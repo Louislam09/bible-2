@@ -12,7 +12,7 @@ type TVerse = {
 };
 
 const Verse: React.FC<TVerse> = ({ item, index, setSelectedWord, setOpen }) => {
-  const theme = useTheme();
+  const theme = useTheme() as TTheme;
   const styles = getStyles(theme);
   const route = useRoute();
   const { strongKey } = route.params as HomeParams;
@@ -47,20 +47,28 @@ const Verse: React.FC<TVerse> = ({ item, index, setSelectedWord, setOpen }) => {
     [onVerseClick]
   );
 
+  const getText = (item: any) =>
+    item.text.replace(/<S>|<\/S>/g, "").replace(/[0-9]/g, "");
+
   return (
     <View style={styles.verseContainer}>
-      {/* <Text
+      <Text
         style={styles.verse}
         aria-selected
         selectable
         selectionColor="black"
         // onPress={handleOpenModal}
       >
-        {`${item.verse}.${item.text
-          .replace(/<S>|<\/S>/g, "")
-          .replace(/[0-9]/g, "")}`}
-      </Text> */}
-      <Text style={styles.verse}>
+        <Text
+          style={{
+            color: theme.colors.notification,
+          }}
+        >
+          &nbsp;{item.verse} &nbsp;
+        </Text>
+        <Text>{getText(item)}</Text>
+      </Text>
+      {/* <Text style={styles.verse}>
         {index + 1}.
         {format(item).map((x: any, index: any) => (
           <Text
@@ -71,7 +79,7 @@ const Verse: React.FC<TVerse> = ({ item, index, setSelectedWord, setOpen }) => {
             {x.text}{" "}
           </Text>
         ))}
-      </Text>
+      </Text> */}
     </View>
   );
 };
@@ -80,9 +88,10 @@ const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     verseContainer: {},
     verse: {
-      paddingHorizontal: 4,
+      paddingHorizontal: 15,
+      paddingLeft: 20,
       marginVertical: 5,
-      fontSize: 18,
+      fontSize: 24,
     },
   });
 

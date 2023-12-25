@@ -10,7 +10,7 @@ import React, { useMemo } from "react";
 import { DB_BOOK_NAMES } from "../constants/BookNames";
 import BookNameList from "./BookNameList";
 import { useTheme } from "@react-navigation/native";
-import { TTheme } from "../types/theme";
+import { TTheme } from "../types";
 
 enum Routes {
   AT = "Antiguo Pacto",

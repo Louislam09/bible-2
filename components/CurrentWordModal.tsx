@@ -8,6 +8,7 @@ import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { DB_BOOK_NAMES } from "../constants/BookNames";
 import { Screens, TTheme } from "../types";
+import { testBorder } from "../utils/border";
 
 type Props = {
   strongNumber: {
@@ -106,8 +107,10 @@ const CurrentWordModal: React.FC<Props> = ({ strongNumber, setOpen }) => {
         width: "100%",
         backgroundColor: colors.backgroundLight,
         position: "absolute",
-        bottom: 110,
-        zIndex: 999,
+        bottom: 0,
+        borderColor: colors.text,
+        borderStyle: "solid",
+        borderWidth: 1,
       }}
     >
       <View style={styles.chapterHeader}>

@@ -9,19 +9,58 @@ import {
   ParamListBase,
 } from "@react-navigation/native";
 import { HomeParams, Screens } from "../../types";
+import {
+  DB_BOOK_CHAPTER_NUMBER,
+  DB_BOOK_NAMES,
+} from "../../constants/BookNames";
 interface FooterInterface {}
 
 const CustomFooter: FC<FooterInterface> = () => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<ParamListBase>>();
-  const { book, chapter } = route.params as HomeParams;
+  const { book, chapter = 1 } = route.params as HomeParams;
+  const { bookNumber } = DB_BOOK_NAMES.find((x) => x.longName === book) || {};
+  const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
   const footerIconSize = 28;
 
-  const onPressIcon = (r: string) => console.log("clicked: ", r);
+  const nextOrPreviousBook = (name: string, chapter: number = 1) => {
+    navigation.setParams({
+      book: name,
+      chapter,
+    });
+  };
+
+  const nextChapter = () => {
+    if (DB_BOOK_CHAPTER_NUMBER[book as any] === chapter) {
+      console.log(bookNumber);
+      if (bookNumber === 730) return;
+      const newBookName = DB_BOOK_NAMES[bookIndex + 1].longName;
+      nextOrPreviousBook(newBookName);
+      return;
+    }
+    navigation.setParams({
+      book,
+      chapter: ((chapter as number) || 0) + 1,
+    });
+  };
+  const previuosChapter = () => {
+    if (bookNumber !== 10 && chapter === 1) {
+      const newBookName = DB_BOOK_NAMES[bookIndex - 1].longName;
+      const newChapter = DB_BOOK_CHAPTER_NUMBER[newBookName];
+      nextOrPreviousBook(newBookName, newChapter);
+      return;
+    }
+    if ((chapter as number) <= 1) return;
+    navigation.setParams({
+      book,
+      chapter: (chapter as number) - 1,
+    });
+  };
+
   return (
     <View style={styles.footer}>
       <View style={styles.footerCenter}>
-        <TouchableOpacity onPress={() => onPressIcon("left than")}>
+        <TouchableOpacity onPress={() => previuosChapter()}>
           <MaterialCommunityIcons
             style={styles.icon}
             name="less-than"
@@ -29,12 +68,15 @@ const CustomFooter: FC<FooterInterface> = () => {
             color="white"
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation?.navigate(Screens.Book)}>
+        <TouchableOpacity
+          style={{ flex: 1 }}
+          onPress={() => navigation?.navigate(Screens.Book)}
+        >
           <Text style={styles.bookLabel}>
             {`${book ?? ""} ${chapter ?? ""}`}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => onPressIcon("greater than")}>
+        <TouchableOpacity onPress={() => nextChapter()}>
           <MaterialCommunityIcons
             style={styles.icon}
             name="greater-than"
@@ -43,10 +85,7 @@ const CustomFooter: FC<FooterInterface> = () => {
           />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={styles.footerEnd}
-        onPress={() => console.log("clicked")}
-      >
+      <TouchableOpacity style={styles.footerEnd}>
         <MaterialCommunityIcons
           name="play"
           size={footerIconSize}
@@ -59,10 +98,8 @@ const CustomFooter: FC<FooterInterface> = () => {
 
 const styles = StyleSheet.create({
   footer: {
-    // position: "absolute",
     right: 0,
     width: "100%",
-    // bottom: 0,
     display: "flex",
     alignItems: "center",
     flexDirection: "row",
@@ -100,6 +137,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   bookLabel: {
+    flex: 1,
     fontSize: 24,
     fontWeight: "bold",
   },

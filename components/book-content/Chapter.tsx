@@ -33,7 +33,7 @@ const Chapter = ({ item, setScrollEnabled, dimensions }: TChapter) => {
     return (
       <View style={styles.chapterHeader}>
         <Text style={styles.chapterHeaderTitle}>
-          Capitulo {item[0].chapter}
+          Capitulo {item[0]?.chapter}
         </Text>
       </View>
     );

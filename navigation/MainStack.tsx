@@ -3,9 +3,8 @@ import React from "react";
 import TabNavigator from "../components/ChooseBookHeader";
 import ChooseChapterNumberScreen from "../screens/ChooseChapterNumberScreen";
 import HomeScreen from "../screens/HomeScreen";
-import { RootStackParamList } from "../types";
+import { RootStackParamList, TTheme } from "../types";
 import { useTheme } from "@react-navigation/native";
-import { TTheme } from "../types/theme";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

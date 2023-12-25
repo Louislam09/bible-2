@@ -7,10 +7,9 @@ import {
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Text } from "./Themed";
 import { FlashList } from "@shopify/flash-list";
-import { HomeParams, IDBBookNames, Screens } from "../types";
+import { HomeParams, IDBBookNames, Screens, TTheme } from "../types";
 import useStorage from "../hooks/useAsyncStorage";
 import { StorageKeys } from "../constants/StorageKeys";
-import { TTheme } from "../types/theme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface IBookNameList {
