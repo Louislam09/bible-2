@@ -15,7 +15,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -33,6 +35,9 @@
       "eas": {
         "projectId": "ae41abb8-478d-4cd9-9b64-47b9486e2c5f"
       }
-    }
+    },
+    "plugins": [
+      "expo-build-properties"
+    ]
   }
 }

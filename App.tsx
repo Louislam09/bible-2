@@ -8,6 +8,7 @@ import Navigation from './navigation';
 
 import { StatusBar } from 'react-native';
 import { DatabaseProvider } from './context/databaseContext';
+import { Text } from './components/Themed';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();

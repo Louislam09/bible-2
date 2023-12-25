@@ -3,21 +3,27 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-// import { FontAwesome } from '@expo/vector-icons';
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// import { createDrawerNavigator } from '@react-navigation/drawer';
-import * as React from 'react';
-import { ColorSchemeName } from 'react-native';
-import LinkingConfiguration from './LinkingConfiguration';
-import MainStack from './MainStack';
+import { NavigationContainer } from "@react-navigation/native";
+import * as React from "react";
+import LinkingConfiguration from "./LinkingConfiguration";
+import MainStack from "./MainStack";
+import { DarkTheme, LightTheme } from "../constants/themeColors";
 
-export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+type TNavigation = {
+  colorScheme: "light" | "dark";
+};
+
+export default function Navigation({ colorScheme }: TNavigation) {
+  const theme = {
+    dark: DarkTheme,
+    light: LightTheme,
+  };
+
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      theme={theme[colorScheme]}
+    >
       <MainStack />
     </NavigationContainer>
   );
