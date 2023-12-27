@@ -20,22 +20,48 @@ const BookNameList = ({ bookList }: IBookNameList) => {
   // const { setLastReadBook } = useStorage(StorageKeys.LAST_READ_BOOK, {}, true)
   const navigation = useNavigation();
   const route = useRoute();
-  const { book: selectedBook } = route?.params as HomeParams;
+  const { book: selectedBook, chapter } = route?.params as HomeParams;
   const theme = useTheme();
   const styles = getStyles(theme);
+  const isVerseScreen = route.name === "ChooseVerseNumber";
+  const steps: any = {
+    [Screens.Book]: Screens.ChooseChapterNumber,
+    [Screens.ChooseChapterNumber]: Screens.ChooseVerseNumber,
+    [Screens.ChooseVerseNumber]: Screens.Home,
+  };
+
+  const keys: any = {
+    [Screens.Book]: "book",
+    [Screens.ChooseChapterNumber]: "chapter",
+    [Screens.ChooseVerseNumber]: "verse",
+  };
+
+  const screenNavigationMap: any = {
+    [Screens.Book]: (item: any) => ({
+      screen: Screens.ChooseChapterNumber,
+      params: { book: item },
+    }),
+    [Screens.ChooseChapterNumber]: (item: any, routeParams: any) => ({
+      screen: Screens.ChooseVerseNumber,
+      params: { ...routeParams, chapter: item },
+    }),
+    [Screens.ChooseVerseNumber]: (item: any, routeParams: any) => ({
+      screen: Screens.Home,
+      params: { ...routeParams, verse: item },
+    }),
+    // Default case
+    default: (item: any) => ({
+      screen: Screens.ChooseChapterNumber,
+      params: { book: item },
+    }),
+  };
 
   const handlePress = (item: string | number) => {
-    if (selectedBook) {
-      const data = {
-        book: selectedBook,
-        chapter: item,
-        strongKey: bookList.length > 30 ? "H" : "G",
-      };
-      // setLastReadBook(data)
-      navigation.navigate(Screens.Home, { ...data });
-      return;
-    }
-    navigation.navigate(Screens.ChooseChapterNumber, { book: item as string });
+    const routeName = route.name;
+    const navigationInfo =
+      screenNavigationMap[routeName] || screenNavigationMap.default;
+    const { screen, params } = navigationInfo(item, route.params);
+    navigation.navigate(screen, params);
   };
 
   const renderItem = ({ item }: { item: any }) => (
@@ -61,7 +87,9 @@ const BookNameList = ({ bookList }: IBookNameList) => {
   return (
     <View style={styles.container}>
       {selectedBook && (
-        <Text style={styles.listChapterTitle}>{selectedBook}</Text>
+        <Text style={styles.listChapterTitle}>
+          {selectedBook} {chapter}
+        </Text>
       )}
       <FlashList
         contentContainerStyle={styles.flatContainer}

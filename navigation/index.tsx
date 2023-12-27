@@ -8,12 +8,14 @@ import * as React from "react";
 import LinkingConfiguration from "./LinkingConfiguration";
 import MainStack from "./MainStack";
 import { DarkTheme, LightTheme } from "../constants/themeColors";
+import { useCustomTheme } from "../context/ThemeContext";
 
 type TNavigation = {
-  colorScheme: "light" | "dark";
+  // colorScheme: "light" | "dark";
 };
 
-export default function Navigation({ colorScheme }: TNavigation) {
+export default function Navigation() {
+  const { theme: colorScheme } = useCustomTheme();
   const theme = {
     dark: DarkTheme,
     light: LightTheme,

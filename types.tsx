@@ -21,11 +21,14 @@ declare global {
 export type RootStackParamList = {
   Home:
     | NavigatorScreenParams<RootTabParamList>
-    | { book?: string; chapter?: string | number };
+    | { book?: string; chapter?: string | number; verse?: string | number };
   Book: NavigatorScreenParams<RootTabParamList> | undefined;
   ChooseChapterNumber:
     | NavigatorScreenParams<RootTabParamList>
     | { book?: string; chapter?: string | number };
+  ChooseVerseNumber:
+    | NavigatorScreenParams<RootTabParamList>
+    | { book?: string; chapter?: string | number; verse?: string | number };
   Modal: undefined;
   NotFound: undefined;
 };
@@ -34,6 +37,7 @@ export enum Screens {
   Home = "Home",
   Book = "Book",
   ChooseChapterNumber = "ChooseChapterNumber",
+  ChooseVerseNumber = "ChooseVerseNumber",
 }
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
@@ -42,6 +46,7 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
 export interface HomeParams {
   book?: string;
   chapter?: number | string;
+  verse?: number | string;
   strongKey?: string;
 }
 
@@ -75,5 +80,5 @@ export interface IBookVerse {
 }
 
 export type TTheme = Theme & {
-  colors?: { backgroundLight?: string };
+  colors?: { backgroundContrast?: string };
 };

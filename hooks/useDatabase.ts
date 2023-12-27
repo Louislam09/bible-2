@@ -36,8 +36,6 @@ const useDatabase = ({ dbName }: TUseDatabase): UseDatabase => {
 
     useEffect(() => {
         async function openDatabase(): Promise<SQLite.WebSQLDatabase> {
-            // console.log(`======================OPENING ${dbName} DATABASE======================`);
-
             try {
                 // Check if the database directory exists, and create it if it doesn't
                 if (!(await FileSystem.getInfoAsync(FileSystem.documentDirectory + 'SQLite')).exists) {

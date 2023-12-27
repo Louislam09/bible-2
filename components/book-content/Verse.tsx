@@ -29,7 +29,7 @@ const Verse: React.FC<TVerse> = ({ item, index, setSelectedWord, setOpen }) => {
   };
 
   const handleOpenModal = () => setOpen(true);
-  const handleCloseModal = () => setOpen(false);
+  // const handleCloseModal = () => setOpen(false);
 
   const onVerseClick = (word: any) => {
     // setSelectedWord(`${strongKey ?? 'H'}${word.replace(/\D/g, '')}`)
@@ -40,46 +40,41 @@ const Verse: React.FC<TVerse> = ({ item, index, setSelectedWord, setOpen }) => {
     handleOpenModal();
   };
 
-  const handleWordClick = React.useCallback(
-    (word: string) => {
-      onVerseClick(word);
-    },
-    [onVerseClick]
-  );
-
   const getText = (item: any) =>
     item.text.replace(/<S>|<\/S>/g, "").replace(/[0-9]/g, "");
 
-  return (
-    <View style={styles.verseContainer}>
-      <Text
-        style={styles.verse}
-        aria-selected
-        selectable
-        selectionColor="black"
-        // onPress={handleOpenModal}
-      >
-        <Text
-          style={{
-            color: theme.colors.notification,
-          }}
-        >
-          &nbsp;{item.verse} &nbsp;
-        </Text>
-        <Text>{getText(item)}</Text>
-      </Text>
-      {/* <Text style={styles.verse}>
+  const TestVerse = () => {
+    return (
+      <Text style={styles.verse}>
         {index + 1}.
         {format(item).map((x: any, index: any) => (
           <Text
             key={index}
             style={{ ...(x.ref && { color: "pink" }) }}
-            onPress={() => handleWordClick(x)}
+            // onPress={() => handleWordClick(x)}
           >
             {x.text}{" "}
           </Text>
         ))}
-      </Text> */}
+      </Text>
+    );
+  };
+
+  return (
+    <View style={styles.verseContainer}>
+      <Text
+        style={[
+          styles.verse,
+          index === 0 && { flexDirection: "row", alignItems: "stretch" },
+        ]}
+        aria-selected
+        selectable
+        selectionColor="black"
+        // onPress={handleOpenModal}
+      >
+        <Text style={[styles.verseNumber]}>&nbsp;{item.verse} &nbsp;</Text>
+        <Text style={styles.verseBody}>{getText(item)}</Text>
+      </Text>
     </View>
   );
 };
@@ -87,6 +82,12 @@ const Verse: React.FC<TVerse> = ({ item, index, setSelectedWord, setOpen }) => {
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     verseContainer: {},
+    verseBody: {
+      color: colors.text,
+    },
+    verseNumber: {
+      color: colors.notification,
+    },
     verse: {
       paddingHorizontal: 15,
       paddingLeft: 20,

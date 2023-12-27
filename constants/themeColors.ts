@@ -1,29 +1,26 @@
 const LightTheme = {
-    dark: false,
-    colors: {
-      primary: "#0a84ff",
-      background: "#ffffff",
-      backgroundLight: "#ddd",
-      card: "#ffffff",
-      text: "#000000",
-      border: "#d4d4d4",
-      notification: "#ff453a",
-    },
-  };
-  
-  const DarkTheme = {
-    dark: true,
-    colors: {
-      primary: "#0a84ff",
-      backgroundLight: "#373e43",
-      background: "#262a2d",
-      card: "#121212",
-      text: "#e5e5e7",
-      border: "#272729",
-      notification: "#ff453a",
-    },
-  };
-export {
-    LightTheme,
-    DarkTheme
-}  
+  dark: false,
+  colors: {
+    primary: "#007BFF",
+    backgroundContrast: "#F5F5F5",
+    background: "#FFFFFF",
+    card: "#F8F8F8",
+    text: "#333333",
+    border: "#CCCCCC",
+    notification: "#FF5252",
+  },
+};
+
+const DarkTheme = {
+  dark: true,
+  colors: {
+    primary: "#007BFF",
+    backgroundContrast: "#2E2E2E",
+    background: "#1E1E1E",
+    card: "#292929",
+    text: "#E5E5E5",
+    border: "#333333",
+    notification: "#FF5252",
+  },
+};
+export { LightTheme, DarkTheme };

@@ -43,8 +43,8 @@ const CurrentWordModal: React.FC<Props> = ({ strongNumber, setOpen }) => {
   useEffect(() => {
     (async () => {
       if (strongDB && strongExecuteSql && text) {
-        const sql = `SELECT * FROM dictionary WHERE topic="${text}";`;
-        strongExecuteSql(sql)
+        const sql = `SELECT * FROM dictionary WHERE topic = ?;`;
+        strongExecuteSql(sql, [text])
           .then((rows) => {
             if (!rows.length) return;
             setData(rows?.[0] ?? {});
@@ -184,7 +184,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: "white",
-    // borderColor: 'red', borderWidth: 2, borderStyle: 'dotted'
   },
 });
 
