@@ -1,6 +1,6 @@
 import { useRoute, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, StyleSheet, View } from "react-native";
 import { DB_BOOK_NAMES } from "../../constants/BookNames";
 import { useDBContext } from "../../context/databaseContext";
@@ -9,7 +9,9 @@ import { HomeParams, IBookVerse, TTheme } from "../../types";
 import Chapter from "./Chapter";
 import { GET_VERSES_BY_BOOK_AND_CHAPTER } from "../../constants/Queries";
 
-const BookContent = () => {
+interface BookContentInterface {}
+
+const BookContent: FC<BookContentInterface> = ({}) => {
   const theme = useTheme();
   const styles = getStyles(theme);
   const { database, executeSql } = useDBContext();
@@ -30,7 +32,6 @@ const BookContent = () => {
           chapter || 1,
         ])
           .then((rows) => {
-            console.log("==DATE FETCHED==");
             setData(rows);
             setLoading(false);
           })

@@ -8,6 +8,8 @@ import { DrawerNavigationProp } from "@react-navigation/drawer";
 import {
   CompositeScreenProps,
   NavigatorScreenParams,
+  ParamListBase,
+  RouteProp,
   Theme,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -67,6 +69,27 @@ export interface IDBBookNames {
   longName: string;
   shortName: string;
 }
+
+export type TRoute = RouteProp<ParamListBase>;
+
+export enum TFont {
+  Roboto = "Roboto",
+  Cardo = "Cardo",
+  OpenSans = "OpenSans",
+  ComingSoon = "ComingSoon",
+}
+
+export enum TVersion {
+  RVR1960 = "RVR1960",
+  RVR1965 = "RVR1965",
+}
+
+export type TVerse = {
+  item: IBookVerse;
+  index: number;
+  setSelectedWord: any;
+  setOpen: any;
+};
 
 export interface BookChapter {
   [key: string]: number;

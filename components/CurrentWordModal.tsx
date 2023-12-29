@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { htmlTemplate } from "../constants/HtmlTemplate";
 import WebView, { WebViewNavigation } from "react-native-webview";
@@ -8,7 +8,7 @@ import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { DB_BOOK_NAMES } from "../constants/BookNames";
 import { Screens, TTheme } from "../types";
-import { testBorder } from "../utils/border";
+import { Text } from "./Themed";
 
 type Props = {
   strongNumber: {
@@ -105,7 +105,7 @@ const CurrentWordModal: React.FC<Props> = ({ strongNumber, setOpen }) => {
         borderRadius: 25,
         height: "50%",
         width: "100%",
-        backgroundColor: colors.backgroundLight,
+        backgroundColor: colors.backgroundContrast,
         position: "absolute",
         bottom: 0,
         borderColor: colors.text,

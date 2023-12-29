@@ -1,20 +1,17 @@
 import { useRoute, useTheme } from "@react-navigation/native";
-import React from "react";
-import { HomeParams, IBookVerse, TTheme } from "../../types";
+import React, { useState } from "react";
+import { HomeParams, TTheme, TVerse } from "../../types";
 import { Text } from "../Themed";
-import { StyleSheet, View } from "react-native";
-
-type TVerse = {
-  item: IBookVerse;
-  index: number;
-  setSelectedWord: any;
-  setOpen: any;
-};
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { useBibleContext } from "../../context/BibleContext";
+import { getVerseTextRaw } from "../../utils/getVerseTextRaw";
 
 const Verse: React.FC<TVerse> = ({ item, index, setSelectedWord, setOpen }) => {
+  const { highlightVerse } = useBibleContext();
   const theme = useTheme() as TTheme;
   const styles = getStyles(theme);
   const route = useRoute();
+  const [isVerseHighlisted, setHighlightVerse] = useState(false);
   const { strongKey } = route.params as HomeParams;
   const format = (item: any) => {
     const textWithNumber = item.text.replace(/<S>|<\/S>/g, "");
@@ -29,7 +26,6 @@ const Verse: React.FC<TVerse> = ({ item, index, setSelectedWord, setOpen }) => {
   };
 
   const handleOpenModal = () => setOpen(true);
-  // const handleCloseModal = () => setOpen(false);
 
   const onVerseClick = (word: any) => {
     // setSelectedWord(`${strongKey ?? 'H'}${word.replace(/\D/g, '')}`)
@@ -39,9 +35,6 @@ const Verse: React.FC<TVerse> = ({ item, index, setSelectedWord, setOpen }) => {
     });
     handleOpenModal();
   };
-
-  const getText = (item: any) =>
-    item.text.replace(/<S>|<\/S>/g, "").replace(/[0-9]/g, "");
 
   const TestVerse = () => {
     return (
@@ -60,22 +53,35 @@ const Verse: React.FC<TVerse> = ({ item, index, setSelectedWord, setOpen }) => {
     );
   };
 
+  const highlightVerseFunc = () => {
+    if (isVerseHighlisted) {
+      setHighlightVerse(false);
+      return;
+    }
+    highlightVerse(item);
+    setHighlightVerse(true);
+  };
+
   return (
-    <View style={styles.verseContainer}>
+    <TouchableOpacity
+      onLongPress={highlightVerseFunc}
+      activeOpacity={0.9}
+      style={styles.verseContainer}
+    >
       <Text
         style={[
           styles.verse,
           index === 0 && { flexDirection: "row", alignItems: "stretch" },
+          isVerseHighlisted && styles.highlightCopy,
         ]}
         aria-selected
         selectable
-        selectionColor="black"
-        // onPress={handleOpenModal}
+        selectionColor={theme.colors.primary}
       >
         <Text style={[styles.verseNumber]}>&nbsp;{item.verse} &nbsp;</Text>
-        <Text style={styles.verseBody}>{getText(item)}</Text>
+        <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -86,13 +92,18 @@ const getStyles = ({ colors }: TTheme) =>
       color: colors.text,
     },
     verseNumber: {
-      color: colors.notification,
+      color: colors.primary,
     },
     verse: {
       paddingHorizontal: 15,
       paddingLeft: 20,
       marginVertical: 5,
       fontSize: 24,
+    },
+    highlightCopy: {
+      textDecorationColor: colors.primary,
+      textDecorationStyle: "solid",
+      textDecorationLine: "underline",
     },
   });
 

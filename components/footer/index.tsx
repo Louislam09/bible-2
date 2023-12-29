@@ -140,14 +140,15 @@ const getStyles = ({ colors }: TTheme) =>
     },
     icon: {
       fontWeight: "900",
-      color: colors.text,
+      // color: colors.text,
       marginHorizontal: 10,
+      color: colors.primary,
     },
     bookLabel: {
-      color: colors.text,
+      color: colors.primary,
       textAlign: "center",
       fontSize: 24,
-      fontWeight: "bold",
+      fontWeight: "600",
     },
   });
 

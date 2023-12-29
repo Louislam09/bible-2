@@ -5,11 +5,11 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
-
 import { StatusBar } from "react-native";
 import { DatabaseProvider } from "./context/databaseContext";
 import { Text } from "./components/Themed";
 import { ThemeProvider } from "./context/ThemeContext";
+import { BibleProvider } from "./context/BibleContext";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -20,8 +20,10 @@ export default function App() {
     return (
       <ThemeProvider>
         <DatabaseProvider>
-          <StatusBar barStyle="light-content" animated />
-          <Navigation />
+          <BibleProvider>
+            <StatusBar barStyle="light-content" animated />
+            <Navigation />
+          </BibleProvider>
         </DatabaseProvider>
       </ThemeProvider>
     );

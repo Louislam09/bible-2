@@ -12,6 +12,8 @@ type TChapter = {
   item: IBookVerse[];
 };
 
+// TODO: Add subtitle feature
+// TODO: Add audio mode feature
 const Chapter = ({ item, dimensions }: TChapter) => {
   const theme = useTheme();
   const route = useRoute();
@@ -23,6 +25,8 @@ const Chapter = ({ item, dimensions }: TChapter) => {
     text?: string;
   }>({});
   const [open, setOpen] = useState(false);
+
+  // TODO: Scroll to verse
 
   const handleScrollToIndex = () => {
     console.log("scrolll", verse);
@@ -63,10 +67,9 @@ const Chapter = ({ item, dimensions }: TChapter) => {
       <View style={[styles.verseContent, { width: dimensions?.width ?? 400 }]}>
         <FlashList
           onLoad={() => {
-            setTimeout(() => {
-              // handleScrollToIndex();
-              console.log("hh");
-            }, 500);
+            // setTimeout(() => {
+            //   // handleScrollToIndex();
+            // }, 500);
           }}
           decelerationRate={"normal"}
           estimatedItemSize={85}
@@ -104,9 +107,9 @@ const getStyles = ({ colors }: TTheme) =>
       justifyContent: "center",
     },
     chapterHeaderTitle: {
-      fontSize: 20,
+      fontSize: 24,
       fontWeight: "bold",
-      color: colors.notification,
+      color: colors.primary,
     },
     verseContent: {
       width: 400,

@@ -23,18 +23,6 @@ const BookNameList = ({ bookList }: IBookNameList) => {
   const { book: selectedBook, chapter } = route?.params as HomeParams;
   const theme = useTheme();
   const styles = getStyles(theme);
-  const isVerseScreen = route.name === "ChooseVerseNumber";
-  const steps: any = {
-    [Screens.Book]: Screens.ChooseChapterNumber,
-    [Screens.ChooseChapterNumber]: Screens.ChooseVerseNumber,
-    [Screens.ChooseVerseNumber]: Screens.Home,
-  };
-
-  const keys: any = {
-    [Screens.Book]: "book",
-    [Screens.ChooseChapterNumber]: "chapter",
-    [Screens.ChooseVerseNumber]: "verse",
-  };
 
   const screenNavigationMap: any = {
     [Screens.Book]: (item: any) => ({

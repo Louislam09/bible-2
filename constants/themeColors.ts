@@ -1,7 +1,7 @@
 const LightTheme = {
   dark: false,
   colors: {
-    primary: "#007BFF",
+    primary: "#ff7566",
     backgroundContrast: "#F5F5F5",
     background: "#FFFFFF",
     card: "#F8F8F8",
@@ -14,7 +14,7 @@ const LightTheme = {
 const DarkTheme = {
   dark: true,
   colors: {
-    primary: "#007BFF",
+    primary: "#87d885",
     backgroundContrast: "#2E2E2E",
     background: "#1E1E1E",
     card: "#292929",

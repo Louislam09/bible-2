@@ -3,7 +3,7 @@ import {
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationProp,
 } from "@react-navigation/material-top-tabs";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet } from "react-native";
 const Tab = createMaterialTopTabNavigator();
 
 import React, { useMemo } from "react";
@@ -27,7 +27,7 @@ function TabNavigator({ navigation }: TabNavigatorInterface) {
   const { colors } = useTheme() as TTheme;
   const screenOptions: MaterialTopTabNavigationOptions = {
     tabBarStyle: {
-      backgroundColor: colors.backgroundLight,
+      backgroundColor: colors.backgroundContrast,
     },
     tabBarActiveTintColor: colors.text,
     tabBarInactiveTintColor: colors.text,
