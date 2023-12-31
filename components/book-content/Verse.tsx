@@ -6,7 +6,13 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useBibleContext } from "../../context/BibleContext";
 import { getVerseTextRaw } from "../../utils/getVerseTextRaw";
 
-const Verse: React.FC<TVerse> = ({ item, index, setSelectedWord, setOpen }) => {
+const Verse: React.FC<TVerse | any> = ({
+  item,
+  index,
+  setSelectedWord,
+  setOpen,
+  subtitleData,
+}) => {
   const { highlightVerse } = useBibleContext();
   const theme = useTheme() as TTheme;
   const styles = getStyles(theme);
@@ -62,12 +68,35 @@ const Verse: React.FC<TVerse> = ({ item, index, setSelectedWord, setOpen }) => {
     setHighlightVerse(true);
   };
 
+  const findSubTitle = (verse: any) => {
+    const sub = subtitleData.find((x: any) => x.verse === verse);
+
+    return sub ? (
+      <Text
+        style={[
+          styles.verse,
+          {
+            fontSize: 22,
+            textAlign: "center",
+            fontWeight: "bold",
+            paddingVertical: 10,
+            color: theme.colors.notification,
+          },
+        ]}
+      >
+        {sub.subheading}
+      </Text>
+    ) : null;
+  };
+
   return (
     <TouchableOpacity
       onLongPress={highlightVerseFunc}
       activeOpacity={0.9}
       style={styles.verseContainer}
     >
+      {findSubTitle(item.verse)}
+
       <Text
         style={[
           styles.verse,

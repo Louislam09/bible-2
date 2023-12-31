@@ -7,27 +7,49 @@ import { useDBContext } from "../../context/databaseContext";
 import { HomeParams, IBookVerse, TTheme } from "../../types";
 
 import Chapter from "./Chapter";
-import { GET_VERSES_BY_BOOK_AND_CHAPTER } from "../../constants/Queries";
+import {
+  GET_SUBTITLE_BY_BOOK_AND_CHAPTER,
+  GET_VERSES_BY_BOOK_AND_CHAPTER,
+} from "../../constants/Queries";
 
 interface BookContentInterface {}
 
 const BookContent: FC<BookContentInterface> = ({}) => {
   const theme = useTheme();
   const styles = getStyles(theme);
-  const { database, executeSql } = useDBContext();
+  const { myBibleDB, executeSql, subTitleDB } = useDBContext();
   const route = useRoute();
   const { book, chapter, verse } = route.params as HomeParams;
   const bookRef = React.useRef<FlashList<IBookVerse[]>>(null);
   const [loading, setLoading] = React.useState(true);
   const [data, setData] = useState<any>([]);
+  const [subtitleData, setSubtitleData] = useState<any>([]);
   const currentBookNumber = DB_BOOK_NAMES.find((x) => x.longName === book);
   const [dimensions, setDimensions] = useState(Dimensions.get("window"));
 
   useEffect(() => {
     (async () => {
-      if (database && executeSql) {
+      if (subTitleDB && executeSql) {
         setLoading(true);
-        executeSql(GET_VERSES_BY_BOOK_AND_CHAPTER, [
+
+        executeSql(subTitleDB, GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
+          currentBookNumber?.bookNumber,
+          chapter || 1,
+        ])
+          .then((rows) => {
+            setSubtitleData(rows);
+          })
+          .catch((err: any) => {
+            console.error("subTitleDB", err);
+          });
+      }
+    })();
+  }, [subTitleDB, book, chapter]);
+  useEffect(() => {
+    (async () => {
+      if (myBibleDB && executeSql) {
+        setLoading(true);
+        executeSql(myBibleDB, GET_VERSES_BY_BOOK_AND_CHAPTER, [
           currentBookNumber?.bookNumber,
           chapter || 1,
         ])
@@ -35,17 +57,21 @@ const BookContent: FC<BookContentInterface> = ({}) => {
             setData(rows);
             setLoading(false);
           })
-          .catch((err) => {
-            console.warn(err);
+          .catch((err: any) => {
+            console.error("myBibleDB", err);
           });
       }
     })();
-  }, [database, book, chapter]);
+  }, [myBibleDB, book, chapter]);
 
   return (
     <View style={styles.bookContainer}>
       {!loading ? (
-        <Chapter dimensions={dimensions} item={data} />
+        <Chapter
+          dimensions={dimensions}
+          item={data}
+          subtitleData={subtitleData}
+        />
       ) : (
         <View style={{ flex: 1, display: "flex", alignItems: "center" }}>
           <ActivityIndicator style={{ flex: 1 }} />

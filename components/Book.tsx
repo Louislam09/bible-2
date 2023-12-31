@@ -192,7 +192,7 @@ export default function Book() {
             setLoading(false);
           })
           .catch((err) => {
-            console.warn(err);
+            console.log(err);
           });
       }
     })();

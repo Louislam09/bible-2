@@ -20,7 +20,7 @@ type ChooseFromListScreenProps = {
 };
 
 function ChooseFromListScreen({ route }: ChooseFromListScreenProps) {
-  const { database, executeSql } = useDBContext();
+  const { myBibleDB, executeSql } = useDBContext();
   const { book, chapter } = route.params as HomeParams;
   const [numOfVerse, setNumVerse] = useState(0);
   const isVerseScreen = route.name === "ChooseVerseNumber";
@@ -28,17 +28,17 @@ function ChooseFromListScreen({ route }: ChooseFromListScreenProps) {
   useEffect(() => {
     if (!isVerseScreen) return;
     (async () => {
-      if (database && executeSql) {
-        executeSql(GET_VERSE_NUMBER_QUERY, [book, chapter])
+      if (myBibleDB && executeSql) {
+        executeSql(myBibleDB, GET_VERSE_NUMBER_QUERY, [book, chapter])
           .then((rows) => {
             setNumVerse(rows?.[0]?.verse_count || 0);
           })
           .catch((err) => {
-            console.warn(err);
+            console.log(err);
           });
       }
     })();
-  }, [database, book, chapter]);
+  }, [myBibleDB, book, chapter]);
 
   const numberOfChapters = useMemo(() => {
     return new Array(

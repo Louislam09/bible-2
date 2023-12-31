@@ -7,14 +7,22 @@ import { Text } from "../Themed";
 import Verse from "./Verse";
 import { StyleSheet, View } from "react-native";
 
+interface ISubtitle {
+  book_number: any;
+  chapter: any;
+  verse: any;
+  subheading: string;
+}
+
 type TChapter = {
   dimensions: any;
   item: IBookVerse[];
+  subtitleData: ISubtitle[];
 };
 
 // TODO: Add subtitle feature
 // TODO: Add audio mode feature
-const Chapter = ({ item, dimensions }: TChapter) => {
+const Chapter = ({ item, dimensions, subtitleData }: TChapter) => {
   const theme = useTheme();
   const route = useRoute();
   const { verse } = route.params as HomeParams;
@@ -59,7 +67,12 @@ const Chapter = ({ item, dimensions }: TChapter) => {
   };
 
   const renderItem = (props: any) => (
-    <Verse {...props} setSelectedWord={setSelectedWord} setOpen={setOpen} />
+    <Verse
+      subtitleData={subtitleData}
+      {...props}
+      setSelectedWord={setSelectedWord}
+      setOpen={setOpen}
+    />
   );
 
   return (
@@ -77,7 +90,7 @@ const Chapter = ({ item, dimensions }: TChapter) => {
           renderItem={renderItem}
           ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
           ListFooterComponent={() => <View style={{ paddingBottom: 50 }} />}
-          ListHeaderComponent={ChapterHeader}
+          // ListHeaderComponent={ChapterHeader}
           ref={chapterRef}
         />
         {open && (

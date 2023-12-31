@@ -36,7 +36,6 @@ const CustomFooter: FC<FooterInterface> = () => {
 
   const nextChapter = () => {
     if (DB_BOOK_CHAPTER_NUMBER[book as any] === chapter) {
-      console.log(bookNumber);
       if (bookNumber === 730) return;
       const newBookName = DB_BOOK_NAMES[bookIndex + 1].longName;
       nextOrPreviousBook(newBookName);

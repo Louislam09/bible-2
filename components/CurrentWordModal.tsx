@@ -50,7 +50,7 @@ const CurrentWordModal: React.FC<Props> = ({ strongNumber, setOpen }) => {
             setData(rows?.[0] ?? {});
           })
           .catch((err) => {
-            console.warn(err);
+            console.log(err);
           });
       }
     })();

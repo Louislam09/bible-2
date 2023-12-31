@@ -1,24 +1,40 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
 import * as SQLite from "expo-sqlite";
-import useDatabase from "../hooks/useDatabase";
+import React, { createContext, useContext } from "react";
 import { DBName } from "../enums";
+import useDatabase from "../hooks/useDatabase";
 
 interface Row {
   [key: string]: any;
 }
 
 type DatabaseContextType = {
-  database: SQLite.WebSQLDatabase | null;
-  executeSql: ((sql: string, params?: any[]) => Promise<Row[]>) | null;
-  strongDB: SQLite.WebSQLDatabase | null;
-  strongExecuteSql: ((sql: string, params?: any[]) => Promise<Row[]>) | null;
+  myBibleDB?: SQLite.WebSQLDatabase | null;
+  executeSql?:
+    | ((
+        db: SQLite.WebSQLDatabase,
+        sql: string,
+        params?: any[]
+      ) => Promise<Row[]>)
+    | null;
+  strongDB?: SQLite.WebSQLDatabase | null;
+  strongExecuteSql?: ((sql: string, params?: any[]) => Promise<Row[]>) | null;
+  subTitleDB?: SQLite.WebSQLDatabase | null;
+  subtitleExecuteSql?: ((sql: string, params?: any[]) => Promise<Row[]>) | null;
 };
 
+enum DBs {
+  MYBIBLE,
+  SUBTITLE,
+}
+
 const initialContext = {
-  database: null,
+  myBibleDB: null,
   executeSql: null,
   strongDB: null,
   strongExecuteSql: null,
+
+  subtitleDB: null,
+  subtitleExecuteSql: null,
 };
 
 export const DatabaseContext =
@@ -27,17 +43,21 @@ export const DatabaseContext =
 export const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { database, executeSql } = useDatabase({ dbName: DBName.BIBLE });
-  const { database: strongDB, executeSql: strongExecuteSql } = useDatabase({
-    dbName: DBName.MULTI,
+  const { databases, executeSql } = useDatabase({
+    dbNames: [DBName.BIBLE, DBName.SUBTITLE],
   });
-  // const { database, executeSql } = useDatabase({ dbName: DBName.BIBLE });
-  // const { database: strongDB, executeSql: strongExecuteSql } = useDatabase({ dbName: DBName.MULTI });
-  // let strongDB: any, strongExecuteSql: any;
+
+  const myBibleDB = databases[DBs.MYBIBLE];
+  const subTitleDB = databases[DBs.SUBTITLE];
+
+  const dbContextValue = {
+    myBibleDB,
+    subTitleDB,
+    executeSql,
+  };
+
   return (
-    <DatabaseContext.Provider
-      value={{ database, executeSql, strongDB, strongExecuteSql }}
-    >
+    <DatabaseContext.Provider value={dbContextValue}>
       {children}
     </DatabaseContext.Provider>
   );
