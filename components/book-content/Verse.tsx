@@ -7,6 +7,7 @@ import { useBibleContext } from "../../context/BibleContext";
 import { getVerseTextRaw } from "../../utils/getVerseTextRaw";
 import extractVersesInfo from "../../utils/extractVersesInfo";
 import { DB_BOOK_NAMES } from "../../constants/BookNames";
+import { customUnderline } from "../../utils/customStyle";
 
 const Verse: React.FC<TVerse | any> = ({
   item,
@@ -99,6 +100,7 @@ const Verse: React.FC<TVerse | any> = ({
             fontWeight: "bold",
             paddingVertical: 10,
             color: theme.colors.notification,
+            ...customUnderline,
           },
         ]}
       >
