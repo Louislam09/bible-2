@@ -1,10 +1,12 @@
-import { useRoute, useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import React, { useState } from "react";
 import { HomeParams, TTheme, TVerse } from "../../types";
 import { Text } from "../Themed";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useBibleContext } from "../../context/BibleContext";
 import { getVerseTextRaw } from "../../utils/getVerseTextRaw";
+import extractVersesInfo from "../../utils/extractVersesInfo";
+import { DB_BOOK_NAMES } from "../../constants/BookNames";
 
 const Verse: React.FC<TVerse | any> = ({
   item,
@@ -13,6 +15,7 @@ const Verse: React.FC<TVerse | any> = ({
   setOpen,
   subtitleData,
 }) => {
+  const navigation = useNavigation();
   const { highlightVerse } = useBibleContext();
   const theme = useTheme() as TTheme;
   const styles = getStyles(theme);
@@ -68,24 +71,66 @@ const Verse: React.FC<TVerse | any> = ({
     setHighlightVerse(true);
   };
 
-  const findSubTitle = (verse: any) => {
-    const sub = subtitleData.find((x: any) => x.verse === verse);
+  const LinkVerse = ({ data }: any) => {
+    if (!data) return null;
+    const { bookNumber, chapter, verse, endVerse } = extractVersesInfo(
+      data.subheading
+    );
+    const bookName = DB_BOOK_NAMES.find(
+      (x: any) => x.bookNumber === bookNumber
+    )?.longName;
 
-    return sub ? (
+    const onLink = () => {
+      navigation.navigate("Home", {
+        book: bookName,
+        chapter,
+        verse,
+      });
+    };
+
+    return data ? (
       <Text
+        onPress={onLink}
         style={[
           styles.verse,
           {
-            fontSize: 22,
-            textAlign: "center",
+            fontSize: 18,
+            textAlign: "justify",
             fontWeight: "bold",
             paddingVertical: 10,
             color: theme.colors.notification,
           },
         ]}
       >
-        {sub.subheading}
+        {`${bookName} ${chapter}:${verse}-${endVerse}`}
       </Text>
+    ) : (
+      <Text>NO THEME</Text>
+    );
+  };
+
+  const findSubTitle = (verse: any) => {
+    const [subTitle, link] = subtitleData.filter((x: any) => x.verse === verse);
+
+    return subTitle ? (
+      <View>
+        <Text
+          key={subTitle.order_if_several}
+          style={[
+            styles.verse,
+            {
+              fontSize: 22,
+              textAlign: "center",
+              fontWeight: "bold",
+              paddingVertical: 10,
+              color: theme.colors.notification,
+            },
+          ]}
+        >
+          {subTitle.subheading}
+        </Text>
+        <LinkVerse data={link} />
+      </View>
     ) : null;
   };
 
