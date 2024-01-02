@@ -14,24 +14,32 @@ type BibleState = {
   clearHighlights: Function;
   selectFont: Function;
   selectBibleVersion: Function;
+  removeHighlistedVerse: Function;
+  toggleCopyMode: Function;
   selectedFont: string;
   currentBibleVersion: string;
+  isCopyMode: boolean;
 };
 
 type BibleAction =
   | { type: "HIGHLIGHT_VERSE"; payload: IBookVerse }
+  | { type: "REMOVE_HIGHLIGHT_VERSE"; payload: IBookVerse }
   | { type: "SELECT_FONT"; payload: string }
   | { type: "SELECT_BIBLE_VERSION"; payload: string }
-  | { type: "CLEAR_HIGHLIGHTS" };
+  | { type: "CLEAR_HIGHLIGHTS" }
+  | { type: "TOGGLE_COPY_MODE" };
 
 const initialContext: BibleState = {
   highlightedVerses: [],
   highlightVerse: () => {},
+  removeHighlistedVerse: () => {},
   clearHighlights: () => {},
   selectBibleVersion: () => {},
   selectFont: () => {},
+  toggleCopyMode: () => {},
   selectedFont: TFont.Roboto,
   currentBibleVersion: TVersion.RVR1960,
+  isCopyMode: false,
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);
@@ -42,6 +50,15 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
       return {
         ...state,
         highlightedVerses: [...state.highlightedVerses, action.payload],
+      };
+    case "REMOVE_HIGHLIGHT_VERSE":
+      return {
+        ...state,
+        highlightedVerses: [
+          ...state.highlightedVerses.filter(
+            (verse) => verse.verse !== action.payload.verse
+          ),
+        ],
       };
     case "CLEAR_HIGHLIGHTS":
       return {
@@ -58,6 +75,11 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
         ...state,
         currentBibleVersion: action.payload,
       };
+    case "TOGGLE_COPY_MODE":
+      return {
+        ...state,
+        isCopyMode: !state.isCopyMode,
+      };
     default:
       return state;
   }
@@ -73,12 +95,18 @@ export const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     return null; // Render loading UI or placeholder while fonts are loading
   }
 
-  const highlightVerse = (verseNumber: any) => {
-    dispatch({ type: "HIGHLIGHT_VERSE", payload: verseNumber });
+  const highlightVerse = (verseItem: IBookVerse) => {
+    dispatch({ type: "HIGHLIGHT_VERSE", payload: verseItem });
+  };
+  const removeHighlistedVerse = (verseItem: IBookVerse) => {
+    dispatch({ type: "REMOVE_HIGHLIGHT_VERSE", payload: verseItem });
   };
 
   const clearHighlights = () => {
     dispatch({ type: "CLEAR_HIGHLIGHTS" });
+  };
+  const toggleCopyMode = () => {
+    dispatch({ type: "TOGGLE_COPY_MODE" });
   };
 
   const selectFont = (font: string) => {
@@ -94,6 +122,8 @@ export const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     clearHighlights,
     selectFont,
     selectBibleVersion,
+    toggleCopyMode,
+    removeHighlistedVerse,
   };
 
   return (

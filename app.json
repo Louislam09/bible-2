@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "bible",
-    "slug": "bible",
+    "name": "Escritura Bereana",
+    "slug": "Escritura Bereana",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

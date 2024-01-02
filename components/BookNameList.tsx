@@ -4,13 +4,14 @@ import {
   useRoute,
   useTheme,
 } from "@react-navigation/native";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Text } from "./Themed";
 import { FlashList } from "@shopify/flash-list";
 import { HomeParams, IDBBookNames, Screens, TTheme } from "../types";
 import useStorage from "../hooks/useAsyncStorage";
 import { StorageKeys } from "../constants/StorageKeys";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { BOOK_IMAGES } from "../constants/Images";
 
 interface IBookNameList {
   bookList: IDBBookNames[] | any[];
@@ -74,11 +75,42 @@ const BookNameList = ({ bookList }: IBookNameList) => {
 
   return (
     <View style={styles.container}>
-      {selectedBook && (
-        <Text style={styles.listChapterTitle}>
-          {selectedBook} {chapter}
-        </Text>
-      )}
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+        }}
+      >
+        {selectedBook && (
+          <Text
+            style={[
+              styles.listChapterTitle,
+              {
+                fontSize: 26,
+                position: "absolute",
+                top: 10,
+                zIndex: 11,
+                // backgroundColor: "white",
+                paddingVertical: 5,
+              },
+            ]}
+          >
+            {selectedBook} {chapter}
+          </Text>
+        )}
+        {selectedBook && (
+          <Image
+            style={[styles.bookImage, { marginTop: 40 }]}
+            source={{
+              uri: BOOK_IMAGES[selectedBook ?? "Génesis"],
+            }}
+            alt={selectedBook}
+          />
+        )}
+      </View>
       <FlashList
         contentContainerStyle={styles.flatContainer}
         data={bookList?.map((x) => (x?.longName ? x?.longName : x))}
@@ -95,6 +127,12 @@ const getStyles = ({ colors }: TTheme) =>
     container: {
       flex: 1,
       backgroundColor: colors.background,
+    },
+    bookImage: {
+      resizeMode: "contain",
+      position: "relative",
+      width: 200,
+      height: 200,
     },
     flatContainer: {
       paddingVertical: 20,
@@ -118,7 +156,7 @@ const getStyles = ({ colors }: TTheme) =>
       fontSize: 20,
     },
     listChapterTitle: {
-      color: colors.text,
+      color: colors.notification,
       padding: 20,
       paddingBottom: 0,
       fontSize: 20,

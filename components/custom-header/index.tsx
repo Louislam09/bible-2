@@ -26,6 +26,7 @@ const CustomHeader: FC<HeaderInterface> = () => {
     selectedFont,
     currentBibleVersion,
     selectBibleVersion,
+    clearHighlights,
   } = useBibleContext();
   const route = useRoute<TRoute>();
   const { book, chapter = 1, verse } = route.params as HomeParams;
@@ -37,7 +38,7 @@ const CustomHeader: FC<HeaderInterface> = () => {
   const formatTextToClipboard = () => {
     return highlightedVerses.reduce((acc, next) => {
       return acc + `\n ${next.verse} ${getVerseTextRaw(next.text)}`;
-    }, `${book} ${chapter}:${highlightedVerses[0].verse} ${highlightedGreaterThanOne && "-" + highlightedVerses[highlightedVerses.length - 1].verse}`);
+    }, `${book} ${chapter}:${highlightedVerses[0].verse}${highlightedGreaterThanOne ? "-" + highlightedVerses[highlightedVerses.length - 1].verse : ""}`);
   };
 
   const copyToClipboard = async () => {
@@ -48,6 +49,7 @@ const CustomHeader: FC<HeaderInterface> = () => {
     const textFormat = formatTextToClipboard();
     await Clipboard.setStringAsync(textFormat);
     const text = await Clipboard.getStringAsync();
+    clearHighlights();
     console.log(text);
   };
 

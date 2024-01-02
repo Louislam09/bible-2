@@ -1,4 +1,4 @@
-export const testBorder: any = {
+export const customBorder: any = {
   borderColor: "red",
   borderWidth: 1,
   borderStyle: "solid",

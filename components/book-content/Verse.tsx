@@ -1,5 +1,5 @@
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HomeParams, TTheme, TVerse } from "../../types";
 import { Text } from "../Themed";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
@@ -7,7 +7,7 @@ import { useBibleContext } from "../../context/BibleContext";
 import { getVerseTextRaw } from "../../utils/getVerseTextRaw";
 import extractVersesInfo from "../../utils/extractVersesInfo";
 import { DB_BOOK_NAMES } from "../../constants/BookNames";
-import { customUnderline } from "../../utils/customStyle";
+import { customBorder, customUnderline } from "../../utils/customStyle";
 
 const Verse: React.FC<TVerse | any> = ({
   item,
@@ -17,7 +17,13 @@ const Verse: React.FC<TVerse | any> = ({
   subtitleData,
 }) => {
   const navigation = useNavigation();
-  const { highlightVerse } = useBibleContext();
+  const {
+    highlightVerse,
+    highlightedVerses,
+    isCopyMode,
+    toggleCopyMode,
+    removeHighlistedVerse,
+  } = useBibleContext();
   const theme = useTheme() as TTheme;
   const styles = getStyles(theme);
   const route = useRoute();
@@ -37,35 +43,43 @@ const Verse: React.FC<TVerse | any> = ({
 
   const handleOpenModal = () => setOpen(true);
 
-  const onVerseClick = (word: any) => {
-    // setSelectedWord(`${strongKey ?? 'H'}${word.replace(/\D/g, '')}`)
-    setSelectedWord({
-      ...word,
-      ref: `${strongKey ?? "H"}${word.ref.replace(/\D/g, "")}`,
-    });
-    handleOpenModal();
-  };
+  // const onVerseClick = (word: any) => {
+  //   // setSelectedWord(`${strongKey ?? 'H'}${word.replace(/\D/g, '')}`)
+  //   setSelectedWord({
+  //     ...word,
+  //     ref: `${strongKey ?? "H"}${word.ref.replace(/\D/g, "")}`,
+  //   });
+  //   handleOpenModal();
+  // };
 
-  const TestVerse = () => {
-    return (
-      <Text style={styles.verse}>
-        {index + 1}.
-        {format(item).map((x: any, index: any) => (
-          <Text
-            key={index}
-            style={{ ...(x.ref && { color: "pink" }) }}
-            // onPress={() => handleWordClick(x)}
-          >
-            {x.text}{" "}
-          </Text>
-        ))}
-      </Text>
-    );
-  };
+  // const TestVerse = () => {
+  //   return (
+  //     <Text style={styles.verse}>
+  //       {index + 1}.
+  //       {format(item).map((x: any, index: any) => (
+  //         <Text
+  //           key={index}
+  //           style={{ ...(x.ref && { color: "pink" }) }}
+  //           // onPress={() => handleWordClick(x)}
+  //         >
+  //           {x.text}{" "}
+  //         </Text>
+  //       ))}
+  //     </Text>
+  //   );
+  // };
+
+  useEffect(() => {
+    if (!highlightedVerses.length) {
+      setHighlightVerse(false);
+    }
+  }, [highlightedVerses]);
 
   const highlightVerseFunc = () => {
+    if (!isCopyMode) toggleCopyMode();
     if (isVerseHighlisted) {
       setHighlightVerse(false);
+      removeHighlistedVerse(item);
       return;
     }
     highlightVerse(item);
@@ -101,6 +115,7 @@ const Verse: React.FC<TVerse | any> = ({
             paddingVertical: 10,
             color: theme.colors.notification,
             ...customUnderline,
+            // ...customBorder,
           },
         ]}
       >
@@ -138,6 +153,10 @@ const Verse: React.FC<TVerse | any> = ({
 
   return (
     <TouchableOpacity
+      onPress={() => {
+        if (!isCopyMode) return;
+        highlightVerseFunc();
+      }}
       onLongPress={highlightVerseFunc}
       activeOpacity={0.9}
       style={styles.verseContainer}

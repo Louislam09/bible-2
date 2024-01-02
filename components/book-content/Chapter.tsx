@@ -20,7 +20,6 @@ type TChapter = {
   subtitleData: ISubtitle[];
 };
 
-// TODO: Add subtitle feature
 // TODO: Add audio mode feature
 const Chapter = ({ item, dimensions, subtitleData }: TChapter) => {
   const theme = useTheme();
@@ -34,37 +33,18 @@ const Chapter = ({ item, dimensions, subtitleData }: TChapter) => {
   }>({});
   const [open, setOpen] = useState(false);
 
-  // TODO: Scroll to verse
+  // const ChapterHeader = () => {
+  //   return (
+  //     <View style={styles.chapterHeader}>
+  //       <Text style={styles.chapterHeaderTitle}>
+  //         Capitulo {item[0]?.chapter}
+  //       </Text>
+  //     </View>
+  //   );
+  // };
 
-  const handleScrollToIndex = () => {
-    console.log("scrolll", verse);
-    if (!chapterRef.current) return;
-    // bookRef.current.scrollToItem({
-    //   item: data[((chapter as number) - 1)],
-    // })
-    chapterRef.current?.scrollToIndex({
-      index: (verse as number) - 1,
-      animated: true,
-      viewPosition: 1, // 0 for left, 0.5 for center, 1 for right
-      viewOffset: 0, // optional offset for the specified viewPosition
-    });
-  };
-
-  // function getRandomColor() {
-  //   const randomColor = Math.floor(Math.random() * 16777215);
-  //   const hexColor = "#" + randomColor.toString(16).padStart(6, "0");
-  //   return hexColor;
-  // }
-
-  const ChapterHeader = () => {
-    return (
-      <View style={styles.chapterHeader}>
-        <Text style={styles.chapterHeaderTitle}>
-          Capitulo {item[0]?.chapter}
-        </Text>
-      </View>
-    );
-  };
+  // useEffect(() => {
+  // }, [verse]);
 
   const renderItem = (props: any) => (
     <Verse
@@ -72,6 +52,7 @@ const Chapter = ({ item, dimensions, subtitleData }: TChapter) => {
       {...props}
       setSelectedWord={setSelectedWord}
       setOpen={setOpen}
+      verse={verse}
     />
   );
 
@@ -79,19 +60,14 @@ const Chapter = ({ item, dimensions, subtitleData }: TChapter) => {
     <View style={styles.chapterContainer}>
       <View style={[styles.verseContent, { width: dimensions?.width ?? 400 }]}>
         <FlashList
-          onLoad={() => {
-            // setTimeout(() => {
-            //   // handleScrollToIndex();
-            // }, 500);
-          }}
+          ref={chapterRef}
           decelerationRate={"normal"}
-          estimatedItemSize={85}
+          estimatedItemSize={item.length}
           data={item}
           renderItem={renderItem}
-          ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
-          ListFooterComponent={() => <View style={{ paddingBottom: 50 }} />}
-          // ListHeaderComponent={ChapterHeader}
-          ref={chapterRef}
+          keyExtractor={(item: any, index: any) => `verse-${index}`}
+          // ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
+          // ListFooterComponent={() => <View style={{ paddingBottom: 50 }} />}
         />
         {open && (
           <CurrentWordModal
