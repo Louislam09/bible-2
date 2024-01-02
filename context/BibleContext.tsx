@@ -16,15 +16,20 @@ type BibleState = {
   selectBibleVersion: Function;
   removeHighlistedVerse: Function;
   toggleCopyMode: Function;
+  decreaseFontSize: Function;
+  increaseFontSize: Function;
   selectedFont: string;
   currentBibleVersion: string;
   isCopyMode: boolean;
+  fontSize: number;
 };
 
 type BibleAction =
   | { type: "HIGHLIGHT_VERSE"; payload: IBookVerse }
   | { type: "REMOVE_HIGHLIGHT_VERSE"; payload: IBookVerse }
   | { type: "SELECT_FONT"; payload: string }
+  | { type: "INCREASE_FONT_SIZE" }
+  | { type: "DECREASE_FONT_SIZE" }
   | { type: "SELECT_BIBLE_VERSION"; payload: string }
   | { type: "CLEAR_HIGHLIGHTS" }
   | { type: "TOGGLE_COPY_MODE" };
@@ -37,9 +42,12 @@ const initialContext: BibleState = {
   selectBibleVersion: () => {},
   selectFont: () => {},
   toggleCopyMode: () => {},
+  decreaseFontSize: () => {},
+  increaseFontSize: () => {},
   selectedFont: TFont.Roboto,
   currentBibleVersion: TVersion.RVR1960,
   isCopyMode: false,
+  fontSize: 24,
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);
@@ -75,6 +83,16 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
         ...state,
         currentBibleVersion: action.payload,
       };
+    case "INCREASE_FONT_SIZE":
+      return {
+        ...state,
+        fontSize: state.fontSize + 1,
+      };
+    case "DECREASE_FONT_SIZE":
+      return {
+        ...state,
+        fontSize: state.fontSize - 1,
+      };
     case "TOGGLE_COPY_MODE":
       return {
         ...state,
@@ -105,6 +123,12 @@ export const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const clearHighlights = () => {
     dispatch({ type: "CLEAR_HIGHLIGHTS" });
   };
+  const decreaseFontSize = () => {
+    dispatch({ type: "DECREASE_FONT_SIZE" });
+  };
+  const increaseFontSize = () => {
+    dispatch({ type: "INCREASE_FONT_SIZE" });
+  };
   const toggleCopyMode = () => {
     dispatch({ type: "TOGGLE_COPY_MODE" });
   };
@@ -123,6 +147,8 @@ export const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     selectFont,
     selectBibleVersion,
     toggleCopyMode,
+    decreaseFontSize,
+    increaseFontSize,
     removeHighlistedVerse,
   };
 

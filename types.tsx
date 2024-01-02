@@ -75,7 +75,7 @@ export type TRoute = RouteProp<ParamListBase>;
 export enum TFont {
   Roboto = "Roboto",
   Cardo = "Cardo",
-  OpenSans = "OpenSans",
+  // OpenSans = "OpenSans",
   ComingSoon = "ComingSoon",
 }
 

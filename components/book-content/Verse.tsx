@@ -23,6 +23,7 @@ const Verse: React.FC<TVerse | any> = ({
     isCopyMode,
     toggleCopyMode,
     removeHighlistedVerse,
+    fontSize,
   } = useBibleContext();
   const theme = useTheme() as TTheme;
   const styles = getStyles(theme);
@@ -166,8 +167,12 @@ const Verse: React.FC<TVerse | any> = ({
       <Text
         style={[
           styles.verse,
-          index === 0 && { flexDirection: "row", alignItems: "stretch" },
+          index === 0 && {
+            flexDirection: "row",
+            alignItems: "stretch",
+          },
           isVerseHighlisted && styles.highlightCopy,
+          { fontSize },
         ]}
         aria-selected
         selectable

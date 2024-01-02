@@ -3,12 +3,13 @@ import { Picker } from "@react-native-picker/picker";
 import { useRoute, useTheme } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import React, { FC, useRef, useState } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { Modal, StyleSheet, TouchableOpacity } from "react-native";
 import { useBibleContext } from "../../context/BibleContext";
 import { useCustomTheme } from "../../context/ThemeContext";
 import { HomeParams, TFont, TRoute, TTheme, TVersion } from "../../types";
 import { getVerseTextRaw } from "../../utils/getVerseTextRaw";
 import { Text, View } from "../Themed";
+import CustomModal from "./modal";
 
 interface HeaderInterface {}
 type TIcon = {
@@ -35,6 +36,7 @@ const CustomHeader: FC<HeaderInterface> = () => {
   const styles = getStyles(theme);
   const headerIconSize = 28;
   const highlightedGreaterThanOne = highlightedVerses.length > 1;
+  const [showModal, setShowModal] = useState(true);
   const formatTextToClipboard = () => {
     return highlightedVerses.reduce((acc, next) => {
       return acc + `\n ${next.verse} ${getVerseTextRaw(next.text)}`;
@@ -56,7 +58,7 @@ const CustomHeader: FC<HeaderInterface> = () => {
   const iconData: TIcon[] = [
     { name: "theme-light-dark", action: toggleTheme },
     { name: "content-copy", action: copyToClipboard },
-    { name: "format-font", action: () => fontRef?.current?.focus() },
+    { name: "format-font", action: () => setShowModal(true) },
     // TODO: Search feature
     { name: "magnify" },
   ];
@@ -85,6 +87,7 @@ const CustomHeader: FC<HeaderInterface> = () => {
             />
           </TouchableOpacity>
         ))}
+        <CustomModal visible={showModal} onClose={() => setShowModal(false)} />
         <Picker
           dropdownIconColor={"#ffffff0"}
           dropdownIconRippleColor={"#ffffff0"}
