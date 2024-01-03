@@ -46,27 +46,27 @@ let DarkTheme = {
 //   },
 // };
 
-const myCustomLightTheme = {
-  dark: false,
-  colors: {
-    background: "#eff3f6",
-    surface: "#eff3f6",
-    primary: "#2f4f65",
-    secondary: "#85b1d1",
-    accent: "#3b88bf",
-  },
-};
+// const myCustomLightTheme = {
+//   dark: false,
+//   colors: {
+//     background: "#eff3f6",
+//     surface: "#eff3f6",
+//     primary: "#2f4f65",
+//     secondary: "#85b1d1",
+//     accent: "#3b88bf",
+//   },
+// };
 
-const myCustomDarkTheme = {
-  dark: true,
-  colors: {
-    background: "#0a0e11",
-    surface: "#0a0e11",
-    primary: "#9cbbd0",
-    secondary: "#2e5978",
-    accent: "#408dc4",
-  },
-};
+// const myCustomDarkTheme = {
+//   dark: true,
+//   colors: {
+//     background: "#0a0e11",
+//     surface: "#0a0e11",
+//     primary: "#9cbbd0",
+//     secondary: "#2e5978",
+//     accent: "#408dc4",
+//   },
+// };
 // const myCustomLightTheme = {
 //   dark: false,
 //   colors: {
@@ -132,27 +132,27 @@ const myCustomDarkTheme = {
 //   },
 // };
 
-// const myCustomLightTheme = {
-//   dark: false,
-//   colors: {
-//     background: "#ebf3f9",
-//     surface: "#ebf3f9",
-//     primary: "#1b4169",
-//     secondary: "#da72cc",
-//     accent: "#aa2c50",
-//   },
-// };
+const myCustomLightTheme = {
+  dark: false,
+  colors: {
+    background: "#ebf3f9",
+    surface: "#ebf3f9",
+    primary: "#1b4169",
+    secondary: "#da72cc",
+    accent: "#aa2c50",
+  },
+};
 
-// const myCustomDarkTheme = {
-//   dark: true,
-//   colors: {
-//     background: "#060e15",
-//     surface: "#060e15",
-//     primary: "#94bae3",
-//     secondary: "#8c257f",
-//     accent: "#d35679",
-//   },
-// };
+const myCustomDarkTheme = {
+  dark: true,
+  colors: {
+    background: "#060e15",
+    surface: "#060e15",
+    primary: "#94bae3",
+    secondary: "#8c257f",
+    accent: "#d35679",
+  },
+};
 
 // const myCustomLightTheme = {
 //   dark: false,

@@ -36,7 +36,7 @@ const CustomHeader: FC<HeaderInterface> = () => {
   const styles = getStyles(theme);
   const headerIconSize = 28;
   const highlightedGreaterThanOne = highlightedVerses.length > 1;
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const formatTextToClipboard = () => {
     return highlightedVerses.reduce((acc, next) => {
       return acc + `\n ${next.verse} ${getVerseTextRaw(next.text)}`;
@@ -175,7 +175,6 @@ const getStyles = ({ colors }: TTheme) =>
       paddingVertical: 10,
       borderRadius: 50,
       backgroundColor: colors.backgroundContrast,
-      // ...testBorder,
     },
     iconContainer: {
       display: "flex",
