@@ -1,24 +1,16 @@
-import {
-  Theme,
-  useNavigation,
-  useRoute,
-  useTheme,
-} from "@react-navigation/native";
+import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Text } from "./Themed";
-import { FlashList } from "@shopify/flash-list";
-import { HomeParams, IDBBookNames, Screens, TTheme } from "../types";
-import useStorage from "../hooks/useAsyncStorage";
-import { StorageKeys } from "../constants/StorageKeys";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { BOOK_IMAGES } from "../constants/Images";
+import { BOOK_IMAGES } from "constants/Images";
+import { HomeParams, IDBBookNames, Screens, TTheme } from "types";
 
 interface IBookNameList {
   bookList: IDBBookNames[] | any[];
 }
 
 const BookNameList = ({ bookList }: IBookNameList) => {
-  // const { setLastReadBook } = useStorage(StorageKeys.LAST_READ_BOOK, {}, true)
   const navigation = useNavigation();
   const route = useRoute();
   const { book: selectedBook, chapter } = route?.params as HomeParams;
@@ -53,7 +45,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
     navigation.navigate(screen, params);
   };
 
-  const renderItem = ({ item }: { item: any }) => (
+  const renderItem = ({ item, index }: any) => (
     <TouchableOpacity
       style={[
         styles.listItem,
@@ -64,7 +56,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
       <Text style={styles.listTitle}>{item}</Text>
       {!selectedBook && (
         <MaterialCommunityIcons
-          style={styles.icon}
+          style={[styles.icon, { color: bookList[index].bookColor }]}
           name="greater-than"
           size={26}
           color="white"

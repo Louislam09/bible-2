@@ -27,4 +27,9 @@ function extractVersesInfo(input: string): VersesInfo {
   }
 }
 
+export function extractTextFromParagraph(paragraph: string) {
+  // Remove all tags and their content
+  return paragraph.replace(/<.*?>/g, "");
+}
+
 export default extractVersesInfo;

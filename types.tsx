@@ -84,11 +84,28 @@ export enum TVersion {
   RVR1965 = "RVR1965",
 }
 
+export type TSubtitle = {
+  book_number: number;
+  chapter: number;
+  order_if_several: number;
+  subheading: string;
+  verse: number;
+};
+
+export type TChapter = {
+  dimensions: any;
+  item: {
+    verses: IBookVerse[];
+    subtitles: TSubtitle[];
+  };
+};
+
 export type TVerse = {
   item: IBookVerse;
   index: number;
   setSelectedWord: any;
   setOpen: any;
+  subtitles: TSubtitle[];
 };
 
 export interface BookChapter {
@@ -100,6 +117,8 @@ export interface IBookVerse {
   chapter: number;
   text: string;
   verse: number;
+  subheading?: string;
+  order_if_several?: number;
 }
 
 export type TTheme = Theme & {

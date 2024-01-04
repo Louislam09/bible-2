@@ -35,14 +35,14 @@ type TUseDatabase = {
 const databases: any = {
   [DBName.BIBLE]: async (dbFolder: any, dbPath: any) => {
     await FileSystem.makeDirectoryAsync(dbFolder, { intermediates: true });
-    const asset = Asset.fromModule(require(`../assets/myBible.db`));
+    const asset = Asset.fromModule(require(`../assets/db/myBible.db`));
     await FileSystem.downloadAsync(asset.uri, dbPath);
   },
-  [DBName.SUBTITLE]: async (dbFolder: any, dbPath: any) => {
-    await FileSystem.makeDirectoryAsync(dbFolder, { intermediates: true });
-    const asset = Asset.fromModule(require(`../assets/subheadings.db`));
-    await FileSystem.downloadAsync(asset.uri, dbPath);
-  },
+  // [DBName.SUBTITLE]: async (dbFolder: any, dbPath: any) => {
+  //   await FileSystem.makeDirectoryAsync(dbFolder, { intermediates: true });
+  //   const asset = Asset.fromModule(require(`../assets/db/subheadings.db`));
+  //   await FileSystem.downloadAsync(asset.uri, dbPath);
+  // },
 };
 
 async function copyDatabases(dbNames: DBName[]) {
@@ -89,6 +89,8 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
   };
 
   useEffect(() => {
+    // deleteDatabaseFile("myBible.db");
+    // return;
     const isDB = async () => {
       const dbFolder = `${FileSystem.documentDirectory}SQLite`;
 
@@ -146,7 +148,7 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
         }
       })
       .catch(console.log);
-  }, []);
+  }, [isDbCreated]);
 
   return { executeSql, databases };
 }

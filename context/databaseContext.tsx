@@ -24,7 +24,6 @@ type DatabaseContextType = {
 
 enum DBs {
   MYBIBLE,
-  SUBTITLE,
 }
 
 const initialContext = {
@@ -44,15 +43,13 @@ export const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const { databases, executeSql } = useDatabase({
-    dbNames: [DBName.BIBLE, DBName.SUBTITLE],
+    dbNames: [DBName.BIBLE],
   });
 
   const myBibleDB = databases[DBs.MYBIBLE];
-  const subTitleDB = databases[DBs.SUBTITLE];
 
   const dbContextValue = {
     myBibleDB,
-    subTitleDB,
     executeSql,
   };
 

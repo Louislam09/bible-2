@@ -3,8 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@components/*":["src/components/*"]
+      "*": ["*"],
+      "components/*":["components/*"]
     },
     "strict": true
   }
