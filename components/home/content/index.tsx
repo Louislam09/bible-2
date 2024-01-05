@@ -54,9 +54,7 @@ const BookContent: FC<BookContentInterface> = ({}) => {
       }
     })();
 
-    return () => {
-      console.log("content unmounted");
-    };
+    return () => {};
   }, [myBibleDB, book, chapter]);
 
   return (

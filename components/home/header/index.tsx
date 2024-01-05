@@ -1,12 +1,19 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
-import { useRoute, useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import React, { FC, useRef, useState } from "react";
 import { Modal, StyleSheet, TouchableOpacity } from "react-native";
 import { useBibleContext } from "../../../context/BibleContext";
 import { useCustomTheme } from "../../../context/ThemeContext";
-import { HomeParams, TFont, TRoute, TTheme, TVersion } from "../../../types";
+import {
+  HomeParams,
+  Screens,
+  TFont,
+  TRoute,
+  TTheme,
+  TVersion,
+} from "../../../types";
 import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import { Text, View } from "../../Themed";
 import CustomModal from "./modal";
@@ -32,6 +39,7 @@ const CustomHeader: FC<HeaderInterface> = () => {
   const route = useRoute<TRoute>();
   const { book, chapter = 1, verse } = route.params as HomeParams;
   const theme = useTheme();
+  const navigation = useNavigation();
   const { toggleTheme } = useCustomTheme();
   const styles = getStyles(theme);
   const headerIconSize = 28;
@@ -60,7 +68,7 @@ const CustomHeader: FC<HeaderInterface> = () => {
     { name: "content-copy", action: copyToClipboard },
     { name: "format-font", action: () => setShowModal(true) },
     // TODO: Search feature
-    { name: "magnify" },
+    { name: "magnify", action: () => navigation.navigate(Screens.Search) },
   ];
 
   const versionRef = useRef<TPicker>(null);

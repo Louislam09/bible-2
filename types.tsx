@@ -25,6 +25,7 @@ export type RootStackParamList = {
     | NavigatorScreenParams<RootTabParamList>
     | { book?: string; chapter?: string | number; verse?: string | number };
   Book: NavigatorScreenParams<RootTabParamList> | undefined;
+  Search: NavigatorScreenParams<RootTabParamList> | { book: string };
   ChooseChapterNumber:
     | NavigatorScreenParams<RootTabParamList>
     | { book?: string; chapter?: string | number };
@@ -37,6 +38,7 @@ export type RootStackParamList = {
 
 export enum Screens {
   Home = "Home",
+  Search = "Search",
   Book = "Book",
   ChooseChapterNumber = "ChooseChapterNumber",
   ChooseVerseNumber = "ChooseVerseNumber",
@@ -110,6 +112,14 @@ export type TVerse = {
 
 export interface BookChapter {
   [key: string]: number;
+}
+
+export interface IVerseItem {
+  bookNumber: number;
+  chapter: number;
+  text: string;
+  verse: number;
+  bookName?: string;
 }
 
 export interface IBookVerse {

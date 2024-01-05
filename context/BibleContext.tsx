@@ -7,6 +7,8 @@ import React, {
 } from "react";
 import { IBookVerse, TFont, TVersion } from "../types";
 import useCustomFonts from "../hooks/useCustomFonts";
+import { useDBContext } from "./databaseContext";
+import useSearch, { UseSearchHookState } from "hooks/useSearch";
 
 type BibleState = {
   highlightedVerses: IBookVerse[];
@@ -18,10 +20,12 @@ type BibleState = {
   toggleCopyMode: Function;
   decreaseFontSize: Function;
   increaseFontSize: Function;
+  performSearch: Function;
   selectedFont: string;
   currentBibleVersion: string;
   isCopyMode: boolean;
   fontSize: number;
+  searchState: UseSearchHookState;
 };
 
 type BibleAction =
@@ -34,6 +38,11 @@ type BibleAction =
   | { type: "CLEAR_HIGHLIGHTS" }
   | { type: "TOGGLE_COPY_MODE" };
 
+const defaultSearch = {
+  searchResults: [],
+  error: null,
+};
+
 const initialContext: BibleState = {
   highlightedVerses: [],
   highlightVerse: () => {},
@@ -44,10 +53,12 @@ const initialContext: BibleState = {
   toggleCopyMode: () => {},
   decreaseFontSize: () => {},
   increaseFontSize: () => {},
+  performSearch: () => {},
   selectedFont: TFont.Roboto,
   currentBibleVersion: TVersion.RVR1960,
   isCopyMode: false,
   fontSize: 24,
+  searchState: defaultSearch,
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);
@@ -108,6 +119,12 @@ export const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
   const fontsLoaded = useCustomFonts();
+  const { myBibleDB } = useDBContext();
+  const {
+    state: searchState,
+    performSearch,
+    setSearchTerm,
+  } = useSearch({ db: myBibleDB });
 
   if (!fontsLoaded) {
     return null; // Render loading UI or placeholder while fonts are loading
@@ -142,6 +159,7 @@ export const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const contextValue = {
     ...state,
+    searchState,
     highlightVerse,
     clearHighlights,
     selectFont,
@@ -150,6 +168,7 @@ export const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     decreaseFontSize,
     increaseFontSize,
     removeHighlistedVerse,
+    performSearch: performSearch as typeof performSearch,
   };
 
   return (
