@@ -25,7 +25,7 @@ export type RootStackParamList = {
     | NavigatorScreenParams<RootTabParamList>
     | { book?: string; chapter?: string | number; verse?: string | number };
   Book: NavigatorScreenParams<RootTabParamList> | undefined;
-  Search: NavigatorScreenParams<RootTabParamList> | { book: string };
+  Search: NavigatorScreenParams<RootTabParamList> | { book?: string };
   ChooseChapterNumber:
     | NavigatorScreenParams<RootTabParamList>
     | { book?: string; chapter?: string | number };

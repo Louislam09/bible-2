@@ -63,12 +63,15 @@ const CustomHeader: FC<HeaderInterface> = () => {
     console.log(text);
   };
 
+  const goSearchScreen = () => {
+    navigation.navigate(Screens.Search, { book: book });
+  };
+
   const iconData: TIcon[] = [
     { name: "theme-light-dark", action: toggleTheme },
     { name: "content-copy", action: copyToClipboard },
     { name: "format-font", action: () => setShowModal(true) },
-    // TODO: Search feature
-    { name: "magnify", action: () => navigation.navigate(Screens.Search) },
+    { name: "magnify", action: goSearchScreen },
   ];
 
   const versionRef = useRef<TPicker>(null);
@@ -96,26 +99,6 @@ const CustomHeader: FC<HeaderInterface> = () => {
           </TouchableOpacity>
         ))}
         <CustomModal visible={showModal} onClose={() => setShowModal(false)} />
-        <Picker
-          dropdownIconColor={"#ffffff0"}
-          dropdownIconRippleColor={"#ffffff0"}
-          style={[{ position: "relative" }]}
-          ref={fontRef}
-          mode="dialog"
-          selectedValue={selectedFont}
-          onValueChange={(itemValue: string) => {
-            selectFont(itemValue);
-          }}
-        >
-          {(Object.values(TFont) as string[]).map((font) => (
-            <Picker.Item
-              color={font === selectedFont ? theme.colors.primary : ""}
-              key={font}
-              label={font}
-              value={font}
-            />
-          ))}
-        </Picker>
       </View>
 
       {/* TODO: Change bible version feature */}

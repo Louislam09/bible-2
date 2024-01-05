@@ -10,7 +10,7 @@ export interface UseSearchHookState {
 
 interface UseSearchHook {
   state: UseSearchHookState;
-  performSearch: (query: string) => void;
+  performSearch: (query: string, abortController: AbortController) => void;
   setSearchTerm: Dispatch<SetStateAction<string>>;
 }
 
@@ -28,26 +28,38 @@ const useSearch = ({ db }: UseSearch): UseSearchHook => {
     setState((prev) => ({ ...prev, searchResults: [], error: null }));
   };
 
-  const searchInDatabase = (query: string): Promise<IVerseItem[]> => {
+  const searchInDatabase = (
+    query: string,
+    abortController: AbortController
+  ): Promise<IVerseItem[]> => {
     const words = query.split(" ");
     const whereConditions = words.map(() => "v.text LIKE ?");
     const whereClause = whereConditions.join(" AND ");
 
     return new Promise((resolve, reject) => {
       if (!db) return true;
+
+      abortController.signal.addEventListener("abort", () => {
+        reject(new Error("Search aborted"));
+      });
+
       db.transaction((tx) => {
         tx.executeSql(
           `${SEARCH_TEXT_QUERY} ${whereClause};`,
           words.map((word) => `%${word}%`),
           (_, { rows }) => {
-            const results: IVerseItem[] = [];
-            for (let i = 0; i < rows.length; i++) {
-              results.push(rows.item(i));
+            if (!abortController.signal.aborted) {
+              const results: IVerseItem[] = [];
+              for (let i = 0; i < rows.length; i++) {
+                results.push(rows.item(i));
+              }
+              resolve(results);
             }
-            resolve(results);
           },
           (_, error) => {
-            reject(error);
+            if (!abortController.signal.aborted) {
+              reject(error);
+            }
             return true;
           }
         );
@@ -55,10 +67,13 @@ const useSearch = ({ db }: UseSearch): UseSearchHook => {
     });
   };
 
-  const performSearch = async (query: string): Promise<void> => {
+  const performSearch = async (
+    query: string,
+    abortController: AbortController
+  ): Promise<void> => {
     setSearchTerm("");
     try {
-      const results = await searchInDatabase(query);
+      const results = await searchInDatabase(query, abortController);
       setState({ searchResults: results, error: null });
     } catch (error: any) {
       setState({ searchResults: [], error });

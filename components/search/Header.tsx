@@ -26,6 +26,17 @@ const CustomHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
     setQuery(query);
   };
 
+  useEffect(() => {
+    if (!query) return;
+    const abortController = new AbortController();
+
+    (async () => {
+      await performSearch(query, abortController);
+    })();
+
+    return () => abortController.abort();
+  }, [query]);
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -37,12 +48,6 @@ const CustomHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
         placeholderTextColor={theme.colors.text}
         onChangeText={handelSearch}
       />
-      <TouchableOpacity
-        onPress={() => performSearch(query)}
-        style={{ backgroundColor: theme.colors.border, padding: 10 }}
-      >
-        <Text style={{ color: theme.colors?.text }}>Buscar</Text>
-      </TouchableOpacity>
     </View>
   );
 };
