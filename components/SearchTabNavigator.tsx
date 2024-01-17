@@ -44,7 +44,7 @@ export const filterDataByTab = (tabName: any, searchState: any, book: any) => {
   return data[tabName];
 };
 
-function SearchTabNavigator({ navigation }: SearchTabNavigatorInterface) {
+const SearchTabNavigator = ({ navigation }: SearchTabNavigatorInterface) => {
   const { searchState } = useBibleContext();
   const route = useRoute();
   const { book } = route.params as any;
@@ -143,7 +143,7 @@ function SearchTabNavigator({ navigation }: SearchTabNavigatorInterface) {
       ))}
     </Tab.Navigator>
   );
-}
+};
 
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({

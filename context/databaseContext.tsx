@@ -39,7 +39,7 @@ const initialContext = {
 export const DatabaseContext =
   createContext<DatabaseContextType>(initialContext);
 
-export const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
+const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const { databases, executeSql } = useDatabase({
@@ -62,3 +62,5 @@ export const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
 
 export const useDBContext = (): DatabaseContextType =>
   useContext(DatabaseContext);
+
+export default DatabaseProvider;

@@ -2302,11 +2302,6 @@
   resolved "https://registry.npmjs.org/@react-native-community/masked-view/-/masked-view-0.1.11.tgz"
   integrity sha512-rQfMIGSR/1r/SyN87+VD8xHHzDYeHaJq6elOSCAD+0iLagXkSI2pfA0LmSXP21uw5i3em7GkkRjfJ8wpqWXZNw==
 
-"@react-native-picker/picker@2.4.10":
-  version "2.4.10"
-  resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-2.4.10.tgz#339c7bfc6e1d9a5e934122eaaa7767dc1c5fb725"
-  integrity sha512-EvAlHmPEPOwvbP6Pjg/gtDV3XJzIjIxr10fXFNlX5r9HeHw582G1Zt2o8FLyB718nOttgj8HYUTGxvhu4N65sQ==
-
 "@react-native/assets-registry@^0.72.0":
   version "0.72.0"
   resolved "https://registry.yarnpkg.com/@react-native/assets-registry/-/assets-registry-0.72.0.tgz#c82a76a1d86ec0c3907be76f7faf97a32bbed05d"
@@ -6247,7 +6242,7 @@ jest-environment-node@^29.2.1, jest-environment-node@^29.5.0:
     jest-mock "^29.5.0"
     jest-util "^29.5.0"
 
-jest-expo@~49.0.0:
+jest-expo@^49.0.0:
   version "49.0.0"
   resolved "https://registry.yarnpkg.com/jest-expo/-/jest-expo-49.0.0.tgz#d1c91ddb1303f8666de47d45ba52174bff6fb241"
   integrity sha512-nglYg6QPYSqCsrsOFiGosQi+m1rrqmYluPbFXNnXNEOrB2MvxMOgQJeWfMHDExHMX1ymLWX+7y8mYo6XVJpBJQ==
@@ -7201,6 +7196,14 @@ metro-core@0.76.8:
     lodash.throttle "^4.1.1"
     metro-resolver "0.76.8"
 
+metro-core@^0.80.4:
+  version "0.80.4"
+  resolved "https://registry.yarnpkg.com/metro-core/-/metro-core-0.80.4.tgz#1421e432f2f9ec69d82ea1f19832a0544a3ce294"
+  integrity sha512-HRb+zydAhI7QyLpK4D6ARZsKjaBwEn+kCrJEjnVFij8wjJxIIHVilgNCETgg9NWvKJFUoZZCG7ewHkxQ9Qpd8Q==
+  dependencies:
+    lodash.throttle "^4.1.1"
+    metro-resolver "0.80.4"
+
 metro-file-map@0.71.3:
   version "0.71.3"
   resolved "https://registry.npmjs.org/metro-file-map/-/metro-file-map-0.71.3.tgz"
@@ -7400,6 +7403,11 @@ metro-resolver@0.76.8:
   version "0.76.8"
   resolved "https://registry.yarnpkg.com/metro-resolver/-/metro-resolver-0.76.8.tgz#0862755b9b84e26853978322464fb37c6fdad76d"
   integrity sha512-KccOqc10vrzS7ZhG2NSnL2dh3uVydarB7nOhjreQ7C4zyWuiW9XpLC4h47KtGQv3Rnv/NDLJYeDqaJ4/+140HQ==
+
+metro-resolver@0.80.4:
+  version "0.80.4"
+  resolved "https://registry.yarnpkg.com/metro-resolver/-/metro-resolver-0.80.4.tgz#c04f2bf3995e11ee0484a067b7a51904ccee9964"
+  integrity sha512-PCiVWN+d3gtWlobf8jPypwKx9T1QrZmhLJAyqIWLoOsZbpSfj1dn5h0ajCr8rYi9LNzIHm58GGYJK8VFHNn8Cw==
 
 metro-runtime@0.71.3:
   version "0.71.3"

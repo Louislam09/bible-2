@@ -18,7 +18,7 @@ interface ThemeProviderProps {
   children: ReactNode;
 }
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const colorScheme = Appearance.getColorScheme();
   const [theme, setTheme] = useState<"light" | "dark">(
     colorScheme === "dark" ? "dark" : "light"
@@ -52,3 +52,5 @@ export const useCustomTheme = (): ThemeContextProps => {
   }
   return context;
 };
+
+export default ThemeProvider;

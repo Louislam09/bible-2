@@ -146,3 +146,17 @@ export enum BookIndexes {
   Mateo = 39,
   Apocalipsis = 66,
 }
+
+export enum EThemes {
+  Orange = "#9f463c",
+  Cyan = "#20acb6",
+  BlueLight = "#3b88bf",
+  Green = "#78b0a4",
+  Red = "#FF5252",
+  Purple = "#2032ac",
+  BlueGreen = "#239db8",
+  Pink = "#aa2c50",
+  PinkLight = "#874a69",
+  Yellow = "#c4c733",
+  Blue = "#2a7ac6",
+}

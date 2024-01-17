@@ -5,7 +5,7 @@ import React, {
   useReducer,
   useState,
 } from "react";
-import { IBookVerse, TFont, TVersion } from "../types";
+import { EThemes, IBookVerse, TFont, TVersion } from "../types";
 import useCustomFonts from "../hooks/useCustomFonts";
 import { useDBContext } from "./databaseContext";
 import useSearch, { UseSearchHookState } from "hooks/useSearch";
@@ -21,10 +21,12 @@ type BibleState = {
   toggleCopyMode: Function;
   decreaseFontSize: Function;
   increaseFontSize: Function;
+  selectTheme: Function;
   performSearch: Function;
   selectedFont: string;
   currentBibleVersion: string;
   saerchQuery: string;
+  currentTheme: keyof typeof EThemes;
   isCopyMode: boolean;
   fontSize: number;
   searchState: UseSearchHookState;
@@ -34,6 +36,7 @@ type BibleAction =
   | { type: "HIGHLIGHT_VERSE"; payload: IBookVerse }
   | { type: "REMOVE_HIGHLIGHT_VERSE"; payload: IBookVerse }
   | { type: "SELECT_FONT"; payload: string }
+  | { type: "SELECT_THEME"; payload: keyof typeof EThemes }
   | { type: "INCREASE_FONT_SIZE" }
   | { type: "DECREASE_FONT_SIZE" }
   | { type: "SELECT_BIBLE_VERSION"; payload: string }
@@ -53,6 +56,7 @@ const initialContext: BibleState = {
   clearHighlights: () => {},
   selectBibleVersion: () => {},
   selectFont: () => {},
+  selectTheme: () => {},
   toggleCopyMode: () => {},
   decreaseFontSize: () => {},
   increaseFontSize: () => {},
@@ -64,6 +68,7 @@ const initialContext: BibleState = {
   fontSize: 24,
   searchState: defaultSearch,
   saerchQuery: "hoy",
+  currentTheme: "Blue",
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);
@@ -93,6 +98,11 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
       return {
         ...state,
         selectedFont: action.payload,
+      };
+    case "SELECT_THEME":
+      return {
+        ...state,
+        currentTheme: action.payload,
       };
     case "SELECT_BIBLE_VERSION":
       return {
@@ -124,7 +134,7 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
   }
 };
 
-export const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
+const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
@@ -163,6 +173,9 @@ export const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const selectFont = (font: string) => {
     dispatch({ type: "SELECT_FONT", payload: font });
   };
+  const selectTheme = (theme: keyof typeof EThemes) => {
+    dispatch({ type: "SELECT_THEME", payload: theme });
+  };
   const selectBibleVersion = (version: string) => {
     dispatch({ type: "SELECT_BIBLE_VERSION", payload: version });
   };
@@ -184,6 +197,7 @@ export const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     removeHighlistedVerse,
     performSearch: performSearch as typeof performSearch,
     setSearchQuery,
+    selectTheme,
   };
 
   return (
@@ -194,3 +208,5 @@ export const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 export const useBibleContext = (): BibleState => useContext(BibleContext);
+
+export default BibleProvider;

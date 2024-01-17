@@ -1,19 +1,16 @@
 import "react-native-gesture-handler";
 // import { StatusBar } from 'expo-status-bar';
-import React from "react";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import useCachedResources from "./hooks/useCachedResources";
-import useColorScheme from "./hooks/useColorScheme";
-import Navigation from "./navigation";
-import { StatusBar } from "react-native";
-import { DatabaseProvider } from "./context/databaseContext";
-import { Text } from "./components/Themed";
-import { ThemeProvider } from "./context/ThemeContext";
-import { BibleProvider } from "./context/BibleContext";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import React from "react";
+import { StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import BibleProvider from "./context/BibleContext";
+import ThemeProvider from "./context/ThemeContext";
+import DatabaseProvider from "./context/databaseContext";
+import useCachedResources from "./hooks/useCachedResources";
+import Navigation from "./navigation";
 
-export default function App() {
+const App = () => {
   const isLoadingComplete = useCachedResources();
 
   if (!isLoadingComplete) {
@@ -34,4 +31,6 @@ export default function App() {
       </ThemeProvider>
     );
   }
-}
+};
+
+export default App;

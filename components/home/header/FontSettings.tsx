@@ -3,17 +3,13 @@ import { useTheme } from "@react-navigation/native";
 import { View, Text } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
 import React from "react";
-import {
-  TouchableWithoutFeedback,
-  TouchableOpacity,
-  StyleSheet,
-  Platform,
-} from "react-native";
+import { TouchableOpacity, StyleSheet, Platform } from "react-native";
 import { TFont, TTheme } from "types";
 
-const FontSettings = () => {
-  const theme = useTheme();
+const FontSettings = ({ theme }: any) => {
+  // const theme = useTheme();
   const styles = getStyles(theme);
+
   const {
     selectFont,
     decreaseFontSize,
@@ -21,14 +17,11 @@ const FontSettings = () => {
     fontSize,
     selectedFont,
   } = useBibleContext();
-  console.log("asdnbjkl");
 
   const fontName = Object.values(TFont) as string[];
   return (
     <View style={styles.modalContent}>
-      <View style={styles.linea} />
       <Text style={styles.title}>Tipo de letras</Text>
-      <View style={styles.linea} />
       <View style={[styles.fontContainer, styles.card]}>
         {fontName.map((font: string, index: any) => (
           <TouchableOpacity key={index} onPress={() => selectFont(font)}>
@@ -45,7 +38,7 @@ const FontSettings = () => {
                   styles.fontIcon,
                   selectedFont === font && {
                     backgroundColor: theme.colors.notification,
-                    color: theme.colors.card,
+                    color: "white",
                   },
                 ]}
               />
@@ -55,9 +48,8 @@ const FontSettings = () => {
           </TouchableOpacity>
         ))}
       </View>
-      <View style={styles.linea} />
-      <Text style={styles.title}>Tamaño</Text>
-      <View style={styles.linea} />
+
+      <Text style={[styles.title, { marginTop: 15 }]}>Tamaño</Text>
       <View style={[styles.fontSizeContainer, styles.card]}>
         <TouchableOpacity onPress={() => decreaseFontSize()}>
           <MaterialCommunityIcons
@@ -83,8 +75,12 @@ const getStyles = ({ colors }: TTheme) =>
       color: colors.backgroundContrast,
     },
     title: {
-      color: colors.text,
+      color: "white",
       fontSize: 20,
+      padding: 5,
+      width: "90%",
+      textAlign: "center",
+      backgroundColor: colors.text,
     },
     linea: {
       width: "90%",
@@ -94,7 +90,6 @@ const getStyles = ({ colors }: TTheme) =>
       marginVertical: 5,
     },
     modalContent: {
-      backgroundColor: colors.background,
       position: "relative",
       display: "flex",
       alignItems: "center",
@@ -104,6 +99,8 @@ const getStyles = ({ colors }: TTheme) =>
     },
     card: {
       backgroundColor: "white",
+      borderWidth: 1,
+      borderColor: colors.notification,
       borderRadius: 8,
       padding: 16,
       marginVertical: 8,

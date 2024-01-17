@@ -1,9 +1,8 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Picker } from "@react-native-picker/picker";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import React, { FC, useCallback, useMemo, useRef, useState } from "react";
-import { Modal, StyleSheet, TouchableOpacity } from "react-native";
+import { Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { useBibleContext } from "../../../context/BibleContext";
 import { useCustomTheme } from "../../../context/ThemeContext";
 import {
@@ -16,7 +15,6 @@ import {
 } from "../../../types";
 import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import { Text, View } from "../../Themed";
-import CustomModal from "./modal";
 import BottomModal from "components/BottomModal";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import FontSettings from "./FontSettings";
@@ -27,8 +25,6 @@ type TIcon = {
   color?: string;
   action?: any;
 };
-
-type TPicker = Picker<any>;
 
 const CustomHeader: FC<HeaderInterface> = ({}) => {
   const {
@@ -47,11 +43,14 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
   const styles = getStyles(theme);
   const headerIconSize = 28;
   const highlightedGreaterThanOne = highlightedVerses.length > 1;
-  const [showModal, setShowModal] = useState(false);
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const versionRef = useRef<BottomSheetModal>(null);
 
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
+  const fontHandlePresentModalPress = useCallback(() => {
+    fontBottomSheetModalRef.current?.present();
+  }, []);
+  const versionHandlePresentModalPress = useCallback(() => {
+    versionRef.current?.present();
   }, []);
 
   const snapPoints = useMemo(() => ["25%", "50%"], []);
@@ -81,16 +80,9 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
   const headerIconData: TIcon[] = [
     { name: "theme-light-dark", action: toggleTheme },
     { name: "content-copy", action: copyToClipboard },
-    { name: "format-font", action: handlePresentModalPress },
+    { name: "format-font", action: fontHandlePresentModalPress },
     { name: "magnify", action: goSearchScreen },
   ];
-
-  const versionRef = useRef<TPicker>(null);
-  const fontRef = useRef<TPicker>(null);
-
-  function open() {
-    versionRef?.current?.focus();
-  }
 
   return (
     <View style={styles.header}>
@@ -109,35 +101,33 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
             />
           </TouchableOpacity>
         ))}
-        {/* <Text>Hello this is amodal</Text> */}
-        <BottomModal snapPoints={snapPoints} ref={bottomSheetModalRef}>
-          <FontSettings />
+        <BottomModal snapPoints={snapPoints} ref={fontBottomSheetModalRef}>
+          <FontSettings theme={theme} />
         </BottomModal>
-        {/* <CustomModal visible={showModal} onClose={() => setShowModal(false)} /> */}
       </View>
       {/* TODO: Change bible version feature */}
-      <TouchableOpacity style={styles.headerEnd} onPress={open}>
+      <TouchableOpacity
+        style={styles.headerEnd}
+        onPress={versionHandlePresentModalPress}
+      >
         <MaterialCommunityIcons
           name="crown"
           size={headerIconSize}
           style={[styles.icon, { marginHorizontal: 0 }]}
         />
         <Text style={styles.text}>{currentBibleVersion}</Text>
-        <Picker
-          dropdownIconColor={"#ffffff0"}
-          dropdownIconRippleColor={"#ffffff0"}
-          style={styles.picker}
-          ref={versionRef}
-          mode="dropdown"
-          selectedValue={currentBibleVersion}
-          onValueChange={(itemValue: string) => {
-            selectBibleVersion(itemValue);
-          }}
-        >
-          {(Object.values(TVersion) as string[]).map((version) => (
-            <Picker.Item key={version} label={version} value={version} />
-          ))}
-        </Picker>
+        <BottomModal snapPoints={snapPoints} ref={versionRef}>
+          <View style={[styles.versionContainer]}>
+            <View style={styles.linea} />
+            <Text style={styles.title}>Tipo de letras</Text>
+            <View style={styles.linea} />
+            {(Object.values(TVersion) as string[]).map((version) => (
+              <View key={version} style={styles.card}>
+                <Text style={[styles.versionText]}>{version}</Text>
+              </View>
+            ))}
+          </View>
+        </BottomModal>
       </TouchableOpacity>
     </View>
   );
@@ -145,6 +135,49 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
 
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
+    title: {
+      color: colors.notification,
+      fontSize: 20,
+      textAlign: "center",
+    },
+    linea: {
+      width: "90%",
+      height: 1,
+      backgroundColor: colors.background,
+      elevation: 5,
+      marginVertical: 5,
+    },
+    versionContainer: {
+      // backgroundColor: colors.background,
+      position: "relative",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: 25,
+      borderRadius: 45,
+    },
+    card: {
+      width: "90%",
+      backgroundColor: "white",
+      borderRadius: 8,
+      padding: 16,
+      marginVertical: 8,
+      elevation: 5,
+      ...Platform.select({
+        ios: {
+          shadowColor: "black",
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.2,
+          shadowRadius: 4,
+        },
+      }),
+    },
+    versionText: {
+      color: colors.text,
+      fontSize: 28,
+      textAlign: "center",
+      // padding: 19,
+    },
     header: {
       position: "relative",
       display: "flex",

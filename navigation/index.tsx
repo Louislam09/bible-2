@@ -7,15 +7,17 @@ import { NavigationContainer } from "@react-navigation/native";
 import * as React from "react";
 import LinkingConfiguration from "./LinkingConfiguration";
 import MainStack from "./MainStack";
-import { DarkTheme, LightTheme } from "../constants/themeColors";
+import getThemes from "../constants/themeColors";
 import { useCustomTheme } from "../context/ThemeContext";
+import { EThemes } from "types";
+import { useBibleContext } from "context/BibleContext";
 
-type TNavigation = {
-  // colorScheme: "light" | "dark";
-};
+const Navigation = () => {
+  const { currentTheme } = useBibleContext();
 
-export default function Navigation() {
   const { theme: colorScheme } = useCustomTheme();
+  const themes = getThemes();
+  const { DarkTheme, LightTheme } = themes[currentTheme];
   const theme = {
     dark: DarkTheme,
     light: LightTheme,
@@ -29,4 +31,6 @@ export default function Navigation() {
       <MainStack />
     </NavigationContainer>
   );
-}
+};
+
+export default Navigation;
