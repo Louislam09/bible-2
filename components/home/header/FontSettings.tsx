@@ -80,7 +80,7 @@ const getStyles = ({ colors }: TTheme) =>
       padding: 5,
       width: "90%",
       textAlign: "center",
-      backgroundColor: colors.text,
+      backgroundColor: colors.notification,
     },
     linea: {
       width: "90%",

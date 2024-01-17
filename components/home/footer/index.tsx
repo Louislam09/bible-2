@@ -154,7 +154,7 @@ const getStyles = ({ colors }: TTheme) =>
       padding: 5,
       width: "100%",
       textAlign: "center",
-      backgroundColor: colors.text,
+      backgroundColor: colors.notification,
       marginBottom: 15,
     },
     linea: {

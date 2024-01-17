@@ -114,7 +114,7 @@ const Verse: React.FC<TVerse | any> = ({
             textAlign: "justify",
             fontWeight: "bold",
             paddingVertical: 10,
-            color: theme.colors.notification,
+            color: theme.colors.notification ?? "black",
             ...customUnderline,
             // ...customBorder,
           },
@@ -123,7 +123,7 @@ const Verse: React.FC<TVerse | any> = ({
         {`${bookName} ${chapter}:${verse}-${endVerse}`}
       </Text>
     ) : (
-      <Text>NO THEME</Text>
+      <Text>--</Text>
     );
   };
 
@@ -141,7 +141,7 @@ const Verse: React.FC<TVerse | any> = ({
               textAlign: "center",
               fontWeight: "bold",
               paddingVertical: 10,
-              color: theme.colors.notification,
+              color: theme?.colors?.notification || "white",
             },
           ]}
         >
@@ -175,8 +175,8 @@ const Verse: React.FC<TVerse | any> = ({
           { fontSize },
         ]}
         aria-selected
-        selectable
-        selectionColor={theme.colors.primary}
+        selectable={false}
+        selectionColor={theme.colors.notification || "white"}
       >
         <Text style={[styles.verseNumber]}>&nbsp;{item.verse} &nbsp;</Text>
         <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
@@ -201,9 +201,11 @@ const getStyles = ({ colors }: TTheme) =>
       fontSize: 24,
     },
     highlightCopy: {
-      textDecorationColor: colors.primary,
       textDecorationStyle: "solid",
       textDecorationLine: "underline",
+      textDecorationColor: colors.notification,
+      borderColor: colors.notification,
+      borderWidth: 1,
     },
   });
 

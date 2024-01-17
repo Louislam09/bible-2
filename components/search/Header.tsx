@@ -65,7 +65,7 @@ const getStyles = ({ colors }: TTheme) =>
     saerchInput: {
       flex: 1,
       fontSize: 22,
-      borderBottomColor: colors.border,
+      borderBottomColor: colors.notification,
       borderBottomWidth: 1,
       borderStyle: "solid",
       color: colors.text,

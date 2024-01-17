@@ -7,6 +7,7 @@ import {
 import { Text, View } from "components/Themed";
 import CustomHeader from "components/search/Header";
 import { ScreensName } from "constants/ScreenName";
+import { useStorage } from "context/LocalstoreContext";
 import React from "react";
 import { TouchableOpacity, TextInput } from "react-native";
 import Book from "screens/Book";
@@ -21,6 +22,8 @@ type Route = RouteProp<ParamListBase>;
 
 const MainStack = () => {
   const { colors } = useTheme() as TTheme;
+  const { storedData } = useStorage();
+  const { lastBook, lastChapter } = storedData;
 
   const styling = {
     backgroundColor: colors.backgroundContrast,
@@ -44,7 +47,11 @@ const MainStack = () => {
       initialRouteName="Home"
     >
       <Stack.Screen
-        initialParams={{ book: "Génesis", chapter: 1, verse: 0 }}
+        initialParams={{
+          book: lastBook || "Génesis",
+          chapter: lastChapter || 1,
+          verse: 0,
+        }}
         name="Home"
         component={Home}
       />

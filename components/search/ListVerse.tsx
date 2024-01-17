@@ -108,7 +108,7 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
         }}
       >
         <MaterialCommunityIcons
-          style={{ color: theme.colors.text }}
+          style={{ color: theme.colors.notification }}
           name="arrow-up-circle"
           size={26}
         />
@@ -152,7 +152,7 @@ const getStyles = ({ colors }: TTheme) =>
       backgroundColor: colors.background,
       padding: 10,
       borderRadius: 50,
-      borderColor: colors.text,
+      borderColor: colors.notification,
       borderWidth: 1,
     },
     chapterHeader: {
@@ -187,7 +187,7 @@ const getStyles = ({ colors }: TTheme) =>
     },
     separator: {
       height: 1,
-      backgroundColor: colors.border,
+      backgroundColor: colors.notification,
       marginVertical: 8,
     },
     noResultsContainer: {

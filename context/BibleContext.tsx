@@ -9,6 +9,7 @@ import { EThemes, IBookVerse, TFont, TVersion } from "../types";
 import useCustomFonts from "../hooks/useCustomFonts";
 import { useDBContext } from "./databaseContext";
 import useSearch, { UseSearchHookState } from "hooks/useSearch";
+import { useStorage } from "./LocalstoreContext";
 
 type BibleState = {
   highlightedVerses: IBookVerse[];
@@ -22,6 +23,7 @@ type BibleState = {
   decreaseFontSize: Function;
   increaseFontSize: Function;
   selectTheme: Function;
+  setLocalData: Function;
   performSearch: Function;
   selectedFont: string;
   currentBibleVersion: string;
@@ -42,6 +44,7 @@ type BibleAction =
   | { type: "SELECT_BIBLE_VERSION"; payload: string }
   | { type: "SET_SEARCH_QUERY"; payload: string }
   | { type: "CLEAR_HIGHLIGHTS" }
+  | { type: "SET_LOCAL_DATA"; payload: any }
   | { type: "TOGGLE_COPY_MODE" };
 
 const defaultSearch = {
@@ -60,6 +63,7 @@ const initialContext: BibleState = {
   toggleCopyMode: () => {},
   decreaseFontSize: () => {},
   increaseFontSize: () => {},
+  setLocalData: () => {},
   performSearch: () => {},
   setSearchQuery: () => {},
   selectedFont: TFont.Roboto,
@@ -78,7 +82,9 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
     case "HIGHLIGHT_VERSE":
       return {
         ...state,
-        highlightedVerses: [...state.highlightedVerses, action.payload],
+        highlightedVerses: [...state.highlightedVerses, action.payload].sort(
+          (a, b) => a.verse - b.verse
+        ),
       };
     case "REMOVE_HIGHLIGHT_VERSE":
       return {
@@ -129,6 +135,11 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
         ...state,
         saerchQuery: action.payload,
       };
+    case "SET_LOCAL_DATA":
+      return {
+        ...state,
+        ...action.payload,
+      };
     default:
       return state;
   }
@@ -137,16 +148,29 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
 const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const { storedData, saveData, isDataLoaded } = useStorage();
+  const { currentBibleVersion, fontSize, currentTheme, selectedFont } =
+    storedData;
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
   const fontsLoaded = useCustomFonts();
   const { myBibleDB } = useDBContext();
+
   const {
     state: searchState,
     performSearch,
     setSearchTerm,
   } = useSearch({ db: myBibleDB });
+  // const { state: searchState, performSearch, setSearchTerm } = useSearch();
 
-  if (!fontsLoaded) {
+  useEffect(() => {
+    if (!isDataLoaded) return;
+    dispatch({
+      type: "SET_LOCAL_DATA",
+      payload: { currentBibleVersion, fontSize, currentTheme, selectedFont },
+    });
+  }, [isDataLoaded]);
+
+  if (!fontsLoaded || !isDataLoaded) {
     return null; // Render loading UI or placeholder while fonts are loading
   }
 
@@ -162,9 +186,11 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   };
   const decreaseFontSize = () => {
     dispatch({ type: "DECREASE_FONT_SIZE" });
+    saveData({ fontSize: state.fontSize - 1 });
   };
   const increaseFontSize = () => {
     dispatch({ type: "INCREASE_FONT_SIZE" });
+    saveData({ fontSize: state.fontSize + 1 });
   };
   const toggleCopyMode = () => {
     dispatch({ type: "TOGGLE_COPY_MODE" });
@@ -172,12 +198,15 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const selectFont = (font: string) => {
     dispatch({ type: "SELECT_FONT", payload: font });
+    saveData({ selectedFont: font });
   };
   const selectTheme = (theme: keyof typeof EThemes) => {
     dispatch({ type: "SELECT_THEME", payload: theme });
+    saveData({ currentTheme: theme });
   };
   const selectBibleVersion = (version: string) => {
     dispatch({ type: "SELECT_BIBLE_VERSION", payload: version });
+    saveData({ currentBibleVersion: version });
   };
 
   const setSearchQuery = (query: string) => {

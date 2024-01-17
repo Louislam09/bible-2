@@ -22,6 +22,7 @@ const Chapter = ({ item, dimensions }: TChapter) => {
   const [open, setOpen] = useState(false);
 
   const scroll = () => {
+    if (true) return;
     if (!chapterRef.current) return;
     chapterRef?.current?.scrollToItem({
       animated: true,

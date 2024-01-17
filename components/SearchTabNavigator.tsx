@@ -56,7 +56,7 @@ const SearchTabNavigator = ({ navigation }: SearchTabNavigatorInterface) => {
     },
     tabBarActiveTintColor: colors.text,
     tabBarInactiveTintColor: colors.text,
-    tabBarIndicatorStyle: { backgroundColor: colors.border },
+    tabBarIndicatorStyle: { backgroundColor: colors.notification },
   };
 
   const filterDataByTab = (tabName: any) => {

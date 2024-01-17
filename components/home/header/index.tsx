@@ -22,7 +22,7 @@ import FontSettings from "./FontSettings";
 interface HeaderInterface {}
 type TIcon = {
   name: any;
-  color?: string;
+  color?: string | any;
   action?: any;
 };
 
@@ -79,7 +79,11 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
 
   const headerIconData: TIcon[] = [
     { name: "theme-light-dark", action: toggleTheme },
-    { name: "content-copy", action: copyToClipboard },
+    {
+      name: "content-copy",
+      action: copyToClipboard,
+      color: highlightedVerses.length && theme.colors.notification,
+    },
     { name: "format-font", action: fontHandlePresentModalPress },
     { name: "magnify", action: goSearchScreen },
   ];
@@ -94,7 +98,7 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
             onPress={icon?.action}
           >
             <MaterialCommunityIcons
-              style={styles.icon}
+              style={[styles.icon, icon.color && { color: icon.color }]}
               name={icon.name}
               size={headerIconSize}
               color={icon.color}
@@ -118,13 +122,25 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
         <Text style={styles.text}>{currentBibleVersion}</Text>
         <BottomModal snapPoints={snapPoints} ref={versionRef}>
           <View style={[styles.versionContainer]}>
-            <View style={styles.linea} />
             <Text style={styles.title}>Tipo de letras</Text>
-            <View style={styles.linea} />
             {(Object.values(TVersion) as string[]).map((version) => (
-              <View key={version} style={styles.card}>
-                <Text style={[styles.versionText]}>{version}</Text>
-              </View>
+              <TouchableOpacity
+                key={version}
+                style={styles.card}
+                onPress={() => selectBibleVersion(version)}
+              >
+                <Text
+                  style={[
+                    styles.versionText,
+                    ,
+                    currentBibleVersion === version && {
+                      color: theme.colors.notification,
+                    },
+                  ]}
+                >
+                  {version}
+                </Text>
+              </TouchableOpacity>
             ))}
           </View>
         </BottomModal>
@@ -136,9 +152,12 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     title: {
-      color: colors.notification,
+      color: "white",
       fontSize: 20,
+      padding: 5,
+      width: "90%",
       textAlign: "center",
+      backgroundColor: colors.notification,
     },
     linea: {
       width: "90%",
@@ -160,6 +179,8 @@ const getStyles = ({ colors }: TTheme) =>
       width: "90%",
       backgroundColor: "white",
       borderRadius: 8,
+      borderColor: colors.notification,
+      borderWidth: 1,
       padding: 16,
       marginVertical: 8,
       elevation: 5,
@@ -174,9 +195,8 @@ const getStyles = ({ colors }: TTheme) =>
     },
     versionText: {
       color: colors.text,
-      fontSize: 28,
+      fontSize: 24,
       textAlign: "center",
-      // padding: 19,
     },
     header: {
       position: "relative",

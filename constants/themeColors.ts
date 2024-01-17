@@ -3,13 +3,12 @@ import { EThemes } from "types";
 let lightRed = {
   dark: false,
   colors: {
-    primary: "#ff7566",
-    backgroundContrast: "#F5F5F5",
+    primary: "#364036",
     background: "#FFFFFF",
-    card: "#F8F8F8",
+    surface: "#F8F8F8",
     text: "#333333",
-    border: "#CCCCCC",
-    notification: "#FF5252",
+    secondary: "#CCCCCC",
+    accent: "#FF5252",
   },
 };
 
@@ -17,12 +16,11 @@ let darkRed = {
   dark: true,
   colors: {
     primary: "#87d885",
-    backgroundContrast: "#2E2E2E",
     background: "#1E1E1E",
-    card: "#292929",
+    surface: "#292929",
     text: "#a1a1a1",
-    border: "#333333",
-    notification: "#FF5252",
+    secondary: "#333333",
+    accent: "#FF5252",
   },
 };
 

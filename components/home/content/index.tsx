@@ -11,12 +11,14 @@ import {
   GET_SUBTITLE_BY_BOOK_AND_CHAPTER,
   GET_VERSES_BY_BOOK_AND_CHAPTER,
 } from "../../../constants/Queries";
+import { useStorage } from "context/LocalstoreContext";
 
 interface BookContentInterface {}
 
 const BookContent: FC<BookContentInterface> = ({}) => {
   const theme = useTheme();
   const styles = getStyles(theme);
+  const { saveData } = useStorage();
   const { myBibleDB, executeSql } = useDBContext();
   const route = useRoute();
   const { book, chapter, verse } = route.params as HomeParams;
@@ -46,6 +48,7 @@ const BookContent: FC<BookContentInterface> = ({}) => {
         Promise.all(promises)
           .then(([verses, subtitles]) => {
             setLoading(false);
+            saveData({ lastBook: book, lastChapter: chapter });
             setData({ verses, subtitles });
           })
           .catch((error) => {
