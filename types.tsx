@@ -159,4 +159,5 @@ export enum EThemes {
   PinkLight = "#874a69",
   Yellow = "#c4c733",
   Blue = "#2a7ac6",
+  BlackWhite = "#000",
 }

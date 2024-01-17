@@ -206,7 +206,7 @@ const getStyles = ({ colors }: TTheme) =>
       color: colors.primary,
     },
     bookLabel: {
-      color: colors.primary,
+      color: colors.notification,
       textAlign: "center",
       fontSize: 24,
       fontWeight: "bold",

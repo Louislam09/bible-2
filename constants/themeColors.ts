@@ -1,5 +1,29 @@
 import { EThemes } from "types";
 
+let lightBlackAndWhite = {
+  dark: false,
+  colors: {
+    primary: "#000000",
+    background: "#FFFFFF",
+    surface: "#FFFFFF",
+    text: "#000000",
+    secondary: "#FFFFFF",
+    accent: "#FF5252",
+  },
+};
+
+let darkBlackAndWhite = {
+  dark: true,
+  colors: {
+    primary: "#FFFFFF",
+    background: "#000000",
+    surface: "#000000",
+    text: "#FFFFFF",
+    secondary: "#000000",
+    accent: "#FF5252",
+  },
+};
+
 let lightRed = {
   dark: false,
   colors: {
@@ -273,6 +297,16 @@ type ThemesObject = {
 
 const getThemes = (): ThemesObject => {
   return {
+    BlackWhite: {
+      LightTheme: {
+        dark: false,
+        colors: mapColors(lightBlackAndWhite),
+      },
+      DarkTheme: {
+        dark: true,
+        colors: mapColors(darkBlackAndWhite),
+      },
+    },
     Orange: {
       LightTheme: {
         dark: false,

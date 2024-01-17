@@ -5,6 +5,7 @@ import React, { FC, useCallback, useMemo, useRef, useState } from "react";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { useBibleContext } from "../../../context/BibleContext";
 import { useCustomTheme } from "../../../context/ThemeContext";
+
 import {
   HomeParams,
   Screens,
