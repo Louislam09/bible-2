@@ -67,15 +67,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
 
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "relative",
-        }}
-      >
+      <View style={styles.listWrapper}>
         {selectedBook && (
           <Text
             style={[
@@ -120,6 +112,13 @@ const getStyles = ({ colors }: TTheme) =>
       flex: 1,
       backgroundColor: colors.background,
     },
+    listWrapper: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
+    },
     bookImage: {
       resizeMode: "contain",
       position: "relative",
@@ -137,7 +136,7 @@ const getStyles = ({ colors }: TTheme) =>
       justifyContent: "space-between",
       borderStyle: "solid",
       borderWidth: 1,
-      borderColor: "#ffffff34",
+      borderColor: colors.text,
       margin: 5,
       paddingVertical: 5,
       paddingHorizontal: 10,

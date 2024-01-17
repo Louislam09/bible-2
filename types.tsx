@@ -71,6 +71,11 @@ export interface IDBBookNames {
   longName: string;
   shortName: string;
 }
+export interface IDBBookChapterVerse {
+  bookNumber: number;
+  chapterNumber: number;
+  verseCount: number;
+}
 
 export type TRoute = RouteProp<ParamListBase>;
 
@@ -115,7 +120,7 @@ export interface BookChapter {
 }
 
 export interface IVerseItem {
-  bookNumber: number;
+  book_number: number;
   chapter: number;
   text: string;
   verse: number;
@@ -134,3 +139,10 @@ export interface IBookVerse {
 export type TTheme = Theme & {
   colors?: { backgroundContrast?: string };
 };
+
+export enum BookIndexes {
+  Genesis = 0,
+  Malaquias = 39,
+  Mateo = 39,
+  Apocalipsis = 66,
+}

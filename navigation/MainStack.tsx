@@ -44,7 +44,7 @@ const MainStack = () => {
       initialRouteName="Home"
     >
       <Stack.Screen
-        initialParams={{ book: "Génesis", chapter: 1, verse: 1 }}
+        initialParams={{ book: "Génesis", chapter: 1, verse: 0 }}
         name="Home"
         component={Home}
       />

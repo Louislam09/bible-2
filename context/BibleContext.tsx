@@ -14,6 +14,7 @@ type BibleState = {
   highlightedVerses: IBookVerse[];
   highlightVerse: Function;
   clearHighlights: Function;
+  setSearchQuery: Function;
   selectFont: Function;
   selectBibleVersion: Function;
   removeHighlistedVerse: Function;
@@ -23,6 +24,7 @@ type BibleState = {
   performSearch: Function;
   selectedFont: string;
   currentBibleVersion: string;
+  saerchQuery: string;
   isCopyMode: boolean;
   fontSize: number;
   searchState: UseSearchHookState;
@@ -35,6 +37,7 @@ type BibleAction =
   | { type: "INCREASE_FONT_SIZE" }
   | { type: "DECREASE_FONT_SIZE" }
   | { type: "SELECT_BIBLE_VERSION"; payload: string }
+  | { type: "SET_SEARCH_QUERY"; payload: string }
   | { type: "CLEAR_HIGHLIGHTS" }
   | { type: "TOGGLE_COPY_MODE" };
 
@@ -54,11 +57,13 @@ const initialContext: BibleState = {
   decreaseFontSize: () => {},
   increaseFontSize: () => {},
   performSearch: () => {},
+  setSearchQuery: () => {},
   selectedFont: TFont.Roboto,
   currentBibleVersion: TVersion.RVR1960,
   isCopyMode: false,
   fontSize: 24,
   searchState: defaultSearch,
+  saerchQuery: "hoy",
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);
@@ -109,6 +114,11 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
         ...state,
         isCopyMode: !state.isCopyMode,
       };
+    case "SET_SEARCH_QUERY":
+      return {
+        ...state,
+        saerchQuery: action.payload,
+      };
     default:
       return state;
   }
@@ -157,6 +167,10 @@ export const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     dispatch({ type: "SELECT_BIBLE_VERSION", payload: version });
   };
 
+  const setSearchQuery = (query: string) => {
+    dispatch({ type: "SET_SEARCH_QUERY", payload: query });
+  };
+
   const contextValue = {
     ...state,
     searchState,
@@ -169,6 +183,7 @@ export const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     increaseFontSize,
     removeHighlistedVerse,
     performSearch: performSearch as typeof performSearch,
+    setSearchQuery,
   };
 
   return (

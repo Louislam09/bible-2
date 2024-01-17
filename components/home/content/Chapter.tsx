@@ -21,6 +21,20 @@ const Chapter = ({ item, dimensions }: TChapter) => {
   }>({});
   const [open, setOpen] = useState(false);
 
+  const scroll = () => {
+    if (!chapterRef.current) return;
+    chapterRef?.current?.scrollToItem({
+      animated: true,
+      item: verses[(verse || 0) as number],
+    });
+  };
+
+  useEffect(() => {
+    if (!chapterRef.current || !verses) return;
+    scroll();
+
+    return () => {};
+  }, [verse, chapterRef, verses]);
   // const ChapterHeader = () => {
   //   return (
   //     <View style={styles.chapterHeader}>
@@ -45,9 +59,12 @@ const Chapter = ({ item, dimensions }: TChapter) => {
     <View style={styles.chapterContainer}>
       <View style={[styles.verseContent, { width: dimensions?.width ?? 400 }]}>
         <FlashList
+          onLayout={() => {
+            scroll();
+          }}
           ref={chapterRef}
           decelerationRate={"normal"}
-          estimatedItemSize={(verses || []).length}
+          estimatedItemSize={135}
           data={verses}
           renderItem={renderItem}
           keyExtractor={(item: any, index: any) => `verse-${index}`}

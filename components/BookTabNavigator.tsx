@@ -9,7 +9,7 @@ const Tab = createMaterialTopTabNavigator();
 import { useTheme } from "@react-navigation/native";
 import { DB_BOOK_NAMES } from "constants/BookNames";
 import React, { useMemo } from "react";
-import { TTheme } from "types";
+import { BookIndexes, TTheme } from "types";
 import BookNameList from "./BookNameList";
 
 enum Routes {
@@ -19,13 +19,6 @@ enum Routes {
 
 interface BookTabNavigatorInterface {
   navigation?: MaterialTopTabNavigationProp<any>;
-}
-
-enum BookIndexes {
-  Genesis = 0,
-  Malaquias = 39,
-  Mateo = 39,
-  Apocalipsis = 66,
 }
 
 function BookTabNavigator({ navigation }: BookTabNavigatorInterface) {

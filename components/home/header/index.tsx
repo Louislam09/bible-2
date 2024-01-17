@@ -2,7 +2,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useCallback, useMemo, useRef, useState } from "react";
 import { Modal, StyleSheet, TouchableOpacity } from "react-native";
 import { useBibleContext } from "../../../context/BibleContext";
 import { useCustomTheme } from "../../../context/ThemeContext";
@@ -17,6 +17,9 @@ import {
 import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import { Text, View } from "../../Themed";
 import CustomModal from "./modal";
+import BottomModal from "components/BottomModal";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import FontSettings from "./FontSettings";
 
 interface HeaderInterface {}
 type TIcon = {
@@ -27,7 +30,7 @@ type TIcon = {
 
 type TPicker = Picker<any>;
 
-const CustomHeader: FC<HeaderInterface> = () => {
+const CustomHeader: FC<HeaderInterface> = ({}) => {
   const {
     highlightedVerses,
     selectFont,
@@ -45,6 +48,14 @@ const CustomHeader: FC<HeaderInterface> = () => {
   const headerIconSize = 28;
   const highlightedGreaterThanOne = highlightedVerses.length > 1;
   const [showModal, setShowModal] = useState(false);
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+
+  const snapPoints = useMemo(() => ["25%", "50%"], []);
+
   const formatTextToClipboard = () => {
     return highlightedVerses.reduce((acc, next) => {
       return acc + `\n ${next.verse} ${getVerseTextRaw(next.text)}`;
@@ -67,10 +78,10 @@ const CustomHeader: FC<HeaderInterface> = () => {
     navigation.navigate(Screens.Search, { book: book });
   };
 
-  const iconData: TIcon[] = [
+  const headerIconData: TIcon[] = [
     { name: "theme-light-dark", action: toggleTheme },
     { name: "content-copy", action: copyToClipboard },
-    { name: "format-font", action: () => setShowModal(true) },
+    { name: "format-font", action: handlePresentModalPress },
     { name: "magnify", action: goSearchScreen },
   ];
 
@@ -84,7 +95,7 @@ const CustomHeader: FC<HeaderInterface> = () => {
   return (
     <View style={styles.header}>
       <View style={styles.headerCenter}>
-        {iconData.map((icon, index) => (
+        {headerIconData.map((icon, index) => (
           <TouchableOpacity
             style={styles.iconContainer}
             key={index}
@@ -98,9 +109,12 @@ const CustomHeader: FC<HeaderInterface> = () => {
             />
           </TouchableOpacity>
         ))}
-        <CustomModal visible={showModal} onClose={() => setShowModal(false)} />
+        {/* <Text>Hello this is amodal</Text> */}
+        <BottomModal snapPoints={snapPoints} ref={bottomSheetModalRef}>
+          <FontSettings />
+        </BottomModal>
+        {/* <CustomModal visible={showModal} onClose={() => setShowModal(false)} /> */}
       </View>
-
       {/* TODO: Change bible version feature */}
       <TouchableOpacity style={styles.headerEnd} onPress={open}>
         <MaterialCommunityIcons

@@ -3,18 +3,16 @@ import {
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationProp,
 } from "@react-navigation/material-top-tabs";
+import { Logs } from "expo";
 import { StyleSheet } from "react-native";
+Logs.enableExpoCliLogging();
+
 const Tab = createMaterialTopTabNavigator();
 
-import {
-  ParamListBase,
-  RouteProp,
-  useRoute,
-  useTheme,
-} from "@react-navigation/native";
-import React, { useMemo } from "react";
-import { IVerseItem, TTheme } from "types";
+import { useRoute, useTheme } from "@react-navigation/native";
 import { useBibleContext } from "context/BibleContext";
+import React, { useMemo } from "react";
+import { BookIndexes, TTheme } from "types";
 import ListVerse from "./search/ListVerse";
 
 enum Routes {
@@ -27,11 +25,31 @@ interface SearchTabNavigatorInterface {
   navigation?: MaterialTopTabNavigationProp<any>;
 }
 
+export const filterDataByTab = (tabName: any, searchState: any, book: any) => {
+  const result = searchState?.searchResults;
+  const data = {
+    ["AT"]: result?.filter(
+      (x: any) =>
+        x.bookNumber >= BookIndexes.Genesis &&
+        x.bookNumber <= BookIndexes.Malaquias
+    ),
+    ["NT"]: result?.filter(
+      (x: any) =>
+        x.bookNumber >= BookIndexes.Mateo &&
+        x.bookNumber <= BookIndexes.Malaquias
+    ),
+    [book]: result?.filter((x: any) => x.bookName === book),
+  };
+
+  return data[tabName];
+};
+
 function SearchTabNavigator({ navigation }: SearchTabNavigatorInterface) {
   const { searchState } = useBibleContext();
   const route = useRoute();
   const { book } = route.params as any;
   const { colors } = useTheme() as TTheme;
+  const NT_BOOK_NUMBER = 470;
   const screenOptions: MaterialTopTabNavigationOptions = {
     tabBarStyle: {
       backgroundColor: colors.backgroundContrast,
@@ -41,22 +59,57 @@ function SearchTabNavigator({ navigation }: SearchTabNavigatorInterface) {
     tabBarIndicatorStyle: { backgroundColor: colors.border },
   };
 
+  const filterDataByTab = (tabName: any) => {
+    const result = searchState?.searchResults;
+    const data = {
+      AT: result?.filter((x) => x.book_number < NT_BOOK_NUMBER),
+      NT: result?.filter((x) => x.book_number >= NT_BOOK_NUMBER),
+      [book]: result?.filter((x) => x.bookName === book),
+    };
+
+    return data[tabName];
+  };
+
   const AllSearchs = useMemo(
-    () => () => <ListVerse data={searchState?.searchResults} />,
+    () => () =>
+      (
+        <ListVerse
+          isLoading={!!searchState?.error}
+          data={searchState?.searchResults}
+        />
+      ),
     [searchState]
   );
   const ASearchs = useMemo(
-    () => () => <ListVerse data={searchState?.searchResults} />,
-    [searchState]
+    () => () =>
+      (
+        <ListVerse
+          isLoading={!!searchState?.error}
+          data={filterDataByTab("AT")}
+        />
+      ),
+    [searchState.searchResults]
   );
 
   const NSearchs = useMemo(
-    () => () => <ListVerse data={searchState?.searchResults} />,
-    [searchState]
+    () => () =>
+      (
+        <ListVerse
+          isLoading={!!searchState?.error}
+          data={filterDataByTab("NT")}
+        />
+      ),
+    [searchState.searchResults]
   );
   const CurrentBook = useMemo(
-    () => () => <ListVerse data={searchState?.searchResults} />,
-    [searchState]
+    () => () =>
+      (
+        <ListVerse
+          isLoading={!!searchState?.error}
+          data={filterDataByTab(book)}
+        />
+      ),
+    [searchState.searchResults]
   );
 
   const tabs = [
@@ -92,6 +145,28 @@ function SearchTabNavigator({ navigation }: SearchTabNavigatorInterface) {
   );
 }
 
-const styles = StyleSheet.create({});
+const getStyles = ({ colors }: TTheme) =>
+  StyleSheet.create({
+    chapterHeader: {
+      display: "flex",
+      alignItems: "flex-start",
+      justifyContent: "center",
+      padding: 16,
+    },
+    chapterHeaderTitle: {
+      fontSize: 18,
+      fontWeight: "bold",
+      color: colors.text,
+    },
+    noResultsContainer: {
+      flex: 0.7,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    noResultsText: {
+      fontSize: 18,
+      color: colors.text,
+    },
+  });
 
 export default SearchTabNavigator;

@@ -12,18 +12,19 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { TTheme } from "types";
-import { useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import { View } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
 
 const CustomHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
-  const { performSearch } = useBibleContext();
+  const { performSearch, setSearchQuery } = useBibleContext();
   const [query, setQuery] = useState("");
 
   const handelSearch = async (query: string) => {
     setQuery(query);
+    setSearchQuery(query);
   };
 
   useEffect(() => {

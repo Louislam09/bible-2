@@ -4,8 +4,8 @@ import { SEARCH_TEXT_QUERY } from "constants/Queries";
 import { IBookVerse, IVerseItem } from "types";
 
 export interface UseSearchHookState {
-  searchResults: IVerseItem[];
-  error: Error | null;
+  searchResults: IVerseItem[] | null;
+  error: Error | null | string;
 }
 
 interface UseSearchHook {
@@ -20,7 +20,7 @@ type UseSearch = {
 
 const useSearch = ({ db }: UseSearch): UseSearchHook => {
   const [state, setState] = useState<UseSearchHookState>({
-    searchResults: [],
+    searchResults: null,
     error: null,
   });
 
@@ -40,7 +40,8 @@ const useSearch = ({ db }: UseSearch): UseSearchHook => {
       if (!db) return true;
 
       abortController.signal.addEventListener("abort", () => {
-        reject(new Error("Search aborted"));
+        setState({ searchResults: null, error: "Search aborted" });
+        reject(new Error(`Search aborted: ${query}`));
       });
 
       db.transaction((tx) => {
@@ -71,12 +72,11 @@ const useSearch = ({ db }: UseSearch): UseSearchHook => {
     query: string,
     abortController: AbortController
   ): Promise<void> => {
-    setSearchTerm("");
     try {
       const results = await searchInDatabase(query, abortController);
       setState({ searchResults: results, error: null });
     } catch (error: any) {
-      setState({ searchResults: [], error });
+      setState({ searchResults: null, error });
     }
   };
 

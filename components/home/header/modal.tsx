@@ -15,8 +15,8 @@ import { useBibleContext } from "../../../context/BibleContext";
 import { Text, View } from "../../Themed";
 
 interface IModal {
-  visible: boolean;
-  onClose: ((event: NativeSyntheticEvent<any>) => void) | undefined;
+  visible?: boolean;
+  onClose?: ((event: NativeSyntheticEvent<any>) => void) | undefined;
 }
 
 const CustomModal = ({ visible, onClose }: IModal) => {
@@ -33,76 +33,73 @@ const CustomModal = ({ visible, onClose }: IModal) => {
   const fontName = Object.values(TFont) as string[];
 
   return (
-    <Modal
-      transparent={true}
-      animationType="fade"
-      visible={visible}
-      onRequestClose={onClose}
-    >
-      <TouchableWithoutFeedback onPress={onClose}>
-        <View style={styles.overlay}>
-          <TouchableWithoutFeedback>
-            <View style={styles.modalContent}>
-              <MaterialCommunityIcons
-                style={styles.triangle}
-                name="triangle"
-                size={24}
-              />
-              <View style={styles.linea} />
-              <Text style={styles.title}>Tipo de letras</Text>
-              <View style={styles.linea} />
-              <View style={[styles.fontContainer, styles.card]}>
-                {fontName.map((font: string, index: any) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => selectFont(font)}
-                  >
-                    <View style={styles.fontItem}>
-                      <MaterialCommunityIcons
-                        name={
-                          [
-                            "format-text-variant",
-                            "format-letter-case",
-                            "format-color-text",
-                          ][index] as any
-                        }
-                        style={[
-                          styles.fontIcon,
-                          selectedFont === font && {
-                            backgroundColor: theme.colors.notification,
-                            color: theme.colors.card,
-                          },
-                        ]}
-                      />
+    // <Modal
+    //   transparent={true}
+    //   animationType="fade"
+    //   visible={visible}
+    //   onRequestClose={onClose}
+    // >
+    <TouchableWithoutFeedback onPress={onClose}>
+      <View style={styles.overlay}>
+        <TouchableWithoutFeedback>
+          <View style={styles.modalContent}>
+            <MaterialCommunityIcons
+              style={styles.triangle}
+              name="triangle"
+              size={24}
+            />
+            <View style={styles.linea} />
+            <Text style={styles.title}>Tipo de letras</Text>
+            <View style={styles.linea} />
+            <View style={[styles.fontContainer, styles.card]}>
+              {fontName.map((font: string, index: any) => (
+                <TouchableOpacity key={index} onPress={() => selectFont(font)}>
+                  <View style={styles.fontItem}>
+                    <MaterialCommunityIcons
+                      name={
+                        [
+                          "format-text-variant",
+                          "format-letter-case",
+                          "format-color-text",
+                        ][index] as any
+                      }
+                      style={[
+                        styles.fontIcon,
+                        selectedFont === font && {
+                          backgroundColor: theme.colors.notification,
+                          color: theme.colors.card,
+                        },
+                      ]}
+                    />
 
-                      <Text style={styles.fontLabel}>{font}</Text>
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </View>
-              <View style={styles.linea} />
-              <Text style={styles.title}>Tamaño</Text>
-              <View style={styles.linea} />
-              <View style={[styles.fontSizeContainer, styles.card]}>
-                <TouchableOpacity onPress={() => decreaseFontSize()}>
-                  <MaterialCommunityIcons
-                    name="format-font-size-decrease"
-                    style={styles.fontIcon}
-                  />
+                    <Text style={styles.fontLabel}>{font}</Text>
+                  </View>
                 </TouchableOpacity>
-                <Text style={styles.fontSize}>{fontSize}</Text>
-                <TouchableOpacity onPress={() => increaseFontSize()}>
-                  <MaterialCommunityIcons
-                    name="format-font-size-increase"
-                    style={styles.fontIcon}
-                  />
-                </TouchableOpacity>
-              </View>
+              ))}
             </View>
-          </TouchableWithoutFeedback>
-        </View>
-      </TouchableWithoutFeedback>
-    </Modal>
+            <View style={styles.linea} />
+            <Text style={styles.title}>Tamaño</Text>
+            <View style={styles.linea} />
+            <View style={[styles.fontSizeContainer, styles.card]}>
+              <TouchableOpacity onPress={() => decreaseFontSize()}>
+                <MaterialCommunityIcons
+                  name="format-font-size-decrease"
+                  style={styles.fontIcon}
+                />
+              </TouchableOpacity>
+              <Text style={styles.fontSize}>{fontSize}</Text>
+              <TouchableOpacity onPress={() => increaseFontSize()}>
+                <MaterialCommunityIcons
+                  name="format-font-size-increase"
+                  style={styles.fontIcon}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
+    </TouchableWithoutFeedback>
+    // </Modal>
   );
 };
 

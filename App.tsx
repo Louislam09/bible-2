@@ -10,6 +10,8 @@ import { DatabaseProvider } from "./context/databaseContext";
 import { Text } from "./components/Themed";
 import { ThemeProvider } from "./context/ThemeContext";
 import { BibleProvider } from "./context/BibleContext";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -21,8 +23,12 @@ export default function App() {
       <ThemeProvider>
         <DatabaseProvider>
           <BibleProvider>
-            <StatusBar barStyle="light-content" animated />
-            <Navigation />
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <BottomSheetModalProvider>
+                <StatusBar barStyle="light-content" animated />
+                <Navigation />
+              </BottomSheetModalProvider>
+            </GestureHandlerRootView>
           </BibleProvider>
         </DatabaseProvider>
       </ThemeProvider>

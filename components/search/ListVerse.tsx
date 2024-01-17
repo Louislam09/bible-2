@@ -1,72 +1,171 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useTheme } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
+import Animation from "components/Animation";
 import { Text } from "components/Themed";
-import { ListRenderItem, StyleSheet, View } from "react-native";
-import { IVerseItem, TTheme } from "types";
+import { useBibleContext } from "context/BibleContext";
+import { useEffect, useRef, useState } from "react";
+import {
+  ListRenderItem,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { IVerseItem, Screens, TTheme } from "types";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";
-
-const verse = [
-  {
-    bookName: "Apocalipsis (de Juan)",
-    book_number: 730,
-    chapter: 22,
-    text: "El<S>3588</S> que da testimonio<S>3140</S> de estas<S>5023</S> cosas dice:<S>3004</S> Ciertamente<S>3483</S> vengo<S>2064</S> en breve.<S>5035</S> Amén;<S>281</S> sí,<S>3483</S> ven,<S>2064</S> Señor<S>2962</S> Jesús.<S>2424</S> ",
-    verse: 20,
-  },
-  {
-    bookName: "Apocalipsis (de Juan)",
-    book_number: 730,
-    chapter: 22,
-    text: "La<S>3588</S> gracia<S>5485</S> de nuestro<S>2257</S> Señor<S>3588</S> <S>2962</S> Jesucristo<S>2424</S> <S>5547</S> sea con<S>3326</S> todos<S>3956</S> vosotros.<S>5216</S> Amén.<S>281</S> ",
-    verse: 21,
-  },
-];
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Highlighter from "components/Highlighter";
 
 type TListVerse = {
   data: IVerseItem[] | any;
+  isLoading: boolean;
 };
 
-const ListVerse = ({ data }: TListVerse) => {
+const ListVerse = ({ data, isLoading }: TListVerse) => {
+  const animationRef = useRef<any>(null);
   const theme = useTheme();
+  const navigation = useNavigation();
   const styles = getStyles(theme);
-  const _data = data;
+  const { saerchQuery: query } = useBibleContext();
+  const flatListRef = useRef<FlashList<any>>(null);
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
+  const notFoundSource = require("../../assets/lottie/notFound.json");
+  const searchingSource = require("../../assets/lottie/searching.json");
+  const land = require("../../assets/lottie/land.json");
+
+  const handleScroll = (event: any) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    const shouldShowButton = offsetY > 100; // Adjust the threshold as needed
+    setShowScrollToTop(shouldShowButton);
+  };
+
+  const onVerseClick = (item: IVerseItem) => {
+    navigation.navigate(Screens.Home, {
+      book: item.bookName,
+      chapter: item.chapter,
+      verse: item.verse,
+    });
+  };
+
   const renderItem: ListRenderItem<IVerseItem> = ({ item }) => {
     return (
-      <View style={styles.cardContainer}>
-        <View style={styles.headerContainer}>
-          <Text
-            style={styles.cardTitle}
-          >{`${item.bookName} ${item.chapter}:${item.verse}`}</Text>
+      <TouchableOpacity activeOpacity={0.9} onPress={() => onVerseClick(item)}>
+        <View style={styles.cardContainer}>
+          <View style={styles.headerContainer}>
+            <Text
+              style={styles.cardTitle}
+            >{`${item.bookName} ${item.chapter}:${item.verse}`}</Text>
+          </View>
+          <Highlighter
+            style={styles.cardBody}
+            highlightStyle={{ color: theme.colors.notification }}
+            searchWords={[...query.split(" ")]}
+            textToHighlight={getVerseTextRaw(item.text)}
+            // onWordClick={(text) => console.log({ text })}
+          />
         </View>
-        <Text style={styles.cardBody}>{getVerseTextRaw(item.text)}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  useEffect(() => {
+    if (!animationRef.current) return;
+    // animationRef.current.play();
+
+    return () => animationRef.current?.pause();
+  }, []);
+
+  const SearchedHeader = () => {
+    return (
+      <View style={styles.chapterHeader}>
+        <Text style={styles.chapterHeaderTitle}>
+          {(data ?? []).length} versiculos encontrado
+        </Text>
       </View>
     );
   };
 
-  return _data.length ? (
-    <FlashList
-      decelerationRate={"normal"}
-      estimatedItemSize={_data.length}
-      data={_data}
-      renderItem={renderItem as any}
-      keyExtractor={(item: any, index: any) => `list-${index}`}
-      ItemSeparatorComponent={() => <View style={styles.separator} />}
-    />
-  ) : (
-    <View style={styles.noResultsContainer}>
-      <MaterialCommunityIcons
-        name="book-open-page-variant-outline"
-        size={40}
-        color={theme.colors.text}
+  if (isLoading || !data) {
+    return (
+      <View style={styles.noResultsContainer}>
+        <Animation
+          animationRef={animationRef}
+          backgroundColor={theme.colors.background}
+          source={searchingSource}
+        />
+      </View>
+    );
+  }
+
+  const renderScrollToTopButton = () => {
+    return (
+      <TouchableOpacity
+        style={[
+          styles.scrollToTopButton,
+          !showScrollToTop && { display: "none" },
+        ]}
+        onPress={() => {
+          flatListRef?.current?.scrollToOffset({ animated: true, offset: 0 });
+        }}
+      >
+        <MaterialCommunityIcons
+          style={{ color: theme.colors.text }}
+          name="arrow-up-circle"
+          size={26}
+        />
+      </TouchableOpacity>
+    );
+  };
+
+  return (
+    <View style={{ flex: 1 }}>
+      <FlashList
+        ref={flatListRef}
+        ListHeaderComponent={SearchedHeader}
+        decelerationRate={"normal"}
+        estimatedItemSize={135}
+        data={data}
+        renderItem={renderItem as any}
+        onScroll={handleScroll}
+        keyExtractor={(item: any, index: any) => `list-${index}`}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ListEmptyComponent={
+          <View style={styles.noResultsContainer}>
+            <Animation
+              backgroundColor={theme.colors.background}
+              source={notFoundSource}
+            />
+            <Text style={styles.noResultsText}>No encontramos resultados</Text>
+          </View>
+        }
       />
-      <Text style={styles.noResultsText}>No encontramos resultados</Text>
+      {renderScrollToTopButton()}
     </View>
   );
 };
 
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
+    scrollToTopButton: {
+      position: "absolute",
+      bottom: 20,
+      right: 20,
+      backgroundColor: colors.background,
+      padding: 10,
+      borderRadius: 50,
+      borderColor: colors.text,
+      borderWidth: 1,
+    },
+    chapterHeader: {
+      display: "flex",
+      alignItems: "flex-start",
+      justifyContent: "center",
+      padding: 16,
+    },
+    chapterHeaderTitle: {
+      fontSize: 18,
+      fontWeight: "bold",
+      color: colors.text,
+    },
     cardContainer: {
       borderRadius: 10,
       padding: 16,
