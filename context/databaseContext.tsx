@@ -2,6 +2,8 @@ import * as SQLite from "expo-sqlite";
 import React, { createContext, useContext } from "react";
 import { DBName } from "../enums";
 import useDatabase from "../hooks/useDatabase";
+import { useStorage } from "./LocalstoreContext";
+import getCurrentDbName from "utils/getCurrentDB";
 
 interface Row {
   [key: string]: any;
@@ -24,6 +26,7 @@ type DatabaseContextType = {
 
 enum DBs {
   MYBIBLE,
+  NTV,
 }
 
 const initialContext = {
@@ -42,11 +45,15 @@ export const DatabaseContext =
 const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const {
+    storedData: { currentBibleVersion },
+  } = useStorage();
+  const isNTV = getCurrentDbName(currentBibleVersion) === DBName.NTV;
   const { databases, executeSql } = useDatabase({
-    dbNames: [DBName.BIBLE],
+    dbNames: [DBName.BIBLE, DBName.NTV],
   });
 
-  const myBibleDB = databases[DBs.MYBIBLE];
+  const myBibleDB = databases[!isNTV ? DBs.MYBIBLE : DBs.NTV];
 
   const dbContextValue = {
     myBibleDB,

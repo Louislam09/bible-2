@@ -19,8 +19,8 @@ const App = () => {
   } else {
     return (
       <ThemeProvider>
-        <DatabaseProvider>
-          <StorageProvider>
+        <StorageProvider>
+          <DatabaseProvider>
             <BibleProvider>
               <GestureHandlerRootView style={{ flex: 1 }}>
                 <BottomSheetModalProvider>
@@ -29,8 +29,8 @@ const App = () => {
                 </BottomSheetModalProvider>
               </GestureHandlerRootView>
             </BibleProvider>
-          </StorageProvider>
-        </DatabaseProvider>
+          </DatabaseProvider>
+        </StorageProvider>
       </ThemeProvider>
     );
   }

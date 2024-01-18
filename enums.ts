@@ -3,4 +3,5 @@ export enum DBName {
   STRONG = "strong-dictionary.db",
   MULTI = "multiDic.db",
   SUBTITLE = "subheadings.db",
+  NTV = "ntv.db",
 }

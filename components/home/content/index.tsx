@@ -10,15 +10,20 @@ import Chapter from "./Chapter";
 import {
   GET_SUBTITLE_BY_BOOK_AND_CHAPTER,
   GET_VERSES_BY_BOOK_AND_CHAPTER,
+  QUERY_BY_DB,
 } from "../../../constants/Queries";
 import { useStorage } from "context/LocalstoreContext";
+import getCurrentDbName from "utils/getCurrentDB";
 
 interface BookContentInterface {}
 
 const BookContent: FC<BookContentInterface> = ({}) => {
   const theme = useTheme();
   const styles = getStyles(theme);
-  const { saveData } = useStorage();
+  const {
+    storedData: { currentBibleVersion },
+    saveData,
+  } = useStorage();
   const { myBibleDB, executeSql } = useDBContext();
   const route = useRoute();
   const { book, chapter, verse } = route.params as HomeParams;
@@ -33,13 +38,13 @@ const BookContent: FC<BookContentInterface> = ({}) => {
     (async () => {
       if (myBibleDB && executeSql) {
         setData({});
-        // setLoading(true);
+        const query = QUERY_BY_DB[getCurrentDbName(currentBibleVersion)];
         const promises = [
-          executeSql(myBibleDB, GET_VERSES_BY_BOOK_AND_CHAPTER, [
+          executeSql(myBibleDB, query.GET_VERSES_BY_BOOK_AND_CHAPTER, [
             currentBookNumber?.bookNumber,
             chapter || 1,
           ]),
-          executeSql(myBibleDB, GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
+          executeSql(myBibleDB, query.GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
             currentBookNumber?.bookNumber,
             chapter || 1,
           ]),

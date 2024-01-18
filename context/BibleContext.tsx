@@ -5,7 +5,7 @@ import React, {
   useReducer,
   useState,
 } from "react";
-import { EThemes, IBookVerse, TFont, TVersion } from "../types";
+import { EThemes, IBookVerse, TFont, EBibleVersions } from "../types";
 import useCustomFonts from "../hooks/useCustomFonts";
 import { useDBContext } from "./databaseContext";
 import useSearch, { UseSearchHookState } from "hooks/useSearch";
@@ -67,7 +67,7 @@ const initialContext: BibleState = {
   performSearch: () => {},
   setSearchQuery: () => {},
   selectedFont: TFont.Roboto,
-  currentBibleVersion: TVersion.RVR1960,
+  currentBibleVersion: EBibleVersions.RVR60,
   isCopyMode: false,
   fontSize: 24,
   searchState: defaultSearch,

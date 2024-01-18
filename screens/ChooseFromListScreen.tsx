@@ -9,7 +9,6 @@ import {
 } from "../constants/BookNames";
 import { HomeParams, RootStackParamList } from "../types";
 import { useDBContext } from "../context/databaseContext";
-import { GET_VERSE_NUMBER_QUERY } from "../constants/Queries";
 
 type ChooseFromListScreenRouteProp = RouteProp<RootStackParamList>;
 
@@ -37,19 +36,6 @@ const ChooseFromListScreen = ({ route }: ChooseFromListScreenProps) => {
         x.bookNumber === bookInfo?.bookNumber && x.chapterNumber === chapter
     );
     setNumVerse(verseInfo?.verseCount || 0);
-    // const fetchVerseCount = async () => {
-    //   try {
-    //     const rows = await executeSql(myBibleDB, GET_VERSE_NUMBER_QUERY, [
-    //       book,
-    //       chapter,
-    //     ]);
-    //     setNumVerse(rows?.[0]?.verse_count || 0);
-    //   } catch (err) {
-    //     console.error(err);
-    //   }
-    // };
-
-    // fetchVerseCount();
   }, [isVerseScreen, myBibleDB, executeSql, book, chapter]);
 
   const numberOfChapters = useMemo(() => {

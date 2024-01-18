@@ -12,7 +12,7 @@ import {
   TFont,
   TRoute,
   TTheme,
-  TVersion,
+  EBibleVersions,
 } from "../../../types";
 import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import { Text, View } from "../../Themed";
@@ -46,6 +46,7 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
   const highlightedGreaterThanOne = highlightedVerses.length > 1;
   const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
+  const isNTV = currentBibleVersion === EBibleVersions.NTV;
 
   const fontHandlePresentModalPress = useCallback(() => {
     fontBottomSheetModalRef.current?.present();
@@ -116,18 +117,25 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
         onPress={versionHandlePresentModalPress}
       >
         <MaterialCommunityIcons
-          name="crown"
-          size={headerIconSize}
+          name={isNTV ? "book-cross" : "crown"}
+          size={isNTV ? 24 : headerIconSize}
           style={[styles.icon, { marginHorizontal: 0 }]}
         />
         <Text style={styles.text}>{currentBibleVersion}</Text>
         <BottomModal snapPoints={snapPoints} ref={versionRef}>
           <View style={[styles.versionContainer]}>
-            <Text style={styles.title}>Tipo de letras</Text>
-            {(Object.values(TVersion) as string[]).map((version) => (
+            <Text style={styles.title}>Versiones</Text>
+            {(Object.values(EBibleVersions) as string[]).map((version) => (
               <TouchableOpacity
                 key={version}
-                style={styles.card}
+                style={[
+                  styles.card,
+                  ,
+                  currentBibleVersion === version && {
+                    borderColor: theme.colors.notification,
+                    borderWidth: 1,
+                  },
+                ]}
                 onPress={() => selectBibleVersion(version)}
               >
                 <Text
@@ -180,8 +188,6 @@ const getStyles = ({ colors }: TTheme) =>
       width: "90%",
       backgroundColor: "white",
       borderRadius: 8,
-      borderColor: colors.notification,
-      borderWidth: 1,
       padding: 16,
       marginVertical: 8,
       elevation: 5,
@@ -195,7 +201,7 @@ const getStyles = ({ colors }: TTheme) =>
       }),
     },
     versionText: {
-      color: colors.text,
+      color: colors.border,
       fontSize: 24,
       textAlign: "center",
     },

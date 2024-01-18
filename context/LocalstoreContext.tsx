@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StorageKeys } from "constants/StorageKeys";
-import { EThemes, TFont, TVersion } from "types";
+import { EThemes, TFont, EBibleVersions } from "types";
 
 type StoreState = {
   lastBook: string;
@@ -49,7 +49,7 @@ const initialContext: StoreState = {
   fontSize: 24,
   selectedFont: TFont.Roboto,
   isDarkMode: true,
-  currentBibleVersion: TVersion.RVR1960,
+  currentBibleVersion: EBibleVersions.RVR60,
 };
 
 const StorageProvider: React.FC<StorageProviderProps> = ({ children }) => {

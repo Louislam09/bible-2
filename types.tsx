@@ -86,16 +86,18 @@ export enum TFont {
   Cardo = "Cardo",
 }
 
-export enum TVersion {
-  RVR1960 = "RVR1960",
-  RVR1965 = "RVR1965",
+export enum EBibleVersions {
+  RVR60 = "RVR60",
+  // RVR1965 = "RVR1965",
+  NTV = "NTV",
 }
 
 export type TSubtitle = {
   book_number: number;
   chapter: number;
   order_if_several: number;
-  subheading: string;
+  subheading?: string;
+  title?: string;
   verse: number;
 };
 

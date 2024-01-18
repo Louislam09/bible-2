@@ -38,6 +38,11 @@ const databases: any = {
     const asset = Asset.fromModule(require(`../assets/db/myBible.db`));
     await FileSystem.downloadAsync(asset.uri, dbPath);
   },
+  [DBName.NTV]: async (dbFolder: any, dbPath: any) => {
+    await FileSystem.makeDirectoryAsync(dbFolder, { intermediates: true });
+    const asset = Asset.fromModule(require(`../assets/db/ntv.db`));
+    await FileSystem.downloadAsync(asset.uri, dbPath);
+  },
   // [DBName.SUBTITLE]: async (dbFolder: any, dbPath: any) => {
   //   await FileSystem.makeDirectoryAsync(dbFolder, { intermediates: true });
   //   const asset = Asset.fromModule(require(`../assets/db/subheadings.db`));

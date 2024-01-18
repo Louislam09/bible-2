@@ -1,7 +1,9 @@
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import * as SQLite from "expo-sqlite";
-import { SEARCH_TEXT_QUERY } from "constants/Queries";
-import { IBookVerse, IVerseItem } from "types";
+import { QUERY_BY_DB } from "constants/Queries";
+import { IVerseItem } from "types";
+import getCurrentDbName from "utils/getCurrentDB";
+import { DBName } from "enums";
 
 export interface UseSearchHookState {
   searchResults: IVerseItem[] | null;
@@ -19,6 +21,7 @@ type UseSearch = {
 };
 
 const useSearch = ({ db }: UseSearch): UseSearchHook => {
+  const dbName = (db as any)?._db?._name ?? DBName.BIBLE;
   const [state, setState] = useState<UseSearchHookState>({
     searchResults: null,
     error: null,
@@ -44,10 +47,11 @@ const useSearch = ({ db }: UseSearch): UseSearchHook => {
         reject(new Error(`Search aborted: ${query}`));
       });
 
+      const query = QUERY_BY_DB[getCurrentDbName(dbName)];
       db.transaction((tx) => {
         tx.executeSql(
-          `${SEARCH_TEXT_QUERY} ${whereClause};`,
-          words.map((word) => `% ${word} %`),
+          `${query.SEARCH_TEXT_QUERY} ${whereClause};`,
+          words.map((word) => `%${word}%`),
           (_, { rows }) => {
             if (!abortController.signal.aborted) {
               const results: IVerseItem[] = [];
