@@ -31,7 +31,6 @@ const CustomFooter: FC<FooterInterface> = () => {
     DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
   const footerIconSize = 28;
-  const snapPoints = useMemo(() => ["25%", "50%"], []);
 
   const themeRef = useRef<BottomSheetModal>(null);
 
@@ -124,12 +123,13 @@ const CustomFooter: FC<FooterInterface> = () => {
         onPress={themeHandlePresentModalPress}
       >
         <MaterialCommunityIcons
-          name="application-settings-outline"
+          // name="application-settings-outline"
+          name="play"
           size={footerIconSize}
           style={[styles.icon, { marginHorizontal: 0 }]}
         />
       </TouchableOpacity>
-      <BottomModal startAT={1} ref={themeRef}>
+      {/* <BottomModal startAT={1} ref={themeRef}>
         <View style={styles.modalBody}>
           <Text style={[styles.title]}>Seleccionar Tema</Text>
           <FlashList
@@ -140,7 +140,7 @@ const CustomFooter: FC<FooterInterface> = () => {
             numColumns={3}
           />
         </View>
-      </BottomModal>
+      </BottomModal> */}
     </View>
   );
 };

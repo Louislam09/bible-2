@@ -17,7 +17,7 @@ import {
 } from "../../../types";
 import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import { Text, View } from "../../Themed";
-import FontSettings from "./FontSettings";
+import Settings from "./Settings";
 import VersionList from "./VersionList";
 
 interface HeaderInterface {}
@@ -54,8 +54,6 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
   const versionHandlePresentModalPress = useCallback(() => {
     versionRef.current?.present();
   }, []);
-
-  const snapPoints = useMemo(() => ["50%", "75%", "100%"], []);
 
   const formatTextToClipboard = () => {
     return highlightedVerses.reduce((acc, next) => {
@@ -112,8 +110,8 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
             />
           </TouchableOpacity>
         ))}
-        <BottomModal startAT={3} ref={fontBottomSheetModalRef}>
-          <FontSettings theme={theme} />
+        <BottomModal startAT={2} ref={fontBottomSheetModalRef}>
+          <Settings theme={theme} />
         </BottomModal>
       </View>
       <TouchableOpacity
@@ -126,10 +124,10 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
           style={[styles.icon, { marginHorizontal: 0 }]}
         />
         <Text style={styles.text}>{currentBibleVersion}</Text>
-        <BottomModal startAT={1} ref={versionRef}>
-          <VersionList {...{ currentBibleVersion, onSelect }} />
-        </BottomModal>
       </TouchableOpacity>
+      <BottomModal startAT={1} ref={versionRef}>
+        <VersionList {...{ currentBibleVersion, onSelect, theme }} />
+      </BottomModal>
     </View>
   );
 };

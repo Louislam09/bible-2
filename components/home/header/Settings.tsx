@@ -1,13 +1,12 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useTheme } from "@react-navigation/native";
-import { View, Text } from "components/Themed";
+import { Text, View } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
 import React from "react";
-import { TouchableOpacity, StyleSheet, Platform } from "react-native";
+import { Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { TFont, TTheme } from "types";
 import SelectThemeList from "./SelectThemeList";
 
-const FontSettings = ({ theme }: any) => {
+const Settings = ({ theme }: any) => {
   const styles = getStyles(theme);
 
   const {
@@ -22,7 +21,7 @@ const FontSettings = ({ theme }: any) => {
   const fontName = Object.values(TFont) as string[];
   return (
     <View style={styles.modalContent}>
-      <Text style={styles.title}>Tipo de letras</Text>
+      <Text style={styles.title}>Tipo de Letra</Text>
       <View style={[styles.fontContainer, styles.card]}>
         {fontName.map((font: string, index: any) => (
           <TouchableOpacity key={index} onPress={() => selectFont(font)}>
@@ -50,7 +49,7 @@ const FontSettings = ({ theme }: any) => {
         ))}
       </View>
 
-      <Text style={[styles.title, { marginTop: 15 }]}>Tamaño</Text>
+      <Text style={[styles.title, { marginTop: 15 }]}>Tamaño de Letra</Text>
       <View style={[styles.fontSizeContainer, styles.card]}>
         <TouchableOpacity onPress={() => decreaseFontSize()}>
           <MaterialCommunityIcons
@@ -67,13 +66,24 @@ const FontSettings = ({ theme }: any) => {
         </TouchableOpacity>
       </View>
 
-      <SelectThemeList selectTheme={selectTheme} />
+      <Text style={[styles.title, { marginTop: 15 }]}>Color de Tema</Text>
+      <SelectThemeList selectTheme={selectTheme} theme={theme} />
     </View>
   );
 };
 
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
+    modalContent: {
+      position: "relative",
+      display: "flex",
+      alignItems: "center",
+      // justifyContent: "center",
+      paddingVertical: 25,
+      borderRadius: 45,
+      flex: 1,
+      backgroundColor: "transparent",
+    },
     icon: {
       color: colors.backgroundContrast,
     },
@@ -84,22 +94,6 @@ const getStyles = ({ colors }: TTheme) =>
       width: "90%",
       textAlign: "center",
       backgroundColor: colors.notification,
-    },
-    linea: {
-      width: "90%",
-      height: 1,
-      backgroundColor: colors.background,
-      elevation: 5,
-      marginVertical: 5,
-    },
-    modalContent: {
-      position: "relative",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      paddingVertical: 25,
-      borderRadius: 45,
-      flex: 1,
     },
     card: {
       backgroundColor: "white",
@@ -145,18 +139,18 @@ const getStyles = ({ colors }: TTheme) =>
       borderRadius: 50,
       elevation: 5,
       backgroundColor: "white",
-      color: colors.text,
+      color: colors.border,
       fontSize: 30,
     },
     fontLabel: {
-      color: colors.text,
+      color: colors.border,
       fontWeight: "bold",
     },
     fontSize: {
       fontWeight: "bold",
-      color: colors.text,
+      color: colors.border,
       fontSize: 30,
     },
   });
 
-export default FontSettings;
+export default Settings;

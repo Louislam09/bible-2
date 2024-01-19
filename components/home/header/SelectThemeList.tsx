@@ -1,17 +1,33 @@
-import { useTheme } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
 import React, { FC } from "react";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
-import { EBibleVersions, EThemes, TTheme } from "types";
+import { EThemes, TTheme } from "types";
 import { Text, View } from "../../Themed";
-import { FlashList } from "@shopify/flash-list";
+import { useBibleContext } from "context/BibleContext";
 
 interface ISelectThemeList {
   selectTheme: Function;
+  theme: TTheme;
 }
 
-const SelectThemeList: FC<ISelectThemeList> = ({ selectTheme }) => {
-  const theme = useTheme();
+const colorNames: any = {
+  Orange: "Naranja",
+  Cyan: "Cian",
+  BlueLight: "Azul Claro",
+  Green: "Verde",
+  Red: "Rojo",
+  Purple: "Púrpura",
+  BlueGreen: "Azul Verde",
+  Pink: "Rosa",
+  PinkLight: "Rosa Claro",
+  Yellow: "Amarillo",
+  Blue: "Azul",
+  BlackWhite: "Negro",
+};
+
+const SelectThemeList: FC<ISelectThemeList> = ({ selectTheme, theme }) => {
   const styles = getStyles(theme);
+  const { currentTheme } = useBibleContext();
 
   const onItemClick = (name: string) => {
     selectTheme(name);
@@ -24,19 +40,20 @@ const SelectThemeList: FC<ISelectThemeList> = ({ selectTheme }) => {
         style={[styles.themeCard, { backgroundColor: item }]}
         onPress={() => onItemClick(name)}
       >
-        <Text style={styles.themeLabel}>{name}</Text>
+        <Text style={[styles.themeLabel, currentTheme === name && {}]}>
+          {colorNames[name]}
+        </Text>
       </TouchableOpacity>
     );
   };
 
   return (
-    <View style={styles.modalBody}>
-      <Text style={[styles.title]}>Seleccionar Tema</Text>
+    <View style={[styles.modalBody, styles.card]}>
       <FlashList
         contentContainerStyle={{ padding: 0 }}
         data={Object.values(EThemes)}
         renderItem={renderItem}
-        estimatedItemSize={10}
+        estimatedItemSize={5}
         numColumns={3}
       />
     </View>
@@ -45,18 +62,24 @@ const SelectThemeList: FC<ISelectThemeList> = ({ selectTheme }) => {
 
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
+    modalBody: {
+      display: "flex",
+      width: "90%",
+      flex: 0.6,
+    },
     title: {
       color: "white",
       fontSize: 20,
       padding: 5,
-      width: "100%",
+      width: "90%",
       textAlign: "center",
       backgroundColor: colors.notification,
       marginBottom: 15,
     },
     card: {
-      width: "90%",
       backgroundColor: "white",
+      borderWidth: 1,
+      borderColor: colors.notification,
       borderRadius: 8,
       padding: 16,
       marginVertical: 8,
@@ -69,13 +92,6 @@ const getStyles = ({ colors }: TTheme) =>
           shadowRadius: 4,
         },
       }),
-    },
-    modalBody: {
-      position: "relative",
-      display: "flex",
-      borderRadius: 45,
-      padding: 10,
-      flex: 1,
     },
     themeCard: {
       display: "flex",

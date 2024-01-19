@@ -1,7 +1,7 @@
 import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { useTheme } from "@react-navigation/native";
-import React, { forwardRef, useCallback, useMemo } from "react";
+import React, { forwardRef, useCallback, useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { TTheme } from "types";
 
@@ -17,10 +17,12 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
     const theme = useTheme();
     const styles = getStyles(theme);
     const snapPoints = useMemo(() => ["25%", "50%", "75%", "100%"], []);
+    const [index, setIndex] = useState(0);
 
-    // const handleSheetChanges = useCallback((index: number) => {
-    //   // console.log("handleSheetChanges", index);
-    // }, []);
+    const handleSheetChanges = useCallback((index: number) => {
+      // console.log("handleSheetChanges", index);
+      setIndex(index);
+    }, []);
 
     const renderBackdrop = useCallback(
       (props: any) => (
@@ -35,14 +37,19 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
 
     return (
       <BottomSheetModal
-        backgroundStyle={styles.bottomSheet}
+        backgroundStyle={[
+          styles.bottomSheet,
+          index === 3 && {
+            borderRadius: 0,
+          },
+        ]}
         ref={ref}
         index={startAT ?? 1}
         snapPoints={snapPoints}
         handleIndicatorStyle={styles.indicator}
         // enableHandlePanningGesture
         backdropComponent={renderBackdrop}
-        // onChange={handleSheetChanges}
+        onChange={handleSheetChanges}
       >
         {children}
       </BottomSheetModal>
@@ -53,10 +60,9 @@ const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     bottomSheet: {
       borderRadius: 45,
-      backgroundColor: "white",
+      backgroundColor: "#000000cc",
       borderColor: colors.notification,
       borderWidth: 2,
-      // backgroundColor: "#e1f4ff",
     },
     indicator: {
       backgroundColor: colors.notification,

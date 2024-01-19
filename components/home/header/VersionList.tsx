@@ -7,10 +7,19 @@ import { Text, View } from "../../Themed";
 interface IVersionList {
   currentBibleVersion: string;
   onSelect: Function;
+  theme: TTheme;
 }
 
-const VersionList: FC<IVersionList> = ({ currentBibleVersion, onSelect }) => {
-  const theme = useTheme();
+const versionNames: any = {
+  [EBibleVersions.NTV]: "Nueva Traduccion Viviente 2009",
+  [EBibleVersions.RVR60]: "Reina Valera 1960",
+};
+
+const VersionList: FC<IVersionList> = ({
+  currentBibleVersion,
+  onSelect,
+  theme,
+}) => {
   const styles = getStyles(theme);
 
   return (
@@ -38,7 +47,7 @@ const VersionList: FC<IVersionList> = ({ currentBibleVersion, onSelect }) => {
               },
             ]}
           >
-            {version}
+            {versionNames[version]}
           </Text>
         </TouchableOpacity>
       ))}
@@ -63,12 +72,13 @@ const getStyles = ({ colors }: TTheme) =>
       justifyContent: "center",
       paddingVertical: 25,
       borderRadius: 45,
+      backgroundColor: "transparent",
     },
     card: {
       width: "90%",
       backgroundColor: "white",
       borderRadius: 8,
-      padding: 16,
+      padding: 5,
       marginVertical: 8,
       elevation: 5,
       ...Platform.select({
@@ -82,7 +92,7 @@ const getStyles = ({ colors }: TTheme) =>
     },
     versionText: {
       color: colors.border,
-      fontSize: 24,
+      fontSize: 22,
       textAlign: "center",
     },
   });
