@@ -26,11 +26,11 @@ const BookContent: FC<BookContentInterface> = ({}) => {
   } = useStorage();
   const { myBibleDB, executeSql } = useDBContext();
   const route = useRoute();
-  const { book, chapter, verse } = route.params as HomeParams;
+  const { book = "Mateo", chapter, verse } = route.params as HomeParams;
   const bookRef = React.useRef<FlashList<IBookVerse[]>>(null);
   const [loading, setLoading] = React.useState(true);
   const [data, setData] = useState<any>({});
-  const currentBookNumber = DB_BOOK_NAMES.find((x) => x.longName === book);
+  const currentBook = DB_BOOK_NAMES.find((x) => x.longName === book);
   const dimensions = Dimensions.get("window");
 
   useEffect(() => {
@@ -41,11 +41,11 @@ const BookContent: FC<BookContentInterface> = ({}) => {
         const query = QUERY_BY_DB[getCurrentDbName(currentBibleVersion)];
         const promises = [
           executeSql(myBibleDB, query.GET_VERSES_BY_BOOK_AND_CHAPTER, [
-            currentBookNumber?.bookNumber,
+            currentBook?.bookNumber,
             chapter || 1,
           ]),
           executeSql(myBibleDB, query.GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
-            currentBookNumber?.bookNumber,
+            currentBook?.bookNumber,
             chapter || 1,
           ]),
         ];
@@ -57,7 +57,7 @@ const BookContent: FC<BookContentInterface> = ({}) => {
             setData({ verses, subtitles });
           })
           .catch((error) => {
-            console.error("Error:", error);
+            console.error("Error:content:", error);
           });
       }
     })();

@@ -1,21 +1,22 @@
 import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { useTheme } from "@react-navigation/native";
-import React, { forwardRef, useCallback } from "react";
+import React, { forwardRef, useCallback, useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { TTheme } from "types";
 
 type TBottomModal = {
-  snapPoints: string[];
+  startAT?: 0 | 1 | 2 | 3;
   children?: any;
 };
 
 type Ref = BottomSheetModal;
 
 const BottomModal = forwardRef<Ref, TBottomModal>(
-  ({ snapPoints, children }, ref) => {
+  ({ children, startAT }, ref) => {
     const theme = useTheme();
     const styles = getStyles(theme);
+    const snapPoints = useMemo(() => ["25%", "50%", "75%", "100%"], []);
 
     // const handleSheetChanges = useCallback((index: number) => {
     //   // console.log("handleSheetChanges", index);
@@ -36,7 +37,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       <BottomSheetModal
         backgroundStyle={styles.bottomSheet}
         ref={ref}
-        index={1}
+        index={startAT ?? 1}
         snapPoints={snapPoints}
         handleIndicatorStyle={styles.indicator}
         // enableHandlePanningGesture

@@ -125,12 +125,11 @@ const CustomFooter: FC<FooterInterface> = () => {
       >
         <MaterialCommunityIcons
           name="application-settings-outline"
-          // name="play"
           size={footerIconSize}
           style={[styles.icon, { marginHorizontal: 0 }]}
         />
       </TouchableOpacity>
-      <BottomModal snapPoints={snapPoints} ref={themeRef}>
+      <BottomModal startAT={1} ref={themeRef}>
         <View style={styles.modalBody}>
           <Text style={[styles.title]}>Seleccionar Tema</Text>
           <FlashList

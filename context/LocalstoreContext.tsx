@@ -43,7 +43,7 @@ interface StorageProviderProps {
 }
 
 const initialContext: StoreState = {
-  lastBook: "Genesis",
+  lastBook: "Génesis",
   lastChapter: 1,
   currentTheme: "Blue",
   fontSize: 24,

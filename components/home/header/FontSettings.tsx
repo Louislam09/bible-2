@@ -5,9 +5,9 @@ import { useBibleContext } from "context/BibleContext";
 import React from "react";
 import { TouchableOpacity, StyleSheet, Platform } from "react-native";
 import { TFont, TTheme } from "types";
+import SelectThemeList from "./SelectThemeList";
 
 const FontSettings = ({ theme }: any) => {
-  // const theme = useTheme();
   const styles = getStyles(theme);
 
   const {
@@ -16,6 +16,7 @@ const FontSettings = ({ theme }: any) => {
     increaseFontSize,
     fontSize,
     selectedFont,
+    selectTheme,
   } = useBibleContext();
 
   const fontName = Object.values(TFont) as string[];
@@ -65,6 +66,8 @@ const FontSettings = ({ theme }: any) => {
           />
         </TouchableOpacity>
       </View>
+
+      <SelectThemeList selectTheme={selectTheme} />
     </View>
   );
 };
@@ -96,6 +99,7 @@ const getStyles = ({ colors }: TTheme) =>
       justifyContent: "center",
       paddingVertical: 25,
       borderRadius: 45,
+      flex: 1,
     },
     card: {
       backgroundColor: "white",

@@ -1,24 +1,24 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
-import React, { FC, useCallback, useMemo, useRef, useState } from "react";
+import React, { FC, useCallback, useMemo, useRef } from "react";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { useBibleContext } from "../../../context/BibleContext";
 import { useCustomTheme } from "../../../context/ThemeContext";
 
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import BottomModal from "components/BottomModal";
 import {
+  EBibleVersions,
   HomeParams,
   Screens,
-  TFont,
   TRoute,
   TTheme,
-  EBibleVersions,
 } from "../../../types";
 import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import { Text, View } from "../../Themed";
-import BottomModal from "components/BottomModal";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import FontSettings from "./FontSettings";
+import VersionList from "./VersionList";
 
 interface HeaderInterface {}
 type TIcon = {
@@ -55,7 +55,7 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
     versionRef.current?.present();
   }, []);
 
-  const snapPoints = useMemo(() => ["25%", "50%"], []);
+  const snapPoints = useMemo(() => ["50%", "75%", "100%"], []);
 
   const formatTextToClipboard = () => {
     return highlightedVerses.reduce((acc, next) => {
@@ -90,6 +90,11 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
     { name: "magnify", action: goSearchScreen },
   ];
 
+  const onSelect = (version: string) => {
+    selectBibleVersion(version);
+    versionRef.current?.dismiss();
+  };
+
   return (
     <View style={styles.header}>
       <View style={styles.headerCenter}>
@@ -107,11 +112,10 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
             />
           </TouchableOpacity>
         ))}
-        <BottomModal snapPoints={snapPoints} ref={fontBottomSheetModalRef}>
+        <BottomModal startAT={3} ref={fontBottomSheetModalRef}>
           <FontSettings theme={theme} />
         </BottomModal>
       </View>
-      {/* TODO: Change bible version feature */}
       <TouchableOpacity
         style={styles.headerEnd}
         onPress={versionHandlePresentModalPress}
@@ -122,36 +126,8 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
           style={[styles.icon, { marginHorizontal: 0 }]}
         />
         <Text style={styles.text}>{currentBibleVersion}</Text>
-        <BottomModal snapPoints={snapPoints} ref={versionRef}>
-          <View style={[styles.versionContainer]}>
-            <Text style={styles.title}>Versiones</Text>
-            {(Object.values(EBibleVersions) as string[]).map((version) => (
-              <TouchableOpacity
-                key={version}
-                style={[
-                  styles.card,
-                  ,
-                  currentBibleVersion === version && {
-                    borderColor: theme.colors.notification,
-                    borderWidth: 1,
-                  },
-                ]}
-                onPress={() => selectBibleVersion(version)}
-              >
-                <Text
-                  style={[
-                    styles.versionText,
-                    ,
-                    currentBibleVersion === version && {
-                      color: theme.colors.notification,
-                    },
-                  ]}
-                >
-                  {version}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+        <BottomModal startAT={1} ref={versionRef}>
+          <VersionList {...{ currentBibleVersion, onSelect }} />
         </BottomModal>
       </TouchableOpacity>
     </View>
