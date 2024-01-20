@@ -1,28 +1,20 @@
-import React, { useEffect, useState } from "react";
-import {
-  Text,
-  TouchableOpacity,
-  TextInput,
-  TextStyle,
-  ViewStyle,
-  StyleSheet,
-  Pressable,
-  Button,
-} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "@react-navigation/native";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
-import { TTheme } from "types";
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import { View } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { TTheme } from "types";
 
-const CustomHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
+const SearchHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
   const { performSearch, setSearchQuery } = useBibleContext();
   const [query, setQuery] = useState("");
 
   const handelSearch = async (query: string) => {
+    console.log({ query });
     setQuery(query);
     setSearchQuery(query);
   };
@@ -77,4 +69,4 @@ const getStyles = ({ colors }: TTheme) =>
     },
   });
 
-export default CustomHeader;
+export default SearchHeader;

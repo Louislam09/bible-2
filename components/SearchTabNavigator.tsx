@@ -9,20 +9,16 @@ Logs.enableExpoCliLogging();
 
 const Tab = createMaterialTopTabNavigator();
 
-import { useRoute, useTheme } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 import { useBibleContext } from "context/BibleContext";
 import React, { useMemo } from "react";
-import { BookIndexes, TTheme } from "types";
+import { BookIndexes, RootStackScreenProps, TTheme } from "types";
 import ListVerse from "./search/ListVerse";
 
 enum Routes {
   ALL = "TODO",
   AT = "AT",
   NT = "NT",
-}
-
-interface SearchTabNavigatorInterface {
-  navigation?: MaterialTopTabNavigationProp<any>;
 }
 
 export const filterDataByTab = (tabName: any, searchState: any, book: any) => {
@@ -44,9 +40,10 @@ export const filterDataByTab = (tabName: any, searchState: any, book: any) => {
   return data[tabName];
 };
 
-const SearchTabNavigator = ({ navigation }: SearchTabNavigatorInterface) => {
+const SearchTabNavigator: React.FC<RootStackScreenProps<"Search">> = ({
+  route,
+}) => {
   const { searchState } = useBibleContext();
-  const route = useRoute();
   const { book } = route.params as any;
   const { colors } = useTheme() as TTheme;
   const NT_BOOK_NUMBER = 470;
@@ -58,6 +55,8 @@ const SearchTabNavigator = ({ navigation }: SearchTabNavigatorInterface) => {
     tabBarInactiveTintColor: colors.text,
     tabBarIndicatorStyle: { backgroundColor: colors.notification },
   };
+
+  console.log("searchResults", searchState.searchResults?.length);
 
   const filterDataByTab = (tabName: any) => {
     const result = searchState?.searchResults;

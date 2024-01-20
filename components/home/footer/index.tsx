@@ -12,8 +12,10 @@ import useAudioPlayer from "hooks/useAudioPlayer";
 import { FC } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { HomeParams, Screens, TTheme } from "types";
+// import { ProgressBar } from "@react-native-community/progress-bar-android";
 
 import { Text, View } from "components/Themed";
+import ProgressBar from "./ProgressBar";
 interface FooterInterface {}
 const FOOTER_ICON_SIZE = 28;
 
@@ -26,12 +28,13 @@ const CustomFooter: FC<FooterInterface> = () => {
   const { book, chapter = 1 } = route.params as HomeParams;
   const { bookNumber, shortName } =
     DB_BOOK_NAMES.find((x) => x.longName === book) || {};
-  const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book) || 1;
-  const { isDownloading, isPlaying, playAudio } = useAudioPlayer({
-    book: bookIndex + 1,
-    chapterNumber: +chapter,
-  });
-  console.log("EBookIndexesAudio", { bookIndex });
+  const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
+  const { isDownloading, isPlaying, playAudio, duration, position } =
+    useAudioPlayer({
+      book: bookIndex + 1,
+      chapterNumber: +chapter,
+      nextChapter,
+    });
 
   const nextOrPreviousBook = (name: string, chapter: number = 1) => {
     navigation.setParams({
@@ -40,7 +43,7 @@ const CustomFooter: FC<FooterInterface> = () => {
     });
   };
 
-  const nextChapter = () => {
+  function nextChapter() {
     if (DB_BOOK_CHAPTER_NUMBER[book as any] === chapter) {
       if (bookNumber === 730) return;
       const newBookName = DB_BOOK_NAMES[bookIndex + 1].longName;
@@ -51,7 +54,7 @@ const CustomFooter: FC<FooterInterface> = () => {
       book,
       chapter: ((chapter as number) || 0) + 1,
     });
-  };
+  }
   const previuosChapter = () => {
     if (bookNumber !== 10 && chapter === 1) {
       const newBookName = DB_BOOK_NAMES[bookIndex - 1].longName;
@@ -70,6 +73,15 @@ const CustomFooter: FC<FooterInterface> = () => {
 
   return (
     <View style={styles.footer}>
+      <View
+        style={[styles.progressBarContainer, !isPlaying && { display: "none" }]}
+      >
+        <ProgressBar
+          color={theme.colors.notification}
+          barColor={theme.colors.text}
+          progress={position / duration}
+        />
+      </View>
       <View style={styles.footerCenter}>
         <TouchableOpacity onPress={() => previuosChapter()}>
           <MaterialCommunityIcons
@@ -81,9 +93,12 @@ const CustomFooter: FC<FooterInterface> = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={{ flex: 1, alignItems: "center" }}
-          onPress={() => navigation?.navigate(Screens.Book)}
+          // onPress={() => navigation?.navigate(Screens.Book)}
         >
-          <Text style={styles.bookLabel}>
+          <Text
+            style={styles.bookLabel}
+            onPress={() => navigation?.navigate(Screens.Book)}
+          >
             {`${displayBookName ?? ""} ${chapter ?? ""}`}
           </Text>
         </TouchableOpacity>
@@ -119,6 +134,29 @@ const CustomFooter: FC<FooterInterface> = () => {
 
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
+    footer: {
+      position: "relative",
+      right: 0,
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "row",
+      justifyContent: "center",
+      paddingVertical: 15,
+      // paddingHorizontal: 10,
+      backgroundColor: colors.background,
+      boxSizing: "border-box",
+      gap: 10,
+      borderTopColor: colors.border,
+      borderWidth: 0.5,
+      borderStyle: "solid",
+    },
+    progressBarContainer: {
+      position: "absolute",
+      top: 0,
+      width: "100%",
+      height: 10,
+    },
     title: {
       color: "white",
       fontSize: 20,
@@ -135,22 +173,6 @@ const getStyles = ({ colors }: TTheme) =>
       elevation: 5,
       marginVertical: 5,
       textAlign: "center",
-    },
-    footer: {
-      right: 0,
-      width: "100%",
-      display: "flex",
-      alignItems: "center",
-      flexDirection: "row",
-      justifyContent: "center",
-      paddingVertical: 15,
-      paddingHorizontal: 10,
-      backgroundColor: colors.background,
-      boxSizing: "border-box",
-      gap: 10,
-      borderTopColor: colors.border,
-      borderWidth: 0.5,
-      borderStyle: "solid",
     },
     footerCenter: {
       display: "flex",

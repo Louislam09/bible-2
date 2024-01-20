@@ -2,12 +2,10 @@ import { useRoute, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import { useEffect, useRef, useState } from "react";
 import CurrentWordModal from "../../CurrentWordModal";
-import { Text } from "../../Themed";
 import Verse from "./Verse";
 import { StyleSheet, View } from "react-native";
 import { TChapter, HomeParams, TTheme } from "types";
 
-// TODO: Add audio mode feature
 const Chapter = ({ item, dimensions }: TChapter) => {
   const { verses, subtitles } = item;
   const theme = useTheme();

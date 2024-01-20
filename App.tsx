@@ -10,6 +10,7 @@ import DatabaseProvider from "./context/databaseContext";
 import useCachedResources from "./hooks/useCachedResources";
 import Navigation from "./navigation";
 import StorageProvider from "context/LocalstoreContext";
+import ErrorBoundary from "components/ErrorBoundary";
 
 const App = () => {
   const isLoadingComplete = useCachedResources();
@@ -18,20 +19,22 @@ const App = () => {
     return null;
   } else {
     return (
-      <ThemeProvider>
-        <StorageProvider>
-          <DatabaseProvider>
-            <BibleProvider>
-              <GestureHandlerRootView style={{ flex: 1 }}>
-                <BottomSheetModalProvider>
-                  <StatusBar barStyle="light-content" animated />
-                  <Navigation />
-                </BottomSheetModalProvider>
-              </GestureHandlerRootView>
-            </BibleProvider>
-          </DatabaseProvider>
-        </StorageProvider>
-      </ThemeProvider>
+      <ErrorBoundary>
+        <ThemeProvider>
+          <StorageProvider>
+            <DatabaseProvider>
+              <BibleProvider>
+                <GestureHandlerRootView style={{ flex: 1 }}>
+                  <BottomSheetModalProvider>
+                    <StatusBar barStyle="light-content" animated />
+                    <Navigation />
+                  </BottomSheetModalProvider>
+                </GestureHandlerRootView>
+              </BibleProvider>
+            </DatabaseProvider>
+          </StorageProvider>
+        </ThemeProvider>
+      </ErrorBoundary>
     );
   }
 };

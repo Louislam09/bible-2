@@ -1,16 +1,19 @@
 import { useState, useEffect } from "react";
-import { Audio } from "expo-av";
+import { AVPlaybackStatus, Audio } from "expo-av";
 import * as FileSystem from "expo-file-system";
 
 interface AudioPlayerHookProps {
   book: number;
   chapterNumber: number;
+  nextChapter: Function;
 }
 
 interface AudioPlayerHookResult {
   isDownloading: boolean;
   isPlaying: boolean;
   playAudio: () => void;
+  position: number;
+  duration: number;
 }
 
 const getAudioUrl = (bookNumberForAudio: number, chapter: number) => {
@@ -20,24 +23,42 @@ const getAudioUrl = (bookNumberForAudio: number, chapter: number) => {
 const useAudioPlayer = ({
   book,
   chapterNumber,
+  nextChapter,
 }: AudioPlayerHookProps): AudioPlayerHookResult => {
   const audioUrl = getAudioUrl(book, chapterNumber);
   const dbFolder = `${FileSystem.documentDirectory}audio`;
   const audioName = `${book}00${chapterNumber}.mp3`;
+  const localUri = `${dbFolder}/${audioName}`;
   const [sound, setSound] = useState<Audio.Sound | undefined>();
   const [isDownloading, setIsDownloading] = useState(false);
+  const [autoPlay, setAutoPlay] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [position, setPosition] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
 
   const resetAudio = async () => {
-    if (!sound) return;
-    await sound.stopAsync();
+    await sound?.stopAsync();
     setIsPlaying(false);
     setIsDownloading(false);
     setSound(undefined);
+    setPosition(0);
+    setDuration(0);
+  };
+
+  const onPlaybackStatusUpdate = async (status: AVPlaybackStatus) => {
+    if (!status.isLoaded) return;
+    setPosition(status.positionMillis);
+    setDuration(status.durationMillis || 0);
+    setIsPlaying(status.isPlaying);
+
+    if (status.didJustFinish) {
+      resetAudio();
+      setAutoPlay(true);
+      nextChapter && nextChapter();
+    }
   };
 
   useEffect(() => {
-    const localUri = `${dbFolder}/${audioName}`;
     const loadAudio = async () => {
       try {
         resetAudio();
@@ -46,28 +67,21 @@ const useAudioPlayer = ({
         const { exists } = await FileSystem.getInfoAsync(localUri);
 
         if (!exists) {
-          // Descargar el archivo si no existe localmente
-          setIsDownloading(true);
-          const { uri } = await FileSystem.downloadAsync(audioUrl, localUri);
-          setIsDownloading(false);
-
-          const { sound } = await Audio.Sound.createAsync(
-            { uri },
-            { shouldPlay: false }
-          );
-
-          setSound(sound);
-        } else {
-          // Usar el archivo local si ya está descargado
-          const { sound } = await Audio.Sound.createAsync(
-            { uri: localUri },
-            { shouldPlay: false }
-          );
-
-          setSound(sound);
+          setAutoPlay(false);
+          return;
         }
+
+        // Usar el archivo local si ya está descargado
+        const { sound } = await Audio.Sound.createAsync(
+          { uri: localUri },
+          { shouldPlay: autoPlay },
+          onPlaybackStatusUpdate
+        );
+        setAutoPlay(false);
+
+        setSound(sound);
       } catch (error) {
-        console.error("Error al cargar el audio:", error);
+        console.log("Error al cargar el audio:", error);
       }
     };
 
@@ -81,18 +95,34 @@ const useAudioPlayer = ({
   }, [book, chapterNumber]);
 
   const playAudio = async () => {
-    if (sound) {
-      if (isPlaying) {
-        setIsPlaying(false);
-        await sound.pauseAsync();
-        return;
-      }
-      await sound.playAsync();
+    if (!sound) {
+      setIsDownloading(true);
+      const { uri } = await FileSystem.downloadAsync(audioUrl, localUri);
+      setIsDownloading(false);
+
+      const { sound } = await Audio.Sound.createAsync(
+        { uri },
+        { shouldPlay: false },
+        onPlaybackStatusUpdate
+      );
+
+      setSound(sound);
+      await sound?.playAsync();
       setIsPlaying(true);
+      return;
     }
+
+    if (isPlaying) {
+      setIsPlaying(false);
+      await sound?.pauseAsync();
+      return;
+    }
+
+    await sound?.playAsync();
+    setIsPlaying(true);
   };
 
-  return { isDownloading, isPlaying, playAudio };
+  return { isDownloading, isPlaying, playAudio, position, duration };
 };
 
 export default useAudioPlayer;

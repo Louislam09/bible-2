@@ -30,7 +30,6 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const notFoundSource = require("../../assets/lottie/notFound.json");
   const searchingSource = require("../../assets/lottie/searching.json");
-  const land = require("../../assets/lottie/land.json");
 
   const handleScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;

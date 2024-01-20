@@ -1,15 +1,12 @@
-import { Ionicons } from "@expo/vector-icons";
 import { ParamListBase, RouteProp, useTheme } from "@react-navigation/native";
 import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from "@react-navigation/native-stack";
-import { Text, View } from "components/Themed";
-import CustomHeader from "components/search/Header";
+import SearchHeader from "components/search/SearchHeader";
 import { ScreensName } from "constants/ScreenName";
 import { useStorage } from "context/LocalstoreContext";
 import React from "react";
-import { TouchableOpacity, TextInput } from "react-native";
 import Book from "screens/Book";
 import ChooseFromListScreen from "screens/ChooseFromListScreen";
 import Home from "screens/Home";
@@ -66,7 +63,7 @@ const MainStack = () => {
         component={Search}
         options={({ route }) => ({
           ...screenOptions(route),
-          header: (props: any) => <CustomHeader {...props} />,
+          header: (props: any) => <SearchHeader {...props} />,
         })}
       />
       <Stack.Screen
