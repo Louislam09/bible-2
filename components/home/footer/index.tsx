@@ -1,5 +1,4 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import {
   ParamListBase,
   RouteProp,
@@ -7,18 +6,16 @@ import {
   useRoute,
   useTheme,
 } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
-import BottomModal from "components/BottomModal";
+import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "constants/BookNames";
 import { useBibleContext } from "context/BibleContext";
-import React, { FC, useCallback, useMemo, useRef } from "react";
+import useAudioPlayer from "hooks/useAudioPlayer";
+import { FC } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import {
-  DB_BOOK_CHAPTER_NUMBER,
-  DB_BOOK_NAMES,
-} from "../../../constants/BookNames";
-import { EThemes, HomeParams, Screens, TTheme } from "../../../types";
-import { Text, View } from "../../Themed";
+import { HomeParams, Screens, TTheme } from "types";
+
+import { Text, View } from "components/Themed";
 interface FooterInterface {}
+const FOOTER_ICON_SIZE = 28;
 
 const CustomFooter: FC<FooterInterface> = () => {
   const { selectTheme } = useBibleContext();
@@ -29,14 +26,12 @@ const CustomFooter: FC<FooterInterface> = () => {
   const { book, chapter = 1 } = route.params as HomeParams;
   const { bookNumber, shortName } =
     DB_BOOK_NAMES.find((x) => x.longName === book) || {};
-  const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
-  const footerIconSize = 28;
-
-  const themeRef = useRef<BottomSheetModal>(null);
-
-  const themeHandlePresentModalPress = useCallback(() => {
-    themeRef.current?.present();
-  }, []);
+  const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book) || 1;
+  const { isDownloading, isPlaying, playAudio } = useAudioPlayer({
+    book: bookIndex + 1,
+    chapterNumber: +chapter,
+  });
+  console.log("EBookIndexesAudio", { bookIndex });
 
   const nextOrPreviousBook = (name: string, chapter: number = 1) => {
     navigation.setParams({
@@ -73,23 +68,6 @@ const CustomFooter: FC<FooterInterface> = () => {
 
   const displayBookName = (book || "")?.length > 10 ? shortName : book;
 
-  const onItemClick = (name: string) => {
-    selectTheme(name);
-    themeRef.current?.dismiss();
-  };
-
-  const renderItem = ({ item, index }: any) => {
-    const name = Object.keys(EThemes)[index];
-    return (
-      <TouchableOpacity
-        style={[styles.themeCard, { backgroundColor: item }]}
-        onPress={() => onItemClick(name)}
-      >
-        <Text style={styles.themeLabel}>{name}</Text>
-      </TouchableOpacity>
-    );
-  };
-
   return (
     <View style={styles.footer}>
       <View style={styles.footerCenter}>
@@ -97,7 +75,7 @@ const CustomFooter: FC<FooterInterface> = () => {
           <MaterialCommunityIcons
             style={styles.icon}
             name="less-than"
-            size={footerIconSize}
+            size={FOOTER_ICON_SIZE}
             color="white"
           />
         </TouchableOpacity>
@@ -113,37 +91,31 @@ const CustomFooter: FC<FooterInterface> = () => {
           <MaterialCommunityIcons
             style={styles.icon}
             name="greater-than"
-            size={footerIconSize}
+            size={FOOTER_ICON_SIZE}
             color="white"
           />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={styles.footerEnd}
-        onPress={themeHandlePresentModalPress}
-      >
-        <MaterialCommunityIcons
-          // name="application-settings-outline"
-          name="play"
-          size={footerIconSize}
-          style={[styles.icon, { marginHorizontal: 0 }]}
-        />
-      </TouchableOpacity>
-      {/* <BottomModal startAT={1} ref={themeRef}>
-        <View style={styles.modalBody}>
-          <Text style={[styles.title]}>Seleccionar Tema</Text>
-          <FlashList
-            contentContainerStyle={{ padding: 0 }}
-            data={Object.values(EThemes)}
-            renderItem={renderItem}
-            estimatedItemSize={10}
-            numColumns={3}
+      <TouchableOpacity style={styles.footerEnd} onPress={playAudio}>
+        {!isDownloading ? (
+          <MaterialCommunityIcons
+            name={!isPlaying ? "play" : "stop"}
+            size={FOOTER_ICON_SIZE}
+            style={[styles.icon, { marginHorizontal: 0 }]}
           />
-        </View>
-      </BottomModal> */}
+        ) : (
+          <MaterialCommunityIcons
+            name="download"
+            size={FOOTER_ICON_SIZE}
+            style={[styles.icon, { marginHorizontal: 0 }]}
+          />
+        )}
+      </TouchableOpacity>
     </View>
   );
 };
+
+// https://www.wordproaudio.net/bibles/app/audio/6/1/1.mp3
 
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({

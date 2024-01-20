@@ -20,7 +20,6 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
     const [index, setIndex] = useState(0);
 
     const handleSheetChanges = useCallback((index: number) => {
-      // console.log("handleSheetChanges", index);
       setIndex(index);
     }, []);
 
@@ -60,7 +59,7 @@ const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     bottomSheet: {
       borderRadius: 45,
-      backgroundColor: "#000000cc",
+      backgroundColor: colors.background + "cc",
       borderColor: colors.notification,
       borderWidth: 2,
     },
