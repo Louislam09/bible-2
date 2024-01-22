@@ -11,8 +11,7 @@ import { useBibleContext } from "context/BibleContext";
 import useAudioPlayer from "hooks/useAudioPlayer";
 import { FC } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { HomeParams, Screens, TTheme } from "types";
-// import { ProgressBar } from "@react-native-community/progress-bar-android";
+import { EBibleVersions, HomeParams, Screens, TTheme } from "types";
 
 import { Text, View } from "components/Themed";
 import ProgressBar from "./ProgressBar";
@@ -20,7 +19,7 @@ interface FooterInterface {}
 const FOOTER_ICON_SIZE = 28;
 
 const CustomFooter: FC<FooterInterface> = () => {
-  const { selectTheme } = useBibleContext();
+  const { currentBibleVersion } = useBibleContext();
   const theme = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
@@ -29,6 +28,7 @@ const CustomFooter: FC<FooterInterface> = () => {
   const { bookNumber, shortName } =
     DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
+  const isNTV = currentBibleVersion === EBibleVersions.NTV;
   const { isDownloading, isPlaying, playAudio, duration, position } =
     useAudioPlayer({
       book: bookIndex + 1,
@@ -91,10 +91,7 @@ const CustomFooter: FC<FooterInterface> = () => {
             color="white"
           />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={{ flex: 1, alignItems: "center" }}
-          // onPress={() => navigation?.navigate(Screens.Book)}
-        >
+        <TouchableOpacity style={{ flex: 1, alignItems: "center" }}>
           <Text
             style={styles.bookLabel}
             onPress={() => navigation?.navigate(Screens.Book)}
@@ -111,7 +108,10 @@ const CustomFooter: FC<FooterInterface> = () => {
           />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.footerEnd} onPress={playAudio}>
+      <TouchableOpacity
+        style={[styles.footerEnd, isNTV && { display: "none" }]}
+        onPress={playAudio}
+      >
         {!isDownloading ? (
           <MaterialCommunityIcons
             name={!isPlaying ? "play" : "stop"}
@@ -203,6 +203,9 @@ const getStyles = ({ colors }: TTheme) =>
       textAlign: "center",
       fontSize: 24,
       fontWeight: "bold",
+      textDecorationColor: colors.text,
+      textDecorationLine: "underline",
+      textDecorationStyle: "solid",
     },
     modalBody: {
       position: "relative",

@@ -1,13 +1,14 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
-import React, { FC, useCallback, useMemo, useRef } from "react";
+import React, { FC, useCallback, useRef } from "react";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { useBibleContext } from "../../../context/BibleContext";
 import { useCustomTheme } from "../../../context/ThemeContext";
 
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BottomModal from "components/BottomModal";
+import formatTextToClipboard from "utils/formatTextToClipboard";
 import {
   EBibleVersions,
   HomeParams,
@@ -15,7 +16,6 @@ import {
   TRoute,
   TTheme,
 } from "../../../types";
-import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import { Text, View } from "../../Themed";
 import Settings from "./Settings";
 import VersionList from "./VersionList";
@@ -55,18 +55,17 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
     versionRef.current?.present();
   }, []);
 
-  const formatTextToClipboard = () => {
-    return highlightedVerses.reduce((acc, next) => {
-      return acc + `\n ${next.verse} ${getVerseTextRaw(next.text)}`;
-    }, `${book} ${chapter}:${highlightedVerses[0].verse}${highlightedGreaterThanOne ? "-" + highlightedVerses[highlightedVerses.length - 1].verse : ""}`);
-  };
-
   const copyToClipboard = async () => {
     if (!highlightedVerses.length) {
       alert("No hay nada seleccinado para copiar.");
       return;
     }
-    const textFormat = formatTextToClipboard();
+    const textFormat = formatTextToClipboard(
+      highlightedVerses,
+      highlightedGreaterThanOne,
+      book,
+      chapter
+    );
     await Clipboard.setStringAsync(textFormat);
     const text = await Clipboard.getStringAsync();
     clearHighlights();

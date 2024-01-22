@@ -65,7 +65,8 @@ const getStyles = ({ colors }: TTheme) =>
     modalBody: {
       display: "flex",
       width: "90%",
-      flex: 0.6,
+      // flex: 1,
+      height: 250,
     },
     title: {
       color: "white",

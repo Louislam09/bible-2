@@ -20,6 +20,12 @@ declare global {
   }
 }
 
+export type RootTabParamList = {
+  Home: undefined;
+  Book: undefined;
+  Search: undefined;
+};
+
 export type RootStackParamList = {
   Home:
     | NavigatorScreenParams<RootTabParamList>
@@ -53,11 +59,6 @@ export interface HomeParams {
   verse?: number | string;
   strongKey?: string;
 }
-
-export type RootTabParamList = {
-  Home: undefined;
-  Book: undefined;
-};
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
   CompositeScreenProps<

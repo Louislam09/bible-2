@@ -1,19 +1,22 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "components/Animation";
+import Highlighter from "components/Highlighter";
 import { Text } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
+import * as Clipboard from "expo-clipboard";
 import { useEffect, useRef, useState } from "react";
 import {
   ListRenderItem,
   StyleSheet,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from "react-native";
 import { IVerseItem, Screens, TTheme } from "types";
+import formatTextToClipboard from "utils/formatTextToClipboard";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import Highlighter from "components/Highlighter";
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -25,7 +28,7 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
   const theme = useTheme();
   const navigation = useNavigation();
   const styles = getStyles(theme);
-  const { saerchQuery: query } = useBibleContext();
+  const { searchQuery: query, isSearchCopy } = useBibleContext();
   const flatListRef = useRef<FlashList<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const notFoundSource = require("../../assets/lottie/notFound.json");
@@ -37,7 +40,18 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
     setShowScrollToTop(shouldShowButton);
   };
 
-  const onVerseClick = (item: IVerseItem) => {
+  const onVerseClick = async (item: IVerseItem) => {
+    if (isSearchCopy) {
+      const textCopied = formatTextToClipboard(
+        [item],
+        1,
+        item.bookName,
+        item.chapter
+      );
+      await Clipboard.setStringAsync(textCopied);
+      ToastAndroid.show("Versiculo copiado!", ToastAndroid.SHORT);
+      return;
+    }
     navigation.navigate(Screens.Home, {
       book: item.bookName,
       chapter: item.chapter,

@@ -20,6 +20,7 @@ type BibleState = {
   selectBibleVersion: Function;
   removeHighlistedVerse: Function;
   toggleCopyMode: Function;
+  toggleCopySearch: Function;
   decreaseFontSize: Function;
   increaseFontSize: Function;
   selectTheme: Function;
@@ -27,9 +28,10 @@ type BibleState = {
   performSearch: Function;
   selectedFont: string;
   currentBibleVersion: string;
-  saerchQuery: string;
+  searchQuery: string;
   currentTheme: keyof typeof EThemes;
   isCopyMode: boolean;
+  isSearchCopy: boolean;
   fontSize: number;
   searchState: UseSearchHookState;
 };
@@ -45,7 +47,8 @@ type BibleAction =
   | { type: "SET_SEARCH_QUERY"; payload: string }
   | { type: "CLEAR_HIGHLIGHTS" }
   | { type: "SET_LOCAL_DATA"; payload: any }
-  | { type: "TOGGLE_COPY_MODE" };
+  | { type: "TOGGLE_COPY_MODE" }
+  | { type: "TOGGLE_COPY_SEARCH"; payload: boolean };
 
 const defaultSearch = {
   searchResults: [],
@@ -61,6 +64,7 @@ const initialContext: BibleState = {
   selectFont: () => {},
   selectTheme: () => {},
   toggleCopyMode: () => {},
+  toggleCopySearch: () => {},
   decreaseFontSize: () => {},
   increaseFontSize: () => {},
   setLocalData: () => {},
@@ -71,8 +75,9 @@ const initialContext: BibleState = {
   isCopyMode: false,
   fontSize: 24,
   searchState: defaultSearch,
-  saerchQuery: "hoy",
+  searchQuery: "hoy",
   currentTheme: "Blue",
+  isSearchCopy: true,
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);
@@ -130,10 +135,15 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
         ...state,
         isCopyMode: !state.isCopyMode,
       };
+    case "TOGGLE_COPY_SEARCH":
+      return {
+        ...state,
+        isSearchCopy: action.payload,
+      };
     case "SET_SEARCH_QUERY":
       return {
         ...state,
-        saerchQuery: action.payload,
+        searchQuery: action.payload,
       };
     case "SET_LOCAL_DATA":
       return {
@@ -160,7 +170,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     performSearch,
     setSearchTerm,
   } = useSearch({ db: myBibleDB });
-  // const { state: searchState, performSearch, setSearchTerm } = useSearch();
 
   useEffect(() => {
     if (!isDataLoaded) return;
@@ -195,6 +204,9 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const toggleCopyMode = () => {
     dispatch({ type: "TOGGLE_COPY_MODE" });
   };
+  const toggleCopySearch = (value: boolean) => {
+    dispatch({ type: "TOGGLE_COPY_SEARCH", payload: value });
+  };
 
   const selectFont = (font: string) => {
     dispatch({ type: "SELECT_FONT", payload: font });
@@ -227,6 +239,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     performSearch: performSearch as typeof performSearch,
     setSearchQuery,
     selectTheme,
+    toggleCopySearch,
   };
 
   return (
