@@ -75,7 +75,7 @@ const initialContext: BibleState = {
   isCopyMode: false,
   fontSize: 24,
   searchState: defaultSearch,
-  searchQuery: "hoy",
+  searchQuery: "",
   currentTheme: "Blue",
   isSearchCopy: true,
 };

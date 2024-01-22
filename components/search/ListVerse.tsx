@@ -71,7 +71,7 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
           <Highlighter
             style={styles.cardBody}
             highlightStyle={{ color: theme.colors.notification }}
-            searchWords={[...query.split(" ")]}
+            searchWords={!query ? [] : [...query.trim().split(" ")]}
             textToHighlight={getVerseTextRaw(item.text)}
             // onWordClick={(text) => console.log({ text })}
           />
