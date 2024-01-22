@@ -3,6 +3,7 @@ import * as SQLite from "expo-sqlite";
 import * as FileSystem from "expo-file-system";
 import { Asset } from "expo-asset";
 import { DBName } from "../enums";
+import { ToastAndroid } from "react-native";
 
 interface Row {
   [key: string]: any;
@@ -43,11 +44,6 @@ const databases: any = {
     const asset = Asset.fromModule(require(`../assets/db/ntv.db`));
     await FileSystem.downloadAsync(asset.uri, dbPath);
   },
-  // [DBName.SUBTITLE]: async (dbFolder: any, dbPath: any) => {
-  //   await FileSystem.makeDirectoryAsync(dbFolder, { intermediates: true });
-  //   const asset = Asset.fromModule(require(`../assets/db/subheadings.db`));
-  //   await FileSystem.downloadAsync(asset.uri, dbPath);
-  // },
 };
 
 async function copyDatabases(dbNames: DBName[]) {
@@ -57,7 +53,7 @@ async function copyDatabases(dbNames: DBName[]) {
     const dbPath = `${dbFolder}/${dbName}`;
     await databases[dbName](dbFolder, dbPath);
   }
-
+  ToastAndroid.show("Ready", ToastAndroid.SHORT);
   console.log("---------- Databases downloaded ------------");
 }
 
@@ -130,6 +126,7 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
               (result) => {
                 if (result) {
                   console.log(`Database ${dbName} opened successfully.`);
+                  ToastAndroid.show(".", ToastAndroid.SHORT);
                   resolve(db);
                 } else {
                   console.error(`Error opening database ${dbName}.`);
