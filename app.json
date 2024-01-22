@@ -3,7 +3,7 @@
     "name": "Santa Escritura",
     "description": "\"Santa Escritura\" es tu compañero espiritual digital, brindando acceso fácil y rápido a textos sagrados. Explora versículos, busca libros y capítulos, y sumérgete en una experiencia de estudio espiritual en esta aplicación intuitiva y amigable.",
     "slug": "bible",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -24,6 +24,7 @@
       "supportsTablet": true
     },
     "android": {
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#0c3e3d"
