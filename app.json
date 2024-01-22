@@ -39,7 +39,14 @@
       }
     },
     "plugins": [
-      "expo-build-properties",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true
+          }
+        }
+      ],
       [
         "expo-updates",
         {
