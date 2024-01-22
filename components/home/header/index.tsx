@@ -2,7 +2,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import React, { FC, useCallback, useRef } from "react";
-import { Platform, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  Platform,
+  StyleSheet,
+  ToastAndroid,
+  TouchableOpacity,
+} from "react-native";
 import { useBibleContext } from "../../../context/BibleContext";
 import { useCustomTheme } from "../../../context/ThemeContext";
 
@@ -57,7 +62,7 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
 
   const copyToClipboard = async () => {
     if (!highlightedVerses.length) {
-      alert("No hay nada seleccinado para copiar.");
+      ToastAndroid.show("No hay selección", ToastAndroid.SHORT);
       return;
     }
     const textFormat = formatTextToClipboard(
@@ -69,6 +74,12 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
     await Clipboard.setStringAsync(textFormat);
     const text = await Clipboard.getStringAsync();
     clearHighlights();
+    ToastAndroid.show(
+      `Versiculo${highlightedGreaterThanOne ? "s" : ""} copiado${
+        highlightedGreaterThanOne ? "s" : ""
+      }!`,
+      ToastAndroid.SHORT
+    );
     console.log(text);
   };
 

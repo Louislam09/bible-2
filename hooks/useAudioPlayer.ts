@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { AVPlaybackStatus, Audio } from "expo-av";
 import * as FileSystem from "expo-file-system";
+import { ToastAndroid } from "react-native";
 
 interface AudioPlayerHookProps {
   book: number;
@@ -96,8 +97,10 @@ const useAudioPlayer = ({
 
   const playAudio = async () => {
     if (!sound) {
+      ToastAndroid.show("Descargando...", ToastAndroid.SHORT);
       setIsDownloading(true);
       const { uri } = await FileSystem.downloadAsync(audioUrl, localUri);
+      ToastAndroid.show("Audio descargado!", ToastAndroid.SHORT);
       setIsDownloading(false);
 
       const { sound } = await Audio.Sound.createAsync(
@@ -108,6 +111,7 @@ const useAudioPlayer = ({
 
       setSound(sound);
       await sound?.playAsync();
+      ToastAndroid.show("Reproduciendo", ToastAndroid.SHORT);
       setIsPlaying(true);
       return;
     }
@@ -115,10 +119,12 @@ const useAudioPlayer = ({
     if (isPlaying) {
       setIsPlaying(false);
       await sound?.pauseAsync();
+      ToastAndroid.show("Pausado", ToastAndroid.SHORT);
       return;
     }
 
     await sound?.playAsync();
+    ToastAndroid.show("Reproduciendo", ToastAndroid.SHORT);
     setIsPlaying(true);
   };
 

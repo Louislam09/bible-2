@@ -105,6 +105,7 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
           backgroundColor={theme.colors.background}
           source={searchingSource}
         />
+        {query && <Text>Buscando...</Text>}
       </View>
     );
   }
