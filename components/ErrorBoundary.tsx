@@ -37,8 +37,8 @@ class ErrorBoundary extends React.Component<
   render(): React.ReactNode {
     if (this.state.hasError) {
       return (
-        <View>
-          <Text>Something went wrong.</Text>
+        <View style={{ flex: 1, alignItems: "center", display: "flex" }}>
+          <Text>Hubo un error</Text>
           {this.state.error && <Text>Error: {this.state.error.message}</Text>}
         </View>
       );

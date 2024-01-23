@@ -59,6 +59,7 @@ const BookContent: FC<BookContentInterface> = ({}) => {
           .catch((error) => {
             console.error("Error:content:", error);
           });
+        setLoading(false);
       }
     })();
 
@@ -67,13 +68,14 @@ const BookContent: FC<BookContentInterface> = ({}) => {
 
   return (
     <View style={styles.bookContainer}>
-      {!loading ? (
+      <Chapter dimensions={dimensions} item={data} />
+      {/* {!loading ? (
         <Chapter dimensions={dimensions} item={data} />
       ) : (
         <View style={{ flex: 1, display: "flex", alignItems: "center" }}>
           <ActivityIndicator style={{ flex: 1 }} />
         </View>
-      )}
+      )} */}
     </View>
   );
 };

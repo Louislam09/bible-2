@@ -53,7 +53,7 @@ async function copyDatabases(dbNames: DBName[]) {
     const dbPath = `${dbFolder}/${dbName}`;
     await databases[dbName](dbFolder, dbPath);
   }
-  ToastAndroid.show("Ready", ToastAndroid.SHORT);
+  ToastAndroid.show("bible downloaded", ToastAndroid.SHORT);
   console.log("---------- Databases downloaded ------------");
 }
 
@@ -90,10 +90,11 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
   };
 
   useEffect(() => {
-    // deleteDatabaseFile("myBible.db");
+    // deleteDatabaseFile("ntv.db");
     // return;
     const isDB = async () => {
       const dbFolder = `${FileSystem.documentDirectory}SQLite`;
+      await FileSystem.makeDirectoryAsync(dbFolder, { intermediates: true });
 
       for (const dbName of dbNames) {
         const dbPath = `${dbFolder}/${dbName}`;
@@ -126,7 +127,6 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
               (result) => {
                 if (result) {
                   console.log(`Database ${dbName} opened successfully.`);
-                  ToastAndroid.show(".", ToastAndroid.SHORT);
                   resolve(db);
                 } else {
                   console.error(`Error opening database ${dbName}.`);

@@ -34,15 +34,6 @@ const Chapter = ({ item, dimensions }: TChapter) => {
 
     return () => {};
   }, [verse, chapterRef, verses]);
-  // const ChapterHeader = () => {
-  //   return (
-  //     <View style={styles.chapterHeader}>
-  //       <Text style={styles.chapterHeaderTitle}>
-  //         Capitulo {item[0]?.chapter}
-  //       </Text>
-  //     </View>
-  //   );
-  // };
 
   const renderItem = (props: any) => (
     <Verse
@@ -50,7 +41,7 @@ const Chapter = ({ item, dimensions }: TChapter) => {
       setSelectedWord={setSelectedWord}
       setOpen={setOpen}
       verse={verse}
-      subtitles={subtitles}
+      subtitles={subtitles ?? []}
     />
   );
 
@@ -64,7 +55,7 @@ const Chapter = ({ item, dimensions }: TChapter) => {
           ref={chapterRef}
           decelerationRate={"normal"}
           estimatedItemSize={135}
-          data={verses}
+          data={verses ?? []}
           renderItem={renderItem}
           keyExtractor={(item: any, index: any) => `verse-${index}`}
           // ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
