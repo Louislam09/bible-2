@@ -2,7 +2,7 @@ import "react-native-gesture-handler";
 // import { StatusBar } from 'expo-status-bar';
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import React, { useEffect } from "react";
-import { StatusBar } from "react-native";
+import { StatusBar, ToastAndroid } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BibleProvider from "./context/BibleContext";
 import ThemeProvider from "./context/ThemeContext";
@@ -25,7 +25,11 @@ const App = () => {
       }
     } catch (error) {
       // You can also add an alert() to see the error message in case of an error when fetching updates.
-      alert(`Error fetching latest Expo update: ${error}`);
+      ToastAndroid.show(
+        "Error fetching latest Expo update",
+        ToastAndroid.SHORT
+      );
+      // alert(`Error fetching latest Expo update: ${error}`);
     }
   }
 
