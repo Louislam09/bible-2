@@ -138,7 +138,10 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
         <MaterialCommunityIcons
           name={isNTV ? "book-cross" : "crown"}
           size={isNTV ? 24 : headerIconSize}
-          style={[styles.icon, { marginHorizontal: 0 }]}
+          style={[
+            styles.icon,
+            { marginHorizontal: 0, color: theme.colors.notification },
+          ]}
         />
         <Text style={styles.text}>{currentBibleVersion}</Text>
       </TouchableOpacity>
