@@ -3,6 +3,8 @@ import React, { FC } from "react";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { EBibleVersions, TTheme } from "types";
 import { Text, View } from "../../Themed";
+import { deleteDatabaseFile } from "hooks/useDatabase";
+import { DBName } from "enums";
 
 interface IVersionList {
   currentBibleVersion: string;
@@ -13,6 +15,12 @@ interface IVersionList {
 const versionNames: any = {
   [EBibleVersions.NTV]: "Nueva Traduccion Viviente 2009",
   [EBibleVersions.RVR60]: "Reina Valera 1960",
+};
+
+const onLongPress = (version: any) => {
+  deleteDatabaseFile(
+    version === EBibleVersions.RVR60 ? DBName.BIBLE : DBName.NTV
+  );
 };
 
 const VersionList: FC<IVersionList> = ({
@@ -37,6 +45,7 @@ const VersionList: FC<IVersionList> = ({
             },
           ]}
           onPress={() => onSelect(version)}
+          onLongPress={() => onLongPress(version)}
         >
           <Text
             style={[
