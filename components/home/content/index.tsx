@@ -68,14 +68,13 @@ const BookContent: FC<BookContentInterface> = ({}) => {
 
   return (
     <View style={styles.bookContainer}>
-      <Chapter dimensions={dimensions} item={data} />
-      {/* {!loading ? (
+      {!loading ? (
         <Chapter dimensions={dimensions} item={data} />
       ) : (
         <View style={{ flex: 1, display: "flex", alignItems: "center" }}>
           <ActivityIndicator style={{ flex: 1 }} />
         </View>
-      )} */}
+      )}
     </View>
   );
 };

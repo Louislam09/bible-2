@@ -4,6 +4,7 @@ import * as FileSystem from "expo-file-system";
 import { Asset } from "expo-asset";
 import { DBName } from "../enums";
 import { ToastAndroid } from "react-native";
+import { CHECK_DB } from "constants/Queries";
 
 interface Row {
   [key: string]: any;
@@ -18,12 +19,15 @@ interface UseDatabase {
   ) => Promise<Row[]>;
 }
 
-const deleteDatabaseFile = async (dbName: string) => {
+export const deleteDatabaseFile = async (dbName: string) => {
   const fileName = `SQLite/${dbName}`;
   const filePath = `${FileSystem.documentDirectory}${fileName}`;
   try {
     await FileSystem.deleteAsync(filePath);
-    console.log(`File ${fileName} deleted successfully.`);
+    ToastAndroid.show(
+      `File ${fileName} deleted successfully.`,
+      ToastAndroid.SHORT
+    );
   } catch (error) {
     console.error(`Error deleting file ${fileName}:`, error);
   }
@@ -52,7 +56,7 @@ async function copyDatabases(dbNames: DBName[]) {
   for (const dbName of dbNames) {
     await databases[dbName]();
   }
-  ToastAndroid.show("bible downloaded", ToastAndroid.SHORT);
+  ToastAndroid.show("Downloaded", ToastAndroid.SHORT);
   console.log("---------- Databases downloaded ------------");
 }
 
@@ -89,24 +93,37 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
   };
 
   useEffect(() => {
-    // deleteDatabaseFile("ntv-bible.db");
-    // return;
+    if (!Array.isArray(dbNames)) return;
+    const dbExists = async (dbName: string) => {
+      return new Promise((resolve, reject) => {
+        const db = SQLite.openDatabase(dbName);
+        db.transaction(
+          (tx) => {
+            tx.executeSql(CHECK_DB, [], (_, result) => {
+              resolve(result.rows.length > 0);
+            });
+          },
+          () => {
+            resolve(false);
+            return false;
+          },
+          () => {
+            db.closeAsync();
+          }
+        );
+      });
+    };
+
     const isDB = async () => {
       const dbFolder = `${FileSystem.documentDirectory}SQLite`;
-      if (
-        !(
-          await FileSystem.getInfoAsync(FileSystem.documentDirectory + "SQLite")
-        ).exists
-      ) {
-        await FileSystem.makeDirectoryAsync(
-          FileSystem.documentDirectory + "SQLite"
-        );
+      if (!(await FileSystem.getInfoAsync(dbFolder)).exists) {
+        await FileSystem.makeDirectoryAsync(dbFolder);
       }
 
       for (const dbName of dbNames) {
-        const dbPath = `${dbFolder}/${dbName}`;
-        const dbFile = await FileSystem.getInfoAsync(dbPath);
-        if (!dbFile.exists) {
+        if (!dbName) return;
+        const exists = await dbExists(dbName);
+        if (!exists) {
           return false;
         }
       }
@@ -124,35 +141,28 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
 
       const databases: SQLite.SQLiteDatabase[] = [];
       for (const dbName of dbNames) {
-        const dbPromise = new Promise<SQLite.SQLiteDatabase>(
+        const db = await new Promise<SQLite.SQLiteDatabase>(
           (resolve, reject) => {
-            // const db = SQLite.openDatabase(
-            //   dbName,
-            //   undefined,
-            //   undefined,
-            //   undefined,
-            //   (result) => {
-            //     if (result) {
-            //       console.log(`Database ${dbName} opened successfully.`);
-            //       resolve(db);
-            //     } else {
-            //       console.error(`Error opening database ${dbName}.`);
-            //       reject(new Error(`Error opening database ${dbName}.`));
-            //     }
-            //   }
-            // );
-            const db = SQLite.openDatabase(dbName);
-            if (!db) {
-              reject(new Error(`Error opening database ${dbName}.`));
-              return;
-            }
-            resolve(db);
+            const database = SQLite.openDatabase(
+              dbName,
+              undefined,
+              undefined,
+              undefined,
+              (result) => {
+                if (result) {
+                  console.log(`Database ${dbName} opened successfully.`);
+                  resolve(database);
+                } else {
+                  console.error(`Error opening database ${dbName}.`);
+                  reject(new Error(`Error opening database ${dbName}.`));
+                }
+              }
+            );
           }
         );
 
-        databases.push(await dbPromise);
+        databases.push(db);
       }
-
       return databases;
     };
 
