@@ -8,7 +8,8 @@ import { Asset } from "expo-asset";
 const LogScreen = () => {
   const { myBibleDB, executeSql } = useDBContext();
   const [tables, setTables] = useState<any>([]);
-  const fileName = `SQLite/${(myBibleDB as any)?._db?._name}`;
+
+  const fileName = `SQLite/bible.db`;
   const filePath = `${FileSystem.documentDirectory}${fileName}`;
   const filePath2 = `${Asset.fromModule(require(`../assets/db/bible.db`)).uri}`;
   const filePath3 = `${

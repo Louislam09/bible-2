@@ -39,14 +39,16 @@ type TUseDatabase = {
 
 const databases: any = {
   [DBName.BIBLE]: async () => {
+    const uri = Asset.fromModule(require(`../assets/db/bible.db`)).uri;
     await FileSystem.downloadAsync(
-      Asset.fromModule(require(`../assets/db/bible.db`)).uri,
+      uri,
       FileSystem.documentDirectory + "SQLite/bible.db"
     );
   },
   [DBName.NTV]: async () => {
+    const uri = Asset.fromModule(require(`../assets/db/ntv-bible.db`)).uri;
     await FileSystem.downloadAsync(
-      Asset.fromModule(require(`../assets/db/ntv-bible.db`)).uri,
+      uri,
       FileSystem.documentDirectory + "SQLite/ntv-bible.db"
     );
   },
