@@ -30,6 +30,7 @@ type TIcon = {
   name: any;
   color?: string | any;
   action?: any;
+  longAction?: any;
 };
 
 const CustomHeader: FC<HeaderInterface> = ({}) => {
@@ -87,11 +88,16 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
     navigation.navigate(Screens.Search, { book: book });
   };
 
+  const onCopyLong = () => {
+    navigation.navigate("Log");
+  };
+
   const headerIconData: TIcon[] = [
     { name: "theme-light-dark", action: toggleTheme },
     {
       name: "content-copy",
       action: copyToClipboard,
+      longAction: onCopyLong,
       color: highlightedVerses.length && theme.colors.notification,
     },
     { name: "format-font", action: fontHandlePresentModalPress },
@@ -111,6 +117,7 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
             style={styles.iconContainer}
             key={index}
             onPress={icon?.action}
+            onLongPress={icon?.longAction}
           >
             <MaterialCommunityIcons
               style={[styles.icon, icon.color && { color: icon.color }]}

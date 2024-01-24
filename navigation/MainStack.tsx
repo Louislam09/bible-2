@@ -10,6 +10,7 @@ import React from "react";
 import Book from "screens/Book";
 import ChooseFromListScreen from "screens/ChooseFromListScreen";
 import Home from "screens/Home";
+import LogScreen from "screens/Log";
 import Search from "screens/Search";
 import { RootStackParamList, Screens, TTheme } from "types";
 
@@ -74,6 +75,11 @@ const MainStack = () => {
       <Stack.Screen
         name="ChooseVerseNumber"
         component={ChooseFromListScreen}
+        options={({ route }) => screenOptions(route)}
+      />
+      <Stack.Screen
+        name="Log"
+        component={LogScreen}
         options={({ route }) => screenOptions(route)}
       />
     </Stack.Navigator>

@@ -39,7 +39,7 @@ export type RootStackParamList = {
     | NavigatorScreenParams<RootTabParamList>
     | { book?: string; chapter?: string | number; verse?: string | number };
   Modal: undefined;
-  NotFound: undefined;
+  Log: undefined;
 };
 
 export enum Screens {
@@ -89,7 +89,6 @@ export enum TFont {
 
 export enum EBibleVersions {
   RVR60 = "RVR60",
-  // RVR1965 = "RVR1965",
   NTV = "NTV",
 }
 

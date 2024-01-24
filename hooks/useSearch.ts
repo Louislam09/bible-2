@@ -17,7 +17,7 @@ interface UseSearchHook {
 }
 
 type UseSearch = {
-  db: SQLite.WebSQLDatabase | null | undefined;
+  db: SQLite.SQLiteDatabase | null | undefined;
 };
 
 const useSearch = ({ db }: UseSearch): UseSearchHook => {

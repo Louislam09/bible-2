@@ -10,9 +10,9 @@ interface Row {
 }
 
 interface UseDatabase {
-  databases: SQLite.WebSQLDatabase[] | null[];
+  databases: SQLite.SQLiteDatabase[] | null[];
   executeSql: (
-    database: SQLite.WebSQLDatabase,
+    database: SQLite.SQLiteDatabase,
     sql: string,
     params?: any[]
   ) => Promise<Row[]>;
@@ -34,37 +34,36 @@ type TUseDatabase = {
 };
 
 const databases: any = {
-  [DBName.BIBLE]: async (dbFolder: any, dbPath: any) => {
-    await FileSystem.makeDirectoryAsync(dbFolder, { intermediates: true });
-    const asset = Asset.fromModule(require(`../assets/db/myBible.db`));
-    await FileSystem.downloadAsync(asset.uri, dbPath);
+  [DBName.BIBLE]: async () => {
+    await FileSystem.downloadAsync(
+      Asset.fromModule(require(`../assets/db/bible.db`)).uri,
+      FileSystem.documentDirectory + "SQLite/bible.db"
+    );
   },
-  [DBName.NTV]: async (dbFolder: any, dbPath: any) => {
-    await FileSystem.makeDirectoryAsync(dbFolder, { intermediates: true });
-    const asset = Asset.fromModule(require(`../assets/db/ntv.db`));
-    await FileSystem.downloadAsync(asset.uri, dbPath);
+  [DBName.NTV]: async () => {
+    await FileSystem.downloadAsync(
+      Asset.fromModule(require(`../assets/db/ntv-bible.db`)).uri,
+      FileSystem.documentDirectory + "SQLite/ntv-bible.db"
+    );
   },
 };
 
 async function copyDatabases(dbNames: DBName[]) {
-  const dbFolder = `${FileSystem.documentDirectory}SQLite`;
-
   for (const dbName of dbNames) {
-    const dbPath = `${dbFolder}/${dbName}`;
-    await databases[dbName](dbFolder, dbPath);
+    await databases[dbName]();
   }
   ToastAndroid.show("bible downloaded", ToastAndroid.SHORT);
   console.log("---------- Databases downloaded ------------");
 }
 
 function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
-  const [databases, setDatabases] = useState<SQLite.WebSQLDatabase[] | null[]>(
+  const [_databases, setDatabases] = useState<SQLite.SQLiteDatabase[] | null[]>(
     []
   );
   const [isDbCreated, setDbCreated] = useState(false);
 
   const executeSql = (
-    database: SQLite.WebSQLDatabase,
+    database: SQLite.SQLiteDatabase,
     sql: string,
     params: any[] = []
   ): Promise<Row[]> => {
@@ -90,11 +89,19 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
   };
 
   useEffect(() => {
-    // deleteDatabaseFile("ntv.db");
+    // deleteDatabaseFile("ntv-bible.db");
     // return;
     const isDB = async () => {
       const dbFolder = `${FileSystem.documentDirectory}SQLite`;
-      await FileSystem.makeDirectoryAsync(dbFolder, { intermediates: true });
+      if (
+        !(
+          await FileSystem.getInfoAsync(FileSystem.documentDirectory + "SQLite")
+        ).exists
+      ) {
+        await FileSystem.makeDirectoryAsync(
+          FileSystem.documentDirectory + "SQLite"
+        );
+      }
 
       for (const dbName of dbNames) {
         const dbPath = `${dbFolder}/${dbName}`;
@@ -115,25 +122,31 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
         return "";
       }
 
-      const databases: SQLite.WebSQLDatabase[] = [];
+      const databases: SQLite.SQLiteDatabase[] = [];
       for (const dbName of dbNames) {
-        const dbPromise = new Promise<SQLite.WebSQLDatabase>(
+        const dbPromise = new Promise<SQLite.SQLiteDatabase>(
           (resolve, reject) => {
-            const db = SQLite.openDatabase(
-              dbName,
-              undefined,
-              undefined,
-              undefined,
-              (result) => {
-                if (result) {
-                  console.log(`Database ${dbName} opened successfully.`);
-                  resolve(db);
-                } else {
-                  console.error(`Error opening database ${dbName}.`);
-                  reject(new Error(`Error opening database ${dbName}.`));
-                }
-              }
-            );
+            // const db = SQLite.openDatabase(
+            //   dbName,
+            //   undefined,
+            //   undefined,
+            //   undefined,
+            //   (result) => {
+            //     if (result) {
+            //       console.log(`Database ${dbName} opened successfully.`);
+            //       resolve(db);
+            //     } else {
+            //       console.error(`Error opening database ${dbName}.`);
+            //       reject(new Error(`Error opening database ${dbName}.`));
+            //     }
+            //   }
+            // );
+            const db = SQLite.openDatabase(dbName);
+            if (!db) {
+              reject(new Error(`Error opening database ${dbName}.`));
+              return;
+            }
+            resolve(db);
           }
         );
 
@@ -144,7 +157,7 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
     };
 
     openDB()
-      .then((resultDatabases: SQLite.WebSQLDatabase[] | string) => {
+      .then((resultDatabases: SQLite.SQLiteDatabase[] | string) => {
         if (Array.isArray(resultDatabases)) {
           setDatabases(resultDatabases);
         }
@@ -152,7 +165,7 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
       .catch(console.log);
   }, [isDbCreated]);
 
-  return { executeSql, databases };
+  return { executeSql, databases: _databases };
 }
 
 export default useDatabase;

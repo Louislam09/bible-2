@@ -10,17 +10,17 @@ interface Row {
 }
 
 type DatabaseContextType = {
-  myBibleDB?: SQLite.WebSQLDatabase | null;
+  myBibleDB?: SQLite.SQLiteDatabase | null;
   executeSql?:
     | ((
-        db: SQLite.WebSQLDatabase,
+        db: SQLite.SQLiteDatabase,
         sql: string,
         params?: any[]
       ) => Promise<Row[]>)
     | null;
-  strongDB?: SQLite.WebSQLDatabase | null;
+  strongDB?: SQLite.SQLiteDatabase | null;
   strongExecuteSql?: ((sql: string, params?: any[]) => Promise<Row[]>) | null;
-  subTitleDB?: SQLite.WebSQLDatabase | null;
+  subTitleDB?: SQLite.SQLiteDatabase | null;
   subtitleExecuteSql?: ((sql: string, params?: any[]) => Promise<Row[]>) | null;
 };
 
