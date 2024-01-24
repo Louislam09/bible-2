@@ -3,14 +3,17 @@ import { useDBContext } from "context/databaseContext";
 import React, { useEffect, useState } from "react";
 import * as FileSystem from "expo-file-system";
 import { DBName } from "enums";
+import { Asset } from "expo-asset";
 
 const LogScreen = () => {
   const { myBibleDB, executeSql } = useDBContext();
   const [tables, setTables] = useState<any>([]);
   const fileName = `SQLite/${(myBibleDB as any)?._db?._name}`;
   const filePath = `${FileSystem.documentDirectory}${fileName}`;
-  const filePath2 = `${FileSystem.documentDirectory}${DBName.BIBLE}`;
-  const filePath3 = `${FileSystem.documentDirectory}${DBName.NTV}`;
+  const filePath2 = `${Asset.fromModule(require(`../assets/db/bible.db`)).uri}`;
+  const filePath3 = `${
+    Asset.fromModule(require(`../assets/db/ntv-bible.db`)).uri
+  }`;
 
   useEffect(() => {
     if (!myBibleDB || !executeSql) return;
