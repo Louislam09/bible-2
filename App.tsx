@@ -22,11 +22,10 @@ const App = () => {
       if (update.isAvailable) {
         await Updates.fetchUpdateAsync();
         await Updates.reloadAsync();
+        ToastAndroid.show("Actualizada ✅", ToastAndroid.SHORT);
       }
     } catch (error) {
-      // You can also add an alert() to see the error message in case of an error when fetching updates.
-      ToastAndroid.show("Error fetching latest update", ToastAndroid.SHORT);
-      // alert(`Error fetching latest Expo update: ${error}`);
+      ToastAndroid.show("🔄", ToastAndroid.SHORT);
     }
   }
 
