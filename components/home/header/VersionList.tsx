@@ -45,7 +45,7 @@ const VersionList: FC<IVersionList> = ({
             },
           ]}
           onPress={() => onSelect(version)}
-          onLongPress={() => onLongPress(version)}
+          // onLongPress={() => onLongPress(version)}
         >
           <Text
             style={[
