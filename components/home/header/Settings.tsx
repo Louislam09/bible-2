@@ -139,16 +139,16 @@ const getStyles = ({ colors }: TTheme) =>
       borderRadius: 50,
       elevation: 5,
       backgroundColor: "white",
-      color: colors.border,
+      color: colors.text,
       fontSize: 30,
     },
     fontLabel: {
-      color: colors.border,
+      color: colors.text,
       fontWeight: "bold",
     },
     fontSize: {
       fontWeight: "bold",
-      color: colors.border,
+      color: colors.text,
       fontSize: 30,
     },
   });

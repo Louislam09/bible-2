@@ -100,7 +100,7 @@ const getStyles = ({ colors }: TTheme) =>
       }),
     },
     versionText: {
-      color: colors.border,
+      color: colors.text,
       fontSize: 22,
       textAlign: "center",
     },
