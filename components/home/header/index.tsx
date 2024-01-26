@@ -85,6 +85,7 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
   };
 
   const goSearchScreen = () => {
+    clearHighlights();
     navigation.navigate(Screens.Search, { book: book });
   };
 
@@ -92,8 +93,15 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
     navigation.navigate("Log");
   };
 
+  const markAsFavorite = () => {
+    console.log("fav");
+  };
+
   const headerIconData: TIcon[] = [
-    { name: "theme-light-dark", action: toggleTheme },
+    {
+      name: highlightedVerses.length ? "star-outline" : "theme-light-dark",
+      action: highlightedVerses.length ? markAsFavorite : toggleTheme,
+    },
     {
       name: "content-copy",
       action: copyToClipboard,
@@ -105,6 +113,7 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
   ];
 
   const onSelect = (version: string) => {
+    clearHighlights();
     selectBibleVersion(version);
     versionRef.current?.dismiss();
   };
