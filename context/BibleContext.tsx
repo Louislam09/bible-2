@@ -23,6 +23,7 @@ type BibleState = {
   toggleCopySearch: Function;
   decreaseFontSize: Function;
   increaseFontSize: Function;
+  toggleViewLayoutGrid: Function;
   selectTheme: Function;
   setLocalData: Function;
   performSearch: Function;
@@ -32,6 +33,7 @@ type BibleState = {
   currentTheme: keyof typeof EThemes;
   isCopyMode: boolean;
   isSearchCopy: boolean;
+  viewLayoutGrid: boolean;
   fontSize: number;
   searchState: UseSearchHookState;
 };
@@ -48,6 +50,7 @@ type BibleAction =
   | { type: "CLEAR_HIGHLIGHTS" }
   | { type: "SET_LOCAL_DATA"; payload: any }
   | { type: "TOGGLE_COPY_MODE" }
+  | { type: "TOGGLE_VIEW_LAYOUT_GRID" }
   | { type: "TOGGLE_COPY_SEARCH"; payload: boolean };
 
 const defaultSearch = {
@@ -67,6 +70,7 @@ const initialContext: BibleState = {
   toggleCopySearch: () => {},
   decreaseFontSize: () => {},
   increaseFontSize: () => {},
+  toggleViewLayoutGrid: () => {},
   setLocalData: () => {},
   performSearch: () => {},
   setSearchQuery: () => {},
@@ -78,6 +82,7 @@ const initialContext: BibleState = {
   searchQuery: "",
   currentTheme: "Blue",
   isSearchCopy: true,
+  viewLayoutGrid: true,
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);
@@ -139,6 +144,11 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
       return {
         ...state,
         isSearchCopy: action.payload,
+      };
+    case "TOGGLE_VIEW_LAYOUT_GRID":
+      return {
+        ...state,
+        viewLayoutGrid: !state.viewLayoutGrid,
       };
     case "SET_SEARCH_QUERY":
       return {
@@ -207,6 +217,9 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const toggleCopySearch = (value: boolean) => {
     dispatch({ type: "TOGGLE_COPY_SEARCH", payload: value });
   };
+  const toggleViewLayoutGrid = () => {
+    dispatch({ type: "TOGGLE_VIEW_LAYOUT_GRID" });
+  };
 
   const selectFont = (font: string) => {
     dispatch({ type: "SELECT_FONT", payload: font });
@@ -240,6 +253,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     setSearchQuery,
     selectTheme,
     toggleCopySearch,
+    toggleViewLayoutGrid,
   };
 
   return (

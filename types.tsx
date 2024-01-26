@@ -23,6 +23,7 @@ declare global {
 export type RootTabParamList = {
   Home: undefined;
   Book: undefined;
+  ChooseBookScreen: undefined;
   Search: undefined;
 };
 
@@ -31,6 +32,7 @@ export type RootStackParamList = {
     | NavigatorScreenParams<RootTabParamList>
     | { book?: string; chapter?: string | number; verse?: string | number };
   Book: NavigatorScreenParams<RootTabParamList> | undefined;
+  ChooseBook: NavigatorScreenParams<RootTabParamList> | undefined;
   Search: NavigatorScreenParams<RootTabParamList> | { book?: string };
   ChooseChapterNumber:
     | NavigatorScreenParams<RootTabParamList>
@@ -46,6 +48,7 @@ export enum Screens {
   Home = "Home",
   Search = "Search",
   Book = "Book",
+  ChooseBook = "ChooseBook",
   ChooseChapterNumber = "ChooseChapterNumber",
   ChooseVerseNumber = "ChooseVerseNumber",
 }

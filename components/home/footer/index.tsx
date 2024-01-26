@@ -94,7 +94,7 @@ const CustomFooter: FC<FooterInterface> = () => {
         <TouchableOpacity style={{ flex: 1, alignItems: "center" }}>
           <Text
             style={styles.bookLabel}
-            onPress={() => navigation?.navigate(Screens.Book)}
+            onPress={() => navigation?.navigate(Screens.ChooseBook)}
           >
             {`${displayBookName ?? ""} ${chapter ?? ""}`}
           </Text>

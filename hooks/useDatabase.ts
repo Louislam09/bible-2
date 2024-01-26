@@ -110,13 +110,10 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
           ? Asset.fromModule(require("../assets/db/bible.db"))
           : Asset.fromModule(require("../assets/db/ntv-bible.db"));
 
-      const name =
-        dbName === DBName.BIBLE ? EBibleVersions.RVR60 : EBibleVersions.NTV;
       if (!asset.downloaded) {
         await asset.downloadAsync().then((value) => {
           asset = value;
           console.log("asset downloadAsync - finished");
-          ToastAndroid.show(name, ToastAndroid.SHORT);
         });
 
         let remoteURI = asset.localUri;

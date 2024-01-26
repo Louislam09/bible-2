@@ -18,7 +18,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
   const styles = getStyles(theme);
 
   const screenNavigationMap: any = {
-    [Screens.Book]: (item: any) => ({
+    [Screens.ChooseBook]: (item: any) => ({
       screen: Screens.ChooseChapterNumber,
       params: { book: item },
     }),
@@ -77,7 +77,6 @@ const BookNameList = ({ bookList }: IBookNameList) => {
                 position: "absolute",
                 top: 10,
                 zIndex: 11,
-                // backgroundColor: "white",
                 paddingVertical: 5,
               },
             ]}
@@ -99,8 +98,8 @@ const BookNameList = ({ bookList }: IBookNameList) => {
         contentContainerStyle={styles.flatContainer}
         data={bookList?.map((x) => (x?.longName ? x?.longName : x))}
         renderItem={renderItem}
-        estimatedItemSize={47}
-        numColumns={selectedBook ? 6 : 1}
+        estimatedItemSize={50}
+        numColumns={bookList.length > 12 ? 5 : 3}
       />
     </View>
   );
@@ -135,11 +134,9 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       justifyContent: "space-between",
       borderStyle: "solid",
-      borderWidth: 1,
+      borderWidth: 0.5,
       borderColor: colors.text,
-      margin: 5,
-      paddingVertical: 5,
-      paddingHorizontal: 10,
+      padding: 15,
       flex: 1,
     },
     listTitle: {

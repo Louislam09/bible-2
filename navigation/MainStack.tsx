@@ -3,11 +3,13 @@ import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from "@react-navigation/native-stack";
+import ChooseBookHeader from "components/chooseBook/ChooseBookHeader";
 import SearchHeader from "components/search/SearchHeader";
 import { ScreensName } from "constants/ScreenName";
 import { useStorage } from "context/LocalstoreContext";
 import React from "react";
 import Book from "screens/Book";
+import ChooseBookScreen from "screens/ChooseBookScreen";
 import ChooseFromListScreen from "screens/ChooseFromListScreen";
 import Home from "screens/Home";
 import LogScreen from "screens/Log";
@@ -52,6 +54,14 @@ const MainStack = () => {
         }}
         name="Home"
         component={Home}
+      />
+      <Stack.Screen
+        name="ChooseBook"
+        component={ChooseBookScreen}
+        options={({ route }) => ({
+          ...screenOptions(route),
+          header: (props: any) => <ChooseBookHeader {...props} />,
+        })}
       />
       <Stack.Screen
         name="Book"
