@@ -40,7 +40,16 @@ const SelectThemeList: FC<ISelectThemeList> = ({ selectTheme, theme }) => {
         style={[styles.themeCard, { backgroundColor: item }]}
         onPress={() => onItemClick(name)}
       >
-        <Text style={[styles.themeLabel, currentTheme === name && {}]}>
+        <Text
+          style={[
+            styles.themeLabel,
+            currentTheme === name && {
+              textDecorationLine: "line-through",
+              textDecorationColor: "red",
+              textDecorationStyle: "solid",
+            },
+          ]}
+        >
           {colorNames[name]}
         </Text>
       </TouchableOpacity>

@@ -59,7 +59,12 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
         style={[styles.listViewItem, index === 0 && { borderTopWidth: 0 }]}
         onPress={() => handlePress(item)}
       >
-        <Text style={[styles.listTitle, { color: item.bookColor }]}>
+        <Text
+          style={[
+            styles.listTitle,
+            { color: theme.dark ? item.bookColor : "black" },
+          ]}
+        >
           {item.longName}
         </Text>
         <MaterialCommunityIcons
@@ -78,7 +83,12 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
         style={[styles.listItem]}
         onPress={() => handlePress(item)}
       >
-        <Text style={[styles.listTitle, { color: item.bookColor }]}>
+        <Text
+          style={[
+            styles.listTitle,
+            { color: theme.dark ? item.bookColor : "black" },
+          ]}
+        >
           {item.shortName}
         </Text>
       </TouchableOpacity>
@@ -101,9 +111,7 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
         <Text style={styles.listTitle}>Nuevo Pacto</Text>
         <FlashList
           contentContainerStyle={styles.flatContainer}
-          data={DB_BOOK_NAMES.filter(
-            (_, index) => index > BookIndexes.Malaquias
-          )}
+          data={DB_BOOK_NAMES.filter((_, index) => index >= BookIndexes.Mateo)}
           renderItem={renderItem}
           estimatedItemSize={47}
           numColumns={6}
@@ -152,7 +160,7 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
   );
 };
 
-const getStyles = ({ colors }: TTheme) =>
+const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     saerchInput: {
       borderBottomColor: colors.notification,
@@ -167,11 +175,13 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "flex-start",
       width: "100%",
       marginTop: 5,
+      backgroundColor: colors.background,
     },
     listWrapper: {
       display: "flex",
       flex: 1,
       width: "100%",
+      backgroundColor: colors.background,
     },
     bookImage: {
       resizeMode: "contain",
@@ -188,7 +198,7 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       borderStyle: "solid",
       borderWidth: 0.5,
-      borderColor: colors.text + "cc",
+      borderColor: "#4a4949",
       padding: 10,
       flex: 1,
     },
@@ -199,7 +209,8 @@ const getStyles = ({ colors }: TTheme) =>
       justifyContent: "space-between",
       borderStyle: "solid",
       borderWidth: 0.19,
-      borderColor: colors.text + "cc",
+      borderColor: "#4a4949",
+
       borderLeftWidth: 0,
       borderRightWidth: 0,
       padding: 15,
@@ -209,9 +220,10 @@ const getStyles = ({ colors }: TTheme) =>
       fontSize: 20,
       marginVertical: 10,
       paddingLeft: 15,
+      color: colors.notification,
     },
     listTitle: {
-      color: colors.text,
+      color: colors.notification,
       fontSize: 20,
     },
     listChapterTitle: {
