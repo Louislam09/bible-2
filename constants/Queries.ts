@@ -13,6 +13,16 @@ where`;
 export const CHECK_DB =
   "SELECT name FROM sqlite_master WHERE type='table' AND name='verses';";
 
+export const CREATE_FAVORITE_VERSES_TABLE = `CREATE TABLE IF NOT EXISTS favorite_verses (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  book_number INTEGER,
+  chapter INTEGER,
+  verse INTEGER,
+  FOREIGN KEY(book_number) REFERENCES books(book_number)
+);`;
+
+export const INSERT_FAVORITE_VERSE = `INSERT INTO favorite_verses (book_number, chapter, verse) VALUES (?, ?, ?);`;
+
 type TQuery = {
   GET_VERSE_NUMBER_QUERY: string;
   GET_VERSES_BY_BOOK_AND_CHAPTER: string;
