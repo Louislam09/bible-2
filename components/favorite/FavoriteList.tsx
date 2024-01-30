@@ -2,15 +2,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "components/Animation";
-import Highlighter from "components/Highlighter";
 import { Text } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
-import * as Clipboard from "expo-clipboard";
 import { useEffect, useRef, useState } from "react";
 import {
   ListRenderItem,
   StyleSheet,
-  ToastAndroid,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -23,16 +20,19 @@ type TListVerse = {
   isLoading: boolean;
 };
 
-const ListVerse = ({ data, isLoading }: TListVerse) => {
-  const animationRef = useRef<any>(null);
+const FavoriteList = ({ data }: TListVerse) => {
+  const [filterData, setFilter] = useState([]);
   const theme = useTheme();
   const navigation = useNavigation();
   const styles = getStyles(theme);
-  const { searchQuery: query, isSearchCopy } = useBibleContext();
+  const { toggleFavoriteVerse } = useBibleContext();
   const flatListRef = useRef<FlashList<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const notFoundSource = require("../../assets/lottie/notFound.json");
-  const searchingSource = require("../../assets/lottie/searching.json");
+
+  useEffect(() => {
+    setFilter(data);
+  }, [data]);
 
   const handleScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -41,10 +41,6 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
   };
 
   const onVerseClick = async (item: IVerseItem) => {
-    if (isSearchCopy) {
-      await copyToClipboard(item);
-      return;
-    }
     navigation.navigate(Screens.Home, {
       book: item.bookName,
       chapter: item.chapter,
@@ -52,7 +48,31 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
     });
   };
 
-  const renderItem: ListRenderItem<IVerseItem> = ({ item }) => {
+  const onFavorite = (item: IVerseItem & { id: number }) => {
+    toggleFavoriteVerse({
+      bookNumber: item.book_number,
+      chapter: item.chapter,
+      verse: item.verse,
+      isFav: true,
+    });
+    setFilter((prev) => prev.filter((x: any) => x.id !== item.id));
+  };
+
+  const onCopy = async (item: IVerseItem) => {
+    await copyToClipboard(item);
+  };
+
+  const formattedDatetime = (date: string) =>
+    new Date(date).toLocaleString("es-ES", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+
+  const renderItem: ListRenderItem<IVerseItem & { id: number }> = ({
+    item,
+  }) => {
     return (
       <TouchableOpacity activeOpacity={0.9} onPress={() => onVerseClick(item)}>
         <View style={styles.cardContainer}>
@@ -60,48 +80,46 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
             <Text
               style={styles.cardTitle}
             >{`${item.bookName} ${item.chapter}:${item.verse}`}</Text>
+            <View style={styles.verseAction}>
+              <MaterialCommunityIcons
+                size={20}
+                name="content-copy"
+                style={styles.icon}
+                onPress={() => onCopy(item)}
+              />
+              <MaterialCommunityIcons
+                size={20}
+                name="star"
+                style={[styles.icon, { color: "yellow" }]}
+                onPress={() => onFavorite(item)}
+              />
+            </View>
           </View>
-          <Highlighter
-            style={styles.cardBody}
-            highlightStyle={{ color: theme.colors.notification }}
-            searchWords={!query ? [] : [...query.trim().split(" ")]}
-            textToHighlight={getVerseTextRaw(item.text)}
-            // onWordClick={(text) => console.log({ text })}
-          />
+          <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
+          <View style={{ alignSelf: "flex-end", marginTop: 15 }}>
+            <Text style={styles.verseBody}>
+              {new Date(item.created_at).toLocaleString()}
+            </Text>
+          </View>
         </View>
       </TouchableOpacity>
     );
   };
 
-  useEffect(() => {
-    if (!animationRef.current) return;
-    // animationRef.current.play();
-
-    return () => animationRef.current?.pause();
-  }, []);
-
   const SearchedHeader = () => {
     return (
-      <View style={styles.chapterHeader}>
+      <View
+        style={[
+          styles.chapterHeader,
+          !filterData.length && { display: "none" },
+        ]}
+      >
         <Text style={styles.chapterHeaderTitle}>
-          {(data ?? []).length} versiculos encontrado
+          {(filterData ?? []).length} versiculos favoritos
         </Text>
       </View>
     );
   };
-
-  if (isLoading || !data) {
-    return (
-      <View style={styles.noResultsContainer}>
-        <Animation
-          animationRef={animationRef}
-          backgroundColor={theme.colors.background}
-          source={searchingSource}
-        />
-        {query && <Text>Buscando...</Text>}
-      </View>
-    );
-  }
 
   const renderScrollToTopButton = () => {
     return (
@@ -130,10 +148,10 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
         ListHeaderComponent={SearchedHeader}
         decelerationRate={"normal"}
         estimatedItemSize={135}
-        data={data}
+        data={filterData}
         renderItem={renderItem as any}
         onScroll={handleScroll}
-        keyExtractor={(item: any, index: any) => `list-${index}`}
+        keyExtractor={(item: any, index: any) => `fav-${index}`}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         ListEmptyComponent={
           <View style={styles.noResultsContainer}>
@@ -141,7 +159,9 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
               backgroundColor={theme.colors.background}
               source={notFoundSource}
             />
-            <Text style={styles.noResultsText}>No encontramos resultados</Text>
+            <Text style={styles.noResultsText}>
+              No tienes versiculos favoritos
+            </Text>
           </View>
         }
       />
@@ -152,6 +172,9 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
 
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
+    verseBody: {
+      color: colors.text,
+    },
     scrollToTopButton: {
       position: "absolute",
       bottom: 20,
@@ -174,11 +197,13 @@ const getStyles = ({ colors }: TTheme) =>
       color: colors.text,
     },
     cardContainer: {
+      display: "flex",
       borderRadius: 10,
-      padding: 16,
+      padding: 10,
       margin: 8,
     },
     headerContainer: {
+      position: "relative",
       flexDirection: "row",
       justifyContent: "space-between",
       marginBottom: 8,
@@ -194,7 +219,7 @@ const getStyles = ({ colors }: TTheme) =>
     },
     separator: {
       height: 1,
-      backgroundColor: colors.notification,
+      backgroundColor: colors.notification + "99",
       marginVertical: 8,
     },
     noResultsContainer: {
@@ -206,6 +231,16 @@ const getStyles = ({ colors }: TTheme) =>
       fontSize: 18,
       color: colors.text,
     },
+    verseAction: {
+      alignSelf: "flex-end",
+      flexDirection: "row",
+    },
+    icon: {
+      fontWeight: "700",
+      marginHorizontal: 10,
+      color: colors.primary,
+      fontSize: 24,
+    },
   });
 
-export default ListVerse;
+export default FavoriteList;

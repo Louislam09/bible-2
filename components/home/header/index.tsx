@@ -13,7 +13,7 @@ import { useCustomTheme } from "../../../context/ThemeContext";
 
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BottomModal from "components/BottomModal";
-import formatTextToClipboard from "utils/formatTextToClipboard";
+import formatTextToClipboard from "utils/copyToClipboard";
 import {
   EBibleVersions,
   HomeParams,
@@ -49,7 +49,6 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
   const { toggleTheme } = useCustomTheme();
   const styles = getStyles(theme);
   const headerIconSize = 28;
-  const highlightedGreaterThanOne = highlightedVerses.length > 1;
   const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
@@ -61,29 +60,6 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
     versionRef.current?.present();
   }, []);
 
-  const copyToClipboard = async () => {
-    if (!highlightedVerses.length) {
-      ToastAndroid.show("No hay selección", ToastAndroid.SHORT);
-      return;
-    }
-    const textFormat = formatTextToClipboard(
-      highlightedVerses,
-      highlightedGreaterThanOne,
-      book,
-      chapter
-    );
-    await Clipboard.setStringAsync(textFormat);
-    const text = await Clipboard.getStringAsync();
-    clearHighlights();
-    ToastAndroid.show(
-      `Versiculo${highlightedGreaterThanOne ? "s" : ""} copiado${
-        highlightedGreaterThanOne ? "s" : ""
-      }!`,
-      ToastAndroid.SHORT
-    );
-    console.log(text);
-  };
-
   const goSearchScreen = () => {
     clearHighlights();
     navigation.navigate(Screens.Search, { book: book });
@@ -93,23 +69,18 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
     navigation.navigate("Log");
   };
 
-  const markAsFavorite = () => {
-    console.log("fav");
-  };
-
   const headerIconData: TIcon[] = [
     {
-      name: highlightedVerses.length ? "star-outline" : "theme-light-dark",
-      action: highlightedVerses.length ? markAsFavorite : toggleTheme,
-    },
-    {
-      name: "content-copy",
-      action: copyToClipboard,
-      longAction: onCopyLong,
-      color: highlightedVerses.length && theme.colors.notification,
+      name: "theme-light-dark",
+      action: toggleTheme,
     },
     { name: "format-font", action: fontHandlePresentModalPress },
     { name: "magnify", action: goSearchScreen },
+    {
+      name: "playlist-star",
+      action: () => navigation.navigate("Favorite"),
+      longAction: onCopyLong,
+    },
   ];
 
   const onSelect = (version: string) => {

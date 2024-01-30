@@ -5,11 +5,21 @@ import React, {
   useReducer,
   useState,
 } from "react";
-import { EThemes, IBookVerse, TFont, EBibleVersions } from "../types";
+import {
+  EThemes,
+  IBookVerse,
+  TFont,
+  EBibleVersions,
+  IFavoriteVerse,
+} from "../types";
 import useCustomFonts from "../hooks/useCustomFonts";
 import { useDBContext } from "./databaseContext";
 import useSearch, { UseSearchHookState } from "hooks/useSearch";
 import { useStorage } from "./LocalstoreContext";
+import {
+  DELETE_FAVORITE_VERSE,
+  INSERT_FAVORITE_VERSE,
+} from "constants/Queries";
 
 type BibleState = {
   highlightedVerses: IBookVerse[];
@@ -22,6 +32,7 @@ type BibleState = {
   toggleCopyMode: Function;
   toggleCopySearch: Function;
   decreaseFontSize: Function;
+  toggleFavoriteVerse: ({ bookNumber, chapter, verse }: IFavoriteVerse) => void;
   increaseFontSize: Function;
   toggleViewLayoutGrid: Function;
   selectTheme: Function;
@@ -69,6 +80,7 @@ const initialContext: BibleState = {
   toggleCopyMode: () => {},
   toggleCopySearch: () => {},
   decreaseFontSize: () => {},
+  toggleFavoriteVerse: (item: IFavoriteVerse) => {},
   increaseFontSize: () => {},
   toggleViewLayoutGrid: () => {},
   setLocalData: () => {},
@@ -173,7 +185,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     storedData;
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
   const fontsLoaded = useCustomFonts();
-  const { myBibleDB } = useDBContext();
+  const { myBibleDB, executeSql } = useDBContext();
 
   const {
     state: searchState,
@@ -221,6 +233,20 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     dispatch({ type: "TOGGLE_VIEW_LAYOUT_GRID" });
   };
 
+  const toggleFavoriteVerse = ({
+    bookNumber,
+    chapter,
+    verse,
+    isFav,
+  }: IFavoriteVerse) => {
+    if (!myBibleDB || !executeSql) return;
+    executeSql(
+      myBibleDB,
+      isFav ? DELETE_FAVORITE_VERSE : INSERT_FAVORITE_VERSE,
+      [bookNumber, chapter, verse]
+    );
+  };
+
   const selectFont = (font: string) => {
     dispatch({ type: "SELECT_FONT", payload: font });
     saveData({ selectedFont: font });
@@ -254,6 +280,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     selectTheme,
     toggleCopySearch,
     toggleViewLayoutGrid,
+    toggleFavoriteVerse,
   };
 
   return (

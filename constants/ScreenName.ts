@@ -11,4 +11,5 @@ export const ScreensName: { [key in Screens]: string } = {
   [Screens.ChooseBook]: "Seleccione un libro",
   [Screens.ChooseChapterNumber]: "Capitulos",
   [Screens.ChooseVerseNumber]: "Versiculos",
+  [Screens.Favorite]: "Versiculos Favoritos",
 };
