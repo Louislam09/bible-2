@@ -42,7 +42,7 @@ on b.book_number = v.book_number
 inner join favorite_verses fv 
 ON v.book_number = fv.book_number 
 AND v.chapter = fv.chapter 
-AND v.verse = fv.verse;`;
+AND v.verse = fv.verse order by id desc;`;
 
 type TQuery = {
   GET_VERSE_NUMBER_QUERY: string;
