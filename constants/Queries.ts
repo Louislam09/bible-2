@@ -17,8 +17,7 @@ export const CREATE_FAVORITE_VERSES_TABLE = `CREATE TABLE IF NOT EXISTS favorite
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   book_number INTEGER,
   chapter INTEGER,
-  verse INTEGER,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  verse INTEGER
 );`;
 
 export const INSERT_FAVORITE_VERSE = `INSERT INTO favorite_verses (book_number, chapter, verse) VALUES (?, ?, ?);`;
@@ -37,13 +36,13 @@ AND v.verse = fv.verse
 WHERE v.book_number = ? 
 AND v.chapter = ?;`;
 
-export const GET_ALL_FAVORITE_VERSES = `select v.*, fv.id, fv.created_at ,b.long_name as bookName from verses v
+export const GET_ALL_FAVORITE_VERSES = `select v.*, fv.id,b.long_name as bookName from verses v
 inner join books b
 on b.book_number = v.book_number
 inner join favorite_verses fv 
 ON v.book_number = fv.book_number 
 AND v.chapter = fv.chapter 
-AND v.verse = fv.verse order by created_at desc;`;
+AND v.verse = fv.verse;`;
 
 type TQuery = {
   GET_VERSE_NUMBER_QUERY: string;

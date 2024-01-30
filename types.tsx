@@ -133,7 +133,6 @@ export interface IVerseItem {
   verse: number;
   bookName?: string;
   is_favorite?: any;
-  created_at?: any;
 }
 
 export interface IBookVerse {

@@ -96,11 +96,6 @@ const FavoriteList = ({ data }: TListVerse) => {
             </View>
           </View>
           <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
-          <View style={{ alignSelf: "flex-end", marginTop: 15 }}>
-            <Text style={styles.verseBody}>
-              {new Date(item.created_at).toLocaleString()}
-            </Text>
-          </View>
         </View>
       </TouchableOpacity>
     );
