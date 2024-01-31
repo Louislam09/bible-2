@@ -24,16 +24,19 @@ export const formatTextToClipboard = (
   }\n${verseText}`;
 };
 
-const copyToClipboard = async (item: IVerseItem): Promise<void> => {
+const copyToClipboard = async (
+  item: IVerseItem | IVerseItem[]
+): Promise<void> => {
+  const isArray = Array.isArray(item);
   const currentBook = DB_BOOK_NAMES.find(
-    (x) => x.bookNumber === +item.book_number
+    (x) => x.bookNumber === +(isArray ? item[0] : item).book_number
   );
   const bookName = currentBook?.longName;
   const textCopied = formatTextToClipboard(
-    [item],
-    false,
+    isArray ? item : [item],
+    isArray,
     bookName,
-    item.chapter
+    isArray ? item[0].chapter : item.chapter
   );
 
   await Clipboard.setStringAsync(textCopied);

@@ -1,8 +1,8 @@
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { HomeParams, TTheme, TVerse } from "../../../types";
+import { HomeParams, IBookVerse, TTheme, TVerse } from "../../../types";
 import { Text } from "../../Themed";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useBibleContext } from "../../../context/BibleContext";
 import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import extractVersesInfo from "../../../utils/extractVersesInfo";
@@ -11,7 +11,7 @@ import { customUnderline } from "../../../utils/customStyle";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import copyToClipboard from "utils/copyToClipboard";
 
-const Verse: React.FC<TVerse> = ({ item, subtitles }) => {
+const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   const navigation = useNavigation();
   const {
     highlightVerse,
@@ -27,24 +27,37 @@ const Verse: React.FC<TVerse> = ({ item, subtitles }) => {
   const styles = getStyles(theme);
   const [isVerseHighlisted, setHighlightVerse] = useState(false);
   const [isFavorite, setFavorite] = useState(false);
+  const [lastHighted, setLastHighted] = useState<IBookVerse | any>(null);
+  const highlightedVersesLenth = highlightedVerses.length;
+  const isMoreThanOneHighted = highlightedVersesLenth > 1;
 
   useEffect(() => {
     setFavorite(!!item.is_favorite);
   }, [item]);
 
   useEffect(() => {
-    if (!highlightedVerses.length) {
+    if (isMoreThanOneHighted && isVerseHighlisted) {
+      const lastItem = highlightedVerses[highlightedVersesLenth - 1];
+      setLastHighted(lastItem);
+    }
+    if (!highlightedVersesLenth) {
       setHighlightVerse(false);
     }
   }, [highlightedVerses]);
 
-  const highlightVerseFunc = () => {
-    if (!isCopyMode) toggleCopyMode();
+  const onVerseClicked = () => {
+    if (!isCopyMode) return;
     if (isVerseHighlisted) {
       setHighlightVerse(false);
       removeHighlistedVerse(item);
       return;
     }
+    highlightVerse(item);
+    setHighlightVerse(true);
+  };
+
+  const onVerseLongPress = () => {
+    toggleCopyMode();
     highlightVerse(item);
     setHighlightVerse(true);
   };
@@ -125,16 +138,14 @@ const Verse: React.FC<TVerse> = ({ item, subtitles }) => {
   };
 
   const onCopy = async () => {
-    await copyToClipboard(item);
+    await copyToClipboard(highlightedVersesLenth ? highlightedVerses : item);
+    if (highlightedVersesLenth) clearHighlights();
   };
 
   return (
     <TouchableOpacity
-      onPress={() => {
-        if (!isCopyMode) return;
-        highlightVerseFunc();
-      }}
-      onLongPress={highlightVerseFunc}
+      onPress={() => onVerseClicked()}
+      onLongPress={() => onVerseLongPress()}
       activeOpacity={0.9}
       style={styles.verseContainer}
     >
@@ -158,20 +169,26 @@ const Verse: React.FC<TVerse> = ({ item, subtitles }) => {
         </Text>
         <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
       </Text>
-      {isVerseHighlisted && (
+      {isVerseHighlisted && !!highlightedVersesLenth && (
         <View style={styles.verseAction}>
-          <MaterialCommunityIcons
-            size={20}
-            name={"content-copy"}
-            style={styles.icon}
-            onPress={() => onCopy()}
-          />
-          <MaterialCommunityIcons
-            size={20}
-            name={isFavorite ? "star" : "star-outline"}
-            style={[styles.icon, isFavorite && { color: "yellow" }]}
-            onPress={onFavorite}
-          />
+          {!(lastHighted?.verse !== item.verse && isMoreThanOneHighted) && (
+            <Pressable>
+              <MaterialCommunityIcons
+                size={24}
+                name={"content-copy"}
+                style={styles.icon}
+                onPress={() => onCopy()}
+              />
+            </Pressable>
+          )}
+          <Pressable>
+            <MaterialCommunityIcons
+              size={24}
+              name={isFavorite ? "star" : "star-outline"}
+              style={[styles.icon, isFavorite && { color: "yellow" }]}
+              onPress={onFavorite}
+            />
+          </Pressable>
         </View>
       )}
     </TouchableOpacity>
@@ -206,7 +223,7 @@ const getStyles = ({ colors }: TTheme) =>
       flexDirection: "row",
       bottom: 10,
       right: 5,
-      zIndex: 11,
+      zIndex: 111,
       backgroundColor: colors.notification + "99",
       borderRadius: 15,
       padding: 5,
@@ -215,7 +232,7 @@ const getStyles = ({ colors }: TTheme) =>
       fontWeight: "700",
       marginHorizontal: 10,
       color: colors.primary,
-      fontSize: 24,
+      fontSize: 26,
     },
   });
 

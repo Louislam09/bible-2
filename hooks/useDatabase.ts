@@ -71,7 +71,6 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
   async function createFavoriteVerseTable(database: SQLite.SQLiteDatabase) {
     try {
       await executeSql(database, CREATE_FAVORITE_VERSES_TABLE);
-      console.log(`- createFavoriteVerseTable`);
     } catch (error) {
       console.error(`Error creating table favorite_verses:`, error);
     }
