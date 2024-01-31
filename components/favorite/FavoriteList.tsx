@@ -31,8 +31,10 @@ const FavoriteList = ({ data }: TListVerse) => {
   const notFoundSource = require("../../assets/lottie/notFound.json");
 
   useEffect(() => {
+    if (!data) return;
     setFilter(data);
   }, [data]);
+  if (!data) return;
 
   const handleScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -61,14 +63,6 @@ const FavoriteList = ({ data }: TListVerse) => {
   const onCopy = async (item: IVerseItem) => {
     await copyToClipboard(item);
   };
-
-  const formattedDatetime = (date: string) =>
-    new Date(date).toLocaleString("es-ES", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
 
   const renderItem: ListRenderItem<IVerseItem & { id: number }> = ({
     item,

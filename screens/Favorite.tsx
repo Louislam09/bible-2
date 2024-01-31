@@ -6,7 +6,7 @@ import { RootStackScreenProps } from "types";
 
 const Favorite: React.FC<RootStackScreenProps<"Favorite">> = (props) => {
   const { myBibleDB, executeSql } = useDBContext();
-  const [data, setData] = useState<any>([]);
+  const [data, setData] = useState<any | null>(null);
 
   useEffect(() => {
     (async () => {
