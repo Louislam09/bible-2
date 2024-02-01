@@ -39,7 +39,7 @@ const useSearch = ({ db }: UseSearch): UseSearchHook => {
     const words = query.split(" ");
     const whereConditions = Array.from(
       { length: words.length },
-      () => "v.text LIKE ?"
+      () => "t.bare_lowercase_words LIKE ?"
     );
     const whereClause = whereConditions.join(" AND ");
 

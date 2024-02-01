@@ -46,7 +46,6 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
         index={startAT ?? 1}
         snapPoints={snapPoints}
         handleIndicatorStyle={styles.indicator}
-        // enableHandlePanningGesture
         backdropComponent={renderBackdrop}
         onChange={handleSheetChanges}
       >

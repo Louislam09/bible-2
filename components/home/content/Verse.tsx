@@ -1,15 +1,21 @@
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { HomeParams, IBookVerse, TTheme, TVerse } from "../../../types";
 import { Text } from "../../Themed";
 import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useBibleContext } from "../../../context/BibleContext";
 import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
-import extractVersesInfo from "../../../utils/extractVersesInfo";
+import extractVersesInfo, {
+  getStrongValue,
+} from "../../../utils/extractVersesInfo";
 import { DB_BOOK_NAMES } from "../../../constants/BookNames";
 import { customUnderline } from "../../../utils/customStyle";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import copyToClipboard from "utils/copyToClipboard";
+import Highlighter from "components/Highlighter";
+import BottomModal from "components/BottomModal";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import StrongContent from "./StrongContent";
 
 const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   const navigation = useNavigation();
@@ -22,6 +28,10 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
     fontSize,
     toggleFavoriteVerse,
     clearHighlights,
+    setStrongWord,
+    strongWord,
+    verseInStrongDisplay,
+    setverseInStrongDisplay,
   } = useBibleContext();
   const theme = useTheme() as TTheme;
   const styles = getStyles(theme);
@@ -30,6 +40,13 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   const [lastHighted, setLastHighted] = useState<IBookVerse | any>(null);
   const highlightedVersesLenth = highlightedVerses.length;
   const isMoreThanOneHighted = highlightedVersesLenth > 1;
+  const isStrongSearch = verseInStrongDisplay === item.verse;
+  const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
+  const strongRef = useRef<BottomSheetModal>(null);
+
+  const strongHandlePresentModalPress = useCallback(() => {
+    strongRef.current?.present();
+  }, []);
 
   useEffect(() => {
     setFavorite(!!item.is_favorite);
@@ -46,6 +63,7 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   }, [highlightedVerses]);
 
   const onVerseClicked = () => {
+    setverseInStrongDisplay(isStrongSearch ? 0 : item.verse);
     if (!isCopyMode) return;
     if (isVerseHighlisted) {
       setHighlightVerse(false);
@@ -107,7 +125,7 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
     return subTitle ? (
       <View>
         <Text
-          key={subTitle.order_if_several}
+          // key={subTitle.order_if_several}
           style={[
             styles.verse,
             {
@@ -142,6 +160,16 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
     if (highlightedVersesLenth) clearHighlights();
   };
 
+  const onWordClicked = (word: string) => {
+    const wordIndex = textValue.indexOf(word);
+    const NT_BOOK_NUMBER = 470;
+    const cognate = item.book_number < NT_BOOK_NUMBER ? "H" : "G";
+    const value = { text: word, code: `${cognate}${strongValue[wordIndex]}` };
+    setStrongWord(value);
+    strongHandlePresentModalPress();
+    console.log(textValue[wordIndex], strongValue[wordIndex]);
+  };
+
   return (
     <TouchableOpacity
       onPress={() => onVerseClicked()}
@@ -163,11 +191,26 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
       >
         <Text style={[styles.verseNumber]}>
           {isFavorite && !isVerseHighlisted && (
-            <MaterialCommunityIcons size={14} name={"star"} color={"yellow"} />
+            <MaterialCommunityIcons
+              size={14}
+              name={"star"}
+              color={theme.dark ? "yellow" : theme.colors.primary}
+            />
           )}
           &nbsp;{item.verse}&nbsp;
         </Text>
-        <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
+
+        {isStrongSearch ? (
+          <Highlighter
+            textToHighlight={getVerseTextRaw(item.text)}
+            searchWords={textValue}
+            highlightStyle={{ color: theme.colors.notification }}
+            style={[styles.verseBody, { letterSpacing: 2 }]}
+            onWordClick={onWordClicked}
+          />
+        ) : (
+          <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
+        )}
       </Text>
       {isVerseHighlisted && !!highlightedVersesLenth && (
         <View style={styles.verseAction}>
@@ -176,7 +219,7 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
               <MaterialCommunityIcons
                 size={24}
                 name={"content-copy"}
-                style={styles.icon}
+                style={[styles.icon, { color: "white" }]}
                 onPress={() => onCopy()}
               />
             </Pressable>
@@ -185,12 +228,16 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
             <MaterialCommunityIcons
               size={24}
               name={isFavorite ? "star" : "star-outline"}
-              style={[styles.icon, isFavorite && { color: "yellow" }]}
+              style={[styles.icon, { color: isFavorite ? "yellow" : "white" }]}
               onPress={onFavorite}
             />
           </Pressable>
         </View>
       )}
+
+      <BottomModal startAT={2} ref={strongRef}>
+        <StrongContent theme={theme} data={strongWord} fontSize={fontSize} />
+      </BottomModal>
     </TouchableOpacity>
   );
 };
@@ -216,7 +263,7 @@ const getStyles = ({ colors }: TTheme) =>
       textDecorationLine: "underline",
       textDecorationColor: colors.notification,
       // borderColor: colors.notification,
-      borderWidth: 1,
+      // borderWidth: 1,
     },
     verseAction: {
       position: "absolute",

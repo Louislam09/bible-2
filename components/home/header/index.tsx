@@ -131,6 +131,22 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
 
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
+    header: {
+      position: "relative",
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "row",
+      justifyContent: "flex-end",
+      paddingVertical: 5,
+      paddingHorizontal: 10,
+      backgroundColor: colors.background,
+      boxSizing: "border-box",
+      gap: 10,
+      width: "100%",
+      borderBottomColor: colors.border,
+      borderWidth: 0.5,
+      borderStyle: "solid",
+    },
     title: {
       color: "white",
       fontSize: 20,
@@ -147,7 +163,6 @@ const getStyles = ({ colors }: TTheme) =>
       marginVertical: 5,
     },
     versionContainer: {
-      // backgroundColor: colors.background,
       position: "relative",
       display: "flex",
       alignItems: "center",
@@ -175,22 +190,6 @@ const getStyles = ({ colors }: TTheme) =>
       color: colors.border,
       fontSize: 24,
       textAlign: "center",
-    },
-    header: {
-      position: "relative",
-      display: "flex",
-      alignItems: "center",
-      flexDirection: "row",
-      justifyContent: "flex-end",
-      paddingVertical: 15,
-      paddingHorizontal: 10,
-      backgroundColor: colors.background,
-      boxSizing: "border-box",
-      gap: 10,
-      width: "100%",
-      borderBottomColor: colors.border,
-      borderWidth: 0.5,
-      borderStyle: "solid",
     },
     headerCenter: {
       display: "flex",

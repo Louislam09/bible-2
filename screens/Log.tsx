@@ -2,6 +2,7 @@ import { Text, View } from "components/Themed";
 import { useDBContext } from "context/databaseContext";
 import React, { useEffect, useState } from "react";
 import * as FileSystem from "expo-file-system";
+import CustomBottomSheet from "components/BottomSheet";
 
 const LogScreen = () => {
   const { myBibleDB, executeSql } = useDBContext();
@@ -13,11 +14,16 @@ const LogScreen = () => {
 
   useEffect(() => {
     if (!myBibleDB || !executeSql) return;
-    executeSql(
-      myBibleDB,
-      "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;",
-      []
-    ).then((res) => setTables(res));
+    (async () => {
+      const res = await executeSql(
+        myBibleDB,
+        "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;",
+        []
+      );
+      setTables(res);
+      // await myBibleDB?.closeAsync();
+      // await myBibleDB?.deleteAsync();
+    })();
   }, [myBibleDB]);
 
   return (

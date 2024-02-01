@@ -5,9 +5,15 @@ type TAnimation = {
   backgroundColor: string;
   source: string;
   animationRef?: React.RefObject<AnimatedLottieView>;
+  loop?: boolean;
 };
 
-const Animation = ({ backgroundColor, source, animationRef }: TAnimation) => {
+const Animation = ({
+  backgroundColor,
+  source,
+  animationRef,
+  loop = true,
+}: TAnimation) => {
   const ref = animationRef || useRef<AnimatedLottieView>(null);
 
   useEffect(() => {
@@ -20,7 +26,7 @@ const Animation = ({ backgroundColor, source, animationRef }: TAnimation) => {
   return (
     <AnimatedLottieView
       ref={ref}
-      loop
+      loop={loop}
       autoPlay
       style={{
         width: 200,

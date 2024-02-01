@@ -11,6 +11,7 @@ import {
   TFont,
   EBibleVersions,
   IFavoriteVerse,
+  IStrongWord,
 } from "../types";
 import useCustomFonts from "../hooks/useCustomFonts";
 import { useDBContext } from "./databaseContext";
@@ -32,6 +33,8 @@ type BibleState = {
   toggleCopyMode: Function;
   toggleCopySearch: Function;
   decreaseFontSize: Function;
+  setStrongWord: (word: IStrongWord) => void;
+  setverseInStrongDisplay: (verse: number) => void;
   toggleFavoriteVerse: ({ bookNumber, chapter, verse }: IFavoriteVerse) => void;
   increaseFontSize: Function;
   toggleViewLayoutGrid: Function;
@@ -46,7 +49,9 @@ type BibleState = {
   isSearchCopy: boolean;
   viewLayoutGrid: boolean;
   fontSize: number;
+  verseInStrongDisplay: number;
   searchState: UseSearchHookState;
+  strongWord: IStrongWord;
 };
 
 type BibleAction =
@@ -58,6 +63,8 @@ type BibleAction =
   | { type: "DECREASE_FONT_SIZE" }
   | { type: "SELECT_BIBLE_VERSION"; payload: string }
   | { type: "SET_SEARCH_QUERY"; payload: string }
+  | { type: "SET_VERSE_IN_STRONG_DISPLAY"; payload: number }
+  | { type: "SET_STRONG_WORD"; payload: IStrongWord }
   | { type: "CLEAR_HIGHLIGHTS" }
   | { type: "SET_LOCAL_DATA"; payload: any }
   | { type: "TOGGLE_COPY_MODE"; payload?: boolean }
@@ -81,9 +88,11 @@ const initialContext: BibleState = {
   toggleCopySearch: () => {},
   decreaseFontSize: () => {},
   toggleFavoriteVerse: (item: IFavoriteVerse) => {},
+  setverseInStrongDisplay: (verse: number) => {},
   increaseFontSize: () => {},
   toggleViewLayoutGrid: () => {},
   setLocalData: () => {},
+  setStrongWord: () => {},
   performSearch: () => {},
   setSearchQuery: () => {},
   selectedFont: TFont.Roboto,
@@ -92,9 +101,11 @@ const initialContext: BibleState = {
   fontSize: 24,
   searchState: defaultSearch,
   searchQuery: "",
+  verseInStrongDisplay: 0,
   currentTheme: "Blue",
-  isSearchCopy: true,
+  isSearchCopy: false,
   viewLayoutGrid: true,
+  strongWord: { text: "", code: "" },
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);
@@ -166,6 +177,16 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
       return {
         ...state,
         searchQuery: action.payload,
+      };
+    case "SET_VERSE_IN_STRONG_DISPLAY":
+      return {
+        ...state,
+        verseInStrongDisplay: action.payload,
+      };
+    case "SET_STRONG_WORD":
+      return {
+        ...state,
+        strongWord: action.payload,
       };
     case "SET_LOCAL_DATA":
       return {
@@ -262,11 +283,19 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   };
   const selectBibleVersion = (version: string) => {
     dispatch({ type: "SELECT_BIBLE_VERSION", payload: version });
+    dispatch({ type: "SET_VERSE_IN_STRONG_DISPLAY", payload: 0 });
     saveData({ currentBibleVersion: version });
   };
 
   const setSearchQuery = (query: string) => {
     dispatch({ type: "SET_SEARCH_QUERY", payload: query });
+  };
+  const setStrongWord = (item: IStrongWord) => {
+    dispatch({ type: "SET_STRONG_WORD", payload: item });
+  };
+  const setverseInStrongDisplay = (verse: number) => {
+    if (currentBibleVersion === EBibleVersions.NTV) return;
+    dispatch({ type: "SET_VERSE_IN_STRONG_DISPLAY", payload: verse });
   };
 
   const contextValue = {
@@ -286,6 +315,8 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     toggleCopySearch,
     toggleViewLayoutGrid,
     toggleFavoriteVerse,
+    setStrongWord,
+    setverseInStrongDisplay,
   };
 
   return (

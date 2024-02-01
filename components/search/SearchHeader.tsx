@@ -7,6 +7,7 @@ import Checkbox from "expo-checkbox";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { TTheme } from "types";
+import removeAccent from "utils/removeAccent";
 
 const SearchHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
   const theme = useTheme();
@@ -26,7 +27,7 @@ const SearchHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
   };
 
   const handelSearch = async (query: string) => {
-    setQuery(query);
+    setQuery(removeAccent(query));
     setSearchQuery(query);
   };
 

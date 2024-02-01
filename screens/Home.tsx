@@ -1,10 +1,8 @@
+import React from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import BookContent from "../components/home/content";
-import CustomHeader from "../components/home/header";
 import CustomFooter from "../components/home/footer";
-import React, { useCallback, useMemo, useRef } from "react";
-import BottomModal from "components/BottomModal";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import CustomHeader from "../components/home/header";
 
 // const html = `<font color='%COLOR_GRrEEN%'><b>אליהים</b></font><p/><font color='%COLOR_PURPLE%'>elojím</font><p/>plural de <a href='S:H433'>H433</a>;</i> dioses</i> en el sentido ordinario; pero específicamente que se usa (en plural así, específicamente con el artículo) del</i> Dios</i> supremo; ocasionalmente se aplica como forma deferente a</i> magistrados;</i> y algunas veces como superlativo: <font color='%COLOR_BLUE%'>ángeles, Dios (dioses), diosa, extremo, grande, ídolo, juez, poderoso, rey.</font>`;
 
