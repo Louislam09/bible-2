@@ -24,7 +24,6 @@ const CustomBottomSheet = forwardRef<Ref, any>(
         <BottomSheet
           backgroundStyle={styles.bottomSheet}
           ref={ref}
-          // enablePanDownToClose
           index={1}
           handleIndicatorStyle={styles.indicator}
           snapPoints={snapPoints}

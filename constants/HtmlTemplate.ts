@@ -13,6 +13,7 @@ export const htmlTemplate = (content: any, colors: any, fontSize: any) => {
                     background: transparent;
                     font-size: ${fontSize - 2}px;
                     user-select: none;
+                    border-bottom: 1px solid #ddd;
                 }
 
                 b{
