@@ -43,12 +43,17 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
       <Text style={styles.title}>{data.text}</Text>
       <View style={styles.webviewWrapper}>
         <WebView
-          style={{ backgroundColor: "transparent", flex: 1 }}
+          style={{ backgroundColor: "transparent" }}
           ref={webViewRef}
           originWhitelist={["*"]}
           source={{
             html: htmlTemplate(value, theme.colors, fontSize),
           }}
+          scrollEnabled
+          // menuItems={[
+          //   { key: "1", label: "hola" },
+          //   { key: "2", label: "action" },
+          // ]}
           // onNavigationStateChange={handleNavigation}
           // onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
         />
@@ -66,6 +71,8 @@ const getStyles = ({ colors }: TTheme) =>
       justifyContent: "flex-start",
       borderRadius: 45,
       backgroundColor: "transparent",
+      flex: 1,
+      height: 5000,
     },
     webviewWrapper: {
       width: "95%",

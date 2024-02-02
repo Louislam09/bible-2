@@ -16,6 +16,7 @@ import Highlighter from "components/Highlighter";
 import BottomModal from "components/BottomModal";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import StrongContent from "./StrongContent";
+import CustomBottomSheet from "components/BottomSheet";
 
 const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   const navigation = useNavigation();
@@ -235,9 +236,9 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
         </View>
       )}
 
-      <BottomModal startAT={2} ref={strongRef}>
+      {/* <BottomModal startAT={2} ref={strongRef}>
         <StrongContent theme={theme} data={strongWord} fontSize={fontSize} />
-      </BottomModal>
+      </BottomModal> */}
     </TouchableOpacity>
   );
 };
@@ -262,8 +263,6 @@ const getStyles = ({ colors }: TTheme) =>
       textDecorationStyle: "solid",
       textDecorationLine: "underline",
       textDecorationColor: colors.notification,
-      // borderColor: colors.notification,
-      // borderWidth: 1,
     },
     verseAction: {
       position: "absolute",

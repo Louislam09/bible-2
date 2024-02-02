@@ -1,73 +1,60 @@
-import React, { useCallback, useRef, useMemo } from "react";
+import React, {
+  useCallback,
+  useRef,
+  useMemo,
+  Children,
+  forwardRef,
+} from "react";
 import { StyleSheet, View, Text, Button } from "react-native";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { TTheme } from "types";
+import { useTheme } from "@react-navigation/native";
 
-const CustomBottomSheet = () => {
-  // hooks
-  const sheetRef = useRef<BottomSheet>(null);
+type Ref = BottomSheet;
 
-  // variables
-  const data = useMemo(
-    () =>
-      Array(50)
-        .fill(0)
-        .map((_, index) => `index-${index}`),
-    []
-  );
-  const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
+const CustomBottomSheet = forwardRef<Ref, any>(
+  ({ children, handleSheetChange }, ref) => {
+    const theme = useTheme();
+    const styles = getStyles(theme);
 
-  // callbacks
-  const handleSheetChange = useCallback((index: any) => {
-    console.log("handleSheetChange", index);
-  }, []);
-  const handleSnapPress = useCallback((index: any) => {
-    sheetRef.current?.snapToIndex(index);
-  }, []);
-  const handleClosePress = useCallback(() => {
-    sheetRef.current?.close();
-  }, []);
+    const snapPoints = useMemo(() => ["1%", "100%"], []);
 
-  // render
-  const renderItem = useCallback(
-    (item: any) => (
-      <View key={item} style={styles.itemContainer}>
-        <Text>{item}</Text>
+    return (
+      <View style={{ flex: 1, backgroundColor: "transparent" }}>
+        <BottomSheet
+          backgroundStyle={styles.bottomSheet}
+          ref={ref}
+          // enablePanDownToClose
+          index={1}
+          handleIndicatorStyle={styles.indicator}
+          snapPoints={snapPoints}
+          onChange={handleSheetChange}
+        >
+          <BottomSheetScrollView
+            contentContainerStyle={styles.contentContainer}
+          >
+            {children}
+          </BottomSheetScrollView>
+        </BottomSheet>
       </View>
-    ),
-    []
-  );
-  return (
-    <View style={styles.container}>
-      <BottomSheet
-        ref={sheetRef}
-        index={1}
-        snapPoints={snapPoints}
-        onChange={handleSheetChange}
-      >
-        <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
-          <Text onPress={handleClosePress} style={{ backgroundColor: "red" }}>
-            Close
-          </Text>
-          {data.map(renderItem)}
-        </BottomSheetScrollView>
-      </BottomSheet>
-    </View>
-  );
-};
+    );
+  }
+);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 200,
-  },
-  contentContainer: {
-    backgroundColor: "white",
-  },
-  itemContainer: {
-    padding: 6,
-    margin: 6,
-    backgroundColor: "#eee",
-  },
-});
+const getStyles = ({ colors }: TTheme) =>
+  StyleSheet.create({
+    bottomSheet: {
+      borderRadius: 45,
+      backgroundColor: colors.background + "",
+      borderColor: colors.notification,
+      borderWidth: 2,
+    },
+    indicator: {
+      backgroundColor: colors.notification,
+    },
+    contentContainer: {
+      backgroundColor: "transparent",
+    },
+  });
 
 export default CustomBottomSheet;

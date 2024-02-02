@@ -6,17 +6,17 @@ export const htmlTemplate = (content: any, colors: any, fontSize: any) => {
             <meta charset="UTF-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Document</title>
+            <title>Santa Escritura</title>
             <style>
                 body{
                     color: ${colors.text};
                     background: transparent;
                     font-size: ${fontSize - 2}px;
-                    border: 1px solid red;
+                    user-select: none;
                 }
 
                 b{
-                  color: ${colors.notification};
+                    color: ${colors.notification};
                 }
                 a {
                     text-decoration: none;
