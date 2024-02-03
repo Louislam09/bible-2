@@ -20,11 +20,11 @@ export const htmlTemplate = (content: any, colors: any, fontSize: any) => {
                     color: ${colors.notification};
                 }
                 a {
-                    text-decoration: none;
+                    // text-decoration: none;
                     color: ${colors.notification};
                 }
                 a:after{
-                    content: '🔎'
+                    // content: '🔎'
                 }
                 p:last-child{
                     color: green;
@@ -33,6 +33,9 @@ export const htmlTemplate = (content: any, colors: any, fontSize: any) => {
         </head>
         <body>
             ${content?.definition?.replaceAll("font", "p")}
+            <script>
+            window.ReactNativeWebView.postMessage(document.body.scrollHeight)
+            </script>
         </body>
         </html>
 `;

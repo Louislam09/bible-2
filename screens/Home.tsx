@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { SafeAreaView, StyleSheet, View } from "react-native";
 import BookContent from "../components/home/content";
 import CustomFooter from "../components/home/footer";

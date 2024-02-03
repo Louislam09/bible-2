@@ -6,7 +6,10 @@ import React, {
   forwardRef,
 } from "react";
 import { StyleSheet, View, Text, Button } from "react-native";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetScrollView,
+} from "@gorhom/bottom-sheet";
 import { TTheme } from "types";
 import { useTheme } from "@react-navigation/native";
 
@@ -19,6 +22,18 @@ const CustomBottomSheet = forwardRef<Ref, any>(
 
     const snapPoints = useMemo(() => ["1%", "100%"], []);
 
+    const renderBackdrop = useCallback(
+      (props: any) => (
+        <BottomSheetBackdrop
+          {...props}
+          disappearsOnIndex={-1}
+          appearsOnIndex={0}
+          opacity={0.9}
+        />
+      ),
+      []
+    );
+
     return (
       <View style={{ flex: 1, backgroundColor: "transparent" }}>
         <BottomSheet
@@ -28,6 +43,7 @@ const CustomBottomSheet = forwardRef<Ref, any>(
           handleIndicatorStyle={styles.indicator}
           snapPoints={snapPoints}
           onChange={handleSheetChange}
+          // backdropComponent={renderBackdrop}
         >
           <BottomSheetScrollView
             contentContainerStyle={styles.contentContainer}

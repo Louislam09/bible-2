@@ -17,6 +17,7 @@ import BottomModal from "components/BottomModal";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import StrongContent from "./StrongContent";
 import CustomBottomSheet from "components/BottomSheet";
+import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
 
 const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   const navigation = useNavigation();
@@ -64,6 +65,7 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   }, [highlightedVerses]);
 
   const onVerseClicked = () => {
+    // setverseInStrongDisplay(item.verse);
     setverseInStrongDisplay(isStrongSearch ? 0 : item.verse);
     if (!isCopyMode) return;
     if (isVerseHighlisted) {
@@ -161,14 +163,28 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
     if (highlightedVersesLenth) clearHighlights();
   };
 
-  const onWordClicked = (word: string) => {
-    const wordIndex = textValue.indexOf(word);
+  const onWordClicked = (code: string) => {
+    const isWord = textValue.includes(code);
+    console.log({ isWord, code });
+
+    const wordIndex = isWord
+      ? textValue.indexOf(code)
+      : strongValue.indexOf(code);
+    const word = textValue[wordIndex];
+    const isDash = word === "-" ? -1 : 0;
     const NT_BOOK_NUMBER = 470;
     const cognate = item.book_number < NT_BOOK_NUMBER ? "H" : "G";
-    const value = { text: word, code: `${cognate}${strongValue[wordIndex]}` };
+    const searchCode = `${cognate}${isWord ? strongValue[wordIndex] : code}`;
+    const searchWord = textValue[wordIndex + isDash] ?? searchCode;
+
+    const value = {
+      text: searchWord,
+      code: searchCode,
+    };
+
+    console.log(value);
     setStrongWord(value);
     strongHandlePresentModalPress();
-    console.log(textValue[wordIndex], strongValue[wordIndex]);
   };
 
   return (
@@ -202,13 +218,20 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
         </Text>
 
         {isStrongSearch ? (
-          <Highlighter
-            textToHighlight={getVerseTextRaw(item.text)}
-            searchWords={textValue}
-            highlightStyle={{ color: theme.colors.notification }}
-            style={[styles.verseBody, { letterSpacing: 2 }]}
-            onWordClick={onWordClicked}
-          />
+          <>
+            {/* <RenderTextWithClickableWords
+              theme={theme}
+              text={item.text}
+              onWordClick={onWordClicked}
+            /> */}
+            <Highlighter
+              textToHighlight={getVerseTextRaw(item.text)}
+              searchWords={textValue}
+              highlightStyle={{ color: theme.colors.notification }}
+              style={[styles.verseBody]}
+              onWordClick={onWordClicked}
+            />
+          </>
         ) : (
           <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
         )}
@@ -248,16 +271,16 @@ const getStyles = ({ colors }: TTheme) =>
     verseContainer: {},
     verseBody: {
       color: colors.text,
+      letterSpacing: 2,
     },
     verseNumber: {
       color: colors.notification,
     },
     verse: {
       position: "relative",
-      paddingHorizontal: 15,
+      // paddingHorizontal: 15,
       paddingLeft: 20,
       marginVertical: 5,
-      fontSize: 24,
     },
     highlightCopy: {
       textDecorationStyle: "solid",

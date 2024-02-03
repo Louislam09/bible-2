@@ -266,10 +266,13 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     isFav,
   }: IFavoriteVerse) => {
     if (!myBibleDB || !executeSql) return;
+    const params = isFav
+      ? [bookNumber, chapter, verse]
+      : [bookNumber, chapter, verse, bookNumber, chapter, verse];
     executeSql(
       myBibleDB,
       isFav ? DELETE_FAVORITE_VERSE : INSERT_FAVORITE_VERSE,
-      [bookNumber, chapter, verse]
+      params
     );
   };
 

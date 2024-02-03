@@ -20,6 +20,8 @@ type StrongData = {
   definition: string;
   topic: string;
 };
+const DEFAULT_HEIGHT = 14000;
+const EXTRA_HEIGHT_TO_ADJUST = 100;
 
 const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
   const navigation = useNavigation();
@@ -27,9 +29,13 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
   const { myBibleDB, executeSql } = useDBContext();
   const [value, setValue] = useState<StrongData>({ definition: "", topic: "" });
   const styles = getStyles(theme);
-  const [height, setHeight] = useState(10000);
+  const [height, setHeight] = useState(DEFAULT_HEIGHT);
   const webViewRef = React.useRef<WebView>(null);
   const [text, setText] = useState(data?.code);
+
+  useEffect(() => {
+    setText(data.code);
+  }, [data]);
 
   useEffect(() => {
     setText(data.code);
@@ -50,14 +56,14 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
   const onShouldStartLoadWithRequest = (event: ShouldStartLoadRequest) => {
     const { url } = event;
     if (url.startsWith("b:")) {
-      const [bookNumber, bookInfo] = url.split(" ");
-      const number = bookNumber.split(":")[1];
-      const currentChapter = bookInfo.split(":")[0];
-      const currentBook = DB_BOOK_NAMES.find((x) => x.bookNumber === +number);
+      const [, bookNumber, chapter] = url.match(/b:(\d+) (\d+):(\d+)/) || [];
+      const currentBook = DB_BOOK_NAMES.find(
+        (x) => x.bookNumber === +bookNumber
+      );
 
       navigation.navigate(Screens.Home, {
         book: currentBook?.longName,
-        chapter: currentChapter,
+        chapter: chapter,
       });
     }
 
@@ -68,27 +74,29 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
       }
       setText(url.replace("s:", ""));
     }
-    return false; // allow the WebView to load the URL normally
+    return false;
   };
 
   return (
-    <View style={[styles.versionContainer, { height }]}>
+    <View
+      style={[
+        styles.versionContainer,
+        { height: height + EXTRA_HEIGHT_TO_ADJUST },
+      ]}
+    >
       <Text style={styles.title}>{data.text}</Text>
-      <View style={styles.webviewWrapper}>
+      <View style={[styles.webviewWrapper]}>
         <WebView
           style={{ backgroundColor: "transparent" }}
           ref={webViewRef}
           originWhitelist={["*"]}
-          source={{
-            html: htmlTemplate(value, theme.colors, fontSize),
-          }}
-          // scrollEnabled
-          // menuItems={[
-          //   { key: "1", label: "hola" },
-          //   { key: "2", label: "action" },
-          // ]}
-          // onNavigationStateChange={handleNavigation}
+          source={{ html: htmlTemplate(value, theme.colors, fontSize) }}
+          onMessage={(event) =>
+            setHeight(+event.nativeEvent.data ?? DEFAULT_HEIGHT)
+          }
+          scrollEnabled
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+          // onNavigationStateChange={(data) => console.log(data)}
         />
       </View>
     </View>
@@ -110,7 +118,7 @@ const getStyles = ({ colors }: TTheme) =>
     webviewWrapper: {
       width: "95%",
       padding: 5,
-      height: "90%",
+      height: "100%",
       backgroundColor: "transparent",
     },
     title: {
