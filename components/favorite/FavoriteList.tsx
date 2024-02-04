@@ -84,7 +84,7 @@ const FavoriteList = ({ data }: TListVerse) => {
               <MaterialCommunityIcons
                 size={20}
                 name="star"
-                style={[styles.icon, { color: "yellow" }]}
+                style={[styles.icon, theme.dark && { color: "yellow" }]}
                 onPress={() => onFavorite(item)}
               />
             </View>
@@ -147,6 +147,7 @@ const FavoriteList = ({ data }: TListVerse) => {
             <Animation
               backgroundColor={theme.colors.background}
               source={notFoundSource}
+              loop={false}
             />
             <Text style={styles.noResultsText}>
               No tienes versiculos favoritos

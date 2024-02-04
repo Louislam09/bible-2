@@ -72,7 +72,6 @@ const useAudioPlayer = ({
           return;
         }
 
-        // Usar el archivo local si ya está descargado
         const { sound } = await Audio.Sound.createAsync(
           { uri: localUri },
           { shouldPlay: autoPlay },

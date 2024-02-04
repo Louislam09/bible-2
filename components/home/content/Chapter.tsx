@@ -53,11 +53,11 @@ const Chapter = ({ item, dimensions }: TChapter) => {
             scroll();
           }}
           ref={chapterRef}
-          decelerationRate={"normal"}
+          decelerationRate="normal"
           estimatedItemSize={135}
           data={verses ?? []}
           renderItem={renderItem}
-          keyExtractor={(item: any, index: any) => `verse-${index}`}
+          keyExtractor={(item: any, index: any) => `verse-${item.verse}:`}
           // ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
           // ListFooterComponent={() => <View style={{ paddingBottom: 50 }} />}
         />

@@ -17,6 +17,7 @@ import {
 import { IVerseItem, Screens, TTheme } from "types";
 import copyToClipboard from "utils/copyToClipboard";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";
+import removeAccent from "utils/removeAccent";
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -62,9 +63,12 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
             >{`${item.bookName} ${item.chapter}:${item.verse}`}</Text>
           </View>
           <Highlighter
+            sanitize={removeAccent}
             style={styles.cardBody}
             highlightStyle={{ color: theme.colors.notification }}
-            searchWords={!query ? [] : [...query.trim().split(" ")]}
+            searchWords={
+              !query ? [] : [...removeAccent(query).trim().split(" ")]
+            }
             textToHighlight={getVerseTextRaw(item.text)}
             // onWordClick={(text) => console.log({ text })}
           />

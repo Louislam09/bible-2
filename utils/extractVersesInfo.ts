@@ -32,4 +32,20 @@ export function extractTextFromParagraph(paragraph: string) {
   return paragraph.replace(/<.*?>/g, "");
 }
 
+export const getStrongValue = (text: string) => {
+  const textValue = text
+    .replace(/<.*?>.*?<\/.*?>/gi, "+")
+    .split(" ")
+    .filter((x) => x.includes("+"))
+    .map((x) => x.replace("+", ""))
+    .map((x) => (!x ? x.replace("", "-") : x));
+  const strongValue = text
+    .match(/<S>.*?<\/S>/gi)
+    ?.join(" ")
+    .replace(/<S>|<\/S>/g, "")
+    .split(" ");
+
+  return { strongValue, textValue };
+};
+
 export default extractVersesInfo;

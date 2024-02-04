@@ -18,6 +18,7 @@ import {
   Screens,
   TTheme,
 } from "types";
+import removeAccent from "utils/removeAccent";
 
 const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
   navigation,
@@ -79,7 +80,6 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
   const renderItem: ListRenderItem<IDBBookNames> = ({ item, index }) => {
     return (
       <TouchableOpacity
-        key={index}
         style={[styles.listItem]}
         onPress={() => handlePress(item)}
       >
@@ -119,12 +119,6 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
       </View>
     </>
   );
-
-  const removeAccent = (text: string) =>
-    text
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase();
 
   const ListView = (
     <View style={{ flex: 1, width: "100%" }}>

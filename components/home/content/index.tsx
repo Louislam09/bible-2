@@ -14,6 +14,7 @@ import {
 } from "../../../constants/Queries";
 import { useStorage } from "context/LocalstoreContext";
 import getCurrentDbName from "utils/getCurrentDB";
+import { useBibleContext } from "context/BibleContext";
 
 interface BookContentInterface {}
 
@@ -24,6 +25,7 @@ const BookContent: FC<BookContentInterface> = ({}) => {
     storedData: { currentBibleVersion },
     saveData,
   } = useStorage();
+  const { setverseInStrongDisplay } = useBibleContext();
   const { myBibleDB, executeSql } = useDBContext();
   const route = useRoute();
   const { book = "Mateo", chapter, verse } = route.params as HomeParams;
@@ -38,6 +40,7 @@ const BookContent: FC<BookContentInterface> = ({}) => {
     (async () => {
       if (myBibleDB && executeSql) {
         setData({});
+        setverseInStrongDisplay(0);
         const query = QUERY_BY_DB[getCurrentDbName(currentBibleVersion)];
         const promises = [
           executeSql(myBibleDB, query.GET_VERSES_BY_BOOK_AND_CHAPTER, [

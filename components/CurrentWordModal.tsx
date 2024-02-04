@@ -20,11 +20,7 @@ type Props = {
 
 export interface IStrongData {
   definition?: string;
-  lexeme?: string;
-  pronunciation?: string;
-  short_definition?: string;
   topic?: string;
-  transliteration?: string;
 }
 
 const CurrentWordModal: React.FC<Props> = ({ strongNumber, setOpen }) => {
@@ -32,6 +28,7 @@ const CurrentWordModal: React.FC<Props> = ({ strongNumber, setOpen }) => {
   const [text, setText] = useState(strongNumber?.ref);
   const [nav, setNav] = useState({ canGoBack: false, canGoForward: false });
   const webViewRef = React.useRef<WebView>(null);
+  // @ts-ignore
   const { strongDB, strongExecuteSql } = useDBContext();
   const [data, setData] = useState<IStrongData>({});
   const navigator = useNavigation();
@@ -45,10 +42,12 @@ const CurrentWordModal: React.FC<Props> = ({ strongNumber, setOpen }) => {
       if (strongDB && strongExecuteSql && text) {
         const sql = `SELECT * FROM dictionary WHERE topic = ?;`;
         strongExecuteSql(sql, [text])
+          // @ts-ignore
           .then((rows) => {
             if (!rows.length) return;
             setData(rows?.[0] ?? {});
           })
+          // @ts-ignore
           .catch((err) => {
             console.log(err);
           });
@@ -158,6 +157,7 @@ const CurrentWordModal: React.FC<Props> = ({ strongNumber, setOpen }) => {
           ref={webViewRef}
           originWhitelist={["*"]}
           source={{
+            // @ts-ignore
             html: htmlTemplate(data ?? "There is not data for this word."),
           }}
           onNavigationStateChange={handleNavigation}

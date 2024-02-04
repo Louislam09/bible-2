@@ -106,6 +106,16 @@ export type TSubtitle = {
   verse: number;
 };
 
+export type IStrongWord = {
+  text: string;
+  code: string;
+};
+
+export type StrongData = {
+  definition: string;
+  topic: string;
+};
+
 export type TChapter = {
   dimensions: any;
   item: {
