@@ -15,6 +15,7 @@ import { EBibleVersions, HomeParams, Screens, TTheme } from "types";
 
 import { Text, View } from "components/Themed";
 import ProgressBar from "./ProgressBar";
+import CustomBottomSheet from "components/BottomSheet";
 interface FooterInterface {}
 const FOOTER_ICON_SIZE = 28;
 
@@ -97,10 +98,24 @@ const CustomFooter: FC<FooterInterface> = () => {
             color="white"
           />
         </TouchableOpacity>
-        <TouchableOpacity style={{ flex: 1, alignItems: "center" }}>
-          <Text style={styles.bookLabel} onPress={onFooterTitle}>
+        <TouchableOpacity
+          style={{
+            flex: 1,
+            alignItems: "center",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+          onPress={onFooterTitle}
+        >
+          <Text style={styles.bookLabel}>
             {`${displayBookName ?? ""} ${chapter ?? ""}`}
           </Text>
+          <MaterialCommunityIcons
+            style={[styles.icon, { margin: 0 }]}
+            name="menu"
+            size={FOOTER_ICON_SIZE - 5}
+            color={"white"}
+          />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => nextChapter()}>
           <MaterialCommunityIcons
@@ -133,8 +148,6 @@ const CustomFooter: FC<FooterInterface> = () => {
   );
 };
 
-// https://www.wordproaudio.net/bibles/app/audio/6/1/1.mp3
-
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     footer: {
@@ -145,13 +158,12 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       flexDirection: "row",
       justifyContent: "center",
-      paddingVertical: 15,
-      // paddingHorizontal: 10,
+      paddingVertical: 5,
       backgroundColor: colors.background,
       boxSizing: "border-box",
       gap: 10,
       borderTopColor: colors.border,
-      borderWidth: 0.5,
+      borderWidth: 1,
       borderStyle: "solid",
     },
     progressBarContainer: {
@@ -159,6 +171,7 @@ const getStyles = ({ colors }: TTheme) =>
       top: 0,
       width: "100%",
       height: 10,
+      zIndex: 111,
     },
     title: {
       color: "white",

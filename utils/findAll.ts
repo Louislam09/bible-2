@@ -1,3 +1,5 @@
+import removeAccent from "./removeAccent";
+
 interface HighlightChunk {
   start: number;
   end: number;
@@ -37,7 +39,9 @@ function findAll({
   }
   const sanitizedText = sanitize ? sanitize(textToHighlight) : textToHighlight;
   const escapedSearchWords = autoEscape
-    ? searchWords.map((word) => word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    ? searchWords.map((word) =>
+        removeAccent(word).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+      )
     : searchWords;
 
   const regexFlags = caseSensitive ? "g" : "gi";
