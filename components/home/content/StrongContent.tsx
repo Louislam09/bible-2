@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { Platform, StyleSheet } from "react-native";
-import { IStrongWord, Screens, TTheme } from "types";
+import { IStrongWord, Screens, StrongData, TTheme } from "types";
 import { Text, View } from "../../Themed";
 import { useDBContext } from "context/databaseContext";
 import WebView, { WebViewNavigation } from "react-native-webview";
@@ -16,10 +16,6 @@ interface IStrongContent {
   fontSize: any;
 }
 
-type StrongData = {
-  definition: string;
-  topic: string;
-};
 const DEFAULT_HEIGHT = 14000;
 const EXTRA_HEIGHT_TO_ADJUST = 100;
 
@@ -27,7 +23,9 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
   const navigation = useNavigation();
   const { code } = data;
   const { myBibleDB, executeSql } = useDBContext();
-  const [value, setValue] = useState<StrongData>({ definition: "", topic: "" });
+  const [value, setValue] = useState<StrongData[]>([
+    { definition: "", topic: "" },
+  ]);
   const styles = getStyles(theme);
   const [height, setHeight] = useState(DEFAULT_HEIGHT);
   const webViewRef = React.useRef<WebView>(null);
@@ -44,11 +42,12 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
   useEffect(() => {
     (async () => {
       if (myBibleDB && executeSql) {
-        const strongData = await executeSql(myBibleDB, SEARCH_STRONG_WORD, [
-          text,
-        ]);
-        const _value = strongData?.[0] as StrongData;
-        setValue(_value);
+        const strongData = await executeSql(
+          myBibleDB,
+          SEARCH_STRONG_WORD,
+          text.split(",")
+        );
+        setValue(strongData as StrongData[]);
       }
     })();
   }, [code, text]);

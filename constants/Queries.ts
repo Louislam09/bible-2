@@ -54,7 +54,7 @@ v.chapter = t.chapter and v.verse = t.verse
 inner join books b on b.book_number = v.book_number
 WHERE`;
 
-export const SEARCH_STRONG_WORD = `select * from dictionary where topic = ?`;
+export const SEARCH_STRONG_WORD = `select * from dictionary where topic in (?,?)`;
 
 type TQuery = {
   GET_VERSE_NUMBER_QUERY: string;

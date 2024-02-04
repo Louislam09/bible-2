@@ -1,4 +1,10 @@
-export const htmlTemplate = (content: any, colors: any, fontSize: any) => {
+import { StrongData } from "types";
+
+export const htmlTemplate = (
+  content: StrongData[] | any,
+  colors: any,
+  fontSize: any
+) => {
   return `
         <!DOCTYPE html>
         <html lang="en">
@@ -29,10 +35,16 @@ export const htmlTemplate = (content: any, colors: any, fontSize: any) => {
                 p:last-child{
                     color: green;
                 }
+                h4 {
+                    display: ${content?.[1]?.topic ? "block" : "none"};
+                }
             </style>
         </head>
         <body>
-            ${content?.definition?.replaceAll("font", "p")}
+            <h4>${content?.[0]?.topic ?? ""} > <a href='S:${
+    content?.[1]?.topic ?? ""
+  }'>${content?.[1]?.topic ?? ""}</a> 🔍</h4>
+            ${(content?.[0].definition ?? "")?.replaceAll("font", "p")}
             <script>
             window.ReactNativeWebView.postMessage(document.body.scrollHeight)
             </script>

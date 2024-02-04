@@ -111,6 +111,11 @@ export type IStrongWord = {
   code: string;
 };
 
+export type StrongData = {
+  definition: string;
+  topic: string;
+};
+
 export type TChapter = {
   dimensions: any;
   item: {

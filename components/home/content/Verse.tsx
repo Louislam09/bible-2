@@ -31,7 +31,6 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
     toggleFavoriteVerse,
     clearHighlights,
     setStrongWord,
-    strongWord,
     verseInStrongDisplay,
     setverseInStrongDisplay,
   } = useBibleContext();
@@ -164,25 +163,24 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   };
 
   const onWordClicked = (code: string) => {
-    const isWord = textValue.includes(code);
-    console.log({ isWord, code });
+    const wordIndex = textValue.indexOf(code);
 
-    const wordIndex = isWord
-      ? textValue.indexOf(code)
-      : strongValue.indexOf(code);
     const word = textValue[wordIndex];
+    const secondCode =
+      textValue[wordIndex + 1] === "-" ? strongValue[wordIndex + 1] : "";
+
     const isDash = word === "-" ? -1 : 0;
     const NT_BOOK_NUMBER = 470;
     const cognate = item.book_number < NT_BOOK_NUMBER ? "H" : "G";
-    const searchCode = `${cognate}${isWord ? strongValue[wordIndex] : code}`;
+    const searchCode = `${cognate}${strongValue[wordIndex]}`;
+    const secondSearchCode = secondCode ? `,${cognate}${secondCode}` : ",";
     const searchWord = textValue[wordIndex + isDash] ?? searchCode;
 
     const value = {
       text: searchWord,
-      code: searchCode,
+      code: searchCode.concat(secondSearchCode),
     };
 
-    console.log(value);
     setStrongWord(value);
     strongHandlePresentModalPress();
   };
