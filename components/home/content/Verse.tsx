@@ -1,21 +1,17 @@
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { HomeParams, TTheme, TVerse } from "../../../types";
+import { HomeParams, IBookVerse, TTheme, TVerse } from "../../../types";
 import { Text } from "../../Themed";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useBibleContext } from "../../../context/BibleContext";
 import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import extractVersesInfo from "../../../utils/extractVersesInfo";
 import { DB_BOOK_NAMES } from "../../../constants/BookNames";
-import { customBorder, customUnderline } from "../../../utils/customStyle";
+import { customUnderline } from "../../../utils/customStyle";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import copyToClipboard from "utils/copyToClipboard";
 
-const Verse: React.FC<TVerse | any> = ({
-  item,
-  index,
-  setSelectedWord,
-  setOpen,
-  subtitles,
-}) => {
+const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   const navigation = useNavigation();
   const {
     highlightVerse,
@@ -24,65 +20,44 @@ const Verse: React.FC<TVerse | any> = ({
     toggleCopyMode,
     removeHighlistedVerse,
     fontSize,
+    toggleFavoriteVerse,
+    clearHighlights,
   } = useBibleContext();
   const theme = useTheme() as TTheme;
   const styles = getStyles(theme);
-  const route = useRoute();
   const [isVerseHighlisted, setHighlightVerse] = useState(false);
-  const { strongKey } = route.params as HomeParams;
-  const format = (item: any) => {
-    const textWithNumber = item.text.replace(/<S>|<\/S>/g, "");
-    return textWithNumber.split(" ").map((text: string) => {
-      const strong = text.replace(/[a-zA-Z]/g, "");
-      const verseText = text.replace(/[0-9]/g, "");
-      return {
-        text: verseText,
-        ref: strong,
-      };
-    });
-  };
-
-  const handleOpenModal = () => setOpen(true);
-
-  // const onVerseClick = (word: any) => {
-  //   // setSelectedWord(`${strongKey ?? 'H'}${word.replace(/\D/g, '')}`)
-  //   setSelectedWord({
-  //     ...word,
-  //     ref: `${strongKey ?? "H"}${word.ref.replace(/\D/g, "")}`,
-  //   });
-  //   handleOpenModal();
-  // };
-
-  // const TestVerse = () => {
-  //   return (
-  //     <Text style={styles.verse}>
-  //       {index + 1}.
-  //       {format(item).map((x: any, index: any) => (
-  //         <Text
-  //           key={index}
-  //           style={{ ...(x.ref && { color: "pink" }) }}
-  //           // onPress={() => handleWordClick(x)}
-  //         >
-  //           {x.text}{" "}
-  //         </Text>
-  //       ))}
-  //     </Text>
-  //   );
-  // };
+  const [isFavorite, setFavorite] = useState(false);
+  const [lastHighted, setLastHighted] = useState<IBookVerse | any>(null);
+  const highlightedVersesLenth = highlightedVerses.length;
+  const isMoreThanOneHighted = highlightedVersesLenth > 1;
 
   useEffect(() => {
-    if (!highlightedVerses.length) {
+    setFavorite(!!item.is_favorite);
+  }, [item]);
+
+  useEffect(() => {
+    if (isMoreThanOneHighted && isVerseHighlisted) {
+      const lastItem = highlightedVerses[highlightedVersesLenth - 1];
+      setLastHighted(lastItem);
+    }
+    if (!highlightedVersesLenth) {
       setHighlightVerse(false);
     }
   }, [highlightedVerses]);
 
-  const highlightVerseFunc = () => {
-    if (!isCopyMode) toggleCopyMode();
+  const onVerseClicked = () => {
+    if (!isCopyMode) return;
     if (isVerseHighlisted) {
       setHighlightVerse(false);
       removeHighlistedVerse(item);
       return;
     }
+    highlightVerse(item);
+    setHighlightVerse(true);
+  };
+
+  const onVerseLongPress = () => {
+    toggleCopyMode();
     highlightVerse(item);
     setHighlightVerse(true);
   };
@@ -116,7 +91,6 @@ const Verse: React.FC<TVerse | any> = ({
             paddingVertical: 10,
             color: theme.colors.notification ?? "black",
             ...customUnderline,
-            // ...customBorder,
           },
         ]}
       >
@@ -152,13 +126,26 @@ const Verse: React.FC<TVerse | any> = ({
     ) : null;
   };
 
+  const onFavorite = () => {
+    toggleFavoriteVerse({
+      bookNumber: item.book_number,
+      chapter: item.chapter,
+      verse: item.verse,
+      isFav: isFavorite,
+    });
+    setFavorite((prev) => !prev);
+    clearHighlights();
+  };
+
+  const onCopy = async () => {
+    await copyToClipboard(highlightedVersesLenth ? highlightedVerses : item);
+    if (highlightedVersesLenth) clearHighlights();
+  };
+
   return (
     <TouchableOpacity
-      onPress={() => {
-        if (!isCopyMode) return;
-        highlightVerseFunc();
-      }}
-      onLongPress={highlightVerseFunc}
+      onPress={() => onVerseClicked()}
+      onLongPress={() => onVerseLongPress()}
       activeOpacity={0.9}
       style={styles.verseContainer}
     >
@@ -167,10 +154,6 @@ const Verse: React.FC<TVerse | any> = ({
       <Text
         style={[
           styles.verse,
-          index === 0 && {
-            flexDirection: "row",
-            alignItems: "stretch",
-          },
           isVerseHighlisted && styles.highlightCopy,
           { fontSize },
         ]}
@@ -178,9 +161,36 @@ const Verse: React.FC<TVerse | any> = ({
         selectable={false}
         selectionColor={theme.colors.notification || "white"}
       >
-        <Text style={[styles.verseNumber]}>&nbsp;{item.verse} &nbsp;</Text>
+        <Text style={[styles.verseNumber]}>
+          {isFavorite && !isVerseHighlisted && (
+            <MaterialCommunityIcons size={14} name={"star"} color={"yellow"} />
+          )}
+          &nbsp;{item.verse}&nbsp;
+        </Text>
         <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
       </Text>
+      {isVerseHighlisted && !!highlightedVersesLenth && (
+        <View style={styles.verseAction}>
+          {!(lastHighted?.verse !== item.verse && isMoreThanOneHighted) && (
+            <Pressable>
+              <MaterialCommunityIcons
+                size={24}
+                name={"content-copy"}
+                style={styles.icon}
+                onPress={() => onCopy()}
+              />
+            </Pressable>
+          )}
+          <Pressable>
+            <MaterialCommunityIcons
+              size={24}
+              name={isFavorite ? "star" : "star-outline"}
+              style={[styles.icon, isFavorite && { color: "yellow" }]}
+              onPress={onFavorite}
+            />
+          </Pressable>
+        </View>
+      )}
     </TouchableOpacity>
   );
 };
@@ -195,6 +205,7 @@ const getStyles = ({ colors }: TTheme) =>
       color: colors.notification,
     },
     verse: {
+      position: "relative",
       paddingHorizontal: 15,
       paddingLeft: 20,
       marginVertical: 5,
@@ -204,8 +215,24 @@ const getStyles = ({ colors }: TTheme) =>
       textDecorationStyle: "solid",
       textDecorationLine: "underline",
       textDecorationColor: colors.notification,
-      borderColor: colors.notification,
+      // borderColor: colors.notification,
       borderWidth: 1,
+    },
+    verseAction: {
+      position: "absolute",
+      flexDirection: "row",
+      bottom: 10,
+      right: 5,
+      zIndex: 111,
+      backgroundColor: colors.notification + "99",
+      borderRadius: 15,
+      padding: 5,
+    },
+    icon: {
+      fontWeight: "700",
+      marginHorizontal: 10,
+      color: colors.primary,
+      fontSize: 26,
     },
   });
 

@@ -62,7 +62,6 @@ const StorageProvider: React.FC<StorageProviderProps> = ({ children }) => {
         const data = await AsyncStorage.getItem(StorageKeys.BIBLE);
         if (data) {
           setStoredData(JSON.parse(data));
-          // console.log("asdsd", JSON.parse(data));
         }
       } catch (error) {
         console.error("Error loading data from AsyncStorage:", error);

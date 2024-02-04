@@ -5,11 +5,21 @@ import React, {
   useReducer,
   useState,
 } from "react";
-import { EThemes, IBookVerse, TFont, EBibleVersions } from "../types";
+import {
+  EThemes,
+  IBookVerse,
+  TFont,
+  EBibleVersions,
+  IFavoriteVerse,
+} from "../types";
 import useCustomFonts from "../hooks/useCustomFonts";
 import { useDBContext } from "./databaseContext";
 import useSearch, { UseSearchHookState } from "hooks/useSearch";
 import { useStorage } from "./LocalstoreContext";
+import {
+  DELETE_FAVORITE_VERSE,
+  INSERT_FAVORITE_VERSE,
+} from "constants/Queries";
 
 type BibleState = {
   highlightedVerses: IBookVerse[];
@@ -22,6 +32,7 @@ type BibleState = {
   toggleCopyMode: Function;
   toggleCopySearch: Function;
   decreaseFontSize: Function;
+  toggleFavoriteVerse: ({ bookNumber, chapter, verse }: IFavoriteVerse) => void;
   increaseFontSize: Function;
   toggleViewLayoutGrid: Function;
   selectTheme: Function;
@@ -49,7 +60,7 @@ type BibleAction =
   | { type: "SET_SEARCH_QUERY"; payload: string }
   | { type: "CLEAR_HIGHLIGHTS" }
   | { type: "SET_LOCAL_DATA"; payload: any }
-  | { type: "TOGGLE_COPY_MODE" }
+  | { type: "TOGGLE_COPY_MODE"; payload?: boolean }
   | { type: "TOGGLE_VIEW_LAYOUT_GRID" }
   | { type: "TOGGLE_COPY_SEARCH"; payload: boolean };
 
@@ -69,6 +80,7 @@ const initialContext: BibleState = {
   toggleCopyMode: () => {},
   toggleCopySearch: () => {},
   decreaseFontSize: () => {},
+  toggleFavoriteVerse: (item: IFavoriteVerse) => {},
   increaseFontSize: () => {},
   toggleViewLayoutGrid: () => {},
   setLocalData: () => {},
@@ -138,7 +150,7 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
     case "TOGGLE_COPY_MODE":
       return {
         ...state,
-        isCopyMode: !state.isCopyMode,
+        isCopyMode: action?.payload ?? !state.isCopyMode,
       };
     case "TOGGLE_COPY_SEARCH":
       return {
@@ -173,7 +185,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     storedData;
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
   const fontsLoaded = useCustomFonts();
-  const { myBibleDB } = useDBContext();
+  const { myBibleDB, executeSql } = useDBContext();
 
   const {
     state: searchState,
@@ -188,6 +200,11 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
       payload: { currentBibleVersion, fontSize, currentTheme, selectedFont },
     });
   }, [isDataLoaded]);
+
+  useEffect(() => {
+    if (state.highlightedVerses.length) return;
+    dispatch({ type: "TOGGLE_COPY_MODE", payload: false });
+  }, [state.highlightedVerses]);
 
   if (!fontsLoaded || !isDataLoaded) {
     return null; // Render loading UI or placeholder while fonts are loading
@@ -219,6 +236,20 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   };
   const toggleViewLayoutGrid = () => {
     dispatch({ type: "TOGGLE_VIEW_LAYOUT_GRID" });
+  };
+
+  const toggleFavoriteVerse = ({
+    bookNumber,
+    chapter,
+    verse,
+    isFav,
+  }: IFavoriteVerse) => {
+    if (!myBibleDB || !executeSql) return;
+    executeSql(
+      myBibleDB,
+      isFav ? DELETE_FAVORITE_VERSE : INSERT_FAVORITE_VERSE,
+      [bookNumber, chapter, verse]
+    );
   };
 
   const selectFont = (font: string) => {
@@ -254,6 +285,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     selectTheme,
     toggleCopySearch,
     toggleViewLayoutGrid,
+    toggleFavoriteVerse,
   };
 
   return (

@@ -19,7 +19,7 @@ interface FooterInterface {}
 const FOOTER_ICON_SIZE = 28;
 
 const CustomFooter: FC<FooterInterface> = () => {
-  const { currentBibleVersion } = useBibleContext();
+  const { currentBibleVersion, clearHighlights } = useBibleContext();
   const theme = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
@@ -37,6 +37,7 @@ const CustomFooter: FC<FooterInterface> = () => {
     });
 
   const nextOrPreviousBook = (name: string, chapter: number = 1) => {
+    clearHighlights();
     navigation.setParams({
       book: name,
       chapter,
@@ -69,6 +70,11 @@ const CustomFooter: FC<FooterInterface> = () => {
     });
   };
 
+  const onFooterTitle = () => {
+    clearHighlights();
+    navigation?.navigate(Screens.ChooseBook);
+  };
+
   const displayBookName = (book || "")?.length > 10 ? shortName : book;
 
   return (
@@ -92,10 +98,7 @@ const CustomFooter: FC<FooterInterface> = () => {
           />
         </TouchableOpacity>
         <TouchableOpacity style={{ flex: 1, alignItems: "center" }}>
-          <Text
-            style={styles.bookLabel}
-            onPress={() => navigation?.navigate(Screens.ChooseBook)}
-          >
+          <Text style={styles.bookLabel} onPress={onFooterTitle}>
             {`${displayBookName ?? ""} ${chapter ?? ""}`}
           </Text>
         </TouchableOpacity>

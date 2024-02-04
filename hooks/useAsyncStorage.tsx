@@ -32,9 +32,7 @@ const useStorage = (
     const loadValue = async () => {
       setLoading(true);
       try {
-        // Get stored value by key
         const value = await AsyncStorage.getItem(key);
-        console.log("==== CALLING ====");
         if (value !== null) {
           setStoredValue(JSON.parse(value));
         }

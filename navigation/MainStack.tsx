@@ -11,6 +11,7 @@ import React from "react";
 import Book from "screens/Book";
 import ChooseBookScreen from "screens/ChooseBookScreen";
 import ChooseFromListScreen from "screens/ChooseFromListScreen";
+import Favorite from "screens/Favorite";
 import Home from "screens/Home";
 import LogScreen from "screens/Log";
 import Search from "screens/Search";
@@ -90,6 +91,11 @@ const MainStack = () => {
       <Stack.Screen
         name="Log"
         component={LogScreen}
+        options={({ route }) => screenOptions(route)}
+      />
+      <Stack.Screen
+        name="Favorite"
+        component={Favorite}
         options={({ route }) => screenOptions(route)}
       />
     </Stack.Navigator>

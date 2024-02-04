@@ -18,10 +18,6 @@ type DatabaseContextType = {
         params?: any[]
       ) => Promise<Row[]>)
     | null;
-  strongDB?: SQLite.SQLiteDatabase | null;
-  strongExecuteSql?: ((sql: string, params?: any[]) => Promise<Row[]>) | null;
-  subTitleDB?: SQLite.SQLiteDatabase | null;
-  subtitleExecuteSql?: ((sql: string, params?: any[]) => Promise<Row[]>) | null;
 };
 
 enum DBs {

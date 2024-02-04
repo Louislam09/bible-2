@@ -32,6 +32,7 @@ export type RootStackParamList = {
     | NavigatorScreenParams<RootTabParamList>
     | { book?: string; chapter?: string | number; verse?: string | number };
   Book: NavigatorScreenParams<RootTabParamList> | undefined;
+  Favorite: NavigatorScreenParams<RootTabParamList> | undefined;
   ChooseBook: NavigatorScreenParams<RootTabParamList> | undefined;
   Search: NavigatorScreenParams<RootTabParamList> | { book?: string };
   ChooseChapterNumber:
@@ -51,6 +52,7 @@ export enum Screens {
   ChooseBook = "ChooseBook",
   ChooseChapterNumber = "ChooseChapterNumber",
   ChooseVerseNumber = "ChooseVerseNumber",
+  Favorite = "Favorite",
 }
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
@@ -130,15 +132,17 @@ export interface IVerseItem {
   text: string;
   verse: number;
   bookName?: string;
+  is_favorite?: any;
 }
 
 export interface IBookVerse {
-  bookNumber: number;
+  book_number: number;
   chapter: number;
   text: string;
   verse: number;
   subheading?: string;
   order_if_several?: number;
+  is_favorite: any;
 }
 
 export type TTheme = Theme & {
@@ -151,6 +155,13 @@ export enum BookIndexes {
   Mateo = 39,
   Apocalipsis = 66,
 }
+
+export type IFavoriteVerse = {
+  bookNumber: number;
+  chapter: number;
+  verse: number;
+  isFav: boolean;
+};
 
 export enum EBookIndexesAudio {
   None,
