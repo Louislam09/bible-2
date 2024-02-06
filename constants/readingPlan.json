@@ -1,0 +1,1002 @@
+[
+  {
+    "day": 1,
+    "evening": 0,
+    "item": 1,
+    "book_number": 500,
+    "start_chapter": 1,
+    "start_verse": 1,
+    "end_chapter": 1,
+    "end_verse": 18
+  },
+  {
+    "day": 2,
+    "evening": 0,
+    "item": 1,
+    "book_number": 570,
+    "start_chapter": 2,
+    "start_verse": 1,
+    "end_chapter": 2,
+    "end_verse": 1
+  },
+  {
+    "day": 3,
+    "evening": 0,
+    "item": 1,
+    "book_number": 580,
+    "start_chapter": 1,
+    "start_verse": 15,
+    "end_chapter": 1,
+    "end_verse": 23
+  },
+  {
+    "day": 4,
+    "evening": 0,
+    "item": 1,
+    "book_number": 650,
+    "start_chapter": 1,
+    "start_verse": 1,
+    "end_chapter": 1,
+    "end_verse": 4
+  },
+  {
+    "day": 5,
+    "evening": 0,
+    "item": 1,
+    "book_number": 670,
+    "start_chapter": 2,
+    "start_verse": 4,
+    "end_chapter": 2,
+    "end_verse": 10
+  },
+  {
+    "day": 6,
+    "evening": 0,
+    "item": 1,
+    "book_number": 10,
+    "start_chapter": 3,
+    "start_verse": 1,
+    "end_chapter": 3,
+    "end_verse": 24
+  },
+  {
+    "day": 7,
+    "evening": 0,
+    "item": 1,
+    "book_number": 20,
+    "start_chapter": 32,
+    "start_verse": 1,
+    "end_chapter": 33,
+    "end_verse": 6
+  },
+  {
+    "day": 8,
+    "evening": 0,
+    "item": 1,
+    "book_number": 230,
+    "start_chapter": 14,
+    "start_verse": 1,
+    "end_chapter": 14,
+    "end_verse": 7
+  },
+  {
+    "day": 9,
+    "evening": 0,
+    "item": 1,
+    "book_number": 290,
+    "start_chapter": 59,
+    "start_verse": 1,
+    "end_chapter": 59,
+    "end_verse": 21
+  },
+  {
+    "day": 10,
+    "evening": 0,
+    "item": 1,
+    "book_number": 370,
+    "start_chapter": 5,
+    "start_verse": 1,
+    "end_chapter": 5,
+    "end_verse": 27
+  },
+  {
+    "day": 11,
+    "evening": 0,
+    "item": 1,
+    "book_number": 20,
+    "start_chapter": 12,
+    "start_verse": 1,
+    "end_chapter": 12,
+    "end_verse": 30
+  },
+  {
+    "day": 12,
+    "evening": 0,
+    "item": 1,
+    "book_number": 20,
+    "start_chapter": 16,
+    "start_verse": 1,
+    "end_chapter": 16,
+    "end_verse": 35
+  },
+  {
+    "day": 13,
+    "evening": 0,
+    "item": 1,
+    "book_number": 40,
+    "start_chapter": 21,
+    "start_verse": 4,
+    "end_chapter": 21,
+    "end_verse": 9
+  },
+  {
+    "day": 14,
+    "evening": 0,
+    "item": 1,
+    "book_number": 110,
+    "start_chapter": 8,
+    "start_verse": 1,
+    "end_chapter": 8,
+    "end_verse": 21
+  },
+  {
+    "day": 15,
+    "evening": 0,
+    "item": 1,
+    "book_number": 390,
+    "start_chapter": 1,
+    "start_verse": 1,
+    "end_chapter": 4,
+    "end_verse": 11
+  },
+  {
+    "day": 16,
+    "evening": 0,
+    "item": 1,
+    "book_number": 230,
+    "start_chapter": 2,
+    "start_verse": 1,
+    "end_chapter": 2,
+    "end_verse": 12
+  },
+  {
+    "day": 17,
+    "evening": 0,
+    "item": 1,
+    "book_number": 230,
+    "start_chapter": 22,
+    "start_verse": 1,
+    "end_chapter": 22,
+    "end_verse": 31
+  },
+  {
+    "day": 18,
+    "evening": 0,
+    "item": 1,
+    "book_number": 230,
+    "start_chapter": 69,
+    "start_verse": 1,
+    "end_chapter": 69,
+    "end_verse": 36
+  },
+  {
+    "day": 19,
+    "evening": 0,
+    "item": 1,
+    "book_number": 230,
+    "start_chapter": 110,
+    "start_verse": 1,
+    "end_chapter": 110,
+    "end_verse": 7
+  },
+  {
+    "day": 20,
+    "evening": 0,
+    "item": 1,
+    "book_number": 230,
+    "start_chapter": 118,
+    "start_verse": 1,
+    "end_chapter": 118,
+    "end_verse": 29
+  },
+  {
+    "day": 21,
+    "evening": 0,
+    "item": 1,
+    "book_number": 10,
+    "start_chapter": 12,
+    "start_verse": 1,
+    "end_chapter": 12,
+    "end_verse": 9
+  },
+  {
+    "day": 22,
+    "evening": 0,
+    "item": 1,
+    "book_number": 300,
+    "start_chapter": 23,
+    "start_verse": 1,
+    "end_chapter": 23,
+    "end_verse": 9
+  },
+  {
+    "day": 23,
+    "evening": 0,
+    "item": 1,
+    "book_number": 400,
+    "start_chapter": 5,
+    "start_verse": 1,
+    "end_chapter": 5,
+    "end_verse": 5
+  },
+  {
+    "day": 24,
+    "evening": 0,
+    "item": 1,
+    "book_number": 450,
+    "start_chapter": 9,
+    "start_verse": 9,
+    "end_chapter": 9,
+    "end_verse": 17
+  },
+  {
+    "day": 25,
+    "evening": 0,
+    "item": 1,
+    "book_number": 450,
+    "start_chapter": 12,
+    "start_verse": 1,
+    "end_chapter": 13,
+    "end_verse": 9
+  },
+  {
+    "day": 26,
+    "evening": 0,
+    "item": 1,
+    "book_number": 290,
+    "start_chapter": 7,
+    "start_verse": 1,
+    "end_chapter": 7,
+    "end_verse": 25
+  },
+  {
+    "day": 27,
+    "evening": 0,
+    "item": 1,
+    "book_number": 290,
+    "start_chapter": 9,
+    "start_verse": 1,
+    "end_chapter": 9,
+    "end_verse": 8
+  },
+  {
+    "day": 28,
+    "evening": 0,
+    "item": 1,
+    "book_number": 290,
+    "start_chapter": 42,
+    "start_verse": 1,
+    "end_chapter": 42,
+    "end_verse": 9
+  },
+  {
+    "day": 29,
+    "evening": 0,
+    "item": 1,
+    "book_number": 290,
+    "start_chapter": 52,
+    "start_verse": 13,
+    "end_chapter": 53,
+    "end_verse": 12
+  },
+  {
+    "day": 30,
+    "evening": 0,
+    "item": 1,
+    "book_number": 290,
+    "start_chapter": 61,
+    "start_verse": 1,
+    "end_chapter": 61,
+    "end_verse": 11
+  },
+  {
+    "day": 31,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 1,
+    "start_verse": 26,
+    "end_chapter": 1,
+    "end_verse": 56
+  },
+  {
+    "day": 32,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 1,
+    "start_verse": 18,
+    "end_chapter": 1,
+    "end_verse": 25
+  },
+  {
+    "day": 33,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 2,
+    "start_verse": 1,
+    "end_chapter": 2,
+    "end_verse": 40
+  },
+  {
+    "day": 34,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 2,
+    "start_verse": 1,
+    "end_chapter": 2,
+    "end_verse": 23
+  },
+  {
+    "day": 35,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 2,
+    "start_verse": 41,
+    "end_chapter": 2,
+    "end_verse": 52
+  },
+  {
+    "day": 36,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 3,
+    "start_verse": 1,
+    "end_chapter": 3,
+    "end_verse": 17
+  },
+  {
+    "day": 37,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 4,
+    "start_verse": 1,
+    "end_chapter": 4,
+    "end_verse": 13
+  },
+  {
+    "day": 38,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 4,
+    "start_verse": 14,
+    "end_chapter": 4,
+    "end_verse": 30
+  },
+  {
+    "day": 39,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 4,
+    "start_verse": 31,
+    "end_chapter": 4,
+    "end_verse": 44
+  },
+  {
+    "day": 40,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 5,
+    "start_verse": 1,
+    "end_chapter": 5,
+    "end_verse": 11
+  },
+  {
+    "day": 41,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 5,
+    "start_verse": 1,
+    "end_chapter": 5,
+    "end_verse": 48
+  },
+  {
+    "day": 42,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 6,
+    "start_verse": 1,
+    "end_chapter": 6,
+    "end_verse": 34
+  },
+  {
+    "day": 43,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 7,
+    "start_verse": 1,
+    "end_chapter": 7,
+    "end_verse": 29
+  },
+  {
+    "day": 44,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 23,
+    "start_verse": 1,
+    "end_chapter": 23,
+    "end_verse": 39
+  },
+  {
+    "day": 45,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 24,
+    "start_verse": 1,
+    "end_chapter": 24,
+    "end_verse": 51
+  },
+  {
+    "day": 46,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 10,
+    "start_verse": 25,
+    "end_chapter": 10,
+    "end_verse": 37
+  },
+  {
+    "day": 47,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 12,
+    "start_verse": 13,
+    "end_chapter": 12,
+    "end_verse": 21
+  },
+  {
+    "day": 48,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 14,
+    "start_verse": 1,
+    "end_chapter": 14,
+    "end_verse": 24
+  },
+  {
+    "day": 49,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 15,
+    "start_verse": 1,
+    "end_chapter": 15,
+    "end_verse": 32
+  },
+  {
+    "day": 50,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 18,
+    "start_verse": 1,
+    "end_chapter": 18,
+    "end_verse": 14
+  },
+  {
+    "day": 51,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 13,
+    "start_verse": 1,
+    "end_chapter": 13,
+    "end_verse": 58
+  },
+  {
+    "day": 52,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 20,
+    "start_verse": 1,
+    "end_chapter": 20,
+    "end_verse": 16
+  },
+  {
+    "day": 53,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 25,
+    "start_verse": 1,
+    "end_chapter": 25,
+    "end_verse": 46
+  },
+  {
+    "day": 54,
+    "evening": 0,
+    "item": 1,
+    "book_number": 500,
+    "start_chapter": 10,
+    "start_verse": 1,
+    "end_chapter": 10,
+    "end_verse": 18
+  },
+  {
+    "day": 55,
+    "evening": 0,
+    "item": 1,
+    "book_number": 500,
+    "start_chapter": 15,
+    "start_verse": 1,
+    "end_chapter": 15,
+    "end_verse": 17
+  },
+  {
+    "day": 56,
+    "evening": 0,
+    "item": 1,
+    "book_number": 500,
+    "start_chapter": 2,
+    "start_verse": 1,
+    "end_chapter": 2,
+    "end_verse": 11
+  },
+  {
+    "day": 57,
+    "evening": 0,
+    "item": 1,
+    "book_number": 480,
+    "start_chapter": 4,
+    "start_verse": 35,
+    "end_chapter": 4,
+    "end_verse": 41
+  },
+  {
+    "day": 58,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 14,
+    "start_verse": 22,
+    "end_chapter": 14,
+    "end_verse": 33
+  },
+  {
+    "day": 59,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 14,
+    "start_verse": 22,
+    "end_chapter": 14,
+    "end_verse": 33
+  },
+  {
+    "day": 60,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 21,
+    "start_verse": 18,
+    "end_chapter": 21,
+    "end_verse": 22
+  },
+  {
+    "day": 61,
+    "evening": 0,
+    "item": 1,
+    "book_number": 500,
+    "start_chapter": 9,
+    "start_verse": 1,
+    "end_chapter": 9,
+    "end_verse": 41
+  },
+  {
+    "day": 62,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 5,
+    "start_verse": 17,
+    "end_chapter": 5,
+    "end_verse": 26
+  },
+  {
+    "day": 63,
+    "evening": 0,
+    "item": 1,
+    "book_number": 480,
+    "start_chapter": 5,
+    "start_verse": 1,
+    "end_chapter": 5,
+    "end_verse": 20
+  },
+  {
+    "day": 64,
+    "evening": 0,
+    "item": 1,
+    "book_number": 480,
+    "start_chapter": 5,
+    "start_verse": 21,
+    "end_chapter": 5,
+    "end_verse": 43
+  },
+  {
+    "day": 65,
+    "evening": 0,
+    "item": 1,
+    "book_number": 500,
+    "start_chapter": 11,
+    "start_verse": 1,
+    "end_chapter": 11,
+    "end_verse": 45
+  },
+  {
+    "day": 66,
+    "evening": 0,
+    "item": 1,
+    "book_number": 480,
+    "start_chapter": 1,
+    "start_verse": 29,
+    "end_chapter": 1,
+    "end_verse": 39
+  },
+  {
+    "day": 67,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 10,
+    "start_verse": 1,
+    "end_chapter": 10,
+    "end_verse": 24
+  },
+  {
+    "day": 68,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 11,
+    "start_verse": 1,
+    "end_chapter": 11,
+    "end_verse": 13
+  },
+  {
+    "day": 69,
+    "evening": 0,
+    "item": 1,
+    "book_number": 500,
+    "start_chapter": 17,
+    "start_verse": 1,
+    "end_chapter": 17,
+    "end_verse": 26
+  },
+  {
+    "day": 70,
+    "evening": 0,
+    "item": 1,
+    "book_number": 480,
+    "start_chapter": 14,
+    "start_verse": 32,
+    "end_chapter": 14,
+    "end_verse": 42
+  },
+  {
+    "day": 71,
+    "evening": 0,
+    "item": 1,
+    "book_number": 500,
+    "start_chapter": 6,
+    "start_verse": 25,
+    "end_chapter": 6,
+    "end_verse": 71
+  },
+  {
+    "day": 72,
+    "evening": 0,
+    "item": 1,
+    "book_number": 480,
+    "start_chapter": 3,
+    "start_verse": 20,
+    "end_chapter": 3,
+    "end_verse": 35
+  },
+  {
+    "day": 73,
+    "evening": 0,
+    "item": 1,
+    "book_number": 500,
+    "start_chapter": 14,
+    "start_verse": 1,
+    "end_chapter": 14,
+    "end_verse": 14
+  },
+  {
+    "day": 74,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 18,
+    "start_verse": 15,
+    "end_chapter": 18,
+    "end_verse": 35
+  },
+  {
+    "day": 75,
+    "evening": 0,
+    "item": 1,
+    "book_number": 480,
+    "start_chapter": 8,
+    "start_verse": 31,
+    "end_chapter": 9,
+    "end_verse": 1
+  },
+  {
+    "day": 76,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 26,
+    "start_verse": 47,
+    "end_chapter": 26,
+    "end_verse": 56
+  },
+  {
+    "day": 77,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 26,
+    "start_verse": 57,
+    "end_chapter": 26,
+    "end_verse": 68
+  },
+  {
+    "day": 78,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 26,
+    "start_verse": 69,
+    "end_chapter": 27,
+    "end_verse": 10
+  },
+  {
+    "day": 79,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 22,
+    "start_verse": 66,
+    "end_chapter": 23,
+    "end_verse": 25
+  },
+  {
+    "day": 80,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 23,
+    "start_verse": 26,
+    "end_chapter": 23,
+    "end_verse": 56
+  },
+  {
+    "day": 81,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 28,
+    "start_verse": 1,
+    "end_chapter": 28,
+    "end_verse": 20
+  },
+  {
+    "day": 82,
+    "evening": 0,
+    "item": 1,
+    "book_number": 480,
+    "start_chapter": 16,
+    "start_verse": 1,
+    "end_chapter": 16,
+    "end_verse": 20
+  },
+  {
+    "day": 83,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 24,
+    "start_verse": 1,
+    "end_chapter": 24,
+    "end_verse": 49
+  },
+  {
+    "day": 84,
+    "evening": 0,
+    "item": 1,
+    "book_number": 500,
+    "start_chapter": 20,
+    "start_verse": 1,
+    "end_chapter": 21,
+    "end_verse": 25
+  },
+  {
+    "day": 85,
+    "evening": 0,
+    "item": 1,
+    "book_number": 530,
+    "start_chapter": 15,
+    "start_verse": 1,
+    "end_chapter": 15,
+    "end_verse": 58
+  },
+  {
+    "day": 86,
+    "evening": 0,
+    "item": 1,
+    "book_number": 730,
+    "start_chapter": 1,
+    "start_verse": 1,
+    "end_chapter": 1,
+    "end_verse": 20
+  },
+  {
+    "day": 87,
+    "evening": 0,
+    "item": 1,
+    "book_number": 730,
+    "start_chapter": 2,
+    "start_verse": 1,
+    "end_chapter": 2,
+    "end_verse": 11
+  },
+  {
+    "day": 88,
+    "evening": 0,
+    "item": 1,
+    "book_number": 730,
+    "start_chapter": 2,
+    "start_verse": 12,
+    "end_chapter": 2,
+    "end_verse": 29
+  },
+  {
+    "day": 89,
+    "evening": 0,
+    "item": 1,
+    "book_number": 730,
+    "start_chapter": 3,
+    "start_verse": 1,
+    "end_chapter": 3,
+    "end_verse": 13
+  },
+  {
+    "day": 90,
+    "evening": 0,
+    "item": 1,
+    "book_number": 730,
+    "start_chapter": 3,
+    "start_verse": 14,
+    "end_chapter": 3,
+    "end_verse": 22
+  },
+  {
+    "day": 91,
+    "evening": 0,
+    "item": 1,
+    "book_number": 510,
+    "start_chapter": 1,
+    "start_verse": 1,
+    "end_chapter": 1,
+    "end_verse": 11
+  },
+  {
+    "day": 92,
+    "evening": 0,
+    "item": 1,
+    "book_number": 590,
+    "start_chapter": 4,
+    "start_verse": 13,
+    "end_chapter": 5,
+    "end_verse": 11
+  },
+  {
+    "day": 93,
+    "evening": 0,
+    "item": 1,
+    "book_number": 600,
+    "start_chapter": 2,
+    "start_verse": 1,
+    "end_chapter": 2,
+    "end_verse": 12
+  },
+  {
+    "day": 94,
+    "evening": 0,
+    "item": 1,
+    "book_number": 680,
+    "start_chapter": 3,
+    "start_verse": 1,
+    "end_chapter": 3,
+    "end_verse": 18
+  },
+  {
+    "day": 95,
+    "evening": 0,
+    "item": 1,
+    "book_number": 730,
+    "start_chapter": 21,
+    "start_verse": 1,
+    "end_chapter": 22,
+    "end_verse": 21
+  },
+  {
+    "day": 96,
+    "evening": 0,
+    "item": 1,
+    "book_number": 470,
+    "start_chapter": 19,
+    "start_verse": 16,
+    "end_chapter": 19,
+    "end_verse": 30
+  },
+  {
+    "day": 97,
+    "evening": 0,
+    "item": 1,
+    "book_number": 500,
+    "start_chapter": 3,
+    "start_verse": 1,
+    "end_chapter": 3,
+    "end_verse": 21
+  },
+  {
+    "day": 98,
+    "evening": 0,
+    "item": 1,
+    "book_number": 500,
+    "start_chapter": 4,
+    "start_verse": 1,
+    "end_chapter": 4,
+    "end_verse": 42
+  },
+  {
+    "day": 99,
+    "evening": 0,
+    "item": 1,
+    "book_number": 510,
+    "start_chapter": 9,
+    "start_verse": 1,
+    "end_chapter": 9,
+    "end_verse": 19
+  },
+  {
+    "day": 100,
+    "evening": 0,
+    "item": 1,
+    "book_number": 490,
+    "start_chapter": 9,
+    "start_verse": 18,
+    "end_chapter": 9,
+    "end_verse": 27
+  }
+]
