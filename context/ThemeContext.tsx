@@ -9,7 +9,7 @@ import { Appearance } from "react-native";
 
 interface ThemeContextProps {
   theme: "light" | "dark";
-  toggleTheme: () => void;
+  toggleTheme: (schema?: "light" | "dark") => void;
 }
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
@@ -34,7 +34,11 @@ const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     };
   }, []);
 
-  const toggleTheme = () => {
+  const toggleTheme = (scheme?: typeof theme) => {
+    if (typeof scheme === "string") {
+      setTheme(scheme);
+      return;
+    }
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 

@@ -29,7 +29,6 @@ const BookContent: FC<BookContentInterface> = ({}) => {
   const { myBibleDB, executeSql } = useDBContext();
   const route = useRoute();
   const { book = "Mateo", chapter, verse } = route.params as HomeParams;
-  const bookRef = React.useRef<FlashList<IBookVerse[]>>(null);
   const [loading, setLoading] = React.useState(true);
   const [data, setData] = useState<any>({});
   const currentBook = DB_BOOK_NAMES.find((x) => x.longName === book);

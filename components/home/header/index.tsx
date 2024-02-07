@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import React, { FC, useCallback, useRef } from "react";
@@ -31,17 +31,12 @@ type TIcon = {
   color?: string | any;
   action?: any;
   longAction?: any;
+  isIonicon?: boolean;
 };
 
 const CustomHeader: FC<HeaderInterface> = ({}) => {
-  const {
-    highlightedVerses,
-    selectFont,
-    selectedFont,
-    currentBibleVersion,
-    selectBibleVersion,
-    clearHighlights,
-  } = useBibleContext();
+  const { currentBibleVersion, selectBibleVersion, clearHighlights } =
+    useBibleContext();
   const route = useRoute<TRoute>();
   const { book, chapter = 1, verse } = route.params as HomeParams;
   const theme = useTheme();
@@ -71,8 +66,9 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
 
   const headerIconData: TIcon[] = [
     {
-      name: "theme-light-dark",
-      action: toggleTheme,
+      name: "home",
+      action: () => navigation.navigate("Dashboard"),
+      isIonicon: true,
     },
     { name: "format-font", action: fontHandlePresentModalPress },
     { name: "magnify", action: goSearchScreen },
@@ -99,12 +95,21 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
             onPress={icon?.action}
             onLongPress={icon?.longAction}
           >
-            <MaterialCommunityIcons
-              style={[styles.icon, icon.color && { color: icon.color }]}
-              name={icon.name}
-              size={headerIconSize}
-              color={icon.color}
-            />
+            {icon.isIonicon ? (
+              <Ionicons
+                name={icon.name}
+                size={headerIconSize}
+                style={[styles.icon]}
+                color={icon.color}
+              />
+            ) : (
+              <MaterialCommunityIcons
+                style={[styles.icon, icon.color && { color: icon.color }]}
+                name={icon.name}
+                size={headerIconSize}
+                color={icon.color}
+              />
+            )}
           </TouchableOpacity>
         ))}
         <BottomModal startAT={2} ref={fontBottomSheetModalRef}>

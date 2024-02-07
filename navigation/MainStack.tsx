@@ -11,6 +11,7 @@ import React from "react";
 import Book from "screens/Book";
 import ChooseBookScreen from "screens/ChooseBookScreen";
 import ChooseFromListScreen from "screens/ChooseFromListScreen";
+import Dashboard from "screens/Dashboard";
 import Favorite from "screens/Favorite";
 import Home from "screens/Home";
 import LogScreen from "screens/Log";
@@ -45,8 +46,9 @@ const MainStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false, animation: "none" }}
-      initialRouteName="Home"
+      initialRouteName="Dashboard"
     >
+      <Stack.Screen initialParams={{}} name="Dashboard" component={Dashboard} />
       <Stack.Screen
         initialParams={{
           book: lastBook || "Génesis",

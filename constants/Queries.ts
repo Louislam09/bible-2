@@ -55,6 +55,10 @@ inner join books b on b.book_number = v.book_number
 WHERE`;
 
 export const SEARCH_STRONG_WORD = `select * from dictionary where topic in (?,?)`;
+export const GET_DAILY_VERSE = `select v.*, b.long_name as bookName from verses v
+inner join books b
+on b.book_number = v.book_number
+where v.book_number = ? and v.chapter = ? and v.verse = ?`;
 
 type TQuery = {
   GET_VERSE_NUMBER_QUERY: string;
@@ -67,17 +71,14 @@ export const QUERY_BY_DB: { [key in DBName.BIBLE | DBName.NTV]: TQuery } = {
   [DBName.BIBLE]: {
     GET_VERSE_NUMBER_QUERY: `SELECT COUNT(v.verse) AS verse_count FROM books b LEFT JOIN verses v ON b.book_number = v.book_number
     WHERE b.long_name = ? AND v.chapter = ? GROUP BY v.chapter ORDER BY v.verse;`,
-    // GET_VERSES_BY_BOOK_AND_CHAPTER: `SELECT * FROM verses WHERE book_number = ? and chapter = ?;`,
     GET_VERSES_BY_BOOK_AND_CHAPTER: GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV,
     GET_SUBTITLE_BY_BOOK_AND_CHAPTER: `Select * from subheadings where book_number = ? and chapter = ?;`,
     SEARCH_TEXT_QUERY: SEARCH_TEXT_QUERY_NEW,
-    // SEARCH_TEXT_QUERY: `SELECT v.*, b.long_name as bookName FROM verses v inner join books b on b.book_number = v.book_number where`,
   },
   [DBName.NTV]: {
     GET_VERSE_NUMBER_QUERY: `SELECT COUNT(v.verse) AS verse_count FROM books b LEFT JOIN verses v ON b.book_number = v.book_number
     WHERE b.long_name = ? AND v.chapter = ? GROUP BY v.chapter ORDER BY v.verse;`,
     GET_VERSES_BY_BOOK_AND_CHAPTER: GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV,
-    // GET_VERSES_BY_BOOK_AND_CHAPTER: `SELECT * FROM verses WHERE book_number = ? and chapter = ?;`,
     GET_SUBTITLE_BY_BOOK_AND_CHAPTER: `Select * from stories where book_number = ? and chapter = ?;`,
     SEARCH_TEXT_QUERY: `SELECT v.*, b.long_name as bookName FROM verses v inner join books b on b.book_number = v.book_number where`,
   },

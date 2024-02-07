@@ -1,14 +1,29 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, View } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
 import React from "react";
-import { Platform, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  useColorScheme,
+} from "react-native";
 import { TFont, TTheme } from "types";
 import SelectThemeList from "./SelectThemeList";
+import { useCustomTheme } from "context/ThemeContext";
+
+type IThemeOption = {
+  icon: string | any;
+  label: string;
+  action: () => void;
+  isIonicon?: boolean;
+  disabled?: boolean;
+};
 
 const Settings = ({ theme }: any) => {
   const styles = getStyles(theme);
-
+  const { toggleTheme, theme: _themeScheme } = useCustomTheme();
+  const colorScheme = useColorScheme() as typeof _themeScheme;
   const {
     selectFont,
     decreaseFontSize,
@@ -19,8 +34,68 @@ const Settings = ({ theme }: any) => {
   } = useBibleContext();
 
   const fontName = Object.values(TFont) as string[];
+
+  const themesIcon: IThemeOption[] = [
+    {
+      icon: "theme-light-dark",
+      label: "Default",
+      action: () => toggleTheme(colorScheme),
+    },
+    {
+      icon: "moon-outline",
+      label: "Oscuro",
+      isIonicon: true,
+      action: toggleTheme,
+      disabled: _themeScheme === "dark",
+    },
+    {
+      icon: "sunny-outline",
+      label: "Claro",
+      isIonicon: true,
+      action: toggleTheme,
+      disabled: _themeScheme === "light",
+    },
+  ];
+
   return (
     <View style={styles.modalContent}>
+      <Text style={[styles.title, { marginTop: 15 }]}>Color de Tema</Text>
+      <View style={[styles.fontContainer, styles.card]}>
+        {themesIcon.map((item, index: any) => (
+          <TouchableOpacity
+            key={index}
+            onPress={item.action}
+            disabled={item.disabled}
+          >
+            <View style={styles.fontItem}>
+              {item.isIonicon ? (
+                <Ionicons
+                  name={item.icon}
+                  style={[
+                    styles.fontIcon,
+                    item.disabled && {
+                      backgroundColor: theme.colors.notification,
+                      color: "white",
+                    },
+                  ]}
+                />
+              ) : (
+                <MaterialCommunityIcons
+                  name={item.icon}
+                  style={[
+                    styles.fontIcon,
+                    item.disabled && {
+                      backgroundColor: theme.colors.notification,
+                      color: "white",
+                    },
+                  ]}
+                />
+              )}
+              <Text style={styles.fontLabel}>{item.label}</Text>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </View>
       <Text style={styles.title}>Tipo de Letra</Text>
       <View style={[styles.fontContainer, styles.card]}>
         {fontName.map((font: string, index: any) => (
