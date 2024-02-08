@@ -57,6 +57,9 @@ const MainStack = () => {
         }}
         name="Home"
         component={Home}
+        options={{
+          animation: "slide_from_right",
+        }}
       />
       <Stack.Screen
         name="ChooseBook"
@@ -64,12 +67,16 @@ const MainStack = () => {
         options={({ route }) => ({
           ...screenOptions(route),
           header: (props: any) => <ChooseBookHeader {...props} />,
+          animation: "slide_from_bottom",
         })}
       />
       <Stack.Screen
         name="Book"
         component={Book}
-        options={({ route }) => screenOptions(route)}
+        options={({ route }) => ({
+          ...screenOptions(route),
+          animation: "slide_from_bottom",
+        })}
       />
       <Stack.Screen
         initialParams={{ book: "Génesis" }}
@@ -78,27 +85,39 @@ const MainStack = () => {
         options={({ route }) => ({
           ...screenOptions(route),
           header: (props: any) => <SearchHeader {...props} />,
+          animation: "slide_from_right",
         })}
       />
       <Stack.Screen
         name="ChooseChapterNumber"
         component={ChooseFromListScreen}
-        options={({ route }) => screenOptions(route)}
+        options={({ route }) => ({
+          ...screenOptions(route),
+          animation: "slide_from_right",
+        })}
       />
       <Stack.Screen
         name="ChooseVerseNumber"
         component={ChooseFromListScreen}
-        options={({ route }) => screenOptions(route)}
+        options={({ route }) => ({
+          ...screenOptions(route),
+        })}
       />
       <Stack.Screen
         name="Log"
         component={LogScreen}
-        options={({ route }) => screenOptions(route)}
+        options={({ route }) => ({
+          ...screenOptions(route),
+          animation: "slide_from_bottom",
+        })}
       />
       <Stack.Screen
         name="Favorite"
         component={Favorite}
-        options={({ route }) => screenOptions(route)}
+        options={({ route }) => ({
+          ...screenOptions(route),
+          animation: "slide_from_right",
+        })}
       />
     </Stack.Navigator>
   );

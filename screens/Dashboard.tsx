@@ -28,14 +28,15 @@ type IDashboardOption = {
   action: () => void;
   disabled?: boolean;
   isIonicon?: boolean;
+  tag?: string;
 };
 
 const defaultDailyVerse = {
   book_number: 0,
-  chapter: 0,
-  text: "",
-  verse: 0,
-  bookName: "",
+  chapter: 3,
+  text: "Oh Jehová, he oído tu palabra, y temí. Oh Jehová, aviva tu obra en medio de los tiempos, En  medio de los tiempos hazla conocer; En la ira acuérdate  de la misericordia.",
+  verse: 2,
+  bookName: "Habacuc",
   is_favorite: false,
 };
 
@@ -99,6 +100,7 @@ const Dashboard = () => {
       icon: isNTV ? "book-cross" : "crown-outline",
       label: "Santa Escritura",
       action: () => navigation.navigate("Home", {}),
+      tag: isNTV ? "book-cross" : "crown-outline",
     },
     {
       icon: "text-search",
@@ -129,7 +131,7 @@ const Dashboard = () => {
     },
   ];
 
-  const renderItem = ({ item, index }: any) => (
+  const renderItem = ({ item }: { item: IDashboardOption }) => (
     <TouchableWithoutFeedback
       onPress={item.action}
       style={[{ padding: 0, flex: 1, display: "flex" }]}
