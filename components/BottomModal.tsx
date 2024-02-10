@@ -16,7 +16,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
   ({ children, startAT }, ref) => {
     const theme = useTheme();
     const styles = getStyles(theme);
-    const snapPoints = useMemo(() => ["25%", "50%", "75%", "100%"], []);
+    const snapPoints = useMemo(() => ["30%", "50%", "75%", "100%"], []);
     const [index, setIndex] = useState(0);
 
     const handleSheetChanges = useCallback((index: number) => {
@@ -45,7 +45,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
         ref={ref}
         index={startAT ?? 1}
         snapPoints={snapPoints}
-        handleIndicatorStyle={styles.indicator}
+        handleIndicatorStyle={[styles.indicator]}
         backdropComponent={renderBackdrop}
         onChange={handleSheetChanges}
       >

@@ -22,6 +22,8 @@ import { useDBContext } from "context/databaseContext";
 import { GET_DAILY_VERSE } from "constants/Queries";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";
 import Animation from "components/Animation";
+import ProgressBar from "components/home/footer/ProgressBar";
+import Play from "components/home/header/Play";
 
 type IDashboardOption = {
   icon: string | any;
@@ -58,6 +60,7 @@ const Dashboard = () => {
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
   const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
+  const playRef = useRef<BottomSheetModal>(null);
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(defaultDailyVerse);
   const dashboardImage = require("../assets/lottie/dashboard.json");
 
@@ -89,6 +92,9 @@ const Dashboard = () => {
 
   const versionHandlePresentModalPress = useCallback(() => {
     versionRef.current?.present();
+  }, []);
+  const playHandlePresentModalPress = useCallback(() => {
+    playRef.current?.present();
   }, []);
 
   const onSelect = (version: string) => {
@@ -130,6 +136,13 @@ const Dashboard = () => {
       label: "Ajustes",
       isIonicon: true,
       action: fontHandlePresentModalPress,
+    },
+    {
+      icon: "play-circle-outline",
+      label: "Escuchar",
+      // isIonicon: true,
+      disabled: true,
+      action: playHandlePresentModalPress,
     },
   ];
 
@@ -196,7 +209,10 @@ const Dashboard = () => {
         <Settings theme={theme} />
       </BottomModal>
 
-      <BottomModal startAT={1} ref={versionRef}>
+      <BottomModal startAT={0} ref={playRef}>
+        <Play {...{ theme }} />
+      </BottomModal>
+      <BottomModal startAT={0} ref={versionRef}>
         <VersionList {...{ currentBibleVersion, onSelect, theme }} />
       </BottomModal>
     </View>
@@ -210,9 +226,9 @@ const getStyles = ({ colors }: TTheme) =>
     container: {
       display: "flex",
       flex: 1,
-      justifyContent: "center",
       alignItems: "center",
-      paddingTop: 30,
+      justifyContent: "space-evenly",
+      paddingTop: 50,
     },
     imageContainer: {
       alignItems: "center",
@@ -229,9 +245,10 @@ const getStyles = ({ colors }: TTheme) =>
       width: "100%",
     },
     optionContainer: {
-      flex: 1,
+      // flex: 1,
       width: "100%",
       backgroundColor: "transparent",
+      minHeight: 300,
     },
     verse: {
       display: "flex",
