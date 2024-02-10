@@ -21,6 +21,7 @@ import DAILY_VERSES from "constants/dailyVerses";
 import { useDBContext } from "context/databaseContext";
 import { GET_DAILY_VERSE } from "constants/Queries";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";
+import Animation from "components/Animation";
 
 type IDashboardOption = {
   icon: string | any;
@@ -58,6 +59,7 @@ const Dashboard = () => {
   const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(defaultDailyVerse);
+  const dashboardImage = require("../assets/lottie/dashboard.json");
 
   useEffect(() => {
     if (!myBibleDB || !executeSql) return;
@@ -151,6 +153,19 @@ const Dashboard = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.imageContainer}>
+        <Animation
+          backgroundColor={"transparent"}
+          source={dashboardImage}
+          loop
+          size={{ width: 220, height: 220 }}
+          colorFilters={[
+            { color: theme.colors.text, keypath: "Secondary shapes" },
+            { color: theme.colors.text, keypath: "Clouds" },
+            { color: theme.colors.text, keypath: "Plants" },
+          ]}
+        />
+      </View>
       <View style={[styles.dailyVerseContainer, { width: SCREEN_WIDTH }]}>
         <View style={styles.verse}>
           <Text style={[styles.verseTitle]}>Versiculo del dia</Text>
@@ -197,19 +212,26 @@ const getStyles = ({ colors }: TTheme) =>
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      paddingTop: 100,
+      paddingTop: 30,
+    },
+    imageContainer: {
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 15,
+      padding: 5,
+      backgroundColor: colors.border + "9c",
     },
     dailyVerseContainer: {
       backgroundColor: "transparent",
       alignItems: "center",
       justifyContent: "center",
       marginVertical: 10,
+      width: "100%",
     },
     optionContainer: {
       flex: 1,
       width: "100%",
       backgroundColor: "transparent",
-      //   ...customBorder,
     },
     verse: {
       display: "flex",
@@ -220,7 +242,6 @@ const getStyles = ({ colors }: TTheme) =>
       paddingHorizontal: 10,
     },
     verseTitle: {
-      //   color: "white",
       fontSize: 24,
       fontWeight: "bold",
       color: colors.notification,

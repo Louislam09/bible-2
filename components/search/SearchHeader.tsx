@@ -4,13 +4,14 @@ import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { Text, View } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
 import Checkbox from "expo-checkbox";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { TTheme } from "types";
 import removeAccent from "utils/removeAccent";
 
 const SearchHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
   const theme = useTheme();
+  const textInputRef = useRef<TextInput>(null);
   const styles = getStyles(theme);
   const {
     performSearch,
@@ -51,6 +52,10 @@ const SearchHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
     return () => abortController.abort();
   }, [query]);
 
+  const clearText = () => {
+    textInputRef.current?.clear();
+  };
+
   return (
     <View>
       <View style={styles.container}>
@@ -58,12 +63,24 @@ const SearchHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
           <Ionicons style={styles.icon} name="arrow-back" size={24} />
         </TouchableOpacity>
         <TextInput
+          ref={textInputRef}
           placeholder="Buscar"
           style={styles.saerchInput}
           placeholderTextColor={theme.colors.text}
           onChangeText={handelSearch}
           defaultValue={searchQuery ?? ""}
+          clearButtonMode="always"
         />
+        {query !== "" && (
+          <TouchableOpacity onPress={clearText} style={{ padding: 5 }}>
+            <Ionicons
+              style={{ color: theme.colors.text }}
+              name="close-circle-outline"
+              size={20}
+              color="gray"
+            />
+          </TouchableOpacity>
+        )}
       </View>
       <View style={styles.checkboxContainer}>
         <View style={styles.checkboxItem}>

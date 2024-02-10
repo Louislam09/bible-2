@@ -1,23 +1,19 @@
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useNavigation, useTheme } from "@react-navigation/native";
+import Highlighter from "components/Highlighter";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { HomeParams, IBookVerse, TTheme, TVerse } from "../../../types";
-import { Text } from "../../Themed";
 import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
+import copyToClipboard from "utils/copyToClipboard";
+import { DB_BOOK_NAMES } from "../../../constants/BookNames";
 import { useBibleContext } from "../../../context/BibleContext";
-import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
+import { IBookVerse, TTheme, TVerse } from "../../../types";
+import { customUnderline } from "../../../utils/customStyle";
 import extractVersesInfo, {
   getStrongValue,
 } from "../../../utils/extractVersesInfo";
-import { DB_BOOK_NAMES } from "../../../constants/BookNames";
-import { customUnderline } from "../../../utils/customStyle";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import copyToClipboard from "utils/copyToClipboard";
-import Highlighter from "components/Highlighter";
-import BottomModal from "components/BottomModal";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import StrongContent from "./StrongContent";
-import CustomBottomSheet from "components/BottomSheet";
-import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
+import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
+import { Text } from "../../Themed";
 
 const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   const navigation = useNavigation();
@@ -64,7 +60,6 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   }, [highlightedVerses]);
 
   const onVerseClicked = () => {
-    // setverseInStrongDisplay(item.verse);
     setverseInStrongDisplay(isStrongSearch ? 0 : item.verse);
     if (!isCopyMode) return;
     if (isVerseHighlisted) {
@@ -114,7 +109,9 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
           },
         ]}
       >
-        {`${bookName} ${chapter}:${verse}-${endVerse}`}
+        {bookNumber
+          ? `${bookName} ${chapter}:${verse}-${endVerse}`
+          : data.subheading}
       </Text>
     ) : (
       <Text>--</Text>
@@ -123,11 +120,9 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
 
   const findSubTitle = (verse: any) => {
     const [subTitle, link] = subtitles.filter((x: any) => x.verse === verse);
-
     return subTitle ? (
       <View>
         <Text
-          // key={subTitle.order_if_several}
           style={[
             styles.verse,
             {
@@ -256,10 +251,6 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
           </Pressable>
         </View>
       )}
-
-      {/* <BottomModal startAT={2} ref={strongRef}>
-        <StrongContent theme={theme} data={strongWord} fontSize={fontSize} />
-      </BottomModal> */}
     </TouchableOpacity>
   );
 };
@@ -276,7 +267,6 @@ const getStyles = ({ colors }: TTheme) =>
     },
     verse: {
       position: "relative",
-      // paddingHorizontal: 15,
       paddingLeft: 20,
       marginVertical: 5,
     },
