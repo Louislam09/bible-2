@@ -8,15 +8,19 @@ import { TTheme } from "types";
 type TBottomModal = {
   startAT?: 0 | 1 | 2 | 3;
   children?: any;
+  justOneSnap?: boolean;
 };
 
 type Ref = BottomSheetModal;
 
 const BottomModal = forwardRef<Ref, TBottomModal>(
-  ({ children, startAT }, ref) => {
+  ({ children, startAT, justOneSnap }, ref) => {
     const theme = useTheme();
     const styles = getStyles(theme);
-    const snapPoints = useMemo(() => ["30%", "50%", "75%", "100%"], []);
+    const snapPoints = useMemo(
+      () => (justOneSnap ? ["30%"] : ["30%", "50%", "75%", "100%"]),
+      []
+    );
     const [index, setIndex] = useState(0);
 
     const handleSheetChanges = useCallback((index: number) => {
@@ -45,7 +49,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
         ref={ref}
         index={startAT ?? 1}
         snapPoints={snapPoints}
-        handleIndicatorStyle={[styles.indicator]}
+        handleIndicatorStyle={[styles.indicator, justOneSnap && { opacity: 0 }]}
         backdropComponent={renderBackdrop}
         onChange={handleSheetChanges}
       >

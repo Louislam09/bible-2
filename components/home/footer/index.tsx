@@ -9,13 +9,16 @@ import {
 import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "constants/BookNames";
 import { useBibleContext } from "context/BibleContext";
 import useAudioPlayer from "hooks/useAudioPlayer";
-import { FC } from "react";
+import { FC, useCallback, useRef } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { EBibleVersions, HomeParams, Screens, TTheme } from "types";
 
 import { Text, View } from "components/Themed";
 import ProgressBar from "./ProgressBar";
 import CustomBottomSheet from "components/BottomSheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import BottomModal from "components/BottomModal";
+import Play from "../header/Play";
 interface FooterInterface {}
 const FOOTER_ICON_SIZE = 28;
 
@@ -23,6 +26,7 @@ const CustomFooter: FC<FooterInterface> = () => {
   const { currentBibleVersion, clearHighlights } = useBibleContext();
   const theme = useTheme();
   const styles = getStyles(theme);
+  const playRef = useRef<BottomSheetModal>(null);
   const navigation = useNavigation();
   const route = useRoute<RouteProp<ParamListBase>>();
   const { book, chapter = 1 } = route.params as HomeParams;
@@ -76,6 +80,10 @@ const CustomFooter: FC<FooterInterface> = () => {
     navigation?.navigate(Screens.ChooseBook);
   };
 
+  const playHandlePresentModalPress = useCallback(() => {
+    playRef.current?.present();
+  }, []);
+
   const displayBookName = (book || "")?.length > 10 ? shortName : book;
 
   return (
@@ -84,9 +92,11 @@ const CustomFooter: FC<FooterInterface> = () => {
         style={[styles.progressBarContainer, !isPlaying && { display: "none" }]}
       >
         <ProgressBar
+          height={8}
           color={theme.colors.notification}
           barColor={theme.colors.text}
           progress={position / duration}
+          circleColor={theme.colors.notification}
         />
       </View>
       <View style={styles.footerCenter}>
@@ -128,22 +138,31 @@ const CustomFooter: FC<FooterInterface> = () => {
       </View>
       <TouchableOpacity
         style={[styles.footerEnd, isNTV && { display: "none" }]}
-        onPress={playAudio}
+        onPress={playHandlePresentModalPress}
       >
-        {!isDownloading ? (
-          <MaterialCommunityIcons
-            name={!isPlaying ? "play" : "stop"}
-            size={FOOTER_ICON_SIZE}
-            style={[styles.icon, { marginHorizontal: 0 }]}
-          />
-        ) : (
-          <MaterialCommunityIcons
-            name="download"
-            size={FOOTER_ICON_SIZE}
-            style={[styles.icon, { marginHorizontal: 0 }]}
-          />
-        )}
+        <MaterialCommunityIcons
+          name={"headphones"}
+          size={FOOTER_ICON_SIZE}
+          style={[styles.icon, { marginHorizontal: 0 }]}
+        />
       </TouchableOpacity>
+
+      <BottomModal justOneSnap startAT={0} ref={playRef}>
+        <Play
+          {...{
+            theme,
+            isDownloading,
+            isPlaying,
+            playAudio,
+            duration,
+            position,
+            nextChapter,
+            previuosChapter,
+            book,
+            chapter,
+          }}
+        />
+      </BottomModal>
     </View>
   );
 };

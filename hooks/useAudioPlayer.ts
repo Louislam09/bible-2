@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { AVPlaybackStatus, Audio } from "expo-av";
+import { AVPlaybackStatus, Audio, InterruptionModeAndroid, InterruptionModeIOS } from "expo-av";
 import * as FileSystem from "expo-file-system";
 import { ToastAndroid } from "react-native";
 
@@ -38,7 +38,7 @@ const useAudioPlayer = ({
   const [duration, setDuration] = useState<number>(0);
 
   const resetAudio = async () => {
-    await sound?.stopAsync();
+    if (sound) await sound?.stopAsync();
     setIsPlaying(false);
     setIsDownloading(false);
     setSound(undefined);
@@ -53,7 +53,7 @@ const useAudioPlayer = ({
     setIsPlaying(status.isPlaying);
 
     if (status.didJustFinish) {
-      resetAudio();
+      // resetAudio();
       setAutoPlay(true);
       nextChapter && nextChapter();
     }
@@ -68,10 +68,9 @@ const useAudioPlayer = ({
         const { exists } = await FileSystem.getInfoAsync(localUri);
 
         if (!exists) {
-          setAutoPlay(false);
-          return;
-        }
-
+          if (autoPlay) playAudio()
+          return
+        };
         const { sound } = await Audio.Sound.createAsync(
           { uri: localUri },
           { shouldPlay: autoPlay },
@@ -84,6 +83,16 @@ const useAudioPlayer = ({
         console.log("Error al cargar el audio:", error);
       }
     };
+
+    Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+      interruptionModeAndroid: InterruptionModeAndroid.DuckOthers,
+      playsInSilentModeIOS: true,
+      playThroughEarpieceAndroid: false,
+      staysActiveInBackground: true,
+      shouldDuckAndroid: true,
+      interruptionModeIOS: InterruptionModeIOS.DuckOthers
+    })
 
     loadAudio();
 
@@ -110,6 +119,7 @@ const useAudioPlayer = ({
 
       setSound(sound);
       await sound?.playAsync();
+      setAutoPlay(false);
       ToastAndroid.show("Reproduciendo", ToastAndroid.SHORT);
       setIsPlaying(true);
       return;

@@ -60,6 +60,28 @@ inner join books b
 on b.book_number = v.book_number
 where v.book_number = ? and v.chapter = ? and v.verse = ?`;
 
+export const GET_VERSES_FOR_CONCORDANCIA = `SELECT 
+b.long_name,
+COUNT(*) AS total,
+'[' || GROUP_CONCAT(
+    json_object(
+'bookName', b.long_name,
+'bookNumber', t.book_number,
+'chapter', t.chapter,
+        'verse', t.verse,
+        'text', t.bare_lowercase_words
+    )
+) || ']' AS data
+FROM 
+texts t
+INNER JOIN 
+books b ON b.book_number = t.book_number
+WHERE 
+t.bare_lowercase_words LIKE "%?%"
+GROUP BY 
+t.book_number;
+`
+
 type TQuery = {
   GET_VERSE_NUMBER_QUERY: string;
   GET_VERSES_BY_BOOK_AND_CHAPTER: string;

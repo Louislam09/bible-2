@@ -1,13 +1,30 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { Platform, StyleSheet, TouchableWithoutFeedback } from "react-native";
-import { TTheme } from "types";
+import { HomeParams, TTheme } from "types";
 import { Text, View } from "../../Themed";
 import ProgressBar from "../footer/ProgressBar";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { customBorder } from "utils/customStyle";
+import useAudioPlayer from "hooks/useAudioPlayer";
+import {
+  ParamListBase,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
+import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "constants/BookNames";
 
 interface IPlay {
   theme: TTheme;
+  isDownloading: boolean;
+  isPlaying: boolean;
+  playAudio: () => void;
+  position: number;
+  duration: number;
+  nextChapter: () => void;
+  previuosChapter: () => void;
+  book: any;
+  chapter: any;
 }
 
 type IPayOption = {
@@ -19,25 +36,36 @@ type IPayOption = {
   tag?: string;
 };
 
-const Play: FC<IPlay> = ({ theme }) => {
+const Play: FC<IPlay> = ({
+  theme,
+  isDownloading,
+  isPlaying,
+  playAudio,
+  duration,
+  position,
+  nextChapter,
+  previuosChapter,
+  book,
+  chapter,
+}) => {
   const styles = getStyles(theme);
 
   const playOptions: IPayOption[] = [
     {
       icon: "play-skip-back",
-      action: () => console.log("Anterior"),
+      action: previuosChapter,
       label: "Anterior",
       isIonicon: true,
     },
     {
-      icon: "play-circle",
-      action: () => console.log("play"),
+      icon: isPlaying ? "pause-circle" : "play-circle",
+      action: playAudio,
       label: "Reproducir",
       isIonicon: true,
     },
     {
       icon: "play-skip-forward",
-      action: () => console.log("Siguinte"),
+      action: nextChapter,
       label: "Siguinte",
       isIonicon: true,
     },
@@ -49,13 +77,7 @@ const Play: FC<IPlay> = ({ theme }) => {
       onPress={item.action}
       disabled={item.disabled}
     >
-      <View
-        style={{
-          backgroundColor: "transparent",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+      <View style={styles.playControlButtonContainer}>
         {item.isIonicon ? (
           <Ionicons
             name={item.icon}
@@ -71,85 +93,27 @@ const Play: FC<IPlay> = ({ theme }) => {
   );
 
   return (
-    <View
-      style={[styles.playContainer, { width: "100%", paddingHorizontal: 30 }]}
-    >
-      <View
-        style={{
-          display: "flex",
-          width: "100%",
-          flexDirection: "column",
-          backgroundColor: "transparent",
-        }}
-      >
-        <View
-          style={{
-            backgroundColor: "transparent",
-            display: "flex",
-            flexDirection: "row",
-            marginVertical: 15,
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 22,
-              fontWeight: "bold",
-              color: theme.colors.text,
-            }}
-          >
-            Mateo 5:1
-          </Text>
+    <View style={[styles.playContainer]}>
+      <View style={styles.playHeader}>
+        <View style={styles.playHeaderBody}>
+          <Text style={styles.playHeaderTitle}>{`${book} ${chapter}`}</Text>
           <MaterialCommunityIcons
-            name={"star-outline"}
+            name="download"
             color={theme.colors.notification}
-            style={{ fontSize: 35 }}
+            style={[styles.playHeaderIcon, isDownloading && { opacity: 1 }]}
           />
         </View>
         <View style={{ marginVertical: 15, borderRadius: 15 }}>
           <ProgressBar
             color={theme.colors.notification}
             barColor={theme.colors.text}
-            progress={10 / 100}
+            progress={position / duration}
             circleColor={theme.colors.notification}
             height={8}
           />
         </View>
       </View>
-      <View
-        style={[
-          {
-            display: "flex",
-            alignItems: "center",
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginVertical: 10,
-            backgroundColor: "transparent",
-            height: "auto",
-          },
-          // customBorder,
-        ]}
-      >
-        {playOptions.map(renderItem)}
-      </View>
-      <View
-        style={{
-          backgroundColor: "transparent",
-          width: "100%",
-        }}
-      >
-        <Text
-          style={{
-            color: theme.colors.text,
-            fontSize: 24,
-            textAlign: "left",
-          }}
-        >
-          Lista de capitulos
-        </Text>
-      </View>
+      <View style={[styles.playControls]}>{playOptions.map(renderItem)}</View>
     </View>
   );
 };
@@ -172,7 +136,29 @@ const getStyles = ({ colors }: TTheme) =>
       paddingVertical: 25,
       borderRadius: 45,
       backgroundColor: "transparent",
+      width: "100%",
+      paddingHorizontal: 30,
     },
+    playHeader: {
+      display: "flex",
+      width: "100%",
+      flexDirection: "column",
+      backgroundColor: "transparent",
+    },
+    playHeaderBody: {
+      backgroundColor: "transparent",
+      display: "flex",
+      flexDirection: "row",
+      marginVertical: 15,
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    playHeaderTitle: {
+      fontSize: 22,
+      fontWeight: "bold",
+      color: colors.text,
+    },
+    playHeaderIcon: { fontSize: 35, opacity: 0 },
     card: {
       width: "90%",
       backgroundColor: "white",
@@ -193,6 +179,30 @@ const getStyles = ({ colors }: TTheme) =>
       color: "#000",
       fontSize: 22,
       textAlign: "center",
+    },
+    playControls: {
+      display: "flex",
+      alignItems: "center",
+      width: "100%",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginVertical: 10,
+      backgroundColor: "transparent",
+      height: "auto",
+    },
+    playControlButtonContainer: {
+      backgroundColor: "transparent",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    playList: {
+      backgroundColor: "transparent",
+      width: "100%",
+    },
+    playListTitle: {
+      color: colors.text,
+      fontSize: 24,
+      textAlign: "left",
     },
   });
 

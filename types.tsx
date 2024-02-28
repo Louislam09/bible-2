@@ -26,6 +26,8 @@ export type RootTabParamList = {
   Book: undefined;
   ChooseBookScreen: undefined;
   Search: undefined;
+  Notes: undefined;
+  Favorite: undefined;
 };
 
 export type RootStackParamList = {
@@ -35,6 +37,7 @@ export type RootStackParamList = {
     | { book?: string; chapter?: string | number; verse?: string | number };
   Book: NavigatorScreenParams<RootTabParamList> | undefined;
   Favorite: NavigatorScreenParams<RootTabParamList> | undefined;
+  Notes: NavigatorScreenParams<RootTabParamList> | undefined;
   ChooseBook: NavigatorScreenParams<RootTabParamList> | undefined;
   Search: NavigatorScreenParams<RootTabParamList> | { book?: string };
   ChooseChapterNumber:
@@ -56,7 +59,22 @@ export enum Screens {
   ChooseChapterNumber = "ChooseChapterNumber",
   ChooseVerseNumber = "ChooseVerseNumber",
   Favorite = "Favorite",
+  Notes = "Notes",
 }
+
+type TScreensName = { [key in Screens]: string };
+
+export const ScreensName: TScreensName = {
+  [Screens.Home]: "Santa Escritura",
+  [Screens.Book]: "Libros",
+  [Screens.Search]: "Busqueda",
+  [Screens.ChooseBook]: "Seleccione un libro",
+  [Screens.ChooseChapterNumber]: "Capitulos",
+  [Screens.ChooseVerseNumber]: "Versiculos",
+  [Screens.Favorite]: "Versiculos Favoritos",
+  [Screens.Notes]: "Notas",
+  [Screens.Dashboard]: "Dashboard",
+};
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, Screen>;
@@ -90,7 +108,6 @@ export type TRoute = RouteProp<ParamListBase>;
 
 export enum TFont {
   Roboto = "Roboto",
-  // ComingSoon = "ComingSoon",
   OpenSans = "OpenSans",
   Cardo = "Cardo",
 }

@@ -5,7 +5,6 @@ import {
 } from "@react-navigation/native-stack";
 import ChooseBookHeader from "components/chooseBook/ChooseBookHeader";
 import SearchHeader from "components/search/SearchHeader";
-import { ScreensName } from "constants/ScreenName";
 import { useStorage } from "context/LocalstoreContext";
 import React from "react";
 import Book from "screens/Book";
@@ -15,8 +14,9 @@ import Dashboard from "screens/Dashboard";
 import Favorite from "screens/Favorite";
 import Home from "screens/Home";
 import LogScreen from "screens/Log";
+import Notes from "screens/Notes";
 import Search from "screens/Search";
-import { RootStackParamList, Screens, TTheme } from "types";
+import { RootStackParamList, Screens, ScreensName, TTheme } from "types";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -114,6 +114,14 @@ const MainStack = () => {
       <Stack.Screen
         name="Favorite"
         component={Favorite}
+        options={({ route }) => ({
+          ...screenOptions(route),
+          animation: "slide_from_right",
+        })}
+      />
+      <Stack.Screen
+        name="Notes"
+        component={Notes}
         options={({ route }) => ({
           ...screenOptions(route),
           animation: "slide_from_right",

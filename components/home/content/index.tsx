@@ -1,20 +1,18 @@
 import { useRoute, useTheme } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
 import React, { FC, useEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, StyleSheet, View } from "react-native";
 import { DB_BOOK_NAMES } from "../../../constants/BookNames";
 import { useDBContext } from "../../../context/databaseContext";
-import { HomeParams, IBookVerse, TTheme } from "../../../types";
+import { HomeParams, TTheme } from "../../../types";
 
-import Chapter from "./Chapter";
-import {
-  GET_SUBTITLE_BY_BOOK_AND_CHAPTER,
-  GET_VERSES_BY_BOOK_AND_CHAPTER,
-  QUERY_BY_DB,
-} from "../../../constants/Queries";
+import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
 import getCurrentDbName from "utils/getCurrentDB";
-import { useBibleContext } from "context/BibleContext";
+import {
+  GET_VERSES_FOR_CONCORDANCIA,
+  QUERY_BY_DB,
+} from "../../../constants/Queries";
+import Chapter from "./Chapter";
 
 interface BookContentInterface {}
 
@@ -37,6 +35,7 @@ const BookContent: FC<BookContentInterface> = ({}) => {
   useEffect(() => {
     // if(loading) return
     (async () => {
+      setLoading(true);
       if (myBibleDB && executeSql) {
         setData({});
         setverseInStrongDisplay(0);
@@ -61,7 +60,7 @@ const BookContent: FC<BookContentInterface> = ({}) => {
           .catch((error) => {
             console.error("Error:content:", error);
           });
-        setLoading(false);
+        // setLoading(false);
       }
     })();
 

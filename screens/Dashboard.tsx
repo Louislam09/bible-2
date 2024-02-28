@@ -2,6 +2,7 @@ import {
   Platform,
   Pressable,
   StyleSheet,
+  TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
@@ -12,7 +13,6 @@ import { useBibleContext } from "context/BibleContext";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { customBorder } from "utils/customStyle";
 import BottomModal from "components/BottomModal";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import Settings from "components/home/header/Settings";
@@ -60,7 +60,6 @@ const Dashboard = () => {
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
   const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
-  const playRef = useRef<BottomSheetModal>(null);
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(defaultDailyVerse);
   const dashboardImage = require("../assets/lottie/dashboard.json");
 
@@ -93,9 +92,6 @@ const Dashboard = () => {
   const versionHandlePresentModalPress = useCallback(() => {
     versionRef.current?.present();
   }, []);
-  const playHandlePresentModalPress = useCallback(() => {
-    playRef.current?.present();
-  }, []);
 
   const onSelect = (version: string) => {
     clearHighlights();
@@ -126,10 +122,17 @@ const Dashboard = () => {
       action: versionHandlePresentModalPress,
     },
     {
+      icon: "television-guide",
+      label: "Como Usar?",
+      // isIonicon: true,
+      disabled: true,
+      action: () => console.log("Como usar?"),
+    },
+    {
       icon: "notebook-outline",
       label: "Notas",
-      action: () => console.log(""),
-      disabled: true,
+      action: () => navigation.navigate("Notes"),
+      // disabled: true,
     },
     {
       icon: "settings-outline",
@@ -137,19 +140,21 @@ const Dashboard = () => {
       isIonicon: true,
       action: fontHandlePresentModalPress,
     },
-    {
-      icon: "play-circle-outline",
-      label: "Escuchar",
-      // isIonicon: true,
-      disabled: true,
-      action: playHandlePresentModalPress,
-    },
   ];
 
   const renderItem = ({ item }: { item: IDashboardOption }) => (
     <TouchableWithoutFeedback
       onPress={item.action}
-      style={[{ padding: 0, flex: 1, display: "flex" }]}
+      style={[
+        {
+          padding: 0,
+          flex: 1,
+          display: "flex",
+          width: SCREEN_WIDTH / 3,
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      ]}
       disabled={item.disabled}
     >
       <View style={[styles.card, item.disabled && { backgroundColor: "#ddd" }]}>
@@ -179,7 +184,16 @@ const Dashboard = () => {
           ]}
         />
       </View>
-      <View style={[styles.dailyVerseContainer, { width: SCREEN_WIDTH }]}>
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() =>
+          navigation.navigate("Home", {
+            book: dailyVerse.bookName,
+            chapter: dailyVerse.chapter,
+          })
+        }
+        style={[styles.dailyVerseContainer, { width: SCREEN_WIDTH }]}
+      >
         <View style={styles.verse}>
           <Text style={[styles.verseTitle]}>Versiculo del dia</Text>
           <Text style={[styles.verseText]}>
@@ -193,7 +207,7 @@ const Dashboard = () => {
             style={[styles.verseReference]}
           >{`${dailyVerse.bookName} ${dailyVerse.chapter}:${dailyVerse.verse}`}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
       <View style={[styles.optionContainer, { width: SCREEN_WIDTH }]}>
         <FlashList
           contentContainerStyle={{ padding: 15 }}
@@ -207,10 +221,6 @@ const Dashboard = () => {
       </View>
       <BottomModal startAT={2} ref={fontBottomSheetModalRef}>
         <Settings theme={theme} />
-      </BottomModal>
-
-      <BottomModal startAT={0} ref={playRef}>
-        <Play {...{ theme }} />
       </BottomModal>
       <BottomModal startAT={0} ref={versionRef}>
         <VersionList {...{ currentBibleVersion, onSelect, theme }} />
@@ -243,12 +253,13 @@ const getStyles = ({ colors }: TTheme) =>
       justifyContent: "center",
       marginVertical: 10,
       width: "100%",
+      minHeight: 140,
     },
     optionContainer: {
-      // flex: 1,
+      flex: 1,
       width: "100%",
       backgroundColor: "transparent",
-      minHeight: 300,
+      minHeight: 390,
     },
     verse: {
       display: "flex",
