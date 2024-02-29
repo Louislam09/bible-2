@@ -126,6 +126,20 @@ export type TSubtitle = {
   verse: number;
 };
 
+export type TNote = {
+  id: number;
+  title: string;
+  note_text: string;
+  created_at: string;
+};
+
+export enum EViewMode {
+  LIST,
+  NEW,
+  EDIT,
+  VIEW,
+}
+
 export type IStrongWord = {
   text: string;
   code: string;

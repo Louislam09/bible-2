@@ -1,4 +1,4 @@
-import { CREATE_FAVORITE_VERSES_TABLE } from "constants/Queries";
+import { CREATE_FAVORITE_VERSES_TABLE, CREATE_NOTE_TABLE } from "constants/Queries";
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
@@ -68,11 +68,11 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
     });
   };
 
-  async function createFavoriteVerseTable(database: SQLite.SQLiteDatabase) {
+  async function createTable(database: SQLite.SQLiteDatabase, createTableQuery: string) {
     try {
-      await executeSql(database, CREATE_FAVORITE_VERSES_TABLE);
+      await executeSql(database, createTableQuery);
     } catch (error) {
-      console.error(`Error creating table favorite_verses:`, error);
+      console.error(`Error creating table ${createTableQuery}:`, error);
     }
   }
 
@@ -149,7 +149,8 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
       const databases: SQLite.SQLiteDatabase[] = [];
       for (const dbName of dbNames) {
         const db = await openDatabase(dbName);
-        createFavoriteVerseTable(db);
+        createTable(db, CREATE_FAVORITE_VERSES_TABLE);
+        createTable(db, CREATE_NOTE_TABLE);
         databases.push(db);
       }
       return databases;

@@ -7,7 +7,7 @@ let lightBlackAndWhite = {
     background: "#FFFFFF",
     surface: "#FFFFFF",
     text: "#000000",
-    secondary: "#FFFFFF",
+    secondary: "#652b2b",
     accent: "#FF5252",
   },
 };

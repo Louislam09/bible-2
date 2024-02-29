@@ -19,12 +19,24 @@ export const CREATE_FAVORITE_VERSES_TABLE = `CREATE TABLE IF NOT EXISTS favorite
   chapter INTEGER,
   verse INTEGER
 );`;
+export const CREATE_NOTE_TABLE = `CREATE TABLE IF NOT EXISTS notes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  note_text TEXT,
+  title TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`;
+
+export const INSERT_INTO_NOTE = `INSERT INTO notes (title, note_text) 
+values (?, ?);`
+export const GET_ALL_NOTE = `SELECT * FROM notes;`
 
 export const INSERT_FAVORITE_VERSE = `INSERT INTO favorite_verses (book_number, chapter, verse) 
 SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM favorite_verses 
   WHERE book_number = ? AND chapter = ? AND verse = ?);`;
 // export const INSERT_FAVORITE_VERSE = `INSERT INTO favorite_verses (book_number, chapter, verse) VALUES (?, ?, ?);`;
 export const DELETE_FAVORITE_VERSE = `DELETE FROM favorite_verses WHERE book_number = ? AND chapter = ? AND verse = ?;`;
+export const DELETE_NOTE = `DELETE FROM notes WHERE id = ?;`;
+export const UPDATE_NOTE_BY_ID = `UPDATE notes set title = ?, note_text = ? where id = ?`
 
 export const GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV = `SELECT v.*, 
 CASE 

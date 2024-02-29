@@ -19,7 +19,10 @@ import useSearch, { UseSearchHookState } from "hooks/useSearch";
 import { useStorage } from "./LocalstoreContext";
 import {
   DELETE_FAVORITE_VERSE,
+  DELETE_NOTE,
   INSERT_FAVORITE_VERSE,
+  INSERT_INTO_NOTE,
+  UPDATE_NOTE_BY_ID,
 } from "constants/Queries";
 
 type BibleState = {
@@ -28,6 +31,16 @@ type BibleState = {
   clearHighlights: Function;
   setSearchQuery: Function;
   selectFont: Function;
+  onDeleteNote: (id: number) => void;
+  onUpdateNote: (
+    data: { title: string; content: string },
+    id: number,
+    closeCallback: any
+  ) => void;
+  onSaveNote: (
+    data: { title: string; content: string },
+    closeCallback: any
+  ) => void;
   selectBibleVersion: Function;
   removeHighlistedVerse: Function;
   toggleCopyMode: Function;
@@ -82,6 +95,9 @@ const initialContext: BibleState = {
   removeHighlistedVerse: () => {},
   clearHighlights: () => {},
   selectBibleVersion: () => {},
+  onSaveNote: () => {},
+  onUpdateNote: () => {},
+  onDeleteNote: () => {},
   selectFont: () => {},
   selectTheme: () => {},
   toggleCopyMode: () => {},
@@ -276,6 +292,33 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
+  const onSaveNote = async (
+    data: { title: string; content: string },
+    closeCallback: any
+  ) => {
+    if (!myBibleDB || !executeSql) return;
+    await executeSql(myBibleDB, INSERT_INTO_NOTE, [data.title, data.content]);
+    closeCallback();
+  };
+  const onUpdateNote = async (
+    data: { title: string; content: string },
+    id: number,
+    closeCallback: any
+  ) => {
+    if (!myBibleDB || !executeSql) return;
+    await executeSql(myBibleDB, UPDATE_NOTE_BY_ID, [
+      data.title,
+      data.content,
+      id,
+    ]);
+    closeCallback();
+  };
+
+  const onDeleteNote = async (id: number) => {
+    if (!myBibleDB || !executeSql) return;
+    await executeSql(myBibleDB, DELETE_NOTE, [id]);
+  };
+
   const selectFont = (font: string) => {
     dispatch({ type: "SELECT_FONT", payload: font });
     saveData({ selectedFont: font });
@@ -307,6 +350,9 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     highlightVerse,
     clearHighlights,
     selectFont,
+    onSaveNote,
+    onDeleteNote,
+    onUpdateNote,
     selectBibleVersion,
     toggleCopyMode,
     decreaseFontSize,

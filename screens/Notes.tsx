@@ -1,30 +1,33 @@
 import NoteList from "components/note";
-import { GET_ALL_FAVORITE_VERSES } from "constants/Queries";
+import { GET_ALL_NOTE } from "constants/Queries";
 import { useDBContext } from "context/databaseContext";
-import React, { useEffect, useState } from "react";
-import { RootStackScreenProps } from "types";
+import React, { useEffect, useRef, useState } from "react";
+import { RootStackScreenProps, TNote } from "types";
 
 const Notes: React.FC<RootStackScreenProps<"Notes">> = (props) => {
   const { myBibleDB, executeSql } = useDBContext();
-  const [data, setData] = useState<any | null>(null);
+  const [data, setData] = useState<TNote | any>(null);
+  const [shouldFetch, setShouldFetch] = useState(false);
 
   useEffect(() => {
-    (async () => {
+    const getNotes = async () => {
       if (myBibleDB && executeSql) {
-        executeSql(myBibleDB, GET_ALL_FAVORITE_VERSES, [])
-          .then((verses) => {
-            setData(verses ?? []);
+        executeSql(myBibleDB, GET_ALL_NOTE, [])
+          .then((notes) => {
+            setData(notes ?? []);
           })
           .catch((error) => {
-            console.error("Error:Favorite:", error);
+            console.error("Error:Notes:", error);
           });
       }
-    })();
+    };
+
+    getNotes();
 
     return () => {};
-  }, [myBibleDB]);
+  }, [shouldFetch]);
 
-  return <NoteList isLoading={false} data={data} />;
+  return <NoteList data={data} setShouldFetch={setShouldFetch} />;
 };
 
 export default Notes;
