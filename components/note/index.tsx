@@ -197,7 +197,12 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
           {noteCountTitle}
         </Text>
         <View style={styles.searchContainer}>
-          <Ionicons name="search" size={24} color={theme.colors.notification} />
+          <Ionicons
+            style={styles.searchIcon}
+            name="search"
+            size={24}
+            color={theme.colors.notification}
+          />
           <TextInput
             placeholder="Buscar en tus notas..."
             style={[styles.noteHeaderSearchInput]}
@@ -217,11 +222,27 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
     return (
       <>
         <TouchableOpacity
-          style={[styles.scrollToTopButton]}
+          style={[
+            styles.scrollToTopButton,
+            {
+              backgroundColor: theme.colors.background,
+              padding: 0,
+              borderWidth: 1,
+              borderColor: theme.colors.notification,
+            },
+          ]}
           onPress={onOpenOrCloseNote}
         >
           <MaterialCommunityIcons
-            style={{ color: theme.colors.card, fontWeight: "bold" }}
+            style={[
+              {
+                color: theme.colors.text,
+                fontWeight: "bold",
+                padding: 10,
+                borderRadius: 10,
+                backgroundColor: theme.colors.notification + "99",
+              },
+            ]}
             name={showExtraButton ? "close" : "plus"}
             size={30}
           />
@@ -243,7 +264,13 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
   };
 
   return (
-    <View style={{ flex: 1, padding: 5 }}>
+    <View
+      style={{
+        flex: 1,
+        padding: 5,
+        backgroundColor: theme.dark ? theme.colors.background : "#eee",
+      }}
+    >
       {showExtraButton ? (
         <>
           {isView && (
@@ -283,7 +310,8 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
           {NoteHeader()}
           <FlashList
             contentContainerStyle={{
-              backgroundColor: theme.colors.background,
+              backgroundColor: theme.dark ? theme.colors.background : "#eee",
+              // backgroundColor: theme.colors.background,
               paddingVertical: 20,
             }}
             ref={flatListRef}
@@ -385,24 +413,31 @@ const getStyles = ({ colors, dark }: TTheme) =>
       alignItems: "center",
       justifyContent: "space-around",
       borderRadius: 10,
-      paddingHorizontal: 10,
       marginVertical: 20,
       borderWidth: 1,
       borderColor: colors.notification,
       borderStyle: "solid",
       width: "100%",
       fontWeight: "100",
-      backgroundColor: "#eee",
+      backgroundColor: colors.notification + "99",
+    },
+    searchIcon: {
+      color: colors.text,
+      paddingHorizontal: 15,
+      borderRadius: 10,
+      fontWeight: "bold",
     },
     noteHeaderSearchInput: {
       borderRadius: 10,
       padding: 10,
+      paddingLeft: 15,
       fontSize: 18,
       flex: 1,
       fontWeight: "100",
-      backgroundColor: "#eee",
+      backgroundColor: "#ddd",
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
     },
-
     cardContainer: {
       display: "flex",
       borderRadius: 10,

@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
 import {
   RichEditor,
@@ -31,6 +31,10 @@ const MyRichEditor: React.FC<IRichEditor> = ({
   const richText = useRef<any>(null);
   const theme = useTheme();
   const scrollViewRef = useRef<ScrollView>(null);
+  const [pos, setPos] = useState({
+    height: 0,
+    offsetY: 0,
+  });
 
   const toolbarActions = [
     actions.setBold,
@@ -71,10 +75,20 @@ const MyRichEditor: React.FC<IRichEditor> = ({
           {Textinput}
         </>
       )}
-      <ScrollView ref={scrollViewRef}>
+      <ScrollView
+        ref={scrollViewRef}
+        onContentSizeChange={(w, h) => {
+          setPos((prev) => ({ ...prev, height: h }));
+          if (pos.offsetY + 40 > pos.height)
+            scrollViewRef.current?.scrollToEnd({ animated: true });
+        }}
+      >
         <KeyboardAvoidingView behavior="padding">
           <RichEditor
-            initialHeight={500}
+            initialHeight={200}
+            onCursorPosition={(offsetY) => {
+              setPos((prev) => ({ ...prev, offsetY }));
+            }}
             editorInitializedCallback={() => {}}
             style={[
               content && {
