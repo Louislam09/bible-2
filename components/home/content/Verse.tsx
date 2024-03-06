@@ -2,12 +2,18 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import Highlighter from "components/Highlighter";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import copyToClipboard from "utils/copyToClipboard";
 import { DB_BOOK_NAMES } from "../../../constants/BookNames";
 import { useBibleContext } from "../../../context/BibleContext";
-import { IBookVerse, TTheme, TVerse } from "../../../types";
+import { IBookVerse, TIcon, TTheme, TVerse } from "../../../types";
 import { customUnderline } from "../../../utils/customStyle";
 import extractVersesInfo, {
   getStrongValue,
@@ -29,6 +35,7 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
     setStrongWord,
     verseInStrongDisplay,
     setverseInStrongDisplay,
+    onAddToNote,
   } = useBibleContext();
   const theme = useTheme() as TTheme;
   const styles = getStyles(theme);
@@ -118,7 +125,7 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
     );
   };
 
-  const findSubTitle = (verse: any) => {
+  const RenderFindSubTitle = (verse: any) => {
     const [subTitle, link] = subtitles.filter((x: any) => x.verse === verse);
     return subTitle ? (
       <View>
@@ -157,6 +164,17 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
     if (highlightedVersesLenth) clearHighlights();
   };
 
+  const addVerseToNote = async () => {
+    const shouldReturn = true;
+    const verseToAdd = (await copyToClipboard(
+      highlightedVersesLenth ? highlightedVerses : item,
+      shouldReturn
+    )) as string;
+
+    onAddToNote(verseToAdd);
+    navigation.navigate("Notes");
+  };
+
   const onWordClicked = (code: string) => {
     const wordIndex = textValue.indexOf(code);
 
@@ -180,6 +198,29 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
     strongHandlePresentModalPress();
   };
 
+  const verseActions: TIcon[] = useMemo(() => {
+    return [
+      {
+        name: "content-copy",
+        action: onCopy,
+        color: "white",
+        hide: lastHighted?.verse !== item.verse && isMoreThanOneHighted,
+      },
+      {
+        name: "note-plus",
+        action: addVerseToNote,
+        color: "white",
+        hide: lastHighted?.verse !== item.verse && isMoreThanOneHighted,
+      },
+      {
+        name: isFavorite ? "star" : "star-outline",
+        action: onFavorite,
+        color: isFavorite ? "yellow" : "white",
+        hide: false,
+      },
+    ];
+  }, [isMoreThanOneHighted, lastHighted]);
+
   return (
     <TouchableOpacity
       onPress={() => onVerseClicked()}
@@ -187,7 +228,7 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
       activeOpacity={0.9}
       style={styles.verseContainer}
     >
-      {findSubTitle(item.verse)}
+      {RenderFindSubTitle(item.verse)}
 
       <Text
         style={[
@@ -231,24 +272,16 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
       </Text>
       {isVerseHighlisted && !!highlightedVersesLenth && (
         <View style={styles.verseAction}>
-          {!(lastHighted?.verse !== item.verse && isMoreThanOneHighted) && (
-            <Pressable>
+          {verseActions.map((action: TIcon, key) => (
+            <Pressable key={key} style={[action.hide && { display: "none" }]}>
               <MaterialCommunityIcons
                 size={24}
-                name={"content-copy"}
-                style={[styles.icon, { color: "white" }]}
-                onPress={() => onCopy()}
+                name={action.name}
+                style={[styles.icon, { color: action.color ?? "black" }]}
+                onPress={action.action}
               />
             </Pressable>
-          )}
-          <Pressable>
-            <MaterialCommunityIcons
-              size={24}
-              name={isFavorite ? "star" : "star-outline"}
-              style={[styles.icon, { color: isFavorite ? "yellow" : "white" }]}
-              onPress={onFavorite}
-            />
-          </Pressable>
+          ))}
         </View>
       )}
     </TouchableOpacity>
@@ -276,14 +309,14 @@ const getStyles = ({ colors }: TTheme) =>
       textDecorationColor: colors.notification,
     },
     verseAction: {
-      position: "absolute",
+      display: "flex",
       flexDirection: "row",
-      bottom: 10,
-      right: 5,
-      zIndex: 111,
-      backgroundColor: colors.notification + "99",
-      borderRadius: 15,
+      alignItems: "center",
+      justifyContent: "flex-end",
+      backgroundColor: colors.notification,
+      borderRadius: 10,
       padding: 5,
+      alignSelf: "flex-end",
     },
     icon: {
       fontWeight: "700",

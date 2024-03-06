@@ -4,7 +4,7 @@ import { useDBContext } from "context/databaseContext";
 import React, { useEffect, useRef, useState } from "react";
 import { RootStackScreenProps, TNote } from "types";
 
-const Notes: React.FC<RootStackScreenProps<"Notes">> = (props) => {
+const Notes: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   const { myBibleDB, executeSql } = useDBContext();
   const [data, setData] = useState<TNote | any>(null);
   const [shouldFetch, setShouldFetch] = useState(false);

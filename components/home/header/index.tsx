@@ -18,6 +18,7 @@ import {
   EBibleVersions,
   HomeParams,
   Screens,
+  TIcon,
   TRoute,
   TTheme,
 } from "../../../types";
@@ -26,13 +27,6 @@ import Settings from "./Settings";
 import VersionList from "./VersionList";
 
 interface HeaderInterface {}
-type TIcon = {
-  name: any;
-  color?: string | any;
-  action?: any;
-  longAction?: any;
-  isIonicon?: boolean;
-};
 
 const CustomHeader: FC<HeaderInterface> = ({}) => {
   const { currentBibleVersion, selectBibleVersion, clearHighlights } =

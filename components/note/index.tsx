@@ -37,7 +37,8 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
     content: "",
   });
   const { title, content } = noteContent;
-  const { onSaveNote, onDeleteNote, onUpdateNote } = useBibleContext();
+  const { onSaveNote, onDeleteNote, onUpdateNote, addToNoteText, onAddToNote } =
+    useBibleContext();
   const [searchText, setSearchText] = useState<any>(null);
   const [openNoteId, setOpenNoteId] = useState<any>(null);
   const [viewMode, setViewMode] = useState<keyof typeof EViewMode>("LIST");
@@ -48,15 +49,23 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
     [filterData]
   );
 
-  useEffect(() => {
-    const currentOpenNote: TNote | any = filterData?.filter(
-      (x: any) => x.id === openNoteId
-    )?.[0];
+  const addTextToNote = (selectedNote: any) => {
+    const myContent = `${
+      selectedNote?.note_text ?? ""
+    } <br> <div>${addToNoteText}</div><br> `;
     setNoteContent({
-      title: currentOpenNote?.title,
-      content: currentOpenNote?.note_text,
+      title: selectedNote?.title || "",
+      content: !selectedNote && !addToNoteText ? "" : myContent,
     });
-  }, [openNoteId]);
+    onAddToNote("");
+  };
+
+  const showAddNoteAlert = () => {
+    ToastAndroid.show(
+      "Seleccione la nota a la que quieres añadir el versiculo",
+      ToastAndroid.LONG
+    );
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -81,19 +90,23 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
 
   useEffect(() => {
     if (!data) return;
+    if (addToNoteText && data.length === 0) {
+      addTextToNote(null);
+      setViewMode("NEW");
+      return;
+    }
+    if (addToNoteText) showAddNoteAlert();
+  }, [addToNoteText, data]);
+
+  useEffect(() => {
+    if (!data) return;
     setFilterData(data);
   }, [data]);
 
   const onOpenOrCloseNote = () => {
-    if (viewMode === "LIST") {
-      setOpenNoteId(null);
-      setNoteContent({ title: "", content: "" });
-      setViewMode("NEW");
-      return;
-    }
-    setNoteContent({ title: "", content: "" });
     setOpenNoteId(null);
-    setViewMode("LIST");
+    addTextToNote(addToNoteText ? {} : null);
+    viewMode !== "LIST" ? setViewMode("LIST") : setViewMode("NEW");
   };
 
   const onUpdate = async (id: number) => {
@@ -142,7 +155,9 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
   const onViewMode = (id: number) => {
     setOpenNoteId(id);
     setSearchText("");
-    setViewMode("VIEW");
+    const currentOpenNote: any = filterData?.find((x: any) => x.id === id);
+    addTextToNote(currentOpenNote);
+    setViewMode(addToNoteText ? "EDIT" : "VIEW");
   };
 
   const renderItem: ListRenderItem<TNote & { id: number }> = ({ item }) => {
@@ -253,7 +268,7 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
             onPress={isView ? onEditMode : onSave}
           >
             <MaterialCommunityIcons
-              style={{ color: theme.colors.card, fontWeight: "bold" }}
+              style={{ color: theme.colors.text, fontWeight: "bold" }}
               name={isView ? "pencil" : "content-save"}
               size={30}
             />
@@ -311,7 +326,6 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
           <FlashList
             contentContainerStyle={{
               backgroundColor: theme.dark ? theme.colors.background : "#eee",
-              // backgroundColor: theme.colors.background,
               paddingVertical: 20,
             }}
             ref={flatListRef}
@@ -475,6 +489,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
+      borderRadius: 10,
+      paddingBottom: 20,
     },
     noResultsText: {
       fontSize: 18,

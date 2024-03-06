@@ -140,6 +140,15 @@ export enum EViewMode {
   VIEW,
 }
 
+export type TIcon = {
+  name: any;
+  color?: string | any;
+  action?: any;
+  longAction?: any;
+  isIonicon?: boolean;
+  hide?: boolean;
+};
+
 export type IStrongWord = {
   text: string;
   code: string;

@@ -12,10 +12,14 @@ import BottomSheet from "@gorhom/bottom-sheet";
 function HomeScreen() {
   const sheetRef = useRef<BottomSheet>(null);
   const theme = useTheme();
-  const { strongWord, fontSize, setStrongWord } = useBibleContext();
+  const { strongWord, fontSize, setStrongWord, addToNoteText, onAddToNote } =
+    useBibleContext();
 
   const handleSheetChange = useCallback((index: any) => {
-    if (!index) setStrongWord({ code: "", text: "" });
+    if (!index) {
+      setStrongWord({ code: "", text: "" });
+      onAddToNote("");
+    }
   }, []);
 
   return (

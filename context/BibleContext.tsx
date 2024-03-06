@@ -32,6 +32,7 @@ type BibleState = {
   setSearchQuery: Function;
   selectFont: Function;
   onDeleteNote: (id: number) => void;
+  onAddToNote: (text: string) => void;
   onUpdateNote: (
     data: { title: string; content: string },
     id: number,
@@ -57,6 +58,7 @@ type BibleState = {
   selectedFont: string;
   currentBibleVersion: string;
   searchQuery: string;
+  addToNoteText: string;
   currentTheme: keyof typeof EThemes;
   isCopyMode: boolean;
   isSearchCopy: boolean;
@@ -75,6 +77,7 @@ type BibleAction =
   | { type: "INCREASE_FONT_SIZE" }
   | { type: "DECREASE_FONT_SIZE" }
   | { type: "SELECT_BIBLE_VERSION"; payload: string }
+  | { type: "ADD_TO_NOTE"; payload: string }
   | { type: "SET_SEARCH_QUERY"; payload: string }
   | { type: "SET_VERSE_IN_STRONG_DISPLAY"; payload: number }
   | { type: "SET_STRONG_WORD"; payload: IStrongWord }
@@ -105,6 +108,7 @@ const initialContext: BibleState = {
   decreaseFontSize: () => {},
   toggleFavoriteVerse: (item: IFavoriteVerse) => {},
   setverseInStrongDisplay: (verse: number) => {},
+  onAddToNote: (text: string) => {},
   increaseFontSize: () => {},
   toggleViewLayoutGrid: () => {},
   setLocalData: () => {},
@@ -117,6 +121,7 @@ const initialContext: BibleState = {
   fontSize: 24,
   searchState: defaultSearch,
   searchQuery: "",
+  addToNoteText: "",
   verseInStrongDisplay: 0,
   currentTheme: "Blue",
   isSearchCopy: false,
@@ -148,6 +153,11 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
       return {
         ...state,
         highlightedVerses: [],
+      };
+    case "ADD_TO_NOTE":
+      return {
+        ...state,
+        addToNoteText: action.payload,
       };
     case "SELECT_FONT":
       return {
@@ -292,6 +302,10 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
+  const onAddToNote = (text: string) => {
+    dispatch({ type: "ADD_TO_NOTE", payload: text });
+  };
+
   const onSaveNote = async (
     data: { title: string; content: string },
     closeCallback: any
@@ -366,6 +380,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     toggleFavoriteVerse,
     setStrongWord,
     setverseInStrongDisplay,
+    onAddToNote,
   };
 
   return (

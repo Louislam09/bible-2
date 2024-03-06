@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
 import {
   RichEditor,
@@ -28,12 +28,11 @@ const MyRichEditor: React.FC<IRichEditor> = ({
   viewMode,
   Textinput,
 }) => {
-  const richText = useRef<any>(null);
+  const richTextRef = useRef<RichEditor>(null);
   const theme = useTheme();
   const scrollViewRef = useRef<ScrollView>(null);
   const [pos, setPos] = useState({
-    height: 0,
-    offsetY: 0,
+    cursorY: 0,
   });
 
   const toolbarActions = [
@@ -62,7 +61,7 @@ const MyRichEditor: React.FC<IRichEditor> = ({
               paddingHorizontal: 5,
               elevation: 3,
             }}
-            editor={richText}
+            editor={richTextRef}
             selectedIconTint={theme.colors.notification}
             actions={toolbarActions}
             iconMap={{
@@ -75,45 +74,42 @@ const MyRichEditor: React.FC<IRichEditor> = ({
           {Textinput}
         </>
       )}
-      <ScrollView
-        ref={scrollViewRef}
-        onContentSizeChange={(w, h) => {
-          setPos((prev) => ({ ...prev, height: h }));
-          if (pos.offsetY + 40 > pos.height)
-            scrollViewRef.current?.scrollToEnd({ animated: true });
-        }}
-      >
-        <KeyboardAvoidingView behavior="padding">
-          <RichEditor
-            initialHeight={200}
-            onCursorPosition={(offsetY) => {
-              setPos((prev) => ({ ...prev, offsetY }));
-            }}
-            editorInitializedCallback={() => {}}
-            style={[
-              content && {
-                borderColor: theme.colors.text,
-                marginTop: 5,
-              },
-              ,
-            ]}
-            ref={richText}
-            placeholder="Escribe tu nota"
-            editorStyle={{
-              backgroundColor: theme.colors.background,
-              color: theme.colors.text,
-              caretColor: theme.colors.notification,
-            }}
-            onChange={(descriptionText: string) => {
-              setContent((prev: any) => ({
-                ...prev,
-                content: descriptionText ?? "",
-              }));
-            }}
-            initialContentHTML={content}
-            disabled={viewMode === "VIEW"}
-          />
-        </KeyboardAvoidingView>
+      <ScrollView ref={scrollViewRef}>
+        {/* <KeyboardAvoidingView behavior="padding"> */}
+        <RichEditor
+          initialHeight={200}
+          onCursorPosition={(cursorY) => {
+            setPos((prev) => ({ ...prev, cursorY }));
+          }}
+          editorInitializedCallback={() => {}}
+          style={[
+            content && {
+              borderColor: theme.colors.text,
+              marginTop: 5,
+            },
+          ]}
+          ref={richTextRef}
+          placeholder="Escribe tu nota"
+          editorStyle={{
+            backgroundColor: theme.colors.background,
+            color: theme.colors.text,
+            caretColor: theme.colors.notification,
+          }}
+          onChange={(descriptionText: string) => {
+            setContent((prev: any) => ({
+              ...prev,
+              content: descriptionText ?? "",
+            }));
+            const numberToCenterOffset = 150;
+            scrollViewRef.current?.scrollTo({
+              y: pos.cursorY - numberToCenterOffset,
+              animated: true,
+            });
+          }}
+          initialContentHTML={content}
+          disabled={viewMode === "VIEW"}
+        />
+        {/* </KeyboardAvoidingView> */}
       </ScrollView>
     </View>
   );
