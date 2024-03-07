@@ -11,7 +11,6 @@ import { EViewMode } from "types";
 import { customBorder } from "utils/customStyle";
 
 const handleHead = ({ tintColor, label }: any) => (
-  //   <Text style={{ color: tintColor }}>{label}</Text>
   <MaterialCommunityIcons color={tintColor} size={22} name={label} />
 );
 
@@ -77,6 +76,7 @@ const MyRichEditor: React.FC<IRichEditor> = ({
       <ScrollView ref={scrollViewRef}>
         {/* <KeyboardAvoidingView behavior="padding"> */}
         <RichEditor
+          pasteAsPlainText
           initialHeight={200}
           onCursorPosition={(cursorY) => {
             setPos((prev) => ({ ...prev, cursorY }));
