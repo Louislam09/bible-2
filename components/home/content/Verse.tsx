@@ -141,7 +141,7 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
             },
           ]}
         >
-          {subTitle.subheading || subTitle.title}s
+          {subTitle.subheading || subTitle.title}
         </Text>
         <LinkVerse data={link} />
       </View>
