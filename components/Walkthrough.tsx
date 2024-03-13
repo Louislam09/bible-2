@@ -19,9 +19,11 @@ const Walkthrough = ({ currentStep, steps, setStep }: TWalkthrough) => {
   const firstStep = currentStep === 0;
   const content = steps[currentStep]?.text ?? "";
   const target = steps[currentStep]?.target ?? null;
+  const action = steps[currentStep]?.action ?? null;
 
-  const next = () => {
+  const next = async () => {
     if (currentStep < steps.length - 1) {
+      action && (await action());
       setStep(currentStep + 1);
     }
   };
@@ -29,6 +31,7 @@ const Walkthrough = ({ currentStep, steps, setStep }: TWalkthrough) => {
     setStep(currentStep - 1);
   };
   const close = () => {
+    if (action && lastStep) action();
     setStep(-1);
   };
 

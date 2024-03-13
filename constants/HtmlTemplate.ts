@@ -1,11 +1,11 @@
 import { StrongData } from "types";
 
 export const htmlTemplate = (
-  content: StrongData[] | any,
-  colors: any,
-  fontSize: any
+    content: StrongData[] | any,
+    colors: any,
+    fontSize: any
 ) => {
-  return `
+    return `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -19,7 +19,6 @@ export const htmlTemplate = (
                     background: transparent;
                     font-size: ${fontSize - 2}px;
                     user-select: none;
-                    border-bottom: 1px solid #ddd;
                 }
 
                 b{
@@ -41,9 +40,8 @@ export const htmlTemplate = (
             </style>
         </head>
         <body>
-            <h4>${content?.[0]?.topic ?? ""} > <a href='S:${
-    content?.[1]?.topic ?? ""
-  }'>${content?.[1]?.topic ?? ""}</a> 🔍</h4>
+            <h4>${content?.[0]?.topic ?? ""} > <a href='S:${content?.[1]?.topic ?? ""
+        }'>${content?.[1]?.topic ?? ""}</a> 🔍</h4>
             ${(content?.[0].definition ?? "")?.replaceAll("font", "p")}
             <script>
             window.ReactNativeWebView.postMessage(document.body.scrollHeight)

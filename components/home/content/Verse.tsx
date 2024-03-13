@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import Highlighter from "components/Highlighter";
 import React, {
   useCallback,
@@ -13,16 +13,19 @@ import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import copyToClipboard from "utils/copyToClipboard";
 import { DB_BOOK_NAMES } from "../../../constants/BookNames";
 import { useBibleContext } from "../../../context/BibleContext";
-import { IBookVerse, TIcon, TTheme, TVerse } from "../../../types";
+import { HomeParams, IBookVerse, TIcon, TTheme, TVerse } from "../../../types";
 import { customUnderline } from "../../../utils/customStyle";
 import extractVersesInfo, {
   getStrongValue,
 } from "../../../utils/extractVersesInfo";
 import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import { Text } from "../../Themed";
+import Walkthrough from "components/Walkthrough";
 
 const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { isVerseTour } = route.params as HomeParams;
   const {
     highlightVerse,
     highlightedVerses,
@@ -47,6 +50,8 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   const isStrongSearch = verseInStrongDisplay === item.verse;
   const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
   const strongRef = useRef<BottomSheetModal>(null);
+  const verseRef = useRef<any>(null);
+  const [stepIndex, setStepIndex] = useState(0);
 
   const strongHandlePresentModalPress = useCallback(() => {
     strongRef.current?.present();
@@ -221,70 +226,101 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
     ];
   }, [isMoreThanOneHighted, lastHighted]);
 
+  const steps = [
+    {
+      text: "Paso 1: Un toque en cualquier versiculo para activa la busqueda en el original",
+      target: verseRef,
+      action: () => {
+        onVerseClicked();
+      },
+    },
+    {
+      text: "Paso 2: Veras como algunas palabra cambian de color",
+      target: verseRef,
+      action: () => onWordClicked("principio"),
+    },
+    {
+      text: "Paso 3: Cuando toques cualquier palabra resaltada veras su significado en el original",
+      target: null,
+    },
+  ];
+
+  const displayTour = item.verse === 1 && verseRef.current && isVerseTour;
+
   return (
-    <TouchableOpacity
-      onPress={() => onVerseClicked()}
-      onLongPress={() => onVerseLongPress()}
-      activeOpacity={0.9}
-      style={styles.verseContainer}
-    >
-      {RenderFindSubTitle(item.verse)}
-
-      <Text
-        style={[
-          styles.verse,
-          isVerseHighlisted && styles.highlightCopy,
-          { fontSize },
-        ]}
-        aria-selected
-        selectable={false}
-        selectionColor={theme.colors.notification || "white"}
+    <>
+      <TouchableOpacity
+        onPress={() => onVerseClicked()}
+        onLongPress={() => onVerseLongPress()}
+        activeOpacity={0.9}
+        style={styles.verseContainer}
+        ref={verseRef}
       >
-        <Text style={[styles.verseNumber]}>
-          {isFavorite && !isVerseHighlisted && (
-            <MaterialCommunityIcons
-              size={14}
-              name={"star"}
-              color={theme.dark ? "yellow" : theme.colors.primary}
-            />
-          )}
-          &nbsp;{item.verse}&nbsp;
-        </Text>
+        {RenderFindSubTitle(item.verse)}
 
-        {isStrongSearch ? (
-          <>
-            {/* <RenderTextWithClickableWords
+        <Text
+          style={[
+            styles.verse,
+            isVerseHighlisted && styles.highlightCopy,
+            { fontSize },
+          ]}
+          aria-selected
+          selectable={false}
+          selectionColor={theme.colors.notification || "white"}
+        >
+          <Text style={[styles.verseNumber]}>
+            {isFavorite && !isVerseHighlisted && (
+              <MaterialCommunityIcons
+                size={14}
+                name={"star"}
+                color={theme.dark ? "yellow" : theme.colors.primary}
+              />
+            )}
+            &nbsp;{item.verse}&nbsp;
+          </Text>
+
+          {isStrongSearch ? (
+            <>
+              {/* <RenderTextWithClickableWords
               theme={theme}
               text={item.text}
               onWordClick={onWordClicked}
             /> */}
-            <Highlighter
-              textToHighlight={getVerseTextRaw(item.text)}
-              searchWords={textValue}
-              highlightStyle={{ color: theme.colors.notification }}
-              style={[styles.verseBody]}
-              onWordClick={onWordClicked}
-            />
-          </>
-        ) : (
-          <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
-        )}
-      </Text>
-      {isVerseHighlisted && !!highlightedVersesLenth && (
-        <View style={styles.verseAction}>
-          {verseActions.map((action: TIcon, key) => (
-            <Pressable key={key} style={[action.hide && { display: "none" }]}>
-              <MaterialCommunityIcons
-                size={24}
-                name={action.name}
-                style={[styles.icon, { color: action.color ?? "black" }]}
-                onPress={action.action}
+              <Highlighter
+                textToHighlight={getVerseTextRaw(item.text)}
+                searchWords={textValue}
+                highlightStyle={{ color: theme.colors.notification }}
+                style={[styles.verseBody]}
+                onWordClick={onWordClicked}
               />
-            </Pressable>
-          ))}
-        </View>
+            </>
+          ) : (
+            <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
+          )}
+        </Text>
+        {isVerseHighlisted && !!highlightedVersesLenth && (
+          <View style={styles.verseAction}>
+            {verseActions.map((action: TIcon, key) => (
+              <Pressable key={key} style={[action.hide && { display: "none" }]}>
+                <MaterialCommunityIcons
+                  size={24}
+                  name={action.name}
+                  style={[styles.icon, { color: action.color ?? "black" }]}
+                  onPress={action.action}
+                />
+              </Pressable>
+            ))}
+          </View>
+        )}
+      </TouchableOpacity>
+      {displayTour && (
+        <Walkthrough
+          steps={steps}
+          setStep={setStepIndex}
+          currentStep={stepIndex}
+        />
       )}
-    </TouchableOpacity>
+    </>
   );
 };
 

@@ -111,8 +111,6 @@ const getStyles = ({ colors }: TTheme) =>
       justifyContent: "flex-start",
       borderRadius: 45,
       backgroundColor: "transparent",
-      // height: 10000,
-      // height: 5000,
     },
     webviewWrapper: {
       width: "95%",

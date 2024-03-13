@@ -120,7 +120,7 @@ const Dashboard = () => {
     {
       icon: "television-guide",
       label: "Como Usar?",
-      action: () => navigation.navigate("Home", { isTour: true }),
+      action: () => navigation.navigate("Onboarding"),
     },
     {
       icon: "notebook-outline",

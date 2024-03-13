@@ -13,7 +13,7 @@ import ChooseFromListScreen from "screens/ChooseFromListScreen";
 import Dashboard from "screens/Dashboard";
 import Favorite from "screens/Favorite";
 import Home from "screens/Home";
-import LogScreen from "screens/Log";
+import OnboardingScreen from "screens/Onboarding";
 import Notes from "screens/Notes";
 import Search from "screens/Search";
 import { RootStackParamList, Screens, ScreensName, TTheme } from "types";
@@ -104,11 +104,12 @@ const MainStack = () => {
         })}
       />
       <Stack.Screen
-        name="Log"
-        component={LogScreen}
+        name="Onboarding"
+        component={OnboardingScreen}
         options={({ route }) => ({
           ...screenOptions(route),
           animation: "slide_from_bottom",
+          headerShown: false,
         })}
       />
       <Stack.Screen
