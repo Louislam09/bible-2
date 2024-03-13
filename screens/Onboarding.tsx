@@ -32,7 +32,12 @@ const OnboardingScreen = () => {
     {
       icon: "text-box-outline",
       label: "Versiculo",
-      action: () => navigation.navigate("Home", { isVerseTour: true }),
+      action: () =>
+        navigation.navigate("Home", {
+          book: "Génesis",
+          chapter: 1,
+          isVerseTour: true,
+        }),
     },
     {
       icon: "television-guide",
