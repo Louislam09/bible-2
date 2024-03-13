@@ -228,19 +228,19 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
 
   const steps = [
     {
-      text: "Paso 1: Un toque en cualquier versiculo para activa la busqueda en el original",
+      text: "Paso 1: 🔍 Haz un toque en cualquier versículo para activar la búsqueda en el original.",
       target: verseRef,
       action: () => {
         onVerseClicked();
       },
     },
     {
-      text: "Paso 2: Veras como algunas palabra cambian de color",
+      text: "Paso 2: 👀 Observarás cómo algunas palabras cambian de color.",
       target: verseRef,
       action: () => onWordClicked("principio"),
     },
     {
-      text: "Paso 3: Cuando toques cualquier palabra resaltada veras su significado en el original",
+      text: "Paso 3: 📘 Cuando toques cualquier palabra resaltada, verás su significado en el original.",
       target: null,
     },
   ];

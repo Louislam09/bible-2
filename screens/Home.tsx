@@ -38,40 +38,39 @@ function HomeScreen() {
 
   const steps = [
     {
-      text: "⬅️ Toque aquí para ir al pantalla principal",
+      text: "🏠 Toque aquí para ir a la pantalla principal.",
       target: dashboardRef,
     },
     {
-      text: "⚙️ Toque aqui para abrir la configuracion",
+      text: "⚙️ Toque aquí para abrir la configuración.",
       target: settingRef,
     },
     {
-      text: "🔍 Toque aqui para buscar en las escritura",
+      text: "🔍 Toque aquí para buscar en la escritura.",
       target: searchRef,
     },
     {
-      text: "⭐ Toque aqui para ver sus versiculos favoritos",
+      text: "⭐ Toque aquí para ver sus versículos favoritos.",
       target: favRef,
     },
     {
-      text: "📑 Toque aqui para cambiar la version de la escritura",
+      text: "📑 Toque aquí para cambiar la versión de la escritura.",
       target: bibleVersionRef,
     },
     {
-      text: "📚 Toque aquí para elegir un libro",
+      text: "📚 Toque aquí para elegir un libro.",
       target: bookRef,
     },
-
     {
-      text: "⬅️ Toque aquí para retroceder al capítulo anterior",
+      text: "⬅️ Toque aquí para retroceder al capítulo anterior.",
       target: backRef,
     },
     {
-      text: "➡️ Toque aquí para pasar al siguiente capítulo",
+      text: "➡️ Toque aquí para pasar al siguiente capítulo.",
       target: nextRef,
     },
     {
-      text: "🔊 Toque aquí para escuchar el capítulo",
+      text: "🔊 Toque aquí para escuchar el capítulo.",
       target: audioRef,
     },
   ];
