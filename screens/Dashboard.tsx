@@ -1,29 +1,25 @@
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useNavigation, useTheme } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
+import Animation from "components/Animation";
+import BottomModal from "components/BottomModal";
+import { Text, View } from "components/Themed";
+import Settings from "components/home/header/Settings";
+import VersionList from "components/home/header/VersionList";
+import { GET_DAILY_VERSE } from "constants/Queries";
+import DAILY_VERSES from "constants/dailyVerses";
+import { useBibleContext } from "context/BibleContext";
+import { useDBContext } from "context/databaseContext";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
-  Platform,
-  Pressable,
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useTheme, useNavigation } from "@react-navigation/native";
-import { EBibleVersions, IVerseItem, TTheme } from "types";
-import { Text, View } from "components/Themed";
-import { useBibleContext } from "context/BibleContext";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { FlashList } from "@shopify/flash-list";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import BottomModal from "components/BottomModal";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import Settings from "components/home/header/Settings";
-import VersionList from "components/home/header/VersionList";
-import DAILY_VERSES from "constants/dailyVerses";
-import { useDBContext } from "context/databaseContext";
-import { GET_DAILY_VERSE } from "constants/Queries";
+import { EBibleVersions, IVerseItem, TTheme } from "types";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";
-import Animation from "components/Animation";
-import ProgressBar from "components/home/footer/ProgressBar";
-import Play from "components/home/header/Play";
 
 type IDashboardOption = {
   icon: string | any;
@@ -103,7 +99,7 @@ const Dashboard = () => {
     {
       icon: isNTV ? "book-cross" : "crown-outline",
       label: "Santa Escritura",
-      action: () => navigation.navigate("Home", {}),
+      action: () => navigation.navigate("Home", { isTour: false }),
       tag: isNTV ? "book-cross" : "crown-outline",
     },
     {
@@ -124,15 +120,12 @@ const Dashboard = () => {
     {
       icon: "television-guide",
       label: "Como Usar?",
-      // isIonicon: true,
-      disabled: true,
-      action: () => console.log("Como usar?"),
+      action: () => navigation.navigate("Home", { isTour: true }),
     },
     {
       icon: "notebook-outline",
       label: "Notas",
       action: () => navigation.navigate("Notes"),
-      // disabled: true,
     },
     {
       icon: "settings-outline",

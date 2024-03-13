@@ -1,19 +1,12 @@
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
-import * as Clipboard from "expo-clipboard";
 import React, { FC, useCallback, useRef } from "react";
-import {
-  Platform,
-  StyleSheet,
-  ToastAndroid,
-  TouchableOpacity,
-} from "react-native";
+import { Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { useBibleContext } from "../../../context/BibleContext";
 import { useCustomTheme } from "../../../context/ThemeContext";
 
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BottomModal from "components/BottomModal";
-import formatTextToClipboard from "utils/copyToClipboard";
 import {
   EBibleVersions,
   HomeParams,
@@ -26,9 +19,21 @@ import { Text, View } from "../../Themed";
 import Settings from "./Settings";
 import VersionList from "./VersionList";
 
-interface HeaderInterface {}
+interface HeaderInterface {
+  bibleVersionRef: any;
+  searchRef: any;
+  favRef: any;
+  dashboardRef: any;
+  settingRef: any;
+}
 
-const CustomHeader: FC<HeaderInterface> = ({}) => {
+const CustomHeader: FC<HeaderInterface> = ({
+  bibleVersionRef,
+  searchRef,
+  favRef,
+  dashboardRef,
+  settingRef,
+}) => {
   const { currentBibleVersion, selectBibleVersion, clearHighlights } =
     useBibleContext();
   const route = useRoute<TRoute>();
@@ -63,13 +68,19 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
       name: "home",
       action: () => navigation.navigate("Dashboard"),
       isIonicon: true,
+      ref: dashboardRef,
     },
-    { name: "format-font", action: fontHandlePresentModalPress },
-    { name: "magnify", action: goSearchScreen },
+    {
+      name: "format-font",
+      action: fontHandlePresentModalPress,
+      ref: settingRef,
+    },
+    { name: "magnify", action: goSearchScreen, ref: searchRef },
     {
       name: "playlist-star",
       action: () => navigation.navigate("Favorite"),
       longAction: onCopyLong,
+      ref: favRef,
     },
   ];
 
@@ -84,6 +95,7 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
       <View style={styles.headerCenter}>
         {headerIconData.map((icon, index) => (
           <TouchableOpacity
+            ref={icon.ref}
             style={styles.iconContainer}
             key={index}
             onPress={icon?.action}
@@ -111,6 +123,7 @@ const CustomHeader: FC<HeaderInterface> = ({}) => {
         </BottomModal>
       </View>
       <TouchableOpacity
+        ref={bibleVersionRef}
         style={styles.headerEnd}
         onPress={versionHandlePresentModalPress}
       >

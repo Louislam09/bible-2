@@ -34,7 +34,12 @@ export type RootStackParamList = {
   Dashboard: NavigatorScreenParams<RootTabParamList> | undefined;
   Home:
     | NavigatorScreenParams<RootTabParamList>
-    | { book?: string; chapter?: string | number; verse?: string | number };
+    | {
+        book?: string;
+        chapter?: string | number;
+        verse?: string | number;
+        isTour?: boolean;
+      };
   Book: NavigatorScreenParams<RootTabParamList> | undefined;
   Favorite: NavigatorScreenParams<RootTabParamList> | undefined;
   Notes: NavigatorScreenParams<RootTabParamList> | undefined;
@@ -48,6 +53,11 @@ export type RootStackParamList = {
     | { book?: string; chapter?: string | number; verse?: string | number };
   Modal: undefined;
   Log: undefined;
+};
+
+export type TStep = {
+  text: string;
+  target: any;
 };
 
 export enum Screens {
@@ -84,6 +94,7 @@ export interface HomeParams {
   chapter?: number | string;
   verse?: number | string;
   strongKey?: string;
+  isTour?: boolean;
 }
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
@@ -147,6 +158,7 @@ export type TIcon = {
   longAction?: any;
   isIonicon?: boolean;
   hide?: boolean;
+  ref?: any;
 };
 
 export type IStrongWord = {

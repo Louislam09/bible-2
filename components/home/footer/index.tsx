@@ -13,16 +13,25 @@ import { FC, useCallback, useRef } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { EBibleVersions, HomeParams, Screens, TTheme } from "types";
 
-import { Text, View } from "components/Themed";
-import ProgressBar from "./ProgressBar";
-import CustomBottomSheet from "components/BottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BottomModal from "components/BottomModal";
+import { Text, View } from "components/Themed";
 import Play from "../header/Play";
-interface FooterInterface {}
+import ProgressBar from "./ProgressBar";
+interface FooterInterface {
+  bookRef: any;
+  nextRef: any;
+  audioRef: any;
+  backRef: any;
+}
 const FOOTER_ICON_SIZE = 28;
 
-const CustomFooter: FC<FooterInterface> = () => {
+const CustomFooter: FC<FooterInterface> = ({
+  bookRef,
+  backRef,
+  nextRef,
+  audioRef,
+}) => {
   const { currentBibleVersion, clearHighlights } = useBibleContext();
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -100,7 +109,7 @@ const CustomFooter: FC<FooterInterface> = () => {
         />
       </View>
       <View style={styles.footerCenter}>
-        <TouchableOpacity onPress={() => previuosChapter()}>
+        <TouchableOpacity ref={backRef} onPress={() => previuosChapter()}>
           <MaterialCommunityIcons
             style={styles.icon}
             name="less-than"
@@ -109,6 +118,7 @@ const CustomFooter: FC<FooterInterface> = () => {
           />
         </TouchableOpacity>
         <TouchableOpacity
+          ref={bookRef}
           style={{
             flex: 1,
             alignItems: "center",
@@ -127,7 +137,7 @@ const CustomFooter: FC<FooterInterface> = () => {
             color={"white"}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => nextChapter()}>
+        <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>
           <MaterialCommunityIcons
             style={styles.icon}
             name="greater-than"
@@ -137,6 +147,7 @@ const CustomFooter: FC<FooterInterface> = () => {
         </TouchableOpacity>
       </View>
       <TouchableOpacity
+        ref={audioRef}
         style={[styles.footerEnd, isNTV && { display: "none" }]}
         onPress={playHandlePresentModalPress}
       >

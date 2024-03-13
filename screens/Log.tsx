@@ -1,39 +1,59 @@
-import { Text, View } from "components/Themed";
-import { useDBContext } from "context/databaseContext";
-import * as FileSystem from "expo-file-system";
-import React, { useEffect, useState } from "react";
+import { Text } from "components/Themed";
+import React, { useState } from "react";
+import Popover, { Rect } from "react-native-popover-view";
 
 const LogScreen = () => {
-  const { myBibleDB, executeSql } = useDBContext();
-  const [tables, setTables] = useState<any>([]);
-  const dbName = (myBibleDB as any)?._db?._name;
+  const [stepIndex, setStepIndex] = useState(0);
+  const steps = [
+    {
+      text: "Paso 1: Haz clic aquí para comenzar",
+      target: "button",
+      pos: new Rect(10, 0, 40, 40),
+    },
+    {
+      text: "Paso 2: Ahora toca esta área",
+      target: "area",
+      pos: new Rect(10, 100, 40, 40),
+    },
+    {
+      text: "Paso 3: Sigue las instrucciones",
+      target: "instructions",
+      pos: new Rect(10, 200, 40, 40),
+    },
+    {
+      text: "Paso 4: Completa el proceso",
+      target: "process",
+      pos: new Rect(10, 300, 40, 40),
+    },
+    {
+      text: "Paso 5: ¡Felicidades, has terminado!",
+      target: "finish",
+      pos: new Rect(10, 400, 40, 40),
+    },
+  ];
 
-  const fileName = `SQLite/${dbName}`;
-  const filePath = `${FileSystem.documentDirectory}${fileName}`;
-
-  useEffect(() => {
-    if (!myBibleDB || !executeSql) return;
-    (async () => {
-      const res = await executeSql(
-        myBibleDB,
-        "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;",
-        []
-      );
-      setTables(res);
-      // await myBibleDB?.closeAsync();
-      // await myBibleDB?.deleteAsync();
-    })();
-  }, [myBibleDB]);
+  const nextStep = () => {
+    if (stepIndex < steps.length - 1) {
+      setStepIndex(stepIndex + 1);
+    }
+  };
 
   return (
-    <View>
-      <Text>{`Name: ${dbName}`}</Text>
-      <Text>{`Path: ${filePath}`}</Text>
-      <Text>Tables:</Text>
-      {tables.map((x: any) => (
-        <Text key={x?.name}>{x?.name}</Text>
-      ))}
-    </View>
+    <Popover
+      from={stepIndex === -1 ? "" : steps[stepIndex].pos}
+      isVisible={stepIndex === -1 ? false : stepIndex < steps.length}
+    >
+      <Text>Log Page</Text>
+      {/* <Walkthrough
+        close={() => setStepIndex(-1)}
+        content={stepIndex === -1 ? "" : steps[stepIndex].text}
+        next={nextStep}
+        previuos={() => setStepIndex(stepIndex - 1)}
+        skip={() => setStepIndex(-1)}
+        totalStep={steps.length}
+        currentStep={stepIndex}
+      /> */}
+    </Popover>
   );
 };
 
