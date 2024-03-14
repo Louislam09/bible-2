@@ -38,12 +38,12 @@ const useAudioPlayer = ({
   const [duration, setDuration] = useState<number>(0);
 
   const resetAudio = async () => {
-    if (sound) await sound?.stopAsync();
+    if (sound) await sound.unloadAsync();
     setIsPlaying(false);
     setIsDownloading(false);
-    setSound(undefined);
     setPosition(0);
     setDuration(0);
+    setSound(undefined);
   };
 
   const onPlaybackStatusUpdate = async (status: AVPlaybackStatus) => {
@@ -53,7 +53,7 @@ const useAudioPlayer = ({
     setIsPlaying(status.isPlaying);
 
     if (status.didJustFinish) {
-      // resetAudio();
+      resetAudio();
       setAutoPlay(true);
       nextChapter && nextChapter();
     }
@@ -62,13 +62,14 @@ const useAudioPlayer = ({
   useEffect(() => {
     const loadAudio = async () => {
       try {
-        resetAudio();
+        await resetAudio()
         await FileSystem.makeDirectoryAsync(dbFolder, { intermediates: true });
 
         const { exists } = await FileSystem.getInfoAsync(localUri);
-
         if (!exists) {
-          if (autoPlay) playAudio()
+          if (autoPlay) {
+            await downloadAudio()
+          }
           return
         };
         const { sound } = await Audio.Sound.createAsync(
@@ -103,37 +104,37 @@ const useAudioPlayer = ({
     };
   }, [book, chapterNumber]);
 
+  const downloadAudio = async () => {
+    ToastAndroid.show("Descargando...", ToastAndroid.SHORT);
+    setIsDownloading(true);
+    const { uri } = await FileSystem.downloadAsync(audioUrl, localUri);
+    ToastAndroid.show("Audio descargado!", ToastAndroid.SHORT);
+    setIsDownloading(false);
+
+    const { sound } = await Audio.Sound.createAsync(
+      { uri },
+      { shouldPlay: false },
+      onPlaybackStatusUpdate
+    );
+
+    setSound(sound);
+    await sound?.playAsync();
+    setAutoPlay(false);
+    setIsPlaying(true);
+  }
+
   const playAudio = async () => {
     if (!sound) {
-      ToastAndroid.show("Descargando...", ToastAndroid.SHORT);
-      setIsDownloading(true);
-      const { uri } = await FileSystem.downloadAsync(audioUrl, localUri);
-      ToastAndroid.show("Audio descargado!", ToastAndroid.SHORT);
-      setIsDownloading(false);
-
-      const { sound } = await Audio.Sound.createAsync(
-        { uri },
-        { shouldPlay: false },
-        onPlaybackStatusUpdate
-      );
-
-      setSound(sound);
-      await sound?.playAsync();
-      setAutoPlay(false);
-      ToastAndroid.show("Reproduciendo", ToastAndroid.SHORT);
-      setIsPlaying(true);
+      await downloadAudio()
       return;
     }
 
     if (isPlaying) {
       setIsPlaying(false);
       await sound?.pauseAsync();
-      ToastAndroid.show("Pausado", ToastAndroid.SHORT);
       return;
     }
-
     await sound?.playAsync();
-    ToastAndroid.show("Reproduciendo", ToastAndroid.SHORT);
     setIsPlaying(true);
   };
 
