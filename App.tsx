@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
-// import { StatusBar } from 'expo-status-bar';
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import StorageProvider from "context/LocalstoreContext";
 import React, { useEffect } from "react";
 import { StatusBar, ToastAndroid } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -9,9 +9,9 @@ import ThemeProvider from "./context/ThemeContext";
 import DatabaseProvider from "./context/databaseContext";
 import useCachedResources from "./hooks/useCachedResources";
 import Navigation from "./navigation";
-import StorageProvider from "context/LocalstoreContext";
-import ErrorBoundary from "components/ErrorBoundary";
+import ErrorBoundaryFallback from "components/ErrorBoundaryFallback";
 import * as Updates from "expo-updates";
+import ErrorBoundary from "react-native-error-boundary";
 
 const App = () => {
   const isLoadingComplete = useCachedResources();
@@ -37,7 +37,7 @@ const App = () => {
     return null;
   } else {
     return (
-      <ErrorBoundary>
+      <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
         <ThemeProvider>
           <StorageProvider>
             <DatabaseProvider>

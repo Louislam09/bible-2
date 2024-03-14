@@ -3,8 +3,7 @@ import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "components/Animation";
 import { Text, View } from "components/Themed";
-import navigation from "navigation";
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   TouchableWithoutFeedback,
