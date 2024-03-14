@@ -18,22 +18,7 @@ const Chapter = ({ item, dimensions }: TChapter) => {
     text?: string;
   }>({});
   const [open, setOpen] = useState(false);
-
-  const scroll = () => {
-    if (true) return;
-    if (!chapterRef.current) return;
-    chapterRef?.current?.scrollToItem({
-      animated: true,
-      item: verses[(verse || 0) as number],
-    });
-  };
-
-  useEffect(() => {
-    if (!chapterRef.current || !verses) return;
-    scroll();
-
-    return () => {};
-  }, [verse, chapterRef, verses]);
+  const initialScrollIndex = +(verse as number) || 0;
 
   const renderItem = (props: any) => (
     <Verse
@@ -49,17 +34,13 @@ const Chapter = ({ item, dimensions }: TChapter) => {
     <View style={styles.chapterContainer}>
       <View style={[styles.verseContent, { width: dimensions?.width ?? 400 }]}>
         <FlashList
-          onLayout={() => {
-            scroll();
-          }}
           ref={chapterRef}
           decelerationRate="normal"
           estimatedItemSize={135}
           data={verses ?? []}
           renderItem={renderItem}
-          keyExtractor={(item: any, index: any) => `verse-${item.verse}:`}
-          // ItemSeparatorComponent={() => <View style={{ height: 1 }} />}
-          // ListFooterComponent={() => <View style={{ paddingBottom: 50 }} />}
+          initialScrollIndex={initialScrollIndex}
+          keyExtractor={(item: any) => `verse-${item.verse}:`}
         />
         {open && (
           <CurrentWordModal

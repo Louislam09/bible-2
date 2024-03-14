@@ -23,7 +23,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
       params: { book: item },
     }),
     [Screens.ChooseChapterNumber]: (item: any, routeParams: any) => ({
-      screen: Screens.Home,
+      screen: Screens.ChooseVerseNumber,
       params: { ...routeParams, chapter: item },
     }),
     [Screens.ChooseVerseNumber]: (item: any, routeParams: any) => ({

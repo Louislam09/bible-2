@@ -183,6 +183,7 @@ const Dashboard = () => {
           navigation.navigate("Home", {
             book: dailyVerse.bookName,
             chapter: dailyVerse.chapter,
+            verse: dailyVerse.verse,
           })
         }
         style={[styles.dailyVerseContainer, { width: SCREEN_WIDTH }]}

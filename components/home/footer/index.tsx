@@ -55,6 +55,7 @@ const CustomFooter: FC<FooterInterface> = ({
     navigation.setParams({
       book: name,
       chapter,
+      verse: 0,
     });
   };
 
@@ -68,6 +69,7 @@ const CustomFooter: FC<FooterInterface> = ({
     navigation.setParams({
       book,
       chapter: ((chapter as number) || 0) + 1,
+      verse: 0,
     });
   }
   const previuosChapter = () => {
@@ -81,6 +83,7 @@ const CustomFooter: FC<FooterInterface> = ({
     navigation.setParams({
       book,
       chapter: (chapter as number) - 1,
+      verse: 0,
     });
   };
 

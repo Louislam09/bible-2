@@ -54,7 +54,11 @@ const BookContent: FC<BookContentInterface> = ({}) => {
         Promise.all(promises)
           .then(([verses, subtitles]) => {
             setLoading(false);
-            saveData({ lastBook: book, lastChapter: chapter });
+            saveData({
+              lastBook: book,
+              lastChapter: chapter,
+              lastVerse: verse,
+            });
             setData({ verses, subtitles });
           })
           .catch((error) => {
@@ -65,7 +69,7 @@ const BookContent: FC<BookContentInterface> = ({}) => {
     })();
 
     return () => {};
-  }, [myBibleDB, book, chapter]);
+  }, [myBibleDB, book, chapter, verse]);
 
   return (
     <View style={styles.bookContainer}>

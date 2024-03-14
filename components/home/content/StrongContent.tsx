@@ -1,15 +1,15 @@
-import React, { FC, useEffect, useState } from "react";
-import { Platform, Pressable, StyleSheet } from "react-native";
-import { IStrongWord, Screens, StrongData, TTheme } from "types";
-import { Text, View } from "../../Themed";
-import { useDBContext } from "context/databaseContext";
-import WebView, { WebViewNavigation } from "react-native-webview";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { DB_BOOK_NAMES } from "constants/BookNames";
 import { htmlTemplate } from "constants/HtmlTemplate";
 import { SEARCH_STRONG_WORD } from "constants/Queries";
-import { DB_BOOK_NAMES } from "constants/BookNames";
-import { useNavigation } from "@react-navigation/native";
+import { useDBContext } from "context/databaseContext";
+import React, { FC, useEffect, useState } from "react";
+import { Platform, Pressable, StyleSheet } from "react-native";
+import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { IStrongWord, Screens, StrongData, TTheme } from "types";
+import { Text, View } from "../../Themed";
 
 interface IStrongContent {
   theme: TTheme;
@@ -57,7 +57,8 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
   const onShouldStartLoadWithRequest = (event: ShouldStartLoadRequest) => {
     const { url } = event;
     if (url.startsWith("b:")) {
-      const [, bookNumber, chapter] = url.match(/b:(\d+) (\d+):(\d+)/) || [];
+      const [, bookNumber, chapter, verse] =
+        url.match(/b:(\d+) (\d+):(\d+)/) || [];
       const currentBook = DB_BOOK_NAMES.find(
         (x) => x.bookNumber === +bookNumber
       );
@@ -65,6 +66,7 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
       navigation.navigate(Screens.Home, {
         book: currentBook?.longName,
         chapter: chapter,
+        verse: verse || 0,
       });
     }
 

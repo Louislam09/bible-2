@@ -12,6 +12,7 @@ import { EThemes, TFont, EBibleVersions } from "types";
 type StoreState = {
   lastBook: string;
   lastChapter: number;
+  lastVerse: number;
   currentTheme: keyof typeof EThemes;
   fontSize: number;
   selectedFont: string;
@@ -45,6 +46,7 @@ interface StorageProviderProps {
 const initialContext: StoreState = {
   lastBook: "Génesis",
   lastChapter: 1,
+  lastVerse: 0,
   currentTheme: "Blue",
   fontSize: 24,
   selectedFont: TFont.Roboto,
