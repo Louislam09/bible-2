@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { Platform, StyleSheet } from "react-native";
+import { Platform, Pressable, StyleSheet } from "react-native";
 import { IStrongWord, Screens, StrongData, TTheme } from "types";
 import { Text, View } from "../../Themed";
 import { useDBContext } from "context/databaseContext";
@@ -9,6 +9,7 @@ import { SEARCH_STRONG_WORD } from "constants/Queries";
 import { DB_BOOK_NAMES } from "constants/BookNames";
 import { useNavigation } from "@react-navigation/native";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface IStrongContent {
   theme: TTheme;
@@ -29,7 +30,8 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
   const styles = getStyles(theme);
   const [height, setHeight] = useState(DEFAULT_HEIGHT);
   const webViewRef = React.useRef<WebView>(null);
-  const [text, setText] = useState(data?.code);
+  const [text, setText] = useState(code);
+  const [backUrl, setBackUrl] = useState<any>([]);
 
   useEffect(() => {
     setText(data.code);
@@ -71,9 +73,18 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
       if (strongKeyToSearch === text) {
         // handleGoForward();
       }
-      setText(url.replace("s:", ""));
+      const word = url.replace("s:", "");
+      setBackUrl((prev: any) => [...prev, text]);
+      setText(word);
     }
     return false;
+  };
+
+  const onGoBack = () => {
+    const urls = backUrl;
+    const url = urls.pop() ?? code;
+    setBackUrl(urls);
+    setText(url);
   };
 
   return (
@@ -83,7 +94,26 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
         { height: height + EXTRA_HEIGHT_TO_ADJUST },
       ]}
     >
-      <Text style={styles.title}>{data.text}</Text>
+      <View style={styles.header}>
+        {backUrl.length !== 0 && (
+          <Pressable
+            android_ripple={{
+              color: theme.colors.background,
+              foreground: true,
+              radius: 10,
+            }}
+            onPress={onGoBack}
+          >
+            <MaterialCommunityIcons
+              style={styles.backIcon}
+              name="keyboard-backspace"
+              size={26}
+              color="white"
+            />
+          </Pressable>
+        )}
+        <Text style={styles.title}>{data.text} </Text>
+      </View>
       <View style={[styles.webviewWrapper]}>
         <WebView
           style={{ backgroundColor: "transparent" }}
@@ -95,7 +125,6 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
           }
           scrollEnabled
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-          // onNavigationStateChange={(data) => console.log(data)}
         />
       </View>
     </View>
@@ -118,14 +147,31 @@ const getStyles = ({ colors }: TTheme) =>
       height: "100%",
       backgroundColor: "transparent",
     },
+    header: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      width: "90%",
+      padding: 5,
+      gap: 2,
+    },
+    backIcon: {
+      alignSelf: "flex-start",
+      fontWeight: "bold",
+      paddingHorizontal: 10,
+      padding: 5,
+      backgroundColor: colors.notification,
+    },
     title: {
+      justifyContent: "space-between",
       textTransform: "capitalize",
-      // borderRadius: 45,
       color: "white",
       fontSize: 20,
-      padding: 5,
-      width: "90%",
+      flex: 1,
       textAlign: "center",
+      padding: 5,
+      paddingRight: 30,
       backgroundColor: colors.notification,
     },
     card: {
