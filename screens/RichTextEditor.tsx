@@ -15,14 +15,14 @@ const handleHead = ({ tintColor, label }: any) => (
 );
 
 interface IRichEditor {
-  setContent: any;
+  onSetContent: any;
   content: any;
   viewMode: keyof typeof EViewMode;
   Textinput: any;
 }
 
 const MyRichEditor: React.FC<IRichEditor> = ({
-  setContent,
+  onSetContent,
   content,
   viewMode,
   Textinput,
@@ -96,10 +96,7 @@ const MyRichEditor: React.FC<IRichEditor> = ({
             caretColor: theme.colors.notification,
           }}
           onChange={(descriptionText: string) => {
-            setContent((prev: any) => ({
-              ...prev,
-              content: descriptionText ?? "",
-            }));
+            onSetContent(descriptionText);
             const numberToCenterOffset = 150;
             scrollViewRef.current?.scrollTo({
               y: pos.cursorY - numberToCenterOffset,

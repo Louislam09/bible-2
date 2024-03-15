@@ -17,7 +17,6 @@ import {
 } from "react-native";
 import MyRichEditor from "screens/RichTextEditor";
 import { EViewMode, IVerseItem, TNote, TTheme } from "types";
-import { customBorder } from "utils/customStyle";
 import removeAccent from "utils/removeAccent";
 
 type TListVerse = {
@@ -32,8 +31,9 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
   const styles = getStyles(theme);
   const flatListRef = useRef<FlashList<any>>(null);
   const notFoundSource = require("../../assets/lottie/notFound.json");
+  const defaultTitle = "Sin titulo 🖋️";
   const [noteContent, setNoteContent] = useState({
-    title: "",
+    title: defaultTitle,
     content: "",
   });
   const { title, content } = noteContent;
@@ -41,6 +41,7 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
     useBibleContext();
   const [searchText, setSearchText] = useState<any>(null);
   const [openNoteId, setOpenNoteId] = useState<any>(null);
+  const [isTyping, setTyping] = useState(false);
   const [viewMode, setViewMode] = useState<keyof typeof EViewMode>("LIST");
   const isView = viewMode === "VIEW";
   const showExtraButton = ["NEW", "EDIT", "VIEW"].includes(viewMode);
@@ -48,13 +49,22 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
     () => `${filterData.length} ${filterData.length > 1 ? "Notas" : "Nota"}`,
     [filterData]
   );
+  const typingTimeoutRef = useRef<any>(null);
+
+  useEffect(() => {
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const addTextToNote = (selectedNote: any) => {
     const myContent = `${
       selectedNote?.note_text ?? ""
     } <br> <div>${addToNoteText}</div><br> `;
     setNoteContent({
-      title: selectedNote?.title || "",
+      title: selectedNote?.title || defaultTitle,
       content: !selectedNote && !addToNoteText ? "" : myContent,
     });
     onAddToNote("");
@@ -109,15 +119,45 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
     viewMode !== "LIST" ? setViewMode("LIST") : setViewMode("NEW");
   };
 
-  const onUpdate = async (id: number) => {
-    await onUpdateNote(noteContent, id, onOpenOrCloseNote);
+  const onUpdate = async (id: number, goToViewMode: boolean = false) => {
+    await onUpdateNote(noteContent, id, afterSaving);
     setShouldFetch((prev: any) => !prev);
-    ToastAndroid.show("Nota actualizada!", ToastAndroid.SHORT);
+    if (goToViewMode) {
+      setViewMode("VIEW");
+      ToastAndroid.show("Nota actualizada!", ToastAndroid.SHORT);
+    }
+  };
+
+  const onSaveDelayed = async () => {
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    setTyping(true);
+    typingTimeoutRef.current = setTimeout(() => {
+      onUpdate(openNoteId);
+    }, 3000);
+  };
+
+  const afterSaving = () => {
+    setTyping(false);
+    clearTimeout(typingTimeoutRef.current);
+  };
+
+  const onContentChange = async (field: any, text: string) => {
+    setNoteContent((prev: any) => ({
+      ...prev,
+      [field]: text ?? "",
+    }));
+    if (openNoteId) {
+      await onSaveDelayed();
+    }
   };
 
   const onSave = async () => {
     if (openNoteId) {
-      await onUpdate(openNoteId);
+      const goToViewMode = true;
+      await onUpdate(openNoteId, goToViewMode);
       return;
     }
     if (!noteContent.title) {
@@ -264,12 +304,18 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
         </TouchableOpacity>
         {showExtraButton && (
           <TouchableOpacity
-            style={[styles.scrollToTopButton, { bottom: 85 }]}
+            style={[
+              styles.scrollToTopButton,
+              { bottom: 85, alignItems: "center" },
+            ]}
             onPress={isView ? onEditMode : onSave}
           >
             <MaterialCommunityIcons
-              style={{ color: theme.colors.text, fontWeight: "bold" }}
-              name={isView ? "pencil" : "content-save"}
+              style={{
+                color: isTyping ? "white" : theme.colors.text,
+                fontWeight: "bold",
+              }}
+              name={isView ? "pencil" : isTyping ? "sync" : "content-save"}
               size={30}
             />
           </TouchableOpacity>
@@ -310,13 +356,11 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
                 style={[styles.textInput]}
                 multiline
                 value={title}
-                onChangeText={(text) =>
-                  setNoteContent((prev) => ({ ...prev, title: text }))
-                }
+                onChangeText={(text: string) => onContentChange("title", text)}
               />
             }
             content={content}
-            setContent={setNoteContent}
+            onSetContent={(text: string) => onContentChange("content", text)}
             viewMode={viewMode}
           />
         </>
