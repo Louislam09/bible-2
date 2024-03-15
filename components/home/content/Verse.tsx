@@ -77,10 +77,14 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
     if (isVerseHighlisted === item.verse) {
       setHighlightVerse(null);
       removeHighlistedVerse(item);
+      return;
     }
+    highlightVerse(item);
+    setHighlightVerse(item.verse);
   };
 
   const onVerseLongPress = () => {
+    if (isVerseHighlisted === item.verse) return;
     toggleCopyMode();
     highlightVerse(item);
     setHighlightVerse(item.verse);
@@ -162,12 +166,7 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   };
 
   const onCopy = async () => {
-    console.log(
-      await copyToClipboard(
-        highlightedVersesLenth ? highlightedVerses : item,
-        true
-      )
-    );
+    await copyToClipboard(highlightedVersesLenth ? highlightedVerses : item);
     clearHighlights();
   };
 
