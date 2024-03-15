@@ -1,7 +1,6 @@
 import { useRoute, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import { useEffect, useRef, useState } from "react";
-import CurrentWordModal from "../../CurrentWordModal";
+import { useRef } from "react";
 import Verse from "./Verse";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { TChapter, HomeParams, TTheme } from "types";
@@ -14,23 +13,12 @@ const Chapter = ({ item, dimensions }: TChapter) => {
   const { verse } = route.params as HomeParams;
   const styles = getStyles(theme);
   const chapterRef = useRef<FlashList<any>>(null);
-  const [selectedWord, setSelectedWord] = useState<{
-    ref?: string;
-    text?: string;
-  }>({});
-  const [open, setOpen] = useState(false);
   const verseNumber = +(verse as number) || 0;
   const initialScrollIndex =
     verses.length === verseNumber ? verseNumber - 1 : verseNumber;
 
   const renderItem = (props: any) => (
-    <Verse
-      {...props}
-      setSelectedWord={setSelectedWord}
-      setOpen={setOpen}
-      verse={verse}
-      subtitles={subtitles ?? []}
-    />
+    <Verse {...props} verse={verse} subtitles={subtitles ?? []} />
   );
 
   return (
@@ -45,12 +33,6 @@ const Chapter = ({ item, dimensions }: TChapter) => {
           initialScrollIndex={initialScrollIndex}
           keyExtractor={(item: any) => `verse-${item.verse}:`}
         />
-        {open && (
-          <CurrentWordModal
-            strongNumber={selectedWord}
-            setOpen={() => setOpen(!open)}
-          />
-        )}
       </View>
     </View>
   );
