@@ -42,7 +42,7 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   } = useBibleContext();
   const theme = useTheme() as TTheme;
   const styles = getStyles(theme);
-  const [isVerseHighlisted, setHighlightVerse] = useState(false);
+  const [isVerseHighlisted, setHighlightVerse] = useState<number | null>(null);
   const [isFavorite, setFavorite] = useState(false);
   const [lastHighted, setLastHighted] = useState<IBookVerse | any>(null);
   const highlightedVersesLenth = highlightedVerses.length;
@@ -62,31 +62,28 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   }, [item]);
 
   useEffect(() => {
-    if (isMoreThanOneHighted && isVerseHighlisted) {
+    if (isMoreThanOneHighted && isVerseHighlisted === item.verse) {
       const lastItem = highlightedVerses[highlightedVersesLenth - 1];
       setLastHighted(lastItem);
     }
     if (!highlightedVersesLenth) {
-      setHighlightVerse(false);
+      setHighlightVerse(null);
     }
   }, [highlightedVerses]);
 
   const onVerseClicked = () => {
     setverseInStrongDisplay(isStrongSearch ? 0 : item.verse);
     if (!isCopyMode) return;
-    if (isVerseHighlisted) {
-      setHighlightVerse(false);
+    if (isVerseHighlisted === item.verse) {
+      setHighlightVerse(null);
       removeHighlistedVerse(item);
-      return;
     }
-    highlightVerse(item);
-    setHighlightVerse(true);
   };
 
   const onVerseLongPress = () => {
     toggleCopyMode();
     highlightVerse(item);
-    setHighlightVerse(true);
+    setHighlightVerse(item.verse);
   };
 
   const LinkVerse = ({ data }: any) => {
@@ -165,8 +162,13 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   };
 
   const onCopy = async () => {
-    await copyToClipboard(highlightedVersesLenth ? highlightedVerses : item);
-    if (highlightedVersesLenth) clearHighlights();
+    console.log(
+      await copyToClipboard(
+        highlightedVersesLenth ? highlightedVerses : item,
+        true
+      )
+    );
+    clearHighlights();
   };
 
   const addVerseToNote = async () => {
@@ -261,7 +263,7 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
         <Text
           style={[
             styles.verse,
-            isVerseHighlisted && styles.highlightCopy,
+            isVerseHighlisted === item.verse && styles.highlightCopy,
             { fontSize },
           ]}
           aria-selected
@@ -298,7 +300,7 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
             <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
           )}
         </Text>
-        {isVerseHighlisted && !!highlightedVersesLenth && (
+        {isVerseHighlisted === item.verse && !!highlightedVersesLenth && (
           <View style={styles.verseAction}>
             {verseActions.map((action: TIcon, key) => (
               <Pressable key={key} style={[action.hide && { display: "none" }]}>

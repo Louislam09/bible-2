@@ -60,7 +60,7 @@ const CustomHeader: FC<HeaderInterface> = ({
   };
 
   const onCopyLong = () => {
-    navigation.navigate("Log");
+    // navigation.navigate("Log");
   };
 
   const headerIconData: TIcon[] = [

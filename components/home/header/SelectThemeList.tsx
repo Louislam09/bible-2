@@ -75,7 +75,7 @@ const getStyles = ({ colors }: TTheme) =>
       display: "flex",
       width: "90%",
       // flex: 1,
-      height: 250,
+      height: 240,
     },
     title: {
       color: "white",

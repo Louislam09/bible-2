@@ -38,7 +38,8 @@ export const getStrongValue = (text: string) => {
     .split(" ")
     .filter((x) => x.includes("+"))
     .map((x) => x.replace("+", ""))
-    .map((x) => (!x ? x.replace("", "-") : x));
+    .map((x) => (!x ? x.replace("", "-") : x))
+    .map(a => a.replace("*", "-"));
   const strongValue = text
     .match(/<S>.*?<\/S>/gi)
     ?.join(" ")

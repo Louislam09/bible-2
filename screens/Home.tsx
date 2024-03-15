@@ -81,23 +81,9 @@ function HomeScreen() {
         {...{ bibleVersionRef, searchRef, favRef, settingRef, dashboardRef }}
       />
       <BookContent />
-      <CustomFooter
-        bookRef={bookRef}
-        nextRef={nextRef}
-        backRef={backRef}
-        {...{ audioRef }}
-      />
+      <CustomFooter {...{ audioRef, bookRef, backRef, nextRef }} />
       {strongWord.code && (
-        <View
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            width: "100%",
-            zIndex: 999,
-            height: "60%",
-          }}
-        >
+        <View style={styles.strongContainer}>
           <CustomBottomSheet
             ref={sheetRef}
             handleSheetChange={handleSheetChange}
@@ -125,6 +111,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: "relative",
+  },
+  strongContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    width: "100%",
+    zIndex: 999,
+    height: "60%",
   },
 });
 

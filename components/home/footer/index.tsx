@@ -191,7 +191,7 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       flexDirection: "row",
       justifyContent: "center",
-      paddingVertical: 5,
+      paddingVertical: 0,
       backgroundColor: colors.background,
       boxSizing: "border-box",
       gap: 10,

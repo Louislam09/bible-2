@@ -8,10 +8,7 @@ import { HomeParams, TTheme } from "../../../types";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
 import getCurrentDbName from "utils/getCurrentDB";
-import {
-  GET_VERSES_FOR_CONCORDANCIA,
-  QUERY_BY_DB,
-} from "../../../constants/Queries";
+import { QUERY_BY_DB } from "../../../constants/Queries";
 import Chapter from "./Chapter";
 
 interface BookContentInterface {}
@@ -23,7 +20,7 @@ const BookContent: FC<BookContentInterface> = ({}) => {
     storedData: { currentBibleVersion },
     saveData,
   } = useStorage();
-  const { setverseInStrongDisplay } = useBibleContext();
+  const { setverseInStrongDisplay, clearHighlights } = useBibleContext();
   const { myBibleDB, executeSql } = useDBContext();
   const route = useRoute();
   const { book = "Mateo", chapter, verse } = route.params as HomeParams;
@@ -35,7 +32,9 @@ const BookContent: FC<BookContentInterface> = ({}) => {
   useEffect(() => {
     // if(loading) return
     (async () => {
+      clearHighlights();
       setLoading(true);
+
       if (myBibleDB && executeSql) {
         setData({});
         setverseInStrongDisplay(0);

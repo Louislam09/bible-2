@@ -3,11 +3,12 @@ import { FlashList } from "@shopify/flash-list";
 import { useEffect, useRef, useState } from "react";
 import CurrentWordModal from "../../CurrentWordModal";
 import Verse from "./Verse";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { TChapter, HomeParams, TTheme } from "types";
 
 const Chapter = ({ item, dimensions }: TChapter) => {
   const { verses, subtitles } = item;
+  if (!verses) return <ActivityIndicator />;
   const theme = useTheme();
   const route = useRoute();
   const { verse } = route.params as HomeParams;
@@ -18,7 +19,9 @@ const Chapter = ({ item, dimensions }: TChapter) => {
     text?: string;
   }>({});
   const [open, setOpen] = useState(false);
-  const initialScrollIndex = +(verse as number) || 0;
+  const verseNumber = +(verse as number) || 0;
+  const initialScrollIndex =
+    verses.length === verseNumber ? verseNumber - 1 : verseNumber;
 
   const renderItem = (props: any) => (
     <Verse

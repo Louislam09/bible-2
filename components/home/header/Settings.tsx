@@ -153,8 +153,6 @@ const getStyles = ({ colors }: TTheme) =>
       position: "relative",
       display: "flex",
       alignItems: "center",
-      // justifyContent: "center",
-      paddingVertical: 25,
       borderRadius: 45,
       flex: 1,
       backgroundColor: "transparent",
