@@ -15,7 +15,9 @@ const Chapter = ({ item, dimensions }: TChapter) => {
   const chapterRef = useRef<FlashList<any>>(null);
   const verseNumber = +(verse as number) || 0;
   const initialScrollIndex =
-    verses.length === verseNumber ? verseNumber - 1 : verseNumber;
+    verses.length === verseNumber || verseNumber === 1
+      ? verseNumber - 1
+      : verseNumber;
 
   const renderItem = (props: any) => (
     <Verse {...props} verse={verse} subtitles={subtitles ?? []} />
@@ -46,23 +48,9 @@ const getStyles = ({ colors }: TTheme) =>
       justifyContent: "center",
       position: "relative",
     },
-    chapterHeader: {
-      paddingVertical: 15,
-      display: "flex",
-      width: "100%",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    chapterHeaderTitle: {
-      fontSize: 24,
-      fontWeight: "bold",
-      color: colors.primary,
-    },
     verseContent: {
       width: 400,
       height: "100%",
-      paddingRight: 10,
-      paddingBottom: 10,
     },
   });
 

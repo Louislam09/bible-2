@@ -30,17 +30,19 @@ export type RootTabParamList = {
   Favorite: undefined;
 };
 
+export interface HomeParams {
+  book?: string;
+  chapter?: number | string;
+  verse?: number | string;
+  strongKey?: string;
+  isTour?: boolean;
+  isVerseTour?: boolean;
+  isHistory?: boolean;
+}
+
 export type RootStackParamList = {
   Dashboard: NavigatorScreenParams<RootTabParamList> | undefined;
-  Home:
-    | NavigatorScreenParams<RootTabParamList>
-    | {
-        book?: string;
-        chapter?: string | number;
-        verse?: string | number;
-        isTour?: boolean;
-        isVerseTour?: boolean;
-      };
+  Home: NavigatorScreenParams<RootTabParamList> | HomeParams;
   Book: NavigatorScreenParams<RootTabParamList> | undefined;
   Favorite: NavigatorScreenParams<RootTabParamList> | undefined;
   Notes: NavigatorScreenParams<RootTabParamList> | undefined;
@@ -92,15 +94,6 @@ export const ScreensName: TScreensName = {
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, Screen>;
-
-export interface HomeParams {
-  book?: string;
-  chapter?: number | string;
-  verse?: number | string;
-  strongKey?: string;
-  isTour?: boolean;
-  isVerseTour?: boolean;
-}
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
   CompositeScreenProps<
@@ -164,6 +157,7 @@ export type TIcon = {
   isIonicon?: boolean;
   hide?: boolean;
   ref?: any;
+  disabled?: boolean;
 };
 
 export type IStrongWord = {
@@ -317,3 +311,9 @@ export enum EThemes {
   Blue = "#2a7ac6",
   BlackWhite = "#000",
 }
+
+export type EHistoryItem = {
+  book: string;
+  chapter: number;
+  verse: number;
+};

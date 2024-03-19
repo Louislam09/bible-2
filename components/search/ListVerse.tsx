@@ -70,7 +70,6 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
               !query ? [] : [...removeAccent(query).trim().split(" ")]
             }
             textToHighlight={getVerseTextRaw(item.text)}
-            // onWordClick={(text) => console.log({ text })}
           />
         </View>
       </TouchableOpacity>

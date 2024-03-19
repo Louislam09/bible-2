@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   ParamListBase,
   RouteProp,
@@ -9,7 +9,7 @@ import {
 import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "constants/BookNames";
 import { useBibleContext } from "context/BibleContext";
 import useAudioPlayer from "hooks/useAudioPlayer";
-import { FC, useCallback, useRef } from "react";
+import { FC, useCallback, useEffect, useRef } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { EBibleVersions, HomeParams, Screens, TTheme } from "types";
 
@@ -18,13 +18,13 @@ import BottomModal from "components/BottomModal";
 import { Text, View } from "components/Themed";
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
+import { iconSize } from "constants/size";
 interface FooterInterface {
   bookRef: any;
   nextRef: any;
   audioRef: any;
   backRef: any;
 }
-const FOOTER_ICON_SIZE = 28;
 
 const CustomFooter: FC<FooterInterface> = ({
   bookRef,
@@ -32,7 +32,13 @@ const CustomFooter: FC<FooterInterface> = ({
   nextRef,
   audioRef,
 }) => {
-  const { currentBibleVersion, clearHighlights } = useBibleContext();
+  const {
+    currentBibleVersion,
+    clearHighlights,
+    currentHistoryIndex,
+    searchHistorial,
+  } = useBibleContext();
+  const FOOTER_ICON_SIZE = iconSize;
   const theme = useTheme();
   const styles = getStyles(theme);
   const playRef = useRef<BottomSheetModal>(null);
@@ -98,24 +104,37 @@ const CustomFooter: FC<FooterInterface> = ({
 
   const displayBookName = (book || "")?.length > 10 ? shortName : book;
 
+  useEffect(() => {
+    if (currentHistoryIndex === -1) return;
+    const currentHistory = searchHistorial[currentHistoryIndex];
+
+    if (!currentHistory) return;
+    navigation.setParams({
+      book: currentHistory.book,
+      chapter: currentHistory.chapter,
+      verse: currentHistory.verse,
+      isHistory: true,
+    });
+  }, [currentHistoryIndex]);
+
   return (
     <View style={styles.footer}>
-      <View
-        style={[styles.progressBarContainer, !isPlaying && { display: "none" }]}
-      >
-        <ProgressBar
-          height={8}
-          color={theme.colors.notification}
-          barColor={theme.colors.text}
-          progress={position / duration}
-          circleColor={theme.colors.notification}
-        />
-      </View>
+      {isPlaying && (
+        <View style={[styles.progressBarContainer]}>
+          <ProgressBar
+            height={8}
+            color={theme.colors.notification}
+            barColor={theme.colors.text}
+            progress={position / duration}
+            circleColor={theme.colors.notification}
+          />
+        </View>
+      )}
       <View style={styles.footerCenter}>
         <TouchableOpacity ref={backRef} onPress={() => previuosChapter()}>
-          <MaterialCommunityIcons
-            style={styles.icon}
-            name="less-than"
+          <Ionicons
+            name="chevron-back-sharp"
+            style={[styles.icon]}
             size={FOOTER_ICON_SIZE}
             color="white"
           />
@@ -141,9 +160,9 @@ const CustomFooter: FC<FooterInterface> = ({
           />
         </TouchableOpacity>
         <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>
-          <MaterialCommunityIcons
+          <Ionicons
+            name="chevron-forward-sharp"
             style={styles.icon}
-            name="greater-than"
             size={FOOTER_ICON_SIZE}
             color="white"
           />
@@ -191,12 +210,12 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       flexDirection: "row",
       justifyContent: "center",
-      paddingVertical: 0,
+      paddingVertical: 10,
       backgroundColor: colors.background,
       boxSizing: "border-box",
       gap: 10,
       borderTopColor: colors.border,
-      borderWidth: 1,
+      borderWidth: 0.5,
       borderStyle: "solid",
     },
     progressBarContainer: {
@@ -215,14 +234,6 @@ const getStyles = ({ colors }: TTheme) =>
       backgroundColor: colors.notification,
       marginBottom: 15,
     },
-    linea: {
-      width: "100%",
-      height: 1,
-      backgroundColor: colors.background,
-      elevation: 5,
-      marginVertical: 5,
-      textAlign: "center",
-    },
     footerCenter: {
       display: "flex",
       flexDirection: "row",
@@ -231,6 +242,7 @@ const getStyles = ({ colors }: TTheme) =>
       borderRadius: 50,
       flex: 1,
       padding: 15,
+      paddingVertical: 0,
       backgroundColor: colors.backgroundContrast,
     },
     footerEnd: {
@@ -239,6 +251,7 @@ const getStyles = ({ colors }: TTheme) =>
       justifyContent: "center",
       padding: 15,
       borderRadius: 50,
+      paddingVertical: 0,
       backgroundColor: colors.backgroundContrast,
     },
     icon: {

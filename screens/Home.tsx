@@ -42,16 +42,16 @@ function HomeScreen() {
       target: dashboardRef,
     },
     {
-      text: "⚙️ Toque aquí para abrir la configuración.",
+      text: "🔙 Toque aquí para moverse atras en su historial de busqueda.",
       target: settingRef,
+    },
+    {
+      text: "⏭️ Toque aquí para moverse adelante en su historial de busqueda.",
+      target: favRef,
     },
     {
       text: "🔍 Toque aquí para buscar en la escritura.",
       target: searchRef,
-    },
-    {
-      text: "⭐ Toque aquí para ver sus versículos favoritos.",
-      target: favRef,
     },
     {
       text: "📑 Toque aquí para cambiar la versión de la escritura.",

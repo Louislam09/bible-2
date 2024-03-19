@@ -504,7 +504,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       margin: 5,
       elevation: 5,
       borderColor: "#ddd",
-      borderWidth: 0.2,
+      borderWidth: 0.5,
     },
     headerContainer: {
       position: "relative",

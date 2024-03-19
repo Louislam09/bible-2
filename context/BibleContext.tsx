@@ -1,22 +1,3 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
-import {
-  EThemes,
-  IBookVerse,
-  TFont,
-  EBibleVersions,
-  IFavoriteVerse,
-  IStrongWord,
-} from "../types";
-import useCustomFonts from "../hooks/useCustomFonts";
-import { useDBContext } from "./databaseContext";
-import useSearch, { UseSearchHookState } from "hooks/useSearch";
-import { useStorage } from "./LocalstoreContext";
 import {
   DELETE_FAVORITE_VERSE,
   DELETE_NOTE,
@@ -24,6 +5,20 @@ import {
   INSERT_INTO_NOTE,
   UPDATE_NOTE_BY_ID,
 } from "constants/Queries";
+import useSearch, { UseSearchHookState } from "hooks/useSearch";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
+import useCustomFonts from "../hooks/useCustomFonts";
+import {
+  EBibleVersions,
+  EHistoryItem,
+  EThemes,
+  IBookVerse,
+  IFavoriteVerse,
+  IStrongWord,
+  TFont,
+} from "../types";
+import { useDBContext } from "./databaseContext";
+import { useStorage } from "./LocalstoreContext";
 
 type BibleState = {
   highlightedVerses: IBookVerse[];
@@ -67,6 +62,11 @@ type BibleState = {
   verseInStrongDisplay: number;
   searchState: UseSearchHookState;
   strongWord: IStrongWord;
+  searchHistorial: EHistoryItem[];
+  currentHistoryIndex: number;
+  goBackOnHistory?: (index: number) => void;
+  goForwardOnHistory?: (index: number) => void;
+  addToHistory?: (item: any) => void;
 };
 
 type BibleAction =
@@ -79,9 +79,12 @@ type BibleAction =
   | { type: "SELECT_BIBLE_VERSION"; payload: string }
   | { type: "ADD_TO_NOTE"; payload: string }
   | { type: "SET_SEARCH_QUERY"; payload: string }
+  | { type: "GO_BACK"; payload: number }
+  | { type: "GO_FORWARD"; payload: number }
   | { type: "SET_VERSE_IN_STRONG_DISPLAY"; payload: number }
   | { type: "SET_STRONG_WORD"; payload: IStrongWord }
   | { type: "CLEAR_HIGHLIGHTS" }
+  | { type: "ADD_TO_HISTORY"; payload: any }
   | { type: "SET_LOCAL_DATA"; payload: any }
   | { type: "TOGGLE_COPY_MODE"; payload?: boolean }
   | { type: "TOGGLE_VIEW_LAYOUT_GRID" }
@@ -127,6 +130,8 @@ const initialContext: BibleState = {
   isSearchCopy: false,
   viewLayoutGrid: true,
   strongWord: { text: "", code: "" },
+  searchHistorial: [],
+  currentHistoryIndex: -1,
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);
@@ -209,6 +214,22 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
         ...state,
         verseInStrongDisplay: action.payload,
       };
+    case "GO_BACK":
+      return {
+        ...state,
+        currentHistoryIndex: action.payload,
+      };
+    case "GO_FORWARD":
+      return {
+        ...state,
+        currentHistoryIndex: action.payload,
+      };
+    case "ADD_TO_HISTORY":
+      return {
+        ...state,
+        searchHistorial: action.payload,
+        currentHistoryIndex: action.payload.length - 1,
+      };
     case "SET_STRONG_WORD":
       return {
         ...state,
@@ -233,18 +254,18 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
   const fontsLoaded = useCustomFonts();
   const { myBibleDB, executeSql } = useDBContext();
-
-  const {
-    state: searchState,
-    performSearch,
-    setSearchTerm,
-  } = useSearch({ db: myBibleDB });
+  const { state: searchState, performSearch } = useSearch({ db: myBibleDB });
 
   useEffect(() => {
     if (!isDataLoaded) return;
     dispatch({
       type: "SET_LOCAL_DATA",
-      payload: { currentBibleVersion, fontSize, currentTheme, selectedFont },
+      payload: {
+        currentBibleVersion,
+        fontSize,
+        currentTheme,
+        selectedFont,
+      },
     });
   }, [isDataLoaded]);
 
@@ -266,6 +287,21 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const clearHighlights = () => {
     dispatch({ type: "CLEAR_HIGHLIGHTS" });
+  };
+  const goBackOnHistory = (index: number) => {
+    dispatch({ type: "GO_BACK", payload: index });
+  };
+  const goForwardOnHistory = (index: number) => {
+    dispatch({ type: "GO_FORWARD", payload: index });
+  };
+  const addToHistory = (item: any) => {
+    const { book, chapter } =
+      state.searchHistorial[state.searchHistorial.length - 1] || {};
+    if (book === item.book && chapter === item.chapter) return;
+
+    const historyToSave = [...state.searchHistorial, item];
+    if (historyToSave.length > 9) historyToSave.shift();
+    dispatch({ type: "ADD_TO_HISTORY", payload: historyToSave });
   };
   const decreaseFontSize = () => {
     dispatch({ type: "DECREASE_FONT_SIZE" });
@@ -381,6 +417,9 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     setStrongWord,
     setverseInStrongDisplay,
     onAddToNote,
+    goBackOnHistory,
+    goForwardOnHistory,
+    addToHistory,
   };
 
   return (

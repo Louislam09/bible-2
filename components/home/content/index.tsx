@@ -20,17 +20,22 @@ const BookContent: FC<BookContentInterface> = ({}) => {
     storedData: { currentBibleVersion },
     saveData,
   } = useStorage();
-  const { setverseInStrongDisplay, clearHighlights } = useBibleContext();
+  const { setverseInStrongDisplay, clearHighlights, addToHistory } =
+    useBibleContext();
   const { myBibleDB, executeSql } = useDBContext();
   const route = useRoute();
-  const { book = "Mateo", chapter, verse } = route.params as HomeParams;
-  const [loading, setLoading] = React.useState(true);
+  const {
+    book = "Mateo",
+    chapter,
+    verse,
+    isHistory,
+  } = route.params as HomeParams;
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>({});
   const currentBook = DB_BOOK_NAMES.find((x) => x.longName === book);
   const dimensions = Dimensions.get("window");
 
   useEffect(() => {
-    // if(loading) return
     (async () => {
       clearHighlights();
       setLoading(true);
@@ -58,12 +63,14 @@ const BookContent: FC<BookContentInterface> = ({}) => {
               lastChapter: chapter,
               lastVerse: verse,
             });
+            !isHistory &&
+              addToHistory &&
+              addToHistory({ book, verse, chapter });
             setData({ verses, subtitles });
           })
           .catch((error) => {
             console.error("Error:content:", error);
           });
-        // setLoading(false);
       }
     })();
 
@@ -75,7 +82,7 @@ const BookContent: FC<BookContentInterface> = ({}) => {
       {!loading ? (
         <Chapter dimensions={dimensions} item={data} />
       ) : (
-        <View style={{ flex: 1, display: "flex", alignItems: "center" }}>
+        <View style={styles.activiyContainer}>
           <ActivityIndicator style={{ flex: 1 }} />
         </View>
       )}
@@ -90,34 +97,7 @@ const getStyles = ({ colors }: TTheme) =>
       flex: 1,
       backgroundColor: colors.background,
     },
-    chapterContainer: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      position: "relative",
-    },
-    chapterHeader: {
-      paddingVertical: 15,
-      display: "flex",
-      width: "100%",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    chapterHeaderTitle: {
-      fontSize: 20,
-      fontWeight: "bold",
-    },
-    verseContent: {
-      height: "100%",
-      paddingRight: 10,
-      paddingBottom: 10,
-    },
-    verseContainer: {},
-    verse: {
-      paddingHorizontal: 4,
-      marginVertical: 5,
-      fontSize: 18,
-    },
+    activiyContainer: { flex: 1, display: "flex", alignItems: "center" },
   });
 
 export default BookContent;
