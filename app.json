@@ -6,7 +6,7 @@
     "version": "1.0.1",
     "orientation": "default",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "sb-rv60",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",

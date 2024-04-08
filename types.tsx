@@ -46,6 +46,7 @@ export type RootStackParamList = {
   Book: NavigatorScreenParams<RootTabParamList> | undefined;
   Favorite: NavigatorScreenParams<RootTabParamList> | undefined;
   Notes: NavigatorScreenParams<RootTabParamList> | undefined;
+  Character: NavigatorScreenParams<RootTabParamList> | undefined;
   ChooseBook: NavigatorScreenParams<RootTabParamList> | undefined;
   Search: NavigatorScreenParams<RootTabParamList> | { book?: string };
   ChooseChapterNumber:
@@ -75,6 +76,7 @@ export enum Screens {
   Favorite = "Favorite",
   Notes = "Notes",
   Onboarding = "Onboarding",
+  Character = "Character",
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -90,6 +92,7 @@ export const ScreensName: TScreensName = {
   [Screens.Notes]: "Notas",
   [Screens.Dashboard]: "Dashboard",
   [Screens.Onboarding]: "Guia",
+  [Screens.Character]: "Personaje",
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

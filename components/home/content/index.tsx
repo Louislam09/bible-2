@@ -1,6 +1,12 @@
-import { useRoute, useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import React, { FC, useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  BackHandler,
+  Dimensions,
+  StyleSheet,
+  View,
+} from "react-native";
 import { DB_BOOK_NAMES } from "../../../constants/BookNames";
 import { useDBContext } from "../../../context/databaseContext";
 import { HomeParams, TTheme } from "../../../types";
@@ -34,6 +40,7 @@ const BookContent: FC<BookContentInterface> = ({}) => {
   const [data, setData] = useState<any>({});
   const currentBook = DB_BOOK_NAMES.find((x) => x.longName === book);
   const dimensions = Dimensions.get("window");
+  const navigation = useNavigation();
 
   useEffect(() => {
     (async () => {
@@ -76,6 +83,20 @@ const BookContent: FC<BookContentInterface> = ({}) => {
 
     return () => {};
   }, [myBibleDB, book, chapter, verse]);
+
+  useEffect(() => {
+    const backAction = () => {
+      navigation.goBack();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <View style={styles.bookContainer}>

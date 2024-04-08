@@ -118,14 +118,20 @@ const Dashboard = () => {
       action: versionHandlePresentModalPress,
     },
     {
-      icon: "television-guide",
-      label: "Como Usar?",
-      action: () => navigation.navigate("Onboarding"),
+      icon: "person-outline",
+      label: "Buscar Personaje",
+      isIonicon: true,
+      action: () => navigation.navigate("Character"),
     },
     {
       icon: "notebook-outline",
       label: "Notas",
       action: () => navigation.navigate("Notes"),
+    },
+    {
+      icon: "television-guide",
+      label: "Como Usar?",
+      action: () => navigation.navigate("Onboarding"),
     },
     {
       icon: "settings-outline",
