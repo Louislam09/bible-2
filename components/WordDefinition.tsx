@@ -74,7 +74,7 @@ const WordDefinition = ({ wordData, onClose }: any) => {
         </TouchableOpacity>
       </View>
       <View style={{ position: "relative" }}>
-        <Text style={[styles.sectionTitle]}>Definición</Text>
+        <Text style={[styles.sectionTitle]}>Historia</Text>
         <View style={styles.sectionDecorationLine} />
       </View>
       <View style={[styles.definitionContainer]}>

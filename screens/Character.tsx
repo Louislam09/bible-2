@@ -47,7 +47,7 @@ const Character: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   const NoteHeader = () => {
     return (
       <View style={[styles.noteHeader]}>
-        <Text style={[styles.noteListTitle]}>Personajes Biblico</Text>
+        <Text style={[styles.noteListTitle]}>Personajes Biblicos</Text>
         <View style={styles.searchContainer}>
           <Ionicons
             style={styles.searchIcon}
