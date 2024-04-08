@@ -166,14 +166,15 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   };
 
   const onCopy = async () => {
-    await copyToClipboard(highlightedVersesLenth ? highlightedVerses : item);
+    if (isVerseHighlisted !== item.verse) return;
+    await copyToClipboard(isMoreThanOneHighted ? highlightedVerses : item);
     clearHighlights();
   };
 
   const addVerseToNote = async () => {
     const shouldReturn = true;
     const verseToAdd = (await copyToClipboard(
-      highlightedVersesLenth ? highlightedVerses : item,
+      isMoreThanOneHighted ? highlightedVerses : item,
       shouldReturn
     )) as string;
 
@@ -225,7 +226,7 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
         hide: false,
       },
     ];
-  }, [isMoreThanOneHighted, lastHighted]);
+  }, [isMoreThanOneHighted, lastHighted, isVerseHighlisted]);
 
   const steps = [
     {
