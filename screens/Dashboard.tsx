@@ -74,7 +74,7 @@ const Dashboard = () => {
           chapter,
           verse,
         ]);
-        setDailyVerse(response?.[0]);
+        setDailyVerse(response?.length ? response?.[0] : defaultDailyVerse);
       } catch (error) {
         console.log(error);
       }
@@ -189,7 +189,7 @@ const Dashboard = () => {
           navigation.navigate("Home", {
             book: dailyVerse.bookName,
             chapter: dailyVerse.chapter,
-            verse: dailyVerse.verse,
+            verse: dailyVerse?.verse,
           })
         }
         style={[styles.dailyVerseContainer, { width: SCREEN_WIDTH }]}
@@ -201,11 +201,11 @@ const Dashboard = () => {
               name="format-quote-open"
               style={[styles.verseQuoteIcon]}
             />
-            {`${dailyVerse.verse} ${getVerseTextRaw(dailyVerse.text)}`}
+            {`${dailyVerse?.verse} ${getVerseTextRaw(dailyVerse?.text || "")}`}
           </Text>
           <Text
             style={[styles.verseReference]}
-          >{`${dailyVerse.bookName} ${dailyVerse.chapter}:${dailyVerse.verse}`}</Text>
+          >{`${dailyVerse.bookName} ${dailyVerse.chapter}:${dailyVerse?.verse}`}</Text>
         </View>
       </TouchableOpacity>
       <View style={[styles.optionContainer, { width: SCREEN_WIDTH }]}>
