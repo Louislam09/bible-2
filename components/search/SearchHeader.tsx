@@ -6,13 +6,18 @@ import { useBibleContext } from "context/BibleContext";
 import Checkbox from "expo-checkbox";
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import { TTheme } from "types";
+import { Screens, ScreensName, TTheme } from "types";
 import removeAccent from "utils/removeAccent";
 
-const SearchHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
+const SearchHeader: React.FC<NativeStackHeaderProps> = ({
+  navigation,
+  route,
+}) => {
   const theme = useTheme();
   const textInputRef = useRef<TextInput>(null);
   const styles = getStyles(theme);
+  const isDeepSearchPage = route.name === Screens.DeepSearch;
+
   const {
     performSearch,
     setSearchQuery,
@@ -71,6 +76,7 @@ const SearchHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
           defaultValue={searchQuery ?? ""}
           clearButtonMode="always"
         />
+
         {query !== "" && (
           <TouchableOpacity onPress={clearText} style={{ padding: 5 }}>
             <Ionicons

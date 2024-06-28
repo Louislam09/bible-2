@@ -18,6 +18,7 @@ import Notes from "screens/Notes";
 import Search from "screens/Search";
 import { RootStackParamList, Screens, ScreensName, TTheme } from "types";
 import Character from "screens/Character";
+import DeepSearch from "screens/DeepSearch";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -83,6 +84,15 @@ const MainStack = () => {
         initialParams={{ book: "Génesis" }}
         name="Search"
         component={Search}
+        options={({ route }) => ({
+          ...screenOptions(route),
+          header: (props: any) => <SearchHeader {...props} />,
+          animation: "slide_from_right",
+        })}
+      />
+      <Stack.Screen
+        name="DeepSearch"
+        component={DeepSearch}
         options={({ route }) => ({
           ...screenOptions(route),
           header: (props: any) => <SearchHeader {...props} />,

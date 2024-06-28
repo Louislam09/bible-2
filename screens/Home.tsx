@@ -10,6 +10,7 @@ import { HomeParams } from "types";
 import BookContent from "../components/home/content";
 import CustomFooter from "../components/home/footer";
 import CustomHeader from "../components/home/header";
+import DeepSearchButton from "components/DeepSearchButton";
 
 function HomeScreen() {
   const route = useRoute();
@@ -26,8 +27,14 @@ function HomeScreen() {
   const settingRef = useRef<any>(null);
   const favRef = useRef<any>(null);
   const theme = useTheme();
-  const { strongWord, fontSize, setStrongWord, addToNoteText, onAddToNote } =
-    useBibleContext();
+  const {
+    strongWord,
+    fontSize,
+    setStrongWord,
+    addToNoteText,
+    onAddToNote,
+    orientation,
+  } = useBibleContext();
 
   const handleSheetChange = useCallback((index: any) => {
     if (!index) {
@@ -76,25 +83,28 @@ function HomeScreen() {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView key={orientation} style={styles.container}>
       <CustomHeader
         {...{ bibleVersionRef, searchRef, favRef, settingRef, dashboardRef }}
       />
       <BookContent />
       <CustomFooter {...{ audioRef, bookRef, backRef, nextRef }} />
       {strongWord.code && (
-        <View style={styles.strongContainer}>
-          <CustomBottomSheet
-            ref={sheetRef}
-            handleSheetChange={handleSheetChange}
-          >
-            <StrongContent
-              theme={theme}
-              data={strongWord}
-              fontSize={fontSize}
-            />
-          </CustomBottomSheet>
-        </View>
+        <>
+          <View style={styles.strongContainer}>
+            <CustomBottomSheet
+              ref={sheetRef}
+              handleSheetChange={handleSheetChange}
+            >
+              <StrongContent
+                theme={theme}
+                data={strongWord}
+                fontSize={fontSize}
+              />
+            </CustomBottomSheet>
+          </View>
+          <DeepSearchButton theme={theme} code={strongWord.code} />
+        </>
       )}
       {bookRef.current && isTour && (
         <Walkthrough

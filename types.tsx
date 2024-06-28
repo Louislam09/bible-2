@@ -26,6 +26,7 @@ export type RootTabParamList = {
   Book: undefined;
   ChooseBookScreen: undefined;
   Search: undefined;
+  DeepSearch: undefined;
   Notes: undefined;
   Favorite: undefined;
 };
@@ -49,6 +50,7 @@ export type RootStackParamList = {
   Character: NavigatorScreenParams<RootTabParamList> | undefined;
   ChooseBook: NavigatorScreenParams<RootTabParamList> | undefined;
   Search: NavigatorScreenParams<RootTabParamList> | { book?: string };
+  DeepSearch: NavigatorScreenParams<RootTabParamList> | { query: string };
   ChooseChapterNumber:
     | NavigatorScreenParams<RootTabParamList>
     | { book?: string; chapter?: string | number };
@@ -69,6 +71,7 @@ export enum Screens {
   Dashboard = "Dashboard",
   Home = "Home",
   Search = "Search",
+  DeepSearch = "DeepSearch",
   Book = "Book",
   ChooseBook = "ChooseBook",
   ChooseChapterNumber = "ChooseChapterNumber",
@@ -85,6 +88,7 @@ export const ScreensName: TScreensName = {
   [Screens.Home]: "Santa Escritura",
   [Screens.Book]: "Libros",
   [Screens.Search]: "Busqueda",
+  [Screens.DeepSearch]: "Uso de numero Strong",
   [Screens.ChooseBook]: "Seleccione un libro",
   [Screens.ChooseChapterNumber]: "Capitulos",
   [Screens.ChooseVerseNumber]: "Versiculos",

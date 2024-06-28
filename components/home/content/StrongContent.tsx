@@ -90,46 +90,48 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
   };
 
   return (
-    <View
-      style={[
-        styles.versionContainer,
-        { height: height + EXTRA_HEIGHT_TO_ADJUST },
-      ]}
-    >
-      <View style={styles.header}>
-        {backUrl.length !== 0 && (
-          <Pressable
-            android_ripple={{
-              color: theme.colors.background,
-              foreground: true,
-              radius: 10,
-            }}
-            onPress={onGoBack}
-          >
-            <MaterialCommunityIcons
-              style={styles.backIcon}
-              name="keyboard-backspace"
-              size={26}
-              color="white"
-            />
-          </Pressable>
-        )}
-        <Text style={styles.title}>{data.text} </Text>
+    <>
+      <View
+        style={[
+          styles.versionContainer,
+          { height: height + EXTRA_HEIGHT_TO_ADJUST },
+        ]}
+      >
+        <View style={styles.header}>
+          {backUrl.length !== 0 && (
+            <Pressable
+              android_ripple={{
+                color: theme.colors.background,
+                foreground: true,
+                radius: 10,
+              }}
+              onPress={onGoBack}
+            >
+              <MaterialCommunityIcons
+                style={styles.backIcon}
+                name="keyboard-backspace"
+                size={26}
+                color="white"
+              />
+            </Pressable>
+          )}
+          <Text style={styles.title}>{data.text}</Text>
+        </View>
+        <View style={[styles.webviewWrapper]}>
+          <WebView
+            style={{ backgroundColor: "transparent" }}
+            ref={webViewRef}
+            originWhitelist={["*"]}
+            source={{ html: htmlTemplate(value, theme.colors, fontSize) }}
+            onMessage={(event) =>
+              setHeight(+event.nativeEvent.data ?? DEFAULT_HEIGHT)
+            }
+            scrollEnabled
+            onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+          />
+        </View>
       </View>
-      <View style={[styles.webviewWrapper]}>
-        <WebView
-          style={{ backgroundColor: "transparent" }}
-          ref={webViewRef}
-          originWhitelist={["*"]}
-          source={{ html: htmlTemplate(value, theme.colors, fontSize) }}
-          onMessage={(event) =>
-            setHeight(+event.nativeEvent.data ?? DEFAULT_HEIGHT)
-          }
-          scrollEnabled
-          onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-        />
-      </View>
-    </View>
+    </>
   );
 };
 

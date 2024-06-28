@@ -6,7 +6,13 @@ import {
   UPDATE_NOTE_BY_ID,
 } from "constants/Queries";
 import useSearch, { UseSearchHookState } from "hooks/useSearch";
-import React, { createContext, useContext, useEffect, useReducer } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import useCustomFonts from "../hooks/useCustomFonts";
 import {
   EBibleVersions,
@@ -19,6 +25,7 @@ import {
 } from "../types";
 import { useDBContext } from "./databaseContext";
 import { useStorage } from "./LocalstoreContext";
+import { Dimensions } from "react-native";
 
 type BibleState = {
   highlightedVerses: IBookVerse[];
@@ -67,6 +74,7 @@ type BibleState = {
   goBackOnHistory?: (index: number) => void;
   goForwardOnHistory?: (index: number) => void;
   addToHistory?: (item: any) => void;
+  orientation: "LANDSCAPE" | "PORTRAIT";
 };
 
 type BibleAction =
@@ -132,6 +140,7 @@ const initialContext: BibleState = {
   strongWord: { text: "", code: "" },
   searchHistorial: [],
   currentHistoryIndex: -1,
+  orientation: "PORTRAIT",
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);
@@ -255,6 +264,26 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const fontsLoaded = useCustomFonts();
   const { myBibleDB, executeSql } = useDBContext();
   const { state: searchState, performSearch } = useSearch({ db: myBibleDB });
+
+  const [orientation, setOrientation] = useState("PORTRAIT");
+
+  const getOrientation = () => {
+    const { height, width } = Dimensions.get("window");
+    if (width > height) {
+      setOrientation("LANDSCAPE");
+    } else {
+      setOrientation("PORTRAIT");
+    }
+  };
+
+  useEffect(() => {
+    getOrientation();
+    const subscription = Dimensions.addEventListener("change", getOrientation);
+    return () => {
+      console.log("remove");
+      subscription?.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (!isDataLoaded) return;
@@ -396,6 +425,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const contextValue = {
     ...state,
+    orientation,
     searchState,
     highlightVerse,
     clearHighlights,
