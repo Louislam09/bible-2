@@ -34,10 +34,21 @@ export interface HomeParams {
   book?: string;
   chapter?: number | string;
   verse?: number | string;
+  bottomSideBook?: string;
+  bottomSideChapter?: number | string;
+  bottomSideVerse?: number | string;
   strongKey?: string;
   isTour?: boolean;
   isVerseTour?: boolean;
   isHistory?: boolean;
+}
+export interface ChooseChapterNumberParams {
+  book?: string;
+  chapter?: number | string;
+  verse?: number | string;
+  bottomSideBook?: string;
+  bottomSideChapter?: number | string;
+  bottomSideVerse?: number | string;
 }
 
 export type RootStackParamList = {
@@ -47,14 +58,16 @@ export type RootStackParamList = {
   Favorite: NavigatorScreenParams<RootTabParamList> | undefined;
   Notes: NavigatorScreenParams<RootTabParamList> | undefined;
   Character: NavigatorScreenParams<RootTabParamList> | undefined;
-  ChooseBook: NavigatorScreenParams<RootTabParamList> | undefined;
+  ChooseBook:
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
   Search: NavigatorScreenParams<RootTabParamList> | { book?: string };
   ChooseChapterNumber:
     | NavigatorScreenParams<RootTabParamList>
-    | { book?: string; chapter?: string | number };
+    | ChooseChapterNumberParams;
   ChooseVerseNumber:
     | NavigatorScreenParams<RootTabParamList>
-    | { book?: string; chapter?: string | number; verse?: string | number };
+    | ChooseChapterNumberParams;
   Modal: undefined;
   Onboarding: undefined;
 };

@@ -10,7 +10,11 @@ import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "constants/BookNames";
 import { useBibleContext } from "context/BibleContext";
 import useAudioPlayer from "hooks/useAudioPlayer";
 import { FC, useCallback, useEffect, useRef } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+} from "react-native";
 import { EBibleVersions, HomeParams, Screens, TTheme } from "types";
 
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
@@ -19,11 +23,16 @@ import { Text, View } from "components/Themed";
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { iconSize } from "constants/size";
+import { getStyles } from "./styles";
 interface FooterInterface {
   bookRef: any;
   nextRef: any;
   audioRef: any;
   backRef: any;
+  isSplit?: boolean;
+  book: any;
+  chapter: any;
+  verse: any;
 }
 
 const CustomFooter: FC<FooterInterface> = ({
@@ -31,20 +40,27 @@ const CustomFooter: FC<FooterInterface> = ({
   backRef,
   nextRef,
   audioRef,
+  isSplit,
+  book,
+  chapter,
+  verse,
 }) => {
   const {
     currentBibleVersion,
     clearHighlights,
     currentHistoryIndex,
     searchHistorial,
+    isSplitActived,
+    toggleBottomSideSearching,
+    isBottomSideSearching,
   } = useBibleContext();
+  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const FOOTER_ICON_SIZE = iconSize;
   const theme = useTheme();
   const styles = getStyles(theme);
   const playRef = useRef<BottomSheetModal>(null);
   const navigation = useNavigation();
-  const route = useRoute<RouteProp<ParamListBase>>();
-  const { book, chapter = 1 } = route.params as HomeParams;
+  const route = useRoute();
   const { bookNumber, shortName } =
     DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
@@ -56,11 +72,12 @@ const CustomFooter: FC<FooterInterface> = ({
       nextChapter,
     });
 
+  console.log(book, chapter);
   const nextOrPreviousBook = (name: string, chapter: number = 1) => {
     clearHighlights();
     navigation.setParams({
-      book: name,
-      chapter,
+      [isSplit ? "bottomSideBook" : "book"]: name,
+      [isSplit ? "bottomSideChapter" : "chapter"]: chapter,
       verse: 0,
     });
   };
@@ -72,9 +89,17 @@ const CustomFooter: FC<FooterInterface> = ({
       nextOrPreviousBook(newBookName);
       return;
     }
+    console.log({
+      [isSplit ? "bottomSideBook" : "book"]: book,
+      [isSplit ? "bottomSideChapter" : "chapter"]:
+        ((chapter as number) || 0) + 1,
+      verse: 0,
+    });
+
     navigation.setParams({
-      book,
-      chapter: ((chapter as number) || 0) + 1,
+      [isSplit ? "bottomSideBook" : "book"]: book,
+      [isSplit ? "bottomSideChapter" : "chapter"]:
+        ((chapter as number) || 0) + 1,
       verse: 0,
     });
   }
@@ -87,15 +112,16 @@ const CustomFooter: FC<FooterInterface> = ({
     }
     if ((chapter as number) <= 1) return;
     navigation.setParams({
-      book,
-      chapter: (chapter as number) - 1,
+      [isSplit ? "bottomSideBook" : "book"]: book,
+      [isSplit ? "bottomSideChapter" : "chapter"]: (chapter as number) - 1,
       verse: 0,
     });
   };
 
   const onFooterTitle = () => {
     clearHighlights();
-    navigation?.navigate(Screens.ChooseBook);
+    toggleBottomSideSearching(isSplit as boolean);
+    navigation?.navigate(Screens.ChooseBook, { ...route.params });
   };
 
   const playHandlePresentModalPress = useCallback(() => {
@@ -112,13 +138,15 @@ const CustomFooter: FC<FooterInterface> = ({
     navigation.setParams({
       book: currentHistory.book,
       chapter: currentHistory.chapter,
+      bottomSideBook: currentHistory.book,
+      bottomSideChapter: currentHistory.chapter,
       verse: currentHistory.verse,
       isHistory: true,
     });
   }, [currentHistoryIndex]);
 
   return (
-    <View style={styles.footer}>
+    <View style={[styles.footer, { width: "52%" }]}>
       {isPlaying && (
         <View style={[styles.progressBarContainer]}>
           <ProgressBar
@@ -141,23 +169,19 @@ const CustomFooter: FC<FooterInterface> = ({
         </TouchableOpacity>
         <TouchableOpacity
           ref={bookRef}
-          style={{
-            flex: 1,
-            alignItems: "center",
-            flexDirection: "row",
-            justifyContent: "center",
-          }}
+          style={styles.titleContainer}
           onPress={onFooterTitle}
         >
-          <Text style={styles.bookLabel}>
+          <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
             {`${displayBookName ?? ""} ${chapter ?? ""}`}
           </Text>
-          <MaterialCommunityIcons
+          {/* <MaterialCommunityIcons
             style={[styles.icon, { margin: 0 }]}
             name="menu"
             size={FOOTER_ICON_SIZE - 5}
             color={"white"}
-          />
+          /> */}
+          {/* {isSplit ? <Text>Second</Text> : <Text>first</Text>} */}
         </TouchableOpacity>
         <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>
           <Ionicons
@@ -168,17 +192,19 @@ const CustomFooter: FC<FooterInterface> = ({
           />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        ref={audioRef}
-        style={[styles.footerEnd, isNTV && { display: "none" }]}
-        onPress={playHandlePresentModalPress}
-      >
-        <MaterialCommunityIcons
-          name={"headphones"}
-          size={FOOTER_ICON_SIZE}
-          style={[styles.icon, { marginHorizontal: 0 }]}
-        />
-      </TouchableOpacity>
+      {!isSplitActived && (
+        <TouchableOpacity
+          ref={audioRef}
+          style={[styles.footerEnd, isNTV && { display: "none" }]}
+          onPress={playHandlePresentModalPress}
+        >
+          <MaterialCommunityIcons
+            name={"headphones"}
+            size={FOOTER_ICON_SIZE}
+            style={[styles.icon, { marginHorizontal: 0 }]}
+          />
+        </TouchableOpacity>
+      )}
 
       <BottomModal justOneSnap startAT={0} ref={playRef}>
         <Play
@@ -199,94 +225,5 @@ const CustomFooter: FC<FooterInterface> = ({
     </View>
   );
 };
-
-const getStyles = ({ colors }: TTheme) =>
-  StyleSheet.create({
-    footer: {
-      position: "relative",
-      right: 0,
-      width: "100%",
-      display: "flex",
-      alignItems: "center",
-      flexDirection: "row",
-      justifyContent: "center",
-      paddingVertical: 10,
-      backgroundColor: colors.background,
-      boxSizing: "border-box",
-      gap: 10,
-      borderTopColor: colors.border,
-      borderWidth: 0.5,
-      borderStyle: "solid",
-    },
-    progressBarContainer: {
-      position: "absolute",
-      top: 0,
-      width: "100%",
-      height: 10,
-      zIndex: 111,
-    },
-    title: {
-      color: "white",
-      fontSize: 20,
-      padding: 5,
-      width: "100%",
-      textAlign: "center",
-      backgroundColor: colors.notification,
-      marginBottom: 15,
-    },
-    footerCenter: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      borderRadius: 50,
-      flex: 1,
-      padding: 15,
-      paddingVertical: 0,
-      backgroundColor: colors.backgroundContrast,
-    },
-    footerEnd: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: 15,
-      borderRadius: 50,
-      paddingVertical: 0,
-      backgroundColor: colors.backgroundContrast,
-    },
-    icon: {
-      fontWeight: "900",
-      // color: colors.text,
-      marginHorizontal: 10,
-      color: colors.primary,
-    },
-    bookLabel: {
-      color: colors.notification,
-      textAlign: "center",
-      fontSize: 24,
-      fontWeight: "bold",
-      textDecorationColor: colors.text,
-      textDecorationLine: "underline",
-      textDecorationStyle: "solid",
-    },
-    modalBody: {
-      position: "relative",
-      display: "flex",
-      borderRadius: 45,
-      padding: 10,
-      flex: 1,
-    },
-    themeCard: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      margin: 5,
-      flex: 1,
-      padding: 10,
-    },
-    themeLabel: {
-      color: "white",
-    },
-  });
 
 export default CustomFooter;

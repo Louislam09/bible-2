@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useTheme } from "@react-navigation/native";
+import { useRoute, useTheme } from "@react-navigation/native";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { Text, View } from "components/Themed";
 import { DB_BOOK_NAMES } from "constants/BookNames";
@@ -23,13 +23,23 @@ import removeAccent from "utils/removeAccent";
 const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
   navigation,
 }) => {
+  const route = useRoute();
+  const routeParam = route.params;
   const theme = useTheme();
   const styles = getStyles(theme);
-  const { viewLayoutGrid } = useBibleContext();
+  const { viewLayoutGrid, isBottomSideSearching } = useBibleContext();
   const [query, setQuery] = useState("");
 
+  // console.log("isBottomSideSearching", isBottomSideSearching, routeParam);
+
   const handlePress = (item: IDBBookNames) => {
-    navigation.navigate(Screens.ChooseChapterNumber, { book: item.longName });
+    const topSide: any = { book: item.longName };
+    const bottomSide: any = { bottomSideBook: item.longName };
+    const params = isBottomSideSearching ? bottomSide : topSide;
+    navigation.navigate(Screens.ChooseChapterNumber, {
+      ...routeParam,
+      ...params,
+    });
   };
 
   const handelSearch = async (query: string) => {

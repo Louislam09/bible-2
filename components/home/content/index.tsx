@@ -17,9 +17,19 @@ import getCurrentDbName from "utils/getCurrentDB";
 import { QUERY_BY_DB } from "../../../constants/Queries";
 import Chapter from "./Chapter";
 
-interface BookContentInterface {}
+interface BookContentInterface {
+  isSplit?: boolean;
+  book: any;
+  chapter: any;
+  verse: any;
+}
 
-const BookContent: FC<BookContentInterface> = ({}) => {
+const BookContent: FC<BookContentInterface> = ({
+  isSplit,
+  book = "Mateo",
+  verse = 1,
+  chapter = 1,
+}) => {
   const theme = useTheme();
   const styles = getStyles(theme);
   const {
@@ -30,12 +40,7 @@ const BookContent: FC<BookContentInterface> = ({}) => {
     useBibleContext();
   const { myBibleDB, executeSql } = useDBContext();
   const route = useRoute();
-  const {
-    book = "Mateo",
-    chapter,
-    verse,
-    isHistory,
-  } = route.params as HomeParams;
+  const { isHistory } = route.params as HomeParams;
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>({});
   const currentBook = DB_BOOK_NAMES.find((x) => x.longName === book);

@@ -5,6 +5,7 @@ import { Text } from "./Themed";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { BOOK_IMAGES } from "constants/Images";
 import { HomeParams, IDBBookNames, Screens, TTheme } from "types";
+import { useBibleContext } from "context/BibleContext";
 
 interface IBookNameList {
   bookList: IDBBookNames[] | any[];
@@ -13,27 +14,50 @@ interface IBookNameList {
 const BookNameList = ({ bookList }: IBookNameList) => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { book: selectedBook, chapter } = route?.params as HomeParams;
+  const {
+    book: selectedBook,
+    chapter,
+    bottomSideBook,
+    bottomSideChapter,
+  } = route?.params as HomeParams;
   const theme = useTheme();
   const styles = getStyles(theme);
+  const { isBottomSideSearching } = useBibleContext();
+  const selectedSideBook = isBottomSideSearching
+    ? bottomSideBook
+    : selectedBook;
+  const selectedSideChapter = isBottomSideSearching
+    ? bottomSideChapter
+    : chapter;
 
   const screenNavigationMap: any = {
-    [Screens.ChooseBook]: (item: any) => ({
+    [Screens.ChooseBook]: (item: any, routeParams: any) => ({
       screen: Screens.ChooseChapterNumber,
-      params: { book: item },
+      params: {
+        ...routeParams,
+        [isBottomSideSearching ? "bottomSideBook" : "book"]: item,
+      },
     }),
     [Screens.ChooseChapterNumber]: (item: any, routeParams: any) => ({
       screen: Screens.ChooseVerseNumber,
-      params: { ...routeParams, chapter: item },
+      params: {
+        ...routeParams,
+        [isBottomSideSearching ? "bottomSideChapter" : "chapter"]: item,
+      },
     }),
     [Screens.ChooseVerseNumber]: (item: any, routeParams: any) => ({
       screen: Screens.Home,
-      params: { ...routeParams, verse: item },
+      params: {
+        ...routeParams,
+        [isBottomSideSearching ? "bottomSideVerse" : "verse"]: item,
+      },
     }),
     // Default case
     default: (item: any) => ({
       screen: Screens.ChooseChapterNumber,
-      params: { book: item },
+      params: {
+        [isBottomSideSearching ? "bottomSideChapter" : "chapter"]: item,
+      },
     }),
   };
 
@@ -49,12 +73,12 @@ const BookNameList = ({ bookList }: IBookNameList) => {
     <TouchableOpacity
       style={[
         styles.listItem,
-        selectedBook ? { justifyContent: "center" } : {},
+        selectedSideBook ? { justifyContent: "center" } : {},
       ]}
       onPress={() => handlePress(item)}
     >
       <Text style={styles.listTitle}>{item}</Text>
-      {!selectedBook && (
+      {!selectedSideBook && (
         <MaterialCommunityIcons
           style={[styles.icon, { color: bookList[index].bookColor }]}
           name="greater-than"
@@ -68,7 +92,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
   return (
     <View style={styles.container}>
       <View style={styles.listWrapper}>
-        {selectedBook && (
+        {selectedSideBook && (
           <Text
             style={[
               styles.listChapterTitle,
@@ -81,16 +105,16 @@ const BookNameList = ({ bookList }: IBookNameList) => {
               },
             ]}
           >
-            {selectedBook} {chapter}
+            {selectedSideBook} {selectedSideChapter}
           </Text>
         )}
-        {selectedBook && (
+        {selectedSideBook && (
           <Image
             style={[styles.bookImage, { marginTop: 40 }]}
             source={{
-              uri: BOOK_IMAGES[selectedBook ?? "Génesis"],
+              uri: BOOK_IMAGES[selectedSideBook ?? "Génesis"],
             }}
-            alt={selectedBook}
+            alt={selectedSideBook}
           />
         )}
       </View>

@@ -46,6 +46,8 @@ const CustomHeader: FC<HeaderInterface> = ({
     goForwardOnHistory,
     currentHistoryIndex,
     searchHistorial,
+    isSplitActived,
+    toggleSplitMode,
   } = useBibleContext();
   const route = useRoute<TRoute>();
   const { book, chapter = 1, verse } = route.params as HomeParams;
@@ -89,6 +91,13 @@ const CustomHeader: FC<HeaderInterface> = ({
   };
 
   const headerIconData: TIcon[] = [
+    {
+      name: "arrow-split-horizontal",
+      action: toggleSplitMode,
+      ref: settingRef,
+      isIonicon: false,
+      color: isSplitActived ? theme.colors.notification : theme.colors.text,
+    },
     {
       name: "arrow-back-outline",
       action: moveBackInHistory,

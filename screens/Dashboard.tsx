@@ -1,5 +1,5 @@
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetModal, WINDOW_WIDTH } from "@gorhom/bottom-sheet";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "components/Animation";
@@ -48,16 +48,22 @@ const defaultDailyObject = {
 const Dashboard = () => {
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const { executeSql, myBibleDB } = useDBContext();
-  const { currentBibleVersion, selectBibleVersion, clearHighlights } =
-    useBibleContext();
+  const {
+    currentBibleVersion,
+    selectBibleVersion,
+    clearHighlights,
+    orientation = "PORTRAIT",
+  } = useBibleContext();
   const theme = useTheme();
   const navigation = useNavigation();
-  const styles = getStyles(theme);
+  const isPortrait = orientation === "PORTRAIT";
+  const styles = getStyles(theme, isPortrait);
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
   const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(defaultDailyVerse);
   const dashboardImage = require("../assets/lottie/dashboard.json");
+  const columnNumber = 3;
 
   useEffect(() => {
     if (!myBibleDB || !executeSql) return;
@@ -149,7 +155,7 @@ const Dashboard = () => {
           padding: 0,
           flex: 1,
           display: "flex",
-          width: SCREEN_WIDTH / 3,
+          // width: SCREEN_WIDTH / columnNumber,
           alignItems: "center",
           justifyContent: "center",
         },
@@ -169,20 +175,7 @@ const Dashboard = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <Animation
-          backgroundColor={"transparent"}
-          source={dashboardImage}
-          loop
-          size={{ width: 220, height: 220 }}
-          colorFilters={[
-            { color: theme.colors.text, keypath: "Secondary shapes" },
-            { color: theme.colors.text, keypath: "Clouds" },
-            { color: theme.colors.text, keypath: "Plants" },
-          ]}
-        />
-      </View>
+    <View style={[styles.container, !isPortrait && { flexDirection: "row" }]}>
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={() =>
@@ -192,7 +185,10 @@ const Dashboard = () => {
             verse: dailyVerse?.verse,
           })
         }
-        style={[styles.dailyVerseContainer, { width: SCREEN_WIDTH }]}
+        style={[
+          styles.dailyVerseContainer,
+          { width: isPortrait ? WINDOW_WIDTH : WINDOW_WIDTH / 2 },
+        ]}
       >
         <View style={styles.verse}>
           <Text style={[styles.verseTitle]}>Versiculo del dia</Text>
@@ -208,7 +204,12 @@ const Dashboard = () => {
           >{`${dailyVerse.bookName} ${dailyVerse.chapter}:${dailyVerse?.verse}`}</Text>
         </View>
       </TouchableOpacity>
-      <View style={[styles.optionContainer, { width: SCREEN_WIDTH }]}>
+      <View
+        style={[
+          styles.optionContainer,
+          { width: isPortrait ? WINDOW_WIDTH : WINDOW_WIDTH / 2 },
+        ]}
+      >
         <FlashList
           contentContainerStyle={{ padding: 15 }}
           data={options}
@@ -216,7 +217,7 @@ const Dashboard = () => {
           renderItem={renderItem}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           estimatedItemSize={5}
-          numColumns={3}
+          numColumns={columnNumber}
         />
       </View>
       <BottomModal startAT={2} ref={fontBottomSheetModalRef}>
@@ -231,35 +232,30 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-const getStyles = ({ colors }: TTheme) =>
+const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
   StyleSheet.create({
     container: {
       display: "flex",
       flex: 1,
       alignItems: "center",
-      justifyContent: "space-evenly",
-      paddingTop: 50,
-    },
-    imageContainer: {
-      alignItems: "center",
       justifyContent: "center",
-      borderRadius: 15,
-      padding: 5,
-      backgroundColor: colors.border + "9c",
+      paddingTop: 50,
     },
     dailyVerseContainer: {
       backgroundColor: "transparent",
       alignItems: "center",
       justifyContent: "center",
-      marginVertical: 10,
+      marginVertical: isPortrait ? 10 : 0,
       width: "100%",
       minHeight: 140,
+      flex: 1,
     },
     optionContainer: {
       flex: 1,
       width: "100%",
       backgroundColor: "transparent",
-      minHeight: 390,
+      minHeight: 400,
+      // borderWidth: 1,
     },
     verse: {
       display: "flex",

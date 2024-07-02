@@ -10,10 +10,22 @@ import { HomeParams } from "types";
 import BookContent from "../components/home/content";
 import CustomFooter from "../components/home/footer";
 import CustomHeader from "../components/home/header";
+import SplitBottomSide from "components/SplitBottomSide";
+import SplitTopSide from "components/SplitTopSide";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import AdjustableSplitScreen from "components/AdjustableSplitScreen";
 
 function HomeScreen() {
   const route = useRoute();
-  const { isTour } = route.params as HomeParams;
+  const {
+    isTour,
+    book,
+    chapter,
+    verse,
+    bottomSideBook,
+    bottomSideChapter,
+    bottomSideVerse,
+  } = route.params as HomeParams;
   const [stepIndex, setStepIndex] = useState(0);
   const sheetRef = useRef<BottomSheet>(null);
   const bookRef = useRef<any>(null);
@@ -26,8 +38,14 @@ function HomeScreen() {
   const settingRef = useRef<any>(null);
   const favRef = useRef<any>(null);
   const theme = useTheme();
-  const { strongWord, fontSize, setStrongWord, addToNoteText, onAddToNote } =
-    useBibleContext();
+  const {
+    strongWord,
+    fontSize,
+    setStrongWord,
+    addToNoteText,
+    onAddToNote,
+    isSplitActived,
+  } = useBibleContext();
 
   const handleSheetChange = useCallback((index: any) => {
     if (!index) {
@@ -80,8 +98,34 @@ function HomeScreen() {
       <CustomHeader
         {...{ bibleVersionRef, searchRef, favRef, settingRef, dashboardRef }}
       />
-      <BookContent />
-      <CustomFooter {...{ audioRef, bookRef, backRef, nextRef }} />
+
+      <SplitTopSide
+        {...{
+          audioRef,
+          bookRef,
+          backRef,
+          nextRef,
+          book,
+          chapter,
+          verse,
+        }}
+      />
+
+      <AdjustableSplitScreen theme={theme} />
+
+      {isSplitActived && (
+        <SplitBottomSide
+          {...{
+            audioRef,
+            bookRef,
+            backRef,
+            nextRef,
+            book: bottomSideBook,
+            chapter: bottomSideChapter,
+            verse: bottomSideVerse,
+          }}
+        />
+      )}
       {strongWord.code && (
         <View style={styles.strongContainer}>
           <CustomBottomSheet
@@ -111,6 +155,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: "relative",
+    width: "100%",
+    backgroundColor: "black",
   },
   strongContainer: {
     position: "absolute",
@@ -119,6 +165,19 @@ const styles = StyleSheet.create({
     width: "100%",
     zIndex: 999,
     height: "60%",
+  },
+  separator: {
+    position: "relative",
+    width: "100%",
+    borderColor: "red",
+    borderWidth: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  separatorIcon: {
+    position: "absolute",
+    bottom: 0,
   },
 });
 
