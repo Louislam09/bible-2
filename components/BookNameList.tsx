@@ -1,6 +1,12 @@
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { Text } from "./Themed";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { BOOK_IMAGES } from "constants/Images";
@@ -14,15 +20,20 @@ interface IBookNameList {
 const BookNameList = ({ bookList }: IBookNameList) => {
   const navigation = useNavigation();
   const route = useRoute();
+  const isVerseScreen = route.name === "ChooseVerseNumber";
   const {
     book: selectedBook,
     chapter,
     bottomSideBook,
     bottomSideChapter,
   } = route?.params as HomeParams;
+
+  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const theme = useTheme();
   const styles = getStyles(theme);
-  const { isBottomSideSearching } = useBibleContext();
+  const { isBottomSideSearching, toggleBottomSideSearching, orientation } =
+    useBibleContext();
+  const isPortrait = orientation === "PORTRAIT";
   const selectedSideBook = isBottomSideSearching
     ? bottomSideBook
     : selectedBook;
@@ -66,6 +77,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
     const navigationInfo =
       screenNavigationMap[routeName] || screenNavigationMap.default;
     const { screen, params } = navigationInfo(item, route.params);
+    if (isVerseScreen) toggleBottomSideSearching(false);
     navigation.navigate(screen, params);
   };
 
@@ -90,7 +102,13 @@ const BookNameList = ({ bookList }: IBookNameList) => {
   );
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { width: SCREEN_WIDTH },
+        !isPortrait && { flexDirection: "row" },
+      ]}
+    >
       <View style={styles.listWrapper}>
         {selectedSideBook && (
           <Text
@@ -134,6 +152,7 @@ const getStyles = ({ colors }: TTheme) =>
     container: {
       flex: 1,
       backgroundColor: colors.background,
+      width: "100%",
     },
     listWrapper: {
       display: "flex",

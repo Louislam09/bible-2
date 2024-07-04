@@ -6,7 +6,11 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { TChapter, HomeParams, TTheme } from "types";
 import { useBibleContext } from "context/BibleContext";
 
-const Chapter = ({ item, dimensions }: TChapter) => {
+const Chapter = ({
+  item,
+  dimensions,
+  isSplit,
+}: TChapter & { isSplit: boolean }) => {
   const { verses, subtitles } = item;
   if (!verses) return <ActivityIndicator />;
   const theme = useTheme();
@@ -24,12 +28,17 @@ const Chapter = ({ item, dimensions }: TChapter) => {
       : verseNumber;
 
   const renderItem = (props: any) => (
-    <Verse {...props} verse={selectedSideBook} subtitles={subtitles ?? []} />
+    <Verse
+      {...props}
+      isSplit={isSplit}
+      verse={selectedSideBook}
+      subtitles={subtitles ?? []}
+    />
   );
 
   return (
     <View style={styles.chapterContainer}>
-      <View style={[styles.verseContent, { width: dimensions?.width ?? 400 }]}>
+      <View style={[styles.verseContent]}>
         <FlashList
           ref={chapterRef}
           decelerationRate="normal"
@@ -51,9 +60,11 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       justifyContent: "center",
       position: "relative",
+      // paddingBottom: 50,
     },
     verseContent: {
-      width: 400,
+      // width: 400,
+      width: "100%",
       height: "100%",
     },
   });

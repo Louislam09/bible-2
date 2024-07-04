@@ -28,7 +28,7 @@ const ChooseFromListScreen = ({ route }: ChooseFromListScreenProps) => {
     route.params as any;
   const [numOfVerse, setNumVerse] = useState(0);
   const isVerseScreen = route.name === "ChooseVerseNumber";
-  const { isBottomSideSearching } = useBibleContext();
+  const { isBottomSideSearching, orientation } = useBibleContext();
   const selectedSideBook = isBottomSideSearching ? bottomSideBook : book;
   const selectedSideChapter = isBottomSideSearching
     ? bottomSideChapter
@@ -53,7 +53,7 @@ const ChooseFromListScreen = ({ route }: ChooseFromListScreenProps) => {
     return new Array(totalChapters).fill(0).map((_, index) => index + 1);
   }, [isVerseScreen, selectedSideBook, numOfVerse]);
 
-  return <BookNameList bookList={numberOfChapters} />;
+  return <BookNameList key={orientation} bookList={numberOfChapters} />;
 };
 
 export default ChooseFromListScreen;

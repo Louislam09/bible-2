@@ -13,6 +13,9 @@ type StoreState = {
   lastBook: string;
   lastChapter: number;
   lastVerse: number;
+  lastBottomSideBook: string;
+  lastBottomSideChapter: number;
+  lastBottomSideVerse: number;
   currentTheme: keyof typeof EThemes;
   fontSize: number;
   selectedFont: string;
@@ -47,6 +50,9 @@ const initialContext: StoreState = {
   lastBook: "Génesis",
   lastChapter: 1,
   lastVerse: 0,
+  lastBottomSideBook: "Génesis",
+  lastBottomSideChapter: 1,
+  lastBottomSideVerse: 0,
   currentTheme: "Blue",
   fontSize: 24,
   selectedFont: TFont.Roboto,

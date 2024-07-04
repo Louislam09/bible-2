@@ -4,20 +4,35 @@ import { TTheme } from "types";
 export const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     footer: {
-      position: "absolute",
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      right: 10,
+      position: "absolute",
+      right: "-56%",
       bottom: 5,
-      paddingVertical: 0,
+      paddingVertical: 5,
       backgroundColor: colors.background,
       boxSizing: "border-box",
       alignSelf: 'flex-end',
       borderWidth: 1,
       borderColor: colors.notification,
       borderRadius: 50,
+      paddingHorizontal: 20
+    },
+    menuIcon: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "flex-end",
+      position: "absolute",
+      flexDirection: 'row',
+      right: 10,
+      bottom: 55,
+      backgroundColor: colors.background,
+      borderWidth: 1,
+      borderColor: colors.notification,
+      borderRadius: 50,
+      padding: 10,
     },
     progressBarContainer: {
       position: "absolute",

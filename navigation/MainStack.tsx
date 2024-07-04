@@ -26,8 +26,14 @@ type Route = RouteProp<ParamListBase>;
 const MainStack = () => {
   const { colors } = useTheme() as TTheme;
   const { storedData } = useStorage();
-  const { lastBook, lastChapter, lastVerse } = storedData;
-
+  const {
+    lastBook,
+    lastChapter,
+    lastVerse,
+    lastBottomSideBook,
+    lastBottomSideChapter,
+    lastBottomSideVerse,
+  } = storedData;
   const styling = {
     backgroundColor: colors.backgroundContrast,
     text: colors.text,
@@ -54,7 +60,10 @@ const MainStack = () => {
         initialParams={{
           book: lastBook || "Génesis",
           chapter: lastChapter || 1,
-          verse: lastVerse || 0,
+          verse: lastVerse || 1,
+          bottomSideBook: lastBottomSideBook || "Génesis",
+          bottomSideChapter: lastBottomSideChapter || 1,
+          bottomSideVerse: lastBottomSideVerse || 0,
         }}
         name="Home"
         component={Home}

@@ -27,10 +27,10 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
   const routeParam = route.params;
   const theme = useTheme();
   const styles = getStyles(theme);
-  const { viewLayoutGrid, isBottomSideSearching } = useBibleContext();
+  const { viewLayoutGrid, isBottomSideSearching, orientation } =
+    useBibleContext();
   const [query, setQuery] = useState("");
-
-  // console.log("isBottomSideSearching", isBottomSideSearching, routeParam);
+  const isPortrait = orientation === "PORTRAIT";
 
   const handlePress = (item: IDBBookNames) => {
     const topSide: any = { book: item.longName };
@@ -117,7 +117,14 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
           numColumns={6}
         />
       </View>
-      <View style={[styles.listWrapper, { flex: 0.9 }]}>
+      <View
+        style={[
+          styles.listWrapper,
+          {
+            flex: 0.9,
+          },
+        ]}
+      >
         <Text style={styles.listTitle}>Nuevo Pacto</Text>
         <FlashList
           contentContainerStyle={styles.flatContainer}
@@ -158,7 +165,10 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      key={orientation}
+      style={[styles.container, !isPortrait && { flexDirection: "row" }]}
+    >
       {viewLayoutGrid ? GridView : ListView}
     </SafeAreaView>
   );
@@ -185,6 +195,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       display: "flex",
       flex: 1,
       width: "100%",
+      height: "100%",
       backgroundColor: colors.background,
     },
     bookImage: {

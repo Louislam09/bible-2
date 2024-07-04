@@ -1,24 +1,35 @@
 import React, { FC } from "react";
-import { StyleSheet, useWindowDimensions, View } from "react-native";
+import { Animated, StyleSheet, useWindowDimensions, View } from "react-native";
 import BookContent from "./home/content";
 import CustomFooter from "./home/footer";
+import { useBibleContext } from "context/BibleContext";
 
 const SplitBottomSide: FC<any> = (props) => {
+  const { isSplitActived, orientation } = useBibleContext();
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
+  const isPortrait = orientation === "PORTRAIT";
   return (
-    <View style={[styles.container, { height: SCREEN_HEIGHT / 2 }]}>
+    <Animated.View
+      style={[
+        styles.container,
+        {
+          [isPortrait ? "height" : "width"]: isPortrait
+            ? props.height
+            : props.wdith,
+        },
+        isSplitActived && { flex: 1 },
+      ]}
+    >
       <BookContent isSplit {...props} />
       <CustomFooter isSplit {...props} />
-    </View>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     position: "relative",
-    // borderColor: "red",
-    // borderTopWidth: 2,
+    width: "100%",
   },
   strongContainer: {
     position: "absolute",

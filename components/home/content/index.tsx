@@ -18,7 +18,7 @@ import { QUERY_BY_DB } from "../../../constants/Queries";
 import Chapter from "./Chapter";
 
 interface BookContentInterface {
-  isSplit?: boolean;
+  isSplit: boolean;
   book: any;
   chapter: any;
   verse: any;
@@ -26,16 +26,15 @@ interface BookContentInterface {
 
 const BookContent: FC<BookContentInterface> = ({
   isSplit,
-  book = "Mateo",
-  verse = 1,
-  chapter = 1,
+  book,
+  chapter,
+  verse,
 }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
-  const {
-    storedData: { currentBibleVersion },
-    saveData,
-  } = useStorage();
+  const { storedData, saveData } = useStorage();
+  const { currentBibleVersion } = storedData;
+
   const { setverseInStrongDisplay, clearHighlights, addToHistory } =
     useBibleContext();
   const { myBibleDB, executeSql } = useDBContext();
@@ -71,9 +70,9 @@ const BookContent: FC<BookContentInterface> = ({
           .then(([verses, subtitles]) => {
             setLoading(false);
             saveData({
-              lastBook: book,
-              lastChapter: chapter,
-              lastVerse: verse,
+              [isSplit ? "lastBottomSideBook" : "lastBook"]: book,
+              [isSplit ? "lastBottomSideChapter" : "lastChapter"]: chapter,
+              [isSplit ? "lastBottomSideVerse" : "lastVerse"]: verse,
             });
             !isHistory &&
               addToHistory &&
@@ -106,7 +105,7 @@ const BookContent: FC<BookContentInterface> = ({
   return (
     <View style={styles.bookContainer}>
       {!loading ? (
-        <Chapter dimensions={dimensions} item={data} />
+        <Chapter isSplit={!!isSplit} dimensions={dimensions} item={data} />
       ) : (
         <View style={styles.activiyContainer}>
           <ActivityIndicator style={{ flex: 1 }} />

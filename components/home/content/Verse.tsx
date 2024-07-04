@@ -22,7 +22,12 @@ import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import { Text } from "../../Themed";
 import Walkthrough from "components/Walkthrough";
 
-const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
+const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
+  item,
+  subtitles,
+  index,
+  isSplit,
+}) => {
   const navigation = useNavigation();
   const route = useRoute();
   const { isVerseTour } = route.params as HomeParams;
@@ -101,9 +106,9 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
 
     const onLink = () => {
       navigation.navigate("Home", {
-        book: bookName,
-        chapter,
-        verse,
+        [!isSplit ? "bottomSideBook" : "book"]: bookName,
+        [!isSplit ? "bottomSideChapter" : "chapter"]: chapter,
+        [!isSplit ? "bottomSideVerse" : "verse"]: verse,
       });
     };
 

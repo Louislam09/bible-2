@@ -1,6 +1,6 @@
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { BottomSheetModal, WINDOW_WIDTH } from "@gorhom/bottom-sheet";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "components/Animation";
 import BottomModal from "components/BottomModal";
@@ -10,6 +10,7 @@ import VersionList from "components/home/header/VersionList";
 import { GET_DAILY_VERSE } from "constants/Queries";
 import DAILY_VERSES from "constants/dailyVerses";
 import { useBibleContext } from "context/BibleContext";
+import { useStorage } from "context/LocalstoreContext";
 import { useDBContext } from "context/databaseContext";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -64,6 +65,15 @@ const Dashboard = () => {
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(defaultDailyVerse);
   const dashboardImage = require("../assets/lottie/dashboard.json");
   const columnNumber = 3;
+  const { storedData } = useStorage();
+  const {
+    lastBook,
+    lastChapter,
+    lastVerse,
+    lastBottomSideBook,
+    lastBottomSideChapter,
+    lastBottomSideVerse,
+  } = storedData;
 
   useEffect(() => {
     if (!myBibleDB || !executeSql) return;
@@ -101,11 +111,21 @@ const Dashboard = () => {
     versionRef.current?.dismiss();
   };
 
+  const homePageInitParams = {
+    book: lastBook || "Génesis",
+    chapter: lastChapter || 1,
+    verse: lastVerse || 1,
+    bottomSideBook: lastBottomSideBook || "Génesis",
+    bottomSideChapter: lastBottomSideChapter || 1,
+    bottomSideVerse: lastBottomSideVerse || 0,
+    isTour: false,
+  };
+
   const options: IDashboardOption[] = [
     {
       icon: isNTV ? "book-cross" : "crown-outline",
       label: "Santa Escritura",
-      action: () => navigation.navigate("Home", { isTour: false }),
+      action: () => navigation.navigate("Home", homePageInitParams),
       tag: isNTV ? "book-cross" : "crown-outline",
     },
     {

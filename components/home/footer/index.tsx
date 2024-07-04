@@ -9,8 +9,9 @@ import {
 import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "constants/BookNames";
 import { useBibleContext } from "context/BibleContext";
 import useAudioPlayer from "hooks/useAudioPlayer";
-import { FC, useCallback, useEffect, useRef } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import {
+  Animated,
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
@@ -52,7 +53,6 @@ const CustomFooter: FC<FooterInterface> = ({
     searchHistorial,
     isSplitActived,
     toggleBottomSideSearching,
-    isBottomSideSearching,
   } = useBibleContext();
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const FOOTER_ICON_SIZE = iconSize;
@@ -72,7 +72,6 @@ const CustomFooter: FC<FooterInterface> = ({
       nextChapter,
     });
 
-  console.log(book, chapter);
   const nextOrPreviousBook = (name: string, chapter: number = 1) => {
     clearHighlights();
     navigation.setParams({
@@ -89,12 +88,6 @@ const CustomFooter: FC<FooterInterface> = ({
       nextOrPreviousBook(newBookName);
       return;
     }
-    console.log({
-      [isSplit ? "bottomSideBook" : "book"]: book,
-      [isSplit ? "bottomSideChapter" : "chapter"]:
-        ((chapter as number) || 0) + 1,
-      verse: 0,
-    });
 
     navigation.setParams({
       [isSplit ? "bottomSideBook" : "book"]: book,
@@ -131,6 +124,7 @@ const CustomFooter: FC<FooterInterface> = ({
   const displayBookName = (book || "")?.length > 10 ? shortName : book;
 
   useEffect(() => {
+    if (isSplitActived) return;
     if (currentHistoryIndex === -1) return;
     const currentHistory = searchHistorial[currentHistoryIndex];
 
@@ -145,8 +139,22 @@ const CustomFooter: FC<FooterInterface> = ({
     });
   }, [currentHistoryIndex]);
 
+  const [animatedValue] = useState(new Animated.Value(-56));
+
+  const toggleAnimation = () => {
+    console.log("toggleAnimation");
+    animatedValue.setValue(animatedValue._value === -56 ? 70 : -56);
+    // Animated.timing(animatedValue, {
+    //   toValue: animatedValue._value === -56 ? 70 : -56,
+    //   duration: 500, // duration in milliseconds
+    //   useNativeDriver: false, // Set to true if animating properties that support native driver
+    // }).start();
+  };
+
   return (
-    <View style={[styles.footer, { width: "52%" }]}>
+    <Animated.View
+      style={[styles.footer, { width: "70%", right: animatedValue }]}
+    >
       {isPlaying && (
         <View style={[styles.progressBarContainer]}>
           <ProgressBar
@@ -159,6 +167,19 @@ const CustomFooter: FC<FooterInterface> = ({
         </View>
       )}
       <View style={styles.footerCenter}>
+        <TouchableOpacity
+          onPress={() => {
+            console.log("grow");
+            toggleAnimation();
+          }}
+        >
+          <MaterialCommunityIcons
+            style={[styles.icon]}
+            name="menu"
+            size={FOOTER_ICON_SIZE - 5}
+            color={"white"}
+          />
+        </TouchableOpacity>
         <TouchableOpacity ref={backRef} onPress={() => previuosChapter()}>
           <Ionicons
             name="chevron-back-sharp"
@@ -175,13 +196,6 @@ const CustomFooter: FC<FooterInterface> = ({
           <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
             {`${displayBookName ?? ""} ${chapter ?? ""}`}
           </Text>
-          {/* <MaterialCommunityIcons
-            style={[styles.icon, { margin: 0 }]}
-            name="menu"
-            size={FOOTER_ICON_SIZE - 5}
-            color={"white"}
-          /> */}
-          {/* {isSplit ? <Text>Second</Text> : <Text>first</Text>} */}
         </TouchableOpacity>
         <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>
           <Ionicons
@@ -222,7 +236,7 @@ const CustomFooter: FC<FooterInterface> = ({
           }}
         />
       </BottomModal>
-    </View>
+    </Animated.View>
   );
 };
 
