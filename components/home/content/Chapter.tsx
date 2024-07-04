@@ -5,6 +5,7 @@ import Verse from "./Verse";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { TChapter, HomeParams, TTheme } from "types";
 import { useBibleContext } from "context/BibleContext";
+import { Text } from "components/Themed";
 
 const Chapter = ({
   item,
@@ -60,7 +61,6 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       justifyContent: "center",
       position: "relative",
-      // paddingBottom: 50,
     },
     verseContent: {
       // width: 400,

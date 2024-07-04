@@ -44,6 +44,8 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
     verseInStrongDisplay,
     setverseInStrongDisplay,
     onAddToNote,
+    toggleBottomSideSearching,
+    isBottomSideSearching,
   } = useBibleContext();
   const theme = useTheme() as TTheme;
   const styles = getStyles(theme);
@@ -57,6 +59,8 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
   const strongRef = useRef<BottomSheetModal>(null);
   const verseRef = useRef<any>(null);
   const [stepIndex, setStepIndex] = useState(0);
+  const isBottom = isSplit && isBottomSideSearching;
+  const isTop = !isSplit && !isBottomSideSearching;
 
   const strongHandlePresentModalPress = useCallback(() => {
     strongRef.current?.present();
@@ -78,6 +82,7 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
 
   const onVerseClicked = () => {
     setverseInStrongDisplay(isStrongSearch ? 0 : item.verse);
+    toggleBottomSideSearching(isSplit);
     if (!isCopyMode) return;
     if (isVerseHighlisted === item.verse) {
       setHighlightVerse(null);
@@ -286,7 +291,7 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
             &nbsp;{item.verse}&nbsp;
           </Text>
 
-          {isStrongSearch ? (
+          {isStrongSearch && (isBottom || isTop) ? (
             <>
               {/* <RenderTextWithClickableWords
               theme={theme}

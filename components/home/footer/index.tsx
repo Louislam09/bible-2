@@ -92,7 +92,7 @@ const CustomFooter: FC<FooterInterface> = ({
     navigation.setParams({
       [isSplit ? "bottomSideBook" : "book"]: book,
       [isSplit ? "bottomSideChapter" : "chapter"]:
-        ((chapter as number) || 0) + 1,
+        (+(chapter as number) || 0) + 1,
       verse: 0,
     });
   }
@@ -132,29 +132,28 @@ const CustomFooter: FC<FooterInterface> = ({
     navigation.setParams({
       book: currentHistory.book,
       chapter: currentHistory.chapter,
-      bottomSideBook: currentHistory.book,
-      bottomSideChapter: currentHistory.chapter,
       verse: currentHistory.verse,
       isHistory: true,
     });
   }, [currentHistoryIndex]);
 
-  const [animatedValue] = useState(new Animated.Value(-56));
+  // const [animatedValue] = useState(new Animated.Value(0));
 
-  const toggleAnimation = () => {
-    console.log("toggleAnimation");
-    animatedValue.setValue(animatedValue._value === -56 ? 70 : -56);
-    // Animated.timing(animatedValue, {
-    //   toValue: animatedValue._value === -56 ? 70 : -56,
-    //   duration: 500, // duration in milliseconds
-    //   useNativeDriver: false, // Set to true if animating properties that support native driver
-    // }).start();
-  };
+  // const toggleAnimation = () => {
+  //   Animated.timing(animatedValue, {
+  //     toValue: animatedValue._value === 0 ? 1 : 0,
+  //     duration: 500, // duration in milliseconds
+  //     useNativeDriver: false, // Set to true if animating properties that support native driver
+  //   }).start();
+  // };
+
+  // const animatedRight = animatedValue.interpolate({
+  //   inputRange: [0, 1],
+  //   outputRange: ["-55%", "2%"],
+  // });
 
   return (
-    <Animated.View
-      style={[styles.footer, { width: "70%", right: animatedValue }]}
-    >
+    <Animated.View style={[styles.footer]}>
       {isPlaying && (
         <View style={[styles.progressBarContainer]}>
           <ProgressBar
@@ -167,19 +166,6 @@ const CustomFooter: FC<FooterInterface> = ({
         </View>
       )}
       <View style={styles.footerCenter}>
-        <TouchableOpacity
-          onPress={() => {
-            console.log("grow");
-            toggleAnimation();
-          }}
-        >
-          <MaterialCommunityIcons
-            style={[styles.icon]}
-            name="menu"
-            size={FOOTER_ICON_SIZE - 5}
-            color={"white"}
-          />
-        </TouchableOpacity>
         <TouchableOpacity ref={backRef} onPress={() => previuosChapter()}>
           <Ionicons
             name="chevron-back-sharp"
@@ -219,7 +205,6 @@ const CustomFooter: FC<FooterInterface> = ({
           />
         </TouchableOpacity>
       )}
-
       <BottomModal justOneSnap startAT={0} ref={playRef}>
         <Play
           {...{

@@ -239,7 +239,7 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
       bottom: 0,
     },
     slider: {
-      height: isPortrait ? 20 : "100%",
+      height: isPortrait ? 15 : "100%",
       justifyContent: "center",
       alignItems: "center",
       backgroundColor: colors.border,
