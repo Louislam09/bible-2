@@ -121,7 +121,7 @@ const CustomHeader: FC<HeaderInterface> = ({
           : theme.colors?.text,
     },
     { name: "magnify", action: goSearchScreen, ref: searchRef },
-  ];
+  ].filter((x) => !x.disabled);
 
   const onSelect = (version: string) => {
     clearHighlights();
