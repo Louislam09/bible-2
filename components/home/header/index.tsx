@@ -88,8 +88,7 @@ const CustomHeader: FC<HeaderInterface> = ({
 
   const headerIconData: TIcon[] = [
     {
-      name: isSplitActived ? "table-merge-cells" : "table-split-cell",
-      // name: "arrow-split-horizontal",
+      name: "arrow-split-horizontal",
       action: toggleSplitMode,
       ref: settingRef,
       isIonicon: false,
