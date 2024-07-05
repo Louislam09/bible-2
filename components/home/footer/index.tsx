@@ -1,4 +1,5 @@
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   ParamListBase,
   RouteProp,

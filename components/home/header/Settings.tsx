@@ -1,4 +1,5 @@
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { Text, View } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
 import React from "react";

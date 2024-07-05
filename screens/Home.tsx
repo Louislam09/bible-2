@@ -15,13 +15,9 @@ import {
   View,
 } from "react-native";
 import { HomeParams, TTheme } from "types";
-import BookContent from "../components/home/content";
-import CustomFooter from "../components/home/footer";
 import CustomHeader from "../components/home/header";
 import SplitBottomSide from "components/SplitBottomSide";
 import SplitTopSide from "components/SplitTopSide";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import AdjustableSplitScreen from "components/AdjustableSplitScreen";
 
 function HomeScreen() {
   const theme = useTheme();

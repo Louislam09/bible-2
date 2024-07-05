@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import Highlighter from "components/Highlighter";

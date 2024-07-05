@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "components/Animation";

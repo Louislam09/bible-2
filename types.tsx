@@ -174,6 +174,7 @@ export type TIcon = {
   hide?: boolean;
   ref?: any;
   disabled?: boolean;
+  isMaterial?: boolean;
 };
 
 export type IStrongWord = {

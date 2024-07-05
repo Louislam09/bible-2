@@ -8,7 +8,8 @@ import {
   View,
 } from "react-native";
 import { Text } from "./Themed";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+
 import { BOOK_IMAGES } from "constants/Images";
 import { HomeParams, IDBBookNames, Screens, TTheme } from "types";
 import { useBibleContext } from "context/BibleContext";

@@ -5,7 +5,7 @@ import WebView from "react-native-webview";
 import { Text } from "./Themed";
 import { useCustomTheme } from "context/ThemeContext";
 import { useTheme } from "@react-navigation/native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { wordDefinitionHtmlTemplate } from "constants/wordDefinitionHtmlTemplate";
 import { Screens, TTheme } from "types";
 import { useBibleContext } from "context/BibleContext";

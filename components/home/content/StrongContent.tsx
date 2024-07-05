@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import { DB_BOOK_NAMES } from "constants/BookNames";
 import { htmlTemplate } from "constants/HtmlTemplate";
