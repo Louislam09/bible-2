@@ -4,7 +4,6 @@
  */
 
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { DrawerNavigationProp } from "@react-navigation/drawer";
 import {
   CompositeScreenProps,
   NavigatorScreenParams,

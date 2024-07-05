@@ -59,7 +59,7 @@ const CustomBottomSheet = forwardRef<Ref, any>(
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     bottomSheet: {
-      borderRadius: 45,
+      // borderRadius: 45,
       backgroundColor: colors.background + "",
       borderColor: colors.notification,
       borderWidth: 2,

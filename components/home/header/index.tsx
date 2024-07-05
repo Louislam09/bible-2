@@ -1,17 +1,13 @@
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import React, { FC, useCallback, useRef } from "react";
-import {
-  Platform,
-  StyleSheet,
-  ToastAndroid,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, ToastAndroid, TouchableOpacity } from "react-native";
 import { useBibleContext } from "../../../context/BibleContext";
 
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BottomModal from "components/BottomModal";
+import { iconSize } from "constants/size";
 import {
   EBibleVersions,
   HomeParams,
@@ -23,7 +19,6 @@ import {
 import { Text, View } from "../../Themed";
 import Settings from "./Settings";
 import VersionList from "./VersionList";
-import { iconSize } from "constants/size";
 
 interface HeaderInterface {
   bibleVersionRef: any;
@@ -93,7 +88,8 @@ const CustomHeader: FC<HeaderInterface> = ({
 
   const headerIconData: TIcon[] = [
     {
-      name: "arrow-split-horizontal",
+      name: isSplitActived ? "table-merge-cells" : "table-split-cell",
+      // name: "arrow-split-horizontal",
       action: toggleSplitMode,
       ref: settingRef,
       isIonicon: false,
@@ -182,7 +178,7 @@ const CustomHeader: FC<HeaderInterface> = ({
         />
         <Text style={styles.text}>{currentBibleVersion}</Text>
       </TouchableOpacity>
-      <BottomModal startAT={1} ref={versionRef}>
+      <BottomModal justOneSnap startAT={0} ref={versionRef}>
         <VersionList {...{ currentBibleVersion, onSelect, theme }} />
       </BottomModal>
     </View>

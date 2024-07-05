@@ -89,6 +89,8 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
     setText(url);
   };
 
+  const title = data?.text.includes("undefined") ? "-" : data?.text;
+
   return (
     <View
       style={[
@@ -114,7 +116,7 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
             />
           </Pressable>
         )}
-        <Text style={styles.title}>{data.text} </Text>
+        <Text style={styles.title}>{title} </Text>
       </View>
       <View style={[styles.webviewWrapper]}>
         <WebView

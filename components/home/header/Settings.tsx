@@ -38,9 +38,10 @@ const Settings = ({ theme }: any) => {
 
   const themesIcon: IThemeOption[] = [
     {
-      icon: "theme-light-dark",
+      icon: "settings-outline",
       label: "Default",
       action: () => toggleTheme(colorScheme),
+      isIonicon: true,
     },
     {
       icon: "moon-outline",
@@ -74,10 +75,7 @@ const Settings = ({ theme }: any) => {
                   name={item.icon}
                   style={[
                     styles.fontIcon,
-                    item.disabled && {
-                      backgroundColor: theme.colors.notification,
-                      color: "white",
-                    },
+                    item.disabled && { color: theme.colors.notification },
                   ]}
                 />
               ) : (
@@ -85,14 +83,18 @@ const Settings = ({ theme }: any) => {
                   name={item.icon}
                   style={[
                     styles.fontIcon,
-                    item.disabled && {
-                      backgroundColor: theme.colors.notification,
-                      color: "white",
-                    },
+                    item.disabled && { color: theme.colors.notification },
                   ]}
                 />
               )}
-              <Text style={styles.fontLabel}>{item.label}</Text>
+              <Text
+                style={[
+                  styles.fontLabel,
+                  item.disabled && { color: theme.colors.notification },
+                ]}
+              >
+                {item.label}
+              </Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -103,23 +105,27 @@ const Settings = ({ theme }: any) => {
           <TouchableOpacity key={index} onPress={() => selectFont(font)}>
             <View style={styles.fontItem}>
               <MaterialCommunityIcons
-                name={
-                  [
-                    "format-text-variant",
-                    "format-letter-case",
-                    "format-color-text",
-                  ][index] as any
-                }
+                name="format-letter-case"
                 style={[
                   styles.fontIcon,
                   selectedFont === font && {
-                    backgroundColor: theme.colors.notification,
-                    color: "white",
+                    // backgroundColor: theme.colors.notification,
+                    color: theme.colors.notification,
                   },
                 ]}
               />
 
-              <Text style={styles.fontLabel}>{font}</Text>
+              <Text
+                style={[
+                  styles.fontLabel,
+                  selectedFont === font && {
+                    // backgroundColor: theme.colors.notification,
+                    color: theme.colors.notification,
+                  },
+                ]}
+              >
+                {font}
+              </Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -133,7 +139,9 @@ const Settings = ({ theme }: any) => {
             style={styles.fontIcon}
           />
         </TouchableOpacity>
-        <Text style={styles.fontSize}>{fontSize}</Text>
+        <Text style={[styles.fontSize, { color: theme.colors.notification }]}>
+          {fontSize}
+        </Text>
         <TouchableOpacity onPress={() => increaseFontSize()}>
           <MaterialCommunityIcons
             name="format-font-size-increase"
@@ -164,7 +172,6 @@ const getStyles = ({ colors }: TTheme) =>
     title: {
       color: "white",
       fontSize: 20,
-      padding: 5,
       width: "90%",
       textAlign: "center",
       backgroundColor: colors.notification,
