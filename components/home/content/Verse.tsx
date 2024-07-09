@@ -46,6 +46,7 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
     onAddToNote,
     toggleBottomSideSearching,
     isBottomSideSearching,
+    isSplitActived,
   } = useBibleContext();
   const theme = useTheme() as TTheme;
   const styles = getStyles(theme);
@@ -111,9 +112,9 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
 
     const onLink = () => {
       navigation.navigate("Home", {
-        [!isSplit ? "bottomSideBook" : "book"]: bookName,
-        [!isSplit ? "bottomSideChapter" : "chapter"]: chapter,
-        [!isSplit ? "bottomSideVerse" : "verse"]: verse,
+        [!isSplit && isSplitActived ? "bottomSideBook" : "book"]: bookName,
+        [!isSplit && isSplitActived ? "bottomSideChapter" : "chapter"]: chapter,
+        [!isSplit && isSplitActived ? "bottomSideVerse" : "verse"]: verse,
       });
     };
 

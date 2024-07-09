@@ -27,6 +27,7 @@ export type RootTabParamList = {
   Search: undefined;
   Notes: undefined;
   Favorite: undefined;
+  NotFound: undefined;
 };
 
 export interface HomeParams {
@@ -69,6 +70,7 @@ export type RootStackParamList = {
     | ChooseChapterNumberParams;
   Modal: undefined;
   Onboarding: undefined;
+  NotFound: undefined;
 };
 
 export type TStep = {

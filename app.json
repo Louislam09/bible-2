@@ -55,7 +55,9 @@
         {
           "username": "louislam09"
         }
-      ]
+      ],
+      "expo-asset",
+      "expo-font"
     ],
     "runtimeVersion": {
       "policy": "nativeVersion"

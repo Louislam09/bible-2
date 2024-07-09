@@ -10,7 +10,6 @@ const useCustomFonts = () => {
   useEffect(() => {
     const loadCustomFonts = async () => {
       const fontMapping: FontMapping = {
-        [TFont.ComingSoon]: require("../assets/fonts/ComingSoon-Regular.ttf"),
         [TFont.Cardo]: require("../assets/fonts/Cardo-Regular.ttf"),
         [TFont.Roboto]: require("../assets/fonts/Roboto-Regular.ttf"),
         [TFont.OpenSans]: require("../assets/fonts/OpenSans-VariableFont_wdth-wght.ttf"),

@@ -3,9 +3,9 @@ import {
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationProp,
 } from "@react-navigation/material-top-tabs";
-import { Logs } from "expo";
+// import { Logs } from "expo";
 import { StyleSheet } from "react-native";
-Logs.enableExpoCliLogging();
+// Logs.enableExpoCliLogging();
 
 const Tab = createMaterialTopTabNavigator();
 
