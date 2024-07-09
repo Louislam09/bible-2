@@ -38,8 +38,7 @@ const VersionList: FC<IVersionList> = ({
           key={version}
           style={[
             styles.card,
-            ,
-            currentBibleVersion === version && {
+            {
               borderColor: theme.colors.notification,
               borderWidth: 1,
             },
@@ -50,9 +49,9 @@ const VersionList: FC<IVersionList> = ({
           <Text
             style={[
               styles.versionText,
-              ,
               currentBibleVersion === version && {
                 color: theme.colors.notification,
+                textDecorationLine: "line-through",
               },
             ]}
           >
@@ -69,7 +68,7 @@ const getStyles = ({ colors }: TTheme) =>
     title: {
       color: "white",
       fontSize: 20,
-      padding: 5,
+      padding: 0,
       width: "90%",
       textAlign: "center",
       backgroundColor: colors.notification,

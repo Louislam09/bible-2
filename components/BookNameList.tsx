@@ -1,10 +1,18 @@
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { Text } from "./Themed";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+
 import { BOOK_IMAGES } from "constants/Images";
 import { HomeParams, IDBBookNames, Screens, TTheme } from "types";
+import { useBibleContext } from "context/BibleContext";
 
 interface IBookNameList {
   bookList: IDBBookNames[] | any[];
@@ -13,27 +21,55 @@ interface IBookNameList {
 const BookNameList = ({ bookList }: IBookNameList) => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { book: selectedBook, chapter } = route?.params as HomeParams;
+  const isVerseScreen = route.name === "ChooseVerseNumber";
+  const {
+    book: selectedBook,
+    chapter,
+    bottomSideBook,
+    bottomSideChapter,
+  } = route?.params as HomeParams;
+
+  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const theme = useTheme();
   const styles = getStyles(theme);
+  const { isBottomSideSearching, toggleBottomSideSearching, orientation } =
+    useBibleContext();
+  const isPortrait = orientation === "PORTRAIT";
+  const selectedSideBook = isBottomSideSearching
+    ? bottomSideBook
+    : selectedBook;
+  const selectedSideChapter = isBottomSideSearching
+    ? bottomSideChapter
+    : chapter;
 
   const screenNavigationMap: any = {
-    [Screens.ChooseBook]: (item: any) => ({
+    [Screens.ChooseBook]: (item: any, routeParams: any) => ({
       screen: Screens.ChooseChapterNumber,
-      params: { book: item },
+      params: {
+        ...routeParams,
+        [isBottomSideSearching ? "bottomSideBook" : "book"]: item,
+      },
     }),
     [Screens.ChooseChapterNumber]: (item: any, routeParams: any) => ({
       screen: Screens.ChooseVerseNumber,
-      params: { ...routeParams, chapter: item },
+      params: {
+        ...routeParams,
+        [isBottomSideSearching ? "bottomSideChapter" : "chapter"]: item,
+      },
     }),
     [Screens.ChooseVerseNumber]: (item: any, routeParams: any) => ({
       screen: Screens.Home,
-      params: { ...routeParams, verse: item },
+      params: {
+        ...routeParams,
+        [isBottomSideSearching ? "bottomSideVerse" : "verse"]: item,
+      },
     }),
     // Default case
     default: (item: any) => ({
       screen: Screens.ChooseChapterNumber,
-      params: { book: item },
+      params: {
+        [isBottomSideSearching ? "bottomSideChapter" : "chapter"]: item,
+      },
     }),
   };
 
@@ -42,6 +78,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
     const navigationInfo =
       screenNavigationMap[routeName] || screenNavigationMap.default;
     const { screen, params } = navigationInfo(item, route.params);
+    if (isVerseScreen) toggleBottomSideSearching(false);
     navigation.navigate(screen, params);
   };
 
@@ -49,12 +86,12 @@ const BookNameList = ({ bookList }: IBookNameList) => {
     <TouchableOpacity
       style={[
         styles.listItem,
-        selectedBook ? { justifyContent: "center" } : {},
+        selectedSideBook ? { justifyContent: "center" } : {},
       ]}
       onPress={() => handlePress(item)}
     >
       <Text style={styles.listTitle}>{item}</Text>
-      {!selectedBook && (
+      {!selectedSideBook && (
         <MaterialCommunityIcons
           style={[styles.icon, { color: bookList[index].bookColor }]}
           name="greater-than"
@@ -66,9 +103,15 @@ const BookNameList = ({ bookList }: IBookNameList) => {
   );
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { width: SCREEN_WIDTH },
+        !isPortrait && { flexDirection: "row" },
+      ]}
+    >
       <View style={styles.listWrapper}>
-        {selectedBook && (
+        {selectedSideBook && (
           <Text
             style={[
               styles.listChapterTitle,
@@ -81,16 +124,16 @@ const BookNameList = ({ bookList }: IBookNameList) => {
               },
             ]}
           >
-            {selectedBook} {chapter}
+            {selectedSideBook} {selectedSideChapter}
           </Text>
         )}
-        {selectedBook && (
+        {selectedSideBook && (
           <Image
             style={[styles.bookImage, { marginTop: 40 }]}
             source={{
-              uri: BOOK_IMAGES[selectedBook ?? "Génesis"],
+              uri: BOOK_IMAGES[selectedSideBook ?? "Génesis"],
             }}
-            alt={selectedBook}
+            alt={selectedSideBook}
           />
         )}
       </View>
@@ -110,6 +153,7 @@ const getStyles = ({ colors }: TTheme) =>
     container: {
       flex: 1,
       backgroundColor: colors.background,
+      width: "100%",
     },
     listWrapper: {
       display: "flex",

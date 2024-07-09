@@ -1,5 +1,5 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useTheme } from "@react-navigation/native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useRoute, useTheme } from "@react-navigation/native";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { Text, View } from "components/Themed";
 import { DB_BOOK_NAMES } from "constants/BookNames";
@@ -23,13 +23,23 @@ import removeAccent from "utils/removeAccent";
 const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
   navigation,
 }) => {
+  const route = useRoute();
+  const routeParam = route.params;
   const theme = useTheme();
   const styles = getStyles(theme);
-  const { viewLayoutGrid } = useBibleContext();
+  const { viewLayoutGrid, isBottomSideSearching, orientation } =
+    useBibleContext();
   const [query, setQuery] = useState("");
+  const isPortrait = orientation === "PORTRAIT";
 
   const handlePress = (item: IDBBookNames) => {
-    navigation.navigate(Screens.ChooseChapterNumber, { book: item.longName });
+    const topSide: any = { book: item.longName };
+    const bottomSide: any = { bottomSideBook: item.longName };
+    const params = isBottomSideSearching ? bottomSide : topSide;
+    navigation.navigate(Screens.ChooseChapterNumber, {
+      ...routeParam,
+      ...params,
+    });
   };
 
   const handelSearch = async (query: string) => {
@@ -107,7 +117,14 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
           numColumns={6}
         />
       </View>
-      <View style={[styles.listWrapper, { flex: 0.9 }]}>
+      <View
+        style={[
+          styles.listWrapper,
+          {
+            flex: 0.9,
+          },
+        ]}
+      >
         <Text style={styles.listTitle}>Nuevo Pacto</Text>
         <FlashList
           contentContainerStyle={styles.flatContainer}
@@ -148,7 +165,10 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      key={orientation}
+      style={[styles.container, !isPortrait && { flexDirection: "row" }]}
+    >
       {viewLayoutGrid ? GridView : ListView}
     </SafeAreaView>
   );
@@ -175,6 +195,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       display: "flex",
       flex: 1,
       width: "100%",
+      height: "100%",
       backgroundColor: colors.background,
     },
     bookImage: {

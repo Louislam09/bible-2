@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import Highlighter from "components/Highlighter";
@@ -22,7 +22,12 @@ import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import { Text } from "../../Themed";
 import Walkthrough from "components/Walkthrough";
 
-const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
+const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
+  item,
+  subtitles,
+  index,
+  isSplit,
+}) => {
   const navigation = useNavigation();
   const route = useRoute();
   const { isVerseTour } = route.params as HomeParams;
@@ -39,6 +44,8 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
     verseInStrongDisplay,
     setverseInStrongDisplay,
     onAddToNote,
+    toggleBottomSideSearching,
+    isBottomSideSearching,
   } = useBibleContext();
   const theme = useTheme() as TTheme;
   const styles = getStyles(theme);
@@ -52,6 +59,8 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
   const strongRef = useRef<BottomSheetModal>(null);
   const verseRef = useRef<any>(null);
   const [stepIndex, setStepIndex] = useState(0);
+  const isBottom = isSplit && isBottomSideSearching;
+  const isTop = !isSplit && !isBottomSideSearching;
 
   const strongHandlePresentModalPress = useCallback(() => {
     strongRef.current?.present();
@@ -73,6 +82,7 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
 
   const onVerseClicked = () => {
     setverseInStrongDisplay(isStrongSearch ? 0 : item.verse);
+    toggleBottomSideSearching(isSplit);
     if (!isCopyMode) return;
     if (isVerseHighlisted === item.verse) {
       setHighlightVerse(null);
@@ -101,9 +111,9 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
 
     const onLink = () => {
       navigation.navigate("Home", {
-        book: bookName,
-        chapter,
-        verse,
+        [!isSplit ? "bottomSideBook" : "book"]: bookName,
+        [!isSplit ? "bottomSideChapter" : "chapter"]: chapter,
+        [!isSplit ? "bottomSideVerse" : "verse"]: verse,
       });
     };
 
@@ -281,7 +291,7 @@ const Verse: React.FC<TVerse> = ({ item, subtitles, index }) => {
             &nbsp;{item.verse}&nbsp;
           </Text>
 
-          {isStrongSearch ? (
+          {isStrongSearch && (isBottom || isTop) ? (
             <>
               {/* <RenderTextWithClickableWords
               theme={theme}

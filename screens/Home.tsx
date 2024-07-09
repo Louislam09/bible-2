@@ -5,15 +5,32 @@ import Walkthrough from "components/Walkthrough";
 import StrongContent from "components/home/content/StrongContent";
 import { useBibleContext } from "context/BibleContext";
 import React, { useCallback, useRef, useState } from "react";
-import { SafeAreaView, StyleSheet, View } from "react-native";
-import { HomeParams } from "types";
-import BookContent from "../components/home/content";
-import CustomFooter from "../components/home/footer";
+import {
+  Animated,
+  PanResponder,
+  PanResponderGestureState,
+  SafeAreaView,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import { HomeParams, TTheme } from "types";
 import CustomHeader from "../components/home/header";
+import SplitBottomSide from "components/SplitBottomSide";
+import SplitTopSide from "components/SplitTopSide";
 
 function HomeScreen() {
+  const theme = useTheme();
   const route = useRoute();
-  const { isTour } = route.params as HomeParams;
+  const {
+    isTour,
+    book,
+    chapter,
+    verse,
+    bottomSideBook,
+    bottomSideChapter,
+    bottomSideVerse,
+  } = route.params as HomeParams;
   const [stepIndex, setStepIndex] = useState(0);
   const sheetRef = useRef<BottomSheet>(null);
   const bookRef = useRef<any>(null);
@@ -25,9 +42,17 @@ function HomeScreen() {
   const searchRef = useRef<any>(null);
   const settingRef = useRef<any>(null);
   const favRef = useRef<any>(null);
-  const theme = useTheme();
-  const { strongWord, fontSize, setStrongWord, addToNoteText, onAddToNote } =
-    useBibleContext();
+  const {
+    strongWord,
+    fontSize,
+    setStrongWord,
+    onAddToNote,
+    isSplitActived,
+    orientation,
+  } = useBibleContext();
+  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
+  const isPortrait = orientation === "PORTRAIT";
+  const styles = getStyles(theme, isPortrait);
 
   const handleSheetChange = useCallback((index: any) => {
     if (!index) {
@@ -75,13 +100,86 @@ function HomeScreen() {
     },
   ];
 
+  const [topHeight] = useState(new Animated.Value(SCREEN_HEIGHT / 2));
+  const [topWidth] = useState(new Animated.Value(SCREEN_WIDTH / 2));
+  const screenHeight = useRef(SCREEN_HEIGHT).current;
+  const lastTopHeight = useRef(SCREEN_HEIGHT);
+  const lastTopWidth = useRef(SCREEN_WIDTH);
+  const minTopHeight = 200;
+  const maxTopHeight = SCREEN_HEIGHT - 200;
+
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onPanResponderMove: (_, gestureState: PanResponderGestureState) => {
+      const newHeight = lastTopHeight.current + gestureState.dy;
+      const newWidth = lastTopWidth.current + gestureState.dx;
+      if (newWidth >= 200 && newWidth <= SCREEN_WIDTH - 200) {
+        topWidth.setValue(newWidth);
+      }
+      if (newHeight >= minTopHeight && newHeight <= maxTopHeight) {
+        topHeight.setValue(newHeight);
+      }
+    },
+    onPanResponderRelease: () => {
+      lastTopHeight.current = (topHeight as any)._value;
+      lastTopWidth.current = (topWidth as any)._value;
+    },
+  });
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView key={orientation} style={[styles.container]}>
       <CustomHeader
         {...{ bibleVersionRef, searchRef, favRef, settingRef, dashboardRef }}
       />
-      <BookContent />
-      <CustomFooter {...{ audioRef, bookRef, backRef, nextRef }} />
+
+      <View style={[styles.container, !isPortrait && { flexDirection: "row" }]}>
+        <SplitTopSide
+          {...{
+            audioRef,
+            bookRef,
+            backRef,
+            nextRef,
+            book,
+            chapter,
+            verse,
+            height: topHeight,
+            width: topWidth,
+          }}
+        />
+
+        {/* AdjustableSplit */}
+        <View
+          {...panResponder.panHandlers}
+          style={[
+            styles.slider,
+            { display: !isSplitActived ? "none" : "flex" },
+          ]}
+        >
+          <View style={styles.sliderHandle} />
+        </View>
+
+        {isSplitActived && (
+          <SplitBottomSide
+            {...{
+              audioRef,
+              bookRef,
+              backRef,
+              nextRef,
+              book: bottomSideBook,
+              chapter: bottomSideChapter,
+              verse: bottomSideVerse,
+              height: Animated.subtract(
+                new Animated.Value(screenHeight),
+                topHeight
+              ),
+              width: Animated.subtract(
+                new Animated.Value(SCREEN_WIDTH),
+                topWidth
+              ),
+            }}
+          />
+        )}
+      </View>
       {strongWord.code && (
         <View style={styles.strongContainer}>
           <CustomBottomSheet
@@ -107,19 +205,48 @@ function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    position: "relative",
-  },
-  strongContainer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    width: "100%",
-    zIndex: 999,
-    height: "60%",
-  },
-});
+const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      position: "relative",
+      width: "100%",
+      height: "100%",
+    },
+    strongContainer: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      width: "100%",
+      zIndex: 999,
+      height: "60%",
+    },
+    separator: {
+      position: "relative",
+      width: "100%",
+      borderColor: "red",
+      borderWidth: 1,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    separatorIcon: {
+      position: "absolute",
+      bottom: 0,
+    },
+    slider: {
+      height: isPortrait ? 15 : "100%",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: colors.border,
+      width: isPortrait ? "100%" : 10,
+    },
+    sliderHandle: {
+      width: isPortrait ? 40 : 4,
+      height: isPortrait ? 4 : 40,
+      backgroundColor: colors.text,
+      borderRadius: 2,
+    },
+  });
 
 export default HomeScreen;

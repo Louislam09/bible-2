@@ -1,16 +1,13 @@
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import React, { FC, useCallback, useRef } from "react";
-import {
-  Platform,
-  StyleSheet,
-  ToastAndroid,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, ToastAndroid, TouchableOpacity } from "react-native";
 import { useBibleContext } from "../../../context/BibleContext";
 
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BottomModal from "components/BottomModal";
+import { iconSize } from "constants/size";
 import {
   EBibleVersions,
   HomeParams,
@@ -22,7 +19,6 @@ import {
 import { Text, View } from "../../Themed";
 import Settings from "./Settings";
 import VersionList from "./VersionList";
-import { iconSize } from "constants/size";
 
 interface HeaderInterface {
   bibleVersionRef: any;
@@ -46,6 +42,8 @@ const CustomHeader: FC<HeaderInterface> = ({
     goForwardOnHistory,
     currentHistoryIndex,
     searchHistorial,
+    isSplitActived,
+    toggleSplitMode,
   } = useBibleContext();
   const route = useRoute<TRoute>();
   const { book, chapter = 1, verse } = route.params as HomeParams;
@@ -90,10 +88,18 @@ const CustomHeader: FC<HeaderInterface> = ({
 
   const headerIconData: TIcon[] = [
     {
+      name: "arrow-split-horizontal",
+      action: toggleSplitMode,
+      ref: settingRef,
+      isIonicon: false,
+      color: isSplitActived ? theme.colors.notification : theme.colors.text,
+    },
+    {
       name: "arrow-back-outline",
       action: moveBackInHistory,
       ref: settingRef,
       isIonicon: true,
+      disabled: isSplitActived,
       color: ![-1, 0].includes(currentHistoryIndex)
         ? theme.colors.notification
         : theme.colors?.text,
@@ -103,6 +109,7 @@ const CustomHeader: FC<HeaderInterface> = ({
       action: moveForwardInHistory,
       ref: searchRef,
       isIonicon: true,
+      disabled: isSplitActived,
       color:
         currentHistoryIndex !== -1 &&
         currentHistoryIndex < searchHistorial.length - 1
@@ -110,7 +117,7 @@ const CustomHeader: FC<HeaderInterface> = ({
           : theme.colors?.text,
     },
     { name: "magnify", action: goSearchScreen, ref: searchRef },
-  ];
+  ].filter((x) => !x.disabled);
 
   const onSelect = (version: string) => {
     clearHighlights();
@@ -135,6 +142,7 @@ const CustomHeader: FC<HeaderInterface> = ({
             key={index}
             onPress={icon?.action}
             onLongPress={icon?.longAction}
+            disabled={icon.disabled}
           >
             {icon.isIonicon ? (
               <Ionicons
@@ -169,7 +177,7 @@ const CustomHeader: FC<HeaderInterface> = ({
         />
         <Text style={styles.text}>{currentBibleVersion}</Text>
       </TouchableOpacity>
-      <BottomModal startAT={1} ref={versionRef}>
+      <BottomModal justOneSnap startAT={0} ref={versionRef}>
         <VersionList {...{ currentBibleVersion, onSelect, theme }} />
       </BottomModal>
     </View>
@@ -185,20 +193,11 @@ const getStyles = ({ colors }: TTheme) =>
       flexDirection: "row",
       justifyContent: "flex-end",
       paddingHorizontal: 10,
-      backgroundColor: colors.background,
+      paddingVertical: 4,
+      backgroundColor: colors.background + "cc",
       boxSizing: "border-box",
       width: "100%",
-      borderBottomColor: colors.border,
       borderWidth: 0.5,
-      borderStyle: "solid",
-    },
-    title: {
-      color: "white",
-      fontSize: 20,
-      padding: 5,
-      width: "90%",
-      textAlign: "center",
-      backgroundColor: colors.notification,
     },
     versionContainer: {
       position: "relative",
@@ -206,22 +205,6 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       justifyContent: "center",
       borderRadius: 45,
-    },
-    card: {
-      width: "90%",
-      backgroundColor: "white",
-      borderRadius: 8,
-      padding: 16,
-      marginVertical: 8,
-      elevation: 5,
-      ...Platform.select({
-        ios: {
-          shadowColor: "black",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.2,
-          shadowRadius: 4,
-        },
-      }),
     },
     versionText: {
       color: colors.border,
@@ -244,18 +227,16 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       justifyContent: "center",
       gap: 4,
-      paddingHorizontal: 20,
-      paddingVertical: 10,
+      paddingHorizontal: 10,
       borderRadius: 50,
-      backgroundColor: colors.backgroundContrast,
     },
     iconContainer: {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      paddingVertical: 10,
       borderRadius: 50,
-      backgroundColor: colors.backgroundContrast,
+      // backgroundColor: colors.background,
+      // backgroundColor: colors.border + "cc",
     },
     icon: {
       fontWeight: "700",
@@ -264,12 +245,6 @@ const getStyles = ({ colors }: TTheme) =>
     },
     text: {
       color: colors.text,
-    },
-    picker: {
-      position: "absolute",
-      color: colors.text,
-      top: 55,
-      left: 20,
     },
   });
 

@@ -17,25 +17,29 @@ import getCurrentDbName from "utils/getCurrentDB";
 import { QUERY_BY_DB } from "../../../constants/Queries";
 import Chapter from "./Chapter";
 
-interface BookContentInterface {}
+interface BookContentInterface {
+  isSplit: boolean;
+  book: any;
+  chapter: any;
+  verse: any;
+}
 
-const BookContent: FC<BookContentInterface> = ({}) => {
+const BookContent: FC<BookContentInterface> = ({
+  isSplit,
+  book,
+  chapter,
+  verse,
+}) => {
   const theme = useTheme();
   const styles = getStyles(theme);
-  const {
-    storedData: { currentBibleVersion },
-    saveData,
-  } = useStorage();
+  const { storedData, saveData } = useStorage();
+  const { currentBibleVersion } = storedData;
+
   const { setverseInStrongDisplay, clearHighlights, addToHistory } =
     useBibleContext();
   const { myBibleDB, executeSql } = useDBContext();
   const route = useRoute();
-  const {
-    book = "Mateo",
-    chapter,
-    verse,
-    isHistory,
-  } = route.params as HomeParams;
+  const { isHistory } = route.params as HomeParams;
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>({});
   const currentBook = DB_BOOK_NAMES.find((x) => x.longName === book);
@@ -66,9 +70,9 @@ const BookContent: FC<BookContentInterface> = ({}) => {
           .then(([verses, subtitles]) => {
             setLoading(false);
             saveData({
-              lastBook: book,
-              lastChapter: chapter,
-              lastVerse: verse,
+              [isSplit ? "lastBottomSideBook" : "lastBook"]: book,
+              [isSplit ? "lastBottomSideChapter" : "lastChapter"]: chapter,
+              [isSplit ? "lastBottomSideVerse" : "lastVerse"]: verse,
             });
             !isHistory &&
               addToHistory &&
@@ -101,7 +105,7 @@ const BookContent: FC<BookContentInterface> = ({}) => {
   return (
     <View style={styles.bookContainer}>
       {!loading ? (
-        <Chapter dimensions={dimensions} item={data} />
+        <Chapter isSplit={!!isSplit} dimensions={dimensions} item={data} />
       ) : (
         <View style={styles.activiyContainer}>
           <ActivityIndicator style={{ flex: 1 }} />

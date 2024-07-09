@@ -6,7 +6,13 @@ import {
   UPDATE_NOTE_BY_ID,
 } from "constants/Queries";
 import useSearch, { UseSearchHookState } from "hooks/useSearch";
-import React, { createContext, useContext, useEffect, useReducer } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import useCustomFonts from "../hooks/useCustomFonts";
 import {
   EBibleVersions,
@@ -19,6 +25,7 @@ import {
 } from "../types";
 import { useDBContext } from "./databaseContext";
 import { useStorage } from "./LocalstoreContext";
+import { Dimensions } from "react-native";
 
 type BibleState = {
   highlightedVerses: IBookVerse[];
@@ -41,6 +48,8 @@ type BibleState = {
   removeHighlistedVerse: Function;
   toggleCopyMode: Function;
   toggleCopySearch: Function;
+  toggleSplitMode: Function;
+  toggleBottomSideSearching: (value: boolean) => void;
   decreaseFontSize: Function;
   setStrongWord: (word: IStrongWord) => void;
   setverseInStrongDisplay: (verse: number) => void;
@@ -67,6 +76,9 @@ type BibleState = {
   goBackOnHistory?: (index: number) => void;
   goForwardOnHistory?: (index: number) => void;
   addToHistory?: (item: any) => void;
+  orientation: "LANDSCAPE" | "PORTRAIT";
+  isSplitActived: boolean;
+  isBottomSideSearching: boolean;
 };
 
 type BibleAction =
@@ -87,6 +99,8 @@ type BibleAction =
   | { type: "ADD_TO_HISTORY"; payload: any }
   | { type: "SET_LOCAL_DATA"; payload: any }
   | { type: "TOGGLE_COPY_MODE"; payload?: boolean }
+  | { type: "TOGGLE_SECOND_SIDE"; payload: boolean }
+  | { type: "TOGGLE_SPLIT_MODE"; payload?: boolean }
   | { type: "TOGGLE_VIEW_LAYOUT_GRID" }
   | { type: "TOGGLE_COPY_SEARCH"; payload: boolean };
 
@@ -107,6 +121,8 @@ const initialContext: BibleState = {
   selectFont: () => {},
   selectTheme: () => {},
   toggleCopyMode: () => {},
+  toggleSplitMode: () => {},
+  toggleBottomSideSearching: (value: boolean) => {},
   toggleCopySearch: () => {},
   decreaseFontSize: () => {},
   toggleFavoriteVerse: (item: IFavoriteVerse) => {},
@@ -121,6 +137,7 @@ const initialContext: BibleState = {
   selectedFont: TFont.Roboto,
   currentBibleVersion: EBibleVersions.RVR60,
   isCopyMode: false,
+  isBottomSideSearching: false,
   fontSize: 24,
   searchState: defaultSearch,
   searchQuery: "",
@@ -128,10 +145,12 @@ const initialContext: BibleState = {
   verseInStrongDisplay: 0,
   currentTheme: "Blue",
   isSearchCopy: false,
+  isSplitActived: false,
   viewLayoutGrid: true,
   strongWord: { text: "", code: "" },
   searchHistorial: [],
   currentHistoryIndex: -1,
+  orientation: "PORTRAIT",
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);
@@ -193,6 +212,16 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
       return {
         ...state,
         isCopyMode: action?.payload ?? !state.isCopyMode,
+      };
+    case "TOGGLE_SPLIT_MODE":
+      return {
+        ...state,
+        isSplitActived: !state.isSplitActived,
+      };
+    case "TOGGLE_SECOND_SIDE":
+      return {
+        ...state,
+        isBottomSideSearching: action.payload,
       };
     case "TOGGLE_COPY_SEARCH":
       return {
@@ -256,6 +285,25 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const { myBibleDB, executeSql } = useDBContext();
   const { state: searchState, performSearch } = useSearch({ db: myBibleDB });
 
+  const [orientation, setOrientation] = useState("PORTRAIT");
+
+  const getOrientation = () => {
+    const { height, width } = Dimensions.get("window");
+    if (width > height) {
+      setOrientation("LANDSCAPE");
+    } else {
+      setOrientation("PORTRAIT");
+    }
+  };
+
+  useEffect(() => {
+    getOrientation();
+    const subscription = Dimensions.addEventListener("change", getOrientation);
+    return () => {
+      subscription?.remove();
+    };
+  }, []);
+
   useEffect(() => {
     if (!isDataLoaded) return;
     dispatch({
@@ -313,6 +361,12 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   };
   const toggleCopyMode = () => {
     dispatch({ type: "TOGGLE_COPY_MODE" });
+  };
+  const toggleSplitMode = () => {
+    dispatch({ type: "TOGGLE_SPLIT_MODE" });
+  };
+  const toggleBottomSideSearching = (value: boolean) => {
+    dispatch({ type: "TOGGLE_SECOND_SIDE", payload: value });
   };
   const toggleCopySearch = (value: boolean) => {
     dispatch({ type: "TOGGLE_COPY_SEARCH", payload: value });
@@ -396,6 +450,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const contextValue = {
     ...state,
+    orientation,
     searchState,
     highlightVerse,
     clearHighlights,
@@ -405,6 +460,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     onUpdateNote,
     selectBibleVersion,
     toggleCopyMode,
+    toggleSplitMode,
     decreaseFontSize,
     increaseFontSize,
     removeHighlistedVerse,
@@ -420,6 +476,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     goBackOnHistory,
     goForwardOnHistory,
     addToHistory,
+    toggleBottomSideSearching,
   };
 
   return (

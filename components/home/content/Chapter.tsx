@@ -4,28 +4,42 @@ import { useRef } from "react";
 import Verse from "./Verse";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { TChapter, HomeParams, TTheme } from "types";
+import { useBibleContext } from "context/BibleContext";
+import { Text } from "components/Themed";
 
-const Chapter = ({ item, dimensions }: TChapter) => {
+const Chapter = ({
+  item,
+  dimensions,
+  isSplit,
+}: TChapter & { isSplit: boolean }) => {
   const { verses, subtitles } = item;
   if (!verses) return <ActivityIndicator />;
   const theme = useTheme();
   const route = useRoute();
-  const { verse } = route.params as HomeParams;
+  const { verse, bottomSideVerse } = route.params as HomeParams;
   const styles = getStyles(theme);
   const chapterRef = useRef<FlashList<any>>(null);
-  const verseNumber = +(verse as number) || 0;
+  const { isBottomSideSearching } = useBibleContext();
+  const selectedSideBook = isBottomSideSearching ? bottomSideVerse : verse;
+
+  const verseNumber = +(selectedSideBook as number) || 0;
   const initialScrollIndex =
     verses.length === verseNumber || verseNumber === 1
       ? verseNumber - 1
       : verseNumber;
 
   const renderItem = (props: any) => (
-    <Verse {...props} verse={verse} subtitles={subtitles ?? []} />
+    <Verse
+      {...props}
+      isSplit={isSplit}
+      verse={selectedSideBook}
+      subtitles={subtitles ?? []}
+    />
   );
 
   return (
     <View style={styles.chapterContainer}>
-      <View style={[styles.verseContent, { width: dimensions?.width ?? 400 }]}>
+      <View style={[styles.verseContent]}>
         <FlashList
           ref={chapterRef}
           decelerationRate="normal"
@@ -49,7 +63,8 @@ const getStyles = ({ colors }: TTheme) =>
       position: "relative",
     },
     verseContent: {
-      width: 400,
+      // width: 400,
+      width: "100%",
       height: "100%",
     },
   });

@@ -128,7 +128,8 @@ const darkBlueGreen = {
   colors: {
     background: "#1b1805",
     surface: "#1b1805",
-    primary: "#eae393",
+    // primary: "#eae393",
+    primary: "#dde",
     secondary: "#1a8a5a",
     accent: "#46c1dc",
   },

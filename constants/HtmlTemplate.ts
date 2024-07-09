@@ -40,9 +40,9 @@ export const htmlTemplate = (
             </style>
         </head>
         <body>
-            <h4>${content?.[0]?.topic ?? ""} > <a href='S:${content?.[1]?.topic ?? ""
-        }'>${content?.[1]?.topic ?? ""}</a> 🔍</h4>
-            ${(content?.[0].definition ?? "")?.replaceAll("font", "p")}
+            <h4>${content?.[0]?.topic || ""} > <a href='S:${content?.[1]?.topic || ""
+        }'>${content?.[1]?.topic || ""}</a> 🔍</h4>
+            ${(content?.[0]?.definition || "No hay resultado para esta palabra")?.replaceAll("font", "p")}
             <script>
             window.ReactNativeWebView.postMessage(document.body.scrollHeight)
             </script>

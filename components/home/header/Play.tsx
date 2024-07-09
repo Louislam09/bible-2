@@ -3,7 +3,8 @@ import { Platform, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { HomeParams, TTheme } from "types";
 import { Text, View } from "../../Themed";
 import ProgressBar from "../footer/ProgressBar";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { customBorder } from "utils/customStyle";
 import useAudioPlayer from "hooks/useAudioPlayer";
 import {
