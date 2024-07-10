@@ -16,6 +16,7 @@ import { useDBContext } from "context/databaseContext";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
+  ToastAndroid,
   TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
@@ -74,6 +75,7 @@ const Dashboard = () => {
     lastBottomSideBook,
     lastBottomSideChapter,
     lastBottomSideVerse,
+    isSongLyricEnabled,
   } = storedData;
 
   useEffect(() => {
@@ -122,12 +124,30 @@ const Dashboard = () => {
     isTour: false,
   };
 
+  const onSong = () => {
+    if (!isSongLyricEnabled) {
+      ToastAndroid.show(
+        "Busca 📖 y presiona el nombre del himnario 🔒🔑",
+        ToastAndroid.LONG
+      );
+      return;
+    }
+    navigation.navigate("Song");
+  };
+
   const options: IDashboardOption[] = [
     {
       icon: isNTV ? "book-cross" : "crown-outline",
       label: "Santa Escritura",
       action: () => navigation.navigate("Home", homePageInitParams),
       tag: isNTV ? "book-cross" : "crown-outline",
+    },
+    {
+      icon: "musical-notes-outline",
+      label: "Himnos",
+      isIonicon: true,
+      action: onSong,
+      // disabled: !isSongLyricEnabled,
     },
     {
       icon: "text-search",

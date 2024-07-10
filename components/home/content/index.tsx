@@ -50,7 +50,6 @@ const BookContent: FC<BookContentInterface> = ({
     (async () => {
       clearHighlights();
       setLoading(true);
-
       if (myBibleDB && executeSql) {
         setData({});
         setverseInStrongDisplay(0);

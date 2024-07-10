@@ -4,7 +4,8 @@ import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { Text, View } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
 import Checkbox from "expo-checkbox";
-import React, { useEffect, useRef, useState } from "react";
+import useDebounce from "hooks/useDebounce";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { TTheme } from "types";
 import removeAccent from "utils/removeAccent";
@@ -22,6 +23,7 @@ const SearchHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
   } = useBibleContext();
 
   const [query, setQuery] = useState("");
+  const debouncedQuery = useDebounce(query, 500);
 
   const onCheckbox = (value: boolean) => {
     toggleCopySearch(value);
@@ -32,25 +34,26 @@ const SearchHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
     setSearchQuery(query);
   };
 
-  useEffect(() => {
-    if (!searchQuery) return;
-    const abortController = new AbortController();
-    (async () => {
-      await performSearch(searchQuery ?? "", abortController);
-    })();
-    return () => abortController.abort();
-  }, []);
+  const [abortController, setAbortController] =
+    useState<AbortController | null>(null);
 
   useEffect(() => {
-    if (!query) return;
-    const abortController = new AbortController();
+    if (debouncedQuery) {
+      handleSearch();
+    }
+  }, [debouncedQuery]);
 
-    (async () => {
-      await performSearch(query, abortController);
-    })();
+  const handleSearch = useCallback(() => {
+    if (abortController) {
+      abortController.abort();
+    }
 
-    return () => abortController.abort();
-  }, [query]);
+    const newAbortController = new AbortController();
+    setAbortController(newAbortController);
+
+    if (debouncedQuery.length < 3) return;
+    performSearch(debouncedQuery, newAbortController);
+  }, [debouncedQuery, performSearch]);
 
   const clearText = () => {
     textInputRef.current?.clear();

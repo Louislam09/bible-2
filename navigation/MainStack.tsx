@@ -18,6 +18,7 @@ import Notes from "screens/Notes";
 import Search from "screens/Search";
 import { RootStackParamList, Screens, ScreensName, TTheme } from "types";
 import Character from "screens/Character";
+import Song from "screens/Song";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -141,6 +142,14 @@ const MainStack = () => {
       <Stack.Screen
         name="Character"
         component={Character}
+        options={({ route }) => ({
+          ...screenOptions(route),
+          animation: "slide_from_right",
+        })}
+      />
+      <Stack.Screen
+        name="Song"
+        component={Song}
         options={({ route }) => ({
           ...screenOptions(route),
           animation: "slide_from_right",

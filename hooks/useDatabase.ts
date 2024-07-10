@@ -42,35 +42,28 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
     []
   );
 
-  const executeSql = (
+  const executeSql = async (
     database: SQLite.SQLiteDatabase,
     sql: string,
     params: any[] = []
   ): Promise<Row[]> => {
-    return new Promise((resolve, reject) => {
-      if (!database) {
-        reject(new Error("Database not initialized"));
-      } else {
-        database.transaction((tx) => {
-          tx.executeSql(
-            sql,
-            params,
-            (_, { rows }) => {
-              resolve(rows._array);
-            },
-            (tx, error) => {
-              reject(error);
-              return true;
-            }
-          );
-        });
-      }
-    });
+    if (!database) {
+      throw new Error("Database not initialized");
+    }
+
+    const statement = await database.prepareAsync(sql);
+    try {
+      const result = await statement.executeAsync(params);
+      const response = await result.getAllAsync()
+      return response as Row[];
+    } finally {
+      await statement.finalizeAsync();
+    }
   };
 
   async function createTable(database: SQLite.SQLiteDatabase, createTableQuery: string) {
     try {
-      await executeSql(database, createTableQuery);
+      await database.execAsync(createTableQuery);
     } catch (error) {
       console.error(`Error creating table ${createTableQuery}:`, error);
     }
@@ -92,11 +85,7 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
           : Asset.fromModule(require("../assets/db/ntv-bible.db"));
 
       if (!asset.downloaded) {
-        await asset.downloadAsync().then((value) => {
-          asset = value;
-          console.log("asset downloadAsync - finished");
-        });
-
+        await asset.downloadAsync();
         let remoteURI = asset.localUri;
 
         if (!(await FileSystem.getInfoAsync(localURI)).exists) {
@@ -108,7 +97,6 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
           });
         }
       } else {
-        // for iOS - Asset is downloaded on call Asset.fromModule(), just copy from cache to local file
         if (
           asset.localUri ||
           asset.uri.startsWith("asset") ||
@@ -142,15 +130,15 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
         }
       }
 
-      return SQLite.openDatabase(dbName);
+      return await SQLite.openDatabaseAsync(dbName);
     }
 
     async function openDatabases() {
       const databases: SQLite.SQLiteDatabase[] = [];
       for (const dbName of dbNames) {
         const db = await openDatabase(dbName);
-        createTable(db, CREATE_FAVORITE_VERSES_TABLE);
-        createTable(db, CREATE_NOTE_TABLE);
+        await createTable(db, CREATE_FAVORITE_VERSES_TABLE);
+        await createTable(db, CREATE_NOTE_TABLE);
         databases.push(db);
       }
       return databases;

@@ -25,7 +25,7 @@
       "backgroundColor": "#0c3e3d"
     },
     "android": {
-      "versionCode": 5,
+      "versionCode": 6,
       "icon": "./assets/images/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
@@ -55,7 +55,9 @@
         {
           "username": "louislam09"
         }
-      ]
+      ],
+      "expo-asset",
+      "expo-font"
     ],
     "runtimeVersion": {
       "policy": "nativeVersion"
