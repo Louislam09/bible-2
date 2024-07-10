@@ -1,9 +1,11 @@
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
+import BottomModal from "components/BottomModal";
+import SongLyricView from "components/SongLyricView";
 import { Text } from "components/Themed";
-import WordDefinition from "components/WordDefinition";
 import Songs from "constants/songs";
 import { useCustomTheme } from "context/ThemeContext";
 import React, { useCallback, useEffect, useRef, useState } from "react";
@@ -17,10 +19,6 @@ import {
   View,
 } from "react-native";
 import { RootStackScreenProps, TTheme } from "types";
-import removeAccent from "utils/removeAccent";
-import SongLyricView from "components/SongLyricView";
-import BottomModal from "components/BottomModal";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   const [selected, setSelected] = useState<any>(null);
@@ -124,52 +122,10 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
     });
   }, [selected]);
 
-  const previuosChapter = () => {};
-  const actionOptions: any[] = [
-    {
-      icon: "play-skip-back",
-      action: previuosChapter,
-      label: "Anterior",
-      isIonicon: true,
-    },
-    {
-      icon: "play-skip-forward",
-      action: previuosChapter,
-      label: "Siguinte",
-      isIonicon: true,
-    },
-  ];
-
-  const renderActionItem = (item: any) => (
-    <TouchableWithoutFeedback
-      key={item.label}
-      onPress={item.action}
-      disabled={item.disabled}
-    >
-      <View
-        style={{
-          backgroundColor: "transparent",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        {item.isIonicon ? (
-          <Ionicons
-            name={item.icon}
-            style={{ fontSize: 45, color: theme.colors.notification }}
-          />
-        ) : (
-          <MaterialCommunityIcons name={item.icon} style={{ fontSize: 35 }} />
-        )}
-
-        <Text style={{ color: theme.colors.text }}>{item.label}</Text>
-      </View>
-    </TouchableWithoutFeedback>
-  );
-
   const getIndex = (index: any) => {
     const value = snaps[index] || 30;
     topHeight.setValue(value);
+    if (index === -1) setSelected(null);
   };
 
   return (

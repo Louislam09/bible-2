@@ -4,6 +4,7 @@ import { Text, View } from "./Themed";
 import { TTheme } from "types";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import ProgressBar from "./home/footer/ProgressBar";
+import { WINDOW_WIDTH } from "@gorhom/bottom-sheet";
 
 type Song = {
   title: string;
@@ -41,7 +42,7 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
 
   const animate = (value: number) => {
     Animated.timing(translateX, {
-      toValue: -380 * value,
+      toValue: -WINDOW_WIDTH * value,
       duration: 300,
       useNativeDriver: true,
     }).start();
@@ -110,6 +111,7 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
         style={[
           styles.content,
           {
+            width: WINDOW_WIDTH,
             transform: [{ translateX }],
           },
         ]}
@@ -164,16 +166,15 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontWeight: "bold",
     },
     stanzaContainer: {
+      display: "flex",
       backgroundColor: "transparent",
       height: "100%",
       width: "100%",
-      marginRight: 10,
+      paddingRight: 15,
     },
     stanzaText: {
       color: colors.text,
       fontSize: 21,
-      textAlign: "left",
       lineHeight: 35,
-      textTransform: "capitalize",
     },
   });
