@@ -9,7 +9,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import copyToClipboard from "utils/copyToClipboard";
 import { DB_BOOK_NAMES } from "../../../constants/BookNames";
 import { useBibleContext } from "../../../context/BibleContext";
@@ -21,6 +27,7 @@ import extractVersesInfo, {
 import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import { Text } from "../../Themed";
 import Walkthrough from "components/Walkthrough";
+import { useStorage } from "context/LocalstoreContext";
 
 const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
   item,
@@ -60,8 +67,11 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
   const strongRef = useRef<BottomSheetModal>(null);
   const verseRef = useRef<any>(null);
   const [stepIndex, setStepIndex] = useState(0);
+  const { storedData, saveData } = useStorage();
   const isBottom = isSplit && isBottomSideSearching;
   const isTop = !isSplit && !isBottomSideSearching;
+  const showMusicIcon =
+    item.book_number === 290 && item.chapter === 41 && item.verse === 27;
 
   const strongHandlePresentModalPress = useCallback(() => {
     strongRef.current?.present();
@@ -216,6 +226,11 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
     strongHandlePresentModalPress();
   };
 
+  const enabledMusic = () => {
+    ToastAndroid.show("Himnario habilitado 🎵", ToastAndroid.SHORT);
+    saveData({ isSongLyricEnabled: true });
+  };
+
   const verseActions: TIcon[] = useMemo(() => {
     return [
       {
@@ -235,6 +250,12 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
         action: onFavorite,
         color: isFavorite ? "yellow" : "white",
         hide: false,
+      },
+      {
+        name: "music",
+        action: enabledMusic,
+        color: "white",
+        hide: !showMusicIcon,
       },
     ];
   }, [isMoreThanOneHighted, lastHighted, isVerseHighlisted]);

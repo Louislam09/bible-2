@@ -50,7 +50,6 @@ const ProgressBar = ({
           }}
         />
       </View>
-      {/* <Text>{Math.floor(progress * 100)}%</Text> */}
     </View>
   );
 };

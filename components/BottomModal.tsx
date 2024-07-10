@@ -9,22 +9,25 @@ type TBottomModal = {
   startAT?: 0 | 1 | 2 | 3;
   children?: any;
   justOneSnap?: boolean;
+  getIndex?: any;
+  snaps?: any;
 };
 
 type Ref = BottomSheetModal;
 
 const BottomModal = forwardRef<Ref, TBottomModal>(
-  ({ children, startAT, justOneSnap }, ref) => {
+  ({ children, startAT, justOneSnap, getIndex, snaps }, ref) => {
     const theme = useTheme();
     const styles = getStyles(theme);
     const snapPoints = useMemo(
-      () => (justOneSnap ? ["30%"] : ["30%", "50%", "75%", "100%"]),
-      []
+      () => (justOneSnap ? ["30%"] : snaps || ["30%", "50%", "75%", "100%"]),
+      [snaps]
     );
     const [index, setIndex] = useState(0);
 
     const handleSheetChanges = useCallback((index: number) => {
       setIndex(index);
+      getIndex?.(index);
     }, []);
 
     const renderBackdrop = useCallback(

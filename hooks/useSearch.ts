@@ -32,10 +32,12 @@ const useSearch = ({ db }: UseSearch): UseSearchHook => {
     setState((prev) => ({ ...prev, searchResults: [], error: null }));
   };
 
-  const searchInDatabase = (
+  const searchInDatabase = async (
     query: string,
     abortController: AbortController
-  ): Promise<IVerseItem[]> => {
+  ): Promise<IVerseItem[] | undefined> => {
+    if (!db) throw new Error("Database not initialized");
+
     const words = query.split(" ");
     const whereConditions = Array.from(
       { length: words.length },
@@ -43,37 +45,27 @@ const useSearch = ({ db }: UseSearch): UseSearchHook => {
     );
     const whereClause = whereConditions.join(" AND ");
 
-    return new Promise((resolve, reject) => {
-      if (!db) return true;
+    const currentDbQuery = QUERY_BY_DB[getCurrentDbName(dbName)];
+    const fullQuery = `${currentDbQuery.SEARCH_TEXT_QUERY} ${whereClause};`;
 
+    try {
       abortController.signal.addEventListener("abort", () => {
         setState({ searchResults: null, error: "Search aborted" });
-        reject(new Error(`Search aborted: ${query}`));
+        return []
       });
+      const statement = await db.prepareAsync(fullQuery);
+      const result = await statement.executeAsync(words.map((word) => `%${word}%`));
+      const response = await result.getAllAsync()
+      await statement.finalizeAsync();
 
-      const query = QUERY_BY_DB[getCurrentDbName(dbName)];
-      db.transaction((tx) => {
-        tx.executeSql(
-          `${query.SEARCH_TEXT_QUERY} ${whereClause};`,
-          words.map((word) => `%${word}%`),
-          (_, { rows }) => {
-            if (!abortController.signal.aborted) {
-              const results: IVerseItem[] = [];
-              for (let i = 0; i < rows.length; i++) {
-                results.push(rows.item(i));
-              }
-              resolve(results);
-            }
-          },
-          (_, error) => {
-            if (!abortController.signal.aborted) {
-              reject(error);
-            }
-            return true;
-          }
-        );
-      });
-    });
+      return response as IVerseItem[];
+    } catch (error) {
+      if (!abortController.signal.aborted) {
+        setState({ searchResults: null, error: "Search aborted" });
+        return []
+      }
+      console.error(error);
+    }
   };
 
   const performSearch = async (

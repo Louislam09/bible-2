@@ -70,6 +70,7 @@ export type RootStackParamList = {
     | ChooseChapterNumberParams;
   Modal: undefined;
   Onboarding: undefined;
+  Song: undefined;
   NotFound: undefined;
 };
 
@@ -91,6 +92,7 @@ export enum Screens {
   Notes = "Notes",
   Onboarding = "Onboarding",
   Character = "Character",
+  Song = "Song",
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -107,6 +109,7 @@ export const ScreensName: TScreensName = {
   [Screens.Dashboard]: "Dashboard",
   [Screens.Onboarding]: "Guia",
   [Screens.Character]: "Personaje",
+  [Screens.Song]: "Himnario",
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
