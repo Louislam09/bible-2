@@ -196,10 +196,10 @@ const Dashboard = () => {
           padding: 0,
           flex: 1,
           display: "flex",
-          // width: SCREEN_WIDTH / columnNumber,
           alignItems: "center",
           justifyContent: "center",
         },
+        isPortrait && { width: SCREEN_WIDTH / columnNumber },
       ]}
       disabled={item.disabled}
     >
@@ -248,11 +248,13 @@ const Dashboard = () => {
       <View
         style={[
           styles.optionContainer,
-          { width: isPortrait ? WINDOW_WIDTH : WINDOW_WIDTH / 2 },
+          {
+            width: isPortrait ? WINDOW_WIDTH : WINDOW_WIDTH / 2,
+          },
+          isPortrait && { padding: 15 },
         ]}
       >
         <FlashList
-          contentContainerStyle={{ padding: 15 }}
           data={options}
           keyExtractor={(item) => item.label}
           renderItem={renderItem}
@@ -296,7 +298,6 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
       width: "100%",
       backgroundColor: "transparent",
       minHeight: 400,
-      // borderWidth: 1,
     },
     verse: {
       display: "flex",
