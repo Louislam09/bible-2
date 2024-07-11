@@ -24,11 +24,12 @@ export default [
     "title": "03 - ¡ACORDES DE ASÁF!",
     "chorus": null,
     "stanzas": [
-      "(1) ¡Dios bendiga a los que están casados y se tienen amor mutuo y santo!\n¡Les proteja de tanto quebranto que en sus vidas se presentará!\n¡Que su hogar que ha logrado formarse al unir ellos sus intenciones,\n goce siempre de mil bendiciones y el amparo del Dios de Abrahám!",
-      "(2) Que Jesús, que en Caná fue invitado, haga acto de Santa presencia cada vez que pierdan la paciencia éstos que se han jurado lealtad. Les recuerde que nada en el mundo es eterno, que todo termina. ¡Que pidiendo la guianza divina, hallarán el remedio a su mal!",
-      "(3) Si estos dos que ante Dios se han jurado un amor para toda su vida incurrieran en una reñida, ¡busquen pronta reconciliación! Y si acaso de duelo o tristeza se nublasen sus vidas un día, ¡el Espíritu Santo es el guía que devuelve la felicidad!",
-      "(4) ¡Se le advierte a todos los casados que no olviden en toda su vida, de cuidarse de gente atrevida que destruye la felicidad! ¡La oración es nuestra arma efectiva en cualquiera de las tentaciones! ¡Dios ha unido a éstos dos corazones! ¡Ay de aquel que se atreva a violar!",
-      "(5) Los adultos que han sido testigos\n no se olviden de orar con frecuencia \n por los dos que han tenido paciencia \n esperando ésta confirmación. \n Con los jóvenes y los chiquitos, \n ¡escudriñen Los Santos Escritos \n por lo menos un día a la semana!,\n reunidos en plan familiar"
+      "(1) ¡Al Dios de Asáf yo le canto alegre!\n¡Al Dios de David y al de Yedutún!\n- ¡Que vengan los músicos y me acompañen,\ncon sus guitarras, bajos, también requintos!",
+      "(2) ¡Gocemos alegres la nueva luna!\n- ¡En el día señalado!\n¡Con ambiente de nuestra solemnidad!\n ¡Porque estatuto es de Yehováh!",
+      "(3) La ordenanza fue dada para Israel.\n- Como testigo está “El Soñador”,\nel cual pidió que llevaran sus huesos.\nAllá se hablaba lenguaje muy pervertido;\ny también ¡un Faraón los convirtió en esclavos!",
+      "(4) ¡Sus manos trabajaron cuatro siglos el barro!\nEn su calamidad clamaron, y ¡Dios los libró!\n¡Les reveló lo de yom teruáh!\n- ¡Los probó junto a las aguas de Masáh!",
+      "(5) “¡Oye, pueblo necio! ¡Yo te corregiré,\nIsrael si me oyeres!”\n- “¡No habrá para ti otros dioses!\n¡Ni te inclinarás a las imágenes!\n- ¡Anojí Yehováh Elohéija!\n¡Yo te ayudé a salir de la tierra de esclavos!”",
+      "(6) “¡Disponte a hablar mi Palabra!”\n- ¡Pero el ciego de Israel no quiso servir de embajador!\n¡Se encuentra cumpliendo de Isaías el cuarenta y dos!"
     ]
   },
   {
@@ -851,6 +852,345 @@ export default [
       "(2) ¡Reíd! (¡Reíd! ¡Reíd!) ¡Reíd con gozo de Dios!\n(¡Al ver! ...) ¡Al ver, al ver…! ¡Al ver Su Perdón!\n(¡Y no callar!) ¡Y no callar la canción!\n(¡de dar! ¡de dar!) ¡de dar las glorias a Dios!\n(¡las glorias a Dios!)",
       "(3) ¡Cantad! ¡Cantad! ¡Cantad para Dios!\n¡Cantad con toda el alma en la voz!\n¡Cantad y solamente cantad!\n¡Cantad para la gloria de Dios!",
       "(Oda:)\nSeñor, que este canto, ¡canto tuyo!\n¡Llegue al corazón de cada oyente!\nSeñor, que este canto, ¡canto tuyo!\ncanto para Tu gloria,\ncorra por los caminos de este mundo,\ny penetre en el corazón de cada hombre,\npara que cada hombre\n¡sea transformado a Ti!\n(Repetir estrofas 2 y 3)"
+    ]
+  },
+  {
+    "title": "87.-¡PONTE EN CONTACTO…!",
+    "chorus": "¡Ponte en contacto con el Salvador!\nY si la tristeza te quiere invadir;\nlleno de alegría siempre estarás,\n¡A causa del contacto con El salvador!",
+    "stanzas": [
+      "(1) ¿Quieres sobre el mundo ser un vencedor?\n¿Quieres tú cantar aún cuando hay dolor?\n¿Quieres ser valiente como un luchador?\n¡Ponte en contacto con el Salvador!",
+      "(2) En tu paso hay gente que ama la maldad,\ny que no conocen la felicidad;\n¡Háblales de Cristo! ¡No hay que callar!\nCon Dios el contacto debes tú guardar.",
+      "(3) Con Dios el contacto debes mantener\npara que confianza pueda en ti tener.\nQue la gente a Cristo pueda en ti sentir,\ncon solo observar tu forma de vivir.",
+      "(4) ¡Deja que tu espíritu empiece a imitar\nla humildad de Cristo y Su santo amor!\n¡Ora siempre y vela, Él te ayudará!\n¡Ponte en contacto con el Salvador!"
+    ]
+  },
+  {
+    "title": "88.-¡POR LOS MALDITOS COMO YO!",
+    "chorus": "¡Su grande amor a mí me salvó!\n¡Su grande amor me libertó!\nEn una cruz mi Jesús sufrió\npor ese amor que tiene Él para mí.",
+    "stanzas": [
+      "(1) ¡Hermoso amor que me salvó de perdición!\nCulpable y vil pecador, yo iba a morir.\nSin esperanza de vivir, ¡que, día feliz!\nCuando Jesús me levantó por su amor.",
+      "(2) En una cruz mi Salvador quiso morir,\n¡Por los malditos como yo, Su vida dio!\nPor ese amor que me mostró: ¡Gloria al Señor!\n¡Soy un cautivo en libertad por Su amor!",
+      "(3) Jesús mi Salvador; mi Rey, me prometió\nuna mansión donde estaré siempre con Él;\nY allí tristezas o dolor jamás tendré\n¡Esa mansión me preparó por Su amor!"
+    ]
+  },
+  {
+    "title": "89.-¡POR MIS CULPAS!",
+    "chorus": "¡Mis pecados borró, cuando sangre vertió,\nel sublime, Cordero de Dios!\n¡Los desprecios sufrió, y mi alma salvó!\n¡Él cambió mis tinieblas en luz!",
+    "stanzas": [
+      "(1) Hubo quien por mis culpas murió en una cruz.\naunque indigno y vil siempre fui.\nSoy feliz, pues Su sangre, vertió mi Jesús,\nY con ella ¡mis culpas cubrí!",
+      "(2) Es muy tierno mi Amado, tal nadie lo fue,\nÉl convierte al infiel corazón;\ny por esa ternura, y paciencia yo sé,\nque soy libre de condenación.",
+      "(3) ¡Es mi anhelo constante a Cristo seguir!\nmi camino Su ejemplo marcó;\ny por darme la vida Él quiso morir.\nEn Su cruz mis pecados cargó."
+    ]
+  },
+  {
+    "title": "90.-¡POR PROFETAS CON TROMPETAS!",
+    "chorus": null,
+    "stanzas": [
+      "(1)¡Mucha gente está ignorando\nque Dios le mostró a Moisés\nel secreto de ese Pueblo que elegido de Dios es!\nPor Profetas con Trompetas,\nel Ungido nos está exhortando:\n\"¡Descifremos el Secreto! ¡Ya para este tiempo es!\"",
+      "(2) ¡El Ungido de ungidos es Imánu-El mi Señor!\n¡Son muy pocos y escogidos\nlos que entienden \"el clamor\"!\nPor Profetas con Trompetas,\nel Ungido les está avisando:\n\"¡Restauramos el Dechado que Dios le exigió a\nMoisés!\"",
+      "(3) ¡Ya tenemos los noventa\nque en el cielo vio Moisés,\nmas noventa del Ungido que es idéntico a Moisés!\nPor Profetas con Trompetas,\nel Ungido nos está aclarando\nque \"Noventa veces cuatro son un Año a la vez\"",
+      "(4) De esa Lámpara en que ardían\nsiete flamas a la vez…\nde ese Árbol que produce doce frutos cada mes…\nPor Profetas con Trompetas,\nel Ungido nos esta insinuando\n¡El versículo quinceavo que hay en Jeremías tres!",
+      "(5) Ciertas gentes enfatizan\nuna Trompeta \"final\",\npero omiten seis Trompetas y ¡es delito capital!\nPor profetas con Trompetas,\nel Ungido está profetizando:\n\"¡Jericó caerá de nuevo por el Celo de Jehováh!\"",
+      "(6) ¡Siete veces bautizado\ntiene que ser hoy \"Naamán\"!,\npues las siete vacas flacas ¡a la vista ya están!\nPor Profetas con Trompetas,\nel Ungido nos está advirtiendo:\n\"¡No es una, sino siete, las Trompetas de\nJehováh!\""
+    ]
+  },
+  {
+    "title": "91.-¡POR TANTAS MARAVILLAS!",
+    "chorus": null,
+    "stanzas": [
+      "(1) Por la inefable luz del día,\nque tanto alegra al corazón,\nal despertarnos diariamente,\ncuando admiramos el fulgor\nde una alborada rubia y bella,\n¡Gracias sean dadas a mi Dios!",
+      "(2) Por el aroma de las flores,\nen cuyas galas de color,\nvemos la Mano Omnipotente,\ncuyo pincel las matizó:\nPor tantas, tantas maravillas,\n¡Gracias sean dadas a mi Dios!",
+      "(3) Por nuestro pan de cada día,\nque Él nos concede con amor,\ninfatigable, bueno y santo\na todo ser de la creación:\nY por el pan que nos da vida\n¡Gracias sean dadas a mi Dios!",
+      "(4) Por éste techo que nos cubre,\nque es una grande bendición;\ny por la vida de mis padres,\nque me arrullaron con amor:\nPor tantas dádivas preciosas\n¡Gracias sean dadas a mi Dios!",
+      "(5) Por esa chispa milagrosa\nde inteligencia que Él nos dio,\npara pensar en lo infinito\ncon alas bellas de amor;\npor ese excelso privilegio,\n¡Gracias sean dadas a mi Dios!",
+      "(6) Por esa dicha tan insigne,\nque en Su piedad nos dispensó;\nmandando a su Hijo Sacrosanto\na consumar la Redención\nde los humanos pecadores.\n¡Gracias sean dadas a mi Dios!"
+    ]
+  },
+  {
+    "title": "92. - ¡PRECIOSA SANGRE!",
+    "chorus": "¡Mis pecados borró, cuando sangre vertió,\nel verdadero Cordero de Dios! //",
+    "stanzas": [
+      "(1) ¡Raza grandiosa y bendita\nfue la Israelita con Su Ungido rey!\n¡Era de las naciones cumbre\nlogrando ese encumbre al acatar su Ley!\n¡Tiene una historia muy envidiable!\n¡Pero en su euforia subestimó\n// La sangre! ¡Preciosa sangre\ndel verdadero Cordero de Dios! //",
+      "(2) ¡Raza que recibió las Leyes\npara que así sus reyes usaran la razón!\n¡Pero que sólo con sus labios\nobservan hoy sus sabios y no de corazón!\n¡Más Yehováh, en su Toráh,\naún le ofrece para expiación\n// La Sangre! ¡Preciosa Sangre\ndel unigénito Hijo de Dios! //",
+      "(3) ¡Era una raza de conquistas,\ndetallan sus Salmistas con gran ostentación!\n¡Mas por odiar al Hijo Ungido\nfracasos ha sufrido de gran lamentación!\n¡Hoy Dios le ofrece, si se entristece,\ndoble grandeza, al aceptar\n// La sangre! ¡Preciosa sangre\nque garantiza ser hijos de Dios! //",
+      "(4) ¡A quien descifre éste Mensaje\nle incluye en su linaje el Dios de Abraham!\n¡Dicta que si pecado hemos,\nabogado tenemos en el segundo Adám!\n¡Nuestra Tikváh se cumplirá,\ny nuestra boca proclamará\n// La Sangre! ¡Preciosa Sangre\ndel unigénito Hijo de Dios! //"
+    ]
+  },
+  {
+    "title": "93. - ¡PREDIQUEMOS LA VERDAD!",
+    "chorus": "¡Sólo Jesucristo puede transformar al pecador!\n¡No hay otro Salvador, ni hay otro mediador!\n¡Sólo Jesucristo salva al pecador!",
+    "stanzas": [
+      "(1) ¡Prediquemos la verdad! ¡Protestemos contra el mal!\n¡Rechacemos las doctrinas de error!\n¡Desechemos la invención, lo que es mera tradición,\nque invalida la Palabra del Señor!",
+      "(2) No podemos encontrar que debemos confesar\nlos pecados a un hombre pecador.\nEl que arrepentido va confesándose a Jehováh,\n¡por la Sangre de Jesús se salvará!",
+      "(3) Preguntemos el por qué han quitado de la Ley\nel segundo mandamiento que Dios dio:\n\"¡imágenes NO te harás! ¡A ellas NO te inclinarás!\"\n\"¡Servirás y adorarás sólo a tu Dios!\"",
+      "(4) ¿Cuándo y dónde ha dicho Dios que se rinda\nadoración a una imagen de madera o de metal?\nDe las \"bulas\" ¿cuándo habló?\nDe \"indulgencias\" ¿qué mandó?\n¡Lee tu Biblia y no las podrás encontrar!",
+      "(5) Sólo para explotar a la pobre humanidad\nse inventó un \"purgatorio\" de terror;\nMas sabemos que Jesús dio Su Sangre en la cruz\npor limpiar de toda mancha al pecador.",
+      "(6) ¡No busquemos el latín! ¡El idioma hebreo, sí!\n¡El lenguaje del Bendito Salvador!\n¡Sólo basta escudriñar la Palabra de Verdad\npara hallar la Vida eterna y Salvación!"
+    ]
+  },
+  {
+    "title": "94. - ¡QUÉ BONDAD TAN INFINITA!",
+    "chorus": "¡Es Jesús para mí,\nla esperanza de salud!\n¡Sólo en Él hallaré\nla divina plenitud!",
+    "stanzas": [
+      "(1) ¡Qué bondad tan infinita\nhacia un mundo pecador:\nDios en Cristo revelando\nSu eternal y santo amor!",
+      "(2) ¡Como el vasto firmamento,\ncomo el insondable mar,\nes la gracia salvadora\nqué Jesús al alma da!",
+      "(3) Aunque sean tus pecados\nrojos como el carmesí,\nen la Sangre de Yeshúa\nhay limpieza para ti."
+    ]
+  },
+  {
+    "title": "95.-¡¿QUIÉN PODRÁ IGUALARTE?!",
+    "chorus": "¡No me cansaré nunca de admirarte!\n¡Yehováh mi Dios, ¿quién podrá igualarte?!",
+    "stanzas": [
+      "(1) ¡Veo el universo: obra de Tus manos;\nla luna y el sol alumbrando humanos!",
+      "(2) ¡Hiciste jilgueros, también ruiseñores;\nque elevan sus cantos a los dos Señores!",
+      "(3) ¡Admiro los mares, también las estrellas!\n¡Admiro montañas, y mil cosas bellas!",
+      "(4) ¡Prometo servirte con el corazón!\n¡Dando a tu Palabra toda la razón!"
+    ]
+  },
+  {
+    "title": "96.-QUIERO HABLARTE DEL AMOR DE CRISTO",
+    "chorus": "¡Nadie pudo amarme como Cristo!\nEs incomparable su amistad;\nsolo Él pudo redimirme del pecado,\npor Su amor y Su bondad.",
+    "stanzas": [
+      "(1) Hoy yo quiero hablarte del amor de Cristo\npues en Él hallé amigo fuerte y fiel,\npor Su gracia transformó mi vida entera,\nlo que en ésta vida soy lo debo a Él.",
+      "(2) Mi alma estaba llena de ayes y tristezas,\nllena estaba de miserias y dolor;\ncon ternura Cristo me tendió la mano\ny me guió por el sendero del amor.",
+      "(3) Cada día viene a darme nuevo aliento,\na mi corazón infunde dulce paz;\nno comprenderé ¿por qué vino a salvarme?,\nhasta que en el cielo pueda ver Su faz."
+    ]
+  },
+  {
+    "title": "97.-¡RECONCÍLIENSE CON DIOS...!",
+    "chorus": "En Nombre de Cristo Jesús,\nesta encomienda traigo yo:\n¡Ya reconcíliense con el Señor mi Rey!\n¡Su Día terrible cerca está!",
+    "stanzas": [
+      "(1) Soy extranjero aquí, vengo de otra nación,\nde un reino celestial de eterna paz y amor,\n¡Representante soy! ¡cumplo de corazón\ncon los asuntos de mi Rey!",
+      "(2) Yo les insisto hoy que se arrepientan ya\nantes que diga Él que el plazo se venció,\ny mi advertencia de hoy pronto se acabará,\n¡pues ya mi Rey se impacientó!",
+      "(3) ¡Si dejan la maldad y buscan a mi Rey,\nlos que hagan caso ya, van a gozar con Él!\nRecibirán también eterna habitación\nlos que obedezcan a Su Ley."
+    ]
+  },
+  {
+    "title": "98.-RUMBO AL SEPULCRO...",
+    "chorus": "¡Aquí no está el que cadáver fue!\n¡Resucitó! ¡La tumba abandonó!\n¡Hay que anunciar que Dios al mundo amó,\na tal grado que a Su Hijo nos envió!",
+    "stanzas": [
+      "(1) Rumbo al sepulcro y muy tristes, sin dormir,\nunas mujeres piadosas quieren ir\na embalsamar el cadáver de Jesús,\nquien por salvar al pecador murió en la cruz.",
+      "(2) Cuando María de Magdala confundió\nal Salvador con aquel jardinero,\n\"¿a dónde te lo has llevado?\", preguntó;\n\"¡Yo soy Jesús, tu Redentor!\", le contestó.",
+      "(3) ¡Más importante que el día de nacer,\nfue el día en que a la muerte Él derrotó!\n¡No habrá sepulcro que pueda retener\nal que creyó en el Señor que ya venció!",
+      "(4) Como Tomás el Gemelo, incrédulos\nmuchos llamados \"hermanos en la fe\",\n¡no están seguros que el Cristo vive hoy!\n¡Bendito es el que creyó sin antes ver!"
+    ]
+  },
+  {
+    "title": "99.-¡SANTO! ¡SANTO! ¡SANTO!",
+    "chorus": null,
+    "stanzas": [
+      "(1) ¡Santo! ¡Santo! ¡Santo! ¡Tu nombre Omnipotente,\nmi boca y mi lengua siempre proclamarán!\n¡Santo! ¡Santo! ¡Santo! te adoro reverente\nDios Padre y Su Hijo, y Su Santo Espíritu.",
+      "(2) ¡Santo! ¡Santo! ¡Santo! En numeroso coro,\nángeles celestes te adoran con fervor;\nllenos de alegría, y sus coronas de oro,\nponen ante el Trono glorioso del Señor.",
+      "(3) ¡Santo! ¡Santo! ¡Santo! ¡Inmensa muchedumbre\nde ángeles y humanos cumplen tu voluntad!\n¡Y ante Ti se postran bañados en Tu lumbre!\n¡Ante Ti que has sido, que eres y serás!",
+      "(4) ¡Santo! ¡Santo! ¡Santo! Aunque estés vigilado\ne imposible sea Tu gloria contemplar,\nSanto Tú eres solo y nadie te ha igualado\nen poder perfecto, pureza y caridad!",
+      "(5) ¡Santo! ¡Santo! ¡Santo! La gloria de Tu nombre\nvemos en Tus obras, en cielo tierra y mar;\n¡Santo! ¡Santo! ¡Santo! Te adoran los humanos:\nDios Padre y Su Hijo y Su Santo Espíritu."
+    ]
+  },
+  {
+    "title": "100.-¡SE DEJÓ CRUCIFICAR!",
+    "chorus": "¡Por querernos rescatar se dejó crucificar!\n¡Dádiva inefable! ¡Nada es comparable\nal amor de mi Jesús!",
+    "stanzas": [
+      "(1)¡Al santo amor de Cristo no encuentro otro igual!\n¡Amor lleno de gracia sublime y eternal!,\nDe ese amor divino, ¡enorme como el mar!,\n¡Inmenso como el cielo!, con gozo he de cantar.",
+      "(2) El Verbo se hizo carne, y el vulgo lo siguió,\ny todas sus angustias en Él depositó;\nentonces, ¡bondadoso!, ¡Su amor brotó en raudal!,\n¡Incontenible!, ¡inmenso!, ¡sanando todo mal!",
+      "(3) Jesús les dio a los ciegos la vista material,\nElías el Profeta da vista espiritual;\nel Espíritu Santo ofrece salvación,\ny nuestro Dios, Jehováh, exige perfección.",
+      "(4) Dios tiene el Candelabro que sirve de fanal,\nmostrando al humano un superior ideal;\ny al paso de los años será más eficaz,\ngarantizando al mundo incomparable paz."
+    ]
+  },
+  {
+    "title": "101.-¡SE HA MAGNIFICADO ÉL! (¡KI GAO GAA!)",
+    "chorus": "¡Cantaré yo a Jehováh, porque se ha magnificado Él!\n¡Ha echado al caballo y su jinete en el mar!\n¡Ha echado al caballo y su jinete en el mar!\n// ¡Al mar! ¡Al mar! ¡Al mar! //\n¡Cantaré yo a Jehováh, porque se ha magnificado Él!",
+    "stanzas": [
+      "(1) ¡Jehováh es mi gran fortaleza, mi cántico y mi Salvación!\n// ¡Alabaré a Jehováh por engrandecerse tan gloriosamente! //\n// ¡Mi Dios es Jehováh! ¡Yo lo alabaré! ¡Dios de mi padre Abraham es Él! //\n// ¡Jehováh! ¡Jehováh! ¡Jehováh! //",
+      "(2) ¡Jehováh es experto en guerra! ¡Su nombre infunde pavor!\n// ¡Ahogó en el mar al ejército del faraón con sus capitanes! //\n// ¡Se hundieron allí, en profundidad! ¡Tumba en abismos les sentenció! //\n// ¡Allí! ¡Allí! ¡Allí! //",
+      "(3) ¡Tu diestra, oh Jehováh, se engrandece! ¡Tú diestra, oh Jehováh quebrantó...\n// Al enemigo, y a los que intentaron también desafiar Tu Nombre! //\n// ¡Tu grande furor allí destruyó al enemigo! ¡Lo consumió! //\n// ¡Furor! ¡Furor! ¡Furor! //",
+      "(4) ¡Soplando partiste las aguas! ¡Tu aliento las amontonó!\n// ¡Se distinguieron así en el fondo del mar los grandes abismos! //\n// ¡Tu Israel cruzó en medio del mar, viendo al egipcio en persecución! //\n// ¡Cruzó! ¡Cruzó! ¡Cruzó! //",
+      "(5) \"¡Ya pronto los alcanzaremos!\" \"¡La espada los acabará!\"\n// \"¡Repartiremos despojos!\" \"¡Nada quedará!\", dijo el enemigo. //\n// ¡Volviste a soplar! ¡Los cubrió el mar! ¡A los abismos fueron a dar! //\n// ¡Se hundió! ¡Se hundió! ¡Se hundió! //",
+      "(6) ¡No hay Dios como Tú, en grandeza! ¡No hay Dios como Tú en santidad!\n// ¡Grande en prodigios! ¡Terrible en proezas también! ¡Todo con Tu diestra! //\n¡La tierra tragó! ¡El mar devoró al enemigo de Israel!\n¡Mi Dios! ¡Mi Dios! ¡Mi Dios!",
+      "(7) ¡Quisiste, por misericordia, librar a Tu pueblo en el mar!\n¡Los redimiste en Egipto, y los conduces hoy a la buena tierra!\n¡Los pueblos lo oirán, y se espantarán! ¡Los filisteos pavor tendrán!\n¡Pavor! ¡Pavor! ¡Pavor!",
+      "(8) ¡Valientes caudillos se turban! ¡Espanto y temblor les cogió!\n¡A los de Edóm y Moáb les acobardará la terrible nueva!\n¡La gente, oh Jehováh, enmudecerá hasta que pase todo Israel!\n¡Pasad! ¡Pasad! ¡Pasad!",
+      "(9) ¡Tú has preparado un Monte, al pueblo de Tu heredad...\nComo Santuario donde Tú, Jehováh, plantarás a Tus redimidos!\n¡Tú los llevarás, y allí habitarán! ¡Y eternamente Tú reinarás!\n¡Tzión! ¡Tzión! ¡Tzión!"
+    ]
+  },
+  {
+    "title": "102.-¡SHILÓH YAVÓH!",
+    "chorus": "¡Shilóh vendrá! ¡No tarda ya!\n¡Viene a quitar nuestro oprobio!\nEntonces, nuestra boca ¡se llenará de risa!\nPorque Shilóh vendrá, ¡y Él es el Novio!",
+    "stanzas": [
+      "(1) Está por amanecer,\nel alba rayando está;\nlas aves silban gorjeos,\n¡el sol pronto brillará!",
+      "(2) Shilóh vendrá, ¡es seguro!\nAl irse lo prometió.\n¡Vendrá cubierto de gloria,\na darnos retribución!",
+      "(3) ¡Vendrá! ¡vendrá! ¡Ya no tarda!\n¡Sus pasos se escuchan ya!\nSeñales hay en el mundo\nque ¡Él pronto aparecerá!",
+      "(4) ¡Mi día más importante\nserá cuando le veré!\n¡Será mi eterna alegría\nestar por siempre con Él!"
+    ]
+  },
+  {
+    "title": "103.-SI ESTOY DESANIMADO...",
+    "chorus": "Por gracia Jesús me sostendrá, y nunca me faltará;\n¡ni en sombras yo voy ni triste estoy!\n¡Su gracia me sostendrá!",
+    "stanzas": [
+      "(1) Si estoy desanimado, con penas y temor,\no si estoy angustiado, en pruebas y dolor,\nentonces Cristo dice, mis pruebas al mirar,\nque Su sostén y ayuda jamás me faltarán.",
+      "(2) Cuando en la dura prueba conmigo el mundo es cruel,\ncuando en la ruda lucha no halló un amigo fiel,\nentonces llega a mi alma un eco celestial;\nes mi Señor que dice que ayuda Él me dará.",
+      "(3) Cuando en mis aflicciones no puedo resistir,\ncuando a las tentaciones ya voy a sucumbir,\nentonces Su socorro mi Salvador me da,\ny Él ha prometido conmigo siempre estar."
+    ]
+  },
+  {
+    "title": "104.-¡SI TU MANO ME CONDUCE...!",
+    "chorus": "¡Yo iré a donde me envíes,\nsi Tu mano me conduce!\n¡Salvador, seguirte quiero!\n¡Donde quiera fiel te seguiré!",
+    "stanzas": [
+      "(1) ¡Puedo oír Tu voz llamando\ncon acentos cariñosos!\nPuedo oír Tu llamamiento:\n\"¡Trae tu cruz y ven en pos de mí!\"",
+      "(2) ¡Yo te seguiré en \"el huerto\",\ny en \"la Vía Dolorosa\"!\n¡Y al seguirte, siempre alegre\nsufriré contigo, mi Jesús!",
+      "(3) ¡Sufriré por Ti, Maestro,\nsi Tu gracia me sostiene!\n¡Y si Tú irás conmigo,\nmoriré contigo, mi Jesús!",
+      "(4) ¡Me darás Tu gracia y gloria,\ny me sostendrás por siempre!\n¡Cada hora yo te quiero!\n¡Y por siempre Tú me guiarás!"
+    ]
+  },
+  {
+    "title": "105.-¡SIEMPRE PUEDES...!",
+    "chorus": null,
+    "stanzas": [
+      "(1) Si por tierra, aire o mar no pudieras tú viajar,\nsiempre a tu vecino puedes de la Salvación hablar.\nSi a un país lejano no pudieras tú llegar,\nen tu tierra siempre puedes al Mesías presentar.",
+      "(2) Si elocuentemente nunca tú pudieras disertar,\nni como un grande cantante tú pudieras destacar,\nsiempre puedes a los niños y a los jóvenes hablar\ncon la gracia tan gloriosa que el Señor te puede dar.",
+      "(3) Si por falta de dinero no pudieras transitar,\npor países extranjeros donde puedas predicar,\npuedes mientras prepararte en la Santa Yeshiváh,\nPues hay muchos que tú tienes que ir a despabilar.",
+      "(4) Si careces de dinero Dios lo va a proporcionar,\npero tú debes primero esa \"maldición\" quitar:\nsi no cumples con los diezmos nunca esperes prosperar;\nY si cumples, Dios promete bendiciones derramar."
+    ]
+  },
+  {
+    "title": "106.-¡SIERVO BUENO Y FIEL!",
+    "chorus": "\"¡Ven mi siervo bueno y fiel!\" así me dirá Imánuel,\n\"Sobre poco fuiste hallado siempre fiel,\n¡sobre mucho te pondré! ¡A gozar conmigo ven!\";\ny en Su gloria eternamente gozaré.",
+    "stanzas": [
+      "(1) ¡Sacrificios yo haré y mi pacto cumpliré,\npues así lo he prometido yo a mi Dios!\nY en aquel día final por mil años reinaré\ncomo rey y sacerdote con Jesús.",
+      "(2) ¡Vanamente tratarás de obtener revelación\nalejándote del Monte de Sión! Y si piensas que Israel ya\nno tiene salvación, ya Romanos 11:, todo lo aclaró.",
+      "(3) En el libro de inscripción yo mi nombre encontraré,\ncuando allá se pase lista ante Dios; y ¡qué gozo ha de ser\nnuevo cuerpo recibir!, pues así lo ha prometido\nel Verbo Fiel.",
+      "(4) La revelación de Juan muchos dicen entender, pero\nPedro, 2:21, lo dirá; prometiendo libertad, ellos mismos\nciegos son; ¡en Mateo 25:5, están!",
+      "(5) Si tú quieres convicción, obtendrás revelación\nacercándote al Monte de Sión; en el 12:22, y en el 5:12 al\nfin, ya Hebreos claramente lo explicó."
+    ]
+  },
+  {
+    "title": "107.-¡SIETE LUCES...!",
+    "chorus": "¡Siete luces tiene el Faro\npara un mar espiritual!\n¡a los nautas pone a salvo\nde un epílogo fatal!",
+    "stanzas": [
+      "(1) Nuestro Dios se compadece\ndel marino espiritual,\nsi su barca se estremece\ncon el fuerte vendaval.",
+      "(2) Su misericordia alumbra\ncon un faro al brillar,\nen la niebla o en la penumbra,\nlos peligros de alta mar.",
+      "(3) Noche oscura es el pecado,\ny el ambiente es negro mar;\nsi eres nauta fatigado\n¡ese Faro te va a guiar!",
+      "(4) Mantengamos ése Faro\na mayor intensidad,\nque en la noche vean claro\nen la negra oscuridad."
+    ]
+  },
+  {
+    "title": "108.-SOY BAUTIZADO",
+    "chorus": "¡Seguiré a mi Jesús!\nPues para mí lo de este mundo se acabó;\nY ayudado por su luz\nproseguir en sus caminos quiero yo.",
+    "stanzas": [
+      "(1) Soy bautizado como manda el Salvador;\n¡qué grande gozo siento yo en mi corazón!\nYa mis pecados los borró mi Salvador;\n¡quiero llegar puro y limpio a Su mansión!",
+      "(2) Adiós, cruel mundo, que hasta ayer estuve en ti,\ndonde el pecado alimentaba mi vivir;\nya siento gozo desde que me sumergí,\ny de volver a pecar, ¡mejor morir!",
+      "(3) Ahora tránsito en el Camino de la Fe,\ndonde muy pocos han podido caminar.\nAhora llevo la bandera de la fe\ny a mi Patria, ¡muy feliz quiero llegar!",
+      "(4) El refugio de Jesús es mi sostén;\nNunca podré desfallecer en mi deber.\nAlabanzas con gran gozo cantaré,\ny a mi Señor ¡con gran gozo serviré!"
+    ]
+  },
+  {
+    "title": "109.-¡SOY REDIMIDO!",
+    "chorus": "¡Soy redimido! ¡esto es muy cierto!\n¡Un Cristo vivo llevo en mi alma!\nSi estoy caído, Él está presto\na levantarme con Su poder.",
+    "stanzas": [
+      "(1) En negro fango yo estuve hundido,\ny allí perdido Jesús me halló;\ny con Su brazo fuerte extendido,\n¡de aquel peligro me rescató!",
+      "(2) Por mucho tiempo colgó en mi cuello,\n(como una muestra de mi error),\nun crucifijo de un hombre muerto;\n¡mas hoy soy libre! ¡Gloria al Señor!",
+      "(3) Si estás caído, como yo estuve,\ny tu alma vaga en el error,\n¡Cristo es tu amigo!, dale tu carga,\nque solo Él salva y da perdón.",
+      "(4) Pronto estaremos los redimidos\nallá reunidos con el Señor;\nde gracia llenos, siendo testigos\nque por los siglos nos dio Su amor."
+    ]
+  },
+  {
+    "title": "110.-¡SU GRANDE AMOR!",
+    "chorus": "¡Su grande amor me rescató!\n¡de densa oscuridad me libertó!\n¡Su grande amor me rescató!\n¡de densa oscuridad me libertó!",
+    "stanzas": [
+      "(1) ¡Lejos de mi dulce hogar, vagaba yo sin Dios!\n¡A través de tierra y mar, sin esperanza y paz!\nPero el grande Salvador, viéndome en perdición,\n¡por Su infinito amor me rescató!",
+      "(2) ¡Yo me entrego al Salvador, siempre lo seguiré!\n¡He tomado ya mi cruz y el mundo atrás dejé!\n¡Tan excelso y grande amor requiere la canción,\ny el servicio fiel de cada corazón!",
+      "(3) Ven a Él, ¡tú! Pecador, no te rechazará:\nCon ternura el buen Pastor hoy te recibirá,\n¡Tus pecados borrará! ¡Gozo tendrás sin par!\n¡Gracia y fuerza te dará para triunfar!"
+    ]
+  },
+  {
+    "title": "111.-¡TOMA TODO LO QUE SOY...!",
+    "chorus": "¡Lávame en tu sangre, Salvador!\n¡Límpiame de toda mi maldad!\n¡Traigo a ti mi vida, para ser, Señor,\ntuya por la eternidad!",
+    "stanzas": [
+      "(1) ¡Todo el tiempo quiero estar consagrado a ti, Señor!\n¡Y mis manos quiero usar, impulsado por tu amor!",
+      "(2) ¡Y mis pies al caminar, a los Montes llegarán!\nY mi boca va a anunciar: \"¡Paz y Bien abundarán!\"",
+      "(3) ¡Y mi tiempo estará dedicado a disertar!\n¡Mi voz siempre alabará al que me vino a salvar!",
+      "(4) ¡De mi voluntad también, cien por ciento dispondrás!\n¡Siempre para hacer el bien, a mi corazón tendrás!",
+      "(5) ¡A tus pies me postro hoy! ¡Fiel por siempre te seré!\n¡Toma todo lo que soy! ¡Siempre yo te serviré!"
+    ]
+  },
+  {
+    "title": "112.- UN MAR AGITADO",
+    "chorus": "¡Y al Eterno Dios alegre cantaré!\n¡Triunfante arribaré al puerto espiritual!\n¡El faro yo veré, y a salvo cruzaré\nel tormentoso vendaval!",
+    "stanzas": [
+      "(1) Un mar agitado tendré que surcar;\n¡las olas me espantarán!\nPero en la rivera de un calmado mar,\nAbraham me esperará.",
+      "(2) ¡Descruza tus brazos! ¡Ponte a trabajar!\n¡Lo ordena el Capitán!\n¡Son muchos los náufragos que hay que salvar!\n¡Con ansia esperando están!",
+      "(3) Queriendo triunfar ésta cruel tempestad,\n¡a los profundos caerá\nla enorme maleta en que va mi maldad!\n¡El sol resplandecerá!",
+      "(4) ¡Al Puerto Celeste ansío llegar!\n¡Allí veré a Imánuel!\n¡Vibrando estas notas de un dulce cantar\nen homenaje a Él!"
+    ]
+  },
+  {
+    "title": "113.- ¡UN TEMPLO HERMOSO!",
+    "chorus": "¡Cómo el alba blanco, ideal,\nvi un templo hermoso, sin igual!\n¡Sus perlas y diamantes vi:\nciento cuarenta y cuatro mil!\n¡Pude entender que el templo aquél\nrepresenta a la Iglesia fiel,\nque de blanco ataviada irá\na encontrar a su Señor!",
+    "stanzas": [
+      "(1) ¡Tuve un día una hermosa visión\nque a mi alma de gozo llenó!\n¡Jamás la podré olvidar!\n¡Quiere Dios que sea una realidad!",
+      "(2) ¡Oh, Iglesia, de blanco saldrás\nal encuentro de tu Salvador!\n¡Tus bodas se celebrarán\ncon gran regocijo y esplendor!",
+      "(3) ¡Diamantes de vivo color\ny perlas de hermoso esplendor,\nserán los hijos del Señor\nque hicieron un Pacto perdurador!"
+    ]
+  },
+  {
+    "title": "114.- ¡UNA ALABANZA MÁS...!",
+    "chorus": "¡Una Alabanza más a mi Señor!\n¡Por Sus bondades y Su grande Amor!\n¡Un canto más a mi Redentor!\n¡Digno es de todo, mi Salvador!",
+    "stanzas": [
+      "(1) Hoy ya puedo expresar lo que siento\nal formar un Templo espiritual,\ndetallando con entendimiento\ncomo Cristo a mí me salvó.\nY ahora que ya Su Palabra\nme ha limpiado de toda maldad,\nÉl dirige mis pasos por senda de amor.\n¡Ah, qué gran felicidad!",
+      "(2) Yo vagué mucho tiempo en el mundo\n¡Sin ninguna esperanza y sin Dios!\n¡Cometí mil errores! y anduve\nrechazando el llamado de Dios.\nY ahora sé que sin palabras\nyo le puedo expresar gratitud,\npues sé bien que Él conoce mi alma y mi ser\ny también mi corazón."
+    ]
+  },
+  {
+    "title": "115.- ¡UNA OVACIÓN!",
+    "chorus": "¡Tristeza y ansiedad borraste con Tu amor!\n¡Ya no hay más soledad! ¡Quitaste mi dolor!,\npor eso elevo a Ti loor.\nMi gran y buen Señor, en esta ocasión\nquiero testificar, de Tu poder cantar\ny ¡darte una ovación!",
+    "stanzas": [
+      "(1) Señor ante Ti estoy; te traigo este son,\nporque Tu paz a diario está en mi corazón.\n¡Por gracia salvo soy! y hoy por Tu Santidad,\n¡ya no he de tropezar en éste caminar\nen mundo de maldad!",
+      "(2) Gracias por la salud, comida, techo ¡y más!,\ny porque cuando viajo, me protege Tu faz.\nAún en mi juventud, Tu voz llegó hasta mí;\nque al envejecer, mi vida pueda ser\n¡cada vez más de Ti!"
+    ]
+  },
+  {
+    "title": "116.- ¡VEN A ÉL!",
+    "chorus": "¡Ven a Él, pecador!\n¡Hoy te espera tu gran Salvador!\n¡Ruégale de favor,\nte conceda un nuevo corazón!",
+    "stanzas": [
+      "(1) Pecador, ven, acepta a Jesús,\n¡y feliz para siempre serás!\nSi te acercas hoy mismo a la Luz,\n¡a tu gran Salvador hallarás!",
+      "(2) Si aceptas que eres pecador,\ny le ruegas tenga compasión,\nJesucristo será el Redentor,\nque te dé por Su Sangre el perdón.",
+      "(3) Y si enfermo te sientes morir\nÉl será tu doctor celestial,\ny Su sangre también curará\na tu espíritu de todo mal.",
+      "(4) Como oveja que vuelve al redil,\nte recibe el bendito Pastor,\ny en sus brazos llevado serás\na un cielo de felicidad."
+    ]
+  },
+  {
+    "title": "117.- ¡VENGO AGRADECIDO!",
+    "chorus": "Veo al cielo y me quedo sin habla,\nal mirar ¡tan bello amanecer!;\ny al saber que el Creador de esta obra,\n¡es el mismo que cambió mi ser!",
+    "stanzas": [
+      "(1a) Señor, vengo a Ti agradecido,\na ¡darte toda honra y loor!;\npues ahora ya estoy convencido:\n¡Fue por mí que murió el Salvador!",
+      "(1b) Pensar que, un día fui un pedido;\nno sabía nada de Tu amor.\nMas en tu plan, ¡ya estaba escogido!,\naún siendo, de los hombres, ¡lo peor!",
+      "(2a) ¡No vuelva yo a ser arrogante!\n¡Líbrame de caer en error!;\nque al dormir y cuando me levante,\nmi familia yo instruya en Tu amor.",
+      "(2b) ¡Ayúdame a ir adelante!\nque en mi ser ¡siempre esté Tu Temor!\nQue en mi vida pueda ser constante,\nhasta estar ante Ti, ¡mi Señor!"
+    ]
+  },
+  {
+    "title": "118.- ¡VIVÍA EN EL MUNDO SIN PAZ!",
+    "chorus": "¡Él ha borrado ya mi maldad!\n¡De mis pecados cuentas no hará!\nSanto cómo es Él, mi alma redimió.",
+    "stanzas": [
+      "(1) Vivía en el mundo sin paz,\nsin esperanza y sin Dios;\nhasta que una noche\na Cristo me entregué.",
+      "(2) ¡En Cristo hallé tanta paz!\nMi vida toda Él cambió,\nÉl es mi roca eterna,\nmi dulce Salvador.",
+      "(3) Él llama al pecador,\nno quiere verlo en el mal;\npor él vertió Su sangre,\npor darle salvación."
+    ]
+  },
+  {
+    "title": "119.- ¡VOY DE PASO!",
+    "chorus": "¡Como anhelo...! ¡Cómo anhelo regresar!\n¡Allá en mi patria no hay sufrimiento!\n¡No hay pecado! ¡Ni existe muerte!\nYo voy de paso por éste mundo,\nsólo un tiempo, sólo un tiempo vivo aquí.",
+    "stanzas": [
+      "(1) Yo voy de paso por éste mundo,\n¡Y no quiero más seguir\nen un mundo de maldad!\n¡No me entretengan ni un segundo,\nen éste mundo de mal vivir!\n¡No tiene el mundo la paz que busco!\n¡Y ya quiero regresar a mi patria celestial!",
+      "(2) Mientras yo siga en éste mundo,\n¡muchas luchas yo tendré!\n¡Tentaciones sufriré!\n¡En éste Valle de sombra y muerte,\nun gran peligro me acecha siempre!\n¡Pastor Divino, solo te pido\nque camines junto a mí, y me alientes a seguir!\n¡Como anhelo...! ¡Cómo anhelo regresar!\nY mientras tanto, ¡me santifico!\n¡Me perfecciono! ¡Me purifico!\n¡Pastor Divino, solo te pido\nque me ayudes, que me ayudes a llegar!"
+    ]
+  },
+  {
+    "title": "120.- YO CONSAGRO A TI MI VIDA",
+    "chorus": "¡Trabajando, trabajando!\nviviré por mi Señor;\nBuenas Nuevas anunciando\nal perdido pecador.",
+    "stanzas": [
+      "(1) Yo consagro a Ti mi vida,\n¡mi querido y buen Jesús!\ny Tu mano bendecida,\npueda guiarme en clara luz.",
+      "(2) Mil temores y mil dudas,\nme quisieran derribar\npero Tú, Jesús, me ayudas\ny arredrarme no podrán.",
+      "(3) Con placer y amor me alisto,\nen las huestes de la fe;\nfortaleza me da Cristo,\ny sin duda venceré.",
+      "(4) ¡Obtendrán feliz victoria\nlos soldados del Señor!\n¡Se verán llenos de gloria,\nde éste mundo en derredor!"
     ]
   }
 ]
