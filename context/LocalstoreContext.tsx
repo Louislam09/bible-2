@@ -22,6 +22,7 @@ type StoreState = {
   isDarkMode: boolean;
   currentBibleVersion: string;
   isSongLyricEnabled: boolean;
+  songFontSize: number;
 };
 
 interface StorageContextProps {
@@ -60,6 +61,7 @@ const initialContext: StoreState = {
   isDarkMode: true,
   currentBibleVersion: EBibleVersions.RVR60,
   isSongLyricEnabled: false,
+  songFontSize: 21,
 };
 
 const StorageProvider: React.FC<StorageProviderProps> = ({ children }) => {

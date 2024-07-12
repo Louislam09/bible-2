@@ -125,7 +125,7 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   const getIndex = (index: any) => {
     const value = snaps[index] || 30;
     topHeight.setValue(value);
-    if (index === -1) setSelected(null);
+    if (index < 1) setSelected(null);
   };
 
   return (

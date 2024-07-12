@@ -1,10 +1,17 @@
-import { StyleSheet, TouchableWithoutFeedback, Animated } from "react-native";
+import {
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Animated,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import React, { FC, useRef, useState } from "react";
 import { Text, View } from "./Themed";
 import { TTheme } from "types";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import ProgressBar from "./home/footer/ProgressBar";
 import { WINDOW_WIDTH } from "@gorhom/bottom-sheet";
+import { useStorage } from "context/LocalstoreContext";
 
 type Song = {
   title: string;
@@ -23,6 +30,11 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
   const [currentStanza, setCurrentStanza] = useState(0);
   const [isChorus, setIsChorus] = useState(false);
   const translateX = useRef(new Animated.Value(0)).current;
+  const {
+    saveData,
+    storedData: { songFontSize },
+  } = useStorage();
+  const fontSize = songFontSize || 21;
 
   const next = () => {
     const value = Math.min(song.stanzas.length - 1, currentStanza + 1);
@@ -91,13 +103,38 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
   );
 
   const Stanza = (text: string) => {
-    return <Text style={styles.stanzaText}>{text}</Text>;
+    return <Text style={[styles.stanzaText, { fontSize }]}>{text}</Text>;
+  };
+
+  const increaseFont = () => {
+    const value = Math.min(50, Math.max(21, fontSize + 2));
+    saveData({ songFontSize: value });
+  };
+  const decreaseFont = () => {
+    const value = Math.max(21, fontSize - 2);
+    saveData({ songFontSize: value });
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>#{song?.title}</Text>
+        <View style={styles.headerActions}>
+          <TouchableOpacity onPress={increaseFont} style={{}}>
+            <MaterialCommunityIcons
+              name="format-font-size-increase"
+              size={24}
+              color={theme.colors.notification}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={decreaseFont} style={{}}>
+            <MaterialCommunityIcons
+              name="format-font-size-decrease"
+              size={24}
+              color={theme.colors.notification}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
       <ProgressBar
         height={8}
@@ -141,9 +178,20 @@ const getStyles = ({ colors, dark }: TTheme) =>
       paddingHorizontal: 10,
     },
     header: {
+      display: "flex",
+      flexDirection: "row",
       alignItems: "center",
       backgroundColor: "transparent",
       color: colors.text,
+      justifyContent: "flex-end",
+      width: "100%",
+      paddingHorizontal: 10,
+    },
+    headerActions: {
+      display: "flex",
+      flexDirection: "row",
+      gap: 30,
+      backgroundColor: "transparent",
     },
     content: {
       flex: 1,
@@ -164,6 +212,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
       color: colors.notification,
       fontSize: 18,
       fontWeight: "bold",
+      textAlign: "left",
+      flex: 1,
     },
     stanzaContainer: {
       display: "flex",
@@ -175,6 +225,5 @@ const getStyles = ({ colors, dark }: TTheme) =>
     stanzaText: {
       color: colors.text,
       fontSize: 21,
-      lineHeight: 35,
     },
   });
