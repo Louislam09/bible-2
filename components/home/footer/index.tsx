@@ -113,11 +113,23 @@ const CustomFooter: FC<FooterInterface> = ({
     });
   };
 
-  const onFooterTitle = () => {
+  const onSingleFooterTitle = () => {
     clearHighlights();
     toggleBottomSideSearching(isSplit as boolean);
     navigation?.navigate(Screens.ChooseBook, { ...route.params });
   };
+  const onDoubleFooterTitle = () => {
+    clearHighlights();
+    toggleBottomSideSearching(isSplit as boolean);
+    navigation?.navigate(Screens.ChooseChapterNumber, { ...route.params });
+  };
+
+  const onPress = useSingleAndDoublePress({
+    onSinglePress: onSingleFooterTitle,
+    onDoublePress: onDoubleFooterTitle,
+    delay: 150,
+  });
+
   const onLongFooterTitle = () => {
     clearHighlights();
     toggleBottomSideSearching(isSplit as boolean);
@@ -169,7 +181,7 @@ const CustomFooter: FC<FooterInterface> = ({
         <TouchableOpacity
           ref={bookRef}
           style={styles.titleContainer}
-          onPress={onFooterTitle}
+          onPress={onPress}
           onLongPress={onLongFooterTitle}
           delayLongPress={200}
         >

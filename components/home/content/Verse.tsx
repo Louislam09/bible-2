@@ -28,6 +28,8 @@ import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import { Text } from "../../Themed";
 import Walkthrough from "components/Walkthrough";
 import { useStorage } from "context/LocalstoreContext";
+import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
+import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
 
 const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
   item,
@@ -67,9 +69,10 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
   const strongRef = useRef<BottomSheetModal>(null);
   const verseRef = useRef<any>(null);
   const [stepIndex, setStepIndex] = useState(0);
-  const { storedData, saveData } = useStorage();
+  const { saveData } = useStorage();
   const isBottom = isSplit && isBottomSideSearching;
   const isTop = !isSplit && !isBottomSideSearching;
+  const [doubleTagged, setDoubleTagged] = useState(false);
   const showMusicIcon =
     item.book_number === 290 && item.chapter === 41 && item.verse === 27;
 
@@ -94,15 +97,26 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
   const onVerseClicked = () => {
     setverseInStrongDisplay(isStrongSearch ? 0 : item.verse);
     toggleBottomSideSearching(isSplit);
+    setDoubleTagged(false);
     if (!isCopyMode) return;
     if (isVerseHighlisted === item.verse) {
       setHighlightVerse(null);
+      setDoubleTagged(false);
       removeHighlistedVerse(item);
       return;
     }
     highlightVerse(item);
     setHighlightVerse(item.verse);
   };
+
+  const onPress = useSingleAndDoublePress({
+    onDoublePress: () => {
+      onVerseClicked();
+      setDoubleTagged(true);
+    },
+    onSinglePress: onVerseClicked,
+    delay: 150,
+  });
 
   const onVerseLongPress = () => {
     if (isVerseHighlisted === item.verse) return;
@@ -204,7 +218,10 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
   };
 
   const onWordClicked = (code: string) => {
-    const wordIndex = textValue.indexOf(code);
+    const isWordName = isNaN(+code);
+    const wordIndex = isWordName
+      ? textValue.indexOf(code)
+      : strongValue.indexOf(code);
 
     const word = textValue[wordIndex];
     const secondCode =
@@ -213,7 +230,9 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
     const isDash = word === "-" ? -1 : 0;
     const NT_BOOK_NUMBER = 470;
     const cognate = item.book_number < NT_BOOK_NUMBER ? "H" : "G";
-    const searchCode = `${cognate}${strongValue[wordIndex]}`;
+    const searchCode = isWordName
+      ? `${cognate}${strongValue[wordIndex]}`
+      : `${cognate}${code}`;
     const secondSearchCode = secondCode ? `,${cognate}${secondCode}` : ",";
     const searchWord = textValue[wordIndex + isDash] ?? searchCode;
 
@@ -284,7 +303,7 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
   return (
     <>
       <TouchableOpacity
-        onPress={() => onVerseClicked()}
+        onPress={() => onPress()}
         onLongPress={() => onVerseLongPress()}
         activeOpacity={0.9}
         style={styles.verseContainer}
@@ -315,18 +334,21 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
 
           {isStrongSearch && (isBottom || isTop) ? (
             <>
-              {/* <RenderTextWithClickableWords
-              theme={theme}
-              text={item.text}
-              onWordClick={onWordClicked}
-            /> */}
-              <Highlighter
-                textToHighlight={getVerseTextRaw(item.text)}
-                searchWords={textValue}
-                highlightStyle={{ color: theme.colors.notification }}
-                style={[styles.verseBody]}
-                onWordClick={onWordClicked}
-              />
+              {doubleTagged ? (
+                <RenderTextWithClickableWords
+                  theme={theme}
+                  text={item.text}
+                  onWordClick={onWordClicked}
+                />
+              ) : (
+                <Highlighter
+                  textToHighlight={getVerseTextRaw(item.text)}
+                  searchWords={textValue}
+                  highlightStyle={{ color: theme.colors.notification }}
+                  style={[styles.verseBody]}
+                  onWordClick={onWordClicked}
+                />
+              )}
             </>
           ) : (
             <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
