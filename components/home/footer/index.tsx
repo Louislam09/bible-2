@@ -26,6 +26,8 @@ import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { iconSize } from "constants/size";
 import { getStyles } from "./styles";
+import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 interface FooterInterface {
   bookRef: any;
   nextRef: any;
@@ -55,7 +57,6 @@ const CustomFooter: FC<FooterInterface> = ({
     isSplitActived,
     toggleBottomSideSearching,
   } = useBibleContext();
-  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const FOOTER_ICON_SIZE = iconSize;
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -117,6 +118,11 @@ const CustomFooter: FC<FooterInterface> = ({
     toggleBottomSideSearching(isSplit as boolean);
     navigation?.navigate(Screens.ChooseBook, { ...route.params });
   };
+  const onLongFooterTitle = () => {
+    clearHighlights();
+    toggleBottomSideSearching(isSplit as boolean);
+    navigation?.navigate(Screens.ChooseChapterNumber, { ...route.params });
+  };
 
   const playHandlePresentModalPress = useCallback(() => {
     playRef.current?.present();
@@ -137,21 +143,6 @@ const CustomFooter: FC<FooterInterface> = ({
       isHistory: true,
     });
   }, [currentHistoryIndex]);
-
-  // const [animatedValue] = useState(new Animated.Value(0));
-
-  // const toggleAnimation = () => {
-  //   Animated.timing(animatedValue, {
-  //     toValue: animatedValue._value === 0 ? 1 : 0,
-  //     duration: 500, // duration in milliseconds
-  //     useNativeDriver: false, // Set to true if animating properties that support native driver
-  //   }).start();
-  // };
-
-  // const animatedRight = animatedValue.interpolate({
-  //   inputRange: [0, 1],
-  //   outputRange: ["-55%", "2%"],
-  // });
 
   return (
     <Animated.View style={[styles.footer]}>
@@ -179,6 +170,8 @@ const CustomFooter: FC<FooterInterface> = ({
           ref={bookRef}
           style={styles.titleContainer}
           onPress={onFooterTitle}
+          onLongPress={onLongFooterTitle}
+          delayLongPress={200}
         >
           <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
             {`${displayBookName ?? ""} ${chapter ?? ""}`}

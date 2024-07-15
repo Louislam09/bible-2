@@ -319,6 +319,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     if (state.highlightedVerses.length) return;
+    if (!state.isCopyMode) return;
     dispatch({ type: "TOGGLE_COPY_MODE", payload: false });
   }, [state.highlightedVerses]);
 
