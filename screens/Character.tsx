@@ -6,8 +6,9 @@ import { Text } from "components/Themed";
 import WordDefinition from "components/WordDefinition";
 import Characters from "constants/Characters";
 import { useCustomTheme } from "context/ThemeContext";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+  Animated,
   BackHandler,
   StyleSheet,
   TextInput,
@@ -16,6 +17,49 @@ import {
 } from "react-native";
 import { RootStackScreenProps, TTheme } from "types";
 import removeAccent from "utils/removeAccent";
+
+const RenderItem = ({ item, index, theme, onItemClick, styles }: any) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const translateXAnim = useRef(new Animated.Value(300)).current;
+
+  React.useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 200,
+        delay: index * 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateXAnim, {
+        toValue: 0,
+        duration: 200,
+        delay: index * 200,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [fadeAnim, translateXAnim, index]);
+
+  return (
+    <Animated.View
+      style={[
+        {
+          opacity: fadeAnim,
+          transform: [{ translateX: translateXAnim }],
+        },
+      ]}
+    >
+      <TouchableOpacity
+        style={[
+          styles.cardContainer,
+          { backgroundColor: theme.colors.background },
+        ]}
+        onPress={() => onItemClick(item.topic)}
+      >
+        <Text>{item.topic}</Text>
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
 
 const Character: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   const [selected, setSelected] = useState<any>(null);
@@ -135,7 +179,14 @@ const Character: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
                   )
                 : filterData
             }
-            renderItem={renderItem as any}
+            // renderItem={renderItem as any}
+            renderItem={({ item, index }) => (
+              <RenderItem
+                {...{ theme, styles, onItemClick }}
+                item={item}
+                index={index}
+              />
+            )}
             keyExtractor={(item: any, index: any) => `note-${index}`}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
           />

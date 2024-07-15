@@ -15,14 +15,59 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { RootStackScreenProps, TTheme } from "types";
+import { RootStackScreenProps, TSongItem, TTheme } from "types";
+
+const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const translateXAnim = useRef(new Animated.Value(300)).current;
+
+  React.useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 200,
+        delay: index * 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateXAnim, {
+        toValue: 0,
+        duration: 200,
+        delay: index * 200,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [fadeAnim, translateXAnim, index]);
+
+  return (
+    <Animated.View
+      style={[
+        {
+          opacity: fadeAnim,
+          transform: [{ translateX: translateXAnim }],
+        },
+      ]}
+    >
+      <TouchableOpacity
+        style={[
+          styles.cardContainer,
+          { backgroundColor: theme.colors.background },
+        ]}
+        onPress={() => onItemClick(item)}
+      >
+        <Text>#{item.title}</Text>
+        <Text style={{ color: theme.colors.notification }}>
+          Estrofas: {item.stanzas.length}
+        </Text>
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
 
 const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   const [selected, setSelected] = useState<any>(null);
-  const [filterData] = useState(Songs);
+  const [filterData] = useState<TSongItem[]>(Songs);
   const theme = useTheme();
   const { theme: _themeScheme } = useCustomTheme();
   const navigation = useNavigation();
@@ -45,20 +90,6 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   const onItemClick = (item: any) => {
     versionHandlePresentModalPress();
     setSelected(item);
-  };
-
-  const renderItem = ({ item, index }: any) => {
-    return (
-      <TouchableOpacity
-        style={[
-          styles.cardContainer,
-          { backgroundColor: theme.colors.background },
-        ]}
-        onPress={() => onItemClick(item)}
-      >
-        <Text>#{item.title}</Text>
-      </TouchableOpacity>
-    );
   };
 
   const SongHeader = () => {
@@ -125,7 +156,7 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   const getIndex = (index: any) => {
     const value = snaps[index] || 30;
     topHeight.setValue(value);
-    if (index < 1) setSelected(null);
+    if (index < 0) setSelected(null);
   };
 
   return (
@@ -169,7 +200,14 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
                 )
               : filterData
           }
-          renderItem={renderItem as any}
+          // renderItem={renderItem as any}
+          renderItem={({ item, index }) => (
+            <RenderItem
+              {...{ theme, styles, onItemClick }}
+              item={item}
+              index={index}
+            />
+          )}
           keyExtractor={(item: any, index: any) => `note-${index}`}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
@@ -265,13 +303,15 @@ const getStyles = ({ colors, dark }: TTheme) =>
     cardContainer: {
       display: "flex",
       borderRadius: 10,
-      // backgroundColor: dark ? "#151517" : colors.card,
-      backgroundColor: "red",
       padding: 15,
       margin: 5,
       elevation: 5,
       borderColor: "#ddd",
       borderWidth: 1,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      flexWrap: "wrap",
+      gap: 5,
     },
     headerContainer: {
       position: "relative",

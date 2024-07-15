@@ -5,9 +5,16 @@ import { FlashList } from "@shopify/flash-list";
 import Animation from "components/Animation";
 import { Text, View } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Alert,
+  Animated,
   BackHandler,
   ListRenderItem,
   StyleSheet,
@@ -23,6 +30,79 @@ import removeAccent from "utils/removeAccent";
 type TListVerse = {
   data: IVerseItem[] | any;
   setShouldFetch: any;
+};
+
+const RenderItem = ({
+  item,
+  onViewMode,
+  styles,
+  warnBeforeDelete,
+  index,
+}: any) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const translateXAnim = useRef(new Animated.Value(300)).current;
+
+  React.useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 500,
+        delay: index * 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateXAnim, {
+        toValue: 0,
+        duration: 500,
+        delay: index * 200,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [fadeAnim, translateXAnim, index]);
+  return (
+    <Animated.View
+      style={[
+        {
+          opacity: fadeAnim,
+          transform: [{ translateX: translateXAnim }],
+        },
+      ]}
+    >
+      <TouchableOpacity
+        style={{ backgroundColor: "transparent" }}
+        activeOpacity={0.9}
+        onPress={() => onViewMode(item.id)}
+      >
+        <View style={[styles.cardContainer]}>
+          <View style={[styles.headerContainer]}>
+            <Text style={[styles.cardTitle]}>{item.title}</Text>
+            <View style={[styles.verseAction]}>
+              <>
+                <MaterialCommunityIcons
+                  size={20}
+                  name="eye"
+                  style={styles.icon}
+                  onPress={() => onViewMode(item.id)}
+                />
+                <MaterialCommunityIcons
+                  size={20}
+                  name="delete"
+                  style={[styles.icon]}
+                  onPress={() => warnBeforeDelete(item.id)}
+                />
+              </>
+            </View>
+          </View>
+          <Text style={styles.verseBody}>
+            {item?.note_text
+              ?.slice(0, 100)
+              .replace(/<br>/gi, "-")
+              .replace(/<.*?>|<.*?\/>/gi, "")}
+          </Text>
+          <Text style={[styles.date]}>{item.created_at.split(" ")[0]}</Text>
+        </View>
+      </TouchableOpacity>
+    </Animated.View>
+  );
 };
 
 const NoteList = ({ data, setShouldFetch }: TListVerse) => {
@@ -80,8 +160,8 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerShown: showExtraButton,
-      headerBackVisible: false,
+      headerShown: !showExtraButton,
+      headerBackVisible: !showExtraButton,
     });
   }, [showExtraButton]);
 
@@ -391,7 +471,14 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
                 : filterData
             }
             // data={filterData}
-            renderItem={renderItem as any}
+            // renderItem={renderItem as any}
+            renderItem={({ item, index }) => (
+              <RenderItem
+                {...{ styles, onViewMode, warnBeforeDelete }}
+                item={item}
+                index={index}
+              />
+            )}
             // onScroll={handleScroll}
             keyExtractor={(item: any, index: any) => `note-${index}`}
             ItemSeparatorComponent={() => <View style={styles.separator} />}

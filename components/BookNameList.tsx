@@ -124,7 +124,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
               },
             ]}
           >
-            {selectedSideBook} {selectedSideChapter}
+            {selectedSideBook} {isVerseScreen && selectedSideChapter}
           </Text>
         )}
         {selectedSideBook && (

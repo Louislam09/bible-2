@@ -1,10 +1,4 @@
-import {
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Animated,
-  Pressable,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Animated, TouchableOpacity } from "react-native";
 import React, { FC, useRef, useState } from "react";
 import { Text, View } from "./Themed";
 import { TTheme } from "types";
@@ -25,7 +19,7 @@ type TSongLyricView = {
 };
 
 const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
-  const chorus = song?.chorus;
+  const hasChorus = song?.chorus;
   const styles = getStyles(theme);
   const [currentStanza, setCurrentStanza] = useState(0);
   const [isChorus, setIsChorus] = useState(false);
@@ -34,12 +28,14 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
     saveData,
     storedData: { songFontSize },
   } = useStorage();
-  const fontSize = songFontSize || 21;
+  const animateFontSize = useRef(
+    new Animated.Value(songFontSize || 21)
+  ).current;
 
   const next = () => {
     const value = Math.min(song.stanzas.length - 1, currentStanza + 1);
     setIsChorus(!isChorus);
-    if (!isChorus && chorus) return;
+    if (!isChorus && hasChorus) return;
     animate(value);
     setCurrentStanza(value);
   };
@@ -47,16 +43,23 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
   const previos = () => {
     const value = Math.max(0, currentStanza - 1);
     setIsChorus(!isChorus);
-    if (!isChorus && chorus) return;
+    if (!isChorus && hasChorus) return;
     animate(value);
     setCurrentStanza(value);
   };
 
+  const animateFont = (value: number) => {
+    Animated.timing(animateFontSize, {
+      toValue: value,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  };
   const animate = (value: number) => {
     Animated.timing(translateX, {
       toValue: -WINDOW_WIDTH * value,
       duration: 300,
-      useNativeDriver: true,
+      useNativeDriver: false,
     }).start();
   };
 
@@ -66,17 +69,19 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
       action: previos,
       label: "Anterior",
       isIonicon: true,
+      disabled: currentStanza === 0 && !isChorus,
     },
     {
       icon: "play-skip-forward",
       action: next,
       label: "Siguiente",
       isIonicon: true,
+      disabled: currentStanza === song?.stanzas?.length - 1 && isChorus,
     },
   ];
 
   const renderItem = (item: any) => (
-    <TouchableWithoutFeedback
+    <TouchableOpacity
       key={item.label}
       onPress={item.action}
       disabled={item.disabled}
@@ -91,7 +96,10 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
         {item.isIonicon ? (
           <Ionicons
             name={item.icon}
-            style={{ fontSize: 45, color: theme.colors.notification }}
+            style={{
+              fontSize: 45,
+              color: item.disabled ? "#898989" : theme.colors.notification,
+            }}
           />
         ) : (
           <MaterialCommunityIcons name={item.icon} style={{ fontSize: 35 }} />
@@ -99,20 +107,29 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
 
         <Text style={{ color: theme.colors.text }}>{item.label}</Text>
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 
   const Stanza = (text: string) => {
-    return <Text style={[styles.stanzaText, { fontSize }]}>{text}</Text>;
+    return (
+      <Animated.Text style={[styles.stanzaText, { fontSize: animateFontSize }]}>
+        {text}
+      </Animated.Text>
+    );
   };
 
   const increaseFont = () => {
-    const value = Math.min(50, Math.max(21, fontSize + 2));
+    const value = Math.min(
+      50,
+      Math.max(21, (animateFontSize as any)?._value + 2)
+    );
     saveData({ songFontSize: value });
+    animateFont(value);
   };
   const decreaseFont = () => {
-    const value = Math.max(21, fontSize - 2);
+    const value = Math.max(21, (animateFontSize as any)?._value - 2);
     saveData({ songFontSize: value });
+    animateFont(value);
   };
 
   return (
@@ -155,7 +172,7 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
       >
         {song?.stanzas.map((stanza, index) => (
           <View key={index} style={[styles.stanzaContainer]}>
-            {isChorus && chorus ? Stanza(song?.chorus) : Stanza(stanza)}
+            {isChorus && hasChorus ? Stanza(song?.chorus) : Stanza(stanza)}
           </View>
         ))}
       </Animated.View>

@@ -25,6 +25,7 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
 }) => {
   const route = useRoute();
   const routeParam = route.params;
+  const { book } = routeParam;
   const theme = useTheme();
   const styles = getStyles(theme);
   const { viewLayoutGrid, isBottomSideSearching, orientation } =
@@ -90,13 +91,19 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
   const renderItem: ListRenderItem<IDBBookNames> = ({ item, index }) => {
     return (
       <TouchableOpacity
-        style={[styles.listItem]}
+        style={[
+          styles.listItem,
+          book === item.longName && {
+            backgroundColor: theme.colors.notification,
+          },
+        ]}
         onPress={() => handlePress(item)}
       >
         <Text
           style={[
             styles.listTitle,
             { color: theme.dark ? item.bookColor : "black" },
+            book === item.longName && { color: "white" },
           ]}
         >
           {item.shortName}

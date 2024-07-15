@@ -368,12 +368,15 @@ export default [
   },
   {
     "title": "37.- EL NIÑO REY",
-    "chorus": "\"¡Gloria sea a Yehováh en las alturas!\ny en la tierra, ¡paz, buena voluntad!\"",
+    "chorus": null,
+    // "chorus": "\"¡Gloria sea a Yehováh en las alturas!\ny en la tierra, ¡paz, buena voluntad!\"",
     "stanzas": [
       "(1a) Hace más de dos mil años,\npor edicto que se promulgó,\nuna pareja viajaba a Betlehem, Yehudáh;\nElla esperaba a un niño, ¡del mundo el Salvador!",
       "(1b) Un ángel lo habia anunciado:\n\"¡He aquí la virgen concebirá!\"\nPero al llegar a Betlehem, hospedaje no encontró.\nDebajo de un manzano, allí tuvo dolor.",
+      "\"¡Gloria sea a Yehováh en las alturas!\ny en la tierra, ¡paz, buena voluntad!\"",
       "(2a) A ver al niño llegaron\nunos pastores de la región.\nSegún el dicho del ángel, vieron al Hijo de Dios:\nRecostado en un pesebre; y ¡a Dios dieron loor!",
       "(2b) Luego vinieron los magos\npreguntando por \"el niño rey\".\nY Herodes, siendo malvado, quiso matar a Jesús\nMas Dios libró a Su Hijo, al cual envió en Su amor.",
+      "\"¡Gloria sea a Yehováh en las alturas!\ny en la tierra, ¡paz, buena voluntad!\"",
       "(3) Hoy ese niño, ¡es mi Amigo!\n¡Él es mi buen Compañero Fiel!\nÉl me salvó del pecado; de muerte me rescató.\nMi corazón ha cambiado; ¡me sacó del error!"
     ]
   },
@@ -1158,12 +1161,15 @@ export default [
   },
   {
     "title": "117.- ¡VENGO AGRADECIDO!",
-    "chorus": "Veo al cielo y me quedo sin habla,\nal mirar ¡tan bello amanecer!;\ny al saber que el Creador de esta obra,\n¡es el mismo que cambió mi ser!",
+    "chorus": null,
+    // "chorus": "Veo al cielo y me quedo sin habla,\nal mirar ¡tan bello amanecer!;\ny al saber que el Creador de esta obra,\n¡es el mismo que cambió mi ser!",
     "stanzas": [
       "(1a) Señor, vengo a Ti agradecido,\na ¡darte toda honra y loor!;\npues ahora ya estoy convencido:\n¡Fue por mí que murió el Salvador!",
       "(1b) Pensar que, un día fui un pedido;\nno sabía nada de Tu amor.\nMas en tu plan, ¡ya estaba escogido!,\naún siendo, de los hombres, ¡lo peor!",
+      "Veo al cielo y me quedo sin habla,\nal mirar ¡tan bello amanecer!;\ny al saber que el Creador de esta obra,\n¡es el mismo que cambió mi ser!",
       "(2a) ¡No vuelva yo a ser arrogante!\n¡Líbrame de caer en error!;\nque al dormir y cuando me levante,\nmi familia yo instruya en Tu amor.",
-      "(2b) ¡Ayúdame a ir adelante!\nque en mi ser ¡siempre esté Tu Temor!\nQue en mi vida pueda ser constante,\nhasta estar ante Ti, ¡mi Señor!"
+      "(2b) ¡Ayúdame a ir adelante!\nque en mi ser ¡siempre esté Tu Temor!\nQue en mi vida pueda ser constante,\nhasta estar ante Ti, ¡mi Señor!",
+      "Veo al cielo y me quedo sin habla,\nal mirar ¡tan bello amanecer!;\ny al saber que el Creador de esta obra,\n¡es el mismo que cambió mi ser!",
     ]
   },
   {

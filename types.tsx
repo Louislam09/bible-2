@@ -333,6 +333,11 @@ export enum EThemes {
   BlackWhite = "#000",
 }
 
+export type TSongItem = {
+  title: string;
+  chorus: string | null;
+  stanzas: string[];
+};
 export type EHistoryItem = {
   book: string;
   chapter: number;
