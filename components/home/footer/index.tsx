@@ -127,7 +127,7 @@ const CustomFooter: FC<FooterInterface> = ({
   const onPress = useSingleAndDoublePress({
     onSinglePress: onSingleFooterTitle,
     onDoublePress: onDoubleFooterTitle,
-    delay: 150,
+    delay: 200,
   });
 
   const onLongFooterTitle = () => {
