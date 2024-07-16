@@ -115,7 +115,7 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
       setDoubleTagged(true);
     },
     onSinglePress: onVerseClicked,
-    delay: 150,
+    delay: 200,
   });
 
   const onVerseLongPress = () => {
