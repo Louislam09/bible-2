@@ -1,6 +1,6 @@
 import { useRoute, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import { useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Verse from "./Verse";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { TChapter, HomeParams, TTheme } from "types";
@@ -37,6 +37,25 @@ const Chapter = ({
     />
   );
 
+  const [topVerse, setTopVerse] = useState(null);
+  const viewabilityConfig = {
+    viewAreaCoveragePercentThreshold: 1,
+  };
+
+  // useEffect(() => {
+  //   console.log("topVerse", { topVerse });
+  // }, [topVerse]);
+
+  const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
+    if (viewableItems.length > 0) {
+      setTopVerse(viewableItems[0].item.verse);
+    }
+  }, []);
+
+  const viewabilityConfigCallbackPairs = useRef([
+    { onViewableItemsChanged, viewabilityConfig },
+  ]);
+
   return (
     <View style={styles.chapterContainer}>
       <View style={[styles.verseContent]}>
@@ -48,6 +67,9 @@ const Chapter = ({
           renderItem={renderItem}
           initialScrollIndex={initialScrollIndex}
           keyExtractor={(item: any) => `verse-${item.verse}:`}
+          // viewabilityConfigCallbackPairs={
+          //   viewabilityConfigCallbackPairs.current
+          // }
         />
       </View>
     </View>

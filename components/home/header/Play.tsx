@@ -88,10 +88,17 @@ const Play: FC<IPlay> = ({
           <MaterialCommunityIcons name={item.icon} style={{ fontSize: 35 }} />
         )}
 
-        <Text style={{}}>{item.label}</Text>
+        <Text style={{ color: theme.colors.text }}>{item.label}</Text>
       </View>
     </TouchableWithoutFeedback>
   );
+
+  const formatTime = (timeInMilliseconds: number): string => {
+    const totalSeconds = Math.floor(timeInMilliseconds / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
 
   return (
     <View style={[styles.playContainer]}>
@@ -103,6 +110,24 @@ const Play: FC<IPlay> = ({
             color={theme.colors.notification}
             style={[styles.playHeaderIcon, isDownloading && { opacity: 1 }]}
           />
+        </View>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            backgroundColor: "transparent",
+            width: "100%",
+            // flex: 1,
+          }}
+        >
+          <Text style={{ color: theme.colors.text }}>
+            {formatTime(position)}
+          </Text>
+          <Text style={{ color: theme.colors.text }}>
+            {formatTime(duration)}
+          </Text>
         </View>
         <View style={{ marginVertical: 15, borderRadius: 15 }}>
           <ProgressBar
@@ -134,8 +159,7 @@ const getStyles = ({ colors }: TTheme) =>
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      paddingVertical: 25,
-      borderRadius: 45,
+      // paddingVertical: 25,
       backgroundColor: "transparent",
       width: "100%",
       paddingHorizontal: 30,
