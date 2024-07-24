@@ -67,12 +67,12 @@ function HomeScreen() {
       target: dashboardRef,
     },
     {
-      text: "🔙 Toque aquí para moverse atras en su historial de busqueda.",
-      target: settingRef,
+      text: "✂️ Toque aquí para partir la pantalla en dos secciones de escrituras.",
+      target: favRef,
     },
     {
-      text: "⏭️ Toque aquí para moverse adelante en su historial de busqueda.",
-      target: favRef,
+      text: "⏪⏩ Toque las flechas para moverse atras/delante en su historial de busqueda.",
+      target: settingRef,
     },
     {
       text: "🔍 Toque aquí para buscar en la escritura.",

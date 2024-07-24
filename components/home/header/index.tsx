@@ -33,6 +33,7 @@ const CustomHeader: FC<HeaderInterface> = ({
   searchRef,
   dashboardRef,
   settingRef,
+  favRef,
 }) => {
   const {
     currentBibleVersion,
@@ -90,7 +91,7 @@ const CustomHeader: FC<HeaderInterface> = ({
     {
       name: "arrow-split-horizontal",
       action: toggleSplitMode,
-      ref: settingRef,
+      ref: favRef,
       isIonicon: false,
       color: isSplitActived ? theme.colors.notification : theme.colors.text,
     },
@@ -195,7 +196,7 @@ const getStyles = ({ colors }: TTheme) =>
       paddingHorizontal: 10,
       paddingVertical: 4,
       backgroundColor: colors.background + "cc",
-      boxSizing: "border-box",
+      // boxSizing: "border-box",
       width: "100%",
       borderWidth: 0.5,
     },

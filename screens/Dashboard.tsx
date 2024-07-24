@@ -156,7 +156,7 @@ const Dashboard = () => {
     },
     {
       icon: "text-box-search-outline",
-      label: "Concordancia",
+      label: "Concordancia Escritural",
       action: () => navigation.navigate("Concordance", {}),
     },
     {
@@ -337,6 +337,7 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
       alignItems: "center",
       justifyContent: "space-evenly",
       padding: 10,
+      paddingHorizontal: 5,
       borderRadius: 15,
       elevation: 5,
       height: 100,

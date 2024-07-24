@@ -36,6 +36,7 @@ const OnboardingScreen = () => {
         navigation.navigate("Home", {
           book: "Génesis",
           chapter: 1,
+          verse: 1,
           isVerseTour: true,
         }),
     },
