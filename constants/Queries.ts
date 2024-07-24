@@ -89,7 +89,7 @@ texts t
 INNER JOIN 
 books b ON b.book_number = t.book_number
 WHERE 
-t.bare_lowercase_words LIKE "%?%"
+t.bare_lowercase_words LIKE ?
 GROUP BY 
 t.book_number;
 `

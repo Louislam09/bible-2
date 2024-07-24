@@ -19,14 +19,74 @@ declare global {
   }
 }
 
+export enum Screens {
+  Dashboard = "Dashboard",
+  Home = "Home",
+  Search = "Search",
+  Concordance = "Concordance",
+  Book = "Book",
+  ChooseBook = "ChooseBook",
+  ChooseChapterNumber = "ChooseChapterNumber",
+  ChooseVerseNumber = "ChooseVerseNumber",
+  Favorite = "Favorite",
+  Notes = "Notes",
+  Onboarding = "Onboarding",
+  Character = "Character",
+  Song = "Song",
+}
+
+type TScreensName = { [key in Screens]: string };
+
+export const ScreensName: TScreensName = {
+  [Screens.Home]: "Santa Escritura",
+  [Screens.Book]: "Libros",
+  [Screens.Search]: "Busqueda",
+  [Screens.Concordance]: "Concordancia",
+  [Screens.ChooseBook]: "Seleccione un libro",
+  [Screens.ChooseChapterNumber]: "Capitulos",
+  [Screens.ChooseVerseNumber]: "Versiculos",
+  [Screens.Favorite]: "Versiculos Favoritos",
+  [Screens.Notes]: "Notas",
+  [Screens.Dashboard]: "Dashboard",
+  [Screens.Onboarding]: "Guia",
+  [Screens.Character]: "Personaje",
+  [Screens.Song]: "Himnario",
+};
+
+// export type RootTabParamList = { [key in Screens]: any };
 export type RootTabParamList = {
   Dashboard: undefined;
   Home: undefined;
   Book: undefined;
   ChooseBookScreen: undefined;
   Search: undefined;
+  Concordance: undefined;
   Notes: undefined;
   Favorite: undefined;
+  NotFound: undefined;
+};
+
+export type RootStackParamList = {
+  Dashboard: NavigatorScreenParams<RootTabParamList> | undefined;
+  Home: NavigatorScreenParams<RootTabParamList> | HomeParams;
+  Book: NavigatorScreenParams<RootTabParamList> | undefined;
+  Favorite: NavigatorScreenParams<RootTabParamList> | undefined;
+  Notes: NavigatorScreenParams<RootTabParamList> | undefined;
+  Character: NavigatorScreenParams<RootTabParamList> | undefined;
+  ChooseBook:
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
+  Search: NavigatorScreenParams<RootTabParamList> | { book?: string };
+  Concordance: NavigatorScreenParams<RootTabParamList> | {};
+  ChooseChapterNumber:
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
+  ChooseVerseNumber:
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
+  Modal: undefined;
+  Onboarding: undefined;
+  Song: undefined;
   NotFound: undefined;
 };
 
@@ -51,65 +111,10 @@ export interface ChooseChapterNumberParams {
   bottomSideVerse?: number | string;
 }
 
-export type RootStackParamList = {
-  Dashboard: NavigatorScreenParams<RootTabParamList> | undefined;
-  Home: NavigatorScreenParams<RootTabParamList> | HomeParams;
-  Book: NavigatorScreenParams<RootTabParamList> | undefined;
-  Favorite: NavigatorScreenParams<RootTabParamList> | undefined;
-  Notes: NavigatorScreenParams<RootTabParamList> | undefined;
-  Character: NavigatorScreenParams<RootTabParamList> | undefined;
-  ChooseBook:
-    | NavigatorScreenParams<RootTabParamList>
-    | ChooseChapterNumberParams;
-  Search: NavigatorScreenParams<RootTabParamList> | { book?: string };
-  ChooseChapterNumber:
-    | NavigatorScreenParams<RootTabParamList>
-    | ChooseChapterNumberParams;
-  ChooseVerseNumber:
-    | NavigatorScreenParams<RootTabParamList>
-    | ChooseChapterNumberParams;
-  Modal: undefined;
-  Onboarding: undefined;
-  Song: undefined;
-  NotFound: undefined;
-};
-
 export type TStep = {
   text: string;
   target: any;
   action?: any;
-};
-
-export enum Screens {
-  Dashboard = "Dashboard",
-  Home = "Home",
-  Search = "Search",
-  Book = "Book",
-  ChooseBook = "ChooseBook",
-  ChooseChapterNumber = "ChooseChapterNumber",
-  ChooseVerseNumber = "ChooseVerseNumber",
-  Favorite = "Favorite",
-  Notes = "Notes",
-  Onboarding = "Onboarding",
-  Character = "Character",
-  Song = "Song",
-}
-
-type TScreensName = { [key in Screens]: string };
-
-export const ScreensName: TScreensName = {
-  [Screens.Home]: "Santa Escritura",
-  [Screens.Book]: "Libros",
-  [Screens.Search]: "Busqueda",
-  [Screens.ChooseBook]: "Seleccione un libro",
-  [Screens.ChooseChapterNumber]: "Capitulos",
-  [Screens.ChooseVerseNumber]: "Versiculos",
-  [Screens.Favorite]: "Versiculos Favoritos",
-  [Screens.Notes]: "Notas",
-  [Screens.Dashboard]: "Dashboard",
-  [Screens.Onboarding]: "Guia",
-  [Screens.Character]: "Personaje",
-  [Screens.Song]: "Himnario",
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

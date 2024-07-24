@@ -155,6 +155,11 @@ const Dashboard = () => {
       action: () => navigation.navigate("Search", {}),
     },
     {
+      icon: "text-box-search-outline",
+      label: "Concordancia",
+      action: () => navigation.navigate("Concordance", {}),
+    },
+    {
       icon: "star-outline",
       label: "Versiculos Favoritos",
       action: () => navigation.navigate("Favorite"),
@@ -282,7 +287,6 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
-      paddingTop: 50,
     },
     dailyVerseContainer: {
       backgroundColor: "transparent",
@@ -291,7 +295,7 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
       marginVertical: isPortrait ? 10 : 0,
       width: "100%",
       minHeight: 140,
-      flex: 1,
+      flex: 0.5,
     },
     optionContainer: {
       flex: 1,

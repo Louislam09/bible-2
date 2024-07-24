@@ -50,10 +50,10 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
     if (!database) {
       throw new Error("Database not initialized");
     }
-
     const statement = await database.prepareAsync(sql);
     try {
       const result = await statement.executeAsync(params);
+
       const response = await result.getAllAsync()
       return response as Row[];
     } finally {

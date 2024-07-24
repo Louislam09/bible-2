@@ -21,6 +21,14 @@ const Chapter = ({
   const chapterRef = useRef<FlashList<any>>(null);
   const { isBottomSideSearching } = useBibleContext();
   const selectedSideBook = isBottomSideSearching ? bottomSideVerse : verse;
+  const [firstLoad, setFirstLoad] = useState(true);
+  const [topVerse, setTopVerse] = useState(null);
+  const viewabilityConfig = { viewAreaCoveragePercentThreshold: 1 };
+
+  useEffect(() => {
+    const isFirst = !!topVerse;
+    setFirstLoad(!isFirst);
+  }, [topVerse]);
 
   const verseNumber = +(selectedSideBook as number) || 0;
   const initialScrollIndex =
@@ -37,14 +45,12 @@ const Chapter = ({
     />
   );
 
-  const [topVerse, setTopVerse] = useState(null);
-  const viewabilityConfig = {
-    viewAreaCoveragePercentThreshold: 1,
-  };
-
-  // useEffect(() => {
-  //   console.log("topVerse", { topVerse });
-  // }, [topVerse]);
+  useEffect(() => {
+    if (initialScrollIndex !== topVerse && topVerse) {
+      if (!firstLoad) return;
+      chapterRef.current?.scrollToIndex({ index: initialScrollIndex - 1 });
+    }
+  }, [topVerse]);
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
@@ -67,9 +73,9 @@ const Chapter = ({
           renderItem={renderItem}
           initialScrollIndex={initialScrollIndex}
           keyExtractor={(item: any) => `verse-${item.verse}:`}
-          // viewabilityConfigCallbackPairs={
-          //   viewabilityConfigCallbackPairs.current
-          // }
+          viewabilityConfigCallbackPairs={
+            viewabilityConfigCallbackPairs.current
+          }
         />
       </View>
     </View>
