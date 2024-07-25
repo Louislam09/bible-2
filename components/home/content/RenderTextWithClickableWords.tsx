@@ -1,63 +1,50 @@
 import React from "react";
-import { Pressable, Text, TouchableOpacity } from "react-native";
+import { Text } from "react-native";
 import { TTheme } from "types";
 
 interface Props {
   text: string;
   onWordClick: (word: string) => void;
   theme?: TTheme;
+  highlightedWord?: string;
+  justOneWord?: boolean;
 }
 
 const RenderTextWithClickableWords: React.FC<Props> = ({
   text,
   onWordClick,
   theme,
+  highlightedWord,
+  justOneWord,
 }) => {
-  // Expresión regular para buscar etiquetas y sus contenidos
   const regex = /<S>(\d+)<\/S>/g;
+  const words = text.split(regex);
 
-  // Divide el texto en partes usando la expresión regular
-  const parts = text.split(regex);
-
-  // Función para renderizar palabras con números clicables
-  const renderClickableWord = (word: string, index: number) => {
-    // Verifica si la palabra es un número
-    return (
-      <TouchableOpacity key={index} onPress={() => onWordClick(word)}>
-        <Text
-          style={{
-            color: theme?.colors.notification ?? "red",
-            textDecorationLine: "underline",
-          }}
-        >
-          {word}👈
-        </Text>
-      </TouchableOpacity>
-    );
+  const isH = highlightedWord?.includes("H") ? "H" : "G";
+  const isHighlighted = (word: string): boolean => {
+    const cleanedHighlight = highlightedWord?.replace(",", "");
+    return cleanedHighlight === `${isH}${word}`;
   };
 
-  return (
-    <Text style={{ zIndex: 999 }}>
-      {parts.map((part, index) => {
-        return index % 2 === 0 ? (
-          part
-        ) : (
-          <Text
-            key={index}
-            onPress={() => onWordClick(part)}
-            style={{
-              color: theme?.colors.notification ?? "red",
-              textDecorationLine: "underline",
-            }}
-          >
-            &nbsp;
-            {part}
-            &nbsp;
-          </Text>
-        );
-      })}
-    </Text>
-  );
+  const renderVerse = (word: string, index: number) => {
+    const styles = { color: theme?.colors.notification ?? "red" };
+    const isEven = index % 2 === 0;
+    if (isEven) return word;
+
+    const shouldRender = !justOneWord || (justOneWord && isHighlighted(word));
+    if (!shouldRender) return null;
+
+    const Componetent = (
+      <Text key={index} onPress={() => onWordClick(word)} style={styles}>
+        {"\u00A0"}
+        {word}
+      </Text>
+    );
+
+    return Componetent;
+  };
+
+  return <Text>{words.map(renderVerse)}</Text>;
 };
 
 export default RenderTextWithClickableWords;

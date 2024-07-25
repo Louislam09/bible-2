@@ -268,7 +268,7 @@ const Dashboard = () => {
           numColumns={columnNumber}
         />
       </View>
-      <BottomModal startAT={2} ref={fontBottomSheetModalRef}>
+      <BottomModal shouldScroll startAT={2} ref={fontBottomSheetModalRef}>
         <Settings theme={theme} />
       </BottomModal>
       <BottomModal startAT={0} ref={versionRef}>

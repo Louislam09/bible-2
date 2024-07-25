@@ -18,6 +18,7 @@ import { HomeParams, TTheme } from "types";
 import CustomHeader from "../components/home/header";
 import SplitBottomSide from "components/SplitBottomSide";
 import SplitTopSide from "components/SplitTopSide";
+import SearchStrongWordEntire from "components/SearchStrongWordEntire";
 
 function HomeScreen() {
   const theme = useTheme();
@@ -181,19 +182,22 @@ function HomeScreen() {
         )}
       </View>
       {strongWord.code && (
-        <View style={styles.strongContainer}>
-          <CustomBottomSheet
-            ref={sheetRef}
-            handleSheetChange={handleSheetChange}
-          >
-            <StrongContent
-              theme={theme}
-              data={strongWord}
-              fontSize={fontSize}
-            />
-          </CustomBottomSheet>
-        </View>
+        <>
+          <View style={styles.strongContainer}>
+            <CustomBottomSheet
+              ref={sheetRef}
+              handleSheetChange={handleSheetChange}
+            >
+              <StrongContent
+                theme={theme}
+                data={strongWord}
+                fontSize={fontSize}
+              />
+            </CustomBottomSheet>
+          </View>
+        </>
       )}
+
       {bookRef.current && isTour && (
         <Walkthrough
           steps={steps}

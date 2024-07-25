@@ -1,4 +1,8 @@
-import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetScrollView,
+} from "@gorhom/bottom-sheet";
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { useTheme } from "@react-navigation/native";
 import React, { forwardRef, useCallback, useMemo, useState } from "react";
@@ -11,12 +15,13 @@ type TBottomModal = {
   justOneSnap?: boolean;
   getIndex?: any;
   snaps?: any;
+  shouldScroll?: boolean;
 };
 
 type Ref = BottomSheetModal;
 
 const BottomModal = forwardRef<Ref, TBottomModal>(
-  ({ children, startAT, justOneSnap, getIndex, snaps }, ref) => {
+  ({ children, startAT, justOneSnap, getIndex, snaps, shouldScroll }, ref) => {
     const theme = useTheme();
     const styles = getStyles(theme);
     const snapPoints = useMemo(
@@ -56,7 +61,15 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
         backdropComponent={renderBackdrop}
         onChange={handleSheetChanges}
       >
-        {children}
+        {shouldScroll ? (
+          <BottomSheetScrollView
+            contentContainerStyle={styles.contentContainer}
+          >
+            {children}
+          </BottomSheetScrollView>
+        ) : (
+          children
+        )}
       </BottomSheetModal>
     );
   }
@@ -64,13 +77,15 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     bottomSheet: {
-      // borderRadius: 45,
       backgroundColor: colors.background + "cc",
       borderColor: colors.notification,
       borderWidth: 2,
     },
     indicator: {
       backgroundColor: colors.notification,
+    },
+    contentContainer: {
+      backgroundColor: "transparent",
     },
   });
 

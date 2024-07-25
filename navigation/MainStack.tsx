@@ -20,6 +20,7 @@ import { RootStackParamList, Screens, ScreensName, TTheme } from "types";
 import Character from "screens/Character";
 import Song from "screens/Song";
 import Concordance from "screens/Concordance";
+import SearchStrongWordEntire from "components/SearchStrongWordEntire";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -130,6 +131,14 @@ const MainStack = () => {
         options={({ route }) => ({
           ...screenOptions(route),
           animation: "slide_from_right",
+        })}
+      />
+      <Stack.Screen
+        name="StrongSearchEntire"
+        component={SearchStrongWordEntire}
+        options={({ route }) => ({
+          ...screenOptions(route),
+          animation: "slide_from_bottom",
         })}
       />
       <Stack.Screen

@@ -20,11 +20,22 @@ interface IStrongContent {
 const DEFAULT_HEIGHT = 14000;
 const EXTRA_HEIGHT_TO_ADJUST = 100;
 
+function extractWord(text: string, isH: boolean) {
+  const regex = isH ? /<p\/><b>(.*?)<\/b>/ : /<p\/>(.*?)<\/b>/;
+  const match = text?.match(regex);
+
+  if (match && match[1]) {
+    return match[1];
+  } else {
+    return null;
+  }
+}
+
 const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
   const navigation = useNavigation();
   const { code } = data;
   const { myBibleDB, executeSql } = useDBContext();
-  const [value, setValue] = useState<StrongData[]>([
+  const [values, setValues] = useState<StrongData[]>([
     { definition: "", topic: "" },
   ]);
   const styles = getStyles(theme);
@@ -38,10 +49,6 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
   }, [data]);
 
   useEffect(() => {
-    setText(data.code);
-  }, [data]);
-
-  useEffect(() => {
     (async () => {
       if (myBibleDB && executeSql) {
         const strongData = await executeSql(
@@ -49,7 +56,7 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
           SEARCH_STRONG_WORD,
           text.split(",")
         );
-        setValue(strongData as StrongData[]);
+        setValues(strongData as StrongData[]);
       }
     })();
   }, [code, text]);
@@ -89,7 +96,17 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
     setText(url);
   };
 
-  const title = data?.text.includes("undefined") ? "-" : data?.text;
+  const onStrongSearch = () => {
+    const [value1] = values;
+    navigation.navigate(Screens.StrongSearchEntire, {
+      paramCode: value1.topic,
+    });
+  };
+
+  // const title = data?.text.includes("undefined") ? "-" : data?.text;
+  const currentCode = values[0].topic;
+  const isH = currentCode?.includes("H");
+  const title = extractWord(values[0].definition, isH);
 
   return (
     <View
@@ -116,14 +133,31 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
             />
           </Pressable>
         )}
-        <Text style={styles.title}>{title} </Text>
+        <Text style={styles.title}>
+          {title || "-"} - {currentCode}
+        </Text>
+        <Pressable
+          android_ripple={{
+            color: theme.colors.background,
+            foreground: true,
+            radius: 10,
+          }}
+          onPress={onStrongSearch}
+        >
+          <MaterialCommunityIcons
+            style={styles.backIcon}
+            name="text-search"
+            size={26}
+            color="white"
+          />
+        </Pressable>
       </View>
       <View style={[styles.webviewWrapper]}>
         <WebView
           style={{ backgroundColor: "transparent" }}
           ref={webViewRef}
           originWhitelist={["*"]}
-          source={{ html: htmlTemplate(value, theme.colors, fontSize) }}
+          source={{ html: htmlTemplate(values, theme.colors, fontSize) }}
           onMessage={(event) =>
             setHeight(+event.nativeEvent.data ?? DEFAULT_HEIGHT)
           }

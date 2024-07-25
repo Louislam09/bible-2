@@ -49,7 +49,7 @@ const RenderVerse = ({ item, onItemClick, theme, selected }: TRenderVerse) => {
           searchWords={[selected]}
           highlightStyle={{ color: theme.colors.notification }}
           style={[styles.verseBody]}
-          onWordClick={() => console.log("item")}
+          onWordClick={() => {}}
         />
       </View>
     </TouchableOpacity>

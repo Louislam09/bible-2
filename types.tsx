@@ -33,6 +33,7 @@ export enum Screens {
   Onboarding = "Onboarding",
   Character = "Character",
   Song = "Song",
+  StrongSearchEntire = "StrongSearchEntire",
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -51,6 +52,7 @@ export const ScreensName: TScreensName = {
   [Screens.Onboarding]: "Guia",
   [Screens.Character]: "Personaje",
   [Screens.Song]: "Himnario",
+  [Screens.StrongSearchEntire]: "Explorador de Números Strong",
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -61,6 +63,7 @@ export type RootTabParamList = {
   ChooseBookScreen: undefined;
   Search: undefined;
   Concordance: undefined;
+  StrongSearchEntire: undefined;
   Notes: undefined;
   Favorite: undefined;
   NotFound: undefined;
@@ -78,6 +81,9 @@ export type RootStackParamList = {
     | ChooseChapterNumberParams;
   Search: NavigatorScreenParams<RootTabParamList> | { book?: string };
   Concordance: NavigatorScreenParams<RootTabParamList> | {};
+  StrongSearchEntire:
+    | NavigatorScreenParams<RootTabParamList>
+    | { paramCode: string };
   ChooseChapterNumber:
     | NavigatorScreenParams<RootTabParamList>
     | ChooseChapterNumberParams;
