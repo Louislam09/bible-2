@@ -99,14 +99,14 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
   const onStrongSearch = () => {
     const [value1] = values;
     navigation.navigate(Screens.StrongSearchEntire, {
-      paramCode: value1.topic,
+      paramCode: value1?.topic,
     });
   };
 
   // const title = data?.text.includes("undefined") ? "-" : data?.text;
-  const currentCode = values[0].topic;
+  const currentCode = values[0]?.topic;
   const isH = currentCode?.includes("H");
-  const title = extractWord(values[0].definition, isH);
+  const title = extractWord(values[0]?.definition, isH);
 
   return (
     <View
