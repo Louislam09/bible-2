@@ -270,8 +270,10 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
             <View style={styles.strongNumber}>
               <Text style={[styles.strongNumberText, { fontSize }]}>
                 {
-                  (!!filteredData?.length ? filteredData || [] : verseList)
-                    ?.length
+                  (selectedFilterOption !== defaultFilterOption
+                    ? filteredData || []
+                    : verseList
+                  )?.length
                 }
               </Text>
             </View>
@@ -286,7 +288,11 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
             }}
             decelerationRate={"normal"}
             estimatedItemSize={135}
-            data={!!filteredData?.length ? filteredData || [] : verseList}
+            data={
+              selectedFilterOption !== defaultFilterOption
+                ? filteredData || []
+                : verseList
+            }
             renderItem={({ item, index }) => (
               <RenderVerse
                 {...{ theme, onItemClick: onVerseClick, index, selected }}
