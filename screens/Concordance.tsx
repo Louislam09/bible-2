@@ -155,7 +155,9 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
 
   const filterOptions = getUniqueBookNames(verseList || []);
   const filteredData = useMemo(() => {
-    return verseList?.filter((item) => item.bookName === selectedFilterOption);
+    return (
+      verseList?.filter((item) => item.bookName === selectedFilterOption) || []
+    );
   }, [verseList, selectedFilterOption]);
 
   const ConcordanceHeader = () => {
@@ -267,7 +269,10 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
             </View>
             <View style={styles.strongNumber}>
               <Text style={[styles.strongNumberText, { fontSize }]}>
-                {(!!filteredData?.length ? filteredData : verseList)?.length}
+                {
+                  (!!filteredData?.length ? filteredData || [] : verseList)
+                    ?.length
+                }
               </Text>
             </View>
           </View>
@@ -281,7 +286,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
             }}
             decelerationRate={"normal"}
             estimatedItemSize={135}
-            data={!!filteredData?.length ? filteredData : verseList}
+            data={!!filteredData?.length ? filteredData || [] : verseList}
             renderItem={({ item, index }) => (
               <RenderVerse
                 {...{ theme, onItemClick: onVerseClick, index, selected }}
