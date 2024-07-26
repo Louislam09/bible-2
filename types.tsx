@@ -252,6 +252,22 @@ export enum BookIndexes {
   Apocalipsis = 66,
 }
 
+export enum BookGruop {
+  AntiguoPacto = "Antiguo Pacto",
+  NuevoPacto = "Nuevo Pacto",
+  Pentateuco = "Pentateuco",
+  LibrosHistóricos = "Libros Históricos",
+  LibrosPoéticos = "Libros Poéticos",
+  ProfetasMayores = "Profetas Mayores",
+  ProfetasMenores = "Profetas Menores",
+  Evangelios = "Evangelios",
+  Hechos = "Hechos",
+  Epístolas = "Epístolas",
+  EpístolasdePablo = "Epístolas de Pablo",
+  EpístolasGenerales = "Epístolas Generales",
+  Apocalipsis = "Apocalipsis",
+}
+
 export type IFavoriteVerse = {
   bookNumber: number;
   chapter: number;

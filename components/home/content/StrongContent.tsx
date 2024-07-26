@@ -159,7 +159,7 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
           originWhitelist={["*"]}
           source={{ html: htmlTemplate(values, theme.colors, fontSize) }}
           onMessage={(event) =>
-            setHeight(+event.nativeEvent.data ?? DEFAULT_HEIGHT)
+            setHeight(+event.nativeEvent.data || DEFAULT_HEIGHT)
           }
           scrollEnabled
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}

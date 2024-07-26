@@ -96,14 +96,6 @@ const StrongSearchContent = ({ data, theme, strongWord }: TListVerse) => {
         <Text style={styles.chapterHeaderTitle}>
           {strongWord.code} {"\n"}
         </Text>
-        <Text
-          style={[
-            styles.chapterHeaderTitle,
-            { color: theme.colors.notification },
-          ]}
-        >
-          {(filterData ?? []).length} versiculos encontrados
-        </Text>
       </View>
     );
   };
@@ -132,7 +124,7 @@ const StrongSearchContent = ({ data, theme, strongWord }: TListVerse) => {
     <View style={{ flex: 1 }}>
       <FlashList
         ref={flatListRef}
-        ListHeaderComponent={SearchedHeader}
+        // ListHeaderComponent={SearchedHeader}
         decelerationRate={"normal"}
         estimatedItemSize={135}
         data={filterData}
