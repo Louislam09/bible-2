@@ -6,7 +6,7 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { IVerseItem, TTheme } from "types";
 import copyToClipboard from "utils/copyToClipboard";
 
-type TItem = {
+export type TItem = {
   bookName: string;
   bookNumber: number;
   chapter: number;

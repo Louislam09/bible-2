@@ -4,12 +4,13 @@ import { DB_BOOK_NAMES } from "constants/BookNames";
 import { htmlTemplate } from "constants/HtmlTemplate";
 import { SEARCH_STRONG_WORD } from "constants/Queries";
 import { useDBContext } from "context/databaseContext";
-import React, { FC, useEffect, useState } from "react";
-import { Platform, Pressable, StyleSheet } from "react-native";
+import React, { FC, useEffect, useRef, useState } from "react";
+import { Animated, Platform, Pressable, StyleSheet } from "react-native";
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { IStrongWord, Screens, StrongData, TTheme } from "types";
 import { Text, View } from "../../Themed";
+import { transform } from "@babel/core";
 
 interface IStrongContent {
   theme: TTheme;
@@ -43,6 +44,42 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
   const webViewRef = React.useRef<WebView>(null);
   const [text, setText] = useState(code);
   const [backUrl, setBackUrl] = useState<any>([]);
+
+  const animatedScaleIcon = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const loopAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.spring(animatedScaleIcon, {
+          toValue: 1,
+          friction: 0.1,
+          tension: 40,
+          useNativeDriver: false,
+        }),
+        // Animated.timing(animatedScaleIcon, {
+        //   toValue: 1,
+        //   duration: 500,
+        //   useNativeDriver: false,
+        // }),
+        Animated.timing(animatedScaleIcon, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: false,
+        }),
+      ])
+    );
+
+    loopAnimation.start();
+  }, [animatedScaleIcon]);
+
+  const _animatedScaleIcon = animatedScaleIcon.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.9, 1],
+  });
+
+  const animatedStyle = {
+    transform: [{ scale: _animatedScaleIcon }],
+  };
 
   useEffect(() => {
     setText(data.code);
@@ -96,7 +133,7 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
     setText(url);
   };
 
-  const onStrongSearch = () => {
+  const onStrongSearchEntire = () => {
     const [value1] = values;
     navigation.navigate(Screens.StrongSearchEntire, {
       paramCode: value1?.topic,
@@ -136,21 +173,23 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
         <Text style={styles.title}>
           {title || "-"} - {currentCode}
         </Text>
-        <Pressable
-          android_ripple={{
-            color: theme.colors.background,
-            foreground: true,
-            radius: 10,
-          }}
-          onPress={onStrongSearch}
-        >
-          <MaterialCommunityIcons
-            style={styles.backIcon}
-            name="text-search"
-            size={26}
-            color="white"
-          />
-        </Pressable>
+        <Animated.View style={[animatedStyle]}>
+          <Pressable
+            android_ripple={{
+              color: theme.colors.background,
+              foreground: true,
+              radius: 10,
+            }}
+            onPress={onStrongSearchEntire}
+          >
+            <MaterialCommunityIcons
+              style={[styles.backIcon, {}]}
+              name="text-search"
+              size={26}
+              color="white"
+            />
+          </Pressable>
+        </Animated.View>
       </View>
       <View style={[styles.webviewWrapper]}>
         <WebView

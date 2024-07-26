@@ -1,11 +1,13 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { Picker } from "@react-native-picker/picker";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import RenderVerse from "components/concordance/RenderVerse";
+import RenderVerse, { TItem } from "components/concordance/RenderVerse";
 import { Text } from "components/Themed";
 import { GET_VERSES_FOR_CONCORDANCIA } from "constants/Queries";
 import WORDS, { TWord } from "constants/words";
+import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
 import { useCustomTheme } from "context/ThemeContext";
 import useDebounce from "hooks/useDebounce";
@@ -98,6 +100,7 @@ const RenderWordItem = ({
 
 const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
   const { myBibleDB, executeSql } = useDBContext();
+  const { fontSize } = useBibleContext();
   const [selected, setSelected] = useState<any>(null);
   const [filterData] = useState<TWord[]>(WORDS);
   const theme = useTheme();
@@ -105,9 +108,17 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
   const navigation = useNavigation();
   const styles = getStyles(theme);
   const [searchText, setSearchText] = useState<any>(null);
-  const [verseList, setVerseList] = useState<any>(null);
+  const [verseList, setVerseList] = useState<TItem[] | null>(null);
+  const defaultFilterOption = "Filtro por libro";
   const debouncedSearchText = useDebounce(searchText, 500);
   const randomLetter = LETTERS[Math.floor(Math.random() * LETTERS.length)];
+  const [selectedFilterOption, setSelectedFilterOption] =
+    useState<any>(defaultFilterOption);
+
+  function getUniqueBookNames(data: TItem[]) {
+    const bookNames = data.map((item: any) => item.bookName);
+    return ["Filtro por libro", ...new Set(bookNames)];
+  }
 
   useEffect(() => {
     (async () => {
@@ -115,10 +126,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
         executeSql(myBibleDB, GET_VERSES_FOR_CONCORDANCIA, [`%${selected}%`])
           .then((data) => {
             const newData = data.flatMap((x) => JSON.parse(x.data));
-            // const newData = data.map((x) => ({
-            //   data: JSON.parse(x.data),
-            //   title: x.long_name,
-            // }));
+            setSelectedFilterOption(defaultFilterOption);
             setVerseList(newData);
           })
           .catch((error) => {
@@ -136,10 +144,6 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
   };
 
   const onVerseClick = async (item: any) => {
-    // if (isSearchCopy) {
-    //   await copyToClipboard(item);
-    //   return;
-    // }
     navigation.navigate(Screens.Home, {
       book: item.bookName,
       chapter: item.chapter,
@@ -149,14 +153,19 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
 
   const showVerseList = useMemo(() => !!verseList, [verseList]);
 
+  const filterOptions = getUniqueBookNames(verseList || []);
+  const filteredData = useMemo(() => {
+    return verseList?.filter((item) => item.bookName === selectedFilterOption);
+  }, [verseList, selectedFilterOption]);
+
   const ConcordanceHeader = () => {
     return (
       <View style={[styles.noteHeader]}>
-        {!showVerseList && (
+        {
           <Text style={[styles.noteListTitle]}>
             Concordancia {"\n"} Escritural
           </Text>
-        )}
+        }
         <View style={styles.searchContainer}>
           <Ionicons
             style={styles.searchIcon}
@@ -227,7 +236,42 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
       }}
     >
       <>
-        {ConcordanceHeader()}
+        {!showVerseList && ConcordanceHeader()}
+        {showVerseList && (
+          <View style={[styles.filterContainer, { minHeight: 49 }]}>
+            <View style={styles.pickerContainer}>
+              <Picker
+                mode="dropdown"
+                style={[styles.pickerStyle, { minHeight: 49 }]}
+                dropdownIconColor={theme.colors.text}
+                accessibilityLabel="Selecciona el libro o el grupo"
+                selectedValue={selectedFilterOption}
+                selectionColor={theme.colors.notification}
+                onValueChange={(itemValue, itemIndex) =>
+                  setSelectedFilterOption(itemValue)
+                }
+              >
+                {filterOptions?.map((option: string, index: any) => (
+                  <Picker.Item
+                    key={index}
+                    color={
+                      selectedFilterOption === option
+                        ? theme.colors.notification
+                        : "black"
+                    }
+                    label={option}
+                    value={option}
+                  />
+                ))}
+              </Picker>
+            </View>
+            <View style={styles.strongNumber}>
+              <Text style={[styles.strongNumberText, { fontSize }]}>
+                {(!!filteredData?.length ? filteredData : verseList)?.length}
+              </Text>
+            </View>
+          </View>
+        )}
         {showVerseList ? (
           <FlashList
             key={_themeScheme}
@@ -237,7 +281,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
             }}
             decelerationRate={"normal"}
             estimatedItemSize={135}
-            data={verseList}
+            data={!!filteredData?.length ? filteredData : verseList}
             renderItem={({ item, index }) => (
               <RenderVerse
                 {...{ theme, onItemClick: onVerseClick, index, selected }}
@@ -330,8 +374,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
       alignItems: "center",
       justifyContent: "center",
       paddingHorizontal: 4,
-      paddingVertical: 10,
-      marginTop: 40,
+      // paddingVertical: 10,
+      // marginTop: 40,
       backgroundColor: "transparent",
     },
     noteListTitle: {
@@ -353,7 +397,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       alignItems: "center",
       justifyContent: "space-around",
       borderRadius: 10,
-      marginVertical: 20,
+      marginVertical: 15,
       borderWidth: 1,
       borderColor: colors.notification,
       borderStyle: "solid",
@@ -421,7 +465,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     separator: {
       height: 1,
-      // backgroundColor: colors.notification + "99",
       marginVertical: 5,
     },
     noResultsContainer: {
@@ -444,6 +487,42 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginHorizontal: 10,
       color: colors.primary,
       fontSize: 24,
+    },
+    pickerContainer: {
+      borderRadius: 10,
+      flex: 1,
+      paddingHorizontal: 10,
+      backgroundColor: "#ddd",
+      borderTopRightRadius: 0,
+      borderBottomRightRadius: 0,
+    },
+    pickerStyle: {
+      color: "black",
+      backgroundColor: "#ddd",
+    },
+    filterContainer: {
+      borderRadius: 10,
+      display: "flex",
+      justifyContent: "space-between",
+      flexDirection: "row",
+      alignItems: "center",
+      paddingLeft: 1,
+      borderWidth: 2,
+      borderColor: colors.notification,
+      backgroundColor: colors.notification + "99",
+    },
+    strongNumber: {
+      flex: 0.18,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "transparent",
+      height: 52,
+      paddingHorizontal: 5,
+    },
+    strongNumberText: {
+      color: colors.text,
+      fontWeight: "bold",
     },
   });
 

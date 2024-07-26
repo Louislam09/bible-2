@@ -4,14 +4,7 @@ import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from "constants/Queries";
 import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
 import React, { useEffect, useState } from "react";
-import {
-  Animated,
-  StyleProp,
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
-} from "react-native";
+import { Animated, StyleSheet, Text, View } from "react-native";
 import { BookGruop, RootStackScreenProps, TTheme } from "types";
 import StrongSearchContent from "./StrongSearchContent";
 
