@@ -160,6 +160,8 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
     );
   }, [verseList, selectedFilterOption]);
 
+  const show = false;
+
   const ConcordanceHeader = () => {
     return (
       <View style={[styles.noteHeader]}>
@@ -239,7 +241,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
     >
       <>
         {!showVerseList && ConcordanceHeader()}
-        {showVerseList && (
+        {showVerseList && show && (
           <View style={[styles.filterContainer, { minHeight: 49 }]}>
             <View style={styles.pickerContainer}>
               <Picker

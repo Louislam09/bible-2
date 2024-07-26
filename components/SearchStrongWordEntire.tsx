@@ -70,6 +70,8 @@ const SearchStrongWordEntire: React.FC<
     return () => {};
   }, [myBibleDB, code, selectedFilterOption]);
 
+  const show = false;
+
   return (
     <Animated.View
       style={{
@@ -85,32 +87,34 @@ const SearchStrongWordEntire: React.FC<
             { backgroundColor: theme.colors.notification },
           ]}
         >
-          <View style={{ flex: 1 }}>
-            <Picker
-              mode="dropdown"
-              style={styles.pickerStyle}
-              dropdownIconColor={theme.colors.text}
-              accessibilityLabel="Selecciona el libro o el grupo"
-              selectedValue={selectedFilterOption}
-              selectionColor={"red"}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedFilterOption(itemValue)
-              }
-            >
-              {filterOptions.map((option: string, index: any) => (
-                <Picker.Item
-                  key={index}
-                  color={
-                    selectedFilterOption === option
-                      ? theme.colors.notification
-                      : "black"
-                  }
-                  label={option}
-                  value={option}
-                />
-              ))}
-            </Picker>
-          </View>
+          {show && (
+            <View style={{ flex: 1 }}>
+              <Picker
+                mode="dropdown"
+                style={styles.pickerStyle}
+                dropdownIconColor={theme.colors.text}
+                accessibilityLabel="Selecciona el libro o el grupo"
+                selectedValue={selectedFilterOption}
+                selectionColor={"red"}
+                onValueChange={(itemValue, itemIndex) =>
+                  setSelectedFilterOption(itemValue)
+                }
+              >
+                {filterOptions.map((option: string, index: any) => (
+                  <Picker.Item
+                    key={index}
+                    color={
+                      selectedFilterOption === option
+                        ? theme.colors.notification
+                        : "black"
+                    }
+                    label={option}
+                    value={option}
+                  />
+                ))}
+              </Picker>
+            </View>
+          )}
           <View style={styles.strongNumber}>
             <Text style={[styles.strongNumberText, { fontSize }]}>
               {paramCode?.split(",")?.[0]}
