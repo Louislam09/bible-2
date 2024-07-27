@@ -4,7 +4,6 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import AnimatedDropdown from "components/AnimatedDropdown";
-import AnimatedPicker from "components/AnimatedPicker";
 import RenderVerse, { TItem } from "components/concordance/RenderVerse";
 import { Text } from "components/Themed";
 import { GET_VERSES_FOR_CONCORDANCIA } from "constants/Queries";
@@ -110,10 +109,10 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
   const navigation = useNavigation();
   const styles = getStyles(theme);
   const [searchText, setSearchText] = useState<any>(null);
+  const [randomLetter, setRandomLetter] = useState<string>("");
   const [verseList, setVerseList] = useState<TItem[] | null>(null);
   const defaultFilterOption = "Filtra por libro";
   const debouncedSearchText = useDebounce(searchText, 500);
-  const randomLetter = LETTERS[Math.floor(Math.random() * LETTERS.length)];
   const [selectedFilterOption, setSelectedFilterOption] =
     useState<any>(defaultFilterOption);
 
@@ -121,6 +120,10 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
     const bookNames = data.map((item: any) => item.bookName);
     return [defaultFilterOption, ...new Set(bookNames)];
   }
+
+  useEffect(() => {
+    setRandomLetter(LETTERS[Math.floor(Math.random() * LETTERS.length)]);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -244,8 +247,26 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
       <>
         {!showVerseList && ConcordanceHeader()}
         {showVerseList && (
-          <View style={[styles.filterContainer, { minHeight: 45 }]}>
-            <View style={[styles.strongNumber]}>
+          <>
+            <View style={[styles.filterContainer, { minHeight: 45 }]}>
+              <View style={[styles.strongNumber, { paddingHorizontal: 15 }]}>
+                <MaterialCommunityIcons
+                  name="filter-variant"
+                  size={24}
+                  color="white"
+                  style={{ fontWeight: "bold" }}
+                />
+              </View>
+              <View style={styles.pickerContainer}>
+                <AnimatedDropdown
+                  options={filterOptions}
+                  selectedValue={selectedFilterOption}
+                  onValueChange={setSelectedFilterOption}
+                  theme={theme}
+                />
+              </View>
+            </View>
+            <View style={[styles.strongNumber, { paddingHorizontal: 10 }]}>
               <Text style={[styles.strongNumberText, { fontSize }]}>
                 {
                   (selectedFilterOption !== defaultFilterOption
@@ -255,15 +276,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
                 }
               </Text>
             </View>
-            <View style={styles.pickerContainer}>
-              <AnimatedDropdown
-                options={filterOptions}
-                selectedValue={selectedFilterOption}
-                onValueChange={setSelectedFilterOption}
-                theme={theme}
-              />
-            </View>
-          </View>
+          </>
         )}
         {showVerseList ? (
           <FlashList
@@ -506,7 +519,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: colors.notification + "99",
     },
     strongNumber: {
-      flex: 0.18,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",

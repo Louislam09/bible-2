@@ -359,7 +359,7 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
             {verseActions.map((action: TIcon, key) => (
               <Pressable key={key} style={[action.hide && { display: "none" }]}>
                 <MaterialCommunityIcons
-                  size={24}
+                  size={30}
                   name={action.name}
                   style={[styles.icon, { color: action.color ?? "black" }]}
                   onPress={action.action}
@@ -407,14 +407,14 @@ const getStyles = ({ colors }: TTheme) =>
       justifyContent: "flex-end",
       backgroundColor: colors.notification,
       borderRadius: 10,
-      padding: 5,
+      padding: 10,
       alignSelf: "flex-end",
     },
     icon: {
       fontWeight: "700",
-      marginHorizontal: 10,
+      marginHorizontal: 15,
       color: colors.primary,
-      fontSize: 26,
+      fontSize: 28,
     },
   });
 

@@ -50,29 +50,6 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
     });
   };
 
-  const renderItem: ListRenderItem<IVerseItem> = ({ item }) => {
-    return (
-      <TouchableOpacity activeOpacity={0.9} onPress={() => onVerseClick(item)}>
-        <View style={styles.cardContainer}>
-          <View style={styles.headerContainer}>
-            <Text
-              style={styles.cardTitle}
-            >{`${item.bookName} ${item.chapter}:${item.verse}`}</Text>
-          </View>
-          <Highlighter
-            sanitize={removeAccent}
-            style={styles.cardBody}
-            highlightStyle={{ color: theme.colors.notification }}
-            searchWords={
-              !query ? [] : [...removeAccent(query).trim().split(" ")]
-            }
-            textToHighlight={getVerseTextRaw(item.text)}
-          />
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
   useEffect(() => {
     if (!animationRef.current) return;
     // animationRef.current.play();
@@ -127,11 +104,10 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
     <View style={{ flex: 1 }}>
       <FlashList
         ref={flatListRef}
-        ListHeaderComponent={SearchedHeader}
+        // ListHeaderComponent={SearchedHeader}
         decelerationRate={"normal"}
         estimatedItemSize={135}
         data={data}
-        // renderItem={renderItem as any}
         renderItem={({ item, index }) => (
           <RenderVerse
             {...{

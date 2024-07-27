@@ -1,38 +1,31 @@
-import { useTheme } from "@react-navigation/native";
-import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from "constants/Queries";
-import { useBibleContext } from "context/BibleContext";
-import { useDBContext } from "context/databaseContext";
-import React, { useEffect, useState } from "react";
-import { Animated, StyleSheet, Text, View } from "react-native";
-import { BookGruop, RootStackScreenProps, TTheme } from "types";
-import StrongSearchContent from "./StrongSearchContent";
-import AnimatedDropdown from "./AnimatedDropdown";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTheme } from "@react-navigation/native";
+import { useBibleContext } from "context/BibleContext";
+import React, { useEffect, useMemo, useState } from "react";
+import { Animated, StyleSheet, Text, View } from "react-native";
+import { BookGruop, IVerseItem, RootStackScreenProps, TTheme } from "types";
+import AnimatedDropdown from "./AnimatedDropdown";
+import ListVerse from "./search/ListVerse";
 
-const SearchStrongWordEntire: React.FC<
-  RootStackScreenProps<"StrongSearchEntire">
-> = ({ route }) => {
-  const { paramCode } = route.params as any;
+const SearchWordEntire: React.FC<RootStackScreenProps<"Search">> = ({
+  route,
+}) => {
+  const { searchState } = useBibleContext();
   const theme = useTheme();
   const styles = getStyles(theme);
-  const { myBibleDB, executeSql } = useDBContext();
-  const [data, setData] = useState<any | null>(null);
-  const { strongWord, fontSize } = useBibleContext();
-  const code = (paramCode || strongWord?.code)?.match(/\d+/)?.[0];
-  const isH = (paramCode || strongWord?.code)?.includes("H");
-  const initialFilterOption = isH
-    ? BookGruop.AntiguoPacto
-    : BookGruop.NuevoPacto;
+  const [data, setData] = useState<IVerseItem[] | null>(null);
+  const { fontSize } = useBibleContext();
+  const defaultFilterOption = "Filtra por grupo";
 
-  const OldVowGroup = {
+  type QueryFilter = { [key in BookGruop | string]: number[] };
+  const filterOptions: QueryFilter = {
+    "Filtra por grupo": [-1, -1],
     [BookGruop.AntiguoPacto]: [0, 460],
     [BookGruop.Pentateuco]: [0, 50],
     [BookGruop.LibrosHistóricos]: [60, 120],
     [BookGruop.LibrosPoéticos]: [130, 150],
     [BookGruop.ProfetasMayores]: [160, 200],
     [BookGruop.ProfetasMenores]: [210, 460],
-  };
-  const NewVowGroup = {
     [BookGruop.NuevoPacto]: [470, 730],
     [BookGruop.Evangelios]: [470, 500],
     [BookGruop.Hechos]: [510, 510],
@@ -42,34 +35,28 @@ const SearchStrongWordEntire: React.FC<
     [BookGruop.Apocalipsis]: [730, 730],
   };
 
-  type QueryFilter = { [key in BookGruop]?: number[] };
-  const queryFilter: QueryFilter = isH ? OldVowGroup : NewVowGroup;
-
   const [selectedFilterOption, setSelectedFilterOption] =
-    useState(initialFilterOption);
+    useState(defaultFilterOption);
 
-  const filterOptions = isH
-    ? Object.keys(OldVowGroup)
-    : (Object.keys(NewVowGroup) as string[]);
+  const filterData = useMemo(() => {
+    const filter = filterOptions[selectedFilterOption];
+    if (filter.includes(-1)) return null;
+    const [startBookNumber, endBookNumber] = filter;
+
+    const _data = data?.filter(
+      (item) =>
+        item.book_number >= startBookNumber && item.book_number <= endBookNumber
+    );
+    return !!_data?.length ? _data : null;
+  }, [selectedFilterOption]);
 
   useEffect(() => {
-    (async () => {
-      if (!myBibleDB || !executeSql) return;
-      if (!code) return;
-      const params = [
-        `%>${code}<%`,
-        ...(queryFilter[selectedFilterOption] || [0, 0]),
-      ];
-      const searchData = await executeSql(
-        myBibleDB,
-        SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE,
-        params
-      );
-      setData(searchData ?? []);
-    })();
+    if (searchState?.searchResults) {
+      setData(searchState?.searchResults);
+    }
 
     return () => {};
-  }, [myBibleDB, code, selectedFilterOption]);
+  }, [searchState]);
 
   return (
     <Animated.View
@@ -80,17 +67,9 @@ const SearchStrongWordEntire: React.FC<
       }}
     >
       <View style={{ paddingHorizontal: 15 }}>
-        <View
-          style={[
-            styles.filterContainer,
-            { backgroundColor: theme.colors.notification + "99" },
-          ]}
-        >
+        <View style={[styles.filterContainer]}>
           <View
-            style={[
-              styles.strongNumber,
-              { paddingHorizontal: 15, backgroundColor: "transparent" },
-            ]}
+            style={[styles.strongNumber, { backgroundColor: "transparent" }]}
           >
             <MaterialCommunityIcons
               name="filter-variant"
@@ -101,39 +80,21 @@ const SearchStrongWordEntire: React.FC<
           </View>
           <View style={styles.pickerContainer}>
             <AnimatedDropdown
-              options={filterOptions}
+              options={Object.keys(filterOptions)}
               selectedValue={selectedFilterOption}
               onValueChange={setSelectedFilterOption}
               theme={theme}
             />
           </View>
         </View>
-        <View
-          style={[
-            styles.strongNumber,
-            {
-              paddingHorizontal: 0,
-              backgroundColor: "transparent",
-            },
-          ]}
-        >
-          <Text style={[styles.strongNumberText, { fontSize }]}>
-            {paramCode?.split(",")?.[0]}
-          </Text>
-        </View>
         <Text style={[styles.resultText, { fontSize }]}>
           Resultado encontrados:{" "}
           <Text style={{ color: theme.colors.notification }}>
-            {data?.length}
+            {(filterData || data)?.length}
           </Text>
         </Text>
       </View>
-      <StrongSearchContent
-        strongWord={{ code: paramCode?.split(",")?.[0], text: strongWord.text }}
-        theme={theme}
-        data={data}
-        currentFilter={selectedFilterOption}
-      />
+      <ListVerse isLoading={!!searchState?.error} data={filterData || data} />
     </Animated.View>
   );
 };
@@ -141,7 +102,7 @@ const SearchStrongWordEntire: React.FC<
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     filterContainer: {
-      borderColor: colors.notification,
+      // borderColor: colors.notification,
       borderWidth: 1,
       borderRadius: 10,
       display: "flex",
@@ -149,6 +110,8 @@ const getStyles = ({ colors }: TTheme) =>
       flexDirection: "row",
       alignItems: "center",
       padding: 1,
+      borderColor: colors.notification,
+      backgroundColor: colors.notification + "99",
     },
     strongNumber: {
       display: "flex",
@@ -157,7 +120,7 @@ const getStyles = ({ colors }: TTheme) =>
       height: 48,
       alignSelf: "flex-start",
       backgroundColor: colors.notification + "99",
-      paddingHorizontal: 10,
+      paddingHorizontal: 15,
     },
     strongNumberText: {
       color: colors.text,
@@ -165,7 +128,7 @@ const getStyles = ({ colors }: TTheme) =>
     },
     resultText: {
       color: colors.text,
-      marginBottom: 10,
+      marginVertical: 10,
       fontWeight: "bold",
     },
     pickerStyle: {
@@ -182,4 +145,4 @@ const getStyles = ({ colors }: TTheme) =>
     },
   });
 
-export default SearchStrongWordEntire;
+export default SearchWordEntire;
