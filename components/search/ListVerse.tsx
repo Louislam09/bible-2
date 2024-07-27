@@ -2,6 +2,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "components/Animation";
+import RenderVerse from "components/concordance/RenderVerse";
 import Highlighter from "components/Highlighter";
 import { Text } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
@@ -29,7 +30,7 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
   const theme = useTheme();
   const navigation = useNavigation();
   const styles = getStyles(theme);
-  const { searchQuery: query, isSearchCopy } = useBibleContext();
+  const { searchQuery: query } = useBibleContext();
   const flatListRef = useRef<FlashList<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const notFoundSource = require("../../assets/lottie/notFound.json");
@@ -42,10 +43,6 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
   };
 
   const onVerseClick = async (item: IVerseItem) => {
-    if (isSearchCopy) {
-      await copyToClipboard(item);
-      return;
-    }
     navigation.navigate(Screens.Home, {
       book: item.bookName,
       chapter: item.chapter,
@@ -134,7 +131,24 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
         decelerationRate={"normal"}
         estimatedItemSize={135}
         data={data}
-        renderItem={renderItem as any}
+        // renderItem={renderItem as any}
+        renderItem={({ item, index }) => (
+          <RenderVerse
+            {...{
+              theme,
+              onItemClick: onVerseClick,
+              sanitize: removeAccent,
+              index,
+              selected: !query
+                ? []
+                : [...removeAccent(query).trim().split(" ")],
+            }}
+            item={{
+              ...item,
+              text: getVerseTextRaw(item.text),
+            }}
+          />
+        )}
         onScroll={handleScroll}
         keyExtractor={(item: any, index: any) => `list-${index}`}
         ItemSeparatorComponent={() => <View style={styles.separator} />}

@@ -43,7 +43,7 @@ export const filterDataByTab = (tabName: any, searchState: any, book: any) => {
 const SearchTabNavigator: React.FC<RootStackScreenProps<"Search">> = ({
   route,
 }) => {
-  const { searchState, isSearchCopy } = useBibleContext();
+  const { searchState } = useBibleContext();
   const { book } = route.params as any;
   const { colors } = useTheme() as TTheme;
   const NT_BOOK_NUMBER = 470;
@@ -75,7 +75,7 @@ const SearchTabNavigator: React.FC<RootStackScreenProps<"Search">> = ({
           data={searchState?.searchResults}
         />
       ),
-    [searchState, isSearchCopy]
+    [searchState]
   );
   const ASearchs = useMemo(
     () => () =>
@@ -85,7 +85,7 @@ const SearchTabNavigator: React.FC<RootStackScreenProps<"Search">> = ({
           data={filterDataByTab("AT")}
         />
       ),
-    [searchState, isSearchCopy]
+    [searchState]
   );
 
   const NSearchs = useMemo(
@@ -96,7 +96,7 @@ const SearchTabNavigator: React.FC<RootStackScreenProps<"Search">> = ({
           data={filterDataByTab("NT")}
         />
       ),
-    [searchState, isSearchCopy]
+    [searchState]
   );
   const CurrentBook = useMemo(
     () => () =>
@@ -106,7 +106,7 @@ const SearchTabNavigator: React.FC<RootStackScreenProps<"Search">> = ({
           data={filterDataByTab(book)}
         />
       ),
-    [searchState, isSearchCopy]
+    [searchState]
   );
 
   const tabs = [

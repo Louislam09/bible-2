@@ -14,20 +14,10 @@ const SearchHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
   const theme = useTheme();
   const textInputRef = useRef<TextInput>(null);
   const styles = getStyles(theme);
-  const {
-    performSearch,
-    setSearchQuery,
-    searchQuery,
-    toggleCopySearch,
-    isSearchCopy,
-  } = useBibleContext();
+  const { performSearch, setSearchQuery, searchQuery } = useBibleContext();
 
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 500);
-
-  const onCheckbox = (value: boolean) => {
-    toggleCopySearch(value);
-  };
 
   const handelSearch = async (query: string) => {
     setQuery(removeAccent(query));
@@ -84,26 +74,6 @@ const SearchHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
             />
           </TouchableOpacity>
         )}
-      </View>
-      <View style={styles.checkboxContainer}>
-        <View style={styles.checkboxItem}>
-          <Checkbox
-            style={{ margin: 8 }}
-            value={isSearchCopy}
-            onValueChange={() => onCheckbox(true)}
-            color={isSearchCopy ? theme.colors.notification : undefined}
-          />
-          <Text>Copy</Text>
-        </View>
-        <View style={styles.checkboxItem}>
-          <Checkbox
-            style={{ margin: 8 }}
-            value={!isSearchCopy}
-            onValueChange={() => onCheckbox(false)}
-            color={!isSearchCopy ? theme.colors.notification : undefined}
-          />
-          <Text>Ir</Text>
-        </View>
       </View>
     </View>
   );

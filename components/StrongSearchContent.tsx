@@ -20,9 +20,15 @@ type TListVerse = {
   data: IVerseItem[] | any;
   theme: TTheme;
   strongWord: { code: string; text: string };
+  currentFilter: string;
 };
 
-const StrongSearchContent = ({ data, theme, strongWord }: TListVerse) => {
+const StrongSearchContent = ({
+  data,
+  theme,
+  strongWord,
+  currentFilter,
+}: TListVerse) => {
   const navigation = useNavigation();
   const [filterData, setFilter] = useState([]);
   const styles = getStyles(theme);
@@ -124,7 +130,6 @@ const StrongSearchContent = ({ data, theme, strongWord }: TListVerse) => {
     <View style={{ flex: 1 }}>
       <FlashList
         ref={flatListRef}
-        // ListHeaderComponent={SearchedHeader}
         decelerationRate={"normal"}
         estimatedItemSize={135}
         data={filterData}
@@ -136,7 +141,7 @@ const StrongSearchContent = ({ data, theme, strongWord }: TListVerse) => {
         ListEmptyComponent={
           <View style={styles.noResultsContainer}>
             <Text style={styles.noResultsText}>
-              No se encontró ningún resultado.
+              No se encontraron resultados en: {"\n"} {currentFilter}
             </Text>
           </View>
         }
@@ -206,6 +211,7 @@ const getStyles = ({ colors }: TTheme) =>
       flex: 0.7,
       alignItems: "center",
       justifyContent: "center",
+      paddingTop: 20,
     },
     noResultsText: {
       fontSize: 18,

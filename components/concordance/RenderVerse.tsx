@@ -5,6 +5,7 @@ import { Text } from "components/Themed";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { IVerseItem, TTheme } from "types";
 import copyToClipboard from "utils/copyToClipboard";
+import removeAccent from "utils/removeAccent";
 
 export type TItem = {
   bookName: string;
@@ -19,15 +20,26 @@ type TRenderVerse = {
   onItemClick: any;
   theme: TTheme;
   selected: any;
+  sanitize?: any;
 };
 
-const RenderVerse = ({ item, onItemClick, theme, selected }: TRenderVerse) => {
+const RenderVerse = ({
+  item,
+  onItemClick,
+  theme,
+  selected,
+  sanitize,
+}: TRenderVerse) => {
   const styles = getStyles(theme);
 
   const onCopy = async (item: any) => {
-    await copyToClipboard({ ...item, book_number: item.bookNumber });
+    await copyToClipboard({
+      ...item,
+      book_number: item.bookNumber || item.book_number,
+    });
   };
 
+  const isArray = Array.isArray(selected);
   return (
     <TouchableOpacity activeOpacity={0.9} onPress={() => onItemClick(item)}>
       <View style={styles.cardContainer}>
@@ -45,8 +57,9 @@ const RenderVerse = ({ item, onItemClick, theme, selected }: TRenderVerse) => {
           </View>
         </View>
         <Highlighter
+          sanitize={sanitize}
           textToHighlight={item.text}
-          searchWords={[selected]}
+          searchWords={isArray ? selected : [selected]}
           highlightStyle={{ color: theme.colors.notification }}
           style={[styles.verseBody]}
           onWordClick={() => {}}

@@ -47,7 +47,6 @@ type BibleState = {
   selectBibleVersion: Function;
   removeHighlistedVerse: Function;
   toggleCopyMode: Function;
-  toggleCopySearch: Function;
   toggleSplitMode: Function;
   toggleBottomSideSearching: (value: boolean) => void;
   decreaseFontSize: Function;
@@ -65,7 +64,6 @@ type BibleState = {
   addToNoteText: string;
   currentTheme: keyof typeof EThemes;
   isCopyMode: boolean;
-  isSearchCopy: boolean;
   viewLayoutGrid: boolean;
   fontSize: number;
   verseInStrongDisplay: number;
@@ -123,7 +121,6 @@ const initialContext: BibleState = {
   toggleCopyMode: () => {},
   toggleSplitMode: () => {},
   toggleBottomSideSearching: (value: boolean) => {},
-  toggleCopySearch: () => {},
   decreaseFontSize: () => {},
   toggleFavoriteVerse: (item: IFavoriteVerse) => {},
   setverseInStrongDisplay: (verse: number) => {},
@@ -144,7 +141,6 @@ const initialContext: BibleState = {
   addToNoteText: "",
   verseInStrongDisplay: 0,
   currentTheme: "Blue",
-  isSearchCopy: false,
   isSplitActived: false,
   viewLayoutGrid: true,
   strongWord: { text: "", code: "" },
@@ -222,11 +218,6 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
       return {
         ...state,
         isBottomSideSearching: action.payload,
-      };
-    case "TOGGLE_COPY_SEARCH":
-      return {
-        ...state,
-        isSearchCopy: action.payload,
       };
     case "TOGGLE_VIEW_LAYOUT_GRID":
       return {
@@ -369,9 +360,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const toggleBottomSideSearching = (value: boolean) => {
     dispatch({ type: "TOGGLE_SECOND_SIDE", payload: value });
   };
-  const toggleCopySearch = (value: boolean) => {
-    dispatch({ type: "TOGGLE_COPY_SEARCH", payload: value });
-  };
+
   const toggleViewLayoutGrid = () => {
     dispatch({ type: "TOGGLE_VIEW_LAYOUT_GRID" });
   };
@@ -468,7 +457,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     performSearch: performSearch as typeof performSearch,
     setSearchQuery,
     selectTheme,
-    toggleCopySearch,
     toggleViewLayoutGrid,
     toggleFavoriteVerse,
     setStrongWord,

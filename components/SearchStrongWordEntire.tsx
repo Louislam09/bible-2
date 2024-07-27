@@ -1,4 +1,3 @@
-import { Picker } from "@react-native-picker/picker";
 import { useTheme } from "@react-navigation/native";
 import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from "constants/Queries";
 import { useBibleContext } from "context/BibleContext";
@@ -7,6 +6,8 @@ import React, { useEffect, useState } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import { BookGruop, RootStackScreenProps, TTheme } from "types";
 import StrongSearchContent from "./StrongSearchContent";
+import AnimatedPicker from "./AnimatedPicker";
+import AnimatedDropdown from "./AnimatedDropdown";
 
 const SearchStrongWordEntire: React.FC<
   RootStackScreenProps<"StrongSearchEntire">
@@ -87,38 +88,18 @@ const SearchStrongWordEntire: React.FC<
             { backgroundColor: theme.colors.notification },
           ]}
         >
-          {show && (
-            <View style={{ flex: 1 }}>
-              <Picker
-                mode="dropdown"
-                style={styles.pickerStyle}
-                dropdownIconColor={theme.colors.text}
-                accessibilityLabel="Selecciona el libro o el grupo"
-                selectedValue={selectedFilterOption}
-                selectionColor={"red"}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelectedFilterOption(itemValue)
-                }
-              >
-                {filterOptions.map((option: string, index: any) => (
-                  <Picker.Item
-                    key={index}
-                    color={
-                      selectedFilterOption === option
-                        ? theme.colors.notification
-                        : "black"
-                    }
-                    label={option}
-                    value={option}
-                  />
-                ))}
-              </Picker>
-            </View>
-          )}
-          <View style={styles.strongNumber}>
+          <View style={[styles.strongNumber]}>
             <Text style={[styles.strongNumberText, { fontSize }]}>
               {paramCode?.split(",")?.[0]}
             </Text>
+          </View>
+          <View style={styles.pickerContainer}>
+            <AnimatedDropdown
+              options={filterOptions}
+              selectedValue={selectedFilterOption}
+              onValueChange={setSelectedFilterOption}
+              theme={theme}
+            />
           </View>
         </View>
         <Text style={[styles.resultText, { fontSize }]}>
@@ -132,6 +113,7 @@ const SearchStrongWordEntire: React.FC<
         strongWord={{ code: paramCode?.split(",")?.[0], text: strongWord.text }}
         theme={theme}
         data={data}
+        currentFilter={selectedFilterOption}
       />
     </Animated.View>
   );
@@ -142,7 +124,7 @@ const getStyles = ({ colors }: TTheme) =>
     filterContainer: {
       borderColor: colors.notification,
       borderWidth: 1,
-      borderRadius: 5,
+      borderRadius: 10,
       display: "flex",
       justifyContent: "space-between",
       flexDirection: "row",
@@ -153,9 +135,10 @@ const getStyles = ({ colors }: TTheme) =>
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
+      height: 48,
+      alignSelf: "flex-start",
       backgroundColor: colors.notification + "99",
-      height: 52,
-      paddingHorizontal: 5,
+      paddingHorizontal: 10,
     },
     strongNumberText: {
       color: colors.text,
@@ -169,6 +152,14 @@ const getStyles = ({ colors }: TTheme) =>
     pickerStyle: {
       color: colors.text,
       backgroundColor: colors.background,
+    },
+    pickerContainer: {
+      borderRadius: 10,
+      flex: 1,
+      backgroundColor: "#ddd",
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
+      paddingVertical: 5,
     },
   });
 

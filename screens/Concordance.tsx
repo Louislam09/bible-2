@@ -1,8 +1,10 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { Picker } from "@react-native-picker/picker";
+// import { Picker } from "@react-native-picker/picker";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
+import AnimatedDropdown from "components/AnimatedDropdown";
+import AnimatedPicker from "components/AnimatedPicker";
 import RenderVerse, { TItem } from "components/concordance/RenderVerse";
 import { Text } from "components/Themed";
 import { GET_VERSES_FOR_CONCORDANCIA } from "constants/Queries";
@@ -109,7 +111,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
   const styles = getStyles(theme);
   const [searchText, setSearchText] = useState<any>(null);
   const [verseList, setVerseList] = useState<TItem[] | null>(null);
-  const defaultFilterOption = "Filtro por libro";
+  const defaultFilterOption = "Filtra por libro";
   const debouncedSearchText = useDebounce(searchText, 500);
   const randomLetter = LETTERS[Math.floor(Math.random() * LETTERS.length)];
   const [selectedFilterOption, setSelectedFilterOption] =
@@ -117,7 +119,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
 
   function getUniqueBookNames(data: TItem[]) {
     const bookNames = data.map((item: any) => item.bookName);
-    return ["Filtro por libro", ...new Set(bookNames)];
+    return [defaultFilterOption, ...new Set(bookNames)];
   }
 
   useEffect(() => {
@@ -241,35 +243,9 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
     >
       <>
         {!showVerseList && ConcordanceHeader()}
-        {showVerseList && show && (
-          <View style={[styles.filterContainer, { minHeight: 49 }]}>
-            <View style={styles.pickerContainer}>
-              <Picker
-                mode="dropdown"
-                style={[styles.pickerStyle, { minHeight: 49 }]}
-                dropdownIconColor={theme.colors.text}
-                accessibilityLabel="Selecciona el libro o el grupo"
-                selectedValue={selectedFilterOption}
-                selectionColor={theme.colors.notification}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelectedFilterOption(itemValue)
-                }
-              >
-                {filterOptions?.map((option: string, index: any) => (
-                  <Picker.Item
-                    key={index}
-                    color={
-                      selectedFilterOption === option
-                        ? theme.colors.notification
-                        : "black"
-                    }
-                    label={option}
-                    value={option}
-                  />
-                ))}
-              </Picker>
-            </View>
-            <View style={styles.strongNumber}>
+        {showVerseList && (
+          <View style={[styles.filterContainer, { minHeight: 45 }]}>
+            <View style={[styles.strongNumber]}>
               <Text style={[styles.strongNumberText, { fontSize }]}>
                 {
                   (selectedFilterOption !== defaultFilterOption
@@ -278,6 +254,14 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
                   )?.length
                 }
               </Text>
+            </View>
+            <View style={styles.pickerContainer}>
+              <AnimatedDropdown
+                options={filterOptions}
+                selectedValue={selectedFilterOption}
+                onValueChange={setSelectedFilterOption}
+                theme={theme}
+              />
             </View>
           </View>
         )}
@@ -387,8 +371,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       alignItems: "center",
       justifyContent: "center",
       paddingHorizontal: 4,
-      // paddingVertical: 10,
-      // marginTop: 40,
       backgroundColor: "transparent",
     },
     noteListTitle: {
@@ -485,7 +467,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       alignItems: "center",
       justifyContent: "center",
       borderRadius: 10,
-      paddingBottom: 20,
+      paddingHorizontal: 20,
     },
     noResultsText: {
       fontSize: 18,
@@ -504,10 +486,10 @@ const getStyles = ({ colors, dark }: TTheme) =>
     pickerContainer: {
       borderRadius: 10,
       flex: 1,
-      paddingHorizontal: 10,
       backgroundColor: "#ddd",
-      borderTopRightRadius: 0,
-      borderBottomRightRadius: 0,
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
+      paddingVertical: 5,
     },
     pickerStyle: {
       color: "black",
@@ -519,7 +501,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       justifyContent: "space-between",
       flexDirection: "row",
       alignItems: "center",
-      paddingLeft: 1,
       borderWidth: 2,
       borderColor: colors.notification,
       backgroundColor: colors.notification + "99",
@@ -530,7 +511,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: "transparent",
-      height: 52,
+      height: 48,
+      alignSelf: "flex-start",
       paddingHorizontal: 5,
     },
     strongNumberText: {
