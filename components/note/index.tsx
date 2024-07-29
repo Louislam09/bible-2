@@ -1,10 +1,12 @@
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "components/Animation";
 import { Text, View } from "components/Themed";
+import { htmlTemplate } from "constants/HtmlTemplate";
 import { useBibleContext } from "context/BibleContext";
+// import usePrintAndShare from "hooks/usePrintAndShare";
 import React, {
   useEffect,
   useLayoutEffect,
@@ -16,19 +18,14 @@ import {
   Alert,
   Animated,
   BackHandler,
-  ListRenderItem,
   StyleSheet,
   TextInput,
   ToastAndroid,
   TouchableOpacity,
-  // View,
 } from "react-native";
 import MyRichEditor from "screens/RichTextEditor";
-import { EViewMode, IVerseItem, TNote, TTheme } from "types";
+import { EViewMode, IVerseItem, TTheme } from "types";
 import removeAccent from "utils/removeAccent";
-import { htmlTemplate } from "constants/HtmlTemplate";
-import { iconSize } from "constants/size";
-import usePrintAndShare from "hooks/usePrintAndShare";
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -94,7 +91,7 @@ const RenderItem = ({
                   style={[styles.icon]}
                   onPress={() => warnBeforeDelete(item.id)}
                 />
-                <MaterialCommunityIcons
+                {/* <MaterialCommunityIcons
                   style={styles.icon}
                   name="share-variant-outline"
                   size={24}
@@ -107,7 +104,7 @@ const RenderItem = ({
                     );
                     printToFile(html);
                   }}
-                />
+                /> */}
               </>
             </View>
           </View>
@@ -136,7 +133,7 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
     title: defaultTitle,
     content: "",
   });
-  const { printToFile } = usePrintAndShare();
+  // const { printToFile } = usePrintAndShare();
   const { title, content } = noteContent;
   const { onSaveNote, onDeleteNote, onUpdateNote, addToNoteText, onAddToNote } =
     useBibleContext();
@@ -385,6 +382,8 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
       </>
     );
   };
+
+  const printToFile = () => {};
 
   return (
     <View

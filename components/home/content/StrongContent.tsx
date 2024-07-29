@@ -4,15 +4,13 @@ import { DB_BOOK_NAMES } from "constants/BookNames";
 import { htmlTemplate } from "constants/HtmlTemplate";
 import { SEARCH_STRONG_WORD } from "constants/Queries";
 import { useDBContext } from "context/databaseContext";
+// import usePrintAndShare from "hooks/usePrintAndShare";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { Animated, Platform, Pressable, StyleSheet } from "react-native";
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { IStrongWord, Screens, StrongData, TTheme } from "types";
 import { Text, View } from "../../Themed";
-import { transform } from "@babel/core";
-import usePrintAndShare from "hooks/usePrintAndShare";
-import AnimatedDropdown from "components/AnimatedDropdown";
 
 interface IStrongContent {
   theme: TTheme;
@@ -46,7 +44,7 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
   const webViewRef = React.useRef<WebView>(null);
   const [text, setText] = useState(code);
   const [backUrl, setBackUrl] = useState<any>([]);
-  const { printToFile, createAndShareTextFile } = usePrintAndShare();
+  // const { createAndShareTextFile } = usePrintAndShare();
 
   const animatedScaleIcon = useRef(new Animated.Value(0)).current;
   const HTML_DATA = htmlTemplate(values, theme.colors, fontSize);
@@ -200,7 +198,7 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
             />
           </Pressable>
         </Animated.View>
-        <Animated.View style={[]}>
+        {/* <Animated.View style={[]}>
           <Pressable
             android_ripple={{
               color: theme.colors.background,
@@ -219,7 +217,7 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
               color="white"
             />
           </Pressable>
-        </Animated.View>
+        </Animated.View> */}
         {/* <Animated.View style={[]}>
           <Pressable
             android_ripple={{
@@ -251,8 +249,8 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
               setHeight(+event.nativeEvent.data || DEFAULT_HEIGHT);
               return;
             }
-            const text = `${event.nativeEvent.data}`;
-            createAndShareTextFile(text, title || "-");
+            // const text = `${event.nativeEvent.data}`;
+            // createAndShareTextFile(text, title || "-");
           }}
           scrollEnabled
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
