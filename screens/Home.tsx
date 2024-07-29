@@ -18,7 +18,6 @@ import { HomeParams, TTheme } from "types";
 import CustomHeader from "../components/home/header";
 import SplitBottomSide from "components/SplitBottomSide";
 import SplitTopSide from "components/SplitTopSide";
-import SearchStrongWordEntire from "components/SearchStrongWordEntire";
 
 function HomeScreen() {
   const theme = useTheme();
@@ -108,9 +107,36 @@ function HomeScreen() {
   const lastTopWidth = useRef(SCREEN_WIDTH);
   const minTopHeight = 200;
   const maxTopHeight = SCREEN_HEIGHT - 200;
+  const [bColor] = useState(new Animated.Value(0));
+
+  const animateBackgroundColorStart = () => {
+    Animated.timing(bColor, {
+      toValue: 1,
+      delay: 100,
+      useNativeDriver: false,
+    }).start();
+  };
+  const animateBackgroundColorEnd = () => {
+    Animated.timing(bColor, {
+      toValue: 0,
+      delay: 100,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const _backgroundColor = bColor.interpolate({
+    inputRange: [0, 1],
+    outputRange: [
+      theme.colors.notification + "30",
+      theme.colors.notification + "90",
+    ],
+  });
 
   const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
+    onStartShouldSetPanResponder: () => {
+      animateBackgroundColorStart();
+      return true;
+    },
     onPanResponderMove: (_, gestureState: PanResponderGestureState) => {
       const newHeight = lastTopHeight.current + gestureState.dy;
       const newWidth = lastTopWidth.current + gestureState.dx;
@@ -122,6 +148,7 @@ function HomeScreen() {
       }
     },
     onPanResponderRelease: () => {
+      animateBackgroundColorEnd();
       lastTopHeight.current = (topHeight as any)._value;
       lastTopWidth.current = (topWidth as any)._value;
     },
@@ -149,15 +176,16 @@ function HomeScreen() {
         />
 
         {/* AdjustableSplit */}
-        <View
+        <Animated.View
           {...panResponder.panHandlers}
           style={[
             styles.slider,
+            { backgroundColor: _backgroundColor },
             { display: !isSplitActived ? "none" : "flex" },
           ]}
         >
           <View style={styles.sliderHandle} />
-        </View>
+        </Animated.View>
 
         {isSplitActived && (
           <SplitBottomSide
@@ -242,7 +270,6 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
       height: isPortrait ? 15 : "100%",
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: colors.border,
       width: isPortrait ? "100%" : 10,
     },
     sliderHandle: {

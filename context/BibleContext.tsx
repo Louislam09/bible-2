@@ -52,7 +52,12 @@ type BibleState = {
   decreaseFontSize: Function;
   setStrongWord: (word: IStrongWord) => void;
   setverseInStrongDisplay: (verse: number) => void;
-  toggleFavoriteVerse: ({ bookNumber, chapter, verse }: IFavoriteVerse) => void;
+  toggleFavoriteVerse: ({
+    bookNumber,
+    chapter,
+    verse,
+    isFav,
+  }: IFavoriteVerse) => Promise<void>;
   increaseFontSize: Function;
   toggleViewLayoutGrid: Function;
   selectTheme: Function;
@@ -122,7 +127,12 @@ const initialContext: BibleState = {
   toggleSplitMode: () => {},
   toggleBottomSideSearching: (value: boolean) => {},
   decreaseFontSize: () => {},
-  toggleFavoriteVerse: (item: IFavoriteVerse) => {},
+  toggleFavoriteVerse: async ({
+    bookNumber,
+    chapter,
+    verse,
+    isFav,
+  }: IFavoriteVerse) => {},
   setverseInStrongDisplay: (verse: number) => {},
   onAddToNote: (text: string) => {},
   increaseFontSize: () => {},
@@ -365,7 +375,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     dispatch({ type: "TOGGLE_VIEW_LAYOUT_GRID" });
   };
 
-  const toggleFavoriteVerse = ({
+  const toggleFavoriteVerse = async ({
     bookNumber,
     chapter,
     verse,
@@ -375,7 +385,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     const params = isFav
       ? [bookNumber, chapter, verse]
       : [bookNumber, chapter, verse, bookNumber, chapter, verse];
-    executeSql(
+    await executeSql(
       myBibleDB,
       isFav ? DELETE_FAVORITE_VERSE : INSERT_FAVORITE_VERSE,
       params

@@ -3,24 +3,24 @@ import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from "@react-navigation/native-stack";
+import SearchStrongWordEntire from "components/SearchStrongWordEntire";
+import ChooseBook from "components/chooseBook";
 import ChooseBookHeader from "components/chooseBook/ChooseBookHeader";
 import SearchHeader from "components/search/SearchHeader";
 import { useStorage } from "context/LocalstoreContext";
 import React from "react";
 import Book from "screens/Book";
-import ChooseBookScreen from "screens/ChooseBookScreen";
+import Character from "screens/Character";
 import ChooseFromListScreen from "screens/ChooseFromListScreen";
+import Concordance from "screens/Concordance";
 import Dashboard from "screens/Dashboard";
 import Favorite from "screens/Favorite";
 import Home from "screens/Home";
-import OnboardingScreen from "screens/Onboarding";
 import Notes from "screens/Notes";
+import OnboardingScreen from "screens/Onboarding";
 import Search from "screens/Search";
-import { RootStackParamList, Screens, ScreensName, TTheme } from "types";
-import Character from "screens/Character";
 import Song from "screens/Song";
-import Concordance from "screens/Concordance";
-import SearchStrongWordEntire from "components/SearchStrongWordEntire";
+import { RootStackParamList, Screens, ScreensName, TTheme } from "types";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -76,7 +76,7 @@ const MainStack = () => {
       />
       <Stack.Screen
         name="ChooseBook"
-        component={ChooseBookScreen}
+        component={ChooseBook}
         options={({ route }) => ({
           ...screenOptions(route),
           header: (props: any) => <ChooseBookHeader {...props} />,

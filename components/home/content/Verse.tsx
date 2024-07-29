@@ -10,6 +10,7 @@ import React, {
   useState,
 } from "react";
 import {
+  Animated,
   Pressable,
   StyleSheet,
   ToastAndroid,
@@ -61,10 +62,12 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
   const styles = getStyles(theme);
   const [isVerseHighlisted, setHighlightVerse] = useState<number | null>(null);
   const [isFavorite, setFavorite] = useState(false);
-  const [lastHighted, setLastHighted] = useState<IBookVerse | any>(null);
   const highlightedVersesLenth = highlightedVerses.length;
   const isMoreThanOneHighted = highlightedVersesLenth > 1;
   const isStrongSearch = verseInStrongDisplay === item.verse;
+  const lastHighted = useMemo(() => {
+    return highlightedVerses[highlightedVerses.length - 1];
+  }, [highlightedVerses]);
   const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
   const strongRef = useRef<BottomSheetModal>(null);
   const verseRef = useRef<any>(null);
@@ -85,14 +88,10 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
   }, [item]);
 
   useEffect(() => {
-    if (isMoreThanOneHighted && isVerseHighlisted === item.verse) {
-      const lastItem = highlightedVerses[highlightedVersesLenth - 1];
-      setLastHighted(lastItem);
-    }
     if (!highlightedVersesLenth) {
       setHighlightVerse(null);
     }
-  }, [highlightedVerses]);
+  }, [highlightedVersesLenth]);
 
   const onVerseClicked = () => {
     setverseInStrongDisplay(isStrongSearch ? 0 : item.verse);
@@ -189,8 +188,8 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
     ) : null;
   };
 
-  const onFavorite = () => {
-    toggleFavoriteVerse({
+  const onFavorite = async () => {
+    await toggleFavoriteVerse({
       bookNumber: item.book_number,
       chapter: item.chapter,
       verse: item.verse,
@@ -255,25 +254,25 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
       {
         name: "content-copy",
         action: onCopy,
-        color: "white",
         hide: lastHighted?.verse !== item.verse && isMoreThanOneHighted,
+        description: "Copiar",
       },
       {
         name: "note-plus",
         action: addVerseToNote,
-        color: "white",
         hide: lastHighted?.verse !== item.verse && isMoreThanOneHighted,
+        description: "Anotar",
       },
       {
         name: isFavorite ? "star" : "star-outline",
         action: onFavorite,
-        color: isFavorite ? "yellow" : "white",
+        color: isFavorite ? theme.colors.notification : "",
         hide: false,
+        description: "Favorito",
       },
       {
         name: "music",
         action: enabledMusic,
-        color: "white",
         hide: !showMusicIcon,
       },
     ];
@@ -301,7 +300,7 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
   const displayTour = item.verse === 1 && verseRef.current && isVerseTour;
 
   return (
-    <>
+    <View>
       <TouchableOpacity
         onPress={() => onPress()}
         onLongPress={() => onVerseLongPress()}
@@ -344,7 +343,11 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
                 <Highlighter
                   textToHighlight={getVerseTextRaw(item.text)}
                   searchWords={textValue}
-                  highlightStyle={{ color: theme.colors.notification }}
+                  highlightStyle={{
+                    color: theme.colors.notification,
+                    backgroundColor: theme?.colors.notification + "30",
+                    fontSize,
+                  }}
                   style={[styles.verseBody]}
                   onWordClick={onWordClicked}
                 />
@@ -357,13 +360,25 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
         {isVerseHighlisted === item.verse && !!highlightedVersesLenth && (
           <View style={styles.verseAction}>
             {verseActions.map((action: TIcon, key) => (
-              <Pressable key={key} style={[action.hide && { display: "none" }]}>
+              <Pressable
+                onPress={action.action}
+                key={key}
+                style={[
+                  {
+                    display: "flex",
+                    alignItems: "center",
+                  },
+                  action.hide && { display: "none" },
+                ]}
+              >
                 <MaterialCommunityIcons
                   size={30}
                   name={action.name}
-                  style={[styles.icon, { color: action.color ?? "black" }]}
-                  onPress={action.action}
+                  style={[styles.icon, action.color && { color: action.color }]}
                 />
+                <Text style={{ color: theme.colors.text }}>
+                  {action?.description}
+                </Text>
               </Pressable>
             ))}
           </View>
@@ -376,11 +391,11 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
           currentStep={stepIndex}
         />
       )}
-    </>
+    </View>
   );
 };
 
-const getStyles = ({ colors }: TTheme) =>
+const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     verseContainer: {},
     verseBody: {
@@ -393,27 +408,25 @@ const getStyles = ({ colors }: TTheme) =>
     verse: {
       position: "relative",
       paddingLeft: 20,
-      marginVertical: 5,
+      marginVertical: 4,
     },
     highlightCopy: {
-      textDecorationStyle: "solid",
-      textDecorationLine: "underline",
-      textDecorationColor: colors.notification,
+      backgroundColor: colors.notification + "20",
     },
     verseAction: {
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "flex-end",
-      backgroundColor: colors.notification,
+      // backgroundColor: colors.notification,
       borderRadius: 10,
-      padding: 10,
+      paddingHorizontal: 10,
       alignSelf: "flex-end",
     },
     icon: {
       fontWeight: "700",
       marginHorizontal: 15,
-      color: colors.primary,
+      color: colors.text,
       fontSize: 28,
     },
   });

@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import {
   BookIndexes,
+  ChooseChapterNumberParams,
   IDBBookNames,
   RootStackScreenProps,
   Screens,
@@ -24,8 +25,9 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
   navigation,
 }) => {
   const route = useRoute();
-  const routeParam = route.params;
+  const routeParam = route.params as ChooseChapterNumberParams;
   const { book } = routeParam;
+  console.log({ book });
   const theme = useTheme();
   const styles = getStyles(theme);
   const { viewLayoutGrid, isBottomSideSearching, orientation } =
@@ -94,7 +96,7 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
         style={[
           styles.listItem,
           book === item.longName && {
-            backgroundColor: theme.colors.notification,
+            backgroundColor: theme.colors.notification + "60",
           },
         ]}
         onPress={() => handlePress(item)}

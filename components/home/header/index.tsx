@@ -235,8 +235,6 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       justifyContent: "center",
       borderRadius: 50,
-      // backgroundColor: colors.background,
-      // backgroundColor: colors.border + "cc",
     },
     icon: {
       fontWeight: "700",

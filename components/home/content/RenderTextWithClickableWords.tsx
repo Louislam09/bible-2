@@ -27,7 +27,10 @@ const RenderTextWithClickableWords: React.FC<Props> = ({
   };
 
   const renderVerse = (word: string, index: number) => {
-    const styles = { color: theme?.colors.notification ?? "red" };
+    const styles = {
+      color: theme?.colors.notification ?? "black",
+      backgroundColor: theme?.colors.notification + "20",
+    };
     const isEven = index % 2 === 0;
     if (isEven) return word;
 

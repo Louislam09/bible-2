@@ -60,7 +60,7 @@ export type RootTabParamList = {
   Dashboard: undefined;
   Home: undefined;
   Book: undefined;
-  ChooseBookScreen: undefined;
+  ChooseBook: { book: string };
   Search: undefined;
   Concordance: undefined;
   StrongSearchEntire: undefined;
@@ -190,6 +190,7 @@ export type TIcon = {
   ref?: any;
   disabled?: boolean;
   isMaterial?: boolean;
+  description?: string;
 };
 
 export type IStrongWord = {

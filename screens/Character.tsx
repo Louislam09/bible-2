@@ -311,7 +311,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     separator: {
       height: 1,
-      // backgroundColor: colors.notification + "99",
       marginVertical: 5,
     },
     noResultsContainer: {

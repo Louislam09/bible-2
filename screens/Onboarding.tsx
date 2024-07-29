@@ -118,8 +118,6 @@ const getStyles = ({ colors }: TTheme) =>
     container: {
       paddingTop: 50,
       flex: 1,
-      // padding: 10,
-      // backgroundColor: colors.border + "",
     },
     imageContainer: {
       alignItems: "center",
