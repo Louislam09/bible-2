@@ -27,7 +27,6 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
   const route = useRoute();
   const routeParam = route.params as ChooseChapterNumberParams;
   const { book } = routeParam;
-  console.log({ book });
   const theme = useTheme();
   const styles = getStyles(theme);
   const { viewLayoutGrid, isBottomSideSearching, orientation } =
