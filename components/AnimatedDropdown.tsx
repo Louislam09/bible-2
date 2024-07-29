@@ -63,7 +63,6 @@ const AnimatedDropdown: React.FC<AnimatedDropdownProps> = ({
                     selectedValue === option
                       ? theme.colors.notification
                       : "#000",
-                  //   fontWeight: "700",
                 }}
               >
                 {option}

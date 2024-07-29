@@ -26,6 +26,9 @@ import {
 import MyRichEditor from "screens/RichTextEditor";
 import { EViewMode, IVerseItem, TNote, TTheme } from "types";
 import removeAccent from "utils/removeAccent";
+import { htmlTemplate } from "constants/HtmlTemplate";
+import { iconSize } from "constants/size";
+import usePrintAndShare from "hooks/usePrintAndShare";
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -38,6 +41,8 @@ const RenderItem = ({
   styles,
   warnBeforeDelete,
   index,
+  printToFile,
+  theme,
 }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateXAnim = useRef(new Animated.Value(300)).current;
@@ -78,16 +83,30 @@ const RenderItem = ({
             <View style={[styles.verseAction]}>
               <>
                 <MaterialCommunityIcons
-                  size={20}
+                  size={24}
                   name="eye"
                   style={styles.icon}
                   onPress={() => onViewMode(item.id)}
                 />
                 <MaterialCommunityIcons
-                  size={20}
+                  size={24}
                   name="delete"
                   style={[styles.icon]}
                   onPress={() => warnBeforeDelete(item.id)}
+                />
+                <MaterialCommunityIcons
+                  style={styles.icon}
+                  name="share-variant-outline"
+                  size={24}
+                  onPress={() => {
+                    const html = htmlTemplate(
+                      [{ definition: item.note_text, topic: item.title }],
+                      theme.colors,
+                      10,
+                      true
+                    );
+                    printToFile(html);
+                  }}
                 />
               </>
             </View>
@@ -117,6 +136,7 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
     title: defaultTitle,
     content: "",
   });
+  const { printToFile } = usePrintAndShare();
   const { title, content } = noteContent;
   const { onSaveNote, onDeleteNote, onUpdateNote, addToNoteText, onAddToNote } =
     useBibleContext();
@@ -281,45 +301,6 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
     setViewMode(addToNoteText ? "EDIT" : "VIEW");
   };
 
-  const renderItem: ListRenderItem<TNote & { id: number }> = ({ item }) => {
-    return (
-      <TouchableOpacity
-        style={{ backgroundColor: "transparent" }}
-        activeOpacity={0.9}
-        onPress={() => onViewMode(item.id)}
-      >
-        <View style={[styles.cardContainer]}>
-          <View style={[styles.headerContainer]}>
-            <Text style={[styles.cardTitle]}>{item.title}</Text>
-            <View style={[styles.verseAction]}>
-              <>
-                <MaterialCommunityIcons
-                  size={20}
-                  name="eye"
-                  style={styles.icon}
-                  onPress={() => onViewMode(item.id)}
-                />
-                <MaterialCommunityIcons
-                  size={20}
-                  name="delete"
-                  style={[styles.icon]}
-                  onPress={() => warnBeforeDelete(item.id)}
-                />
-              </>
-            </View>
-          </View>
-          <Text style={styles.verseBody}>
-            {item?.note_text
-              ?.slice(0, 100)
-              .replace(/<br>/gi, "-")
-              .replace(/<.*?>|<.*?\/>/gi, "")}
-          </Text>
-          <Text style={[styles.date]}>{item.created_at.split(" ")[0]}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
   const NoteHeader = () => {
     return (
       <View style={[styles.noteHeader]}>
@@ -474,7 +455,13 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
             // renderItem={renderItem as any}
             renderItem={({ item, index }) => (
               <RenderItem
-                {...{ styles, onViewMode, warnBeforeDelete }}
+                {...{
+                  styles,
+                  onViewMode,
+                  warnBeforeDelete,
+                  printToFile,
+                  theme,
+                }}
                 item={item}
                 index={index}
               />
@@ -636,7 +623,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontWeight: "700",
       marginHorizontal: 10,
       color: colors.primary,
-      fontSize: 24,
+      // fontSize: 24,
     },
   });
 

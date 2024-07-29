@@ -11,6 +11,8 @@ import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { IStrongWord, Screens, StrongData, TTheme } from "types";
 import { Text, View } from "../../Themed";
 import { transform } from "@babel/core";
+import usePrintAndShare from "hooks/usePrintAndShare";
+import AnimatedDropdown from "components/AnimatedDropdown";
 
 interface IStrongContent {
   theme: TTheme;
@@ -44,8 +46,10 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
   const webViewRef = React.useRef<WebView>(null);
   const [text, setText] = useState(code);
   const [backUrl, setBackUrl] = useState<any>([]);
+  const { printToFile, createAndShareTextFile } = usePrintAndShare();
 
   const animatedScaleIcon = useRef(new Animated.Value(0)).current;
+  const HTML_DATA = htmlTemplate(values, theme.colors, fontSize);
 
   useEffect(() => {
     const loopAnimation = Animated.loop(
@@ -56,11 +60,6 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
           tension: 40,
           useNativeDriver: false,
         }),
-        // Animated.timing(animatedScaleIcon, {
-        //   toValue: 1,
-        //   duration: 500,
-        //   useNativeDriver: false,
-        // }),
         Animated.timing(animatedScaleIcon, {
           toValue: 0,
           duration: 500,
@@ -140,10 +139,21 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
     });
   };
 
-  // const title = data?.text.includes("undefined") ? "-" : data?.text;
   const currentCode = values[0]?.topic;
   const isH = currentCode?.includes("H");
   const title = extractWord(values[0]?.definition, isH);
+
+  const copyContentToClipboard = () => {
+    if (!webViewRef?.current) return;
+    webViewRef?.current.injectJavaScript(`
+      function copyContentToClipboard() {
+        var content = document.body.innerText; // Extract content as needed
+        window.ReactNativeWebView.postMessage(content);
+      }
+
+      copyContentToClipboard();
+    `);
+  };
 
   return (
     <View
@@ -190,16 +200,60 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
             />
           </Pressable>
         </Animated.View>
+        <Animated.View style={[]}>
+          <Pressable
+            android_ripple={{
+              color: theme.colors.background,
+              foreground: true,
+              radius: 10,
+            }}
+            onPress={() => {
+              const html = htmlTemplate(values, theme.colors, fontSize, true);
+              printToFile(html);
+            }}
+          >
+            <MaterialCommunityIcons
+              style={[styles.backIcon, {}]}
+              name="share-variant-outline"
+              size={26}
+              color="white"
+            />
+          </Pressable>
+        </Animated.View>
+        {/* <Animated.View style={[]}>
+          <Pressable
+            android_ripple={{
+              color: theme.colors.background,
+              foreground: true,
+              radius: 10,
+            }}
+            onPress={copyContentToClipboard}
+            // onPress={() => createAndShareTextFile(values?.[0]?.definition)}
+          >
+            <MaterialCommunityIcons
+              style={[styles.backIcon, {}]}
+              name="share-variant"
+              size={26}
+              color="white"
+            />
+          </Pressable>
+        </Animated.View> */}
       </View>
       <View style={[styles.webviewWrapper]}>
         <WebView
           style={{ backgroundColor: "transparent" }}
           ref={webViewRef}
           originWhitelist={["*"]}
-          source={{ html: htmlTemplate(values, theme.colors, fontSize) }}
-          onMessage={(event) =>
-            setHeight(+event.nativeEvent.data || DEFAULT_HEIGHT)
-          }
+          source={{ html: HTML_DATA }}
+          onMessage={(event) => {
+            const isNumber = !isNaN(+event.nativeEvent.data);
+            if (isNumber) {
+              setHeight(+event.nativeEvent.data || DEFAULT_HEIGHT);
+              return;
+            }
+            const text = `${event.nativeEvent.data}`;
+            createAndShareTextFile(text, title || "-");
+          }}
           scrollEnabled
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
         />

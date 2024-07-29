@@ -3,7 +3,8 @@ import { StrongData } from "types";
 export const htmlTemplate = (
     content: StrongData[] | any,
     colors: any,
-    fontSize: any
+    fontSize: any,
+    isPrint: boolean = false
 ) => {
     return `
         <!DOCTYPE html>
@@ -16,9 +17,12 @@ export const htmlTemplate = (
             <style>
                 body{
                     color: ${colors.text};
-                    background: transparent;
-                    font-size: ${fontSize - 2}px;
+                    background: ${colors.background};
+                    font-size: ${isPrint ? "3rem" : fontSize + "px"};
                     user-select: none;
+                    font-family: Arial, sans-serif;
+                    margin: 20px;
+                    padding: 0;
                 }
 
                 b{
@@ -40,13 +44,18 @@ export const htmlTemplate = (
             </style>
         </head>
         <body>
-            <h4>${content?.[0]?.topic || ""} > <a href='S:${content?.[1]?.topic || ""
+            <h4>
+                ${content?.[0]?.topic || ""} > <a href='S:${content?.[1]?.topic || ""
         }'>${content?.[1]?.topic || ""}</a> 🔍</h4>
-            ${(content?.[0]?.definition || "No hay resultado para esta palabra")?.replaceAll("font", "p")}
+
+        ${(content?.[0]?.definition || "No hay resultado para esta palabra")?.replaceAll("font", "p")}
             <script>
-            window.ReactNativeWebView.postMessage(document.body.scrollHeight)
+                window.ReactNativeWebView.postMessage(document.body.scrollHeight)
             </script>
         </body>
         </html>
 `;
 };
+
+// <br/>
+// <a href="https://play.google.com/store/apps/details?id=com.louislam09.bible">Descargar: Santa Biblia RV60: Audio</a>
