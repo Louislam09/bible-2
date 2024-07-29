@@ -7,10 +7,8 @@ import { BookGruop, IVerseItem, RootStackScreenProps, TTheme } from "types";
 import AnimatedDropdown from "./AnimatedDropdown";
 import ListVerse from "./search/ListVerse";
 
-const SearchWordEntire: React.FC<RootStackScreenProps<"Search">> = ({
-  route,
-}) => {
-  const { searchState } = useBibleContext();
+const SearchWordEntire: React.FC<RootStackScreenProps<"Search">> = ({}) => {
+  const { searchState, searchQuery } = useBibleContext();
   const theme = useTheme();
   const styles = getStyles(theme);
   const [data, setData] = useState<IVerseItem[] | null>(null);
@@ -57,6 +55,11 @@ const SearchWordEntire: React.FC<RootStackScreenProps<"Search">> = ({
 
     return () => {};
   }, [searchState]);
+
+  useEffect(() => {
+    if (searchQuery.length > 0) return;
+    setData([]);
+  }, [searchQuery]);
 
   return (
     <Animated.View

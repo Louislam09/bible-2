@@ -47,6 +47,7 @@ const SearchHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
 
   const clearText = () => {
     textInputRef.current?.clear();
+    handelSearch("");
   };
 
   return (
