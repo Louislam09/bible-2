@@ -127,16 +127,14 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
 
   useEffect(() => {
     (async () => {
-      if (myBibleDB && executeSql && selected) {
-        executeSql(myBibleDB, GET_VERSES_FOR_CONCORDANCIA, [`%${selected}%`])
-          .then((data) => {
-            const newData = data.flatMap((x) => JSON.parse(x.data));
-            setSelectedFilterOption(defaultFilterOption);
-            setVerseList(newData);
-          })
-          .catch((error) => {
-            console.error("Error:Concordance:", error);
-          });
+      if (!myBibleDB || !executeSql) return;
+      if (selected) {
+        const data = await executeSql(myBibleDB, GET_VERSES_FOR_CONCORDANCIA, [
+          `%${selected}%`,
+        ]);
+        const newData = data.flatMap((x) => JSON.parse(x.data));
+        setSelectedFilterOption(defaultFilterOption);
+        setVerseList(newData);
       }
     })();
 

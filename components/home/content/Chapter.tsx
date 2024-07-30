@@ -10,6 +10,8 @@ import { Text } from "components/Themed";
 const Chapter = ({
   item,
   isSplit,
+  book,
+  chapter,
   verse: _verse,
 }: TChapter & { isSplit: boolean }) => {
   const { verses, subtitles } = item;
@@ -21,6 +23,7 @@ const Chapter = ({
   const [firstLoad, setFirstLoad] = useState(true);
   const [topVerse, setTopVerse] = useState(null);
   const viewabilityConfig = { viewAreaCoveragePercentThreshold: 1 };
+  const [isLayoutMounted, setLayoutMounted] = useState(false);
 
   useEffect(() => {
     const isFirst = !!topVerse;
@@ -46,10 +49,10 @@ const Chapter = ({
 
   useEffect(() => {
     if (initialScrollIndex !== topVerse && topVerse) {
-      if (!firstLoad) return;
+      if (!firstLoad || !isLayoutMounted) return;
       chapterRef.current?.scrollToIndex({ index: initialScrollIndex - 1 });
     }
-  }, [topVerse]);
+  }, [topVerse, isLayoutMounted]);
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
@@ -66,6 +69,9 @@ const Chapter = ({
       <View style={[styles.verseContent]}>
         <FlashList
           ref={chapterRef}
+          onLayout={() => {
+            setLayoutMounted(true);
+          }}
           decelerationRate="normal"
           estimatedItemSize={135}
           data={verses ?? []}

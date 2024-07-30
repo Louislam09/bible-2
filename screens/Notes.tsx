@@ -11,15 +11,9 @@ const Notes: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
 
   useEffect(() => {
     const getNotes = async () => {
-      if (myBibleDB && executeSql) {
-        executeSql(myBibleDB, GET_ALL_NOTE, [])
-          .then((notes) => {
-            setData(notes ?? []);
-          })
-          .catch((error) => {
-            console.error("Error:Notes:", error);
-          });
-      }
+      if (!myBibleDB || !executeSql) return;
+      const notes = await executeSql(myBibleDB, GET_ALL_NOTE, []);
+      setData(notes ?? []);
     };
 
     getNotes();

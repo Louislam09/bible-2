@@ -79,7 +79,7 @@ const CustomFooter: FC<FooterInterface> = ({
     navigation.setParams({
       [isSplit ? "bottomSideBook" : "book"]: name,
       [isSplit ? "bottomSideChapter" : "chapter"]: chapter,
-      verse: 0,
+      [isSplit ? "bottomSideVerse" : "verse"]: 0,
     });
   };
 
@@ -91,11 +91,11 @@ const CustomFooter: FC<FooterInterface> = ({
       return;
     }
 
+    const _chapter = +(chapter as number) + 1;
     navigation.setParams({
       [isSplit ? "bottomSideBook" : "book"]: book,
-      [isSplit ? "bottomSideChapter" : "chapter"]:
-        (+(chapter as number) || 0) + 1,
-      verse: 0,
+      [isSplit ? "bottomSideChapter" : "chapter"]: _chapter || 0,
+      [isSplit ? "bottomSideVerse" : "verse"]: 0,
     });
   }
   const previuosChapter = () => {
@@ -109,7 +109,7 @@ const CustomFooter: FC<FooterInterface> = ({
     navigation.setParams({
       [isSplit ? "bottomSideBook" : "book"]: book,
       [isSplit ? "bottomSideChapter" : "chapter"]: (chapter as number) - 1,
-      verse: 0,
+      [isSplit ? "bottomSideVerse" : "verse"]: 0,
     });
   };
 

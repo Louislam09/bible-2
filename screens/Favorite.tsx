@@ -10,15 +10,9 @@ const Favorite: React.FC<RootStackScreenProps<"Favorite">> = (props) => {
 
   useEffect(() => {
     (async () => {
-      if (myBibleDB && executeSql) {
-        executeSql(myBibleDB, GET_ALL_FAVORITE_VERSES, [])
-          .then((verses) => {
-            setData(verses ?? []);
-          })
-          .catch((error) => {
-            console.error("Error:Favorite:", error);
-          });
-      }
+      if (!myBibleDB || !executeSql) return;
+      const verses = await executeSql(myBibleDB, GET_ALL_FAVORITE_VERSES, []);
+      setData(verses ?? []);
     })();
 
     return () => {};

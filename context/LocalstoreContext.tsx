@@ -27,7 +27,7 @@ type StoreState = {
 
 interface StorageContextProps {
   storedData: StoreState;
-  saveData: (data: StoreState | {}) => void;
+  saveData: (data: StoreState | {}) => Promise<void>;
   clearData: () => void;
   isDataLoaded: boolean;
 }

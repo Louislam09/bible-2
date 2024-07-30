@@ -1,5 +1,5 @@
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   BackHandler,
@@ -50,38 +50,34 @@ const BookContent: FC<BookContentInterface> = ({
     (async () => {
       clearHighlights();
       setLoading(true);
-      if (myBibleDB && executeSql) {
-        setData({});
-        setverseInStrongDisplay(0);
-        const query = QUERY_BY_DB[getCurrentDbName(currentBibleVersion)];
-        const promises = [
-          executeSql(myBibleDB, query.GET_VERSES_BY_BOOK_AND_CHAPTER, [
-            currentBook?.bookNumber,
-            chapter || 1,
-          ]),
-          executeSql(myBibleDB, query.GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
-            currentBook?.bookNumber,
-            chapter || 1,
-          ]),
-        ];
+      if (!myBibleDB || !executeSql) return;
+      // console.log(`BC- ${book} ${chapter}:${verse}`);
+      setData({});
+      setverseInStrongDisplay(0);
+      const query = QUERY_BY_DB[getCurrentDbName(currentBibleVersion)];
+      const promises = [
+        executeSql(myBibleDB, query.GET_VERSES_BY_BOOK_AND_CHAPTER, [
+          currentBook?.bookNumber,
+          chapter || 1,
+        ]),
+        executeSql(myBibleDB, query.GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
+          currentBook?.bookNumber,
+          chapter || 1,
+        ]),
+      ];
 
-        Promise.all(promises)
-          .then(([verses, subtitles]) => {
-            setLoading(false);
-            saveData({
-              [isSplit ? "lastBottomSideBook" : "lastBook"]: book,
-              [isSplit ? "lastBottomSideChapter" : "lastChapter"]: chapter,
-              [isSplit ? "lastBottomSideVerse" : "lastVerse"]: verse,
-            });
-            !isHistory &&
-              addToHistory &&
-              addToHistory({ book, verse, chapter });
-            setData({ verses, subtitles });
-          })
-          .catch((error) => {
-            console.error("Error:content:", error);
-          });
+      const responses = await Promise.all(promises);
+      const [verses, subtitles] = responses;
+      setData({ verses, subtitles });
+      await saveData({
+        [isSplit ? "lastBottomSideBook" : "lastBook"]: book,
+        [isSplit ? "lastBottomSideChapter" : "lastChapter"]: chapter,
+        [isSplit ? "lastBottomSideVerse" : "lastVerse"]: verse,
+      });
+      if (!isHistory && addToHistory) {
+        addToHistory({ book, verse, chapter });
       }
+      setLoading(false);
     })();
 
     return () => {};
@@ -106,7 +102,7 @@ const BookContent: FC<BookContentInterface> = ({
       {!loading ? (
         <Chapter
           {...{ book, chapter, verse }}
-          isSplit={!!isSplit}
+          isSplit={isSplit}
           dimensions={dimensions}
           item={data}
         />
