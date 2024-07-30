@@ -28,15 +28,15 @@ type Route = RouteProp<ParamListBase>;
 
 const MainStack = () => {
   const { colors } = useTheme() as TTheme;
-  const { storedData } = useStorage();
-  const {
-    lastBook,
-    lastChapter,
-    lastVerse,
-    lastBottomSideBook,
-    lastBottomSideChapter,
-    lastBottomSideVerse,
-  } = storedData;
+  // const { storedData } = useStorage();
+  // // const {
+  // //   lastBook,
+  // //   lastChapter,
+  // //   lastVerse,
+  // //   lastBottomSideBook,
+  // //   lastBottomSideChapter,
+  // //   lastBottomSideVerse,
+  // // } = storedData;
   const styling = {
     backgroundColor: colors.backgroundContrast,
     text: colors.text,
@@ -60,14 +60,7 @@ const MainStack = () => {
     >
       <Stack.Screen initialParams={{}} name="Dashboard" component={Dashboard} />
       <Stack.Screen
-        initialParams={{
-          book: lastBook || "Génesis",
-          chapter: lastChapter || 1,
-          verse: lastVerse || 1,
-          bottomSideBook: lastBottomSideBook || "Génesis",
-          bottomSideChapter: lastBottomSideChapter || 1,
-          bottomSideVerse: lastBottomSideVerse || 0,
-        }}
+        initialParams={{}}
         name="Home"
         component={Home}
         options={{

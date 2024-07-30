@@ -209,6 +209,9 @@ export type TChapter = {
     verses: IBookVerse[];
     subtitles: TSubtitle[];
   };
+  verse?: number;
+  chapter?: number;
+  book?: string;
 };
 
 export type TVerse = {

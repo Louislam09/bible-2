@@ -1,9 +1,12 @@
 import BottomSheet from "@gorhom/bottom-sheet";
 import { useRoute, useTheme } from "@react-navigation/native";
 import CustomBottomSheet from "components/BottomSheet";
+import SplitBottomSide from "components/SplitBottomSide";
+import SplitTopSide from "components/SplitTopSide";
 import Walkthrough from "components/Walkthrough";
 import StrongContent from "components/home/content/StrongContent";
 import { useBibleContext } from "context/BibleContext";
+import { useStorage } from "context/LocalstoreContext";
 import React, { useCallback, useRef, useState } from "react";
 import {
   Animated,
@@ -16,21 +19,37 @@ import {
 } from "react-native";
 import { HomeParams, TTheme } from "types";
 import CustomHeader from "../components/home/header";
-import SplitBottomSide from "components/SplitBottomSide";
-import SplitTopSide from "components/SplitTopSide";
 
 function HomeScreen() {
   const theme = useTheme();
   const route = useRoute();
   const {
     isTour,
-    book,
-    chapter,
-    verse,
-    bottomSideBook,
-    bottomSideChapter,
-    bottomSideVerse,
+    book: _book,
+    chapter: _chapter,
+    verse: _verse,
+    bottomSideBook: _bottomSideBook,
+    bottomSideChapter: _bottomSideChapter,
+    bottomSideVerse: _bottomSideVerse,
   } = route.params as HomeParams;
+
+  const { storedData } = useStorage();
+  const {
+    lastBook,
+    lastChapter,
+    lastVerse,
+    lastBottomSideBook,
+    lastBottomSideChapter,
+    lastBottomSideVerse,
+  } = storedData;
+  const book = _book || lastBook;
+  const chapter = _chapter || lastChapter;
+  const verse = (_verse === 0 ? 1 : _verse) || lastVerse;
+  const bottomSideBook = _bottomSideBook || lastBottomSideBook;
+  const bottomSideChapter = _bottomSideChapter || lastBottomSideChapter;
+  const bottomSideVerse =
+    (_bottomSideVerse === 0 ? 1 : _bottomSideVerse) || lastBottomSideVerse;
+
   const [stepIndex, setStepIndex] = useState(0);
   const sheetRef = useRef<BottomSheet>(null);
   const bookRef = useRef<any>(null);

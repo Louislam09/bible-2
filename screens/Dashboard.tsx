@@ -1,9 +1,8 @@
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { BottomSheetModal, WINDOW_WIDTH } from "@gorhom/bottom-sheet";
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import Animation from "components/Animation";
 import BottomModal from "components/BottomModal";
 import { Text, View } from "components/Themed";
 import Settings from "components/home/header/Settings";
@@ -65,7 +64,6 @@ const Dashboard = () => {
   const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(defaultDailyVerse);
-  const dashboardImage = require("../assets/lottie/dashboard.json");
   const columnNumber = 3;
   const { storedData } = useStorage();
   const {

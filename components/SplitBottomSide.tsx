@@ -6,7 +6,6 @@ import { useBibleContext } from "context/BibleContext";
 
 const SplitBottomSide: FC<any> = (props) => {
   const { isSplitActived, orientation } = useBibleContext();
-  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const isPortrait = orientation === "PORTRAIT";
   return (
     <Animated.View

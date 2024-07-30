@@ -1,6 +1,6 @@
 import { useRoute, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Verse from "./Verse";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { TChapter, HomeParams, TTheme } from "types";
@@ -9,48 +9,51 @@ import { Text } from "components/Themed";
 
 const Chapter = ({
   item,
-  dimensions,
   isSplit,
+  book,
+  chapter,
+  verse: _verse,
 }: TChapter & { isSplit: boolean }) => {
   const { verses, subtitles } = item;
   if (!verses) return <ActivityIndicator />;
   const theme = useTheme();
-  const route = useRoute();
-  const { verse, bottomSideVerse } = route.params as HomeParams;
   const styles = getStyles(theme);
   const chapterRef = useRef<FlashList<any>>(null);
   const { isBottomSideSearching } = useBibleContext();
-  const selectedSideBook = isBottomSideSearching ? bottomSideVerse : verse;
+  const selectedSideVerse = _verse;
   const [firstLoad, setFirstLoad] = useState(true);
   const [topVerse, setTopVerse] = useState(null);
   const viewabilityConfig = { viewAreaCoveragePercentThreshold: 1 };
+  const [isLayoutMounted, setLayoutMounted] = useState(false);
 
   useEffect(() => {
     const isFirst = !!topVerse;
     setFirstLoad(!isFirst);
   }, [topVerse]);
 
-  const verseNumber = +(selectedSideBook as number) || 0;
-  const initialScrollIndex =
-    verses.length === verseNumber || verseNumber === 1
-      ? verseNumber - 1
-      : verseNumber;
+  const verseNumber = +(selectedSideVerse as number) || 0;
+  const initialScrollIndex = useMemo(() => {
+    const inValidIndex = verseNumber > verses.length;
+    const shouldSubtract =
+      verses.length === verseNumber || verseNumber === 1 ? -1 : 0;
+    return inValidIndex ? 0 : verseNumber + shouldSubtract;
+  }, [verseNumber, verses]);
 
   const renderItem = (props: any) => (
     <Verse
       {...props}
       isSplit={isSplit}
-      verse={selectedSideBook}
+      verse={selectedSideVerse}
       subtitles={subtitles ?? []}
     />
   );
 
   useEffect(() => {
     if (initialScrollIndex !== topVerse && topVerse) {
-      if (!firstLoad) return;
+      if (!firstLoad || !isLayoutMounted) return;
       chapterRef.current?.scrollToIndex({ index: initialScrollIndex - 1 });
     }
-  }, [topVerse]);
+  }, [topVerse, isLayoutMounted]);
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
@@ -67,6 +70,9 @@ const Chapter = ({
       <View style={[styles.verseContent]}>
         <FlashList
           ref={chapterRef}
+          onLayout={() => {
+            setLayoutMounted(true);
+          }}
           decelerationRate="normal"
           estimatedItemSize={135}
           data={verses ?? []}
