@@ -1,8 +1,8 @@
+import { useBibleContext } from "context/BibleContext";
 import React, { FC } from "react";
-import { Animated, StyleSheet, useWindowDimensions, View } from "react-native";
+import { Animated, StyleSheet } from "react-native";
 import BookContent from "./home/content";
 import CustomFooter from "./home/footer";
-import { useBibleContext } from "context/BibleContext";
 
 const SplitTopSide: FC<any> = (props) => {
   const { isSplitActived, orientation } = useBibleContext();

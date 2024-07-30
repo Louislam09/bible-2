@@ -1,6 +1,8 @@
 import BottomSheet from "@gorhom/bottom-sheet";
 import { useRoute, useTheme } from "@react-navigation/native";
 import CustomBottomSheet from "components/BottomSheet";
+import SplitBottomSide from "components/SplitBottomSide";
+import SplitTopSide from "components/SplitTopSide";
 import Walkthrough from "components/Walkthrough";
 import StrongContent from "components/home/content/StrongContent";
 import { useBibleContext } from "context/BibleContext";
@@ -16,8 +18,6 @@ import {
 } from "react-native";
 import { HomeParams, TTheme } from "types";
 import CustomHeader from "../components/home/header";
-import SplitBottomSide from "components/SplitBottomSide";
-import SplitTopSide from "components/SplitTopSide";
 
 function HomeScreen() {
   const theme = useTheme();

@@ -104,7 +104,12 @@ const BookContent: FC<BookContentInterface> = ({
   return (
     <View style={styles.bookContainer}>
       {!loading ? (
-        <Chapter isSplit={!!isSplit} dimensions={dimensions} item={data} />
+        <Chapter
+          {...{ book, chapter, verse }}
+          isSplit={!!isSplit}
+          dimensions={dimensions}
+          item={data}
+        />
       ) : (
         <View style={styles.activiyContainer}>
           <ActivityIndicator style={{ flex: 1 }} />
