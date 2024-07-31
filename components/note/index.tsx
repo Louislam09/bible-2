@@ -6,7 +6,7 @@ import Animation from "components/Animation";
 import { Text, View } from "components/Themed";
 import { htmlTemplate } from "constants/HtmlTemplate";
 import { useBibleContext } from "context/BibleContext";
-// import usePrintAndShare from "hooks/usePrintAndShare";
+import usePrintAndShare from "hooks/usePrintAndShare";
 import React, {
   useEffect,
   useLayoutEffect,
@@ -91,7 +91,7 @@ const RenderItem = ({
                   style={[styles.icon]}
                   onPress={() => warnBeforeDelete(item.id)}
                 />
-                {/* <MaterialCommunityIcons
+                <MaterialCommunityIcons
                   style={styles.icon}
                   name="share-variant-outline"
                   size={24}
@@ -104,7 +104,7 @@ const RenderItem = ({
                     );
                     printToFile(html);
                   }}
-                /> */}
+                />
               </>
             </View>
           </View>
@@ -133,7 +133,7 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
     title: defaultTitle,
     content: "",
   });
-  // const { printToFile } = usePrintAndShare();
+  const { printToFile } = usePrintAndShare();
   const { title, content } = noteContent;
   const { onSaveNote, onDeleteNote, onUpdateNote, addToNoteText, onAddToNote } =
     useBibleContext();
@@ -383,8 +383,6 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
     );
   };
 
-  const printToFile = () => {};
-
   return (
     <View
       style={{
@@ -434,7 +432,6 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
               paddingVertical: 20,
             }}
             ref={flatListRef}
-            // ListHeaderComponent={NoteHeader}
             decelerationRate={"normal"}
             estimatedItemSize={135}
             data={
@@ -450,8 +447,6 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
                   )
                 : filterData
             }
-            // data={filterData}
-            // renderItem={renderItem as any}
             renderItem={({ item, index }) => (
               <RenderItem
                 {...{
@@ -465,7 +460,6 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
                 index={index}
               />
             )}
-            // onScroll={handleScroll}
             keyExtractor={(item: any, index: any) => `note-${index}`}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
             ListEmptyComponent={
