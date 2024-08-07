@@ -78,7 +78,6 @@ type BibleState = {
   currentHistoryIndex: number;
   goBackOnHistory?: (index: number) => void;
   goForwardOnHistory?: (index: number) => void;
-  addToHistory?: (item: any) => void;
   orientation: "LANDSCAPE" | "PORTRAIT";
   isSplitActived: boolean;
   isBottomSideSearching: boolean;
@@ -99,7 +98,6 @@ type BibleAction =
   | { type: "SET_VERSE_IN_STRONG_DISPLAY"; payload: number }
   | { type: "SET_STRONG_WORD"; payload: IStrongWord }
   | { type: "CLEAR_HIGHLIGHTS" }
-  | { type: "ADD_TO_HISTORY"; payload: any }
   | { type: "SET_LOCAL_DATA"; payload: any }
   | { type: "TOGGLE_COPY_MODE"; payload?: boolean }
   | { type: "TOGGLE_SECOND_SIDE"; payload: boolean }
@@ -254,12 +252,6 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
         ...state,
         currentHistoryIndex: action.payload,
       };
-    case "ADD_TO_HISTORY":
-      return {
-        ...state,
-        searchHistorial: action.payload,
-        currentHistoryIndex: action.payload.length - 1,
-      };
     case "SET_STRONG_WORD":
       return {
         ...state,
@@ -325,7 +317,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [state.highlightedVerses]);
 
   if (!fontsLoaded || !isDataLoaded) {
-    return null; // Render loading UI or placeholder while fonts are loading
+    return null;
   }
 
   const highlightVerse = (verseItem: IBookVerse) => {
@@ -344,15 +336,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const goForwardOnHistory = (index: number) => {
     dispatch({ type: "GO_FORWARD", payload: index });
   };
-  const addToHistory = (item: any) => {
-    const { book, chapter } =
-      state.searchHistorial[state.searchHistorial.length - 1] || {};
-    if (book === item.book && chapter === item.chapter) return;
 
-    const historyToSave = [...state.searchHistorial, item];
-    if (historyToSave.length > 9) historyToSave.shift();
-    dispatch({ type: "ADD_TO_HISTORY", payload: historyToSave });
-  };
   const decreaseFontSize = () => {
     dispatch({ type: "DECREASE_FONT_SIZE" });
     saveData({ fontSize: state.fontSize - 1 });
@@ -474,7 +458,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     onAddToNote,
     goBackOnHistory,
     goForwardOnHistory,
-    addToHistory,
     toggleBottomSideSearching,
   };
 

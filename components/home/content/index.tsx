@@ -32,11 +32,14 @@ const BookContent: FC<BookContentInterface> = ({
 }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
-  const { storedData, saveData } = useStorage();
+  const {
+    storedData,
+    saveData,
+    historyManager: { add: addToHistory },
+  } = useStorage();
   const { currentBibleVersion } = storedData;
 
-  const { setverseInStrongDisplay, clearHighlights, addToHistory } =
-    useBibleContext();
+  const { setverseInStrongDisplay, clearHighlights } = useBibleContext();
   const { myBibleDB, executeSql } = useDBContext();
   const route = useRoute();
   const { isHistory } = route.params as HomeParams;
@@ -51,7 +54,6 @@ const BookContent: FC<BookContentInterface> = ({
       clearHighlights();
       setLoading(true);
       if (!myBibleDB || !executeSql) return;
-      // console.log(`BC- ${book} ${chapter}:${verse}`);
       setData({});
       setverseInStrongDisplay(0);
       const query = QUERY_BY_DB[getCurrentDbName(currentBibleVersion)];
@@ -69,14 +71,17 @@ const BookContent: FC<BookContentInterface> = ({
       const responses = await Promise.all(promises);
       const [verses, subtitles] = responses;
       setData({ verses, subtitles });
+
+      if (!isHistory) {
+        addToHistory({ book, verse, chapter });
+      }
+
       await saveData({
         [isSplit ? "lastBottomSideBook" : "lastBook"]: book,
         [isSplit ? "lastBottomSideChapter" : "lastChapter"]: chapter,
         [isSplit ? "lastBottomSideVerse" : "lastVerse"]: verse,
       });
-      if (!isHistory && addToHistory) {
-        addToHistory({ book, verse, chapter });
-      }
+
       setLoading(false);
     })();
 

@@ -1,33 +1,22 @@
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import {
-  ParamListBase,
-  RouteProp,
-  useNavigation,
-  useRoute,
-  useTheme,
-} from "@react-navigation/native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "constants/BookNames";
 import { useBibleContext } from "context/BibleContext";
 import useAudioPlayer from "hooks/useAudioPlayer";
-import { FC, useCallback, useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  StyleSheet,
-  TouchableOpacity,
-  useWindowDimensions,
-} from "react-native";
-import { EBibleVersions, HomeParams, Screens, TTheme } from "types";
+import { FC, useCallback, useEffect, useRef } from "react";
+import { Animated, TouchableOpacity } from "react-native";
+import { EBibleVersions, Screens } from "types";
 
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BottomModal from "components/BottomModal";
 import { Text, View } from "components/Themed";
+import { iconSize } from "constants/size";
+import { useStorage } from "context/LocalstoreContext";
+import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
-import { iconSize } from "constants/size";
 import { getStyles } from "./styles";
-import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 interface FooterInterface {
   bookRef: any;
   nextRef: any;
@@ -53,10 +42,11 @@ const CustomFooter: FC<FooterInterface> = ({
     currentBibleVersion,
     clearHighlights,
     currentHistoryIndex,
-    searchHistorial,
+    // searchHistorial,
     isSplitActived,
     toggleBottomSideSearching,
   } = useBibleContext();
+  const { historyManager } = useStorage();
   const FOOTER_ICON_SIZE = iconSize;
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -80,6 +70,7 @@ const CustomFooter: FC<FooterInterface> = ({
       [isSplit ? "bottomSideBook" : "book"]: name,
       [isSplit ? "bottomSideChapter" : "chapter"]: chapter,
       [isSplit ? "bottomSideVerse" : "verse"]: 0,
+      isHistory: false,
     });
   };
 
@@ -96,6 +87,7 @@ const CustomFooter: FC<FooterInterface> = ({
       [isSplit ? "bottomSideBook" : "book"]: book,
       [isSplit ? "bottomSideChapter" : "chapter"]: _chapter || 0,
       [isSplit ? "bottomSideVerse" : "verse"]: 0,
+      isHistory: false,
     });
   }
   const previuosChapter = () => {
@@ -110,6 +102,7 @@ const CustomFooter: FC<FooterInterface> = ({
       [isSplit ? "bottomSideBook" : "book"]: book,
       [isSplit ? "bottomSideChapter" : "chapter"]: (chapter as number) - 1,
       [isSplit ? "bottomSideVerse" : "verse"]: 0,
+      isHistory: false,
     });
   };
 
@@ -145,7 +138,7 @@ const CustomFooter: FC<FooterInterface> = ({
   useEffect(() => {
     if (isSplitActived) return;
     if (currentHistoryIndex === -1) return;
-    const currentHistory = searchHistorial[currentHistoryIndex];
+    const currentHistory = historyManager.getCurrentItem();
 
     if (!currentHistory) return;
     navigation.setParams({

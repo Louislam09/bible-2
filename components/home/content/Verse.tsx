@@ -138,6 +138,7 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
         [!isSplit && isSplitActived ? "bottomSideBook" : "book"]: bookName,
         [!isSplit && isSplitActived ? "bottomSideChapter" : "chapter"]: chapter,
         [!isSplit && isSplitActived ? "bottomSideVerse" : "verse"]: verse,
+        isHistory: false,
       });
     };
 

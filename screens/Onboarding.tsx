@@ -38,12 +38,14 @@ const OnboardingScreen = () => {
           chapter: 1,
           verse: 1,
           isVerseTour: true,
+          isHistory: true,
         }),
     },
     {
       icon: "television-guide",
       label: "Funciones",
-      action: () => navigation.navigate("Home", { isTour: true }),
+      action: () =>
+        navigation.navigate("Home", { isTour: true, isHistory: true }),
     },
   ];
 

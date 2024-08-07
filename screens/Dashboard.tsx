@@ -65,7 +65,10 @@ const Dashboard = () => {
   const versionRef = useRef<BottomSheetModal>(null);
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(defaultDailyVerse);
   const columnNumber = 3;
-  const { storedData } = useStorage();
+  const {
+    storedData,
+    historyManager: { getCurrentItem },
+  } = useStorage();
   const {
     lastBook,
     lastChapter,
@@ -75,6 +78,11 @@ const Dashboard = () => {
     lastBottomSideVerse,
     isSongLyricEnabled,
   } = storedData;
+  const {
+    book: lastHistoryBook,
+    chapter: lastHistoryChapter,
+    verse: lastHistoryVerse,
+  } = getCurrentItem() as any;
 
   useEffect(() => {
     if (!myBibleDB || !executeSql) return;
@@ -113,13 +121,14 @@ const Dashboard = () => {
   };
 
   const homePageInitParams = {
-    book: lastBook || "Génesis",
-    chapter: lastChapter || 1,
-    verse: lastVerse || 1,
+    book: lastHistoryBook || lastBook || "Génesis",
+    chapter: lastHistoryChapter || lastChapter || 1,
+    verse: lastHistoryVerse || lastVerse || 1,
     bottomSideBook: lastBottomSideBook || "Génesis",
     bottomSideChapter: lastBottomSideChapter || 1,
     bottomSideVerse: lastBottomSideVerse || 0,
     isTour: false,
+    isHistory: true,
   };
 
   const onSong = () => {

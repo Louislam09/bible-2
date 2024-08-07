@@ -62,6 +62,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
       params: {
         ...routeParams,
         [isBottomSideSearching ? "bottomSideVerse" : "verse"]: item,
+        isHistory: false,
       },
     }),
     // Default case

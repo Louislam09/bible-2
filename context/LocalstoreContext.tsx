@@ -1,13 +1,17 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StorageKeys } from "constants/StorageKeys";
-import { EThemes, TFont, EBibleVersions } from "types";
+import useHistoryManager, {
+  HistoryItem,
+  HistoryManager,
+} from "hooks/useHistoryManager";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { EBibleVersions, EThemes, TFont } from "types";
 
 type StoreState = {
   lastBook: string;
@@ -23,13 +27,15 @@ type StoreState = {
   currentBibleVersion: string;
   isSongLyricEnabled: boolean;
   songFontSize: number;
+  history: HistoryItem[];
 };
 
 interface StorageContextProps {
   storedData: StoreState;
-  saveData: (data: StoreState | {}) => Promise<void>;
+  saveData: (data: Partial<StoreState>) => Promise<void>;
   clearData: () => void;
   isDataLoaded: boolean;
+  historyManager: HistoryManager;
 }
 
 const StorageContext = createContext<StorageContextProps | undefined>(
@@ -62,42 +68,57 @@ const initialContext: StoreState = {
   currentBibleVersion: EBibleVersions.RVR60,
   isSongLyricEnabled: false,
   songFontSize: 21,
+  history: [],
+};
+
+const isArrEqual = (arr1: any[], arr2: any[]) => {
+  return JSON.stringify(arr1) === JSON.stringify(arr2);
 };
 
 const StorageProvider: React.FC<StorageProviderProps> = ({ children }) => {
   const [storedData, setStoredData] = useState<StoreState>(initialContext);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const historyManager = useHistoryManager();
+  const { history, isHistoryInitialized } = historyManager;
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const data = await AsyncStorage.getItem(StorageKeys.BIBLE);
         if (data) {
-          setStoredData(JSON.parse(data));
+          const parsedData = JSON.parse(data) as StoreState;
+          setStoredData(parsedData);
+          historyManager.initializeHistory(parsedData.history || []);
         }
       } catch (error) {
         console.error("Error loading data from AsyncStorage:", error);
+      } finally {
+        setDataLoaded(true);
       }
     };
 
-    (async () => {
-      await loadData();
-      setDataLoaded(true);
-    })();
-
-    return () => {
-      setDataLoaded(false);
-    };
+    loadData();
   }, []);
 
-  const saveData = async (data: StoreState | {}) => {
+  useEffect(() => {
+    const shouldSave =
+      isHistoryInitialized && !isArrEqual(history, storedData.history);
+    if (shouldSave) {
+      saveData({ history: [...history] });
+    }
+  }, [isHistoryInitialized, history]);
+
+  const saveData = async (data: Partial<StoreState>) => {
     try {
-      const myData = {
+      const updatedData = {
         ...storedData,
         ...data,
       };
-      await AsyncStorage.setItem(StorageKeys.BIBLE, JSON.stringify(myData));
-      setStoredData(myData);
+      await AsyncStorage.setItem(
+        StorageKeys.BIBLE,
+        JSON.stringify(updatedData)
+      );
+      setStoredData(updatedData);
     } catch (error) {
       console.error("Error saving data to AsyncStorage:", error);
     }
@@ -107,6 +128,7 @@ const StorageProvider: React.FC<StorageProviderProps> = ({ children }) => {
     try {
       await AsyncStorage.removeItem(StorageKeys.BIBLE);
       setStoredData(initialContext);
+      historyManager.clear();
     } catch (error) {
       console.error("Error clearing data from AsyncStorage:", error);
     }
@@ -114,7 +136,13 @@ const StorageProvider: React.FC<StorageProviderProps> = ({ children }) => {
 
   return (
     <StorageContext.Provider
-      value={{ storedData, saveData, clearData, isDataLoaded: dataLoaded }}
+      value={{
+        storedData,
+        saveData,
+        clearData,
+        isDataLoaded: dataLoaded,
+        historyManager,
+      }}
     >
       {children}
     </StorageContext.Provider>

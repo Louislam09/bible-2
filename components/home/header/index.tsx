@@ -1,13 +1,14 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
-import React, { FC, useCallback, useRef } from "react";
-import { StyleSheet, ToastAndroid, TouchableOpacity } from "react-native";
+import React, { FC, useCallback, useMemo, useRef } from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { useBibleContext } from "../../../context/BibleContext";
 
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BottomModal from "components/BottomModal";
 import { iconSize } from "constants/size";
+import { useStorage } from "context/LocalstoreContext";
 import {
   EBibleVersions,
   HomeParams,
@@ -47,6 +48,9 @@ const CustomHeader: FC<HeaderInterface> = ({
     toggleSplitMode,
     toggleBottomSideSearching,
   } = useBibleContext();
+  const {
+    historyManager: { goBack, goForward, history, getCurrentIndex },
+  } = useStorage();
   const route = useRoute<TRoute>();
   const { book, chapter = 1, verse } = route.params as HomeParams;
   const theme = useTheme();
@@ -56,6 +60,8 @@ const CustomHeader: FC<HeaderInterface> = ({
   const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
+  const shouldForward = !(getCurrentIndex() === history.length - 1);
+  const shouldBackward = getCurrentIndex() !== 0;
 
   const versionHandlePresentModalPress = useCallback(() => {
     versionRef.current?.present();
@@ -67,62 +73,62 @@ const CustomHeader: FC<HeaderInterface> = ({
   };
 
   const moveBackInHistory = () => {
-    if (!goBackOnHistory || [-1, 0].includes(currentHistoryIndex)) {
-      ToastAndroid.show("No tiene historial", ToastAndroid.SHORT);
-      return;
-    }
-    const index = currentHistoryIndex - 1;
-    goBackOnHistory(index);
+    // if (!goBackOnHistory || [-1, 0].includes(currentHistoryIndex)) {
+    //   ToastAndroid.show("No tiene historial", ToastAndroid.SHORT);
+    //   return;
+    // }
+    const index = goBack();
+    goBackOnHistory?.(index);
   };
 
   const moveForwardInHistory = () => {
-    if (
-      !goForwardOnHistory ||
-      -1 === currentHistoryIndex ||
-      currentHistoryIndex + 1 >= searchHistorial.length
-    ) {
-      ToastAndroid.show("No tiene historial", ToastAndroid.SHORT);
-      return;
-    }
-    const index = currentHistoryIndex + 1;
-    goForwardOnHistory(index);
+    // if (
+    //   !goForwardOnHistory ||
+    //   -1 === currentHistoryIndex ||
+    //   currentHistoryIndex + 1 >= searchHistorial.length
+    // ) {
+    //   ToastAndroid.show("No tiene historial", ToastAndroid.SHORT);
+    //   return;
+    // }
+    const index = goForward();
+    goForwardOnHistory?.(index);
   };
 
-  const headerIconData: TIcon[] = [
-    {
-      name: "arrow-split-horizontal",
-      action: () => {
-        toggleSplitMode();
-        toggleBottomSideSearching(!isSplitActived);
-      },
-      ref: favRef,
-      isIonicon: false,
-      color: isSplitActived ? theme.colors.notification : theme.colors.text,
-    },
-    {
-      name: "arrow-back-outline",
-      action: moveBackInHistory,
-      ref: settingRef,
-      isIonicon: true,
-      disabled: isSplitActived,
-      color: ![-1, 0].includes(currentHistoryIndex)
-        ? theme.colors.notification
-        : theme.colors?.text,
-    },
-    {
-      name: "arrow-forward-outline",
-      action: moveForwardInHistory,
-      ref: searchRef,
-      isIonicon: true,
-      disabled: isSplitActived,
-      color:
-        currentHistoryIndex !== -1 &&
-        currentHistoryIndex < searchHistorial.length - 1
-          ? theme.colors.notification
-          : theme.colors?.text,
-    },
-    { name: "magnify", action: goSearchScreen, ref: searchRef },
-  ].filter((x) => !x.disabled);
+  const headerIconData: TIcon[] = useMemo(
+    () =>
+      [
+        {
+          name: "arrow-split-horizontal",
+          action: () => {
+            toggleSplitMode();
+            toggleBottomSideSearching(!isSplitActived);
+          },
+          ref: favRef,
+          isIonicon: false,
+          color: isSplitActived ? theme.colors.notification : theme.colors.text,
+        },
+        {
+          name: "arrow-back-outline",
+          action: moveBackInHistory,
+          ref: settingRef,
+          isIonicon: true,
+          disabled: isSplitActived,
+          color: shouldBackward
+            ? theme.colors.notification
+            : theme.colors?.text,
+        },
+        {
+          name: "arrow-forward-outline",
+          action: moveForwardInHistory,
+          ref: searchRef,
+          isIonicon: true,
+          disabled: isSplitActived,
+          color: shouldForward ? theme.colors.notification : theme.colors?.text,
+        },
+        { name: "magnify", action: goSearchScreen, ref: searchRef },
+      ].filter((x) => !x.disabled),
+    [isSplitActived, shouldForward, shouldBackward]
+  );
 
   const onSelect = (version: string) => {
     clearHighlights();
