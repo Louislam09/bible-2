@@ -88,7 +88,7 @@ const StorageProvider: React.FC<StorageProviderProps> = ({ children }) => {
         if (data) {
           const parsedData = JSON.parse(data) as StoreState;
           setStoredData(parsedData);
-          historyManager.initializeHistory(parsedData.history || []);
+          historyManager.initializeHistory(parsedData?.history || []);
         }
       } catch (error) {
         console.error("Error loading data from AsyncStorage:", error);

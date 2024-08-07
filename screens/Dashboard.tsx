@@ -48,7 +48,7 @@ const defaultDailyObject = {
 };
 
 const Dashboard = () => {
-  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
+  const { width: SCREEN_WIDTH } = useWindowDimensions();
   const { executeSql, myBibleDB } = useDBContext();
   const {
     currentBibleVersion,
@@ -82,7 +82,7 @@ const Dashboard = () => {
     book: lastHistoryBook,
     chapter: lastHistoryChapter,
     verse: lastHistoryVerse,
-  } = getCurrentItem() as any;
+  } = (getCurrentItem() as any) || {};
 
   useEffect(() => {
     if (!myBibleDB || !executeSql) return;
