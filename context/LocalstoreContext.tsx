@@ -78,7 +78,7 @@ const isArrEqual = (arr1: any[], arr2: any[]) => {
 const StorageProvider: React.FC<StorageProviderProps> = ({ children }) => {
   const [storedData, setStoredData] = useState<StoreState>(initialContext);
   const [dataLoaded, setDataLoaded] = useState(false);
-  const historyManager = useHistoryManager();
+  const historyManager = useHistoryManager(15);
   const { history, isHistoryInitialized } = historyManager;
 
   useEffect(() => {
