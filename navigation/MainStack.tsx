@@ -14,6 +14,7 @@ import Character from "screens/Character";
 import ChooseFromListScreen from "screens/ChooseFromListScreen";
 import Concordance from "screens/Concordance";
 import Dashboard from "screens/Dashboard";
+import DownloadManager from "screens/DownloadManager";
 import Favorite from "screens/Favorite";
 import Home from "screens/Home";
 import Notes from "screens/Notes";
@@ -107,6 +108,14 @@ const MainStack = () => {
           ...screenOptions(route),
           animation: "slide_from_bottom",
           headerShown: false,
+        })}
+      />
+      <Stack.Screen
+        name="DownloadManager"
+        component={DownloadManager}
+        options={({ route }) => ({
+          ...screenOptions(route),
+          animation: "slide_from_right",
         })}
       />
       <Stack.Screen

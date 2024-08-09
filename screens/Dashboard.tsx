@@ -193,6 +193,11 @@ const Dashboard = () => {
       action: () => navigation.navigate("Onboarding"),
     },
     {
+      icon: "download",
+      label: "Gestor de descargas",
+      action: () => navigation.navigate("DownloadManager"),
+    },
+    {
       icon: "settings-outline",
       label: "Ajustes",
       isIonicon: true,

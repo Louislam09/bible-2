@@ -29,6 +29,7 @@ export enum Screens {
   ChooseChapterNumber = "ChooseChapterNumber",
   ChooseVerseNumber = "ChooseVerseNumber",
   Favorite = "Favorite",
+  DownloadManager = "DownloadManager",
   Notes = "Notes",
   Onboarding = "Onboarding",
   Character = "Character",
@@ -49,6 +50,7 @@ export const ScreensName: TScreensName = {
   [Screens.Favorite]: "Versiculos Favoritos",
   [Screens.Notes]: "Notas",
   [Screens.Dashboard]: "Dashboard",
+  [Screens.DownloadManager]: "Gestor de descargas",
   [Screens.Onboarding]: "Guia",
   [Screens.Character]: "Personaje",
   [Screens.Song]: "Himnario",
@@ -64,6 +66,7 @@ export type RootTabParamList = {
   Search: undefined;
   Concordance: undefined;
   StrongSearchEntire: undefined;
+  DownloadManager: undefined;
   Notes: undefined;
   Favorite: undefined;
   NotFound: undefined;
@@ -74,6 +77,7 @@ export type RootStackParamList = {
   Home: NavigatorScreenParams<RootTabParamList> | HomeParams;
   Book: NavigatorScreenParams<RootTabParamList> | undefined;
   Favorite: NavigatorScreenParams<RootTabParamList> | undefined;
+  DownloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
   Notes: NavigatorScreenParams<RootTabParamList> | undefined;
   Character: NavigatorScreenParams<RootTabParamList> | undefined;
   ChooseBook:

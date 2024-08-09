@@ -43,6 +43,8 @@ const CustomBottomSheet = forwardRef<Ref, any>(
           handleIndicatorStyle={styles.indicator}
           snapPoints={snapPoints}
           onChange={handleSheetChange}
+          // enablePanDownToClose
+          // enableDynamicSizing
           // backdropComponent={renderBackdrop}
         >
           <BottomSheetScrollView

@@ -1,4 +1,7 @@
-import { CREATE_FAVORITE_VERSES_TABLE, CREATE_NOTE_TABLE } from "constants/Queries";
+import {
+  CREATE_FAVORITE_VERSES_TABLE,
+  CREATE_NOTE_TABLE,
+} from "constants/Queries";
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
@@ -54,14 +57,17 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
     try {
       const result = await statement.executeAsync(params);
 
-      const response = await result.getAllAsync()
+      const response = await result.getAllAsync();
       return response as Row[];
     } finally {
       await statement.finalizeAsync();
     }
   };
 
-  async function createTable(database: SQLite.SQLiteDatabase, createTableQuery: string) {
+  async function createTable(
+    database: SQLite.SQLiteDatabase,
+    createTableQuery: string
+  ) {
     try {
       await database.execAsync(createTableQuery);
     } catch (error) {
