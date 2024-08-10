@@ -12,6 +12,8 @@ import * as FileSystem from "expo-file-system";
 import { baseDownloadUrl, SQLiteDirPath } from "constants/databaseNames";
 import bibleDatabases from "constants/bibleDatabases";
 import DatabaseDownloadItem from "components/DatabaseDownloadItem";
+import FileList from "components/FileList";
+import TabNavigation from "components/DownloadManagerTab";
 
 type DownloadBibleItem = {
   name: string;
@@ -38,70 +40,28 @@ const DownloadManager: React.FC<RootStackScreenProps<"DownloadManager">> = (
   const theme = useTheme();
   const styles = getStyles(theme);
   const databasesToDownload: DownloadBibleItem[] = bibleDatabases;
-
-  const getIfDatabaseNeedsDownload = async (name: string) => {
-    const path = `${SQLiteDirPath}/${name}`;
-    await initSQLiteDir();
-    const { exists } = await FileSystem.getInfoAsync(path);
-    return exists;
-  };
-
-  const downloadBible = async (item: DownloadBibleItem) => {
-    const downloadFrom = `${baseDownloadUrl}/${item.url}`;
-    const needDownload = await getIfDatabaseNeedsDownload(item.name);
-    console.log(item.storedName, { needDownload });
-  };
-
-  const FileSizeText = (size: number) => {
-    const sizeInMB = size / (1024 * 1024);
-
-    if (sizeInMB >= 1) {
-      return <Text style={styles.sizeText}>{sizeInMB.toFixed(2)} MB</Text>;
-    } else {
-      const sizeInKB = size / 1024;
-      return <Text style={styles.sizeText}>{sizeInKB.toFixed(2)} KB</Text>;
-    }
-  };
-
-  const renderItem: ListRenderItem<DownloadBibleItem> = ({ item }) => {
-    return (
-      <View style={styles.itemContainer}>
-        <Text style={{ color: theme.colors.notification }}>
-          {item.storedName}
-        </Text>
-        <View style={styles.itemContent}>
-          <Text style={{ paddingRight: 10, width: "90%" }}>{item.name}</Text>
-          <TouchableOpacity onPress={() => downloadBible(item)}>
-            <MaterialCommunityIcons
-              style={styles.icon}
-              name="download"
-              // name={item.needDownload ? "download" : "check"}
-              size={30}
-              color={theme.colors.notification}
-            />
-          </TouchableOpacity>
-        </View>
-        {FileSizeText(item.size)}
-      </View>
-    );
-  };
+  const [isMyDownloadTab, setIsMyDownloadTab] = useState(false);
 
   return (
     <View style={{ paddingHorizontal: 20, flex: 1 }}>
-      <FlashList
-        ListHeaderComponent={
-          <Text style={{ fontSize: 28, marginBottom: 10 }}>Bibles</Text>
-        }
-        contentContainerStyle={{ paddingVertical: 10 }}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        estimatedItemSize={10}
-        renderItem={(props) => (
-          <DatabaseDownloadItem {...{ theme, ...props }} />
-        )}
-        // renderItem={renderItem}
-        data={databasesToDownload}
-        keyExtractor={(item: any, index: any) => `download-${index}`}
-      />
+      <TabNavigation {...{ isMyDownloadTab, setIsMyDownloadTab, theme }} />
+      {!isMyDownloadTab ? (
+        <FlashList
+          ListHeaderComponent={
+            <Text style={{ fontSize: 28, marginBottom: 10 }}>Bibles</Text>
+          }
+          contentContainerStyle={{ paddingVertical: 10 }}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          estimatedItemSize={10}
+          renderItem={(props) => (
+            <DatabaseDownloadItem {...{ theme, ...props }} />
+          )}
+          data={databasesToDownload}
+          keyExtractor={(item: any, index: any) => `download-${index}`}
+        />
+      ) : (
+        <FileList />
+      )}
     </View>
   );
 };

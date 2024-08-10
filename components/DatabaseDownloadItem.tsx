@@ -11,6 +11,11 @@ import {
 import { Text, View } from "./Themed";
 import { DownloadedDatabase } from "classes/Database";
 import ProgressBar from "./home/footer/ProgressBar";
+// import { unzip } from "react-native-zip-archive";
+import JSZip from "jszip";
+// @ts-ignore
+import { decode as atob, encode as btoa } from "base-64";
+import unzipFile from "utils/unzipFile";
 
 type DownloadBibleItem = {
   name: string;
@@ -28,13 +33,15 @@ type DatabaseDownloadItemProps = {
 const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [unzipProgress, setUnzipProgress] = useState("");
   const { size, url, storedName, name } = item;
   const styles = getStyles(theme);
   const downloadFrom = `${baseDownloadUrl}/${url}`;
+  const fileUri = `${SQLiteDirPath}/${storedName}`;
 
   useEffect(() => {
     async function needD() {
-      return await getIfDatabaseNeedsDownload(storedName);
+      return await getIfDatabaseNeedsDownload(storedName + ".SQLite3");
     }
     needD().then((res) => {
       setIsDownloaded(!res);
@@ -56,15 +63,26 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
   const startDownload = async () => {
     try {
       const uri = downloadFrom;
-      const fileUri = `${SQLiteDirPath}/${storedName}`;
+      const downloadDest = `${fileUri}.zip`;
       console.log(`Downloading ${storedName}`);
 
       await FileSystem.createDownloadResumable(
         uri,
-        fileUri,
+        downloadDest,
         {},
         calculateProgress
       ).downloadAsync();
+      // Progress callback function
+      const progressCallback = (progress: string) => {
+        setUnzipProgress(progress);
+        console.log(progress); // Update UI or state here with progress
+      };
+
+      await unzipFile({
+        zipFileUri: downloadDest,
+        onProgress: progressCallback,
+      });
+      // await unzipFile(downloadDest);
     } catch (error) {
       console.error(error);
     }
@@ -89,8 +107,8 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
     }
   };
 
-  const deleteBibleDB = async () => {
-    const bibleObject = new DownloadedDatabase(storedName);
+  const deleteBibleFile = async () => {
+    const bibleObject = new DownloadedDatabase(storedName + ".zip");
     const deleted = await bibleObject.delete();
     console.log({ deleted });
     setIsDownloaded(false);
@@ -130,7 +148,7 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
           }}
         >
           {isDownloaded ? (
-            <TouchableOpacity onPress={() => deleteBibleDB()}>
+            <TouchableOpacity onPress={() => deleteBibleFile()}>
               <MaterialCommunityIcons
                 style={[styles.icon, { color: "#e74856" }]}
                 name="delete"
@@ -151,6 +169,9 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
         </View>
       </View>
       {FileSizeText(item.size)}
+      <Text style={{ marginVertical: 15, color: theme.colors.text }}>
+        {unzipProgress}
+      </Text>
       {!!progress && !isDownloaded && (
         <View style={{ marginVertical: 15 }}>
           <ProgressBar
