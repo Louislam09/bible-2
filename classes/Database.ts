@@ -1,7 +1,8 @@
+import { SQLiteDirPath } from "constants/databaseNames";
 import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
 
-class DB {
+export class DownloadedDatabase {
   db?: SQLite.SQLiteDatabase;
   public name: string;
 
@@ -23,15 +24,15 @@ class DB {
 
   delete = async () => {
     try {
-      if (this.db) {
-        await this.db.closeAsync(); // Fermer la base de données
-        await FileSystem.deleteAsync(
-          `${FileSystem.documentDirectory}SQLite/${this.name}`
-        ); // Supprimer le fichier de la base de données
-        console.log("Strong database deleted");
-      }
+      // if (this.db) {
+      // await this.db.closeAsync(); // Fermer la base de données
+      await FileSystem.deleteAsync(`${SQLiteDirPath}/${this.name}`); // Supprimer le fichier de la base de données
+      console.log("Strong database deleted");
+      return true;
+      // }
     } catch (error) {
       console.error("Error deleting database:", error);
+      return false;
       throw error;
     }
   };

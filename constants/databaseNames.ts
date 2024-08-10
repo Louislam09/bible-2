@@ -4,11 +4,22 @@ export const SQLiteDirPath = `${FileSystem.documentDirectory}SQLite`;
 export const baseDownloadUrl = "https://www.ph4.org";
 // https://www.ph4.org/_dl.php?back=bbl&a=RV%2760_plus_&b=mybible&c
 
-// {
-//   "url": "_dl.php?back=bbl&a=NBD'08&b=mybible&c",
-//   "name": "Nueva Biblia al Día",
-//   "key": "NBD 2008"
-// },
+export const getIfDatabaseNeedsDownload = async (name: string) => {
+  const path = `${SQLiteDirPath}/${name}`;
+  await initSQLiteDir();
+  const { exists } = await FileSystem.getInfoAsync(path);
+  return !exists;
+};
+
+export const initSQLiteDir = async () => {
+  const sqliteDir = await FileSystem.getInfoAsync(SQLiteDirPath);
+
+  if (!sqliteDir.exists) {
+    await FileSystem.makeDirectoryAsync(SQLiteDirPath);
+  } else if (!sqliteDir.isDirectory) {
+    throw new Error("SQLite dir is not a directory");
+  }
+};
 
 export const databaseNames = [
   {

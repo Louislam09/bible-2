@@ -150,6 +150,11 @@ const Dashboard = () => {
       tag: isNTV ? "book-cross" : "crown-outline",
     },
     {
+      icon: "download",
+      label: "Gestor de descargas",
+      action: () => navigation.navigate("DownloadManager"),
+    },
+    {
       icon: "musical-notes-outline",
       label: "Himnos",
       isIonicon: true,
@@ -192,11 +197,7 @@ const Dashboard = () => {
       label: "Como Usar?",
       action: () => navigation.navigate("Onboarding"),
     },
-    {
-      icon: "download",
-      label: "Gestor de descargas",
-      action: () => navigation.navigate("DownloadManager"),
-    },
+
     {
       icon: "settings-outline",
       label: "Ajustes",

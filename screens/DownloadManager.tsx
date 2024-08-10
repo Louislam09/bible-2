@@ -11,6 +11,7 @@ import { RootStackScreenProps, TTheme } from "types";
 import * as FileSystem from "expo-file-system";
 import { baseDownloadUrl, SQLiteDirPath } from "constants/databaseNames";
 import bibleDatabases from "constants/bibleDatabases";
+import DatabaseDownloadItem from "components/DatabaseDownloadItem";
 
 type DownloadBibleItem = {
   name: string;
@@ -37,34 +38,18 @@ const DownloadManager: React.FC<RootStackScreenProps<"DownloadManager">> = (
   const theme = useTheme();
   const styles = getStyles(theme);
   const databasesToDownload: DownloadBibleItem[] = bibleDatabases;
-  const dbNames = Object.values(DBName);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     if (!myBibleDB || !executeSql) return;
-  //     const verses = await executeSql(myBibleDB, GET_ALL_FAVORITE_VERSES, []);
-  //     setData(verses ?? []);
-  //   })();
-
-  //   return () => {};
-  // }, [myBibleDB]);
 
   const getIfDatabaseNeedsDownload = async (name: string) => {
     const path = `${SQLiteDirPath}/${name}`;
     await initSQLiteDir();
-    const file = await FileSystem.getInfoAsync(path);
-
-    if (!file.exists) {
-      return true;
-    }
-
-    return false;
+    const { exists } = await FileSystem.getInfoAsync(path);
+    return exists;
   };
 
-  const downloadBible = (item: DownloadBibleItem) => {
+  const downloadBible = async (item: DownloadBibleItem) => {
     const downloadFrom = `${baseDownloadUrl}/${item.url}`;
-    const needDownload = getIfDatabaseNeedsDownload(item.name);
-    console.log(item, { needDownload });
+    const needDownload = await getIfDatabaseNeedsDownload(item.name);
+    console.log(item.storedName, { needDownload });
   };
 
   const FileSizeText = (size: number) => {
@@ -110,7 +95,10 @@ const DownloadManager: React.FC<RootStackScreenProps<"DownloadManager">> = (
         contentContainerStyle={{ paddingVertical: 10 }}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         estimatedItemSize={10}
-        renderItem={renderItem}
+        renderItem={(props) => (
+          <DatabaseDownloadItem {...{ theme, ...props }} />
+        )}
+        // renderItem={renderItem}
         data={databasesToDownload}
         keyExtractor={(item: any, index: any) => `download-${index}`}
       />
@@ -140,12 +128,10 @@ const getStyles = ({ colors }: TTheme) =>
       fontWeight: "700",
       marginHorizontal: 10,
       color: colors.notification + "90",
-      fontSize: 24,
+      fontSize: 28,
     },
     sizeText: {
       color: colors.notification,
-      alignSelf: "flex-end",
-      fontSize: 18,
     },
   });
 
