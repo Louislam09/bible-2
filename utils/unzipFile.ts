@@ -3,6 +3,8 @@ import * as FileSystem from "expo-file-system";
 // @ts-ignore
 import { decode as atob, encode as btoa } from "base-64";
 import * as Sharing from "expo-sharing";
+import { dbFileExt } from "constants/databaseNames";
+export const SQLiteDirPath = `${FileSystem.documentDirectory}SQLite`;
 
 // Helper function to convert Uint8Array to base64
 const uint8ArrayToBase64 = (uint8Array: Uint8Array): string => {
@@ -17,21 +19,16 @@ const uint8ArrayToBase64 = (uint8Array: Uint8Array): string => {
 // Function to read and decode ZIP file
 const readZipFile = async (zipFileUri: string): Promise<JSZip> => {
   try {
-    // Read the ZIP file as base64
     const zipBase64 = await FileSystem.readAsStringAsync(zipFileUri, {
       encoding: FileSystem.EncodingType.Base64,
     });
-
-    // Decode the base64 data to Uint8Array
     // @ts-ignore
     const zipData = Uint8Array.from(atob(zipBase64), (c) => c.charCodeAt(0));
-
-    // Create a JSZip instance and load the data
     const zip = await JSZip.loadAsync(zipData);
     return zip;
   } catch (error) {
     console.error("Error reading ZIP file:", error);
-    throw error; // Re-throw the error to be handled by the caller
+    throw error;
   }
 };
 
@@ -71,27 +68,20 @@ const deleteFilesInDirectory = async (directoryUri: string) => {
   }
 };
 
-// Function to save a file to the phone's storage
 const saveFileToPhone = async (
   fileName: string,
   fileContent: Uint8Array,
   directory: string
 ) => {
   try {
-    // Define the full file path
-    const fileUri = `${directory}${fileName}`;
-
-    // Convert Uint8Array to base64 string
+    const newFileName = changeFileNameExt({ fileName, newExt: dbFileExt });
+    console.log("---------", { fileName, newFileName });
+    const fileUri = `${directory}${newFileName}`;
     const base64String = uint8ArrayToBase64(fileContent);
-
-    // Write the file to the specified path
     await FileSystem.writeAsStringAsync(fileUri, base64String, {
       encoding: FileSystem.EncodingType.Base64,
     });
-
     console.log("File saved to:", fileUri);
-
-    // Share the file using Expo Sharing API
     // if (await Sharing.isAvailableAsync()) {
     //   await Sharing.shareAsync(fileUri, {
     //     mimeType: "application/zip",
@@ -105,27 +95,53 @@ const saveFileToPhone = async (
   }
 };
 
-// Function to extract files from the ZIP and save them
-const extractAndSaveFiles = async (zip: JSZip, extractionPath: string) => {
+interface ChangeFileNameExt {
+  fileName: string;
+  newExt: string;
+}
+
+function getFileExtension(filename: string) {
+  const parts = filename.split(".");
+  return parts.pop() || "";
+}
+
+const changeFileNameExt = ({ fileName, newExt }: ChangeFileNameExt) => {
+  const fileExt = getFileExtension(fileName);
+  const newFileName = fileName.endsWith(`.${fileExt}`)
+    ? fileName.replace(`.${fileExt}`, newExt)
+    : fileName;
+  return newFileName;
+};
+
+const extractAndSaveFiles = async (
+  zip: JSZip,
+  extractionPath: string,
+  onProgress: (message: string) => void
+) => {
   try {
-    // Create the extraction directory if it doesn't exist
     await FileSystem.makeDirectoryAsync(extractionPath, {
       intermediates: true,
     });
 
-    // Iterate over the files in the ZIP and extract them
+    const totalFiles = Object.keys(zip.files).length;
+    let filesExtracted = 0;
+
     for (const fileName of Object.keys(zip.files)) {
       const file = zip.files[fileName];
       if (!file.dir) {
-        // Ensure you're not trying to write directories
+        onProgress(
+          `Extrayendo ${fileName} (${filesExtracted + 1}/${totalFiles})`
+        );
         const fileContent = await file.async("uint8array");
+        // const newFileName = changeFileNameExt({ fileName, newExt: dbFileExt });
 
-        // Save the file to the specified path and prompt user to share
         await saveFileToPhone(fileName, fileContent, extractionPath);
+        filesExtracted++;
       }
     }
-    console.log("Unzipping and saving complete");
+    onProgress("¡Todo listo para usar!");
   } catch (error) {
+    onProgress("Error durante la extracción");
     console.error("Error extracting and saving files:", error);
   }
 };
@@ -135,24 +151,19 @@ interface UnzipProps {
   onProgress: (progress: string) => void; // Callback to update progress
 }
 
-// Main function to manage the unzipping process
 const unzipFile = async ({ zipFileUri, onProgress }: UnzipProps) => {
   try {
-    const extractionPath = `${FileSystem.documentDirectory}SQLite/`;
-    onProgress("Reading ZIP file...");
+    const extractionPath = `${SQLiteDirPath}/`;
+    onProgress("Preparando tus archivos, por favor aguarda...");
     const zip = await readZipFile(zipFileUri);
-    await extractAndSaveFiles(zip, extractionPath);
-
-    // Delete the ZIP file after extraction
+    await extractAndSaveFiles(zip, extractionPath, onProgress);
     await deleteFile(zipFileUri);
-
-    // List files in the extraction directory
     const files = await listFilesInDirectory(extractionPath);
-    onProgress("Unzipping complete");
-    console.log("Unzipped files are located at:", extractionPath);
-    console.log("Files:", files);
+    onProgress("¡Tus archivos ya están disponibles!");
+    // console.log("Unzipped files are located at:", extractionPath);
+    // console.log("Files:", files);
   } catch (error) {
-    onProgress("Error during unzipping");
+    onProgress("Error durante el proceso");
     console.error("Error during unzipping process:", error);
   }
 };

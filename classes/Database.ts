@@ -31,7 +31,6 @@ export class DownloadedDatabase {
       return true;
       // }
     } catch (error) {
-      console.error("Error deleting database:", error);
       return false;
       throw error;
     }

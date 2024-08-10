@@ -2,6 +2,8 @@ import { DBName } from "enums";
 import * as FileSystem from "expo-file-system";
 export const SQLiteDirPath = `${FileSystem.documentDirectory}SQLite`;
 export const baseDownloadUrl = "https://www.ph4.org";
+export const dbFileExt = ".db";
+export const bibleReadyMsg = "¡Todo listo para usar!";
 // https://www.ph4.org/_dl.php?back=bbl&a=RV%2760_plus_&b=mybible&c
 
 export const getIfDatabaseNeedsDownload = async (name: string) => {

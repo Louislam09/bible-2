@@ -5,6 +5,8 @@ import { TTheme } from "types";
 import * as FileSystem from "expo-file-system";
 import {
   baseDownloadUrl,
+  bibleReadyMsg,
+  dbFileExt,
   getIfDatabaseNeedsDownload,
   SQLiteDirPath,
 } from "constants/databaseNames";
@@ -16,6 +18,7 @@ import JSZip from "jszip";
 // @ts-ignore
 import { decode as atob, encode as btoa } from "base-64";
 import unzipFile from "utils/unzipFile";
+import DownloadButton from "./DatabaseDownloadButton";
 
 type DownloadBibleItem = {
   name: string;
@@ -32,6 +35,7 @@ type DatabaseDownloadItemProps = {
 
 const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
   const [isDownloaded, setIsDownloaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [unzipProgress, setUnzipProgress] = useState("");
   const { size, url, storedName, name } = item;
@@ -41,7 +45,7 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
 
   useEffect(() => {
     async function needD() {
-      return await getIfDatabaseNeedsDownload(storedName + ".SQLite3");
+      return await getIfDatabaseNeedsDownload(storedName + dbFileExt);
     }
     needD().then((res) => {
       setIsDownloaded(!res);
@@ -75,13 +79,14 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
       // Progress callback function
       const progressCallback = (progress: string) => {
         setUnzipProgress(progress);
-        console.log(progress); // Update UI or state here with progress
+        console.log(progress);
       };
 
       await unzipFile({
         zipFileUri: downloadDest,
         onProgress: progressCallback,
       });
+      setIsLoading(false);
       // await unzipFile(downloadDest);
     } catch (error) {
       console.error(error);
@@ -91,9 +96,9 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
   const downloadBible = async () => {
     const needDownload = await getIfDatabaseNeedsDownload(storedName);
     if (needDownload) {
+      setIsLoading(true);
       startDownload();
     }
-    console.log(storedName, { needDownload });
   };
 
   const FileSizeText = (size: number) => {
@@ -108,7 +113,7 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
   };
 
   const deleteBibleFile = async () => {
-    const bibleObject = new DownloadedDatabase(storedName + ".zip");
+    const bibleObject = new DownloadedDatabase(storedName + dbFileExt);
     const deleted = await bibleObject.delete();
     console.log({ deleted });
     setIsDownloaded(false);
@@ -147,7 +152,16 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
             flex: 0.3,
           }}
         >
-          {isDownloaded ? (
+          <DownloadButton
+            {...{
+              deleteBibleFile,
+              downloadBible,
+              isDownloaded,
+              progress: isLoading,
+              theme,
+            }}
+          />
+          {/* {isDownloaded ? (
             <TouchableOpacity onPress={() => deleteBibleFile()}>
               <MaterialCommunityIcons
                 style={[styles.icon, { color: "#e74856" }]}
@@ -160,18 +174,20 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
             <TouchableOpacity onPress={() => downloadBible()}>
               <MaterialCommunityIcons
                 style={[styles.icon, { color: theme.colors.notification }]}
-                name="download"
+                name={!!progress ? "loading" : "download"}
                 size={30}
                 color={theme.colors.notification}
               />
             </TouchableOpacity>
-          )}
+          )} */}
         </View>
       </View>
       {FileSizeText(item.size)}
-      <Text style={{ marginVertical: 15, color: theme.colors.text }}>
-        {unzipProgress}
-      </Text>
+      {isDownloaded && unzipProgress && (
+        <Text style={{ marginVertical: 15, color: theme.colors.text }}>
+          {unzipProgress}
+        </Text>
+      )}
       {!!progress && !isDownloaded && (
         <View style={{ marginVertical: 15 }}>
           <ProgressBar
