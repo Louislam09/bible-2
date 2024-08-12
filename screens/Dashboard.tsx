@@ -1,7 +1,7 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { BottomSheetModal, WINDOW_WIDTH } from "@gorhom/bottom-sheet";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import BottomModal from "components/BottomModal";
 import { Text, View } from "components/Themed";
@@ -20,7 +20,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { EBibleVersions, IVerseItem, TTheme } from "types";
+import { EBibleVersions, IVerseItem, Screens, TTheme } from "types";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";
 
 type IDashboardOption = {
@@ -58,6 +58,7 @@ const Dashboard = () => {
   } = useBibleContext();
   const theme = useTheme();
   const navigation = useNavigation();
+  const route = useRoute();
   const isPortrait = orientation === "PORTRAIT";
   const styles = getStyles(theme, isPortrait);
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
@@ -146,35 +147,47 @@ const Dashboard = () => {
     {
       icon: isNTV ? "book-cross" : "crown-outline",
       label: "Santa Escritura",
-      action: () => navigation.navigate("Home", homePageInitParams),
+      action: () => navigation.navigate(Screens.Home, homePageInitParams),
       tag: isNTV ? "book-cross" : "crown-outline",
     },
     {
-      icon: "download",
-      label: "Gestor de descargas",
-      action: () => navigation.navigate("DownloadManager"),
+      icon: "book-outline",
+      label: "Seleccion de Libro",
+      action: () =>
+        navigation?.navigate(Screens.ChooseBook, { ...route.params }),
+    },
+    {
+      icon: "text-box-search-outline",
+      label: "Concordancia Escritural",
+      action: () => navigation.navigate(Screens.Concordance, {}),
+    },
+
+    {
+      icon: "star-outline",
+      label: "Versiculos Favoritos",
+      action: () => navigation.navigate(Screens.Favorite),
+    },
+    {
+      icon: "person-outline",
+      label: "Buscar Personaje",
+      isIonicon: true,
+      action: () => navigation.navigate(Screens.Character),
     },
     {
       icon: "musical-notes-outline",
       label: "Himnos",
       isIonicon: true,
       action: onSong,
-      // disabled: !isSongLyricEnabled,
     },
     {
-      icon: "text-search",
-      label: "Buscador",
-      action: () => navigation.navigate("Search", {}),
+      icon: "notebook-outline",
+      label: "Notas",
+      action: () => navigation.navigate(Screens.Notes),
     },
     {
-      icon: "text-box-search-outline",
-      label: "Concordancia Escritural",
-      action: () => navigation.navigate("Concordance", {}),
-    },
-    {
-      icon: "star-outline",
-      label: "Versiculos Favoritos",
-      action: () => navigation.navigate("Favorite"),
+      icon: "download",
+      label: "Gestor de descargas",
+      action: () => navigation.navigate(Screens.DownloadManager),
     },
     {
       icon: "book-open-page-variant-outline",
@@ -182,20 +195,9 @@ const Dashboard = () => {
       action: versionHandlePresentModalPress,
     },
     {
-      icon: "person-outline",
-      label: "Buscar Personaje",
-      isIonicon: true,
-      action: () => navigation.navigate("Character"),
-    },
-    {
-      icon: "notebook-outline",
-      label: "Notas",
-      action: () => navigation.navigate("Notes"),
-    },
-    {
-      icon: "television-guide",
-      label: "Como Usar?",
-      action: () => navigation.navigate("Onboarding"),
+      icon: "text-search",
+      label: "Buscador",
+      action: () => navigation.navigate(Screens.Search, {}),
     },
 
     {
@@ -204,9 +206,21 @@ const Dashboard = () => {
       isIonicon: true,
       action: fontHandlePresentModalPress,
     },
+
+    {
+      icon: "television-guide",
+      label: "Como Usar?",
+      action: () => navigation.navigate(Screens.Onboarding),
+    },
   ];
 
-  const renderItem = ({ item }: { item: IDashboardOption }) => (
+  const renderItem = ({
+    item,
+    index,
+  }: {
+    item: IDashboardOption;
+    index: number;
+  }) => (
     <TouchableWithoutFeedback
       onPress={item.action}
       style={[
@@ -221,20 +235,39 @@ const Dashboard = () => {
       ]}
       disabled={item.disabled}
     >
-      <View style={[styles.card, item.disabled && { backgroundColor: "#ddd" }]}>
+      <View
+        style={[
+          styles.card,
+          item.disabled && { backgroundColor: "#ddd" },
+          index === 0 && {
+            backgroundColor: theme.colors.notification,
+          },
+        ]}
+      >
         {item.isIonicon ? (
-          <Ionicons name={item.icon} style={[styles.cardIcon]} />
+          <Ionicons
+            name={item.icon}
+            style={[styles.cardIcon, index === 0 && { color: "white" }]}
+          />
         ) : (
-          <MaterialCommunityIcons name={item.icon} style={[styles.cardIcon]} />
+          <MaterialCommunityIcons
+            name={item.icon}
+            style={[styles.cardIcon, index === 0 && { color: "white" }]}
+          />
         )}
 
-        <Text style={[styles.cardLabel]}>{item.label}</Text>
+        <Text style={[styles.cardLabel, index === 0 && { color: "white" }]}>
+          {item.label}
+        </Text>
       </View>
     </TouchableWithoutFeedback>
   );
 
   return (
-    <View style={[styles.container, !isPortrait && { flexDirection: "row" }]}>
+    <View
+      key={orientation}
+      style={[styles.container, !isPortrait && { flexDirection: "row" }]}
+    >
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={() =>
@@ -270,6 +303,7 @@ const Dashboard = () => {
             width: isPortrait ? WINDOW_WIDTH : WINDOW_WIDTH / 2,
           },
           isPortrait && { padding: 15 },
+          !isPortrait && { paddingVertical: 50 },
         ]}
       >
         <FlashList
@@ -284,7 +318,7 @@ const Dashboard = () => {
       <BottomModal shouldScroll startAT={2} ref={fontBottomSheetModalRef}>
         <Settings theme={theme} />
       </BottomModal>
-      <BottomModal startAT={0} ref={versionRef}>
+      <BottomModal shouldScroll startAT={1} ref={versionRef}>
         <VersionList {...{ currentBibleVersion, onSelect, theme }} />
       </BottomModal>
     </View>
@@ -362,11 +396,13 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
       margin: 10,
     },
     cardLabel: {
+      backgroundColor: "transparent",
       textAlign: "center",
       color: colors.border,
       fontWeight: "bold",
     },
     cardIcon: {
+      backgroundColor: "transparent",
       color: colors.notification,
       fontSize: 36,
     },

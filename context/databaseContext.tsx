@@ -1,9 +1,9 @@
 import * as SQLite from "expo-sqlite";
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 import { DBName } from "../enums";
 import useDatabase from "../hooks/useDatabase";
 import { useStorage } from "./LocalstoreContext";
-import getCurrentDbName from "utils/getCurrentDB";
+import useInstalledBibles, { VersionItem } from "hooks/useInstalledBible";
 
 interface Row {
   [key: string]: any;
@@ -18,6 +18,9 @@ type DatabaseContextType = {
         params?: any[]
       ) => Promise<Row[]>)
     | null;
+  installedBibles: VersionItem[];
+  isInstallBiblesLoaded: boolean;
+  refreshDatabaseList: () => void;
 };
 
 enum DBs {
@@ -28,11 +31,9 @@ enum DBs {
 const initialContext = {
   myBibleDB: null,
   executeSql: null,
-  strongDB: null,
-  strongExecuteSql: null,
-
-  subtitleDB: null,
-  subtitleExecuteSql: null,
+  installedBibles: [],
+  isInstallBiblesLoaded: false,
+  refreshDatabaseList: () => {},
 };
 
 export const DatabaseContext =
@@ -44,16 +45,22 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   const {
     storedData: { currentBibleVersion },
   } = useStorage();
-  const isNTV = getCurrentDbName(currentBibleVersion) === DBName.NTV;
+  const { installedBibles, loading, refreshDatabaseList } =
+    useInstalledBibles();
   const { databases, executeSql } = useDatabase({
-    dbNames: [DBName.BIBLE, DBName.NTV],
+    dbNames: installedBibles,
   });
 
-  const myBibleDB = databases[!isNTV ? DBs.MYBIBLE : DBs.NTV];
+  const myBibleDB = databases?.find(
+    (version) => version?.databaseName.split(".")[0] === currentBibleVersion
+  );
 
   const dbContextValue = {
     myBibleDB,
     executeSql,
+    installedBibles,
+    isInstallBiblesLoaded: !loading,
+    refreshDatabaseList,
   };
 
   return (

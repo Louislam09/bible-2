@@ -7,6 +7,7 @@ import {
   baseDownloadUrl,
   bibleReadyMsg,
   dbFileExt,
+  defaultDatabases,
   getIfDatabaseNeedsDownload,
   SQLiteDirPath,
 } from "constants/databaseNames";
@@ -19,6 +20,8 @@ import JSZip from "jszip";
 import { decode as atob, encode as btoa } from "base-64";
 import unzipFile from "utils/unzipFile";
 import DownloadButton from "./DatabaseDownloadButton";
+import { useDBContext } from "context/databaseContext";
+import { useBibleContext } from "context/BibleContext";
 
 type DownloadBibleItem = {
   name: string;
@@ -42,6 +45,8 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
   const styles = getStyles(theme);
   const downloadFrom = `${baseDownloadUrl}/${url}`;
   const fileUri = `${SQLiteDirPath}/${storedName}`;
+  const { refreshDatabaseList } = useDBContext();
+  const { selectBibleVersion } = useBibleContext();
 
   useEffect(() => {
     async function needD() {
@@ -68,7 +73,7 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
     try {
       const uri = downloadFrom;
       const downloadDest = `${fileUri}.zip`;
-      console.log(`Downloading ${storedName}`);
+      // console.log(`Downloading ${storedName}`);
 
       await FileSystem.createDownloadResumable(
         uri,
@@ -79,7 +84,7 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
       // Progress callback function
       const progressCallback = (progress: string) => {
         setUnzipProgress(progress);
-        console.log(progress);
+        // console.log(progress);
       };
 
       await unzipFile({
@@ -87,6 +92,7 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
         onProgress: progressCallback,
       });
       setIsLoading(false);
+      refreshDatabaseList();
       // await unzipFile(downloadDest);
     } catch (error) {
       console.error(error);
@@ -115,9 +121,11 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
   const deleteBibleFile = async () => {
     const bibleObject = new DownloadedDatabase(storedName + dbFileExt);
     const deleted = await bibleObject.delete();
-    console.log({ deleted });
+    if (!deleted) return;
     setIsDownloaded(false);
     setProgress(0);
+    refreshDatabaseList();
+    selectBibleVersion(defaultDatabases[0]);
   };
 
   return (
@@ -161,25 +169,6 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
               theme,
             }}
           />
-          {/* {isDownloaded ? (
-            <TouchableOpacity onPress={() => deleteBibleFile()}>
-              <MaterialCommunityIcons
-                style={[styles.icon, { color: "#e74856" }]}
-                name="delete"
-                // name={item.needDownload ? "download" : "check"}
-                size={30}
-              />
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={() => downloadBible()}>
-              <MaterialCommunityIcons
-                style={[styles.icon, { color: theme.colors.notification }]}
-                name={!!progress ? "loading" : "download"}
-                size={30}
-                color={theme.colors.notification}
-              />
-            </TouchableOpacity>
-          )} */}
         </View>
       </View>
       {FileSizeText(item.size)}

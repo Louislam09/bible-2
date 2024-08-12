@@ -20,6 +20,8 @@ import {
 import { Text, View } from "../../Themed";
 import Settings from "./Settings";
 import VersionList from "./VersionList";
+import useInstalledBibles from "hooks/useInstalledBible";
+import getCurrentDbName from "utils/getCurrentDB";
 
 interface HeaderInterface {
   bibleVersionRef: any;
@@ -42,8 +44,6 @@ const CustomHeader: FC<HeaderInterface> = ({
     clearHighlights,
     goBackOnHistory,
     goForwardOnHistory,
-    currentHistoryIndex,
-    searchHistorial,
     isSplitActived,
     toggleSplitMode,
     toggleBottomSideSearching,
@@ -62,6 +62,10 @@ const CustomHeader: FC<HeaderInterface> = ({
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
   const shouldForward = !(getCurrentIndex() === history.length - 1);
   const shouldBackward = getCurrentIndex() !== 0;
+  const { installedBibles } = useInstalledBibles();
+  const currentVersionName =
+    installedBibles.find((version) => version.id === currentBibleVersion)
+      ?.shortName || installedBibles[0].shortName;
 
   const versionHandlePresentModalPress = useCallback(() => {
     versionRef.current?.present();
@@ -186,9 +190,9 @@ const CustomHeader: FC<HeaderInterface> = ({
           size={isNTV ? 24 : headerIconSize}
           style={[styles.icon, { marginHorizontal: 0 }]}
         />
-        <Text style={styles.text}>{currentBibleVersion}</Text>
+        <Text style={styles.text}>{currentVersionName}</Text>
       </TouchableOpacity>
-      <BottomModal justOneSnap startAT={0} ref={versionRef}>
+      <BottomModal shouldScroll startAT={1} ref={versionRef}>
         <VersionList {...{ currentBibleVersion, onSelect, theme }} />
       </BottomModal>
     </View>

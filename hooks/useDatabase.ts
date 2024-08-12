@@ -7,7 +7,13 @@ import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
 import { useEffect, useState } from "react";
 import { ToastAndroid } from "react-native";
-import { DBName } from "../enums";
+// import { DBName } from "../enums";
+import {
+  dbFileExt,
+  defaultDatabases,
+  SQLiteDirPath,
+} from "constants/databaseNames";
+import { VersionItem } from "./useInstalledBible";
 
 interface Row {
   [key: string]: any;
@@ -37,8 +43,13 @@ export const deleteDatabaseFile = async (dbName: string) => {
 };
 
 type TUseDatabase = {
-  dbNames: DBName[];
+  dbNames: VersionItem[];
 };
+
+enum DEFAULT_DATABASE {
+  BIBLE = "bible",
+  NTV = "ntv-bible",
+}
 
 function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
   const [_databases, setDatabases] = useState<SQLite.SQLiteDatabase[] | null[]>(
@@ -50,17 +61,22 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
     sql: string,
     params: any[] = []
   ): Promise<Row[]> => {
-    if (!database) {
-      throw new Error("Database not initialized");
-    }
-    const statement = await database.prepareAsync(sql);
     try {
-      const result = await statement.executeAsync(params);
+      if (!database) {
+        throw new Error("Database not initialized");
+      }
+      const statement = await database.prepareAsync(sql);
+      try {
+        const result = await statement.executeAsync(params);
 
-      const response = await result.getAllAsync();
-      return response as Row[];
-    } finally {
-      await statement.finalizeAsync();
+        const response = await result.getAllAsync();
+        return response as Row[];
+      } finally {
+        await statement.finalizeAsync();
+      }
+    } catch (error) {
+      console.log("Database not initialized", error);
+      return await new Promise((resolve) => resolve([]));
     }
   };
 
@@ -76,67 +92,75 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
   }
 
   useEffect(() => {
-    async function openDatabase(databaseName: string) {
-      const localFolder = FileSystem.documentDirectory + "SQLite";
-      const dbName = databaseName;
-      const localURI = localFolder + "/" + dbName;
+    console.log("dbNames.length", dbNames.length);
+    setDatabases([]);
+    async function openDatabase(databaseItem: VersionItem) {
+      const localFolder = SQLiteDirPath;
+      const dbName = databaseItem.id;
+      const dbNameWithExt = `${databaseItem.id}${dbFileExt}`;
+      const localURI = databaseItem.path;
+      // const localURI = localFolder + "/" + dbName;
 
       if (!(await FileSystem.getInfoAsync(localFolder)).exists) {
         await FileSystem.makeDirectoryAsync(localFolder);
       }
 
-      let asset =
-        dbName === DBName.BIBLE
-          ? Asset.fromModule(require("../assets/db/bible.db"))
-          : Asset.fromModule(require("../assets/db/ntv-bible.db"));
+      if (defaultDatabases.includes(dbName)) {
+        let asset =
+          dbName === DEFAULT_DATABASE.BIBLE
+            ? Asset.fromModule(require("../assets/db/bible.db"))
+            : Asset.fromModule(require("../assets/db/ntv-bible.db"));
 
-      if (!asset.downloaded) {
-        await asset.downloadAsync();
-        let remoteURI = asset.localUri;
-
-        if (!(await FileSystem.getInfoAsync(localURI)).exists) {
-          await FileSystem.copyAsync({
-            from: remoteURI as string,
-            to: localURI,
-          }).catch((error) => {
-            console.log("asset copyDatabase - finished with error: " + error);
-          });
-        }
-      } else {
-        if (
-          asset.localUri ||
-          asset.uri.startsWith("asset") ||
-          asset.uri.startsWith("file")
-        ) {
-          let remoteURI = asset.localUri || asset.uri;
+        if (!asset.downloaded) {
+          await asset.downloadAsync();
+          let remoteURI = asset.localUri;
 
           if (!(await FileSystem.getInfoAsync(localURI)).exists) {
             await FileSystem.copyAsync({
-              from: remoteURI,
+              from: remoteURI as string,
               to: localURI,
             }).catch((error) => {
-              console.log("local copyDatabase - finished with error: " + error);
+              console.log("asset copyDatabase - finished with error: " + error);
             });
           }
-        } else if (
-          asset.uri.startsWith("http") ||
-          asset.uri.startsWith("https")
-        ) {
-          let remoteURI = asset.uri;
+        } else {
+          if (
+            asset.localUri ||
+            asset.uri.startsWith("asset") ||
+            asset.uri.startsWith("file")
+          ) {
+            let remoteURI = asset.localUri || asset.uri;
 
-          if (!(await FileSystem.getInfoAsync(localURI)).exists) {
-            await FileSystem.downloadAsync(remoteURI, localURI).catch(
-              (error) => {
+            if (!(await FileSystem.getInfoAsync(localURI)).exists) {
+              await FileSystem.copyAsync({
+                from: remoteURI,
+                to: localURI,
+              }).catch((error) => {
                 console.log(
-                  "local downloadAsync - finished with error: " + error
+                  "local copyDatabase - finished with error: " + error
                 );
-              }
-            );
+              });
+            }
+          } else if (
+            asset.uri.startsWith("http") ||
+            asset.uri.startsWith("https")
+          ) {
+            let remoteURI = asset.uri;
+
+            if (!(await FileSystem.getInfoAsync(localURI)).exists) {
+              await FileSystem.downloadAsync(remoteURI, localURI).catch(
+                (error) => {
+                  console.log(
+                    "local downloadAsync - finished with error: " + error
+                  );
+                }
+              );
+            }
           }
         }
       }
 
-      return await SQLite.openDatabaseAsync(dbName);
+      return await SQLite.openDatabaseAsync(dbNameWithExt);
     }
 
     async function openDatabases() {
@@ -157,7 +181,7 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
         }
       })
       .catch(console.log);
-  }, []);
+  }, [dbNames]);
 
   return { executeSql, databases: _databases };
 }

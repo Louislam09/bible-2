@@ -5,6 +5,10 @@ import { EBibleVersions, TTheme } from "types";
 import { Text, View } from "../../Themed";
 import { deleteDatabaseFile } from "hooks/useDatabase";
 import { DBName } from "enums";
+import { useDBContext } from "context/databaseContext";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useStorage } from "context/LocalstoreContext";
+import { iconSize } from "constants/size";
 
 interface IVersionList {
   currentBibleVersion: string;
@@ -12,14 +16,9 @@ interface IVersionList {
   theme: TTheme;
 }
 
-const versionNames: any = {
-  [EBibleVersions.NTV]: "Nueva Traduccion Viviente 2009",
-  [EBibleVersions.RVR60]: "Reina Valera 1960",
-};
-
 const onLongPress = (version: any) => {
   deleteDatabaseFile(
-    version === EBibleVersions.RVR60 ? DBName.BIBLE : DBName.NTV
+    version === EBibleVersions.BIBLE ? DBName.BIBLE : DBName.NTV
   );
 };
 
@@ -29,41 +28,63 @@ const VersionList: FC<IVersionList> = ({
   theme,
 }) => {
   const styles = getStyles(theme);
+  const { installedBibles } = useDBContext();
+  const {
+    storedData: { fontSize },
+  } = useStorage();
+
+  const dbNameList = installedBibles || [];
 
   return (
     <View style={[styles.versionContainer]}>
-      <Text style={styles.title}>Versiones</Text>
-      {(Object.values(EBibleVersions) as string[]).map((version) => (
+      <Text
+        style={[
+          styles.title,
+          {
+            textTransform: "capitalize",
+            paddingVertical: 5,
+            fontWeight: "bold",
+          },
+        ]}
+      >
+        Versiones Disponibles
+      </Text>
+      {dbNameList.map((version) => (
         <TouchableOpacity
-          key={version}
-          style={[
-            styles.card,
-            {
-              borderColor: theme.colors.notification,
-              borderWidth: 1,
-            },
-          ]}
-          onPress={() => onSelect(version)}
-          onLongPress={() => onLongPress(version)}
+          key={version.path}
+          style={[styles.card]}
+          onPress={() => onSelect(version.id)}
         >
-          <Text
-            style={[
-              styles.versionText,
-              currentBibleVersion === version && {
-                color: theme.colors.notification,
-                textDecorationLine: "line-through",
-              },
-            ]}
-          >
-            {versionNames[version]}
-          </Text>
+          <View style={{ backgroundColor: "transparent", flex: 1 }}>
+            <Text
+              style={[
+                styles.versionText,
+                { color: theme.colors.notification, fontSize },
+              ]}
+            >
+              {version.shortName}
+            </Text>
+            <Text style={[styles.versionText, { fontSize }]}>
+              {version.name}
+            </Text>
+          </View>
+          {currentBibleVersion === version.id && (
+            <MaterialCommunityIcons
+              style={[
+                styles.icon,
+                { color: theme.colors.notification, fontSize: iconSize },
+              ]}
+              name="check"
+              color={theme.colors.notification}
+            />
+          )}
         </TouchableOpacity>
       ))}
     </View>
   );
 };
 
-const getStyles = ({ colors }: TTheme) =>
+const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     title: {
       color: "white",
@@ -83,11 +104,11 @@ const getStyles = ({ colors }: TTheme) =>
       backgroundColor: "transparent",
     },
     card: {
+      display: "flex",
+      flexDirection: "row",
       width: "90%",
-      backgroundColor: "white",
-      borderRadius: 8,
       padding: 5,
-      marginVertical: 8,
+      marginVertical: 5,
       elevation: 5,
       ...Platform.select({
         ios: {
@@ -97,11 +118,25 @@ const getStyles = ({ colors }: TTheme) =>
           shadowRadius: 4,
         },
       }),
+      paddingVertical: 10,
+      paddingLeft: 10,
+      borderColor: colors.notification + "50",
+      backgroundColor: colors.background,
+      borderWidth: dark ? 1 : 0,
+      shadowColor: colors.notification,
+      shadowOpacity: 1,
+      shadowRadius: 10,
+      borderRadius: 10,
+      alignItems: "center",
+    },
+    icon: {
+      fontWeight: "700",
+      marginHorizontal: 10,
+      color: colors.notification + "90",
+      fontSize: 28,
     },
     versionText: {
-      color: "#000",
-      fontSize: 22,
-      textAlign: "center",
+      color: colors.text,
     },
   });
 

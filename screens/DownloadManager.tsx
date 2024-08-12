@@ -33,10 +33,9 @@ const initSQLiteDir = async () => {
   }
 };
 
-const DownloadManager: React.FC<RootStackScreenProps<"DownloadManager">> = (
-  props
-) => {
-  const { myBibleDB, executeSql } = useDBContext();
+const DownloadManager: React.FC<
+  RootStackScreenProps<"DownloadManager">
+> = () => {
   const theme = useTheme();
   const styles = getStyles(theme);
   const databasesToDownload: DownloadBibleItem[] = bibleDatabases;

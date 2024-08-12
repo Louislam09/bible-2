@@ -65,7 +65,7 @@ const initialContext: StoreState = {
   fontSize: 24,
   selectedFont: TFont.Roboto,
   isDarkMode: true,
-  currentBibleVersion: EBibleVersions.RVR60,
+  currentBibleVersion: EBibleVersions.BIBLE,
   isSongLyricEnabled: false,
   songFontSize: 21,
   history: [],

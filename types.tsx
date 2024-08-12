@@ -157,8 +157,8 @@ export enum TFont {
 }
 
 export enum EBibleVersions {
-  RVR60 = "RVR60",
-  NTV = "NTV",
+  BIBLE = "bible",
+  NTV = "ntv-bible",
 }
 
 export type TSubtitle = {

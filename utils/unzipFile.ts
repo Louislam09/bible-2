@@ -35,7 +35,7 @@ const readZipFile = async (zipFileUri: string): Promise<JSZip> => {
 const deleteFile = async (fileUri: string) => {
   try {
     await FileSystem.deleteAsync(fileUri, { idempotent: true });
-    console.log("File deleted:", fileUri);
+    // console.log("File deleted:", fileUri);
   } catch (error) {
     console.error("Error deleting file:", error);
   }
@@ -46,7 +46,7 @@ const listFilesInDirectory = async (
 ): Promise<string[]> => {
   try {
     const files = await FileSystem.readDirectoryAsync(directoryUri);
-    console.log("Files in directory:", files);
+    // console.log("Files in directory:", files);
     return files;
   } catch (error) {
     console.error("Error listing files in directory:", error);
@@ -60,9 +60,9 @@ const deleteFilesInDirectory = async (directoryUri: string) => {
     for (const file of files) {
       const fileUri = `${directoryUri}${file}`;
       await FileSystem.deleteAsync(fileUri, { idempotent: true });
-      console.log("File deleted:", fileUri);
+      // console.log("File deleted:", fileUri);
     }
-    console.log("All files in directory deleted.");
+    // console.log("All files in directory deleted.");
   } catch (error) {
     console.error("Error deleting files in directory:", error);
   }
@@ -75,13 +75,13 @@ const saveFileToPhone = async (
 ) => {
   try {
     const newFileName = changeFileNameExt({ fileName, newExt: dbFileExt });
-    console.log("---------", { fileName, newFileName });
+    // console.log("---------", { fileName, newFileName });
     const fileUri = `${directory}${newFileName}`;
     const base64String = uint8ArrayToBase64(fileContent);
     await FileSystem.writeAsStringAsync(fileUri, base64String, {
       encoding: FileSystem.EncodingType.Base64,
     });
-    console.log("File saved to:", fileUri);
+    // console.log("File saved to:", fileUri);
     // if (await Sharing.isAvailableAsync()) {
     //   await Sharing.shareAsync(fileUri, {
     //     mimeType: "application/zip",
@@ -128,7 +128,7 @@ const extractAndSaveFiles = async (
 
     for (const fileName of Object.keys(zip.files)) {
       const file = zip.files[fileName];
-      if (!file.dir) {
+      if (!file.dir && !file.name.includes(".commentaries")) {
         onProgress(
           `Extrayendo ${fileName} (${filesExtracted + 1}/${totalFiles})`
         );

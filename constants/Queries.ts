@@ -1,4 +1,5 @@
 import { DBName } from "enums";
+import { EBibleVersions } from "types";
 
 export const GET_VERSE_NUMBER_QUERY = `SELECT COUNT(v.verse) AS verse_count
 FROM books b LEFT JOIN verses v ON b.book_number = v.book_number
@@ -27,8 +28,8 @@ export const CREATE_NOTE_TABLE = `CREATE TABLE IF NOT EXISTS notes (
 );`;
 
 export const INSERT_INTO_NOTE = `INSERT INTO notes (title, note_text) 
-values (?, ?);`
-export const GET_ALL_NOTE = `SELECT * FROM notes;`
+values (?, ?);`;
+export const GET_ALL_NOTE = `SELECT * FROM notes;`;
 
 export const INSERT_FAVORITE_VERSE = `INSERT INTO favorite_verses (book_number, chapter, verse) 
 SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM favorite_verses 
@@ -36,7 +37,7 @@ SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM favorite_verses
 // export const INSERT_FAVORITE_VERSE = `INSERT INTO favorite_verses (book_number, chapter, verse) VALUES (?, ?, ?);`;
 export const DELETE_FAVORITE_VERSE = `DELETE FROM favorite_verses WHERE book_number = ? AND chapter = ? AND verse = ?;`;
 export const DELETE_NOTE = `DELETE FROM notes WHERE id = ?;`;
-export const UPDATE_NOTE_BY_ID = `UPDATE notes set title = ?, note_text = ? where id = ?`
+export const UPDATE_NOTE_BY_ID = `UPDATE notes set title = ?, note_text = ? where id = ?`;
 
 export const GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV = `SELECT v.*, 
 CASE 
@@ -95,7 +96,7 @@ WHERE
 t.bare_lowercase_words LIKE ?
 GROUP BY 
 t.book_number;
-`
+`;
 
 type TQuery = {
   GET_VERSE_NUMBER_QUERY: string;
@@ -104,15 +105,22 @@ type TQuery = {
   SEARCH_TEXT_QUERY: string;
 };
 
-export const QUERY_BY_DB: { [key in DBName.BIBLE | DBName.NTV]: TQuery } = {
-  [DBName.BIBLE]: {
+export const QUERY_BY_DB: { [key in string]: TQuery } = {
+  [EBibleVersions.BIBLE]: {
     GET_VERSE_NUMBER_QUERY: `SELECT COUNT(v.verse) AS verse_count FROM books b LEFT JOIN verses v ON b.book_number = v.book_number
     WHERE b.long_name = ? AND v.chapter = ? GROUP BY v.chapter ORDER BY v.verse;`,
     GET_VERSES_BY_BOOK_AND_CHAPTER: GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV,
     GET_SUBTITLE_BY_BOOK_AND_CHAPTER: `Select * from subheadings where book_number = ? and chapter = ?;`,
     SEARCH_TEXT_QUERY: SEARCH_TEXT_QUERY_NEW,
   },
-  [DBName.NTV]: {
+  [EBibleVersions.NTV]: {
+    GET_VERSE_NUMBER_QUERY: `SELECT COUNT(v.verse) AS verse_count FROM books b LEFT JOIN verses v ON b.book_number = v.book_number
+    WHERE b.long_name = ? AND v.chapter = ? GROUP BY v.chapter ORDER BY v.verse;`,
+    GET_VERSES_BY_BOOK_AND_CHAPTER: GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV,
+    GET_SUBTITLE_BY_BOOK_AND_CHAPTER: `Select * from stories where book_number = ? and chapter = ?;`,
+    SEARCH_TEXT_QUERY: `SELECT v.*, b.long_name as bookName FROM verses v inner join books b on b.book_number = v.book_number where`,
+  },
+  OTHERS: {
     GET_VERSE_NUMBER_QUERY: `SELECT COUNT(v.verse) AS verse_count FROM books b LEFT JOIN verses v ON b.book_number = v.book_number
     WHERE b.long_name = ? AND v.chapter = ? GROUP BY v.chapter ORDER BY v.verse;`,
     GET_VERSES_BY_BOOK_AND_CHAPTER: GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV,

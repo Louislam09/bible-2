@@ -16,6 +16,8 @@ import { useStorage } from "context/LocalstoreContext";
 import getCurrentDbName from "utils/getCurrentDB";
 import { QUERY_BY_DB } from "../../../constants/Queries";
 import Chapter from "./Chapter";
+import { defaultDatabases } from "constants/databaseNames";
+import { Text } from "components/Themed";
 
 interface BookContentInterface {
   isSplit: boolean;
@@ -37,7 +39,7 @@ const BookContent: FC<BookContentInterface> = ({
     saveData,
     historyManager: { add: addToHistory },
   } = useStorage();
-  const { currentBibleVersion } = storedData;
+  const { currentBibleVersion, fontSize } = storedData;
 
   const { setverseInStrongDisplay, clearHighlights } = useBibleContext();
   const { myBibleDB, executeSql } = useDBContext();
@@ -49,6 +51,11 @@ const BookContent: FC<BookContentInterface> = ({
   const dimensions = Dimensions.get("window");
   const navigation = useNavigation();
 
+  const getDatabaseQueryKey = (name: string) => {
+    const isDefault = defaultDatabases.includes(name);
+    return isDefault ? name : "OTHERS";
+  };
+
   useEffect(() => {
     (async () => {
       clearHighlights();
@@ -56,7 +63,8 @@ const BookContent: FC<BookContentInterface> = ({
       if (!myBibleDB || !executeSql) return;
       setData({});
       setverseInStrongDisplay(0);
-      const query = QUERY_BY_DB[getCurrentDbName(currentBibleVersion)];
+      const queryKey = getDatabaseQueryKey(currentBibleVersion);
+      const query = QUERY_BY_DB[queryKey];
       const promises = [
         executeSql(myBibleDB, query.GET_VERSES_BY_BOOK_AND_CHAPTER, [
           currentBook?.bookNumber,
@@ -102,15 +110,33 @@ const BookContent: FC<BookContentInterface> = ({
     return () => backHandler.remove();
   }, []);
 
+  const notVerseToRender = data?.verses?.length && !loading;
+
   return (
     <View style={styles.bookContainer}>
       {!loading ? (
-        <Chapter
-          {...{ book, chapter, verse }}
-          isSplit={isSplit}
-          dimensions={dimensions}
-          item={data}
-        />
+        !notVerseToRender ? (
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <Text
+              style={{
+                color: theme.colors.notification,
+                fontSize,
+                textAlign: "center",
+              }}
+            >
+              No se puede mostrar esta versión. Intenta con otra.
+            </Text>
+          </View>
+        ) : (
+          <Chapter
+            {...{ book, chapter, verse }}
+            isSplit={isSplit}
+            dimensions={dimensions}
+            item={data}
+          />
+        )
       ) : (
         <View style={styles.activiyContainer}>
           <ActivityIndicator style={{ flex: 1 }} />
@@ -127,7 +153,12 @@ const getStyles = ({ colors }: TTheme) =>
       flex: 1,
       backgroundColor: colors.background,
     },
-    activiyContainer: { flex: 1, display: "flex", alignItems: "center" },
+    activiyContainer: {
+      flex: 1,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
   });
 
 export default BookContent;

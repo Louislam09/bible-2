@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from "react";
-import {
-  FlatList,
-  StyleSheet,
-  ActivityIndicator,
-  TouchableOpacity,
-} from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTheme } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
+import { defaultDatabases } from "constants/databaseNames";
+import { useBibleContext } from "context/BibleContext";
+import { useDBContext } from "context/databaseContext";
 import * as FileSystem from "expo-file-system";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, StyleSheet } from "react-native";
 import { Text, View } from "./Themed";
 
-// Component to render a list of saved files with delete functionality
 const FileList = () => {
+  const theme = useTheme();
   const [files, setFiles] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const { refreshDatabaseList, installedBibles } = useDBContext();
+  const { selectBibleVersion } = useBibleContext();
 
-  // Define the directory where files are saved
   const extractionPath = `${FileSystem.documentDirectory}SQLite/`;
 
-  // Function to fetch files from the directory
   const fetchFiles = async () => {
     try {
-      // List files in the extraction directory
       const fileList = await FileSystem.readDirectoryAsync(extractionPath);
       setFiles(fileList);
     } catch (err) {
@@ -31,39 +31,62 @@ const FileList = () => {
     }
   };
 
-  // Function to delete a file
   const deleteFile = async (fileName: string) => {
     try {
       const fileUri = `${extractionPath}${fileName}`;
       await FileSystem.deleteAsync(fileUri, { idempotent: true });
-      setFiles(files.filter((file) => file !== fileName)); // Remove file from state
-      console.log("File deleted:", fileUri);
+      setFiles(files.filter((file) => file !== fileName));
+      refreshDatabaseList();
+      selectBibleVersion(defaultDatabases[0]);
     } catch (err) {
       setError("Error deleting file");
       console.error("Error deleting file:", err);
     }
   };
 
-  // Fetch files when component mounts
   useEffect(() => {
     fetchFiles();
   }, []);
 
-  // Render each file item with delete button
-  const renderItem = ({ item }: { item: string }) => (
-    <View style={styles.itemContainer}>
-      <Text style={[styles.itemText]}>{item}</Text>
-      {!item.includes("bible") && (
-        <TouchableOpacity
-          disabled={item.includes("bible")}
-          onPress={() => deleteFile(item)}
-          style={styles.deleteButton}
-        >
-          <Text style={[styles.deleteButtonText]}>Delete</Text>
-        </TouchableOpacity>
-      )}
-    </View>
-  );
+  const renderItem = ({ item }: { item: string }) => {
+    const versionItem = installedBibles.find((version) =>
+      version.path.includes(item)
+    );
+    const allowDelete = !defaultDatabases.includes(versionItem?.id as string);
+    return (
+      <View style={[styles.itemContainer]}>
+        <View style={{ justifyContent: "center", flex: 1 }}>
+          <Text
+            style={[
+              styles.itemText,
+              !allowDelete && { color: theme.colors.notification + "70" },
+            ]}
+          >
+            {versionItem?.shortName}
+          </Text>
+
+          <Text
+            style={[
+              styles.itemText,
+              !allowDelete && { color: theme.colors.text + "70" },
+            ]}
+          >
+            {versionItem?.name || item}
+          </Text>
+        </View>
+        {allowDelete && (
+          <MaterialCommunityIcons
+            onPress={() => deleteFile(item)}
+            style={{
+              color: "#e74856",
+            }}
+            name="delete"
+            size={30}
+          />
+        )}
+      </View>
+    );
+  };
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -74,7 +97,8 @@ const FileList = () => {
   }
 
   return (
-    <FlatList
+    <FlashList
+      estimatedItemSize={50}
       data={files}
       renderItem={renderItem}
       keyExtractor={(item) => item}
@@ -88,14 +112,13 @@ const styles = StyleSheet.create({
   itemContainer: {
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    borderBottomColor: "#eeeeee40",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
   itemText: {
     fontSize: 16,
-    flex: 1,
   },
   deleteButton: {
     backgroundColor: "#ff4d4d",

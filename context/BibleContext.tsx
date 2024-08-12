@@ -140,7 +140,7 @@ const initialContext: BibleState = {
   performSearch: () => {},
   setSearchQuery: () => {},
   selectedFont: TFont.Roboto,
-  currentBibleVersion: EBibleVersions.RVR60,
+  currentBibleVersion: EBibleVersions.BIBLE,
   isCopyMode: false,
   isBottomSideSearching: false,
   fontSize: 24,
@@ -275,7 +275,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     storedData;
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
   const fontsLoaded = useCustomFonts();
-  const { myBibleDB, executeSql } = useDBContext();
+  const { myBibleDB, executeSql, isInstallBiblesLoaded } = useDBContext();
   const { state: searchState, performSearch } = useSearch({ db: myBibleDB });
 
   const [orientation, setOrientation] = useState("PORTRAIT");
@@ -316,7 +316,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     dispatch({ type: "TOGGLE_COPY_MODE", payload: false });
   }, [state.highlightedVerses]);
 
-  if (!fontsLoaded || !isDataLoaded) {
+  if (!fontsLoaded || !isDataLoaded || !isInstallBiblesLoaded) {
     return null;
   }
 
@@ -428,7 +428,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     dispatch({ type: "SET_STRONG_WORD", payload: item });
   };
   const setverseInStrongDisplay = (verse: number) => {
-    if (currentBibleVersion === EBibleVersions.NTV) return;
+    if (currentBibleVersion !== EBibleVersions.BIBLE) return;
     dispatch({ type: "SET_VERSE_IN_STRONG_DISPLAY", payload: verse });
   };
 
