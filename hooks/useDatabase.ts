@@ -92,7 +92,6 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
   }
 
   useEffect(() => {
-    console.log("dbNames.length", dbNames.length);
     setDatabases([]);
     async function openDatabase(databaseItem: VersionItem) {
       const localFolder = SQLiteDirPath;

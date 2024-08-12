@@ -107,7 +107,6 @@ const MainStack = () => {
         options={({ route }) => ({
           ...screenOptions(route),
           animation: "slide_from_bottom",
-          headerShown: false,
         })}
       />
       <Stack.Screen
@@ -115,6 +114,7 @@ const MainStack = () => {
         component={DownloadManager}
         options={({ route }) => ({
           ...screenOptions(route),
+          headerTitle: "",
           animation: "slide_from_right",
         })}
       />
@@ -139,6 +139,7 @@ const MainStack = () => {
         component={Notes}
         options={({ route }) => ({
           ...screenOptions(route),
+          headerTitle: "",
           animation: "slide_from_right",
         })}
       />
@@ -147,6 +148,7 @@ const MainStack = () => {
         component={Character}
         options={({ route }) => ({
           ...screenOptions(route),
+          headerTitle: "",
           animation: "slide_from_right",
         })}
       />
@@ -155,6 +157,7 @@ const MainStack = () => {
         component={Song}
         options={({ route }) => ({
           ...screenOptions(route),
+          headerTitle: "",
           animation: "slide_from_right",
         })}
       />
@@ -163,6 +166,7 @@ const MainStack = () => {
         component={Concordance}
         options={({ route }) => ({
           ...screenOptions(route),
+          headerTitle: "",
           animation: "slide_from_right",
         })}
       />

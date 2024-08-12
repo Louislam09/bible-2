@@ -6,7 +6,8 @@ import { FlashList } from "@shopify/flash-list";
 import AnimatedDropdown from "components/AnimatedDropdown";
 import RenderVerse, { TItem } from "components/concordance/RenderVerse";
 import { Text } from "components/Themed";
-import { GET_VERSES_FOR_CONCORDANCIA } from "constants/Queries";
+import { getDatabaseQueryKey } from "constants/databaseNames";
+import { GET_VERSES_FOR_CONCORDANCIA, QUERY_BY_DB } from "constants/Queries";
 import WORDS, { TWord } from "constants/words";
 import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
@@ -101,7 +102,7 @@ const RenderWordItem = ({
 
 const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
   const { myBibleDB, executeSql } = useDBContext();
-  const { fontSize } = useBibleContext();
+  const { fontSize, currentBibleVersion } = useBibleContext();
   const [selected, setSelected] = useState<any>(null);
   const [filterData] = useState<TWord[]>(WORDS);
   const theme = useTheme();
@@ -129,9 +130,13 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
     (async () => {
       if (!myBibleDB || !executeSql) return;
       if (selected) {
-        const data = await executeSql(myBibleDB, GET_VERSES_FOR_CONCORDANCIA, [
-          `%${selected}%`,
-        ]);
+        const queryKey = getDatabaseQueryKey(currentBibleVersion);
+        const query = QUERY_BY_DB[queryKey];
+        const data = await executeSql(
+          myBibleDB,
+          query.GET_VERSES_FOR_CONCORDANCIA,
+          [`%${selected}%`]
+        );
         const newData = data.flatMap((x) => JSON.parse(x.data));
         setSelectedFilterOption(defaultFilterOption);
         setVerseList(newData);

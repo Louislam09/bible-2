@@ -53,7 +53,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     container: {
       flexDirection: "row",
       alignItems: "center",
-      flex: 0.3,
+      paddingVertical: 10,
     },
     tab: {
       flex: 1,
@@ -63,17 +63,18 @@ const getStyles = ({ colors, dark }: TTheme) =>
       paddingVertical: 10,
       alignItems: "center",
       justifyContent: "center",
+      borderRadius: 10,
     },
     activeTab: {
-      backgroundColor: colors.notification, // or theme.colors.primary for active tab background
-      borderBottomWidth: 2, // Underline for the active tab
+      backgroundColor: colors.notification,
+      borderBottomWidth: 2,
     },
     tabText: {
       fontSize: 20,
-      color: colors.text, // or theme.colors.primary for active tab text
+      color: colors.text,
     },
     activeTabText: {
-      color: dark ? "white" : "#000", // or theme.colors.primary for active tab text
+      color: dark ? "white" : "#000",
     },
   });
 

@@ -7,6 +7,11 @@ export const bibleReadyMsg = "¡Todo listo para usar!";
 export const defaultDatabases = ["bible", "ntv-bible"];
 // https://www.ph4.org/_dl.php?back=bbl&a=RV%2760_plus_&b=mybible&c
 
+export const getDatabaseQueryKey = (name: string) => {
+  const isDefault = defaultDatabases.includes(name);
+  return isDefault ? name : "OTHERS";
+};
+
 export const getIfDatabaseNeedsDownload = async (name: string) => {
   const path = `${SQLiteDirPath}/${name}`;
   await initSQLiteDir();

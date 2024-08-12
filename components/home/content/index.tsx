@@ -1,5 +1,5 @@
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   BackHandler,
@@ -11,13 +11,12 @@ import { DB_BOOK_NAMES } from "../../../constants/BookNames";
 import { useDBContext } from "../../../context/databaseContext";
 import { HomeParams, TTheme } from "../../../types";
 
+import { Text } from "components/Themed";
+import { getDatabaseQueryKey } from "constants/databaseNames";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
-import getCurrentDbName from "utils/getCurrentDB";
 import { QUERY_BY_DB } from "../../../constants/Queries";
 import Chapter from "./Chapter";
-import { defaultDatabases } from "constants/databaseNames";
-import { Text } from "components/Themed";
 
 interface BookContentInterface {
   isSplit: boolean;
@@ -50,11 +49,6 @@ const BookContent: FC<BookContentInterface> = ({
   const currentBook = DB_BOOK_NAMES.find((x) => x.longName === book);
   const dimensions = Dimensions.get("window");
   const navigation = useNavigation();
-
-  const getDatabaseQueryKey = (name: string) => {
-    const isDefault = defaultDatabases.includes(name);
-    return isDefault ? name : "OTHERS";
-  };
 
   useEffect(() => {
     (async () => {

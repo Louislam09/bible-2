@@ -97,12 +97,34 @@ t.bare_lowercase_words LIKE ?
 GROUP BY 
 t.book_number;
 `;
+export const GET_VERSES_FOR_CONCORDANCIA_OTHERS = `SELECT 
+b.long_name,
+COUNT(*) AS total,
+'[' || GROUP_CONCAT(
+    json_object(
+'bookName', b.long_name,
+'bookNumber', v.book_number,
+'chapter', v.chapter,
+        'verse', v.verse,
+        'text', v.text
+    )
+) || ']' AS data
+FROM 
+verses v
+INNER JOIN 
+books b ON b.book_number = v.book_number
+WHERE 
+v.text LIKE ?
+GROUP BY 
+v.book_number;
+`;
 
 type TQuery = {
   GET_VERSE_NUMBER_QUERY: string;
   GET_VERSES_BY_BOOK_AND_CHAPTER: string;
   GET_SUBTITLE_BY_BOOK_AND_CHAPTER: string;
   SEARCH_TEXT_QUERY: string;
+  GET_VERSES_FOR_CONCORDANCIA: string;
 };
 
 export const QUERY_BY_DB: { [key in string]: TQuery } = {
@@ -112,6 +134,7 @@ export const QUERY_BY_DB: { [key in string]: TQuery } = {
     GET_VERSES_BY_BOOK_AND_CHAPTER: GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV,
     GET_SUBTITLE_BY_BOOK_AND_CHAPTER: `Select * from subheadings where book_number = ? and chapter = ?;`,
     SEARCH_TEXT_QUERY: SEARCH_TEXT_QUERY_NEW,
+    GET_VERSES_FOR_CONCORDANCIA,
   },
   [EBibleVersions.NTV]: {
     GET_VERSE_NUMBER_QUERY: `SELECT COUNT(v.verse) AS verse_count FROM books b LEFT JOIN verses v ON b.book_number = v.book_number
@@ -119,6 +142,7 @@ export const QUERY_BY_DB: { [key in string]: TQuery } = {
     GET_VERSES_BY_BOOK_AND_CHAPTER: GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV,
     GET_SUBTITLE_BY_BOOK_AND_CHAPTER: `Select * from stories where book_number = ? and chapter = ?;`,
     SEARCH_TEXT_QUERY: `SELECT v.*, b.long_name as bookName FROM verses v inner join books b on b.book_number = v.book_number where`,
+    GET_VERSES_FOR_CONCORDANCIA: GET_VERSES_FOR_CONCORDANCIA_OTHERS,
   },
   OTHERS: {
     GET_VERSE_NUMBER_QUERY: `SELECT COUNT(v.verse) AS verse_count FROM books b LEFT JOIN verses v ON b.book_number = v.book_number
@@ -126,5 +150,6 @@ export const QUERY_BY_DB: { [key in string]: TQuery } = {
     GET_VERSES_BY_BOOK_AND_CHAPTER: GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV,
     GET_SUBTITLE_BY_BOOK_AND_CHAPTER: `Select * from stories where book_number = ? and chapter = ?;`,
     SEARCH_TEXT_QUERY: `SELECT v.*, b.long_name as bookName FROM verses v inner join books b on b.book_number = v.book_number where`,
+    GET_VERSES_FOR_CONCORDANCIA: GET_VERSES_FOR_CONCORDANCIA_OTHERS,
   },
 };
