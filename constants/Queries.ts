@@ -60,6 +60,21 @@ ON v.book_number = fv.book_number
 AND v.chapter = fv.chapter 
 AND v.verse = fv.verse order by id desc;`;
 
+export const GET_COMPARE_BOOK_CHAPTER_VERSE = `SELECT v.*, 
+CASE 
+    WHEN fv.id IS NOT NULL THEN 1 
+    ELSE 0 
+END AS is_favorite, b.long_name as bookName
+FROM verses v 
+inner join books b
+on b.book_number = v.book_number
+LEFT JOIN favorite_verses fv 
+ON v.book_number = fv.book_number 
+AND v.chapter = fv.chapter 
+AND v.verse = fv.verse 
+WHERE v.book_number = ? 
+AND v.chapter = ? and v.verse = ?;`;
+
 const SEARCH_TEXT_QUERY_NEW = `SELECT v.*, b.long_name as bookName FROM texts t
 inner join verses v on 
 v.book_number = t.book_number AND

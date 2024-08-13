@@ -11,6 +11,7 @@ import React, {
 } from "react";
 import {
   Animated,
+  Easing,
   Pressable,
   StyleSheet,
   ToastAndroid,
@@ -32,12 +33,9 @@ import { useStorage } from "context/LocalstoreContext";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
 import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
 
-const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
-  item,
-  subtitles,
-  index,
-  isSplit,
-}) => {
+const Verse: React.FC<
+  TVerse & { isSplit: boolean; onCompare: () => void; initVerse: number }
+> = ({ item, subtitles, isSplit, onCompare, initVerse }) => {
   const navigation = useNavigation();
   const route = useRoute();
   const { isVerseTour } = route.params as HomeParams;
@@ -57,6 +55,7 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
     toggleBottomSideSearching,
     isBottomSideSearching,
     isSplitActived,
+    setVerseToCompare,
   } = useBibleContext();
   const theme = useTheme() as TTheme;
   const styles = getStyles(theme);
@@ -78,6 +77,28 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
   const [doubleTagged, setDoubleTagged] = useState(false);
   const showMusicIcon =
     item.book_number === 290 && item.chapter === 41 && item.verse === 27;
+  const animatedVerseHighlight = useRef(new Animated.Value(0)).current;
+
+  const initHighLightedVerseAnimation = () => {
+    const loopAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(animatedVerseHighlight, {
+          toValue: 1,
+          duration: 300,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: false,
+        }),
+        Animated.timing(animatedVerseHighlight, {
+          toValue: 0,
+          duration: 300,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: false,
+        }),
+      ]),
+      { iterations: 3 }
+    );
+    loopAnimation.start();
+  };
 
   const strongHandlePresentModalPress = useCallback(() => {
     strongRef.current?.present();
@@ -250,6 +271,11 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
     saveData({ isSongLyricEnabled: true });
   };
 
+  const onCompareClicked = () => {
+    setVerseToCompare(item.verse);
+    onCompare();
+  };
+
   const verseActions: TIcon[] = useMemo(() => {
     return [
       {
@@ -270,6 +296,12 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
         color: isFavorite ? theme.colors.notification : "",
         hide: false,
         description: "Favorito",
+      },
+      {
+        name: "file-compare",
+        action: onCompareClicked,
+        hide: false,
+        description: "Comparar",
       },
       {
         name: "music",
@@ -300,8 +332,21 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
 
   const displayTour = item.verse === 1 && verseRef.current && isVerseTour;
 
+  const bgVerseHighlight = animatedVerseHighlight.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["transparent", `${theme.colors.notification + "20"}`],
+  });
+
+  const styledVerseHighlight = {
+    backgroundColor: bgVerseHighlight,
+  };
+
   return (
-    <View>
+    <View
+      onLayout={() => {
+        if (initVerse === item.verse) initHighLightedVerseAnimation();
+      }}
+    >
       <TouchableOpacity
         onPress={() => onPress()}
         onLongPress={() => onVerseLongPress()}
@@ -311,9 +356,10 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
       >
         {RenderFindSubTitle(item.verse)}
 
-        <Text
+        <Animated.Text
           style={[
             styles.verse,
+            styledVerseHighlight,
             isVerseHighlisted === item.verse && styles.highlightCopy,
             { fontSize },
           ]}
@@ -357,7 +403,7 @@ const Verse: React.FC<TVerse & { isSplit: boolean }> = ({
           ) : (
             <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
           )}
-        </Text>
+        </Animated.Text>
         {isVerseHighlisted === item.verse && !!highlightedVersesLenth && (
           <View style={styles.verseAction}>
             {verseActions.map((action: TIcon, key) => (
@@ -419,10 +465,10 @@ const getStyles = ({ colors, dark }: TTheme) =>
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "flex-end",
-      // backgroundColor: colors.notification,
       borderRadius: 10,
       paddingHorizontal: 10,
       alignSelf: "flex-end",
+      gap: 2,
     },
     icon: {
       fontWeight: "700",

@@ -6,7 +6,13 @@ import { SEARCH_STRONG_WORD } from "constants/Queries";
 import { useDBContext } from "context/databaseContext";
 import usePrintAndShare from "hooks/usePrintAndShare";
 import React, { FC, useEffect, useRef, useState } from "react";
-import { Animated, Platform, Pressable, StyleSheet } from "react-native";
+import {
+  Animated,
+  Easing,
+  Platform,
+  Pressable,
+  StyleSheet,
+} from "react-native";
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { IStrongWord, Screens, StrongData, TTheme } from "types";
@@ -46,24 +52,25 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
   const [backUrl, setBackUrl] = useState<any>([]);
   const { createAndShareTextFile, printToFile } = usePrintAndShare();
 
-  const animatedScaleIcon = useRef(new Animated.Value(0)).current;
+  const animatedScaleIcon = useRef(new Animated.Value(1)).current;
   const HTML_DATA = htmlTemplate(values, theme.colors, fontSize);
 
   useEffect(() => {
     const loopAnimation = Animated.loop(
       Animated.sequence([
-        Animated.spring(animatedScaleIcon, {
-          toValue: 1,
-          friction: 0.1,
-          tension: 40,
+        Animated.timing(animatedScaleIcon, {
+          toValue: 0,
+          duration: 300,
+          easing: Easing.inOut(Easing.quad),
           useNativeDriver: false,
         }),
         Animated.timing(animatedScaleIcon, {
-          toValue: 0,
+          toValue: 1,
           duration: 500,
           useNativeDriver: false,
         }),
-      ])
+      ]),
+      { iterations: 2 }
     );
 
     loopAnimation.start();
@@ -71,7 +78,7 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
 
   const _animatedScaleIcon = animatedScaleIcon.interpolate({
     inputRange: [0, 1],
-    outputRange: [0.9, 1],
+    outputRange: [0.91, 1],
   });
 
   const animatedStyle = {

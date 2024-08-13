@@ -75,7 +75,7 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
         await statement.finalizeAsync();
       }
     } catch (error) {
-      console.log("Database not initialized", error);
+      // console.log("Database not initialized", error);
       return await new Promise((resolve) => resolve([]));
     }
   };

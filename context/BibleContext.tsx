@@ -44,13 +44,14 @@ type BibleState = {
     data: { title: string; content: string },
     closeCallback: any
   ) => void;
-  selectBibleVersion: Function;
+  selectBibleVersion: (version: string) => Promise<void>;
   removeHighlistedVerse: Function;
   toggleCopyMode: Function;
   toggleSplitMode: Function;
   toggleBottomSideSearching: (value: boolean) => void;
   decreaseFontSize: Function;
   setStrongWord: (word: IStrongWord) => void;
+  setVerseToCompare: (verse: number) => void;
   setverseInStrongDisplay: (verse: number) => void;
   toggleFavoriteVerse: ({
     bookNumber,
@@ -72,6 +73,7 @@ type BibleState = {
   viewLayoutGrid: boolean;
   fontSize: number;
   verseInStrongDisplay: number;
+  verseToCompare: number;
   searchState: UseSearchHookState;
   strongWord: IStrongWord;
   searchHistorial: EHistoryItem[];
@@ -96,6 +98,7 @@ type BibleAction =
   | { type: "GO_BACK"; payload: number }
   | { type: "GO_FORWARD"; payload: number }
   | { type: "SET_VERSE_IN_STRONG_DISPLAY"; payload: number }
+  | { type: "SET_VERSE_TO_COMPARE"; payload: number }
   | { type: "SET_STRONG_WORD"; payload: IStrongWord }
   | { type: "CLEAR_HIGHLIGHTS" }
   | { type: "SET_LOCAL_DATA"; payload: any }
@@ -115,7 +118,9 @@ const initialContext: BibleState = {
   highlightVerse: () => {},
   removeHighlistedVerse: () => {},
   clearHighlights: () => {},
-  selectBibleVersion: () => {},
+  selectBibleVersion: (version: string) => {
+    return new Promise((resolve) => resolve());
+  },
   onSaveNote: () => {},
   onUpdateNote: () => {},
   onDeleteNote: () => {},
@@ -131,6 +136,7 @@ const initialContext: BibleState = {
     verse,
     isFav,
   }: IFavoriteVerse) => {},
+  setVerseToCompare: (verse: number) => {},
   setverseInStrongDisplay: (verse: number) => {},
   onAddToNote: (text: string) => {},
   increaseFontSize: () => {},
@@ -148,6 +154,7 @@ const initialContext: BibleState = {
   searchQuery: "",
   addToNoteText: "",
   verseInStrongDisplay: 0,
+  verseToCompare: 1,
   currentTheme: "Blue",
   isSplitActived: false,
   viewLayoutGrid: true,
@@ -241,6 +248,11 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
       return {
         ...state,
         verseInStrongDisplay: action.payload,
+      };
+    case "SET_VERSE_TO_COMPARE":
+      return {
+        ...state,
+        verseToCompare: action.payload,
       };
     case "GO_BACK":
       return {
@@ -415,10 +427,10 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     dispatch({ type: "SELECT_THEME", payload: theme });
     saveData({ currentTheme: theme });
   };
-  const selectBibleVersion = (version: string) => {
+  const selectBibleVersion = async (version: string) => {
     dispatch({ type: "SELECT_BIBLE_VERSION", payload: version });
     dispatch({ type: "SET_VERSE_IN_STRONG_DISPLAY", payload: 0 });
-    saveData({ currentBibleVersion: version });
+    await saveData({ currentBibleVersion: version });
   };
 
   const setSearchQuery = (query: string) => {
@@ -430,6 +442,9 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const setverseInStrongDisplay = (verse: number) => {
     if (currentBibleVersion !== EBibleVersions.BIBLE) return;
     dispatch({ type: "SET_VERSE_IN_STRONG_DISPLAY", payload: verse });
+  };
+  const setVerseToCompare = (verse: number) => {
+    dispatch({ type: "SET_VERSE_TO_COMPARE", payload: verse });
   };
 
   const contextValue = {
@@ -455,6 +470,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     toggleFavoriteVerse,
     setStrongWord,
     setverseInStrongDisplay,
+    setVerseToCompare,
     onAddToNote,
     goBackOnHistory,
     goForwardOnHistory,

@@ -1,4 +1,4 @@
-import { useRoute, useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Verse from "./Verse";
@@ -6,6 +6,9 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { TChapter, HomeParams, TTheme } from "types";
 import { useBibleContext } from "context/BibleContext";
 import { Text } from "components/Themed";
+import BottomModal from "components/BottomModal";
+import CompareVersions from "components/CompareVersions";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 const Chapter = ({
   item,
@@ -19,11 +22,14 @@ const Chapter = ({
   const theme = useTheme();
   const styles = getStyles(theme);
   const chapterRef = useRef<FlashList<any>>(null);
+  const compareRef = useRef<BottomSheetModal>(null);
   const selectedSideVerse = _verse;
   const [firstLoad, setFirstLoad] = useState(true);
   const [topVerse, setTopVerse] = useState(null);
   const viewabilityConfig = { viewAreaCoveragePercentThreshold: 1 };
   const [isLayoutMounted, setLayoutMounted] = useState(false);
+  const { verseToCompare } = useBibleContext();
+  const navigation = useNavigation();
 
   useEffect(() => {
     const isFirst = !!topVerse;
@@ -38,12 +44,18 @@ const Chapter = ({
     return inValidIndex ? 0 : verseNumber + shouldSubtract;
   }, [verseNumber, verses]);
 
+  const compareRefHandlePresentModalPress = useCallback(() => {
+    compareRef.current?.present();
+  }, []);
+
   const renderItem = (props: any) => (
     <Verse
       {...props}
       isSplit={isSplit}
       verse={selectedSideVerse}
       subtitles={subtitles ?? []}
+      initVerse={initialScrollIndex}
+      onCompare={compareRefHandlePresentModalPress}
     />
   );
 
@@ -83,6 +95,18 @@ const Chapter = ({
           }
         />
       </View>
+      <BottomModal shouldScroll startAT={3} ref={compareRef}>
+        <CompareVersions
+          {...{
+            theme,
+            book,
+            chapter,
+            verse: verseToCompare || 1,
+            navigation,
+            compareRef,
+          }}
+        />
+      </BottomModal>
     </View>
   );
 };

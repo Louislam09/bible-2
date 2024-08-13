@@ -42,7 +42,6 @@ const CustomFooter: FC<FooterInterface> = ({
     currentBibleVersion,
     clearHighlights,
     currentHistoryIndex,
-    // searchHistorial,
     isSplitActived,
     toggleBottomSideSearching,
   } = useBibleContext();
@@ -56,7 +55,7 @@ const CustomFooter: FC<FooterInterface> = ({
   const { bookNumber, shortName } =
     DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
-  const isNTV = currentBibleVersion === EBibleVersions.NTV;
+  const isRVR = currentBibleVersion === EBibleVersions.BIBLE;
   const { isDownloading, isPlaying, playAudio, duration, position } =
     useAudioPlayer({
       book: bookIndex + 1,
@@ -192,18 +191,21 @@ const CustomFooter: FC<FooterInterface> = ({
         </TouchableOpacity>
       </View>
       {!isSplitActived && (
-        <TouchableOpacity
-          ref={audioRef}
-          style={[styles.footerEnd, isNTV && { display: "none" }]}
-          onPress={playHandlePresentModalPress}
-        >
-          <MaterialCommunityIcons
-            name={"headphones"}
-            size={FOOTER_ICON_SIZE}
-            style={[styles.icon, { marginHorizontal: 0 }]}
-          />
-        </TouchableOpacity>
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity
+            ref={audioRef}
+            style={[styles.footerEnd, !isRVR && { display: "none" }]}
+            onPress={playHandlePresentModalPress}
+          >
+            <MaterialCommunityIcons
+              name={"headphones"}
+              size={FOOTER_ICON_SIZE}
+              style={[styles.icon, { marginHorizontal: 0 }]}
+            />
+          </TouchableOpacity>
+        </View>
       )}
+
       <BottomModal justOneSnap startAT={0} ref={playRef}>
         <Play
           {...{
