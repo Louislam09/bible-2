@@ -1,7 +1,7 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { TTheme } from "types";
+import { DownloadBibleItem, TTheme } from "types";
 import * as FileSystem from "expo-file-system";
 import {
   baseDownloadUrl,
@@ -22,14 +22,6 @@ import unzipFile from "utils/unzipFile";
 import DownloadButton from "./DatabaseDownloadButton";
 import { useDBContext } from "context/databaseContext";
 import { useBibleContext } from "context/BibleContext";
-
-type DownloadBibleItem = {
-  name: string;
-  url: string;
-  key: string;
-  storedName: string;
-  size: number;
-};
 
 type DatabaseDownloadItemProps = {
   item: DownloadBibleItem;
@@ -111,10 +103,28 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
     const sizeInMB = size / (1024 * 1024);
 
     if (sizeInMB >= 1) {
-      return <Text style={styles.sizeText}>⚠️ {sizeInMB.toFixed(2)} MB</Text>;
+      return (
+        <Text
+          style={[
+            styles.sizeText,
+            item?.disabled && { color: theme.colors.text + "70" },
+          ]}
+        >
+          ⚠️ {sizeInMB.toFixed(2)} MB
+        </Text>
+      );
     } else {
       const sizeInKB = size / 1024;
-      return <Text style={styles.sizeText}>⚠️ {sizeInKB.toFixed(2)} KB</Text>;
+      return (
+        <Text
+          style={[
+            styles.sizeText,
+            item?.disabled && { color: theme.colors.text + "70" },
+          ]}
+        >
+          ⚠️ {sizeInKB.toFixed(2)} KB
+        </Text>
+      );
     }
   };
 
@@ -131,7 +141,14 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
   return (
     <View style={styles.itemContainer}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Text style={{ color: theme.colors.notification }}>{storedName}</Text>
+        <Text
+          style={[
+            { color: theme.colors.notification },
+            item?.disabled && { color: theme.colors.notification + "70" },
+          ]}
+        >
+          {storedName}
+        </Text>
         {isDownloaded && (
           <MaterialCommunityIcons
             style={[
@@ -145,20 +162,26 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
       </View>
       <View style={styles.itemContent}>
         <Text
-          style={{
-            paddingRight: 10,
-            flex: 1,
-          }}
+          style={[
+            {
+              paddingRight: 10,
+              flex: 1,
+            },
+            item?.disabled && { color: theme.colors.text + "70" },
+          ]}
         >
           {name}
         </Text>
         <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            flex: 0.3,
-          }}
+          style={[
+            {
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              flex: 0.3,
+            },
+            item?.disabled && { display: "none" },
+          ]}
         >
           <DownloadButton
             {...{

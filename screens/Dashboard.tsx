@@ -342,7 +342,7 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
       marginVertical: isPortrait ? 10 : 0,
       width: "100%",
       minHeight: 140,
-      flex: 0.5,
+      flex: 1,
     },
     optionContainer: {
       flex: 1,

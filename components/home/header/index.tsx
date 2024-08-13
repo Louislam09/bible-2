@@ -9,6 +9,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BottomModal from "components/BottomModal";
 import { iconSize } from "constants/size";
 import { useStorage } from "context/LocalstoreContext";
+import useInstalledBibles from "hooks/useInstalledBible";
 import {
   EBibleVersions,
   HomeParams,
@@ -20,8 +21,6 @@ import {
 import { Text, View } from "../../Themed";
 import Settings from "./Settings";
 import VersionList from "./VersionList";
-import useInstalledBibles from "hooks/useInstalledBible";
-import getCurrentDbName from "utils/getCurrentDB";
 
 interface HeaderInterface {
   bibleVersionRef: any;

@@ -1301,4 +1301,10 @@ export default [
     size: 2553649,
     storedName: "CATG-c.commentaries",
   },
-];
+].map((version) => {
+  return {
+    ...version,
+    disabled:
+      version.name.includes("Comentario") || version.name.includes("Comentada"),
+  };
+});

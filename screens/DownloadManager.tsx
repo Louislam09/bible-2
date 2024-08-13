@@ -7,7 +7,7 @@ import { useDBContext } from "context/databaseContext";
 import { DBName } from "enums";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import { RootStackScreenProps, TTheme } from "types";
+import { DownloadBibleItem, RootStackScreenProps, TTheme } from "types";
 import * as FileSystem from "expo-file-system";
 import { baseDownloadUrl, SQLiteDirPath } from "constants/databaseNames";
 import bibleDatabases from "constants/bibleDatabases";
@@ -16,14 +16,6 @@ import FileList from "components/FileList";
 import TabNavigation from "components/DownloadManagerTab";
 import removeAccent from "utils/removeAccent";
 import useDebounce from "hooks/useDebounce";
-
-type DownloadBibleItem = {
-  name: string;
-  url: string;
-  key: string;
-  storedName: string;
-  size: number;
-};
 
 const initSQLiteDir = async () => {
   const sqliteDir = await FileSystem.getInfoAsync(SQLiteDirPath);
@@ -45,7 +37,7 @@ const DownloadManager: React.FC<
   const [searchText, setSearchText] = useState<any>(null);
   const debouncedSearchText = useDebounce(searchText, 500);
 
-  const NoteHeader = () => {
+  const DownloadManagerHeader = () => {
     return (
       <View style={[styles.noteHeader]}>
         <Text style={[styles.noteListTitle]}>Gestor de Modulos</Text>
@@ -71,7 +63,7 @@ const DownloadManager: React.FC<
 
   return (
     <View style={{ paddingHorizontal: 20, flex: 1 }}>
-      {NoteHeader()}
+      {DownloadManagerHeader()}
       <TabNavigation {...{ isMyDownloadTab, setIsMyDownloadTab, theme }} />
       {!isMyDownloadTab ? (
         <FlashList

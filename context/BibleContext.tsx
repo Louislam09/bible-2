@@ -26,6 +26,7 @@ import {
 import { useDBContext } from "./databaseContext";
 import { useStorage } from "./LocalstoreContext";
 import { Dimensions } from "react-native";
+import getCurrentDbName from "utils/getCurrentDB";
 
 type BibleState = {
   highlightedVerses: IBookVerse[];
@@ -83,6 +84,7 @@ type BibleState = {
   orientation: "LANDSCAPE" | "PORTRAIT";
   isSplitActived: boolean;
   isBottomSideSearching: boolean;
+  currentBibleLongName: string;
 };
 
 type BibleAction =
@@ -162,6 +164,7 @@ const initialContext: BibleState = {
   searchHistorial: [],
   currentHistoryIndex: -1,
   orientation: "PORTRAIT",
+  currentBibleLongName: "Reina Valera 1960",
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);
@@ -287,9 +290,12 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     storedData;
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
   const fontsLoaded = useCustomFonts();
-  const { myBibleDB, executeSql, isInstallBiblesLoaded } = useDBContext();
+  const { myBibleDB, executeSql, isInstallBiblesLoaded, installedBibles } =
+    useDBContext();
   const { state: searchState, performSearch } = useSearch({ db: myBibleDB });
-
+  const [currentBibleLongName, setCurrentBibleLongName] = useState(
+    getCurrentDbName(currentBibleVersion, installedBibles)
+  );
   const [orientation, setOrientation] = useState("PORTRAIT");
 
   const getOrientation = () => {
@@ -300,6 +306,12 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
       setOrientation("PORTRAIT");
     }
   };
+
+  useEffect(() => {
+    setCurrentBibleLongName(
+      getCurrentDbName(currentBibleVersion, installedBibles)
+    );
+  }, [currentBibleVersion, installedBibles]);
 
   useEffect(() => {
     getOrientation();
@@ -451,6 +463,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     ...state,
     orientation,
     searchState,
+    currentBibleLongName,
     highlightVerse,
     clearHighlights,
     selectFont,

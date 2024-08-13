@@ -52,6 +52,7 @@ const CustomFooter: FC<FooterInterface> = ({
   const playRef = useRef<BottomSheetModal>(null);
   const navigation = useNavigation();
   const route = useRoute();
+  const currentHistoryItemVerse = historyManager.getCurrentItem()?.verse;
   const { bookNumber, shortName } =
     DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
@@ -178,7 +179,9 @@ const CustomFooter: FC<FooterInterface> = ({
           delayLongPress={200}
         >
           <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
-            {`${displayBookName ?? ""} ${chapter ?? ""}`}
+            {`${displayBookName ?? ""} ${chapter ?? ""}:${
+              currentHistoryItemVerse || verse
+            }`}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>

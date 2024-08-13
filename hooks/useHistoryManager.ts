@@ -15,6 +15,7 @@ export type HistoryManager = {
   getCurrentItem: () => HistoryItem | null;
   clear: () => void;
   getHistory: () => HistoryItem[];
+  updateVerse: (newVerse: number) => void;
   history: HistoryItem[];
   isHistoryInitialized: boolean;
 };
@@ -90,6 +91,19 @@ const useHistoryManager = (_maxSize: number = 10): HistoryManager => {
     return [...history];
   };
 
+  const updateVerse = (newVerse: number) => {
+    const currentIndex = currentIndexRef.current;
+
+    if (currentIndex >= 0 && currentIndex < history.length) {
+      const updatedHistory = [...history];
+      updatedHistory[currentIndex] = {
+        ...updatedHistory[currentIndex],
+        verse: newVerse || updatedHistory[currentIndex].verse,
+      };
+      setHistory(updatedHistory);
+    }
+  };
+
   return {
     initializeHistory,
     add,
@@ -101,6 +115,7 @@ const useHistoryManager = (_maxSize: number = 10): HistoryManager => {
     history,
     isHistoryInitialized,
     getCurrentIndex,
+    updateVerse,
   };
 };
 

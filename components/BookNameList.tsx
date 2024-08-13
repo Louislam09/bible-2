@@ -27,6 +27,8 @@ const BookNameList = ({ bookList }: IBookNameList) => {
     chapter,
     bottomSideBook,
     bottomSideChapter,
+    verse,
+    bottomSideVerse,
   } = route?.params as HomeParams;
 
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
@@ -41,6 +43,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
   const selectedSideChapter = isBottomSideSearching
     ? bottomSideChapter
     : chapter;
+  const selectedSideVerse = isBottomSideSearching ? bottomSideVerse : verse;
 
   const screenNavigationMap: any = {
     [Screens.ChooseBook]: (item: any, routeParams: any) => ({
@@ -88,18 +91,29 @@ const BookNameList = ({ bookList }: IBookNameList) => {
       style={[
         styles.listItem,
         selectedSideBook ? { justifyContent: "center" } : {},
+        (isVerseScreen ? selectedSideVerse : selectedSideChapter) === item && {
+          backgroundColor: theme.colors.notification + "60",
+        },
       ]}
       onPress={() => handlePress(item)}
     >
-      <Text style={styles.listTitle}>{item}</Text>
-      {!selectedSideBook && (
+      <Text
+        style={[
+          styles.listTitle,
+          (isVerseScreen ? selectedSideVerse : selectedSideChapter) ===
+            item && { color: "white" },
+        ]}
+      >
+        {item}
+      </Text>
+      {/* {!selectedSideBook && (
         <MaterialCommunityIcons
           style={[styles.icon, { color: bookList[index].bookColor }]}
           name="greater-than"
           size={26}
           color="white"
         />
-      )}
+      )} */}
     </TouchableOpacity>
   );
 

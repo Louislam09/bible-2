@@ -9,6 +9,8 @@ import { Text } from "components/Themed";
 import BottomModal from "components/BottomModal";
 import CompareVersions from "components/CompareVersions";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useStorage } from "context/LocalstoreContext";
+import useDebounce from "hooks/useDebounce";
 
 const Chapter = ({
   item,
@@ -30,6 +32,15 @@ const Chapter = ({
   const [isLayoutMounted, setLayoutMounted] = useState(false);
   const { verseToCompare } = useBibleContext();
   const navigation = useNavigation();
+  const debounceTopVerse = useDebounce(topVerse, 100);
+  const {
+    historyManager: { updateVerse },
+  } = useStorage();
+
+  useEffect(() => {
+    if (!debounceTopVerse) return;
+    updateVerse(debounceTopVerse);
+  }, [debounceTopVerse]);
 
   useEffect(() => {
     const isFirst = !!topVerse;

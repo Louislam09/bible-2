@@ -1,14 +1,12 @@
-import { DBName } from "enums";
 import { VersionItem } from "hooks/useInstalledBible";
-import { EBibleVersions } from "types";
 
 const getCurrentDbName = (
   currentBible: string,
   databaseList: VersionItem[]
 ): string => {
-  const defaultDb = "bible";
+  const defaultDb = "Reina Valera 1960";
   const dbName =
-    databaseList?.find((version) => currentBible === version.id)?.id ||
+    databaseList?.find((version) => currentBible === version.id)?.name ||
     defaultDb;
   return dbName;
 };

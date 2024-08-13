@@ -11,8 +11,8 @@ export const getStyles = ({ colors }: TTheme) =>
       width: "100%",
       paddingVertical: 5,
       backgroundColor: colors.background,
-      boxSizing: "border-box",
-      paddingHorizontal: 20
+      // boxSizing: "border-box",
+      paddingHorizontal: 20,
     },
     progressBarContainer: {
       position: "absolute",
@@ -32,14 +32,14 @@ export const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       justifyContent: "space-between",
       backgroundColor: colors.backgroundContrast,
-      flex: 1
+      flex: 1,
     },
     footerEnd: {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: colors.backgroundContrast,
-      marginLeft: 10
+      marginLeft: 10,
     },
     icon: {
       fontWeight: "900",
@@ -52,7 +52,7 @@ export const getStyles = ({ colors }: TTheme) =>
       fontSize: 18,
       fontWeight: "bold",
       textDecorationColor: colors.text,
-      textDecorationLine: "underline",
-      textDecorationStyle: "solid",
+      // textDecorationLine: "underline",
+      // textDecorationStyle: "solid",
     },
   });

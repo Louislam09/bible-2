@@ -161,6 +161,15 @@ export enum EBibleVersions {
   NTV = "ntv-bible",
 }
 
+export type DownloadBibleItem = {
+  name: string;
+  url: string;
+  key: string;
+  storedName: string;
+  size: number;
+  disabled?: boolean;
+};
+
 export type TSubtitle = {
   book_number: number;
   chapter: number;

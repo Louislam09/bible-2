@@ -1,5 +1,5 @@
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   BackHandler,
@@ -40,7 +40,8 @@ const BookContent: FC<BookContentInterface> = ({
   } = useStorage();
   const { currentBibleVersion, fontSize } = storedData;
 
-  const { setverseInStrongDisplay, clearHighlights } = useBibleContext();
+  const { setverseInStrongDisplay, clearHighlights, currentBibleLongName } =
+    useBibleContext();
   const { myBibleDB, executeSql } = useDBContext();
   const route = useRoute();
   const { isHistory } = route.params as HomeParams;
@@ -49,6 +50,13 @@ const BookContent: FC<BookContentInterface> = ({
   const currentBook = DB_BOOK_NAMES.find((x) => x.longName === book);
   const dimensions = Dimensions.get("window");
   const navigation = useNavigation();
+  const isNewLaw = useRef<boolean>(false);
+
+  useEffect(() => {
+    isNewLaw.current = currentBibleLongName
+      .toLowerCase()
+      .includes("nuevo testamento");
+  }, [currentBibleLongName]);
 
   useEffect(() => {
     (async () => {
@@ -104,6 +112,14 @@ const BookContent: FC<BookContentInterface> = ({
     return () => backHandler.remove();
   }, []);
 
+  const displayErrorMessage = (_isNewLaw: boolean) => {
+    if (_isNewLaw) {
+      return "Solo disponible el Nuevo Pacto en esta versión.";
+    } else {
+      return "No se puede mostrar esta versión. Intenta con otra.";
+    }
+  };
+
   const notVerseToRender = data?.verses?.length && !loading;
 
   return (
@@ -120,7 +136,7 @@ const BookContent: FC<BookContentInterface> = ({
                 textAlign: "center",
               }}
             >
-              No se puede mostrar esta versión. Intenta con otra.
+              {displayErrorMessage(isNewLaw.current)}
             </Text>
           </View>
         ) : (
