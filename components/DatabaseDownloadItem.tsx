@@ -44,6 +44,7 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
     async function needD() {
       return await getIfDatabaseNeedsDownload(storedName + dbFileExt);
     }
+
     needD().then((res) => {
       setIsDownloaded(!res);
     });
@@ -73,10 +74,9 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
         {},
         calculateProgress
       ).downloadAsync();
-      // Progress callback function
+
       const progressCallback = (progress: string) => {
         setUnzipProgress(progress);
-        // console.log(progress);
       };
 
       await unzipFile({
@@ -85,7 +85,6 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
       });
       setIsLoading(false);
       refreshDatabaseList();
-      // await unzipFile(downloadDest);
     } catch (error) {
       console.error(error);
     }

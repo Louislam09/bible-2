@@ -59,7 +59,6 @@ const useCompareVerses = ({
       try {
         const results: DatabaseData[] = [];
         for (const databaseItem of databases) {
-          const dbName = databaseItem.name;
           const dbNameWithExt = `${databaseItem.id}${dbFileExt}`;
           const db = await SQLite.openDatabaseAsync(dbNameWithExt);
           const queryResult = await executeSql?.(

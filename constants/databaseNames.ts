@@ -1,11 +1,28 @@
 import { DBName } from "enums";
 import * as FileSystem from "expo-file-system";
+import { DATABASE_TYPE } from "types";
 export const SQLiteDirPath = `${FileSystem.documentDirectory}SQLite`;
 export const baseDownloadUrl = "https://www.ph4.org";
-export const dbFileExt = ".db";
+export const dbFileExt = "-bible.db";
 export const bibleReadyMsg = "¡Todo listo para usar!";
 export const defaultDatabases = ["bible", "ntv-bible"];
 // https://www.ph4.org/_dl.php?back=bbl&a=RV%2760_plus_&b=mybible&c
+
+const databaseExtensions = {
+  [DATABASE_TYPE.BIBLE]: "-bible.db",
+  [DATABASE_TYPE.DICTIONARY]: "-dict.db",
+  [DATABASE_TYPE.COMMENTARIES]: "-com.db",
+};
+
+export const getDatabaseExt = (dbType: DATABASE_TYPE) => {
+  return databaseExtensions[dbType];
+};
+
+export const getDatabaseType = (fileName: string) => {
+  if (fileName.includes(".dictionary")) return DATABASE_TYPE.DICTIONARY;
+  if (fileName.includes(".commentaries")) return DATABASE_TYPE.COMMENTARIES;
+  return DATABASE_TYPE.BIBLE;
+};
 
 export const getDatabaseQueryKey = (name: string) => {
   const isDefault = defaultDatabases.includes(name);

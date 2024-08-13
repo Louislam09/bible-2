@@ -1,31 +1,16 @@
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
-import { FlashList, ListRenderItem } from "@shopify/flash-list";
-import { Text, View } from "components/Themed";
-import { GET_ALL_FAVORITE_VERSES } from "constants/Queries";
-import { useDBContext } from "context/databaseContext";
-import { DBName } from "enums";
-import React, { useEffect, useState } from "react";
-import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import { DownloadBibleItem, RootStackScreenProps, TTheme } from "types";
-import * as FileSystem from "expo-file-system";
-import { baseDownloadUrl, SQLiteDirPath } from "constants/databaseNames";
-import bibleDatabases from "constants/bibleDatabases";
+import { FlashList } from "@shopify/flash-list";
 import DatabaseDownloadItem from "components/DatabaseDownloadItem";
-import FileList from "components/FileList";
 import TabNavigation from "components/DownloadManagerTab";
-import removeAccent from "utils/removeAccent";
+import FileList from "components/FileList";
+import { Text, View } from "components/Themed";
+import bibleDatabases from "constants/bibleDatabases";
 import useDebounce from "hooks/useDebounce";
-
-const initSQLiteDir = async () => {
-  const sqliteDir = await FileSystem.getInfoAsync(SQLiteDirPath);
-
-  if (!sqliteDir.exists) {
-    await FileSystem.makeDirectoryAsync(SQLiteDirPath);
-  } else if (!sqliteDir.isDirectory) {
-    throw new Error("SQLite dir is not a directory");
-  }
-};
+import React, { useState } from "react";
+import { StyleSheet, TextInput } from "react-native";
+import { DownloadBibleItem, RootStackScreenProps, TTheme } from "types";
+import removeAccent from "utils/removeAccent";
 
 const DownloadManager: React.FC<
   RootStackScreenProps<"DownloadManager">

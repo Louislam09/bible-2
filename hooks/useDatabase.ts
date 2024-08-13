@@ -75,7 +75,6 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
         await statement.finalizeAsync();
       }
     } catch (error) {
-      // console.log("Database not initialized", error);
       return await new Promise((resolve) => resolve([]));
     }
   };
@@ -87,7 +86,10 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
     try {
       await database.execAsync(createTableQuery);
     } catch (error) {
-      console.error(`Error creating table ${createTableQuery}:`, error);
+      console.error(
+        `Error creating table ${createTableQuery} In ${database.databaseName} :`,
+        error
+      );
     }
   }
 
@@ -96,15 +98,17 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
     async function openDatabase(databaseItem: VersionItem) {
       const localFolder = SQLiteDirPath;
       const dbName = databaseItem.id;
-      const dbNameWithExt = `${databaseItem.id}${dbFileExt}`;
+      const isDefaultDatabase = defaultDatabases.includes(dbName);
+      const dbNameWithExt = isDefaultDatabase
+        ? `${databaseItem.id}.db`
+        : `${databaseItem.id}${dbFileExt}`;
       const localURI = databaseItem.path;
-      // const localURI = localFolder + "/" + dbName;
 
       if (!(await FileSystem.getInfoAsync(localFolder)).exists) {
         await FileSystem.makeDirectoryAsync(localFolder);
       }
 
-      if (defaultDatabases.includes(dbName)) {
+      if (isDefaultDatabase) {
         let asset =
           dbName === DEFAULT_DATABASE.BIBLE
             ? Asset.fromModule(require("../assets/db/bible.db"))

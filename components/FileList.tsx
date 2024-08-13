@@ -14,7 +14,8 @@ const FileList = () => {
   const [files, setFiles] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const { refreshDatabaseList, installedBibles } = useDBContext();
+  const { refreshDatabaseList, installedBibles, installedDictionary } =
+    useDBContext();
   const { selectBibleVersion } = useBibleContext();
 
   const extractionPath = `${FileSystem.documentDirectory}SQLite/`;
@@ -49,8 +50,8 @@ const FileList = () => {
   }, []);
 
   const renderItem = ({ item }: { item: string }) => {
-    const versionItem = installedBibles.find((version) =>
-      version.path.includes(item)
+    const versionItem = [...installedBibles, ...installedDictionary].find(
+      (version) => version.path.includes(item)
     );
     const allowDelete = !defaultDatabases.includes(versionItem?.id as string);
     return (

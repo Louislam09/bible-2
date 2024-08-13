@@ -387,3 +387,9 @@ export type EHistoryItem = {
   chapter: number;
   verse: number;
 };
+
+export enum DATABASE_TYPE {
+  BIBLE,
+  DICTIONARY,
+  COMMENTARIES,
+}

@@ -19,6 +19,7 @@ type DatabaseContextType = {
       ) => Promise<Row[]>)
     | null;
   installedBibles: VersionItem[];
+  installedDictionary: VersionItem[];
   isInstallBiblesLoaded: boolean;
   refreshDatabaseList: () => void;
 };
@@ -32,6 +33,7 @@ const initialContext = {
   myBibleDB: null,
   executeSql: null,
   installedBibles: [],
+  installedDictionary: [],
   isInstallBiblesLoaded: false,
   refreshDatabaseList: () => {},
 };
@@ -45,7 +47,7 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   const {
     storedData: { currentBibleVersion },
   } = useStorage();
-  const { installedBibles, loading, refreshDatabaseList } =
+  const { installedBibles, loading, refreshDatabaseList, installedDictionary } =
     useInstalledBibles();
   const { databases, executeSql } = useDatabase({
     dbNames: installedBibles,
@@ -59,6 +61,7 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     myBibleDB,
     executeSql,
     installedBibles,
+    installedDictionary,
     isInstallBiblesLoaded: !loading,
     refreshDatabaseList,
   };
