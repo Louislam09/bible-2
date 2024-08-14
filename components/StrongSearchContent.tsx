@@ -11,7 +11,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { IStrongWord, IVerseItem, Screens, StrongData, TTheme } from "types";
+import {
+  IStrongWord,
+  IVerseItem,
+  Screens,
+  DictionaryData,
+  TTheme,
+} from "types";
 import copyToClipboard from "utils/copyToClipboard";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";
 import RenderTextWithClickableWords from "./home/content/RenderTextWithClickableWords";

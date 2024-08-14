@@ -7,13 +7,18 @@ import { useCustomTheme } from "context/ThemeContext";
 import { useTheme } from "@react-navigation/native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { wordDefinitionHtmlTemplate } from "constants/wordDefinitionHtmlTemplate";
-import { Screens, TTheme } from "types";
+import { DictionaryData, Screens, TTheme } from "types";
 import { useBibleContext } from "context/BibleContext";
 import { useNavigation } from "@react-navigation/native";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { DB_BOOK_NAMES } from "constants/BookNames";
 
-const WordDefinition = ({ wordData, onClose }: any) => {
+type WordDefinitionProps = {
+  wordData: DictionaryData;
+  subTitle: string;
+};
+
+const WordDefinition = ({ wordData, subTitle }: WordDefinitionProps) => {
   const navigation = useNavigation();
   const { theme: themeScheme } = useCustomTheme();
   const theme = useTheme();
@@ -55,10 +60,7 @@ const WordDefinition = ({ wordData, onClose }: any) => {
   return (
     <View style={{ paddingHorizontal: 20, flex: 1 }}>
       <View style={styles.wordOfDayContainer}>
-        <TouchableOpacity
-          onPress={() => onClose(null)}
-          style={styles.wordOfDayBody}
-        >
+        <TouchableOpacity style={styles.wordOfDayBody}>
           <Text style={styles.bodyTitle}>{topic}</Text>
           <View style={styles.decorationLine} />
         </TouchableOpacity>
@@ -74,7 +76,7 @@ const WordDefinition = ({ wordData, onClose }: any) => {
         </TouchableOpacity>
       </View>
       <View style={{ position: "relative" }}>
-        <Text style={[styles.sectionTitle]}>Historia</Text>
+        <Text style={[styles.sectionTitle]}>{subTitle}</Text>
         <View style={styles.sectionDecorationLine} />
       </View>
       <View style={[styles.definitionContainer]}>

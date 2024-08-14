@@ -11,6 +11,7 @@ import { ToastAndroid } from "react-native";
 import {
   dbFileExt,
   defaultDatabases,
+  isDefaultDatabase,
   SQLiteDirPath,
 } from "constants/databaseNames";
 import { VersionItem } from "./useInstalledBible";
@@ -97,9 +98,9 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
     setDatabases([]);
     async function openDatabase(databaseItem: VersionItem) {
       const localFolder = SQLiteDirPath;
-      const dbName = databaseItem.id;
-      const isDefaultDatabase = defaultDatabases.includes(dbName);
-      const dbNameWithExt = isDefaultDatabase
+      const dbID = databaseItem.id;
+      const _isDefaultDatabase = isDefaultDatabase(dbID);
+      const dbNameWithExt = _isDefaultDatabase
         ? `${databaseItem.id}.db`
         : `${databaseItem.id}${dbFileExt}`;
       const localURI = databaseItem.path;
@@ -108,9 +109,9 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
         await FileSystem.makeDirectoryAsync(localFolder);
       }
 
-      if (isDefaultDatabase) {
+      if (_isDefaultDatabase) {
         let asset =
-          dbName === DEFAULT_DATABASE.BIBLE
+          dbID === DEFAULT_DATABASE.BIBLE
             ? Asset.fromModule(require("../assets/db/bible.db"))
             : Asset.fromModule(require("../assets/db/ntv-bible.db"));
 

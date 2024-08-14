@@ -16,7 +16,7 @@ const FileList = () => {
   const [error, setError] = useState<string | null>(null);
   const { refreshDatabaseList, installedBibles, installedDictionary } =
     useDBContext();
-  const { selectBibleVersion } = useBibleContext();
+  const { selectBibleVersion, fontSize } = useBibleContext();
 
   const extractionPath = `${FileSystem.documentDirectory}SQLite/`;
 
@@ -49,42 +49,63 @@ const FileList = () => {
     fetchFiles();
   }, []);
 
-  const renderItem = ({ item }: { item: string }) => {
+  const withTitle = (indexes: number[], index: number) => {
+    const addTitle = indexes.includes(index);
+    const text = index === 0 ? "Biblias" : "Diccionarios";
+
+    return addTitle ? (
+      <Text
+        style={{
+          fontSize,
+          paddingVertical: 10,
+          color: theme.colors.notification,
+        }}
+      >
+        {text}
+      </Text>
+    ) : (
+      <></>
+    );
+  };
+
+  const renderItem = ({ item, index }: { item: string; index: number }) => {
     const versionItem = [...installedBibles, ...installedDictionary].find(
       (version) => version.path.includes(item)
     );
     const allowDelete = !defaultDatabases.includes(versionItem?.id as string);
     return (
-      <View style={[styles.itemContainer]}>
-        <View style={{ justifyContent: "center", flex: 1 }}>
-          <Text
-            style={[
-              styles.itemText,
-              !allowDelete && { color: theme.colors.notification + "70" },
-            ]}
-          >
-            {versionItem?.shortName}
-          </Text>
-
-          <Text
-            style={[
-              styles.itemText,
-              !allowDelete && { color: theme.colors.text + "70" },
-            ]}
-          >
-            {versionItem?.name || item}
-          </Text>
+      <View>
+        {withTitle([0, installedBibles.length], index)}
+        <View style={[styles.itemContainer]}>
+          <View style={{ justifyContent: "center", flex: 1 }}>
+            <Text
+              style={[
+                styles.itemText,
+                !allowDelete && { color: theme.colors.notification + "70" },
+              ]}
+            >
+              {versionItem?.shortName}
+            </Text>
+            <Text
+              style={[
+                styles.itemText,
+                !allowDelete && { color: theme.colors.text + "70" },
+              ]}
+            >
+              {versionItem?.name || item}
+            </Text>
+          </View>
+          {allowDelete && (
+            <MaterialCommunityIcons
+              onPress={() => deleteFile(item)}
+              style={{
+                color: "#e74856",
+              }}
+              name="delete"
+              size={30}
+            />
+          )}
         </View>
-        {allowDelete && (
-          <MaterialCommunityIcons
-            onPress={() => deleteFile(item)}
-            style={{
-              color: "#e74856",
-            }}
-            name="delete"
-            size={30}
-          />
-        )}
       </View>
     );
   };

@@ -24,7 +24,10 @@ import { useBibleContext } from "../../../context/BibleContext";
 import { HomeParams, IBookVerse, TIcon, TTheme, TVerse } from "../../../types";
 import { customUnderline } from "../../../utils/customStyle";
 import extractVersesInfo, {
+  extractTextFromParagraph,
+  extractWordsWithTags,
   getStrongValue,
+  WordTagPair,
 } from "../../../utils/extractVersesInfo";
 import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import { Text } from "../../Themed";
@@ -32,10 +35,39 @@ import Walkthrough from "components/Walkthrough";
 import { useStorage } from "context/LocalstoreContext";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
 import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
+import DisplayStrongWord from "components/DisplayStrongWord";
 
-const Verse: React.FC<
-  TVerse & { isSplit: boolean; onCompare: () => void; initVerse: number }
-> = ({ item, subtitles, isSplit, onCompare, initVerse }) => {
+type VerseProps = TVerse & {
+  isSplit: boolean;
+  onCompare: () => void;
+  onWord: () => void;
+  initVerse: number;
+};
+
+const validStrongArr = (arr: WordTagPair[]) => {
+  const newArr = [...arr];
+  return newArr.map((item, index) => {
+    const newItem = item;
+    const nextItem = newArr[index + 1];
+    if (nextItem && nextItem.word.includes("<S>")) {
+      newItem.tagValue = `${newItem.tagValue},${extractTextFromParagraph(
+        nextItem?.word
+      )}`;
+      nextItem.word = "";
+    }
+
+    return newItem;
+  });
+};
+
+const Verse: React.FC<VerseProps> = ({
+  item,
+  subtitles,
+  isSplit,
+  onCompare,
+  initVerse,
+  onWord,
+}) => {
   const navigation = useNavigation();
   const route = useRoute();
   const { isVerseTour } = route.params as HomeParams;
@@ -68,7 +100,6 @@ const Verse: React.FC<
     return highlightedVerses[highlightedVerses.length - 1];
   }, [highlightedVerses]);
   const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
-  const strongRef = useRef<BottomSheetModal>(null);
   const verseRef = useRef<any>(null);
   const [stepIndex, setStepIndex] = useState(0);
   const { saveData } = useStorage();
@@ -78,6 +109,7 @@ const Verse: React.FC<
   const showMusicIcon =
     item.book_number === 290 && item.chapter === 41 && item.verse === 27;
   const animatedVerseHighlight = useRef(new Animated.Value(0)).current;
+  const wordAndStrongValue = extractWordsWithTags(item.text);
 
   const initHighLightedVerseAnimation = () => {
     const loopAnimation = Animated.loop(
@@ -99,10 +131,6 @@ const Verse: React.FC<
     );
     loopAnimation.start();
   };
-
-  const strongHandlePresentModalPress = useCallback(() => {
-    strongRef.current?.present();
-  }, []);
 
   useEffect(() => {
     setFavorite(!!item.is_favorite);
@@ -263,7 +291,26 @@ const Verse: React.FC<
     };
 
     setStrongWord(value);
-    strongHandlePresentModalPress();
+    onWord();
+  };
+
+  const onStrongWordClicked = ({ word, tagValue }: WordTagPair) => {
+    const NT_BOOK_NUMBER = 470;
+    const cognate = item.book_number < NT_BOOK_NUMBER ? "H" : "G";
+
+    const addCognate = (tagValue: string) =>
+      tagValue
+        .split(",")
+        .map((code) => `${cognate}${code}`)
+        .join(",");
+
+    const searchCode = addCognate(tagValue || "");
+    const value = {
+      text: word,
+      code: searchCode,
+    };
+    setStrongWord(value);
+    onWord();
   };
 
   const enabledMusic = () => {
@@ -322,7 +369,8 @@ const Verse: React.FC<
     {
       text: "Paso 2: 👀 Observarás cómo algunas palabras cambian de color.",
       target: verseRef,
-      action: () => onWordClicked("principio"),
+      action: () =>
+        onStrongWordClicked({ word: "principio", tagValue: "H7225" }),
     },
     {
       text: "Paso 3: 📘 Cuando toques cualquier palabra resaltada, verás su significado en el original.",
@@ -387,17 +435,27 @@ const Verse: React.FC<
                   onWordClick={onWordClicked}
                 />
               ) : (
-                <Highlighter
-                  textToHighlight={getVerseTextRaw(item.text)}
-                  searchWords={textValue}
+                <DisplayStrongWord
+                  data={validStrongArr(wordAndStrongValue)}
                   highlightStyle={{
                     color: theme.colors.notification,
                     backgroundColor: theme?.colors.notification + "30",
                     fontSize,
                   }}
                   style={[styles.verseBody]}
-                  onWordClick={onWordClicked}
+                  onWordClick={onStrongWordClicked}
                 />
+                // <Highlighter
+                //   textToHighlight={getVerseTextRaw(item.text)}
+                //   searchWords={textValue}
+                //   highlightStyle={{
+                //     color: theme.colors.notification,
+                //     backgroundColor: theme?.colors.notification + "30",
+                //     fontSize,
+                //   }}
+                //   style={[styles.verseBody]}
+                //   onWordClick={onWordClicked}
+                // />
               )}
             </>
           ) : (

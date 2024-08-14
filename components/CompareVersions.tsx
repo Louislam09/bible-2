@@ -118,7 +118,7 @@ const CompareVersions = ({
             </View>
           </View>
           <Text style={[styles.verseBody, { fontSize }]}>
-            {getVerseTextRaw(item.text || "")}
+            {getVerseTextRaw(item?.text || "")}
           </Text>
           <TouchableOpacity
             style={styles.verseAction}

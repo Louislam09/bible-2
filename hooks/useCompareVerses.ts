@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import * as SQLite from "expo-sqlite";
-import { dbFileExt } from "constants/databaseNames";
+import {
+  dbFileExt,
+  defaultDatabases,
+  isDefaultDatabase,
+} from "constants/databaseNames";
 import { VersionItem } from "./useInstalledBible";
 import { DB_BOOK_NAMES } from "constants/BookNames";
 import { GET_COMPARE_BOOK_CHAPTER_VERSE } from "constants/Queries";
@@ -59,7 +63,11 @@ const useCompareVerses = ({
       try {
         const results: DatabaseData[] = [];
         for (const databaseItem of databases) {
-          const dbNameWithExt = `${databaseItem.id}${dbFileExt}`;
+          const dbID = databaseItem.id;
+          const _isDefaultDatabase = isDefaultDatabase(dbID);
+          const dbNameWithExt = _isDefaultDatabase
+            ? `${databaseItem.id}.db`
+            : `${databaseItem.id}${dbFileExt}`;
           const db = await SQLite.openDatabaseAsync(dbNameWithExt);
           const queryResult = await executeSql?.(
             db,

@@ -3,10 +3,9 @@ import {
   BottomSheetModal,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
-import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { useTheme } from "@react-navigation/native";
 import React, { forwardRef, useCallback, useMemo, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { TTheme } from "types";
 
 type TBottomModal = {
@@ -16,12 +15,24 @@ type TBottomModal = {
   getIndex?: any;
   snaps?: any;
   shouldScroll?: boolean;
+  headerComponent?: React.ReactNode;
 };
 
 type Ref = BottomSheetModal;
 
 const BottomModal = forwardRef<Ref, TBottomModal>(
-  ({ children, startAT, justOneSnap, getIndex, snaps, shouldScroll }, ref) => {
+  (
+    {
+      children,
+      startAT,
+      justOneSnap,
+      getIndex,
+      snaps,
+      shouldScroll,
+      headerComponent,
+    },
+    ref
+  ) => {
     const theme = useTheme();
     const styles = getStyles(theme);
     const snapPoints = useMemo(
@@ -70,6 +81,9 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
         ) : (
           children
         )}
+        {/* {headerComponent && (
+          <BottomSheetView>{headerComponent}</BottomSheetView>
+        )} */}
       </BottomSheetModal>
     );
   }

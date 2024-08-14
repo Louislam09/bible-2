@@ -67,11 +67,16 @@ const DownloadManager: React.FC<
                   (version) =>
                     removeAccent(version.name).indexOf(
                       debouncedSearchText.toLowerCase()
+                    ) !== -1 ||
+                    removeAccent(version.storedName).indexOf(
+                      debouncedSearchText.toLowerCase()
                     ) !== -1
                 )
               : databasesToDownload
           }
-          keyExtractor={(item: any, index: any) => `download-${index}`}
+          keyExtractor={(item: DownloadBibleItem, index: any) =>
+            `download-${item.storedName}`
+          }
         />
       ) : (
         <FileList />

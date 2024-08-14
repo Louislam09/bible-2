@@ -1,11 +1,11 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { useNavigation } from "@react-navigation/native";
+import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { DB_BOOK_NAMES } from "constants/BookNames";
 import { htmlTemplate } from "constants/HtmlTemplate";
 import { SEARCH_STRONG_WORD } from "constants/Queries";
 import { useDBContext } from "context/databaseContext";
 import usePrintAndShare from "hooks/usePrintAndShare";
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, RefObject, useEffect, useRef, useState } from "react";
 import {
   Animated,
   Easing,
@@ -15,17 +15,28 @@ import {
 } from "react-native";
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
-import { IStrongWord, Screens, StrongData, TTheme } from "types";
+import { DictionaryData, IStrongWord, Screens, TTheme } from "types";
 import { Text, View } from "../../Themed";
 
 interface IStrongContent {
   theme: TTheme;
   data: IStrongWord;
   fontSize: any;
+  navigation: any;
+  bottomRef: RefObject<BottomSheetModalMethods>;
 }
 
+type MaterialCommunityIconName = keyof typeof MaterialCommunityIcons.glyphMap;
+
+type HeaderAction = {
+  iconName: MaterialCommunityIconName;
+  viewStyle: {};
+  description: string;
+  onAction: () => void;
+};
+
 const DEFAULT_HEIGHT = 14000;
-const EXTRA_HEIGHT_TO_ADJUST = 100;
+const EXTRA_HEIGHT_TO_ADJUST = 150;
 
 function extractWord(text: string, isH: boolean) {
   const regex = isH ? /<p\/><b>(.*?)<\/b>/ : /<p\/>(.*?)<\/b>/;
@@ -38,11 +49,16 @@ function extractWord(text: string, isH: boolean) {
   }
 }
 
-const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
-  const navigation = useNavigation();
-  const { code } = data;
+const StrongContent: FC<IStrongContent> = ({
+  theme,
+  data,
+  fontSize,
+  navigation,
+  bottomRef,
+}) => {
+  const { code, text: word } = data;
   const { myBibleDB, executeSql } = useDBContext();
-  const [values, setValues] = useState<StrongData[]>([
+  const [values, setValues] = useState<DictionaryData[]>([
     { definition: "", topic: "" },
   ]);
   const styles = getStyles(theme);
@@ -92,15 +108,19 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
   useEffect(() => {
     (async () => {
       if (myBibleDB && executeSql) {
-        const strongData = await executeSql(
+        const DictionaryData = await executeSql(
           myBibleDB,
           SEARCH_STRONG_WORD,
           text.split(",")
         );
-        setValues(strongData as StrongData[]);
+        setValues(DictionaryData as DictionaryData[]);
       }
     })();
   }, [code, text]);
+
+  const onClose = () => {
+    bottomRef.current?.dismiss();
+  };
 
   const onShouldStartLoadWithRequest = (event: ShouldStartLoadRequest) => {
     const { url } = event;
@@ -111,6 +131,7 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
         (x) => x.bookNumber === +bookNumber
       );
 
+      onClose();
       navigation.navigate(Screens.Home, {
         book: currentBook?.longName,
         chapter: chapter,
@@ -139,25 +160,77 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
 
   const onStrongSearchEntire = () => {
     const [value1] = values;
+    // onClose();
     navigation.navigate(Screens.StrongSearchEntire, {
       paramCode: value1?.topic,
     });
+  };
+
+  const onShare = () => {
+    const html = htmlTemplate(values, theme.colors, fontSize, true);
+    printToFile(html);
   };
 
   const currentCode = values[0]?.topic;
   const isH = currentCode?.includes("H");
   const title = extractWord(values[0]?.definition, isH);
 
-  const copyContentToClipboard = () => {
-    if (!webViewRef?.current) return;
-    webViewRef?.current.injectJavaScript(`
-      function copyContentToClipboard() {
-        var content = document.body.innerText; // Extract content as needed
-        window.ReactNativeWebView.postMessage(content);
-      }
+  // const copyContentToClipboard = () => {
+  //   if (!webViewRef?.current) return;
+  //   webViewRef?.current.injectJavaScript(`
+  //     function copyContentToClipboard() {
+  //       var content = document.body.innerText; // Extract content as needed
+  //       window.ReactNativeWebView.postMessage(content);
+  //     }
 
-      copyContentToClipboard();
-    `);
+  //     copyContentToClipboard();
+  //   `);
+  // };
+
+  const headerActions: HeaderAction[] = [
+    {
+      iconName: "bookshelf",
+      viewStyle: {},
+      description: "Diccionario",
+      onAction: () => {},
+    },
+    {
+      iconName: "text-search",
+      viewStyle: animatedStyle,
+      description: "Buscar",
+      onAction: onStrongSearchEntire,
+    },
+    {
+      iconName: "share-variant-outline",
+      viewStyle: {},
+      description: "Compartir",
+      onAction: onShare,
+    },
+  ];
+
+  const RenderItem = ({ item }: { item: HeaderAction }) => {
+    return (
+      <Animated.View
+        style={[item.viewStyle, { alignItems: "center", marginHorizontal: 2 }]}
+      >
+        <Pressable
+          android_ripple={{
+            color: theme.colors.background,
+            foreground: true,
+            radius: 10,
+          }}
+          onPress={onStrongSearchEntire}
+        >
+          <MaterialCommunityIcons
+            style={[styles.backIcon, {}]}
+            name={item.iconName}
+            size={26}
+            color="white"
+          />
+        </Pressable>
+        <Text style={{ fontSize: 12, color: "white" }}>{item.description}</Text>
+      </Animated.View>
+    );
   };
 
   return (
@@ -167,8 +240,8 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
         { height: height + EXTRA_HEIGHT_TO_ADJUST },
       ]}
     >
-      <View style={styles.header}>
-        {backUrl.length !== 0 && (
+      <View style={[styles.header]}>
+        {backUrl.length !== 0 ? (
           <Pressable
             android_ripple={{
               color: theme.colors.background,
@@ -184,65 +257,19 @@ const StrongContent: FC<IStrongContent> = ({ theme, data, fontSize }) => {
               color="white"
             />
           </Pressable>
+        ) : (
+          <Text></Text>
         )}
-        <Text style={styles.title}>
-          {title || "-"} - {currentCode}
+        <View style={styles.actionContainer}>
+          {headerActions.map((item, index) => (
+            <RenderItem key={index} item={item} />
+          ))}
+        </View>
+      </View>
+      <View style={styles.subHeader}>
+        <Text style={[styles.subTitle]}>
+          {word.replace(",", "") || "-"} - {title || "-"} {currentCode}
         </Text>
-        <Animated.View style={[animatedStyle]}>
-          <Pressable
-            android_ripple={{
-              color: theme.colors.background,
-              foreground: true,
-              radius: 10,
-            }}
-            onPress={onStrongSearchEntire}
-          >
-            <MaterialCommunityIcons
-              style={[styles.backIcon, {}]}
-              name="text-search"
-              size={26}
-              color="white"
-            />
-          </Pressable>
-        </Animated.View>
-        <Animated.View style={[]}>
-          <Pressable
-            android_ripple={{
-              color: theme.colors.background,
-              foreground: true,
-              radius: 10,
-            }}
-            onPress={() => {
-              const html = htmlTemplate(values, theme.colors, fontSize, true);
-              printToFile(html);
-            }}
-          >
-            <MaterialCommunityIcons
-              style={[styles.backIcon, {}]}
-              name="share-variant-outline"
-              size={26}
-              color="white"
-            />
-          </Pressable>
-        </Animated.View>
-        {/* <Animated.View style={[]}>
-          <Pressable
-            android_ripple={{
-              color: theme.colors.background,
-              foreground: true,
-              radius: 10,
-            }}
-            onPress={copyContentToClipboard}
-            // onPress={() => createAndShareTextFile(values?.[0]?.definition)}
-          >
-            <MaterialCommunityIcons
-              style={[styles.backIcon, {}]}
-              name="share-variant"
-              size={26}
-              color="white"
-            />
-          </Pressable>
-        </Animated.View> */}
       </View>
       <View style={[styles.webviewWrapper]}>
         <WebView
@@ -291,24 +318,36 @@ const getStyles = ({ colors }: TTheme) =>
       width: "90%",
       padding: 5,
       gap: 2,
+      backgroundColor: colors.notification + "90",
     },
-    backIcon: {
-      alignSelf: "flex-start",
-      fontWeight: "bold",
-      paddingHorizontal: 10,
+    subHeader: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      width: "90%",
       padding: 5,
-      backgroundColor: colors.notification,
+      gap: 2,
+      backgroundColor: "transparent",
     },
     title: {
       justifyContent: "space-between",
       textTransform: "capitalize",
       color: "white",
       fontSize: 20,
-      flex: 1,
       textAlign: "center",
       padding: 5,
-      paddingRight: 30,
-      backgroundColor: colors.notification,
+    },
+    subTitle: {
+      justifyContent: "space-between",
+      textTransform: "capitalize",
+      fontSize: 20,
+      textAlign: "center",
+      paddingVertical: 5,
+      textDecorationLine: "underline",
+      color: colors.text,
+    },
+    backIcon: {
+      fontWeight: "bold",
     },
     card: {
       width: "90%",
@@ -330,6 +369,12 @@ const getStyles = ({ colors }: TTheme) =>
       color: "#000",
       fontSize: 22,
       textAlign: "center",
+    },
+    actionContainer: {
+      flexDirection: "row",
+      gap: 2,
+      backgroundColor: "transparent",
+      alignItems: "center",
     },
   });
 

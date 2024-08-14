@@ -211,7 +211,7 @@ export type IStrongWord = {
   code: string;
 };
 
-export type StrongData = {
+export type DictionaryData = {
   definition: string;
   topic: string;
 };

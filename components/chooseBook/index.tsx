@@ -80,12 +80,6 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
         >
           {item.longName}
         </Text>
-        <MaterialCommunityIcons
-          style={[styles.icon, { color: item.bookColor }]}
-          name="greater-than"
-          size={26}
-          color="white"
-        />
       </TouchableOpacity>
     </>
   );
@@ -147,7 +141,7 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
 
   const ListView = (
     <View style={{ flex: 1, width: "100%" }}>
-      <View style={{ marginVertical: 4 }}>
+      {/* <View style={{ marginVertical: 4 }}>
         <TextInput
           placeholder="Filtra libro"
           cursorColor={theme.colors.notification}
@@ -155,9 +149,12 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
           placeholderTextColor={theme.colors.text + "99"}
           onChangeText={handelSearch}
         />
-      </View>
+      </View> */}
       <FlashList
-        contentContainerStyle={styles.flatContainer}
+        contentContainerStyle={{
+          ...styles.flatContainer,
+          paddingHorizontal: 10,
+        }}
         data={
           query
             ? DB_BOOK_NAMES.filter(
@@ -244,6 +241,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginVertical: 10,
       paddingLeft: 15,
       color: colors.notification,
+      textAlign: "center",
     },
     listTitle: {
       color: colors.notification,

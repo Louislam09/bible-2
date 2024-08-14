@@ -1,5 +1,5 @@
+import { Text } from "components/Themed";
 import React from "react";
-import { Text } from "react-native";
 import { TTheme } from "types";
 
 interface Props {

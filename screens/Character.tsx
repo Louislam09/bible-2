@@ -157,7 +157,7 @@ const Character: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
       }}
     >
       {selected ? (
-        <WordDefinition wordData={selected} onClose={onItemClick} />
+        <WordDefinition subTitle="Historia" wordData={selected} />
       ) : (
         <>
           {NoteHeader()}

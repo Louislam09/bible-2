@@ -11,6 +11,7 @@ import CompareVersions from "components/CompareVersions";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useStorage } from "context/LocalstoreContext";
 import useDebounce from "hooks/useDebounce";
+import StrongContent from "./StrongContent";
 
 const Chapter = ({
   item,
@@ -30,9 +31,10 @@ const Chapter = ({
   const [topVerse, setTopVerse] = useState(null);
   const viewabilityConfig = { viewAreaCoveragePercentThreshold: 1 };
   const [isLayoutMounted, setLayoutMounted] = useState(false);
-  const { verseToCompare } = useBibleContext();
+  const { verseToCompare, strongWord, fontSize } = useBibleContext();
   const navigation = useNavigation();
   const debounceTopVerse = useDebounce(topVerse, 100);
+  const strongSearchBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const {
     historyManager: { updateVerse },
   } = useStorage();
@@ -59,6 +61,10 @@ const Chapter = ({
     compareRef.current?.present();
   }, []);
 
+  const strongSearchHandlePresentModalPress = useCallback(() => {
+    strongSearchBottomSheetModalRef.current?.present();
+  }, []);
+
   const renderItem = (props: any) => (
     <Verse
       {...props}
@@ -67,6 +73,7 @@ const Chapter = ({
       subtitles={subtitles ?? []}
       initVerse={initialScrollIndex}
       onCompare={compareRefHandlePresentModalPress}
+      onWord={strongSearchHandlePresentModalPress}
     />
   );
 
@@ -106,6 +113,29 @@ const Chapter = ({
           }
         />
       </View>
+      <BottomModal
+        shouldScroll
+        startAT={2}
+        ref={strongSearchBottomSheetModalRef}
+        headerComponent={
+          <View
+            style={{
+              height: 50,
+              backgroundColor: theme.colors.notification,
+            }}
+          >
+            <Text>Bottom Sheet Header</Text>
+          </View>
+        }
+      >
+        <StrongContent
+          navigation={navigation}
+          theme={theme}
+          data={strongWord}
+          fontSize={fontSize}
+          bottomRef={strongSearchBottomSheetModalRef}
+        />
+      </BottomModal>
       <BottomModal shouldScroll startAT={3} ref={compareRef}>
         <CompareVersions
           {...{

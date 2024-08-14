@@ -14,6 +14,10 @@ const databaseExtensions = {
   [DATABASE_TYPE.COMMENTARIES]: "-com.db",
 };
 
+export const isDefaultDatabase = (dbID: string) => {
+  return defaultDatabases.includes(dbID);
+};
+
 export const getDatabaseExt = (dbType: DATABASE_TYPE) => {
   return databaseExtensions[dbType];
 };

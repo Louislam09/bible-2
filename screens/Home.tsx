@@ -1,5 +1,5 @@
 import BottomSheet from "@gorhom/bottom-sheet";
-import { useRoute, useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import CustomBottomSheet from "components/BottomSheet";
 import SplitBottomSide from "components/SplitBottomSide";
 import SplitTopSide from "components/SplitTopSide";
@@ -21,6 +21,7 @@ import { HomeParams, TTheme } from "types";
 import CustomHeader from "../components/home/header";
 
 function HomeScreen() {
+  const navigation = useNavigation();
   const theme = useTheme();
   const route = useRoute();
   const {
@@ -52,6 +53,7 @@ function HomeScreen() {
 
   const [stepIndex, setStepIndex] = useState(0);
   const sheetRef = useRef<BottomSheet>(null);
+
   const bookRef = useRef<any>(null);
   const nextRef = useRef<any>(null);
   const backRef = useRef<any>(null);
@@ -228,22 +230,6 @@ function HomeScreen() {
           />
         )}
       </View>
-      {strongWord.code && (
-        <>
-          <View style={styles.strongContainer}>
-            <CustomBottomSheet
-              ref={sheetRef}
-              handleSheetChange={handleSheetChange}
-            >
-              <StrongContent
-                theme={theme}
-                data={strongWord}
-                fontSize={fontSize}
-              />
-            </CustomBottomSheet>
-          </View>
-        </>
-      )}
 
       {bookRef.current && isTour && (
         <Walkthrough
