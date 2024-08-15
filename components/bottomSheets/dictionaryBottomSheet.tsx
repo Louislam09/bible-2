@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect, useState, useMemo } from "react";
 import BottomModal from "components/BottomModal";
 import { Text, View } from "components/Themed";
@@ -8,6 +8,7 @@ import WordDefinition from "components/WordDefinition";
 import useDictionaryData, { DatabaseData } from "hooks/useDictionaryData";
 import { useDBContext } from "context/databaseContext";
 import AnimatedDropdown from "components/AnimatedDropdown";
+import { Ionicons } from "@expo/vector-icons";
 
 type DictionaryBottomSheetProps = {
   dictionaryRef: React.RefObject<BottomSheetModalMethods>;
@@ -46,6 +47,11 @@ const DictionaryBottomSheet = ({
     return list.find((dic) => dic.dbItem.name === dicName)?.value;
   };
 
+  const onNavToManagerDownload = () => {
+    dictionaryRef.current?.close();
+    navigation.navigate("DownloadManager");
+  };
+
   useEffect(() => {
     if (!loading && !error) {
       setResults(data);
@@ -57,6 +63,26 @@ const DictionaryBottomSheet = ({
   const renderContent = () => {
     if (loading) {
       return <Text style={styles.loadingText}>Cargando...</Text>;
+    }
+
+    if (dbNames.length === 0) {
+      return (
+        <View style={styles.emptyContainer}>
+          <Ionicons
+            name="cloud-download-outline"
+            size={50}
+            color={theme.colors.text}
+          />
+          <Text style={styles.emptyText}>
+            No tienes ningún diccionario descargado. {"\n"}
+            <TouchableOpacity onPress={onNavToManagerDownload}>
+              <Text style={styles.linkText}>
+                Haz clic aquí para descargar uno.
+              </Text>
+            </TouchableOpacity>
+          </Text>
+        </View>
+      );
     }
 
     const wordData = getValue(selectedFilterOption, results) || {
@@ -125,11 +151,22 @@ const getStyles = ({ colors }: TTheme) =>
       marginVertical: 20,
       color: "#999",
     },
+    emptyContainer: {
+      alignItems: "center",
+      backgroundColor: "transparent",
+      justifyContent: "center",
+      padding: 20,
+    },
     emptyText: {
       textAlign: "center",
       marginVertical: 20,
       color: colors.text,
-      // color: "#999",
+      fontSize: 18,
+    },
+    linkText: {
+      color: colors.primary,
+      textDecorationLine: "underline",
+      fontSize: 18,
     },
   });
 
