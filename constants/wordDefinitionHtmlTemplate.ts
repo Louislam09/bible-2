@@ -46,16 +46,10 @@ export const wordDefinitionHtmlTemplate = (
                 }
                 
             </style>
-            <script>
-                window.ReactNativeWebView.postMessage(document.body.scrollHeight)
-            </script>
         </head>
         <body>
            ${content?.replace(/<b>(.*?)<\/b>/g, "<h3>$1</h3>")}
            <hr />
-             <script>
-                window.ReactNativeWebView.postMessage(document.body.scrollHeight)
-            </script>
         </body>
         </html>
 `;

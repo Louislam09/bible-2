@@ -1,5 +1,5 @@
 import * as Clipboard from "expo-clipboard";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import WebView from "react-native-webview";
 import { Text } from "./Themed";
@@ -12,8 +12,6 @@ import { useBibleContext } from "context/BibleContext";
 import { useNavigation } from "@react-navigation/native";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { DB_BOOK_NAMES } from "constants/BookNames";
-import { ScrollView } from "react-native-gesture-handler";
-import { customBorder } from "utils/customStyle";
 
 type WordDefinitionProps = {
   wordData: DictionaryData;
@@ -21,9 +19,6 @@ type WordDefinitionProps = {
   navigation?: any;
   theme?: TTheme;
 };
-
-const DEFAULT_HEIGHT = 1400;
-const EXTRA_HEIGHT_TO_ADJUST = 250;
 
 const WordDefinition = ({
   wordData,
@@ -43,7 +38,7 @@ const WordDefinition = ({
     theme.colors,
     fontSize
   );
-  const [height, setHeight] = useState(DEFAULT_HEIGHT);
+  const [height, setHeight] = useState<number | string>("100%");
 
   const copyContentToClipboard = () => {
     if (!webViewRef?.current) return;
@@ -99,33 +94,36 @@ const WordDefinition = ({
         <View style={styles.sectionDecorationLine} />
       </View>
 
-      <View
-        style={[
-          styles.definitionContainer,
-          { height: height + EXTRA_HEIGHT_TO_ADJUST },
-        ]}
-      >
+      <View style={[styles.definitionContainer, { height: height as any }]}>
         <WebView
           startInLoadingState
           style={{
             backgroundColor: "transparent",
+            height: height as any,
           }}
           ref={webViewRef}
           originWhitelist={["*"]}
           source={{ html }}
-          scrollEnabled
+          scrollEnabled={true}
           onMessage={async (event) => {
             const eventData = event.nativeEvent.data;
             const isNumber = !isNaN(+eventData);
             if (isNumber) {
-              console.log({ eventData });
-              setHeight(+eventData || DEFAULT_HEIGHT);
+              setHeight(+eventData);
               return;
             }
             const text = `${eventData}`;
             await Clipboard.setStringAsync(text);
           }}
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+          onLoadEnd={() => {
+            webViewRef.current?.injectJavaScript(`
+              setTimeout(() => {
+                const contentHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+                window.ReactNativeWebView.postMessage(contentHeight.toString());
+              }, 500);
+            `);
+          }}
         />
       </View>
     </View>
@@ -183,7 +181,6 @@ const getStyles = ({ colors }: TTheme, isDark?: boolean) =>
       fontWeight: "bold",
     },
     definitionContainer: {
-      height: "100%",
       flex: 1,
       backgroundColor: "transparent",
     },

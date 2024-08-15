@@ -1,5 +1,5 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import BottomModal from "components/BottomModal";
 import { Text, View } from "components/Themed";
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
@@ -108,18 +108,20 @@ const DictionaryBottomSheet = ({
     );
   };
 
-  const getIndex = (index: any) => {
-    if (index > 2) {
+  const handleSheetChanges = useCallback((index: number) => {
+    // When index is -1, the sheet is closed
+    if (index === -1) {
+      setEnabledSearch(false);
+    } else {
       setEnabledSearch(true);
     }
-  };
-
+  }, []);
   return (
     <BottomModal
       shouldScroll
       startAT={3}
       ref={dictionaryRef}
-      getIndex={getIndex}
+      getIndex={handleSheetChanges}
       headerComponent={
         <View style={styles.headerContainer}>
           <AnimatedDropdown
