@@ -5,7 +5,15 @@ import { htmlTemplate } from "constants/HtmlTemplate";
 import { SEARCH_STRONG_WORD } from "constants/Queries";
 import { useDBContext } from "context/databaseContext";
 import usePrintAndShare from "hooks/usePrintAndShare";
-import React, { FC, RefObject, useEffect, useRef, useState } from "react";
+import React, {
+  FC,
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Animated,
   Easing,
@@ -17,14 +25,9 @@ import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { DictionaryData, IStrongWord, Screens, TTheme } from "types";
 import { Text, View } from "../../Themed";
-
-interface IStrongContent {
-  theme: TTheme;
-  data: IStrongWord;
-  fontSize: any;
-  navigation: any;
-  bottomRef: RefObject<BottomSheetModalMethods>;
-}
+import { customBorder } from "utils/customStyle";
+import { DEFAULT_ICON_SIZE } from "@expo/vector-icons/build/createIconSet";
+import { iconSize } from "constants/size";
 
 type MaterialCommunityIconName = keyof typeof MaterialCommunityIcons.glyphMap;
 
@@ -49,12 +52,22 @@ function extractWord(text: string, isH: boolean) {
   }
 }
 
+interface IStrongContent {
+  theme: TTheme;
+  data: IStrongWord;
+  fontSize: any;
+  navigation: any;
+  bottomRef: RefObject<BottomSheetModalMethods>;
+  onDictionary: () => void;
+}
+
 const StrongContent: FC<IStrongContent> = ({
   theme,
   data,
   fontSize,
   navigation,
   bottomRef,
+  onDictionary,
 }) => {
   const { code, text: word } = data;
   const { myBibleDB, executeSql } = useDBContext();
@@ -65,6 +78,7 @@ const StrongContent: FC<IStrongContent> = ({
   const [height, setHeight] = useState(DEFAULT_HEIGHT);
   const webViewRef = React.useRef<WebView>(null);
   const [text, setText] = useState(code);
+  const [sharing, setSharing] = useState(false);
   const [backUrl, setBackUrl] = useState<any>([]);
   const { createAndShareTextFile, printToFile } = usePrintAndShare();
 
@@ -158,18 +172,20 @@ const StrongContent: FC<IStrongContent> = ({
     setText(url);
   };
 
-  const onStrongSearchEntire = () => {
+  const onStrongSearchEntire = useCallback(() => {
     const [value1] = values;
-    // onClose();
+    onClose();
     navigation.navigate(Screens.StrongSearchEntire, {
       paramCode: value1?.topic,
     });
-  };
+  }, [values]);
 
-  const onShare = () => {
+  const onShare = useCallback(async () => {
     const html = htmlTemplate(values, theme.colors, fontSize, true);
-    printToFile(html);
-  };
+    setSharing(true);
+    await printToFile(html);
+    setSharing(false);
+  }, [values]);
 
   const currentCode = values[0]?.topic;
   const isH = currentCode?.includes("H");
@@ -187,48 +203,49 @@ const StrongContent: FC<IStrongContent> = ({
   //   `);
   // };
 
-  const headerActions: HeaderAction[] = [
-    {
-      iconName: "bookshelf",
-      viewStyle: {},
-      description: "Diccionario",
-      onAction: () => {},
-    },
-    {
-      iconName: "text-search",
-      viewStyle: animatedStyle,
-      description: "Buscar",
-      onAction: onStrongSearchEntire,
-    },
-    {
-      iconName: "share-variant-outline",
-      viewStyle: {},
-      description: "Compartir",
-      onAction: onShare,
-    },
-  ];
+  const headerActions: HeaderAction[] = useMemo(
+    () => [
+      {
+        iconName: "bookshelf",
+        viewStyle: animatedStyle,
+        description: "Diccionario",
+        onAction: onDictionary,
+      },
+      {
+        iconName: "text-search",
+        viewStyle: animatedStyle,
+        description: "Buscar Versículos",
+        onAction: onStrongSearchEntire,
+      },
+      {
+        iconName: sharing ? "loading" : "share-variant-outline",
+        viewStyle: animatedStyle,
+        description: "Compartir",
+        onAction: onShare,
+      },
+    ],
+    [onStrongSearchEntire, onShare]
+  );
 
   const RenderItem = ({ item }: { item: HeaderAction }) => {
     return (
-      <Animated.View
-        style={[item.viewStyle, { alignItems: "center", marginHorizontal: 2 }]}
-      >
+      <Animated.View style={[item.viewStyle, styles.actionItem]}>
         <Pressable
           android_ripple={{
             color: theme.colors.background,
             foreground: true,
             radius: 10,
           }}
-          onPress={onStrongSearchEntire}
+          onPress={item.onAction}
         >
           <MaterialCommunityIcons
             style={[styles.backIcon, {}]}
             name={item.iconName}
-            size={26}
+            size={iconSize}
             color="white"
           />
         </Pressable>
-        <Text style={{ fontSize: 12, color: "white" }}>{item.description}</Text>
+        <Text style={styles.actionItemText}>{item.description}</Text>
       </Animated.View>
     );
   };
@@ -241,35 +258,35 @@ const StrongContent: FC<IStrongContent> = ({
       ]}
     >
       <View style={[styles.header]}>
-        {backUrl.length !== 0 ? (
-          <Pressable
-            android_ripple={{
-              color: theme.colors.background,
-              foreground: true,
-              radius: 10,
-            }}
-            onPress={onGoBack}
-          >
-            <MaterialCommunityIcons
-              style={styles.backIcon}
-              name="keyboard-backspace"
-              size={26}
-              color="white"
-            />
-          </Pressable>
-        ) : (
-          <Text></Text>
-        )}
         <View style={styles.actionContainer}>
+          {backUrl.length !== 0 && (
+            <Pressable
+              android_ripple={{
+                color: theme.colors.background,
+                foreground: true,
+                radius: 10,
+              }}
+              style={{ alignItems: "center" }}
+              onPress={onGoBack}
+            >
+              <MaterialCommunityIcons
+                style={styles.backIcon}
+                name="keyboard-backspace"
+                size={26}
+                color="white"
+              />
+              <Text style={{ fontSize: 12, color: "white" }}>Anterior</Text>
+            </Pressable>
+          )}
           {headerActions.map((item, index) => (
             <RenderItem key={index} item={item} />
           ))}
         </View>
-      </View>
-      <View style={styles.subHeader}>
-        <Text style={[styles.subTitle]}>
-          {word.replace(",", "") || "-"} - {title || "-"} {currentCode}
-        </Text>
+        <View style={styles.subHeader}>
+          <Text style={[styles.subTitle, { fontSize }]}>
+            {word.replace(",", "") || "-"} - {title || "-"} {currentCode}
+          </Text>
+        </View>
       </View>
       <View style={[styles.webviewWrapper]}>
         <WebView
@@ -312,21 +329,18 @@ const getStyles = ({ colors }: TTheme) =>
     },
     header: {
       display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
+      flexDirection: "column",
+      justifyContent: "center",
       width: "90%",
-      padding: 5,
-      gap: 2,
-      backgroundColor: colors.notification + "90",
+      backgroundColor: "transparent",
+      // ...customBorder,
     },
     subHeader: {
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
       width: "90%",
-      padding: 5,
-      gap: 2,
+      paddingVertical: 5,
       backgroundColor: "transparent",
     },
     title: {
@@ -372,9 +386,21 @@ const getStyles = ({ colors }: TTheme) =>
     },
     actionContainer: {
       flexDirection: "row",
-      gap: 2,
       backgroundColor: "transparent",
       alignItems: "center",
+      justifyContent: "space-between",
+      // ...customBorder,
+    },
+    actionItem: {
+      alignItems: "center",
+      marginHorizontal: 2,
+      paddingVertical: 2,
+      paddingHorizontal: 4,
+    },
+    actionItemText: {
+      fontSize: 12,
+      color: "white",
+      textAlign: "center",
     },
   });
 

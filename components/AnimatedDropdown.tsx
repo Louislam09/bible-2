@@ -4,15 +4,27 @@ import {
   Animated,
   StyleSheet,
   ScrollView,
+  ViewStyle,
+  StyleProp,
+  TextStyle,
 } from "react-native";
 import { Text, View } from "./Themed";
 import { TTheme } from "types";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface AnimatedDropdownProps {
   options: string[];
   selectedValue: string;
   onValueChange: (value: any) => void;
   theme: TTheme;
+  customStyle?: {
+    picker?: StyleProp<ViewStyle>;
+    dropdown?: StyleProp<ViewStyle>;
+    pickerText?: StyleProp<TextStyle>;
+    dropdownOptionText?: StyleProp<TextStyle>;
+    selectedOptionText?: StyleProp<TextStyle>;
+  };
+  withIcon?: boolean;
 }
 
 const AnimatedDropdown: React.FC<AnimatedDropdownProps> = ({
@@ -20,6 +32,8 @@ const AnimatedDropdown: React.FC<AnimatedDropdownProps> = ({
   selectedValue,
   onValueChange,
   theme,
+  customStyle,
+  withIcon,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [animatedHeight] = useState(new Animated.Value(0));
@@ -42,11 +56,37 @@ const AnimatedDropdown: React.FC<AnimatedDropdownProps> = ({
     <View style={[styles.container, { paddingBottom: isOpen ? 10 : 0 }]}>
       <TouchableOpacity
         onPress={togglePicker}
-        style={[styles.picker, { backgroundColor: "#ddd" }]}
+        style={[
+          styles.picker,
+          { backgroundColor: "#ddd" },
+          customStyle?.picker,
+          {
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          },
+        ]}
       >
-        <Text style={[styles.selectedText]}>{selectedValue}</Text>
+        <Text style={[styles.selectedText, customStyle?.pickerText]}>
+          {selectedValue}
+        </Text>
+        {withIcon && (
+          <MaterialCommunityIcons
+            name="chevron-down"
+            size={24}
+            color={theme.colors.notification}
+            style={{ fontWeight: "bold" }}
+          />
+        )}
       </TouchableOpacity>
-      <Animated.View style={[styles.dropdown, { height: animatedHeight }]}>
+      <Animated.View
+        style={[
+          styles.dropdown,
+          { height: animatedHeight },
+          customStyle?.picker,
+          { borderWidth: isOpen ? 1 : 0 },
+        ]}
+      >
         <ScrollView persistentScrollbar>
           {options.map((option, index) => (
             <TouchableOpacity
@@ -58,12 +98,16 @@ const AnimatedDropdown: React.FC<AnimatedDropdownProps> = ({
               }}
             >
               <Text
-                style={{
-                  color:
-                    selectedValue === option
-                      ? theme.colors.notification
-                      : "#000",
-                }}
+                style={[
+                  {
+                    color:
+                      selectedValue === option
+                        ? theme.colors.notification
+                        : "#000",
+                  },
+                  customStyle?.dropdownOptionText,
+                  selectedValue === option && customStyle?.selectedOptionText,
+                ]}
               >
                 {option}
               </Text>
@@ -94,6 +138,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       maxHeight: 400,
       backgroundColor: "white",
       paddingHorizontal: 10,
+      marginTop: 4,
     },
     option: {
       padding: 10,

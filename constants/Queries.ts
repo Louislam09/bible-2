@@ -83,6 +83,7 @@ inner join books b on b.book_number = v.book_number
 WHERE`;
 
 export const SEARCH_STRONG_WORD = `select * from dictionary where topic in (?,?)`;
+export const SEARCH_DICTIONARY_WORD = `select * from dictionary where topic like ?`;
 export const SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE = `select v.*, b.long_name as bookName from verses v
 inner join books b on v.book_number = b.book_number
 WHERE v.text like ? AND b.book_number BETWEEN ? and ?`;

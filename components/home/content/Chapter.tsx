@@ -12,6 +12,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useStorage } from "context/LocalstoreContext";
 import useDebounce from "hooks/useDebounce";
 import StrongContent from "./StrongContent";
+import DictionaryBottomSheet from "components/bottomSheets/dictionaryBottomSheet";
 
 const Chapter = ({
   item,
@@ -35,6 +36,7 @@ const Chapter = ({
   const navigation = useNavigation();
   const debounceTopVerse = useDebounce(topVerse, 100);
   const strongSearchBottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const dictionaryBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const {
     historyManager: { updateVerse },
   } = useStorage();
@@ -63,6 +65,9 @@ const Chapter = ({
 
   const strongSearchHandlePresentModalPress = useCallback(() => {
     strongSearchBottomSheetModalRef.current?.present();
+  }, []);
+  const dictionaryHandlePresentModalPress = useCallback(() => {
+    dictionaryBottomSheetModalRef.current?.present();
   }, []);
 
   const renderItem = (props: any) => (
@@ -113,20 +118,19 @@ const Chapter = ({
           }
         />
       </View>
+
+      {strongWord.code && (
+        <View style={{ flex: 1 }}>
+          <DictionaryBottomSheet
+            {...{ navigation, theme, strongWord }}
+            dictionaryRef={dictionaryBottomSheetModalRef}
+          />
+        </View>
+      )}
       <BottomModal
         shouldScroll
         startAT={2}
         ref={strongSearchBottomSheetModalRef}
-        headerComponent={
-          <View
-            style={{
-              height: 50,
-              backgroundColor: theme.colors.notification,
-            }}
-          >
-            <Text>Bottom Sheet Header</Text>
-          </View>
-        }
       >
         <StrongContent
           navigation={navigation}
@@ -134,6 +138,7 @@ const Chapter = ({
           data={strongWord}
           fontSize={fontSize}
           bottomRef={strongSearchBottomSheetModalRef}
+          onDictionary={dictionaryHandlePresentModalPress}
         />
       </BottomModal>
       <BottomModal shouldScroll startAT={3} ref={compareRef}>

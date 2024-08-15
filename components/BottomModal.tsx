@@ -2,6 +2,7 @@ import {
   BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetScrollView,
+  BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useTheme } from "@react-navigation/native";
 import React, { forwardRef, useCallback, useMemo, useState } from "react";
@@ -72,6 +73,9 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
         backdropComponent={renderBackdrop}
         onChange={handleSheetChanges}
       >
+        {headerComponent && (
+          <BottomSheetView style={{}}>{headerComponent}</BottomSheetView>
+        )}
         {shouldScroll ? (
           <BottomSheetScrollView
             contentContainerStyle={styles.contentContainer}
@@ -81,9 +85,6 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
         ) : (
           children
         )}
-        {/* {headerComponent && (
-          <BottomSheetView>{headerComponent}</BottomSheetView>
-        )} */}
       </BottomSheetModal>
     );
   }

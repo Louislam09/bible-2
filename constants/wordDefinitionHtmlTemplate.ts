@@ -1,10 +1,9 @@
-
 export const wordDefinitionHtmlTemplate = (
-    content: any,
-    colors: any,
-    fontSize: any
+  content: any,
+  colors: any,
+  fontSize: any
 ) => {
-    return `
+  return `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -52,8 +51,11 @@ export const wordDefinitionHtmlTemplate = (
             </script>
         </head>
         <body>
-           ${content?.replace(/<b>(.*?)<\/b>/g, '<h3>$1</h3>')}
-            
+           ${content?.replace(/<b>(.*?)<\/b>/g, "<h3>$1</h3>")}
+           <hr />
+             <script>
+                window.ReactNativeWebView.postMessage(document.body.scrollHeight)
+            </script>
         </body>
         </html>
 `;
