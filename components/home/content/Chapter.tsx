@@ -66,6 +66,7 @@ const Chapter = ({
   const strongSearchHandlePresentModalPress = useCallback(() => {
     strongSearchBottomSheetModalRef.current?.present();
   }, []);
+
   const dictionaryHandlePresentModalPress = useCallback(() => {
     dictionaryBottomSheetModalRef.current?.present();
   }, []);
@@ -119,14 +120,13 @@ const Chapter = ({
         />
       </View>
 
-      {strongWord.code && (
-        <View style={{ flex: 1 }}>
-          <DictionaryBottomSheet
-            {...{ navigation, theme, strongWord }}
-            dictionaryRef={dictionaryBottomSheetModalRef}
-          />
-        </View>
-      )}
+      <View style={{ flex: 1 }}>
+        <DictionaryBottomSheet
+          key="dictionary"
+          {...{ navigation, theme, strongWord }}
+          dictionaryRef={dictionaryBottomSheetModalRef}
+        />
+      </View>
       <BottomModal
         shouldScroll
         startAT={2}

@@ -9,6 +9,7 @@ import useDictionaryData, { DatabaseData } from "hooks/useDictionaryData";
 import { useDBContext } from "context/databaseContext";
 import AnimatedDropdown from "components/AnimatedDropdown";
 import { Ionicons } from "@expo/vector-icons";
+import { VersionItem } from "hooks/useInstalledBible";
 
 type DictionaryBottomSheetProps = {
   dictionaryRef: React.RefObject<BottomSheetModalMethods>;
@@ -23,29 +24,44 @@ const DictionaryBottomSheet = ({
   navigation,
   strongWord,
 }: DictionaryBottomSheetProps) => {
+  const defaultValue = "Selecciona un diccionario";
   const styles = getStyles(theme);
   const { installedDictionary: dbNames, executeSql } = useDBContext();
   const [results, setResults] = useState<DatabaseData[]>([]);
-  const [selectedFilterOption, setSelectedFilterOption] = useState(
-    "Selecciona un diccionario"
-  );
+  const [selectedDictionaryDb, setSelectedDictionaryDb] = useState<
+    VersionItem[]
+  >([]);
+  const [selectedFilterOption, setSelectedFilterOption] =
+    useState(defaultValue);
   const [enabledSearch, setEnabledSearch] = useState(false);
+
+  useEffect(() => {
+    const isDefaultValue = defaultValue === selectedFilterOption;
+    const selectedDic = dbNames.filter(
+      (dicVersion) => dicVersion.name === selectedFilterOption
+    );
+    setSelectedDictionaryDb(isDefaultValue ? [] : selectedDic);
+  }, [selectedFilterOption]);
 
   const { data, error, loading } = useDictionaryData({
     searchParam: strongWord.text.replace(/[.,;]/g, ""),
-    databases: dbNames,
+    databases: selectedDictionaryDb,
     executeSql,
     enabled: enabledSearch,
   });
 
   const dictionaryNames = useMemo(
-    () => results.map((x) => x?.dbItem?.name),
+    () => dbNames.map((dicVersion) => dicVersion.name),
     [results]
   );
 
   const getValue = (dicName: string, list: DatabaseData[]) => {
     return list.find((dic) => dic.dbItem.name === dicName)?.value;
   };
+
+  const resultValue = useMemo(() => {
+    return results[0]?.value;
+  }, [results]);
 
   const onNavToManagerDownload = () => {
     dictionaryRef.current?.close();
@@ -60,7 +76,7 @@ const DictionaryBottomSheet = ({
     }
   }, [data, loading, error]);
 
-  const renderContent = () => {
+  const renderContent = useCallback(() => {
     if (loading) {
       return <Text style={styles.loadingText}>Cargando...</Text>;
     }
@@ -85,10 +101,7 @@ const DictionaryBottomSheet = ({
       );
     }
 
-    const wordData = getValue(selectedFilterOption, results) || {
-      definition: "",
-      topic: "",
-    };
+    const wordData = resultValue || { definition: "", topic: "" };
 
     if (!wordData.definition) {
       return (
@@ -106,16 +119,15 @@ const DictionaryBottomSheet = ({
         theme={theme}
       />
     );
-  };
+  }, [resultValue, dbNames, loading]);
 
   const handleSheetChanges = useCallback((index: number) => {
-    // When index is -1, the sheet is closed
-    if (index === -1) {
-      setEnabledSearch(false);
-    } else {
-      setEnabledSearch(true);
+    setEnabledSearch(index !== -1);
+    if (index <= 1) {
+      // dictionaryRef.current?.dismiss();
     }
   }, []);
+
   return (
     <BottomModal
       shouldScroll

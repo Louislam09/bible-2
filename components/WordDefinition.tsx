@@ -44,7 +44,7 @@ const WordDefinition = ({
     if (!webViewRef?.current) return;
     webViewRef?.current.injectJavaScript(`
       function copyContentToClipboard() {
-        var content = document.body.innerText; // Extract content as needed
+        let content = document.body.innerText; // Extract content as needed
         window.ReactNativeWebView.postMessage(content);
       }
 
@@ -151,7 +151,7 @@ const getStyles = ({ colors }: TTheme, isDark?: boolean) =>
     },
     bodyTitle: {
       color: colors.text,
-      fontSize: 50,
+      fontSize: 40,
       fontWeight: "600",
       textTransform: "capitalize",
     },

@@ -14,6 +14,7 @@ import {
 } from "constants/Queries";
 import { DATABASE_TYPE, DictionaryData } from "types";
 import WORDS from "constants/words";
+import { pluralToSingular } from "utils/removeAccent";
 
 interface Verse {
   book_number: number;
@@ -58,6 +59,7 @@ const useDictionaryData = ({
   const dicExt = getDatabaseExt(DATABASE_TYPE.DICTIONARY);
 
   useEffect(() => {
+    if (!databases[0]?.name) return;
     const fetchData = async () => {
       setLoading(true);
       setError(null);
@@ -69,9 +71,10 @@ const useDictionaryData = ({
           const dbNameWithExt = `${dbID}${dicExt}`;
           const db = await SQLite.openDatabaseAsync(dbNameWithExt);
           const queryResult = await executeSql?.(db, SEARCH_DICTIONARY_WORD, [
-            `${searchParam}`,
+            `${pluralToSingular(searchParam)}`,
           ]);
 
+          await db.closeAsync();
           results.push({
             dbItem: databaseItem,
             value: queryResult?.[0] as DictionaryData,
@@ -86,14 +89,8 @@ const useDictionaryData = ({
         setLoading(false);
       }
     };
-    console.log({ enabled });
-    if (!enabled) return;
-    console.log({ searchParam });
-    console.log(
-      WORDS.find((x) => x.name_lower === searchParam.toLowerCase())?.name
-    );
     fetchData();
-  }, [searchParam, enabled]);
+  }, [searchParam, enabled, databases]);
 
   return { data, loading, error };
 };

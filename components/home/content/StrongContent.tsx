@@ -191,25 +191,16 @@ const StrongContent: FC<IStrongContent> = ({
   const isH = currentCode?.includes("H");
   const title = extractWord(values[0]?.definition, isH);
 
-  // const copyContentToClipboard = () => {
-  //   if (!webViewRef?.current) return;
-  //   webViewRef?.current.injectJavaScript(`
-  //     function copyContentToClipboard() {
-  //       var content = document.body.innerText; // Extract content as needed
-  //       window.ReactNativeWebView.postMessage(content);
-  //     }
-
-  //     copyContentToClipboard();
-  //   `);
-  // };
-
   const headerActions: HeaderAction[] = useMemo(
     () => [
       {
         iconName: "bookshelf",
         viewStyle: animatedStyle,
         description: "Diccionario",
-        onAction: onDictionary,
+        onAction: () => {
+          onClose();
+          onDictionary();
+        },
       },
       {
         iconName: "text-search",

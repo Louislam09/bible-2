@@ -4,10 +4,12 @@ import { FlashList } from "@shopify/flash-list";
 import DatabaseDownloadItem from "components/DatabaseDownloadItem";
 import TabNavigation from "components/DownloadManagerTab";
 import FileList from "components/FileList";
+import NoInternetSplash from "components/NoInternetSplash";
 import { Text, View } from "components/Themed";
 import bibleDatabases from "constants/bibleDatabases";
 import useDebounce from "hooks/useDebounce";
-import React, { useState } from "react";
+import useNetworkStatus from "hooks/useNetworkInfo";
+import React, { useCallback, useState } from "react";
 import { StyleSheet, TextInput } from "react-native";
 import { DownloadBibleItem, RootStackScreenProps, TTheme } from "types";
 import removeAccent from "utils/removeAccent";
@@ -21,6 +23,7 @@ const DownloadManager: React.FC<
   const [isMyDownloadTab, setIsMyDownloadTab] = useState(false);
   const [searchText, setSearchText] = useState<any>(null);
   const debouncedSearchText = useDebounce(searchText, 500);
+  const { isConnected, isInternetReachable } = useNetworkStatus();
 
   const DownloadManagerHeader = () => {
     return (
@@ -45,6 +48,10 @@ const DownloadManager: React.FC<
       </View>
     );
   };
+
+  if (!isConnected || !isInternetReachable) {
+    return <NoInternetSplash theme={theme} />;
+  }
 
   return (
     <View style={{ paddingHorizontal: 20, flex: 1 }}>
