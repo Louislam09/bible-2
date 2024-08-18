@@ -1,18 +1,16 @@
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Verse from "./Verse";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { TChapter, HomeParams, TTheme } from "types";
-import { useBibleContext } from "context/BibleContext";
-import { Text } from "components/Themed";
 import BottomModal from "components/BottomModal";
 import CompareVersions from "components/CompareVersions";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
 import useDebounce from "hooks/useDebounce";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { TChapter, TTheme } from "types";
 import StrongContent from "./StrongContent";
-import DictionaryBottomSheet from "components/bottomSheets/dictionaryBottomSheet";
+import Verse from "./Verse";
 
 const Chapter = ({
   item,
@@ -68,7 +66,6 @@ const Chapter = ({
   }, []);
 
   const dictionaryHandlePresentModalPress = useCallback(() => {
-    console.log("dictionaryHandlePresentModalPress");
     dictionaryBottomSheetModalRef.current?.present();
   }, []);
 
@@ -121,12 +118,6 @@ const Chapter = ({
         />
       </View>
 
-      <View key="dictionary" style={{ flex: 1 }}>
-        <DictionaryBottomSheet
-          {...{ navigation, theme, strongWord }}
-          dictionaryRef={dictionaryBottomSheetModalRef}
-        />
-      </View>
       <BottomModal
         shouldScroll
         startAT={2}
