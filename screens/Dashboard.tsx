@@ -155,8 +155,8 @@ const Dashboard = () => {
       tag: isNTV ? "book-cross" : "crown-outline",
     },
     {
-      icon: "book-outline",
-      label: "Seleccion de Libro",
+      icon: "view-list-outline",
+      label: "Lista de Libro",
       action: () =>
         navigation?.navigate(Screens.ChooseBook, { ...route.params }),
     },

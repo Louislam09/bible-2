@@ -164,7 +164,7 @@ const DictionarySearch: React.FC<
             value={searchText}
           />
         </View>
-        {wordNotFoundInDictionary && (
+        {wordNotFoundInDictionary && searchDebounce !== "" && (
           <TouchableOpacity
             onPress={() => setSearchText(pluralToSingular(searchDebounce))}
           >
@@ -270,7 +270,7 @@ const DictionarySearch: React.FC<
                 index={index}
               />
             )}
-            keyExtractor={(item: any, index: any) => `note-${index}`}
+            keyExtractor={(item: any, index: any) => `dictionary-${index}`}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
             ListEmptyComponent={
               <View
@@ -285,15 +285,16 @@ const DictionarySearch: React.FC<
                   backgroundColor={theme.colors.background}
                   source={searchingSource}
                 />
-                {wordNotFoundInDictionary && (
+                {wordNotFoundInDictionary && searchDebounce !== "" ? (
                   <Text style={[styles.noResultsText, { fontSize }]}>
                     No encontramos resultados para: {"\n"}
                     <Text style={{ color: theme.colors.notification }}>
                       {searchDebounce}
                     </Text>
                   </Text>
+                ) : (
+                  <Text>Buscar un palabra</Text>
                 )}
-                {/* <Text>Buscando...</Text> */}
               </View>
             }
           />
