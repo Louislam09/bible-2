@@ -1,5 +1,5 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect, useState, useMemo, useCallback } from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import BottomModal from "components/BottomModal";
 import { Text, View } from "components/Themed";
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
@@ -25,7 +25,7 @@ const DictionaryBottomSheet = ({
   strongWord,
 }: DictionaryBottomSheetProps) => {
   const defaultValue = "Selecciona un diccionario";
-  const styles = getStyles(theme);
+  const styles = useMemo(() => getStyles(theme), [theme]);
   const { installedDictionary: dbNames, executeSql } = useDBContext();
   const [results, setResults] = useState<DatabaseData[]>([]);
   const [selectedDictionaryDb, setSelectedDictionaryDb] = useState<
@@ -41,7 +41,7 @@ const DictionaryBottomSheet = ({
       (dicVersion) => dicVersion.name === selectedFilterOption
     );
     setSelectedDictionaryDb(isDefaultValue ? [] : selectedDic);
-  }, [selectedFilterOption]);
+  }, [selectedFilterOption, dbNames]);
 
   const { data, error, loading } = useDictionaryData({
     searchParam: strongWord.text.replace(/[.,;]/g, ""),
@@ -52,31 +52,25 @@ const DictionaryBottomSheet = ({
 
   const dictionaryNames = useMemo(
     () => dbNames.map((dicVersion) => dicVersion.name),
-    [results]
+    [dbNames]
   );
 
-  const getValue = (dicName: string, list: DatabaseData[]) => {
-    return list.find((dic) => dic.dbItem.name === dicName)?.value;
-  };
+  const resultValue = useMemo(() => results[0]?.words, [results]);
 
-  const resultValue = useMemo(() => {
-    return results[0]?.value;
-  }, [results]);
-
-  const onNavToManagerDownload = () => {
+  const onNavToManagerDownload = useCallback(() => {
     dictionaryRef.current?.close();
     navigation.navigate("DownloadManager");
-  };
+  }, [dictionaryRef, navigation]);
 
   useEffect(() => {
     if (!loading && !error) {
       setResults(data);
     } else if (error) {
-      console.error("Error fetching dictionary data:", error);
+      console.log("Error fetching dictionary data:", error);
     }
   }, [data, loading, error]);
 
-  const renderContent = useCallback(() => {
+  const renderContent = useMemo(() => {
     if (loading) {
       return <Text style={styles.loadingText}>Cargando...</Text>;
     }
@@ -119,12 +113,21 @@ const DictionaryBottomSheet = ({
         theme={theme}
       />
     );
-  }, [resultValue, dbNames, loading]);
+  }, [
+    resultValue,
+    dbNames,
+    loading,
+    onNavToManagerDownload,
+    styles,
+    navigation,
+  ]);
 
   const handleSheetChanges = useCallback((index: number) => {
     setEnabledSearch(index !== -1);
-    if (index <= 1) {
-      // dictionaryRef.current?.dismiss();
+    console.log({ index });
+    if (index <= 0) {
+      dictionaryRef.current?.dismiss();
+      console.log("closeds");
     }
   }, []);
 
@@ -147,12 +150,10 @@ const DictionaryBottomSheet = ({
         </View>
       }
     >
-      {renderContent()}
+      {renderContent}
     </BottomModal>
   );
 };
-
-export default DictionaryBottomSheet;
 
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
@@ -201,3 +202,5 @@ const dropdownStyles = (theme: TTheme) => ({
     color: "#eee",
   },
 });
+
+export default DictionaryBottomSheet;

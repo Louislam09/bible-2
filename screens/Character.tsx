@@ -179,7 +179,6 @@ const Character: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
                   )
                 : filterData
             }
-            // renderItem={renderItem as any}
             renderItem={({ item, index }) => (
               <RenderItem
                 {...{ theme, styles, onItemClick }}

@@ -23,8 +23,12 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { EBibleVersions, IVerseItem, Screens, TTheme } from "types";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";
 
+type MaterialCommunityIconName =
+  | keyof typeof Ionicons.glyphMap
+  | keyof typeof MaterialCommunityIcons.glyphMap;
+
 type IDashboardOption = {
-  icon: string | any;
+  icon: MaterialCommunityIconName;
   label: string;
   action: () => void;
   disabled?: boolean;
@@ -157,6 +161,12 @@ const Dashboard = () => {
         navigation?.navigate(Screens.ChooseBook, { ...route.params }),
     },
     {
+      icon: "bookshelf",
+      label: "Diccionarios",
+      action: () =>
+        navigation?.navigate(Screens.DictionarySearch, { word: "" }),
+    },
+    {
       icon: "text-box-search-outline",
       label: "Concordancia Escritural",
       action: () => navigation.navigate(Screens.Concordance, {}),
@@ -206,7 +216,6 @@ const Dashboard = () => {
       isIonicon: true,
       action: fontHandlePresentModalPress,
     },
-
     {
       icon: "television-guide",
       label: "Como Usar?",
@@ -246,12 +255,12 @@ const Dashboard = () => {
       >
         {item.isIonicon ? (
           <Ionicons
-            name={item.icon}
+            name={item.icon as any}
             style={[styles.cardIcon, index === 0 && { color: "white" }]}
           />
         ) : (
           <MaterialCommunityIcons
-            name={item.icon}
+            name={item.icon as any}
             style={[styles.cardIcon, index === 0 && { color: "white" }]}
           />
         )}

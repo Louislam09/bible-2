@@ -14,6 +14,7 @@ import Character from "screens/Character";
 import ChooseFromListScreen from "screens/ChooseFromListScreen";
 import Concordance from "screens/Concordance";
 import Dashboard from "screens/Dashboard";
+import DictionarySearch from "screens/DictionarySearch";
 import DownloadManager from "screens/DownloadManager";
 import Favorite from "screens/Favorite";
 import Home from "screens/Home";
@@ -124,6 +125,15 @@ const MainStack = () => {
         options={({ route }) => ({
           ...screenOptions(route),
           animation: "slide_from_right",
+        })}
+      />
+      <Stack.Screen
+        name="DictionarySearch"
+        component={DictionarySearch}
+        options={({ route }) => ({
+          ...screenOptions(route),
+          headerTitle: "",
+          animation: "slide_from_bottom",
         })}
       />
       <Stack.Screen

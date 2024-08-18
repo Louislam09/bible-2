@@ -72,8 +72,8 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
         handleIndicatorStyle={[styles.indicator, justOneSnap && { opacity: 0 }]}
         backdropComponent={renderBackdrop}
         onChange={handleSheetChanges}
-        enablePanDownToClose
-        enableDismissOnClose
+        // enablePanDownToClose
+        // enableDismissOnClose
       >
         {headerComponent && (
           <BottomSheetView style={{}}>{headerComponent}</BottomSheetView>

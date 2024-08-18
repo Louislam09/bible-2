@@ -25,8 +25,8 @@ interface Verse {
 }
 
 export interface DatabaseData {
-  dbItem: VersionItem;
-  value: DictionaryData;
+  dbShortName: string;
+  words: DictionaryData[];
 }
 
 interface Row {
@@ -59,7 +59,7 @@ const useDictionaryData = ({
   const dicExt = getDatabaseExt(DATABASE_TYPE.DICTIONARY);
 
   useEffect(() => {
-    if (!databases[0]?.name) return;
+    if (!enabled) return;
     const fetchData = async () => {
       setLoading(true);
       setError(null);
@@ -71,13 +71,13 @@ const useDictionaryData = ({
           const dbNameWithExt = `${dbID}${dicExt}`;
           const db = await SQLite.openDatabaseAsync(dbNameWithExt);
           const queryResult = await executeSql?.(db, SEARCH_DICTIONARY_WORD, [
-            `${pluralToSingular(searchParam)}`,
+            `${searchParam}%`,
           ]);
 
           await db.closeAsync();
           results.push({
-            dbItem: databaseItem,
-            value: queryResult?.[0] as DictionaryData,
+            dbShortName: databaseItem.name,
+            words: queryResult as DictionaryData[],
           });
         }
 

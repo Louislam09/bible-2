@@ -68,6 +68,7 @@ const Chapter = ({
   }, []);
 
   const dictionaryHandlePresentModalPress = useCallback(() => {
+    console.log("dictionaryHandlePresentModalPress");
     dictionaryBottomSheetModalRef.current?.present();
   }, []);
 
@@ -120,9 +121,8 @@ const Chapter = ({
         />
       </View>
 
-      <View style={{ flex: 1 }}>
+      <View key="dictionary" style={{ flex: 1 }}>
         <DictionaryBottomSheet
-          key="dictionary"
           {...{ navigation, theme, strongWord }}
           dictionaryRef={dictionaryBottomSheetModalRef}
         />

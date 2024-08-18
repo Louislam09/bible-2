@@ -67,7 +67,6 @@ const StrongContent: FC<IStrongContent> = ({
   fontSize,
   navigation,
   bottomRef,
-  onDictionary,
 }) => {
   const { code, text: word } = data;
   const { myBibleDB, executeSql } = useDBContext();
@@ -199,7 +198,9 @@ const StrongContent: FC<IStrongContent> = ({
         description: "Diccionario",
         onAction: () => {
           onClose();
-          onDictionary();
+          navigation.navigate(Screens.DictionarySearch, {
+            word: data.text,
+          });
         },
       },
       {
