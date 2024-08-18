@@ -460,7 +460,6 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
                 index={index}
               />
             )}
-            numColumns={2}
             keyExtractor={(item: any, index: any) => `note-${index}`}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
             ListEmptyComponent={
