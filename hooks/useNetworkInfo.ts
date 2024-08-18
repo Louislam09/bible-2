@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import * as Network from "expo-network";
+// import * as Network from "expo-network";
+const Network: any = {};
 
 // Define the type for the network state
 type NetworkStatus = {
   isConnected: boolean | null;
   isInternetReachable: boolean | null;
-  type: Network.NetworkStateType | undefined;
+  // type: Network.NetworkStateType | undefined;
+  type: undefined;
   isAirplaneMode: boolean | null;
 };
 
