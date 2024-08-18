@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
+import React from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { TTheme } from "types";
 import { Text, View } from "./Themed";
 
@@ -57,16 +57,16 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     tab: {
       flex: 1,
-      borderWidth: 1,
+      // borderWidth: 1,
       paddingHorizontal: 10,
       marginHorizontal: 5,
-      paddingVertical: 10,
+      paddingVertical: 5,
       alignItems: "center",
       justifyContent: "center",
       borderRadius: 10,
     },
     activeTab: {
-      backgroundColor: colors.notification,
+      // backgroundColor: colors.notification,
       borderBottomWidth: 2,
     },
     tabText: {

@@ -17,7 +17,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { NavigationState } from "react-native-tab-view";
 import { IVerseItem, Screens, TTheme } from "types";
 import copyToClipboard from "utils/copyToClipboard";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";

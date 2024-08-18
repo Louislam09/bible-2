@@ -53,9 +53,10 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     dbNames: installedBibles,
   });
 
-  const myBibleDB = databases?.find(
-    (version) => version?.databaseName.split(".")[0] === currentBibleVersion
-  );
+  const myBibleDB =
+    databases?.find(
+      (version) => version?.databaseName.split(".")[0] === currentBibleVersion
+    ) || databases[0];
 
   const dbContextValue = {
     myBibleDB,
