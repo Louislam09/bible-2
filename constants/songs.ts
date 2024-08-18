@@ -987,8 +987,7 @@ export default [
   },
   {
     title: "92. - ¡PRECIOSA SANGRE!",
-    chorus:
-      "¡Mis pecados borró, cuando sangre vertió,\nel verdadero Cordero de Dios! //",
+    chorus: null,
     stanzas: [
       "(1) ¡Raza grandiosa y bendita\nfue la Israelita con Su Ungido rey!\n¡Era de las naciones cumbre\nlogrando ese encumbre al acatar su Ley!\n¡Tiene una historia muy envidiable!\n¡Pero en su euforia subestimó\n// La sangre! ¡Preciosa sangre\ndel verdadero Cordero de Dios! //",
       "(2) ¡Raza que recibió las Leyes\npara que así sus reyes usaran la razón!\n¡Pero que sólo con sus labios\nobservan hoy sus sabios y no de corazón!\n¡Más Yehováh, en su Toráh,\naún le ofrece para expiación\n// La Sangre! ¡Preciosa Sangre\ndel unigénito Hijo de Dios! //",

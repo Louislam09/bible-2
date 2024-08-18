@@ -118,6 +118,7 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
 
   useEffect(() => {
     const backAction = () => {
+      versionRef.current?.dismiss();
       setSelected(null);
       !selected && navigation.goBack();
       return true;
@@ -254,7 +255,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       justifyContent: "center",
       paddingHorizontal: 4,
       paddingVertical: 10,
-      marginTop: 40,
       backgroundColor: "transparent",
     },
     noteListTitle: {
