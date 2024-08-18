@@ -1,10 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
+import { NavigationProp } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "components/Animation";
 import { Text } from "components/Themed";
 import { DB_BOOK_CHAPTER_VERSES, DB_BOOK_NAMES } from "constants/BookNames";
+import { iconSize } from "constants/size";
 import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
 import useCompareVerses, { DatabaseData } from "hooks/useCompareVerses";
@@ -15,6 +17,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { NavigationState } from "react-native-tab-view";
 import { IVerseItem, Screens, TTheme } from "types";
 import copyToClipboard from "utils/copyToClipboard";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";
@@ -24,7 +27,7 @@ interface CompareVersionsProps {
   book: any;
   chapter: any;
   verse: any;
-  navigation: any;
+  navigation: Omit<NavigationProp<ReactNavigation.RootParamList>, "getState">;
   compareRef: React.RefObject<BottomSheetModalMethods>;
 }
 
@@ -197,6 +200,11 @@ const CompareVersions = ({
     </TouchableOpacity>
   );
 
+  const onAddMoreDic = () => {
+    compareRef.current?.dismiss();
+    navigation.navigate(Screens.DownloadManager);
+  };
+
   const SearchedHeader = () => {
     return (
       <View
@@ -208,6 +216,16 @@ const CompareVersions = ({
         <Text style={styles.chapterHeaderTitle}>
           Comparativa de {(filterData ?? []).length} Versiones
         </Text>
+        <TouchableOpacity
+          style={{ alignItems: "center" }}
+          onPress={onAddMoreDic}
+        >
+          <MaterialCommunityIcons
+            name="book-plus-multiple-outline"
+            color={theme.colors.notification}
+            size={iconSize}
+          />
+        </TouchableOpacity>
         {/* <View style={styles.footer}>{actionOptions.map(renderItemOption)}</View> */}
       </View>
     );
@@ -294,17 +312,19 @@ const getStyles = ({ colors }: TTheme) =>
     },
     chapterHeader: {
       display: "flex",
-      alignItems: "flex-start",
-      justifyContent: "center",
-      padding: 16,
+      alignItems: "center",
+      justifyContent: "space-between",
+      flexDirection: "row",
+      paddingHorizontal: 16,
+      paddingVertical: 10,
       borderBottomWidth: 1,
       borderColor: colors.notification + "99",
+      width: "100%",
     },
     chapterHeaderTitle: {
       fontSize: 18,
       fontWeight: "bold",
       color: colors.text,
-      width: "100%",
     },
     cardContainer: {
       display: "flex",
