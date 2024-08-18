@@ -531,6 +531,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "flex-end",
+      paddingRight: 10,
     },
     estimatedText: {
       textAlign: "right",
