@@ -53,6 +53,7 @@ type BibleState = {
   decreaseFontSize: Function;
   setStrongWord: (word: IStrongWord) => void;
   setVerseToCompare: (verse: number) => void;
+  setChapterLengthNumber: (chapterLengthNumber: number) => void;
   setverseInStrongDisplay: (verse: number) => void;
   toggleFavoriteVerse: ({
     bookNumber,
@@ -66,6 +67,7 @@ type BibleState = {
   setLocalData: Function;
   performSearch: Function;
   selectedFont: string;
+  chapterVerseLength: number;
   currentBibleVersion: string;
   searchQuery: string;
   addToNoteText: string;
@@ -101,6 +103,7 @@ type BibleAction =
   | { type: "GO_FORWARD"; payload: number }
   | { type: "SET_VERSE_IN_STRONG_DISPLAY"; payload: number }
   | { type: "SET_VERSE_TO_COMPARE"; payload: number }
+  | { type: "SET_CHAPTER_VERSE_LENGTH"; payload: number }
   | { type: "SET_STRONG_WORD"; payload: IStrongWord }
   | { type: "CLEAR_HIGHLIGHTS" }
   | { type: "SET_LOCAL_DATA"; payload: any }
@@ -139,6 +142,7 @@ const initialContext: BibleState = {
     isFav,
   }: IFavoriteVerse) => {},
   setVerseToCompare: (verse: number) => {},
+  setChapterLengthNumber: (chapterLengthNumber: number) => {},
   setverseInStrongDisplay: (verse: number) => {},
   onAddToNote: (text: string) => {},
   increaseFontSize: () => {},
@@ -156,6 +160,7 @@ const initialContext: BibleState = {
   searchQuery: "",
   addToNoteText: "",
   verseInStrongDisplay: 0,
+  chapterVerseLength: 0,
   verseToCompare: 1,
   currentTheme: "Blue",
   isSplitActived: false,
@@ -256,6 +261,11 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
       return {
         ...state,
         verseToCompare: action.payload,
+      };
+    case "SET_CHAPTER_VERSE_LENGTH":
+      return {
+        ...state,
+        chapterVerseLength: action.payload,
       };
     case "GO_BACK":
       return {
@@ -458,6 +468,12 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const setVerseToCompare = (verse: number) => {
     dispatch({ type: "SET_VERSE_TO_COMPARE", payload: verse });
   };
+  const setChapterLengthNumber = (chapterLengthNumber: number) => {
+    dispatch({
+      type: "SET_CHAPTER_VERSE_LENGTH",
+      payload: chapterLengthNumber,
+    });
+  };
 
   const contextValue = {
     ...state,
@@ -484,6 +500,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     setStrongWord,
     setverseInStrongDisplay,
     setVerseToCompare,
+    setChapterLengthNumber,
     onAddToNote,
     goBackOnHistory,
     goForwardOnHistory,

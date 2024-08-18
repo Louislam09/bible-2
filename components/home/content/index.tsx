@@ -40,8 +40,12 @@ const BookContent: FC<BookContentInterface> = ({
   } = useStorage();
   const { currentBibleVersion, fontSize } = storedData;
 
-  const { setverseInStrongDisplay, clearHighlights, currentBibleLongName } =
-    useBibleContext();
+  const {
+    setverseInStrongDisplay,
+    clearHighlights,
+    currentBibleLongName,
+    setChapterLengthNumber,
+  } = useBibleContext();
   const { myBibleDB, executeSql } = useDBContext();
   const route = useRoute();
   const { isHistory } = route.params as HomeParams;
@@ -81,6 +85,7 @@ const BookContent: FC<BookContentInterface> = ({
       const responses = await Promise.all(promises);
       const [verses, subtitles] = responses;
       setData({ verses, subtitles });
+      setChapterLengthNumber(verses?.length || 0);
 
       if (!isHistory) {
         addToHistory({ book, verse, chapter });

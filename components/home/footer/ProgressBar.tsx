@@ -1,5 +1,5 @@
-import { Text, View } from "components/Themed";
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import { Animated, View } from "react-native";
 
 interface IProgressBar {
   progress: number;
@@ -7,6 +7,8 @@ interface IProgressBar {
   barColor: string;
   circleColor?: string;
   height?: number;
+  animationDuration?: number;
+  hideCircle?: boolean;
 }
 
 const ProgressBar = ({
@@ -15,7 +17,28 @@ const ProgressBar = ({
   barColor,
   height = 10,
   circleColor = "black",
+  hideCircle,
+  animationDuration = 500,
 }: IProgressBar) => {
+  const animatedProgress = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.timing(animatedProgress, {
+      toValue: progress,
+      duration: animationDuration,
+      useNativeDriver: false,
+    }).start();
+  }, [progress]);
+
+  const progressWidth = animatedProgress.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0%", "100%"],
+  });
+
+  const circleLeftPosition = animatedProgress.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0%", "99%"],
+  });
+
   return (
     <View
       style={{ flexDirection: "row", alignItems: "center", borderRadius: 15 }}
@@ -29,26 +52,27 @@ const ProgressBar = ({
           flex: 1,
         }}
       >
-        <View
+        <Animated.View
           style={{
             height: "100%",
-            width: `${progress * 100}%`,
+            width: progressWidth,
             backgroundColor: color,
             borderRadius: 15,
           }}
         />
-        <View
-          style={{
-            position: "absolute",
-            height: 16,
-            width: 16,
-            backgroundColor: circleColor,
-            borderRadius: 50,
-            // left: 10,
-            top: -height / 2,
-            left: `${(progress - 0.01) * 100}%`,
-          }}
-        />
+        {!hideCircle && (
+          <Animated.View
+            style={{
+              position: "absolute",
+              height: 16,
+              width: 16,
+              backgroundColor: circleColor,
+              borderRadius: 50,
+              top: -height / 2,
+              left: circleLeftPosition,
+            }}
+          />
+        )}
       </View>
     </View>
   );

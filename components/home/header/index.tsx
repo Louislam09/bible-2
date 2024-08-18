@@ -19,6 +19,7 @@ import {
   TTheme,
 } from "../../../types";
 import { Text, View } from "../../Themed";
+import ProgressBar from "../footer/ProgressBar";
 import Settings from "./Settings";
 import VersionList from "./VersionList";
 
@@ -46,9 +47,16 @@ const CustomHeader: FC<HeaderInterface> = ({
     isSplitActived,
     toggleSplitMode,
     toggleBottomSideSearching,
+    chapterVerseLength,
   } = useBibleContext();
   const {
-    historyManager: { goBack, goForward, history, getCurrentIndex },
+    historyManager: {
+      goBack,
+      goForward,
+      history,
+      getCurrentIndex,
+      getCurrentItem,
+    },
   } = useStorage();
   const route = useRoute<TRoute>();
   const { book, chapter = 1, verse } = route.params as HomeParams;
@@ -62,6 +70,8 @@ const CustomHeader: FC<HeaderInterface> = ({
   const shouldForward = !(getCurrentIndex() === history.length - 1);
   const shouldBackward = getCurrentIndex() !== 0;
   const { installedBibles } = useInstalledBibles();
+  const currentItem = getCurrentItem();
+  const currentVerse = currentItem?.verse;
   const currentVersionName =
     installedBibles.find((version) => version.id === currentBibleVersion)
       ?.shortName || installedBibles[0].shortName;
@@ -138,62 +148,79 @@ const CustomHeader: FC<HeaderInterface> = ({
     selectBibleVersion(version);
     versionRef.current?.dismiss();
   };
+  const progressValue = useMemo(() => {
+    return (currentVerse || 0) / (chapterVerseLength || 10);
+  }, [currentVerse, chapterVerseLength]);
 
   return (
     <View style={styles.header}>
-      <TouchableOpacity
-        ref={dashboardRef}
-        style={styles.iconContainer}
-        onPress={() => navigation.navigate("Dashboard")}
-      >
-        <Ionicons name="home" size={headerIconSize} style={[styles.icon]} />
-      </TouchableOpacity>
-      <View style={styles.headerCenter}>
-        {headerIconData.map((icon, index) => (
-          <TouchableOpacity
-            ref={icon.ref}
-            style={styles.iconContainer}
-            key={index}
-            onPress={icon?.action}
-            onLongPress={icon?.longAction}
-            disabled={icon.disabled}
-          >
-            {icon.isIonicon ? (
-              <Ionicons
-                name={icon.name}
-                size={headerIconSize}
-                style={[styles.icon, { color: icon.color }]}
-                color={icon.color}
-              />
-            ) : (
-              <MaterialCommunityIcons
-                style={[styles.icon, icon.color && { color: icon.color }]}
-                name={icon.name}
-                size={headerIconSize}
-                color={icon.color}
-              />
-            )}
-          </TouchableOpacity>
-        ))}
-        <BottomModal startAT={2} ref={fontBottomSheetModalRef}>
-          <Settings theme={theme} />
+      <View style={{ flexDirection: "row" }}>
+        <TouchableOpacity
+          ref={dashboardRef}
+          style={styles.iconContainer}
+          onPress={() => navigation.navigate("Dashboard")}
+        >
+          <Ionicons name="home" size={headerIconSize} style={[styles.icon]} />
+        </TouchableOpacity>
+        <View style={styles.headerCenter}>
+          {headerIconData.map((icon, index) => (
+            <TouchableOpacity
+              ref={icon.ref}
+              style={styles.iconContainer}
+              key={index}
+              onPress={icon?.action}
+              onLongPress={icon?.longAction}
+              disabled={icon.disabled}
+            >
+              {icon.isIonicon ? (
+                <Ionicons
+                  name={icon.name}
+                  size={headerIconSize}
+                  style={[styles.icon, { color: icon.color }]}
+                  color={icon.color}
+                />
+              ) : (
+                <MaterialCommunityIcons
+                  style={[styles.icon, icon.color && { color: icon.color }]}
+                  name={icon.name}
+                  size={headerIconSize}
+                  color={icon.color}
+                />
+              )}
+            </TouchableOpacity>
+          ))}
+          <BottomModal startAT={2} ref={fontBottomSheetModalRef}>
+            <Settings theme={theme} />
+          </BottomModal>
+        </View>
+        <TouchableOpacity
+          ref={bibleVersionRef}
+          style={styles.headerEnd}
+          onPress={versionHandlePresentModalPress}
+        >
+          <MaterialCommunityIcons
+            name={isNTV ? "book-cross" : "crown"}
+            size={isNTV ? 24 : headerIconSize}
+            style={[styles.icon, { marginHorizontal: 0 }]}
+          />
+          <Text style={styles.text}>{currentVersionName}</Text>
+        </TouchableOpacity>
+        <BottomModal shouldScroll startAT={1} ref={versionRef}>
+          <VersionList {...{ currentBibleVersion, onSelect, theme }} />
         </BottomModal>
       </View>
-      <TouchableOpacity
-        ref={bibleVersionRef}
-        style={styles.headerEnd}
-        onPress={versionHandlePresentModalPress}
-      >
-        <MaterialCommunityIcons
-          name={isNTV ? "book-cross" : "crown"}
-          size={isNTV ? 24 : headerIconSize}
-          style={[styles.icon, { marginHorizontal: 0 }]}
-        />
-        <Text style={styles.text}>{currentVersionName}</Text>
-      </TouchableOpacity>
-      <BottomModal shouldScroll startAT={1} ref={versionRef}>
-        <VersionList {...{ currentBibleVersion, onSelect, theme }} />
-      </BottomModal>
+      {!isSplitActived && (
+        <View style={[styles.progressContainer]}>
+          <ProgressBar
+            hideCircle
+            height={4}
+            color={theme.colors.notification}
+            barColor={theme.colors.text}
+            progress={progressValue > 0.9 ? 1 : progressValue}
+            circleColor={theme.colors.notification}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -204,13 +231,16 @@ const getStyles = ({ colors }: TTheme) =>
       position: "relative",
       display: "flex",
       alignItems: "center",
-      flexDirection: "row",
       justifyContent: "flex-end",
       paddingHorizontal: 10,
       paddingVertical: 10,
       backgroundColor: colors.background + "cc",
       width: "100%",
       borderWidth: 0.5,
+    },
+    progressContainer: {
+      width: "100%",
+      marginVertical: 8,
     },
     versionContainer: {
       position: "relative",
