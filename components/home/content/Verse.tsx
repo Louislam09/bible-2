@@ -42,6 +42,7 @@ type VerseProps = TVerse & {
   onCompare: () => void;
   onWord: () => void;
   initVerse: number;
+  estimatedReadingTime?: number;
 };
 
 const validStrongArr = (arr: WordTagPair[]) => {
@@ -67,6 +68,7 @@ const Verse: React.FC<VerseProps> = ({
   onCompare,
   initVerse,
   onWord,
+  estimatedReadingTime,
 }) => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -110,6 +112,9 @@ const Verse: React.FC<VerseProps> = ({
     item.book_number === 290 && item.chapter === 41 && item.verse === 27;
   const animatedVerseHighlight = useRef(new Animated.Value(0)).current;
   const wordAndStrongValue = extractWordsWithTags(item.text);
+  const isFirstVerse = useMemo(() => {
+    return item.verse === 1;
+  }, [item.verse]);
 
   const initHighLightedVerseAnimation = () => {
     const loopAnimation = Animated.loop(
@@ -402,6 +407,18 @@ const Verse: React.FC<VerseProps> = ({
         style={styles.verseContainer}
         ref={verseRef}
       >
+        {isFirstVerse && (
+          <View style={styles.estimatedContainer}>
+            <Text style={styles.estimatedText}>
+              <MaterialCommunityIcons
+                size={14}
+                name="timer-outline"
+                color={theme.colors.notification}
+              />
+              &nbsp; Tiempo de lectura {`~ ${estimatedReadingTime} min(s)\n`}
+            </Text>
+          </View>
+        )}
         {RenderFindSubTitle(item.verse)}
 
         <Animated.Text
@@ -509,6 +526,14 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     verseNumber: {
       color: colors.notification,
+    },
+    estimatedContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-end",
+    },
+    estimatedText: {
+      textAlign: "right",
     },
     verse: {
       position: "relative",

@@ -229,6 +229,7 @@ export type TChapter = {
   verse?: number;
   chapter?: number;
   book?: string;
+  estimatedReadingTime?: number;
 };
 
 export type TVerse = {

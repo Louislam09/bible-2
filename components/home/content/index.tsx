@@ -17,6 +17,8 @@ import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
 import { QUERY_BY_DB } from "../../../constants/Queries";
 import Chapter from "./Chapter";
+import { getChapterTextRaw } from "utils/getVerseTextRaw";
+import useReadingTime from "hooks/useReadTime";
 
 interface BookContentInterface {
   isSplit: boolean;
@@ -51,10 +53,14 @@ const BookContent: FC<BookContentInterface> = ({
   const { isHistory } = route.params as HomeParams;
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>({});
+  const [chapterText, setChapterText] = useState<string>("");
   const currentBook = DB_BOOK_NAMES.find((x) => x.longName === book);
   const dimensions = Dimensions.get("window");
   const navigation = useNavigation();
   const isNewLaw = useRef<boolean>(false);
+  const estimatedReadingTime = useReadingTime({
+    text: chapterText,
+  });
 
   useEffect(() => {
     isNewLaw.current = currentBibleLongName
@@ -86,6 +92,7 @@ const BookContent: FC<BookContentInterface> = ({
       const [verses, subtitles] = responses;
       setData({ verses, subtitles });
       setChapterLengthNumber(verses?.length || 0);
+      setChapterText(getChapterTextRaw(verses as any));
 
       if (!isHistory) {
         addToHistory({ book, verse, chapter });
@@ -150,6 +157,7 @@ const BookContent: FC<BookContentInterface> = ({
             isSplit={isSplit}
             dimensions={dimensions}
             item={data}
+            estimatedReadingTime={estimatedReadingTime}
           />
         )
       ) : (

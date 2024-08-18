@@ -18,6 +18,7 @@ const Chapter = ({
   book,
   chapter,
   verse: _verse,
+  estimatedReadingTime,
 }: TChapter & { isSplit: boolean }) => {
   const { verses, subtitles } = item;
   if (!verses) return <ActivityIndicator />;
@@ -78,6 +79,7 @@ const Chapter = ({
       initVerse={initialScrollIndex}
       onCompare={compareRefHandlePresentModalPress}
       onWord={strongSearchHandlePresentModalPress}
+      estimatedReadingTime={estimatedReadingTime}
     />
   );
 
