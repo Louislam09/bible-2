@@ -168,6 +168,7 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
       }}
     >
       <BottomModal
+        shouldScroll
         snaps={_snaps}
         startAT={1}
         ref={versionRef}

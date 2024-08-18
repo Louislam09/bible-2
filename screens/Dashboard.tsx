@@ -348,7 +348,6 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
       backgroundColor: "transparent",
       alignItems: "center",
       justifyContent: "center",
-      marginVertical: isPortrait ? 10 : 0,
       width: "100%",
       minHeight: 140,
       flex: 1,
@@ -357,7 +356,7 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
       flex: 1,
       width: "100%",
       backgroundColor: "transparent",
-      minHeight: 400,
+      minHeight: 450,
     },
     verse: {
       display: "flex",
@@ -399,6 +398,7 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
       height: 100,
       width: 100,
       margin: 5,
+      marginBottom: 0,
       backgroundColor: "white",
     },
     separator: {

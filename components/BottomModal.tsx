@@ -7,6 +7,7 @@ import {
 import { useTheme } from "@react-navigation/native";
 import React, { forwardRef, useCallback, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { TTheme } from "types";
 
 type TBottomModal = {
@@ -17,6 +18,7 @@ type TBottomModal = {
   snaps?: any;
   shouldScroll?: boolean;
   headerComponent?: React.ReactNode;
+  footerComponent?: React.ReactNode;
 };
 
 type Ref = BottomSheetModal;
@@ -31,6 +33,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       snaps,
       shouldScroll,
       headerComponent,
+      footerComponent,
     },
     ref
   ) => {
@@ -72,21 +75,24 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
         handleIndicatorStyle={[styles.indicator, justOneSnap && { opacity: 0 }]}
         backdropComponent={renderBackdrop}
         onChange={handleSheetChanges}
-        // enablePanDownToClose
-        // enableDismissOnClose
       >
         {headerComponent && (
           <BottomSheetView style={{}}>{headerComponent}</BottomSheetView>
         )}
         {shouldScroll ? (
-          <BottomSheetScrollView
-            contentContainerStyle={styles.contentContainer}
-          >
-            {children}
-          </BottomSheetScrollView>
+          <>
+            <BottomSheetScrollView
+              contentContainerStyle={styles.contentContainer}
+            >
+              {children}
+            </BottomSheetScrollView>
+          </>
         ) : (
           children
         )}
+        {/* {footerComponent && (
+          <BottomSheetView style={{}}>{footerComponent}</BottomSheetView>
+        )} */}
       </BottomSheetModal>
     );
   }

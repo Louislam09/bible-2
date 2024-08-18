@@ -3,6 +3,7 @@ import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/typ
 import { DB_BOOK_NAMES } from "constants/BookNames";
 import { htmlTemplate } from "constants/HtmlTemplate";
 import { SEARCH_STRONG_WORD } from "constants/Queries";
+import { iconSize } from "constants/size";
 import { useDBContext } from "context/databaseContext";
 import usePrintAndShare from "hooks/usePrintAndShare";
 import React, {
@@ -25,9 +26,6 @@ import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { DictionaryData, IStrongWord, Screens, TTheme } from "types";
 import { Text, View } from "../../Themed";
-import { customBorder } from "utils/customStyle";
-import { DEFAULT_ICON_SIZE } from "@expo/vector-icons/build/createIconSet";
-import { iconSize } from "constants/size";
 
 type MaterialCommunityIconName = keyof typeof MaterialCommunityIcons.glyphMap;
 
