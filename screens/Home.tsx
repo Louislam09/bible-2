@@ -1,13 +1,10 @@
-import BottomSheet from "@gorhom/bottom-sheet";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
-import CustomBottomSheet from "components/BottomSheet";
 import SplitBottomSide from "components/SplitBottomSide";
 import SplitTopSide from "components/SplitTopSide";
 import Walkthrough from "components/Walkthrough";
-import StrongContent from "components/home/content/StrongContent";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Animated,
   PanResponder,
@@ -52,7 +49,6 @@ function HomeScreen() {
     (_bottomSideVerse === 0 ? 1 : _bottomSideVerse) || lastBottomSideVerse;
 
   const [stepIndex, setStepIndex] = useState(0);
-  const sheetRef = useRef<BottomSheet>(null);
 
   const bookRef = useRef<any>(null);
   const nextRef = useRef<any>(null);
@@ -74,13 +70,6 @@ function HomeScreen() {
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const isPortrait = orientation === "PORTRAIT";
   const styles = getStyles(theme, isPortrait);
-
-  const handleSheetChange = useCallback((index: any) => {
-    if (!index) {
-      setStrongWord({ code: "", text: "" });
-      onAddToNote("");
-    }
-  }, []);
 
   const steps = [
     {
@@ -180,7 +169,6 @@ function HomeScreen() {
       <CustomHeader
         {...{ bibleVersionRef, searchRef, favRef, settingRef, dashboardRef }}
       />
-
       <View style={[styles.container, !isPortrait && { flexDirection: "row" }]}>
         <SplitTopSide
           {...{
@@ -195,7 +183,6 @@ function HomeScreen() {
             width: topWidth,
           }}
         />
-
         {/* AdjustableSplit */}
         <Animated.View
           {...panResponder.panHandlers}
@@ -207,7 +194,6 @@ function HomeScreen() {
         >
           <View style={styles.sliderHandle} />
         </Animated.View>
-
         {isSplitActived && (
           <SplitBottomSide
             {...{
@@ -230,7 +216,6 @@ function HomeScreen() {
           />
         )}
       </View>
-
       {bookRef.current && isTour && (
         <Walkthrough
           steps={steps}

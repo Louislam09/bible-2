@@ -5,7 +5,7 @@ import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "constants/BookNames";
 import { useBibleContext } from "context/BibleContext";
 import useAudioPlayer from "hooks/useAudioPlayer";
 import { FC, useCallback, useEffect, useRef } from "react";
-import { Animated, TouchableOpacity } from "react-native";
+import { Animated, TouchableOpacity, useWindowDimensions } from "react-native";
 import { EBibleVersions, Screens } from "types";
 
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
@@ -14,6 +14,11 @@ import { Text, View } from "components/Themed";
 import { iconSize } from "constants/size";
 import { useStorage } from "context/LocalstoreContext";
 import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
+import {
+  GestureHandlerStateChangeNativeEvent,
+  PanGestureHandler,
+  State,
+} from "react-native-gesture-handler";
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
@@ -27,6 +32,10 @@ interface FooterInterface {
   chapter: any;
   verse: any;
 }
+
+type handleGestureStateChangeProps = {
+  nativeEvent: GestureHandlerStateChangeNativeEvent;
+};
 
 const CustomFooter: FC<FooterInterface> = ({
   bookRef,
@@ -45,6 +54,7 @@ const CustomFooter: FC<FooterInterface> = ({
     isSplitActived,
     toggleBottomSideSearching,
   } = useBibleContext();
+  const { width: SCREEN_WIDTH } = useWindowDimensions();
   const { historyManager } = useStorage();
   const FOOTER_ICON_SIZE = iconSize;
   const theme = useTheme();
@@ -57,6 +67,8 @@ const CustomFooter: FC<FooterInterface> = ({
     DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
   const isRVR = currentBibleVersion === EBibleVersions.BIBLE;
+  const translateX = useRef(new Animated.Value(0)).current;
+  const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
   const { isDownloading, isPlaying, playAudio, duration, position } =
     useAudioPlayer({
       book: bookIndex + 1,
@@ -149,83 +161,130 @@ const CustomFooter: FC<FooterInterface> = ({
     });
   }, [currentHistoryIndex]);
 
+  const handleGestureEvent = Animated.event(
+    [{ nativeEvent: { translationX: translateX } }],
+    {
+      useNativeDriver: false,
+    }
+  );
+
+  const handleGestureStateChange = ({
+    nativeEvent,
+  }: handleGestureStateChangeProps) => {
+    if (nativeEvent.state !== State.END) return;
+    // @ts-ignore
+    const _translationX = nativeEvent.translationX;
+    if (_translationX < -SWIPE_THRESHOLD) {
+      Animated.timing(translateX, {
+        toValue: -SCREEN_WIDTH,
+        duration: 100,
+        useNativeDriver: true,
+      }).start(() => {
+        nextChapter();
+        translateX.setValue(0);
+      });
+    } else if (_translationX > SWIPE_THRESHOLD) {
+      Animated.timing(translateX, {
+        toValue: SCREEN_WIDTH,
+        duration: 100,
+        useNativeDriver: true,
+      }).start(() => {
+        previuosChapter();
+        translateX.setValue(0);
+      });
+    } else {
+      Animated.timing(translateX, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
   return (
-    <Animated.View style={[styles.footer]}>
-      {isPlaying && (
-        <View style={[styles.progressBarContainer]}>
-          <ProgressBar
-            height={8}
-            color={theme.colors.notification}
-            barColor={theme.colors.text}
-            progress={position / duration}
-            circleColor={theme.colors.notification}
-          />
-        </View>
-      )}
-      <View style={styles.footerCenter}>
-        <TouchableOpacity ref={backRef} onPress={() => previuosChapter()}>
-          <Ionicons
-            name="chevron-back-sharp"
-            style={[styles.icon]}
-            size={FOOTER_ICON_SIZE}
-            color="white"
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          ref={bookRef}
-          style={styles.titleContainer}
-          onPress={onPress}
-          onLongPress={onLongFooterTitle}
-          delayLongPress={200}
-        >
-          <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
-            {`${displayBookName ?? ""} ${chapter ?? ""}:${
-              currentHistoryItemVerse || verse
-            }`}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>
-          <Ionicons
-            name="chevron-forward-sharp"
-            style={styles.icon}
-            size={FOOTER_ICON_SIZE}
-            color="white"
-          />
-        </TouchableOpacity>
-      </View>
-      {!isSplitActived && (
-        <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity
-            ref={audioRef}
-            style={[styles.footerEnd, !isRVR && { display: "none" }]}
-            onPress={playHandlePresentModalPress}
-          >
-            <MaterialCommunityIcons
-              name={"headphones"}
+    <PanGestureHandler
+      onGestureEvent={handleGestureEvent}
+      onHandlerStateChange={handleGestureStateChange}
+    >
+      <Animated.View style={[styles.footer]}>
+        {isPlaying && (
+          <View style={[styles.progressBarContainer]}>
+            <ProgressBar
+              height={8}
+              color={theme.colors.notification}
+              barColor={theme.colors.text}
+              progress={position / duration}
+              circleColor={theme.colors.notification}
+            />
+          </View>
+        )}
+        <View style={styles.footerCenter}>
+          <TouchableOpacity ref={backRef} onPress={() => previuosChapter()}>
+            <Ionicons
+              name="chevron-back-sharp"
+              style={[styles.icon]}
               size={FOOTER_ICON_SIZE}
-              style={[styles.icon, { marginHorizontal: 0 }]}
+              color="white"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            ref={bookRef}
+            style={styles.titleContainer}
+            onPress={onPress}
+            onLongPress={onLongFooterTitle}
+            delayLongPress={200}
+          >
+            <Text
+              style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}
+            >
+              {`${displayBookName ?? ""} ${chapter ?? ""}:${
+                currentHistoryItemVerse || verse
+              }`}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>
+            <Ionicons
+              name="chevron-forward-sharp"
+              style={styles.icon}
+              size={FOOTER_ICON_SIZE}
+              color="white"
             />
           </TouchableOpacity>
         </View>
-      )}
+        {!isSplitActived && (
+          <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity
+              ref={audioRef}
+              style={[styles.footerEnd, !isRVR && { display: "none" }]}
+              onPress={playHandlePresentModalPress}
+            >
+              <MaterialCommunityIcons
+                name={"headphones"}
+                size={FOOTER_ICON_SIZE}
+                style={[styles.icon, { marginHorizontal: 0 }]}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
 
-      <BottomModal justOneSnap startAT={0} ref={playRef}>
-        <Play
-          {...{
-            theme,
-            isDownloading,
-            isPlaying,
-            playAudio,
-            duration,
-            position,
-            nextChapter,
-            previuosChapter,
-            book,
-            chapter,
-          }}
-        />
-      </BottomModal>
-    </Animated.View>
+        <BottomModal justOneSnap startAT={0} ref={playRef}>
+          <Play
+            {...{
+              theme,
+              isDownloading,
+              isPlaying,
+              playAudio,
+              duration,
+              position,
+              nextChapter,
+              previuosChapter,
+              book,
+              chapter,
+            }}
+          />
+        </BottomModal>
+      </Animated.View>
+    </PanGestureHandler>
   );
 };
 
