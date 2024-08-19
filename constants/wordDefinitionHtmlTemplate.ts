@@ -1,7 +1,8 @@
 export const wordDefinitionHtmlTemplate = (
   content: any,
   colors: any,
-  fontSize: any
+  fontSize: any,
+  isPrint: boolean = false
 ) => {
   return `
         <!DOCTYPE html>
@@ -17,8 +18,8 @@ export const wordDefinitionHtmlTemplate = (
             <style>
                 body{
                     color: ${colors.text};
-                    background: transparent;
-                    font-size: ${fontSize - 2}px;
+                    background: ${colors.background};
+                    font-size: ${isPrint ? "3rem" : fontSize - 2 + "px"};
                     user-select: none;
                     font-family: "Open Sans", sans-serif;
                     font-optical-sizing: auto;

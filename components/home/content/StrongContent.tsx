@@ -180,9 +180,9 @@ const StrongContent: FC<IStrongContent> = ({
   const onShare = useCallback(async () => {
     const html = htmlTemplate(values, theme.colors, fontSize, true);
     setSharing(true);
-    await printToFile(html);
+    await printToFile(html, word?.toUpperCase() || "--");
     setSharing(false);
-  }, [values]);
+  }, [values, word]);
 
   const currentCode = values[0]?.topic;
   const isH = currentCode?.includes("H");
@@ -277,7 +277,7 @@ const StrongContent: FC<IStrongContent> = ({
         </View>
         <View style={styles.subHeader}>
           <Text style={[styles.subTitle, { fontSize }]}>
-            {word.replace(",", "") || "-"} - {title || "-"} {currentCode}
+            {word.replace(/[.,;]/g, "") || "-"} - {title || "-"} {currentCode}
           </Text>
         </View>
       </View>

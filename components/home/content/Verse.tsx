@@ -311,7 +311,7 @@ const Verse: React.FC<VerseProps> = ({
 
     const searchCode = addCognate(tagValue || "");
     const value = {
-      text: word,
+      text: word.replace(/[.,;]/g, ""),
       code: searchCode,
     };
     setStrongWord(value);

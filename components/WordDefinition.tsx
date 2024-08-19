@@ -1,6 +1,6 @@
 import * as Clipboard from "expo-clipboard";
 import React, { useRef, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, ToastAndroid, TouchableOpacity, View } from "react-native";
 import WebView from "react-native-webview";
 import { Text } from "./Themed";
 import { useCustomTheme } from "context/ThemeContext";
@@ -10,8 +10,12 @@ import { wordDefinitionHtmlTemplate } from "constants/wordDefinitionHtmlTemplate
 import { DictionaryData, Screens, TTheme } from "types";
 import { useBibleContext } from "context/BibleContext";
 import { useNavigation } from "@react-navigation/native";
-import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
+import {
+  ShouldStartLoadRequest,
+  WebViewMessageEvent,
+} from "react-native-webview/lib/WebViewTypes";
 import { DB_BOOK_NAMES } from "constants/BookNames";
+import usePrintAndShare from "hooks/usePrintAndShare";
 
 type WordDefinitionProps = {
   wordData: DictionaryData;
@@ -33,6 +37,7 @@ const WordDefinition = ({
   const webViewRef = useRef<WebView>(null);
   const { definition, topic } = wordData;
   const { fontSize } = useBibleContext();
+  const { printToFile } = usePrintAndShare();
   const html = wordDefinitionHtmlTemplate(
     definition || "",
     theme.colors,
@@ -71,10 +76,31 @@ const WordDefinition = ({
     return false;
   };
 
+  const onMessage = async (event: WebViewMessageEvent) => {
+    const eventData = event.nativeEvent.data;
+    const isNumber = !isNaN(+eventData);
+    if (isNumber) {
+      setHeight(+eventData);
+      return;
+    }
+    const text = `${eventData}`;
+    await Clipboard.setStringAsync(text);
+    const _html = wordDefinitionHtmlTemplate(
+      definition || "",
+      theme.colors,
+      fontSize,
+      true
+    );
+    printToFile(_html, topic?.toUpperCase() || "--");
+  };
+
   return (
     <View style={{ paddingHorizontal: 20, flex: 1 }}>
       <View style={styles.wordOfDayContainer}>
-        <TouchableOpacity style={styles.wordOfDayBody}>
+        <TouchableOpacity
+          onPress={copyContentToClipboard}
+          style={styles.wordOfDayBody}
+        >
           <Text style={styles.bodyTitle}>{topic}</Text>
           <View style={styles.decorationLine} />
         </TouchableOpacity>
@@ -83,7 +109,7 @@ const WordDefinition = ({
           onPress={copyContentToClipboard}
         >
           <MaterialCommunityIcons
-            name="content-copy"
+            name="share-variant-outline"
             color={theme.colors.notification}
             size={28}
           />
@@ -105,16 +131,7 @@ const WordDefinition = ({
           originWhitelist={["*"]}
           source={{ html }}
           scrollEnabled={true}
-          onMessage={async (event) => {
-            const eventData = event.nativeEvent.data;
-            const isNumber = !isNaN(+eventData);
-            if (isNumber) {
-              setHeight(+eventData);
-              return;
-            }
-            const text = `${eventData}`;
-            await Clipboard.setStringAsync(text);
-          }}
+          onMessage={onMessage}
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
           onLoadEnd={() => {
             webViewRef.current?.injectJavaScript(`

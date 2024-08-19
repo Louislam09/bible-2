@@ -102,7 +102,7 @@ const RenderItem = ({
                       10,
                       true
                     );
-                    printToFile(html);
+                    printToFile(html, item?.title?.toUpperCase() || "--");
                   }}
                 />
               </>
