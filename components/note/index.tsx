@@ -79,16 +79,21 @@ const RenderItem = ({
             <Text style={[styles.cardTitle]}>{item.title}</Text>
             <View style={[styles.verseAction]}>
               <>
-                <MaterialCommunityIcons
+                {/* <MaterialCommunityIcons
                   size={24}
                   name="eye"
                   style={styles.icon}
                   onPress={() => onViewMode(item.id)}
-                />
+                /> */}
                 <MaterialCommunityIcons
                   size={24}
                   name="delete"
-                  style={[styles.icon]}
+                  style={[
+                    styles.icon,
+                    {
+                      color: "#e74856",
+                    },
+                  ]}
                   onPress={() => warnBeforeDelete(item.id)}
                 />
                 <MaterialCommunityIcons
