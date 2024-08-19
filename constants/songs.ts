@@ -763,7 +763,7 @@ export default [
   {
     title: "71.- ¡LO SÉ! ¡LO SÉ!",
     chorus:
-      "(E) ¡Lo sé! ¡Lo sé! ¡Lavado en Su sangre yo soy!\nA E C#m F#m B7 E\n¡Lo sé! ¡Lo sé! ¡Con Cristo al cielo yo voy!",
+      "(E) ¡Lo sé! ¡Lo sé! ¡Lavado en Su sangre yo soy!\n¡Lo sé! ¡Lo sé! ¡Con Cristo al cielo yo voy!",
     stanzas: [
       "(1) Lavado en la Sangre de Cristo,\ncon gozo al cielo yo voy;\nlibrado por gracia infinita,\nhoy sé que ¡Su hijo ya soy!",
       "(2) ¡Soy libre de pena y culpa, Su gozo Él me hace sentir!\n¡Él llena de gracia mi alma, con Él es tan dulce vivir!",

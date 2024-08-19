@@ -120,6 +120,7 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
     const backAction = () => {
       versionRef.current?.dismiss();
       setSelected(null);
+      setSearchText("");
       !selected && navigation.goBack();
       return true;
     };
@@ -135,6 +136,7 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   const handleCustomBack = () => {
     if (selected) {
       setSelected(null);
+      setSearchText("");
     } else {
       navigation.navigate("Dashboard");
     }
@@ -157,7 +159,10 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   const getIndex = (index: any) => {
     const value = snaps[index] || 30;
     topHeight.setValue(value);
-    if (index < 0) setSelected(null);
+    if (index < 0) {
+      setSearchText("");
+      setSelected(null);
+    }
   };
 
   return (
