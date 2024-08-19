@@ -6,6 +6,7 @@ import { Animated, StyleSheet, Text, View } from "react-native";
 import { BookGruop, IVerseItem, RootStackScreenProps, TTheme } from "types";
 import AnimatedDropdown from "./AnimatedDropdown";
 import ListVerse from "./search/ListVerse";
+import { DB_BOOK_NAMES } from "constants/BookNames";
 
 const SearchWordEntire: React.FC<RootStackScreenProps<"Search">> = ({}) => {
   const { searchState, searchQuery } = useBibleContext();
@@ -13,40 +14,28 @@ const SearchWordEntire: React.FC<RootStackScreenProps<"Search">> = ({}) => {
   const styles = getStyles(theme);
   const [data, setData] = useState<IVerseItem[] | null>(null);
   const { fontSize } = useBibleContext();
-  const defaultFilterOption = "Filtra por grupo";
+  const defaultFilterOption = "Filtra por libro";
 
-  type QueryFilter = { [key in BookGruop | string]: number[] };
-  const filterOptions: QueryFilter = {
-    "Filtra por grupo": [-1, -1],
-    [BookGruop.AntiguoPacto]: [0, 460],
-    [BookGruop.Pentateuco]: [0, 50],
-    [BookGruop.LibrosHistóricos]: [60, 120],
-    [BookGruop.LibrosPoéticos]: [130, 150],
-    [BookGruop.ProfetasMayores]: [160, 200],
-    [BookGruop.ProfetasMenores]: [210, 460],
-    [BookGruop.NuevoPacto]: [470, 730],
-    [BookGruop.Evangelios]: [470, 500],
-    [BookGruop.Hechos]: [510, 510],
-    [BookGruop.Epístolas]: [520, 700],
-    [BookGruop.EpístolasdePablo]: [520, 590],
-    [BookGruop.EpístolasGenerales]: [600, 700],
-    [BookGruop.Apocalipsis]: [730, 730],
-  };
+  function getUniqueBookNames(data: IVerseItem[]) {
+    const bookNames = data.map((item: any) => item.bookName);
+    return [defaultFilterOption, ...new Set(bookNames)];
+  }
 
   const [selectedFilterOption, setSelectedFilterOption] =
     useState(defaultFilterOption);
 
-  const filterData = useMemo(() => {
-    const filter = filterOptions[selectedFilterOption];
-    if (filter.includes(-1)) return null;
-    const [startBookNumber, endBookNumber] = filter;
-
-    const _data = data?.filter(
-      (item) =>
-        item.book_number >= startBookNumber && item.book_number <= endBookNumber
+  const filterOptions = getUniqueBookNames(data || []);
+  const filterBookNumber = useMemo(() => {
+    return (
+      DB_BOOK_NAMES.find((book) => book.longName === selectedFilterOption)
+        ?.bookNumber || 0
     );
-    return !!_data?.length ? _data : null;
   }, [selectedFilterOption]);
+
+  const filteredData = useMemo(() => {
+    if (!filterBookNumber) return data;
+    return data?.filter((item) => item.book_number === filterBookNumber);
+  }, [filterBookNumber, data]);
 
   useEffect(() => {
     if (searchState?.searchResults) {
@@ -66,7 +55,7 @@ const SearchWordEntire: React.FC<RootStackScreenProps<"Search">> = ({}) => {
       style={{
         flex: 1,
         backgroundColor: theme.colors.background,
-        paddingTop: 10,
+        paddingTop: 0,
       }}
     >
       <View style={{ paddingHorizontal: 15 }}>
@@ -83,7 +72,11 @@ const SearchWordEntire: React.FC<RootStackScreenProps<"Search">> = ({}) => {
           </View>
           <View style={styles.pickerContainer}>
             <AnimatedDropdown
-              options={Object.keys(filterOptions)}
+              withIcon
+              customStyle={{
+                picker: { padding: 0 },
+              }}
+              options={filterOptions}
               selectedValue={selectedFilterOption}
               onValueChange={setSelectedFilterOption}
               theme={theme}
@@ -93,11 +86,11 @@ const SearchWordEntire: React.FC<RootStackScreenProps<"Search">> = ({}) => {
         <Text style={[styles.resultText, { fontSize }]}>
           Resultado encontrados:{" "}
           <Text style={{ color: theme.colors.notification }}>
-            {(filterData || data)?.length}
+            {filteredData?.length}
           </Text>
         </Text>
       </View>
-      <ListVerse isLoading={!!searchState?.error} data={filterData || data} />
+      <ListVerse isLoading={!!searchState?.error} data={filteredData} />
     </Animated.View>
   );
 };
@@ -105,14 +98,13 @@ const SearchWordEntire: React.FC<RootStackScreenProps<"Search">> = ({}) => {
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     filterContainer: {
-      // borderColor: colors.notification,
       borderWidth: 1,
       borderRadius: 10,
       display: "flex",
       justifyContent: "space-between",
       flexDirection: "row",
       alignItems: "center",
-      padding: 1,
+      padding: 0,
       borderColor: colors.notification,
       backgroundColor: colors.notification + "99",
     },
@@ -120,7 +112,7 @@ const getStyles = ({ colors }: TTheme) =>
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      height: 48,
+      height: 40,
       alignSelf: "flex-start",
       backgroundColor: colors.notification + "99",
       paddingHorizontal: 15,

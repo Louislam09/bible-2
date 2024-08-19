@@ -10,24 +10,6 @@ import AnimatedDropdown from "./AnimatedDropdown";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { DB_BOOK_NAMES } from "constants/BookNames";
 
-// const OldVowGroup = {
-//   [BookGruop.AntiguoPacto]: [0, 460],
-//   [BookGruop.Pentateuco]: [0, 50],
-//   [BookGruop.LibrosHistóricos]: [60, 120],
-//   [BookGruop.LibrosPoéticos]: [130, 150],
-//   [BookGruop.ProfetasMayores]: [160, 200],
-//   [BookGruop.ProfetasMenores]: [210, 460],
-// };
-// const NewVowGroup = {
-//   [BookGruop.NuevoPacto]: [470, 730],
-//   [BookGruop.Evangelios]: [470, 500],
-//   [BookGruop.Hechos]: [510, 510],
-//   [BookGruop.Epístolas]: [520, 700],
-//   [BookGruop.EpístolasdePablo]: [520, 590],
-//   [BookGruop.EpístolasGenerales]: [600, 700],
-//   [BookGruop.Apocalipsis]: [730, 730],
-// };
-
 const SearchStrongWordEntire: React.FC<
   RootStackScreenProps<"StrongSearchEntire">
 > = ({ route }) => {
