@@ -204,7 +204,8 @@ const StrongContent: FC<IStrongContent> = ({
       {
         iconName: "text-search",
         viewStyle: animatedStyle,
-        description: "Buscar Versículos",
+        description: "Profundizar",
+        // description: "Buscar Versículos",
         onAction: onStrongSearchEntire,
       },
       {
@@ -232,7 +233,7 @@ const StrongContent: FC<IStrongContent> = ({
             style={[styles.backIcon, {}]}
             name={item.iconName}
             size={iconSize}
-            color="white"
+            color={theme.colors.notification}
           />
         </Pressable>
         <Text style={styles.actionItemText}>{item.description}</Text>
@@ -263,9 +264,11 @@ const StrongContent: FC<IStrongContent> = ({
                 style={styles.backIcon}
                 name="keyboard-backspace"
                 size={26}
-                color="white"
+                color={theme.colors.text}
               />
-              <Text style={{ fontSize: 12, color: "white" }}>Anterior</Text>
+              <Text style={{ fontSize: 12, color: theme.colors.text }}>
+                Anterior
+              </Text>
             </Pressable>
           )}
           {headerActions.map((item, index) => (
@@ -349,6 +352,7 @@ const getStyles = ({ colors }: TTheme) =>
       paddingVertical: 5,
       textDecorationLine: "underline",
       color: colors.text,
+      fontWeight: "bold",
     },
     backIcon: {
       fontWeight: "bold",
@@ -389,8 +393,9 @@ const getStyles = ({ colors }: TTheme) =>
     },
     actionItemText: {
       fontSize: 12,
-      color: "white",
+      color: colors.text,
       textAlign: "center",
+      fontWeight: "bold",
     },
   });
 

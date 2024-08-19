@@ -2,12 +2,31 @@ import { useTheme } from "@react-navigation/native";
 import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from "constants/Queries";
 import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
-import { BookGruop, RootStackScreenProps, TTheme } from "types";
+import { BookGruop, IVerseItem, RootStackScreenProps, TTheme } from "types";
 import StrongSearchContent from "./StrongSearchContent";
 import AnimatedDropdown from "./AnimatedDropdown";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { DB_BOOK_NAMES } from "constants/BookNames";
+
+// const OldVowGroup = {
+//   [BookGruop.AntiguoPacto]: [0, 460],
+//   [BookGruop.Pentateuco]: [0, 50],
+//   [BookGruop.LibrosHistóricos]: [60, 120],
+//   [BookGruop.LibrosPoéticos]: [130, 150],
+//   [BookGruop.ProfetasMayores]: [160, 200],
+//   [BookGruop.ProfetasMenores]: [210, 460],
+// };
+// const NewVowGroup = {
+//   [BookGruop.NuevoPacto]: [470, 730],
+//   [BookGruop.Evangelios]: [470, 500],
+//   [BookGruop.Hechos]: [510, 510],
+//   [BookGruop.Epístolas]: [520, 700],
+//   [BookGruop.EpístolasdePablo]: [520, 590],
+//   [BookGruop.EpístolasGenerales]: [600, 700],
+//   [BookGruop.Apocalipsis]: [730, 730],
+// };
 
 const SearchStrongWordEntire: React.FC<
   RootStackScreenProps<"StrongSearchEntire">
@@ -16,56 +35,43 @@ const SearchStrongWordEntire: React.FC<
   const theme = useTheme();
   const styles = getStyles(theme);
   const { myBibleDB, executeSql } = useDBContext();
-  const [data, setData] = useState<any | null>(null);
+  const [data, setData] = useState<IVerseItem[] | null>(null);
   const { strongWord, fontSize } = useBibleContext();
   const code = (paramCode || strongWord?.code)?.match(/\d+/)?.[0];
-  const isH = (paramCode || strongWord?.code)?.includes("H");
-  const initialFilterOption = isH
-    ? BookGruop.AntiguoPacto
-    : BookGruop.NuevoPacto;
+  const defaultFilterOption = "Filtra por libro";
 
-  const OldVowGroup = {
-    [BookGruop.AntiguoPacto]: [0, 460],
-    [BookGruop.Pentateuco]: [0, 50],
-    [BookGruop.LibrosHistóricos]: [60, 120],
-    [BookGruop.LibrosPoéticos]: [130, 150],
-    [BookGruop.ProfetasMayores]: [160, 200],
-    [BookGruop.ProfetasMenores]: [210, 460],
-  };
-  const NewVowGroup = {
-    [BookGruop.NuevoPacto]: [470, 730],
-    [BookGruop.Evangelios]: [470, 500],
-    [BookGruop.Hechos]: [510, 510],
-    [BookGruop.Epístolas]: [520, 700],
-    [BookGruop.EpístolasdePablo]: [520, 590],
-    [BookGruop.EpístolasGenerales]: [600, 700],
-    [BookGruop.Apocalipsis]: [730, 730],
-  };
-
-  type QueryFilter = { [key in BookGruop]?: number[] };
-  const queryFilter: QueryFilter = isH ? OldVowGroup : NewVowGroup;
+  function getUniqueBookNames(data: IVerseItem[]) {
+    const bookNames = data.map((item: any) => item.bookName);
+    return [defaultFilterOption, ...new Set(bookNames)];
+  }
 
   const [selectedFilterOption, setSelectedFilterOption] =
-    useState(initialFilterOption);
+    useState(defaultFilterOption);
 
-  const filterOptions = isH
-    ? Object.keys(OldVowGroup)
-    : (Object.keys(NewVowGroup) as string[]);
+  const filterOptions = getUniqueBookNames(data || []);
+  const filterBookNumber = useMemo(() => {
+    return (
+      DB_BOOK_NAMES.find((book) => book.longName === selectedFilterOption)
+        ?.bookNumber || 0
+    );
+  }, [selectedFilterOption]);
+
+  const filteredData = useMemo(() => {
+    if (!filterBookNumber) return data;
+    return data?.filter((item) => item.book_number === filterBookNumber);
+  }, [filterBookNumber, data]);
 
   useEffect(() => {
     (async () => {
       if (!myBibleDB || !executeSql) return;
       if (!code) return;
-      const params = [
-        `%>${code}<%`,
-        ...(queryFilter[selectedFilterOption] || [0, 0]),
-      ];
+      const params = [`%>${code}<%`];
       const searchData = await executeSql(
         myBibleDB,
         SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE,
         params
       );
-      setData(searchData ?? []);
+      setData((searchData as IVerseItem[]) || []);
     })();
 
     return () => {};
@@ -89,7 +95,10 @@ const SearchStrongWordEntire: React.FC<
           <View
             style={[
               styles.strongNumber,
-              { paddingHorizontal: 15, backgroundColor: "transparent" },
+              {
+                paddingHorizontal: 15,
+                backgroundColor: "transparent",
+              },
             ]}
           >
             <MaterialCommunityIcons
@@ -101,6 +110,10 @@ const SearchStrongWordEntire: React.FC<
           </View>
           <View style={styles.pickerContainer}>
             <AnimatedDropdown
+              withIcon
+              customStyle={{
+                picker: { padding: 0 },
+              }}
               options={filterOptions}
               selectedValue={selectedFilterOption}
               onValueChange={setSelectedFilterOption}
@@ -124,14 +137,14 @@ const SearchStrongWordEntire: React.FC<
         <Text style={[styles.resultText, { fontSize }]}>
           Resultado encontrados:{" "}
           <Text style={{ color: theme.colors.notification }}>
-            {data?.length}
+            {filteredData?.length}
           </Text>
         </Text>
       </View>
       <StrongSearchContent
         strongWord={{ code: paramCode?.split(",")?.[0], text: strongWord.text }}
         theme={theme}
-        data={data}
+        data={filteredData}
         currentFilter={selectedFilterOption}
       />
     </Animated.View>
@@ -148,13 +161,13 @@ const getStyles = ({ colors }: TTheme) =>
       justifyContent: "space-between",
       flexDirection: "row",
       alignItems: "center",
-      padding: 1,
+      padding: 0,
     },
     strongNumber: {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      height: 48,
+      height: 40,
       alignSelf: "flex-start",
       backgroundColor: colors.notification + "99",
       paddingHorizontal: 10,
