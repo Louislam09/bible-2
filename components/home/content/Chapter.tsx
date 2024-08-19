@@ -31,7 +31,8 @@ const Chapter = ({
   const [topVerse, setTopVerse] = useState(null);
   const viewabilityConfig = { viewAreaCoveragePercentThreshold: 1 };
   const [isLayoutMounted, setLayoutMounted] = useState(false);
-  const { verseToCompare, strongWord, fontSize } = useBibleContext();
+  const { verseToCompare, strongWord, fontSize, chapterVerseLength } =
+    useBibleContext();
   const navigation = useNavigation();
   const debounceTopVerse = useDebounce(topVerse, 100);
   const strongSearchBottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -100,6 +101,10 @@ const Chapter = ({
     { onViewableItemsChanged, viewabilityConfig },
   ]);
 
+  const onEndReached = useCallback(() => {
+    setTimeout(() => setTopVerse(chapterVerseLength as any), 500);
+  }, [chapterVerseLength]);
+
   return (
     <View style={styles.chapterContainer}>
       <View style={[styles.verseContent]}>
@@ -112,6 +117,7 @@ const Chapter = ({
           estimatedItemSize={135}
           data={verses ?? []}
           renderItem={renderItem}
+          onEndReached={onEndReached}
           initialScrollIndex={initialScrollIndex}
           keyExtractor={(item: any) => `verse-${item.verse}:`}
           viewabilityConfigCallbackPairs={

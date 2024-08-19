@@ -86,23 +86,11 @@ const CustomHeader: FC<HeaderInterface> = ({
   };
 
   const moveBackInHistory = () => {
-    // if (!goBackOnHistory || [-1, 0].includes(currentHistoryIndex)) {
-    //   ToastAndroid.show("No tiene historial", ToastAndroid.SHORT);
-    //   return;
-    // }
     const index = goBack();
     goBackOnHistory?.(index);
   };
 
   const moveForwardInHistory = () => {
-    // if (
-    //   !goForwardOnHistory ||
-    //   -1 === currentHistoryIndex ||
-    //   currentHistoryIndex + 1 >= searchHistorial.length
-    // ) {
-    //   ToastAndroid.show("No tiene historial", ToastAndroid.SHORT);
-    //   return;
-    // }
     const index = goForward();
     goForwardOnHistory?.(index);
   };
@@ -216,7 +204,7 @@ const CustomHeader: FC<HeaderInterface> = ({
             height={4}
             color={theme.colors.notification}
             barColor={theme.colors.text}
-            progress={progressValue > 0.9 ? 1 : progressValue}
+            progress={progressValue}
             circleColor={theme.colors.notification}
           />
         </View>
