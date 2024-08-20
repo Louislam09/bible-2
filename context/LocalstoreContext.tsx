@@ -28,6 +28,7 @@ type StoreState = {
   isSongLyricEnabled: boolean;
   songFontSize: number;
   history: HistoryItem[];
+  currentVoiceIdentifier: string;
 };
 
 interface StorageContextProps {
@@ -69,6 +70,7 @@ const initialContext: StoreState = {
   isSongLyricEnabled: false,
   songFontSize: 21,
   history: [],
+  currentVoiceIdentifier: "es-us-x-esd-local",
 };
 
 const isArrEqual = (arr1: any[], arr2: any[]) => {

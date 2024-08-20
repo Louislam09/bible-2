@@ -1,50 +1,53 @@
+import { FlashList } from "@shopify/flash-list";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { TTheme } from "types";
-import { Text, View } from "./Themed";
+import { Text } from "./Themed";
 
-type TabNavigationProps = {
+type CustomTabsProps = {
   theme: TTheme;
-  isMyDownloadTab: boolean;
-  setIsMyDownloadTab: any;
+  activedTab: string;
+  setActivedTab: any;
+  tabs: string[];
 };
 
-const TabNavigation = ({
+const CustomTabs = ({
   theme,
-  isMyDownloadTab,
-  setIsMyDownloadTab,
-}: TabNavigationProps) => {
+  activedTab,
+  setActivedTab,
+  tabs,
+}: CustomTabsProps) => {
   const styles = getStyles(theme);
 
-  return (
-    <View style={styles.container}>
+  const renderItem = ({ item: tab }: any) => {
+    return (
       <TouchableOpacity
-        onPress={() => setIsMyDownloadTab(false)}
+        key={tab}
+        onPress={() => setActivedTab(tab)}
         style={[
           styles.tab,
-          !isMyDownloadTab && styles.activeTab,
+          activedTab === tab && styles.activeTab,
           { borderColor: theme.colors.notification },
         ]}
       >
         <Text
-          style={[styles.tabText, !isMyDownloadTab && styles.activeTabText]}
+          style={[styles.tabText, activedTab === tab && styles.activeTabText]}
         >
-          Modulos
+          {tab}
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => setIsMyDownloadTab(true)}
-        style={[
-          styles.tab,
-          isMyDownloadTab && styles.activeTab,
-          { borderColor: theme.colors.notification },
-        ]}
-      >
-        <Text style={[styles.tabText, isMyDownloadTab && styles.activeTabText]}>
-          Mis Descargas
-        </Text>
-      </TouchableOpacity>
-    </View>
+    );
+  };
+
+  return (
+    <FlashList
+      horizontal
+      contentContainerStyle={{ backgroundColor: "transparent" }}
+      data={tabs}
+      renderItem={renderItem}
+      estimatedItemSize={100}
+      keyExtractor={(item: any, index: any) => `tab-${index}-${item}`}
+    />
   );
 };
 
@@ -54,11 +57,11 @@ const getStyles = ({ colors, dark }: TTheme) =>
       flexDirection: "row",
       alignItems: "center",
       paddingVertical: 10,
+      paddingHorizontal: 10,
       backgroundColor: "transparent",
     },
     tab: {
       flex: 1,
-      // borderWidth: 1,
       paddingHorizontal: 10,
       marginHorizontal: 5,
       paddingVertical: 5,
@@ -67,7 +70,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderRadius: 10,
     },
     activeTab: {
-      // backgroundColor: colors.notification,
       borderBottomWidth: 2,
     },
     tabText: {
@@ -79,4 +81,4 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
   });
 
-export default TabNavigation;
+export default CustomTabs;

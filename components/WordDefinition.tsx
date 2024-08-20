@@ -18,6 +18,7 @@ import { DB_BOOK_NAMES } from "constants/BookNames";
 import usePrintAndShare from "hooks/usePrintAndShare";
 import { useTextToSpeech } from "hooks/useTextToSpeech";
 import { iconSize } from "constants/size";
+import Voices from "constants/Voices";
 
 type WordDefinitionProps = {
   wordData: DictionaryData;
@@ -25,6 +26,7 @@ type WordDefinitionProps = {
   navigation?: any;
   theme?: TTheme;
 };
+const randomVoice = Math.floor(Math.random() * Voices.length);
 
 const WordDefinition = ({
   wordData,
@@ -33,7 +35,8 @@ const WordDefinition = ({
   theme: _theme,
 }: WordDefinitionProps) => {
   const navigation = _navigation ? _navigation : useNavigation();
-  const { speak, stop, isSpeaking } = useTextToSpeech();
+  const voice = Voices[randomVoice];
+  const { speak, stop, isSpeaking } = useTextToSpeech({ voice });
   const { theme: themeScheme } = useCustomTheme();
   const theme = _theme ? _theme : useTheme();
   const styles = getStyles(theme, themeScheme === "dark");
@@ -102,7 +105,7 @@ const WordDefinition = ({
       stop();
       return;
     }
-    speak(definition);
+    // speak(definition);
   };
 
   return (

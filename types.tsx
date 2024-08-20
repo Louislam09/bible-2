@@ -220,6 +220,14 @@ export type DictionaryData = {
   topic: string;
 };
 
+export type SpeechVoice = {
+  identifier: string;
+  language: string;
+  name: string;
+  quality: string;
+  isMale?: boolean;
+};
+
 export type TChapter = {
   dimensions: any;
   item: {
