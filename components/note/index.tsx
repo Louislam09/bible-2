@@ -140,8 +140,14 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
   });
   const { printToFile } = usePrintAndShare();
   const { title, content } = noteContent;
-  const { onSaveNote, onDeleteNote, onUpdateNote, addToNoteText, onAddToNote } =
-    useBibleContext();
+  const {
+    onSaveNote,
+    onDeleteNote,
+    onUpdateNote,
+    addToNoteText,
+    onAddToNote,
+    currentBibleLongName,
+  } = useBibleContext();
   const [searchText, setSearchText] = useState<any>(null);
   const [openNoteId, setOpenNoteId] = useState<any>(null);
   const [isTyping, setTyping] = useState(false);
@@ -474,7 +480,13 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
                   source={notFoundSource}
                   loop={false}
                 />
-                <Text style={styles.noResultsText}>No tienes notas</Text>
+                <Text style={styles.noResultsText}>
+                  <Text style={{ color: theme.colors.notification }}>
+                    ({currentBibleLongName})
+                  </Text>{" "}
+                  {"\n"}
+                  No tienes notas en esta version de la escritura.
+                </Text>
               </View>
             }
           />
@@ -612,6 +624,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     noResultsText: {
       fontSize: 18,
       color: colors.text,
+      textAlign: "center",
     },
     verseAction: {
       flexDirection: "row",

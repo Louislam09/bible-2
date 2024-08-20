@@ -25,7 +25,7 @@ const FavoriteList = ({ data }: TListVerse) => {
   const theme = useTheme();
   const navigation = useNavigation();
   const styles = getStyles(theme);
-  const { toggleFavoriteVerse } = useBibleContext();
+  const { toggleFavoriteVerse, currentBibleLongName } = useBibleContext();
   const flatListRef = useRef<FlashList<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const notFoundSource = require("../../assets/lottie/notFound.json");
@@ -150,7 +150,11 @@ const FavoriteList = ({ data }: TListVerse) => {
               loop={false}
             />
             <Text style={styles.noResultsText}>
-              No tienes versiculos favoritos
+              <Text style={{ color: theme.colors.notification }}>
+                ({currentBibleLongName})
+              </Text>
+              {"\n"}
+              No tienes versiculos favoritos en esta version de la escritura.
             </Text>
           </View>
         }
@@ -220,6 +224,8 @@ const getStyles = ({ colors }: TTheme) =>
     noResultsText: {
       fontSize: 18,
       color: colors.text,
+      textAlign: "center",
+      paddingHorizontal: 10,
     },
     verseAction: {
       alignSelf: "flex-end",
