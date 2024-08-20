@@ -4,6 +4,7 @@ import { DBName } from "../enums";
 import useDatabase from "../hooks/useDatabase";
 import { useStorage } from "./LocalstoreContext";
 import useInstalledBibles, { VersionItem } from "hooks/useInstalledBible";
+import { defaultDatabases } from "constants/databaseNames";
 
 interface Row {
   [key: string]: any;
@@ -53,10 +54,20 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     dbNames: installedBibles,
   });
 
+  const getCurrentDB = (
+    _databases: SQLite.SQLiteDatabase[] | null[],
+    currentSelectedDB: string
+  ) => {
+    const separator = defaultDatabases.includes(currentSelectedDB)
+      ? "."
+      : "-bible.db";
+    return _databases?.find(
+      (db) => db?.databaseName?.split(separator)[0] === currentSelectedDB
+    );
+  };
+
   const myBibleDB =
-    databases?.find(
-      (version) => version?.databaseName.split(".")[0] === currentBibleVersion
-    ) || databases[0];
+    getCurrentDB(databases, currentBibleVersion) || databases[0];
 
   const dbContextValue = {
     myBibleDB,
