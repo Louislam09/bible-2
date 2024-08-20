@@ -54,6 +54,7 @@ type BibleState = {
   setStrongWord: (word: IStrongWord) => void;
   setVerseToCompare: (verse: number) => void;
   setChapterLengthNumber: (chapterLengthNumber: number) => void;
+  setChapterVerses: (currentChapterVerses: IBookVerse[]) => void;
   setverseInStrongDisplay: (verse: number) => void;
   toggleFavoriteVerse: ({
     bookNumber,
@@ -80,6 +81,7 @@ type BibleState = {
   searchState: UseSearchHookState;
   strongWord: IStrongWord;
   searchHistorial: EHistoryItem[];
+  currentChapterVerses: IBookVerse[];
   currentHistoryIndex: number;
   goBackOnHistory?: (index: number) => void;
   goForwardOnHistory?: (index: number) => void;
@@ -104,6 +106,7 @@ type BibleAction =
   | { type: "SET_VERSE_IN_STRONG_DISPLAY"; payload: number }
   | { type: "SET_VERSE_TO_COMPARE"; payload: number }
   | { type: "SET_CHAPTER_VERSE_LENGTH"; payload: number }
+  | { type: "SET_CHAPTER_VERSES"; payload: any[] }
   | { type: "SET_STRONG_WORD"; payload: IStrongWord }
   | { type: "CLEAR_HIGHLIGHTS" }
   | { type: "SET_LOCAL_DATA"; payload: any }
@@ -143,6 +146,7 @@ const initialContext: BibleState = {
   }: IFavoriteVerse) => {},
   setVerseToCompare: (verse: number) => {},
   setChapterLengthNumber: (chapterLengthNumber: number) => {},
+  setChapterVerses: (currentChapterVerses: IBookVerse[]) => {},
   setverseInStrongDisplay: (verse: number) => {},
   onAddToNote: (text: string) => {},
   increaseFontSize: () => {},
@@ -170,6 +174,7 @@ const initialContext: BibleState = {
   currentHistoryIndex: -1,
   orientation: "PORTRAIT",
   currentBibleLongName: "Reina Valera 1960",
+  currentChapterVerses: [],
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);
@@ -266,6 +271,11 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
       return {
         ...state,
         chapterVerseLength: action.payload,
+      };
+    case "SET_CHAPTER_VERSES":
+      return {
+        ...state,
+        currentChapterVerses: action.payload,
       };
     case "GO_BACK":
       return {
@@ -474,6 +484,12 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
       payload: chapterLengthNumber,
     });
   };
+  const setChapterVerses = (currentChapterVerses: IBookVerse[]) => {
+    dispatch({
+      type: "SET_CHAPTER_VERSES",
+      payload: currentChapterVerses,
+    });
+  };
 
   const contextValue = {
     ...state,
@@ -501,6 +517,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     setverseInStrongDisplay,
     setVerseToCompare,
     setChapterLengthNumber,
+    setChapterVerses,
     onAddToNote,
     goBackOnHistory,
     goForwardOnHistory,

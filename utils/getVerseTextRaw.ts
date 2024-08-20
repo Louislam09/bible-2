@@ -6,6 +6,15 @@ export const getVerseTextRaw = (text: any, addIcon: boolean = false) => {
     .replace(/\d+/g, addIcon ? "🔍" : "");
 };
 
+export const getChapterTextRawForReading = (verses: IBookVerse[]) => {
+  const text = [];
+  for (const verse of verses) {
+    const rawText = getVerseTextRaw(verse.text);
+    text.push(rawText);
+  }
+  return text;
+};
+
 export const getChapterTextRaw = (verses: IBookVerse[]) => {
   const text = [""];
   for (const verse of verses) {

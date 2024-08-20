@@ -4,7 +4,11 @@ import Voices from "constants/Voices";
 import { SpeechVoice } from "types";
 
 type UseTextToSpeech = {
-  speak: (text: string, voice: SpeechVoice) => void;
+  speak: (
+    text: string,
+    voice: SpeechVoice,
+    onDone?: () => void | Speech.SpeechEventCallback
+  ) => void;
   stop: () => void;
   isSpeaking: boolean;
 };
@@ -14,15 +18,25 @@ type UseTextToSpeechProps = {};
 export const useTextToSpeech = ({}: UseTextToSpeechProps): UseTextToSpeech => {
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
 
-  const speak = useCallback((text: string, voice: SpeechVoice) => {
-    setIsSpeaking(true);
-    Speech.speak(text, {
-      voice: voice.identifier,
-      language: "es-ES",
-      onDone: () => setIsSpeaking(false),
-      onError: () => setIsSpeaking(false),
-    });
-  }, []);
+  const speak = useCallback(
+    (
+      text: string,
+      voice: SpeechVoice,
+      onDone?: () => void | Speech.SpeechEventCallback
+    ) => {
+      setIsSpeaking(true);
+      Speech.speak(text, {
+        voice: voice.identifier,
+        language: "es-ES",
+        onDone: () => {
+          onDone?.();
+          setIsSpeaking(false);
+        },
+        onError: () => setIsSpeaking(false),
+      });
+    },
+    []
+  );
 
   const stop = useCallback(() => {
     Speech.stop();

@@ -53,9 +53,13 @@ const CustomFooter: FC<FooterInterface> = ({
     currentHistoryIndex,
     isSplitActived,
     toggleBottomSideSearching,
+    currentChapterVerses,
   } = useBibleContext();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
-  const { historyManager } = useStorage();
+  const {
+    historyManager,
+    storedData: { currentVoiceIdentifier },
+  } = useStorage();
   const FOOTER_ICON_SIZE = iconSize;
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -102,7 +106,7 @@ const CustomFooter: FC<FooterInterface> = ({
       isHistory: false,
     });
   }
-  const previuosChapter = () => {
+  const previousChapter = () => {
     if (bookNumber !== 10 && chapter === 1) {
       const newBookName = DB_BOOK_NAMES[bookIndex - 1].longName;
       const newChapter = DB_BOOK_CHAPTER_NUMBER[newBookName];
@@ -189,7 +193,7 @@ const CustomFooter: FC<FooterInterface> = ({
         duration: 100,
         useNativeDriver: true,
       }).start(() => {
-        previuosChapter();
+        previousChapter();
         translateX.setValue(0);
       });
     } else {
@@ -219,7 +223,7 @@ const CustomFooter: FC<FooterInterface> = ({
           </View>
         )}
         <View style={styles.footerCenter}>
-          <TouchableOpacity ref={backRef} onPress={() => previuosChapter()}>
+          <TouchableOpacity ref={backRef} onPress={() => previousChapter()}>
             <Ionicons
               name="chevron-back-sharp"
               style={[styles.icon]}
@@ -269,6 +273,7 @@ const CustomFooter: FC<FooterInterface> = ({
 
         <BottomModal justOneSnap startAT={0} ref={playRef}>
           <Play
+            isRvr={false}
             {...{
               theme,
               isDownloading,
@@ -277,9 +282,12 @@ const CustomFooter: FC<FooterInterface> = ({
               duration,
               position,
               nextChapter,
-              previuosChapter,
+              previousChapter,
               book,
               chapter,
+              verse,
+              currentChapterVerses,
+              currentVoiceIdentifier,
             }}
           />
         </BottomModal>

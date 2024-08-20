@@ -24,13 +24,17 @@ import {
 } from "react-native";
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
-import { DictionaryData, IStrongWord, Screens, TTheme } from "types";
+import {
+  DictionaryData,
+  MaterialIconNameType,
+  IStrongWord,
+  Screens,
+  TTheme,
+} from "types";
 import { Text, View } from "../../Themed";
 
-type MaterialCommunityIconName = keyof typeof MaterialCommunityIcons.glyphMap;
-
 type HeaderAction = {
-  iconName: MaterialCommunityIconName;
+  iconName: MaterialIconNameType;
   viewStyle: {};
   description: string;
   onAction: () => void;

@@ -7,7 +7,7 @@ import { useTextToSpeech } from "hooks/useTextToSpeech";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { Animated, Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { SpeechVoice, TTheme } from "types";
-import CustomTabs from "./CustomTabs";
+import CustomTabs, { TabItemType } from "./CustomTabs";
 import { Text, View } from "./Themed";
 
 interface IVoiceList {
@@ -127,7 +127,7 @@ const VoiceList: FC<IVoiceList> = ({ theme }) => {
       voice.identifier === (currentVoiceIdentifier || "es-us-x-esd-local")
   ) as SpeechVoice;
   const [selectedVoice, setSelectedVoice] = useState<SpeechVoice>(currentVoice);
-  const [tab, setTab] = useState<string>("Masculina");
+  const [tab, setTab] = useState<string>("masculina");
   const { isSpeaking, speak, stop } = useTextToSpeech({});
   const styles = getStyles(theme);
   const {
@@ -154,7 +154,10 @@ const VoiceList: FC<IVoiceList> = ({ theme }) => {
     speak(text, voice);
   };
 
-  const tabs = ["Masculina", "Femenina"];
+  const tabs: TabItemType[] = [
+    { icon: "face-man-outline", name: "masculina" },
+    { icon: "face-woman-outline", name: "fenemina" },
+  ];
 
   return (
     <View style={[styles.versionContainer]}>
@@ -188,7 +191,7 @@ const VoiceList: FC<IVoiceList> = ({ theme }) => {
       </View>
       {voices
         .sort((a, b) => +!a.isMale - +!b.isMale)
-        .filter((voice) => (tab === "Masculina" ? voice.isMale : !voice.isMale))
+        .filter((voice) => (tab === "masculina" ? voice.isMale : !voice.isMale))
         .map((voice, index) => (
           <VoiceItem
             key={index}

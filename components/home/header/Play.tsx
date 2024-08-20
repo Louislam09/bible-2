@@ -1,19 +1,12 @@
-import React, { FC, useState } from "react";
+// Play.tsx
+import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import React, { FC } from "react";
 import { Platform, StyleSheet, TouchableWithoutFeedback } from "react-native";
-import { HomeParams, TTheme } from "types";
+import { IBookVerse, TTheme } from "types";
 import { Text, View } from "../../Themed";
 import ProgressBar from "../footer/ProgressBar";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { customBorder } from "utils/customStyle";
-import useAudioPlayer from "hooks/useAudioPlayer";
-import {
-  ParamListBase,
-  RouteProp,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
-import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "constants/BookNames";
+import useBibleReader from "hooks/useBibleReading";
 
 interface IPlay {
   theme: TTheme;
@@ -23,9 +16,13 @@ interface IPlay {
   position: number;
   duration: number;
   nextChapter: () => void;
-  previuosChapter: () => void;
+  previousChapter: () => void;
   book: any;
   chapter: any;
+  verse: number;
+  isRvr: boolean;
+  currentVoiceIdentifier: string;
+  currentChapterVerses: IBookVerse[];
 }
 
 type IPayOption = {
@@ -40,33 +37,52 @@ type IPayOption = {
 const Play: FC<IPlay> = ({
   theme,
   isDownloading,
-  isPlaying,
-  playAudio,
+  isPlaying: isPlayingProp,
+  playAudio: playAudioProp,
   duration,
   position,
-  nextChapter,
-  previuosChapter,
+  nextChapter: nextChapterProp,
+  previousChapter: previousChapterProp,
   book,
   chapter,
+  verse,
+  isRvr,
+  currentChapterVerses,
+  currentVoiceIdentifier,
 }) => {
+  const {
+    verseIndex,
+    setVerseIndex,
+    reading,
+    startReading,
+    stopReading,
+    nextVerse,
+    previousVerse,
+    isSpeaking,
+  } = useBibleReader({ currentChapterVerses, currentVoiceIdentifier });
   const styles = getStyles(theme);
+
+  const playAudio = isRvr ? playAudioProp : startReading;
+  const previousChapterHandler = isRvr ? previousChapterProp : previousVerse;
+  const nextChapterHandler = isRvr ? nextChapterProp : nextVerse;
+  const isPlaying = isRvr ? isPlayingProp : isSpeaking;
 
   const playOptions: IPayOption[] = [
     {
       icon: "play-skip-back",
-      action: previuosChapter,
+      action: previousChapterHandler,
       label: "Anterior",
       isIonicon: true,
     },
     {
       icon: isPlaying ? "pause-circle" : "play-circle",
-      action: playAudio,
+      action: isPlaying ? (isRvr ? playAudio : stopReading) : playAudio,
       label: "Reproducir",
       isIonicon: true,
     },
     {
       icon: "play-skip-forward",
-      action: nextChapter,
+      action: nextChapterHandler,
       label: "Siguinte",
       isIonicon: true,
     },

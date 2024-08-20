@@ -3,6 +3,8 @@
  * https://reactnavigation.org/docs/typescript/
  */
 
+import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import {
   CompositeScreenProps,
@@ -214,6 +216,9 @@ export type IStrongWord = {
   text: string;
   code: string;
 };
+
+export type MaterialIconNameType = keyof typeof MaterialCommunityIcons.glyphMap;
+export type IoniconsIconNameType = keyof typeof Ionicons.glyphMap;
 
 export type DictionaryData = {
   definition: string;

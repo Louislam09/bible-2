@@ -45,7 +45,7 @@ type VerseProps = TVerse & {
   estimatedReadingTime?: number;
 };
 
-const validStrongArr = (arr: WordTagPair[]) => {
+const validStrongList = (arr: WordTagPair[]) => {
   const newArr = [...arr];
   return newArr.map((item, index) => {
     const newItem = item;
@@ -453,7 +453,7 @@ const Verse: React.FC<VerseProps> = ({
                 />
               ) : (
                 <DisplayStrongWord
-                  data={validStrongArr(wordAndStrongValue)}
+                  data={validStrongList(wordAndStrongValue)}
                   highlightStyle={{
                     color: theme.colors.notification,
                     backgroundColor: theme?.colors.notification + "30",
@@ -462,17 +462,6 @@ const Verse: React.FC<VerseProps> = ({
                   style={[styles.verseBody]}
                   onWordClick={onStrongWordClicked}
                 />
-                // <Highlighter
-                //   textToHighlight={getVerseTextRaw(item.text)}
-                //   searchWords={textValue}
-                //   highlightStyle={{
-                //     color: theme.colors.notification,
-                //     backgroundColor: theme?.colors.notification + "30",
-                //     fontSize,
-                //   }}
-                //   style={[styles.verseBody]}
-                //   onWordClick={onWordClicked}
-                // />
               )}
             </>
           ) : (

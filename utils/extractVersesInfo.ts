@@ -37,21 +37,6 @@ export interface WordTagPair {
   tagValue: string | null;
 }
 
-// function extractWordsWithTags(text: string): WordTagPair[] {
-//   const regex = /(\S+)(?:<S>(\d+)<\/S>)/g;
-//   const matches = [];
-//   let match;
-
-//   while ((match = regex.exec(text)) !== null) {
-//     const word = match[1];
-//     const tagValue = match[2];
-//     matches.push({ word, tagValue });
-//   }
-
-//   return matches;
-// }
-
-// good
 export function extractWordsWithTags(text: string): WordTagPair[] {
   // The regex now accounts for word boundaries, tags, and punctuation.
   const regex = /(\S+?)(?:<S>(\d+)<\/S>)?(\s|$)/g;
@@ -65,43 +50,6 @@ export function extractWordsWithTags(text: string): WordTagPair[] {
   }
 
   return matches;
-}
-function extractWordsWithTags2(text: string) {
-  const regex = /(\S+?)(<S>(\d+)<\/S>)+|(\S+)/g;
-  const matches = [];
-  let match;
-
-  while ((match = regex.exec(text)) !== null) {
-    if (match[1]) {
-      // Word with one or more tags
-      const word = match[1];
-      const tagValues =
-        match[0]
-          .match(/<S>(\d+)<\/S>/g)
-          ?.map((tag) => tag.replace(/<\/?S>/g, ""))
-          .join(",") || null;
-      matches.push({ word, tagValue: tagValues });
-    } else if (match[4]) {
-      // Word without a tag
-      matches.push({ word: match[4], tagValue: null });
-    }
-  }
-
-  return matches;
-}
-
-function extractWordsWithTags3(text: string) {
-  const wordsWithTags = [];
-  const regex = /(\S+)(?:\s*<S>(\d+)<\/S>)+/g;
-  let match;
-
-  while ((match = regex.exec(text)) !== null) {
-    const word = match[1];
-    const tagValue = match.slice(2).filter(Boolean).join(",");
-    wordsWithTags.push({ word, tagValue });
-  }
-
-  return wordsWithTags;
 }
 
 export const getStrongValue = (text: string) => {

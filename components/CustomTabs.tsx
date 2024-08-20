@@ -1,14 +1,20 @@
 import { FlashList } from "@shopify/flash-list";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { TTheme } from "types";
+import { MaterialIconNameType, TTheme } from "types";
 import { Text } from "./Themed";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+export type TabItemType = {
+  name: string;
+  icon: MaterialIconNameType;
+};
 
 type CustomTabsProps = {
   theme: TTheme;
   activedTab: string;
   setActivedTab: any;
-  tabs: string[];
+  tabs: TabItemType[];
 };
 
 const CustomTabs = ({
@@ -19,21 +25,29 @@ const CustomTabs = ({
 }: CustomTabsProps) => {
   const styles = getStyles(theme);
 
-  const renderItem = ({ item: tab }: any) => {
+  const renderItem = ({ item: tab }: { item: TabItemType }) => {
     return (
       <TouchableOpacity
-        key={tab}
-        onPress={() => setActivedTab(tab)}
+        key={tab.name}
+        onPress={() => setActivedTab(tab.name)}
         style={[
           styles.tab,
-          activedTab === tab && styles.activeTab,
+          activedTab === tab.name && styles.activeTab,
           { borderColor: theme.colors.notification },
         ]}
       >
+        <MaterialCommunityIcons
+          name={tab.icon}
+          color={theme.colors.text}
+          size={20}
+        />
         <Text
-          style={[styles.tabText, activedTab === tab && styles.activeTabText]}
+          style={[
+            styles.tabText,
+            activedTab === tab.name && styles.activeTabText,
+          ]}
         >
-          {tab}
+          {tab.name}
         </Text>
       </TouchableOpacity>
     );
@@ -68,6 +82,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       alignItems: "center",
       justifyContent: "center",
       borderRadius: 10,
+      flexDirection: "row",
     },
     activeTab: {
       borderBottomWidth: 2,
@@ -75,6 +90,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
     tabText: {
       fontSize: 20,
       color: colors.text,
+      textTransform: "capitalize",
+      marginHorizontal: 5,
     },
     activeTabText: {
       color: dark ? "white" : "#000",

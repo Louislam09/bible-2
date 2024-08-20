@@ -21,15 +21,18 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { EBibleVersions, IVerseItem, Screens, TTheme } from "types";
+import {
+  EBibleVersions,
+  MaterialIconNameType,
+  IVerseItem,
+  Screens,
+  TTheme,
+  IoniconsIconNameType,
+} from "types";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";
 
-type MaterialCommunityIconName =
-  | keyof typeof Ionicons.glyphMap
-  | keyof typeof MaterialCommunityIcons.glyphMap;
-
 type IDashboardOption = {
-  icon: MaterialCommunityIconName;
+  icon: MaterialIconNameType | IoniconsIconNameType;
   label: string;
   action: () => void;
   disabled?: boolean;

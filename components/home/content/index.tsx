@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { DB_BOOK_NAMES } from "../../../constants/BookNames";
 import { useDBContext } from "../../../context/databaseContext";
-import { HomeParams, TTheme } from "../../../types";
+import { HomeParams, IBookVerse, TTheme } from "../../../types";
 
 import { Text } from "components/Themed";
 import { getDatabaseQueryKey } from "constants/databaseNames";
@@ -47,6 +47,7 @@ const BookContent: FC<BookContentInterface> = ({
     clearHighlights,
     currentBibleLongName,
     setChapterLengthNumber,
+    setChapterVerses,
   } = useBibleContext();
   const { myBibleDB, executeSql } = useDBContext();
   const route = useRoute();
@@ -91,9 +92,9 @@ const BookContent: FC<BookContentInterface> = ({
       const responses = await Promise.all(promises);
       const [verses, subtitles] = responses;
       setData({ verses, subtitles });
+      setChapterVerses(verses as IBookVerse[]);
       setChapterLengthNumber(verses?.length || 0);
       setChapterText(getChapterTextRaw(verses as any));
-
       if (!isHistory) {
         addToHistory({ book, verse, chapter });
       }
