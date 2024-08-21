@@ -27,13 +27,8 @@ const useBibleReader = ({
   const [verseIndex, setVerseIndex] = useState(0);
   const [reading, setReading] = useState(false);
   const [ended, setEnded] = useState(false);
-  const [shouldPlay, setShouldPlay] = useState(false);
+  const [shouldPlayNextChapter, setShouldPlayNextChapter] = useState(false);
   const { isSpeaking, speak, stop } = useTextToSpeech({});
-
-  const verseList = useMemo(() => {
-    setVerseIndex(0);
-    return getChapterTextRawForReading(currentChapterVerses);
-  }, [currentChapterVerses, ended]);
 
   const currentVoice = useMemo(() => {
     return Voices.find(
@@ -44,9 +39,12 @@ const useBibleReader = ({
 
   const reset = ({ andPlay }: { andPlay: boolean }) => {
     if (andPlay) {
-      setVerseIndex(0);
-      setShouldPlay(true);
+      setShouldPlayNextChapter(true);
+      return;
     }
+    setVerseIndex(0);
+    setEnded(false);
+    setReading(false);
   };
 
   const stopReading = useCallback(() => {
@@ -54,16 +52,22 @@ const useBibleReader = ({
     stop();
   }, [stop]);
 
+  const verseList = useMemo(() => {
+    setVerseIndex(0);
+    stopReading();
+    setEnded(false);
+    return getChapterTextRawForReading(currentChapterVerses);
+  }, [currentChapterVerses]);
+
   const startReading = useCallback(
     (index: number) => {
       speak(verseList[index], currentVoice, 2, () => {
-        setShouldPlay(false);
         if (index < verseList.length - 1) {
+          setShouldPlayNextChapter(false);
           setVerseIndex((prev) => prev + 1);
         } else {
-          setVerseIndex((prev) => prev + 1);
-          stopReading();
           setEnded(true);
+          stopReading();
         }
       });
     },
@@ -71,10 +75,11 @@ const useBibleReader = ({
   );
 
   useEffect(() => {
-    if (shouldPlay) {
+    if (shouldPlayNextChapter) {
+      setVerseIndex(0);
       setReading(true);
     }
-  }, [verseList]);
+  }, [shouldPlayNextChapter]);
 
   useEffect(() => {
     if (reading && verseIndex < verseList.length) {

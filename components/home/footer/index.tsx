@@ -93,7 +93,9 @@ const CustomFooter: FC<FooterInterface> = ({
   useEffect(() => {
     if (ended) {
       nextChapter();
-      reset({ andPlay: true });
+      setTimeout(() => {
+        reset({ andPlay: true });
+      }, 1000);
     }
   }, [ended]);
 
