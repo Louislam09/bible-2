@@ -61,7 +61,7 @@ const useBibleReader = ({
 
   const startReading = useCallback(
     (index: number) => {
-      speak(verseList[index], currentVoice, 2, () => {
+      speak(verseList[index], currentVoice, 1, () => {
         if (index < verseList.length - 1) {
           setShouldPlayNextChapter(false);
           setVerseIndex((prev) => prev + 1);
