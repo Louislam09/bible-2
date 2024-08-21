@@ -15,9 +15,7 @@ interface UseBibleReaderResult {
   reading: boolean;
   startReading: () => void;
   stopReading: () => void;
-  nextVerse: () => void;
-  previousVerse: () => void;
-  reset: () => void;
+  reset: ({ andPlay }: { andPlay: boolean }) => void;
   isSpeaking: boolean;
   ended: boolean;
 }
@@ -29,11 +27,14 @@ const useBibleReader = ({
   const [verseIndex, setVerseIndex] = useState(0);
   const [reading, setReading] = useState(false);
   const [ended, setEnded] = useState(false);
+  const [shouldPlay, setShouldPlay] = useState(false);
   const { isSpeaking, speak, stop } = useTextToSpeech({});
 
   const verseList = useMemo(() => {
+    setVerseIndex(0);
     return getChapterTextRawForReading(currentChapterVerses);
-  }, [currentChapterVerses]);
+  }, [currentChapterVerses, ended]);
+
   const currentVoice = useMemo(() => {
     return Voices.find(
       (voice) =>
@@ -41,10 +42,11 @@ const useBibleReader = ({
     ) as SpeechVoice;
   }, [currentVoiceIdentifier]);
 
-  const reset = () => {
-    setVerseIndex(0);
-    setReading(false);
-    setEnded(false);
+  const reset = ({ andPlay }: { andPlay: boolean }) => {
+    if (andPlay) {
+      setVerseIndex(0);
+      setShouldPlay(true);
+    }
   };
 
   const stopReading = useCallback(() => {
@@ -52,23 +54,16 @@ const useBibleReader = ({
     stop();
   }, [stop]);
 
-  const nextVerse = useCallback(() => {
-    setVerseIndex((prev) => Math.min(verseList.length - 1, prev + 1));
-  }, [verseList.length]);
-
-  const previousVerse = useCallback(() => {
-    setVerseIndex((prev) => Math.max(0, prev - 1));
-  }, []);
-
   const startReading = useCallback(
     (index: number) => {
-      speak(verseList[index], currentVoice, 1, () => {
+      speak(verseList[index], currentVoice, 2, () => {
+        setShouldPlay(false);
         if (index < verseList.length - 1) {
           setVerseIndex((prev) => prev + 1);
         } else {
-          setEnded(true);
           setVerseIndex((prev) => prev + 1);
           stopReading();
+          setEnded(true);
         }
       });
     },
@@ -76,11 +71,16 @@ const useBibleReader = ({
   );
 
   useEffect(() => {
-    console.log(reading, verseIndex, verseList.length);
+    if (shouldPlay) {
+      setReading(true);
+    }
+  }, [verseList]);
+
+  useEffect(() => {
     if (reading && verseIndex < verseList.length) {
       startReading(verseIndex);
     }
-  }, [reading, verseIndex]);
+  }, [reading, verseIndex, verseList]);
 
   return {
     verseIndex,
@@ -88,8 +88,6 @@ const useBibleReader = ({
     reading,
     startReading: () => setReading(true),
     stopReading,
-    nextVerse,
-    previousVerse,
     isSpeaking,
     ended,
     reset,

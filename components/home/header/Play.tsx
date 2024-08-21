@@ -122,25 +122,27 @@ const Play: FC<IPlay> = ({
             color={theme.colors.notification}
             style={[styles.playHeaderIcon, isDownloading && { opacity: 1 }]}
           />
-          <TouchableOpacity
-            onPress={voiceHandlePresentModalPress}
-            style={{
-              backgroundColor: "transparent",
-              alignItems: "center",
-              flexDirection: "row",
-            }}
-          >
-            <MaterialCommunityIcons
-              name="account-voice"
-              color={theme.colors.notification}
-              style={[styles.playHeaderIcon, { opacity: 1 }]}
-            />
-            <MaterialCommunityIcons
-              name="chevron-down"
-              color={theme.colors.notification}
-              size={28}
-            />
-          </TouchableOpacity>
+          {!isRvr && (
+            <TouchableOpacity
+              onPress={voiceHandlePresentModalPress}
+              style={{
+                backgroundColor: "transparent",
+                alignItems: "center",
+                flexDirection: "row",
+              }}
+            >
+              <MaterialCommunityIcons
+                name="waveform"
+                color={theme.colors.notification}
+                style={[styles.playHeaderIcon, { opacity: 1 }]}
+              />
+              <MaterialCommunityIcons
+                name="chevron-down"
+                color={theme.colors.notification}
+                size={28}
+              />
+            </TouchableOpacity>
+          )}
         </View>
         <View
           style={{
@@ -163,7 +165,7 @@ const Play: FC<IPlay> = ({
             </>
           ) : (
             <Text style={{ color: theme.colors.text }}>
-              {`versiculo ${position || 1} de ${duration}`}
+              {`versiculo ${position + 1} de ${duration}`}
             </Text>
           )}
         </View>

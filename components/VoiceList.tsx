@@ -9,6 +9,7 @@ import { Animated, Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { SpeechVoice, TTheme } from "types";
 import CustomTabs, { TabItemType } from "./CustomTabs";
 import { Text, View } from "./Themed";
+import DecoratorLine from "./DecoratorLine";
 
 interface IVoiceList {
   theme: TTheme;
@@ -62,8 +63,10 @@ const VoiceItem = ({
           opacity: fadeAnim,
           transform: [{ translateY: translateYAnim }],
         },
+        { flexDirection: "row", marginVertical: 5 },
       ]}
     >
+      <DecoratorLine theme={theme} />
       <TouchableOpacity
         key={voice.identifier}
         style={[styles.card]}
@@ -151,7 +154,7 @@ const VoiceList: FC<IVoiceList> = ({ theme }) => {
     if (isSpeaking) stop();
     setSelectedVoice(voice);
     saveData({ currentVoiceIdentifier: voice.identifier });
-    speak(text, voice);
+    speak(text, voice, 1);
   };
 
   const tabs: TabItemType[] = [
@@ -235,7 +238,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       flexDirection: "row",
       width: "90%",
       padding: 5,
-      marginVertical: 5,
       elevation: 5,
       ...Platform.select({
         ios: {
@@ -248,13 +250,15 @@ const getStyles = ({ colors, dark }: TTheme) =>
       paddingVertical: 10,
       paddingLeft: 10,
       borderColor: colors.notification + "50",
-      backgroundColor: colors.background,
+      backgroundColor: dark ? colors.background : "white",
       borderWidth: dark ? 1 : 0,
       shadowColor: colors.notification,
       shadowOpacity: 1,
       shadowRadius: 10,
       borderRadius: 10,
       alignItems: "center",
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
     },
     icon: {
       fontWeight: "700",

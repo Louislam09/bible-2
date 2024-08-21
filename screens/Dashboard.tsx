@@ -198,7 +198,7 @@ const Dashboard = () => {
       action: onSong,
     },
     {
-      icon: "account-voice",
+      icon: "waveform",
       label: "Selecciona Una Voz",
       action: voiceHandlePresentModalPress,
     },
