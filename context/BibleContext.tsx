@@ -54,6 +54,7 @@ type BibleState = {
   setStrongWord: (word: IStrongWord) => void;
   setVerseToCompare: (verse: number) => void;
   setChapterLengthNumber: (chapterLengthNumber: number) => void;
+  setShouldLoop: (shouldLoop: boolean) => void;
   setChapterVerses: (currentChapterVerses: IBookVerse[]) => void;
   setverseInStrongDisplay: (verse: number) => void;
   toggleFavoriteVerse: ({
@@ -69,6 +70,7 @@ type BibleState = {
   performSearch: Function;
   selectedFont: string;
   chapterVerseLength: number;
+  shouldLoopReading: boolean;
   currentBibleVersion: string;
   searchQuery: string;
   addToNoteText: string;
@@ -106,6 +108,7 @@ type BibleAction =
   | { type: "SET_VERSE_IN_STRONG_DISPLAY"; payload: number }
   | { type: "SET_VERSE_TO_COMPARE"; payload: number }
   | { type: "SET_CHAPTER_VERSE_LENGTH"; payload: number }
+  | { type: "SET_REPEAT_READING"; payload: boolean }
   | { type: "SET_CHAPTER_VERSES"; payload: any[] }
   | { type: "SET_STRONG_WORD"; payload: IStrongWord }
   | { type: "CLEAR_HIGHLIGHTS" }
@@ -146,6 +149,7 @@ const initialContext: BibleState = {
   }: IFavoriteVerse) => {},
   setVerseToCompare: (verse: number) => {},
   setChapterLengthNumber: (chapterLengthNumber: number) => {},
+  setShouldLoop: (shouldLoop: boolean) => {},
   setChapterVerses: (currentChapterVerses: IBookVerse[]) => {},
   setverseInStrongDisplay: (verse: number) => {},
   onAddToNote: (text: string) => {},
@@ -165,6 +169,7 @@ const initialContext: BibleState = {
   addToNoteText: "",
   verseInStrongDisplay: 0,
   chapterVerseLength: 0,
+  shouldLoopReading: false,
   verseToCompare: 1,
   currentTheme: "Blue",
   isSplitActived: false,
@@ -271,6 +276,11 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
       return {
         ...state,
         chapterVerseLength: action.payload,
+      };
+    case "SET_REPEAT_READING":
+      return {
+        ...state,
+        shouldLoopReading: action.payload,
       };
     case "SET_CHAPTER_VERSES":
       return {
@@ -484,6 +494,12 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
       payload: chapterLengthNumber,
     });
   };
+  const setShouldLoop = (shouldLoop: boolean) => {
+    dispatch({
+      type: "SET_REPEAT_READING",
+      payload: shouldLoop,
+    });
+  };
   const setChapterVerses = (currentChapterVerses: IBookVerse[]) => {
     dispatch({
       type: "SET_CHAPTER_VERSES",
@@ -517,6 +533,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     setverseInStrongDisplay,
     setVerseToCompare,
     setChapterLengthNumber,
+    setShouldLoop,
     setChapterVerses,
     onAddToNote,
     goBackOnHistory,

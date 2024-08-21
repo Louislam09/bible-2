@@ -28,6 +28,8 @@ interface IPlay {
   book: any;
   chapter: any;
   isRvr: boolean;
+  shouldLoopReading: boolean;
+  setShouldLoop: (shouldLoop: boolean) => void;
 }
 
 type IPayOption = {
@@ -51,6 +53,8 @@ const Play: FC<IPlay> = ({
   book,
   chapter,
   isRvr,
+  shouldLoopReading,
+  setShouldLoop,
 }) => {
   const styles = getStyles(theme);
   const voiceBottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -109,8 +113,9 @@ const Play: FC<IPlay> = ({
   };
 
   const progress = useMemo(() => {
-    return position / duration;
-  }, [position, duration]);
+    const add = isPlaying ? 1 : 0;
+    return (position + add) / duration;
+  }, [position, duration, isPlaying]);
 
   return (
     <View style={[styles.playContainer]}>
@@ -122,6 +127,22 @@ const Play: FC<IPlay> = ({
             color={theme.colors.notification}
             style={[styles.playHeaderIcon, isDownloading && { opacity: 1 }]}
           />
+          {!isRvr && (
+            <TouchableOpacity
+              onPress={() => setShouldLoop(!shouldLoopReading)}
+              style={{
+                backgroundColor: "transparent",
+                alignItems: "center",
+                flexDirection: "row",
+              }}
+            >
+              <MaterialCommunityIcons
+                name={shouldLoopReading ? "repeat" : "repeat-off"}
+                color={theme.colors.notification}
+                style={[styles.playHeaderIcon, { opacity: 1 }]}
+              />
+            </TouchableOpacity>
+          )}
           {!isRvr && (
             <TouchableOpacity
               onPress={voiceHandlePresentModalPress}

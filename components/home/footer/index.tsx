@@ -55,6 +55,8 @@ const CustomFooter: FC<FooterInterface> = ({
     isSplitActived,
     toggleBottomSideSearching,
     currentChapterVerses,
+    shouldLoopReading,
+    setShouldLoop,
   } = useBibleContext();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const {
@@ -91,13 +93,13 @@ const CustomFooter: FC<FooterInterface> = ({
   const _isPlaying = isRVR ? isPlaying : isSpeaking;
 
   useEffect(() => {
-    if (ended) {
+    if (ended && shouldLoopReading) {
       nextChapter();
       setTimeout(() => {
-        reset({ andPlay: true });
+        reset({ andPlay: shouldLoopReading });
       }, 1000);
     }
-  }, [ended]);
+  }, [ended, shouldLoopReading]);
 
   useEffect(() => {
     return () => {
@@ -312,6 +314,8 @@ const CustomFooter: FC<FooterInterface> = ({
               previousChapter,
               book,
               chapter,
+              shouldLoopReading,
+              setShouldLoop,
             }}
           />
         </BottomModal>
