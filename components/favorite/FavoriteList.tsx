@@ -216,6 +216,7 @@ const getStyles = ({ colors }: TTheme) =>
       flex: 0.7,
       alignItems: "center",
       justifyContent: "center",
+      backgroundColor: "transparent",
     },
     noResultsText: {
       fontSize: 18,

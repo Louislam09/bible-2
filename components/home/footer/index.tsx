@@ -22,6 +22,7 @@ import {
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
+import useBibleReader from "hooks/useBibleReading";
 interface FooterInterface {
   bookRef: any;
   nextRef: any;
@@ -79,6 +80,29 @@ const CustomFooter: FC<FooterInterface> = ({
       chapterNumber: +chapter,
       nextChapter,
     });
+
+  const { verseIndex, startReading, stopReading, isSpeaking, ended, reset } =
+    useBibleReader({
+      currentChapterVerses,
+      currentVoiceIdentifier,
+    });
+  const startOrStop = isSpeaking ? stopReading : startReading;
+  const _playAudio = isRVR ? playAudio : startOrStop;
+  const _isPlaying = isRVR ? isPlaying : isSpeaking;
+
+  useEffect(() => {
+    if (ended) {
+      // nextChapter();
+      // reset();
+    }
+  }, [ended]);
+
+  useEffect(() => {
+    return () => {
+      if (isPlaying) playAudio();
+      stopReading();
+    };
+  }, []);
 
   const nextOrPreviousBook = (name: string, chapter: number = 1) => {
     clearHighlights();
@@ -259,7 +283,8 @@ const CustomFooter: FC<FooterInterface> = ({
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
               ref={audioRef}
-              style={[styles.footerEnd, !isRVR && { display: "none" }]}
+              style={[styles.footerEnd]}
+              // style={[styles.footerEnd, !isRVR && { display: "none" }]}
               onPress={playHandlePresentModalPress}
             >
               <MaterialCommunityIcons
@@ -273,21 +298,18 @@ const CustomFooter: FC<FooterInterface> = ({
 
         <BottomModal justOneSnap startAT={0} ref={playRef}>
           <Play
-            isRvr={false}
+            isRvr={isRVR}
             {...{
               theme,
               isDownloading,
-              isPlaying,
-              playAudio,
-              duration,
-              position,
+              isPlaying: _isPlaying,
+              playAudio: _playAudio,
+              duration: isRVR ? duration : currentChapterVerses.length,
+              position: isRVR ? position : verseIndex,
               nextChapter,
               previousChapter,
               book,
               chapter,
-              verse,
-              currentChapterVerses,
-              currentVoiceIdentifier,
             }}
           />
         </BottomModal>

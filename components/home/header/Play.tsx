@@ -1,12 +1,20 @@
 // Play.tsx
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import React, { FC } from "react";
-import { Platform, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import React, { FC, useCallback, useMemo, useRef } from "react";
+import {
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { IBookVerse, TTheme } from "types";
 import { Text, View } from "../../Themed";
 import ProgressBar from "../footer/ProgressBar";
 import useBibleReader from "hooks/useBibleReading";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import BottomModal from "components/BottomModal";
+import VoiceList from "components/VoiceList";
 
 interface IPlay {
   theme: TTheme;
@@ -19,10 +27,7 @@ interface IPlay {
   previousChapter: () => void;
   book: any;
   chapter: any;
-  verse: number;
   isRvr: boolean;
-  currentVoiceIdentifier: string;
-  currentChapterVerses: IBookVerse[];
 }
 
 type IPayOption = {
@@ -37,52 +42,39 @@ type IPayOption = {
 const Play: FC<IPlay> = ({
   theme,
   isDownloading,
-  isPlaying: isPlayingProp,
-  playAudio: playAudioProp,
+  isPlaying,
+  playAudio,
   duration,
   position,
-  nextChapter: nextChapterProp,
-  previousChapter: previousChapterProp,
+  nextChapter,
+  previousChapter,
   book,
   chapter,
-  verse,
   isRvr,
-  currentChapterVerses,
-  currentVoiceIdentifier,
 }) => {
-  const {
-    verseIndex,
-    setVerseIndex,
-    reading,
-    startReading,
-    stopReading,
-    nextVerse,
-    previousVerse,
-    isSpeaking,
-  } = useBibleReader({ currentChapterVerses, currentVoiceIdentifier });
   const styles = getStyles(theme);
+  const voiceBottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const playAudio = isRvr ? playAudioProp : startReading;
-  const previousChapterHandler = isRvr ? previousChapterProp : previousVerse;
-  const nextChapterHandler = isRvr ? nextChapterProp : nextVerse;
-  const isPlaying = isRvr ? isPlayingProp : isSpeaking;
+  const voiceHandlePresentModalPress = useCallback(() => {
+    voiceBottomSheetModalRef.current?.present();
+  }, []);
 
   const playOptions: IPayOption[] = [
     {
       icon: "play-skip-back",
-      action: previousChapterHandler,
+      action: previousChapter,
       label: "Anterior",
       isIonicon: true,
     },
     {
       icon: isPlaying ? "pause-circle" : "play-circle",
-      action: isPlaying ? (isRvr ? playAudio : stopReading) : playAudio,
+      action: playAudio,
       label: "Reproducir",
       isIonicon: true,
     },
     {
       icon: "play-skip-forward",
-      action: nextChapterHandler,
+      action: nextChapter,
       label: "Siguinte",
       isIonicon: true,
     },
@@ -116,6 +108,10 @@ const Play: FC<IPlay> = ({
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
+  const progress = useMemo(() => {
+    return position / duration;
+  }, [position, duration]);
+
   return (
     <View style={[styles.playContainer]}>
       <View style={styles.playHeader}>
@@ -126,6 +122,25 @@ const Play: FC<IPlay> = ({
             color={theme.colors.notification}
             style={[styles.playHeaderIcon, isDownloading && { opacity: 1 }]}
           />
+          <TouchableOpacity
+            onPress={voiceHandlePresentModalPress}
+            style={{
+              backgroundColor: "transparent",
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+          >
+            <MaterialCommunityIcons
+              name="account-voice"
+              color={theme.colors.notification}
+              style={[styles.playHeaderIcon, { opacity: 1 }]}
+            />
+            <MaterialCommunityIcons
+              name="chevron-down"
+              color={theme.colors.notification}
+              size={28}
+            />
+          </TouchableOpacity>
         </View>
         <View
           style={{
@@ -135,27 +150,44 @@ const Play: FC<IPlay> = ({
             justifyContent: "space-between",
             backgroundColor: "transparent",
             width: "100%",
-            // flex: 1,
           }}
         >
-          <Text style={{ color: theme.colors.text }}>
-            {formatTime(position)}
-          </Text>
-          <Text style={{ color: theme.colors.text }}>
-            {formatTime(duration)}
-          </Text>
+          {isRvr ? (
+            <>
+              <Text style={{ color: theme.colors.text }}>
+                {formatTime(position)}
+              </Text>
+              <Text style={{ color: theme.colors.text }}>
+                {formatTime(duration)}
+              </Text>
+            </>
+          ) : (
+            <Text style={{ color: theme.colors.text }}>
+              {`versiculo ${position || 1} de ${duration}`}
+            </Text>
+          )}
         </View>
         <View style={{ marginVertical: 15, borderRadius: 15 }}>
           <ProgressBar
+            hideCircle={!isRvr}
             color={theme.colors.notification}
             barColor={theme.colors.text}
-            progress={position / duration}
+            progress={progress}
             circleColor={theme.colors.notification}
             height={8}
           />
         </View>
       </View>
       <View style={[styles.playControls]}>{playOptions.map(renderItem)}</View>
+
+      <BottomModal
+        _theme={theme}
+        shouldScroll
+        startAT={2}
+        ref={voiceBottomSheetModalRef}
+      >
+        <VoiceList theme={theme} />
+      </BottomModal>
     </View>
   );
 };

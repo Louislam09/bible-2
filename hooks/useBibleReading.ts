@@ -1,5 +1,4 @@
-// hooks/useBibleReader.ts
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { IBookVerse, SpeechVoice } from "types";
 import { getChapterTextRawForReading } from "utils/getVerseTextRaw";
 import Voices from "constants/Voices";
@@ -18,7 +17,9 @@ interface UseBibleReaderResult {
   stopReading: () => void;
   nextVerse: () => void;
   previousVerse: () => void;
+  reset: () => void;
   isSpeaking: boolean;
+  ended: boolean;
 }
 
 const useBibleReader = ({
@@ -27,51 +28,71 @@ const useBibleReader = ({
 }: UseBibleReaderProps): UseBibleReaderResult => {
   const [verseIndex, setVerseIndex] = useState(0);
   const [reading, setReading] = useState(false);
+  const [ended, setEnded] = useState(false);
   const { isSpeaking, speak, stop } = useTextToSpeech({});
 
-  const verseList = getChapterTextRawForReading(currentChapterVerses);
-  const currentVoice = Voices.find(
-    (voice) =>
-      voice.identifier === (currentVoiceIdentifier || "es-us-x-esd-local")
-  ) as SpeechVoice;
+  const verseList = useMemo(() => {
+    return getChapterTextRawForReading(currentChapterVerses);
+  }, [currentChapterVerses]);
+  const currentVoice = useMemo(() => {
+    return Voices.find(
+      (voice) =>
+        voice.identifier === (currentVoiceIdentifier || "es-us-x-esd-local")
+    ) as SpeechVoice;
+  }, [currentVoiceIdentifier]);
 
-  const stopReading = () => {
+  const reset = () => {
+    setVerseIndex(0);
+    setReading(false);
+    setEnded(false);
+  };
+
+  const stopReading = useCallback(() => {
     setReading(false);
     stop();
-  };
+  }, [stop]);
 
   const nextVerse = useCallback(() => {
     setVerseIndex((prev) => Math.min(verseList.length - 1, prev + 1));
-  }, [verseList]);
+  }, [verseList.length]);
 
   const previousVerse = useCallback(() => {
     setVerseIndex((prev) => Math.max(0, prev - 1));
   }, []);
 
-  const startReading = useCallback(() => {
-    setReading(true);
-    speak(verseList[verseIndex], currentVoice, () => {
-      nextVerse();
-    });
-  }, [verseIndex, verseList, currentVoice, speak]);
+  const startReading = useCallback(
+    (index: number) => {
+      speak(verseList[index], currentVoice, 1, () => {
+        if (index < verseList.length - 1) {
+          setVerseIndex((prev) => prev + 1);
+        } else {
+          setEnded(true);
+          setVerseIndex((prev) => prev + 1);
+          stopReading();
+        }
+      });
+    },
+    [verseList, currentVoice]
+  );
 
   useEffect(() => {
-    if (!reading) return;
-    console.log({ verseIndex });
+    console.log(reading, verseIndex, verseList.length);
     if (reading && verseIndex < verseList.length) {
-      startReading();
+      startReading(verseIndex);
     }
-  }, [reading, verseIndex, startReading]);
+  }, [reading, verseIndex]);
 
   return {
     verseIndex,
     setVerseIndex,
     reading,
-    startReading,
+    startReading: () => setReading(true),
     stopReading,
     nextVerse,
     previousVerse,
     isSpeaking,
+    ended,
+    reset,
   };
 };
 

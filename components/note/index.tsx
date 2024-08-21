@@ -608,6 +608,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       justifyContent: "center",
       borderRadius: 10,
       paddingBottom: 20,
+      backgroundColor: "transparent",
     },
     noResultsText: {
       fontSize: 18,
