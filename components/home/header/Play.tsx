@@ -1,19 +1,20 @@
-import React, { FC, useState } from "react";
-import { Platform, StyleSheet, TouchableWithoutFeedback } from "react-native";
-import { HomeParams, TTheme } from "types";
+// Play.tsx
+import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import React, { FC, useCallback, useMemo, useRef } from "react";
+import {
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { IBookVerse, TTheme } from "types";
 import { Text, View } from "../../Themed";
 import ProgressBar from "../footer/ProgressBar";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { customBorder } from "utils/customStyle";
-import useAudioPlayer from "hooks/useAudioPlayer";
-import {
-  ParamListBase,
-  RouteProp,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
-import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "constants/BookNames";
+import useBibleReader from "hooks/useBibleReading";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import BottomModal from "components/BottomModal";
+import VoiceList from "components/VoiceList";
 
 interface IPlay {
   theme: TTheme;
@@ -23,9 +24,12 @@ interface IPlay {
   position: number;
   duration: number;
   nextChapter: () => void;
-  previuosChapter: () => void;
+  previousChapter: () => void;
   book: any;
   chapter: any;
+  isRvr: boolean;
+  shouldLoopReading: boolean;
+  setShouldLoop: (shouldLoop: boolean) => void;
 }
 
 type IPayOption = {
@@ -45,16 +49,24 @@ const Play: FC<IPlay> = ({
   duration,
   position,
   nextChapter,
-  previuosChapter,
+  previousChapter,
   book,
   chapter,
+  isRvr,
+  shouldLoopReading,
+  setShouldLoop,
 }) => {
   const styles = getStyles(theme);
+  const voiceBottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  const voiceHandlePresentModalPress = useCallback(() => {
+    voiceBottomSheetModalRef.current?.present();
+  }, []);
 
   const playOptions: IPayOption[] = [
     {
       icon: "play-skip-back",
-      action: previuosChapter,
+      action: previousChapter,
       label: "Anterior",
       isIonicon: true,
     },
@@ -100,6 +112,11 @@ const Play: FC<IPlay> = ({
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
+  const progress = useMemo(() => {
+    const add = isPlaying ? 1 : 0;
+    return (position + add) / duration;
+  }, [position, duration, isPlaying]);
+
   return (
     <View style={[styles.playContainer]}>
       <View style={styles.playHeader}>
@@ -110,6 +127,43 @@ const Play: FC<IPlay> = ({
             color={theme.colors.notification}
             style={[styles.playHeaderIcon, isDownloading && { opacity: 1 }]}
           />
+          {!isRvr && (
+            <TouchableOpacity
+              onPress={() => setShouldLoop(!shouldLoopReading)}
+              style={{
+                backgroundColor: "transparent",
+                alignItems: "center",
+                flexDirection: "row",
+              }}
+            >
+              <MaterialCommunityIcons
+                name={shouldLoopReading ? "repeat" : "repeat-off"}
+                color={theme.colors.notification}
+                style={[styles.playHeaderIcon, { opacity: 1 }]}
+              />
+            </TouchableOpacity>
+          )}
+          {!isRvr && (
+            <TouchableOpacity
+              onPress={voiceHandlePresentModalPress}
+              style={{
+                backgroundColor: "transparent",
+                alignItems: "center",
+                flexDirection: "row",
+              }}
+            >
+              <MaterialCommunityIcons
+                name="waveform"
+                color={theme.colors.notification}
+                style={[styles.playHeaderIcon, { opacity: 1 }]}
+              />
+              <MaterialCommunityIcons
+                name="chevron-down"
+                color={theme.colors.notification}
+                size={28}
+              />
+            </TouchableOpacity>
+          )}
         </View>
         <View
           style={{
@@ -119,27 +173,44 @@ const Play: FC<IPlay> = ({
             justifyContent: "space-between",
             backgroundColor: "transparent",
             width: "100%",
-            // flex: 1,
           }}
         >
-          <Text style={{ color: theme.colors.text }}>
-            {formatTime(position)}
-          </Text>
-          <Text style={{ color: theme.colors.text }}>
-            {formatTime(duration)}
-          </Text>
+          {isRvr ? (
+            <>
+              <Text style={{ color: theme.colors.text }}>
+                {formatTime(position)}
+              </Text>
+              <Text style={{ color: theme.colors.text }}>
+                {formatTime(duration)}
+              </Text>
+            </>
+          ) : (
+            <Text style={{ color: theme.colors.text }}>
+              {`versiculo ${position + 1} de ${duration}`}
+            </Text>
+          )}
         </View>
         <View style={{ marginVertical: 15, borderRadius: 15 }}>
           <ProgressBar
+            hideCircle={!isRvr}
             color={theme.colors.notification}
             barColor={theme.colors.text}
-            progress={position / duration}
+            progress={progress}
             circleColor={theme.colors.notification}
             height={8}
           />
         </View>
       </View>
       <View style={[styles.playControls]}>{playOptions.map(renderItem)}</View>
+
+      <BottomModal
+        _theme={theme}
+        shouldScroll
+        startAT={2}
+        ref={voiceBottomSheetModalRef}
+      >
+        <VoiceList theme={theme} />
+      </BottomModal>
     </View>
   );
 };

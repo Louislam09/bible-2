@@ -22,6 +22,7 @@ import {
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
+import useBibleReader from "hooks/useBibleReading";
 interface FooterInterface {
   bookRef: any;
   nextRef: any;
@@ -53,9 +54,15 @@ const CustomFooter: FC<FooterInterface> = ({
     currentHistoryIndex,
     isSplitActived,
     toggleBottomSideSearching,
+    currentChapterVerses,
+    shouldLoopReading,
+    setShouldLoop,
   } = useBibleContext();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
-  const { historyManager } = useStorage();
+  const {
+    historyManager,
+    storedData: { currentVoiceIdentifier },
+  } = useStorage();
   const FOOTER_ICON_SIZE = iconSize;
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -75,6 +82,31 @@ const CustomFooter: FC<FooterInterface> = ({
       chapterNumber: +chapter,
       nextChapter,
     });
+
+  const { verseIndex, startReading, stopReading, isSpeaking, ended, reset } =
+    useBibleReader({
+      currentChapterVerses,
+      currentVoiceIdentifier,
+    });
+  const startOrStop = isSpeaking ? stopReading : startReading;
+  const _playAudio = isRVR ? playAudio : startOrStop;
+  const _isPlaying = isRVR ? isPlaying : isSpeaking;
+
+  useEffect(() => {
+    if (ended && shouldLoopReading) {
+      nextChapter();
+      setTimeout(() => {
+        reset({ andPlay: shouldLoopReading });
+      }, 1000);
+    }
+  }, [ended, shouldLoopReading]);
+
+  useEffect(() => {
+    return () => {
+      if (isPlaying) playAudio();
+      stopReading();
+    };
+  }, []);
 
   const nextOrPreviousBook = (name: string, chapter: number = 1) => {
     clearHighlights();
@@ -102,7 +134,7 @@ const CustomFooter: FC<FooterInterface> = ({
       isHistory: false,
     });
   }
-  const previuosChapter = () => {
+  const previousChapter = () => {
     if (bookNumber !== 10 && chapter === 1) {
       const newBookName = DB_BOOK_NAMES[bookIndex - 1].longName;
       const newChapter = DB_BOOK_CHAPTER_NUMBER[newBookName];
@@ -189,7 +221,7 @@ const CustomFooter: FC<FooterInterface> = ({
         duration: 100,
         useNativeDriver: true,
       }).start(() => {
-        previuosChapter();
+        previousChapter();
         translateX.setValue(0);
       });
     } else {
@@ -219,7 +251,7 @@ const CustomFooter: FC<FooterInterface> = ({
           </View>
         )}
         <View style={styles.footerCenter}>
-          <TouchableOpacity ref={backRef} onPress={() => previuosChapter()}>
+          <TouchableOpacity ref={backRef} onPress={() => previousChapter()}>
             <Ionicons
               name="chevron-back-sharp"
               style={[styles.icon]}
@@ -255,7 +287,8 @@ const CustomFooter: FC<FooterInterface> = ({
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
               ref={audioRef}
-              style={[styles.footerEnd, !isRVR && { display: "none" }]}
+              style={[styles.footerEnd]}
+              // style={[styles.footerEnd, !isRVR && { display: "none" }]}
               onPress={playHandlePresentModalPress}
             >
               <MaterialCommunityIcons
@@ -269,17 +302,20 @@ const CustomFooter: FC<FooterInterface> = ({
 
         <BottomModal justOneSnap startAT={0} ref={playRef}>
           <Play
+            isRvr={isRVR}
             {...{
               theme,
               isDownloading,
-              isPlaying,
-              playAudio,
-              duration,
-              position,
+              isPlaying: _isPlaying,
+              playAudio: _playAudio,
+              duration: isRVR ? duration : currentChapterVerses.length,
+              position: isRVR ? position : verseIndex,
               nextChapter,
-              previuosChapter,
+              previousChapter,
               book,
               chapter,
+              shouldLoopReading,
+              setShouldLoop,
             }}
           />
         </BottomModal>

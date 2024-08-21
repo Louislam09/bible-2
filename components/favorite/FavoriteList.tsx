@@ -2,17 +2,20 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "components/Animation";
+import DecoratorLine from "components/DecoratorLine";
 import { Text } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
 import { useEffect, useRef, useState } from "react";
 import {
   ListRenderItem,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
 import { IVerseItem, Screens, TTheme } from "types";
 import copyToClipboard from "utils/copyToClipboard";
+import { customBorder } from "utils/customStyle";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";
 
 type TListVerse = {
@@ -25,7 +28,8 @@ const FavoriteList = ({ data }: TListVerse) => {
   const theme = useTheme();
   const navigation = useNavigation();
   const styles = getStyles(theme);
-  const { toggleFavoriteVerse, currentBibleLongName } = useBibleContext();
+  const { toggleFavoriteVerse, currentBibleLongName, orientation } =
+    useBibleContext();
   const flatListRef = useRef<FlashList<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const notFoundSource = require("../../assets/lottie/notFound.json");
@@ -68,7 +72,12 @@ const FavoriteList = ({ data }: TListVerse) => {
     item,
   }) => {
     return (
-      <TouchableOpacity activeOpacity={0.9} onPress={() => onVerseClick(item)}>
+      <TouchableOpacity
+        style={styles.itemContainer}
+        activeOpacity={0.9}
+        onPress={() => onVerseClick(item)}
+      >
+        <DecoratorLine theme={theme} />
         <View style={styles.cardContainer}>
           <View style={styles.headerContainer}>
             <Text
@@ -131,7 +140,7 @@ const FavoriteList = ({ data }: TListVerse) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View key={orientation} style={{ flex: 1 }}>
       <FlashList
         ref={flatListRef}
         ListHeaderComponent={SearchedHeader}
@@ -141,7 +150,7 @@ const FavoriteList = ({ data }: TListVerse) => {
         renderItem={renderItem as any}
         onScroll={handleScroll}
         keyExtractor={(item: any, index: any) => `fav-${index}`}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        // ItemSeparatorComponent={() => <View style={styles.separator} />}
         ListEmptyComponent={
           <View style={styles.noResultsContainer}>
             <Animation
@@ -164,7 +173,7 @@ const FavoriteList = ({ data }: TListVerse) => {
   );
 };
 
-const getStyles = ({ colors }: TTheme) =>
+const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     verseBody: {
       color: colors.text,
@@ -190,11 +199,34 @@ const getStyles = ({ colors }: TTheme) =>
       fontWeight: "bold",
       color: colors.text,
     },
+    itemContainer: {
+      flexDirection: "row",
+      backgroundColor: dark ? colors.background : "white",
+      marginVertical: 5,
+      paddingLeft: 5,
+    },
     cardContainer: {
       display: "flex",
       borderRadius: 10,
       padding: 10,
-      margin: 8,
+      flex: 1,
+      elevation: 5,
+      ...Platform.select({
+        ios: {
+          shadowColor: "black",
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.2,
+          shadowRadius: 4,
+        },
+      }),
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
+      borderColor: colors.notification + "50",
+      backgroundColor: dark ? colors.background : "white",
+      borderWidth: dark ? 1 : 0,
+      shadowColor: colors.notification,
+      shadowOpacity: 1,
+      shadowRadius: 10,
     },
     headerContainer: {
       position: "relative",
@@ -220,6 +252,7 @@ const getStyles = ({ colors }: TTheme) =>
       flex: 0.7,
       alignItems: "center",
       justifyContent: "center",
+      backgroundColor: "transparent",
     },
     noResultsText: {
       fontSize: 18,

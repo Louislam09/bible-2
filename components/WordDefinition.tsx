@@ -16,6 +16,9 @@ import {
 } from "react-native-webview/lib/WebViewTypes";
 import { DB_BOOK_NAMES } from "constants/BookNames";
 import usePrintAndShare from "hooks/usePrintAndShare";
+import { useTextToSpeech } from "hooks/useTextToSpeech";
+import { iconSize } from "constants/size";
+import Voices from "constants/Voices";
 
 type WordDefinitionProps = {
   wordData: DictionaryData;
@@ -23,6 +26,7 @@ type WordDefinitionProps = {
   navigation?: any;
   theme?: TTheme;
 };
+const randomVoice = Math.floor(Math.random() * Voices.length);
 
 const WordDefinition = ({
   wordData,
@@ -31,6 +35,8 @@ const WordDefinition = ({
   theme: _theme,
 }: WordDefinitionProps) => {
   const navigation = _navigation ? _navigation : useNavigation();
+  const voice = Voices[randomVoice];
+  const { speak, stop, isSpeaking } = useTextToSpeech({ voice });
   const { theme: themeScheme } = useCustomTheme();
   const theme = _theme ? _theme : useTheme();
   const styles = getStyles(theme, themeScheme === "dark");
@@ -94,6 +100,14 @@ const WordDefinition = ({
     printToFile(_html, topic?.toUpperCase() || "--");
   };
 
+  const onRead = () => {
+    if (isSpeaking) {
+      stop();
+      return;
+    }
+    // speak(definition);
+  };
+
   return (
     <View style={{ paddingHorizontal: 20, flex: 1 }}>
       <View style={styles.wordOfDayContainer}>
@@ -112,6 +126,13 @@ const WordDefinition = ({
             name="share-variant-outline"
             color={theme.colors.notification}
             size={28}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity style={{ marginHorizontal: 20 }} onPress={onRead}>
+          <MaterialCommunityIcons
+            name={isSpeaking ? "stop-circle-outline" : "play-circle-outline"}
+            color={theme.colors.notification}
+            size={iconSize}
           />
         </TouchableOpacity>
       </View>

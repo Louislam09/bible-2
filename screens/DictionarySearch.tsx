@@ -278,6 +278,7 @@ const DictionarySearch: React.FC<
                   flex: 1,
                   alignItems: "center",
                   justifyContent: "center",
+                  backgroundColor: "transparent",
                 }}
               >
                 <Animation

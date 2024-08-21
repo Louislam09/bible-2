@@ -9,6 +9,7 @@ import { useDBContext } from "context/databaseContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useStorage } from "context/LocalstoreContext";
 import { iconSize } from "constants/size";
+import DecoratorLine from "components/DecoratorLine";
 
 interface IVersionList {
   currentBibleVersion: string;
@@ -50,35 +51,44 @@ const VersionList: FC<IVersionList> = ({
         Versiones Disponibles
       </Text>
       {dbNameList.map((version) => (
-        <TouchableOpacity
+        <View
           key={version.path}
-          style={[styles.card]}
-          onPress={() => onSelect(version.id)}
+          style={{
+            flexDirection: "row",
+            marginVertical: 5,
+            backgroundColor: "transparent",
+          }}
         >
-          <View style={{ backgroundColor: "transparent", flex: 1 }}>
-            <Text
-              style={[
-                styles.versionText,
-                { color: theme.colors.notification, fontSize },
-              ]}
-            >
-              {version.shortName}
-            </Text>
-            <Text style={[styles.versionText, { fontSize }]}>
-              {version.name}
-            </Text>
-          </View>
-          {currentBibleVersion === version.id && (
-            <MaterialCommunityIcons
-              style={[
-                styles.icon,
-                { color: theme.colors.notification, fontSize: iconSize },
-              ]}
-              name="check"
-              color={theme.colors.notification}
-            />
-          )}
-        </TouchableOpacity>
+          <DecoratorLine theme={theme} />
+          <TouchableOpacity
+            style={[styles.card]}
+            onPress={() => onSelect(version.id)}
+          >
+            <View style={{ backgroundColor: "transparent", flex: 1 }}>
+              <Text
+                style={[
+                  styles.versionText,
+                  { color: theme.colors.notification, fontSize },
+                ]}
+              >
+                {version.shortName}
+              </Text>
+              <Text style={[styles.versionText, { fontSize }]}>
+                {version.name}
+              </Text>
+            </View>
+            {currentBibleVersion === version.id && (
+              <MaterialCommunityIcons
+                style={[
+                  styles.icon,
+                  { color: theme.colors.notification, fontSize: iconSize },
+                ]}
+                name="check"
+                color={theme.colors.notification}
+              />
+            )}
+          </TouchableOpacity>
+        </View>
       ))}
     </View>
   );
@@ -108,7 +118,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       flexDirection: "row",
       width: "90%",
       padding: 5,
-      marginVertical: 5,
       elevation: 5,
       ...Platform.select({
         ios: {
@@ -121,13 +130,15 @@ const getStyles = ({ colors, dark }: TTheme) =>
       paddingVertical: 10,
       paddingLeft: 10,
       borderColor: colors.notification + "50",
-      backgroundColor: colors.background,
+      backgroundColor: dark ? colors.background : "white",
       borderWidth: dark ? 1 : 0,
       shadowColor: colors.notification,
       shadowOpacity: 1,
       shadowRadius: 10,
       borderRadius: 10,
       alignItems: "center",
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
     },
     icon: {
       fontWeight: "700",

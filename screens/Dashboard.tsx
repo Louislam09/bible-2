@@ -5,6 +5,7 @@ import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import BottomModal from "components/BottomModal";
 import { Text, View } from "components/Themed";
+import VoiceList from "components/VoiceList";
 import Settings from "components/home/header/Settings";
 import VersionList from "components/home/header/VersionList";
 import { GET_DAILY_VERSE } from "constants/Queries";
@@ -20,15 +21,18 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { EBibleVersions, IVerseItem, Screens, TTheme } from "types";
+import {
+  EBibleVersions,
+  MaterialIconNameType,
+  IVerseItem,
+  Screens,
+  TTheme,
+  IoniconsIconNameType,
+} from "types";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";
 
-type MaterialCommunityIconName =
-  | keyof typeof Ionicons.glyphMap
-  | keyof typeof MaterialCommunityIcons.glyphMap;
-
 type IDashboardOption = {
-  icon: MaterialCommunityIconName;
+  icon: MaterialIconNameType | IoniconsIconNameType;
   label: string;
   action: () => void;
   disabled?: boolean;
@@ -67,6 +71,7 @@ const Dashboard = () => {
   const styles = getStyles(theme, isPortrait);
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
   const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const voiceBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(defaultDailyVerse);
   const columnNumber = 3;
@@ -113,6 +118,9 @@ const Dashboard = () => {
 
   const fontHandlePresentModalPress = useCallback(() => {
     fontBottomSheetModalRef.current?.present();
+  }, []);
+  const voiceHandlePresentModalPress = useCallback(() => {
+    voiceBottomSheetModalRef.current?.present();
   }, []);
 
   const versionHandlePresentModalPress = useCallback(() => {
@@ -188,6 +196,11 @@ const Dashboard = () => {
       label: "Himnos",
       isIonicon: true,
       action: onSong,
+    },
+    {
+      icon: "waveform",
+      label: "Selecciona Una Voz",
+      action: voiceHandlePresentModalPress,
     },
     {
       icon: "notebook-outline",
@@ -324,6 +337,9 @@ const Dashboard = () => {
           numColumns={columnNumber}
         />
       </View>
+      <BottomModal shouldScroll startAT={2} ref={voiceBottomSheetModalRef}>
+        <VoiceList theme={theme} />
+      </BottomModal>
       <BottomModal shouldScroll startAT={2} ref={fontBottomSheetModalRef}>
         <Settings theme={theme} />
       </BottomModal>

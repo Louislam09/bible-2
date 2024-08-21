@@ -19,6 +19,7 @@ type TBottomModal = {
   shouldScroll?: boolean;
   headerComponent?: React.ReactNode;
   footerComponent?: React.ReactNode;
+  _theme?: TTheme;
 };
 
 type Ref = BottomSheetModal;
@@ -34,10 +35,11 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       shouldScroll,
       headerComponent,
       footerComponent,
+      _theme,
     },
     ref
   ) => {
-    const theme = useTheme();
+    const theme = _theme || useTheme();
     const styles = getStyles(theme);
     const snapPoints = useMemo(
       () => (justOneSnap ? ["30%"] : snaps || ["30%", "50%", "75%", "100%"]),

@@ -4786,6 +4786,11 @@ expo-sharing@~12.0.1:
   resolved "https://registry.yarnpkg.com/expo-sharing/-/expo-sharing-12.0.1.tgz#6c4d951beda47dac47112e679d60fc06c233b7aa"
   integrity sha512-wBT+WeXwapj/9NWuLJO01vi9bdlchYu/Q/xD8slL/Ls4vVYku8CPqzkTtDFcjLrjtlJqyeHsdQXwKLvORmBIew==
 
+expo-speech@~12.0.2:
+  version "12.0.2"
+  resolved "https://registry.yarnpkg.com/expo-speech/-/expo-speech-12.0.2.tgz#d6d8d1daf6c40eda4eb8358ec221e5283d768c40"
+  integrity sha512-voWNz69hvtLEA2jipAbM5XJBIbKCusQsDZ/G/vAKKkP5AUTzAmcdRDWGcmESPRKK0JUtQZ8WetujgLCn2kl83w==
+
 expo-splash-screen@~0.27.5:
   version "0.27.5"
   resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.27.5.tgz#bcc1ebb4e761e19a1f2112469f3d424a36fb1e2c"

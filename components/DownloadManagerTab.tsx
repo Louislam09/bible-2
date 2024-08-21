@@ -54,6 +54,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       flexDirection: "row",
       alignItems: "center",
       paddingVertical: 10,
+      backgroundColor: "transparent",
     },
     tab: {
       flex: 1,
