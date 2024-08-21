@@ -25,7 +25,7 @@ import {
 } from "../types";
 import { useDBContext } from "./databaseContext";
 import { useStorage } from "./LocalstoreContext";
-import { Dimensions } from "react-native";
+import { Dimensions, ToastAndroid } from "react-native";
 import getCurrentDbName from "utils/getCurrentDB";
 
 type BibleState = {
@@ -495,6 +495,10 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
   const setShouldLoop = (shouldLoop: boolean) => {
+    const msg = shouldLoop
+      ? "Reproducción automática: Activada ✅"
+      : "Reproducción automática: Desactivada ❌";
+    ToastAndroid.show(msg, ToastAndroid.SHORT);
     dispatch({
       type: "SET_REPEAT_READING",
       payload: shouldLoop,
