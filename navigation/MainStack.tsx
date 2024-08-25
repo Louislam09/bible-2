@@ -20,6 +20,7 @@ import Favorite from "screens/Favorite";
 import Home from "screens/Home";
 import Notes from "screens/Notes";
 import OnboardingScreen from "screens/Onboarding";
+import Resource from "screens/Resource";
 import Search from "screens/Search";
 import Song from "screens/Song";
 import { RootStackParamList, Screens, ScreensName, TTheme } from "types";
@@ -108,6 +109,15 @@ const MainStack = () => {
         options={({ route }) => ({
           ...screenOptions(route),
           animation: "slide_from_bottom",
+        })}
+      />
+      <Stack.Screen
+        name="Resource"
+        component={Resource}
+        options={({ route }) => ({
+          ...screenOptions(route),
+          headerTitle: "",
+          animation: "slide_from_right",
         })}
       />
       <Stack.Screen

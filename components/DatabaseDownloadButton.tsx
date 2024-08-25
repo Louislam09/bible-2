@@ -4,8 +4,8 @@ import { TouchableOpacity, Animated, Easing, ViewStyle } from "react-native";
 
 interface DownloadButtonProps {
   isDownloaded: boolean;
-  deleteBibleFile: () => void;
-  downloadBible: () => void;
+  deleteFile: () => void;
+  downloadFile: () => void;
   progress: boolean;
   theme: {
     colors: {
@@ -16,8 +16,8 @@ interface DownloadButtonProps {
 
 const DownloadButton: React.FC<DownloadButtonProps> = ({
   isDownloaded,
-  deleteBibleFile,
-  downloadBible,
+  deleteFile: deleteBibleFile,
+  downloadFile: downloadBible,
   progress,
   theme,
 }) => {

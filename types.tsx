@@ -35,6 +35,7 @@ export enum Screens {
   Notes = "Notes",
   Onboarding = "Onboarding",
   Character = "Character",
+  Resource = "Resource",
   Song = "Song",
   StrongSearchEntire = "StrongSearchEntire",
   DictionarySearch = "DictionarySearch",
@@ -56,6 +57,7 @@ export const ScreensName: TScreensName = {
   [Screens.DownloadManager]: "Gestor de descargas",
   [Screens.Onboarding]: "Guia",
   [Screens.Character]: "Personaje",
+  [Screens.Resource]: "Recurso Biblico",
   [Screens.Song]: "Himnario",
   [Screens.StrongSearchEntire]: "Explorador de Números Strong",
   [Screens.DictionarySearch]: "Dictionary Search",
@@ -85,6 +87,7 @@ export type RootStackParamList = {
   DownloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
   Notes: NavigatorScreenParams<RootTabParamList> | undefined;
   Character: NavigatorScreenParams<RootTabParamList> | undefined;
+  Resource: NavigatorScreenParams<RootTabParamList> | undefined;
   ChooseBook:
     | NavigatorScreenParams<RootTabParamList>
     | ChooseChapterNumberParams;
@@ -174,6 +177,13 @@ export type DownloadBibleItem = {
   storedName: string;
   size: number;
   disabled?: boolean;
+};
+
+export type ResouceBookItem = {
+  name: string;
+  image: string;
+  downloadUrl: string;
+  description: string;
 };
 
 export type TSubtitle = {

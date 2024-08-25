@@ -1,34 +1,29 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { DownloadBibleItem, TTheme } from "types";
-import * as FileSystem from "expo-file-system";
+import { DownloadedDatabase } from "classes/Database";
 import {
   baseDownloadUrl,
-  bibleReadyMsg,
   dbFileExt,
   defaultDatabases,
   getIfDatabaseNeedsDownload,
   SQLiteDirPath,
 } from "constants/databaseNames";
-import { Text, View } from "./Themed";
-import { DownloadedDatabase } from "classes/Database";
+import * as FileSystem from "expo-file-system";
+import React, { useEffect, useState } from "react";
+import { StyleSheet } from "react-native";
+import { DownloadBibleItem, TTheme } from "types";
 import ProgressBar from "./home/footer/ProgressBar";
-// import { unzip } from "react-native-zip-archive";
-import JSZip from "jszip";
-// @ts-ignore
-import { decode as atob, encode as btoa } from "base-64";
+import { Text, View } from "./Themed";
+import { useBibleContext } from "context/BibleContext";
+import { useDBContext } from "context/databaseContext";
 import unzipFile from "utils/unzipFile";
 import DownloadButton from "./DatabaseDownloadButton";
-import { useDBContext } from "context/databaseContext";
-import { useBibleContext } from "context/BibleContext";
 
 type DatabaseDownloadItemProps = {
   item: DownloadBibleItem;
   theme: TTheme;
 };
 
-const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
+const ResourceDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -214,7 +209,7 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
   );
 };
 
-export default DatabaseDownloadItem;
+export default ResourceDownloadItem;
 
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
