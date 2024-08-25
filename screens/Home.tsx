@@ -64,7 +64,7 @@ function HomeScreen() {
     fontSize,
     setStrongWord,
     onAddToNote,
-    isSplitActived,
+    isSplitActivated,
     orientation,
   } = useBibleContext();
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
@@ -189,12 +189,12 @@ function HomeScreen() {
           style={[
             styles.slider,
             { backgroundColor: _backgroundColor },
-            { display: !isSplitActived ? "none" : "flex" },
+            { display: !isSplitActivated ? "none" : "flex" },
           ]}
         >
           <View style={styles.sliderHandle} />
         </Animated.View>
-        {isSplitActived && (
+        {isSplitActivated && (
           <SplitBottomSide
             {...{
               audioRef,

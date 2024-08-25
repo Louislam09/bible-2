@@ -43,7 +43,7 @@ const BookContent: FC<BookContentInterface> = ({
   const { currentBibleVersion, fontSize } = storedData;
 
   const {
-    setverseInStrongDisplay,
+    setVerseInStrongDisplay,
     clearHighlights,
     currentBibleLongName,
     setChapterLengthNumber,
@@ -75,7 +75,7 @@ const BookContent: FC<BookContentInterface> = ({
       setLoading(true);
       if (!myBibleDB || !executeSql) return;
       setData({});
-      setverseInStrongDisplay(0);
+      setVerseInStrongDisplay(0);
       const queryKey = getDatabaseQueryKey(currentBibleVersion);
       const query = QUERY_BY_DB[queryKey];
       const promises = [

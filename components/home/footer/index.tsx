@@ -52,7 +52,7 @@ const CustomFooter: FC<FooterInterface> = ({
     currentBibleVersion,
     clearHighlights,
     currentHistoryIndex,
-    isSplitActived,
+    isSplitActivated,
     toggleBottomSideSearching,
     currentChapterVerses,
     shouldLoopReading,
@@ -180,7 +180,7 @@ const CustomFooter: FC<FooterInterface> = ({
   const displayBookName = (book || "")?.length > 10 ? shortName : book;
 
   useEffect(() => {
-    if (isSplitActived) return;
+    if (isSplitActivated) return;
     if (currentHistoryIndex === -1) return;
     const currentHistory = historyManager.getCurrentItem();
 
@@ -283,7 +283,7 @@ const CustomFooter: FC<FooterInterface> = ({
             />
           </TouchableOpacity>
         </View>
-        {!isSplitActived && (
+        {!isSplitActivated && (
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
               ref={audioRef}

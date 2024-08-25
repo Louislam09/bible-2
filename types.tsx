@@ -14,6 +14,7 @@ import {
   Theme,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { UseSearchHookState } from "hooks/useSearch";
 
 declare global {
   namespace ReactNavigation {
@@ -411,3 +412,72 @@ export enum DATABASE_TYPE {
   DICTIONARY,
   COMMENTARIES,
 }
+
+export type BibleState = {
+  // State properties...
+  highlightedVerses: IBookVerse[];
+  selectedFont: string;
+  chapterVerseLength: number;
+  shouldLoopReading: boolean;
+  currentBibleVersion: string;
+  searchQuery: string;
+  addToNoteText: string;
+  currentTheme: keyof typeof EThemes;
+  isCopyMode: boolean;
+  viewLayoutGrid: boolean;
+  fontSize: number;
+  verseInStrongDisplay: number;
+  verseToCompare: number;
+  searchState: UseSearchHookState;
+  strongWord: IStrongWord;
+  searchHistory: EHistoryItem[];
+  currentChapterVerses: IBookVerse[];
+  currentHistoryIndex: number;
+  orientation: "LANDSCAPE" | "PORTRAIT";
+  isSplitActivated: boolean;
+  isBottomSideSearching: boolean;
+  currentBibleLongName: string;
+  // Functions...
+  highlightVerse: (verse: IBookVerse) => void;
+  clearHighlights: () => void;
+  selectFont: (font: string) => void;
+  onAddToNote: (text: string) => void;
+  onSaveNote: (
+    data: { title: string; content: string },
+    closeCallback: () => void
+  ) => void;
+  onUpdateNote: (
+    data: { title: string; content: string },
+    id: number,
+    closeCallback: () => void
+  ) => void;
+  onDeleteNote: (id: number) => void;
+  selectBibleVersion: (version: string) => Promise<void>;
+  removeHighlightedVerse: (verse: IBookVerse) => void;
+  toggleCopyMode: () => void;
+  toggleSplitMode: () => void;
+  toggleBottomSideSearching: (value: boolean) => void;
+  decreaseFontSize: () => void;
+  setStrongWord: (word: IStrongWord) => void;
+  setVerseToCompare: (verse: number) => void;
+  setChapterLengthNumber: (chapterLengthNumber: number) => void;
+  setShouldLoop: (shouldLoop: boolean) => void;
+  setChapterVerses: (currentChapterVerses: IBookVerse[]) => void;
+  setVerseInStrongDisplay: (verse: number) => void;
+  toggleFavoriteVerse: ({
+    bookNumber,
+    chapter,
+    verse,
+    isFav,
+  }: IFavoriteVerse) => Promise<void>;
+  increaseFontSize: () => void;
+  toggleViewLayoutGrid: () => void;
+  selectTheme: (theme: keyof typeof EThemes) => void;
+  setLocalData: (data: any) => void;
+  performSearch: () => void;
+  goBackOnHistory?: (index: number) => void;
+  goForwardOnHistory?: (index: number) => void;
+  // neeeeeeew
+  setSearchQuery: Function;
+  searchHistorial: EHistoryItem[];
+};

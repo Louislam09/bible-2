@@ -44,7 +44,7 @@ const CustomHeader: FC<HeaderInterface> = ({
     clearHighlights,
     goBackOnHistory,
     goForwardOnHistory,
-    isSplitActived,
+    isSplitActivated,
     toggleSplitMode,
     toggleBottomSideSearching,
     chapterVerseLength,
@@ -102,18 +102,20 @@ const CustomHeader: FC<HeaderInterface> = ({
           name: "arrow-split-horizontal",
           action: () => {
             toggleSplitMode();
-            toggleBottomSideSearching(!isSplitActived);
+            toggleBottomSideSearching(!isSplitActivated);
           },
           ref: favRef,
           isIonicon: false,
-          color: isSplitActived ? theme.colors.notification : theme.colors.text,
+          color: isSplitActivated
+            ? theme.colors.notification
+            : theme.colors.text,
         },
         {
           name: "arrow-back-outline",
           action: moveBackInHistory,
           ref: settingRef,
           isIonicon: true,
-          disabled: isSplitActived,
+          disabled: isSplitActivated,
           color: shouldBackward
             ? theme.colors.notification
             : theme.colors?.text,
@@ -123,12 +125,12 @@ const CustomHeader: FC<HeaderInterface> = ({
           action: moveForwardInHistory,
           ref: searchRef,
           isIonicon: true,
-          disabled: isSplitActived,
+          disabled: isSplitActivated,
           color: shouldForward ? theme.colors.notification : theme.colors?.text,
         },
         { name: "magnify", action: goSearchScreen, ref: searchRef },
       ].filter((x) => !x.disabled),
-    [isSplitActived, shouldForward, shouldBackward]
+    [isSplitActivated, shouldForward, shouldBackward]
   );
 
   const onSelect = (version: string) => {
@@ -197,7 +199,7 @@ const CustomHeader: FC<HeaderInterface> = ({
           <VersionList {...{ currentBibleVersion, onSelect, theme }} />
         </BottomModal>
       </View>
-      {!isSplitActived && (
+      {!isSplitActivated && (
         <View style={[styles.progressContainer]}>
           <ProgressBar
             hideCircle

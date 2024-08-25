@@ -78,17 +78,17 @@ const Verse: React.FC<VerseProps> = ({
     highlightedVerses,
     isCopyMode,
     toggleCopyMode,
-    removeHighlistedVerse,
+    removeHighlightedVerse,
     fontSize,
     toggleFavoriteVerse,
     clearHighlights,
     setStrongWord,
     verseInStrongDisplay,
-    setverseInStrongDisplay,
+    setVerseInStrongDisplay,
     onAddToNote,
     toggleBottomSideSearching,
     isBottomSideSearching,
-    isSplitActived,
+    isSplitActivated,
     setVerseToCompare,
   } = useBibleContext();
   const theme = useTheme() as TTheme;
@@ -148,14 +148,14 @@ const Verse: React.FC<VerseProps> = ({
   }, [highlightedVersesLenth]);
 
   const onVerseClicked = () => {
-    setverseInStrongDisplay(isStrongSearch ? 0 : item.verse);
+    setVerseInStrongDisplay(isStrongSearch ? 0 : item.verse);
     toggleBottomSideSearching(isSplit);
     setDoubleTagged(false);
     if (!isCopyMode) return;
     if (isVerseHighlisted === item.verse) {
       setHighlightVerse(null);
       setDoubleTagged(false);
-      removeHighlistedVerse(item);
+      removeHighlightedVerse(item);
       return;
     }
     highlightVerse(item);
@@ -189,9 +189,10 @@ const Verse: React.FC<VerseProps> = ({
 
     const onLink = () => {
       navigation.navigate("Home", {
-        [!isSplit && isSplitActived ? "bottomSideBook" : "book"]: bookName,
-        [!isSplit && isSplitActived ? "bottomSideChapter" : "chapter"]: chapter,
-        [!isSplit && isSplitActived ? "bottomSideVerse" : "verse"]: verse,
+        [!isSplit && isSplitActivated ? "bottomSideBook" : "book"]: bookName,
+        [!isSplit && isSplitActivated ? "bottomSideChapter" : "chapter"]:
+          chapter,
+        [!isSplit && isSplitActivated ? "bottomSideVerse" : "verse"]: verse,
         isHistory: false,
       });
     };

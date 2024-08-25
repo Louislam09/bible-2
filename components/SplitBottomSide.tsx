@@ -5,7 +5,7 @@ import BookContent from "./home/content";
 import CustomFooter from "./home/footer";
 
 const SplitBottomSide: FC<any> = (props) => {
-  const { isSplitActived, orientation } = useBibleContext();
+  const { isSplitActivated, orientation } = useBibleContext();
   const isPortrait = orientation === "PORTRAIT";
   return (
     <Animated.View
@@ -16,7 +16,7 @@ const SplitBottomSide: FC<any> = (props) => {
             ? props.height
             : props.wdith,
         },
-        isSplitActived && { flex: 1 },
+        isSplitActivated && { flex: 1 },
       ]}
     >
       <BookContent isSplit {...props} />

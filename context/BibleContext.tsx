@@ -5,7 +5,7 @@ import {
   INSERT_INTO_NOTE,
   UPDATE_NOTE_BY_ID,
 } from "constants/Queries";
-import useSearch, { UseSearchHookState } from "hooks/useSearch";
+import useSearch from "hooks/useSearch";
 import React, {
   createContext,
   useContext,
@@ -13,10 +13,13 @@ import React, {
   useReducer,
   useState,
 } from "react";
+import { Dimensions, ToastAndroid } from "react-native";
+import bibleReducer from "reducers/bible.reducer";
+import getCurrentDbName from "utils/getCurrentDB";
 import useCustomFonts from "../hooks/useCustomFonts";
 import {
+  BibleState,
   EBibleVersions,
-  EHistoryItem,
   EThemes,
   IBookVerse,
   IFavoriteVerse,
@@ -25,99 +28,6 @@ import {
 } from "../types";
 import { useDBContext } from "./databaseContext";
 import { useStorage } from "./LocalstoreContext";
-import { Dimensions, ToastAndroid } from "react-native";
-import getCurrentDbName from "utils/getCurrentDB";
-
-type BibleState = {
-  highlightedVerses: IBookVerse[];
-  highlightVerse: Function;
-  clearHighlights: Function;
-  setSearchQuery: Function;
-  selectFont: Function;
-  onDeleteNote: (id: number) => void;
-  onAddToNote: (text: string) => void;
-  onUpdateNote: (
-    data: { title: string; content: string },
-    id: number,
-    closeCallback: any
-  ) => void;
-  onSaveNote: (
-    data: { title: string; content: string },
-    closeCallback: any
-  ) => void;
-  selectBibleVersion: (version: string) => Promise<void>;
-  removeHighlistedVerse: Function;
-  toggleCopyMode: Function;
-  toggleSplitMode: Function;
-  toggleBottomSideSearching: (value: boolean) => void;
-  decreaseFontSize: Function;
-  setStrongWord: (word: IStrongWord) => void;
-  setVerseToCompare: (verse: number) => void;
-  setChapterLengthNumber: (chapterLengthNumber: number) => void;
-  setShouldLoop: (shouldLoop: boolean) => void;
-  setChapterVerses: (currentChapterVerses: IBookVerse[]) => void;
-  setverseInStrongDisplay: (verse: number) => void;
-  toggleFavoriteVerse: ({
-    bookNumber,
-    chapter,
-    verse,
-    isFav,
-  }: IFavoriteVerse) => Promise<void>;
-  increaseFontSize: Function;
-  toggleViewLayoutGrid: Function;
-  selectTheme: Function;
-  setLocalData: Function;
-  performSearch: Function;
-  selectedFont: string;
-  chapterVerseLength: number;
-  shouldLoopReading: boolean;
-  currentBibleVersion: string;
-  searchQuery: string;
-  addToNoteText: string;
-  currentTheme: keyof typeof EThemes;
-  isCopyMode: boolean;
-  viewLayoutGrid: boolean;
-  fontSize: number;
-  verseInStrongDisplay: number;
-  verseToCompare: number;
-  searchState: UseSearchHookState;
-  strongWord: IStrongWord;
-  searchHistorial: EHistoryItem[];
-  currentChapterVerses: IBookVerse[];
-  currentHistoryIndex: number;
-  goBackOnHistory?: (index: number) => void;
-  goForwardOnHistory?: (index: number) => void;
-  orientation: "LANDSCAPE" | "PORTRAIT";
-  isSplitActived: boolean;
-  isBottomSideSearching: boolean;
-  currentBibleLongName: string;
-};
-
-type BibleAction =
-  | { type: "HIGHLIGHT_VERSE"; payload: IBookVerse }
-  | { type: "REMOVE_HIGHLIGHT_VERSE"; payload: IBookVerse }
-  | { type: "SELECT_FONT"; payload: string }
-  | { type: "SELECT_THEME"; payload: keyof typeof EThemes }
-  | { type: "INCREASE_FONT_SIZE" }
-  | { type: "DECREASE_FONT_SIZE" }
-  | { type: "SELECT_BIBLE_VERSION"; payload: string }
-  | { type: "ADD_TO_NOTE"; payload: string }
-  | { type: "SET_SEARCH_QUERY"; payload: string }
-  | { type: "GO_BACK"; payload: number }
-  | { type: "GO_FORWARD"; payload: number }
-  | { type: "SET_VERSE_IN_STRONG_DISPLAY"; payload: number }
-  | { type: "SET_VERSE_TO_COMPARE"; payload: number }
-  | { type: "SET_CHAPTER_VERSE_LENGTH"; payload: number }
-  | { type: "SET_REPEAT_READING"; payload: boolean }
-  | { type: "SET_CHAPTER_VERSES"; payload: any[] }
-  | { type: "SET_STRONG_WORD"; payload: IStrongWord }
-  | { type: "CLEAR_HIGHLIGHTS" }
-  | { type: "SET_LOCAL_DATA"; payload: any }
-  | { type: "TOGGLE_COPY_MODE"; payload?: boolean }
-  | { type: "TOGGLE_SECOND_SIDE"; payload: boolean }
-  | { type: "TOGGLE_SPLIT_MODE"; payload?: boolean }
-  | { type: "TOGGLE_VIEW_LAYOUT_GRID" }
-  | { type: "TOGGLE_COPY_SEARCH"; payload: boolean };
 
 const defaultSearch = {
   searchResults: [],
@@ -127,7 +37,7 @@ const defaultSearch = {
 const initialContext: BibleState = {
   highlightedVerses: [],
   highlightVerse: () => {},
-  removeHighlistedVerse: () => {},
+  removeHighlightedVerse: () => {},
   clearHighlights: () => {},
   selectBibleVersion: (version: string) => {
     return new Promise((resolve) => resolve());
@@ -151,7 +61,7 @@ const initialContext: BibleState = {
   setChapterLengthNumber: (chapterLengthNumber: number) => {},
   setShouldLoop: (shouldLoop: boolean) => {},
   setChapterVerses: (currentChapterVerses: IBookVerse[]) => {},
-  setverseInStrongDisplay: (verse: number) => {},
+  setVerseInStrongDisplay: (verse: number) => {},
   onAddToNote: (text: string) => {},
   increaseFontSize: () => {},
   toggleViewLayoutGrid: () => {},
@@ -172,7 +82,7 @@ const initialContext: BibleState = {
   shouldLoopReading: false,
   verseToCompare: 1,
   currentTheme: "Blue",
-  isSplitActived: false,
+  isSplitActivated: false,
   viewLayoutGrid: true,
   strongWord: { text: "", code: "" },
   searchHistorial: [],
@@ -180,137 +90,10 @@ const initialContext: BibleState = {
   orientation: "PORTRAIT",
   currentBibleLongName: "Reina Valera 1960",
   currentChapterVerses: [],
+  searchHistory: [],
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);
-
-const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
-  switch (action.type) {
-    case "HIGHLIGHT_VERSE":
-      return {
-        ...state,
-        highlightedVerses: [...state.highlightedVerses, action.payload].sort(
-          (a, b) => a.verse - b.verse
-        ),
-      };
-    case "REMOVE_HIGHLIGHT_VERSE":
-      return {
-        ...state,
-        highlightedVerses: [
-          ...state.highlightedVerses.filter(
-            (verse) => verse.verse !== action.payload.verse
-          ),
-        ],
-      };
-    case "CLEAR_HIGHLIGHTS":
-      return {
-        ...state,
-        highlightedVerses: [],
-      };
-    case "ADD_TO_NOTE":
-      return {
-        ...state,
-        addToNoteText: action.payload,
-      };
-    case "SELECT_FONT":
-      return {
-        ...state,
-        selectedFont: action.payload,
-      };
-    case "SELECT_THEME":
-      return {
-        ...state,
-        currentTheme: action.payload,
-      };
-    case "SELECT_BIBLE_VERSION":
-      return {
-        ...state,
-        currentBibleVersion: action.payload,
-      };
-    case "INCREASE_FONT_SIZE":
-      return {
-        ...state,
-        fontSize: state.fontSize + 1,
-      };
-    case "DECREASE_FONT_SIZE":
-      return {
-        ...state,
-        fontSize: state.fontSize - 1,
-      };
-    case "TOGGLE_COPY_MODE":
-      return {
-        ...state,
-        isCopyMode: action?.payload ?? !state.isCopyMode,
-      };
-    case "TOGGLE_SPLIT_MODE":
-      return {
-        ...state,
-        isSplitActived: !state.isSplitActived,
-      };
-    case "TOGGLE_SECOND_SIDE":
-      return {
-        ...state,
-        isBottomSideSearching: action.payload,
-      };
-    case "TOGGLE_VIEW_LAYOUT_GRID":
-      return {
-        ...state,
-        viewLayoutGrid: !state.viewLayoutGrid,
-      };
-    case "SET_SEARCH_QUERY":
-      return {
-        ...state,
-        searchQuery: action.payload,
-      };
-    case "SET_VERSE_IN_STRONG_DISPLAY":
-      return {
-        ...state,
-        verseInStrongDisplay: action.payload,
-      };
-    case "SET_VERSE_TO_COMPARE":
-      return {
-        ...state,
-        verseToCompare: action.payload,
-      };
-    case "SET_CHAPTER_VERSE_LENGTH":
-      return {
-        ...state,
-        chapterVerseLength: action.payload,
-      };
-    case "SET_REPEAT_READING":
-      return {
-        ...state,
-        shouldLoopReading: action.payload,
-      };
-    case "SET_CHAPTER_VERSES":
-      return {
-        ...state,
-        currentChapterVerses: action.payload,
-      };
-    case "GO_BACK":
-      return {
-        ...state,
-        currentHistoryIndex: action.payload,
-      };
-    case "GO_FORWARD":
-      return {
-        ...state,
-        currentHistoryIndex: action.payload,
-      };
-    case "SET_STRONG_WORD":
-      return {
-        ...state,
-        strongWord: action.payload,
-      };
-    case "SET_LOCAL_DATA":
-      return {
-        ...state,
-        ...action.payload,
-      };
-    default:
-      return state;
-  }
-};
 
 const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -377,7 +160,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const highlightVerse = (verseItem: IBookVerse) => {
     dispatch({ type: "HIGHLIGHT_VERSE", payload: verseItem });
   };
-  const removeHighlistedVerse = (verseItem: IBookVerse) => {
+  const removeHighlightedVerse = (verseItem: IBookVerse) => {
     dispatch({ type: "REMOVE_HIGHLIGHT_VERSE", payload: verseItem });
   };
 
@@ -481,7 +264,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const setStrongWord = (item: IStrongWord) => {
     dispatch({ type: "SET_STRONG_WORD", payload: item });
   };
-  const setverseInStrongDisplay = (verse: number) => {
+  const setVerseInStrongDisplay = (verse: number) => {
     if (currentBibleVersion !== EBibleVersions.BIBLE) return;
     dispatch({ type: "SET_VERSE_IN_STRONG_DISPLAY", payload: verse });
   };
@@ -527,14 +310,14 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     toggleSplitMode,
     decreaseFontSize,
     increaseFontSize,
-    removeHighlistedVerse,
+    removeHighlightedVerse,
     performSearch: performSearch as typeof performSearch,
     setSearchQuery,
     selectTheme,
     toggleViewLayoutGrid,
     toggleFavoriteVerse,
     setStrongWord,
-    setverseInStrongDisplay,
+    setverseInStrongDisplay: setVerseInStrongDisplay,
     setVerseToCompare,
     setChapterLengthNumber,
     setShouldLoop,

@@ -5,7 +5,7 @@ import BookContent from "./home/content";
 import CustomFooter from "./home/footer";
 
 const SplitTopSide: FC<any> = (props) => {
-  const { isSplitActived, orientation } = useBibleContext();
+  const { isSplitActivated, orientation } = useBibleContext();
   const isPortrait = orientation === "PORTRAIT";
 
   return (
@@ -17,7 +17,7 @@ const SplitTopSide: FC<any> = (props) => {
             ? props.height
             : props.width,
         },
-        !isSplitActived && { flex: 1 },
+        !isSplitActivated && { flex: 1 },
       ]}
     >
       <BookContent isSplit={false} {...props} />
