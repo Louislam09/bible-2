@@ -7,6 +7,7 @@ type PdfViewerProps = { pdfUri: string };
 const PdfViewer = ({ pdfUri }: PdfViewerProps) => {
   const [pdfBase64, setPdfBase64] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  console.log({ pdfUri });
 
   useEffect(() => {
     const loadPdf = async () => {

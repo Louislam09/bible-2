@@ -22,6 +22,10 @@ import {
   TTheme,
 } from "types";
 import { customBorder } from "utils/customStyle";
+import * as Sharing from "expo-sharing";
+import * as FileSystem from "expo-file-system";
+import GradientBackground from "components/BackgroundGredient";
+import PdfViewer from "components/PdfView";
 
 type ActionButtonType = {
   icon: MaterialIconNameType;
@@ -36,10 +40,12 @@ const blurhash =
 
 const BookDetail: React.FC<RootStackScreenProps<"BookDetail">> = ({
   route,
+  navigation,
 }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
   const [isDownloaded, setIsDownloaded] = useState(false);
+  const [selected, setSelected] = useState<string | null>(null);
   // @ts-ignore
   const { bookName } = route?.params || {};
   const selectedBook = useMemo(() => {
@@ -59,15 +65,21 @@ const BookDetail: React.FC<RootStackScreenProps<"BookDetail">> = ({
 
   const { image, name, description, autor, longDescription, downloadUrl } =
     selectedBook;
+  const fileUri = `${FileSystem.documentDirectory}${name}.pdf`;
+
+  const onOpen = () => {
+    setSelected(fileUri);
+  };
 
   const actionsButtons: ActionButtonType[] = [
-    { icon: "book-open-page-variant-outline", name: "Leer", action: () => {} },
-    // { icon: "download", name: "Descargar", action: () => {} },
-    // { icon: "delete", name: "Borrar", action: () => {} },
+    {
+      icon: "book-open-page-variant-outline",
+      name: "Leer",
+      action: onOpen,
+    },
   ];
 
   const handleDownload = () => {
-    // const pdfUrl = "https://www.example.com/sample.pdf";
     const pdfUrl = downloadUrl;
     downloadPDF(pdfUrl, name + ".pdf");
   };
@@ -87,7 +99,11 @@ const BookDetail: React.FC<RootStackScreenProps<"BookDetail">> = ({
 
   const RenderAction = (action: ActionButtonType) => {
     return (
-      <TouchableOpacity style={styles.actionItem}>
+      <TouchableOpacity
+        onPress={action.action}
+        key={action.name}
+        style={styles.actionItem}
+      >
         <MaterialCommunityIcons
           style={styles.actionIcon}
           name={action.icon}
@@ -98,18 +114,50 @@ const BookDetail: React.FC<RootStackScreenProps<"BookDetail">> = ({
     );
   };
 
+  const onClose = () => {
+    navigation.goBack();
+  };
+  const onShare = async () => {
+    if (fileUri) {
+      await Sharing.shareAsync(fileUri);
+    }
+  };
+
+  const gradientBackgroundColors = [
+    theme.colors.notification + 60,
+    theme.colors.background + 99,
+    theme.colors.notification + 60,
+  ];
+
   return (
     <View style={styles.container}>
       <View style={styles.heroContainer}>
-        <View style={styles.imageContainer}>
-          <Image
-            style={styles.image}
-            source={image}
-            placeholder={{ blurhash }}
-            contentFit="contain"
-            transition={1000}
-          />
-        </View>
+        <GradientBackground colors={gradientBackgroundColors}>
+          <TouchableOpacity style={styles.closeIcon} onPress={onClose}>
+            <MaterialCommunityIcons name="close" size={30} color={"white"} />
+          </TouchableOpacity>
+          {isDownloaded && (
+            <TouchableOpacity
+              style={[styles.closeIcon, { right: 0 }]}
+              onPress={onShare}
+            >
+              <MaterialCommunityIcons
+                name="share-variant-outline"
+                size={30}
+                color={"white"}
+              />
+            </TouchableOpacity>
+          )}
+          <View style={styles.imageContainer}>
+            <Image
+              style={styles.image}
+              source={image}
+              placeholder={{ blurhash }}
+              contentFit="contain"
+              transition={1000}
+            />
+          </View>
+        </GradientBackground>
       </View>
       <View style={styles.contentContainer}>
         <Text style={styles.contentTitle}>{name}</Text>
@@ -129,21 +177,31 @@ const BookDetail: React.FC<RootStackScreenProps<"BookDetail">> = ({
           withLabel
         />
       </View>
-      <ScrollView style={styles.bookDetail}>
-        <Text style={styles.bookDetailTitle}>Sinopsis</Text>
-        <Text style={styles.bookDetailSubTitle}>
-          {longDescription || description}
-        </Text>
-        <View style={{ height: 20 }} />
-      </ScrollView>
+
+      {selected ? (
+        <PdfViewer pdfUri={selected} />
+      ) : (
+        <ScrollView style={styles.bookDetail}>
+          <Text style={styles.bookDetailTitle}>Sinopsis</Text>
+          <Text style={styles.bookDetailSubTitle}>
+            {longDescription || description}
+          </Text>
+          <View style={{ height: 20 }} />
+        </ScrollView>
+      )}
     </View>
   );
 };
 
-const getStyles = ({ colors }: TTheme) =>
+const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     container: {
       flex: 1,
+    },
+    closeIcon: {
+      padding: 10,
+      position: "absolute",
+      zIndex: 11,
     },
     heroContainer: {
       flex: 0.4,
@@ -158,6 +216,7 @@ const getStyles = ({ colors }: TTheme) =>
       textAlign: "center",
       paddingVertical: 10,
       fontWeight: "bold",
+      paddingHorizontal: 10,
     },
     contentSubTitle: {
       fontSize: 18,
@@ -169,6 +228,7 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       justifyContent: "space-around",
       paddingVertical: 20,
+      elevation: 3,
     },
     actionItem: {
       alignItems: "center",

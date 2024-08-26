@@ -22,8 +22,8 @@ import DownloadButton from "components/DatabaseDownloadButton";
 import resourceBook from "constants/resourceBook";
 import { Image } from "expo-image";
 import PdfViewer from "components/PdfView";
-import * as FileSystem from "expo-file-system";
-import * as Sharing from "expo-sharing";
+// import * as FileSystem from "expo-file-system";
+// import * as Sharing from "expo-sharing";
 import DailyVerse from "components/DailyVerse";
 
 const notImageUrl =
@@ -136,7 +136,6 @@ const RenderItem = ({ item, index, theme, onView }: RenderItemProps) => {
 
   return (
     <TouchableOpacity onPress={onItem}>
-      <Text># {index}</Text>
       <Animated.View
         style={[
           {
@@ -265,7 +264,6 @@ const Resource: React.FC<RootStackScreenProps<"Resource"> | any> = (props) => {
         <PdfViewer pdfUri={selected} />
       ) : (
         <>
-          {/* {ResourceHeader()} */}
           <FlashList
             key={_themeScheme}
             ListHeaderComponent={ResourceHeader}
