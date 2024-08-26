@@ -15,12 +15,16 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { ResouceBookItem, RootStackScreenProps, TTheme } from "types";
+import { ResouceBookItem, RootStackScreenProps, Screens, TTheme } from "types";
 import { useDownloadPDF } from "hooks/useDownloadPdf";
 import { getIfFileNeedsDownload } from "constants/databaseNames";
 import DownloadButton from "components/DatabaseDownloadButton";
 import resourceBook from "constants/resourceBook";
 import { Image } from "expo-image";
+import PdfViewer from "components/PdfView";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
+import DailyVerse from "components/DailyVerse";
 
 const notImageUrl =
   "https://st4.depositphotos.com/14953852/24787/v/380/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg";
@@ -32,9 +36,19 @@ type RenderItemProps = {
   item: ResouceBookItem;
   index: number;
   theme: TTheme;
+  onView: (fileName: string) => void;
 };
 
-const RenderItem = ({ item, index, theme }: RenderItemProps) => {
+const defaultDailyObject = {
+  book_number: 590,
+  chapter: 5,
+  text: "Examinadlo todo; retened lo bueno.",
+  verse: 21,
+  bookName: "1 Tesalonicenses",
+  is_favorite: false,
+};
+
+const RenderItem = ({ item, index, theme, onView }: RenderItemProps) => {
   const { downloadUrl, description, image, name } = item;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateXAnim = useRef(new Animated.Value(300)).current;
@@ -52,10 +66,10 @@ const RenderItem = ({ item, index, theme }: RenderItemProps) => {
   const handleDownload = () => {
     // const pdfUrl = "https://www.example.com/sample.pdf";
     const pdfUrl = downloadUrl;
-    downloadPDF(pdfUrl, name);
+    downloadPDF(pdfUrl, name + ".pdf");
   };
   const handleDelete = () => {
-    deleteDownloadedFile(name);
+    deleteDownloadedFile(name + ".pdf");
   };
 
   useEffect(() => {
@@ -66,7 +80,7 @@ const RenderItem = ({ item, index, theme }: RenderItemProps) => {
 
   useEffect(() => {
     async function needD() {
-      return await getIfFileNeedsDownload(name);
+      return await getIfFileNeedsDownload(name + ".pdf");
     }
 
     needD().then((res) => {
@@ -91,92 +105,92 @@ const RenderItem = ({ item, index, theme }: RenderItemProps) => {
     ]).start();
   }, [fadeAnim, translateXAnim, index]);
 
+  const onItem = () => {
+    onView(name);
+  };
+
+  const bodyContainer = {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  };
+
+  const bodyStyle = {
+    flexDirection: "row",
+    flex: 1,
+    justifyContent: "space-between",
+  };
+
+  const infoStyle = {
+    paddingHorizontal: 10,
+    paddingLeft: 5,
+    flex: 1,
+  };
+
+  const imageStyle = {
+    width: 100,
+    height: 150,
+    backgroundColor: theme.colors.notification + "40",
+  };
+
   return (
-    <Animated.View
-      style={[
-        {
-          opacity: fadeAnim,
-          transform: [{ translateX: translateXAnim }],
-          flex: 1,
-          height: 150,
-          marginTop: 10,
-        },
-      ]}
-    >
+    <TouchableOpacity onPress={onItem}>
+      <Text># {index}</Text>
       <Animated.View
         style={[
           {
+            opacity: fadeAnim,
+            transform: [{ translateX: translateXAnim }],
             flex: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
+            marginTop: 10,
+            paddingHorizontal: 5,
           },
         ]}
       >
-        <Animated.View
-          style={{
-            flexDirection: "row",
-            flex: 1,
-            justifyContent: "space-between",
-          }}
-        >
-          <Image
-            style={{
-              width: 100,
-              height: 150,
-              backgroundColor: theme.colors.notification + "40",
-            }}
-            source={image || notImageUrl}
-            placeholder={{ blurhash }}
-            contentFit="cover"
-            transition={1000}
-          />
+        <Animated.View style={bodyContainer as any}>
+          <Animated.View style={bodyStyle as any}>
+            <Image
+              style={imageStyle}
+              source={image || notImageUrl}
+              placeholder={{ blurhash }}
+              contentFit="cover"
+              transition={1000}
+            />
+            <Animated.View style={infoStyle}>
+              <Text style={{ fontSize: 18, color: theme.colors.notification }}>
+                {name}
+              </Text>
+              <Text style={{ paddingHorizontal: 5 }}>{description}</Text>
+            </Animated.View>
+          </Animated.View>
 
-          <Animated.View
-            style={{
-              paddingHorizontal: 10,
-              flex: 1,
-            }}
-          >
-            <Text style={{ fontSize: 18, color: theme.colors.notification }}>
-              {name}
-            </Text>
-            <Text style={{ paddingHorizontal: 5 }}>{description}</Text>
-            <View style={{}}>
-              <MaterialCommunityIcons
-                name="open-in-new"
-                size={24}
-                color="white"
-              />
-              <Text style={{ paddingHorizontal: 5 }}>Abrir</Text>
-            </View>
+          <Animated.View style={{}}>
+            <DownloadButton
+              {...{
+                downloadFile: () => handleDownload(),
+                deleteFile: () => handleDelete(),
+                isDownloaded,
+                progress: isDownloading,
+                theme,
+              }}
+            />
           </Animated.View>
         </Animated.View>
-        <Animated.View style={{}}>
-          <DownloadButton
-            {...{
-              downloadFile: () => handleDownload(),
-              deleteFile: () => handleDelete(),
-              isDownloaded,
-              progress: isDownloading,
-              theme,
-            }}
-          />
-        </Animated.View>
+        <View style={{ marginVertical: 10 }}>
+          {isDownloading && (
+            <Text>Descargando... {downloadProgress.toFixed(2)}%</Text>
+          )}
+          {downloadError && <Text>Error: {downloadError}</Text>}
+          {downloadedFileUri && <Text>Archivo descargado 🎉</Text>}
+        </View>
       </Animated.View>
-
-      <View style={{ marginVertical: 10 }} />
-      {isDownloading && (
-        <Text>Descargando... {downloadProgress.toFixed(2)}%</Text>
-      )}
-      {downloadError && <Text>Error: {downloadError}</Text>}
-      {downloadedFileUri && <Text>Archivo descargado 🎉</Text>}
-    </Animated.View>
+    </TouchableOpacity>
   );
 };
 
 const Resource: React.FC<RootStackScreenProps<"Resource"> | any> = (props) => {
-  const [selected, setSelected] = useState<any>(null);
+  const [selected, setSelected] = useState<string | null>(null);
   const [filterData] = useState(Characters);
   const theme = useTheme();
   const { theme: _themeScheme } = useCustomTheme();
@@ -189,20 +203,11 @@ const Resource: React.FC<RootStackScreenProps<"Resource"> | any> = (props) => {
     return (
       <View style={[styles.noteHeader]}>
         <Text style={[styles.noteListTitle]}>Recurso Biblicos</Text>
-        {/* <View style={styles.searchContainer}>
-          <Ionicons
-            style={styles.searchIcon}
-            name="search"
-            size={24}
-            color={theme.colors.notification}
-          />
-          <TextInput
-            placeholder="Buscar un libro..."
-            style={[styles.noteHeaderSearchInput]}
-            onChangeText={(text) => setSearchText(text)}
-            value={searchText}
-          />
-        </View> */}
+        <DailyVerse
+          dailyVerseObject={defaultDailyObject}
+          navigation={navigation}
+          theme={theme}
+        />
       </View>
     );
   };
@@ -210,7 +215,7 @@ const Resource: React.FC<RootStackScreenProps<"Resource"> | any> = (props) => {
   useEffect(() => {
     const backAction = () => {
       setSelected(null);
-      !selected?.topic && navigation.goBack();
+      !selected && navigation.goBack();
       return true;
     };
 
@@ -223,7 +228,7 @@ const Resource: React.FC<RootStackScreenProps<"Resource"> | any> = (props) => {
   }, [selected]);
 
   const handleCustomBack = () => {
-    if (selected?.topic) {
+    if (selected) {
       setSelected(null);
     } else {
       navigation.navigate("Dashboard");
@@ -244,6 +249,10 @@ const Resource: React.FC<RootStackScreenProps<"Resource"> | any> = (props) => {
     });
   }, [selected]);
 
+  const onView = async (fileName: string) => {
+    navigation.navigate(Screens.BookDetail, { bookName: fileName });
+  };
+
   return (
     <View
       style={{
@@ -253,7 +262,7 @@ const Resource: React.FC<RootStackScreenProps<"Resource"> | any> = (props) => {
       }}
     >
       {selected ? (
-        <WordDefinition subTitle="Historia" wordData={selected} />
+        <PdfViewer pdfUri={selected} />
       ) : (
         <>
           {/* {ResourceHeader()} */}
@@ -267,7 +276,9 @@ const Resource: React.FC<RootStackScreenProps<"Resource"> | any> = (props) => {
             decelerationRate={"normal"}
             estimatedItemSize={135}
             data={books}
-            renderItem={(props) => <RenderItem {...{ theme, ...props }} />}
+            renderItem={(props) => (
+              <RenderItem {...{ theme, onView, ...props }} />
+            )}
             keyExtractor={(item: any, index: any) => `note-${index}`}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
           />
@@ -314,12 +325,10 @@ const getStyles = ({ colors, dark }: TTheme) =>
       justifyContent: "center",
       paddingHorizontal: 4,
       paddingVertical: 10,
-      marginTop: 40,
       backgroundColor: "transparent",
     },
     noteListTitle: {
       fontSize: 30,
-      marginVertical: 10,
       fontWeight: "bold",
       textAlign: "center",
       color: colors.notification,

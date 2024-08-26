@@ -1,215 +1,208 @@
 export default [
   {
+    name: "El progreso del peregrino",
+    autor: "John Bunyan",
+    image:
+      "https://raw.githubusercontent.com/Louislam09/resources/main/images/el%20progreso%20del%20peregrino.jpg",
+    downloadUrl:
+      "http://www.elcristianismoprimitivo.com/El%20progreso%20del%20peregrino.pdf",
+    description:
+      "Por Juan Bunyan El libro clásico del viaje de Cristiano desde la Ciudad de Destrucción hasta la Ciudad Celestial",
+    longDescription:
+      "El progreso del peregrino es una poderosa alegoría espiritual escrita por John Bunyan que narra el viaje de un hombre llamado Cristiano desde la Ciudad de Destrucción hacia la Ciudad Celestial. A través de desafíos, tentaciones y encuentros con personajes simbólicos, este libro inspira y motiva al lector a reflexionar sobre su propia vida espiritual y a perseverar en la fe, recordando que, aunque el camino sea difícil, la recompensa es eterna. ¡Una lectura esencial para quienes buscan fortalecer su vida espiritual y encontrar esperanza en medio de las pruebas!",
+  },
+  {
     name: "La fe por la cual vale morir",
+    autor: "John Piper",
     image:
       "http://www.elcristianismoprimitivo.com/lafevalemorircover_small.jpg",
     downloadUrl:
       "http://www.elcristianismoprimitivo.com/la_fe_por_la_cual_vale_morir.pdf",
     description: "Muy buen estudio de la fe genuina.",
+    longDescription:
+      "En 'La fe por la cual vale morir', John Piper explora la naturaleza de la fe verdadera y su importancia en la vida del creyente. A través de un análisis profundo de las Escrituras y ejemplos históricos, Piper desafía al lector a considerar el costo y el valor de una fe auténtica. Este libro inspirador anima a los creyentes a vivir una vida de compromiso radical con Cristo, recordándonos que la fe genuina no solo transforma nuestra vida, sino que también nos prepara para enfrentar cualquier prueba, incluso la muerte, por amor a Cristo.",
   },
   {
     name: "El secreto de la fuerza",
+    autor: "Peter Hoover",
     image:
       "http://www.elcristianismoprimitivo.com/secretodelafuerzacover_small.jpg",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/el_secreto_de_la_fuerza.htm",
+      "http://www.elcristianismoprimitivo.com/El_secreto_de_la_fuerza.pdf",
     description:
       "La historia y las enseñanzas de los anabaptistas. ¡Un libro muy impactador!",
+    longDescription:
+      "'El secreto de la fuerza' es una exploración fascinante de la historia y las enseñanzas de los anabaptistas, un movimiento cristiano radical del siglo XVI. Peter Hoover revela cómo estos creyentes encontraron fuerza espiritual en medio de la persecución y el sufrimiento. A través de relatos históricos y análisis de sus principios, el libro desafía a los lectores modernos a considerar un cristianismo más auténtico y comprometido. Esta obra impactante invita a reflexionar sobre el verdadero significado del discipulado y el costo de seguir a Cristo en un mundo hostil.",
   },
   {
     name: "La iglesia peregrina",
+    autor: "William MacDonald",
     image:
-      "http://www.elcristianismoprimitivo.com/iglesiaperegrinacover_small.jpg",
+      "https://raw.githubusercontent.com/Louislam09/resources/main/images/iglesiaperegrinacover.jpg",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/la_iglesia_peregrina.htm",
+      "http://www.elcristianismoprimitivo.com/la_iglesia_peregrina.pdf",
     description:
       "¡Buenísmo libro! A todos se les recomiendo. Se va a animarse. La historia de la verdadera iglesia. No es la historia de una denominación, porque la iglesia de Jesús no fue, ni es, ni será denominacional.",
+    longDescription:
+      "'La iglesia peregrina' de William MacDonald es un vibrante recorrido por la historia de la verdadera iglesia de Cristo. Este libro inspirador trasciende las barreras denominacionales para revelar la esencia del cuerpo de Cristo a lo largo de los siglos. MacDonald presenta una visión de la iglesia como una comunidad de creyentes unidos por su fe en Cristo, peregrinando juntos hacia la eternidad. Con ejemplos históricos y enseñanzas bíblicas, el autor desafía a los lectores a redescubrir el propósito original de la iglesia y a vivir como peregrinos fieles en un mundo cambiante.",
   },
   {
     name: "Cuando el cristianismo era nuevo",
+    autor: "James D. Murch",
     image: "http://www.elcristianismoprimitivo.com/cuando1_small.jpg",
-    downloadUrl: "http://www.elcristianismoprimitivo.com/cuandonuevointro.htm",
+    downloadUrl:
+      "https://raw.githubusercontent.com/Louislam09/resources/main/images/Cuando%20el%20cristianismo%20era%20nuevo.jpg",
     description:
       'Este libro da un desafiante reto a cada cristiano, pero en especial a los "Evangélicos". Se le recomienda a cada persona que busca el cristianismo "que ha sido una vez dado a los santos".',
+    longDescription:
+      "'Cuando el cristianismo era nuevo' de James D. Murch ofrece una mirada fresca y reveladora a los primeros días de la fe cristiana. Este libro desafiante invita a los lectores, especialmente a los evangélicos, a redescubrir las raíces del cristianismo primitivo. Murch explora las prácticas, creencias y el fervor de los primeros cristianos, contrastándolos con la iglesia moderna. A través de un análisis histórico y bíblico, el autor desafía a los creyentes contemporáneos a volver a la pureza y el poder del cristianismo original, animándolos a vivir una fe más auténtica y transformadora en el mundo actual.",
   },
   {
     name: "El reino que trastornó el mundo",
+    autor: "David Bercot",
     image:
-      "http://www.elcristianismoprimitivo.com/elreinoque%20trastornocover_small.jpg",
+      "https://raw.githubusercontent.com/Louislam09/resources/main/images/El%20reino%20que%20trastorn%C3%B3%20el%20mundo.jpg",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/elreinoquetrastorno.htm",
+      "https://www.elcristianismoprimitivo.com/El%20reino%20que%20trastorno%20el%20mundo.pdf",
     description:
       "Otro libro por el mismo autor que el libro anterior. Toca el tema casi desconocido entre muchas iglesias: la llegada del reino de Dios a la tierra.",
+    longDescription:
+      "En 'El reino que trastornó el mundo', David Bercot aborda el tema crucial y a menudo olvidado de la llegada del reino de Dios a la tierra. Este libro penetrante explora cómo el mensaje del reino de Dios, predicado por Jesús y sus primeros seguidores, revolucionó el mundo antiguo y continúa desafiando nuestras concepciones modernas. Bercot examina las implicaciones prácticas y espirituales de vivir bajo el gobierno de Dios, instando a los creyentes a reconsiderar su comprensión del cristianismo y su papel en la sociedad. Una lectura esencial para aquellos que buscan una fe más profunda y transformadora.",
   },
   {
     name: "Diccionario de la iglesia primitiva",
+    autor: "J. D. Douglas",
     image:
-      "http://www.elcristianismoprimitivo.com/pix/diccionario-de-la-iglesia-primitiva.jpg",
+      "https://raw.githubusercontent.com/Louislam09/resources/main/images/Diccionario%20de%20la%20iglesia%20primitiva.png",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/espanol/diccionario-de-la-iglesia-primitiva.htm",
+      "http://elcristianismoprimitivo.com/pdf/diccionario-de-la-iglesia-primitiva.pdf",
     description: "Compendio de la doctrina de los padres apostólicos",
+    longDescription:
+      "El 'Diccionario de la iglesia primitiva', editado por J. D. Douglas, es una valiosa herramienta de referencia que ofrece un compendio detallado de la doctrina de los padres apostólicos. Este recurso exhaustivo proporciona información clara y concisa sobre los primeros líderes, teólogos y pensadores de la iglesia cristiana. A través de entradas bien investigadas, el diccionario explora las creencias, prácticas y desafíos de la iglesia en sus primeros siglos. Es una obra indispensable para estudiantes, teólogos y cualquier persona interesada en comprender las raíces y el desarrollo del cristianismo primitivo.",
   },
   {
     name: "El sacrificio del Señor",
+    autor: "Thieleman J. van Braght",
     image:
-      "http://www.elcristianismoprimitivo.com/pix/el-sacrificio-del-senor-thumb.jpg",
+      "https://raw.githubusercontent.com/Louislam09/resources/main/images/El%20sacrificio%20del%20Se%C3%B1or.jpg",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/espanol/el-sacrificio-del-senor-introduccion.htm",
+      "http://www.elcristianismoprimitivo.com/pdf/el-sacrificio-del-senor.pdf",
     description: "Historias de los mártires del reino de Dios",
+    longDescription:
+      "'El sacrificio del Señor', compilado por Thieleman J. van Braght, es una poderosa colección de historias de mártires del reino de Dios. Este libro conmovedor narra las vidas y muertes de numerosos creyentes a lo largo de la historia que dieron su vida por su fe en Cristo. A través de estas narraciones, van Braght ilustra el costo del discipulado y la profundidad del compromiso de estos fieles seguidores. Las historias sirven como un testimonio inspirador de la fuerza de la fe y un desafío para los creyentes modernos a vivir con la misma convicción y coraje en su caminar cristiano.",
   },
   {
     name: "La búsqueda de una descendencia para Dios",
-    image: "http://www.elcristianismoprimitivo.com/busque3_small.jpg",
+    autor: "Denny Kenaston",
+    image:
+      "https://raw.githubusercontent.com/Louislam09/resources/main/images/El%20sacrificio%20del%20Se%C3%B1or.jpg",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/busquedadescendenciaintro.htm",
+      "http://www.elcristianismoprimitivo.com/La%20busqueda%20de%20una%20descendencia%20para%20Dios.pdf",
     description:
       "El libro más completo y bíblico que yo conociera acerca del tema de la crianza de los niños.",
+    longDescription:
+      "'La búsqueda de una descendencia para Dios' de Denny Kenaston es una guía completa y bíblica sobre la crianza de los hijos. Este libro profundo explora el papel crucial de los padres en formar una generación que ame y sirva a Dios. Kenaston combina principios bíblicos sólidos con consejos prácticos para ayudar a los padres a criar hijos que sean verdaderos discípulos de Cristo. Abordando temas como la disciplina, la educación espiritual y la formación del carácter, este libro ofrece una visión integral de la paternidad centrada en Dios. Es un recurso invaluable para padres que desean criar a sus hijos con propósito y fidelidad.",
   },
   {
     name: "Gobierne bien su casa",
+    autor: "David Bercot",
     image:
-      "http://www.elcristianismoprimitivo.com/pix/gobierne-su-casa-portada.jpg",
+      "https://raw.githubusercontent.com/Louislam09/resources/main/images/Gobierne%20bien%20su%20casa.png",
     downloadUrl:
       "http://www.elcristianismoprimitivo.com/pdf/gobierne-bien-su-casa.pdf",
     description:
       "Tanto el padre como la madre tienen su responsabilidad en la tarea de criar a sus hijos, pero la mayor responsabilidad siempre recae sobre los hombros del padre.",
+    longDescription:
+      "En 'Gobierne bien su casa', David Bercot aborda el tema crucial del liderazgo paterno en el hogar cristiano. Este libro práctico y basado en la Biblia enfatiza la responsabilidad primordial del padre en la crianza de los hijos, sin disminuir el papel importante de la madre. Bercot ofrece orientación bíblica sobre cómo los padres pueden liderar eficazmente a sus familias, cultivar un ambiente de amor y disciplina, y criar hijos que honren a Dios. Con sabiduría y comprensión, el autor proporciona herramientas valiosas para que los padres cumplan su llamado divino de gobernar bien sus hogares.",
   },
   {
     name: "Menno Simons- su vida y escritos",
-    image: "http://www.elcristianismoprimitivo.com/mennosp1_small.gif",
+    autor: "John Christian Wenger",
+    image:
+      "https://raw.githubusercontent.com/Louislam09/resources/main/images/Menno%20Simons-%20su%20vida%20y%20escritos.gif",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/intro%20menno_simons.htm",
+      "https://www.elcristianismoprimitivo.com/Menno%20Simons-%20su%20vida%20y%20escritos.pdf",
     description:
       "Biografía del predicador anabaptista Menno Simons, junto con algunas de sus enseñanzas.",
+    longDescription:
+      "'Menno Simons- su vida y escritos', compilado por John Christian Wenger, ofrece una visión profunda de la vida y el pensamiento de este influyente líder anabaptista del siglo XVI. El libro combina una biografía detallada de Menno Simons con una selección de sus escritos más importantes. A través de esta obra, los lectores pueden comprender mejor las creencias y prácticas de los primeros anabaptistas, así como la teología distintiva de Simons. Este libro es un recurso valioso para aquellos interesados en la historia de la Reforma Radical y en las raíces del movimiento menonita moderno.",
   },
   {
     name: "Los Anabaptistas",
-    image: "http://www.elcristianismoprimitivo.com/Los%20an1_small.jpg",
+    autor: "William R. Estep",
+    image:
+      "https://raw.githubusercontent.com/Louislam09/resources/main/images/Los%20Anabaptistas.jpeg",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/Los%20anabaptistas.htm",
+      "https://www.elcristianismoprimitivo.com/los%20anabaptistas.pdf",
     description:
       "Resumen de la reformación que realizaron algunos discípulos de Cristo en el siglo XVI. Hasta hoy en día, hay congregaciones descendidas de esos atrevidos seguidores de Jesús. ¡Ellos no fueron católicos, ni protestantes!",
+    longDescription:
+      "'Los Anabaptistas' de William R. Estep es una exploración exhaustiva del movimiento anabaptista del siglo XVI. Este libro presenta un resumen detallado de la reformación radical llevada a cabo por estos discípulos de Cristo, quienes no se alinearon ni con los católicos ni con los protestantes tradicionales. Estep examina las creencias, prácticas y persecuciones de los anabaptistas, destacando su énfasis en el bautismo de adultos, la separación de la iglesia y el estado, y el pacifismo. El autor también traza la influencia duradera del movimiento hasta las congregaciones modernas. Esta obra es esencial para comprender una parte crucial y a menudo pasada por alto de la historia de la Reforma.",
   },
   {
     name: "Discursos sobre el avivamiento",
-    image: "http://www.elcristianismoprimitivo.com/discursos1.gif",
+    autor: "Jonathan Edwards",
+    image:
+      "https://raw.githubusercontent.com/Louislam09/resources/main/images/Discursos%20sobre%20el%20avivamiento.png",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/discursosavivaintro.htm",
+      "http://www.elcristianismoprimitivo.com/Discursos%20sobre%20el%20avivamiento.pdf",
     description:
       "Este libro toca el tema del pecado encubierto. Si tú lo lees con un corazón honesto, tocará al corazón, pero fuertemente.",
-  },
-  {
-    name: "La vida hogareña de cristianos famosos",
-    image: "",
-    downloadUrl: "http://www.elcristianismoprimitivo.com/Hogarintro.htm",
-    description:
-      "El autor revela algunos de los principios que ayudaron en producir las buenas calidades que se ven entre estos cristianos de renombre.",
-  },
-  {
-    name: "Cómo oraban- TOMO 2 - Las oraciones de ministros",
-    image: "",
-    downloadUrl: "http://www.elcristianismoprimitivo.com/Comoorabanintro.htm",
-    description:
-      "Muy buen libro que nos anima a todos a la oración y a la íntima comunión con Dios.",
-  },
-  {
-    name: "Instrucciones para nuevos cristianos",
-    image: "",
-    downloadUrl:
-      "http://www.elcristianismoprimitivo.com/instruccionesncintro.htm",
-    description:
-      "Enseñanzas acerca de las doctrinas fundamentales de la fe cristiana.",
-  },
-  {
-    name: "Doctrina de la Biblia",
-    image: "",
-    downloadUrl: "http://www.elcristianismoprimitivo.com/doctintro.htm",
-    description: "Exposición de doctrina cristiana.",
-  },
-  {
-    name: "El libro de los mártires de Foxe",
-    image: "",
-    downloadUrl: "http://www.elcristianismoprimitivo.com/Foxebosquejo.htm",
-    description:
-      "No sé quién lo ha traducido o si tiene derechos reservados. Lo comparto (los primeros capítulos) como me fue enviado. (Tiene algunos errores gramaticales, que se necesitan corregir. Pero creo que se entiende.)",
+    longDescription:
+      "'Discursos sobre el avivamiento' de Jonathan Edwards es una obra profunda y desafiante que aborda el tema del avivamiento espiritual y el pecado encubierto. Edwards, un teólogo y predicador del Gran Despertar en América colonial, ofrece una perspectiva penetrante sobre la naturaleza del verdadero avivamiento y los obstáculos que lo impiden. Con un enfoque particular en el pecado oculto, Edwards desafía a los lectores a examinar honestamente sus corazones y buscar una renovación genuina en su relación con Dios. Este libro, leído con un corazón abierto, tiene el poder de tocar profundamente el alma y provocar una transformación espiritual significativa.",
   },
   {
     name: "Las guerras de los Judíos- Libro I",
-    image: "",
+    autor: "Flavio Josefo",
+    image:
+      "https://raw.githubusercontent.com/Louislam09/resources/main/images/Las%20guerras%20de%20los%20Jud%C3%ADos-%20Libro%20I.jpg",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/guerras%20josefa%201.htm",
+      "https://raw.githubusercontent.com/Louislam09/resources/main/books/Las%20guerras%20de%20los%20Jud%C3%ADos-%20I.pdf",
     description:
-      "Por Josefa Historiador judío. Sus escritos aclarecen el modo de vivir y pensar de los judíos de la era biblíca. (Éste es un archivo medio grande, de 526 kb)",
+      "Por Josefa Historiador judío. Sus escritos aclarecen el modo de vivir y pensar de los judíos de la era biblíca.",
+    longDescription:
+      "'Las guerras de los Judíos - Libro I' es la primera parte de la obra maestra histórica de Flavio Josefo, un historiador judío del siglo I. Este libro proporciona un relato detallado de la historia judía desde la toma de Jerusalén por Antíoco Epífanes hasta la muerte de Herodes el Grande. Josefo ofrece una visión única del mundo judío durante el período del Segundo Templo, iluminando el contexto histórico, político y cultural de la era bíblica. Sus escritos son invaluables para comprender el trasfondo de los eventos del Nuevo Testamento y la vida cotidiana de los judíos en la antigüedad.",
   },
   {
     name: "Las guerras de los Judíos- Libro II",
-    image: "",
-    downloadUrl:
-      "http://www.elcristianismoprimitivo.com/guerras%20josefa%202.htm",
-    description:
-      "Por Josefa-Historiador judío. Sus escritos aclarecen el modo de vivir y pensar de los judíos de la era biblíca. (269 kb)",
-  },
-  {
-    name: "El sermón del monte",
-    image: "sermonmmmontecover_small.jpg",
-    downloadUrl: "http://www.elcristianismoprimitivo.com/sermonmonteintro.htm",
-    description: "Exposición de la enseñanza central del evangelio.",
-  },
-  {
-    name: "La entrega",
-    image: "http://www.elcristianismoprimitivo.com/laentregacover_small.jpg",
-    downloadUrl: "http://www.elcristianismoprimitivo.com/laentregaintro.htm",
-    description: "¡Qué todos nos entreguemos al Señor por completo!",
-  },
-  {
-    name: "El tesoro bíblico",
+    autor: "Flavio Josefo",
     image:
-      "http://www.elcristianismoprimitivo.com/tesorobiblicocover_small.jpg",
-    downloadUrl: "http://www.elcristianismoprimitivo.com/tesbibintro.htm",
-    description:
-      "Este libro contiene muchos datos bíblicos. Incluso hay una pequeña vista de la historia de la iglesia.",
-  },
-  {
-    name: "Pláticas oportunas con adolescentes",
-    image:
-      "http://www.elcristianismoprimitivo.com/platicasoportunas%20cover_small.jpg",
+      "https://raw.githubusercontent.com/Louislam09/resources/main/images/Las%20guerras%20de%20los%20Jud%C3%ADos-%20Libro%202.jpg",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/charlasoportunasintro.htm",
-    description: "Buenos consejos para los jóvenes. 12 capítulos.",
-  },
-  {
-    name: "La Biblia en la pared",
-    image: "http://www.elcristianismoprimitivo.com/bibliaparedcover_small.jpg",
-    downloadUrl: "http://www.elcristianismoprimitivo.com/bibliaparedintro.htm",
+      "https://raw.githubusercontent.com/Louislam09/resources/main/books/Las%20guerras%20de%20los%20Jud%C3%ADos-%20II.pdf",
     description:
-      "Lee este libro para ver el poder de la Palabra de Dios y del Autor de ella.",
-  },
-  {
-    name: "12 relatos selectos",
-    image: "http://www.elcristianismoprimitivo.com/12relatoscover_small.jpg",
-    downloadUrl: "http://www.elcristianismoprimitivo.com/12relatosselectos.htm",
-    description:
-      "Estos relatos son especialmente importantes para aquellos jóvenes que desean formarse en sus vidas, y que desean establecerse en morales e ideales cristianos.",
+      "Por Josefa-Historiador judío. Sus escritos aclarecen el modo de vivir y pensar de los judíos de la era biblíca.",
+    longDescription:
+      "'Las guerras de los Judíos - Libro II' continúa la narración histórica de Flavio Josefo, cubriendo el período desde la muerte de Herodes el Grande hasta el comienzo de la Gran Revuelta Judía contra Roma en el año 66 d.C. Este volumen ofrece una visión detallada de las tensiones políticas y sociales que llevaron a la rebelión, así como una descripción vívida de la vida judía bajo el dominio romano. Josefo, como testigo ocular de muchos de estos eventos, proporciona un relato invaluable que ayuda a los lectores modernos a comprender mejor el contexto histórico del Nuevo Testamento y el judaísmo del primer siglo.",
   },
   {
     name: "Redención",
-    image: "http://www.elcristianismoprimitivo.com/redencion.gif",
+    autor: "John Murray",
+    image:
+      "https://raw.githubusercontent.com/Louislam09/resources/main/images/Redenci%C3%B3n.jpg",
     downloadUrl: "http://www.elcristianismoprimitivo.com/Redencion.pdf",
     description: "",
-  },
-  {
-    name: "El progreso del peregrino",
-    image: "http://www.elcristianismoprimitivo.com/peregrino1.gif",
-    downloadUrl:
-      "http://www.elcristianismoprimitivo.com/El%20progreso%20del%20peregrino.pdf",
-    description:
-      "Por Juan Bunyan El libro clásico del viaje de Cristiano desde la Ciudad de Destrucción hasta la Ciudad Celestial (formato .pdf 662 kb)",
+    longDescription:
+      "'Redención' de John Murray es un estudio teológico profundo sobre el concepto central del cristianismo: la obra redentora de Cristo. Murray, un teólogo reformado del siglo XX, examina meticulosamente la doctrina de la redención, explorando sus múltiples aspectos, incluyendo la expiación, la justificación, la santificación y la glorificación. Con un enfoque bíblico riguroso y una claridad expositiva, el autor presenta una visión integral de cómo Dios ha obrado para redimir a la humanidad caída. Este libro es una lectura esencial para aquellos que buscan una comprensión más profunda de la salvación y sus implicaciones para la vida cristiana.",
   },
   {
     name: "La mayordomía",
+    autor: "Dallas Witmer",
     image: "http://www.elcristianismoprimitivo.com/lamayo7_small.jpg",
-    downloadUrl: "http://www.elcristianismoprimitivo.com/lamayordomia.htm",
+    downloadUrl: "https://www.elcristianismoprimitivo.com/TextoMayordomia1.pdf",
     description:
       "Por Dallas Witmer. Dos estudios sobre el uso de nuestros bienes y vida.",
+    longDescription:
+      "'La mayordomía' de Dallas Witmer es un estudio bíblico perspicaz sobre el uso responsable de nuestros recursos y vidas para la gloria de Dios. En este primer volumen, Witmer explora los principios fundamentales de la mayordomía cristiana, abordando temas como la administración del tiempo, los talentos y las posesiones materiales. El autor desafía a los lectores a ver todos los aspectos de sus vidas como un regalo de Dios que debe ser utilizado sabiamente para Su propósito. Con enseñanzas prácticas y ejemplos bíblicos, este libro ayuda a los creyentes a desarrollar una mentalidad de mayordomía que impacta cada área de la vida.",
+  },
+  {
+    name: "La mayordomía 2",
+    autor: "Dallas Witmer",
+    image: "http://www.elcristianismoprimitivo.com/lamayo7_small.jpg",
+    downloadUrl: "https://www.elcristianismoprimitivo.com/mayodomia2.pdf",
+    description:
+      "Por Dallas Witmer. Dos estudios sobre el uso de nuestros bienes y vida.",
+    longDescription:
+      "'La mayordomía 2' es la continuación del estudio de Dallas Witmer sobre el uso fiel de nuestros recursos y vidas para Dios. En este segundo volumen, Witmer profundiza en aspectos más específicos de la mayordomía cristiana, posiblemente abordando temas como la administración financiera, el servicio en la iglesia, y el cuidado del medio ambiente. El autor continúa desafiando a los lectores a ver cada aspecto de sus vidas como una oportunidad para servir a Dios y a los demás. Con una base bíblica sólida y aplicaciones prácticas, este libro equipa a los creyentes para vivir como mayordomos fieles en todos los aspectos de la vida cotidiana.",
   },
 ];

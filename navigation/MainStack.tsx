@@ -10,6 +10,7 @@ import SearchHeader from "components/search/SearchHeader";
 import { useStorage } from "context/LocalstoreContext";
 import React from "react";
 import Book from "screens/Book";
+import BookDetail from "screens/BookDetail";
 import Character from "screens/Character";
 import ChooseFromListScreen from "screens/ChooseFromListScreen";
 import Concordance from "screens/Concordance";
@@ -101,6 +102,15 @@ const MainStack = () => {
         component={ChooseFromListScreen}
         options={({ route }) => ({
           ...screenOptions(route),
+        })}
+      />
+      <Stack.Screen
+        name="BookDetail"
+        component={BookDetail}
+        options={({ route }) => ({
+          ...screenOptions(route),
+          animation: "slide_from_bottom",
+          headerShown: false,
         })}
       />
       <Stack.Screen

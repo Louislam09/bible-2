@@ -34,6 +34,7 @@ export enum Screens {
   DownloadManager = "DownloadManager",
   Notes = "Notes",
   Onboarding = "Onboarding",
+  BookDetail = "BookDetail",
   Character = "Character",
   Resource = "Resource",
   Song = "Song",
@@ -56,6 +57,7 @@ export const ScreensName: TScreensName = {
   [Screens.Dashboard]: "Dashboard",
   [Screens.DownloadManager]: "Gestor de descargas",
   [Screens.Onboarding]: "Guia",
+  [Screens.BookDetail]: "Detalle del libro",
   [Screens.Character]: "Personaje",
   [Screens.Resource]: "Recurso Biblico",
   [Screens.Song]: "Himnario",
@@ -77,6 +79,7 @@ export type RootTabParamList = {
   Favorite: undefined;
   NotFound: undefined;
   DictionarySearch: undefined;
+  BookDetail: undefined;
 };
 
 export type RootStackParamList = {
@@ -105,6 +108,7 @@ export type RootStackParamList = {
     | ChooseChapterNumberParams;
   Modal: undefined;
   Onboarding: undefined;
+  BookDetail: NavigatorScreenParams<RootTabParamList> | { bookName: string };
   Song: undefined;
   NotFound: undefined;
 };
@@ -184,6 +188,8 @@ export type ResouceBookItem = {
   image: string;
   downloadUrl: string;
   description: string;
+  longDescription?: string;
+  autor?: string;
 };
 
 export type TSubtitle = {
