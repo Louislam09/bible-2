@@ -5,7 +5,8 @@ export default [
     image:
       "https://raw.githubusercontent.com/Louislam09/resources/main/images/el%20progreso%20del%20peregrino.jpg",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/El%20progreso%20del%20peregrino.pdf",
+      "https://raw.githubusercontent.com/Louislam09/resources/main/books%20in%20html/El%20progreso%20del%20peregrino.html",
+    // "http://www.elcristianismoprimitivo.com/El%20progreso%20del%20peregrino.pdf",
     description:
       "Por Juan Bunyan El libro clásico del viaje de Cristiano desde la Ciudad de Destrucción hasta la Ciudad Celestial",
     longDescription:
@@ -17,7 +18,7 @@ export default [
     image:
       "http://www.elcristianismoprimitivo.com/lafevalemorircover_small.jpg",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/la_fe_por_la_cual_vale_morir.pdf",
+      "https://github.com/Louislam09/resources/raw/main/books%20in%20html/La%20fe%20por%20la%20cual%20vale%20morir.html",
     description: "Muy buen estudio de la fe genuina.",
     longDescription:
       "En 'La fe por la cual vale morir', Dallas Witmer presenta un estudio profundo y desafiante sobre la naturaleza de la fe genuina. A través de un análisis cuidadoso de las Escrituras y ejemplos históricos de creyentes fieles, Witmer explora lo que significa tener una fe que está dispuesta a enfrentar cualquier prueba, incluso la muerte. Este libro inspirador examina las características de una fe auténtica y transformadora, desafiando a los lectores a evaluar su propio compromiso con Cristo. Witmer anima a los creyentes a cultivar una fe que no solo impacte sus vidas diarias, sino que también los prepare para permanecer fieles en medio de las pruebas más difíciles. Una lectura esencial para aquellos que buscan profundizar su comprensión y práctica de la fe cristiana.",
@@ -28,7 +29,7 @@ export default [
     image:
       "http://www.elcristianismoprimitivo.com/secretodelafuerzacover_small.jpg",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/El_secreto_de_la_fuerza.pdf",
+      "https://github.com/Louislam09/resources/raw/main/books%20in%20html/El%20secreto%20de%20la%20fuerza.html",
     description:
       "La historia y las enseñanzas de los anabaptistas. ¡Un libro muy impactador!",
     longDescription:
@@ -40,7 +41,7 @@ export default [
     image:
       "https://raw.githubusercontent.com/Louislam09/resources/main/images/iglesiaperegrinacover.jpg",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/la_iglesia_peregrina.pdf",
+      "https://github.com/Louislam09/resources/raw/main/books%20in%20html/La%20iglesia%20peregrina.html",
     description:
       "¡Buenísmo libro! A todos se les recomiendo. Se va a animarse. La historia de la verdadera iglesia. No es la historia de una denominación, porque la iglesia de Jesús no fue, ni es, ni será denominacional.",
     longDescription:
@@ -49,9 +50,10 @@ export default [
   {
     name: "Cuando el cristianismo era nuevo",
     autor: "David W. Bercot",
-    image: "http://www.elcristianismoprimitivo.com/cuando1_small.jpg",
-    downloadUrl:
+    image:
       "https://raw.githubusercontent.com/Louislam09/resources/main/images/Cuando%20el%20cristianismo%20era%20nuevo.jpg",
+    downloadUrl:
+      "https://github.com/Louislam09/resources/raw/main/books%20in%20html/Cuando%20el%20cristianismo%20era%20nuevo.html",
     description:
       'Este libro da un desafiante reto a cada cristiano, pero en especial a los "Evangélicos". Se le recomienda a cada persona que busca el cristianismo "que ha sido una vez dado a los santos".',
     longDescription:
@@ -63,7 +65,7 @@ export default [
     image:
       "https://raw.githubusercontent.com/Louislam09/resources/main/images/El%20reino%20que%20trastorn%C3%B3%20el%20mundo.jpg",
     downloadUrl:
-      "https://www.elcristianismoprimitivo.com/El%20reino%20que%20trastorno%20el%20mundo.pdf",
+      "https://github.com/Louislam09/resources/raw/main/books%20in%20html/El%20reino%20que%20trastorn%C3%B3%20el%20mundo.html",
     description:
       "Otro libro por el mismo autor que el libro anterior. Toca el tema casi desconocido entre muchas iglesias: la llegada del reino de Dios a la tierra.",
     longDescription:
@@ -75,7 +77,7 @@ export default [
     image:
       "https://raw.githubusercontent.com/Louislam09/resources/main/images/Diccionario%20de%20la%20iglesia%20primitiva.png",
     downloadUrl:
-      "http://elcristianismoprimitivo.com/pdf/diccionario-de-la-iglesia-primitiva.pdf",
+      "https://github.com/Louislam09/resources/raw/main/books%20in%20html/Diccionario%20de%20la%20iglesia%20primitiva.html",
     description: "Compendio de la doctrina de los padres apostólicos",
     longDescription:
       "El 'Diccionario de la iglesia primitiva' de Brain Gray es una obra de referencia invaluable que ofrece un compendio detallado de la doctrina de los padres apostólicos. Gray ha compilado un recurso exhaustivo que proporciona información clara y concisa sobre los primeros líderes, teólogos y pensadores de la iglesia cristiana. A través de entradas meticulosamente investigadas, el diccionario explora las creencias, prácticas y desafíos de la iglesia en sus primeros siglos. Gray presenta un panorama completo del cristianismo primitivo, abordando temas doctrinales, litúrgicos y organizativos de la iglesia temprana. Este trabajo no solo sirve como una fuente de información histórica, sino que también ofrece una ventana a la riqueza teológica y espiritual de los primeros cristianos. Es una herramienta indispensable para estudiantes, teólogos, historiadores y cualquier persona interesada en comprender las raíces y el desarrollo del cristianismo primitivo, proporcionando una base sólida para la reflexión sobre la fe cristiana contemporánea a la luz de sus orígenes apostólicos.",
@@ -86,7 +88,7 @@ export default [
     image:
       "https://raw.githubusercontent.com/Louislam09/resources/main/images/El%20sacrificio%20del%20Se%C3%B1or.jpg",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/pdf/el-sacrificio-del-senor.pdf",
+      "https://github.com/Louislam09/resources/raw/main/books%20in%20html/El%20sacrificio%20del%20Se%C3%B1or.html",
     description: "Historias de los mártires del reino de Dios",
     longDescription:
       "'El sacrificio del Señor' es una poderosa colección anónima de historias de mártires del reino de Dios. Este libro conmovedor narra las vidas y muertes de numerosos creyentes a lo largo de la historia que dieron su vida por su fe en Cristo. A través de estas narraciones, el autor desconocido ilustra el costo del discipulado y la profundidad del compromiso de estos fieles seguidores. Las historias abarcan diferentes épocas y lugares, mostrando la constancia de la fe cristiana frente a la persecución. Cada relato sirve como un testimonio inspirador de la fuerza de la fe y un desafío para los creyentes modernos. El libro invita a los lectores a reflexionar sobre el verdadero significado del sacrificio en el contexto de la fe cristiana y a considerar cómo pueden vivir con la misma convicción y coraje en su propio caminar cristiano. 'El sacrificio del Señor' es una obra esencial para aquellos que buscan comprender la dimensión del costo del discipulado y la perseverancia de la fe a través de los siglos.",
@@ -95,9 +97,9 @@ export default [
     name: "La búsqueda de una descendencia para Dios",
     autor: "Denny Kenaston",
     image:
-      "https://raw.githubusercontent.com/Louislam09/resources/main/images/El%20sacrificio%20del%20Se%C3%B1or.jpg",
+      "https://raw.githubusercontent.com/Louislam09/resources/main/images/La%20b%C3%BAsqueda%20de%20una%20descendencia%20para%20Dios.jpg",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/La%20busqueda%20de%20una%20descendencia%20para%20Dios.pdf",
+      "https://github.com/Louislam09/resources/raw/main/books%20in%20html/La%20b%C3%BAsqueda%20de%20una%20descendencia%20para%20Dios.html",
     description:
       "El libro más completo y bíblico que yo conociera acerca del tema de la crianza de los niños.",
     longDescription:
@@ -109,7 +111,7 @@ export default [
     image:
       "https://raw.githubusercontent.com/Louislam09/resources/main/images/Gobierne%20bien%20su%20casa.png",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/pdf/gobierne-bien-su-casa.pdf",
+      "https://github.com/Louislam09/resources/raw/main/books%20in%20html/Gobierne%20bien%20su%20casa.html",
     description:
       "Tanto el padre como la madre tienen su responsabilidad en la tarea de criar a sus hijos, pero la mayor responsabilidad siempre recae sobre los hombros del padre.",
     longDescription:
@@ -121,7 +123,7 @@ export default [
     image:
       "https://raw.githubusercontent.com/Louislam09/resources/main/images/Menno%20Simons-%20su%20vida%20y%20escritos.gif",
     downloadUrl:
-      "https://www.elcristianismoprimitivo.com/Menno%20Simons-%20su%20vida%20y%20escritos.pdf",
+      "https://github.com/Louislam09/resources/raw/main/books%20in%20html/Menno%20Simons-%20su%20vida%20y%20escritos.html",
     description:
       "Biografía del predicador anabaptista Menno Simons, junto con algunas de sus enseñanzas.",
     longDescription:
@@ -133,7 +135,7 @@ export default [
     image:
       "https://raw.githubusercontent.com/Louislam09/resources/main/images/Los%20Anabaptistas.jpeg",
     downloadUrl:
-      "https://www.elcristianismoprimitivo.com/los%20anabaptistas.pdf",
+      "https://github.com/Louislam09/resources/raw/main/books%20in%20html/Los%20Anabaptistas.html",
     description:
       "Resumen de la reformación que realizaron algunos discípulos de Cristo en el siglo XVI. Hasta hoy en día, hay congregaciones descendidas de esos atrevidos seguidores de Jesús. ¡Ellos no fueron católicos, ni protestantes!",
     longDescription:
@@ -145,7 +147,7 @@ export default [
     image:
       "https://raw.githubusercontent.com/Louislam09/resources/main/images/Discursos%20sobre%20el%20avivamiento.png",
     downloadUrl:
-      "http://www.elcristianismoprimitivo.com/Discursos%20sobre%20el%20avivamiento.pdf",
+      "https://github.com/Louislam09/resources/raw/main/books%20in%20html/Discursos%20sobre%20el%20avivamiento.html",
     description:
       "Este libro toca el tema del pecado encubierto. Si tú lo lees con un corazón honesto, tocará al corazón, pero fuertemente.",
     longDescription:
@@ -157,7 +159,7 @@ export default [
     image:
       "https://raw.githubusercontent.com/Louislam09/resources/main/images/Las%20guerras%20de%20los%20Jud%C3%ADos-%20Libro%20I.jpg",
     downloadUrl:
-      "https://raw.githubusercontent.com/Louislam09/resources/main/books/Las%20guerras%20de%20los%20Jud%C3%ADos-%20I.pdf",
+      "https://github.com/Louislam09/resources/raw/main/books%20in%20html/Las%20guerras%20de%20los%20Jud%C3%ADos-%20Libro%20I.html",
     description:
       "Por Josefa Historiador judío. Sus escritos aclarecen el modo de vivir y pensar de los judíos de la era biblíca.",
     longDescription:
@@ -169,7 +171,7 @@ export default [
     image:
       "https://raw.githubusercontent.com/Louislam09/resources/main/images/Las%20guerras%20de%20los%20Jud%C3%ADos-%20Libro%202.jpg",
     downloadUrl:
-      "https://raw.githubusercontent.com/Louislam09/resources/main/books/Las%20guerras%20de%20los%20Jud%C3%ADos-%20II.pdf",
+      "https://github.com/Louislam09/resources/raw/main/books%20in%20html/Las%20guerras%20de%20los%20Jud%C3%ADos-%20Libro%20II.html",
     description:
       "Por Josefa-Historiador judío. Sus escritos aclarecen el modo de vivir y pensar de los judíos de la era biblíca.",
     longDescription:
@@ -180,7 +182,8 @@ export default [
     autor: "Leland M. Haines",
     image:
       "https://raw.githubusercontent.com/Louislam09/resources/main/images/Redenci%C3%B3n.jpg",
-    downloadUrl: "http://www.elcristianismoprimitivo.com/Redencion.pdf",
+    downloadUrl:
+      "https://github.com/Louislam09/resources/raw/main/books%20in%20html/Redenci%C3%B3n.html",
     description: "",
     longDescription:
       "'Redención' de Leland M. Haines es una exploración profunda del significado de la redención en la vida cristiana. Haines examina cómo la obra redentora de Cristo transforma a los creyentes, proporcionando una nueva vida y una relación restaurada con Dios. Con un enfoque accesible y bíblicamente fundamentado, el autor guía a los lectores a través de los aspectos clave de la redención, incluyendo la expiación, la justificación y la santificación. Este libro es una lectura enriquecedora para aquellos que desean comprender mejor la redención y su impacto en la fe y la práctica cristiana.",
@@ -189,7 +192,8 @@ export default [
     name: "La mayordomía",
     autor: "Dallas Witmer",
     image: "http://www.elcristianismoprimitivo.com/lamayo7_small.jpg",
-    downloadUrl: "https://www.elcristianismoprimitivo.com/TextoMayordomia1.pdf",
+    downloadUrl:
+      "https://github.com/Louislam09/resources/raw/main/books%20in%20html/La%20mayordom%C3%ADa.html",
     description:
       "Por Dallas Witmer. Dos estudios sobre el uso de nuestros bienes y vida.",
     longDescription:
@@ -199,7 +203,8 @@ export default [
     name: "La mayordomía 2",
     autor: "Dallas Witmer",
     image: "http://www.elcristianismoprimitivo.com/lamayo7_small.jpg",
-    downloadUrl: "https://www.elcristianismoprimitivo.com/mayodomia2.pdf",
+    downloadUrl:
+      "https://github.com/Louislam09/resources/raw/main/books%20in%20html/La%20mayordom%C3%ADa%202.html",
     description:
       "Por Dallas Witmer. Dos estudios sobre el uso de nuestros bienes y vida.",
     longDescription:

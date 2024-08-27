@@ -73,7 +73,13 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({
       </Animated.View>
       {withLabel && (
         <Text style={{ color: theme.colors.text }}>
-          {progress ? "Descargando..." : isDownloaded ? "Borrar" : "Descargar"}
+          {progress
+            ? isDownloaded
+              ? "Eliminando..."
+              : "Descargando..."
+            : isDownloaded
+            ? "Borrar"
+            : "Descargar"}
         </Text>
       )}
     </TouchableOpacity>

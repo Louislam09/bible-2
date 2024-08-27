@@ -1,5 +1,6 @@
 import { useState } from "react";
 import * as FileSystem from "expo-file-system";
+import { initDir } from "constants/databaseNames";
 
 type DownloadPDFHook = {
   isDownloading: boolean;
@@ -24,7 +25,8 @@ export const useDownloadPDF = (): DownloadPDFHook => {
     setDownloadProgress(0);
 
     try {
-      const fileUri = `${FileSystem.documentDirectory}${fileName}`;
+      const fileUri = `${FileSystem.documentDirectory}books/${fileName}`;
+      await initDir("books");
 
       const downloadResumable = FileSystem.createDownloadResumable(
         url,
@@ -48,13 +50,17 @@ export const useDownloadPDF = (): DownloadPDFHook => {
   };
 
   const deleteDownloadedFile = async (fileName: string): Promise<void> => {
-    const fileUri = `${FileSystem.documentDirectory}${fileName}`;
+    setIsDownloading(true);
+    const fileUri = `${FileSystem.documentDirectory}books/${fileName}`;
+    await initDir("books");
     if (fileUri) {
       try {
         await FileSystem.deleteAsync(fileUri);
         setDownloadedFileUri(null);
       } catch (error: any) {
         setDownloadError(error.message);
+      } finally {
+        setIsDownloading(false);
       }
     }
   };

@@ -5,25 +5,17 @@ import * as FileSystem from "expo-file-system";
 type PdfViewerProps = { pdfUri: string };
 
 const PdfViewer = ({ pdfUri }: PdfViewerProps) => {
-  const [pdfBase64, setPdfBase64] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  console.log({ pdfUri });
+  const [fileContent, setFileContent] = useState<string>("null");
 
   useEffect(() => {
     const loadPdf = async () => {
+      setLoading(true);
       try {
-        const fileInfo = await FileSystem.getInfoAsync(pdfUri);
-
-        if (fileInfo.exists) {
-          const base64 = await FileSystem.readAsStringAsync(pdfUri, {
-            encoding: FileSystem.EncodingType.Base64,
-          });
-          setPdfBase64(base64);
-        } else {
-          Alert.alert("Error", "PDF file not found.");
-        }
+        const fileContent = await FileSystem.readAsStringAsync(pdfUri);
+        setFileContent(fileContent);
       } catch (error) {
-        Alert.alert("Error", "Failed to load PDF.");
+        console.log(error);
       } finally {
         setLoading(false);
       }
@@ -40,7 +32,7 @@ const PdfViewer = ({ pdfUri }: PdfViewerProps) => {
     <View style={styles.container}>
       <WebView
         originWhitelist={["*"]}
-        source={{ uri: `data:application/pdf;base64,${pdfBase64}` }}
+        source={{ html: fileContent }}
         style={styles.webview}
         javaScriptEnabled={true}
       />

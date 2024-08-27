@@ -5,7 +5,6 @@ import * as FileSystem from "expo-file-system";
 const usePrintAndShare = () => {
   const printToFile = async (html: string, fileName: string) => {
     const { uri } = await Print.printToFileAsync({ html });
-
     const newUri = `${FileSystem.cacheDirectory}${fileName}.pdf`;
 
     await FileSystem.moveAsync({

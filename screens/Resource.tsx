@@ -1,29 +1,25 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
+import PdfViewer from "components/PdfView";
 import { Text } from "components/Themed";
-import WordDefinition from "components/WordDefinition";
-import Characters from "constants/Characters";
+import { getIfFileNeedsDownload } from "constants/databaseNames";
+import resourceBook from "constants/resourceBook";
 import { useCustomTheme } from "context/ThemeContext";
-import React, { useEffect, useRef, useState } from "react";
+import { Image } from "expo-image";
+import { useDownloadPDF } from "hooks/useDownloadPdf";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated,
   BackHandler,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { ResouceBookItem, RootStackScreenProps, Screens, TTheme } from "types";
-import { useDownloadPDF } from "hooks/useDownloadPdf";
-import { getIfFileNeedsDownload } from "constants/databaseNames";
-import DownloadButton from "components/DatabaseDownloadButton";
-import resourceBook from "constants/resourceBook";
-import { Image } from "expo-image";
-import PdfViewer from "components/PdfView";
 // import * as FileSystem from "expo-file-system";
 // import * as Sharing from "expo-sharing";
+import BackButton from "components/BackButton";
 import DailyVerse from "components/DailyVerse";
 
 const notImageUrl =
@@ -49,46 +45,22 @@ const defaultDailyObject = {
 };
 
 const RenderItem = ({ item, index, theme, onView }: RenderItemProps) => {
-  const { downloadUrl, description, image, name } = item;
+  const { downloadUrl, description, image, name, autor } = item;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateXAnim = useRef(new Animated.Value(300)).current;
   const [isDownloaded, setIsDownloaded] = useState(false);
 
-  const {
-    isDownloading,
-    downloadProgress,
-    downloadError,
-    downloadedFileUri,
-    downloadPDF,
-    deleteDownloadedFile,
-  } = useDownloadPDF();
-
-  const handleDownload = () => {
-    // const pdfUrl = "https://www.example.com/sample.pdf";
-    const pdfUrl = downloadUrl;
-    downloadPDF(pdfUrl, name + ".pdf");
-  };
-  const handleDelete = () => {
-    deleteDownloadedFile(name + ".pdf");
-  };
-
-  useEffect(() => {
-    if (downloadedFileUri) {
-      console.log("Downloaded file saved at:", downloadedFileUri);
-    }
-  }, [downloadedFileUri]);
-
   useEffect(() => {
     async function needD() {
-      return await getIfFileNeedsDownload(name + ".pdf");
+      return await getIfFileNeedsDownload(`books/${name}.html`);
     }
 
     needD().then((res) => {
       setIsDownloaded(!res);
     });
-  }, [downloadedFileUri]);
+  }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -109,13 +81,6 @@ const RenderItem = ({ item, index, theme, onView }: RenderItemProps) => {
     onView(name);
   };
 
-  const bodyContainer = {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  };
-
   const bodyStyle = {
     flexDirection: "row",
     flex: 1,
@@ -123,19 +88,28 @@ const RenderItem = ({ item, index, theme, onView }: RenderItemProps) => {
   };
 
   const infoStyle = {
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     paddingLeft: 5,
     flex: 1,
+    marginLeft: 5,
   };
 
   const imageStyle = {
     width: 100,
     height: 150,
-    backgroundColor: theme.colors.notification + "40",
+    // height: "100%",
+    backgroundColor: theme.colors.notification + "0",
   };
 
   return (
-    <TouchableOpacity onPress={onItem}>
+    <TouchableOpacity
+      onPress={onItem}
+      style={{
+        elevation: 5,
+        backgroundColor: theme.dark ? theme.colors.background : "#fff",
+        paddingVertical: 10,
+      }}
+    >
       <Animated.View
         style={[
           {
@@ -143,46 +117,47 @@ const RenderItem = ({ item, index, theme, onView }: RenderItemProps) => {
             transform: [{ translateX: translateXAnim }],
             flex: 1,
             marginTop: 10,
-            paddingHorizontal: 5,
+            paddingHorizontal: 10,
+            marginHorizontal: 10,
+            height: 150,
+            overflow: "hidden",
           },
         ]}
       >
-        <Animated.View style={bodyContainer as any}>
-          <Animated.View style={bodyStyle as any}>
-            <Image
-              style={imageStyle}
-              source={image || notImageUrl}
-              placeholder={{ blurhash }}
-              contentFit="cover"
-              transition={1000}
-            />
-            <Animated.View style={infoStyle}>
-              <Text style={{ fontSize: 18, color: theme.colors.notification }}>
-                {name}
-              </Text>
-              <Text style={{ paddingHorizontal: 5 }}>{description}</Text>
-            </Animated.View>
-          </Animated.View>
-
-          <Animated.View style={{}}>
-            <DownloadButton
-              {...{
-                downloadFile: () => handleDownload(),
-                deleteFile: () => handleDelete(),
-                isDownloaded,
-                progress: isDownloading,
-                theme,
+        <Animated.View style={bodyStyle as any}>
+          <Image
+            style={imageStyle}
+            source={image || notImageUrl}
+            placeholder={{ blurhash }}
+            contentFit="contain"
+            transition={1000}
+          />
+          <Animated.View style={infoStyle}>
+            <Text
+              style={{
+                fontSize: 18,
+                color: theme.colors.notification,
+                fontWeight: "bold",
               }}
-            />
+            >
+              {name}
+            </Text>
+            <Text
+              style={{
+                color: theme.colors.notification,
+                marginBottom: 5,
+              }}
+            >
+              {autor}
+            </Text>
+            <Text style={{}}>{description}</Text>
           </Animated.View>
+          <MaterialCommunityIcons
+            name={isDownloaded ? "star" : "star-outline"}
+            size={24}
+            color={isDownloaded ? theme.colors.notification : theme.colors.text}
+          />
         </Animated.View>
-        <View style={{ marginVertical: 10 }}>
-          {isDownloading && (
-            <Text>Descargando... {downloadProgress.toFixed(2)}%</Text>
-          )}
-          {downloadError && <Text>Error: {downloadError}</Text>}
-          {downloadedFileUri && <Text>Archivo descargado 🎉</Text>}
-        </View>
       </Animated.View>
     </TouchableOpacity>
   );
@@ -190,15 +165,24 @@ const RenderItem = ({ item, index, theme, onView }: RenderItemProps) => {
 
 const Resource: React.FC<RootStackScreenProps<"Resource"> | any> = (props) => {
   const [selected, setSelected] = useState<string | null>(null);
-  const [filterData] = useState(Characters);
   const theme = useTheme();
   const { theme: _themeScheme } = useCustomTheme();
   const navigation = useNavigation();
   const styles = getStyles(theme);
-  const [searchText, setSearchText] = useState<any>(null);
   const books = resourceBook;
+  const [isScrolling, setScrolling] = useState(false);
 
-  const ResourceHeader = () => {
+  useEffect(() => {
+    const time = setTimeout(() => {
+      setScrolling(false);
+    }, 1000);
+
+    return () => {
+      clearTimeout(time);
+    };
+  }, [isScrolling]);
+
+  const ResourceHeader = useCallback(() => {
     return (
       <View style={[styles.noteHeader]}>
         <Text style={[styles.noteListTitle]}>Recurso Biblicos</Text>
@@ -209,7 +193,7 @@ const Resource: React.FC<RootStackScreenProps<"Resource"> | any> = (props) => {
         />
       </View>
     );
-  };
+  }, [theme]);
 
   useEffect(() => {
     const backAction = () => {
@@ -252,6 +236,12 @@ const Resource: React.FC<RootStackScreenProps<"Resource"> | any> = (props) => {
     navigation.navigate(Screens.BookDetail, { bookName: fileName });
   };
 
+  const handleScroll = (event: any) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    const shouldShowButton = offsetY > 100;
+    setScrolling(true);
+  };
+
   return (
     <View
       style={{
@@ -260,6 +250,9 @@ const Resource: React.FC<RootStackScreenProps<"Resource"> | any> = (props) => {
         backgroundColor: theme.dark ? theme.colors.background : "#eee",
       }}
     >
+      {!isScrolling && (
+        <BackButton iconName="arrow-left" {...{ theme, navigation }} />
+      )}
       {selected ? (
         <PdfViewer pdfUri={selected} />
       ) : (
@@ -271,6 +264,7 @@ const Resource: React.FC<RootStackScreenProps<"Resource"> | any> = (props) => {
               backgroundColor: theme.dark ? theme.colors.background : "#eee",
               paddingVertical: 20,
             }}
+            onScroll={handleScroll}
             decelerationRate={"normal"}
             estimatedItemSize={135}
             data={books}
@@ -288,6 +282,11 @@ const Resource: React.FC<RootStackScreenProps<"Resource"> | any> = (props) => {
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
+    closeIcon: {
+      padding: 10,
+      position: "absolute",
+      zIndex: 11,
+    },
     verseBody: {
       color: colors.text,
       backgroundColor: "transparent",
@@ -324,6 +323,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       paddingHorizontal: 4,
       paddingVertical: 10,
       backgroundColor: "transparent",
+      position: "relative",
     },
     noteListTitle: {
       fontSize: 30,

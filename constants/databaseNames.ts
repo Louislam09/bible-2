@@ -45,6 +45,17 @@ export const getIfDatabaseNeedsDownload = async (name: string) => {
   return !exists;
 };
 
+export const initDir = async (dirName: string) => {
+  const path = `${FileSystem.documentDirectory}${dirName}`;
+  const dir = await FileSystem.getInfoAsync(path);
+
+  if (!dir.exists) {
+    await FileSystem.makeDirectoryAsync(path);
+  } else if (!dir.isDirectory) {
+    throw new Error("SQLite dir is not a directory");
+  }
+};
+
 export const initSQLiteDir = async () => {
   const sqliteDir = await FileSystem.getInfoAsync(SQLiteDirPath);
 

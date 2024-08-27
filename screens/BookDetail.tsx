@@ -9,6 +9,7 @@ import { Image } from "expo-image";
 import { useDownloadPDF } from "hooks/useDownloadPdf";
 import React, { useEffect, useMemo, useState } from "react";
 import {
+  Alert,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -26,6 +27,9 @@ import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
 import GradientBackground from "components/BackgroundGredient";
 import PdfViewer from "components/PdfView";
+import BackButton from "components/BackButton";
+import usePrintAndShare from "hooks/usePrintAndShare";
+import { printToFileAsync } from "expo-print";
 
 type ActionButtonType = {
   icon: MaterialIconNameType;
@@ -37,6 +41,34 @@ const IMAGE_TOP = 40;
 
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
+
+const sharePDF = async (base64: string) => {
+  try {
+    const base64PDF = `data:application/pdf;base64,${base64}`;
+    // Convert Base64 PDF into HTML for embedding in an iframe
+    const htmlContent = `
+      <html>
+        <body>
+          <iframe 
+            width="100%" 
+            height="100%" 
+            src="${base64PDF}">
+          </iframe>
+        </body>
+      </html>`;
+
+    // Generate the PDF file using Print.printToFileAsync
+    const { uri } = await printToFileAsync({ html: htmlContent });
+
+    // Check if the file was created
+    console.log("File has been created at:", uri);
+
+    // Share the generated PDF file
+    await Sharing.shareAsync(uri);
+  } catch (error) {
+    console.error("Error while sharing the PDF:", error);
+  }
+};
 
 const BookDetail: React.FC<RootStackScreenProps<"BookDetail">> = ({
   route,
@@ -54,48 +86,77 @@ const BookDetail: React.FC<RootStackScreenProps<"BookDetail">> = ({
     ) as ResouceBookItem;
   }, [bookName]);
 
-  const {
-    isDownloading,
-    downloadProgress,
-    downloadError,
-    downloadedFileUri,
-    downloadPDF,
-    deleteDownloadedFile,
-  } = useDownloadPDF();
+  const { isDownloading, downloadPDF, deleteDownloadedFile } = useDownloadPDF();
+  const { printToFile } = usePrintAndShare();
 
   const { image, name, description, autor, longDescription, downloadUrl } =
     selectedBook;
-  const fileUri = `${FileSystem.documentDirectory}${name}.pdf`;
+  const fileUri = `${FileSystem.documentDirectory}books/${name}.html`;
 
-  const onOpen = () => {
-    setSelected(fileUri);
+  const onShare = async () => {
+    if (fileUri) {
+      const fileContent = await FileSystem.readAsStringAsync(fileUri);
+      console.log("onShare", fileUri);
+      printToFile(fileContent, name);
+      //   await Sharing.shareAsync(fileUri, {
+      //     dialogTitle: "Compartir PDF",
+      //     mimeType: "application/pdf",
+      //   });
+    }
+  };
+
+  const IsNotDownloadedWarn = () => {
+    Alert.alert(
+      "Descarga requerida",
+      "Este libro no ha sido descargado. Por favor, descárgalo antes de intentar leerlo.",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => {},
+          style: "cancel",
+        },
+        {
+          text: "Descargar",
+          onPress: () => handleDownload(),
+        },
+      ],
+      { userInterfaceStyle: theme.dark ? "dark" : "light" }
+    );
+  };
+
+  const onRead = () => {
+    if (isDownloaded) {
+      setSelected(fileUri);
+      return;
+    }
+    IsNotDownloadedWarn();
   };
 
   const actionsButtons: ActionButtonType[] = [
     {
       icon: "book-open-page-variant-outline",
       name: "Leer",
-      action: onOpen,
+      action: onRead,
     },
   ];
 
   const handleDownload = () => {
     const pdfUrl = downloadUrl;
-    downloadPDF(pdfUrl, name + ".pdf");
+    downloadPDF(pdfUrl, name + ".html");
   };
   const handleDelete = () => {
-    deleteDownloadedFile(name + ".pdf");
+    deleteDownloadedFile(name + ".html");
   };
 
   useEffect(() => {
     async function needD() {
-      return await getIfFileNeedsDownload(name + ".pdf");
+      return await getIfFileNeedsDownload(`books/${name}.html`);
     }
 
     needD().then((res) => {
       setIsDownloaded(!res);
     });
-  }, [downloadedFileUri]);
+  }, [isDownloading]);
 
   const RenderAction = (action: ActionButtonType) => {
     return (
@@ -117,11 +178,6 @@ const BookDetail: React.FC<RootStackScreenProps<"BookDetail">> = ({
   const onClose = () => {
     navigation.goBack();
   };
-  const onShare = async () => {
-    if (fileUri) {
-      await Sharing.shareAsync(fileUri);
-    }
-  };
 
   const gradientBackgroundColors = [
     theme.colors.notification + 60,
@@ -133,9 +189,12 @@ const BookDetail: React.FC<RootStackScreenProps<"BookDetail">> = ({
     <View style={styles.container}>
       <View style={styles.heroContainer}>
         <GradientBackground colors={gradientBackgroundColors}>
-          <TouchableOpacity style={styles.closeIcon} onPress={onClose}>
-            <MaterialCommunityIcons name="close" size={30} color={"white"} />
-          </TouchableOpacity>
+          <BackButton
+            backAction={onClose}
+            iconName="close"
+            color={theme.colors.card}
+            {...{ theme, navigation }}
+          />
           {isDownloaded && (
             <TouchableOpacity
               style={[styles.closeIcon, { right: 0 }]}

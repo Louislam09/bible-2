@@ -128,6 +128,7 @@ const MainStack = () => {
           ...screenOptions(route),
           headerTitle: "",
           animation: "slide_from_right",
+          headerShown: false,
         })}
       />
       <Stack.Screen
