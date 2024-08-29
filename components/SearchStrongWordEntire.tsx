@@ -10,6 +10,16 @@ import AnimatedDropdown from "./AnimatedDropdown";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { DB_BOOK_NAMES } from "constants/BookNames";
 
+enum CognateBook {
+  NEW_VOW = "newVow",
+  OLD_VOW = "oldVow",
+}
+
+const bookFilter = {
+  oldVow: [0, 460],
+  newVow: [470, 730],
+};
+
 const SearchStrongWordEntire: React.FC<
   RootStackScreenProps<"StrongSearchEntire">
 > = ({ route }) => {
@@ -20,7 +30,13 @@ const SearchStrongWordEntire: React.FC<
   const [data, setData] = useState<IVerseItem[] | null>(null);
   const { strongWord, fontSize } = useBibleContext();
   const code = (paramCode || strongWord?.code)?.match(/\d+/)?.[0];
+  const cognate = (paramCode || strongWord?.code)?.match(/\w/)?.[0] as string;
   const defaultFilterOption = "Filtra por libro";
+  const bookGroup =
+    cognate.toLowerCase() === "g" ? CognateBook.NEW_VOW : CognateBook.OLD_VOW;
+  const filterByBookGroup = useMemo(() => {
+    return bookFilter[bookGroup];
+  }, [bookGroup]);
 
   function getUniqueBookNames(data: IVerseItem[]) {
     const bookNames = data.map((item: any) => item.bookName);
@@ -47,7 +63,7 @@ const SearchStrongWordEntire: React.FC<
     (async () => {
       if (!myBibleDB || !executeSql) return;
       if (!code) return;
-      const params = [`%>${code}<%`];
+      const params = [`%>${code}<%`, ...filterByBookGroup];
       const searchData = await executeSql(
         myBibleDB,
         SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE,
