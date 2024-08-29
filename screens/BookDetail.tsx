@@ -185,68 +185,82 @@ const BookDetail: React.FC<RootStackScreenProps<"BookDetail">> = ({
     theme.colors.notification + 60,
   ];
 
+  //   selected ? (
+  //     <PdfViewer pdfUri={selected} />
+  //   ) :
   return (
     <View style={styles.container}>
-      <View style={styles.heroContainer}>
-        <GradientBackground colors={gradientBackgroundColors}>
+      {selected ? (
+        <>
           <BackButton
-            backAction={onClose}
+            backAction={() => setSelected(null)}
             iconName="close"
             color={theme.colors.card}
             {...{ theme, navigation }}
           />
-          {isDownloaded && (
-            <TouchableOpacity
-              style={[styles.closeIcon, { right: 0 }]}
-              onPress={onShare}
-            >
-              <MaterialCommunityIcons
-                name="share-variant-outline"
-                size={30}
-                color={"white"}
+          <PdfViewer pdfUri={selected} />
+        </>
+      ) : (
+        <>
+          <View style={styles.heroContainer}>
+            <GradientBackground colors={gradientBackgroundColors}>
+              <BackButton
+                backAction={onClose}
+                iconName="close"
+                color={theme.colors.card}
+                {...{ theme, navigation }}
               />
-            </TouchableOpacity>
-          )}
-          <View style={styles.imageContainer}>
-            <Image
-              style={styles.image}
-              source={image}
-              placeholder={{ blurhash }}
-              contentFit="contain"
-              transition={1000}
+              {isDownloaded && (
+                <TouchableOpacity
+                  style={[styles.closeIcon, { right: 0 }]}
+                  onPress={onShare}
+                >
+                  <MaterialCommunityIcons
+                    name="share-variant-outline"
+                    size={30}
+                    color={"white"}
+                  />
+                </TouchableOpacity>
+              )}
+              <View style={styles.imageContainer}>
+                <Image
+                  style={styles.image}
+                  source={image}
+                  placeholder={{ blurhash }}
+                  contentFit="contain"
+                  transition={1000}
+                />
+              </View>
+            </GradientBackground>
+          </View>
+
+          <View style={styles.contentContainer}>
+            <Text style={styles.contentTitle}>{name}</Text>
+            <Text style={styles.contentSubTitle}>{autor}</Text>
+          </View>
+          <View style={styles.actionsContainer}>
+            {actionsButtons.map((action) => RenderAction(action))}
+            <DownloadButton
+              {...{
+                downloadFile: () => handleDownload(),
+                deleteFile: () => handleDelete(),
+                isDownloaded,
+                progress: isDownloading,
+                theme,
+                iconSize: 50,
+              }}
+              withLabel
             />
           </View>
-        </GradientBackground>
-      </View>
-      <View style={styles.contentContainer}>
-        <Text style={styles.contentTitle}>{name}</Text>
-        <Text style={styles.contentSubTitle}>{autor}</Text>
-      </View>
-      <View style={styles.actionsContainer}>
-        {actionsButtons.map((action) => RenderAction(action))}
-        <DownloadButton
-          {...{
-            downloadFile: () => handleDownload(),
-            deleteFile: () => handleDelete(),
-            isDownloaded,
-            progress: isDownloading,
-            theme,
-            iconSize: 50,
-          }}
-          withLabel
-        />
-      </View>
 
-      {selected ? (
-        <PdfViewer pdfUri={selected} />
-      ) : (
-        <ScrollView style={styles.bookDetail}>
-          <Text style={styles.bookDetailTitle}>Sinopsis</Text>
-          <Text style={styles.bookDetailSubTitle}>
-            {longDescription || description}
-          </Text>
-          <View style={{ height: 20 }} />
-        </ScrollView>
+          <ScrollView style={styles.bookDetail}>
+            <Text style={styles.bookDetailTitle}>Sinopsis</Text>
+            <Text style={styles.bookDetailSubTitle}>
+              {longDescription || description}
+            </Text>
+            <View style={{ height: 20 }} />
+          </ScrollView>
+        </>
       )}
     </View>
   );
