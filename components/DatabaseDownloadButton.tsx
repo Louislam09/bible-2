@@ -1,25 +1,27 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useState, useEffect, useRef } from "react";
 import { TouchableOpacity, Animated, Easing, ViewStyle } from "react-native";
+import { Text } from "./Themed";
+import { TTheme } from "types";
 
 interface DownloadButtonProps {
   isDownloaded: boolean;
-  deleteBibleFile: () => void;
-  downloadBible: () => void;
+  deleteFile: () => void;
+  downloadFile: () => void;
   progress: boolean;
-  theme: {
-    colors: {
-      notification: string;
-    };
-  };
+  theme: TTheme;
+  iconSize?: number;
+  withLabel?: boolean;
 }
 
 const DownloadButton: React.FC<DownloadButtonProps> = ({
   isDownloaded,
-  deleteBibleFile,
-  downloadBible,
+  deleteFile: deleteBibleFile,
+  downloadFile: downloadBible,
   progress,
   theme,
+  iconSize,
+  withLabel = false,
 }) => {
   const rotation = useRef(new Animated.Value(0)).current;
 
@@ -56,16 +58,30 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({
   });
 
   return (
-    <TouchableOpacity onPress={isDownloaded ? deleteBibleFile : downloadBible}>
+    <TouchableOpacity
+      style={{ alignItems: "center" }}
+      onPress={isDownloaded ? deleteBibleFile : downloadBible}
+    >
       <Animated.View style={{ transform: [{ rotate }] }}>
         <MaterialCommunityIcons
           style={{
             color: isDownloaded ? "#e74856" : theme.colors.notification,
           }}
           name={progress ? "loading" : isDownloaded ? "delete" : "download"}
-          size={30}
+          size={iconSize || 30}
         />
       </Animated.View>
+      {withLabel && (
+        <Text style={{ color: theme.colors.text }}>
+          {progress
+            ? isDownloaded
+              ? "Eliminando..."
+              : "Descargando..."
+            : isDownloaded
+            ? "Borrar"
+            : "Descargar"}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };

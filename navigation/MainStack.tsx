@@ -7,9 +7,7 @@ import SearchStrongWordEntire from "components/SearchStrongWordEntire";
 import ChooseBook from "components/chooseBook";
 import ChooseBookHeader from "components/chooseBook/ChooseBookHeader";
 import SearchHeader from "components/search/SearchHeader";
-import { useStorage } from "context/LocalstoreContext";
 import React from "react";
-import Book from "screens/Book";
 import Character from "screens/Character";
 import ChooseFromListScreen from "screens/ChooseFromListScreen";
 import Concordance from "screens/Concordance";
@@ -70,14 +68,6 @@ const MainStack = () => {
         })}
       />
       <Stack.Screen
-        name="Book"
-        component={Book}
-        options={({ route }) => ({
-          ...screenOptions(route),
-          animation: "slide_from_bottom",
-        })}
-      />
-      <Stack.Screen
         initialParams={{ book: "Génesis" }}
         name="Search"
         component={Search}
@@ -110,6 +100,7 @@ const MainStack = () => {
           animation: "slide_from_bottom",
         })}
       />
+
       <Stack.Screen
         name="DownloadManager"
         component={DownloadManager}

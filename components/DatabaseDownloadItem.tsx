@@ -184,8 +184,8 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
         >
           <DownloadButton
             {...{
-              deleteBibleFile,
-              downloadBible,
+              deleteFile: deleteBibleFile,
+              downloadFile: downloadBible,
               isDownloaded,
               progress: isLoading,
               theme,

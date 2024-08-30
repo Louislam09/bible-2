@@ -33,11 +33,27 @@ export const getDatabaseQueryKey = (name: string) => {
   return isDefault ? name : "OTHERS";
 };
 
+export const getIfFileNeedsDownload = async (name: string) => {
+  const path = `${FileSystem.documentDirectory}${name}`;
+  const { exists } = await FileSystem.getInfoAsync(path);
+  return !exists;
+};
 export const getIfDatabaseNeedsDownload = async (name: string) => {
   const path = `${SQLiteDirPath}/${name}`;
   await initSQLiteDir();
   const { exists } = await FileSystem.getInfoAsync(path);
   return !exists;
+};
+
+export const initDir = async (dirName: string) => {
+  const path = `${FileSystem.documentDirectory}${dirName}`;
+  const dir = await FileSystem.getInfoAsync(path);
+
+  if (!dir.exists) {
+    await FileSystem.makeDirectoryAsync(path);
+  } else if (!dir.isDirectory) {
+    throw new Error("SQLite dir is not a directory");
+  }
 };
 
 export const initSQLiteDir = async () => {

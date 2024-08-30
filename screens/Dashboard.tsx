@@ -4,32 +4,23 @@ import { BottomSheetModal, WINDOW_WIDTH } from "@gorhom/bottom-sheet";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import BottomModal from "components/BottomModal";
+import DailyVerse from "components/DailyVerse";
 import { Text, View } from "components/Themed";
 import VoiceList from "components/VoiceList";
 import Settings from "components/home/header/Settings";
 import VersionList from "components/home/header/VersionList";
-import { GET_DAILY_VERSE } from "constants/Queries";
-import DAILY_VERSES from "constants/dailyVerses";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
-import { useDBContext } from "context/databaseContext";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import {
-  StyleSheet,
-  ToastAndroid,
-  TouchableOpacity,
-  useWindowDimensions,
-} from "react-native";
+import React, { useCallback, useRef } from "react";
+import { StyleSheet, ToastAndroid, useWindowDimensions } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import {
   EBibleVersions,
+  IoniconsIconNameType,
   MaterialIconNameType,
-  IVerseItem,
   Screens,
   TTheme,
-  IoniconsIconNameType,
 } from "types";
-import { getVerseTextRaw } from "utils/getVerseTextRaw";
 
 type IDashboardOption = {
   icon: MaterialIconNameType | IoniconsIconNameType;
@@ -40,24 +31,8 @@ type IDashboardOption = {
   tag?: string;
 };
 
-const defaultDailyVerse = {
-  book_number: 0,
-  chapter: 3,
-  text: "Oh Jehová, he oído tu palabra, y temí. Oh Jehová, aviva tu obra en medio de los tiempos, En  medio de los tiempos hazla conocer; En la ira acuérdate  de la misericordia.",
-  verse: 2,
-  bookName: "Habacuc",
-  is_favorite: false,
-};
-
-const defaultDailyObject = {
-  book_number: 510,
-  chapter: 3,
-  verse: 19,
-};
-
 const Dashboard = () => {
   const { width: SCREEN_WIDTH } = useWindowDimensions();
-  const { executeSql, myBibleDB } = useDBContext();
   const {
     currentBibleVersion,
     selectBibleVersion,
@@ -73,7 +48,6 @@ const Dashboard = () => {
   const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const voiceBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
-  const [dailyVerse, setDailyVerse] = useState<IVerseItem>(defaultDailyVerse);
   const columnNumber = 3;
   const {
     storedData,
@@ -93,28 +67,6 @@ const Dashboard = () => {
     chapter: lastHistoryChapter,
     verse: lastHistoryVerse,
   } = (getCurrentItem() as any) || {};
-
-  useEffect(() => {
-    if (!myBibleDB || !executeSql) return;
-    const currentDate: any = new Date();
-    const lastDayOfYear: any = new Date(currentDate.getFullYear(), 0, 0);
-    const dayPassed = Math.floor((currentDate - lastDayOfYear) / 86400000);
-
-    const { book_number, chapter, verse } =
-      DAILY_VERSES[dayPassed] ?? defaultDailyObject;
-    (async () => {
-      try {
-        const response: any = await executeSql(myBibleDB, GET_DAILY_VERSE, [
-          book_number,
-          chapter,
-          verse,
-        ]);
-        setDailyVerse(response?.length ? response?.[0] : defaultDailyVerse);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, [currentBibleVersion, myBibleDB]);
 
   const fontHandlePresentModalPress = useCallback(() => {
     fontBottomSheetModalRef.current?.present();
@@ -290,34 +242,8 @@ const Dashboard = () => {
       key={orientation}
       style={[styles.container, !isPortrait && { flexDirection: "row" }]}
     >
-      <TouchableOpacity
-        activeOpacity={0.7}
-        onPress={() =>
-          navigation.navigate("Home", {
-            book: dailyVerse.bookName,
-            chapter: dailyVerse.chapter,
-            verse: dailyVerse?.verse,
-          })
-        }
-        style={[
-          styles.dailyVerseContainer,
-          { width: isPortrait ? WINDOW_WIDTH : WINDOW_WIDTH / 2 },
-        ]}
-      >
-        <View style={styles.verse}>
-          <Text style={[styles.verseTitle]}>Versiculo del dia</Text>
-          <Text style={[styles.verseText]}>
-            <MaterialCommunityIcons
-              name="format-quote-open"
-              style={[styles.verseQuoteIcon]}
-            />
-            {`${dailyVerse?.verse} ${getVerseTextRaw(dailyVerse?.text || "")}`}
-          </Text>
-          <Text
-            style={[styles.verseReference]}
-          >{`${dailyVerse.bookName} ${dailyVerse.chapter}:${dailyVerse?.verse}`}</Text>
-        </View>
-      </TouchableOpacity>
+      <DailyVerse navigation={navigation} theme={theme} />
+
       <View
         style={[
           styles.optionContainer,
@@ -360,48 +286,11 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
       alignItems: "center",
       justifyContent: "center",
     },
-    dailyVerseContainer: {
-      backgroundColor: "transparent",
-      alignItems: "center",
-      justifyContent: "center",
-      width: "100%",
-      minHeight: 140,
-      flex: 1,
-    },
     optionContainer: {
       flex: 1,
       width: "100%",
       backgroundColor: "transparent",
       minHeight: 450,
-    },
-    verse: {
-      display: "flex",
-      backgroundColor: "transparent",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: 6,
-      paddingHorizontal: 10,
-    },
-    verseTitle: {
-      fontSize: 24,
-      fontWeight: "bold",
-      color: colors.notification,
-    },
-    verseText: {
-      fontSize: 18,
-      color: colors.text,
-      textAlign: "center",
-    },
-    verseReference: {
-      fontSize: 16,
-      //   color: "white",
-      alignSelf: "flex-end",
-      fontWeight: "bold",
-      color: colors.notification,
-    },
-    verseQuoteIcon: {
-      fontSize: 30,
-      color: colors.notification,
     },
     card: {
       display: "flex",

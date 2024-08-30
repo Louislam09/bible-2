@@ -1,6 +1,5 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-// import { Picker } from "@react-native-picker/picker";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import AnimatedDropdown from "components/AnimatedDropdown";

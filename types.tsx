@@ -176,6 +176,15 @@ export type DownloadBibleItem = {
   disabled?: boolean;
 };
 
+export type ResouceBookItem = {
+  name: string;
+  image: string;
+  downloadUrl: string;
+  description: string;
+  longDescription?: string;
+  autor?: string;
+};
+
 export type TSubtitle = {
   book_number: number;
   chapter: number;
