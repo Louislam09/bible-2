@@ -1,26 +1,44 @@
-import React, {
-  useCallback,
-  useRef,
-  useMemo,
-  Children,
-  forwardRef,
-} from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BottomSheet, {
   BottomSheetBackdrop,
+  BottomSheetHandleProps,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
-import { TTheme } from "types";
 import { useTheme } from "@react-navigation/native";
+import React, { forwardRef, useCallback, useMemo, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { TTheme } from "types";
 
 type Ref = BottomSheet;
 
-const CustomBottomSheet = forwardRef<Ref, any>(
-  ({ children, handleSheetChange }, ref) => {
-    const theme = useTheme();
-    const styles = getStyles(theme);
+interface CustomBottomSheet {
+  startAT?: 0 | 1 | 2 | 3;
+  children?: any;
+  handleSheetChange?: ((index: number) => void) | undefined;
+  justOneSnap?: boolean;
+  snaps?: any[];
+  handleComponent?: React.FC<BottomSheetHandleProps> | null;
+}
 
-    const snapPoints = useMemo(() => ["1%", "100%"], []);
+const CustomBottomSheet = forwardRef<Ref, CustomBottomSheet>(
+  (
+    {
+      children,
+      handleSheetChange,
+      justOneSnap,
+      snaps,
+      startAT,
+      handleComponent,
+    },
+    ref
+  ) => {
+    const [index, setIndex] = useState(0);
+    const theme = useTheme() as TTheme;
+    const styles = getStyles(theme);
+    const snapPoints = useMemo(
+      () => (justOneSnap ? ["30%"] : snaps || ["30%", "50%", "75%", "100%"]),
+      [snaps]
+    );
 
     const renderBackdrop = useCallback(
       (props: any) => (
@@ -34,18 +52,39 @@ const CustomBottomSheet = forwardRef<Ref, any>(
       []
     );
 
+    const onChange = (index: number) => {
+      setIndex(index);
+      handleSheetChange?.(index);
+    };
+
+    const lastIndex = useMemo(() => {
+      return index === snapPoints.length - 1;
+    }, [index, snapPoints]);
+
+    const DefaultIndicator = useCallback(
+      () => (
+        <View style={styles.defaultIndicator}>
+          <MaterialCommunityIcons
+            name="drag-horizontal"
+            size={30}
+            color={theme.colors.text}
+          />
+        </View>
+      ),
+      []
+    );
+
     return (
       <View style={{ flex: 1, backgroundColor: "transparent" }}>
         <BottomSheet
           backgroundStyle={styles.bottomSheet}
           ref={ref}
-          index={1}
+          index={startAT}
           handleIndicatorStyle={styles.indicator}
           snapPoints={snapPoints}
-          onChange={handleSheetChange}
-          // enablePanDownToClose
-          // enableDynamicSizing
-          // backdropComponent={renderBackdrop}
+          onChange={onChange}
+          enablePanDownToClose
+          handleComponent={lastIndex ? handleComponent : DefaultIndicator}
         >
           <BottomSheetScrollView
             contentContainerStyle={styles.contentContainer}
@@ -61,16 +100,32 @@ const CustomBottomSheet = forwardRef<Ref, any>(
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     bottomSheet: {
-      // borderRadius: 45,
       backgroundColor: colors.background + "",
       borderColor: colors.notification,
       borderWidth: 2,
+    },
+    defaultIndicator: {
+      width: "100%",
+      justifyContent: "center",
+      alignItems: "center",
     },
     indicator: {
       backgroundColor: colors.notification,
     },
     contentContainer: {
       backgroundColor: "transparent",
+    },
+    slider: {
+      height: 15,
+      justifyContent: "center",
+      alignItems: "center",
+      width: "100%",
+    },
+    sliderHandle: {
+      width: 40,
+      height: 4,
+      backgroundColor: colors.text,
+      borderRadius: 2,
     },
   });
 

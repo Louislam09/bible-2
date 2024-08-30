@@ -7,7 +7,6 @@ import {
 import { useTheme } from "@react-navigation/native";
 import React, { forwardRef, useCallback, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 import { TTheme } from "types";
 
 type TBottomModal = {

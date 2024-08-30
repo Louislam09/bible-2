@@ -183,7 +183,6 @@ function HomeScreen() {
             width: topWidth,
           }}
         />
-        {/* AdjustableSplit */}
         <Animated.View
           {...panResponder.panHandlers}
           style={[

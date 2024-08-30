@@ -47,7 +47,7 @@ const RenderItem = ({
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateXAnim = useRef(new Animated.Value(300)).current;
 
-  React.useEffect(() => {
+  useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -199,7 +199,7 @@ const DictionarySearch: React.FC<
     if (selectedWord?.topic) {
       setSelectedWord(null);
     } else {
-      navigation.navigate("Dashboard");
+      navigation.goBack();
     }
   };
 

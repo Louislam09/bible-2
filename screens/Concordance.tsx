@@ -220,7 +220,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
       setSelected(null);
       setVerseList(null);
     } else {
-      navigation.navigate("Dashboard");
+      navigation.goBack();
     }
   };
 
