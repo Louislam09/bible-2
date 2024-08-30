@@ -115,11 +115,6 @@ const Dashboard = () => {
       tag: isNTV ? "book-cross" : "crown-outline",
     },
     {
-      icon: "book-alphabet",
-      label: "Recursos Biblicos",
-      action: () => navigation?.navigate(Screens.Resource),
-    },
-    {
       icon: "view-list-outline",
       label: "Lista de Libro",
       action: () =>

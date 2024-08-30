@@ -7,10 +7,7 @@ import SearchStrongWordEntire from "components/SearchStrongWordEntire";
 import ChooseBook from "components/chooseBook";
 import ChooseBookHeader from "components/chooseBook/ChooseBookHeader";
 import SearchHeader from "components/search/SearchHeader";
-import { useStorage } from "context/LocalstoreContext";
 import React from "react";
-import Book from "screens/Book";
-import BookDetail from "screens/BookDetail";
 import Character from "screens/Character";
 import ChooseFromListScreen from "screens/ChooseFromListScreen";
 import Concordance from "screens/Concordance";
@@ -21,7 +18,6 @@ import Favorite from "screens/Favorite";
 import Home from "screens/Home";
 import Notes from "screens/Notes";
 import OnboardingScreen from "screens/Onboarding";
-import Resource from "screens/Resource";
 import Search from "screens/Search";
 import Song from "screens/Song";
 import { RootStackParamList, Screens, ScreensName, TTheme } from "types";
@@ -72,14 +68,6 @@ const MainStack = () => {
         })}
       />
       <Stack.Screen
-        name="Book"
-        component={Book}
-        options={({ route }) => ({
-          ...screenOptions(route),
-          animation: "slide_from_bottom",
-        })}
-      />
-      <Stack.Screen
         initialParams={{ book: "Génesis" }}
         name="Search"
         component={Search}
@@ -105,15 +93,6 @@ const MainStack = () => {
         })}
       />
       <Stack.Screen
-        name="BookDetail"
-        component={BookDetail}
-        options={({ route }) => ({
-          ...screenOptions(route),
-          animation: "slide_from_bottom",
-          headerShown: false,
-        })}
-      />
-      <Stack.Screen
         name="Onboarding"
         component={OnboardingScreen}
         options={({ route }) => ({
@@ -121,16 +100,7 @@ const MainStack = () => {
           animation: "slide_from_bottom",
         })}
       />
-      <Stack.Screen
-        name="Resource"
-        component={Resource}
-        options={({ route }) => ({
-          ...screenOptions(route),
-          headerTitle: "",
-          animation: "slide_from_right",
-          headerShown: false,
-        })}
-      />
+
       <Stack.Screen
         name="DownloadManager"
         component={DownloadManager}

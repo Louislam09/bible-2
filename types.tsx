@@ -34,9 +34,7 @@ export enum Screens {
   DownloadManager = "DownloadManager",
   Notes = "Notes",
   Onboarding = "Onboarding",
-  BookDetail = "BookDetail",
   Character = "Character",
-  Resource = "Resource",
   Song = "Song",
   StrongSearchEntire = "StrongSearchEntire",
   DictionarySearch = "DictionarySearch",
@@ -57,9 +55,7 @@ export const ScreensName: TScreensName = {
   [Screens.Dashboard]: "Dashboard",
   [Screens.DownloadManager]: "Gestor de descargas",
   [Screens.Onboarding]: "Guia",
-  [Screens.BookDetail]: "Detalle del libro",
   [Screens.Character]: "Personaje",
-  [Screens.Resource]: "Recurso Biblico",
   [Screens.Song]: "Himnario",
   [Screens.StrongSearchEntire]: "Explorador de Números Strong",
   [Screens.DictionarySearch]: "Dictionary Search",
@@ -79,7 +75,6 @@ export type RootTabParamList = {
   Favorite: undefined;
   NotFound: undefined;
   DictionarySearch: undefined;
-  BookDetail: undefined;
 };
 
 export type RootStackParamList = {
@@ -90,7 +85,6 @@ export type RootStackParamList = {
   DownloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
   Notes: NavigatorScreenParams<RootTabParamList> | undefined;
   Character: NavigatorScreenParams<RootTabParamList> | undefined;
-  Resource: NavigatorScreenParams<RootTabParamList> | undefined;
   ChooseBook:
     | NavigatorScreenParams<RootTabParamList>
     | ChooseChapterNumberParams;
@@ -108,7 +102,6 @@ export type RootStackParamList = {
     | ChooseChapterNumberParams;
   Modal: undefined;
   Onboarding: undefined;
-  BookDetail: NavigatorScreenParams<RootTabParamList> | { bookName: string };
   Song: undefined;
   NotFound: undefined;
 };
