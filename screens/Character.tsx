@@ -130,7 +130,7 @@ const Character: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
     if (selected?.topic) {
       setSelected(null);
     } else {
-      navigation.navigate("Dashboard");
+      navigation.goBack();
     }
   };
 

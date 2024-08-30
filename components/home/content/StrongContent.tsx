@@ -134,7 +134,8 @@ const StrongContent: FC<IStrongContent> = ({
   }, [code, text]);
 
   const onClose = () => {
-    bottomRef.current?.dismiss();
+    // bottomRef.current?.close();
+    // bottomRef.current?.dismiss();
   };
 
   const onShouldStartLoadWithRequest = (event: ShouldStartLoadRequest) => {

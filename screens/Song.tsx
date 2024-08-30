@@ -138,7 +138,7 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
       setSelected(null);
       setSearchText("");
     } else {
-      navigation.navigate("Dashboard");
+      navigation.goBack();
     }
   };
 
