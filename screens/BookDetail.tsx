@@ -185,20 +185,15 @@ const BookDetail: React.FC<RootStackScreenProps<"BookDetail">> = ({
     theme.colors.notification + 60,
   ];
 
-  //   selected ? (
-  //     <PdfViewer pdfUri={selected} />
-  //   ) :
   return (
     <View style={styles.container}>
       {selected ? (
         <>
-          <BackButton
-            backAction={() => setSelected(null)}
-            iconName="close"
-            color={theme.colors.card}
+          <PdfViewer
+            onClose={() => setSelected(null)}
             {...{ theme, navigation }}
+            pdfUri={selected}
           />
-          <PdfViewer pdfUri={selected} />
         </>
       ) : (
         <>
