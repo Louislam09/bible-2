@@ -1,10 +1,9 @@
+import { defaultDatabases } from "constants/databaseNames";
 import * as SQLite from "expo-sqlite";
-import React, { createContext, useContext, useEffect } from "react";
-import { DBName } from "../enums";
+import useInstalledBibles, { VersionItem } from "hooks/useInstalledBible";
+import React, { createContext, useContext } from "react";
 import useDatabase from "../hooks/useDatabase";
 import { useStorage } from "./LocalstoreContext";
-import useInstalledBibles, { VersionItem } from "hooks/useInstalledBible";
-import { defaultDatabases } from "constants/databaseNames";
 
 interface Row {
   [key: string]: any;

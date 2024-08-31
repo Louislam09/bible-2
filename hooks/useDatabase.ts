@@ -1,4 +1,5 @@
 import {
+  CREATE_COLUMN_UPDATED_AT_IN_NOTE_TABLE,
   CREATE_FAVORITE_VERSES_TABLE,
   CREATE_NOTE_TABLE,
 } from "constants/Queries";
@@ -80,6 +81,31 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
     }
   };
 
+  async function checkIfColumnExist(database: SQLite.SQLiteDatabase) {
+    try {
+      const data = await executeSql(database, `PRAGMA table_info(notes);`, []);
+      return data.map((x) => x.name).includes("updated_at");
+    } catch (error) {
+      return await new Promise((resolve) => resolve([]));
+    }
+  }
+
+  async function addColumnIfNotExists(
+    database: SQLite.SQLiteDatabase,
+    createColumnQuery: string
+  ) {
+    try {
+      const hasColumn = await checkIfColumnExist(database);
+      if (!hasColumn) {
+        await database.execAsync(createColumnQuery);
+      }
+    } catch (error) {
+      console.error(
+        `Error creating column ${createColumnQuery} In ${database.databaseName} :`,
+        error
+      );
+    }
+  }
   async function createTable(
     database: SQLite.SQLiteDatabase,
     createTableQuery: string
@@ -173,6 +199,7 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
         const db = await openDatabase(dbName);
         await createTable(db, CREATE_FAVORITE_VERSES_TABLE);
         await createTable(db, CREATE_NOTE_TABLE);
+        await addColumnIfNotExists(db, CREATE_COLUMN_UPDATED_AT_IN_NOTE_TABLE);
         databases.push(db);
       }
       return databases;

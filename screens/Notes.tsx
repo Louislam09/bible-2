@@ -13,7 +13,7 @@ const Notes: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
     const getNotes = async () => {
       if (!myBibleDB || !executeSql) return;
       const notes = await executeSql(myBibleDB, GET_ALL_NOTE, []);
-      setData(notes?.reverse() ?? []);
+      setData(notes ?? []);
     };
 
     getNotes();

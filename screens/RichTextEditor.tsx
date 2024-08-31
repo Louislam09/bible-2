@@ -1,14 +1,13 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTheme } from "@react-navigation/native";
-import React, { useEffect, useRef, useState } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
+import React, { useRef, useState } from "react";
+import { ScrollView, View } from "react-native";
 import {
   RichEditor,
   RichToolbar,
   actions,
 } from "react-native-pell-rich-editor";
 import { EViewMode } from "types";
-import { customBorder } from "utils/customStyle";
 
 const handleHead = ({ tintColor, label }: any) => (
   <MaterialCommunityIcons color={tintColor} size={22} name={label} />
@@ -74,7 +73,6 @@ const MyRichEditor: React.FC<IRichEditor> = ({
         </>
       )}
       <ScrollView ref={scrollViewRef}>
-        {/* <KeyboardAvoidingView behavior="padding"> */}
         <RichEditor
           pasteAsPlainText
           initialHeight={200}
@@ -106,7 +104,6 @@ const MyRichEditor: React.FC<IRichEditor> = ({
           initialContentHTML={content}
           disabled={viewMode === "VIEW"}
         />
-        {/* </KeyboardAvoidingView> */}
       </ScrollView>
     </View>
   );

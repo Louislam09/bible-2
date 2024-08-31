@@ -44,7 +44,7 @@ const RenderItem = ({
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateXAnim = useRef(new Animated.Value(300)).current;
 
-  React.useEffect(() => {
+  useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -60,6 +60,7 @@ const RenderItem = ({
       }),
     ]).start();
   }, [fadeAnim, translateXAnim, index]);
+
   return (
     <Animated.View
       style={[
@@ -79,12 +80,6 @@ const RenderItem = ({
             <Text style={[styles.cardTitle]}>{item.title}</Text>
             <View style={[styles.verseAction]}>
               <>
-                {/* <MaterialCommunityIcons
-                  size={24}
-                  name="eye"
-                  style={styles.icon}
-                  onPress={() => onViewMode(item.id)}
-                /> */}
                 <MaterialCommunityIcons
                   size={24}
                   name="delete"
@@ -119,7 +114,9 @@ const RenderItem = ({
               .replace(/<br>/gi, "-")
               .replace(/<.*?>|<.*?\/>/gi, "")}
           </Text>
-          <Text style={[styles.date]}>{item.created_at.split(" ")[0]}</Text>
+          <Text style={[styles.date]}>
+            {item.updated_at?.split(" ")[0] || item.created_at.split(" ")[0]}
+          </Text>
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -413,6 +410,7 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
                 paddingLeft: 5,
                 fontWeight: "bold",
                 textDecorationLine: "underline",
+                paddingTop: 20,
               }}
             >
               {title}
@@ -489,6 +487,7 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
                 </Text>
               </View>
             }
+            ListFooterComponent={<View style={{ paddingVertical: 30 }} />}
           />
         </>
       )}
