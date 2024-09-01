@@ -1,6 +1,11 @@
 // Play.tsx
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import BottomModal from "components/BottomModal";
+import CustomSlider from "components/Slider";
+import VoiceList from "components/VoiceList";
+import { useStorage } from "context/LocalstoreContext";
 import React, { FC, useCallback, useMemo, useRef } from "react";
 import {
   Platform,
@@ -8,13 +13,9 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import { IBookVerse, TTheme } from "types";
+import { TTheme } from "types";
 import { Text, View } from "../../Themed";
 import ProgressBar from "../footer/ProgressBar";
-import useBibleReader from "hooks/useBibleReading";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import BottomModal from "components/BottomModal";
-import VoiceList from "components/VoiceList";
 
 interface IPlay {
   theme: TTheme;
@@ -57,11 +58,24 @@ const Play: FC<IPlay> = ({
   setShouldLoop,
 }) => {
   const styles = getStyles(theme);
+  const {
+    saveData,
+    storedData: { currentVoiceRate: voiceRate = 1 },
+  } = useStorage();
   const voiceBottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const voiceRateBottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const speedOptions = [0.6, 1, 1.5, 2];
+
+  const handleSpeedChange = (newSpeed: number) => {
+    saveData({ currentVoiceRate: newSpeed });
+  };
 
   const voiceHandlePresentModalPress = useCallback(() => {
     voiceBottomSheetModalRef.current?.present();
   }, []);
+  const voiceRateHandlePresentModalPress = useCallback(() => {
+    voiceRateBottomSheetModalRef.current?.present();
+  }, [isPlaying]);
 
   const playOptions: IPayOption[] = [
     {
@@ -127,6 +141,22 @@ const Play: FC<IPlay> = ({
             color={theme.colors.notification}
             style={[styles.playHeaderIcon, isDownloading && { opacity: 1 }]}
           />
+          {!isRvr && (
+            <TouchableOpacity
+              onPress={voiceRateHandlePresentModalPress}
+              style={{
+                backgroundColor: "transparent",
+                alignItems: "center",
+                flexDirection: "row",
+              }}
+            >
+              <MaterialCommunityIcons
+                name="play-speed"
+                color={theme.colors.notification}
+                style={[styles.playHeaderIcon, { opacity: 1 }]}
+              />
+            </TouchableOpacity>
+          )}
           {!isRvr && (
             <TouchableOpacity
               onPress={() => setShouldLoop(!shouldLoopReading)}
@@ -202,6 +232,63 @@ const Play: FC<IPlay> = ({
         </View>
       </View>
       <View style={[styles.playControls]}>{playOptions.map(renderItem)}</View>
+
+      <BottomModal
+        justOneValue={["20%"]}
+        _theme={theme}
+        justOneSnap
+        startAT={0}
+        ref={voiceRateBottomSheetModalRef}
+      >
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            paddingHorizontal: 20,
+            backgroundColor: "transparent",
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: "100%",
+              backgroundColor: "transparent",
+            }}
+          >
+            <Text
+              style={{
+                color: theme.colors.notification,
+                fontWeight: "bold",
+                fontSize: 20,
+              }}
+            >
+              Velocidad
+            </Text>
+            <Text
+              style={{
+                color: theme.colors.text,
+                fontWeight: "bold",
+                fontSize: 20,
+                borderWidth: 1,
+                borderColor: "#ddd",
+                paddingHorizontal: 5,
+                borderRadius: 5,
+              }}
+            >
+              {voiceRate}x
+            </Text>
+          </View>
+          <CustomSlider
+            options={speedOptions}
+            initialValue={voiceRate}
+            onChange={handleSpeedChange}
+            activeColor={theme.colors.notification}
+            inactiveColor="#D1D8E0"
+            textColor={theme.colors.text}
+          />
+        </View>
+      </BottomModal>
 
       <BottomModal
         _theme={theme}

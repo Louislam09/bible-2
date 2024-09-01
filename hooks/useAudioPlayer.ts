@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { AVPlaybackStatus, Audio, InterruptionModeAndroid, InterruptionModeIOS } from "expo-av";
+import {
+  AVPlaybackStatus,
+  Audio,
+  InterruptionModeAndroid,
+  InterruptionModeIOS,
+} from "expo-av";
 import * as FileSystem from "expo-file-system";
 import { ToastAndroid } from "react-native";
 
@@ -62,16 +67,16 @@ const useAudioPlayer = ({
   useEffect(() => {
     const loadAudio = async () => {
       try {
-        await resetAudio()
+        await resetAudio();
         await FileSystem.makeDirectoryAsync(dbFolder, { intermediates: true });
 
         const { exists } = await FileSystem.getInfoAsync(localUri);
         if (!exists) {
           if (autoPlay) {
-            await downloadAudio()
+            await downloadAudio();
           }
-          return
-        };
+          return;
+        }
         const { sound } = await Audio.Sound.createAsync(
           { uri: localUri },
           { shouldPlay: autoPlay },
@@ -92,8 +97,8 @@ const useAudioPlayer = ({
       playThroughEarpieceAndroid: false,
       staysActiveInBackground: true,
       shouldDuckAndroid: true,
-      interruptionModeIOS: InterruptionModeIOS.DuckOthers
-    })
+      interruptionModeIOS: InterruptionModeIOS.DuckOthers,
+    });
 
     loadAudio();
 
@@ -121,21 +126,21 @@ const useAudioPlayer = ({
     await sound?.playAsync();
     setAutoPlay(false);
     setIsPlaying(true);
-  }
+  };
 
   const playAudio = async () => {
     if (!sound) {
-      await downloadAudio()
+      await downloadAudio();
       return;
     }
 
     if (isPlaying) {
-      setIsPlaying(false);
       await sound?.pauseAsync();
+      setIsPlaying(false);
       return;
     }
-    await sound?.playAsync();
     setIsPlaying(true);
+    await sound?.playAsync();
   };
 
   return { isDownloading, isPlaying, playAudio, position, duration };

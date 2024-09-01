@@ -5,14 +5,21 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useTheme } from "@react-navigation/native";
-import React, { forwardRef, useCallback, useMemo, useState } from "react";
-import { StyleSheet } from "react-native";
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { BackHandler, StyleSheet } from "react-native";
 import { TTheme } from "types";
 
 type TBottomModal = {
   startAT?: 0 | 1 | 2 | 3;
   children?: any;
   justOneSnap?: boolean;
+  justOneValue?: any;
   getIndex?: any;
   snaps?: any;
   shouldScroll?: boolean;
@@ -29,6 +36,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       children,
       startAT,
       justOneSnap,
+      justOneValue,
       getIndex,
       snaps,
       shouldScroll,
@@ -41,7 +49,10 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
     const theme = _theme || useTheme();
     const styles = getStyles(theme);
     const snapPoints = useMemo(
-      () => (justOneSnap ? ["30%"] : snaps || ["30%", "50%", "75%", "100%"]),
+      () =>
+        justOneSnap
+          ? justOneValue || ["30%"]
+          : snaps || ["30%", "50%", "75%", "100%"],
       [snaps]
     );
     const [index, setIndex] = useState(0);
@@ -61,6 +72,22 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       ),
       []
     );
+
+    useEffect(() => {
+      const backAction = () => {
+        // @ts-ignore
+        if (ref?.current) ref?.current?.close();
+        return true;
+      };
+
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
+
+      return () => backHandler.remove();
+      // @ts-ignore
+    }, [ref?.current]);
 
     return (
       <BottomSheetModal

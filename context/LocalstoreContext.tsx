@@ -29,6 +29,7 @@ type StoreState = {
   songFontSize: number;
   history: HistoryItem[];
   currentVoiceIdentifier: string;
+  currentVoiceRate: number;
 };
 
 interface StorageContextProps {
@@ -71,6 +72,7 @@ const initialContext: StoreState = {
   songFontSize: 21,
   history: [],
   currentVoiceIdentifier: "es-us-x-esd-local",
+  currentVoiceRate: 1,
 };
 
 const isArrEqual = (arr1: any[], arr2: any[]) => {

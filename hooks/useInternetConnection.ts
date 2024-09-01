@@ -17,10 +17,6 @@ function useInternetConnection(): boolean {
     }
 
     checkConnection();
-
-    // const intervalId = setInterval(checkConnection, 10000);
-
-    // return () => clearInterval(intervalId);
   }, []);
 
   return isConnected;

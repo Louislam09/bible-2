@@ -23,6 +23,7 @@ import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
 import useBibleReader from "hooks/useBibleReading";
+import useInternetConnection from "hooks/useInternetConnection";
 interface FooterInterface {
   bookRef: any;
   nextRef: any;
@@ -61,8 +62,9 @@ const CustomFooter: FC<FooterInterface> = ({
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const {
     historyManager,
-    storedData: { currentVoiceIdentifier },
+    storedData: { currentVoiceIdentifier, currentVoiceRate = 1 },
   } = useStorage();
+  const isConnected = useInternetConnection();
   const FOOTER_ICON_SIZE = iconSize;
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -73,7 +75,7 @@ const CustomFooter: FC<FooterInterface> = ({
   const { bookNumber, shortName } =
     DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
-  const isRVR = currentBibleVersion === EBibleVersions.BIBLE;
+  const isRVR = currentBibleVersion === EBibleVersions.BIBLE && isConnected;
   const translateX = useRef(new Animated.Value(0)).current;
   const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
   const { isDownloading, isPlaying, playAudio, duration, position } =
@@ -87,6 +89,7 @@ const CustomFooter: FC<FooterInterface> = ({
     useBibleReader({
       currentChapterVerses,
       currentVoiceIdentifier,
+      voiceRate: currentVoiceRate,
     });
   const startOrStop = isSpeaking ? stopReading : startReading;
   const _playAudio = isRVR ? playAudio : startOrStop;

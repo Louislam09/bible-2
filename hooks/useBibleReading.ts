@@ -7,6 +7,7 @@ import { useTextToSpeech } from "hooks/useTextToSpeech";
 interface UseBibleReaderProps {
   currentChapterVerses: IBookVerse[];
   currentVoiceIdentifier: string;
+  voiceRate: number; // Add the voice rate to the props
 }
 
 interface UseBibleReaderResult {
@@ -23,6 +24,7 @@ interface UseBibleReaderResult {
 const useBibleReader = ({
   currentChapterVerses,
   currentVoiceIdentifier,
+  voiceRate,
 }: UseBibleReaderProps): UseBibleReaderResult => {
   const [verseIndex, setVerseIndex] = useState(0);
   const [reading, setReading] = useState(false);
@@ -61,7 +63,7 @@ const useBibleReader = ({
 
   const startReading = useCallback(
     (index: number) => {
-      speak(verseList[index], currentVoice, 1, () => {
+      speak(verseList[index], currentVoice, voiceRate, () => {
         if (index < verseList.length - 1) {
           setShouldPlayNextChapter(false);
           setVerseIndex((prev) => prev + 1);
@@ -71,7 +73,7 @@ const useBibleReader = ({
         }
       });
     },
-    [verseList, currentVoice]
+    [verseList, currentVoice, voiceRate]
   );
 
   useEffect(() => {
