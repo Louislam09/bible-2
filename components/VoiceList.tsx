@@ -13,13 +13,14 @@ import DecoratorLine from "./DecoratorLine";
 
 interface IVoiceList {
   theme: TTheme;
+  shouldPlay?: boolean;
 }
 
 type VoiceItemProps = {
   voice: SpeechVoice;
   styles: any;
   index: number;
-  playItem: (voice: SpeechVoice) => void;
+  playItem: (voice: SpeechVoice, shouldPlay?: boolean) => void;
   theme: TTheme;
   fontSize: number;
   isSpeaking: boolean;
@@ -97,7 +98,7 @@ const VoiceItem = ({
           <Text style={[styles.versionText, { fontSize }]}>{voice.name}</Text>
         </View>
         <TouchableOpacity
-          onPress={() => playItem(voice)}
+          onPress={() => playItem(voice, true)}
           style={{ alignItems: "center" }}
         >
           <MaterialCommunityIcons
@@ -119,7 +120,7 @@ const VoiceItem = ({
   );
 };
 
-const VoiceList: FC<IVoiceList> = ({ theme }) => {
+const VoiceList: FC<IVoiceList> = ({ theme, shouldPlay = true }) => {
   const {
     saveData,
     storedData: { currentVoiceIdentifier },
@@ -142,11 +143,11 @@ const VoiceList: FC<IVoiceList> = ({ theme }) => {
 
   useEffect(() => {
     return () => {
-      stop();
+      if (isSpeaking) stop();
     };
   }, []);
 
-  const playItem = (voice: SpeechVoice) => {
+  const playItem = (voice: SpeechVoice, play?: boolean) => {
     if (voice.name === selectedVoice.name && isSpeaking) {
       stop();
       return;
@@ -154,6 +155,7 @@ const VoiceList: FC<IVoiceList> = ({ theme }) => {
     if (isSpeaking) stop();
     setSelectedVoice(voice);
     saveData({ currentVoiceIdentifier: voice.identifier });
+    if (!shouldPlay && !play) return;
     speak(text, voice, 1);
   };
 

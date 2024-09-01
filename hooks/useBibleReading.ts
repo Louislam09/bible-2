@@ -63,6 +63,7 @@ const useBibleReader = ({
 
   const startReading = useCallback(
     (index: number) => {
+      setReading(true);
       speak(verseList[index], currentVoice, voiceRate, () => {
         if (index < verseList.length - 1) {
           setShouldPlayNextChapter(false);
@@ -73,7 +74,7 @@ const useBibleReader = ({
         }
       });
     },
-    [verseList, currentVoice, voiceRate]
+    [verseList, currentVoice, voiceRate, stopReading, speak]
   );
 
   useEffect(() => {
@@ -87,7 +88,14 @@ const useBibleReader = ({
     if (reading && verseIndex < verseList.length) {
       startReading(verseIndex);
     }
-  }, [reading, verseIndex, verseList]);
+  }, [reading, verseIndex, verseList, currentVoice, voiceRate, startReading]);
+
+  useEffect(() => {
+    if (reading) {
+      stopReading();
+      startReading(verseIndex);
+    }
+  }, [currentVoice, voiceRate]);
 
   return {
     verseIndex,

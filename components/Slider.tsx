@@ -10,6 +10,7 @@ import {
 
 interface CustomSliderProps {
   options: any[];
+  height?: number;
   initialValue?: any;
   onChange?: (value: any) => void;
   activeColor?: string;
@@ -78,6 +79,7 @@ const CustomSlider: React.FC<CustomSliderProps> = ({
   activeColor = "#3498db",
   inactiveColor = "#bdc3c7",
   textColor = "#2c3e50",
+  height = 10,
 }) => {
   const [sliderWidth, setSliderWidth] = useState(0);
 
@@ -100,7 +102,7 @@ const CustomSlider: React.FC<CustomSliderProps> = ({
 
   return (
     <View style={[styles.container]} onLayout={handleLayout}>
-      <View style={[styles.track, { backgroundColor: inactiveColor }]}>
+      <View style={[styles.track, { height, backgroundColor: inactiveColor }]}>
         <Animated.View
           style={[
             styles.fill,
@@ -109,7 +111,10 @@ const CustomSlider: React.FC<CustomSliderProps> = ({
         />
       </View>
       <Animated.View
-        style={[styles.thumb, { transform: [{ translateX: pan.x }] }]}
+        style={[
+          styles.thumb,
+          { transform: [{ translateX: pan.x }], top: height },
+        ]}
         {...panResponder.panHandlers}
       />
       <View style={styles.labelContainer}>
@@ -156,7 +161,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: "white",
     position: "absolute",
-    top: 8,
     marginLeft: -5,
     borderWidth: 2,
     borderColor: "#3498db",
@@ -167,7 +171,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 0,
     right: 0,
-    top: 30,
+    top: 40,
   },
   label: {
     fontSize: 14,

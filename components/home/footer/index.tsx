@@ -72,6 +72,7 @@ const CustomFooter: FC<FooterInterface> = ({
   const navigation = useNavigation();
   const route = useRoute();
   const currentHistoryItemVerse = historyManager.getCurrentItem()?.verse;
+
   const { bookNumber, shortName } =
     DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);

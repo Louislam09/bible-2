@@ -6,7 +6,7 @@ import BottomModal from "components/BottomModal";
 import CustomSlider from "components/Slider";
 import VoiceList from "components/VoiceList";
 import { useStorage } from "context/LocalstoreContext";
-import React, { FC, useCallback, useMemo, useRef } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
 import {
   Platform,
   StyleSheet,
@@ -64,7 +64,7 @@ const Play: FC<IPlay> = ({
   } = useStorage();
   const voiceBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const voiceRateBottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const speedOptions = [0.6, 1, 1.5, 2];
+  const speedOptions = [0.5, 1, 1.5, 2];
 
   const handleSpeedChange = (newSpeed: number) => {
     saveData({ currentVoiceRate: newSpeed });
@@ -72,7 +72,8 @@ const Play: FC<IPlay> = ({
 
   const voiceHandlePresentModalPress = useCallback(() => {
     voiceBottomSheetModalRef.current?.present();
-  }, []);
+  }, [isPlaying]);
+
   const voiceRateHandlePresentModalPress = useCallback(() => {
     voiceRateBottomSheetModalRef.current?.present();
   }, [isPlaying]);
@@ -187,11 +188,6 @@ const Play: FC<IPlay> = ({
                 color={theme.colors.notification}
                 style={[styles.playHeaderIcon, { opacity: 1 }]}
               />
-              <MaterialCommunityIcons
-                name="chevron-down"
-                color={theme.colors.notification}
-                size={28}
-              />
             </TouchableOpacity>
           )}
         </View>
@@ -240,44 +236,10 @@ const Play: FC<IPlay> = ({
         startAT={0}
         ref={voiceRateBottomSheetModalRef}
       >
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            paddingHorizontal: 20,
-            backgroundColor: "transparent",
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: "100%",
-              backgroundColor: "transparent",
-            }}
-          >
-            <Text
-              style={{
-                color: theme.colors.notification,
-                fontWeight: "bold",
-                fontSize: 20,
-              }}
-            >
-              Velocidad
-            </Text>
-            <Text
-              style={{
-                color: theme.colors.text,
-                fontWeight: "bold",
-                fontSize: 20,
-                borderWidth: 1,
-                borderColor: "#ddd",
-                paddingHorizontal: 5,
-                borderRadius: 5,
-              }}
-            >
-              {voiceRate}x
-            </Text>
+        <View style={styles.voiceRateContainer}>
+          <View style={styles.voiceRateHeader}>
+            <Text style={styles.voiceRateLabel}>Velocidad</Text>
+            <Text style={styles.voiceRateValue}>{voiceRate}x</Text>
           </View>
           <CustomSlider
             options={speedOptions}
@@ -296,7 +258,7 @@ const Play: FC<IPlay> = ({
         startAT={2}
         ref={voiceBottomSheetModalRef}
       >
-        <VoiceList theme={theme} />
+        <VoiceList theme={theme} shouldPlay={false} />
       </BottomModal>
     </View>
   );
@@ -386,6 +348,32 @@ const getStyles = ({ colors }: TTheme) =>
       color: colors.text,
       fontSize: 24,
       textAlign: "left",
+    },
+    voiceRateContainer: {
+      justifyContent: "center",
+      alignItems: "center",
+      paddingHorizontal: 20,
+      backgroundColor: "transparent",
+    },
+    voiceRateHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      width: "100%",
+      backgroundColor: "transparent",
+    },
+    voiceRateLabel: {
+      color: colors.notification,
+      fontWeight: "bold",
+      fontSize: 20,
+    },
+    voiceRateValue: {
+      color: colors.text,
+      fontWeight: "bold",
+      fontSize: 20,
+      borderWidth: 1,
+      borderColor: "#ddd",
+      paddingHorizontal: 5,
+      borderRadius: 5,
     },
   });
 

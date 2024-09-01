@@ -59,14 +59,7 @@ function HomeScreen() {
   const searchRef = useRef<any>(null);
   const settingRef = useRef<any>(null);
   const favRef = useRef<any>(null);
-  const {
-    strongWord,
-    fontSize,
-    setStrongWord,
-    onAddToNote,
-    isSplitActived,
-    orientation,
-  } = useBibleContext();
+  const { isSplitActived, orientation } = useBibleContext();
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const isPortrait = orientation === "PORTRAIT";
   const styles = getStyles(theme, isPortrait);
@@ -126,6 +119,7 @@ function HomeScreen() {
       useNativeDriver: false,
     }).start();
   };
+
   const animateBackgroundColorEnd = () => {
     Animated.timing(bColor, {
       toValue: 0,
