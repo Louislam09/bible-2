@@ -5,6 +5,7 @@ import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import BottomModal from "components/BottomModal";
 import DailyVerse from "components/DailyVerse";
+import Icon, { IconProps } from "components/Icon";
 import { Text, View } from "components/Themed";
 import VoiceList from "components/VoiceList";
 import Settings from "components/home/header/Settings";
@@ -23,7 +24,8 @@ import {
 } from "types";
 
 type IDashboardOption = {
-  icon: MaterialIconNameType | IoniconsIconNameType;
+  icon: IconProps["name"];
+  // icon: MaterialIconNameType | IoniconsIconNameType;
   label: string;
   action: () => void;
   disabled?: boolean;
@@ -109,80 +111,93 @@ const Dashboard = () => {
 
   const options: IDashboardOption[] = [
     {
-      icon: isNTV ? "book-cross" : "crown-outline",
+      icon: isNTV ? "BookText" : "Crown",
       label: "Santa Escritura",
       action: () => navigation.navigate(Screens.Home, homePageInitParams),
       tag: isNTV ? "book-cross" : "crown-outline",
     },
     {
-      icon: "view-list-outline",
+      icon: "Table",
+      // icon: "view-list-outline",
       label: "Lista de Libro",
       action: () =>
         navigation?.navigate(Screens.ChooseBook, { ...route.params }),
     },
     {
-      icon: "bookshelf",
+      icon: "BookA",
+      // icon: "bookshelf",
       label: "Diccionarios",
       action: () =>
         navigation?.navigate(Screens.DictionarySearch, { word: "" }),
     },
     {
-      icon: "text-box-search-outline",
+      icon: "SwatchBook",
+      // icon: "text-box-search-outline",
       label: "Concordancia Escritural",
       action: () => navigation.navigate(Screens.Concordance, {}),
     },
 
     {
-      icon: "star-outline",
+      icon: "Star",
+      // icon: "star-outline",
       label: "Versiculos Favoritos",
       action: () => navigation.navigate(Screens.Favorite),
     },
     {
-      icon: "person-outline",
+      icon: "UserSearch",
+      // icon: "person-outline",
       label: "Buscar Personaje",
       isIonicon: true,
       action: () => navigation.navigate(Screens.Character),
     },
     {
-      icon: "musical-notes-outline",
+      icon: "Music4",
+      // icon: "musical-notes-outline",
       label: "Himnos",
       isIonicon: true,
       action: onSong,
     },
     {
-      icon: "waveform",
+      icon: "AudioLines",
+      // icon: "waveform",
       label: "Selecciona Una Voz",
       action: voiceHandlePresentModalPress,
     },
     {
-      icon: "notebook-outline",
+      icon: "NotebookText",
+      // icon: "notebook-outline",
       label: "Notas",
       action: () => navigation.navigate(Screens.Notes),
     },
     {
-      icon: "download",
+      icon: "MonitorDown",
+      // icon: "download",
       label: "Gestor de descargas",
       action: () => navigation.navigate(Screens.DownloadManager),
     },
     {
-      icon: "book-open-page-variant-outline",
+      icon: "FileStack",
+      // icon: "book-open-page-variant-outline",
       label: "Versiones",
       action: versionHandlePresentModalPress,
     },
     {
-      icon: "text-search",
+      icon: "Search",
+      // icon: "text-search",
       label: "Buscador",
       action: () => navigation.navigate(Screens.Search, {}),
     },
 
     {
-      icon: "settings-outline",
+      icon: "Settings",
+      // icon: "settings-outline",
       label: "Ajustes",
       isIonicon: true,
       action: fontHandlePresentModalPress,
     },
     {
-      icon: "television-guide",
+      icon: "HandHelping",
+      // icon: "television-guide",
       label: "Como Usar?",
       action: () => navigation.navigate(Screens.Onboarding),
     },
@@ -218,17 +233,12 @@ const Dashboard = () => {
           },
         ]}
       >
-        {item.isIonicon ? (
-          <Ionicons
-            name={item.icon as any}
-            style={[styles.cardIcon, index === 0 && { color: "white" }]}
-          />
-        ) : (
-          <MaterialCommunityIcons
-            name={item.icon as any}
-            style={[styles.cardIcon, index === 0 && { color: "white" }]}
-          />
-        )}
+        <Icon
+          name={item.icon as any}
+          size={36}
+          style={[styles.cardIcon]}
+          color={index === 0 ? "white" : theme.colors.notification}
+        />
 
         <Text style={[styles.cardLabel, index === 0 && { color: "white" }]}>
           {item.label}

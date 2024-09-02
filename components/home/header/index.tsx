@@ -22,6 +22,8 @@ import { Text, View } from "../../Themed";
 import ProgressBar from "../footer/ProgressBar";
 import Settings from "./Settings";
 import VersionList from "./VersionList";
+import Icon, { IconProps } from "components/Icon";
+import { icons } from "lucide-react-native";
 
 interface HeaderInterface {
   bibleVersionRef: any;
@@ -95,41 +97,38 @@ const CustomHeader: FC<HeaderInterface> = ({
     goForwardOnHistory?.(index);
   };
 
-  const headerIconData: TIcon[] = useMemo(
-    () =>
-      [
-        {
-          name: "arrow-split-horizontal",
-          action: () => {
-            toggleSplitMode();
-            toggleBottomSideSearching(!isSplitActived);
-          },
-          ref: favRef,
-          isIonicon: false,
-          color: isSplitActived ? theme.colors.notification : theme.colors.text,
+  const headerIconData = useMemo(() => {
+    const options: TIcon[] = [
+      {
+        name: "SquareSplitVertical",
+        action: () => {
+          toggleSplitMode();
+          toggleBottomSideSearching(!isSplitActived);
         },
-        {
-          name: "arrow-back-outline",
-          action: moveBackInHistory,
-          ref: settingRef,
-          isIonicon: true,
-          disabled: isSplitActived,
-          color: shouldBackward
-            ? theme.colors.notification
-            : theme.colors?.text,
-        },
-        {
-          name: "arrow-forward-outline",
-          action: moveForwardInHistory,
-          ref: searchRef,
-          isIonicon: true,
-          disabled: isSplitActived,
-          color: shouldForward ? theme.colors.notification : theme.colors?.text,
-        },
-        { name: "magnify", action: goSearchScreen, ref: searchRef },
-      ].filter((x) => !x.disabled),
-    [isSplitActived, shouldForward, shouldBackward]
-  );
+        ref: favRef,
+        isIonicon: false,
+        color: isSplitActived ? theme.colors.notification : theme.colors.text,
+      },
+      {
+        name: "ArrowBigLeftDash",
+        action: moveBackInHistory,
+        ref: settingRef,
+        isIonicon: true,
+        disabled: isSplitActived,
+        color: shouldBackward ? theme.colors.notification : theme.colors?.text,
+      },
+      {
+        name: "ArrowBigRightDash",
+        action: moveForwardInHistory,
+        ref: searchRef,
+        isIonicon: true,
+        disabled: isSplitActived,
+        color: shouldForward ? theme.colors.notification : theme.colors?.text,
+      },
+      { name: "Search", action: goSearchScreen, ref: searchRef },
+    ];
+    return options.filter((x) => !x.disabled);
+  }, [isSplitActived, shouldForward, shouldBackward]);
 
   const onSelect = (version: string) => {
     clearHighlights();
@@ -148,7 +147,14 @@ const CustomHeader: FC<HeaderInterface> = ({
           style={styles.iconContainer}
           onPress={() => navigation.navigate("Dashboard")}
         >
-          <Ionicons name="home" size={headerIconSize} style={[styles.icon]} />
+          <Icon
+            name="House"
+            size={headerIconSize}
+            color={theme.colors.primary}
+            //  style={[styles.icon]}
+          />
+          {/* <House /> */}
+          {/* <Ionicons name="home" size={headerIconSize} style={[styles.icon]} /> */}
         </TouchableOpacity>
         <View style={styles.headerCenter}>
           {headerIconData.map((icon, index) => (
@@ -160,9 +166,14 @@ const CustomHeader: FC<HeaderInterface> = ({
               onLongPress={icon?.longAction}
               disabled={icon.disabled}
             >
-              {icon.isIonicon ? (
+              <Icon
+                name={icon.name}
+                size={headerIconSize}
+                color={icon.color || theme.colors.primary}
+              />
+              {/* {icon.isIonicon ? (
                 <Ionicons
-                  name={icon.name}
+                  name={icon.iconName}
                   size={headerIconSize}
                   style={[styles.icon, { color: icon.color }]}
                   color={icon.color}
@@ -170,11 +181,11 @@ const CustomHeader: FC<HeaderInterface> = ({
               ) : (
                 <MaterialCommunityIcons
                   style={[styles.icon, icon.color && { color: icon.color }]}
-                  name={icon.name}
+                  name={icon.iconName}
                   size={headerIconSize}
                   color={icon.color}
                 />
-              )}
+              )} */}
             </TouchableOpacity>
           ))}
           <BottomModal startAT={2} ref={fontBottomSheetModalRef}>
@@ -248,7 +259,7 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       justifyContent: "flex-end",
       backgroundColor: "none",
-      gap: 5,
+      gap: 15,
       flex: 1,
     },
     headerEnd: {
@@ -268,8 +279,7 @@ const getStyles = ({ colors }: TTheme) =>
       borderRadius: 50,
     },
     icon: {
-      fontWeight: "700",
-      marginHorizontal: 10,
+      // marginHorizontal: 5,
       color: colors.primary,
     },
     text: {

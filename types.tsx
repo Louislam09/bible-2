@@ -14,6 +14,7 @@ import {
   Theme,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { IconProps } from "components/Icon";
 
 declare global {
   namespace ReactNavigation {
@@ -209,7 +210,7 @@ export enum EViewMode {
 }
 
 export type TIcon = {
-  name: any;
+  name: IconProps["name"];
   color?: string | any;
   action?: any;
   longAction?: any;

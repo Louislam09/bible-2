@@ -3,6 +3,7 @@ import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIconNameType, TTheme } from "types";
 import { NavigationProp, NavigationState } from "@react-navigation/native";
+import Icon from "./Icon";
 
 type BackButtonProps = {
   theme: TTheme;
@@ -34,8 +35,8 @@ const BackButton = ({
 
   return (
     <TouchableOpacity style={styles.closeIcon} onPress={onGoBack}>
-      <MaterialCommunityIcons
-        name={iconName || "keyboard-backspace"}
+      <Icon
+        name="ArrowLeft"
         size={30}
         color={color || theme.colors.notification}
       />

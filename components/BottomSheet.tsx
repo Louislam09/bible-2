@@ -8,6 +8,7 @@ import { useTheme } from "@react-navigation/native";
 import React, { forwardRef, useCallback, useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { TTheme } from "types";
+import Icon from "./Icon";
 
 type Ref = BottomSheet;
 
@@ -64,11 +65,7 @@ const CustomBottomSheet = forwardRef<Ref, CustomBottomSheet>(
     const DefaultIndicator = useCallback(
       () => (
         <View style={styles.defaultIndicator}>
-          <MaterialCommunityIcons
-            name="drag-horizontal"
-            size={30}
-            color={theme.colors.text}
-          />
+          <Icon name="GripHorizontal" size={30} color={theme.colors.text} />
         </View>
       ),
       []

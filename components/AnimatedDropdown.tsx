@@ -11,6 +11,7 @@ import {
 import { Text, View } from "./Themed";
 import { TTheme } from "types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Icon from "./Icon";
 
 interface AnimatedDropdownProps {
   options: string[];
@@ -71,11 +72,10 @@ const AnimatedDropdown: React.FC<AnimatedDropdownProps> = ({
           {selectedValue}
         </Text>
         {withIcon && (
-          <MaterialCommunityIcons
-            name="chevron-down"
+          <Icon
+            name="ChevronDown"
             size={24}
             color={theme.colors.notification}
-            style={{ fontWeight: "bold" }}
           />
         )}
       </TouchableOpacity>

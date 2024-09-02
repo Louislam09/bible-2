@@ -24,6 +24,7 @@ import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
 import useBibleReader from "hooks/useBibleReading";
 import useInternetConnection from "hooks/useInternetConnection";
+import Icon from "components/Icon";
 interface FooterInterface {
   bookRef: any;
   nextRef: any;
@@ -256,11 +257,10 @@ const CustomFooter: FC<FooterInterface> = ({
         )}
         <View style={styles.footerCenter}>
           <TouchableOpacity ref={backRef} onPress={() => previousChapter()}>
-            <Ionicons
-              name="chevron-back-sharp"
-              style={[styles.icon]}
+            <Icon
+              name={"ChevronsLeft"}
               size={FOOTER_ICON_SIZE}
-              color="white"
+              style={[styles.icon, { marginHorizontal: 0 }]}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -279,11 +279,10 @@ const CustomFooter: FC<FooterInterface> = ({
             </Text>
           </TouchableOpacity>
           <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>
-            <Ionicons
-              name="chevron-forward-sharp"
-              style={styles.icon}
+            <Icon
+              name={"ChevronsRight"}
               size={FOOTER_ICON_SIZE}
-              color="white"
+              style={[styles.icon, { marginHorizontal: 0 }]}
             />
           </TouchableOpacity>
         </View>
@@ -292,11 +291,10 @@ const CustomFooter: FC<FooterInterface> = ({
             <TouchableOpacity
               ref={audioRef}
               style={[styles.footerEnd]}
-              // style={[styles.footerEnd, !isRVR && { display: "none" }]}
               onPress={playHandlePresentModalPress}
             >
-              <MaterialCommunityIcons
-                name={"headphones"}
+              <Icon
+                name={"Headphones"}
                 size={FOOTER_ICON_SIZE}
                 style={[styles.icon, { marginHorizontal: 0 }]}
               />

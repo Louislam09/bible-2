@@ -16,6 +16,8 @@ import {
 import { TTheme } from "types";
 import { Text, View } from "../../Themed";
 import ProgressBar from "../footer/ProgressBar";
+import Icon, { IconProps } from "components/Icon";
+import { iconSize } from "constants/size";
 
 interface IPlay {
   theme: TTheme;
@@ -34,7 +36,7 @@ interface IPlay {
 }
 
 type IPayOption = {
-  icon: string | any;
+  icon: IconProps["name"];
   label: string;
   action: () => void;
   disabled?: boolean;
@@ -80,19 +82,19 @@ const Play: FC<IPlay> = ({
 
   const playOptions: IPayOption[] = [
     {
-      icon: "play-skip-back",
+      icon: "SkipBack",
       action: previousChapter,
       label: "Anterior",
       isIonicon: true,
     },
     {
-      icon: isPlaying ? "pause-circle" : "play-circle",
+      icon: isPlaying ? "Pause" : "Play",
       action: playAudio,
       label: "Reproducir",
       isIonicon: true,
     },
     {
-      icon: "play-skip-forward",
+      icon: "SkipForward",
       action: nextChapter,
       label: "Siguinte",
       isIonicon: true,
@@ -106,15 +108,7 @@ const Play: FC<IPlay> = ({
       disabled={item.disabled}
     >
       <View style={styles.playControlButtonContainer}>
-        {item.isIonicon ? (
-          <Ionicons
-            name={item.icon}
-            style={{ fontSize: 45, color: theme.colors.notification }}
-          />
-        ) : (
-          <MaterialCommunityIcons name={item.icon} style={{ fontSize: 35 }} />
-        )}
-
+        <Icon size={45} name={item.icon} color={theme.colors.notification} />
         <Text style={{ color: theme.colors.text }}>{item.label}</Text>
       </View>
     </TouchableWithoutFeedback>
@@ -137,9 +131,10 @@ const Play: FC<IPlay> = ({
       <View style={styles.playHeader}>
         <View style={styles.playHeaderBody}>
           <Text style={styles.playHeaderTitle}>{`${book} ${chapter}`}</Text>
-          <MaterialCommunityIcons
-            name="download"
+          <Icon
+            name={"Download"}
             color={theme.colors.notification}
+            size={iconSize}
             style={[styles.playHeaderIcon, isDownloading && { opacity: 1 }]}
           />
           {!isRvr && (
@@ -151,8 +146,9 @@ const Play: FC<IPlay> = ({
                 flexDirection: "row",
               }}
             >
-              <MaterialCommunityIcons
-                name="play-speed"
+              <Icon
+                name="MicVocal"
+                size={iconSize}
                 color={theme.colors.notification}
                 style={[styles.playHeaderIcon, { opacity: 1 }]}
               />
@@ -167,11 +163,15 @@ const Play: FC<IPlay> = ({
                 flexDirection: "row",
               }}
             >
-              <MaterialCommunityIcons
-                name={shouldLoopReading ? "repeat" : "repeat-off"}
+              <Icon
+                name={!shouldLoopReading ? "Repeat" : "Repeat1"}
+                size={iconSize}
                 color={theme.colors.notification}
                 style={[styles.playHeaderIcon, { opacity: 1 }]}
               />
+              {!shouldLoopReading && (
+                <Text style={{ color: theme.colors.notification }}>X</Text>
+              )}
             </TouchableOpacity>
           )}
           {!isRvr && (
@@ -183,8 +183,9 @@ const Play: FC<IPlay> = ({
                 flexDirection: "row",
               }}
             >
-              <MaterialCommunityIcons
-                name="waveform"
+              <Icon
+                name={"AudioLines"}
+                size={iconSize}
                 color={theme.colors.notification}
                 style={[styles.playHeaderIcon, { opacity: 1 }]}
               />
