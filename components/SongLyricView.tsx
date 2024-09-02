@@ -1,11 +1,11 @@
-import { StyleSheet, Animated, TouchableOpacity } from "react-native";
-import React, { FC, useRef, useState } from "react";
-import { Text, View } from "./Themed";
-import { TTheme } from "types";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import ProgressBar from "./home/footer/ProgressBar";
 import { WINDOW_WIDTH } from "@gorhom/bottom-sheet";
 import { useStorage } from "context/LocalstoreContext";
+import React, { FC, useRef, useState } from "react";
+import { Animated, StyleSheet, TouchableOpacity } from "react-native";
+import { TTheme } from "types";
+import ProgressBar from "./home/footer/ProgressBar";
+import Icon from "./Icon";
+import { Text, View } from "./Themed";
 
 type Song = {
   title: string;
@@ -65,14 +65,14 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
 
   const actionOptions: any[] = [
     {
-      icon: "play-skip-back",
+      icon: "SkipBack",
       action: previos,
       label: "Anterior",
       isIonicon: true,
       disabled: currentStanza === 0 && !isChorus,
     },
     {
-      icon: "play-skip-forward",
+      icon: "SkipForward",
       action: next,
       label: "Siguiente",
       isIonicon: true,
@@ -93,17 +93,11 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
           justifyContent: "center",
         }}
       >
-        {item.isIonicon ? (
-          <Ionicons
-            name={item.icon}
-            style={{
-              fontSize: 45,
-              color: item.disabled ? "#898989" : theme.colors.notification,
-            }}
-          />
-        ) : (
-          <MaterialCommunityIcons name={item.icon} style={{ fontSize: 35 }} />
-        )}
+        <Icon
+          name={item.icon}
+          size={35}
+          color={item.disabled ? "#898989" : theme.colors.notification}
+        />
 
         <Text style={{ color: theme.colors.text }}>{item.label}</Text>
       </View>
@@ -138,15 +132,11 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
         <Text style={styles.title}>#{song?.title}</Text>
         <View style={styles.headerActions}>
           <TouchableOpacity onPress={increaseFont} style={{}}>
-            <MaterialCommunityIcons
-              name="format-font-size-increase"
-              size={24}
-              color={theme.colors.notification}
-            />
+            <Icon name="AArrowUp" size={24} color={theme.colors.notification} />
           </TouchableOpacity>
           <TouchableOpacity onPress={decreaseFont} style={{}}>
-            <MaterialCommunityIcons
-              name="format-font-size-decrease"
+            <Icon
+              name="AArrowDown"
               size={24}
               color={theme.colors.notification}
             />

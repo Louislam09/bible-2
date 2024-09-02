@@ -159,7 +159,7 @@ function HomeScreen() {
   });
 
   return (
-    <SafeAreaView key={orientation} style={[styles.container]}>
+    <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
       <CustomHeader
         {...{ bibleVersionRef, searchRef, favRef, settingRef, dashboardRef }}
       />

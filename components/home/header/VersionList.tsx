@@ -1,15 +1,14 @@
-import { useTheme } from "@react-navigation/native";
+import DecoratorLine from "components/DecoratorLine";
+import Icon from "components/Icon";
+import { iconSize } from "constants/size";
+import { useDBContext } from "context/databaseContext";
+import { useStorage } from "context/LocalstoreContext";
+import { DBName } from "enums";
+import { deleteDatabaseFile } from "hooks/useDatabase";
 import React, { FC } from "react";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { EBibleVersions, TTheme } from "types";
 import { Text, View } from "../../Themed";
-import { deleteDatabaseFile } from "hooks/useDatabase";
-import { DBName } from "enums";
-import { useDBContext } from "context/databaseContext";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useStorage } from "context/LocalstoreContext";
-import { iconSize } from "constants/size";
-import DecoratorLine from "components/DecoratorLine";
 
 interface IVersionList {
   currentBibleVersion: string;
@@ -78,12 +77,10 @@ const VersionList: FC<IVersionList> = ({
               </Text>
             </View>
             {currentBibleVersion === version.id && (
-              <MaterialCommunityIcons
-                style={[
-                  styles.icon,
-                  { color: theme.colors.notification, fontSize: iconSize },
-                ]}
-                name="check"
+              <Icon
+                style={[styles.icon]}
+                size={iconSize}
+                name="Check"
                 color={theme.colors.notification}
               />
             )}

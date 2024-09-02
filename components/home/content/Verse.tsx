@@ -1,14 +1,11 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
-import Highlighter from "components/Highlighter";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import DisplayStrongWord from "components/DisplayStrongWord";
+import Icon from "components/Icon";
+import Walkthrough from "components/Walkthrough";
+import { useStorage } from "context/LocalstoreContext";
+import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
   Easing,
@@ -21,7 +18,7 @@ import {
 import copyToClipboard from "utils/copyToClipboard";
 import { DB_BOOK_NAMES } from "../../../constants/BookNames";
 import { useBibleContext } from "../../../context/BibleContext";
-import { HomeParams, IBookVerse, TIcon, TTheme, TVerse } from "../../../types";
+import { HomeParams, TIcon, TTheme, TVerse } from "../../../types";
 import { customUnderline } from "../../../utils/customStyle";
 import extractVersesInfo, {
   extractTextFromParagraph,
@@ -31,11 +28,7 @@ import extractVersesInfo, {
 } from "../../../utils/extractVersesInfo";
 import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import { Text } from "../../Themed";
-import Walkthrough from "components/Walkthrough";
-import { useStorage } from "context/LocalstoreContext";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
-import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
-import DisplayStrongWord from "components/DisplayStrongWord";
 
 type VerseProps = TVerse & {
   isSplit: boolean;
@@ -331,32 +324,32 @@ const Verse: React.FC<VerseProps> = ({
   const verseActions: TIcon[] = useMemo(() => {
     return [
       {
-        name: "content-copy",
+        name: "Copy",
         action: onCopy,
         hide: lastHighted?.verse !== item.verse && isMoreThanOneHighted,
         description: "Copiar",
       },
       {
-        name: "note-plus",
+        name: "NotebookPen",
         action: addVerseToNote,
         hide: lastHighted?.verse !== item.verse && isMoreThanOneHighted,
         description: "Anotar",
       },
       {
-        name: isFavorite ? "star" : "star-outline",
+        name: isFavorite ? "Star" : "StarOff",
         action: onFavorite,
         color: isFavorite ? theme.colors.notification : "",
         hide: false,
         description: "Favorito",
       },
       {
-        name: "file-compare",
+        name: "FileDiff",
         action: onCompareClicked,
         hide: false,
         description: "Comparar",
       },
       {
-        name: "music",
+        name: "Music2",
         action: enabledMusic,
         hide: !showMusicIcon,
       },
@@ -410,11 +403,7 @@ const Verse: React.FC<VerseProps> = ({
         {isFirstVerse && (
           <View style={styles.estimatedContainer}>
             <Text style={styles.estimatedText}>
-              <MaterialCommunityIcons
-                size={14}
-                name="timer-outline"
-                color={theme.colors.notification}
-              />
+              <Icon size={14} name="Timer" color={theme.colors.notification} />
               &nbsp; Tiempo de lectura {`~ ${estimatedReadingTime} min(s)\n`}
             </Text>
           </View>
@@ -434,11 +423,7 @@ const Verse: React.FC<VerseProps> = ({
         >
           <Text style={[styles.verseNumber]}>
             {isFavorite && !isVerseHighlisted && (
-              <MaterialCommunityIcons
-                size={14}
-                name={"star"}
-                color={theme.dark ? "yellow" : theme.colors.primary}
-              />
+              <MaterialCommunityIcons size={14} name="star" color="#ffd41d" />
             )}
             &nbsp;{item.verse}&nbsp;
           </Text>
@@ -482,7 +467,7 @@ const Verse: React.FC<VerseProps> = ({
                   action.hide && { display: "none" },
                 ]}
               >
-                <MaterialCommunityIcons
+                <Icon
                   size={30}
                   name={action.name}
                   style={[styles.icon, action.color && { color: action.color }]}

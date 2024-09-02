@@ -1,7 +1,7 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet } from "react-native";
 import { TTheme } from "types";
+import Icon from "./Icon";
 import { Text, View } from "./Themed";
 
 type NoInternetSplashProps = {
@@ -11,11 +11,7 @@ type NoInternetSplashProps = {
 const NoInternetSplash = ({ theme }: NoInternetSplashProps) => {
   return (
     <View style={styles.container}>
-      <MaterialCommunityIcons
-        name="wifi-off"
-        size={100}
-        color={theme.dark ? "white" : "black"}
-      />
+      <Icon name="WifiOff" size={100} color={theme.dark ? "white" : "black"} />
       <Text style={styles.title}>Sin conexión a Internet</Text>
       <Text style={styles.subtitle}>
         Por favor, revisa tu conexión e inténtalo de nuevo.

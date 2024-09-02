@@ -1,14 +1,14 @@
 import { useTheme } from "@react-navigation/native";
+import { DB_BOOK_NAMES } from "constants/BookNames";
 import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from "constants/Queries";
 import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
 import React, { useEffect, useMemo, useState } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
-import { BookGruop, IVerseItem, RootStackScreenProps, TTheme } from "types";
-import StrongSearchContent from "./StrongSearchContent";
+import { IVerseItem, RootStackScreenProps, TTheme } from "types";
 import AnimatedDropdown from "./AnimatedDropdown";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { DB_BOOK_NAMES } from "constants/BookNames";
+import Icon from "./Icon";
+import StrongSearchContent from "./StrongSearchContent";
 
 enum CognateBook {
   NEW_VOW = "newVow",
@@ -99,12 +99,7 @@ const SearchStrongWordEntire: React.FC<
               },
             ]}
           >
-            <MaterialCommunityIcons
-              name="filter-variant"
-              size={24}
-              color="white"
-              style={{ fontWeight: "bold" }}
-            />
+            <Icon name="ListFilter" size={24} color="white" />
           </View>
           <View style={styles.pickerContainer}>
             <AnimatedDropdown

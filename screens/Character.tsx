@@ -1,7 +1,7 @@
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
+import Icon from "components/Icon";
 import { Text } from "components/Themed";
 import WordDefinition from "components/WordDefinition";
 import Characters from "constants/Characters";
@@ -138,11 +138,7 @@ const Character: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
     navigation.setOptions({
       headerLeft: () => (
         <TouchableOpacity onPress={handleCustomBack}>
-          <MaterialCommunityIcons
-            name="arrow-left"
-            color={theme.colors.text}
-            size={28}
-          />
+          <Icon name="ArrowLeft" color={theme.colors.text} size={28} />
         </TouchableOpacity>
       ),
     });

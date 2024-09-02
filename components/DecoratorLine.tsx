@@ -4,14 +4,15 @@ import { TTheme } from "types";
 
 type DecoratorLineProps = {
   theme: TTheme;
+  color?: string;
 };
 
-const DecoratorLine = ({ theme }: DecoratorLineProps) => {
+const DecoratorLine = ({ theme, color }: DecoratorLineProps) => {
   return (
     <View
       style={{
         width: 5,
-        backgroundColor: theme.colors.notification,
+        backgroundColor: color || theme.colors.notification,
         paddingVertical: 10,
       }}
     />

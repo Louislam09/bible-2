@@ -117,22 +117,19 @@ const Dashboard = () => {
       tag: isNTV ? "book-cross" : "crown-outline",
     },
     {
-      icon: "Table",
-      // icon: "view-list-outline",
+      icon: "LayoutGrid",
       label: "Lista de Libro",
       action: () =>
         navigation?.navigate(Screens.ChooseBook, { ...route.params }),
     },
     {
       icon: "BookA",
-      // icon: "bookshelf",
       label: "Diccionarios",
       action: () =>
         navigation?.navigate(Screens.DictionarySearch, { word: "" }),
     },
     {
       icon: "SwatchBook",
-      // icon: "text-box-search-outline",
       label: "Concordancia Escritural",
       action: () => navigation.navigate(Screens.Concordance, {}),
     },
@@ -249,7 +246,7 @@ const Dashboard = () => {
 
   return (
     <View
-      key={orientation}
+      key={orientation + theme.dark}
       style={[styles.container, !isPortrait && { flexDirection: "row" }]}
     >
       <DailyVerse navigation={navigation} theme={theme} />

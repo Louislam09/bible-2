@@ -1,9 +1,9 @@
 import { FlashList } from "@shopify/flash-list";
+import { useBibleContext } from "context/BibleContext";
 import React, { FC } from "react";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { EThemes, TTheme } from "types";
 import { Text, View } from "../../Themed";
-import { useBibleContext } from "context/BibleContext";
 
 interface ISelectThemeList {
   selectTheme: Function;

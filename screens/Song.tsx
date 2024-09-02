@@ -1,9 +1,9 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import BottomModal from "components/BottomModal";
+import Icon from "components/Icon";
 import SongLyricView from "components/SongLyricView";
 import { Text } from "components/Themed";
 import Songs from "constants/songs";
@@ -146,11 +146,7 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
     navigation.setOptions({
       headerLeft: () => (
         <TouchableOpacity onPress={handleCustomBack}>
-          <MaterialCommunityIcons
-            name="arrow-left"
-            color={theme.colors.text}
-            size={28}
-          />
+          <Icon name="ArrowLeft" color={theme.colors.text} size={28} />
         </TouchableOpacity>
       ),
     });

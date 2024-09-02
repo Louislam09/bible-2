@@ -1,8 +1,7 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "components/Animation";
+import Icon, { IconProps } from "components/Icon";
 import { Text, View } from "components/Themed";
 import React from "react";
 import {
@@ -13,7 +12,7 @@ import {
 import { TTheme } from "types";
 
 type IDashboardOption = {
-  icon: string | any;
+  icon: IconProps["name"];
   label: string;
   action: () => void;
   disabled?: boolean;
@@ -30,7 +29,7 @@ const OnboardingScreen = () => {
 
   const options: IDashboardOption[] = [
     {
-      icon: "text-box-outline",
+      icon: "LetterText",
       label: "Versiculo",
       action: () =>
         navigation.navigate("Home", {
@@ -42,7 +41,7 @@ const OnboardingScreen = () => {
         }),
     },
     {
-      icon: "television-guide",
+      icon: "HandHelping",
       label: "Funciones",
       action: () =>
         navigation.navigate("Home", { isTour: true, isHistory: true }),
@@ -65,12 +64,7 @@ const OnboardingScreen = () => {
       disabled={item.disabled}
     >
       <View style={[styles.card, item.disabled && { backgroundColor: "#ddd" }]}>
-        {item.isIonicon ? (
-          <Ionicons name={item.icon} style={[styles.cardIcon]} />
-        ) : (
-          <MaterialCommunityIcons name={item.icon} style={[styles.cardIcon]} />
-        )}
-
+        <Icon name={item.icon} size={40} color={theme.colors.notification} />
         <Text style={[styles.cardLabel]}>{item.label}</Text>
       </View>
     </TouchableWithoutFeedback>

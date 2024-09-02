@@ -1,7 +1,5 @@
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import Animation from "components/Animation";
 import { Text } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
 import { useEffect, useRef, useState } from "react";
@@ -11,16 +9,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {
-  IStrongWord,
-  IVerseItem,
-  Screens,
-  DictionaryData,
-  TTheme,
-} from "types";
+import { IVerseItem, Screens, TTheme } from "types";
 import copyToClipboard from "utils/copyToClipboard";
-import { getVerseTextRaw } from "utils/getVerseTextRaw";
 import RenderTextWithClickableWords from "./home/content/RenderTextWithClickableWords";
+import Icon from "./Icon";
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -75,9 +67,9 @@ const StrongSearchContent = ({
               style={styles.cardTitle}
             >{`${item.bookName} ${item.chapter}:${item.verse}`}</Text>
             <View style={styles.verseAction}>
-              <MaterialCommunityIcons
+              <Icon
                 size={20}
-                name="content-copy"
+                name="Copy"
                 style={styles.icon}
                 onPress={() => onCopy(item)}
               />
@@ -123,11 +115,7 @@ const StrongSearchContent = ({
           flatListRef?.current?.scrollToOffset({ animated: true, offset: 0 });
         }}
       >
-        <MaterialCommunityIcons
-          style={{ color: theme.colors.notification }}
-          name="arrow-up-circle"
-          size={26}
-        />
+        <Icon color={theme.colors.notification} name="ChevronsUp" size={26} />
       </TouchableOpacity>
     );
   };

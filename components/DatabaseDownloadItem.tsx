@@ -1,27 +1,24 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { DownloadBibleItem, TTheme } from "types";
-import * as FileSystem from "expo-file-system";
+import { DownloadedDatabase } from "classes/Database";
 import {
   baseDownloadUrl,
-  bibleReadyMsg,
   dbFileExt,
   defaultDatabases,
   getIfDatabaseNeedsDownload,
   SQLiteDirPath,
 } from "constants/databaseNames";
-import { Text, View } from "./Themed";
-import { DownloadedDatabase } from "classes/Database";
+import * as FileSystem from "expo-file-system";
+import React, { useEffect, useState } from "react";
+import { StyleSheet } from "react-native";
+import { DownloadBibleItem, TTheme } from "types";
 import ProgressBar from "./home/footer/ProgressBar";
+import { Text, View } from "./Themed";
 // import { unzip } from "react-native-zip-archive";
-import JSZip from "jszip";
 // @ts-ignore
-import { decode as atob, encode as btoa } from "base-64";
+import { useBibleContext } from "context/BibleContext";
+import { useDBContext } from "context/databaseContext";
 import unzipFile from "utils/unzipFile";
 import DownloadButton from "./DatabaseDownloadButton";
-import { useDBContext } from "context/databaseContext";
-import { useBibleContext } from "context/BibleContext";
+import Icon from "./Icon";
 
 type DatabaseDownloadItemProps = {
   item: DownloadBibleItem;
@@ -109,7 +106,8 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
             item?.disabled && { color: theme.colors.text + "70" },
           ]}
         >
-          ⚠️ {sizeInMB.toFixed(2)} MB
+          <Icon name="TriangleAlert" color="orange" size={16} />{" "}
+          <Text>{sizeInMB.toFixed(2)} MB</Text>
         </Text>
       );
     } else {
@@ -121,7 +119,8 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
             item?.disabled && { color: theme.colors.text + "70" },
           ]}
         >
-          ⚠️ {sizeInKB.toFixed(2)} KB
+          <Icon name="TriangleAlert" color="orange" size={16} />{" "}
+          {sizeInKB.toFixed(2)} KB
         </Text>
       );
     }
@@ -149,13 +148,11 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
           {storedName}
         </Text>
         {isDownloaded && (
-          <MaterialCommunityIcons
-            style={[
-              styles.icon,
-              { color: theme.colors.notification, fontSize: 20 },
-            ]}
-            name="check"
-            color={theme.colors.notification}
+          <Icon
+            size={18}
+            style={styles.icon}
+            name="BadgeCheck"
+            color="#4ec9b0"
           />
         )}
       </View>
@@ -242,5 +239,8 @@ const getStyles = ({ colors }: TTheme) =>
     },
     sizeText: {
       color: colors.notification,
+      flexDirection: "row",
+      alignItems: "center",
+      paddingVertical: 4,
     },
   });

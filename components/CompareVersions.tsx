@@ -1,5 +1,3 @@
-import { Ionicons } from "@expo/vector-icons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { NavigationProp } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
@@ -10,7 +8,7 @@ import { iconSize } from "constants/size";
 import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
 import useCompareVerses, { DatabaseData } from "hooks/useCompareVerses";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ListRenderItem,
   StyleSheet,
@@ -20,6 +18,7 @@ import {
 import { IVerseItem, Screens, TTheme } from "types";
 import copyToClipboard from "utils/copyToClipboard";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";
+import Icon from "./Icon";
 
 interface CompareVersionsProps {
   theme: TTheme;
@@ -111,9 +110,9 @@ const CompareVersions = ({
               {`${item?.bookName} ${item?.chapter}:${item?.verse}`}
             </Text>
             <View style={styles.verseAction}>
-              <MaterialCommunityIcons
-                size={20}
-                name="content-copy"
+              <Icon
+                size={24}
+                name="Copy"
                 style={styles.icon}
                 onPress={() => onCopy(item, versionName)}
               />
@@ -129,8 +128,8 @@ const CompareVersions = ({
             <Text style={[styles.cardTitle]}>
               Lee {`${item?.bookName} ${item?.chapter}`}
             </Text>
-            <MaterialCommunityIcons
-              name="open-in-new"
+            <Icon
+              name="SquareArrowOutUpRight"
               size={18}
               color={theme.colors.text}
             />
@@ -150,54 +149,6 @@ const CompareVersions = ({
       verse: Math.min(verseInfo, prev.verse + 1),
     }));
   }, [searchParam]);
-
-  const actionOptions: any[] = useMemo(
-    () => [
-      {
-        icon: "play-skip-back",
-        action: back,
-        label: "Anterior",
-        isIonicon: true,
-      },
-      {
-        icon: "play-skip-forward",
-        action: next,
-        label: "Siguiente",
-        isIonicon: true,
-      },
-    ],
-    [next, back]
-  );
-
-  const renderItemOption = (item: any) => (
-    <TouchableOpacity
-      key={item.label}
-      onPress={item.action}
-      disabled={item.disabled}
-    >
-      <View
-        style={{
-          backgroundColor: "transparent",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        {item.isIonicon ? (
-          <Ionicons
-            name={item.icon}
-            style={{
-              fontSize: 45,
-              color: item.disabled ? "#898989" : theme.colors.notification,
-            }}
-          />
-        ) : (
-          <MaterialCommunityIcons name={item.icon} style={{ fontSize: 35 }} />
-        )}
-
-        <Text style={{ color: theme.colors.text }}>{item.label}</Text>
-      </View>
-    </TouchableOpacity>
-  );
 
   const onAddMoreDic = () => {
     compareRef.current?.dismiss();
@@ -219,13 +170,12 @@ const CompareVersions = ({
           style={{ alignItems: "center" }}
           onPress={onAddMoreDic}
         >
-          <MaterialCommunityIcons
-            name="book-plus-multiple-outline"
+          <Icon
+            name="BookPlus"
             color={theme.colors.notification}
             size={iconSize}
           />
         </TouchableOpacity>
-        {/* <View style={styles.footer}>{actionOptions.map(renderItemOption)}</View> */}
       </View>
     );
   };
@@ -241,11 +191,7 @@ const CompareVersions = ({
           flatListRef?.current?.scrollToOffset({ animated: true, offset: 0 });
         }}
       >
-        <MaterialCommunityIcons
-          style={{ color: theme.colors.notification }}
-          name="arrow-up-circle"
-          size={26}
-        />
+        <Icon name="ChevronsUp" size={26} color={theme.colors.notification} />
       </TouchableOpacity>
     );
   };

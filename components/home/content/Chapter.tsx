@@ -1,10 +1,10 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import BottomModal from "components/BottomModal";
 import CustomBottomSheet from "components/BottomSheet";
 import CompareVersions from "components/CompareVersions";
+import Icon from "components/Icon";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
 import useDebounce from "hooks/useDebounce";
@@ -171,8 +171,8 @@ const Chapter = ({
                   {...panResponder.panHandlers}
                   style={[styles.slider]}
                 >
-                  <MaterialCommunityIcons
-                    name="drag-horizontal"
+                  <Icon
+                    name="GripHorizontal"
                     size={30}
                     color={theme.colors.text}
                   />

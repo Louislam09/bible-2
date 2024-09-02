@@ -1,4 +1,3 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import { defaultDatabases } from "constants/databaseNames";
@@ -7,6 +6,7 @@ import { useDBContext } from "context/databaseContext";
 import * as FileSystem from "expo-file-system";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
+import Icon from "./Icon";
 import { Text, View } from "./Themed";
 
 const FileList = () => {
@@ -96,13 +96,11 @@ const FileList = () => {
             </Text>
           </View>
           {allowDelete && (
-            <MaterialCommunityIcons
+            <Icon
               onPress={() => deleteFile(item)}
-              style={{
-                color: "#e74856",
-              }}
-              name="delete"
+              name="Trash2"
               size={30}
+              color="#e74856"
             />
           )}
         </View>

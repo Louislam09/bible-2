@@ -12,9 +12,10 @@ import {
 import { TFont, TTheme } from "types";
 import SelectThemeList from "./SelectThemeList";
 import { useCustomTheme } from "context/ThemeContext";
+import Icon, { IconProps } from "components/Icon";
 
 type IThemeOption = {
-  icon: string | any;
+  icon: IconProps["name"];
   label: string;
   action: () => void;
   isIonicon?: boolean;
@@ -38,20 +39,20 @@ const Settings = ({ theme }: any) => {
 
   const themesIcon: IThemeOption[] = [
     {
-      icon: "settings-outline",
+      icon: "SunMoon",
       label: "Default",
       action: () => toggleTheme(colorScheme),
       isIonicon: true,
     },
     {
-      icon: "moon-outline",
+      icon: "Moon",
       label: "Oscuro",
       isIonicon: true,
       action: toggleTheme,
       disabled: _themeScheme === "dark",
     },
     {
-      icon: "sunny-outline",
+      icon: "Sun",
       label: "Claro",
       isIonicon: true,
       action: toggleTheme,
@@ -70,23 +71,12 @@ const Settings = ({ theme }: any) => {
             disabled={item.disabled}
           >
             <View style={styles.fontItem}>
-              {item.isIonicon ? (
-                <Ionicons
-                  name={item.icon}
-                  style={[
-                    styles.fontIcon,
-                    item.disabled && { color: theme.colors.notification },
-                  ]}
-                />
-              ) : (
-                <MaterialCommunityIcons
-                  name={item.icon}
-                  style={[
-                    styles.fontIcon,
-                    item.disabled && { color: theme.colors.notification },
-                  ]}
-                />
-              )}
+              <Icon
+                name={item.icon}
+                style={[styles.fontIcon]}
+                color={item.disabled ? theme.colors.notification : "#000"}
+                size={30}
+              />
               <Text
                 style={[
                   styles.fontLabel,
@@ -104,22 +94,19 @@ const Settings = ({ theme }: any) => {
         {fontName.map((font: string, index: any) => (
           <TouchableOpacity key={index} onPress={() => selectFont(font)}>
             <View style={styles.fontItem}>
-              <MaterialCommunityIcons
-                name="format-letter-case"
-                style={[
-                  styles.fontIcon,
-                  selectedFont === font && {
-                    // backgroundColor: theme.colors.notification,
-                    color: theme.colors.notification,
-                  },
-                ]}
+              <Icon
+                name="CaseSensitive"
+                size={30}
+                style={[styles.fontIcon]}
+                color={
+                  selectedFont === font ? theme.colors.notification : "#000"
+                }
               />
 
               <Text
                 style={[
                   styles.fontLabel,
                   selectedFont === font && {
-                    // backgroundColor: theme.colors.notification,
                     color: theme.colors.notification,
                   },
                 ]}
@@ -134,19 +121,13 @@ const Settings = ({ theme }: any) => {
       <Text style={[styles.title, { marginTop: 15 }]}>Tamaño de Letra</Text>
       <View style={[styles.fontSizeContainer, styles.card]}>
         <TouchableOpacity onPress={() => decreaseFontSize()}>
-          <MaterialCommunityIcons
-            name="format-font-size-decrease"
-            style={styles.fontIcon}
-          />
+          <Icon name="AArrowDown" size={34} style={styles.fontIcon} />
         </TouchableOpacity>
         <Text style={[styles.fontSize, { color: theme.colors.notification }]}>
           {fontSize}
         </Text>
         <TouchableOpacity onPress={() => increaseFontSize()}>
-          <MaterialCommunityIcons
-            name="format-font-size-increase"
-            style={styles.fontIcon}
-          />
+          <Icon name="AArrowUp" size={34} style={styles.fontIcon} />
         </TouchableOpacity>
       </View>
 

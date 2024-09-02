@@ -1,8 +1,8 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import React, { useState, useEffect, useRef } from "react";
-import { TouchableOpacity, Animated, Easing, ViewStyle } from "react-native";
-import { Text } from "./Themed";
+import React, { useEffect, useRef } from "react";
+import { Animated, Easing, TouchableOpacity } from "react-native";
 import { TTheme } from "types";
+import Icon from "./Icon";
+import { Text } from "./Themed";
 
 interface DownloadButtonProps {
   isDownloaded: boolean;
@@ -24,7 +24,6 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({
   withLabel = false,
 }) => {
   const rotation = useRef(new Animated.Value(0)).current;
-
   // Start the rotation animation
   const startRotation = () => {
     Animated.loop(
@@ -61,13 +60,18 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({
     <TouchableOpacity
       style={{ alignItems: "center" }}
       onPress={isDownloaded ? deleteBibleFile : downloadBible}
+      disabled={progress}
     >
       <Animated.View style={{ transform: [{ rotate }] }}>
-        <MaterialCommunityIcons
-          style={{
-            color: isDownloaded ? "#e74856" : theme.colors.notification,
-          }}
-          name={progress ? "loading" : isDownloaded ? "delete" : "download"}
+        <Icon
+          name={progress ? "Loader" : isDownloaded ? "Trash2" : "Download"}
+          color={
+            isDownloaded
+              ? progress
+                ? "#4ec9b0"
+                : "#e74856"
+              : theme.colors.text
+          }
           size={iconSize || 30}
         />
       </Animated.View>

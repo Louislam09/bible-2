@@ -1,24 +1,23 @@
-import * as Clipboard from "expo-clipboard";
-import React, { useRef, useState } from "react";
-import { StyleSheet, ToastAndroid, TouchableOpacity, View } from "react-native";
-import WebView from "react-native-webview";
-import { Text } from "./Themed";
-import { useCustomTheme } from "context/ThemeContext";
-import { useTheme } from "@react-navigation/native";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useNavigation, useTheme } from "@react-navigation/native";
+import { DB_BOOK_NAMES } from "constants/BookNames";
+import { iconSize } from "constants/size";
+import Voices from "constants/Voices";
 import { wordDefinitionHtmlTemplate } from "constants/wordDefinitionHtmlTemplate";
-import { DictionaryData, Screens, TTheme } from "types";
 import { useBibleContext } from "context/BibleContext";
-import { useNavigation } from "@react-navigation/native";
+import { useCustomTheme } from "context/ThemeContext";
+import * as Clipboard from "expo-clipboard";
+import usePrintAndShare from "hooks/usePrintAndShare";
+import { useTextToSpeech } from "hooks/useTextToSpeech";
+import React, { useRef, useState } from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import WebView from "react-native-webview";
 import {
   ShouldStartLoadRequest,
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
-import { DB_BOOK_NAMES } from "constants/BookNames";
-import usePrintAndShare from "hooks/usePrintAndShare";
-import { useTextToSpeech } from "hooks/useTextToSpeech";
-import { iconSize } from "constants/size";
-import Voices from "constants/Voices";
+import { DictionaryData, Screens, TTheme } from "types";
+import Icon from "./Icon";
+import { Text } from "./Themed";
 
 type WordDefinitionProps = {
   wordData: DictionaryData;
@@ -122,15 +121,11 @@ const WordDefinition = ({
           style={{ marginHorizontal: 20 }}
           onPress={copyContentToClipboard}
         >
-          <MaterialCommunityIcons
-            name="share-variant-outline"
-            color={theme.colors.notification}
-            size={28}
-          />
+          <Icon name="Share2" color={theme.colors.notification} size={28} />
         </TouchableOpacity>
         <TouchableOpacity style={{ marginHorizontal: 20 }} onPress={onRead}>
-          <MaterialCommunityIcons
-            name={isSpeaking ? "stop-circle-outline" : "play-circle-outline"}
+          <Icon
+            name={isSpeaking ? "Pause" : "Play"}
             color={theme.colors.notification}
             size={iconSize}
           />

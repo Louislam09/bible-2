@@ -1,5 +1,3 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import React, { FC, useCallback, useMemo, useRef } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
@@ -7,6 +5,7 @@ import { useBibleContext } from "../../../context/BibleContext";
 
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BottomModal from "components/BottomModal";
+import Icon from "components/Icon";
 import { iconSize } from "constants/size";
 import { useStorage } from "context/LocalstoreContext";
 import useInstalledBibles from "hooks/useInstalledBible";
@@ -22,8 +21,6 @@ import { Text, View } from "../../Themed";
 import ProgressBar from "../footer/ProgressBar";
 import Settings from "./Settings";
 import VersionList from "./VersionList";
-import Icon, { IconProps } from "components/Icon";
-import { icons } from "lucide-react-native";
 
 interface HeaderInterface {
   bibleVersionRef: any;
@@ -171,21 +168,6 @@ const CustomHeader: FC<HeaderInterface> = ({
                 size={headerIconSize}
                 color={icon.color || theme.colors.primary}
               />
-              {/* {icon.isIonicon ? (
-                <Ionicons
-                  name={icon.iconName}
-                  size={headerIconSize}
-                  style={[styles.icon, { color: icon.color }]}
-                  color={icon.color}
-                />
-              ) : (
-                <MaterialCommunityIcons
-                  style={[styles.icon, icon.color && { color: icon.color }]}
-                  name={icon.iconName}
-                  size={headerIconSize}
-                  color={icon.color}
-                />
-              )} */}
             </TouchableOpacity>
           ))}
           <BottomModal startAT={2} ref={fontBottomSheetModalRef}>
@@ -197,10 +179,10 @@ const CustomHeader: FC<HeaderInterface> = ({
           style={styles.headerEnd}
           onPress={versionHandlePresentModalPress}
         >
-          <MaterialCommunityIcons
-            name={isNTV ? "book-cross" : "crown"}
-            size={isNTV ? 24 : headerIconSize}
-            style={[styles.icon, { marginHorizontal: 0 }]}
+          <Icon
+            name={isNTV ? "BookText" : "Crown"}
+            size={24}
+            color={theme.colors.primary}
           />
           <Text style={styles.text}>{currentVersionName}</Text>
         </TouchableOpacity>
