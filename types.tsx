@@ -24,6 +24,7 @@ declare global {
 
 export enum Screens {
   Dashboard = "Dashboard",
+  Settings = "Settings",
   Home = "Home",
   Search = "Search",
   Concordance = "Concordance",
@@ -54,6 +55,7 @@ export const ScreensName: TScreensName = {
   [Screens.Favorite]: "Versiculos Favoritos",
   [Screens.Notes]: "Notas",
   [Screens.Dashboard]: "Dashboard",
+  [Screens.Settings]: "Ajustes",
   [Screens.DownloadManager]: "Gestor de descargas",
   [Screens.Onboarding]: "Guia",
   [Screens.Character]: "Personaje",
@@ -65,6 +67,7 @@ export const ScreensName: TScreensName = {
 // export type RootTabParamList = { [key in Screens]: any };
 export type RootTabParamList = {
   Dashboard: undefined;
+  Settings: undefined;
   Home: undefined;
   Book: undefined;
   ChooseBook: { book: string };
@@ -80,6 +83,7 @@ export type RootTabParamList = {
 
 export type RootStackParamList = {
   Dashboard: NavigatorScreenParams<RootTabParamList> | undefined;
+  Settings: NavigatorScreenParams<RootTabParamList> | undefined;
   Home: NavigatorScreenParams<RootTabParamList> | HomeParams;
   Book: NavigatorScreenParams<RootTabParamList> | undefined;
   Favorite: NavigatorScreenParams<RootTabParamList> | undefined;

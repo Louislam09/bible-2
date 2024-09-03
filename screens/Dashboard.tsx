@@ -190,7 +190,8 @@ const Dashboard = () => {
       // icon: "settings-outline",
       label: "Ajustes",
       isIonicon: true,
-      action: fontHandlePresentModalPress,
+      // action: fontHandlePresentModalPress,
+      action: () => navigation.navigate(Screens.Settings),
     },
     {
       icon: "HandHelping",

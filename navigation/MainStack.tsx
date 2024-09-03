@@ -19,6 +19,7 @@ import Home from "screens/Home";
 import Notes from "screens/Notes";
 import OnboardingScreen from "screens/Onboarding";
 import Search from "screens/Search";
+import SettingsScren from "screens/Settings";
 import Song from "screens/Song";
 import { RootStackParamList, Screens, ScreensName, TTheme } from "types";
 
@@ -50,6 +51,7 @@ const MainStack = () => {
       initialRouteName="Dashboard"
     >
       <Stack.Screen initialParams={{}} name="Dashboard" component={Dashboard} />
+
       <Stack.Screen
         initialParams={{}}
         name="Home"
@@ -107,6 +109,15 @@ const MainStack = () => {
         options={({ route }) => ({
           ...screenOptions(route),
           headerTitle: "",
+          animation: "slide_from_right",
+        })}
+      />
+
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScren}
+        options={({ route }) => ({
+          ...screenOptions(route),
           animation: "slide_from_right",
         })}
       />
