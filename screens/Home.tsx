@@ -175,6 +175,7 @@ function HomeScreen() {
             verse,
             height: topHeight,
             width: topWidth,
+            navigation,
           }}
         />
         <Animated.View
@@ -205,6 +206,7 @@ function HomeScreen() {
                 new Animated.Value(SCREEN_WIDTH),
                 topWidth
               ),
+              navigation,
             }}
           />
         )}

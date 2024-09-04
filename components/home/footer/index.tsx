@@ -1,5 +1,3 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "constants/BookNames";
 import { useBibleContext } from "context/BibleContext";
@@ -10,21 +8,20 @@ import { EBibleVersions, Screens } from "types";
 
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BottomModal from "components/BottomModal";
+import Icon from "components/Icon";
 import { Text, View } from "components/Themed";
 import { iconSize } from "constants/size";
 import { useStorage } from "context/LocalstoreContext";
+import useBibleReader from "hooks/useBibleReading";
+import useInternetConnection from "hooks/useInternetConnection";
 import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
 import {
   GestureHandlerStateChangeNativeEvent,
-  PanGestureHandler,
   State,
 } from "react-native-gesture-handler";
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
-import useBibleReader from "hooks/useBibleReading";
-import useInternetConnection from "hooks/useInternetConnection";
-import Icon from "components/Icon";
 interface FooterInterface {
   bookRef: any;
   nextRef: any;
@@ -239,90 +236,88 @@ const CustomFooter: FC<FooterInterface> = ({
   };
 
   return (
-    <PanGestureHandler
-      onGestureEvent={handleGestureEvent}
-      onHandlerStateChange={handleGestureStateChange}
-    >
-      <Animated.View style={[styles.footer]}>
-        {isPlaying && (
-          <View style={[styles.progressBarContainer]}>
-            <ProgressBar
-              height={8}
-              color={theme.colors.notification}
-              barColor={theme.colors.text}
-              progress={position / duration}
-              circleColor={theme.colors.notification}
-            />
-          </View>
-        )}
-        <View style={styles.footerCenter}>
-          <TouchableOpacity ref={backRef} onPress={() => previousChapter()}>
-            <Icon
-              name={"ChevronsLeft"}
-              size={FOOTER_ICON_SIZE}
-              style={[styles.icon, { marginHorizontal: 0 }]}
-            />
-          </TouchableOpacity>
+    // <PanGestureHandler
+    //   onGestureEvent={handleGestureEvent}
+    //   onHandlerStateChange={handleGestureStateChange}
+    // >
+    <Animated.View style={[styles.footer]}>
+      {isPlaying && (
+        <View style={[styles.progressBarContainer]}>
+          <ProgressBar
+            height={8}
+            color={theme.colors.notification}
+            barColor={theme.colors.text}
+            progress={position / duration}
+            circleColor={theme.colors.notification}
+          />
+        </View>
+      )}
+      <View style={styles.footerCenter}>
+        <TouchableOpacity ref={backRef} onPress={() => previousChapter()}>
+          <Icon
+            name={"ChevronsLeft"}
+            size={FOOTER_ICON_SIZE}
+            style={[styles.icon, { marginHorizontal: 0 }]}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          ref={bookRef}
+          style={styles.titleContainer}
+          onPress={onPress}
+          onLongPress={onLongFooterTitle}
+          delayLongPress={200}
+        >
+          <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
+            {`${displayBookName ?? ""} ${chapter ?? ""}:${
+              currentHistoryItemVerse || verse
+            }`}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>
+          <Icon
+            name={"ChevronsRight"}
+            size={FOOTER_ICON_SIZE}
+            style={[styles.icon, { marginHorizontal: 0 }]}
+          />
+        </TouchableOpacity>
+      </View>
+      {!isSplitActived && (
+        <View style={{ flexDirection: "row" }}>
           <TouchableOpacity
-            ref={bookRef}
-            style={styles.titleContainer}
-            onPress={onPress}
-            onLongPress={onLongFooterTitle}
-            delayLongPress={200}
+            ref={audioRef}
+            style={[styles.footerEnd]}
+            onPress={playHandlePresentModalPress}
           >
-            <Text
-              style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}
-            >
-              {`${displayBookName ?? ""} ${chapter ?? ""}:${
-                currentHistoryItemVerse || verse
-              }`}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>
             <Icon
-              name={"ChevronsRight"}
+              name={"Headphones"}
               size={FOOTER_ICON_SIZE}
               style={[styles.icon, { marginHorizontal: 0 }]}
             />
           </TouchableOpacity>
         </View>
-        {!isSplitActived && (
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
-              ref={audioRef}
-              style={[styles.footerEnd]}
-              onPress={playHandlePresentModalPress}
-            >
-              <Icon
-                name={"Headphones"}
-                size={FOOTER_ICON_SIZE}
-                style={[styles.icon, { marginHorizontal: 0 }]}
-              />
-            </TouchableOpacity>
-          </View>
-        )}
+      )}
 
-        <BottomModal justOneSnap startAT={0} ref={playRef}>
-          <Play
-            isRvr={isRVR}
-            {...{
-              theme,
-              isDownloading,
-              isPlaying: _isPlaying,
-              playAudio: _playAudio,
-              duration: isRVR ? duration : currentChapterVerses.length,
-              position: isRVR ? position : verseIndex,
-              nextChapter,
-              previousChapter,
-              book,
-              chapter,
-              shouldLoopReading,
-              setShouldLoop,
-            }}
-          />
-        </BottomModal>
-      </Animated.View>
-    </PanGestureHandler>
+      <BottomModal justOneSnap startAT={0} ref={playRef}>
+        <Play
+          isRvr={isRVR}
+          {...{
+            theme,
+            isDownloading,
+            isPlaying: _isPlaying,
+            playAudio: _playAudio,
+            duration: isRVR ? duration : currentChapterVerses.length,
+            position: isRVR ? position : verseIndex,
+            nextChapter,
+            previousChapter,
+            book,
+            chapter,
+            shouldLoopReading,
+            setShouldLoop,
+          }}
+        />
+      </BottomModal>
+    </Animated.View>
+    // </PanGestureHandler>
   );
 };
 

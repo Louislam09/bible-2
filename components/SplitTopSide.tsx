@@ -3,11 +3,25 @@ import React, { FC } from "react";
 import { Animated, StyleSheet } from "react-native";
 import BookContent from "./home/content";
 import CustomFooter from "./home/footer";
+import SwipeWrapper from "./SwipeWrapper";
+import useChangeBookOrChapter from "hooks/useChangeBookOrChapter";
+import { View } from "./Themed";
 
 const SplitTopSide: FC<any> = (props) => {
+  const { navigation } = props;
   const { isSplitActived, orientation } = useBibleContext();
   const isPortrait = orientation === "PORTRAIT";
+  const { nextChapter, previousChapter } = useChangeBookOrChapter({
+    navigation,
+    ...props,
+  });
 
+  const onSwipeRight = () => {
+    previousChapter();
+  };
+  const onSwipeLeft = () => {
+    nextChapter();
+  };
   return (
     <Animated.View
       style={[
@@ -20,7 +34,9 @@ const SplitTopSide: FC<any> = (props) => {
         !isSplitActived && { flex: 1 },
       ]}
     >
-      <BookContent isSplit={false} {...props} />
+      <SwipeWrapper {...{ onSwipeRight, onSwipeLeft }}>
+        <BookContent isSplit={false} {...props} />
+      </SwipeWrapper>
       <CustomFooter isSplit={false} {...props} />
     </Animated.View>
   );
