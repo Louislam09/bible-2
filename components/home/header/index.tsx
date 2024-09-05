@@ -148,10 +148,7 @@ const CustomHeader: FC<HeaderInterface> = ({
             name="House"
             size={headerIconSize}
             color={theme.colors.primary}
-            //  style={[styles.icon]}
           />
-          {/* <House /> */}
-          {/* <Ionicons name="home" size={headerIconSize} style={[styles.icon]} /> */}
         </TouchableOpacity>
         <View style={styles.headerCenter}>
           {headerIconData.map((icon, index) => (
@@ -181,7 +178,7 @@ const CustomHeader: FC<HeaderInterface> = ({
         >
           <Icon
             name={isNTV ? "BookText" : "Crown"}
-            size={24}
+            size={headerIconSize}
             color={theme.colors.primary}
           />
           <Text style={styles.text}>{currentVersionName}</Text>
@@ -206,7 +203,7 @@ const CustomHeader: FC<HeaderInterface> = ({
   );
 };
 
-const getStyles = ({ colors }: TTheme) =>
+const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     header: {
       position: "relative",
@@ -261,11 +258,15 @@ const getStyles = ({ colors }: TTheme) =>
       borderRadius: 50,
     },
     icon: {
-      // marginHorizontal: 5,
       color: colors.primary,
     },
     text: {
-      color: colors.text,
+      color: dark ? colors.text : colors.background,
+      paddingHorizontal: 4,
+      fontSize: 18,
+      backgroundColor: colors.notification,
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
     },
   });
 

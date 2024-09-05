@@ -1,11 +1,18 @@
 import { WINDOW_WIDTH } from "@gorhom/bottom-sheet";
 import { useStorage } from "context/LocalstoreContext";
-import React, { FC, useRef, useState } from "react";
-import { Animated, StyleSheet, TouchableOpacity } from "react-native";
+import React, { FC, useEffect, useRef, useState } from "react";
+import {
+  Animated,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+} from "react-native";
 import { TTheme } from "types";
 import ProgressBar from "./home/footer/ProgressBar";
 import Icon from "./Icon";
 import { Text, View } from "./Themed";
+import { useBibleContext } from "context/BibleContext";
+import SwipeWrapper from "./SwipeWrapper";
 
 type Song = {
   title: string;
@@ -19,11 +26,13 @@ type TSongLyricView = {
 };
 
 const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
+  const { width: WINDOW_WIDTH } = useWindowDimensions();
   const hasChorus = song?.chorus;
   const styles = getStyles(theme);
   const [currentStanza, setCurrentStanza] = useState(0);
   const [isChorus, setIsChorus] = useState(false);
   const translateX = useRef(new Animated.Value(0)).current;
+  const { orientation } = useBibleContext();
   const {
     saveData,
     storedData: { songFontSize },
@@ -62,6 +71,10 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
       useNativeDriver: false,
     }).start();
   };
+
+  useEffect(() => {
+    animate(currentStanza);
+  }, [WINDOW_WIDTH]);
 
   const actionOptions: any[] = [
     {
@@ -126,8 +139,15 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
     animateFont(value);
   };
 
+  const onSwipeLeft = () => {
+    next();
+  };
+  const onSwipeRight = () => {
+    previos();
+  };
+
   return (
-    <View style={styles.container}>
+    <View key={orientation + theme.dark} style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>#{song?.title}</Text>
         <View style={styles.headerActions}>
@@ -151,22 +171,23 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
         circleColor={theme.colors.notification}
       />
 
-      <Animated.View
-        style={[
-          styles.content,
-          {
-            width: WINDOW_WIDTH,
-            transform: [{ translateX }],
-          },
-        ]}
-      >
-        {song?.stanzas.map((stanza, index) => (
-          <View key={index} style={[styles.stanzaContainer]}>
-            {isChorus && hasChorus ? Stanza(song?.chorus) : Stanza(stanza)}
-          </View>
-        ))}
-      </Animated.View>
-
+      <SwipeWrapper onSwipeLeft={onSwipeLeft} onSwipeRight={onSwipeRight}>
+        <Animated.View
+          style={[
+            styles.content,
+            {
+              width: WINDOW_WIDTH,
+              transform: [{ translateX }],
+            },
+          ]}
+        >
+          {song?.stanzas.map((stanza, index) => (
+            <View key={index} style={[styles.stanzaContainer]}>
+              {isChorus && hasChorus ? Stanza(song?.chorus) : Stanza(stanza)}
+            </View>
+          ))}
+        </Animated.View>
+      </SwipeWrapper>
       <View style={styles.footer}>{actionOptions.map(renderItem)}</View>
     </View>
   );

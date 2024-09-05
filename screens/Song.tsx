@@ -7,6 +7,7 @@ import Icon from "components/Icon";
 import SongLyricView from "components/SongLyricView";
 import { Text } from "components/Themed";
 import Songs from "constants/songs";
+import { useBibleContext } from "context/BibleContext";
 import { useCustomTheme } from "context/ThemeContext";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -77,6 +78,7 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   const snaps = [50, 75, 100];
   const _snaps = ["50%", "75%", "100%"];
   const [topHeight] = useState(new Animated.Value(75));
+  const { orientation } = useBibleContext();
 
   const _topHeight = topHeight.interpolate({
     inputRange: [50, 75, 100],
@@ -163,6 +165,7 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
 
   return (
     <View
+      key={orientation + theme.dark}
       style={{
         flex: 1,
         padding: 5,

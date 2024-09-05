@@ -5,7 +5,13 @@ import Icon from "components/Icon";
 import Walkthrough from "components/Walkthrough";
 import { useStorage } from "context/LocalstoreContext";
 import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Animated,
   Easing,
@@ -232,47 +238,51 @@ const Verse: React.FC<VerseProps> = ({
 
   const LinkVerse = ({ data }: any) => {
     if (!data) return null;
-    const { bookNumber, chapter, verse, endVerse } = extractVersesInfo(
-      data.subheading
-    );
-    const bookName = DB_BOOK_NAMES.find(
-      (x: any) => x.bookNumber === bookNumber
-    )?.longName;
+    const linkVerses = data.subheading
+      ?.split("—")
+      .map((linkVerse: any) => extractVersesInfo(linkVerse));
 
-    const onLink = () => {
-      navigation.navigate("Home", {
-        [!isSplit && isSplitActived ? "bottomSideBook" : "book"]: bookName,
-        [!isSplit && isSplitActived ? "bottomSideChapter" : "chapter"]: chapter,
-        [!isSplit && isSplitActived ? "bottomSideVerse" : "verse"]: verse,
-        isHistory: false,
-      });
+    const renderItem = (verseInfo: any, index: number) => {
+      const { bookNumber, chapter, verse } = verseInfo;
+
+      const bookName = DB_BOOK_NAMES.find(
+        (x: any) => x.bookNumber === bookNumber
+      )?.longName;
+
+      const onLink = () => {
+        navigation.navigate("Home", {
+          [!isSplit && isSplitActived ? "bottomSideBook" : "book"]: bookName,
+          [!isSplit && isSplitActived ? "bottomSideChapter" : "chapter"]:
+            chapter,
+          [!isSplit && isSplitActived ? "bottomSideVerse" : "verse"]: verse,
+          isHistory: false,
+        });
+      };
+
+      return bookName ? (
+        <Text
+          key={index}
+          onPress={onLink}
+          style={[
+            styles.verse,
+            {
+              fontSize: 18,
+              fontWeight: "bold",
+              paddingVertical: 5,
+              color: theme.colors.notification ?? "black",
+              ...customUnderline,
+            },
+          ]}
+        >
+          {`${bookName} ${chapter}:${verse}`}
+        </Text>
+      ) : null;
     };
 
-    return data ? (
-      <Text
-        onPress={onLink}
-        style={[
-          styles.verse,
-          {
-            fontSize: 18,
-            textAlign: "justify",
-            fontWeight: "bold",
-            paddingVertical: 10,
-            color: theme.colors.notification ?? "black",
-            ...customUnderline,
-          },
-        ]}
-      >
-        {bookNumber
-          ? `${bookName} ${chapter}:${verse}-${endVerse}`
-          : data.subheading}
-      </Text>
-    ) : (
-      <Text>--</Text>
-    );
+    return data ? linkVerses.map(renderItem) : <Text>--</Text>;
   };
 
-  const RenderFindSubTitle = (verse: any) => {
+  const RenderFindSubTitle = useCallback((verse: any) => {
     const [subTitle, link] = subtitles.filter((x: any) => x.verse === verse);
     return subTitle ? (
       <View>
@@ -283,17 +293,19 @@ const Verse: React.FC<VerseProps> = ({
               fontSize: 22,
               textAlign: "center",
               fontWeight: "bold",
-              paddingVertical: 10,
+              paddingVertical: 5,
               color: theme?.colors?.notification || "white",
             },
           ]}
         >
           {subTitle.subheading || subTitle.title}
         </Text>
-        <LinkVerse data={link} />
+        <View style={{ flexDirection: "row" }}>
+          <LinkVerse data={link} />
+        </View>
       </View>
     ) : null;
-  };
+  }, []);
 
   const onFavorite = async () => {
     await toggleFavoriteVerse({
