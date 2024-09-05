@@ -112,19 +112,19 @@ const BookContent: FC<BookContentInterface> = ({
     return () => {};
   }, [myBibleDB, book, chapter, verse]);
 
-  useEffect(() => {
-    const backAction = () => {
-      navigation.goBack();
-      return true;
-    };
+  // useEffect(() => {
+  //   const backAction = () => {
+  //     // navigation.goBack();
+  //     return true;
+  //   };
 
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
+  //   const backHandler = BackHandler.addEventListener(
+  //     "hardwareBackPress",
+  //     backAction
+  //   );
 
-    return () => backHandler.remove();
-  }, []);
+  //   return () => backHandler.remove();
+  // }, []);
 
   const displayErrorMessage = (_isNewLaw: boolean) => {
     if (_isNewLaw) {

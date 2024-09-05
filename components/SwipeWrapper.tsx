@@ -59,7 +59,8 @@ const SwipeWrapper = forwardRef<View, SwipeWrapperProps>(
             }}
           >
             <Animated.View
-              style={{ flex: 1, transform: [{ translateX }] }}
+              style={{ flex: 1 }}
+              //   style={{ flex: 1, transform: [{ translateX }] }}
               ref={ref} // Forward the ref
             >
               {children}

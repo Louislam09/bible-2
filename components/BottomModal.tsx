@@ -118,9 +118,6 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
         ) : (
           children
         )}
-        {/* {footerComponent && (
-          <BottomSheetView style={{}}>{footerComponent}</BottomSheetView>
-        )} */}
       </BottomSheetModal>
     );
   }
@@ -128,7 +125,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     bottomSheet: {
-      backgroundColor: colors.background + "99",
+      backgroundColor: colors.background,
       borderColor: colors.notification,
       borderWidth: 2,
     },

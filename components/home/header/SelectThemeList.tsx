@@ -20,7 +20,7 @@ const colorNames: any = {
   BlueGreen: "Azul Verde",
   Pink: "Rosa",
   PinkLight: "Rosa Claro",
-  Yellow: "Amarillo",
+  BlueGray: "Gris Azul",
   Blue: "Azul",
   BlackWhite: "Negro",
 };

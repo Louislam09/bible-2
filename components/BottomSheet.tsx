@@ -1,12 +1,17 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetHandleProps,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import { useTheme } from "@react-navigation/native";
-import React, { forwardRef, useCallback, useMemo, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { BackHandler, StyleSheet, View } from "react-native";
 import { TTheme } from "types";
 import Icon from "./Icon";
 
@@ -40,6 +45,22 @@ const CustomBottomSheet = forwardRef<Ref, CustomBottomSheet>(
       () => (justOneSnap ? ["30%"] : snaps || ["30%", "50%", "75%", "100%"]),
       [snaps]
     );
+
+    useEffect(() => {
+      const backAction = () => {
+        // @ts-ignore
+        if (ref?.current) ref?.current?.close();
+        return true;
+      };
+
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
+
+      return () => backHandler.remove();
+      // @ts-ignore
+    }, [ref?.current]);
 
     const renderBackdrop = useCallback(
       (props: any) => (

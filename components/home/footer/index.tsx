@@ -195,51 +195,7 @@ const CustomFooter: FC<FooterInterface> = ({
     });
   }, [currentHistoryIndex]);
 
-  const handleGestureEvent = Animated.event(
-    [{ nativeEvent: { translationX: translateX } }],
-    {
-      useNativeDriver: false,
-    }
-  );
-
-  const handleGestureStateChange = ({
-    nativeEvent,
-  }: handleGestureStateChangeProps) => {
-    if (nativeEvent.state !== State.END) return;
-    // @ts-ignore
-    const _translationX = nativeEvent.translationX;
-    if (_translationX < -SWIPE_THRESHOLD) {
-      Animated.timing(translateX, {
-        toValue: -SCREEN_WIDTH,
-        duration: 100,
-        useNativeDriver: true,
-      }).start(() => {
-        nextChapter();
-        translateX.setValue(0);
-      });
-    } else if (_translationX > SWIPE_THRESHOLD) {
-      Animated.timing(translateX, {
-        toValue: SCREEN_WIDTH,
-        duration: 100,
-        useNativeDriver: true,
-      }).start(() => {
-        previousChapter();
-        translateX.setValue(0);
-      });
-    } else {
-      Animated.timing(translateX, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }
-  };
-
   return (
-    // <PanGestureHandler
-    //   onGestureEvent={handleGestureEvent}
-    //   onHandlerStateChange={handleGestureStateChange}
-    // >
     <Animated.View style={[styles.footer]}>
       {isPlaying && (
         <View style={[styles.progressBarContainer]}>
@@ -282,7 +238,7 @@ const CustomFooter: FC<FooterInterface> = ({
         </TouchableOpacity>
       </View>
       {!isSplitActived && (
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row", backgroundColor: "transparent" }}>
           <TouchableOpacity
             ref={audioRef}
             style={[styles.footerEnd]}
@@ -317,7 +273,6 @@ const CustomFooter: FC<FooterInterface> = ({
         />
       </BottomModal>
     </Animated.View>
-    // </PanGestureHandler>
   );
 };
 

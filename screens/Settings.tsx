@@ -1,5 +1,6 @@
 import {
   Alert,
+  BackHandler,
   Linking,
   Platform,
   ScrollView,
@@ -15,8 +16,8 @@ import { Text, View } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
 import { useCustomTheme } from "context/ThemeContext";
-import { useCallback, useMemo } from "react";
-import { EThemes, TFont, TTheme } from "types";
+import { useCallback, useEffect, useMemo } from "react";
+import { EThemes, RootStackScreenProps, TFont, TTheme } from "types";
 
 const URLS = {
   BIBLE: "market://details?id=com.louislam09.bible",
@@ -26,6 +27,7 @@ const URLS = {
 
 const colorNames: any = {
   Orange: "Naranja",
+  BlackWhite: "Negro",
   Cyan: "Cian",
   BlueLight: "Azul Claro",
   Green: "Verde",
@@ -34,9 +36,8 @@ const colorNames: any = {
   BlueGreen: "Azul Verde",
   Pink: "Rosa",
   PinkLight: "Rosa Claro",
-  Yellow: "Amarillo",
+  BlueGray: "Gris Azul",
   Blue: "Azul",
-  BlackWhite: "Negro",
 };
 
 type TOption = {
@@ -55,7 +56,9 @@ type TSection = {
   id?: string;
 };
 
-export default function SettingsScren() {
+const SettingsScren: React.FC<RootStackScreenProps<"Settings">> = ({
+  navigation,
+}) => {
   const theme = useTheme();
   const {
     selectTheme,
@@ -100,8 +103,6 @@ export default function SettingsScren() {
 
     await Linking.openURL(mailtoUrl);
   };
-
-  const colorsKey = Object.keys(EThemes) as any;
 
   const getColosTheme: any = useCallback(() => {
     return Object.values(EThemes).map((color, index) => {
@@ -248,10 +249,19 @@ export default function SettingsScren() {
       <TouchableOpacity
         onPress={item.action}
         key={item + "+" + index}
-        style={[styles.listItem, { backgroundColor: item.iconName }]}
+        style={[
+          styles.listItem,
+          { backgroundColor: item.iconName, justifyContent: "center" },
+        ]}
       >
         <Text
-          style={[styles.listItemLabel, { color: "white", fontWeight: "bold" }]}
+          style={[
+            styles.listItemLabel,
+            {
+              color: "white",
+              fontWeight: "bold",
+            },
+          ]}
         >
           {item.label}
         </Text>
@@ -356,6 +366,20 @@ export default function SettingsScren() {
     );
   };
 
+  useEffect(() => {
+    const backAction = () => {
+      navigation.goBack();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, [navigation, theme]);
+
   return (
     <View key={orientation + theme.dark} style={styles.container}>
       <ScrollView
@@ -367,7 +391,7 @@ export default function SettingsScren() {
       </ScrollView>
     </View>
   );
-}
+};
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
@@ -482,3 +506,5 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontSize: 30,
     },
   });
+
+export default SettingsScren;

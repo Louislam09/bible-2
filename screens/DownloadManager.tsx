@@ -10,14 +10,14 @@ import bibleDatabases from "constants/bibleDatabases";
 import useDebounce from "hooks/useDebounce";
 import useInternetConnection from "hooks/useInternetConnection";
 // import useNetworkStatus from "hooks/useNetworkInfo";
-import React, { useCallback, useState } from "react";
-import { StyleSheet, TextInput } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { BackHandler, StyleSheet, TextInput } from "react-native";
 import { DownloadBibleItem, RootStackScreenProps, TTheme } from "types";
 import removeAccent from "utils/removeAccent";
 
-const DownloadManager: React.FC<
-  RootStackScreenProps<"DownloadManager">
-> = () => {
+const DownloadManager: React.FC<RootStackScreenProps<"DownloadManager">> = ({
+  navigation,
+}) => {
   const theme = useTheme();
   const styles = getStyles(theme);
   const databasesToDownload: DownloadBibleItem[] = bibleDatabases;
@@ -49,6 +49,20 @@ const DownloadManager: React.FC<
       </View>
     );
   };
+
+  useEffect(() => {
+    const backAction = () => {
+      navigation.goBack();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   if (!isConnected) {
     return <NoInternetSplash theme={theme} />;

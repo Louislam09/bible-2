@@ -2,13 +2,15 @@ import { useTheme } from "@react-navigation/native";
 import { DB_BOOK_NAMES } from "constants/BookNames";
 import { useBibleContext } from "context/BibleContext";
 import React, { useEffect, useMemo, useState } from "react";
-import { Animated, StyleSheet, Text, View } from "react-native";
+import { Animated, BackHandler, StyleSheet, Text, View } from "react-native";
 import { IVerseItem, RootStackScreenProps, TTheme } from "types";
 import AnimatedDropdown from "./AnimatedDropdown";
 import Icon from "./Icon";
 import ListVerse from "./search/ListVerse";
 
-const SearchWordEntire: React.FC<RootStackScreenProps<"Search">> = ({}) => {
+const SearchWordEntire: React.FC<RootStackScreenProps<"Search">> = ({
+  navigation,
+}) => {
   const { searchState, searchQuery } = useBibleContext();
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -49,6 +51,20 @@ const SearchWordEntire: React.FC<RootStackScreenProps<"Search">> = ({}) => {
     if (searchQuery.length > 0) return;
     setData([]);
   }, [searchQuery]);
+
+  useEffect(() => {
+    const backAction = () => {
+      navigation.goBack();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <Animated.View

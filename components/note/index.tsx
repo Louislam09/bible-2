@@ -192,8 +192,12 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
 
   useEffect(() => {
     const backAction = () => {
-      if (showExtraButton) setViewMode("LIST");
-      return showExtraButton;
+      if (showExtraButton) {
+        setViewMode("LIST");
+        return showExtraButton;
+      }
+      navigation.goBack();
+      // return true;
     };
 
     const backHandler = BackHandler.addEventListener(

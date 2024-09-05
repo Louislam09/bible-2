@@ -48,16 +48,6 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
     return () => animationRef.current?.pause();
   }, []);
 
-  const SearchedHeader = () => {
-    return (
-      <View style={styles.chapterHeader}>
-        <Text style={styles.chapterHeaderTitle}>
-          {(data ?? []).length} versiculos encontrado
-        </Text>
-      </View>
-    );
-  };
-
   if (isLoading || !data) {
     return (
       <View style={styles.noResultsContainer}>
@@ -91,7 +81,6 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
     <View style={{ flex: 1 }}>
       <FlashList
         ref={flatListRef}
-        // ListHeaderComponent={SearchedHeader}
         decelerationRate={"normal"}
         estimatedItemSize={135}
         data={data}

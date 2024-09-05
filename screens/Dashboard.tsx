@@ -1,31 +1,26 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { BottomSheetModal, WINDOW_WIDTH } from "@gorhom/bottom-sheet";
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { useRoute, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import BottomModal from "components/BottomModal";
 import DailyVerse from "components/DailyVerse";
 import Icon, { IconProps } from "components/Icon";
 import { Text, View } from "components/Themed";
 import VoiceList from "components/VoiceList";
-import Settings from "components/home/header/Settings";
 import VersionList from "components/home/header/VersionList";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
-import React, { useCallback, useRef } from "react";
-import { StyleSheet, ToastAndroid, useWindowDimensions } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import React, { useCallback, useEffect, useRef } from "react";
 import {
-  EBibleVersions,
-  IoniconsIconNameType,
-  MaterialIconNameType,
-  Screens,
-  TTheme,
-} from "types";
+  BackHandler,
+  StyleSheet,
+  ToastAndroid,
+  useWindowDimensions,
+} from "react-native";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { EBibleVersions, RootStackScreenProps, Screens, TTheme } from "types";
 
 type IDashboardOption = {
   icon: IconProps["name"];
-  // icon: MaterialIconNameType | IoniconsIconNameType;
   label: string;
   action: () => void;
   disabled?: boolean;
@@ -33,7 +28,9 @@ type IDashboardOption = {
   tag?: string;
 };
 
-const Dashboard = () => {
+const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
+  navigation,
+}) => {
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const {
     currentBibleVersion,
@@ -42,12 +39,11 @@ const Dashboard = () => {
     orientation = "PORTRAIT",
   } = useBibleContext();
   const theme = useTheme();
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const route = useRoute();
   const isPortrait = orientation === "PORTRAIT";
   const styles = getStyles(theme, isPortrait);
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
-  const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const voiceBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const columnNumber = 3;
@@ -70,9 +66,6 @@ const Dashboard = () => {
     verse: lastHistoryVerse,
   } = (getCurrentItem() as any) || {};
 
-  const fontHandlePresentModalPress = useCallback(() => {
-    fontBottomSheetModalRef.current?.present();
-  }, []);
   const voiceHandlePresentModalPress = useCallback(() => {
     voiceBottomSheetModalRef.current?.present();
   }, []);
@@ -201,6 +194,20 @@ const Dashboard = () => {
     },
   ];
 
+  useEffect(() => {
+    const backAction = () => {
+      BackHandler.exitApp();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
   const renderItem = ({
     item,
     index,
@@ -274,9 +281,7 @@ const Dashboard = () => {
       <BottomModal shouldScroll startAT={2} ref={voiceBottomSheetModalRef}>
         <VoiceList theme={theme} />
       </BottomModal>
-      <BottomModal shouldScroll startAT={2} ref={fontBottomSheetModalRef}>
-        <Settings theme={theme} />
-      </BottomModal>
+
       <BottomModal shouldScroll startAT={1} ref={versionRef}>
         <VersionList {...{ currentBibleVersion, onSelect, theme }} />
       </BottomModal>
@@ -286,7 +291,7 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
+const getStyles = ({ colors, dark }: TTheme, isPortrait: boolean) =>
   StyleSheet.create({
     container: {
       display: "flex",
@@ -312,7 +317,7 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
       width: 100,
       margin: 5,
       marginBottom: 0,
-      backgroundColor: "white",
+      backgroundColor: "#fff",
     },
     separator: {
       margin: 10,
@@ -320,8 +325,8 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
     cardLabel: {
       backgroundColor: "transparent",
       textAlign: "center",
-      color: colors.border,
       fontWeight: "bold",
+      color: dark ? colors.card : colors.text,
     },
     cardIcon: {
       backgroundColor: "transparent",

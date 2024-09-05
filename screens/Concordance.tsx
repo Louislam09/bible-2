@@ -87,7 +87,10 @@ const RenderWordItem = ({
   return (
     <Animated.View style={[{ flex: 1, opacity: fadeAnim }]}>
       <TouchableOpacity
-        style={[styles.wordItemContainer]}
+        style={[
+          styles.wordItemContainer,
+          { backgroundColor: theme.colors.background },
+        ]}
         onPress={() => onItemClick(item)}
       >
         <Text style={{ textTransform: "uppercase" }}>{name}</Text>

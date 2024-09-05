@@ -395,18 +395,18 @@ export enum EBookIndexesAudio {
 }
 
 export enum EThemes {
-  Orange = "#9f463c",
-  Cyan = "#20acb6",
-  BlueLight = "#3b88bf",
+  BlackWhite = "#000",
+  BlueGray = "#8EACBB",
+  Blue = "#2a7ac6",
   Green = "#78b0a4",
   Red = "#FF5252",
+  Orange = "#9f463c",
+  Cyan = "#20acb6",
   Purple = "#2032ac",
-  BlueGreen = "#239db8",
   Pink = "#aa2c50",
+  BlueLight = "#3b88bf",
+  BlueGreen = "#239db8",
   PinkLight = "#874a69",
-  Yellow = "#c4c733",
-  Blue = "#2a7ac6",
-  BlackWhite = "#000",
 }
 
 export type TSongItem = {

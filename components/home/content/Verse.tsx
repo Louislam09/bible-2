@@ -38,6 +38,13 @@ type VerseProps = TVerse & {
   estimatedReadingTime?: number;
 };
 
+type ActionItemProps = {
+  index: number;
+  action: TIcon;
+  styles: any;
+  theme: any;
+};
+
 const validStrongList = (arr: WordTagPair[]) => {
   const newArr = [...arr];
   return newArr.map((item, index) => {
@@ -52,6 +59,58 @@ const validStrongList = (arr: WordTagPair[]) => {
 
     return newItem;
   });
+};
+
+const ActionItem = ({ index, action, styles, theme }: ActionItemProps) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const translateXAnim = useRef(new Animated.Value(300)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        delay: index * 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateXAnim, {
+        toValue: 0,
+        duration: 300,
+        delay: index * 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [fadeAnim, translateXAnim, index]);
+
+  return (
+    <Animated.View
+      style={[
+        {
+          opacity: fadeAnim,
+          transform: [{ translateX: translateXAnim }],
+        },
+        { flexDirection: "row", marginVertical: 5 },
+      ]}
+    >
+      <Pressable
+        onPress={action.action}
+        style={[
+          {
+            display: "flex",
+            alignItems: "center",
+          },
+          action.hide && { display: "none" },
+        ]}
+      >
+        <Icon
+          size={30}
+          name={action.name}
+          style={[styles.icon, action.color && { color: action.color }]}
+        />
+        <Text style={{ color: theme.colors.text }}>{action?.description}</Text>
+      </Pressable>
+    </Animated.View>
+  );
 };
 
 const Verse: React.FC<VerseProps> = ({
@@ -455,27 +514,8 @@ const Verse: React.FC<VerseProps> = ({
         </Animated.Text>
         {isVerseHighlisted === item.verse && !!highlightedVersesLenth && (
           <View style={styles.verseAction}>
-            {verseActions.map((action: TIcon, key) => (
-              <Pressable
-                onPress={action.action}
-                key={key}
-                style={[
-                  {
-                    display: "flex",
-                    alignItems: "center",
-                  },
-                  action.hide && { display: "none" },
-                ]}
-              >
-                <Icon
-                  size={30}
-                  name={action.name}
-                  style={[styles.icon, action.color && { color: action.color }]}
-                />
-                <Text style={{ color: theme.colors.text }}>
-                  {action?.description}
-                </Text>
-              </Pressable>
+            {verseActions.map((action: TIcon, index) => (
+              <ActionItem key={index} {...{ index, action, styles, theme }} />
             ))}
           </View>
         )}
