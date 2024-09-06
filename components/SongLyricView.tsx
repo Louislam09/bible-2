@@ -1,4 +1,4 @@
-import { WINDOW_WIDTH } from "@gorhom/bottom-sheet";
+import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
 import React, { FC, useEffect, useRef, useState } from "react";
 import {
@@ -10,9 +10,8 @@ import {
 import { TTheme } from "types";
 import ProgressBar from "./home/footer/ProgressBar";
 import Icon from "./Icon";
-import { Text, View } from "./Themed";
-import { useBibleContext } from "context/BibleContext";
 import SwipeWrapper from "./SwipeWrapper";
+import { Text, View } from "./Themed";
 
 type Song = {
   title: string;

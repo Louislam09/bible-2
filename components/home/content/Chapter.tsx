@@ -4,6 +4,7 @@ import { FlashList } from "@shopify/flash-list";
 import BottomModal from "components/BottomModal";
 import CustomBottomSheet from "components/BottomSheet";
 import CompareVersions from "components/CompareVersions";
+import DictionaryContent from "components/DictionaryContent";
 import Icon from "components/Icon";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
@@ -42,6 +43,7 @@ const Chapter = ({
   const [topVerse, setTopVerse] = useState(null);
   const viewabilityConfig = { viewAreaCoveragePercentThreshold: 1 };
   const [isLayoutMounted, setLayoutMounted] = useState(false);
+  const [searchWordOnDic, setSearchWordOnDic] = useState("");
   const { verseToCompare, strongWord, fontSize, chapterVerseLength } =
     useBibleContext();
   const navigation = useNavigation();
@@ -80,7 +82,8 @@ const Chapter = ({
     strongSearchBottomSheetModalRef.current?.expand();
   }, []);
 
-  const dictionaryHandlePresentModalPress = useCallback(() => {
+  const dictionaryHandlePresentModalPress = useCallback((text: string) => {
+    setSearchWordOnDic(text);
     dictionaryBottomSheetModalRef.current?.present();
   }, []);
 
@@ -93,6 +96,7 @@ const Chapter = ({
       initVerse={initialScrollIndex}
       onCompare={compareRefHandlePresentModalPress}
       onWord={strongSearchHandlePresentModalPress}
+      onDictionary={dictionaryHandlePresentModalPress}
       estimatedReadingTime={estimatedReadingTime}
     />
   );
@@ -192,20 +196,20 @@ const Chapter = ({
         </Animated.View>
       )}
 
-      {/* <BottomModal
+      <BottomModal
+        backgroundColor={theme.dark ? theme.colors.background : "#eee"}
         shouldScroll
         startAT={2}
-        ref={strongSearchBottomSheetModalRef}
+        ref={dictionaryBottomSheetModalRef}
       >
-        <StrongContent
+        <DictionaryContent
+          word={searchWordOnDic}
           navigation={navigation}
           theme={theme}
-          data={strongWord}
           fontSize={fontSize}
-          bottomRef={strongSearchBottomSheetModalRef}
-          onDictionary={dictionaryHandlePresentModalPress}
+          dicRef={dictionaryBottomSheetModalRef}
         />
-      </BottomModal> */}
+      </BottomModal>
       <BottomModal shouldScroll startAT={3} ref={compareRef}>
         <CompareVersions
           {...{

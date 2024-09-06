@@ -108,7 +108,13 @@ const WordDefinition = ({
   };
 
   return (
-    <View style={{ paddingHorizontal: 20, flex: 1 }}>
+    <View
+      style={{
+        paddingHorizontal: 20,
+        flex: 1,
+        backgroundColor: theme.colors.background,
+      }}
+    >
       <View style={styles.wordOfDayContainer}>
         <TouchableOpacity
           onPress={copyContentToClipboard}
@@ -123,7 +129,10 @@ const WordDefinition = ({
         >
           <Icon name="Share2" color={theme.colors.notification} size={28} />
         </TouchableOpacity>
-        <TouchableOpacity style={{ marginHorizontal: 20 }} onPress={onRead}>
+        <TouchableOpacity
+          style={{ marginHorizontal: 20, display: "none" }}
+          onPress={onRead}
+        >
           <Icon
             name={isSpeaking ? "Pause" : "Play"}
             color={theme.colors.notification}

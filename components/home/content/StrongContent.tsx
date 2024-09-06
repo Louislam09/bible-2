@@ -54,7 +54,7 @@ interface IStrongContent {
   fontSize: any;
   navigation: any;
   bottomRef: RefObject<BottomSheetModalMethods>;
-  onDictionary: () => void;
+  onDictionary: (text: string) => void;
 }
 
 const StrongContent: FC<IStrongContent> = ({
@@ -63,6 +63,7 @@ const StrongContent: FC<IStrongContent> = ({
   fontSize,
   navigation,
   bottomRef,
+  onDictionary,
 }) => {
   const { code, text: word } = data;
   const { myBibleDB, executeSql } = useDBContext();
@@ -195,9 +196,10 @@ const StrongContent: FC<IStrongContent> = ({
         description: "Diccionario",
         onAction: () => {
           onClose();
-          navigation.navigate(Screens.DictionarySearch, {
-            word: data.text,
-          });
+          onDictionary(data.text);
+          // navigation.navigate(Screens.DictionarySearch, {
+          //   word: data.text,
+          // });
         },
       },
       {

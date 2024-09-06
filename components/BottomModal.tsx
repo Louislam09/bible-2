@@ -26,6 +26,7 @@ type TBottomModal = {
   headerComponent?: React.ReactNode;
   footerComponent?: React.ReactNode;
   _theme?: TTheme;
+  backgroundColor?: any;
 };
 
 type Ref = BottomSheetModal;
@@ -42,6 +43,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       shouldScroll,
       headerComponent,
       footerComponent,
+      backgroundColor,
       _theme,
     },
     ref
@@ -96,6 +98,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
           index === 3 && {
             borderRadius: 0,
           },
+          backgroundColor && { backgroundColor: backgroundColor },
         ]}
         ref={ref}
         index={startAT ?? 1}

@@ -40,6 +40,7 @@ type VerseProps = TVerse & {
   isSplit: boolean;
   onCompare: () => void;
   onWord: () => void;
+  onDictionary: (text: string) => void;
   initVerse: number;
   estimatedReadingTime?: number;
 };
@@ -126,6 +127,7 @@ const Verse: React.FC<VerseProps> = ({
   onCompare,
   initVerse,
   onWord,
+  onDictionary,
   estimatedReadingTime,
 }) => {
   const navigation = useNavigation();
@@ -382,6 +384,10 @@ const Verse: React.FC<VerseProps> = ({
     onWord();
   };
 
+  const onNonHightlistedWordClick = ({ word, tagValue }: WordTagPair) => {
+    onDictionary(word);
+  };
+
   const enabledMusic = () => {
     ToastAndroid.show("Himnario habilitado 🎵", ToastAndroid.SHORT);
     saveData({ isSongLyricEnabled: true });
@@ -439,7 +445,7 @@ const Verse: React.FC<VerseProps> = ({
       text: "Paso 2: 👀 Observarás cómo algunas palabras cambian de color.",
       target: verseRef,
       action: () =>
-        onStrongWordClicked({ word: "principio", tagValue: "H7225" }),
+        onStrongWordClicked({ word: "principio", tagValue: "7225" }),
     },
     {
       text: "Paso 3: 📘 Cuando toques cualquier palabra resaltada, verás su significado en el original.",
@@ -515,8 +521,13 @@ const Verse: React.FC<VerseProps> = ({
                     backgroundColor: theme?.colors.notification + "30",
                     fontSize,
                   }}
+                  nonHightlistedStyle={{
+                    fontSize,
+                    ...customUnderline,
+                  }}
                   style={[styles.verseBody]}
                   onWordClick={onStrongWordClicked}
+                  onNonHightlistedWordClick={onNonHightlistedWordClick}
                 />
               )}
             </>

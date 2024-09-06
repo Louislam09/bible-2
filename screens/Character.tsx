@@ -75,20 +75,6 @@ const Character: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
     setSelected(ch);
   };
 
-  const renderItem = ({ item, index }: any) => {
-    return (
-      <TouchableOpacity
-        style={[
-          styles.cardContainer,
-          { backgroundColor: theme.colors.background },
-        ]}
-        onPress={() => onItemClick(item.topic)}
-      >
-        <Text>{item.topic}</Text>
-      </TouchableOpacity>
-    );
-  };
-
   const NoteHeader = () => {
     return (
       <View style={[styles.noteHeader]}>
@@ -278,8 +264,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     cardContainer: {
       display: "flex",
       borderRadius: 10,
-      // backgroundColor: dark ? "#151517" : colors.card,
-      backgroundColor: "red",
+      backgroundColor: dark ? "#151517" : colors.card,
       padding: 15,
       margin: 5,
       elevation: 5,

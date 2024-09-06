@@ -70,7 +70,7 @@ const RenderWordItem = ({
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateXAnim = useRef(new Animated.Value(-300)).current;
 
-  React.useEffect(() => {
+  useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,

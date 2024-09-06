@@ -75,7 +75,7 @@ const FileList = () => {
     const allowDelete = !defaultDatabases.includes(versionItem?.id as string);
     return (
       <View>
-        {withTitle([0, installedBibles.length], index)}
+        {withTitle([0, installedBibles.length - 1], index)}
         <View style={[styles.itemContainer]}>
           <View style={{ justifyContent: "center", flex: 1 }}>
             <Text

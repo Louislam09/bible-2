@@ -7,23 +7,33 @@ import { WordTagPair } from "utils/extractVersesInfo";
 interface DisplayStrongWordProps extends TextProps {
   autoEscape?: boolean;
   highlightStyle?: TextStyle;
+  nonHightlistedStyle?: TextStyle;
   data: WordTagPair[];
   sanitize?: (text: string) => string;
   onWordClick?: (word: WordTagPair) => void;
+  onNonHightlistedWordClick?: (word: WordTagPair) => void;
 }
 
 const DisplayStrongWord: React.FC<DisplayStrongWordProps> = ({
   autoEscape,
   highlightStyle,
+  nonHightlistedStyle,
   data,
   sanitize,
   style,
   onWordClick,
+  onNonHightlistedWordClick,
   ...props
 }) => {
   const handleWordClick = (wordItem: WordTagPair) => {
     if (onWordClick) {
       onWordClick(wordItem);
+    }
+  };
+
+  const handleNonHightedWordClick = (wordItem: WordTagPair) => {
+    if (onNonHightlistedWordClick) {
+      onNonHightlistedWordClick(wordItem);
     }
   };
 
@@ -35,7 +45,13 @@ const DisplayStrongWord: React.FC<DisplayStrongWordProps> = ({
         const space = !!index ? " " : "";
 
         return !hasValue ? (
-          `${space}${word}`
+          <Text
+            onPress={() => handleNonHightedWordClick(wordItem)}
+            key={index}
+            style={nonHightlistedStyle}
+          >
+            {`${space}${word}`}
+          </Text>
         ) : (
           <Text
             key={index}

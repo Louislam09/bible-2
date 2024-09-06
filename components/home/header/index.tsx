@@ -261,12 +261,13 @@ const getStyles = ({ colors, dark }: TTheme) =>
       color: colors.primary,
     },
     text: {
-      color: dark ? colors.text : colors.background,
+      color: dark ? "white" : colors.background,
       paddingHorizontal: 4,
       fontSize: 18,
       backgroundColor: colors.notification,
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
+      // fontWeight: "bold",
     },
   });
 

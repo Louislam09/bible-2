@@ -8,13 +8,12 @@ import Icon from "./Icon";
 type BackButtonProps = {
   theme: TTheme;
   backAction?: () => void;
-  navigation: Omit<
+  navigation?: Omit<
     NavigationProp<ReactNavigation.RootParamList>,
     "getState"
   > & {
     getState(): NavigationState | undefined;
   };
-  iconName?: MaterialIconNameType;
   color?: string;
 };
 
@@ -22,7 +21,6 @@ const BackButton = ({
   theme,
   backAction,
   navigation,
-  iconName,
   color,
 }: BackButtonProps) => {
   const onGoBack = () => {
@@ -30,7 +28,7 @@ const BackButton = ({
       backAction();
       return;
     }
-    navigation.goBack();
+    navigation?.goBack();
   };
 
   return (
