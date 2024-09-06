@@ -1,6 +1,6 @@
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTheme } from "@react-navigation/native";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
+import Icon from "components/Icon";
 import { Text, View } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
 import React from "react";
@@ -22,20 +22,16 @@ const ChooseBookHeader: React.FC<NativeStackHeaderProps> = ({
           style={{ marginLeft: 5 }}
           onPress={() => navigation.goBack()}
         >
-          <MaterialCommunityIcons
-            style={styles.icon}
-            name="arrow-left"
-            size={24}
-          />
+          <Icon style={styles.icon} name="ArrowLeft" size={24} />
         </TouchableOpacity>
       </View>
       <Text style={{ fontSize: 22 }}>{options.headerTitle as string}</Text>
 
       <View style={styles.itemContainer}>
         <TouchableOpacity onPress={() => toggleViewLayoutGrid()}>
-          <MaterialCommunityIcons
+          <Icon
             style={styles.icon}
-            name={!viewLayoutGrid ? "grid-large" : "format-list-bulleted"}
+            name={!viewLayoutGrid ? "LayoutGrid" : "List"}
             size={24}
           />
         </TouchableOpacity>

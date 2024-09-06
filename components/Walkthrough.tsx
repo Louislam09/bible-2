@@ -1,9 +1,9 @@
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTheme } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Popover from "react-native-popover-view";
 import { TStep, TTheme } from "types";
+import Icon from "./Icon";
 import { Text, View } from "./Themed";
 type TWalkthrough = {
   currentStep: number;
@@ -72,7 +72,7 @@ const Walkthrough = ({ currentStep, steps, setStep }: TWalkthrough) => {
       <View style={styles.container}>
         <TouchableOpacity onPress={close}>
           <View style={styles.closeIconWrapper}>
-            <MaterialCommunityIcons style={styles.closeIcon} name="close" />
+            <Icon style={styles.closeIcon} name="X" />
           </View>
         </TouchableOpacity>
 
@@ -88,9 +88,10 @@ const Walkthrough = ({ currentStep, steps, setStep }: TWalkthrough) => {
           <View style={styles.actionButtons}>
             {!firstStep && (
               <Pressable onPress={previuos} style={styles.iconButton}>
-                <MaterialCommunityIcons
-                  style={styles.actionIcon}
-                  name="arrow-left"
+                <Icon
+                  name="ArrowLeft"
+                  color={theme.colors.notification}
+                  size={16}
                 />
               </Pressable>
             )}
@@ -101,9 +102,10 @@ const Walkthrough = ({ currentStep, steps, setStep }: TWalkthrough) => {
             </Pressable>
             {!lastStep && (
               <Pressable onPress={next} style={styles.iconButton}>
-                <MaterialCommunityIcons
-                  style={styles.actionIcon}
-                  name="arrow-right"
+                <Icon
+                  name="ArrowRight"
+                  color={theme.colors.notification}
+                  size={16}
                 />
               </Pressable>
             )}

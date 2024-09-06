@@ -106,14 +106,6 @@ const BookNameList = ({ bookList }: IBookNameList) => {
       >
         {item}
       </Text>
-      {/* {!selectedSideBook && (
-        <MaterialCommunityIcons
-          style={[styles.icon, { color: bookList[index].bookColor }]}
-          name="greater-than"
-          size={26}
-          color="white"
-        />
-      )} */}
     </TouchableOpacity>
   );
 

@@ -1,5 +1,3 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import React, { FC, useCallback, useMemo, useRef } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
@@ -7,6 +5,7 @@ import { useBibleContext } from "../../../context/BibleContext";
 
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BottomModal from "components/BottomModal";
+import Icon from "components/Icon";
 import { iconSize } from "constants/size";
 import { useStorage } from "context/LocalstoreContext";
 import useInstalledBibles from "hooks/useInstalledBible";
@@ -95,41 +94,38 @@ const CustomHeader: FC<HeaderInterface> = ({
     goForwardOnHistory?.(index);
   };
 
-  const headerIconData: TIcon[] = useMemo(
-    () =>
-      [
-        {
-          name: "arrow-split-horizontal",
-          action: () => {
-            toggleSplitMode();
-            toggleBottomSideSearching(!isSplitActived);
-          },
-          ref: favRef,
-          isIonicon: false,
-          color: isSplitActived ? theme.colors.notification : theme.colors.text,
+  const headerIconData = useMemo(() => {
+    const options: TIcon[] = [
+      {
+        name: "SquareSplitVertical",
+        action: () => {
+          toggleSplitMode();
+          toggleBottomSideSearching(!isSplitActived);
         },
-        {
-          name: "arrow-back-outline",
-          action: moveBackInHistory,
-          ref: settingRef,
-          isIonicon: true,
-          disabled: isSplitActived,
-          color: shouldBackward
-            ? theme.colors.notification
-            : theme.colors?.text,
-        },
-        {
-          name: "arrow-forward-outline",
-          action: moveForwardInHistory,
-          ref: searchRef,
-          isIonicon: true,
-          disabled: isSplitActived,
-          color: shouldForward ? theme.colors.notification : theme.colors?.text,
-        },
-        { name: "magnify", action: goSearchScreen, ref: searchRef },
-      ].filter((x) => !x.disabled),
-    [isSplitActived, shouldForward, shouldBackward]
-  );
+        ref: favRef,
+        isIonicon: false,
+        color: isSplitActived ? theme.colors.notification : theme.colors.text,
+      },
+      {
+        name: "ArrowBigLeftDash",
+        action: moveBackInHistory,
+        ref: settingRef,
+        isIonicon: true,
+        disabled: isSplitActived,
+        color: shouldBackward ? theme.colors.notification : theme.colors?.text,
+      },
+      {
+        name: "ArrowBigRightDash",
+        action: moveForwardInHistory,
+        ref: searchRef,
+        isIonicon: true,
+        disabled: isSplitActived,
+        color: shouldForward ? theme.colors.notification : theme.colors?.text,
+      },
+      { name: "Search", action: goSearchScreen, ref: searchRef },
+    ];
+    return options.filter((x) => !x.disabled);
+  }, [isSplitActived, shouldForward, shouldBackward]);
 
   const onSelect = (version: string) => {
     clearHighlights();
@@ -148,7 +144,11 @@ const CustomHeader: FC<HeaderInterface> = ({
           style={styles.iconContainer}
           onPress={() => navigation.navigate("Dashboard")}
         >
-          <Ionicons name="home" size={headerIconSize} style={[styles.icon]} />
+          <Icon
+            name="House"
+            size={headerIconSize}
+            color={theme.colors.primary}
+          />
         </TouchableOpacity>
         <View style={styles.headerCenter}>
           {headerIconData.map((icon, index) => (
@@ -160,21 +160,11 @@ const CustomHeader: FC<HeaderInterface> = ({
               onLongPress={icon?.longAction}
               disabled={icon.disabled}
             >
-              {icon.isIonicon ? (
-                <Ionicons
-                  name={icon.name}
-                  size={headerIconSize}
-                  style={[styles.icon, { color: icon.color }]}
-                  color={icon.color}
-                />
-              ) : (
-                <MaterialCommunityIcons
-                  style={[styles.icon, icon.color && { color: icon.color }]}
-                  name={icon.name}
-                  size={headerIconSize}
-                  color={icon.color}
-                />
-              )}
+              <Icon
+                name={icon.name}
+                size={headerIconSize}
+                color={icon.color || theme.colors.primary}
+              />
             </TouchableOpacity>
           ))}
           <BottomModal startAT={2} ref={fontBottomSheetModalRef}>
@@ -186,10 +176,10 @@ const CustomHeader: FC<HeaderInterface> = ({
           style={styles.headerEnd}
           onPress={versionHandlePresentModalPress}
         >
-          <MaterialCommunityIcons
-            name={isNTV ? "book-cross" : "crown"}
-            size={isNTV ? 24 : headerIconSize}
-            style={[styles.icon, { marginHorizontal: 0 }]}
+          <Icon
+            name={isNTV ? "BookText" : "Crown"}
+            size={headerIconSize}
+            color={theme.colors.primary}
           />
           <Text style={styles.text}>{currentVersionName}</Text>
         </TouchableOpacity>
@@ -213,7 +203,7 @@ const CustomHeader: FC<HeaderInterface> = ({
   );
 };
 
-const getStyles = ({ colors }: TTheme) =>
+const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     header: {
       position: "relative",
@@ -248,7 +238,7 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       justifyContent: "flex-end",
       backgroundColor: "none",
-      gap: 5,
+      gap: 15,
       flex: 1,
     },
     headerEnd: {
@@ -268,12 +258,16 @@ const getStyles = ({ colors }: TTheme) =>
       borderRadius: 50,
     },
     icon: {
-      fontWeight: "700",
-      marginHorizontal: 10,
       color: colors.primary,
     },
     text: {
-      color: colors.text,
+      color: dark ? "white" : colors.background,
+      paddingHorizontal: 4,
+      fontSize: 18,
+      backgroundColor: colors.notification,
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
+      // fontWeight: "bold",
     },
   });
 

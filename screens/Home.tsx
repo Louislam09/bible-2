@@ -1,4 +1,4 @@
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { useRoute, useTheme } from "@react-navigation/native";
 import SplitBottomSide from "components/SplitBottomSide";
 import SplitTopSide from "components/SplitTopSide";
 import Walkthrough from "components/Walkthrough";
@@ -14,11 +14,11 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import { HomeParams, TTheme } from "types";
+import { HomeParams, RootStackScreenProps, TTheme } from "types";
 import CustomHeader from "../components/home/header";
 
-function HomeScreen() {
-  const navigation = useNavigation();
+const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
+  // const navigation = useNavigation();
   const theme = useTheme();
   const route = useRoute();
   const {
@@ -159,7 +159,7 @@ function HomeScreen() {
   });
 
   return (
-    <SafeAreaView key={orientation} style={[styles.container]}>
+    <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
       <CustomHeader
         {...{ bibleVersionRef, searchRef, favRef, settingRef, dashboardRef }}
       />
@@ -175,6 +175,7 @@ function HomeScreen() {
             verse,
             height: topHeight,
             width: topWidth,
+            navigation,
           }}
         />
         <Animated.View
@@ -205,6 +206,7 @@ function HomeScreen() {
                 new Animated.Value(SCREEN_WIDTH),
                 topWidth
               ),
+              navigation,
             }}
           />
         )}
@@ -218,7 +220,7 @@ function HomeScreen() {
       )}
     </SafeAreaView>
   );
-}
+};
 
 const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
   StyleSheet.create({

@@ -6,7 +6,8 @@ interface VersesInfo {
 }
 
 function extractVersesInfo(input: string): VersesInfo {
-  const regex = /<x>(\d+)\s+(\d+):(\d+)-(\d+)<\/x>/;
+  // Updated regex to match both cases
+  const regex = /<x>(\d+)\s+(\d+):(\d+)(?:-(\d+))?<\/x>/;
   const match = input.match(regex);
 
   if (match) {
@@ -15,14 +16,14 @@ function extractVersesInfo(input: string): VersesInfo {
       bookNumber: parseInt(book, 10),
       chapter: parseInt(chapter, 10),
       verse: parseInt(startVerse, 10),
-      endVerse: parseInt(endVerse, 10),
+      endVerse: endVerse ? parseInt(endVerse, 10) : "", // Handle optional end verse
     };
   } else {
     return {
       bookNumber: "",
-      endVerse: "",
       chapter: "",
       verse: "",
+      endVerse: "",
     };
   }
 }

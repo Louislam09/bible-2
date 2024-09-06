@@ -1,22 +1,13 @@
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "components/Animation";
 import RenderVerse from "components/concordance/RenderVerse";
-import Highlighter from "components/Highlighter";
+import Icon from "components/Icon";
 import { Text } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
-import * as Clipboard from "expo-clipboard";
 import { useEffect, useRef, useState } from "react";
-import {
-  ListRenderItem,
-  StyleSheet,
-  ToastAndroid,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { IVerseItem, Screens, TTheme } from "types";
-import copyToClipboard from "utils/copyToClipboard";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";
 import removeAccent from "utils/removeAccent";
 
@@ -57,16 +48,6 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
     return () => animationRef.current?.pause();
   }, []);
 
-  const SearchedHeader = () => {
-    return (
-      <View style={styles.chapterHeader}>
-        <Text style={styles.chapterHeaderTitle}>
-          {(data ?? []).length} versiculos encontrado
-        </Text>
-      </View>
-    );
-  };
-
   if (isLoading || !data) {
     return (
       <View style={styles.noResultsContainer}>
@@ -91,11 +72,7 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
           flatListRef?.current?.scrollToOffset({ animated: true, offset: 0 });
         }}
       >
-        <MaterialCommunityIcons
-          style={{ color: theme.colors.notification }}
-          name="arrow-up-circle"
-          size={26}
-        />
+        <Icon color={theme.colors.notification} name="ChevronsUp" size={26} />
       </TouchableOpacity>
     );
   };
@@ -104,7 +81,6 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
     <View style={{ flex: 1 }}>
       <FlashList
         ref={flatListRef}
-        // ListHeaderComponent={SearchedHeader}
         decelerationRate={"normal"}
         estimatedItemSize={135}
         data={data}

@@ -48,6 +48,7 @@ const BookContent: FC<BookContentInterface> = ({
     currentBibleLongName,
     setChapterLengthNumber,
     setChapterVerses,
+    highlightedVerses,
   } = useBibleContext();
   const { myBibleDB, executeSql } = useDBContext();
   const route = useRoute();
@@ -71,7 +72,7 @@ const BookContent: FC<BookContentInterface> = ({
 
   useEffect(() => {
     (async () => {
-      clearHighlights();
+      if (highlightedVerses.length) clearHighlights();
       setLoading(true);
       if (!myBibleDB || !executeSql) return;
       setData({});
@@ -111,19 +112,19 @@ const BookContent: FC<BookContentInterface> = ({
     return () => {};
   }, [myBibleDB, book, chapter, verse]);
 
-  useEffect(() => {
-    const backAction = () => {
-      navigation.goBack();
-      return true;
-    };
+  // useEffect(() => {
+  //   const backAction = () => {
+  //     // navigation.goBack();
+  //     return true;
+  //   };
 
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
+  //   const backHandler = BackHandler.addEventListener(
+  //     "hardwareBackPress",
+  //     backAction
+  //   );
 
-    return () => backHandler.remove();
-  }, []);
+  //   return () => backHandler.remove();
+  // }, []);
 
   const displayErrorMessage = (_isNewLaw: boolean) => {
     if (_isNewLaw) {
@@ -135,36 +136,38 @@ const BookContent: FC<BookContentInterface> = ({
 
   const notVerseToRender = data?.verses?.length && !loading;
 
+  if (loading || data?.verses?.length === undefined) {
+    return (
+      <View style={styles.activiyContainer}>
+        <ActivityIndicator style={{ flex: 1 }} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.bookContainer}>
-      {!loading ? (
-        !notVerseToRender ? (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      {!notVerseToRender ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text
+            style={{
+              color: theme.colors.notification,
+              fontSize,
+              textAlign: "center",
+            }}
           >
-            <Text
-              style={{
-                color: theme.colors.notification,
-                fontSize,
-                textAlign: "center",
-              }}
-            >
-              {displayErrorMessage(isNewLaw.current)}
-            </Text>
-          </View>
-        ) : (
-          <Chapter
-            {...{ book, chapter, verse }}
-            isSplit={isSplit}
-            dimensions={dimensions}
-            item={data}
-            estimatedReadingTime={estimatedReadingTime}
-          />
-        )
-      ) : (
-        <View style={styles.activiyContainer}>
-          <ActivityIndicator style={{ flex: 1 }} />
+            {displayErrorMessage(isNewLaw.current)}
+          </Text>
         </View>
+      ) : (
+        <Chapter
+          {...{ book, chapter, verse }}
+          isSplit={isSplit}
+          dimensions={dimensions}
+          item={data}
+          estimatedReadingTime={estimatedReadingTime}
+        />
       )}
     </View>
   );

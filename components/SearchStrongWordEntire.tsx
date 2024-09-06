@@ -1,14 +1,14 @@
 import { useTheme } from "@react-navigation/native";
+import { DB_BOOK_NAMES } from "constants/BookNames";
 import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from "constants/Queries";
 import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
 import React, { useEffect, useMemo, useState } from "react";
-import { Animated, StyleSheet, Text, View } from "react-native";
-import { BookGruop, IVerseItem, RootStackScreenProps, TTheme } from "types";
-import StrongSearchContent from "./StrongSearchContent";
+import { Animated, BackHandler, StyleSheet, Text, View } from "react-native";
+import { IVerseItem, RootStackScreenProps, TTheme } from "types";
 import AnimatedDropdown from "./AnimatedDropdown";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { DB_BOOK_NAMES } from "constants/BookNames";
+import Icon from "./Icon";
+import StrongSearchContent from "./StrongSearchContent";
 
 enum CognateBook {
   NEW_VOW = "newVow",
@@ -22,7 +22,7 @@ const bookFilter = {
 
 const SearchStrongWordEntire: React.FC<
   RootStackScreenProps<"StrongSearchEntire">
-> = ({ route }) => {
+> = ({ route, navigation }) => {
   const { paramCode } = route.params as any;
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -75,6 +75,20 @@ const SearchStrongWordEntire: React.FC<
     return () => {};
   }, [myBibleDB, code, selectedFilterOption]);
 
+  useEffect(() => {
+    const backAction = () => {
+      navigation.goBack();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
   return (
     <Animated.View
       style={{
@@ -99,12 +113,7 @@ const SearchStrongWordEntire: React.FC<
               },
             ]}
           >
-            <MaterialCommunityIcons
-              name="filter-variant"
-              size={24}
-              color="white"
-              style={{ fontWeight: "bold" }}
-            />
+            <Icon name="ListFilter" size={24} color="white" />
           </View>
           <View style={styles.pickerContainer}>
             <AnimatedDropdown

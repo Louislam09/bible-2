@@ -1,8 +1,8 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "components/Animation";
+import Icon from "components/Icon";
 import { Text, View } from "components/Themed";
 import { htmlTemplate } from "constants/HtmlTemplate";
 import { useBibleContext } from "context/BibleContext";
@@ -80,9 +80,9 @@ const RenderItem = ({
             <Text style={[styles.cardTitle]}>{item.title}</Text>
             <View style={[styles.verseAction]}>
               <>
-                <MaterialCommunityIcons
+                <Icon
                   size={24}
-                  name="delete"
+                  name="Trash2"
                   style={[
                     styles.icon,
                     {
@@ -91,9 +91,9 @@ const RenderItem = ({
                   ]}
                   onPress={() => warnBeforeDelete(item.id)}
                 />
-                <MaterialCommunityIcons
+                <Icon
                   style={styles.icon}
-                  name="share-variant-outline"
+                  name="Share2"
                   size={24}
                   onPress={() => {
                     const html = htmlTemplate(
@@ -192,8 +192,12 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
 
   useEffect(() => {
     const backAction = () => {
-      if (showExtraButton) setViewMode("LIST");
-      return showExtraButton;
+      if (showExtraButton) {
+        setViewMode("LIST");
+        return showExtraButton;
+      }
+      navigation.goBack();
+      // return true;
     };
 
     const backHandler = BackHandler.addEventListener(
@@ -347,25 +351,19 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
           style={[
             styles.scrollToTopButton,
             {
-              backgroundColor: theme.colors.background,
-              padding: 0,
               borderWidth: 1,
               borderColor: theme.colors.notification,
+              padding: 10,
+              borderRadius: 10,
+              backgroundColor: theme.colors.notification + "99",
             },
           ]}
           onPress={onOpenOrCloseNote}
         >
-          <MaterialCommunityIcons
-            style={[
-              {
-                color: theme.colors.text,
-                fontWeight: "bold",
-                padding: 10,
-                borderRadius: 10,
-                backgroundColor: theme.colors.notification + "99",
-              },
-            ]}
-            name={showExtraButton ? "close" : "plus"}
+          <Icon
+            style={[{}]}
+            color={theme.colors.text}
+            name={showExtraButton ? "X" : "Plus"}
             size={30}
           />
         </TouchableOpacity>
@@ -377,12 +375,9 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
             ]}
             onPress={isView ? onEditMode : onSave}
           >
-            <MaterialCommunityIcons
-              style={{
-                color: isTyping ? "white" : theme.colors.text,
-                fontWeight: "bold",
-              }}
-              name={isView ? "pencil" : isTyping ? "sync" : "content-save"}
+            <Icon
+              color={isTyping ? "white" : theme.colors.text}
+              name={isView ? "Pencil" : isTyping ? "RefreshCcw" : "Save"}
               size={30}
             />
           </TouchableOpacity>

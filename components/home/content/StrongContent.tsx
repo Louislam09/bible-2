@@ -1,5 +1,5 @@
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
+import Icon, { IconProps } from "components/Icon";
 import { DB_BOOK_NAMES } from "constants/BookNames";
 import { htmlTemplate } from "constants/HtmlTemplate";
 import { SEARCH_STRONG_WORD } from "constants/Queries";
@@ -24,17 +24,11 @@ import {
 } from "react-native";
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
-import {
-  DictionaryData,
-  MaterialIconNameType,
-  IStrongWord,
-  Screens,
-  TTheme,
-} from "types";
+import { DictionaryData, IStrongWord, Screens, TTheme } from "types";
 import { Text, View } from "../../Themed";
 
 type HeaderAction = {
-  iconName: MaterialIconNameType;
+  iconName: IconProps["name"];
   viewStyle: {};
   description: string;
   onAction: () => void;
@@ -60,7 +54,7 @@ interface IStrongContent {
   fontSize: any;
   navigation: any;
   bottomRef: RefObject<BottomSheetModalMethods>;
-  onDictionary: () => void;
+  onDictionary: (text: string) => void;
 }
 
 const StrongContent: FC<IStrongContent> = ({
@@ -69,6 +63,7 @@ const StrongContent: FC<IStrongContent> = ({
   fontSize,
   navigation,
   bottomRef,
+  onDictionary,
 }) => {
   const { code, text: word } = data;
   const { myBibleDB, executeSql } = useDBContext();
@@ -196,25 +191,25 @@ const StrongContent: FC<IStrongContent> = ({
   const headerActions: HeaderAction[] = useMemo(
     () => [
       {
-        iconName: "bookshelf",
+        iconName: "BookA",
         viewStyle: animatedStyle,
         description: "Diccionario",
         onAction: () => {
           onClose();
-          navigation.navigate(Screens.DictionarySearch, {
-            word: data.text,
-          });
+          onDictionary(data.text);
+          // navigation.navigate(Screens.DictionarySearch, {
+          //   word: data.text,
+          // });
         },
       },
       {
-        iconName: "text-search",
+        iconName: "FileSearch2",
         viewStyle: animatedStyle,
         description: "Profundizar",
-        // description: "Buscar Versículos",
         onAction: onStrongSearchEntire,
       },
       {
-        iconName: sharing ? "loading" : "share-variant-outline",
+        iconName: sharing ? "Loader" : "Share2",
         viewStyle: animatedStyle,
         description: "Compartir",
         onAction: onShare,
@@ -234,8 +229,7 @@ const StrongContent: FC<IStrongContent> = ({
           }}
           onPress={item.onAction}
         >
-          <MaterialCommunityIcons
-            style={[styles.backIcon, {}]}
+          <Icon
             name={item.iconName}
             size={iconSize}
             color={theme.colors.notification}
@@ -265,9 +259,9 @@ const StrongContent: FC<IStrongContent> = ({
               style={{ alignItems: "center" }}
               onPress={onGoBack}
             >
-              <MaterialCommunityIcons
-                style={styles.backIcon}
-                name="keyboard-backspace"
+              <Icon
+                strokeWidth={3}
+                name="ArrowLeft"
                 size={26}
                 color={theme.colors.text}
               />

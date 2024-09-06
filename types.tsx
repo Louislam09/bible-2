@@ -14,6 +14,7 @@ import {
   Theme,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { IconProps } from "components/Icon";
 
 declare global {
   namespace ReactNavigation {
@@ -23,6 +24,7 @@ declare global {
 
 export enum Screens {
   Dashboard = "Dashboard",
+  Settings = "Settings",
   Home = "Home",
   Search = "Search",
   Concordance = "Concordance",
@@ -53,6 +55,7 @@ export const ScreensName: TScreensName = {
   [Screens.Favorite]: "Versiculos Favoritos",
   [Screens.Notes]: "Notas",
   [Screens.Dashboard]: "Dashboard",
+  [Screens.Settings]: "Ajustes",
   [Screens.DownloadManager]: "Gestor de descargas",
   [Screens.Onboarding]: "Guia",
   [Screens.Character]: "Personaje",
@@ -64,6 +67,7 @@ export const ScreensName: TScreensName = {
 // export type RootTabParamList = { [key in Screens]: any };
 export type RootTabParamList = {
   Dashboard: undefined;
+  Settings: undefined;
   Home: undefined;
   Book: undefined;
   ChooseBook: { book: string };
@@ -79,6 +83,7 @@ export type RootTabParamList = {
 
 export type RootStackParamList = {
   Dashboard: NavigatorScreenParams<RootTabParamList> | undefined;
+  Settings: NavigatorScreenParams<RootTabParamList> | undefined;
   Home: NavigatorScreenParams<RootTabParamList> | HomeParams;
   Book: NavigatorScreenParams<RootTabParamList> | undefined;
   Favorite: NavigatorScreenParams<RootTabParamList> | undefined;
@@ -209,7 +214,7 @@ export enum EViewMode {
 }
 
 export type TIcon = {
-  name: any;
+  name: IconProps["name"];
   color?: string | any;
   action?: any;
   longAction?: any;
@@ -390,18 +395,18 @@ export enum EBookIndexesAudio {
 }
 
 export enum EThemes {
-  Orange = "#9f463c",
-  Cyan = "#20acb6",
-  BlueLight = "#3b88bf",
+  BlackWhite = "#000",
+  BlueGray = "#8EACBB",
+  Blue = "#2a7ac6",
   Green = "#78b0a4",
   Red = "#FF5252",
+  Orange = "#9f463c",
+  Cyan = "#20acb6",
   Purple = "#2032ac",
-  BlueGreen = "#239db8",
   Pink = "#aa2c50",
+  BlueLight = "#3b88bf",
+  BlueGreen = "#239db8",
   PinkLight = "#874a69",
-  Yellow = "#c4c733",
-  Blue = "#2a7ac6",
-  BlackWhite = "#000",
 }
 
 export type TSongItem = {

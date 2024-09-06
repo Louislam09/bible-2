@@ -8,7 +8,7 @@ let lightBlackAndWhite = {
     surface: "#FFFFFF",
     text: "#000000",
     secondary: "#652b2b",
-    accent: "#FF5252",
+    accent: "#557fbe",
   },
 };
 
@@ -20,7 +20,7 @@ let darkBlackAndWhite = {
     surface: "#000000",
     text: "#FFFFFF",
     secondary: "#000000",
-    accent: "#FF5252",
+    accent: "#557fbe",
   },
 };
 
@@ -138,22 +138,33 @@ const darkBlueGreen = {
 const lightCyan = {
   dark: false,
   colors: {
-    background: "#f7fcee",
-    surface: "#f7fcee",
-    primary: "#547e16",
+    background: "#E0F7FA",
+    surface: "#FFFFFF",
+    primary: "#000",
     secondary: "#73e7bb",
     accent: "#20acb6",
   },
 };
 
+// const lightCyan = {
+//   dark: false,
+//   colors: {
+//     background: "#E0F7FA",
+//     surface: "#FFFFFF",
+//     primary: "#0097A7",
+//     secondary: "#4DD0E1",
+//     accent: "#00BCD4",
+//   },
+// };
+
 const darkCyan = {
   dark: true,
   colors: {
-    background: "#0c1103",
-    surface: "#0c1103",
-    primary: "#bfe981",
-    secondary: "#188c5f",
-    accent: "#49d5df",
+    background: "#1A2E31",
+    surface: "#264145",
+    primary: "#4DD0E1",
+    secondary: "#26C6DA",
+    accent: "#80DEEA",
   },
 };
 
@@ -200,25 +211,29 @@ const darkOrange = {
     accent: "#c3695f",
   },
 };
-const lightYellow = {
+const lightBlueGray = {
   dark: false,
   colors: {
-    background: "#ebf8fa",
-    surface: "#ebf8fa",
-    primary: "#1e7176",
-    secondary: "#da7175",
-    accent: "#c4c733",
+    background: "#F4F7F9",
+    surface: "#FFFFFF",
+    primary: "#3A5E7C",
+    secondary: "#8EACBB",
+    accent: "#FF6B6B",
+    text: "#2C3E50",
+    textSecondary: "#5D6D7E",
   },
 };
 
-const darkYellow = {
+const darkBlueGray = {
   dark: true,
   colors: {
-    background: "#061416",
-    surface: "#061416",
-    primary: "#8adde1",
-    secondary: "#8c2427",
-    accent: "#c9cb37",
+    background: "#1E2A3A",
+    surface: "#2C3E50",
+    primary: "#A3C6E3",
+    secondary: "#5D6D7E",
+    accent: "#FF8E8E",
+    text: "#ECF0F1",
+    textSecondary: "#BDC3C7",
   },
 };
 
@@ -398,14 +413,14 @@ const getThemes = (): ThemesObject => {
         colors: mapColors(darkPinkLight),
       },
     },
-    Yellow: {
+    BlueGray: {
       LightTheme: {
         dark: false,
-        colors: mapColors(lightYellow),
+        colors: mapColors(lightBlueGray),
       },
       DarkTheme: {
         dark: true,
-        colors: mapColors(darkYellow),
+        colors: mapColors(darkBlueGray),
       },
     },
     Blue: {

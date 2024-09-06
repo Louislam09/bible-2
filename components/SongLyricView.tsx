@@ -1,11 +1,17 @@
-import { StyleSheet, Animated, TouchableOpacity } from "react-native";
-import React, { FC, useRef, useState } from "react";
-import { Text, View } from "./Themed";
-import { TTheme } from "types";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import ProgressBar from "./home/footer/ProgressBar";
-import { WINDOW_WIDTH } from "@gorhom/bottom-sheet";
+import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
+import React, { FC, useEffect, useRef, useState } from "react";
+import {
+  Animated,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+} from "react-native";
+import { TTheme } from "types";
+import ProgressBar from "./home/footer/ProgressBar";
+import Icon from "./Icon";
+import SwipeWrapper from "./SwipeWrapper";
+import { Text, View } from "./Themed";
 
 type Song = {
   title: string;
@@ -19,11 +25,13 @@ type TSongLyricView = {
 };
 
 const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
+  const { width: WINDOW_WIDTH } = useWindowDimensions();
   const hasChorus = song?.chorus;
   const styles = getStyles(theme);
   const [currentStanza, setCurrentStanza] = useState(0);
   const [isChorus, setIsChorus] = useState(false);
   const translateX = useRef(new Animated.Value(0)).current;
+  const { orientation } = useBibleContext();
   const {
     saveData,
     storedData: { songFontSize },
@@ -63,16 +71,20 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
     }).start();
   };
 
+  useEffect(() => {
+    animate(currentStanza);
+  }, [WINDOW_WIDTH]);
+
   const actionOptions: any[] = [
     {
-      icon: "play-skip-back",
+      icon: "SkipBack",
       action: previos,
       label: "Anterior",
       isIonicon: true,
       disabled: currentStanza === 0 && !isChorus,
     },
     {
-      icon: "play-skip-forward",
+      icon: "SkipForward",
       action: next,
       label: "Siguiente",
       isIonicon: true,
@@ -93,17 +105,11 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
           justifyContent: "center",
         }}
       >
-        {item.isIonicon ? (
-          <Ionicons
-            name={item.icon}
-            style={{
-              fontSize: 45,
-              color: item.disabled ? "#898989" : theme.colors.notification,
-            }}
-          />
-        ) : (
-          <MaterialCommunityIcons name={item.icon} style={{ fontSize: 35 }} />
-        )}
+        <Icon
+          name={item.icon}
+          size={35}
+          color={item.disabled ? "#898989" : theme.colors.notification}
+        />
 
         <Text style={{ color: theme.colors.text }}>{item.label}</Text>
       </View>
@@ -132,21 +138,24 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
     animateFont(value);
   };
 
+  const onSwipeLeft = () => {
+    next();
+  };
+  const onSwipeRight = () => {
+    previos();
+  };
+
   return (
-    <View style={styles.container}>
+    <View key={orientation + theme.dark} style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>#{song?.title}</Text>
         <View style={styles.headerActions}>
           <TouchableOpacity onPress={increaseFont} style={{}}>
-            <MaterialCommunityIcons
-              name="format-font-size-increase"
-              size={24}
-              color={theme.colors.notification}
-            />
+            <Icon name="AArrowUp" size={24} color={theme.colors.notification} />
           </TouchableOpacity>
           <TouchableOpacity onPress={decreaseFont} style={{}}>
-            <MaterialCommunityIcons
-              name="format-font-size-decrease"
+            <Icon
+              name="AArrowDown"
               size={24}
               color={theme.colors.notification}
             />
@@ -161,22 +170,23 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
         circleColor={theme.colors.notification}
       />
 
-      <Animated.View
-        style={[
-          styles.content,
-          {
-            width: WINDOW_WIDTH,
-            transform: [{ translateX }],
-          },
-        ]}
-      >
-        {song?.stanzas.map((stanza, index) => (
-          <View key={index} style={[styles.stanzaContainer]}>
-            {isChorus && hasChorus ? Stanza(song?.chorus) : Stanza(stanza)}
-          </View>
-        ))}
-      </Animated.View>
-
+      <SwipeWrapper onSwipeLeft={onSwipeLeft} onSwipeRight={onSwipeRight}>
+        <Animated.View
+          style={[
+            styles.content,
+            {
+              width: WINDOW_WIDTH,
+              transform: [{ translateX }],
+            },
+          ]}
+        >
+          {song?.stanzas.map((stanza, index) => (
+            <View key={index} style={[styles.stanzaContainer]}>
+              {isChorus && hasChorus ? Stanza(song?.chorus) : Stanza(stanza)}
+            </View>
+          ))}
+        </Animated.View>
+      </SwipeWrapper>
       <View style={styles.footer}>{actionOptions.map(renderItem)}</View>
     </View>
   );

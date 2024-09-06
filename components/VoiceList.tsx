@@ -1,4 +1,3 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { iconSize } from "constants/size";
 import Voices from "constants/Voices";
 import { useStorage } from "context/LocalstoreContext";
@@ -8,8 +7,9 @@ import React, { FC, useEffect, useRef, useState } from "react";
 import { Animated, Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { SpeechVoice, TTheme } from "types";
 import CustomTabs, { TabItemType } from "./CustomTabs";
-import { Text, View } from "./Themed";
 import DecoratorLine from "./DecoratorLine";
+import Icon from "./Icon";
+import { Text, View } from "./Themed";
 
 interface IVoiceList {
   theme: TTheme;
@@ -101,15 +101,13 @@ const VoiceItem = ({
           onPress={() => playItem(voice, true)}
           style={{ alignItems: "center" }}
         >
-          <MaterialCommunityIcons
-            style={[
-              styles.icon,
-              { color: theme.colors.notification, fontSize: iconSize },
-            ]}
+          <Icon
+            style={[styles.icon, { color: theme.colors.notification }]}
+            size={iconSize}
             name={
               selectedVoice.name === voice.name && isSpeaking
-                ? "stop-circle-outline"
-                : "play-circle-outline"
+                ? "CircleStop"
+                : "Play"
             }
             color={theme.colors.notification}
           />

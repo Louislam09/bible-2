@@ -1,9 +1,8 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useTheme } from "@react-navigation/native";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
-import { Text, View } from "components/Themed";
+import { View } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
-import Checkbox from "expo-checkbox";
 import useDebounce from "hooks/useDebounce";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
@@ -65,16 +64,14 @@ const SearchHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
           defaultValue={searchQuery ?? ""}
           clearButtonMode="always"
         />
-        {query !== "" && (
-          <TouchableOpacity onPress={clearText} style={{ padding: 5 }}>
-            <Ionicons
-              style={{ color: theme.colors.text }}
-              name="close-circle-outline"
-              size={20}
-              color="gray"
-            />
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity onPress={clearText} style={{ padding: 5 }}>
+          <Ionicons
+            style={{ color: theme.colors.text }}
+            name="close-circle-outline"
+            size={20}
+            color="gray"
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );

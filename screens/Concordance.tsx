@@ -1,12 +1,12 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import AnimatedDropdown from "components/AnimatedDropdown";
 import RenderVerse, { TItem } from "components/concordance/RenderVerse";
+import Icon from "components/Icon";
 import { Text } from "components/Themed";
 import { getDatabaseQueryKey } from "constants/databaseNames";
-import { GET_VERSES_FOR_CONCORDANCIA, QUERY_BY_DB } from "constants/Queries";
+import { QUERY_BY_DB } from "constants/Queries";
 import WORDS, { TWord } from "constants/words";
 import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
@@ -70,7 +70,7 @@ const RenderWordItem = ({
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateXAnim = useRef(new Animated.Value(-300)).current;
 
-  React.useEffect(() => {
+  useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -87,7 +87,10 @@ const RenderWordItem = ({
   return (
     <Animated.View style={[{ flex: 1, opacity: fadeAnim }]}>
       <TouchableOpacity
-        style={[styles.wordItemContainer]}
+        style={[
+          styles.wordItemContainer,
+          { backgroundColor: theme.colors.background },
+        ]}
         onPress={() => onItemClick(item)}
       >
         <Text style={{ textTransform: "uppercase" }}>{name}</Text>
@@ -228,11 +231,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
     navigation.setOptions({
       headerLeft: () => (
         <TouchableOpacity onPress={handleCustomBack}>
-          <MaterialCommunityIcons
-            name="arrow-left"
-            color={theme.colors.text}
-            size={28}
-          />
+          <Icon name="ArrowLeft" color={theme.colors.text} size={28} />
         </TouchableOpacity>
       ),
     });
@@ -252,12 +251,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
           <>
             <View style={[styles.filterContainer, { minHeight: 45 }]}>
               <View style={[styles.strongNumber, { paddingHorizontal: 15 }]}>
-                <MaterialCommunityIcons
-                  name="filter-variant"
-                  size={24}
-                  color="white"
-                  style={{ fontWeight: "bold" }}
-                />
+                <Icon name="ListFilter" size={24} color="white" />
               </View>
               <View style={styles.pickerContainer}>
                 <AnimatedDropdown

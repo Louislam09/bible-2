@@ -1,19 +1,15 @@
-import {
-  StyleSheet,
-  TouchableOpacity,
-  useWindowDimensions,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import { Text, View } from "./Themed";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { getVerseTextRaw } from "utils/getVerseTextRaw";
-import { useDBContext } from "context/databaseContext";
-import DAILY_VERSES from "constants/dailyVerses";
-import { GET_DAILY_VERSE } from "constants/Queries";
-import { IVerseItem, TTheme } from "types";
-import { useBibleContext } from "context/BibleContext";
 import { WINDOW_WIDTH } from "@gorhom/bottom-sheet";
 import { NavigationProp, NavigationState } from "@react-navigation/native";
+import DAILY_VERSES from "constants/dailyVerses";
+import { GET_DAILY_VERSE } from "constants/Queries";
+import { useBibleContext } from "context/BibleContext";
+import { useDBContext } from "context/databaseContext";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { IVerseItem, TTheme } from "types";
+import { getVerseTextRaw } from "utils/getVerseTextRaw";
+import { Text, View } from "./Themed";
 
 const defaultDailyVerse = {
   book_number: 0,

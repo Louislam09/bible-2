@@ -3,17 +3,17 @@ import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIconNameType, TTheme } from "types";
 import { NavigationProp, NavigationState } from "@react-navigation/native";
+import Icon from "./Icon";
 
 type BackButtonProps = {
   theme: TTheme;
   backAction?: () => void;
-  navigation: Omit<
+  navigation?: Omit<
     NavigationProp<ReactNavigation.RootParamList>,
     "getState"
   > & {
     getState(): NavigationState | undefined;
   };
-  iconName?: MaterialIconNameType;
   color?: string;
 };
 
@@ -21,7 +21,6 @@ const BackButton = ({
   theme,
   backAction,
   navigation,
-  iconName,
   color,
 }: BackButtonProps) => {
   const onGoBack = () => {
@@ -29,13 +28,13 @@ const BackButton = ({
       backAction();
       return;
     }
-    navigation.goBack();
+    navigation?.goBack();
   };
 
   return (
     <TouchableOpacity style={styles.closeIcon} onPress={onGoBack}>
-      <MaterialCommunityIcons
-        name={iconName || "keyboard-backspace"}
+      <Icon
+        name="ArrowLeft"
         size={30}
         color={color || theme.colors.notification}
       />

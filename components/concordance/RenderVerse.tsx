@@ -1,11 +1,9 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useTheme } from "@react-navigation/native";
 import Highlighter from "components/Highlighter";
+import Icon from "components/Icon";
 import { Text } from "components/Themed";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { IVerseItem, TTheme } from "types";
+import { TTheme } from "types";
 import copyToClipboard from "utils/copyToClipboard";
-import removeAccent from "utils/removeAccent";
 
 export type TItem = {
   bookName: string;
@@ -48,9 +46,9 @@ const RenderVerse = ({
             style={styles.cardTitle}
           >{`${item.bookName} ${item.chapter}:${item.verse}`}</Text>
           <View style={styles.verseAction}>
-            <MaterialCommunityIcons
+            <Icon
               size={20}
-              name="content-copy"
+              name="Copy"
               style={styles.icon}
               onPress={() => onCopy(item)}
             />

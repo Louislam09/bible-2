@@ -1,7 +1,10 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
-import Highlighter from "components/Highlighter";
+import DisplayStrongWord from "components/DisplayStrongWord";
+import Icon from "components/Icon";
+import Walkthrough from "components/Walkthrough";
+import { useStorage } from "context/LocalstoreContext";
+import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
 import React, {
   useCallback,
   useEffect,
@@ -21,7 +24,7 @@ import {
 import copyToClipboard from "utils/copyToClipboard";
 import { DB_BOOK_NAMES } from "../../../constants/BookNames";
 import { useBibleContext } from "../../../context/BibleContext";
-import { HomeParams, IBookVerse, TIcon, TTheme, TVerse } from "../../../types";
+import { HomeParams, TIcon, TTheme, TVerse } from "../../../types";
 import { customUnderline } from "../../../utils/customStyle";
 import extractVersesInfo, {
   extractTextFromParagraph,
@@ -31,18 +34,22 @@ import extractVersesInfo, {
 } from "../../../utils/extractVersesInfo";
 import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import { Text } from "../../Themed";
-import Walkthrough from "components/Walkthrough";
-import { useStorage } from "context/LocalstoreContext";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
-import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
-import DisplayStrongWord from "components/DisplayStrongWord";
 
 type VerseProps = TVerse & {
   isSplit: boolean;
   onCompare: () => void;
   onWord: () => void;
+  onDictionary: (text: string) => void;
   initVerse: number;
   estimatedReadingTime?: number;
+};
+
+type ActionItemProps = {
+  index: number;
+  action: TIcon;
+  styles: any;
+  theme: any;
 };
 
 const validStrongList = (arr: WordTagPair[]) => {
@@ -61,6 +68,58 @@ const validStrongList = (arr: WordTagPair[]) => {
   });
 };
 
+const ActionItem = ({ index, action, styles, theme }: ActionItemProps) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const translateXAnim = useRef(new Animated.Value(300)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        delay: index * 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateXAnim, {
+        toValue: 0,
+        duration: 300,
+        delay: index * 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [fadeAnim, translateXAnim, index]);
+
+  return (
+    <Animated.View
+      style={[
+        {
+          opacity: fadeAnim,
+          transform: [{ translateX: translateXAnim }],
+        },
+        { flexDirection: "row", marginVertical: 5 },
+      ]}
+    >
+      <Pressable
+        onPress={action.action}
+        style={[
+          {
+            display: "flex",
+            alignItems: "center",
+          },
+          action.hide && { display: "none" },
+        ]}
+      >
+        <Icon
+          size={30}
+          name={action.name}
+          style={[styles.icon, action.color && { color: action.color }]}
+        />
+        <Text style={{ color: theme.colors.text }}>{action?.description}</Text>
+      </Pressable>
+    </Animated.View>
+  );
+};
+
 const Verse: React.FC<VerseProps> = ({
   item,
   subtitles,
@@ -68,6 +127,7 @@ const Verse: React.FC<VerseProps> = ({
   onCompare,
   initVerse,
   onWord,
+  onDictionary,
   estimatedReadingTime,
 }) => {
   const navigation = useNavigation();
@@ -180,47 +240,51 @@ const Verse: React.FC<VerseProps> = ({
 
   const LinkVerse = ({ data }: any) => {
     if (!data) return null;
-    const { bookNumber, chapter, verse, endVerse } = extractVersesInfo(
-      data.subheading
-    );
-    const bookName = DB_BOOK_NAMES.find(
-      (x: any) => x.bookNumber === bookNumber
-    )?.longName;
+    const linkVerses = data.subheading
+      ?.split("—")
+      .map((linkVerse: any) => extractVersesInfo(linkVerse));
 
-    const onLink = () => {
-      navigation.navigate("Home", {
-        [!isSplit && isSplitActived ? "bottomSideBook" : "book"]: bookName,
-        [!isSplit && isSplitActived ? "bottomSideChapter" : "chapter"]: chapter,
-        [!isSplit && isSplitActived ? "bottomSideVerse" : "verse"]: verse,
-        isHistory: false,
-      });
+    const renderItem = (verseInfo: any, index: number) => {
+      const { bookNumber, chapter, verse } = verseInfo;
+
+      const bookName = DB_BOOK_NAMES.find(
+        (x: any) => x.bookNumber === bookNumber
+      )?.longName;
+
+      const onLink = () => {
+        navigation.navigate("Home", {
+          [!isSplit && isSplitActived ? "bottomSideBook" : "book"]: bookName,
+          [!isSplit && isSplitActived ? "bottomSideChapter" : "chapter"]:
+            chapter,
+          [!isSplit && isSplitActived ? "bottomSideVerse" : "verse"]: verse,
+          isHistory: false,
+        });
+      };
+
+      return bookName ? (
+        <Text
+          key={index}
+          onPress={onLink}
+          style={[
+            styles.verse,
+            {
+              fontSize: 18,
+              fontWeight: "bold",
+              paddingVertical: 5,
+              color: theme.colors.notification ?? "black",
+              ...customUnderline,
+            },
+          ]}
+        >
+          {`${bookName} ${chapter}:${verse}`}
+        </Text>
+      ) : null;
     };
 
-    return data ? (
-      <Text
-        onPress={onLink}
-        style={[
-          styles.verse,
-          {
-            fontSize: 18,
-            textAlign: "justify",
-            fontWeight: "bold",
-            paddingVertical: 10,
-            color: theme.colors.notification ?? "black",
-            ...customUnderline,
-          },
-        ]}
-      >
-        {bookNumber
-          ? `${bookName} ${chapter}:${verse}-${endVerse}`
-          : data.subheading}
-      </Text>
-    ) : (
-      <Text>--</Text>
-    );
+    return data ? linkVerses.map(renderItem) : <Text>--</Text>;
   };
 
-  const RenderFindSubTitle = (verse: any) => {
+  const RenderFindSubTitle = useCallback((verse: any) => {
     const [subTitle, link] = subtitles.filter((x: any) => x.verse === verse);
     return subTitle ? (
       <View>
@@ -231,17 +295,19 @@ const Verse: React.FC<VerseProps> = ({
               fontSize: 22,
               textAlign: "center",
               fontWeight: "bold",
-              paddingVertical: 10,
+              paddingVertical: 5,
               color: theme?.colors?.notification || "white",
             },
           ]}
         >
           {subTitle.subheading || subTitle.title}
         </Text>
-        <LinkVerse data={link} />
+        <View style={{ flexDirection: "row" }}>
+          <LinkVerse data={link} />
+        </View>
       </View>
     ) : null;
-  };
+  }, []);
 
   const onFavorite = async () => {
     await toggleFavoriteVerse({
@@ -318,6 +384,10 @@ const Verse: React.FC<VerseProps> = ({
     onWord();
   };
 
+  const onNonHightlistedWordClick = ({ word, tagValue }: WordTagPair) => {
+    onDictionary(word);
+  };
+
   const enabledMusic = () => {
     ToastAndroid.show("Himnario habilitado 🎵", ToastAndroid.SHORT);
     saveData({ isSongLyricEnabled: true });
@@ -331,32 +401,32 @@ const Verse: React.FC<VerseProps> = ({
   const verseActions: TIcon[] = useMemo(() => {
     return [
       {
-        name: "content-copy",
+        name: "Copy",
         action: onCopy,
         hide: lastHighted?.verse !== item.verse && isMoreThanOneHighted,
         description: "Copiar",
       },
       {
-        name: "note-plus",
+        name: "NotebookPen",
         action: addVerseToNote,
         hide: lastHighted?.verse !== item.verse && isMoreThanOneHighted,
         description: "Anotar",
       },
       {
-        name: isFavorite ? "star" : "star-outline",
+        name: isFavorite ? "Star" : "StarOff",
         action: onFavorite,
         color: isFavorite ? theme.colors.notification : "",
         hide: false,
         description: "Favorito",
       },
       {
-        name: "file-compare",
+        name: "FileDiff",
         action: onCompareClicked,
         hide: false,
         description: "Comparar",
       },
       {
-        name: "music",
+        name: "Music2",
         action: enabledMusic,
         hide: !showMusicIcon,
       },
@@ -375,7 +445,7 @@ const Verse: React.FC<VerseProps> = ({
       text: "Paso 2: 👀 Observarás cómo algunas palabras cambian de color.",
       target: verseRef,
       action: () =>
-        onStrongWordClicked({ word: "principio", tagValue: "H7225" }),
+        onStrongWordClicked({ word: "principio", tagValue: "7225" }),
     },
     {
       text: "Paso 3: 📘 Cuando toques cualquier palabra resaltada, verás su significado en el original.",
@@ -410,11 +480,7 @@ const Verse: React.FC<VerseProps> = ({
         {isFirstVerse && (
           <View style={styles.estimatedContainer}>
             <Text style={styles.estimatedText}>
-              <MaterialCommunityIcons
-                size={14}
-                name="timer-outline"
-                color={theme.colors.notification}
-              />
+              <Icon size={14} name="Timer" color={theme.colors.notification} />
               &nbsp; Tiempo de lectura {`~ ${estimatedReadingTime} min(s)\n`}
             </Text>
           </View>
@@ -434,11 +500,7 @@ const Verse: React.FC<VerseProps> = ({
         >
           <Text style={[styles.verseNumber]}>
             {isFavorite && !isVerseHighlisted && (
-              <MaterialCommunityIcons
-                size={14}
-                name={"star"}
-                color={theme.dark ? "yellow" : theme.colors.primary}
-              />
+              <MaterialCommunityIcons size={14} name="star" color="#ffd41d" />
             )}
             &nbsp;{item.verse}&nbsp;
           </Text>
@@ -459,8 +521,13 @@ const Verse: React.FC<VerseProps> = ({
                     backgroundColor: theme?.colors.notification + "30",
                     fontSize,
                   }}
+                  nonHightlistedStyle={{
+                    fontSize,
+                    ...customUnderline,
+                  }}
                   style={[styles.verseBody]}
                   onWordClick={onStrongWordClicked}
+                  onNonHightlistedWordClick={onNonHightlistedWordClick}
                 />
               )}
             </>
@@ -470,27 +537,8 @@ const Verse: React.FC<VerseProps> = ({
         </Animated.Text>
         {isVerseHighlisted === item.verse && !!highlightedVersesLenth && (
           <View style={styles.verseAction}>
-            {verseActions.map((action: TIcon, key) => (
-              <Pressable
-                onPress={action.action}
-                key={key}
-                style={[
-                  {
-                    display: "flex",
-                    alignItems: "center",
-                  },
-                  action.hide && { display: "none" },
-                ]}
-              >
-                <MaterialCommunityIcons
-                  size={30}
-                  name={action.name}
-                  style={[styles.icon, action.color && { color: action.color }]}
-                />
-                <Text style={{ color: theme.colors.text }}>
-                  {action?.description}
-                </Text>
-              </Pressable>
+            {verseActions.map((action: TIcon, index) => (
+              <ActionItem key={index} {...{ index, action, styles, theme }} />
             ))}
           </View>
         )}

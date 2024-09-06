@@ -1,5 +1,5 @@
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTheme } from "@react-navigation/native";
+import Icon from "components/Icon";
 import React, { useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import {
@@ -10,7 +10,7 @@ import {
 import { EViewMode } from "types";
 
 const handleHead = ({ tintColor, label }: any) => (
-  <MaterialCommunityIcons color={tintColor} size={22} name={label} />
+  <Icon color={tintColor} size={22} name={label} />
 );
 
 interface IRichEditor {
@@ -64,9 +64,13 @@ const MyRichEditor: React.FC<IRichEditor> = ({
             actions={toolbarActions}
             iconMap={{
               [actions.heading2]: (props: any) =>
-                handleHead({ ...props, label: "format-header-1" }),
+                handleHead({ ...props, label: "Heading1" }),
               [actions.setParagraph]: (props: any) =>
-                handleHead({ ...props, label: "format-paragraph" }),
+                handleHead({ ...props, label: "Pilcrow" }),
+              [actions.undo]: (props: any) =>
+                handleHead({ ...props, label: "Undo" }),
+              [actions.redo]: (props: any) =>
+                handleHead({ ...props, label: "Redo" }),
             }}
           />
           {Textinput}

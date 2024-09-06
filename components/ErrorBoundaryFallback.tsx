@@ -1,17 +1,16 @@
+import { useTheme } from "@react-navigation/native";
+import React, { useState } from "react";
 import {
-  Button,
   Pressable,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
-import { Text } from "./Themed";
 import { TTheme } from "types";
-import { useTheme } from "@react-navigation/native";
 import Animation from "./Animation";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Icon from "./Icon";
+import { Text } from "./Themed";
 
 type ErrorBoundaryFallbackProps = {
   error: string | any;
@@ -56,8 +55,8 @@ const ErrorBoundaryFallback = ({
           style={styles.toggleErrorButton}
           onPress={() => setShowErrorDetails(!showErrorDetails)}
         >
-          <MaterialCommunityIcons
-            name={showErrorDetails ? "chevron-down" : "chevron-right"}
+          <Icon
+            name={showErrorDetails ? "ChevronDown" : "ChevronRight"}
             size={24}
             color={theme.colors.notification}
           />

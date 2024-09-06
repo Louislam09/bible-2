@@ -1,8 +1,8 @@
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "components/Animation";
 import DecoratorLine from "components/DecoratorLine";
+import Icon from "components/Icon";
 import { Text } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
 import { useEffect, useRef, useState } from "react";
@@ -15,7 +15,6 @@ import {
 } from "react-native";
 import { IVerseItem, Screens, TTheme } from "types";
 import copyToClipboard from "utils/copyToClipboard";
-import { customBorder } from "utils/customStyle";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";
 
 type TListVerse = {
@@ -77,23 +76,25 @@ const FavoriteList = ({ data }: TListVerse) => {
         activeOpacity={0.9}
         onPress={() => onVerseClick(item)}
       >
-        <DecoratorLine theme={theme} />
+        <DecoratorLine color="#ffd41d" theme={theme} />
         <View style={styles.cardContainer}>
           <View style={styles.headerContainer}>
             <Text
               style={styles.cardTitle}
             >{`${item.bookName} ${item.chapter}:${item.verse}`}</Text>
             <View style={styles.verseAction}>
-              <MaterialCommunityIcons
+              <Icon
                 size={20}
-                name="content-copy"
+                name="Copy"
                 style={styles.icon}
                 onPress={() => onCopy(item)}
               />
-              <MaterialCommunityIcons
+              <Icon
                 size={20}
-                name="star"
-                style={[styles.icon, theme.dark && { color: "yellow" }]}
+                name="Star"
+                strokeWidth={3}
+                color="#ffd41d"
+                style={styles.icon}
                 onPress={() => onFavorite(item)}
               />
             </View>
@@ -130,17 +131,13 @@ const FavoriteList = ({ data }: TListVerse) => {
           flatListRef?.current?.scrollToOffset({ animated: true, offset: 0 });
         }}
       >
-        <MaterialCommunityIcons
-          style={{ color: theme.colors.notification }}
-          name="arrow-up-circle"
-          size={26}
-        />
+        <Icon color={theme.colors.notification} name="ChevronsUp" size={26} />
       </TouchableOpacity>
     );
   };
 
   return (
-    <View key={orientation} style={{ flex: 1 }}>
+    <View key={orientation + theme.dark} style={{ flex: 1 }}>
       <FlashList
         ref={flatListRef}
         ListHeaderComponent={SearchedHeader}

@@ -1,4 +1,4 @@
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useTheme } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect, useMemo, useState } from "react";
 import BookNameList from "../components/BookNameList";
@@ -24,6 +24,7 @@ type ChooseFromListScreenProps = {
 };
 
 const ChooseFromListScreen = ({ route }: ChooseFromListScreenProps) => {
+  const theme = useTheme();
   const { book, chapter, bottomSideBook, bottomSideChapter } =
     route.params as any;
   const [numOfVerse, setNumVerse] = useState(0);
@@ -53,7 +54,9 @@ const ChooseFromListScreen = ({ route }: ChooseFromListScreenProps) => {
     return new Array(totalChapters).fill(0).map((_, index) => index + 1);
   }, [isVerseScreen, selectedSideBook, numOfVerse]);
 
-  return <BookNameList key={orientation} bookList={numberOfChapters} />;
+  return (
+    <BookNameList key={orientation + theme.dark} bookList={numberOfChapters} />
+  );
 };
 
 export default ChooseFromListScreen;

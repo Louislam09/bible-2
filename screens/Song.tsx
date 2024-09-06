@@ -1,12 +1,13 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import BottomModal from "components/BottomModal";
+import Icon from "components/Icon";
 import SongLyricView from "components/SongLyricView";
 import { Text } from "components/Themed";
 import Songs from "constants/songs";
+import { useBibleContext } from "context/BibleContext";
 import { useCustomTheme } from "context/ThemeContext";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -77,6 +78,8 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   const snaps = [50, 75, 100];
   const _snaps = ["50%", "75%", "100%"];
   const [topHeight] = useState(new Animated.Value(75));
+  const { orientation } = useBibleContext();
+  const isPortrait = orientation === "PORTRAIT";
 
   const _topHeight = topHeight.interpolate({
     inputRange: [50, 75, 100],
@@ -94,10 +97,12 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
 
   const SongHeader = () => {
     return (
-      <View style={[styles.noteHeader]}>
-        <Text style={[styles.noteListTitle]}>
-          Mensajero de{"\n"} Alegres Nuevas
-        </Text>
+      <View style={[styles.noteHeader, !isPortrait && { paddingTop: 0 }]}>
+        {isPortrait && (
+          <Text style={[styles.noteListTitle]}>
+            Mensajero de{"\n"} Alegres Nuevas
+          </Text>
+        )}
         <View style={styles.searchContainer}>
           <Ionicons
             style={styles.searchIcon}
@@ -146,11 +151,7 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
     navigation.setOptions({
       headerLeft: () => (
         <TouchableOpacity onPress={handleCustomBack}>
-          <MaterialCommunityIcons
-            name="arrow-left"
-            color={theme.colors.text}
-            size={28}
-          />
+          <Icon name="ArrowLeft" color={theme.colors.text} size={28} />
         </TouchableOpacity>
       ),
     });
@@ -167,6 +168,7 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
 
   return (
     <View
+      key={orientation + theme.dark}
       style={{
         flex: 1,
         padding: 5,
@@ -176,7 +178,7 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
       <BottomModal
         shouldScroll
         snaps={_snaps}
-        startAT={1}
+        startAT={2}
         ref={versionRef}
         getIndex={getIndex}
       >

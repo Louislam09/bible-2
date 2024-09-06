@@ -171,7 +171,7 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
 
   return (
     <SafeAreaView
-      key={orientation}
+      key={orientation + theme.dark}
       style={[styles.container, !isPortrait && { flexDirection: "row" }]}
     >
       {viewLayoutGrid ? GridView : ListView}

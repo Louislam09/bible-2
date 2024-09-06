@@ -3,7 +3,6 @@ import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialIconNameType, TTheme } from "types";
 import { Text } from "./Themed";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export type TabItemType = {
   name: string;
@@ -36,11 +35,6 @@ const CustomTabs = ({
           { borderColor: theme.colors.notification },
         ]}
       >
-        <MaterialCommunityIcons
-          name={tab.icon}
-          color={theme.colors.text}
-          size={20}
-        />
         <Text
           style={[
             styles.tabText,

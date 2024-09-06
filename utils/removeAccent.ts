@@ -1,13 +1,13 @@
-export const pluralToSingular = (word: string): string => {
-  if (word.endsWith("es")) {
-    return word.slice(0, -2);
-  }
-
+export const pluralToSingular = (word: string): string | boolean => {
   if (word.endsWith("s")) {
     return word.slice(0, -1);
   }
 
-  return word;
+  if (word.endsWith("es")) {
+    return word.slice(0, -2);
+  }
+
+  return false;
 };
 
 const removeAccent = (text: string) =>
