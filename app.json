@@ -25,7 +25,7 @@
       "backgroundColor": "#0c3e3d"
     },
     "android": {
-      "versionCode": 9,
+      "versionCode": 10,
       "icon": "./assets/images/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
