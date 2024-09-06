@@ -384,7 +384,10 @@ const Verse: React.FC<VerseProps> = ({
     onWord();
   };
 
-  const onNonHightlistedWordClick = ({ word, tagValue }: WordTagPair) => {
+  const onNonHightlistedWordClick = ({ word }: WordTagPair) => {
+    if (word.length < 3) {
+      return;
+    }
     onDictionary(word);
   };
 

@@ -69,7 +69,7 @@ const RenderItem = ({
   return (
     <View style={{ backgroundColor: "transparent" }}>
       <Text style={styles.itemTitle}>{dbShortName}</Text>
-      {words.map((word) => (
+      {words.slice(0, 10).map((word) => (
         <Animated.View
           key={word?.topic}
           style={[
