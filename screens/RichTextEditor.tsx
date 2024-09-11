@@ -1,7 +1,8 @@
 import { useTheme } from "@react-navigation/native";
 import Icon from "components/Icon";
-import React, { useRef, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { Text } from "components/Themed";
+import React, { useEffect, useRef, useState } from "react";
+import { Keyboard, ScrollView, View } from "react-native";
 import {
   RichEditor,
   RichToolbar,
@@ -16,19 +17,22 @@ const handleHead = ({ tintColor, label }: any) => (
 interface IRichEditor {
   onSetContent: any;
   content: any;
-  viewMode: keyof typeof EViewMode;
+  isViewMode: boolean;
   Textinput: any;
 }
 
 const MyRichEditor: React.FC<IRichEditor> = ({
   onSetContent,
   content,
-  viewMode,
+  isViewMode,
   Textinput,
 }) => {
-  const richTextRef = useRef<RichEditor>(null);
   const theme = useTheme();
+
+  const richTextRef = useRef<RichEditor>(null);
   const scrollViewRef = useRef<ScrollView>(null);
+
+  const [_, setKeyboardOpen] = useState(false);
   const [pos, setPos] = useState({
     cursorY: 0,
   });
@@ -47,9 +51,32 @@ const MyRichEditor: React.FC<IRichEditor> = ({
     actions.redo,
   ];
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        scrollViewRef.current?.scrollToEnd();
+        setKeyboardOpen(true);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardOpen(false);
+      }
+    );
+
+    // Cleanup listeners on unmount
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
     <View style={{ flex: 1 }}>
-      {viewMode !== "VIEW" && (
+      {!isViewMode && (
         <>
           <RichToolbar
             style={{
@@ -106,7 +133,7 @@ const MyRichEditor: React.FC<IRichEditor> = ({
             });
           }}
           initialContentHTML={content}
-          disabled={viewMode === "VIEW"}
+          disabled={isViewMode}
         />
       </ScrollView>
     </View>

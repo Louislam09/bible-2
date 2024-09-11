@@ -16,6 +16,7 @@ import DictionarySearch from "screens/DictionarySearch";
 import DownloadManager from "screens/DownloadManager";
 import Favorite from "screens/Favorite";
 import Home from "screens/Home";
+import NoteDetail from "screens/NoteDetail";
 import Notes from "screens/Notes";
 import OnboardingScreen from "screens/Onboarding";
 import Search from "screens/Search";
@@ -152,6 +153,14 @@ const MainStack = () => {
         options={({ route }) => ({
           ...screenOptions(route),
           headerTitle: "",
+          animation: "slide_from_right",
+        })}
+      />
+      <Stack.Screen
+        name="NoteDetail"
+        component={NoteDetail}
+        options={({ route }) => ({
+          ...screenOptions(route),
           animation: "slide_from_right",
         })}
       />

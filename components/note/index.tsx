@@ -24,7 +24,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import MyRichEditor from "screens/RichTextEditor";
-import { EViewMode, IVerseItem, TTheme } from "types";
+import { EViewMode, IVerseItem, Screens, TTheme } from "types";
 import removeAccent from "utils/removeAccent";
 
 type TListVerse = {
@@ -303,11 +303,12 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
   };
 
   const onViewMode = (id: number) => {
-    setOpenNoteId(id);
-    setSearchText("");
-    const currentOpenNote: any = filterData?.find((x: any) => x.id === id);
-    addTextToNote(currentOpenNote);
-    setViewMode(addToNoteText ? "EDIT" : "VIEW");
+    navigation.navigate(Screens.NoteDetail, { noteId: id });
+    // setOpenNoteId(id);
+    // setSearchText("");
+    // const currentOpenNote: any = filterData?.find((x: any) => x.id === id);
+    // addTextToNote(currentOpenNote);
+    // setViewMode(addToNoteText ? "EDIT" : "VIEW");
   };
 
   const NoteHeader = () => {
@@ -424,7 +425,7 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
             }
             content={content}
             onSetContent={(text: string) => onContentChange("content", text)}
-            viewMode={viewMode}
+            isViewMode={isView}
           />
         </>
       ) : (
