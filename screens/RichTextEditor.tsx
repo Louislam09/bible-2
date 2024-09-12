@@ -1,17 +1,18 @@
 import { useTheme } from "@react-navigation/native";
 import Icon from "components/Icon";
 import { Text } from "components/Themed";
+import { iconSize } from "constants/size";
 import React, { useEffect, useRef, useState } from "react";
-import { Keyboard, ScrollView, View } from "react-native";
+import { Keyboard, ScrollView, StyleSheet, View } from "react-native";
 import {
   RichEditor,
   RichToolbar,
   actions,
 } from "react-native-pell-rich-editor";
-import { EViewMode } from "types";
+import { EViewMode, TTheme } from "types";
 
 const handleHead = ({ tintColor, label }: any) => (
-  <Icon color={tintColor} size={22} name={label} />
+  <Icon color={tintColor} size={iconSize} name={label} />
 );
 
 interface IRichEditor {
@@ -28,14 +29,11 @@ const MyRichEditor: React.FC<IRichEditor> = ({
   Textinput,
 }) => {
   const theme = useTheme();
-
+  const styles = getStyles(theme);
   const richTextRef = useRef<RichEditor>(null);
   const scrollViewRef = useRef<ScrollView>(null);
 
-  const [_, setKeyboardOpen] = useState(false);
-  const [pos, setPos] = useState({
-    cursorY: 0,
-  });
+  const [cursorY, setCursorY] = useState(0);
 
   const toolbarActions = [
     actions.setBold,
@@ -43,74 +41,31 @@ const MyRichEditor: React.FC<IRichEditor> = ({
     actions.setUnderline,
     actions.setParagraph,
     actions.heading2,
+    actions.alignFull,
     actions.alignLeft,
     actions.alignCenter,
     actions.alignRight,
-    actions.insertBulletsList,
-    actions.undo,
-    actions.redo,
+    // actions.redo,
   ];
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => {
-        scrollViewRef.current?.scrollToEnd();
-        setKeyboardOpen(true);
-      }
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        setKeyboardOpen(false);
-      }
-    );
-
-    // Cleanup listeners on unmount
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
+  const handleScrollToCursor = () => {
+    const offset = 150; // Offset to adjust the cursor position in view
+    scrollViewRef.current?.scrollTo({
+      y: cursorY - offset,
+      animated: true,
+    });
+  };
 
   return (
     <View style={{ flex: 1 }}>
-      {!isViewMode && (
-        <>
-          <RichToolbar
-            style={{
-              backgroundColor: theme.dark ? "#151517" : theme.colors.card,
-              borderColor: "#ddd",
-              borderWidth: 0.2,
-              paddingHorizontal: 5,
-              elevation: 3,
-            }}
-            editor={richTextRef}
-            selectedIconTint={theme.colors.notification}
-            actions={toolbarActions}
-            iconMap={{
-              [actions.heading2]: (props: any) =>
-                handleHead({ ...props, label: "Heading1" }),
-              [actions.setParagraph]: (props: any) =>
-                handleHead({ ...props, label: "Pilcrow" }),
-              [actions.undo]: (props: any) =>
-                handleHead({ ...props, label: "Undo" }),
-              [actions.redo]: (props: any) =>
-                handleHead({ ...props, label: "Redo" }),
-            }}
-          />
-          {Textinput}
-        </>
-      )}
+      {!isViewMode && <>{Textinput}</>}
       <ScrollView ref={scrollViewRef}>
         <RichEditor
           pasteAsPlainText
           initialHeight={200}
           onCursorPosition={(cursorY) => {
-            setPos((prev) => ({ ...prev, cursorY }));
+            setCursorY(cursorY);
           }}
-          editorInitializedCallback={() => {}}
           style={[
             content && {
               borderColor: theme.colors.text,
@@ -118,26 +73,62 @@ const MyRichEditor: React.FC<IRichEditor> = ({
             },
           ]}
           ref={richTextRef}
-          placeholder="Escribe tu nota"
+          placeholder="Escribe aqui..."
           editorStyle={{
             backgroundColor: theme.colors.background,
             color: theme.colors.text,
             caretColor: theme.colors.notification,
+            placeholderColor: theme.colors.text + 90,
           }}
           onChange={(descriptionText: string) => {
             onSetContent(descriptionText);
-            const numberToCenterOffset = 150;
-            scrollViewRef.current?.scrollTo({
-              y: pos.cursorY - numberToCenterOffset,
-              animated: true,
-            });
+            handleScrollToCursor();
           }}
           initialContentHTML={content}
           disabled={isViewMode}
         />
       </ScrollView>
+      {!isViewMode && (
+        <RichToolbar
+          style={styles.richToolbar}
+          editor={richTextRef}
+          selectedIconTint={theme.colors.notification}
+          actions={toolbarActions}
+          iconMap={{
+            [actions.setBold]: (props: any) =>
+              handleHead({ ...props, label: "Bold" }),
+            [actions.setItalic]: (props: any) =>
+              handleHead({ ...props, label: "Italic" }),
+            [actions.setUnderline]: (props: any) =>
+              handleHead({ ...props, label: "Underline" }),
+            [actions.heading2]: (props: any) =>
+              handleHead({ ...props, label: "Heading1" }),
+            [actions.alignFull]: ({ tintColor }: any) =>
+              handleHead({ tintColor, label: "AlignJustify" }),
+            [actions.alignLeft]: ({ tintColor }: any) =>
+              handleHead({ tintColor, label: "AlignLeft" }),
+            [actions.alignRight]: ({ tintColor }: any) =>
+              handleHead({ tintColor, label: "AlignRight" }),
+            [actions.alignCenter]: ({ tintColor }: any) =>
+              handleHead({ tintColor, label: "AlignCenter" }),
+            [actions.setParagraph]: ({ tintColor }: any) =>
+              handleHead({ tintColor, label: "Pilcrow" }),
+          }}
+        />
+      )}
     </View>
   );
 };
+
+const getStyles = ({ colors, dark }: TTheme) =>
+  StyleSheet.create({
+    richToolbar: {
+      backgroundColor: colors.background,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginBottom: 20,
+    },
+  });
 
 export default MyRichEditor;

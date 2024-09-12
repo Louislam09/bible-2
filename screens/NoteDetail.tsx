@@ -1,11 +1,12 @@
 import { useTheme } from "@react-navigation/native";
 import Icon from "components/Icon";
-import { View } from "components/Themed";
+import { Text, View } from "components/Themed";
 import { GET_NOTE_BY_ID } from "constants/Queries";
 import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
+  Keyboard,
   StyleSheet,
   TextInput,
   ToastAndroid,
@@ -13,21 +14,25 @@ import {
 } from "react-native";
 import { EViewMode, RootStackScreenProps, TNote, TTheme } from "types";
 import MyRichEditor from "./RichTextEditor";
+import { formatDateShortDayMonth } from "utils/formatDateShortDayMonth";
 
 const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
   route,
   navigation,
 }) => {
   const defaultTitle = "Sin titulo 🖋️";
-  const { noteId } = route.params as any;
+  const { noteId, isNewNote } = route.params as any;
 
   const theme = useTheme();
   const typingTimeoutRef = useRef<any>(null);
-  const [noteInfo, setNoteInfo] = useState<TNote | any>({});
-  const [viewMode, setViewMode] = useState<keyof typeof EViewMode>("VIEW");
+  const [noteInfo, setNoteInfo] = useState<TNote | null>(null);
+  const [viewMode, setViewMode] = useState<keyof typeof EViewMode>(
+    isNewNote ? "NEW" : "VIEW"
+  );
   const [isTyping, setTyping] = useState(false);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [noteContent, setNoteContent] = useState({
-    title: defaultTitle,
+    title: "",
     content: "",
   });
 
@@ -40,7 +45,7 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
     useBibleContext();
 
   useEffect(() => {
-    if (noteId === undefined || noteId === null) return;
+    if (noteId === undefined || noteId === null || isNewNote) return;
     const getNoteById = async () => {
       if (!myBibleDB || !executeSql) return;
       const note = await executeSql(myBibleDB, GET_NOTE_BY_ID, [noteId]);
@@ -49,18 +54,49 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
 
     getNoteById();
     return () => {};
-  }, [noteId]);
+  }, [noteId, isNewNote]);
 
   useEffect(() => {
+    if (isNewNote) {
+      navigation.setOptions({
+        headerTitle: "Mi Nota",
+      });
+      return;
+    }
     addTextToNote(noteInfo);
     navigation.setOptions({ headerTitle: noteInfo?.title });
-  }, [noteInfo]);
+  }, [noteInfo, isNewNote]);
+
+  useEffect(() => {
+    console.log(noteContent);
+  }, [noteContent]);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardOpen(true);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardOpen(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const addTextToNote = (selectedNote: TNote | null) => {
     const contentToAdd = `<br> <div>${addToNoteText}</div><br>`;
     const myContent = `${selectedNote?.note_text || ""} ${contentToAdd} `;
     setNoteContent({
-      title: selectedNote?.title || defaultTitle,
+      title: selectedNote?.title || "",
       content: !selectedNote && !addToNoteText ? "" : myContent,
     });
     onAddToNote("");
@@ -91,9 +127,10 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
   };
 
   const onContentChange = async (field: any, text: string) => {
+    // console.log({ field, text });
     setNoteContent((prev: any) => ({
       ...prev,
-      [field]: text ?? "",
+      [field]: text || "",
     }));
     if (noteId) {
       await onSaveDelayed();
@@ -107,10 +144,12 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
       return;
     }
     if (!noteContent.title) {
-      ToastAndroid.show("El titulo es requerido!", ToastAndroid.SHORT);
-      return;
+      noteContent.title = defaultTitle;
+      // ToastAndroid.show("El titulo es requerido!", ToastAndroid.SHORT);
+      // return;
     }
-    await onSaveNote(noteContent, () => console.log("onOpenOrCloseNote"));
+
+    await onSaveNote(noteContent, () => navigation.goBack());
     // setNoteContent({ title: "", content: "" });
     ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
   };
@@ -131,6 +170,7 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
               padding: 10,
               borderRadius: 10,
             },
+            (keyboardOpen || !isView) && { bottom: 70 },
           ]}
           onPress={isView ? onEditMode : onSave}
         >
@@ -143,14 +183,21 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
         </TouchableOpacity>
       </>
     );
-  }, [isTyping, isView, showExtraButton]);
+  }, [isTyping, isView, noteContent]);
 
   return (
     <View style={styles.container}>
+      <Text style={styles.dateLabel}>
+        {formatDateShortDayMonth(
+          isNewNote
+            ? new Date()
+            : ((noteInfo?.updated_at || noteInfo?.created_at) as any)
+        )}
+      </Text>
       <MyRichEditor
         Textinput={
           <TextInput
-            placeholder="Escribe el titulo"
+            placeholder="Titulo"
             placeholderTextColor={theme.colors.text}
             style={[styles.textInput]}
             multiline
@@ -174,23 +221,19 @@ const getStyles = ({ colors, dark }: TTheme) =>
       padding: 5,
       backgroundColor: dark ? colors.background : "#eee",
     },
-    verseBody: {
-      color: colors.text,
-      backgroundColor: "transparent",
-    },
-    date: {
-      color: colors.notification,
-      textAlign: "right",
-      marginTop: 10,
+    dateLabel: {
+      textTransform: "uppercase",
+      textAlign: "center",
     },
     textInput: {
       padding: 10,
-      fontSize: 22,
+      fontSize: 26,
+      fontWeight: "bold",
       color: colors.text,
       marginVertical: 5,
-      textDecorationStyle: "solid",
-      textDecorationColor: "red",
-      textDecorationLine: "underline",
+      // textDecorationStyle: "solid",
+      // textDecorationColor: "red",
+      // textDecorationLine: "underline",
     },
     scrollToTopButton: {
       position: "absolute",

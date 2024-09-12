@@ -10,16 +10,16 @@ const Notes: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   const [shouldFetch, setShouldFetch] = useState(false);
 
   useEffect(() => {
+    if (!myBibleDB || !executeSql) return;
     const getNotes = async () => {
-      if (!myBibleDB || !executeSql) return;
       const notes = await executeSql(myBibleDB, GET_ALL_NOTE, []);
+      console.log("getNotes", shouldFetch, notes.length);
       setData(notes ?? []);
     };
-
     getNotes();
 
     return () => {};
-  }, [shouldFetch]);
+  }, [shouldFetch, myBibleDB, executeSql]);
 
   return <NoteList data={data} setShouldFetch={setShouldFetch} />;
 };

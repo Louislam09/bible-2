@@ -457,6 +457,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const onDeleteNote = async (id: number) => {
+    console.log("myBibleDB", myBibleDB?.databaseName);
     if (!myBibleDB || !executeSql) return;
     await executeSql(myBibleDB, DELETE_NOTE, [id]);
   };

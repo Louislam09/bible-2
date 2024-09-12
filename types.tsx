@@ -92,7 +92,9 @@ export type RootStackParamList = {
   Favorite: NavigatorScreenParams<RootTabParamList> | undefined;
   DownloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
   Notes: NavigatorScreenParams<RootTabParamList> | undefined;
-  NoteDetail: NavigatorScreenParams<RootTabParamList> | { noteId: number };
+  NoteDetail:
+    | NavigatorScreenParams<RootTabParamList>
+    | { noteId: number | null; isNewNote: boolean };
   Character: NavigatorScreenParams<RootTabParamList> | undefined;
   ChooseBook:
     | NavigatorScreenParams<RootTabParamList>
@@ -208,6 +210,7 @@ export type TNote = {
   title: string;
   note_text: string;
   created_at: string;
+  updated_at?: string;
 };
 
 export enum EViewMode {

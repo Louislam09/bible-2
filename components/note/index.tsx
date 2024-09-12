@@ -7,24 +7,17 @@ import { Text, View } from "components/Themed";
 import { htmlTemplate } from "constants/HtmlTemplate";
 import { useBibleContext } from "context/BibleContext";
 import usePrintAndShare from "hooks/usePrintAndShare";
-import React, {
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
   Animated,
-  BackHandler,
   StyleSheet,
   TextInput,
   ToastAndroid,
   TouchableOpacity,
 } from "react-native";
-import MyRichEditor from "screens/RichTextEditor";
-import { EViewMode, IVerseItem, Screens, TTheme } from "types";
+import { IVerseItem, Screens, TTheme } from "types";
+import { formatDateShortDayMonth } from "utils/formatDateShortDayMonth";
 import removeAccent from "utils/removeAccent";
 
 type TListVerse = {
@@ -115,7 +108,7 @@ const RenderItem = ({
               .replace(/<.*?>|<.*?\/>/gi, "")}
           </Text>
           <Text style={[styles.date]}>
-            {item.updated_at?.split(" ")[0] || item.created_at.split(" ")[0]}
+            {formatDateShortDayMonth(item.updated_at || item.created_at)}
           </Text>
         </View>
       </TouchableOpacity>
@@ -130,49 +123,24 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
   const styles = getStyles(theme);
   const flatListRef = useRef<FlashList<any>>(null);
   const notFoundSource = require("../../assets/lottie/notFound.json");
-  const defaultTitle = "Sin titulo 🖋️";
-  const [noteContent, setNoteContent] = useState({
-    title: defaultTitle,
-    content: "",
-  });
+
   const { printToFile } = usePrintAndShare();
-  const { title, content } = noteContent;
-  const {
-    onSaveNote,
-    onDeleteNote,
-    onUpdateNote,
-    addToNoteText,
-    onAddToNote,
-    currentBibleLongName,
-  } = useBibleContext();
+  const { onDeleteNote, addToNoteText, onAddToNote, currentBibleLongName } =
+    useBibleContext();
   const [searchText, setSearchText] = useState<any>(null);
-  const [openNoteId, setOpenNoteId] = useState<any>(null);
-  const [isTyping, setTyping] = useState(false);
-  const [viewMode, setViewMode] = useState<keyof typeof EViewMode>("LIST");
-  const isView = viewMode === "VIEW";
-  const showExtraButton = ["NEW", "EDIT", "VIEW"].includes(viewMode);
   const noteCountTitle = useMemo(
     () => `${filterData.length} ${filterData.length > 1 ? "Notas" : "Nota"}`,
     [filterData]
   );
-  const typingTimeoutRef = useRef<any>(null);
-
-  useEffect(() => {
-    return () => {
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
-      }
-    };
-  }, []);
 
   const addTextToNote = (selectedNote: any) => {
     const myContent = `${
       selectedNote?.note_text ?? ""
     } <br> <div>${addToNoteText}</div><br> `;
-    setNoteContent({
-      title: selectedNote?.title || defaultTitle,
-      content: !selectedNote && !addToNoteText ? "" : myContent,
-    });
+    // setNoteContent({
+    //   title: selectedNote?.title || defaultTitle,
+    //   content: !selectedNote && !addToNoteText ? "" : myContent,
+    // });
     onAddToNote("");
   };
 
@@ -183,36 +151,10 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
     );
   };
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: !showExtraButton,
-      headerBackVisible: !showExtraButton,
-    });
-  }, [showExtraButton]);
-
-  useEffect(() => {
-    const backAction = () => {
-      if (showExtraButton) {
-        setViewMode("LIST");
-        return showExtraButton;
-      }
-      navigation.goBack();
-      // return true;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove();
-  }, [showExtraButton]);
-
   useEffect(() => {
     if (!data) return;
     if (addToNoteText && data.length === 0) {
       addTextToNote(null);
-      setViewMode("NEW");
       return;
     }
     if (addToNoteText) showAddNoteAlert();
@@ -224,63 +166,11 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
   }, [data]);
 
   const onOpenOrCloseNote = () => {
-    setOpenNoteId(null);
-    addTextToNote(addToNoteText ? {} : null);
-    viewMode !== "LIST" ? setViewMode("LIST") : setViewMode("NEW");
-  };
-
-  const onUpdate = async (id: number, goToViewMode: boolean = false) => {
-    await onUpdateNote(noteContent, id, afterSaving);
-    setShouldFetch((prev: any) => !prev);
-    if (goToViewMode) {
-      setViewMode("VIEW");
-      ToastAndroid.show("Nota actualizada!", ToastAndroid.SHORT);
-    }
-  };
-
-  const onSaveDelayed = async () => {
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-    }
-
-    setTyping(true);
-    typingTimeoutRef.current = setTimeout(() => {
-      onUpdate(openNoteId);
-    }, 3000);
-  };
-
-  const afterSaving = () => {
-    setTyping(false);
-    clearTimeout(typingTimeoutRef.current);
-  };
-
-  const onContentChange = async (field: any, text: string) => {
-    setNoteContent((prev: any) => ({
-      ...prev,
-      [field]: text ?? "",
-    }));
-    if (openNoteId) {
-      await onSaveDelayed();
-    }
-  };
-
-  const onSave = async () => {
-    if (openNoteId) {
-      const goToViewMode = true;
-      await onUpdate(openNoteId, goToViewMode);
-      return;
-    }
-    if (!noteContent.title) {
-      ToastAndroid.show("El titulo es requerido!", ToastAndroid.SHORT);
-      return;
-    }
-    await onSaveNote(noteContent, onOpenOrCloseNote);
-    setNoteContent({ title: "", content: "" });
-    ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
-    setShouldFetch((prev: any) => !prev);
+    navigation.navigate(Screens.NoteDetail, { noteId: null, isNewNote: true });
   };
 
   const onDelete = async (id: number) => {
+    console.log({ id });
     await onDeleteNote(id);
     setShouldFetch((prev: any) => !prev);
     ToastAndroid.show("Nota borrada!", ToastAndroid.SHORT);
@@ -303,12 +193,7 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
   };
 
   const onViewMode = (id: number) => {
-    navigation.navigate(Screens.NoteDetail, { noteId: id });
-    // setOpenNoteId(id);
-    // setSearchText("");
-    // const currentOpenNote: any = filterData?.find((x: any) => x.id === id);
-    // addTextToNote(currentOpenNote);
-    // setViewMode(addToNoteText ? "EDIT" : "VIEW");
+    navigation.navigate(Screens.NoteDetail, { noteId: id, isNewNote: false });
   };
 
   const NoteHeader = () => {
@@ -341,51 +226,34 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
     );
   };
 
-  const onEditMode = () => {
-    setViewMode("EDIT");
-  };
-
-  const renderActionButtons = () => {
+  const ListEmptyComponent = () => {
     return (
-      <>
-        <TouchableOpacity
-          style={[
-            styles.scrollToTopButton,
-            {
-              borderWidth: 1,
-              borderColor: theme.colors.notification,
-              padding: 10,
-              borderRadius: 10,
-              backgroundColor: theme.colors.notification + "99",
-            },
-          ]}
-          onPress={onOpenOrCloseNote}
-        >
-          <Icon
-            style={[{}]}
-            color={theme.colors.text}
-            name={showExtraButton ? "X" : "Plus"}
-            size={30}
-          />
-        </TouchableOpacity>
-        {showExtraButton && (
-          <TouchableOpacity
-            style={[
-              styles.scrollToTopButton,
-              { bottom: 85, alignItems: "center" },
-            ]}
-            onPress={isView ? onEditMode : onSave}
-          >
-            <Icon
-              color={isTyping ? "white" : theme.colors.text}
-              name={isView ? "Pencil" : isTyping ? "RefreshCcw" : "Save"}
-              size={30}
-            />
-          </TouchableOpacity>
-        )}
-      </>
+      <View style={[styles.noResultsContainer]}>
+        <Animation
+          backgroundColor={theme.colors.background}
+          source={notFoundSource}
+          loop={false}
+        />
+        <Text style={styles.noResultsText}>
+          <Text style={{ color: theme.colors.notification }}>
+            ({currentBibleLongName})
+          </Text>{" "}
+          {"\n"}
+          No tienes notas en esta version de la escritura.
+        </Text>
+      </View>
     );
   };
+
+  const getData = useMemo(() => {
+    return searchText
+      ? filterData.filter(
+          (x: any) =>
+            removeAccent(x.title).indexOf(searchText.toLowerCase()) !== -1 ||
+            removeAccent(x.note_text).indexOf(searchText.toLowerCase()) !== -1
+        )
+      : filterData;
+  }, [searchText, filterData]);
 
   return (
     <View
@@ -395,105 +263,56 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
         backgroundColor: theme.dark ? theme.colors.background : "#eee",
       }}
     >
-      {showExtraButton ? (
-        <>
-          {isView && (
-            <Text
-              style={{
-                color: theme.colors.notification,
-                fontSize: 22,
-                paddingVertical: 5,
-                paddingLeft: 5,
-                fontWeight: "bold",
-                textDecorationLine: "underline",
-                paddingTop: 20,
-              }}
-            >
-              {title}
-            </Text>
-          )}
-          <MyRichEditor
-            Textinput={
-              <TextInput
-                placeholder="Escribe el titulo"
-                placeholderTextColor={theme.colors.text}
-                style={[styles.textInput]}
-                multiline
-                value={title}
-                onChangeText={(text: string) => onContentChange("title", text)}
-              />
-            }
-            content={content}
-            onSetContent={(text: string) => onContentChange("content", text)}
-            isViewMode={isView}
-          />
-        </>
-      ) : (
-        <>
-          {NoteHeader()}
-          <FlashList
-            contentContainerStyle={{
-              backgroundColor: theme.dark ? theme.colors.background : "#eee",
-              paddingVertical: 20,
+      {NoteHeader()}
+      <FlashList
+        contentContainerStyle={styles.contentContainerStyle}
+        ref={flatListRef}
+        decelerationRate={"normal"}
+        estimatedItemSize={135}
+        data={getData}
+        renderItem={({ item, index }) => (
+          <RenderItem
+            {...{
+              styles,
+              onViewMode,
+              warnBeforeDelete,
+              printToFile,
+              theme,
+              item,
+              index,
             }}
-            ref={flatListRef}
-            decelerationRate={"normal"}
-            estimatedItemSize={135}
-            data={
-              searchText
-                ? filterData.filter(
-                    (x: any) =>
-                      removeAccent(x.title).indexOf(
-                        searchText.toLowerCase()
-                      ) !== -1 ||
-                      removeAccent(x.note_text).indexOf(
-                        searchText.toLowerCase()
-                      ) !== -1
-                  )
-                : filterData
-            }
-            renderItem={({ item, index }) => (
-              <RenderItem
-                {...{
-                  styles,
-                  onViewMode,
-                  warnBeforeDelete,
-                  printToFile,
-                  theme,
-                }}
-                item={item}
-                index={index}
-              />
-            )}
-            keyExtractor={(item: any, index: any) => `note-${index}`}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-            ListEmptyComponent={
-              <View style={[styles.noResultsContainer]}>
-                <Animation
-                  backgroundColor={theme.colors.background}
-                  source={notFoundSource}
-                  loop={false}
-                />
-                <Text style={styles.noResultsText}>
-                  <Text style={{ color: theme.colors.notification }}>
-                    ({currentBibleLongName})
-                  </Text>{" "}
-                  {"\n"}
-                  No tienes notas en esta version de la escritura.
-                </Text>
-              </View>
-            }
-            ListFooterComponent={<View style={{ paddingVertical: 30 }} />}
           />
-        </>
-      )}
-      {renderActionButtons()}
+        )}
+        keyExtractor={(item: any, index: any) => `note-${index}`}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ListEmptyComponent={ListEmptyComponent}
+        ListFooterComponent={<View style={{ paddingVertical: 30 }} />}
+      />
+      <TouchableOpacity
+        style={[
+          styles.scrollToTopButton,
+          {
+            borderWidth: 1,
+            borderColor: theme.colors.notification,
+            padding: 10,
+            borderRadius: 10,
+            backgroundColor: theme.colors.notification + "99",
+          },
+        ]}
+        onPress={onOpenOrCloseNote}
+      >
+        <Icon style={[{}]} color={theme.colors.text} name={"Plus"} size={30} />
+      </TouchableOpacity>
     </View>
   );
 };
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
+    contentContainerStyle: {
+      backgroundColor: dark ? colors.background : "#eee",
+      paddingVertical: 20,
+    },
     verseBody: {
       color: colors.text,
       backgroundColor: "transparent",
@@ -529,12 +348,12 @@ const getStyles = ({ colors, dark }: TTheme) =>
       justifyContent: "center",
       paddingHorizontal: 4,
       paddingVertical: 10,
-      marginTop: 40,
+      // marginTop: 40,
       backgroundColor: "transparent",
     },
     noteListTitle: {
       fontSize: 30,
-      marginVertical: 10,
+      // marginVertical: 10,
       fontWeight: "bold",
       textAlign: "center",
       color: colors.notification,
