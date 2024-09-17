@@ -35,6 +35,7 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
 
   const rotation = useRef(new Animated.Value(0)).current;
   const typingTimeoutRef = useRef<any>(null);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [isTyping, setTyping] = useState(false);
@@ -52,30 +53,6 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
 
   const debouncedNoteContent = useDebounce(noteContent, 3000);
 
-  const startRotation = () => {
-    Animated.loop(
-      Animated.timing(rotation, {
-        toValue: 1,
-        duration: 2000,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      })
-    ).start();
-  };
-
-  const stopRotation = () => {
-    rotation.stopAnimation();
-    rotation.setValue(0);
-  };
-
-  useEffect(() => {
-    if (isTyping) {
-      startRotation();
-    } else {
-      stopRotation();
-    }
-  }, [isTyping]);
-
   const rotate = rotation.interpolate({
     inputRange: [0, 1],
     outputRange: ["0deg", "-360deg"],
@@ -85,7 +62,6 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
     if (noteId && debouncedNoteContent && typingTimeoutRef.current) {
       onUpdate(noteId as number);
     } else {
-      console.log('is a new note, saved and return the id')
       setTyping(false)
     }
   }, [debouncedNoteContent, noteId]);
@@ -144,6 +120,61 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (isTyping) {
+      startRotation();
+    } else {
+      stopRotation();
+    }
+  }, [isTyping]);
+
+  const onSave = useCallback(async () => {
+    try {
+      if (noteId) {
+        await onUpdate(noteId, true);
+        return;
+      }
+      if (!noteContent.title) noteContent.title = defaultTitle;
+      setHasUnsavedChanges(false);
+      await onSaveNote(noteContent, () => navigation.navigate(Screens.Notes, { shouldRefresh: true }));
+      ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
+    } catch (error) {
+      Alert.alert("Error", "No se pudo guardar la nota.");
+    }
+  }, [noteContent, noteId]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+      if (!hasUnsavedChanges) return;
+
+      // Prevent default behavior (leaving the screen)
+      e.preventDefault();
+
+      // Show a confirmation dialog to the user
+      Alert.alert(
+        "Guardar cambios",
+        "Tienes cambios sin guardar, ¿quieres salir sin guardar?",
+        [
+          { text: "Cancelar", style: "cancel", onPress: () => { } },
+          {
+            text: "Salir sin guardar",
+            style: "destructive",
+            onPress: () => navigation.dispatch(e.data.action),
+          },
+          {
+            text: "Guardar",
+            onPress: async () => {
+              await onSave();
+              navigation.dispatch(e.data.action);
+            },
+          },
+        ]
+      );
+    });
+
+    return unsubscribe;
+  }, [navigation, hasUnsavedChanges, onSave]);
+
   const renderActionButtons = useCallback(() => {
     return (
       <>
@@ -173,9 +204,28 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
     );
   }, [isTyping, isView, noteContent]);
 
+  const startRotation = () => {
+    Animated.loop(
+      Animated.timing(rotation, {
+        toValue: 1,
+        duration: 2000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    ).start();
+  };
+
+  const stopRotation = () => {
+    rotation.stopAnimation();
+    rotation.setValue(0);
+  };
+
   const addTextToNote = useCallback(() => {
     const isEditMode = !!addToNoteText;
-    if (isEditMode) setViewMode("EDIT");
+    if (isEditMode) {
+      setViewMode("EDIT");
+      setHasUnsavedChanges(true)
+    }
 
     const contentToAdd = `<br> <div>${addToNoteText}</div><br>`;
     const myContent = `${noteInfo?.note_text || ""} ${contentToAdd}`;
@@ -194,6 +244,7 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
   const onUpdate = async (id: number, goToViewMode = false) => {
     try {
       await onUpdateNote(noteContent, id, afterSaving);
+      setHasUnsavedChanges(false);
       if (goToViewMode) {
         setViewMode("VIEW");
         ToastAndroid.show("Nota actualizada!", ToastAndroid.SHORT);
@@ -204,27 +255,18 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
   };
 
   const onContentChange = async (field: any, text: string) => {
-    typingTimeoutRef.current = true
-    setTyping(true);
+    if (!isNewNote) {
+      typingTimeoutRef.current = true
+      setTyping(true);
+    }
+    setHasUnsavedChanges(true);
+
     setNoteContent((prev: any) => ({
       ...prev,
       [field]: text || "",
     }));
   };
 
-  const onSave = async () => {
-    try {
-      if (noteId) {
-        await onUpdate(noteId, true);
-        return;
-      }
-      if (!noteContent.title) noteContent.title = defaultTitle;
-      await onSaveNote(noteContent, () => navigation.navigate(Screens.Notes, { shouldRefresh: true }));
-      ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
-    } catch (error) {
-      Alert.alert("Error", "Failed to save note.");
-    }
-  };
 
   const onEditMode = () => {
     setViewMode("EDIT");
