@@ -147,10 +147,8 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
     const unsubscribe = navigation.addListener("beforeRemove", (e) => {
       if (!hasUnsavedChanges) return;
 
-      // Prevent default behavior (leaving the screen)
       e.preventDefault();
 
-      // Show a confirmation dialog to the user
       Alert.alert(
         "Guardar cambios",
         "Tienes cambios sin guardar, ¿quieres salir sin guardar?",

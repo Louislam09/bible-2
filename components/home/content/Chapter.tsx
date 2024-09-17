@@ -21,6 +21,9 @@ import {
 import { TChapter, TTheme } from "types";
 import StrongContent from "./StrongContent";
 import Verse from "./Verse";
+import FloatingButton from "components/FloatingButton";
+import { Text } from "components/Themed";
+import CurrentNoteDetail from "components/CurrentNoteDetail";
 
 const DragIconView = Animated.View;
 
@@ -131,6 +134,7 @@ const Chapter = ({
 
   const { topHeight, topWidth, _backgroundColor, panResponder } =
     useResizableBox({ theme });
+
 
   return (
     <View style={styles.chapterContainer}>

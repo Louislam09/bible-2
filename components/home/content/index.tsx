@@ -109,7 +109,7 @@ const BookContent: FC<BookContentInterface> = ({
       setLoading(false);
     })();
 
-    return () => {};
+    return () => { };
   }, [myBibleDB, book, chapter, verse]);
 
   // useEffect(() => {

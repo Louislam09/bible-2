@@ -6,6 +6,8 @@ import CustomFooter from "./home/footer";
 import SwipeWrapper from "./SwipeWrapper";
 import useChangeBookOrChapter from "hooks/useChangeBookOrChapter";
 import { View } from "./Themed";
+import CurrentNoteDetail from "./CurrentNoteDetail";
+import FloatingButton from "./FloatingButton";
 
 const SplitTopSide: FC<any> = (props) => {
   const { navigation } = props;
@@ -37,6 +39,9 @@ const SplitTopSide: FC<any> = (props) => {
       <SwipeWrapper {...{ onSwipeRight, onSwipeLeft }}>
         <BookContent isSplit={false} {...props} />
       </SwipeWrapper>
+      <FloatingButton navigation={navigation}>
+        <CurrentNoteDetail />
+      </FloatingButton>
       <CustomFooter isSplit={false} {...props} />
     </Animated.View>
   );

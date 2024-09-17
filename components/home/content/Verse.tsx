@@ -334,7 +334,7 @@ const Verse: React.FC<VerseProps> = ({
     )) as string;
 
     onAddToNote(verseToAdd);
-    navigation.navigate("Notes", {shouldRefresh: false});
+    navigation.navigate("Notes", { shouldRefresh: false });
   };
 
   const onWordClicked = (code: string) => {
