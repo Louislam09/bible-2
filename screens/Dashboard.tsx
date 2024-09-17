@@ -157,7 +157,7 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
       icon: "NotebookText",
       // icon: "notebook-outline",
       label: "Notas",
-      action: () => navigation.navigate(Screens.Notes),
+      action: () => navigation.navigate(Screens.Notes, {shouldRefresh: false}),
     },
     {
       icon: "MonitorDown",

@@ -91,7 +91,7 @@ export type RootStackParamList = {
   Book: NavigatorScreenParams<RootTabParamList> | undefined;
   Favorite: NavigatorScreenParams<RootTabParamList> | undefined;
   DownloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
-  Notes: NavigatorScreenParams<RootTabParamList> | undefined;
+  Notes: NavigatorScreenParams<RootTabParamList> | { shouldRefresh: boolean };
   NoteDetail:
     | NavigatorScreenParams<RootTabParamList>
     | { noteId: number | null; isNewNote: boolean };

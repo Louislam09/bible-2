@@ -7,14 +7,16 @@ import { Text, View } from "components/Themed";
 import { htmlTemplate } from "constants/HtmlTemplate";
 import { useBibleContext } from "context/BibleContext";
 import usePrintAndShare from "hooks/usePrintAndShare";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
   Animated,
+  Keyboard,
   StyleSheet,
   TextInput,
   ToastAndroid,
   TouchableOpacity,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { IVerseItem, Screens, TTheme } from "types";
 import { formatDateShortDayMonth } from "utils/formatDateShortDayMonth";
@@ -27,7 +29,7 @@ type TListVerse = {
 
 const RenderItem = ({
   item,
-  onViewMode,
+  onOpenNoteDetail,
   styles,
   warnBeforeDelete,
   index,
@@ -66,7 +68,7 @@ const RenderItem = ({
       <TouchableOpacity
         style={{ backgroundColor: "transparent" }}
         activeOpacity={0.9}
-        onPress={() => onViewMode(item.id)}
+        onPress={() => onOpenNoteDetail(item.id)}
       >
         <View style={[styles.cardContainer]}>
           <View style={[styles.headerContainer]}>
@@ -117,46 +119,36 @@ const RenderItem = ({
 };
 
 const NoteList = ({ data, setShouldFetch }: TListVerse) => {
-  const [filterData, setFilterData] = useState([]);
   const theme = useTheme();
   const navigation = useNavigation();
+  const { printToFile } = usePrintAndShare();
+  const { onDeleteNote, addToNoteText, currentBibleLongName } =
+    useBibleContext();
+
   const styles = getStyles(theme);
-  const flatListRef = useRef<FlashList<any>>(null);
   const notFoundSource = require("../../assets/lottie/notFound.json");
 
-  const { printToFile } = usePrintAndShare();
-  const { onDeleteNote, addToNoteText, onAddToNote, currentBibleLongName } =
-    useBibleContext();
+  const [filterData, setFilterData] = useState([]);
   const [searchText, setSearchText] = useState<any>(null);
+  const flatListRef = useRef<FlashList<any>>(null);
+
   const noteCountTitle = useMemo(
     () => `${filterData.length} ${filterData.length > 1 ? "Notas" : "Nota"}`,
     [filterData]
   );
 
-  const addTextToNote = (selectedNote: any) => {
-    const myContent = `${
-      selectedNote?.note_text ?? ""
-    } <br> <div>${addToNoteText}</div><br> `;
-    // setNoteContent({
-    //   title: selectedNote?.title || defaultTitle,
-    //   content: !selectedNote && !addToNoteText ? "" : myContent,
-    // });
-    onAddToNote("");
-  };
-
-  const showAddNoteAlert = () => {
-    ToastAndroid.show(
-      "Seleccione la nota a la que quieres añadir el versiculo",
-      ToastAndroid.LONG
-    );
-  };
+  const getData = useMemo(() => {
+    return searchText
+      ? filterData.filter(
+        (x: any) =>
+          removeAccent(x.title).indexOf(searchText.toLowerCase()) !== -1 ||
+          removeAccent(x.note_text).indexOf(searchText.toLowerCase()) !== -1
+      )
+      : filterData;
+  }, [searchText, filterData]);
 
   useEffect(() => {
     if (!data) return;
-    if (addToNoteText && data.length === 0) {
-      addTextToNote(null);
-      return;
-    }
     if (addToNoteText) showAddNoteAlert();
   }, [addToNoteText, data]);
 
@@ -165,12 +157,18 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
     setFilterData(data);
   }, [data]);
 
-  const onOpenOrCloseNote = () => {
+  const showAddNoteAlert = () => {
+    ToastAndroid.show(
+      "Seleccione la nota a la que quieres añadir el versiculo",
+      ToastAndroid.LONG
+    );
+  };
+
+  const onCreateNewNote = () => {
     navigation.navigate(Screens.NoteDetail, { noteId: null, isNewNote: true });
   };
 
   const onDelete = async (id: number) => {
-    console.log({ id });
     await onDeleteNote(id);
     setShouldFetch((prev: any) => !prev);
     ToastAndroid.show("Nota borrada!", ToastAndroid.SHORT);
@@ -184,7 +182,7 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
       [
         {
           text: "Cancelar",
-          onPress: () => {},
+          onPress: () => { },
           style: "cancel",
         },
         { text: "Eliminar", onPress: () => onDelete(id) },
@@ -192,9 +190,9 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
     );
   };
 
-  const onViewMode = (id: number) => {
+  const onOpenNoteDetail = useCallback((id: number) => {
     navigation.navigate(Screens.NoteDetail, { noteId: id, isNewNote: false });
-  };
+  }, []);
 
   const NoteHeader = () => {
     return (
@@ -245,65 +243,58 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
     );
   };
 
-  const getData = useMemo(() => {
-    return searchText
-      ? filterData.filter(
-          (x: any) =>
-            removeAccent(x.title).indexOf(searchText.toLowerCase()) !== -1 ||
-            removeAccent(x.note_text).indexOf(searchText.toLowerCase()) !== -1
-        )
-      : filterData;
-  }, [searchText, filterData]);
-
   return (
-    <View
-      style={{
-        flex: 1,
-        padding: 5,
-        backgroundColor: theme.dark ? theme.colors.background : "#eee",
-      }}
-    >
-      {NoteHeader()}
-      <FlashList
-        contentContainerStyle={styles.contentContainerStyle}
-        ref={flatListRef}
-        decelerationRate={"normal"}
-        estimatedItemSize={135}
-        data={getData}
-        renderItem={({ item, index }) => (
-          <RenderItem
-            {...{
-              styles,
-              onViewMode,
-              warnBeforeDelete,
-              printToFile,
-              theme,
-              item,
-              index,
-            }}
-          />
-        )}
-        keyExtractor={(item: any, index: any) => `note-${index}`}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        ListEmptyComponent={ListEmptyComponent}
-        ListFooterComponent={<View style={{ paddingVertical: 30 }} />}
-      />
-      <TouchableOpacity
-        style={[
-          styles.scrollToTopButton,
-          {
-            borderWidth: 1,
-            borderColor: theme.colors.notification,
-            padding: 10,
-            borderRadius: 10,
-            backgroundColor: theme.colors.notification + "99",
-          },
-        ]}
-        onPress={onOpenOrCloseNote}
+    <TouchableWithoutFeedback style={{ flex: 1 }} onPress={() => Keyboard.dismiss()}>
+      <View
+        style={{
+          flex: 1,
+          padding: 5,
+          backgroundColor: theme.dark ? theme.colors.background : "#eee",
+        }}
       >
-        <Icon style={[{}]} color={theme.colors.text} name={"Plus"} size={30} />
-      </TouchableOpacity>
-    </View>
+
+        {NoteHeader()}
+        <FlashList
+          contentContainerStyle={styles.contentContainerStyle}
+          ref={flatListRef}
+          decelerationRate={"normal"}
+          estimatedItemSize={135}
+          data={getData}
+          renderItem={({ item, index }) => (
+            <RenderItem
+              {...{
+                styles,
+                onOpenNoteDetail,
+                warnBeforeDelete,
+                printToFile,
+                theme,
+                item,
+                index,
+              }}
+            />
+          )}
+          keyExtractor={(item: any, index: any) => `note-${index}`}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          ListEmptyComponent={ListEmptyComponent}
+          ListFooterComponent={<View style={{ paddingVertical: 30 }} />}
+        />
+        <TouchableOpacity
+          style={[
+            styles.scrollToTopButton,
+            {
+              borderWidth: 1,
+              borderColor: theme.colors.notification,
+              padding: 10,
+              borderRadius: 10,
+              backgroundColor: theme.colors.notification + "99",
+            },
+          ]}
+          onPress={onCreateNewNote}
+        >
+          <Icon style={[{}]} color={theme.colors.text} name={"Plus"} size={30} />
+        </TouchableOpacity>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -398,7 +389,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     cardContainer: {
       display: "flex",
       borderRadius: 10,
-      backgroundColor: dark ? "#151517" : colors.card,
+      backgroundColor: colors.card,
       padding: 15,
       margin: 5,
       elevation: 5,

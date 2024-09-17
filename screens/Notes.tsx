@@ -4,7 +4,8 @@ import { useDBContext } from "context/databaseContext";
 import React, { useEffect, useRef, useState } from "react";
 import { RootStackScreenProps, TNote } from "types";
 
-const Notes: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
+const Notes: React.FC<RootStackScreenProps<"Notes">> = ({ route }) => {
+  const { shouldRefresh } = route.params as any;
   const { myBibleDB, executeSql } = useDBContext();
   const [data, setData] = useState<TNote | any>(null);
   const [shouldFetch, setShouldFetch] = useState(false);
@@ -13,13 +14,12 @@ const Notes: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
     if (!myBibleDB || !executeSql) return;
     const getNotes = async () => {
       const notes = await executeSql(myBibleDB, GET_ALL_NOTE, []);
-      console.log("getNotes", shouldFetch, notes.length);
       setData(notes ?? []);
     };
     getNotes();
 
     return () => {};
-  }, [shouldFetch, myBibleDB, executeSql]);
+  }, [shouldFetch, myBibleDB, executeSql, shouldRefresh]);
 
   return <NoteList data={data} setShouldFetch={setShouldFetch} />;
 };

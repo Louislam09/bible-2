@@ -126,39 +126,39 @@ const defaultSearch = {
 
 const initialContext: BibleState = {
   highlightedVerses: [],
-  highlightVerse: () => {},
-  removeHighlistedVerse: () => {},
-  clearHighlights: () => {},
+  highlightVerse: () => { },
+  removeHighlistedVerse: () => { },
+  clearHighlights: () => { },
   selectBibleVersion: (version: string) => {
     return new Promise((resolve) => resolve());
   },
-  onSaveNote: () => {},
-  onUpdateNote: () => {},
-  onDeleteNote: () => {},
-  selectFont: () => {},
-  selectTheme: () => {},
-  toggleCopyMode: () => {},
-  toggleSplitMode: () => {},
-  toggleBottomSideSearching: (value: boolean) => {},
-  decreaseFontSize: () => {},
+  onSaveNote: () => { },
+  onUpdateNote: () => { },
+  onDeleteNote: () => { },
+  selectFont: () => { },
+  selectTheme: () => { },
+  toggleCopyMode: () => { },
+  toggleSplitMode: () => { },
+  toggleBottomSideSearching: (value: boolean) => { },
+  decreaseFontSize: () => { },
   toggleFavoriteVerse: async ({
     bookNumber,
     chapter,
     verse,
     isFav,
-  }: IFavoriteVerse) => {},
-  setVerseToCompare: (verse: number) => {},
-  setChapterLengthNumber: (chapterLengthNumber: number) => {},
-  setShouldLoop: (shouldLoop: boolean) => {},
-  setChapterVerses: (currentChapterVerses: IBookVerse[]) => {},
-  setverseInStrongDisplay: (verse: number) => {},
-  onAddToNote: (text: string) => {},
-  increaseFontSize: () => {},
-  toggleViewLayoutGrid: () => {},
-  setLocalData: () => {},
-  setStrongWord: () => {},
-  performSearch: () => {},
-  setSearchQuery: () => {},
+  }: IFavoriteVerse) => { },
+  setVerseToCompare: (verse: number) => { },
+  setChapterLengthNumber: (chapterLengthNumber: number) => { },
+  setShouldLoop: (shouldLoop: boolean) => { },
+  setChapterVerses: (currentChapterVerses: IBookVerse[]) => { },
+  setverseInStrongDisplay: (verse: number) => { },
+  onAddToNote: (text: string) => { },
+  increaseFontSize: () => { },
+  toggleViewLayoutGrid: () => { },
+  setLocalData: () => { },
+  setStrongWord: () => { },
+  performSearch: () => { },
+  setSearchQuery: () => { },
   selectedFont: TFont.Roboto,
   currentBibleVersion: EBibleVersions.BIBLE,
   isCopyMode: false,
@@ -457,7 +457,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const onDeleteNote = async (id: number) => {
-    console.log("myBibleDB", myBibleDB?.databaseName);
     if (!myBibleDB || !executeSql) return;
     await executeSql(myBibleDB, DELETE_NOTE, [id]);
   };

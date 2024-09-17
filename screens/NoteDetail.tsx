@@ -6,31 +6,36 @@ import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   Keyboard,
   StyleSheet,
   TextInput,
   ToastAndroid,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
-import { EViewMode, RootStackScreenProps, TNote, TTheme } from "types";
-import MyRichEditor from "./RichTextEditor";
+import { EViewMode, RootStackScreenProps, Screens, TNote, TTheme } from "types";
 import { formatDateShortDayMonth } from "utils/formatDateShortDayMonth";
+import MyRichEditor from "./RichTextEditor";
 
 const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
   route,
   navigation,
 }) => {
-  const defaultTitle = "Sin titulo 🖋️";
+  const theme = useTheme();
+  const { myBibleDB, executeSql } = useDBContext();
+  const { onSaveNote, onUpdateNote, addToNoteText, onAddToNote } =
+    useBibleContext();
+
   const { noteId, isNewNote } = route.params as any;
 
-  const theme = useTheme();
   const typingTimeoutRef = useRef<any>(null);
+  const [isLoading, setLoading] = useState(true);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+  const [isTyping, setTyping] = useState(false);
   const [noteInfo, setNoteInfo] = useState<TNote | null>(null);
   const [viewMode, setViewMode] = useState<keyof typeof EViewMode>(
     isNewNote ? "NEW" : "VIEW"
   );
-  const [isTyping, setTyping] = useState(false);
-  const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [noteContent, setNoteContent] = useState({
     title: "",
     content: "",
@@ -38,38 +43,40 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
 
   const styles = getStyles(theme);
   const isView = viewMode === "VIEW";
-  const showExtraButton = ["NEW", "EDIT", "VIEW"].includes(viewMode);
-
-  const { myBibleDB, executeSql } = useDBContext();
-  const { onSaveNote, onUpdateNote, addToNoteText, onAddToNote } =
-    useBibleContext();
+  const defaultTitle = "Sin titulo ✏️";
 
   useEffect(() => {
-    if (noteId === undefined || noteId === null || isNewNote) return;
+    if (noteId === undefined || noteId === null || isNewNote) {
+      setLoading(false)
+      return
+    };
+    setLoading(true)
     const getNoteById = async () => {
       if (!myBibleDB || !executeSql) return;
       const note = await executeSql(myBibleDB, GET_NOTE_BY_ID, [noteId]);
       setNoteInfo(note[0] as TNote);
+      setLoading(false)
     };
 
     getNoteById();
-    return () => {};
+    return () => { };
   }, [noteId, isNewNote]);
+
+  useEffect(() => {
+    if (isLoading) return
+    addTextToNote(noteInfo);
+  }, [noteInfo, isNewNote, isLoading]);
 
   useEffect(() => {
     if (isNewNote) {
       navigation.setOptions({
-        headerTitle: "Mi Nota",
+        headerTitle: "📝",
       });
-      return;
+    } else {
+      const headerTitle = isView ? noteInfo?.title?.toUpperCase() : "✏️"
+      navigation.setOptions({ headerTitle });
     }
-    addTextToNote(noteInfo);
-    navigation.setOptions({ headerTitle: noteInfo?.title });
-  }, [noteInfo, isNewNote]);
-
-  useEffect(() => {
-    console.log(noteContent);
-  }, [noteContent]);
+  }, [isView, noteInfo, isNewNote])
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -92,7 +99,37 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
     };
   }, []);
 
+  const renderActionButtons = useCallback(() => {
+    return (
+      <>
+        <TouchableOpacity
+          style={[
+            styles.scrollToTopButton,
+            {
+              borderWidth: 1,
+              borderColor: theme.colors.notification,
+              padding: 10,
+              borderRadius: 10,
+            },
+            (keyboardOpen || !isView) && { bottom: 70 },
+          ]}
+          onPress={isView ? onEditMode : onSave}
+        >
+          <Icon
+            style={[{}]}
+            color={theme.colors.notification}
+            name={isView ? "Pencil" : isTyping ? "RefreshCcw" : "Save"}
+            size={30}
+          />
+        </TouchableOpacity>
+      </>
+    );
+  }, [isTyping, isView, noteContent]);
+
+
   const addTextToNote = (selectedNote: TNote | null) => {
+    const isEditMode = !!addToNoteText
+    if (isEditMode) setViewMode("EDIT")
     const contentToAdd = `<br> <div>${addToNoteText}</div><br>`;
     const myContent = `${selectedNote?.note_text || ""} ${contentToAdd} `;
     setNoteContent({
@@ -127,7 +164,6 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
   };
 
   const onContentChange = async (field: any, text: string) => {
-    // console.log({ field, text });
     setNoteContent((prev: any) => ({
       ...prev,
       [field]: text || "",
@@ -149,7 +185,7 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
       // return;
     }
 
-    await onSaveNote(noteContent, () => navigation.goBack());
+    await onSaveNote(noteContent, () => navigation.navigate(Screens.Notes, { shouldRefresh: true }));
     // setNoteContent({ title: "", content: "" });
     ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
   };
@@ -158,32 +194,11 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
     setViewMode("EDIT");
   };
 
-  const renderActionButtons = useCallback(() => {
-    return (
-      <>
-        <TouchableOpacity
-          style={[
-            styles.scrollToTopButton,
-            {
-              borderWidth: 1,
-              borderColor: theme.colors.notification,
-              padding: 10,
-              borderRadius: 10,
-            },
-            (keyboardOpen || !isView) && { bottom: 70 },
-          ]}
-          onPress={isView ? onEditMode : onSave}
-        >
-          <Icon
-            style={[{}]}
-            color={theme.colors.notification}
-            name={isView ? "Pencil" : isTyping ? "RefreshCcw" : "Save"}
-            size={30}
-          />
-        </TouchableOpacity>
-      </>
-    );
-  }, [isTyping, isView, noteContent]);
+  if (isLoading) {
+    return <View style={styles.activiyContainer}>
+      <ActivityIndicator style={{ flex: 1 }} />
+    </View>
+  }
 
   return (
     <View style={styles.container}>
@@ -267,6 +282,12 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontWeight: "600",
       color: colors.text,
       alignSelf: "flex-start",
+    },
+    activiyContainer: {
+      flex: 1,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
     },
     searchContainer: {
       display: "flex",
