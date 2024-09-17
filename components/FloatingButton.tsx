@@ -84,7 +84,7 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({ navigation, children })
                     width: containerWidth,
                     borderRadius: borderRadius,
                     bottom: bottom,
-                    // backgroundColor: backgroundColor
+                    backgroundColor: theme.colors.notification
                 },
             ]}
         >
@@ -92,7 +92,7 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({ navigation, children })
                 <Icon name='NotebookText' color={'white'} size={iconSize} />
             </TouchableOpacity> : (
                 <Animated.View style={{ flex: 1, opacity }}>
-                    <TouchableOpacity onPress={toggleExpand} style={{ paddingVertical: 10, backgroundColor: theme.colors.background }}>
+                    <TouchableOpacity activeOpacity={1} onPress={toggleExpand} style={{ paddingVertical: 10, backgroundColor: theme.colors.background }}>
                         <Icon name='ChevronLeft' color={'white'} size={iconSize} />
                     </TouchableOpacity>
                     {children}
