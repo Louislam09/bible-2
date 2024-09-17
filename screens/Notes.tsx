@@ -1,7 +1,7 @@
 import NoteList from "components/note";
 import { GET_ALL_NOTE } from "constants/Queries";
 import { useDBContext } from "context/databaseContext";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RootStackScreenProps, TNote } from "types";
 
 const Notes: React.FC<RootStackScreenProps<"Notes">> = ({ route }) => {
@@ -18,7 +18,7 @@ const Notes: React.FC<RootStackScreenProps<"Notes">> = ({ route }) => {
     };
     getNotes();
 
-    return () => {};
+    return () => { };
   }, [shouldFetch, myBibleDB, executeSql, shouldRefresh]);
 
   return <NoteList data={data} setShouldFetch={setShouldFetch} />;

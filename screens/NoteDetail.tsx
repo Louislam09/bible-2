@@ -4,9 +4,12 @@ import { Text, View } from "components/Themed";
 import { GET_NOTE_BY_ID } from "constants/Queries";
 import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
+  Animated,
+  Easing,
   Keyboard,
   StyleSheet,
   TextInput,
@@ -16,6 +19,7 @@ import {
 import { EViewMode, RootStackScreenProps, Screens, TNote, TTheme } from "types";
 import { formatDateShortDayMonth } from "utils/formatDateShortDayMonth";
 import MyRichEditor from "./RichTextEditor";
+import useDebounce from "hooks/useDebounce";
 
 const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
   route,
@@ -23,11 +27,13 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
 }) => {
   const theme = useTheme();
   const { myBibleDB, executeSql } = useDBContext();
+  const styles = useMemo(() => getStyles(theme), [theme]);
   const { onSaveNote, onUpdateNote, addToNoteText, onAddToNote } =
     useBibleContext();
 
   const { noteId, isNewNote } = route.params as any;
 
+  const rotation = useRef(new Animated.Value(0)).current;
   const typingTimeoutRef = useRef<any>(null);
   const [isLoading, setLoading] = useState(true);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
@@ -41,30 +47,73 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
     content: "",
   });
 
-  const styles = getStyles(theme);
   const isView = viewMode === "VIEW";
   const defaultTitle = "Sin titulo ✏️";
 
-  useEffect(() => {
-    if (noteId === undefined || noteId === null || isNewNote) {
-      setLoading(false)
-      return
-    };
-    setLoading(true)
-    const getNoteById = async () => {
-      if (!myBibleDB || !executeSql) return;
-      const note = await executeSql(myBibleDB, GET_NOTE_BY_ID, [noteId]);
-      setNoteInfo(note[0] as TNote);
-      setLoading(false)
-    };
+  const debouncedNoteContent = useDebounce(noteContent, 3000);
 
-    getNoteById();
-    return () => { };
+  const startRotation = () => {
+    Animated.loop(
+      Animated.timing(rotation, {
+        toValue: 1,
+        duration: 2000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    ).start();
+  };
+
+  const stopRotation = () => {
+    rotation.stopAnimation();
+    rotation.setValue(0);
+  };
+
+  useEffect(() => {
+    if (isTyping) {
+      startRotation();
+    } else {
+      stopRotation();
+    }
+  }, [isTyping]);
+
+  const rotate = rotation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "-360deg"],
+  });
+
+  useEffect(() => {
+    if (noteId && debouncedNoteContent && typingTimeoutRef.current) {
+      onUpdate(noteId as number);
+    } else {
+      console.log('is a new note, saved and return the id')
+      setTyping(false)
+    }
+  }, [debouncedNoteContent, noteId]);
+
+  useEffect(() => {
+    const fetchNote = async () => {
+      try {
+        if (noteId === undefined || noteId === null || isNewNote) {
+          setLoading(false);
+          return;
+        }
+        setLoading(true);
+        if (!myBibleDB || !executeSql) return;
+        const note = await executeSql(myBibleDB, GET_NOTE_BY_ID, [noteId]);
+        setNoteInfo(note[0] as TNote);
+      } catch (error) {
+        Alert.alert("Error", "No se pudo cargar la nota. Por favor, inténtelo de nuevo.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchNote();
   }, [noteId, isNewNote]);
 
   useEffect(() => {
-    if (isLoading) return
-    addTextToNote(noteInfo);
+    if (!isLoading) {
+      addTextToNote();
+    }
   }, [noteInfo, isNewNote, isLoading]);
 
   useEffect(() => {
@@ -81,16 +130,12 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
-      () => {
-        setKeyboardOpen(true);
-      }
+      () => setKeyboardOpen(true)
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
-      () => {
-        setKeyboardOpen(false);
-      }
+      () => setKeyboardOpen(false)
     );
 
     return () => {
@@ -115,79 +160,70 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
           ]}
           onPress={isView ? onEditMode : onSave}
         >
-          <Icon
-            style={[{}]}
-            color={theme.colors.notification}
-            name={isView ? "Pencil" : isTyping ? "RefreshCcw" : "Save"}
-            size={30}
-          />
+          <Animated.View style={{ transform: [{ rotate }] }}>
+            <Icon
+              style={[{}]}
+              color={theme.colors.notification}
+              name={isView ? "Pencil" : isTyping ? "RefreshCcw" : "Save"}
+              size={30}
+            />
+          </Animated.View>
         </TouchableOpacity>
       </>
     );
   }, [isTyping, isView, noteContent]);
 
+  const addTextToNote = useCallback(() => {
+    const isEditMode = !!addToNoteText;
+    if (isEditMode) setViewMode("EDIT");
 
-  const addTextToNote = (selectedNote: TNote | null) => {
-    const isEditMode = !!addToNoteText
-    if (isEditMode) setViewMode("EDIT")
     const contentToAdd = `<br> <div>${addToNoteText}</div><br>`;
-    const myContent = `${selectedNote?.note_text || ""} ${contentToAdd} `;
+    const myContent = `${noteInfo?.note_text || ""} ${contentToAdd}`;
     setNoteContent({
-      title: selectedNote?.title || "",
-      content: !selectedNote && !addToNoteText ? "" : myContent,
+      title: noteInfo?.title || "",
+      content: !noteInfo && !addToNoteText ? "" : myContent,
     });
     onAddToNote("");
-  };
+  }, [noteInfo, addToNoteText]);
 
   const afterSaving = () => {
     setTyping(false);
-    clearTimeout(typingTimeoutRef.current);
+    typingTimeoutRef.current = null;
   };
 
-  const onUpdate = async (id: number, goToViewMode: boolean = false) => {
-    await onUpdateNote(noteContent, id, afterSaving);
-    if (goToViewMode) {
-      setViewMode("VIEW");
-      ToastAndroid.show("Nota actualizada!", ToastAndroid.SHORT);
+  const onUpdate = async (id: number, goToViewMode = false) => {
+    try {
+      await onUpdateNote(noteContent, id, afterSaving);
+      if (goToViewMode) {
+        setViewMode("VIEW");
+        ToastAndroid.show("Nota actualizada!", ToastAndroid.SHORT);
+      }
+    } catch (error) {
+      Alert.alert("Error", "No se pudo actualizar la nota.");
     }
-  };
-
-  const onSaveDelayed = async () => {
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-    }
-
-    setTyping(true);
-    typingTimeoutRef.current = setTimeout(() => {
-      onUpdate(noteId);
-    }, 3000);
   };
 
   const onContentChange = async (field: any, text: string) => {
+    typingTimeoutRef.current = true
+    setTyping(true);
     setNoteContent((prev: any) => ({
       ...prev,
       [field]: text || "",
     }));
-    if (noteId) {
-      await onSaveDelayed();
-    }
   };
 
   const onSave = async () => {
-    if (noteId) {
-      const goToViewMode = true;
-      await onUpdate(noteId, goToViewMode);
-      return;
+    try {
+      if (noteId) {
+        await onUpdate(noteId, true);
+        return;
+      }
+      if (!noteContent.title) noteContent.title = defaultTitle;
+      await onSaveNote(noteContent, () => navigation.navigate(Screens.Notes, { shouldRefresh: true }));
+      ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
+    } catch (error) {
+      Alert.alert("Error", "Failed to save note.");
     }
-    if (!noteContent.title) {
-      noteContent.title = defaultTitle;
-      // ToastAndroid.show("El titulo es requerido!", ToastAndroid.SHORT);
-      // return;
-    }
-
-    await onSaveNote(noteContent, () => navigation.navigate(Screens.Notes, { shouldRefresh: true }));
-    // setNoteContent({ title: "", content: "" });
-    ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
   };
 
   const onEditMode = () => {
