@@ -1,10 +1,9 @@
-import React, { useState, useRef, useEffect, MutableRefObject } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Dimensions, Animated, Easing, GestureResponderEvent } from 'react-native';
-import Icon from './Icon';
-import { iconSize } from 'constants/size';
-import { Screens, TTheme } from 'types';
 import { NavigationProp, NavigationState, useTheme } from '@react-navigation/native';
-import BackButton from './BackButton';
+import { iconSize } from 'constants/size';
+import React, { useRef, useState } from 'react';
+import { Animated, Dimensions, Easing, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { TTheme } from 'types';
+import Icon from './Icon';
 
 type FloatingButtonProps = {
     navigation: Omit<NavigationProp<ReactNavigation.RootParamList>, "getState"> & {
@@ -14,47 +13,44 @@ type FloatingButtonProps = {
 }
 
 const FloatingButton: React.FC<FloatingButtonProps> = ({ navigation, children }) => {
-    const theme = useTheme()
-    const styles = getStyles(theme)
-    const [expanded, setExpanded] = useState<boolean>(false);
+    const theme = useTheme();
+    const styles = getStyles(theme);
+    const [expanded, setExpanded] = useState(false);
     const animation = useRef<Animated.Value>(new Animated.Value(0)).current;
+    const floatingButtonSize = 60
+    const animationDuration = 300
+    const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
     const toggleExpand = (): void => {
         if (expanded) {
             Animated.timing(animation, {
                 toValue: 0,
-                duration: 300,
+                duration: animationDuration,
                 easing: Easing.ease,
                 useNativeDriver: false,
             }).start(() => {
-                console.log('Collapse')
                 setExpanded(false)
             });
         } else {
-            setExpanded(true);
             Animated.timing(animation, {
                 toValue: 1,
-                duration: 300,
+                duration: animationDuration,
                 easing: Easing.ease,
                 useNativeDriver: false,
             }).start(() => {
-                // navigation.navigate(Screens.NoteDetail, { noteId: 8, isNewNote: false });
-                console.log('Expand')
+                setExpanded(true);
             });
         }
     };
 
-    const screenHeight = Dimensions.get('window').height;
-    const screenWidth = Dimensions.get('window').width;
-
     const containerHeight = animation.interpolate({
         inputRange: [0, 1],
-        outputRange: [60, screenHeight],
+        outputRange: [floatingButtonSize, screenHeight],
     });
 
     const containerWidth = animation.interpolate({
         inputRange: [0, 1],
-        outputRange: [60, screenWidth],
+        outputRange: [floatingButtonSize, screenWidth],
     });
 
     const borderRadius = animation.interpolate({
@@ -66,6 +62,12 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({ navigation, children })
         inputRange: [0, 1],
         outputRange: ["50%", "0%"],
     });
+
+    const right = animation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [20, 0],
+    })
+
     const backgroundColor = animation.interpolate({
         inputRange: [0, 1],
         outputRange: [theme.colors.notification, theme.colors.background],
@@ -75,28 +77,43 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({ navigation, children })
         outputRange: [0, 1],
     });
 
+    const containerAnimatedStyle = {
+        width: containerWidth,
+        height: !expanded ? containerHeight : animation.interpolate({
+            inputRange: [0, 1],
+            outputRange: ["0%", "100%"],
+        }),
+        borderRadius,
+        bottom,
+        right,
+        backgroundColor,
+    }
+
     return (
-        <Animated.View
-            style={[
-                styles.floatingButton,
-                {
-                    height: containerHeight,
-                    width: containerWidth,
-                    borderRadius: borderRadius,
-                    bottom: bottom,
-                    backgroundColor: theme.colors.notification
-                },
-            ]}
-        >
-            {!expanded ? <TouchableOpacity onPress={(event: GestureResponderEvent) => toggleExpand()} style={styles.button}>
-                <Icon name='NotebookText' color={'white'} size={iconSize} />
-            </TouchableOpacity> : (
-                <Animated.View style={{ flex: 1, opacity }}>
-                    <TouchableOpacity activeOpacity={1} onPress={toggleExpand} style={{ paddingVertical: 10, backgroundColor: theme.colors.background }}>
-                        <Icon name='ChevronLeft' color={'white'} size={iconSize} />
-                    </TouchableOpacity>
-                    {children}
-                </Animated.View>
+        <Animated.View style={[styles.expandedContainer, containerAnimatedStyle]}>
+            {!expanded ? (
+                <TouchableOpacity
+                    onPress={toggleExpand}
+                    style={{ zIndex: 999 }}
+                >
+                    <Animated.View style={[styles.floatingButton]}>
+                        <Icon name='NotebookText' color='white' size={iconSize} />
+                    </Animated.View>
+                </TouchableOpacity>
+            ) : (
+                <>
+                    <View style={styles.header}>
+                        <TouchableOpacity style={{}} onPress={toggleExpand}>
+                            <Icon name='ChevronLeft' color={theme.colors.notification} size={iconSize} />
+                        </TouchableOpacity>
+                    </View>
+                    <Animated.View style={[
+                        styles.content,
+                        { opacity }
+                    ]}>
+                        {children}
+                    </Animated.View>
+                </>
             )}
         </Animated.View>
     );
@@ -105,26 +122,29 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({ navigation, children })
 const getStyles = ({ colors }: TTheme) => StyleSheet.create({
     floatingButton: {
         position: 'absolute',
-        right: 0,
-        zIndex: 9999
-    },
-    button: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        backgroundColor: colors.notification,
         justifyContent: 'center',
         alignItems: 'center',
-        flex: 1,
+        elevation: 5,
+        zIndex: 9999,
     },
-    buttonText: {
-        fontSize: 28,
-        color: '#fff',
+    expandedContainer: {
+        position: 'absolute',
+        backgroundColor: colors.background,
+        zIndex: 9999,
     },
-    expandedContent: {
-        justifyContent: 'center',
+    header: {
+        flexDirection: 'row',
         alignItems: 'center',
-        flex: 1,
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.border,
     },
-    closeButtonText: {
-        fontSize: 20,
-        color: '#fff',
+    content: {
+        flex: 1,
     },
 });
 

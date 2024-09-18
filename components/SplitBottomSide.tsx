@@ -48,15 +48,8 @@ const styles = StyleSheet.create({
   container: {
     position: "relative",
     width: "100%",
-  },
-  strongContainer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    width: "100%",
-    zIndex: 999,
-    height: "60%",
-  },
+  }
+
 });
 
 export default SplitBottomSide;

@@ -41,7 +41,7 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
     const [isTyping, setTyping] = useState(false);
     const [noteInfo, setNoteInfo] = useState<TNote | null>(null);
     const [viewMode, setViewMode] = useState<keyof typeof EViewMode>(
-        isNewNote ? "NEW" : "VIEW"
+        isNewNote ? "NEW" : "EDIT"
     );
     const [noteContent, setNoteContent] = useState({
         title: "",
@@ -265,7 +265,6 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
         }));
     };
 
-
     const onEditMode = () => {
         setViewMode("EDIT");
     };
@@ -311,6 +310,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
             flex: 1,
             padding: 5,
             backgroundColor: dark ? colors.background : "#eee",
+            zIndex: 100
         },
         dateLabel: {
             textTransform: "uppercase",
@@ -322,9 +322,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
             fontWeight: "bold",
             color: colors.text,
             marginVertical: 5,
-            // textDecorationStyle: "solid",
-            // textDecorationColor: "red",
-            // textDecorationLine: "underline",
         },
         scrollToTopButton: {
             position: "absolute",

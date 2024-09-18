@@ -16,6 +16,8 @@ import {
 } from "react-native";
 import { HomeParams, RootStackScreenProps, TTheme } from "types";
 import CustomHeader from "../components/home/header";
+import CurrentNoteDetail from "components/CurrentNoteDetail";
+import FloatingButton from "components/FloatingButton";
 
 const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
   // const navigation = useNavigation();
@@ -211,6 +213,9 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
           />
         )}
       </View>
+      <FloatingButton navigation={navigation}>
+        <CurrentNoteDetail />
+      </FloatingButton>
       {bookRef.current && isTour && (
         <Walkthrough
           steps={steps}
@@ -229,14 +234,6 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
       position: "relative",
       width: "100%",
       height: "100%",
-    },
-    strongContainer: {
-      position: "absolute",
-      bottom: 0,
-      left: 0,
-      width: "100%",
-      zIndex: 999,
-      height: "60%",
     },
     separator: {
       position: "relative",

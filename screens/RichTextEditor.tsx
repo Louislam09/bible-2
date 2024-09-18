@@ -68,14 +68,14 @@ const MyRichEditor: React.FC<IRichEditor> = ({
           }}
           style={[
             content && {
-              borderColor: theme.colors.text,
-              marginTop: 5,
+              borderRadius: 15,
+              paddingHorizontal: 5,
             },
           ]}
           ref={richTextRef}
           placeholder="Escribe aqui..."
           editorStyle={{
-            backgroundColor: theme.colors.background,
+            backgroundColor: theme.colors.text + "30",
             color: theme.colors.text,
             caretColor: theme.colors.notification,
             placeholderColor: theme.colors.text + 90,
