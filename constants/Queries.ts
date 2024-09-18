@@ -39,6 +39,12 @@ ORDER BY
     WHEN updated_at IS NOT NULL THEN updated_at 
     ELSE created_at 
   END DESC;`;
+export const GET_ALL_NOTE_NAME = `SELECT id, title FROM notes
+ORDER BY 
+  CASE 
+    WHEN updated_at IS NOT NULL THEN updated_at 
+    ELSE created_at 
+  END DESC;`;
 
 export const INSERT_FAVORITE_VERSE = `INSERT INTO favorite_verses (book_number, chapter, verse) 
 SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM favorite_verses 

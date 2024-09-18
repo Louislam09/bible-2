@@ -4,7 +4,7 @@ import SplitTopSide from "components/SplitTopSide";
 import Walkthrough from "components/Walkthrough";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated,
   PanResponder,
@@ -18,11 +18,15 @@ import { HomeParams, RootStackScreenProps, TTheme } from "types";
 import CustomHeader from "../components/home/header";
 import CurrentNoteDetail from "components/CurrentNoteDetail";
 import FloatingButton from "components/FloatingButton";
+import BottomModal from "components/BottomModal";
+import NoteNameList from "components/home/NoteNameList";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
-  // const navigation = useNavigation();
   const theme = useTheme();
+  const { storedData } = useStorage();
   const route = useRoute();
+  const { addToNoteText, onAddToNote, currentNoteId, setCurrentNoteId } = useBibleContext()
   const {
     isTour,
     book: _book,
@@ -33,7 +37,6 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
     bottomSideVerse: _bottomSideVerse,
   } = route.params as HomeParams;
 
-  const { storedData } = useStorage();
   const {
     lastBook,
     lastChapter,
@@ -52,6 +55,9 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
 
   const [stepIndex, setStepIndex] = useState(0);
 
+  const currentNoteIdRef = useRef<BottomSheetModal>(null);
+
+  // Onboarding Refs
   const bookRef = useRef<any>(null);
   const nextRef = useRef<any>(null);
   const backRef = useRef<any>(null);
@@ -130,6 +136,13 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
     }).start();
   };
 
+  const currentNoteIdPresentModalPress = useCallback(() => {
+    currentNoteIdRef.current?.present()
+  }, []);
+  const currentNoteIdDismissModalPress = useCallback(() => {
+    currentNoteIdRef.current?.dismiss()
+  }, []);
+
   const _backgroundColor = bColor.interpolate({
     inputRange: [0, 1],
     outputRange: [
@@ -159,6 +172,13 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
       lastTopWidth.current = (topWidth as any)._value;
     },
   });
+
+  useEffect(() => {
+    const shouldOpen = currentNoteId === -2;
+    const shouldClose = currentNoteId && currentNoteId >= -1;
+    if (shouldOpen) currentNoteIdPresentModalPress()
+    if (shouldClose) currentNoteIdDismissModalPress()
+  }, [currentNoteId])
 
   return (
     <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
@@ -216,6 +236,12 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
       <FloatingButton navigation={navigation}>
         <CurrentNoteDetail />
       </FloatingButton>
+      <BottomModal
+        // getIndex={getIndex}
+
+        shouldScroll justOneSnap justOneValue={["50%"]} startAT={0} ref={currentNoteIdRef}>
+        <NoteNameList {...{ theme }} />
+      </BottomModal>
       {bookRef.current && isTour && (
         <Walkthrough
           steps={steps}

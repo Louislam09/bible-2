@@ -146,6 +146,7 @@ const Verse: React.FC<VerseProps> = ({
     verseInStrongDisplay,
     setverseInStrongDisplay,
     onAddToNote,
+    setCurrentNoteId,
     toggleBottomSideSearching,
     isBottomSideSearching,
     isSplitActived,
@@ -334,7 +335,8 @@ const Verse: React.FC<VerseProps> = ({
     )) as string;
 
     onAddToNote(verseToAdd);
-    navigation.navigate("Notes", { shouldRefresh: false });
+    setCurrentNoteId(-2)
+    // navigation.navigate("Notes", { shouldRefresh: false });
   };
 
   const onWordClicked = (code: string) => {

@@ -56,6 +56,7 @@ type BibleState = {
   setChapterLengthNumber: (chapterLengthNumber: number) => void;
   setShouldLoop: (shouldLoop: boolean) => void;
   setChapterVerses: (currentChapterVerses: IBookVerse[]) => void;
+  setCurrentNoteId: (noteId: number) => void;
   setverseInStrongDisplay: (verse: number) => void;
   toggleFavoriteVerse: ({
     bookNumber,
@@ -79,6 +80,7 @@ type BibleState = {
   viewLayoutGrid: boolean;
   fontSize: number;
   verseInStrongDisplay: number;
+  currentNoteId: number | null;
   verseToCompare: number;
   searchState: UseSearchHookState;
   strongWord: IStrongWord;
@@ -105,6 +107,7 @@ type BibleAction =
   | { type: "SET_SEARCH_QUERY"; payload: string }
   | { type: "GO_BACK"; payload: number }
   | { type: "GO_FORWARD"; payload: number }
+  | { type: "SET_CURRENT_NOTE_ID"; payload: number }
   | { type: "SET_VERSE_IN_STRONG_DISPLAY"; payload: number }
   | { type: "SET_VERSE_TO_COMPARE"; payload: number }
   | { type: "SET_CHAPTER_VERSE_LENGTH"; payload: number }
@@ -151,6 +154,7 @@ const initialContext: BibleState = {
   setChapterLengthNumber: (chapterLengthNumber: number) => { },
   setShouldLoop: (shouldLoop: boolean) => { },
   setChapterVerses: (currentChapterVerses: IBookVerse[]) => { },
+  setCurrentNoteId: (noteId: number) => { },
   setverseInStrongDisplay: (verse: number) => { },
   onAddToNote: (text: string) => { },
   increaseFontSize: () => { },
@@ -168,6 +172,7 @@ const initialContext: BibleState = {
   searchQuery: "",
   addToNoteText: "",
   verseInStrongDisplay: 0,
+  currentNoteId: null,
   chapterVerseLength: 0,
   shouldLoopReading: false,
   verseToCompare: 1,
@@ -261,6 +266,11 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
       return {
         ...state,
         searchQuery: action.payload,
+      };
+    case "SET_CURRENT_NOTE_ID":
+      return {
+        ...state,
+        currentNoteId: action.payload,
       };
     case "SET_VERSE_IN_STRONG_DISPLAY":
       return {
@@ -481,6 +491,9 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const setStrongWord = (item: IStrongWord) => {
     dispatch({ type: "SET_STRONG_WORD", payload: item });
   };
+  const setCurrentNoteId = (noteId: number) => {
+    dispatch({ type: "SET_CURRENT_NOTE_ID", payload: noteId });
+  };
   const setverseInStrongDisplay = (verse: number) => {
     if (currentBibleVersion !== EBibleVersions.BIBLE) return;
     dispatch({ type: "SET_VERSE_IN_STRONG_DISPLAY", payload: verse });
@@ -534,6 +547,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     toggleViewLayoutGrid,
     toggleFavoriteVerse,
     setStrongWord,
+    setCurrentNoteId,
     setverseInStrongDisplay,
     setVerseToCompare,
     setChapterLengthNumber,

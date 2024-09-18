@@ -28,11 +28,11 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
     const route = useRoute()
     const { myBibleDB, executeSql } = useDBContext();
     const styles = useMemo(() => getStyles(theme), [theme]);
-    const { onSaveNote, onUpdateNote, addToNoteText, onAddToNote } =
+    const { onSaveNote, onUpdateNote, addToNoteText, onAddToNote, currentNoteId } =
         useBibleContext();
 
     const { isNewNote } = route.params as any;
-    const noteId = 8
+    const noteId = currentNoteId
     const rotation = useRef(new Animated.Value(0)).current;
     const typingTimeoutRef = useRef<any>(null);
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -68,6 +68,7 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
 
     useEffect(() => {
         const fetchNote = async () => {
+            console.log({ currentNoteId })
             try {
                 if (noteId === undefined || noteId === null || isNewNote) {
                     setLoading(false);
