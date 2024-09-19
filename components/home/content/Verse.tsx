@@ -146,10 +146,11 @@ const Verse: React.FC<VerseProps> = ({
     verseInStrongDisplay,
     setverseInStrongDisplay,
     onAddToNote,
-    setCurrentNoteId,
+    noteListPresentModalPress,
     toggleBottomSideSearching,
     isBottomSideSearching,
     isSplitActived,
+    currentNoteId,
     setVerseToCompare,
   } = useBibleContext();
   const theme = useTheme() as TTheme;
@@ -335,8 +336,8 @@ const Verse: React.FC<VerseProps> = ({
     )) as string;
 
     onAddToNote(verseToAdd);
-    setCurrentNoteId(-2)
-    // navigation.navigate("Notes", { shouldRefresh: false });
+    clearHighlights();
+    if (!currentNoteId) noteListPresentModalPress()
   };
 
   const onWordClicked = (code: string) => {

@@ -21,6 +21,7 @@ import { formatDateShortDayMonth } from "utils/formatDateShortDayMonth";
 // import MyRichEditor from "./RichTextEditor";
 import useDebounce from "hooks/useDebounce";
 import MyRichEditor from "screens/RichTextEditor";
+import { RichEditor } from "react-native-pell-rich-editor";
 
 const CurrentNoteDetail: React.FC<any> = ({ }) => {
     const theme = useTheme();
@@ -39,6 +40,7 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
     const [isLoading, setLoading] = useState(true);
     const [keyboardOpen, setKeyboardOpen] = useState(false);
     const [isTyping, setTyping] = useState(false);
+    const [shouldOpenKeyboard, setShouldOpenKeyboard] = useState(false);
     const [noteInfo, setNoteInfo] = useState<TNote | null>(null);
     const [viewMode, setViewMode] = useState<keyof typeof EViewMode>(
         isNewNote ? "NEW" : "EDIT"
@@ -51,7 +53,7 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
     const isView = viewMode === "VIEW";
     const defaultTitle = "Sin titulo ✏️";
 
-    const debouncedNoteContent = useDebounce(noteContent, 3000);
+    const debouncedNoteContent = useDebounce(noteContent, 1000);
 
     const rotate = rotation.interpolate({
         inputRange: [0, 1],
@@ -68,7 +70,6 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
 
     useEffect(() => {
         const fetchNote = async () => {
-            console.log({ currentNoteId })
             try {
                 if (noteId === undefined || noteId === null || isNewNote) {
                     setLoading(false);
@@ -221,11 +222,6 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
 
     const addTextToNote = useCallback(() => {
         const isEditMode = !!addToNoteText;
-        if (isEditMode) {
-            setViewMode("EDIT");
-            setHasUnsavedChanges(true)
-        }
-
         const contentToAdd = `<br> <div>${addToNoteText}</div><br>`;
         const myContent = `${noteInfo?.note_text || ""} ${contentToAdd}`;
         setNoteContent({
@@ -233,6 +229,11 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
             content: !noteInfo && !addToNoteText ? "" : myContent,
         });
         onAddToNote("");
+        if (isEditMode) {
+            setViewMode("EDIT");
+            setHasUnsavedChanges(true)
+            setShouldOpenKeyboard(true)
+        }
     }, [noteInfo, addToNoteText]);
 
     const afterSaving = () => {
@@ -286,8 +287,11 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
                 )}
             </Text>
             <MyRichEditor
+                shouldOpenKeyboard={shouldOpenKeyboard}
+                isModal
                 Textinput={
                     <TextInput
+                        editable={!isView}
                         placeholder="Titulo"
                         placeholderTextColor={theme.colors.text}
                         style={[styles.textInput]}

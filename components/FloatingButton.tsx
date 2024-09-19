@@ -1,45 +1,61 @@
 import { NavigationProp, NavigationState, useTheme } from '@react-navigation/native';
 import { iconSize } from 'constants/size';
-import React, { useRef, useState } from 'react';
-import { Animated, Dimensions, Easing, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Animated, Dimensions, Easing, Keyboard, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { TTheme } from 'types';
 import Icon from './Icon';
+import { useBibleContext } from 'context/BibleContext';
 
 type FloatingButtonProps = {
     navigation: Omit<NavigationProp<ReactNavigation.RootParamList>, "getState"> & {
         getState(): NavigationState | undefined;
     },
-    children: React.ReactNode
+    children: React.ReactNode,
 }
 
 const FloatingButton: React.FC<FloatingButtonProps> = ({ navigation, children }) => {
     const theme = useTheme();
     const styles = getStyles(theme);
+    const { currentNoteId, setCurrentNoteId, addToNoteText } = useBibleContext()
     const [expanded, setExpanded] = useState(false);
     const animation = useRef<Animated.Value>(new Animated.Value(0)).current;
     const floatingButtonSize = 60
     const animationDuration = 300
     const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
+    useEffect(() => {
+        if (!currentNoteId) return
+        expandAnimation()
+    }, [currentNoteId, addToNoteText])
+
+    const collapseAnimation = (shouldClose = false) => {
+        Animated.timing(animation, {
+            toValue: 0,
+            duration: animationDuration,
+            easing: Easing.ease,
+            useNativeDriver: false,
+        }).start(() => {
+            setExpanded(false)
+            if (shouldClose) setTimeout(() => setCurrentNoteId(null), 100);
+        });
+    }
+
+    const expandAnimation = () => {
+        Animated.timing(animation, {
+            toValue: 1,
+            duration: animationDuration,
+            easing: Easing.ease,
+            useNativeDriver: false,
+        }).start(() => {
+            setExpanded(true);
+        });
+    }
+
     const toggleExpand = (): void => {
         if (expanded) {
-            Animated.timing(animation, {
-                toValue: 0,
-                duration: animationDuration,
-                easing: Easing.ease,
-                useNativeDriver: false,
-            }).start(() => {
-                setExpanded(false)
-            });
+            collapseAnimation()
         } else {
-            Animated.timing(animation, {
-                toValue: 1,
-                duration: animationDuration,
-                easing: Easing.ease,
-                useNativeDriver: false,
-            }).start(() => {
-                setExpanded(true);
-            });
+            expandAnimation()
         }
     };
 
@@ -89,8 +105,12 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({ navigation, children })
         backgroundColor,
     }
 
+    const onCloseFloatingButton = () => {
+        collapseAnimation(true)
+    }
+
     return (
-        <Animated.View style={[styles.expandedContainer, containerAnimatedStyle]}>
+        <Animated.View style={[styles.expandedContainer, containerAnimatedStyle, currentNoteId === null && { display: 'none' }]}>
             {!expanded ? (
                 <TouchableOpacity
                     onPress={toggleExpand}
@@ -104,7 +124,10 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({ navigation, children })
                 <>
                     <View style={styles.header}>
                         <TouchableOpacity style={{}} onPress={toggleExpand}>
-                            <Icon name='ChevronLeft' color={theme.colors.notification} size={iconSize} />
+                            <Icon name='ChevronDown' color={theme.colors.notification} size={iconSize} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{}} onPress={onCloseFloatingButton}>
+                            <Icon name='X' color={"#e74856"} size={iconSize} />
                         </TouchableOpacity>
                     </View>
                     <Animated.View style={[
@@ -139,6 +162,7 @@ const getStyles = ({ colors }: TTheme) => StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
         padding: 10,
         borderBottomWidth: 1,
         borderBottomColor: colors.border,

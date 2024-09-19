@@ -18,7 +18,7 @@ type NoteNameListProps = {
 const NoteNameList: FC<NoteNameListProps> = ({ theme }) => {
   const styles = getStyles(theme);
   const { myBibleDB, executeSql } = useDBContext();
-  const { setCurrentNoteId } = useBibleContext()
+  const { setCurrentNoteId, noteListDismissModalPress } = useBibleContext()
   const [data, setData] = useState<TNote[] | any>(null);
   const {
     storedData: { fontSize },
@@ -37,6 +37,7 @@ const NoteNameList: FC<NoteNameListProps> = ({ theme }) => {
 
   const onItem = (id: number) => {
     setCurrentNoteId(id)
+    noteListDismissModalPress()
   }
 
   return (

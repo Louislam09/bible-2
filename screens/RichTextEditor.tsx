@@ -20,6 +20,8 @@ interface IRichEditor {
   content: any;
   isViewMode: boolean;
   Textinput: any;
+  isModal?: boolean;
+  shouldOpenKeyboard?: boolean
 }
 
 const MyRichEditor: React.FC<IRichEditor> = ({
@@ -27,6 +29,8 @@ const MyRichEditor: React.FC<IRichEditor> = ({
   content,
   isViewMode,
   Textinput,
+  isModal,
+  shouldOpenKeyboard
 }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -56,9 +60,17 @@ const MyRichEditor: React.FC<IRichEditor> = ({
     });
   };
 
+  useEffect(() => {
+    if (!shouldOpenKeyboard) return
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd()
+      richTextRef.current?.focusContentEditor()
+    }, 800);
+  }, [shouldOpenKeyboard])
+
   return (
     <View style={{ flex: 1 }}>
-      {!isViewMode && <>{Textinput}</>}
+      {(!isViewMode || isModal) && <>{Textinput}</>}
       <ScrollView ref={scrollViewRef}>
         <RichEditor
           pasteAsPlainText

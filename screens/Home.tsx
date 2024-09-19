@@ -26,7 +26,7 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
   const theme = useTheme();
   const { storedData } = useStorage();
   const route = useRoute();
-  const { addToNoteText, onAddToNote, currentNoteId, setCurrentNoteId } = useBibleContext()
+  const { noteListBottomSheetRef } = useBibleContext()
   const {
     isTour,
     book: _book,
@@ -54,8 +54,6 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
     (_bottomSideVerse === 0 ? 1 : _bottomSideVerse) || lastBottomSideVerse;
 
   const [stepIndex, setStepIndex] = useState(0);
-
-  const currentNoteIdRef = useRef<BottomSheetModal>(null);
 
   // Onboarding Refs
   const bookRef = useRef<any>(null);
@@ -136,13 +134,6 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
     }).start();
   };
 
-  const currentNoteIdPresentModalPress = useCallback(() => {
-    currentNoteIdRef.current?.present()
-  }, []);
-  const currentNoteIdDismissModalPress = useCallback(() => {
-    currentNoteIdRef.current?.dismiss()
-  }, []);
-
   const _backgroundColor = bColor.interpolate({
     inputRange: [0, 1],
     outputRange: [
@@ -172,13 +163,6 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
       lastTopWidth.current = (topWidth as any)._value;
     },
   });
-
-  useEffect(() => {
-    const shouldOpen = currentNoteId === -2;
-    const shouldClose = currentNoteId && currentNoteId >= -1;
-    if (shouldOpen) currentNoteIdPresentModalPress()
-    if (shouldClose) currentNoteIdDismissModalPress()
-  }, [currentNoteId])
 
   return (
     <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
@@ -237,9 +221,7 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
         <CurrentNoteDetail />
       </FloatingButton>
       <BottomModal
-        // getIndex={getIndex}
-
-        shouldScroll justOneSnap justOneValue={["50%"]} startAT={0} ref={currentNoteIdRef}>
+        shouldScroll justOneSnap justOneValue={["50%"]} startAT={0} ref={noteListBottomSheetRef}>
         <NoteNameList {...{ theme }} />
       </BottomModal>
       {bookRef.current && isTour && (

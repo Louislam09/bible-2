@@ -8,9 +8,11 @@ import {
 import useSearch, { UseSearchHookState } from "hooks/useSearch";
 import React, {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useReducer,
+  useRef,
   useState,
 } from "react";
 import useCustomFonts from "../hooks/useCustomFonts";
@@ -27,6 +29,8 @@ import { useDBContext } from "./databaseContext";
 import { useStorage } from "./LocalstoreContext";
 import { Dimensions, ToastAndroid } from "react-native";
 import getCurrentDbName from "utils/getCurrentDB";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 
 type BibleState = {
   highlightedVerses: IBookVerse[];
@@ -56,7 +60,7 @@ type BibleState = {
   setChapterLengthNumber: (chapterLengthNumber: number) => void;
   setShouldLoop: (shouldLoop: boolean) => void;
   setChapterVerses: (currentChapterVerses: IBookVerse[]) => void;
-  setCurrentNoteId: (noteId: number) => void;
+  setCurrentNoteId: (noteId: number | null) => void;
   setverseInStrongDisplay: (verse: number) => void;
   toggleFavoriteVerse: ({
     bookNumber,
@@ -93,6 +97,9 @@ type BibleState = {
   isSplitActived: boolean;
   isBottomSideSearching: boolean;
   currentBibleLongName: string;
+  noteListBottomSheetRef: React.RefObject<BottomSheetModalMethods> | null;
+  noteListPresentModalPress: () => void
+  noteListDismissModalPress: () => void
 };
 
 type BibleAction =
@@ -107,7 +114,7 @@ type BibleAction =
   | { type: "SET_SEARCH_QUERY"; payload: string }
   | { type: "GO_BACK"; payload: number }
   | { type: "GO_FORWARD"; payload: number }
-  | { type: "SET_CURRENT_NOTE_ID"; payload: number }
+  | { type: "SET_CURRENT_NOTE_ID"; payload: number | null }
   | { type: "SET_VERSE_IN_STRONG_DISPLAY"; payload: number }
   | { type: "SET_VERSE_TO_COMPARE"; payload: number }
   | { type: "SET_CHAPTER_VERSE_LENGTH"; payload: number }
@@ -154,7 +161,7 @@ const initialContext: BibleState = {
   setChapterLengthNumber: (chapterLengthNumber: number) => { },
   setShouldLoop: (shouldLoop: boolean) => { },
   setChapterVerses: (currentChapterVerses: IBookVerse[]) => { },
-  setCurrentNoteId: (noteId: number) => { },
+  setCurrentNoteId: (noteId: number | null) => { },
   setverseInStrongDisplay: (verse: number) => { },
   onAddToNote: (text: string) => { },
   increaseFontSize: () => { },
@@ -185,6 +192,9 @@ const initialContext: BibleState = {
   orientation: "PORTRAIT",
   currentBibleLongName: "Reina Valera 1960",
   currentChapterVerses: [],
+  noteListBottomSheetRef: null,
+  noteListPresentModalPress: () => { },
+  noteListDismissModalPress: () => { },
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);
@@ -337,6 +347,14 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     getCurrentDbName(currentBibleVersion, installedBibles)
   );
   const [orientation, setOrientation] = useState("PORTRAIT");
+  const noteListBottomSheetRef = useRef<BottomSheetModal>(null);
+
+  const noteListPresentModalPress = useCallback(() => {
+    noteListBottomSheetRef.current?.present();
+  }, []);
+  const noteListDismissModalPress = useCallback(() => {
+    noteListBottomSheetRef.current?.dismiss();
+  }, []);
 
   const getOrientation = () => {
     const { height, width } = Dimensions.get("window");
@@ -491,7 +509,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const setStrongWord = (item: IStrongWord) => {
     dispatch({ type: "SET_STRONG_WORD", payload: item });
   };
-  const setCurrentNoteId = (noteId: number) => {
+  const setCurrentNoteId = (noteId: number | null) => {
     dispatch({ type: "SET_CURRENT_NOTE_ID", payload: noteId });
   };
   const setverseInStrongDisplay = (verse: number) => {
@@ -529,6 +547,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     orientation,
     searchState,
     currentBibleLongName,
+    noteListBottomSheetRef,
     highlightVerse,
     clearHighlights,
     selectFont,
@@ -557,6 +576,8 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     goBackOnHistory,
     goForwardOnHistory,
     toggleBottomSideSearching,
+    noteListPresentModalPress,
+    noteListDismissModalPress,
   };
 
   return (

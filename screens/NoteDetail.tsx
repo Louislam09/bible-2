@@ -288,6 +288,7 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
       <MyRichEditor
         Textinput={
           <TextInput
+            editable={!isView}
             placeholder="Titulo"
             placeholderTextColor={theme.colors.text}
             style={[styles.textInput]}
