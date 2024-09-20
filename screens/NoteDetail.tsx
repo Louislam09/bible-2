@@ -297,9 +297,9 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
             onChangeText={(text: string) => onContentChange("title", text)}
           />
         }
-        content={noteContent.content}
-        onSetContent={(text: string) => onContentChange("content", text)}
-        isViewMode={isView}
+        value={noteContent.content}
+        onChangeText={(text: string) => onContentChange("content", text)}
+        readOnly={isView}
       />
       {renderActionButtons()}
     </View>

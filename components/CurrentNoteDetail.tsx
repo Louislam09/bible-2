@@ -16,27 +16,23 @@ import {
     ToastAndroid,
     TouchableOpacity
 } from "react-native";
-import { EViewMode, Screens, TNote, TTheme } from "types";
+import { EViewMode, TNote, TTheme } from "types";
 import { formatDateShortDayMonth } from "utils/formatDateShortDayMonth";
 // import MyRichEditor from "./RichTextEditor";
 import useDebounce from "hooks/useDebounce";
 import MyRichEditor from "screens/RichTextEditor";
-import { RichEditor } from "react-native-pell-rich-editor";
 
 const CurrentNoteDetail: React.FC<any> = ({ }) => {
     const theme = useTheme();
-    const navigation = useNavigation()
-    const route = useRoute()
     const { myBibleDB, executeSql } = useDBContext();
     const styles = useMemo(() => getStyles(theme), [theme]);
-    const { onSaveNote, onUpdateNote, addToNoteText, onAddToNote, currentNoteId } =
+    const { onSaveNote, onUpdateNote, addToNoteText, onAddToNote, currentNoteId, setCurrentNoteId } =
         useBibleContext();
 
-    const { isNewNote } = route.params as any;
-    const noteId = currentNoteId
+    const [noteId, setNoteId] = useState(currentNoteId)
+    const [isNewNote, setNewNote] = useState(noteId === -1)
     const rotation = useRef(new Animated.Value(0)).current;
     const typingTimeoutRef = useRef<any>(null);
-    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
     const [isLoading, setLoading] = useState(true);
     const [keyboardOpen, setKeyboardOpen] = useState(false);
     const [isTyping, setTyping] = useState(false);
@@ -59,6 +55,11 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
         inputRange: [0, 1],
         outputRange: ["0deg", "-360deg"],
     });
+
+    useEffect(() => {
+        setNoteId(currentNoteId)
+        setNewNote(currentNoteId === -1)
+    }, [currentNoteId])
 
     useEffect(() => {
         if (noteId && debouncedNoteContent && typingTimeoutRef.current) {
@@ -95,27 +96,8 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
     }, [noteInfo, isNewNote, isLoading]);
 
     useEffect(() => {
-        if (isNewNote) {
-            navigation.setOptions({
-                headerTitle: "📝",
-            });
-        } else {
-            const headerTitle = isView ? noteInfo?.title?.toUpperCase() : "✏️"
-            navigation.setOptions({ headerTitle });
-        }
-    }, [isView, noteInfo, isNewNote])
-
-    useEffect(() => {
-        const keyboardDidShowListener = Keyboard.addListener(
-            "keyboardDidShow",
-            () => setKeyboardOpen(true)
-        );
-
-        const keyboardDidHideListener = Keyboard.addListener(
-            "keyboardDidHide",
-            () => setKeyboardOpen(false)
-        );
-
+        const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => setKeyboardOpen(true));
+        const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => setKeyboardOpen(false));
         return () => {
             keyboardDidShowListener.remove();
             keyboardDidHideListener.remove();
@@ -132,48 +114,21 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
 
     const onSave = useCallback(async () => {
         try {
-            if (noteId) {
+            if (noteId && !isNewNote) {
                 await onUpdate(noteId, true);
                 return;
             }
             if (!noteContent.title) noteContent.title = defaultTitle;
-            setHasUnsavedChanges(false);
-            await onSaveNote(noteContent, () => navigation.navigate(Screens.Notes, { shouldRefresh: true }));
+            await onSaveNote(noteContent, () => setViewMode("VIEW"));
+            if (!myBibleDB || !executeSql) return;
+            const result = await executeSql(myBibleDB, "SELECT last_insert_rowid() as id");
+            const newNoteId = result[0]?.id
+            setCurrentNoteId(newNoteId)
             ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
         } catch (error) {
             Alert.alert("Error", "No se pudo guardar la nota.");
         }
     }, [noteContent, noteId]);
-
-    useEffect(() => {
-        const unsubscribe = navigation.addListener("beforeRemove", (e) => {
-            if (!hasUnsavedChanges) return;
-
-            e.preventDefault();
-
-            Alert.alert(
-                "Guardar cambios",
-                "Tienes cambios sin guardar, ¿quieres salir sin guardar?",
-                [
-                    { text: "Cancelar", style: "cancel", onPress: () => { } },
-                    {
-                        text: "Salir sin guardar",
-                        style: "destructive",
-                        onPress: () => navigation.dispatch(e.data.action),
-                    },
-                    {
-                        text: "Guardar",
-                        onPress: async () => {
-                            await onSave();
-                            navigation.dispatch(e.data.action);
-                        },
-                    },
-                ]
-            );
-        });
-
-        return unsubscribe;
-    }, [navigation, hasUnsavedChanges, onSave]);
 
     const renderActionButtons = useCallback(() => {
         return (
@@ -231,7 +186,6 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
         onAddToNote("");
         if (isEditMode) {
             setViewMode("EDIT");
-            setHasUnsavedChanges(true)
             setShouldOpenKeyboard(true)
         }
     }, [noteInfo, addToNoteText]);
@@ -244,7 +198,6 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
     const onUpdate = async (id: number, goToViewMode = false) => {
         try {
             await onUpdateNote(noteContent, id, afterSaving);
-            setHasUnsavedChanges(false);
             if (goToViewMode) {
                 setViewMode("VIEW");
                 ToastAndroid.show("Nota actualizada!", ToastAndroid.SHORT);
@@ -259,7 +212,6 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
             typingTimeoutRef.current = true
             setTyping(true);
         }
-        setHasUnsavedChanges(true);
 
         setNoteContent((prev: any) => ({
             ...prev,
@@ -300,9 +252,9 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
                         onChangeText={(text: string) => onContentChange("title", text)}
                     />
                 }
-                content={noteContent.content}
-                onSetContent={(text: string) => onContentChange("content", text)}
-                isViewMode={isView}
+                value={noteContent.content}
+                onChangeText={(text: string) => onContentChange("content", text)}
+                readOnly={isView}
             />
             {renderActionButtons()}
         </View>

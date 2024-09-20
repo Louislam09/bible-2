@@ -54,6 +54,33 @@ const NoteNameList: FC<NoteNameListProps> = ({ theme }) => {
       >
         Tus Notas
       </Text>
+      <View
+        style={{
+          flexDirection: "row",
+          marginVertical: 5,
+          backgroundColor: "transparent",
+        }}
+      >
+        <DecoratorLine theme={theme} color={theme.colors.text} />
+        <TouchableOpacity
+          style={[styles.card, { borderColor: theme.colors.text, borderRadius: 0 }]}
+          onPress={() => onItem(-1)}
+        >
+          <Icon name='NotebookText' color={theme.colors.text} size={iconSize} />
+          <View style={{ backgroundColor: "transparent", flex: 1 }}>
+            <Text
+              style={[
+                styles.versionText,
+                { color: theme.colors.text, fontSize, textAlign: 'center', fontWeight: 'bold' },
+              ]}
+            >
+              Crea una nueva nota
+            </Text>
+          </View>
+          <Icon name='NotebookText' color={theme.colors.text} size={iconSize} />
+        </TouchableOpacity>
+        <DecoratorLine theme={theme} color={theme.colors.text} />
+      </View >
       {data?.map((note: any) => (
         <View
           key={note?.id}
@@ -65,7 +92,7 @@ const NoteNameList: FC<NoteNameListProps> = ({ theme }) => {
         >
           <DecoratorLine theme={theme} />
           <TouchableOpacity
-            style={[styles.card]}
+            style={[styles.card, { borderRadius: 0 }]}
             onPress={() => onItem(note?.id)}
           >
             <View style={{ backgroundColor: "transparent", flex: 1 }}>
@@ -82,29 +109,33 @@ const NoteNameList: FC<NoteNameListProps> = ({ theme }) => {
               </Text>
             </View>
             <Icon name='NotebookText' color={theme.colors.text} size={iconSize} />
-
-            {/* {"currentBibleVersion" === note.id && (
-              <Icon
-                style={[styles.icon]}
-                size={iconSize}
-                name="Check"
-                color={theme.colors.notification}
-              />
-            )} */}
           </TouchableOpacity>
         </View >
-      ))}
+      ))
+      }
     </View >
   );
 };
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
+    plusNote: {
+      backgroundColor: colors.notification,
+      paddingVertical: 5,
+    },
+    listHeader: {
+      width: "90%",
+      backgroundColor: 'transparent',
+      flexDirection: 'row',
+      marginBottom: 5,
+      alignItems: 'center',
+      gap: 4
+    },
     title: {
       color: "white",
       fontSize: 20,
       padding: 0,
-      width: "90%",
+      width: "93%",
       textAlign: "center",
       backgroundColor: colors.notification,
     },

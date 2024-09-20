@@ -49,7 +49,6 @@ ORDER BY
 export const INSERT_FAVORITE_VERSE = `INSERT INTO favorite_verses (book_number, chapter, verse) 
 SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM favorite_verses 
   WHERE book_number = ? AND chapter = ? AND verse = ?);`;
-// export const INSERT_FAVORITE_VERSE = `INSERT INTO favorite_verses (book_number, chapter, verse) VALUES (?, ?, ?);`;
 export const DELETE_FAVORITE_VERSE = `DELETE FROM favorite_verses WHERE book_number = ? AND chapter = ? AND verse = ?;`;
 export const DELETE_NOTE = `DELETE FROM notes WHERE id = ?;`;
 export const UPDATE_NOTE_BY_ID = `UPDATE notes set title = ?, note_text = ?, 

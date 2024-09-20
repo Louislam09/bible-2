@@ -16,18 +16,18 @@ const handleHead = ({ tintColor, label }: any) => (
 );
 
 interface IRichEditor {
-  onSetContent: any;
-  content: any;
-  isViewMode: boolean;
+  onChangeText: any;
+  value: any;
+  readOnly: boolean;
   Textinput: any;
   isModal?: boolean;
   shouldOpenKeyboard?: boolean
 }
 
 const MyRichEditor: React.FC<IRichEditor> = ({
-  onSetContent,
-  content,
-  isViewMode,
+  onChangeText,
+  value,
+  readOnly,
   Textinput,
   isModal,
   shouldOpenKeyboard
@@ -70,7 +70,7 @@ const MyRichEditor: React.FC<IRichEditor> = ({
 
   return (
     <View style={{ flex: 1 }}>
-      {(!isViewMode || isModal) && <>{Textinput}</>}
+      {(!readOnly || isModal) && <>{Textinput}</>}
       <ScrollView ref={scrollViewRef}>
         <RichEditor
           pasteAsPlainText
@@ -79,7 +79,7 @@ const MyRichEditor: React.FC<IRichEditor> = ({
             setCursorY(cursorY);
           }}
           style={[
-            content && {
+            value && {
               borderRadius: 15,
               paddingHorizontal: 5,
             },
@@ -93,14 +93,14 @@ const MyRichEditor: React.FC<IRichEditor> = ({
             placeholderColor: theme.colors.text + 90,
           }}
           onChange={(descriptionText: string) => {
-            onSetContent(descriptionText);
+            onChangeText(descriptionText);
             handleScrollToCursor();
           }}
-          initialContentHTML={content}
-          disabled={isViewMode}
+          initialContentHTML={value}
+          disabled={readOnly}
         />
       </ScrollView>
-      {!isViewMode && (
+      {!readOnly && (
         <RichToolbar
           style={styles.richToolbar}
           editor={richTextRef}
