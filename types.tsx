@@ -18,7 +18,7 @@ import { IconProps } from "components/Icon";
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
+    interface RootParamList extends RootStackParamList { }
   }
 }
 
@@ -93,24 +93,24 @@ export type RootStackParamList = {
   DownloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
   Notes: NavigatorScreenParams<RootTabParamList> | { shouldRefresh: boolean };
   NoteDetail:
-    | NavigatorScreenParams<RootTabParamList>
-    | { noteId: number | null; isNewNote: boolean };
+  | NavigatorScreenParams<RootTabParamList>
+  | { noteId: number | null; isNewNote: boolean };
   Character: NavigatorScreenParams<RootTabParamList> | undefined;
   ChooseBook:
-    | NavigatorScreenParams<RootTabParamList>
-    | ChooseChapterNumberParams;
+  | NavigatorScreenParams<RootTabParamList>
+  | ChooseChapterNumberParams;
   Search: NavigatorScreenParams<RootTabParamList> | { book?: string };
   Concordance: NavigatorScreenParams<RootTabParamList> | {};
   StrongSearchEntire:
-    | NavigatorScreenParams<RootTabParamList>
-    | { paramCode: string };
+  | NavigatorScreenParams<RootTabParamList>
+  | { paramCode: string };
   DictionarySearch: NavigatorScreenParams<RootTabParamList> | { word: string };
   ChooseChapterNumber:
-    | NavigatorScreenParams<RootTabParamList>
-    | ChooseChapterNumberParams;
+  | NavigatorScreenParams<RootTabParamList>
+  | ChooseChapterNumberParams;
   ChooseVerseNumber:
-    | NavigatorScreenParams<RootTabParamList>
-    | ChooseChapterNumberParams;
+  | NavigatorScreenParams<RootTabParamList>
+  | ChooseChapterNumberParams;
   Modal: undefined;
   Onboarding: undefined;
   Song: undefined;
@@ -204,6 +204,11 @@ export type TSubtitle = {
   title?: string;
   verse: number;
 };
+
+export enum OrientationType {
+  "LANDSCAPE",
+  "PORTRAIT"
+}
 
 export type TNote = {
   id: number;

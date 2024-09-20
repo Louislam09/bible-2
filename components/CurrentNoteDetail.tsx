@@ -1,4 +1,4 @@
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 import Icon from "components/Icon";
 import { Text, View } from "components/Themed";
 import { GET_NOTE_BY_ID } from "constants/Queries";
@@ -142,7 +142,7 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
                             padding: 10,
                             borderRadius: 10,
                         },
-                        (keyboardOpen || !isView) && { bottom: 70 },
+                        (keyboardOpen || !isView) && { bottom: 150 },
                     ]}
                     onPress={isView ? onEditMode : onSave}
                 >

@@ -1,19 +1,58 @@
 import { useTheme } from "@react-navigation/native";
 import Icon from "components/Icon";
-import { Text } from "components/Themed";
 import { iconSize } from "constants/size";
-import React, { useEffect, useRef, useState } from "react";
-import { Keyboard, ScrollView, StyleSheet, View } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import {
   RichEditor,
   RichToolbar,
-  actions,
+  actions
 } from "react-native-pell-rich-editor";
-import { EViewMode, TTheme } from "types";
+import { TTheme } from "types";
 
 const handleHead = ({ tintColor, label }: any) => (
   <Icon color={tintColor} size={iconSize} name={label} />
 );
+
+const ColorPicker = ({ onSelectColor, mainColor }: any) => {
+  const colors = [
+    mainColor,
+    '#000000', // Black
+    '#FFFFFF', // White
+    '#FF0000', // Red
+    '#FF7F00', // Orange
+    '#FFFF00', // Yellow
+    '#00FF00', // Green
+    '#00FFFF', // Cyan
+    '#0000FF', // Blue
+    '#7F00FF', // Purple
+    '#FF1493', // Deep Pink
+    '#FF69B4', // Hot Pink
+    '#8B4513', // Saddle Brown
+    '#A52A2A', // Brown
+    '#808080', // Gray
+  ];
+
+  return (
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', zIndex: 9999 }}>
+      {colors.map(color => (
+        <TouchableOpacity
+          key={color}
+          onPress={() => onSelectColor(color)}
+          style={{
+            width: 25,
+            height: 25,
+            backgroundColor: color,
+            margin: 5,
+            borderRadius: 15,
+            borderColor: '#ddd',
+            borderWidth: 1,
+          }}
+        />
+      ))}
+    </View>
+  );
+};
 
 interface IRichEditor {
   onChangeText: any;
@@ -36,24 +75,26 @@ const MyRichEditor: React.FC<IRichEditor> = ({
   const styles = getStyles(theme);
   const richTextRef = useRef<RichEditor>(null);
   const scrollViewRef = useRef<ScrollView>(null);
+  const [textColor, setTextColor] = useState(theme.colors.text); // Default text color
+  const [colorVisible, setColorVisible] = useState(false);
 
   const [cursorY, setCursorY] = useState(0);
 
   const toolbarActions = [
+    actions.foreColor,
     actions.setBold,
     actions.setItalic,
     actions.setUnderline,
     actions.setParagraph,
     actions.heading2,
-    actions.alignFull,
+    actions.insertBulletsList,
     actions.alignLeft,
     actions.alignCenter,
     actions.alignRight,
-    // actions.redo,
   ];
 
   const handleScrollToCursor = () => {
-    const offset = 150; // Offset to adjust the cursor position in view
+    const offset = 150;
     scrollViewRef.current?.scrollTo({
       y: cursorY - offset,
       animated: true,
@@ -61,12 +102,21 @@ const MyRichEditor: React.FC<IRichEditor> = ({
   };
 
   useEffect(() => {
-    if (!shouldOpenKeyboard) return
+    if (!shouldOpenKeyboard) return;
     setTimeout(() => {
-      scrollViewRef.current?.scrollToEnd()
-      richTextRef.current?.focusContentEditor()
+      scrollViewRef.current?.scrollToEnd();
+      richTextRef.current?.focusContentEditor();
     }, 800);
-  }, [shouldOpenKeyboard])
+  }, [shouldOpenKeyboard]);
+
+  const handleColor = useCallback(() => {
+    setColorVisible(!colorVisible);
+  }, [colorVisible]);
+
+  const onSelectColor = (color: string) => {
+    setTextColor(color);
+    richTextRef.current?.setForeColor(color);
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -78,12 +128,10 @@ const MyRichEditor: React.FC<IRichEditor> = ({
           onCursorPosition={(cursorY) => {
             setCursorY(cursorY);
           }}
-          style={[
-            value && {
-              borderRadius: 15,
-              paddingHorizontal: 5,
-            },
-          ]}
+          style={[value && {
+            borderRadius: 15,
+            paddingHorizontal: 5,
+          }]}
           ref={richTextRef}
           placeholder="Escribe aqui..."
           editorStyle={{
@@ -100,6 +148,8 @@ const MyRichEditor: React.FC<IRichEditor> = ({
           disabled={readOnly}
         />
       </ScrollView>
+
+      {colorVisible && <ColorPicker mainColor={theme.colors.text} onSelectColor={onSelectColor} />}
       {!readOnly && (
         <RichToolbar
           style={styles.richToolbar}
@@ -107,25 +157,18 @@ const MyRichEditor: React.FC<IRichEditor> = ({
           selectedIconTint={theme.colors.notification}
           actions={toolbarActions}
           iconMap={{
-            [actions.setBold]: (props: any) =>
-              handleHead({ ...props, label: "Bold" }),
-            [actions.setItalic]: (props: any) =>
-              handleHead({ ...props, label: "Italic" }),
-            [actions.setUnderline]: (props: any) =>
-              handleHead({ ...props, label: "Underline" }),
-            [actions.heading2]: (props: any) =>
-              handleHead({ ...props, label: "Heading1" }),
-            [actions.alignFull]: ({ tintColor }: any) =>
-              handleHead({ tintColor, label: "AlignJustify" }),
-            [actions.alignLeft]: ({ tintColor }: any) =>
-              handleHead({ tintColor, label: "AlignLeft" }),
-            [actions.alignRight]: ({ tintColor }: any) =>
-              handleHead({ tintColor, label: "AlignRight" }),
-            [actions.alignCenter]: ({ tintColor }: any) =>
-              handleHead({ tintColor, label: "AlignCenter" }),
-            [actions.setParagraph]: ({ tintColor }: any) =>
-              handleHead({ tintColor, label: "Pilcrow" }),
+            [actions.setBold]: (props: any) => handleHead({ ...props, label: "Bold" }),
+            [actions.setItalic]: (props: any) => handleHead({ ...props, label: "Italic" }),
+            [actions.setUnderline]: (props: any) => handleHead({ ...props, label: "Underline" }),
+            [actions.heading2]: (props: any) => handleHead({ ...props, label: "Heading1" }),
+            [actions.alignLeft]: ({ tintColor }: any) => handleHead({ tintColor, label: "AlignLeft" }),
+            [actions.alignRight]: ({ tintColor }: any) => handleHead({ tintColor, label: "AlignRight" }),
+            [actions.alignCenter]: ({ tintColor }: any) => handleHead({ tintColor, label: "AlignCenter" }),
+            [actions.setParagraph]: ({ tintColor }: any) => handleHead({ tintColor, label: "Pilcrow" }),
+            [actions.insertBulletsList]: ({ tintColor }: any) => handleHead({ tintColor, label: "List" }),
+            [actions.foreColor]: ({ tintColor }: any) => handleHead({ tintColor: textColor, label: "Palette" }),
           }}
+          foreColor={handleColor}
         />
       )}
     </View>
