@@ -18,7 +18,7 @@ import { IconProps } from "components/Icon";
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
+    interface RootParamList extends RootStackParamList { }
   }
 }
 
@@ -40,6 +40,7 @@ export enum Screens {
   Song = "Song",
   StrongSearchEntire = "StrongSearchEntire",
   DictionarySearch = "DictionarySearch",
+  NoteDetail = "NoteDetail",
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -62,6 +63,7 @@ export const ScreensName: TScreensName = {
   [Screens.Song]: "Himnario",
   [Screens.StrongSearchEntire]: "Explorador de Números Strong",
   [Screens.DictionarySearch]: "Dictionary Search",
+  [Screens.NoteDetail]: "Nota",
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -76,6 +78,7 @@ export type RootTabParamList = {
   StrongSearchEntire: undefined;
   DownloadManager: undefined;
   Notes: undefined;
+  NoteDetail: undefined;
   Favorite: undefined;
   NotFound: undefined;
   DictionarySearch: undefined;
@@ -88,23 +91,26 @@ export type RootStackParamList = {
   Book: NavigatorScreenParams<RootTabParamList> | undefined;
   Favorite: NavigatorScreenParams<RootTabParamList> | undefined;
   DownloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
-  Notes: NavigatorScreenParams<RootTabParamList> | undefined;
+  Notes: NavigatorScreenParams<RootTabParamList> | { shouldRefresh: boolean };
+  NoteDetail:
+  | NavigatorScreenParams<RootTabParamList>
+  | { noteId: number | null; isNewNote: boolean };
   Character: NavigatorScreenParams<RootTabParamList> | undefined;
   ChooseBook:
-    | NavigatorScreenParams<RootTabParamList>
-    | ChooseChapterNumberParams;
+  | NavigatorScreenParams<RootTabParamList>
+  | ChooseChapterNumberParams;
   Search: NavigatorScreenParams<RootTabParamList> | { book?: string };
   Concordance: NavigatorScreenParams<RootTabParamList> | {};
   StrongSearchEntire:
-    | NavigatorScreenParams<RootTabParamList>
-    | { paramCode: string };
+  | NavigatorScreenParams<RootTabParamList>
+  | { paramCode: string };
   DictionarySearch: NavigatorScreenParams<RootTabParamList> | { word: string };
   ChooseChapterNumber:
-    | NavigatorScreenParams<RootTabParamList>
-    | ChooseChapterNumberParams;
+  | NavigatorScreenParams<RootTabParamList>
+  | ChooseChapterNumberParams;
   ChooseVerseNumber:
-    | NavigatorScreenParams<RootTabParamList>
-    | ChooseChapterNumberParams;
+  | NavigatorScreenParams<RootTabParamList>
+  | ChooseChapterNumberParams;
   Modal: undefined;
   Onboarding: undefined;
   Song: undefined;
@@ -199,11 +205,17 @@ export type TSubtitle = {
   verse: number;
 };
 
+export enum OrientationType {
+  "LANDSCAPE",
+  "PORTRAIT"
+}
+
 export type TNote = {
   id: number;
   title: string;
   note_text: string;
   created_at: string;
+  updated_at?: string;
 };
 
 export enum EViewMode {

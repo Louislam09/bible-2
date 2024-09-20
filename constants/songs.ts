@@ -76,7 +76,7 @@ export default [
       "Y Bar Timeo Insistió: ”… ¿acaso el mismo que sanó\na la mujer que lo tocó…? ¿… y a diez leprosos restauró?\nY el populacho contestó: “¡Es el Jesús de Nazaret!”\n Y todo el vulgo confirmó: “¡Es el Jesús de Nazaret!”",
       "También la chusma preguntó: “¿No es este el hijo de José,\nel carpintero popular que vive allá en Nazaret?”\nY el populacho contestó: “¡Es el Jesús de Nazaret!”\n Y todo el vulgo confirmó: “¡Es el Jesús de Nazaret!”",
       "Cuando tú sientas tentación, ven a Jesús y paz tendrás.\n Si derrotado siempre estás, de Dios Su gracia obtendrás.\nY si tu alma tiene sed, ¡Busca a Jesús de Nazaret!\n Y si tu alma tiene sed, ¡Busca a Jesús de Nazaret!",
-      "También dos mil años después, el buen Jesús pasando va.\nAmable llega a tu ciudad, ¡y allí se quiere hospedar!\n¡Ya Dominicana lo invitó! ¡Y en México ya se hospedó!\nA centroamerica ya va, ¡y con los gauchos cenará!",
+      "También dos mil años después, el buen Jesús pasando va.\nAmable llega a tu ciudad, ¡y allí se quiere hospedar!\n¡Dominicana lo invitó! ¡Y en México ya se hospedó!\nA centroamerica ya va, ¡y con los gauchos cenará!",
       "Mas si a Jesús desprecias hoy, y miras todo con desdén,\nentristecido Él pasará, y en vano tú le buscarás.\nUn panameño te dirá: “¡Se fue Jesús de Nazaret!”\n“Quizá si corres lo hallarás, sanando a un ciego espiritual”",
     ],
   },

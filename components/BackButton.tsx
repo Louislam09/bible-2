@@ -48,6 +48,8 @@ const styles = StyleSheet.create({
   closeIcon: {
     padding: 10,
     position: "absolute",
-    zIndex: 11,
+    zIndex: 99999,
+    left: 0,
+    bottom: 0,
   },
 });

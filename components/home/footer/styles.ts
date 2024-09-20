@@ -20,7 +20,7 @@ export const getStyles = ({ colors }: TTheme) =>
       top: 0,
       width: "100%",
       height: 10,
-      zIndex: 111,
+      zIndex: 13,
     },
     titleContainer: {
       alignItems: "center",

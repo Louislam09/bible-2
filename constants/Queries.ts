@@ -32,7 +32,14 @@ export const CREATE_COLUMN_UPDATED_AT_IN_NOTE_TABLE = `ALTER TABLE notes ADD COL
 
 export const INSERT_INTO_NOTE = `INSERT INTO notes (title, note_text) 
 values (?, ?);`;
+export const GET_NOTE_BY_ID = `SELECT * FROM notes where id = ?`;
 export const GET_ALL_NOTE = `SELECT * FROM notes
+ORDER BY 
+  CASE 
+    WHEN updated_at IS NOT NULL THEN updated_at 
+    ELSE created_at 
+  END DESC;`;
+export const GET_ALL_NOTE_NAME = `SELECT id, title FROM notes
 ORDER BY 
   CASE 
     WHEN updated_at IS NOT NULL THEN updated_at 
@@ -42,7 +49,6 @@ ORDER BY
 export const INSERT_FAVORITE_VERSE = `INSERT INTO favorite_verses (book_number, chapter, verse) 
 SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM favorite_verses 
   WHERE book_number = ? AND chapter = ? AND verse = ?);`;
-// export const INSERT_FAVORITE_VERSE = `INSERT INTO favorite_verses (book_number, chapter, verse) VALUES (?, ?, ?);`;
 export const DELETE_FAVORITE_VERSE = `DELETE FROM favorite_verses WHERE book_number = ? AND chapter = ? AND verse = ?;`;
 export const DELETE_NOTE = `DELETE FROM notes WHERE id = ?;`;
 export const UPDATE_NOTE_BY_ID = `UPDATE notes set title = ?, note_text = ?, 

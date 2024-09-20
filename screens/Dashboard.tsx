@@ -129,66 +129,55 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
 
     {
       icon: "Star",
-      // icon: "star-outline",
       label: "Versiculos Favoritos",
       action: () => navigation.navigate(Screens.Favorite),
     },
     {
       icon: "UserSearch",
-      // icon: "person-outline",
       label: "Buscar Personaje",
       isIonicon: true,
       action: () => navigation.navigate(Screens.Character),
     },
     {
       icon: "Music4",
-      // icon: "musical-notes-outline",
       label: "Himnos",
       isIonicon: true,
       action: onSong,
     },
     {
       icon: "AudioLines",
-      // icon: "waveform",
       label: "Selecciona Una Voz",
       action: voiceHandlePresentModalPress,
     },
     {
       icon: "NotebookText",
-      // icon: "notebook-outline",
       label: "Notas",
-      action: () => navigation.navigate(Screens.Notes),
+      action: () => navigation.navigate(Screens.Notes, { shouldRefresh: false }),
     },
     {
       icon: "MonitorDown",
-      // icon: "download",
       label: "Gestor de descargas",
       action: () => navigation.navigate(Screens.DownloadManager),
     },
     {
       icon: "FileStack",
-      // icon: "book-open-page-variant-outline",
       label: "Versiones",
       action: versionHandlePresentModalPress,
     },
     {
       icon: "Search",
-      // icon: "text-search",
       label: "Buscador",
       action: () => navigation.navigate(Screens.Search, {}),
     },
 
     {
       icon: "Settings",
-      // icon: "settings-outline",
       label: "Ajustes",
       isIonicon: true,
-      // action: fontHandlePresentModalPress,
       action: () => navigation.navigate(Screens.Settings),
     },
     {
       icon: "HandHelping",
-      // icon: "television-guide",
       label: "Como Usar?",
       action: () => navigation.navigate(Screens.Onboarding),
     },

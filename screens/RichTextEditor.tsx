@@ -1,116 +1,189 @@
 import { useTheme } from "@react-navigation/native";
 import Icon from "components/Icon";
-import React, { useRef, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { iconSize } from "constants/size";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import {
   RichEditor,
   RichToolbar,
-  actions,
+  actions
 } from "react-native-pell-rich-editor";
-import { EViewMode } from "types";
+import { TTheme } from "types";
 
 const handleHead = ({ tintColor, label }: any) => (
-  <Icon color={tintColor} size={22} name={label} />
+  <Icon color={tintColor} size={iconSize} name={label} />
 );
 
+const ColorPicker = ({ onSelectColor, mainColor }: any) => {
+  const colors = [
+    mainColor,
+    '#000000', // Black
+    '#FFFFFF', // White
+    '#FF0000', // Red
+    '#FF7F00', // Orange
+    '#FFFF00', // Yellow
+    '#00FF00', // Green
+    '#00FFFF', // Cyan
+    '#0000FF', // Blue
+    '#7F00FF', // Purple
+    '#FF1493', // Deep Pink
+    '#FF69B4', // Hot Pink
+    '#8B4513', // Saddle Brown
+    '#A52A2A', // Brown
+    '#808080', // Gray
+  ];
+
+  return (
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', zIndex: 9999 }}>
+      {colors.map(color => (
+        <TouchableOpacity
+          key={color}
+          onPress={() => onSelectColor(color)}
+          style={{
+            width: 25,
+            height: 25,
+            backgroundColor: color,
+            margin: 5,
+            borderRadius: 15,
+            borderColor: '#ddd',
+            borderWidth: 1,
+          }}
+        />
+      ))}
+    </View>
+  );
+};
+
 interface IRichEditor {
-  onSetContent: any;
-  content: any;
-  viewMode: keyof typeof EViewMode;
+  onChangeText: any;
+  value: any;
+  readOnly: boolean;
   Textinput: any;
+  isModal?: boolean;
+  shouldOpenKeyboard?: boolean
 }
 
 const MyRichEditor: React.FC<IRichEditor> = ({
-  onSetContent,
-  content,
-  viewMode,
+  onChangeText,
+  value,
+  readOnly,
   Textinput,
+  isModal,
+  shouldOpenKeyboard
 }) => {
-  const richTextRef = useRef<RichEditor>(null);
   const theme = useTheme();
+  const styles = getStyles(theme);
+  const richTextRef = useRef<RichEditor>(null);
   const scrollViewRef = useRef<ScrollView>(null);
-  const [pos, setPos] = useState({
-    cursorY: 0,
-  });
+  const [textColor, setTextColor] = useState(theme.colors.text); // Default text color
+  const [colorVisible, setColorVisible] = useState(false);
+
+  const [cursorY, setCursorY] = useState(0);
 
   const toolbarActions = [
+    actions.foreColor,
     actions.setBold,
     actions.setItalic,
     actions.setUnderline,
     actions.setParagraph,
     actions.heading2,
+    actions.insertBulletsList,
     actions.alignLeft,
     actions.alignCenter,
     actions.alignRight,
-    actions.insertBulletsList,
-    actions.undo,
-    actions.redo,
   ];
+
+  const handleScrollToCursor = () => {
+    const offset = 150;
+    scrollViewRef.current?.scrollTo({
+      y: cursorY - offset,
+      animated: true,
+    });
+  };
+
+  useEffect(() => {
+    if (!shouldOpenKeyboard) return;
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd();
+      richTextRef.current?.focusContentEditor();
+    }, 800);
+  }, [shouldOpenKeyboard]);
+
+  const handleColor = useCallback(() => {
+    setColorVisible(!colorVisible);
+  }, [colorVisible]);
+
+  const onSelectColor = (color: string) => {
+    setTextColor(color);
+    richTextRef.current?.setForeColor(color);
+  };
 
   return (
     <View style={{ flex: 1 }}>
-      {viewMode !== "VIEW" && (
-        <>
-          <RichToolbar
-            style={{
-              backgroundColor: theme.dark ? "#151517" : theme.colors.card,
-              borderColor: "#ddd",
-              borderWidth: 0.2,
-              paddingHorizontal: 5,
-              elevation: 3,
-            }}
-            editor={richTextRef}
-            selectedIconTint={theme.colors.notification}
-            actions={toolbarActions}
-            iconMap={{
-              [actions.heading2]: (props: any) =>
-                handleHead({ ...props, label: "Heading1" }),
-              [actions.setParagraph]: (props: any) =>
-                handleHead({ ...props, label: "Pilcrow" }),
-              [actions.undo]: (props: any) =>
-                handleHead({ ...props, label: "Undo" }),
-              [actions.redo]: (props: any) =>
-                handleHead({ ...props, label: "Redo" }),
-            }}
-          />
-          {Textinput}
-        </>
-      )}
+      {(!readOnly || isModal) && <>{Textinput}</>}
       <ScrollView ref={scrollViewRef}>
         <RichEditor
           pasteAsPlainText
           initialHeight={200}
           onCursorPosition={(cursorY) => {
-            setPos((prev) => ({ ...prev, cursorY }));
+            setCursorY(cursorY);
           }}
-          editorInitializedCallback={() => {}}
-          style={[
-            content && {
-              borderColor: theme.colors.text,
-              marginTop: 5,
-            },
-          ]}
+          style={[value && {
+            borderRadius: 15,
+            paddingHorizontal: 5,
+          }]}
           ref={richTextRef}
-          placeholder="Escribe tu nota"
+          placeholder="Escribe aqui..."
           editorStyle={{
-            backgroundColor: theme.colors.background,
+            backgroundColor: theme.colors.text + "30",
             color: theme.colors.text,
             caretColor: theme.colors.notification,
+            placeholderColor: theme.colors.text + 90,
           }}
           onChange={(descriptionText: string) => {
-            onSetContent(descriptionText);
-            const numberToCenterOffset = 150;
-            scrollViewRef.current?.scrollTo({
-              y: pos.cursorY - numberToCenterOffset,
-              animated: true,
-            });
+            onChangeText(descriptionText);
+            handleScrollToCursor();
           }}
-          initialContentHTML={content}
-          disabled={viewMode === "VIEW"}
+          initialContentHTML={value}
+          disabled={readOnly}
         />
       </ScrollView>
+
+      {colorVisible && <ColorPicker mainColor={theme.colors.text} onSelectColor={onSelectColor} />}
+      {!readOnly && (
+        <RichToolbar
+          style={styles.richToolbar}
+          editor={richTextRef}
+          selectedIconTint={theme.colors.notification}
+          actions={toolbarActions}
+          iconMap={{
+            [actions.setBold]: (props: any) => handleHead({ ...props, label: "Bold" }),
+            [actions.setItalic]: (props: any) => handleHead({ ...props, label: "Italic" }),
+            [actions.setUnderline]: (props: any) => handleHead({ ...props, label: "Underline" }),
+            [actions.heading2]: (props: any) => handleHead({ ...props, label: "Heading1" }),
+            [actions.alignLeft]: ({ tintColor }: any) => handleHead({ tintColor, label: "AlignLeft" }),
+            [actions.alignRight]: ({ tintColor }: any) => handleHead({ tintColor, label: "AlignRight" }),
+            [actions.alignCenter]: ({ tintColor }: any) => handleHead({ tintColor, label: "AlignCenter" }),
+            [actions.setParagraph]: ({ tintColor }: any) => handleHead({ tintColor, label: "Pilcrow" }),
+            [actions.insertBulletsList]: ({ tintColor }: any) => handleHead({ tintColor, label: "List" }),
+            [actions.foreColor]: ({ tintColor }: any) => handleHead({ tintColor: textColor, label: "Palette" }),
+          }}
+          foreColor={handleColor}
+        />
+      )}
     </View>
   );
 };
+
+const getStyles = ({ colors, dark }: TTheme) =>
+  StyleSheet.create({
+    richToolbar: {
+      backgroundColor: colors.background,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginBottom: 20,
+    },
+  });
 
 export default MyRichEditor;

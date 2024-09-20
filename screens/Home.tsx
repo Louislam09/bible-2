@@ -4,7 +4,7 @@ import SplitTopSide from "components/SplitTopSide";
 import Walkthrough from "components/Walkthrough";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated,
   PanResponder,
@@ -16,11 +16,17 @@ import {
 } from "react-native";
 import { HomeParams, RootStackScreenProps, TTheme } from "types";
 import CustomHeader from "../components/home/header";
+import CurrentNoteDetail from "components/CurrentNoteDetail";
+import FloatingButton from "components/FloatingButton";
+import BottomModal from "components/BottomModal";
+import NoteNameList from "components/home/NoteNameList";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
-  // const navigation = useNavigation();
   const theme = useTheme();
+  const { storedData } = useStorage();
   const route = useRoute();
+  const { noteListBottomSheetRef } = useBibleContext()
   const {
     isTour,
     book: _book,
@@ -31,7 +37,6 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
     bottomSideVerse: _bottomSideVerse,
   } = route.params as HomeParams;
 
-  const { storedData } = useStorage();
   const {
     lastBook,
     lastChapter,
@@ -50,6 +55,7 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
 
   const [stepIndex, setStepIndex] = useState(0);
 
+  // Onboarding Refs
   const bookRef = useRef<any>(null);
   const nextRef = useRef<any>(null);
   const backRef = useRef<any>(null);
@@ -211,6 +217,13 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
           />
         )}
       </View>
+      <FloatingButton navigation={navigation}>
+        <CurrentNoteDetail />
+      </FloatingButton>
+      <BottomModal
+        shouldScroll justOneSnap justOneValue={["50%"]} startAT={0} ref={noteListBottomSheetRef}>
+        <NoteNameList {...{ theme }} />
+      </BottomModal>
       {bookRef.current && isTour && (
         <Walkthrough
           steps={steps}
@@ -229,14 +242,6 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
       position: "relative",
       width: "100%",
       height: "100%",
-    },
-    strongContainer: {
-      position: "absolute",
-      bottom: 0,
-      left: 0,
-      width: "100%",
-      zIndex: 999,
-      height: "60%",
     },
     separator: {
       position: "relative",
