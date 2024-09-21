@@ -7,6 +7,7 @@ import { useStorage } from "context/LocalstoreContext";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated,
+  BackHandler,
   PanResponder,
   PanResponderGestureState,
   SafeAreaView,
@@ -163,6 +164,20 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
       lastTopWidth.current = (topWidth as any)._value;
     },
   });
+
+  useEffect(() => {
+    const backAction = () => {
+      navigation.goBack()
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>

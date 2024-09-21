@@ -203,10 +203,10 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
           data={
             searchText
               ? filterData.filter(
-                  (x: any) =>
-                    x?.title.toLowerCase().indexOf(searchText.toLowerCase()) !==
-                    -1
-                )
+                (x: any) =>
+                  x?.title.toLowerCase().indexOf(searchText.toLowerCase()) !==
+                  -1
+              )
               : filterData
           }
           // renderItem={renderItem as any}
@@ -225,7 +225,7 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   );
 };
 
-const getStyles = ({ colors, dark }: TTheme) =>
+const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     verseBody: {
       color: colors.text,

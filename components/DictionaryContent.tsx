@@ -238,7 +238,7 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
       }}
     >
       {selectedWord && (
-        <View style={{ marginBottom: 30 }}>
+        <View style={{ position: 'relative', height: 40 }}>
           <BackButton theme={theme} backAction={() => handleCustomBack()} />
         </View>
       )}

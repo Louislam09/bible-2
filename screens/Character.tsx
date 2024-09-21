@@ -154,11 +154,11 @@ const Character: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
             data={
               searchText
                 ? filterData.filter(
-                    (x: any) =>
-                      removeAccent(x.topic).indexOf(
-                        searchText.toLowerCase()
-                      ) !== -1
-                  )
+                  (x: any) =>
+                    removeAccent(x.topic).indexOf(
+                      searchText.toLowerCase()
+                    ) !== -1
+                )
                 : filterData
             }
             renderItem={({ item, index }) => (
