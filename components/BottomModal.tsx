@@ -75,21 +75,21 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       []
     );
 
-    useEffect(() => {
-      const backAction = () => {
-        // @ts-ignore
-        if (ref?.current) ref?.current?.close();
-        return true;
-      };
+    // useEffect(() => {
+    //   const backAction = () => {
+    //     // @ts-ignore
+    //     if (ref?.current) ref?.current?.close();
+    //     return true;
+    //   };
 
-      const backHandler = BackHandler.addEventListener(
-        "hardwareBackPress",
-        backAction
-      );
+    //   const backHandler = BackHandler.addEventListener(
+    //     "hardwareBackPress",
+    //     backAction
+    //   );
 
-      return () => backHandler.remove();
-      // @ts-ignore
-    }, [ref?.current]);
+    //   return () => backHandler.remove();
+    //   // @ts-ignore
+    // }, [ref?.current]);
 
     return (
       <BottomSheetModal

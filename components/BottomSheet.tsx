@@ -102,7 +102,7 @@ const CustomBottomSheet = forwardRef<Ref, CustomBottomSheet>(
           snapPoints={snapPoints}
           onChange={onChange}
           enablePanDownToClose
-          handleComponent={lastIndex ? handleComponent : DefaultIndicator}
+        // handleComponent={lastIndex ? handleComponent : DefaultIndicator}
         >
           <BottomSheetScrollView
             contentContainerStyle={styles.contentContainer}

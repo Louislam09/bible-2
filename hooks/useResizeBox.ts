@@ -25,7 +25,6 @@ const useResizableBox = ({
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const [topHeight] = useState(new Animated.Value(SCREEN_HEIGHT / 2));
   const [topWidth] = useState(new Animated.Value(SCREEN_WIDTH / 2));
-  const screenHeight = useRef(SCREEN_HEIGHT).current;
   const lastTopHeight = useRef(SCREEN_HEIGHT);
   const lastTopWidth = useRef(SCREEN_WIDTH);
   const minTopHeight = 50;

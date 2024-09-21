@@ -1,4 +1,4 @@
-import { BottomSheetModal, WINDOW_WIDTH } from "@gorhom/bottom-sheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useRoute, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import BottomModal from "components/BottomModal";
@@ -9,7 +9,7 @@ import VoiceList from "components/VoiceList";
 import VersionList from "components/home/header/VersionList";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   BackHandler,
   StyleSheet,
@@ -28,10 +28,15 @@ type IDashboardOption = {
   tag?: string;
 };
 
+type RenderItemProps = {
+  item: IDashboardOption;
+  index: number;
+}
+
 const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
   navigation,
 }) => {
-  const { width: SCREEN_WIDTH } = useWindowDimensions();
+  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const {
     currentBibleVersion,
     selectBibleVersion,
@@ -39,18 +44,19 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
     orientation = "PORTRAIT",
   } = useBibleContext();
   const theme = useTheme();
-  // const navigation = useNavigation();
   const route = useRoute();
-  const isPortrait = orientation === "PORTRAIT";
-  const styles = getStyles(theme, isPortrait);
-  const isNTV = currentBibleVersion === EBibleVersions.NTV;
-  const voiceBottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const versionRef = useRef<BottomSheetModal>(null);
-  const columnNumber = 3;
   const {
     storedData,
     historyManager: { getCurrentItem },
   } = useStorage();
+  const voiceBottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const versionRef = useRef<BottomSheetModal>(null);
+  const currentModalOpenRef = useRef<any>(null);
+
+  const isPortrait = orientation === "PORTRAIT";
+  const styles = getStyles(theme, isPortrait);
+  const isNTV = currentBibleVersion === EBibleVersions.NTV;
+  const columnNumber = isPortrait ? 3 : 5;
   const {
     lastBook,
     lastChapter,
@@ -65,21 +71,6 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
     chapter: lastHistoryChapter,
     verse: lastHistoryVerse,
   } = (getCurrentItem() as any) || {};
-
-  const voiceHandlePresentModalPress = useCallback(() => {
-    voiceBottomSheetModalRef.current?.present();
-  }, []);
-
-  const versionHandlePresentModalPress = useCallback(() => {
-    versionRef.current?.present();
-  }, []);
-
-  const onSelect = (version: string) => {
-    clearHighlights();
-    selectBibleVersion(version);
-    versionRef.current?.dismiss();
-  };
-
   const homePageInitParams = {
     book: lastHistoryBook || lastBook || "Génesis",
     chapter: lastHistoryChapter || lastChapter || 1,
@@ -89,6 +80,22 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
     bottomSideVerse: lastBottomSideVerse || 0,
     isTour: false,
     isHistory: true,
+  };
+
+  const voiceHandlePresentModalPress = useCallback(() => {
+    voiceBottomSheetModalRef.current?.present();
+    currentModalOpenRef.current = voiceBottomSheetModalRef.current
+  }, []);
+
+  const versionHandlePresentModalPress = useCallback(() => {
+    versionRef.current?.present();
+    currentModalOpenRef.current = versionRef.current
+  }, []);
+
+  const onSelect = (version: string) => {
+    clearHighlights();
+    selectBibleVersion(version);
+    versionRef.current?.dismiss();
   };
 
   const onSong = () => {
@@ -102,7 +109,7 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
     navigation.navigate("Song");
   };
 
-  const options: IDashboardOption[] = [
+  const dashboardItems: IDashboardOption[] = [
     {
       icon: isNTV ? "BookText" : "Crown",
       label: "Santa Escritura",
@@ -185,6 +192,11 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
 
   useEffect(() => {
     const backAction = () => {
+      if (currentModalOpenRef.current) {
+        currentModalOpenRef?.current?.close()
+        currentModalOpenRef.current = null
+        return true
+      }
       BackHandler.exitApp();
       return true;
     };
@@ -195,15 +207,9 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
     );
 
     return () => backHandler.remove();
-  }, []);
+  }, [currentModalOpenRef.current]);
 
-  const renderItem = ({
-    item,
-    index,
-  }: {
-    item: IDashboardOption;
-    index: number;
-  }) => (
+  const RenderItem = ({ item, index }: RenderItemProps) => (
     <TouchableWithoutFeedback
       onPress={item.action}
       style={[
@@ -214,7 +220,7 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
           alignItems: "center",
           justifyContent: "center",
         },
-        isPortrait && { width: SCREEN_WIDTH / columnNumber },
+        { width: SCREEN_WIDTH / columnNumber },
       ]}
       disabled={item.disabled}
     >
@@ -241,32 +247,28 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
     </TouchableWithoutFeedback>
   );
 
+  const StyleByOrientation = useMemo(() => {
+    return isPortrait ? {} : { minHeight: SCREEN_HEIGHT - 40 }
+  }, [SCREEN_WIDTH, SCREEN_HEIGHT, isPortrait])
+
   return (
     <View
       key={orientation + theme.dark}
       style={[styles.container, !isPortrait && { flexDirection: "row" }]}
     >
-      <DailyVerse navigation={navigation} theme={theme} />
+      {isPortrait && <DailyVerse navigation={navigation} theme={theme} />}
 
-      <View
-        style={[
-          styles.optionContainer,
-          {
-            width: isPortrait ? WINDOW_WIDTH : WINDOW_WIDTH / 2,
-          },
-          isPortrait && { padding: 15 },
-          !isPortrait && { paddingVertical: 50 },
-        ]}
-      >
+      <View style={[styles.optionContainer, StyleByOrientation]} >
         <FlashList
-          data={options}
+          data={dashboardItems}
           keyExtractor={(item) => item.label}
-          renderItem={renderItem}
+          renderItem={RenderItem}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           estimatedItemSize={5}
           numColumns={columnNumber}
         />
       </View>
+
       <BottomModal shouldScroll startAT={2} ref={voiceBottomSheetModalRef}>
         <VoiceList theme={theme} />
       </BottomModal>
