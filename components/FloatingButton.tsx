@@ -35,7 +35,7 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({ children }) => {
     });
 
     useEffect(() => {
-        if (!currentNoteId) return
+        if (!currentNoteId || !addToNoteText) return
         expandAnimation()
     }, [currentNoteId, addToNoteText])
 
