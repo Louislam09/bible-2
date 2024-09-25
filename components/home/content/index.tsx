@@ -1,11 +1,10 @@
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  BackHandler,
   Dimensions,
   StyleSheet,
-  View,
+  View
 } from "react-native";
 import { DB_BOOK_NAMES } from "../../../constants/BookNames";
 import { useDBContext } from "../../../context/databaseContext";
@@ -15,10 +14,10 @@ import { Text } from "components/Themed";
 import { getDatabaseQueryKey } from "constants/databaseNames";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
+import useReadingTime from "hooks/useReadTime";
+import { getChapterTextRaw } from "utils/getVerseTextRaw";
 import { QUERY_BY_DB } from "../../../constants/Queries";
 import Chapter from "./Chapter";
-import { getChapterTextRaw } from "utils/getVerseTextRaw";
-import useReadingTime from "hooks/useReadTime";
 
 interface BookContentInterface {
   isSplit: boolean;
@@ -56,7 +55,7 @@ const BookContent: FC<BookContentInterface> = ({
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>({});
   const [chapterText, setChapterText] = useState<string>("");
-  const currentBook = DB_BOOK_NAMES.find((x) => x.longName === book);
+  const currentBook = useMemo(() => DB_BOOK_NAMES.find((x) => x.longName === book), [book]);
   const dimensions = Dimensions.get("window");
   const navigation = useNavigation();
   const isNewLaw = useRef<boolean>(false);
@@ -112,19 +111,6 @@ const BookContent: FC<BookContentInterface> = ({
     return () => { };
   }, [myBibleDB, book, chapter, verse]);
 
-  // useEffect(() => {
-  //   const backAction = () => {
-  //     // navigation.goBack();
-  //     return true;
-  //   };
-
-  //   const backHandler = BackHandler.addEventListener(
-  //     "hardwareBackPress",
-  //     backAction
-  //   );
-
-  //   return () => backHandler.remove();
-  // }, []);
 
   const displayErrorMessage = (_isNewLaw: boolean) => {
     if (_isNewLaw) {
@@ -169,6 +155,7 @@ const BookContent: FC<BookContentInterface> = ({
           estimatedReadingTime={estimatedReadingTime}
         />
       )}
+      {/* <BookContentModals book={book} chapter={chapter} /> */}
     </View>
   );
 };

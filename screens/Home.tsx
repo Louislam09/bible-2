@@ -1,10 +1,15 @@
 import { useRoute, useTheme } from "@react-navigation/native";
+import BookContentModals from "components/book-content-modals";
+import BottomModal from "components/BottomModal";
+import CurrentNoteDetail from "components/CurrentNoteDetail";
+import FloatingButton from "components/FloatingButton";
+import NoteNameList from "components/home/NoteNameList";
 import SplitBottomSide from "components/SplitBottomSide";
 import SplitTopSide from "components/SplitTopSide";
 import Walkthrough from "components/Walkthrough";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
   BackHandler,
@@ -17,11 +22,6 @@ import {
 } from "react-native";
 import { HomeParams, RootStackScreenProps, TTheme } from "types";
 import CustomHeader from "../components/home/header";
-import CurrentNoteDetail from "components/CurrentNoteDetail";
-import FloatingButton from "components/FloatingButton";
-import BottomModal from "components/BottomModal";
-import NoteNameList from "components/home/NoteNameList";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
   const theme = useTheme();
@@ -232,6 +232,8 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
           />
         )}
       </View>
+      <BookContentModals book={book} chapter={chapter} />
+
       <FloatingButton navigation={navigation}>
         <CurrentNoteDetail />
       </FloatingButton>

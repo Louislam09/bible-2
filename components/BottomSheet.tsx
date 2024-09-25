@@ -93,7 +93,7 @@ const CustomBottomSheet = forwardRef<Ref, CustomBottomSheet>(
     );
 
     return (
-      <View style={{ flex: 1, backgroundColor: "transparent" }}>
+      <View style={{ flex: 1, backgroundColor: theme.colors.notification + 50 }}>
         <BottomSheet
           backgroundStyle={styles.bottomSheet}
           ref={ref}
@@ -102,7 +102,6 @@ const CustomBottomSheet = forwardRef<Ref, CustomBottomSheet>(
           snapPoints={snapPoints}
           onChange={onChange}
           enablePanDownToClose
-        // handleComponent={lastIndex ? handleComponent : DefaultIndicator}
         >
           <BottomSheetScrollView
             contentContainerStyle={styles.contentContainer}

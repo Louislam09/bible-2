@@ -35,12 +35,10 @@ import extractVersesInfo, {
 import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
 import { Text } from "../../Themed";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
+import { useModal } from "context/modal-context";
 
 type VerseProps = TVerse & {
   isSplit: boolean;
-  onCompare: () => void;
-  onWord: () => void;
-  onDictionary: (text: string) => void;
   initVerse: number;
   estimatedReadingTime?: number;
 };
@@ -124,10 +122,7 @@ const Verse: React.FC<VerseProps> = ({
   item,
   subtitles,
   isSplit,
-  onCompare,
   initVerse,
-  onWord,
-  onDictionary,
   estimatedReadingTime,
 }) => {
   const navigation = useNavigation();
@@ -177,6 +172,12 @@ const Verse: React.FC<VerseProps> = ({
   const isFirstVerse = useMemo(() => {
     return item.verse === 1;
   }, [item.verse]);
+
+  const {
+    compareRefHandlePresentModalPress: onCompare,
+    strongSearchHandlePresentModalPress: onWord,
+    dictionaryHandlePresentModalPress: onDictionary
+  } = useModal();
 
   const initHighLightedVerseAnimation = () => {
     const loopAnimation = Animated.loop(
@@ -428,7 +429,7 @@ const Verse: React.FC<VerseProps> = ({
       {
         name: "FileDiff",
         action: onCompareClicked,
-        hide: false,
+        hide: isSplitActived,
         description: "Comparar",
       },
       {
@@ -437,7 +438,7 @@ const Verse: React.FC<VerseProps> = ({
         hide: !showMusicIcon,
       },
     ];
-  }, [isMoreThanOneHighted, lastHighted, isVerseHighlisted]);
+  }, [isMoreThanOneHighted, lastHighted, isVerseHighlisted, isSplitActived]);
 
   const steps = [
     {

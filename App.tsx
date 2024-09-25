@@ -12,6 +12,7 @@ import Navigation from "./navigation";
 import ErrorBoundaryFallback from "components/ErrorBoundaryFallback";
 import * as Updates from "expo-updates";
 import ErrorBoundary from "react-native-error-boundary";
+import { ModalProvider } from "context/modal-context";
 
 const App = () => {
   const isLoadingComplete = useCachedResources();
@@ -44,8 +45,10 @@ const App = () => {
               <BibleProvider>
                 <GestureHandlerRootView style={{ flex: 1 }}>
                   <BottomSheetModalProvider>
-                    <StatusBar barStyle="light-content" animated />
-                    <Navigation />
+                    <ModalProvider>
+                      <StatusBar barStyle="light-content" animated />
+                      <Navigation />
+                    </ModalProvider>
                   </BottomSheetModalProvider>
                 </GestureHandlerRootView>
               </BibleProvider>
