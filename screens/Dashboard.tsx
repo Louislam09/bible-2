@@ -117,6 +117,17 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
       tag: isNTV ? "book-cross" : "crown-outline",
     },
     {
+      icon: "Music4",
+      label: "Himnos",
+      isIonicon: true,
+      action: onSong,
+    },
+    {
+      icon: "Search",
+      label: "Buscador",
+      action: () => navigation.navigate(Screens.Search, {}),
+    },
+    {
       icon: "LayoutGrid",
       label: "Lista de Libro",
       action: () =>
@@ -133,7 +144,16 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
       label: "Concordancia Escritural",
       action: () => navigation.navigate(Screens.Concordance, {}),
     },
-
+    {
+      icon: "NotebookText",
+      label: "Notas",
+      action: () => navigation.navigate(Screens.Notes, { shouldRefresh: false }),
+    },
+    {
+      icon: "MonitorDown",
+      label: "Gestor de descargas",
+      action: () => navigation.navigate(Screens.DownloadManager),
+    },
     {
       icon: "Star",
       label: "Versiculos Favoritos",
@@ -146,37 +166,15 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
       action: () => navigation.navigate(Screens.Character),
     },
     {
-      icon: "Music4",
-      label: "Himnos",
-      isIonicon: true,
-      action: onSong,
-    },
-    {
       icon: "AudioLines",
       label: "Selecciona Una Voz",
       action: voiceHandlePresentModalPress,
-    },
-    {
-      icon: "NotebookText",
-      label: "Notas",
-      action: () => navigation.navigate(Screens.Notes, { shouldRefresh: false }),
-    },
-    {
-      icon: "MonitorDown",
-      label: "Gestor de descargas",
-      action: () => navigation.navigate(Screens.DownloadManager),
     },
     {
       icon: "FileStack",
       label: "Versiones",
       action: versionHandlePresentModalPress,
     },
-    {
-      icon: "Search",
-      label: "Buscador",
-      action: () => navigation.navigate(Screens.Search, {}),
-    },
-
     {
       icon: "Settings",
       label: "Ajustes",
