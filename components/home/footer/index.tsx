@@ -15,38 +15,30 @@ import { useStorage } from "context/LocalstoreContext";
 import useBibleReader from "hooks/useBibleReading";
 import useInternetConnection from "hooks/useInternetConnection";
 import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
-import {
-  GestureHandlerStateChangeNativeEvent,
-  State,
-} from "react-native-gesture-handler";
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
 interface FooterInterface {
-  bookRef: any;
-  nextRef: any;
-  audioRef: any;
-  backRef: any;
+  refs: any,
   isSplit?: boolean;
   book: any;
   chapter: any;
   verse: any;
 }
 
-type handleGestureStateChangeProps = {
-  nativeEvent: GestureHandlerStateChangeNativeEvent;
-};
-
 const CustomFooter: FC<FooterInterface> = ({
-  bookRef,
-  backRef,
-  nextRef,
-  audioRef,
+  refs,
   isSplit,
   book,
   chapter,
   verse,
 }) => {
+  const {
+    book: bookRef,
+    back: backRef,
+    next: nextRef,
+    audi: audioRef,
+  } = refs
   const {
     currentBibleVersion,
     clearHighlights,
@@ -224,9 +216,8 @@ const CustomFooter: FC<FooterInterface> = ({
           delayLongPress={200}
         >
           <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
-            {`${displayBookName ?? ""} ${chapter ?? ""}:${
-              currentHistoryItemVerse || verse
-            }`}
+            {`${displayBookName ?? ""} ${chapter ?? ""}:${currentHistoryItemVerse || verse
+              }`}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>

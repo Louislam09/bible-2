@@ -66,11 +66,13 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
     lastBottomSideVerse,
     isSongLyricEnabled,
   } = storedData;
+
   const {
     book: lastHistoryBook,
     chapter: lastHistoryChapter,
     verse: lastHistoryVerse,
   } = (getCurrentItem() as any) || {};
+
   const homePageInitParams = {
     book: lastHistoryBook || lastBook || "Génesis",
     chapter: lastHistoryChapter || lastChapter || 1,
@@ -81,6 +83,10 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
     isTour: false,
     isHistory: true,
   };
+
+  useEffect(() => {
+    console.log(getCurrentItem())
+  }, [getCurrentItem])
 
   const voiceHandlePresentModalPress = useCallback(() => {
     voiceBottomSheetModalRef.current?.present();

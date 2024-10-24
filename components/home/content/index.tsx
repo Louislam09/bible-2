@@ -57,7 +57,6 @@ const BookContent: FC<BookContentInterface> = ({
   const [chapterText, setChapterText] = useState<string>("");
   const currentBook = useMemo(() => DB_BOOK_NAMES.find((x) => x.longName === book), [book]);
   const dimensions = Dimensions.get("window");
-  const navigation = useNavigation();
   const isNewLaw = useRef<boolean>(false);
   const estimatedReadingTime = useReadingTime({
     text: chapterText,

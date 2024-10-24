@@ -23,20 +23,12 @@ import Settings from "./Settings";
 import VersionList from "./VersionList";
 
 interface HeaderInterface {
-  bibleVersionRef: any;
-  searchRef: any;
-  favRef: any;
-  dashboardRef: any;
-  settingRef: any;
+  refs: any
 }
 
-const CustomHeader: FC<HeaderInterface> = ({
-  bibleVersionRef,
-  searchRef,
-  dashboardRef,
-  settingRef,
-  favRef,
-}) => {
+const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
+  const { bibleVersion, search, dashboard, setting, fav } = refs
+
   const {
     currentBibleVersion,
     selectBibleVersion,
@@ -102,14 +94,14 @@ const CustomHeader: FC<HeaderInterface> = ({
           toggleSplitMode();
           toggleBottomSideSearching(!isSplitActived);
         },
-        ref: favRef,
+        ref: fav,
         isIonicon: false,
         color: isSplitActived ? theme.colors.notification : theme.colors.text,
       },
       {
         name: "ArrowBigLeftDash",
         action: moveBackInHistory,
-        ref: settingRef,
+        ref: setting,
         isIonicon: true,
         disabled: isSplitActived,
         color: shouldBackward ? theme.colors.notification : theme.colors?.text,
@@ -117,12 +109,12 @@ const CustomHeader: FC<HeaderInterface> = ({
       {
         name: "ArrowBigRightDash",
         action: moveForwardInHistory,
-        ref: searchRef,
+        ref: search,
         isIonicon: true,
         disabled: isSplitActived,
         color: shouldForward ? theme.colors.notification : theme.colors?.text,
       },
-      { name: "Search", action: goSearchScreen, ref: searchRef },
+      { name: "Search", action: goSearchScreen, ref: search },
     ];
     return options.filter((x) => !x.disabled);
   }, [isSplitActived, shouldForward, shouldBackward]);
@@ -140,7 +132,7 @@ const CustomHeader: FC<HeaderInterface> = ({
     <View style={styles.header}>
       <View style={{ flexDirection: "row" }}>
         <TouchableOpacity
-          ref={dashboardRef}
+          ref={dashboard}
           style={styles.iconContainer}
           onPress={() => navigation.navigate("Dashboard")}
         >
@@ -172,7 +164,7 @@ const CustomHeader: FC<HeaderInterface> = ({
           </BottomModal>
         </View>
         <TouchableOpacity
-          ref={bibleVersionRef}
+          ref={bibleVersion}
           style={styles.headerEnd}
           onPress={versionHandlePresentModalPress}
         >

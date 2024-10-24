@@ -1,5 +1,6 @@
 import { RouteProp, useTheme } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useBibleContext } from "context/BibleContext";
 import React, { useEffect, useMemo, useState } from "react";
 import BookNameList from "../components/BookNameList";
 import {
@@ -7,9 +8,7 @@ import {
   DB_BOOK_CHAPTER_VERSES,
   DB_BOOK_NAMES,
 } from "../constants/BookNames";
-import { HomeParams, RootStackParamList } from "../types";
-import { useDBContext } from "../context/databaseContext";
-import { useBibleContext } from "context/BibleContext";
+import { RootStackParamList } from "../types";
 
 type ChooseFromListScreenRouteProp = RouteProp<RootStackParamList>;
 
