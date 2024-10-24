@@ -84,10 +84,6 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
     isHistory: true,
   };
 
-  useEffect(() => {
-    console.log(getCurrentItem())
-  }, [getCurrentItem])
-
   const voiceHandlePresentModalPress = useCallback(() => {
     voiceBottomSheetModalRef.current?.present();
     currentModalOpenRef.current = voiceBottomSheetModalRef.current

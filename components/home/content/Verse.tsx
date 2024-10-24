@@ -195,7 +195,7 @@ const Verse: React.FC<VerseProps> = ({
           useNativeDriver: false,
         }),
       ]),
-      { iterations: 3 }
+      { iterations: 2 }
     );
     loopAnimation.start();
   };
