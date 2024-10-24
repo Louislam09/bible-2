@@ -17,6 +17,7 @@ type TAnimation = {
   };
   style?: {};
   colorFilters?: ColorFilter[] | undefined;
+  onAnimationFinish?: ((isCancelled: boolean) => void) | undefined
 };
 
 const Animation = ({
@@ -27,6 +28,7 @@ const Animation = ({
   size = { width: 200, height: 200 },
   style = {},
   colorFilters,
+  onAnimationFinish
 }: TAnimation) => {
   const ref = animationRef || useRef<AnimatedLottieView>(null);
   const { width, height } = size;
@@ -41,6 +43,9 @@ const Animation = ({
     <AnimatedLottieView
       ref={ref}
       loop={loop}
+      onAnimationFinish={(isCancelled) => {
+        onAnimationFinish?.(isCancelled)
+      }}
       autoPlay
       colorFilters={colorFilters}
       style={{

@@ -410,6 +410,7 @@ export default [
       '(2b) Luego vinieron los magos\npreguntando por "el niño rey".\nY Herodes, siendo malvado, quiso matar a Jesús\nMas Dios libró a Su Hijo, al cual envió en Su amor.',
       '"¡Gloria sea a Yehováh en las alturas!\ny en la tierra, ¡paz, buena voluntad!"',
       "(3) Hoy ese niño, ¡es mi Amigo!\n¡Él es mi buen Compañero Fiel!\nÉl me salvó del pecado; de muerte me rescató.\nMi corazón ha cambiado; ¡me sacó del error!",
+      '"// ¡Gloria sea a Yehováh en las alturas!\ny en la tierra, ¡paz, buena voluntad! //"',
     ],
   },
   {
