@@ -18,6 +18,7 @@ import { useStorage } from "context/LocalstoreContext";
 import { useCustomTheme } from "context/ThemeContext";
 import { useCallback, useEffect, useMemo } from "react";
 import { EThemes, RootStackScreenProps, TFont, TTheme } from "types";
+import * as Updates from 'expo-updates';
 
 const URLS = {
   BIBLE: "market://details?id=com.louislam09.bible",
@@ -73,6 +74,37 @@ const SettingsScren: React.FC<RootStackScreenProps<"Settings">> = ({
   const styles = getStyles(theme);
   const { storedData, saveData, isDataLoaded } = useStorage();
 
+  const checkForUpdate = async () => {
+    try {
+      const update = await Updates.checkForUpdateAsync();
+      if (update.isAvailable) {
+        Alert.alert(
+          "Actualización Disponible",
+          "Hay una nueva actualización. ¿Te gustaría descargarla e instalarla?",
+          [
+            { text: "Cancelar", style: "cancel" },
+            { text: "Actualizar", onPress: applyUpdate }
+          ]
+        );
+      } else {
+        Alert.alert("No Hay Actualizaciones", "Ya tienes la última versión.");
+      }
+    } catch (error) {
+      console.error("Error al verificar actualizaciones:", error);
+      Alert.alert("Error", "Ocurrió un error al verificar actualizaciones.");
+    }
+  };
+
+  const applyUpdate = async () => {
+    try {
+      await Updates.fetchUpdateAsync();
+      await Updates.reloadAsync(); // Reinicia la app para aplicar la actualización
+    } catch (error) {
+      console.error("Error al actualizar:", error);
+      Alert.alert("Error", "Ocurrió un error al actualizar la aplicación.");
+    }
+  };
+
   const openAppInStore = async (appPackage: string) => {
     await Linking.openURL(appPackage);
   };
@@ -84,7 +116,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"Settings">> = ({
       [
         {
           text: "Cancelar",
-          onPress: () => {},
+          onPress: () => { },
           style: "destructive",
         },
         { text: "Borrar", onPress: () => console.log?.() },
@@ -160,6 +192,12 @@ const SettingsScren: React.FC<RootStackScreenProps<"Settings">> = ({
             },
             extraText: "Cambiar entre el modo claro y el modo oscuro",
           },
+          {
+            label: "Buscar Actualización",
+            iconName: "Download", // Icon for the update button
+            action: checkForUpdate,
+            extraText: "Verificar si hay actualizaciones de la app",
+          },
         ],
       },
       {
@@ -185,7 +223,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"Settings">> = ({
             label: fontSize,
             isValue: true,
             iconName: `ChartNoAxesColumn`,
-            action: () => {},
+            action: () => { },
             extraText: "",
           },
           {
