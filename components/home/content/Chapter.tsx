@@ -12,7 +12,6 @@ import {
 import { TChapter, TTheme } from "types";
 import Verse from "./Verse";
 
-
 const Chapter = ({
   item,
   isSplit,

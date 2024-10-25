@@ -18,6 +18,8 @@ import useReadingTime from "hooks/useReadTime";
 import { getChapterTextRaw } from "utils/getVerseTextRaw";
 import { QUERY_BY_DB } from "../../../constants/Queries";
 import Chapter from "./Chapter";
+import { FlashList } from "@shopify/flash-list";
+import SkeletonVerse from "./SkeletonVerse";
 
 interface BookContentInterface {
   isSplit: boolean;
@@ -122,11 +124,14 @@ const BookContent: FC<BookContentInterface> = ({
   const notVerseToRender = data?.verses?.length && !loading;
 
   if (loading || data?.verses?.length === undefined) {
-    return (
-      <View style={styles.activiyContainer}>
-        <ActivityIndicator style={{ flex: 1 }} />
-      </View>
-    );
+    return <View style={{ flex: 1 }}>
+      <FlashList
+        keyExtractor={(item: any) => `skeleton-${item}:`}
+        data={[1, 2, 3, 4, 5, 6]}
+        estimatedItemSize={100}
+        renderItem={(props) => <SkeletonVerse {...props} />}
+      />
+    </View>
   }
 
   return (
