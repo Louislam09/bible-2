@@ -19,6 +19,7 @@ import { useCustomTheme } from "context/ThemeContext";
 import { useCallback, useEffect, useMemo } from "react";
 import { EThemes, RootStackScreenProps, TFont, TTheme } from "types";
 import * as Updates from 'expo-updates';
+import Constants from 'expo-constants';
 
 const URLS = {
   BIBLE: "market://details?id=com.louislam09.bible",
@@ -73,6 +74,8 @@ const SettingsScren: React.FC<RootStackScreenProps<"Settings">> = ({
   const { toggleTheme, theme: _themeScheme } = useCustomTheme();
   const styles = getStyles(theme);
   const { storedData, saveData, isDataLoaded } = useStorage();
+
+  const appVersion = Constants.nativeAppVersion;
 
   const checkForUpdate = async () => {
     try {
@@ -256,6 +259,17 @@ const SettingsScren: React.FC<RootStackScreenProps<"Settings">> = ({
             action: () => openAppInStore(URLS.MORE_APPS),
             isFont5: true,
             extraText: "Ver todas nuestras aplicaciones",
+          },
+        ],
+      },
+      {
+        title: "Versión",
+        options: [
+          {
+            label: `Versión ${appVersion}`,
+            iconName: "Info",
+            action: () => { }, // No action needed
+            extraText: `Fecha de Lanzamiento: Mar 13, 2024`,
           },
         ],
       },
