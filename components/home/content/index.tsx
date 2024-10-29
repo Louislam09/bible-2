@@ -127,7 +127,7 @@ const BookContent: FC<BookContentInterface> = ({
     return <View style={{ flex: 1 }}>
       <FlashList
         keyExtractor={(item: any) => `skeleton-${item}:`}
-        data={[1, 2, 3, 4, 5, 6]}
+        data={[1, 2, 3, 4, 5, 6, 7, 8]}
         estimatedItemSize={100}
         renderItem={(props) => <SkeletonVerse {...props} />}
       />
