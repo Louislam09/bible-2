@@ -1,7 +1,7 @@
 import { useTheme } from "@react-navigation/native";
+import { View } from "components/Themed";
 import { MotiView } from 'moti';
 import { Skeleton } from 'moti/skeleton';
-import { View } from 'react-native';
 
 const SkeletonVerse = ({ index }: any) => {
     const theme = useTheme()

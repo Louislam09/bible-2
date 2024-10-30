@@ -1,16 +1,14 @@
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { useRoute, useTheme } from "@react-navigation/native";
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import {
-  ActivityIndicator,
   Dimensions,
-  StyleSheet,
-  View
+  StyleSheet
 } from "react-native";
 import { DB_BOOK_NAMES } from "../../../constants/BookNames";
 import { useDBContext } from "../../../context/databaseContext";
 import { HomeParams, IBookVerse, TTheme } from "../../../types";
 
-import { Text } from "components/Themed";
+import { Text, View } from "components/Themed";
 import { getDatabaseQueryKey } from "constants/databaseNames";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
@@ -18,7 +16,6 @@ import useReadingTime from "hooks/useReadTime";
 import { getChapterTextRaw } from "utils/getVerseTextRaw";
 import { QUERY_BY_DB } from "../../../constants/Queries";
 import Chapter from "./Chapter";
-import { FlashList } from "@shopify/flash-list";
 import SkeletonVerse from "./SkeletonVerse";
 
 interface BookContentInterface {
@@ -125,12 +122,13 @@ const BookContent: FC<BookContentInterface> = ({
 
   if (loading || data?.verses?.length === undefined) {
     return <View style={{ flex: 1 }}>
-      <FlashList
+      <SkeletonVerse index={0} />
+      {/* <FlashList
         keyExtractor={(item: any) => `skeleton-${item}:`}
         data={[1, 2, 3, 4, 5, 6, 7, 8]}
         estimatedItemSize={100}
         renderItem={(props) => <SkeletonVerse {...props} />}
-      />
+      /> */}
     </View>
   }
 
@@ -159,7 +157,6 @@ const BookContent: FC<BookContentInterface> = ({
           estimatedReadingTime={estimatedReadingTime}
         />
       )}
-      {/* <BookContentModals book={book} chapter={chapter} /> */}
     </View>
   );
 };
