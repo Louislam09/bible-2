@@ -1,5 +1,6 @@
+import { View } from "components/Themed";
 import React, { useEffect, useRef } from "react";
-import { Animated, View } from "react-native";
+import { Animated } from "react-native";
 
 interface IProgressBar {
   progress: number;

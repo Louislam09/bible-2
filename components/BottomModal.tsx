@@ -8,11 +8,10 @@ import { useTheme } from "@react-navigation/native";
 import React, {
   forwardRef,
   useCallback,
-  useEffect,
   useMemo,
-  useState,
+  useState
 } from "react";
-import { BackHandler, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { TTheme } from "types";
 
 type TBottomModal = {

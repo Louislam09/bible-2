@@ -1,8 +1,9 @@
 import { useTheme } from "@react-navigation/native";
 import Icon from "components/Icon";
+import { View } from "components/Themed";
 import { iconSize } from "constants/size";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import {
   RichEditor,
   RichToolbar,

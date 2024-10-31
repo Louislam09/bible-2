@@ -11,9 +11,10 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { BackHandler, StyleSheet, View } from "react-native";
+import { BackHandler, StyleSheet, } from "react-native";
 import { TTheme } from "types";
 import Icon from "./Icon";
+import { View } from "./Themed";
 
 type Ref = BottomSheet;
 

@@ -2,11 +2,12 @@ import { useTheme } from "@react-navigation/native";
 import { DB_BOOK_NAMES } from "constants/BookNames";
 import { useBibleContext } from "context/BibleContext";
 import React, { useEffect, useMemo, useState } from "react";
-import { Animated, BackHandler, StyleSheet, Text, View } from "react-native";
+import { Animated, BackHandler, StyleSheet, Text } from "react-native";
 import { IVerseItem, RootStackScreenProps, TTheme } from "types";
 import AnimatedDropdown from "./AnimatedDropdown";
 import Icon from "./Icon";
 import ListVerse from "./search/ListVerse";
+import { View } from "./Themed";
 
 const SearchWordEntire: React.FC<RootStackScreenProps<"Search">> = ({
   navigation,
@@ -44,7 +45,7 @@ const SearchWordEntire: React.FC<RootStackScreenProps<"Search">> = ({
       setData(searchState?.searchResults);
     }
 
-    return () => {};
+    return () => { };
   }, [searchState]);
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import Highlighter from "components/Highlighter";
 import Icon from "components/Icon";
-import { Text } from "components/Themed";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Text, View } from "components/Themed";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { TTheme } from "types";
 import copyToClipboard from "utils/copyToClipboard";
 
@@ -60,7 +60,7 @@ const RenderVerse = ({
           searchWords={isArray ? selected : [selected]}
           highlightStyle={{ color: theme.colors.notification }}
           style={[styles.verseBody]}
-          onWordClick={() => {}}
+          onWordClick={() => { }}
         />
       </View>
     </TouchableOpacity>

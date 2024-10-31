@@ -1,8 +1,7 @@
 import React from "react";
-import { TextProps, TextStyle, TouchableOpacity } from "react-native";
-import { findAll } from "utils/findAll";
-import { Text, View } from "./Themed";
+import { TextProps, TextStyle } from "react-native";
 import { WordTagPair } from "utils/extractVersesInfo";
+import { Text } from "./Themed";
 
 interface DisplayStrongWordProps extends TextProps {
   autoEscape?: boolean;

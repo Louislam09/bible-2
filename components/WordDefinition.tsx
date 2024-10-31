@@ -9,7 +9,7 @@ import * as Clipboard from "expo-clipboard";
 import usePrintAndShare from "hooks/usePrintAndShare";
 import { useTextToSpeech } from "hooks/useTextToSpeech";
 import React, { useRef, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import WebView from "react-native-webview";
 import {
   ShouldStartLoadRequest,
@@ -17,7 +17,7 @@ import {
 } from "react-native-webview/lib/WebViewTypes";
 import { DictionaryData, Screens, TTheme } from "types";
 import Icon from "./Icon";
-import { Text } from "./Themed";
+import { Text, View } from "./Themed";
 
 type WordDefinitionProps = {
   wordData: DictionaryData;
@@ -140,7 +140,8 @@ const WordDefinition = ({
           />
         </TouchableOpacity>
       </View>
-      <View style={{ position: "relative" }}>
+
+      <View style={{ position: "relative", backgroundColor: theme.colors.background }}>
         <Text style={[styles.sectionTitle]}>{subTitle}</Text>
         <View style={styles.sectionDecorationLine} />
       </View>
@@ -185,6 +186,7 @@ const getStyles = ({ colors }: TTheme, isDark?: boolean) =>
       justifyContent: "flex-start",
       marginVertical: 15,
       flexDirection: "row",
+      backgroundColor: colors.background
     },
     wordOfDayBody: {
       alignItems: "center",
