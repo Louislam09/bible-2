@@ -4,13 +4,14 @@ import DisplayStrongWord from "components/DisplayStrongWord";
 import Icon from "components/Icon";
 import Walkthrough from "components/Walkthrough";
 import { useStorage } from "context/LocalstoreContext";
+import { useModal } from "context/modal-context";
 import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
 import React, {
   useCallback,
   useEffect,
   useMemo,
   useRef,
-  useState,
+  useState
 } from "react";
 import {
   Animated,
@@ -19,7 +20,6 @@ import {
   StyleSheet,
   ToastAndroid,
   TouchableOpacity,
-  View,
 } from "react-native";
 import copyToClipboard from "utils/copyToClipboard";
 import { DB_BOOK_NAMES } from "../../../constants/BookNames";
@@ -33,9 +33,8 @@ import extractVersesInfo, {
   WordTagPair,
 } from "../../../utils/extractVersesInfo";
 import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
-import { Text } from "../../Themed";
+import { Text, View } from "../../Themed";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
-import { useModal } from "context/modal-context";
 
 type VerseProps = TVerse & {
   isSplit: boolean;
@@ -486,7 +485,7 @@ const Verse: React.FC<VerseProps> = ({
       >
         {isFirstVerse && (
           <View style={styles.estimatedContainer}>
-            <Text style={styles.estimatedText}>
+            <Text style={[styles.estimatedText]}>
               <Icon size={14} name="Timer" color={theme.colors.notification} />
               &nbsp; Tiempo de lectura {`~ ${estimatedReadingTime} min(s)\n`}
             </Text>

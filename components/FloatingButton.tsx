@@ -1,11 +1,12 @@
 import { NavigationProp, NavigationState, useTheme } from '@react-navigation/native';
 import { iconSize } from 'constants/size';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Dimensions, Easing, Keyboard, StyleSheet, ToastAndroid, TouchableOpacity, View } from 'react-native';
+import { Animated, Dimensions, Easing, Keyboard, StyleSheet, ToastAndroid, TouchableOpacity, } from 'react-native';
 import { TTheme } from 'types';
 import Icon from './Icon';
 import { useBibleContext } from 'context/BibleContext';
 import useDraggableElement from 'hooks/useDraggableBox';
+import { View } from './Themed';
 
 type FloatingButtonProps = {
     navigation: Omit<NavigationProp<ReactNavigation.RootParamList>, "getState"> & {

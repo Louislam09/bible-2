@@ -5,14 +5,12 @@ import {
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
-  View,
 } from "react-native";
-import { Text } from "./Themed";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { Text, View } from "./Themed";
 
 import { BOOK_IMAGES } from "constants/Images";
-import { HomeParams, IDBBookNames, Screens, TTheme } from "types";
 import { useBibleContext } from "context/BibleContext";
+import { HomeParams, IDBBookNames, Screens, TTheme } from "types";
 
 interface IBookNameList {
   bookList: IDBBookNames[] | any[];
@@ -101,7 +99,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
         style={[
           styles.listTitle,
           (isVerseScreen ? selectedSideVerse : selectedSideChapter) ===
-            item && { color: "white" },
+          item && { color: "white" },
         ]}
       >
         {item}

@@ -4,11 +4,12 @@ import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from "constants/Queries";
 import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
 import React, { useEffect, useMemo, useState } from "react";
-import { Animated, BackHandler, StyleSheet, Text, View } from "react-native";
+import { Animated, BackHandler, StyleSheet, Text, } from "react-native";
 import { IVerseItem, RootStackScreenProps, TTheme } from "types";
 import AnimatedDropdown from "./AnimatedDropdown";
 import Icon from "./Icon";
 import StrongSearchContent from "./StrongSearchContent";
+import { View } from "./Themed";
 
 enum CognateBook {
   NEW_VOW = "newVow",
@@ -72,7 +73,7 @@ const SearchStrongWordEntire: React.FC<
       setData((searchData as IVerseItem[]) || []);
     })();
 
-    return () => {};
+    return () => { };
   }, [myBibleDB, code, selectedFilterOption]);
 
   useEffect(() => {

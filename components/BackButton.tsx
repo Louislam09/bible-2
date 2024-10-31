@@ -1,8 +1,7 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
-import React from "react";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { MaterialIconNameType, TTheme } from "types";
 import { NavigationProp, NavigationState } from "@react-navigation/native";
+import React from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { TTheme } from "types";
 import Icon from "./Icon";
 
 type BackButtonProps = {
