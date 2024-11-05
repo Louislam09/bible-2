@@ -1,7 +1,7 @@
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import Icon, { IconProps } from "components/Icon";
 import { Text, View } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
+import { useCustomTheme } from "context/ThemeContext";
 import React from "react";
 import {
   Platform,
@@ -11,8 +11,6 @@ import {
 } from "react-native";
 import { TFont, TTheme } from "types";
 import SelectThemeList from "./SelectThemeList";
-import { useCustomTheme } from "context/ThemeContext";
-import Icon, { IconProps } from "components/Icon";
 
 type IThemeOption = {
   icon: IconProps["name"];
@@ -24,7 +22,7 @@ type IThemeOption = {
 
 const Settings = ({ theme }: any) => {
   const styles = getStyles(theme);
-  const { toggleTheme, theme: _themeScheme } = useCustomTheme();
+  const { toggleTheme, schema } = useCustomTheme();
   const colorScheme = useColorScheme() as typeof _themeScheme;
   const {
     selectFont,

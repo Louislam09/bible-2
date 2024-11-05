@@ -1,3 +1,5 @@
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import {
   DELETE_FAVORITE_VERSE,
   DELETE_NOTE,
@@ -15,6 +17,8 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { Dimensions, ToastAndroid } from "react-native";
+import getCurrentDbName from "utils/getCurrentDB";
 import useCustomFonts from "../hooks/useCustomFonts";
 import {
   EBibleVersions,
@@ -27,10 +31,6 @@ import {
 } from "../types";
 import { useDBContext } from "./databaseContext";
 import { useStorage } from "./LocalstoreContext";
-import { Dimensions, ToastAndroid } from "react-native";
-import getCurrentDbName from "utils/getCurrentDB";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 
 type BibleState = {
   highlightedVerses: IBookVerse[];

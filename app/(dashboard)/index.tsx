@@ -9,6 +9,7 @@ import VoiceList from "components/VoiceList";
 import VersionList from "components/home/header/VersionList";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
+import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   BackHandler,
@@ -33,9 +34,8 @@ type RenderItemProps = {
   index: number;
 }
 
-const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
-  navigation,
-}) => {
+const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = () => {
+  const router = useRouter()
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const {
     currentBibleVersion,
@@ -44,6 +44,8 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
     orientation = "PORTRAIT",
   } = useBibleContext();
   const theme = useTheme();
+
+  console.log(theme)
   const route = useRoute();
   const {
     storedData,
@@ -108,14 +110,14 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
       );
       return;
     }
-    navigation.navigate("Song");
+    router.navigate("Song");
   };
 
   const dashboardItems: IDashboardOption[] = [
     {
       icon: isNTV ? "BookText" : "Crown",
       label: "Santa Escritura",
-      action: () => navigation.navigate(Screens.Home, homePageInitParams),
+      action: () => router.navigate(Screens.Home, homePageInitParams),
       tag: isNTV ? "book-cross" : "crown-outline",
     },
     {
@@ -127,45 +129,45 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
     {
       icon: "Search",
       label: "Buscador",
-      action: () => navigation.navigate(Screens.Search, {}),
+      action: () => router.navigate(Screens.Search, {}),
     },
     {
       icon: "LayoutGrid",
       label: "Lista de Libro",
       action: () =>
-        navigation?.navigate(Screens.ChooseBook, { ...route.params }),
+        router?.navigate(Screens.ChooseBook, { ...route.params }),
     },
     {
       icon: "BookA",
       label: "Diccionarios",
       action: () =>
-        navigation?.navigate(Screens.DictionarySearch, { word: "" }),
+        router?.navigate(Screens.DictionarySearch, { word: "" }),
     },
     {
       icon: "SwatchBook",
       label: "Concordancia Escritural",
-      action: () => navigation.navigate(Screens.Concordance, {}),
+      action: () => router.navigate(Screens.Concordance, {}),
     },
     {
       icon: "NotebookText",
       label: "Notas",
-      action: () => navigation.navigate(Screens.Notes, { shouldRefresh: false }),
+      action: () => router.navigate(Screens.Notes, { shouldRefresh: false }),
     },
     {
       icon: "MonitorDown",
       label: "Gestor de descargas",
-      action: () => navigation.navigate(Screens.DownloadManager),
+      action: () => router.navigate(Screens.DownloadManager),
     },
     {
       icon: "Star",
       label: "Versiculos Favoritos",
-      action: () => navigation.navigate(Screens.Favorite),
+      action: () => router.navigate(Screens.Favorite),
     },
     {
       icon: "UserSearch",
       label: "Buscar Personaje",
       isIonicon: true,
-      action: () => navigation.navigate(Screens.Character),
+      action: () => router.navigate(Screens.Character),
     },
     {
       icon: "AudioLines",
@@ -181,12 +183,12 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
       icon: "Settings",
       label: "Ajustes",
       isIonicon: true,
-      action: () => navigation.navigate(Screens.Settings),
+      action: () => router.navigate(Screens.Settings),
     },
     {
       icon: "HandHelping",
       label: "Como Usar?",
-      action: () => navigation.navigate(Screens.Onboarding),
+      action: () => router.navigate(Screens.Onboarding),
     },
   ];
 
@@ -256,7 +258,7 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = ({
       key={orientation + theme.dark}
       style={[styles.container, !isPortrait && { flexDirection: "row" }]}
     >
-      {isPortrait && <DailyVerse navigation={navigation} theme={theme} />}
+      {isPortrait && <DailyVerse navigation={router} theme={theme} />}
 
       <View style={[styles.optionContainer, StyleByOrientation]} >
         <FlashList

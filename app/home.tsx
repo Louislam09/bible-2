@@ -24,9 +24,11 @@ import NoteNameList from "components/home/NoteNameList";
 import SplitBottomSide from "components/SplitBottomSide";
 import SplitTopSide from "components/SplitTopSide";
 import Walkthrough from "components/Walkthrough";
-import CustomHeader from "../components/home/header";
+// import CustomHeader from "../components/home/header";
 
 
+import CustomHeader from "components/home/header";
+import { useRouter } from 'expo-router';
 import { HomeParams, RootStackScreenProps, TTheme } from "types";
 
 // Constants
@@ -40,7 +42,8 @@ interface SplitConfig {
   maxWidth: number;
 }
 
-const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
+const HomeScreen: React.FC<RootStackScreenProps<"Home">> = () => {
+  const router = useRouter()
   const theme = useTheme();
   const { storedData } = useStorage();
   const route = useRoute();
@@ -171,12 +174,12 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {
-        navigation.goBack();
+        router.back();
         return true;
       }
     );
     return () => backHandler.remove();
-  }, [navigation]);
+  }, [router]);
 
   return (
     <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
@@ -191,7 +194,7 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
             ...initialState,
             height: topHeight,
             width: topWidth,
-            navigation,
+            router,
           }}
         />
         {isSplitActived && (
@@ -218,7 +221,7 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
                   new Animated.Value(SCREEN_WIDTH),
                   topWidth
                 ),
-                navigation,
+                router,
               }}
             />
           </>
@@ -226,7 +229,7 @@ const HomeScreen: React.FC<RootStackScreenProps<"Home">> = ({ navigation }) => {
       </View>
       <BookContentModals book={initialState.book} chapter={initialState.chapter} />
 
-      <FloatingButton navigation={navigation}>
+      <FloatingButton navigation={router}>
         <CurrentNoteDetail />
       </FloatingButton>
       <BottomModal

@@ -1,5 +1,5 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import AnimatedDropdown from "components/AnimatedDropdown";
 import RenderVerse, { TItem } from "components/concordance/RenderVerse";
@@ -12,6 +12,7 @@ import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
 import { useCustomTheme } from "context/ThemeContext";
 import useDebounce from "hooks/useDebounce";
+import { useRouter } from "node_modules/expo-router/build";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
@@ -108,8 +109,8 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
   const [selected, setSelected] = useState<any>(null);
   const [filterData] = useState<TWord[]>(WORDS);
   const theme = useTheme();
-  const { theme: _themeScheme } = useCustomTheme();
-  const navigation = useNavigation();
+  const { schema } = useCustomTheme();
+  const router = useRouter();
   const styles = getStyles(theme);
   const [searchText, setSearchText] = useState<any>(null);
   const [randomLetter, setRandomLetter] = useState<string>("");
@@ -145,7 +146,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
       }
     })();
 
-    return () => {};
+    return () => { };
   }, [myBibleDB, selected]);
 
   const onWordItemClick = (item: TWord) => {
@@ -206,7 +207,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
     const backAction = () => {
       setSelected(null);
       setVerseList(null);
-      !selected && navigation.goBack();
+      !selected && router.back();
       return true;
     };
 
@@ -223,7 +224,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
       setSelected(null);
       setVerseList(null);
     } else {
-      navigation.goBack();
+      router.back();
     }
   };
 
@@ -276,7 +277,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
         )}
         {showVerseList ? (
           <FlashList
-            key={_themeScheme}
+            key={schema}
             contentContainerStyle={{
               backgroundColor: theme.dark ? theme.colors.background : "#eee",
               paddingVertical: 20,
@@ -299,7 +300,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
           />
         ) : (
           <FlashList
-            key={_themeScheme}
+            key={schema}
             contentContainerStyle={{
               backgroundColor: theme.dark ? theme.colors.background : "#eee",
               paddingVertical: 20,
@@ -309,16 +310,16 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
             data={
               debouncedSearchText
                 ? filterData.filter(
-                    (x: any) =>
-                      x.name_lower.indexOf(
-                        debouncedSearchText.toLowerCase()
-                      ) !== -1
-                  )
+                  (x: any) =>
+                    x.name_lower.indexOf(
+                      debouncedSearchText.toLowerCase()
+                    ) !== -1
+                )
                 : filterData
-                    .filter(
-                      (x) => x.first_letter === randomLetter.toLowerCase()
-                    )
-                    .sort()
+                  .filter(
+                    (x) => x.first_letter === randomLetter.toLowerCase()
+                  )
+                  .sort()
             }
             renderItem={({ item, index }) => (
               <RenderWordItem

@@ -1,4 +1,4 @@
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { useRoute, useTheme } from "@react-navigation/native";
 import React, { FC, useCallback, useMemo, useRef } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { useBibleContext } from "../../../context/BibleContext";
@@ -8,6 +8,7 @@ import BottomModal from "components/BottomModal";
 import Icon from "components/Icon";
 import { iconSize } from "constants/size";
 import { useStorage } from "context/LocalstoreContext";
+import { useRouter } from 'expo-router';
 import useInstalledBibles from "hooks/useInstalledBible";
 import {
   EBibleVersions,
@@ -52,7 +53,9 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
   const route = useRoute<TRoute>();
   const { book, chapter = 1, verse } = route.params as HomeParams;
   const theme = useTheme();
-  const navigation = useNavigation();
+  const router = useRouter()
+  // const navigation = useNavigation();
+
   const styles = getStyles(theme);
   const headerIconSize = iconSize;
   const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -73,7 +76,7 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
 
   const goSearchScreen = () => {
     clearHighlights();
-    navigation.navigate(Screens.Search, { book: book });
+    router.navigate(Screens.Search, { book: book });
   };
 
   const moveBackInHistory = () => {
@@ -134,7 +137,7 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
         <TouchableOpacity
           ref={dashboard}
           style={styles.iconContainer}
-          onPress={() => navigation.navigate("Dashboard")}
+          onPress={() => router.navigate("(dashboard)")}
         >
           <Icon
             name="House"

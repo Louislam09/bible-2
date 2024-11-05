@@ -1,11 +1,11 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import Icon from "components/Icon";
 import { Text } from "components/Themed";
 import WordDefinition from "components/WordDefinition";
 import Characters from "constants/Characters";
 import { useCustomTheme } from "context/ThemeContext";
+import { useRouter } from "node_modules/expo-router/build";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -65,8 +65,8 @@ const Character: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   const [selected, setSelected] = useState<any>(null);
   const [filterData] = useState(Characters);
   const theme = useTheme();
-  const { theme: _themeScheme } = useCustomTheme();
-  const navigation = useNavigation();
+  const { schema } = useCustomTheme();
+  const router = useRouter();
   const styles = getStyles(theme);
   const [searchText, setSearchText] = useState<any>(null);
 
@@ -100,7 +100,7 @@ const Character: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   useEffect(() => {
     const backAction = () => {
       setSelected(null);
-      !selected?.topic && navigation.goBack();
+      !selected?.topic && router.back();
       return true;
     };
 
@@ -116,18 +116,18 @@ const Character: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
     if (selected?.topic) {
       setSelected(null);
     } else {
-      navigation.goBack();
+      router.back();
     }
   };
 
   React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => (
-        <TouchableOpacity onPress={handleCustomBack}>
-          <Icon name="ArrowLeft" color={theme.colors.text} size={28} />
-        </TouchableOpacity>
-      ),
-    });
+    // navigation.setOptions({
+    //   headerLeft: () => (
+    //     <TouchableOpacity onPress={handleCustomBack}>
+    //       <Icon name="ArrowLeft" color={theme.colors.text} size={28} />
+    //     </TouchableOpacity>
+    //   ),
+    // });
   }, [selected]);
 
   return (
@@ -144,7 +144,7 @@ const Character: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
         <>
           {NoteHeader()}
           <FlashList
-            key={_themeScheme}
+            key={schema}
             contentContainerStyle={{
               backgroundColor: theme.dark ? theme.colors.background : "#eee",
               paddingVertical: 20,

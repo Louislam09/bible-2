@@ -3,9 +3,17 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "*": ["*"],
-      "components/*":["components/*"]
+      "*": [
+        "*"
+      ],
+      "components/*": [
+        "components/*"
+      ]
     },
     "strict": true
-  }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }

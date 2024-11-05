@@ -4,13 +4,12 @@
  *
  */
 import { NavigationContainer } from "@react-navigation/native";
+import { useBibleContext } from "context/BibleContext";
 import * as React from "react";
-import LinkingConfiguration from "./LinkingConfiguration";
-import MainStack from "./MainStack";
 import getThemes from "../constants/themeColors";
 import { useCustomTheme } from "../context/ThemeContext";
-import { EThemes } from "types";
-import { useBibleContext } from "context/BibleContext";
+import LinkingConfiguration from "./LinkingConfiguration";
+import MainStack from "./MainStack";
 
 const Navigation = () => {
   const { currentTheme } = useBibleContext();

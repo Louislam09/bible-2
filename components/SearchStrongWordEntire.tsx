@@ -3,6 +3,7 @@ import { DB_BOOK_NAMES } from "constants/BookNames";
 import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from "constants/Queries";
 import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
+import { useRouter } from "node_modules/expo-router/build";
 import React, { useEffect, useMemo, useState } from "react";
 import { Animated, BackHandler, StyleSheet, Text, } from "react-native";
 import { IVerseItem, RootStackScreenProps, TTheme } from "types";
@@ -23,7 +24,8 @@ const bookFilter = {
 
 const SearchStrongWordEntire: React.FC<
   RootStackScreenProps<"StrongSearchEntire">
-> = ({ route, navigation }) => {
+> = ({ route }) => {
+  const router = useRouter()
   const { paramCode } = route.params as any;
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -78,7 +80,7 @@ const SearchStrongWordEntire: React.FC<
 
   useEffect(() => {
     const backAction = () => {
-      navigation.goBack();
+      router.back()
       return true;
     };
 

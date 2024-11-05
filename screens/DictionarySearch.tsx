@@ -1,9 +1,7 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "components/Animation";
-import Icon from "components/Icon";
 import { Text } from "components/Themed";
 import WordDefinition from "components/WordDefinition";
 import { useBibleContext } from "context/BibleContext";
@@ -11,6 +9,7 @@ import { useDBContext } from "context/databaseContext";
 import { useCustomTheme } from "context/ThemeContext";
 import useDebounce from "hooks/useDebounce";
 import useDictionaryData, { DatabaseData } from "hooks/useDictionaryData";
+import { useRouter } from "node_modules/expo-router/build";
 import React, {
   useCallback,
   useEffect,
@@ -104,8 +103,8 @@ const DictionarySearch: React.FC<
   const [selectedWord, setSelectedWord] = useState<any>(null);
   const [filterData, setFilterData] = useState<DatabaseData[]>([]);
   const theme = useTheme();
-  const { theme: _themeScheme } = useCustomTheme();
-  const navigation = useNavigation();
+  const { schema } = useCustomTheme();
+  const router = useRouter();
   const styles = getStyles(theme);
   const [searchText, setSearchText] = useState<any>(word ? word : "");
   const { installedDictionary: dbNames, executeSql } = useDBContext();
@@ -183,7 +182,7 @@ const DictionarySearch: React.FC<
   useEffect(() => {
     const backAction = () => {
       setSelectedWord(null);
-      !selectedWord?.topic && navigation.goBack();
+      !selectedWord?.topic && router.back();
       return true;
     };
 
@@ -199,23 +198,23 @@ const DictionarySearch: React.FC<
     if (selectedWord?.topic) {
       setSelectedWord(null);
     } else {
-      navigation.goBack();
+      router.back();
     }
   };
 
   React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => (
-        <TouchableOpacity onPress={handleCustomBack}>
-          <Icon name="ArrowLeft" color={theme.colors.text} size={28} />
-        </TouchableOpacity>
-      ),
-    });
+    // navigation.setOptions({
+    //   headerLeft: () => (
+    //     <TouchableOpacity onPress={handleCustomBack}>
+    //       <Icon name="ArrowLeft" color={theme.colors.text} size={28} />
+    //     </TouchableOpacity>
+    //   ),
+    // });
   }, [selectedWord]);
 
   const onNavToManagerDownload = useCallback(() => {
-    navigation.navigate("DownloadManager");
-  }, [navigation]);
+    router.navigate("DownloadManager");
+  }, [router]);
 
   if (dbNames.length === 0) {
     return (
@@ -251,7 +250,7 @@ const DictionarySearch: React.FC<
         <>
           {DictionaryHeader()}
           <FlashList
-            key={_themeScheme}
+            key={schema}
             contentContainerStyle={{
               backgroundColor: theme.dark ? theme.colors.background : "#eee",
               paddingVertical: 20,

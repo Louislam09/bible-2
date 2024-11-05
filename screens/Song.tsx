@@ -1,6 +1,6 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import BottomModal from "components/BottomModal";
 import Icon from "components/Icon";
@@ -9,6 +9,7 @@ import { Text } from "components/Themed";
 import Songs from "constants/songs";
 import { useBibleContext } from "context/BibleContext";
 import { useCustomTheme } from "context/ThemeContext";
+import { useRouter } from "node_modules/expo-router/build";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -70,8 +71,8 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   const [selected, setSelected] = useState<any>(null);
   const [filterData] = useState<TSongItem[]>(Songs);
   const theme = useTheme();
-  const { theme: _themeScheme } = useCustomTheme();
-  const navigation = useNavigation();
+  const { schema } = useCustomTheme();
+  const router = useRouter();
   const styles = getStyles(theme);
   const [searchText, setSearchText] = useState<any>(null);
   const versionRef = useRef<BottomSheetModal>(null);
@@ -126,7 +127,7 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
       versionRef.current?.dismiss();
       setSelected(null);
       setSearchText("");
-      !selected && navigation.goBack();
+      !selected && router.back();
       return true;
     };
 
@@ -143,7 +144,7 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
       setSelected(null);
       setSearchText("");
     } else {
-      navigation.goBack();
+      router.back();
     }
   };
 
@@ -193,7 +194,7 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
       <>
         {SongHeader()}
         <FlashList
-          key={_themeScheme}
+          key={schema}
           contentContainerStyle={{
             backgroundColor: theme.dark ? theme.colors.background : "#eee",
             paddingVertical: 20,

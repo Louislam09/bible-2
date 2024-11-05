@@ -9,15 +9,16 @@ import { Text, View } from "components/Themed";
 import bibleDatabases from "constants/bibleDatabases";
 import useDebounce from "hooks/useDebounce";
 import useInternetConnection from "hooks/useInternetConnection";
+import { useRouter } from "node_modules/expo-router/build";
 // import useNetworkStatus from "hooks/useNetworkInfo";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BackHandler, StyleSheet, TextInput } from "react-native";
 import { DownloadBibleItem, RootStackScreenProps, TTheme } from "types";
 import removeAccent from "utils/removeAccent";
 
 const DownloadManager: React.FC<RootStackScreenProps<"DownloadManager">> = ({
-  navigation,
 }) => {
+  const router = useRouter()
   const theme = useTheme();
   const styles = getStyles(theme);
   const databasesToDownload: DownloadBibleItem[] = bibleDatabases;
@@ -52,7 +53,7 @@ const DownloadManager: React.FC<RootStackScreenProps<"DownloadManager">> = ({
 
   useEffect(() => {
     const backAction = () => {
-      navigation.goBack();
+      router.back();
       return true;
     };
 
@@ -86,14 +87,14 @@ const DownloadManager: React.FC<RootStackScreenProps<"DownloadManager">> = ({
           data={
             debouncedSearchText
               ? databasesToDownload.filter(
-                  (version) =>
-                    removeAccent(version.name).indexOf(
-                      debouncedSearchText.toLowerCase()
-                    ) !== -1 ||
-                    removeAccent(version.storedName).indexOf(
-                      debouncedSearchText.toLowerCase()
-                    ) !== -1
-                )
+                (version) =>
+                  removeAccent(version.name).indexOf(
+                    debouncedSearchText.toLowerCase()
+                  ) !== -1 ||
+                  removeAccent(version.storedName).indexOf(
+                    debouncedSearchText.toLowerCase()
+                  ) !== -1
+              )
               : databasesToDownload
           }
           keyExtractor={(item: DownloadBibleItem, index: any) =>

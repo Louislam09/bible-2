@@ -126,7 +126,7 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
 }) => {
   const [selectedWord, setSelectedWord] = useState<any>(null);
   const [filterData, setFilterData] = useState<DatabaseData[]>([]);
-  const { theme: _themeScheme } = useCustomTheme();
+  const { schema } = useCustomTheme();
   const styles = getStyles(theme);
   const [searchText, setSearchText] = useState<any>(word ? word : "");
   const { installedDictionary: dbNames, executeSql } = useDBContext();
@@ -260,7 +260,7 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
           <>
             {DictionaryHeader()}
             <FlashList
-              key={_themeScheme}
+              key={schema}
               contentContainerStyle={{
                 backgroundColor: theme.dark ? theme.colors.background : "#eee",
               }}

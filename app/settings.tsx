@@ -16,10 +16,11 @@ import { Text, View } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
 import { useCustomTheme } from "context/ThemeContext";
+import Constants from 'expo-constants';
+import { useRouter } from 'expo-router';
+import * as Updates from 'expo-updates';
 import { useCallback, useEffect, useMemo } from "react";
 import { EThemes, RootStackScreenProps, TFont, TTheme } from "types";
-import * as Updates from 'expo-updates';
-import Constants from 'expo-constants';
 
 const URLS = {
   BIBLE: "market://details?id=com.louislam09.bible",
@@ -61,6 +62,7 @@ type TSection = {
 const SettingsScren: React.FC<RootStackScreenProps<"Settings">> = ({
   navigation,
 }) => {
+  const router = useRouter()
   const theme = useTheme();
   const {
     selectTheme,
@@ -71,7 +73,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"Settings">> = ({
     fontSize,
     selectedFont,
   } = useBibleContext();
-  const { toggleTheme, theme: _themeScheme } = useCustomTheme();
+  const { toggleTheme, schema } = useCustomTheme();
   const styles = getStyles(theme);
   const { storedData, saveData, isDataLoaded } = useStorage();
 
@@ -420,7 +422,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"Settings">> = ({
 
   useEffect(() => {
     const backAction = () => {
-      navigation.goBack();
+      router.back()
       return true;
     };
 

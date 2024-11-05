@@ -4,12 +4,14 @@ import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { View } from "components/Themed";
 import { useBibleContext } from "context/BibleContext";
 import useDebounce from "hooks/useDebounce";
+import { useRouter } from "node_modules/expo-router/build";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { TTheme } from "types";
 import removeAccent from "utils/removeAccent";
 
-const SearchHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
+const SearchHeader: React.FC<NativeStackHeaderProps> = ({ }) => {
+  const router = useRouter()
   const theme = useTheme();
   const textInputRef = useRef<TextInput>(null);
   const styles = getStyles(theme);
@@ -52,7 +54,7 @@ const SearchHeader: React.FC<NativeStackHeaderProps> = ({ navigation }) => {
   return (
     <View>
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => router.back()}>
           <Ionicons style={styles.icon} name="arrow-back" size={24} />
         </TouchableOpacity>
         <TextInput

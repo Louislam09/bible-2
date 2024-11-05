@@ -1,14 +1,16 @@
+import getThemes from "constants/themeColors";
 import React, {
   createContext,
-  useState,
+  ReactNode,
   useContext,
   useEffect,
-  ReactNode,
+  useState,
 } from "react";
 import { Appearance } from "react-native";
+import { useBibleContext } from "./BibleContext";
 
 interface ThemeContextProps {
-  theme: "light" | "dark";
+  schema: "light" | "dark";
   toggleTheme: (schema?: "light" | "dark") => void;
 }
 
@@ -19,14 +21,18 @@ interface ThemeProviderProps {
 }
 
 const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+  const { currentTheme } = useBibleContext();
   const colorScheme = Appearance.getColorScheme();
-  const [theme, setTheme] = useState<"light" | "dark">(
+  const themes = getThemes();
+  const { DarkTheme, LightTheme } = themes[currentTheme];
+  const theme = { dark: DarkTheme, light: LightTheme };
+  const [schema, setSchema] = useState<"light" | "dark">(
     colorScheme === "dark" ? "dark" : "light"
   );
 
   useEffect(() => {
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      setTheme(colorScheme === "dark" ? "dark" : "light");
+      setSchema(colorScheme === "dark" ? "dark" : "light");
     });
 
     return () => {
@@ -34,16 +40,16 @@ const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     };
   }, []);
 
-  const toggleTheme = (scheme?: typeof theme) => {
-    if (typeof scheme === "string") {
-      setTheme(scheme);
+  const toggleTheme = (value?: typeof schema) => {
+    if (typeof value === "string") {
+      setSchema(value);
       return;
     }
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+    setSchema((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ schema, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
