@@ -1,11 +1,10 @@
 import {
   Alert,
-  BackHandler,
   Linking,
   Platform,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
 
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
@@ -19,7 +18,7 @@ import { useCustomTheme } from "context/ThemeContext";
 import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import * as Updates from 'expo-updates';
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { EThemes, RootStackScreenProps, TFont, TTheme } from "types";
 
 const URLS = {
@@ -420,19 +419,6 @@ const SettingsScren: React.FC<RootStackScreenProps<"Settings">> = ({
     );
   };
 
-  useEffect(() => {
-    const backAction = () => {
-      router.back()
-      return true;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove();
-  }, [navigation, theme]);
 
   return (
     <View key={orientation + theme.dark} style={styles.container}>

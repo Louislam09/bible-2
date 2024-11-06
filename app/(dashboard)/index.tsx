@@ -45,7 +45,6 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = () => {
   } = useBibleContext();
   const theme = useTheme();
 
-  console.log(theme)
   const route = useRoute();
   const {
     storedData,

@@ -1,18 +1,18 @@
-import "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import ErrorBoundaryFallback from "components/ErrorBoundaryFallback";
 import StorageProvider from "context/LocalstoreContext";
+import { ModalProvider } from "context/modal-context";
+import * as Updates from "expo-updates";
 import React, { useEffect } from "react";
 import { StatusBar, ToastAndroid } from "react-native";
+import ErrorBoundary from "react-native-error-boundary";
+import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BibleProvider from "./context/BibleContext";
-import ThemeProvider from "./context/ThemeContext";
+import MyThemeProvider from "./context/ThemeContext";
 import DatabaseProvider from "./context/databaseContext";
 import useCachedResources from "./hooks/useCachedResources";
 import Navigation from "./navigation";
-import ErrorBoundaryFallback from "components/ErrorBoundaryFallback";
-import * as Updates from "expo-updates";
-import ErrorBoundary from "react-native-error-boundary";
-import { ModalProvider } from "context/modal-context";
 
 const App = () => {
   const isLoadingComplete = useCachedResources();
@@ -39,7 +39,7 @@ const App = () => {
   } else {
     return (
       <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
-        <ThemeProvider>
+        <MyThemeProvider>
           <StorageProvider>
             <DatabaseProvider>
               <BibleProvider>
@@ -54,7 +54,7 @@ const App = () => {
               </BibleProvider>
             </DatabaseProvider>
           </StorageProvider>
-        </ThemeProvider>
+        </MyThemeProvider>
       </ErrorBoundary>
     );
   }

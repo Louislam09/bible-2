@@ -1,12 +1,10 @@
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import ErrorBoundaryFallback from "components/ErrorBoundaryFallback";
-import { View } from "components/Themed";
 import BibleProvider from "context/BibleContext";
 import DatabaseProvider from "context/databaseContext";
 import StorageProvider from "context/LocalstoreContext";
 import { ModalProvider } from "context/modal-context";
-import ThemeProvider from "context/ThemeContext";
-import Constants from "expo-constants";
+import MyThemeProvider from "context/ThemeContext";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as Updates from "expo-updates";
@@ -17,25 +15,15 @@ import ErrorBoundary from "react-native-error-boundary";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-const StatusBarBackground = ({ children }: any) => {
-    const styling = {
-        flex: 1,
-        paddingTop: Constants.statusBarHeight,
-        // backgroundColor: 'salmon',
-    };
-    return <View style={[styling, { width: "100%" }]}>{children}</View>;
-};
-
 const MyStack = () => {
     return (
-        <Stack screenOptions={{ headerShown: false }}>
+        <Stack screenOptions={{ headerShown: true }}>
             <Stack.Screen options={{ headerShown: false }} name="(dashboard)" />
             <Stack.Screen options={{ headerShown: false }} name="home" />
             <Stack.Screen options={{ headerShown: false }} name="settings" />
         </Stack>
     )
 }
-
 
 const App = () => {
     const isLoadingComplete = useCachedResources();
@@ -61,27 +49,24 @@ const App = () => {
         return null;
     } else {
         return (
-            <StatusBarBackground>
-                <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
-                    <StorageProvider>
-                        <DatabaseProvider>
-                            <BibleProvider>
-                                <ThemeProvider>
-                                    <GestureHandlerRootView style={{ flex: 1 }}>
-                                        <BottomSheetModalProvider>
-                                            <ModalProvider>
-                                                {/* <StatusBar barStyle="light-content" animated /> */}
-                                                <StatusBar animated translucent style="inverted" />
-                                                <MyStack />
-                                            </ModalProvider>
-                                        </BottomSheetModalProvider>
-                                    </GestureHandlerRootView>
-                                </ThemeProvider>
-                            </BibleProvider>
-                        </DatabaseProvider>
-                    </StorageProvider>
-                </ErrorBoundary>
-            </StatusBarBackground>
+            <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
+                <StorageProvider>
+                    <DatabaseProvider>
+                        <BibleProvider>
+                            <MyThemeProvider>
+                                <GestureHandlerRootView style={{ flex: 1 }}>
+                                    <BottomSheetModalProvider>
+                                        <ModalProvider>
+                                            <StatusBar animated translucent style="inverted" />
+                                            <MyStack />
+                                        </ModalProvider>
+                                    </BottomSheetModalProvider>
+                                </GestureHandlerRootView>
+                            </MyThemeProvider>
+                        </BibleProvider>
+                    </DatabaseProvider>
+                </StorageProvider>
+            </ErrorBoundary>
         );
     }
 };

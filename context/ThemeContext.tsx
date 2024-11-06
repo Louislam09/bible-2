@@ -1,4 +1,7 @@
+import { ThemeProvider } from "@react-navigation/native";
+import { View } from "components/Themed";
 import getThemes from "constants/themeColors";
+import Constants from "expo-constants";
 import React, {
   createContext,
   ReactNode,
@@ -20,7 +23,16 @@ interface ThemeProviderProps {
   children: ReactNode;
 }
 
-const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+const StatusBarBackground = ({ children, bgColor }: any) => {
+  const styling = {
+    flex: 1,
+    paddingTop: Constants.statusBarHeight,
+    // backgroundColor: bgColor,
+  };
+  return <View style={[styling, { width: "100%" }]}>{children}</View>;
+};
+
+const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const { currentTheme } = useBibleContext();
   const colorScheme = Appearance.getColorScheme();
   const themes = getThemes();
@@ -50,7 +62,11 @@ const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   return (
     <ThemeContext.Provider value={{ schema, toggleTheme }}>
-      {children}
+      <ThemeProvider value={theme[schema]}>
+        <StatusBarBackground bgColor={theme[schema].colors.notification + 90}>
+          {children}
+        </StatusBarBackground>
+      </ThemeProvider>
     </ThemeContext.Provider>
   );
 };
@@ -63,4 +79,4 @@ export const useCustomTheme = (): ThemeContextProps => {
   return context;
 };
 
-export default ThemeProvider;
+export default MyThemeProvider;

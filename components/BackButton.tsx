@@ -27,7 +27,7 @@ const BackButton = ({
       backAction();
       return;
     }
-    navigation?.goBack();
+    // navigation?.goBack();
   };
 
   return (
