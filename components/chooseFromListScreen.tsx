@@ -1,33 +1,36 @@
 import { RouteProp, useTheme } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useBibleContext } from "context/BibleContext";
+import { useLocalSearchParams } from "node_modules/expo-router/build";
 import React, { useEffect, useMemo, useState } from "react";
-import BookNameList from "../components/BookNameList";
 import {
   DB_BOOK_CHAPTER_NUMBER,
   DB_BOOK_CHAPTER_VERSES,
   DB_BOOK_NAMES,
 } from "../constants/BookNames";
-import { RootStackParamList } from "../types";
+import { RootStackParamList, RootStackScreenProps } from "../types";
+import BookNameList from "./BookNameList";
 
 type ChooseFromListScreenRouteProp = RouteProp<RootStackParamList>;
 
 type ChooseFromListScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
-  "ChooseChapterNumber"
+  "chooseChapterNumber" | "chooseVerseNumber"
 >;
 
-type ChooseFromListScreenProps = {
+export type ChooseFromListScreenProps = {
   route: ChooseFromListScreenRouteProp;
   navigation: ChooseFromListScreenNavigationProp;
 };
 
-const ChooseFromListScreen = ({ route }: ChooseFromListScreenProps) => {
+const ChooseFromListScreen: React.FC<RootStackScreenProps<"chooseChapterNumber" | "chooseVerseNumber">> = (props) => {
   const theme = useTheme();
+  const params = useLocalSearchParams();
+  const route = {}
   const { book, chapter, bottomSideBook, bottomSideChapter } =
-    route.params as any;
+    params as any;
   const [numOfVerse, setNumVerse] = useState(0);
-  const isVerseScreen = route.name === "ChooseVerseNumber";
+  const isVerseScreen = route.name === "chooseVerseNumber";
   const { isBottomSideSearching, orientation } = useBibleContext();
   const selectedSideBook = isBottomSideSearching ? bottomSideBook : book;
   const selectedSideChapter = isBottomSideSearching

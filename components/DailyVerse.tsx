@@ -1,10 +1,10 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { WINDOW_WIDTH } from "@gorhom/bottom-sheet";
-import { NavigationProp, NavigationState } from "@react-navigation/native";
 import DAILY_VERSES from "constants/dailyVerses";
 import { GET_DAILY_VERSE } from "constants/Queries";
 import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
+import { useRouter } from "node_modules/expo-router/build";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { IVerseItem, TTheme } from "types";
@@ -27,12 +27,6 @@ const defaultDailyObject = {
 };
 
 type DailyVerseProps = {
-  navigation: Omit<
-    NavigationProp<ReactNavigation.RootParamList>,
-    "getState"
-  > & {
-    getState(): NavigationState | undefined;
-  };
   theme: TTheme;
   dailyVerseObject?: {
     book_number: number;
@@ -45,10 +39,10 @@ type DailyVerseProps = {
 };
 
 const DailyVerse = ({
-  navigation,
   theme,
   dailyVerseObject,
 }: DailyVerseProps) => {
+  const router = useRouter()
   const { executeSql, myBibleDB } = useDBContext();
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(
     dailyVerseObject || defaultDailyVerse
@@ -86,7 +80,7 @@ const DailyVerse = ({
       activeOpacity={0.7}
       onPress={() => {
         if (isDefaultVerse) return;
-        navigation.navigate("Home", {
+        router.navigate("Home", {
           book: dailyVerse.bookName,
           chapter: dailyVerse.chapter,
           verse: dailyVerse?.verse,

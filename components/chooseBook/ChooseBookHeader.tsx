@@ -8,9 +8,7 @@ import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { TTheme } from "types";
 
-const ChooseBookHeader: React.FC<NativeStackHeaderProps> = ({
-  options,
-}) => {
+const ChooseBookHeader: React.FC<NativeStackHeaderProps> = (props) => {
   const router = useRouter()
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -26,8 +24,7 @@ const ChooseBookHeader: React.FC<NativeStackHeaderProps> = ({
           <Icon style={styles.icon} name="ArrowLeft" size={24} />
         </TouchableOpacity>
       </View>
-      <Text style={{ fontSize: 22 }}>{options.headerTitle as string}</Text>
-
+      <Text style={{ fontSize: 22 }}>{props.options.headerTitle as string}</Text>
       <View style={styles.itemContainer}>
         <TouchableOpacity onPress={() => toggleViewLayoutGrid()}>
           <Icon

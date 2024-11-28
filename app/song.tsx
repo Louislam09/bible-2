@@ -3,13 +3,12 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import BottomModal from "components/BottomModal";
-import Icon from "components/Icon";
 import SongLyricView from "components/SongLyricView";
 import { Text } from "components/Themed";
 import Songs from "constants/songs";
 import { useBibleContext } from "context/BibleContext";
 import { useCustomTheme } from "context/ThemeContext";
-import { useRouter } from "node_modules/expo-router/build";
+import { Stack, useRouter } from "node_modules/expo-router/build";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -67,7 +66,7 @@ const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
   );
 };
 
-const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
+const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
   const [selected, setSelected] = useState<any>(null);
   const [filterData] = useState<TSongItem[]>(Songs);
   const theme = useTheme();
@@ -148,15 +147,15 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
     }
   };
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => (
-        <TouchableOpacity onPress={handleCustomBack}>
-          <Icon name="ArrowLeft" color={theme.colors.text} size={28} />
-        </TouchableOpacity>
-      ),
-    });
-  }, [selected]);
+  // React.useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerLeft: () => (
+  //       <TouchableOpacity onPress={handleCustomBack}>
+  //         <Icon name="ArrowLeft" color={theme.colors.text} size={28} />
+  //       </TouchableOpacity>
+  //     ),
+  //   });
+  // }, [selected]);
 
   const getIndex = (index: any) => {
     const value = snaps[index] || 30;
@@ -168,61 +167,64 @@ const Song: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   };
 
   return (
-    <View
-      key={orientation + theme.dark}
-      style={{
-        flex: 1,
-        padding: 5,
-        backgroundColor: theme.dark ? theme.colors.background : "#eee",
-      }}
-    >
-      <BottomModal
-        shouldScroll
-        snaps={_snaps}
-        startAT={2}
-        ref={versionRef}
-        getIndex={getIndex}
+    <>
+      <Stack.Screen options={{ headerShown: false }} />
+      <View
+        key={orientation + theme.dark}
+        style={{
+          flex: 1,
+          padding: 5,
+          backgroundColor: theme.dark ? theme.colors.background : "#eee",
+        }}
       >
-        <Animated.View
-          style={{
-            height: _topHeight,
-          }}
+        <BottomModal
+          shouldScroll
+          snaps={_snaps}
+          startAT={2}
+          ref={versionRef}
+          getIndex={getIndex}
         >
-          <SongLyricView theme={theme} song={selected} />
-        </Animated.View>
-      </BottomModal>
-      <>
-        {SongHeader()}
-        <FlashList
-          key={schema}
-          contentContainerStyle={{
-            backgroundColor: theme.dark ? theme.colors.background : "#eee",
-            paddingVertical: 20,
-          }}
-          decelerationRate={"normal"}
-          estimatedItemSize={135}
-          data={
-            searchText
-              ? filterData.filter(
-                (x: any) =>
-                  x?.title.toLowerCase().indexOf(searchText.toLowerCase()) !==
-                  -1
-              )
-              : filterData
-          }
-          // renderItem={renderItem as any}
-          renderItem={({ item, index }) => (
-            <RenderItem
-              {...{ theme, styles, onItemClick }}
-              item={item}
-              index={index}
-            />
-          )}
-          keyExtractor={(item: any, index: any) => `note-${index}`}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-        />
-      </>
-    </View>
+          <Animated.View
+            style={{
+              height: _topHeight,
+            }}
+          >
+            <SongLyricView theme={theme} song={selected} />
+          </Animated.View>
+        </BottomModal>
+        <>
+          {SongHeader()}
+          <FlashList
+            key={schema}
+            contentContainerStyle={{
+              backgroundColor: theme.dark ? theme.colors.background : "#eee",
+              paddingVertical: 20,
+            }}
+            decelerationRate={"normal"}
+            estimatedItemSize={135}
+            data={
+              searchText
+                ? filterData.filter(
+                  (x: any) =>
+                    x?.title.toLowerCase().indexOf(searchText.toLowerCase()) !==
+                    -1
+                )
+                : filterData
+            }
+            // renderItem={renderItem as any}
+            renderItem={({ item, index }) => (
+              <RenderItem
+                {...{ theme, styles, onItemClick }}
+                item={item}
+                index={index}
+              />
+            )}
+            keyExtractor={(item: any, index: any) => `note-${index}`}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+          />
+        </>
+      </View>
+    </>
   );
 };
 

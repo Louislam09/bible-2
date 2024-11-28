@@ -8,6 +8,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "sb-rv60",
     "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -58,7 +59,8 @@
       ],
       "expo-asset",
       "expo-font",
-      "expo-router"
+      "expo-router",
+      "expo-secure-store"
     ],
     "runtimeVersion": {
       "policy": "nativeVersion"

@@ -9,21 +9,13 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as Updates from "expo-updates";
 import useCachedResources from "hooks/useCachedResources";
+import { NativeStackNavigationOptions } from "node_modules/react-native-screens/lib/typescript/native-stack/types";
 import React, { useEffect } from "react";
 import { ToastAndroid } from "react-native";
 import ErrorBoundary from "react-native-error-boundary";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-
-const MyStack = () => {
-    return (
-        <Stack screenOptions={{ headerShown: true }}>
-            <Stack.Screen options={{ headerShown: false }} name="(dashboard)" />
-            <Stack.Screen options={{ headerShown: false }} name="home" />
-            <Stack.Screen options={{ headerShown: false }} name="settings" />
-        </Stack>
-    )
-}
+import { Screens, ScreensName } from "types";
 
 const App = () => {
     const isLoadingComplete = useCachedResources();
@@ -45,6 +37,16 @@ const App = () => {
         onFetchUpdateAsync();
     }, []);
 
+
+    const screenOptions: (props: any) => NativeStackNavigationOptions | any = (props) => {
+        return ({
+            headerTitle: ScreensName[props.route.name as Screens],
+            headerShown: true,
+            headerTitleAlign: "center",
+            headerTitleStyle: { fontWeight: "bold" },
+        })
+    };
+
     if (!isLoadingComplete) {
         return null;
     } else {
@@ -58,7 +60,7 @@ const App = () => {
                                     <BottomSheetModalProvider>
                                         <ModalProvider>
                                             <StatusBar animated translucent style="inverted" />
-                                            <MyStack />
+                                            <Stack screenOptions={screenOptions} />
                                         </ModalProvider>
                                     </BottomSheetModalProvider>
                                 </GestureHandlerRootView>

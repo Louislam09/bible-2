@@ -1,9 +1,11 @@
 import { useTheme } from "@react-navigation/native";
 import Icon from "components/Icon";
+import MyRichEditor from "components/RichTextEditor";
 import { Text, View } from "components/Themed";
 import { GET_NOTE_BY_ID } from "constants/Queries";
 import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
+import useDebounce from "hooks/useDebounce";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -18,8 +20,6 @@ import {
 } from "react-native";
 import { EViewMode, RootStackScreenProps, Screens, TNote, TTheme } from "types";
 import { formatDateShortDayMonth } from "utils/formatDateShortDayMonth";
-import MyRichEditor from "./RichTextEditor";
-import useDebounce from "hooks/useDebounce";
 
 const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
   route,

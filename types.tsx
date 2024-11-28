@@ -23,24 +23,24 @@ declare global {
 }
 
 export enum Screens {
-  Dashboard = "Dashboard",
-  Settings = "Settings",
-  Home = "Home",
-  Search = "Search",
-  Concordance = "Concordance",
-  Book = "Book",
-  ChooseBook = "ChooseBook",
-  ChooseChapterNumber = "ChooseChapterNumber",
-  ChooseVerseNumber = "ChooseVerseNumber",
-  Favorite = "Favorite",
-  DownloadManager = "DownloadManager",
-  Notes = "Notes",
-  Onboarding = "Onboarding",
-  Character = "Character",
-  Song = "Song",
-  StrongSearchEntire = "StrongSearchEntire",
-  DictionarySearch = "DictionarySearch",
-  NoteDetail = "NoteDetail",
+  Dashboard = "dashboard",
+  Settings = "settings",
+  Home = "home",
+  Search = "search",
+  Concordance = "concordance",
+  Book = "book",
+  ChooseBook = "chooseBook",
+  ChooseChapterNumber = "chooseChapterNumber",
+  ChooseVerseNumber = "chooseVerseNumber",
+  Favorite = "favorite",
+  DownloadManager = "downloadManager",
+  Notes = "notes",
+  Onboarding = "onboarding",
+  Character = "character",
+  Song = "song",
+  StrongSearchEntire = "strongSearchEntire",
+  DictionarySearch = "dictionarySearch",
+  NoteDetail = "noteDetail",
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -68,53 +68,53 @@ export const ScreensName: TScreensName = {
 
 // export type RootTabParamList = { [key in Screens]: any };
 export type RootTabParamList = {
-  Dashboard: undefined;
-  Settings: undefined;
-  Home: undefined;
-  Book: undefined;
-  ChooseBook: { book: string };
-  Search: undefined;
-  Concordance: undefined;
-  StrongSearchEntire: undefined;
-  DownloadManager: undefined;
-  Notes: undefined;
-  NoteDetail: undefined;
-  Favorite: undefined;
-  NotFound: undefined;
-  DictionarySearch: undefined;
+  dashboard: undefined;
+  settings: undefined;
+  home: undefined;
+  book: undefined;
+  chooseBook: { book: string };
+  search: undefined;
+  concordance: undefined;
+  strongSearchEntire: undefined;
+  downloadManager: undefined;
+  notes: undefined;
+  noteDetail: undefined;
+  favorite: undefined;
+  notFound: undefined;
+  dictionarySearch: undefined;
 };
 
 export type RootStackParamList = {
-  Dashboard: NavigatorScreenParams<RootTabParamList> | undefined;
-  Settings: NavigatorScreenParams<RootTabParamList> | undefined;
-  Home: NavigatorScreenParams<RootTabParamList> | HomeParams;
-  Book: NavigatorScreenParams<RootTabParamList> | undefined;
-  Favorite: NavigatorScreenParams<RootTabParamList> | undefined;
-  DownloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
-  Notes: NavigatorScreenParams<RootTabParamList> | { shouldRefresh: boolean };
-  NoteDetail:
+  dashboard: NavigatorScreenParams<RootTabParamList> | undefined;
+  settings: NavigatorScreenParams<RootTabParamList> | undefined;
+  home: NavigatorScreenParams<RootTabParamList> | HomeParams;
+  book: NavigatorScreenParams<RootTabParamList> | undefined;
+  favorite: NavigatorScreenParams<RootTabParamList> | undefined;
+  downloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
+  notes: NavigatorScreenParams<RootTabParamList> | { shouldRefresh: boolean };
+  noteDetail:
   | NavigatorScreenParams<RootTabParamList>
   | { noteId: number | null; isNewNote: boolean };
-  Character: NavigatorScreenParams<RootTabParamList> | undefined;
-  ChooseBook:
+  character: NavigatorScreenParams<RootTabParamList> | undefined;
+  chooseBook:
   | NavigatorScreenParams<RootTabParamList>
   | ChooseChapterNumberParams;
-  Search: NavigatorScreenParams<RootTabParamList> | { book?: string };
-  Concordance: NavigatorScreenParams<RootTabParamList> | {};
-  StrongSearchEntire:
+  search: NavigatorScreenParams<RootTabParamList> | { book?: string };
+  concordance: NavigatorScreenParams<RootTabParamList> | {};
+  strongSearchEntire:
   | NavigatorScreenParams<RootTabParamList>
   | { paramCode: string };
-  DictionarySearch: NavigatorScreenParams<RootTabParamList> | { word: string };
-  ChooseChapterNumber:
+  dictionarySearch: NavigatorScreenParams<RootTabParamList> | { word: string };
+  chooseChapterNumber:
   | NavigatorScreenParams<RootTabParamList>
   | ChooseChapterNumberParams;
-  ChooseVerseNumber:
+  chooseVerseNumber:
   | NavigatorScreenParams<RootTabParamList>
   | ChooseChapterNumberParams;
-  Modal: undefined;
-  Onboarding: undefined;
-  Song: undefined;
-  NotFound: undefined;
+  modal: undefined;
+  onboarding: undefined;
+  song: undefined;
+  notFound: undefined;
 };
 
 export interface HomeParams {

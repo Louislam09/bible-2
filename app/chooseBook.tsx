@@ -1,15 +1,15 @@
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { useRoute, useTheme } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
+import ChooseBookHeader from "components/chooseBook/ChooseBookHeader";
 import { Text, View } from "components/Themed";
 import { DB_BOOK_NAMES } from "constants/BookNames";
 import { useBibleContext } from "context/BibleContext";
-import React, { useState } from "react";
+import { Stack, useLocalSearchParams, useNavigation, } from "node_modules/expo-router/build";
+import React, { Fragment, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
-  TextInput,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
 import {
   BookIndexes,
@@ -21,11 +21,11 @@ import {
 } from "types";
 import removeAccent from "utils/removeAccent";
 
-const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
-  navigation,
-}) => {
-  const route = useRoute();
-  const routeParam = route.params as ChooseChapterNumberParams;
+const ChooseBook: React.FC<RootStackScreenProps<"chooseBook">> = (props) => {
+  const navigation = useNavigation()
+  const params = useLocalSearchParams();
+
+  const routeParam = params as ChooseChapterNumberParams;
   const { book } = routeParam;
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -158,9 +158,9 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
         data={
           query
             ? DB_BOOK_NAMES.filter(
-                (x) =>
-                  removeAccent(x.longName).indexOf(query.toLowerCase()) !== -1
-              )
+              (x) =>
+                removeAccent(x.longName).indexOf(query.toLowerCase()) !== -1
+            )
             : DB_BOOK_NAMES
         }
         renderItem={renderListView}
@@ -170,12 +170,15 @@ const ChooseBook: React.FC<RootStackScreenProps<"ChooseBook">> = ({
   );
 
   return (
-    <SafeAreaView
-      key={orientation + theme.dark}
-      style={[styles.container, !isPortrait && { flexDirection: "row" }]}
-    >
-      {viewLayoutGrid ? GridView : ListView}
-    </SafeAreaView>
+    <Fragment>
+      <Stack.Screen options={{ header: (props) => <ChooseBookHeader {...props} /> }} />
+      <SafeAreaView
+        key={orientation + theme.dark}
+        style={[styles.container, !isPortrait && { flexDirection: "row" }]}
+      >
+        {viewLayoutGrid ? GridView : ListView}
+      </SafeAreaView>
+    </Fragment>
   );
 };
 

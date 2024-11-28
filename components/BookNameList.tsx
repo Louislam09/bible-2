@@ -1,4 +1,4 @@
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import {
   Image,
@@ -10,6 +10,7 @@ import { Text, View } from "./Themed";
 
 import { BOOK_IMAGES } from "constants/Images";
 import { useBibleContext } from "context/BibleContext";
+import { useLocalSearchParams, useNavigation, usePathname } from "node_modules/expo-router/build";
 import { HomeParams, IDBBookNames, Screens, TTheme } from "types";
 
 interface IBookNameList {
@@ -18,29 +19,22 @@ interface IBookNameList {
 
 const BookNameList = ({ bookList }: IBookNameList) => {
   const navigation = useNavigation();
-  const route = useRoute();
-  const isVerseScreen = route.name === "ChooseVerseNumber";
-  const {
-    book: selectedBook,
-    chapter,
-    bottomSideBook,
-    bottomSideChapter,
-    verse,
-    bottomSideVerse,
-  } = route?.params as HomeParams;
+  const pathname = usePathname();
+  const localParams = useLocalSearchParams();
+  const isVerseScreen = pathname.includes('chooseVerseNumber')
 
-  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
+  const {
+    book: selectedBook, chapter, bottomSideBook,
+    bottomSideChapter, verse, bottomSideVerse,
+  } = localParams as HomeParams;
+
+  const { width: SCREEN_WIDTH } = useWindowDimensions();
   const theme = useTheme();
   const styles = getStyles(theme);
-  const { isBottomSideSearching, toggleBottomSideSearching, orientation } =
-    useBibleContext();
+  const { isBottomSideSearching, toggleBottomSideSearching, orientation } = useBibleContext();
   const isPortrait = orientation === "PORTRAIT";
-  const selectedSideBook = isBottomSideSearching
-    ? bottomSideBook
-    : selectedBook;
-  const selectedSideChapter = isBottomSideSearching
-    ? bottomSideChapter
-    : chapter;
+  const selectedSideBook = isBottomSideSearching ? bottomSideBook : selectedBook;
+  const selectedSideChapter = isBottomSideSearching ? bottomSideChapter : chapter;
   const selectedSideVerse = isBottomSideSearching ? bottomSideVerse : verse;
 
   const screenNavigationMap: any = {
@@ -66,20 +60,19 @@ const BookNameList = ({ bookList }: IBookNameList) => {
         isHistory: false,
       },
     }),
-    // Default case
     default: (item: any) => ({
       screen: Screens.ChooseChapterNumber,
       params: {
         [isBottomSideSearching ? "bottomSideChapter" : "chapter"]: item,
       },
-    }),
+    })
   };
 
   const handlePress = (item: string | number) => {
-    const routeName = route.name;
+    const routeName = pathname.split("/")[1];
     const navigationInfo =
       screenNavigationMap[routeName] || screenNavigationMap.default;
-    const { screen, params } = navigationInfo(item, route.params);
+    const { screen, params } = navigationInfo(item, localParams);
     if (isVerseScreen) toggleBottomSideSearching(false);
     navigation.navigate(screen, params);
   };

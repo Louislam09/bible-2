@@ -1,5 +1,5 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useRoute, useTheme } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import BottomModal from "components/BottomModal";
 import DailyVerse from "components/DailyVerse";
@@ -9,7 +9,7 @@ import VoiceList from "components/VoiceList";
 import VersionList from "components/home/header/VersionList";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
-import { useRouter } from 'expo-router';
+import { useNavigation } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   BackHandler,
@@ -34,8 +34,8 @@ type RenderItemProps = {
   index: number;
 }
 
-const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = () => {
-  const router = useRouter()
+const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
+  const navigation = useNavigation()
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const {
     currentBibleVersion,
@@ -45,7 +45,6 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = () => {
   } = useBibleContext();
   const theme = useTheme();
 
-  const route = useRoute();
   const {
     storedData,
     historyManager: { getCurrentItem },
@@ -101,7 +100,7 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = () => {
     versionRef.current?.dismiss();
   };
 
-  const onSong = () => {
+  const onSong = useCallback(() => {
     if (!isSongLyricEnabled) {
       ToastAndroid.show(
         "Busca 📖 y presiona el nombre del himnario 🔒🔑",
@@ -109,14 +108,15 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = () => {
       );
       return;
     }
-    router.navigate("Song");
-  };
+    navigation.navigate(Screens.Song);
+  }, [navigation, isSongLyricEnabled])
+
 
   const dashboardItems: IDashboardOption[] = [
     {
       icon: isNTV ? "BookText" : "Crown",
       label: "Santa Escritura",
-      action: () => router.navigate(Screens.Home, homePageInitParams),
+      action: () => navigation.navigate(Screens.Home, homePageInitParams),
       tag: isNTV ? "book-cross" : "crown-outline",
     },
     {
@@ -128,45 +128,45 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = () => {
     {
       icon: "Search",
       label: "Buscador",
-      action: () => router.navigate(Screens.Search, {}),
+      action: () => navigation.navigate(Screens.Search, {}),
     },
     {
       icon: "LayoutGrid",
       label: "Lista de Libro",
       action: () =>
-        router?.navigate(Screens.ChooseBook, { ...route.params }),
+        navigation.navigate(Screens.ChooseBook, {}),
     },
     {
       icon: "BookA",
       label: "Diccionarios",
       action: () =>
-        router?.navigate(Screens.DictionarySearch, { word: "" }),
+        navigation?.navigate(Screens.DictionarySearch, { word: "" }),
     },
     {
       icon: "SwatchBook",
       label: "Concordancia Escritural",
-      action: () => router.navigate(Screens.Concordance, {}),
+      action: () => navigation.navigate(Screens.Concordance, {}),
     },
     {
       icon: "NotebookText",
       label: "Notas",
-      action: () => router.navigate(Screens.Notes, { shouldRefresh: false }),
+      action: () => navigation.navigate(Screens.Notes, { shouldRefresh: false }),
     },
     {
       icon: "MonitorDown",
       label: "Gestor de descargas",
-      action: () => router.navigate(Screens.DownloadManager),
+      action: () => navigation.navigate(Screens.DownloadManager),
     },
     {
       icon: "Star",
       label: "Versiculos Favoritos",
-      action: () => router.navigate(Screens.Favorite),
+      action: () => navigation.navigate(Screens.Favorite),
     },
     {
       icon: "UserSearch",
       label: "Buscar Personaje",
       isIonicon: true,
-      action: () => router.navigate(Screens.Character),
+      action: () => navigation.navigate(Screens.Character),
     },
     {
       icon: "AudioLines",
@@ -182,12 +182,12 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = () => {
       icon: "Settings",
       label: "Ajustes",
       isIonicon: true,
-      action: () => router.navigate(Screens.Settings),
+      action: () => navigation.navigate(Screens.Settings),
     },
     {
       icon: "HandHelping",
       label: "Como Usar?",
-      action: () => router.navigate(Screens.Onboarding),
+      action: () => navigation.navigate(Screens.Onboarding),
     },
   ];
 
@@ -257,7 +257,7 @@ const Dashboard: React.FC<RootStackScreenProps<"Dashboard">> = () => {
       key={orientation + theme.dark}
       style={[styles.container, !isPortrait && { flexDirection: "row" }]}
     >
-      {isPortrait && <DailyVerse navigation={router} theme={theme} />}
+      {isPortrait && <DailyVerse theme={theme} />}
 
       <View style={[styles.optionContainer, StyleByOrientation]} >
         <FlashList

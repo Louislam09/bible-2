@@ -10,7 +10,7 @@ import Icon from "./Icon";
 import ListVerse from "./search/ListVerse";
 import { View } from "./Themed";
 
-const SearchWordEntire: React.FC<RootStackScreenProps<"Search">> = ({
+const SearchWordEntire: React.FC<RootStackScreenProps<"search">> = ({
 }) => {
   const router = useRouter()
   const { searchState, searchQuery } = useBibleContext();

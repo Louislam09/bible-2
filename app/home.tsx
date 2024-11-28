@@ -42,7 +42,7 @@ interface SplitConfig {
   maxWidth: number;
 }
 
-const HomeScreen: React.FC<RootStackScreenProps<"Home">> = () => {
+const HomeScreen: React.FC<RootStackScreenProps<"home">> = () => {
   const router = useRouter()
   const theme = useTheme();
   const { storedData } = useStorage();
