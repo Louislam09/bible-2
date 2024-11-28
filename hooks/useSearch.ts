@@ -20,7 +20,7 @@ type UseSearch = {
 };
 
 const useSearch = ({ db }: UseSearch): UseSearchHook => {
-  const dbName = db?.databaseName.split(".")[0] || defaultDatabases[0];
+  const dbName = db?.databaseName?.split(".")[0] || defaultDatabases[0];
   const [state, setState] = useState<UseSearchHookState>({
     searchResults: null,
     error: null,

@@ -1,9 +1,9 @@
 import { Text as DefaultText, View as DefaultView } from "react-native";
 
-import { useBibleContext } from "../context/BibleContext";
 import { useTheme } from "@react-navigation/native";
-import { TTheme } from "types";
 import { createElement } from "react";
+import { TTheme } from "types";
+import { useBibleContext } from "../context/BibleContext";
 
 export const NativeDefaultView = require('react-native/Libraries/Components/View/ViewNativeComponent').default;
 export const NativeDefaultText = (props: any) => createElement('RCTText', props)

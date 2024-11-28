@@ -41,7 +41,7 @@ const App = () => {
     const screenOptions: (props: any) => NativeStackNavigationOptions | any = (props) => {
         return ({
             headerTitle: ScreensName[props.route.name as Screens],
-            headerShown: true,
+            headerShown: false,
             headerTitleAlign: "center",
             headerTitleStyle: { fontWeight: "bold" },
         })

@@ -37,7 +37,7 @@ const ErrorBoundaryFallback = ({
         >
           Error
         </Text>
-        <Text style={styles.title}>404</Text>
+        {/* <Text style={styles.title}>404</Text> */}
         <View style={styles.imageContainer}>
           <Animation
             backgroundColor={"transparent"}
