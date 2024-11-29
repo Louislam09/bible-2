@@ -18,7 +18,7 @@ import { IconProps } from "components/Icon";
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList { }
+    interface RootParamList extends RootStackParamList {}
   }
 }
 
@@ -93,31 +93,31 @@ export type RootStackParamList = {
   downloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
   notes: NavigatorScreenParams<RootTabParamList> | { shouldRefresh: boolean };
   noteDetail:
-  | NavigatorScreenParams<RootTabParamList>
-  | { noteId: number | null; isNewNote: boolean };
+    | NavigatorScreenParams<RootTabParamList>
+    | { noteId: number | null; isNewNote: boolean };
   character: NavigatorScreenParams<RootTabParamList> | undefined;
   chooseBook:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
   search: NavigatorScreenParams<RootTabParamList> | { book?: string };
   concordance: NavigatorScreenParams<RootTabParamList> | {};
   strongSearchEntire:
-  | NavigatorScreenParams<RootTabParamList>
-  | { paramCode: string };
+    | NavigatorScreenParams<RootTabParamList>
+    | { paramCode: string };
   dictionarySearch: NavigatorScreenParams<RootTabParamList> | { word: string };
   chooseChapterNumber:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
   chooseVerseNumber:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
   modal: undefined;
   onboarding: undefined;
   song: undefined;
   notFound: undefined;
 };
 
-export interface HomeParams {
+export type HomeParams = {
   book?: string;
   chapter?: number | string;
   verse?: number | string;
@@ -128,7 +128,7 @@ export interface HomeParams {
   isTour?: boolean;
   isVerseTour?: boolean;
   isHistory?: boolean;
-}
+};
 export interface ChooseChapterNumberParams {
   book?: string;
   chapter?: number | string;
@@ -207,7 +207,7 @@ export type TSubtitle = {
 
 export enum OrientationType {
   "LANDSCAPE",
-  "PORTRAIT"
+  "PORTRAIT",
 }
 
 export type TNote = {

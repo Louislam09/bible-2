@@ -24,7 +24,7 @@ const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateXAnim = useRef(new Animated.Value(300)).current;
 
-  React.useEffect(() => {
+  useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -138,25 +138,6 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
     return () => backHandler.remove();
   }, [selected]);
 
-  const handleCustomBack = () => {
-    if (selected) {
-      setSelected(null);
-      setSearchText("");
-    } else {
-      router.back();
-    }
-  };
-
-  // React.useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerLeft: () => (
-  //       <TouchableOpacity onPress={handleCustomBack}>
-  //         <Icon name="ArrowLeft" color={theme.colors.text} size={28} />
-  //       </TouchableOpacity>
-  //     ),
-  //   });
-  // }, [selected]);
-
   const getIndex = (index: any) => {
     const value = snaps[index] || 30;
     topHeight.setValue(value);
@@ -168,7 +149,7 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
 
   return (
     <>
-      <Stack.Screen options={{ headerShown: false }} />
+      <Stack.Screen options={{ headerShown: true, headerTitle: "" }} />
       <View
         key={orientation + theme.dark}
         style={{
@@ -205,10 +186,11 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
             data={
               searchText
                 ? filterData.filter(
-                  (x: any) =>
-                    x?.title.toLowerCase().indexOf(searchText.toLowerCase()) !==
-                    -1
-                )
+                    (x: any) =>
+                      x?.title
+                        .toLowerCase()
+                        .indexOf(searchText.toLowerCase()) !== -1
+                  )
                 : filterData
             }
             // renderItem={renderItem as any}

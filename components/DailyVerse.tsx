@@ -4,12 +4,14 @@ import DAILY_VERSES from "constants/dailyVerses";
 import { GET_DAILY_VERSE } from "constants/Queries";
 import { useBibleContext } from "context/BibleContext";
 import { useDBContext } from "context/databaseContext";
-import { useRouter } from "node_modules/expo-router/build";
+import { useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
-import { IVerseItem, TTheme } from "types";
+import { StyleSheet, ToastAndroid, TouchableOpacity } from "react-native";
+import { IVerseItem, Screens, TTheme } from "types";
 import { getVerseTextRaw } from "utils/getVerseTextRaw";
 import { Text, View } from "./Themed";
+import { useStorage } from "@/context/LocalstoreContext";
+import { showToast } from "@/utils/showToast";
 
 const defaultDailyVerse = {
   book_number: 0,
@@ -38,12 +40,11 @@ type DailyVerseProps = {
   };
 };
 
-const DailyVerse = ({
-  theme,
-  dailyVerseObject,
-}: DailyVerseProps) => {
-  const router = useRouter()
+const DailyVerse = ({ theme, dailyVerseObject }: DailyVerseProps) => {
+  const navigation = useNavigation();
+  const { saveData } = useStorage();
   const { executeSql, myBibleDB } = useDBContext();
+  const [countPress, setCountPres] = useState(0);
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(
     dailyVerseObject || defaultDailyVerse
   );
@@ -75,12 +76,35 @@ const DailyVerse = ({
     })();
   }, [currentBibleVersion, myBibleDB, dailyVerseObject]);
 
+  useEffect(() => {
+    setCountPres(0);
+  }, []);
+
+  const enabledMusic = () => {
+    const MESSAGES = {
+      encourage: "¡Presiona una vez más!",
+      success: "🎵 ¡Modo Himnario habilitado! 🎵 ",
+    };
+
+    if (countPress < 2) {
+      setCountPres((prev) => prev + 1);
+      showToast(MESSAGES.encourage);
+      return;
+    }
+
+    if (saveData) {
+      saveData({ isSongLyricEnabled: true });
+    }
+    showToast(MESSAGES.success);
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.7}
+      onLongPress={enabledMusic}
       onPress={() => {
         if (isDefaultVerse) return;
-        router.navigate("Home", {
+        navigation.navigate(Screens.Home, {
           book: dailyVerse.bookName,
           chapter: dailyVerse.chapter,
           verse: dailyVerse?.verse,

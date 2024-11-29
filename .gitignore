@@ -15,3 +15,5 @@ web-build/
 .env
 todo.ts
 todolist.md
+
+expo-env.d.ts

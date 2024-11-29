@@ -11,11 +11,10 @@ import {
   View,
 } from "react-native";
 
-
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
 
-import { useRoute, useTheme } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 import BookContentModals from "components/book-content-modals";
 import BottomModal from "components/BottomModal";
 import CurrentNoteDetail from "components/CurrentNoteDetail";
@@ -26,10 +25,10 @@ import SplitTopSide from "components/SplitTopSide";
 import Walkthrough from "components/Walkthrough";
 // import CustomHeader from "../components/home/header";
 
-
+import useParams from "@/hooks/useParams";
 import CustomHeader from "components/home/header";
-import { useRouter } from 'expo-router';
-import { HomeParams, RootStackScreenProps, TTheme } from "types";
+import { useRouter } from "expo-router";
+import { HomeParams, TTheme } from "types";
 
 // Constants
 const MIN_SPLIT_SIZE = 200;
@@ -42,12 +41,15 @@ interface SplitConfig {
   maxWidth: number;
 }
 
-const HomeScreen: React.FC<RootStackScreenProps<"home">> = () => {
-  const router = useRouter()
+type HomeScreenProps = {};
+
+const HomeScreen: React.FC<HomeScreenProps> = () => {
+  const router = useRouter();
+  const routeParams = useParams<HomeParams>();
+
   const theme = useTheme();
   const { storedData } = useStorage();
-  const route = useRoute();
-  const { noteListBottomSheetRef } = useBibleContext()
+  const { noteListBottomSheetRef } = useBibleContext();
   const { isSplitActived, orientation } = useBibleContext();
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
 
@@ -59,16 +61,23 @@ const HomeScreen: React.FC<RootStackScreenProps<"home">> = () => {
   const isPortrait = orientation === "PORTRAIT";
   const styles = getStyles(theme, isPortrait);
 
-  const routeParams = route.params as HomeParams
-
-  const initialState = useMemo(() => ({
-    book: routeParams.book || storedData.lastBook,
-    chapter: routeParams.chapter || storedData.lastChapter,
-    verse: (routeParams.verse === 0 ? 1 : routeParams.verse) || storedData.lastVerse,
-    bottomSideBook: routeParams.bottomSideBook || storedData.lastBottomSideBook,
-    bottomSideChapter: routeParams.bottomSideChapter || storedData.lastBottomSideChapter,
-    bottomSideVerse: (routeParams.bottomSideVerse === 0 ? 1 : routeParams.bottomSideVerse) || storedData.lastBottomSideVerse,
-  }), [route.params, storedData]);
+  const initialState = useMemo(
+    () => ({
+      book: routeParams.book || storedData.lastBook,
+      chapter: routeParams.chapter || storedData.lastChapter,
+      verse:
+        (routeParams.verse === 0 ? 1 : routeParams.verse) ||
+        storedData.lastVerse,
+      bottomSideBook:
+        routeParams.bottomSideBook || storedData.lastBottomSideBook,
+      bottomSideChapter:
+        routeParams.bottomSideChapter || storedData.lastBottomSideChapter,
+      bottomSideVerse:
+        (routeParams.bottomSideVerse === 0 ? 1 : routeParams.bottomSideVerse) ||
+        storedData.lastBottomSideVerse,
+    }),
+    [routeParams, storedData]
+  );
 
   const screenHeight = useRef(SCREEN_HEIGHT).current;
   const lastTopHeight = useRef(SCREEN_HEIGHT);
@@ -124,12 +133,15 @@ const HomeScreen: React.FC<RootStackScreenProps<"home">> = () => {
     },
   ];
 
-  const splitConfig: SplitConfig = useMemo(() => ({
-    minTopHeight: MIN_SPLIT_SIZE,
-    maxTopHeight: SCREEN_HEIGHT - MIN_SPLIT_SIZE,
-    minWidth: MIN_SPLIT_SIZE,
-    maxWidth: SCREEN_WIDTH - MIN_SPLIT_SIZE,
-  }), [SCREEN_HEIGHT, SCREEN_WIDTH]);
+  const splitConfig: SplitConfig = useMemo(
+    () => ({
+      minTopHeight: MIN_SPLIT_SIZE,
+      maxTopHeight: SCREEN_HEIGHT - MIN_SPLIT_SIZE,
+      minWidth: MIN_SPLIT_SIZE,
+      maxWidth: SCREEN_WIDTH - MIN_SPLIT_SIZE,
+    }),
+    [SCREEN_HEIGHT, SCREEN_WIDTH]
+  );
 
   const animateBackgroundColor = (toValue: number) => {
     Animated.timing(bColor, {
@@ -147,28 +159,38 @@ const HomeScreen: React.FC<RootStackScreenProps<"home">> = () => {
     ],
   });
 
-  const panResponder = useMemo(() => PanResponder.create({
-    onStartShouldSetPanResponder: () => {
-      animateBackgroundColor(1);
-      return true;
-    },
-    onPanResponderMove: (_, gestureState: PanResponderGestureState) => {
-      const newHeight = lastTopHeight.current + gestureState.dy;
-      const newWidth = lastTopWidth.current + gestureState.dx;
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onStartShouldSetPanResponder: () => {
+          animateBackgroundColor(1);
+          return true;
+        },
+        onPanResponderMove: (_, gestureState: PanResponderGestureState) => {
+          const newHeight = lastTopHeight.current + gestureState.dy;
+          const newWidth = lastTopWidth.current + gestureState.dx;
 
-      if (newWidth >= splitConfig.minWidth && newWidth <= splitConfig.maxWidth) {
-        topWidth.setValue(newWidth);
-      }
-      if (newHeight >= splitConfig.minTopHeight && newHeight <= splitConfig.maxTopHeight) {
-        topHeight.setValue(newHeight);
-      }
-    },
-    onPanResponderRelease: () => {
-      animateBackgroundColor(0);
-      lastTopHeight.current = (topHeight as any)._value;
-      lastTopWidth.current = (topWidth as any)._value;
-    },
-  }), [splitConfig, topHeight, topWidth]);
+          if (
+            newWidth >= splitConfig.minWidth &&
+            newWidth <= splitConfig.maxWidth
+          ) {
+            topWidth.setValue(newWidth);
+          }
+          if (
+            newHeight >= splitConfig.minTopHeight &&
+            newHeight <= splitConfig.maxTopHeight
+          ) {
+            topHeight.setValue(newHeight);
+          }
+        },
+        onPanResponderRelease: () => {
+          animateBackgroundColor(0);
+          lastTopHeight.current = (topHeight as any)._value;
+          lastTopWidth.current = (topWidth as any)._value;
+        },
+      }),
+    [splitConfig, topHeight, topWidth]
+  );
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -183,14 +205,11 @@ const HomeScreen: React.FC<RootStackScreenProps<"home">> = () => {
 
   return (
     <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
-      <CustomHeader
-        refs={componentRefs}
-      />
+      <CustomHeader refs={componentRefs} />
       <View style={[styles.container, !isPortrait && { flexDirection: "row" }]}>
         <SplitTopSide
           refs={componentRefs}
           {...{
-
             ...initialState,
             height: topHeight,
             width: topWidth,
@@ -198,7 +217,6 @@ const HomeScreen: React.FC<RootStackScreenProps<"home">> = () => {
           }}
         />
         {isSplitActived && (
-
           <>
             <Animated.View
               {...panResponder.panHandlers}
@@ -209,7 +227,6 @@ const HomeScreen: React.FC<RootStackScreenProps<"home">> = () => {
             <SplitBottomSide
               refs={componentRefs}
               {...{
-
                 book: initialState.bottomSideBook,
                 chapter: initialState.bottomSideChapter,
                 verse: initialState.bottomSideVerse,
@@ -227,16 +244,24 @@ const HomeScreen: React.FC<RootStackScreenProps<"home">> = () => {
           </>
         )}
       </View>
-      <BookContentModals book={initialState.book} chapter={initialState.chapter} />
+      <BookContentModals
+        book={initialState.book}
+        chapter={initialState.chapter}
+      />
 
       <FloatingButton navigation={router}>
         <CurrentNoteDetail />
       </FloatingButton>
       <BottomModal
-        shouldScroll justOneSnap justOneValue={["50%"]} startAT={0} ref={noteListBottomSheetRef}>
+        shouldScroll
+        justOneSnap
+        justOneValue={["50%"]}
+        startAT={0}
+        ref={noteListBottomSheetRef}
+      >
         <NoteNameList {...{ theme }} />
       </BottomModal>
-      {componentRefs.book.current && routeParams.isTour && (
+      {componentRefs.book.current && routeParams.isTour === true && (
         <Walkthrough
           steps={tutorialSteps}
           setStep={setStepIndex}

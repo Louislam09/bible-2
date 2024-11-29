@@ -1,7 +1,8 @@
+import { RootStackScreenProps } from "@/types";
 import SearchWordEntire from "components/SearchWordEntire";
-import { Stack } from "node_modules/expo-router/build";
+import { Stack } from "expo-router";
 import React, { Fragment } from "react";
-import { RootStackScreenProps } from "types";
+// import { RootStackScreenProps } from "types";
 
 const Search: React.FC<RootStackScreenProps<"search">> = (props) => {
   return (
@@ -9,7 +10,7 @@ const Search: React.FC<RootStackScreenProps<"search">> = (props) => {
       <Stack.Screen options={{ headerShown: false }} />
       <SearchWordEntire {...props} />;
     </Fragment>
-  )
+  );
 };
 
 export default Search;

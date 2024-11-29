@@ -26,8 +26,8 @@ interface ThemeProviderProps {
 const StatusBarBackground = ({ children, bgColor }: any) => {
   const styling = {
     flex: 1,
-    paddingTop: Constants.statusBarHeight,
-    // backgroundColor: bgColor,
+    // paddingTop: Constants.statusBarHeight,
+    backgroundColor: bgColor,
   };
   return <View style={[styling, { width: "100%" }]}>{children}</View>;
 };
@@ -63,9 +63,9 @@ const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   return (
     <ThemeContext.Provider value={{ schema, toggleTheme }}>
       <ThemeProvider value={theme[schema]}>
-        <StatusBarBackground bgColor={theme[schema].colors.notification + 90}>
-          {children}
-        </StatusBarBackground>
+        {/* <StatusBarBackground bgColor={theme[schema].colors.notification + 90}> */}
+        {children}
+        {/* </StatusBarBackground> */}
       </ThemeProvider>
     </ThemeContext.Provider>
   );

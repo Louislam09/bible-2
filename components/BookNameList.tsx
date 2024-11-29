@@ -8,9 +8,10 @@ import {
 } from "react-native";
 import { Text, View } from "./Themed";
 
+import useParams from "@/hooks/useParams";
 import { BOOK_IMAGES } from "constants/Images";
 import { useBibleContext } from "context/BibleContext";
-import { useLocalSearchParams, useNavigation, usePathname } from "node_modules/expo-router/build";
+import { useNavigation, usePathname } from "node_modules/expo-router/build";
 import { HomeParams, IDBBookNames, Screens, TTheme } from "types";
 
 interface IBookNameList {
@@ -20,21 +21,31 @@ interface IBookNameList {
 const BookNameList = ({ bookList }: IBookNameList) => {
   const navigation = useNavigation();
   const pathname = usePathname();
-  const localParams = useLocalSearchParams();
-  const isVerseScreen = pathname.includes('chooseVerseNumber')
+  const localParams = useParams<HomeParams>();
+
+  const isVerseScreen = pathname.includes("chooseVerseNumber");
 
   const {
-    book: selectedBook, chapter, bottomSideBook,
-    bottomSideChapter, verse, bottomSideVerse,
-  } = localParams as HomeParams;
+    book: selectedBook,
+    chapter,
+    bottomSideBook,
+    bottomSideChapter,
+    verse,
+    bottomSideVerse,
+  } = localParams;
 
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const theme = useTheme();
   const styles = getStyles(theme);
-  const { isBottomSideSearching, toggleBottomSideSearching, orientation } = useBibleContext();
+  const { isBottomSideSearching, toggleBottomSideSearching, orientation } =
+    useBibleContext();
   const isPortrait = orientation === "PORTRAIT";
-  const selectedSideBook = isBottomSideSearching ? bottomSideBook : selectedBook;
-  const selectedSideChapter = isBottomSideSearching ? bottomSideChapter : chapter;
+  const selectedSideBook = isBottomSideSearching
+    ? bottomSideBook
+    : selectedBook;
+  const selectedSideChapter = isBottomSideSearching
+    ? bottomSideChapter
+    : chapter;
   const selectedSideVerse = isBottomSideSearching ? bottomSideVerse : verse;
 
   const screenNavigationMap: any = {
@@ -65,7 +76,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
       params: {
         [isBottomSideSearching ? "bottomSideChapter" : "chapter"]: item,
       },
-    })
+    }),
   };
 
   const handlePress = (item: string | number) => {
@@ -73,7 +84,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
     const navigationInfo =
       screenNavigationMap[routeName] || screenNavigationMap.default;
     const { screen, params } = navigationInfo(item, localParams);
-    if (isVerseScreen) toggleBottomSideSearching(false);
+    // if (isVerseScreen) toggleBottomSideSearching(false);
     navigation.navigate(screen, params);
   };
 
@@ -92,7 +103,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
         style={[
           styles.listTitle,
           (isVerseScreen ? selectedSideVerse : selectedSideChapter) ===
-          item && { color: "white" },
+            item && { color: "white" },
         ]}
       >
         {item}
@@ -137,7 +148,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
       </View>
       <FlashList
         contentContainerStyle={styles.flatContainer}
-        data={bookList?.map((x) => (x?.longName ? x?.longName : x))}
+        data={bookList?.map((item) => (item?.longName ? item?.longName : item))}
         renderItem={renderItem}
         estimatedItemSize={50}
         numColumns={bookList.length > 12 ? 5 : 3}

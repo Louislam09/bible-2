@@ -9,7 +9,7 @@ import VoiceList from "components/VoiceList";
 import VersionList from "components/home/header/VersionList";
 import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
-import { useNavigation } from 'expo-router';
+import { useNavigation } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   BackHandler,
@@ -32,10 +32,10 @@ type IDashboardOption = {
 type RenderItemProps = {
   item: IDashboardOption;
   index: number;
-}
+};
 
 const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const {
     currentBibleVersion,
@@ -86,12 +86,12 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
 
   const voiceHandlePresentModalPress = useCallback(() => {
     voiceBottomSheetModalRef.current?.present();
-    currentModalOpenRef.current = voiceBottomSheetModalRef.current
+    currentModalOpenRef.current = voiceBottomSheetModalRef.current;
   }, []);
 
   const versionHandlePresentModalPress = useCallback(() => {
     versionRef.current?.present();
-    currentModalOpenRef.current = versionRef.current
+    currentModalOpenRef.current = versionRef.current;
   }, []);
 
   const onSelect = (version: string) => {
@@ -109,8 +109,7 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
       return;
     }
     navigation.navigate(Screens.Song);
-  }, [navigation, isSongLyricEnabled])
-
+  }, [navigation, isSongLyricEnabled]);
 
   const dashboardItems: IDashboardOption[] = [
     {
@@ -133,8 +132,7 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
     {
       icon: "LayoutGrid",
       label: "Lista de Libro",
-      action: () =>
-        navigation.navigate(Screens.ChooseBook, {}),
+      action: () => navigation.navigate(Screens.ChooseBook, {}),
     },
     {
       icon: "BookA",
@@ -150,7 +148,8 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
     {
       icon: "NotebookText",
       label: "Notas",
-      action: () => navigation.navigate(Screens.Notes, { shouldRefresh: false }),
+      action: () =>
+        navigation.navigate(Screens.Notes, { shouldRefresh: false }),
     },
     {
       icon: "MonitorDown",
@@ -194,11 +193,11 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
   useEffect(() => {
     const backAction = () => {
       if (currentModalOpenRef.current) {
-        currentModalOpenRef?.current?.close()
-        currentModalOpenRef.current = null
-        return true
+        currentModalOpenRef?.current?.close();
+        currentModalOpenRef.current = null;
+        return true;
       }
-      BackHandler.exitApp();
+      // BackHandler.exitApp();
       return true;
     };
 
@@ -249,8 +248,8 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
   );
 
   const StyleByOrientation = useMemo(() => {
-    return isPortrait ? {} : { minHeight: SCREEN_HEIGHT - 40 }
-  }, [SCREEN_WIDTH, SCREEN_HEIGHT, isPortrait])
+    return isPortrait ? {} : { minHeight: SCREEN_HEIGHT - 40 };
+  }, [SCREEN_WIDTH, SCREEN_HEIGHT, isPortrait]);
 
   return (
     <View
@@ -259,7 +258,7 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
     >
       {isPortrait && <DailyVerse theme={theme} />}
 
-      <View style={[styles.optionContainer, StyleByOrientation]} >
+      <View style={[styles.optionContainer, StyleByOrientation]}>
         <FlashList
           data={dashboardItems}
           keyExtractor={(item) => item.label}

@@ -16,7 +16,7 @@ import { useBibleContext } from "context/BibleContext";
 import { useStorage } from "context/LocalstoreContext";
 import { useCustomTheme } from "context/ThemeContext";
 import Constants from 'expo-constants';
-import { useRouter } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import * as Updates from 'expo-updates';
 import { useCallback, useMemo } from "react";
 import { EThemes, RootStackScreenProps, TFont, TTheme } from "types";
@@ -58,7 +58,7 @@ type TSection = {
   id?: string;
 };
 
-const SettingsScren: React.FC<RootStackScreenProps<"Settings">> = ({
+const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
   navigation,
 }) => {
   const router = useRouter()
@@ -365,6 +365,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"Settings">> = ({
   const SettingSection = ({ title, options, id }: TSection, index: any) => {
     return (
       <View style={styles.sectionContainer} key={index}>
+        <Stack.Screen options={{ headerShown: true, }} />
         <Text style={styles.sectionTitle}>{title}</Text>
 
         {id ? (

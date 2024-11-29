@@ -1,15 +1,16 @@
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "components/Animation";
 import Icon, { IconProps } from "components/Icon";
 import { Text, View } from "components/Themed";
+import { useNavigation } from "expo-router";
 import React from "react";
 import {
   StyleSheet,
   TouchableWithoutFeedback,
   useWindowDimensions,
 } from "react-native";
-import { TTheme } from "types";
+import { Screens, TTheme } from "types";
 
 type IDashboardOption = {
   icon: IconProps["name"];
@@ -32,7 +33,7 @@ const OnboardingScreen = () => {
       icon: "LetterText",
       label: "Versiculo",
       action: () =>
-        navigation.navigate("Home", {
+        navigation.navigate(Screens.Home, {
           book: "Génesis",
           chapter: 1,
           verse: 1,
@@ -44,7 +45,7 @@ const OnboardingScreen = () => {
       icon: "HandHelping",
       label: "Funciones",
       action: () =>
-        navigation.navigate("Home", { isTour: true, isHistory: true }),
+        navigation.navigate(Screens.Home, { isTour: true, isHistory: true }),
     },
   ];
 

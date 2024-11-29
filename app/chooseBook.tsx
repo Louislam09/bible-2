@@ -1,31 +1,27 @@
+import useParams from "@/hooks/useParams";
 import { useTheme } from "@react-navigation/native";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import ChooseBookHeader from "components/chooseBook/ChooseBookHeader";
 import { Text, View } from "components/Themed";
 import { DB_BOOK_NAMES } from "constants/BookNames";
 import { useBibleContext } from "context/BibleContext";
-import { Stack, useLocalSearchParams, useNavigation, } from "node_modules/expo-router/build";
+import { Stack, useNavigation } from "node_modules/expo-router/build";
 import React, { Fragment, useState } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity
-} from "react-native";
+import { SafeAreaView, StyleSheet, TouchableOpacity } from "react-native";
 import {
   BookIndexes,
   ChooseChapterNumberParams,
   IDBBookNames,
-  RootStackScreenProps,
   Screens,
   TTheme,
 } from "types";
 import removeAccent from "utils/removeAccent";
 
-const ChooseBook: React.FC<RootStackScreenProps<"chooseBook">> = (props) => {
-  const navigation = useNavigation()
-  const params = useLocalSearchParams();
+type ChooseBookProps = {};
 
-  const routeParam = params as ChooseChapterNumberParams;
+const ChooseBook: React.FC<ChooseBookProps> = () => {
+  const navigation = useNavigation();
+  const routeParam = useParams<ChooseChapterNumberParams>();
   const { book } = routeParam;
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -158,9 +154,9 @@ const ChooseBook: React.FC<RootStackScreenProps<"chooseBook">> = (props) => {
         data={
           query
             ? DB_BOOK_NAMES.filter(
-              (x) =>
-                removeAccent(x.longName).indexOf(query.toLowerCase()) !== -1
-            )
+                (x) =>
+                  removeAccent(x.longName).indexOf(query.toLowerCase()) !== -1
+              )
             : DB_BOOK_NAMES
         }
         renderItem={renderListView}
@@ -171,7 +167,12 @@ const ChooseBook: React.FC<RootStackScreenProps<"chooseBook">> = (props) => {
 
   return (
     <Fragment>
-      <Stack.Screen options={{ header: (props) => <ChooseBookHeader {...props} /> }} />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          header: (props) => <ChooseBookHeader {...props} />,
+        }}
+      />
       <SafeAreaView
         key={orientation + theme.dark}
         style={[styles.container, !isPortrait && { flexDirection: "row" }]}

@@ -1,39 +1,38 @@
+import { Text, View } from "@/components/Themed";
+import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { useBibleContext } from "@/context/BibleContext";
+import { HomeParams, Screens, TIcon, TTheme, TVerse } from "@/types";
+import { customUnderline } from "@/utils/customStyle";
+import extractVersesInfo, {
+  extractTextFromParagraph,
+  extractWordsWithTags,
+  getStrongValue,
+  WordTagPair,
+} from "@/utils/extractVersesInfo";
+import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { useRoute, useTheme } from "@react-navigation/native";
 import DisplayStrongWord from "components/DisplayStrongWord";
 import Icon from "components/Icon";
 import Walkthrough from "components/Walkthrough";
-import { useStorage } from "context/LocalstoreContext";
 import { useModal } from "context/modal-context";
+import { useNavigation } from "expo-router";
 import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
 import React, {
   useCallback,
   useEffect,
   useMemo,
   useRef,
-  useState
+  useState,
 } from "react";
 import {
   Animated,
   Easing,
   Pressable,
   StyleSheet,
-  ToastAndroid,
   TouchableOpacity,
 } from "react-native";
 import copyToClipboard from "utils/copyToClipboard";
-import { DB_BOOK_NAMES } from "../../../constants/BookNames";
-import { useBibleContext } from "../../../context/BibleContext";
-import { HomeParams, TIcon, TTheme, TVerse } from "../../../types";
-import { customUnderline } from "../../../utils/customStyle";
-import extractVersesInfo, {
-  extractTextFromParagraph,
-  extractWordsWithTags,
-  getStrongValue,
-  WordTagPair,
-} from "../../../utils/extractVersesInfo";
-import { getVerseTextRaw } from "../../../utils/getVerseTextRaw";
-import { Text, View } from "../../Themed";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
 
 type VerseProps = TVerse & {
@@ -160,12 +159,9 @@ const Verse: React.FC<VerseProps> = ({
   const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
   const verseRef = useRef<any>(null);
   const [stepIndex, setStepIndex] = useState(0);
-  const { saveData } = useStorage();
   const isBottom = isSplit && isBottomSideSearching;
   const isTop = !isSplit && !isBottomSideSearching;
   const [doubleTagged, setDoubleTagged] = useState(false);
-  const showMusicIcon =
-    item.book_number === 290 && item.chapter === 41 && item.verse === 27;
   const animatedVerseHighlight = useRef(new Animated.Value(0)).current;
   const wordAndStrongValue = extractWordsWithTags(item.text);
   const isFirstVerse = useMemo(() => {
@@ -175,7 +171,7 @@ const Verse: React.FC<VerseProps> = ({
   const {
     compareRefHandlePresentModalPress: onCompare,
     strongSearchHandlePresentModalPress: onWord,
-    dictionaryHandlePresentModalPress: onDictionary
+    dictionaryHandlePresentModalPress: onDictionary,
   } = useModal();
 
   const initHighLightedVerseAnimation = () => {
@@ -254,7 +250,7 @@ const Verse: React.FC<VerseProps> = ({
       )?.longName;
 
       const onLink = () => {
-        navigation.navigate("Home", {
+        navigation.navigate(Screens.Home, {
           [!isSplit && isSplitActived ? "bottomSideBook" : "book"]: bookName,
           [!isSplit && isSplitActived ? "bottomSideChapter" : "chapter"]:
             chapter,
@@ -337,7 +333,7 @@ const Verse: React.FC<VerseProps> = ({
 
     onAddToNote(verseToAdd);
     clearHighlights();
-    if (!currentNoteId) noteListPresentModalPress()
+    if (!currentNoteId) noteListPresentModalPress();
   };
 
   const onWordClicked = (code: string) => {
@@ -394,11 +390,6 @@ const Verse: React.FC<VerseProps> = ({
     onDictionary(word);
   };
 
-  const enabledMusic = () => {
-    ToastAndroid.show("Himnario habilitado 🎵", ToastAndroid.SHORT);
-    saveData({ isSongLyricEnabled: true });
-  };
-
   const onCompareClicked = () => {
     setVerseToCompare(item.verse);
     onCompare();
@@ -430,11 +421,6 @@ const Verse: React.FC<VerseProps> = ({
         action: onCompareClicked,
         hide: isSplitActived,
         description: "Comparar",
-      },
-      {
-        name: "Music2",
-        action: enabledMusic,
-        hide: !showMusicIcon,
       },
     ];
   }, [isMoreThanOneHighted, lastHighted, isVerseHighlisted, isSplitActived]);
