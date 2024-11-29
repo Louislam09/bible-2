@@ -4,12 +4,12 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { useBibleContext } from "../../../context/BibleContext";
 
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import BottomModal from "components/BottomModal";
-import Icon from "components/Icon";
-import { iconSize } from "constants/size";
-import { useStorage } from "context/LocalstoreContext";
-import { useRouter } from 'expo-router';
-import useInstalledBibles from "hooks/useInstalledBible";
+import BottomModal from "@/components/BottomModal";
+import Icon from "@/components/Icon";
+import { iconSize } from "@/constants/size";
+import { useStorage } from "@/context/LocalstoreContext";
+import { useRouter } from "expo-router";
+import useInstalledBibles from "@/hooks/useInstalledBible";
 import {
   EBibleVersions,
   HomeParams,
@@ -24,11 +24,11 @@ import Settings from "./Settings";
 import VersionList from "./VersionList";
 
 interface HeaderInterface {
-  refs: any
+  refs: any;
 }
 
 const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
-  const { bibleVersion, search, dashboard, setting, fav } = refs
+  const { bibleVersion, search, dashboard, setting, fav } = refs;
 
   const {
     currentBibleVersion,
@@ -53,7 +53,7 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
   const route = useRoute<TRoute>();
   const { book, chapter = 1, verse } = route.params as HomeParams;
   const theme = useTheme();
-  const router = useRouter()
+  const router = useRouter();
   // const navigation = useNavigation();
 
   const styles = getStyles(theme);

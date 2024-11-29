@@ -1,9 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { StorageKeys } from "constants/StorageKeys";
+import { StorageKeys } from "@/constants/StorageKeys";
 import useHistoryManager, {
   HistoryItem,
   HistoryManager,
-} from "hooks/useHistoryManager";
+} from "@/hooks/useHistoryManager";
 import React, {
   createContext,
   ReactNode,
@@ -11,7 +11,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { EBibleVersions, EThemes, TFont } from "types";
+import { EBibleVersions, EThemes, TFont } from "@/types";
 
 type StoreState = {
   lastBook: string;
@@ -30,7 +30,7 @@ type StoreState = {
   history: HistoryItem[];
   currentVoiceIdentifier: string;
   currentVoiceRate: number;
-  floatingNoteButtonPosition: { x: number, y: number }
+  floatingNoteButtonPosition: { x: number; y: number };
 };
 
 interface StorageContextProps {
@@ -74,7 +74,7 @@ const initialContext: StoreState = {
   history: [],
   currentVoiceIdentifier: "es-us-x-esd-local",
   currentVoiceRate: 1,
-  floatingNoteButtonPosition: { x: 0, y: 0 }
+  floatingNoteButtonPosition: { x: 0, y: 0 },
 };
 
 const isArrEqual = (arr1: any[], arr2: any[]) => {
@@ -93,7 +93,7 @@ const StorageProvider: React.FC<StorageProviderProps> = ({ children }) => {
         const data = await AsyncStorage.getItem(StorageKeys.BIBLE);
         if (data) {
           const parsedData = JSON.parse(data) as StoreState;
-          setStoredData(prev => ({ ...prev, ...parsedData }));
+          setStoredData((prev) => ({ ...prev, ...parsedData }));
           historyManager.initializeHistory(parsedData?.history || []);
         }
       } catch (error) {

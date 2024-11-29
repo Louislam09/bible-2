@@ -1,13 +1,19 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import Animation from "components/Animation";
-import Icon from "components/Icon";
-import { Text, View } from "components/Themed";
-import { htmlTemplate } from "constants/HtmlTemplate";
-import { useBibleContext } from "context/BibleContext";
-import usePrintAndShare from "hooks/usePrintAndShare";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Animation from "@/components/Animation";
+import Icon from "@/components/Icon";
+import { Text, View } from "@/components/Themed";
+import { htmlTemplate } from "@/constants/HtmlTemplate";
+import { useBibleContext } from "@/context/BibleContext";
+import usePrintAndShare from "@/hooks/usePrintAndShare";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Alert,
   Animated,
@@ -18,9 +24,9 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import { IVerseItem, Screens, TTheme } from "types";
-import { formatDateShortDayMonth } from "utils/formatDateShortDayMonth";
-import removeAccent from "utils/removeAccent";
+import { IVerseItem, Screens, TTheme } from "@/types";
+import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
+import removeAccent from "@/utils/removeAccent";
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -140,10 +146,10 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
   const getData = useMemo(() => {
     return searchText
       ? filterData.filter(
-        (x: any) =>
-          removeAccent(x.title).indexOf(searchText.toLowerCase()) !== -1 ||
-          removeAccent(x.note_text).indexOf(searchText.toLowerCase()) !== -1
-      )
+          (x: any) =>
+            removeAccent(x.title).indexOf(searchText.toLowerCase()) !== -1 ||
+            removeAccent(x.note_text).indexOf(searchText.toLowerCase()) !== -1
+        )
       : filterData;
   }, [searchText, filterData]);
 
@@ -182,7 +188,7 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
       [
         {
           text: "Cancelar",
-          onPress: () => { },
+          onPress: () => {},
           style: "cancel",
         },
         { text: "Eliminar", onPress: () => onDelete(id) },
@@ -244,7 +250,10 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
   };
 
   return (
-    <TouchableWithoutFeedback style={{ flex: 1 }} onPress={() => Keyboard.dismiss()}>
+    <TouchableWithoutFeedback
+      style={{ flex: 1 }}
+      onPress={() => Keyboard.dismiss()}
+    >
       <View
         style={{
           flex: 1,
@@ -252,7 +261,6 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
           backgroundColor: theme.dark ? theme.colors.background : "#eee",
         }}
       >
-
         {NoteHeader()}
         <FlashList
           contentContainerStyle={styles.contentContainerStyle}
@@ -291,7 +299,12 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
           ]}
           onPress={onCreateNewNote}
         >
-          <Icon style={[{}]} color={theme.colors.text} name={"Plus"} size={30} />
+          <Icon
+            style={[{}]}
+            color={theme.colors.text}
+            name={"Plus"}
+            size={30}
+          />
         </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>

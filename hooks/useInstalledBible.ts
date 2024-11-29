@@ -4,9 +4,9 @@ import {
   databaseNames,
   getDatabaseExt,
   SQLiteDirPath,
-} from "constants/databaseNames";
-import bibleDatabases from "constants/bibleDatabases";
-import { DATABASE_TYPE } from "types";
+} from "@/constants/databaseNames";
+import bibleDatabases from "@/constants/bibleDatabases";
+import { DATABASE_TYPE } from "@/types";
 
 export type VersionItem = {
   id: string;

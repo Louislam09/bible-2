@@ -7,8 +7,8 @@ import {
   dbFileExt,
   getDatabaseExt,
   getDatabaseType,
-} from "constants/databaseNames";
-import { DATABASE_TYPE } from "types";
+} from "@/constants/databaseNames";
+import { DATABASE_TYPE } from "@/types";
 export const SQLiteDirPath = `${FileSystem.documentDirectory}SQLite`;
 
 // Helper function to convert Uint8Array to base64

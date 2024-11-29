@@ -2,7 +2,7 @@ import {
   CREATE_COLUMN_UPDATED_AT_IN_NOTE_TABLE,
   CREATE_FAVORITE_VERSES_TABLE,
   CREATE_NOTE_TABLE,
-} from "constants/Queries";
+} from "@/constants/Queries";
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
@@ -14,7 +14,7 @@ import {
   defaultDatabases,
   isDefaultDatabase,
   SQLiteDirPath,
-} from "constants/databaseNames";
+} from "@/constants/databaseNames";
 import { VersionItem } from "./useInstalledBible";
 
 interface Row {

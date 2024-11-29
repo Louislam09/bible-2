@@ -1,5 +1,5 @@
 import { useTheme } from "@react-navigation/native";
-import { useBibleContext } from "context/BibleContext";
+import { useBibleContext } from "@/context/BibleContext";
 import React, { FC } from "react";
 import BookNameList from "./BookNameList";
 

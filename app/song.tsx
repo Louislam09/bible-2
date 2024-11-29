@@ -2,12 +2,12 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import BottomModal from "components/BottomModal";
-import SongLyricView from "components/SongLyricView";
-import { Text } from "components/Themed";
-import Songs from "constants/songs";
-import { useBibleContext } from "context/BibleContext";
-import { useCustomTheme } from "context/ThemeContext";
+import BottomModal from "@/components/BottomModal";
+import SongLyricView from "@/components/SongLyricView";
+import { Text } from "@/components/Themed";
+import Songs from "@/constants/songs";
+import { useBibleContext } from "@/context/BibleContext";
+import { useCustomTheme } from "@/context/ThemeContext";
 import { Stack, useRouter } from "node_modules/expo-router/build";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -18,7 +18,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { RootStackScreenProps, TSongItem, TTheme } from "types";
+import { RootStackScreenProps, TSongItem, TTheme } from "@/types";
 
 const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;

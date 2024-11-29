@@ -1,5 +1,5 @@
 import { NavigationProp, NavigationState } from "@react-navigation/native";
-import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "constants/BookNames";
+import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "@/constants/BookNames";
 
 interface useChangeBookOrChapterProps {
   navigation: Omit<

@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "./Themed";
-import { TTheme } from "types";
+import { TTheme } from "@/types";
 
 type DecoratorLineProps = {
   theme: TTheme;

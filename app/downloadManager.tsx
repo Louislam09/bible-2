@@ -1,32 +1,33 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import DatabaseDownloadItem from "components/DatabaseDownloadItem";
-import TabNavigation from "components/DownloadManagerTab";
-import FileList from "components/FileList";
-import NoInternetSplash from "components/NoInternetSplash";
-import { Text, View } from "components/Themed";
-import bibleDatabases from "constants/bibleDatabases";
-import useDebounce from "hooks/useDebounce";
-import useInternetConnection from "hooks/useInternetConnection";
-import { useRouter } from "node_modules/expo-router/build";
-// import useNetworkStatus from "hooks/useNetworkInfo";
+import DatabaseDownloadItem from "@/components/DatabaseDownloadItem";
+import TabNavigation from "@/components/DownloadManagerTab";
+import FileList from "@/components/FileList";
+import NoInternetSplash from "@/components/NoInternetSplash";
+import { Text, View } from "@/components/Themed";
+import bibleDatabases from "@/constants/bibleDatabases";
+import { Stack, useRouter } from "expo-router";
+import useDebounce from "@/hooks/useDebounce";
+import useInternetConnection from "@/hooks/useInternetConnection";
+// import useNetworkStatus from "@/hooks/useNetworkInfo";
 import React, { useEffect, useState } from "react";
 import { BackHandler, StyleSheet, TextInput } from "react-native";
-import { DownloadBibleItem, RootStackScreenProps, TTheme } from "types";
-import removeAccent from "utils/removeAccent";
+import { DownloadBibleItem, TTheme } from "@/types";
+import removeAccent from "@/utils/removeAccent";
 
-const DownloadManager: React.FC<RootStackScreenProps<"DownloadManager">> = ({
-}) => {
-  const router = useRouter()
+type DownloadManagerProps = {};
+
+const DownloadManager: React.FC<DownloadManagerProps> = ({}) => {
+  const router = useRouter();
   const theme = useTheme();
   const styles = getStyles(theme);
   const databasesToDownload: DownloadBibleItem[] = bibleDatabases;
   const [isMyDownloadTab, setIsMyDownloadTab] = useState(false);
   const [searchText, setSearchText] = useState<any>(null);
   const debouncedSearchText = useDebounce(searchText, 500);
-  // const { isConnected, isInternetReachable } = useNetworkStatus();
   const isConnected = useInternetConnection();
+
   const DownloadManagerHeader = () => {
     return (
       <View style={[styles.noteHeader]}>
@@ -71,6 +72,12 @@ const DownloadManager: React.FC<RootStackScreenProps<"DownloadManager">> = ({
 
   return (
     <View style={{ paddingHorizontal: 20, flex: 1 }}>
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerTitle: "",
+        }}
+      />
       {DownloadManagerHeader()}
       <TabNavigation {...{ isMyDownloadTab, setIsMyDownloadTab, theme }} />
       {!isMyDownloadTab ? (
@@ -87,14 +94,14 @@ const DownloadManager: React.FC<RootStackScreenProps<"DownloadManager">> = ({
           data={
             debouncedSearchText
               ? databasesToDownload.filter(
-                (version) =>
-                  removeAccent(version.name).indexOf(
-                    debouncedSearchText.toLowerCase()
-                  ) !== -1 ||
-                  removeAccent(version.storedName).indexOf(
-                    debouncedSearchText.toLowerCase()
-                  ) !== -1
-              )
+                  (version) =>
+                    removeAccent(version.name).indexOf(
+                      debouncedSearchText.toLowerCase()
+                    ) !== -1 ||
+                    removeAccent(version.storedName).indexOf(
+                      debouncedSearchText.toLowerCase()
+                    ) !== -1
+                )
               : databasesToDownload
           }
           keyExtractor={(item: DownloadBibleItem, index: any) =>

@@ -1,12 +1,12 @@
 import { useTheme } from "@react-navigation/native";
-import { DB_BOOK_NAMES } from "constants/BookNames";
-import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from "constants/Queries";
-import { useBibleContext } from "context/BibleContext";
-import { useDBContext } from "context/databaseContext";
+import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from "@/constants/Queries";
+import { useBibleContext } from "@/context/BibleContext";
+import { useDBContext } from "@/context/databaseContext";
 import { useRouter } from "node_modules/expo-router/build";
 import React, { useEffect, useMemo, useState } from "react";
-import { Animated, BackHandler, StyleSheet, Text, } from "react-native";
-import { IVerseItem, RootStackScreenProps, TTheme } from "types";
+import { Animated, BackHandler, StyleSheet, Text } from "react-native";
+import { IVerseItem, RootStackScreenProps, TTheme } from "@/types";
 import AnimatedDropdown from "./AnimatedDropdown";
 import Icon from "./Icon";
 import StrongSearchContent from "./StrongSearchContent";
@@ -25,7 +25,7 @@ const bookFilter = {
 const SearchStrongWordEntire: React.FC<
   RootStackScreenProps<"StrongSearchEntire">
 > = ({ route }) => {
-  const router = useRouter()
+  const router = useRouter();
   const { paramCode } = route.params as any;
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -75,12 +75,12 @@ const SearchStrongWordEntire: React.FC<
       setData((searchData as IVerseItem[]) || []);
     })();
 
-    return () => { };
+    return () => {};
   }, [myBibleDB, code, selectedFilterOption]);
 
   useEffect(() => {
     const backAction = () => {
-      router.back()
+      router.back();
       return true;
     };
 

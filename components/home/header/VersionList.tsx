@@ -1,13 +1,13 @@
-import DecoratorLine from "components/DecoratorLine";
-import Icon from "components/Icon";
-import { iconSize } from "constants/size";
-import { useDBContext } from "context/databaseContext";
-import { useStorage } from "context/LocalstoreContext";
+import DecoratorLine from "@/components/DecoratorLine";
+import Icon from "@/components/Icon";
+import { iconSize } from "@/constants/size";
+import { useDBContext } from "@/context/databaseContext";
+import { useStorage } from "@/context/LocalstoreContext";
 import { DBName } from "enums";
-import { deleteDatabaseFile } from "hooks/useDatabase";
+import { deleteDatabaseFile } from "@/hooks/useDatabase";
 import React, { FC } from "react";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
-import { EBibleVersions, TTheme } from "types";
+import { EBibleVersions, TTheme } from "@/types";
 import { Text, View } from "../../Themed";
 
 interface IVersionList {

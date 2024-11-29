@@ -4,10 +4,10 @@ import {
   dbFileExt,
   defaultDatabases,
   isDefaultDatabase,
-} from "constants/databaseNames";
+} from "@/constants/databaseNames";
 import { VersionItem } from "./useInstalledBible";
-import { DB_BOOK_NAMES } from "constants/BookNames";
-import { GET_COMPARE_BOOK_CHAPTER_VERSE } from "constants/Queries";
+import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { GET_COMPARE_BOOK_CHAPTER_VERSE } from "@/constants/Queries";
 
 interface Verse {
   book_number: number;

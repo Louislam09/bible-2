@@ -2,10 +2,10 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import BottomModal from "components/BottomModal";
-import CustomSlider from "components/Slider";
-import VoiceList from "components/VoiceList";
-import { useStorage } from "context/LocalstoreContext";
+import BottomModal from "@/components/BottomModal";
+import CustomSlider from "@/components/Slider";
+import VoiceList from "@/components/VoiceList";
+import { useStorage } from "@/context/LocalstoreContext";
 import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
 import {
   Platform,
@@ -13,11 +13,11 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import { TTheme } from "types";
+import { TTheme } from "@/types";
 import { Text, View } from "../../Themed";
 import ProgressBar from "../footer/ProgressBar";
-import Icon, { IconProps } from "components/Icon";
-import { iconSize } from "constants/size";
+import Icon, { IconProps } from "@/components/Icon";
+import { iconSize } from "@/constants/size";
 
 interface IPlay {
   theme: TTheme;

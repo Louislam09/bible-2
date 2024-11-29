@@ -1,6 +1,6 @@
 import { useState } from "react";
 import * as FileSystem from "expo-file-system";
-import { initDir } from "constants/databaseNames";
+import { initDir } from "@/constants/databaseNames";
 
 type DownloadPDFHook = {
   isDownloading: boolean;

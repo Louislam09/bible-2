@@ -5,18 +5,18 @@ import {
   defaultDatabases,
   getIfDatabaseNeedsDownload,
   SQLiteDirPath,
-} from "constants/databaseNames";
+} from "@/constants/databaseNames";
 import * as FileSystem from "expo-file-system";
 import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
-import { DownloadBibleItem, TTheme } from "types";
+import { DownloadBibleItem, TTheme } from "@/types";
 import ProgressBar from "./home/footer/ProgressBar";
 import { Text, View } from "./Themed";
 // import { unzip } from "react-native-zip-archive";
 // @ts-ignore
-import { useBibleContext } from "context/BibleContext";
-import { useDBContext } from "context/databaseContext";
-import unzipFile from "utils/unzipFile";
+import { useBibleContext } from "@/context/BibleContext";
+import { useDBContext } from "@/context/databaseContext";
+import unzipFile from "@/utils/unzipFile";
 import DownloadButton from "./DatabaseDownloadButton";
 import Icon from "./Icon";
 

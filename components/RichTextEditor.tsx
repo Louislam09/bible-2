@@ -1,15 +1,15 @@
 import { useTheme } from "@react-navigation/native";
-import Icon from "components/Icon";
-import { View } from "components/Themed";
-import { iconSize } from "constants/size";
+import Icon from "@/components/Icon";
+import { View } from "@/components/Themed";
+import { iconSize } from "@/constants/size";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import {
   RichEditor,
   RichToolbar,
-  actions
+  actions,
 } from "react-native-pell-rich-editor";
-import { TTheme } from "types";
+import { TTheme } from "@/types";
 
 const handleHead = ({ tintColor, label }: any) => (
   <Icon color={tintColor} size={iconSize} name={label} />
@@ -18,25 +18,25 @@ const handleHead = ({ tintColor, label }: any) => (
 const ColorPicker = ({ onSelectColor, mainColor }: any) => {
   const colors = [
     mainColor,
-    '#000000', // Black
-    '#FFFFFF', // White
-    '#FF0000', // Red
-    '#FF7F00', // Orange
-    '#FFFF00', // Yellow
-    '#00FF00', // Green
-    '#00FFFF', // Cyan
-    '#0000FF', // Blue
-    '#7F00FF', // Purple
-    '#FF1493', // Deep Pink
-    '#FF69B4', // Hot Pink
-    '#8B4513', // Saddle Brown
-    '#A52A2A', // Brown
-    '#808080', // Gray
+    "#000000", // Black
+    "#FFFFFF", // White
+    "#FF0000", // Red
+    "#FF7F00", // Orange
+    "#FFFF00", // Yellow
+    "#00FF00", // Green
+    "#00FFFF", // Cyan
+    "#0000FF", // Blue
+    "#7F00FF", // Purple
+    "#FF1493", // Deep Pink
+    "#FF69B4", // Hot Pink
+    "#8B4513", // Saddle Brown
+    "#A52A2A", // Brown
+    "#808080", // Gray
   ];
 
   return (
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap', zIndex: 9999 }}>
-      {colors.map(color => (
+    <View style={{ flexDirection: "row", flexWrap: "wrap", zIndex: 9999 }}>
+      {colors.map((color) => (
         <TouchableOpacity
           key={color}
           onPress={() => onSelectColor(color)}
@@ -46,7 +46,7 @@ const ColorPicker = ({ onSelectColor, mainColor }: any) => {
             backgroundColor: color,
             margin: 5,
             borderRadius: 15,
-            borderColor: '#ddd',
+            borderColor: "#ddd",
             borderWidth: 1,
           }}
         />
@@ -61,7 +61,7 @@ interface IRichEditor {
   readOnly: boolean;
   Textinput: any;
   isModal?: boolean;
-  shouldOpenKeyboard?: boolean
+  shouldOpenKeyboard?: boolean;
 }
 
 const MyRichEditor: React.FC<IRichEditor> = ({
@@ -70,7 +70,7 @@ const MyRichEditor: React.FC<IRichEditor> = ({
   readOnly,
   Textinput,
   isModal,
-  shouldOpenKeyboard
+  shouldOpenKeyboard,
 }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -129,10 +129,12 @@ const MyRichEditor: React.FC<IRichEditor> = ({
           onCursorPosition={(cursorY) => {
             setCursorY(cursorY);
           }}
-          style={[value && {
-            borderRadius: 15,
-            paddingHorizontal: 5,
-          }]}
+          style={[
+            value && {
+              borderRadius: 15,
+              paddingHorizontal: 5,
+            },
+          ]}
           ref={richTextRef}
           placeholder="Escribe aqui..."
           editorStyle={{
@@ -150,7 +152,12 @@ const MyRichEditor: React.FC<IRichEditor> = ({
         />
       </ScrollView>
 
-      {colorVisible && <ColorPicker mainColor={theme.colors.text} onSelectColor={onSelectColor} />}
+      {colorVisible && (
+        <ColorPicker
+          mainColor={theme.colors.text}
+          onSelectColor={onSelectColor}
+        />
+      )}
       {!readOnly && (
         <RichToolbar
           style={styles.richToolbar}
@@ -158,16 +165,26 @@ const MyRichEditor: React.FC<IRichEditor> = ({
           selectedIconTint={theme.colors.notification}
           actions={toolbarActions}
           iconMap={{
-            [actions.setBold]: (props: any) => handleHead({ ...props, label: "Bold" }),
-            [actions.setItalic]: (props: any) => handleHead({ ...props, label: "Italic" }),
-            [actions.setUnderline]: (props: any) => handleHead({ ...props, label: "Underline" }),
-            [actions.heading2]: (props: any) => handleHead({ ...props, label: "Heading1" }),
-            [actions.alignLeft]: ({ tintColor }: any) => handleHead({ tintColor, label: "AlignLeft" }),
-            [actions.alignRight]: ({ tintColor }: any) => handleHead({ tintColor, label: "AlignRight" }),
-            [actions.alignCenter]: ({ tintColor }: any) => handleHead({ tintColor, label: "AlignCenter" }),
-            [actions.setParagraph]: ({ tintColor }: any) => handleHead({ tintColor, label: "Pilcrow" }),
-            [actions.insertBulletsList]: ({ tintColor }: any) => handleHead({ tintColor, label: "List" }),
-            [actions.foreColor]: ({ tintColor }: any) => handleHead({ tintColor: textColor, label: "Palette" }),
+            [actions.setBold]: (props: any) =>
+              handleHead({ ...props, label: "Bold" }),
+            [actions.setItalic]: (props: any) =>
+              handleHead({ ...props, label: "Italic" }),
+            [actions.setUnderline]: (props: any) =>
+              handleHead({ ...props, label: "Underline" }),
+            [actions.heading2]: (props: any) =>
+              handleHead({ ...props, label: "Heading1" }),
+            [actions.alignLeft]: ({ tintColor }: any) =>
+              handleHead({ tintColor, label: "AlignLeft" }),
+            [actions.alignRight]: ({ tintColor }: any) =>
+              handleHead({ tintColor, label: "AlignRight" }),
+            [actions.alignCenter]: ({ tintColor }: any) =>
+              handleHead({ tintColor, label: "AlignCenter" }),
+            [actions.setParagraph]: ({ tintColor }: any) =>
+              handleHead({ tintColor, label: "Pilcrow" }),
+            [actions.insertBulletsList]: ({ tintColor }: any) =>
+              handleHead({ tintColor, label: "List" }),
+            [actions.foreColor]: ({ tintColor }: any) =>
+              handleHead({ tintColor: textColor, label: "Palette" }),
           }}
           foreColor={handleColor}
         />

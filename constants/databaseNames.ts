@@ -1,6 +1,6 @@
 import { DBName } from "enums";
 import * as FileSystem from "expo-file-system";
-import { DATABASE_TYPE } from "types";
+import { DATABASE_TYPE } from "@/types";
 export const SQLiteDirPath = `${FileSystem.documentDirectory}SQLite`;
 export const baseDownloadUrl = "https://www.ph4.org";
 export const dbFileExt = "-bible.db";

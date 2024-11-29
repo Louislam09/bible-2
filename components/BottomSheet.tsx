@@ -11,8 +11,8 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { BackHandler, StyleSheet, } from "react-native";
-import { TTheme } from "types";
+import { BackHandler, StyleSheet } from "react-native";
+import { TTheme } from "@/types";
 import Icon from "./Icon";
 import { View } from "./Themed";
 
@@ -94,7 +94,9 @@ const CustomBottomSheet = forwardRef<Ref, CustomBottomSheet>(
     );
 
     return (
-      <View style={{ flex: 1, backgroundColor: theme.colors.notification + 50 }}>
+      <View
+        style={{ flex: 1, backgroundColor: theme.colors.notification + 50 }}
+      >
         <BottomSheet
           backgroundStyle={styles.bottomSheet}
           ref={ref}

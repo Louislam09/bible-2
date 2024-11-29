@@ -1,6 +1,6 @@
 import React from "react";
 import { TextProps, TextStyle } from "react-native";
-import { findAll } from "utils/findAll";
+import { findAll } from "@/utils/findAll";
 import { Text, View } from "./Themed";
 
 interface HighlighterProps extends TextProps {

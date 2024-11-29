@@ -1,8 +1,11 @@
-import { defaultDatabases, getDatabaseQueryKey } from "constants/databaseNames";
-import { QUERY_BY_DB } from "constants/Queries";
+import {
+  defaultDatabases,
+  getDatabaseQueryKey,
+} from "@/constants/databaseNames";
+import { QUERY_BY_DB } from "@/constants/Queries";
 import * as SQLite from "expo-sqlite";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { IVerseItem } from "types";
+import { IVerseItem } from "@/types";
 
 export interface UseSearchHookState {
   searchResults: IVerseItem[] | null;

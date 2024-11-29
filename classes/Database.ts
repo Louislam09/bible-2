@@ -1,4 +1,4 @@
-import { SQLiteDirPath } from "constants/databaseNames";
+import { SQLiteDirPath } from "@/constants/databaseNames";
 import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
 

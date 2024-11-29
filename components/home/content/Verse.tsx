@@ -12,12 +12,12 @@ import extractVersesInfo, {
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRoute, useTheme } from "@react-navigation/native";
-import DisplayStrongWord from "components/DisplayStrongWord";
-import Icon from "components/Icon";
-import Walkthrough from "components/Walkthrough";
-import { useModal } from "context/modal-context";
+import DisplayStrongWord from "@/components/DisplayStrongWord";
+import Icon from "@/components/Icon";
+import Walkthrough from "@/components/Walkthrough";
+import { useModal } from "@/context/modal-context";
 import { useNavigation } from "expo-router";
-import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
+import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import React, {
   useCallback,
   useEffect,
@@ -32,7 +32,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import copyToClipboard from "utils/copyToClipboard";
+import copyToClipboard from "@/utils/copyToClipboard";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
 
 type VerseProps = TVerse & {

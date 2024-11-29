@@ -2,13 +2,13 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { NavigationProp, NavigationState } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import Animation from "components/Animation";
-import { Text } from "components/Themed";
-import WordDefinition from "components/WordDefinition";
-import { useDBContext } from "context/databaseContext";
-import { useCustomTheme } from "context/ThemeContext";
-import useDebounce from "hooks/useDebounce";
-import useDictionaryData, { DatabaseData } from "hooks/useDictionaryData";
+import Animation from "@/components/Animation";
+import { Text } from "@/components/Themed";
+import WordDefinition from "@/components/WordDefinition";
+import { useDBContext } from "@/context/databaseContext";
+import { useCustomTheme } from "@/context/ThemeContext";
+import useDebounce from "@/hooks/useDebounce";
+import useDictionaryData, { DatabaseData } from "@/hooks/useDictionaryData";
 import React, {
   RefObject,
   useCallback,
@@ -24,8 +24,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { DictionaryData, TTheme } from "types";
-import { pluralToSingular } from "utils/removeAccent";
+import { DictionaryData, TTheme } from "@/types";
+import { pluralToSingular } from "@/utils/removeAccent";
 import BackButton from "./BackButton";
 
 type RenderItem = {
@@ -238,7 +238,7 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
       }}
     >
       {selectedWord && (
-        <View style={{ position: 'relative', height: 40 }}>
+        <View style={{ position: "relative", height: 40 }}>
           <BackButton theme={theme} backAction={() => handleCustomBack()} />
         </View>
       )}

@@ -9,10 +9,10 @@ import {
 import { Text, View } from "./Themed";
 
 import useParams from "@/hooks/useParams";
-import { BOOK_IMAGES } from "constants/Images";
-import { useBibleContext } from "context/BibleContext";
+import { BOOK_IMAGES } from "@/constants/Images";
+import { useBibleContext } from "@/context/BibleContext";
 import { useNavigation, usePathname } from "node_modules/expo-router/build";
-import { HomeParams, IDBBookNames, Screens, TTheme } from "types";
+import { HomeParams, IDBBookNames, Screens, TTheme } from "@/types";
 
 interface IBookNameList {
   bookList: IDBBookNames[] | any[];

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, Easing, TouchableOpacity } from "react-native";
-import { TTheme } from "types";
+import { TTheme } from "@/types";
 import Icon from "./Icon";
 import { Text } from "./Themed";
 

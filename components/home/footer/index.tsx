@@ -1,25 +1,25 @@
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
-import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "constants/BookNames";
-import { useBibleContext } from "context/BibleContext";
-import useAudioPlayer from "hooks/useAudioPlayer";
+import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "@/constants/BookNames";
+import { useBibleContext } from "@/context/BibleContext";
+import useAudioPlayer from "@/hooks/useAudioPlayer";
 import { FC, useCallback, useEffect, useRef } from "react";
 import { Animated, TouchableOpacity, useWindowDimensions } from "react-native";
-import { EBibleVersions, Screens } from "types";
+import { EBibleVersions, Screens } from "@/types";
 
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import BottomModal from "components/BottomModal";
-import Icon from "components/Icon";
-import { Text, View } from "components/Themed";
-import { iconSize } from "constants/size";
-import { useStorage } from "context/LocalstoreContext";
-import useBibleReader from "hooks/useBibleReading";
-import useInternetConnection from "hooks/useInternetConnection";
-import useSingleAndDoublePress from "hooks/useSingleOrDoublePress";
+import BottomModal from "@/components/BottomModal";
+import Icon from "@/components/Icon";
+import { Text, View } from "@/components/Themed";
+import { iconSize } from "@/constants/size";
+import { useStorage } from "@/context/LocalstoreContext";
+import useBibleReader from "@/hooks/useBibleReading";
+import useInternetConnection from "@/hooks/useInternetConnection";
+import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
 interface FooterInterface {
-  refs: any,
+  refs: any;
   isSplit?: boolean;
   book: any;
   chapter: any;
@@ -33,12 +33,7 @@ const CustomFooter: FC<FooterInterface> = ({
   chapter,
   verse,
 }) => {
-  const {
-    book: bookRef,
-    back: backRef,
-    next: nextRef,
-    audi: audioRef,
-  } = refs
+  const { book: bookRef, back: backRef, next: nextRef, audi: audioRef } = refs;
   const {
     currentBibleVersion,
     clearHighlights,
@@ -216,8 +211,9 @@ const CustomFooter: FC<FooterInterface> = ({
           delayLongPress={200}
         >
           <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
-            {`${displayBookName ?? ""} ${chapter ?? ""}:${currentHistoryItemVerse || verse
-              }`}
+            {`${displayBookName ?? ""} ${chapter ?? ""}:${
+              currentHistoryItemVerse || verse
+            }`}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>

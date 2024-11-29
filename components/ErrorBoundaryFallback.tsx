@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { TTheme } from "types";
+import { TTheme } from "@/types";
 import Animation from "./Animation";
 import Icon from "./Icon";
 import { Text } from "./Themed";

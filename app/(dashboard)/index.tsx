@@ -1,14 +1,14 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import BottomModal from "components/BottomModal";
-import DailyVerse from "components/DailyVerse";
-import Icon, { IconProps } from "components/Icon";
-import { Text, View } from "components/Themed";
-import VoiceList from "components/VoiceList";
-import VersionList from "components/home/header/VersionList";
-import { useBibleContext } from "context/BibleContext";
-import { useStorage } from "context/LocalstoreContext";
+import BottomModal from "@/components/BottomModal";
+import DailyVerse from "@/components/DailyVerse";
+import Icon, { IconProps } from "@/components/Icon";
+import { Text, View } from "@/components/Themed";
+import VoiceList from "@/components/VoiceList";
+import VersionList from "@/components/home/header/VersionList";
+import { useBibleContext } from "@/context/BibleContext";
+import { useStorage } from "@/context/LocalstoreContext";
 import { useNavigation } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
@@ -18,7 +18,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { EBibleVersions, RootStackScreenProps, Screens, TTheme } from "types";
+import { EBibleVersions, RootStackScreenProps, Screens, TTheme } from "@/types";
 
 type IDashboardOption = {
   icon: IconProps["name"];

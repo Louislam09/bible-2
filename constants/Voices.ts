@@ -1,4 +1,4 @@
-import { SpeechVoice } from "types";
+import { SpeechVoice } from "@/types";
 
 const Voices: SpeechVoice[] = [
   {

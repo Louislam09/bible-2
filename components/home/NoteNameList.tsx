@@ -1,24 +1,24 @@
-import DecoratorLine from "components/DecoratorLine";
-import Icon from "components/Icon";
-import { GET_ALL_NOTE, GET_ALL_NOTE_NAME } from "constants/Queries";
-import { iconSize } from "constants/size";
-import { useDBContext } from "context/databaseContext";
+import DecoratorLine from "@/components/DecoratorLine";
+import Icon from "@/components/Icon";
+import { GET_ALL_NOTE, GET_ALL_NOTE_NAME } from "@/constants/Queries";
+import { iconSize } from "@/constants/size";
+import { useDBContext } from "@/context/databaseContext";
 import React, { FC, useEffect, useState } from "react";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
-import { TNote, TTheme } from "types";
+import { TNote, TTheme } from "@/types";
 import { Text, View } from "../Themed";
-import { useStorage } from "context/LocalstoreContext";
-import { formatDateShortDayMonth } from "utils/formatDateShortDayMonth";
-import { useBibleContext } from "context/BibleContext";
+import { useStorage } from "@/context/LocalstoreContext";
+import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
+import { useBibleContext } from "@/context/BibleContext";
 
 type NoteNameListProps = {
   theme: TTheme;
-}
+};
 
 const NoteNameList: FC<NoteNameListProps> = ({ theme }) => {
   const styles = getStyles(theme);
   const { myBibleDB, executeSql } = useDBContext();
-  const { setCurrentNoteId, noteListDismissModalPress } = useBibleContext()
+  const { setCurrentNoteId, noteListDismissModalPress } = useBibleContext();
   const [data, setData] = useState<TNote[] | any>(null);
   const {
     storedData: { fontSize },
@@ -32,13 +32,13 @@ const NoteNameList: FC<NoteNameListProps> = ({ theme }) => {
     };
     getNotes();
 
-    return () => { };
+    return () => {};
   }, [myBibleDB, executeSql]);
 
   const onItem = (id: number) => {
-    setCurrentNoteId(id)
-    noteListDismissModalPress()
-  }
+    setCurrentNoteId(id);
+    noteListDismissModalPress();
+  };
 
   return (
     <View style={[styles.versionContainer]}>
@@ -63,24 +63,32 @@ const NoteNameList: FC<NoteNameListProps> = ({ theme }) => {
       >
         <DecoratorLine theme={theme} color={theme.colors.text} />
         <TouchableOpacity
-          style={[styles.card, { borderColor: theme.colors.text, borderRadius: 0 }]}
+          style={[
+            styles.card,
+            { borderColor: theme.colors.text, borderRadius: 0 },
+          ]}
           onPress={() => onItem(-1)}
         >
-          <Icon name='NotebookText' color={theme.colors.text} size={iconSize} />
+          <Icon name="NotebookText" color={theme.colors.text} size={iconSize} />
           <View style={{ backgroundColor: "transparent", flex: 1 }}>
             <Text
               style={[
                 styles.versionText,
-                { color: theme.colors.text, fontSize, textAlign: 'center', fontWeight: 'bold' },
+                {
+                  color: theme.colors.text,
+                  fontSize,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                },
               ]}
             >
               Crea una nueva nota
             </Text>
           </View>
-          <Icon name='NotebookText' color={theme.colors.text} size={iconSize} />
+          <Icon name="NotebookText" color={theme.colors.text} size={iconSize} />
         </TouchableOpacity>
         <DecoratorLine theme={theme} color={theme.colors.text} />
-      </View >
+      </View>
       {data?.map((note: any) => (
         <View
           key={note?.id}
@@ -108,12 +116,15 @@ const NoteNameList: FC<NoteNameListProps> = ({ theme }) => {
                 {formatDateShortDayMonth(note.updated_at || note.created_at)}
               </Text>
             </View>
-            <Icon name='NotebookText' color={theme.colors.text} size={iconSize} />
+            <Icon
+              name="NotebookText"
+              color={theme.colors.text}
+              size={iconSize}
+            />
           </TouchableOpacity>
-        </View >
-      ))
-      }
-    </View >
+        </View>
+      ))}
+    </View>
   );
 };
 
@@ -125,11 +136,11 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     listHeader: {
       width: "90%",
-      backgroundColor: 'transparent',
-      flexDirection: 'row',
+      backgroundColor: "transparent",
+      flexDirection: "row",
       marginBottom: 5,
-      alignItems: 'center',
-      gap: 4
+      alignItems: "center",
+      gap: 4,
     },
     title: {
       color: "white",

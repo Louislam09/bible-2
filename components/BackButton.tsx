@@ -1,7 +1,7 @@
 import { NavigationProp, NavigationState } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { TTheme } from "types";
+import { TTheme } from "@/types";
 import Icon from "./Icon";
 
 type BackButtonProps = {

@@ -1,4 +1,4 @@
-import { EThemes } from "types";
+import { EThemes } from "@/types";
 
 let lightBlackAndWhite = {
   dark: false,

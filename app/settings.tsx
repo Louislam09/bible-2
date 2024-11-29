@@ -4,22 +4,22 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import Icon, { IconProps } from "components/Icon";
-import { Text, View } from "components/Themed";
-import { useBibleContext } from "context/BibleContext";
-import { useStorage } from "context/LocalstoreContext";
-import { useCustomTheme } from "context/ThemeContext";
-import Constants from 'expo-constants';
-import { Stack, useRouter } from 'expo-router';
-import * as Updates from 'expo-updates';
+import Icon, { IconProps } from "@/components/Icon";
+import { Text, View } from "@/components/Themed";
+import { useBibleContext } from "@/context/BibleContext";
+import { useStorage } from "@/context/LocalstoreContext";
+import { useCustomTheme } from "@/context/ThemeContext";
+import Constants from "expo-constants";
+import { Stack, useRouter } from "expo-router";
+import * as Updates from "expo-updates";
 import { useCallback, useMemo } from "react";
-import { EThemes, RootStackScreenProps, TFont, TTheme } from "types";
+import { EThemes, RootStackScreenProps, TFont, TTheme } from "@/types";
 
 const URLS = {
   BIBLE: "market://details?id=com.louislam09.bible",
@@ -61,7 +61,7 @@ type TSection = {
 const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
   navigation,
 }) => {
-  const router = useRouter()
+  const router = useRouter();
   const theme = useTheme();
   const {
     selectTheme,
@@ -87,7 +87,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
           "Hay una nueva actualización. ¿Te gustaría descargarla e instalarla?",
           [
             { text: "Cancelar", style: "cancel" },
-            { text: "Actualizar", onPress: applyUpdate }
+            { text: "Actualizar", onPress: applyUpdate },
           ]
         );
       } else {
@@ -120,7 +120,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
       [
         {
           text: "Cancelar",
-          onPress: () => { },
+          onPress: () => {},
           style: "destructive",
         },
         { text: "Borrar", onPress: () => console.log?.() },
@@ -227,7 +227,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
             label: fontSize,
             isValue: true,
             iconName: `ChartNoAxesColumn`,
-            action: () => { },
+            action: () => {},
             extraText: "",
           },
           {
@@ -269,7 +269,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
           {
             label: `Versión ${appVersion}`,
             iconName: "Info",
-            action: () => { }, // No action needed
+            action: () => {}, // No action needed
             extraText: `Fecha de Lanzamiento: Mar 13, 2024`,
           },
         ],
@@ -365,7 +365,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
   const SettingSection = ({ title, options, id }: TSection, index: any) => {
     return (
       <View style={styles.sectionContainer} key={index}>
-        <Stack.Screen options={{ headerShown: true, }} />
+        <Stack.Screen options={{ headerShown: true }} />
         <Text style={styles.sectionTitle}>{title}</Text>
 
         {id ? (
@@ -419,7 +419,6 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
       </View>
     );
   };
-
 
   return (
     <View key={orientation + theme.dark} style={styles.container}>

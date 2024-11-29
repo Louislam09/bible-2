@@ -1,7 +1,7 @@
 import { FlashList } from "@shopify/flash-list";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { MaterialIconNameType, TTheme } from "types";
+import { MaterialIconNameType, TTheme } from "@/types";
 import { Text } from "./Themed";
 
 export type TabItemType = {

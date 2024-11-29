@@ -1,8 +1,8 @@
 import { ToastAndroid } from "react-native";
 import * as Clipboard from "expo-clipboard";
-import { IBookVerse, IVerseItem } from "types";
+import { IBookVerse, IVerseItem } from "@/types";
 import { getVerseTextRaw } from "./getVerseTextRaw";
-import { DB_BOOK_NAMES } from "constants/BookNames";
+import { DB_BOOK_NAMES } from "@/constants/BookNames";
 
 type FormatTextToClipboard = {
   highlightedVerses: IVerseItem[];

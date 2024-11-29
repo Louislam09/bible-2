@@ -1,6 +1,6 @@
-import { defaultDatabases } from "constants/databaseNames";
+import { defaultDatabases } from "@/constants/databaseNames";
 import * as SQLite from "expo-sqlite";
-import useInstalledBibles, { VersionItem } from "hooks/useInstalledBible";
+import useInstalledBibles, { VersionItem } from "@/hooks/useInstalledBible";
 import React, { createContext, useContext } from "react";
 import useDatabase from "../hooks/useDatabase";
 import { useStorage } from "./LocalstoreContext";

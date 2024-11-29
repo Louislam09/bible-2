@@ -1,9 +1,9 @@
-import { useBibleContext } from "context/BibleContext";
+import { useBibleContext } from "@/context/BibleContext";
 import React, { FC } from "react";
 import { Animated, StyleSheet } from "react-native";
 import BookContent from "./home/content";
 import CustomFooter from "./home/footer";
-import useChangeBookOrChapter from "hooks/useChangeBookOrChapter";
+import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import SwipeWrapper from "./SwipeWrapper";
 
 const SplitBottomSide: FC<any> = (props) => {
@@ -48,8 +48,7 @@ const styles = StyleSheet.create({
   container: {
     position: "relative",
     width: "100%",
-  }
-
+  },
 });
 
 export default SplitBottomSide;

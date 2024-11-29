@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@react-navigation/native";
-import { View } from "components/Themed";
-import getThemes from "constants/themeColors";
+import { View } from "@/components/Themed";
+import getThemes from "@/constants/themeColors";
 import Constants from "expo-constants";
 import React, {
   createContext,

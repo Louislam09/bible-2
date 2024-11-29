@@ -1,12 +1,18 @@
 import { useTheme } from "@react-navigation/native";
-import Icon from "components/Icon";
-import MyRichEditor from "components/RichTextEditor";
-import { Text, View } from "components/Themed";
-import { GET_NOTE_BY_ID } from "constants/Queries";
-import { useBibleContext } from "context/BibleContext";
-import { useDBContext } from "context/databaseContext";
-import useDebounce from "hooks/useDebounce";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Icon from "@/components/Icon";
+import MyRichEditor from "@/components/RichTextEditor";
+import { Text, View } from "@/components/Themed";
+import { GET_NOTE_BY_ID } from "@/constants/Queries";
+import { useBibleContext } from "@/context/BibleContext";
+import { useDBContext } from "@/context/databaseContext";
+import useDebounce from "@/hooks/useDebounce";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -16,10 +22,16 @@ import {
   StyleSheet,
   TextInput,
   ToastAndroid,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
-import { EViewMode, RootStackScreenProps, Screens, TNote, TTheme } from "types";
-import { formatDateShortDayMonth } from "utils/formatDateShortDayMonth";
+import {
+  EViewMode,
+  RootStackScreenProps,
+  Screens,
+  TNote,
+  TTheme,
+} from "@/types";
+import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
 
 const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
   route,
@@ -62,7 +74,7 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
     if (noteId && debouncedNoteContent && typingTimeoutRef.current) {
       onUpdate(noteId as number);
     } else {
-      setTyping(false)
+      setTyping(false);
     }
   }, [debouncedNoteContent, noteId]);
 
@@ -78,7 +90,10 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
         const note = await executeSql(myBibleDB, GET_NOTE_BY_ID, [noteId]);
         setNoteInfo(note[0] as TNote);
       } catch (error) {
-        Alert.alert("Error", "No se pudo cargar la nota. Por favor, inténtelo de nuevo.");
+        Alert.alert(
+          "Error",
+          "No se pudo cargar la nota. Por favor, inténtelo de nuevo."
+        );
       } finally {
         setLoading(false);
       }
@@ -98,10 +113,10 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
         headerTitle: "📝",
       });
     } else {
-      const headerTitle = isView ? noteInfo?.title?.toUpperCase() : "✏️"
+      const headerTitle = isView ? noteInfo?.title?.toUpperCase() : "✏️";
       navigation.setOptions({ headerTitle });
     }
-  }, [isView, noteInfo, isNewNote])
+  }, [isView, noteInfo, isNewNote]);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -136,7 +151,9 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
       }
       if (!noteContent.title) noteContent.title = defaultTitle;
       setHasUnsavedChanges(false);
-      await onSaveNote(noteContent, () => navigation.navigate(Screens.Notes, { shouldRefresh: true }));
+      await onSaveNote(noteContent, () =>
+        navigation.navigate(Screens.Notes, { shouldRefresh: true })
+      );
       ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
     } catch (error) {
       Alert.alert("Error", "No se pudo guardar la nota.");
@@ -153,7 +170,7 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
         "Guardar cambios",
         "Tienes cambios sin guardar, ¿quieres salir sin guardar?",
         [
-          { text: "Cancelar", style: "cancel", onPress: () => { } },
+          { text: "Cancelar", style: "cancel", onPress: () => {} },
           {
             text: "Salir sin guardar",
             style: "destructive",
@@ -222,7 +239,7 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
     const isEditMode = !!addToNoteText;
     if (isEditMode) {
       setViewMode("EDIT");
-      setHasUnsavedChanges(true)
+      setHasUnsavedChanges(true);
     }
 
     const contentToAdd = `<br> <div>${addToNoteText}</div><br>`;
@@ -254,7 +271,7 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
 
   const onContentChange = async (field: any, text: string) => {
     if (!isNewNote) {
-      typingTimeoutRef.current = true
+      typingTimeoutRef.current = true;
       setTyping(true);
     }
     setHasUnsavedChanges(true);
@@ -265,15 +282,16 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
     }));
   };
 
-
   const onEditMode = () => {
     setViewMode("EDIT");
   };
 
   if (isLoading) {
-    return <View style={styles.activiyContainer}>
-      <ActivityIndicator style={{ flex: 1 }} />
-    </View>
+    return (
+      <View style={styles.activiyContainer}>
+        <ActivityIndicator style={{ flex: 1 }} />
+      </View>
+    );
   }
 
   return (

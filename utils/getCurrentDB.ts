@@ -1,4 +1,4 @@
-import { VersionItem } from "hooks/useInstalledBible";
+import { VersionItem } from "@/hooks/useInstalledBible";
 
 const getCurrentDbName = (
   currentBible: string,

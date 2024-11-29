@@ -1,11 +1,11 @@
-import { iconSize } from "constants/size";
-import Voices from "constants/Voices";
-import { useStorage } from "context/LocalstoreContext";
+import { iconSize } from "@/constants/size";
+import Voices from "@/constants/Voices";
+import { useStorage } from "@/context/LocalstoreContext";
 import Checkbox from "expo-checkbox";
-import { useTextToSpeech } from "hooks/useTextToSpeech";
+import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { Animated, Platform, StyleSheet, TouchableOpacity } from "react-native";
-import { SpeechVoice, TTheme } from "types";
+import { SpeechVoice, TTheme } from "@/types";
 import CustomTabs, { TabItemType } from "./CustomTabs";
 import DecoratorLine from "./DecoratorLine";
 import Icon from "./Icon";

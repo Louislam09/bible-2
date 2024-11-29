@@ -1,10 +1,10 @@
 import useParams from "@/hooks/useParams";
 import { useTheme } from "@react-navigation/native";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
-import ChooseBookHeader from "components/chooseBook/ChooseBookHeader";
-import { Text, View } from "components/Themed";
-import { DB_BOOK_NAMES } from "constants/BookNames";
-import { useBibleContext } from "context/BibleContext";
+import ChooseBookHeader from "@/components/chooseBook/ChooseBookHeader";
+import { Text, View } from "@/components/Themed";
+import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { useBibleContext } from "@/context/BibleContext";
 import { Stack, useNavigation } from "node_modules/expo-router/build";
 import React, { Fragment, useState } from "react";
 import { SafeAreaView, StyleSheet, TouchableOpacity } from "react-native";
@@ -14,8 +14,8 @@ import {
   IDBBookNames,
   Screens,
   TTheme,
-} from "types";
-import removeAccent from "utils/removeAccent";
+} from "@/types";
+import removeAccent from "@/utils/removeAccent";
 
 type ChooseBookProps = {};
 

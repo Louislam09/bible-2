@@ -1,15 +1,15 @@
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import Animation from "components/Animation";
-import RenderVerse from "components/concordance/RenderVerse";
-import Icon from "components/Icon";
-import { Text, View } from "components/Themed";
-import { useBibleContext } from "context/BibleContext";
+import Animation from "@/components/Animation";
+import RenderVerse from "@/components/concordance/RenderVerse";
+import Icon from "@/components/Icon";
+import { Text, View } from "@/components/Themed";
+import { useBibleContext } from "@/context/BibleContext";
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { IVerseItem, Screens, TTheme } from "types";
-import { getVerseTextRaw } from "utils/getVerseTextRaw";
-import removeAccent from "utils/removeAccent";
+import { IVerseItem, Screens, TTheme } from "@/types";
+import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import removeAccent from "@/utils/removeAccent";
 
 type TListVerse = {
   data: IVerseItem[] | any;

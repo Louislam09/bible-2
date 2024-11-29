@@ -1,13 +1,13 @@
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { NavigationProp } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import Animation from "components/Animation";
-import { Text } from "components/Themed";
-import { DB_BOOK_CHAPTER_VERSES, DB_BOOK_NAMES } from "constants/BookNames";
-import { iconSize } from "constants/size";
-import { useBibleContext } from "context/BibleContext";
-import { useDBContext } from "context/databaseContext";
-import useCompareVerses, { DatabaseData } from "hooks/useCompareVerses";
+import Animation from "@/components/Animation";
+import { Text } from "@/components/Themed";
+import { DB_BOOK_CHAPTER_VERSES, DB_BOOK_NAMES } from "@/constants/BookNames";
+import { iconSize } from "@/constants/size";
+import { useBibleContext } from "@/context/BibleContext";
+import { useDBContext } from "@/context/databaseContext";
+import useCompareVerses, { DatabaseData } from "@/hooks/useCompareVerses";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ListRenderItem,
@@ -15,9 +15,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { IVerseItem, Screens, TTheme } from "types";
-import copyToClipboard from "utils/copyToClipboard";
-import { getVerseTextRaw } from "utils/getVerseTextRaw";
+import { IVerseItem, Screens, TTheme } from "@/types";
+import copyToClipboard from "@/utils/copyToClipboard";
+import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import Icon from "./Icon";
 
 interface CompareVersionsProps {

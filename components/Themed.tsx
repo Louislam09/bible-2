@@ -2,11 +2,13 @@ import { Text as DefaultText, View as DefaultView } from "react-native";
 
 import { useTheme } from "@react-navigation/native";
 import { createElement } from "react";
-import { TTheme } from "types";
+import { TTheme } from "@/types";
 import { useBibleContext } from "../context/BibleContext";
 
-export const NativeDefaultView = require('react-native/Libraries/Components/View/ViewNativeComponent').default;
-export const NativeDefaultText = (props: any) => createElement('RCTText', props)
+export const NativeDefaultView =
+  require("react-native/Libraries/Components/View/ViewNativeComponent").default;
+export const NativeDefaultText = (props: any) =>
+  createElement("RCTText", props);
 
 type ThemeProps = {
   lightColor?: string;
@@ -21,7 +23,7 @@ export function Text(props: TextProps) {
   const { colors } = useTheme() as TTheme;
   const { selectedFont } = useBibleContext();
 
-  const CustomText = onPress ? DefaultText : NativeDefaultText
+  const CustomText = onPress ? DefaultText : NativeDefaultText;
 
   return (
     <CustomText

@@ -1,17 +1,17 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useTheme } from "@react-navigation/native";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
-import { View } from "components/Themed";
-import { useBibleContext } from "context/BibleContext";
-import useDebounce from "hooks/useDebounce";
-import { useRouter } from "node_modules/expo-router/build";
+import { View } from "@/components/Themed";
+import { useBibleContext } from "@/context/BibleContext";
+import useDebounce from "@/hooks/useDebounce";
+import { useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import { TTheme } from "types";
-import removeAccent from "utils/removeAccent";
+import { TTheme } from "@/types";
+import removeAccent from "@/utils/removeAccent";
 
-const SearchHeader: React.FC<NativeStackHeaderProps> = ({ }) => {
-  const router = useRouter()
+const SearchHeader: React.FC<NativeStackHeaderProps> = ({}) => {
+  const router = useRouter();
   const theme = useTheme();
   const textInputRef = useRef<TextInput>(null);
   const styles = getStyles(theme);

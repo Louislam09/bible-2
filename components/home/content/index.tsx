@@ -1,19 +1,16 @@
 import { useRoute, useTheme } from "@react-navigation/native";
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
-import {
-  Dimensions,
-  StyleSheet
-} from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import { DB_BOOK_NAMES } from "../../../constants/BookNames";
 import { useDBContext } from "../../../context/databaseContext";
 import { HomeParams, IBookVerse, TTheme } from "../../../types";
 
-import { Text, View } from "components/Themed";
-import { getDatabaseQueryKey } from "constants/databaseNames";
-import { useBibleContext } from "context/BibleContext";
-import { useStorage } from "context/LocalstoreContext";
-import useReadingTime from "hooks/useReadTime";
-import { getChapterTextRaw } from "utils/getVerseTextRaw";
+import { Text, View } from "@/components/Themed";
+import { getDatabaseQueryKey } from "@/constants/databaseNames";
+import { useBibleContext } from "@/context/BibleContext";
+import { useStorage } from "@/context/LocalstoreContext";
+import useReadingTime from "@/hooks/useReadTime";
+import { getChapterTextRaw } from "@/utils/getVerseTextRaw";
 import { QUERY_BY_DB } from "../../../constants/Queries";
 import Chapter from "./Chapter";
 import SkeletonVerse from "./SkeletonVerse";
@@ -54,7 +51,10 @@ const BookContent: FC<BookContentInterface> = ({
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>({});
   const [chapterText, setChapterText] = useState<string>("");
-  const currentBook = useMemo(() => DB_BOOK_NAMES.find((x) => x.longName === book), [book]);
+  const currentBook = useMemo(
+    () => DB_BOOK_NAMES.find((x) => x.longName === book),
+    [book]
+  );
   const dimensions = Dimensions.get("window");
   const isNewLaw = useRef<boolean>(false);
   const estimatedReadingTime = useReadingTime({
@@ -106,9 +106,8 @@ const BookContent: FC<BookContentInterface> = ({
       setLoading(false);
     })();
 
-    return () => { };
+    return () => {};
   }, [myBibleDB, book, chapter, verse]);
-
 
   const displayErrorMessage = (_isNewLaw: boolean) => {
     if (_isNewLaw) {
@@ -121,15 +120,17 @@ const BookContent: FC<BookContentInterface> = ({
   const notVerseToRender = data?.verses?.length && !loading;
 
   if (loading || data?.verses?.length === undefined) {
-    return <View style={{ flex: 1 }}>
-      <SkeletonVerse index={0} />
-      {/* <FlashList
+    return (
+      <View style={{ flex: 1 }}>
+        <SkeletonVerse index={0} />
+        {/* <FlashList
         keyExtractor={(item: any) => `skeleton-${item}:`}
         data={[1, 2, 3, 4, 5, 6, 7, 8]}
         estimatedItemSize={100}
         renderItem={(props) => <SkeletonVerse {...props} />}
       /> */}
-    </View>
+      </View>
+    );
   }
 
   return (

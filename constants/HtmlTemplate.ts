@@ -1,4 +1,4 @@
-import { DictionaryData } from "types";
+import { DictionaryData } from "@/types";
 
 export const htmlTemplate = (
   content: DictionaryData[] | any,

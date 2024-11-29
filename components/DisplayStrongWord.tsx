@@ -1,6 +1,6 @@
 import React from "react";
 import { TextProps, TextStyle } from "react-native";
-import { WordTagPair } from "utils/extractVersesInfo";
+import { WordTagPair } from "@/utils/extractVersesInfo";
 import { Text } from "./Themed";
 
 interface DisplayStrongWordProps extends TextProps {

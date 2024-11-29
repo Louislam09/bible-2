@@ -1,8 +1,8 @@
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import { defaultDatabases } from "constants/databaseNames";
-import { useBibleContext } from "context/BibleContext";
-import { useDBContext } from "context/databaseContext";
+import { defaultDatabases } from "@/constants/databaseNames";
+import { useBibleContext } from "@/context/BibleContext";
+import { useDBContext } from "@/context/databaseContext";
 import * as FileSystem from "expo-file-system";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";

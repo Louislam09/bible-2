@@ -1,4 +1,4 @@
-import { Text } from "components/Themed";
+import { Text } from "@/components/Themed";
 import React, { useRef } from "react";
 import { Animated, TouchableOpacity } from "react-native";
 

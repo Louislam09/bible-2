@@ -1,15 +1,16 @@
+import useParams from "@/hooks/useParams";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import Animation from "components/Animation";
-import { Text } from "components/Themed";
-import WordDefinition from "components/WordDefinition";
-import { useBibleContext } from "context/BibleContext";
-import { useDBContext } from "context/databaseContext";
-import { useCustomTheme } from "context/ThemeContext";
-import useDebounce from "hooks/useDebounce";
-import useDictionaryData, { DatabaseData } from "hooks/useDictionaryData";
-import { useRouter } from "node_modules/expo-router/build";
+import Animation from "@/components/Animation";
+import { Text } from "@/components/Themed";
+import WordDefinition from "@/components/WordDefinition";
+import { useBibleContext } from "@/context/BibleContext";
+import { useDBContext } from "@/context/databaseContext";
+import { useCustomTheme } from "@/context/ThemeContext";
+import useDebounce from "@/hooks/useDebounce";
+import useDictionaryData, { DatabaseData } from "@/hooks/useDictionaryData";
+import { useRouter } from "expo-router";
 import React, {
   useCallback,
   useEffect,
@@ -25,8 +26,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { DictionaryData, RootStackScreenProps, TTheme } from "types";
-import { pluralToSingular } from "utils/removeAccent";
+import { DictionaryData, RootStackScreenProps, Screens, TTheme } from "@/types";
+import { pluralToSingular } from "@/utils/removeAccent";
 
 type RenderItem = {
   item: DatabaseData;
@@ -95,10 +96,10 @@ const RenderItem = ({
   );
 };
 
-const DictionarySearch: React.FC<
-  RootStackScreenProps<"DictionarySearch"> | any
-> = ({ route }) => {
-  const { word } = route.params as any;
+type DictionarySearchProps = {};
+
+const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
+  const { word } = useParams<{ word: string }>();
   const { fontSize } = useBibleContext();
   const [selectedWord, setSelectedWord] = useState<any>(null);
   const [filterData, setFilterData] = useState<DatabaseData[]>([]);
@@ -202,18 +203,8 @@ const DictionarySearch: React.FC<
     }
   };
 
-  React.useLayoutEffect(() => {
-    // navigation.setOptions({
-    //   headerLeft: () => (
-    //     <TouchableOpacity onPress={handleCustomBack}>
-    //       <Icon name="ArrowLeft" color={theme.colors.text} size={28} />
-    //     </TouchableOpacity>
-    //   ),
-    // });
-  }, [selectedWord]);
-
   const onNavToManagerDownload = useCallback(() => {
-    router.navigate("DownloadManager");
+    router.navigate(Screens.DownloadManager);
   }, [router]);
 
   if (dbNames.length === 0) {
@@ -454,7 +445,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontSize: 18,
     },
     linkText: {
-      color: colors.primary,
+      color: colors.notification,
       textDecorationLine: "underline",
       fontSize: 18,
     },

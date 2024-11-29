@@ -1,7 +1,7 @@
-import Icon, { IconProps } from "components/Icon";
-import { Text, View } from "components/Themed";
-import { useBibleContext } from "context/BibleContext";
-import { useCustomTheme } from "context/ThemeContext";
+import Icon, { IconProps } from "@/components/Icon";
+import { Text, View } from "@/components/Themed";
+import { useBibleContext } from "@/context/BibleContext";
+import { useCustomTheme } from "@/context/ThemeContext";
 import React from "react";
 import {
   Platform,
@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   useColorScheme,
 } from "react-native";
-import { TFont, TTheme } from "types";
+import { TFont, TTheme } from "@/types";
 import SelectThemeList from "./SelectThemeList";
 
 type IThemeOption = {

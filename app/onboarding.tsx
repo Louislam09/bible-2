@@ -1,8 +1,8 @@
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import Animation from "components/Animation";
-import Icon, { IconProps } from "components/Icon";
-import { Text, View } from "components/Themed";
+import Animation from "@/components/Animation";
+import Icon, { IconProps } from "@/components/Icon";
+import { Text, View } from "@/components/Themed";
 import { useNavigation } from "expo-router";
 import React from "react";
 import {
@@ -10,7 +10,7 @@ import {
   TouchableWithoutFeedback,
   useWindowDimensions,
 } from "react-native";
-import { Screens, TTheme } from "types";
+import { Screens, TTheme } from "@/types";
 
 type IDashboardOption = {
   icon: IconProps["name"];

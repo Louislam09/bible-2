@@ -1,11 +1,11 @@
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
-import Icon, { IconProps } from "components/Icon";
-import { DB_BOOK_NAMES } from "constants/BookNames";
-import { htmlTemplate } from "constants/HtmlTemplate";
-import { SEARCH_STRONG_WORD } from "constants/Queries";
-import { iconSize } from "constants/size";
-import { useDBContext } from "context/databaseContext";
-import usePrintAndShare from "hooks/usePrintAndShare";
+import Icon, { IconProps } from "@/components/Icon";
+import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { htmlTemplate } from "@/constants/HtmlTemplate";
+import { SEARCH_STRONG_WORD } from "@/constants/Queries";
+import { iconSize } from "@/constants/size";
+import { useDBContext } from "@/context/databaseContext";
+import usePrintAndShare from "@/hooks/usePrintAndShare";
 import React, {
   FC,
   RefObject,
@@ -24,7 +24,7 @@ import {
 } from "react-native";
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
-import { DictionaryData, IStrongWord, Screens, TTheme } from "types";
+import { DictionaryData, IStrongWord, Screens, TTheme } from "@/types";
 import { Text, View } from "../../Themed";
 
 type HeaderAction = {

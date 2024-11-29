@@ -1,9 +1,9 @@
-import Highlighter from "components/Highlighter";
-import Icon from "components/Icon";
-import { Text, View } from "components/Themed";
+import Highlighter from "@/components/Highlighter";
+import Icon from "@/components/Icon";
+import { Text, View } from "@/components/Themed";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { TTheme } from "types";
-import copyToClipboard from "utils/copyToClipboard";
+import { TTheme } from "@/types";
+import copyToClipboard from "@/utils/copyToClipboard";
 
 export type TItem = {
   bookName: string;
@@ -60,7 +60,7 @@ const RenderVerse = ({
           searchWords={isArray ? selected : [selected]}
           highlightStyle={{ color: theme.colors.notification }}
           style={[styles.verseBody]}
-          onWordClick={() => { }}
+          onWordClick={() => {}}
         />
       </View>
     </TouchableOpacity>

@@ -14,7 +14,7 @@ import {
   Theme,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { IconProps } from "components/Icon";
+import { IconProps } from "@/components/Icon";
 
 declare global {
   namespace ReactNavigation {
@@ -28,7 +28,7 @@ export enum Screens {
   Home = "home",
   Search = "search",
   Concordance = "concordance",
-  Book = "book",
+  // Book = "book",
   ChooseBook = "chooseBook",
   ChooseChapterNumber = "chooseChapterNumber",
   ChooseVerseNumber = "chooseVerseNumber",
@@ -39,7 +39,7 @@ export enum Screens {
   Character = "character",
   Song = "song",
   StrongSearchEntire = "strongSearchEntire",
-  DictionarySearch = "dictionarySearch",
+  DictionarySearch = "dictionary",
   NoteDetail = "noteDetail",
 }
 
@@ -47,7 +47,7 @@ type TScreensName = { [key in Screens]: string };
 
 export const ScreensName: TScreensName = {
   [Screens.Home]: "Santa Escritura",
-  [Screens.Book]: "Libros",
+  // [Screens.Book]: "Libros",
   [Screens.Search]: "Busqueda",
   [Screens.Concordance]: "Concordancia",
   [Screens.ChooseBook]: "Seleccione un libro",
@@ -81,7 +81,7 @@ export type RootTabParamList = {
   noteDetail: undefined;
   favorite: undefined;
   notFound: undefined;
-  dictionarySearch: undefined;
+  dictionary: undefined;
 };
 
 export type RootStackParamList = {
@@ -104,7 +104,7 @@ export type RootStackParamList = {
   strongSearchEntire:
     | NavigatorScreenParams<RootTabParamList>
     | { paramCode: string };
-  dictionarySearch: NavigatorScreenParams<RootTabParamList> | { word: string };
+  dictionary: NavigatorScreenParams<RootTabParamList> | { word: string };
   chooseChapterNumber:
     | NavigatorScreenParams<RootTabParamList>
     | ChooseChapterNumberParams;

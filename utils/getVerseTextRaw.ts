@@ -1,4 +1,4 @@
-import { IBookVerse } from "types";
+import { IBookVerse } from "@/types";
 
 export const getVerseTextRaw = (text: any, addIcon: boolean = false) => {
   return text

@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { TTheme } from "types";
+import { TTheme } from "@/types";
 import { Text, View } from "./Themed";
 
 type TabNavigationProps = {

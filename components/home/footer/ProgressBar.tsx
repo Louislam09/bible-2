@@ -1,4 +1,4 @@
-import { View } from "components/Themed";
+import { View } from "@/components/Themed";
 import React, { useEffect, useRef } from "react";
 import { Animated } from "react-native";
 

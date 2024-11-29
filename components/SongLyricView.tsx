@@ -1,5 +1,5 @@
-import { useBibleContext } from "context/BibleContext";
-import { useStorage } from "context/LocalstoreContext";
+import { useBibleContext } from "@/context/BibleContext";
+import { useStorage } from "@/context/LocalstoreContext";
 import React, { FC, useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
-import { TTheme } from "types";
+import { TTheme } from "@/types";
 import ProgressBar from "./home/footer/ProgressBar";
 import Icon from "./Icon";
 import SwipeWrapper from "./SwipeWrapper";

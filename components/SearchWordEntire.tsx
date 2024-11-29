@@ -1,18 +1,19 @@
 import { useTheme } from "@react-navigation/native";
-import { DB_BOOK_NAMES } from "constants/BookNames";
-import { useBibleContext } from "context/BibleContext";
-import { useRouter } from "node_modules/expo-router/build";
+import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { useBibleContext } from "@/context/BibleContext";
+import { useRouter } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
 import { Animated, BackHandler, StyleSheet, Text } from "react-native";
-import { IVerseItem, RootStackScreenProps, TTheme } from "types";
+import { IVerseItem, TTheme } from "@/types";
 import AnimatedDropdown from "./AnimatedDropdown";
 import Icon from "./Icon";
 import ListVerse from "./search/ListVerse";
 import { View } from "./Themed";
 
-const SearchWordEntire: React.FC<RootStackScreenProps<"search">> = ({
-}) => {
-  const router = useRouter()
+type SearchWordEntireProps = {};
+
+const SearchWordEntire: React.FC<SearchWordEntireProps> = ({}) => {
+  const router = useRouter();
   const { searchState, searchQuery } = useBibleContext();
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -46,7 +47,7 @@ const SearchWordEntire: React.FC<RootStackScreenProps<"search">> = ({
       setData(searchState?.searchResults);
     }
 
-    return () => { };
+    return () => {};
   }, [searchState]);
 
   useEffect(() => {
@@ -56,7 +57,7 @@ const SearchWordEntire: React.FC<RootStackScreenProps<"search">> = ({
 
   useEffect(() => {
     const backAction = () => {
-      router.back()
+      router.back();
       return true;
     };
 

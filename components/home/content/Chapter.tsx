@@ -1,15 +1,11 @@
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import { useBibleContext } from "context/BibleContext";
-import { useStorage } from "context/LocalstoreContext";
-import useDebounce from "hooks/useDebounce";
+import { useBibleContext } from "@/context/BibleContext";
+import { useStorage } from "@/context/LocalstoreContext";
+import useDebounce from "@/hooks/useDebounce";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  View
-} from "react-native";
-import { TChapter, TTheme } from "types";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { TChapter, TTheme } from "@/types";
 import Verse from "./Verse";
 
 const Chapter = ({
@@ -30,8 +26,7 @@ const Chapter = ({
   const [topVerse, setTopVerse] = useState(null);
   const viewabilityConfig = { viewAreaCoveragePercentThreshold: 1 };
   const [isLayoutMounted, setLayoutMounted] = useState(false);
-  const { chapterVerseLength } =
-    useBibleContext();
+  const { chapterVerseLength } = useBibleContext();
   const debounceTopVerse = useDebounce(topVerse, 100);
   const {
     historyManager: { updateVerse },
@@ -54,7 +49,6 @@ const Chapter = ({
       verses.length === verseNumber || verseNumber === 1 ? -1 : 0;
     return inValidIndex ? 0 : verseNumber + shouldSubtract;
   }, [verseNumber, verses]);
-
 
   const renderItem = (props: any) => (
     <Verse
@@ -87,7 +81,6 @@ const Chapter = ({
   const onEndReached = useCallback(() => {
     setTimeout(() => setTopVerse(chapterVerseLength as any), 500);
   }, [chapterVerseLength]);
-
 
   return (
     <View style={styles.chapterContainer}>

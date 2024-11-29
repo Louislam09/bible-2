@@ -1,6 +1,6 @@
-import { Text } from "components/Themed";
+import { Text } from "@/components/Themed";
 import React from "react";
-import { TTheme } from "types";
+import { TTheme } from "@/types";
 
 interface Props {
   text: string;

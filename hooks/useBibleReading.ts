@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { IBookVerse, SpeechVoice } from "types";
-import { getChapterTextRawForReading } from "utils/getVerseTextRaw";
-import Voices from "constants/Voices";
-import { useTextToSpeech } from "hooks/useTextToSpeech";
+import { IBookVerse, SpeechVoice } from "@/types";
+import { getChapterTextRawForReading } from "@/utils/getVerseTextRaw";
+import Voices from "@/constants/Voices";
+import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 
 interface UseBibleReaderProps {
   currentChapterVerses: IBookVerse[];

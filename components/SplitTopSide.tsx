@@ -1,5 +1,5 @@
-import { useBibleContext } from "context/BibleContext";
-import useChangeBookOrChapter from "hooks/useChangeBookOrChapter";
+import { useBibleContext } from "@/context/BibleContext";
+import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import React, { FC } from "react";
 import { Animated, StyleSheet } from "react-native";
 import BookContent from "./home/content";
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   container: {
     position: "relative",
     width: "100%",
-  }
+  },
 });
 
 export default SplitTopSide;

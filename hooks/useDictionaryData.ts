@@ -5,16 +5,16 @@ import {
   defaultDatabases,
   getDatabaseExt,
   isDefaultDatabase,
-} from "constants/databaseNames";
+} from "@/constants/databaseNames";
 import { VersionItem } from "./useInstalledBible";
-import { DB_BOOK_NAMES } from "constants/BookNames";
+import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import {
   GET_COMPARE_BOOK_CHAPTER_VERSE,
   SEARCH_DICTIONARY_WORD,
-} from "constants/Queries";
-import { DATABASE_TYPE, DictionaryData } from "types";
-import WORDS from "constants/words";
-import { pluralToSingular } from "utils/removeAccent";
+} from "@/constants/Queries";
+import { DATABASE_TYPE, DictionaryData } from "@/types";
+import WORDS from "@/constants/words";
+import { pluralToSingular } from "@/utils/removeAccent";
 
 interface Verse {
   book_number: number;

@@ -9,7 +9,7 @@ import {
   TextStyle,
 } from "react-native";
 import { Text, View } from "./Themed";
-import { TTheme } from "types";
+import { TTheme } from "@/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Icon from "./Icon";
 

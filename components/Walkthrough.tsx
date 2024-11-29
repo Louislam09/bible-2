@@ -2,7 +2,7 @@ import { useTheme } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Popover from "react-native-popover-view";
-import { TStep, TTheme } from "types";
+import { TStep, TTheme } from "@/types";
 import Icon from "./Icon";
 import { Text, View } from "./Themed";
 type TWalkthrough = {

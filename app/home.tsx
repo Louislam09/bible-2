@@ -11,24 +11,24 @@ import {
   View,
 } from "react-native";
 
-import { useBibleContext } from "context/BibleContext";
-import { useStorage } from "context/LocalstoreContext";
+import { useBibleContext } from "@/context/BibleContext";
+import { useStorage } from "@/context/LocalstoreContext";
 
 import { useTheme } from "@react-navigation/native";
-import BookContentModals from "components/book-content-modals";
-import BottomModal from "components/BottomModal";
-import CurrentNoteDetail from "components/CurrentNoteDetail";
-import FloatingButton from "components/FloatingButton";
-import NoteNameList from "components/home/NoteNameList";
-import SplitBottomSide from "components/SplitBottomSide";
-import SplitTopSide from "components/SplitTopSide";
-import Walkthrough from "components/Walkthrough";
+import BookContentModals from "@/components/book-content-modals";
+import BottomModal from "@/components/BottomModal";
+import CurrentNoteDetail from "@/components/CurrentNoteDetail";
+import FloatingButton from "@/components/FloatingButton";
+import NoteNameList from "@/components/home/NoteNameList";
+import SplitBottomSide from "@/components/SplitBottomSide";
+import SplitTopSide from "@/components/SplitTopSide";
+import Walkthrough from "@/components/Walkthrough";
 // import CustomHeader from "../components/home/header";
 
 import useParams from "@/hooks/useParams";
-import CustomHeader from "components/home/header";
+import CustomHeader from "@/components/home/header";
 import { useRouter } from "expo-router";
-import { HomeParams, TTheme } from "types";
+import { HomeParams, TTheme } from "@/types";
 
 // Constants
 const MIN_SPLIT_SIZE = 200;

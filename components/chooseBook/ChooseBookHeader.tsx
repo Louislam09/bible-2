@@ -1,15 +1,15 @@
 import { useTheme } from "@react-navigation/native";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
-import Icon from "components/Icon";
-import { Text, View } from "components/Themed";
-import { useBibleContext } from "context/BibleContext";
+import Icon from "@/components/Icon";
+import { Text, View } from "@/components/Themed";
+import { useBibleContext } from "@/context/BibleContext";
 import { useRouter } from "node_modules/expo-router/build";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { TTheme } from "types";
+import { TTheme } from "@/types";
 
 const ChooseBookHeader: React.FC<NativeStackHeaderProps> = (props) => {
-  const router = useRouter()
+  const router = useRouter();
   const theme = useTheme();
   const styles = getStyles(theme);
   const { toggleViewLayoutGrid, viewLayoutGrid } = useBibleContext();
@@ -24,7 +24,9 @@ const ChooseBookHeader: React.FC<NativeStackHeaderProps> = (props) => {
           <Icon style={styles.icon} name="ArrowLeft" size={24} />
         </TouchableOpacity>
       </View>
-      <Text style={{ fontSize: 22 }}>{props.options.headerTitle as string}</Text>
+      <Text style={{ fontSize: 22 }}>
+        {props.options.headerTitle as string}
+      </Text>
       <View style={styles.itemContainer}>
         <TouchableOpacity onPress={() => toggleViewLayoutGrid()}>
           <Icon

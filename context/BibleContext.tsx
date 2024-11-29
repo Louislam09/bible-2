@@ -6,8 +6,8 @@ import {
   INSERT_FAVORITE_VERSE,
   INSERT_INTO_NOTE,
   UPDATE_NOTE_BY_ID,
-} from "constants/Queries";
-import useSearch, { UseSearchHookState } from "hooks/useSearch";
+} from "@/constants/Queries";
+import useSearch, { UseSearchHookState } from "@/hooks/useSearch";
 import React, {
   createContext,
   useCallback,
@@ -18,7 +18,7 @@ import React, {
   useState,
 } from "react";
 import { Dimensions, ToastAndroid } from "react-native";
-import getCurrentDbName from "utils/getCurrentDB";
+import getCurrentDbName from "@/utils/getCurrentDB";
 import useCustomFonts from "../hooks/useCustomFonts";
 import {
   EBibleVersions,
@@ -98,8 +98,8 @@ type BibleState = {
   isBottomSideSearching: boolean;
   currentBibleLongName: string;
   noteListBottomSheetRef: React.RefObject<BottomSheetModalMethods> | null;
-  noteListPresentModalPress: () => void
-  noteListDismissModalPress: () => void
+  noteListPresentModalPress: () => void;
+  noteListDismissModalPress: () => void;
 };
 
 type BibleAction =
@@ -136,40 +136,40 @@ const defaultSearch = {
 
 const initialContext: BibleState = {
   highlightedVerses: [],
-  highlightVerse: () => { },
-  removeHighlistedVerse: () => { },
-  clearHighlights: () => { },
+  highlightVerse: () => {},
+  removeHighlistedVerse: () => {},
+  clearHighlights: () => {},
   selectBibleVersion: (version: string) => {
     return new Promise((resolve) => resolve());
   },
-  onSaveNote: () => { },
-  onUpdateNote: () => { },
-  onDeleteNote: () => { },
-  selectFont: () => { },
-  selectTheme: () => { },
-  toggleCopyMode: () => { },
-  toggleSplitMode: () => { },
-  toggleBottomSideSearching: (value: boolean) => { },
-  decreaseFontSize: () => { },
+  onSaveNote: () => {},
+  onUpdateNote: () => {},
+  onDeleteNote: () => {},
+  selectFont: () => {},
+  selectTheme: () => {},
+  toggleCopyMode: () => {},
+  toggleSplitMode: () => {},
+  toggleBottomSideSearching: (value: boolean) => {},
+  decreaseFontSize: () => {},
   toggleFavoriteVerse: async ({
     bookNumber,
     chapter,
     verse,
     isFav,
-  }: IFavoriteVerse) => { },
-  setVerseToCompare: (verse: number) => { },
-  setChapterLengthNumber: (chapterLengthNumber: number) => { },
-  setShouldLoop: (shouldLoop: boolean) => { },
-  setChapterVerses: (currentChapterVerses: IBookVerse[]) => { },
-  setCurrentNoteId: (noteId: number | null) => { },
-  setverseInStrongDisplay: (verse: number) => { },
-  onAddToNote: (text: string) => { },
-  increaseFontSize: () => { },
-  toggleViewLayoutGrid: () => { },
-  setLocalData: () => { },
-  setStrongWord: () => { },
-  performSearch: () => { },
-  setSearchQuery: () => { },
+  }: IFavoriteVerse) => {},
+  setVerseToCompare: (verse: number) => {},
+  setChapterLengthNumber: (chapterLengthNumber: number) => {},
+  setShouldLoop: (shouldLoop: boolean) => {},
+  setChapterVerses: (currentChapterVerses: IBookVerse[]) => {},
+  setCurrentNoteId: (noteId: number | null) => {},
+  setverseInStrongDisplay: (verse: number) => {},
+  onAddToNote: (text: string) => {},
+  increaseFontSize: () => {},
+  toggleViewLayoutGrid: () => {},
+  setLocalData: () => {},
+  setStrongWord: () => {},
+  performSearch: () => {},
+  setSearchQuery: () => {},
   selectedFont: TFont.Roboto,
   currentBibleVersion: EBibleVersions.BIBLE,
   isCopyMode: false,
@@ -193,8 +193,8 @@ const initialContext: BibleState = {
   currentBibleLongName: "Reina Valera 1960",
   currentChapterVerses: [],
   noteListBottomSheetRef: null,
-  noteListPresentModalPress: () => { },
-  noteListDismissModalPress: () => { },
+  noteListPresentModalPress: () => {},
+  noteListDismissModalPress: () => {},
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);

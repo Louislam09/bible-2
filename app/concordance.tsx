@@ -1,17 +1,17 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import AnimatedDropdown from "components/AnimatedDropdown";
-import RenderVerse, { TItem } from "components/concordance/RenderVerse";
-import Icon from "components/Icon";
-import { Text } from "components/Themed";
-import { getDatabaseQueryKey } from "constants/databaseNames";
-import { QUERY_BY_DB } from "constants/Queries";
-import WORDS, { TWord } from "constants/words";
-import { useBibleContext } from "context/BibleContext";
-import { useDBContext } from "context/databaseContext";
-import { useCustomTheme } from "context/ThemeContext";
-import useDebounce from "hooks/useDebounce";
+import AnimatedDropdown from "@/components/AnimatedDropdown";
+import RenderVerse, { TItem } from "@/components/concordance/RenderVerse";
+import Icon from "@/components/Icon";
+import { Text } from "@/components/Themed";
+import { getDatabaseQueryKey } from "@/constants/databaseNames";
+import { QUERY_BY_DB } from "@/constants/Queries";
+import WORDS, { TWord } from "@/constants/words";
+import { useBibleContext } from "@/context/BibleContext";
+import { useDBContext } from "@/context/databaseContext";
+import { useCustomTheme } from "@/context/ThemeContext";
+import useDebounce from "@/hooks/useDebounce";
 import { useRouter } from "node_modules/expo-router/build";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -22,7 +22,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { RootStackScreenProps, Screens, TTheme } from "types";
+import { RootStackScreenProps, Screens, TTheme } from "@/types";
 
 const LETTERS = [
   "A",
@@ -146,7 +146,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
       }
     })();
 
-    return () => { };
+    return () => {};
   }, [myBibleDB, selected]);
 
   const onWordItemClick = (item: TWord) => {
@@ -310,16 +310,16 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
             data={
               debouncedSearchText
                 ? filterData.filter(
-                  (x: any) =>
-                    x.name_lower.indexOf(
-                      debouncedSearchText.toLowerCase()
-                    ) !== -1
-                )
-                : filterData
-                  .filter(
-                    (x) => x.first_letter === randomLetter.toLowerCase()
+                    (x: any) =>
+                      x.name_lower.indexOf(
+                        debouncedSearchText.toLowerCase()
+                      ) !== -1
                   )
-                  .sort()
+                : filterData
+                    .filter(
+                      (x) => x.first_letter === randomLetter.toLowerCase()
+                    )
+                    .sort()
             }
             renderItem={({ item, index }) => (
               <RenderWordItem

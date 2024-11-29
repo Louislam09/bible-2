@@ -6,7 +6,7 @@ import {
   PanResponderInstance,
   useWindowDimensions,
 } from "react-native";
-import { TTheme } from "types";
+import { TTheme } from "@/types";
 
 interface UseResizableBoxProps {
   theme: TTheme;

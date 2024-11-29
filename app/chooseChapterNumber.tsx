@@ -2,7 +2,7 @@ import { DB_BOOK_CHAPTER_NUMBER } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
 import useParams from "@/hooks/useParams";
 import { ChooseChapterNumberParams } from "@/types";
-import ChooseFromListScreen from "components/chooseFromListScreen";
+import ChooseFromListScreen from "@/components/chooseFromListScreen";
 import { Stack } from "expo-router";
 import { Fragment, useMemo } from "react";
 

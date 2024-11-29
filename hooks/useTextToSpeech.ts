@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
 import * as Speech from "expo-speech";
-import Voices from "constants/Voices";
-import { SpeechVoice } from "types";
-import { useStorage } from "context/LocalstoreContext";
+import Voices from "@/constants/Voices";
+import { SpeechVoice } from "@/types";
+import { useStorage } from "@/context/LocalstoreContext";
 
 type UseTextToSpeech = {
   speak: (

@@ -1,10 +1,10 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import { Text } from "components/Themed";
-import WordDefinition from "components/WordDefinition";
-import Characters from "constants/Characters";
-import { useCustomTheme } from "context/ThemeContext";
+import { Text } from "@/components/Themed";
+import WordDefinition from "@/components/WordDefinition";
+import Characters from "@/constants/Characters";
+import { useCustomTheme } from "@/context/ThemeContext";
 import { useRouter } from "node_modules/expo-router/build";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -15,8 +15,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { RootStackScreenProps, TTheme } from "types";
-import removeAccent from "utils/removeAccent";
+import { RootStackScreenProps, TTheme } from "@/types";
+import removeAccent from "@/utils/removeAccent";
 
 const RenderItem = ({ item, index, theme, onItemClick, styles }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -154,11 +154,11 @@ const Character: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
             data={
               searchText
                 ? filterData.filter(
-                  (x: any) =>
-                    removeAccent(x.topic).indexOf(
-                      searchText.toLowerCase()
-                    ) !== -1
-                )
+                    (x: any) =>
+                      removeAccent(x.topic).indexOf(
+                        searchText.toLowerCase()
+                      ) !== -1
+                  )
                 : filterData
             }
             renderItem={({ item, index }) => (
