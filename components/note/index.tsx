@@ -1,13 +1,18 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { useTheme } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
 import Animation from "@/components/Animation";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
+import { IVerseItem, Screens, TTheme } from "@/types";
+import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
+import removeAccent from "@/utils/removeAccent";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useTheme } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
+import { Stack, useNavigation } from "expo-router";
 import React, {
+  Fragment,
   useCallback,
   useEffect,
   useMemo,
@@ -24,10 +29,6 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import { IVerseItem, Screens, TTheme } from "@/types";
-import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
-import removeAccent from "@/utils/removeAccent";
-import { Stack, useNavigation } from "expo-router";
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -202,11 +203,9 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
     navigation.navigate(Screens.NoteDetail, { noteId: id, isNewNote: false });
   }, []);
 
-  const NoteHeader = () => {
+  const NoteHero = () => {
     return (
       <View style={[styles.noteHeader]}>
-        <Stack.Screen options={{ headerShown: true, headerTitle: '' }} />
-
         <Text style={[styles.noteListTitle]}>Mis Notas</Text>
         <Text
           style={[
@@ -254,8 +253,17 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
   };
 
   return (
+    <Fragment>
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerTitle: '',
+          // header: () => <NoteHeader />,
+          animation: "slide_from_left",
+        }}
+      />
     <TouchableWithoutFeedback
-      style={{ flex: 1 }}
+        style={{ flex: 1 }}
       onPress={() => Keyboard.dismiss()}
     >
       <View
@@ -265,7 +273,7 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
           backgroundColor: theme.dark ? theme.colors.background : "#eee",
         }}
       >
-        {NoteHeader()}
+          {NoteHero()}
         <FlashList
           contentContainerStyle={styles.contentContainerStyle}
           ref={flatListRef}
@@ -312,6 +320,7 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
         </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
+    </Fragment>
   );
 };
 
