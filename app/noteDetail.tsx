@@ -1,4 +1,3 @@
-import { useTheme } from "@react-navigation/native";
 import Icon from "@/components/Icon";
 import MyRichEditor from "@/components/RichTextEditor";
 import { Text, View } from "@/components/Themed";
@@ -6,6 +5,16 @@ import { GET_NOTE_BY_ID } from "@/constants/Queries";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
 import useDebounce from "@/hooks/useDebounce";
+import useParams from '@/hooks/useParams';
+import {
+  EViewMode,
+  Screens,
+  TNote,
+  TTheme
+} from "@/types";
+import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
+import { useTheme } from "@react-navigation/native";
+import { Stack, useNavigation } from 'expo-router';
 import React, {
   useCallback,
   useEffect,
@@ -24,26 +33,22 @@ import {
   ToastAndroid,
   TouchableOpacity,
 } from "react-native";
-import {
-  EViewMode,
-  RootStackScreenProps,
-  Screens,
-  TNote,
-  TTheme,
-} from "@/types";
-import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
 
-const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
-  route,
-  navigation,
+type NoteDetailProps = {}
+type NoteDetailParams = { noteId: number | null; isNewNote: boolean }
+
+
+const NoteDetail: React.FC<NoteDetailProps> = ({
 }) => {
   const theme = useTheme();
+  const navigation = useNavigation()
   const { myBibleDB, executeSql } = useDBContext();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const { onSaveNote, onUpdateNote, addToNoteText, onAddToNote } =
     useBibleContext();
 
-  const { noteId, isNewNote } = route.params as any;
+  const routeParams = useParams<NoteDetailParams>();
+  const { noteId, isNewNote } = routeParams;
 
   const rotation = useRef(new Animated.Value(0)).current;
   const typingTimeoutRef = useRef<any>(null);
@@ -81,7 +86,7 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
   useEffect(() => {
     const fetchNote = async () => {
       try {
-        if (noteId === undefined || noteId === null || isNewNote) {
+        if (noteId === undefined || noteId === null || isNewNote || !isView) {
           setLoading(false);
           return;
         }
@@ -99,7 +104,7 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
       }
     };
     fetchNote();
-  }, [noteId, isNewNote]);
+  }, [noteId, isNewNote, isView]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -296,6 +301,7 @@ const NoteDetail: React.FC<RootStackScreenProps<"NoteDetail">> = ({
 
   return (
     <View style={styles.container}>
+      <Stack.Screen options={{ headerShown: true }} />
       <Text style={styles.dateLabel}>
         {formatDateShortDayMonth(
           isNewNote

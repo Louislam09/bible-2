@@ -27,7 +27,7 @@ import Walkthrough from "@/components/Walkthrough";
 
 import useParams from "@/hooks/useParams";
 import CustomHeader from "@/components/home/header";
-import { useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { HomeParams, TTheme } from "@/types";
 
 // Constants
@@ -46,7 +46,6 @@ type HomeScreenProps = {};
 const HomeScreen: React.FC<HomeScreenProps> = () => {
   const router = useRouter();
   const routeParams = useParams<HomeParams>();
-
   const theme = useTheme();
   const { storedData } = useStorage();
   const { noteListBottomSheetRef } = useBibleContext();
@@ -205,6 +204,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
 
   return (
     <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
+      <Stack.Screen options={{ headerShown: false }} />
       <CustomHeader refs={componentRefs} />
       <View style={[styles.container, !isPortrait && { flexDirection: "row" }]}>
         <SplitTopSide

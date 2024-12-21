@@ -59,7 +59,6 @@ type TSection = {
 };
 
 const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
-  navigation,
 }) => {
   const router = useRouter();
   const theme = useTheme();

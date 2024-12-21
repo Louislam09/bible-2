@@ -1,5 +1,5 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "@/components/Animation";
 import Icon from "@/components/Icon";
@@ -27,6 +27,7 @@ import {
 import { IVerseItem, Screens, TTheme } from "@/types";
 import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
 import removeAccent from "@/utils/removeAccent";
+import { Stack, useNavigation } from "expo-router";
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -124,9 +125,10 @@ const RenderItem = ({
   );
 };
 
-const NoteList = ({ data, setShouldFetch }: TListVerse) => {
+const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
   const theme = useTheme();
   const navigation = useNavigation();
+
   const { printToFile } = usePrintAndShare();
   const { onDeleteNote, addToNoteText, currentBibleLongName } =
     useBibleContext();
@@ -203,6 +205,8 @@ const NoteList = ({ data, setShouldFetch }: TListVerse) => {
   const NoteHeader = () => {
     return (
       <View style={[styles.noteHeader]}>
+        <Stack.Screen options={{ headerShown: true, headerTitle: '' }} />
+
         <Text style={[styles.noteListTitle]}>Mis Notas</Text>
         <Text
           style={[
@@ -457,4 +461,4 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
   });
 
-export default NoteList;
+export default NotesPage;

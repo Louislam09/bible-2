@@ -17,6 +17,7 @@ import {
 } from "react-native";
 import { RootStackScreenProps, TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
+import { Stack } from 'expo-router';
 
 const RenderItem = ({ item, index, theme, onItemClick, styles }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -61,7 +62,9 @@ const RenderItem = ({ item, index, theme, onItemClick, styles }: any) => {
   );
 };
 
-const Character: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
+type CharacterProps = {};
+
+const Character: React.FC<CharacterProps> = () => {
   const [selected, setSelected] = useState<any>(null);
   const [filterData] = useState(Characters);
   const theme = useTheme();
@@ -78,6 +81,7 @@ const Character: React.FC<RootStackScreenProps<"Notes"> | any> = (props) => {
   const NoteHeader = () => {
     return (
       <View style={[styles.noteHeader]}>
+        <Stack.Screen options={{ headerShown: true, headerTitle: "" }} />
         <Text style={[styles.noteListTitle]}>Personajes Biblicos</Text>
         <View style={styles.searchContainer}>
           <Ionicons

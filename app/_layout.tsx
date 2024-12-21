@@ -16,6 +16,9 @@ import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NativeStackNavigationOptions } from "react-native-screens/lib/typescript/native-stack/types";
 import { Screens, ScreensName } from "@/types";
+import Constants from "expo-constants";
+import { View } from '@/components/Themed';
+import { useTheme } from '@react-navigation/native';
 
 type TScreensName = { [key in Screens]: string };
 
@@ -38,6 +41,18 @@ const screenAnimations: TScreensName = {
   [Screens.Song]: "slide_from_right",
   [Screens.Concordance]: "slide_from_right",
 };
+
+const StatusBarBackground = ({ children }: any) => {
+  const theme = useTheme();
+
+  const styling = {
+    flex: 1,
+    paddingTop: Constants.statusBarHeight,
+    backgroundColor: theme.colors.notification + "50",
+  };
+  return <View style={[styling, { width: "100%" }]}>{children}</View>;
+};
+
 
 const App = () => {
   const isLoadingComplete = useCachedResources();
@@ -80,6 +95,7 @@ const App = () => {
           <DatabaseProvider>
             <BibleProvider>
               <MyThemeProvider>
+                <StatusBarBackground>
                 <GestureHandlerRootView style={{ flex: 1 }}>
                   <BottomSheetModalProvider>
                     <ModalProvider>
@@ -88,6 +104,7 @@ const App = () => {
                     </ModalProvider>
                   </BottomSheetModalProvider>
                 </GestureHandlerRootView>
+                </StatusBarBackground>
               </MyThemeProvider>
             </BibleProvider>
           </DatabaseProvider>

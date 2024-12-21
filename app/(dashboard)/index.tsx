@@ -288,7 +288,7 @@ const getStyles = ({ colors, dark }: TTheme, isPortrait: boolean) =>
       display: "flex",
       flex: 1,
       alignItems: "center",
-      justifyContent: "center",
+      justifyContent: "center"
     },
     optionContainer: {
       flex: 1,
