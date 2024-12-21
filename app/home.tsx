@@ -29,6 +29,7 @@ import useParams from "@/hooks/useParams";
 import CustomHeader from "@/components/home/header";
 import { Stack, useRouter } from "expo-router";
 import { HomeParams, TTheme } from "@/types";
+import StatusBarBackground from '@/components/StatusBarBackground';
 
 // Constants
 const MIN_SPLIT_SIZE = 200;
@@ -203,72 +204,74 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   }, [router]);
 
   return (
-    <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
-      <Stack.Screen options={{ headerShown: false }} />
-      <CustomHeader refs={componentRefs} />
-      <View style={[styles.container, !isPortrait && { flexDirection: "row" }]}>
-        <SplitTopSide
-          refs={componentRefs}
-          {...{
-            ...initialState,
-            height: topHeight,
-            width: topWidth,
-            router,
-          }}
+    <StatusBarBackground>
+      <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
+        <Stack.Screen options={{ headerShown: false }} />
+        <CustomHeader refs={componentRefs} />
+        <View style={[styles.container, !isPortrait && { flexDirection: "row" }]}>
+          <SplitTopSide
+            refs={componentRefs}
+            {...{
+              ...initialState,
+              height: topHeight,
+              width: topWidth,
+              router,
+            }}
+          />
+          {isSplitActived && (
+            <>
+              <Animated.View
+                {...panResponder.panHandlers}
+                style={[styles.slider, { backgroundColor }]}
+              >
+                <View style={styles.sliderHandle} />
+              </Animated.View>
+              <SplitBottomSide
+                refs={componentRefs}
+                {...{
+                  book: initialState.bottomSideBook,
+                  chapter: initialState.bottomSideChapter,
+                  verse: initialState.bottomSideVerse,
+                  height: Animated.subtract(
+                    new Animated.Value(screenHeight),
+                    topHeight
+                  ),
+                  width: Animated.subtract(
+                    new Animated.Value(SCREEN_WIDTH),
+                    topWidth
+                  ),
+                  router,
+                }}
+              />
+            </>
+          )}
+        </View>
+        <BookContentModals
+          book={initialState.book}
+          chapter={initialState.chapter}
         />
-        {isSplitActived && (
-          <>
-            <Animated.View
-              {...panResponder.panHandlers}
-              style={[styles.slider, { backgroundColor }]}
-            >
-              <View style={styles.sliderHandle} />
-            </Animated.View>
-            <SplitBottomSide
-              refs={componentRefs}
-              {...{
-                book: initialState.bottomSideBook,
-                chapter: initialState.bottomSideChapter,
-                verse: initialState.bottomSideVerse,
-                height: Animated.subtract(
-                  new Animated.Value(screenHeight),
-                  topHeight
-                ),
-                width: Animated.subtract(
-                  new Animated.Value(SCREEN_WIDTH),
-                  topWidth
-                ),
-                router,
-              }}
-            />
-          </>
-        )}
-      </View>
-      <BookContentModals
-        book={initialState.book}
-        chapter={initialState.chapter}
-      />
 
-      <FloatingButton navigation={router}>
-        <CurrentNoteDetail />
-      </FloatingButton>
-      <BottomModal
-        shouldScroll
-        justOneSnap
-        justOneValue={["50%"]}
-        startAT={0}
-        ref={noteListBottomSheetRef}
-      >
-        <NoteNameList {...{ theme }} />
-      </BottomModal>
-      {componentRefs.book.current && routeParams.isTour === true && (
-        <Walkthrough
-          steps={tutorialSteps}
-          setStep={setStepIndex}
-          currentStep={stepIndex}
-        />
-      )}
-    </SafeAreaView>
+        <FloatingButton navigation={router}>
+          <CurrentNoteDetail />
+        </FloatingButton>
+        <BottomModal
+          shouldScroll
+          justOneSnap
+          justOneValue={["50%"]}
+          startAT={0}
+          ref={noteListBottomSheetRef}
+        >
+          <NoteNameList {...{ theme }} />
+        </BottomModal>
+        {componentRefs.book.current && routeParams.isTour === true && (
+          <Walkthrough
+            steps={tutorialSteps}
+            setStep={setStepIndex}
+            currentStep={stepIndex}
+          />
+        )}
+      </SafeAreaView>
+    </StatusBarBackground>
   );
 };
 
