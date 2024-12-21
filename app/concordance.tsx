@@ -12,7 +12,6 @@ import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
 import { useCustomTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
-import { useRouter } from "node_modules/expo-router/build";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
@@ -23,6 +22,7 @@ import {
   View,
 } from "react-native";
 import { RootStackScreenProps, Screens, TTheme } from "@/types";
+import { Stack, useNavigation, useRouter } from 'expo-router';
 
 const LETTERS = [
   "A",
@@ -103,7 +103,9 @@ const RenderWordItem = ({
   );
 };
 
-const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
+type ConcordanceProps = {}
+
+const Concordance: React.FC<ConcordanceProps> = () => {
   const { myBibleDB, executeSql } = useDBContext();
   const { fontSize, currentBibleVersion } = useBibleContext();
   const [selected, setSelected] = useState<any>(null);
@@ -111,6 +113,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
   const theme = useTheme();
   const { schema } = useCustomTheme();
   const router = useRouter();
+  const navigation = useNavigation()
   const styles = getStyles(theme);
   const [searchText, setSearchText] = useState<any>(null);
   const [randomLetter, setRandomLetter] = useState<string>("");
@@ -171,16 +174,12 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
     );
   }, [verseList, selectedFilterOption]);
 
-  const show = false;
-
   const ConcordanceHeader = () => {
     return (
       <View style={[styles.noteHeader]}>
-        {
           <Text style={[styles.noteListTitle]}>
             Concordancia {"\n"} Escritural
-          </Text>
-        }
+        </Text>
         <View style={styles.searchContainer}>
           <Ionicons
             style={styles.searchIcon}
@@ -246,6 +245,7 @@ const Concordance: React.FC<RootStackScreenProps<"Concordance"> | any> = () => {
         backgroundColor: theme.dark ? theme.colors.background : "#eee",
       }}
     >
+      <Stack.Screen options={{ headerShown: true, headerTitle: '' }} />
       <>
         {!showVerseList && ConcordanceHeader()}
         {showVerseList && (

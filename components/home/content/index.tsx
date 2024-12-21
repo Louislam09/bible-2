@@ -1,4 +1,4 @@
-import { useRoute, useTheme } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { Dimensions, StyleSheet } from "react-native";
 import { DB_BOOK_NAMES } from "../../../constants/BookNames";
@@ -9,6 +9,7 @@ import { Text, View } from "@/components/Themed";
 import { getDatabaseQueryKey } from "@/constants/databaseNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { useStorage } from "@/context/LocalstoreContext";
+import useParams from '@/hooks/useParams';
 import useReadingTime from "@/hooks/useReadTime";
 import { getChapterTextRaw } from "@/utils/getVerseTextRaw";
 import { QUERY_BY_DB } from "../../../constants/Queries";
@@ -46,8 +47,8 @@ const BookContent: FC<BookContentInterface> = ({
     highlightedVerses,
   } = useBibleContext();
   const { myBibleDB, executeSql } = useDBContext();
-  const route = useRoute();
-  const { isHistory } = route.params as HomeParams;
+  const params = useParams<HomeParams>()
+  const { isHistory } = params;
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>({});
   const [chapterText, setChapterText] = useState<string>("");

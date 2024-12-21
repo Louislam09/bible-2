@@ -1,11 +1,12 @@
+import { Text } from "@/components/Themed";
+import Characters from "@/constants/Characters";
+import { useCustomTheme } from "@/context/ThemeContext";
+import { TTheme } from "@/types";
+import removeAccent from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import { Text } from "@/components/Themed";
-import WordDefinition from "@/components/WordDefinition";
-import Characters from "@/constants/Characters";
-import { useCustomTheme } from "@/context/ThemeContext";
-import { useRouter } from "node_modules/expo-router/build";
+import { Stack, useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -15,9 +16,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { RootStackScreenProps, TTheme } from "@/types";
-import removeAccent from "@/utils/removeAccent";
-import { Stack } from 'expo-router';
 
 const RenderItem = ({ item, index, theme, onItemClick, styles }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -73,15 +71,13 @@ const Character: React.FC<CharacterProps> = () => {
   const styles = getStyles(theme);
   const [searchText, setSearchText] = useState<any>(null);
 
-  const onItemClick = (topic: any) => {
-    const ch = filterData.find((x) => x.topic == topic);
-    setSelected(ch);
+  const handleCharacterPress = (character: string) => {
+    router.push({ pathname: `/${character}` });
   };
 
   const NoteHeader = () => {
     return (
       <View style={[styles.noteHeader]}>
-        <Stack.Screen options={{ headerShown: true, headerTitle: "" }} />
         <Text style={[styles.noteListTitle]}>Personajes Biblicos</Text>
         <View style={styles.searchContainer}>
           <Ionicons
@@ -116,23 +112,6 @@ const Character: React.FC<CharacterProps> = () => {
     return () => backHandler.remove();
   }, [selected]);
 
-  const handleCustomBack = () => {
-    if (selected?.topic) {
-      setSelected(null);
-    } else {
-      router.back();
-    }
-  };
-
-  React.useLayoutEffect(() => {
-    // navigation.setOptions({
-    //   headerLeft: () => (
-    //     <TouchableOpacity onPress={handleCustomBack}>
-    //       <Icon name="ArrowLeft" color={theme.colors.text} size={28} />
-    //     </TouchableOpacity>
-    //   ),
-    // });
-  }, [selected]);
 
   return (
     <View
@@ -142,41 +121,36 @@ const Character: React.FC<CharacterProps> = () => {
         backgroundColor: theme.dark ? theme.colors.background : "#eee",
       }}
     >
-      {selected ? (
-        <WordDefinition subTitle="Historia" wordData={selected} />
-      ) : (
-        <>
-          {NoteHeader()}
-          <FlashList
-            key={schema}
-            contentContainerStyle={{
-              backgroundColor: theme.dark ? theme.colors.background : "#eee",
-              paddingVertical: 20,
-            }}
-            decelerationRate={"normal"}
-            estimatedItemSize={135}
-            data={
-              searchText
-                ? filterData.filter(
-                    (x: any) =>
-                      removeAccent(x.topic).indexOf(
-                        searchText.toLowerCase()
-                      ) !== -1
-                  )
-                : filterData
-            }
-            renderItem={({ item, index }) => (
-              <RenderItem
-                {...{ theme, styles, onItemClick }}
-                item={item}
-                index={index}
-              />
-            )}
-            keyExtractor={(item: any, index: any) => `note-${index}`}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
+      <Stack.Screen options={{ headerShown: true, headerTitle: "" }} />
+      {NoteHeader()}
+      <FlashList
+        key={schema}
+        contentContainerStyle={{
+          backgroundColor: theme.dark ? theme.colors.background : "#eee",
+          paddingVertical: 20,
+        }}
+        decelerationRate={"normal"}
+        estimatedItemSize={135}
+        data={
+          searchText
+            ? filterData.filter(
+              (x: any) =>
+                removeAccent(x.topic).indexOf(
+                  searchText.toLowerCase()
+                ) !== -1
+            )
+            : filterData
+        }
+        renderItem={({ item, index }) => (
+          <RenderItem
+            {...{ theme, styles, onItemClick: handleCharacterPress }}
+            item={item}
+            index={index}
           />
-        </>
-      )}
+        )}
+        keyExtractor={(item: any, index: any) => `note-${index}`}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+      />
     </View>
   );
 };

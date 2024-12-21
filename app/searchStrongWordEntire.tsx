@@ -3,14 +3,15 @@ import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from "@/constants/Queries";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
-import { useRouter } from "node_modules/expo-router/build";
 import React, { useEffect, useMemo, useState } from "react";
 import { Animated, BackHandler, StyleSheet, Text } from "react-native";
-import { IVerseItem, RootStackScreenProps, TTheme } from "@/types";
-import AnimatedDropdown from "./AnimatedDropdown";
-import Icon from "./Icon";
-import StrongSearchContent from "./StrongSearchContent";
-import { View } from "./Themed";
+import { IVerseItem, TTheme } from "@/types";
+import AnimatedDropdown from "../components/AnimatedDropdown";
+import Icon from "../components/Icon";
+import StrongSearchContent from "../components/StrongSearchContent";
+import { View } from "../components/Themed";
+import useParams from '@/hooks/useParams';
+import { Stack, useRouter } from 'expo-router';
 
 enum CognateBook {
   NEW_VOW = "newVow",
@@ -22,11 +23,13 @@ const bookFilter = {
   newVow: [470, 730],
 };
 
-const SearchStrongWordEntire: React.FC<
-  RootStackScreenProps<"StrongSearchEntire">
-> = ({ route }) => {
+type SearchStrongWordEntireProps = {}
+type SearchStrongWordEntireParams = { paramCode: string }
+
+const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
   const router = useRouter();
-  const { paramCode } = route.params as any;
+  const params = useParams<SearchStrongWordEntireParams>()
+  const { paramCode } = params;
   const theme = useTheme();
   const styles = getStyles(theme);
   const { myBibleDB, executeSql } = useDBContext();
@@ -75,7 +78,7 @@ const SearchStrongWordEntire: React.FC<
       setData((searchData as IVerseItem[]) || []);
     })();
 
-    return () => {};
+    return () => { };
   }, [myBibleDB, code, selectedFilterOption]);
 
   useEffect(() => {
@@ -100,6 +103,7 @@ const SearchStrongWordEntire: React.FC<
         paddingTop: 10,
       }}
     >
+      <Stack.Screen options={{ headerShown: true }} />
       <View style={{ paddingHorizontal: 15 }}>
         <View
           style={[

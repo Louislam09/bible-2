@@ -36,7 +36,7 @@ const WordDefinition = ({
   const navigation = _navigation ? _navigation : useNavigation();
   const voice = Voices[randomVoice];
   const { speak, stop, isSpeaking } = useTextToSpeech({ voice });
-  const { theme: themeScheme } = useCustomTheme();
+  const { schema: themeScheme, } = useCustomTheme();
   const theme = _theme ? _theme : useTheme();
   const styles = getStyles(theme, themeScheme === "dark");
   const webViewRef = useRef<WebView>(null);

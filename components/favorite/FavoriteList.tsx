@@ -16,6 +16,7 @@ import {
 import { IVerseItem, Screens, TTheme } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { Stack } from 'expo-router';
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -76,7 +77,7 @@ const FavoriteList = ({ data }: TListVerse) => {
         activeOpacity={0.9}
         onPress={() => onVerseClick(item)}
       >
-        <DecoratorLine color="#ffd41d" theme={theme} />
+        {/* <DecoratorLine color="#ffd41d" theme={theme} /> */}
         <View style={styles.cardContainer}>
           <View style={styles.headerContainer}>
             <Text
@@ -138,6 +139,7 @@ const FavoriteList = ({ data }: TListVerse) => {
 
   return (
     <View key={orientation + theme.dark} style={{ flex: 1 }}>
+      <Stack.Screen options={{ headerShown: true }} />
       <FlashList
         ref={flatListRef}
         ListHeaderComponent={SearchedHeader}

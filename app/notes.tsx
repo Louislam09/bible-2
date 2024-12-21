@@ -6,9 +6,11 @@ import { TNote } from "@/types";
 import React, { useEffect, useState } from "react";
 
 type NotesProps = {};
+type NoteParam = { shouldRefresh: boolean }
+
 const Notes: React.FC<NotesProps> = ({ }) => {
-  const routeParams = useParams<any>();
-  const { shouldRefresh } = routeParams as any;
+  const routeParams = useParams<NoteParam>();
+  const { shouldRefresh } = routeParams;
   const { myBibleDB, executeSql } = useDBContext();
   const [data, setData] = useState<TNote | any>(null);
   const [shouldFetch, setShouldFetch] = useState(false);

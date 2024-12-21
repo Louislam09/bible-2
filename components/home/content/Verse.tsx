@@ -34,6 +34,7 @@ import {
 } from "react-native";
 import copyToClipboard from "@/utils/copyToClipboard";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
+import useParams from '@/hooks/useParams';
 
 type VerseProps = TVerse & {
   isSplit: boolean;
@@ -124,8 +125,8 @@ const Verse: React.FC<VerseProps> = ({
   estimatedReadingTime,
 }) => {
   const navigation = useNavigation();
-  const route = useRoute();
-  const { isVerseTour } = route.params as HomeParams;
+  const params = useParams<HomeParams>()
+  const { isVerseTour } = params;
   const {
     highlightVerse,
     highlightedVerses,

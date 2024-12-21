@@ -38,7 +38,7 @@ export enum Screens {
   Onboarding = "onboarding",
   Character = "character",
   Song = "song",
-  StrongSearchEntire = "strongSearchEntire",
+  StrongSearchEntire = "searchStrongWordEntire",
   DictionarySearch = "dictionary",
   NoteDetail = "noteDetail",
 }

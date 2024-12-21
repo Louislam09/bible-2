@@ -1,27 +1,21 @@
-import { useRoute, useTheme } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 import React, { FC, useCallback, useMemo, useRef } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { useBibleContext } from "../../../context/BibleContext";
 
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import BottomModal from "@/components/BottomModal";
 import Icon from "@/components/Icon";
 import { iconSize } from "@/constants/size";
 import { useStorage } from "@/context/LocalstoreContext";
-import { useRouter } from "expo-router";
 import useInstalledBibles from "@/hooks/useInstalledBible";
-import {
-  EBibleVersions,
-  HomeParams,
-  Screens,
-  TIcon,
-  TRoute,
-  TTheme,
-} from "../../../types";
-import { Text, View } from "../../Themed";
+import useParams from '@/hooks/useParams';
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useNavigation, useRouter } from "expo-router";
 import ProgressBar from "../footer/ProgressBar";
 import Settings from "./Settings";
 import VersionList from "./VersionList";
+import { EBibleVersions, HomeParams, Screens, TIcon, TTheme } from '@/types';
+import { View, Text } from '@/components/Themed';
 
 interface HeaderInterface {
   refs: any;
@@ -50,11 +44,11 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
       getCurrentItem,
     },
   } = useStorage();
-  const route = useRoute<TRoute>();
-  const { book, chapter = 1, verse } = route.params as HomeParams;
+  const params = useParams<HomeParams>()
+  const { book } = params;
   const theme = useTheme();
   const router = useRouter();
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
 
   const styles = getStyles(theme);
   const headerIconSize = iconSize;
@@ -76,7 +70,7 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
 
   const goSearchScreen = () => {
     clearHighlights();
-    router.navigate(Screens.Search, { book: book });
+    navigation.navigate(Screens.Search, { book: book });
   };
 
   const moveBackInHistory = () => {
