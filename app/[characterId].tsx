@@ -11,11 +11,16 @@ const CharacterDetails = () => {
     const wordData = Characters.find((x) => x.topic == characterId) as DictionaryData;
 
     return (
-        <Fragment>
-            <Stack.Screen options={{ headerShown: true, headerTitle: characterId }} />
-            <WordDefinition subTitle="Historia" wordData={wordData} />
-        </Fragment>
-    )
+      <Fragment>
+        <Stack.Screen
+          options={{
+            headerShown: true,
+            headerTitle: characterId,
+          }}
+        />
+        <WordDefinition subTitle='Historia' wordData={wordData} />
+      </Fragment>
+    );
 };
 
 const styles = StyleSheet.create({

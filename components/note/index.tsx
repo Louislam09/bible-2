@@ -258,68 +258,67 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
         options={{
           headerShown: true,
           headerTitle: '',
-          // header: () => <NoteHeader />,
-          animation: "slide_from_left",
+          animation: 'slide_from_left',
         }}
       />
-    <TouchableWithoutFeedback
+      <TouchableWithoutFeedback
         style={{ flex: 1 }}
-      onPress={() => Keyboard.dismiss()}
-    >
-      <View
-        style={{
-          flex: 1,
-          padding: 5,
-          backgroundColor: theme.dark ? theme.colors.background : "#eee",
-        }}
+        onPress={() => Keyboard.dismiss()}
       >
-          {NoteHero()}
-        <FlashList
-          contentContainerStyle={styles.contentContainerStyle}
-          ref={flatListRef}
-          decelerationRate={"normal"}
-          estimatedItemSize={135}
-          data={getData}
-          renderItem={({ item, index }) => (
-            <RenderItem
-              {...{
-                styles,
-                onOpenNoteDetail,
-                warnBeforeDelete,
-                printToFile,
-                theme,
-                item,
-                index,
-              }}
-            />
-          )}
-          keyExtractor={(item: any, index: any) => `note-${index}`}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          ListEmptyComponent={ListEmptyComponent}
-          ListFooterComponent={<View style={{ paddingVertical: 30 }} />}
-        />
-        <TouchableOpacity
-          style={[
-            styles.scrollToTopButton,
-            {
-              borderWidth: 1,
-              borderColor: theme.colors.notification,
-              padding: 10,
-              borderRadius: 10,
-              backgroundColor: theme.colors.notification + "99",
-            },
-          ]}
-          onPress={onCreateNewNote}
+        <View
+          style={{
+            flex: 1,
+            padding: 5,
+            backgroundColor: theme.dark ? theme.colors.background : '#eee',
+          }}
         >
-          <Icon
-            style={[{}]}
-            color={theme.colors.text}
-            name={"Plus"}
-            size={30}
+          {NoteHero()}
+          <FlashList
+            contentContainerStyle={styles.contentContainerStyle}
+            ref={flatListRef}
+            decelerationRate={'normal'}
+            estimatedItemSize={135}
+            data={getData}
+            renderItem={({ item, index }) => (
+              <RenderItem
+                {...{
+                  styles,
+                  onOpenNoteDetail,
+                  warnBeforeDelete,
+                  printToFile,
+                  theme,
+                  item,
+                  index,
+                }}
+              />
+            )}
+            keyExtractor={(item: any, index: any) => `note-${index}`}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            ListEmptyComponent={ListEmptyComponent}
+            ListFooterComponent={<View style={{ paddingVertical: 30 }} />}
           />
-        </TouchableOpacity>
-      </View>
-    </TouchableWithoutFeedback>
+          <TouchableOpacity
+            style={[
+              styles.scrollToTopButton,
+              {
+                borderWidth: 1,
+                borderColor: theme.colors.notification,
+                padding: 10,
+                borderRadius: 10,
+                backgroundColor: theme.colors.notification + '99',
+              },
+            ]}
+            onPress={onCreateNewNote}
+          >
+            <Icon
+              style={[{}]}
+              color={theme.colors.text}
+              name={'Plus'}
+              size={30}
+            />
+          </TouchableOpacity>
+        </View>
+      </TouchableWithoutFeedback>
     </Fragment>
   );
 };

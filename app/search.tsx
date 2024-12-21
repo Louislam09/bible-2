@@ -11,8 +11,8 @@ const Search: React.FC<SearchProps> = () => {
       <Stack.Screen
         options={{
           headerShown: true,
-          header: (props) => <SearchHeader {...props} />,
-          animation: "slide_from_left",
+          header: () => <SearchHeader />,
+          animation: 'slide_from_left',
         }}
       />
       <SearchWordEntire />
