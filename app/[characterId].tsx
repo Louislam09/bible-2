@@ -7,36 +7,25 @@ import React, { Fragment } from 'react';
 import { StyleSheet } from 'react-native';
 
 const CharacterDetails = () => {
-    const { characterId } = useParams();
-    const wordData = Characters.find((x) => x.topic == characterId) as DictionaryData;
+  const { characterId } = useParams();
+  const wordData = Characters.find(
+    (x) => x.topic == characterId
+  ) as DictionaryData;
 
-    return (
-      <Fragment>
-        <Stack.Screen
-          options={{
-            headerShown: true,
-            headerTitle: characterId,
-          }}
-        />
-        <WordDefinition subTitle='Historia' wordData={wordData} />
-      </Fragment>
-    );
+  return (
+    <Fragment>
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerTitle: characterId,
+          animation: 'fade_from_bottom',
+        }}
+      />
+      <WordDefinition subTitle='Historia' wordData={wordData} />
+    </Fragment>
+  );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: '#fff',
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-    },
-    description: {
-        fontSize: 16,
-        marginTop: 10,
-    },
-});
+const styles = StyleSheet.create({});
 
 export default CharacterDetails;

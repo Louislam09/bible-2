@@ -80,7 +80,6 @@ const App = () => {
           <DatabaseProvider>
             <BibleProvider>
               <MyThemeProvider>
-                {/* <StatusBarBackground> */}
                 <GestureHandlerRootView style={{ flex: 1 }}>
                   <BottomSheetModalProvider>
                     <ModalProvider>
@@ -89,7 +88,6 @@ const App = () => {
                     </ModalProvider>
                   </BottomSheetModalProvider>
                 </GestureHandlerRootView>
-                {/* </StatusBarBackground> */}
               </MyThemeProvider>
             </BibleProvider>
           </DatabaseProvider>

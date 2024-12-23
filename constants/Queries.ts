@@ -1,6 +1,6 @@
-import { DBName } from "enums";
 import { EBibleVersions } from "@/types";
 
+export const GET_BOOKS_NAME = `SELECT * FROM books;`
 export const GET_VERSE_NUMBER_QUERY = `SELECT COUNT(v.verse) AS verse_count
 FROM books b LEFT JOIN verses v ON b.book_number = v.book_number
 WHERE b.long_name = ? AND v.chapter = ?

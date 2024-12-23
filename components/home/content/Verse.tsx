@@ -473,7 +473,7 @@ const Verse: React.FC<VerseProps> = ({
         {isFirstVerse && (
           <View style={styles.estimatedContainer}>
             <Text style={[styles.estimatedText]}>
-              <Icon size={14} name="Timer" color={theme.colors.notification} />
+              <Icon size={14} name='Timer' color={theme.colors.notification} />
               &nbsp; Tiempo de lectura {`~ ${estimatedReadingTime} min(s)\n`}
             </Text>
           </View>
@@ -489,11 +489,11 @@ const Verse: React.FC<VerseProps> = ({
           ]}
           aria-selected
           selectable={false}
-          selectionColor={theme.colors.notification || "white"}
+          selectionColor={theme.colors.notification || 'white'}
         >
           <Text style={[styles.verseNumber]}>
             {isFavorite && !isVerseHighlisted && (
-              <MaterialCommunityIcons size={14} name="star" color="#ffd41d" />
+              <MaterialCommunityIcons size={14} name='star' color='#ffd41d' />
             )}
             &nbsp;{item.verse}&nbsp;
           </Text>
@@ -511,7 +511,7 @@ const Verse: React.FC<VerseProps> = ({
                   data={validStrongList(wordAndStrongValue)}
                   highlightStyle={{
                     color: theme.colors.notification,
-                    backgroundColor: theme?.colors.notification + "30",
+                    backgroundColor: theme?.colors.notification + '30',
                     fontSize,
                   }}
                   nonHightlistedStyle={{
