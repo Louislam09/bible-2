@@ -36,12 +36,12 @@ const DownloadManager: React.FC<DownloadManagerProps> = ({}) => {
           <View style={styles.searchContainer}>
             <Ionicons
               style={styles.searchIcon}
-              name="search"
+              name='search'
               size={24}
               color={theme.colors.notification}
             />
             <TextInput
-              placeholder="Buscar un modulo..."
+              placeholder='Buscar un modulo...'
               style={[styles.noteHeaderSearchInput]}
               onChangeText={(text) => setSearchText(text)}
               value={searchText}
@@ -52,19 +52,19 @@ const DownloadManager: React.FC<DownloadManagerProps> = ({}) => {
     );
   };
 
-  useEffect(() => {
-    const backAction = () => {
-      router.back();
-      return true;
-    };
+  // useEffect(() => {
+  //   const backAction = () => {
+  //     router.back();
+  //     return true;
+  //   };
 
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
+  //   const backHandler = BackHandler.addEventListener(
+  //     "hardwareBackPress",
+  //     backAction
+  //   );
 
-    return () => backHandler.remove();
-  }, []);
+  //   return () => backHandler.remove();
+  // }, []);
 
   if (!isConnected) {
     return <NoInternetSplash theme={theme} />;
@@ -75,7 +75,7 @@ const DownloadManager: React.FC<DownloadManagerProps> = ({}) => {
       <Stack.Screen
         options={{
           headerShown: true,
-          headerTitle: "",
+          headerTitle: '',
         }}
       />
       {DownloadManagerHeader()}

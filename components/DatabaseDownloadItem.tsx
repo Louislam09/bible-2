@@ -1,24 +1,24 @@
-import { DownloadedDatabase } from "classes/Database";
 import {
   baseDownloadUrl,
   dbFileExt,
   defaultDatabases,
   getIfDatabaseNeedsDownload,
   SQLiteDirPath,
-} from "@/constants/databaseNames";
-import * as FileSystem from "expo-file-system";
-import React, { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
-import { DownloadBibleItem, TTheme } from "@/types";
-import ProgressBar from "./home/footer/ProgressBar";
-import { Text, View } from "./Themed";
+} from '@/constants/databaseNames';
+import * as FileSystem from 'expo-file-system';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet } from 'react-native';
+import { DownloadBibleItem, TTheme } from '@/types';
+import ProgressBar from './home/footer/ProgressBar';
+import { Text, View } from './Themed';
 // import { unzip } from "react-native-zip-archive";
 // @ts-ignore
-import { useBibleContext } from "@/context/BibleContext";
-import { useDBContext } from "@/context/databaseContext";
-import unzipFile from "@/utils/unzipFile";
-import DownloadButton from "./DatabaseDownloadButton";
-import Icon from "./Icon";
+import { useBibleContext } from '@/context/BibleContext';
+import { useDBContext } from '@/context/databaseContext';
+import unzipFile from '@/utils/unzipFile';
+import DownloadButton from './DatabaseDownloadButton';
+import Icon from './Icon';
+import { DownloadedDatabase } from '@/classes/Database';
 
 type DatabaseDownloadItemProps = {
   item: DownloadBibleItem;
@@ -29,7 +29,7 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [unzipProgress, setUnzipProgress] = useState("");
+  const [unzipProgress, setUnzipProgress] = useState('');
   const { size, url, storedName, name } = item;
   const styles = getStyles(theme);
   const downloadFrom = `${baseDownloadUrl}/${url}`;
@@ -103,10 +103,10 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
         <Text
           style={[
             styles.sizeText,
-            item?.disabled && { color: theme.colors.text + "70" },
+            item?.disabled && { color: theme.colors.text + '70' },
           ]}
         >
-          <Icon name="TriangleAlert" color="orange" size={16} />{" "}
+          <Icon name='TriangleAlert' color='orange' size={16} />{' '}
           <Text>{sizeInMB.toFixed(2)} MB</Text>
         </Text>
       );
@@ -116,10 +116,10 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
         <Text
           style={[
             styles.sizeText,
-            item?.disabled && { color: theme.colors.text + "70" },
+            item?.disabled && { color: theme.colors.text + '70' },
           ]}
         >
-          <Icon name="TriangleAlert" color="orange" size={16} />{" "}
+          <Icon name='TriangleAlert' color='orange' size={16} />{' '}
           {sizeInKB.toFixed(2)} KB
         </Text>
       );
@@ -138,11 +138,11 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
 
   return (
     <View style={styles.itemContainer}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Text
           style={[
             { color: theme.colors.notification },
-            item?.disabled && { color: theme.colors.notification + "70" },
+            item?.disabled && { color: theme.colors.notification + '70' },
           ]}
         >
           {storedName}
@@ -151,8 +151,8 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
           <Icon
             size={18}
             style={styles.icon}
-            name="BadgeCheck"
-            color="#4ec9b0"
+            name='BadgeCheck'
+            color='#4ec9b0'
           />
         )}
       </View>
@@ -163,7 +163,7 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
               paddingRight: 10,
               flex: 1,
             },
-            item?.disabled && { color: theme.colors.text + "70" },
+            item?.disabled && { color: theme.colors.text + '70' },
           ]}
         >
           {name}
@@ -171,12 +171,12 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
         <View
           style={[
             {
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "flex-end",
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
               flex: 0.3,
             },
-            item?.disabled && { display: "none" },
+            item?.disabled && { display: 'none' },
           ]}
         >
           <DownloadButton
@@ -216,31 +216,31 @@ export default DatabaseDownloadItem;
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     itemContainer: {
-      display: "flex",
+      display: 'flex',
       paddingVertical: 10,
     },
     itemContent: {
-      display: "flex",
-      alignItems: "center",
-      flexDirection: "row",
-      justifyContent: "space-between",
+      display: 'flex',
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
       flex: 1,
     },
     separator: {
       height: 1,
-      backgroundColor: colors.notification + "40",
+      backgroundColor: colors.notification + '40',
       marginVertical: 8,
     },
     icon: {
-      fontWeight: "700",
+      fontWeight: '700',
       marginHorizontal: 10,
-      color: colors.notification + "90",
+      color: colors.notification + '90',
       fontSize: 28,
     },
     sizeText: {
       color: colors.notification,
-      flexDirection: "row",
-      alignItems: "center",
+      flexDirection: 'row',
+      alignItems: 'center',
       paddingVertical: 4,
     },
   });

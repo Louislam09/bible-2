@@ -58,7 +58,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   const [topWidth] = useState(new Animated.Value(SCREEN_WIDTH / 2));
   const [bColor] = useState(new Animated.Value(0));
 
-  const isPortrait = orientation === "PORTRAIT";
+  const isPortrait = orientation === 'PORTRAIT';
   const styles = getStyles(theme, isPortrait);
 
   const initialState = useMemo(
@@ -96,39 +96,39 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
 
   const tutorialSteps = [
     {
-      text: "🏠 Toque aquí para ir a la pantalla principal.",
+      text: '🏠 Toque aquí para ir a la pantalla principal.',
       target: componentRefs.dashboard,
     },
     {
-      text: "✂️ Toque aquí para partir la pantalla en dos secciones de escrituras.",
+      text: '✂️ Toque aquí para partir la pantalla en dos secciones de escrituras.',
       target: componentRefs.fav,
     },
     {
-      text: "⏪⏩ Toque las flechas para moverse atras/delante en su historial de busqueda.",
+      text: '⏪⏩ Toque las flechas para moverse atras/delante en su historial de busqueda.',
       target: componentRefs.setting,
     },
     {
-      text: "🔍 Toque aquí para buscar en la escritura.",
+      text: '🔍 Toque aquí para buscar en la escritura.',
       target: componentRefs.search,
     },
     {
-      text: "📑 Toque aquí para cambiar la versión de la escritura.",
+      text: '📑 Toque aquí para cambiar la versión de la escritura.',
       target: componentRefs.bibleVersion,
     },
     {
-      text: "📚 Toque aquí para elegir un libro.",
+      text: '📚 Toque aquí para elegir un libro.',
       target: componentRefs.book,
     },
     {
-      text: "⬅️ Toque aquí para retroceder al capítulo anterior.",
+      text: '⬅️ Toque aquí para retroceder al capítulo anterior.',
       target: componentRefs.back,
     },
     {
-      text: "➡️ Toque aquí para pasar al siguiente capítulo.",
+      text: '➡️ Toque aquí para pasar al siguiente capítulo.',
       target: componentRefs.next,
     },
     {
-      text: "🔊 Toque aquí para escuchar el capítulo.",
+      text: '🔊 Toque aquí para escuchar el capítulo.',
       target: componentRefs.audio,
     },
   ];
@@ -192,84 +192,87 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
     [splitConfig, topHeight, topWidth]
   );
 
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      () => {
-        router.back();
-        return true;
-      }
-    );
-    return () => backHandler.remove();
-  }, [router]);
+  // useEffect(() => {
+  //   const backHandler = BackHandler.addEventListener(
+  //     "hardwareBackPress",
+  //     () => {
+  //       router.back();
+  //       return true;
+  //     }
+  //   );
+  //   return () => backHandler.remove();
+  // }, [router]);
 
   return (
-    <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
-      <Stack.Screen options={{ headerShown: false }} />
-      <CustomHeader refs={componentRefs} />
-      <View style={[styles.container, !isPortrait && { flexDirection: 'row' }]}>
-        <SplitTopSide
-          refs={componentRefs}
-          {...{
-            ...initialState,
-            height: topHeight,
-            width: topWidth,
-            router,
-          }}
+    <StatusBarBackground>
+      <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
+        <Stack.Screen options={{ headerShown: false }} />
+        <CustomHeader refs={componentRefs} />
+        <View
+          style={[styles.container, !isPortrait && { flexDirection: 'row' }]}
+        >
+          <SplitTopSide
+            refs={componentRefs}
+            {...{
+              ...initialState,
+              height: topHeight,
+              width: topWidth,
+              router,
+            }}
+          />
+          {isSplitActived && (
+            <>
+              <Animated.View
+                {...panResponder.panHandlers}
+                style={[styles.slider, { backgroundColor }]}
+              >
+                <View style={styles.sliderHandle} />
+              </Animated.View>
+              <SplitBottomSide
+                refs={componentRefs}
+                {...{
+                  book: initialState.bottomSideBook,
+                  chapter: initialState.bottomSideChapter,
+                  verse: initialState.bottomSideVerse,
+                  height: Animated.subtract(
+                    new Animated.Value(screenHeight),
+                    topHeight
+                  ),
+                  width: Animated.subtract(
+                    new Animated.Value(SCREEN_WIDTH),
+                    topWidth
+                  ),
+                  router,
+                }}
+              />
+            </>
+          )}
+        </View>
+        <BookContentModals
+          book={initialState.book}
+          chapter={initialState.chapter}
         />
-        {isSplitActived && (
-          <>
-            <Animated.View
-              {...panResponder.panHandlers}
-              style={[styles.slider, { backgroundColor }]}
-            >
-              <View style={styles.sliderHandle} />
-            </Animated.View>
-            <SplitBottomSide
-              refs={componentRefs}
-              {...{
-                book: initialState.bottomSideBook,
-                chapter: initialState.bottomSideChapter,
-                verse: initialState.bottomSideVerse,
-                height: Animated.subtract(
-                  new Animated.Value(screenHeight),
-                  topHeight
-                ),
-                width: Animated.subtract(
-                  new Animated.Value(SCREEN_WIDTH),
-                  topWidth
-                ),
-                router,
-              }}
-            />
-          </>
+        <FloatingButton navigation={router}>
+          <CurrentNoteDetail />
+        </FloatingButton>
+        <BottomModal
+          shouldScroll
+          justOneSnap
+          justOneValue={['50%']}
+          startAT={0}
+          ref={noteListBottomSheetRef}
+        >
+          <NoteNameList {...{ theme }} />
+        </BottomModal>
+        {componentRefs.book.current && routeParams.isTour === true && (
+          <Walkthrough
+            steps={tutorialSteps}
+            setStep={setStepIndex}
+            currentStep={stepIndex}
+          />
         )}
-      </View>
-      <BookContentModals
-        book={initialState.book}
-        chapter={initialState.chapter}
-      />
-
-      <FloatingButton navigation={router}>
-        <CurrentNoteDetail />
-      </FloatingButton>
-      <BottomModal
-        shouldScroll
-        justOneSnap
-        justOneValue={['50%']}
-        startAT={0}
-        ref={noteListBottomSheetRef}
-      >
-        <NoteNameList {...{ theme }} />
-      </BottomModal>
-      {componentRefs.book.current && routeParams.isTour === true && (
-        <Walkthrough
-          steps={tutorialSteps}
-          setStep={setStepIndex}
-          currentStep={stepIndex}
-        />
-      )}
-    </SafeAreaView>
+      </SafeAreaView>
+    </StatusBarBackground>
   );
 };
 

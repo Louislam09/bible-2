@@ -80,16 +80,16 @@ const App = () => {
           <DatabaseProvider>
             <BibleProvider>
               <MyThemeProvider>
-                <StatusBarBackground>
-                  <GestureHandlerRootView style={{ flex: 1 }}>
-                    <BottomSheetModalProvider>
-                      <ModalProvider>
-                        <StatusBar animated translucent style='inverted' />
-                        <Stack screenOptions={screenOptions} />
-                      </ModalProvider>
-                    </BottomSheetModalProvider>
-                  </GestureHandlerRootView>
-                </StatusBarBackground>
+                {/* <StatusBarBackground> */}
+                <GestureHandlerRootView style={{ flex: 1 }}>
+                  <BottomSheetModalProvider>
+                    <ModalProvider>
+                      <StatusBar animated translucent style='inverted' />
+                      <Stack screenOptions={screenOptions} />
+                    </ModalProvider>
+                  </BottomSheetModalProvider>
+                </GestureHandlerRootView>
+                {/* </StatusBarBackground> */}
               </MyThemeProvider>
             </BibleProvider>
           </DatabaseProvider>

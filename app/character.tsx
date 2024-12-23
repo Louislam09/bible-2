@@ -82,12 +82,12 @@ const Character: React.FC<CharacterProps> = () => {
         <View style={styles.searchContainer}>
           <Ionicons
             style={styles.searchIcon}
-            name="search"
+            name='search'
             size={24}
             color={theme.colors.notification}
           />
           <TextInput
-            placeholder="Buscar un personaje..."
+            placeholder='Buscar un personaje...'
             style={[styles.noteHeaderSearchInput]}
             onChangeText={(text) => setSearchText(text)}
             value={searchText}
@@ -97,48 +97,45 @@ const Character: React.FC<CharacterProps> = () => {
     );
   };
 
-  useEffect(() => {
-    const backAction = () => {
-      setSelected(null);
-      !selected?.topic && router.back();
-      return true;
-    };
+  // useEffect(() => {
+  //   const backAction = () => {
+  //     setSelected(null);
+  //     !selected?.topic && router.back();
+  //     return true;
+  //   };
 
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
+  //   const backHandler = BackHandler.addEventListener(
+  //     "hardwareBackPress",
+  //     backAction
+  //   );
 
-    return () => backHandler.remove();
-  }, [selected]);
-
+  //   return () => backHandler.remove();
+  // }, [selected]);
 
   return (
     <View
       style={{
         flex: 1,
         padding: 5,
-        backgroundColor: theme.dark ? theme.colors.background : "#eee",
+        backgroundColor: theme.dark ? theme.colors.background : '#eee',
       }}
     >
-      <Stack.Screen options={{ headerShown: true, headerTitle: "" }} />
+      <Stack.Screen options={{ headerShown: true, headerTitle: '' }} />
       {NoteHeader()}
       <FlashList
         key={schema}
         contentContainerStyle={{
-          backgroundColor: theme.dark ? theme.colors.background : "#eee",
+          backgroundColor: theme.dark ? theme.colors.background : '#eee',
           paddingVertical: 20,
         }}
-        decelerationRate={"normal"}
+        decelerationRate={'normal'}
         estimatedItemSize={135}
         data={
           searchText
             ? filterData.filter(
-              (x: any) =>
-                removeAccent(x.topic).indexOf(
-                  searchText.toLowerCase()
-                ) !== -1
-            )
+                (x: any) =>
+                  removeAccent(x.topic).indexOf(searchText.toLowerCase()) !== -1
+              )
             : filterData
         }
         renderItem={({ item, index }) => (

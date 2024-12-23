@@ -41,7 +41,7 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
     currentBibleVersion,
     selectBibleVersion,
     clearHighlights,
-    orientation = "PORTRAIT",
+    orientation = 'PORTRAIT',
   } = useBibleContext();
   const theme = useTheme();
 
@@ -53,7 +53,7 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
   const versionRef = useRef<BottomSheetModal>(null);
   const currentModalOpenRef = useRef<any>(null);
 
-  const isPortrait = orientation === "PORTRAIT";
+  const isPortrait = orientation === 'PORTRAIT';
   const styles = getStyles(theme, isPortrait);
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
   const columnNumber = isPortrait ? 3 : 5;
@@ -74,10 +74,10 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
   } = (getCurrentItem() as any) || {};
 
   const homePageInitParams = {
-    book: lastHistoryBook || lastBook || "Génesis",
+    book: lastHistoryBook || lastBook || 'Génesis',
     chapter: lastHistoryChapter || lastChapter || 1,
     verse: lastHistoryVerse || lastVerse || 1,
-    bottomSideBook: lastBottomSideBook || "Génesis",
+    bottomSideBook: lastBottomSideBook || 'Génesis',
     bottomSideChapter: lastBottomSideChapter || 1,
     bottomSideVerse: lastBottomSideVerse || 0,
     isTour: false,
@@ -103,7 +103,7 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
   const onSong = useCallback(() => {
     if (!isSongLyricEnabled) {
       ToastAndroid.show(
-        "Busca 📖 y presiona el nombre del himnario 🔒🔑",
+        'Busca 📖 y presiona el nombre del himnario 🔒🔑',
         ToastAndroid.LONG
       );
       return;
@@ -113,101 +113,101 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
 
   const dashboardItems: IDashboardOption[] = [
     {
-      icon: isNTV ? "BookText" : "Crown",
-      label: "Santa Escritura",
+      icon: isNTV ? 'BookText' : 'Crown',
+      label: 'Santa Escritura',
       action: () => navigation.navigate(Screens.Home, homePageInitParams),
-      tag: isNTV ? "book-cross" : "crown-outline",
+      tag: isNTV ? 'book-cross' : 'crown-outline',
     },
     {
-      icon: "Music4",
-      label: "Himnos",
+      icon: 'Music4',
+      label: 'Himnos',
       isIonicon: true,
       action: onSong,
     },
     {
-      icon: "Search",
-      label: "Buscador",
+      icon: 'Search',
+      label: 'Buscador',
       action: () => navigation.navigate(Screens.Search, {}),
     },
     {
-      icon: "LayoutGrid",
-      label: "Lista de Libro",
+      icon: 'LayoutGrid',
+      label: 'Lista de Libro',
       action: () => navigation.navigate(Screens.ChooseBook, {}),
     },
     {
-      icon: "BookA",
-      label: "Diccionarios",
+      icon: 'BookA',
+      label: 'Diccionarios',
       action: () =>
-        navigation?.navigate(Screens.DictionarySearch, { word: "" }),
+        navigation?.navigate(Screens.DictionarySearch, { word: '' }),
     },
     {
-      icon: "SwatchBook",
-      label: "Concordancia Escritural",
+      icon: 'SwatchBook',
+      label: 'Concordancia Escritural',
       action: () => navigation.navigate(Screens.Concordance, {}),
     },
     {
-      icon: "NotebookText",
-      label: "Notas",
+      icon: 'NotebookText',
+      label: 'Notas',
       action: () =>
         navigation.navigate(Screens.Notes, { shouldRefresh: false }),
     },
     {
-      icon: "MonitorDown",
-      label: "Gestor de descargas",
+      icon: 'MonitorDown',
+      label: 'Gestor de descargas',
       action: () => navigation.navigate(Screens.DownloadManager),
     },
     {
-      icon: "Star",
-      label: "Versiculos Favoritos",
+      icon: 'Star',
+      label: 'Versiculos Favoritos',
       action: () => navigation.navigate(Screens.Favorite),
     },
     {
-      icon: "UserSearch",
-      label: "Buscar Personaje",
+      icon: 'UserSearch',
+      label: 'Buscar Personaje',
       isIonicon: true,
       action: () => navigation.navigate(Screens.Character),
     },
     {
-      icon: "AudioLines",
-      label: "Selecciona Una Voz",
+      icon: 'AudioLines',
+      label: 'Selecciona Una Voz',
       action: voiceHandlePresentModalPress,
     },
     {
-      icon: "FileStack",
-      label: "Versiones",
+      icon: 'FileStack',
+      label: 'Versiones',
       action: versionHandlePresentModalPress,
     },
     {
-      icon: "Settings",
-      label: "Ajustes",
+      icon: 'Settings',
+      label: 'Ajustes',
       isIonicon: true,
       action: () => navigation.navigate(Screens.Settings),
     },
     {
-      icon: "HandHelping",
-      label: "Como Usar?",
+      icon: 'HandHelping',
+      label: 'Como Usar?',
       action: () => navigation.navigate(Screens.Onboarding),
     },
   ];
 
-  useEffect(() => {
-    const backAction = () => {
-      if (currentModalOpenRef.current) {
-        currentModalOpenRef?.current?.close();
-        currentModalOpenRef.current = null;
-        return true;
-      }
-      // BackHandler.exitApp();
-      return true;
-    };
+  // useEffect(() => {
+  //   const backAction = () => {
+  //     if (currentModalOpenRef.current) {
+  //       currentModalOpenRef?.current?.close();
+  //       currentModalOpenRef.current = null;
+  //       return true;
+  //     }
+  //     // BackHandler.exitApp();
+  //     return true;
+  //   };
 
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
+  //   const backHandler = BackHandler.addEventListener(
+  //     "hardwareBackPress",
+  //     backAction
+  //   );
 
-    return () => backHandler.remove();
-  }, [currentModalOpenRef.current]);
+  //   return () => backHandler.remove();
+  // }, [currentModalOpenRef.current]);
 
   const RenderItem = ({ item, index }: RenderItemProps) => (
     <TouchableWithoutFeedback
@@ -216,9 +216,9 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
         {
           padding: 0,
           flex: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         },
         { width: SCREEN_WIDTH / columnNumber },
       ]}
@@ -227,7 +227,7 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
       <View
         style={[
           styles.card,
-          item.disabled && { backgroundColor: "#ddd" },
+          item.disabled && { backgroundColor: '#ddd' },
           index === 0 && {
             backgroundColor: theme.colors.notification,
           },
@@ -237,10 +237,10 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
           name={item.icon as any}
           size={36}
           style={[styles.cardIcon]}
-          color={index === 0 ? "white" : theme.colors.notification}
+          color={index === 0 ? 'white' : theme.colors.notification}
         />
 
-        <Text style={[styles.cardLabel, index === 0 && { color: "white" }]}>
+        <Text style={[styles.cardLabel, index === 0 && { color: 'white' }]}>
           {item.label}
         </Text>
       </View>
@@ -254,7 +254,7 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
   return (
     <View
       key={orientation + theme.dark}
-      style={[styles.container, !isPortrait && { flexDirection: "row" }]}
+      style={[styles.container, !isPortrait && { flexDirection: 'row' }]}
     >
       {isPortrait && <DailyVerse theme={theme} />}
 

@@ -7,9 +7,8 @@ import SongLyricView from "@/components/SongLyricView";
 import { Text } from "@/components/Themed";
 import Songs from "@/constants/songs";
 import { useBibleContext } from "@/context/BibleContext";
-import { useCustomTheme } from "@/context/ThemeContext";
-import { Stack, useRouter } from "node_modules/expo-router/build";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCustomTheme } from '@/context/ThemeContext';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Animated,
   BackHandler,
@@ -17,8 +16,9 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from "react-native";
-import { RootStackScreenProps, TSongItem, TTheme } from "@/types";
+} from 'react-native';
+import { RootStackScreenProps, TSongItem, TTheme } from '@/types';
+import { Stack, useRouter } from 'expo-router';
 
 const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -66,7 +66,7 @@ const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
   );
 };
 
-const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
+const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
   const [selected, setSelected] = useState<any>(null);
   const [filterData] = useState<TSongItem[]>(Songs);
   const theme = useTheme();
@@ -76,14 +76,14 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
   const [searchText, setSearchText] = useState<any>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const snaps = [50, 75, 100];
-  const _snaps = ["50%", "75%", "100%"];
+  const _snaps = ['50%', '75%', '100%'];
   const [topHeight] = useState(new Animated.Value(75));
   const { orientation } = useBibleContext();
-  const isPortrait = orientation === "PORTRAIT";
+  const isPortrait = orientation === 'PORTRAIT';
 
   const _topHeight = topHeight.interpolate({
     inputRange: [50, 75, 100],
-    outputRange: ["48%", "73%", "98%"],
+    outputRange: ['48%', '73%', '98%'],
   });
 
   const versionHandlePresentModalPress = useCallback(() => {
@@ -100,18 +100,18 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
       <View style={[styles.noteHeader, !isPortrait && { paddingTop: 0 }]}>
         {isPortrait && (
           <Text style={[styles.noteListTitle]}>
-            Mensajero de{"\n"} Alegres Nuevas
+            Mensajero de{'\n'} Alegres Nuevas
           </Text>
         )}
         <View style={styles.searchContainer}>
           <Ionicons
             style={styles.searchIcon}
-            name="search"
+            name='search'
             size={24}
             color={theme.colors.notification}
           />
           <TextInput
-            placeholder="Buscar un himno..."
+            placeholder='Buscar un himno...'
             style={[styles.noteHeaderSearchInput]}
             onChangeText={(text) => setSearchText(text)}
             value={searchText}
@@ -121,41 +121,41 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
     );
   };
 
-  useEffect(() => {
-    const backAction = () => {
-      versionRef.current?.dismiss();
-      setSelected(null);
-      setSearchText("");
-      !selected && router.back();
-      return true;
-    };
+  // useEffect(() => {
+  //   const backAction = () => {
+  //     versionRef.current?.dismiss();
+  //     setSelected(null);
+  //     setSearchText("");
+  //     !selected && router.back();
+  //     return true;
+  //   };
 
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
+  //   const backHandler = BackHandler.addEventListener(
+  //     "hardwareBackPress",
+  //     backAction
+  //   );
 
-    return () => backHandler.remove();
-  }, [selected]);
+  //   return () => backHandler.remove();
+  // }, [selected]);
 
   const getIndex = (index: any) => {
     const value = snaps[index] || 30;
     topHeight.setValue(value);
     if (index < 0) {
-      setSearchText("");
+      setSearchText('');
       setSelected(null);
     }
   };
 
   return (
     <>
-      <Stack.Screen options={{ headerShown: true, headerTitle: "" }} />
+      <Stack.Screen options={{ headerShown: true, headerTitle: '' }} />
       <View
         key={orientation + theme.dark}
         style={{
           flex: 1,
           padding: 5,
-          backgroundColor: theme.dark ? theme.colors.background : "#eee",
+          backgroundColor: theme.dark ? theme.colors.background : '#eee',
         }}
       >
         <BottomModal
@@ -178,10 +178,10 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
           <FlashList
             key={schema}
             contentContainerStyle={{
-              backgroundColor: theme.dark ? theme.colors.background : "#eee",
+              backgroundColor: theme.dark ? theme.colors.background : '#eee',
               paddingVertical: 20,
             }}
-            decelerationRate={"normal"}
+            decelerationRate={'normal'}
             estimatedItemSize={135}
             data={
               searchText

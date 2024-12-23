@@ -113,12 +113,12 @@ const Concordance: React.FC<ConcordanceProps> = () => {
   const theme = useTheme();
   const { schema } = useCustomTheme();
   const router = useRouter();
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const styles = getStyles(theme);
   const [searchText, setSearchText] = useState<any>(null);
-  const [randomLetter, setRandomLetter] = useState<string>("");
+  const [randomLetter, setRandomLetter] = useState<string>('');
   const [verseList, setVerseList] = useState<TItem[] | null>(null);
-  const defaultFilterOption = "Filtra por libro";
+  const defaultFilterOption = 'Filtra por libro';
   const debouncedSearchText = useDebounce(searchText, 500);
   const [selectedFilterOption, setSelectedFilterOption] =
     useState<any>(defaultFilterOption);
@@ -177,18 +177,18 @@ const Concordance: React.FC<ConcordanceProps> = () => {
   const ConcordanceHeader = () => {
     return (
       <View style={[styles.noteHeader]}>
-          <Text style={[styles.noteListTitle]}>
-            Concordancia {"\n"} Escritural
+        <Text style={[styles.noteListTitle]}>
+          Concordancia {'\n'} Escritural
         </Text>
         <View style={styles.searchContainer}>
           <Ionicons
             style={styles.searchIcon}
-            name="search"
+            name='search'
             size={24}
             color={theme.colors.notification}
           />
           <TextInput
-            placeholder="Buscar una palabra..."
+            placeholder='Buscar una palabra...'
             style={[styles.noteHeaderSearchInput]}
             onChangeText={(text) => {
               setSelected(null);
@@ -202,21 +202,21 @@ const Concordance: React.FC<ConcordanceProps> = () => {
     );
   };
 
-  useEffect(() => {
-    const backAction = () => {
-      setSelected(null);
-      setVerseList(null);
-      !selected && router.back();
-      return true;
-    };
+  // useEffect(() => {
+  //   const backAction = () => {
+  //     setSelected(null);
+  //     setVerseList(null);
+  //     !selected && router.back();
+  //     return true;
+  //   };
 
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
+  //   const backHandler = BackHandler.addEventListener(
+  //     "hardwareBackPress",
+  //     backAction
+  //   );
 
-    return () => backHandler.remove();
-  }, [selected]);
+  //   return () => backHandler.remove();
+  // }, [selected]);
 
   const handleCustomBack = () => {
     if (selected) {
@@ -231,7 +231,7 @@ const Concordance: React.FC<ConcordanceProps> = () => {
     navigation.setOptions({
       headerLeft: () => (
         <TouchableOpacity onPress={handleCustomBack}>
-          <Icon name="ArrowLeft" color={theme.colors.text} size={28} />
+          <Icon name='ArrowLeft' color={theme.colors.text} size={28} />
         </TouchableOpacity>
       ),
     });
@@ -242,7 +242,7 @@ const Concordance: React.FC<ConcordanceProps> = () => {
       style={{
         flex: 1,
         padding: 5,
-        backgroundColor: theme.dark ? theme.colors.background : "#eee",
+        backgroundColor: theme.dark ? theme.colors.background : '#eee',
       }}
     >
       <Stack.Screen options={{ headerShown: true, headerTitle: '' }} />
@@ -252,7 +252,7 @@ const Concordance: React.FC<ConcordanceProps> = () => {
           <>
             <View style={[styles.filterContainer, { minHeight: 45 }]}>
               <View style={[styles.strongNumber, { paddingHorizontal: 15 }]}>
-                <Icon name="ListFilter" size={24} color="white" />
+                <Icon name='ListFilter' size={24} color='white' />
               </View>
               <View style={styles.pickerContainer}>
                 <AnimatedDropdown
@@ -279,10 +279,10 @@ const Concordance: React.FC<ConcordanceProps> = () => {
           <FlashList
             key={schema}
             contentContainerStyle={{
-              backgroundColor: theme.dark ? theme.colors.background : "#eee",
+              backgroundColor: theme.dark ? theme.colors.background : '#eee',
               paddingVertical: 20,
             }}
-            decelerationRate={"normal"}
+            decelerationRate={'normal'}
             estimatedItemSize={135}
             data={
               selectedFilterOption !== defaultFilterOption
@@ -302,10 +302,10 @@ const Concordance: React.FC<ConcordanceProps> = () => {
           <FlashList
             key={schema}
             contentContainerStyle={{
-              backgroundColor: theme.dark ? theme.colors.background : "#eee",
+              backgroundColor: theme.dark ? theme.colors.background : '#eee',
               paddingVertical: 20,
             }}
-            decelerationRate={"normal"}
+            decelerationRate={'normal'}
             estimatedItemSize={135}
             data={
               debouncedSearchText
