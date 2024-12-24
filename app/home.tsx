@@ -63,18 +63,18 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
 
   const initialState = useMemo(
     () => ({
-      book: routeParams.book || storedData.lastBook,
-      chapter: routeParams.chapter || storedData.lastChapter,
+      book: routeParams.book ?? storedData.lastBook,
+      chapter: routeParams.chapter ?? storedData.lastChapter,
       verse:
-        (routeParams.verse === 0 ? 1 : routeParams.verse) ||
-        storedData.lastVerse,
+        routeParams.verse === 0 ? 1 : routeParams.verse ?? storedData.lastVerse,
       bottomSideBook:
-        routeParams.bottomSideBook || storedData.lastBottomSideBook,
+        routeParams.bottomSideBook ?? storedData.lastBottomSideBook,
       bottomSideChapter:
-        routeParams.bottomSideChapter || storedData.lastBottomSideChapter,
+        routeParams.bottomSideChapter ?? storedData.lastBottomSideChapter,
       bottomSideVerse:
-        (routeParams.bottomSideVerse === 0 ? 1 : routeParams.bottomSideVerse) ||
-        storedData.lastBottomSideVerse,
+        routeParams.bottomSideVerse === 0
+          ? 1
+          : routeParams.bottomSideVerse ?? storedData.lastBottomSideVerse,
     }),
     [routeParams, storedData]
   );
@@ -191,17 +191,6 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
       }),
     [splitConfig, topHeight, topWidth]
   );
-
-  // useEffect(() => {
-  //   const backHandler = BackHandler.addEventListener(
-  //     "hardwareBackPress",
-  //     () => {
-  //       router.back();
-  //       return true;
-  //     }
-  //   );
-  //   return () => backHandler.remove();
-  // }, [router]);
 
   return (
     <StatusBarBackground>
