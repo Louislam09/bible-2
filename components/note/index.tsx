@@ -3,14 +3,15 @@ import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
-import usePrintAndShare from "@/hooks/usePrintAndShare";
-import { IVerseItem, Screens, TTheme } from "@/types";
-import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
-import removeAccent from "@/utils/removeAccent";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { useTheme } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
-import { Stack, useNavigation } from "expo-router";
+import useNotesExportImport from '@/hooks/useNotesExportImport';
+import usePrintAndShare from '@/hooks/usePrintAndShare';
+import { IVerseItem, Screens, TTheme } from '@/types';
+import { formatDateShortDayMonth } from '@/utils/formatDateShortDayMonth';
+import removeAccent from '@/utils/removeAccent';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useTheme } from '@react-navigation/native';
+import { FlashList } from '@shopify/flash-list';
+import { Stack, useNavigation } from 'expo-router';
 import React, {
   Fragment,
   useCallback,
@@ -18,7 +19,7 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from "react";
+} from 'react';
 import {
   Alert,
   Animated,
@@ -28,7 +29,7 @@ import {
   ToastAndroid,
   TouchableOpacity,
   TouchableWithoutFeedback,
-} from "react-native";
+} from 'react-native';
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -74,7 +75,7 @@ const RenderItem = ({
       ]}
     >
       <TouchableOpacity
-        style={{ backgroundColor: "transparent" }}
+        style={{ backgroundColor: 'transparent' }}
         activeOpacity={0.9}
         onPress={() => onOpenNoteDetail(item.id)}
       >
@@ -85,18 +86,18 @@ const RenderItem = ({
               <>
                 <Icon
                   size={24}
-                  name="Trash2"
+                  name='Trash2'
                   style={[
                     styles.icon,
                     {
-                      color: "#e74856",
+                      color: '#e74856',
                     },
                   ]}
                   onPress={() => warnBeforeDelete(item.id)}
                 />
                 <Icon
                   style={styles.icon}
-                  name="Share2"
+                  name='Share2'
                   size={24}
                   onPress={() => {
                     const html = htmlTemplate(
@@ -105,7 +106,7 @@ const RenderItem = ({
                       10,
                       true
                     );
-                    printToFile(html, item?.title?.toUpperCase() || "--");
+                    printToFile(html, item?.title?.toUpperCase() || '--');
                   }}
                 />
               </>
@@ -114,13 +115,71 @@ const RenderItem = ({
           <Text style={styles.verseBody}>
             {item?.note_text
               ?.slice(0, 100)
-              .replace(/<br>/gi, "-")
-              .replace(/<.*?>|<.*?\/>/gi, "")}
+              .replace(/<br>/gi, '-')
+              .replace(/<.*?>|<.*?\/>/gi, '')}
           </Text>
           <Text style={[styles.date]}>
             {formatDateShortDayMonth(item.updated_at || item.created_at)}
           </Text>
         </View>
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
+
+interface ActionButtonProps {
+  item: {
+    bottom: number;
+    name: string;
+    color: string;
+    action: () => void;
+  };
+  index: number;
+  styles: any;
+  theme: any;
+}
+
+const ActionButton = ({ item, index, styles, theme }: ActionButtonProps) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const translateYAnim = useRef(new Animated.Value(100)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 500,
+        delay: index * 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateYAnim, {
+        toValue: 0,
+        duration: 500,
+        delay: index * 200,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [fadeAnim, translateYAnim, index]);
+
+  return (
+    <Animated.View
+      key={`button-${item.name}`}
+      style={[
+        styles.scrollToTopButton,
+        {
+          bottom: item.bottom,
+          backgroundColor: item.color + '99',
+          opacity: fadeAnim,
+          transform: [{ translateY: translateYAnim }],
+        },
+      ]}
+    >
+      <TouchableOpacity onPress={item.action}>
+        <Icon
+          style={[{}]}
+          color={theme.colors.text}
+          name={item.name as any}
+          size={30}
+        />
       </TouchableOpacity>
     </Animated.View>
   );
@@ -133,16 +192,17 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
   const { printToFile } = usePrintAndShare();
   const { onDeleteNote, addToNoteText, currentBibleLongName } =
     useBibleContext();
+  const { exportNotes, importNotes, error, isLoading } = useNotesExportImport();
 
   const styles = getStyles(theme);
-  const notFoundSource = require("../../assets/lottie/notFound.json");
+  const notFoundSource = require('../../assets/lottie/notFound.json');
 
   const [filterData, setFilterData] = useState([]);
   const [searchText, setSearchText] = useState<any>(null);
   const flatListRef = useRef<FlashList<any>>(null);
 
   const noteCountTitle = useMemo(
-    () => `${filterData.length} ${filterData.length > 1 ? "Notas" : "Nota"}`,
+    () => `${filterData.length} ${filterData.length > 1 ? 'Notas' : 'Nota'}`,
     [filterData]
   );
 
@@ -168,7 +228,7 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
 
   const showAddNoteAlert = () => {
     ToastAndroid.show(
-      "Seleccione la nota a la que quieres añadir el versiculo",
+      'Seleccione la nota a la que quieres añadir el versiculo',
       ToastAndroid.LONG
     );
   };
@@ -180,21 +240,21 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
   const onDelete = async (id: number) => {
     await onDeleteNote(id);
     setShouldFetch((prev: any) => !prev);
-    ToastAndroid.show("Nota borrada!", ToastAndroid.SHORT);
-    setSearchText("");
+    ToastAndroid.show('Nota borrada!', ToastAndroid.SHORT);
+    setSearchText('');
   };
 
   const warnBeforeDelete = (id: number) => {
     Alert.alert(
-      "Eliminar Nota",
-      "¿Estás seguro que quieres eliminar esta nota?",
+      'Eliminar Nota',
+      '¿Estás seguro que quieres eliminar esta nota?',
       [
         {
-          text: "Cancelar",
+          text: 'Cancelar',
           onPress: () => {},
-          style: "cancel",
+          style: 'cancel',
         },
-        { text: "Eliminar", onPress: () => onDelete(id) },
+        { text: 'Eliminar', onPress: () => onDelete(id) },
       ]
     );
   };
@@ -210,7 +270,7 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
         <Text
           style={[
             styles.noteHeaderSubtitle,
-            !filterData.length && { display: "none" },
+            !filterData.length && { display: 'none' },
           ]}
         >
           {noteCountTitle}
@@ -218,12 +278,12 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
         <View style={styles.searchContainer}>
           <Ionicons
             style={styles.searchIcon}
-            name="search"
+            name='search'
             size={24}
             color={theme.colors.notification}
           />
           <TextInput
-            placeholder="Buscar en tus notas..."
+            placeholder='Buscar en tus notas...'
             style={[styles.noteHeaderSearchInput]}
             onChangeText={(text) => setSearchText(text)}
             value={searchText}
@@ -244,13 +304,42 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
         <Text style={styles.noResultsText}>
           <Text style={{ color: theme.colors.notification }}>
             ({currentBibleLongName})
-          </Text>{" "}
-          {"\n"}
+          </Text>{' '}
+          {'\n'}
           No tienes notas en esta version de la escritura.
         </Text>
       </View>
     );
   };
+
+  const onImportNotes = async () => {
+    await importNotes();
+    setShouldFetch((prev: any) => !prev);
+  };
+
+  const actionButtons = useMemo(
+    () => [
+      {
+        bottom: 25,
+        name: 'Plus',
+        color: theme.colors.notification,
+        action: onCreateNewNote,
+      },
+      {
+        bottom: 90,
+        name: 'Import',
+        color: '#008CBA',
+        action: onImportNotes,
+      },
+      {
+        bottom: 155,
+        name: 'Share',
+        color: '#45a049',
+        action: exportNotes,
+      },
+    ],
+    []
+  );
 
   return (
     <Fragment>
@@ -297,26 +386,14 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
             ListEmptyComponent={ListEmptyComponent}
             ListFooterComponent={<View style={{ paddingVertical: 30 }} />}
           />
-          <TouchableOpacity
-            style={[
-              styles.scrollToTopButton,
-              {
-                borderWidth: 1,
-                borderColor: theme.colors.notification,
-                padding: 10,
-                borderRadius: 10,
-                backgroundColor: theme.colors.notification + '99',
-              },
-            ]}
-            onPress={onCreateNewNote}
-          >
-            <Icon
-              style={[{}]}
-              color={theme.colors.text}
-              name={'Plus'}
-              size={30}
+          {actionButtons.map((item, index) => (
+            <ActionButton
+              theme={theme}
+              styles={styles}
+              item={item}
+              index={index}
             />
-          </TouchableOpacity>
+          ))}
         </View>
       </TouchableWithoutFeedback>
     </Fragment>
@@ -326,16 +403,16 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     contentContainerStyle: {
-      backgroundColor: dark ? colors.background : "#eee",
+      backgroundColor: dark ? colors.background : '#eee',
       paddingVertical: 20,
     },
     verseBody: {
       color: colors.text,
-      backgroundColor: "transparent",
+      backgroundColor: 'transparent',
     },
     date: {
       color: colors.notification,
-      textAlign: "right",
+      textAlign: 'right',
       marginTop: 10,
     },
     textInput: {
@@ -343,62 +420,61 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontSize: 22,
       color: colors.text,
       marginVertical: 5,
-      textDecorationStyle: "solid",
-      textDecorationColor: "red",
-      textDecorationLine: "underline",
+      textDecorationStyle: 'solid',
+      textDecorationColor: 'red',
+      textDecorationLine: 'underline',
     },
     scrollToTopButton: {
-      position: "absolute",
-      bottom: 25,
+      position: 'absolute',
       right: 20,
-      backgroundColor: colors.notification,
+      backgroundColor: colors.notification + 99,
       padding: 10,
       borderRadius: 10,
-      borderColor: "#ddd",
-      borderWidth: 0.3,
       elevation: 3,
+      borderWidth: 1,
+      borderColor: colors.notification,
     },
     noteHeader: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
       paddingHorizontal: 4,
       paddingVertical: 10,
       // marginTop: 40,
-      backgroundColor: "transparent",
+      backgroundColor: 'transparent',
     },
     noteListTitle: {
       fontSize: 30,
       // marginVertical: 10,
-      fontWeight: "bold",
-      textAlign: "center",
+      fontWeight: 'bold',
+      textAlign: 'center',
       color: colors.notification,
     },
     noteHeaderSubtitle: {
       fontSize: 18,
-      fontWeight: "600",
+      fontWeight: '600',
       color: colors.text,
-      alignSelf: "flex-start",
+      alignSelf: 'flex-start',
     },
     searchContainer: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-around",
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-around',
       borderRadius: 10,
       marginVertical: 20,
       borderWidth: 1,
       borderColor: colors.notification,
-      borderStyle: "solid",
-      width: "100%",
-      fontWeight: "100",
-      backgroundColor: colors.notification + "99",
+      borderStyle: 'solid',
+      width: '100%',
+      fontWeight: '100',
+      backgroundColor: colors.notification + '99',
     },
     searchIcon: {
       color: colors.text,
       paddingHorizontal: 15,
       borderRadius: 10,
-      fontWeight: "bold",
+      fontWeight: 'bold',
     },
     noteHeaderSearchInput: {
       borderRadius: 10,
@@ -406,32 +482,32 @@ const getStyles = ({ colors, dark }: TTheme) =>
       paddingLeft: 15,
       fontSize: 18,
       flex: 1,
-      fontWeight: "100",
-      backgroundColor: "#ddd",
+      fontWeight: '100',
+      backgroundColor: '#ddd',
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
     },
     cardContainer: {
-      display: "flex",
+      display: 'flex',
       borderRadius: 10,
       backgroundColor: colors.card,
       padding: 15,
       margin: 5,
       elevation: 5,
-      borderColor: "#ddd",
+      borderColor: '#ddd',
       borderWidth: 0.5,
     },
     headerContainer: {
-      position: "relative",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
+      position: 'relative',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
       marginBottom: 8,
-      backgroundColor: "transparent",
+      backgroundColor: 'transparent',
     },
     cardTitle: {
       fontSize: 18,
-      fontWeight: "600",
+      fontWeight: '600',
       color: colors.notification,
       flex: 1,
     },
@@ -441,28 +517,28 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     separator: {
       height: 1,
-      backgroundColor: colors.notification + "99",
+      backgroundColor: colors.notification + '99',
       marginVertical: 8,
     },
     noResultsContainer: {
       flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
+      alignItems: 'center',
+      justifyContent: 'center',
       borderRadius: 10,
       paddingBottom: 20,
-      backgroundColor: "transparent",
+      backgroundColor: 'transparent',
     },
     noResultsText: {
       fontSize: 18,
       color: colors.text,
-      textAlign: "center",
+      textAlign: 'center',
     },
     verseAction: {
-      flexDirection: "row",
-      backgroundColor: "transparent",
+      flexDirection: 'row',
+      backgroundColor: 'transparent',
     },
     icon: {
-      fontWeight: "700",
+      fontWeight: '700',
       marginHorizontal: 10,
       color: colors.primary,
       // fontSize: 24,
