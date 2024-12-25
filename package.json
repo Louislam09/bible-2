@@ -9,8 +9,8 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "test": "jest --watchAll",
-    "build:android": "eas build --platform android",
-    "submit:android":  "eas submit --platform android",
+    "build:a": "eas build --platform android",
+    "submit:a":  "eas submit --platform android",
     "eas:update": "eas update --platform android --message \"$npm_config_message\""
   },
   "jest": {
