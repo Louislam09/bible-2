@@ -52,6 +52,7 @@ SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM favorite_verses
   WHERE book_number = ? AND chapter = ? AND verse = ?);`;
 export const DELETE_FAVORITE_VERSE = `DELETE FROM favorite_verses WHERE book_number = ? AND chapter = ? AND verse = ?;`;
 export const DELETE_NOTE = `DELETE FROM notes WHERE id = ?;`;
+export const DELETE_NOTE_ALL = `DELETE FROM notes;`;
 export const UPDATE_NOTE_BY_ID = `UPDATE notes set title = ?, note_text = ?, 
   updated_at = CURRENT_TIMESTAMP where id = ?`;
 

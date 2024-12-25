@@ -21,6 +21,7 @@ import React, {
   useState,
 } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Animated,
   Keyboard,
@@ -190,14 +191,19 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
   const navigation = useNavigation();
 
   const { printToFile } = usePrintAndShare();
-  const { onDeleteNote, addToNoteText, currentBibleLongName } =
-    useBibleContext();
+  const {
+    onDeleteNote,
+    onDeleteAllNotes,
+    addToNoteText,
+    currentBibleLongName,
+  } = useBibleContext();
   const { exportNotes, importNotes, error, isLoading } = useNotesExportImport();
 
   const styles = getStyles(theme);
   const notFoundSource = require('../../assets/lottie/notFound.json');
 
   const [filterData, setFilterData] = useState([]);
+  const [showMoreOptions, setShowMoreOptions] = useState(false);
   const [searchText, setSearchText] = useState<any>(null);
   const flatListRef = useRef<FlashList<any>>(null);
 
@@ -244,6 +250,13 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
     setSearchText('');
   };
 
+  const onDeleteAll = async () => {
+    await onDeleteAllNotes();
+    setShouldFetch((prev: any) => !prev);
+    ToastAndroid.show('Todas las notas han sido borradas!', ToastAndroid.SHORT);
+    setSearchText('');
+  };
+
   const warnBeforeDelete = (id: number) => {
     Alert.alert(
       'Eliminar Nota',
@@ -255,6 +268,20 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
           style: 'cancel',
         },
         { text: 'Eliminar', onPress: () => onDelete(id) },
+      ]
+    );
+  };
+  const warnBeforeDeleteAll = () => {
+    Alert.alert(
+      'Eliminar Todas las Notas',
+      '¿Estás seguro que quieres eliminar todas las notas?',
+      [
+        {
+          text: 'Cancelar',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        { text: 'Eliminar', onPress: () => onDeleteAll() },
       ]
     );
   };
@@ -317,29 +344,51 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
     setShouldFetch((prev: any) => !prev);
   };
 
+  const showMoreOptionHandle = () => {
+    setShowMoreOptions((prev) => !prev);
+  };
+
+  const dismiss = () => {
+    Keyboard.dismiss();
+    setShowMoreOptions(false);
+  };
+
   const actionButtons = useMemo(
-    () => [
-      {
-        bottom: 25,
-        name: 'Plus',
-        color: theme.colors.notification,
-        action: onCreateNewNote,
-      },
-      {
-        bottom: 90,
-        name: 'Import',
-        color: '#008CBA',
-        action: onImportNotes,
-      },
-      {
-        bottom: 155,
-        name: 'Share',
-        color: '#45a049',
-        action: exportNotes,
-      },
-    ],
-    []
+    () =>
+      [
+        {
+          bottom: 25,
+          name: 'Plus',
+          color: theme.colors.notification,
+          action: onCreateNewNote,
+          hide: false,
+        },
+        {
+          bottom: 90,
+          name: 'EllipsisVertical',
+          color: '#008CBA',
+          action: showMoreOptionHandle,
+          hide: showMoreOptions,
+        },
+        {
+          bottom: 90,
+          name: 'Import',
+          color: '#008CBA',
+          action: onImportNotes,
+          hide: !showMoreOptions,
+        },
+        {
+          bottom: 155,
+          name: 'Share',
+          color: '#45a049',
+          action: exportNotes,
+          hide: !showMoreOptions,
+        },
+      ].filter((item) => !item.hide),
+    [showMoreOptions]
   );
+
+  if (isLoading) <ActivityIndicator />;
 
   return (
     <Fragment>
@@ -348,12 +397,19 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
           headerShown: true,
           headerTitle: '',
           animation: 'slide_from_left',
+          headerRight: () => (
+            <TouchableOpacity onPress={warnBeforeDeleteAll}>
+              <Icon
+                style={[{ marginHorizontal: 10 }]}
+                color={theme.colors.text}
+                name={'Trash2'}
+                size={25}
+              />
+            </TouchableOpacity>
+          ),
         }}
       />
-      <TouchableWithoutFeedback
-        style={{ flex: 1 }}
-        onPress={() => Keyboard.dismiss()}
-      >
+      <TouchableWithoutFeedback style={{ flex: 1 }} onPress={dismiss}>
         <View
           style={{
             flex: 1,
@@ -362,6 +418,11 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
           }}
         >
           {NoteHero()}
+          {error && (
+            <Text style={{ textAlign: 'center', color: '#e74856' }}>
+              {error}
+            </Text>
+          )}
           <FlashList
             contentContainerStyle={styles.contentContainerStyle}
             ref={flatListRef}

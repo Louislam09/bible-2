@@ -74,7 +74,7 @@ const useNotesExportImport = (): UseNotesExportImport => {
         });
       }
     } catch (err) {
-      setError('Failed to export notes: ' + (err instanceof Error ? err.message : String(err)));
+      setError('Error al exportar notas: ' + (err instanceof Error ? err.message : String(err)));
     } finally {
       setIsLoading(false);
     }
@@ -100,7 +100,7 @@ const useNotesExportImport = (): UseNotesExportImport => {
 
       // Validate the import data
       if (!importData.version || !Array.isArray(importData.notes)) {
-        throw new Error('Invalid import file format');
+        throw new Error('Formato de archivo de importación no válido');
       }
 
       importData.notes.forEach(async (note: Note) => {
@@ -108,7 +108,7 @@ const useNotesExportImport = (): UseNotesExportImport => {
       });
 
     } catch (err) {
-      setError('Failed to import notes: ' + (err instanceof Error ? err.message : String(err)));
+      setError('Error al importar notas: ' + (err instanceof Error ? err.message : String(err)));
     } finally {
       setIsLoading(false);
     }
