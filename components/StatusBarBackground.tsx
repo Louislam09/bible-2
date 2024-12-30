@@ -3,7 +3,7 @@ import { View } from './Themed';
 import Constants from 'expo-constants';
 
 const StatusBarBackground = ({ children }: any) => {
-  //   const theme = useTheme();
+  // const theme = useTheme();
 
   const styling = {
     flex: 1,

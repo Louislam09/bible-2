@@ -54,7 +54,7 @@ const SearchHeader: React.FC<SearchHeaderProps> = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => router.back()}>
+      <TouchableOpacity onPress={() => router.push('(dashboard)')}>
         <Ionicons style={styles.icon} name='arrow-back' size={24} />
       </TouchableOpacity>
       <TextInput

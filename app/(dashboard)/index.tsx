@@ -1,32 +1,29 @@
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useTheme } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
-import BottomModal from "@/components/BottomModal";
-import DailyVerse from "@/components/DailyVerse";
-import Icon, { IconProps } from "@/components/Icon";
-import { Text, View } from "@/components/Themed";
-import VoiceList from "@/components/VoiceList";
-import VersionList from "@/components/home/header/VersionList";
-import { useBibleContext } from "@/context/BibleContext";
-import { useStorage } from "@/context/LocalstoreContext";
-import { useNavigation } from "expo-router";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import {
-  BackHandler,
-  StyleSheet,
-  ToastAndroid,
-  useWindowDimensions,
-} from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { EBibleVersions, RootStackScreenProps, Screens, TTheme } from "@/types";
+import BottomModal from '@/components/BottomModal';
+import DailyVerse from '@/components/DailyVerse';
+import Icon, { IconProps } from '@/components/Icon';
+import { Text, View } from '@/components/Themed';
+import VoiceList from '@/components/VoiceList';
+import VersionList from '@/components/home/header/VersionList';
+import { useBibleContext } from '@/context/BibleContext';
+import { useStorage } from '@/context/LocalstoreContext';
+import { EBibleVersions, Screens, TTheme } from '@/types';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { useTheme } from '@react-navigation/native';
+import { FlashList } from '@shopify/flash-list';
+import { useNavigation } from 'expo-router';
+import React, { useCallback, useMemo, useRef } from 'react';
+import { StyleSheet, ToastAndroid, useWindowDimensions } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import SecondDashboard from '../../components/new-dashboard';
 
-type IDashboardOption = {
-  icon: IconProps["name"];
+export type IDashboardOption = {
+  icon: IconProps['name'];
   label: string;
   action: () => void;
   disabled?: boolean;
   isIonicon?: boolean;
   tag?: string;
+  color?: string;
 };
 
 type RenderItemProps = {
@@ -34,7 +31,9 @@ type RenderItemProps = {
   index: number;
 };
 
-const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
+type DashboardProps = {};
+
+const Dashboard: React.FC<DashboardProps> = () => {
   const navigation = useNavigation();
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const {
@@ -127,7 +126,8 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
     {
       icon: 'Search',
       label: 'Buscador',
-      action: () => navigation.navigate(Screens.Search, {}),
+      // @ts-ignore
+      action: () => navigation.navigate('(search)', {}),
     },
     {
       icon: 'LayoutGrid',
@@ -189,25 +189,6 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
       action: () => navigation.navigate(Screens.Onboarding),
     },
   ];
-
-  // useEffect(() => {
-  //   const backAction = () => {
-  //     if (currentModalOpenRef.current) {
-  //       currentModalOpenRef?.current?.close();
-  //       currentModalOpenRef.current = null;
-  //       return true;
-  //     }
-  //     // BackHandler.exitApp();
-  //     return true;
-  //   };
-
-  //   const backHandler = BackHandler.addEventListener(
-  //     "hardwareBackPress",
-  //     backAction
-  //   );
-
-  //   return () => backHandler.remove();
-  // }, [currentModalOpenRef.current]);
 
   const RenderItem = ({ item, index }: RenderItemProps) => (
     <TouchableWithoutFeedback
@@ -280,26 +261,31 @@ const Dashboard: React.FC<RootStackScreenProps<"dashboard">> = () => {
   );
 };
 
-export default Dashboard;
+const MyDashboard = () => {
+  const isSecondDashboard = true;
+  return isSecondDashboard ? <SecondDashboard /> : <Dashboard />;
+};
+
+export default MyDashboard;
 
 const getStyles = ({ colors, dark }: TTheme, isPortrait: boolean) =>
   StyleSheet.create({
     container: {
-      display: "flex",
+      display: 'flex',
       flex: 1,
-      alignItems: "center",
-      justifyContent: "center"
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     optionContainer: {
       flex: 1,
-      width: "100%",
-      backgroundColor: "transparent",
+      width: '100%',
+      backgroundColor: 'transparent',
       minHeight: 450,
     },
     card: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-evenly",
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-evenly',
       padding: 10,
       paddingHorizontal: 5,
       borderRadius: 15,
@@ -308,23 +294,23 @@ const getStyles = ({ colors, dark }: TTheme, isPortrait: boolean) =>
       width: 100,
       margin: 5,
       marginBottom: 0,
-      backgroundColor: "#fff",
+      backgroundColor: '#fff',
     },
     separator: {
       margin: 10,
     },
     cardLabel: {
-      backgroundColor: "transparent",
-      textAlign: "center",
-      fontWeight: "bold",
+      backgroundColor: 'transparent',
+      textAlign: 'center',
+      fontWeight: 'bold',
       color: dark ? colors.card : colors.text,
     },
     cardIcon: {
-      backgroundColor: "transparent",
+      backgroundColor: 'transparent',
       color: colors.notification,
       fontSize: 36,
     },
     text: {
-      color: "white",
+      color: 'white',
     },
   });

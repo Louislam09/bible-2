@@ -1,0 +1,183 @@
+import DAILY_VERSES from '@/constants/dailyVerses';
+import { GET_DAILY_VERSE } from '@/constants/Queries';
+import { useBibleContext } from '@/context/BibleContext';
+import { useDBContext } from '@/context/databaseContext';
+import { useStorage } from '@/context/LocalstoreContext';
+import { IVerseItem, Screens, TTheme } from '@/types';
+import { getVerseTextRaw } from '@/utils/getVerseTextRaw';
+import { showToast } from '@/utils/showToast';
+import { useTheme } from '@react-navigation/native';
+import { useNavigation } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View } from '../Themed';
+import Icon from '../Icon';
+
+const defaultDailyVerse = {
+  book_number: 0,
+  chapter: 3,
+  text: 'Oh Jehová, he oído tu palabra, y temí. Oh Jehová, aviva tu obra en medio de los tiempos, En  medio de los tiempos hazla conocer; En la ira acuérdate  de la misericordia.',
+  verse: 2,
+  bookName: 'Habacuc',
+  is_favorite: false,
+};
+
+const defaultDailyObject = {
+  book_number: 510,
+  chapter: 3,
+  verse: 19,
+};
+
+type DailyVerseProps = {
+  dailyVerseObject?: {
+    book_number: number;
+    chapter: number;
+    text: string;
+    verse: number;
+    bookName: string;
+    is_favorite: boolean;
+  };
+  theme: TTheme;
+};
+
+const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
+  const navigation = useNavigation();
+  const { saveData } = useStorage();
+  const { executeSql, myBibleDB } = useDBContext();
+  const [countPress, setCountPres] = useState(0);
+  const [dailyVerse, setDailyVerse] = useState<IVerseItem>(
+    dailyVerseObject || defaultDailyVerse
+  );
+  const { currentBibleVersion } = useBibleContext();
+  const styles = getStyles(theme);
+  const isDefaultVerse = dailyVerseObject?.bookName;
+
+  useEffect(() => {
+    if (!myBibleDB || !executeSql) return;
+    if (isDefaultVerse) return;
+    const currentDate: any = new Date();
+    const lastDayOfYear: any = new Date(currentDate.getFullYear(), 0, 0);
+    const dayPassed = Math.floor((currentDate - lastDayOfYear) / 86400000);
+
+    const { book_number, chapter, verse } =
+      DAILY_VERSES[dayPassed] || defaultDailyObject;
+    (async () => {
+      try {
+        const response: any = await executeSql(myBibleDB, GET_DAILY_VERSE, [
+          book_number,
+          chapter,
+          verse,
+        ]);
+        setDailyVerse(response?.length ? response?.[0] : defaultDailyVerse);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [currentBibleVersion, myBibleDB, dailyVerseObject]);
+
+  useEffect(() => {
+    setCountPres(0);
+  }, []);
+
+  const enabledMusic = () => {
+    const MESSAGES = {
+      encourage: '¡Presiona una vez más!',
+      success: '🎵 ¡Modo Himnario habilitado! 🎵 ',
+    };
+
+    if (countPress < 2) {
+      setCountPres((prev) => prev + 1);
+      showToast(MESSAGES.encourage);
+      return;
+    }
+
+    if (saveData) {
+      saveData({ isSongLyricEnabled: true });
+    }
+    showToast(MESSAGES.success);
+  };
+
+  return (
+    <View style={styles.dailyVerseContainer}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate(Screens.Onboarding)}
+        style={styles.infoIcon}
+      >
+        <Icon name={'Info'} size={20} color={'white'} />
+      </TouchableOpacity>
+      <View style={styles.header}>
+        <Text style={styles.title}>Versículo del día</Text>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onLongPress={enabledMusic}
+          onPress={() => {
+            if (isDefaultVerse) return;
+            navigation.navigate(Screens.Home, {
+              book: dailyVerse.bookName,
+              chapter: dailyVerse.chapter,
+              verse: dailyVerse?.verse,
+            });
+          }}
+          style={styles.verseContainer}
+        >
+          <Text style={styles.verseRef}>
+            {`${dailyVerse.bookName} ${dailyVerse.chapter}:${dailyVerse?.verse}`}
+          </Text>
+          <Text style={styles.verseText}>{`${
+            dailyVerse?.verse
+          } ${getVerseTextRaw(dailyVerse?.text || '')}`}</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
+
+const getStyles = ({ colors }: TTheme) =>
+  StyleSheet.create({
+    dailyVerseContainer: {
+      backgroundColor: 'transparent',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%',
+      minHeight: 140,
+      flex: 1,
+    },
+    infoIcon: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      zIndex: 100,
+    },
+    header: {
+      backgroundColor: 'transparent',
+      marginBottom: 16,
+      alignItems: 'center',
+    },
+    title: {
+      width: '100%',
+      color: colors.notification,
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 8,
+    },
+    verseContainer: {
+      backgroundColor: colors.text + 20,
+      padding: 12,
+      borderRadius: 8,
+    },
+    verseRef: {
+      color: colors.text,
+      fontSize: 18,
+      fontStyle: 'italic',
+      textAlign: 'center',
+      fontWeight: 'bold',
+    },
+    verseText: {
+      color: colors.text,
+      fontSize: 18,
+      fontStyle: 'italic',
+      textAlign: 'center',
+    },
+  });
+
+export default DailyVerseTwo;
