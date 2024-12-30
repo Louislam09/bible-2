@@ -11,6 +11,10 @@ import { useNavigation } from 'expo-router';
 import React, { useCallback, useRef } from 'react';
 import { ScrollView, StyleSheet, ToastAndroid } from 'react-native';
 import { IDashboardOption } from '../../app/(dashboard)';
+import BottomModal from '../BottomModal';
+import VoiceList from '../VoiceList';
+import VersionList from '../home/header/VersionList';
+import { useBibleContext } from '@/context/BibleContext';
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
@@ -22,6 +26,12 @@ const SecondDashboard = () => {
   const theme = useTheme();
   const styles = getStyles(theme);
 
+  const {
+    currentBibleVersion,
+    selectBibleVersion,
+    clearHighlights,
+    orientation = 'PORTRAIT',
+  } = useBibleContext();
   const {
     storedData,
     historyManager: { getCurrentItem },
@@ -35,6 +45,12 @@ const SecondDashboard = () => {
     lastBottomSideVerse,
     isSongLyricEnabled,
   } = storedData;
+
+  const onSelect = (version: string) => {
+    clearHighlights();
+    selectBibleVersion(version);
+    versionRef.current?.dismiss();
+  };
 
   const onSong = useCallback(() => {
     if (!isSongLyricEnabled) {
@@ -179,6 +195,13 @@ const SecondDashboard = () => {
         <MainSection list={mainActionItems} theme={theme} />
         <StudyTools list={studyToolItems} theme={theme} />
         <AdditionalResources list={additionalResourceList} theme={theme} />
+        <BottomModal shouldScroll startAT={2} ref={voiceBottomSheetModalRef}>
+          <VoiceList theme={theme} />
+        </BottomModal>
+
+        <BottomModal shouldScroll startAT={1} ref={versionRef}>
+          <VersionList {...{ currentBibleVersion, onSelect, theme }} />
+        </BottomModal>
       </ScrollView>
     </StatusBarBackground>
   );
