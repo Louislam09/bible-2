@@ -55,7 +55,7 @@ const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
           styles.cardContainer,
           { backgroundColor: theme.colors.background },
         ]}
-        onPress={() => onItemClick(item)}
+        onPress={() => onItemClick(item.id)}
       >
         <Text>#{item.title}</Text>
         <Text style={{ color: theme.colors.notification }}>
@@ -95,6 +95,10 @@ const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
     setSelected(item);
   };
 
+  const handleSongPress = (songTitle: string) => {
+    router.push({ pathname: `/song/${songTitle}` });
+  };
+
   const SongHeader = () => {
     return (
       <View style={[styles.noteHeader, !isPortrait && { paddingTop: 0 }]}>
@@ -121,23 +125,6 @@ const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
     );
   };
 
-  // useEffect(() => {
-  //   const backAction = () => {
-  //     versionRef.current?.dismiss();
-  //     setSelected(null);
-  //     setSearchText("");
-  //     !selected && router.back();
-  //     return true;
-  //   };
-
-  //   const backHandler = BackHandler.addEventListener(
-  //     "hardwareBackPress",
-  //     backAction
-  //   );
-
-  //   return () => backHandler.remove();
-  // }, [selected]);
-
   const getIndex = (index: any) => {
     const value = snaps[index] || 30;
     topHeight.setValue(value);
@@ -158,7 +145,7 @@ const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
           backgroundColor: theme.dark ? theme.colors.background : '#eee',
         }}
       >
-        <BottomModal
+        {/* <BottomModal
           shouldScroll
           snaps={_snaps}
           startAT={2}
@@ -172,39 +159,36 @@ const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
           >
             <SongLyricView theme={theme} song={selected} />
           </Animated.View>
-        </BottomModal>
-        <>
-          {SongHeader()}
-          <FlashList
-            key={schema}
-            contentContainerStyle={{
-              backgroundColor: theme.dark ? theme.colors.background : '#eee',
-              paddingVertical: 20,
-            }}
-            decelerationRate={'normal'}
-            estimatedItemSize={135}
-            data={
-              searchText
-                ? filterData.filter(
-                    (x: any) =>
-                      x?.title
-                        .toLowerCase()
-                        .indexOf(searchText.toLowerCase()) !== -1
-                  )
-                : filterData
-            }
-            // renderItem={renderItem as any}
-            renderItem={({ item, index }) => (
-              <RenderItem
-                {...{ theme, styles, onItemClick }}
-                item={item}
-                index={index}
-              />
-            )}
-            keyExtractor={(item: any, index: any) => `note-${index}`}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-          />
-        </>
+        </BottomModal> */}
+        {SongHeader()}
+        <FlashList
+          key={schema}
+          contentContainerStyle={{
+            backgroundColor: theme.dark ? theme.colors.background : '#eee',
+            paddingVertical: 20,
+          }}
+          decelerationRate={'normal'}
+          estimatedItemSize={135}
+          data={
+            searchText
+              ? filterData.filter(
+                  (x: any) =>
+                    x?.title.toLowerCase().indexOf(searchText.toLowerCase()) !==
+                    -1
+                )
+              : filterData
+          }
+          // renderItem={renderItem as any}
+          renderItem={({ item, index }) => (
+            <RenderItem
+              {...{ theme, styles, onItemClick: handleSongPress }}
+              item={item}
+              index={index}
+            />
+          )}
+          keyExtractor={(item: any, index: any) => `note-${index}`}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+        />
       </View>
     </>
   );

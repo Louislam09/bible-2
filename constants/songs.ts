@@ -1,5 +1,6 @@
 export default [
   {
+    id: "01",
     title: "01 - A LOS QUE ESTÁN CASADOS",
     chorus: null,
     stanzas: [
@@ -11,6 +12,7 @@ export default [
     ],
   },
   {
+    id: "02",
     title: "02 - ¡A TU SERVICIO!",
     chorus:
       "¡A Tu servicio pongo mi vida\npara tu gloria, mi Señor!\n¡Todos los días yo quiero estar\na Tu servicio, esté donde esté!",
@@ -22,6 +24,7 @@ export default [
     ],
   },
   {
+    id: "03",
     title: "03 - ¡ACORDES DE ASÁF!",
     chorus: null,
     stanzas: [
@@ -34,6 +37,7 @@ export default [
     ],
   },
   {
+    id: "04",
     title: "04 - ¡ALABAD A JEHOVÁH!",
     chorus:
       "¡Alabadle sol y luna!\n¡Alabadle vosotras todas lucientes estrellas!\n¡Alabadle! ¡Alabadle cielos de los cielos,\ny las aguas que están sobre los cielos! ¡Alabadle!",
@@ -48,6 +52,7 @@ export default [
     ],
   },
   {
+    id: "05",
     title: "05 - ¡ANUNCIEN QUE ÉL RESUCITÓ!",
     chorus:
       "¿Por qué buscáis a Cristo aquí?\n¡Entre los muertos ya no está!\n¡Ya no lloréis! ¡Cantad, reíd!\nY proclamad: ¡Que Cristo vive y reina ya!",
@@ -59,6 +64,7 @@ export default [
     ],
   },
   {
+    id: "06",
     title: "06 - ¡BABILONIA CAERÁ!",
     chorus: null,
     stanzas: [
@@ -68,6 +74,7 @@ export default [
     ],
   },
   {
+    id: "07",
     title: "07 - BARTIMEO EL CIEGO",
     chorus:
       "¡Hay Poder, Poder, sin igual Poder, en Jesús de Nazaret!\n¡Hay Poder, Poder, sin igual Poder, en Su Sangre que vertió!",
@@ -81,6 +88,7 @@ export default [
     ],
   },
   {
+    id: "08",
     title: "08 - ¡BELLAS PALABRAS DE VIDA!",
     chorus:
       "(E) ¡Bellas palabras de vida, son las de Cristo Jesús!\n¡Ellas alientan mi vida! ¡Dan fortaleza y salud!\n¡Bellas palabras de vida! ¡Se reflejan en mi ser!\n¡Bellas palabras que nunca en mi vida había entendido hasta hoy!\n¡Bellas palabras que nunca en mi vida había entendido hasta hoy!",
@@ -91,6 +99,7 @@ export default [
     ],
   },
   {
+    id: "09",
     title: "09 - ¡CANTAD AL REY DE LA CREACIÓN!",
     chorus:
       "(E) ¡Cantad, cantad, dulcísima canción!\n¡Cantad, cantad, al Rey de la creación!\nVosotros ángeles que Él creó, y hacéis su voluntad.\nVosotras, obras que Él formó, Su nombre celebrad.",
@@ -102,6 +111,7 @@ export default [
     ],
   },
   {
+    id: "10",
     title: "10.- ¡CANTARÉ DE JESÚS!",
     chorus:
       "(E) ¡Yo soy feliz con mi Cristo, porque Él mi alma salvó!\nÁngeles cantan alegres, por cuantos Él redimió!\n¡Ah! ¡Cuán hermosa es la vida, dulce, serena de fe!\n¡Soy extranjero en el mundo, pero ando con Cristo, de mi alma Rey!",
@@ -113,6 +123,7 @@ export default [
     ],
   },
   {
+    id: "11",
     title: "11.- ¡COMO EN LOS DÍAS DE NOÉ...!",
     chorus:
       "(E) Hoy, ¡se repite! ¡Todo acabará!\n¡Todo este planeta, en fuego arderá!",
@@ -123,6 +134,7 @@ export default [
     ],
   },
   {
+    id: "12",
     title: "12 - ¿Cómo podré expresar mi gratitud?",
     chorus:
       "¿Cómo podré expresar mi gratitud, Señor?\nSolo puedo llorar con lágrimas de amor.\nNada te puedo dar, solo mi corazón.\nQuiero estar cerca, más cerca de Ti, mi Dios.",
@@ -133,6 +145,7 @@ export default [
     ],
   },
   {
+    id: "13",
     title: "13 - Corona de vida",
     chorus:
       "¡Mi corona de vida y justicia será,\nforjada por la mano de Dios!\nComo piedras preciosas en ellas serán\nLos que en Sangre de Su Hijo salvó.",
@@ -143,6 +156,7 @@ export default [
     ],
   },
   {
+    id: "14",
     title: "14 - ¡Cristo vendrá otra vez!",
     chorus:
       "¡Viene otra vez! ¡Con rapidez!\n¡En gloria viene por segunda vez!\n¡Viene otra vez! ¡Con brillantez!\n¡Cristo vendrá otra vez!",
@@ -154,6 +168,7 @@ export default [
     ],
   },
   {
+    id: "15",
     title: "15.- ¡CRISTO YA VIENE!",
     chorus:
       "¡Cristo ya viene! ¡Mi amado precioso Señor!\n¡Viene en Su gloria, en gloria de gran resplandor!\n¡Por mil milenios veremos Su faz celestial!\n¡Fue Su promesa sacarnos del mundo\npara rescatarnos del mal!",
@@ -164,6 +179,7 @@ export default [
     ],
   },
   {
+    id: "16",
     title: "16.- ¡CUÁN GRANDE ES DIOS!",
     chorus:
       '…mi corazón entona ésta canción:\n"¡Cuán grande es Dios! ¡Cuán grande es Dios!"\nMi corazón entona ésta canción:\n"¡Cuán grande es Dios! ¡Cuán grande es Dios!"',
@@ -175,6 +191,7 @@ export default [
     ],
   },
   {
+    id: "17",
     title: "17.- CUANDO COMBATIDO",
     chorus:
       "¡Cuenta las riquezas de tu Dios!;\n¡Mira las riquezas de Su amor!,\npon tu vista donde Cristo está,\ny tu mente capte Su divina Faz.",
@@ -186,6 +203,7 @@ export default [
     ],
   },
   {
+    id: "18",
     title: "18.- CUANDO CRISTO VENGA AL MUNDO OTRA VEZ",
     chorus:
       "¡Oh, Jesús vendrá al mundo otra vez! (¡Gloria a Dios!)\n¡Si, Jesús vendrá al mundo otra vez! (Haleluyáh)\n¡Lo veremos en las nubes con los ángeles de Dios!\n¡Cuando Cristo venga al mundo otra vez!",
@@ -197,6 +215,7 @@ export default [
     ],
   },
   {
+    id: "19",
     title: "19.- ¡CUANDO TE QUIERO MÁS!",
     chorus:
       "¡Cuando te quiero más,\n¡Cuando te quiero más\ncerca Tú estás, mi buen Salvador!\n¡Cuando te quiero más!",
@@ -208,6 +227,7 @@ export default [
     ],
   },
   {
+    id: "20",
     title: "20.- CUANDO VEO SU FAZ",
     chorus:
       "Cuando veo Su faz, Su sonriente faz,\nel problema se va, cuando veo Su faz.\nÉl me imparte Su amor y me da dulce paz,\ncuando veo de Él Su sonriente faz.",
@@ -219,6 +239,7 @@ export default [
     ],
   },
   {
+    id: "21",
     title: "21.- CUATRO METÁFORAS",
     chorus:
       "¡El león, cachorro en Yehudá!\n¡El Buey, Becerro de Efraím!\n¡El Águila, que vuela ya!\n¡Y el Varón amado de Elohím!",
@@ -232,6 +253,7 @@ export default [
     ],
   },
   {
+    id: "22",
     title: "22.- ¡CUÉNTASELO EN ORACIÓN!",
     chorus: null,
     stanzas: [
@@ -241,6 +263,7 @@ export default [
     ],
   },
   {
+    id: "23",
     title: "23.- DA LO MEJOR AL MAESTRO",
     chorus:
       "¡Da lo mejor al maestro! A combatir por Él ven.\nSé paladín decidido de la verdad y del bien.",
@@ -251,6 +274,7 @@ export default [
     ],
   },
   {
+    id: "24",
     title: "24.- ¡DEJA DE VAGAR!",
     chorus:
       "¡Ven, ven a Mí y revivirás!\n¡Ponte hoy Mi yugo, Yo te ayudaré!\n¡Sigue mi ejemplo: Manso, humilde soy!\n¡Ven, en Mí confía! ¡Yo te salvaré!",
@@ -262,6 +286,7 @@ export default [
     ],
   },
   {
+    id: "25",
     title: "25.- ¡DEJEMOS LAS SIMPLEZAS!",
     chorus:
       'Cuando descubrimos que perdimos tanto tiempo\npracticando sólo "la doctrina del comienzo",\n¡Decidimos no seguir amando la simpleza!\nPues, por madurez, ¡Dios nos reclama perfección!',
@@ -276,6 +301,7 @@ export default [
     ],
   },
   {
+    id: "26",
     title: "26.- ¡DESPUÉS DE LA BATALLA!",
     chorus:
       "Y después de la batalla nos congregará;\n¡Jehováh nos sanará, y nos consolará!\nDespués de la batalla la Puerta abrirá\n¡Y entraremos al Hogar!\nY el dolor huirá, y ¡reposo allí habrá!\nDespués de la batalla nos coronará en aquella santa Sión.",
@@ -286,6 +312,7 @@ export default [
     ],
   },
   {
+    id: "27",
     title: "27.- ¡DIOS ME AYUDARÁ!",
     chorus:
       "¡Dios me ayudará! ¡Dios me ayudará!\n¡Mi buen Dios siempre me ha amado!\n¡Dios me ayudará!",
@@ -297,6 +324,7 @@ export default [
     ],
   },
   {
+    id: "28",
     title: "28.- ¡DIVINO AMOR!",
     chorus:
       "¡Divino amor! ¡Divino amor!\n¡Tu gran poder me conquistó!\n¡Mi corazón será de Ti!\n¡Divino amor! ¡Divino amor!",
@@ -308,6 +336,7 @@ export default [
     ],
   },
   {
+    id: "29",
     title: "29.- DOBLE PORCIÓN",
     chorus:
       "¡Doble porción envía Dios; la salvación, la Perfección!\nEstán lloviendo ya las dos en esta gran Restauración.",
@@ -324,6 +353,7 @@ export default [
     ],
   },
   {
+    id: "30",
     title: "30.- EL AMIGO DE MI ALMA",
     chorus: "Y yo soy feliz, ¡Yo soy muy feliz!, con Él",
     stanzas: [
@@ -333,6 +363,7 @@ export default [
     ],
   },
   {
+    id: "31",
     title: "31.- EL CAMINO DE SANTIDAD",
     chorus:
       "¡Soy salvo! ¡Por eso canto!\n¡Cristo me salva! ¡Ah, cuan glorioso!\n¡Soy salvo! ¡Miro Su gloria!\n¡Yo glorifico a mi Salvador!",
@@ -344,6 +375,7 @@ export default [
     ],
   },
   {
+    id: "32",
     title: "32.- ¡ÉL CUMPLE LO QUE HABLÓ!",
     chorus:
       "¡Gloria, honores y lealtad,\nal Eterno tributamos!\n¡Sin cansancio anunciamos\nque Él cumple lo que habló!",
@@ -353,6 +385,7 @@ export default [
     ],
   },
   {
+    id: "33",
     title: "33.- ¡EL DÍA ANUNCIADO!",
     chorus:
       '¡Gloria le rendirán a Cristo el Salvador!\n¡Porque Él los viene a librar de un mundo de maldad!\nGritan "¡Aleluya!" los que esperando están\nque a Sus fieles creyentes Él venga a rescatar.',
@@ -364,6 +397,7 @@ export default [
     ],
   },
   {
+    id: "34",
     title: "34.- ¡EL INGRATO DE DON JUAN!",
     chorus:
       "¡Pero al morirme Yo, no habrá indecisión,\nde que JESÚS me dio la gran recepción!\n¡Tendré un breve dormir e inmediato despertar\nen Su santo Paraíso, donde Él dará el aviso\nde que YO LOGRÉ TRIUNFAR!",
@@ -379,6 +413,7 @@ export default [
     ],
   },
   {
+    id: "35",
     title: "35.- EL MÉDICO DEL ALMA",
     chorus:
       "¡Culpas y pecados Él quitó,\ncon Su Sangre que en la cruz vertió!\nAlma que al pecado atada estás,\n¡Ven a Cristo y libertad tendrás!",
@@ -389,6 +424,7 @@ export default [
     ],
   },
   {
+    id: "36",
     title: "36.- EL MUNDO FELIZ",
     chorus:
       "En el mundo feliz.\nNos espera mi gran Salvador.\nEn el mundo feliz.\nNos espera mi gran Salvador.",
@@ -399,6 +435,7 @@ export default [
     ],
   },
   {
+    id: "37",
     title: "37.- EL NIÑO REY",
     chorus: null,
     // "chorus": "\"¡Gloria sea a Yehováh en las alturas!\ny en la tierra, ¡paz, buena voluntad!\"",
@@ -413,6 +450,7 @@ export default [
     ],
   },
   {
+    id: "38",
     title: "38.- ¡EL NOMBRE DE JESÚS!",
     chorus:
       "¡NOMBRE agradable el de Él!\n¡Nombre temible también!\n¡Huyen legiones del mal,\ncuando escuchan el Nombre!",
@@ -424,6 +462,7 @@ export default [
     ],
   },
   {
+    id: "39",
     title: "39.- EL PRÍNCIPE DE PAZ",
     chorus:
       "Y Su nombre que era oculto,\nes ahora revelado:\n¡Es Yeshúa, y Shilóh también;\nes el Príncipe de Paz!",
@@ -435,6 +474,7 @@ export default [
     ],
   },
   {
+    id: "40",
     title: "40.- ¡ÉL SE HA PREOCUPADO POR MÍ!",
     chorus:
       "¡Él se ha preocupado por mí,\nque nada me vaya a faltar!\n¡Y todos mis buenos deseos aquí\nmuy pronto Él me los va a saciar!",
@@ -446,6 +486,7 @@ export default [
     ],
   },
   {
+    id: "41",
     title: "41.- ¡ÉL SIEMPRE CUMPLE!",
     chorus:
       "¡Mi Jesús! ¡En Él confío!\n¡Siempre cumple, vez tras vez!\n¡Mi Jesús! ¡Que agradable\nes seguir confiando en Él!",
@@ -457,6 +498,7 @@ export default [
     ],
   },
   {
+    id: "42",
     title: "42. - ¡ÉL TE QUIERE AYUDAR!",
     chorus:
       "¡Él te quiere ayudar! ¡Platícale tu dolor!\n¡Y Cristo mi amigo vivirá contigo!\n¡Porque Él te quiere ayudar!",
@@ -469,6 +511,7 @@ export default [
     ],
   },
   {
+    id: "43",
     title: "43.- En el Calvario",
     chorus:
       "¡Por Su sangre, por Su sangre,\nSomos redimidos, si, por Su sangre carmesí!\n¡Por Su sangre, por Su sangre,\npor la sangre de Jesús, del Calvario.",
@@ -479,6 +522,7 @@ export default [
     ],
   },
   {
+    id: "44",
     title: "44.- En el monte Calvario",
     chorus:
       "¡Y yo siempre amaré a Jesús!\n¡En Sus triunfos mi gloria será!\nY un día en vez de una cruz,\n¡Mi Corona, Jesús me dará!",
@@ -490,6 +534,7 @@ export default [
     ],
   },
   {
+    id: "45",
     title: "45.- ¡En Jesucristo me gozo!",
     chorus:
       "¡Cristo, Cristo, eres mi Salvador!\n¡Cristo, Cristo, eres mi Redentor!\n¡Te entrego mi vida entera, porque me has dado paz!\nY al terminar mi carrera podré contemplar Tu faz",
@@ -500,6 +545,7 @@ export default [
     ],
   },
   {
+    id: "46",
     title: "46. - ¡EN LA NUEVA JERUSALÉM!",
     chorus:
       "Cantaremos con los santos la Canción de Redención.\n¡En Jerusalém, en Jerusalém!\nCon potente gritería alabando al Salvador,\n¡En la nueva Jerusalém!",
@@ -511,6 +557,7 @@ export default [
     ],
   },
   {
+    id: "47",
     title: "47. - ¡EN PAZ ME ACOSTARÉ!",
     chorus: null,
     stanzas: [
@@ -522,6 +569,7 @@ export default [
     ],
   },
   {
+    id: "48",
     title: "48. - ¡ENSEÑANZAS DE JESÚS!",
     chorus:
       "¡Enseñanzas de Jesús, que a mi alma vida dan!\n¡Me instruyen! ¡Me alertan! ¡Me traen más Luz!\n¡Enseñanzas de Jesús!",
@@ -533,6 +581,7 @@ export default [
     ],
   },
   {
+    id: "49",
     title: "49. - ¡ES MI AMIGO!",
     chorus:
       "¡Es mi Amigo! ¡Es mi Amigo!\nY es el Lirio de los Valles, mi Jesús.\n¡Es mi Amigo! ¡Es mi Amigo!\nY es el Lirio de los Valles, mi Jesús",
@@ -543,6 +592,7 @@ export default [
     ],
   },
   {
+    id: "50",
     title: "50. - ¡ESCÚCHAME TÚ ISRAEL!",
     chorus:
       "¡Abre Israel tu corazón! ¡Abre Israel tu corazón!\n¡Abre Israel tu corazón! ¡Y Yo te salvaré!",
@@ -555,6 +605,7 @@ export default [
     ],
   },
   {
+    id: "51",
     title: "51. - ¡FLOJO, PONTE A TRABAJAR!",
     chorus:
       'Ven, y ve los campos blancos, que ya están\nesperando manos que los segarán;\n¡Flojo! ¡Despierta! ¡Hazlo pronto! y ¡alerta!\nSé el primero en decirle: "¡Heme aquí, Señor!"\nPor doquier se inclina la madura mies,\nque las auras mueven, y ¡qué bella es!\n¡Flojo, despierta! ¡hazlo pronto! Y ¡alerta!\n¡Pocos días ya te quedan para cosechar!',
@@ -565,6 +616,7 @@ export default [
     ],
   },
   {
+    id: "52",
     title: "52. - GETSEMANÍ",
     chorus:
       "¡Getsemaní! hondo recuerdo.\n¡Getsemaní!, lugar hermoso.\nAllí contemplo arrodillado\nal Hijo eterno de mi Dios.",
@@ -576,6 +628,7 @@ export default [
     ],
   },
   {
+    id: "53",
     title: "53. - ¡GLORIA EN LAS ALTURAS!",
     chorus:
       "¡Gloria, alegría y solaz!,\ncantan los humanos al Creador.\n¡Gloria en las Alturas y en la tierra paz!,\nlos ángeles cantan al Señor.",
@@ -588,6 +641,7 @@ export default [
     ],
   },
   {
+    id: "54",
     title: "54. - ¡GRANDES COSAS…!",
     chorus: null,
     stanzas: [
@@ -597,6 +651,7 @@ export default [
     ],
   },
   {
+    id: "55",
     title: "55. - ¡HÁBLAME, TÚ, MI CRISTO!",
     chorus:
       "¡Háblame, Tú, mi Cristo, háblame con amor!\n¡Tómame en Tus brazos, llena mi corazón!\n¡Me estoy postrado a Tus pies al escuchar tu voz!\nDame descanso, gozo, paz y tranquilidad.",
@@ -607,6 +662,7 @@ export default [
     ],
   },
   {
+    id: "56",
     title: "56. - ¡HARÁS SU SANTA VOLUNTAD!",
     chorus:
       "¡Si lo haces, Él sus dones te dará!\nSi cambias, ¡gozo y paz en ti Él pondrá!\n¡La Sangre de Jesús te limpiará!\n¡y siempre harás Su santa voluntad!",
@@ -617,6 +673,7 @@ export default [
     ],
   },
   {
+    id: "57",
     title: "57.-¡HAY PODER EN JESÚS!",
     chorus:
       "¡Hay poder, poder, sin igual poder\nen Jesús mi Salvador!\n¡Hay poder, poder, sin igual poder,\nen Su sangre que vertió!",
@@ -627,6 +684,7 @@ export default [
     ],
   },
   {
+    id: "58",
     title: "58.- ¡HAY QUÉ ANUNCIAR…!",
     chorus:
       "¡Anuncien a todos que el Salvador regresa al mundo!\n¡En triunfo y victoria,\nal mundo pronto volverá!",
@@ -639,6 +697,7 @@ export default [
     ],
   },
   {
+    id: "59",
     title: "59.- ¡HAY UN BAUTISMO ESPIRITUAL!",
     chorus:
       "¡Al Bautismo con Sangre de Jesús\nlo acompaña su identificación!\n¡Los que andan como Él siempre en la Luz\ntienen santificación!",
@@ -649,6 +708,7 @@ export default [
     ],
   },
   {
+    id: "60",
     title: "60.- ¡HE VUELTO A NACER!",
     chorus:
       "¡En Tu plan divino yo estaba contado!\n¡Ya soy redimido! ¡por siempre salvado!\nTan sólo por gracia, porque no era digno,\nya que en el pecado yo estuve perdido",
@@ -659,6 +719,7 @@ export default [
     ],
   },
   {
+    id: "61",
     title: "61.- ¡HOY YO TE INVITO…!",
     chorus:
       "¡No puede el mundo ser mi hogar!\n¡No puede el mundo ser mi hogar!\n¡en gloria tengo mi mansión!\n¡No puede el mundo ser mi hogar!",
@@ -669,6 +730,7 @@ export default [
     ],
   },
   {
+    id: "62",
     title: "62.- ¡JESÚS ME GUÍA AQUÍ!",
     chorus:
       "¡Jesús me guía aquí! Él me salvó a mí,\nSu paz, Su amor a puesto en mi alma bien lo sé.\n¡Jesús me guía aquí!, me guarda por la fe.\n¡Doy gloria a Su nombre! ¡Jesús me guía aquí!",
@@ -679,6 +741,7 @@ export default [
     ],
   },
   {
+    id: "63",
     title: "63.- LA ESPOSA DE YESHÚA",
     chorus:
       "¡La esposa de Yeshúa se llama Beuláh!\n¡Es virtuosa! ¡Haleluyáh!\nLos ángeles del cielo confirman en coro:\n¡Ella teme a Yehováh!",
@@ -689,6 +752,7 @@ export default [
     ],
   },
   {
+    id: "64",
     title: "64.- LA MAÑANA VINO YA",
     chorus:
       "La mañana reina ya en mi corazón;\ntoda sombra ha disipado mi Señor.\nYa cantando alegre voy,\nporque con Jesús estoy,\nLa mañana reina ya en mi corazón.",
@@ -699,6 +763,7 @@ export default [
     ],
   },
   {
+    id: "65",
     title: "65.- LA OVEJA REBELDE",
     chorus:
       "Sus noventa y nueve guardó de inmediato,\ny por los barrancos, ¡a buscarme fue!\nMe encontró llorando, ¡temblando de miedo!\nCuró mis heridas, me cargó en Sus brazos,\n¡y así me salvó!",
@@ -709,6 +774,7 @@ export default [
     ],
   },
   {
+    id: "66",
     title: "66.- LAS PROMESAS DEL SEÑOR JESÚS",
     chorus:
       "¡Grandes, fieles,\nlas promesas que el Señor Jesús ha dado!\n¡Grandes, fieles,\nen ellas para siempre confiare!",
@@ -719,6 +785,7 @@ export default [
     ],
   },
   {
+    id: "67",
     title: "67.- LAS SAGRADAS ESCRITURAS",
     chorus:
       "¡Cielo!... ¡Tierra!... ¡Vía Láctea!... ¡todo, todo acabará!\n¡Solo la Palabra Santa por milenios durará!",
@@ -729,6 +796,7 @@ export default [
     ],
   },
   {
+    id: "68",
     title: "68.- ¡LIBRE, AL FIN!",
     chorus:
       "¡Dios me ha hecho libre! ¡Libre, al fin, ya soy!\n¡Que mi voz hoy vibre! ¡Alabando a Dios estoy!",
@@ -741,6 +809,7 @@ export default [
     ],
   },
   {
+    id: "69",
     title: "69.- ¡LIBRO SANTO!",
     chorus: null,
     stanzas: [
@@ -750,6 +819,7 @@ export default [
     ],
   },
   {
+    id: "70",
     title: "70.- ¡LLUVIA DE BENDICIÓN!",
     chorus:
       "¡Lluvias de gracia, lluvias pedimos Señor!\n¡Mándanos lluvias copiosas, lluvias del Consolador!",
@@ -761,6 +831,7 @@ export default [
     ],
   },
   {
+    id: "71",
     title: "71.- ¡LO SÉ! ¡LO SÉ!",
     chorus:
       "(E) ¡Lo sé! ¡Lo sé! ¡Lavado en Su sangre yo soy!\n¡Lo sé! ¡Lo sé! ¡Con Cristo al cielo yo voy!",
@@ -773,6 +844,7 @@ export default [
     ],
   },
   {
+    id: "72",
     title: "72.- ¡MÁS DE JESÚS!",
     chorus:
       "(E) ¡Más quiero amarle,\nmás quiero honrarle!\n¡más de Su salvación gozar,\nmás de su dulce amor gustar!",
@@ -784,6 +856,7 @@ export default [
     ],
   },
   {
+    id: "73",
     title: "73.- MI BUEN PASTOR",
     chorus:
       "(E) ¡Mi buen Pastor, tu cayado me guiará!\n¡Mi buen Pastor, con tu amor me sostendrás!\n¡Mi buen Pastor, nada mi alma temerá!\n¡Aunque en valle de sombra de muerte esté,\nsé conmigo y seguro estaré!",
@@ -795,6 +868,7 @@ export default [
     ],
   },
   {
+    id: "74",
     title: "74.- ¡MI DIOS, LÁVAME!",
     chorus: "",
     stanzas: [
@@ -805,6 +879,7 @@ export default [
     ],
   },
   {
+    id: "75",
     title: "75.- ¡MI DIOS PERDONA AL PECADOR!",
     chorus:
       "(E) ¡Excelsa gracia de amor!,\ny mi Dios perdona al pecador\nque presto está a confesar\nsus culpas y en Jesús confiar.\n¡No hay otro autor de salvación!\npues Cristo obró la redención.",
@@ -815,6 +890,7 @@ export default [
     ],
   },
   {
+    id: "76",
     title: "76.- ¡MI FIEL AMIGO!",
     chorus:
       "(E)¡Es Imánuel mi fiel amigo! ¡Es Imánuel mi fiel amigo!\n¡Él mis suplicas oirá!¡Mis angustias quitará!\n¡Es Imánuel mi fiel amigo!",
@@ -827,6 +903,7 @@ export default [
     ],
   },
   {
+    id: "77",
     title: "77.- MI PIEDRECITA BLANCA",
     chorus:
       "(E) Esta frase que Pedro pronunció\nJesucristo llamó ¡Revelación!\n// y que en el 10:4 dice la primera a los Corintios,\nque otro Apóstol ¡Así lo confirmó! //",
@@ -838,6 +915,7 @@ export default [
     ],
   },
   {
+    id: "78",
     title: "78.- MI REY SOBERANO",
     chorus: "",
     stanzas: [
@@ -847,6 +925,7 @@ export default [
     ],
   },
   {
+    id: "79",
     title: "79.- ¡MORIBUNDO ME HALLÓ!",
     chorus:
       '(E) Y ese día en que Cristo, moribundo me halló,\nMe dijo: "¡Ya no temas! Solo ¡mira hacia Mí!"\n"Por redimirte, ¡Mi vida entregué!\nPor darte Vida, ¡traspasado yo fui!"',
@@ -857,6 +936,7 @@ export default [
     ],
   },
   {
+    id: "80",
     title: "80.- ¡MUERES POR MÍ!",
     chorus: "",
     stanzas: [
@@ -868,6 +948,7 @@ export default [
     ],
   },
   {
+    id: "81",
     title: "81.- ¡MUY LEJOS DE DIOS ME SENTÍ!",
     chorus:
       "(E) ¡Yo todo dejé para andar en la Luz!\nNo moro en tinieblas ya más.\nYa todo dejé por seguir a Jesús,\ny vivo en la luz de Su faz.",
@@ -879,6 +960,7 @@ export default [
     ],
   },
   {
+    id: "82",
     title: "82.- ¡NADA DE SOMBRAS!",
     chorus:
       "(E) ¿Sombras? ¡Nada de sombras!\n¡Al dejar el mundo de dolor!\n¿Sombras? ¡Nada de sombras!\n¡Cuando al cielo llegue el vencedor!",
@@ -889,6 +971,7 @@ export default [
     ],
   },
   {
+    id: "83",
     title: "83.- NI ORO, NI PLATA",
     chorus:
       "(E) Me redimió, mas no con plata.\n¡Me compró el Salvador!\nCon oro no, ¡mas con Su Sangre!\nGrande precio de Su amor.",
@@ -901,6 +984,7 @@ export default [
     ],
   },
   {
+    id: "84",
     title: "84.- ¡NO DEBO PREOCUPARME!",
     chorus:
       '(E) ¡Feliz, cantando alegre! Yo digo siempre así:\n"¡Si Él cuida de las aves cuidará también de mí!"\n"¡Si Él cuida de las aves cuidará también de mí!"',
@@ -911,6 +995,7 @@ export default [
     ],
   },
   {
+    id: "85",
     title: "85.- ¡NO TENGO RIQUEZAS!",
     chorus:
       "(E) ¡Más allá del sol! ¡Más allá del sol!\nYo tengo un hogar ¡mi hogar! Bello hogar; ¡más allá del sol!\n¡Más allá del sol! ¡Más allá del sol!\nYo tengo un hogar ¡mi hogar! Bello hogar; ¡más allá del sol!",
@@ -921,6 +1006,7 @@ export default [
     ],
   },
   {
+    id: "86",
     title: "86.- ¡PARA LA GLORIA DE DIOS!",
     chorus: null,
     stanzas: [
@@ -931,6 +1017,7 @@ export default [
     ],
   },
   {
+    id: "87",
     title: "87.-¡PONTE EN CONTACTO…!",
     chorus:
       "¡Ponte en contacto con el Salvador!\nY si la tristeza te quiere invadir;\nlleno de alegría siempre estarás,\n¡A causa del contacto con El salvador!",
@@ -942,6 +1029,7 @@ export default [
     ],
   },
   {
+    id: "88",
     title: "88.-¡POR LOS MALDITOS COMO YO!",
     chorus:
       "¡Su grande amor a mí me salvó!\n¡Su grande amor me libertó!\nEn una cruz mi Jesús sufrió\npor ese amor que tiene Él para mí.",
@@ -952,6 +1040,7 @@ export default [
     ],
   },
   {
+    id: "89",
     title: "89.-¡POR MIS CULPAS!",
     chorus:
       "¡Mis pecados borró, cuando sangre vertió,\nel sublime, Cordero de Dios!\n¡Los desprecios sufrió, y mi alma salvó!\n¡Él cambió mis tinieblas en luz!",
@@ -962,6 +1051,7 @@ export default [
     ],
   },
   {
+    id: "90",
     title: "90.-¡POR PROFETAS CON TROMPETAS!",
     chorus: null,
     stanzas: [
@@ -974,6 +1064,7 @@ export default [
     ],
   },
   {
+    id: "91",
     title: "91.-¡POR TANTAS MARAVILLAS!",
     chorus: null,
     stanzas: [
@@ -986,6 +1077,7 @@ export default [
     ],
   },
   {
+    id: "92",
     title: "92. - ¡PRECIOSA SANGRE!",
     chorus: null,
     stanzas: [
@@ -996,6 +1088,7 @@ export default [
     ],
   },
   {
+    id: "93",
     title: "93. - ¡PREDIQUEMOS LA VERDAD!",
     chorus:
       "¡Sólo Jesucristo puede transformar al pecador!\n¡No hay otro Salvador, ni hay otro mediador!\n¡Sólo Jesucristo salva al pecador!",
@@ -1009,6 +1102,7 @@ export default [
     ],
   },
   {
+    id: "94",
     title: "94. - ¡QUÉ BONDAD TAN INFINITA!",
     chorus:
       "¡Es Jesús para mí,\nla esperanza de salud!\n¡Sólo en Él hallaré\nla divina plenitud!",
@@ -1019,6 +1113,7 @@ export default [
     ],
   },
   {
+    id: "95",
     title: "95.-¡¿QUIÉN PODRÁ IGUALARTE?!",
     chorus:
       "¡No me cansaré nunca de admirarte!\n¡Yehováh mi Dios, ¿quién podrá igualarte?!",
@@ -1030,6 +1125,7 @@ export default [
     ],
   },
   {
+    id: "96",
     title: "96.-QUIERO HABLARTE DEL AMOR DE CRISTO",
     chorus:
       "¡Nadie pudo amarme como Cristo!\nEs incomparable su amistad;\nsolo Él pudo redimirme del pecado,\npor Su amor y Su bondad.",
@@ -1040,6 +1136,7 @@ export default [
     ],
   },
   {
+    id: "97",
     title: "97.-¡RECONCÍLIENSE CON DIOS...!",
     chorus:
       "En Nombre de Cristo Jesús,\nesta encomienda traigo yo:\n¡Ya reconcíliense con el Señor mi Rey!\n¡Su Día terrible cerca está!",
@@ -1050,6 +1147,7 @@ export default [
     ],
   },
   {
+    id: "98",
     title: "98.-RUMBO AL SEPULCRO...",
     chorus:
       "¡Aquí no está el que cadáver fue!\n¡Resucitó! ¡La tumba abandonó!\n¡Hay que anunciar que Dios al mundo amó,\na tal grado que a Su Hijo nos envió!",
@@ -1061,6 +1159,7 @@ export default [
     ],
   },
   {
+    id: "99",
     title: "99.-¡SANTO! ¡SANTO! ¡SANTO!",
     chorus: null,
     stanzas: [
@@ -1072,6 +1171,7 @@ export default [
     ],
   },
   {
+    id: "100",
     title: "100.-¡SE DEJÓ CRUCIFICAR!",
     chorus:
       "¡Por querernos rescatar se dejó crucificar!\n¡Dádiva inefable! ¡Nada es comparable\nal amor de mi Jesús!",
@@ -1083,6 +1183,7 @@ export default [
     ],
   },
   {
+    id: "101",
     title: "101.-¡SE HA MAGNIFICADO ÉL! (¡KI GAO GAA!)",
     chorus:
       "¡Cantaré yo a Jehováh, porque se ha magnificado Él!\n¡Ha echado al caballo y su jinete en el mar!\n¡Ha echado al caballo y su jinete en el mar!\n// ¡Al mar! ¡Al mar! ¡Al mar! //\n¡Cantaré yo a Jehováh, porque se ha magnificado Él!",
@@ -1099,6 +1200,7 @@ export default [
     ],
   },
   {
+    id: "102",
     title: "102.-¡SHILÓH YAVÓH!",
     chorus:
       "¡Shilóh vendrá! ¡No tarda ya!\n¡Viene a quitar nuestro oprobio!\nEntonces, nuestra boca ¡se llenará de risa!\nPorque Shilóh vendrá, ¡y Él es el Novio!",
@@ -1110,6 +1212,7 @@ export default [
     ],
   },
   {
+    id: "103",
     title: "103.-SI ESTOY DESANIMADO...",
     chorus:
       "Por gracia Jesús me sostendrá, y nunca me faltará;\n¡ni en sombras yo voy ni triste estoy!\n¡Su gracia me sostendrá!",
@@ -1120,6 +1223,7 @@ export default [
     ],
   },
   {
+    id: "104",
     title: "104.-¡SI TU MANO ME CONDUCE...!",
     chorus:
       "¡Yo iré a donde me envíes,\nsi Tu mano me conduce!\n¡Salvador, seguirte quiero!\n¡Donde quiera fiel te seguiré!",
@@ -1131,6 +1235,7 @@ export default [
     ],
   },
   {
+    id: "105",
     title: "105.-¡SIEMPRE PUEDES...!",
     chorus: null,
     stanzas: [
@@ -1141,6 +1246,7 @@ export default [
     ],
   },
   {
+    id: "106",
     title: "106.-¡SIERVO BUENO Y FIEL!",
     chorus:
       '"¡Ven mi siervo bueno y fiel!" así me dirá Imánuel,\n"Sobre poco fuiste hallado siempre fiel,\n¡sobre mucho te pondré! ¡A gozar conmigo ven!";\ny en Su gloria eternamente gozaré.',
@@ -1153,6 +1259,7 @@ export default [
     ],
   },
   {
+    id: "107",
     title: "107.-¡SIETE LUCES...!",
     chorus:
       "¡Siete luces tiene el Faro\npara un mar espiritual!\n¡a los nautas pone a salvo\nde un epílogo fatal!",
@@ -1164,6 +1271,7 @@ export default [
     ],
   },
   {
+    id: "108",
     title: "108.-SOY BAUTIZADO",
     chorus:
       "¡Seguiré a mi Jesús!\nPues para mí lo de este mundo se acabó;\nY ayudado por su luz\nproseguir en sus caminos quiero yo.",
@@ -1175,6 +1283,7 @@ export default [
     ],
   },
   {
+    id: "109",
     title: "109.-¡SOY REDIMIDO!",
     chorus:
       "¡Soy redimido! ¡esto es muy cierto!\n¡Un Cristo vivo llevo en mi alma!\nSi estoy caído, Él está presto\na levantarme con Su poder.",
@@ -1186,6 +1295,7 @@ export default [
     ],
   },
   {
+    id: "110",
     title: "110.-¡SU GRANDE AMOR!",
     chorus:
       "¡Su grande amor me rescató!\n¡de densa oscuridad me libertó!\n¡Su grande amor me rescató!\n¡de densa oscuridad me libertó!",
@@ -1196,6 +1306,7 @@ export default [
     ],
   },
   {
+    id: "111",
     title: "111.-¡TOMA TODO LO QUE SOY...!",
     chorus:
       "¡Lávame en tu sangre, Salvador!\n¡Límpiame de toda mi maldad!\n¡Traigo a ti mi vida, para ser, Señor,\ntuya por la eternidad!",
@@ -1208,6 +1319,7 @@ export default [
     ],
   },
   {
+    id: "112",
     title: "112.- UN MAR AGITADO",
     chorus:
       "¡Y al Eterno Dios alegre cantaré!\n¡Triunfante arribaré al puerto espiritual!\n¡El faro yo veré, y a salvo cruzaré\nel tormentoso vendaval!",
@@ -1219,6 +1331,7 @@ export default [
     ],
   },
   {
+    id: "113",
     title: "113.- ¡UN TEMPLO HERMOSO!",
     chorus:
       "¡Cómo el alba blanco, ideal,\nvi un templo hermoso, sin igual!\n¡Sus perlas y diamantes vi:\nciento cuarenta y cuatro mil!\n¡Pude entender que el templo aquél\nrepresenta a la Iglesia fiel,\nque de blanco ataviada irá\na encontrar a su Señor!",
@@ -1229,6 +1342,7 @@ export default [
     ],
   },
   {
+    id: "114",
     title: "114.- ¡UNA ALABANZA MÁS...!",
     chorus:
       "¡Una Alabanza más a mi Señor!\n¡Por Sus bondades y Su grande Amor!\n¡Un canto más a mi Redentor!\n¡Digno es de todo, mi Salvador!",
@@ -1238,6 +1352,7 @@ export default [
     ],
   },
   {
+    id: "115",
     title: "115.- ¡UNA OVACIÓN!",
     chorus:
       "¡Tristeza y ansiedad borraste con Tu amor!\n¡Ya no hay más soledad! ¡Quitaste mi dolor!,\npor eso elevo a Ti loor.\nMi gran y buen Señor, en esta ocasión\nquiero testificar, de Tu poder cantar\ny ¡darte una ovación!",
@@ -1247,6 +1362,7 @@ export default [
     ],
   },
   {
+    id: "116",
     title: "116.- ¡VEN A ÉL!",
     chorus:
       "¡Ven a Él, pecador!\n¡Hoy te espera tu gran Salvador!\n¡Ruégale de favor,\nte conceda un nuevo corazón!",
@@ -1258,6 +1374,7 @@ export default [
     ],
   },
   {
+    id: "117",
     title: "117.- ¡VENGO AGRADECIDO!",
     chorus: null,
     // "chorus": "Veo al cielo y me quedo sin habla,\nal mirar ¡tan bello amanecer!;\ny al saber que el Creador de esta obra,\n¡es el mismo que cambió mi ser!",
@@ -1271,6 +1388,7 @@ export default [
     ],
   },
   {
+    id: "118",
     title: "118.- ¡VIVÍA EN EL MUNDO SIN PAZ!",
     chorus:
       "¡Él ha borrado ya mi maldad!\n¡De mis pecados cuentas no hará!\nSanto cómo es Él, mi alma redimió.",
@@ -1281,6 +1399,7 @@ export default [
     ],
   },
   {
+    id: "119",
     title: "119.- ¡VOY DE PASO!",
     chorus:
       "¡Como anhelo...! ¡Cómo anhelo regresar!\n¡Allá en mi patria no hay sufrimiento!\n¡No hay pecado! ¡Ni existe muerte!\nYo voy de paso por éste mundo,\nsólo un tiempo, sólo un tiempo vivo aquí.",
@@ -1290,6 +1409,7 @@ export default [
     ],
   },
   {
+    id: "120",
     title: "120.- YO CONSAGRO A TI MI VIDA",
     chorus:
       "¡Trabajando, trabajando!\nviviré por mi Señor;\nBuenas Nuevas anunciando\nal perdido pecador.",

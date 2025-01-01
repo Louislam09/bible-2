@@ -141,6 +141,7 @@ const getStyles = ({ colors }: TTheme) =>
       width: '100%',
       minHeight: 140,
       flex: 1,
+      marginTop: 10,
     },
     infoIcon: {
       position: 'absolute',

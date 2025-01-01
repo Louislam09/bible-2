@@ -423,6 +423,7 @@ export type TSongItem = {
   title: string;
   chorus: string | null;
   stanzas: string[];
+  id: string;
 };
 export type EHistoryItem = {
   book: string;

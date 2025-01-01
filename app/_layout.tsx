@@ -1,4 +1,5 @@
-import ErrorBoundaryFallback from "@/components/ErrorBoundaryFallback";
+import CustomHeaderLeft from '@/components/CustomHeaderLeft';
+import ErrorBoundaryFallback from '@/components/ErrorBoundaryFallback';
 import StatusBarBackground from '@/components/StatusBarBackground';
 import BibleProvider from '@/context/BibleContext';
 import DatabaseProvider from '@/context/databaseContext';
@@ -63,11 +64,15 @@ const App = () => {
     props
   ) => {
     return {
-      headerTitle: ScreensName[props.route.name as Screens],
+      headerTitle: '',
+      // headerTitle: ScreensName[props.route.name as Screens],
       headerShown: false,
       headerTitleAlign: 'center',
       headerTitleStyle: { fontWeight: 'bold' },
       animation: screenAnimations[props.route.name as Screens],
+      headerLeft: () => (
+        <CustomHeaderLeft title={ScreensName[props.route.name as Screens]} />
+      ),
     };
   };
 

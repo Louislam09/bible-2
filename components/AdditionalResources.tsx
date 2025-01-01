@@ -64,6 +64,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderRadius: 8,
       flexDirection: 'row',
       alignItems: 'center',
+      height: 55,
     },
     toolIcon: {
       color: dark ? '#fff' : colors.text,
