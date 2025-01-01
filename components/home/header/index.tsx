@@ -28,7 +28,6 @@ interface HeaderInterface {
 const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
   const { bibleVersion, search, dashboard, setting, fav } = refs;
   const { width } = useWindowDimensions();
-  console.log({ width });
   const {
     currentBibleVersion,
     selectBibleVersion,
