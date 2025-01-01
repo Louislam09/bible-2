@@ -1,1 +1,1 @@
-export const iconSize = 30
+export const iconSize = 28

@@ -5,9 +5,15 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useTheme } from "@react-navigation/native";
-import React, { forwardRef, useCallback, useMemo, useState } from "react";
-import { StyleSheet } from "react-native";
-import { TTheme } from "@/types";
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { BackHandler, StyleSheet } from 'react-native';
+import { TTheme } from '@/types';
 
 type TBottomModal = {
   startAT?: 0 | 1 | 2 | 3;
@@ -47,8 +53,8 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
     const snapPoints = useMemo(
       () =>
         justOneSnap
-          ? justOneValue || ["30%"]
-          : snaps || ["30%", "50%", "75%", "100%"],
+          ? justOneValue || ['30%']
+          : snaps || ['30%', '50%', '75%', '100%'],
       [snaps]
     );
     const [index, setIndex] = useState(0);
@@ -68,6 +74,22 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       ),
       []
     );
+
+    useEffect(() => {
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        () => {
+          if (index > 0) {
+            // @ts-ignore
+            ref?.current?.dismiss();
+            return true; // Prevent default back button behavior
+          }
+          return false; // Allow default back button behavior if modal is not open
+        }
+      );
+
+      return () => backHandler.remove(); // Cleanup the listener
+    }, [index]);
 
     return (
       <BottomSheetModal

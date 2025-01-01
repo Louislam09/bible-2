@@ -1,19 +1,23 @@
 import { useTheme } from "@react-navigation/native";
 import React, { FC, useCallback, useMemo, useRef } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
-import { useBibleContext } from "../../../context/BibleContext";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native';
+import { useBibleContext } from '../../../context/BibleContext';
 
-import BottomModal from "@/components/BottomModal";
-import Icon from "@/components/Icon";
-import { iconSize } from "@/constants/size";
-import { useStorage } from "@/context/LocalstoreContext";
-import useInstalledBibles from "@/hooks/useInstalledBible";
+import BottomModal from '@/components/BottomModal';
+import Icon from '@/components/Icon';
+import { iconSize } from '@/constants/size';
+import { useStorage } from '@/context/LocalstoreContext';
+import useInstalledBibles from '@/hooks/useInstalledBible';
 import useParams from '@/hooks/useParams';
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useNavigation, useRouter } from "expo-router";
-import ProgressBar from "../footer/ProgressBar";
-import Settings from "./Settings";
-import VersionList from "./VersionList";
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { useNavigation, useRouter } from 'expo-router';
+import ProgressBar from '../footer/ProgressBar';
+import Settings from './Settings';
+import VersionList from './VersionList';
 import { EBibleVersions, HomeParams, Screens, TIcon, TTheme } from '@/types';
 import { View, Text } from '@/components/Themed';
 
@@ -23,7 +27,8 @@ interface HeaderInterface {
 
 const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
   const { bibleVersion, search, dashboard, setting, fav } = refs;
-
+  const { width } = useWindowDimensions();
+  console.log({ width });
   const {
     currentBibleVersion,
     selectBibleVersion,
@@ -44,14 +49,15 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
       getCurrentItem,
     },
   } = useStorage();
-  const params = useParams<HomeParams>()
+  const params = useParams<HomeParams>();
   const { book } = params;
   const theme = useTheme();
   const router = useRouter();
   const navigation = useNavigation();
+  const isSmallSDevice = width < 300;
 
   const styles = getStyles(theme);
-  const headerIconSize = iconSize;
+  const headerIconSize = isSmallSDevice ? 26 : iconSize;
   const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
@@ -70,6 +76,7 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
 
   const goSearchScreen = () => {
     clearHighlights();
+    // @ts-ignore
     navigation.navigate('(search)', { book: book });
   };
 
@@ -86,7 +93,7 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
   const headerIconData = useMemo(() => {
     const options: TIcon[] = [
       {
-        name: "SquareSplitVertical",
+        name: 'SquareSplitVertical',
         action: () => {
           toggleSplitMode();
           toggleBottomSideSearching(!isSplitActived);
@@ -96,7 +103,7 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
         color: isSplitActived ? theme.colors.notification : theme.colors.text,
       },
       {
-        name: "ArrowBigLeftDash",
+        name: 'ArrowBigLeftDash',
         action: moveBackInHistory,
         ref: setting,
         isIonicon: true,
@@ -104,14 +111,14 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
         color: shouldBackward ? theme.colors.notification : theme.colors?.text,
       },
       {
-        name: "ArrowBigRightDash",
+        name: 'ArrowBigRightDash',
         action: moveForwardInHistory,
         ref: search,
         isIonicon: true,
         disabled: isSplitActived,
         color: shouldForward ? theme.colors.notification : theme.colors?.text,
       },
-      { name: "Search", action: goSearchScreen, ref: search },
+      { name: 'Search', action: goSearchScreen, ref: search },
     ];
     return options.filter((x) => !x.disabled);
   }, [isSplitActived, shouldForward, shouldBackward]);
@@ -127,14 +134,14 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
 
   return (
     <View style={styles.header}>
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: 'row' }}>
         <TouchableOpacity
           ref={dashboard}
           style={styles.iconContainer}
-          onPress={() => router.navigate("(dashboard)")}
+          onPress={() => router.navigate('(dashboard)')}
         >
           <Icon
-            name="House"
+            name='House'
             size={headerIconSize}
             color={theme.colors.primary}
           />
@@ -166,11 +173,13 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
           onPress={versionHandlePresentModalPress}
         >
           <Icon
-            name={isNTV ? "BookText" : "Crown"}
+            name={isNTV ? 'BookText' : 'Crown'}
             size={headerIconSize}
             color={theme.colors.primary}
           />
-          <Text style={styles.text}>{currentVersionName}</Text>
+          {!isSmallSDevice && (
+            <Text style={styles.text}>{currentVersionName}</Text>
+          )}
         </TouchableOpacity>
         <BottomModal shouldScroll startAT={1} ref={versionRef}>
           <VersionList {...{ currentBibleVersion, onSelect, theme }} />

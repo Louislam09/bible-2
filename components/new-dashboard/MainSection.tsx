@@ -1,4 +1,8 @@
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native';
 import React from 'react';
 import { Text, View } from '../Themed';
 import { IDashboardOption } from '@/app/(dashboard)';
@@ -20,14 +24,15 @@ const MainSection = ({ list, theme }: MainSectionProps) => {
   return (
     <View style={styles.mainSection}>
       {list.map((item) => (
-        <TouchableWithoutFeedback
+        <TouchableOpacity
+          activeOpacity={0.8}
           style={[styles.card, { width: itemWidth }]}
           key={item.tag + item.label}
           onPress={item.action}
         >
           <Icon name={item.icon as any} size={36} style={[styles.cardIcon]} />
           <Text style={styles.cardText}>{item.label}</Text>
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
       ))}
     </View>
   );

@@ -195,6 +195,7 @@ const SecondDashboard = () => {
         <MainSection list={mainActionItems} theme={theme} />
         <StudyTools list={studyToolItems} theme={theme} />
         <AdditionalResources list={additionalResourceList} theme={theme} />
+
         <BottomModal shouldScroll startAT={2} ref={voiceBottomSheetModalRef}>
           <VoiceList theme={theme} />
         </BottomModal>
