@@ -151,7 +151,7 @@ const SongViewer = ({ song }: SongViewer) => {
 
         {/* Navigation */}
         <LinearGradient
-          colors={[theme.colors.background, theme.colors.text]}
+          colors={[theme.colors.background, theme.colors.background]}
           style={styles.navigationContainer}
         >
           <TouchableOpacity
