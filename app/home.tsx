@@ -1,20 +1,18 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 
 import {
   Animated,
-  BackHandler,
   PanResponder,
   PanResponderGestureState,
   SafeAreaView,
   StyleSheet,
   useWindowDimensions,
-  View,
+  View
 } from "react-native";
 
 import { useBibleContext } from "@/context/BibleContext";
 import { useStorage } from "@/context/LocalstoreContext";
 
-import { useTheme } from "@react-navigation/native";
 import BookContentModals from "@/components/book-content-modals";
 import BottomModal from "@/components/BottomModal";
 import CurrentNoteDetail from "@/components/CurrentNoteDetail";
@@ -23,13 +21,14 @@ import NoteNameList from "@/components/home/NoteNameList";
 import SplitBottomSide from "@/components/SplitBottomSide";
 import SplitTopSide from "@/components/SplitTopSide";
 import Walkthrough from "@/components/Walkthrough";
+import { useTheme } from "@react-navigation/native";
 // import CustomHeader from "../components/home/header";
 
-import useParams from "@/hooks/useParams";
 import CustomHeader from "@/components/home/header";
-import { Stack, useRouter } from "expo-router";
-import { HomeParams, TTheme } from "@/types";
 import StatusBarBackground from '@/components/StatusBarBackground';
+import useParams from "@/hooks/useParams";
+import { HomeParams, TTheme } from "@/types";
+import { Stack, useRouter } from "expo-router";
 
 // Constants
 const MIN_SPLIT_SIZE = 200;
@@ -241,7 +240,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
           book={initialState.book}
           chapter={initialState.chapter}
         />
-        <FloatingButton navigation={router}>
+        <FloatingButton iconName='NotebookText' navigation={router}>
           <CurrentNoteDetail />
         </FloatingButton>
         <BottomModal

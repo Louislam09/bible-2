@@ -8,6 +8,7 @@ interface UseDraggableElementProps {
   parentHeight?: number;
   elementWidth: number;
   elementHeight: number;
+  onPressAction: () => void;
 }
 
 interface UseDraggableElementReturn {
@@ -15,11 +16,14 @@ interface UseDraggableElementReturn {
   panResponder: PanResponderInstance;
 }
 
+const TOUCH_SLOP = 5; // Threshold to differentiate between tap and drag
+
 const useDraggableElement = ({
   parentWidth,
   parentHeight,
   elementWidth,
   elementHeight,
+  onPressAction
 }: UseDraggableElementProps): UseDraggableElementReturn => {
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const maxWidth = parentWidth || SCREEN_WIDTH;
@@ -29,6 +33,7 @@ const useDraggableElement = ({
 
   const pan = useRef(new Animated.ValueXY(floatingNoteButtonPosition)).current;
   const [panState, setPanState] = useState(floatingNoteButtonPosition);
+  const isTappedRef = useRef(false);
 
   const ensureWithinBounds = (x: number, y: number) => {
     const boundedX = Math.max(0, Math.min(x, maxWidth - elementWidth));
@@ -47,15 +52,24 @@ const useDraggableElement = ({
     () =>
       PanResponder.create({
         onMoveShouldSetPanResponder: () => true,
+        onPanResponderGrant: () => {
+          isTappedRef.current = true;
+        },
         onPanResponderMove: (_, gestureState: PanResponderGestureState) => {
           const newX = panState.x + gestureState.dx;
           const newY = panState.y + gestureState.dy;
 
           const { x: boundedX, y: boundedY } = ensureWithinBounds(newX, newY);
-
+          if (Math.abs(gestureState.dx) > TOUCH_SLOP || Math.abs(gestureState.dy) > TOUCH_SLOP) {
+            isTappedRef.current = false;
+          }
           pan.setValue({ x: boundedX, y: boundedY });
         },
         onPanResponderRelease: () => {
+          if (isTappedRef.current) {
+            onPressAction?.()
+            return
+          }
           // @ts-ignore
           const x = pan.x._value;
           // @ts-ignore
