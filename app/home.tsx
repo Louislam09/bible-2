@@ -28,7 +28,7 @@ import CustomHeader from "@/components/home/header";
 import StatusBarBackground from '@/components/StatusBarBackground';
 import useParams from "@/hooks/useParams";
 import { HomeParams, TTheme } from "@/types";
-import { Stack, useRouter } from "expo-router";
+import { Stack, useNavigation, useRouter } from "expo-router";
 
 // Constants
 const MIN_SPLIT_SIZE = 200;
@@ -45,6 +45,7 @@ type HomeScreenProps = {};
 
 const HomeScreen: React.FC<HomeScreenProps> = () => {
   const router = useRouter();
+  const navigation = useNavigation()
   const routeParams = useParams<HomeParams>();
   const theme = useTheme();
   const { storedData } = useStorage();
@@ -205,7 +206,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
               ...initialState,
               height: topHeight,
               width: topWidth,
-              router,
+              navigation,
             }}
           />
           {isSplitActived && (
@@ -230,7 +231,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
                     new Animated.Value(SCREEN_WIDTH),
                     topWidth
                   ),
-                  router,
+                  navigation,
                 }}
               />
             </>
