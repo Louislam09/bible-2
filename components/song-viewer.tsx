@@ -18,6 +18,7 @@ type SongViewer = {
 
 const SongViewer = ({ song }: SongViewer) => {
   const { title, chorus, stanzas } = song;
+  const scrollViewRef = useRef<ScrollView>(null)
 
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -51,6 +52,10 @@ const SongViewer = ({ song }: SongViewer) => {
   };
 
   const goToNextVerse = () => {
+    scrollViewRef.current?.scrollTo({
+      y: 0,
+      animated: true,
+    });
     setIsChorus(!isChorus);
     if (!isChorus && hasChorus) return;
     if (currentVerseIndex < stanzas.length - 1) {
@@ -59,6 +64,10 @@ const SongViewer = ({ song }: SongViewer) => {
   };
 
   const goToPrevVerse = () => {
+    scrollViewRef.current?.scrollTo({
+      y: 0,
+      animated: true,
+    });
     setIsChorus(!isChorus);
     if (!isChorus && hasChorus) return;
     if (currentVerseIndex > 0) {
@@ -80,7 +89,7 @@ const SongViewer = ({ song }: SongViewer) => {
           },
         ]}
       >
-        <ScrollView style={styles.contentGradient}>
+        <ScrollView ref={scrollViewRef} style={styles.contentGradient}>
           {isChorus && hasChorus ? (
             <Fragment>
               <Text style={styles.chorusLabel}>CORO</Text>
