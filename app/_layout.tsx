@@ -88,7 +88,7 @@ const App = () => {
                 <GestureHandlerRootView style={{ flex: 1 }}>
                   <BottomSheetModalProvider>
                     <ModalProvider>
-                      <StatusBar animated translucent style='inverted' />
+                      <StatusBar animated translucent style='light' />
                       <Stack
                         initialRouteName='(dashboard)'
                         screenOptions={screenOptions}
