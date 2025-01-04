@@ -442,7 +442,7 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
                 }}
               />
             )}
-            keyExtractor={(item: any, index: any) => `note-${index}`}
+            keyExtractor={(item: any, index: any) => `note-${index}-${item?.id}`}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
             ListEmptyComponent={ListEmptyComponent}
             ListFooterComponent={<View style={{ paddingVertical: 30 }} />}

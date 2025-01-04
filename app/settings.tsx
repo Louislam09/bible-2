@@ -7,19 +7,19 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { useTheme } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
 import Icon, { IconProps } from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { useBibleContext } from "@/context/BibleContext";
 import { useStorage } from "@/context/LocalstoreContext";
 import { useCustomTheme } from "@/context/ThemeContext";
+import { EThemes, RootStackScreenProps, TFont, TTheme } from "@/types";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { useTheme } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
 import Constants from "expo-constants";
 import { Stack, useRouter } from "expo-router";
 import * as Updates from "expo-updates";
 import { useCallback, useMemo } from "react";
-import { EThemes, RootStackScreenProps, TFont, TTheme } from "@/types";
 
 const URLS = {
   BIBLE: "market://details?id=com.louislam09.bible",
@@ -49,6 +49,7 @@ type TOption = {
   action: () => void;
   isFont5?: boolean;
   isValue?: boolean;
+  color?: any;
 };
 
 type TSection = {
@@ -73,9 +74,9 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
   } = useBibleContext();
   const { toggleTheme, schema } = useCustomTheme();
   const styles = getStyles(theme);
-  const { storedData, saveData, isDataLoaded } = useStorage();
+  const { storedData: { isGridLayout }, saveData } = useStorage();
 
-  const appVersion = Constants.nativeAppVersion;
+  const appVersion = Constants.expoVersion ?? Constants.nativeAppVersion;
 
   const checkForUpdate = async () => {
     try {
@@ -171,19 +172,30 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
     });
   }, []);
 
+  const toggleHomeScreen = () => {
+    saveData({ isGridLayout: !isGridLayout })
+  }
+
   const sections = useMemo(() => {
     const options: TSection[] = [
-      //   {
-      //     title: "General",
-      //     options: [
-      //       {
-      //         label: "Borrar Historial",
-      //         iconName: "Trash2",
-      //         action: warnBeforeDelete,
-      //         extraText: "Limpiar el historial de busqueda",
-      //       },
-      //     ],
-      //   },
+      // {
+      //   title: "General",
+      //   options: [
+      //     {
+      //       label: "Cambiar Pantalla de Inicio",
+      //       iconName: isGridLayout ? "LayoutGrid" : "LayoutPanelTop",
+      //       action: toggleHomeScreen,
+      //       extraText: "Selecciona tu pantalla de inicio preferida",
+      //       color: isGridLayout ? '#fff' : theme.colors.notification
+      //     },
+      //     // {
+      //     //   label: "Borrar Historial",
+      //     //   iconName: "Trash2",
+      //     //   action: warnBeforeDelete,
+      //     //   extraText: "Limpiar el historial de busqueda",
+      //     // },
+      //   ],
+      // },
       {
         title: "Configuración",
         options: [
@@ -294,7 +306,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
     ];
 
     return options;
-  }, [theme, fontSize]);
+  }, [theme, fontSize, isGridLayout]);
 
   const renderItem = ({ item, index }: { item: TOption; index: number }) => {
     return (
@@ -408,7 +420,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
                   <Icon
                     size={26}
                     name={item.iconName || "Sun"}
-                    color={theme.colors.text}
+                      color={item.color || theme.colors.text}
                   />
                 )}
               </TouchableOpacity>
@@ -426,6 +438,19 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
           backgroundColor: theme.colors.background,
         }}
       >
+        <Stack.Screen options={{
+          headerRight: () => (
+            <TouchableOpacity onPress={toggleHomeScreen}>
+              <Icon
+                style={[{ marginHorizontal: 10 }]}
+                color={isGridLayout ? '#fff' : theme.colors.notification}
+                name={isGridLayout ? "LayoutGrid" : "LayoutPanelTop"}
+                size={25}
+              />
+            </TouchableOpacity>
+          ),
+        }} />
+
         {sections.map(SettingSection)}
       </ScrollView>
     </View>

@@ -262,8 +262,8 @@ const Dashboard: React.FC<DashboardProps> = () => {
 };
 
 const MyDashboard = () => {
-  const isSecondDashboard = true;
-  return isSecondDashboard ? <SecondDashboard /> : <Dashboard />;
+  const { storedData: { isGridLayout } } = useStorage();
+  return !isGridLayout ? <SecondDashboard /> : <Dashboard />;
 };
 
 export default MyDashboard;
