@@ -22,7 +22,7 @@ import { Stack, useRouter } from 'expo-router';
 
 const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const translateXAnim = useRef(new Animated.Value(300)).current;
+  const translateYAnim = useRef(new Animated.Value(50)).current;
 
   useEffect(() => {
     Animated.parallel([
@@ -32,21 +32,21 @@ const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
         delay: index * 200,
         useNativeDriver: true,
       }),
-      Animated.timing(translateXAnim, {
+      Animated.timing(translateYAnim, {
         toValue: 0,
-        duration: 200,
+        duration: 500,
         delay: index * 200,
         useNativeDriver: true,
       }),
     ]).start();
-  }, [fadeAnim, translateXAnim, index]);
+  }, [fadeAnim, translateYAnim, index]);
 
   return (
     <Animated.View
       style={[
         {
           opacity: fadeAnim,
-          transform: [{ translateX: translateXAnim }],
+          transform: [{ translateY: translateYAnim }],
         },
       ]}
     >
