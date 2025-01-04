@@ -1,24 +1,20 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useTheme } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
-import BottomModal from "@/components/BottomModal";
-import SongLyricView from "@/components/SongLyricView";
 import { Text } from "@/components/Themed";
 import Songs from "@/constants/songs";
 import { useBibleContext } from "@/context/BibleContext";
 import { useCustomTheme } from '@/context/ThemeContext';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { RootStackScreenProps, TSongItem, TTheme } from '@/types';
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useTheme } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
+import { Stack, useRouter } from 'expo-router';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated,
-  BackHandler,
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
-import { RootStackScreenProps, TSongItem, TTheme } from '@/types';
-import { Stack, useRouter } from 'expo-router';
 
 const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -67,33 +63,14 @@ const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
 };
 
 const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
-  const [selected, setSelected] = useState<any>(null);
-  const [filterData] = useState<TSongItem[]>(Songs);
+  const [filterData, setFilterData] = useState<TSongItem[]>(Songs);
   const theme = useTheme();
   const { schema } = useCustomTheme();
   const router = useRouter();
   const styles = getStyles(theme);
   const [searchText, setSearchText] = useState<any>(null);
-  const versionRef = useRef<BottomSheetModal>(null);
-  const snaps = [50, 75, 100];
-  const _snaps = ['50%', '75%', '100%'];
-  const [topHeight] = useState(new Animated.Value(75));
   const { orientation } = useBibleContext();
   const isPortrait = orientation === 'PORTRAIT';
-
-  const _topHeight = topHeight.interpolate({
-    inputRange: [50, 75, 100],
-    outputRange: ['48%', '73%', '98%'],
-  });
-
-  const versionHandlePresentModalPress = useCallback(() => {
-    versionRef.current?.present();
-  }, []);
-
-  const onItemClick = (item: any) => {
-    versionHandlePresentModalPress();
-    setSelected(item);
-  };
 
   const handleSongPress = (songTitle: string) => {
     router.push({ pathname: `/song/${songTitle}` });
@@ -117,7 +94,8 @@ const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
           <TextInput
             placeholder='Buscar un himno...'
             style={[styles.noteHeaderSearchInput]}
-            onChangeText={(text) => setSearchText(text)}
+            onChangeText={filterSongs}
+            // onChangeText={(text) => setSearchText(text)}
             value={searchText}
           />
         </View>
@@ -125,13 +103,22 @@ const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
     );
   };
 
-  const getIndex = (index: any) => {
-    const value = snaps[index] || 30;
-    topHeight.setValue(value);
-    if (index < 0) {
-      setSearchText('');
-      setSelected(null);
+  const filterSongs = (text: string) => {
+    setSearchText(text);
+
+    if (!text) {
+      setFilterData(Songs);
+      return;
     }
+
+    const lowerText = text.toLowerCase();
+    const filtered = Songs.filter(
+      (song) =>
+        song.title.toLowerCase().includes(lowerText) ||
+        song.stanzas.some((verse) => verse.toLowerCase().includes(lowerText))
+    );
+
+    setFilterData(filtered);
   };
 
   return (
@@ -145,21 +132,6 @@ const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
           backgroundColor: theme.dark ? theme.colors.background : '#eee',
         }}
       >
-        {/* <BottomModal
-          shouldScroll
-          snaps={_snaps}
-          startAT={2}
-          ref={versionRef}
-          getIndex={getIndex}
-        >
-          <Animated.View
-            style={{
-              height: _topHeight,
-            }}
-          >
-            <SongLyricView theme={theme} song={selected} />
-          </Animated.View>
-        </BottomModal> */}
         {SongHeader()}
         <FlashList
           key={schema}
