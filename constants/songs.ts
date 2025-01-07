@@ -232,10 +232,10 @@ export default [
     chorus:
       "Cuando veo Su faz, Su sonriente faz,\nel problema se va, cuando veo Su faz.\nÉl me imparte Su amor y me da dulce paz,\ncuando veo de Él Su sonriente faz.",
     stanzas: [
-      "Si los vientos azotan mi barquía en el mar,\nTodo vuelve a la paz, cuando veo Su faz.",
-      "Cuando en prueba o dolor yo me siento caer.\nÉl me infunde valor, cuando veo Su faz",
-      "Si en el mundo no encuentro beneficios para mí,\nMuy feliz soy aquí cuando veo Su faz",
-      "Algún día llegaré al hogar celestial,\nDonde siempre veré Su sonriente faz",
+      "// Si los vientos azotan mi barquía en el mar,\nTodo vuelve a la paz, cuando veo Su faz. //",
+      "// Cuando en prueba o dolor yo me siento caer.\nÉl me infunde valor, cuando veo Su faz //",
+      "// Si en el mundo no encuentro beneficios para mí,\nMuy feliz soy aquí cuando veo Su faz //",
+      "// Algún día llegaré al hogar celestial,\nDonde siempre veré Su sonriente faz //",
     ],
   },
   {
