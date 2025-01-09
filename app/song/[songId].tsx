@@ -2,7 +2,8 @@ import CustomHeaderLeft from '@/components/CustomHeaderLeft';
 import Icon from '@/components/Icon';
 import SongViewer from '@/components/song-viewer';
 import { View } from '@/components/Themed';
-import songs from '@/constants/songs';
+import AlegreSongs from '@/constants/songs';
+import hymnSong from '@/constants/hymnSong';
 import { useStorage } from '@/context/LocalstoreContext';
 import useParams from '@/hooks/useParams';
 import { TSongItem } from '@/types';
@@ -12,9 +13,10 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 const DisplaySong = () => {
-  const { songId } = useParams();
+  const { songId, isAlegres } = useParams();
   const theme = useTheme();
-  const selected = songs.find((item) => +item.id === songId) as TSongItem;
+  const Songs = isAlegres ? AlegreSongs : hymnSong
+  const selected = Songs.find((item) => +item.id === songId) as TSongItem;
 
   const {
     saveData,

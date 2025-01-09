@@ -107,7 +107,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
       );
       return;
     }
-    navigation.navigate(Screens.Song);
+    navigation.navigate(Screens.Hymn);
   }, [navigation, isSongLyricEnabled]);
 
   const dashboardItems: IDashboardOption[] = [

@@ -60,7 +60,8 @@ const SecondDashboard = () => {
       );
       return;
     }
-    navigation.navigate(Screens.Song);
+    navigation.navigate(Screens.Hymn);
+    // navigation.navigate(Screens.Song);
   }, [navigation, isSongLyricEnabled]);
 
   const {

@@ -1,13 +1,17 @@
 import { Text } from "@/components/Themed";
-import Songs from "@/constants/songs";
+import hymnSong from '@/constants/hymnSong';
+import AlegreSongs from "@/constants/songs";
 import { useBibleContext } from "@/context/BibleContext";
 import { useCustomTheme } from '@/context/ThemeContext';
+import useParams from '@/hooks/useParams';
 import { RootStackScreenProps, TSongItem, TTheme } from '@/types';
+import removeAccent from '@/utils/removeAccent';
+// import removeAccent from '@/utils/removeAccent';
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useRouter } from 'expo-router';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   StyleSheet,
@@ -63,17 +67,21 @@ const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
 };
 
 const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
-  const [filterData, setFilterData] = useState<TSongItem[]>(Songs);
   const theme = useTheme();
+  const { isAlegres } = useParams()
   const { schema } = useCustomTheme();
   const router = useRouter();
-  const styles = getStyles(theme);
+  const Songs = isAlegres ? AlegreSongs : hymnSong
+  const [filterData, setFilterData] = useState<TSongItem[]>(Songs);
   const [searchText, setSearchText] = useState<any>(null);
   const { orientation } = useBibleContext();
+  const title = useMemo(() => isAlegres ? "Mensajero de\nAlegres Nuevas" : "Himnario de Victoria", [isAlegres])
+
+  const styles = getStyles(theme);
   const isPortrait = orientation === 'PORTRAIT';
 
   const handleSongPress = (songTitle: string) => {
-    router.push({ pathname: `/song/${songTitle}` });
+    router.push({ pathname: `/song/${songTitle}?isAlegres=${isAlegres}` });
   };
 
   const SongHeader = () => {
@@ -81,7 +89,7 @@ const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
       <View style={[styles.noteHeader, !isPortrait && { paddingTop: 0 }]}>
         {isPortrait && (
           <Text style={[styles.noteListTitle]}>
-            Mensajero de{'\n'} Alegres Nuevas
+            {title}
           </Text>
         )}
         <View style={styles.searchContainer}>
@@ -111,12 +119,21 @@ const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
       return;
     }
 
-    const lowerText = text.toLowerCase();
-    const filtered = Songs.filter(
-      (song) =>
-        song.title.toLowerCase().includes(lowerText) ||
-        song.stanzas.some((verse) => verse.toLowerCase().includes(lowerText))
-    );
+    const normalizedText = removeAccent(text);
+
+    const filtered = Songs.filter((song) => {
+      const normalizedTitle = removeAccent(song.title);
+      const normalizedChorus = removeAccent((song.chorus || ""));
+      const normalizedStanzas = song.stanzas.map((stanza) =>
+        removeAccent(stanza)
+      );
+
+      return (
+        normalizedTitle.includes(normalizedText) ||
+        normalizedChorus.includes(normalizedText) ||
+        normalizedStanzas.some((verse) => verse.includes(normalizedText))
+      );
+    });
 
     setFilterData(filtered);
   };
@@ -141,15 +158,7 @@ const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
           }}
           decelerationRate={'normal'}
           estimatedItemSize={135}
-          data={
-            searchText
-              ? filterData.filter(
-                  (x: any) =>
-                    x?.title.toLowerCase().indexOf(searchText.toLowerCase()) !==
-                    -1
-                )
-              : filterData
-          }
+          data={filterData}
           // renderItem={renderItem as any}
           renderItem={({ item, index }) => (
             <RenderItem

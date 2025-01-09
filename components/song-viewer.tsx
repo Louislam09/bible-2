@@ -173,7 +173,7 @@ const SongViewer = ({ song }: SongViewer) => {
                 styles.navButtonText,
                 currentVerseIndex === 0 &&
                   !isChorus &&
-                  styles.navButtonDisabled,
+                styles.navButtonDisabled,
                 { color: theme.colors.text.includes('FFF') ? '#000' : '#fff' },
               ]}
             >
@@ -308,7 +308,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       color: '#FFF',
     },
     navButtonDisabled: {
-      opacity: 0.2,
+      opacity: 0.4,
       color: colors.background,
     },
   });

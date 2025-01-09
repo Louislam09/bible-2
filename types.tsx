@@ -40,6 +40,7 @@ export enum Screens {
   StrongSearchEntire = 'searchStrongWordEntire',
   DictionarySearch = 'dictionary',
   NoteDetail = 'noteDetail',
+  Hymn = 'hymn',
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -62,6 +63,7 @@ export const ScreensName: TScreensName = {
   [Screens.StrongSearchEntire]: 'Explorador de Números Strong',
   [Screens.DictionarySearch]: 'Dictionary Search',
   [Screens.NoteDetail]: 'Nota',
+  [Screens.Hymn]: 'Selecciona un himnario',
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -111,7 +113,8 @@ export type RootStackParamList = {
     | ChooseChapterNumberParams;
   modal: undefined;
   onboarding: undefined;
-  song: undefined;
+  song: { isAlegres: boolean };
+  hymn: undefined;
   notFound: undefined;
 };
 
