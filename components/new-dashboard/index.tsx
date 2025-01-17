@@ -129,6 +129,13 @@ const SecondDashboard = () => {
       action: () => navigation.navigate(Screens.Favorite),
       color: '#fedf75',
     },
+    {
+      icon: 'Gamepad',
+      label: 'Juego',
+      // @ts-ignore
+      action: () => navigation.navigate('(game)', {}),
+      color: '#75d0fe',
+    },
   ];
 
   const versionRef = useRef<BottomSheetModal>(null);

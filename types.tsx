@@ -41,6 +41,7 @@ export enum Screens {
   DictionarySearch = 'dictionary',
   NoteDetail = 'noteDetail',
   Hymn = 'hymn',
+  Game = '(game)',
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -64,6 +65,7 @@ export const ScreensName: TScreensName = {
   [Screens.DictionarySearch]: 'Dictionary Search',
   [Screens.NoteDetail]: 'Nota',
   [Screens.Hymn]: 'Selecciona un himnario',
+  [Screens.Game]: 'Juego Biblico',
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -438,4 +440,29 @@ export enum DATABASE_TYPE {
   BIBLE,
   DICTIONARY,
   COMMENTARIES,
+}
+
+// GAME TYPES
+export interface Question {
+  question: string;
+  options: string[];
+  correct: any;
+  reference: string;
+  explanation: string;
+  difficulty: string;
+}
+
+export interface GameProgress {
+  current: number;
+  total: number;
+  score: number;
+  level: number;
+  totalLevels: number;
+}
+
+export interface AnswerResult {
+  isCorrect: boolean;
+  correctAnswer: string;
+  explanation: string;
+  reference: string;
 }
