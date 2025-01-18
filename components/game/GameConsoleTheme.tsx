@@ -1,8 +1,9 @@
 import { ICardTheme } from '@/types';
 import { shuffleOptions } from '@/utils/shuffleOptions';
 import React, { useMemo } from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from '../Icon';
+import useGameAnimation from '@/hooks/useGameAnimation';
 
 
 interface ButtonStyleProps {
@@ -13,6 +14,7 @@ interface ButtonStyleProps {
 
 const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext, progress, selectedAnswer, title }: ICardTheme) => {
     const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion]);
+    const { feedbackOpacity, optionsOpacity, questionCardOpacity } = useGameAnimation({ progress, feedback, currentOptions })
 
     const getButtonStyle = ({ isSelected, isCorrect, showResult }: ButtonStyleProps): object => {
         return [
@@ -37,11 +39,12 @@ const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext,
                     </View>
                 </View>
 
-                <View style={styles.questionCard}>
+                <Animated.View style={[styles.questionCard, { opacity: questionCardOpacity }]}>
                     <Text style={styles.consoleText}>{`> ${currentQuestion?.question}`}</Text>
-                </View>
+                </Animated.View>
 
-                <View style={styles.optionsContainer}>
+                <ScrollView style={styles.optionsContainer}>
+                    <Animated.View style={{ opacity: optionsOpacity }}>
 
                     {currentOptions.map((option, i) => (
                         <TouchableOpacity
@@ -60,8 +63,10 @@ const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext,
                             <Text style={[styles.consoleText]}>[{i + 1}] {option}</Text>
                         </TouchableOpacity>
                     ))}
+                    </Animated.View>
+
                     {feedback && (
-                        <View style={styles.feedbackContainer}>
+                        <Animated.View style={[styles.feedbackContainer, { opacity: feedbackOpacity }]}>
                             <Text
                                 style={[
                                     styles.feedbackText,
@@ -77,9 +82,9 @@ const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext,
                             <TouchableOpacity style={[styles.nextButton]} onPress={onNext}>
                                 <Text style={styles.buttonText}>[ Siguiente pregunta ]</Text>
                             </TouchableOpacity>
-                        </View>
+                        </Animated.View>
                     )}
-                </View>
+                </ScrollView>
             </View>
         </SafeAreaView>
     );
@@ -90,7 +95,7 @@ export default GameConsoleTheme
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
+        padding: 4,
     },
     safeArea: {
         flex: 1,

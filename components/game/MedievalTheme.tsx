@@ -2,8 +2,9 @@ import { ICardTheme } from '@/types';
 import { shuffleOptions } from '@/utils/shuffleOptions';
 import { Shield } from 'lucide-react-native';
 import React, { useMemo } from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from '../Icon';
+import useGameAnimation from '@/hooks/useGameAnimation';
 
 interface ButtonStyleProps {
     isSelected: boolean;
@@ -22,6 +23,7 @@ const MedievalTheme = ({
     title,
 }: ICardTheme) => {
     const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion]);
+    const { feedbackOpacity, optionsOpacity, questionCardOpacity } = useGameAnimation({ progress, feedback, currentOptions })
 
     const getButtonStyle = ({ isSelected, isCorrect, showResult }: ButtonStyleProps): object => {
         return [
@@ -43,10 +45,12 @@ const MedievalTheme = ({
                 </View>
             </View>
 
-            <View style={styles.medievalCard}>
-                <Text style={styles.medievalQuestionText}>{currentQuestion?.question}</Text>
+            <ScrollView style={styles.medievalCard}>
+                <Animated.View style={{ opacity: questionCardOpacity }}>
+                    <Text style={styles.medievalQuestionText}>{currentQuestion?.question}</Text>
+                </Animated.View>
 
-                <View style={styles.optionsContainer}>
+                <Animated.View style={[styles.optionsContainer, { opacity: optionsOpacity }]}>
                     {currentOptions.map((option, i) => (
                         <TouchableOpacity
                             key={i}
@@ -64,10 +68,10 @@ const MedievalTheme = ({
                             <Text style={styles.medievalOptionText}>{option}</Text>
                         </TouchableOpacity>
                     ))}
-                </View>
+                </Animated.View>
 
                 {feedback && (
-                    <View style={styles.feedbackContainer}>
+                    <Animated.View style={[styles.feedbackContainer, { opacity: feedbackOpacity }]}>
                         <Text
                             style={[
                                 styles.feedbackText,
@@ -83,9 +87,9 @@ const MedievalTheme = ({
                         <TouchableOpacity style={styles.nextButton} onPress={onNext}>
                             <Text style={styles.buttonText}>Siguiente pregunta</Text>
                         </TouchableOpacity>
-                    </View>
+                    </Animated.View>
                 )}
-            </View>
+            </ScrollView>
         </SafeAreaView>
     );
 };
@@ -112,16 +116,14 @@ const styles = StyleSheet.create({
         gap: 12,
     },
     feedbackContainer: {
-        padding: 16,
         borderRadius: 8,
-        marginTop: 24,
+        marginTop: 10,
     },
     feedbackText: {
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 8,
     },
-    // Medieval Theme specific styles
     medievalCard: {
         borderWidth: 2,
         borderColor: '#fbbf24',
@@ -182,6 +184,7 @@ const styles = StyleSheet.create({
     explanationText: {
         fontSize: 16,
         marginBottom: 8,
+        color: 'white'
     },
     referenceText: {
         fontSize: 14,

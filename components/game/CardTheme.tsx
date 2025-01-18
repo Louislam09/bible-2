@@ -1,7 +1,9 @@
+import useGameAnimation from '@/hooks/useGameAnimation';
 import { ICardTheme } from '@/types';
 import { shuffleOptions } from '@/utils/shuffleOptions';
 import React, { useMemo } from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import Icon from '../Icon';
 
 interface ButtonStyleProps {
@@ -12,6 +14,7 @@ interface ButtonStyleProps {
 
 const CardTheme = ({ router, feedback, currentQuestion, onAnswer, onNext, progress, selectedAnswer, title }: ICardTheme) => {
     const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion]);
+    const { feedbackOpacity, optionsOpacity, questionCardOpacity } = useGameAnimation({ progress, feedback, currentOptions })
 
     const getButtonStyle = ({ isSelected, isCorrect, showResult }: ButtonStyleProps): object => {
         return [
@@ -33,12 +36,12 @@ const CardTheme = ({ router, feedback, currentQuestion, onAnswer, onNext, progre
                 </View>
             </View>
 
-            <View style={[styles.cardContainer, styles.shadowProp]}>
-                <View style={[styles.questionCard, { backgroundColor: '#fef9c3' }]}>
+            <ScrollView style={[styles.cardContainer, styles.shadowProp]}>
+                <Animated.View style={[styles.questionCard, { backgroundColor: '#fef9c3', opacity: questionCardOpacity }]}>
                     <Text style={[styles.questionText, { color: '#854d0e' }]}>{currentQuestion?.question}</Text>
-                </View>
+                </Animated.View>
 
-                <View style={styles.optionsContainer}>
+                <Animated.View style={[styles.optionsContainer, { opacity: optionsOpacity }]}>
                     {currentOptions.map((option, i) => (
                         <TouchableOpacity
                             key={i}
@@ -61,10 +64,10 @@ const CardTheme = ({ router, feedback, currentQuestion, onAnswer, onNext, progre
                             <Text style={[styles.optionText, { color: '#854d0e' }]}>{option}</Text>
                         </TouchableOpacity>
                     ))}
-                </View>
+                </Animated.View>
 
                 {feedback && (
-                    <View style={styles.feedbackContainer}>
+                    <Animated.View style={[styles.feedbackContainer, { opacity: feedbackOpacity }]}>
                         <Text
                             style={[styles.feedbackText, feedback.isCorrect ? styles.correctText : styles.incorrectText]}
                         >
@@ -77,9 +80,9 @@ const CardTheme = ({ router, feedback, currentQuestion, onAnswer, onNext, progre
                         <TouchableOpacity style={styles.nextButton} onPress={onNext}>
                             <Text style={styles.buttonText}>Siguiente pregunta</Text>
                         </TouchableOpacity>
-                    </View>
+                    </Animated.View >
                 )}
-            </View>
+            </ScrollView>
         </SafeAreaView>
     );
 }
@@ -157,9 +160,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     feedbackContainer: {
-        padding: 16,
-        borderRadius: 8,
-        backgroundColor: '#fefce8',
+        paddingVertical: 16,
         marginBottom: 24,
     },
     feedbackText: {

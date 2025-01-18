@@ -1,8 +1,9 @@
 import { ICardTheme } from '@/types';
 import { shuffleOptions } from '@/utils/shuffleOptions';
 import React, { useMemo } from 'react';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from '../Icon';
+import useGameAnimation from '@/hooks/useGameAnimation';
 
 interface ButtonStyleProps {
     isSelected: boolean;
@@ -12,6 +13,7 @@ interface ButtonStyleProps {
 
 const NeonTheme = ({ router, title, currentQuestion, onAnswer, onNext, progress, selectedAnswer, feedback }: ICardTheme) => {
     const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion]);
+    const { feedbackOpacity, optionsOpacity, questionCardOpacity } = useGameAnimation({ progress, feedback, currentOptions })
 
     const getButtonStyle = ({ isSelected, isCorrect, showResult }: ButtonStyleProps): object => {
         return [
@@ -31,10 +33,14 @@ const NeonTheme = ({ router, title, currentQuestion, onAnswer, onNext, progress,
                 <Text style={styles.neonText}>{progress?.current}/{progress?.total}</Text>
             </View>
 
-            <View style={[styles.neonCard, styles.neonShadow]}>
-                <Text style={styles.neonQuestionText}>{currentQuestion?.question}</Text>
+            <ScrollView style={[styles.neonCard, styles.neonShadow]}>
+                <Animated.View style={{ opacity: questionCardOpacity }}>
 
-                <View style={styles.optionsContainer}>
+                <Text style={styles.neonQuestionText}>{currentQuestion?.question}</Text>
+                </Animated.View>
+
+
+                <Animated.View style={[styles.optionsContainer, { opacity: optionsOpacity }]}>
                     {currentOptions.map((option, i) => (
                         <TouchableOpacity
                             key={i}
@@ -52,10 +58,10 @@ const NeonTheme = ({ router, title, currentQuestion, onAnswer, onNext, progress,
                             <Text style={styles.neonOptionText}>{option}</Text>
                         </TouchableOpacity>
                     ))}
-                </View>
+                </Animated.View>
 
                 {feedback && (
-                    <View style={styles.feedbackContainer}>
+                    <Animated.View style={[styles.feedbackContainer, { opacity: feedbackOpacity }]}>
                         <Text
                             style={[
                                 styles.feedbackText,
@@ -71,9 +77,9 @@ const NeonTheme = ({ router, title, currentQuestion, onAnswer, onNext, progress,
                         <TouchableOpacity style={styles.nextButton} onPress={onNext}>
                             <Text style={styles.buttonText}>Siguiente pregunta</Text>
                         </TouchableOpacity>
-                    </View>
+                    </Animated.View>
                 )}
-            </View>
+            </ScrollView>
         </SafeAreaView>
     );
 };
