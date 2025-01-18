@@ -15,6 +15,7 @@ import {
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { IconProps } from "@/components/Icon";
+import { Router } from 'expo-router';
 
 declare global {
   namespace ReactNavigation {
@@ -42,6 +43,7 @@ export enum Screens {
   NoteDetail = 'noteDetail',
   Hymn = 'hymn',
   Game = '(game)',
+  ChooseGame = 'chooseGame',
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -66,6 +68,7 @@ export const ScreensName: TScreensName = {
   [Screens.NoteDetail]: 'Nota',
   [Screens.Hymn]: 'Selecciona un himnario',
   [Screens.Game]: 'Juego Biblico',
+  [Screens.ChooseGame]: '',
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -116,6 +119,7 @@ export type RootStackParamList = {
   modal: undefined;
   onboarding: undefined;
   song: { isAlegres: boolean };
+  '(game)': { questionsPerLevel: number };
   hymn: undefined;
   notFound: undefined;
 };
@@ -465,4 +469,15 @@ export interface AnswerResult {
   correctAnswer: string;
   explanation: string;
   reference: string;
+}
+
+export interface ICardTheme {
+  title: string;
+  currentQuestion: Question | null;
+  onAnswer: (answer: string) => void;
+  onNext: () => void;
+  progress: GameProgress | null;
+  selectedAnswer: string | null;
+  feedback: AnswerResult | null;
+  router: Router
 }

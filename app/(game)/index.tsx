@@ -1,9 +1,15 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import { GameManager } from '@/classes/GameManager';
+import CardTheme from '@/components/game/CardTheme';
+import GameConsoleTheme from '@/components/game/GameConsoleTheme';
+import GameOverScreen from '@/components/game/Gameover';
+import MedievalTheme from '@/components/game/MedievalTheme';
+import NeonTheme from '@/components/game/NeonTheme';
+import useParams from '@/hooks/useParams';
+import { AnswerResult, GameProgress, Question } from '@/types';
+import { useNavigation, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { Question, GameProgress, AnswerResult } from '@/types';
-import { useRouter } from 'expo-router';
+import React, { useEffect, useMemo, useState } from 'react';
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface ButtonStyleProps {
     isSelected: boolean;
@@ -12,7 +18,7 @@ interface ButtonStyleProps {
 }
 
 const shuffleOptions = (options: string[] | undefined): string[] => {
-    if (!options) return []
+    if (!options) return [];
     for (let i = options.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [options[i], options[j]] = [options[j], options[i]];
@@ -20,15 +26,26 @@ const shuffleOptions = (options: string[] | undefined): string[] => {
     return options;
 };
 
+const themes = [
+    { component: CardTheme },
+    { component: GameConsoleTheme },
+    { component: MedievalTheme },
+    { component: NeonTheme },
+];
+
 const Game = () => {
     const router = useRouter()
-    const gameManager = useMemo(() => new GameManager(3), []);
+    const params = useParams()
+    const { questionsPerLevel = 10 } = params
+    const number = (questionsPerLevel / 5 - 1)
+    const [currentTheme] = useState(number ?? 0);
+    const gameManager = useMemo(() => new GameManager(questionsPerLevel), [questionsPerLevel]);
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
     const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
     const [feedback, setFeedback] = useState<AnswerResult | null>(null);
     const [progress, setProgress] = useState<GameProgress | null>(null);
     const currentLevel = progress?.level;
-    const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion])
+    const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion]);
 
     useEffect(() => {
         updateGameState();
@@ -50,117 +67,84 @@ const Game = () => {
     };
 
     const handleNext = (): void => {
-        if (gameManager.gameOver) return
+        if (gameManager.gameOver) return;
         if (gameManager.nextQuestion()) {
-            updateGameState()
+            updateGameState();
         } else {
-            setProgress(gameManager.getProgress())
+            setProgress(gameManager.getProgress());
         }
     };
 
     const handleRestart = (): void => {
-        gameManager.nextLevel()
+        gameManager.nextLevel();
         updateGameState();
     };
 
-    const getButtonStyle = ({ isSelected, isCorrect, showResult }: ButtonStyleProps): object => {
-        return [
-            styles.optionButton,
-            isSelected && styles.selectedButton,
-            showResult && isCorrect && styles.correctButton,
-            isSelected && !isCorrect && showResult && styles.incorrectButton,
-        ];
-    };
 
     if (gameManager.gameOver) {
-        return (
-            <SafeAreaView style={styles.container}>
-                <View style={styles.gameOverContainer}>
-                    <Text style={styles.title}>¡Juego Completado!</Text>
-                    <Text style={styles.scoreText}>
-                        Puntuación final: {progress?.score} de {progress?.total}
-                    </Text>
-                    <TouchableOpacity style={styles.button} onPress={handleRestart}>
-                        <Text style={styles.buttonText}>Siguiente Nivel</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.button, { backgroundColor: '#ff7b6d' }]} onPress={() => router.back()}>
-                        <Text style={styles.buttonText}>Cerrar</Text>
-                    </TouchableOpacity>
-                </View>
-                <StatusBar style="auto" />
-            </SafeAreaView>
-        );
+        return <GameOverScreen handleRestart={handleRestart} progress={progress} />
     }
 
-
+    const Card = themes[currentTheme].component
 
     return (
-        <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <Text style={styles.title}>
-                    Preguntas Bíblicas - Nivel {currentLevel} ({progress?.current}/{progress?.total})
-                </Text>
-
-                <View style={styles.questionContainer}>
-                    <Text style={styles.questionText}>{currentQuestion?.question}</Text>
-
-                    <View style={styles.optionsContainer}>
-                        {currentOptions.map((option, index) => (
-                            <TouchableOpacity
-                                key={index}
-                                style={getButtonStyle({
-                                    isSelected: selectedAnswer === option,
-                                    isCorrect: option === currentQuestion?.correct,
-                                    showResult: selectedAnswer !== null
-                                })}
-                                onPress={() => handleAnswer(option)}
-                                disabled={selectedAnswer !== null}
-                            >
-                                <Text style={styles.optionText}>{option}</Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-
-                    {feedback && (
-                        <View style={styles.feedbackContainer}>
-                            <Text style={[styles.feedbackText, feedback.isCorrect ? styles.correctText : styles.incorrectText]}>
-                                {feedback.isCorrect ? "¡Correcto!" : "Incorrecto"}
-                            </Text>
-                            <Text style={styles.explanationText}>{feedback.explanation}</Text>
-                            {feedback.reference && (
-                                <Text style={styles.referenceText}>Referencia: {feedback.reference}</Text>
-                            )}
-                            <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-                                <Text style={styles.buttonText}>Siguiente pregunta</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )}
-
-                    <Text style={styles.scoreText}>
-                        Puntuación actual: {progress?.score}/{progress?.current}
-                    </Text>
-                </View>
-            </ScrollView>
-            <StatusBar style="auto" />
-        </SafeAreaView>
-    );
-}
+        <View style={styles.container}>
+            <Card
+                router={router}
+                title="JuegoBiblico"
+                currentQuestion={currentQuestion}
+                onAnswer={handleAnswer}
+                onNext={handleNext}
+                progress={progress}
+                selectedAnswer={selectedAnswer}
+                feedback={feedback}
+            />
+        </View>
+    )
+};
 
 export default Game;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: 'transparent',
     },
     scrollContainer: {
         padding: 20,
     },
-    gameOverContainer: {
-        flex: 1,
-        justifyContent: 'center',
+    headerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 20,
+        marginBottom: 20,
+    },
+    iconContainer: {
+        backgroundColor: 'white',
+        padding: 10,
+        borderRadius: 50,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        elevation: 3,
+    },
+    scoreContainer: {
+        flexDirection: 'row',
+        gap: 10,
+    },
+    scoreBox: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        elevation: 3,
     },
     title: {
         fontSize: 24,
@@ -179,13 +163,19 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     optionButton: {
-        backgroundColor: '#f0f0f0',
+        backgroundColor: '#ffffff',
         padding: 15,
-        borderRadius: 8,
+        borderRadius: 12,
         marginBottom: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        elevation: 3,
     },
     selectedButton: {
-        backgroundColor: '#ddd',
+        backgroundColor: '#d1e9fc',
+        transform: [{ scale: 1.05 }],
     },
     correctButton: {
         backgroundColor: '#4CAF50',
@@ -199,8 +189,13 @@ const styles = StyleSheet.create({
     feedbackContainer: {
         backgroundColor: '#f8f8f8',
         padding: 15,
-        borderRadius: 8,
+        borderRadius: 12,
         marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        elevation: 3,
     },
     feedbackText: {
         fontSize: 18,
@@ -225,13 +220,16 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: '#2196F3',
         padding: 15,
-        borderRadius: 8,
+        borderRadius: 12,
         marginTop: 10,
+    },
+    closeButton: {
+        backgroundColor: '#ff7b6d',
     },
     nextButton: {
         backgroundColor: '#2196F3',
         padding: 15,
-        borderRadius: 8,
+        borderRadius: 12,
         marginTop: 10,
     },
     buttonText: {
@@ -243,5 +241,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
         marginTop: 10,
+    },
+    gameOverContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+        backgroundColor: '#e3f2fd',
     },
 });

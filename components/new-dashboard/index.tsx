@@ -133,7 +133,8 @@ const SecondDashboard = () => {
       icon: 'Gamepad',
       label: 'Juego',
       // @ts-ignore
-      action: () => navigation.navigate('(game)', {}),
+      action: () => navigation.navigate(Screens.ChooseGame, {}),
+      // action: () => navigation.navigate('(game)', {}),
       color: '#75d0fe',
     },
   ];

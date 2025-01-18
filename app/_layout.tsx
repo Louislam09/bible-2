@@ -40,6 +40,7 @@ const screenAnimations: TScreensName = {
   [Screens.Concordance]: 'slide_from_right',
   [Screens.Hymn]: 'slide_from_right',
   [Screens.Game]: 'slide_from_right',
+  [Screens.ChooseGame]: 'slide_from_right',
 };
 
 const App = () => {
