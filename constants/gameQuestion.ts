@@ -317,7 +317,7 @@ export default [
     reference: 'Génesis 46:30',
     explanation:
       'Estas palabras fueron dichas por Jacob, quien exclamó esto cuando se reunió con su hijo José, después de muchos años de separación. Jacob pensaba que José había muerto, pero al verlo vivo, se sintió tan aliviado que expresó su deseo de morir en paz.',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿En qué versículo se registra que Jesús cantó?',
@@ -326,7 +326,7 @@ export default [
     reference: '',
     explanation:
       'En Mateo 26:30 se registra que Jesús cantó un himno con sus discípulos después de la Última Cena. Este acto se realizó antes de que se dirigieran al Monte de los Olivos, donde Jesús sería arrestado.',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿Qué capítulo es considerado el “Salón de la fama de la fe”?',
@@ -367,7 +367,7 @@ export default [
     reference: '',
     explanation:
       'El misionero que evangelizó a los pieles rojas, es decir, a los pueblos nativos americanos, fue David Brainerd. Brainerd dedicó su vida a la predicación entre los nativos en Nueva Inglaterra en el siglo XVIII.',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿Que hombre tenía una larga y pesada cabellera?',
@@ -427,7 +427,7 @@ export default [
     reference: '',
     explanation:
       'El libro de Levítico es el que menciona más animales en la Biblia. Contiene leyes detalladas sobre qué animales son limpios y qué animales son impuros, así como las regulaciones para el sacrificio y la pureza ritual.',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿Cuántos versículos tiene el Salmo 117?',
@@ -465,7 +465,7 @@ export default [
     reference: 'Mateo 10:2-4',
     explanation:
       'La respuesta es Judas Iscariote, quien fue uno de los doce discípulos de Jesús, pero traicionó a Jesús. Sin embargo, después de su traición, ya no fue considerado un discípulo fiel.',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: "¿Quién dijo 'Por voluntad de Jehová he adquirido varón'?",
@@ -494,7 +494,7 @@ export default [
     reference: '1 Samuel 2:1',
     explanation:
       'Estas palabras fueron dichas por Ana, la madre de Samuel, en su oración de gratitud a Dios después de haber recibido la respuesta a su oración por un hijo.',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question:
@@ -519,7 +519,7 @@ export default [
     reference: 'Éxodo 15:27',
     explanation:
       'Elim tenía 12 fuentes de agua y 70 palmeras, según Éxodo 15:27. Este lugar fue un punto de descanso para los israelitas durante su éxodo del desierto.',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question:
@@ -609,7 +609,7 @@ export default [
     reference: '1 Samuel 31',
     explanation:
       'Saúl murió en el monte Gilboa, junto con sus tres hijos, durante una batalla contra los filisteos (1 Samuel 31:1-6).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿En qué monte murió Moisés?',
@@ -618,7 +618,7 @@ export default [
     reference: 'Deuteronomio 34',
     explanation:
       'Moisés murió en el monte Nebo, que se encuentra en la región de Moab, frente a la tierra prometida que no pudo entrar (Deuteronomio 34:1-5).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿Por cuántos días ayunó Moisés?',
@@ -938,7 +938,7 @@ export default [
     reference: '',
     explanation:
       'El libro de Proverbios fue principalmente escrito por el rey Salomón, conocido por su sabiduría.',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿Quién fue profeta durante el reinado de Darío?',
@@ -961,7 +961,7 @@ export default [
     reference: 'Génesis 12:8',
     explanation:
       "Bet-el significa 'Casa de Dios'. Es un lugar importante en la Biblia, conocido por la visión de Jacob de una escalera que llegaba al cielo (Génesis 28:19).",
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿Cuántos capítulos tiene el libro de Judas?',
@@ -984,7 +984,7 @@ export default [
     reference: 'Génesis 17:26',
     explanation:
       'Abraham y su hijo Isaac fueron circuncidados el mismo día. Esto se menciona en Génesis 17:23-27.',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿Cuánto tiempo anduvo Isaías desnudo y descalzo?',
@@ -993,7 +993,7 @@ export default [
     reference: 'Isaías 20:3',
     explanation:
       'Isaías anduvo desnudo y descalzo durante tres años como una señal profética de lo que sucedería con Egipto y Etiopía (Isaías 20:2-4).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question:
@@ -1042,7 +1042,7 @@ export default [
     reference: '',
     explanation:
       'El evangelio de Juan es el que no incluye ninguna predicción específica de la resurrección de Jesús. Aunque Jesús habla sobre su muerte y resurrección, no hay un pronóstico claro como en los otros evangelios (Mateo, Marcos y Lucas).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿Quién vió a unos ángeles subir y bajar por una escalera?',
@@ -1109,7 +1109,7 @@ export default [
     reference: 'Éxodo 14:13',
     explanation:
       'Estas palabras fueron pronunciadas por Moisés en el Mar Rojo, cuando los israelitas temían ser alcanzados por el ejército de Faraón. Moisés les aseguró que Dios les daría la victoria (Éxodo 14:13).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿Cómo se llamaba la esposa de Moisés?',
@@ -1136,7 +1136,7 @@ export default [
     reference: '2 Crónicas 3:1',
     explanation:
       'El Monte Moriah está ubicado en Jerusalén. Fue el lugar donde Abraham casi sacrificó a su hijo Isaac y más tarde donde se construyó el Templo de Salomón (Génesis 22:2).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿Quién escribió el libro de Lamentaciones?',
@@ -1190,7 +1190,7 @@ export default [
     reference: '1 Samuel 1',
     explanation:
       'El padre de Samuel se llamaba Elcana. Él era un hombre de Efraín que tuvo dos esposas: Ana y Penina (1 Samuel 1:1-2).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question:
@@ -1200,7 +1200,7 @@ export default [
     reference: 'Mateo 17:1, Marcos 9:2, Lucas 9:28',
     explanation:
       'En la Transfiguración, además de Jesús, estuvieron presentes tres discípulos: Pedro, Santiago y Juan (Mateo 17:1-9).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question:
@@ -1210,7 +1210,7 @@ export default [
     reference: 'Jeremías 29:13',
     explanation:
       'Esta frase se encuentra en el libro de Jeremías 29:13, donde Dios promete a los exiliados que los restaurará si lo buscan sinceramente.',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿Cuál es la primera mentira que se registra en la Biblia?',
@@ -1242,7 +1242,7 @@ export default [
     reference: '1 Reyes 17:1',
     explanation:
       "El profeta Elías fue llamado el 'Tisbita', ya que provenía de la ciudad de Tisbé, en Galilea (1 Reyes 17:1).",
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿Cuántos capítulos tiene el libro de Rut?',
@@ -1331,7 +1331,7 @@ export default [
     reference: 'Job 1:2 más Job 42:13',
     explanation:
       'Job tuvo diez hijos: siete hijos y tres hijas, según se menciona en Job 1:2.',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: 'Bienaventurados los pobres en espíritu, porque...',
@@ -1509,7 +1509,7 @@ export default [
     reference: '2 Corintios 11:32-33',
     explanation:
       'Pablo escapó de la ciudad de Damasco en un canasto, cuando los gobernantes de la ciudad intentaron matarlo (Hechos 9:25).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿En qué ciudades puso Jeroboam los becerros de oro?',
@@ -1518,7 +1518,7 @@ export default [
     reference: '1 Reyes 12:28-29',
     explanation:
       'Jeroboam puso los becerros de oro en Bet-el y Dan para que el pueblo de Israel no tuviera que ir a Jerusalén a adorar (1 Reyes 12:28-30).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question:
@@ -1528,7 +1528,7 @@ export default [
     reference: 'Mateo 14:3',
     explanation:
       'El nombre de la esposa de Herodes, que se había casado con su hermano Felipe, era Herodías (Marcos 6:17-18).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question:
@@ -1538,7 +1538,7 @@ export default [
     reference: '2 Reyes 11',
     explanation:
       'Este rey fue Atalía, quien mató a toda la descendencia real excepto a Joás, quien fue escondido y luego fue rey de Judá (2 Reyes 11:1-3).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question:
@@ -1694,7 +1694,7 @@ export default [
     reference: '1 Reyes 6:23',
     explanation:
       'Los querubines del lugar Santísimo del templo de Salomón estaban hechos de madera de olivo (1 Reyes 6:23-28).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: "¿Quién es el 'Padre de la Fe'?",
@@ -1759,7 +1759,7 @@ export default [
     reference: 'Hechos 9:36',
     explanation:
       'Tabita, también llamada Dorcas, vivía en la ciudad de Joppe (Hechos 9:36).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question:
@@ -1769,7 +1769,7 @@ export default [
     reference: 'Lucas 24:50-51',
     explanation:
       'Jesús ascendió a los cielos desde el monte de los Olivos, cerca de Jerusalén, después de resucitar (Hechos 1:9-12).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿Quién dirigió la reconstrucción del muro de Jerusalén?',
@@ -1892,7 +1892,7 @@ export default [
     reference: 'Génesis 49:22',
     explanation:
       "El nombre 'rama fructífera' se refiere al Mesías, Jesús, como se menciona en Jeremías 23:5.",
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿Quién es el dulce cantor de Israel?',
@@ -1919,7 +1919,7 @@ export default [
     reference: '1 Reyes 6:38',
     explanation:
       'Salomón tardó 7 años en construir el templo de Jerusalén (1 Reyes 6:38).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿Por quién se dió 20 piezas de plata?',
@@ -2057,7 +2057,7 @@ export default [
     reference: 'Génesis 22:2',
     explanation:
       'Abraham llevó a Isaac a la tierra de Moriah, donde iba a sacrificarlo según la orden de Dios (Génesis 22:2).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question:
@@ -2067,7 +2067,7 @@ export default [
     reference: 'Mateo 19:15-17, Marcos 10:16-18, Lucas 18:17-19',
     explanation:
       'El encuentro de Jesús con el hombre rico no se narra en el evangelio de Juan, pero sí en Mateo, Marcos y Lucas (Mateo 19:16-30).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question:
@@ -2133,7 +2133,7 @@ export default [
     reference: 'Juan 18:10',
     explanation:
       'El siervo del sumo sacerdote al que Pedro le cortó una oreja se llamaba Malco (Juan 18:10).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: '¿Cuál fue el número de concubinas de Salomón?',
@@ -2142,7 +2142,7 @@ export default [
     reference: '1 Reyes 11:3',
     explanation:
       'Salomón tuvo 300 concubinas además de sus 700 esposas (1 Reyes 11:3).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: "¿Cómo se traduce 'Emanuel'?",
@@ -2184,7 +2184,7 @@ export default [
     reference: 'Isaías 8:3',
     explanation:
       'El padre de Maher-salal-hasbaz fue el profeta Isaías (Isaías 8:3).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question:
@@ -2199,7 +2199,7 @@ export default [
     reference: 'Génesis 6:15',
     explanation:
       'Las dimensiones del arca de Noé eran 300 codos de largo, 50 codos de ancho y 30 codos de alto (Génesis 6:15).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question:
@@ -2209,7 +2209,7 @@ export default [
     reference: 'Éxodo 25:10',
     explanation:
       'El Arca del Pacto fue hecha de madera de acacia recubierta de oro (Éxodo 25:10-11).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question:
@@ -2219,7 +2219,7 @@ export default [
     reference: 'Éxodo 37:1',
     explanation:
       'El Arca del Pacto fue construida por Bezalel, un artesano escogido por Dios (Éxodo 31:2-5).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: "¿Qué es 'Azazel'?",
@@ -2228,7 +2228,7 @@ export default [
     reference: 'Levítico 16:26',
     explanation:
       'Azazel es un término que se refiere a un ser o entidad a la que se enviaba el chivo expiatorio durante el Yom Kipur, el cual se llevaba al desierto (Levítico 16:10).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: "¿Quién dijo '¿Soy yo perro, para que vengas a mí con palos?'?",
@@ -2271,7 +2271,7 @@ export default [
     reference: 'Mateo 20:21',
     explanation:
       'Estas palabras fueron dichas por la madre de los hijos de Zebedeo a Jesús, pidiendo que sus hijos ocuparan los lugares de honor (Mateo 20:21).',
-    difficulty: 'very_hard',
+    difficulty: 'hard',
   },
   {
     question: "¿Quién dijo 'Si perezco, que perezca'?",
@@ -2384,5 +2384,1258 @@ export default [
     explanation:
       'Juan el Bautista bautizó a Jesús en el río Jordán (Mateo 3:13).',
     difficulty: 'easy',
+  },
+  {
+    question: '¿Quién construyó un arca para salvarse del diluvio?',
+    options: ['Noé', 'Abraham', 'Moisés', 'Elías'],
+    correct: 'Noé',
+    reference: 'Génesis 6:14',
+    explanation:
+      'Dios le ordenó a Noé construir un arca para salvar a su familia y a los animales del diluvio (Génesis 6:14-22).',
+    difficulty: 'easy',
+  },
+  {
+    question: '¿Quién fue tragado por un gran pez al huir de Dios?',
+    options: ['Jonás', 'David', 'Elías', 'Daniel'],
+    correct: 'Jonás',
+    reference: 'Jonás 1:17',
+    explanation:
+      'Jonás fue tragado por un gran pez cuando trató de huir de la misión que Dios le había encomendado en Nínive (Jonás 1:17).',
+    difficulty: 'medium',
+  },
+  {
+    question: '¿Qué mujer juzgó a Israel bajo una palmera?',
+    options: ['Débora', 'Sara', 'Rut', 'Esther'],
+    correct: 'Débora',
+    reference: 'Jueces 4:4-5',
+    explanation:
+      'Débora fue una profetisa y jueza de Israel que impartía justicia bajo una palmera (Jueces 4:4-5).',
+    difficulty: 'medium',
+  },
+  {
+    question: '¿Cuál de los siguientes no fue uno de los discípulos de Jesús?',
+    options: ['Pedro', 'Andrés', 'Pablo', 'Tomás'],
+    correct: 'Pablo',
+    reference: 'Hechos 9:1-19',
+    explanation:
+      'Pablo no fue uno de los 12 discípulos originales; más tarde fue llamado al apostolado después de su conversión (Hechos 9).',
+    difficulty: 'hard',
+  },
+  {
+    question: '¿Qué rey soñó con una estatua hecha de varios materiales?',
+    options: ['Salomón', 'Nabucodonosor', 'David', 'Acab'],
+    correct: 'Nabucodonosor',
+    reference: 'Daniel 2:31-35',
+    explanation:
+      'El rey Nabucodonosor soñó con una estatua de oro, plata, bronce, hierro y barro, interpretada por Daniel (Daniel 2:31-35).',
+    difficulty: 'hard',
+  },
+  {
+    question: '¿Qué mujer es conocida como la madre de todos los vivientes?',
+    options: ['Sara', 'Eva', 'Rebeca', 'Lea'],
+    correct: 'Eva',
+    reference: 'Génesis 3:20',
+    explanation:
+      'Eva recibió este título porque fue la primera mujer y la madre de toda la humanidad (Génesis 3:20).',
+    difficulty: 'easy',
+  },
+  {
+    question: "¿Qué salmo comienza con 'Jehová es mi pastor; nada me faltará'?",
+    options: ['Salmo 1', 'Salmo 23', 'Salmo 51', 'Salmo 100'],
+    correct: 'Salmo 23',
+    reference: 'Salmo 23:1',
+    explanation:
+      'Este salmo es una expresión de confianza en la provisión y cuidado de Dios (Salmo 23:1).',
+    difficulty: 'easy',
+  },
+  {
+    question: '¿Quién fue el primer rey de Israel?',
+    options: ['Saúl', 'David', 'Salomón', 'Samuel'],
+    correct: 'Saúl',
+    reference: '1 Samuel 10:1',
+    explanation:
+      'Saúl fue ungido por el profeta Samuel como el primer rey de Israel (1 Samuel 10:1).',
+    difficulty: 'medium',
+  },
+  {
+    question: '¿Cuántos años vagó el pueblo de Israel en el desierto?',
+    options: ['20 años', '40 años', '50 años', '70 años'],
+    correct: '40 años',
+    reference: 'Números 14:33-34',
+    explanation:
+      'El pueblo de Israel vagó 40 años en el desierto debido a su desobediencia a Dios (Números 14:33-34).',
+    difficulty: 'medium',
+  },
+  {
+    question: '¿Qué profeta fue llevado al cielo en un carro de fuego?',
+    options: ['Elías', 'Enoc', 'Isaías', 'Jeremías'],
+    correct: 'Elías',
+    reference: '2 Reyes 2:11',
+    explanation:
+      'Elías fue llevado al cielo en un carro de fuego, sin pasar por la muerte (2 Reyes 2:11).',
+    difficulty: 'hard',
+  },
+
+  {
+    question: '¿Quién interpretó los sueños del faraón en Egipto?',
+    options: ['José', 'Moisés', 'Daniel', 'Elías'],
+    correct: 'José',
+    reference: 'Génesis 41:15-16',
+    explanation:
+      'José interpretó los sueños del faraón, prediciendo siete años de abundancia seguidos por siete años de hambre (Génesis 41:15-16).',
+    difficulty: 'medium',
+  },
+  {
+    question: '¿Cuál es el primer libro de la Biblia?',
+    options: ['Éxodo', 'Mateo', 'Génesis', 'Salmos'],
+    correct: 'Génesis',
+    reference: 'Génesis 1:1',
+    explanation:
+      'El libro de Génesis comienza con la creación del mundo y es el primer libro de la Biblia.',
+    difficulty: 'easy',
+  },
+  {
+    question: '¿Quién fue el sucesor de Moisés como líder de Israel?',
+    options: ['Josué', 'Caleb', 'Aarón', 'Gedeón'],
+    correct: 'Josué',
+    reference: 'Josué 1:1-2',
+    explanation:
+      'Dios designó a Josué para liderar a Israel después de la muerte de Moisés (Josué 1:1-2).',
+    difficulty: 'medium',
+  },
+  {
+    question: '¿Quién es el autor principal del libro de los Salmos?',
+    options: ['David', 'Salomón', 'Asaf', 'Moisés'],
+    correct: 'David',
+    reference: 'Salmo 3:1',
+    explanation:
+      'Aunque varios autores contribuyeron al libro de los Salmos, David es el autor principal.',
+    difficulty: 'medium',
+  },
+  {
+    question: '¿Qué líder israelita derribó los muros de Jericó?',
+    options: ['Josué', 'Sansón', 'Débora', 'Moisés'],
+    correct: 'Josué',
+    reference: 'Josué 6:20',
+    explanation:
+      'Josué lideró al pueblo de Israel en la batalla de Jericó, donde los muros cayeron tras las trompetas y gritos (Josué 6:20).',
+    difficulty: 'easy',
+  },
+  {
+    question: '¿Cuál es el evangelio más corto de la Biblia?',
+    options: ['Mateo', 'Marcos', 'Lucas', 'Juan'],
+    correct: 'Marcos',
+    reference: 'Marcos 1:1',
+    explanation:
+      'El evangelio de Marcos es el más corto de los cuatro evangelios, con 16 capítulos.',
+    difficulty: 'medium',
+  },
+  {
+    question: '¿Quién fue la esposa de Isaac?',
+    options: ['Sara', 'Rebeca', 'Raquel', 'Lea'],
+    correct: 'Rebeca',
+    reference: 'Génesis 24:67',
+    explanation:
+      'Rebeca fue la esposa de Isaac, elegida por el siervo de Abraham siguiendo la guía de Dios (Génesis 24:67).',
+    difficulty: 'medium',
+  },
+  {
+    question: '¿Qué alimento proveyó Dios a los israelitas en el desierto?',
+    options: ['Pan', 'Maná', 'Cordero', 'Miel'],
+    correct: 'Maná',
+    reference: 'Éxodo 16:15',
+    explanation:
+      'Dios proveyó maná como alimento diario para los israelitas en el desierto (Éxodo 16:15).',
+    difficulty: 'easy',
+  },
+  {
+    question: '¿Quién fue conocido como el amigo de Dios?',
+    options: ['Abraham', 'Moisés', 'David', 'Isaías'],
+    correct: 'Abraham',
+    reference: 'Santiago 2:23',
+    explanation:
+      'Abraham es llamado el amigo de Dios debido a su fe y obediencia (Santiago 2:23).',
+    difficulty: 'medium',
+  },
+  {
+    question: '¿En qué monte recibió Moisés los Diez Mandamientos?',
+    options: ['Monte Sinaí', 'Monte Carmelo', 'Monte Tabor', 'Monte Hermón'],
+    correct: 'Monte Sinaí',
+    reference: 'Éxodo 19:20',
+    explanation:
+      'Moisés recibió los Diez Mandamientos en el monte Sinaí (Éxodo 19:20).',
+    difficulty: 'medium',
+  },
+  {
+    question: '¿Cuántos libros tiene la Biblia?',
+    options: ['39', '66', '73', '81'],
+    correct: '66',
+    reference: 'Canon bíblico',
+    explanation:
+      'La Biblia protestante tiene 66 libros: 39 en el Antiguo Testamento y 27 en el Nuevo Testamento.',
+    difficulty: 'easy',
+  },
+  {
+    question:
+      '¿Qué profeta confrontó a los profetas de Baal en el Monte Carmelo?',
+
+    options: ['Elías', 'Eliseo', 'Jeremías', 'Isaías'],
+    correct: 'Elías',
+    reference: '1 Reyes 18:20-40',
+    explanation:
+      'Elías confrontó a los profetas de Baal en el Monte Carmelo, demostrando el poder de Dios (1 Reyes 18:20-40).',
+    difficulty: 'medium',
+  },
+  {
+    question: '¿Quién tuvo un sueño de una escalera que llegaba al cielo?',
+    options: ['Jacob', 'José', 'Moisés', 'David'],
+    correct: 'Jacob',
+    reference: 'Génesis 28:12',
+    explanation:
+      'Jacob soñó con una escalera que llegaba al cielo y vio ángeles subiendo y bajando por ella (Génesis 28:12).',
+    difficulty: 'medium',
+  },
+  {
+    question: '¿Quién traicionó a Jesús por 30 piezas de plata?',
+    options: ['Pedro', 'Judas Iscariote', 'Juan', 'Tomás'],
+    correct: 'Judas Iscariote',
+    reference: 'Mateo 26:14-16',
+    explanation:
+      'Judas Iscariote traicionó a Jesús entregándolo a los líderes religiosos por 30 piezas de plata (Mateo 26:14-16).',
+    difficulty: 'easy',
+  },
+  {
+    question: '¿Quién fue lanzado al foso de los leones pero salió ileso?',
+    options: ['Daniel', 'David', 'Eliseo', 'Moisés'],
+    correct: 'Daniel',
+    reference: 'Daniel 6:16-22',
+    explanation:
+      'Daniel fue protegido por Dios cuando fue lanzado al foso de los leones (Daniel 6:16-22).',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      '¿Qué libro de la Biblia habla sobre la reconstrucción del muro de Jerusalén?',
+    options: ['Esdras', 'Nehemías', 'Crónicas', 'Reyes'],
+    correct: 'Nehemías',
+    reference: 'Nehemías 6:15',
+    explanation:
+      'El libro de Nehemías narra la reconstrucción del muro de Jerusalén tras el exilio (Nehemías 6:15).',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      '¿Cuántos panes y peces usó Jesús para alimentar a 5,000 personas?',
+    options: [
+      '5 panes y 2 peces',
+      '7 panes y 3 peces',
+      '4 panes y 2 peces',
+      '6 panes y 3 peces',
+    ],
+    correct: '5 panes y 2 peces',
+    reference: 'Mateo 14:17',
+    explanation:
+      'Jesús usó 5 panes y 2 peces para alimentar a 5,000 personas y sobró comida (Mateo 14:17).',
+    difficulty: 'medium',
+  },
+  {
+    question: '¿Qué rey pidió sabiduría a Dios?',
+    options: ['David', 'Salomón', 'Saúl', 'Josafat'],
+    correct: 'Salomón',
+    reference: '1 Reyes 3:9',
+    explanation:
+      'El rey Salomón pidió sabiduría a Dios para gobernar a su pueblo con justicia (1 Reyes 3:9).',
+    difficulty: 'easy',
+  },
+  {
+    question: '¿Quién bautizó a Jesús?',
+    options: ['Pedro', 'Juan el Bautista', 'Elías', 'Moisés'],
+    correct: 'Juan el Bautista',
+    reference: 'Mateo 3:13-17',
+    explanation:
+      'Jesús fue bautizado por Juan el Bautista en el río Jordán (Mateo 3:13-17).',
+    difficulty: 'easy',
+  },
+  {
+    question: '¿Qué imperio destruyó el templo de Jerusalén en el año 70 d.C.?',
+    options: ['Egipcio', 'Babilónico', 'Romano', 'Asirio'],
+    correct: 'Romano',
+    reference: 'Historia Bíblica',
+    explanation:
+      'El imperio romano, bajo el mando de Tito, destruyó el templo de Jerusalén en el año 70 d.C.',
+    difficulty: 'hard',
+  },
+
+  {
+    question:
+      'Soy conocido por mi fe y por obedecer a Dios cuando me pidió salir de mi tierra. ¿Quién soy?',
+    options: ['Moisés', 'David', 'Abraham', 'Josué'],
+    correct: 'Abraham',
+    reference: 'Génesis 12:1',
+    explanation:
+      'Dios llamó a Abraham para salir de su tierra y confiar en Él, convirtiéndose en el padre de muchas naciones (Génesis 12:1-3).',
+    hint: 'Dios prometió hacer de mí una gran nación.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      'Yo guié al pueblo de Israel por el desierto durante 40 años. ¿Quién soy?',
+    options: ['Josué', 'Moisés', 'Aarón', 'Elías'],
+    correct: 'Moisés',
+    reference: 'Éxodo 3:10',
+    explanation:
+      'Moisés lideró al pueblo de Israel tras liberarlos de la esclavitud en Egipto (Éxodo 3:10-12).',
+    hint: 'Recibí los Diez Mandamientos en el Monte Sinaí.',
+    difficulty: 'easy',
+  },
+  {
+    question:
+      'Soy conocido por mi gran fuerza, pero mi debilidad fue confiar en la persona equivocada. ¿Quién soy?',
+    options: ['Sansón', 'David', 'Saúl', 'Eliseo'],
+    correct: 'Sansón',
+    reference: 'Jueces 16:17',
+    explanation:
+      'Sansón perdió su fuerza cuando Dalila descubrió el secreto de su cabello (Jueces 16:17-20).',
+    hint: 'Mi fuerza dependía de mi cabello largo.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      'Fui tragado por un gran pez por no obedecer la misión que Dios me dio. ¿Quién soy?',
+    options: ['Jonás', 'Elías', 'Isaías', 'Jeremías'],
+    correct: 'Jonás',
+    reference: 'Jonás 1:17',
+    explanation:
+      'Jonás intentó huir de la misión de predicar en Nínive, pero Dios lo corrigió enviando un gran pez (Jonás 1:17).',
+    hint: 'Prediqué en Nínive después de un viaje especial en el mar.',
+    difficulty: 'easy',
+  },
+  {
+    question:
+      'Conocí a Dios en una zarza ardiente mientras pastoreaba ovejas. ¿Quién soy?',
+    options: ['Moisés', 'Abraham', 'Elías', 'Josué'],
+    correct: 'Moisés',
+    reference: 'Éxodo 3:2',
+    explanation:
+      'Dios se le apareció a Moisés en una zarza ardiente y lo llamó a liberar a Israel (Éxodo 3:2-4).',
+    hint: 'Me crié en el palacio de Egipto.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      'Yo sobreviví a un foso de leones gracias a mi fe en Dios. ¿Quién soy?',
+    options: ['Daniel', 'David', 'Jonás', 'Eliseo'],
+    correct: 'Daniel',
+    reference: 'Daniel 6:22',
+    explanation:
+      'Daniel fue lanzado al foso de los leones, pero Dios envió un ángel para protegerlo (Daniel 6:22).',
+    hint: 'Dios cerró la boca de los leones por mí.',
+    difficulty: 'easy',
+  },
+  {
+    question:
+      'Lideré la reconstrucción del muro de Jerusalén después del exilio. ¿Quién soy?',
+    options: ['Esdras', 'Nehemías', 'Zorobabel', 'Gedeón'],
+    correct: 'Nehemías',
+    reference: 'Nehemías 2:17',
+    explanation:
+      'Nehemías organizó y lideró la reconstrucción del muro, enfrentando oposición (Nehemías 2:17-20).',
+    hint: 'Fui copero del rey antes de mi misión.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      'Soy conocido por mi sabiduría y construí el primer templo en Jerusalén. ¿Quién soy?',
+    options: ['David', 'Salomón', 'Saúl', 'Ezequías'],
+    correct: 'Salomón',
+    reference: '1 Reyes 3:12',
+    explanation:
+      'Salomón recibió sabiduría de Dios y construyó el primer templo en Jerusalén (1 Reyes 3:12, 1 Reyes 6).',
+    hint: 'Fui hijo del rey David.',
+    difficulty: 'easy',
+  },
+  {
+    question:
+      "Mi nombre significa 'el que sirve' y fui el abuelo del rey David. ¿Quién soy?",
+    options: ['Isaí', 'Obed', 'Boaz', 'Nabot'],
+    correct: 'Obed',
+    reference: 'Rut 4:17',
+    explanation:
+      'Obed fue el hijo de Rut y Boaz, el padre de Isaí y abuelo de David (Rut 4:17).',
+    hint: 'Mi madre fue Rut.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      'Me conocieron como el rey más malvado de Israel, junto con mi esposa Jezabel. ¿Quién soy?',
+    options: ['Acab', 'Saúl', 'Roboam', 'Manasés'],
+    correct: 'Acab',
+    reference: '1 Reyes 16:30',
+    explanation:
+      'Acab y Jezabel introdujeron la adoración a Baal, provocando la ira de Dios (1 Reyes 16:30-33).',
+    hint: 'Tuve un enfrentamiento con el profeta Elías.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      'Fui conocido como un hombre conforme al corazón de Dios, pero también cometí errores graves. ¿Quién soy?',
+    options: ['David', 'Salomón', 'Josué', 'Gedeón'],
+    correct: 'David',
+    reference: '1 Samuel 13:14',
+    explanation:
+      'David fue descrito como un hombre conforme al corazón de Dios, a pesar de cometer errores como el caso de Betsabé (1 Samuel 13:14).',
+    hint: 'Escribí muchos de los Salmos.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      'Me consideraban el hombre más humilde de la Tierra en mi tiempo, pero también me enojé y desobedecí a Dios. ¿Quién soy?',
+    options: ['Moisés', 'Elías', 'Josué', 'Abraham'],
+    correct: 'Moisés',
+    reference: 'Números 12:3',
+    explanation:
+      'Moisés fue reconocido por su humildad, pero su enojo lo llevó a desobedecer a Dios al golpear la roca (Números 20:10-12).',
+    hint: 'No entré a la Tierra Prometida.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      'Soy uno de los reyes que comenzó mi reinado siendo muy joven y restauré el culto a Dios en Israel. ¿Quién soy?',
+    options: ['Josías', 'Manasés', 'Salomón', 'Joás'],
+    correct: 'Josías',
+    reference: '2 Reyes 22:1-2',
+    explanation:
+      'Josías comenzó a reinar a los 8 años y lideró una reforma espiritual en Israel (2 Reyes 22:1-2).',
+    hint: 'Durante mi reinado se halló el libro de la Ley.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      'Soy conocido por haber sido llamado por Dios mientras era niño y serví como profeta. ¿Quién soy?',
+    options: ['Samuel', 'Jeremías', 'Eliseo', 'Isaías'],
+    correct: 'Samuel',
+    reference: '1 Samuel 3:1-10',
+    explanation:
+      'Samuel fue llamado por Dios mientras servía en el templo bajo la guía de Elí (1 Samuel 3:1-10).',
+    hint: 'Ungí al primer rey de Israel.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      'Traicioné a mi hermano por celos, y mi acto marcó la primera muerte registrada en la Biblia. ¿Quién soy?',
+    options: ['Caín', 'Esaú', 'Absalón', 'Judá'],
+    correct: 'Caín',
+    reference: 'Génesis 4:8',
+    explanation:
+      'Caín mató a su hermano Abel debido a los celos por la aceptación de su ofrenda (Génesis 4:8).',
+    hint: 'Fui marcado por Dios para evitar que otros me mataran.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      'Conocí a Jesús junto a un pozo, y Él me habló del agua viva. ¿Quién soy?',
+    options: ['La mujer samaritana', 'Marta', 'María Magdalena', 'Ana'],
+    correct: 'La mujer samaritana',
+    reference: 'Juan 4:7-26',
+    explanation:
+      'Jesús tuvo un encuentro con la mujer samaritana, revelándole que Él es el Mesías (Juan 4:7-26).',
+    hint: 'Tuve cinco esposos.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      'Soy un profeta que huyó de mi misión y terminé pidiendo la muerte bajo una planta seca. ¿Quién soy?',
+    options: ['Jonás', 'Elías', 'Jeremías', 'Oseas'],
+    correct: 'Jonás',
+    reference: 'Jonás 4:8',
+    explanation:
+      'Después de predicar en Nínive, Jonás se enojó por la misericordia de Dios y deseó la muerte (Jonás 4:8-9).',
+    hint: 'Me quejé de la misericordia de Dios hacia los ninivitas.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      'Soy conocido como el profeta llorón debido a mi dolor por la condición de Israel. ¿Quién soy?',
+    options: ['Jeremías', 'Isaías', 'Ezequiel', 'Daniel'],
+    correct: 'Jeremías',
+    reference: 'Jeremías 9:1',
+    explanation:
+      'Jeremías fue conocido como el profeta llorón porque lloró por el pecado y la destrucción de Israel (Jeremías 9:1).',
+    hint: 'Escribí Lamentaciones.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      'Soy una mujer que lideró a Israel como juez y profetisa. ¿Quién soy?',
+    options: ['Débora', 'Jael', 'Rut', 'Esther'],
+    correct: 'Débora',
+    reference: 'Jueces 4:4',
+    explanation:
+      'Débora fue una líder sabia y valiente que dirigió a Israel en tiempos de guerra (Jueces 4:4-5).',
+    hint: 'Canté un cántico tras una victoria.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      'Fui un líder militar que derrotó a un ejército con solo 300 hombres. ¿Quién soy?',
+    options: ['Gedeón', 'Saúl', 'Sansón', 'Josué'],
+    correct: 'Gedeón',
+    reference: 'Jueces 7:7',
+    explanation:
+      'Gedeón, con un ejército de 300 hombres, derrotó a los madianitas por orden de Dios (Jueces 7:7-22).',
+    hint: 'Pedí señales a Dios antes de actuar.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      'Fui la ciudad donde los seguidores de Jesús fueron llamados cristianos por primera vez. ¿Cuál es mi nombre?',
+    options: ['Antioquía', 'Jerusalén', 'Éfeso', 'Corinto'],
+    correct: 'Antioquía',
+    reference: 'Hechos 11:26',
+    explanation:
+      'En Antioquía, los discípulos fueron llamados cristianos por primera vez debido a su clara identificación con Cristo (Hechos 11:26).',
+    hint: 'Era una ciudad importante en Siria.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      'Dios detuvo el sol por mí durante una batalla para garantizar mi victoria. ¿Quién soy?',
+    options: ['Josué', 'Moisés', 'Gedeón', 'David'],
+    correct: 'Josué',
+    reference: 'Josué 10:13',
+    explanation:
+      'Dios respondió a la oración de Josué y detuvo el sol y la luna, permitiendo a Israel vencer a sus enemigos (Josué 10:13-14).',
+    hint: 'Lideré a Israel después de la muerte de Moisés.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      'Soy una ciudad que Dios destruyó con fuego del cielo debido a su gran maldad. ¿Cuál es mi nombre?',
+    options: ['Sodoma', 'Jericó', 'Nínive', 'Babel'],
+    correct: 'Sodoma',
+    reference: 'Génesis 19:24',
+    explanation:
+      'Sodoma fue destruida por Dios junto con Gomorra debido a la maldad de sus habitantes (Génesis 19:24-25).',
+    hint: 'Lot y su familia huyeron de mí.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      'Soy un líder que construyó una torre para llegar al cielo, pero Dios confundió el lenguaje de mi pueblo. ¿Quién soy?',
+    options: ['Nimrod', 'Caín', 'Faraón', 'Babel'],
+    correct: 'Nimrod',
+    reference: 'Génesis 10:8-10',
+    explanation:
+      'Nimrod fue el fundador de Babel, donde se construyó la torre que llevó a la confusión de lenguas (Génesis 10:8-10, 11:1-9).',
+    hint: 'Mi historia está relacionada con el origen de los idiomas.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      'Soy un concepto teológico que describe la doctrina de tres personas en un solo Dios. ¿Qué soy?',
+    options: ['La Trinidad', 'La Encarnación', 'La Redención', 'La Salvación'],
+    correct: 'La Trinidad',
+    reference: 'Mateo 28:19',
+    explanation:
+      'La Trinidad es la doctrina cristiana que enseña que Dios es Padre, Hijo y Espíritu Santo (Mateo 28:19).',
+    hint: 'Se menciona al bautizar en el nombre del Padre, Hijo y Espíritu Santo.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      'Soy conocido por escribir sobre el amor en una de las cartas más famosas del Nuevo Testamento. ¿Quién soy?',
+    options: ['Pablo', 'Juan', 'Pedro', 'Santiago'],
+    correct: 'Pablo',
+    reference: '1 Corintios 13:1-13',
+    explanation:
+      'En 1 Corintios 13, Pablo describe el amor como el mayor don que supera todo (1 Corintios 13:13).',
+    hint: 'Escribí cartas a los Corintios.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      'Fui el rey que sufrió una enfermedad terrible como juicio por no dar la gloria a Dios. ¿Quién soy?',
+    options: ['Herodes Agripa', 'Nabucodonosor', 'Acab', 'Manasés'],
+    correct: 'Herodes Agripa',
+    reference: 'Hechos 12:21-23',
+    explanation:
+      'Herodes Agripa fue herido por un ángel y murió comido de gusanos por no dar gloria a Dios (Hechos 12:21-23).',
+    hint: 'Mi historia ocurre en el Nuevo Testamento.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      'Soy el lugar donde el arca de Noé descansó después del diluvio. ¿Cuál es mi nombre?',
+    options: ['Monte Ararat', 'Monte Sinaí', 'Monte Carmelo', 'Monte Moriah'],
+    correct: 'Monte Ararat',
+    reference: 'Génesis 8:4',
+    explanation:
+      'Después del diluvio, el arca de Noé reposó en el Monte Ararat (Génesis 8:4).',
+    hint: 'Estoy ubicado en la región que hoy es Turquía.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      'Soy un profeta que vio una visión de un valle lleno de huesos secos que volvieron a la vida. ¿Quién soy?',
+    options: ['Ezequiel', 'Isaías', 'Jeremías', 'Amós'],
+    correct: 'Ezequiel',
+    reference: 'Ezequiel 37:1-14',
+    explanation:
+      'Ezequiel tuvo una visión de un valle de huesos secos que cobró vida, simbolizando la restauración de Israel (Ezequiel 37:1-14).',
+    hint: 'Mis visiones eran a menudo simbólicas.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      'Yo interpreto sueños y fui un alto funcionario en Egipto. ¿Quién soy?',
+    options: ['José', 'Daniel', 'Moisés', 'Nehemías'],
+    correct: 'José',
+    reference: 'Génesis 41:15-16',
+    explanation:
+      'José interpretó los sueños del faraón y fue puesto como gobernador de Egipto (Génesis 41:15-16, 41).',
+    hint: 'Mis hermanos me vendieron como esclavo.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      "¿Quién dijo: 'Yo soy el camino, la verdad y la vida; nadie viene al Padre, sino por mí'?",
+    options: ['Jesús', 'Pedro', 'Pablo', 'Juan'],
+    correct: 'Jesús',
+    reference: 'Juan 14:6',
+    explanation:
+      'Jesús dijo estas palabras a sus discípulos, afirmando ser el único camino hacia Dios (Juan 14:6).',
+    hint: 'Estas palabras se encuentran en el Evangelio de Juan.',
+    difficulty: 'easy',
+  },
+  {
+    question: "¿Quién dijo: '¡Heme aquí, envíame a mí!'?",
+    options: ['Isaías', 'Moisés', 'Samuel', 'Jeremías'],
+    correct: 'Isaías',
+    reference: 'Isaías 6:8',
+    explanation:
+      'Isaías respondió con disposición al llamado de Dios para ser su profeta (Isaías 6:8).',
+    hint: 'Esto sucedió en una visión del trono de Dios.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      "¿Quién dijo: 'Yo sé que mi Redentor vive, y al fin se levantará sobre el polvo'?",
+    options: ['Job', 'David', 'Isaías', 'Pablo'],
+    correct: 'Job',
+    reference: 'Job 19:25',
+    explanation:
+      'Job expresó su confianza en Dios como su Redentor en medio de su sufrimiento (Job 19:25).',
+    hint: 'Es un personaje conocido por su paciencia en la prueba.',
+    difficulty: 'hard',
+  },
+  {
+    question: "¿Quién dijo: 'Si pereciera, que perezca'?",
+    options: ['Ester', 'Débora', 'Rut', 'Abigail'],
+    correct: 'Ester',
+    reference: 'Ester 4:16',
+    explanation:
+      'Ester dijo estas palabras al decidir arriesgar su vida para interceder por su pueblo ante el rey (Ester 4:16).',
+    hint: 'Fue reina en Persia.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      "¿Quién dijo: 'No me ruegues que te deje, y me aparte de ti; porque adondequiera que tú fueres, iré yo'?",
+    options: ['Rut', 'Naomi', 'Ester', 'Sara'],
+    correct: 'Rut',
+    reference: 'Rut 1:16',
+    explanation:
+      'Rut dijo estas palabras a Noemí, mostrando su lealtad y amor hacia ella (Rut 1:16).',
+    hint: 'Ella era una mujer moabita.',
+    difficulty: 'easy',
+  },
+  {
+    question: "¿Quién dijo: '¡Mi Señor y mi Dios!'?",
+    options: ['Tomás', 'Pedro', 'Juan', 'Jesús'],
+    correct: 'Tomás',
+    reference: 'Juan 20:28',
+    explanation:
+      'Tomás exclamó estas palabras cuando vio al Jesús resucitado y tocó sus heridas (Juan 20:28).',
+    hint: 'Es conocido como el discípulo que dudó.',
+    difficulty: 'easy',
+  },
+  {
+    question:
+      "¿Quién dijo: 'Por cuanto me has visto, Tomás, creíste; bienaventurados los que no vieron, y creyeron'?",
+    options: ['Jesús', 'Pedro', 'Juan', 'Pablo'],
+    correct: 'Jesús',
+    reference: 'Juan 20:29',
+    explanation:
+      'Jesús dijo estas palabras a Tomás después de su incredulidad respecto a la resurrección (Juan 20:29).',
+    hint: 'Estas palabras suceden justo después de una confesión de fe.',
+    difficulty: 'medium',
+  },
+  {
+    question: "¿Quién dijo: '¿Soy yo acaso guarda de mi hermano?'?",
+    options: ['Caín', 'Abel', 'Jacob', 'Esaú'],
+    correct: 'Caín',
+    reference: 'Génesis 4:9',
+    explanation:
+      'Caín dijo estas palabras a Dios después de asesinar a su hermano Abel (Génesis 4:9).',
+    hint: 'Es un personaje del Génesis.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿Quién dijo: 'El Señor dio, y el Señor quitó; sea el nombre del Señor bendito'?",
+    options: ['Job', 'David', 'Salomón', 'Isaías'],
+    correct: 'Job',
+    reference: 'Job 1:21',
+    explanation:
+      'Job dijo estas palabras tras perder a sus hijos y posesiones, mostrando su fe en Dios (Job 1:21).',
+    hint: 'Su paciencia es ejemplar en medio del sufrimiento.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      "¿Quién dijo: 'Bendita tú entre las mujeres, y bendito el fruto de tu vientre'?",
+    options: ['Elisabet', 'Ana', 'María', 'Marta'],
+    correct: 'Elisabet',
+    reference: 'Lucas 1:42',
+    explanation:
+      'Elisabet, llena del Espíritu Santo, dijo estas palabras al ver a María, la madre de Jesús (Lucas 1:42).',
+    hint: 'Es madre de Juan el Bautista.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      "¿Quién dijo: 'Señor, no soy digno de que entres bajo mi techo; pero sólo di la palabra, y mi criado sanará'?",
+    options: ['El centurión', 'Pedro', 'Nicodemo', 'Jairo'],
+    correct: 'El centurión',
+    reference: 'Mateo 8:8',
+    explanation:
+      'El centurión mostró gran fe al creer que Jesús podía sanar a su criado a distancia (Mateo 8:8-10).',
+    hint: 'Era un soldado romano.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      "¿Quién dijo: 'No tengo plata ni oro, pero lo que tengo te doy; en el nombre de Jesucristo de Nazaret, levántate y anda'?",
+    options: ['Pedro', 'Juan', 'Pablo', 'Santiago'],
+    correct: 'Pedro',
+    reference: 'Hechos 3:6',
+    explanation:
+      'Pedro dijo estas palabras al sanar a un hombre cojo en la puerta del templo (Hechos 3:6-8).',
+    hint: 'Era uno de los discípulos más cercanos a Jesús.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      "¿Quién dijo: 'He pecado contra el cielo y contra ti; ya no soy digno de ser llamado tu hijo'?",
+    options: ['El hijo pródigo', 'David', 'Saúl', 'Pedro'],
+    correct: 'El hijo pródigo',
+    reference: 'Lucas 15:21',
+    explanation:
+      'Estas palabras fueron dichas por el hijo pródigo al regresar a su padre arrepentido (Lucas 15:21).',
+    hint: 'Es un personaje de una parábola de Jesús.',
+    difficulty: 'easy',
+  },
+  {
+    question:
+      "¿Quién dijo: 'No contenderá mi espíritu con el hombre para siempre'?",
+    options: ['Dios', 'Moisés', 'Noé', 'Elías'],
+    correct: 'Dios',
+    reference: 'Génesis 6:3',
+    explanation:
+      'Dios dijo estas palabras antes de anunciar el diluvio, debido a la maldad de la humanidad (Génesis 6:3).',
+    hint: 'Se dijo antes del diluvio.',
+    difficulty: 'hard',
+  },
+  {
+    question: "¿Quién dijo: 'Todo lo puedo en Cristo que me fortalece'?",
+    options: ['Pablo', 'Pedro', 'Juan', 'Santiago'],
+    correct: 'Pablo',
+    reference: 'Filipenses 4:13',
+    explanation:
+      'Pablo dijo estas palabras, afirmando su confianza en la provisión de Cristo (Filipenses 4:13).',
+    hint: 'Es un versículo muy citado del Nuevo Testamento.',
+    difficulty: 'easy',
+  },
+  {
+    question:
+      "¿Quién dijo: '¿Hasta cuándo clamaré, y no oirás; y daré voces a ti a causa de la violencia, y no salvarás?'?",
+    options: ['Habacuc', 'Jeremías', 'Isaías', 'Ezequiel'],
+    correct: 'Habacuc',
+    reference: 'Habacuc 1:2',
+    explanation:
+      'Habacuc clamó a Dios en medio de la injusticia y la violencia de su tiempo (Habacuc 1:2).',
+    hint: 'Soy uno de los profetas menores.',
+    difficulty: 'hard',
+  },
+  {
+    question: "¿Quién dijo: '¿Es acaso Dios injusto?'?",
+    options: ['Pablo', 'Job', 'Moisés', 'Jeremías'],
+    correct: 'Pablo',
+    reference: 'Romanos 9:14',
+    explanation:
+      'Pablo planteó esta pregunta al explicar la soberanía de Dios en la elección divina (Romanos 9:14).',
+    hint: 'Es una carta a los cristianos en Roma.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿Quién dijo: 'Venid luego, y estemos a cuenta, dice Jehová: si vuestros pecados fueren como la grana, como la nieve serán emblanquecidos'?",
+    options: ['Isaías', 'Jeremías', 'Moisés', 'David'],
+    correct: 'Isaías',
+    reference: 'Isaías 1:18',
+    explanation:
+      'Dios habló a través de Isaías, llamando a su pueblo al arrepentimiento y prometiendo perdón (Isaías 1:18).',
+    hint: 'Es un profeta mayor.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      "¿Quién dijo: 'Porque yo sé los planes que tengo para vosotros, declara el Señor, planes de bienestar y no de calamidad, para daros un futuro y una esperanza'?",
+    options: ['Jeremías', 'Isaías', 'Ezequiel', 'Pablo'],
+    correct: 'Jeremías',
+    reference: 'Jeremías 29:11',
+    explanation:
+      'Jeremías escribió estas palabras en una carta dirigida a los exiliados en Babilonia (Jeremías 29:11).',
+    hint: 'Soy conocido como el profeta llorón.',
+    difficulty: 'medium',
+  },
+  {
+    question: "¿Quién dijo: 'Si yo perezco, que perezca'?",
+    options: ['Ester', 'Débora', 'Rut', 'Ana'],
+    correct: 'Ester',
+    reference: 'Ester 4:16',
+    explanation:
+      'Ester dijo estas palabras al decidir interceder por su pueblo ante el rey, a riesgo de su vida (Ester 4:16).',
+    hint: 'Era reina en Persia.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      "¿De quién se dijo: 'Esto es ahora hueso de mis huesos y carne de mi carne'?",
+    options: ['Eva', 'Sara', 'Débora', 'Rut'],
+    correct: 'Eva',
+    reference: 'Génesis 2:23',
+    explanation:
+      'Adán dijo estas palabras al reconocer a Eva como su compañera, creada de su costilla (Génesis 2:23).',
+    hint: 'Fue la primera mujer creada.',
+    difficulty: 'easy',
+  },
+  {
+    question:
+      '¿Quién tuvo un sueño en el que vio una escalera que llegaba al cielo con ángeles subiendo y bajando?',
+    options: ['Jacob', 'José', 'Samuel', 'Daniel'],
+    correct: 'Jacob',
+    reference: 'Génesis 28:12',
+    explanation:
+      'Jacob tuvo este sueño mientras huía de su hermano Esaú, y Dios le habló en ese lugar (Génesis 28:12-15).',
+    hint: 'Fue padre de las doce tribus de Israel.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      '¿A quién se le prometió que Dios enviaría carne para alimentar a todo el pueblo por un mes entero?',
+    options: ['Moisés', 'Josué', 'Aarón', 'Elías'],
+    correct: 'Moisés',
+    reference: 'Números 11:18-20',
+    explanation:
+      'El pueblo se quejó de no tener carne, y Dios respondió enviando codornices (Números 11:18-20, 31-32).',
+    hint: 'Lideré al pueblo de Israel en el desierto.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      '¿Qué profeta fue llevado a un valle lleno de huesos secos en una visión?',
+    options: ['Ezequiel', 'Isaías', 'Jeremías', 'Amós'],
+    correct: 'Ezequiel',
+    reference: 'Ezequiel 37:1-14',
+    explanation:
+      'Ezequiel vio un valle de huesos secos que cobraron vida, simbolizando la restauración de Israel (Ezequiel 37:1-14).',
+    hint: 'Es un profeta mayor con muchas visiones simbólicas.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      '¿Quién fue conocido por interpretar sueños en Egipto, lo que lo llevó a ser un alto funcionario?',
+    options: ['José', 'Daniel', 'Moisés', 'Nehemías'],
+    correct: 'José',
+    reference: 'Génesis 41:15-16',
+    explanation:
+      'José interpretó los sueños del faraón sobre las vacas gordas y flacas, y se convirtió en gobernador (Génesis 41:15-16).',
+    hint: 'Sus hermanos lo vendieron como esclavo.',
+    difficulty: 'easy',
+  },
+  {
+    question:
+      '¿Quién cayó en un profundo sueño mientras Dios tomaba una de sus costillas?',
+    options: ['Adán', 'Jacob', 'José', 'Caín'],
+    correct: 'Adán',
+    reference: 'Génesis 2:21',
+    explanation:
+      'Dios hizo caer a Adán en un sueño profundo para formar a Eva a partir de una de sus costillas (Génesis 2:21-22).',
+    hint: 'Fue el primer hombre creado.',
+    difficulty: 'easy',
+  },
+  {
+    question: "¿Quién dijo: 'Mis huesos se secaron, y pereció mi esperanza'?",
+    options: ['Ezequiel', 'Job', 'David', 'Isaías'],
+    correct: 'Ezequiel',
+    reference: 'Ezequiel 37:11',
+    explanation:
+      'Estas palabras representan el sentir de los hijos de Israel en el exilio, simbolizados por huesos secos (Ezequiel 37:11).',
+    hint: 'Es parte de la visión del valle de los huesos secos.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      '¿Qué grupo de animales se menciona que proveyó carne en el desierto al pueblo de Israel?',
+    options: ['Codornices', 'Palomas', 'Bueyes', 'Cabritos'],
+    correct: 'Codornices',
+    reference: 'Éxodo 16:13',
+    explanation:
+      'Dios envió codornices al campamento para satisfacer el hambre del pueblo en el desierto (Éxodo 16:13).',
+    hint: 'También se menciona junto con el maná.',
+    difficulty: 'easy',
+  },
+  {
+    question:
+      '¿Qué personaje soñó con siete espigas de grano llenas y siete espigas vacías?',
+    options: ['Faraón', 'José', 'Nabucodonosor', 'Gedeón'],
+    correct: 'Faraón',
+    reference: 'Génesis 41:5-7',
+    explanation:
+      'El faraón soñó con las espigas, y José interpretó que representaban siete años de abundancia y siete de hambre (Génesis 41:5-7).',
+    hint: 'José interpretó este sueño en Egipto.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      "¿Quién pidió a Dios morir diciendo: 'No soy mejor que mis padres'?",
+    options: ['Elías', 'Moisés', 'Jonás', 'Jeremías'],
+    correct: 'Elías',
+    reference: '1 Reyes 19:4',
+    explanation:
+      'Elías, desanimado y temeroso, pidió la muerte mientras huía de Jezabel (1 Reyes 19:4).',
+    hint: 'Era un profeta que desafió a los profetas de Baal.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'carne, sueño, mujer, huesos, costilla'?",
+    options: ['Eva', 'Sara', 'Débora', 'Lea'],
+    correct: 'Eva',
+    reference: 'Génesis 2:21-23',
+    explanation:
+      "Eva fue creada a partir de la costilla de Adán, quien la llamó 'hueso de mis huesos y carne de mi carne' (Génesis 2:21-23).",
+    hint: 'Fue la primera mujer creada.',
+    difficulty: 'easy',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'sueño, escalera, ángeles, cielo, tierra'?",
+    options: ['Jacob', 'José', 'Daniel', 'Elías'],
+    correct: 'Jacob',
+    reference: 'Génesis 28:12',
+    explanation:
+      'Jacob soñó con una escalera que unía el cielo y la tierra, con ángeles subiendo y bajando (Génesis 28:12).',
+    hint: 'El sueño ocurrió mientras huía de su hermano.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'juez, miel, león, cabellos largos, filisteos'?",
+    options: ['Sansón', 'Gedeón', 'Débora', 'Jefté'],
+    correct: 'Sansón',
+    reference: 'Jueces 13-16',
+    explanation:
+      'Sansón era un juez de Israel con fuerza sobrenatural; mató a un león y encontró miel en su cadáver (Jueces 14:5-9).',
+    hint: 'Su fuerza dependía de no cortar su cabello.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'sueños, faraón, túnica, pozo, Egipto'?",
+    options: ['José', 'Daniel', 'Jacob', 'Moisés'],
+    correct: 'José',
+    reference: 'Génesis 37-50',
+    explanation:
+      'José interpretó sueños en Egipto, fue vendido por sus hermanos, y llevaba una túnica especial dada por su padre (Génesis 37-50).',
+    hint: 'Fue gobernador en Egipto.',
+    difficulty: 'easy',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'balsa, animales, lluvia, pacto, arco iris'?",
+    options: ['Noé', 'Moisés', 'Abraham', 'Elías'],
+    correct: 'Noé',
+    reference: 'Génesis 6-9',
+    explanation:
+      'Noé construyó un arca para salvar a su familia y a los animales del diluvio; Dios hizo un pacto con él usando el arco iris como señal (Génesis 6-9).',
+    hint: 'Fue advertido del diluvio antes de que sucediera.',
+    difficulty: 'easy',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'gigante, piedra, honda, pastor, rey'?",
+    options: ['David', 'Goliat', 'Saúl', 'Jonatán'],
+    correct: 'David',
+    reference: '1 Samuel 17',
+    explanation:
+      'David derrotó al gigante Goliat con una honda y una piedra, y más tarde se convirtió en rey de Israel (1 Samuel 17).',
+    hint: 'Fue el autor de muchos Salmos.',
+    difficulty: 'easy',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'mar, tablas, Egipto, monte, diez'?",
+    options: ['Moisés', 'Aarón', 'Josué', 'Elías'],
+    correct: 'Moisés',
+    reference: 'Éxodo 14, 19-20',
+    explanation:
+      'Moisés lideró a Israel a través del Mar Rojo, recibió los Diez Mandamientos en el Monte Sinaí, y sacó al pueblo de Egipto (Éxodo 14, 19-20).',
+    hint: 'Es conocido como el libertador de Israel.',
+    difficulty: 'easy',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'bueyes, altar, fuego, monte, Baal'?",
+    options: ['Elías', 'Eliseo', 'Moisés', 'Jeremías'],
+    correct: 'Elías',
+    reference: '1 Reyes 18:16-39',
+    explanation:
+      'Elías desafió a los profetas de Baal en el Monte Carmelo, y Dios envió fuego para consumir su altar (1 Reyes 18:16-39).',
+    hint: 'Fue un profeta que nunca murió, sino que fue llevado al cielo en un torbellino.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'pez, profeta, ciudad grande, arrepentimiento, tres días'?",
+    options: ['Jonás', 'Noé', 'Isaías', 'Jeremías'],
+    correct: 'Jonás',
+    reference: 'Jonás 1-4',
+    explanation:
+      'Jonás fue tragado por un gran pez y enviado a predicar a Nínive para llamar al arrepentimiento (Jonás 1-4).',
+    hint: 'Intentó huir de Dios hacia Tarsis.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'cueva, hambre, profetas, rey, Jezabel'?",
+    options: ['Elías', 'Obadías', 'Jeremías', 'Samuel'],
+    correct: 'Elías',
+    reference: '1 Reyes 19',
+    explanation:
+      'Elías se escondió en una cueva huyendo de Jezabel después de enfrentarse a los profetas de Baal (1 Reyes 19).',
+    hint: 'Dios le habló en un silbo apacible.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'sal, esposa, destrucción, huida, mirada'?",
+    options: ['Lota', 'Abraham', 'Moisés', 'Noé'],
+    correct: 'Lota',
+    reference: 'Génesis 19:26',
+    explanation:
+      'Lota, al huir de Sodoma, miró hacia atrás y se convirtió en una estatua de sal (Génesis 19:26).',
+    hint: 'Fue salvado de la destrucción de Sodoma y Gomorra.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'hoja, sombra, viña, profeta, muerte'?",
+    options: ['Jonás', 'Elías', 'Amós', 'Isaías'],
+    correct: 'Jonás',
+    reference: 'Jonás 4:5-11',
+    explanation:
+      'Jonás se sentó bajo una planta que le dio sombra mientras esperaba que Dios destruyera Nínive. La planta se secó y Jonás lamentó su muerte (Jonás 4:5-11).',
+    hint: 'Su misión era predicar arrepentimiento en Nínive.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'esposo, sueño, escalera, patriarca, pacto'?",
+    options: ['Jacob', 'Isaac', 'Abraham', 'José'],
+    correct: 'Jacob',
+    reference: 'Génesis 28:10-22',
+    explanation:
+      'Jacob soñó con una escalera entre el cielo y la tierra y recibió un pacto de Dios en ese sueño (Génesis 28:10-22).',
+    hint: 'Este patriarca tuvo doce hijos, que fueron las tribus de Israel.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'rey, león, mandamiento, fuego, sacrificio'?",
+    options: ['Nabucodonosor', 'Ciro', 'Saúl', 'David'],
+    correct: 'Nabucodonosor',
+    reference: 'Daniel 3:1-30',
+    explanation:
+      'Nabucodonosor, rey de Babilonia, ordenó que todos adoraran una estatua de oro, y tres jóvenes hebreos fueron arrojados al fuego por no hacerlo (Daniel 3:1-30).',
+    hint: 'Este rey tuvo un sueño que Daniel interpretó.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'cabra, ángel, raíz, apocalipsis, guerra'?",
+    options: ['Judas Macabeo', 'David', 'Jesús', 'Miguel'],
+    correct: 'Miguel',
+    reference: 'Apocalipsis 12:7-9',
+    explanation:
+      'Miguel es descrito como un ángel guerrero que lucha contra las fuerzas del mal, representado como un ángel con una espada (Apocalipsis 12:7-9).',
+    hint: 'Es mencionado en el libro de Daniel y Apocalipsis.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'estrella, tres, oro, incienso, mirra'?",
+    options: ['Los Magos', 'Pedro', 'Juan el Bautista', 'José y María'],
+    correct: 'Los Magos',
+    reference: 'Mateo 2:1-12',
+    explanation:
+      'Los magos trajeron oro, incienso y mirra como regalos al niño Jesús, guiados por una estrella (Mateo 2:1-12).',
+    hint: 'Siguiendo una estrella llegaron de Oriente.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'león, justicia, rey, juicio, manto'?",
+    options: ['Salomón', 'David', 'Ezequías', 'Josías'],
+    correct: 'Salomón',
+    reference: '1 Reyes 3:16-28',
+    explanation:
+      'Salomón es conocido por su sabiduría en el juicio, como el caso de las dos mujeres que disputaban la maternidad de un niño (1 Reyes 3:16-28).',
+    hint: 'Fue el hijo de David y el rey que construyó el templo.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'cisternas, cordero, hermano, codicia, Egipto'?",
+    options: ['José', 'Abraham', 'Saúl', 'Isaac'],
+    correct: 'José',
+    reference: 'Génesis 37:12-36',
+    explanation:
+      'José fue arrojado a una cisterna por sus hermanos debido a su codicia y luego fue vendido a mercaderes que lo llevaron a Egipto (Génesis 37:12-36).',
+    hint: 'Tuvo un sueño en el que sus hermanos se inclinaban ante él.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'cisterna, profeta, juicio, muerte, rey'?",
+    options: ['Jeremías', 'Isaías', 'Elías', 'Amós'],
+    correct: 'Jeremías',
+    reference: 'Jeremías 38:1-28',
+    explanation:
+      'Jeremías fue arrojado a una cisterna seca por su proclamación de juicio sobre Judá, pero fue rescatado (Jeremías 38:1-28).',
+    hint: "Era conocido como el 'profeta llorón'.",
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'becerro, oro, pecado, monte, ira'?",
+    options: ['Aarón', 'Moisés', 'Josué', 'Saúl'],
+    correct: 'Aarón',
+    reference: 'Éxodo 32:1-35',
+    explanation:
+      'Aarón, el hermano de Moisés, fue quien fundió el oro para hacer el becerro de oro, lo que desató la ira de Moisés y Dios (Éxodo 32:1-35).',
+    hint: 'Fue el primer sumo sacerdote de Israel.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'arca, diluvio, salvación, animales, pacto'?",
+    options: ['Noé', 'Moisés', 'Abraham', 'Elías'],
+    correct: 'Noé',
+    reference: 'Génesis 6-9',
+    explanation:
+      'Noé construyó un arca para salvar a su familia y a los animales del diluvio, con el cual Dios hizo un pacto.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'desierto, maná, agua de la roca, liderazgo'?",
+    options: ['Aarón', 'Moisés', 'Josué', 'Samuel'],
+    correct: 'Moisés',
+    reference: 'Éxodo 16-17',
+    explanation:
+      'Moisés fue el líder que guió a los israelitas por el desierto, donde Dios proveyó maná y agua de la roca.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'león, enfrentamiento, fuego, milagro'?",
+    options: ['Elías', 'Daniel', 'David', 'Sansón'],
+    correct: 'Daniel',
+    reference: 'Daniel 6',
+    explanation:
+      'Daniel fue lanzado al foso de los leones por no adorar la estatua del rey, pero Dios lo protegió.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'patriarca, sueño, escalera, bendición'?",
+    options: ['Isaac', 'Jacob', 'Abraham', 'José'],
+    correct: 'Jacob',
+    reference: 'Génesis 28:10-22',
+    explanation:
+      'Jacob soñó con una escalera que conectaba el cielo y la tierra, y Dios le dio una bendición.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'pez, milagro, discipulado, redención'?",
+    options: ['Juan', 'Pedro', 'Pablo', 'Andrés'],
+    correct: 'Pedro',
+    reference: 'Mateo 4:18-19, Juan 21:1-14',
+    explanation:
+      'Pedro fue llamado por Jesús a ser pescador de hombres, y en un milagro, Jesús lo instruyó a tirar las redes para una gran pesca.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'madre, niño, pesebre, humildad'?",
+    options: ['María', 'Elizabet', 'Ana', 'Raquel'],
+    correct: 'María',
+    reference: 'Lucas 2:7',
+    explanation:
+      'María fue la madre de Jesús, quien nació en un pesebre en Belén, en humildad.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'idolatría, monte Carmelo, fuego, profetas'?",
+    options: ['Elías', 'Eliseo', 'Moisés', 'Samuel'],
+    correct: 'Elías',
+    reference: '1 Reyes 18:16-39',
+    explanation:
+      'Elías desafió a los profetas de Baal en el monte Carmelo, donde Dios envió fuego para consumir su sacrificio.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'rey, sabiduría, juicio, templo'?",
+    options: ['David', 'Salomón', 'Saúl', 'Ezequías'],
+    correct: 'Salomón',
+    reference: '1 Reyes 3:16-28',
+    explanation:
+      'Salomón fue el rey sabio que construyó el Templo de Jerusalén y es famoso por su juicio, como el de las dos mujeres disputando la maternidad de un niño.',
+    difficulty: 'hard',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'esposa, sal, destrucción, mirada'?",
+    options: ['Esposa de Lot', 'Ester', 'Rebeca', 'Débora'],
+    correct: 'Esposa de Lot',
+    reference: 'Génesis 19:26',
+    explanation:
+      'La esposa de Lot, quien miró hacia atrás mientras huía de Sodoma y se convirtió en una estatua de sal.',
+    difficulty: 'medium',
+  },
+  {
+    question:
+      "¿A quién se refieren las siguientes pistas: 'hijo, sacrificio, cuchillo, ángel'?",
+    options: ['Isaac', 'José', 'Moisés', 'Samuel'],
+    correct: 'Isaac',
+    reference: 'Génesis 22:1-19',
+    explanation:
+      'Abraham estuvo dispuesto a sacrificar a su hijo Isaac en obediencia a Dios, pero un ángel lo detuvo a último momento.',
+    difficulty: 'hard',
   },
 ];

@@ -88,8 +88,8 @@ const Game = () => {
     return (
         <View style={styles.container}>
             <Card
+                title="Quiz_Bíblico"
                 router={router}
-                title="JuegoBiblico"
                 currentQuestion={currentQuestion}
                 onAnswer={handleAnswer}
                 onNext={handleNext}

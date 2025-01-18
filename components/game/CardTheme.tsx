@@ -1,6 +1,7 @@
 import useGameAnimation from '@/hooks/useGameAnimation';
-import { ICardTheme } from '@/types';
+import { ICardTheme, QuestionDifficulty } from '@/types';
 import { shuffleOptions } from '@/utils/shuffleOptions';
+import { Lightbulb, ShieldCheck } from 'lucide-react-native';
 import React, { useMemo } from 'react';
 import { Animated, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -14,7 +15,8 @@ interface ButtonStyleProps {
 
 const CardTheme = ({ router, feedback, currentQuestion, onAnswer, onNext, progress, selectedAnswer, title }: ICardTheme) => {
     const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion]);
-    const { feedbackOpacity, optionsOpacity, questionCardOpacity } = useGameAnimation({ progress, feedback, currentOptions })
+    const { blinkingColor, feedbackOpacity, optionsOpacity, questionCardOpacity } = useGameAnimation({ progress, feedback, currentQuestion })
+    const questionDifficulty = currentQuestion?.difficulty as keyof typeof QuestionDifficulty
 
     const getButtonStyle = ({ isSelected, isCorrect, showResult }: ButtonStyleProps): object => {
         return [
@@ -31,14 +33,37 @@ const CardTheme = ({ router, feedback, currentQuestion, onAnswer, onNext, progre
                     <Icon onPress={() => router.back()} name="ChevronLeft" color="#ca8a04" size={24} />
                     <Text style={[styles.headerTitle, { color: '#854d0e' }]}>{title}</Text>
                 </View>
+                <View
+                    style={[
+                        styles.progress,
+                        { backgroundColor: '#fef08a', flexDirection: 'row', alignItems: 'center' }
+                    ]}
+                >
+                    <ShieldCheck color="#854d0e" size={24} />
+                    <Text style={{ fontSize: 16, color: '#854d0e' }}>LVL_{progress?.level}</Text>
+                </View>
                 <View style={[styles.progress, { backgroundColor: '#fef08a' }]}>
-                    <Text style={{ color: '#854d0e' }}>{progress?.current}/{progress?.total}</Text>
+                    <Text style={{ fontSize: 16, color: '#854d0e' }}>{progress?.current} / {progress?.total}</Text>
                 </View>
             </View>
 
             <ScrollView style={[styles.cardContainer, styles.shadowProp]}>
-                <Animated.View style={[styles.questionCard, { backgroundColor: '#fef9c3', opacity: questionCardOpacity }]}>
+                <Animated.View style={[
+                    styles.questionCard,
+                    {
+                        backgroundColor: '#fef9c3',
+                        opacity: questionCardOpacity,
+                        borderColor: blinkingColor,
+                        borderWidth: 2
+                    }
+                ]}>
                     <Text style={[styles.questionText, { color: '#854d0e' }]}>{currentQuestion?.question}</Text>
+                    <Lightbulb
+                        style={{ position: 'absolute', bottom: 10, right: 10 }}
+                        strokeWidth={2}
+                        color={QuestionDifficulty[questionDifficulty]}
+                        size={28}
+                    />
                 </Animated.View>
 
                 <Animated.View style={[styles.optionsContainer, { opacity: optionsOpacity }]}>

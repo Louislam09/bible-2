@@ -131,7 +131,7 @@ const SecondDashboard = () => {
     },
     {
       icon: 'Gamepad',
-      label: 'Juego',
+      label: 'Quiz Bíblico',
       // @ts-ignore
       action: () => navigation.navigate(Screens.ChooseGame, {}),
       // action: () => navigation.navigate('(game)', {}),

@@ -481,3 +481,14 @@ export interface ICardTheme {
   feedback: AnswerResult | null;
   router: Router
 }
+
+export enum QuestionDifficulty {
+  hard = '#f05448',
+  medium = '#fccd0e',
+  easy = '#83cb99'
+}
+export enum QuestionDifficultyKey {
+  hard = 'Dificil',
+  medium = 'Medio',
+  easy = 'Facil'
+}

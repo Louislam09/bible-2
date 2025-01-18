@@ -1,9 +1,11 @@
-import { ICardTheme } from '@/types';
+import { ICardTheme, QuestionDifficulty } from '@/types';
 import { shuffleOptions } from '@/utils/shuffleOptions';
 import React, { useMemo } from 'react';
 import { Animated, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from '../Icon';
 import useGameAnimation from '@/hooks/useGameAnimation';
+import { Lightbulb } from 'lucide-react-native';
+import ProgressBar from '../home/footer/ProgressBar';
 
 
 interface ButtonStyleProps {
@@ -14,7 +16,8 @@ interface ButtonStyleProps {
 
 const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext, progress, selectedAnswer, title }: ICardTheme) => {
     const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion]);
-    const { feedbackOpacity, optionsOpacity, questionCardOpacity } = useGameAnimation({ progress, feedback, currentOptions })
+    const { blinkingColor, feedbackOpacity, optionsOpacity, questionCardOpacity } = useGameAnimation({ progress, feedback, currentQuestion })
+    const questionDifficulty = currentQuestion?.difficulty as keyof typeof QuestionDifficulty
 
     const getButtonStyle = ({ isSelected, isCorrect, showResult }: ButtonStyleProps): object => {
         return [
@@ -27,20 +30,38 @@ const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext,
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: '#111827' }]}>
             <View style={[styles.consoleContainer, styles.consoleBorder]}>
-                <View style={[styles.header, styles.consoleBorderBottom]}>
+                <View style={[styles.header]}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Icon onPress={() => router.back()} name="ChevronLeft" color="#34d399" size={32} />
                         <Text style={styles.consoleTitle}>{title.toUpperCase()}</Text>
-
                     </View>
                     <View style={styles.headerRight}>
                         <Text style={styles.consoleText}>⚡</Text>
                         <Text style={[styles.consoleText, { marginLeft: 8 }]}>LVL_{progress?.level}</Text>
                     </View>
                 </View>
+                <View style={{ marginBottom: 32, marginTop: 15 }}>
+                    <ProgressBar
+                        hideCircle
+                        height={4}
+                        color={"#34d399"}
+                        barColor={QuestionDifficulty[questionDifficulty]}
+                        progress={(progress?.current || 0) / (progress?.total || 10)}
+                        circleColor={'#34d399'}
+                    />
+                </View>
 
-                <Animated.View style={[styles.questionCard, { opacity: questionCardOpacity }]}>
+                <Animated.View style={[styles.questionCard, {
+                    opacity: questionCardOpacity, borderColor: blinkingColor,
+                    borderWidth: 2
+                }]}>
                     <Text style={styles.consoleText}>{`> ${currentQuestion?.question}`}</Text>
+                    <Lightbulb
+                        style={{ position: 'absolute', bottom: 10, right: 10 }}
+                        strokeWidth={2}
+                        color={QuestionDifficulty[questionDifficulty]}
+                        size={28}
+                    />
                 </Animated.View>
 
                 <ScrollView style={styles.optionsContainer}>
@@ -151,7 +172,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 32,
+        // marginBottom: 32,
     },
     headerLeft: {
         flexDirection: 'row',
@@ -173,7 +194,7 @@ const styles = StyleSheet.create({
     },
     questionCard: {
         padding: 24,
-        borderRadius: 16,
+        // borderRadius: 16,
         marginBottom: 24,
     },
     questionText: {
@@ -223,7 +244,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#34d399',
     },
-
     shadowProp: {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },

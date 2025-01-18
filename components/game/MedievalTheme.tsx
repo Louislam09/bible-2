@@ -1,10 +1,11 @@
-import { ICardTheme } from '@/types';
+import { ICardTheme, QuestionDifficulty } from '@/types';
 import { shuffleOptions } from '@/utils/shuffleOptions';
-import { Shield } from 'lucide-react-native';
+import { Lightbulb, Shield, ShieldCheck } from 'lucide-react-native';
 import React, { useMemo } from 'react';
-import { Animated, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import Icon from '../Icon';
 import useGameAnimation from '@/hooks/useGameAnimation';
+import ProgressBar from '../home/footer/ProgressBar';
 
 interface ButtonStyleProps {
     isSelected: boolean;
@@ -23,7 +24,11 @@ const MedievalTheme = ({
     title,
 }: ICardTheme) => {
     const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion]);
-    const { feedbackOpacity, optionsOpacity, questionCardOpacity } = useGameAnimation({ progress, feedback, currentOptions })
+    const { blinkingColor, feedbackOpacity, optionsOpacity, questionCardOpacity } = useGameAnimation({ progress, feedback, currentQuestion })
+    const questionDifficulty = currentQuestion?.difficulty as keyof typeof QuestionDifficulty
+    const { width } = useWindowDimensions();
+    const isSmallSDevice = width < 300;
+
 
     const getButtonStyle = ({ isSelected, isCorrect, showResult }: ButtonStyleProps): object => {
         return [
@@ -36,17 +41,45 @@ const MedievalTheme = ({
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: '#92400e' }]}>
             <View style={styles.header}>
-                {/* <Shield color="#fef3c7" size={32} /> */}
                 <Icon onPress={() => router.back()} name="ChevronLeft" color="#fef3c7" size={32} />
-
-                <Text style={[styles.headerTitle, { fontFamily: 'serif' }]}>{title}</Text>
+                {!isSmallSDevice && <Text style={[styles.headerTitle, { fontFamily: 'serif' }]}>{title}</Text>}
+                <View
+                    style={[
+                        { flexDirection: 'row', alignItems: 'center' }
+                    ]}
+                >
+                    <ShieldCheck color="#fef08a" size={24} />
+                    <Text style={{ fontSize: 16, fontFamily: 'serif', color: '#fef3c7' }}>LVL_{progress?.level}</Text>
+                </View>
                 <View style={styles.medievalLevel}>
                     <Text style={styles.medievalText}>{progress?.current}/{progress?.total}</Text>
                 </View>
             </View>
+            <View style={{ marginVertical: 20, marginBottom: 32 }}>
+                <ProgressBar
+                    hideCircle
+                    height={4}
+                    color={"#fbbf24"}
+                    barColor={QuestionDifficulty[questionDifficulty]}
+                    progress={(progress?.current || 0) / (progress?.total || 10)}
+                    circleColor={'#fbbf24'}
+                />
+            </View>
 
-            <ScrollView style={styles.medievalCard}>
-                <Animated.View style={{ opacity: questionCardOpacity }}>
+            <ScrollView style={[styles.medievalCard]}>
+                <Animated.View style={{
+                    marginBottom: 24,
+                    borderRadius: 4,
+                    paddingHorizontal: 16,
+                    opacity: questionCardOpacity, borderColor: blinkingColor,
+                    borderWidth: 2,
+                }}>
+                    <Lightbulb
+                        style={{ position: 'absolute', bottom: 20, right: 10 }}
+                        strokeWidth={2}
+                        color={QuestionDifficulty[questionDifficulty]}
+                        size={28}
+                    />
                     <Text style={styles.medievalQuestionText}>{currentQuestion?.question}</Text>
                 </Animated.View>
 
@@ -104,13 +137,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 32,
+        // marginBottom: 32,
     },
     headerTitle: {
         fontSize: 24,
         fontWeight: 'bold',
         color: '#fef3c7',
-        marginLeft: 16,
     },
     optionsContainer: {
         gap: 12,
@@ -129,6 +161,7 @@ const styles = StyleSheet.create({
         borderColor: '#fbbf24',
         borderRadius: 8,
         padding: 24,
+        paddingVertical: 10,
         backgroundColor: 'rgba(0,0,0,0.2)',
     },
     medievalLevel: {

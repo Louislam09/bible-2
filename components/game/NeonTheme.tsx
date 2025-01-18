@@ -1,9 +1,10 @@
-import { ICardTheme } from '@/types';
+import { ICardTheme, QuestionDifficulty } from '@/types';
 import { shuffleOptions } from '@/utils/shuffleOptions';
 import React, { useMemo } from 'react';
-import { Animated, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import Icon from '../Icon';
 import useGameAnimation from '@/hooks/useGameAnimation';
+import { CloudLightning, Lightbulb } from 'lucide-react-native';
 
 interface ButtonStyleProps {
     isSelected: boolean;
@@ -13,7 +14,10 @@ interface ButtonStyleProps {
 
 const NeonTheme = ({ router, title, currentQuestion, onAnswer, onNext, progress, selectedAnswer, feedback }: ICardTheme) => {
     const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion]);
-    const { feedbackOpacity, optionsOpacity, questionCardOpacity } = useGameAnimation({ progress, feedback, currentOptions })
+    const { blinkingColor, feedbackOpacity, optionsOpacity, questionCardOpacity } = useGameAnimation({ progress, feedback, currentQuestion })
+    const { width } = useWindowDimensions();
+    const isSmallSDevice = width < 300;
+    const questionDifficulty = currentQuestion?.difficulty as keyof typeof QuestionDifficulty
 
     const getButtonStyle = ({ isSelected, isCorrect, showResult }: ButtonStyleProps): object => {
         return [
@@ -26,16 +30,34 @@ const NeonTheme = ({ router, title, currentQuestion, onAnswer, onNext, progress,
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: '#030712' }]}>
             <View style={styles.header}>
-                {/* <CloudLightning color="#22d3ee" size={32} /> */}
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Icon onPress={() => router.back()} name="ChevronLeft" color="#22d3ee" size={32} />
-
-                <Text style={styles.neonTitle}>{title}</Text>
+                    {!isSmallSDevice && <Text style={styles.neonTitle}>{title}</Text>}
+                </View>
+                <View
+                    style={[
+                        { flexDirection: 'row', alignItems: 'center' }
+                    ]}
+                >
+                    <CloudLightning color="#22d3ee" size={24} />
+                    <Text style={styles.neonText}>LVL_{progress?.level}</Text>
+                </View>
                 <Text style={styles.neonText}>{progress?.current}/{progress?.total}</Text>
             </View>
 
             <ScrollView style={[styles.neonCard, styles.neonShadow]}>
-                <Animated.View style={{ opacity: questionCardOpacity }}>
-
+                <Animated.View style={{
+                    opacity: questionCardOpacity, borderColor: blinkingColor,
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    marginBottom: 10
+                }}>
+                    <Lightbulb
+                        style={{ position: 'absolute', bottom: 10, right: 10 }}
+                        strokeWidth={2}
+                        color={QuestionDifficulty[questionDifficulty]}
+                        size={28}
+                    />
                 <Text style={styles.neonQuestionText}>{currentQuestion?.question}</Text>
                 </Animated.View>
 
