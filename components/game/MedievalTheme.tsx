@@ -192,51 +192,6 @@ const styles = StyleSheet.create({
         color: '#fef3c7',
         fontFamily: 'serif',
     },
-    // Button states
-    selectedButton: {
-        backgroundColor: '#78350f',
-        borderColor: '#fbbf24',
-        borderWidth: 2,
-    },
-    correctButton: {
-        backgroundColor: '#166534',
-        borderColor: '#4ade80',
-    },
-    incorrectButton: {
-        backgroundColor: '#991b1b',
-        borderColor: '#f87171',
-    },
-    correctText: {
-        color: '#16a34a',
-    },
-    incorrectText: {
-        color: '#dc2626',
-    },
-    explanationText: {
-        fontSize: 16,
-        marginBottom: 8,
-        color: 'white'
-    },
-    referenceText: {
-        fontSize: 14,
-        color: '#fff',
-        marginBottom: 16,
-    },
-    nextButton: {
-        alignItems: 'center',
-
-        backgroundColor: '#92400e',
-        padding: 16,
-        borderRadius: 4,
-        borderWidth: 1,
-        borderColor: '#fff',
-        marginBottom: 12,
-    },
-    buttonText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
 });
 
 export default MedievalTheme;

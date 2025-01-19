@@ -165,41 +165,6 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
     },
-    feedbackContainer: {
-        paddingVertical: 16,
-        marginBottom: 24,
-    },
-    feedbackText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 8,
-    },
-    correctText: {
-        color: '#16a34a',
-    },
-    incorrectText: {
-        color: '#dc2626',
-    },
-    explanationText: {
-        fontSize: 16,
-        marginBottom: 8,
-    },
-    referenceText: {
-        fontSize: 14,
-        color: '#4b5563',
-        marginBottom: 16,
-    },
-    nextButton: {
-        backgroundColor: '#ca8a04',
-        padding: 12,
-        borderRadius: 8,
-        alignItems: 'center',
-    },
-    buttonText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
     // Card Theme styles
     progress: {
         paddingHorizontal: 12,

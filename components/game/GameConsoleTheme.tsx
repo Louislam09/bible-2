@@ -77,25 +77,6 @@ const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext,
                         />
                     )}
 
-                    {/* {feedback && (
-                        <Animated.View style={[styles.feedbackContainer, { opacity: feedbackOpacity }]}>
-                            <Text
-                                style={[
-                                    styles.feedbackText,
-                                    feedback.isCorrect ? styles.correctText : styles.incorrectText,
-                                ]}
-                            >
-                                {feedback.isCorrect ? "¡Correcto!" : "Incorrecto"}
-                            </Text>
-                            <Text style={styles.explanationText}>{feedback.explanation}</Text>
-                            {feedback.reference && (
-                                <Text style={styles.referenceText}>Referencia: {feedback.reference}</Text>
-                            )}
-                            <TouchableOpacity style={[styles.nextButton]} onPress={onNext}>
-                                <Text style={styles.buttonText}>[ Siguiente pregunta ]</Text>
-                            </TouchableOpacity>
-                        </Animated.View>
-                    )} */}
                 </ScrollView>
             </View>
         </SafeAreaView>
@@ -112,59 +93,10 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
     },
-    feedbackContainer: {
-        marginTop: 20,
-    },
-    feedbackText: {
-        fontSize: 16,
-        textAlign: 'center',
-        color: 'white'
-    },
-    correctText: {
-        color: '#4caf50',
-    },
-    incorrectText: {
-        color: '#f44336',
-    },
-    explanationText: {
-        fontSize: 14,
-        color: '#b0bec5',
-        marginTop: 8,
-    },
-    referenceText: {
-        fontSize: 14,
-        color: '#34d399',
-        marginTop: 8,
-    },
-    nextButton: {
-        marginTop: 20,
-        padding: 10,
-        alignItems: 'center',
-
-        backgroundColor: '#1f2937',
-        borderWidth: 1,
-        borderColor: '#fff',
-    },
-    buttonText: {
-        color: 'white',
-        fontWeight: 'bold',
-    },
-    selectedButton: {
-        borderColor: '#fff',
-        borderWidth: 2,
-    },
-    correctButton: {
-        backgroundColor: '#34d39977',
-        color: '#fff'
-    },
-    incorrectButton: {
-        backgroundColor: '#dc26267d',
-    },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        // marginBottom: 32,
     },
     headerLeft: {
         flexDirection: 'row',

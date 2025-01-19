@@ -1,6 +1,11 @@
-import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useMemo } from 'react'
-import { AnswerResult } from '@/types'
+import { useBibleContext } from '@/context/BibleContext';
+import { useDBContext } from '@/context/databaseContext';
+import { AnswerResult } from '@/types';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Reference from './Reference';
+import { GET_DAILY_VERSE } from '@/constants/Queries';
+import { DB_BOOK_NAMES } from '@/constants/BookNames';
 
 type TypeTHeme = 'Card' | 'GameConsole' | 'Neon' | 'Medieval'
 
@@ -11,8 +16,72 @@ interface IFeedback {
     theme: TypeTHeme;
 }
 
+interface BibleReference {
+    book: string;
+    chapter: string;
+    verse: string;
+    endVerse: string | null;
+}
+
+function parseBibleReferences(references: string): BibleReference[] {
+    // Regular expression to match book names, chapters, and verses, supporting books with spaces or numbers (e.g., "1 Samuel")
+    const regex = /(\d?\s?[A-Za-záéíóúñ]+(?:\s[A-Za-záéíóúñ]+)?)\s+(\d+):(\d+)(?:-(\d+))?/g;
+
+    // Find all matches using matchAll
+    const matches = [...references.matchAll(regex)];
+
+    if (matches.length === 0) {
+        throw new Error("Formato inválido. Asegúrate de usar 'Libro Capítulo:Versículo' o 'Libro Capítulo:Versículo-Versículo'.");
+    }
+
+    // Map the matches to the BibleReference structure
+    return matches.map(match => {
+        const [, book, chapter, verse, endVerse] = match;
+        return {
+            book: book.trim(),  // Remove extra spaces
+            chapter: chapter || "",
+            verse: verse || "",
+            endVerse: endVerse || null
+        };
+    });
+}
+
 const Feedback = ({ theme, feedback, feedbackOpacity, onNext }: IFeedback) => {
     const styles = useMemo(() => getStyles({ theme }), [theme])
+    const refenceRef = useRef(null)
+    const [displayRef, setDisplayRef] = useState(false)
+    const [item, setItem] = useState(null)
+
+    const { executeSql, myBibleDB } = useDBContext();
+
+    const fetchVerseDetails = async (reference: string) => {
+        if (!myBibleDB || !executeSql) return;
+
+        const [{ book, chapter, verse }] = parseBibleReferences(reference);
+        const { bookNumber: book_number } = DB_BOOK_NAMES.find((x) => x.longName === book || x.longName.includes(book)) || {};
+        console.log({ book, book_number, chapter, verse });
+
+        try {
+            const response: any = await executeSql(myBibleDB, GET_DAILY_VERSE, [
+                book_number,
+                chapter,
+                verse,
+            ]);
+            setItem(response?.[0]);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const onReference = (reference: string) => {
+        setDisplayRef(true)
+        fetchVerseDetails(feedback.reference);
+    }
+
+    const onClose = () => {
+        console.log('closing ref')
+        setDisplayRef(false)
+    }
 
     return (
         <Animated.View style={[styles.feedbackContainer, { opacity: feedbackOpacity }]}>
@@ -23,7 +92,15 @@ const Feedback = ({ theme, feedback, feedbackOpacity, onNext }: IFeedback) => {
             </Text>
             <Text style={styles.explanationText}>{feedback.explanation}</Text>
             {feedback.reference && (
-                <Text style={styles.referenceText}><Text style={styles.ref}>Referencia:</Text> {feedback.reference}</Text>
+                <>
+                <View style={styles.referenceText}>
+                    <Text style={styles.ref}>Referencia: </Text>
+                    <TouchableOpacity onPress={() => onReference(feedback.reference)}>
+                        <Text ref={refenceRef} style={{ color: '#34d399' }}>{feedback.reference}</Text>
+                    </TouchableOpacity>
+                    </View>
+                    <Reference item={item} onClose={onClose} isVisible={displayRef} target={refenceRef} />
+                </>
             )}
             <TouchableOpacity style={styles.nextButton} onPress={onNext}>
                 <Text style={styles.buttonText}>Siguiente pregunta</Text>
@@ -83,9 +160,9 @@ const getStyles = ({ theme }: { theme: TypeTHeme }) => StyleSheet.create({
     },
     referenceText: {
         fontSize: 14,
-        color: '#34d399',
         marginBottom: 16,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        flexDirection: 'row', gap: 4, alignItems: 'center'
     },
     nextButton: {
         backgroundColor: feedbackTheme[theme].next,
