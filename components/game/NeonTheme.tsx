@@ -7,6 +7,7 @@ import useGameAnimation from '@/hooks/useGameAnimation';
 import { CloudLightning, Lightbulb } from 'lucide-react-native';
 import ProgressBar from '../home/footer/ProgressBar';
 import OptionItem from './OptionItem';
+import Feedback from './Feedback';
 
 const NeonTheme = ({ router, title, currentQuestion, onAnswer, onNext, progress, selectedAnswer, feedback }: ICardTheme) => {
     const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion]);
@@ -77,6 +78,14 @@ const NeonTheme = ({ router, title, currentQuestion, onAnswer, onNext, progress,
                 </Animated.View>
 
                 {feedback && (
+                    <Feedback
+                        theme='Neon'
+                        feedback={feedback}
+                        feedbackOpacity={feedbackOpacity}
+                        onNext={onNext}
+                    />
+                )}
+                {/* {feedback && (
                     <Animated.View style={[styles.feedbackContainer, { opacity: feedbackOpacity }]}>
                         <Text
                             style={[
@@ -94,7 +103,7 @@ const NeonTheme = ({ router, title, currentQuestion, onAnswer, onNext, progress,
                             <Text style={styles.buttonText}>Siguiente pregunta</Text>
                         </TouchableOpacity>
                     </Animated.View>
-                )}
+                )} */}
             </ScrollView>
         </SafeAreaView>
     );

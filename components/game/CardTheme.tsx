@@ -8,8 +8,9 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Icon from '../Icon';
 import OptionItem from './OptionItem';
 import ProgressBar from '@/components/home/footer/ProgressBar';
+import Feedback from './Feedback';
 
-const CardTheme = ({ router, feedback, currentQuestion, onAnswer, onNext, progress, selectedAnswer, title }: ICardTheme) => {
+const CardTheme = ({ scrollViewRef, router, feedback, currentQuestion, onAnswer, onNext, progress, selectedAnswer, title }: ICardTheme) => {
     const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion]);
     const { blinkingColor, feedbackOpacity, optionsOpacity, questionCardOpacity } = useGameAnimation({ progress, feedback, currentQuestion })
     const questionDifficulty = currentQuestion?.difficulty as keyof typeof QuestionDifficulty
@@ -19,7 +20,7 @@ const CardTheme = ({ router, feedback, currentQuestion, onAnswer, onNext, progre
             <View style={styles.header}>
                 <View style={styles.headerLeft}>
                     <Icon onPress={() => router.back()} name="ChevronLeft" color="#ca8a04" size={24} />
-                    <Text style={[styles.headerTitle, { color: '#854d0e' }]}>{title}</Text>
+                    <Text style={[styles.headerTitle]}>{title}</Text>
                 </View>
                 <View style={[styles.progress, { backgroundColor: '#fef08a', flexDirection: 'row', alignItems: 'center' }]}>
                     <ShieldCheck color={QuestionDifficulty[questionDifficulty]} size={24} />
@@ -40,7 +41,7 @@ const CardTheme = ({ router, feedback, currentQuestion, onAnswer, onNext, progre
                 />
             </View>
 
-            <ScrollView style={[styles.cardContainer, styles.shadowProp]}>
+            <ScrollView ref={scrollViewRef} style={[styles.cardContainer, styles.shadowProp]}>
                 <Animated.View style={[
                     styles.questionCard,
                     {
@@ -76,20 +77,12 @@ const CardTheme = ({ router, feedback, currentQuestion, onAnswer, onNext, progre
                 </Animated.View>
 
                 {feedback && (
-                    <Animated.View style={[styles.feedbackContainer, { opacity: feedbackOpacity }]}>
-                        <Text
-                            style={[styles.feedbackText, feedback.isCorrect ? styles.correctText : styles.incorrectText]}
-                        >
-                            {feedback.isCorrect ? "¡Correcto!" : "Incorrecto"}
-                        </Text>
-                        <Text style={styles.explanationText}>{feedback.explanation}</Text>
-                        {feedback.reference && (
-                            <Text style={styles.referenceText}>Referencia: {feedback.reference}</Text>
-                        )}
-                        <TouchableOpacity style={styles.nextButton} onPress={onNext}>
-                            <Text style={styles.buttonText}>Siguiente pregunta</Text>
-                        </TouchableOpacity>
-                    </Animated.View >
+                    <Feedback
+                        theme='Card'
+                        feedback={feedback}
+                        feedbackOpacity={feedbackOpacity}
+                        onNext={onNext}
+                    />
                 )}
             </ScrollView>
         </SafeAreaView>
@@ -126,8 +119,8 @@ const styles = StyleSheet.create({
     headerTitle: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: 'white',
         marginLeft: 16,
+        color: '#854d0e'
     },
     headerRight: {
         flexDirection: 'row',

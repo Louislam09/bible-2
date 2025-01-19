@@ -7,6 +7,7 @@ import useGameAnimation from '@/hooks/useGameAnimation';
 import { Lightbulb, Zap } from 'lucide-react-native';
 import ProgressBar from '../home/footer/ProgressBar';
 import OptionItem from './OptionItem';
+import Feedback from './Feedback';
 
 const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext, progress, selectedAnswer, title }: ICardTheme) => {
     const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion]);
@@ -68,6 +69,15 @@ const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext,
                     </Animated.View>
 
                     {feedback && (
+                        <Feedback
+                            theme='GameConsole'
+                            feedback={feedback}
+                            feedbackOpacity={feedbackOpacity}
+                            onNext={onNext}
+                        />
+                    )}
+
+                    {/* {feedback && (
                         <Animated.View style={[styles.feedbackContainer, { opacity: feedbackOpacity }]}>
                             <Text
                                 style={[
@@ -85,7 +95,7 @@ const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext,
                                 <Text style={styles.buttonText}>[ Siguiente pregunta ]</Text>
                             </TouchableOpacity>
                         </Animated.View>
-                    )}
+                    )} */}
                 </ScrollView>
             </View>
         </SafeAreaView>
@@ -108,6 +118,7 @@ const styles = StyleSheet.create({
     feedbackText: {
         fontSize: 16,
         textAlign: 'center',
+        color: 'white'
     },
     correctText: {
         color: '#4caf50',

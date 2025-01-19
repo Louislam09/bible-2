@@ -480,6 +480,7 @@ export interface ICardTheme {
   selectedAnswer: string | null;
   feedback: AnswerResult | null;
   router: Router
+  scrollViewRef?: any;
 }
 
 export enum QuestionDifficulty {

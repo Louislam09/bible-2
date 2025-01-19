@@ -7,6 +7,7 @@ import Icon from '../Icon';
 import useGameAnimation from '@/hooks/useGameAnimation';
 import ProgressBar from '../home/footer/ProgressBar';
 import OptionItem from './OptionItem';
+import Feedback from './Feedback';
 
 const MedievalTheme = ({
     router,
@@ -95,6 +96,14 @@ const MedievalTheme = ({
                 </Animated.View>
 
                 {feedback && (
+                    <Feedback
+                        theme='Medieval'
+                        feedback={feedback}
+                        feedbackOpacity={feedbackOpacity}
+                        onNext={onNext}
+                    />
+                )}
+                {/* {feedback && (
                     <Animated.View style={[styles.feedbackContainer, { opacity: feedbackOpacity }]}>
                         <Text
                             style={[
@@ -112,7 +121,7 @@ const MedievalTheme = ({
                             <Text style={styles.buttonText}>Siguiente pregunta</Text>
                         </TouchableOpacity>
                     </Animated.View>
-                )}
+                )} */}
             </ScrollView>
         </SafeAreaView>
     );
