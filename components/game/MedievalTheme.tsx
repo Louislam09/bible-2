@@ -6,12 +6,7 @@ import { Animated, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity,
 import Icon from '../Icon';
 import useGameAnimation from '@/hooks/useGameAnimation';
 import ProgressBar from '../home/footer/ProgressBar';
-
-interface ButtonStyleProps {
-    isSelected: boolean;
-    isCorrect: boolean;
-    showResult: boolean;
-}
+import OptionItem from './OptionItem';
 
 const MedievalTheme = ({
     router,
@@ -29,31 +24,29 @@ const MedievalTheme = ({
     const { width } = useWindowDimensions();
     const isSmallSDevice = width < 300;
 
-
-    const getButtonStyle = ({ isSelected, isCorrect, showResult }: ButtonStyleProps): object => {
-        return [
-            isSelected && styles.selectedButton,
-            showResult && isCorrect && styles.correctButton,
-            isSelected && !isCorrect && showResult && styles.incorrectButton,
-        ];
-    };
-
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: '#92400e' }]}>
             <View style={styles.header}>
-                <Icon onPress={() => router.back()} name="ChevronLeft" color="#fef3c7" size={32} />
-                {!isSmallSDevice && <Text style={[styles.headerTitle, { fontFamily: 'serif' }]}>{title}</Text>}
                 <View
                     style={[
                         { flexDirection: 'row', alignItems: 'center' }
                     ]}
                 >
-                    <ShieldCheck color="#fef08a" size={24} />
+                <Icon onPress={() => router.back()} name="ChevronLeft" color="#fef3c7" size={32} />
+                {!isSmallSDevice && <Text style={[styles.headerTitle, { fontFamily: 'serif' }]}>{title}</Text>}
+                </View>
+
+                <View
+                    style={[
+                        { flexDirection: 'row', alignItems: 'center' }
+                    ]}
+                >
+                    <ShieldCheck color={QuestionDifficulty[questionDifficulty]} size={24} />
                     <Text style={{ fontSize: 16, fontFamily: 'serif', color: '#fef3c7' }}>LVL_{progress?.level}</Text>
                 </View>
-                <View style={styles.medievalLevel}>
+                {/* <View style={styles.medievalLevel}>
                     <Text style={styles.medievalText}>{progress?.current}/{progress?.total}</Text>
-                </View>
+                </View> */}
             </View>
             <View style={{ marginVertical: 20, marginBottom: 32 }}>
                 <ProgressBar
@@ -73,33 +66,31 @@ const MedievalTheme = ({
                     paddingHorizontal: 16,
                     opacity: questionCardOpacity, borderColor: blinkingColor,
                     borderWidth: 2,
+                    padding: 16,
+                    paddingBottom: 10
                 }}>
+                    <Text style={styles.medievalQuestionText}>{currentQuestion?.question}</Text>
                     <Lightbulb
-                        style={{ position: 'absolute', bottom: 20, right: 10 }}
+                        style={{ position: 'relative', alignSelf: 'flex-end', marginRight: -20 }}
                         strokeWidth={2}
                         color={QuestionDifficulty[questionDifficulty]}
                         size={28}
                     />
-                    <Text style={styles.medievalQuestionText}>{currentQuestion?.question}</Text>
                 </Animated.View>
 
                 <Animated.View style={[styles.optionsContainer, { opacity: optionsOpacity }]}>
                     {currentOptions.map((option, i) => (
-                        <TouchableOpacity
+                        <OptionItem
                             key={i}
-                            onPress={() => onAnswer(option)}
-                            disabled={selectedAnswer !== null}
-                            style={[
-                                styles.medievalOption,
-                                getButtonStyle({
-                                    isSelected: selectedAnswer === option,
-                                    isCorrect: option === currentQuestion?.correct,
-                                    showResult: selectedAnswer !== null,
-                                }),
-                            ]}
-                        >
-                            <Text style={styles.medievalOptionText}>{option}</Text>
-                        </TouchableOpacity>
+                            index={i}
+                            theme='Medieval'
+                            isCorrect={option === currentQuestion?.correct}
+                            isSelected={selectedAnswer === option}
+                            onAnswer={onAnswer}
+                            selectedAnswer={selectedAnswer}
+                            showResult={selectedAnswer !== null}
+                            value={option}
+                        />
                     ))}
                 </Animated.View>
 
@@ -137,7 +128,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        // marginBottom: 32,
     },
     headerTitle: {
         fontSize: 24,
@@ -179,7 +169,6 @@ const styles = StyleSheet.create({
     medievalQuestionText: {
         color: '#fef3c7',
         fontSize: 20,
-        marginBottom: 32,
         fontFamily: 'serif',
     },
     medievalOption: {

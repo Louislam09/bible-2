@@ -14,7 +14,7 @@ const useGameAnimation = ({ progress, feedback, currentQuestion }: any) => {
     questionCardOpacity.setValue(0);
     optionsOpacity.setValue(0);
     feedbackOpacity.setValue(0);
-    blinkAnimation.setValue(0); // Reset blinking animation
+    blinkAnimation.setValue(0);
   }, [progress?.current]);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const useGameAnimation = ({ progress, feedback, currentQuestion }: any) => {
     Animated.timing(optionsOpacity, {
       toValue: 1,
       duration: 500,
-      delay: 300, // Delay the options fade-in for effect
+      delay: 300,
       useNativeDriver: true,
     }).start();
   }, [currentQuestion, progress]);
@@ -37,14 +37,13 @@ const useGameAnimation = ({ progress, feedback, currentQuestion }: any) => {
       Animated.timing(feedbackOpacity, {
         toValue: 1,
         duration: 500,
-        delay: 300, // Delay the feedback fade-in for effect
+        delay: 300,
         useNativeDriver: true,
       }).start();
     }
   }, [feedback, progress]);
 
   useEffect(() => {
-    // Start the blinking animation
     Animated.loop(
       Animated.sequence([
         Animated.timing(blinkAnimation, {
@@ -61,22 +60,19 @@ const useGameAnimation = ({ progress, feedback, currentQuestion }: any) => {
     ).start();
   }, [questionDifficulty]);
 
-  console.log({ questionDifficulty });
-
-  // Interpolate the blinkAnimation to produce a color
   const blinkingColor = blinkAnimation.interpolate({
     inputRange: [0, 1],
     outputRange: [
       QuestionDifficulty[questionDifficulty] + 10,
       QuestionDifficulty[questionDifficulty] + 80,
-    ], // Example: red to blue
+    ],
   });
 
   return {
     questionCardOpacity,
     optionsOpacity,
     feedbackOpacity,
-    blinkingColor, // Expose the blinking color
+    blinkingColor,
   };
 };
 

@@ -7,8 +7,8 @@ import NeonTheme from '@/components/game/NeonTheme';
 import useParams from '@/hooks/useParams';
 import { AnswerResult, GameProgress, Question } from '@/types';
 import { useRouter } from 'expo-router';
-import React, { useEffect, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Animated, StyleSheet, View } from 'react-native';
 
 interface ButtonStyleProps {
     isSelected: boolean;
@@ -43,7 +43,21 @@ const Game = () => {
     const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
     const [feedback, setFeedback] = useState<AnswerResult | null>(null);
     const [progress, setProgress] = useState<GameProgress | null>(null);
+    const defaultTranslation = -100
+    const translateYAnim = useRef(new Animated.Value(defaultTranslation)).current;
     const currentLevel = progress?.level;
+
+    useEffect(() => {
+        translateYAnim.setValue(defaultTranslation)
+        Animated.parallel([
+            Animated.timing(translateYAnim, {
+                toValue: 0,
+                duration: 500,
+                useNativeDriver: true,
+            }),
+        ]).start();
+        console.log('slide animation')
+    }, [translateYAnim, currentQuestion]);
 
     useEffect(() => {
         updateGameState();
@@ -85,8 +99,9 @@ const Game = () => {
 
     const Card = themes[currentTheme].component
 
+
     return (
-        <View style={styles.container}>
+        <Animated.View style={[styles.container, { transform: [{ translateX: translateYAnim }] }]}>
             <Card
                 title="Quiz_Bíblico"
                 router={router}
@@ -97,7 +112,7 @@ const Game = () => {
                 selectedAnswer={selectedAnswer}
                 feedback={feedback}
             />
-        </View>
+        </Animated.View>
     )
 };
 

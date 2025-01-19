@@ -4,28 +4,14 @@ import React, { useMemo } from 'react';
 import { Animated, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from '../Icon';
 import useGameAnimation from '@/hooks/useGameAnimation';
-import { Lightbulb } from 'lucide-react-native';
+import { Lightbulb, Zap } from 'lucide-react-native';
 import ProgressBar from '../home/footer/ProgressBar';
-
-
-interface ButtonStyleProps {
-    isSelected: boolean;
-    isCorrect: boolean;
-    showResult: boolean;
-}
+import OptionItem from './OptionItem';
 
 const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext, progress, selectedAnswer, title }: ICardTheme) => {
     const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion]);
     const { blinkingColor, feedbackOpacity, optionsOpacity, questionCardOpacity } = useGameAnimation({ progress, feedback, currentQuestion })
     const questionDifficulty = currentQuestion?.difficulty as keyof typeof QuestionDifficulty
-
-    const getButtonStyle = ({ isSelected, isCorrect, showResult }: ButtonStyleProps): object => {
-        return [
-            isSelected && styles.selectedButton,
-            showResult && isCorrect && styles.correctButton,
-            isSelected && !isCorrect && showResult && styles.incorrectButton,
-        ];
-    };
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: '#111827' }]}>
@@ -36,7 +22,7 @@ const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext,
                         <Text style={styles.consoleTitle}>{title.toUpperCase()}</Text>
                     </View>
                     <View style={styles.headerRight}>
-                        <Text style={styles.consoleText}>⚡</Text>
+                        <Zap color={QuestionDifficulty[questionDifficulty]} size={24} />
                         <Text style={[styles.consoleText, { marginLeft: 8 }]}>LVL_{progress?.level}</Text>
                     </View>
                 </View>
@@ -57,7 +43,7 @@ const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext,
                 }]}>
                     <Text style={styles.consoleText}>{`> ${currentQuestion?.question}`}</Text>
                     <Lightbulb
-                        style={{ position: 'absolute', bottom: 10, right: 10 }}
+                        style={{ position: 'relative', alignSelf: 'flex-end', marginRight: -20 }}
                         strokeWidth={2}
                         color={QuestionDifficulty[questionDifficulty]}
                         size={28}
@@ -66,23 +52,18 @@ const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext,
 
                 <ScrollView style={styles.optionsContainer}>
                     <Animated.View style={{ opacity: optionsOpacity }}>
-
                     {currentOptions.map((option, i) => (
-                        <TouchableOpacity
+                        <OptionItem
                             key={i}
-                            onPress={() => onAnswer(option)}
-                            disabled={selectedAnswer !== null}
-                            style={[
-                                styles.consoleOption,
-                                getButtonStyle({
-                                    isSelected: selectedAnswer === option,
-                                    isCorrect: option === currentQuestion?.correct,
-                                    showResult: selectedAnswer !== null,
-                                })
-                            ]}
-                        >
-                            <Text style={[styles.consoleText]}>[{i + 1}] {option}</Text>
-                        </TouchableOpacity>
+                            index={i}
+                            theme='GameConsole'
+                            isCorrect={option === currentQuestion?.correct}
+                            isSelected={selectedAnswer === option}
+                            onAnswer={onAnswer}
+                            selectedAnswer={selectedAnswer}
+                            showResult={selectedAnswer !== null}
+                            value={option}
+                        />
                     ))}
                     </Animated.View>
 
@@ -194,6 +175,7 @@ const styles = StyleSheet.create({
     },
     questionCard: {
         padding: 24,
+        paddingBottom: 10,
         // borderRadius: 16,
         marginBottom: 24,
     },

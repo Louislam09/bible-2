@@ -5,12 +5,8 @@ import { Animated, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity,
 import Icon from '../Icon';
 import useGameAnimation from '@/hooks/useGameAnimation';
 import { CloudLightning, Lightbulb } from 'lucide-react-native';
-
-interface ButtonStyleProps {
-    isSelected: boolean;
-    isCorrect: boolean;
-    showResult: boolean;
-}
+import ProgressBar from '../home/footer/ProgressBar';
+import OptionItem from './OptionItem';
 
 const NeonTheme = ({ router, title, currentQuestion, onAnswer, onNext, progress, selectedAnswer, feedback }: ICardTheme) => {
     const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion]);
@@ -19,14 +15,6 @@ const NeonTheme = ({ router, title, currentQuestion, onAnswer, onNext, progress,
     const isSmallSDevice = width < 300;
     const questionDifficulty = currentQuestion?.difficulty as keyof typeof QuestionDifficulty
 
-    const getButtonStyle = ({ isSelected, isCorrect, showResult }: ButtonStyleProps): object => {
-        return [
-            isSelected && styles.selectedButton,
-            showResult && isCorrect && styles.correctButton,
-            isSelected && !isCorrect && showResult && styles.incorrectButton,
-        ];
-    };
-
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: '#030712' }]}>
             <View style={styles.header}>
@@ -34,51 +22,57 @@ const NeonTheme = ({ router, title, currentQuestion, onAnswer, onNext, progress,
                 <Icon onPress={() => router.back()} name="ChevronLeft" color="#22d3ee" size={32} />
                     {!isSmallSDevice && <Text style={styles.neonTitle}>{title}</Text>}
                 </View>
-                <View
-                    style={[
-                        { flexDirection: 'row', alignItems: 'center' }
-                    ]}
-                >
-                    <CloudLightning color="#22d3ee" size={24} />
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                    <CloudLightning color={QuestionDifficulty[questionDifficulty]} size={24} />
                     <Text style={styles.neonText}>LVL_{progress?.level}</Text>
                 </View>
-                <Text style={styles.neonText}>{progress?.current}/{progress?.total}</Text>
+                {/* <Text style={styles.neonText}>{progress?.current}/{progress?.total}</Text> */}
+            </View>
+            <View style={{ marginVertical: 20 }}>
+                <ProgressBar
+                    hideCircle
+                    height={4}
+                    color='#22d3ee'
+                    barColor='#854d0e'
+                    progress={(progress?.current || 0) / (progress?.total || 10)}
+                    circleColor='#22d3ee'
+                />
             </View>
 
             <ScrollView style={[styles.neonCard, styles.neonShadow]}>
                 <Animated.View style={{
-                    opacity: questionCardOpacity, borderColor: blinkingColor,
+                    // opacity: questionCardOpacity,
+                    borderColor: blinkingColor,
                     borderWidth: 2,
                     borderRadius: 8,
-                    marginBottom: 10
+                    marginBottom: 10,
+                    padding: 16,
+                    paddingBottom: 10
+
                 }}>
+                    <Text style={styles.neonQuestionText}>{currentQuestion?.question}</Text>
                     <Lightbulb
-                        style={{ position: 'absolute', bottom: 10, right: 10 }}
+                        style={{ position: 'relative', alignSelf: 'flex-end', }}
                         strokeWidth={2}
                         color={QuestionDifficulty[questionDifficulty]}
                         size={28}
                     />
-                <Text style={styles.neonQuestionText}>{currentQuestion?.question}</Text>
                 </Animated.View>
 
 
                 <Animated.View style={[styles.optionsContainer, { opacity: optionsOpacity }]}>
                     {currentOptions.map((option, i) => (
-                        <TouchableOpacity
+                        <OptionItem
                             key={i}
-                            onPress={() => onAnswer(option)}
-                            disabled={selectedAnswer !== null}
-                            style={[
-                                styles.neonOption,
-                                getButtonStyle({
-                                    isSelected: selectedAnswer === option,
-                                    isCorrect: option === currentQuestion?.correct,
-                                    showResult: selectedAnswer !== null,
-                                }),
-                            ]}
-                        >
-                            <Text style={styles.neonOptionText}>{option}</Text>
-                        </TouchableOpacity>
+                            index={i}
+                            theme='Neon'
+                            isCorrect={option === currentQuestion?.correct}
+                            isSelected={selectedAnswer === option}
+                            onAnswer={onAnswer}
+                            selectedAnswer={selectedAnswer}
+                            showResult={selectedAnswer !== null}
+                            value={option}
+                        />
                     ))}
                 </Animated.View>
 
@@ -117,7 +111,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 32,
     },
     neonTitle: {
         fontSize: 24,
@@ -143,7 +136,6 @@ const styles = StyleSheet.create({
     neonQuestionText: {
         color: '#22d3ee',
         fontSize: 20,
-        marginBottom: 32,
     },
     optionsContainer: {
         gap: 12,
