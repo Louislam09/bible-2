@@ -9,6 +9,7 @@ import { IDashboardOption } from '@/app/(dashboard)';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Icon from '../Icon';
 import { TTheme } from '@/types';
+import { NewFeatureBadge } from '../NewFeatureBadge';
 
 type MainSectionProps = {
   list: IDashboardOption[];

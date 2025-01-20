@@ -24,6 +24,7 @@ export type IDashboardOption = {
   isIonicon?: boolean;
   tag?: string;
   color?: string;
+  isNew?: boolean
 };
 
 type RenderItemProps = {

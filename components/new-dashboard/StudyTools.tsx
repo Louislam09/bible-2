@@ -9,6 +9,7 @@ import React from 'react';
 import { IDashboardOption } from '@/app/(dashboard)';
 import { TTheme } from '@/types';
 import Icon from '../Icon';
+import { NewFeatureBadge } from '../NewFeatureBadge';
 
 type StudyToolsProps = {
   list: IDashboardOption[];
@@ -32,6 +33,7 @@ const StudyTools = ({ list, theme }: StudyToolsProps) => {
             onPress={item.action}
             style={[styles.tool, { width: itemWidth }]}
           >
+            {item.isNew && <NewFeatureBadge style={{ backgroundColor: '#f73043' }} />}
             <Icon
               name={item.icon as any}
               color={item.color}

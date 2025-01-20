@@ -136,6 +136,7 @@ const SecondDashboard = () => {
       action: () => navigation.navigate(Screens.ChooseGame, {}),
       // action: () => navigation.navigate('(game)', {}),
       color: '#75d0fe',
+      isNew: true
     },
   ];
 
