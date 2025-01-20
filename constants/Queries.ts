@@ -109,6 +109,12 @@ inner join books b
 on b.book_number = v.book_number
 where v.book_number = ? and v.chapter = ? and v.verse = ?`;
 
+export const GET_SINGLE_OR_MULTIPLE_VERSES = `SELECT v.*, b.long_name AS bookName
+FROM verses v
+INNER JOIN books b
+    ON b.book_number = v.book_number
+WHERE (v.book_number, v.chapter, v.verse) IN `;
+
 export const GET_VERSES_FOR_CONCORDANCIA = `SELECT 
 b.long_name,
 COUNT(*) AS total,

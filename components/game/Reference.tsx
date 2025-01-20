@@ -1,16 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import Popover from 'react-native-popover-view';
 import { getVerseTextRaw } from '@/utils/getVerseTextRaw';
 
 interface IReference {
-    item: any;
+    items: any[];
     target: any;
     isVisible: boolean;
     onClose: () => void;
 }
 
-const Reference = ({ item, target, isVisible, onClose }: IReference) => {
+const Reference = ({ items, target, isVisible, onClose }: IReference) => {
     return (
         <Popover
             offset={10}
@@ -19,12 +19,16 @@ const Reference = ({ item, target, isVisible, onClose }: IReference) => {
             onRequestClose={() => onClose()}
             popoverStyle={styles.popoverContainer}
         >
-            <View style={styles.container}>
-                <Text style={styles.cardTitle}>
-                    {`${item?.bookName} ${item?.chapter}:${item?.verse}`}
-                </Text>
-                <Text style={styles.verseBody}>{getVerseTextRaw(item?.text || "")}</Text>
-            </View>
+            <ScrollView style={styles.container}>
+                {items.map((item, i) => (
+                    <View style={{ borderColor: '#ddd', marginBottom: 10 }} key={i}>
+                        <Text style={styles.cardTitle}>
+                            {`${item?.bookName} ${item?.chapter}:${item?.verse}`}
+                        </Text>
+                        <Text style={styles.verseBody}>{getVerseTextRaw(item?.text || "")}</Text>
+                    </View>
+                ))}
+            </ScrollView>
         </Popover>
     );
 };
@@ -63,6 +67,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         color: '#63B3ED', // Calming blue accent
-        marginBottom: 5,
+        marginBottom: 0,
     },
 });
