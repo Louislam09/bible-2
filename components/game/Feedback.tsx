@@ -6,6 +6,7 @@ import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native
 import Reference from './Reference';
 import { GET_DAILY_VERSE, GET_SINGLE_OR_MULTIPLE_VERSES } from '@/constants/Queries';
 import { DB_BOOK_NAMES } from '@/constants/BookNames';
+import { parseBibleReferences } from '@/utils/extractVersesInfo';
 
 type TypeTHeme = 'Card' | 'GameConsole' | 'Neon' | 'Medieval'
 
@@ -16,93 +17,76 @@ interface IFeedback {
     theme: TypeTHeme;
 }
 
-interface BibleReference {
-    book: string;
-    chapter: string;
-    verse: string;
-    endVerse: string | null;
-}
-
-function parseBibleReferences(references: string): BibleReference[] {
-    // Regular expression to match:
-    // 1. Books with spaces or numbers (e.g., "1 Samuel").
-    // 2. Chapter and verse ranges (e.g., "6:13-22").
-    // 3. Chapter-only references (e.g., "1").
-    const regex = /(\d?\s?[A-Za-záéíóúñ]+(?:\s[A-Za-záéíóúñ]+)?)\s+(\d+)(?::(\d+)(?:-(\d+))?)?/g;
-
-    // Find all matches using matchAll
-    const matches = [...references.matchAll(regex)];
-
-    if (matches.length === 0) {
-        throw new Error("Formato inválido. Asegúrate de usar 'Libro Capítulo:Versículo', 'Libro Capítulo:Versículo-Versículo', o 'Libro Capítulo'.");
-    }
-
-    // Map the matches to the BibleReference structure
-    return matches.map(match => {
-        const [, book, chapter, verse, endVerse] = match;
-        return {
-            book: book.trim(),  // Remove extra spaces
-            chapter: chapter || "",
-            verse: verse || '1',
-            endVerse: endVerse || null
-        };
-    });
-}
 
 const Feedback = ({ theme, feedback, feedbackOpacity, onNext }: IFeedback) => {
     const styles = useMemo(() => getStyles({ theme }), [theme])
     const refenceRef = useRef(null)
     const [displayRef, setDisplayRef] = useState(false)
-    const [items, setItems] = useState<any[]>([])
+    const [references, SetReferences] = useState<string | null>(null)
 
     const { executeSql, myBibleDB } = useDBContext();
 
-    const fetchVerseDetails = async (references: string) => {
-        if (!myBibleDB || !executeSql) return;
-        // Parse the references into structured data
-        const parsedReferences = parseBibleReferences(references);
-        console.log({ parsedReferences })
-        const params: any[] = [];
+    // const fetchVerseDetails = async (references: string) => {
+    //     if (!myBibleDB || !executeSql) return;
 
-        // Map references to database-compatible format
-        const referenceTuples = parsedReferences
-            .map(({ book, chapter, verse }) => {
-                const { bookNumber: book_number } = DB_BOOK_NAMES.find(
-                    (x) => x.longName === book || x.longName.includes(book)
-                ) || {};
+    //     // Parse the references into structured data
+    //     const parsedReferences = parseBibleReferences(references);
 
-                if (book_number) {
-                    params.push(book_number, chapter, verse);
-                    return "(?, ?, ?)";
-                }
+    //     // Build the query dynamically
+    //     const conditions: string[] = [];
+    //     const params: (string | number)[] = [];
 
-                return null;
-            })
-            .filter(Boolean); // Remove invalid references
+    //     parsedReferences.forEach(({ book, chapter, verse, endVerse }) => {
+    //         const { bookNumber: book_number } = DB_BOOK_NAMES.find(
+    //             (x) => x.longName === book || x.longName.includes(book)
+    //         ) || {};
 
-        if (referenceTuples.length === 0) {
-            console.log("No valid references found.");
-            return;
-        }
+    //         if (!book_number) {
+    //             console.log(`Book "${book}" not found in database.`);
+    //             return;
+    //         }
 
+    //         if (endVerse) {
+    //             // Range condition for verses
+    //             conditions.push(`(v.book_number = ? AND v.chapter = ? AND v.verse BETWEEN ? AND ?)`);
+    //             params.push(book_number, chapter, verse, endVerse);
+    //         } else {
+    //             // Single verse condition
+    //             conditions.push(`(v.book_number = ? AND v.chapter = ? AND v.verse = ?)`);
+    //             params.push(book_number, chapter, verse);
+    //         }
+    //     });
 
-        try {
-            // Execute the query with parameters
-            const response: any = await executeSql(myBibleDB, `${GET_SINGLE_OR_MULTIPLE_VERSES} (${referenceTuples.join(", ")})`, params);
-            setItems(response); // Set the response
-        } catch (error) {
-            console.error("Error fetching verse details:", error);
-        }
-    };
+    //     if (conditions.length === 0) {
+    //         console.log("No valid references found.");
+    //         return;
+    //     }
 
+    //     // Build the final query
+    //     const query = `
+    //         SELECT v.*, b.long_name AS bookName
+    //         FROM verses v
+    //         INNER JOIN books b
+    //             ON b.book_number = v.book_number
+    //         WHERE ${conditions.join(" OR ")};
+    //     `;
+
+    //     try {
+    //         // Execute the query with parameters
+    //         const response: any = await executeSql(myBibleDB, query, params);
+    //         setItems(response); // Set the response
+    //     } catch (error) {
+    //         console.error("Error fetching verse details:", error);
+    //     }
+    // };
 
     const onReference = (reference: string) => {
+        SetReferences(reference)
         setDisplayRef(true)
-        fetchVerseDetails(feedback.reference);
+        // fetchVerseDetails(feedback.reference);
     }
 
     const onClose = () => {
-        console.log('closing ref')
         setDisplayRef(false)
     }
 
@@ -122,7 +106,7 @@ const Feedback = ({ theme, feedback, feedbackOpacity, onNext }: IFeedback) => {
                         <Text ref={refenceRef} style={{ color: '#34d399' }}>{feedback.reference}</Text>
                     </TouchableOpacity>
                     </View>
-                    <Reference items={items} onClose={onClose} isVisible={displayRef} target={refenceRef} />
+                    <Reference references={references} onClose={onClose} isVisible={displayRef} target={refenceRef} />
                 </>
             )}
             <TouchableOpacity style={styles.nextButton} onPress={onNext}>

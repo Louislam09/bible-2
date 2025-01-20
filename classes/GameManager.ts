@@ -26,8 +26,8 @@ export class GameManager {
 
   getCurrentQuestion(): Question {
     const levelQuestions = this.levels[this.currentLevel];
-    // return this.questions[levelQuestions[this.currentQuestionIndex]];
-    return this.questions[0];
+    // return this.questions[0];
+    return this.questions[levelQuestions[this.currentQuestionIndex]];
   }
 
   checkAnswer(selectedOption: string): AnswerResult {

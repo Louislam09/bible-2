@@ -113,7 +113,7 @@ export const GET_SINGLE_OR_MULTIPLE_VERSES = `SELECT v.*, b.long_name AS bookNam
 FROM verses v
 INNER JOIN books b
     ON b.book_number = v.book_number
-WHERE (v.book_number, v.chapter, v.verse) IN `;
+WHERE `;
 
 export const GET_VERSES_FOR_CONCORDANCIA = `SELECT 
 b.long_name,
