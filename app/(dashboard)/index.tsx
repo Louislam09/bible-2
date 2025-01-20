@@ -15,6 +15,7 @@ import React, { useCallback, useMemo, useRef } from 'react';
 import { StyleSheet, ToastAndroid, useWindowDimensions } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import SecondDashboard from '../../components/new-dashboard';
+import { NewFeatureBadge } from '@/components/NewFeatureBadge';
 
 export type IDashboardOption = {
   icon: IconProps['name'];
@@ -125,6 +126,15 @@ const Dashboard: React.FC<DashboardProps> = () => {
       action: onSong,
     },
     {
+      icon: 'Gamepad',
+      label: 'Quiz Bíblico',
+      // @ts-ignore
+      action: () => navigation.navigate(Screens.ChooseGame, {}),
+      // action: () => navigation.navigate('(game)', {}),
+      color: '#75d0fe',
+      isNew: true
+    },
+    {
       icon: 'Search',
       label: 'Buscador',
       // @ts-ignore
@@ -215,6 +225,8 @@ const Dashboard: React.FC<DashboardProps> = () => {
           },
         ]}
       >
+        {item.isNew && <NewFeatureBadge style={{ backgroundColor: '#f73043' }} />}
+
         <Icon
           name={item.icon as any}
           size={36}
