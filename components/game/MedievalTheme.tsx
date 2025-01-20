@@ -6,7 +6,7 @@ import { Animated, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity,
 import Icon from '../Icon';
 import useGameAnimation from '@/hooks/useGameAnimation';
 import ProgressBar from '../home/footer/ProgressBar';
-import OptionItem from './OptionItem';
+import QuestionOptionItem from './QuestionOptionItem';
 import Feedback from './Feedback';
 
 const MedievalTheme = ({
@@ -81,7 +81,7 @@ const MedievalTheme = ({
 
                 <Animated.View style={[styles.optionsContainer, { opacity: optionsOpacity }]}>
                     {currentOptions.map((option, i) => (
-                        <OptionItem
+                        <QuestionOptionItem
                             key={i}
                             index={i}
                             theme='Medieval'

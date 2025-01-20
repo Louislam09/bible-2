@@ -6,7 +6,7 @@ import React, { useMemo } from 'react';
 import { Animated, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Icon from '../Icon';
-import OptionItem from './OptionItem';
+import QuestionOptionItem from './QuestionOptionItem';
 import ProgressBar from '@/components/home/footer/ProgressBar';
 import Feedback from './Feedback';
 
@@ -62,7 +62,7 @@ const CardTheme = ({ scrollViewRef, router, feedback, currentQuestion, onAnswer,
 
                 <Animated.View style={[styles.optionsContainer, { opacity: optionsOpacity }]}>
                     {currentOptions.map((option, i) => (
-                        <OptionItem 
+                        <QuestionOptionItem 
                             key={i}
                             index={i}
                             theme='Card'

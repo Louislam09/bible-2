@@ -6,7 +6,7 @@ import { getVerseTextRaw } from '@/utils/getVerseTextRaw';
 import { groupBy } from '@/utils/groupBy';
 import { FlashList } from '@shopify/flash-list';
 import React, { useEffect, useState } from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Popover from 'react-native-popover-view';
 
 interface IReference {

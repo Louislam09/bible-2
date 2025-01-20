@@ -1,44 +1,87 @@
 import lottieAssets from '@/constants/lottieAssets';
 import { GameProgress } from '@/types';
-import React from 'react';
-import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet, StatusBar, Image } from 'react-native';
+import React, { useEffect, useMemo } from 'react';
+import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Animation from '../Animation';
 import { useRouter } from 'expo-router';
+import { usePlaySound } from '@/hooks/usePlaySound';
+import { SOUNDS } from '@/constants/gameSound';
 
 interface IGameOverScreen {
     progress: GameProgress | null;
-    handleRestart: () => void;
+    handleNextLevel: () => void;
+    handleTryAgain: () => void;
 }
-const getRandomNumberFromLength = (length: number) => Math.floor(Math.random() * length)
 
-const GameOverScreen = ({ progress, handleRestart }: IGameOverScreen) => {
-    const router = useRouter()
-    const assets = [...Object.values(lottieAssets)]
-    const pickARandomAsset = assets[getRandomNumberFromLength(assets.length)]
+const GameOverScreen = ({ progress, handleNextLevel, handleTryAgain }: IGameOverScreen) => {
+    const router = useRouter();
+    const levelCompletedAnimation = lottieAssets.star;
+    const levelFailedAnimation = lottieAssets.violin;
+    const { play: playLevelCompleted } = usePlaySound(SOUNDS.levelCompleted);
+    const { play: playLevelFailed } = usePlaySound(SOUNDS.levelFailed);
+
+    const hasPassed = progress && progress?.score >= progress?.total / 2;
+
+    useEffect(() => {
+        if (hasPassed) {
+            playLevelCompleted();
+        } else {
+            playLevelFailed();
+        }
+    }, [hasPassed]);
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.gameOverContainer}>
+            <View
+                style={[
+                    styles.gameOverContainer,
+                    { backgroundColor: hasPassed ? '#E6FFFA' : '#FFE6E6' }, // Adjust container background
+                ]}
+            >
                 <Animation
-                    backgroundColor={'transparent'}
-                    source={pickARandomAsset}
+                    backgroundColor="transparent"
+                    source={hasPassed ? levelCompletedAnimation : levelFailedAnimation}
                     loop
                     size={{ width: 220, height: 220 }}
-                    style={{ backgrund: 'transparent' }}
+                    style={{ background: 'transparent' }}
                 />
-                {/* <Image
-                    source={require('./assets/trophy.png')}
-                    style={styles.trophyImage}
-                    resizeMode="contain"
-                /> */}
-                <Text style={styles.title}>¡Juego Completado!</Text>
-                <Text style={styles.subtitle}>¡Felicidades por completar el nivel!</Text>
-                <Text style={styles.scoreText}>
+                <Text
+                    style={[
+                        styles.title,
+                        { color: hasPassed ? '#2F855A' : '#C53030' }, // Adjust title color
+                    ]}
+                >
+                    {hasPassed ? '¡Juego Completado!' : '¡Intento Fallido!'}
+                </Text>
+                <Text
+                    style={[
+                        styles.subtitle,
+                        { color: hasPassed ? '#38A169' : '#E53E3E' }, // Adjust subtitle color
+                    ]}
+                >
+                    {hasPassed
+                        ? '¡Felicidades por completar el nivel!'
+                        : '¡Mejor suerte la próxima vez!'}
+                </Text>
+                <Text
+                    style={[
+                        styles.scoreText,
+                        { color: hasPassed ? '#276749' : '#742A2A' }, // Adjust score text color
+                    ]}
+                >
                     Puntuación final: {progress?.score} de {progress?.total}
                 </Text>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button} onPress={handleRestart}>
-                        <Text style={styles.buttonText}>Siguiente Nivel</Text>
+                    <TouchableOpacity
+                        style={[
+                            styles.button,
+                            { backgroundColor: hasPassed ? '#48BB78' : '#F56565' }, // Adjust button color
+                        ]}
+                        onPress={hasPassed ? handleNextLevel : handleTryAgain}
+                    >
+                        <Text style={styles.buttonText}>
+                            {hasPassed ? 'Siguiente Nivel' : 'Reintentar'}
+                        </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.button, styles.closeButton]}
@@ -61,7 +104,6 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     gameOverContainer: {
-        backgroundColor: '#FFFFFF',
         padding: 20,
         borderRadius: 16,
         alignItems: 'center',
@@ -72,25 +114,17 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5,
     },
-    trophyImage: {
-        width: 100,
-        height: 100,
-        marginBottom: 16,
-    },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#333333',
         marginBottom: 8,
     },
     subtitle: {
         fontSize: 16,
-        color: '#666666',
         marginBottom: 16,
     },
     scoreText: {
         fontSize: 18,
-        color: '#444444',
         marginBottom: 24,
         textAlign: 'center',
     },
@@ -101,14 +135,13 @@ const styles = StyleSheet.create({
     },
     button: {
         flex: 1,
-        backgroundColor: '#4CAF50',
         paddingVertical: 12,
         borderRadius: 8,
         marginHorizontal: 8,
         alignItems: 'center',
     },
     closeButton: {
-        backgroundColor: '#F44336',
+        backgroundColor: '#718096', // Neutral close button color
     },
     buttonText: {
         color: '#FFFFFF',

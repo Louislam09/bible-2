@@ -4,26 +4,14 @@ import GameConsoleTheme from '@/components/game/GameConsoleTheme';
 import GameOverScreen from '@/components/game/Gameover';
 import MedievalTheme from '@/components/game/MedievalTheme';
 import NeonTheme from '@/components/game/NeonTheme';
+import { SOUNDS } from '@/constants/gameSound';
 import useParams from '@/hooks/useParams';
+import { usePlaySound } from '@/hooks/usePlaySound';
 import { AnswerResult, GameProgress, Question } from '@/types';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing, ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
-interface ButtonStyleProps {
-    isSelected: boolean;
-    isCorrect: boolean;
-    showResult: boolean;
-}
-
-const shuffleOptions = (options: string[] | undefined): string[] => {
-    if (!options) return [];
-    for (let i = options.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [options[i], options[j]] = [options[j], options[i]];
-    }
-    return options;
-};
 
 const themes = [
     { component: CardTheme },
@@ -45,9 +33,11 @@ const Game = () => {
     const [progress, setProgress] = useState<GameProgress | null>(null);
     const currentLevel = progress?.level;
     const scrollViewRef = useRef<ScrollView>(null)
+    const { play: playNextQuestion } = usePlaySound(SOUNDS.nextQuestion);
 
     useEffect(() => {
         updateGameState();
+        playNextQuestion()
     }, [currentLevel]);
 
     const updateGameState = (): void => {
@@ -66,23 +56,28 @@ const Game = () => {
         scrollViewRef.current?.scrollToEnd()
     };
 
-    const handleNext = (): void => {
+    const handleNextQuestion = (): void => {
         if (gameManager.gameOver) return;
         if (gameManager.nextQuestion()) {
             updateGameState();
+            playNextQuestion()
         } else {
             setProgress(gameManager.getProgress());
         }
     };
 
-    const handleRestart = (): void => {
+    const handleNextLevel = (): void => {
         gameManager.nextLevel();
+        updateGameState();
+    };
+    const handleTryAgain = (): void => {
+        gameManager.resetGame();
         updateGameState();
     };
 
 
     if (gameManager.gameOver) {
-        return <GameOverScreen handleRestart={handleRestart} progress={progress} />
+        return <GameOverScreen handleTryAgain={handleTryAgain} handleNextLevel={handleNextLevel} progress={progress} />
     }
 
     const Card = themes[currentTheme].component
@@ -96,7 +91,7 @@ const Game = () => {
                 router={router}
                 currentQuestion={currentQuestion}
                 onAnswer={handleAnswer}
-                onNext={handleNext}
+                onNext={handleNextQuestion}
                 progress={progress}
                 selectedAnswer={selectedAnswer}
                 feedback={feedback}

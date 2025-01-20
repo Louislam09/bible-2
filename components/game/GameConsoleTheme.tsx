@@ -6,7 +6,7 @@ import Icon from '../Icon';
 import useGameAnimation from '@/hooks/useGameAnimation';
 import { Lightbulb, Zap } from 'lucide-react-native';
 import ProgressBar from '../home/footer/ProgressBar';
-import OptionItem from './OptionItem';
+import QuestionOptionItem from './QuestionOptionItem';
 import Feedback from './Feedback';
 
 const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext, progress, selectedAnswer, title }: ICardTheme) => {
@@ -54,7 +54,7 @@ const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext,
                 <ScrollView style={styles.optionsContainer}>
                     <Animated.View style={{ opacity: optionsOpacity }}>
                     {currentOptions.map((option, i) => (
-                        <OptionItem
+                        <QuestionOptionItem
                             key={i}
                             index={i}
                             theme='GameConsole'

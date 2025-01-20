@@ -5,13 +5,15 @@ const violin = require('../assets/lottie/violin.json');
 const guitar = require('../assets/lottie/guitar.json');
 const shelo = require('../assets/lottie/shelo.json');
 const guitarNotes = require('../assets/lottie/guitar-notes.json');
+const star = require('../assets/lottie/star.json');
 
 export default {
-    sing2,
-    sing,
-    birdSinging,
-    violin,
-    guitar,
-    shelo,
-    guitarNotes,
-}
+  sing2,
+  sing,
+  birdSinging,
+  violin,
+  guitar,
+  shelo,
+  guitarNotes,
+  star,
+};

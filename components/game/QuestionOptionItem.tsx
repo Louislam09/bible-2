@@ -1,5 +1,7 @@
+import { SOUNDS } from '@/constants/gameSound';
+import { usePlaySound } from '@/hooks/usePlaySound';
 import React, { useEffect, useMemo, useRef } from 'react';
-import { Animated, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Animated, StyleSheet, Text, TouchableOpacity, Vibration } from 'react-native';
 
 type TypeTHeme = 'Card' | 'GameConsole' | 'Neon' | 'Medieval'
 
@@ -92,11 +94,21 @@ const gameThemes = {
 
 }
 
-const OptionItem = ({ index, theme, isSelected, showResult, isCorrect, onAnswer, selectedAnswer, value }: IOptionItem) => {
+const QuestionOptionItem = ({ index, theme, isSelected, showResult, isCorrect, onAnswer, selectedAnswer, value }: IOptionItem) => {
     const styles = useMemo(() => getStyles({ theme }), [theme])
     const defaultTranslation = -100
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const translateYAnim = useRef(new Animated.Value(defaultTranslation)).current;
+    const { play: playCorrectChoise } = usePlaySound(SOUNDS.correct);
+    const { play: playIncorrectChoise } = usePlaySound(SOUNDS.incorrectChoice);
+
+    useEffect(() => {
+        if (isCorrect && isSelected) {
+            playCorrectChoise()
+        } else if (isSelected && !isCorrect && showResult) {
+            playIncorrectChoise()
+        }
+    }, [isSelected])
 
     useEffect(() => {
         fadeAnim.setValue(0)
@@ -124,11 +136,12 @@ const OptionItem = ({ index, theme, isSelected, showResult, isCorrect, onAnswer,
         <Animated.View style={{
             opacity: fadeAnim,
             transform: [{ translateX: translateYAnim }]
-        }
-        } >
+        }}>
             <TouchableOpacity
                 key={value}
-                onPress={() => onAnswer(value)}
+                onPress={() => {
+                    onAnswer(value)
+                }}
                 disabled={selectedAnswer !== null}
                 style={[
                     styles.option,
@@ -147,7 +160,7 @@ const OptionItem = ({ index, theme, isSelected, showResult, isCorrect, onAnswer,
     )
 }
 
-export default OptionItem
+export default QuestionOptionItem
 
 const getStyles = ({ theme }: { theme: TypeTHeme }) => StyleSheet.create({
     option: gameThemes[theme].option,

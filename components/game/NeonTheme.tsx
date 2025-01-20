@@ -6,7 +6,7 @@ import Icon from '../Icon';
 import useGameAnimation from '@/hooks/useGameAnimation';
 import { CloudLightning, Lightbulb } from 'lucide-react-native';
 import ProgressBar from '../home/footer/ProgressBar';
-import OptionItem from './OptionItem';
+import QuestionOptionItem from './QuestionOptionItem';
 import Feedback from './Feedback';
 
 const NeonTheme = ({ router, title, currentQuestion, onAnswer, onNext, progress, selectedAnswer, feedback }: ICardTheme) => {
@@ -63,7 +63,7 @@ const NeonTheme = ({ router, title, currentQuestion, onAnswer, onNext, progress,
 
                 <Animated.View style={[styles.optionsContainer, { opacity: optionsOpacity }]}>
                     {currentOptions.map((option, i) => (
-                        <OptionItem
+                        <QuestionOptionItem
                             key={i}
                             index={i}
                             theme='Neon'
