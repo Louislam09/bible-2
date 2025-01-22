@@ -1,20 +1,17 @@
-import SearchHeader from '@/components/search/SearchHeader';
-import StatusBarBackground from '@/components/StatusBarBackground';
 import { Slot, Stack } from 'expo-router';
 import React from 'react';
 
 const SearchLayout = () => {
   return (
-    <StatusBarBackground>
+    <>
       <Stack.Screen
         options={{
-          headerShown: false,
+          headerShown: true,
           headerTitle: '',
         }}
       />
-      <SearchHeader />
       <Slot />
-    </StatusBarBackground>
+    </>
   );
 };
 

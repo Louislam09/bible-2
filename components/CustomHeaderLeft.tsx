@@ -1,8 +1,8 @@
+import { useTheme } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
-import { Text, View } from './Themed';
 import Icon from './Icon';
-import { useTheme } from '@react-navigation/native';
+import { Text, View } from './Themed';
 
 type CustomHeaderLeftProps = {
   title: string;
@@ -11,6 +11,14 @@ type CustomHeaderLeftProps = {
 const CustomHeaderLeft = ({ title }: CustomHeaderLeftProps) => {
   const router = useRouter();
   const theme = useTheme();
+
+  const handleGoBack = () => {
+    if (router.canGoBack()) {
+      router.back()
+      return
+    }
+    router.push("/(dashboard)")
+  }
 
   return (
     <View
@@ -21,7 +29,7 @@ const CustomHeaderLeft = ({ title }: CustomHeaderLeftProps) => {
       }}
     >
       <TouchableOpacity
-        onPress={() => router.back()}
+        onPress={handleGoBack}
         style={{ marginRight: 10 }}
       >
         <Icon name='ArrowLeft' size={24} color={theme.colors.text} />

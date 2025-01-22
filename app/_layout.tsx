@@ -17,7 +17,14 @@ import { ToastAndroid } from 'react-native';
 import ErrorBoundary from 'react-native-error-boundary';
 import 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { NativeStackNavigationOptions } from 'react-native-screens/lib/typescript/native-stack/types';
+import { NativeStackNavigationOptions, NativeStackNavigatorProps } from 'react-native-screens/lib/typescript/native-stack/types';
+import { RouteProp, ParamListBase } from '@react-navigation/native';
+
+type ScreenOptionsProps = {
+  route: RouteProp<ParamListBase, string>;
+  navigation: any;
+}
+
 type TScreensName = { [key in Screens]: string };
 
 const screenAnimations: TScreensName = {
@@ -63,12 +70,12 @@ const App = () => {
     onFetchUpdateAsync();
   }, []);
 
-  const screenOptions: (props: any) => NativeStackNavigationOptions | any = (
+
+  const screenOptions: (props: ScreenOptionsProps) => NativeStackNavigationOptions | any = (
     props
   ) => {
     return {
       headerTitle: '',
-      // headerTitle: ScreensName[props.route.name as Screens],
       headerShown: false,
       headerTitleAlign: 'center',
       headerTitleStyle: { fontWeight: 'bold' },

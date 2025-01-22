@@ -138,7 +138,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
       icon: 'Search',
       label: 'Buscador',
       // @ts-ignore
-      action: () => navigation.navigate('(search)', {}),
+      action: () => navigation.navigate(Screens.Search, {}),
     },
     {
       icon: 'LayoutGrid',

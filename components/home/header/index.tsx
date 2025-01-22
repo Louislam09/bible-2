@@ -76,7 +76,7 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
   const goSearchScreen = () => {
     clearHighlights();
     // @ts-ignore
-    navigation.navigate('(search)', { book: book });
+    navigation.navigate(Screens.Search, { book: book });
   };
 
   const moveBackInHistory = () => {

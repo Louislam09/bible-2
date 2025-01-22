@@ -24,10 +24,10 @@ declare global {
 }
 
 export enum Screens {
-  Dashboard = 'dashboard',
+  Dashboard = '(dashboard)',
   Settings = 'settings',
   Home = 'home',
-  Search = 'search',
+  Search = '(search)',
   Concordance = 'concordance',
   ChooseBook = 'chooseBook',
   ChooseChapterNumber = 'chooseChapterNumber',

@@ -63,7 +63,6 @@ const RenderItem = ({ item, index, theme, onItemClick, styles }: any) => {
 type CharacterProps = {};
 
 const Character: React.FC<CharacterProps> = () => {
-  const [selected, setSelected] = useState<any>(null);
   const [filterData] = useState(Characters);
   const theme = useTheme();
   const { schema } = useCustomTheme();
@@ -72,10 +71,10 @@ const Character: React.FC<CharacterProps> = () => {
   const [searchText, setSearchText] = useState<any>(null);
 
   const handleCharacterPress = (character: string) => {
-    router.push({ pathname: `/${character}` });
+    router.push({ pathname: `character/${character}` });
   };
 
-  const NoteHeader = () => {
+  const CharacterHeader = () => {
     return (
       <View style={[styles.noteHeader]}>
         <Text style={[styles.noteListTitle]}>Personajes Biblicos</Text>
@@ -97,20 +96,6 @@ const Character: React.FC<CharacterProps> = () => {
     );
   };
 
-  // useEffect(() => {
-  //   const backAction = () => {
-  //     setSelected(null);
-  //     !selected?.topic && router.back();
-  //     return true;
-  //   };
-
-  //   const backHandler = BackHandler.addEventListener(
-  //     "hardwareBackPress",
-  //     backAction
-  //   );
-
-  //   return () => backHandler.remove();
-  // }, [selected]);
 
   return (
     <View
@@ -120,8 +105,8 @@ const Character: React.FC<CharacterProps> = () => {
         backgroundColor: theme.dark ? theme.colors.background : '#eee',
       }}
     >
-      <Stack.Screen options={{ headerShown: true, headerTitle: '' }} />
-      {NoteHeader()}
+      {/* <Stack.Screen options={{ headerShown: true, headerTitle: '' }} /> */}
+      {CharacterHeader()}
       <FlashList
         key={schema}
         contentContainerStyle={{
@@ -133,9 +118,9 @@ const Character: React.FC<CharacterProps> = () => {
         data={
           searchText
             ? filterData.filter(
-                (x: any) =>
-                  removeAccent(x.topic).indexOf(searchText.toLowerCase()) !== -1
-              )
+              (x: any) =>
+                removeAccent(x.topic).indexOf(searchText.toLowerCase()) !== -1
+            )
             : filterData
         }
         renderItem={({ item, index }) => (
