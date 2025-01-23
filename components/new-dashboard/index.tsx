@@ -138,6 +138,15 @@ const SecondDashboard = () => {
       color: '#75d0fe',
       isNew: true
     },
+    {
+      icon: 'Gamepad2',
+      label: 'Aprender',
+      // @ts-ignore
+      action: () => navigation.navigate('learn', {}),
+      // action: () => navigation.navigate('(game)', {}),
+      color: '#75d0fe',
+      isNew: true
+    },
   ];
 
   const versionRef = useRef<BottomSheetModal>(null);

@@ -493,3 +493,15 @@ export enum QuestionDifficultyKey {
   medium = 'Medio',
   easy = 'Facil'
 }
+
+export interface ILessons {
+  type: string;
+  completed: boolean;
+  position: string;
+}
+
+export type TGameUnit = {
+  title: string;
+  subtitle: string;
+  lessons: ILessons[];
+}
