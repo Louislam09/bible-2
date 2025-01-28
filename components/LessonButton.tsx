@@ -1,21 +1,22 @@
+import { Check, Crown, Star } from 'lucide-react-native';
 import React, { useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, Animated, StyleSheet } from 'react-native';
-import { Check, Star, Crown } from 'lucide-react-native';
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 type LessonButtonProps = {
     type: 'start' | 'star' | 'crown';
     completed: boolean;
     isCurrent: boolean;
     label?: string;
+    action: () => void;
 };
 
-const LessonButton: React.FC<LessonButtonProps> = ({ type, completed, label, isCurrent }) => {
+const LessonButton: React.FC<LessonButtonProps> = ({ action, type, completed, label, isCurrent }) => {
     const buttonStyles = [
         styles.button,
         (completed || isCurrent) ? styles.buttonCompleted : styles.buttonIncomplete,
     ];
 
-    const Icon = type === 'start' ? Check : type === 'star' ? Star : Crown;
+    const Icon = (type === 'start' || completed) ? Check : type === 'star' ? Star : Crown;
 
     const bounceAnim = useRef(new Animated.Value(0)).current;
 
@@ -38,6 +39,8 @@ const LessonButton: React.FC<LessonButtonProps> = ({ type, completed, label, isC
         }
     }, [isCurrent]);
 
+    // const disabled = !isCurrent && !completed
+    const disabled = false
     const bounce = bounceAnim.interpolate({
         inputRange: [0, 1],
         outputRange: [0, -10],
@@ -45,7 +48,7 @@ const LessonButton: React.FC<LessonButtonProps> = ({ type, completed, label, isC
 
     return (
         <View style={styles.lessonContainer}>
-            {isCurrent && (
+            {/* {isCurrent && (
                 <Animated.View style={[styles.tooltipContainer, { transform: [{ translateX: -60 }, { translateY: bounce }] }]}>
                     <View style={styles.tooltip}>
                         <Text style={[styles.label]}>
@@ -54,13 +57,18 @@ const LessonButton: React.FC<LessonButtonProps> = ({ type, completed, label, isC
                     </View>
                     <View style={styles.tooltipArrow} />
                 </Animated.View>
-            )}
-            <View style={styles.base}>
+            )} */}
+            <TouchableOpacity onPress={action} disabled={disabled} style={styles.base}>
                 <View style={styles.shadow} />
-                <TouchableOpacity style={buttonStyles}>
-                    <Icon strokeWidth={2} color={'#fff'} width={32} height={32} />
-                </TouchableOpacity>
-            </View>
+                <View style={buttonStyles}>
+                    <Icon
+                        fill={disabled ? "#c4c4c4" : "transparent"}
+                        strokeWidth={2}
+                        color={disabled ? "#c4c4c4" : "#fff"}
+                        size={40}
+                    />
+                </View>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -78,7 +86,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'red'
     },
     label: {
-        fontSize: 20,
+        width: '100%',
+        fontSize: 18,
         fontWeight: 500,
         textTransform: 'uppercase',
         color: '#10b981',
@@ -138,7 +147,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     tooltip: {
-        backgroundColor: '#ddd',
+        backgroundColor: '#eee',
         paddingHorizontal: 10,
         paddingVertical: 10,
         borderRadius: 10,
@@ -152,7 +161,7 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderLeftColor: 'transparent',
         borderRightColor: 'transparent',
-        borderBottomColor: '#000',
+        borderBottomColor: '#eee',
         marginTop: -1,
         transform: [{ rotate: '180deg' }],
     },

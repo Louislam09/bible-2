@@ -145,7 +145,7 @@ const SecondDashboard = () => {
       action: () => navigation.navigate('learn', {}),
       // action: () => navigation.navigate('(game)', {}),
       color: '#75d0fe',
-      isNew: true
+      isNew: false
     },
   ];
 
