@@ -76,6 +76,7 @@ export type RootTabParamList = {
   dashboard: undefined;
   settings: undefined;
   home: undefined;
+  chooseGame: undefined;
   book: undefined;
   chooseBook: { book: string };
   search: undefined;
@@ -95,6 +96,7 @@ export type RootStackParamList = {
   home: NavigatorScreenParams<RootTabParamList> | HomeParams;
   book: NavigatorScreenParams<RootTabParamList> | undefined;
   favorite: NavigatorScreenParams<RootTabParamList> | undefined;
+  chooseGame: NavigatorScreenParams<RootTabParamList> | undefined;
   downloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
   notes: NavigatorScreenParams<RootTabParamList> | { shouldRefresh: boolean };
   noteDetail:
@@ -492,16 +494,4 @@ export enum QuestionDifficultyKey {
   hard = 'Dificil',
   medium = 'Medio',
   easy = 'Facil'
-}
-
-export interface ILessons {
-  type: string;
-  completed: boolean;
-  position: string;
-}
-
-export type TGameUnit = {
-  title: string;
-  subtitle: string;
-  lessons: ILessons[];
 }

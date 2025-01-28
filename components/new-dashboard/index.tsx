@@ -15,6 +15,7 @@ import BottomModal from '../BottomModal';
 import VoiceList from '../VoiceList';
 import VersionList from '../home/header/VersionList';
 import { useBibleContext } from '@/context/BibleContext';
+import isWithinTimeframe from '@/utils/isWithinTimeframe';
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
@@ -132,21 +133,19 @@ const SecondDashboard = () => {
     {
       icon: 'Gamepad',
       label: 'Quiz Bíblico',
-      // @ts-ignore
-      action: () => navigation.navigate(Screens.ChooseGame, {}),
-      // action: () => navigation.navigate('(game)', {}),
+      action: () => navigation.navigate(Screens.ChooseGame),
       color: '#75d0fe',
-      isNew: true
+      isNew: isWithinTimeframe('3d', new Date('2025-01-28')).isActive
     },
-    {
-      icon: 'Gamepad2',
-      label: 'Aprender',
-      // @ts-ignore
-      action: () => navigation.navigate('learn', {}),
-      // action: () => navigation.navigate('(game)', {}),
-      color: '#75d0fe',
-      isNew: true
-    },
+    // {
+    //   icon: 'Gamepad2',
+    //   label: 'Aprender',
+    //   // @ts-ignore
+    //   action: () => navigation.navigate('learn', {}),
+    //   // action: () => navigation.navigate('(game)', {}),
+    //   color: '#75d0fe',
+    //   isNew: isWithinTimeframe('1d', new Date('2025-01-28')).isActive
+    // },
   ];
 
   const versionRef = useRef<BottomSheetModal>(null);

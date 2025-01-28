@@ -16,6 +16,7 @@ import { StyleSheet, ToastAndroid, useWindowDimensions } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import SecondDashboard from '../../components/new-dashboard';
 import { NewFeatureBadge } from '@/components/NewFeatureBadge';
+import isWithinTimeframe from '@/utils/isWithinTimeframe';
 
 export type IDashboardOption = {
   icon: IconProps['name'];
@@ -128,11 +129,9 @@ const Dashboard: React.FC<DashboardProps> = () => {
     {
       icon: 'Gamepad',
       label: 'Quiz Bíblico',
-      // @ts-ignore
-      action: () => navigation.navigate(Screens.ChooseGame, {}),
-      // action: () => navigation.navigate('(game)', {}),
+      action: () => navigation.navigate(Screens.ChooseGame),
       color: '#75d0fe',
-      isNew: true
+      isNew: isWithinTimeframe('3d', new Date('2025-01-28')).isActive
     },
     {
       icon: 'Search',
