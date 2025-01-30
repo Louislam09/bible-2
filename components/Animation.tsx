@@ -17,6 +17,7 @@ type TAnimation = {
   };
   style?: {};
   colorFilters?: ColorFilter[] | undefined;
+  onFinished?: ((isCancelled: boolean) => void) | undefined
 };
 
 const Animation = ({
@@ -27,6 +28,7 @@ const Animation = ({
   size = { width: 200, height: 200 },
   style = {},
   colorFilters,
+  onFinished
 }: TAnimation) => {
   const ref = animationRef || useRef<AnimatedLottieView>(null);
   const { width, height } = size;
@@ -49,6 +51,7 @@ const Animation = ({
         backgroundColor: backgroundColor,
         ...style,
       }}
+      onAnimationFinish={onFinished}
       source={source}
     />
   );

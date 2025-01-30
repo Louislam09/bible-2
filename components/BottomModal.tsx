@@ -12,21 +12,23 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { BackHandler, StyleSheet } from 'react-native';
+import { BackHandler, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { TTheme } from '@/types';
 
 type TBottomModal = {
   startAT?: 0 | 1 | 2 | 3;
   children?: any;
   justOneSnap?: boolean;
-  justOneValue?: any;
+  showIndicator?: boolean;
+  justOneValue?: string[];
   getIndex?: any;
-  snaps?: any;
+  snaps?: string[];
   shouldScroll?: boolean;
   headerComponent?: React.ReactNode;
   footerComponent?: React.ReactNode;
   _theme?: TTheme;
   backgroundColor?: any;
+  style?: StyleProp<ViewStyle>;
 };
 
 type Ref = BottomSheetModal;
@@ -37,6 +39,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       children,
       startAT,
       justOneSnap,
+      showIndicator,
       justOneValue,
       getIndex,
       snaps,
@@ -45,6 +48,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       footerComponent,
       backgroundColor,
       _theme,
+      style
     },
     ref
   ) => {
@@ -95,15 +99,14 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       <BottomSheetModal
         backgroundStyle={[
           styles.bottomSheet,
-          index === 3 && {
-            borderRadius: 0,
-          },
+          index === 3 && { borderRadius: 0 },
           backgroundColor && { backgroundColor: backgroundColor },
+          style && style
         ]}
         ref={ref}
         index={startAT ?? 1}
         snapPoints={snapPoints}
-        handleIndicatorStyle={[styles.indicator, justOneSnap && { opacity: 0 }]}
+        handleIndicatorStyle={[styles.indicator, (justOneSnap && !showIndicator) && { opacity: 0 }]}
         backdropComponent={renderBackdrop}
         onChange={handleSheetChanges}
       >

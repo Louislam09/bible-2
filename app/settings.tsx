@@ -20,6 +20,7 @@ import Constants from "expo-constants";
 import { Stack, useRouter } from "expo-router";
 import * as Updates from "expo-updates";
 import { useCallback, useMemo } from "react";
+import { headerIconSize } from '@/constants/size';
 
 const URLS = {
   BIBLE: "market://details?id=com.louislam09.bible",
@@ -445,7 +446,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
                 style={[{ marginHorizontal: 10 }]}
                 color={isGridLayout ? '#fff' : theme.colors.notification}
                 name={isGridLayout ? "LayoutGrid" : "LayoutPanelTop"}
-                size={25}
+                size={headerIconSize}
               />
             </TouchableOpacity>
           ),

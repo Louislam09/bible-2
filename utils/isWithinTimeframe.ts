@@ -2,8 +2,8 @@ type Duration = `${number}${'d' | 'w' | 'm' | 'h' | 'min'}`;
 
 interface TimeframeResult {
   isActive: boolean;
-  remainingTime?: number;
-  expiredTime?: number;
+  remainingTime?: string;
+  expiredTime?: string;
 }
 
 const isWithinTimeframe = (
@@ -34,15 +34,33 @@ const isWithinTimeframe = (
   const now = new Date();
   const timeDifference = targetDate.getTime() - now.getTime();
 
+  const formatTime = (milliseconds: number): string => {
+    const days = Math.floor(milliseconds / (24 * 60 * 60 * 1000));
+    milliseconds %= 24 * 60 * 60 * 1000;
+    const hours = Math.floor(milliseconds / (60 * 60 * 1000));
+    milliseconds %= 60 * 60 * 1000;
+    const minutes = Math.floor(milliseconds / (60 * 1000));
+    milliseconds %= 60 * 1000;
+    const seconds = Math.floor(milliseconds / 1000);
+
+    const parts = [];
+    if (days > 0) parts.push(`${days} day${days > 1 ? 's' : ''}`);
+    if (hours > 0) parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
+    if (minutes > 0) parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
+    // if (seconds > 0) parts.push(`${seconds} second${seconds > 1 ? 's' : ''}`);
+
+    return parts.join(', ');
+  };
+
   if (timeDifference > 0) {
     return {
       isActive: true,
-      remainingTime: timeDifference,
+      remainingTime: formatTime(timeDifference),
     };
   } else {
     return {
       isActive: false,
-      expiredTime: Math.abs(timeDifference),
+      expiredTime: formatTime(Math.abs(timeDifference)),
     };
   }
 };

@@ -48,6 +48,9 @@ const screenAnimations: TScreensName = {
   [Screens.Hymn]: 'slide_from_right',
   [Screens.Game]: 'slide_from_right',
   [Screens.ChooseGame]: 'slide_from_right',
+  [Screens.RecordaVerso]: 'slide_from_bottom',
+  [Screens.VerseId]: 'slide_from_bottom',
+  [Screens.ChallengeTypeId]: 'slide_from_left',
 };
 
 const App = () => {

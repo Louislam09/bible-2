@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { Screens, TTheme } from '@/types';
 import lottieAssets from '@/constants/lottieAssets';
+import ScreenWithAnimation from '@/components/LottieTransitionScreen';
 
 type IHymnOption = {
   icon: IconProps['name'];
@@ -68,24 +69,26 @@ const ChooseGameScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <Stack.Screen options={{ headerShown: true }} />
-      <View style={styles.imageContainer}>
-        <Text style={styles.subtitle}>Selecciona el modo de juego</Text>
-      </View>
+    <ScreenWithAnimation speed={1.5} title='Quiz Biblico' icon='Gamepad'>
+      <View style={styles.container}>
+        <Stack.Screen options={{ headerShown: true }} />
+        <View style={styles.imageContainer}>
+          <Text style={styles.subtitle}>Selecciona el modo de juego</Text>
+        </View>
 
-      <View style={[styles.optionContainer, { width: SCREEN_WIDTH }]}>
-        <FlashList
-          contentContainerStyle={{ padding: 15 }}
-          data={options}
-          keyExtractor={(item) => item.label}
-          renderItem={renderItem}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          estimatedItemSize={5}
-          numColumns={2}
-        />
+        <View style={[styles.optionContainer, { width: SCREEN_WIDTH }]}>
+          <FlashList
+            contentContainerStyle={{ padding: 15 }}
+            data={options}
+            keyExtractor={(item) => item.label}
+            renderItem={renderItem}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            estimatedItemSize={5}
+            numColumns={2}
+          />
+        </View>
       </View>
-    </View>
+    </ScreenWithAnimation>
   );
 };
 

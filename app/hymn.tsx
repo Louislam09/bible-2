@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { Screens, TTheme } from '@/types';
 import lottieAssets from '@/constants/lottieAssets';
+import ScreenWithAnimation from '@/components/LottieTransitionScreen';
 
 type IHymnOption = {
   icon: IconProps['name'];
@@ -78,31 +79,33 @@ const HymnScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <Stack.Screen options={{ headerShown: true }} />
-      <View style={styles.imageContainer}>
-        <Text style={styles.subtitle}>Cantad alegres a Dios, {"\n"} habitantes de toda la tierra.{"\n"} Salmos 100:1 </Text>
-        <Animation
-          backgroundColor={'transparent'}
-          source={pickARandomAsset}
-          loop
-          size={{ width: 220, height: 220 }}
-          style={{ backgrund: 'transparent' }}
-        />
-      </View>
 
-      <View style={[styles.optionContainer, { width: SCREEN_WIDTH }]}>
-        <FlashList
-          contentContainerStyle={{ padding: 15 }}
-          data={options}
-          keyExtractor={(item) => item.label}
-          renderItem={renderItem}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          estimatedItemSize={5}
-          numColumns={2}
-        />
+    <ScreenWithAnimation title='Himnarios' animationSource={pickARandomAsset} speed={1.5} >
+      <View style={styles.container}>
+        <Stack.Screen options={{ headerShown: true }} />
+        <View style={styles.imageContainer}>
+          <Text style={styles.subtitle}>Cantad alegres a Dios, {"\n"} habitantes de toda la tierra.{"\n"} Salmos 100:1 </Text>
+          <Animation
+            backgroundColor={'transparent'}
+            source={pickARandomAsset}
+            loop
+            size={{ width: 220, height: 220 }}
+            style={{ backgrund: 'transparent' }}
+          />
+        </View>
+        <View style={[styles.optionContainer, { width: SCREEN_WIDTH }]}>
+          <FlashList
+            contentContainerStyle={{ padding: 15 }}
+            data={options}
+            keyExtractor={(item) => item.label}
+            renderItem={renderItem}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            estimatedItemSize={5}
+            numColumns={2}
+          />
+        </View>
       </View>
-    </View>
+    </ScreenWithAnimation>
   );
 };
 

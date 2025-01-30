@@ -44,6 +44,9 @@ export enum Screens {
   Hymn = 'hymn',
   Game = '(game)',
   ChooseGame = 'chooseGame',
+  RecordaVerso = 'versify',
+  VerseId = 'versify/[verseId]',
+  ChallengeTypeId = 'versify/challenge/[type]',
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -69,6 +72,9 @@ export const ScreensName: TScreensName = {
   [Screens.Hymn]: 'Selecciona un himnario',
   [Screens.Game]: 'Juego Biblico',
   [Screens.ChooseGame]: '',
+  [Screens.RecordaVerso]: 'RecordaVerso',
+  [Screens.VerseId]: 'Versiculo',
+  [Screens.ChallengeTypeId]: 'Reto',
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -88,6 +94,7 @@ export type RootTabParamList = {
   favorite: undefined;
   notFound: undefined;
   dictionary: undefined;
+  versify: undefined;
 };
 
 export type RootStackParamList = {
@@ -120,6 +127,7 @@ export type RootStackParamList = {
     | ChooseChapterNumberParams;
   modal: undefined;
   onboarding: undefined;
+  versify: undefined;
   song: { isAlegres: boolean };
   '(game)': { questionsPerLevel: number };
   hymn: undefined;
@@ -177,14 +185,14 @@ export interface IDBBookChapterVerse {
 export type TRoute = RouteProp<ParamListBase>;
 
 export enum TFont {
-  Roboto = "Roboto",
-  OpenSans = "OpenSans",
-  Cardo = "Cardo",
+  Roboto = 'Roboto',
+  OpenSans = 'OpenSans',
+  Cardo = 'Cardo',
 }
 
 export enum EBibleVersions {
-  BIBLE = "bible",
-  NTV = "ntv-bible",
+  BIBLE = 'bible',
+  NTV = 'ntv-bible',
 }
 
 export type DownloadBibleItem = {
@@ -215,8 +223,8 @@ export type TSubtitle = {
 };
 
 export enum OrientationType {
-  "LANDSCAPE",
-  "PORTRAIT",
+  'LANDSCAPE',
+  'PORTRAIT',
 }
 
 export type TNote = {
@@ -235,7 +243,7 @@ export enum EViewMode {
 }
 
 export type TIcon = {
-  name: IconProps["name"];
+  name: IconProps['name'];
   color?: string | any;
   action?: any;
   longAction?: any;
@@ -309,6 +317,7 @@ export interface IBookVerse {
   subheading?: string;
   order_if_several?: number;
   is_favorite: any;
+  id?: any;
 }
 
 export type TTheme = Theme & {
@@ -323,19 +332,19 @@ export enum BookIndexes {
 }
 
 export enum BookGruop {
-  AntiguoPacto = "Antiguo Pacto",
-  NuevoPacto = "Nuevo Pacto",
-  Pentateuco = "Pentateuco",
-  LibrosHistóricos = "Libros Históricos",
-  LibrosPoéticos = "Libros Poéticos",
-  ProfetasMayores = "Profetas Mayores",
-  ProfetasMenores = "Profetas Menores",
-  Evangelios = "Evangelios",
-  Hechos = "Hechos",
-  Epístolas = "Epístolas",
-  EpístolasdePablo = "Epístolas de Pablo",
-  EpístolasGenerales = "Epístolas Generales",
-  Apocalipsis = "Apocalipsis",
+  AntiguoPacto = 'Antiguo Pacto',
+  NuevoPacto = 'Nuevo Pacto',
+  Pentateuco = 'Pentateuco',
+  LibrosHistóricos = 'Libros Históricos',
+  LibrosPoéticos = 'Libros Poéticos',
+  ProfetasMayores = 'Profetas Mayores',
+  ProfetasMenores = 'Profetas Menores',
+  Evangelios = 'Evangelios',
+  Hechos = 'Hechos',
+  Epístolas = 'Epístolas',
+  EpístolasdePablo = 'Epístolas de Pablo',
+  EpístolasGenerales = 'Epístolas Generales',
+  Apocalipsis = 'Apocalipsis',
 }
 
 export type IFavoriteVerse = {
@@ -355,12 +364,12 @@ export enum EBookIndexesAudio {
   Josué,
   Jueces,
   Rut,
-  "1 Samuel",
-  "2 Samuel",
-  "1 Reyes",
-  "2 Reyes",
-  "1 Crónicas",
-  "2 Crónicas",
+  '1 Samuel',
+  '2 Samuel',
+  '1 Reyes',
+  '2 Reyes',
+  '1 Crónicas',
+  '2 Crónicas',
   Esdras,
   Nehemías,
   Ester,
@@ -368,7 +377,7 @@ export enum EBookIndexesAudio {
   Salmos,
   Proverbios,
   Eclesiastés,
-  "Cantar de los Cantares",
+  'Cantar de los Cantares',
   Isaías,
   Jeremías,
   Lamentaciones,
@@ -390,44 +399,44 @@ export enum EBookIndexesAudio {
   Marcos,
   Lucas,
   Juan,
-  "Hechos de los Apóstoles",
+  'Hechos de los Apóstoles',
   Romanos,
-  "1 Corintios",
-  "2 Corintios",
+  '1 Corintios',
+  '2 Corintios',
   Gálatas,
   Efesios,
   Filipenses,
   Colosenses,
-  "1 Tesalonicenses",
-  "2 Tesalonicenses",
-  "1 Timoteo",
-  "2 Timoteo",
+  '1 Tesalonicenses',
+  '2 Tesalonicenses',
+  '1 Timoteo',
+  '2 Timoteo',
   Tito,
   Filemón,
   Hebreos,
   Santiago,
-  "1 Pedro",
-  "2 Pedro",
-  "1 Juan",
-  "2 Juan",
-  "3 Juan",
+  '1 Pedro',
+  '2 Pedro',
+  '1 Juan',
+  '2 Juan',
+  '3 Juan',
   Judas,
-  "Apocalipsis (de Juan)",
+  'Apocalipsis (de Juan)',
 }
 
 export enum EThemes {
-  BlackWhite = "#000",
-  BlueGray = "#8EACBB",
-  Blue = "#2a7ac6",
-  Green = "#78b0a4",
-  Red = "#FF5252",
-  Orange = "#9f463c",
-  Cyan = "#20acb6",
-  Purple = "#2032ac",
-  Pink = "#aa2c50",
-  BlueLight = "#3b88bf",
-  BlueGreen = "#239db8",
-  PinkLight = "#874a69",
+  BlackWhite = '#000',
+  BlueGray = '#8EACBB',
+  Blue = '#2a7ac6',
+  Green = '#78b0a4',
+  Red = '#FF5252',
+  Orange = '#9f463c',
+  Cyan = '#20acb6',
+  Purple = '#2032ac',
+  Pink = '#aa2c50',
+  BlueLight = '#3b88bf',
+  BlueGreen = '#239db8',
+  PinkLight = '#874a69',
 }
 
 export type TSongItem = {
@@ -481,17 +490,31 @@ export interface ICardTheme {
   progress: GameProgress | null;
   selectedAnswer: string | null;
   feedback: AnswerResult | null;
-  router: Router
+  router: Router;
   scrollViewRef?: any;
 }
 
 export enum QuestionDifficulty {
   hard = '#f05448',
   medium = '#fccd0e',
-  easy = '#83cb99'
+  easy = '#83cb99',
 }
 export enum QuestionDifficultyKey {
   hard = 'Dificil',
   medium = 'Medio',
-  easy = 'Facil'
+  easy = 'Facil',
+}
+
+export enum SortOption {
+  MostRecent = 'Más reciente',
+  LeastRecent = 'Menos reciente',
+  BiblicalOrder = 'Orden bíblico',
+}
+
+export enum VersifyButtonType {
+  Read = 'Leer',
+  Blank = 'Completar',
+  Type = 'Escribir',
+  Locked = 'Bloqueado',
+  Test = 'Prueba',
 }

@@ -137,15 +137,13 @@ const SecondDashboard = () => {
       color: '#75d0fe',
       isNew: isWithinTimeframe('3d', new Date('2025-01-28')).isActive
     },
-    // {
-    //   icon: 'Gamepad2',
-    //   label: 'Aprender',
-    //   // @ts-ignore
-    //   action: () => navigation.navigate('learn', {}),
-    //   // action: () => navigation.navigate('(game)', {}),
-    //   color: '#75d0fe',
-    //   isNew: isWithinTimeframe('1d', new Date('2025-01-28')).isActive
-    // },
+    {
+      icon: 'Brain',
+      label: 'RecordaVerso',
+      action: () => navigation.navigate(Screens.RecordaVerso),
+      color: '#f1abab',
+      isNew: isWithinTimeframe('1d', new Date('2025-01-28')).isActive
+    },
   ];
 
   const versionRef = useRef<BottomSheetModal>(null);
