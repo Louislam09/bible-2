@@ -1,12 +1,13 @@
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import React from 'react';
-import useParams from '@/hooks/useParams';
-import { Stack } from 'expo-router';
 import { Text, View } from '@/components/Themed';
-import { useTheme } from '@react-navigation/native';
-import { TTheme } from '@/types';
-import { CircleHelp, FileQuestion } from 'lucide-react-native';
+import ReadChallenge from '@/components/versify/ReadChallenge';
 import { headerIconSize } from '@/constants/size';
+import useParams from '@/hooks/useParams';
+import { TTheme, VersifyButtonType } from '@/types';
+import { useTheme } from '@react-navigation/native';
+import { Stack } from 'expo-router';
+import { CircleHelp } from 'lucide-react-native';
+import React from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 const MOCK_DATA = [
   {
@@ -38,10 +39,35 @@ const MOCK_DATA = [
   },
 ];
 
+type ParamProps = {
+  type: any;
+  verseId: number;
+};
+
 const Type = () => {
-  const { type } = useParams();
+  const { type, verseId } = useParams<ParamProps>();
+  const item = MOCK_DATA.find((x) => x.id === verseId);
+
   const theme = useTheme();
   const styles = getStyles(theme);
+
+  let CurrentChallenge;
+  switch (type) {
+    case 'Leer':
+      CurrentChallenge = ReadChallenge;
+      break;
+    case 'Completar':
+      CurrentChallenge = () => <Text>Blank</Text>;
+      break;
+    case 'Prueba':
+      CurrentChallenge = () => <Text>Test</Text>;
+      break;
+    case 'Escribir':
+      CurrentChallenge = () => <Text>Type</Text>;
+      break;
+    default:
+      CurrentChallenge = null;
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -63,7 +89,13 @@ const Type = () => {
           ),
         }}
       />
-      <Text>{type}</Text>
+      <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+        {CurrentChallenge ? (
+          <CurrentChallenge item={item} />
+        ) : (
+          <Text>Challenge not found</Text>
+        )}
+      </View>
     </View>
   );
 };

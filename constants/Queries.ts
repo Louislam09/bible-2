@@ -28,6 +28,15 @@ export const CREATE_NOTE_TABLE = `CREATE TABLE IF NOT EXISTS notes (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );`;
 
+export const CREATE_MEMORIZATION_TABLE = `CREATE TABLE IF NOT EXISTS memorization (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  verse TEXT NOT NULL,
+  version TEXT NOT NULL,
+  progress INTEGER NOT NULL DEFAULT 0,
+  lastPracticed INTEGER NOT NULL,
+  addedDate INTEGER NOT NULL
+);`;
+
 export const CREATE_COLUMN_UPDATED_AT_IN_NOTE_TABLE = `ALTER TABLE notes ADD COLUMN updated_at TIMESTAMP;`;
 
 export const INSERT_INTO_NOTE = `INSERT INTO notes (title, note_text) 
@@ -157,6 +166,11 @@ v.text LIKE ?
 GROUP BY 
 v.book_number;
 `;
+
+export const GET_ALL_MOMORIZATION = `SELECT * FROM memorization;`;
+export const INSERT_VERSE_TO_MOMORIZATION = `INSERT INTO memorization (verse, version, progress, lastPracticed, addedDate) VALUES (?, ?, ?, ?, ?);`;
+export const DELETE_VERSE_FROM_MOMORIZATION = `DELETE FROM memorization WHERE id = ?;`;
+export const UPDATE_MOMORIZATION_PROGRESS = `UPDATE memorization SET progress = ?, lastPracticed = ? WHERE id = ?;`;
 
 type TQuery = {
   GET_VERSE_NUMBER_QUERY: string;

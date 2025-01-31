@@ -46,7 +46,7 @@ export enum Screens {
   ChooseGame = 'chooseGame',
   RecordaVerso = 'versify',
   VerseId = 'versify/[verseId]',
-  ChallengeTypeId = 'versify/challenge/[type]',
+  ChallengeTypeId = 'versify/[verseId]/challenge/[type]',
 }
 
 type TScreensName = { [key in Screens]: string };

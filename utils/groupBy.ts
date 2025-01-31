@@ -31,3 +31,17 @@ export function groupBy<T>(
 
   return result;
 }
+
+export const splitText = (text: string, parts: number): string[] => {
+  if (parts <= 0) throw new Error('Parts must be positive');
+  if (!text.trim()) return Array(parts).fill('');
+
+  const words = text.trim().split(/\s+/);
+  const wordsPerPart = Math.ceil(words.length / parts);
+
+  return Array.from(
+    { length: parts },
+    (_, i) =>
+      words.slice(i * wordsPerPart, (i + 1) * wordsPerPart).join(' ') || ''
+  );
+};

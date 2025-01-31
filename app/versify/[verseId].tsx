@@ -69,8 +69,8 @@ const MOCK_DATA = [
 ];
 
 const MemorizationScreen = () => {
-  const params = useParams();
-  const item = MOCK_DATA.find((x) => x.id === params.verseId);
+  const { verseId } = useParams();
+  const item = MOCK_DATA.find((x) => x.id === verseId);
   const progress = Math.floor(Math.random() * 100);
   const lastPracticed = new Date();
   const addedDate = new Date('2025-01-30T13:45:57.911Z');
@@ -92,7 +92,7 @@ const MemorizationScreen = () => {
   };
 
   const onActionButtonPress = (type: VersifyButtonType) => {
-    router.push(`versify/challenge/${type}`);
+    router.push(`versify/${verseId}/challenge/${type}`);
   };
 
   const actionButtons: TButtonItem[] = [
