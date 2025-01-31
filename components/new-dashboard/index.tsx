@@ -115,7 +115,7 @@ const SecondDashboard = () => {
       icon: 'SwatchBook',
       label: 'Concordancia',
       action: () => navigation.navigate(Screens.Concordance, {}),
-      color: '#4c4c4c',
+      color: '#ffffff',
     },
     {
       icon: 'NotebookText',
@@ -135,14 +135,14 @@ const SecondDashboard = () => {
       label: 'Quiz Bíblico',
       action: () => navigation.navigate(Screens.ChooseGame),
       color: '#75d0fe',
-      isNew: isWithinTimeframe('3d', new Date('2025-01-28')).isActive
+      isNew: isWithinTimeframe('3d', new Date('2025-01-28')).isActive,
     },
     {
       icon: 'Brain',
-      label: 'RecordaVerso',
-      action: () => navigation.navigate(Screens.RecordaVerso),
+      label: 'Momorizar Versos',
+      action: () => navigation.navigate(Screens.MemorizeVerse),
       color: '#f1abab',
-      isNew: isWithinTimeframe('1d', new Date('2025-01-28')).isActive
+      isNew: isWithinTimeframe('1d', new Date('2025-01-28')).isActive,
     },
   ];
 

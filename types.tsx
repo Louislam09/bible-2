@@ -44,9 +44,9 @@ export enum Screens {
   Hymn = 'hymn',
   Game = '(game)',
   ChooseGame = 'chooseGame',
-  RecordaVerso = 'versify',
-  VerseId = 'versify/[verseId]',
-  ChallengeTypeId = 'versify/[verseId]/challenge/[type]',
+  MemorizeVerse = 'memorization',
+  VerseId = 'memorization/[verseId]',
+  ChallengeTypeId = 'memorization/[verseId]/challenge/[typeId]',
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -72,7 +72,7 @@ export const ScreensName: TScreensName = {
   [Screens.Hymn]: 'Selecciona un himnario',
   [Screens.Game]: 'Juego Biblico',
   [Screens.ChooseGame]: '',
-  [Screens.RecordaVerso]: 'RecordaVerso',
+  [Screens.MemorizeVerse]: 'Memorizar Verso',
   [Screens.VerseId]: 'Versiculo',
   [Screens.ChallengeTypeId]: 'Reto',
 };
@@ -94,7 +94,7 @@ export type RootTabParamList = {
   favorite: undefined;
   notFound: undefined;
   dictionary: undefined;
-  versify: undefined;
+  memorization: undefined;
 };
 
 export type RootStackParamList = {
@@ -127,7 +127,7 @@ export type RootStackParamList = {
     | ChooseChapterNumberParams;
   modal: undefined;
   onboarding: undefined;
-  versify: undefined;
+  memorization: undefined;
   song: { isAlegres: boolean };
   '(game)': { questionsPerLevel: number };
   hymn: undefined;
@@ -511,10 +511,20 @@ export enum SortOption {
   BiblicalOrder = 'Orden bíblico',
 }
 
-export enum VersifyButtonType {
+export enum MemorizationButtonType {
   Read = 'Leer',
   Blank = 'Completar',
   Type = 'Escribir',
   Locked = 'Bloqueado',
   Test = 'Prueba',
 }
+
+// MEMORIZATION
+export type Memorization = {
+  id: number;
+  verse: string;
+  version: string;
+  progress: number;
+  lastPracticed: number;
+  addedDate: number;
+};

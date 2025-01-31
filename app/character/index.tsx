@@ -105,7 +105,6 @@ const Character: React.FC<CharacterProps> = () => {
         backgroundColor: theme.dark ? theme.colors.background : '#eee',
       }}
     >
-      {/* <Stack.Screen options={{ headerShown: true, headerTitle: '' }} /> */}
       {CharacterHeader()}
       <FlashList
         key={schema}
@@ -118,9 +117,9 @@ const Character: React.FC<CharacterProps> = () => {
         data={
           searchText
             ? filterData.filter(
-              (x: any) =>
-                removeAccent(x.topic).indexOf(searchText.toLowerCase()) !== -1
-            )
+                (x: any) =>
+                  removeAccent(x.topic).indexOf(searchText.toLowerCase()) !== -1
+              )
             : filterData
         }
         renderItem={({ item, index }) => (

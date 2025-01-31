@@ -6415,3 +6415,10 @@ export const DB_BOOK_CHAPTER_VERSES: IDBBookChapterVerse[] = [
     verseCount: 21,
   },
 ];
+
+export const getBookDetail = (book: string): IDBBookNames => {
+  const bookDetail = DB_BOOK_NAMES.find(
+    (x) => x.longName === book || x.longName.includes(book)
+  );
+  return (bookDetail || {}) as IDBBookNames;
+};

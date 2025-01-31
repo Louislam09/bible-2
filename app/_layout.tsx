@@ -19,11 +19,12 @@ import 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NativeStackNavigationOptions, NativeStackNavigatorProps } from 'react-native-screens/lib/typescript/native-stack/types';
 import { RouteProp, ParamListBase } from '@react-navigation/native';
+import { MemorizationProvider } from '@/context/MemorizationContext';
 
 type ScreenOptionsProps = {
   route: RouteProp<ParamListBase, string>;
   navigation: any;
-}
+};
 
 type TScreensName = { [key in Screens]: string };
 
@@ -48,7 +49,7 @@ const screenAnimations: TScreensName = {
   [Screens.Hymn]: 'slide_from_right',
   [Screens.Game]: 'slide_from_right',
   [Screens.ChooseGame]: 'slide_from_right',
-  [Screens.RecordaVerso]: 'slide_from_bottom',
+  [Screens.MemorizeVerse]: 'slide_from_bottom',
   [Screens.VerseId]: 'slide_from_bottom',
   [Screens.ChallengeTypeId]: 'slide_from_left',
 };
@@ -73,10 +74,9 @@ const App = () => {
     onFetchUpdateAsync();
   }, []);
 
-
-  const screenOptions: (props: ScreenOptionsProps) => NativeStackNavigationOptions | any = (
-    props
-  ) => {
+  const screenOptions: (
+    props: ScreenOptionsProps
+  ) => NativeStackNavigationOptions | any = (props) => {
     return {
       headerTitle: '',
       headerShown: false,
@@ -97,19 +97,21 @@ const App = () => {
         <StorageProvider>
           <DatabaseProvider>
             <BibleProvider>
-              <MyThemeProvider>
-                <GestureHandlerRootView style={{ flex: 1 }}>
-                  <BottomSheetModalProvider>
-                    <ModalProvider>
-                      <StatusBar animated translucent style='light' />
-                      <Stack
-                        initialRouteName='(dashboard)'
-                        screenOptions={screenOptions}
-                      />
-                    </ModalProvider>
-                  </BottomSheetModalProvider>
-                </GestureHandlerRootView>
-              </MyThemeProvider>
+              <MemorizationProvider>
+                <MyThemeProvider>
+                  <GestureHandlerRootView style={{ flex: 1 }}>
+                    <BottomSheetModalProvider>
+                      <ModalProvider>
+                        <StatusBar animated translucent style='light' />
+                        <Stack
+                          initialRouteName='(dashboard)'
+                          screenOptions={screenOptions}
+                        />
+                      </ModalProvider>
+                    </BottomSheetModalProvider>
+                  </GestureHandlerRootView>
+                </MyThemeProvider>
+              </MemorizationProvider>
             </BibleProvider>
           </DatabaseProvider>
         </StorageProvider>

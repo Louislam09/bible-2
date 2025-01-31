@@ -14,7 +14,7 @@ import { router, Stack, useRouter } from 'expo-router';
 import CircularProgressBar from '@/components/CircularProgressBar';
 import { useTheme } from '@react-navigation/native';
 import ProgressBar from '@/components/home/footer/ProgressBar';
-import { TTheme, VersifyButtonType } from '@/types';
+import { TTheme, MemorizationButtonType } from '@/types';
 import Icon from '@/components/Icon';
 import { useBibleContext } from '@/context/BibleContext';
 import { databaseNames } from '@/constants/databaseNames';
@@ -22,6 +22,7 @@ import { icons } from 'lucide-react-native';
 import isWithinTimeframe from '@/utils/isWithinTimeframe';
 import { showToast } from '@/utils/showToast';
 import useParams from '@/hooks/useParams';
+import { formatDateShortDayMonth } from '@/utils/formatDateShortDayMonth';
 
 type MemorizationScreenProps = {
   verse: string;
@@ -33,9 +34,9 @@ type MemorizationScreenProps = {
 
 type TButtonItem = {
   icon: keyof typeof icons;
-  label: VersifyButtonType;
+  label: MemorizationButtonType;
   isTest?: boolean;
-  action: (type: VersifyButtonType) => void;
+  action: (type: MemorizationButtonType) => void;
 };
 
 const MOCK_DATA = [
@@ -91,29 +92,31 @@ const MemorizationScreen = () => {
     showToast('¡Desbloqueado con una puntuación de 80!', 'LONG');
   };
 
-  const onActionButtonPress = (type: VersifyButtonType) => {
-    router.push(`versify/${verseId}/challenge/${type}`);
+  const onActionButtonPress = (type: MemorizationButtonType) => {
+    router.push(`memorization/${verseId}/challenge/${type}`);
   };
 
   const actionButtons: TButtonItem[] = [
     {
       icon: 'BookOpenText',
-      label: VersifyButtonType.Read,
+      label: MemorizationButtonType.Read,
       action: onActionButtonPress,
     },
     {
       icon: 'ListMinus',
-      label: VersifyButtonType.Blank,
+      label: MemorizationButtonType.Blank,
       action: onActionButtonPress,
     },
     {
       icon: 'Fingerprint',
-      label: VersifyButtonType.Type,
+      label: MemorizationButtonType.Type,
       action: onActionButtonPress,
     },
     {
       icon: isTestLocked ? 'LockKeyhole' : 'CircleCheck',
-      label: isTestLocked ? VersifyButtonType.Locked : VersifyButtonType.Test,
+      label: isTestLocked
+        ? MemorizationButtonType.Locked
+        : MemorizationButtonType.Test,
       isTest: isTestLocked,
       action: () => onTestPress(),
     },
@@ -216,13 +219,21 @@ const MemorizationScreen = () => {
           </View>
           <View style={styles.dateContainer}>
             <View>
-              <Text style={[styles.dateText]}> Añadido </Text>
-              <Text style={styles.dateText}> {addedDate.toDateString()} </Text>
+              <Text style={[styles.dateText, { color: theme.colors.text }]}>
+                {' '}
+                Añadido{' '}
+              </Text>
+              <Text style={styles.dateText}>
+                {' '}
+                {formatDateShortDayMonth(addedDate.toDateString())}{' '}
+              </Text>
             </View>
             <View>
-              <Text style={[styles.dateText]}>Última práctica</Text>
+              <Text style={[styles.dateText, { color: theme.colors.text }]}>
+                Última práctica
+              </Text>
               <Text style={styles.dateText}>
-                {lastPracticed.toDateString()}
+                {formatDateShortDayMonth(lastPracticed.toDateString())}
               </Text>
             </View>
           </View>

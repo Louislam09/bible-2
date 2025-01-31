@@ -28,11 +28,9 @@ const CustomHeaderLeft = ({ title }: CustomHeaderLeftProps) => {
         backgroundColor: 'transparent',
       }}
     >
-      <TouchableOpacity
-        onPress={handleGoBack}
-        style={{ marginRight: 10 }}
-      >
-        <Icon name='ArrowLeft' size={24} color={theme.colors.text} />
+      <TouchableOpacity onPress={handleGoBack} style={{ marginRight: 10 }}>
+        <Icon name='ChevronLeft' size={24} color={theme.colors.text} />
+        {/* <Icon name='ArrowLeft' size={24} color={theme.colors.text} /> */}
       </TouchableOpacity>
       <Text
         style={{ fontSize: 18, fontWeight: 'bold', color: theme.colors.text }}

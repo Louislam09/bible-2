@@ -2,20 +2,28 @@ import Animation from '@/components/Animation';
 import BottomModal from '@/components/BottomModal';
 import CircularProgressBar from '@/components/CircularProgressBar';
 import Icon from '@/components/Icon';
-import ScreenWithAnimation from '@/components/LottieTransitionScreen';
 import SortMemoryList from '@/components/SortList';
 import { Text } from '@/components/Themed';
+import { DB_BOOK_NAMES, getBookDetail } from '@/constants/BookNames';
 import { headerIconSize } from '@/constants/size';
-import { IBookVerse, IVerseItem, SortOption, TTheme } from '@/types';
+import { useBibleContext } from '@/context/BibleContext';
+import { useMemorization } from '@/context/MemorizationContext';
+import {
+  IBookVerse,
+  IVerseItem,
+  Memorization,
+  SortOption,
+  TTheme,
+} from '@/types';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useTheme } from '@react-navigation/native';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
-import { Stack, useRouter } from 'expo-router';
-import { Brain, ListFilter, Zap } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
+import { ListFilter } from 'lucide-react-native';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
-type VersifyProps = {};
+type MemorizationProps = {};
 
 const MOCK_DATA = [
   {
@@ -68,39 +76,46 @@ const Status = ({ color, value }: StatusProps) => {
   );
 };
 
-const Strike = ({ color, value }: StatusProps) => {
-  return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-      <Zap color={color} size={headerIconSize} />
-      <Text style={{}}>{value}</Text>
-    </View>
-  );
-};
-
 const sortVerses = (
-  verses: IBookVerse[],
+  verses: Memorization[],
   sortOption: SortOption
-): IBookVerse[] => {
+): Memorization[] => {
   switch (sortOption) {
     case SortOption.MostRecent:
       return [...verses].sort((a, b) => b.id - a.id);
     case SortOption.LeastRecent:
       return [...verses].sort((a, b) => a.id - b.id);
     case SortOption.BiblicalOrder:
-      return [...verses].sort((a, b) => a.book_number - b.book_number);
+      return [...verses].sort(
+        (a, b) =>
+          getBookDetail(a.verse)?.bookNumber -
+          getBookDetail(a.verse)?.bookNumber
+      );
     default:
       return verses;
   }
 };
 
-const MemoryList: React.FC<VersifyProps> = () => {
+const MemoryList: React.FC<MemorizationProps> = () => {
   const theme = useTheme();
   const router = useRouter();
   const styles = getStyles(theme);
   const sortRef = useRef<BottomSheetModal>(null);
+  const { currentBibleLongName } = useBibleContext();
+  const { verses } = useMemorization();
+
+  const stats = useMemo(
+    () => ({
+      completed: verses.map((x) => x.progress === 100).length,
+      incompleted: verses.map((x) => x.progress !== 100).length,
+    }),
+    [verses]
+  );
+
   const [sortType, setSortType] = useState<SortOption>(SortOption.MostRecent);
-  const data = useMemo(() => sortVerses(MOCK_DATA, sortType), [sortType]);
-  const sourceVersify = require('../assets/lottie/brain.json');
+  const data = useMemo(() => sortVerses(verses, sortType), [sortType]);
+
+  const notFoundSource = require('../../assets/lottie/notFound.json');
 
   const sortHandlePresentModalPress = useCallback(() => {
     sortRef.current?.present();
@@ -109,39 +124,34 @@ const MemoryList: React.FC<VersifyProps> = () => {
     sortRef.current?.dismiss();
   }, []);
 
-  const RenderItem: ListRenderItem<IVerseItem & { id: number }> = ({
-    item,
-  }) => {
-    const progress = Math.floor(Math.random() * 100);
+  const RenderItem: ListRenderItem<Memorization> = ({ item }) => {
     return (
       <TouchableOpacity
         style={styles.verseContainer}
         activeOpacity={0.9}
-        onPress={() => router.push(`/versify/${item.id}`)}
+        onPress={() => router.push(`/memorization/${item.id}`)}
       >
         <View style={styles.verseItem}>
           <View style={styles.verseBody}>
-            <Text
-              style={styles.verseText}
-            >{`${item.bookName} ${item.chapter}:${item.verse}`}</Text>
+            <Text style={styles.verseText}> {item.verse} </Text>
             <View
               style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}
             >
               <Icon name='CalendarDays' color={theme.colors.notification} />
-              <Text style={styles.verseDate}>01.29.25</Text>
+              <Text style={styles.verseDate}>{item.addedDate}</Text>
             </View>
           </View>
           <View>
             <CircularProgressBar
               strokeWidth={5}
               size={70}
-              progress={progress}
+              progress={item.progress}
               maxProgress={100}
               color={theme.colors.notification}
               backgroundColor={'#a29f9f'}
             >
               <Text style={{ color: theme.colors.text, fontSize: 18 }}>
-                {progress}
+                {item.progress}
               </Text>
             </CircularProgressBar>
           </View>
@@ -156,11 +166,7 @@ const MemoryList: React.FC<VersifyProps> = () => {
   };
 
   return (
-    <ScreenWithAnimation
-      speed={1.5}
-      title='RecordaVerse'
-      animationSource={sourceVersify}
-    >
+    <>
       <View
         style={{
           flex: 1,
@@ -168,23 +174,7 @@ const MemoryList: React.FC<VersifyProps> = () => {
           backgroundColor: theme.dark ? theme.colors.background : '#eee',
         }}
       >
-        <Stack.Screen
-          options={{
-            headerShown: true,
-            headerLeft: () => <View />,
-            headerRight: () => <Strike color={theme.colors.text} value={1} />,
-            headerTitle: () => (
-              <View
-                style={{ gap: 4, flexDirection: 'row', alignItems: 'center' }}
-              >
-                <Brain color={'pink'} size={headerIconSize} />
-                <Text style={{ fontSize: 22 }}>Versify</Text>
-              </View>
-            ),
-          }}
-        />
-
-        <View style={styles.versifyHeader}>
+        <View style={styles.memorizationHeader}>
           <View style={{}}>
             <Text style={{ fontSize: 18, textTransform: 'capitalize' }}>
               lista de memoria
@@ -197,8 +187,8 @@ const MemoryList: React.FC<VersifyProps> = () => {
                 alignItems: 'center',
               }}
             >
-              <Status color='#18d86b' value={0} />
-              <Status color='#fff' value={2} />
+              <Status color='#18d86b' value={stats.completed} />
+              <Status color='#fff' value={stats.incompleted} />
             </View>
           </View>
           <View style={{}}>
@@ -216,7 +206,23 @@ const MemoryList: React.FC<VersifyProps> = () => {
           estimatedItemSize={135}
           renderItem={RenderItem as any}
           data={data}
-          keyExtractor={(item: any, index: any) => `versify-${index}`}
+          keyExtractor={(item: any, index: any) => `memorization-${index}`}
+          ListEmptyComponent={
+            <View style={styles.noResultsContainer}>
+              <Animation
+                backgroundColor={theme.colors.background}
+                source={notFoundSource}
+                loop={false}
+              />
+              <Text style={styles.noResultsText}>
+                <Text style={{ color: theme.colors.notification }}>
+                  ({currentBibleLongName})
+                </Text>
+                {'\n'}
+                ¡Empieza a memorizar tus versículos favoritos hoy!
+              </Text>
+            </View>
+          }
         />
 
         <BottomModal
@@ -230,13 +236,13 @@ const MemoryList: React.FC<VersifyProps> = () => {
           <SortMemoryList sortType={sortType} onSort={handleSort} />
         </BottomModal>
       </View>
-    </ScreenWithAnimation>
+    </>
   );
 };
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
-    versifyHeader: {
+    memorizationHeader: {
       justifyContent: 'space-between',
       gap: 4,
       padding: 10,
@@ -248,6 +254,18 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderColor: 'transparent',
       backgroundColor: '#1c1c1e',
       width: '100%',
+    },
+    noResultsContainer: {
+      flex: 0.7,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'transparent',
+    },
+    noResultsText: {
+      fontSize: 18,
+      color: colors.text,
+      textAlign: 'center',
+      paddingHorizontal: 10,
     },
     separator: {
       height: 0.3,

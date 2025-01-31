@@ -1,8 +1,8 @@
 import { Text, View } from '@/components/Themed';
-import ReadChallenge from '@/components/versify/ReadChallenge';
+import ReadChallenge from '@/components/memorization/ReadChallenge';
 import { headerIconSize } from '@/constants/size';
 import useParams from '@/hooks/useParams';
-import { TTheme, VersifyButtonType } from '@/types';
+import { TTheme, MemorizationButtonType } from '@/types';
 import { useTheme } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { CircleHelp } from 'lucide-react-native';
@@ -40,12 +40,12 @@ const MOCK_DATA = [
 ];
 
 type ParamProps = {
-  type: any;
+  typeId: any;
   verseId: number;
 };
 
 const Type = () => {
-  const { type, verseId } = useParams<ParamProps>();
+  const { typeId: type, verseId } = useParams<ParamProps>();
   const item = MOCK_DATA.find((x) => x.id === verseId);
 
   const theme = useTheme();

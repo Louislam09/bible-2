@@ -1,21 +1,22 @@
 import {
   CREATE_COLUMN_UPDATED_AT_IN_NOTE_TABLE,
   CREATE_FAVORITE_VERSES_TABLE,
+  CREATE_MEMORIZATION_TABLE,
   CREATE_NOTE_TABLE,
-} from "@/constants/Queries";
-import { Asset } from "expo-asset";
-import * as FileSystem from "expo-file-system";
-import * as SQLite from "expo-sqlite";
-import { useEffect, useState } from "react";
-import { ToastAndroid } from "react-native";
+} from '@/constants/Queries';
+import { Asset } from 'expo-asset';
+import * as FileSystem from 'expo-file-system';
+import * as SQLite from 'expo-sqlite';
+import { useEffect, useState } from 'react';
+import { ToastAndroid } from 'react-native';
 // import { DBName } from "../enums";
 import {
   dbFileExt,
   defaultDatabases,
   isDefaultDatabase,
   SQLiteDirPath,
-} from "@/constants/databaseNames";
-import { VersionItem } from "./useInstalledBible";
+} from '@/constants/databaseNames';
+import { VersionItem } from './useInstalledBible';
 
 interface Row {
   [key: string]: any;
@@ -49,8 +50,8 @@ type TUseDatabase = {
 };
 
 enum DEFAULT_DATABASE {
-  BIBLE = "bible",
-  NTV = "ntv-bible",
+  BIBLE = 'bible',
+  NTV = 'ntv-bible',
 }
 
 function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
@@ -65,7 +66,7 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
   ): Promise<Row[]> => {
     try {
       if (!database) {
-        throw new Error("Database not initialized");
+        throw new Error('Database not initialized');
       }
       const statement = await database.prepareAsync(sql);
       try {
@@ -84,7 +85,7 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
   async function checkIfColumnExist(database: SQLite.SQLiteDatabase) {
     try {
       const data = await executeSql(database, `PRAGMA table_info(notes);`, []);
-      return data.map((x) => x.name).includes("updated_at");
+      return data.map((x) => x.name).includes('updated_at');
     } catch (error) {
       return await new Promise((resolve) => resolve([]));
     }
@@ -138,8 +139,8 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
       if (_isDefaultDatabase) {
         let asset =
           dbID === DEFAULT_DATABASE.BIBLE
-            ? Asset.fromModule(require("../assets/db/bible.db"))
-            : Asset.fromModule(require("../assets/db/ntv-bible.db"));
+            ? Asset.fromModule(require('../assets/db/bible.db'))
+            : Asset.fromModule(require('../assets/db/ntv-bible.db'));
 
         if (!asset.downloaded) {
           await asset.downloadAsync();
@@ -150,14 +151,14 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
               from: remoteURI as string,
               to: localURI,
             }).catch((error) => {
-              console.log("asset copyDatabase - finished with error: " + error);
+              console.log('asset copyDatabase - finished with error: ' + error);
             });
           }
         } else {
           if (
             asset.localUri ||
-            asset.uri.startsWith("asset") ||
-            asset.uri.startsWith("file")
+            asset.uri.startsWith('asset') ||
+            asset.uri.startsWith('file')
           ) {
             let remoteURI = asset.localUri || asset.uri;
 
@@ -167,13 +168,13 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
                 to: localURI,
               }).catch((error) => {
                 console.log(
-                  "local copyDatabase - finished with error: " + error
+                  'local copyDatabase - finished with error: ' + error
                 );
               });
             }
           } else if (
-            asset.uri.startsWith("http") ||
-            asset.uri.startsWith("https")
+            asset.uri.startsWith('http') ||
+            asset.uri.startsWith('https')
           ) {
             let remoteURI = asset.uri;
 
@@ -181,7 +182,7 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
               await FileSystem.downloadAsync(remoteURI, localURI).catch(
                 (error) => {
                   console.log(
-                    "local downloadAsync - finished with error: " + error
+                    'local downloadAsync - finished with error: ' + error
                   );
                 }
               );
@@ -199,6 +200,7 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
         const db = await openDatabase(dbName);
         await createTable(db, CREATE_FAVORITE_VERSES_TABLE);
         await createTable(db, CREATE_NOTE_TABLE);
+        await createTable(db, CREATE_MEMORIZATION_TABLE);
         await addColumnIfNotExists(db, CREATE_COLUMN_UPDATED_AT_IN_NOTE_TABLE);
         databases.push(db);
       }
