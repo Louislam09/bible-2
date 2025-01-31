@@ -10,7 +10,7 @@
     "eject": "expo eject",
     "test": "jest --watchAll",
     "build:a": "eas build --platform android",
-    "submit:a":  "eas submit --platform android",
+    "submit:a": "eas submit --platform android",
     "eas:update": "eas update --platform android --message \"$npm_config_message\""
   },
   "jest": {
@@ -19,6 +19,11 @@
   "dependencies": {
     "@babel/preset-typescript": "^7.18.6",
     "@clerk/clerk-expo": "^2.2.30",
+    "@expo-google-fonts/dm-sans": "^0.2.3",
+    "@expo-google-fonts/eb-garamond": "^0.2.3",
+    "@expo-google-fonts/inter": "^0.2.3",
+    "@expo-google-fonts/manrope": "^0.2.3",
+    "@expo-google-fonts/poppins": "^0.2.3",
     "@expo/cli": "^0.21.8",
     "@expo/vector-icons": "^14.0.3",
     "@expo/webpack-config": "~19.0.1",

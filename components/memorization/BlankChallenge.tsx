@@ -12,19 +12,19 @@ import { splitText } from '@/utils/groupBy';
 import { useTheme } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 
+type BlankChallengeProps = {
+  item: IVerseItem | any;
+  typeInfo: TPoints;
+  onUpdateProgress: (value: number) => void;
+};
+
 type TPoints = {
   point: number;
   maxPoint: number;
   description: string;
 };
 
-type ReadChallengeProps = {
-  item: IVerseItem | any;
-  typeInfo: TPoints;
-  onUpdateProgress: (value: number) => void;
-};
-
-const ReadChallenge: FC<ReadChallengeProps> = ({
+const BlankChallenge: FC<BlankChallengeProps> = ({
   item,
   typeInfo,
   onUpdateProgress,
@@ -46,9 +46,6 @@ const ReadChallenge: FC<ReadChallengeProps> = ({
 
   const onPress = () => {
     if (!started) setStarted(true);
-    if (isCompleted) return;
-    setCurrentIndex(currentIndex + 1);
-    setCurrentParts([...currentParts, parts[currentIndex + 1]]);
   };
 
   const onCompleted = async () => {
@@ -91,12 +88,12 @@ const ReadChallenge: FC<ReadChallengeProps> = ({
         {started && isCompleted && (
           <TouchableOpacity
             style={styles.completedButton}
-            onPress={() => onCompleted()}
+            onPress={() => router.back()}
           >
             <Text
               style={{
                 fontSize: 18,
-                color: theme.colors.background,
+                color: theme.dark ? '#fff' : '#000',
                 fontWeight: 'bold',
               }}
             >
@@ -109,7 +106,7 @@ const ReadChallenge: FC<ReadChallengeProps> = ({
   );
 };
 
-export default ReadChallenge;
+export default BlankChallenge;
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
@@ -131,7 +128,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
     completedButton: {
       width: '100%',
       backgroundColor: colors.notification,
-      // borderWidth: 2,
       borderRadius: 12,
       paddingVertical: 12,
       alignItems: 'center',

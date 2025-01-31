@@ -164,143 +164,125 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
 
       return {
         label: font,
-        iconName: "CaseSensitive",
+        iconName: theme.colors.text,
         action: () => {
           selectFont(font);
         },
-        extraText: "",
+        extraText: 'font',
       };
     });
   }, []);
 
   const toggleHomeScreen = () => {
-    saveData({ isGridLayout: !isGridLayout })
-  }
+    saveData({ isGridLayout: !isGridLayout });
+  };
 
   const sections = useMemo(() => {
     const options: TSection[] = [
-      // {
-      //   title: "General",
-      //   options: [
-      //     {
-      //       label: "Cambiar Pantalla de Inicio",
-      //       iconName: isGridLayout ? "LayoutGrid" : "LayoutPanelTop",
-      //       action: toggleHomeScreen,
-      //       extraText: "Selecciona tu pantalla de inicio preferida",
-      //       color: isGridLayout ? '#fff' : theme.colors.notification
-      //     },
-      //     // {
-      //     //   label: "Borrar Historial",
-      //     //   iconName: "Trash2",
-      //     //   action: warnBeforeDelete,
-      //     //   extraText: "Limpiar el historial de busqueda",
-      //     // },
-      //   ],
-      // },
       {
-        title: "Configuración",
+        title: 'Configuración',
         options: [
           {
-            label: "Modo Claro / Modo Oscuro",
-            iconName: `${theme.dark ? "Sun" : "Moon"}`,
+            label: 'Modo Claro / Modo Oscuro',
+            iconName: `${theme.dark ? 'Sun' : 'Moon'}`,
             action: () => {
               toggleTheme();
             },
-            extraText: "Cambiar entre el modo claro y el modo oscuro",
+            extraText: 'Cambiar entre el modo claro y el modo oscuro',
           },
           {
-            label: "Buscar Actualización",
-            iconName: "Download", // Icon for the update button
+            label: 'Buscar Actualización',
+            iconName: 'Download', // Icon for the update button
             action: checkForUpdate,
-            extraText: "Verificar si hay actualizaciones de la app",
+            extraText: 'Verificar si hay actualizaciones de la app',
           },
         ],
       },
       {
-        title: "Tipografia",
-        id: "font",
+        title: 'Tipografia',
+        id: 'fontFamily',
         withIcon: true,
         options: [...getFontType()],
       },
       {
-        title: "Tamaño de Letra",
-        id: "font",
+        title: 'Tamaño de Letra',
+        id: 'font',
         withIcon: true,
         options: [
           {
-            label: "",
+            label: '',
             iconName: `AArrowDown`,
             action: () => {
               decreaseFontSize();
             },
-            extraText: "",
+            extraText: '',
           },
           {
             label: fontSize,
             isValue: true,
             iconName: `ChartNoAxesColumn`,
             action: () => {},
-            extraText: "",
+            extraText: '',
           },
           {
-            label: "",
+            label: '',
             iconName: `AArrowUp`,
             action: () => {
               increaseFontSize();
             },
-            extraText: "",
+            extraText: '',
           },
         ],
       },
       {
-        title: "Temas",
-        id: "tema",
+        title: 'Temas',
+        id: 'tema',
         options: [...getColosTheme()],
       },
       {
-        title: "Más Aplicaciones",
+        title: 'Más Aplicaciones',
         options: [
           {
-            label: "Santa Biblia RV60: Audio",
-            iconName: "Crown",
+            label: 'Santa Biblia RV60: Audio',
+            iconName: 'Crown',
             action: () => openAppInStore(URLS.BIBLE),
-            extraText: "Descárgala y explora la Palabra de Dios.",
+            extraText: 'Descárgala y explora la Palabra de Dios.',
           },
           {
-            label: "Mira Más Apps",
-            iconName: "Play",
+            label: 'Mira Más Apps',
+            iconName: 'Play',
             action: () => openAppInStore(URLS.MORE_APPS),
             isFont5: true,
-            extraText: "Ver todas nuestras aplicaciones",
+            extraText: 'Ver todas nuestras aplicaciones',
           },
         ],
       },
       {
-        title: "Versión",
+        title: 'Versión',
         options: [
           {
             label: `Versión ${appVersion}`,
-            iconName: "Info",
+            iconName: 'Info',
             action: () => {}, // No action needed
             extraText: `Fecha de Lanzamiento: Mar 13, 2024`,
           },
         ],
       },
       {
-        title: "About",
+        title: 'About',
         options: [
           {
-            label: "Contactame",
-            iconName: "Mail",
+            label: 'Contactame',
+            iconName: 'Mail',
             action: () => sendEmail(URLS.ME),
-            extraText: "Envíanos un correo electrónico",
+            extraText: 'Envíanos un correo electrónico',
           },
           {
-            label: "Mira Más Apps",
-            iconName: "Play",
+            label: 'Mira Más Apps',
+            iconName: 'Play',
             action: () => openAppInStore(URLS.MORE_APPS),
             isFont5: true,
-            extraText: "Ver todas nuestras aplicaciones",
+            extraText: 'Ver todas nuestras aplicaciones',
           },
         ],
       },
@@ -313,18 +295,22 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
     return (
       <TouchableOpacity
         onPress={item.action}
-        key={item + "+" + index}
+        key={item + '+' + index}
         style={[
           styles.listItem,
-          { backgroundColor: item.iconName, justifyContent: "center" },
+          { backgroundColor: item.iconName, justifyContent: 'center' },
         ]}
       >
         <Text
           style={[
             styles.listItemLabel,
             {
-              color: "white",
-              fontWeight: "bold",
+              color: 'white',
+              fontWeight: 'bold',
+            },
+            item.extraText === 'font' && {
+              fontFamily: item.label,
+              fontWeight: 'semibold',
             },
           ]}
         >
@@ -354,7 +340,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
             name={iconName}
             size={30}
             style={[styles.fontIcon]}
-            color={selectedFont === label ? theme.colors.notification : "#000"}
+            color={selectedFont === label ? theme.colors.notification : '#000'}
           />
 
           {label && (
@@ -381,7 +367,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
         <Text style={styles.sectionTitle}>{title}</Text>
 
         {id ? (
-          id === "font" ? (
+          id === 'font' ? (
             <View style={[styles.listItem, styles.historyItem]}>
               {options.map(renderFontItem)}
             </View>
@@ -411,17 +397,17 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
             >
               <Text style={[styles.listHistoryLabel]}>
                 {item?.label}
-                {"\n"}
+                {'\n'}
                 <Text style={styles.itemDate}>{item.extraText}</Text>
               </Text>
               <TouchableOpacity>
                 {item.isFont5 ? (
-                  <FontAwesome5 name="google-play" size={26} color={"green"} />
+                  <FontAwesome5 name='google-play' size={26} color={'green'} />
                 ) : (
                   <Icon
                     size={26}
-                    name={item.iconName || "Sun"}
-                      color={item.color || theme.colors.text}
+                    name={item.iconName || 'Sun'}
+                    color={item.color || theme.colors.text}
                   />
                 )}
               </TouchableOpacity>

@@ -120,7 +120,11 @@ const MemoryList: React.FC<MemorizationProps> = () => {
             <View
               style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}
             >
-              <Icon name='CalendarDays' color={theme.colors.notification} />
+              <Icon
+                name='CalendarDays'
+                size={18}
+                color={theme.colors.notification}
+              />
               <Text style={styles.verseDate}>
                 {formatDateShortDayMonth(item.addedDate)}
               </Text>
@@ -133,7 +137,8 @@ const MemoryList: React.FC<MemorizationProps> = () => {
               progress={item.progress}
               maxProgress={100}
               color={theme.colors.notification}
-              backgroundColor={'#a29f9f'}
+              backgroundColor={theme.colors.text + 70}
+              // backgroundColor={'#a29f9f'}
             >
               <Text style={{ color: theme.colors.text, fontSize: 18 }}>
                 {item.progress}
@@ -170,7 +175,6 @@ const MemoryList: React.FC<MemorizationProps> = () => {
                 onPress={() => router.back()}
               />
             ),
-            // headerLeft: () => <View />,
             headerRight: () => (
               <Strike color={theme.colors.text} value={strike} />
             ),
@@ -210,7 +214,10 @@ const MemoryList: React.FC<MemorizationProps> = () => {
                 }}
               >
                 <Status color='#18d86b' value={stats.completed} />
-                <Status color='#fff' value={stats.incompleted} />
+                <Status
+                  color={theme.colors.text + 90}
+                  value={stats.incompleted}
+                />
               </View>
             </View>
             <View style={{}}>
@@ -222,7 +229,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
                   alignItems: 'center',
                 }}
               >
-                <ListFilter color={'#fff'} size={headerIconSize} />
+                <ListFilter color={theme.colors.text} size={headerIconSize} />
                 <Text>Ordenar</Text>
               </TouchableOpacity>
             </View>
@@ -316,14 +323,13 @@ const getStyles = ({ colors, dark }: TTheme) =>
       height: '100%',
       alignItems: 'flex-start',
       justifyContent: 'space-around',
-      // borderColor: 'red', borderWidth: 1
     },
     verseText: {
       fontSize: 18,
     },
     verseDate: {
       fontSize: 18,
-      color: '#d8d8d8',
+      color: colors.text + 99,
     },
   });
 

@@ -189,8 +189,12 @@ export enum TFont {
   Roboto = 'Roboto',
   OpenSans = 'OpenSans',
   Cardo = 'Cardo',
+  Inter = 'Inter',
+  DMSans = 'DMSans',
+  Manrope = 'Manrope',
+  Poppins = 'Poppins',
+  EBGaramond = 'EBGaramond',
 }
-
 export enum EBibleVersions {
   BIBLE = 'bible',
   NTV = 'ntv-bible',

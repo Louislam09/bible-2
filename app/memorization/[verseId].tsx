@@ -25,6 +25,7 @@ import useParams from '@/hooks/useParams';
 import { formatDateShortDayMonth } from '@/utils/formatDateShortDayMonth';
 import { useMemorization } from '@/context/MemorizationContext';
 import { headerIconSize } from '@/constants/size';
+import useDebounce from '@/hooks/useDebounce';
 
 type TButtonItem = {
   icon: keyof typeof icons;
@@ -42,8 +43,7 @@ const MemorizationScreen = () => {
   const styles = getStyles(theme);
   const router = useRouter();
   const versionName = databaseNames.find((x) => x.id === item.version);
-  const { width } = useWindowDimensions();
-  // const buttonWidth = width / 2.8;
+  const memorizeProgress = useDebounce(item.progress, 1000);
 
   const isTestLocked = item.progress < 80;
 
@@ -116,13 +116,14 @@ const MemorizationScreen = () => {
           <CircularProgressBar
             size={150}
             strokeWidth={8}
-            progress={item.progress}
+            progress={memorizeProgress}
             maxProgress={100}
             color={theme.colors.notification}
-            backgroundColor={'#a29f9f'}
+            backgroundColor={theme.colors.text + 70}
+            // backgroundColor={'#a29f9f'}
           >
             <Text style={[styles.progressText, { color: theme.colors.text }]}>
-              {item.progress}
+              {memorizeProgress}
             </Text>
           </CircularProgressBar>
         </View>

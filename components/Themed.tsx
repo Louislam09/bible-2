@@ -30,8 +30,7 @@ export function Text(props: TextProps) {
       style={[
         {
           color: colors?.text || 'black',
-          fontFamily: TFont.Roboto,
-          // fontFamily: selectedFont,
+          fontFamily: selectedFont,
           fontWeight: '100',
         },
         style,

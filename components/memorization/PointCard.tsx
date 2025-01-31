@@ -1,29 +1,39 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../Themed';
-import { TTheme } from '@/types';
+import { MemorizationButtonType, TTheme } from '@/types';
 import { useTheme } from '@react-navigation/native';
 
-const PointsCard = () => {
+type PointsCardProps = {
+  typeInfo: TPoints;
+};
+
+type TPoints = {
+  point: number;
+  maxPoint: number;
+  description: string;
+};
+
+const PointsCard = ({ typeInfo }: PointsCardProps) => {
   const theme = useTheme();
   const styles = getStyles(theme);
+  const { description, maxPoint, point } = typeInfo;
+
   return (
     <View style={styles.card}>
       <View style={styles.content}>
         <View style={styles.pointsContainer}>
           <Text style={styles.points}>
-            <Text style={styles.bold}>5</Text>
+            <Text style={styles.bold}>{point}</Text>
             {'\n'}Puntos
           </Text>
           <Text style={styles.points}>
-            <Text style={styles.bold}>20</Text>
-            {'\n'}Max Puntos
+            <Text style={styles.bold}>{maxPoint}</Text>
+            {'\n'}Tope de Puntos
           </Text>
         </View>
         <TouchableOpacity>
-          <Text style={styles.tapText}>
-            Toca para revelar el versículo por sección
-          </Text>
+          <Text style={styles.tapText}>{description}</Text>
         </TouchableOpacity>
       </View>
     </View>

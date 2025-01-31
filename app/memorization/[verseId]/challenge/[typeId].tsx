@@ -1,7 +1,9 @@
 import { Text, View } from '@/components/Themed';
 import Tooltip from '@/components/Tooltip';
+import BlankChallenge from '@/components/memorization/BlankChallenge';
 import PointsCard from '@/components/memorization/PointCard';
 import ReadChallenge from '@/components/memorization/ReadChallenge';
+import TypeChallenge from '@/components/memorization/TypeChallenge';
 import { DB_BOOK_NAMES } from '@/constants/BookNames';
 import { GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE } from '@/constants/Queries';
 import { headerIconSize } from '@/constants/size';
@@ -13,18 +15,24 @@ import { parseBibleReferences } from '@/utils/extractVersesInfo';
 import { useTheme } from '@react-navigation/native';
 import { Stack, useRouter } from 'expo-router';
 import { ChevronLeft, CircleHelp } from 'lucide-react-native';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 
 type ParamProps = {
-  typeId: any;
+  typeId: MemorizationButtonType;
   verseId: number;
+};
+
+type TPoints = {
+  point: number;
+  maxPoint: number;
+  description: string;
 };
 
 const Type = () => {
   const router = useRouter();
   const { typeId: type, verseId } = useParams<ParamProps>();
-  const { verses } = useMemorization();
+  const { verses, updateProgress } = useMemorization();
   const { myBibleDB, executeSql } = useDBContext();
 
   const [item, setItem] = useState(null);
@@ -40,6 +48,40 @@ const Type = () => {
 
   const [openHelp, setOpenHelp] = React.useState(false);
   const currentPopRef = useRef(null);
+
+  const challengeComponents: Record<MemorizationButtonType, any> = {
+    [MemorizationButtonType.Read]: ReadChallenge,
+    [MemorizationButtonType.Blank]: BlankChallenge,
+    [MemorizationButtonType.Type]: TypeChallenge,
+    [MemorizationButtonType.Test]: TypeChallenge,
+    [MemorizationButtonType.Locked]: TypeChallenge,
+  };
+
+  const CurrentChallenge = challengeComponents[type] || ReadChallenge;
+
+  const typeInfo: Record<MemorizationButtonType, TPoints> = {
+    [MemorizationButtonType.Read]: {
+      point: 5,
+      maxPoint: 20,
+      description: 'Toca para revelar el versículo por sección',
+    },
+    [MemorizationButtonType.Blank]: {
+      point: 5,
+      maxPoint: 40,
+      description: 'Selecciona una palabra para llenar cada espacio en blanco',
+    },
+    [MemorizationButtonType.Type]: {
+      point: 15,
+      maxPoint: 80,
+      description: 'Escribe la primera letra de cada palabra',
+    },
+    [MemorizationButtonType.Test]: {
+      point: 20,
+      maxPoint: 100,
+      description: 'Escribe la primera letra de cada palabra',
+    },
+    [MemorizationButtonType.Locked]: { point: 0, maxPoint: 0, description: '' },
+  };
 
   useEffect(() => {
     const getCurrentItem = async () => {
@@ -66,23 +108,14 @@ const Type = () => {
     getCurrentItem();
   }, [memorizeItem]);
 
-  let CurrentChallenge;
-  switch (type) {
-    case 'Leer':
-      CurrentChallenge = ReadChallenge;
-      break;
-    case 'Completar':
-      CurrentChallenge = () => <Text>Blank</Text>;
-      break;
-    case 'Prueba':
-      CurrentChallenge = () => <Text>Test</Text>;
-      break;
-    case 'Escribir':
-      CurrentChallenge = () => <Text>Type</Text>;
-      break;
-    default:
-      CurrentChallenge = null;
-  }
+  const onUpdateProgress = async (value: number) => {
+    if (memorizeItem.progress === typeInfo[type].maxPoint) {
+      console.log('No more point on this challenge', memorizeItem.progress);
+      return;
+    }
+    console.log('onUpdateProgress', { value });
+    updateProgress(memorizeItem.id, value + memorizeItem.progress);
+  };
 
   if (loading) return <ActivityIndicator />;
 
@@ -100,7 +133,10 @@ const Type = () => {
             />
           ),
           headerRight: () => (
-            <TouchableOpacity ref={currentPopRef} onPress={() => setOpenHelp(true)}>
+            <TouchableOpacity
+              ref={currentPopRef}
+              onPress={() => setOpenHelp(true)}
+            >
               <CircleHelp color={theme.colors.text} size={headerIconSize} />
             </TouchableOpacity>
           ),
@@ -125,10 +161,14 @@ const Type = () => {
           isVisible={openHelp}
           onClose={() => setOpenHelp(false)}
         >
-          <PointsCard />
+          <PointsCard typeInfo={typeInfo[type]} />
         </Tooltip>
         {CurrentChallenge ? (
-          <CurrentChallenge item={item} />
+          <CurrentChallenge
+            onUpdateProgress={onUpdateProgress}
+            typeInfo={typeInfo[type]}
+            item={item}
+          />
         ) : (
           <Text>Challenge not found</Text>
         )}
