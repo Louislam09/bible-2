@@ -14,7 +14,7 @@ import { router, Stack, useRouter } from 'expo-router';
 import CircularProgressBar from '@/components/CircularProgressBar';
 import { useTheme } from '@react-navigation/native';
 import ProgressBar from '@/components/home/footer/ProgressBar';
-import { TTheme, MemorizationButtonType } from '@/types';
+import { TTheme, MemorizationButtonType, Memorization } from '@/types';
 import Icon from '@/components/Icon';
 import { useBibleContext } from '@/context/BibleContext';
 import { databaseNames } from '@/constants/databaseNames';
@@ -23,14 +23,7 @@ import isWithinTimeframe from '@/utils/isWithinTimeframe';
 import { showToast } from '@/utils/showToast';
 import useParams from '@/hooks/useParams';
 import { formatDateShortDayMonth } from '@/utils/formatDateShortDayMonth';
-
-type MemorizationScreenProps = {
-  verse: string;
-  version: string;
-  progress: number;
-  lastPracticed: Date;
-  addedDate: Date;
-};
+import { useMemorization } from '@/context/MemorizationContext';
 
 type TButtonItem = {
   icon: keyof typeof icons;
@@ -39,54 +32,24 @@ type TButtonItem = {
   action: (type: MemorizationButtonType) => void;
 };
 
-const MOCK_DATA = [
-  {
-    is_favorite: false,
-    bookName: 'Proverbios',
-    book_number: 240,
-    chapter: 1,
-    id: 7,
-    text: 'El principio de<S>3374</S> <S>7225</S> <S>1847</S> la sabiduría es el temor de Jehová; Los<S>3068</S> insensatos desprecian<S>191</S> la sabiduría y<S>2451</S> <S>4148</S> la enseñanza.',
-    verse: 7,
-  },
-  {
-    is_favorite: false,
-    bookName: 'Génesis',
-    book_number: 10,
-    chapter: 1,
-    id: 6,
-    text: 'En el principio<S>7225</S> creó<S>1254</S> Dios<S>430</S> los cielos<S>8064</S> y la tierra.<S>776</S> ',
-    verse: 1,
-  },
-  {
-    is_favorite: false,
-    bookName: 'Salmos',
-    book_number: 230,
-    chapter: 100,
-    id: 5,
-    text: '«Salmo de<S>4210</S> alabanza.» * Cantad<S>8426</S> <S>7321</S> alegres a Dios, habitantes<S>3068</S> de toda la<S>3605</S> <S>776</S> tierra.',
-    verse: 1,
-  },
-];
-
 const MemorizationScreen = () => {
   const { verseId } = useParams();
-  const item = MOCK_DATA.find((x) => x.id === verseId);
-  const progress = Math.floor(Math.random() * 100);
-  const lastPracticed = new Date();
-  const addedDate = new Date('2025-01-30T13:45:57.911Z');
+  const { verses } = useMemorization();
+  const item = verses.find((x) => x.id === verseId) as Memorization;
 
   const theme = useTheme();
   const styles = getStyles(theme);
   const router = useRouter();
-  const { currentBibleVersion } = useBibleContext();
-  const versionName = databaseNames.find((x) => x.id === currentBibleVersion);
+  const versionName = databaseNames.find((x) => x.id === item.version);
   const { width } = useWindowDimensions();
   const buttonWidth = width / 3;
 
-  const isTestLocked = progress < 80;
+  const isTestLocked = item.progress < 80;
 
-  const remainingTime = isWithinTimeframe('3d', new Date(addedDate));
+  const currentTimeStat = isWithinTimeframe(
+    '3d',
+    new Date(item?.addedDate || 0)
+  );
 
   const onTestPress = () => {
     showToast('¡Desbloqueado con una puntuación de 80!', 'LONG');
@@ -135,9 +98,7 @@ const MemorizationScreen = () => {
             <View
               style={{ gap: 4, flexDirection: 'row', alignItems: 'center' }}
             >
-              <Text
-                style={styles.title}
-              >{`${item?.bookName} ${item?.chapter}:${item?.verse}`}</Text>
+              <Text style={styles.title}>{item?.verse}</Text>
             </View>
           ),
         }}
@@ -147,13 +108,13 @@ const MemorizationScreen = () => {
           <CircularProgressBar
             size={150}
             strokeWidth={8}
-            progress={progress}
+            progress={item.progress}
             maxProgress={100}
             color={theme.colors.notification}
             backgroundColor={'#a29f9f'}
           >
             <Text style={[styles.progressText, { color: theme.colors.text }]}>
-              {progress}
+              {item.progress}
             </Text>
           </CircularProgressBar>
         </View>
@@ -204,7 +165,7 @@ const MemorizationScreen = () => {
             />
           </View>
           <Text style={styles.practiceTime}>
-            {remainingTime.remainingTime} restantes
+            {currentTimeStat.remainingDate} restantes
           </Text>
 
           <View style={{ marginVertical: 10 }}>
@@ -212,7 +173,18 @@ const MemorizationScreen = () => {
               height={8}
               color={theme.colors.notification}
               barColor={theme.colors.text}
-              progress={progress / 100}
+              progress={
+                ((currentTimeStat.targetTime as any) -
+                  (currentTimeStat.remainingTime as any) /
+                    (currentTimeStat.targetTime as any)) *
+                100
+                // currentTimeStat.targetTime
+                //   ? ((currentTimeStat.targetTime -
+                //       (currentTimeStat.remainingTime || 0)) /
+                //       currentTimeStat.targetTime) *
+                //     100
+                //   : 0
+              }
               hideCircle
               circleColor={theme.colors.notification}
             />
@@ -225,7 +197,7 @@ const MemorizationScreen = () => {
               </Text>
               <Text style={styles.dateText}>
                 {' '}
-                {formatDateShortDayMonth(addedDate.toDateString())}{' '}
+                {formatDateShortDayMonth(item?.addedDate || '')}{' '}
               </Text>
             </View>
             <View>
@@ -233,7 +205,7 @@ const MemorizationScreen = () => {
                 Última práctica
               </Text>
               <Text style={styles.dateText}>
-                {formatDateShortDayMonth(lastPracticed.toDateString())}
+                {formatDateShortDayMonth(item?.lastPracticed || '')}
               </Text>
             </View>
           </View>

@@ -23,7 +23,8 @@ const ReadChallenge: FC<ReadChallengeProps> = ({ item }) => {
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [started, setStarted] = useState(false);
   const [currentParts, setCurrentParts] = useState<string[]>([]);
-  const text = getVerseTextRaw(item.text);
+  console.log({ item });
+  const text = getVerseTextRaw(item?.text || '');
   const splitByComma = text.split(/[,;]/);
   const verseReference = `${item?.bookName} ${item?.chapter}:${item?.verse}`;
   const parts =
@@ -55,10 +56,10 @@ const ReadChallenge: FC<ReadChallengeProps> = ({ item }) => {
                 if (index === parts.length - 1) return '';
                 return isCurrent ? (
                   <Text style={{ fontSize: 24 }} key={index}>
-                    {` ${part}`}
+                    {` ${part.trim()}`}
                   </Text>
                 ) : (
-                  `${part} `
+                  `${part.trim()} `
                 );
               })}
             </Text>
@@ -82,6 +83,8 @@ const ReadChallenge: FC<ReadChallengeProps> = ({ item }) => {
             <Text
               style={{
                 fontSize: 18,
+                color: theme.dark ? '#fff' : '#000',
+                fontWeight: 'bold',
               }}
             >
               Completado

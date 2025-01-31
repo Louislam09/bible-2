@@ -16,6 +16,7 @@ import {
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { IconProps } from "@/components/Icon";
 import { Router } from 'expo-router';
+import { icons } from 'lucide-react-native';
 
 declare global {
   namespace ReactNavigation {
@@ -243,7 +244,7 @@ export enum EViewMode {
 }
 
 export type TIcon = {
-  name: IconProps['name'];
+  name: keyof typeof icons;
   color?: string | any;
   action?: any;
   longAction?: any;

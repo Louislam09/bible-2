@@ -131,7 +131,14 @@ const Dashboard: React.FC<DashboardProps> = () => {
       label: 'Quiz Bíblico',
       action: () => navigation.navigate(Screens.ChooseGame),
       color: '#75d0fe',
-      isNew: isWithinTimeframe('3d', new Date('2025-01-28')).isActive
+      isNew: isWithinTimeframe('3d', new Date('2025-01-28')).isActive,
+    },
+    {
+      icon: 'Brain',
+      label: 'Momorizar',
+      action: () => navigation.navigate(Screens.MemorizeVerse),
+      color: '#f1abab',
+      isNew: isWithinTimeframe('3d', new Date('2025-01-30')).isActive,
     },
     {
       icon: 'Search',

@@ -8,6 +8,8 @@ GROUP BY v.chapter
 ORDER BY v.verse;`;
 
 export const GET_VERSES_BY_BOOK_AND_CHAPTER = `SELECT * FROM verses WHERE book_number = ? and chapter = ?;`;
+export const GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE = `SELECT v.*, b.long_name as bookName FROM verses v INNER JOIN books b
+ON b.book_number = v.book_number WHERE v.book_number = ? AND v.chapter = ? AND v.verse = ?;`;
 export const GET_SUBTITLE_BY_BOOK_AND_CHAPTER = `Select * from subheadings where book_number = ? and chapter = ?;`;
 export const SEARCH_TEXT_QUERY = `SELECT v.*, b.long_name as bookName FROM verses v inner join books b on b.book_number = v.book_number
 where`;

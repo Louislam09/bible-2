@@ -15,6 +15,7 @@ import {
   SortOption,
   TTheme,
 } from '@/types';
+import { formatDateShortDayMonth } from '@/utils/formatDateShortDayMonth';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useTheme } from '@react-navigation/native';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
@@ -102,7 +103,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
   const styles = getStyles(theme);
   const sortRef = useRef<BottomSheetModal>(null);
   const { currentBibleLongName } = useBibleContext();
-  const { verses } = useMemorization();
+  const { verses, deleteVerse } = useMemorization();
 
   const stats = useMemo(
     () => ({
@@ -113,7 +114,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
   );
 
   const [sortType, setSortType] = useState<SortOption>(SortOption.MostRecent);
-  const data = useMemo(() => sortVerses(verses, sortType), [sortType]);
+  const data = useMemo(() => sortVerses(verses, sortType), [sortType, verses]);
 
   const notFoundSource = require('../../assets/lottie/notFound.json');
 
@@ -130,6 +131,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
         style={styles.verseContainer}
         activeOpacity={0.9}
         onPress={() => router.push(`/memorization/${item.id}`)}
+        onLongPress={() => deleteVerse(item.id)}
       >
         <View style={styles.verseItem}>
           <View style={styles.verseBody}>
@@ -138,7 +140,9 @@ const MemoryList: React.FC<MemorizationProps> = () => {
               style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}
             >
               <Icon name='CalendarDays' color={theme.colors.notification} />
-              <Text style={styles.verseDate}>{item.addedDate}</Text>
+              <Text style={styles.verseDate}>
+                {formatDateShortDayMonth(item.addedDate)}
+              </Text>
             </View>
           </View>
           <View>

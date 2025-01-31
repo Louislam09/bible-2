@@ -1,40 +1,43 @@
 import { Text, View } from "@/components/Themed";
-import { DB_BOOK_NAMES } from "@/constants/BookNames";
-import { useBibleContext } from "@/context/BibleContext";
-import { HomeParams, Screens, TIcon, TTheme, TVerse } from "@/types";
-import { customUnderline } from "@/utils/customStyle";
+import { DB_BOOK_NAMES, getBookDetail } from '@/constants/BookNames';
+import { useBibleContext } from '@/context/BibleContext';
+import { HomeParams, Screens, TIcon, TTheme, TVerse } from '@/types';
+import { customUnderline } from '@/utils/customStyle';
 import extractVersesInfo, {
   extractTextFromParagraph,
   extractWordsWithTags,
   getStrongValue,
   WordTagPair,
-} from "@/utils/extractVersesInfo";
-import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { useRoute, useTheme } from "@react-navigation/native";
-import DisplayStrongWord from "@/components/DisplayStrongWord";
-import Icon from "@/components/Icon";
-import Walkthrough from "@/components/Walkthrough";
-import { useModal } from "@/context/modal-context";
-import { useNavigation } from "expo-router";
-import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
+} from '@/utils/extractVersesInfo';
+import { getVerseTextRaw } from '@/utils/getVerseTextRaw';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useRoute, useTheme } from '@react-navigation/native';
+import DisplayStrongWord from '@/components/DisplayStrongWord';
+import Icon from '@/components/Icon';
+import Walkthrough from '@/components/Walkthrough';
+import { useModal } from '@/context/modal-context';
+import { useNavigation } from 'expo-router';
+import useSingleAndDoublePress from '@/hooks/useSingleOrDoublePress';
 import React, {
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-} from "react";
+} from 'react';
 import {
   Animated,
   Easing,
   Pressable,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
-} from "react-native";
-import copyToClipboard from "@/utils/copyToClipboard";
-import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
+} from 'react-native';
+import copyToClipboard from '@/utils/copyToClipboard';
+import RenderTextWithClickableWords from './RenderTextWithClickableWords';
 import useParams from '@/hooks/useParams';
+import { useMemorization } from '@/context/MemorizationContext';
+import { showToast } from '@/utils/showToast';
 
 type VerseProps = TVerse & {
   isSplit: boolean;
@@ -54,11 +57,11 @@ const validStrongList = (arr: WordTagPair[]) => {
   return newArr.map((item, index) => {
     const newItem = item;
     const nextItem = newArr[index + 1];
-    if (nextItem && nextItem.word.includes("<S>")) {
+    if (nextItem && nextItem.word.includes('<S>')) {
       newItem.tagValue = `${newItem.tagValue},${extractTextFromParagraph(
         nextItem?.word
       )}`;
-      nextItem.word = "";
+      nextItem.word = '';
     }
 
     return newItem;
@@ -93,17 +96,17 @@ const ActionItem = ({ index, action, styles, theme }: ActionItemProps) => {
           opacity: fadeAnim,
           transform: [{ translateX: translateXAnim }],
         },
-        { flexDirection: "row", marginVertical: 5 },
+        { flexDirection: 'row', marginVertical: 5, marginHorizontal: 5 },
       ]}
     >
       <Pressable
         onPress={action.action}
         style={[
           {
-            display: "flex",
-            alignItems: "center",
+            display: 'flex',
+            alignItems: 'center',
           },
-          action.hide && { display: "none" },
+          action.hide && { display: 'none' },
         ]}
       >
         <Icon
@@ -125,9 +128,10 @@ const Verse: React.FC<VerseProps> = ({
   estimatedReadingTime,
 }) => {
   const navigation = useNavigation();
-  const params = useParams<HomeParams>()
+  const params = useParams<HomeParams>();
   const { isVerseTour } = params;
   const {
+    currentBibleVersion,
     highlightVerse,
     highlightedVerses,
     isCopyMode,
@@ -147,6 +151,8 @@ const Verse: React.FC<VerseProps> = ({
     currentNoteId,
     setVerseToCompare,
   } = useBibleContext();
+
+  const { addVerse } = useMemorization();
   const theme = useTheme() as TTheme;
   const styles = getStyles(theme);
   const [isVerseHighlisted, setHighlightVerse] = useState<number | null>(null);
@@ -157,7 +163,7 @@ const Verse: React.FC<VerseProps> = ({
   const lastHighted = useMemo(() => {
     return highlightedVerses[highlightedVerses.length - 1];
   }, [highlightedVerses]);
-  const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
+  const { textValue = ['.'], strongValue = [] } = getStrongValue(item.text);
   const verseRef = useRef<any>(null);
   const [stepIndex, setStepIndex] = useState(0);
   const isBottom = isSplit && isBottomSideSearching;
@@ -240,7 +246,7 @@ const Verse: React.FC<VerseProps> = ({
   const LinkVerse = ({ data }: any) => {
     if (!data) return null;
     const linkVerses = data.subheading
-      ?.split("—")
+      ?.split('—')
       .map((linkVerse: any) => extractVersesInfo(linkVerse));
 
     const renderItem = (verseInfo: any, index: number) => {
@@ -252,10 +258,10 @@ const Verse: React.FC<VerseProps> = ({
 
       const onLink = () => {
         navigation.navigate(Screens.Home, {
-          [!isSplit && isSplitActived ? "bottomSideBook" : "book"]: bookName,
-          [!isSplit && isSplitActived ? "bottomSideChapter" : "chapter"]:
+          [!isSplit && isSplitActived ? 'bottomSideBook' : 'book']: bookName,
+          [!isSplit && isSplitActived ? 'bottomSideChapter' : 'chapter']:
             chapter,
-          [!isSplit && isSplitActived ? "bottomSideVerse" : "verse"]: verse,
+          [!isSplit && isSplitActived ? 'bottomSideVerse' : 'verse']: verse,
           isHistory: false,
         });
       };
@@ -268,9 +274,9 @@ const Verse: React.FC<VerseProps> = ({
             styles.verse,
             {
               fontSize: 18,
-              fontWeight: "bold",
+              fontWeight: 'bold',
               paddingVertical: 5,
-              color: theme.colors.notification ?? "black",
+              color: theme.colors.notification ?? 'black',
               ...customUnderline,
             },
           ]}
@@ -292,16 +298,16 @@ const Verse: React.FC<VerseProps> = ({
             styles.verse,
             {
               fontSize: 22,
-              textAlign: "center",
-              fontWeight: "bold",
+              textAlign: 'center',
+              fontWeight: 'bold',
               paddingVertical: 5,
-              color: theme?.colors?.notification || "white",
+              color: theme?.colors?.notification || 'white',
             },
           ]}
         >
           {subTitle.subheading || subTitle.title}
         </Text>
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: 'row' }}>
           <LinkVerse data={link} />
         </View>
       </View>
@@ -345,15 +351,15 @@ const Verse: React.FC<VerseProps> = ({
 
     const word = textValue[wordIndex];
     const secondCode =
-      textValue[wordIndex + 1] === "-" ? strongValue[wordIndex + 1] : "";
+      textValue[wordIndex + 1] === '-' ? strongValue[wordIndex + 1] : '';
 
-    const isDash = word === "-" ? -1 : 0;
+    const isDash = word === '-' ? -1 : 0;
     const NT_BOOK_NUMBER = 470;
-    const cognate = item.book_number < NT_BOOK_NUMBER ? "H" : "G";
+    const cognate = item.book_number < NT_BOOK_NUMBER ? 'H' : 'G';
     const searchCode = isWordName
       ? `${cognate}${strongValue[wordIndex]}`
       : `${cognate}${code}`;
-    const secondSearchCode = secondCode ? `,${cognate}${secondCode}` : ",";
+    const secondSearchCode = secondCode ? `,${cognate}${secondCode}` : ',';
     const searchWord = textValue[wordIndex + isDash] ?? searchCode;
 
     const value = {
@@ -367,17 +373,17 @@ const Verse: React.FC<VerseProps> = ({
 
   const onStrongWordClicked = ({ word, tagValue }: WordTagPair) => {
     const NT_BOOK_NUMBER = 470;
-    const cognate = item.book_number < NT_BOOK_NUMBER ? "H" : "G";
+    const cognate = item.book_number < NT_BOOK_NUMBER ? 'H' : 'G';
 
     const addCognate = (tagValue: string) =>
       tagValue
-        .split(",")
+        .split(',')
         .map((code) => `${cognate}${code}`)
-        .join(",");
+        .join(',');
 
-    const searchCode = addCognate(tagValue || "");
+    const searchCode = addCognate(tagValue || '');
     const value = {
-      text: word.replace(/[.,;]/g, ""),
+      text: word.replace(/[.,;]/g, ''),
       code: searchCode,
     };
     setStrongWord(value);
@@ -396,52 +402,68 @@ const Verse: React.FC<VerseProps> = ({
     onCompare();
   };
 
+  const onMemorizeVerse = (text: string) => {
+    addVerse(text, currentBibleVersion);
+  };
+
   const verseActions: TIcon[] = useMemo(() => {
     return [
       {
-        name: "Copy",
+        name: 'Copy',
         action: onCopy,
         hide: lastHighted?.verse !== item.verse && isMoreThanOneHighted,
-        description: "Copiar",
+        description: 'Copiar',
       },
       {
-        name: "NotebookPen",
+        name: 'NotebookPen',
         action: addVerseToNote,
         hide: lastHighted?.verse !== item.verse && isMoreThanOneHighted,
-        description: "Anotar",
+        description: 'Anotar',
       },
       {
-        name: isFavorite ? "Star" : "StarOff",
+        name: isFavorite ? 'Star' : 'StarOff',
         action: onFavorite,
-        color: isFavorite ? theme.colors.notification : "",
+        color: isFavorite ? theme.colors.notification : '',
         hide: false,
-        description: "Favorito",
+        description: 'Favorito',
       },
       {
-        name: "FileDiff",
+        name: 'Brain',
+        action: () =>
+          onMemorizeVerse(
+            `${getBookDetail(item.book_number).longName} ${item?.chapter}:${
+              item?.verse
+            }`
+          ),
+        color: '#f1abab',
+        hide: false,
+        description: 'Memorizar',
+      },
+      {
+        name: 'FileDiff',
         action: onCompareClicked,
         hide: isSplitActived,
-        description: "Comparar",
+        description: 'Comparar',
       },
-    ];
+    ] as TIcon[];
   }, [isMoreThanOneHighted, lastHighted, isVerseHighlisted, isSplitActived]);
 
   const steps = [
     {
-      text: "Paso 1: 🔍 Haz un toque en cualquier versículo para activar la búsqueda en el original.",
+      text: 'Paso 1: 🔍 Haz un toque en cualquier versículo para activar la búsqueda en el original.',
       target: verseRef,
       action: () => {
         onVerseClicked();
       },
     },
     {
-      text: "Paso 2: 👀 Observarás cómo algunas palabras cambian de color.",
+      text: 'Paso 2: 👀 Observarás cómo algunas palabras cambian de color.',
       target: verseRef,
       action: () =>
-        onStrongWordClicked({ word: "principio", tagValue: "7225" }),
+        onStrongWordClicked({ word: 'principio', tagValue: '7225' }),
     },
     {
-      text: "Paso 3: 📘 Cuando toques cualquier palabra resaltada, verás su significado en el original.",
+      text: 'Paso 3: 📘 Cuando toques cualquier palabra resaltada, verás su significado en el original.',
       target: null,
     },
   ];
@@ -450,7 +472,7 @@ const Verse: React.FC<VerseProps> = ({
 
   const bgVerseHighlight = animatedVerseHighlight.interpolate({
     inputRange: [0, 1],
-    outputRange: ["transparent", `${theme.colors.notification + "20"}`],
+    outputRange: ['transparent', `${theme.colors.notification + '20'}`],
   });
 
   const styledVerseHighlight = {
@@ -529,11 +551,18 @@ const Verse: React.FC<VerseProps> = ({
           )}
         </Animated.Text>
         {isVerseHighlisted === item.verse && !!highlightedVersesLenth && (
-          <View style={styles.verseAction}>
+          <ScrollView
+            horizontal
+            contentContainerStyle={{
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+            }}
+            style={styles.verseAction}
+          >
             {verseActions.map((action: TIcon, index) => (
               <ActionItem key={index} {...{ index, action, styles, theme }} />
             ))}
-          </View>
+          </ScrollView>
         )}
       </TouchableOpacity>
       {displayTour && (
@@ -558,34 +587,34 @@ const getStyles = ({ colors, dark }: TTheme) =>
       color: colors.notification,
     },
     estimatedContainer: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "flex-end",
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
       paddingRight: 10,
     },
     estimatedText: {
-      textAlign: "right",
+      textAlign: 'right',
     },
     verse: {
-      position: "relative",
+      position: 'relative',
       paddingLeft: 20,
       marginVertical: 4,
     },
     highlightCopy: {
-      backgroundColor: colors.notification + "20",
+      backgroundColor: colors.notification + '20',
     },
     verseAction: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "flex-end",
+      display: 'flex',
+      flexDirection: 'row',
+      // alignItems: "center",
+      // justifyContent: "flex-end",
       borderRadius: 10,
       paddingHorizontal: 10,
-      alignSelf: "flex-end",
+      alignSelf: 'flex-end',
       gap: 2,
     },
     icon: {
-      fontWeight: "700",
+      fontWeight: '700',
       marginHorizontal: 15,
       color: colors.text,
       fontSize: 28,

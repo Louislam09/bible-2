@@ -12,6 +12,7 @@ import {
   INSERT_VERSE_TO_MOMORIZATION,
   UPDATE_MOMORIZATION_PROGRESS,
 } from '@/constants/Queries';
+import { showToast } from '@/utils/showToast';
 
 type Memorization = {
   id: number;
@@ -39,8 +40,9 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
   const { myBibleDB, executeSql } = useDBContext();
 
   useEffect(() => {
+    if (!myBibleDB || !executeSql) return;
     refreshVerses();
-  }, []);
+  }, [myBibleDB, executeSql]);
 
   const refreshVerses = async () => {
     try {
@@ -58,7 +60,8 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
       if (!myBibleDB || !executeSql) return;
       const values = [verse, version, 0, timestamp, timestamp];
       await executeSql(myBibleDB, INSERT_VERSE_TO_MOMORIZATION, values);
-      refreshVerses();
+      await refreshVerses();
+      showToast('Versículo añadido con éxito!');
     } catch (error) {
       console.warn('Error inserting verse:', error);
     }
@@ -69,7 +72,8 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
       if (!myBibleDB || !executeSql) return;
       const values = [id];
       await executeSql(myBibleDB, DELETE_VERSE_FROM_MOMORIZATION, values);
-      refreshVerses();
+      await refreshVerses();
+      showToast('Versículo eliminado con éxito!');
     } catch (error) {
       console.warn('Error deleting verse:', error);
     }

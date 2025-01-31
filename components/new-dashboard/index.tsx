@@ -139,7 +139,7 @@ const SecondDashboard = () => {
     },
     {
       icon: 'Brain',
-      label: 'Momorizar Versos',
+      label: 'Momorizar',
       action: () => navigation.navigate(Screens.MemorizeVerse),
       color: '#f1abab',
       isNew: isWithinTimeframe('1d', new Date('2025-01-28')).isActive,

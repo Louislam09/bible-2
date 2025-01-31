@@ -13,7 +13,14 @@ type StatusProps = {
 
 const Strike = ({ color, value }: StatusProps) => {
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
+        backgroundColor: 'transparent',
+      }}
+    >
       <Zap color={color} size={headerIconSize} />
       <Text style={{ fontSize: 18 }}>{value}</Text>
     </View>
@@ -49,7 +56,12 @@ const MemorizationLayout = () => {
           ),
           headerTitle: () => (
             <View
-              style={{ gap: 4, flexDirection: 'row', alignItems: 'center' }}
+              style={{
+                gap: 4,
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: 'transparent',
+              }}
             >
               <Brain color={'pink'} size={headerIconSize} />
               <Text style={{ fontSize: 22 }}>Memorizar</Text>

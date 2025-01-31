@@ -1,13 +1,18 @@
 import { Text, View } from '@/components/Themed';
 import ReadChallenge from '@/components/memorization/ReadChallenge';
+import { DB_BOOK_NAMES } from '@/constants/BookNames';
+import { GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE } from '@/constants/Queries';
 import { headerIconSize } from '@/constants/size';
+import { useMemorization } from '@/context/MemorizationContext';
+import { useDBContext } from '@/context/databaseContext';
 import useParams from '@/hooks/useParams';
-import { TTheme, MemorizationButtonType } from '@/types';
+import { TTheme, MemorizationButtonType, Memorization } from '@/types';
+import { parseBibleReferences } from '@/utils/extractVersesInfo';
 import { useTheme } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { CircleHelp } from 'lucide-react-native';
-import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 
 const MOCK_DATA = [
   {
@@ -46,10 +51,45 @@ type ParamProps = {
 
 const Type = () => {
   const { typeId: type, verseId } = useParams<ParamProps>();
-  const item = MOCK_DATA.find((x) => x.id === verseId);
+  const { verses } = useMemorization();
+  const { myBibleDB, executeSql } = useDBContext();
+
+  const [item, setItem] = useState(null);
+  const [loading, setLoadiing] = useState(true);
+
+  const memorizeItem = useMemo(
+    () => verses.find((x) => x.id === verseId) as Memorization,
+    [verseId]
+  );
 
   const theme = useTheme();
   const styles = getStyles(theme);
+
+  useEffect(() => {
+    const getCurrentItem = async () => {
+      try {
+        if (!myBibleDB || !executeSql) return;
+        const [{ book, chapter, verse }] = parseBibleReferences(
+          memorizeItem.verse
+        );
+        const { bookNumber } =
+          DB_BOOK_NAMES.find(
+            (x) => x.longName === book || x.longName.includes(book)
+          ) || {};
+        const data = await executeSql(
+          myBibleDB,
+          GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE,
+          [bookNumber, chapter, verse]
+        );
+        console.log(bookNumber, memorizeItem, { book, chapter, verse });
+        setItem(data[0] as any);
+        setLoadiing(false);
+      } catch (error) {
+        console.warn('Error refreshVerses:', error);
+      }
+    };
+    getCurrentItem();
+  }, [memorizeItem]);
 
   let CurrentChallenge;
   switch (type) {
@@ -68,6 +108,8 @@ const Type = () => {
     default:
       CurrentChallenge = null;
   }
+
+  if (loading) return <ActivityIndicator />;
 
   return (
     <View style={{ flex: 1 }}>

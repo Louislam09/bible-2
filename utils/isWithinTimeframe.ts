@@ -2,7 +2,9 @@ type Duration = `${number}${'d' | 'w' | 'm' | 'h' | 'min'}`;
 
 interface TimeframeResult {
   isActive: boolean;
-  remainingTime?: string;
+  remainingDate?: string;
+  remainingTime?: number;
+  targetTime?: number;
   expiredTime?: string;
 }
 
@@ -55,7 +57,9 @@ const isWithinTimeframe = (
   if (timeDifference > 0) {
     return {
       isActive: true,
-      remainingTime: formatTime(timeDifference),
+      remainingDate: formatTime(timeDifference),
+      remainingTime: timeDifference,
+      targetTime: targetDate.getTime(),
     };
   } else {
     return {
