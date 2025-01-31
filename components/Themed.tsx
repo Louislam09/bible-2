@@ -2,21 +2,21 @@ import { Text as DefaultText, View as DefaultView } from "react-native";
 
 import { useTheme } from "@react-navigation/native";
 import { createElement } from "react";
-import { TTheme } from "@/types";
-import { useBibleContext } from "../context/BibleContext";
+import { TFont, TTheme } from '@/types';
+import { useBibleContext } from '../context/BibleContext';
 
 export const NativeDefaultView =
-  require("react-native/Libraries/Components/View/ViewNativeComponent").default;
+  require('react-native/Libraries/Components/View/ViewNativeComponent').default;
 export const NativeDefaultText = (props: any) =>
-  createElement("RCTText", props);
+  createElement('RCTText', props);
 
 type ThemeProps = {
   lightColor?: string;
   darkColor?: string;
 };
 
-export type TextProps = ThemeProps & DefaultText["props"];
-export type ViewProps = ThemeProps & DefaultView["props"];
+export type TextProps = ThemeProps & DefaultText['props'];
+export type ViewProps = ThemeProps & DefaultView['props'];
 
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, onPress, ...otherProps } = props;
@@ -29,9 +29,10 @@ export function Text(props: TextProps) {
     <CustomText
       style={[
         {
-          color: colors?.text || "black",
-          fontFamily: selectedFont,
-          fontWeight: "100",
+          color: colors?.text || 'black',
+          fontFamily: TFont.Roboto,
+          // fontFamily: selectedFont,
+          fontWeight: '100',
         },
         style,
       ]}

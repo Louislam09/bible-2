@@ -2,59 +2,24 @@ import Animation from '@/components/Animation';
 import BottomModal from '@/components/BottomModal';
 import CircularProgressBar from '@/components/CircularProgressBar';
 import Icon from '@/components/Icon';
+import ScreenWithAnimation from '@/components/LottieTransitionScreen';
 import SortMemoryList from '@/components/SortList';
 import { Text } from '@/components/Themed';
-import { DB_BOOK_NAMES, getBookDetail } from '@/constants/BookNames';
+import { getBookDetail } from '@/constants/BookNames';
 import { headerIconSize } from '@/constants/size';
 import { useBibleContext } from '@/context/BibleContext';
 import { useMemorization } from '@/context/MemorizationContext';
-import {
-  IBookVerse,
-  IVerseItem,
-  Memorization,
-  SortOption,
-  TTheme,
-} from '@/types';
+import { Memorization, SortOption, TTheme } from '@/types';
 import { formatDateShortDayMonth } from '@/utils/formatDateShortDayMonth';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useTheme } from '@react-navigation/native';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
-import { useRouter } from 'expo-router';
-import { ListFilter } from 'lucide-react-native';
+import { Stack, useRouter } from 'expo-router';
+import { Brain, ChevronLeft, ListFilter, Zap } from 'lucide-react-native';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 type MemorizationProps = {};
-
-const MOCK_DATA = [
-  {
-    is_favorite: false,
-    bookName: 'Proverbios',
-    book_number: 240,
-    chapter: 1,
-    id: 7,
-    text: 'El principio de<S>3374</S> <S>7225</S> <S>1847</S> la sabiduría es el temor de Jehová; Los<S>3068</S> insensatos desprecian<S>191</S> la sabiduría y<S>2451</S> <S>4148</S> la enseñanza.',
-    verse: 7,
-  },
-  {
-    is_favorite: false,
-    bookName: 'Génesis',
-    book_number: 10,
-    chapter: 1,
-    id: 6,
-    text: 'En el principio<S>7225</S> creó<S>1254</S> Dios<S>430</S> los cielos<S>8064</S> y la tierra.<S>776</S> ',
-    verse: 1,
-  },
-  {
-    is_favorite: false,
-    bookName: 'Salmos',
-    book_number: 230,
-    chapter: 100,
-    id: 5,
-    text: '«Salmo de<S>4210</S> alabanza.» * Cantad<S>8426</S> <S>7321</S> alegres a Dios, habitantes<S>3068</S> de toda la<S>3605</S> <S>776</S> tierra.',
-    verse: 1,
-  },
-];
 
 type StatusProps = {
   color: string;
@@ -73,6 +38,22 @@ const Status = ({ color, value }: StatusProps) => {
         }}
       />
       <Text style={{}}>{value}</Text>
+    </View>
+  );
+};
+
+const Strike = ({ color, value }: StatusProps) => {
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
+        backgroundColor: 'transparent',
+      }}
+    >
+      <Zap color={color} size={headerIconSize} />
+      <Text style={{ fontSize: 18 }}>{value}</Text>
     </View>
   );
 };
@@ -135,7 +116,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
       >
         <View style={styles.verseItem}>
           <View style={styles.verseBody}>
-            <Text style={styles.verseText}> {item.verse} </Text>
+            <Text style={styles.verseText}>{item.verse}</Text>
             <View
               style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}
             >
@@ -168,78 +149,120 @@ const MemoryList: React.FC<MemorizationProps> = () => {
     setSortType(sortOption);
     sortClosePresentModalPress();
   };
+  const sourceMemorization = require('../../assets/lottie/brain.json');
+  const strike = 0;
 
   return (
     <>
-      <View
-        style={{
-          flex: 1,
-          padding: 5,
-          backgroundColor: theme.dark ? theme.colors.background : '#eee',
-        }}
+      <ScreenWithAnimation
+        speed={1.5}
+        title='Memorizar Versos'
+        animationSource={sourceMemorization}
       >
-        <View style={styles.memorizationHeader}>
-          <View style={{}}>
-            <Text style={{ fontSize: 18, textTransform: 'capitalize' }}>
-              lista de memoria
-            </Text>
-            <View
-              style={{
-                marginTop: 5,
-                gap: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <Status color='#18d86b' value={stats.completed} />
-              <Status color='#fff' value={stats.incompleted} />
-            </View>
-          </View>
-          <View style={{}}>
-            <TouchableOpacity
-              onPress={() => sortHandlePresentModalPress()}
-              style={{ gap: 4, flexDirection: 'column', alignItems: 'center' }}
-            >
-              <ListFilter color={'#fff'} size={headerIconSize} />
-              <Text>Ordenar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <FlashList
-          estimatedItemSize={135}
-          renderItem={RenderItem as any}
-          data={data}
-          keyExtractor={(item: any, index: any) => `memorization-${index}`}
-          ListEmptyComponent={
-            <View style={styles.noResultsContainer}>
-              <Animation
-                backgroundColor={theme.colors.background}
-                source={notFoundSource}
-                loop={false}
+        <Stack.Screen
+          options={{
+            headerShown: true,
+            headerBackVisible: false,
+            headerLeft: () => (
+              <ChevronLeft
+                color={theme.colors.text}
+                size={headerIconSize}
+                onPress={() => router.back()}
               />
-              <Text style={styles.noResultsText}>
-                <Text style={{ color: theme.colors.notification }}>
-                  ({currentBibleLongName})
-                </Text>
-                {'\n'}
-                ¡Empieza a memorizar tus versículos favoritos hoy!
-              </Text>
-            </View>
-          }
+            ),
+            // headerLeft: () => <View />,
+            headerRight: () => (
+              <Strike color={theme.colors.text} value={strike} />
+            ),
+            headerTitle: () => (
+              <View
+                style={{
+                  gap: 4,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Brain color={'pink'} size={headerIconSize} />
+                <Text style={{ fontSize: 22 }}>Memorizar</Text>
+              </View>
+            ),
+          }}
         />
-
-        <BottomModal
-          justOneSnap
-          showIndicator
-          justOneValue={['40%']}
-          startAT={0}
-          style={styles.bottomModal}
-          ref={sortRef}
+        <View
+          style={{
+            flex: 1,
+            padding: 5,
+            backgroundColor: theme.dark ? theme.colors.background : '#eee',
+          }}
         >
-          <SortMemoryList sortType={sortType} onSort={handleSort} />
-        </BottomModal>
-      </View>
+          <View style={styles.memorizationHeader}>
+            <View style={{}}>
+              <Text style={{ fontSize: 18, textTransform: 'capitalize' }}>
+                lista de memoria
+              </Text>
+              <View
+                style={{
+                  marginTop: 5,
+                  gap: 10,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <Status color='#18d86b' value={stats.completed} />
+                <Status color='#fff' value={stats.incompleted} />
+              </View>
+            </View>
+            <View style={{}}>
+              <TouchableOpacity
+                onPress={() => sortHandlePresentModalPress()}
+                style={{
+                  gap: 4,
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}
+              >
+                <ListFilter color={'#fff'} size={headerIconSize} />
+                <Text>Ordenar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <FlashList
+            estimatedItemSize={135}
+            renderItem={RenderItem as any}
+            data={data}
+            keyExtractor={(item: any, index: any) => `memorization-${index}`}
+            ListEmptyComponent={
+              <View style={styles.noResultsContainer}>
+                <Animation
+                  backgroundColor={theme.colors.background}
+                  source={notFoundSource}
+                  loop={false}
+                />
+                <Text style={styles.noResultsText}>
+                  <Text style={{ color: theme.colors.notification }}>
+                    ({currentBibleLongName})
+                  </Text>
+                  {'\n'}
+                  ¡Empieza a memorizar tus versículos favoritos hoy!
+                </Text>
+              </View>
+            }
+          />
+
+          <BottomModal
+            justOneSnap
+            showIndicator
+            justOneValue={['40%']}
+            startAT={0}
+            style={styles.bottomModal}
+            ref={sortRef}
+          >
+            <SortMemoryList sortType={sortType} onSort={handleSort} />
+          </BottomModal>
+        </View>
+      </ScreenWithAnimation>
     </>
   );
 };

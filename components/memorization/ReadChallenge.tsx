@@ -23,7 +23,6 @@ const ReadChallenge: FC<ReadChallengeProps> = ({ item }) => {
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [started, setStarted] = useState(false);
   const [currentParts, setCurrentParts] = useState<string[]>([]);
-  console.log({ item });
   const text = getVerseTextRaw(item?.text || '');
   const splitByComma = text.split(/[,;]/);
   const verseReference = `${item?.bookName} ${item?.chapter}:${item?.verse}`;
@@ -34,12 +33,10 @@ const ReadChallenge: FC<ReadChallengeProps> = ({ item }) => {
   const isCompleted = currentIndex === parts.length - 1;
 
   const onPress = () => {
-    if (!started) {
-      setStarted(true);
-    } else if (currentIndex < parts.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-      setCurrentParts([...currentParts, parts[currentIndex + 1]]);
-    }
+    if (!started) setStarted(true);
+    if (isCompleted) return;
+    setCurrentIndex(currentIndex + 1);
+    setCurrentParts([...currentParts, parts[currentIndex + 1]]);
   };
 
   return (
@@ -49,17 +46,18 @@ const ReadChallenge: FC<ReadChallengeProps> = ({ item }) => {
     >
       <View style={styles.container}>
         {started && (
-          <View style={{}}>
+          <View style={{ width: '100%' }}>
             <Text style={styles.verseText}>
               {currentParts.map((part, index) => {
                 const isCurrent = index === currentIndex;
                 if (index === parts.length - 1) return '';
-                return isCurrent ? (
-                  <Text style={{ fontSize: 24 }} key={index}>
-                    {` ${part.trim()}`}
+                return (
+                  <Text
+                    style={{ color: isCurrent ? theme.colors.text : '#bebebd' }}
+                    key={index}
+                  >
+                    {`${part.trim()}`}{' '}
                   </Text>
-                ) : (
-                  `${part.trim()} `
                 );
               })}
             </Text>
@@ -123,16 +121,14 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginTop: 20,
     },
     verseText: {
-      marginBottom: 10,
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 3,
+      textAlign: 'left',
       color: '#cfcfce',
-      fontSize: 24,
+      fontSize: 22,
     },
     verseReference: {
-      fontSize: 22,
-      color: '#fff',
+      marginTop: 5,
+      fontSize: 20,
+      color: colors.text,
       fontWeight: 'bold',
       textAlign: 'left',
     },

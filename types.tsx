@@ -45,7 +45,7 @@ export enum Screens {
   Hymn = 'hymn',
   Game = '(game)',
   ChooseGame = 'chooseGame',
-  MemorizeVerse = 'memorization',
+  MemorizeVerse = 'memorization/memoryList',
   VerseId = 'memorization/[verseId]',
   ChallengeTypeId = 'memorization/[verseId]/challenge/[typeId]',
 }
@@ -95,7 +95,7 @@ export type RootTabParamList = {
   favorite: undefined;
   notFound: undefined;
   dictionary: undefined;
-  memorization: undefined;
+  'memorization/memoryList': undefined;
 };
 
 export type RootStackParamList = {
@@ -128,7 +128,7 @@ export type RootStackParamList = {
     | ChooseChapterNumberParams;
   modal: undefined;
   onboarding: undefined;
-  memorization: undefined;
+  'memorization/memoryList': undefined;
   song: { isAlegres: boolean };
   '(game)': { questionsPerLevel: number };
   hymn: undefined;

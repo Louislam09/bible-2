@@ -18,12 +18,13 @@ import { TTheme, MemorizationButtonType, Memorization } from '@/types';
 import Icon from '@/components/Icon';
 import { useBibleContext } from '@/context/BibleContext';
 import { databaseNames } from '@/constants/databaseNames';
-import { icons } from 'lucide-react-native';
+import { ChevronLeft, icons } from 'lucide-react-native';
 import isWithinTimeframe from '@/utils/isWithinTimeframe';
 import { showToast } from '@/utils/showToast';
 import useParams from '@/hooks/useParams';
 import { formatDateShortDayMonth } from '@/utils/formatDateShortDayMonth';
 import { useMemorization } from '@/context/MemorizationContext';
+import { headerIconSize } from '@/constants/size';
 
 type TButtonItem = {
   icon: keyof typeof icons;
@@ -42,7 +43,7 @@ const MemorizationScreen = () => {
   const router = useRouter();
   const versionName = databaseNames.find((x) => x.id === item.version);
   const { width } = useWindowDimensions();
-  const buttonWidth = width / 3;
+  // const buttonWidth = width / 2.8;
 
   const isTestLocked = item.progress < 80;
 
@@ -90,7 +91,14 @@ const MemorizationScreen = () => {
       <Stack.Screen
         options={{
           headerShown: true,
-          headerLeft: () => <View />,
+          headerBackVisible: false,
+          headerLeft: () => (
+            <ChevronLeft
+              color={theme.colors.text}
+              size={headerIconSize}
+              onPress={() => router.back()}
+            />
+          ),
           headerRight: () => (
             <Text style={styles.version}>{versionName?.shortName}</Text>
           ),
@@ -127,14 +135,14 @@ const MemorizationScreen = () => {
               key={icon}
               style={[
                 styles.actionButton,
-                { width: buttonWidth },
-                isTest && { borderColor: '#fff' },
+                // { width: buttonWidth },
+                isTest && { borderColor: theme.colors.text },
               ]}
             >
               <Icon
                 name={icon}
                 size={75}
-                color={isTest ? '#fff' : theme.colors.notification}
+                color={isTest ? theme.colors.text : theme.colors.notification}
               />
               <Text
                 style={[
@@ -173,18 +181,7 @@ const MemorizationScreen = () => {
               height={8}
               color={theme.colors.notification}
               barColor={theme.colors.text}
-              progress={
-                ((currentTimeStat.targetTime as any) -
-                  (currentTimeStat.remainingTime as any) /
-                    (currentTimeStat.targetTime as any)) *
-                100
-                // currentTimeStat.targetTime
-                //   ? ((currentTimeStat.targetTime -
-                //       (currentTimeStat.remainingTime || 0)) /
-                //       currentTimeStat.targetTime) *
-                //     100
-                //   : 0
-              }
+              progress={10 / 100}
               hideCircle
               circleColor={theme.colors.notification}
             />
@@ -195,7 +192,7 @@ const MemorizationScreen = () => {
                 {' '}
                 Añadido{' '}
               </Text>
-              <Text style={styles.dateText}>
+              <Text style={styles.dateSubText}>
                 {' '}
                 {formatDateShortDayMonth(item?.addedDate || '')}{' '}
               </Text>
@@ -204,7 +201,7 @@ const MemorizationScreen = () => {
               <Text style={[styles.dateText, { color: theme.colors.text }]}>
                 Última práctica
               </Text>
-              <Text style={styles.dateText}>
+              <Text style={styles.dateSubText}>
                 {formatDateShortDayMonth(item?.lastPracticed || '')}
               </Text>
             </View>
@@ -219,7 +216,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#121212',
+      // backgroundColor: '#121212',
+      backgroundColor: colors.text + 20,
       padding: 16,
       paddingTop: 0,
     },
@@ -233,7 +231,10 @@ const getStyles = ({ colors, dark }: TTheme) =>
       color: colors.text,
       fontWeight: 'bold',
     },
-    version: { fontSize: 16, color: '#B0BEC5' },
+    version: {
+      fontSize: 16,
+      color: colors.text,
+    },
     progressCircle: {
       alignItems: 'center',
       marginVertical: 20,
@@ -259,26 +260,47 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderColor: colors.notification,
       borderWidth: 2,
     },
-    actionLabel: { color: colors.notification, marginTop: 8, fontSize: 20 },
+    actionLabel: {
+      color: colors.notification,
+      marginTop: 8,
+      fontSize: 20,
+    },
     practiceContainer: {
-      backgroundColor: '#1E1E1E',
+      backgroundColor: colors.text + 20,
       padding: 16,
       borderRadius: 12,
       marginTop: 20,
+      borderColor: dark ? colors.text : colors.notification,
+      borderWidth: 2,
     },
     practiceTitle: {
-      color: 'white',
+      color: colors.text,
       fontSize: 18,
       fontWeight: 'bold',
     },
-    practiceTime: { color: '#B0BEC5', fontSize: 16 },
-    progressBar: { height: 6, borderRadius: 5, marginVertical: 8 },
+    practiceTime: {
+      color: colors.text,
+      fontSize: 16,
+    },
+    progressBar: {
+      height: 6,
+      borderRadius: 5,
+      marginVertical: 8,
+    },
     dateContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginVertical: 10,
     },
-    dateText: { color: '#B0BEC5', fontSize: 14 },
+    dateText: {
+      color: colors.text,
+      fontSize: 14,
+      fontWeight: 'bold',
+    },
+    dateSubText: {
+      color: colors.text,
+      fontSize: 14,
+    },
   });
 
 export default MemorizationScreen;
