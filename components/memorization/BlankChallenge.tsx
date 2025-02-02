@@ -4,13 +4,15 @@ import {
   Button,
   TouchableOpacity,
 } from 'react-native';
-import React, { FC, useState } from 'react';
+import React, { FC, Fragment, useEffect, useState } from 'react';
 import { Text, View } from '../Themed';
 import { IVerseItem, TTheme } from '@/types';
 import { getVerseTextRaw } from '@/utils/getVerseTextRaw';
 import { splitText } from '@/utils/groupBy';
 import { useTheme } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
+import removeAccent from '@/utils/removeAccent';
+import BlankBoard from './BlankBoard';
 
 type BlankChallengeProps = {
   item: IVerseItem | any;
@@ -32,17 +34,10 @@ const BlankChallenge: FC<BlankChallengeProps> = ({
   const router = useRouter();
   const theme = useTheme();
   const styles = getStyles(theme);
-  const [currentIndex, setCurrentIndex] = useState(-1);
   const [started, setStarted] = useState(false);
-  const [currentParts, setCurrentParts] = useState<string[]>([]);
   const text = getVerseTextRaw(item?.text || '');
-  const splitByComma = text.split(/[,;]/);
   const verseReference = `${item?.bookName} ${item?.chapter}:${item?.verse}`;
-  const parts =
-    splitByComma.length <= 1
-      ? [...splitText(text, 3), verseReference]
-      : [...splitByComma, verseReference];
-  const isCompleted = currentIndex === parts.length - 1;
+  const isCompleted = false;
 
   const onPress = () => {
     if (!started) setStarted(true);
@@ -59,27 +54,7 @@ const BlankChallenge: FC<BlankChallengeProps> = ({
       onPress={onPress}
     >
       <View style={styles.container}>
-        {started && (
-          <View style={{ width: '100%' }}>
-            <Text style={styles.verseText}>
-              {currentParts.map((part, index) => {
-                const isCurrent = index === currentIndex;
-                if (index === parts.length - 1) return '';
-                return (
-                  <Text
-                    style={{ color: isCurrent ? theme.colors.text : '#bebebd' }}
-                    key={index}
-                  >
-                    {`${part.trim()}`}{' '}
-                  </Text>
-                );
-              })}
-            </Text>
-            {isCompleted && (
-              <Text style={styles.verseReference}>{verseReference}</Text>
-            )}
-          </View>
-        )}
+        {started && <BlankBoard phrase={text} reference={verseReference} />}
         {!started && (
           <View style={styles.introContainer}>
             <Text style={styles.introText}>{typeInfo.description}</Text>
@@ -88,7 +63,7 @@ const BlankChallenge: FC<BlankChallengeProps> = ({
         {started && isCompleted && (
           <TouchableOpacity
             style={styles.completedButton}
-            onPress={() => router.back()}
+            onPress={() => onCompleted()}
           >
             <Text
               style={{
@@ -135,8 +110,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     verseText: {
       textAlign: 'left',
-      color: '#cfcfce',
       fontSize: 22,
+      gap: 2,
     },
     verseReference: {
       marginTop: 5,
@@ -144,5 +119,55 @@ const getStyles = ({ colors, dark }: TTheme) =>
       color: colors.text,
       fontWeight: 'bold',
       textAlign: 'left',
+    },
+    hideVerse: {
+      backgroundColor: colors.background,
+      color: colors.background,
+      // marginRight: 10,
+    },
+    wordBank: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      padding: 20,
+      justifyContent: 'center',
+      gap: 10,
+    },
+    word: {
+      backgroundColor: '#303030',
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      borderRadius: 20,
+    },
+    wordText: {
+      color: 'white',
+      fontSize: 16,
+    },
+
+    verseContainer: {
+      flex: 1,
+      padding: 20,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    },
+    blankText: {
+      color: 'white',
+      fontSize: 16,
+    },
+    // verseText: {
+    //   color: 'white',
+    //   fontSize: 18,
+    // },
+    blank: {
+      backgroundColor: '#404040',
+      minWidth: 60,
+      height: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginHorizontal: 2,
+      marginVertical: 2,
+      borderRadius: 5,
+    },
+    selectedBlank: {
+      backgroundColor: '#606060',
     },
   });
