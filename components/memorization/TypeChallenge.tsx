@@ -60,6 +60,13 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
       inputRef.current.focus();
     }
   }, []);
+  useEffect(() => {
+    if (mistakes >= 2) {
+      setTimeout(() => {
+        resetGame();
+      }, 500);
+    }
+  }, [mistakes]);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -74,7 +81,7 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
       'keyboardDidHide',
       () => {
         if (inputRef.current && started) {
-          // inputRef.current.focus();
+          inputRef.current.focus();
         }
       }
     );
@@ -85,6 +92,16 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
   }, [started]);
 
   const onPress = () => {};
+
+  const resetGame = () => {
+    setStarted(false);
+    setMistakes(0);
+    setCurrentIndex(0);
+    setCompletedWords([]);
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
 
   const handleKeyPress = (key: string) => {
     setStarted(true);
@@ -174,10 +191,10 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
                 <Text style={styles.verseReference}>{verseReference}</Text>
                 <TouchableOpacity
                   style={styles.completedButton}
-                  onPress={() => onCompleted()}
+                  onPress={() => router.back()}
                 >
                   <Text style={styles.completedButtonText}>
-                    Completed
+                    Completed ({typeInfo.point - mistakes * 2} points)
                   </Text>
                 </TouchableOpacity>
               </>
@@ -188,6 +205,12 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
         {!started && (
           <View style={styles.introContainer}>
             <Text style={styles.introText}>{typeInfo.description}</Text>
+            <Text style={[styles.instructionText, { marginTop: 10 }]}>
+              Game will reset after 2 mistakes
+            </Text>
+            <Text style={styles.instructionText}>
+              Type the first letter of each word to begin
+            </Text>
           </View>
         )}
       </View>
