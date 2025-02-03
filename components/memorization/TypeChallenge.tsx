@@ -1,10 +1,11 @@
 import {
   StyleSheet,
   TouchableWithoutFeedback,
-  Button,
   TouchableOpacity,
+  TextInput,
+  Keyboard,
 } from 'react-native';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { Text, View } from '../Themed';
 import { IVerseItem, TTheme } from '@/types';
 import { getVerseTextRaw } from '@/utils/getVerseTextRaw';
@@ -13,7 +14,7 @@ import { useTheme } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 
 type TypeChallengeProps = {
-  item: IVerseItem | any;
+  item: IVerseItem;
   typeInfo: TPoints;
   onUpdateProgress: (value: number) => void;
 };
@@ -32,20 +33,77 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
   const router = useRouter();
   const theme = useTheme();
   const styles = getStyles(theme);
-  const [currentIndex, setCurrentIndex] = useState(-1);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [started, setStarted] = useState(false);
-  const [currentParts, setCurrentParts] = useState<string[]>([]);
+  const [mistakes, setMistakes] = useState(0);
+  const [completedWords, setCompletedWords] = useState<
+    Array<{ text: string; isCorrect: boolean }>
+  >([]);
+
   const text = getVerseTextRaw(item?.text || '');
-  const splitByComma = text.split(/[,;]/);
+  const words = text
+    .replace(/«.*»/, '')
+    .split(' ')
+    .filter((x: string) => x !== '*' && x !== '');
+
   const verseReference = `${item?.bookName} ${item?.chapter}:${item?.verse}`;
   const parts =
-    splitByComma.length <= 1
+    words.length <= 1
       ? [...splitText(text, 3), verseReference]
-      : [...splitByComma, verseReference];
+      : [...words, verseReference];
+
+  const inputRef = useRef<TextInput>(null);
   const isCompleted = currentIndex === parts.length - 1;
 
-  const onPress = () => {
-    if (!started) setStarted(true);
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        if (inputRef.current && started) {
+          // inputRef.current.focus();
+        }
+      }
+    );
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, [started]);
+
+  const onPress = () => {};
+
+  const handleKeyPress = (key: string) => {
+    setStarted(true);
+    if (isCompleted) return;
+
+    const currentWord = parts[currentIndex];
+    const expectedFirstLetter = currentWord.charAt(0).toLowerCase();
+    const inputLetter = key.toLowerCase();
+
+    const isCorrect = expectedFirstLetter === inputLetter;
+
+    if (!isCorrect) {
+      setMistakes((prev) => prev + 1);
+    }
+
+    setCompletedWords((prev) => [...prev, { text: currentWord, isCorrect }]);
+    setCurrentIndex((prev) => prev + 1);
+
+    if (currentIndex === parts.length - 2) Keyboard.dismiss();
   };
 
   const onCompleted = async () => {
@@ -53,60 +111,89 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
     router.back();
   };
 
+  const renderWord = (word: string, index: number) => {
+    const completed = completedWords[index];
+    if (!completed) {
+      return (
+        <Text
+          key={index}
+          style={[
+            styles.verseText,
+            index === currentIndex && styles.currentWord,
+            { color: 'transparent' },
+          ]}
+        >
+          {word}{' '}
+        </Text>
+      );
+    }
+
+    return (
+      <Text
+        key={index}
+        style={[
+          styles.verseText,
+          {
+            color: completed.isCorrect ? '#1ce265' : '#dc2626',
+          },
+        ]}
+      >
+        {word}{' '}
+      </Text>
+    );
+  };
+
   return (
-    <TouchableWithoutFeedback
-      style={{ flex: 1, borderWidth: 1, borderColor: 'red' }}
-      onPress={onPress}
-    >
+    <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.container}>
+        <TextInput
+          ref={inputRef}
+          style={styles.hiddenInput}
+          onKeyPress={(e) => handleKeyPress(e.nativeEvent.key)}
+          autoFocus
+          autoCapitalize='none'
+          autoCorrect={false}
+          blurOnSubmit={false}
+        />
+
         {started && (
-          <View style={{ width: '100%' }}>
-            <Text style={styles.verseText}>
-              {currentParts.map((part, index) => {
-                const isCurrent = index === currentIndex;
-                if (index === parts.length - 1) return '';
-                return (
-                  <Text
-                    style={{ color: isCurrent ? theme.colors.text : '#bebebd' }}
-                    key={index}
-                  >
-                    {`${part.trim()}`}{' '}
-                  </Text>
-                );
-              })}
-            </Text>
+          <View style={styles.gameContainer}>
+            <View style={styles.progressContainer}>
+              <Text style={styles.progressText}>Mistakes: {mistakes}</Text>
+              <Text style={styles.progressText}>
+                Progress: {Math.round((currentIndex / parts.length) * 100)}%
+              </Text>
+            </View>
+
+            <View style={styles.wordsContainer}>
+              {parts.slice(0, -1).map((word, index) => renderWord(word, index))}
+            </View>
+
             {isCompleted && (
-              <Text style={styles.verseReference}>{verseReference}</Text>
+              <>
+                <Text style={styles.verseReference}>{verseReference}</Text>
+                <TouchableOpacity
+                  style={styles.completedButton}
+                  onPress={() => onCompleted()}
+                >
+                  <Text style={styles.completedButtonText}>
+                    Completed
+                  </Text>
+                </TouchableOpacity>
+              </>
             )}
           </View>
         )}
+
         {!started && (
           <View style={styles.introContainer}>
             <Text style={styles.introText}>{typeInfo.description}</Text>
           </View>
         )}
-        {started && isCompleted && (
-          <TouchableOpacity
-            style={styles.completedButton}
-            onPress={() => router.back()}
-          >
-            <Text
-              style={{
-                fontSize: 18,
-                color: theme.dark ? '#fff' : '#000',
-                fontWeight: 'bold',
-              }}
-            >
-              Completado
-            </Text>
-          </TouchableOpacity>
-        )}
       </View>
     </TouchableWithoutFeedback>
   );
 };
-
-export default TypeChallenge;
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
@@ -116,6 +203,30 @@ const getStyles = ({ colors, dark }: TTheme) =>
       justifyContent: 'space-between',
       alignItems: 'center',
     },
+    hiddenInput: {
+      position: 'absolute',
+      width: 1,
+      height: 1,
+      opacity: 0,
+    },
+    gameContainer: {
+      width: '100%',
+      flex: 1,
+    },
+    progressContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 20,
+    },
+    progressText: {
+      fontSize: 16,
+      color: colors.text,
+    },
+    wordsContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      marginBottom: 20,
+    },
     introContainer: {
       alignItems: 'center',
       justifyContent: 'center',
@@ -124,19 +235,22 @@ const getStyles = ({ colors, dark }: TTheme) =>
     introText: {
       textAlign: 'center',
       fontSize: 20,
+      marginBottom: 16,
     },
-    completedButton: {
-      width: '100%',
-      backgroundColor: colors.notification,
-      borderRadius: 12,
-      paddingVertical: 12,
-      alignItems: 'center',
-      marginTop: 20,
+    instructionText: {
+      textAlign: 'center',
+      fontSize: 16,
+      color: colors.text,
+      opacity: 0.8,
     },
     verseText: {
-      textAlign: 'left',
-      color: '#cfcfce',
       fontSize: 22,
+      color: colors.text,
+      opacity: 0.6,
+    },
+    currentWord: {
+      opacity: 1,
+      fontWeight: 'bold',
     },
     verseReference: {
       marginTop: 5,
@@ -145,4 +259,19 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontWeight: 'bold',
       textAlign: 'left',
     },
+    completedButton: {
+      width: '100%',
+      backgroundColor: colors.primary,
+      borderRadius: 12,
+      paddingVertical: 12,
+      alignItems: 'center',
+      marginTop: 20,
+    },
+    completedButtonText: {
+      fontSize: 18,
+      color: dark ? '#fff' : '#000',
+      fontWeight: 'bold',
+    },
   });
+
+export default TypeChallenge;
