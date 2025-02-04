@@ -13,6 +13,7 @@ import { useTheme } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import removeAccent from '@/utils/removeAccent';
 import BlankBoard from './BlankBoard';
+import ProgressBar from '../home/footer/ProgressBar';
 
 type BlankChallengeProps = {
   item: IVerseItem | any;
@@ -35,9 +36,12 @@ const BlankChallenge: FC<BlankChallengeProps> = ({
   const theme = useTheme();
   const styles = getStyles(theme);
   const [started, setStarted] = useState(false);
-  const text = getVerseTextRaw(item?.text || '');
+  const [isChallengeCompleted, setIsChallengeCompleted] = useState(false);
+  const text = getVerseTextRaw(item?.text || '')
+    .replace(/«.*»/, '')
+    .replace('*', '');
   const verseReference = `${item?.bookName} ${item?.chapter}:${item?.verse}`;
-  const isCompleted = false;
+  const allowNumberOfMistakes = 1;
 
   const onPress = () => {
     if (!started) setStarted(true);
@@ -48,19 +52,32 @@ const BlankChallenge: FC<BlankChallengeProps> = ({
     router.back();
   };
 
+  const onFinished = () => {
+    setIsChallengeCompleted(true);
+  };
+
   return (
     <TouchableWithoutFeedback
       style={{ flex: 1, borderWidth: 1, borderColor: 'red' }}
       onPress={onPress}
     >
       <View style={styles.container}>
-        {started && <BlankBoard phrase={text} reference={verseReference} />}
+        {started && (
+          <BlankBoard
+            onFinished={onFinished}
+            phrase={text}
+            reference={verseReference}
+          />
+        )}
         {!started && (
           <View style={styles.introContainer}>
             <Text style={styles.introText}>{typeInfo.description}</Text>
+            <Text style={[styles.instructionText, { marginTop: 10 }]}>
+              El juego se reiniciará después de {allowNumberOfMistakes} error
+            </Text>
           </View>
         )}
-        {started && isCompleted && (
+        {started && isChallengeCompleted && (
           <TouchableOpacity
             style={styles.completedButton}
             onPress={() => onCompleted()}
@@ -90,6 +107,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       flex: 1,
       justifyContent: 'space-between',
       alignItems: 'center',
+      width: '100%',
     },
     introContainer: {
       alignItems: 'center',
@@ -99,6 +117,12 @@ const getStyles = ({ colors, dark }: TTheme) =>
     introText: {
       textAlign: 'center',
       fontSize: 20,
+    },
+    instructionText: {
+      textAlign: 'center',
+      fontSize: 16,
+      color: colors.text,
+      opacity: 0.8,
     },
     completedButton: {
       width: '100%',

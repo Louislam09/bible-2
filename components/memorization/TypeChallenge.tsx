@@ -12,6 +12,8 @@ import { getVerseTextRaw } from '@/utils/getVerseTextRaw';
 import { splitText } from '@/utils/groupBy';
 import { useTheme } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
+import ProgressBar from '../home/footer/ProgressBar';
+import removeAccent from '@/utils/removeAccent';
 
 type TypeChallengeProps = {
   item: IVerseItem;
@@ -54,44 +56,28 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
 
   const inputRef = useRef<TextInput>(null);
   const isCompleted = currentIndex === parts.length - 1;
+  const allowNumberOfMistakes = 3;
 
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
+    if (isCompleted) {
+      Keyboard.dismiss();
     }
-  }, []);
+  }, [isCompleted]);
+
   useEffect(() => {
-    if (mistakes >= 2) {
+    if (mistakes >= allowNumberOfMistakes) {
       setTimeout(() => {
         resetGame();
       }, 500);
     }
   }, [mistakes]);
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        if (inputRef.current) {
-          inputRef.current.focus();
-        }
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        if (inputRef.current && started) {
-          inputRef.current.focus();
-        }
-      }
-    );
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, [started]);
-
-  const onPress = () => {};
+  const onPress = () => {
+    if (!Keyboard.isVisible() && !isCompleted) {
+      Keyboard.dismiss();
+      inputRef.current?.focus();
+    }
+  };
 
   const resetGame = () => {
     setStarted(false);
@@ -107,7 +93,7 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
     setStarted(true);
     if (isCompleted) return;
 
-    const currentWord = parts[currentIndex];
+    const currentWord = removeAccent(parts[currentIndex]);
     const expectedFirstLetter = currentWord.charAt(0).toLowerCase();
     const inputLetter = key.toLowerCase();
 
@@ -172,32 +158,42 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
           autoCorrect={false}
           blurOnSubmit={false}
         />
+        <View style={{ marginBottom: 20, width: '100%' }}>
+          <ProgressBar
+            hideCircle
+            height={4}
+            color={'#dc2626'}
+            barColor={theme.colors.text}
+            progress={mistakes / allowNumberOfMistakes}
+            circleColor='transparent'
+          />
+          <Text style={styles.verseReference}>{verseReference}</Text>
+        </View>
 
         {started && (
           <View style={styles.gameContainer}>
-            <View style={styles.progressContainer}>
-              <Text style={styles.progressText}>Mistakes: {mistakes}</Text>
-              <Text style={styles.progressText}>
-                Progress: {Math.round((currentIndex / parts.length) * 100)}%
-              </Text>
-            </View>
+            <View>
+              <View style={styles.progressContainer}>
+                <Text style={styles.progressText}>Errores: {mistakes}</Text>
+                <Text style={styles.progressText}>
+                  Progreso: {Math.round((currentIndex / parts.length) * 100)}%
+                </Text>
+              </View>
 
-            <View style={styles.wordsContainer}>
-              {parts.slice(0, -1).map((word, index) => renderWord(word, index))}
+              <View style={styles.wordsContainer}>
+                {parts
+                  .slice(0, -1)
+                  .map((word, index) => renderWord(word, index))}
+              </View>
             </View>
 
             {isCompleted && (
-              <>
-                <Text style={styles.verseReference}>{verseReference}</Text>
-                <TouchableOpacity
-                  style={styles.completedButton}
-                  onPress={() => router.back()}
-                >
-                  <Text style={styles.completedButtonText}>
-                    Completed ({typeInfo.point - mistakes * 2} points)
-                  </Text>
-                </TouchableOpacity>
-              </>
+              <TouchableOpacity
+                style={styles.completedButton}
+                onPress={() => onCompleted()}
+              >
+                <Text style={styles.completedButtonText}>Completedo</Text>
+              </TouchableOpacity>
             )}
           </View>
         )}
@@ -206,10 +202,7 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
           <View style={styles.introContainer}>
             <Text style={styles.introText}>{typeInfo.description}</Text>
             <Text style={[styles.instructionText, { marginTop: 10 }]}>
-              Game will reset after 2 mistakes
-            </Text>
-            <Text style={styles.instructionText}>
-              Type the first letter of each word to begin
+              El juego se reiniciará después de {allowNumberOfMistakes} errores
             </Text>
           </View>
         )}
@@ -235,6 +228,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     gameContainer: {
       width: '100%',
       flex: 1,
+      justifyContent: 'space-between',
     },
     progressContainer: {
       flexDirection: 'row',
@@ -276,7 +270,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontWeight: 'bold',
     },
     verseReference: {
-      marginTop: 5,
+      marginTop: 10,
       fontSize: 20,
       color: colors.text,
       fontWeight: 'bold',

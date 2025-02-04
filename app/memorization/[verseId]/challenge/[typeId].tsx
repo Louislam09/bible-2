@@ -109,11 +109,10 @@ const Type = () => {
   }, [memorizeItem]);
 
   const onUpdateProgress = async (value: number) => {
-    if (memorizeItem.progress === typeInfo[type].maxPoint) {
+    if (memorizeItem.progress > typeInfo[type].maxPoint) {
       console.log('No more point on this challenge', memorizeItem.progress);
       return;
     }
-    console.log('onUpdateProgress', { value });
     updateProgress(memorizeItem.id, value + memorizeItem.progress);
   };
 

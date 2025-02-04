@@ -1,34 +1,65 @@
 import { TTheme } from '@/types';
+import removeAccent from '@/utils/removeAccent';
 import { useTheme } from '@react-navigation/native';
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  SafeAreaView,
-} from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react';
+import { TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import { Text, View } from '../Themed';
+import ProgressBar from '../home/footer/ProgressBar';
 
 type BlankBoardProps = {
   phrase: string;
   reference?: string;
+  onFinished: () => void;
 };
 
 type VersePart = string | null;
 
-const BlankBoard: React.FC<BlankBoardProps> = ({ phrase, reference = '' }) => {
+const BlankBoard: React.FC<BlankBoardProps> = ({
+  phrase,
+  reference = '',
+  onFinished,
+}) => {
   const theme = useTheme();
   const styles = getStyles(theme);
-  const [selectedBlankIndex, setSelectedBlankIndex] = useState<number | null>(
-    null
-  );
   const [answers, setAnswers] = useState<string[]>([]);
+  const [correctAnswers, setCorrentAnswers] = useState<string[]>([]);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [mistakes, setMistakes] = useState(0);
   const [verseParts, setVerseParts] = useState<VersePart[]>([]);
   const [wordBank, setWordBank] = useState<string[]>([]);
+  const isChallengeCompleted =
+    currentIndex > 0 && currentIndex === correctAnswers.length;
+  const shuffleOptions = (options: string[], correctAnswer: string) => {
+    const uniqueOptions = Array.from(
+      new Set(options.filter((word) => word !== correctAnswer))
+    );
+    const randomWords = uniqueOptions
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 5);
+    return [...randomWords, correctAnswer].sort(() => 0.5 - Math.random());
+  };
+
+  const currentOptions = useMemo(
+    () => shuffleOptions(wordBank, correctAnswers[currentIndex]),
+    [currentIndex, wordBank, correctAnswers]
+  );
 
   useEffect(() => {
     generatePuzzle();
   }, [phrase]);
+
+  useEffect(() => {
+    if (isChallengeCompleted) onFinished();
+  }, [isChallengeCompleted]);
+
+  useEffect(() => {
+    if (mistakes > 0) {
+      setTimeout(() => {
+        resetGame();
+        generatePuzzle();
+      }, 500);
+    }
+  }, [mistakes]);
 
   const generatePuzzle = () => {
     // Split the phrase, preserving spaces for reconstruction
@@ -36,7 +67,6 @@ const BlankBoard: React.FC<BlankBoardProps> = ({ phrase, reference = '' }) => {
     const processedParts: VersePart[] = [];
     const hiddenWords: string[] = [];
 
-    // Randomly select words to hide
     const wordsToHide = parts
       .filter((part) => part.trim() !== '')
       .sort(() => 0.5 - Math.random())
@@ -44,13 +74,10 @@ const BlankBoard: React.FC<BlankBoardProps> = ({ phrase, reference = '' }) => {
 
     parts.forEach((part) => {
       if (part.trim() === '') {
-        // It's a space, preserve it
         processedParts.push(part);
       } else {
-        // Check if this part should be hidden
         if (wordsToHide.includes(part)) {
-          // It's a word to hide
-          hiddenWords.push(part.toLowerCase());
+          hiddenWords.push(part);
           processedParts.push(null);
         } else {
           processedParts.push(part);
@@ -59,42 +86,78 @@ const BlankBoard: React.FC<BlankBoardProps> = ({ phrase, reference = '' }) => {
     });
 
     setVerseParts(processedParts);
-    // Remove duplicates and sort
-    setWordBank([...new Set(hiddenWords)].sort());
-    setAnswers(new Array(hiddenWords.length).fill(''));
-  };
-
-  const handleBlankPress = (index: number) => {
-    setSelectedBlankIndex(index);
+    setCorrentAnswers(hiddenWords);
+    setWordBank(hiddenWords);
   };
 
   const handleWordPress = (word: string) => {
-    if (selectedBlankIndex !== null) {
-      const newAnswers = [...answers];
-      newAnswers[selectedBlankIndex] = word;
-      setAnswers(newAnswers);
-      setSelectedBlankIndex(null);
-    }
+    if (currentIndex === correctAnswers.length) return;
+    const isCorrect = correctAnswers[currentIndex] === word;
+    if (!isCorrect) setMistakes((prev) => prev + 1);
+    setCurrentIndex((prev) => prev + 1);
+    setAnswers((prev) => [...prev, word]);
+  };
+
+  const checkFilledBlank = (blankIndex: number) => {
+    const isFilled = !!answers[blankIndex];
+    const isCorrent =
+      removeAccent(answers[blankIndex] || '') ===
+      removeAccent(correctAnswers[blankIndex] || '');
+    const isCurrentBlank = blankIndex === currentIndex;
+
+    return { isFilled, isCorrent, isCurrentBlank };
+  };
+
+  const resetGame = () => {
+    setAnswers([]);
+    setCorrentAnswers([]);
+    setCurrentIndex(0);
+    setMistakes(0);
+    setVerseParts([]);
+    setWordBank([]);
+    generatePuzzle();
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <View style={{ marginTop: 10 }}>
+        <ProgressBar
+          hideCircle
+          height={4}
+          color={'#dc2626'}
+          barColor={theme.colors.text}
+          progress={mistakes / 1}
+          circleColor='transparent'
+        />
+        <View style={styles.reference}>
+          <Text style={styles.referenceText}>{reference || ''}</Text>
+        </View>
+      </View>
+
       <View style={styles.verseContainer}>
         {verseParts.map((part, index) => {
+          if (index === 0 && part?.trim() === '') return;
           if (part === null) {
             const blankIndex = verseParts
               .slice(0, index)
               .filter((p) => p === null).length;
+            const { isCorrent, isCurrentBlank, isFilled } =
+              checkFilledBlank(blankIndex);
+            const key = isCorrent ? 'correctText' : 'incorrectText';
+
             return (
               <TouchableOpacity
                 key={index}
                 style={[
                   styles.blank,
-                  selectedBlankIndex === blankIndex && styles.selectedBlank,
+                  isCurrentBlank && styles.selectedBlank,
+                  isFilled && styles.filled,
                 ]}
-                onPress={() => handleBlankPress(blankIndex)}
+                onPress={() => {}}
               >
-                <Text style={styles.blankText}>{answers[blankIndex]}</Text>
+                <Text style={[styles.blankText, isFilled && styles[key]]}>
+                  {isFilled ? correctAnswers[blankIndex] : ''}
+                </Text>
               </TouchableOpacity>
             );
           }
@@ -106,24 +169,20 @@ const BlankBoard: React.FC<BlankBoardProps> = ({ phrase, reference = '' }) => {
         })}
       </View>
 
-      {/* {reference && (
-        <View style={styles.reference}>
-          <Text style={styles.referenceText}>{reference}</Text>
+      {!isChallengeCompleted && (
+        <View style={styles.wordBank}>
+          {currentOptions.map((word, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.word}
+              onPress={() => handleWordPress(word)}
+            >
+              <Text style={styles.wordText}>{word}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
-      )} */}
-
-      <View style={styles.wordBank}>
-        {wordBank.map((word, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.word}
-            onPress={() => handleWordPress(word)}
-          >
-            <Text style={styles.wordText}>{word}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    </SafeAreaView>
+      )}
+    </View>
   );
 };
 
@@ -131,7 +190,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.card,
+      backgroundColor: colors.background,
     },
     verseContainer: {
       flex: 1,
@@ -140,31 +199,44 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     verseText: {
       color: colors.text,
-      fontSize: 18,
+      fontSize: 20,
     },
     blank: {
-      backgroundColor: '#404040',
+      // backgroundColor: '#ffffff',
+      backgroundColor: colors.text + 40,
       minWidth: 60,
       height: 30,
       justifyContent: 'center',
       alignItems: 'center',
-      marginHorizontal: 2,
-      marginVertical: 2,
+      // marginHorizontal: 2,
+      // marginVertical: 2,
       borderRadius: 5,
     },
     selectedBlank: {
-      backgroundColor: '#606060',
+      backgroundColor: colors.text,
+    },
+    filled: {
+      backgroundColor: 'transparent',
+    },
+    correctText: {
+      color: '#1ce265',
+      fontSize: 20,
+    },
+    incorrectText: {
+      color: '#dc2626',
+      fontSize: 20,
     },
     blankText: {
       color: colors.text,
-      fontSize: 16,
+      fontSize: 20,
     },
     reference: {
       padding: 20,
+      paddingLeft: 0,
     },
     referenceText: {
       color: colors.text,
-      fontSize: 18,
+      fontSize: 20,
       fontWeight: 'bold',
     },
     wordBank: {
@@ -178,11 +250,12 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: colors.notification,
       paddingVertical: 10,
       paddingHorizontal: 20,
-      borderRadius: 20,
+      // borderRadius: 20,
+      borderRadius: 5,
     },
     wordText: {
       color: colors.card,
-      fontSize: 16,
+      fontSize: 20,
       fontWeight: 'bold',
     },
   });
