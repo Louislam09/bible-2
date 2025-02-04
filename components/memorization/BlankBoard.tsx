@@ -152,6 +152,7 @@ const BlankBoard: React.FC<BlankBoardProps> = ({
                   styles.blank,
                   isCurrentBlank && styles.selectedBlank,
                   isFilled && styles.filled,
+                  { minWidth: correctAnswers[blankIndex]?.length * 10 },
                 ]}
                 onPress={() => {}}
               >
@@ -204,7 +205,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     blank: {
       // backgroundColor: '#ffffff',
       backgroundColor: colors.text + 40,
-      minWidth: 60,
+      // minWidth: 60,
       height: 30,
       justifyContent: 'center',
       alignItems: 'center',
@@ -237,7 +238,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     referenceText: {
       color: colors.text,
       fontSize: 20,
-      fontWeight: 'bold',
+      fontWeight: '700',
     },
     wordBank: {
       flexDirection: 'row',

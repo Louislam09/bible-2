@@ -309,8 +309,9 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
               fontWeight: 'bold',
             },
             item.extraText === 'font' && {
+              color: theme.dark ? '#000' : 'white',
               fontFamily: item.label,
-              fontWeight: 'semibold',
+              fontWeight: '600',
             },
           ]}
         >
