@@ -77,20 +77,12 @@ const BlankChallenge: FC<BlankChallengeProps> = ({
             </Text>
           </View>
         )}
-        {started && isChallengeCompleted && (
+        {isChallengeCompleted && (
           <TouchableOpacity
             style={styles.completedButton}
             onPress={() => onCompleted()}
           >
-            <Text
-              style={{
-                fontSize: 18,
-                color: theme.dark ? '#fff' : '#000',
-                fontWeight: 'bold',
-              }}
-            >
-              Completado
-            </Text>
+            <Text style={styles.completedButtonText}>Completado</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -126,11 +118,16 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     completedButton: {
       width: '100%',
-      backgroundColor: colors.notification,
+      backgroundColor: colors.text,
       borderRadius: 12,
       paddingVertical: 12,
       alignItems: 'center',
       marginTop: 20,
+    },
+    completedButtonText: {
+      fontSize: 18,
+      color: dark ? '#000' : '#fff',
+      fontWeight: '400',
     },
     verseText: {
       textAlign: 'left',

@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { Text, View } from '../Themed';
-import { IVerseItem, TTheme } from '@/types';
+import { IVerseItem, MemorizationButtonType, TPoints, TTheme } from '@/types';
 import { getVerseTextRaw } from '@/utils/getVerseTextRaw';
 import { splitText } from '@/utils/groupBy';
 import { useTheme } from '@react-navigation/native';
@@ -19,12 +19,6 @@ type TypeChallengeProps = {
   item: IVerseItem;
   typeInfo: TPoints;
   onUpdateProgress: (value: number) => void;
-};
-
-type TPoints = {
-  point: number;
-  maxPoint: number;
-  description: string;
 };
 
 const TypeChallenge: FC<TypeChallengeProps> = ({
@@ -41,6 +35,7 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
   const [completedWords, setCompletedWords] = useState<
     Array<{ text: string; isCorrect: boolean }>
   >([]);
+  const isTestChallenge = typeInfo.type === MemorizationButtonType.Test;
 
   const text = getVerseTextRaw(item?.text || '');
   const words = text
@@ -56,7 +51,7 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
 
   const inputRef = useRef<TextInput>(null);
   const isCompleted = currentIndex === parts.length - 1;
-  const allowNumberOfMistakes = 3;
+  const allowNumberOfMistakes = isTestChallenge ? 1 : 3;
 
   useEffect(() => {
     if (isCompleted) {
@@ -80,6 +75,10 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
   };
 
   const resetGame = () => {
+    if (isTestChallenge) {
+      onCompleted(typeInfo.negativePoint);
+      return;
+    }
     setStarted(false);
     setMistakes(0);
     setCurrentIndex(0);
@@ -109,8 +108,8 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
     if (currentIndex === parts.length - 2) Keyboard.dismiss();
   };
 
-  const onCompleted = async () => {
-    await onUpdateProgress(typeInfo.point);
+  const onCompleted = async (value?: number) => {
+    await onUpdateProgress(value || typeInfo.point);
     router.back();
   };
 
@@ -176,7 +175,8 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
               <View style={styles.progressContainer}>
                 <Text style={styles.progressText}>Errores: {mistakes}</Text>
                 <Text style={styles.progressText}>
-                  Progreso: {Math.round((currentIndex / parts.length) * 100)}%
+                  Progreso:{' '}
+                  {Math.round((currentIndex / (parts.length - 1)) * 100)}%
                 </Text>
               </View>
 
@@ -192,7 +192,7 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
                 style={styles.completedButton}
                 onPress={() => onCompleted()}
               >
-                <Text style={styles.completedButtonText}>Completedo</Text>
+                <Text style={styles.completedButtonText}>Completado</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -200,9 +200,21 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
 
         {!started && (
           <View style={styles.introContainer}>
-            <Text style={styles.introText}>{typeInfo.description}</Text>
-            <Text style={[styles.instructionText, { marginTop: 10 }]}>
-              El juego se reiniciará después de {allowNumberOfMistakes} errores
+            <Text
+              style={[styles.introText, isTestChallenge && { opacity: 0.8 }]}
+            >
+              {typeInfo.description}
+            </Text>
+            <Text
+              style={[
+                styles.instructionText,
+                { marginTop: 10 },
+                isTestChallenge && { opacity: 1 },
+              ]}
+            >
+              {isTestChallenge
+                ? `Los fallos disminuirá tu puntuación`
+                : `El juego se reiniciará después de ${allowNumberOfMistakes} errores`}
             </Text>
           </View>
         )}
@@ -273,12 +285,12 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginTop: 10,
       fontSize: 20,
       color: colors.text,
-      fontWeight: 'bold',
+      fontWeight: '500',
       textAlign: 'left',
     },
     completedButton: {
       width: '100%',
-      backgroundColor: colors.primary,
+      backgroundColor: colors.text,
       borderRadius: 12,
       paddingVertical: 12,
       alignItems: 'center',
@@ -286,8 +298,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     completedButtonText: {
       fontSize: 18,
-      color: dark ? '#fff' : '#000',
-      fontWeight: 'bold',
+      color: dark ? '#000' : '#fff',
+      fontWeight: '400',
     },
   });
 

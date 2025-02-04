@@ -533,3 +533,11 @@ export type Memorization = {
   lastPracticed: number;
   addedDate: number;
 };
+
+export type TPoints = {
+  point: number;
+  maxPoint: number;
+  description: string;
+  type: MemorizationButtonType;
+  negativePoint?: number;
+};

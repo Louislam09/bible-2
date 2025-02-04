@@ -88,8 +88,9 @@ const MemoryList: React.FC<MemorizationProps> = () => {
 
   const stats = useMemo(
     () => ({
-      completed: verses.map((x) => x.progress === 100).length,
-      incompleted: verses.map((x) => x.progress !== 100).length,
+      completed: verses.filter((x) => x.progress === 100).length,
+      incompleted: verses.filter((x) => x.progress !== 100).length,
+      pending: verses.filter((x) => x.progress !== 100).length,
     }),
     [verses]
   );
@@ -107,6 +108,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
   }, []);
 
   const RenderItem: ListRenderItem<Memorization> = ({ item }) => {
+    const isCompleted = item.progress === 100;
     return (
       <TouchableOpacity
         style={styles.verseContainer}
@@ -123,7 +125,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
               <Icon
                 name='CalendarDays'
                 size={18}
-                color={theme.colors.notification}
+                color={isCompleted ? '#1ce265' : theme.colors.notification}
               />
               <Text style={styles.verseDate}>
                 {formatDateShortDayMonth(item.addedDate)}
@@ -136,9 +138,8 @@ const MemoryList: React.FC<MemorizationProps> = () => {
               size={70}
               progress={item.progress}
               maxProgress={100}
-              color={theme.colors.notification}
+              color={isCompleted ? '#1ce265' : theme.colors.notification}
               backgroundColor={theme.colors.text + 70}
-              // backgroundColor={'#a29f9f'}
             >
               <Text style={{ color: theme.colors.text, fontSize: 18 }}>
                 {item.progress}
@@ -286,7 +287,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     bottomModal: {
       borderColor: 'transparent',
-      backgroundColor: '#1c1c1e',
+      backgroundColor: dark ? colors.background : colors.background,
+      // backgroundColor: '#1c1c1e',
       width: '100%',
     },
     noResultsContainer: {
@@ -329,7 +331,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     verseDate: {
       fontSize: 18,
-      color: colors.text + 99,
+      color: colors.text,
+      opacity: 0.7,
     },
   });
 

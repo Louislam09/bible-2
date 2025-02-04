@@ -30,7 +30,7 @@ import useDebounce from '@/hooks/useDebounce';
 type TButtonItem = {
   icon: keyof typeof icons;
   label: MemorizationButtonType;
-  isTest?: boolean;
+  isLock?: boolean;
   action: (type: MemorizationButtonType) => void;
 };
 
@@ -52,11 +52,11 @@ const MemorizationScreen = () => {
     new Date(item?.addedDate || 0)
   );
 
-  const onTestPress = () => {
-    showToast('¡Desbloqueado con una puntuación de 80!', 'LONG');
-  };
-
   const onActionButtonPress = (type: MemorizationButtonType) => {
+    if (type === MemorizationButtonType.Locked) {
+      showToast('Necesitas 80% de progreso para desbloquear.', 'LONG');
+      return;
+    }
     router.push(`memorization/${verseId}/challenge/${type}`);
   };
 
@@ -81,8 +81,8 @@ const MemorizationScreen = () => {
       label: isTestLocked
         ? MemorizationButtonType.Locked
         : MemorizationButtonType.Test,
-      isTest: isTestLocked,
-      action: () => onTestPress(),
+      isLock: isTestLocked,
+      action: onActionButtonPress,
     },
   ];
 
@@ -120,41 +120,53 @@ const MemorizationScreen = () => {
             maxProgress={100}
             color={theme.colors.notification}
             backgroundColor={theme.colors.text + 70}
-            // backgroundColor={'#a29f9f'}
           >
-            <Text style={[styles.progressText, { color: theme.colors.text }]}>
-              {memorizeProgress}
-            </Text>
+            <Text style={[styles.progressText]}>{memorizeProgress}</Text>
           </CircularProgressBar>
         </View>
 
         {/* Action Buttons */}
         <View style={styles.buttonGrid}>
-          {actionButtons.map(({ icon, label, isTest, action }) => (
-            <TouchableOpacity
-              onPress={() => action(label)}
-              key={icon}
-              style={[
-                styles.actionButton,
-                // { width: buttonWidth },
-                isTest && { borderColor: theme.colors.text },
-              ]}
-            >
-              <Icon
-                name={icon}
-                size={75}
-                color={isTest ? theme.colors.text : theme.colors.notification}
-              />
-              <Text
+          {actionButtons.map(({ icon, label, isLock, action }) => {
+            const lockTextKey = isLock
+              ? 'isLockLabelText'
+              : 'isUnlockLabelText';
+            const lockBorderKey = isLock ? 'isLockButton' : 'isUnlockButton';
+            const isLockButton = isLock !== undefined;
+
+            return (
+              <TouchableOpacity
+                onPress={() => action(label)}
+                key={icon}
                 style={[
-                  styles.actionLabel,
-                  isTest && { color: theme.colors.text },
+                  styles.actionButton,
+                  isLockButton && styles[lockBorderKey],
                 ]}
               >
-                {label}
-              </Text>
-            </TouchableOpacity>
-          ))}
+                <Icon
+                  name={icon}
+                  size={75}
+                  color={
+                    isLock
+                      ? theme.dark
+                        ? '#fff'
+                        : '#000'
+                      : isLockButton
+                      ? theme.colors.notification
+                      : theme.colors.text
+                  }
+                />
+                <Text
+                  style={[
+                    styles.actionLabel,
+                    isLockButton && styles[lockTextKey],
+                  ]}
+                >
+                  {label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
 
         {/* Practice Tracker */}
@@ -241,8 +253,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginVertical: 20,
     },
     progressText: {
-      fontSize: 40,
-      color: colors.notification,
+      fontSize: 60,
+      color: colors.text,
     },
     buttonGrid: {
       flexDirection: 'row',
@@ -258,10 +270,26 @@ const getStyles = ({ colors, dark }: TTheme) =>
       justifyContent: 'center',
       padding: 16,
       borderRadius: 25,
-      borderColor: colors.notification,
+      borderColor: colors.text,
       borderWidth: 2,
     },
+    isLockButton: {
+      borderColor: dark ? '#fff' : '#000',
+    },
+    isUnlockButton: {
+      borderColor: colors.notification,
+    },
     actionLabel: {
+      color: colors.text,
+      marginTop: 8,
+      fontSize: 20,
+    },
+    isLockLabelText: {
+      color: dark ? '#fff' : '#000',
+      marginTop: 8,
+      fontSize: 20,
+    },
+    isUnlockLabelText: {
       color: colors.notification,
       marginTop: 8,
       fontSize: 20,

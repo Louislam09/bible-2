@@ -51,9 +51,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
     content: {
       backgroundColor: colors.background,
       alignItems: 'center',
-      //   borderColor: 'red',
-      //   borderWidth: 1,
-      //   paddingHorizontal: 20,
     },
     pointsContainer: {
       backgroundColor: colors.background,
