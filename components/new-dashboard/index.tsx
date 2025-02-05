@@ -135,14 +135,14 @@ const SecondDashboard = () => {
       label: 'Quiz Bíblico',
       action: () => navigation.navigate(Screens.ChooseGame),
       color: '#75d0fe',
-      isNew: isWithinTimeframe('3d', new Date('2025-01-28')).isActive,
+      isNew: isWithinTimeframe('3d', new Date('2025-02-04')).isActive,
     },
     {
       icon: 'Brain',
       label: 'Momorizar',
       action: () => navigation.navigate(Screens.MemorizeVerse),
       color: '#f1abab',
-      isNew: isWithinTimeframe('1d', new Date('2025-01-28')).isActive,
+      isNew: isWithinTimeframe('1w', new Date('2025-02-04')).isActive,
     },
   ];
 
