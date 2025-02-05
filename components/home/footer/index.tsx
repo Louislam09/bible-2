@@ -26,6 +26,15 @@ interface FooterInterface {
   verse: any;
 }
 
+const renameLongBookName = (text: string) => {
+  return text.replace(
+    /^(Hechos de los Apóstoles|Apocalipsis \(de Juan\))/,
+    (match) => {
+      return match.includes('Hechos') ? 'Hechos' : 'Apocalipsis';
+    }
+  );
+};
+
 const CustomFooter: FC<FooterInterface> = ({
   refs,
   isSplit,
@@ -100,9 +109,9 @@ const CustomFooter: FC<FooterInterface> = ({
   const nextOrPreviousBook = (name: string, chapter: number = 1) => {
     clearHighlights();
     navigation.setParams({
-      [isSplit ? "bottomSideBook" : "book"]: name,
-      [isSplit ? "bottomSideChapter" : "chapter"]: chapter,
-      [isSplit ? "bottomSideVerse" : "verse"]: 0,
+      [isSplit ? 'bottomSideBook' : 'book']: name,
+      [isSplit ? 'bottomSideChapter' : 'chapter']: chapter,
+      [isSplit ? 'bottomSideVerse' : 'verse']: 0,
       isHistory: false,
     });
   };
@@ -117,9 +126,9 @@ const CustomFooter: FC<FooterInterface> = ({
 
     const _chapter = +(chapter as number) + 1;
     navigation.setParams({
-      [isSplit ? "bottomSideBook" : "book"]: book,
-      [isSplit ? "bottomSideChapter" : "chapter"]: _chapter || 0,
-      [isSplit ? "bottomSideVerse" : "verse"]: 0,
+      [isSplit ? 'bottomSideBook' : 'book']: book,
+      [isSplit ? 'bottomSideChapter' : 'chapter']: _chapter || 0,
+      [isSplit ? 'bottomSideVerse' : 'verse']: 0,
       isHistory: false,
     });
   }
@@ -132,9 +141,9 @@ const CustomFooter: FC<FooterInterface> = ({
     }
     if ((chapter as number) <= 1) return;
     navigation.setParams({
-      [isSplit ? "bottomSideBook" : "book"]: book,
-      [isSplit ? "bottomSideChapter" : "chapter"]: (chapter as number) - 1,
-      [isSplit ? "bottomSideVerse" : "verse"]: 0,
+      [isSplit ? 'bottomSideBook' : 'book']: book,
+      [isSplit ? 'bottomSideChapter' : 'chapter']: (chapter as number) - 1,
+      [isSplit ? 'bottomSideVerse' : 'verse']: 0,
       isHistory: false,
     });
   };
@@ -166,7 +175,7 @@ const CustomFooter: FC<FooterInterface> = ({
     playRef.current?.present();
   }, []);
 
-  const displayBookName = (book || "")?.length > 10 ? shortName : book;
+  const displayBookName = renameLongBookName(book);
 
   useEffect(() => {
     if (isSplitActived) return;
@@ -198,7 +207,7 @@ const CustomFooter: FC<FooterInterface> = ({
       <View style={styles.footerCenter}>
         <TouchableOpacity ref={backRef} onPress={() => previousChapter()}>
           <Icon
-            name={"ChevronsLeft"}
+            name={'ChevronsLeft'}
             size={FOOTER_ICON_SIZE}
             style={[styles.icon, { marginHorizontal: 0 }]}
           />
@@ -211,28 +220,28 @@ const CustomFooter: FC<FooterInterface> = ({
           delayLongPress={200}
         >
           <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
-            {`${displayBookName ?? ""} ${chapter ?? ""}:${
+            {`${displayBookName ?? ''} ${chapter ?? ''}:${
               currentHistoryItemVerse || verse
             }`}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>
           <Icon
-            name={"ChevronsRight"}
+            name={'ChevronsRight'}
             size={FOOTER_ICON_SIZE}
             style={[styles.icon, { marginHorizontal: 0 }]}
           />
         </TouchableOpacity>
       </View>
       {!isSplitActived && (
-        <View style={{ flexDirection: "row", backgroundColor: "transparent" }}>
+        <View style={{ flexDirection: 'row', backgroundColor: 'transparent' }}>
           <TouchableOpacity
             ref={audioRef}
             style={[styles.footerEnd]}
             onPress={playHandlePresentModalPress}
           >
             <Icon
-              name={"Headphones"}
+              name={'Headphones'}
               size={FOOTER_ICON_SIZE}
               style={[styles.icon, { marginHorizontal: 0 }]}
             />

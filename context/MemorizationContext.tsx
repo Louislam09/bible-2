@@ -48,7 +48,7 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
     try {
       if (!myBibleDB || !executeSql) return;
       const data = await executeSql(myBibleDB, GET_ALL_MOMORIZATION, []);
-      setVerses(data as any);
+      setVerses(renameLongBookName(data as any));
     } catch (error) {
       console.warn('Error refreshVerses:', error);
     }
@@ -91,9 +91,28 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const renameLongBookName = (verses: Memorization[]) => {
+    return verses.map((verse) => {
+      const currentVerseName = verse.verse.replace(
+        /^(Hechos de los Apóstoles|Apocalipsis \(de Juan\))/,
+        (match) => {
+          return match.includes('Hechos') ? 'Hechos' : 'Apocalipsis';
+        }
+      );
+      verse.verse = currentVerseName;
+      return verse;
+    });
+  };
+
   return (
     <MemorizationContext.Provider
-      value={{ verses, addVerse, deleteVerse, updateProgress, refreshVerses }}
+      value={{
+        verses,
+        addVerse,
+        deleteVerse,
+        updateProgress,
+        refreshVerses,
+      }}
     >
       {children}
     </MemorizationContext.Provider>

@@ -6,6 +6,7 @@ interface TimeframeResult {
   remainingTime?: number;
   targetTime?: number;
   expiredTime?: string;
+  progress?: number;
 }
 
 const isWithinTimeframe = (
@@ -46,25 +47,28 @@ const isWithinTimeframe = (
     const seconds = Math.floor(milliseconds / 1000);
 
     const parts = [];
-    if (days > 0) parts.push(`${days} day${days > 1 ? 's' : ''}`);
-    if (hours > 0) parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
-    if (minutes > 0) parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
-    // if (seconds > 0) parts.push(`${seconds} second${seconds > 1 ? 's' : ''}`);
+    if (days > 0) parts.push(`${days} día${days > 1 ? 's' : ''}`);
+    if (hours > 0) parts.push(`${hours} hora${hours > 1 ? 's' : ''}`);
+    if (minutes > 0) parts.push(`${minutes} minuto${minutes > 1 ? 's' : ''}`);
+    // if (seconds > 0) parts.push(`${seconds} segundo${seconds > 1 ? 's' : ''}`);
 
     return parts.join(', ');
   };
 
   if (timeDifference > 0) {
+    const progress = (timeDifference / durationInMilliseconds) * 100;
     return {
       isActive: true,
       remainingDate: formatTime(timeDifference),
       remainingTime: timeDifference,
       targetTime: targetDate.getTime(),
+      progress: progress,
     };
   } else {
     return {
       isActive: false,
       expiredTime: formatTime(Math.abs(timeDifference)),
+      progress: 0,
     };
   }
 };

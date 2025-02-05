@@ -1,7 +1,6 @@
 import {
   StyleSheet,
   TouchableWithoutFeedback,
-  Button,
   TouchableOpacity,
 } from 'react-native';
 import React, { FC, useState } from 'react';

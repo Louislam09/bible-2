@@ -194,6 +194,11 @@ export enum TFont {
   Manrope = 'Manrope',
   Poppins = 'Poppins',
   EBGaramond = 'EBGaramond',
+  InterBold = 'InterBold',
+  DMSansBold = 'DMSansBold',
+  ManropeBold = 'ManropeBold',
+  PoppinsBold = 'PoppinsBold',
+  EBGaramondBold = 'EBGaramondBold',
 }
 export enum EBibleVersions {
   BIBLE = 'bible',
