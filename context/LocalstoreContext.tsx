@@ -11,7 +11,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { EBibleVersions, EThemes, TFont } from "@/types";
+import { EBibleVersions, EThemes, SortOption, TFont } from '@/types';
 
 type StoreState = {
   lastBook: string;
@@ -32,6 +32,8 @@ type StoreState = {
   currentVoiceIdentifier: string;
   currentVoiceRate: number;
   floatingNoteButtonPosition: { x: number; y: number };
+  memorySortOption: SortOption;
+  strikeCount: number;
 };
 
 interface StorageContextProps {
@@ -49,7 +51,7 @@ const StorageContext = createContext<StorageContextProps | undefined>(
 export const useStorage = () => {
   const context = useContext(StorageContext);
   if (!context) {
-    throw new Error("useStorage must be used within a StorageProvider");
+    throw new Error('useStorage must be used within a StorageProvider');
   }
   return context;
 };
@@ -59,13 +61,13 @@ interface StorageProviderProps {
 }
 
 const initialContext: StoreState = {
-  lastBook: "Génesis",
+  lastBook: 'Génesis',
   lastChapter: 1,
   lastVerse: 0,
-  lastBottomSideBook: "Génesis",
+  lastBottomSideBook: 'Génesis',
   lastBottomSideChapter: 1,
   lastBottomSideVerse: 0,
-  currentTheme: "Blue",
+  currentTheme: 'Blue',
   fontSize: 24,
   selectedFont: TFont.Roboto,
   isDarkMode: true,
@@ -74,9 +76,11 @@ const initialContext: StoreState = {
   isSongLyricEnabled: false,
   songFontSize: 21,
   history: [],
-  currentVoiceIdentifier: "es-us-x-esd-local",
+  currentVoiceIdentifier: 'es-us-x-esd-local',
   currentVoiceRate: 1,
   floatingNoteButtonPosition: { x: 0, y: 0 },
+  memorySortOption: SortOption.MostRecent,
+  strikeCount: 0,
 };
 
 const isArrEqual = (arr1: any[], arr2: any[]) => {

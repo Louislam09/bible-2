@@ -7,7 +7,7 @@ import { Text, View } from '../Themed';
 import ProgressBar from '../home/footer/ProgressBar';
 
 type BlankBoardProps = {
-  phrase: string;
+  verse: string;
   reference?: string;
   onFinished: () => void;
 };
@@ -15,7 +15,7 @@ type BlankBoardProps = {
 type VersePart = string | null;
 
 const BlankBoard: React.FC<BlankBoardProps> = ({
-  phrase,
+  verse: phrase,
   reference = '',
   onFinished,
 }) => {
@@ -152,7 +152,9 @@ const BlankBoard: React.FC<BlankBoardProps> = ({
                   styles.blank,
                   isCurrentBlank && styles.selectedBlank,
                   isFilled && styles.filled,
-                  { minWidth: correctAnswers[blankIndex]?.length * 10 },
+                  {
+                    minWidth: (correctAnswers?.[blankIndex]?.length || 1) * 10,
+                  },
                 ]}
                 onPress={() => {}}
               >

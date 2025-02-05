@@ -7,6 +7,8 @@ interface CircularProgressBarProps {
   strokeWidth?: number;
   progress?: number;
   maxProgress?: number;
+  /** The duration of the progress animation in milliseconds. Default value 800ms */
+  animationDuration?: number;
   color?: string;
   backgroundColor?: string;
   children?: React.ReactNode;
@@ -20,21 +22,20 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
   color = '#3498db',
   backgroundColor = '#e0e0e0',
   children,
+  animationDuration = 800,
 }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
 
-  // Animated value
   const animatedProgress = useRef(new Animated.Value(0)).current;
 
-  // Effect to animate progress
   useEffect(() => {
     Animated.timing(animatedProgress, {
       toValue: progress,
-      duration: 800, // Animation duration (ms)
+      duration: animationDuration,
       useNativeDriver: false,
     }).start();
-  }, [progress]);
+  }, [progress, animationDuration]);
 
   // Interpolating progress into strokeDashoffset
   const strokeDashoffset = animatedProgress.interpolate({
@@ -69,7 +70,7 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
           origin={`${size / 2}, ${size / 2}`}
         />
       </Svg>
-      {/* Text in the center */}
+
       <View style={[styles.textContainer, { width: size, height: size }]}>
         {children}
       </View>
@@ -77,7 +78,6 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
   );
 };
 
-// Animated version of the Circle component
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const styles = StyleSheet.create({

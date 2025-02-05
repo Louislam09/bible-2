@@ -114,19 +114,23 @@ const Type = () => {
 
   const onUpdateProgress = async (value: number) => {
     const currentTypeInfo = typeInfo[type];
-    if (memorizeItem.progress > currentTypeInfo.maxPoint) {
+    if (memorizeItem.progress >= currentTypeInfo.maxPoint) {
       console.log('No more point on this challenge', memorizeItem.progress);
       return;
     }
     const progressValue = value + memorizeItem.progress;
-    const isTypeChallege = currentTypeInfo.type === MemorizationButtonType.Type;
+    const isTypeOrTestChallenge = [
+      MemorizationButtonType.Type,
+      MemorizationButtonType.Test,
+    ].includes(currentTypeInfo.type);
     const maxFromTypeChallenge = Math.min(
       progressValue,
       currentTypeInfo.maxPoint
     );
+    console.log(progressValue, maxFromTypeChallenge);
     updateProgress(
       memorizeItem.id,
-      isTypeChallege ? maxFromTypeChallenge : progressValue
+      isTypeOrTestChallenge ? maxFromTypeChallenge : progressValue
     );
   };
 

@@ -1,5 +1,8 @@
+import Animation from '@/components/Animation';
 import CircularProgressBar from '@/components/CircularProgressBar';
+import CofettiAnimation from '@/components/CofettiAnimation';
 import Icon from '@/components/Icon';
+import ScreenWithAnimation from '@/components/LottieTransitionScreen';
 import PracticeTracker from '@/components/memorization/PracticeTracker';
 import { Text, View } from '@/components/Themed';
 import { databaseNames } from '@/constants/databaseNames';
@@ -16,6 +19,7 @@ import { ChevronLeft, icons, Trash2 } from 'lucide-react-native';
 import React from 'react';
 import {
   ActivityIndicator,
+  Alert,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -87,6 +91,21 @@ const MemorizationScreen = () => {
     router.back();
   };
 
+  const warnBeforeDelete = (id: number) => {
+    Alert.alert(
+      `Eliminar ${item.verse}`,
+      '¿Estás seguro que quieres eliminar este versículo?',
+      [
+        {
+          text: 'Cancelar',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        { text: 'Eliminar', onPress: () => onDelete(id) },
+      ]
+    );
+  };
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <Stack.Screen
@@ -101,7 +120,7 @@ const MemorizationScreen = () => {
             />
           ),
           headerRight: () => (
-            <TouchableOpacity onPress={() => onDelete(item.id)}>
+            <TouchableOpacity onPress={() => warnBeforeDelete(item.id)}>
               <Trash2 color={theme.colors.notification} size={headerIconSize} />
             </TouchableOpacity>
           ),
@@ -121,6 +140,7 @@ const MemorizationScreen = () => {
       />
       <View style={styles.container}>
         <View style={styles.progressCircle}>
+          <CofettiAnimation />
           <CircularProgressBar
             size={150}
             strokeWidth={8}
@@ -128,6 +148,7 @@ const MemorizationScreen = () => {
             maxProgress={100}
             color={isCompleted ? '#1ce265' : theme.colors.notification}
             backgroundColor={theme.colors.text + 70}
+            animationDuration={1000}
           >
             <Text style={[styles.progressText]}>{memorizeProgress}</Text>
           </CircularProgressBar>
@@ -157,6 +178,7 @@ const MemorizationScreen = () => {
                   isLockButton && isCompleted && styles.isCompletedButton,
                 ]}
               >
+                {isLockButton && isCompleted && <CofettiAnimation />}
                 <Icon
                   name={icon}
                   size={75}
@@ -241,7 +263,9 @@ const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     container: {
       flex: 1,
+      zIndex: 99,
       // backgroundColor: colors.text + 20,
+      backgroundColor: 'transparent',
       padding: 16,
       paddingTop: 0,
     },

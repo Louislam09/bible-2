@@ -65,7 +65,7 @@ const BlankChallenge: FC<BlankChallengeProps> = ({
         {started && (
           <BlankBoard
             onFinished={onFinished}
-            phrase={text}
+            verse={text}
             reference={verseReference}
           />
         )}

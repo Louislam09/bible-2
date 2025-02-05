@@ -6421,7 +6421,9 @@ export const getBookDetail = (book: string | number): IDBBookNames => {
     (x) =>
       x.longName === book ||
       x.longName.includes(book + '') ||
+      (book + '').includes(x.longName) ||
       x.bookNumber === +book
   );
+
   return (bookDetail || {}) as IDBBookNames;
 };

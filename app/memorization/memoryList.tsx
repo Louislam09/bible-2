@@ -8,6 +8,7 @@ import { Text } from '@/components/Themed';
 import { getBookDetail } from '@/constants/BookNames';
 import { headerIconSize } from '@/constants/size';
 import { useBibleContext } from '@/context/BibleContext';
+import { useStorage } from '@/context/LocalstoreContext';
 import { useMemorization } from '@/context/MemorizationContext';
 import { Memorization, SortOption, TTheme } from '@/types';
 import { formatDateShortDayMonth } from '@/utils/formatDateShortDayMonth';
@@ -71,7 +72,7 @@ const sortVerses = (
       return [...verses].sort(
         (a, b) =>
           getBookDetail(a.verse)?.bookNumber -
-          getBookDetail(a.verse)?.bookNumber
+          getBookDetail(b.verse)?.bookNumber
       );
     default:
       return verses;
@@ -81,10 +82,15 @@ const sortVerses = (
 const MemoryList: React.FC<MemorizationProps> = () => {
   const theme = useTheme();
   const router = useRouter();
-  const styles = getStyles(theme);
   const sortRef = useRef<BottomSheetModal>(null);
   const { currentBibleLongName } = useBibleContext();
-  const { verses, deleteVerse } = useMemorization();
+  const { verses } = useMemorization();
+  const { saveData, storedData } = useStorage();
+
+  const styles = getStyles(theme);
+  const sourceMemorization = require('../../assets/lottie/brain.json');
+  const notFoundSource = require('../../assets/lottie/notFound.json');
+  const { memorySortOption, strikeCount } = storedData;
 
   const stats = useMemo(
     () => ({
@@ -95,10 +101,8 @@ const MemoryList: React.FC<MemorizationProps> = () => {
     [verses]
   );
 
-  const [sortType, setSortType] = useState<SortOption>(SortOption.MostRecent);
+  const [sortType, setSortType] = useState<SortOption>(memorySortOption);
   const data = useMemo(() => sortVerses(verses, sortType), [sortType, verses]);
-
-  const notFoundSource = require('../../assets/lottie/notFound.json');
 
   const sortHandlePresentModalPress = useCallback(() => {
     sortRef.current?.present();
@@ -114,7 +118,6 @@ const MemoryList: React.FC<MemorizationProps> = () => {
         style={styles.verseContainer}
         activeOpacity={0.9}
         onPress={() => router.push(`/memorization/${item.id}`)}
-        onLongPress={() => deleteVerse(item.id)}
       >
         <View style={styles.verseItem}>
           <View style={styles.verseBody}>
@@ -140,6 +143,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
               maxProgress={100}
               color={isCompleted ? '#1ce265' : theme.colors.notification}
               backgroundColor={theme.colors.text + 70}
+              animationDuration={1000}
             >
               <Text style={{ color: theme.colors.text, fontSize: 18 }}>
                 {item.progress}
@@ -153,10 +157,13 @@ const MemoryList: React.FC<MemorizationProps> = () => {
 
   const handleSort = (sortOption: SortOption) => {
     setSortType(sortOption);
+    saveData({ memorySortOption: sortOption });
     sortClosePresentModalPress();
   };
-  const sourceMemorization = require('../../assets/lottie/brain.json');
-  const strike = 0;
+
+  const handleStrike = (value: number) => {
+    saveData({ strikeCount: strikeCount + value });
+  };
 
   return (
     <>
@@ -177,7 +184,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
               />
             ),
             headerRight: () => (
-              <Strike color={theme.colors.text} value={strike} />
+              <Strike color={theme.colors.text} value={strikeCount} />
             ),
             headerTitle: () => (
               <View
@@ -188,7 +195,10 @@ const MemoryList: React.FC<MemorizationProps> = () => {
                   backgroundColor: 'transparent',
                 }}
               >
-                <Brain color={'pink'} size={headerIconSize} />
+                <Brain
+                  color={theme.colors.notification}
+                  size={headerIconSize}
+                />
                 <Text style={{ fontSize: 22 }}>Memorizar</Text>
               </View>
             ),
@@ -203,9 +213,14 @@ const MemoryList: React.FC<MemorizationProps> = () => {
         >
           <View style={styles.memorizationHeader}>
             <View style={{}}>
-              <Text style={{ fontSize: 18, textTransform: 'capitalize' }}>
-                lista de memoria
-              </Text>
+              <View
+                style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}
+              >
+                <Text style={{ fontSize: 18, textTransform: 'capitalize' }}>
+                  lista de memoria
+                </Text>
+                <Status color={theme.colors.notification} value={data.length} />
+              </View>
               <View
                 style={{
                   marginTop: 5,
