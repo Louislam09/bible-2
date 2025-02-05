@@ -398,7 +398,10 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
           headerTitle: '',
           animation: 'slide_from_left',
           headerRight: () => (
-            <TouchableOpacity onPress={warnBeforeDeleteAll}>
+            <TouchableOpacity
+              style={{ display: 'none' }}
+              onPress={warnBeforeDeleteAll}
+            >
               <Icon
                 style={[{ marginHorizontal: 10 }]}
                 color={theme.colors.text}
@@ -451,6 +454,7 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
           />
           {actionButtons.map((item, index) => (
             <ActionButton
+              key={index}
               theme={theme}
               styles={styles}
               item={item}
