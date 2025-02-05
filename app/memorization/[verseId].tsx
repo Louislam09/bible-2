@@ -1,22 +1,25 @@
-import React from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import CircularProgressBar from '@/components/CircularProgressBar';
-import ProgressBar from '@/components/home/footer/ProgressBar';
 import Icon from '@/components/Icon';
+import PracticeTracker from '@/components/memorization/PracticeTracker';
+import { Text, View } from '@/components/Themed';
 import { databaseNames } from '@/constants/databaseNames';
 import { headerIconSize } from '@/constants/size';
 import { useMemorization } from '@/context/MemorizationContext';
 import useDebounce from '@/hooks/useDebounce';
 import useParams from '@/hooks/useParams';
 import { Memorization, MemorizationButtonType, TTheme } from '@/types';
-import { formatDateShortDayMonth } from '@/utils/formatDateShortDayMonth';
 import isWithinTimeframe from '@/utils/isWithinTimeframe';
 import { showToast } from '@/utils/showToast';
 import { useTheme } from '@react-navigation/native';
 import { Stack, useRouter } from 'expo-router';
-import { ChevronLeft, icons } from 'lucide-react-native';
-import { Text, View } from '@/components/Themed';
-import PracticeTracker from '@/components/memorization/PracticeTracker';
+import { ChevronLeft, icons, Trash2 } from 'lucide-react-native';
+import React from 'react';
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 
 type TButtonItem = {
   icon: keyof typeof icons;
@@ -27,12 +30,12 @@ type TButtonItem = {
 
 const MemorizationScreen = () => {
   const { verseId } = useParams();
-  const { verses } = useMemorization();
+  const { verses, deleteVerse } = useMemorization();
   const item = verses.find((x) => x.id === verseId) as Memorization;
+  if (!item) return <ActivityIndicator />;
   const theme = useTheme();
   const styles = getStyles(theme);
   const router = useRouter();
-  const versionName = databaseNames.find((x) => x.id === item.version);
   const memorizeProgress = useDebounce(item.progress, 1000);
 
   const isTestLocked = item.progress < 80;
@@ -79,6 +82,11 @@ const MemorizationScreen = () => {
   const iconColor = theme.dark ? '#fff' : '#000';
   const isCompleted = memorizeProgress === 100;
 
+  const onDelete = async (id: number) => {
+    await deleteVerse(id);
+    router.back();
+  };
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <Stack.Screen
@@ -93,7 +101,9 @@ const MemorizationScreen = () => {
             />
           ),
           headerRight: () => (
-            <Text style={styles.version}>{versionName?.shortName}</Text>
+            <TouchableOpacity onPress={() => onDelete(item.id)}>
+              <Trash2 color={theme.colors.notification} size={headerIconSize} />
+            </TouchableOpacity>
           ),
           headerTitle: () => (
             <View
