@@ -140,7 +140,7 @@ const MemorizationScreen = () => {
       />
       <View style={styles.container}>
         <View style={styles.progressCircle}>
-          <CofettiAnimation />
+          {isCompleted && <CofettiAnimation />}
           <CircularProgressBar
             size={150}
             strokeWidth={8}

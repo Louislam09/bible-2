@@ -90,7 +90,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
   const { currentBibleLongName } = useBibleContext();
   const { verses } = useMemorization();
   const { saveData, storedData } = useStorage();
-  const { streak, days, bestStreak, deleteAllStreaks } = useStreak();
+  const { streak, days, bestStreak } = useStreak();
   const styles = getStyles(theme);
   const sourceMemorization = require('../../assets/lottie/brain.json');
   const notFoundSource = require('../../assets/lottie/notFound.json');

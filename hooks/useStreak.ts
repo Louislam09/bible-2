@@ -56,9 +56,7 @@ export const useStreak = (): Streak => {
         setBestStreak(streakData[0].bestStreak);
         setDays(
           streakData.map(({ date }, index) => ({
-            label: new Date(date)
-              .toLocaleDateString('es-ES', { weekday: 'short' })
-              .charAt(0),
+            label: new Date(date).toUTCString().split(', ')[0],
             date,
             active: index < streak,
           }))

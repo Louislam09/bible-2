@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Text, View } from '../Themed';
 import { useTheme } from '@react-navigation/native';
@@ -13,20 +13,59 @@ interface StreakCardProps {
   days: StreakDay[];
 }
 
-// const mockStreakData: StreakCardProps = {
-//   streak: 5,
-//   bestStreak: 10,
-//   days: Array.from({ length: 19 }, (_, i) => {
-//     let date = Date.now() - i * 86400000;
-//     return {
-//       label: new Date(date)
-//         .toLocaleDateString('es-ES', { weekday: 'short' })
-//         .charAt(0),
-//       date: new Date(date).toISOString().split('T')[0], // Generates past dates
-//       active: Math.random() > 0.5, // Randomly marks some as active
-//     };
-//   }).reverse(),
-// };
+const mockDates = [
+  {
+    label: 'Sat',
+    date: '2025-02-01',
+    active: true,
+  },
+  {
+    label: 'Mon',
+    date: '2025-02-03',
+    active: true,
+  },
+  {
+    label: 'Wed',
+    date: '2025-02-05',
+    active: true,
+  },
+  {
+    label: 'Thu',
+    date: '2025-02-06',
+    active: true,
+  },
+];
+
+const generateDateRange = (startDate: string, days: StreakDay[]) => {
+  const dates = [];
+  const endDate = new Date();
+  endDate.setDate(endDate.getDate() + 1);
+  const currentDate = new Date(startDate);
+  const end = new Date(endDate);
+  const storedStreakDates = days.map((streak) => streak.date);
+
+  while (currentDate <= end) {
+    const date = currentDate.toISOString().split('T')[0];
+    dates.push({
+      label: currentDate.toUTCString().split(', ')[0],
+      date: date,
+      active: storedStreakDates.includes(date),
+    });
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return dates;
+};
+
+const weekdayShorts: { [key: string]: string } = {
+  Mon: 'Lun',
+  Tue: 'Mar',
+  Wed: 'Mié',
+  Thu: 'Jue',
+  Fri: 'Vie',
+  Sat: 'Sáb',
+  Sun: 'Dom',
+};
 
 const StreakCard: React.FC<StreakCardProps> = ({
   streak,
@@ -34,14 +73,15 @@ const StreakCard: React.FC<StreakCardProps> = ({
   days = [],
 }) => {
   const theme = useTheme();
+  const steakListRef = useRef<FlashList<any>>(null);
+  const [isLayoutMounted, setLayoutMounted] = useState(false);
   const styles = getStyles(theme);
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const tomorrowStreak = {
-    label: tomorrow.toLocaleDateString('es-ES', { weekday: 'short' }).charAt(0),
-    date: tomorrow.toISOString().split('T')[0],
-    active: false,
-  };
+  const startDate = '2025-02-01';
+  const dayDatas = useMemo(
+    () => generateDateRange(startDate, days.reverse()),
+    // () => generateDateRange('2025-02-01', mockDates),
+    [days]
+  );
 
   const RenderItem: ListRenderItem<StreakDay> = ({
     item: { active, date, label },
@@ -49,22 +89,32 @@ const StreakCard: React.FC<StreakCardProps> = ({
     <View style={[styles.dayContainer]}>
       <View style={[styles.dayCircle, active && styles.dayActive]}>
         <Text style={[styles.dayLabel, active && styles.activeText]}>
-          {label}
+          {weekdayShorts[label].charAt(0)}
         </Text>
       </View>
       <View style={styles.dateContainer}>
         <Text style={[styles.dayDate, active && styles.activeText]}>
-          {new Date(date).getDate()}
+          {date.split('-')[2]}
         </Text>
         <Text style={[styles.dayDate, active && styles.activeText]}>
-          {new Date(date)
-            .toLocaleDateString('es-ES', { month: 'short' })
-            .toUpperCase()
-            .replace('.', '')}
+          {new Date(date).toUTCString().split(' ')[2]}
         </Text>
       </View>
     </View>
   );
+
+  useEffect(() => {
+    if (steakListRef.current && isLayoutMounted) {
+      setTimeout(() => {
+        steakListRef.current?.scrollToIndex({
+          index: dayDatas.length - 1,
+          // index: dayDatas.findIndex((x) => x.date === days[0].date),
+          animated: true,
+          viewPosition: 0.5,
+        });
+      }, 500);
+    }
+  }, [steakListRef.current, isLayoutMounted]);
 
   return (
     <View style={styles.card}>
@@ -72,10 +122,14 @@ const StreakCard: React.FC<StreakCardProps> = ({
       <Text style={styles.subtitle}>Mejor: {bestStreak} días</Text>
       <View style={styles.daysContainer}>
         <FlashList
+          ref={steakListRef}
+          data={dayDatas}
+          // initialScrollIndex={dayDatas.length - 1}
+          onLayout={() => setLayoutMounted(true)}
+          decelerationRate='normal'
           horizontal
-          estimatedItemSize={135}
+          estimatedItemSize={60}
           renderItem={RenderItem as any}
-          data={[...days.reverse(), tomorrowStreak]}
           keyExtractor={(item: any, index: any) => `streak-${index}`}
         />
       </View>
