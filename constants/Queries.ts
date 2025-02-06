@@ -161,6 +161,7 @@ GROUP BY
 v.book_number;
 `;
 
+// MEMORIZATION QUERIES
 export const CREATE_MEMORIZATION_TABLE = `CREATE TABLE IF NOT EXISTS memorization (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   verse TEXT NOT NULL,
@@ -173,6 +174,12 @@ export const GET_ALL_MOMORIZATION = `SELECT * FROM memorization;`;
 export const INSERT_VERSE_TO_MOMORIZATION = `INSERT INTO memorization (verse, version, progress, lastPracticed, addedDate) VALUES (?, ?, ?, ?, ?);`;
 export const DELETE_VERSE_FROM_MOMORIZATION = `DELETE FROM memorization WHERE id = ?;`;
 export const UPDATE_MOMORIZATION_PROGRESS = `UPDATE memorization SET progress = ?, lastPracticed = ? WHERE id = ?;`;
+
+// STREAK QUERIES
+export const CREATE_STREAK_TABLE = `CREATE TABLE IF NOT EXISTS streaks (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT UNIQUE, streak INTEGER, bestStreak INTEGER);`;
+export const GET_STREAKS = `SELECT * FROM streaks ORDER BY date DESC LIMIT 7;`;
+export const UPDATE_STREAK = `UPDATE streaks SET currentStreak = ?, lastPracticed = ? WHERE id = (SELECT id FROM streaks ORDER BY id DESC LIMIT 1);`;
+export const RESET_STREAK = `UPDATE streaks SET currentStreak = 0, lastPracticed = ? WHERE id = (SELECT id FROM streaks ORDER BY id DESC LIMIT 1);`;
 
 type TQuery = {
   GET_VERSE_NUMBER_QUERY: string;

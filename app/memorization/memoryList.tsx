@@ -43,7 +43,7 @@ const Status = ({ color, value }: StatusProps) => {
   );
 };
 
-const Strike = ({ color, value }: StatusProps) => {
+const Streak = ({ color, value }: StatusProps) => {
   return (
     <View
       style={{
@@ -90,7 +90,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
   const styles = getStyles(theme);
   const sourceMemorization = require('../../assets/lottie/brain.json');
   const notFoundSource = require('../../assets/lottie/notFound.json');
-  const { memorySortOption, strikeCount } = storedData;
+  const { memorySortOption, streakCount } = storedData;
 
   const stats = useMemo(
     () => ({
@@ -161,8 +161,8 @@ const MemoryList: React.FC<MemorizationProps> = () => {
     sortClosePresentModalPress();
   };
 
-  const handleStrike = (value: number) => {
-    saveData({ strikeCount: strikeCount + value });
+  const handleStreakCount = (value: number) => {
+    saveData({ streakCount: streakCount + value });
   };
 
   return (
@@ -184,7 +184,14 @@ const MemoryList: React.FC<MemorizationProps> = () => {
               />
             ),
             headerRight: () => (
-              <Strike color={theme.colors.text} value={strikeCount} />
+              <Streak
+                color={
+                  streakCount > 1
+                    ? theme.colors.notification
+                    : theme.colors.text
+                }
+                value={streakCount}
+              />
             ),
             headerTitle: () => (
               <View
