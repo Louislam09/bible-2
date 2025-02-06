@@ -10,12 +10,13 @@ import { headerIconSize } from '@/constants/size';
 import { useMemorization } from '@/context/MemorizationContext';
 import { useDBContext } from '@/context/databaseContext';
 import useParams from '@/hooks/useParams';
-import { TTheme, MemorizationButtonType, Memorization, TPoints } from '@/types';
+import { useStreak } from '@/hooks/useStreak';
+import { Memorization, MemorizationButtonType, TPoints, TTheme } from '@/types';
 import { parseBibleReferences } from '@/utils/extractVersesInfo';
 import { useTheme } from '@react-navigation/native';
 import { Stack, useRouter } from 'expo-router';
 import { ChevronLeft, CircleHelp } from 'lucide-react-native';
-import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 
 type ParamProps = {
@@ -28,6 +29,7 @@ const Type = () => {
   const { typeId: type, verseId } = useParams<ParamProps>();
   const { verses, updateProgress } = useMemorization();
   const { myBibleDB, executeSql } = useDBContext();
+  const { updateStreak } = useStreak();
 
   const [item, setItem] = useState(null);
   const [loading, setLoadiing] = useState(true);
@@ -86,6 +88,10 @@ const Type = () => {
       type,
     },
   };
+
+  useEffect(() => {
+    updateStreak();
+  }, []);
 
   useEffect(() => {
     const getCurrentItem = async () => {

@@ -3,6 +3,7 @@ import {
   CREATE_FAVORITE_VERSES_TABLE,
   CREATE_MEMORIZATION_TABLE,
   CREATE_NOTE_TABLE,
+  CREATE_STREAK_TABLE,
 } from '@/constants/Queries';
 import { Asset } from 'expo-asset';
 import * as FileSystem from 'expo-file-system';
@@ -201,6 +202,7 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
         await createTable(db, CREATE_FAVORITE_VERSES_TABLE);
         await createTable(db, CREATE_NOTE_TABLE);
         await createTable(db, CREATE_MEMORIZATION_TABLE);
+        await createTable(db, CREATE_STREAK_TABLE);
         await addColumnIfNotExists(db, CREATE_COLUMN_UPDATED_AT_IN_NOTE_TABLE);
         databases.push(db);
       }

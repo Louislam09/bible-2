@@ -3,13 +3,16 @@ import BottomModal from '@/components/BottomModal';
 import CircularProgressBar from '@/components/CircularProgressBar';
 import Icon from '@/components/Icon';
 import ScreenWithAnimation from '@/components/LottieTransitionScreen';
+import StreakCard from '@/components/memorization/StreakCard';
 import SortMemoryList from '@/components/SortList';
 import { Text } from '@/components/Themed';
+import Tooltip from '@/components/Tooltip';
 import { getBookDetail } from '@/constants/BookNames';
 import { headerIconSize } from '@/constants/size';
 import { useBibleContext } from '@/context/BibleContext';
 import { useStorage } from '@/context/LocalstoreContext';
 import { useMemorization } from '@/context/MemorizationContext';
+import { useStreak } from '@/hooks/useStreak';
 import { Memorization, SortOption, TTheme } from '@/types';
 import { formatDateShortDayMonth } from '@/utils/formatDateShortDayMonth';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
@@ -83,14 +86,15 @@ const MemoryList: React.FC<MemorizationProps> = () => {
   const theme = useTheme();
   const router = useRouter();
   const sortRef = useRef<BottomSheetModal>(null);
+  const streakTooltipRef = useRef(null);
   const { currentBibleLongName } = useBibleContext();
   const { verses } = useMemorization();
   const { saveData, storedData } = useStorage();
-
+  const { streak, days, bestStreak, deleteAllStreaks } = useStreak();
   const styles = getStyles(theme);
   const sourceMemorization = require('../../assets/lottie/brain.json');
   const notFoundSource = require('../../assets/lottie/notFound.json');
-  const { memorySortOption, streakCount } = storedData;
+  const { memorySortOption } = storedData;
 
   const stats = useMemo(
     () => ({
@@ -101,6 +105,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
     [verses]
   );
 
+  const [openStreak, setOpenStreak] = useState(false);
   const [sortType, setSortType] = useState<SortOption>(memorySortOption);
   const data = useMemo(() => sortVerses(verses, sortType), [sortType, verses]);
 
@@ -161,10 +166,6 @@ const MemoryList: React.FC<MemorizationProps> = () => {
     sortClosePresentModalPress();
   };
 
-  const handleStreakCount = (value: number) => {
-    saveData({ streakCount: streakCount + value });
-  };
-
   return (
     <>
       <ScreenWithAnimation
@@ -184,14 +185,18 @@ const MemoryList: React.FC<MemorizationProps> = () => {
               />
             ),
             headerRight: () => (
-              <Streak
-                color={
-                  streakCount > 1
-                    ? theme.colors.notification
-                    : theme.colors.text
-                }
-                value={streakCount}
-              />
+              <TouchableOpacity
+                ref={streakTooltipRef}
+                onPress={() => setOpenStreak(true)}
+                // onLongPress={() => deleteAllStreaks()}
+              >
+                <Streak
+                  color={
+                    streak > 1 ? theme.colors.notification : theme.colors.text
+                  }
+                  value={streak}
+                />
+              </TouchableOpacity>
             ),
             headerTitle: () => (
               <View
@@ -291,6 +296,18 @@ const MemoryList: React.FC<MemorizationProps> = () => {
           >
             <SortMemoryList sortType={sortType} onSort={handleSort} />
           </BottomModal>
+          <Tooltip
+            offset={-20}
+            target={streakTooltipRef}
+            isVisible={openStreak}
+            onClose={() => setOpenStreak(false)}
+          >
+            <StreakCard
+              streak={streak}
+              bestStreak={bestStreak}
+              days={days || []}
+            />
+          </Tooltip>
         </View>
       </ScreenWithAnimation>
     </>

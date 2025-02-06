@@ -200,60 +200,6 @@ const MemorizationScreen = () => {
 
         {/* Practice Tracker */}
         <PracticeTracker currentTimeStat={currentTimeStat} item={item} />
-        {/* <View style={styles.practiceContainer}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              backgroundColor: 'transparent',
-            }}
-          >
-            <Text style={styles.practiceTitle}>Practicado</Text>
-            <Icon
-              name='CircleCheck'
-              size={24}
-              color={isCompleted ? '#1ce265' : theme.colors.notification}
-            />
-          </View>
-          {currentTimeStat.remainingDate && (
-            <Text style={styles.practiceTime}>
-              {currentTimeStat.remainingDate} restantes
-            </Text>
-          )}
-
-          <View style={{ marginVertical: 10 }}>
-            <ProgressBar
-              height={8}
-              color={isCompleted ? '#1ce265' : theme.colors.notification}
-              barColor={theme.colors.text}
-              progress={(currentTimeStat.progress || 0) / 100}
-              hideCircle
-              circleColor={theme.colors.notification}
-            />
-          </View>
-          <View style={styles.dateContainer}>
-            <View style={{ backgroundColor: 'transparent' }}>
-              <Text style={[styles.dateText, { color: theme.colors.text }]}>
-                {' '}
-                Añadido{' '}
-              </Text>
-              <Text style={styles.dateSubText}>
-                {' '}
-                {formatDateShortDayMonth(item?.addedDate || '')}{' '}
-              </Text>
-            </View>
-
-            <View style={{ backgroundColor: 'transparent' }}>
-              <Text style={[styles.dateText, { color: theme.colors.text }]}>
-                Última práctica
-              </Text>
-              <Text style={styles.dateSubText}>
-                {formatDateShortDayMonth(item?.lastPracticed || '')}
-              </Text>
-            </View>
-          </View>
-        </View> */}
       </View>
     </ScrollView>
   );

@@ -33,7 +33,6 @@ type StoreState = {
   currentVoiceRate: number;
   floatingNoteButtonPosition: { x: number; y: number };
   memorySortOption: SortOption;
-  streakCount: number;
 };
 
 interface StorageContextProps {
@@ -80,7 +79,6 @@ const initialContext: StoreState = {
   currentVoiceRate: 1,
   floatingNoteButtonPosition: { x: 0, y: 0 },
   memorySortOption: SortOption.MostRecent,
-  streakCount: 0,
 };
 
 const isArrEqual = (arr1: any[], arr2: any[]) => {

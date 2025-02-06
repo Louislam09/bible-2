@@ -178,8 +178,9 @@ export const UPDATE_MOMORIZATION_PROGRESS = `UPDATE memorization SET progress = 
 // STREAK QUERIES
 export const CREATE_STREAK_TABLE = `CREATE TABLE IF NOT EXISTS streaks (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT UNIQUE, streak INTEGER, bestStreak INTEGER);`;
 export const GET_STREAKS = `SELECT * FROM streaks ORDER BY date DESC LIMIT 7;`;
-export const UPDATE_STREAK = `UPDATE streaks SET currentStreak = ?, lastPracticed = ? WHERE id = (SELECT id FROM streaks ORDER BY id DESC LIMIT 1);`;
-export const RESET_STREAK = `UPDATE streaks SET currentStreak = 0, lastPracticed = ? WHERE id = (SELECT id FROM streaks ORDER BY id DESC LIMIT 1);`;
+export const GET_STREAK = `SELECT * FROM streaks ORDER BY date DESC LIMIT 1;`;
+export const UPDATE_STREAK = `INSERT INTO streaks (date, streak, bestStreak) VALUES (?, ?, ?);`;
+export const DELETE_ALL_STEAKS = `DELETE FROM streaks`;
 
 type TQuery = {
   GET_VERSE_NUMBER_QUERY: string;

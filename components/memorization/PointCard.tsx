@@ -1,8 +1,8 @@
+import { TTheme } from '@/types';
+import { useTheme } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../Themed';
-import { MemorizationButtonType, TTheme } from '@/types';
-import { useTheme } from '@react-navigation/native';
 
 type PointsCardProps = {
   typeInfo: TPoints;
