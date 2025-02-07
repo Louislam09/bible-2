@@ -101,6 +101,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
   const sortRef = useRef<BottomSheetModal>(null);
   const streakTooltipRef = useRef(null);
   const swipeableRefs = useRef<Map<number, Swipeable | null>>(new Map());
+  const openSwipeableId = useRef<number | null>(null);
   const { currentBibleLongName } = useBibleContext();
   const { verses, deleteVerse } = useMemorization();
   const { saveData, storedData } = useStorage();
@@ -159,7 +160,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
     const translateX = dragX.interpolate({
       inputRange: [-80, 0],
       outputRange: [0, 80],
-      extrapolate: 'clamp',
+      extrapolate: 'extend',
     });
 
     return (
@@ -174,11 +175,19 @@ const MemoryList: React.FC<MemorizationProps> = () => {
     );
   };
 
+  const handleSwipeableOpen = (id: number) => {
+    if (openSwipeableId.current && openSwipeableId.current !== id) {
+      swipeableRefs.current.get(openSwipeableId.current)?.close();
+    }
+    openSwipeableId.current = id;
+  };
+
   const RenderItem: ListRenderItem<Memorization> = ({ item }) => {
     const isCompleted = item.progress === 100;
     return (
       <Swipeable
         ref={(ref) => swipeableRefs.current.set(item.id, ref)}
+        onSwipeableOpenStartDrag={() => handleSwipeableOpen(item.id)}
         renderRightActions={(progress, dragX) =>
           renderRightActions(progress, dragX, item)
         }
@@ -253,7 +262,6 @@ const MemoryList: React.FC<MemorizationProps> = () => {
               <TouchableOpacity
                 ref={streakTooltipRef}
                 onPress={() => setOpenStreak(true)}
-                // onLongPress={() => deleteAllStreaks()}
               >
                 <Streak
                   color={
@@ -329,6 +337,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
           </View>
 
           <FlashList
+            contentContainerStyle={{ backgroundColor: '#dc2626' }}
             estimatedItemSize={135}
             renderItem={RenderItem as any}
             data={data}
@@ -416,6 +425,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderColor: '#a29f9f',
       borderTopWidth: 0.3,
       borderBottomWidth: 0.3,
+      backgroundColor: colors.background,
     },
     verseItem: {
       flex: 1,
