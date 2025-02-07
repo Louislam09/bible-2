@@ -4,11 +4,13 @@ import {
   UPDATE_STREAK,
   DELETE_ALL_STEAKS,
   GET_STREAK,
+  DELETE_LAST_STREAK,
 } from '@/constants/Queries';
 import { showToast } from '@/utils/showToast';
 import { useDBContext } from '@/context/databaseContext';
+import { useStorage } from '@/context/LocalstoreContext';
 
-type StreakDay = { label: string; date: string; active: boolean };
+type StreakDay = { label: string; date: string; active: boolean; id: number };
 
 type Streak = {
   streak: number;
@@ -22,15 +24,23 @@ type Streak = {
 export const useStreak = (): Streak => {
   const [streak, setStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
-  const [days, setDays] = useState<
-    { label: string; date: string; active: boolean }[]
-  >([]);
+  const [days, setDays] = useState<StreakDay[]>([]);
   const { myBibleDB, executeSql } = useDBContext();
+  const {
+    saveData,
+    storedData: { deleteLastStreakNumber },
+  } = useStorage();
 
   useEffect(() => {
     if (!myBibleDB || !executeSql) return;
     refreshStreak();
   }, [myBibleDB, executeSql]);
+
+  useEffect(() => {
+    if (deleteLastStreakNumber !== 0 && days.length === 2) {
+      deleteLastStreak();
+    }
+  }, [days]);
 
   const refreshStreak = async () => {
     try {
@@ -55,10 +65,11 @@ export const useStreak = (): Streak => {
         setStreak(streakData[0].streak);
         setBestStreak(streakData[0].bestStreak);
         setDays(
-          streakData.map(({ date }, index) => ({
+          streakData.map(({ date, id }, index) => ({
             label: new Date(date).toUTCString().split(', ')[0],
             date,
             active: index < streak,
+            id,
           }))
         );
       }
@@ -72,10 +83,12 @@ export const useStreak = (): Streak => {
 
     try {
       if (!myBibleDB || !executeSql) return;
+
       let values = null;
       const streaks = await executeSql(myBibleDB, GET_STREAK, []);
 
       if (streaks.length > 0) {
+        const lastStreak = streaks[0];
         const lastDate = new Date(streaks[0].date);
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
@@ -84,9 +97,13 @@ export const useStreak = (): Streak => {
           lastDate.toISOString().split('T')[0] ===
           yesterday.toISOString().split('T')[0]
         ) {
-          values = [today, streak + 1, Math.max(bestStreak, streak + 1)];
+          values = [
+            today,
+            lastStreak.streak + 1,
+            Math.max(lastStreak.bestStreak, lastStreak.streak + 1),
+          ];
         } else {
-          values = [today, 1, Math.max(bestStreak, 1)];
+          values = [today, 1, Math.max(lastStreak.bestStreak, 1)];
         }
       } else {
         values = [today, 1, 1];
@@ -98,12 +115,12 @@ export const useStreak = (): Streak => {
         if (isAnotherDay) {
           await executeSql(myBibleDB, UPDATE_STREAK, values);
           await refreshStreak();
-          showToast('¡Racha actualizada con éxito!');
+          showToast('⚡');
         }
       } else {
         await executeSql(myBibleDB, UPDATE_STREAK, values);
         await refreshStreak();
-        showToast('¡Racha actualizada con éxito!');
+        showToast('⚡');
       }
     } catch (error) {
       console.warn('Error updating streak:', error);
@@ -116,6 +133,17 @@ export const useStreak = (): Streak => {
       await executeSql(myBibleDB, DELETE_ALL_STEAKS, []);
       refreshStreak();
       showToast('¡Racha reiniciada con éxito!');
+    } catch (error) {
+      console.warn('Error resetting streak:', error);
+    }
+  };
+
+  const deleteLastStreak = async () => {
+    try {
+      if (!myBibleDB || !executeSql) return;
+      await executeSql(myBibleDB, DELETE_LAST_STREAK, []);
+      saveData({ deleteLastStreakNumber: 0 });
+      refreshStreak();
     } catch (error) {
       console.warn('Error resetting streak:', error);
     }

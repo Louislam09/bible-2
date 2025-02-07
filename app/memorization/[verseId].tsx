@@ -15,7 +15,7 @@ import isWithinTimeframe from '@/utils/isWithinTimeframe';
 import { showToast } from '@/utils/showToast';
 import { useTheme } from '@react-navigation/native';
 import { Stack, useRouter } from 'expo-router';
-import { ChevronLeft, icons, Trash2 } from 'lucide-react-native';
+import { Brain, ChevronLeft, icons, Trash2 } from 'lucide-react-native';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -120,8 +120,8 @@ const MemorizationScreen = () => {
             />
           ),
           headerRight: () => (
-            <TouchableOpacity onPress={() => warnBeforeDelete(item.id)}>
-              <Trash2 color={theme.colors.notification} size={headerIconSize} />
+            <TouchableOpacity onPress={() => console.log(item.id)}>
+              <Brain color={theme.colors.notification} size={headerIconSize} />
             </TouchableOpacity>
           ),
           headerTitle: () => (

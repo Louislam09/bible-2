@@ -404,6 +404,7 @@ const Verse: React.FC<VerseProps> = ({
 
   const onMemorizeVerse = (text: string) => {
     addVerse(text, currentBibleVersion);
+    clearHighlights();
   };
 
   const verseActions: TIcon[] = useMemo(() => {

@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
-import { Text, View } from '../Themed';
-import { useTheme } from '@react-navigation/native';
 import { TTheme } from '@/types';
+import { useTheme } from '@react-navigation/native';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { StyleSheet } from 'react-native';
+import { Text, View } from '../Themed';
 
-type StreakDay = { label: string; date: string; active: boolean };
+type StreakDay = { label: string; date: string; active: boolean; id: number };
 
 interface StreakCardProps {
   streak: number;
@@ -79,7 +79,6 @@ const StreakCard: React.FC<StreakCardProps> = ({
   const startDate = '2025-02-01';
   const dayDatas = useMemo(
     () => generateDateRange(startDate, days.reverse()),
-    // () => generateDateRange('2025-02-01', mockDates),
     [days]
   );
 
@@ -124,7 +123,6 @@ const StreakCard: React.FC<StreakCardProps> = ({
         <FlashList
           ref={steakListRef}
           data={dayDatas}
-          // initialScrollIndex={dayDatas.length - 1}
           onLayout={() => setLayoutMounted(true)}
           decelerationRate='normal'
           horizontal
@@ -164,7 +162,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     dayContainer: {
       alignItems: 'center',
-      marginHorizontal: 15,
+      marginHorizontal: 10,
     },
     dayCircle: {
       width: 50,

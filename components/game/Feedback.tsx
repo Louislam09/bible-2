@@ -12,7 +12,6 @@ interface IFeedback {
     theme: TypeTHeme;
 }
 
-
 const Feedback = ({ theme, feedback, feedbackOpacity, onNext }: IFeedback) => {
     const styles = useMemo(() => getStyles({ theme }), [theme])
     const refenceRef = useRef(null)

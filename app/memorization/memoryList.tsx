@@ -19,9 +19,22 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useTheme } from '@react-navigation/native';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import { Stack, useRouter } from 'expo-router';
-import { Brain, ChevronLeft, ListFilter, Zap } from 'lucide-react-native';
+import {
+  Brain,
+  ChevronLeft,
+  ListFilter,
+  Trash2,
+  Zap,
+} from 'lucide-react-native';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Animated,
+  Alert,
+} from 'react-native';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 type MemorizationProps = {};
 
@@ -87,8 +100,9 @@ const MemoryList: React.FC<MemorizationProps> = () => {
   const router = useRouter();
   const sortRef = useRef<BottomSheetModal>(null);
   const streakTooltipRef = useRef(null);
+  const swipeableRefs = useRef<Map<number, Swipeable | null>>(new Map());
   const { currentBibleLongName } = useBibleContext();
-  const { verses } = useMemorization();
+  const { verses, deleteVerse } = useMemorization();
   const { saveData, storedData } = useStorage();
   const { streak, days, bestStreak } = useStreak();
   const styles = getStyles(theme);
@@ -116,47 +130,98 @@ const MemoryList: React.FC<MemorizationProps> = () => {
     sortRef.current?.dismiss();
   }, []);
 
+  const handleDelete = async (id: number) => {
+    const swipeable = swipeableRefs.current.get(id);
+    swipeable?.close();
+    setTimeout(async () => await deleteVerse(id), 300);
+  };
+
+  const warnBeforeDelete = (item: Memorization) => {
+    Alert.alert(
+      `Eliminar ${item.verse}`,
+      '¿Estás seguro que quieres eliminar este versículo?',
+      [
+        {
+          text: 'Cancelar',
+          onPress: () => swipeableRefs.current.get(item.id)?.close(),
+          style: 'cancel',
+        },
+        { text: 'Eliminar', onPress: () => handleDelete(item.id) },
+      ]
+    );
+  };
+
+  const renderRightActions = (
+    progress: Animated.AnimatedInterpolation<number>,
+    dragX: Animated.AnimatedInterpolation<number>,
+    item: Memorization
+  ) => {
+    const translateX = dragX.interpolate({
+      inputRange: [-80, 0],
+      outputRange: [0, 80],
+      extrapolate: 'clamp',
+    });
+
+    return (
+      <Animated.View style={{ transform: [{ translateX }] }}>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => warnBeforeDelete(item)}
+        >
+          <Trash2 size={headerIconSize} color='#fff' />
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  };
+
   const RenderItem: ListRenderItem<Memorization> = ({ item }) => {
     const isCompleted = item.progress === 100;
     return (
-      <TouchableOpacity
-        style={styles.verseContainer}
-        activeOpacity={0.9}
-        onPress={() => router.push(`/memorization/${item.id}`)}
+      <Swipeable
+        ref={(ref) => swipeableRefs.current.set(item.id, ref)}
+        renderRightActions={(progress, dragX) =>
+          renderRightActions(progress, dragX, item)
+        }
       >
-        <View style={styles.verseItem}>
-          <View style={styles.verseBody}>
-            <Text style={styles.verseText}>{item.verse}</Text>
-            <View
-              style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}
-            >
-              <Icon
-                name='CalendarDays'
-                size={18}
+        <TouchableOpacity
+          style={styles.verseContainer}
+          activeOpacity={0.9}
+          onPress={() => router.push(`/memorization/${item.id}`)}
+        >
+          <View style={styles.verseItem}>
+            <View style={styles.verseBody}>
+              <Text style={styles.verseText}>{item.verse}</Text>
+              <View
+                style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}
+              >
+                <Icon
+                  name='CalendarDays'
+                  size={18}
+                  color={isCompleted ? '#1ce265' : theme.colors.notification}
+                />
+                <Text style={styles.verseDate}>
+                  {formatDateShortDayMonth(item.addedDate)}
+                </Text>
+              </View>
+            </View>
+            <View>
+              <CircularProgressBar
+                strokeWidth={5}
+                size={70}
+                progress={item.progress}
+                maxProgress={100}
                 color={isCompleted ? '#1ce265' : theme.colors.notification}
-              />
-              <Text style={styles.verseDate}>
-                {formatDateShortDayMonth(item.addedDate)}
-              </Text>
+                backgroundColor={theme.colors.text + 70}
+                animationDuration={1000}
+              >
+                <Text style={{ color: theme.colors.text, fontSize: 18 }}>
+                  {item.progress}
+                </Text>
+              </CircularProgressBar>
             </View>
           </View>
-          <View>
-            <CircularProgressBar
-              strokeWidth={5}
-              size={70}
-              progress={item.progress}
-              maxProgress={100}
-              color={isCompleted ? '#1ce265' : theme.colors.notification}
-              backgroundColor={theme.colors.text + 70}
-              animationDuration={1000}
-            >
-              <Text style={{ color: theme.colors.text, fontSize: 18 }}>
-                {item.progress}
-              </Text>
-            </CircularProgressBar>
-          </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </Swipeable>
     );
   };
 
@@ -372,6 +437,17 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontSize: 18,
       color: colors.text,
       opacity: 0.7,
+    },
+    deleteButton: {
+      backgroundColor: '#dc2626',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: 80,
+      height: '100%',
+    },
+    deleteButtonText: {
+      color: 'white',
+      fontWeight: 'bold',
     },
   });
 

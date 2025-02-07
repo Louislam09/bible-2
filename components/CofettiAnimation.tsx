@@ -1,9 +1,13 @@
 import { StyleSheet } from 'react-native';
-import React from 'react';
+import React, { FC } from 'react';
 import Animation from './Animation';
 import { View } from './Themed';
 
-const CofettiAnimation = () => {
+type CofettiAnimationProps = {
+  top?: number;
+};
+
+const CofettiAnimation: FC<CofettiAnimationProps> = ({ top = 0 }) => {
   const cofettiAnimation = require('../assets/lottie/confetti_animation.json');
   return (
     <View
@@ -13,6 +17,7 @@ const CofettiAnimation = () => {
         backgroundColor: 'transparent',
         width: '100%',
         height: '100%',
+        top,
       }}
     >
       <Animation

@@ -181,6 +181,12 @@ export const GET_STREAKS = `SELECT * FROM streaks ORDER BY date DESC LIMIT 7;`;
 export const GET_STREAK = `SELECT * FROM streaks ORDER BY date DESC LIMIT 1;`;
 export const UPDATE_STREAK = `INSERT INTO streaks (date, streak, bestStreak) VALUES (?, ?, ?);`;
 export const DELETE_ALL_STEAKS = `DELETE FROM streaks`;
+export const DELETE_LAST_STREAK = `WITH last_streak AS (
+    SELECT id FROM streaks ORDER BY date DESC LIMIT 1
+)
+DELETE FROM streaks 
+WHERE id = (SELECT id FROM last_streak)
+RETURNING *;`;
 
 type TQuery = {
   GET_VERSE_NUMBER_QUERY: string;
