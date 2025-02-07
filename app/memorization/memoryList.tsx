@@ -137,6 +137,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
     setTimeout(async () => await deleteVerse(id), 300);
   };
 
+
   const warnBeforeDelete = (item: Memorization) => {
     Alert.alert(
       `Eliminar ${item.verse}`,
@@ -187,10 +188,25 @@ const MemoryList: React.FC<MemorizationProps> = () => {
     return (
       <Swipeable
         ref={(ref) => swipeableRefs.current.set(item.id, ref)}
+        friction={0.6}
+        rightThreshold={150}
+        onSwipeableWillOpen={(direction) =>
+          direction === 'right'
+            ? warnBeforeDelete(item)
+            : console.log(direction)
+        }
         onSwipeableOpenStartDrag={() => handleSwipeableOpen(item.id)}
         renderRightActions={(progress, dragX) =>
           renderRightActions(progress, dragX, item)
         }
+        // renderLeftActions={() => (
+        //   <View
+        //     style={[
+        //       styles.deleteButton,
+        //       { backgroundColor: 'blue', width: '70%' },
+        //     ]}
+        //   />
+        // )}
       >
         <TouchableOpacity
           style={styles.verseContainer}
@@ -337,7 +353,10 @@ const MemoryList: React.FC<MemorizationProps> = () => {
           </View>
 
           <FlashList
-            contentContainerStyle={{ backgroundColor: '#dc2626' }}
+            contentContainerStyle={{
+              backgroundColor:
+                data.length > 0 ? '#dc2626' : theme.colors.background,
+            }}
             estimatedItemSize={135}
             renderItem={RenderItem as any}
             data={data}
@@ -370,6 +389,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
           >
             <SortMemoryList sortType={sortType} onSort={handleSort} />
           </BottomModal>
+
           <Tooltip
             offset={-20}
             target={streakTooltipRef}
