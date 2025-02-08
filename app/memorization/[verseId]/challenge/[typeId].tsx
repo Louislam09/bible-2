@@ -133,7 +133,6 @@ const Type = () => {
       progressValue,
       currentTypeInfo.maxPoint
     );
-    console.log(progressValue, maxFromTypeChallenge);
     updateProgress(
       memorizeItem.id,
       isTypeOrTestChallenge ? maxFromTypeChallenge : progressValue

@@ -11,8 +11,8 @@ import { Text, View } from "./Themed";
 import useParams from "@/hooks/useParams";
 import { BOOK_IMAGES } from "@/constants/Images";
 import { useBibleContext } from "@/context/BibleContext";
-import { useNavigation, usePathname } from "node_modules/expo-router/build";
-import { HomeParams, IDBBookNames, Screens, TTheme } from "@/types";
+import { useNavigation, usePathname } from 'expo-router';
+import { HomeParams, IDBBookNames, Screens, TTheme } from '@/types';
 
 interface IBookNameList {
   bookList: IDBBookNames[] | any[];
@@ -23,7 +23,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
   const pathname = usePathname();
   const localParams = useParams<HomeParams>();
 
-  const isVerseScreen = pathname.includes("chooseVerseNumber");
+  const isVerseScreen = pathname.includes('chooseVerseNumber');
 
   const {
     book: selectedBook,
@@ -39,7 +39,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
   const styles = getStyles(theme);
   const { isBottomSideSearching, toggleBottomSideSearching, orientation } =
     useBibleContext();
-  const isPortrait = orientation === "PORTRAIT";
+  const isPortrait = orientation === 'PORTRAIT';
   const selectedSideBook = isBottomSideSearching
     ? bottomSideBook
     : selectedBook;
@@ -53,34 +53,34 @@ const BookNameList = ({ bookList }: IBookNameList) => {
       screen: Screens.ChooseChapterNumber,
       params: {
         ...routeParams,
-        [isBottomSideSearching ? "bottomSideBook" : "book"]: item,
+        [isBottomSideSearching ? 'bottomSideBook' : 'book']: item,
       },
     }),
     [Screens.ChooseChapterNumber]: (item: any, routeParams: any) => ({
       screen: Screens.ChooseVerseNumber,
       params: {
         ...routeParams,
-        [isBottomSideSearching ? "bottomSideChapter" : "chapter"]: item,
+        [isBottomSideSearching ? 'bottomSideChapter' : 'chapter']: item,
       },
     }),
     [Screens.ChooseVerseNumber]: (item: any, routeParams: any) => ({
       screen: Screens.Home,
       params: {
         ...routeParams,
-        [isBottomSideSearching ? "bottomSideVerse" : "verse"]: item,
+        [isBottomSideSearching ? 'bottomSideVerse' : 'verse']: item,
         isHistory: false,
       },
     }),
     default: (item: any) => ({
       screen: Screens.ChooseChapterNumber,
       params: {
-        [isBottomSideSearching ? "bottomSideChapter" : "chapter"]: item,
+        [isBottomSideSearching ? 'bottomSideChapter' : 'chapter']: item,
       },
     }),
   };
 
   const handlePress = (item: string | number) => {
-    const routeName = pathname.split("/")[1];
+    const routeName = pathname.split('/')[1];
     const navigationInfo =
       screenNavigationMap[routeName] || screenNavigationMap.default;
     const { screen, params } = navigationInfo(item, localParams);
@@ -92,9 +92,9 @@ const BookNameList = ({ bookList }: IBookNameList) => {
     <TouchableOpacity
       style={[
         styles.listItem,
-        selectedSideBook ? { justifyContent: "center" } : {},
+        selectedSideBook ? { justifyContent: 'center' } : {},
         (isVerseScreen ? selectedSideVerse : selectedSideChapter) === item && {
-          backgroundColor: theme.colors.notification + "60",
+          backgroundColor: theme.colors.notification + '60',
         },
       ]}
       onPress={() => handlePress(item)}
@@ -103,7 +103,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
         style={[
           styles.listTitle,
           (isVerseScreen ? selectedSideVerse : selectedSideChapter) ===
-            item && { color: "white" },
+            item && { color: 'white' },
         ]}
       >
         {item}
@@ -116,34 +116,23 @@ const BookNameList = ({ bookList }: IBookNameList) => {
       style={[
         styles.container,
         { width: SCREEN_WIDTH },
-        !isPortrait && { flexDirection: "row" },
+        !isPortrait && { flexDirection: 'row' },
       ]}
     >
       <View style={styles.listWrapper}>
         {selectedSideBook && (
-          <Text
-            style={[
-              styles.listChapterTitle,
-              {
-                fontSize: 26,
-                position: "absolute",
-                top: 10,
-                zIndex: 11,
-                paddingVertical: 5,
-              },
-            ]}
-          >
-            {selectedSideBook} {isVerseScreen && selectedSideChapter}
-          </Text>
-        )}
-        {selectedSideBook && (
           <Image
-            style={[styles.bookImage, { marginTop: 40 }]}
+            style={[styles.bookImage]}
             source={{
-              uri: BOOK_IMAGES[selectedSideBook ?? "Génesis"],
+              uri: BOOK_IMAGES[selectedSideBook ?? 'Génesis'],
             }}
             alt={selectedSideBook}
           />
+        )}
+        {selectedSideBook && (
+          <Text style={styles.listChapterTitle}>
+            {selectedSideBook} {isVerseScreen && selectedSideChapter}
+          </Text>
         )}
       </View>
       <FlashList
@@ -162,33 +151,32 @@ const getStyles = ({ colors }: TTheme) =>
     container: {
       flex: 1,
       backgroundColor: colors.background,
-      width: "100%",
+      width: '100%',
     },
     listWrapper: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      position: "relative",
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
     },
     bookImage: {
-      resizeMode: "contain",
-      position: "relative",
-      width: 200,
-      height: 200,
+      resizeMode: 'contain',
+      position: 'relative',
+      width: 100,
+      height: 100,
     },
     flatContainer: {
       paddingVertical: 20,
       backgroundColor: colors.background,
     },
     listItem: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      borderStyle: "solid",
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      borderStyle: 'solid',
       borderWidth: 0.5,
-      borderColor: colors.text,
+      borderColor: colors.text + 60,
       padding: 15,
       flex: 1,
     },
@@ -198,12 +186,13 @@ const getStyles = ({ colors }: TTheme) =>
     },
     listChapterTitle: {
       color: colors.notification,
-      padding: 20,
+      paddingHorizontal: 20,
       paddingBottom: 0,
-      fontSize: 20,
+      fontSize: 26,
+      paddingVertical: 5,
     },
     icon: {
-      fontWeight: "900",
+      fontWeight: '900',
       color: colors.text,
       marginHorizontal: 10,
     },

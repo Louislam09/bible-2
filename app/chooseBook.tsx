@@ -56,118 +56,33 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
     Mt: 'Nuevo Pacto',
   };
 
-  const renderListView: ListRenderItem<IDBBookNames> = ({ item, index }) => (
-    <>
-      {withTitle(index) && (
-        <Text
-          style={[
-            styles.listViewTitle,
-            item.shortName === 'Mt' && { padding: 10 },
-          ]}
-        >
-          {title[item.shortName]}
-        </Text>
-      )}
-      <TouchableOpacity
-        style={[styles.listViewItem, index === 0 && { borderTopWidth: 0 }]}
-        onPress={() => handlePress(item)}
-      >
-        <Text
-          style={[
-            styles.listTitle,
-            { color: theme.dark ? item.bookColor : 'black' },
-          ]}
-        >
-          {item.longName}
-        </Text>
-      </TouchableOpacity>
-    </>
-  );
   const renderItem: ListRenderItem<IDBBookNames> = ({ item, index }) => {
+    const isCurrent = book === item.longName;
+    const isNewVow = index >= BookIndexes.Malaquias;
     return (
       <TouchableOpacity
         style={[
           styles.listItem,
-          book === item.longName && {
-            backgroundColor: theme.colors.notification + '60',
-          },
+          isCurrent && { backgroundColor: theme.colors.notification + '60' },
+          isNewVow && { backgroundColor: theme.colors.text + 20 },
         ]}
         onPress={() => handlePress(item)}
+        activeOpacity={0.7}
       >
         <Text
           style={[
             styles.listTitle,
-            { color: theme.dark ? item.bookColor : 'black' },
-            book === item.longName && { color: 'white' },
+            { color: theme.dark ? item.bookColor : '' },
           ]}
         >
-          {item.shortName}
+          {item.longName.replace(/\s+/g, '').slice(0, 3)}
+        </Text>
+        <Text numberOfLines={1} ellipsizeMode='middle' style={styles.subTitle}>
+          {item.longName}
         </Text>
       </TouchableOpacity>
     );
   };
-
-  const GridView = (
-    <>
-      <View style={styles.listWrapper}>
-        <Text style={styles.listTitle}>Antiguo Pacto</Text>
-        <FlashList
-          contentContainerStyle={styles.flatContainer}
-          data={DB_BOOK_NAMES.filter((_, index) => index < BookIndexes.Mateo)}
-          renderItem={renderItem}
-          estimatedItemSize={47}
-          numColumns={6}
-        />
-      </View>
-      <View
-        style={[
-          styles.listWrapper,
-          {
-            flex: 0.9,
-          },
-        ]}
-      >
-        <Text style={styles.listTitle}>Nuevo Pacto</Text>
-        <FlashList
-          contentContainerStyle={styles.flatContainer}
-          data={DB_BOOK_NAMES.filter((_, index) => index >= BookIndexes.Mateo)}
-          renderItem={renderItem}
-          estimatedItemSize={47}
-          numColumns={6}
-        />
-      </View>
-    </>
-  );
-
-  const ListView = (
-    <View style={{ flex: 1, width: '100%' }}>
-      {/* <View style={{ marginVertical: 4 }}>
-        <TextInput
-          placeholder="Filtra libro"
-          cursorColor={theme.colors.notification}
-          style={styles.saerchInput}
-          placeholderTextColor={theme.colors.text + "99"}
-          onChangeText={handelSearch}
-        />
-      </View> */}
-      <FlashList
-        contentContainerStyle={{
-          ...styles.flatContainer,
-          paddingHorizontal: 10,
-        }}
-        data={
-          query
-            ? DB_BOOK_NAMES.filter(
-                (x) =>
-                  removeAccent(x.longName).indexOf(query.toLowerCase()) !== -1
-              )
-            : DB_BOOK_NAMES
-        }
-        renderItem={renderListView}
-        estimatedItemSize={47}
-      />
-    </View>
-  );
 
   return (
     <Fragment>
@@ -189,7 +104,15 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
         key={orientation + theme.dark}
         style={[styles.container, !isPortrait && { flexDirection: 'row' }]}
       >
-        {viewLayoutGrid ? GridView : ListView}
+        <View style={styles.listWrapper}>
+          <FlashList
+            contentContainerStyle={styles.flatContainer}
+            data={DB_BOOK_NAMES}
+            renderItem={renderItem}
+            estimatedItemSize={47}
+            numColumns={viewLayoutGrid ? 4 : 1}
+          />
+        </View>
       </View>
     </Fragment>
   );
@@ -197,27 +120,18 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
-    saerchInput: {
-      borderBottomColor: colors.notification,
-      borderBottomWidth: 0.7,
-      borderStyle: 'solid',
-      color: colors.text,
-    },
     container: {
       flex: 1,
       position: 'relative',
-      paddingHorizontal: 5,
       alignItems: 'flex-start',
       width: '100%',
-      marginTop: 5,
-      backgroundColor: colors.background,
+      backgroundColor: dark ? colors.background : colors.text + 20,
     },
     listWrapper: {
       display: 'flex',
       flex: 1,
       width: '100%',
       height: '100%',
-      backgroundColor: colors.background,
     },
     bookImage: {
       resizeMode: 'contain',
@@ -226,17 +140,17 @@ const getStyles = ({ colors, dark }: TTheme) =>
       height: 200,
     },
     flatContainer: {
-      paddingVertical: 20,
+      paddingBottom: 20,
       backgroundColor: colors.background,
     },
     listItem: {
       display: 'flex',
-      alignItems: 'center',
       borderStyle: 'solid',
-      borderWidth: 0.5,
-      borderColor: '#4a4949',
+      borderWidth: 1,
+      borderColor: colors.text + 10,
       padding: 10,
       flex: 1,
+      height: 70,
     },
     listViewItem: {
       display: 'flex',
@@ -260,8 +174,14 @@ const getStyles = ({ colors, dark }: TTheme) =>
       textAlign: 'center',
     },
     listTitle: {
-      color: colors.notification,
-      fontSize: 20,
+      color: colors.text,
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    subTitle: {
+      fontSize: 14,
+      color: colors.text,
+      opacity: 0.9,
     },
     listChapterTitle: {
       color: colors.notification,
