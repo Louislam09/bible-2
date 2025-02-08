@@ -1,59 +1,47 @@
 import Icon from '@/components/Icon';
 import { Text, View } from '@/components/Themed';
 import { DB_BOOK_NAMES } from '@/constants/BookNames';
+import { useBibleChapter } from '@/context/BibleChapterContext';
 import { useBibleContext } from '@/context/BibleContext';
-import useParams from '@/hooks/useParams';
-import {
-  BookIndexes,
-  ChooseChapterNumberParams,
-  IDBBookNames,
-  Screens,
-  TTheme,
-} from '@/types';
-import removeAccent from '@/utils/removeAccent';
+import { BookIndexes, IDBBookNames, Screens, TTheme } from '@/types';
 import { useTheme } from '@react-navigation/native';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
-import { Stack, useNavigation } from 'expo-router';
-import React, { Fragment, useState } from 'react';
+import { Stack, useRouter } from 'expo-router';
+import React, { Fragment } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 type ChooseBookProps = {};
 
 const ChooseBook: React.FC<ChooseBookProps> = () => {
-  const navigation = useNavigation();
-  const routeParam = useParams<ChooseChapterNumberParams>();
-  const { book } = routeParam;
+  // const navigation = useNavigation();
+  const router = useRouter();
+
+  // const routeParam = useParams<ChooseChapterNumberParams>();
+  const {
+    updateBibleQuery,
+    bibleQuery: { book },
+  } = useBibleChapter();
+  // const { book } = routeParam;
   const theme = useTheme();
   const styles = getStyles(theme);
   const {
     viewLayoutGrid,
     toggleViewLayoutGrid,
-    isBottomSideSearching,
+    // isBottomSideSearching,
     orientation,
   } = useBibleContext();
-  const [query, setQuery] = useState('');
   const isPortrait = orientation === 'PORTRAIT';
 
   const handlePress = (item: IDBBookNames) => {
-    const topSide: any = { book: item.longName };
-    const bottomSide: any = { bottomSideBook: item.longName };
-    const params = isBottomSideSearching ? bottomSide : topSide;
-    navigation.navigate(Screens.ChooseChapterNumber, {
-      ...routeParam,
-      ...params,
-    });
-  };
-
-  const handelSearch = async (query: string) => {
-    setQuery(query);
-  };
-
-  const withTitle = (index: number) =>
-    [BookIndexes.Genesis, BookIndexes.Mateo].includes(index);
-
-  const title: { [key: string]: string } = {
-    Gn: 'Antiguo Pacto',
-    Mt: 'Nuevo Pacto',
+    // const topSide: any = { book: item.longName };
+    // const bottomSide: any = { bottomSideBook: item.longName };
+    // const params = isBottomSideSearching ? bottomSide : topSide;
+    updateBibleQuery({ book: item.longName });
+    router.push(Screens.ChooseChapterNumber);
+    // navigation.navigate(Screens.ChooseChapterNumber, {
+    //   ...routeParam,
+    //   ...params,
+    // });
   };
 
   const renderItem: ListRenderItem<IDBBookNames> = ({ item, index }) => {

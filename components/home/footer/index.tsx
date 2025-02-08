@@ -18,6 +18,8 @@ import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
+import { useBibleChapter } from '@/context/BibleChapterContext';
+import { renameLongBookName } from '@/utils/extractVersesInfo';
 interface FooterInterface {
   refs: any;
   isSplit?: boolean;
@@ -26,20 +28,11 @@ interface FooterInterface {
   verse: any;
 }
 
-const renameLongBookName = (text: string) => {
-  return text.replace(
-    /^(Hechos de los Apóstoles|Apocalipsis \(de Juan\))/,
-    (match) => {
-      return match.includes('Hechos') ? 'Hechos' : 'Apocalipsis';
-    }
-  );
-};
-
 const CustomFooter: FC<FooterInterface> = ({
   refs,
   isSplit,
-  book,
-  chapter,
+  // book,
+  // chapter,
   verse,
 }) => {
   const { book: bookRef, back: backRef, next: nextRef, audi: audioRef } = refs;
@@ -59,20 +52,23 @@ const CustomFooter: FC<FooterInterface> = ({
     storedData: { currentVoiceIdentifier, currentVoiceRate = 1 },
   } = useStorage();
   const isConnected = useInternetConnection();
+  const {
+    updateBibleQuery,
+    bibleQuery: { book, chapter },
+  } = useBibleChapter();
+
   const FOOTER_ICON_SIZE = iconSize;
   const theme = useTheme();
   const styles = getStyles(theme);
   const playRef = useRef<BottomSheetModal>(null);
   const navigation = useNavigation();
-  const route = useRoute();
+  const router = useRoute();
   const currentHistoryItemVerse = historyManager.getCurrentItem()?.verse;
 
   const { bookNumber, shortName } =
     DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
   const isRVR = currentBibleVersion === EBibleVersions.BIBLE && isConnected;
-  const translateX = useRef(new Animated.Value(0)).current;
-  const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
   const { isDownloading, isPlaying, playAudio, duration, position } =
     useAudioPlayer({
       book: bookIndex + 1,
@@ -108,12 +104,13 @@ const CustomFooter: FC<FooterInterface> = ({
 
   const nextOrPreviousBook = (name: string, chapter: number = 1) => {
     clearHighlights();
-    navigation.setParams({
-      [isSplit ? 'bottomSideBook' : 'book']: name,
-      [isSplit ? 'bottomSideChapter' : 'chapter']: chapter,
-      [isSplit ? 'bottomSideVerse' : 'verse']: 0,
-      isHistory: false,
-    });
+    updateBibleQuery({ book: name, chapter, verse: 0 });
+    // navigation.setParams({
+    //   [isSplit ? 'bottomSideBook' : 'book']: name,
+    //   [isSplit ? 'bottomSideChapter' : 'chapter']: chapter,
+    //   [isSplit ? 'bottomSideVerse' : 'verse']: 0,
+    //   isHistory: false,
+    // });
   };
 
   function nextChapter() {
@@ -125,12 +122,13 @@ const CustomFooter: FC<FooterInterface> = ({
     }
 
     const _chapter = +(chapter as number) + 1;
-    navigation.setParams({
-      [isSplit ? 'bottomSideBook' : 'book']: book,
-      [isSplit ? 'bottomSideChapter' : 'chapter']: _chapter || 0,
-      [isSplit ? 'bottomSideVerse' : 'verse']: 0,
-      isHistory: false,
-    });
+    updateBibleQuery({ chapter: _chapter || 1, verse: 0 });
+    // navigation.setParams({
+    //   [isSplit ? 'bottomSideBook' : 'book']: book,
+    //   [isSplit ? 'bottomSideChapter' : 'chapter']: _chapter || 0,
+    //   [isSplit ? 'bottomSideVerse' : 'verse']: 0,
+    //   isHistory: false,
+    // });
   }
   const previousChapter = () => {
     if (bookNumber !== 10 && chapter === 1) {
@@ -140,23 +138,27 @@ const CustomFooter: FC<FooterInterface> = ({
       return;
     }
     if ((chapter as number) <= 1) return;
-    navigation.setParams({
-      [isSplit ? 'bottomSideBook' : 'book']: book,
-      [isSplit ? 'bottomSideChapter' : 'chapter']: (chapter as number) - 1,
-      [isSplit ? 'bottomSideVerse' : 'verse']: 0,
-      isHistory: false,
+    updateBibleQuery({
+      chapter: (chapter as number) - 1,
+      verse: 0,
     });
+    // navigation.setParams({
+    //   [isSplit ? 'bottomSideBook' : 'book']: book,
+    //   [isSplit ? 'bottomSideChapter' : 'chapter']: (chapter as number) - 1,
+    //   [isSplit ? 'bottomSideVerse' : 'verse']: 0,
+    //   isHistory: false,
+    // });
   };
 
   const onSingleFooterTitle = () => {
     clearHighlights();
     toggleBottomSideSearching(isSplit as boolean);
-    navigation?.navigate(Screens.ChooseBook, { ...route.params });
+    navigation?.navigate(Screens.ChooseBook, { ...router.params });
   };
   const onDoubleFooterTitle = () => {
     clearHighlights();
     toggleBottomSideSearching(isSplit as boolean);
-    navigation?.navigate(Screens.ChooseChapterNumber, { ...route.params });
+    navigation?.navigate(Screens.ChooseChapterNumber, { ...router.params });
   };
 
   const onPress = useSingleAndDoublePress({
@@ -168,7 +170,7 @@ const CustomFooter: FC<FooterInterface> = ({
   const onLongFooterTitle = () => {
     clearHighlights();
     toggleBottomSideSearching(isSplit as boolean);
-    navigation?.navigate(Screens.ChooseChapterNumber, { ...route.params });
+    navigation?.navigate(Screens.ChooseChapterNumber, { ...router.params });
   };
 
   const playHandlePresentModalPress = useCallback(() => {
@@ -183,12 +185,12 @@ const CustomFooter: FC<FooterInterface> = ({
     const currentHistory = historyManager.getCurrentItem();
 
     if (!currentHistory) return;
-    navigation.setParams({
-      book: currentHistory.book,
-      chapter: currentHistory.chapter,
-      verse: currentHistory.verse,
-      isHistory: true,
-    });
+    // navigation.setParams({
+    //   book: currentHistory.book,
+    //   chapter: currentHistory.chapter,
+    //   verse: currentHistory.verse,
+    //   isHistory: true,
+    // });
   }, [currentHistoryIndex]);
 
   return (

@@ -112,4 +112,16 @@ export function parseBibleReferences(_references: string): BibleReference[] {
   });
 }
 
+export const renameLongBookName = (text: string) => {
+  return text.replace(
+    /^(Hechos de los Apóstoles|Apocalipsis \(de Juan\)|Cantar de los Cantares)/,
+    (match) => {
+      if (match.includes('Hechos')) return 'Hechos';
+      if (match.includes('Apocalipsis')) return 'Apocalipsis';
+      if (match.includes('Cantares')) return 'Cantares';
+      return match;
+    }
+  );
+};
+
 export default extractVersesInfo;

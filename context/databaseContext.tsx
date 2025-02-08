@@ -11,7 +11,7 @@ interface Row {
 
 type DatabaseContextType = {
   myBibleDB?: SQLite.SQLiteDatabase | null;
-  executeSql?:
+  executeSql:
     | ((
         db: SQLite.SQLiteDatabase,
         sql: string,

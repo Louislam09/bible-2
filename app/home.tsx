@@ -29,6 +29,7 @@ import StatusBarBackground from '@/components/StatusBarBackground';
 import useParams from "@/hooks/useParams";
 import { HomeParams, TTheme } from "@/types";
 import { Stack, useNavigation, useRouter } from "expo-router";
+import { useBibleChapter } from '@/context/BibleChapterContext';
 
 // Constants
 const MIN_SPLIT_SIZE = 200;
@@ -45,8 +46,9 @@ type HomeScreenProps = {};
 
 const HomeScreen: React.FC<HomeScreenProps> = () => {
   const router = useRouter();
-  const navigation = useNavigation()
-  const routeParams = useParams<HomeParams>();
+  const navigation = useNavigation();
+  const routeParams2 = useParams<HomeParams>();
+  const { bibleQuery: routeParams } = useBibleChapter();
   const theme = useTheme();
   const { storedData } = useStorage();
   const { noteListBottomSheetRef } = useBibleContext();
@@ -68,13 +70,13 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
       verse:
         routeParams.verse === 0 ? 1 : routeParams.verse ?? storedData.lastVerse,
       bottomSideBook:
-        routeParams.bottomSideBook ?? storedData.lastBottomSideBook,
+        routeParams.lastBottomSideBook ?? storedData.lastBottomSideBook,
       bottomSideChapter:
-        routeParams.bottomSideChapter ?? storedData.lastBottomSideChapter,
+        routeParams.lastBottomSideChapter ?? storedData.lastBottomSideChapter,
       bottomSideVerse:
-        routeParams.bottomSideVerse === 0
+        routeParams.lastBottomSideVerse === 0
           ? 1
-          : routeParams.bottomSideVerse ?? storedData.lastBottomSideVerse,
+          : routeParams.lastBottomSideVerse ?? storedData.lastBottomSideVerse,
     }),
     [routeParams, storedData]
   );
@@ -253,7 +255,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
         >
           <NoteNameList {...{ theme }} />
         </BottomModal>
-        {componentRefs.book.current && routeParams.isTour === true && (
+        {componentRefs.book.current && routeParams2.isTour === true && (
           <Walkthrough
             steps={tutorialSteps}
             setStep={setStepIndex}

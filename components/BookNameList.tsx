@@ -13,6 +13,7 @@ import { BOOK_IMAGES } from "@/constants/Images";
 import { useBibleContext } from "@/context/BibleContext";
 import { useNavigation, usePathname } from 'expo-router';
 import { HomeParams, IDBBookNames, Screens, TTheme } from '@/types';
+import { useBibleChapter } from '@/context/BibleChapterContext';
 
 interface IBookNameList {
   bookList: IDBBookNames[] | any[];
@@ -22,6 +23,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
   const navigation = useNavigation();
   const pathname = usePathname();
   const localParams = useParams<HomeParams>();
+  const { updateBibleQuery } = useBibleChapter();
 
   const isVerseScreen = pathname.includes('chooseVerseNumber');
 
@@ -84,6 +86,7 @@ const BookNameList = ({ bookList }: IBookNameList) => {
     const navigationInfo =
       screenNavigationMap[routeName] || screenNavigationMap.default;
     const { screen, params } = navigationInfo(item, localParams);
+    updateBibleQuery({ book: params.book, chapter: params.chapter });
     // if (isVerseScreen) toggleBottomSideSearching(false);
     navigation.navigate(screen, params);
   };

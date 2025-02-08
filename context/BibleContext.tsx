@@ -36,7 +36,7 @@ import { useStorage } from './LocalstoreContext';
 type BibleState = {
   highlightedVerses: IBookVerse[];
   highlightVerse: Function;
-  clearHighlights: Function;
+  clearHighlights: () => void;
   setSearchQuery: Function;
   selectFont: Function;
   onDeleteNote: (id: number) => void;

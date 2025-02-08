@@ -1,20 +1,16 @@
 import { useTheme } from "@react-navigation/native";
-import React, { FC, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, StyleSheet } from "react-native";
-import { DB_BOOK_NAMES } from "../../../constants/BookNames";
-import { useDBContext } from "../../../context/databaseContext";
-import { HomeParams, IBookVerse, TTheme } from "../../../types";
+import React, { FC, useEffect, useMemo, useRef } from 'react';
+import { ActivityIndicator, Dimensions, StyleSheet } from 'react-native';
+import { DB_BOOK_NAMES } from '../../../constants/BookNames';
+import { HomeParams, TTheme } from '../../../types';
 
-import { Text, View } from "@/components/Themed";
-import { getDatabaseQueryKey } from "@/constants/databaseNames";
-import { useBibleContext } from "@/context/BibleContext";
-import { useStorage } from "@/context/LocalstoreContext";
+import { Text, View } from '@/components/Themed';
+import { useBibleChapter } from '@/context/BibleChapterContext';
+import { useBibleContext } from '@/context/BibleContext';
+import { useStorage } from '@/context/LocalstoreContext';
 import useParams from '@/hooks/useParams';
-import useReadingTime from "@/hooks/useReadTime";
-import { getChapterTextRaw } from "@/utils/getVerseTextRaw";
-import { QUERY_BY_DB } from "../../../constants/Queries";
-import Chapter from "./Chapter";
-import SkeletonVerse from "./SkeletonVerse";
+import Chapter from './Chapter';
+import SkeletonVerse from './SkeletonVerse';
 
 interface BookContentInterface {
   isSplit: boolean;
@@ -31,90 +27,33 @@ const BookContent: FC<BookContentInterface> = ({
 }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
-  const {
-    storedData,
-    saveData,
-    historyManager: { add: addToHistory },
-  } = useStorage();
-  const { currentBibleVersion, fontSize } = storedData;
+  const { storedData } = useStorage();
+  const { fontSize } = storedData;
 
-  const {
-    setverseInStrongDisplay,
-    clearHighlights,
-    currentBibleLongName,
-    setChapterLengthNumber,
-    setChapterVerses,
-    highlightedVerses,
-  } = useBibleContext();
-  const { myBibleDB, executeSql } = useDBContext();
-  const params = useParams<HomeParams>()
+  const { currentBibleLongName } = useBibleContext();
+  const params = useParams<HomeParams>();
   const { isHistory } = params;
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<any>({});
-  const [chapterText, setChapterText] = useState<string>("");
   const currentBook = useMemo(
     () => DB_BOOK_NAMES.find((x) => x.longName === book),
     [book]
   );
-  const dimensions = Dimensions.get("window");
-  const isNewLaw = useRef<boolean>(false);
-  const estimatedReadingTime = useReadingTime({
-    text: chapterText,
-  });
+  const dimensions = Dimensions.get('window');
+  const isNewLaw = useRef<boolean>(
+    currentBibleLongName?.toLowerCase().includes('nuevo testamento')
+  );
+
+  const { data, estimatedReadingTime, loading, updateBibleQuery } =
+    useBibleChapter();
 
   useEffect(() => {
-    isNewLaw.current = currentBibleLongName
-      .toLowerCase()
-      .includes("nuevo testamento");
-  }, [currentBibleLongName]);
-
-  useEffect(() => {
-    (async () => {
-      if (highlightedVerses.length) clearHighlights();
-      setLoading(true);
-      if (!myBibleDB || !executeSql) return;
-      setData({});
-      setverseInStrongDisplay(0);
-      const queryKey = getDatabaseQueryKey(currentBibleVersion);
-      const query = QUERY_BY_DB[queryKey];
-      const promises = [
-        executeSql(myBibleDB, query.GET_VERSES_BY_BOOK_AND_CHAPTER, [
-          currentBook?.bookNumber,
-          chapter || 1,
-        ]),
-        executeSql(myBibleDB, query.GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
-          currentBook?.bookNumber,
-          chapter || 1,
-        ]),
-      ];
-
-      const responses = await Promise.all(promises);
-      const [verses, subtitles] = responses;
-      setData({ verses, subtitles });
-      setChapterVerses(verses as IBookVerse[]);
-      setChapterLengthNumber(verses?.length || 0);
-      setChapterText(getChapterTextRaw(verses as any));
-      if (!isHistory) {
-        addToHistory({ book, verse, chapter });
-      }
-
-      await saveData({
-        [isSplit ? "lastBottomSideBook" : "lastBook"]: book,
-        [isSplit ? "lastBottomSideChapter" : "lastChapter"]: chapter,
-        [isSplit ? "lastBottomSideVerse" : "lastVerse"]: verse,
-      });
-
-      setLoading(false);
-    })();
-
-    return () => {};
-  }, [myBibleDB, book, chapter, verse]);
+    // updateBibleQuery({ book, chapter, verse });
+  }, [book, chapter, verse, isHistory, isSplit]);
 
   const displayErrorMessage = (_isNewLaw: boolean) => {
     if (_isNewLaw) {
-      return "Solo disponible el Nuevo Pacto en esta versión.";
+      return 'Solo disponible el Nuevo Pacto en esta versión.';
     } else {
-      return "No se puede mostrar esta versión. Intenta con otra.";
+      return 'No se puede mostrar esta versión. Intenta con otra.';
     }
   };
 
@@ -122,43 +61,38 @@ const BookContent: FC<BookContentInterface> = ({
 
   if (loading || data?.verses?.length === undefined) {
     return (
-      <View style={{ flex: 1 }}>
-        <SkeletonVerse index={0} />
-        {/* <FlashList
-        keyExtractor={(item: any) => `skeleton-${item}:`}
-        data={[1, 2, 3, 4, 5, 6, 7, 8]}
-        estimatedItemSize={100}
-        renderItem={(props) => <SkeletonVerse {...props} />}
-      /> */}
+      <ActivityIndicator />
+      // <View style={{ flex: 1 }}>
+      //   <SkeletonVerse index={0} />
+      // </View>
+    );
+  }
+
+  if (!notVerseToRender) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text
+          style={{
+            color: theme.colors.notification,
+            fontSize,
+            textAlign: 'center',
+          }}
+        >
+          {displayErrorMessage(isNewLaw.current)}
+        </Text>
       </View>
     );
   }
 
   return (
     <View style={styles.bookContainer}>
-      {!notVerseToRender ? (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <Text
-            style={{
-              color: theme.colors.notification,
-              fontSize,
-              textAlign: "center",
-            }}
-          >
-            {displayErrorMessage(isNewLaw.current)}
-          </Text>
-        </View>
-      ) : (
-        <Chapter
-          {...{ book, chapter, verse }}
-          isSplit={isSplit}
-          dimensions={dimensions}
-          item={data}
-          estimatedReadingTime={estimatedReadingTime}
-        />
-      )}
+      <Chapter
+        {...{ book, chapter, verse }}
+        isSplit={isSplit}
+        dimensions={dimensions}
+        item={data}
+        estimatedReadingTime={estimatedReadingTime}
+      />
     </View>
   );
 };
