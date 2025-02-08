@@ -25,9 +25,9 @@ const useInstalledBibles = () => {
   const [installedDictionary, setInstalledDictionary] =
     useState<VersionItem[]>(defaultDBs);
   const [refreshList, setRefreshList] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const bibleDirectory = `${SQLiteDirPath}/`;
-  const bibleExt = getDatabaseExt(DATABASE_TYPE.BIBLE).replace("-", "");
+  const bibleExt = getDatabaseExt(DATABASE_TYPE.BIBLE).replace('-', '');
   const dicExt = getDatabaseExt(DATABASE_TYPE.DICTIONARY);
 
   const refreshDatabaseList = () => {
@@ -64,9 +64,9 @@ const useInstalledBibles = () => {
         setInstalledBibles(() => [...defaultDBs, ...formatArray(bibleFiles)]);
         setInstalledDictionary(() => [...formatArray(dicFiles)]);
       } catch (error) {
-        console.error("Error checking installed Bible:", error);
+        console.error('Error checking installed Bible:', error);
       } finally {
-        setLoading(false);
+        setLoading(true);
       }
     };
 

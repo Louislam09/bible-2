@@ -10,10 +10,8 @@ import * as FileSystem from 'expo-file-system';
 import * as SQLite from 'expo-sqlite';
 import { useEffect, useState } from 'react';
 import { ToastAndroid } from 'react-native';
-// import { DBName } from "../enums";
 import {
   dbFileExt,
-  defaultDatabases,
   isDefaultDatabase,
   SQLiteDirPath,
 } from '@/constants/databaseNames';
@@ -24,27 +22,14 @@ interface Row {
 }
 
 interface UseDatabase {
-  databases: SQLite.SQLiteDatabase[] | null[];
+  databases: SQLite.SQLiteDatabase[];
   executeSql: (
     database: SQLite.SQLiteDatabase,
     sql: string,
     params?: any[]
   ) => Promise<Row[]>;
+  loading: boolean;
 }
-
-export const deleteDatabaseFile = async (dbName: string) => {
-  const fileName = `SQLite/${dbName}`;
-  const filePath = `${FileSystem.documentDirectory}${fileName}`;
-  try {
-    await FileSystem.deleteAsync(filePath);
-    ToastAndroid.show(
-      `File ${fileName} deleted successfully.`,
-      ToastAndroid.SHORT
-    );
-  } catch (error) {
-    console.error(`Error deleting file ${fileName}:`, error);
-  }
-};
 
 type TUseDatabase = {
   dbNames: VersionItem[];
@@ -56,76 +41,69 @@ enum DEFAULT_DATABASE {
 }
 
 function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
-  const [_databases, setDatabases] = useState<SQLite.SQLiteDatabase[] | null[]>(
-    []
-  );
+  const [databases, setDatabases] = useState<SQLite.SQLiteDatabase[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const executeSql = async (
     database: SQLite.SQLiteDatabase,
     sql: string,
     params: any[] = []
   ): Promise<Row[]> => {
+    // console.time(`Query Time: ${sql}`);
     try {
-      if (!database) {
-        throw new Error('Database not initialized');
-      }
+      if (!database) throw new Error('Database not initialized');
       const statement = await database.prepareAsync(sql);
       try {
         const result = await statement.executeAsync(params);
-
         const response = await result.getAllAsync();
         return response as Row[];
       } finally {
         await statement.finalizeAsync();
       }
     } catch (error) {
-      return await new Promise((resolve) => resolve([]));
+      console.error(`SQL Error in query: ${sql}`, error);
+      return [];
+    } finally {
+      // console.timeEnd(`Query Time: ${sql}`);
     }
   };
 
-  async function checkIfColumnExist(database: SQLite.SQLiteDatabase) {
-    try {
-      const data = await executeSql(database, `PRAGMA table_info(notes);`, []);
-      return data.map((x) => x.name).includes('updated_at');
-    } catch (error) {
-      return await new Promise((resolve) => resolve([]));
-    }
-  }
+  const optimizeDatabase = async (database: SQLite.SQLiteDatabase) => {
+    await executeSql(database, 'PRAGMA cache_size = 5000;');
+    await executeSql(database, 'PRAGMA journal_mode = WAL;');
+    await executeSql(database, 'PRAGMA optimize;');
+  };
 
-  async function addColumnIfNotExists(
+  const checkIfColumnExist = async (database: SQLite.SQLiteDatabase) => {
+    try {
+      const data = await executeSql(database, 'PRAGMA table_info(notes);');
+      return data.some((col) => col.name === 'updated_at');
+    } catch (error) {
+      console.error('Error checking column:', error);
+      return false;
+    }
+  };
+
+  const addColumnIfNotExists = async (
     database: SQLite.SQLiteDatabase,
     createColumnQuery: string
-  ) {
-    try {
-      const hasColumn = await checkIfColumnExist(database);
-      if (!hasColumn) {
-        await database.execAsync(createColumnQuery);
-      }
-    } catch (error) {
-      console.error(
-        `Error creating column ${createColumnQuery} In ${database.databaseName} :`,
-        error
-      );
+  ) => {
+    const hasColumn = await checkIfColumnExist(database);
+    if (!hasColumn) {
+      await executeSql(database, createColumnQuery);
     }
-  }
-  async function createTable(
+  };
+
+  const createTable = async (
     database: SQLite.SQLiteDatabase,
     createTableQuery: string
-  ) {
-    try {
-      await database.execAsync(createTableQuery);
-    } catch (error) {
-      console.error(
-        `Error creating table ${createTableQuery} In ${database.databaseName} :`,
-        error
-      );
-    }
-  }
+  ) => {
+    await executeSql(database, createTableQuery);
+  };
 
   useEffect(() => {
     setDatabases([]);
-    async function openDatabase(databaseItem: VersionItem) {
-      const localFolder = SQLiteDirPath;
+    const openDatabase = async (databaseItem: VersionItem) => {
       const dbID = databaseItem.id;
       const _isDefaultDatabase = isDefaultDatabase(dbID);
       const dbNameWithExt = _isDefaultDatabase
@@ -133,8 +111,8 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
         : `${databaseItem.id}${dbFileExt}`;
       const localURI = databaseItem.path;
 
-      if (!(await FileSystem.getInfoAsync(localFolder)).exists) {
-        await FileSystem.makeDirectoryAsync(localFolder);
+      if (!(await FileSystem.getInfoAsync(SQLiteDirPath)).exists) {
+        await FileSystem.makeDirectoryAsync(SQLiteDirPath);
       }
 
       if (_isDefaultDatabase) {
@@ -145,80 +123,47 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
 
         if (!asset.downloaded) {
           await asset.downloadAsync();
-          let remoteURI = asset.localUri;
+        }
 
-          if (!(await FileSystem.getInfoAsync(localURI)).exists) {
-            await FileSystem.copyAsync({
-              from: remoteURI as string,
-              to: localURI,
-            }).catch((error) => {
-              console.log('asset copyDatabase - finished with error: ' + error);
-            });
-          }
-        } else {
-          if (
-            asset.localUri ||
-            asset.uri.startsWith('asset') ||
-            asset.uri.startsWith('file')
-          ) {
-            let remoteURI = asset.localUri || asset.uri;
+        let remoteURI = asset.localUri || asset.uri;
 
-            if (!(await FileSystem.getInfoAsync(localURI)).exists) {
-              await FileSystem.copyAsync({
-                from: remoteURI,
-                to: localURI,
-              }).catch((error) => {
-                console.log(
-                  'local copyDatabase - finished with error: ' + error
-                );
-              });
-            }
-          } else if (
-            asset.uri.startsWith('http') ||
-            asset.uri.startsWith('https')
-          ) {
-            let remoteURI = asset.uri;
-
-            if (!(await FileSystem.getInfoAsync(localURI)).exists) {
-              await FileSystem.downloadAsync(remoteURI, localURI).catch(
-                (error) => {
-                  console.log(
-                    'local downloadAsync - finished with error: ' + error
-                  );
-                }
-              );
-            }
-          }
+        if (!(await FileSystem.getInfoAsync(localURI)).exists) {
+          await FileSystem.copyAsync({
+            from: remoteURI,
+            to: localURI,
+          }).catch((error) => {
+            console.error('Error copying database:', error);
+          });
         }
       }
 
       return await SQLite.openDatabaseAsync(dbNameWithExt);
-    }
+    };
 
-    async function openDatabases() {
-      const databases: SQLite.SQLiteDatabase[] = [];
+    const openDatabases = async () => {
+      const dbList: SQLite.SQLiteDatabase[] = [];
       for (const dbName of dbNames) {
         const db = await openDatabase(dbName);
+        await optimizeDatabase(db);
         await createTable(db, CREATE_FAVORITE_VERSES_TABLE);
         await createTable(db, CREATE_NOTE_TABLE);
         await createTable(db, CREATE_MEMORIZATION_TABLE);
         await createTable(db, CREATE_STREAK_TABLE);
         await addColumnIfNotExists(db, CREATE_COLUMN_UPDATED_AT_IN_NOTE_TABLE);
-        databases.push(db);
+        dbList.push(db);
       }
-      return databases;
-    }
+      return dbList;
+    };
 
     openDatabases()
-      .then((resultDatabases: SQLite.SQLiteDatabase[] | string) => {
-        if (Array.isArray(resultDatabases)) {
-          setDatabases(resultDatabases);
-        }
-      })
-      .catch(console.log);
+      .then(setDatabases)
+      .catch(console.error)
+      .finally(() => {
+        setLoading(true);
+      });
   }, [dbNames]);
 
-  return { executeSql, databases: _databases };
+  return { executeSql, databases, loading };
 }
 
 export default useDatabase;

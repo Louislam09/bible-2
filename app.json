@@ -22,7 +22,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "backgroundColor": "#0c3e3d"
+      "backgroundColor": "#0c3e3d",
+      "bundleIdentifier": "com.louislam09.bible"
     },
     "android": {
       "versionCode": 12,

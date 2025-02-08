@@ -50,7 +50,7 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
   const [data, setData] = useState<BibleData>({});
   const [chapterText, setChapterText] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const { myBibleDB, executeSql } = useDBContext();
+  const { myBibleDB, executeSql, isMyBibleDbLoaded } = useDBContext();
   const { storedData, saveData, historyManager } = useStorage();
   const estimatedReadingTime = useReadingTime({ text: chapterText });
   const {
@@ -95,29 +95,31 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     isSplit = false,
   }: fetchChapterProps) => {
     const { book, chapter, verse } = bibleQuery as any;
-    console.log('bibleQuery', { book, chapter, verse });
     // if (book) return;
     const currentBook = DB_BOOK_NAMES.find((x) => x.longName === book);
     if (highlightedVerses.length) clearHighlights();
     setLoading(true);
     if (!myBibleDB || !executeSql) return;
+    // console.log('bibleQuery', { book, chapter, verse });
     setData({});
     setverseInStrongDisplay(0);
     const queryKey = getDatabaseQueryKey(currentBibleVersion);
     const query = QUERY_BY_DB[queryKey];
+    // const result = await executeSql(myBibleDB, 'PRAGMA journal_mode;');
+    // console.log('Journal Mode:', result);
     try {
-      const [verses] = await Promise.all([
+      const [verses, subtitles] = await Promise.all([
         executeSql(myBibleDB, query.GET_VERSES_BY_BOOK_AND_CHAPTER, [
           currentBook?.bookNumber,
           chapter || 1,
         ]),
-        // executeSql(myBibleDB, query.GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
-        //   currentBook?.bookNumber,
-        //   chapter || 1,
-        // ]),
+        executeSql(myBibleDB, query.GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
+          currentBook?.bookNumber,
+          chapter || 1,
+        ]),
       ]);
-
-      setData({ verses, subtitles: [] });
+      console.log(verses.length);
+      setData({ verses, subtitles });
       setChapterVerses(verses as any);
       setChapterLengthNumber(verses?.length || 0);
       setChapterText(getChapterTextRaw(verses as any));
@@ -139,8 +141,10 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    console.log({ isMyBibleDbLoaded });
+    if (!isMyBibleDbLoaded) return;
     fetchChapter({});
-  }, [bibleQuery.chapter]);
+  }, [bibleQuery.verse, isMyBibleDbLoaded]);
 
   return (
     <BibleChapterContext.Provider

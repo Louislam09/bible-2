@@ -26,6 +26,12 @@
         "resourceClass": "m-medium"
       },
       "channel": "production"
+    },
+    "simulator": {
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      }
     }
   },
   "submit": {

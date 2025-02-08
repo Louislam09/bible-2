@@ -1,9 +1,9 @@
 import { defaultDatabases } from "@/constants/databaseNames";
 import * as SQLite from "expo-sqlite";
 import useInstalledBibles, { VersionItem } from "@/hooks/useInstalledBible";
-import React, { createContext, useContext } from "react";
-import useDatabase from "../hooks/useDatabase";
-import { useStorage } from "./LocalstoreContext";
+import React, { createContext, useContext, useMemo } from 'react';
+import useDatabase from '../hooks/useDatabase';
+import { useStorage } from './LocalstoreContext';
 
 interface Row {
   [key: string]: any;
@@ -21,6 +21,7 @@ type DatabaseContextType = {
   installedBibles: VersionItem[];
   installedDictionary: VersionItem[];
   isInstallBiblesLoaded: boolean;
+  isMyBibleDbLoaded: boolean;
   refreshDatabaseList: () => void;
 };
 
@@ -35,11 +36,24 @@ const initialContext = {
   installedBibles: [],
   installedDictionary: [],
   isInstallBiblesLoaded: false,
+  isMyBibleDbLoaded: false,
   refreshDatabaseList: () => {},
 };
 
 export const DatabaseContext =
   createContext<DatabaseContextType>(initialContext);
+
+const getCurrentDB = (
+  _databases: SQLite.SQLiteDatabase[] | null[],
+  currentSelectedDB: string
+) => {
+  const separator = defaultDatabases.includes(currentSelectedDB)
+    ? '.'
+    : '-bible.db';
+  return _databases?.find(
+    (db) => db?.databaseName?.split(separator)[0] === currentSelectedDB
+  );
+};
 
 const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -47,35 +61,51 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   const {
     storedData: { currentBibleVersion },
   } = useStorage();
-  const { installedBibles, loading, refreshDatabaseList, installedDictionary } =
-    useInstalledBibles();
-  const { databases, executeSql } = useDatabase({
-    dbNames: installedBibles,
-  });
+  const {
+    installedBibles: dbNames,
+    loading: isInstallBiblesLoaded,
+    refreshDatabaseList,
+    installedDictionary,
+  } = useInstalledBibles();
 
-  const getCurrentDB = (
-    _databases: SQLite.SQLiteDatabase[] | null[],
-    currentSelectedDB: string
-  ) => {
-    const separator = defaultDatabases.includes(currentSelectedDB)
-      ? "."
-      : "-bible.db";
-    return _databases?.find(
-      (db) => db?.databaseName?.split(separator)[0] === currentSelectedDB
-    );
-  };
+  const {
+    databases,
+    executeSql,
+    loading: isMyBibleDbLoaded,
+  } = useDatabase({ dbNames });
 
   const myBibleDB =
     getCurrentDB(databases, currentBibleVersion) || databases[0];
 
-  const dbContextValue = {
-    myBibleDB,
-    executeSql,
-    installedBibles,
-    installedDictionary,
-    isInstallBiblesLoaded: !loading,
-    refreshDatabaseList,
-  };
+  // const dbContextValue = {
+  //   myBibleDB,
+  //   executeSql,
+  //   installedBibles: dbNames,
+  //   installedDictionary,
+  //   isInstallBiblesLoaded,
+  //   refreshDatabaseList,
+  //   isMyBibleDbLoaded,
+  // };
+  const dbContextValue = useMemo(
+    () => ({
+      myBibleDB,
+      executeSql,
+      installedBibles: dbNames,
+      installedDictionary,
+      isInstallBiblesLoaded,
+      refreshDatabaseList,
+      isMyBibleDbLoaded,
+    }),
+    [
+      myBibleDB,
+      executeSql,
+      dbNames,
+      installedDictionary,
+      isInstallBiblesLoaded,
+      refreshDatabaseList,
+      isMyBibleDbLoaded,
+    ]
+  );
 
   return (
     <DatabaseContext.Provider value={dbContextValue}>
