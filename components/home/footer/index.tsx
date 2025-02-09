@@ -215,7 +215,7 @@ const CustomFooter: FC<FooterInterface> = ({
         >
           <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
             {`${displayBookName ?? ''} ${chapter ?? ''}:${
-              currentHistoryItemVerse || verse
+              isSplitActived ? verse : currentHistoryItemVerse || verse
             }`}
           </Text>
         </TouchableOpacity>

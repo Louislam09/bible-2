@@ -69,7 +69,7 @@ const BookContent: FC<BookContentInterface> = ({
 
   useEffect(() => {
     (async () => {
-      if (highlightedVerses.length) clearHighlights();
+      if (highlightedVerses?.length) clearHighlights();
       setLoading(true);
       if (!myBibleDB || !executeSql) return;
       setData({});

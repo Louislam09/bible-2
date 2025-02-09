@@ -1,32 +1,37 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, {
+  RefObject,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import {
   Animated,
-  PanResponder,
-  PanResponderGestureState,
   SafeAreaView,
   StyleSheet,
   useWindowDimensions,
-  View
-} from "react-native";
+  View,
+} from 'react-native';
 
-import { useBibleContext } from "@/context/BibleContext";
-import { useStorage } from "@/context/LocalstoreContext";
+import { useBibleContext } from '@/context/BibleContext';
 
-import BookContentModals from "@/components/book-content-modals";
-import BottomModal from "@/components/BottomModal";
-import CurrentNoteDetail from "@/components/CurrentNoteDetail";
-import FloatingButton from "@/components/FloatingButton";
-import NoteNameList from "@/components/home/NoteNameList";
 import BibleBottom from '@/components/BibleBottom';
 import BibleTop from '@/components/BibleTop';
+import BookContentModals from '@/components/book-content-modals';
+import BottomModal from '@/components/BottomModal';
+import CurrentNoteDetail from '@/components/CurrentNoteDetail';
+import FloatingButton from '@/components/FloatingButton';
+import NoteNameList from '@/components/home/NoteNameList';
 import Walkthrough from '@/components/Walkthrough';
 import { useTheme } from '@react-navigation/native';
 // import CustomHeader from "../components/home/header";
 
 import CustomHeader from '@/components/home/header';
 import StatusBarBackground from '@/components/StatusBarBackground';
+import { useInitialState } from '@/hooks/useInitialState';
 import useParams from '@/hooks/useParams';
+import { useSplitScreen } from '@/hooks/useSplitScreen';
 import { HomeParams, TTheme } from '@/types';
 import { Stack, useNavigation, useRouter } from 'expo-router';
 
@@ -41,47 +46,40 @@ interface SplitConfig {
   maxWidth: number;
 }
 
+interface TutorialStep {
+  text: string;
+  target: RefObject<any>;
+}
+
 type HomeScreenProps = {};
 
 const HomeScreen: React.FC<HomeScreenProps> = () => {
   const router = useRouter();
   const navigation = useNavigation();
-  const routeParams = useParams<HomeParams>();
   const theme = useTheme();
-  const { storedData } = useStorage();
   const { noteListBottomSheetRef } = useBibleContext();
   const { isSplitActived, orientation } = useBibleContext();
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
 
   const [stepIndex, setStepIndex] = useState(0);
-  const [topHeight] = useState(new Animated.Value(SCREEN_HEIGHT / 2));
-  const [topWidth] = useState(new Animated.Value(SCREEN_WIDTH / 2));
-  const [bColor] = useState(new Animated.Value(0));
 
   const isPortrait = orientation === 'PORTRAIT';
-  const styles = getStyles(theme, isPortrait);
-
-  const initialState = useMemo(
-    () => ({
-      book: routeParams.book ?? storedData.lastBook,
-      chapter: routeParams.chapter ?? storedData.lastChapter,
-      verse:
-        routeParams.verse === 0 ? 1 : routeParams.verse ?? storedData.lastVerse,
-      bottomSideBook:
-        routeParams.bottomSideBook ?? storedData.lastBottomSideBook,
-      bottomSideChapter:
-        routeParams.bottomSideChapter ?? storedData.lastBottomSideChapter,
-      bottomSideVerse:
-        routeParams.bottomSideVerse === 0
-          ? 1
-          : routeParams.bottomSideVerse ?? storedData.lastBottomSideVerse,
-    }),
-    [routeParams, storedData]
+  const styles = useMemo(
+    () => getStyles(theme, isPortrait),
+    [theme, isPortrait]
   );
 
+  const initialState = useInitialState();
+
+  const { topHeight, topWidth, panResponder, backgroundColor } =
+    useSplitScreen({
+      screenWidth: SCREEN_WIDTH,
+      screenHeight: SCREEN_HEIGHT,
+      theme,
+      minSplitSize: MIN_SPLIT_SIZE,
+    });
+
   const screenHeight = useRef(SCREEN_HEIGHT).current;
-  const lastTopHeight = useRef(SCREEN_HEIGHT);
-  const lastTopWidth = useRef(SCREEN_WIDTH);
   const componentRefs = {
     book: useRef<any>(null),
     next: useRef<any>(null),
@@ -94,103 +92,83 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
     fav: useRef<any>(null),
   };
 
-  const tutorialSteps = [
-    {
-      text: '🏠 Toque aquí para ir a la pantalla principal.',
-      target: componentRefs.dashboard,
-    },
-    {
-      text: '✂️ Toque aquí para partir la pantalla en dos secciones de escrituras.',
-      target: componentRefs.fav,
-    },
-    {
-      text: '⏪⏩ Toque las flechas para moverse atras/delante en su historial de busqueda.',
-      target: componentRefs.setting,
-    },
-    {
-      text: '🔍 Toque aquí para buscar en la escritura.',
-      target: componentRefs.search,
-    },
-    {
-      text: '📑 Toque aquí para cambiar la versión de la escritura.',
-      target: componentRefs.bibleVersion,
-    },
-    {
-      text: '📚 Toque aquí para elegir un libro.',
-      target: componentRefs.book,
-    },
-    {
-      text: '⬅️ Toque aquí para retroceder al capítulo anterior.',
-      target: componentRefs.back,
-    },
-    {
-      text: '➡️ Toque aquí para pasar al siguiente capítulo.',
-      target: componentRefs.next,
-    },
-    {
-      text: '🔊 Toque aquí para escuchar el capítulo.',
-      target: componentRefs.audio,
-    },
-  ];
-
-  const splitConfig: SplitConfig = useMemo(
-    () => ({
-      minTopHeight: MIN_SPLIT_SIZE,
-      maxTopHeight: SCREEN_HEIGHT - MIN_SPLIT_SIZE,
-      minWidth: MIN_SPLIT_SIZE,
-      maxWidth: SCREEN_WIDTH - MIN_SPLIT_SIZE,
-    }),
-    [SCREEN_HEIGHT, SCREEN_WIDTH]
-  );
-
-  const animateBackgroundColor = (toValue: number) => {
-    Animated.timing(bColor, {
-      toValue,
-      delay: ANIMATION_DELAY,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const backgroundColor = bColor.interpolate({
-    inputRange: [0, 1],
-    outputRange: [
-      `${theme.colors.notification}30`,
-      `${theme.colors.notification}90`,
+  const tutorialSteps = useMemo<TutorialStep[]>(
+    () => [
+      {
+        text: '🏠 Toque aquí para ir a la pantalla principal.',
+        target: componentRefs.dashboard,
+      },
+      {
+        text: '✂️ Toque aquí para partir la pantalla en dos secciones de escrituras.',
+        target: componentRefs.fav,
+      },
+      {
+        text: '⏪⏩ Toque las flechas para moverse atras/delante en su historial de busqueda.',
+        target: componentRefs.setting,
+      },
+      {
+        text: '🔍 Toque aquí para buscar en la escritura.',
+        target: componentRefs.search,
+      },
+      {
+        text: '📑 Toque aquí para cambiar la versión de la escritura.',
+        target: componentRefs.bibleVersion,
+      },
+      {
+        text: '📚 Toque aquí para elegir un libro.',
+        target: componentRefs.book,
+      },
+      {
+        text: '⬅️ Toque aquí para retroceder al capítulo anterior.',
+        target: componentRefs.back,
+      },
+      {
+        text: '➡️ Toque aquí para pasar al siguiente capítulo.',
+        target: componentRefs.next,
+      },
+      {
+        text: '🔊 Toque aquí para escuchar el capítulo.',
+        target: componentRefs.audio,
+      },
     ],
-  });
-
-  const panResponder = useMemo(
-    () =>
-      PanResponder.create({
-        onStartShouldSetPanResponder: () => {
-          animateBackgroundColor(1);
-          return true;
-        },
-        onPanResponderMove: (_, gestureState: PanResponderGestureState) => {
-          const newHeight = lastTopHeight.current + gestureState.dy;
-          const newWidth = lastTopWidth.current + gestureState.dx;
-
-          if (
-            newWidth >= splitConfig.minWidth &&
-            newWidth <= splitConfig.maxWidth
-          ) {
-            topWidth.setValue(newWidth);
-          }
-          if (
-            newHeight >= splitConfig.minTopHeight &&
-            newHeight <= splitConfig.maxTopHeight
-          ) {
-            topHeight.setValue(newHeight);
-          }
-        },
-        onPanResponderRelease: () => {
-          animateBackgroundColor(0);
-          lastTopHeight.current = (topHeight as any)._value;
-          lastTopWidth.current = (topWidth as any)._value;
-        },
-      }),
-    [splitConfig, topHeight, topWidth]
+    [componentRefs]
   );
+
+  const renderSplitScreenDivider = useCallback(() => {
+    if (!isSplitActived) return null;
+
+    return (
+      <Animated.View
+        {...panResponder.panHandlers}
+        style={[styles.slider, { backgroundColor }]}
+      >
+        <View style={styles.sliderHandle} />
+      </Animated.View>
+    );
+  }, [isSplitActived, panResponder, backgroundColor, styles]);
+
+  const renderBottomContent = useCallback(() => {
+    if (!isSplitActived) return null;
+
+    return (
+      <BibleBottom
+        refs={componentRefs}
+        book={initialState.bottomSideBook}
+        chapter={initialState.bottomSideChapter}
+        verse={initialState.bottomSideVerse}
+        height={Animated.subtract(new Animated.Value(screenHeight), topHeight)}
+        width={Animated.subtract(new Animated.Value(SCREEN_WIDTH), topWidth)}
+        navigation={navigation}
+      />
+    );
+  }, [
+    isSplitActived,
+    initialState,
+    componentRefs,
+    screenHeight,
+    SCREEN_WIDTH,
+    navigation,
+  ]);
 
   return (
     <StatusBarBackground>
@@ -209,33 +187,8 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
               navigation,
             }}
           />
-          {isSplitActived && (
-            <Animated.View
-              {...panResponder.panHandlers}
-              style={[styles.slider, { backgroundColor }]}
-            >
-              <View style={styles.sliderHandle} />
-            </Animated.View>
-          )}
-          {isSplitActived && (
-            <BibleBottom
-              refs={componentRefs}
-              {...{
-                book: initialState.bottomSideBook,
-                chapter: initialState.bottomSideChapter,
-                verse: initialState.bottomSideVerse,
-                height: Animated.subtract(
-                  new Animated.Value(screenHeight),
-                  topHeight
-                ),
-                width: Animated.subtract(
-                  new Animated.Value(SCREEN_WIDTH),
-                  topWidth
-                ),
-                navigation,
-              }}
-            />
-          )}
+          {renderSplitScreenDivider()}
+          {renderBottomContent()}
         </View>
         <>
           <BookContentModals
@@ -255,7 +208,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
           >
             <NoteNameList {...{ theme }} />
           </BottomModal>
-          {componentRefs.book.current && routeParams.isTour === true && (
+          {componentRefs.book.current && initialState.isTour === true && (
             <Walkthrough
               steps={tutorialSteps}
               setStep={setStepIndex}
@@ -272,28 +225,28 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      position: "relative",
-      width: "100%",
-      height: "100%",
+      position: 'relative',
+      width: '100%',
+      height: '100%',
     },
     separator: {
-      position: "relative",
-      width: "100%",
-      borderColor: "red",
+      position: 'relative',
+      width: '100%',
+      borderColor: 'red',
       borderWidth: 1,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     separatorIcon: {
-      position: "absolute",
+      position: 'absolute',
       bottom: 0,
     },
     slider: {
-      height: isPortrait ? 15 : "100%",
-      justifyContent: "center",
-      alignItems: "center",
-      width: isPortrait ? "100%" : 10,
+      height: isPortrait ? 15 : '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: isPortrait ? '100%' : 10,
     },
     sliderHandle: {
       width: isPortrait ? 40 : 4,

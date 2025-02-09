@@ -17,6 +17,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { IconProps } from "@/components/Icon";
 import { Router } from 'expo-router';
 import { icons } from 'lucide-react-native';
+import { RefObject } from 'react';
 
 declare global {
   namespace ReactNavigation {
@@ -466,6 +467,19 @@ export enum DATABASE_TYPE {
   DICTIONARY,
   COMMENTARIES,
 }
+
+export interface ComponentRefs {
+  book: RefObject<any>;
+  next: RefObject<any>;
+  back: RefObject<any>;
+  audio: RefObject<any>;
+  dashboard: RefObject<any>;
+  bibleVersion: RefObject<any>;
+  search: RefObject<any>;
+  setting: RefObject<any>;
+  fav: RefObject<any>;
+}
+
 
 // GAME TYPES
 export interface Question {
