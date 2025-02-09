@@ -287,7 +287,7 @@ export type SpeechVoice = {
 };
 
 export type TChapter = {
-  dimensions: any;
+  dimensions?: any;
   item: {
     verses: IBookVerse[];
     subtitles: TSubtitle[];

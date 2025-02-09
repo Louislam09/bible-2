@@ -56,7 +56,6 @@ const BookContent: FC<BookContentInterface> = ({
     () => DB_BOOK_NAMES.find((x) => x.longName === book),
     [book]
   );
-  const dimensions = Dimensions.get("window");
   const isNewLaw = useRef<boolean>(false);
   const estimatedReadingTime = useReadingTime({
     text: chapterText,
@@ -65,7 +64,7 @@ const BookContent: FC<BookContentInterface> = ({
   useEffect(() => {
     isNewLaw.current = currentBibleLongName
       .toLowerCase()
-      .includes("nuevo testamento");
+      .includes('nuevo testamento');
   }, [currentBibleLongName]);
 
   useEffect(() => {
@@ -99,9 +98,9 @@ const BookContent: FC<BookContentInterface> = ({
       }
 
       await saveData({
-        [isSplit ? "lastBottomSideBook" : "lastBook"]: book,
-        [isSplit ? "lastBottomSideChapter" : "lastChapter"]: chapter,
-        [isSplit ? "lastBottomSideVerse" : "lastVerse"]: verse,
+        [isSplit ? 'lastBottomSideBook' : 'lastBook']: book,
+        [isSplit ? 'lastBottomSideChapter' : 'lastChapter']: chapter,
+        [isSplit ? 'lastBottomSideVerse' : 'lastVerse']: verse,
       });
 
       setLoading(false);
@@ -112,9 +111,9 @@ const BookContent: FC<BookContentInterface> = ({
 
   const displayErrorMessage = (_isNewLaw: boolean) => {
     if (_isNewLaw) {
-      return "Solo disponible el Nuevo Pacto en esta versión.";
+      return 'Solo disponible el Nuevo Pacto en esta versión.';
     } else {
-      return "No se puede mostrar esta versión. Intenta con otra.";
+      return 'No se puede mostrar esta versión. Intenta con otra.';
     }
   };
 
@@ -124,41 +123,34 @@ const BookContent: FC<BookContentInterface> = ({
     return (
       <View style={{ flex: 1 }}>
         <SkeletonVerse index={0} />
-        {/* <FlashList
-        keyExtractor={(item: any) => `skeleton-${item}:`}
-        data={[1, 2, 3, 4, 5, 6, 7, 8]}
-        estimatedItemSize={100}
-        renderItem={(props) => <SkeletonVerse {...props} />}
-      /> */}
+      </View>
+    );
+  }
+
+  if (!notVerseToRender) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text
+          style={{
+            color: theme.colors.notification,
+            fontSize,
+            textAlign: 'center',
+          }}
+        >
+          {displayErrorMessage(isNewLaw.current)}
+        </Text>
       </View>
     );
   }
 
   return (
     <View style={styles.bookContainer}>
-      {!notVerseToRender ? (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <Text
-            style={{
-              color: theme.colors.notification,
-              fontSize,
-              textAlign: "center",
-            }}
-          >
-            {displayErrorMessage(isNewLaw.current)}
-          </Text>
-        </View>
-      ) : (
-        <Chapter
-          {...{ book, chapter, verse }}
-          isSplit={isSplit}
-          dimensions={dimensions}
-          item={data}
-          estimatedReadingTime={estimatedReadingTime}
-        />
-      )}
+      <Chapter
+        {...{  verse }}
+        isSplit={isSplit}
+        item={data}
+        estimatedReadingTime={estimatedReadingTime}
+      />
     </View>
   );
 };

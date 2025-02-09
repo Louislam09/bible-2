@@ -26,7 +26,13 @@ import {
   Trash2,
   Zap,
 } from 'lucide-react-native';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -103,7 +109,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
   const swipeableRefs = useRef<Map<number, Swipeable | null>>(new Map());
   const openSwipeableId = useRef<number | null>(null);
   const { currentBibleLongName } = useBibleContext();
-  const { verses, deleteVerse } = useMemorization();
+  const { verses, deleteVerse, refreshVerses } = useMemorization();
   const { saveData, storedData } = useStorage();
   const { streak, days, bestStreak } = useStreak();
   const styles = getStyles(theme);
@@ -119,6 +125,10 @@ const MemoryList: React.FC<MemorizationProps> = () => {
     }),
     [verses]
   );
+
+  useEffect(() => {
+    refreshVerses();
+  }, []);
 
   const [openStreak, setOpenStreak] = useState(false);
   const [sortType, setSortType] = useState<SortOption>(memorySortOption);
@@ -136,7 +146,6 @@ const MemoryList: React.FC<MemorizationProps> = () => {
     swipeable?.close();
     setTimeout(async () => await deleteVerse(id), 300);
   };
-
 
   const warnBeforeDelete = (item: Memorization) => {
     Alert.alert(

@@ -1,19 +1,17 @@
 import { useBibleContext } from "@/context/BibleContext";
+import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import React, { FC } from "react";
 import { Animated, StyleSheet } from "react-native";
 import BookContent from "./home/content";
 import CustomFooter from "./home/footer";
-import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import SwipeWrapper from "./SwipeWrapper";
 
-const SplitBottomSide: FC<any> = (props) => {
+const BibleTop: FC<any> = (props) => {
   const { navigation } = props;
   const { isSplitActived, orientation } = useBibleContext();
   const isPortrait = orientation === "PORTRAIT";
-
   const { nextChapter, previousChapter } = useChangeBookOrChapter({
     navigation,
-    isSplit: true,
     ...props,
   });
 
@@ -23,7 +21,6 @@ const SplitBottomSide: FC<any> = (props) => {
   const onSwipeLeft = () => {
     nextChapter();
   };
-
   return (
     <Animated.View
       style={[
@@ -31,15 +28,15 @@ const SplitBottomSide: FC<any> = (props) => {
         {
           [isPortrait ? "height" : "width"]: isPortrait
             ? props.height
-            : props.wdith,
+            : props.width,
         },
-        isSplitActived && { flex: 1 },
+        !isSplitActived && { flex: 1 },
       ]}
     >
       <SwipeWrapper {...{ onSwipeRight, onSwipeLeft }}>
-        <BookContent isSplit {...props} />
+        <BookContent isSplit={false} {...props} />
       </SwipeWrapper>
-      <CustomFooter isSplit {...props} />
+      <CustomFooter isSplit={false} {...props} />
     </Animated.View>
   );
 };
@@ -51,4 +48,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SplitBottomSide;
+export default BibleTop;

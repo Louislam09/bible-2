@@ -30,6 +30,7 @@ interface UseDatabase {
     sql: string,
     params?: any[]
   ) => Promise<Row[]>;
+  loading: boolean;
 }
 
 export const deleteDatabaseFile = async (dbName: string) => {
@@ -59,6 +60,7 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
   const [_databases, setDatabases] = useState<SQLite.SQLiteDatabase[] | null[]>(
     []
   );
+  const [loading, setLoading] = useState(false);
 
   const executeSql = async (
     database: SQLite.SQLiteDatabase,
@@ -66,6 +68,7 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
     params: any[] = []
   ): Promise<Row[]> => {
     try {
+      const startTime = Date.now(); // Start timing
       if (!database) {
         throw new Error('Database not initialized');
       }
@@ -74,6 +77,10 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
         const result = await statement.executeAsync(params);
 
         const response = await result.getAllAsync();
+        const endTime = Date.now(); // End timing
+        const executionTime = endTime - startTime;
+
+        console.log(`Query ${sql} executed in ${executionTime} ms.`);
         return response as Row[];
       } finally {
         await statement.finalizeAsync();
@@ -203,7 +210,7 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
         await createTable(db, CREATE_NOTE_TABLE);
         await createTable(db, CREATE_MEMORIZATION_TABLE);
         await createTable(db, CREATE_STREAK_TABLE);
-        await addColumnIfNotExists(db, CREATE_COLUMN_UPDATED_AT_IN_NOTE_TABLE);
+        // await addColumnIfNotExists(db, CREATE_COLUMN_UPDATED_AT_IN_NOTE_TABLE);
         databases.push(db);
       }
       return databases;
@@ -215,10 +222,11 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
           setDatabases(resultDatabases);
         }
       })
-      .catch(console.log);
+      .catch(console.log)
+      .finally(() => setLoading(true));
   }, [dbNames]);
 
-  return { executeSql, databases: _databases };
+  return { executeSql, databases: _databases, loading };
 }
 
 export default useDatabase;

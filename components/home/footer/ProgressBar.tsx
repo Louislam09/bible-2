@@ -42,20 +42,25 @@ const ProgressBar = ({
 
   return (
     <View
-      style={{ flexDirection: "row", alignItems: "center", borderRadius: 15 }}
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: 15,
+        backgroundColor: 'transparent',
+      }}
     >
       <View
         style={{
-          position: "relative",
+          position: 'relative',
           height: height,
-          backgroundColor: barColor + "99",
+          backgroundColor: barColor + '99',
           borderRadius: 15,
           flex: 1,
         }}
       >
         <Animated.View
           style={{
-            height: "100%",
+            height: '100%',
             width: progressWidth,
             backgroundColor: color,
             borderRadius: 15,
@@ -64,7 +69,7 @@ const ProgressBar = ({
         {!hideCircle && (
           <Animated.View
             style={{
-              position: "absolute",
+              position: 'absolute',
               height: 16,
               width: 16,
               backgroundColor: circleColor,

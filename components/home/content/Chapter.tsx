@@ -11,8 +11,6 @@ import Verse from "./Verse";
 const Chapter = ({
   item,
   isSplit,
-  book,
-  chapter,
   verse: _verse,
   estimatedReadingTime,
 }: TChapter & { isSplit: boolean }) => {
@@ -90,7 +88,7 @@ const Chapter = ({
           onLayout={() => {
             setLayoutMounted(true);
           }}
-          decelerationRate="normal"
+          decelerationRate='normal'
           estimatedItemSize={135}
           data={verses ?? []}
           renderItem={renderItem}

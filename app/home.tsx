@@ -18,17 +18,17 @@ import BottomModal from "@/components/BottomModal";
 import CurrentNoteDetail from "@/components/CurrentNoteDetail";
 import FloatingButton from "@/components/FloatingButton";
 import NoteNameList from "@/components/home/NoteNameList";
-import SplitBottomSide from "@/components/SplitBottomSide";
-import SplitTopSide from "@/components/SplitTopSide";
-import Walkthrough from "@/components/Walkthrough";
-import { useTheme } from "@react-navigation/native";
+import BibleBottom from '@/components/BibleBottom';
+import BibleTop from '@/components/BibleTop';
+import Walkthrough from '@/components/Walkthrough';
+import { useTheme } from '@react-navigation/native';
 // import CustomHeader from "../components/home/header";
 
-import CustomHeader from "@/components/home/header";
+import CustomHeader from '@/components/home/header';
 import StatusBarBackground from '@/components/StatusBarBackground';
-import useParams from "@/hooks/useParams";
-import { HomeParams, TTheme } from "@/types";
-import { Stack, useNavigation, useRouter } from "expo-router";
+import useParams from '@/hooks/useParams';
+import { HomeParams, TTheme } from '@/types';
+import { Stack, useNavigation, useRouter } from 'expo-router';
 
 // Constants
 const MIN_SPLIT_SIZE = 200;
@@ -45,7 +45,7 @@ type HomeScreenProps = {};
 
 const HomeScreen: React.FC<HomeScreenProps> = () => {
   const router = useRouter();
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const routeParams = useParams<HomeParams>();
   const theme = useTheme();
   const { storedData } = useStorage();
@@ -200,7 +200,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
         <View
           style={[styles.container, !isPortrait && { flexDirection: 'row' }]}
         >
-          <SplitTopSide
+          <BibleTop
             refs={componentRefs}
             {...{
               ...initialState,
@@ -210,56 +210,59 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
             }}
           />
           {isSplitActived && (
-            <>
-              <Animated.View
-                {...panResponder.panHandlers}
-                style={[styles.slider, { backgroundColor }]}
-              >
-                <View style={styles.sliderHandle} />
-              </Animated.View>
-              <SplitBottomSide
-                refs={componentRefs}
-                {...{
-                  book: initialState.bottomSideBook,
-                  chapter: initialState.bottomSideChapter,
-                  verse: initialState.bottomSideVerse,
-                  height: Animated.subtract(
-                    new Animated.Value(screenHeight),
-                    topHeight
-                  ),
-                  width: Animated.subtract(
-                    new Animated.Value(SCREEN_WIDTH),
-                    topWidth
-                  ),
-                  navigation,
-                }}
-              />
-            </>
+            <Animated.View
+              {...panResponder.panHandlers}
+              style={[styles.slider, { backgroundColor }]}
+            >
+              <View style={styles.sliderHandle} />
+            </Animated.View>
+          )}
+          {isSplitActived && (
+            <BibleBottom
+              refs={componentRefs}
+              {...{
+                book: initialState.bottomSideBook,
+                chapter: initialState.bottomSideChapter,
+                verse: initialState.bottomSideVerse,
+                height: Animated.subtract(
+                  new Animated.Value(screenHeight),
+                  topHeight
+                ),
+                width: Animated.subtract(
+                  new Animated.Value(SCREEN_WIDTH),
+                  topWidth
+                ),
+                navigation,
+              }}
+            />
           )}
         </View>
-        <BookContentModals
-          book={initialState.book}
-          chapter={initialState.chapter}
-        />
-        <FloatingButton iconName='NotebookText' navigation={router}>
-          <CurrentNoteDetail />
-        </FloatingButton>
-        <BottomModal
-          shouldScroll
-          justOneSnap
-          justOneValue={['50%']}
-          startAT={0}
-          ref={noteListBottomSheetRef}
-        >
-          <NoteNameList {...{ theme }} />
-        </BottomModal>
-        {componentRefs.book.current && routeParams.isTour === true && (
-          <Walkthrough
-            steps={tutorialSteps}
-            setStep={setStepIndex}
-            currentStep={stepIndex}
+        <>
+          <BookContentModals
+            book={initialState.book}
+            chapter={initialState.chapter}
           />
-        )}
+          <FloatingButton iconName='NotebookText' navigation={router}>
+            <CurrentNoteDetail />
+          </FloatingButton>
+
+          <BottomModal
+            shouldScroll
+            justOneSnap
+            justOneValue={['50%']}
+            startAT={0}
+            ref={noteListBottomSheetRef}
+          >
+            <NoteNameList {...{ theme }} />
+          </BottomModal>
+          {componentRefs.book.current && routeParams.isTour === true && (
+            <Walkthrough
+              steps={tutorialSteps}
+              setStep={setStepIndex}
+              currentStep={stepIndex}
+            />
+          )}
+        </>
       </SafeAreaView>
     </StatusBarBackground>
   );

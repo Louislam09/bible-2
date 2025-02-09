@@ -39,10 +39,10 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
   const [verses, setVerses] = useState<Memorization[]>([]);
   const { myBibleDB, executeSql } = useDBContext();
 
-  useEffect(() => {
-    if (!myBibleDB || !executeSql) return;
-    refreshVerses();
-  }, [myBibleDB, executeSql]);
+  // useEffect(() => {
+  //   if (!myBibleDB || !executeSql) return;
+  //   refreshVerses();
+  // }, [myBibleDB, executeSql]);
 
   const refreshVerses = async () => {
     try {
