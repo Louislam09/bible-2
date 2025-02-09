@@ -13,6 +13,7 @@ import { IVerseItem, Screens, TTheme } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import RenderTextWithClickableWords from "./home/content/RenderTextWithClickableWords";
 import Icon from "./Icon";
+import { renameLongBookName } from '@/utils/extractVersesInfo';
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -63,13 +64,13 @@ const StrongSearchContent = ({
       <TouchableOpacity activeOpacity={0.9} onPress={() => onVerseClick(item)}>
         <View style={styles.cardContainer}>
           <View style={styles.headerContainer}>
-            <Text
-              style={styles.cardTitle}
-            >{`${item.bookName} ${item.chapter}:${item.verse}`}</Text>
+            <Text style={styles.cardTitle}>{`${renameLongBookName(
+              item.bookName
+            )} ${item.chapter}:${item.verse}`}</Text>
             <View style={styles.verseAction}>
               <Icon
                 size={20}
-                name="Copy"
+                name='Copy'
                 style={styles.icon}
                 onPress={() => onCopy(item)}
               />
@@ -94,11 +95,11 @@ const StrongSearchContent = ({
       <View
         style={[
           styles.chapterHeader,
-          !filterData.length && { display: "none" },
+          !filterData.length && { display: 'none' },
         ]}
       >
         <Text style={styles.chapterHeaderTitle}>
-          {strongWord.code} {"\n"}
+          {strongWord.code} {'\n'}
         </Text>
       </View>
     );
@@ -109,13 +110,13 @@ const StrongSearchContent = ({
       <TouchableOpacity
         style={[
           styles.scrollToTopButton,
-          !showScrollToTop && { display: "none" },
+          !showScrollToTop && { display: 'none' },
         ]}
         onPress={() => {
           flatListRef?.current?.scrollToOffset({ animated: true, offset: 0 });
         }}
       >
-        <Icon color={theme.colors.notification} name="ChevronsUp" size={26} />
+        <Icon color={theme.colors.notification} name='ChevronsUp' size={26} />
       </TouchableOpacity>
     );
   };
@@ -124,7 +125,7 @@ const StrongSearchContent = ({
     <View style={{ flex: 1 }}>
       <FlashList
         ref={flatListRef}
-        decelerationRate={"normal"}
+        decelerationRate={'normal'}
         estimatedItemSize={135}
         data={filterData}
         renderItem={renderItem as any}
@@ -135,7 +136,7 @@ const StrongSearchContent = ({
         ListEmptyComponent={
           <View style={styles.noResultsContainer}>
             <Text style={styles.noResultsText}>
-              No se encontraron resultados en: {"\n"} {currentFilter}
+              No se encontraron resultados en: {'\n'} {currentFilter}
             </Text>
           </View>
         }

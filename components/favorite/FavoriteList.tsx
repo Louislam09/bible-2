@@ -17,6 +17,7 @@ import { IVerseItem, Screens, TTheme } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { Stack } from 'expo-router';
+import { renameLongBookName } from '@/utils/extractVersesInfo';
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -32,7 +33,7 @@ const FavoriteList = ({ data }: TListVerse) => {
     useBibleContext();
   const flatListRef = useRef<FlashList<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
-  const notFoundSource = require("../../assets/lottie/notFound.json");
+  const notFoundSource = require('../../assets/lottie/notFound.json');
 
   useEffect(() => {
     if (!data) return;
@@ -80,21 +81,21 @@ const FavoriteList = ({ data }: TListVerse) => {
         {/* <DecoratorLine color="#ffd41d" theme={theme} /> */}
         <View style={styles.cardContainer}>
           <View style={styles.headerContainer}>
-            <Text
-              style={styles.cardTitle}
-            >{`${item.bookName} ${item.chapter}:${item.verse}`}</Text>
+            <Text style={styles.cardTitle}>{`${renameLongBookName(
+              item.bookName
+            )} ${item.chapter}:${item.verse}`}</Text>
             <View style={styles.verseAction}>
               <Icon
                 size={20}
-                name="Copy"
+                name='Copy'
                 style={styles.icon}
                 onPress={() => onCopy(item)}
               />
               <Icon
                 size={20}
-                name="Star"
+                name='Star'
                 strokeWidth={3}
-                color="#ffd41d"
+                color='#ffd41d'
                 style={styles.icon}
                 onPress={() => onFavorite(item)}
               />
@@ -111,7 +112,7 @@ const FavoriteList = ({ data }: TListVerse) => {
       <View
         style={[
           styles.chapterHeader,
-          !filterData.length && { display: "none" },
+          !filterData.length && { display: 'none' },
         ]}
       >
         <Text style={styles.chapterHeaderTitle}>
@@ -126,13 +127,13 @@ const FavoriteList = ({ data }: TListVerse) => {
       <TouchableOpacity
         style={[
           styles.scrollToTopButton,
-          !showScrollToTop && { display: "none" },
+          !showScrollToTop && { display: 'none' },
         ]}
         onPress={() => {
           flatListRef?.current?.scrollToOffset({ animated: true, offset: 0 });
         }}
       >
-        <Icon color={theme.colors.notification} name="ChevronsUp" size={26} />
+        <Icon color={theme.colors.notification} name='ChevronsUp' size={26} />
       </TouchableOpacity>
     );
   };
@@ -143,7 +144,7 @@ const FavoriteList = ({ data }: TListVerse) => {
       <FlashList
         ref={flatListRef}
         ListHeaderComponent={SearchedHeader}
-        decelerationRate={"normal"}
+        decelerationRate={'normal'}
         estimatedItemSize={135}
         data={filterData}
         renderItem={renderItem as any}
@@ -161,7 +162,7 @@ const FavoriteList = ({ data }: TListVerse) => {
               <Text style={{ color: theme.colors.notification }}>
                 ({currentBibleLongName})
               </Text>
-              {"\n"}
+              {'\n'}
               No tienes versiculos favoritos en esta version de la escritura.
             </Text>
           </View>

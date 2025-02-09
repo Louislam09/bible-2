@@ -10,6 +10,7 @@ import {
   Screens,
   TTheme,
 } from '@/types';
+import { renameLongBookName } from '@/utils/extractVersesInfo';
 import removeAccent from '@/utils/removeAccent';
 import { useTheme } from '@react-navigation/native';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
@@ -31,7 +32,6 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
     isBottomSideSearching,
     orientation,
   } = useBibleContext();
-  const [query, setQuery] = useState('');
   const isPortrait = orientation === 'PORTRAIT';
 
   const handlePress = (item: IDBBookNames) => {
@@ -42,18 +42,6 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
       ...routeParam,
       ...params,
     });
-  };
-
-  const handelSearch = async (query: string) => {
-    setQuery(query);
-  };
-
-  const withTitle = (index: number) =>
-    [BookIndexes.Genesis, BookIndexes.Mateo].includes(index);
-
-  const title: { [key: string]: string } = {
-    Gn: 'Antiguo Pacto',
-    Mt: 'Nuevo Pacto',
   };
 
   const renderItem: ListRenderItem<IDBBookNames> = ({ item, index }) => {
@@ -78,7 +66,7 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
           {item.longName.replace(/\s+/g, '').slice(0, 3)}
         </Text>
         <Text numberOfLines={1} ellipsizeMode='middle' style={styles.subTitle}>
-          {item.longName}
+          {renameLongBookName(item.longName)}
         </Text>
       </TouchableOpacity>
     );
@@ -151,6 +139,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       padding: 10,
       flex: 1,
       height: 70,
+      alignItems: 'center',
     },
     listViewItem: {
       display: 'flex',

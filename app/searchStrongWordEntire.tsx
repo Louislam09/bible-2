@@ -81,20 +81,6 @@ const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
     return () => {};
   }, [myBibleDB, code, selectedFilterOption]);
 
-  // useEffect(() => {
-  //   const backAction = () => {
-  //     router.back();
-  //     return true;
-  //   };
-
-  //   const backHandler = BackHandler.addEventListener(
-  //     "hardwareBackPress",
-  //     backAction
-  //   );
-
-  //   return () => backHandler.remove();
-  // }, []);
-
   return (
     <Animated.View
       style={{

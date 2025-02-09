@@ -4,6 +4,7 @@ import { Text, View } from "@/components/Themed";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { TTheme } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
+import { renameLongBookName } from '@/utils/extractVersesInfo';
 
 export type TItem = {
   bookName: string;
@@ -42,13 +43,13 @@ const RenderVerse = ({
     <TouchableOpacity activeOpacity={0.9} onPress={() => onItemClick(item)}>
       <View style={styles.cardContainer}>
         <View style={styles.headerContainer}>
-          <Text
-            style={styles.cardTitle}
-          >{`${item.bookName} ${item.chapter}:${item.verse}`}</Text>
+          <Text style={styles.cardTitle}>{`${renameLongBookName(
+            item.bookName
+          )} ${item.chapter}:${item.verse}`}</Text>
           <View style={styles.verseAction}>
             <Icon
               size={20}
-              name="Copy"
+              name='Copy'
               style={styles.icon}
               onPress={() => onCopy(item)}
             />

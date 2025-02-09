@@ -19,13 +19,14 @@ import { IVerseItem, Screens, TTheme } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import Icon from "./Icon";
+import { renameLongBookName } from '@/utils/extractVersesInfo';
 
 interface CompareVersionsProps {
   theme: TTheme;
   book: any;
   chapter: any;
   verse: any;
-  navigation: Omit<NavigationProp<ReactNavigation.RootParamList>, "getState">;
+  navigation: Omit<NavigationProp<ReactNavigation.RootParamList>, 'getState'>;
   compareRef: React.RefObject<BottomSheetModalMethods>;
 }
 
@@ -43,7 +44,7 @@ const CompareVersions = ({
   const { fontSize, selectBibleVersion } = useBibleContext();
   const flatListRef = useRef<FlashList<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
-  const notFoundSource = require("../assets/lottie/notFound.json");
+  const notFoundSource = require('../assets/lottie/notFound.json');
   const [searchParam, setSearchParam] = useState({
     book,
     chapter,
@@ -107,19 +108,21 @@ const CompareVersions = ({
           </Text>
           <View style={styles.headerContainer}>
             <Text style={[styles.cardTitle, { fontSize }]}>
-              {`${item?.bookName} ${item?.chapter}:${item?.verse}`}
+              {`${renameLongBookName(item?.bookName)} ${item?.chapter}:${
+                item?.verse
+              }`}
             </Text>
             <View style={styles.verseAction}>
               <Icon
                 size={24}
-                name="Copy"
+                name='Copy'
                 style={styles.icon}
                 onPress={() => onCopy(item, versionName)}
               />
             </View>
           </View>
           <Text style={[styles.verseBody, { fontSize }]}>
-            {getVerseTextRaw(item?.text || "")}
+            {getVerseTextRaw(item?.text || '')}
           </Text>
           <TouchableOpacity
             style={styles.verseAction}
@@ -129,7 +132,7 @@ const CompareVersions = ({
               Lee {`${item?.bookName} ${item?.chapter}`}
             </Text>
             <Icon
-              name="SquareArrowOutUpRight"
+              name='SquareArrowOutUpRight'
               size={18}
               color={theme.colors.text}
             />
@@ -160,18 +163,18 @@ const CompareVersions = ({
       <View
         style={[
           styles.chapterHeader,
-          !filterData.length && { display: "none" },
+          !filterData.length && { display: 'none' },
         ]}
       >
         <Text style={styles.chapterHeaderTitle}>
           Comparativa de {(filterData ?? []).length} Versiones
         </Text>
         <TouchableOpacity
-          style={{ alignItems: "center" }}
+          style={{ alignItems: 'center' }}
           onPress={onAddMoreDic}
         >
           <Icon
-            name="BookPlus"
+            name='BookPlus'
             color={theme.colors.notification}
             size={iconSize}
           />
@@ -185,13 +188,13 @@ const CompareVersions = ({
       <TouchableOpacity
         style={[
           styles.scrollToTopButton,
-          !showScrollToTop && { display: "none" },
+          !showScrollToTop && { display: 'none' },
         ]}
         onPress={() => {
           flatListRef?.current?.scrollToOffset({ animated: true, offset: 0 });
         }}
       >
-        <Icon name="ChevronsUp" size={26} color={theme.colors.notification} />
+        <Icon name='ChevronsUp' size={26} color={theme.colors.notification} />
       </TouchableOpacity>
     );
   };
@@ -201,7 +204,7 @@ const CompareVersions = ({
       {SearchedHeader()}
       <FlashList
         ref={flatListRef}
-        decelerationRate={"normal"}
+        decelerationRate={'normal'}
         estimatedItemSize={135}
         data={filterData}
         renderItem={renderItem as any}

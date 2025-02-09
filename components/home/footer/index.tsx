@@ -18,6 +18,7 @@ import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
+import { renameLongBookName } from '@/utils/extractVersesInfo';
 interface FooterInterface {
   refs: any;
   isSplit?: boolean;
@@ -26,14 +27,7 @@ interface FooterInterface {
   verse: any;
 }
 
-const renameLongBookName = (text: string) => {
-  return text.replace(
-    /^(Hechos de los Apóstoles|Apocalipsis \(de Juan\))/,
-    (match) => {
-      return match.includes('Hechos') ? 'Hechos' : 'Apocalipsis';
-    }
-  );
-};
+
 
 const CustomFooter: FC<FooterInterface> = ({
   refs,
