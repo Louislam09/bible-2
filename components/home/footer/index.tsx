@@ -214,9 +214,10 @@ const CustomFooter: FC<FooterInterface> = ({
           delayLongPress={200}
         >
           <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
-            {`${displayBookName ?? ''} ${chapter ?? ''}:${
+            {`${displayBookName ?? ''} ${chapter ?? ''}`}
+            {/* {`${displayBookName ?? ''} ${chapter ?? ''}:${
               isSplitActived ? verse : currentHistoryItemVerse || verse
-            }`}
+            }`} */}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>

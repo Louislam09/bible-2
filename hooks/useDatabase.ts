@@ -65,7 +65,8 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
   const executeSql = async (
     database: SQLite.SQLiteDatabase,
     sql: string,
-    params: any[] = []
+    params: any[] = [],
+    queryName?: any
   ): Promise<Row[]> => {
     try {
       const startTime = Date.now(); // Start timing
@@ -80,7 +81,9 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
         const endTime = Date.now(); // End timing
         const executionTime = endTime - startTime;
 
-        console.log(`Query ${sql} executed in ${executionTime} ms.`);
+        if (queryName) {
+          console.log(`Query ${queryName} executed in ${executionTime} ms.`);
+        }
         return response as Row[];
       } finally {
         await statement.finalizeAsync();
@@ -206,6 +209,11 @@ function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
       const databases: SQLite.SQLiteDatabase[] = [];
       for (const dbName of dbNames) {
         const db = await openDatabase(dbName);
+        if (isDefaultDatabase(dbName.id)) {
+          await executeSql(db, 'PRAGMA journal_mode = WAL;');
+          await executeSql(db, 'PRAGMA optimize;');
+        }
+
         await createTable(db, CREATE_FAVORITE_VERSES_TABLE);
         await createTable(db, CREATE_NOTE_TABLE);
         await createTable(db, CREATE_MEMORIZATION_TABLE);

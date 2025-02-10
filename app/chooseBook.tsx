@@ -2,6 +2,7 @@ import Icon from '@/components/Icon';
 import { Text, View } from '@/components/Themed';
 import { DB_BOOK_NAMES } from '@/constants/BookNames';
 import { useBibleContext } from '@/context/BibleContext';
+import { useStorage } from '@/context/LocalstoreContext';
 import useParams from '@/hooks/useParams';
 import {
   BookIndexes,
@@ -15,14 +16,18 @@ import removeAccent from '@/utils/removeAccent';
 import { useTheme } from '@react-navigation/native';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import { Stack, useNavigation } from 'expo-router';
-import React, { Fragment, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import React, { Fragment, useCallback, useState } from 'react';
+import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
 type ChooseBookProps = {};
 
 const ChooseBook: React.FC<ChooseBookProps> = () => {
   const navigation = useNavigation();
   const routeParam = useParams<ChooseChapterNumberParams>();
+  const {
+    saveData,
+    storedData: { isShowName },
+  } = useStorage();
   const { book } = routeParam;
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -34,6 +39,11 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
   } = useBibleContext();
   const isPortrait = orientation === 'PORTRAIT';
 
+  const title: { [key: string]: string } = {
+    Gn: 'Antiguo Pacto',
+    Mt: 'Nuevo Pacto',
+  };
+
   const handlePress = (item: IDBBookNames) => {
     const topSide: any = { book: item.longName };
     const bottomSide: any = { bottomSideBook: item.longName };
@@ -42,6 +52,10 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
       ...routeParam,
       ...params,
     });
+  };
+
+  const handleLongPress = () => {
+    saveData({ isShowName: !isShowName });
   };
 
   const renderItem: ListRenderItem<IDBBookNames> = ({ item, index }) => {
@@ -53,6 +67,7 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
           styles.listItem,
           isCurrent && { backgroundColor: theme.colors.notification + '60' },
           isNewVow && { backgroundColor: theme.colors.text + 20 },
+          !isShowName && { justifyContent: 'center', height: 'auto' },
         ]}
         onPress={() => handlePress(item)}
         activeOpacity={0.7}
@@ -63,11 +78,19 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
             { color: theme.dark ? item.bookColor : '' },
           ]}
         >
-          {item.longName.replace(/\s+/g, '').slice(0, 3)}
+          {viewLayoutGrid
+            ? item.longName.replace(/\s+/g, '').slice(0, 3)
+            : renameLongBookName(item.longName)}
         </Text>
-        <Text numberOfLines={1} ellipsizeMode='middle' style={styles.subTitle}>
-          {renameLongBookName(item.longName)}
-        </Text>
+        {isShowName && viewLayoutGrid && (
+          <Text
+            numberOfLines={1}
+            ellipsizeMode='middle'
+            style={styles.subTitle}
+          >
+            {renameLongBookName(item.longName)}
+          </Text>
+        )}
       </TouchableOpacity>
     );
   };
@@ -78,36 +101,76 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
         options={{
           headerShown: true,
           headerRight: () => (
-            <TouchableOpacity onPress={() => toggleViewLayoutGrid()}>
-              <Icon
-                style={styles.icon}
-                name={!viewLayoutGrid ? 'LayoutGrid' : 'List'}
-                size={24}
-              />
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <TouchableOpacity onPress={() => toggleViewLayoutGrid()}>
+                <Icon
+                  style={styles.icon}
+                  name={!viewLayoutGrid ? 'LayoutGrid' : 'List'}
+                  size={24}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleLongPress()}>
+                <Icon
+                  style={styles.icon}
+                  color={
+                    isShowName ? theme.colors.notification : theme.colors.text
+                  }
+                  name={'ChartNoAxesGantt'}
+                  size={24}
+                />
+              </TouchableOpacity>
+            </View>
           ),
         }}
       />
-      <View
-        key={orientation + theme.dark}
+      {/* <View
+        key={orientation + theme.dark + isShowName + viewLayoutGrid}
         style={[styles.container, !isPortrait && { flexDirection: 'row' }]}
-      >
+      > */}
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.listWrapper}>
+          <Text style={styles.sectionTitle}>{title.Gn}</Text>
           <FlashList
             contentContainerStyle={styles.flatContainer}
-            data={DB_BOOK_NAMES}
+            keyExtractor={(item, index) => `book-${index}`}
+            data={DB_BOOK_NAMES.slice(0, BookIndexes.Malaquias)} // Old Testament Books
             renderItem={renderItem}
             estimatedItemSize={47}
-            numColumns={viewLayoutGrid ? 4 : 1}
+            numColumns={viewLayoutGrid ? (isShowName ? 4 : 5) : 1}
+          />
+          <Text style={styles.sectionTitle}>{title.Mt}</Text>
+          <FlashList
+            contentContainerStyle={styles.flatContainer}
+            keyExtractor={(item, index) => `book-${index}`}
+            data={DB_BOOK_NAMES.slice(BookIndexes.Malaquias)} // New Testament Books
+            renderItem={renderItem}
+            estimatedItemSize={47}
+            numColumns={viewLayoutGrid ? (isShowName ? 4 : 5) : 1}
           />
         </View>
-      </View>
+      </ScrollView>
+      {/* </View> */}
     </Fragment>
   );
 };
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
+    scrollContainer: {
+      flexGrow: 1,
+      paddingBottom: 20,
+      backgroundColor: colors.background,
+    },
+    sectionTitle: {
+      fontSize: 22,
+      fontWeight: 'bold',
+      textAlign: 'center',
+      marginVertical: 5,
+      color: colors.notification,
+      backgroundColor: colors.background,
+      padding: 15,
+      width: '100%',
+    },
     container: {
       flex: 1,
       position: 'relative',
@@ -128,7 +191,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       height: 200,
     },
     flatContainer: {
-      paddingBottom: 20,
       backgroundColor: colors.background,
     },
     listItem: {

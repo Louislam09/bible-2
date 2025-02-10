@@ -57,7 +57,7 @@ export const ScreensName: TScreensName = {
   [Screens.Home]: 'Santa Escritura',
   [Screens.Search]: 'Busqueda',
   [Screens.Concordance]: 'Concordancia',
-  [Screens.ChooseBook]: 'Seleccione un libro',
+  [Screens.ChooseBook]: 'Libros',
   [Screens.ChooseChapterNumber]: 'Capitulos',
   [Screens.ChooseVerseNumber]: 'Versiculos',
   [Screens.Favorite]: 'Versiculos Favoritos',

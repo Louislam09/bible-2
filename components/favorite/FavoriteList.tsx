@@ -39,6 +39,7 @@ const FavoriteList = ({ data }: TListVerse) => {
     if (!data) return;
     setFilter(data);
   }, [data]);
+
   if (!data) return;
 
   const handleScroll = (event: any) => {

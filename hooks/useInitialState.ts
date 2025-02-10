@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useStorage } from '@/context/LocalstoreContext';
 import useParams from './useParams';
 import { HomeParams } from '@/types';
@@ -16,7 +16,7 @@ export interface InitialState {
 }
 
 export type StateChangeDetector = (
-  prevState: InitialState, 
+  prevState: InitialState,
   newState: InitialState
 ) => boolean;
 
@@ -30,7 +30,7 @@ export const DEFAULT_VALUES = {
 
 export const useInitialState = (): InitialState => {
   const routeParams = useParams<HomeParams>();
-  console.log(routeParams)
+
   const { storedData } = useStorage();
 
   const initialState = useMemo(() => {
@@ -40,15 +40,16 @@ export const useInitialState = (): InitialState => {
       isVerseTour: routeParams.isVerseTour ?? false,
       book: routeParams.book ?? storedData.lastBook,
       chapter: routeParams.chapter ?? storedData.lastChapter,
-      verse: routeParams.verse === 0 
-        ? 1 
-        : routeParams.verse ?? storedData.lastVerse,
-      bottomSideBook: routeParams.bottomSideBook ?? storedData.lastBottomSideBook,
-      bottomSideChapter: routeParams.bottomSideChapter ?? 
-        storedData.lastBottomSideChapter,
-      bottomSideVerse: routeParams.bottomSideVerse === 0
-        ? 1
-        : routeParams.bottomSideVerse ?? storedData.lastBottomSideVerse,
+      verse:
+        routeParams.verse === 0 ? 1 : routeParams.verse ?? storedData.lastVerse,
+      bottomSideBook:
+        routeParams.bottomSideBook ?? storedData.lastBottomSideBook,
+      bottomSideChapter:
+        routeParams.bottomSideChapter ?? storedData.lastBottomSideChapter,
+      bottomSideVerse:
+        routeParams.bottomSideVerse === 0
+          ? 1
+          : routeParams.bottomSideVerse ?? storedData.lastBottomSideVerse,
     };
   }, [
     routeParams.book,
@@ -75,11 +76,15 @@ export const useInitialState = (): InitialState => {
     };
   }, [initialState]);
 
+  useEffect(() => {
+    // console.log(validatedState);
+  }, [validatedState]);
+
   return validatedState;
 };
 
 export const hasStateChanged = (
-  prevState: InitialState, 
+  prevState: InitialState,
   newState: InitialState
 ): boolean => {
   return (
@@ -91,4 +96,3 @@ export const hasStateChanged = (
     prevState.bottomSideVerse !== newState.bottomSideVerse
   );
 };
-

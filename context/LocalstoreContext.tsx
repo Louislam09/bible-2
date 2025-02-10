@@ -27,6 +27,7 @@ type StoreState = {
   currentBibleVersion: string;
   isSongLyricEnabled: boolean;
   isGridLayout: boolean;
+  isShowName: boolean;
   songFontSize: number;
   history: HistoryItem[];
   currentVoiceIdentifier: string;
@@ -72,6 +73,7 @@ const initialContext: StoreState = {
   selectedFont: TFont.Roboto,
   isDarkMode: true,
   isGridLayout: false,
+  isShowName: false,
   currentBibleVersion: EBibleVersions.BIBLE,
   isSongLyricEnabled: false,
   songFontSize: 21,

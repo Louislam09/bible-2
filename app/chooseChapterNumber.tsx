@@ -11,6 +11,7 @@ import { Fragment, useMemo } from 'react';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { renameLongBookName } from '@/utils/extractVersesInfo';
+import { useStorage } from '@/context/LocalstoreContext';
 
 const chooseChapterNumber = () => {
   const navigation = useNavigation();
@@ -44,9 +45,6 @@ const chooseChapterNumber = () => {
         activeOpacity={0.7}
       >
         <Text style={[styles.listTitle]}>{item}</Text>
-        <Text numberOfLines={1} ellipsizeMode='tail' style={styles.subTitle}>
-          {displayBookName}
-        </Text>
       </TouchableOpacity>
     );
   };
@@ -73,8 +71,7 @@ const chooseChapterNumber = () => {
         data={numberOfChapters}
         renderItem={renderItem}
         estimatedItemSize={50}
-        numColumns={4}
-        // numColumns={numberOfChapters.length > 12 ? 5 : 3}
+        numColumns={numberOfChapters.length > 12 ? 5 : 4}
       />
       {/* <ChooseFromListScreen list={numberOfChapters} /> */}
     </Fragment>
@@ -113,6 +110,7 @@ const getStyles = ({ colors }: TTheme) =>
       flex: 1,
       height: 70,
       alignItems: 'center',
+      justifyContent: 'center',
     },
     listTitle: {
       color: colors.text,

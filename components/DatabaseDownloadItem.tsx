@@ -19,13 +19,19 @@ import unzipFile from '@/utils/unzipFile';
 import DownloadButton from './DatabaseDownloadButton';
 import Icon from './Icon';
 import { DownloadedDatabase } from '@/classes/Database';
+import { showToast } from '@/utils/showToast';
 
 type DatabaseDownloadItemProps = {
   item: DownloadBibleItem;
   theme: TTheme;
+  isConnected: boolean;
 };
 
-const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
+const DatabaseDownloadItem = ({
+  item,
+  theme,
+  isConnected,
+}: DatabaseDownloadItemProps) => {
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -88,6 +94,10 @@ const DatabaseDownloadItem = ({ item, theme }: DatabaseDownloadItemProps) => {
   };
 
   const downloadBible = async () => {
+    if (!isConnected) {
+      showToast('Por favor, revisa tu conexión e inténtalo de nuevo.');
+      return;
+    }
     const needDownload = await getIfDatabaseNeedsDownload(storedName);
     if (needDownload) {
       setIsLoading(true);

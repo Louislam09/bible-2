@@ -52,23 +52,9 @@ const DownloadManager: React.FC<DownloadManagerProps> = ({}) => {
     );
   };
 
-  // useEffect(() => {
-  //   const backAction = () => {
-  //     router.back();
-  //     return true;
-  //   };
-
-  //   const backHandler = BackHandler.addEventListener(
-  //     "hardwareBackPress",
-  //     backAction
-  //   );
-
-  //   return () => backHandler.remove();
-  // }, []);
-
-  if (!isConnected) {
-    return <NoInternetSplash theme={theme} />;
-  }
+  // if (!isConnected) {
+  //   return <NoInternetSplash theme={theme} />;
+  // }
 
   return (
     <View style={{ paddingHorizontal: 20, flex: 1 }}>
@@ -89,7 +75,7 @@ const DownloadManager: React.FC<DownloadManagerProps> = ({}) => {
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           estimatedItemSize={10}
           renderItem={(props) => (
-            <DatabaseDownloadItem {...{ theme, ...props }} />
+            <DatabaseDownloadItem {...{ theme, isConnected, ...props }} />
           )}
           data={
             debouncedSearchText

@@ -1,17 +1,17 @@
-import { DBName } from "enums";
-import * as FileSystem from "expo-file-system";
-import { DATABASE_TYPE } from "@/types";
+import { DBName } from '@/enums';
+import * as FileSystem from 'expo-file-system';
+import { DATABASE_TYPE } from '@/types';
 export const SQLiteDirPath = `${FileSystem.documentDirectory}SQLite`;
-export const baseDownloadUrl = "https://www.ph4.org";
-export const dbFileExt = "-bible.db";
-export const bibleReadyMsg = "¡Todo listo para usar!";
-export const defaultDatabases = ["bible", "ntv-bible"];
+export const baseDownloadUrl = 'https://www.ph4.org';
+export const dbFileExt = '-bible.db';
+export const bibleReadyMsg = '¡Todo listo para usar!';
+export const defaultDatabases = ['bible', 'ntv-bible'];
 // https://www.ph4.org/_dl.php?back=bbl&a=RV%2760_plus_&b=mybible&c
 
 const databaseExtensions = {
-  [DATABASE_TYPE.BIBLE]: "-bible.db",
-  [DATABASE_TYPE.DICTIONARY]: "-dict.db",
-  [DATABASE_TYPE.COMMENTARIES]: "-com.db",
+  [DATABASE_TYPE.BIBLE]: '-bible.db',
+  [DATABASE_TYPE.DICTIONARY]: '-dict.db',
+  [DATABASE_TYPE.COMMENTARIES]: '-com.db',
 };
 
 export const isDefaultDatabase = (dbID: string) => {
@@ -23,14 +23,14 @@ export const getDatabaseExt = (dbType: DATABASE_TYPE) => {
 };
 
 export const getDatabaseType = (fileName: string) => {
-  if (fileName.includes(".dictionary")) return DATABASE_TYPE.DICTIONARY;
-  if (fileName.includes(".commentaries")) return DATABASE_TYPE.COMMENTARIES;
+  if (fileName.includes('.dictionary')) return DATABASE_TYPE.DICTIONARY;
+  if (fileName.includes('.commentaries')) return DATABASE_TYPE.COMMENTARIES;
   return DATABASE_TYPE.BIBLE;
 };
 
 export const getDatabaseQueryKey = (name: string) => {
   const isDefault = defaultDatabases.includes(name);
-  return isDefault ? name : "OTHERS";
+  return isDefault ? name : 'OTHERS';
 };
 
 export const getIfFileNeedsDownload = async (name: string) => {
@@ -52,7 +52,7 @@ export const initDir = async (dirName: string) => {
   if (!dir.exists) {
     await FileSystem.makeDirectoryAsync(path);
   } else if (!dir.isDirectory) {
-    throw new Error("SQLite dir is not a directory");
+    throw new Error('SQLite dir is not a directory');
   }
 };
 
@@ -62,59 +62,59 @@ export const initSQLiteDir = async () => {
   if (!sqliteDir.exists) {
     await FileSystem.makeDirectoryAsync(SQLiteDirPath);
   } else if (!sqliteDir.isDirectory) {
-    throw new Error("SQLite dir is not a directory");
+    throw new Error('SQLite dir is not a directory');
   }
 };
 
 export const databaseNames = [
   {
-    id: "bible",
-    name: "Reina Valera 1960",
-    description: "La Santa Biblia Reina-Valera con números Strong, 1960",
+    id: 'bible',
+    name: 'Reina Valera 1960',
+    description: 'La Santa Biblia Reina-Valera con números Strong, 1960',
     size: 44007424,
     path: `${SQLiteDirPath}/${DBName.BIBLE}`,
-    shortName: "RVR60",
+    shortName: 'RVR60',
   },
   {
-    id: "ntv-bible",
-    name: "Nueva Traducción Viviente",
-    description: "Nueva Traducción Viviente, 2009",
+    id: 'ntv-bible',
+    name: 'Nueva Traducción Viviente',
+    description: 'Nueva Traducción Viviente, 2009',
     size: 15571968,
     path: `${SQLiteDirPath}/${DBName.NTV}`,
-    shortName: "NTV",
+    shortName: 'NTV',
   },
   {
-    id: "INT",
-    name: "Berean Interlinear Bible",
+    id: 'INT',
+    name: 'Berean Interlinear Bible',
     description:
-      "La Biblia Bereana es una Biblia de estudio de tres niveles que lo conecta desde una traducción fluida y precisa hasta la raíz de los significados griegos y hebreos.",
+      'La Biblia Bereana es una Biblia de estudio de tres niveles que lo conecta desde una traducción fluida y precisa hasta la raíz de los significados griegos y hebreos.',
     size: 15571968,
     path: `${SQLiteDirPath}/${DBName.INT}`,
-    shortName: "INT",
+    shortName: 'INT',
   },
   {
-    id: "DIC",
-    name: "Diccionario Clave - Diccionario de uso del espanol actual ",
+    id: 'DIC',
+    name: 'Diccionario Clave - Diccionario de uso del espanol actual ',
     description:
-      "Diccionario Clave - Diccionario de uso del espanol actual (con sinonimos y antonimos)",
+      'Diccionario Clave - Diccionario de uso del espanol actual (con sinonimos y antonimos)',
     size: 15571968,
     path: `${SQLiteDirPath}/${DBName.DIC}`,
-    shortName: "DIC",
+    shortName: 'DIC',
   },
   {
-    id: "Hitchcock",
-    name: "Diccionario de Nombres Bíblicos Hitchcock",
-    description: "Diccionario de Nombres Bíblicos Hitchcock",
+    id: 'Hitchcock',
+    name: 'Diccionario de Nombres Bíblicos Hitchcock',
+    description: 'Diccionario de Nombres Bíblicos Hitchcock',
     size: 15571968,
     path: `${SQLiteDirPath}/${DBName.Hitchcock}`,
-    shortName: "Hitchcock",
+    shortName: 'Hitchcock',
   },
   {
-    id: "Nelson",
-    name: "Diccionario Nelson",
-    description: "Diccionario Nelson",
+    id: 'Nelson',
+    name: 'Diccionario Nelson',
+    description: 'Diccionario Nelson',
     size: 15571968,
     path: `${SQLiteDirPath}/${DBName.Nelson}`,
-    shortName: "Nelson",
+    shortName: 'Nelson',
   },
 ];

@@ -57,8 +57,8 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   const router = useRouter();
   const navigation = useNavigation();
   const theme = useTheme();
-  const { noteListBottomSheetRef } = useBibleContext();
-  const { isSplitActived, orientation } = useBibleContext();
+  const { noteListBottomSheetRef, isSplitActived, orientation } =
+    useBibleContext();
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
 
   const [stepIndex, setStepIndex] = useState(0);
@@ -71,15 +71,15 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
 
   const initialState = useInitialState();
 
-  const { topHeight, topWidth, panResponder, backgroundColor } =
-    useSplitScreen({
+  const { topHeight, topWidth, panResponder, backgroundColor } = useSplitScreen(
+    {
       screenWidth: SCREEN_WIDTH,
       screenHeight: SCREEN_HEIGHT,
       theme,
       minSplitSize: MIN_SPLIT_SIZE,
-    });
+    }
+  );
 
-  const screenHeight = useRef(SCREEN_HEIGHT).current;
   const componentRefs = {
     book: useRef<any>(null),
     next: useRef<any>(null),
@@ -156,7 +156,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
         book={initialState.bottomSideBook}
         chapter={initialState.bottomSideChapter}
         verse={initialState.bottomSideVerse}
-        height={Animated.subtract(new Animated.Value(screenHeight), topHeight)}
+        height={Animated.subtract(new Animated.Value(SCREEN_HEIGHT), topHeight)}
         width={Animated.subtract(new Animated.Value(SCREEN_WIDTH), topWidth)}
         navigation={navigation}
       />
@@ -165,7 +165,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
     isSplitActived,
     initialState,
     componentRefs,
-    screenHeight,
+    SCREEN_HEIGHT,
     SCREEN_WIDTH,
     navigation,
   ]);

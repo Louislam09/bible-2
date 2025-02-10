@@ -11,6 +11,7 @@ import { renameLongBookName } from '@/utils/extractVersesInfo';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import { Text, View } from '@/components/Themed';
 import { BOOK_IMAGES } from '@/constants/Images';
+import { useStorage } from '@/context/LocalstoreContext';
 
 const chooseVerseNumber = () => {
   const routeParam = useParams<ChooseChapterNumberParams>();
@@ -19,7 +20,6 @@ const chooseVerseNumber = () => {
   const selectedBook = isBottomSideSearching ? bottomSideBook : book;
   const selectedChapter = isBottomSideSearching ? bottomSideChapter : chapter;
   const navigation = useNavigation();
-
   const theme = useTheme();
   const styles = getStyles(theme);
   const displayBookName = renameLongBookName(selectedBook || '');
@@ -50,14 +50,11 @@ const chooseVerseNumber = () => {
   const renderItem: ListRenderItem<number> = ({ item, index }) => {
     return (
       <TouchableOpacity
-        style={[styles.listItem]}
+        style={styles.listItem}
         onPress={() => handlePress(item)}
         activeOpacity={0.7}
       >
         <Text style={[styles.listTitle]}>{item}</Text>
-        <Text numberOfLines={1} ellipsizeMode='tail' style={styles.subTitle}>
-          {displayBookName} {chapter}
-        </Text>
       </TouchableOpacity>
     );
   };
@@ -86,10 +83,8 @@ const chooseVerseNumber = () => {
         data={numberOfVerses}
         renderItem={renderItem}
         estimatedItemSize={50}
-        numColumns={4}
-        // numColumns={numberOfChapters.length > 12 ? 5 : 3}
+        numColumns={numberOfVerses.length > 12 ? 5 : 3}
       />
-      {/* <ChooseFromListScreen list={numberOfChapters} /> */}
     </Fragment>
   );
 };
@@ -126,6 +121,7 @@ const getStyles = ({ colors }: TTheme) =>
       flex: 1,
       height: 70,
       alignItems: 'center',
+      justifyContent: 'center',
     },
     listTitle: {
       color: colors.text,
