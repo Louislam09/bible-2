@@ -58,7 +58,7 @@ const useBibleReader = ({
     setVerseIndex(0);
     stopReading();
     setEnded(false);
-    return getChapterTextRawForReading(currentChapterVerses);
+    return getChapterTextRawForReading(currentChapterVerses || []);
   }, [currentChapterVerses]);
 
   const startReading = useCallback(

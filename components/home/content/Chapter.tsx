@@ -7,6 +7,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { TChapter, TTheme } from "@/types";
 import Verse from "./Verse";
+import { Text } from '@/components/Themed';
 
 const Chapter = ({
   item,
@@ -14,8 +15,7 @@ const Chapter = ({
   verse: _verse,
   estimatedReadingTime,
 }: TChapter & { isSplit: boolean }) => {
-  const { verses, subtitles } = item;
-  if (!verses) return <ActivityIndicator />;
+  const { verses = [], subtitles = [] } = item;
   const theme = useTheme();
   const styles = getStyles(theme);
   const chapterRef = useRef<FlashList<any>>(null);
@@ -24,7 +24,7 @@ const Chapter = ({
   const [topVerse, setTopVerse] = useState(null);
   const viewabilityConfig = { viewAreaCoveragePercentThreshold: 1 };
   const [isLayoutMounted, setLayoutMounted] = useState(false);
-  const { chapterVerseLength } = useBibleContext();
+  const chapterVerseLength = useMemo(() => verses.length, [verses]);
   const debounceTopVerse = useDebounce(topVerse, 100);
   const {
     historyManager: { updateVerse },
@@ -89,9 +89,31 @@ const Chapter = ({
           decelerationRate='normal'
           estimatedItemSize={135}
           data={verses ?? []}
-          // data={verses.splice(0, 5) ?? []}
           renderItem={renderItem}
           onEndReached={onEndReached}
+          ListEmptyComponent={() => {
+            return (
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: 100,
+                }}
+              >
+                <ActivityIndicator />
+                <Text
+                  style={{
+                    marginTop: 10,
+                    fontSize: 16,
+                    color: theme.colors.text,
+                  }}
+                >
+                  Cargando...
+                </Text>
+              </View>
+            );
+          }}
           initialScrollIndex={initialScrollIndex}
           keyExtractor={(item: any) => `verse-${item.verse}:`}
           viewabilityConfigCallbackPairs={
@@ -106,20 +128,20 @@ const Chapter = ({
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     chapterContainer: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      position: "relative",
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
     },
     verseContent: {
-      width: "100%",
-      height: "100%",
+      width: '100%',
+      height: '100%',
     },
     slider: {
-      justifyContent: "center",
-      alignItems: "center",
+      justifyContent: 'center',
+      alignItems: 'center',
       borderRadius: 10,
-      width: "100%",
+      width: '100%',
     },
     sliderHandle: {
       width: 40,

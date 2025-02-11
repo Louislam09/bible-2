@@ -34,6 +34,7 @@ import useParams from '@/hooks/useParams';
 import { useSplitScreen } from '@/hooks/useSplitScreen';
 import { HomeParams, TTheme } from '@/types';
 import { Stack, useNavigation, useRouter } from 'expo-router';
+import { BibleChapterProvider } from '@/context/BibleChapterContext';
 
 // Constants
 const MIN_SPLIT_SIZE = 200;

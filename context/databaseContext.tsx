@@ -12,7 +12,7 @@ interface Row {
 
 type DatabaseContextType = {
   myBibleDB?: SQLite.SQLiteDatabase | null;
-  executeSql: (sql: string, params?: any[]) => Promise<Row[]>;
+  executeSql: (sql: string, params?: any[]) => Promise<any[]>;
   installedBibles: VersionItem[];
   installedDictionary: VersionItem[];
   isInstallBiblesLoaded: boolean;
@@ -42,45 +42,21 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const {
+    isDataLoaded,
     storedData: { currentBibleVersion },
   } = useStorage();
   const { installedBibles, loading, refreshDatabaseList, installedDictionary } =
     useInstalledBibles();
   const currentDbName = useMemo(
-    () =>
-      installedBibles?.find((x) => x.id === currentBibleVersion) ||
-      installedBibles[0],
+    () => installedBibles?.find((x) => x.id === currentBibleVersion),
     [installedBibles, currentBibleVersion]
   );
 
-  // const {
-  //   databases,
-  //   executeSql,
-  //   loading: isMyBibleDbLoaded,
-  // } = useDatabase({
-  //   dbNames: installedBibles,
-  //   currentBibleVersion: currentBibleVersion,
-  // });
   const {
     database: myBibleDB,
     executeSql,
     loading: isMyBibleDbLoaded,
-  } = useDB({ dbName: currentDbName });
-
-  const getCurrentDB = (
-    _databases: SQLite.SQLiteDatabase[] | null[],
-    currentSelectedDB: string
-  ) => {
-    const separator = defaultDatabases.includes(currentSelectedDB)
-      ? '.'
-      : '-bible.db';
-    return _databases?.find(
-      (db) => db?.databaseName?.split(separator)[0] === currentSelectedDB
-    );
-  };
-
-  // const myBibleDB =
-  //   getCurrentDB(databases, currentBibleVersion) || databases[0];
+  } = useDB({ dbName: isDataLoaded ? currentDbName : undefined });
 
   const dbContextValue = {
     myBibleDB,

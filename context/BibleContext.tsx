@@ -59,9 +59,7 @@ type BibleState = {
   decreaseFontSize: Function;
   setStrongWord: (word: IStrongWord) => void;
   setVerseToCompare: (verse: number) => void;
-  setChapterLengthNumber: (chapterLengthNumber: number) => void;
   setShouldLoop: (shouldLoop: boolean) => void;
-  setChapterVerses: (currentChapterVerses: IBookVerse[]) => void;
   setCurrentNoteId: (noteId: number | null) => void;
   setverseInStrongDisplay: (verse: number) => void;
   toggleFavoriteVerse: ({
@@ -76,7 +74,6 @@ type BibleState = {
   setLocalData: Function;
   performSearch: Function;
   selectedFont: string;
-  chapterVerseLength: number;
   shouldLoopReading: boolean;
   currentBibleVersion: string;
   searchQuery: string;
@@ -91,7 +88,6 @@ type BibleState = {
   searchState: UseSearchHookState;
   strongWord: IStrongWord;
   searchHistorial: EHistoryItem[];
-  currentChapterVerses: IBookVerse[];
   currentHistoryIndex: number;
   goBackOnHistory?: (index: number) => void;
   goForwardOnHistory?: (index: number) => void;
@@ -161,9 +157,7 @@ const initialContext: BibleState = {
     isFav,
   }: IFavoriteVerse) => {},
   setVerseToCompare: (verse: number) => {},
-  setChapterLengthNumber: (chapterLengthNumber: number) => {},
   setShouldLoop: (shouldLoop: boolean) => {},
-  setChapterVerses: (currentChapterVerses: IBookVerse[]) => {},
   setCurrentNoteId: (noteId: number | null) => {},
   setverseInStrongDisplay: (verse: number) => {},
   onAddToNote: (text: string) => {},
@@ -183,7 +177,6 @@ const initialContext: BibleState = {
   addToNoteText: '',
   verseInStrongDisplay: 0,
   currentNoteId: null,
-  chapterVerseLength: 0,
   shouldLoopReading: false,
   verseToCompare: 1,
   currentTheme: 'Blue',
@@ -194,7 +187,6 @@ const initialContext: BibleState = {
   currentHistoryIndex: -1,
   orientation: 'PORTRAIT',
   currentBibleLongName: 'Reina Valera 1960',
-  currentChapterVerses: [],
   noteListBottomSheetRef: null,
   noteListPresentModalPress: () => {},
   noteListDismissModalPress: () => {},
@@ -295,20 +287,10 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
         ...state,
         verseToCompare: action.payload,
       };
-    case 'SET_CHAPTER_VERSE_LENGTH':
-      return {
-        ...state,
-        chapterVerseLength: action.payload,
-      };
     case 'SET_REPEAT_READING':
       return {
         ...state,
         shouldLoopReading: action.payload,
-      };
-    case 'SET_CHAPTER_VERSES':
-      return {
-        ...state,
-        currentChapterVerses: action.payload,
       };
     case 'GO_BACK':
       return {
@@ -521,12 +503,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const setVerseToCompare = (verse: number) => {
     dispatch({ type: 'SET_VERSE_TO_COMPARE', payload: verse });
   };
-  const setChapterLengthNumber = (chapterLengthNumber: number) => {
-    dispatch({
-      type: 'SET_CHAPTER_VERSE_LENGTH',
-      payload: chapterLengthNumber,
-    });
-  };
+
   const setShouldLoop = (shouldLoop: boolean) => {
     const msg = shouldLoop
       ? 'Reproducción automática: Activada ✅'
@@ -535,12 +512,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     dispatch({
       type: 'SET_REPEAT_READING',
       payload: shouldLoop,
-    });
-  };
-  const setChapterVerses = (currentChapterVerses: IBookVerse[]) => {
-    dispatch({
-      type: 'SET_CHAPTER_VERSES',
-      payload: currentChapterVerses,
     });
   };
 
@@ -572,9 +543,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     setCurrentNoteId,
     setverseInStrongDisplay,
     setVerseToCompare,
-    setChapterLengthNumber,
     setShouldLoop,
-    setChapterVerses,
     onAddToNote,
     goBackOnHistory,
     goForwardOnHistory,

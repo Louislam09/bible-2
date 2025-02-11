@@ -1,12 +1,12 @@
 import { IBookVerse } from "@/types";
 
-export const getVerseTextRaw = (text: any, addIcon: boolean = false) => {
+export const getVerseTextRaw = (text: any = '', addIcon: boolean = false) => {
   return text
-    .replace(/<.*?>|<\/.*?> |<.*?>.*?<\/.*?>|\[.*?\]/gi, "")
-    .replace(/\d+/g, addIcon ? "🔍" : "");
+    .replace(/<.*?>|<\/.*?> |<.*?>.*?<\/.*?>|\[.*?\]/gi, '')
+    .replace(/\d+/g, addIcon ? '🔍' : '');
 };
 
-export const getChapterTextRawForReading = (verses: IBookVerse[]) => {
+export const getChapterTextRawForReading = (verses: IBookVerse[] = []) => {
   const text = [];
   for (const verse of verses) {
     const rawText = getVerseTextRaw(verse.text);
@@ -15,11 +15,11 @@ export const getChapterTextRawForReading = (verses: IBookVerse[]) => {
   return text;
 };
 
-export const getChapterTextRaw = (verses: IBookVerse[]) => {
-  const text = [""];
+export const getChapterTextRaw = (verses: IBookVerse[] = []) => {
+  const text = [''];
   for (const verse of verses) {
     const rawText = getVerseTextRaw(verse.text);
     text.push(rawText);
   }
-  return text.join("\n");
+  return text.join('\n');
 };

@@ -1,20 +1,11 @@
 import { useTheme } from "@react-navigation/native";
-import React, { FC, useEffect, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, Dimensions, StyleSheet } from 'react-native';
-import { DB_BOOK_NAMES } from '../../../constants/BookNames';
-import { useDBContext } from '../../../context/databaseContext';
-import { HomeParams, IBookVerse, TTheme } from '../../../types';
+import React, { FC } from 'react';
+import { ActivityIndicator, StyleSheet } from 'react-native';
+import { TTheme } from '../../../types';
 
-import { Text, View } from '@/components/Themed';
-import { getDatabaseQueryKey } from '@/constants/databaseNames';
-import { useBibleContext } from '@/context/BibleContext';
-import { useStorage } from '@/context/LocalstoreContext';
-import useParams from '@/hooks/useParams';
-import useReadingTime from '@/hooks/useReadTime';
-import { getChapterTextRaw } from '@/utils/getVerseTextRaw';
-import { QUERY_BY_DB } from '../../../constants/Queries';
+import { View } from '@/components/Themed';
+import { useBibleChapter } from '@/context/BibleChapterContext';
 import Chapter from './Chapter';
-import SkeletonVerse from './SkeletonVerse';
 
 interface BookContentInterface {
   isSplit: boolean;
@@ -31,124 +22,7 @@ const BookContent: FC<BookContentInterface> = ({
 }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
-  const {
-    storedData,
-    saveData,
-    historyManager: { add: addToHistory },
-  } = useStorage();
-  const { currentBibleVersion, fontSize } = storedData;
-
-  const {
-    setverseInStrongDisplay,
-    clearHighlights,
-    currentBibleLongName,
-    setChapterLengthNumber,
-    setChapterVerses,
-    highlightedVerses,
-  } = useBibleContext();
-  const { myBibleDB, executeSql } = useDBContext();
-  const params = useParams<HomeParams>();
-  const { isHistory } = params;
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<any>({});
-  const [chapterText, setChapterText] = useState<string>('');
-  const currentBook = useMemo(
-    () => DB_BOOK_NAMES.find((x) => x.longName === book),
-    [book]
-  );
-  const isNewLaw = useRef<boolean>(
-    currentBibleLongName.toLowerCase().includes('nuevo testamento')
-  );
-  const estimatedReadingTime = useReadingTime({
-    text: chapterText,
-  });
-
-  useEffect(() => {
-    (async () => {
-      const startTime = Date.now(); // Start timing
-      if (highlightedVerses?.length) clearHighlights();
-      setLoading(true);
-      if (!myBibleDB || !executeSql) return;
-      setData({});
-      setverseInStrongDisplay(0);
-      const queryKey = getDatabaseQueryKey(currentBibleVersion);
-      const query = QUERY_BY_DB[queryKey];
-      // checkPragmas();
-      const promises = [
-        executeSql(
-          query.GET_VERSES_BY_BOOK_AND_CHAPTER,
-          [currentBook?.bookNumber, chapter || 1]
-          // @ts-ignore
-          // 'GET_VERSES_BY_BOOK_AND_CHAPTER'
-        ),
-        executeSql(query.GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
-          currentBook?.bookNumber,
-          chapter || 1,
-          // 'GET_SUBTITLE_BY_BOOK_AND_CHAPTER'
-        ]),
-      ];
-
-      const responses = await Promise.all(promises);
-      const endTime = Date.now(); // End timing
-      const executionTime = endTime - startTime;
-      const [verses, subtitles] = responses;
-      console.log(
-        `Query verse: ${book} ${chapter} executed in ${executionTime} ms.`
-      );
-      setData({ verses, subtitles });
-      setChapterVerses(verses as IBookVerse[]);
-      setChapterLengthNumber(verses?.length || 0);
-      setChapterText(getChapterTextRaw(verses as any));
-      if (!isHistory) {
-        addToHistory({ book, verse, chapter });
-      }
-
-      await saveData({
-        [isSplit ? 'lastBottomSideBook' : 'lastBook']: book,
-        [isSplit ? 'lastBottomSideChapter' : 'lastChapter']: chapter,
-        [isSplit ? 'lastBottomSideVerse' : 'lastVerse']: verse,
-      });
-
-      setLoading(false);
-    })();
-
-    return () => {};
-  }, [myBibleDB, book, chapter, verse]);
-
-  const displayErrorMessage = (_isNewLaw: boolean) => {
-    if (_isNewLaw) {
-      return 'Solo disponible el Nuevo Pacto en esta versión.';
-    } else {
-      return 'No se puede mostrar esta versión. Intenta con otra.';
-    }
-  };
-
-  const notVerseToRender = data?.verses?.length && !loading;
-
-  if (loading || data?.verses?.length === undefined) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator />
-      </View>
-    );
-  }
-  // if (loading || data?.verses?.length === undefined) return <ActivityIndicator />;
-
-  if (!notVerseToRender) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text
-          style={{
-            color: theme.colors.notification,
-            fontSize,
-            textAlign: 'center',
-          }}
-        >
-          {displayErrorMessage(isNewLaw.current)}
-        </Text>
-      </View>
-    );
-  }
+  const { data, estimatedReadingTime } = useBibleChapter();
 
   return (
     <View style={styles.bookContainer}>

@@ -19,6 +19,8 @@ import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
 import { renameLongBookName } from '@/utils/extractVersesInfo';
+import { useBibleChapter } from '@/context/BibleChapterContext';
+import useChangeBookOrChapter from '@/hooks/useChangeBookOrChapter';
 interface FooterInterface {
   refs: any;
   isSplit?: boolean;
@@ -26,8 +28,6 @@ interface FooterInterface {
   chapter: any;
   verse: any;
 }
-
-
 
 const CustomFooter: FC<FooterInterface> = ({
   refs,
@@ -43,11 +43,9 @@ const CustomFooter: FC<FooterInterface> = ({
     currentHistoryIndex,
     isSplitActived,
     toggleBottomSideSearching,
-    currentChapterVerses,
     shouldLoopReading,
     setShouldLoop,
   } = useBibleContext();
-  const { width: SCREEN_WIDTH } = useWindowDimensions();
   const {
     historyManager,
     storedData: { currentVoiceIdentifier, currentVoiceRate = 1 },
@@ -59,14 +57,12 @@ const CustomFooter: FC<FooterInterface> = ({
   const playRef = useRef<BottomSheetModal>(null);
   const navigation = useNavigation();
   const route = useRoute();
-  const currentHistoryItemVerse = historyManager.getCurrentItem()?.verse;
+  // const currentHistoryItemVerse = historyManager.getCurrentItem()?.verse;
 
   const { bookNumber, shortName } =
     DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
   const isRVR = currentBibleVersion === EBibleVersions.BIBLE && isConnected;
-  const translateX = useRef(new Animated.Value(0)).current;
-  const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
   const { isDownloading, isPlaying, playAudio, duration, position } =
     useAudioPlayer({
       book: bookIndex + 1,
@@ -74,15 +70,19 @@ const CustomFooter: FC<FooterInterface> = ({
       nextChapter,
     });
 
+  const {
+    data: { verses },
+  } = useBibleChapter();
   const { verseIndex, startReading, stopReading, isSpeaking, ended, reset } =
     useBibleReader({
-      currentChapterVerses,
+      currentChapterVerses: verses as any,
       currentVoiceIdentifier,
       voiceRate: currentVoiceRate,
     });
   const startOrStop = isSpeaking ? stopReading : startReading;
   const _playAudio = isRVR ? playAudio : startOrStop;
   const _isPlaying = isRVR ? isPlaying : isSpeaking;
+  const { updateBibleQuery } = useBibleChapter();
 
   useEffect(() => {
     if (ended && shouldLoopReading) {
@@ -102,12 +102,13 @@ const CustomFooter: FC<FooterInterface> = ({
 
   const nextOrPreviousBook = (name: string, chapter: number = 1) => {
     clearHighlights();
-    navigation.setParams({
+    const queryInfo = {
       [isSplit ? 'bottomSideBook' : 'book']: name,
       [isSplit ? 'bottomSideChapter' : 'chapter']: chapter,
       [isSplit ? 'bottomSideVerse' : 'verse']: 0,
-      isHistory: false,
-    });
+    };
+    updateBibleQuery(queryInfo);
+    navigation.setParams({ ...queryInfo, isHistory: false });
   };
 
   function nextChapter() {
@@ -119,12 +120,13 @@ const CustomFooter: FC<FooterInterface> = ({
     }
 
     const _chapter = +(chapter as number) + 1;
-    navigation.setParams({
+    const queryInfo = {
       [isSplit ? 'bottomSideBook' : 'book']: book,
-      [isSplit ? 'bottomSideChapter' : 'chapter']: _chapter || 0,
-      [isSplit ? 'bottomSideVerse' : 'verse']: 0,
-      isHistory: false,
-    });
+      [isSplit ? 'bottomSideChapter' : 'chapter']: _chapter || 1,
+      [isSplit ? 'bottomSideVerse' : 'verse']: 1,
+    };
+    updateBibleQuery(queryInfo);
+    navigation.setParams({ ...queryInfo, isHistory: false });
   }
   const previousChapter = () => {
     if (bookNumber !== 10 && chapter === 1) {
@@ -134,12 +136,13 @@ const CustomFooter: FC<FooterInterface> = ({
       return;
     }
     if ((chapter as number) <= 1) return;
-    navigation.setParams({
+    const queryInfo = {
       [isSplit ? 'bottomSideBook' : 'book']: book,
       [isSplit ? 'bottomSideChapter' : 'chapter']: (chapter as number) - 1,
-      [isSplit ? 'bottomSideVerse' : 'verse']: 0,
-      isHistory: false,
-    });
+      [isSplit ? 'bottomSideVerse' : 'verse']: 1,
+    };
+    updateBibleQuery(queryInfo);
+    navigation.setParams({ ...queryInfo, isHistory: false });
   };
 
   const onSingleFooterTitle = () => {
@@ -252,7 +255,7 @@ const CustomFooter: FC<FooterInterface> = ({
             isDownloading,
             isPlaying: _isPlaying,
             playAudio: _playAudio,
-            duration: isRVR ? duration : currentChapterVerses.length,
+            duration: isRVR ? duration : (verses || []).length,
             position: isRVR ? position : verseIndex,
             nextChapter,
             previousChapter,

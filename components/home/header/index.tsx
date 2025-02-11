@@ -20,6 +20,7 @@ import Settings from './Settings';
 import VersionList from './VersionList';
 import { EBibleVersions, HomeParams, Screens, TIcon, TTheme } from '@/types';
 import { View, Text } from '@/components/Themed';
+import { useBibleChapter } from '@/context/BibleChapterContext';
 
 interface HeaderInterface {
   refs: any;
@@ -37,8 +38,12 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
     isSplitActived,
     toggleSplitMode,
     toggleBottomSideSearching,
-    chapterVerseLength,
   } = useBibleContext();
+  const {
+    data: { verses },
+  } = useBibleChapter();
+  const chapterVerseLength = useMemo(() => verses.length, [verses]);
+
   const {
     historyManager: {
       goBack,

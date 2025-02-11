@@ -20,6 +20,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NativeStackNavigationOptions, NativeStackNavigatorProps } from 'react-native-screens/lib/typescript/native-stack/types';
 import { RouteProp, ParamListBase } from '@react-navigation/native';
 import { MemorizationProvider } from '@/context/MemorizationContext';
+import { BibleChapterProvider } from '@/context/BibleChapterContext';
 
 type ScreenOptionsProps = {
   route: RouteProp<ParamListBase, string>;
@@ -97,21 +98,23 @@ const App = () => {
         <StorageProvider>
           <DatabaseProvider>
             <BibleProvider>
-              <MemorizationProvider>
-                <MyThemeProvider>
-                  <GestureHandlerRootView style={{ flex: 1 }}>
-                    <BottomSheetModalProvider>
-                      <ModalProvider>
-                        <StatusBar animated translucent style='auto' />
-                        <Stack
-                          initialRouteName='(dashboard)'
-                          screenOptions={screenOptions}
-                        />
-                      </ModalProvider>
-                    </BottomSheetModalProvider>
-                  </GestureHandlerRootView>
-                </MyThemeProvider>
-              </MemorizationProvider>
+              <BibleChapterProvider>
+                <MemorizationProvider>
+                  <MyThemeProvider>
+                    <GestureHandlerRootView style={{ flex: 1 }}>
+                      <BottomSheetModalProvider>
+                        <ModalProvider>
+                          <StatusBar animated translucent style='auto' />
+                          <Stack
+                            initialRouteName='(dashboard)'
+                            screenOptions={screenOptions}
+                          />
+                        </ModalProvider>
+                      </BottomSheetModalProvider>
+                    </GestureHandlerRootView>
+                  </MyThemeProvider>
+                </MemorizationProvider>
+              </BibleChapterProvider>
             </BibleProvider>
           </DatabaseProvider>
         </StorageProvider>

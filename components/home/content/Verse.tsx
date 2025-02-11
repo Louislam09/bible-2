@@ -1,7 +1,15 @@
-import { Text, View } from "@/components/Themed";
+import DisplayStrongWord from '@/components/DisplayStrongWord';
+import Icon from '@/components/Icon';
+import { Text, View } from '@/components/Themed';
+import Walkthrough from '@/components/Walkthrough';
 import { DB_BOOK_NAMES, getBookDetail } from '@/constants/BookNames';
 import { useBibleContext } from '@/context/BibleContext';
+import { useMemorization } from '@/context/MemorizationContext';
+import { useModal } from '@/context/modal-context';
+import useParams from '@/hooks/useParams';
+import useSingleAndDoublePress from '@/hooks/useSingleOrDoublePress';
 import { HomeParams, Screens, TIcon, TTheme, TVerse } from '@/types';
+import copyToClipboard from '@/utils/copyToClipboard';
 import { customUnderline } from '@/utils/customStyle';
 import extractVersesInfo, {
   extractTextFromParagraph,
@@ -11,13 +19,8 @@ import extractVersesInfo, {
 } from '@/utils/extractVersesInfo';
 import { getVerseTextRaw } from '@/utils/getVerseTextRaw';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { useRoute, useTheme } from '@react-navigation/native';
-import DisplayStrongWord from '@/components/DisplayStrongWord';
-import Icon from '@/components/Icon';
-import Walkthrough from '@/components/Walkthrough';
-import { useModal } from '@/context/modal-context';
+import { useTheme } from '@react-navigation/native';
 import { useNavigation } from 'expo-router';
-import useSingleAndDoublePress from '@/hooks/useSingleOrDoublePress';
 import React, {
   useCallback,
   useEffect,
@@ -33,11 +36,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import copyToClipboard from '@/utils/copyToClipboard';
 import RenderTextWithClickableWords from './RenderTextWithClickableWords';
-import useParams from '@/hooks/useParams';
-import { useMemorization } from '@/context/MemorizationContext';
-import { showToast } from '@/utils/showToast';
 
 type VerseProps = TVerse & {
   isSplit: boolean;
@@ -607,8 +606,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
     verseAction: {
       display: 'flex',
       flexDirection: 'row',
-      // alignItems: "center",
-      // justifyContent: "flex-end",
       borderRadius: 10,
       paddingHorizontal: 10,
       alignSelf: 'flex-end',

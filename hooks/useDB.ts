@@ -27,7 +27,7 @@ interface UseDatabase {
 }
 
 type TUseDatabase = {
-  dbName: VersionItem;
+  dbName: VersionItem | undefined;
 };
 
 enum DEFAULT_DATABASE {
@@ -45,7 +45,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
     sql: string,
     params: any[] = [],
     queryName?: any
-  ): Promise<Row[]> => {
+  ): Promise<any[]> => {
     try {
       const startTime = Date.now(); // Start timing
       if (!database) {
@@ -69,7 +69,6 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
       return [];
     }
   };
-
 
   async function openDatabase(databaseItem: VersionItem) {
     const localFolder = SQLiteDirPath;
@@ -105,13 +104,15 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
 
     return await SQLite.openDatabaseAsync(dbNameWithExt);
   }
-  
-  useEffect(() => {
-    async function initializeDatabase() {
-      const db = await openDatabase(dbName);
-      if (!isMounted.current) return;
 
-      console.log({ db });
+  useEffect(() => {
+    if (!dbName) return;
+    async function initializeDatabase() {
+      if (!dbName) return;
+      setLoading(false);
+      if (database) await database.closeAsync();
+      const db = await openDatabase(dbName);
+
       setDatabase(db);
       dbInitialized.current = true;
     }
@@ -136,7 +137,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
         await executeSql('PRAGMA synchronous = NORMAL;');
         await executeSql('PRAGMA temp_store = MEMORY;');
         await executeSql('PRAGMA cache_size = -10000;');
-        await executeSql('PRAGMA optimize;');
+        // await executeSql('PRAGMA optimize;');
         console.log(`Database optimized successfully.`);
       } catch (error) {
         console.error('Error optimizing database:', error);
@@ -156,27 +157,27 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
       }
     }
     const checkPragmas = async () => {
-          const journalMode = await executeSql(`PRAGMA journal_mode;`, []);
-          const synchronous = await executeSql(`PRAGMA synchronous;`, []);
-          const tempStore = await executeSql(`PRAGMA temp_store;`, []);
-          const cacheSize = await executeSql(`PRAGMA cache_size;`, []);
-    
-          console.log({
-            journalMode,
-            synchronous,
-            tempStore,
-            cacheSize,
-          });
-        };
+      const journalMode = await executeSql(`PRAGMA journal_mode;`, []);
+      const synchronous = await executeSql(`PRAGMA synchronous;`, []);
+      const tempStore = await executeSql(`PRAGMA temp_store;`, []);
+      const cacheSize = await executeSql(`PRAGMA cache_size;`, []);
+
+      console.log({
+        journalMode,
+        synchronous,
+        tempStore,
+        cacheSize,
+      });
+    };
 
     if (database) {
-      if (isDefaultDatabase(dbName.id)) {
+      if (isDefaultDatabase(dbName?.id || '')) {
         optimizeDatabase();
       }
       createTables();
-    //   checkPragmas()
+      //   checkPragmas()
     }
-  }, [database, dbName]);
+  }, [database]);
 
   return { executeSql, database, loading };
 }
