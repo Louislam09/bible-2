@@ -1,9 +1,10 @@
 import { defaultDatabases } from "@/constants/databaseNames";
 import * as SQLite from "expo-sqlite";
 import useInstalledBibles, { VersionItem } from "@/hooks/useInstalledBible";
-import React, { createContext, useContext } from "react";
-import useDatabase from "../hooks/useDatabase";
-import { useStorage } from "./LocalstoreContext";
+import React, { createContext, useContext, useEffect, useMemo } from 'react';
+import useDatabase from '../hooks/useDatabase';
+import { useStorage } from './LocalstoreContext';
+import useDB from '@/hooks/useDB';
 
 interface Row {
   [key: string]: any;
@@ -11,13 +12,7 @@ interface Row {
 
 type DatabaseContextType = {
   myBibleDB?: SQLite.SQLiteDatabase | null;
-  executeSql?:
-    | ((
-        db: SQLite.SQLiteDatabase,
-        sql: string,
-        params?: any[]
-      ) => Promise<Row[]>)
-    | null;
+  executeSql: (sql: string, params?: any[]) => Promise<Row[]>;
   installedBibles: VersionItem[];
   installedDictionary: VersionItem[];
   isInstallBiblesLoaded: boolean;
@@ -30,9 +25,9 @@ enum DBs {
   NTV,
 }
 
-const initialContext = {
+const initialContext: DatabaseContextType = {
   myBibleDB: null,
-  executeSql: null,
+  executeSql: async (sql: string, params?: any[]) => [],
   installedBibles: [],
   installedDictionary: [],
   isInstallBiblesLoaded: false,
@@ -51,13 +46,26 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   } = useStorage();
   const { installedBibles, loading, refreshDatabaseList, installedDictionary } =
     useInstalledBibles();
+  const currentDbName = useMemo(
+    () =>
+      installedBibles?.find((x) => x.id === currentBibleVersion) ||
+      installedBibles[0],
+    [installedBibles, currentBibleVersion]
+  );
+
+  // const {
+  //   databases,
+  //   executeSql,
+  //   loading: isMyBibleDbLoaded,
+  // } = useDatabase({
+  //   dbNames: installedBibles,
+  //   currentBibleVersion: currentBibleVersion,
+  // });
   const {
-    databases,
+    database: myBibleDB,
     executeSql,
     loading: isMyBibleDbLoaded,
-  } = useDatabase({
-    dbNames: installedBibles,
-  });
+  } = useDB({ dbName: currentDbName });
 
   const getCurrentDB = (
     _databases: SQLite.SQLiteDatabase[] | null[],
@@ -71,8 +79,8 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
-  const myBibleDB =
-    getCurrentDB(databases, currentBibleVersion) || databases[0];
+  // const myBibleDB =
+  //   getCurrentDB(databases, currentBibleVersion) || databases[0];
 
   const dbContextValue = {
     myBibleDB,

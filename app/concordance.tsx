@@ -138,11 +138,9 @@ const Concordance: React.FC<ConcordanceProps> = () => {
       if (selected) {
         const queryKey = getDatabaseQueryKey(currentBibleVersion);
         const query = QUERY_BY_DB[queryKey];
-        const data = await executeSql(
-          myBibleDB,
-          query.GET_VERSES_FOR_CONCORDANCIA,
-          [`%${selected}%`]
-        );
+        const data = await executeSql(query.GET_VERSES_FOR_CONCORDANCIA, [
+          `%${selected}%`,
+        ]);
         const newData = data.flatMap((x) => JSON.parse(x.data));
         setSelectedFilterOption(defaultFilterOption);
         setVerseList(newData);

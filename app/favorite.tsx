@@ -14,7 +14,7 @@ const Favorite: React.FC<FavoriteProps> = () => {
   useEffect(() => {
     (async () => {
       if (!myBibleDB || !executeSql) return;
-      const verses = await executeSql(myBibleDB, GET_ALL_FAVORITE_VERSES, []);
+      const verses = await executeSql(GET_ALL_FAVORITE_VERSES, []);
       setData(verses ?? []);
     })();
 

@@ -119,9 +119,8 @@ const StrongContent: FC<IStrongContent> = ({
     (async () => {
       if (myBibleDB && executeSql) {
         const DictionaryData = await executeSql(
-          myBibleDB,
           SEARCH_STRONG_WORD,
-          text.split(",")
+          text.split(',')
         );
         setValues(DictionaryData as DictionaryData[]);
       }

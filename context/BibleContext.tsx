@@ -455,7 +455,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
       ? [bookNumber, chapter, verse]
       : [bookNumber, chapter, verse, bookNumber, chapter, verse];
     await executeSql(
-      myBibleDB,
       isFav ? DELETE_FAVORITE_VERSE : INSERT_FAVORITE_VERSE,
       params
     );
@@ -470,7 +469,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     closeCallback: any
   ) => {
     if (!myBibleDB || !executeSql) return;
-    await executeSql(myBibleDB, INSERT_INTO_NOTE, [data.title, data.content]);
+    await executeSql(INSERT_INTO_NOTE, [data.title, data.content]);
     closeCallback();
   };
   const onUpdateNote = async (
@@ -479,21 +478,17 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     closeCallback: any
   ) => {
     if (!myBibleDB || !executeSql) return;
-    await executeSql(myBibleDB, UPDATE_NOTE_BY_ID, [
-      data.title,
-      data.content,
-      id,
-    ]);
+    await executeSql(UPDATE_NOTE_BY_ID, [data.title, data.content, id]);
     closeCallback();
   };
 
   const onDeleteNote = async (id: number) => {
     if (!myBibleDB || !executeSql) return;
-    await executeSql(myBibleDB, DELETE_NOTE, [id]);
+    await executeSql(DELETE_NOTE, [id]);
   };
   const onDeleteAllNotes = async () => {
     if (!myBibleDB || !executeSql) return;
-    await executeSql(myBibleDB, DELETE_NOTE_ALL, []);
+    await executeSql(DELETE_NOTE_ALL, []);
   };
 
   const selectFont = (font: string) => {

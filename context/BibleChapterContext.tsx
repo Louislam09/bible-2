@@ -107,11 +107,11 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       const [verses, subtitles] = await Promise.all([
-        executeSql(myBibleDB, query.GET_VERSES_BY_BOOK_AND_CHAPTER, [
+        executeSql(query.GET_VERSES_BY_BOOK_AND_CHAPTER, [
           currentBook?.bookNumber,
           chapter || 1,
         ]),
-        executeSql(myBibleDB, query.GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
+        executeSql(query.GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
           currentBook?.bookNumber,
           chapter || 1,
         ]),

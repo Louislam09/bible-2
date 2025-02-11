@@ -71,7 +71,6 @@ const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
       if (!code) return;
       const params = [`%>${code}<%`, ...filterByBookGroup];
       const searchData = await executeSql(
-        myBibleDB,
         SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE,
         params
       );

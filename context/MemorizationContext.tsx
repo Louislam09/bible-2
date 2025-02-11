@@ -47,7 +47,7 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
   const refreshVerses = async () => {
     try {
       if (!myBibleDB || !executeSql) return;
-      const data = await executeSql(myBibleDB, GET_ALL_MOMORIZATION, []);
+      const data = await executeSql(GET_ALL_MOMORIZATION, []);
       setVerses(renameLongBookName(data as any));
     } catch (error) {
       console.warn('Error refreshVerses:', error);
@@ -59,7 +59,7 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
       const timestamp = Date.now();
       if (!myBibleDB || !executeSql) return;
       const values = [verse, version, 0, timestamp, timestamp];
-      await executeSql(myBibleDB, INSERT_VERSE_TO_MOMORIZATION, values);
+      await executeSql(INSERT_VERSE_TO_MOMORIZATION, values);
       await refreshVerses();
       showToast('Versículo añadido con éxito!');
     } catch (error) {
@@ -71,7 +71,7 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
     try {
       if (!myBibleDB || !executeSql) return;
       const values = [id];
-      await executeSql(myBibleDB, DELETE_VERSE_FROM_MOMORIZATION, values);
+      await executeSql(DELETE_VERSE_FROM_MOMORIZATION, values);
       await refreshVerses();
       showToast('Versículo eliminado con éxito!');
     } catch (error) {
@@ -84,7 +84,7 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
     try {
       if (!myBibleDB || !executeSql) return;
       const values = [progress, timestamp, id];
-      await executeSql(myBibleDB, UPDATE_MOMORIZATION_PROGRESS, values);
+      await executeSql(UPDATE_MOMORIZATION_PROGRESS, values);
       refreshVerses();
     } catch (error) {
       console.warn('Error updating progress:', error);

@@ -85,12 +85,10 @@ const Chapter = ({
       <View style={[styles.verseContent]}>
         <FlashList
           ref={chapterRef}
-          onLayout={() => {
-            setLayoutMounted(true);
-          }}
+          onLayout={() => setLayoutMounted(true)}
           decelerationRate='normal'
           estimatedItemSize={135}
-          data={verses ?? []}
+          data={verses.splice(0, 5) ?? []}
           renderItem={renderItem}
           onEndReached={onEndReached}
           initialScrollIndex={initialScrollIndex}

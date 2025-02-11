@@ -18,7 +18,7 @@ const Notes: React.FC<NotesProps> = ({ }) => {
   useEffect(() => {
     if (!myBibleDB || !executeSql) return;
     const getNotes = async () => {
-      const notes = await executeSql(myBibleDB, GET_ALL_NOTE, []);
+      const notes = await executeSql(GET_ALL_NOTE, []);
       setData(notes ?? []);
     };
     getNotes();

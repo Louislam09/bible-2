@@ -59,7 +59,7 @@ const Reference = ({ target, isVisible, onClose, references }: IReference) => {
         `;
 
         try {
-            const response: any = await executeSql(myBibleDB, query, params);
+            const response: any = await executeSql(query, params);
             setItems(response);
         } catch (error) {
             console.error("Error fetching verse details:", error);

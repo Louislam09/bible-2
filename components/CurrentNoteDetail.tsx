@@ -89,12 +89,12 @@ const CurrentNoteDetail: React.FC<any> = ({}) => {
         }
         setLoading(true);
         if (!myBibleDB || !executeSql) return;
-        const note = await executeSql(myBibleDB, GET_NOTE_BY_ID, [noteId]);
+        const note = await executeSql(GET_NOTE_BY_ID, [noteId]);
         setNoteInfo(note[0] as TNote);
       } catch (error) {
         Alert.alert(
-          "Error",
-          "No se pudo cargar la nota. Por favor, inténtelo de nuevo."
+          'Error',
+          'No se pudo cargar la nota. Por favor, inténtelo de nuevo.'
         );
       } finally {
         setLoading(false);
@@ -111,11 +111,11 @@ const CurrentNoteDetail: React.FC<any> = ({}) => {
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
+      'keyboardDidShow',
       () => setKeyboardOpen(true)
     );
     const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
+      'keyboardDidHide',
       () => setKeyboardOpen(false)
     );
     return () => {
@@ -139,17 +139,14 @@ const CurrentNoteDetail: React.FC<any> = ({}) => {
         return;
       }
       if (!noteContent.title) noteContent.title = defaultTitle;
-      await onSaveNote(noteContent, () => setViewMode("VIEW"));
+      await onSaveNote(noteContent, () => setViewMode('VIEW'));
       if (!myBibleDB || !executeSql) return;
-      const result = await executeSql(
-        myBibleDB,
-        "SELECT last_insert_rowid() as id"
-      );
+      const result = await executeSql('SELECT last_insert_rowid() as id');
       const newNoteId = result[0]?.id;
       setCurrentNoteId(newNoteId);
-      ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
+      ToastAndroid.show('Nota guardada!', ToastAndroid.SHORT);
     } catch (error) {
-      Alert.alert("Error", "No se pudo guardar la nota.");
+      Alert.alert('Error', 'No se pudo guardar la nota.');
     }
   }, [noteContent, noteId]);
 

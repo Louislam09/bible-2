@@ -1,20 +1,20 @@
 import { useTheme } from "@react-navigation/native";
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, StyleSheet } from "react-native";
-import { DB_BOOK_NAMES } from "../../../constants/BookNames";
-import { useDBContext } from "../../../context/databaseContext";
-import { HomeParams, IBookVerse, TTheme } from "../../../types";
+import { ActivityIndicator, Dimensions, StyleSheet } from 'react-native';
+import { DB_BOOK_NAMES } from '../../../constants/BookNames';
+import { useDBContext } from '../../../context/databaseContext';
+import { HomeParams, IBookVerse, TTheme } from '../../../types';
 
-import { Text, View } from "@/components/Themed";
-import { getDatabaseQueryKey } from "@/constants/databaseNames";
-import { useBibleContext } from "@/context/BibleContext";
-import { useStorage } from "@/context/LocalstoreContext";
+import { Text, View } from '@/components/Themed';
+import { getDatabaseQueryKey } from '@/constants/databaseNames';
+import { useBibleContext } from '@/context/BibleContext';
+import { useStorage } from '@/context/LocalstoreContext';
 import useParams from '@/hooks/useParams';
-import useReadingTime from "@/hooks/useReadTime";
-import { getChapterTextRaw } from "@/utils/getVerseTextRaw";
-import { QUERY_BY_DB } from "../../../constants/Queries";
-import Chapter from "./Chapter";
-import SkeletonVerse from "./SkeletonVerse";
+import useReadingTime from '@/hooks/useReadTime';
+import { getChapterTextRaw } from '@/utils/getVerseTextRaw';
+import { QUERY_BY_DB } from '../../../constants/Queries';
+import Chapter from './Chapter';
+import SkeletonVerse from './SkeletonVerse';
 
 interface BookContentInterface {
   isSplit: boolean;
@@ -47,28 +47,25 @@ const BookContent: FC<BookContentInterface> = ({
     highlightedVerses,
   } = useBibleContext();
   const { myBibleDB, executeSql } = useDBContext();
-  const params = useParams<HomeParams>()
+  const params = useParams<HomeParams>();
   const { isHistory } = params;
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>({});
-  const [chapterText, setChapterText] = useState<string>("");
+  const [chapterText, setChapterText] = useState<string>('');
   const currentBook = useMemo(
     () => DB_BOOK_NAMES.find((x) => x.longName === book),
     [book]
   );
-  const isNewLaw = useRef<boolean>(false);
+  const isNewLaw = useRef<boolean>(
+    currentBibleLongName.toLowerCase().includes('nuevo testamento')
+  );
   const estimatedReadingTime = useReadingTime({
     text: chapterText,
   });
 
   useEffect(() => {
-    isNewLaw.current = currentBibleLongName
-      .toLowerCase()
-      .includes('nuevo testamento');
-  }, [currentBibleLongName]);
-
-  useEffect(() => {
     (async () => {
+      const startTime = Date.now(); // Start timing
       if (highlightedVerses?.length) clearHighlights();
       setLoading(true);
       if (!myBibleDB || !executeSql) return;
@@ -76,21 +73,28 @@ const BookContent: FC<BookContentInterface> = ({
       setverseInStrongDisplay(0);
       const queryKey = getDatabaseQueryKey(currentBibleVersion);
       const query = QUERY_BY_DB[queryKey];
+      // checkPragmas();
       const promises = [
         executeSql(
-          myBibleDB,
           query.GET_VERSES_BY_BOOK_AND_CHAPTER,
-          [currentBook?.bookNumber, chapter || 1],
-          'GET_VERSES_BY_BOOK_AND_CHAPTER'
+          [currentBook?.bookNumber, chapter || 1]
+          // @ts-ignore
+          // 'GET_VERSES_BY_BOOK_AND_CHAPTER'
         ),
-        executeSql(myBibleDB, query.GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
+        executeSql(query.GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
           currentBook?.bookNumber,
           chapter || 1,
+          // 'GET_SUBTITLE_BY_BOOK_AND_CHAPTER'
         ]),
       ];
 
       const responses = await Promise.all(promises);
+      const endTime = Date.now(); // End timing
+      const executionTime = endTime - startTime;
       const [verses, subtitles] = responses;
+      console.log(
+        `Query verse: ${book} ${chapter} executed in ${executionTime} ms.`
+      );
       setData({ verses, subtitles });
       setChapterVerses(verses as IBookVerse[]);
       setChapterLengthNumber(verses?.length || 0);
@@ -123,11 +127,12 @@ const BookContent: FC<BookContentInterface> = ({
 
   if (loading || data?.verses?.length === undefined) {
     return (
-      <View style={{ flex: 1 }}>
-        <SkeletonVerse index={0} />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator />
       </View>
     );
   }
+  // if (loading || data?.verses?.length === undefined) return <ActivityIndicator />;
 
   if (!notVerseToRender) {
     return (
@@ -148,7 +153,7 @@ const BookContent: FC<BookContentInterface> = ({
   return (
     <View style={styles.bookContainer}>
       <Chapter
-        {...{  verse }}
+        {...{ verse }}
         isSplit={isSplit}
         item={data}
         estimatedReadingTime={estimatedReadingTime}

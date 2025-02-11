@@ -49,6 +49,7 @@ export const deleteDatabaseFile = async (dbName: string) => {
 
 type TUseDatabase = {
   dbNames: VersionItem[];
+  currentBibleVersion: string;
 };
 
 enum DEFAULT_DATABASE {
@@ -56,7 +57,10 @@ enum DEFAULT_DATABASE {
   NTV = 'ntv-bible',
 }
 
-function useDatabase({ dbNames }: TUseDatabase): UseDatabase {
+function useDatabase({
+  dbNames,
+  currentBibleVersion,
+}: TUseDatabase): UseDatabase {
   const [_databases, setDatabases] = useState<SQLite.SQLiteDatabase[] | null[]>(
     []
   );

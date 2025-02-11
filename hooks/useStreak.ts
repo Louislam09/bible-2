@@ -45,7 +45,7 @@ export const useStreak = (): Streak => {
   const refreshStreak = async () => {
     try {
       if (!myBibleDB || !executeSql) return;
-      const data = await executeSql(myBibleDB, GET_STREAKS, []);
+      const data = await executeSql(GET_STREAKS, []);
       const streakData = data;
       if (streakData.length > 0) {
         const lastDate = new Date(streakData[0].date);
@@ -85,7 +85,7 @@ export const useStreak = (): Streak => {
       if (!myBibleDB || !executeSql) return;
 
       let values = null;
-      const streaks = await executeSql(myBibleDB, GET_STREAK, []);
+      const streaks = await executeSql(GET_STREAK, []);
 
       if (streaks.length > 0) {
         const lastStreak = streaks[0];
@@ -113,12 +113,12 @@ export const useStreak = (): Streak => {
         const lastDate = new Date(streaks[0].date);
         const isAnotherDay = lastDate.toISOString().split('T')[0] !== today;
         if (isAnotherDay) {
-          await executeSql(myBibleDB, UPDATE_STREAK, values);
+          await executeSql(UPDATE_STREAK, values);
           await refreshStreak();
           showToast('⚡');
         }
       } else {
-        await executeSql(myBibleDB, UPDATE_STREAK, values);
+        await executeSql(UPDATE_STREAK, values);
         await refreshStreak();
         showToast('⚡');
       }
@@ -130,7 +130,7 @@ export const useStreak = (): Streak => {
   const deleteAllStreaks = async () => {
     try {
       if (!myBibleDB || !executeSql) return;
-      await executeSql(myBibleDB, DELETE_ALL_STEAKS, []);
+      await executeSql(DELETE_ALL_STEAKS, []);
       refreshStreak();
       showToast('¡Racha reiniciada con éxito!');
     } catch (error) {
@@ -141,7 +141,7 @@ export const useStreak = (): Streak => {
   const deleteLastStreak = async () => {
     try {
       if (!myBibleDB || !executeSql) return;
-      await executeSql(myBibleDB, DELETE_LAST_STREAK, []);
+      await executeSql(DELETE_LAST_STREAK, []);
       saveData({ deleteLastStreakNumber: 0 });
       refreshStreak();
     } catch (error) {

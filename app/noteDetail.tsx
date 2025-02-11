@@ -90,7 +90,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
         }
         setLoading(true);
         if (!myBibleDB || !executeSql) return;
-        const note = await executeSql(myBibleDB, GET_NOTE_BY_ID, [noteId]);
+        const note = await executeSql(GET_NOTE_BY_ID, [noteId]);
         setNoteInfo(note[0] as TNote);
       } catch (error) {
         Alert.alert(

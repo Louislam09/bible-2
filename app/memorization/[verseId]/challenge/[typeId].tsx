@@ -104,11 +104,11 @@ const Type = () => {
           DB_BOOK_NAMES.find(
             (x) => x.longName === book || x.longName.includes(book)
           ) || {};
-        const data = await executeSql(
-          myBibleDB,
-          GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE,
-          [bookNumber, chapter, verse]
-        );
+        const data = await executeSql(GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE, [
+          bookNumber,
+          chapter,
+          verse,
+        ]);
         setItem(data[0] as any);
         setLoadiing(false);
       } catch (error) {

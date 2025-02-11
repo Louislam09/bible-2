@@ -63,7 +63,7 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
       DAILY_VERSES[dayPassed] || defaultDailyObject;
     (async () => {
       try {
-        const response: any = await executeSql(myBibleDB, GET_DAILY_VERSE, [
+        const response: any = await executeSql(GET_DAILY_VERSE, [
           book_number,
           chapter,
           verse,
