@@ -1,19 +1,16 @@
 import Icon from "@/components/Icon";
 import MyRichEditor from "@/components/RichTextEditor";
 import { Text, View } from "@/components/Themed";
-import { GET_NOTE_BY_ID } from "@/constants/Queries";
-import { useBibleContext } from "@/context/BibleContext";
-import { useDBContext } from "@/context/databaseContext";
-import useDebounce from "@/hooks/useDebounce";
+import { htmlTemplate } from '@/constants/HtmlTemplate';
+import { GET_NOTE_BY_ID } from '@/constants/Queries';
+import { useBibleContext } from '@/context/BibleContext';
+import { useDBContext } from '@/context/databaseContext';
+import useDebounce from '@/hooks/useDebounce';
 import useParams from '@/hooks/useParams';
-import {
-  EViewMode,
-  Screens,
-  TNote,
-  TTheme
-} from "@/types";
-import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
-import { useTheme } from "@react-navigation/native";
+import usePrintAndShare from '@/hooks/usePrintAndShare';
+import { EViewMode, Screens, TNote, TTheme } from '@/types';
+import { formatDateShortDayMonth } from '@/utils/formatDateShortDayMonth';
+import { useTheme } from '@react-navigation/native';
 import { Stack, useNavigation } from 'expo-router';
 import React, {
   useCallback,
@@ -67,6 +64,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
   const defaultTitle = 'Sin titulo ✏️';
 
   const debouncedNoteContent = useDebounce(noteContent, 3000);
+  const { printToFile } = usePrintAndShare();
 
   const rotate = rotation.interpolate({
     inputRange: [0, 1],
@@ -299,7 +297,36 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ headerShown: true }} />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerRight: () => (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <TouchableOpacity onPress={() => console.log()}>
+                <Icon
+                  style={styles.icon}
+                  name='Share2'
+                  size={24}
+                  onPress={() => {
+                    const html = htmlTemplate(
+                      [
+                        {
+                          definition: noteInfo?.note_text,
+                          topic: noteInfo?.title,
+                        },
+                      ],
+                      theme.colors,
+                      10,
+                      true
+                    );
+                    printToFile(html, noteInfo?.title?.toUpperCase() || '--');
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+          ),
+        }}
+      />
       <View
         style={[
           styles.titleContainer,

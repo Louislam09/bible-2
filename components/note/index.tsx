@@ -2,16 +2,19 @@ import Animation from "@/components/Animation";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
-import { useBibleContext } from "@/context/BibleContext";
+import { headerIconSize } from '@/constants/size';
+import { useBibleContext } from '@/context/BibleContext';
 import useNotesExportImport from '@/hooks/useNotesExportImport';
 import usePrintAndShare from '@/hooks/usePrintAndShare';
-import { IVerseItem, Screens, TTheme } from '@/types';
+import { IVerseItem, Screens, TNote, TTheme } from '@/types';
 import { formatDateShortDayMonth } from '@/utils/formatDateShortDayMonth';
 import removeAccent from '@/utils/removeAccent';
+import { createIconSetFromFontello } from '@expo/vector-icons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTheme } from '@react-navigation/native';
-import { FlashList } from '@shopify/flash-list';
+import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import { Stack, useNavigation } from 'expo-router';
+import { Download, NotebookText, Trash2 } from 'lucide-react-native';
 import React, {
   Fragment,
   useCallback,
@@ -31,103 +34,12 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
+import { Swipeable } from 'react-native-gesture-handler';
 
 type TListVerse = {
   data: IVerseItem[] | any;
   setShouldFetch: any;
 };
-
-const RenderItem = ({
-  item,
-  onOpenNoteDetail,
-  styles,
-  warnBeforeDelete,
-  index,
-  printToFile,
-  theme,
-}: any) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const translateXAnim = useRef(new Animated.Value(300)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 500,
-        delay: index * 200,
-        useNativeDriver: true,
-      }),
-      Animated.timing(translateXAnim, {
-        toValue: 0,
-        duration: 500,
-        delay: index * 200,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [fadeAnim, translateXAnim, index]);
-
-  return (
-    <Animated.View
-      style={[
-        {
-          opacity: fadeAnim,
-          transform: [{ translateX: translateXAnim }],
-        },
-      ]}
-    >
-      <TouchableOpacity
-        style={{ backgroundColor: 'transparent' }}
-        activeOpacity={0.9}
-        onPress={() => onOpenNoteDetail(item.id)}
-      >
-        <View style={[styles.cardContainer]}>
-          <View style={[styles.headerContainer]}>
-            <Text style={[styles.cardTitle]}>{item.title}</Text>
-            <View style={[styles.verseAction]}>
-              <>
-                <Icon
-                  size={24}
-                  name='Trash2'
-                  style={[
-                    styles.icon,
-                    {
-                      color: '#e74856',
-                    },
-                  ]}
-                  onPress={() => warnBeforeDelete(item.id)}
-                />
-                <Icon
-                  style={styles.icon}
-                  name='Share2'
-                  size={24}
-                  onPress={() => {
-                    const html = htmlTemplate(
-                      [{ definition: item.note_text, topic: item.title }],
-                      theme.colors,
-                      10,
-                      true
-                    );
-                    printToFile(html, item?.title?.toUpperCase() || '--');
-                  }}
-                />
-              </>
-            </View>
-          </View>
-          <Text style={styles.verseBody}>
-            {item?.note_text
-              ?.slice(0, 100)
-              .replace(/<br>/gi, '-')
-              .replace(/<.*?>|<.*?\/>/gi, '')}
-          </Text>
-          <Text style={[styles.date]}>
-            {formatDateShortDayMonth(item.updated_at || item.created_at)}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    </Animated.View>
-  );
-};
-
 interface ActionButtonProps {
   item: {
     bottom: number;
@@ -189,8 +101,6 @@ const ActionButton = ({ item, index, styles, theme }: ActionButtonProps) => {
 const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
   const theme = useTheme();
   const navigation = useNavigation();
-
-  const { printToFile } = usePrintAndShare();
   const {
     onDeleteNote,
     onDeleteAllNotes,
@@ -244,10 +154,13 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
   };
 
   const onDelete = async (id: number) => {
-    await onDeleteNote(id);
-    setShouldFetch((prev: any) => !prev);
-    ToastAndroid.show('Nota borrada!', ToastAndroid.SHORT);
-    setSearchText('');
+    closeCurrentSwiped(id);
+    setTimeout(async () => {
+      await onDeleteNote(id);
+      setShouldFetch((prev: any) => !prev);
+      ToastAndroid.show('Nota borrada!', ToastAndroid.SHORT);
+      setSearchText('');
+    }, 300);
   };
 
   const onDeleteAll = async () => {
@@ -257,6 +170,11 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
     setSearchText('');
   };
 
+  const closeCurrentSwiped = (id: number) => {
+    const swipeable = swipeableRefs.current.get(id);
+    swipeable?.close();
+  };
+
   const warnBeforeDelete = (id: number) => {
     Alert.alert(
       'Eliminar Nota',
@@ -264,13 +182,34 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
       [
         {
           text: 'Cancelar',
-          onPress: () => {},
+          onPress: () => closeCurrentSwiped(id),
           style: 'cancel',
         },
         { text: 'Eliminar', onPress: () => onDelete(id) },
       ]
     );
   };
+  const warnBeforeExporting = (id: number) => {
+    Alert.alert(
+      'Exportar Nota',
+      '¿Estás seguro que quieres exportar esta nota?',
+      [
+        {
+          text: 'Cancelar',
+          onPress: () => closeCurrentSwiped(id),
+          style: 'cancel',
+        },
+        {
+          text: 'Exportar',
+          onPress: () => {
+            exportNotes(id);
+            closeCurrentSwiped(id);
+          },
+        },
+      ]
+    );
+  };
+
   const warnBeforeDeleteAll = () => {
     Alert.alert(
       'Eliminar Todas las Notas',
@@ -388,6 +327,157 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
     [showMoreOptions]
   );
 
+  const swipeableRefs = useRef<Map<number, Swipeable | null>>(new Map());
+  const openSwipeableId = useRef<number | null>(null);
+
+  const handleSwipeableOpen = (id: number) => {
+    if (openSwipeableId.current && openSwipeableId.current !== id) {
+      swipeableRefs.current.get(openSwipeableId.current)?.close();
+    }
+    openSwipeableId.current = id;
+  };
+
+  const swipeAction = {
+    right: warnBeforeDelete,
+    left: warnBeforeExporting,
+  };
+  const onSwipeableWillOpen = (direction: 'left' | 'right', item: TNote) => {
+    swipeAction[direction](item.id);
+  };
+  const renderRightActions = (
+    progress: Animated.AnimatedInterpolation<number>,
+    dragX: Animated.AnimatedInterpolation<number>,
+    item: any
+  ) => {
+    const translateX = dragX.interpolate({
+      inputRange: [-80, 0],
+      outputRange: [0, 80],
+      extrapolate: 'clamp',
+    });
+
+    return (
+      <Animated.View
+        style={{
+          transform: [{ translateX }],
+          backgroundColor: '#dc2626',
+        }}
+      >
+        <TouchableOpacity
+          style={[styles.renderActionButton, { backgroundColor: '#dc2626' }]}
+        >
+          <Trash2 size={headerIconSize} color='#fff' />
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  };
+  const renderLeftActions = (
+    progress: Animated.AnimatedInterpolation<number>,
+    dragX: Animated.AnimatedInterpolation<number>,
+    item: any
+  ) => {
+    const translateX = dragX.interpolate({
+      inputRange: [0, 80],
+      outputRange: [-80, 0],
+      extrapolate: 'clamp',
+    });
+
+    return (
+      <Animated.View
+        style={{
+          transform: [{ translateX }],
+          backgroundColor: '#008CBA',
+        }}
+      >
+        <TouchableOpacity
+          style={[styles.renderActionButton, { backgroundColor: '#008CBA' }]}
+        >
+          <Download size={headerIconSize} color='#fff' />
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  };
+  const RenderItem: ListRenderItem<TNote> = ({ item }) => {
+    return (
+      <Swipeable
+        ref={(ref) => swipeableRefs.current.set(item.id, ref)}
+        friction={0.6}
+        rightThreshold={100}
+        leftThreshold={100}
+        onSwipeableWillOpen={(direction) =>
+          onSwipeableWillOpen(direction, item)
+        }
+        onSwipeableOpenStartDrag={(direction) => handleSwipeableOpen(item.id)}
+        renderRightActions={(progress, dragX) =>
+          renderRightActions(progress, dragX, item)
+        }
+        renderLeftActions={(progress, dragX) =>
+          renderLeftActions(progress, dragX, item)
+        }
+      >
+        <TouchableOpacity
+          style={styles.verseContainer}
+          activeOpacity={0.9}
+          onPress={() => onOpenNoteDetail(item.id)}
+        >
+          <View style={styles.verseItem}>
+            <View style={styles.verseBody}>
+              <Text
+                ellipsizeMode='tail'
+                numberOfLines={1}
+                style={styles.verseText}
+              >
+                {item.title}
+              </Text>
+              <View
+                style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}
+              >
+                <Icon
+                  name='CalendarDays'
+                  size={18}
+                  color={theme.colors.notification}
+                />
+                <Text style={styles.verseDate}>
+                  {formatDateShortDayMonth(item.created_at)}
+                </Text>
+              </View>
+
+              <View
+                style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}
+              >
+                <Icon name='Eye' size={18} color={theme.colors.notification} />
+                <Text style={styles.verseDate}>
+                  {formatDateShortDayMonth(item.updated_at || '')}
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                backgroundColor: 'transparent',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <NotebookText size={50} color={theme.colors.text} />
+              {/* <CircularProgressBar
+                strokeWidth={5}
+                size={70}
+                progress={item.progress}
+                maxProgress={100}
+                color={isCompleted ? '#1ce265' : theme.colors.notification}
+                backgroundColor={theme.colors.text + 70}
+                animationDuration={1000}
+              >
+                <Text style={{ color: theme.colors.text, fontSize: 18 }}>
+                  {item.progress}
+                </Text>
+              </CircularProgressBar> */}
+            </View>
+          </View>
+        </TouchableOpacity>
+      </Swipeable>
+    );
+  };
+
   if (isLoading) <ActivityIndicator />;
 
   return (
@@ -421,36 +511,28 @@ const NotesPage = ({ data, setShouldFetch }: TListVerse) => {
           }}
         >
           {NoteHero()}
-          {error && (
-            <Text style={{ textAlign: 'center', color: '#e74856' }}>
-              {error}
-            </Text>
-          )}
+          {error && <Text style={styles.textError}>{error}</Text>}
           <FlashList
-            contentContainerStyle={styles.contentContainerStyle}
+            contentContainerStyle={{ backgroundColor: theme.colors.background }}
+            // swipeDirection === 'left' ? '#dc2626' : '#008CBA',
             ref={flatListRef}
             decelerationRate={'normal'}
             estimatedItemSize={135}
             data={getData}
-            renderItem={({ item, index }) => (
-              <RenderItem
-                {...{
-                  styles,
-                  onOpenNoteDetail,
-                  warnBeforeDelete,
-                  printToFile,
-                  theme,
-                  item,
-                  index,
-                }}
-              />
-            )}
+            renderItem={RenderItem as any}
             keyExtractor={(item: any, index: any) =>
               `note-${item?.id}:${index}`
             }
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            // ItemSeparatorComponent={() => <View style={styles.separator} />}
             ListEmptyComponent={ListEmptyComponent}
-            ListFooterComponent={<View style={{ paddingVertical: 30 }} />}
+            ListFooterComponent={
+              <View
+                style={{
+                  paddingVertical: 30,
+                  backgroundColor: theme.colors.background,
+                }}
+              />
+            }
           />
           {actionButtons.map((item, index) => (
             <ActionButton
@@ -473,10 +555,11 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: dark ? colors.background : '#eee',
       paddingVertical: 20,
     },
-    verseBody: {
-      color: colors.text,
-      backgroundColor: 'transparent',
-    },
+    textError: { textAlign: 'center', color: '#e74856' },
+    // verseBody: {
+    //   color: colors.text,
+    //   backgroundColor: 'transparent',
+    // },
     date: {
       color: colors.notification,
       textAlign: 'right',
@@ -556,13 +639,11 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     cardContainer: {
       display: 'flex',
-      borderRadius: 10,
-      backgroundColor: colors.card,
+      backgroundColor: colors.background,
       padding: 15,
-      margin: 5,
-      elevation: 5,
-      borderColor: '#ddd',
-      borderWidth: 0.5,
+      borderColor: '#a29f9f',
+      borderTopWidth: 0.3,
+      borderBottomWidth: 0.3,
     },
     headerContainer: {
       position: 'relative',
@@ -584,7 +665,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     separator: {
       height: 1,
-      backgroundColor: colors.notification + '99',
+      backgroundColor: '#a29f9f',
       marginVertical: 8,
     },
     noResultsContainer: {
@@ -609,6 +690,47 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginHorizontal: 10,
       color: colors.primary,
       // fontSize: 24,
+    },
+
+    // verseee
+    verseContainer: {
+      borderColor: '#a29f9f',
+      borderTopWidth: 0.3,
+      borderBottomWidth: 0.3,
+      backgroundColor: colors.background,
+      paddingVertical: 10,
+    },
+    verseItem: {
+      flex: 1,
+      alignItems: 'flex-start',
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+      padding: 10,
+    },
+    verseBody: {
+      flex: 1,
+      height: '100%',
+      alignItems: 'flex-start',
+      justifyContent: 'space-around',
+    },
+    verseText: {
+      fontSize: 18,
+    },
+    verseDate: {
+      fontSize: 18,
+      color: colors.text,
+      opacity: 0.7,
+    },
+    renderActionButton: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: 80,
+      height: '100%',
+      // borderRadius: 10,
+    },
+    deleteButtonText: {
+      color: 'white',
+      fontWeight: 'bold',
     },
   });
 

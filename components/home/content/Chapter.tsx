@@ -88,7 +88,8 @@ const Chapter = ({
           onLayout={() => setLayoutMounted(true)}
           decelerationRate='normal'
           estimatedItemSize={135}
-          data={verses.splice(0, 5) ?? []}
+          data={verses ?? []}
+          // data={verses.splice(0, 5) ?? []}
           renderItem={renderItem}
           onEndReached={onEndReached}
           initialScrollIndex={initialScrollIndex}

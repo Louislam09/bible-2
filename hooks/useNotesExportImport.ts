@@ -18,7 +18,7 @@ type Note = {
 };
 
 type UseNotesExportImport = {
-  exportNotes: () => Promise<void>;
+  exportNotes: (noteId?: number) => Promise<void>;
   importNotes: () => Promise<void>;
   isLoading: boolean;
   error: string | null;
@@ -37,7 +37,7 @@ const useNotesExportImport = (): UseNotesExportImport => {
 
   const getNoteById = async (noteId: number) => {
     if (!myBibleDB || !executeSql) return;
-    const notes = await executeSql(GET_NOTE_BY_ID, []);
+    const notes = await executeSql(GET_NOTE_BY_ID, [noteId]);
     return notes as Note[];
   };
 
