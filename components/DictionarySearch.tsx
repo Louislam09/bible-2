@@ -1,23 +1,25 @@
-import useParams from "@/hooks/useParams";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { useTheme } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
-import Animation from "@/components/Animation";
-import { Text } from "@/components/Themed";
-import WordDefinition from "@/components/WordDefinition";
-import { useBibleContext } from "@/context/BibleContext";
-import { useDBContext } from "@/context/databaseContext";
-import { useCustomTheme } from "@/context/ThemeContext";
-import useDebounce from "@/hooks/useDebounce";
-import useDictionaryData, { DatabaseData } from "@/hooks/useDictionaryData";
-import { useRouter } from "expo-router";
+import Animation from '@/components/Animation';
+import { Text } from '@/components/Themed';
+import WordDefinition from '@/components/WordDefinition';
+import { useBibleContext } from '@/context/BibleContext';
+import { useDBContext } from '@/context/databaseContext';
+import { useCustomTheme } from '@/context/ThemeContext';
+import useDebounce from '@/hooks/useDebounce';
+import useDictionaryData, { DatabaseData } from '@/hooks/useDictionaryData';
+import useParams from '@/hooks/useParams';
+import { DictionaryData, Screens, TTheme } from '@/types';
+import { pluralToSingular } from '@/utils/removeAccent';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useTheme } from '@react-navigation/native';
+import { FlashList } from '@shopify/flash-list';
+import { useRouter } from 'expo-router';
 import React, {
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-} from "react";
+} from 'react';
 import {
   Animated,
   BackHandler,
@@ -25,9 +27,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from "react-native";
-import { DictionaryData, RootStackScreenProps, Screens, TTheme } from "@/types";
-import { pluralToSingular } from "@/utils/removeAccent";
+} from 'react-native';
 
 type RenderItem = {
   item: DatabaseData;
@@ -80,15 +80,15 @@ const RenderItem = ({
               borderWidth: 1,
               borderRadius: 10,
               marginVertical: 5,
-              borderColor: "#eeeeee50",
+              borderColor: '#eeeeee50',
             },
           ]}
         >
           <TouchableOpacity
-            style={[styles.cardContainer, { backgroundColor: "transparent" }]}
+            style={[styles.cardContainer, { backgroundColor: 'transparent' }]}
             onPress={() => onItemClick(word)}
           >
-            <Text style={{ textTransform: "uppercase" }}>{word?.topic}</Text>
+            <Text style={{ textTransform: 'uppercase' }}>{word?.topic}</Text>
           </TouchableOpacity>
         </Animated.View>
       ))}
@@ -107,10 +107,10 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
   const { schema } = useCustomTheme();
   const router = useRouter();
   const styles = getStyles(theme);
-  const [searchText, setSearchText] = useState<any>(word ? word : "");
-  const { installedDictionary: dbNames, executeSql } = useDBContext();
+  const [searchText, setSearchText] = useState<any>(word ? word : '');
+  const { installedDictionary: dbNames } = useDBContext();
   const searchDebounce = useDebounce(searchText, 500);
-  const searchingSource = require("../assets/lottie/searching.json");
+  const searchingSource = require('../assets/lottie/searching.json');
   const animationRef = useRef<any>(null);
   useEffect(() => {
     if (!animationRef.current) return;
@@ -120,10 +120,9 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
 
   const { data, error, loading } = useDictionaryData({
     searchParam:
-      searchDebounce?.length < 3 ? "" : searchDebounce.replace(/[.,;]/g, ""),
+      searchDebounce?.length < 3 ? '' : searchDebounce.replace(/[.,;]/g, ''),
     databases: dbNames,
-    executeSql,
-    enabled: searchDebounce !== "",
+    enabled: searchDebounce !== '',
   });
 
   const wordNotFoundInDictionary = useMemo(
@@ -135,7 +134,7 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
     if (!loading && !error) {
       setFilterData(data?.sort((a, b) => a.words.length - b.words.length));
     } else if (error) {
-      console.log("Error fetching dictionary data:", error);
+      console.log('Error fetching dictionary data:', error);
     }
   }, [data, loading, error]);
 
@@ -155,23 +154,23 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
         <View style={styles.searchContainer}>
           <Ionicons
             style={styles.searchIcon}
-            name="search"
+            name='search'
             size={24}
             color={theme.colors.notification}
           />
           <TextInput
-            placeholder="Buscar una palabra..."
+            placeholder='Buscar una palabra...'
             style={[styles.noteHeaderSearchInput]}
             onChangeText={onChangeText}
             value={searchText}
           />
         </View>
-        {wordNotFoundInDictionary && searchDebounce !== "" && suggestWord && (
+        {wordNotFoundInDictionary && searchDebounce !== '' && suggestWord && (
           <TouchableOpacity onPress={() => setSearchText(suggestWord)}>
             <Text style={{ fontSize }}>
               Sugerencia:&nbsp;
               <Text style={{ color: theme.colors.notification }}>
-                {suggestWord}{" "}
+                {suggestWord}{' '}
               </Text>
             </Text>
           </TouchableOpacity>
@@ -188,7 +187,7 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
     };
 
     const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
+      'hardwareBackPress',
       backAction
     );
 
@@ -211,12 +210,12 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
     return (
       <View style={styles.emptyContainer}>
         <Ionicons
-          name="cloud-download-outline"
+          name='cloud-download-outline'
           size={50}
           color={theme.colors.text}
         />
         <Text style={styles.emptyText}>
-          No tienes ningún diccionario descargado. {"\n"}
+          No tienes ningún diccionario descargado. {'\n'}
           <TouchableOpacity onPress={onNavToManagerDownload}>
             <Text style={styles.linkText}>
               Haz clic aquí para descargar uno.
@@ -232,21 +231,21 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
       style={{
         flex: 1,
         padding: 5,
-        backgroundColor: theme.dark ? theme.colors.background : "#eee",
+        backgroundColor: theme.dark ? theme.colors.background : '#eee',
       }}
     >
       {selectedWord ? (
-        <WordDefinition subTitle="Definicion" wordData={selectedWord} />
+        <WordDefinition subTitle='Definicion' wordData={selectedWord} />
       ) : (
         <>
           {DictionaryHeader()}
           <FlashList
             key={schema}
             contentContainerStyle={{
-              backgroundColor: theme.dark ? theme.colors.background : "#eee",
+              backgroundColor: theme.dark ? theme.colors.background : '#eee',
               paddingVertical: 20,
             }}
-            decelerationRate={"normal"}
+            decelerationRate={'normal'}
             estimatedItemSize={135}
             data={wordNotFoundInDictionary ? [] : filterData}
             renderItem={({ item, index }) => (
@@ -262,9 +261,9 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
               <View
                 style={{
                   flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "transparent",
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'transparent',
                 }}
               >
                 <Animation
@@ -272,9 +271,9 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
                   backgroundColor={theme.colors.background}
                   source={searchingSource}
                 />
-                {wordNotFoundInDictionary && searchDebounce !== "" ? (
+                {wordNotFoundInDictionary && searchDebounce !== '' ? (
                   <Text style={[styles.noResultsText, { fontSize }]}>
-                    No encontramos resultados para: {"\n"}
+                    No encontramos resultados para: {'\n'}
                     <Text style={{ color: theme.colors.notification }}>
                       {searchDebounce}
                     </Text>
@@ -295,11 +294,11 @@ const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     verseBody: {
       color: colors.text,
-      backgroundColor: "transparent",
+      backgroundColor: 'transparent',
     },
     date: {
       color: colors.notification,
-      textAlign: "right",
+      textAlign: 'right',
       marginTop: 10,
     },
     textInput: {
@@ -307,61 +306,61 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontSize: 22,
       color: colors.text,
       marginVertical: 5,
-      textDecorationStyle: "solid",
-      textDecorationColor: "red",
-      textDecorationLine: "underline",
+      textDecorationStyle: 'solid',
+      textDecorationColor: 'red',
+      textDecorationLine: 'underline',
     },
     scrollToTopButton: {
-      position: "absolute",
+      position: 'absolute',
       bottom: 25,
       right: 20,
       backgroundColor: colors.notification,
       padding: 10,
       borderRadius: 10,
-      borderColor: "#ddd",
+      borderColor: '#ddd',
       borderWidth: 0.3,
       elevation: 3,
     },
     noteHeader: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
       paddingHorizontal: 4,
       paddingVertical: 10,
-      backgroundColor: "transparent",
+      backgroundColor: 'transparent',
     },
     noteListTitle: {
       fontSize: 30,
       marginVertical: 10,
-      fontWeight: "bold",
-      textAlign: "center",
+      fontWeight: 'bold',
+      textAlign: 'center',
       color: colors.notification,
     },
     noteHeaderSubtitle: {
       fontSize: 18,
-      fontWeight: "600",
+      fontWeight: '600',
       color: colors.text,
-      alignSelf: "flex-start",
+      alignSelf: 'flex-start',
     },
     searchContainer: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-around",
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-around',
       borderRadius: 10,
       marginVertical: 20,
       borderWidth: 1,
       borderColor: colors.notification,
-      borderStyle: "solid",
-      width: "100%",
-      fontWeight: "100",
-      backgroundColor: colors.notification + "99",
+      borderStyle: 'solid',
+      width: '100%',
+      fontWeight: '100',
+      backgroundColor: colors.notification + '99',
     },
     searchIcon: {
       color: colors.text,
       paddingHorizontal: 15,
       borderRadius: 10,
-      fontWeight: "bold",
+      fontWeight: 'bold',
     },
     noteHeaderSearchInput: {
       borderRadius: 10,
@@ -369,8 +368,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
       paddingLeft: 15,
       fontSize: 18,
       flex: 1,
-      fontWeight: "100",
-      backgroundColor: "#ddd",
+      fontWeight: '100',
+      backgroundColor: '#ddd',
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
     },
@@ -378,16 +377,16 @@ const getStyles = ({ colors, dark }: TTheme) =>
       padding: 15,
     },
     headerContainer: {
-      position: "relative",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
+      position: 'relative',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
       marginBottom: 8,
-      backgroundColor: "transparent",
+      backgroundColor: 'transparent',
     },
     cardTitle: {
       fontSize: 18,
-      fontWeight: "600",
+      fontWeight: '600',
       color: colors.notification,
       flex: 1,
     },
@@ -401,22 +400,22 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     noResultsContainer: {
       flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
+      alignItems: 'center',
+      justifyContent: 'center',
       borderRadius: 10,
       paddingBottom: 20,
     },
     noResultsText: {
       fontSize: 18,
       color: colors.text,
-      textAlign: "center",
+      textAlign: 'center',
     },
     verseAction: {
-      flexDirection: "row",
-      backgroundColor: "transparent",
+      flexDirection: 'row',
+      backgroundColor: 'transparent',
     },
     icon: {
-      fontWeight: "700",
+      fontWeight: '700',
       marginHorizontal: 10,
       color: colors.primary,
       fontSize: 24,
@@ -428,25 +427,25 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
 
     loadingText: {
-      textAlign: "center",
+      textAlign: 'center',
       marginVertical: 20,
-      color: "#999",
+      color: '#999',
     },
     emptyContainer: {
-      alignItems: "center",
-      backgroundColor: "transparent",
-      justifyContent: "center",
+      alignItems: 'center',
+      backgroundColor: 'transparent',
+      justifyContent: 'center',
       padding: 20,
     },
     emptyText: {
-      textAlign: "center",
+      textAlign: 'center',
       marginVertical: 20,
       color: colors.text,
       fontSize: 18,
     },
     linkText: {
       color: colors.notification,
-      textDecorationLine: "underline",
+      textDecorationLine: 'underline',
       fontSize: 18,
     },
   });

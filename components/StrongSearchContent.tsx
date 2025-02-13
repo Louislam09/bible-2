@@ -14,6 +14,7 @@ import copyToClipboard from "@/utils/copyToClipboard";
 import RenderTextWithClickableWords from "./home/content/RenderTextWithClickableWords";
 import Icon from "./Icon";
 import { renameLongBookName } from '@/utils/extractVersesInfo';
+import { useBibleChapter } from '@/context/BibleChapterContext';
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -34,6 +35,7 @@ const StrongSearchContent = ({
   const { fontSize } = useBibleContext();
   const flatListRef = useRef<FlashList<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
+  const { updateBibleQuery } = useBibleChapter();
 
   useEffect(() => {
     if (!data) return;
@@ -47,11 +49,13 @@ const StrongSearchContent = ({
   };
 
   const onVerseClick = async (item: IVerseItem) => {
-    navigation.navigate(Screens.Home, {
+    const queryInfo = {
       book: item.bookName,
       chapter: item.chapter,
       verse: item.verse,
-    });
+    };
+    updateBibleQuery(queryInfo);
+    navigation.navigate(Screens.Home, queryInfo);
   };
 
   const onCopy = async (item: IVerseItem) => {

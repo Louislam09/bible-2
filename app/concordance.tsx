@@ -23,32 +23,33 @@ import {
 } from "react-native";
 import { RootStackScreenProps, Screens, TTheme } from "@/types";
 import { Stack, useNavigation, useRouter } from 'expo-router';
+import { useBibleChapter } from '@/context/BibleChapterContext';
 
 const LETTERS = [
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-  "I",
-  "J",
-  "K",
-  "L",
-  "M",
-  "N",
-  "O",
-  "P",
-  "Q",
-  "R",
-  "S",
-  "T",
-  "U",
-  "V",
-  "Y",
-  "Z",
+  'A',
+  'B',
+  'C',
+  'D',
+  'E',
+  'F',
+  'G',
+  'H',
+  'I',
+  'J',
+  'K',
+  'L',
+  'M',
+  'N',
+  'O',
+  'P',
+  'Q',
+  'R',
+  'S',
+  'T',
+  'U',
+  'V',
+  'Y',
+  'Z',
 ];
 
 type TRenderWordItem = {
@@ -94,8 +95,8 @@ const RenderWordItem = ({
         ]}
         onPress={() => onItemClick(item)}
       >
-        <Text style={{ textTransform: "uppercase" }}>{name}</Text>
-        <Text style={{ color: theme.colors.text, fontWeight: "bold" }}>
+        <Text style={{ textTransform: 'uppercase' }}>{name}</Text>
+        <Text style={{ color: theme.colors.text, fontWeight: 'bold' }}>
           ({numCount})
         </Text>
       </TouchableOpacity>
@@ -103,7 +104,7 @@ const RenderWordItem = ({
   );
 };
 
-type ConcordanceProps = {}
+type ConcordanceProps = {};
 
 const Concordance: React.FC<ConcordanceProps> = () => {
   const { myBibleDB, executeSql } = useDBContext();
@@ -123,6 +124,7 @@ const Concordance: React.FC<ConcordanceProps> = () => {
   const [selectedFilterOption, setSelectedFilterOption] =
     useState<any>(defaultFilterOption);
 
+  const { updateBibleQuery } = useBibleChapter();
   function getUniqueBookNames(data: TItem[]) {
     const bookNames = data.map((item: any) => item.bookName);
     return [defaultFilterOption, ...new Set(bookNames)];
@@ -156,11 +158,13 @@ const Concordance: React.FC<ConcordanceProps> = () => {
   };
 
   const onVerseClick = async (item: any) => {
-    navigation.navigate(Screens.Home, {
+    const queryInfo = {
       book: item.bookName,
       chapter: item.chapter,
       verse: item.verse,
-    });
+    };
+    updateBibleQuery(queryInfo);
+    navigation.navigate(Screens.Home, queryInfo);
   };
 
   const showVerseList = useMemo(() => !!verseList, [verseList]);

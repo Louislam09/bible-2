@@ -12,6 +12,7 @@ import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import { Text, View } from '@/components/Themed';
 import { BOOK_IMAGES } from '@/constants/Images';
 import { useStorage } from '@/context/LocalstoreContext';
+import { useBibleChapter } from '@/context/BibleChapterContext';
 
 const chooseVerseNumber = () => {
   const routeParam = useParams<ChooseChapterNumberParams>();
@@ -23,6 +24,7 @@ const chooseVerseNumber = () => {
   const theme = useTheme();
   const styles = getStyles(theme);
   const displayBookName = renameLongBookName(selectedBook || '');
+  const { updateBibleQuery } = useBibleChapter();
 
   const bookNumber = DB_BOOK_NAMES.find(
     (bookItem) => bookItem.longName === selectedBook
@@ -44,6 +46,8 @@ const chooseVerseNumber = () => {
       [isBottomSideSearching ? 'bottomSideVerse' : 'verse']: item,
       isHistory: false,
     };
+
+    updateBibleQuery(params as any);
     navigation.navigate(Screens.Home, params);
   };
 

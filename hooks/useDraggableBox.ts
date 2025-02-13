@@ -1,7 +1,13 @@
-import { useStorage } from 'context/LocalstoreContext';
+import { useStorage } from '@/context/LocalstoreContext';
 import { useState, useRef, useMemo, useEffect } from 'react';
-import { PanResponder, Animated, PanResponderGestureState, PanResponderInstance, useWindowDimensions } from 'react-native';
-import { OrientationType } from 'types';
+import {
+  PanResponder,
+  Animated,
+  PanResponderGestureState,
+  PanResponderInstance,
+  useWindowDimensions,
+} from 'react-native';
+import { OrientationType } from '@/types';
 
 interface UseDraggableElementProps {
   parentWidth?: number;
@@ -9,6 +15,7 @@ interface UseDraggableElementProps {
   elementWidth: number;
   elementHeight: number;
   onPressAction: () => void;
+  enabled: boolean;
 }
 
 interface UseDraggableElementReturn {
@@ -23,13 +30,17 @@ const useDraggableElement = ({
   parentHeight,
   elementWidth,
   elementHeight,
-  onPressAction
+  onPressAction,
+  enabled,
 }: UseDraggableElementProps): UseDraggableElementReturn => {
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const maxWidth = parentWidth || SCREEN_WIDTH;
   const maxHeight = parentHeight || SCREEN_HEIGHT;
-  
-  const { storedData: { floatingNoteButtonPosition }, saveData } = useStorage();
+
+  const {
+    storedData: { floatingNoteButtonPosition },
+    saveData,
+  } = useStorage();
 
   const pan = useRef(new Animated.ValueXY(floatingNoteButtonPosition)).current;
   const [panState, setPanState] = useState(floatingNoteButtonPosition);
@@ -42,11 +53,12 @@ const useDraggableElement = ({
   };
 
   useEffect(() => {
+    if (!enabled) return;
     const { x, y } = ensureWithinBounds(panState.x, panState.y);
     pan.setValue({ x, y });
     setPanState({ x, y });
     saveData({ floatingNoteButtonPosition: { x, y } });
-  }, [SCREEN_WIDTH, SCREEN_HEIGHT]);
+  }, [SCREEN_WIDTH, SCREEN_HEIGHT, enabled]);
 
   const panResponder = useMemo(
     () =>
@@ -60,15 +72,18 @@ const useDraggableElement = ({
           const newY = panState.y + gestureState.dy;
 
           const { x: boundedX, y: boundedY } = ensureWithinBounds(newX, newY);
-          if (Math.abs(gestureState.dx) > TOUCH_SLOP || Math.abs(gestureState.dy) > TOUCH_SLOP) {
+          if (
+            Math.abs(gestureState.dx) > TOUCH_SLOP ||
+            Math.abs(gestureState.dy) > TOUCH_SLOP
+          ) {
             isTappedRef.current = false;
           }
           pan.setValue({ x: boundedX, y: boundedY });
         },
         onPanResponderRelease: () => {
           if (isTappedRef.current) {
-            onPressAction?.()
-            return
+            onPressAction?.();
+            return;
           }
           // @ts-ignore
           const x = pan.x._value;

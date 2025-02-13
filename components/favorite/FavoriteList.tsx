@@ -18,6 +18,7 @@ import copyToClipboard from "@/utils/copyToClipboard";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { Stack } from 'expo-router';
 import { renameLongBookName } from '@/utils/extractVersesInfo';
+import { useBibleChapter } from '@/context/BibleChapterContext';
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -34,7 +35,7 @@ const FavoriteList = ({ data }: TListVerse) => {
   const flatListRef = useRef<FlashList<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const notFoundSource = require('../../assets/lottie/notFound.json');
-
+  const { updateBibleQuery } = useBibleChapter();
   useEffect(() => {
     if (!data) return;
     setFilter(data);
@@ -49,11 +50,13 @@ const FavoriteList = ({ data }: TListVerse) => {
   };
 
   const onVerseClick = async (item: IVerseItem) => {
-    navigation.navigate(Screens.Home, {
+    const queryInfo = {
       book: item.bookName,
       chapter: item.chapter,
       verse: item.verse,
-    });
+    };
+    updateBibleQuery(queryInfo);
+    navigation.navigate(Screens.Home, queryInfo);
   };
 
   const onFavorite = (item: IVerseItem & { id: number }) => {

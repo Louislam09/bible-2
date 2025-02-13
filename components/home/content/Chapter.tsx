@@ -1,13 +1,13 @@
-import { useTheme } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
-import { useBibleContext } from "@/context/BibleContext";
-import { useStorage } from "@/context/LocalstoreContext";
-import useDebounce from "@/hooks/useDebounce";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { TChapter, TTheme } from "@/types";
-import Verse from "./Verse";
 import { Text } from '@/components/Themed';
+import useDebounce from '@/hooks/useDebounce';
+import useHistoryManager from '@/hooks/useHistoryManager';
+import { TChapter, TTheme } from '@/types';
+import { useTheme } from '@react-navigation/native';
+import { FlashList } from '@shopify/flash-list';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import Verse from './Verse';
+import { useBibleChapter } from '@/context/BibleChapterContext';
 
 const Chapter = ({
   item,
@@ -26,9 +26,8 @@ const Chapter = ({
   const [isLayoutMounted, setLayoutMounted] = useState(false);
   const chapterVerseLength = useMemo(() => verses.length, [verses]);
   const debounceTopVerse = useDebounce(topVerse, 100);
-  const {
-    historyManager: { updateVerse },
-  } = useStorage();
+  const { historyManager } = useBibleChapter();
+  const { updateVerse } = historyManager;
 
   useEffect(() => {
     if (!debounceTopVerse) return;
@@ -119,6 +118,7 @@ const Chapter = ({
           viewabilityConfigCallbackPairs={
             viewabilityConfigCallbackPairs.current
           }
+          // removeClippedSubviews
         />
       </View>
     </View>

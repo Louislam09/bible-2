@@ -16,6 +16,8 @@ import VoiceList from '../VoiceList';
 import VersionList from '../home/header/VersionList';
 import { useBibleContext } from '@/context/BibleContext';
 import isWithinTimeframe from '@/utils/isWithinTimeframe';
+import useHistoryManager from '@/hooks/useHistoryManager';
+import { useBibleChapter } from '@/context/BibleChapterContext';
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
@@ -33,10 +35,12 @@ const SecondDashboard = () => {
     clearHighlights,
     orientation = 'PORTRAIT',
   } = useBibleContext();
+  const { storedData } = useStorage();
+
   const {
-    storedData,
     historyManager: { getCurrentItem },
-  } = useStorage();
+  } = useBibleChapter();
+
   const {
     lastBook,
     lastChapter,

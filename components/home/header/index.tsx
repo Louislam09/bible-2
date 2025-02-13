@@ -9,18 +9,18 @@ import { useBibleContext } from '../../../context/BibleContext';
 
 import BottomModal from '@/components/BottomModal';
 import Icon from '@/components/Icon';
+import { Text, View } from '@/components/Themed';
 import { iconSize } from '@/constants/size';
-import { useStorage } from '@/context/LocalstoreContext';
+import { useBibleChapter } from '@/context/BibleChapterContext';
+import useHistoryManager from '@/hooks/useHistoryManager';
 import useInstalledBibles from '@/hooks/useInstalledBible';
 import useParams from '@/hooks/useParams';
+import { EBibleVersions, HomeParams, Screens, TIcon, TTheme } from '@/types';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useNavigation, useRouter } from 'expo-router';
 import ProgressBar from '../footer/ProgressBar';
 import Settings from './Settings';
 import VersionList from './VersionList';
-import { EBibleVersions, HomeParams, Screens, TIcon, TTheme } from '@/types';
-import { View, Text } from '@/components/Themed';
-import { useBibleChapter } from '@/context/BibleChapterContext';
 
 interface HeaderInterface {
   refs: any;
@@ -41,18 +41,19 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
   } = useBibleContext();
   const {
     data: { verses },
+    historyManager,
   } = useBibleChapter();
   const chapterVerseLength = useMemo(() => verses.length, [verses]);
 
   const {
-    historyManager: {
-      goBack,
-      goForward,
-      history,
-      getCurrentIndex,
-      getCurrentItem,
-    },
-  } = useStorage();
+    goBack,
+    goForward,
+    history,
+    getCurrentIndex,
+    getCurrentItem,
+    currentIndex: currentHistoryIndex,
+  } = historyManager;
+
   const params = useParams<HomeParams>();
   const { book } = params;
   const theme = useTheme();
@@ -65,8 +66,8 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
   const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
-  const shouldForward = !(getCurrentIndex() === history.length - 1);
-  const shouldBackward = getCurrentIndex() !== 0;
+  const canGoForward = !(currentHistoryIndex === history.length - 1);
+  const canGoBackward = currentHistoryIndex !== 0;
   const { installedBibles } = useInstalledBibles();
   const currentItem = getCurrentItem();
   const currentVerse = currentItem?.verse;
@@ -112,7 +113,7 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
         ref: setting,
         isIonicon: true,
         disabled: isSplitActived,
-        color: shouldBackward ? theme.colors.notification : theme.colors?.text,
+        color: canGoBackward ? theme.colors.notification : theme.colors?.text,
       },
       {
         name: 'ArrowBigRightDash',
@@ -120,12 +121,12 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
         ref: search,
         isIonicon: true,
         disabled: isSplitActived,
-        color: shouldForward ? theme.colors.notification : theme.colors?.text,
+        color: canGoForward ? theme.colors.notification : theme.colors?.text,
       },
       { name: 'Search', action: goSearchScreen, ref: search },
     ];
     return options.filter((x) => !x.disabled);
-  }, [isSplitActived, shouldForward, shouldBackward]);
+  }, [isSplitActived, canGoForward, canGoBackward]);
 
   const onSelect = (version: string) => {
     clearHighlights();

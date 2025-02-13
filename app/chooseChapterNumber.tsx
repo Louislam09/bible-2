@@ -12,6 +12,7 @@ import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { renameLongBookName } from '@/utils/extractVersesInfo';
 import { useStorage } from '@/context/LocalstoreContext';
+import { useBibleChapter } from '@/context/BibleChapterContext';
 
 const chooseChapterNumber = () => {
   const navigation = useNavigation();
@@ -20,6 +21,7 @@ const chooseChapterNumber = () => {
   const { book, bottomSideBook } = routeParam;
   const selectedBook = isBottomSideSearching ? bottomSideBook : book;
   const displayBookName = renameLongBookName(selectedBook || '');
+  const { updateBibleQuery } = useBibleChapter();
 
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -34,6 +36,7 @@ const chooseChapterNumber = () => {
       ...routeParam,
       [isBottomSideSearching ? 'bottomSideChapter' : 'chapter']: item,
     };
+    // updateBibleQuery(params as any);
     navigation.navigate(Screens.ChooseVerseNumber, params);
   };
 

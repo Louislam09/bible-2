@@ -12,6 +12,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../Themed';
 import Icon from '../Icon';
+import { useBibleChapter } from '@/context/BibleChapterContext';
 
 const defaultDailyVerse = {
   book_number: 0,
@@ -51,6 +52,7 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
   const { currentBibleVersion } = useBibleContext();
   const styles = getStyles(theme);
   const isDefaultVerse = dailyVerseObject?.bookName;
+  const { updateBibleQuery } = useBibleChapter();
 
   useEffect(() => {
     if (!myBibleDB || !executeSql) return;
@@ -112,11 +114,13 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
           onLongPress={enabledMusic}
           onPress={() => {
             if (isDefaultVerse) return;
-            navigation.navigate(Screens.Home, {
+            const queryInfo = {
               book: dailyVerse.bookName,
               chapter: dailyVerse.chapter,
               verse: dailyVerse?.verse,
-            });
+            };
+            updateBibleQuery(queryInfo);
+            navigation.navigate(Screens.Home, queryInfo);
           }}
           style={styles.verseContainer}
         >

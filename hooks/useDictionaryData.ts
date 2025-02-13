@@ -37,26 +37,47 @@ type UseCompareVersesProps = {
   searchParam: string;
   enabled: boolean;
   databases: VersionItem[];
-  executeSql:
-    | ((
-        db: SQLite.SQLiteDatabase,
-        sql: string,
-        params?: any[]
-      ) => Promise<Row[]>)
-    | null
-    | undefined;
 };
 
 const useDictionaryData = ({
   searchParam,
   databases,
-  executeSql,
   enabled,
 }: UseCompareVersesProps) => {
   const [data, setData] = useState<DatabaseData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const dicExt = getDatabaseExt(DATABASE_TYPE.DICTIONARY);
+
+  const executeSql = async (
+    database: SQLite.SQLiteDatabase,
+    sql: string,
+    params: any[] = [],
+    queryName?: any
+  ): Promise<any[]> => {
+    try {
+      const startTime = Date.now(); // Start timing
+      if (!database) {
+        throw new Error('Database not initialized');
+      }
+      const statement = await database.prepareAsync(sql);
+      try {
+        const result = await statement.executeAsync(params);
+        const endTime = Date.now(); // End timing
+        const executionTime = endTime - startTime;
+
+        const response = await result.getAllAsync();
+        if (queryName) {
+          console.log(`Query ${queryName} executed in ${executionTime} ms.`);
+        }
+        return response as Row[];
+      } finally {
+        await statement.finalizeAsync();
+      }
+    } catch (error) {
+      return [];
+    }
+  };
 
   useEffect(() => {
     if (!enabled) return;
@@ -70,7 +91,7 @@ const useDictionaryData = ({
           const dbID = databaseItem.id;
           const dbNameWithExt = `${dbID}${dicExt}`;
           const db = await SQLite.openDatabaseAsync(dbNameWithExt);
-          const queryResult = await executeSql?.(db, SEARCH_DICTIONARY_WORD, [
+          const queryResult = await executeSql(db, SEARCH_DICTIONARY_WORD, [
             `${searchParam}%`,
           ]);
 
@@ -83,7 +104,7 @@ const useDictionaryData = ({
 
         setData(results);
       } catch (error) {
-        setError("Error fetching data");
+        setError('Error fetching data');
         console.error(error);
       } finally {
         setLoading(false);

@@ -17,6 +17,8 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import SecondDashboard from '../../components/new-dashboard';
 import { NewFeatureBadge } from '@/components/NewFeatureBadge';
 import isWithinTimeframe from '@/utils/isWithinTimeframe';
+import useHistoryManager from '@/hooks/useHistoryManager';
+import { useBibleChapter } from '@/context/BibleChapterContext';
 
 export type IDashboardOption = {
   icon: IconProps['name'];
@@ -26,7 +28,7 @@ export type IDashboardOption = {
   isIonicon?: boolean;
   tag?: string;
   color?: string;
-  isNew?: boolean
+  isNew?: boolean;
 };
 
 type RenderItemProps = {
@@ -47,10 +49,10 @@ const Dashboard: React.FC<DashboardProps> = () => {
   } = useBibleContext();
   const theme = useTheme();
 
+  const { storedData } = useStorage();
   const {
-    storedData,
     historyManager: { getCurrentItem },
-  } = useStorage();
+  } = useBibleChapter();
   const voiceBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const currentModalOpenRef = useRef<any>(null);
@@ -231,7 +233,9 @@ const Dashboard: React.FC<DashboardProps> = () => {
           },
         ]}
       >
-        {item.isNew && <NewFeatureBadge style={{ backgroundColor: '#f73043' }} />}
+        {item.isNew && (
+          <NewFeatureBadge style={{ backgroundColor: '#f73043' }} />
+        )}
 
         <Icon
           name={item.icon as any}

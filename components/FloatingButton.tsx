@@ -38,11 +38,12 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({ children, iconName }) =
     const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
     const { pan, panResponder } = useDraggableElement({
-        elementWidth: FLOATING_BUTTON_SIZE,
-        elementHeight: FLOATING_BUTTON_SIZE,
-        parentWidth: screenWidth,
-        parentHeight: screenHeight,
-        onPressAction: toggleExpand,
+      elementWidth: FLOATING_BUTTON_SIZE,
+      elementHeight: FLOATING_BUTTON_SIZE,
+      parentWidth: screenWidth,
+      parentHeight: screenHeight,
+      onPressAction: toggleExpand,
+      enabled: !!currentNoteId,
     });
 
     useEffect(() => {

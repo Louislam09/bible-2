@@ -37,6 +37,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import RenderTextWithClickableWords from './RenderTextWithClickableWords';
+import { useBibleChapter } from '@/context/BibleChapterContext';
 
 type VerseProps = TVerse & {
   isSplit: boolean;
@@ -179,6 +180,7 @@ const Verse: React.FC<VerseProps> = ({
     strongSearchHandlePresentModalPress: onWord,
     dictionaryHandlePresentModalPress: onDictionary,
   } = useModal();
+  const { updateBibleQuery } = useBibleChapter();
 
   const initHighLightedVerseAnimation = () => {
     const loopAnimation = Animated.loop(
@@ -256,13 +258,14 @@ const Verse: React.FC<VerseProps> = ({
       )?.longName;
 
       const onLink = () => {
-        navigation.navigate(Screens.Home, {
-          [!isSplit && isSplitActived ? 'bottomSideBook' : 'book']: bookName,
-          [!isSplit && isSplitActived ? 'bottomSideChapter' : 'chapter']:
-            chapter,
-          [!isSplit && isSplitActived ? 'bottomSideVerse' : 'verse']: verse,
-          isHistory: false,
-        });
+        const isBottom = !isSplit && isSplitActived;
+        const queryInfo = {
+          [isBottom ? 'bottomSideBook' : 'book']: bookName,
+          [isBottom ? 'bottomSideChapter' : 'chapter']: chapter,
+          [isBottom ? 'bottomSideVerse' : 'verse']: verse,
+        };
+        updateBibleQuery(queryInfo);
+        navigation.navigate(Screens.Home, { ...queryInfo, isHistory: false });
       };
 
       return bookName ? (

@@ -1,6 +1,7 @@
-import { EBibleVersions } from "@/types";
+import { HistoryItem } from './../hooks/useHistoryManager';
+import { EBibleVersions } from '@/types';
 
-export const GET_BOOKS_NAME = `SELECT * FROM books;`
+export const GET_BOOKS_NAME = `SELECT * FROM books;`;
 export const GET_VERSE_NUMBER_QUERY = `SELECT COUNT(v.verse) AS verse_count
 FROM books b LEFT JOIN verses v ON b.book_number = v.book_number
 WHERE b.long_name = ? AND v.chapter = ?
@@ -29,7 +30,6 @@ export const CREATE_NOTE_TABLE = `CREATE TABLE IF NOT EXISTS notes (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );`;
-
 
 export const CREATE_COLUMN_UPDATED_AT_IN_NOTE_TABLE = `ALTER TABLE notes ADD COLUMN updated_at TIMESTAMP;`;
 
@@ -187,6 +187,25 @@ export const DELETE_LAST_STREAK = `WITH last_streak AS (
 DELETE FROM streaks 
 WHERE id = (SELECT id FROM last_streak)
 RETURNING *;`;
+
+// History
+export const historyQuery = {
+  CREATE_TABLE: `
+    CREATE TABLE IF NOT EXISTS history (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      book TEXT NOT NULL,
+      chapter INTEGER NOT NULL,
+      verse INTEGER NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `,
+  INSERT: `INSERT INTO history (book, chapter, verse) VALUES (?, ?, ?);`,
+  GET_ALL: `SELECT * FROM history ORDER BY created_at DESC;`,
+  GET_LAST: `SELECT * FROM history ORDER BY created_at DESC LIMIT 1;`,
+  DELETE_ALL: `DELETE FROM history;`,
+  DELETE_BY_ID: `DELETE FROM history WHERE id = ?;`,
+  UPDATE_VERSE: `UPDATE history SET verse = ? WHERE id = ?;`,
+};
 
 type TQuery = {
   GET_VERSE_NUMBER_QUERY: string;

@@ -3,6 +3,7 @@ import {
   CREATE_MEMORIZATION_TABLE,
   CREATE_NOTE_TABLE,
   CREATE_STREAK_TABLE,
+  historyQuery,
 } from '@/constants/Queries';
 import { Asset } from 'expo-asset';
 import * as FileSystem from 'expo-file-system';
@@ -152,6 +153,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
         await executeSql(CREATE_NOTE_TABLE);
         await executeSql(CREATE_MEMORIZATION_TABLE);
         await executeSql(CREATE_STREAK_TABLE);
+        await executeSql(historyQuery.CREATE_TABLE);
       } catch (error) {
         console.error('Error creating tables:', error);
       }

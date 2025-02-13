@@ -1,26 +1,26 @@
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
-import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "@/constants/BookNames";
-import { useBibleContext } from "@/context/BibleContext";
-import useAudioPlayer from "@/hooks/useAudioPlayer";
-import { FC, useCallback, useEffect, useRef } from "react";
-import { Animated, TouchableOpacity, useWindowDimensions } from "react-native";
-import { EBibleVersions, Screens } from "@/types";
+import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from '@/constants/BookNames';
+import { useBibleContext } from '@/context/BibleContext';
+import useAudioPlayer from '@/hooks/useAudioPlayer';
+import { EBibleVersions, Screens } from '@/types';
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
+import { FC, useCallback, useEffect, useRef } from 'react';
+import { Animated, TouchableOpacity } from 'react-native';
 
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import BottomModal from "@/components/BottomModal";
-import Icon from "@/components/Icon";
-import { Text, View } from "@/components/Themed";
-import { iconSize } from "@/constants/size";
-import { useStorage } from "@/context/LocalstoreContext";
-import useBibleReader from "@/hooks/useBibleReading";
-import useInternetConnection from "@/hooks/useInternetConnection";
-import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
-import Play from "../header/Play";
-import ProgressBar from "./ProgressBar";
-import { getStyles } from "./styles";
-import { renameLongBookName } from '@/utils/extractVersesInfo';
+import BottomModal from '@/components/BottomModal';
+import Icon from '@/components/Icon';
+import { Text, View } from '@/components/Themed';
+import { iconSize } from '@/constants/size';
 import { useBibleChapter } from '@/context/BibleChapterContext';
-import useChangeBookOrChapter from '@/hooks/useChangeBookOrChapter';
+import { useStorage } from '@/context/LocalstoreContext';
+import useBibleReader from '@/hooks/useBibleReading';
+import useHistoryManager from '@/hooks/useHistoryManager';
+import useInternetConnection from '@/hooks/useInternetConnection';
+import useSingleAndDoublePress from '@/hooks/useSingleOrDoublePress';
+import { renameLongBookName } from '@/utils/extractVersesInfo';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import Play from '../header/Play';
+import ProgressBar from './ProgressBar';
+import { getStyles } from './styles';
 interface FooterInterface {
   refs: any;
   isSplit?: boolean;
@@ -32,8 +32,8 @@ interface FooterInterface {
 const CustomFooter: FC<FooterInterface> = ({
   refs,
   isSplit,
-  book,
-  chapter,
+  book: bookProp,
+  chapter: chapterProp,
   verse,
 }) => {
   const { book: bookRef, back: backRef, next: nextRef, audi: audioRef } = refs;
@@ -47,7 +47,6 @@ const CustomFooter: FC<FooterInterface> = ({
     setShouldLoop,
   } = useBibleContext();
   const {
-    historyManager,
     storedData: { currentVoiceIdentifier, currentVoiceRate = 1 },
   } = useStorage();
   const isConnected = useInternetConnection();
@@ -57,10 +56,15 @@ const CustomFooter: FC<FooterInterface> = ({
   const playRef = useRef<BottomSheetModal>(null);
   const navigation = useNavigation();
   const route = useRoute();
-  // const currentHistoryItemVerse = historyManager.getCurrentItem()?.verse;
+  const {
+    data: { verses },
+    bibleQuery,
+    updateBibleQuery,
+  } = useBibleChapter();
+  const book = bibleQuery?.book || bookProp;
+  const chapter = bibleQuery?.chapter || chapterProp;
 
-  const { bookNumber, shortName } =
-    DB_BOOK_NAMES.find((x) => x.longName === book) || {};
+  const { bookNumber } = DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
   const isRVR = currentBibleVersion === EBibleVersions.BIBLE && isConnected;
   const { isDownloading, isPlaying, playAudio, duration, position } =
@@ -70,9 +74,6 @@ const CustomFooter: FC<FooterInterface> = ({
       nextChapter,
     });
 
-  const {
-    data: { verses },
-  } = useBibleChapter();
   const { verseIndex, startReading, stopReading, isSpeaking, ended, reset } =
     useBibleReader({
       currentChapterVerses: verses as any,
@@ -82,7 +83,6 @@ const CustomFooter: FC<FooterInterface> = ({
   const startOrStop = isSpeaking ? stopReading : startReading;
   const _playAudio = isRVR ? playAudio : startOrStop;
   const _isPlaying = isRVR ? isPlaying : isSpeaking;
-  const { updateBibleQuery } = useBibleChapter();
 
   useEffect(() => {
     if (ended && shouldLoopReading) {
@@ -105,9 +105,9 @@ const CustomFooter: FC<FooterInterface> = ({
     const queryInfo = {
       [isSplit ? 'bottomSideBook' : 'book']: name,
       [isSplit ? 'bottomSideChapter' : 'chapter']: chapter,
-      [isSplit ? 'bottomSideVerse' : 'verse']: 0,
+      [isSplit ? 'bottomSideVerse' : 'verse']: 1,
     };
-    updateBibleQuery(queryInfo);
+    updateBibleQuery({ ...queryInfo, shouldFetch: true });
     navigation.setParams({ ...queryInfo, isHistory: false });
   };
 
@@ -125,7 +125,7 @@ const CustomFooter: FC<FooterInterface> = ({
       [isSplit ? 'bottomSideChapter' : 'chapter']: _chapter || 1,
       [isSplit ? 'bottomSideVerse' : 'verse']: 1,
     };
-    updateBibleQuery(queryInfo);
+    updateBibleQuery({ ...queryInfo, shouldFetch: true });
     navigation.setParams({ ...queryInfo, isHistory: false });
   }
   const previousChapter = () => {
@@ -141,7 +141,7 @@ const CustomFooter: FC<FooterInterface> = ({
       [isSplit ? 'bottomSideChapter' : 'chapter']: (chapter as number) - 1,
       [isSplit ? 'bottomSideVerse' : 'verse']: 1,
     };
-    updateBibleQuery(queryInfo);
+    updateBibleQuery({ ...queryInfo, shouldFetch: true });
     navigation.setParams({ ...queryInfo, isHistory: false });
   };
 
@@ -174,19 +174,15 @@ const CustomFooter: FC<FooterInterface> = ({
 
   const displayBookName = renameLongBookName(book);
 
-  useEffect(() => {
-    if (isSplitActived) return;
-    if (currentHistoryIndex === -1) return;
-    const currentHistory = historyManager.getCurrentItem();
+  // useEffect(() => {
+  //   if (isSplitActived) return;
+  //   if (currentHistoryIndex === -1) return;
+  //   const currentHistory = getCurrentItem();
 
-    if (!currentHistory) return;
-    navigation.setParams({
-      book: currentHistory.book,
-      chapter: currentHistory.chapter,
-      verse: currentHistory.verse,
-      isHistory: true,
-    });
-  }, [currentHistoryIndex]);
+  //   if (!currentHistory) return;
+  //   updateBibleQuery(currentHistory);
+  //   navigation.setParams({ ...currentHistory, isHistory: true });
+  // }, [currentHistoryIndex]);
 
   return (
     <Animated.View style={[styles.footer]}>
