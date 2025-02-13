@@ -4,23 +4,23 @@ import {
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
-} from 'react-native';
-import { useBibleContext } from '../../../context/BibleContext';
+} from "react-native";
+import { useBibleContext } from "../../../context/BibleContext";
 
-import BottomModal from '@/components/BottomModal';
-import Icon from '@/components/Icon';
-import { Text, View } from '@/components/Themed';
-import { iconSize } from '@/constants/size';
-import { useBibleChapter } from '@/context/BibleChapterContext';
-import useHistoryManager from '@/hooks/useHistoryManager';
-import useInstalledBibles from '@/hooks/useInstalledBible';
-import useParams from '@/hooks/useParams';
-import { EBibleVersions, HomeParams, Screens, TIcon, TTheme } from '@/types';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { useNavigation, useRouter } from 'expo-router';
-import ProgressBar from '../footer/ProgressBar';
-import Settings from './Settings';
-import VersionList from './VersionList';
+import BottomModal from "@/components/BottomModal";
+import Icon from "@/components/Icon";
+import { Text, View } from "@/components/Themed";
+import { iconSize } from "@/constants/size";
+import { useBibleChapter } from "@/context/BibleChapterContext";
+import useHistoryManager from "@/hooks/useHistoryManager";
+import useInstalledBibles from "@/hooks/useInstalledBible";
+import useParams from "@/hooks/useParams";
+import { EBibleVersions, HomeParams, Screens, TIcon, TTheme } from "@/types";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useNavigation, useRouter } from "expo-router";
+import ProgressBar from "../footer/ProgressBar";
+import Settings from "./Settings";
+import VersionList from "./VersionList";
 
 interface HeaderInterface {
   refs: any;
@@ -108,7 +108,7 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
         color: isSplitActived ? theme.colors.notification : theme.colors.text,
       },
       {
-        name: 'ArrowBigLeftDash',
+        name: "ArrowBigLeftDash",
         action: moveBackInHistory,
         ref: setting,
         isIonicon: true,
@@ -116,14 +116,14 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
         color: canGoBackward ? theme.colors.notification : theme.colors?.text,
       },
       {
-        name: 'ArrowBigRightDash',
+        name: "ArrowBigRightDash",
         action: moveForwardInHistory,
         ref: search,
         isIonicon: true,
         disabled: isSplitActived,
         color: canGoForward ? theme.colors.notification : theme.colors?.text,
       },
-      { name: 'Search', action: goSearchScreen, ref: search },
+      { name: "Search", action: goSearchScreen, ref: search },
     ];
     return options.filter((x) => !x.disabled);
   }, [isSplitActived, canGoForward, canGoBackward]);
@@ -139,14 +139,14 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
 
   return (
     <View style={styles.header}>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: "row" }}>
         <TouchableOpacity
           ref={dashboard}
           style={styles.iconContainer}
-          onPress={() => router.navigate('(dashboard)')}
+          onPress={() => router.navigate("(dashboard)")}
         >
           <Icon
-            name='House'
+            name="House"
             size={headerIconSize}
             color={theme.colors.primary}
           />
@@ -178,7 +178,7 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
           onPress={versionHandlePresentModalPress}
         >
           <Icon
-            name={isNTV ? 'BookText' : 'Crown'}
+            name={isNTV ? "BookText" : "Crown"}
             size={headerIconSize}
             color={theme.colors.primary}
           />
@@ -209,63 +209,63 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     header: {
-      position: 'relative',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
+      position: "relative",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "flex-end",
       paddingHorizontal: 10,
       paddingVertical: 10,
       backgroundColor: colors.background,
-      width: '100%',
+      width: "100%",
       borderWidth: 0.5,
     },
     progressContainer: {
-      width: '100%',
+      width: "100%",
       marginVertical: 8,
       backgroundColor: colors.background,
     },
     versionContainer: {
-      position: 'relative',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      position: "relative",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
       borderRadius: 45,
     },
     versionText: {
       color: colors.border,
       fontSize: 24,
-      textAlign: 'center',
+      textAlign: "center",
     },
     headerCenter: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-      backgroundColor: 'none',
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-end",
+      backgroundColor: "none",
       gap: 15,
       flex: 1,
     },
     headerEnd: {
-      position: 'relative',
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
+      position: "relative",
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
       gap: 4,
       paddingHorizontal: 10,
       borderRadius: 50,
     },
     iconContainer: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
       borderRadius: 50,
     },
     icon: {
       color: colors.primary,
     },
     text: {
-      color: dark ? 'white' : colors.background,
+      color: dark ? "white" : colors.background,
       paddingHorizontal: 4,
       fontSize: 18,
       backgroundColor: colors.notification,
