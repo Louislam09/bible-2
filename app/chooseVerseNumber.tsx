@@ -1,18 +1,18 @@
 import { DB_BOOK_CHAPTER_VERSES, DB_BOOK_NAMES } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
 import useParams from "@/hooks/useParams";
-import { ChooseChapterNumberParams, Screens, TTheme } from '@/types';
-import ChooseFromListScreen from '@/components/chooseFromListScreen';
-import { Stack, useNavigation } from 'expo-router';
-import { Fragment, useMemo } from 'react';
-import { Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { useTheme } from '@react-navigation/native';
-import { renameLongBookName } from '@/utils/extractVersesInfo';
-import { FlashList, ListRenderItem } from '@shopify/flash-list';
-import { Text, View } from '@/components/Themed';
-import { BOOK_IMAGES } from '@/constants/Images';
-import { useStorage } from '@/context/LocalstoreContext';
-import { useBibleChapter } from '@/context/BibleChapterContext';
+import { ChooseChapterNumberParams, Screens, TTheme } from "@/types";
+import ChooseFromListScreen from "@/components/chooseFromListScreen";
+import { Stack, useNavigation } from "expo-router";
+import { Fragment, useMemo } from "react";
+import { Image, StyleSheet, TouchableOpacity } from "react-native";
+import { useTheme } from "@react-navigation/native";
+import { renameLongBookName } from "@/utils/extractVersesInfo";
+import { FlashList, ListRenderItem } from "@shopify/flash-list";
+import { Text, View } from "@/components/Themed";
+import { BOOK_IMAGES } from "@/constants/Images";
+import { useStorage } from "@/context/LocalstoreContext";
+import { useBibleChapter } from "@/context/BibleChapterContext";
 
 const chooseVerseNumber = () => {
   const routeParam = useParams<ChooseChapterNumberParams>();
@@ -23,7 +23,7 @@ const chooseVerseNumber = () => {
   const navigation = useNavigation();
   const theme = useTheme();
   const styles = getStyles(theme);
-  const displayBookName = renameLongBookName(selectedBook || '');
+  const displayBookName = renameLongBookName(selectedBook || "");
   const { updateBibleQuery } = useBibleChapter();
 
   const bookNumber = DB_BOOK_NAMES.find(
@@ -43,11 +43,12 @@ const chooseVerseNumber = () => {
   const handlePress = (item: number) => {
     const params = {
       ...routeParam,
-      [isBottomSideSearching ? 'bottomSideVerse' : 'verse']: item,
+      [isBottomSideSearching ? "bottomSideVerse" : "verse"]: item,
       isHistory: false,
-    };
+    } as any;
 
-    updateBibleQuery(params as any);
+    console.log("verse chopo", isBottomSideSearching);
+    updateBibleQuery({ ...params, isBibleBottom: isBottomSideSearching });
     navigation.navigate(Screens.Home, params);
   };
 
@@ -71,7 +72,7 @@ const chooseVerseNumber = () => {
           <Image
             style={[styles.bookImage]}
             source={{
-              uri: BOOK_IMAGES[selectedBook ?? 'Génesis'],
+              uri: BOOK_IMAGES[selectedBook ?? "Génesis"],
             }}
             alt={selectedBook}
           />
@@ -98,17 +99,17 @@ const getStyles = ({ colors }: TTheme) =>
     container: {
       flex: 1,
       backgroundColor: colors.background,
-      width: '100%',
+      width: "100%",
     },
     listWrapper: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'relative',
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
     },
     bookImage: {
-      resizeMode: 'contain',
-      position: 'relative',
+      resizeMode: "contain",
+      position: "relative",
       width: 100,
       height: 100,
     },
@@ -117,20 +118,20 @@ const getStyles = ({ colors }: TTheme) =>
       backgroundColor: colors.background,
     },
     listItem: {
-      display: 'flex',
-      borderStyle: 'solid',
+      display: "flex",
+      borderStyle: "solid",
       borderWidth: 1,
       borderColor: colors.text + 10,
       padding: 10,
       flex: 1,
       height: 70,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
     },
     listTitle: {
       color: colors.text,
       fontSize: 18,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     subTitle: {
       fontSize: 14,
@@ -145,7 +146,7 @@ const getStyles = ({ colors }: TTheme) =>
       paddingVertical: 5,
     },
     icon: {
-      fontWeight: '900',
+      fontWeight: "900",
       color: colors.text,
       marginHorizontal: 10,
     },

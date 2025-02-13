@@ -21,6 +21,7 @@ import { useNavigation, useRouter } from "expo-router";
 import ProgressBar from "../footer/ProgressBar";
 import Settings from "./Settings";
 import VersionList from "./VersionList";
+import { showToast } from "@/utils/showToast";
 
 interface HeaderInterface {
   refs: any;
@@ -98,8 +99,9 @@ const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
   const headerIconData = useMemo(() => {
     const options: TIcon[] = [
       {
-        name: 'SquareSplitVertical',
+        name: "SquareSplitVertical",
         action: () => {
+          // showToast("⚠️ Esta función está en mantenimiento 🚧");
           toggleSplitMode();
           toggleBottomSideSearching(!isSplitActived);
         },

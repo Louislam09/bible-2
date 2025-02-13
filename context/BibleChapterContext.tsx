@@ -1,10 +1,10 @@
-import { DB_BOOK_NAMES } from '@/constants/BookNames';
-import { getDatabaseQueryKey } from '@/constants/databaseNames';
-import { QUERY_BY_DB } from '@/constants/Queries';
-import { useDBContext } from '@/context/databaseContext';
-import { useStorage } from '@/context/LocalstoreContext';
-import useReadingTime from '@/hooks/useReadTime';
-import { getChapterTextRaw } from '@/utils/getVerseTextRaw';
+import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { getDatabaseQueryKey } from "@/constants/databaseNames";
+import { QUERY_BY_DB } from "@/constants/Queries";
+import { useDBContext } from "@/context/databaseContext";
+import { useStorage } from "@/context/LocalstoreContext";
+import useReadingTime from "@/hooks/useReadTime";
+import { getChapterTextRaw } from "@/utils/getVerseTextRaw";
 import {
   createContext,
   ReactNode,
@@ -13,11 +13,11 @@ import {
   useEffect,
   useMemo,
   useState,
-} from 'react';
-import { useBibleContext } from './BibleContext';
-import { HomeParams, IBookVerse, TSubtitle } from '@/types';
-import useParams from '@/hooks/useParams';
-import useHistoryManager, { HistoryManager } from '@/hooks/useHistoryManager';
+} from "react";
+import { useBibleContext } from "./BibleContext";
+import { HomeParams, IBookVerse, TSubtitle } from "@/types";
+import useParams from "@/hooks/useParams";
+import useHistoryManager, { HistoryManager } from "@/hooks/useHistoryManager";
 
 interface BibleData {
   verses: IBookVerse[];
@@ -26,8 +26,10 @@ interface BibleData {
 
 interface BibleChapterContextProps {
   data: BibleData;
+  bottomData: BibleData;
   loading: boolean;
   estimatedReadingTime: number;
+  estimatedReadingTimeBottom: number;
   fetchChapter: () => void;
   updateBibleQuery: (props: Partial<IBibleQuery>) => void;
   bibleQuery: IBibleQuery;
@@ -42,9 +44,9 @@ type IBibleQuery = {
   book: string;
   chapter: number;
   verse: number;
-  lastBottomSideBook: string;
-  lastBottomSideChapter: number;
-  lastBottomSideVerse: number;
+  bottomSideBook: string;
+  bottomSideChapter: number;
+  bottomSideVerse: number;
   isBibleBottom: boolean;
   isHistory: boolean;
   shouldFetch: boolean;
@@ -53,15 +55,29 @@ type IBibleQuery = {
 export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
   const defaultData = { verses: [], subtitles: [] };
   const [data, setData] = useState<BibleData>(defaultData);
+  const [bottomData, setBottomData] = useState<BibleData>(defaultData);
   const params = useParams<HomeParams>();
   const [loading, setLoading] = useState<boolean>(true);
   const { executeSql, isMyBibleDbLoaded } = useDBContext();
   const { storedData, saveData } = useStorage();
   const historyManager = useHistoryManager();
   const { getCurrentItem, add: addToHistory } = historyManager;
+
   const estimatedReadingTime = useReadingTime({
     text: getChapterTextRaw(data.verses),
   });
+
+  const estimatedReadingTimeBottom = useReadingTime({
+    text: getChapterTextRaw(bottomData.verses),
+  });
+
+  const {
+    setverseInStrongDisplay,
+    highlightedVerses,
+    clearHighlights,
+    isSplitActived,
+    currentHistoryIndex,
+  } = useBibleContext();
 
   const {
     lastBook,
@@ -74,42 +90,40 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
   } = storedData;
 
   const [bibleQuery, setBibleQuery] = useState<IBibleQuery>({
-    book: lastBook || 'Génesis',
+    book: lastBook || "Génesis",
     chapter: lastChapter || 1,
     verse: lastVerse || 1,
-    lastBottomSideBook: lastBottomSideBook || 'Génesis',
-    lastBottomSideChapter: lastBottomSideChapter || 1,
-    lastBottomSideVerse: lastBottomSideVerse || 1,
+    bottomSideBook: lastBottomSideBook || "Génesis",
+    bottomSideChapter: lastBottomSideChapter || 1,
+    bottomSideVerse: lastBottomSideVerse || 1,
     isBibleBottom: false,
     isHistory: false,
     shouldFetch: false,
   });
 
-  const {
-    setverseInStrongDisplay,
-    highlightedVerses,
-    clearHighlights,
-    isSplitActived,
-    currentHistoryIndex,
-  } = useBibleContext();
-
   const updateBibleQuery = (props: Partial<IBibleQuery>) => {
-    // console.log('updateBibleQuery - shouldFetch', props.shouldFetch);
     setBibleQuery((prev) => ({
       ...prev,
-      isBibleBottom: false,
-      isHistory: false,
-      shouldFetch: false,
       ...props,
     }));
   };
 
   const fetchChapter = useCallback(async () => {
-    const { book, chapter, verse, isHistory } = bibleQuery;
-    const currentBook = DB_BOOK_NAMES.find((x) => x.longName === book);
+    const { book, chapter, verse, isBibleBottom } = bibleQuery;
+    console.log({ isBibleBottom });
+    const targetBook = isBibleBottom ? bibleQuery.bottomSideBook : book;
+    const targetChapter = isBibleBottom
+      ? bibleQuery.bottomSideChapter
+      : chapter;
+    const targetVerse = isBibleBottom ? bibleQuery.bottomSideVerse : verse;
+    const currentBook = DB_BOOK_NAMES.find((x) => x.longName === targetBook);
     if (highlightedVerses.length) clearHighlights();
     setLoading(true);
-    setData(defaultData);
+    if (isBibleBottom) {
+      setBottomData(defaultData);
+    } else {
+      setData(defaultData);
+    }
     setverseInStrongDisplay(0);
     const queryKey = getDatabaseQueryKey(currentBibleVersion);
     const query = QUERY_BY_DB[queryKey];
@@ -118,38 +132,50 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
       const [verses, subtitles] = await Promise.all([
         executeSql(query.GET_VERSES_BY_BOOK_AND_CHAPTER, [
           currentBook?.bookNumber,
-          chapter || 1,
+          targetChapter || 1,
         ]),
         executeSql(query.GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
           currentBook?.bookNumber,
-          chapter || 1,
+          targetChapter || 1,
         ]),
       ]);
       const endTime = Date.now();
       const executionTime = endTime - startTime;
-      console.log(`${book} ${chapter}:${verse} in ${executionTime} ms.`);
-      setData({ verses, subtitles });
+      console.log(
+        `${targetBook} ${targetChapter}:${targetVerse} in ${executionTime} ms.`
+      );
+
+      if (isBibleBottom) {
+        setBottomData({ verses, subtitles });
+      } else {
+        setData({ verses, subtitles });
+      }
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching Bible data:', error);
+      console.error("Error fetching Bible data:", error);
     } finally {
       setLoading(false);
-      setBibleQuery((prev) => ({ ...prev, shouldFetch: false }));
+      setBibleQuery((prev) => ({
+        ...prev,
+        isBibleBottom: false,
+        isHistory: false,
+        shouldFetch: false,
+      }));
     }
   }, [bibleQuery, executeSql]);
 
   useEffect(() => {
     if (!loading) {
       const { isBibleBottom, isHistory } = bibleQuery;
-      const saveKeyPrefix = isBibleBottom ? 'lastBottomSide' : 'last';
+      const saveKeyPrefix = isBibleBottom ? "lastBottomSide" : "last";
       const bookValue = isBibleBottom
-        ? bibleQuery.lastBottomSideBook
+        ? bibleQuery.bottomSideBook
         : bibleQuery.book;
       const chapterValue = isBibleBottom
-        ? bibleQuery.lastBottomSideChapter
+        ? bibleQuery.bottomSideChapter
         : bibleQuery.chapter;
       const verseValue = isBibleBottom
-        ? bibleQuery.lastBottomSideVerse
+        ? bibleQuery.bottomSideVerse
         : bibleQuery.verse;
 
       saveData({
@@ -176,15 +202,7 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     updateBibleQuery({ ...currentHistory, isHistory: true });
   }, [currentHistoryIndex]);
 
-  // useEffect(() => {
-  //   const dontFetch =
-  //     bibleQuery.book === params.book && params.chapter === bibleQuery.chapter;
-  //   if (dontFetch) return;
-  //   updateBibleQuery(params as any);
-  // }, [params.book, params.chapter]);
-
   useEffect(() => {
-    console.log('shouldFetch', bibleQuery.shouldFetch);
     if (!bibleQuery.shouldFetch) return;
     fetchChapter();
   }, [bibleQuery.shouldFetch]);
@@ -192,17 +210,19 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!isMyBibleDbLoaded) return;
     fetchChapter();
-  }, [bibleQuery.verse, isMyBibleDbLoaded]);
+  }, [bibleQuery.verse, bibleQuery.bottomSideVerse, isMyBibleDbLoaded]);
 
   const contextValue = useMemo(
     () => ({
       data,
+      bottomData,
       loading,
       estimatedReadingTime,
       fetchChapter,
       updateBibleQuery,
       bibleQuery,
       historyManager,
+      estimatedReadingTimeBottom,
     }),
     [data, loading, estimatedReadingTime, bibleQuery, historyManager]
   );
@@ -218,7 +238,7 @@ export const useBibleChapter = () => {
   const context = useContext(BibleChapterContext);
   if (!context) {
     throw new Error(
-      'useBibleChapter must be used within a BibleChapterProvider'
+      "useBibleChapter must be used within a BibleChapterProvider"
     );
   }
   return context;

@@ -1,26 +1,26 @@
-import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from '@/constants/BookNames';
-import { useBibleContext } from '@/context/BibleContext';
-import useAudioPlayer from '@/hooks/useAudioPlayer';
-import { EBibleVersions, Screens } from '@/types';
-import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
-import { FC, useCallback, useEffect, useRef } from 'react';
-import { Animated, TouchableOpacity } from 'react-native';
+import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "@/constants/BookNames";
+import { useBibleContext } from "@/context/BibleContext";
+import useAudioPlayer from "@/hooks/useAudioPlayer";
+import { EBibleVersions, Screens } from "@/types";
+import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { FC, useCallback, useEffect, useRef } from "react";
+import { Animated, TouchableOpacity } from "react-native";
 
-import BottomModal from '@/components/BottomModal';
-import Icon from '@/components/Icon';
-import { Text, View } from '@/components/Themed';
-import { iconSize } from '@/constants/size';
-import { useBibleChapter } from '@/context/BibleChapterContext';
-import { useStorage } from '@/context/LocalstoreContext';
-import useBibleReader from '@/hooks/useBibleReading';
-import useHistoryManager from '@/hooks/useHistoryManager';
-import useInternetConnection from '@/hooks/useInternetConnection';
-import useSingleAndDoublePress from '@/hooks/useSingleOrDoublePress';
-import { renameLongBookName } from '@/utils/extractVersesInfo';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import Play from '../header/Play';
-import ProgressBar from './ProgressBar';
-import { getStyles } from './styles';
+import BottomModal from "@/components/BottomModal";
+import Icon from "@/components/Icon";
+import { Text, View } from "@/components/Themed";
+import { iconSize } from "@/constants/size";
+import { useBibleChapter } from "@/context/BibleChapterContext";
+import { useStorage } from "@/context/LocalstoreContext";
+import useBibleReader from "@/hooks/useBibleReading";
+import useHistoryManager from "@/hooks/useHistoryManager";
+import useInternetConnection from "@/hooks/useInternetConnection";
+import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
+import { renameLongBookName } from "@/utils/extractVersesInfo";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import Play from "../header/Play";
+import ProgressBar from "./ProgressBar";
+import { getStyles } from "./styles";
 interface FooterInterface {
   refs: any;
   isSplit?: boolean;
@@ -103,11 +103,15 @@ const CustomFooter: FC<FooterInterface> = ({
   const nextOrPreviousBook = (name: string, chapter: number = 1) => {
     clearHighlights();
     const queryInfo = {
-      [isSplit ? 'bottomSideBook' : 'book']: name,
-      [isSplit ? 'bottomSideChapter' : 'chapter']: chapter,
-      [isSplit ? 'bottomSideVerse' : 'verse']: 1,
+      [isSplit ? "bottomSideBook" : "book"]: name,
+      [isSplit ? "bottomSideChapter" : "chapter"]: chapter,
+      [isSplit ? "bottomSideVerse" : "verse"]: 1,
     };
-    updateBibleQuery({ ...queryInfo, shouldFetch: true });
+    updateBibleQuery({
+      ...queryInfo,
+      shouldFetch: true,
+      isBibleBottom: isSplit,
+    });
     navigation.setParams({ ...queryInfo, isHistory: false });
   };
 
@@ -121,11 +125,15 @@ const CustomFooter: FC<FooterInterface> = ({
 
     const _chapter = +(chapter as number) + 1;
     const queryInfo = {
-      [isSplit ? 'bottomSideBook' : 'book']: book,
-      [isSplit ? 'bottomSideChapter' : 'chapter']: _chapter || 1,
-      [isSplit ? 'bottomSideVerse' : 'verse']: 1,
+      [isSplit ? "bottomSideBook" : "book"]: book,
+      [isSplit ? "bottomSideChapter" : "chapter"]: _chapter || 1,
+      [isSplit ? "bottomSideVerse" : "verse"]: 1,
     };
-    updateBibleQuery({ ...queryInfo, shouldFetch: true });
+    updateBibleQuery({
+      ...queryInfo,
+      shouldFetch: true,
+      isBibleBottom: isSplit,
+    });
     navigation.setParams({ ...queryInfo, isHistory: false });
   }
   const previousChapter = () => {
@@ -137,11 +145,15 @@ const CustomFooter: FC<FooterInterface> = ({
     }
     if ((chapter as number) <= 1) return;
     const queryInfo = {
-      [isSplit ? 'bottomSideBook' : 'book']: book,
-      [isSplit ? 'bottomSideChapter' : 'chapter']: (chapter as number) - 1,
-      [isSplit ? 'bottomSideVerse' : 'verse']: 1,
+      [isSplit ? "bottomSideBook" : "book"]: book,
+      [isSplit ? "bottomSideChapter" : "chapter"]: (chapter as number) - 1,
+      [isSplit ? "bottomSideVerse" : "verse"]: 1,
     };
-    updateBibleQuery({ ...queryInfo, shouldFetch: true });
+    updateBibleQuery({
+      ...queryInfo,
+      shouldFetch: true,
+      isBibleBottom: isSplit,
+    });
     navigation.setParams({ ...queryInfo, isHistory: false });
   };
 
@@ -172,7 +184,7 @@ const CustomFooter: FC<FooterInterface> = ({
     playRef.current?.present();
   }, []);
 
-  const displayBookName = renameLongBookName(book);
+  const displayBookName = renameLongBookName(isSplit ? bookProp : book);
 
   // useEffect(() => {
   //   if (isSplitActived) return;
@@ -200,7 +212,7 @@ const CustomFooter: FC<FooterInterface> = ({
       <View style={styles.footerCenter}>
         <TouchableOpacity ref={backRef} onPress={() => previousChapter()}>
           <Icon
-            name={'ChevronsLeft'}
+            name={"ChevronsLeft"}
             size={FOOTER_ICON_SIZE}
             style={[styles.icon, { marginHorizontal: 0 }]}
           />
@@ -213,7 +225,9 @@ const CustomFooter: FC<FooterInterface> = ({
           delayLongPress={200}
         >
           <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
-            {`${displayBookName ?? ''} ${chapter ?? ''}`}
+            {`${displayBookName ?? ""} ${
+              isSplit ? chapterProp : chapter ?? ""
+            }`}
             {/* {`${displayBookName ?? ''} ${chapter ?? ''}:${
               isSplitActived ? verse : currentHistoryItemVerse || verse
             }`} */}
@@ -221,21 +235,21 @@ const CustomFooter: FC<FooterInterface> = ({
         </TouchableOpacity>
         <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>
           <Icon
-            name={'ChevronsRight'}
+            name={"ChevronsRight"}
             size={FOOTER_ICON_SIZE}
             style={[styles.icon, { marginHorizontal: 0 }]}
           />
         </TouchableOpacity>
       </View>
       {!isSplitActived && (
-        <View style={{ flexDirection: 'row', backgroundColor: 'transparent' }}>
+        <View style={{ flexDirection: "row", backgroundColor: "transparent" }}>
           <TouchableOpacity
             ref={audioRef}
             style={[styles.footerEnd]}
             onPress={playHandlePresentModalPress}
           >
             <Icon
-              name={'Headphones'}
+              name={"Headphones"}
               size={FOOTER_ICON_SIZE}
               style={[styles.icon, { marginHorizontal: 0 }]}
             />

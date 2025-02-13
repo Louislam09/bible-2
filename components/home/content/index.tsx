@@ -1,11 +1,11 @@
 import { useTheme } from "@react-navigation/native";
-import React, { FC } from 'react';
-import { ActivityIndicator, StyleSheet } from 'react-native';
-import { TTheme } from '../../../types';
+import React, { FC } from "react";
+import { ActivityIndicator, StyleSheet } from "react-native";
+import { TTheme } from "../../../types";
 
-import { View } from '@/components/Themed';
-import { useBibleChapter } from '@/context/BibleChapterContext';
-import Chapter from './Chapter';
+import { View } from "@/components/Themed";
+import { useBibleChapter } from "@/context/BibleChapterContext";
+import Chapter from "./Chapter";
 
 interface BookContentInterface {
   isSplit: boolean;
@@ -14,23 +14,21 @@ interface BookContentInterface {
   verse: any;
 }
 
-const BookContent: FC<BookContentInterface> = ({
-  isSplit,
-  book,
-  chapter,
-  verse,
-}) => {
+const BookContent: FC<BookContentInterface> = ({ isSplit, verse }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
-  const { data, estimatedReadingTime } = useBibleChapter();
+  const { data, bottomData, estimatedReadingTime, estimatedReadingTimeBottom } =
+    useBibleChapter();
 
   return (
     <View style={styles.bookContainer}>
       <Chapter
         {...{ verse }}
         isSplit={isSplit}
-        item={data}
-        estimatedReadingTime={estimatedReadingTime}
+        item={isSplit ? bottomData : data}
+        estimatedReadingTime={
+          isSplit ? estimatedReadingTimeBottom : estimatedReadingTime
+        }
       />
     </View>
   );

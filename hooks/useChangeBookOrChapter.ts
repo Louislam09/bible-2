@@ -1,5 +1,6 @@
 import { NavigationProp, NavigationState } from "@react-navigation/native";
 import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "@/constants/BookNames";
+import { useBibleChapter } from "@/context/BibleChapterContext";
 
 interface useChangeBookOrChapterProps {
   navigation: Omit<
@@ -23,14 +24,21 @@ const useChangeBookOrChapter = ({
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
   const { bookNumber, shortName } =
     DB_BOOK_NAMES.find((x) => x.longName === book) || {};
+  const { updateBibleQuery } = useBibleChapter();
 
   const nextOrPreviousBook = (name: string, chapter: number = 1) => {
-    navigation.setParams({
+    const queryInfo = {
       [isSplit ? "bottomSideBook" : "book"]: name,
       [isSplit ? "bottomSideChapter" : "chapter"]: chapter,
       [isSplit ? "bottomSideVerse" : "verse"]: 0,
       isHistory: false,
+    };
+    updateBibleQuery({
+      ...queryInfo,
+      shouldFetch: true,
+      isBibleBottom: isSplit,
     });
+    navigation.setParams(queryInfo);
   };
 
   function nextChapter() {
@@ -42,12 +50,18 @@ const useChangeBookOrChapter = ({
     }
 
     const _chapter = +(chapter as number) + 1;
-    navigation.setParams({
+    const queryInfo = {
       [isSplit ? "bottomSideBook" : "book"]: book,
       [isSplit ? "bottomSideChapter" : "chapter"]: _chapter || 0,
       [isSplit ? "bottomSideVerse" : "verse"]: 0,
       isHistory: false,
+    };
+    updateBibleQuery({
+      ...queryInfo,
+      shouldFetch: true,
+      isBibleBottom: isSplit,
     });
+    navigation.setParams(queryInfo);
   }
   const previousChapter = () => {
     if (bookNumber !== 10 && chapter === 1) {
@@ -57,12 +71,18 @@ const useChangeBookOrChapter = ({
       return;
     }
     if ((chapter as number) <= 1) return;
-    navigation.setParams({
+    const queryInfo = {
       [isSplit ? "bottomSideBook" : "book"]: book,
       [isSplit ? "bottomSideChapter" : "chapter"]: (chapter as number) - 1,
       [isSplit ? "bottomSideVerse" : "verse"]: 0,
       isHistory: false,
+    };
+    updateBibleQuery({
+      ...queryInfo,
+      shouldFetch: true,
+      isBibleBottom: isSplit,
     });
+    navigation.setParams(queryInfo);
   };
 
   return {
