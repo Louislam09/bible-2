@@ -47,7 +47,6 @@ const chooseVerseNumber = () => {
       isHistory: false,
     } as any;
 
-    console.log("verse choose", isBottomSideSearching);
     updateBibleQuery({
       ...params,
       isBibleBottom: isBottomSideSearching,

@@ -157,7 +157,6 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
       setBibleQuery((prev) => ({
         ...prev,
         isBibleBottom: false,
-        // isHistory: false,
         shouldFetch: false,
       }));
     }
@@ -193,6 +192,12 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
       setBibleQuery((prev) => ({ ...prev, isHistory: false }));
     }
   }, [loading]);
+
+  useEffect(() => {
+    if (isSplitActived) {
+      updateBibleQuery({ isBibleBottom: true, shouldFetch: true });
+    }
+  }, [isSplitActived]);
 
   useEffect(() => {
     if (isSplitActived) return;

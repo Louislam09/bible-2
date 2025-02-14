@@ -264,7 +264,11 @@ const Verse: React.FC<VerseProps> = ({
           [isBottom ? "bottomSideChapter" : "chapter"]: chapter,
           [isBottom ? "bottomSideVerse" : "verse"]: verse,
         };
-        updateBibleQuery({ ...queryInfo, shouldFetch: true });
+        updateBibleQuery({
+          ...queryInfo,
+          shouldFetch: true,
+          isBibleBottom: isBottom,
+        });
         navigation.navigate(Screens.Home, { ...queryInfo, isHistory: false });
       };
 

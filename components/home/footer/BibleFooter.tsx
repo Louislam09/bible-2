@@ -40,7 +40,6 @@ const BibleFooter: FC<FooterInterface> = ({
   const {
     currentBibleVersion,
     clearHighlights,
-    currentHistoryIndex,
     isSplitActived,
     toggleBottomSideSearching,
     shouldLoopReading,
@@ -60,9 +59,14 @@ const BibleFooter: FC<FooterInterface> = ({
     data: { verses },
     bibleQuery,
     updateBibleQuery,
+    historyManager: { getCurrentItem },
   } = useBibleChapter();
-  const book = bibleQuery?.book || bookProp;
-  const chapter = bibleQuery?.chapter || chapterProp;
+  const book = isSplit
+    ? bibleQuery?.bottomSideBook || bookProp
+    : bibleQuery.book || bookProp;
+  const chapter = isSplit
+    ? bibleQuery?.bottomSideChapter || bookProp
+    : bibleQuery.chapter || chapterProp;
 
   const { bookNumber } = DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
@@ -185,16 +189,7 @@ const BibleFooter: FC<FooterInterface> = ({
   }, []);
 
   const displayBookName = renameLongBookName(isSplit ? bookProp : book);
-
-  // useEffect(() => {
-  //   if (isSplitActived) return;
-  //   if (currentHistoryIndex === -1) return;
-  //   const currentHistory = getCurrentItem();
-
-  //   if (!currentHistory) return;
-  //   updateBibleQuery(currentHistory);
-  //   navigation.setParams({ ...currentHistory, isHistory: true });
-  // }, [currentHistoryIndex]);
+  const currentHistoryItemVerse = getCurrentItem()?.verse;
 
   return (
     <Animated.View style={[styles.footer]}>
@@ -227,10 +222,7 @@ const BibleFooter: FC<FooterInterface> = ({
           <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
             {`${displayBookName ?? ""} ${
               isSplit ? chapterProp : chapter ?? ""
-            }`}
-            {/* {`${displayBookName ?? ''} ${chapter ?? ''}:${
-              isSplitActived ? verse : currentHistoryItemVerse || verse
-            }`} */}
+            }:${isSplitActived ? verse : currentHistoryItemVerse || verse}`}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>
