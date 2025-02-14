@@ -18,7 +18,6 @@ const useCachedResources = () => {
           "space-mono": require("../assets/fonts/SpaceMono-Regular.ttf"),
         });
       } catch (e) {
-        // We might want to provide this error information to an error reporting service
         console.log(e);
       } finally {
         setLoadingComplete(true);

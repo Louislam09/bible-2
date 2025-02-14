@@ -18,7 +18,7 @@ import {
 import { DictionaryData, Screens, TTheme } from "@/types";
 import Icon from "./Icon";
 import { Text, View } from "./Themed";
-import { useBibleChapter } from '@/context/BibleChapterContext';
+import { useBibleChapter } from "@/context/BibleChapterContext";
 
 type WordDefinitionProps = {
   wordData: DictionaryData;
@@ -39,17 +39,17 @@ const WordDefinition = ({
   const { speak, stop, isSpeaking } = useTextToSpeech({ voice });
   const { schema: themeScheme } = useCustomTheme();
   const theme = _theme ? _theme : useTheme();
-  const styles = getStyles(theme, themeScheme === 'dark');
+  const styles = getStyles(theme, themeScheme === "dark");
   const webViewRef = useRef<WebView>(null);
   const { definition, topic } = wordData;
   const { fontSize } = useBibleContext();
   const { printToFile } = usePrintAndShare();
   const html = wordDefinitionHtmlTemplate(
-    definition || '',
+    definition || "",
     theme.colors,
     fontSize
   );
-  const [height, setHeight] = useState<number | string>('100%');
+  const [height, setHeight] = useState<number | string>("100%");
   const { updateBibleQuery } = useBibleChapter();
 
   const copyContentToClipboard = () => {
@@ -66,18 +66,18 @@ const WordDefinition = ({
 
   const onShouldStartLoadWithRequest = (event: ShouldStartLoadRequest) => {
     const { url } = event;
-    if (url.startsWith('b:')) {
+    if (url.startsWith("b:")) {
       const [, bookNumber, chapter, verse] =
         url.match(/b:(\d+) (\d+):(\d+)/) || [];
       const currentBook = DB_BOOK_NAMES.find(
         (x) => x.bookNumber === +bookNumber
       );
       const queryInfo = {
-        book: currentBook?.longName || 'Mateo',
+        book: currentBook?.longName || "Mateo",
         chapter: +chapter,
         verse: +verse || 0,
       };
-      updateBibleQuery(queryInfo);
+      updateBibleQuery({ ...queryInfo, shouldFetch: true });
       navigation.navigate(Screens.Home, queryInfo);
     }
 
@@ -94,12 +94,12 @@ const WordDefinition = ({
     const text = `${eventData}`;
     await Clipboard.setStringAsync(text);
     const _html = wordDefinitionHtmlTemplate(
-      definition || '',
+      definition || "",
       theme.colors,
       fontSize,
       true
     );
-    printToFile(_html, topic?.toUpperCase() || '--');
+    printToFile(_html, topic?.toUpperCase() || "--");
   };
 
   const onRead = () => {
@@ -130,14 +130,14 @@ const WordDefinition = ({
           style={{ marginHorizontal: 20 }}
           onPress={copyContentToClipboard}
         >
-          <Icon name='Share2' color={theme.colors.notification} size={28} />
+          <Icon name="Share2" color={theme.colors.notification} size={28} />
         </TouchableOpacity>
         <TouchableOpacity
-          style={{ marginHorizontal: 20, display: 'none' }}
+          style={{ marginHorizontal: 20, display: "none" }}
           onPress={onRead}
         >
           <Icon
-            name={isSpeaking ? 'Pause' : 'Play'}
+            name={isSpeaking ? "Pause" : "Play"}
             color={theme.colors.notification}
             size={iconSize}
           />
@@ -146,7 +146,7 @@ const WordDefinition = ({
 
       <View
         style={{
-          position: 'relative',
+          position: "relative",
           backgroundColor: theme.colors.background,
         }}
       >
@@ -158,11 +158,11 @@ const WordDefinition = ({
         <WebView
           startInLoadingState
           style={{
-            backgroundColor: 'transparent',
+            backgroundColor: "transparent",
             height: height as any,
           }}
           ref={webViewRef}
-          originWhitelist={['*']}
+          originWhitelist={["*"]}
           source={{ html }}
           scrollEnabled={true}
           onMessage={onMessage}

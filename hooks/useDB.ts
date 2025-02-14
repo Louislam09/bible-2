@@ -4,18 +4,18 @@ import {
   CREATE_NOTE_TABLE,
   CREATE_STREAK_TABLE,
   historyQuery,
-} from '@/constants/Queries';
-import { Asset } from 'expo-asset';
-import * as FileSystem from 'expo-file-system';
-import * as SQLite from 'expo-sqlite';
-import { useEffect, useRef, useState } from 'react';
-import { ToastAndroid } from 'react-native';
+} from "@/constants/Queries";
+import { Asset } from "expo-asset";
+import * as FileSystem from "expo-file-system";
+import * as SQLite from "expo-sqlite";
+import { useEffect, useRef, useState } from "react";
+import { ToastAndroid } from "react-native";
 import {
   dbFileExt,
   isDefaultDatabase,
   SQLiteDirPath,
-} from '@/constants/databaseNames';
-import { VersionItem } from './useInstalledBible';
+} from "@/constants/databaseNames";
+import { VersionItem } from "./useInstalledBible";
 
 interface Row {
   [key: string]: any;
@@ -23,7 +23,8 @@ interface Row {
 
 interface UseDatabase {
   database: SQLite.SQLiteDatabase | null;
-  executeSql: (sql: string, params?: any[]) => Promise<Row[]>;
+  // executeSql: (sql: string, params?: any[]) => Promise<Row[]>;
+  executeSql: <T = any>(sql: string, params?: any[]) => Promise<T[]>;
   loading: boolean;
 }
 
@@ -32,8 +33,8 @@ type TUseDatabase = {
 };
 
 enum DEFAULT_DATABASE {
-  BIBLE = 'bible',
-  NTV = 'ntv-bible',
+  BIBLE = "bible",
+  NTV = "ntv-bible",
 }
 
 function useDB({ dbName }: TUseDatabase): UseDatabase {
@@ -50,7 +51,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
     try {
       const startTime = Date.now(); // Start timing
       if (!database) {
-        throw new Error('Database not initialized');
+        throw new Error("Database not initialized");
       }
       const statement = await database.prepareAsync(sql);
       try {
@@ -87,8 +88,8 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
     if (_isDefaultDatabase) {
       let asset =
         dbID === DEFAULT_DATABASE.BIBLE
-          ? Asset.fromModule(require('../assets/db/bible.db'))
-          : Asset.fromModule(require('../assets/db/ntv-bible.db'));
+          ? Asset.fromModule(require("../assets/db/bible.db"))
+          : Asset.fromModule(require("../assets/db/ntv-bible.db"));
 
       if (!asset.downloaded) {
         await asset.downloadAsync();
@@ -134,14 +135,14 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
 
       try {
         // Apply PRAGMA settings for optimization
-        await executeSql('PRAGMA journal_mode = WAL;');
-        await executeSql('PRAGMA synchronous = NORMAL;');
-        await executeSql('PRAGMA temp_store = MEMORY;');
-        await executeSql('PRAGMA cache_size = -10000;');
+        await executeSql("PRAGMA journal_mode = WAL;");
+        await executeSql("PRAGMA synchronous = NORMAL;");
+        await executeSql("PRAGMA temp_store = MEMORY;");
+        await executeSql("PRAGMA cache_size = -10000;");
         // await executeSql('PRAGMA optimize;');
         console.log(`Database optimized successfully.`);
       } catch (error) {
-        console.error('Error optimizing database:', error);
+        console.error("Error optimizing database:", error);
       }
     }
 
@@ -155,7 +156,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
         await executeSql(CREATE_STREAK_TABLE);
         await executeSql(historyQuery.CREATE_TABLE);
       } catch (error) {
-        console.error('Error creating tables:', error);
+        console.error("Error creating tables:", error);
       }
     }
     const checkPragmas = async () => {
@@ -173,7 +174,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
     };
 
     if (database) {
-      if (isDefaultDatabase(dbName?.id || '')) {
+      if (isDefaultDatabase(dbName?.id || "")) {
         optimizeDatabase();
       }
       createTables();

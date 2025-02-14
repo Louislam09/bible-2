@@ -47,8 +47,12 @@ const chooseVerseNumber = () => {
       isHistory: false,
     } as any;
 
-    console.log("verse chopo", isBottomSideSearching);
-    updateBibleQuery({ ...params, isBibleBottom: isBottomSideSearching });
+    console.log("verse choose", isBottomSideSearching);
+    updateBibleQuery({
+      ...params,
+      isBibleBottom: isBottomSideSearching,
+      shouldFetch: true,
+    });
     navigation.navigate(Screens.Home, params);
   };
 

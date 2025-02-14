@@ -26,10 +26,10 @@ import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { DictionaryData, IStrongWord, Screens, TTheme } from "@/types";
 import { Text, View } from "../../Themed";
-import { useBibleChapter } from '@/context/BibleChapterContext';
+import { useBibleChapter } from "@/context/BibleChapterContext";
 
 type HeaderAction = {
-  iconName: IconProps['name'];
+  iconName: IconProps["name"];
   viewStyle: {};
   description: string;
   onAction: () => void;
@@ -69,7 +69,7 @@ const StrongContent: FC<IStrongContent> = ({
   const { code, text: word } = data;
   const { myBibleDB, executeSql } = useDBContext();
   const [values, setValues] = useState<DictionaryData[]>([
-    { definition: '', topic: '' },
+    { definition: "", topic: "" },
   ]);
   const styles = getStyles(theme);
   const [height, setHeight] = useState(DEFAULT_HEIGHT);
@@ -121,7 +121,7 @@ const StrongContent: FC<IStrongContent> = ({
       if (myBibleDB && executeSql) {
         const DictionaryData = await executeSql(
           SEARCH_STRONG_WORD,
-          text.split(',')
+          text.split(",")
         );
         setValues(DictionaryData as DictionaryData[]);
       }
@@ -135,7 +135,7 @@ const StrongContent: FC<IStrongContent> = ({
 
   const onShouldStartLoadWithRequest = (event: ShouldStartLoadRequest) => {
     const { url } = event;
-    if (url.startsWith('b:')) {
+    if (url.startsWith("b:")) {
       const [, bookNumber, chapter, verse] =
         url.match(/b:(\d+) (\d+):(\d+)/) || [];
       const currentBook = DB_BOOK_NAMES.find(
@@ -144,20 +144,20 @@ const StrongContent: FC<IStrongContent> = ({
 
       onClose();
       const queryInfo = {
-        book: currentBook?.longName || 'Mateo',
+        book: currentBook?.longName || "Mateo",
         chapter: +chapter,
         verse: +verse || 0,
       };
-      updateBibleQuery(queryInfo);
+      updateBibleQuery({ ...queryInfo, shouldFetch: true });
       navigation.navigate(Screens.Home, queryInfo);
     }
 
-    if (url.startsWith('s:')) {
-      const strongKeyToSearch = url.replace('s:', '');
+    if (url.startsWith("s:")) {
+      const strongKeyToSearch = url.replace("s:", "");
       if (strongKeyToSearch === text) {
         // handleGoForward();
       }
-      const word = url.replace('s:', '');
+      const word = url.replace("s:", "");
       setBackUrl((prev: any) => [...prev, text]);
       setText(word);
     }
@@ -182,20 +182,20 @@ const StrongContent: FC<IStrongContent> = ({
   const onShare = useCallback(async () => {
     const html = htmlTemplate(values, theme.colors, fontSize, true);
     setSharing(true);
-    await printToFile(html, word?.toUpperCase() || '--');
+    await printToFile(html, word?.toUpperCase() || "--");
     setSharing(false);
   }, [values, word]);
 
   const currentCode = values[0]?.topic;
-  const isH = currentCode?.includes('H');
+  const isH = currentCode?.includes("H");
   const title = extractWord(values[0]?.definition, isH);
 
   const headerActions: HeaderAction[] = useMemo(
     () => [
       {
-        iconName: 'BookA',
+        iconName: "BookA",
         viewStyle: animatedStyle,
-        description: 'Diccionario',
+        description: "Diccionario",
         onAction: () => {
           onClose();
           onDictionary(data.text);
@@ -205,15 +205,15 @@ const StrongContent: FC<IStrongContent> = ({
         },
       },
       {
-        iconName: 'FileSearch2',
+        iconName: "FileSearch2",
         viewStyle: animatedStyle,
-        description: 'Profundizar',
+        description: "Profundizar",
         onAction: onStrongSearchEntire,
       },
       {
-        iconName: sharing ? 'Loader' : 'Share2',
+        iconName: sharing ? "Loader" : "Share2",
         viewStyle: animatedStyle,
-        description: 'Compartir',
+        description: "Compartir",
         onAction: onShare,
       },
     ],
@@ -258,12 +258,12 @@ const StrongContent: FC<IStrongContent> = ({
                 foreground: true,
                 radius: 10,
               }}
-              style={{ alignItems: 'center' }}
+              style={{ alignItems: "center" }}
               onPress={onGoBack}
             >
               <Icon
                 strokeWidth={3}
-                name='ArrowLeft'
+                name="ArrowLeft"
                 size={26}
                 color={theme.colors.text}
               />
@@ -278,15 +278,15 @@ const StrongContent: FC<IStrongContent> = ({
         </View>
         <View style={styles.subHeader}>
           <Text style={[styles.subTitle, { fontSize }]}>
-            {word.replace(/[.,;]/g, '') || '-'} - {title || '-'} {currentCode}
+            {word.replace(/[.,;]/g, "") || "-"} - {title || "-"} {currentCode}
           </Text>
         </View>
       </View>
       <View style={[styles.webviewWrapper]}>
         <WebView
-          style={{ backgroundColor: 'transparent' }}
+          style={{ backgroundColor: "transparent" }}
           ref={webViewRef}
-          originWhitelist={['*']}
+          originWhitelist={["*"]}
           source={{ html: HTML_DATA }}
           onMessage={(event) => {
             const isNumber = !isNaN(+event.nativeEvent.data);
@@ -295,7 +295,7 @@ const StrongContent: FC<IStrongContent> = ({
               return;
             }
             const text = `${event.nativeEvent.data}`;
-            createAndShareTextFile(text, title || '-');
+            createAndShareTextFile(text, title || "-");
           }}
           scrollEnabled
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}

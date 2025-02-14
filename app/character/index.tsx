@@ -6,11 +6,10 @@ import removeAccent from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
-  BackHandler,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -21,7 +20,7 @@ const RenderItem = ({ item, index, theme, onItemClick, styles }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateXAnim = useRef(new Animated.Value(300)).current;
 
-  React.useEffect(() => {
+  useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -48,13 +47,10 @@ const RenderItem = ({ item, index, theme, onItemClick, styles }: any) => {
       ]}
     >
       <TouchableOpacity
-        style={[
-          styles.cardContainer,
-          { backgroundColor: theme.colors.background },
-        ]}
+        style={[styles.cardContainer]}
         onPress={() => onItemClick(item.topic)}
       >
-        <Text>{item.topic}</Text>
+        <Text style={styles.cardTitle}>{item.topic}</Text>
       </TouchableOpacity>
     </Animated.View>
   );
@@ -77,16 +73,16 @@ const Character: React.FC<CharacterProps> = () => {
   const CharacterHeader = () => {
     return (
       <View style={[styles.noteHeader]}>
-        <Text style={[styles.noteListTitle]}>Personajes Biblicos</Text>
+        {/* <Text style={[styles.noteListTitle]}>Personajes Biblicos</Text> */}
         <View style={styles.searchContainer}>
           <Ionicons
             style={styles.searchIcon}
-            name='search'
+            name="search"
             size={24}
             color={theme.colors.notification}
           />
           <TextInput
-            placeholder='Buscar un personaje...'
+            placeholder="Buscar un personaje..."
             style={[styles.noteHeaderSearchInput]}
             onChangeText={(text) => setSearchText(text)}
             value={searchText}
@@ -96,23 +92,23 @@ const Character: React.FC<CharacterProps> = () => {
     );
   };
 
-
   return (
     <View
       style={{
         flex: 1,
         padding: 5,
-        backgroundColor: theme.dark ? theme.colors.background : '#eee',
+        backgroundColor: theme.dark ? theme.colors.background : "#eee",
       }}
+      key={theme.dark + ""}
     >
       {CharacterHeader()}
       <FlashList
         key={schema}
         contentContainerStyle={{
-          backgroundColor: theme.dark ? theme.colors.background : '#eee',
+          backgroundColor: theme.dark ? theme.colors.background : "#eee",
           paddingVertical: 20,
         }}
-        decelerationRate={'normal'}
+        decelerationRate={"normal"}
         estimatedItemSize={135}
         data={
           searchText
@@ -173,7 +169,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       justifyContent: "center",
       paddingHorizontal: 4,
       paddingVertical: 10,
-      marginTop: 40,
       backgroundColor: "transparent",
     },
     noteListTitle: {
@@ -195,7 +190,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       alignItems: "center",
       justifyContent: "space-around",
       borderRadius: 10,
-      marginVertical: 20,
+      // marginVertical: 20,
       borderWidth: 1,
       borderColor: colors.notification,
       borderStyle: "solid",
@@ -221,14 +216,19 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderBottomLeftRadius: 0,
     },
     cardContainer: {
-      display: "flex",
-      borderRadius: 10,
-      backgroundColor: dark ? "#151517" : colors.card,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       padding: 15,
-      margin: 5,
-      elevation: 5,
-      borderColor: "#ddd",
-      borderWidth: 1,
+      marginBottom: 8,
+      borderRadius: 8,
+      backgroundColor: dark ? colors.background : colors.text + 20,
+      borderColor: colors.notification + 50,
+      borderWidth: dark ? 1 : 0,
+    },
+    cardTitle: {
+      fontSize: 16,
+      color: colors.text,
     },
     headerContainer: {
       position: "relative",
@@ -237,12 +237,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       alignItems: "center",
       marginBottom: 8,
       backgroundColor: "transparent",
-    },
-    cardTitle: {
-      fontSize: 18,
-      fontWeight: "600",
-      color: colors.notification,
-      flex: 1,
     },
     cardBody: {
       fontSize: 16,

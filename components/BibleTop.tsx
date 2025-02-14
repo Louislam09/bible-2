@@ -3,7 +3,7 @@ import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import React, { FC } from "react";
 import { Animated, StyleSheet } from "react-native";
 import BookContent from "./home/content";
-import CustomFooter from "./home/footer";
+import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
 
 const BibleTop: FC<any> = (props) => {
@@ -36,7 +36,7 @@ const BibleTop: FC<any> = (props) => {
       <SwipeWrapper {...{ onSwipeRight, onSwipeLeft }}>
         <BookContent isSplit={false} {...props} />
       </SwipeWrapper>
-      <CustomFooter isSplit={false} {...props} />
+      <BibleFooter isSplit={false} {...props} />
     </Animated.View>
   );
 };

@@ -10,7 +10,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { IVerseItem, Screens, TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import removeAccent from "@/utils/removeAccent";
-import { useBibleChapter } from '@/context/BibleChapterContext';
+import { useBibleChapter } from "@/context/BibleChapterContext";
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -25,8 +25,8 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
   const { searchQuery: query } = useBibleContext();
   const flatListRef = useRef<FlashList<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
-  const notFoundSource = require('../../assets/lottie/notFound.json');
-  const searchingSource = require('../../assets/lottie/searching.json');
+  const notFoundSource = require("../../assets/lottie/notFound.json");
+  const searchingSource = require("../../assets/lottie/searching.json");
   const { updateBibleQuery } = useBibleChapter();
 
   const handleScroll = (event: any) => {
@@ -41,7 +41,7 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
       chapter: item.chapter,
       verse: item.verse,
     };
-    updateBibleQuery(queryInfo);
+    updateBibleQuery({ ...queryInfo, shouldFetch: true });
     navigation.navigate(Screens.Home, queryInfo);
   };
 
@@ -70,13 +70,13 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
       <TouchableOpacity
         style={[
           styles.scrollToTopButton,
-          !showScrollToTop && { display: 'none' },
+          !showScrollToTop && { display: "none" },
         ]}
         onPress={() => {
           flatListRef?.current?.scrollToOffset({ animated: true, offset: 0 });
         }}
       >
-        <Icon color={theme.colors.notification} name='ChevronsUp' size={26} />
+        <Icon color={theme.colors.notification} name="ChevronsUp" size={26} />
       </TouchableOpacity>
     );
   };
@@ -85,7 +85,7 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
     <View style={{ flex: 1 }}>
       <FlashList
         ref={flatListRef}
-        decelerationRate={'normal'}
+        decelerationRate={"normal"}
         estimatedItemSize={135}
         data={data}
         renderItem={({ item, index }) => (
@@ -97,7 +97,7 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
               index,
               selected: !query
                 ? []
-                : [...removeAccent(query).trim().split(' ')],
+                : [...removeAccent(query).trim().split(" ")],
             }}
             item={{
               ...item,

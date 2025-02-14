@@ -12,14 +12,14 @@ import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { Text, View } from "./Themed";
 import { useStorage } from "@/context/LocalstoreContext";
 import { showToast } from "@/utils/showToast";
-import { useBibleChapter } from '@/context/BibleChapterContext';
+import { useBibleChapter } from "@/context/BibleChapterContext";
 
 const defaultDailyVerse = {
   book_number: 0,
   chapter: 3,
-  text: 'Oh Jehová, he oído tu palabra, y temí. Oh Jehová, aviva tu obra en medio de los tiempos, En  medio de los tiempos hazla conocer; En la ira acuérdate  de la misericordia.',
+  text: "Oh Jehová, he oído tu palabra, y temí. Oh Jehová, aviva tu obra en medio de los tiempos, En  medio de los tiempos hazla conocer; En la ira acuérdate  de la misericordia.",
   verse: 2,
-  bookName: 'Habacuc',
+  bookName: "Habacuc",
   is_favorite: false,
 };
 
@@ -49,9 +49,9 @@ const DailyVerse = ({ theme, dailyVerseObject }: DailyVerseProps) => {
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(
     dailyVerseObject || defaultDailyVerse
   );
-  const { currentBibleVersion, orientation = 'PORTRAIT' } = useBibleContext();
+  const { currentBibleVersion, orientation = "PORTRAIT" } = useBibleContext();
   const styles = getStyles(theme);
-  const isPortrait = orientation === 'PORTRAIT';
+  const isPortrait = orientation === "PORTRAIT";
   const isDefaultVerse = dailyVerseObject?.bookName;
   const { updateBibleQuery } = useBibleChapter();
 
@@ -84,8 +84,8 @@ const DailyVerse = ({ theme, dailyVerseObject }: DailyVerseProps) => {
 
   const enabledMusic = () => {
     const MESSAGES = {
-      encourage: '¡Presiona una vez más!',
-      success: '🎵 ¡Modo Himnario habilitado! 🎵 ',
+      encourage: "¡Presiona una vez más!",
+      success: "🎵 ¡Modo Himnario habilitado! 🎵 ",
     };
 
     if (countPress < 2) {
@@ -111,7 +111,7 @@ const DailyVerse = ({ theme, dailyVerseObject }: DailyVerseProps) => {
           chapter: dailyVerse.chapter,
           verse: dailyVerse?.verse,
         };
-        updateBibleQuery(queryInfo);
+        updateBibleQuery({ ...queryInfo, shouldFetch: true });
         navigation.navigate(Screens.Home, queryInfo);
       }}
       style={[
@@ -125,10 +125,10 @@ const DailyVerse = ({ theme, dailyVerseObject }: DailyVerseProps) => {
         )}
         <Text style={[styles.verseText]}>
           <MaterialCommunityIcons
-            name='format-quote-open'
+            name="format-quote-open"
             style={[styles.verseQuoteIcon]}
           />
-          {`${dailyVerse?.verse} ${getVerseTextRaw(dailyVerse?.text || '')}`}
+          {`${dailyVerse?.verse} ${getVerseTextRaw(dailyVerse?.text || "")}`}
         </Text>
         <Text
           style={[styles.verseReference]}

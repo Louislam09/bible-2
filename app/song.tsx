@@ -1,24 +1,25 @@
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import { Text } from "@/components/Themed";
-import hymnSong from '@/constants/hymnSong';
+import hymnSong from "@/constants/hymnSong";
 import AlegreSongs from "@/constants/songs";
 import { useBibleContext } from "@/context/BibleContext";
-import { useCustomTheme } from '@/context/ThemeContext';
-import useParams from '@/hooks/useParams';
-import { RootStackScreenProps, TSongItem, TTheme } from '@/types';
-import removeAccent from '@/utils/removeAccent';
+import { useCustomTheme } from "@/context/ThemeContext";
+import useParams from "@/hooks/useParams";
+import { RootStackScreenProps, TSongItem, TTheme } from "@/types";
+import removeAccent from "@/utils/removeAccent";
 // import removeAccent from '@/utils/removeAccent';
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import { Stack, useRouter } from 'expo-router';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Stack, useRouter } from "expo-router";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  View
-} from 'react-native';
+  View,
+} from "react-native";
 
 const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -51,10 +52,7 @@ const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
       ]}
     >
       <TouchableOpacity
-        style={[
-          styles.cardContainer,
-          { backgroundColor: theme.colors.background },
-        ]}
+        style={[styles.cardContainer]}
         onPress={() => onItemClick(item.id)}
       >
         <Text>#{item.title}</Text>
@@ -66,19 +64,22 @@ const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
   );
 };
 
-const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
+const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
   const theme = useTheme();
-  const { isAlegres } = useParams()
+  const { isAlegres } = useParams();
   const { schema } = useCustomTheme();
   const router = useRouter();
-  const Songs = isAlegres ? AlegreSongs : hymnSong
+  const Songs = isAlegres ? AlegreSongs : hymnSong;
   const [filterData, setFilterData] = useState<TSongItem[]>(Songs);
   const [searchText, setSearchText] = useState<any>(null);
   const { orientation } = useBibleContext();
-  const title = useMemo(() => isAlegres ? "Mensajero de\nAlegres Nuevas" : "Himnario de Victoria", [isAlegres])
+  const title = useMemo(
+    () => (isAlegres ? "Mensajero de\nAlegres Nuevas" : "Himnario de Victoria"),
+    [isAlegres]
+  );
 
   const styles = getStyles(theme);
-  const isPortrait = orientation === 'PORTRAIT';
+  const isPortrait = orientation === "PORTRAIT";
 
   const handleSongPress = (songTitle: string) => {
     router.push({ pathname: `/song/${songTitle}?isAlegres=${isAlegres}` });
@@ -87,20 +88,18 @@ const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
   const SongHeader = () => {
     return (
       <View style={[styles.noteHeader, !isPortrait && { paddingTop: 0 }]}>
-        {isPortrait && (
-          <Text style={[styles.noteListTitle]}>
-            {title}
-          </Text>
+        {isPortrait && isAlegres && (
+          <Text style={[styles.noteListTitle]}>{title}</Text>
         )}
         <View style={styles.searchContainer}>
           <Ionicons
             style={styles.searchIcon}
-            name='search'
+            name="search"
             size={24}
             color={theme.colors.notification}
           />
           <TextInput
-            placeholder='Buscar un himno...'
+            placeholder="Buscar un himno..."
             style={[styles.noteHeaderSearchInput]}
             onChangeText={filterSongs}
             // onChangeText={(text) => setSearchText(text)}
@@ -123,7 +122,7 @@ const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
 
     const filtered = Songs.filter((song) => {
       const normalizedTitle = removeAccent(song.title);
-      const normalizedChorus = removeAccent((song.chorus || ""));
+      const normalizedChorus = removeAccent(song.chorus || "");
       const normalizedStanzas = song.stanzas.map((stanza) =>
         removeAccent(stanza)
       );
@@ -140,23 +139,38 @@ const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
 
   return (
     <>
-      <Stack.Screen options={{ headerShown: true, headerTitle: '' }} />
+      <Stack.Screen
+        options={{
+          ...singleScreenHeader({
+            theme,
+            title: isAlegres && isPortrait ? "" : title,
+            titleIcon: "Music4",
+            headerRightProps: {
+              headerRightIcon: "Trash2",
+              headerRightIconColor: "red",
+              onPress: () => console.log(),
+              disabled: true,
+              style: { opacity: 0 },
+            },
+          }),
+        }}
+      />
       <View
         key={orientation + theme.dark}
         style={{
           flex: 1,
           padding: 5,
-          backgroundColor: theme.dark ? theme.colors.background : '#eee',
+          backgroundColor: theme.colors.background,
         }}
       >
         {SongHeader()}
         <FlashList
           key={schema}
           contentContainerStyle={{
-            backgroundColor: theme.dark ? theme.colors.background : '#eee',
+            backgroundColor: theme.colors.background,
             paddingVertical: 20,
           }}
-          decelerationRate={'normal'}
+          decelerationRate={"normal"}
           estimatedItemSize={135}
           data={filterData}
           // renderItem={renderItem as any}
@@ -175,7 +189,7 @@ const Song: React.FC<RootStackScreenProps<'song'> | any> = (props) => {
   );
 };
 
-const getStyles = ({ colors }: TTheme) =>
+const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     verseBody: {
       color: colors.text,
@@ -233,7 +247,6 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       justifyContent: "space-around",
       borderRadius: 10,
-      marginVertical: 20,
       borderWidth: 1,
       borderColor: colors.notification,
       borderStyle: "solid",
@@ -259,17 +272,26 @@ const getStyles = ({ colors }: TTheme) =>
       borderBottomLeftRadius: 0,
     },
     cardContainer: {
-      display: "flex",
-      borderRadius: 10,
-      padding: 15,
-      margin: 5,
-      elevation: 5,
-      borderColor: "#ddd",
-      borderWidth: 1,
+      // display: "flex",
+      // borderRadius: 10,
+      // padding: 15,
+      // margin: 5,
+      // elevation: 5,
+      // borderColor: "#ddd",
+      // borderWidth: 1,
+      // flexDirection: "row",
+      // justifyContent: "space-between",
+      // flexWrap: "wrap",
+      // gap: 5,
       flexDirection: "row",
       justifyContent: "space-between",
-      flexWrap: "wrap",
-      gap: 5,
+      alignItems: "center",
+      padding: 15,
+      marginBottom: 8,
+      borderRadius: 8,
+      backgroundColor: dark ? colors.background : colors.text + 20,
+      borderColor: colors.notification + 50,
+      borderWidth: dark ? 1 : 0,
     },
     headerContainer: {
       position: "relative",

@@ -29,6 +29,8 @@
       "icon": "./assets/images/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
+        "monochromeImage": "./assets/images/adaptive-icon.png",
+        "backgroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#0c3e3d"
       },
       "package": "com.louislam09.bible"

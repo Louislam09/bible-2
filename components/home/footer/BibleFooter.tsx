@@ -13,7 +13,6 @@ import { iconSize } from "@/constants/size";
 import { useBibleChapter } from "@/context/BibleChapterContext";
 import { useStorage } from "@/context/LocalstoreContext";
 import useBibleReader from "@/hooks/useBibleReading";
-import useHistoryManager from "@/hooks/useHistoryManager";
 import useInternetConnection from "@/hooks/useInternetConnection";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
@@ -21,6 +20,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
+
 interface FooterInterface {
   refs: any;
   isSplit?: boolean;
@@ -29,7 +29,7 @@ interface FooterInterface {
   verse: any;
 }
 
-const CustomFooter: FC<FooterInterface> = ({
+const BibleFooter: FC<FooterInterface> = ({
   refs,
   isSplit,
   book: bookProp,
@@ -280,4 +280,4 @@ const CustomFooter: FC<FooterInterface> = ({
   );
 };
 
-export default CustomFooter;
+export default BibleFooter;

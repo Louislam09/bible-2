@@ -1,23 +1,23 @@
-import Icon from '@/components/Icon';
-import { Text, View } from '@/components/Themed';
-import { DB_BOOK_NAMES } from '@/constants/BookNames';
-import { useBibleContext } from '@/context/BibleContext';
-import { useStorage } from '@/context/LocalstoreContext';
-import useParams from '@/hooks/useParams';
+import Icon from "@/components/Icon";
+import { Text, View } from "@/components/Themed";
+import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { useBibleContext } from "@/context/BibleContext";
+import { useStorage } from "@/context/LocalstoreContext";
+import useParams from "@/hooks/useParams";
 import {
   BookIndexes,
   ChooseChapterNumberParams,
   IDBBookNames,
   Screens,
   TTheme,
-} from '@/types';
-import { renameLongBookName } from '@/utils/extractVersesInfo';
-import removeAccent from '@/utils/removeAccent';
-import { useTheme } from '@react-navigation/native';
-import { FlashList, ListRenderItem } from '@shopify/flash-list';
-import { Stack, useNavigation } from 'expo-router';
-import React, { Fragment, useCallback, useState } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+} from "@/types";
+import { renameLongBookName } from "@/utils/extractVersesInfo";
+import removeAccent from "@/utils/removeAccent";
+import { useTheme } from "@react-navigation/native";
+import { FlashList, ListRenderItem } from "@shopify/flash-list";
+import { Stack, useNavigation } from "expo-router";
+import React, { Fragment, useCallback, useState } from "react";
+import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 
 type ChooseBookProps = {};
 
@@ -37,11 +37,11 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
     isBottomSideSearching,
     orientation,
   } = useBibleContext();
-  const isPortrait = orientation === 'PORTRAIT';
+  const isPortrait = orientation === "PORTRAIT";
 
   const title: { [key: string]: string } = {
-    Gn: 'Antiguo Pacto',
-    Mt: 'Nuevo Pacto',
+    Gn: "Antiguo Pacto",
+    Mt: "Nuevo Pacto",
   };
 
   const handlePress = (item: IDBBookNames) => {
@@ -65,9 +65,9 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
       <TouchableOpacity
         style={[
           styles.listItem,
-          isCurrent && { backgroundColor: theme.colors.notification + '60' },
+          isCurrent && { backgroundColor: theme.colors.notification + "60" },
           isNewVow && { backgroundColor: theme.colors.text + 20 },
-          !isShowName && { justifyContent: 'center', height: 'auto' },
+          !isShowName && { justifyContent: "center", height: "auto" },
         ]}
         onPress={() => handlePress(item)}
         activeOpacity={0.7}
@@ -75,17 +75,17 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
         <Text
           style={[
             styles.listTitle,
-            { color: theme.dark ? item.bookColor : '' },
+            { color: theme.dark ? item.bookColor : "" },
           ]}
         >
           {viewLayoutGrid
-            ? item.longName.replace(/\s+/g, '').slice(0, 3)
+            ? item.longName.replace(/\s+/g, "").slice(0, 3)
             : renameLongBookName(item.longName)}
         </Text>
         {isShowName && viewLayoutGrid && (
           <Text
             numberOfLines={1}
-            ellipsizeMode='middle'
+            ellipsizeMode="middle"
             style={styles.subTitle}
           >
             {renameLongBookName(item.longName)}
@@ -101,11 +101,11 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
         options={{
           headerShown: true,
           headerRight: () => (
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TouchableOpacity onPress={() => toggleViewLayoutGrid()}>
                 <Icon
                   style={styles.icon}
-                  name={!viewLayoutGrid ? 'LayoutGrid' : 'List'}
+                  name={!viewLayoutGrid ? "LayoutGrid" : "List"}
                   size={24}
                 />
               </TouchableOpacity>
@@ -115,7 +115,7 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
                   color={
                     isShowName ? theme.colors.notification : theme.colors.text
                   }
-                  name={'ChartNoAxesGantt'}
+                  name={"ChartNoAxesGantt"}
                   size={24}
                 />
               </TouchableOpacity>
@@ -123,10 +123,7 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
           ),
         }}
       />
-      {/* <View
-        key={orientation + theme.dark + isShowName + viewLayoutGrid}
-        style={[styles.container, !isPortrait && { flexDirection: 'row' }]}
-      > */}
+
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.listWrapper}>
           <Text style={styles.sectionTitle}>{title.Gn}</Text>
@@ -149,7 +146,6 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
           />
         </View>
       </ScrollView>
-      {/* </View> */}
     </Fragment>
   );
 };
@@ -163,30 +159,30 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     sectionTitle: {
       fontSize: 22,
-      fontWeight: 'bold',
-      textAlign: 'center',
+      fontWeight: "bold",
+      textAlign: "center",
       marginVertical: 5,
       color: colors.notification,
       backgroundColor: colors.background,
       padding: 15,
-      width: '100%',
+      width: "100%",
     },
     container: {
       flex: 1,
-      position: 'relative',
-      alignItems: 'flex-start',
-      width: '100%',
+      position: "relative",
+      alignItems: "flex-start",
+      width: "100%",
       backgroundColor: dark ? colors.background : colors.text + 20,
     },
     listWrapper: {
-      display: 'flex',
+      display: "flex",
       flex: 1,
-      width: '100%',
-      height: '100%',
+      width: "100%",
+      height: "100%",
     },
     bookImage: {
-      resizeMode: 'contain',
-      position: 'relative',
+      resizeMode: "contain",
+      position: "relative",
       width: 200,
       height: 200,
     },
@@ -194,23 +190,23 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: colors.background,
     },
     listItem: {
-      display: 'flex',
-      borderStyle: 'solid',
+      display: "flex",
+      borderStyle: "solid",
       borderWidth: 1,
       borderColor: colors.text + 10,
       padding: 10,
       flex: 1,
       height: 70,
-      alignItems: 'center',
+      alignItems: "center",
     },
     listViewItem: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      borderStyle: 'solid',
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      borderStyle: "solid",
       borderWidth: 0.19,
-      borderColor: '#4a4949',
+      borderColor: "#4a4949",
 
       borderLeftWidth: 0,
       borderRightWidth: 0,
@@ -222,12 +218,12 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginVertical: 10,
       paddingLeft: 15,
       color: colors.notification,
-      textAlign: 'center',
+      textAlign: "center",
     },
     listTitle: {
       color: colors.text,
       fontSize: 18,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     subTitle: {
       fontSize: 14,
@@ -241,7 +237,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontSize: 20,
     },
     icon: {
-      fontWeight: '900',
+      fontWeight: "900",
       color: colors.text,
       marginHorizontal: 10,
     },

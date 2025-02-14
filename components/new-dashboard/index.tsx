@@ -1,23 +1,23 @@
-import AdditionalResources from '@/components/AdditionalResources';
-import DailyVerseTwo from '@/components/new-dashboard/DailyVerseTwo';
-import MainSection from '@/components/new-dashboard/MainSection';
-import StudyTools from '@/components/new-dashboard/StudyTools';
-import StatusBarBackground from '@/components/StatusBarBackground';
-import { useStorage } from '@/context/LocalstoreContext';
-import { Screens, TTheme } from '@/types';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { useTheme } from '@react-navigation/native';
-import { useNavigation } from 'expo-router';
-import React, { useCallback, useRef } from 'react';
-import { ScrollView, StyleSheet, ToastAndroid } from 'react-native';
-import { IDashboardOption } from '../../app/(dashboard)';
-import BottomModal from '../BottomModal';
-import VoiceList from '../VoiceList';
-import VersionList from '../home/header/VersionList';
-import { useBibleContext } from '@/context/BibleContext';
-import isWithinTimeframe from '@/utils/isWithinTimeframe';
-import useHistoryManager from '@/hooks/useHistoryManager';
-import { useBibleChapter } from '@/context/BibleChapterContext';
+import AdditionalResources from "@/components/AdditionalResources";
+import DailyVerseTwo from "@/components/new-dashboard/DailyVerseTwo";
+import MainSection from "@/components/new-dashboard/MainSection";
+import StudyTools from "@/components/new-dashboard/StudyTools";
+import StatusBarBackground from "@/components/StatusBarBackground";
+import { useStorage } from "@/context/LocalstoreContext";
+import { Screens, TTheme } from "@/types";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useTheme } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
+import React, { useCallback, useRef } from "react";
+import { ScrollView, StyleSheet, ToastAndroid } from "react-native";
+import { IDashboardOption } from "../../app/(dashboard)";
+import BottomModal from "../BottomModal";
+import VoiceList from "../VoiceList";
+import VersionList from "../home/header/VersionList";
+import { useBibleContext } from "@/context/BibleContext";
+import isWithinTimeframe from "@/utils/isWithinTimeframe";
+import useHistoryManager from "@/hooks/useHistoryManager";
+import { useBibleChapter } from "@/context/BibleChapterContext";
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
@@ -33,7 +33,7 @@ const SecondDashboard = () => {
     currentBibleVersion,
     selectBibleVersion,
     clearHighlights,
-    orientation = 'PORTRAIT',
+    orientation = "PORTRAIT",
   } = useBibleContext();
   const { storedData } = useStorage();
 
@@ -60,7 +60,7 @@ const SecondDashboard = () => {
   const onSong = useCallback(() => {
     if (!isSongLyricEnabled) {
       ToastAndroid.show(
-        'Busca 📖 y presiona el nombre del himnario 🔒🔑',
+        "Busca 📖 y presiona el nombre del himnario 🔒🔑",
         ToastAndroid.LONG
       );
       return;
@@ -76,10 +76,10 @@ const SecondDashboard = () => {
   } = (getCurrentItem() as any) || {};
 
   const homePageInitParams = {
-    book: lastHistoryBook || lastBook || 'Génesis',
+    book: lastHistoryBook || lastBook || "Génesis",
     chapter: lastHistoryChapter || lastChapter || 1,
     verse: lastHistoryVerse || lastVerse || 1,
-    bottomSideBook: lastBottomSideBook || 'Génesis',
+    bottomSideBook: lastBottomSideBook || "Génesis",
     bottomSideChapter: lastBottomSideChapter || 1,
     bottomSideVerse: lastBottomSideVerse || 0,
     isTour: false,
@@ -88,20 +88,21 @@ const SecondDashboard = () => {
 
   const mainActionItems: IDashboardOption[] = [
     {
-      icon: 'Crown',
-      label: 'Santa Escritura',
+      icon: "Crown",
+      label: "Santa Escritura",
       action: () => navigation.navigate(Screens.Home, homePageInitParams),
-      tag: 'crown-outline',
+      tag: "crown-outline",
+      // longAction: () => navigation.navigate(Screens.History),
     },
     {
-      icon: 'Music4',
-      label: 'Himnos',
+      icon: "Music4",
+      label: "Himnos",
       isIonicon: true,
       action: onSong,
     },
     {
-      icon: 'Search',
-      label: 'Buscador',
+      icon: "Search",
+      label: "Buscador",
       // @ts-ignore
       action: () => navigation.navigate(Screens.Search, {}),
     },
@@ -109,44 +110,50 @@ const SecondDashboard = () => {
 
   const studyToolItems: IDashboardOption[] = [
     {
-      icon: 'BookA',
-      label: 'Diccionarios',
+      icon: "BookA",
+      label: "Diccionarios",
       action: () =>
-        navigation?.navigate(Screens.DictionarySearch, { word: '' }),
-      color: '#ec899e',
+        navigation?.navigate(Screens.DictionarySearch, { word: "" }),
+      color: "#ec899e",
     },
     {
-      icon: 'SwatchBook',
-      label: 'Concordancia',
+      icon: "SwatchBook",
+      label: "Concordancia",
       action: () => navigation.navigate(Screens.Concordance, {}),
-      color: '#ffffff',
+      color: "#ffffff",
     },
     {
-      icon: 'NotebookText',
-      label: 'Notas',
+      icon: "NotebookText",
+      label: "Notas",
       action: () =>
         navigation.navigate(Screens.Notes, { shouldRefresh: false }),
       color: theme.colors.notification,
     },
     {
-      icon: 'Star',
-      label: 'Favoritos',
+      icon: "Star",
+      label: "Favoritos",
       action: () => navigation.navigate(Screens.Favorite),
-      color: '#fedf75',
+      color: "#fedf75",
     },
     {
-      icon: 'Gamepad',
-      label: 'Quiz Bíblico',
+      icon: "History",
+      label: "Historial",
+      action: () => navigation.navigate(Screens.History),
+      color: "#a9a9a9",
+    },
+    {
+      icon: "Gamepad",
+      label: "Quiz Bíblico",
       action: () => navigation.navigate(Screens.ChooseGame),
-      color: '#75d0fe',
-      isNew: isWithinTimeframe('3d', new Date('2025-02-04')).isActive,
+      color: "#75d0fe",
+      isNew: isWithinTimeframe("3d", new Date("2025-02-04")).isActive,
     },
     {
-      icon: 'Brain',
-      label: 'Momorizar',
+      icon: "Brain",
+      label: "Momorizar",
       action: () => navigation.navigate(Screens.MemorizeVerse),
-      color: '#f1abab',
-      isNew: isWithinTimeframe('1w', new Date('2025-02-04')).isActive,
+      color: "#f1abab",
+      isNew: isWithinTimeframe("1w", new Date("2025-02-04")).isActive,
     },
   ];
 
@@ -166,44 +173,44 @@ const SecondDashboard = () => {
   const additionalResourceList: IAdditionalResourceList = {
     advancedSearch: [
       {
-        icon: 'LayoutGrid',
-        label: 'Lista de Libro',
+        icon: "LayoutGrid",
+        label: "Lista de Libro",
         action: () => navigation.navigate(Screens.ChooseBook, {}),
-        color: '#b76e5b',
+        color: "#b76e5b",
       },
       {
-        icon: 'UserSearch',
-        label: 'Buscar \nPersonaje',
+        icon: "UserSearch",
+        label: "Buscar \nPersonaje",
         isIonicon: true,
         action: () => navigation.navigate(Screens.Character),
-        color: '#cec8ff',
+        color: "#cec8ff",
       },
       {
-        icon: 'AudioLines',
-        label: 'Selecciona \nUna Voz',
+        icon: "AudioLines",
+        label: "Selecciona \nUna Voz",
         action: voiceHandlePresentModalPress,
-        color: '#5bb77b',
+        color: "#5bb77b",
       },
     ],
     manager: [
       {
-        icon: 'MonitorDown',
-        label: 'Modulos',
+        icon: "MonitorDown",
+        label: "Modulos",
         action: () => navigation.navigate(Screens.DownloadManager),
-        color: '#2cc47d',
+        color: "#2cc47d",
       },
       {
-        icon: 'FileStack',
-        label: 'Versiones',
+        icon: "FileStack",
+        label: "Versiones",
         action: versionHandlePresentModalPress,
-        color: '#beeaff',
+        color: "#beeaff",
       },
       {
-        icon: 'Settings',
-        label: 'Ajustes',
+        icon: "Settings",
+        label: "Ajustes",
         isIonicon: true,
         action: () => navigation.navigate(Screens.Settings),
-        color: '#84b75b',
+        color: "#84b75b",
       },
     ],
   };

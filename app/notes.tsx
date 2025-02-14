@@ -1,4 +1,6 @@
-import NotesPage from "@/components/note";
+import ScreenWithAnimation from "@/components/LottieTransitionScreen";
+import Note from "@/components/note";
+import { Text } from "@/components/Themed";
 import { GET_ALL_NOTE } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
 import useParams from "@/hooks/useParams";
@@ -22,11 +24,13 @@ const Notes: React.FC<NotesProps> = ({}) => {
       setData(notes ?? []);
     };
     getNotes();
-
-    return () => {};
   }, [canFetchNote, myBibleDB, executeSql, shouldRefresh]);
 
-  return <NotesPage data={data} setShouldFetch={setCanFetchNote} />;
+  return (
+    <ScreenWithAnimation duration={1000} icon="NotebookPen" title="Mis Notas">
+      <Note data={data} setShouldFetch={setCanFetchNote} />
+    </ScreenWithAnimation>
+  );
 };
 
 export default Notes;

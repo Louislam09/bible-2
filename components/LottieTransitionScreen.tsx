@@ -1,9 +1,9 @@
-import LottieView, { AnimationObject } from 'lottie-react-native';
-import React, { FC, useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
-import { useTheme } from '@react-navigation/native';
-import { icons } from 'lucide-react-native';
-import Icon from './Icon';
+import LottieView, { AnimationObject } from "lottie-react-native";
+import React, { FC, useEffect, useRef, useState } from "react";
+import { Animated, StyleSheet, View } from "react-native";
+import { useTheme } from "@react-navigation/native";
+import { icons } from "lucide-react-native";
+import Icon from "./Icon";
 
 type ScreenWithAnimationProps = {
   /** The child components to render once the animation is complete. */
@@ -79,9 +79,14 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
   }, [opacity, bounceValue, icon, animationSource, duration]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       {isAnimating && (
-        <View style={styles.animationContainer}>
+        <View
+          style={[
+            styles.animationContainer,
+            { backgroundColor: theme.colors.background },
+          ]}
+        >
           {animationSource ? (
             <LottieView
               source={animationSource}
@@ -118,10 +123,10 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
 export default ScreenWithAnimation;
 
 const styles = StyleSheet.create({
-    animationContainer: {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'transparent',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
+  animationContainer: {
+    ...StyleSheet.absoluteFillObject,
+    // backgroundColor: "transparent",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });

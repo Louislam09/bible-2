@@ -2,14 +2,14 @@ import { useBibleContext } from "@/context/BibleContext";
 import React, { FC } from "react";
 import { Animated, StyleSheet } from "react-native";
 import BookContent from "./home/content";
-import CustomFooter from "./home/footer";
+import BibleFooter from "./home/footer/BibleFooter";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import SwipeWrapper from "./SwipeWrapper";
 
 const BibleBottom: FC<any> = (props) => {
   const { navigation } = props;
   const { isSplitActived, orientation } = useBibleContext();
-  const isPortrait = orientation === 'PORTRAIT';
+  const isPortrait = orientation === "PORTRAIT";
 
   const { nextChapter, previousChapter } = useChangeBookOrChapter({
     navigation,
@@ -29,7 +29,7 @@ const BibleBottom: FC<any> = (props) => {
       style={[
         styles.container,
         {
-          [isPortrait ? 'height' : 'width']: isPortrait
+          [isPortrait ? "height" : "width"]: isPortrait
             ? props.height
             : props.wdith,
         },
@@ -39,15 +39,15 @@ const BibleBottom: FC<any> = (props) => {
       <SwipeWrapper {...{ onSwipeRight, onSwipeLeft }}>
         <BookContent isSplit {...props} />
       </SwipeWrapper>
-      <CustomFooter isSplit {...props} />
+      <BibleFooter isSplit {...props} />
     </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    position: 'relative',
-    width: '100%',
+    position: "relative",
+    width: "100%",
   },
 });
 

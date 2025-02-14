@@ -1,14 +1,14 @@
-import { StorageKeys } from '@/constants/StorageKeys';
-import { HistoryItem } from '@/hooks/useHistoryManager';
-import { EBibleVersions, EThemes, SortOption, TFont } from '@/types';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StorageKeys } from "@/constants/StorageKeys";
+import { HistoryItem } from "@/hooks/useHistoryManager";
+import { EBibleVersions, EThemes, SortOption, TFont } from "@/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, {
   createContext,
   ReactNode,
   useContext,
   useEffect,
   useState,
-} from 'react';
+} from "react";
 
 type StoreState = {
   lastBook: string;
@@ -48,7 +48,7 @@ const StorageContext = createContext<StorageContextProps | undefined>(
 export const useStorage = () => {
   const context = useContext(StorageContext);
   if (!context) {
-    throw new Error('useStorage must be used within a StorageProvider');
+    throw new Error("useStorage must be used within a StorageProvider");
   }
   return context;
 };
@@ -58,13 +58,13 @@ interface StorageProviderProps {
 }
 
 const initialContext: StoreState = {
-  lastBook: 'Génesis',
+  lastBook: "Génesis",
   lastChapter: 1,
   lastVerse: 0,
-  lastBottomSideBook: 'Génesis',
+  lastBottomSideBook: "Génesis",
   lastBottomSideChapter: 1,
   lastBottomSideVerse: 0,
-  currentTheme: 'Blue',
+  currentTheme: "Green",
   fontSize: 24,
   selectedFont: TFont.Roboto,
   isDarkMode: true,
@@ -74,7 +74,7 @@ const initialContext: StoreState = {
   isSongLyricEnabled: false,
   songFontSize: 21,
   history: [],
-  currentVoiceIdentifier: 'es-us-x-esd-local',
+  currentVoiceIdentifier: "es-us-x-esd-local",
   currentVoiceRate: 1,
   floatingNoteButtonPosition: { x: 0, y: 0 },
   memorySortOption: SortOption.MostRecent,
@@ -98,7 +98,7 @@ const StorageProvider: React.FC<StorageProviderProps> = ({ children }) => {
           setStoredData((prev) => ({ ...prev, ...parsedData }));
         }
       } catch (error) {
-        console.error('Error loading data from AsyncStorage:', error);
+        console.error("Error loading data from AsyncStorage:", error);
       } finally {
         setDataLoaded(true);
       }
@@ -119,7 +119,7 @@ const StorageProvider: React.FC<StorageProviderProps> = ({ children }) => {
       );
       setStoredData(updatedData);
     } catch (error) {
-      console.error('Error saving data to AsyncStorage:', error);
+      console.error("Error saving data to AsyncStorage:", error);
     }
   };
 
@@ -128,7 +128,7 @@ const StorageProvider: React.FC<StorageProviderProps> = ({ children }) => {
       await AsyncStorage.removeItem(StorageKeys.BIBLE);
       setStoredData(initialContext);
     } catch (error) {
-      console.error('Error clearing data from AsyncStorage:', error);
+      console.error("Error clearing data from AsyncStorage:", error);
     }
   };
 

@@ -1,25 +1,25 @@
-import DAILY_VERSES from '@/constants/dailyVerses';
-import { GET_DAILY_VERSE } from '@/constants/Queries';
-import { useBibleContext } from '@/context/BibleContext';
-import { useDBContext } from '@/context/databaseContext';
-import { useStorage } from '@/context/LocalstoreContext';
-import { IVerseItem, Screens, TTheme } from '@/types';
-import { getVerseTextRaw } from '@/utils/getVerseTextRaw';
-import { showToast } from '@/utils/showToast';
-import { useTheme } from '@react-navigation/native';
-import { useNavigation } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, View } from '../Themed';
-import Icon from '../Icon';
-import { useBibleChapter } from '@/context/BibleChapterContext';
+import DAILY_VERSES from "@/constants/dailyVerses";
+import { GET_DAILY_VERSE } from "@/constants/Queries";
+import { useBibleContext } from "@/context/BibleContext";
+import { useDBContext } from "@/context/databaseContext";
+import { useStorage } from "@/context/LocalstoreContext";
+import { IVerseItem, Screens, TTheme } from "@/types";
+import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { showToast } from "@/utils/showToast";
+import { useTheme } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View } from "../Themed";
+import Icon from "../Icon";
+import { useBibleChapter } from "@/context/BibleChapterContext";
 
 const defaultDailyVerse = {
   book_number: 0,
   chapter: 3,
-  text: 'Oh Jehová, he oído tu palabra, y temí. Oh Jehová, aviva tu obra en medio de los tiempos, En  medio de los tiempos hazla conocer; En la ira acuérdate  de la misericordia.',
+  text: "Oh Jehová, he oído tu palabra, y temí. Oh Jehová, aviva tu obra en medio de los tiempos, En  medio de los tiempos hazla conocer; En la ira acuérdate  de la misericordia.",
   verse: 2,
-  bookName: 'Habacuc',
+  bookName: "Habacuc",
   is_favorite: false,
 };
 
@@ -83,8 +83,8 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
 
   const enabledMusic = () => {
     const MESSAGES = {
-      encourage: '¡Presiona una vez más!',
-      success: '🎵 ¡Modo Himnario habilitado! 🎵 ',
+      encourage: "¡Presiona una vez más!",
+      success: "🎵 ¡Modo Himnario habilitado! 🎵 ",
     };
 
     if (countPress < 2) {
@@ -105,7 +105,7 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
         onPress={() => navigation.navigate(Screens.Onboarding)}
         style={styles.infoIcon}
       >
-        <Icon name={'Info'} size={20} color={'white'} />
+        <Icon name={"Info"} size={20} color={"white"} />
       </TouchableOpacity>
       <View style={styles.header}>
         <Text style={styles.title}>Versículo del día</Text>
@@ -119,7 +119,7 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
               chapter: dailyVerse.chapter,
               verse: dailyVerse?.verse,
             };
-            updateBibleQuery(queryInfo);
+            updateBibleQuery({ ...queryInfo, shouldFetch: true });
             navigation.navigate(Screens.Home, queryInfo);
           }}
           style={styles.verseContainer}
@@ -129,7 +129,7 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
           </Text>
           <Text style={styles.verseText}>{`${
             dailyVerse?.verse
-          } ${getVerseTextRaw(dailyVerse?.text || '')}`}</Text>
+          } ${getVerseTextRaw(dailyVerse?.text || "")}`}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -139,30 +139,30 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     dailyVerseContainer: {
-      backgroundColor: 'transparent',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '100%',
+      backgroundColor: "transparent",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "100%",
       minHeight: 140,
       flex: 1,
       marginTop: 10,
     },
     infoIcon: {
-      position: 'absolute',
+      position: "absolute",
       top: 0,
       right: 0,
       zIndex: 100,
     },
     header: {
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
       marginBottom: 16,
-      alignItems: 'center',
+      alignItems: "center",
     },
     title: {
-      width: '100%',
+      width: "100%",
       color: colors.notification,
       fontSize: 24,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       marginBottom: 8,
     },
     verseContainer: {
@@ -173,15 +173,15 @@ const getStyles = ({ colors }: TTheme) =>
     verseRef: {
       color: colors.text,
       fontSize: 18,
-      fontStyle: 'italic',
-      textAlign: 'center',
-      fontWeight: 'bold',
+      fontStyle: "italic",
+      textAlign: "center",
+      fontWeight: "bold",
     },
     verseText: {
       color: colors.text,
       fontSize: 18,
-      fontStyle: 'italic',
-      textAlign: 'center',
+      fontStyle: "italic",
+      textAlign: "center",
     },
   });
 

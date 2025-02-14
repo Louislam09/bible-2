@@ -1,12 +1,14 @@
-import { historyQuery } from '@/constants/Queries';
-import { useDBContext } from '@/context/databaseContext';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { historyQuery } from "@/constants/Queries";
+import { useDBContext } from "@/context/databaseContext";
+import { format } from "date-fns";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export type HistoryItem = {
   id?: number;
   book: string;
-  verse: number;
   chapter: number;
+  verse: number;
+  created_at?: string;
 };
 
 export type HistoryManager = {
@@ -15,7 +17,8 @@ export type HistoryManager = {
   goForward: () => number;
   getCurrentIndex: () => number;
   getCurrentItem: () => HistoryItem | null;
-  clear: () => void;
+  clear: () => Promise<void>;
+  deleteOne: (id: number) => Promise<void>;
   getHistory: () => HistoryItem[];
   updateVerse: (newVerse: number) => void;
   history: HistoryItem[];
@@ -25,7 +28,6 @@ export type HistoryManager = {
 
 const useHistoryManager = (): HistoryManager => {
   const { executeSql, isMyBibleDbLoaded } = useDBContext();
-  const maxSize = 15;
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [isHistoryInitialized, setIsHistoryInitialized] = useState(false);
   const currentIndexRef = useRef<number>(-1);
@@ -40,12 +42,22 @@ const useHistoryManager = (): HistoryManager => {
     try {
       const results = await executeSql(historyQuery.GET_ALL);
       if (results.length) {
-        setHistory(results);
+        const formattedData = results.map((row) => ({
+          id: row.id,
+          book: row.book,
+          chapter: row.chapter,
+          verse: row.verse,
+          created_at: format(
+            new Date(row.created_at),
+            "MMM dd, yyyy - hh:mm a"
+          ),
+        }));
+        setHistory(formattedData);
         currentIndexRef.current = results.length - 1;
       }
       setIsHistoryInitialized(true);
     } catch (error) {
-      console.error('Error fetching history:', error);
+      console.error("Error fetching history:", error);
     }
   }, [executeSql]);
 
@@ -57,33 +69,34 @@ const useHistoryManager = (): HistoryManager => {
       lastItem?.verse === item.verse;
     if (isSame) return;
 
-    setHistory((prevHistory) => {
-      let newHistory = [...prevHistory];
-
-      // If navigating back, trim future history before adding a new item
-      if (currentIndexRef.current < prevHistory.length - 1) {
-        newHistory = prevHistory.slice(0, currentIndexRef.current + 1);
-      }
-
-      newHistory.push(item);
-
-      // Maintain maxSize limit
-      if (newHistory.length > maxSize) {
-        newHistory.shift();
-      }
-
-      currentIndexRef.current = newHistory.length - 1;
-      return newHistory;
-    });
-
     try {
       await executeSql(historyQuery.INSERT, [
         item.book,
         item.chapter,
         item.verse,
       ]);
+
+      const result = await executeSql(historyQuery.GET_LAST);
+      if (result.length) {
+        const newItem = {
+          id: result[0].id,
+          book: result[0].book,
+          chapter: result[0].chapter,
+          verse: result[0].verse,
+          created_at: format(
+            new Date(result[0].created_at),
+            "MMM dd, yyyy - hh:mm a"
+          ),
+        };
+
+        setHistory((prevHistory) => {
+          let newHistory = [...prevHistory, newItem];
+          currentIndexRef.current = newHistory.length - 1;
+          return newHistory;
+        });
+      }
     } catch (error) {
-      console.error('Error inserting history:', error);
+      console.error("Error inserting history:", error);
     }
   };
 
@@ -106,13 +119,22 @@ const useHistoryManager = (): HistoryManager => {
     history[currentIndexRef.current] || null;
   const getHistory = (): HistoryItem[] => [...history];
 
+  const deleteOne = async (id: number) => {
+    try {
+      await executeSql(historyQuery.DELETE_BY_ID, [id]);
+      setHistory((prev) => prev.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error("Error deleting history item:", error);
+    }
+  };
+
   const clear = async () => {
     setHistory([]);
     currentIndexRef.current = -1;
     try {
       await executeSql(historyQuery.DELETE_ALL);
     } catch (error) {
-      console.error('Error deleting history:', error);
+      console.error("Error deleting history:", error);
     }
   };
 
@@ -134,7 +156,7 @@ const useHistoryManager = (): HistoryManager => {
           history[currentIndex]?.id,
         ]);
       } catch (error) {
-        console.error('Error updating verse:', error);
+        console.error("Error updating verse:", error);
       }
     }
   };
@@ -145,6 +167,7 @@ const useHistoryManager = (): HistoryManager => {
     goForward,
     getCurrentItem,
     clear,
+    deleteOne,
     getHistory,
     history,
     isHistoryInitialized,

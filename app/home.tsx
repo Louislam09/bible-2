@@ -4,7 +4,7 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react';
+} from "react";
 
 import {
   Animated,
@@ -12,29 +12,27 @@ import {
   StyleSheet,
   useWindowDimensions,
   View,
-} from 'react-native';
+} from "react-native";
 
-import { useBibleContext } from '@/context/BibleContext';
+import { useBibleContext } from "@/context/BibleContext";
 
-import BibleBottom from '@/components/BibleBottom';
-import BibleTop from '@/components/BibleTop';
-import BookContentModals from '@/components/book-content-modals';
-import BottomModal from '@/components/BottomModal';
-import CurrentNoteDetail from '@/components/CurrentNoteDetail';
-import FloatingButton from '@/components/FloatingButton';
-import NoteNameList from '@/components/home/NoteNameList';
-import Walkthrough from '@/components/Walkthrough';
-import { useTheme } from '@react-navigation/native';
+import BibleBottom from "@/components/BibleBottom";
+import BibleTop from "@/components/BibleTop";
+import BookContentModals from "@/components/book-content-modals";
+import BottomModal from "@/components/BottomModal";
+import CurrentNoteDetail from "@/components/CurrentNoteDetail";
+import FloatingButton from "@/components/FloatingButton";
+import NoteNameList from "@/components/home/NoteNameList";
+import Walkthrough from "@/components/Walkthrough";
+import { useTheme } from "@react-navigation/native";
 // import CustomHeader from "../components/home/header";
 
-import CustomHeader from '@/components/home/header';
-import StatusBarBackground from '@/components/StatusBarBackground';
-import { useInitialState } from '@/hooks/useInitialState';
-import useParams from '@/hooks/useParams';
-import { useSplitScreen } from '@/hooks/useSplitScreen';
-import { HomeParams, TTheme } from '@/types';
-import { Stack, useNavigation, useRouter } from 'expo-router';
-import { BibleChapterProvider } from '@/context/BibleChapterContext';
+import BibleHeader from "@/components/home/header/BibleHeader";
+import StatusBarBackground from "@/components/StatusBarBackground";
+import { useInitialState } from "@/hooks/useInitialState";
+import { useSplitScreen } from "@/hooks/useSplitScreen";
+import { TTheme } from "@/types";
+import { Stack, useNavigation, useRouter } from "expo-router";
 
 // Constants
 const MIN_SPLIT_SIZE = 200;
@@ -64,7 +62,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
 
   const [stepIndex, setStepIndex] = useState(0);
 
-  const isPortrait = orientation === 'PORTRAIT';
+  const isPortrait = orientation === "PORTRAIT";
   const styles = useMemo(
     () => getStyles(theme, isPortrait),
     [theme, isPortrait]
@@ -96,39 +94,39 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   const tutorialSteps = useMemo<TutorialStep[]>(
     () => [
       {
-        text: '🏠 Toque aquí para ir a la pantalla principal.',
+        text: "🏠 Toque aquí para ir a la pantalla principal.",
         target: componentRefs.dashboard,
       },
       {
-        text: '✂️ Toque aquí para partir la pantalla en dos secciones de escrituras.',
+        text: "✂️ Toque aquí para partir la pantalla en dos secciones de escrituras.",
         target: componentRefs.fav,
       },
       {
-        text: '⏪⏩ Toque las flechas para moverse atras/delante en su historial de busqueda.',
+        text: "⏪⏩ Toque las flechas para moverse atras/delante en su historial de busqueda.",
         target: componentRefs.setting,
       },
       {
-        text: '🔍 Toque aquí para buscar en la escritura.',
+        text: "🔍 Toque aquí para buscar en la escritura.",
         target: componentRefs.search,
       },
       {
-        text: '📑 Toque aquí para cambiar la versión de la escritura.',
+        text: "📑 Toque aquí para cambiar la versión de la escritura.",
         target: componentRefs.bibleVersion,
       },
       {
-        text: '📚 Toque aquí para elegir un libro.',
+        text: "📚 Toque aquí para elegir un libro.",
         target: componentRefs.book,
       },
       {
-        text: '⬅️ Toque aquí para retroceder al capítulo anterior.',
+        text: "⬅️ Toque aquí para retroceder al capítulo anterior.",
         target: componentRefs.back,
       },
       {
-        text: '➡️ Toque aquí para pasar al siguiente capítulo.',
+        text: "➡️ Toque aquí para pasar al siguiente capítulo.",
         target: componentRefs.next,
       },
       {
-        text: '🔊 Toque aquí para escuchar el capítulo.',
+        text: "🔊 Toque aquí para escuchar el capítulo.",
         target: componentRefs.audio,
       },
     ],
@@ -175,9 +173,9 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
     <StatusBarBackground>
       <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
         <Stack.Screen options={{ headerShown: false }} />
-        <CustomHeader refs={componentRefs} />
+        <BibleHeader refs={componentRefs} />
         <View
-          style={[styles.container, !isPortrait && { flexDirection: 'row' }]}
+          style={[styles.container, !isPortrait && { flexDirection: "row" }]}
         >
           <BibleTop
             refs={componentRefs}
@@ -196,14 +194,14 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
             book={initialState.book}
             chapter={initialState.chapter}
           />
-          <FloatingButton iconName='NotebookText' navigation={router}>
+          <FloatingButton iconName="NotebookText" navigation={router}>
             <CurrentNoteDetail />
           </FloatingButton>
 
           <BottomModal
             shouldScroll
             justOneSnap
-            justOneValue={['50%']}
+            justOneValue={["50%"]}
             startAT={0}
             ref={noteListBottomSheetRef}
           >
@@ -226,28 +224,28 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      position: 'relative',
-      width: '100%',
-      height: '100%',
+      position: "relative",
+      width: "100%",
+      height: "100%",
     },
     separator: {
-      position: 'relative',
-      width: '100%',
-      borderColor: 'red',
+      position: "relative",
+      width: "100%",
+      borderColor: "red",
       borderWidth: 1,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
     },
     separatorIcon: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 0,
     },
     slider: {
-      height: isPortrait ? 15 : '100%',
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: isPortrait ? '100%' : 10,
+      height: isPortrait ? 15 : "100%",
+      justifyContent: "center",
+      alignItems: "center",
+      width: isPortrait ? "100%" : 10,
     },
     sliderHandle: {
       width: isPortrait ? 40 : 4,

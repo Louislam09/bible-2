@@ -1,8 +1,8 @@
-import { IAdditionalResourceList } from '@/components/new-dashboard';
-import { TTheme } from '@/types';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Icon from './Icon';
+import { IAdditionalResourceList } from "@/components/new-dashboard";
+import { TTheme } from "@/types";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Icon from "./Icon";
 
 type AdditionalResourcesProps = {
   list: IAdditionalResourceList;
@@ -62,23 +62,22 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginVertical: 4,
       padding: 10,
       borderRadius: 8,
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       height: 55,
     },
     toolIcon: {
-      color: dark ? '#fff' : colors.text,
-      // fontWeight: dark ? 'normal' : '600',
+      color: dark ? "#fff" : colors.text,
       marginRight: 8,
     },
     toolText: {
-      color: dark ? '#fff' : colors.text,
-      // fontWeight: dark ? 'normal' : '600',
-      textAlign: 'left',
+      color: dark ? "#fff" : colors.text,
+      textAlign: "left",
     },
     additionalResources: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      paddingBottom: 30,
     },
     resourceCard: {
       backgroundColor: colors.text + 20,
@@ -90,6 +89,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
     resourceTitle: {
       color: colors.notification,
       marginBottom: 8,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
   });

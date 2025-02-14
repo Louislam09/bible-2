@@ -1,10 +1,10 @@
 import { defaultDatabases } from "@/constants/databaseNames";
 import * as SQLite from "expo-sqlite";
 import useInstalledBibles, { VersionItem } from "@/hooks/useInstalledBible";
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
-import useDatabase from '../hooks/useDatabase';
-import { useStorage } from './LocalstoreContext';
-import useDB from '@/hooks/useDB';
+import React, { createContext, useContext, useEffect, useMemo } from "react";
+import useDatabase from "../hooks/useDatabase";
+import { useStorage } from "./LocalstoreContext";
+import useDB from "@/hooks/useDB";
 
 interface Row {
   [key: string]: any;
@@ -12,7 +12,8 @@ interface Row {
 
 type DatabaseContextType = {
   myBibleDB?: SQLite.SQLiteDatabase | null;
-  executeSql: (sql: string, params?: any[]) => Promise<any[]>;
+  executeSql: <T = any>(sql: string, params?: any[]) => Promise<T[]>;
+  // executeSql: (sql: string, params?: any[]) => Promise<any[]>;
   installedBibles: VersionItem[];
   installedDictionary: VersionItem[];
   isInstallBiblesLoaded: boolean;

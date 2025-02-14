@@ -12,7 +12,6 @@ import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
 import { useBibleChapter } from "@/context/BibleChapterContext";
-import useHistoryManager from "@/hooks/useHistoryManager";
 import useInstalledBibles from "@/hooks/useInstalledBible";
 import useParams from "@/hooks/useParams";
 import { EBibleVersions, HomeParams, Screens, TIcon, TTheme } from "@/types";
@@ -21,13 +20,12 @@ import { useNavigation, useRouter } from "expo-router";
 import ProgressBar from "../footer/ProgressBar";
 import Settings from "./Settings";
 import VersionList from "./VersionList";
-import { showToast } from "@/utils/showToast";
 
 interface HeaderInterface {
   refs: any;
 }
 
-const CustomHeader: FC<HeaderInterface> = ({ refs }) => {
+const BibleHeader: FC<HeaderInterface> = ({ refs }) => {
   const { bibleVersion, search, dashboard, setting, fav } = refs;
   const { width } = useWindowDimensions();
   const {
@@ -277,4 +275,4 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
   });
 
-export default CustomHeader;
+export default BibleHeader;

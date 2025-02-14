@@ -2,14 +2,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
-} from 'react-native';
-import React from 'react';
-import { Text, View } from '../Themed';
-import { IDashboardOption } from '@/app/(dashboard)';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import Icon from '../Icon';
-import { TTheme } from '@/types';
-import { NewFeatureBadge } from '../NewFeatureBadge';
+} from "react-native";
+import React from "react";
+import { Text, View } from "../Themed";
+import { IDashboardOption } from "@/app/(dashboard)";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import Icon from "../Icon";
+import { TTheme } from "@/types";
+import { NewFeatureBadge } from "../NewFeatureBadge";
 
 type MainSectionProps = {
   list: IDashboardOption[];
@@ -30,6 +30,11 @@ const MainSection = ({ list, theme }: MainSectionProps) => {
           style={[styles.card, { width: itemWidth }]}
           key={item.tag + item.label}
           onPress={item.action}
+          onLongPress={
+            item.longAction
+              ? item.longAction
+              : () => console.log("no long action")
+          }
         >
           <Icon name={item.icon as any} size={36} style={[styles.cardIcon]} />
           <Text style={styles.cardText}>{item.label}</Text>
@@ -44,30 +49,30 @@ export default MainSection;
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     mainSection: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      justifyContent: "space-between",
       marginBottom: 16,
-      backgroundColor: 'transparent',
-      width: '100%',
+      backgroundColor: "transparent",
+      width: "100%",
       flex: 1,
     },
     card: {
       backgroundColor: colors.notification,
       flex: 1,
-      maxWidth: '100%',
+      maxWidth: "100%",
       marginHorizontal: 4,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       padding: 16,
       borderRadius: 16,
     },
     cardIcon: {
       fontSize: 32,
-      color: '#fff',
+      color: "#fff",
       marginBottom: 8,
     },
     cardText: {
-      color: '#fff',
-      textAlign: 'center',
+      color: "#fff",
+      textAlign: "center",
     },
   });

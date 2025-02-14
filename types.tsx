@@ -15,9 +15,9 @@ import {
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { IconProps } from "@/components/Icon";
-import { Router } from 'expo-router';
-import { icons } from 'lucide-react-native';
-import { RefObject } from 'react';
+import { Router } from "expo-router";
+import { icons } from "lucide-react-native";
+import { RefObject } from "react";
 
 declare global {
   namespace ReactNavigation {
@@ -26,57 +26,59 @@ declare global {
 }
 
 export enum Screens {
-  Dashboard = '(dashboard)',
-  Settings = 'settings',
-  Home = 'home',
-  Search = '(search)',
-  Concordance = 'concordance',
-  ChooseBook = 'chooseBook',
-  ChooseChapterNumber = 'chooseChapterNumber',
-  ChooseVerseNumber = 'chooseVerseNumber',
-  Favorite = 'favorite',
-  DownloadManager = 'downloadManager',
-  Notes = 'notes',
-  Onboarding = 'onboarding',
-  Character = 'character',
-  Song = 'song',
-  StrongSearchEntire = 'searchStrongWordEntire',
-  DictionarySearch = 'dictionary',
-  NoteDetail = 'noteDetail',
-  Hymn = 'hymn',
-  Game = '(game)',
-  ChooseGame = 'chooseGame',
-  MemorizeVerse = 'memorization/memoryList',
-  VerseId = 'memorization/[verseId]',
-  ChallengeTypeId = 'memorization/[verseId]/challenge/[typeId]',
+  Dashboard = "(dashboard)",
+  Settings = "settings",
+  Home = "home",
+  Search = "(search)",
+  Concordance = "concordance",
+  ChooseBook = "chooseBook",
+  ChooseChapterNumber = "chooseChapterNumber",
+  ChooseVerseNumber = "chooseVerseNumber",
+  Favorite = "favorite",
+  DownloadManager = "downloadManager",
+  Notes = "notes",
+  Onboarding = "onboarding",
+  Character = "character",
+  Song = "song",
+  StrongSearchEntire = "searchStrongWordEntire",
+  DictionarySearch = "dictionary",
+  NoteDetail = "noteDetail",
+  History = "history",
+  Hymn = "hymn",
+  Game = "(game)",
+  ChooseGame = "chooseGame",
+  MemorizeVerse = "memorization/memoryList",
+  VerseId = "memorization/[verseId]",
+  ChallengeTypeId = "memorization/[verseId]/challenge/[typeId]",
 }
 
 type TScreensName = { [key in Screens]: string };
 
 export const ScreensName: TScreensName = {
-  [Screens.Home]: 'Santa Escritura',
-  [Screens.Search]: 'Busqueda',
-  [Screens.Concordance]: 'Concordancia',
-  [Screens.ChooseBook]: 'Libros',
-  [Screens.ChooseChapterNumber]: 'Capitulos',
-  [Screens.ChooseVerseNumber]: 'Versiculos',
-  [Screens.Favorite]: 'Versiculos Favoritos',
-  [Screens.Notes]: 'Notas',
-  [Screens.Dashboard]: 'Dashboard',
-  [Screens.Settings]: 'Ajustes',
-  [Screens.DownloadManager]: 'Gestor de descargas',
-  [Screens.Onboarding]: 'Guia',
-  [Screens.Character]: 'Personaje',
-  [Screens.Song]: 'Himnario',
-  [Screens.StrongSearchEntire]: 'Explorador de Números Strong',
-  [Screens.DictionarySearch]: 'Dictionary Search',
-  [Screens.NoteDetail]: 'Nota',
-  [Screens.Hymn]: 'Selecciona un himnario',
-  [Screens.Game]: 'Juego Biblico',
-  [Screens.ChooseGame]: '',
-  [Screens.MemorizeVerse]: 'Memorizar Verso',
-  [Screens.VerseId]: 'Versiculo',
-  [Screens.ChallengeTypeId]: 'Reto',
+  [Screens.Home]: "Santa Escritura",
+  [Screens.Search]: "Busqueda",
+  [Screens.Concordance]: "Concordancia",
+  [Screens.ChooseBook]: "Libros",
+  [Screens.ChooseChapterNumber]: "Capitulos",
+  [Screens.ChooseVerseNumber]: "Versiculos",
+  [Screens.Favorite]: "Versiculos Favoritos",
+  [Screens.Notes]: "Notas",
+  [Screens.Dashboard]: "Dashboard",
+  [Screens.Settings]: "Ajustes",
+  [Screens.DownloadManager]: "Gestor de descargas",
+  [Screens.Onboarding]: "Guia",
+  [Screens.Character]: "Personaje",
+  [Screens.Song]: "Himnario",
+  [Screens.StrongSearchEntire]: "Explorador de Números Strong",
+  [Screens.DictionarySearch]: "Busqueda en el Diccionario",
+  [Screens.NoteDetail]: "Nota",
+  [Screens.Hymn]: "Selecciona un himnario",
+  [Screens.Game]: "Juego Biblico",
+  [Screens.ChooseGame]: "Seleccionar Juego",
+  [Screens.MemorizeVerse]: "Memorizar Verso",
+  [Screens.VerseId]: "Versiculo",
+  [Screens.ChallengeTypeId]: "Reto",
+  [Screens.History]: "Historial",
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -96,7 +98,8 @@ export type RootTabParamList = {
   favorite: undefined;
   notFound: undefined;
   dictionary: undefined;
-  'memorization/memoryList': undefined;
+  history: undefined;
+  "memorization/memoryList": undefined;
 };
 
 export type RootStackParamList = {
@@ -129,10 +132,11 @@ export type RootStackParamList = {
     | ChooseChapterNumberParams;
   modal: undefined;
   onboarding: undefined;
-  'memorization/memoryList': undefined;
+  "memorization/memoryList": undefined;
   song: { isAlegres: boolean };
-  '(game)': { questionsPerLevel: number };
+  "(game)": { questionsPerLevel: number };
   hymn: undefined;
+  history: undefined;
   notFound: undefined;
 };
 
@@ -187,23 +191,23 @@ export interface IDBBookChapterVerse {
 export type TRoute = RouteProp<ParamListBase>;
 
 export enum TFont {
-  Roboto = 'Roboto',
-  OpenSans = 'OpenSans',
-  Cardo = 'Cardo',
-  Inter = 'Inter',
-  DMSans = 'DMSans',
-  Manrope = 'Manrope',
-  Poppins = 'Poppins',
-  EBGaramond = 'EBGaramond',
-  InterBold = 'InterBold',
-  DMSansBold = 'DMSansBold',
-  ManropeBold = 'ManropeBold',
-  PoppinsBold = 'PoppinsBold',
-  EBGaramondBold = 'EBGaramondBold',
+  Roboto = "Roboto",
+  OpenSans = "OpenSans",
+  Cardo = "Cardo",
+  Inter = "Inter",
+  DMSans = "DMSans",
+  Manrope = "Manrope",
+  Poppins = "Poppins",
+  EBGaramond = "EBGaramond",
+  InterBold = "InterBold",
+  DMSansBold = "DMSansBold",
+  ManropeBold = "ManropeBold",
+  PoppinsBold = "PoppinsBold",
+  EBGaramondBold = "EBGaramondBold",
 }
 export enum EBibleVersions {
-  BIBLE = 'bible',
-  NTV = 'ntv-bible',
+  BIBLE = "bible",
+  NTV = "ntv-bible",
 }
 
 export type DownloadBibleItem = {
@@ -234,8 +238,8 @@ export type TSubtitle = {
 };
 
 export enum OrientationType {
-  'LANDSCAPE',
-  'PORTRAIT',
+  "LANDSCAPE",
+  "PORTRAIT",
 }
 
 export type TNote = {
@@ -343,19 +347,19 @@ export enum BookIndexes {
 }
 
 export enum BookGruop {
-  AntiguoPacto = 'Antiguo Pacto',
-  NuevoPacto = 'Nuevo Pacto',
-  Pentateuco = 'Pentateuco',
-  LibrosHistóricos = 'Libros Históricos',
-  LibrosPoéticos = 'Libros Poéticos',
-  ProfetasMayores = 'Profetas Mayores',
-  ProfetasMenores = 'Profetas Menores',
-  Evangelios = 'Evangelios',
-  Hechos = 'Hechos',
-  Epístolas = 'Epístolas',
-  EpístolasdePablo = 'Epístolas de Pablo',
-  EpístolasGenerales = 'Epístolas Generales',
-  Apocalipsis = 'Apocalipsis',
+  AntiguoPacto = "Antiguo Pacto",
+  NuevoPacto = "Nuevo Pacto",
+  Pentateuco = "Pentateuco",
+  LibrosHistóricos = "Libros Históricos",
+  LibrosPoéticos = "Libros Poéticos",
+  ProfetasMayores = "Profetas Mayores",
+  ProfetasMenores = "Profetas Menores",
+  Evangelios = "Evangelios",
+  Hechos = "Hechos",
+  Epístolas = "Epístolas",
+  EpístolasdePablo = "Epístolas de Pablo",
+  EpístolasGenerales = "Epístolas Generales",
+  Apocalipsis = "Apocalipsis",
 }
 
 export type IFavoriteVerse = {
@@ -375,12 +379,12 @@ export enum EBookIndexesAudio {
   Josué,
   Jueces,
   Rut,
-  '1 Samuel',
-  '2 Samuel',
-  '1 Reyes',
-  '2 Reyes',
-  '1 Crónicas',
-  '2 Crónicas',
+  "1 Samuel",
+  "2 Samuel",
+  "1 Reyes",
+  "2 Reyes",
+  "1 Crónicas",
+  "2 Crónicas",
   Esdras,
   Nehemías,
   Ester,
@@ -388,7 +392,7 @@ export enum EBookIndexesAudio {
   Salmos,
   Proverbios,
   Eclesiastés,
-  'Cantar de los Cantares',
+  "Cantar de los Cantares",
   Isaías,
   Jeremías,
   Lamentaciones,
@@ -410,44 +414,44 @@ export enum EBookIndexesAudio {
   Marcos,
   Lucas,
   Juan,
-  'Hechos de los Apóstoles',
+  "Hechos de los Apóstoles",
   Romanos,
-  '1 Corintios',
-  '2 Corintios',
+  "1 Corintios",
+  "2 Corintios",
   Gálatas,
   Efesios,
   Filipenses,
   Colosenses,
-  '1 Tesalonicenses',
-  '2 Tesalonicenses',
-  '1 Timoteo',
-  '2 Timoteo',
+  "1 Tesalonicenses",
+  "2 Tesalonicenses",
+  "1 Timoteo",
+  "2 Timoteo",
   Tito,
   Filemón,
   Hebreos,
   Santiago,
-  '1 Pedro',
-  '2 Pedro',
-  '1 Juan',
-  '2 Juan',
-  '3 Juan',
+  "1 Pedro",
+  "2 Pedro",
+  "1 Juan",
+  "2 Juan",
+  "3 Juan",
   Judas,
-  'Apocalipsis (de Juan)',
+  "Apocalipsis (de Juan)",
 }
 
 export enum EThemes {
-  BlackWhite = '#000',
-  BlueGray = '#8EACBB',
-  Blue = '#2a7ac6',
-  Green = '#78b0a4',
-  Red = '#FF5252',
-  Orange = '#9f463c',
-  Cyan = '#20acb6',
-  Purple = '#2032ac',
-  Pink = '#aa2c50',
-  BlueLight = '#3b88bf',
-  BlueGreen = '#239db8',
-  PinkLight = '#874a69',
+  BlackWhite = "#000",
+  BlueGray = "#8EACBB",
+  Blue = "#2a7ac6",
+  Green = "#78b0a4",
+  Red = "#FF5252",
+  Orange = "#9f463c",
+  Cyan = "#20acb6",
+  Purple = "#2032ac",
+  Pink = "#aa2c50",
+  BlueLight = "#3b88bf",
+  BlueGreen = "#239db8",
+  PinkLight = "#874a69",
 }
 
 export type TSongItem = {
@@ -479,7 +483,6 @@ export interface ComponentRefs {
   setting: RefObject<any>;
   fav: RefObject<any>;
 }
-
 
 // GAME TYPES
 export interface Question {
@@ -519,28 +522,28 @@ export interface ICardTheme {
 }
 
 export enum QuestionDifficulty {
-  hard = '#f05448',
-  medium = '#fccd0e',
-  easy = '#83cb99',
+  hard = "#f05448",
+  medium = "#fccd0e",
+  easy = "#83cb99",
 }
 export enum QuestionDifficultyKey {
-  hard = 'Dificil',
-  medium = 'Medio',
-  easy = 'Facil',
+  hard = "Dificil",
+  medium = "Medio",
+  easy = "Facil",
 }
 
 export enum SortOption {
-  MostRecent = 'Más reciente',
-  LeastRecent = 'Menos reciente',
-  BiblicalOrder = 'Orden bíblico',
+  MostRecent = "Más reciente",
+  LeastRecent = "Menos reciente",
+  BiblicalOrder = "Orden bíblico",
 }
 
 export enum MemorizationButtonType {
-  Read = 'Leer',
-  Blank = 'Completar',
-  Type = 'Escribir',
-  Locked = 'Bloqueado',
-  Test = 'Prueba',
+  Read = "Leer",
+  Blank = "Completar",
+  Type = "Escribir",
+  Locked = "Bloqueado",
+  Test = "Prueba",
 }
 
 // MEMORIZATION

@@ -3,19 +3,21 @@ import { FlashList } from "@shopify/flash-list";
 import Animation from "@/components/Animation";
 import Icon, { IconProps } from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
-import { Stack, useNavigation } from 'expo-router';
-import React from 'react';
+import { Stack, useNavigation } from "expo-router";
+import React from "react";
 import {
+  ScrollView,
   StyleSheet,
   TouchableWithoutFeedback,
   useWindowDimensions,
-} from 'react-native';
-import { Screens, TTheme } from '@/types';
-import lottieAssets from '@/constants/lottieAssets';
-import ScreenWithAnimation from '@/components/LottieTransitionScreen';
+} from "react-native";
+import { Screens, TTheme } from "@/types";
+import lottieAssets from "@/constants/lottieAssets";
+import ScreenWithAnimation from "@/components/LottieTransitionScreen";
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 
 type IHymnOption = {
-  icon: IconProps['name'];
+  icon: IconProps["name"];
   label: string;
   action: () => void;
   disabled?: boolean;
@@ -23,52 +25,58 @@ type IHymnOption = {
   tag?: string;
 };
 
-const getRandomNumberFromLength = (length: number) => Math.floor(Math.random() * length)
+const getRandomNumberFromLength = (length: number) =>
+  Math.floor(Math.random() * length);
 
 const HymnScreen = () => {
   const theme = useTheme();
   const styles = getStyles(theme);
-  const assets = [...Object.values(lottieAssets)]
-  const pickARandomAsset = assets[getRandomNumberFromLength(assets.length)]
+  const assets = [...Object.values(lottieAssets)];
+  const pickARandomAsset = assets[getRandomNumberFromLength(assets.length)];
   const navigation = useNavigation();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
 
   const options: IHymnOption[] = [
     {
-      icon: 'Music',
-      label: 'Himnario de Victoria',
+      icon: "Music",
+      label: "Himnario de Victoria",
       action: () =>
         navigation.navigate(Screens.Song, {
-          isAlegres: false
+          isAlegres: false,
         }),
     },
     {
-      icon: 'Music2',
-      label: 'Mensajero de Alegres Nuevas',
-      action: () =>
-        navigation.navigate(Screens.Song, { isAlegres: true }),
+      icon: "Music2",
+      label: "Mensajero de Alegres Nuevas",
+      action: () => navigation.navigate(Screens.Song, { isAlegres: true }),
     },
   ];
 
-  const renderItem = ({ item, index }: { item: IHymnOption, index: number }) => (
+  const renderItem = ({
+    item,
+    index,
+  }: {
+    item: IHymnOption;
+    index: number;
+  }) => (
     <TouchableWithoutFeedback
       onPress={item.action}
       style={[
         {
           padding: 0,
           flex: 1,
-          display: 'flex',
+          display: "flex",
           width: SCREEN_WIDTH / 3,
-          alignItems: 'center',
-          justifyContent: 'center',
+          alignItems: "center",
+          justifyContent: "center",
         },
       ]}
       disabled={item.disabled}
     >
-      <View style={[styles.card, item.disabled && { backgroundColor: '#ddd' }]}>
+      <View style={[styles.card, item.disabled && { backgroundColor: "#ddd" }]}>
         <Animation
-          style={{ borderColor: 'red', borderWidth: 1 }}
-          backgroundColor={'transparent'}
+          style={{ borderColor: "red", borderWidth: 1 }}
+          backgroundColor={"transparent"}
           source={assets[index]}
           loop
           size={{ width: 120, height: 120 }}
@@ -79,18 +87,39 @@ const HymnScreen = () => {
   );
 
   return (
-
-    <ScreenWithAnimation title='Himnarios' animationSource={pickARandomAsset} speed={1.5} >
-      <View style={styles.container}>
-        <Stack.Screen options={{ headerShown: true }} />
+    <ScreenWithAnimation
+      title="Himnarios"
+      animationSource={pickARandomAsset}
+      speed={1.5}
+    >
+      <ScrollView style={styles.container}>
+        <Stack.Screen
+          options={{
+            ...singleScreenHeader({
+              theme,
+              title: "Himnarios",
+              titleIcon: "Music",
+              headerRightProps: {
+                headerRightIcon: "Trash2",
+                headerRightIconColor: "red",
+                onPress: () => console.log(),
+                disabled: true,
+                style: { opacity: 0 },
+              },
+            }),
+          }}
+        />
         <View style={styles.imageContainer}>
-          <Text style={styles.subtitle}>Cantad alegres a Dios, {"\n"} habitantes de toda la tierra.{"\n"} Salmos 100:1 </Text>
+          <Text style={styles.subtitle}>
+            Cantad alegres a Dios, {"\n"} habitantes de toda la tierra.{"\n"}{" "}
+            Salmos 100:1{" "}
+          </Text>
           <Animation
-            backgroundColor={'transparent'}
+            backgroundColor={"transparent"}
             source={pickARandomAsset}
             loop
             size={{ width: 220, height: 220 }}
-            style={{ backgrund: 'transparent' }}
+            style={{ backgrund: "transparent" }}
           />
         </View>
         <View style={[styles.optionContainer, { width: SCREEN_WIDTH }]}>
@@ -104,7 +133,7 @@ const HymnScreen = () => {
             numColumns={2}
           />
         </View>
-      </View>
+      </ScrollView>
     </ScreenWithAnimation>
   );
 };
