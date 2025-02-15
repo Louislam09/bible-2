@@ -140,6 +140,7 @@ const SecondDashboard = () => {
       label: "Historial",
       action: () => navigation.navigate(Screens.History),
       color: "#a9a9a9",
+      isNew: isWithinTimeframe("3d", new Date("2025-02-16")).isActive,
     },
     {
       icon: "Gamepad",

@@ -23,21 +23,21 @@ function extractVersesInfo(input: string): VersesInfo {
       bookNumber: parseInt(book, 10),
       chapter: parseInt(chapter, 10),
       verse: parseInt(startVerse, 10),
-      endVerse: endVerse ? parseInt(endVerse, 10) : '', // Handle optional end verse
+      endVerse: endVerse ? parseInt(endVerse, 10) : "", // Handle optional end verse
     };
   } else {
     return {
-      bookNumber: '',
-      chapter: '',
-      verse: '',
-      endVerse: '',
+      bookNumber: "",
+      chapter: "",
+      verse: "",
+      endVerse: "",
     };
   }
 }
 
 export function extractTextFromParagraph(paragraph: string) {
   // Remove all tags and their content
-  return paragraph.replace(/<.*?>/g, '');
+  return paragraph.replace(/<.*?>/g, "").replace(/\s{2,}/g, " ");
 }
 
 export interface WordTagPair {
@@ -62,18 +62,18 @@ export function extractWordsWithTags(text: string): WordTagPair[] {
 
 export const getStrongValue = (text: string) => {
   const textValue = text
-    .replace(/<.*?>.*?<\/.*?>/gi, '+')
-    .split(' ')
-    .filter((x) => x.includes('+'))
-    .map((x) => x.replace('+', ''))
-    .map((x) => (!x ? x.replace('', '-') : x))
-    .map((a) => a.replace('*', '-'))
-    .map((a) => a.replace('?', ''));
+    .replace(/<.*?>.*?<\/.*?>/gi, "+")
+    .split(" ")
+    .filter((x) => x.includes("+"))
+    .map((x) => x.replace("+", ""))
+    .map((x) => (!x ? x.replace("", "-") : x))
+    .map((a) => a.replace("*", "-"))
+    .map((a) => a.replace("?", ""));
   const strongValue = text
     .match(/<S>.*?<\/S>/gi)
-    ?.join(' ')
-    .replace(/<S>|<\/S>/g, '')
-    .split(' ');
+    ?.join(" ")
+    .replace(/<S>|<\/S>/g, "")
+    .split(" ");
 
   return { strongValue, textValue };
 };
@@ -83,7 +83,7 @@ export function parseBibleReferences(_references: string): BibleReference[] {
     _references
       ?.split(/,|y /)
       .map((item) => item.trim())
-      .join(',') || '';
+      .join(",") || "";
   // Regular expression to match:
   // 1. Books with spaces or numbers (e.g., "1 Samuel").
   // 2. Chapter and verse ranges (e.g., "6:13-22").
@@ -105,20 +105,20 @@ export function parseBibleReferences(_references: string): BibleReference[] {
     const [, book, chapter, verse, endVerse] = match;
     return {
       book: book.trim(), // Remove extra spaces
-      chapter: chapter || '',
-      verse: verse || '',
+      chapter: chapter || "",
+      verse: verse || "",
       endVerse: endVerse || null,
     };
   });
 }
 
 export const renameLongBookName = (text: string | undefined) => {
-  return (text || '').replace(
+  return (text || "").replace(
     /^(Hechos de los Apóstoles|Apocalipsis \(de Juan\)|Cantar de los Cantares)/,
     (match) => {
-      if (match.includes('Hechos')) return 'Hechos';
-      if (match.includes('Apocalipsis')) return 'Apocalipsis';
-      if (match.includes('Cantares')) return 'Cantares';
+      if (match.includes("Hechos")) return "Hechos";
+      if (match.includes("Apocalipsis")) return "Apocalipsis";
+      if (match.includes("Cantares")) return "Cantares";
       return match;
     }
   );

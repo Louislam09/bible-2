@@ -20,7 +20,9 @@ import Constants from "expo-constants";
 import { Stack, useRouter } from "expo-router";
 import * as Updates from "expo-updates";
 import { useCallback, useMemo } from "react";
-import { headerIconSize } from '@/constants/size';
+import { headerIconSize } from "@/constants/size";
+import ScreenWithAnimation from "@/components/LottieTransitionScreen";
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 
 const URLS = {
   BIBLE: "market://details?id=com.louislam09.bible",
@@ -60,8 +62,7 @@ type TSection = {
   id?: string;
 };
 
-const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
-}) => {
+const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
   const router = useRouter();
   const theme = useTheme();
   const {
@@ -75,7 +76,10 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
   } = useBibleContext();
   const { toggleTheme, schema } = useCustomTheme();
   const styles = getStyles(theme);
-  const { storedData: { isGridLayout }, saveData } = useStorage();
+  const {
+    storedData: { isGridLayout },
+    saveData,
+  } = useStorage();
 
   const appVersion = Constants.expoVersion ?? Constants.nativeAppVersion;
 
@@ -168,7 +172,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
         action: () => {
           selectFont(font);
         },
-        extraText: 'font',
+        extraText: "font",
       };
     });
   }, []);
@@ -180,109 +184,109 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
   const sections = useMemo(() => {
     const options: TSection[] = [
       {
-        title: 'Configuración',
+        title: "Configuración",
         options: [
           {
-            label: 'Modo Claro / Modo Oscuro',
-            iconName: `${theme.dark ? 'Sun' : 'Moon'}`,
+            label: "Modo Claro / Modo Oscuro",
+            iconName: `${theme.dark ? "Sun" : "Moon"}`,
             action: () => {
               toggleTheme();
             },
-            extraText: 'Cambiar entre el modo claro y el modo oscuro',
+            extraText: "Cambiar entre el modo claro y el modo oscuro",
           },
           {
-            label: 'Buscar Actualización',
-            iconName: 'Download', // Icon for the update button
+            label: "Buscar Actualización",
+            iconName: "Download", // Icon for the update button
             action: checkForUpdate,
-            extraText: 'Verificar si hay actualizaciones de la app',
+            extraText: "Verificar si hay actualizaciones de la app",
           },
         ],
       },
       {
-        title: 'Tipografia',
-        id: 'fontFamily',
+        title: "Tipografia",
+        id: "fontFamily",
         withIcon: true,
         options: [...getFontType()],
       },
       {
-        title: 'Tamaño de Letra',
-        id: 'font',
+        title: "Tamaño de Letra",
+        id: "font",
         withIcon: true,
         options: [
           {
-            label: '',
+            label: "",
             iconName: `AArrowDown`,
             action: () => {
               decreaseFontSize();
             },
-            extraText: '',
+            extraText: "",
           },
           {
             label: fontSize,
             isValue: true,
             iconName: `ChartNoAxesColumn`,
             action: () => {},
-            extraText: '',
+            extraText: "",
           },
           {
-            label: '',
+            label: "",
             iconName: `AArrowUp`,
             action: () => {
               increaseFontSize();
             },
-            extraText: '',
+            extraText: "",
           },
         ],
       },
       {
-        title: 'Temas',
-        id: 'tema',
+        title: "Temas",
+        id: "tema",
         options: [...getColosTheme()],
       },
       {
-        title: 'Más Aplicaciones',
+        title: "Más Aplicaciones",
         options: [
           {
-            label: 'Santa Biblia RV60: Audio',
-            iconName: 'Crown',
+            label: "Santa Biblia RV60: Audio",
+            iconName: "Crown",
             action: () => openAppInStore(URLS.BIBLE),
-            extraText: 'Descárgala y explora la Palabra de Dios.',
+            extraText: "Descárgala y explora la Palabra de Dios.",
           },
           {
-            label: 'Mira Más Apps',
-            iconName: 'Play',
+            label: "Mira Más Apps",
+            iconName: "Play",
             action: () => openAppInStore(URLS.MORE_APPS),
             isFont5: true,
-            extraText: 'Ver todas nuestras aplicaciones',
+            extraText: "Ver todas nuestras aplicaciones",
           },
         ],
       },
       {
-        title: 'Versión',
+        title: "Versión",
         options: [
           {
             label: `Versión ${appVersion}`,
-            iconName: 'Info',
+            iconName: "Info",
             action: () => {}, // No action needed
             extraText: `Fecha de Lanzamiento: Mar 13, 2024`,
           },
         ],
       },
       {
-        title: 'About',
+        title: "About",
         options: [
           {
-            label: 'Contactame',
-            iconName: 'Mail',
+            label: "Contactame",
+            iconName: "Mail",
             action: () => sendEmail(URLS.ME),
-            extraText: 'Envíanos un correo electrónico',
+            extraText: "Envíanos un correo electrónico",
           },
           {
-            label: 'Mira Más Apps',
-            iconName: 'Play',
+            label: "Mira Más Apps",
+            iconName: "Play",
             action: () => openAppInStore(URLS.MORE_APPS),
             isFont5: true,
-            extraText: 'Ver todas nuestras aplicaciones',
+            extraText: "Ver todas nuestras aplicaciones",
           },
         ],
       },
@@ -295,23 +299,23 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
     return (
       <TouchableOpacity
         onPress={item.action}
-        key={item + '+' + index}
+        key={item + "+" + index}
         style={[
           styles.listItem,
-          { backgroundColor: item.iconName, justifyContent: 'center' },
+          { backgroundColor: item.iconName, justifyContent: "center" },
         ]}
       >
         <Text
           style={[
             styles.listItemLabel,
             {
-              color: 'white',
-              fontWeight: 'bold',
+              color: "white",
+              fontWeight: "bold",
             },
-            item.extraText === 'font' && {
-              color: theme.dark ? '#000' : 'white',
+            item.extraText === "font" && {
+              color: theme.dark ? "#000" : "white",
               fontFamily: item.label,
-              fontWeight: '600',
+              fontWeight: "600",
             },
           ]}
         >
@@ -341,7 +345,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
             name={iconName}
             size={30}
             style={[styles.fontIcon]}
-            color={selectedFont === label ? theme.colors.notification : '#000'}
+            color={selectedFont === label ? theme.colors.notification : "#000"}
           />
 
           {label && (
@@ -364,11 +368,10 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
   const SettingSection = ({ title, options, id }: TSection, index: any) => {
     return (
       <View style={styles.sectionContainer} key={index}>
-        <Stack.Screen options={{ headerShown: true }} />
         <Text style={styles.sectionTitle}>{title}</Text>
 
         {id ? (
-          id === 'font' ? (
+          id === "font" ? (
             <View style={[styles.listItem, styles.historyItem]}>
               {options.map(renderFontItem)}
             </View>
@@ -398,16 +401,16 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
             >
               <Text style={[styles.listHistoryLabel]}>
                 {item?.label}
-                {'\n'}
+                {"\n"}
                 <Text style={styles.itemDate}>{item.extraText}</Text>
               </Text>
               <TouchableOpacity>
                 {item.isFont5 ? (
-                  <FontAwesome5 name='google-play' size={26} color={'green'} />
+                  <FontAwesome5 name="google-play" size={26} color={"green"} />
                 ) : (
                   <Icon
                     size={26}
-                    name={item.iconName || 'Sun'}
+                    name={item.iconName || "Sun"}
                     color={item.color || theme.colors.text}
                   />
                 )}
@@ -420,28 +423,38 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({
   };
 
   return (
-    <View key={orientation + theme.dark} style={styles.container}>
-      <ScrollView
-        style={{
-          backgroundColor: theme.colors.background,
-        }}
-      >
-        <Stack.Screen options={{
-          headerRight: () => (
-            <TouchableOpacity onPress={toggleHomeScreen}>
-              <Icon
-                style={[{ marginHorizontal: 10 }]}
-                color={isGridLayout ? '#fff' : theme.colors.notification}
-                name={isGridLayout ? "LayoutGrid" : "LayoutPanelTop"}
-                size={headerIconSize}
-              />
-            </TouchableOpacity>
-          ),
-        }} />
+    <ScreenWithAnimation icon="Settings" title="Ajustes">
+      <View key={orientation + theme.dark} style={styles.container}>
+        <ScrollView
+          style={{
+            backgroundColor: theme.colors.background,
+          }}
+        >
+          <Stack.Screen
+            options={{
+              ...singleScreenHeader({
+                theme,
+                title: "Ajustes",
+                titleIcon: "Settings",
+                headerRightProps: {
+                  headerRightIcon: isGridLayout
+                    ? "LayoutGrid"
+                    : "LayoutPanelTop",
+                  headerRightIconColor: isGridLayout
+                    ? "#fff"
+                    : theme.colors.notification,
+                  onPress: toggleHomeScreen,
+                  disabled: false,
+                  style: { opacity: 1 },
+                },
+              }),
+            }}
+          />
 
-        {sections.map(SettingSection)}
-      </ScrollView>
-    </View>
+          {sections.map(SettingSection)}
+        </ScrollView>
+      </View>
+    </ScreenWithAnimation>
   );
 };
 

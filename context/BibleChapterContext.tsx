@@ -15,7 +15,7 @@ import {
   useState,
 } from "react";
 import { useBibleContext } from "./BibleContext";
-import { HomeParams, IBookVerse, TSubtitle } from "@/types";
+import { HomeParams, IBookVerse, IVerseItem, TSubtitle } from "@/types";
 import useParams from "@/hooks/useParams";
 import useHistoryManager, { HistoryManager } from "@/hooks/useHistoryManager";
 
@@ -129,11 +129,11 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     const startTime = Date.now();
     try {
       const [verses, subtitles] = await Promise.all([
-        executeSql(query.GET_VERSES_BY_BOOK_AND_CHAPTER, [
+        executeSql<IBookVerse>(query.GET_VERSES_BY_BOOK_AND_CHAPTER, [
           currentBook?.bookNumber,
           targetChapter || 1,
         ]),
-        executeSql(query.GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
+        executeSql<TSubtitle>(query.GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
           currentBook?.bookNumber,
           targetChapter || 1,
         ]),

@@ -522,7 +522,7 @@ const Verse: React.FC<VerseProps> = ({
         >
           <Text style={[styles.verseNumber]}>
             {isFavorite && !isVerseHighlisted && (
-              <MaterialCommunityIcons size={14} name="star" color="#ffd41d" />
+              <Icon size={14} name="Star" color="#ffd41d" />
             )}
             &nbsp;{item.verse}&nbsp;
           </Text>
@@ -557,6 +557,7 @@ const Verse: React.FC<VerseProps> = ({
             <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
           )}
         </Animated.Text>
+        {/* ACTIONS */}
         {isVerseHighlisted === item.verse && !!highlightedVersesLenth && (
           <ScrollView
             horizontal

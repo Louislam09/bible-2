@@ -1,19 +1,22 @@
-import SearchHeader from '@/components/search/SearchHeader';
-import StatusBarBackground from '@/components/StatusBarBackground';
-import { Slot, Stack } from 'expo-router';
-import React from 'react';
+import ScreenWithAnimation from "@/components/LottieTransitionScreen";
+import SearchHeader from "@/components/search/SearchHeader";
+import StatusBarBackground from "@/components/StatusBarBackground";
+import { Slot, Stack } from "expo-router";
+import React from "react";
 
 const SearchLayout = () => {
   return (
     <StatusBarBackground>
-      <Stack.Screen
-        options={{
-          headerShown: false,
-          headerTitle: '',
-        }}
-      />
-      <SearchHeader />
-      <Slot />
+      <ScreenWithAnimation icon="Search" title="Buscador">
+        <Stack.Screen
+          options={{
+            headerShown: false,
+            headerTitle: "",
+          }}
+        />
+        <SearchHeader />
+        <Slot />
+      </ScreenWithAnimation>
     </StatusBarBackground>
   );
 };

@@ -1,9 +1,13 @@
 import { IBookVerse } from "@/types";
 
-export const getVerseTextRaw = (text: any = '', addIcon: boolean = false) => {
+export const getVerseTextRaw = (
+  text: any = "",
+  addIcon: boolean = false
+): string => {
   return text
-    .replace(/<.*?>|<\/.*?> |<.*?>.*?<\/.*?>|\[.*?\]/gi, '')
-    .replace(/\d+/g, addIcon ? '🔍' : '');
+    .replace(/<.*?>|<\/.*?> |<.*?>.*?<\/.*?>|\[.*?\]/gi, "")
+    .replace(/\d+/g, addIcon ? "🔍" : "")
+    .replace(/\s{2,}/g, " ");
 };
 
 export const getChapterTextRawForReading = (verses: IBookVerse[] = []) => {
@@ -16,10 +20,10 @@ export const getChapterTextRawForReading = (verses: IBookVerse[] = []) => {
 };
 
 export const getChapterTextRaw = (verses: IBookVerse[] = []) => {
-  const text = [''];
+  const text = [""];
   for (const verse of verses) {
     const rawText = getVerseTextRaw(verse.text);
     text.push(rawText);
   }
-  return text.join('\n');
+  return text.join("\n");
 };
