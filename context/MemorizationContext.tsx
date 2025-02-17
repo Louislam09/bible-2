@@ -4,15 +4,15 @@ import React, {
   useEffect,
   useState,
   ReactNode,
-} from 'react';
-import { useDBContext } from './databaseContext';
+} from "react";
+import { useDBContext } from "./databaseContext";
 import {
   DELETE_VERSE_FROM_MOMORIZATION,
   GET_ALL_MOMORIZATION,
   INSERT_VERSE_TO_MOMORIZATION,
   UPDATE_MOMORIZATION_PROGRESS,
-} from '@/constants/Queries';
-import { showToast } from '@/utils/showToast';
+} from "@/constants/Queries";
+import { showToast } from "@/utils/showToast";
 
 type Memorization = {
   id: number;
@@ -50,20 +50,19 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
       const data = await executeSql(GET_ALL_MOMORIZATION, []);
       setVerses(renameLongBookName(data as any));
     } catch (error) {
-      console.warn('Error refreshVerses:', error);
+      console.warn("Error refreshVerses:", error);
     }
   };
 
   const addVerse = async (verse: string, version: string) => {
     try {
-      const timestamp = Date.now();
       if (!myBibleDB || !executeSql) return;
-      const values = [verse, version, 0, timestamp, timestamp];
+      const values = [verse, version, 0];
       await executeSql(INSERT_VERSE_TO_MOMORIZATION, values);
       await refreshVerses();
-      showToast('Versículo añadido con éxito!');
+      showToast("Versículo añadido con éxito!");
     } catch (error) {
-      console.warn('Error inserting verse:', error);
+      console.warn("Error inserting verse:", error);
     }
   };
 
@@ -73,9 +72,9 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
       const values = [id];
       await executeSql(DELETE_VERSE_FROM_MOMORIZATION, values);
       await refreshVerses();
-      showToast('Versículo eliminado con éxito!');
+      showToast("Versículo eliminado con éxito!");
     } catch (error) {
-      console.warn('Error deleting verse:', error);
+      console.warn("Error deleting verse:", error);
     }
   };
 
@@ -87,7 +86,7 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
       await executeSql(UPDATE_MOMORIZATION_PROGRESS, values);
       refreshVerses();
     } catch (error) {
-      console.warn('Error updating progress:', error);
+      console.warn("Error updating progress:", error);
     }
   };
 
@@ -96,7 +95,7 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
       const currentVerseName = verse.verse.replace(
         /^(Hechos de los Apóstoles|Apocalipsis \(de Juan\))/,
         (match) => {
-          return match.includes('Hechos') ? 'Hechos' : 'Apocalipsis';
+          return match.includes("Hechos") ? "Hechos" : "Apocalipsis";
         }
       );
       verse.verse = currentVerseName;
@@ -123,7 +122,7 @@ export const useMemorization = () => {
   const context = useContext(MemorizationContext);
   if (!context) {
     throw new Error(
-      'useMemorization must be used within a MemorizationProvider'
+      "useMemorization must be used within a MemorizationProvider"
     );
   }
   return context;

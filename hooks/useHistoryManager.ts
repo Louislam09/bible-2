@@ -8,7 +8,7 @@ export type HistoryItem = {
   book: string;
   chapter: number;
   verse: number;
-  created_at?: string;
+  created_at: string;
 };
 
 export type HistoryManager = {
@@ -40,7 +40,7 @@ const useHistoryManager = (): HistoryManager => {
 
   const loadHistory = useCallback(async () => {
     try {
-      const results = await executeSql(historyQuery.GET_ALL);
+      const results = await executeSql<HistoryItem>(historyQuery.GET_ALL);
       if (results.length) {
         const formattedData = results.map((row) => ({
           id: row.id,

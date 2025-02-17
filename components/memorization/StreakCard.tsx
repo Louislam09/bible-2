@@ -1,9 +1,9 @@
-import { TTheme } from '@/types';
-import { useTheme } from '@react-navigation/native';
-import { FlashList, ListRenderItem } from '@shopify/flash-list';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet } from 'react-native';
-import { Text, View } from '../Themed';
+import { TTheme } from "@/types";
+import { useTheme } from "@react-navigation/native";
+import { FlashList, ListRenderItem } from "@shopify/flash-list";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { StyleSheet } from "react-native";
+import { Text, View } from "../Themed";
 
 type StreakDay = { label: string; date: string; active: boolean; id: number };
 
@@ -13,41 +13,18 @@ interface StreakCardProps {
   days: StreakDay[];
 }
 
-const mockDates = [
-  {
-    label: 'Sat',
-    date: '2025-02-01',
-    active: true,
-  },
-  {
-    label: 'Mon',
-    date: '2025-02-03',
-    active: true,
-  },
-  {
-    label: 'Wed',
-    date: '2025-02-05',
-    active: true,
-  },
-  {
-    label: 'Thu',
-    date: '2025-02-06',
-    active: true,
-  },
-];
-
 const generateDateRange = (startDate: string, days: StreakDay[]) => {
   const dates = [];
   const endDate = new Date();
   endDate.setDate(endDate.getDate() + 1);
   const currentDate = new Date(startDate);
   const end = new Date(endDate);
-  const storedStreakDates = days.map((streak) => streak.date);
+  const storedStreakDates = days.map((streak) => streak.date.split(" ")[0]);
 
   while (currentDate <= end) {
-    const date = currentDate.toISOString().split('T')[0];
+    const date = currentDate.toISOString().split("T")[0];
     dates.push({
-      label: currentDate.toUTCString().split(', ')[0],
+      label: currentDate.toUTCString().split(", ")[0],
       date: date,
       active: storedStreakDates.includes(date),
     });
@@ -58,13 +35,13 @@ const generateDateRange = (startDate: string, days: StreakDay[]) => {
 };
 
 const weekdayShorts: { [key: string]: string } = {
-  Mon: 'Lun',
-  Tue: 'Mar',
-  Wed: 'Mié',
-  Thu: 'Jue',
-  Fri: 'Vie',
-  Sat: 'Sáb',
-  Sun: 'Dom',
+  Mon: "Lun",
+  Tue: "Mar",
+  Wed: "Mié",
+  Thu: "Jue",
+  Fri: "Vie",
+  Sat: "Sáb",
+  Sun: "Dom",
 };
 
 const StreakCard: React.FC<StreakCardProps> = ({
@@ -76,7 +53,7 @@ const StreakCard: React.FC<StreakCardProps> = ({
   const steakListRef = useRef<FlashList<any>>(null);
   const [isLayoutMounted, setLayoutMounted] = useState(false);
   const styles = getStyles(theme);
-  const startDate = '2025-02-01';
+  const startDate = "2025-02-01";
   const dayDatas = useMemo(
     () => generateDateRange(startDate, days.reverse()),
     [days]
@@ -93,10 +70,10 @@ const StreakCard: React.FC<StreakCardProps> = ({
       </View>
       <View style={styles.dateContainer}>
         <Text style={[styles.dayDate, active && styles.activeText]}>
-          {date.split('-')[2]}
+          {date.split("-")[2]}
         </Text>
         <Text style={[styles.dayDate, active && styles.activeText]}>
-          {new Date(date).toUTCString().split(' ')[2]}
+          {new Date(date).toUTCString().split(" ")[2]}
         </Text>
       </View>
     </View>
@@ -124,7 +101,7 @@ const StreakCard: React.FC<StreakCardProps> = ({
           ref={steakListRef}
           data={dayDatas}
           onLayout={() => setLayoutMounted(true)}
-          decelerationRate='normal'
+          decelerationRate="normal"
           horizontal
           estimatedItemSize={60}
           renderItem={RenderItem as any}
@@ -142,13 +119,13 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: colors.background,
       paddingVertical: 25,
       borderRadius: 10,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     title: {
       color: colors.text,
       fontSize: 18,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     subtitle: {
       color: colors.text,
@@ -157,39 +134,39 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginBottom: 10,
     },
     daysContainer: {
-      flexDirection: 'row',
-      width: '100%',
+      flexDirection: "row",
+      width: "100%",
     },
     dayContainer: {
-      alignItems: 'center',
+      alignItems: "center",
       marginHorizontal: 10,
     },
     dayCircle: {
       width: 50,
       height: 50,
       borderRadius: 25,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       backgroundColor: colors.background,
       marginBottom: 10,
       borderColor: colors.text + 40,
       borderWidth: 4,
     },
     dayActive: {
-      backgroundColor: '#4CAF50',
-      borderColor: '#4CAF50',
+      backgroundColor: "#4CAF50",
+      borderColor: "#4CAF50",
     },
     dayLabel: {
-      textTransform: 'uppercase',
+      textTransform: "uppercase",
       color: colors.text,
       fontSize: 18,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     activeText: {
-      color: '#fff',
+      color: "#fff",
     },
     dateContainer: {
-      alignItems: 'center',
+      alignItems: "center",
     },
     dayDate: {
       color: colors.text,

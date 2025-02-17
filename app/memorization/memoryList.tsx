@@ -1,46 +1,47 @@
-import Animation from '@/components/Animation';
-import BottomModal from '@/components/BottomModal';
-import CircularProgressBar from '@/components/CircularProgressBar';
-import Icon from '@/components/Icon';
-import ScreenWithAnimation from '@/components/LottieTransitionScreen';
-import StreakCard from '@/components/memorization/StreakCard';
-import SortMemoryList from '@/components/SortList';
-import { Text } from '@/components/Themed';
-import Tooltip from '@/components/Tooltip';
-import { getBookDetail } from '@/constants/BookNames';
-import { headerIconSize } from '@/constants/size';
-import { useBibleContext } from '@/context/BibleContext';
-import { useStorage } from '@/context/LocalstoreContext';
-import { useMemorization } from '@/context/MemorizationContext';
-import { useStreak } from '@/hooks/useStreak';
-import { Memorization, SortOption, TTheme } from '@/types';
-import { formatDateShortDayMonth } from '@/utils/formatDateShortDayMonth';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { useTheme } from '@react-navigation/native';
-import { FlashList, ListRenderItem } from '@shopify/flash-list';
-import { Stack, useRouter } from 'expo-router';
+import Animation from "@/components/Animation";
+import BottomModal from "@/components/BottomModal";
+import CircularProgressBar from "@/components/CircularProgressBar";
+import Icon from "@/components/Icon";
+import ScreenWithAnimation from "@/components/LottieTransitionScreen";
+import StreakCard from "@/components/memorization/StreakCard";
+import SortMemoryList from "@/components/SortList";
+import { Text } from "@/components/Themed";
+import Tooltip from "@/components/Tooltip";
+import { getBookDetail } from "@/constants/BookNames";
+import { headerIconSize } from "@/constants/size";
+import { useBibleContext } from "@/context/BibleContext";
+import { useStorage } from "@/context/LocalstoreContext";
+import { useMemorization } from "@/context/MemorizationContext";
+import { useStreak } from "@/hooks/useStreak";
+import { Memorization, SortOption, TTheme } from "@/types";
+import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useTheme } from "@react-navigation/native";
+import { FlashList, ListRenderItem } from "@shopify/flash-list";
+import { format } from "date-fns";
+import { Stack, useRouter } from "expo-router";
 import {
   Brain,
   ChevronLeft,
   ListFilter,
   Trash2,
   Zap,
-} from 'lucide-react-native';
+} from "lucide-react-native";
 import React, {
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-} from 'react';
+} from "react";
 import {
   StyleSheet,
   TouchableOpacity,
   View,
   Animated,
   Alert,
-} from 'react-native';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
+} from "react-native";
+import Swipeable from "react-native-gesture-handler/Swipeable";
 
 type MemorizationProps = {};
 
@@ -51,7 +52,7 @@ type StatusProps = {
 
 const Status = ({ color, value }: StatusProps) => {
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+    <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
       <View
         style={{
           borderRadius: 50,
@@ -69,10 +70,10 @@ const Streak = ({ color, value }: StatusProps) => {
   return (
     <View
       style={{
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: "row",
+        alignItems: "center",
         gap: 4,
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent",
       }}
     >
       <Zap color={color} size={headerIconSize} />
@@ -113,8 +114,8 @@ const MemoryList: React.FC<MemorizationProps> = () => {
   const { saveData, storedData } = useStorage();
   const { streak, days, bestStreak } = useStreak();
   const styles = getStyles(theme);
-  const sourceMemorization = require('../../assets/lottie/brain.json');
-  const notFoundSource = require('../../assets/lottie/notFound.json');
+  const sourceMemorization = require("../../assets/lottie/brain.json");
+  const notFoundSource = require("../../assets/lottie/notFound.json");
   const { memorySortOption } = storedData;
 
   const stats = useMemo(
@@ -150,14 +151,14 @@ const MemoryList: React.FC<MemorizationProps> = () => {
   const warnBeforeDelete = (item: Memorization) => {
     Alert.alert(
       `Eliminar ${item.verse}`,
-      '¿Estás seguro que quieres eliminar este versículo?',
+      "¿Estás seguro que quieres eliminar este versículo?",
       [
         {
-          text: 'Cancelar',
+          text: "Cancelar",
           onPress: () => swipeableRefs.current.get(item.id)?.close(),
-          style: 'cancel',
+          style: "cancel",
         },
-        { text: 'Eliminar', onPress: () => handleDelete(item.id) },
+        { text: "Eliminar", onPress: () => handleDelete(item.id) },
       ]
     );
   };
@@ -170,7 +171,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
     const translateX = dragX.interpolate({
       inputRange: [-80, 0],
       outputRange: [0, 80],
-      extrapolate: 'extend',
+      extrapolate: "extend",
     });
 
     return (
@@ -179,7 +180,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
           style={styles.deleteButton}
           onPress={() => warnBeforeDelete(item)}
         >
-          <Trash2 size={headerIconSize} color='#fff' />
+          <Trash2 size={headerIconSize} color="#fff" />
         </TouchableOpacity>
       </Animated.View>
     );
@@ -200,7 +201,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
         friction={0.6}
         rightThreshold={150}
         onSwipeableWillOpen={(direction) =>
-          direction === 'right'
+          direction === "right"
             ? warnBeforeDelete(item)
             : console.log(direction)
         }
@@ -208,14 +209,6 @@ const MemoryList: React.FC<MemorizationProps> = () => {
         renderRightActions={(progress, dragX) =>
           renderRightActions(progress, dragX, item)
         }
-        // renderLeftActions={() => (
-        //   <View
-        //     style={[
-        //       styles.deleteButton,
-        //       { backgroundColor: 'blue', width: '70%' },
-        //     ]}
-        //   />
-        // )}
       >
         <TouchableOpacity
           style={styles.verseContainer}
@@ -226,15 +219,16 @@ const MemoryList: React.FC<MemorizationProps> = () => {
             <View style={styles.verseBody}>
               <Text style={styles.verseText}>{item.verse}</Text>
               <View
-                style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}
+                style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
               >
                 <Icon
-                  name='CalendarDays'
+                  name="CalendarDays"
                   size={18}
-                  color={isCompleted ? '#1ce265' : theme.colors.notification}
+                  color={isCompleted ? "#1ce265" : theme.colors.notification}
                 />
                 <Text style={styles.verseDate}>
-                  {formatDateShortDayMonth(item.addedDate)}
+                  {format(new Date(item.addedDate), "MMM dd, yyyy - hh:mm a")}
+                  {/* {formatDateShortDayMonth(item.addedDate)} */}
                 </Text>
               </View>
             </View>
@@ -244,7 +238,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
                 size={70}
                 progress={item.progress}
                 maxProgress={100}
-                color={isCompleted ? '#1ce265' : theme.colors.notification}
+                color={isCompleted ? "#1ce265" : theme.colors.notification}
                 backgroundColor={theme.colors.text + 70}
                 animationDuration={1000}
               >
@@ -269,7 +263,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
     <>
       <ScreenWithAnimation
         speed={1.5}
-        title='Memorizar Versos'
+        title="Memorizar Versos"
         animationSource={sourceMemorization}
       >
         <Stack.Screen
@@ -300,9 +294,9 @@ const MemoryList: React.FC<MemorizationProps> = () => {
               <View
                 style={{
                   gap: 4,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: 'transparent',
+                  flexDirection: "row",
+                  alignItems: "center",
+                  backgroundColor: "transparent",
                 }}
               >
                 <Brain
@@ -318,15 +312,15 @@ const MemoryList: React.FC<MemorizationProps> = () => {
           style={{
             flex: 1,
             padding: 5,
-            backgroundColor: theme.dark ? theme.colors.background : '#eee',
+            backgroundColor: theme.dark ? theme.colors.background : "#eee",
           }}
         >
           <View style={styles.memorizationHeader}>
             <View style={{}}>
               <View
-                style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}
+                style={{ flexDirection: "row", alignItems: "center", gap: 4 }}
               >
-                <Text style={{ fontSize: 18, textTransform: 'capitalize' }}>
+                <Text style={{ fontSize: 18, textTransform: "capitalize" }}>
                   lista de memoria
                 </Text>
                 <Status color={theme.colors.notification} value={data.length} />
@@ -335,11 +329,11 @@ const MemoryList: React.FC<MemorizationProps> = () => {
                 style={{
                   marginTop: 5,
                   gap: 10,
-                  flexDirection: 'row',
-                  alignItems: 'center',
+                  flexDirection: "row",
+                  alignItems: "center",
                 }}
               >
-                <Status color='#18d86b' value={stats.completed} />
+                <Status color="#18d86b" value={stats.completed} />
                 <Status
                   color={theme.colors.text + 90}
                   value={stats.incompleted}
@@ -351,8 +345,8 @@ const MemoryList: React.FC<MemorizationProps> = () => {
                 onPress={() => sortHandlePresentModalPress()}
                 style={{
                   gap: 4,
-                  flexDirection: 'column',
-                  alignItems: 'center',
+                  flexDirection: "column",
+                  alignItems: "center",
                 }}
               >
                 <ListFilter color={theme.colors.text} size={headerIconSize} />
@@ -364,7 +358,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
           <FlashList
             contentContainerStyle={{
               backgroundColor:
-                data.length > 0 ? '#dc2626' : theme.colors.background,
+                data.length > 0 ? "#dc2626" : theme.colors.background,
             }}
             estimatedItemSize={135}
             renderItem={RenderItem as any}
@@ -381,7 +375,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
                   <Text style={{ color: theme.colors.notification }}>
                     ({currentBibleLongName})
                   </Text>
-                  {'\n'}
+                  {"\n"}
                   ¡Empieza a memorizar tus versículos favoritos hoy!
                 </Text>
               </View>
@@ -391,7 +385,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
           <BottomModal
             justOneSnap
             showIndicator
-            justOneValue={['40%']}
+            justOneValue={["40%"]}
             startAT={0}
             style={styles.bottomModal}
             ref={sortRef}
@@ -420,54 +414,54 @@ const MemoryList: React.FC<MemorizationProps> = () => {
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     memorizationHeader: {
-      justifyContent: 'space-between',
+      justifyContent: "space-between",
       gap: 4,
       padding: 10,
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       // borderColor: 'red', borderWidth: 1
     },
     bottomModal: {
-      borderColor: 'transparent',
+      borderColor: "transparent",
       backgroundColor: dark ? colors.background : colors.background,
       // backgroundColor: '#1c1c1e',
-      width: '100%',
+      width: "100%",
     },
     noResultsContainer: {
       flex: 0.7,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'transparent',
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "transparent",
     },
     noResultsText: {
       fontSize: 18,
       color: colors.text,
-      textAlign: 'center',
+      textAlign: "center",
       paddingHorizontal: 10,
     },
     separator: {
       height: 0.3,
-      backgroundColor: '#eeeeee93',
+      backgroundColor: "#eeeeee93",
       marginVertical: 8,
     },
     verseContainer: {
-      borderColor: '#a29f9f',
+      borderColor: "#a29f9f",
       borderTopWidth: 0.3,
       borderBottomWidth: 0.3,
       backgroundColor: colors.background,
     },
     verseItem: {
       flex: 1,
-      alignItems: 'flex-start',
-      justifyContent: 'space-between',
-      flexDirection: 'row',
+      alignItems: "flex-start",
+      justifyContent: "space-between",
+      flexDirection: "row",
       padding: 10,
     },
     verseBody: {
       flex: 1,
-      height: '100%',
-      alignItems: 'flex-start',
-      justifyContent: 'space-around',
+      height: "100%",
+      alignItems: "flex-start",
+      justifyContent: "space-around",
     },
     verseText: {
       fontSize: 18,
@@ -478,15 +472,15 @@ const getStyles = ({ colors, dark }: TTheme) =>
       opacity: 0.7,
     },
     deleteButton: {
-      backgroundColor: '#dc2626',
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: "#dc2626",
+      justifyContent: "center",
+      alignItems: "center",
       width: 80,
-      height: '100%',
+      height: "100%",
     },
     deleteButtonText: {
-      color: 'white',
-      fontWeight: 'bold',
+      color: "white",
+      fontWeight: "bold",
     },
   });
 

@@ -1,5 +1,4 @@
-import { HistoryItem } from './../hooks/useHistoryManager';
-import { EBibleVersions } from '@/types';
+import { EBibleVersions } from "@/types";
 
 export const GET_BOOKS_NAME = `SELECT * FROM books;`;
 export const GET_VERSE_NUMBER_QUERY = `SELECT COUNT(v.verse) AS verse_count
@@ -33,8 +32,8 @@ export const CREATE_NOTE_TABLE = `CREATE TABLE IF NOT EXISTS notes (
 
 export const CREATE_COLUMN_UPDATED_AT_IN_NOTE_TABLE = `ALTER TABLE notes ADD COLUMN updated_at TIMESTAMP;`;
 
-export const INSERT_INTO_NOTE = `INSERT INTO notes (title, note_text) 
-values (?, ?);`;
+export const INSERT_INTO_NOTE = `INSERT INTO notes (title, note_text, created_at, updated_at) 
+values (?, ?, datetime('now', 'localtime'), datetime('now', 'localtime'));`;
 export const INSERT_IMPORTED_INTO_NOTE = `INSERT INTO notes (title, note_text, created_at, updated_at) VALUES (?, ?, ?, ?)`;
 export const GET_NOTE_BY_ID = `SELECT * FROM notes where id = ?`;
 export const GET_ALL_NOTE = `SELECT * FROM notes
@@ -57,7 +56,7 @@ export const DELETE_FAVORITE_VERSE = `DELETE FROM favorite_verses WHERE book_num
 export const DELETE_NOTE = `DELETE FROM notes WHERE id = ?;`;
 export const DELETE_NOTE_ALL = `DELETE FROM notes;`;
 export const UPDATE_NOTE_BY_ID = `UPDATE notes set title = ?, note_text = ?, 
-  updated_at = CURRENT_TIMESTAMP where id = ?`;
+  updated_at = datetime('now', 'localtime') where id = ?`;
 
 export const GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV = `SELECT v.*, 
 CASE 
@@ -171,7 +170,7 @@ export const CREATE_MEMORIZATION_TABLE = `CREATE TABLE IF NOT EXISTS memorizatio
   addedDate INTEGER NOT NULL
 );`;
 export const GET_ALL_MOMORIZATION = `SELECT * FROM memorization;`;
-export const INSERT_VERSE_TO_MOMORIZATION = `INSERT INTO memorization (verse, version, progress, lastPracticed, addedDate) VALUES (?, ?, ?, ?, ?);`;
+export const INSERT_VERSE_TO_MOMORIZATION = `INSERT INTO memorization (verse, version, progress, lastPracticed, addedDate) VALUES (?, ?, ?, datetime('now', 'localtime'), datetime('now', 'localtime'));`;
 export const DELETE_VERSE_FROM_MOMORIZATION = `DELETE FROM memorization WHERE id = ?;`;
 export const UPDATE_MOMORIZATION_PROGRESS = `UPDATE memorization SET progress = ?, lastPracticed = ? WHERE id = ?;`;
 
@@ -179,7 +178,7 @@ export const UPDATE_MOMORIZATION_PROGRESS = `UPDATE memorization SET progress = 
 export const CREATE_STREAK_TABLE = `CREATE TABLE IF NOT EXISTS streaks (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT UNIQUE, streak INTEGER, bestStreak INTEGER);`;
 export const GET_STREAKS = `SELECT * FROM streaks ORDER BY date DESC LIMIT 7;`;
 export const GET_STREAK = `SELECT * FROM streaks ORDER BY date DESC LIMIT 1;`;
-export const UPDATE_STREAK = `INSERT INTO streaks (date, streak, bestStreak) VALUES (?, ?, ?);`;
+export const UPDATE_STREAK = `INSERT INTO streaks (date, streak, bestStreak) VALUES (datetime('now', 'localtime'), ?, ?);`;
 export const DELETE_ALL_STEAKS = `DELETE FROM streaks`;
 export const DELETE_LAST_STREAK = `WITH last_streak AS (
     SELECT id FROM streaks ORDER BY date DESC LIMIT 1
@@ -199,7 +198,7 @@ export const historyQuery = {
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `,
-  INSERT: `INSERT INTO history (book, chapter, verse) VALUES (?, ?, ?);`,
+  INSERT: `INSERT INTO history (book, chapter, verse, created_at) VALUES (?, ?, ?, datetime('now', 'localtime'));`,
   GET_ALL: `SELECT * FROM history ORDER BY created_at DESC;`,
   GET_LAST: `SELECT * FROM history ORDER BY created_at DESC LIMIT 1;`,
   DELETE_ALL: `DELETE FROM history;`,

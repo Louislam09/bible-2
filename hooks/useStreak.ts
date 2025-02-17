@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   GET_STREAKS,
   UPDATE_STREAK,
   DELETE_ALL_STEAKS,
   GET_STREAK,
   DELETE_LAST_STREAK,
-} from '@/constants/Queries';
-import { showToast } from '@/utils/showToast';
-import { useDBContext } from '@/context/databaseContext';
-import { useStorage } from '@/context/LocalstoreContext';
+} from "@/constants/Queries";
+import { showToast } from "@/utils/showToast";
+import { useDBContext } from "@/context/databaseContext";
+import { useStorage } from "@/context/LocalstoreContext";
 
 type StreakDay = { label: string; date: string; active: boolean; id: number };
 
@@ -51,12 +51,12 @@ export const useStreak = (): Streak => {
         const lastDate = new Date(streakData[0].date);
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date().toISOString().split("T")[0];
 
-        if (lastDate.toISOString().split('T')[0] !== today) {
+        if (lastDate.toISOString().split("T")[0] !== today) {
           if (
-            lastDate.toISOString().split('T')[0] !==
-            yesterday.toISOString().split('T')[0]
+            lastDate.toISOString().split("T")[0] !==
+            yesterday.toISOString().split("T")[0]
           ) {
             setStreak(0);
           }
@@ -66,7 +66,7 @@ export const useStreak = (): Streak => {
         setBestStreak(streakData[0].bestStreak);
         setDays(
           streakData.map(({ date, id }, index) => ({
-            label: new Date(date).toUTCString().split(', ')[0],
+            label: new Date(date).toUTCString().split(", ")[0],
             date,
             active: index < streak,
             id,
@@ -74,12 +74,12 @@ export const useStreak = (): Streak => {
         );
       }
     } catch (error) {
-      console.warn('Error refreshing streak:', error);
+      console.warn("Error refreshing streak:", error);
     }
   };
 
   const updateStreak = async () => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split("T")[0];
 
     try {
       if (!myBibleDB || !executeSql) return;
@@ -94,36 +94,35 @@ export const useStreak = (): Streak => {
         yesterday.setDate(yesterday.getDate() - 1);
 
         if (
-          lastDate.toISOString().split('T')[0] ===
-          yesterday.toISOString().split('T')[0]
+          lastDate.toISOString().split("T")[0] ===
+          yesterday.toISOString().split("T")[0]
         ) {
           values = [
-            today,
             lastStreak.streak + 1,
             Math.max(lastStreak.bestStreak, lastStreak.streak + 1),
           ];
         } else {
-          values = [today, 1, Math.max(lastStreak.bestStreak, 1)];
+          values = [1, Math.max(lastStreak.bestStreak, 1)];
         }
       } else {
-        values = [today, 1, 1];
+        values = [1, 1];
       }
 
       if (streaks.length > 0) {
         const lastDate = new Date(streaks[0].date);
-        const isAnotherDay = lastDate.toISOString().split('T')[0] !== today;
+        const isAnotherDay = lastDate.toISOString().split("T")[0] !== today;
         if (isAnotherDay) {
           await executeSql(UPDATE_STREAK, values);
           await refreshStreak();
-          showToast('⚡');
+          showToast("⚡");
         }
       } else {
         await executeSql(UPDATE_STREAK, values);
         await refreshStreak();
-        showToast('⚡');
+        showToast("⚡");
       }
     } catch (error) {
-      console.warn('Error updating streak:', error);
+      console.warn("Error updating streak:", error);
     }
   };
 
@@ -132,9 +131,9 @@ export const useStreak = (): Streak => {
       if (!myBibleDB || !executeSql) return;
       await executeSql(DELETE_ALL_STEAKS, []);
       refreshStreak();
-      showToast('¡Racha reiniciada con éxito!');
+      showToast("¡Racha reiniciada con éxito!");
     } catch (error) {
-      console.warn('Error resetting streak:', error);
+      console.warn("Error resetting streak:", error);
     }
   };
 
@@ -145,7 +144,7 @@ export const useStreak = (): Streak => {
       saveData({ deleteLastStreakNumber: 0 });
       refreshStreak();
     } catch (error) {
-      console.warn('Error resetting streak:', error);
+      console.warn("Error resetting streak:", error);
     }
   };
 

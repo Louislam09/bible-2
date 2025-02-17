@@ -2,12 +2,12 @@ import {
   GET_ALL_NOTE,
   GET_NOTE_BY_ID,
   INSERT_IMPORTED_INTO_NOTE,
-} from '@/constants/Queries';
-import { useDBContext } from '@/context/databaseContext';
-import * as DocumentPicker from 'expo-document-picker';
-import * as FileSystem from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
-import { useState } from 'react';
+} from "@/constants/Queries";
+import { useDBContext } from "@/context/databaseContext";
+import * as DocumentPicker from "expo-document-picker";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
+import { useState } from "react";
 
 type Note = {
   id: number;
@@ -61,8 +61,8 @@ const useNotesExportImport = (): UseNotesExportImport => {
 
       // Create export data with metadata
       const exportData = {
-        version: '1.0',
-        exportDate: new Date().toISOString(),
+        version: "1.0",
+        exportDate: new Date().toString(),
         notes,
       };
 
@@ -76,14 +76,14 @@ const useNotesExportImport = (): UseNotesExportImport => {
       // Share the file
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(fileUri, {
-          mimeType: 'application/json',
-          dialogTitle: 'Export Bible Notes',
-          UTI: 'public.json',
+          mimeType: "application/json",
+          dialogTitle: "Export Bible Notes",
+          UTI: "public.json",
         });
       }
     } catch (err) {
       setError(
-        'Error al exportar notas: ' +
+        "Error al exportar notas: " +
           (err instanceof Error ? err.message : String(err))
       );
     } finally {
@@ -98,7 +98,7 @@ const useNotesExportImport = (): UseNotesExportImport => {
 
       // Pick a document
       const result = await DocumentPicker.getDocumentAsync({
-        type: 'application/json',
+        type: "application/json",
       });
 
       if (result.canceled) {
@@ -113,7 +113,7 @@ const useNotesExportImport = (): UseNotesExportImport => {
 
       // Validate the import data
       if (!importData.version || !Array.isArray(importData.notes)) {
-        throw new Error('Formato de archivo de importación no válido');
+        throw new Error("Formato de archivo de importación no válido");
       }
 
       importData.notes.forEach(async (note: Note) => {
@@ -121,7 +121,7 @@ const useNotesExportImport = (): UseNotesExportImport => {
       });
     } catch (err) {
       setError(
-        'Error al importar notas: ' +
+        "Error al importar notas: " +
           (err instanceof Error ? err.message : String(err))
       );
     } finally {

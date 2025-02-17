@@ -77,30 +77,6 @@ const HistoryScreen = () => {
     </TouchableOpacity>
   );
 
-  if (!isHistoryInitialized) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
-          marginTop: 100,
-        }}
-      >
-        <ActivityIndicator />
-        <Text
-          style={{
-            marginTop: 10,
-            fontSize: 16,
-            color: theme.colors.text,
-          }}
-        >
-          Cargando...
-        </Text>
-      </View>
-    );
-  }
-
   return (
     <ScreenWithAnimation
       duration={800}
@@ -108,36 +84,58 @@ const HistoryScreen = () => {
       title="Historial"
       icon="History"
     >
-      <View style={styles.container} key={theme.dark + ""}>
-        <Stack.Screen
-          options={{
-            ...singleScreenHeader({
-              theme,
-              title: "Historial",
-              titleIcon: "History",
-              headerRightProps: {
-                headerRightIcon: "Trash2",
-                headerRightIconColor: "red",
-                onPress: clearHistory,
-                disabled: !history.length,
-                style: { opacity: !history.length ? 0.2 : 1 },
-              },
-            }),
+      {!isHistoryInitialized ? (
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: 100,
           }}
-        />
+        >
+          <ActivityIndicator />
+          <Text
+            style={{
+              marginTop: 10,
+              fontSize: 16,
+              color: theme.colors.text,
+            }}
+          >
+            Cargando...
+          </Text>
+        </View>
+      ) : (
+        <View style={styles.container} key={theme.dark + ""}>
+          <Stack.Screen
+            options={{
+              ...singleScreenHeader({
+                theme,
+                title: "Historial",
+                titleIcon: "History",
+                headerRightProps: {
+                  headerRightIcon: "Trash2",
+                  headerRightIconColor: "red",
+                  onPress: clearHistory,
+                  disabled: !history.length,
+                  style: { opacity: !history.length ? 0.2 : 1 },
+                },
+              }),
+            }}
+          />
 
-        <FlashList
-          data={history.reverse()}
-          keyExtractor={(item) => (item.id as number).toString()}
-          renderItem={renderItem}
-          estimatedItemSize={60}
-          ListEmptyComponent={() => (
-            <View style={styles.emptyContainer}>
-              <Text style={styles.emptyText}>No se encontró historial</Text>
-            </View>
-          )}
-        />
-      </View>
+          <FlashList
+            data={history.reverse()}
+            keyExtractor={(item) => (item.id as number).toString()}
+            renderItem={renderItem}
+            estimatedItemSize={60}
+            ListEmptyComponent={() => (
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>No se encontró historial</Text>
+              </View>
+            )}
+          />
+        </View>
+      )}
     </ScreenWithAnimation>
   );
 };

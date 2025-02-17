@@ -187,6 +187,7 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
           book: bookValue,
           chapter: chapterValue,
           verse: verseValue,
+          created_at: "",
         });
       }
       setBibleQuery((prev) => ({ ...prev, isHistory: false }));
