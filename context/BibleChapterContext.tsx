@@ -3,7 +3,10 @@ import { getDatabaseQueryKey } from "@/constants/databaseNames";
 import { QUERY_BY_DB } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
 import { useStorage } from "@/context/LocalstoreContext";
+import useHistoryManager, { HistoryManager } from "@/hooks/useHistoryManager";
+import useParams from "@/hooks/useParams";
 import useReadingTime from "@/hooks/useReadTime";
+import { HomeParams, IBookVerse, TSubtitle } from "@/types";
 import { getChapterTextRaw } from "@/utils/getVerseTextRaw";
 import {
   createContext,
@@ -15,9 +18,6 @@ import {
   useState,
 } from "react";
 import { useBibleContext } from "./BibleContext";
-import { HomeParams, IBookVerse, IVerseItem, TSubtitle } from "@/types";
-import useParams from "@/hooks/useParams";
-import useHistoryManager, { HistoryManager } from "@/hooks/useHistoryManager";
 
 interface BibleData {
   verses: IBookVerse[];
@@ -129,14 +129,16 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     const startTime = Date.now();
     try {
       const [verses, subtitles] = await Promise.all([
-        executeSql<IBookVerse>(query.GET_VERSES_BY_BOOK_AND_CHAPTER, [
-          currentBook?.bookNumber,
-          targetChapter || 1,
-        ]),
-        executeSql<TSubtitle>(query.GET_SUBTITLE_BY_BOOK_AND_CHAPTER, [
-          currentBook?.bookNumber,
-          targetChapter || 1,
-        ]),
+        executeSql<IBookVerse>(
+          query.GET_VERSES_BY_BOOK_AND_CHAPTER,
+          [currentBook?.bookNumber, targetChapter || 1],
+          "verses"
+        ),
+        executeSql<TSubtitle>(
+          query.GET_SUBTITLE_BY_BOOK_AND_CHAPTER,
+          [currentBook?.bookNumber, targetChapter || 1],
+          "subtitles"
+        ),
       ]);
       const endTime = Date.now();
       const executionTime = endTime - startTime;
@@ -212,7 +214,8 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     if (!isMyBibleDbLoaded) return;
     if (!bibleQuery.shouldFetch) return;
     fetchChapter();
-  }, [bibleQuery.shouldFetch, isMyBibleDbLoaded]);
+    // setTimeout(fetchChapter, 0);
+  }, [bibleQuery.shouldFetch, bibleQuery.chapter, isMyBibleDbLoaded]);
 
   const contextValue = useMemo(
     () => ({

@@ -2,7 +2,7 @@ import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
 import useAudioPlayer from "@/hooks/useAudioPlayer";
 import { EBibleVersions, Screens } from "@/types";
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 import { FC, useCallback, useEffect, useRef } from "react";
 import { Animated, TouchableOpacity } from "react-native";
 
@@ -14,9 +14,11 @@ import { useBibleChapter } from "@/context/BibleChapterContext";
 import { useStorage } from "@/context/LocalstoreContext";
 import useBibleReader from "@/hooks/useBibleReading";
 import useInternetConnection from "@/hooks/useInternetConnection";
+import useParams from "@/hooks/useParams";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useNavigation } from "expo-router";
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
@@ -54,7 +56,7 @@ const BibleFooter: FC<FooterInterface> = ({
   const styles = getStyles(theme);
   const playRef = useRef<BottomSheetModal>(null);
   const navigation = useNavigation();
-  const route = useRoute();
+  const params = useParams();
   const {
     data: { verses },
     bibleQuery,
@@ -164,12 +166,12 @@ const BibleFooter: FC<FooterInterface> = ({
   const onSingleFooterTitle = () => {
     clearHighlights();
     toggleBottomSideSearching(isSplit as boolean);
-    navigation?.navigate(Screens.ChooseBook, { ...route.params });
+    navigation?.navigate(Screens.ChooseBook, { ...params });
   };
   const onDoubleFooterTitle = () => {
     clearHighlights();
     toggleBottomSideSearching(isSplit as boolean);
-    navigation?.navigate(Screens.ChooseChapterNumber, { ...route.params });
+    navigation?.navigate(Screens.ChooseChapterNumber, { ...params });
   };
 
   const onPress = useSingleAndDoublePress({
@@ -181,7 +183,7 @@ const BibleFooter: FC<FooterInterface> = ({
   const onLongFooterTitle = () => {
     clearHighlights();
     toggleBottomSideSearching(isSplit as boolean);
-    navigation?.navigate(Screens.ChooseChapterNumber, { ...route.params });
+    navigation?.navigate(Screens.ChooseChapterNumber, { ...params });
   };
 
   const playHandlePresentModalPress = useCallback(() => {

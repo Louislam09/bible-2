@@ -1,18 +1,17 @@
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import OptimizedChapterList from "@/components/optimized-chapter-list";
+import { View } from "@/components/Themed";
 import { DB_BOOK_CHAPTER_VERSES, DB_BOOK_NAMES } from "@/constants/BookNames";
+import { BOOK_IMAGES } from "@/constants/Images";
+import { useBibleChapter } from "@/context/BibleChapterContext";
 import { useBibleContext } from "@/context/BibleContext";
 import useParams from "@/hooks/useParams";
 import { ChooseChapterNumberParams, Screens, TTheme } from "@/types";
-import ChooseFromListScreen from "@/components/chooseFromListScreen";
+import { renameLongBookName } from "@/utils/extractVersesInfo";
+import { useTheme } from "@react-navigation/native";
 import { Stack, useNavigation } from "expo-router";
 import { Fragment, useMemo } from "react";
-import { Image, StyleSheet, TouchableOpacity } from "react-native";
-import { useTheme } from "@react-navigation/native";
-import { renameLongBookName } from "@/utils/extractVersesInfo";
-import { FlashList, ListRenderItem } from "@shopify/flash-list";
-import { Text, View } from "@/components/Themed";
-import { BOOK_IMAGES } from "@/constants/Images";
-import { useStorage } from "@/context/LocalstoreContext";
-import { useBibleChapter } from "@/context/BibleChapterContext";
+import { StyleSheet } from "react-native";
 
 const chooseVerseNumber = () => {
   const routeParam = useParams<ChooseChapterNumberParams>();
@@ -22,23 +21,23 @@ const chooseVerseNumber = () => {
   const selectedChapter = isBottomSideSearching ? bottomSideChapter : chapter;
   const navigation = useNavigation();
   const theme = useTheme();
-  const styles = getStyles(theme);
   const displayBookName = renameLongBookName(selectedBook || "");
   const { updateBibleQuery } = useBibleChapter();
 
-  const bookNumber = DB_BOOK_NAMES.find(
-    (bookItem) => bookItem.longName === selectedBook
-  )?.bookNumber;
-
-  const verseCount = DB_BOOK_CHAPTER_VERSES.find(
-    (bookItem) =>
-      bookItem.bookNumber === bookNumber &&
-      bookItem.chapterNumber === selectedChapter
-  )?.verseCount;
-
   const numberOfVerses = useMemo(() => {
-    return new Array(verseCount).fill(0).map((_, index) => index + 1);
-  }, [verseCount]);
+    const bookNumber = DB_BOOK_NAMES.find(
+      (bookItem) => bookItem.longName === selectedBook
+    )?.bookNumber;
+
+    const verseCount =
+      DB_BOOK_CHAPTER_VERSES.find(
+        (bookItem) =>
+          bookItem.bookNumber === bookNumber &&
+          bookItem.chapterNumber === selectedChapter
+      )?.verseCount || 0;
+
+    return Array.from({ length: verseCount }, (_, index) => index + 1);
+  }, [selectedBook, selectedChapter]);
 
   const handlePress = (item: number) => {
     const params = {
@@ -50,49 +49,36 @@ const chooseVerseNumber = () => {
     updateBibleQuery({
       ...params,
       isBibleBottom: isBottomSideSearching,
-      shouldFetch: true,
     });
     navigation.navigate(Screens.Home, params);
   };
 
-  const renderItem: ListRenderItem<number> = ({ item, index }) => {
-    return (
-      <TouchableOpacity
-        style={styles.listItem}
-        onPress={() => handlePress(item)}
-        activeOpacity={0.7}
-      >
-        <Text style={[styles.listTitle]}>{item}</Text>
-      </TouchableOpacity>
-    );
-  };
-
   return (
     <Fragment>
-      <Stack.Screen options={{ headerShown: true }} />
-      <View style={styles.listWrapper}>
-        {selectedBook && (
-          <Image
-            style={[styles.bookImage]}
-            source={{
-              uri: BOOK_IMAGES[selectedBook ?? "Génesis"],
-            }}
-            alt={selectedBook}
-          />
-        )}
-        {selectedBook && (
-          <Text style={styles.listChapterTitle}>
-            {displayBookName} {chapter}
-          </Text>
-        )}
-      </View>
-      <FlashList
-        contentContainerStyle={styles.flatContainer}
-        data={numberOfVerses}
-        renderItem={renderItem}
-        estimatedItemSize={50}
-        numColumns={numberOfVerses.length > 12 ? 5 : 3}
+      <Stack.Screen
+        options={{
+          ...singleScreenHeader({
+            theme,
+            title: "Versiculos",
+            titleIcon: "List",
+            headerRightProps: {
+              headerRightIconColor: "red",
+              onPress: () => console.log(),
+              disabled: true,
+              style: { opacity: 1 },
+            },
+          }),
+        }}
       />
+      <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+        <OptimizedChapterList
+          bookName={displayBookName}
+          selectedChapeter={selectedChapter as number}
+          chapters={numberOfVerses}
+          onChapterSelect={handlePress}
+          bookImageUri={BOOK_IMAGES[selectedBook ?? "Génesis"]}
+        />
+      </View>
     </Fragment>
   );
 };

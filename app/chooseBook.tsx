@@ -1,4 +1,4 @@
-import Icon from "@/components/Icon";
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import { Text, View } from "@/components/Themed";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
@@ -12,64 +12,41 @@ import {
   TTheme,
 } from "@/types";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
-import removeAccent from "@/utils/removeAccent";
 import { useTheme } from "@react-navigation/native";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
-import React, { Fragment, useCallback, useState } from "react";
+import React, { useCallback, useMemo } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 
-type ChooseBookProps = {};
-
-const ChooseBook: React.FC<ChooseBookProps> = () => {
-  const navigation = useNavigation();
-  const routeParam = useParams<ChooseChapterNumberParams>();
-  const {
-    saveData,
-    storedData: { isShowName },
-  } = useStorage();
-  const { book } = routeParam;
-  const theme = useTheme();
-  const styles = getStyles(theme);
-  const {
+const BookItem = React.memo(
+  ({
+    item,
+    isCurrent,
+    isNewVow,
+    onPress,
     viewLayoutGrid,
-    toggleViewLayoutGrid,
-    isBottomSideSearching,
-    orientation,
-  } = useBibleContext();
-  const isPortrait = orientation === "PORTRAIT";
+    isShowName,
+    theme,
+  }: {
+    item: IDBBookNames;
+    isCurrent: boolean;
+    isNewVow: boolean;
+    onPress: () => void;
+    viewLayoutGrid: boolean;
+    isShowName: boolean;
+    theme: any;
+  }) => {
+    const styles = useMemo(() => getStyles(theme), [theme]);
 
-  const title: { [key: string]: string } = {
-    Gn: "Antiguo Pacto",
-    Mt: "Nuevo Pacto",
-  };
-
-  const handlePress = (item: IDBBookNames) => {
-    const topSide: any = { book: item.longName };
-    const bottomSide: any = { bottomSideBook: item.longName };
-    const params = isBottomSideSearching ? bottomSide : topSide;
-    navigation.navigate(Screens.ChooseChapterNumber, {
-      ...routeParam,
-      ...params,
-    });
-  };
-
-  const handleLongPress = () => {
-    saveData({ isShowName: !isShowName });
-  };
-
-  const renderItem: ListRenderItem<IDBBookNames> = ({ item, index }) => {
-    const isCurrent = book === item.longName;
-    const isNewVow = index >= BookIndexes.Malaquias;
     return (
       <TouchableOpacity
         style={[
           styles.listItem,
           isCurrent && { backgroundColor: theme.colors.notification + "60" },
-          isNewVow && { backgroundColor: theme.colors.text + 20 },
+          isNewVow && { backgroundColor: theme.colors.text + "20" },
           !isShowName && { justifyContent: "center", height: "auto" },
         ]}
-        onPress={() => handlePress(item)}
+        onPress={onPress}
         activeOpacity={0.7}
       >
         <Text
@@ -93,62 +70,210 @@ const ChooseBook: React.FC<ChooseBookProps> = () => {
         )}
       </TouchableOpacity>
     );
-  };
+  }
+);
+
+const BookList = React.memo(
+  ({
+    data,
+    viewLayoutGrid,
+    isShowName,
+    book,
+    onBookPress,
+    startIndex,
+    theme,
+  }: {
+    data: IDBBookNames[];
+    viewLayoutGrid: boolean;
+    isShowName: boolean;
+    book: string;
+    onBookPress: (item: IDBBookNames) => void;
+    startIndex: number;
+    theme: any;
+  }) => {
+    const renderItem: ListRenderItem<IDBBookNames> = useCallback(
+      ({ item, index }) => (
+        <BookItem
+          item={item}
+          isCurrent={book === item.longName}
+          isNewVow={index + startIndex >= BookIndexes.Malaquias}
+          onPress={() => onBookPress(item)}
+          viewLayoutGrid={viewLayoutGrid}
+          isShowName={isShowName}
+          theme={theme}
+        />
+      ),
+      [book, startIndex, viewLayoutGrid, isShowName, theme]
+    );
+
+    const keyExtractor = useCallback(
+      (item: IDBBookNames, index: number) => `book-${index}`,
+      []
+    );
+
+    return (
+      <FlashList
+        contentContainerStyle={styles.flatContainer}
+        keyExtractor={keyExtractor}
+        data={data}
+        renderItem={renderItem}
+        estimatedItemSize={47}
+        numColumns={viewLayoutGrid ? (isShowName ? 4 : 5) : 1}
+        removeClippedSubviews={true}
+      />
+    );
+  }
+);
+
+const ChooseBook: React.FC = () => {
+  const navigation = useNavigation();
+  const routeParam = useParams<ChooseChapterNumberParams>();
+  const {
+    saveData,
+    storedData: { isShowName },
+  } = useStorage();
+  const { book } = routeParam;
+  const theme = useTheme();
+  const { viewLayoutGrid, toggleViewLayoutGrid, isBottomSideSearching } =
+    useBibleContext();
+
+  const handlePress = useCallback(
+    (item: IDBBookNames) => {
+      const params = isBottomSideSearching
+        ? { bottomSideBook: item.longName }
+        : { book: item.longName };
+      navigation.navigate(Screens.ChooseChapterNumber, {
+        ...routeParam,
+        ...params,
+      });
+    },
+    [isBottomSideSearching, routeParam, navigation]
+  );
+
+  const handleLongPress = useCallback(() => {
+    saveData({ isShowName: !isShowName });
+  }, [isShowName, saveData]);
+
+  const [oldTestamentBooks, newTestamentBooks] = useMemo(
+    () => [
+      DB_BOOK_NAMES.slice(0, BookIndexes.Malaquias),
+      DB_BOOK_NAMES.slice(BookIndexes.Malaquias),
+    ],
+    []
+  );
+
+  const refreshKey = useMemo(
+    () => theme.dark + "" + isShowName + viewLayoutGrid,
+    [theme.dark, isShowName, viewLayoutGrid]
+  );
 
   return (
-    <Fragment>
+    <View style={{ flex: 1 }} key={refreshKey}>
       <Stack.Screen
         options={{
-          headerShown: true,
-          headerRight: () => (
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <TouchableOpacity onPress={() => toggleViewLayoutGrid()}>
-                <Icon
-                  style={styles.icon}
-                  name={!viewLayoutGrid ? "LayoutGrid" : "List"}
-                  size={24}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleLongPress()}>
-                <Icon
-                  style={styles.icon}
-                  color={
-                    isShowName ? theme.colors.notification : theme.colors.text
-                  }
-                  name={"ChartNoAxesGantt"}
-                  size={24}
-                />
-              </TouchableOpacity>
-            </View>
-          ),
+          ...singleScreenHeader({
+            theme,
+            title: "Libros",
+            titleIcon: "LibraryBig",
+            headerRightProps: {
+              headerRightIcon: !viewLayoutGrid ? "LayoutGrid" : "List",
+              headerRightIconColor: viewLayoutGrid
+                ? theme.colors.notification
+                : theme.colors.text,
+              onPress: () => toggleViewLayoutGrid(),
+              onLongPress: handleLongPress,
+              disabled: false,
+              style: { opacity: 1 },
+            },
+          }),
         }}
       />
 
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.scrollContainer,
+          { backgroundColor: theme.colors.background },
+        ]}
+      >
         <View style={styles.listWrapper}>
-          <Text style={styles.sectionTitle}>{title.Gn}</Text>
-          <FlashList
-            contentContainerStyle={styles.flatContainer}
-            keyExtractor={(item, index) => `book-${index}`}
-            data={DB_BOOK_NAMES.slice(0, BookIndexes.Malaquias)} // Old Testament Books
-            renderItem={renderItem}
-            estimatedItemSize={47}
-            numColumns={viewLayoutGrid ? (isShowName ? 4 : 5) : 1}
+          <Text
+            style={[styles.sectionTitle, { color: theme.colors.notification }]}
+          >
+            {"Antiguo Pacto"}
+          </Text>
+          <BookList
+            data={oldTestamentBooks}
+            viewLayoutGrid={viewLayoutGrid}
+            isShowName={isShowName}
+            book={book as string}
+            onBookPress={handlePress}
+            startIndex={0}
+            theme={theme}
           />
-          <Text style={styles.sectionTitle}>{title.Mt}</Text>
-          <FlashList
-            contentContainerStyle={styles.flatContainer}
-            keyExtractor={(item, index) => `book-${index}`}
-            data={DB_BOOK_NAMES.slice(BookIndexes.Malaquias)} // New Testament Books
-            renderItem={renderItem}
-            estimatedItemSize={47}
-            numColumns={viewLayoutGrid ? (isShowName ? 4 : 5) : 1}
+          <Text
+            style={[styles.sectionTitle, { color: theme.colors.notification }]}
+          >
+            {"Nuevo Pacto"}
+          </Text>
+          <BookList
+            data={newTestamentBooks}
+            viewLayoutGrid={viewLayoutGrid}
+            isShowName={isShowName}
+            book={book as string}
+            onBookPress={handlePress}
+            startIndex={BookIndexes.Malaquias}
+            theme={theme}
           />
         </View>
       </ScrollView>
-    </Fragment>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginVertical: 5,
+    padding: 15,
+    width: "100%",
+  },
+  listWrapper: {
+    display: "flex",
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
+  flatContainer: {
+    backgroundColor: "transparent",
+  },
+  listItem: {
+    display: "flex",
+    borderStyle: "solid",
+    borderWidth: 1,
+    padding: 10,
+    flex: 1,
+    height: 70,
+    alignItems: "center",
+  },
+  listTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  subTitle: {
+    fontSize: 14,
+    opacity: 0.9,
+  },
+  icon: {
+    fontWeight: "900",
+    marginHorizontal: 10,
+  },
+});
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({

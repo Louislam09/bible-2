@@ -1,14 +1,16 @@
 import CustomHeaderLeft from "@/components/CustomHeaderLeft";
 import ErrorBoundaryFallback from "@/components/ErrorBoundaryFallback";
-import StatusBarBackground from "@/components/StatusBarBackground";
+import { BibleChapterProvider } from "@/context/BibleChapterContext";
 import BibleProvider from "@/context/BibleContext";
 import DatabaseProvider from "@/context/databaseContext";
 import StorageProvider from "@/context/LocalstoreContext";
+import { MemorizationProvider } from "@/context/MemorizationContext";
 import { ModalProvider } from "@/context/modal-context";
 import MyThemeProvider from "@/context/ThemeContext";
 import useCachedResources from "@/hooks/useCachedResources";
 import { Screens, ScreensName } from "@/types";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as Updates from "expo-updates";
@@ -17,15 +19,7 @@ import { ToastAndroid } from "react-native";
 import ErrorBoundary from "react-native-error-boundary";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import {
-  NativeStackNavigationOptions,
-  NativeStackNavigatorProps,
-} from "react-native-screens/lib/typescript/native-stack/types";
-import { RouteProp, ParamListBase } from "@react-navigation/native";
-import { MemorizationProvider } from "@/context/MemorizationContext";
-import { BibleChapterProvider } from "@/context/BibleChapterContext";
-import ScreenWithAnimation from "@/components/LottieTransitionScreen";
-import { Text } from "@/components/Themed";
+import { NativeStackNavigationOptions } from "react-native-screens/lib/typescript/native-stack/types";
 
 type ScreenOptionsProps = {
   route: RouteProp<ParamListBase, string>;
@@ -72,9 +66,7 @@ const App = () => {
         await Updates.reloadAsync();
         ToastAndroid.show("Actualizada ✅", ToastAndroid.SHORT);
       }
-    } catch (error) {
-      ToastAndroid.show("🔄", ToastAndroid.SHORT);
-    }
+    } catch (error) {}
   }
 
   useEffect(() => {
@@ -89,7 +81,8 @@ const App = () => {
       headerShown: false,
       headerTitleAlign: "center",
       headerTitleStyle: { fontWeight: "bold" },
-      animation: screenAnimations[props.route.name as Screens],
+      animation: "none",
+      // animation: screenAnimations[props.route.name as Screens],
       headerLeft: () => (
         <CustomHeaderLeft title={ScreensName[props.route.name as Screens]} />
       ),

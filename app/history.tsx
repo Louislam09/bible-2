@@ -37,7 +37,6 @@ const HistoryScreen = () => {
           onPress: async () => {
             try {
               clear();
-              //   await executeSql(historyQuery.DELETE_ALL);
             } catch (error) {
               console.error("Error clearing history:", error);
             }

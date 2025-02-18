@@ -22,6 +22,7 @@ type SingleScreenHeaderProps = {
     headerRightIconColor: string;
     style?: StyleProp<ViewStyle>;
     onPress?: ((event: GestureResponderEvent) => void) | undefined;
+    onLongPress?: ((event: GestureResponderEvent) => void) | undefined;
     disabled?: boolean | undefined;
     headerRightText?: string;
   };

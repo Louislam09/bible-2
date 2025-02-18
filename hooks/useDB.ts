@@ -1,20 +1,20 @@
 import {
+  dbFileExt,
+  isDefaultDatabase,
+  SQLiteDirPath,
+} from "@/constants/databaseNames";
+import {
   CREATE_FAVORITE_VERSES_TABLE,
   CREATE_MEMORIZATION_TABLE,
   CREATE_NOTE_TABLE,
   CREATE_STREAK_TABLE,
   historyQuery,
 } from "@/constants/Queries";
+import { showToast } from "@/utils/showToast";
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
 import { useEffect, useRef, useState } from "react";
-import { ToastAndroid } from "react-native";
-import {
-  dbFileExt,
-  isDefaultDatabase,
-  SQLiteDirPath,
-} from "@/constants/databaseNames";
 import { VersionItem } from "./useInstalledBible";
 
 interface Row {
@@ -23,8 +23,11 @@ interface Row {
 
 interface UseDatabase {
   database: SQLite.SQLiteDatabase | null;
-  // executeSql: (sql: string, params?: any[]) => Promise<Row[]>;
-  executeSql: <T = any>(sql: string, params?: any[]) => Promise<T[]>;
+  executeSql: <T = any>(
+    sql: string,
+    params?: any[],
+    queryName?: string
+  ) => Promise<T[]>;
   loading: boolean;
 }
 
@@ -49,14 +52,16 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
     queryName?: any
   ): Promise<any[]> => {
     try {
-      const startTime = Date.now(); // Start timing
-      if (!database) {
-        throw new Error("Database not initialized");
+      const startTime = Date.now();
+      if (!database || !dbInitialized.current) {
+        return [];
+        // throw new Error("Database not initialized");
       }
+
       const statement = await database.prepareAsync(sql);
       try {
         const result = await statement.executeAsync(params);
-        const endTime = Date.now(); // End timing
+        const endTime = Date.now();
         const executionTime = endTime - startTime;
 
         const response = await result.getAllAsync();
@@ -68,6 +73,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
         await statement.finalizeAsync();
       }
     } catch (error) {
+      console.error(`"Error executing SQL${sql}:"`, error);
       return [];
     }
   };
@@ -104,83 +110,98 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
       }
     }
 
-    return await SQLite.openDatabaseAsync(dbNameWithExt);
+    const db = await SQLite.openDatabaseAsync(dbNameWithExt);
+
+    if (_isDefaultDatabase) {
+      try {
+        await db.execAsync("PRAGMA journal_mode = WAL");
+        // await db.execAsync("PRAGMA synchronous = NORMAL");
+        await db.execAsync("PRAGMA synchronous = OFF");
+        await db.execAsync("PRAGMA temp_store = MEMORY");
+        await db.execAsync("PRAGMA cache_size = 16384");
+        // await db.execAsync("PRAGMA cache_size = -10000");
+
+        showToast("✔");
+      } catch (error) {
+        console.warn("Error applying optimization settings:", error);
+      }
+    }
+
+    return db;
   }
+
+  async function createTables(db: SQLite.SQLiteDatabase) {
+    const tables = [
+      CREATE_FAVORITE_VERSES_TABLE,
+      CREATE_NOTE_TABLE,
+      CREATE_MEMORIZATION_TABLE,
+      CREATE_STREAK_TABLE,
+      historyQuery.CREATE_TABLE,
+    ];
+
+    try {
+      for (const sql of tables) {
+        await db.execAsync(sql);
+      }
+    } catch (error) {
+      console.error("Error creating tables:", error);
+      throw error; // Rethrow to handle in the calling function
+    }
+  }
+
+  const checkPragmas = async () => {
+    const journalMode = await executeSql(`PRAGMA journal_mode;`, []);
+    const synchronous = await executeSql(`PRAGMA synchronous;`, []);
+    const tempStore = await executeSql(`PRAGMA temp_store;`, []);
+    const cacheSize = await executeSql(`PRAGMA cache_size;`, []);
+    console.log({
+      journalMode,
+      synchronous,
+      tempStore,
+      cacheSize,
+    });
+  };
 
   useEffect(() => {
     if (!dbName) return;
-    async function initializeDatabase() {
-      if (!dbName) return;
-      setLoading(false);
-      if (database) await database.closeAsync();
-      const db = await openDatabase(dbName);
 
-      setDatabase(db);
-      dbInitialized.current = true;
+    async function initializeDatabase() {
+      try {
+        setLoading(false);
+        if (database) {
+          await database.closeAsync();
+        }
+        if (!dbName) return;
+        const db = await openDatabase(dbName);
+        await createTables(db);
+        if (isMounted.current) {
+          setDatabase(db);
+          dbInitialized.current = true;
+          setLoading(true);
+        }
+      } catch (error) {
+        console.error("Database initialization error:", error);
+        if (isMounted.current) {
+          setLoading(true); // Set loading to true even on error to prevent infinite loading state
+        }
+      }
     }
 
     dbInitialized.current = false;
-    initializeDatabase()
-      .catch(console.log)
-      .finally(() => setLoading(true));
+    initializeDatabase();
 
     return () => {
       isMounted.current = false;
+      if (database) {
+        database.closeAsync().catch(console.error);
+      }
     };
   }, [dbName]);
 
-  useEffect(() => {
-    async function optimizeDatabase() {
-      if (!database) return;
-
-      try {
-        // Apply PRAGMA settings for optimization
-        await executeSql("PRAGMA journal_mode = WAL;");
-        await executeSql("PRAGMA synchronous = NORMAL;");
-        await executeSql("PRAGMA temp_store = MEMORY;");
-        await executeSql("PRAGMA cache_size = -10000;");
-        // await executeSql('PRAGMA optimize;');
-        console.log(`Database optimized successfully.`);
-      } catch (error) {
-        console.error("Error optimizing database:", error);
-      }
-    }
-
-    async function createTables() {
-      if (!database) return;
-
-      try {
-        await executeSql(CREATE_FAVORITE_VERSES_TABLE);
-        await executeSql(CREATE_NOTE_TABLE);
-        await executeSql(CREATE_MEMORIZATION_TABLE);
-        await executeSql(CREATE_STREAK_TABLE);
-        await executeSql(historyQuery.CREATE_TABLE);
-      } catch (error) {
-        console.error("Error creating tables:", error);
-      }
-    }
-    const checkPragmas = async () => {
-      const journalMode = await executeSql(`PRAGMA journal_mode;`, []);
-      const synchronous = await executeSql(`PRAGMA synchronous;`, []);
-      const tempStore = await executeSql(`PRAGMA temp_store;`, []);
-      const cacheSize = await executeSql(`PRAGMA cache_size;`, []);
-
-      console.log({
-        journalMode,
-        synchronous,
-        tempStore,
-        cacheSize,
-      });
-    };
-
-    if (database) {
-      if (isDefaultDatabase(dbName?.id || "")) {
-        optimizeDatabase();
-      }
-      createTables();
-      //   checkPragmas()
-    }
-  }, [database]);
+  // useEffect(() => {
+  //   if (!loading) return;
+  //   checkPragmas();
+  // }, [loading]);
 
   return { executeSql, database, loading };
 }

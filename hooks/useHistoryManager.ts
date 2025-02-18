@@ -40,7 +40,11 @@ const useHistoryManager = (): HistoryManager => {
 
   const loadHistory = useCallback(async () => {
     try {
-      const results = await executeSql<HistoryItem>(historyQuery.GET_ALL);
+      const results = await executeSql<HistoryItem>(
+        historyQuery.GET_ALL,
+        [],
+        "history"
+      );
       if (results.length) {
         const formattedData = results.map((row) => ({
           id: row.id,
@@ -70,13 +74,18 @@ const useHistoryManager = (): HistoryManager => {
     if (isSame) return;
 
     try {
-      await executeSql(historyQuery.INSERT, [
-        item.book,
-        item.chapter,
-        item.verse,
-      ]);
+      if (historyQuery.INSERT) return;
+      await executeSql(
+        historyQuery.INSERT,
+        [item.book, item.chapter, item.verse],
+        "add history"
+      );
 
-      const result = await executeSql(historyQuery.GET_LAST);
+      const result = await executeSql(
+        historyQuery.GET_LAST,
+        [],
+        "last history"
+      );
       if (result.length) {
         const newItem = {
           id: result[0].id,

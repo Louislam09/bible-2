@@ -12,7 +12,7 @@ import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
 import { useBibleChapter } from "@/context/BibleChapterContext";
-import useInstalledBibles from "@/hooks/useInstalledBible";
+import { useDBContext } from "@/context/databaseContext";
 import useParams from "@/hooks/useParams";
 import { EBibleVersions, HomeParams, Screens, TIcon, TTheme } from "@/types";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
@@ -67,7 +67,7 @@ const BibleHeader: FC<HeaderInterface> = ({ refs }) => {
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
   const canGoForward = !(currentHistoryIndex === history.length - 1);
   const canGoBackward = currentHistoryIndex !== 0;
-  const { installedBibles } = useInstalledBibles();
+  const { installedBibles } = useDBContext();
   const currentItem = getCurrentItem();
   const currentVerse = currentItem?.verse;
   const currentVersionName =

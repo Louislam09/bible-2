@@ -1,13 +1,12 @@
-import { Text } from '@/components/Themed';
-import useDebounce from '@/hooks/useDebounce';
-import useHistoryManager from '@/hooks/useHistoryManager';
-import { TChapter, TTheme } from '@/types';
-import { useTheme } from '@react-navigation/native';
-import { FlashList } from '@shopify/flash-list';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import Verse from './Verse';
-import { useBibleChapter } from '@/context/BibleChapterContext';
+import { Text } from "@/components/Themed";
+import { useBibleChapter } from "@/context/BibleChapterContext";
+import useDebounce from "@/hooks/useDebounce";
+import { TChapter, TTheme } from "@/types";
+import { useTheme } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import Verse from "./Verse";
 
 const Chapter = ({
   item,
@@ -85,7 +84,7 @@ const Chapter = ({
         <FlashList
           ref={chapterRef}
           onLayout={() => setLayoutMounted(true)}
-          decelerationRate='normal'
+          decelerationRate="normal"
           estimatedItemSize={135}
           data={verses ?? []}
           renderItem={renderItem}
@@ -95,8 +94,8 @@ const Chapter = ({
               <View
                 style={{
                   flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  alignItems: "center",
+                  justifyContent: "center",
                   marginTop: 100,
                 }}
               >
@@ -128,20 +127,20 @@ const Chapter = ({
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     chapterContainer: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'relative',
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
     },
     verseContent: {
-      width: '100%',
-      height: '100%',
+      width: "100%",
+      height: "100%",
     },
     slider: {
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       borderRadius: 10,
-      width: '100%',
+      width: "100%",
     },
     sliderHandle: {
       width: 40,

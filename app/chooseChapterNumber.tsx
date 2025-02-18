@@ -1,82 +1,75 @@
-import ChooseFromListScreen from '@/components/chooseFromListScreen';
-import { Text, View } from '@/components/Themed';
-import { DB_BOOK_CHAPTER_NUMBER } from '@/constants/BookNames';
-import { BOOK_IMAGES } from '@/constants/Images';
-import { useBibleContext } from '@/context/BibleContext';
-import useParams from '@/hooks/useParams';
-import { ChooseChapterNumberParams, Screens, TTheme } from '@/types';
-import { FlashList, ListRenderItem } from '@shopify/flash-list';
-import { Stack, useNavigation } from 'expo-router';
-import { Fragment, useMemo } from 'react';
-import { Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { useTheme } from '@react-navigation/native';
-import { renameLongBookName } from '@/utils/extractVersesInfo';
-import { useStorage } from '@/context/LocalstoreContext';
-import { useBibleChapter } from '@/context/BibleChapterContext';
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import OptimizedChapterList from "@/components/optimized-chapter-list";
+import { DB_BOOK_CHAPTER_NUMBER } from "@/constants/BookNames";
+import { BOOK_IMAGES } from "@/constants/Images";
+import { useBibleChapter } from "@/context/BibleChapterContext";
+import { useBibleContext } from "@/context/BibleContext";
+import useParams from "@/hooks/useParams";
+import { ChooseChapterNumberParams, Screens, TTheme } from "@/types";
+import { renameLongBookName } from "@/utils/extractVersesInfo";
+import { useTheme } from "@react-navigation/native";
+import { Stack, useNavigation } from "expo-router";
+import { Fragment, useCallback, useMemo } from "react";
+import { StyleSheet } from "react-native";
 
-const chooseChapterNumber = () => {
+const ChooseChapterNumber = () => {
   const navigation = useNavigation();
   const routeParam = useParams<ChooseChapterNumberParams>();
   const { isBottomSideSearching } = useBibleContext();
   const { book, bottomSideBook } = routeParam;
   const selectedBook = isBottomSideSearching ? bottomSideBook : book;
-  const displayBookName = renameLongBookName(selectedBook || '');
+  const displayBookName = renameLongBookName(selectedBook || "");
   const { updateBibleQuery } = useBibleChapter();
-
   const theme = useTheme();
-  const styles = getStyles(theme);
 
   const numberOfChapters = useMemo(() => {
-    const totalChapters = DB_BOOK_CHAPTER_NUMBER[selectedBook ?? 'Génesis'];
-    return new Array(totalChapters).fill(0).map((_, index) => index + 1);
+    return Array.from(
+      { length: DB_BOOK_CHAPTER_NUMBER[selectedBook ?? "Génesis"] },
+      (_, i) => i + 1
+    );
   }, [selectedBook]);
 
-  const handlePress = (item: number) => {
-    const params = {
-      ...routeParam,
-      [isBottomSideSearching ? 'bottomSideChapter' : 'chapter']: item,
-    };
-    // updateBibleQuery(params as any);
-    navigation.navigate(Screens.ChooseVerseNumber, params);
-  };
+  const handleChapterSelect = useCallback(
+    (item: number) => {
+      const params = {
+        ...routeParam,
+        [isBottomSideSearching ? "bottomSideChapter" : "chapter"]: item,
+        isHistory: false,
+      } as any;
 
-  const renderItem: ListRenderItem<number> = ({ item, index }) => {
-    return (
-      <TouchableOpacity
-        style={[styles.listItem]}
-        onPress={() => handlePress(item)}
-        activeOpacity={0.7}
-      >
-        <Text style={[styles.listTitle]}>{item}</Text>
-      </TouchableOpacity>
-    );
-  };
+      updateBibleQuery({
+        ...params,
+        isBibleBottom: isBottomSideSearching,
+        shouldFetch: true,
+      });
+      navigation.navigate(Screens.ChooseVerseNumber, params);
+    },
+    [routeParam, isBottomSideSearching, updateBibleQuery, navigation]
+  );
 
   return (
     <Fragment>
-      <Stack.Screen options={{ headerShown: true }} />
-      <View style={styles.listWrapper}>
-        {selectedBook && (
-          <Image
-            style={[styles.bookImage]}
-            source={{
-              uri: BOOK_IMAGES[selectedBook ?? 'Génesis'],
-            }}
-            alt={selectedBook}
-          />
-        )}
-        {selectedBook && (
-          <Text style={styles.listChapterTitle}>{displayBookName}</Text>
-        )}
-      </View>
-      <FlashList
-        contentContainerStyle={styles.flatContainer}
-        data={numberOfChapters}
-        renderItem={renderItem}
-        estimatedItemSize={50}
-        numColumns={numberOfChapters.length > 12 ? 5 : 4}
+      <Stack.Screen
+        options={{
+          ...singleScreenHeader({
+            theme,
+            title: "Capitulos",
+            titleIcon: "List",
+            headerRightProps: {
+              headerRightIconColor: "red",
+              onPress: () => console.log(),
+              disabled: true,
+              style: { opacity: 1 },
+            },
+          }),
+        }}
       />
-      {/* <ChooseFromListScreen list={numberOfChapters} /> */}
+      <OptimizedChapterList
+        bookName={displayBookName}
+        chapters={numberOfChapters}
+        onChapterSelect={handleChapterSelect}
+        bookImageUri={BOOK_IMAGES[selectedBook ?? "Génesis"]}
+      />
     </Fragment>
   );
 };
@@ -86,17 +79,17 @@ const getStyles = ({ colors }: TTheme) =>
     container: {
       flex: 1,
       backgroundColor: colors.background,
-      width: '100%',
+      width: "100%",
     },
     listWrapper: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'relative',
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
     },
     bookImage: {
-      resizeMode: 'contain',
-      position: 'relative',
+      resizeMode: "contain",
+      position: "relative",
       width: 100,
       height: 100,
     },
@@ -105,20 +98,20 @@ const getStyles = ({ colors }: TTheme) =>
       backgroundColor: colors.background,
     },
     listItem: {
-      display: 'flex',
-      borderStyle: 'solid',
+      display: "flex",
+      borderStyle: "solid",
       borderWidth: 1,
       borderColor: colors.text + 10,
       padding: 10,
       flex: 1,
       height: 70,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
     },
     listTitle: {
       color: colors.text,
       fontSize: 18,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     subTitle: {
       fontSize: 14,
@@ -133,10 +126,10 @@ const getStyles = ({ colors }: TTheme) =>
       paddingVertical: 5,
     },
     icon: {
-      fontWeight: '900',
+      fontWeight: "900",
       color: colors.text,
       marginHorizontal: 10,
     },
   });
 
-export default chooseChapterNumber;
+export default ChooseChapterNumber;

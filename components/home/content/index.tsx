@@ -1,6 +1,6 @@
 import { useTheme } from "@react-navigation/native";
 import React, { FC } from "react";
-import { ActivityIndicator, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { TTheme } from "../../../types";
 
 import { View } from "@/components/Themed";

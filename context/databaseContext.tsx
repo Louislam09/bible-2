@@ -12,8 +12,11 @@ interface Row {
 
 type DatabaseContextType = {
   myBibleDB?: SQLite.SQLiteDatabase | null;
-  executeSql: <T = any>(sql: string, params?: any[]) => Promise<T[]>;
-  // executeSql: (sql: string, params?: any[]) => Promise<any[]>;
+  executeSql: <T = any>(
+    sql: string,
+    params?: any[],
+    queryName?: string
+  ) => Promise<T[]>;
   installedBibles: VersionItem[];
   installedDictionary: VersionItem[];
   isInstallBiblesLoaded: boolean;
@@ -28,7 +31,7 @@ enum DBs {
 
 const initialContext: DatabaseContextType = {
   myBibleDB: null,
-  executeSql: async (sql: string, params?: any[]) => [],
+  executeSql: async (sql: string, params?: any[], queryName?: string) => [],
   installedBibles: [],
   installedDictionary: [],
   isInstallBiblesLoaded: false,
