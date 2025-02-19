@@ -11,7 +11,6 @@ import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { useTheme } from "@react-navigation/native";
 import { Stack, useNavigation } from "expo-router";
 import { Fragment, useMemo } from "react";
-import { StyleSheet } from "react-native";
 
 const chooseVerseNumber = () => {
   const routeParam = useParams<ChooseChapterNumberParams>();
@@ -44,6 +43,7 @@ const chooseVerseNumber = () => {
       ...routeParam,
       [isBottomSideSearching ? "bottomSideVerse" : "verse"]: item,
       isHistory: false,
+      shouldFetch: true,
     } as any;
 
     updateBibleQuery({
@@ -82,63 +82,5 @@ const chooseVerseNumber = () => {
     </Fragment>
   );
 };
-
-const getStyles = ({ colors }: TTheme) =>
-  StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: colors.background,
-      width: "100%",
-    },
-    listWrapper: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      position: "relative",
-    },
-    bookImage: {
-      resizeMode: "contain",
-      position: "relative",
-      width: 100,
-      height: 100,
-    },
-    flatContainer: {
-      paddingVertical: 20,
-      backgroundColor: colors.background,
-    },
-    listItem: {
-      display: "flex",
-      borderStyle: "solid",
-      borderWidth: 1,
-      borderColor: colors.text + 10,
-      padding: 10,
-      flex: 1,
-      height: 70,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    listTitle: {
-      color: colors.text,
-      fontSize: 18,
-      fontWeight: "bold",
-    },
-    subTitle: {
-      fontSize: 14,
-      color: colors.text,
-      opacity: 0.9,
-    },
-    listChapterTitle: {
-      color: colors.notification,
-      paddingHorizontal: 20,
-      paddingBottom: 0,
-      fontSize: 26,
-      paddingVertical: 5,
-    },
-    icon: {
-      fontWeight: "900",
-      color: colors.text,
-      marginHorizontal: 10,
-    },
-  });
 
 export default chooseVerseNumber;

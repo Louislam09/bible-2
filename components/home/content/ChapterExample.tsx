@@ -1,9 +1,3 @@
-import { Text } from "@/components/Themed";
-import { useBibleChapter } from "@/context/BibleChapterContext";
-import useDebounce from "@/hooks/useDebounce";
-import { TChapter, TTheme } from "@/types";
-import { useTheme } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
 import React, {
   useCallback,
   useEffect,
@@ -12,21 +6,54 @@ import React, {
   useState,
 } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { FlashList } from "@shopify/flash-list";
+import { useTheme } from "@react-navigation/native";
+import { Text } from "@/components/Themed";
+import { useBibleChapter } from "@/context/BibleChapterContext";
+import useDebounce from "@/hooks/useDebounce";
+import { TChapter, TTheme } from "@/types";
 import Verse from "./Verse";
 
-const Chapter = ({
+const LoadingComponent = React.memo(({ textColor }: { textColor: string }) => (
+  <View style={styles.loadingContainer}>
+    <ActivityIndicator />
+    <Text style={[styles.loadingText, { color: textColor }]}>Cargando...</Text>
+  </View>
+));
+
+const VerseItem = React.memo(
+  ({
+    item,
+    isSplit,
+    verse,
+    subtitles,
+    initVerse,
+    estimatedReadingTime,
+  }: any) => (
+    <Verse
+      item={item}
+      isSplit={isSplit}
+      // verse={verse as any}
+      subtitles={subtitles}
+      initVerse={initVerse}
+      estimatedReadingTime={estimatedReadingTime}
+    />
+  )
+);
+
+const Chapter: React.FC<TChapter & { isSplit: boolean }> = ({
   item,
   isSplit,
   verse: _verse,
   estimatedReadingTime,
-}: TChapter & { isSplit: boolean }) => {
+}) => {
   const { verses = [], subtitles = [] } = item;
   const theme = useTheme();
-  const styles = useMemo(() => getStyles(theme), [theme]);
   const chapterRef = useRef<FlashList<any>>(null);
   const [firstLoad, setFirstLoad] = useState(true);
   const [topVerse, setTopVerse] = useState<number | null>(null);
   const [isLayoutMounted, setLayoutMounted] = useState(false);
+
   const chapterVerseLength = useMemo(() => verses.length, [verses]);
   const debounceTopVerse = useDebounce(topVerse, 100);
   const { historyManager } = useBibleChapter();
@@ -39,30 +66,21 @@ const Chapter = ({
     []
   );
 
-  useEffect(() => {
-    if (debounceTopVerse) updateVerse(debounceTopVerse);
-  }, [debounceTopVerse, updateVerse]);
-
-  useEffect(() => {
-    const isFirst = !!topVerse;
-    setFirstLoad(!isFirst);
-  }, [topVerse]);
-
-  const verseNumber = +(_verse as number) || 0;
+  const verseNumber = +((_verse as number) || 0);
   const initialScrollIndex = useMemo(() => {
-    const inValidIndex = verseNumber > verses.length;
+    if (verseNumber > verses.length) return 0;
     const shouldSubtract =
       verses.length === verseNumber || verseNumber === 1 ? -1 : 0;
-    return inValidIndex ? 0 : verseNumber + shouldSubtract;
-  }, [verseNumber, verses]);
+    return verseNumber + shouldSubtract;
+  }, [verseNumber, verses.length]);
 
   const renderItem = useCallback(
-    (props: any) => (
-      <Verse
-        {...props}
+    ({ item: verseItem }: any) => (
+      <VerseItem
+        item={verseItem}
         isSplit={isSplit}
         verse={_verse}
-        subtitles={subtitles ?? []}
+        subtitles={subtitles}
         initVerse={initialScrollIndex}
         estimatedReadingTime={estimatedReadingTime}
       />
@@ -71,14 +89,28 @@ const Chapter = ({
   );
 
   useEffect(() => {
-    if (initialScrollIndex !== topVerse && topVerse) {
-      if (!firstLoad || !isLayoutMounted) return;
+    if (debounceTopVerse) {
+      updateVerse(debounceTopVerse);
+    }
+  }, [debounceTopVerse, updateVerse]);
+
+  useEffect(() => {
+    setFirstLoad(!topVerse);
+  }, [topVerse]);
+
+  useEffect(() => {
+    if (
+      initialScrollIndex !== topVerse &&
+      topVerse &&
+      firstLoad &&
+      isLayoutMounted
+    ) {
       chapterRef.current?.scrollToIndex({
         index: initialScrollIndex - 1,
         animated: false,
       });
     }
-  }, [topVerse, isLayoutMounted]);
+  }, [topVerse, isLayoutMounted, initialScrollIndex, firstLoad]);
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
@@ -90,10 +122,6 @@ const Chapter = ({
     { onViewableItemsChanged, viewabilityConfig },
   ]);
 
-  // const onEndReached = useCallback(() => {
-  //   setTimeout(() => setTopVerse(chapterVerseLength as any), 500);
-  // }, [chapterVerseLength]);
-
   const onEndReached = useCallback(() => {
     requestAnimationFrame(() => {
       setTopVerse(chapterVerseLength);
@@ -104,29 +132,28 @@ const Chapter = ({
 
   return (
     <View style={styles.chapterContainer}>
-      <View style={[styles.verseContent]}>
+      <View style={styles.verseContent}>
         <FlashList
           ref={chapterRef}
-          keyExtractor={keyExtractor}
-          data={verses ?? []}
           onLayout={() => setLayoutMounted(true)}
-          onEndReached={onEndReached}
-          renderItem={renderItem}
-          // decelerationRate="normal"
           decelerationRate="fast"
           estimatedItemSize={135}
-          removeClippedSubviews={true}
+          data={verses}
+          renderItem={renderItem}
+          onEndReached={onEndReached}
           ListEmptyComponent={() => (
             <LoadingComponent textColor={theme.colors.text} />
           )}
           initialScrollIndex={initialScrollIndex}
+          keyExtractor={keyExtractor}
           viewabilityConfigCallbackPairs={
             viewabilityConfigCallbackPairs.current
           }
-          // maintainVisibleContentPosition={{
-          //   minIndexForVisible: 0,
-          //   autoscrollToTopThreshold: 10,
-          // }}
+          removeClippedSubviews={true}
+          maintainVisibleContentPosition={{
+            minIndexForVisible: 0,
+            autoscrollToTopThreshold: 10,
+          }}
           onEndReachedThreshold={0.5}
         />
       </View>
@@ -134,14 +161,17 @@ const Chapter = ({
   );
 };
 
-const LoadingComponent = React.memo(({ textColor }: { textColor: string }) => (
-  <View style={styles.loadingContainer}>
-    <ActivityIndicator />
-    <Text style={[styles.loadingText, { color: textColor }]}>Cargando...</Text>
-  </View>
-));
-
 const styles = StyleSheet.create({
+  chapterContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+  },
+  verseContent: {
+    width: "100%",
+    height: "100%",
+  },
   loadingContainer: {
     flex: 1,
     alignItems: "center",
@@ -154,30 +184,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const getStyles = ({ colors }: TTheme) =>
-  StyleSheet.create({
-    chapterContainer: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      position: "relative",
-    },
-    verseContent: {
-      width: "100%",
-      height: "100%",
-    },
-    slider: {
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: 10,
-      width: "100%",
-    },
-    sliderHandle: {
-      width: 40,
-      height: 4,
-      backgroundColor: colors.text,
-      borderRadius: 2,
-    },
-  });
-
-export default Chapter;
+export default React.memo(Chapter);

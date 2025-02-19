@@ -74,7 +74,7 @@ const useHistoryManager = (): HistoryManager => {
     if (isSame) return;
 
     try {
-      if (historyQuery.INSERT) return;
+      // if (historyQuery.INSERT) return;
       await executeSql(
         historyQuery.INSERT,
         [item.book, item.chapter, item.verse],

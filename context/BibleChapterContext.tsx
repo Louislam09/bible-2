@@ -213,9 +213,8 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!isMyBibleDbLoaded) return;
     if (!bibleQuery.shouldFetch) return;
-    fetchChapter();
-    // setTimeout(fetchChapter, 0);
-  }, [bibleQuery.shouldFetch, bibleQuery.chapter, isMyBibleDbLoaded]);
+    setTimeout(fetchChapter, 0);
+  }, [bibleQuery.shouldFetch, isMyBibleDbLoaded]);
 
   const contextValue = useMemo(
     () => ({

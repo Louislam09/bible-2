@@ -305,9 +305,9 @@ export type TChapter = {
 
 export type TVerse = {
   item: IBookVerse;
-  index: number;
-  setSelectedWord: any;
-  setOpen: any;
+  index?: number;
+  setSelectedWord?: any;
+  setOpen?: any;
   subtitles: TSubtitle[];
 };
 
