@@ -1,6 +1,7 @@
 import React, {
   RefObject,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -186,8 +187,12 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
               navigation,
             }}
           />
-          {renderSplitScreenDivider()}
-          {renderBottomContent()}
+          {isSplitActived && (
+            <>
+              {renderSplitScreenDivider()}
+              {renderBottomContent()}
+            </>
+          )}
         </View>
         <>
           <BookContentModals

@@ -1,7 +1,7 @@
 import { historyQuery } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
 import { format } from "date-fns";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export type HistoryItem = {
   id?: number;
@@ -68,9 +68,10 @@ const useHistoryManager = (): HistoryManager => {
   const add = async (item: HistoryItem) => {
     const lastItem = history[history.length - 1];
     const isSame =
-      lastItem?.book === item.book &&
-      lastItem?.chapter === item.chapter &&
-      lastItem?.verse === item.verse;
+      lastItem &&
+      lastItem.book === item.book &&
+      lastItem.chapter === item.chapter &&
+      lastItem.verse === item.verse;
     if (isSame) return;
 
     try {
@@ -170,20 +171,40 @@ const useHistoryManager = (): HistoryManager => {
     }
   };
 
-  return {
-    add,
-    goBack,
-    goForward,
-    getCurrentItem,
-    clear,
-    deleteOne,
-    getHistory,
-    history,
-    isHistoryInitialized,
-    getCurrentIndex,
-    updateVerse,
-    currentIndex: getCurrentIndex(),
-  };
+  const historyManager = useMemo(
+    () => ({
+      add,
+      goBack,
+      goForward,
+      getCurrentItem,
+      clear,
+      deleteOne,
+      getHistory,
+      history,
+      isHistoryInitialized,
+      getCurrentIndex,
+      updateVerse,
+      currentIndex: getCurrentIndex(),
+    }),
+    [
+      {
+        add,
+        goBack,
+        goForward,
+        getCurrentItem,
+        clear,
+        deleteOne,
+        getHistory,
+        history,
+        isHistoryInitialized,
+        getCurrentIndex,
+        updateVerse,
+        currentIndex: getCurrentIndex(),
+      },
+    ]
+  );
+
+  return historyManager;
 };
 
 export default useHistoryManager;

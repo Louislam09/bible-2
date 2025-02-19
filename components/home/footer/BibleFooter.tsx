@@ -3,7 +3,7 @@ import { useBibleContext } from "@/context/BibleContext";
 import useAudioPlayer from "@/hooks/useAudioPlayer";
 import { EBibleVersions, Screens } from "@/types";
 import { useTheme } from "@react-navigation/native";
-import { FC, useCallback, useEffect, useRef } from "react";
+import { FC, useCallback, useEffect, useMemo, useRef } from "react";
 import { Animated, TouchableOpacity } from "react-native";
 
 import BottomModal from "@/components/BottomModal";
@@ -22,6 +22,7 @@ import { useNavigation } from "expo-router";
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
+import withRenderCount from "@/components/withRenderCount";
 
 interface FooterInterface {
   refs: any;
@@ -57,12 +58,14 @@ const BibleFooter: FC<FooterInterface> = ({
   const playRef = useRef<BottomSheetModal>(null);
   const navigation = useNavigation();
   const params = useParams();
+  const chpaterInfo = useBibleChapter();
   const {
     data: { verses },
     bibleQuery,
     updateBibleQuery,
     historyManager: { getCurrentItem },
-  } = useBibleChapter();
+  } = chpaterInfo;
+
   const book = isSplit
     ? bibleQuery?.bottomSideBook || bookProp
     : bibleQuery.book || bookProp;
@@ -191,7 +194,8 @@ const BibleFooter: FC<FooterInterface> = ({
   }, []);
 
   const displayBookName = renameLongBookName(isSplit ? bookProp : book);
-  const currentHistoryItemVerse = getCurrentItem()?.verse;
+
+  // const currentHistoryItemVerse = getCurrentItem()?.verse;
 
   return (
     <Animated.View style={[styles.footer]}>
@@ -224,8 +228,13 @@ const BibleFooter: FC<FooterInterface> = ({
           <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
             {`${displayBookName ?? ""} ${
               isSplit ? chapterProp : chapter ?? ""
-            }:${isSplitActived ? verse : currentHistoryItemVerse || verse}`}
+            }:${verse}`}
           </Text>
+          {/* <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
+            {`${displayBookName ?? ""} ${
+              isSplit ? chapterProp : chapter ?? ""
+            }:${isSplitActived ? verse : currentHistoryItemVerse || verse}`}
+          </Text> */}
         </TouchableOpacity>
         <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>
           <Icon
@@ -251,7 +260,7 @@ const BibleFooter: FC<FooterInterface> = ({
         </View>
       )}
 
-      <BottomModal justOneSnap startAT={0} ref={playRef}>
+      <BottomModal id="footer" justOneSnap startAT={0} ref={playRef}>
         <Play
           isRvr={isRVR}
           {...{
@@ -274,4 +283,5 @@ const BibleFooter: FC<FooterInterface> = ({
   );
 };
 
+// export default withRenderCount(BibleFooter);
 export default BibleFooter;

@@ -58,18 +58,41 @@ export const DELETE_NOTE_ALL = `DELETE FROM notes;`;
 export const UPDATE_NOTE_BY_ID = `UPDATE notes set title = ?, note_text = ?, 
   updated_at = datetime('now', 'localtime') where id = ?`;
 
-export const GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV = `SELECT v.*, 
-CASE 
-    WHEN fv.id IS NOT NULL THEN 1 
-    ELSE 0 
-END AS is_favorite 
-FROM verses v 
+export const GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV = `SELECT 
+    v.*,
+    CASE 
+        WHEN fv.id IS NOT NULL THEN 1 
+        ELSE 0 
+    END AS is_favorite,
+    COALESCE(
+        json_group_array(sh.subheading),
+        json('[]')
+    ) AS subheading
+FROM verses v
 LEFT JOIN favorite_verses fv 
-ON v.book_number = fv.book_number 
-AND v.chapter = fv.chapter 
-AND v.verse = fv.verse 
+    ON v.book_number = fv.book_number 
+    AND v.chapter = fv.chapter 
+    AND v.verse = fv.verse
+LEFT JOIN subheadings sh 
+    ON v.book_number = sh.book_number 
+    AND v.chapter = sh.chapter 
+    AND v.verse = sh.verse
 WHERE v.book_number = ? 
-AND v.chapter = ?;`;
+AND v.chapter = ?
+GROUP BY v.book_number, v.chapter, v.verse;
+`;
+// export const GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV = `SELECT v.*,
+// CASE
+//     WHEN fv.id IS NOT NULL THEN 1
+//     ELSE 0
+// END AS is_favorite
+// FROM verses v
+// LEFT JOIN favorite_verses fv
+// ON v.book_number = fv.book_number
+// AND v.chapter = fv.chapter
+// AND v.verse = fv.verse
+// WHERE v.book_number = ?
+// AND v.chapter = ?;`;
 
 export const GET_ALL_FAVORITE_VERSES = `select v.*, fv.id,b.long_name as bookName from verses v
 inner join books b

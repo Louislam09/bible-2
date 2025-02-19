@@ -66,7 +66,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
 
         const response = await result.getAllAsync();
         if (queryName) {
-          console.log(`Query ${queryName} executed in ${executionTime} ms.`);
+          // console.log(`Query ${queryName} executed in ${executionTime} ms.`);
         }
         return response as Row[];
       } finally {

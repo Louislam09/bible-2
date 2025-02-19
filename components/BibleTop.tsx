@@ -1,6 +1,6 @@
 import { useBibleContext } from "@/context/BibleContext";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
-import React, { FC } from "react";
+import React, { FC, useEffect, useMemo } from "react";
 import { Animated, StyleSheet } from "react-native";
 import BookContent from "./home/content";
 import BibleFooter from "./home/footer/BibleFooter";
@@ -18,18 +18,21 @@ const BibleTop: FC<any> = (props) => {
   const onSwipeRight = () => {
     previousChapter();
   };
+
   const onSwipeLeft = () => {
     nextChapter();
   };
+
+  const widthOrHeight = useMemo(
+    () => (isPortrait ? "height" : "width"),
+    [isPortrait]
+  );
+
   return (
     <Animated.View
       style={[
         styles.container,
-        {
-          [isPortrait ? "height" : "width"]: isPortrait
-            ? props.height
-            : props.width,
-        },
+        { [widthOrHeight]: props[widthOrHeight] },
         !isSplitActived && { flex: 1 },
       ]}
     >
@@ -49,3 +52,4 @@ const styles = StyleSheet.create({
 });
 
 export default BibleTop;
+// export default withRenderCount(BibleTop);

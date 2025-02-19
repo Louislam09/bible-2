@@ -22,19 +22,11 @@ const LoadingComponent = React.memo(({ textColor }: { textColor: string }) => (
 ));
 
 const VerseItem = React.memo(
-  ({
-    item,
-    isSplit,
-    verse,
-    subtitles,
-    initVerse,
-    estimatedReadingTime,
-  }: any) => (
+  ({ item, isSplit, verse, initVerse, estimatedReadingTime }: any) => (
     <Verse
       item={item}
       isSplit={isSplit}
       // verse={verse as any}
-      subtitles={subtitles}
       initVerse={initVerse}
       estimatedReadingTime={estimatedReadingTime}
     />
@@ -47,7 +39,7 @@ const Chapter: React.FC<TChapter & { isSplit: boolean }> = ({
   verse: _verse,
   estimatedReadingTime,
 }) => {
-  const { verses = [], subtitles = [] } = item;
+  const { verses = [] } = item;
   const theme = useTheme();
   const chapterRef = useRef<FlashList<any>>(null);
   const [firstLoad, setFirstLoad] = useState(true);
@@ -80,12 +72,11 @@ const Chapter: React.FC<TChapter & { isSplit: boolean }> = ({
         item={verseItem}
         isSplit={isSplit}
         verse={_verse}
-        subtitles={subtitles}
         initVerse={initialScrollIndex}
         estimatedReadingTime={estimatedReadingTime}
       />
     ),
-    [isSplit, _verse, subtitles, initialScrollIndex, estimatedReadingTime]
+    [isSplit, _verse, initialScrollIndex, estimatedReadingTime]
   );
 
   useEffect(() => {

@@ -11,7 +11,12 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import Verse from "./Verse";
 
 const Chapter = ({
@@ -20,7 +25,7 @@ const Chapter = ({
   verse: _verse,
   estimatedReadingTime,
 }: TChapter & { isSplit: boolean }) => {
-  const { verses = [], subtitles = [] } = item;
+  const { verses = [] } = item;
   const theme = useTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const chapterRef = useRef<FlashList<any>>(null);
@@ -31,17 +36,15 @@ const Chapter = ({
   const debounceTopVerse = useDebounce(topVerse, 100);
   const { historyManager } = useBibleChapter();
   const { updateVerse } = historyManager;
+  const { width, height } = useWindowDimensions();
+  const aspectRadio = height / width;
+  const isMobile = +aspectRadio.toFixed(2) > 1.65;
 
-  const viewabilityConfig = useMemo(
-    () => ({
-      viewAreaCoveragePercentThreshold: 1,
-    }),
-    []
-  );
-
-  useEffect(() => {
-    if (debounceTopVerse) updateVerse(debounceTopVerse);
-  }, [debounceTopVerse, updateVerse]);
+  // THIS IS CAUSING RE-RENDER - FIX
+  // useEffect(() => {
+  // if (!debounceTopVerse) return;
+  //   // updateVerse(debounceTopVerse);
+  // }, [debounceTopVerse]);
 
   useEffect(() => {
     const isFirst = !!topVerse;
@@ -56,18 +59,14 @@ const Chapter = ({
     return inValidIndex ? 0 : verseNumber + shouldSubtract;
   }, [verseNumber, verses]);
 
-  const renderItem = useCallback(
-    (props: any) => (
-      <Verse
-        {...props}
-        isSplit={isSplit}
-        verse={_verse}
-        subtitles={subtitles ?? []}
-        initVerse={initialScrollIndex}
-        estimatedReadingTime={estimatedReadingTime}
-      />
-    ),
-    [isSplit, _verse, subtitles, initialScrollIndex, estimatedReadingTime]
+  const renderItem = (props: any) => (
+    <Verse
+      {...props}
+      isSplit={isSplit}
+      verse={_verse}
+      initVerse={initialScrollIndex}
+      estimatedReadingTime={estimatedReadingTime}
+    />
   );
 
   useEffect(() => {
@@ -75,7 +74,7 @@ const Chapter = ({
       if (!firstLoad || !isLayoutMounted) return;
       chapterRef.current?.scrollToIndex({
         index: initialScrollIndex - 1,
-        animated: false,
+        animated: true,
       });
     }
   }, [topVerse, isLayoutMounted]);
@@ -86,35 +85,29 @@ const Chapter = ({
     }
   }, []);
 
+  const viewabilityConfig = { viewAreaCoveragePercentThreshold: 1 };
+
   const viewabilityConfigCallbackPairs = useRef([
     { onViewableItemsChanged, viewabilityConfig },
   ]);
 
-  // const onEndReached = useCallback(() => {
-  //   setTimeout(() => setTopVerse(chapterVerseLength as any), 500);
-  // }, [chapterVerseLength]);
-
   const onEndReached = useCallback(() => {
-    requestAnimationFrame(() => {
-      setTopVerse(chapterVerseLength);
-    });
+    setTimeout(() => setTopVerse(chapterVerseLength as any), 500);
   }, [chapterVerseLength]);
-
-  const keyExtractor = useCallback((item: any) => `verse-${item.verse}`, []);
 
   return (
     <View style={styles.chapterContainer}>
       <View style={[styles.verseContent]}>
         <FlashList
           ref={chapterRef}
-          keyExtractor={keyExtractor}
+          keyExtractor={(item: any) => `verse-${item.verse}`}
           data={verses ?? []}
           onLayout={() => setLayoutMounted(true)}
           onEndReached={onEndReached}
           renderItem={renderItem}
           // decelerationRate="normal"
           decelerationRate="fast"
-          estimatedItemSize={135}
+          estimatedItemSize={isMobile ? 140 : 100}
           removeClippedSubviews={true}
           ListEmptyComponent={() => (
             <LoadingComponent textColor={theme.colors.text} />
@@ -180,4 +173,5 @@ const getStyles = ({ colors }: TTheme) =>
     },
   });
 
+// export default withRenderCount(Chapter);
 export default Chapter;

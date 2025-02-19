@@ -38,6 +38,7 @@ import {
 } from "react-native";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
 import { useBibleChapter } from "@/context/BibleChapterContext";
+import VerseTitle from "./VerseTitle";
 
 type VerseProps = TVerse & {
   isSplit: boolean;
@@ -122,7 +123,6 @@ const ActionItem = ({ index, action, styles, theme }: ActionItemProps) => {
 
 const Verse: React.FC<VerseProps> = ({
   item,
-  subtitles,
   isSplit,
   initVerse,
   estimatedReadingTime,
@@ -174,6 +174,10 @@ const Verse: React.FC<VerseProps> = ({
   const isFirstVerse = useMemo(() => {
     return item.verse === 1;
   }, [item.verse]);
+  const hasTitle = useMemo(
+    () => !item.subheading.includes(null as any),
+    [item.subheading]
+  );
 
   const {
     compareRefHandlePresentModalPress: onCompare,
@@ -243,82 +247,6 @@ const Verse: React.FC<VerseProps> = ({
     highlightVerse(item);
     setHighlightVerse(item.verse);
   };
-
-  const LinkVerse = ({ data }: any) => {
-    if (!data) return null;
-    const linkVerses = data.subheading
-      ?.split("—")
-      .map((linkVerse: any) => extractVersesInfo(linkVerse));
-
-    const renderItem = (verseInfo: any, index: number) => {
-      const { bookNumber, chapter, verse } = verseInfo;
-
-      const bookName = DB_BOOK_NAMES.find(
-        (x: any) => x.bookNumber === bookNumber
-      )?.longName;
-
-      const onLink = () => {
-        const isBottom = !isSplit && isSplitActived;
-        const queryInfo = {
-          [isBottom ? "bottomSideBook" : "book"]: bookName,
-          [isBottom ? "bottomSideChapter" : "chapter"]: chapter,
-          [isBottom ? "bottomSideVerse" : "verse"]: verse,
-        };
-        updateBibleQuery({
-          ...queryInfo,
-          shouldFetch: true,
-          isBibleBottom: isBottom,
-        });
-        navigation.navigate(Screens.Home, { ...queryInfo, isHistory: false });
-      };
-
-      return bookName ? (
-        <Text
-          key={index}
-          onPress={onLink}
-          style={[
-            styles.verse,
-            {
-              fontSize: 18,
-              fontWeight: "bold",
-              paddingVertical: 5,
-              color: theme.colors.notification ?? "black",
-              ...customUnderline,
-            },
-          ]}
-        >
-          {`${bookName} ${chapter}:${verse}`}
-        </Text>
-      ) : null;
-    };
-
-    return data ? linkVerses.map(renderItem) : <Text>--</Text>;
-  };
-
-  const RenderFindSubTitle = useCallback((verse: any) => {
-    const [subTitle, link] = subtitles.filter((x: any) => x.verse === verse);
-    return subTitle ? (
-      <View>
-        <Text
-          style={[
-            styles.verse,
-            {
-              fontSize: 22,
-              textAlign: "center",
-              fontWeight: "bold",
-              paddingVertical: 5,
-              color: theme?.colors?.notification || "white",
-            },
-          ]}
-        >
-          {subTitle.subheading || subTitle.title}
-        </Text>
-        <View style={{ flexDirection: "row" }}>
-          <LinkVerse data={link} />
-        </View>
-      </View>
-    ) : null;
-  }, []);
 
   const onFavorite = async () => {
     await toggleFavoriteVerse({
@@ -507,7 +435,16 @@ const Verse: React.FC<VerseProps> = ({
             </Text>
           </View>
         )}
-        {RenderFindSubTitle(item.verse)}
+        {hasTitle && (
+          <VerseTitle
+            isSplit={isSplit}
+            isSplitActived={isSplitActived}
+            updateBibleQuery={updateBibleQuery}
+            key={item.verse}
+            subheading={item.subheading}
+          />
+        )}
+        {/* {RenderFindSubTitle(item.verse)} */}
 
         <Animated.Text
           style={[

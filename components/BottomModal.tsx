@@ -11,9 +11,9 @@ import React, {
   useEffect,
   useMemo,
   useState,
-} from 'react';
-import { BackHandler, StyleProp, StyleSheet, ViewStyle } from 'react-native';
-import { TTheme } from '@/types';
+} from "react";
+import { BackHandler, StyleProp, StyleSheet, ViewStyle } from "react-native";
+import { TTheme } from "@/types";
 
 type TBottomModal = {
   startAT?: 0 | 1 | 2 | 3;
@@ -29,6 +29,7 @@ type TBottomModal = {
   _theme?: TTheme;
   backgroundColor?: any;
   style?: StyleProp<ViewStyle>;
+  id?: string;
 };
 
 type Ref = BottomSheetModal;
@@ -48,7 +49,8 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       footerComponent,
       backgroundColor,
       _theme,
-      style
+      style,
+      id,
     },
     ref
   ) => {
@@ -57,12 +59,11 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
     const snapPoints = useMemo(
       () =>
         justOneSnap
-          ? justOneValue || ['30%']
-          : snaps || ['30%', '50%', '75%', '100%'],
+          ? justOneValue || ["30%"]
+          : snaps || ["30%", "50%", "75%", "100%"],
       [snaps]
     );
     const [index, setIndex] = useState(0);
-
     const handleSheetChanges = useCallback((index: number) => {
       setIndex(index);
       getIndex?.(index);
@@ -81,7 +82,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
 
     useEffect(() => {
       const backHandler = BackHandler.addEventListener(
-        'hardwareBackPress',
+        "hardwareBackPress",
         () => {
           if (index > 0) {
             // @ts-ignore
@@ -101,12 +102,15 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
           styles.bottomSheet,
           index === 3 && { borderRadius: 0 },
           backgroundColor && { backgroundColor: backgroundColor },
-          style && style
+          style && style,
         ]}
         ref={ref}
         index={startAT ?? 1}
         snapPoints={snapPoints}
-        handleIndicatorStyle={[styles.indicator, (justOneSnap && !showIndicator) && { opacity: 0 }]}
+        handleIndicatorStyle={[
+          styles.indicator,
+          justOneSnap && !showIndicator && { opacity: 0 },
+        ]}
         backdropComponent={renderBackdrop}
         onChange={handleSheetChanges}
       >

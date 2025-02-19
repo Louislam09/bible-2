@@ -295,7 +295,6 @@ export type TChapter = {
   dimensions?: any;
   item: {
     verses: IBookVerse[];
-    subtitles: TSubtitle[];
   };
   verse?: number;
   chapter?: number;
@@ -308,7 +307,6 @@ export type TVerse = {
   index?: number;
   setSelectedWord?: any;
   setOpen?: any;
-  subtitles: TSubtitle[];
 };
 
 export interface BookChapter {
@@ -329,8 +327,7 @@ export interface IBookVerse {
   chapter: number;
   text: string;
   verse: number;
-  subheading?: string;
-  order_if_several?: number;
+  subheading: string[];
   is_favorite: any;
   id?: any;
 }
