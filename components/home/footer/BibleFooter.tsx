@@ -60,7 +60,7 @@ const BibleFooter: FC<FooterInterface> = ({
   const params = useParams();
   const chpaterInfo = useBibleChapter();
   const {
-    data: { verses },
+    verses,
     bibleQuery,
     updateBibleQuery,
     historyManager: { getCurrentItem },

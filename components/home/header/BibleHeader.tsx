@@ -38,10 +38,7 @@ const BibleHeader: FC<HeaderInterface> = ({ refs }) => {
     toggleSplitMode,
     toggleBottomSideSearching,
   } = useBibleContext();
-  const {
-    data: { verses },
-    historyManager,
-  } = useBibleChapter();
+  const { verses, historyManager } = useBibleChapter();
   const chapterVerseLength = useMemo(() => verses.length, [verses]);
 
   const {

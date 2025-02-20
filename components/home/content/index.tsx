@@ -17,19 +17,18 @@ interface BookContentInterface {
 const BookContent: FC<BookContentInterface> = ({ isSplit, verse }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
-  const { data, bottomData, estimatedReadingTime, estimatedReadingTimeBottom } =
-    useBibleChapter();
 
   return (
     <View style={styles.bookContainer}>
-      <Chapter
+      {/* <Chapter
+        initialScrollIndex={0}
         {...{ verse }}
         isSplit={isSplit}
-        item={isSplit ? bottomData : data}
+        verses={isSplit ? bottomData.verses : data.verses}
         estimatedReadingTime={
           isSplit ? estimatedReadingTimeBottom : estimatedReadingTime
         }
-      />
+      /> */}
     </View>
   );
 };

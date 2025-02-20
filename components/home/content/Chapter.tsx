@@ -1,6 +1,5 @@
+import Icon from "@/components/Icon";
 import { Text } from "@/components/Themed";
-import { useBibleChapter } from "@/context/BibleChapterContext";
-import useDebounce from "@/hooks/useDebounce";
 import { TChapter, TTheme } from "@/types";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
@@ -18,94 +17,100 @@ import {
   View,
 } from "react-native";
 import Verse from "./Verse";
+import useHistoryManager from "@/hooks/useHistoryManager";
+import { useBibleChapter } from "@/context/BibleChapterContext";
 
 const Chapter = ({
-  item,
+  verses,
   isSplit,
-  verse: _verse,
+  verse,
   estimatedReadingTime,
-}: TChapter & { isSplit: boolean }) => {
-  const { verses = [] } = item;
+  initialScrollIndex,
+  fetching,
+}: TChapter) => {
+  const { width, height } = useWindowDimensions();
   const theme = useTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const chapterRef = useRef<FlashList<any>>(null);
-  const [firstLoad, setFirstLoad] = useState(true);
-  const [topVerse, setTopVerse] = useState<number | null>(null);
-  const [isLayoutMounted, setLayoutMounted] = useState(false);
-  const chapterVerseLength = useMemo(() => verses.length, [verses]);
-  const debounceTopVerse = useDebounce(topVerse, 100);
-  const { historyManager } = useBibleChapter();
-  const { updateVerse } = historyManager;
-  const { width, height } = useWindowDimensions();
+  const topVerseRef = useRef<number | null>(null);
+
   const aspectRadio = height / width;
   const isMobile = +aspectRadio.toFixed(2) > 1.65;
+  console.log("🔄 BibleTop Component Rendered", {
+    verses: verses.length,
+    isSplit,
+    verse,
+    estimatedReadingTime,
+    initialScrollIndex,
+    fetching,
+  });
 
-  // THIS IS CAUSING RE-RENDER - FIX
-  // useEffect(() => {
-  // if (!debounceTopVerse) return;
-  //   // updateVerse(debounceTopVerse);
-  // }, [debounceTopVerse]);
-
-  useEffect(() => {
-    const isFirst = !!topVerse;
-    setFirstLoad(!isFirst);
-  }, [topVerse]);
-
-  const verseNumber = +(_verse as number) || 0;
-  const initialScrollIndex = useMemo(() => {
-    const inValidIndex = verseNumber > verses.length;
-    const shouldSubtract =
-      verses.length === verseNumber || verseNumber === 1 ? -1 : 0;
-    return inValidIndex ? 0 : verseNumber + shouldSubtract;
-  }, [verseNumber, verses]);
-
-  const renderItem = (props: any) => (
-    <Verse
-      {...props}
-      isSplit={isSplit}
-      verse={_verse}
-      initVerse={initialScrollIndex}
-      estimatedReadingTime={estimatedReadingTime}
-    />
+  const renderItem = useCallback(
+    (props: any) => (
+      <Verse
+        {...props}
+        isSplit={isSplit}
+        verse={verse}
+        initVerse={initialScrollIndex}
+      />
+    ),
+    [isSplit, verse, initialScrollIndex]
   );
-
-  useEffect(() => {
-    if (initialScrollIndex !== topVerse && topVerse) {
-      if (!firstLoad || !isLayoutMounted) return;
-      chapterRef.current?.scrollToIndex({
-        index: initialScrollIndex - 1,
-        animated: true,
-      });
-    }
-  }, [topVerse, isLayoutMounted]);
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
-      setTopVerse(viewableItems[0].item.verse);
+      const newTopVerse = viewableItems[0].item.verse;
+      // console.log({ newTopVerse });
+      if (topVerseRef.current !== newTopVerse) {
+        topVerseRef.current = newTopVerse;
+      }
     }
   }, []);
 
-  const viewabilityConfig = { viewAreaCoveragePercentThreshold: 1 };
-
   const viewabilityConfigCallbackPairs = useRef([
-    { onViewableItemsChanged, viewabilityConfig },
+    {
+      onViewableItemsChanged,
+      viewabilityConfig: {
+        viewAreaCoveragePercentThreshold: 50,
+        // itemVisiblePercentThreshold: 75,
+        minimumViewTime: 500,
+        waitForInteraction: true,
+      },
+    },
   ]);
 
-  const onEndReached = useCallback(() => {
-    setTimeout(() => setTopVerse(chapterVerseLength as any), 500);
-  }, [chapterVerseLength]);
+  useEffect(() => {
+    if (initialScrollIndex !== topVerseRef.current) {
+      console.log({ initialScrollIndex });
+      chapterRef.current?.scrollToIndex({
+        index: initialScrollIndex,
+        animated: true,
+        viewPosition: 0,
+      });
+    }
+  }, [initialScrollIndex]);
+
+  const ListHeader = useCallback(() => {
+    return (
+      <View style={styles.estimatedContainer}>
+        <Text style={[styles.estimatedText]}>
+          <Icon size={14} name="Timer" color={theme.colors.notification} />
+          &nbsp; Tiempo de lectura {`~ ${estimatedReadingTime} min(s)\n`}
+        </Text>
+      </View>
+    );
+  }, [estimatedReadingTime]);
 
   return (
     <View style={styles.chapterContainer}>
       <View style={[styles.verseContent]}>
         <FlashList
           ref={chapterRef}
+          refreshing={fetching}
           keyExtractor={(item: any) => `verse-${item.verse}`}
           data={verses ?? []}
-          onLayout={() => setLayoutMounted(true)}
-          onEndReached={onEndReached}
+          ListHeaderComponent={ListHeader}
           renderItem={renderItem}
-          // decelerationRate="normal"
           decelerationRate="fast"
           estimatedItemSize={isMobile ? 140 : 100}
           removeClippedSubviews={true}
@@ -116,11 +121,14 @@ const Chapter = ({
           viewabilityConfigCallbackPairs={
             viewabilityConfigCallbackPairs.current
           }
+          onEndReachedThreshold={0.5}
+          disableAutoLayout
+          // decelerationRate="normal"
+          // onEndReached={onEndReached}
           // maintainVisibleContentPosition={{
           //   minIndexForVisible: 0,
           //   autoscrollToTopThreshold: 10,
           // }}
-          onEndReachedThreshold={0.5}
         />
       </View>
     </View>
@@ -170,6 +178,16 @@ const getStyles = ({ colors }: TTheme) =>
       height: 4,
       backgroundColor: colors.text,
       borderRadius: 2,
+    },
+    estimatedContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-end",
+      paddingRight: 10,
+      width: "100%",
+    },
+    estimatedText: {
+      textAlign: "right",
     },
   });
 

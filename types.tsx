@@ -293,13 +293,12 @@ export type SpeechVoice = {
 
 export type TChapter = {
   dimensions?: any;
-  item: {
-    verses: IBookVerse[];
-  };
-  verse?: number;
-  chapter?: number;
-  book?: string;
+  verses: IBookVerse[];
+  isSplit?: boolean;
+  verse: number;
+  initialScrollIndex: number;
   estimatedReadingTime?: number;
+  fetching: boolean;
 };
 
 export type TVerse = {

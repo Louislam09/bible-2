@@ -24,8 +24,8 @@ interface BibleData {
 }
 
 interface BibleChapterContextProps {
-  data: BibleData;
-  bottomData: BibleData;
+  verses: IBookVerse[];
+  bottomVerses: IBookVerse[];
   loading: boolean;
   estimatedReadingTime: number;
   estimatedReadingTimeBottom: number;
@@ -210,19 +210,32 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     fetchChapter();
   }, [bibleQuery.shouldFetch, isMyBibleDbLoaded]);
 
+  const memoizedVerses = useMemo(() => data.verses, [data.verses]);
+  const memoizedBottomVerses = useMemo(
+    () => bottomData.verses,
+    [bottomData.verses]
+  );
+  const memoizedQuery = useMemo(() => bibleQuery, [bibleQuery]);
+
   const contextValue = useMemo(
     () => ({
-      data,
-      bottomData,
+      verses: memoizedVerses,
+      bottomVerses: memoizedBottomVerses,
       loading,
       estimatedReadingTime,
       fetchChapter,
       updateBibleQuery,
-      bibleQuery,
+      bibleQuery: memoizedQuery,
       historyManager,
       estimatedReadingTimeBottom,
     }),
-    [data, loading, estimatedReadingTime, bibleQuery, historyManager]
+    [
+      memoizedVerses,
+      memoizedBottomVerses,
+      loading,
+      estimatedReadingTime,
+      memoizedQuery,
+    ]
   );
 
   return (

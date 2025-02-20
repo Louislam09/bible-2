@@ -2,32 +2,25 @@ import DisplayStrongWord from "@/components/DisplayStrongWord";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import Walkthrough from "@/components/Walkthrough";
-import { DB_BOOK_NAMES, getBookDetail } from "@/constants/BookNames";
+import { getBookDetail } from "@/constants/BookNames";
+import { useBibleChapter } from "@/context/BibleChapterContext";
 import { useBibleContext } from "@/context/BibleContext";
 import { useMemorization } from "@/context/MemorizationContext";
 import { useModal } from "@/context/modal-context";
 import useParams from "@/hooks/useParams";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
-import { HomeParams, Screens, TIcon, TTheme, TVerse } from "@/types";
+import { HomeParams, TIcon, TTheme, TVerse } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { customUnderline } from "@/utils/customStyle";
-import extractVersesInfo, {
+import {
   extractTextFromParagraph,
   extractWordsWithTags,
   getStrongValue,
   WordTagPair,
 } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTheme } from "@react-navigation/native";
-import { useNavigation } from "expo-router";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
   Easing,
@@ -37,13 +30,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
-import { useBibleChapter } from "@/context/BibleChapterContext";
 import VerseTitle from "./VerseTitle";
 
 type VerseProps = TVerse & {
   isSplit: boolean;
   initVerse: number;
-  estimatedReadingTime?: number;
 };
 
 type ActionItemProps = {
@@ -121,13 +112,7 @@ const ActionItem = ({ index, action, styles, theme }: ActionItemProps) => {
   );
 };
 
-const Verse: React.FC<VerseProps> = ({
-  item,
-  isSplit,
-  initVerse,
-  estimatedReadingTime,
-}) => {
-  const navigation = useNavigation();
+const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   const params = useParams<HomeParams>();
   const { isVerseTour } = params;
   const {
@@ -427,14 +412,14 @@ const Verse: React.FC<VerseProps> = ({
         style={styles.verseContainer}
         ref={verseRef}
       >
-        {isFirstVerse && (
+        {/* {isFirstVerse && (
           <View style={styles.estimatedContainer}>
             <Text style={[styles.estimatedText]}>
               <Icon size={14} name="Timer" color={theme.colors.notification} />
               &nbsp; Tiempo de lectura {`~ ${estimatedReadingTime} min(s)\n`}
             </Text>
           </View>
-        )}
+        )} */}
         {hasTitle && (
           <VerseTitle
             isSplit={isSplit}
