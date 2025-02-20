@@ -111,7 +111,7 @@ const Chapter = ({
           data={verses ?? []}
           ListHeaderComponent={ListHeader}
           renderItem={renderItem}
-          decelerationRate="fast"
+          decelerationRate="normal"
           estimatedItemSize={isMobile ? 140 : 100}
           removeClippedSubviews={true}
           ListEmptyComponent={() => (
