@@ -2,7 +2,7 @@ import { useBibleChapter } from "@/context/BibleChapterContext";
 import { useBibleContext } from "@/context/BibleContext";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import React, { FC, useMemo } from "react";
-import { Animated, StyleSheet } from "react-native";
+import { ActivityIndicator, Animated, StyleSheet } from "react-native";
 import Chapter from "./home/content/Chapter";
 import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
@@ -13,20 +13,25 @@ const BibleTop: FC<any> = (props) => {
   const theme = useTheme();
   const { isSplitActived, orientation } = useBibleContext();
   const isPortrait = orientation === "PORTRAIT";
-  const { nextChapter, previousChapter } = useChangeBookOrChapter({
-    navigation,
-    ...props,
-  });
+
   const {
     verses,
     estimatedReadingTime,
-    bibleQuery: { verse },
+    bibleQuery: { book, chapter, verse },
     loading,
   } = useBibleChapter();
   const memoizedData = useMemo(() => verses, [verses]);
+  const memoizedBook = useMemo(() => book, [book]);
+  const memoizedChapter = useMemo(() => chapter, [chapter]);
+  const memoizedVerse = useMemo(() => verse, [verse]);
+
+  const { nextChapter, previousChapter } = useChangeBookOrChapter({
+    book: memoizedBook,
+    chapter: memoizedChapter,
+  });
 
   const initialScrollIndex = useMemo(
-    () => Math.min(verse, memoizedData.length),
+    () => Math.min(verse - 1, memoizedData.length - 1),
     [verse, memoizedData]
   );
 
@@ -55,13 +60,18 @@ const BibleTop: FC<any> = (props) => {
   return (
     <Animated.View style={[styles.container, containerStyle]}>
       <SwipeWrapper {...{ onSwipeRight, onSwipeLeft }}>
-        <Chapter
-          verses={memoizedData}
-          verse={verse || 1}
-          estimatedReadingTime={estimatedReadingTime}
-          initialScrollIndex={initialScrollIndex}
-          fetching={loading}
-        />
+        {loading.top ? (
+          <ActivityIndicator />
+        ) : (
+          <Chapter
+            verses={memoizedData}
+            verse={memoizedVerse || 1}
+            estimatedReadingTime={estimatedReadingTime}
+            initialScrollIndex={
+              initialScrollIndex === 1 ? 0 : initialScrollIndex
+            }
+          />
+        )}
       </SwipeWrapper>
       <BibleFooter isSplit={false} {...props} />
     </Animated.View>

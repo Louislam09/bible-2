@@ -20,7 +20,14 @@ import {
 } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { useTheme } from "@react-navigation/native";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Animated,
   Easing,
@@ -31,6 +38,7 @@ import {
 } from "react-native";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
 import VerseTitle from "./VerseTitle";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 type VerseProps = TVerse & {
   isSplit: boolean;
@@ -60,7 +68,7 @@ const validStrongList = (arr: WordTagPair[]) => {
   });
 };
 
-const ActionItem = ({ index, action, styles, theme }: ActionItemProps) => {
+const ActionItem = memo(({ index, action, styles, theme }: ActionItemProps) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateXAnim = useRef(new Animated.Value(300)).current;
 
@@ -68,13 +76,13 @@ const ActionItem = ({ index, action, styles, theme }: ActionItemProps) => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 300,
+        duration: 150,
         delay: index * 100,
         useNativeDriver: true,
       }),
       Animated.timing(translateXAnim, {
         toValue: 0,
-        duration: 300,
+        duration: 150,
         delay: index * 100,
         useNativeDriver: true,
       }),
@@ -110,11 +118,11 @@ const ActionItem = ({ index, action, styles, theme }: ActionItemProps) => {
       </Pressable>
     </Animated.View>
   );
-};
+});
 
 const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
-  const params = useParams<HomeParams>();
-  const { isVerseTour } = params;
+  // const params = useParams<HomeParams>();
+  // const { isVerseTour } = params;
   const {
     currentBibleVersion,
     highlightVerse,
@@ -138,31 +146,32 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   } = useBibleContext();
 
   const { addVerse } = useMemorization();
-  const theme = useTheme() as TTheme;
-  const styles = getStyles(theme);
+  const theme = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
   const [isVerseHighlisted, setHighlightVerse] = useState<number | null>(null);
   const [isFavorite, setFavorite] = useState(false);
   const highlightedVersesLenth = highlightedVerses.length;
   const isMoreThanOneHighted = highlightedVersesLenth > 1;
   const isStrongSearch = verseInStrongDisplay === item.verse;
-  const lastHighted = useMemo(() => {
-    return highlightedVerses[highlightedVerses.length - 1];
-  }, [highlightedVerses]);
   const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
   const verseRef = useRef<any>(null);
-  const [stepIndex, setStepIndex] = useState(0);
+  // const [stepIndex, setStepIndex] = useState(0);
   const isBottom = isSplit && isBottomSideSearching;
   const isTop = !isSplit && !isBottomSideSearching;
   const [doubleTagged, setDoubleTagged] = useState(false);
   const animatedVerseHighlight = useRef(new Animated.Value(0)).current;
   const wordAndStrongValue = extractWordsWithTags(item.text);
-  const isFirstVerse = useMemo(() => {
-    return item.verse === 1;
-  }, [item.verse]);
+
+  const lastHighted = useMemo(
+    () => highlightedVerses[highlightedVerses.length - 1],
+    [highlightedVerses]
+  );
+
   const hasTitle = useMemo(
     () => !item.subheading.includes(null as any),
-    [item.subheading]
+    [item]
   );
+  // console.log("🆚 Verse Component Rendered", item.verse);
 
   const {
     compareRefHandlePresentModalPress: onCompare,
@@ -202,7 +211,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     }
   }, [highlightedVersesLenth]);
 
-  const onVerseClicked = () => {
+  const onVerseClicked = useCallback(() => {
     setverseInStrongDisplay(isStrongSearch ? 0 : item.verse);
     toggleBottomSideSearching(isSplit);
     setDoubleTagged(false);
@@ -215,7 +224,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     }
     highlightVerse(item);
     setHighlightVerse(item.verse);
-  };
+  }, [item, isStrongSearch, isSplit, isCopyMode, isVerseHighlisted]);
 
   const onPress = useSingleAndDoublePress({
     onDoublePress: () => {
@@ -226,12 +235,12 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     delay: 200,
   });
 
-  const onVerseLongPress = () => {
+  const onVerseLongPress = useCallback(() => {
     if (isVerseHighlisted === item.verse) return;
     toggleCopyMode();
     highlightVerse(item);
     setHighlightVerse(item.verse);
-  };
+  }, [item, isVerseHighlisted]);
 
   const onFavorite = async () => {
     await toggleFavoriteVerse({
@@ -366,7 +375,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         description: "Comparar",
       },
     ] as TIcon[];
-  }, [isMoreThanOneHighted, lastHighted, isVerseHighlisted, isSplitActived]);
+  }, [isMoreThanOneHighted, lastHighted, isVerseHighlisted, isFavorite]);
+  // }, [isMoreThanOneHighted, lastHighted, isVerseHighlisted, isSplitActived]);
 
   const steps = [
     {
@@ -388,7 +398,10 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     },
   ];
 
-  const displayTour = item.verse === 1 && verseRef.current && isVerseTour;
+  // const displayTour = useMemo(
+  //   () => item.verse === 1 && verseRef.current && isVerseTour,
+  //   [isVerseTour, item]
+  // );
 
   const bgVerseHighlight = animatedVerseHighlight.interpolate({
     inputRange: [0, 1],
@@ -406,20 +419,12 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       }}
     >
       <TouchableOpacity
-        onPress={() => onPress()}
-        onLongPress={() => onVerseLongPress()}
+        onPress={onPress}
+        onLongPress={onVerseLongPress}
         activeOpacity={0.9}
         style={styles.verseContainer}
         ref={verseRef}
       >
-        {/* {isFirstVerse && (
-          <View style={styles.estimatedContainer}>
-            <Text style={[styles.estimatedText]}>
-              <Icon size={14} name="Timer" color={theme.colors.notification} />
-              &nbsp; Tiempo de lectura {`~ ${estimatedReadingTime} min(s)\n`}
-            </Text>
-          </View>
-        )} */}
         {hasTitle && (
           <VerseTitle
             isSplit={isSplit}
@@ -429,7 +434,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
             subheading={item.subheading}
           />
         )}
-        {/* {RenderFindSubTitle(item.verse)} */}
 
         <Animated.Text
           style={[
@@ -444,11 +448,13 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         >
           <Text style={[styles.verseNumber]}>
             {isFavorite && !isVerseHighlisted && (
-              <Icon size={14} name="Star" color="#ffd41d" />
+              <MaterialCommunityIcons size={14} name="star" color="#ffd41d" />
+              // <Icon size={14} name="Star" color="#ffd41d" />
             )}
             &nbsp;{item.verse}&nbsp;
           </Text>
 
+          {/* HIGHLIGHT */}
           {isStrongSearch && (isBottom || isTop) ? (
             <>
               {doubleTagged ? (
@@ -479,6 +485,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
             <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
           )}
         </Animated.Text>
+
         {/* ACTIONS */}
         {isVerseHighlisted === item.verse && !!highlightedVersesLenth && (
           <ScrollView
@@ -495,13 +502,13 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
           </ScrollView>
         )}
       </TouchableOpacity>
-      {displayTour && (
+      {/* {displayTour && (
         <Walkthrough
           steps={steps}
           setStep={setStepIndex}
           currentStep={stepIndex}
         />
-      )}
+      )} */}
     </View>
   );
 };
@@ -549,4 +556,5 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
   });
 
-export default Verse;
+// export default Verse;
+export default React.memo(Verse);

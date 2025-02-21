@@ -1,33 +1,25 @@
 import Icon from "@/components/Icon";
 import { Text } from "@/components/Themed";
-import { TChapter, TTheme } from "@/types";
+import { IBookVerse, TChapter, TTheme } from "@/types";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   ActivityIndicator,
+  Animated,
   StyleSheet,
   useWindowDimensions,
   View,
 } from "react-native";
 import Verse from "./Verse";
-import useHistoryManager from "@/hooks/useHistoryManager";
-import { useBibleChapter } from "@/context/BibleChapterContext";
 
 const Chapter = ({
   verses,
   isSplit,
-  verse,
   estimatedReadingTime,
   initialScrollIndex,
-  fetching,
 }: TChapter) => {
+  console.log("🔄 Chapter Component Rendered");
   const { width, height } = useWindowDimensions();
   const theme = useTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
@@ -36,31 +28,20 @@ const Chapter = ({
 
   const aspectRadio = height / width;
   const isMobile = +aspectRadio.toFixed(2) > 1.65;
-  console.log("🔄 BibleTop Component Rendered", {
-    verses: verses.length,
-    isSplit,
-    verse,
-    estimatedReadingTime,
-    initialScrollIndex,
-    fetching,
-  });
+  const { style } = useHighlightRender();
 
   const renderItem = useCallback(
-    (props: any) => (
-      <Verse
-        {...props}
-        isSplit={isSplit}
-        verse={verse}
-        initVerse={initialScrollIndex}
-      />
+    ({ item }: any) => (
+      <Animated.View style={style}>
+        <Verse item={item} isSplit={!!isSplit} initVerse={initialScrollIndex} />
+      </Animated.View>
     ),
-    [isSplit, verse, initialScrollIndex]
+    [isSplit, initialScrollIndex]
   );
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
       const newTopVerse = viewableItems[0].item.verse;
-      // console.log({ newTopVerse });
       if (topVerseRef.current !== newTopVerse) {
         topVerseRef.current = newTopVerse;
       }
@@ -80,8 +61,7 @@ const Chapter = ({
   ]);
 
   useEffect(() => {
-    if (initialScrollIndex !== topVerseRef.current) {
-      console.log({ initialScrollIndex });
+    if (initialScrollIndex !== topVerseRef.current && chapterRef.current) {
       chapterRef.current?.scrollToIndex({
         index: initialScrollIndex,
         animated: true,
@@ -101,19 +81,23 @@ const Chapter = ({
     );
   }, [estimatedReadingTime]);
 
+  const keyExtractor = useCallback(
+    (item: IBookVerse) => `${item.book_number}-${item.chapter}-${item.verse}`,
+    []
+  );
+
   return (
     <View style={styles.chapterContainer}>
       <View style={[styles.verseContent]}>
         <FlashList
           ref={chapterRef}
-          refreshing={fetching}
-          keyExtractor={(item: any) => `verse-${item.verse}`}
+          keyExtractor={keyExtractor}
           data={verses ?? []}
           ListHeaderComponent={ListHeader}
           renderItem={renderItem}
           decelerationRate="normal"
-          estimatedItemSize={isMobile ? 140 : 100}
-          removeClippedSubviews={true}
+          estimatedItemSize={isMobile ? 162 : 100}
+          removeClippedSubviews
           ListEmptyComponent={() => (
             <LoadingComponent textColor={theme.colors.text} />
           )}
@@ -123,6 +107,7 @@ const Chapter = ({
           }
           onEndReachedThreshold={0.5}
           disableAutoLayout
+          disableHorizontalListHeightMeasurement
           // decelerationRate="normal"
           // onEndReached={onEndReached}
           // maintainVisibleContentPosition={{
@@ -191,5 +176,41 @@ const getStyles = ({ colors }: TTheme) =>
     },
   });
 
-// export default withRenderCount(Chapter);
-export default Chapter;
+export function useHighlightRender() {
+  const animation = useRef(new Animated.Value(0)).current;
+  const renderCount = useRef(0);
+  const theme = useTheme();
+
+  useEffect(() => {
+    // Increment render count
+    renderCount.current += 1;
+
+    // Trigger animation only if it's not the first render
+    if (renderCount.current > 1) {
+      Animated.sequence([
+        Animated.timing(animation, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: false,
+        }),
+        Animated.timing(animation, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: false,
+        }),
+      ]).start();
+    }
+  });
+
+  return {
+    style: {
+      borderColor: animation.interpolate({
+        inputRange: [0, 1],
+        outputRange: ["transparent", theme.colors.notification],
+      }),
+      borderWidth: 1,
+    },
+  };
+}
+
+export default React.memo(Chapter);

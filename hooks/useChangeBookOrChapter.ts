@@ -3,20 +3,18 @@ import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "@/constants/BookNames";
 import { useBibleChapter } from "@/context/BibleChapterContext";
 
 interface useChangeBookOrChapterProps {
-  navigation: Omit<
-    NavigationProp<ReactNavigation.RootParamList>,
-    "getState"
-  > & {
-    getState(): NavigationState | undefined;
-  };
+  // navigation: Omit<
+  //   NavigationProp<ReactNavigation.RootParamList>,
+  //   "getState"
+  // > & {
+  //   getState(): NavigationState | undefined;
+  // };
   isSplit?: boolean;
   book: string;
   chapter: number;
-  verse: number;
 }
 
 const useChangeBookOrChapter = ({
-  navigation,
   isSplit = false,
   book,
   chapter,
@@ -38,7 +36,7 @@ const useChangeBookOrChapter = ({
       shouldFetch: true,
       isBibleBottom: isSplit,
     });
-    navigation.setParams(queryInfo);
+    // navigation.setParams(queryInfo);
   };
 
   function nextChapter() {
@@ -61,7 +59,7 @@ const useChangeBookOrChapter = ({
       shouldFetch: true,
       isBibleBottom: isSplit,
     });
-    navigation.setParams(queryInfo);
+    // navigation.setParams(queryInfo);
   }
   const previousChapter = () => {
     if (bookNumber !== 10 && chapter === 1) {
@@ -82,7 +80,7 @@ const useChangeBookOrChapter = ({
       shouldFetch: true,
       isBibleBottom: isSplit,
     });
-    navigation.setParams(queryInfo);
+    // navigation.setParams(queryInfo);
   };
 
   return {

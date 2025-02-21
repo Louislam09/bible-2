@@ -368,4 +368,4 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
   });
 
-export default ChooseBook;
+export default React.memo(ChooseBook);

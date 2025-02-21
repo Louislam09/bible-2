@@ -19,14 +19,13 @@ import {
 } from "react";
 import { useBibleContext } from "./BibleContext";
 
-interface BibleData {
-  verses: IBookVerse[];
-}
-
 interface BibleChapterContextProps {
   verses: IBookVerse[];
   bottomVerses: IBookVerse[];
-  loading: boolean;
+  loading: {
+    top: boolean;
+    bottom: boolean;
+  };
   estimatedReadingTime: number;
   estimatedReadingTimeBottom: number;
   fetchChapter: () => void;
@@ -53,21 +52,23 @@ type IBibleQuery = {
 
 export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
   const defaultData = { verses: [] };
-  const [data, setData] = useState<BibleData>(defaultData);
-  const [bottomData, setBottomData] = useState<BibleData>(defaultData);
-  // const params = useParams<HomeParams>();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [verses, setVerses] = useState<IBookVerse[]>([]);
+  const [bottomVerses, setBottomVerses] = useState<IBookVerse[]>([]);
+  const [loading, setLoading] = useState({
+    top: false,
+    bottom: false,
+  });
   const { executeSql, isMyBibleDbLoaded } = useDBContext();
   const { storedData, saveData } = useStorage();
   const historyManager = useHistoryManager();
   const { getCurrentItem, add: addToHistory } = historyManager;
 
   const estimatedReadingTime = useReadingTime({
-    text: getChapterTextRaw(data.verses),
+    text: getChapterTextRaw(verses),
   });
 
   const estimatedReadingTimeBottom = useReadingTime({
-    text: getChapterTextRaw(bottomData.verses),
+    text: getChapterTextRaw(bottomVerses),
   });
 
   const {
@@ -101,14 +102,14 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const updateBibleQuery = useCallback((props: Partial<IBibleQuery>) => {
-    setBibleQuery((prev) => ({
-      ...prev,
-      ...props,
-    }));
+    const loadingKey = props.isBibleBottom ? "bottom" : "top";
+    setLoading((prev) => ({ ...prev, [loadingKey]: true }));
+    setBibleQuery((prev) => ({ ...prev, ...props }));
   }, []);
 
   const fetchChapter = useCallback(async () => {
     const { book, chapter, verse, isBibleBottom } = bibleQuery;
+    const loadingKey = isBibleBottom ? "bottom" : "top";
     const targetBook = isBibleBottom ? bibleQuery.bottomSideBook : book;
     const targetChapter = isBibleBottom
       ? bibleQuery.bottomSideChapter
@@ -116,12 +117,8 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     const targetVerse = isBibleBottom ? bibleQuery.bottomSideVerse : verse;
     const currentBook = DB_BOOK_NAMES.find((x) => x.longName === targetBook);
     if (highlightedVerses.length) clearHighlights();
-    setLoading(true);
-    if (isBibleBottom) {
-      setBottomData(defaultData);
-    } else {
-      setData(defaultData);
-    }
+    setLoading((prev) => ({ ...prev, [loadingKey]: true }));
+
     setverseInStrongDisplay(0);
     const queryKey = getDatabaseQueryKey(currentBibleVersion);
     const query = QUERY_BY_DB[queryKey];
@@ -133,33 +130,30 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
         "verses"
       );
 
-      // const subheading = verses[1].subheading;
       const endTime = Date.now();
       const executionTime = endTime - startTime;
+      // 📖📚🧾
       console.log(
-        `${targetBook} ${targetChapter}:${targetVerse} in ${executionTime} ms.`
+        `📚 ${targetBook} ${targetChapter}:${targetVerse} in ${executionTime} ms.`
       );
 
-      if (isBibleBottom) {
-        setBottomData({ verses });
-      } else {
-        setData({ verses });
-      }
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching Bible data:", error);
-    } finally {
-      setLoading(false);
+      isBibleBottom ? setBottomVerses(verses) : setVerses(verses);
+
       setBibleQuery((prev) => ({
         ...prev,
         isBibleBottom: false,
         shouldFetch: false,
       }));
+      setLoading((prev) => ({ ...prev, [loadingKey]: false }));
+    } catch (error) {
+      console.error("Error fetching Bible data:", error);
+      setLoading((prev) => ({ ...prev, [loadingKey]: false }));
     }
   }, [bibleQuery, executeSql]);
 
   useEffect(() => {
-    if (!loading) {
+    // Fix this issue
+    if (!loading.top || !loading.bottom) {
       const { isBibleBottom, isHistory } = bibleQuery;
       const saveKeyPrefix = isBibleBottom ? "lastBottomSide" : "last";
       const bookValue = isBibleBottom
@@ -172,21 +166,21 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
         ? bibleQuery.bottomSideVerse
         : bibleQuery.verse;
 
-      saveData({
-        [`${saveKeyPrefix}Book`]: bookValue,
-        [`${saveKeyPrefix}Chapter`]: chapterValue,
-        [`${saveKeyPrefix}Verse`]: verseValue,
-      });
+      // saveData({
+      //   [`${saveKeyPrefix}Book`]: bookValue,
+      //   [`${saveKeyPrefix}Chapter`]: chapterValue,
+      //   [`${saveKeyPrefix}Verse`]: verseValue,
+      // });
 
-      if (!isHistory) {
-        addToHistory({
-          book: bookValue,
-          chapter: chapterValue,
-          verse: verseValue,
-          created_at: "",
-        });
-      }
-      setBibleQuery((prev) => ({ ...prev, isHistory: false }));
+      // if (!isHistory) {
+      //   addToHistory({
+      //     book: bookValue,
+      //     chapter: chapterValue,
+      //     verse: verseValue,
+      //     created_at: "",
+      //   });
+      // }
+      // setBibleQuery((prev) => ({ ...prev, isHistory: false }));
     }
   }, [loading]);
 
@@ -210,11 +204,8 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     fetchChapter();
   }, [bibleQuery.shouldFetch, isMyBibleDbLoaded]);
 
-  const memoizedVerses = useMemo(() => data.verses, [data.verses]);
-  const memoizedBottomVerses = useMemo(
-    () => bottomData.verses,
-    [bottomData.verses]
-  );
+  const memoizedVerses = useMemo(() => verses, [verses]);
+  const memoizedBottomVerses = useMemo(() => bottomVerses, [bottomVerses]);
   const memoizedQuery = useMemo(() => bibleQuery, [bibleQuery]);
 
   const contextValue = useMemo(

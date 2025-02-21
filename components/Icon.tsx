@@ -32,10 +32,10 @@ const Icon: React.FC<IconProps> = ({
       strokeWidth={strokeWidth}
       style={style}
       color={color}
-      size={size}
+      size={size || 14}
       onPress={onPress}
     />
   );
 };
 
-export default Icon;
+export default React.memo(Icon);

@@ -127,4 +127,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OptimizedChapterList;
+export default React.memo(OptimizedChapterList);

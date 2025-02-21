@@ -298,7 +298,6 @@ export type TChapter = {
   verse: number;
   initialScrollIndex: number;
   estimatedReadingTime?: number;
-  fetching: boolean;
 };
 
 export type TVerse = {

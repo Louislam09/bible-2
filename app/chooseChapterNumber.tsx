@@ -9,7 +9,7 @@ import { ChooseChapterNumberParams, Screens } from "@/types";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { useTheme } from "@react-navigation/native";
 import { Stack, useNavigation } from "expo-router";
-import { Fragment, useCallback, useMemo } from "react";
+import React, { Fragment, useCallback, useMemo } from "react";
 
 const ChooseChapterNumber = () => {
   const navigation = useNavigation();
@@ -73,4 +73,4 @@ const ChooseChapterNumber = () => {
   );
 };
 
-export default ChooseChapterNumber;
+export default React.memo(ChooseChapterNumber);
