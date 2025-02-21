@@ -3,13 +3,7 @@ import { Text } from "@/components/Themed";
 import { TChapter, TTheme } from "@/types";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -17,8 +11,6 @@ import {
   View,
 } from "react-native";
 import Verse from "./Verse";
-import useHistoryManager from "@/hooks/useHistoryManager";
-import { useBibleChapter } from "@/context/BibleChapterContext";
 
 const Chapter = ({
   verses,
@@ -28,6 +20,7 @@ const Chapter = ({
   initialScrollIndex,
   fetching,
 }: TChapter) => {
+  console.log("🔄 Chapter Component Rendered");
   const { width, height } = useWindowDimensions();
   const theme = useTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
@@ -36,14 +29,6 @@ const Chapter = ({
 
   const aspectRadio = height / width;
   const isMobile = +aspectRadio.toFixed(2) > 1.65;
-  console.log("🔄 BibleTop Component Rendered", {
-    verses: verses.length,
-    isSplit,
-    verse,
-    estimatedReadingTime,
-    initialScrollIndex,
-    fetching,
-  });
 
   const renderItem = useCallback(
     (props: any) => (
@@ -81,7 +66,7 @@ const Chapter = ({
 
   useEffect(() => {
     if (initialScrollIndex !== topVerseRef.current) {
-      console.log({ initialScrollIndex });
+      // console.log({ initialScrollIndex });
       chapterRef.current?.scrollToIndex({
         index: initialScrollIndex,
         animated: true,
@@ -192,4 +177,4 @@ const getStyles = ({ colors }: TTheme) =>
   });
 
 // export default withRenderCount(Chapter);
-export default Chapter;
+export default React.memo(Chapter);

@@ -180,12 +180,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
         >
           <BibleTop
             refs={componentRefs}
-            {...{
-              ...initialState,
-              height: topHeight,
-              width: topWidth,
-              navigation,
-            }}
+            {...{ height: topHeight, width: topWidth }}
           />
           {isSplitActived && (
             <>

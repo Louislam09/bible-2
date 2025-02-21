@@ -37,7 +37,7 @@ const BibleFooter: FC<FooterInterface> = ({
   isSplit,
   book: bookProp,
   chapter: chapterProp,
-  verse,
+  verse: verseProp,
 }) => {
   const { book: bookRef, back: backRef, next: nextRef, audi: audioRef } = refs;
   const {
@@ -70,8 +70,11 @@ const BibleFooter: FC<FooterInterface> = ({
     ? bibleQuery?.bottomSideBook || bookProp
     : bibleQuery.book || bookProp;
   const chapter = isSplit
-    ? bibleQuery?.bottomSideChapter || bookProp
+    ? bibleQuery?.bottomSideChapter || chapterProp
     : bibleQuery.chapter || chapterProp;
+  const verse = isSplit
+    ? bibleQuery?.bottomSideVerse || verseProp
+    : bibleQuery.verse || verseProp;
 
   const { bookNumber } = DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
@@ -121,7 +124,7 @@ const BibleFooter: FC<FooterInterface> = ({
       shouldFetch: true,
       isBibleBottom: isSplit,
     });
-    navigation.setParams({ ...queryInfo, isHistory: false });
+    // navigation.setParams({ ...queryInfo, isHistory: false });
   };
 
   function nextChapter() {
@@ -143,7 +146,7 @@ const BibleFooter: FC<FooterInterface> = ({
       shouldFetch: true,
       isBibleBottom: isSplit,
     });
-    navigation.setParams({ ...queryInfo, isHistory: false });
+    // navigation.setParams({ ...queryInfo, isHistory: false });
   }
   const previousChapter = () => {
     if (bookNumber !== 10 && chapter === 1) {
@@ -163,7 +166,7 @@ const BibleFooter: FC<FooterInterface> = ({
       shouldFetch: true,
       isBibleBottom: isSplit,
     });
-    navigation.setParams({ ...queryInfo, isHistory: false });
+    // navigation.setParams({ ...queryInfo, isHistory: false });
   };
 
   const onSingleFooterTitle = () => {

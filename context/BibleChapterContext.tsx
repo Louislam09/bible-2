@@ -18,6 +18,8 @@ import {
   useState,
 } from "react";
 import { useBibleContext } from "./BibleContext";
+import { observable } from "@legendapp/state";
+import { use$ } from "@legendapp/state/react";
 
 interface BibleData {
   verses: IBookVerse[];
@@ -51,23 +53,52 @@ type IBibleQuery = {
   shouldFetch: boolean;
 };
 
+export interface IBibleState {
+  verses: IBookVerse[];
+  bottomVerses: IBookVerse[];
+  loading: boolean;
+  bibleQuery: IBibleQuery;
+}
+
+export const bibleState = observable<IBibleState>({
+  verses: [] as IBookVerse[],
+  bottomVerses: [] as IBookVerse[],
+  loading: false,
+  bibleQuery: {
+    book: "Génesis",
+    chapter: 1,
+    verse: 1,
+    bottomSideBook: "Génesis",
+    bottomSideChapter: 1,
+    bottomSideVerse: 1,
+    isBibleBottom: false,
+    isHistory: false,
+    shouldFetch: true,
+  },
+});
+
+export const selectVerses = () => use$(bibleState.verses);
+export const selectBottomVerses = () => use$(bibleState.bottomVerses);
+export const selectLoading = () => use$(bibleState.loading);
+export const selectBibleQuery = () => use$(bibleState.bibleQuery);
+
 export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
-  const defaultData = { verses: [] };
-  const [data, setData] = useState<BibleData>(defaultData);
-  const [bottomData, setBottomData] = useState<BibleData>(defaultData);
-  // const params = useParams<HomeParams>();
-  const [loading, setLoading] = useState<boolean>(false);
   const { executeSql, isMyBibleDbLoaded } = useDBContext();
   const { storedData, saveData } = useStorage();
   const historyManager = useHistoryManager();
   const { getCurrentItem, add: addToHistory } = historyManager;
 
+  const loading = selectLoading();
+  const bibleQuery = selectBibleQuery();
+  const verses = selectVerses();
+  const bottomVerses = selectBottomVerses();
+
   const estimatedReadingTime = useReadingTime({
-    text: getChapterTextRaw(data.verses),
+    text: getChapterTextRaw(verses),
   });
 
   const estimatedReadingTimeBottom = useReadingTime({
-    text: getChapterTextRaw(bottomData.verses),
+    text: getChapterTextRaw(bottomVerses),
   });
 
   const {
@@ -88,23 +119,10 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     currentBibleVersion,
   } = storedData;
 
-  const [bibleQuery, setBibleQuery] = useState<IBibleQuery>({
-    book: lastBook || "Génesis",
-    chapter: lastChapter || 1,
-    verse: lastVerse || 1,
-    bottomSideBook: lastBottomSideBook || "Génesis",
-    bottomSideChapter: lastBottomSideChapter || 1,
-    bottomSideVerse: lastBottomSideVerse || 1,
-    isBibleBottom: false,
-    isHistory: false,
-    shouldFetch: true,
-  });
+  const shouldFetch = use$(bibleState.bibleQuery.shouldFetch);
 
   const updateBibleQuery = useCallback((props: Partial<IBibleQuery>) => {
-    setBibleQuery((prev) => ({
-      ...prev,
-      ...props,
-    }));
+    bibleState.bibleQuery.set((prev) => ({ ...prev, ...props }));
   }, []);
 
   const fetchChapter = useCallback(async () => {
@@ -115,13 +133,13 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
       : chapter;
     const targetVerse = isBibleBottom ? bibleQuery.bottomSideVerse : verse;
     const currentBook = DB_BOOK_NAMES.find((x) => x.longName === targetBook);
-    if (highlightedVerses.length) clearHighlights();
-    setLoading(true);
-    if (isBibleBottom) {
-      setBottomData(defaultData);
-    } else {
-      setData(defaultData);
-    }
+    // if (highlightedVerses.length) clearHighlights();
+    bibleState.loading.set(true);
+    // if (isBibleBottom) {
+    //   bibleState.bottomVerses.set([]);
+    // } else {
+    //   bibleState.verses.set([]);
+    // }
     setverseInStrongDisplay(0);
     const queryKey = getDatabaseQueryKey(currentBibleVersion);
     const query = QUERY_BY_DB[queryKey];
@@ -133,7 +151,6 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
         "verses"
       );
 
-      // const subheading = verses[1].subheading;
       const endTime = Date.now();
       const executionTime = endTime - startTime;
       console.log(
@@ -141,20 +158,15 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
       );
 
       if (isBibleBottom) {
-        setBottomData({ verses });
+        bibleState.bottomVerses.set(verses);
       } else {
-        setData({ verses });
+        bibleState.verses.set(verses);
       }
-      setLoading(false);
+      bibleState.loading.set(false);
     } catch (error) {
       console.error("Error fetching Bible data:", error);
     } finally {
-      setLoading(false);
-      setBibleQuery((prev) => ({
-        ...prev,
-        isBibleBottom: false,
-        shouldFetch: false,
-      }));
+      bibleState.bibleQuery.shouldFetch.set(() => false);
     }
   }, [bibleQuery, executeSql]);
 
@@ -186,7 +198,6 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
           created_at: "",
         });
       }
-      setBibleQuery((prev) => ({ ...prev, isHistory: false }));
     }
   }, [loading]);
 
@@ -206,36 +217,23 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!isMyBibleDbLoaded) return;
-    if (!bibleQuery.shouldFetch) return;
+    if (!shouldFetch) return;
     fetchChapter();
-  }, [bibleQuery.shouldFetch, isMyBibleDbLoaded]);
-
-  const memoizedVerses = useMemo(() => data.verses, [data.verses]);
-  const memoizedBottomVerses = useMemo(
-    () => bottomData.verses,
-    [bottomData.verses]
-  );
-  const memoizedQuery = useMemo(() => bibleQuery, [bibleQuery]);
+  }, [shouldFetch, isMyBibleDbLoaded]);
 
   const contextValue = useMemo(
     () => ({
-      verses: memoizedVerses,
-      bottomVerses: memoizedBottomVerses,
+      verses,
+      bottomVerses,
       loading,
       estimatedReadingTime,
       fetchChapter,
       updateBibleQuery,
-      bibleQuery: memoizedQuery,
+      bibleQuery,
       historyManager,
       estimatedReadingTimeBottom,
     }),
-    [
-      memoizedVerses,
-      memoizedBottomVerses,
-      loading,
-      estimatedReadingTime,
-      memoizedQuery,
-    ]
+    [verses, bottomVerses, loading, estimatedReadingTime, bibleQuery]
   );
 
   return (

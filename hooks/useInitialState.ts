@@ -1,7 +1,7 @@
-import { useEffect, useMemo } from 'react';
-import { useStorage } from '@/context/LocalstoreContext';
-import useParams from './useParams';
-import { HomeParams } from '@/types';
+import { useEffect, useMemo } from "react";
+import { useStorage } from "@/context/LocalstoreContext";
+import useParams from "./useParams";
+import { HomeParams } from "@/types";
 
 export interface InitialState {
   book: string;
@@ -21,7 +21,7 @@ export type StateChangeDetector = (
 ) => boolean;
 
 export const DEFAULT_VALUES = {
-  INITIAL_BOOK: 'Genesis',
+  INITIAL_BOOK: "Genesis",
   INITIAL_CHAPTER: 1,
   INITIAL_VERSE: 1,
   MIN_CHAPTER: 1,
@@ -75,10 +75,6 @@ export const useInitialState = (): InitialState => {
       bottomSideVerse: Math.max(1, Number(initialState.bottomSideVerse)),
     };
   }, [initialState]);
-
-  useEffect(() => {
-    // console.log(validatedState);
-  }, [validatedState]);
 
   return validatedState;
 };
