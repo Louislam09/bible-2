@@ -8,6 +8,12 @@ import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
 import { useTheme } from "@react-navigation/native";
 
+// import { observable } from "@legendapp/state";
+// import { enableReactTracking } from "@legendapp/state";
+
+// const page$ = observable(1);
+// enableReactTracking({ auto: true });
+
 const BibleTop: FC<any> = (props) => {
   const { navigation } = props;
   const theme = useTheme();

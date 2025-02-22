@@ -32,11 +32,11 @@ const Chapter = ({
 
   const renderItem = useCallback(
     ({ item }: any) => (
-      <Animated.View style={style}>
+      <Animated.View style={[{ borderColor: "red", borderWidth: 1 }, style]}>
         <Verse item={item} isSplit={!!isSplit} initVerse={initialScrollIndex} />
       </Animated.View>
     ),
-    [isSplit, initialScrollIndex]
+    [isSplit, initialScrollIndex, style]
   );
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
@@ -206,7 +206,8 @@ export function useHighlightRender() {
     style: {
       borderColor: animation.interpolate({
         inputRange: [0, 1],
-        outputRange: ["transparent", theme.colors.notification],
+        outputRange: ["transparent", "red"],
+        // outputRange: ["transparent", theme.colors.notification],
       }),
       borderWidth: 1,
     },

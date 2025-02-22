@@ -1,15 +1,13 @@
 import DisplayStrongWord from "@/components/DisplayStrongWord";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
-import Walkthrough from "@/components/Walkthrough";
 import { getBookDetail } from "@/constants/BookNames";
 import { useBibleChapter } from "@/context/BibleChapterContext";
 import { useBibleContext } from "@/context/BibleContext";
 import { useMemorization } from "@/context/MemorizationContext";
 import { useModal } from "@/context/modal-context";
-import useParams from "@/hooks/useParams";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
-import { HomeParams, TIcon, TTheme, TVerse } from "@/types";
+import { TIcon, TTheme, TVerse } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { customUnderline } from "@/utils/customStyle";
 import {
@@ -19,6 +17,7 @@ import {
   WordTagPair,
 } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 import React, {
   memo,
@@ -38,7 +37,9 @@ import {
 } from "react-native";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
 import VerseTitle from "./VerseTitle";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { observable } from "@legendapp/state";
+import { use$ } from "@legendapp/state/react";
+import { currentVerse$ } from "@/state/bibleState";
 
 type VerseProps = TVerse & {
   isSplit: boolean;
@@ -134,8 +135,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     toggleFavoriteVerse,
     clearHighlights,
     setStrongWord,
-    verseInStrongDisplay,
-    setverseInStrongDisplay,
+    // verseInStrongDisplay,
+    // setverseInStrongDisplay,
     onAddToNote,
     noteListPresentModalPress,
     toggleBottomSideSearching,
@@ -152,7 +153,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   const [isFavorite, setFavorite] = useState(false);
   const highlightedVersesLenth = highlightedVerses.length;
   const isMoreThanOneHighted = highlightedVersesLenth > 1;
-  const isStrongSearch = verseInStrongDisplay === item.verse;
+  // const isStrongSearch = verseInStrongDisplay === item.verse;
   const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
   const verseRef = useRef<any>(null);
   // const [stepIndex, setStepIndex] = useState(0);
@@ -171,7 +172,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     () => !item.subheading.includes(null as any),
     [item]
   );
-  // console.log("🆚 Verse Component Rendered", item.verse);
+  console.log("🆚 Verse Component Rendered", item.verse);
 
   const {
     compareRefHandlePresentModalPress: onCompare,
@@ -211,9 +212,23 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     }
   }, [highlightedVersesLenth]);
 
+  // observe(() => {
+  //   if (item.verse === currentVerse$.get())
+  //     console.log("Soy yo: " + currentVerse$.get());
+  // });
+
+  const isStrongSearch = use$(() => item.verse === currentVerse$.get());
+
+  // currentVerse$.onChange(() => {
+  //   if (item.verse === currentVerse$.get())
+  //     console.log("Soy yo: " + currentVerse$.get());
+  // });
+
   const onVerseClicked = useCallback(() => {
-    setverseInStrongDisplay(isStrongSearch ? 0 : item.verse);
-    toggleBottomSideSearching(isSplit);
+    console.log("🐭 Verse clicked", item.verse);
+    currentVerse$.set(isStrongSearch ? 0 : item.verse);
+    // setverseInStrongDisplay(isStrongSearch ? 0 : item.verse);
+    // toggleBottomSideSearching(isSplit);
     setDoubleTagged(false);
     if (!isCopyMode) return;
     if (isVerseHighlisted === item.verse) {
@@ -226,12 +241,18 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     setHighlightVerse(item.verse);
   }, [item, isStrongSearch, isSplit, isCopyMode, isVerseHighlisted]);
 
+  // const onClicked = () => console.log("🐭 single click", item.verse);
+  // const onDoubleClicked = () => console.log("🐭  double click", item.verse);
+
   const onPress = useSingleAndDoublePress({
     onDoublePress: () => {
+      console.log("🐭 Verse doubled clicked", item.verse);
       onVerseClicked();
       setDoubleTagged(true);
     },
     onSinglePress: onVerseClicked,
+    // onDoublePress: onDoubleClicked,
+    // onSinglePress: onClicked,
     delay: 200,
   });
 
@@ -447,6 +468,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
           selectionColor={theme.colors.notification || "white"}
         >
           <Text style={[styles.verseNumber]}>
+            {`${isStrongSearch} -`}
             {isFavorite && !isVerseHighlisted && (
               <MaterialCommunityIcons size={14} name="star" color="#ffd41d" />
               // <Icon size={14} name="Star" color="#ffd41d" />

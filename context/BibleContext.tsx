@@ -7,8 +7,8 @@ import {
   INSERT_FAVORITE_VERSE,
   INSERT_INTO_NOTE,
   UPDATE_NOTE_BY_ID,
-} from '@/constants/Queries';
-import useSearch, { UseSearchHookState } from '@/hooks/useSearch';
+} from "@/constants/Queries";
+import useSearch, { UseSearchHookState } from "@/hooks/useSearch";
 import React, {
   createContext,
   useCallback,
@@ -17,10 +17,10 @@ import React, {
   useReducer,
   useRef,
   useState,
-} from 'react';
-import { Dimensions, ToastAndroid } from 'react-native';
-import getCurrentDbName from '@/utils/getCurrentDB';
-import useCustomFonts from '../hooks/useCustomFonts';
+} from "react";
+import { Dimensions, ToastAndroid } from "react-native";
+import getCurrentDbName from "@/utils/getCurrentDB";
+import useCustomFonts from "../hooks/useCustomFonts";
 import {
   EBibleVersions,
   EHistoryItem,
@@ -29,9 +29,9 @@ import {
   IFavoriteVerse,
   IStrongWord,
   TFont,
-} from '../types';
-import { useDBContext } from './databaseContext';
-import { useStorage } from './LocalstoreContext';
+} from "../types";
+import { useDBContext } from "./databaseContext";
+import { useStorage } from "./LocalstoreContext";
 
 type BibleState = {
   highlightedVerses: IBookVerse[];
@@ -61,7 +61,7 @@ type BibleState = {
   setVerseToCompare: (verse: number) => void;
   setShouldLoop: (shouldLoop: boolean) => void;
   setCurrentNoteId: (noteId: number | null) => void;
-  setverseInStrongDisplay: (verse: number) => void;
+  // setverseInStrongDisplay: (verse: number) => void;
   toggleFavoriteVerse: ({
     bookNumber,
     chapter,
@@ -82,7 +82,7 @@ type BibleState = {
   isCopyMode: boolean;
   viewLayoutGrid: boolean;
   fontSize: number;
-  verseInStrongDisplay: number;
+  // verseInStrongDisplay: number;
   currentNoteId: number | null;
   verseToCompare: number;
   searchState: UseSearchHookState;
@@ -91,7 +91,7 @@ type BibleState = {
   currentHistoryIndex: number;
   goBackOnHistory?: (index: number) => void;
   goForwardOnHistory?: (index: number) => void;
-  orientation: 'LANDSCAPE' | 'PORTRAIT';
+  orientation: "LANDSCAPE" | "PORTRAIT";
   isSplitActived: boolean;
   isBottomSideSearching: boolean;
   currentBibleLongName: string;
@@ -101,31 +101,31 @@ type BibleState = {
 };
 
 type BibleAction =
-  | { type: 'HIGHLIGHT_VERSE'; payload: IBookVerse }
-  | { type: 'REMOVE_HIGHLIGHT_VERSE'; payload: IBookVerse }
-  | { type: 'SELECT_FONT'; payload: string }
-  | { type: 'SELECT_THEME'; payload: keyof typeof EThemes }
-  | { type: 'INCREASE_FONT_SIZE' }
-  | { type: 'DECREASE_FONT_SIZE' }
-  | { type: 'SELECT_BIBLE_VERSION'; payload: string }
-  | { type: 'ADD_TO_NOTE'; payload: string }
-  | { type: 'SET_SEARCH_QUERY'; payload: string }
-  | { type: 'GO_BACK'; payload: number }
-  | { type: 'GO_FORWARD'; payload: number }
-  | { type: 'SET_CURRENT_NOTE_ID'; payload: number | null }
-  | { type: 'SET_VERSE_IN_STRONG_DISPLAY'; payload: number }
-  | { type: 'SET_VERSE_TO_COMPARE'; payload: number }
-  | { type: 'SET_CHAPTER_VERSE_LENGTH'; payload: number }
-  | { type: 'SET_REPEAT_READING'; payload: boolean }
-  | { type: 'SET_CHAPTER_VERSES'; payload: any[] }
-  | { type: 'SET_STRONG_WORD'; payload: IStrongWord }
-  | { type: 'CLEAR_HIGHLIGHTS' }
-  | { type: 'SET_LOCAL_DATA'; payload: any }
-  | { type: 'TOGGLE_COPY_MODE'; payload?: boolean }
-  | { type: 'TOGGLE_SECOND_SIDE'; payload: boolean }
-  | { type: 'TOGGLE_SPLIT_MODE'; payload?: boolean }
-  | { type: 'TOGGLE_VIEW_LAYOUT_GRID' }
-  | { type: 'TOGGLE_COPY_SEARCH'; payload: boolean };
+  | { type: "HIGHLIGHT_VERSE"; payload: IBookVerse }
+  | { type: "REMOVE_HIGHLIGHT_VERSE"; payload: IBookVerse }
+  | { type: "SELECT_FONT"; payload: string }
+  | { type: "SELECT_THEME"; payload: keyof typeof EThemes }
+  | { type: "INCREASE_FONT_SIZE" }
+  | { type: "DECREASE_FONT_SIZE" }
+  | { type: "SELECT_BIBLE_VERSION"; payload: string }
+  | { type: "ADD_TO_NOTE"; payload: string }
+  | { type: "SET_SEARCH_QUERY"; payload: string }
+  | { type: "GO_BACK"; payload: number }
+  | { type: "GO_FORWARD"; payload: number }
+  | { type: "SET_CURRENT_NOTE_ID"; payload: number | null }
+  // | { type: 'SET_VERSE_IN_STRONG_DISPLAY'; payload: number }
+  | { type: "SET_VERSE_TO_COMPARE"; payload: number }
+  | { type: "SET_CHAPTER_VERSE_LENGTH"; payload: number }
+  | { type: "SET_REPEAT_READING"; payload: boolean }
+  | { type: "SET_CHAPTER_VERSES"; payload: any[] }
+  | { type: "SET_STRONG_WORD"; payload: IStrongWord }
+  | { type: "CLEAR_HIGHLIGHTS" }
+  | { type: "SET_LOCAL_DATA"; payload: any }
+  | { type: "TOGGLE_COPY_MODE"; payload?: boolean }
+  | { type: "TOGGLE_SECOND_SIDE"; payload: boolean }
+  | { type: "TOGGLE_SPLIT_MODE"; payload?: boolean }
+  | { type: "TOGGLE_VIEW_LAYOUT_GRID" }
+  | { type: "TOGGLE_COPY_SEARCH"; payload: boolean };
 
 const defaultSearch = {
   searchResults: [],
@@ -159,7 +159,7 @@ const initialContext: BibleState = {
   setVerseToCompare: (verse: number) => {},
   setShouldLoop: (shouldLoop: boolean) => {},
   setCurrentNoteId: (noteId: number | null) => {},
-  setverseInStrongDisplay: (verse: number) => {},
+  // setverseInStrongDisplay: (verse: number) => {},
   onAddToNote: (text: string) => {},
   increaseFontSize: () => {},
   toggleViewLayoutGrid: () => {},
@@ -173,20 +173,20 @@ const initialContext: BibleState = {
   isBottomSideSearching: false,
   fontSize: 24,
   searchState: defaultSearch,
-  searchQuery: '',
-  addToNoteText: '',
-  verseInStrongDisplay: 0,
+  searchQuery: "",
+  addToNoteText: "",
+  // verseInStrongDisplay: 0,
   currentNoteId: null,
   shouldLoopReading: false,
   verseToCompare: 1,
-  currentTheme: 'Blue',
+  currentTheme: "Blue",
   isSplitActived: false,
   viewLayoutGrid: true,
-  strongWord: { text: '', code: '' },
+  strongWord: { text: "", code: "" },
   searchHistorial: [],
   currentHistoryIndex: -1,
-  orientation: 'PORTRAIT',
-  currentBibleLongName: 'Reina Valera 1960',
+  orientation: "PORTRAIT",
+  currentBibleLongName: "Reina Valera 1960",
   noteListBottomSheetRef: null,
   noteListPresentModalPress: () => {},
   noteListDismissModalPress: () => {},
@@ -196,14 +196,14 @@ export const BibleContext = createContext<BibleState | any>(initialContext);
 
 const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
   switch (action.type) {
-    case 'HIGHLIGHT_VERSE':
+    case "HIGHLIGHT_VERSE":
       return {
         ...state,
         highlightedVerses: [...state.highlightedVerses, action.payload].sort(
           (a, b) => a.verse - b.verse
         ),
       };
-    case 'REMOVE_HIGHLIGHT_VERSE':
+    case "REMOVE_HIGHLIGHT_VERSE":
       return {
         ...state,
         highlightedVerses: [
@@ -212,102 +212,102 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
           ),
         ],
       };
-    case 'CLEAR_HIGHLIGHTS':
+    case "CLEAR_HIGHLIGHTS":
       return {
         ...state,
         highlightedVerses: [],
       };
-    case 'ADD_TO_NOTE':
+    case "ADD_TO_NOTE":
       return {
         ...state,
         addToNoteText: action.payload,
       };
-    case 'SELECT_FONT':
+    case "SELECT_FONT":
       return {
         ...state,
         selectedFont: action.payload,
       };
-    case 'SELECT_THEME':
+    case "SELECT_THEME":
       return {
         ...state,
         currentTheme: action.payload,
       };
-    case 'SELECT_BIBLE_VERSION':
+    case "SELECT_BIBLE_VERSION":
       return {
         ...state,
         currentBibleVersion: action.payload,
       };
-    case 'INCREASE_FONT_SIZE':
+    case "INCREASE_FONT_SIZE":
       return {
         ...state,
         fontSize: state.fontSize + 1,
       };
-    case 'DECREASE_FONT_SIZE':
+    case "DECREASE_FONT_SIZE":
       return {
         ...state,
         fontSize: state.fontSize - 1,
       };
-    case 'TOGGLE_COPY_MODE':
+    case "TOGGLE_COPY_MODE":
       return {
         ...state,
         isCopyMode: action?.payload ?? !state.isCopyMode,
       };
-    case 'TOGGLE_SPLIT_MODE':
+    case "TOGGLE_SPLIT_MODE":
       return {
         ...state,
         isSplitActived: !state.isSplitActived,
       };
-    case 'TOGGLE_SECOND_SIDE':
+    case "TOGGLE_SECOND_SIDE":
       return {
         ...state,
         isBottomSideSearching: action.payload,
       };
-    case 'TOGGLE_VIEW_LAYOUT_GRID':
+    case "TOGGLE_VIEW_LAYOUT_GRID":
       return {
         ...state,
         viewLayoutGrid: !state.viewLayoutGrid,
       };
-    case 'SET_SEARCH_QUERY':
+    case "SET_SEARCH_QUERY":
       return {
         ...state,
         searchQuery: action.payload,
       };
-    case 'SET_CURRENT_NOTE_ID':
+    case "SET_CURRENT_NOTE_ID":
       return {
         ...state,
         currentNoteId: action.payload,
       };
-    case 'SET_VERSE_IN_STRONG_DISPLAY':
-      return {
-        ...state,
-        verseInStrongDisplay: action.payload,
-      };
-    case 'SET_VERSE_TO_COMPARE':
+    // case 'SET_VERSE_IN_STRONG_DISPLAY':
+    //   return {
+    //     ...state,
+    //     verseInStrongDisplay: action.payload,
+    //   };
+    case "SET_VERSE_TO_COMPARE":
       return {
         ...state,
         verseToCompare: action.payload,
       };
-    case 'SET_REPEAT_READING':
+    case "SET_REPEAT_READING":
       return {
         ...state,
         shouldLoopReading: action.payload,
       };
-    case 'GO_BACK':
+    case "GO_BACK":
       return {
         ...state,
         currentHistoryIndex: action.payload,
       };
-    case 'GO_FORWARD':
+    case "GO_FORWARD":
       return {
         ...state,
         currentHistoryIndex: action.payload,
       };
-    case 'SET_STRONG_WORD':
+    case "SET_STRONG_WORD":
       return {
         ...state,
         strongWord: action.payload,
       };
-    case 'SET_LOCAL_DATA':
+    case "SET_LOCAL_DATA":
       return {
         ...state,
         ...action.payload,
@@ -331,7 +331,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const [currentBibleLongName, setCurrentBibleLongName] = useState(
     getCurrentDbName(currentBibleVersion, installedBibles)
   );
-  const [orientation, setOrientation] = useState('PORTRAIT');
+  const [orientation, setOrientation] = useState("PORTRAIT");
   const noteListBottomSheetRef = useRef<BottomSheetModal>(null);
 
   const noteListPresentModalPress = useCallback(() => {
@@ -342,11 +342,11 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const getOrientation = () => {
-    const { height, width } = Dimensions.get('window');
+    const { height, width } = Dimensions.get("window");
     if (width > height) {
-      setOrientation('LANDSCAPE');
+      setOrientation("LANDSCAPE");
     } else {
-      setOrientation('PORTRAIT');
+      setOrientation("PORTRAIT");
     }
   };
 
@@ -358,7 +358,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     getOrientation();
-    const subscription = Dimensions.addEventListener('change', getOrientation);
+    const subscription = Dimensions.addEventListener("change", getOrientation);
     return () => {
       subscription?.remove();
     };
@@ -367,7 +367,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (!isDataLoaded) return;
     dispatch({
-      type: 'SET_LOCAL_DATA',
+      type: "SET_LOCAL_DATA",
       payload: {
         currentBibleVersion,
         fontSize,
@@ -380,7 +380,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (state.highlightedVerses.length) return;
     if (!state.isCopyMode) return;
-    dispatch({ type: 'TOGGLE_COPY_MODE', payload: false });
+    dispatch({ type: "TOGGLE_COPY_MODE", payload: false });
   }, [state.highlightedVerses]);
 
   if (!fontsLoaded || !isDataLoaded || !isInstallBiblesLoaded) {
@@ -388,42 +388,42 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   const highlightVerse = (verseItem: IBookVerse) => {
-    dispatch({ type: 'HIGHLIGHT_VERSE', payload: verseItem });
+    dispatch({ type: "HIGHLIGHT_VERSE", payload: verseItem });
   };
   const removeHighlistedVerse = (verseItem: IBookVerse) => {
-    dispatch({ type: 'REMOVE_HIGHLIGHT_VERSE', payload: verseItem });
+    dispatch({ type: "REMOVE_HIGHLIGHT_VERSE", payload: verseItem });
   };
 
   const clearHighlights = () => {
-    dispatch({ type: 'CLEAR_HIGHLIGHTS' });
+    dispatch({ type: "CLEAR_HIGHLIGHTS" });
   };
   const goBackOnHistory = (index: number) => {
-    dispatch({ type: 'GO_BACK', payload: index });
+    dispatch({ type: "GO_BACK", payload: index });
   };
   const goForwardOnHistory = (index: number) => {
-    dispatch({ type: 'GO_FORWARD', payload: index });
+    dispatch({ type: "GO_FORWARD", payload: index });
   };
 
   const decreaseFontSize = () => {
-    dispatch({ type: 'DECREASE_FONT_SIZE' });
+    dispatch({ type: "DECREASE_FONT_SIZE" });
     saveData({ fontSize: state.fontSize - 1 });
   };
   const increaseFontSize = () => {
-    dispatch({ type: 'INCREASE_FONT_SIZE' });
+    dispatch({ type: "INCREASE_FONT_SIZE" });
     saveData({ fontSize: state.fontSize + 1 });
   };
   const toggleCopyMode = () => {
-    dispatch({ type: 'TOGGLE_COPY_MODE' });
+    dispatch({ type: "TOGGLE_COPY_MODE" });
   };
   const toggleSplitMode = () => {
-    dispatch({ type: 'TOGGLE_SPLIT_MODE' });
+    dispatch({ type: "TOGGLE_SPLIT_MODE" });
   };
   const toggleBottomSideSearching = (value: boolean) => {
-    dispatch({ type: 'TOGGLE_SECOND_SIDE', payload: value });
+    dispatch({ type: "TOGGLE_SECOND_SIDE", payload: value });
   };
 
   const toggleViewLayoutGrid = () => {
-    dispatch({ type: 'TOGGLE_VIEW_LAYOUT_GRID' });
+    dispatch({ type: "TOGGLE_VIEW_LAYOUT_GRID" });
   };
 
   const toggleFavoriteVerse = async ({
@@ -443,7 +443,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const onAddToNote = (text: string) => {
-    dispatch({ type: 'ADD_TO_NOTE', payload: text });
+    dispatch({ type: "ADD_TO_NOTE", payload: text });
   };
 
   const onSaveNote = async (
@@ -474,43 +474,43 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const selectFont = (font: string) => {
-    dispatch({ type: 'SELECT_FONT', payload: font });
+    dispatch({ type: "SELECT_FONT", payload: font });
     saveData({ selectedFont: font });
   };
   const selectTheme = (theme: keyof typeof EThemes) => {
-    dispatch({ type: 'SELECT_THEME', payload: theme });
+    dispatch({ type: "SELECT_THEME", payload: theme });
     saveData({ currentTheme: theme });
   };
   const selectBibleVersion = async (version: string) => {
-    dispatch({ type: 'SELECT_BIBLE_VERSION', payload: version });
-    dispatch({ type: 'SET_VERSE_IN_STRONG_DISPLAY', payload: 0 });
+    dispatch({ type: "SELECT_BIBLE_VERSION", payload: version });
+    // dispatch({ type: 'SET_VERSE_IN_STRONG_DISPLAY', payload: 0 });
     await saveData({ currentBibleVersion: version });
   };
 
   const setSearchQuery = (query: string) => {
-    dispatch({ type: 'SET_SEARCH_QUERY', payload: query });
+    dispatch({ type: "SET_SEARCH_QUERY", payload: query });
   };
   const setStrongWord = (item: IStrongWord) => {
-    dispatch({ type: 'SET_STRONG_WORD', payload: item });
+    dispatch({ type: "SET_STRONG_WORD", payload: item });
   };
   const setCurrentNoteId = (noteId: number | null) => {
-    dispatch({ type: 'SET_CURRENT_NOTE_ID', payload: noteId });
+    dispatch({ type: "SET_CURRENT_NOTE_ID", payload: noteId });
   };
-  const setverseInStrongDisplay = (verse: number) => {
-    if (currentBibleVersion !== EBibleVersions.BIBLE) return;
-    dispatch({ type: 'SET_VERSE_IN_STRONG_DISPLAY', payload: verse });
-  };
+  // const setverseInStrongDisplay = (verse: number) => {
+  //   if (currentBibleVersion !== EBibleVersions.BIBLE) return;
+  //   dispatch({ type: 'SET_VERSE_IN_STRONG_DISPLAY', payload: verse });
+  // };
   const setVerseToCompare = (verse: number) => {
-    dispatch({ type: 'SET_VERSE_TO_COMPARE', payload: verse });
+    dispatch({ type: "SET_VERSE_TO_COMPARE", payload: verse });
   };
 
   const setShouldLoop = (shouldLoop: boolean) => {
     const msg = shouldLoop
-      ? 'Reproducción automática: Activada ✅'
-      : 'Reproducción automática: Desactivada ❌';
+      ? "Reproducción automática: Activada ✅"
+      : "Reproducción automática: Desactivada ❌";
     ToastAndroid.show(msg, ToastAndroid.SHORT);
     dispatch({
-      type: 'SET_REPEAT_READING',
+      type: "SET_REPEAT_READING",
       payload: shouldLoop,
     });
   };
@@ -541,7 +541,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     toggleFavoriteVerse,
     setStrongWord,
     setCurrentNoteId,
-    setverseInStrongDisplay,
+    // setverseInStrongDisplay,
     setVerseToCompare,
     setShouldLoop,
     onAddToNote,
