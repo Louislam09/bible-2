@@ -85,7 +85,6 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({
   };
 
   function toggleExpand(): void {
-    console.log("toggleExpand", { isLandscape });
     if (isLandscape) {
       ToastAndroid.show(
         "¡Rota tu pantalla para acceder a la nota! 🔄",
@@ -192,7 +191,7 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({
       {...(expanded ? {} : panResponder.panHandlers)}
     >
       {!expanded ? (
-        <TouchableOpacity style={{ zIndex: 999 }}>
+        <TouchableOpacity onPress={toggleExpand} style={{ zIndex: 999 }}>
           <Animated.View style={[styles.floatingButton]}>
             <Icon name={iconName} color="white" size={iconSize} />
           </Animated.View>
