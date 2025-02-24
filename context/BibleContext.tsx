@@ -53,7 +53,6 @@ type BibleState = {
   toggleBottomSideSearching: (value: boolean) => void;
   decreaseFontSize: Function;
   setStrongWord: (word: IStrongWord) => void;
-  setVerseToCompare: (verse: number) => void;
   setShouldLoop: (shouldLoop: boolean) => void;
   // setverseInStrongDisplay: (verse: number) => void;
   toggleFavoriteVerse: ({
@@ -74,7 +73,6 @@ type BibleState = {
   currentTheme: keyof typeof EThemes;
   viewLayoutGrid: boolean;
   fontSize: number;
-  verseToCompare: number;
   searchState: UseSearchHookState;
   strongWord: IStrongWord;
   searchHistorial: EHistoryItem[];
@@ -134,7 +132,6 @@ const initialContext: BibleState = {
     verse,
     isFav,
   }: IFavoriteVerse) => {},
-  setVerseToCompare: (verse: number) => {},
   setShouldLoop: (shouldLoop: boolean) => {},
   // setverseInStrongDisplay: (verse: number) => {},
   increaseFontSize: () => {},
@@ -151,7 +148,6 @@ const initialContext: BibleState = {
   searchQuery: "",
   // verseInStrongDisplay: 0,
   shouldLoopReading: false,
-  verseToCompare: 1,
   currentTheme: "Blue",
   isSplitActived: false,
   viewLayoutGrid: true,
@@ -216,11 +212,7 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
     //     ...state,
     //     verseInStrongDisplay: action.payload,
     //   };
-    case "SET_VERSE_TO_COMPARE":
-      return {
-        ...state,
-        verseToCompare: action.payload,
-      };
+
     case "SET_REPEAT_READING":
       return {
         ...state,
@@ -403,9 +395,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   //   if (currentBibleVersion !== EBibleVersions.BIBLE) return;
   //   dispatch({ type: 'SET_VERSE_IN_STRONG_DISPLAY', payload: verse });
   // };
-  const setVerseToCompare = (verse: number) => {
-    dispatch({ type: "SET_VERSE_TO_COMPARE", payload: verse });
-  };
 
   const setShouldLoop = (shouldLoop: boolean) => {
     const msg = shouldLoop
@@ -440,7 +429,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     toggleFavoriteVerse,
     setStrongWord,
     // setverseInStrongDisplay,
-    setVerseToCompare,
     setShouldLoop,
     goBackOnHistory,
     goForwardOnHistory,

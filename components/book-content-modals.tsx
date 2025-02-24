@@ -1,16 +1,17 @@
-import React, { useRef, useCallback, useState, useEffect } from "react";
-import { Animated, StyleSheet, View, Dimensions } from "react-native";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useNavigation, useTheme } from "@react-navigation/native";
-import CustomBottomSheet from "@/components/BottomSheet";
 import BottomModal from "@/components/BottomModal";
+import CustomBottomSheet from "@/components/BottomSheet";
 import CompareVersions from "@/components/CompareVersions";
 import DictionaryContent from "@/components/DictionaryContent";
 import Icon from "@/components/Icon";
 import { useBibleContext } from "@/context/BibleContext";
 import useResizableBox from "@/hooks/useResizeBox";
+import { bibleState$ } from "@/state/bibleState";
+import { modalState$ } from "@/state/modalState";
 import { TTheme } from "@/types";
-import { useModal } from "@/context/modal-context";
+import { use$ } from "@legendapp/state/react";
+import { useNavigation, useTheme } from "@react-navigation/native";
+import React from "react";
+import { Animated, Dimensions, StyleSheet } from "react-native";
 import StrongContent from "./home/content/StrongContent";
 
 const DragIconView = Animated.View;
@@ -19,30 +20,11 @@ const BookContentModals = ({ book, chapter }: any) => {
   const theme = useTheme();
   const { fontSize } = useBibleContext();
   const styles = getStyles(theme);
-  const compareRef = useRef<BottomSheetModal>(null);
-  const { verseToCompare, strongWord } = useBibleContext();
+  const { strongWord } = useBibleContext();
   const navigation = useNavigation();
-  const strongSearchBottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const dictionaryBottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const isSheetClosed = use$(() => modalState$.isSheetClosed.get());
 
-  const {
-    setCompareRef,
-    setStrongSearchRef,
-    setDictionaryRef,
-    searchWordOnDic,
-    dictionaryHandlePresentModalPress,
-    isSheetClosed,
-    handleSheetChange,
-  } = useModal();
-
-  useEffect(() => {
-    setCompareRef(compareRef);
-    setStrongSearchRef(strongSearchBottomSheetModalRef);
-    setDictionaryRef(dictionaryBottomSheetModalRef);
-  }, [setCompareRef, setStrongSearchRef, setDictionaryRef]);
-
-  const { topHeight, topWidth, _backgroundColor, panResponder } =
-    useResizableBox({ theme });
+  const { topHeight, panResponder } = useResizableBox({ theme });
 
   return (
     <>
@@ -60,9 +42,9 @@ const BookContentModals = ({ book, chapter }: any) => {
           }}
         >
           <CustomBottomSheet
-            handleSheetChange={handleSheetChange}
+            handleSheetChange={(index) => modalState$.handleSheetChange(index)}
             startAT={3}
-            ref={strongSearchBottomSheetModalRef}
+            ref={modalState$.strongSearchRef.get()}
             handleComponent={() => (
               <DragIconView
                 {...panResponder.panHandlers}
@@ -81,8 +63,6 @@ const BookContentModals = ({ book, chapter }: any) => {
               theme={theme}
               data={strongWord}
               fontSize={fontSize}
-              bottomRef={strongSearchBottomSheetModalRef}
-              onDictionary={dictionaryHandlePresentModalPress}
             />
           </CustomBottomSheet>
         </Animated.View>
@@ -92,26 +72,24 @@ const BookContentModals = ({ book, chapter }: any) => {
         backgroundColor={theme.dark ? theme.colors.background : "#eee"}
         shouldScroll
         startAT={2}
-        ref={dictionaryBottomSheetModalRef}
+        ref={modalState$.dictionaryRef.get()}
       >
         <DictionaryContent
-          word={searchWordOnDic}
           navigation={navigation}
           theme={theme}
           fontSize={fontSize}
-          dicRef={dictionaryBottomSheetModalRef}
         />
       </BottomModal>
 
-      <BottomModal shouldScroll startAT={3} ref={compareRef}>
+      <BottomModal shouldScroll startAT={3} ref={modalState$.compareRef.get()}>
         <CompareVersions
           {...{
             theme,
             book,
             chapter,
-            verse: verseToCompare || 1,
+            verse: bibleState$.verseToCompare.get() || 1,
             navigation,
-            compareRef,
+            compareRef: modalState$.compareRef.get(),
           }}
         />
       </BottomModal>

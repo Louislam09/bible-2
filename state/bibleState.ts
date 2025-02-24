@@ -11,6 +11,7 @@ export const fontSize$ = observable<number>(24);
 export const bibleState$ = observable({
   isBottomBibleSearching: false,
   currentVerse: 0,
+  verseToCompare: 0,
   isVerseDoubleTagged: false,
   selectedVerses: observable(new Map<number, IBookVerse>()),
   selectedVerseForNote: observable<string | null>(null),
@@ -21,14 +22,12 @@ export const bibleState$ = observable({
   handleFloatingNoteButtonPosition: (x: number, y: number) => {
     bibleState$.floatingNoteButtonPosition.set({ x, y });
   },
-
   openNoteListBottomSheet() {
     bibleState$.noteListBottomSheetRef.current?.present();
   },
   closeNoteListBottomSheet() {
     bibleState$.noteListBottomSheetRef.current?.dismiss();
   },
-
   clearSelection: () => {
     bibleState$.currentVerse.set(0);
     bibleState$.selectedVerses.set(new Map());
@@ -81,4 +80,7 @@ export const bibleState$ = observable({
   clearSelectedVerseForNote: () => {
     bibleState$.selectedVerseForNote.set(null);
   },
+  //   compareRefHandlePresentModalPress: () => {
+  //     bibleState$.compareRef.current?.present();
+  //   }
 });

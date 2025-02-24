@@ -27,6 +27,7 @@ import {
 import { DictionaryData, TTheme } from "@/types";
 import { pluralToSingular } from "@/utils/removeAccent";
 import BackButton from "./BackButton";
+import { modalState$ } from "@/state/modalState";
 
 type RenderItem = {
   item: DatabaseData;
@@ -113,23 +114,20 @@ interface DictionaryContentProps {
   > & {
     getState(): NavigationState | undefined;
   };
-  dicRef: RefObject<BottomSheetModalMethods>;
-  word: string;
 }
 
 const DictionaryContent: React.FC<DictionaryContentProps> = ({
   navigation,
   theme,
   fontSize,
-  dicRef,
-  word,
 }) => {
   const [selectedWord, setSelectedWord] = useState<any>(null);
   const [filterData, setFilterData] = useState<DatabaseData[]>([]);
   const { schema } = useCustomTheme();
   const styles = getStyles(theme);
+  const word = modalState$.searchWordOnDic.get();
   const [searchText, setSearchText] = useState<any>(word ? word : "");
-  const { installedDictionary: dbNames, executeSql } = useDBContext();
+  const { installedDictionary: dbNames } = useDBContext();
   const searchDebounce = useDebounce(searchText, 500);
   const searchingSource = require("../assets/lottie/searching.json");
   const animationRef = useRef<any>(null);
@@ -143,7 +141,6 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
     searchParam:
       searchDebounce?.length < 3 ? "" : searchDebounce?.replace(/[.,;]/g, ""),
     databases: dbNames,
-    executeSql,
     enabled: searchDebounce !== "",
   });
 
@@ -186,7 +183,7 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
   useEffect(() => {
     const backAction = () => {
       setSelectedWord(null);
-      !selectedWord?.topic && dicRef?.current?.close();
+      !selectedWord?.topic && modalState$.closeDictionaryBottomSheet();
       return true;
     };
 
@@ -202,11 +199,12 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
     if (selectedWord?.topic) {
       setSelectedWord(null);
     } else {
-      dicRef?.current?.close();
+      modalState$.closeDictionaryBottomSheet();
     }
-  }, [dicRef?.current, selectedWord]);
+  }, [selectedWord]);
 
   const onNavToManagerDownload = useCallback(() => {
+    // @ts-ignore
     navigation.navigate("DownloadManager");
   }, [navigation]);
 

@@ -31,14 +31,6 @@ type UseCompareVersesProps = {
   chapter: number;
   verse: number;
   databases: VersionItem[];
-  executeSql:
-    | ((
-        db: SQLite.SQLiteDatabase,
-        sql: string,
-        params?: any[]
-      ) => Promise<Row[]>)
-    | null
-    | undefined;
 };
 
 const useCompareVerses = ({
@@ -46,7 +38,6 @@ const useCompareVerses = ({
   chapter,
   verse,
   databases,
-  executeSql,
 }: UseCompareVersesProps) => {
   const [data, setData] = useState<DatabaseData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -54,6 +45,36 @@ const useCompareVerses = ({
   const currentBook = DB_BOOK_NAMES.find(
     (x) => x.longName === book
   )?.bookNumber;
+
+  const executeSql = async (
+    database: SQLite.SQLiteDatabase,
+    sql: string,
+    params: any[] = [],
+    queryName?: any
+  ): Promise<any[]> => {
+    try {
+      const startTime = Date.now(); // Start timing
+      if (!database) {
+        throw new Error("Database not initialized");
+      }
+      const statement = await database.prepareAsync(sql);
+      try {
+        const result = await statement.executeAsync(params);
+        const endTime = Date.now(); // End timing
+        const executionTime = endTime - startTime;
+
+        const response = await result.getAllAsync();
+        if (queryName) {
+          console.log(`Query ${queryName} executed in ${executionTime} ms.`);
+        }
+        return response as Row[];
+      } finally {
+        await statement.finalizeAsync();
+      }
+    } catch (error) {
+      return [];
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {

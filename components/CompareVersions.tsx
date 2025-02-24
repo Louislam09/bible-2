@@ -19,15 +19,15 @@ import { IVerseItem, Screens, TTheme } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import Icon from "./Icon";
-import { renameLongBookName } from '@/utils/extractVersesInfo';
+import { renameLongBookName } from "@/utils/extractVersesInfo";
+import { modalState$ } from "@/state/modalState";
 
 interface CompareVersionsProps {
   theme: TTheme;
   book: any;
   chapter: any;
   verse: any;
-  navigation: Omit<NavigationProp<ReactNavigation.RootParamList>, 'getState'>;
-  compareRef: React.RefObject<BottomSheetModalMethods>;
+  navigation: Omit<NavigationProp<ReactNavigation.RootParamList>, "getState">;
 }
 
 const CompareVersions = ({
@@ -36,7 +36,6 @@ const CompareVersions = ({
   chapter,
   verse,
   navigation,
-  compareRef,
 }: CompareVersionsProps) => {
   const { installedBibles: dbNames, executeSql } = useDBContext();
   const [filterData, setFilter] = useState<DatabaseData[]>([]);
@@ -44,7 +43,7 @@ const CompareVersions = ({
   const { fontSize, selectBibleVersion } = useBibleContext();
   const flatListRef = useRef<FlashList<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
-  const notFoundSource = require('../assets/lottie/notFound.json');
+  const notFoundSource = require("../assets/lottie/notFound.json");
   const [searchParam, setSearchParam] = useState({
     book,
     chapter,
@@ -54,7 +53,6 @@ const CompareVersions = ({
   const { data, error, loading } = useCompareVerses({
     ...searchParam,
     databases: dbNames,
-    executeSql,
   });
   const currentBook = DB_BOOK_NAMES.find(
     (x) => x.longName === book
@@ -81,7 +79,7 @@ const CompareVersions = ({
       chapter: item.chapter,
       verse: item.verse,
     });
-    compareRef.current?.dismiss();
+    modalState$.closeCompareBottomSheet();
   };
 
   const onCopy = async (item: IVerseItem, versionName: string) => {
@@ -115,14 +113,14 @@ const CompareVersions = ({
             <View style={styles.verseAction}>
               <Icon
                 size={24}
-                name='Copy'
+                name="Copy"
                 style={styles.icon}
                 onPress={() => onCopy(item, versionName)}
               />
             </View>
           </View>
           <Text style={[styles.verseBody, { fontSize }]}>
-            {getVerseTextRaw(item?.text || '')}
+            {getVerseTextRaw(item?.text || "")}
           </Text>
           <TouchableOpacity
             style={styles.verseAction}
@@ -132,7 +130,7 @@ const CompareVersions = ({
               Lee {`${item?.bookName} ${item?.chapter}`}
             </Text>
             <Icon
-              name='SquareArrowOutUpRight'
+              name="SquareArrowOutUpRight"
               size={18}
               color={theme.colors.text}
             />
@@ -154,7 +152,7 @@ const CompareVersions = ({
   }, [searchParam]);
 
   const onAddMoreDic = () => {
-    compareRef.current?.dismiss();
+    modalState$.closeCompareBottomSheet();
     navigation.navigate(Screens.DownloadManager);
   };
 
@@ -163,18 +161,18 @@ const CompareVersions = ({
       <View
         style={[
           styles.chapterHeader,
-          !filterData.length && { display: 'none' },
+          !filterData.length && { display: "none" },
         ]}
       >
         <Text style={styles.chapterHeaderTitle}>
           Comparativa de {(filterData ?? []).length} Versiones
         </Text>
         <TouchableOpacity
-          style={{ alignItems: 'center' }}
+          style={{ alignItems: "center" }}
           onPress={onAddMoreDic}
         >
           <Icon
-            name='BookPlus'
+            name="BookPlus"
             color={theme.colors.notification}
             size={iconSize}
           />
@@ -188,13 +186,13 @@ const CompareVersions = ({
       <TouchableOpacity
         style={[
           styles.scrollToTopButton,
-          !showScrollToTop && { display: 'none' },
+          !showScrollToTop && { display: "none" },
         ]}
         onPress={() => {
           flatListRef?.current?.scrollToOffset({ animated: true, offset: 0 });
         }}
       >
-        <Icon name='ChevronsUp' size={26} color={theme.colors.notification} />
+        <Icon name="ChevronsUp" size={26} color={theme.colors.notification} />
       </TouchableOpacity>
     );
   };
@@ -204,7 +202,7 @@ const CompareVersions = ({
       {SearchedHeader()}
       <FlashList
         ref={flatListRef}
-        decelerationRate={'normal'}
+        decelerationRate={"normal"}
         estimatedItemSize={135}
         data={filterData}
         renderItem={renderItem as any}

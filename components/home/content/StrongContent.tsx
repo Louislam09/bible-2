@@ -27,6 +27,7 @@ import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { DictionaryData, IStrongWord, Screens, TTheme } from "@/types";
 import { Text, View } from "../../Themed";
 import { useBibleChapter } from "@/context/BibleChapterContext";
+import { modalState$ } from "@/state/modalState";
 
 type HeaderAction = {
   iconName: IconProps["name"];
@@ -54,8 +55,6 @@ interface IStrongContent {
   data: IStrongWord;
   fontSize: any;
   navigation: any;
-  bottomRef: RefObject<BottomSheetModalMethods>;
-  onDictionary: (text: string) => void;
 }
 
 const StrongContent: FC<IStrongContent> = ({
@@ -63,8 +62,6 @@ const StrongContent: FC<IStrongContent> = ({
   data,
   fontSize,
   navigation,
-  bottomRef,
-  onDictionary,
 }) => {
   const { code, text: word } = data;
   const { myBibleDB, executeSql } = useDBContext();
@@ -128,11 +125,6 @@ const StrongContent: FC<IStrongContent> = ({
     })();
   }, [code, text]);
 
-  const onClose = () => {
-    // bottomRef.current?.close();
-    // bottomRef.current?.dismiss();
-  };
-
   const onShouldStartLoadWithRequest = (event: ShouldStartLoadRequest) => {
     const { url } = event;
     if (url.startsWith("b:")) {
@@ -142,7 +134,6 @@ const StrongContent: FC<IStrongContent> = ({
         (x) => x.bookNumber === +bookNumber
       );
 
-      onClose();
       const queryInfo = {
         book: currentBook?.longName || "Mateo",
         chapter: +chapter,
@@ -173,7 +164,6 @@ const StrongContent: FC<IStrongContent> = ({
 
   const onStrongSearchEntire = useCallback(() => {
     const [value1] = values;
-    onClose();
     navigation.navigate(Screens.StrongSearchEntire, {
       paramCode: value1?.topic,
     });
@@ -196,13 +186,7 @@ const StrongContent: FC<IStrongContent> = ({
         iconName: "BookA",
         viewStyle: animatedStyle,
         description: "Diccionario",
-        onAction: () => {
-          onClose();
-          onDictionary(data.text);
-          // navigation.navigate(Screens.DictionarySearch, {
-          //   word: data.text,
-          // });
-        },
+        onAction: () => modalState$.openDictionaryBottomSheet(data.text),
       },
       {
         iconName: "FileSearch2",

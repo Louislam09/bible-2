@@ -5,7 +5,6 @@ import BibleProvider from "@/context/BibleContext";
 import DatabaseProvider from "@/context/databaseContext";
 import StorageProvider from "@/context/LocalstoreContext";
 import { MemorizationProvider } from "@/context/MemorizationContext";
-import { ModalProvider } from "@/context/modal-context";
 import MyThemeProvider from "@/context/ThemeContext";
 import useCachedResources from "@/hooks/useCachedResources";
 import { Screens, ScreensName } from "@/types";
@@ -103,13 +102,11 @@ const App = () => {
                   <MyThemeProvider>
                     <GestureHandlerRootView style={{ flex: 1 }}>
                       <BottomSheetModalProvider>
-                        <ModalProvider>
-                          <StatusBar animated translucent style="auto" />
-                          <Stack
-                            initialRouteName="(dashboard)"
-                            screenOptions={screenOptions}
-                          />
-                        </ModalProvider>
+                        <StatusBar animated translucent style="auto" />
+                        <Stack
+                          initialRouteName="(dashboard)"
+                          screenOptions={screenOptions}
+                        />
                       </BottomSheetModalProvider>
                     </GestureHandlerRootView>
                   </MyThemeProvider>

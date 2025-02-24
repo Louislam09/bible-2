@@ -1,20 +1,9 @@
-import { useState, useEffect } from "react";
-import * as SQLite from "expo-sqlite";
-import {
-  dbFileExt,
-  defaultDatabases,
-  getDatabaseExt,
-  isDefaultDatabase,
-} from "@/constants/databaseNames";
-import { VersionItem } from "./useInstalledBible";
-import { DB_BOOK_NAMES } from "@/constants/BookNames";
-import {
-  GET_COMPARE_BOOK_CHAPTER_VERSE,
-  SEARCH_DICTIONARY_WORD,
-} from "@/constants/Queries";
+import { getDatabaseExt } from "@/constants/databaseNames";
+import { SEARCH_DICTIONARY_WORD } from "@/constants/Queries";
 import { DATABASE_TYPE, DictionaryData } from "@/types";
-import WORDS from "@/constants/words";
-import { pluralToSingular } from "@/utils/removeAccent";
+import * as SQLite from "expo-sqlite";
+import { useEffect, useState } from "react";
+import { VersionItem } from "./useInstalledBible";
 
 interface Verse {
   book_number: number;
@@ -58,7 +47,7 @@ const useDictionaryData = ({
     try {
       const startTime = Date.now(); // Start timing
       if (!database) {
-        throw new Error('Database not initialized');
+        throw new Error("Database not initialized");
       }
       const statement = await database.prepareAsync(sql);
       try {
@@ -104,7 +93,7 @@ const useDictionaryData = ({
 
         setData(results);
       } catch (error) {
-        setError('Error fetching data');
+        setError("Error fetching data");
         console.error(error);
       } finally {
         setLoading(false);

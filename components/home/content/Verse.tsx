@@ -1,12 +1,15 @@
 import DisplayStrongWord from "@/components/DisplayStrongWord";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
+import Walkthrough from "@/components/Walkthrough";
 import { getBookDetail } from "@/constants/BookNames";
 import { useBibleChapter } from "@/context/BibleChapterContext";
 import { useBibleContext } from "@/context/BibleContext";
 import { useMemorization } from "@/context/MemorizationContext";
-import { useModal } from "@/context/modal-context";
+import useParams from "@/hooks/useParams";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
+import { bibleState$ } from "@/state/bibleState";
+import { modalState$ } from "@/state/modalState";
 import { HomeParams, IBookVerse, TIcon, TTheme, TVerse } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { customUnderline } from "@/utils/customStyle";
@@ -18,6 +21,7 @@ import {
 } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import React, {
   memo,
@@ -37,10 +41,6 @@ import {
 } from "react-native";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
 import VerseTitle from "./VerseTitle";
-import { use$ } from "@legendapp/state/react";
-import { bibleState$ } from "@/state/bibleState";
-import Walkthrough from "@/components/Walkthrough";
-import useParams from "@/hooks/useParams";
 
 type VerseProps = TVerse & {
   isSplit: boolean;
@@ -88,13 +88,13 @@ const ActionItem = memo(
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 1,
-          duration: 150,
+          duration: 100,
           delay: index * 100,
           useNativeDriver: true,
         }),
         Animated.timing(translateXAnim, {
           toValue: 0,
-          duration: 150,
+          duration: 100,
           delay: index * 100,
           useNativeDriver: true,
         }),
@@ -152,7 +152,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     toggleBottomSideSearching,
     isBottomSideSearching,
     isSplitActived,
-    setVerseToCompare,
   } = useBibleContext();
 
   const { addVerse } = useMemorization();
@@ -188,11 +187,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   );
   console.log("🆚", item.verse);
 
-  const {
-    compareRefHandlePresentModalPress: onCompare,
-    strongSearchHandlePresentModalPress: onWord,
-    dictionaryHandlePresentModalPress: onDictionary,
-  } = useModal();
   const { updateBibleQuery } = useBibleChapter();
 
   const initHighLightedVerseAnimation = () => {
@@ -258,7 +252,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       bibleState$.selectedVerses.get().values()
     ).sort((a, b) => a.verse - b.verse);
     const value = isMoreThanOneHighted ? highlightedVerses : item;
-    console.log(await copyToClipboard(value, true));
+    await copyToClipboard(value);
     bibleState$.clearSelection();
   };
 
@@ -300,7 +294,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     };
 
     setStrongWord(value);
-    onWord();
+    modalState$.openStrongSearchBottomSheet();
   };
 
   const onStrongWordClicked = ({ word, tagValue }: WordTagPair) => {
@@ -319,19 +313,20 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       code: searchCode,
     };
     setStrongWord(value);
-    onWord();
+    modalState$.openStrongSearchBottomSheet();
   };
 
   const onNonHightlistedWordClick = ({ word }: WordTagPair) => {
     if (word.length < 3) {
       return;
     }
-    onDictionary(word);
+    modalState$.openDictionaryBottomSheet(word);
   };
 
   const onCompareClicked = () => {
-    setVerseToCompare(item.verse);
-    onCompare();
+    bibleState$.verseToCompare.set(item.verse);
+    modalState$.openCompareBottomSheet();
+    bibleState$.clearSelection();
   };
 
   const onMemorizeVerse = (text: string) => {
@@ -344,8 +339,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       {
         name: "Copy",
         action: onCopy,
-        // hide: bibleState$.lastSelectedVerse.get()?.verse,
-        // hide: lastHighted?.verse !== item.verse && isMoreThanOneHighted,
         hide: false,
         description: "Copiar",
       },
