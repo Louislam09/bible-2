@@ -39,11 +39,6 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
   const [verses, setVerses] = useState<Memorization[]>([]);
   const { myBibleDB, executeSql } = useDBContext();
 
-  // useEffect(() => {
-  //   if (!myBibleDB || !executeSql) return;
-  //   refreshVerses();
-  // }, [myBibleDB, executeSql]);
-
   const refreshVerses = async () => {
     try {
       if (!myBibleDB || !executeSql) return;
@@ -59,7 +54,6 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
       if (!myBibleDB || !executeSql) return;
       const values = [verse, version, 0];
       await executeSql(INSERT_VERSE_TO_MOMORIZATION, values);
-      await refreshVerses();
       showToast("Versículo añadido con éxito!");
     } catch (error) {
       console.warn("Error inserting verse:", error);
@@ -84,7 +78,7 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
       if (!myBibleDB || !executeSql) return;
       const values = [progress, timestamp, id];
       await executeSql(UPDATE_MOMORIZATION_PROGRESS, values);
-      refreshVerses();
+      await refreshVerses();
     } catch (error) {
       console.warn("Error updating progress:", error);
     }
