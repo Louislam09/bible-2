@@ -147,7 +147,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     // toggleCopyMode,
     fontSize,
     toggleFavoriteVerse,
-    setStrongWord,
     // noteListPresentModalPress,
     toggleBottomSideSearching,
     isBottomSideSearching,
@@ -293,7 +292,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       code: searchCode.concat(secondSearchCode),
     };
 
-    setStrongWord(value);
+    bibleState$.handleStrongWord(value);
     modalState$.openStrongSearchBottomSheet();
   };
 
@@ -312,7 +311,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       text: word.replace(/[.,;]/g, ""),
       code: searchCode,
     };
-    setStrongWord(value);
+    bibleState$.handleStrongWord(value);
     modalState$.openStrongSearchBottomSheet();
   };
 

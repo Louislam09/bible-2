@@ -28,6 +28,8 @@ import { DictionaryData, IStrongWord, Screens, TTheme } from "@/types";
 import { Text, View } from "../../Themed";
 import { useBibleChapter } from "@/context/BibleChapterContext";
 import { modalState$ } from "@/state/modalState";
+import { bibleState$ } from "@/state/bibleState";
+import { use$ } from "@legendapp/state/react";
 
 type HeaderAction = {
   iconName: IconProps["name"];
@@ -52,26 +54,21 @@ function extractWord(text: string, isH: boolean) {
 
 interface IStrongContent {
   theme: TTheme;
-  data: IStrongWord;
   fontSize: any;
   navigation: any;
 }
 
-const StrongContent: FC<IStrongContent> = ({
-  theme,
-  data,
-  fontSize,
-  navigation,
-}) => {
+const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
+  const data = use$<IStrongWord>(() => bibleState$.strongWord.get());
   const { code, text: word } = data;
-  const { myBibleDB, executeSql } = useDBContext();
+  const { myBibleDB, executeSql, isMyBibleDbLoaded } = useDBContext();
   const [values, setValues] = useState<DictionaryData[]>([
     { definition: "", topic: "" },
   ]);
   const styles = getStyles(theme);
   const [height, setHeight] = useState(DEFAULT_HEIGHT);
   const webViewRef = React.useRef<WebView>(null);
-  const [text, setText] = useState(code);
+  const [strongCode, setStrongCode] = useState(code);
   const [sharing, setSharing] = useState(false);
   const [backUrl, setBackUrl] = useState<any>([]);
   const { createAndShareTextFile, printToFile } = usePrintAndShare();
@@ -110,20 +107,29 @@ const StrongContent: FC<IStrongContent> = ({
   };
 
   useEffect(() => {
-    setText(data.code);
+    setStrongCode(data.code);
   }, [data]);
 
   useEffect(() => {
-    (async () => {
-      if (myBibleDB && executeSql) {
-        const DictionaryData = await executeSql(
+    const fetchDictionaryData = async () => {
+      if (!isMyBibleDbLoaded || !strongCode) return;
+
+      try {
+        const dictionaryData = await executeSql(
           SEARCH_STRONG_WORD,
-          text.split(",")
+          strongCode.split(",")
         );
-        setValues(DictionaryData as DictionaryData[]);
+
+        if (dictionaryData?.length) {
+          setValues(dictionaryData as DictionaryData[]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch dictionary data:", error);
       }
-    })();
-  }, [code, text]);
+    };
+
+    fetchDictionaryData();
+  }, [isMyBibleDbLoaded, strongCode]);
 
   const onShouldStartLoadWithRequest = (event: ShouldStartLoadRequest) => {
     const { url } = event;
@@ -145,12 +151,12 @@ const StrongContent: FC<IStrongContent> = ({
 
     if (url.startsWith("s:")) {
       const strongKeyToSearch = url.replace("s:", "");
-      if (strongKeyToSearch === text) {
+      if (strongKeyToSearch === strongCode) {
         // handleGoForward();
       }
       const word = url.replace("s:", "");
-      setBackUrl((prev: any) => [...prev, text]);
-      setText(word);
+      setBackUrl((prev: any) => [...prev, strongCode]);
+      setStrongCode(word);
     }
     return false;
   };
@@ -159,7 +165,7 @@ const StrongContent: FC<IStrongContent> = ({
     const urls = backUrl;
     const url = urls.pop() ?? code;
     setBackUrl(urls);
-    setText(url);
+    setStrongCode(url);
   };
 
   const onStrongSearchEntire = useCallback(() => {

@@ -94,9 +94,7 @@ const CustomBottomSheet = forwardRef<Ref, CustomBottomSheet>(
     );
 
     return (
-      <View
-        style={{ flex: 1, backgroundColor: theme.colors.notification + 50 }}
-      >
+      <View style={{ flex: 1, backgroundColor: "transparent" }}>
         <BottomSheet
           backgroundStyle={styles.bottomSheet}
           ref={ref}
@@ -120,7 +118,7 @@ const CustomBottomSheet = forwardRef<Ref, CustomBottomSheet>(
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     bottomSheet: {
-      backgroundColor: colors.background + "",
+      backgroundColor: colors.background,
       borderColor: colors.notification,
       borderWidth: 2,
     },

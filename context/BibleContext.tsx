@@ -52,7 +52,6 @@ type BibleState = {
   toggleSplitMode: Function;
   toggleBottomSideSearching: (value: boolean) => void;
   decreaseFontSize: Function;
-  setStrongWord: (word: IStrongWord) => void;
   setShouldLoop: (shouldLoop: boolean) => void;
   // setverseInStrongDisplay: (verse: number) => void;
   toggleFavoriteVerse: ({
@@ -74,7 +73,6 @@ type BibleState = {
   viewLayoutGrid: boolean;
   fontSize: number;
   searchState: UseSearchHookState;
-  strongWord: IStrongWord;
   searchHistorial: EHistoryItem[];
   currentHistoryIndex: number;
   goBackOnHistory?: (index: number) => void;
@@ -99,7 +97,6 @@ type BibleAction =
   | { type: "SET_CHAPTER_VERSE_LENGTH"; payload: number }
   | { type: "SET_REPEAT_READING"; payload: boolean }
   | { type: "SET_CHAPTER_VERSES"; payload: any[] }
-  | { type: "SET_STRONG_WORD"; payload: IStrongWord }
   | { type: "SET_LOCAL_DATA"; payload: any }
   // | { type: "TOGGLE_COPY_MODE"; payload?: boolean }
   | { type: "TOGGLE_SECOND_SIDE"; payload: boolean }
@@ -137,7 +134,6 @@ const initialContext: BibleState = {
   increaseFontSize: () => {},
   toggleViewLayoutGrid: () => {},
   setLocalData: () => {},
-  setStrongWord: () => {},
   performSearch: () => {},
   setSearchQuery: () => {},
   selectedFont: TFont.Roboto,
@@ -151,7 +147,6 @@ const initialContext: BibleState = {
   currentTheme: "Blue",
   isSplitActived: false,
   viewLayoutGrid: true,
-  strongWord: { text: "", code: "" },
   searchHistorial: [],
   currentHistoryIndex: -1,
   orientation: "PORTRAIT",
@@ -227,11 +222,6 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
       return {
         ...state,
         currentHistoryIndex: action.payload,
-      };
-    case "SET_STRONG_WORD":
-      return {
-        ...state,
-        strongWord: action.payload,
       };
     case "SET_LOCAL_DATA":
       return {
@@ -388,9 +378,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const setSearchQuery = (query: string) => {
     dispatch({ type: "SET_SEARCH_QUERY", payload: query });
   };
-  const setStrongWord = (item: IStrongWord) => {
-    dispatch({ type: "SET_STRONG_WORD", payload: item });
-  };
   // const setverseInStrongDisplay = (verse: number) => {
   //   if (currentBibleVersion !== EBibleVersions.BIBLE) return;
   //   dispatch({ type: 'SET_VERSE_IN_STRONG_DISPLAY', payload: verse });
@@ -427,7 +414,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     selectTheme,
     toggleViewLayoutGrid,
     toggleFavoriteVerse,
-    setStrongWord,
     // setverseInStrongDisplay,
     setShouldLoop,
     goBackOnHistory,

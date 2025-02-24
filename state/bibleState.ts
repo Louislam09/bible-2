@@ -1,4 +1,4 @@
-import { EBibleVersions, IBookVerse } from "@/types";
+import { EBibleVersions, IBookVerse, IStrongWord } from "@/types";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { observable } from "@legendapp/state";
 import { createRef } from "react";
@@ -18,9 +18,13 @@ export const bibleState$ = observable({
   lastSelectedVerse: null as IBookVerse | null,
   currentNoteId: null as number | null,
   floatingNoteButtonPosition: { x: 0, y: 75 },
+  strongWord: { text: "", code: "" } as IStrongWord,
   noteListBottomSheetRef: createRef<BottomSheetModal>(),
   handleFloatingNoteButtonPosition: (x: number, y: number) => {
     bibleState$.floatingNoteButtonPosition.set({ x, y });
+  },
+  handleStrongWord: (strongWord: IStrongWord) => {
+    bibleState$.strongWord.set(strongWord);
   },
   openNoteListBottomSheet() {
     bibleState$.noteListBottomSheetRef.current?.present();

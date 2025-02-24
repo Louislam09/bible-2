@@ -1,21 +1,22 @@
-import { useTheme } from '@react-navigation/native';
-import { DB_BOOK_NAMES } from '@/constants/BookNames';
-import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from '@/constants/Queries';
-import { useBibleContext } from '@/context/BibleContext';
-import { useDBContext } from '@/context/databaseContext';
-import React, { useEffect, useMemo, useState } from 'react';
-import { Animated, BackHandler, StyleSheet, Text } from 'react-native';
-import { IVerseItem, TTheme } from '@/types';
-import AnimatedDropdown from '../components/AnimatedDropdown';
-import Icon from '../components/Icon';
-import StrongSearchContent from '../components/StrongSearchContent';
-import { View } from '../components/Themed';
-import useParams from '@/hooks/useParams';
-import { Stack, useRouter } from 'expo-router';
+import { useTheme } from "@react-navigation/native";
+import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from "@/constants/Queries";
+import { useBibleContext } from "@/context/BibleContext";
+import { useDBContext } from "@/context/databaseContext";
+import React, { useEffect, useMemo, useState } from "react";
+import { Animated, BackHandler, StyleSheet, Text } from "react-native";
+import { IVerseItem, TTheme } from "@/types";
+import AnimatedDropdown from "../components/AnimatedDropdown";
+import Icon from "../components/Icon";
+import StrongSearchContent from "../components/StrongSearchContent";
+import { View } from "../components/Themed";
+import useParams from "@/hooks/useParams";
+import { Stack, useRouter } from "expo-router";
+import { bibleState$ } from "@/state/bibleState";
 
 enum CognateBook {
-  NEW_VOW = 'newVow',
-  OLD_VOW = 'oldVow',
+  NEW_VOW = "newVow",
+  OLD_VOW = "oldVow",
 }
 
 const bookFilter = {
@@ -34,12 +35,13 @@ const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
   const styles = getStyles(theme);
   const { myBibleDB, executeSql } = useDBContext();
   const [data, setData] = useState<IVerseItem[] | null>(null);
-  const { strongWord, fontSize } = useBibleContext();
+  const { fontSize } = useBibleContext();
+  const strongWord = bibleState$.strongWord.get();
   const code = (paramCode || strongWord?.code)?.match(/\d+/)?.[0];
   const cognate = (paramCode || strongWord?.code)?.match(/\w/)?.[0] as string;
-  const defaultFilterOption = 'Filtra por libro';
+  const defaultFilterOption = "Filtra por libro";
   const bookGroup =
-    cognate.toLowerCase() === 'g' ? CognateBook.NEW_VOW : CognateBook.OLD_VOW;
+    cognate.toLowerCase() === "g" ? CognateBook.NEW_VOW : CognateBook.OLD_VOW;
   const filterByBookGroup = useMemo(() => {
     return bookFilter[bookGroup];
   }, [bookGroup]);
@@ -93,7 +95,7 @@ const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
         <View
           style={[
             styles.filterContainer,
-            { backgroundColor: theme.colors.notification + '99' },
+            { backgroundColor: theme.colors.notification + "99" },
           ]}
         >
           <View
@@ -101,11 +103,11 @@ const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
               styles.strongNumber,
               {
                 paddingHorizontal: 15,
-                backgroundColor: 'transparent',
+                backgroundColor: "transparent",
               },
             ]}
           >
-            <Icon name='ListFilter' size={24} color='white' />
+            <Icon name="ListFilter" size={24} color="white" />
           </View>
           <View style={styles.pickerContainer}>
             <AnimatedDropdown
@@ -125,23 +127,23 @@ const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
             styles.strongNumber,
             {
               paddingHorizontal: 0,
-              backgroundColor: 'transparent',
+              backgroundColor: "transparent",
             },
           ]}
         >
           <Text style={[styles.strongNumberText, { fontSize }]}>
-            {paramCode?.split(',')?.[0]}
+            {paramCode?.split(",")?.[0]}
           </Text>
         </View>
         <Text style={[styles.resultText, { fontSize }]}>
-          Resultado encontrados:{' '}
+          Resultado encontrados:{" "}
           <Text style={{ color: theme.colors.notification }}>
             {filteredData?.length}
           </Text>
         </Text>
       </View>
       <StrongSearchContent
-        strongWord={{ code: paramCode?.split(',')?.[0], text: strongWord.text }}
+        strongWord={{ code: paramCode?.split(",")?.[0], text: strongWord.text }}
         theme={theme}
         data={filteredData}
         currentFilter={selectedFilterOption}
@@ -156,29 +158,29 @@ const getStyles = ({ colors }: TTheme) =>
       borderColor: colors.notification,
       borderWidth: 1,
       borderRadius: 10,
-      display: 'flex',
-      justifyContent: 'space-between',
-      flexDirection: 'row',
-      alignItems: 'center',
+      display: "flex",
+      justifyContent: "space-between",
+      flexDirection: "row",
+      alignItems: "center",
       padding: 0,
     },
     strongNumber: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
       height: 40,
-      alignSelf: 'flex-start',
-      backgroundColor: colors.notification + '99',
+      alignSelf: "flex-start",
+      backgroundColor: colors.notification + "99",
       paddingHorizontal: 10,
     },
     strongNumberText: {
       color: colors.text,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     resultText: {
       color: colors.text,
       marginBottom: 10,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     pickerStyle: {
       color: colors.text,
@@ -187,7 +189,7 @@ const getStyles = ({ colors }: TTheme) =>
     pickerContainer: {
       borderRadius: 10,
       flex: 1,
-      backgroundColor: '#ddd',
+      backgroundColor: "#ddd",
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
       paddingVertical: 5,

@@ -1,7 +1,11 @@
+import { Text } from "@/components/Themed";
+import { useBibleChapter } from "@/context/BibleChapterContext";
+import { useBibleContext } from "@/context/BibleContext";
+import { IVerseItem, Screens, TTheme } from "@/types";
+import copyToClipboard from "@/utils/copyToClipboard";
+import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { useNavigation } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
-import { Text } from "@/components/Themed";
-import { useBibleContext } from "@/context/BibleContext";
 import { useEffect, useRef, useState } from "react";
 import {
   ListRenderItem,
@@ -9,12 +13,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { IVerseItem, Screens, TTheme } from "@/types";
-import copyToClipboard from "@/utils/copyToClipboard";
 import RenderTextWithClickableWords from "./home/content/RenderTextWithClickableWords";
 import Icon from "./Icon";
-import { renameLongBookName } from "@/utils/extractVersesInfo";
-import { useBibleChapter } from "@/context/BibleChapterContext";
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -91,21 +91,6 @@ const StrongSearchContent = ({
           </Text>
         </View>
       </TouchableOpacity>
-    );
-  };
-
-  const SearchedHeader = () => {
-    return (
-      <View
-        style={[
-          styles.chapterHeader,
-          !filterData.length && { display: "none" },
-        ]}
-      >
-        <Text style={styles.chapterHeaderTitle}>
-          {strongWord.code} {"\n"}
-        </Text>
-      </View>
     );
   };
 

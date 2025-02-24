@@ -122,7 +122,7 @@ const CompareVersions = ({
           <Text style={[styles.verseBody, { fontSize }]}>
             {getVerseTextRaw(item?.text || "")}
           </Text>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.verseAction}
             onPress={() => onVerseClick(item, id)}
           >
@@ -134,7 +134,7 @@ const CompareVersions = ({
               size={18}
               color={theme.colors.text}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </TouchableOpacity>
     );

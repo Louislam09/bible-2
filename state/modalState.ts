@@ -23,7 +23,8 @@ export const modalState$ = observable({
   },
   openStrongSearchBottomSheet: () => {
     modalState$.isSheetClosed.set(false);
-    modalState$.strongSearchRef.current?.present();
+    console.log(modalState$.strongSearchRef.current);
+    modalState$.strongSearchRef.current?.expand();
   },
   openDictionaryBottomSheet: (text: string) => {
     modalState$.setSearchWordOnDic(text);
