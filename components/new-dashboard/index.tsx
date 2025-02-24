@@ -16,8 +16,8 @@ import VoiceList from "../VoiceList";
 import VersionList from "../home/header/VersionList";
 import { useBibleContext } from "@/context/BibleContext";
 import isWithinTimeframe from "@/utils/isWithinTimeframe";
-import useHistoryManager from "@/hooks/useHistoryManager";
 import { useBibleChapter } from "@/context/BibleChapterContext";
+import { bibleState$ } from "@/state/bibleState";
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
@@ -29,12 +29,7 @@ const SecondDashboard = () => {
   const theme = useTheme();
   const styles = getStyles(theme);
 
-  const {
-    currentBibleVersion,
-    selectBibleVersion,
-    clearHighlights,
-    orientation = "PORTRAIT",
-  } = useBibleContext();
+  const { currentBibleVersion, selectBibleVersion } = useBibleContext();
   const { storedData } = useStorage();
 
   const {
@@ -52,7 +47,7 @@ const SecondDashboard = () => {
   } = storedData;
 
   const onSelect = (version: string) => {
-    clearHighlights();
+    bibleState$.clearSelection();
     selectBibleVersion(version);
     versionRef.current?.dismiss();
   };

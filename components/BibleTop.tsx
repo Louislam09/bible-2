@@ -15,7 +15,7 @@ import { useTheme } from "@react-navigation/native";
 // enableReactTracking({ auto: true });
 
 const BibleTop: FC<any> = (props) => {
-  const { navigation } = props;
+  console.log("🔝 BibleTop Component Rendered");
   const theme = useTheme();
   const { isSplitActived, orientation } = useBibleContext();
   const isPortrait = orientation === "PORTRAIT";

@@ -23,6 +23,7 @@ import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
 import withRenderCount from "@/components/withRenderCount";
+import { bibleState$ } from "@/state/bibleState";
 
 interface FooterInterface {
   refs: any;
@@ -42,7 +43,6 @@ const BibleFooter: FC<FooterInterface> = ({
   const { book: bookRef, back: backRef, next: nextRef, audi: audioRef } = refs;
   const {
     currentBibleVersion,
-    clearHighlights,
     isSplitActived,
     toggleBottomSideSearching,
     shouldLoopReading,
@@ -110,7 +110,7 @@ const BibleFooter: FC<FooterInterface> = ({
   }, []);
 
   const nextOrPreviousBook = (name: string, chapter: number = 1) => {
-    clearHighlights();
+    bibleState$.clearSelection();
     const queryInfo = {
       [isSplit ? "bottomSideBook" : "book"]: name,
       [isSplit ? "bottomSideChapter" : "chapter"]: chapter,
@@ -167,12 +167,12 @@ const BibleFooter: FC<FooterInterface> = ({
   };
 
   const onSingleFooterTitle = () => {
-    clearHighlights();
+    bibleState$.clearSelection();
     toggleBottomSideSearching(isSplit as boolean);
     navigation?.navigate(Screens.ChooseBook, { ...params });
   };
   const onDoubleFooterTitle = () => {
-    clearHighlights();
+    bibleState$.clearSelection();
     toggleBottomSideSearching(isSplit as boolean);
     navigation?.navigate(Screens.ChooseChapterNumber, { ...params });
   };
@@ -184,7 +184,7 @@ const BibleFooter: FC<FooterInterface> = ({
   });
 
   const onLongFooterTitle = () => {
-    clearHighlights();
+    bibleState$.clearSelection();
     toggleBottomSideSearching(isSplit as boolean);
     navigation?.navigate(Screens.ChooseChapterNumber, { ...params });
   };

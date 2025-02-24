@@ -34,6 +34,8 @@ import { useInitialState } from "@/hooks/useInitialState";
 import { useSplitScreen } from "@/hooks/useSplitScreen";
 import { TTheme } from "@/types";
 import { Stack, useNavigation, useRouter } from "expo-router";
+import { bibleState$ } from "@/state/bibleState";
+import { Text } from "@/components/Themed";
 
 // Constants
 const MIN_SPLIT_SIZE = 200;
@@ -54,11 +56,11 @@ interface TutorialStep {
 type HomeScreenProps = {};
 
 const HomeScreen: React.FC<HomeScreenProps> = () => {
+  console.log(`🏠 HomeScreen Component Rendered`);
   const router = useRouter();
   const navigation = useNavigation();
   const theme = useTheme();
-  const { noteListBottomSheetRef, isSplitActived, orientation } =
-    useBibleContext();
+  const { isSplitActived, orientation } = useBibleContext();
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
 
   const [stepIndex, setStepIndex] = useState(0);
@@ -199,7 +201,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
             book={initialState.book}
             chapter={initialState.chapter}
           />
-          <FloatingButton iconName="NotebookText" navigation={router}>
+          <FloatingButton iconName="NotebookText">
             <CurrentNoteDetail />
           </FloatingButton>
 
@@ -208,9 +210,9 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
             justOneSnap
             justOneValue={["50%"]}
             startAT={0}
-            ref={noteListBottomSheetRef}
+            ref={bibleState$.noteListBottomSheetRef.get()}
           >
-            <NoteNameList {...{ theme }} />
+            <NoteNameList />
           </BottomModal>
           {componentRefs.book.current && initialState.isTour === true && (
             <Walkthrough

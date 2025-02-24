@@ -1,24 +1,23 @@
 import DecoratorLine from "@/components/DecoratorLine";
 import Icon from "@/components/Icon";
-import { GET_ALL_NOTE, GET_ALL_NOTE_NAME } from "@/constants/Queries";
+import { GET_ALL_NOTE } from "@/constants/Queries";
 import { iconSize } from "@/constants/size";
 import { useDBContext } from "@/context/databaseContext";
+import { useStorage } from "@/context/LocalstoreContext";
+import { bibleState$ } from "@/state/bibleState";
+import { TNote, TTheme } from "@/types";
+import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
+import { useTheme } from "@react-navigation/native";
 import React, { FC, useEffect, useState } from "react";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
-import { TNote, TTheme } from "@/types";
 import { Text, View } from "../Themed";
-import { useStorage } from "@/context/LocalstoreContext";
-import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
-import { useBibleContext } from "@/context/BibleContext";
 
-type NoteNameListProps = {
-  theme: TTheme;
-};
+type NoteNameListProps = {};
 
-const NoteNameList: FC<NoteNameListProps> = ({ theme }) => {
+const NoteNameList: FC<NoteNameListProps> = ({}) => {
+  const theme = useTheme();
   const styles = getStyles(theme);
   const { myBibleDB, executeSql } = useDBContext();
-  const { setCurrentNoteId, noteListDismissModalPress } = useBibleContext();
   const [data, setData] = useState<TNote[] | any>(null);
   const {
     storedData: { fontSize },
@@ -36,8 +35,8 @@ const NoteNameList: FC<NoteNameListProps> = ({ theme }) => {
   }, [myBibleDB, executeSql]);
 
   const onItem = (id: number) => {
-    setCurrentNoteId(id);
-    noteListDismissModalPress();
+    bibleState$.currentNoteId.set(id);
+    bibleState$.closeNoteListBottomSheet();
   };
 
   return (

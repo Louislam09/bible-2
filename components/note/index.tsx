@@ -33,6 +33,8 @@ import {
 } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { singleScreenHeader } from "../common/singleScreenHeader";
+import { use$ } from "@legendapp/state/react";
+import { bibleState$ } from "@/state/bibleState";
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -99,13 +101,12 @@ const ActionButton = ({ item, index, styles, theme }: ActionButtonProps) => {
 const Note = ({ data, setShouldFetch }: TListVerse) => {
   const theme = useTheme();
   const navigation = useNavigation();
-  const {
-    onDeleteNote,
-    onDeleteAllNotes,
-    addToNoteText,
-    currentBibleLongName,
-  } = useBibleContext();
+  const { onDeleteNote, onDeleteAllNotes, currentBibleLongName } =
+    useBibleContext();
   const { exportNotes, importNotes, error, isLoading } = useNotesExportImport();
+  const selectedVerseForNote = use$(() =>
+    bibleState$.selectedVerseForNote.get()
+  );
 
   const styles = getStyles(theme);
   const notFoundSource = require("../../assets/lottie/notFound.json");
@@ -132,8 +133,8 @@ const Note = ({ data, setShouldFetch }: TListVerse) => {
 
   useEffect(() => {
     if (!data) return;
-    if (addToNoteText) showAddNoteAlert();
-  }, [addToNoteText, data]);
+    if (selectedVerseForNote) showAddNoteAlert();
+  }, [selectedVerseForNote, data]);
 
   useEffect(() => {
     if (!data) return;

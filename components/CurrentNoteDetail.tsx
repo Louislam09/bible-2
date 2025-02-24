@@ -26,20 +26,19 @@ import {
 } from "react-native";
 import { EViewMode, TNote, TTheme } from "@/types";
 import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
+import { bibleState$ } from "@/state/bibleState";
+import { use$ } from "@legendapp/state/react";
 
 const CurrentNoteDetail: React.FC<any> = ({}) => {
   const theme = useTheme();
   const { myBibleDB, executeSql } = useDBContext();
   const styles = useMemo(() => getStyles(theme), [theme]);
-  const {
-    onSaveNote,
-    onUpdateNote,
-    addToNoteText,
-    onAddToNote,
-    currentNoteId,
-    setCurrentNoteId,
-  } = useBibleContext();
+  const { onSaveNote, onUpdateNote } = useBibleContext();
+  const selectedVerseForNote = use$(() =>
+    bibleState$.selectedVerseForNote.get()
+  );
 
+  const currentNoteId = bibleState$.currentNoteId.get();
   const [noteId, setNoteId] = useState(currentNoteId);
   const [isNewNote, setNewNote] = useState(noteId === -1);
   const rotation = useRef(new Animated.Value(0)).current;
@@ -93,8 +92,8 @@ const CurrentNoteDetail: React.FC<any> = ({}) => {
         setNoteInfo(note[0] as TNote);
       } catch (error) {
         Alert.alert(
-          'Error',
-          'No se pudo cargar la nota. Por favor, inténtelo de nuevo.'
+          "Error",
+          "No se pudo cargar la nota. Por favor, inténtelo de nuevo."
         );
       } finally {
         setLoading(false);
@@ -111,11 +110,11 @@ const CurrentNoteDetail: React.FC<any> = ({}) => {
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
+      "keyboardDidShow",
       () => setKeyboardOpen(true)
     );
     const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
+      "keyboardDidHide",
       () => setKeyboardOpen(false)
     );
     return () => {
@@ -139,14 +138,14 @@ const CurrentNoteDetail: React.FC<any> = ({}) => {
         return;
       }
       if (!noteContent.title) noteContent.title = defaultTitle;
-      await onSaveNote(noteContent, () => setViewMode('VIEW'));
+      await onSaveNote(noteContent, () => setViewMode("VIEW"));
       if (!myBibleDB || !executeSql) return;
-      const result = await executeSql('SELECT last_insert_rowid() as id');
+      const result = await executeSql("SELECT last_insert_rowid() as id");
       const newNoteId = result[0]?.id;
-      setCurrentNoteId(newNoteId);
-      ToastAndroid.show('Nota guardada!', ToastAndroid.SHORT);
+      bibleState$.currentNoteId.set(newNoteId);
+      ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
     } catch (error) {
-      Alert.alert('Error', 'No se pudo guardar la nota.');
+      Alert.alert("Error", "No se pudo guardar la nota.");
     }
   }, [noteContent, noteId]);
 
@@ -196,19 +195,19 @@ const CurrentNoteDetail: React.FC<any> = ({}) => {
   };
 
   const addTextToNote = useCallback(() => {
-    const isEditMode = !!addToNoteText;
-    const contentToAdd = `<br> <div>${addToNoteText}</div><br>`;
+    const isEditMode = !!selectedVerseForNote;
+    const contentToAdd = `<br> <div>${selectedVerseForNote}</div><br>`;
     const myContent = `${noteInfo?.note_text || ""} ${contentToAdd}`;
     setNoteContent({
       title: noteInfo?.title || "",
-      content: !noteInfo && !addToNoteText ? "" : myContent,
+      content: !noteInfo && !selectedVerseForNote ? "" : myContent,
     });
-    onAddToNote("");
+    bibleState$.clearSelectedVerseForNote();
     if (isEditMode) {
       setViewMode("EDIT");
       setShouldOpenKeyboard(true);
     }
-  }, [noteInfo, addToNoteText]);
+  }, [noteInfo, selectedVerseForNote]);
 
   const afterSaving = () => {
     setTyping(false);

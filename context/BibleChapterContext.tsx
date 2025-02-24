@@ -18,7 +18,7 @@ import {
   useState,
 } from "react";
 import { useBibleContext } from "./BibleContext";
-import { currentVerse$ } from "@/state/bibleState";
+import { bibleState$ } from "@/state/bibleState";
 
 interface BibleChapterContextProps {
   verses: IBookVerse[];
@@ -74,8 +74,6 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
 
   const {
     // setverseInStrongDisplay,
-    highlightedVerses,
-    clearHighlights,
     isSplitActived,
     currentHistoryIndex,
   } = useBibleContext();
@@ -117,11 +115,10 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
       : chapter;
     const targetVerse = isBibleBottom ? bibleQuery.bottomSideVerse : verse;
     const currentBook = DB_BOOK_NAMES.find((x) => x.longName === targetBook);
-    if (highlightedVerses.length) clearHighlights();
     setLoading((prev) => ({ ...prev, [loadingKey]: true }));
 
     // setverseInStrongDisplay(0);
-    currentVerse$.set(0);
+    bibleState$.currentVerse.set(0);
     const queryKey = getDatabaseQueryKey(currentBibleVersion);
     const query = QUERY_BY_DB[queryKey];
     const startTime = Date.now();

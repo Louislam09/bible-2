@@ -19,6 +19,7 @@ import { NewFeatureBadge } from "@/components/NewFeatureBadge";
 import isWithinTimeframe from "@/utils/isWithinTimeframe";
 import useHistoryManager from "@/hooks/useHistoryManager";
 import { useBibleChapter } from "@/context/BibleChapterContext";
+import { bibleState$ } from "@/state/bibleState";
 
 export type IDashboardOption = {
   icon: IconProps["name"];
@@ -45,7 +46,6 @@ const Dashboard: React.FC<DashboardProps> = () => {
   const {
     currentBibleVersion,
     selectBibleVersion,
-    clearHighlights,
     orientation = "PORTRAIT",
   } = useBibleContext();
   const theme = useTheme();
@@ -100,7 +100,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
   }, []);
 
   const onSelect = (version: string) => {
-    clearHighlights();
+    bibleState$.clearSelection();
     selectBibleVersion(version);
     versionRef.current?.dismiss();
   };

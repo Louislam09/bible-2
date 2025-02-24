@@ -7,7 +7,7 @@ import { useBibleContext } from "@/context/BibleContext";
 import { useMemorization } from "@/context/MemorizationContext";
 import { useModal } from "@/context/modal-context";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
-import { TIcon, TTheme, TVerse } from "@/types";
+import { HomeParams, IBookVerse, TIcon, TTheme, TVerse } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { customUnderline } from "@/utils/customStyle";
 import {
@@ -37,9 +37,10 @@ import {
 } from "react-native";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
 import VerseTitle from "./VerseTitle";
-import { observable } from "@legendapp/state";
 import { use$ } from "@legendapp/state/react";
-import { currentVerse$ } from "@/state/bibleState";
+import { bibleState$ } from "@/state/bibleState";
+import Walkthrough from "@/components/Walkthrough";
+import useParams from "@/hooks/useParams";
 
 type VerseProps = TVerse & {
   isSplit: boolean;
@@ -51,6 +52,7 @@ type ActionItemProps = {
   action: TIcon;
   styles: any;
   theme: any;
+  item: IBookVerse;
 };
 
 const validStrongList = (arr: WordTagPair[]) => {
@@ -69,110 +71,122 @@ const validStrongList = (arr: WordTagPair[]) => {
   });
 };
 
-const ActionItem = memo(({ index, action, styles, theme }: ActionItemProps) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const translateXAnim = useRef(new Animated.Value(300)).current;
+const ActionItem = memo(
+  ({ index, action, styles, theme, item }: ActionItemProps) => {
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const translateXAnim = useRef(new Animated.Value(300)).current;
+    const actionToHide = ["Copy", "NotebookPen"];
+    const lastSelectedItem = use$(() => {
+      const selectedVerses = bibleState$.selectedVerses.get();
+      return (
+        bibleState$.lastSelectedVerse.get()?.verse === item.verse &&
+        selectedVerses.has(item.verse)
+      );
+    });
 
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 150,
-        delay: index * 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(translateXAnim, {
-        toValue: 0,
-        duration: 150,
-        delay: index * 100,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [fadeAnim, translateXAnim, index]);
+    useEffect(() => {
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 150,
+          delay: index * 100,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateXAnim, {
+          toValue: 0,
+          duration: 150,
+          delay: index * 100,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }, [fadeAnim, translateXAnim, index]);
 
-  return (
-    <Animated.View
-      style={[
-        {
-          opacity: fadeAnim,
-          transform: [{ translateX: translateXAnim }],
-        },
-        { flexDirection: "row", marginVertical: 5, marginHorizontal: 5 },
-      ]}
-    >
-      <Pressable
-        onPress={action.action}
+    return (
+      <Animated.View
         style={[
           {
-            display: "flex",
-            alignItems: "center",
+            opacity: fadeAnim,
+            transform: [{ translateX: translateXAnim }],
           },
-          action.hide && { display: "none" },
+          { flexDirection: "row", marginVertical: 5, marginHorizontal: 5 },
         ]}
       >
-        <Icon
-          size={30}
-          name={action.name}
-          style={[styles.icon, action.color && { color: action.color }]}
-        />
-        <Text style={{ color: theme.colors.text }}>{action?.description}</Text>
-      </Pressable>
-    </Animated.View>
-  );
-});
+        <Pressable
+          onPress={action.action}
+          style={[
+            {
+              display: "flex",
+              alignItems: "center",
+            },
+            (action.hide ||
+              (!lastSelectedItem && actionToHide.includes(action.name))) && {
+              display: "none",
+            },
+          ]}
+        >
+          <Icon
+            size={30}
+            name={action.name}
+            style={[styles.icon, action.color && { color: action.color }]}
+          />
+          <Text style={{ color: theme.colors.text }}>
+            {action?.description}
+          </Text>
+        </Pressable>
+      </Animated.View>
+    );
+  }
+);
 
 const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
-  // const params = useParams<HomeParams>();
-  // const { isVerseTour } = params;
+  const params = useParams<HomeParams>();
+  const { isVerseTour } = params;
   const {
     currentBibleVersion,
-    highlightVerse,
-    highlightedVerses,
-    isCopyMode,
-    toggleCopyMode,
-    removeHighlistedVerse,
+    // isCopyMode,
+    // toggleCopyMode,
     fontSize,
     toggleFavoriteVerse,
-    clearHighlights,
     setStrongWord,
-    // verseInStrongDisplay,
-    // setverseInStrongDisplay,
-    onAddToNote,
-    noteListPresentModalPress,
+    // noteListPresentModalPress,
     toggleBottomSideSearching,
     isBottomSideSearching,
     isSplitActived,
-    currentNoteId,
     setVerseToCompare,
   } = useBibleContext();
 
   const { addVerse } = useMemorization();
   const theme = useTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
-  const [isVerseHighlisted, setHighlightVerse] = useState<number | null>(null);
   const [isFavorite, setFavorite] = useState(false);
-  const highlightedVersesLenth = highlightedVerses.length;
-  const isMoreThanOneHighted = highlightedVersesLenth > 1;
   // const isStrongSearch = verseInStrongDisplay === item.verse;
   const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
   const verseRef = useRef<any>(null);
-  // const [stepIndex, setStepIndex] = useState(0);
+  const [stepIndex, setStepIndex] = useState(0);
   const isBottom = isSplit && isBottomSideSearching;
   const isTop = !isSplit && !isBottomSideSearching;
-  const [doubleTagged, setDoubleTagged] = useState(false);
   const animatedVerseHighlight = useRef(new Animated.Value(0)).current;
   const wordAndStrongValue = extractWordsWithTags(item.text);
 
-  const lastHighted = useMemo(
-    () => highlightedVerses[highlightedVerses.length - 1],
-    [highlightedVerses]
+  // LEGEND STATE
+  const verseIsTapped = use$(
+    () => item.verse === bibleState$.currentVerse.get()
   );
+  const isVerseDoubleTagged = use$(
+    () =>
+      item.verse === bibleState$.currentVerse.get() &&
+      bibleState$.isVerseDoubleTagged.get()
+  );
+  const verseShowAction = use$(() => {
+    const selectedVerses = bibleState$.selectedVerses.get();
+    return selectedVerses.has(item.verse);
+  });
 
   const hasTitle = useMemo(
     () => !item.subheading.includes(null as any),
     [item]
   );
-  console.log("🆚 Verse Component Rendered", item.verse);
+  console.log("🆚", item.verse);
 
   const {
     compareRefHandlePresentModalPress: onCompare,
@@ -206,62 +220,26 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     setFavorite(!!item.is_favorite);
   }, [item]);
 
-  useEffect(() => {
-    if (!highlightedVersesLenth) {
-      setHighlightVerse(null);
-    }
-  }, [highlightedVersesLenth]);
-
-  // observe(() => {
-  //   if (item.verse === currentVerse$.get())
-  //     console.log("Soy yo: " + currentVerse$.get());
-  // });
-
-  const isStrongSearch = use$(() => item.verse === currentVerse$.get());
-
-  // currentVerse$.onChange(() => {
-  //   if (item.verse === currentVerse$.get())
-  //     console.log("Soy yo: " + currentVerse$.get());
-  // });
-
   const onVerseClicked = useCallback(() => {
-    console.log("🐭 Verse clicked", item.verse);
-    currentVerse$.set(isStrongSearch ? 0 : item.verse);
-    // setverseInStrongDisplay(isStrongSearch ? 0 : item.verse);
-    // toggleBottomSideSearching(isSplit);
-    setDoubleTagged(false);
-    if (!isCopyMode) return;
-    if (isVerseHighlisted === item.verse) {
-      setHighlightVerse(null);
-      setDoubleTagged(false);
-      removeHighlistedVerse(item);
-      return;
+    const isActionMode = bibleState$.selectedVerses.get().size > 0;
+    if (isActionMode) {
+      bibleState$.handleLongPressVerse(item);
+    } else {
+      bibleState$.handleTapVerse(item);
     }
-    highlightVerse(item);
-    setHighlightVerse(item.verse);
-  }, [item, isStrongSearch, isSplit, isCopyMode, isVerseHighlisted]);
-
-  // const onClicked = () => console.log("🐭 single click", item.verse);
-  // const onDoubleClicked = () => console.log("🐭  double click", item.verse);
+  }, [item, verseIsTapped, isSplit]);
 
   const onPress = useSingleAndDoublePress({
     onDoublePress: () => {
-      console.log("🐭 Verse doubled clicked", item.verse);
-      onVerseClicked();
-      setDoubleTagged(true);
+      bibleState$.handleDoubleTapVerse(item);
     },
     onSinglePress: onVerseClicked,
-    // onDoublePress: onDoubleClicked,
-    // onSinglePress: onClicked,
     delay: 200,
   });
 
   const onVerseLongPress = useCallback(() => {
-    if (isVerseHighlisted === item.verse) return;
-    toggleCopyMode();
-    highlightVerse(item);
-    setHighlightVerse(item.verse);
-  }, [item, isVerseHighlisted]);
+    bibleState$.handleLongPressVerse(item);
+  }, [item]);
 
   const onFavorite = async () => {
     await toggleFavoriteVerse({
@@ -271,25 +249,30 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       isFav: isFavorite,
     });
     setFavorite((prev) => !prev);
-    clearHighlights();
+    bibleState$.clearSelection();
   };
 
   const onCopy = async () => {
-    if (isVerseHighlisted !== item.verse) return;
-    await copyToClipboard(isMoreThanOneHighted ? highlightedVerses : item);
-    clearHighlights();
+    const isMoreThanOneHighted = bibleState$.selectedVerses.get().size > 1;
+    const highlightedVerses = Array.from(
+      bibleState$.selectedVerses.get().values()
+    ).sort((a, b) => a.verse - b.verse);
+    const value = isMoreThanOneHighted ? highlightedVerses : item;
+    console.log(await copyToClipboard(value, true));
+    bibleState$.clearSelection();
   };
 
   const addVerseToNote = async () => {
     const shouldReturn = true;
-    const verseToAdd = (await copyToClipboard(
-      isMoreThanOneHighted ? highlightedVerses : item,
-      shouldReturn
-    )) as string;
-
-    onAddToNote(verseToAdd);
-    clearHighlights();
-    if (!currentNoteId) noteListPresentModalPress();
+    const isMoreThanOneHighted = bibleState$.selectedVerses.get().size > 1;
+    const highlightedVerses = Array.from(
+      bibleState$.selectedVerses.get().values()
+    ).sort((a, b) => a.verse - b.verse);
+    const value = isMoreThanOneHighted ? highlightedVerses : item;
+    const verseToAdd = (await copyToClipboard(value, shouldReturn)) as string;
+    bibleState$.handleSelectVerseForNote(verseToAdd);
+    bibleState$.clearSelection();
+    if (!bibleState$.currentNoteId.get()) bibleState$.openNoteListBottomSheet();
   };
 
   const onWordClicked = (code: string) => {
@@ -353,7 +336,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const onMemorizeVerse = (text: string) => {
     addVerse(text, currentBibleVersion);
-    clearHighlights();
+    bibleState$.clearSelection();
   };
 
   const verseActions: TIcon[] = useMemo(() => {
@@ -361,13 +344,15 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       {
         name: "Copy",
         action: onCopy,
-        hide: lastHighted?.verse !== item.verse && isMoreThanOneHighted,
+        // hide: bibleState$.lastSelectedVerse.get()?.verse,
+        // hide: lastHighted?.verse !== item.verse && isMoreThanOneHighted,
+        hide: false,
         description: "Copiar",
       },
       {
         name: "NotebookPen",
         action: addVerseToNote,
-        hide: lastHighted?.verse !== item.verse && isMoreThanOneHighted,
+        hide: false,
         description: "Anotar",
       },
       {
@@ -396,8 +381,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         description: "Comparar",
       },
     ] as TIcon[];
-  }, [isMoreThanOneHighted, lastHighted, isVerseHighlisted, isFavorite]);
-  // }, [isMoreThanOneHighted, lastHighted, isVerseHighlisted, isSplitActived]);
+  }, [verseIsTapped, isFavorite]);
 
   const steps = [
     {
@@ -419,19 +403,15 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     },
   ];
 
-  // const displayTour = useMemo(
-  //   () => item.verse === 1 && verseRef.current && isVerseTour,
-  //   [isVerseTour, item]
-  // );
+  const displayTour = useMemo(
+    () => item.verse === 1 && verseRef.current && isVerseTour,
+    [isVerseTour, item]
+  );
 
   const bgVerseHighlight = animatedVerseHighlight.interpolate({
     inputRange: [0, 1],
     outputRange: ["transparent", `${theme.colors.notification + "20"}`],
   });
-
-  const styledVerseHighlight = {
-    backgroundColor: bgVerseHighlight,
-  };
 
   return (
     <View
@@ -459,27 +439,25 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         <Animated.Text
           style={[
             styles.verse,
-            styledVerseHighlight,
-            isVerseHighlisted === item.verse && styles.highlightCopy,
-            { fontSize },
+            // styledVerseHighlight,
+            (verseIsTapped || verseShowAction) && styles.highlightCopy,
+            { fontSize, backgroundColor: bgVerseHighlight },
           ]}
           aria-selected
           selectable={false}
           selectionColor={theme.colors.notification || "white"}
         >
           <Text style={[styles.verseNumber]}>
-            {`${isStrongSearch} -`}
-            {isFavorite && !isVerseHighlisted && (
+            {isFavorite && (
               <MaterialCommunityIcons size={14} name="star" color="#ffd41d" />
-              // <Icon size={14} name="Star" color="#ffd41d" />
             )}
             &nbsp;{item.verse}&nbsp;
           </Text>
 
           {/* HIGHLIGHT */}
-          {isStrongSearch && (isBottom || isTop) ? (
+          {verseIsTapped && (isBottom || isTop) ? (
             <>
-              {doubleTagged ? (
+              {isVerseDoubleTagged ? (
                 <RenderTextWithClickableWords
                   theme={theme}
                   text={item.text}
@@ -509,7 +487,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         </Animated.Text>
 
         {/* ACTIONS */}
-        {isVerseHighlisted === item.verse && !!highlightedVersesLenth && (
+        {verseShowAction && (
           <ScrollView
             horizontal
             contentContainerStyle={{
@@ -519,18 +497,21 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
             style={styles.verseAction}
           >
             {verseActions.map((action: TIcon, index) => (
-              <ActionItem key={index} {...{ index, action, styles, theme }} />
+              <ActionItem
+                key={index}
+                {...{ index, action, styles, theme, item }}
+              />
             ))}
           </ScrollView>
         )}
       </TouchableOpacity>
-      {/* {displayTour && (
+      {displayTour && (
         <Walkthrough
           steps={steps}
           setStep={setStepIndex}
           currentStep={stepIndex}
         />
-      )} */}
+      )}
     </View>
   );
 };

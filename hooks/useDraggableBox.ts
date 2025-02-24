@@ -1,13 +1,15 @@
-import { useStorage } from '@/context/LocalstoreContext';
-import { useState, useRef, useMemo, useEffect } from 'react';
+import { useStorage } from "@/context/LocalstoreContext";
+import { useState, useRef, useMemo, useEffect } from "react";
 import {
   PanResponder,
   Animated,
   PanResponderGestureState,
   PanResponderInstance,
   useWindowDimensions,
-} from 'react-native';
-import { OrientationType } from '@/types';
+} from "react-native";
+import { OrientationType } from "@/types";
+import { bibleState$ } from "@/state/bibleState";
+import { use$ } from "@legendapp/state/react";
 
 interface UseDraggableElementProps {
   parentWidth?: number;
@@ -36,12 +38,8 @@ const useDraggableElement = ({
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const maxWidth = parentWidth || SCREEN_WIDTH;
   const maxHeight = parentHeight || SCREEN_HEIGHT;
-
-  const {
-    storedData: { floatingNoteButtonPosition },
-    saveData,
-  } = useStorage();
-
+  const floatingNoteButtonPosition =
+    bibleState$.floatingNoteButtonPosition.get();
   const pan = useRef(new Animated.ValueXY(floatingNoteButtonPosition)).current;
   const [panState, setPanState] = useState(floatingNoteButtonPosition);
   const isTappedRef = useRef(false);
@@ -57,7 +55,8 @@ const useDraggableElement = ({
     const { x, y } = ensureWithinBounds(panState.x, panState.y);
     pan.setValue({ x, y });
     setPanState({ x, y });
-    saveData({ floatingNoteButtonPosition: { x, y } });
+    // saveData({ floatingNoteButtonPosition: { x, y } });
+    bibleState$.handleFloatingNoteButtonPosition(x, y);
   }, [SCREEN_WIDTH, SCREEN_HEIGHT, enabled]);
 
   const panResponder = useMemo(
@@ -89,7 +88,8 @@ const useDraggableElement = ({
           const x = pan.x._value;
           // @ts-ignore
           const y = pan.y._value;
-          saveData({ floatingNoteButtonPosition: { x, y } });
+          bibleState$.handleFloatingNoteButtonPosition(x, y);
+          // saveData({ floatingNoteButtonPosition: { x, y } });
           setPanState({ x, y });
         },
       }),

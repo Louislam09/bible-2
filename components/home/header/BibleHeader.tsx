@@ -20,6 +20,7 @@ import { useNavigation, useRouter } from "expo-router";
 import ProgressBar from "../footer/ProgressBar";
 import Settings from "./Settings";
 import VersionList from "./VersionList";
+import { bibleState$ } from "@/state/bibleState";
 
 interface HeaderInterface {
   refs: any;
@@ -31,7 +32,6 @@ const BibleHeader: FC<HeaderInterface> = ({ refs }) => {
   const {
     currentBibleVersion,
     selectBibleVersion,
-    clearHighlights,
     goBackOnHistory,
     goForwardOnHistory,
     isSplitActived,
@@ -76,7 +76,7 @@ const BibleHeader: FC<HeaderInterface> = ({ refs }) => {
   }, []);
 
   const goSearchScreen = () => {
-    clearHighlights();
+    bibleState$.clearSelection();
     // @ts-ignore
     navigation.navigate(Screens.Search, { book: book });
   };
@@ -126,7 +126,7 @@ const BibleHeader: FC<HeaderInterface> = ({ refs }) => {
   }, [isSplitActived, canGoForward, canGoBackward]);
 
   const onSelect = (version: string) => {
-    clearHighlights();
+    bibleState$.clearSelection();
     selectBibleVersion(version);
     versionRef.current?.dismiss();
   };

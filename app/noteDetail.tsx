@@ -1,24 +1,26 @@
 import Icon from "@/components/Icon";
 import MyRichEditor from "@/components/RichTextEditor";
 import { Text, View } from "@/components/Themed";
-import { htmlTemplate } from '@/constants/HtmlTemplate';
-import { GET_NOTE_BY_ID } from '@/constants/Queries';
-import { useBibleContext } from '@/context/BibleContext';
-import { useDBContext } from '@/context/databaseContext';
-import useDebounce from '@/hooks/useDebounce';
-import useParams from '@/hooks/useParams';
-import usePrintAndShare from '@/hooks/usePrintAndShare';
-import { EViewMode, Screens, TNote, TTheme } from '@/types';
-import { formatDateShortDayMonth } from '@/utils/formatDateShortDayMonth';
-import { useTheme } from '@react-navigation/native';
-import { Stack, useNavigation } from 'expo-router';
+import { htmlTemplate } from "@/constants/HtmlTemplate";
+import { GET_NOTE_BY_ID } from "@/constants/Queries";
+import { useBibleContext } from "@/context/BibleContext";
+import { useDBContext } from "@/context/databaseContext";
+import useDebounce from "@/hooks/useDebounce";
+import useParams from "@/hooks/useParams";
+import usePrintAndShare from "@/hooks/usePrintAndShare";
+import { bibleState$ } from "@/state/bibleState";
+import { EViewMode, Screens, TNote, TTheme } from "@/types";
+import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
+import { use$ } from "@legendapp/state/react";
+import { useTheme } from "@react-navigation/native";
+import { Stack, useNavigation } from "expo-router";
 import React, {
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-} from 'react';
+} from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -29,7 +31,7 @@ import {
   TextInput,
   ToastAndroid,
   TouchableOpacity,
-} from 'react-native';
+} from "react-native";
 
 type NoteDetailProps = {};
 type NoteDetailParams = { noteId: number | null; isNewNote: boolean };
@@ -39,8 +41,10 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
   const navigation = useNavigation();
   const { myBibleDB, executeSql } = useDBContext();
   const styles = useMemo(() => getStyles(theme), [theme]);
-  const { onSaveNote, onUpdateNote, addToNoteText, onAddToNote } =
-    useBibleContext();
+  const { onSaveNote, onUpdateNote } = useBibleContext();
+  const selectedVerseForNote = use$(() =>
+    bibleState$.selectedVerseForNote.get()
+  );
 
   const routeParams = useParams<NoteDetailParams>();
   const { noteId, isNewNote } = routeParams;
@@ -53,22 +57,22 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
   const [isTyping, setTyping] = useState(false);
   const [noteInfo, setNoteInfo] = useState<TNote | null>(null);
   const [viewMode, setViewMode] = useState<keyof typeof EViewMode>(
-    isNewNote ? 'NEW' : 'VIEW'
+    isNewNote ? "NEW" : "VIEW"
   );
   const [noteContent, setNoteContent] = useState({
-    title: '',
-    content: '',
+    title: "",
+    content: "",
   });
 
-  const isView = viewMode === 'VIEW';
-  const defaultTitle = 'Sin titulo ✏️';
+  const isView = viewMode === "VIEW";
+  const defaultTitle = "Sin titulo ✏️";
 
   const debouncedNoteContent = useDebounce(noteContent, 3000);
   const { printToFile } = usePrintAndShare();
 
   const rotate = rotation.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '-360deg'],
+    outputRange: ["0deg", "-360deg"],
   });
 
   useEffect(() => {
@@ -92,8 +96,8 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
         setNoteInfo(note[0] as TNote);
       } catch (error) {
         Alert.alert(
-          'Error',
-          'No se pudo cargar la nota. Por favor, inténtelo de nuevo.'
+          "Error",
+          "No se pudo cargar la nota. Por favor, inténtelo de nuevo."
         );
       } finally {
         setLoading(false);
@@ -111,7 +115,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
   useEffect(() => {
     if (isNewNote) {
       navigation.setOptions({
-        headerTitle: '📝',
+        headerTitle: "📝",
       });
     } else {
       // const headerTitle = isView ? noteInfo?.title?.toUpperCase() : '✏️';
@@ -121,12 +125,12 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
+      "keyboardDidShow",
       () => setKeyboardOpen(true)
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
+      "keyboardDidHide",
       () => setKeyboardOpen(false)
     );
 
@@ -155,30 +159,30 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
       await onSaveNote(noteContent, () =>
         navigation.navigate(Screens.Notes, { shouldRefresh: true })
       );
-      ToastAndroid.show('Nota guardada!', ToastAndroid.SHORT);
+      ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
     } catch (error) {
-      Alert.alert('Error', 'No se pudo guardar la nota.');
+      Alert.alert("Error", "No se pudo guardar la nota.");
     }
   }, [noteContent, noteId]);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+    const unsubscribe = navigation.addListener("beforeRemove", (e) => {
       if (!hasUnsavedChanges) return;
 
       e.preventDefault();
 
       Alert.alert(
-        'Guardar cambios',
-        'Tienes cambios sin guardar, ¿quieres salir sin guardar?',
+        "Guardar cambios",
+        "Tienes cambios sin guardar, ¿quieres salir sin guardar?",
         [
-          { text: 'Cancelar', style: 'cancel', onPress: () => {} },
+          { text: "Cancelar", style: "cancel", onPress: () => {} },
           {
-            text: 'Salir sin guardar',
-            style: 'destructive',
+            text: "Salir sin guardar",
+            style: "destructive",
             onPress: () => navigation.dispatch(e.data.action),
           },
           {
-            text: 'Guardar',
+            text: "Guardar",
             onPress: async () => {
               await onSave();
               navigation.dispatch(e.data.action);
@@ -211,7 +215,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
             <Icon
               style={[{}]}
               color={theme.colors.notification}
-              name={isView ? 'Pencil' : isTyping ? 'RefreshCcw' : 'Save'}
+              name={isView ? "Pencil" : isTyping ? "RefreshCcw" : "Save"}
               size={30}
             />
           </Animated.View>
@@ -237,20 +241,20 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
   };
 
   const addTextToNote = useCallback(() => {
-    const isEditMode = !!addToNoteText;
+    const isEditMode = !!selectedVerseForNote;
     if (isEditMode) {
-      setViewMode('EDIT');
+      setViewMode("EDIT");
       setHasUnsavedChanges(true);
     }
 
-    const contentToAdd = `<br> <div>${addToNoteText}</div><br>`;
-    const myContent = `${noteInfo?.note_text || ''} ${contentToAdd}`;
+    const contentToAdd = `<br> <div>${selectedVerseForNote}</div><br>`;
+    const myContent = `${noteInfo?.note_text || ""} ${contentToAdd}`;
     setNoteContent({
-      title: noteInfo?.title || '',
-      content: !noteInfo && !addToNoteText ? '' : myContent,
+      title: noteInfo?.title || "",
+      content: !noteInfo && !selectedVerseForNote ? "" : myContent,
     });
-    onAddToNote('');
-  }, [noteInfo, addToNoteText]);
+    bibleState$.clearSelectedVerseForNote();
+  }, [noteInfo, selectedVerseForNote]);
 
   const afterSaving = () => {
     setTyping(false);
@@ -262,11 +266,11 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
       await onUpdateNote(noteContent, id, afterSaving);
       setHasUnsavedChanges(false);
       if (goToViewMode) {
-        setViewMode('VIEW');
-        ToastAndroid.show('Nota actualizada!', ToastAndroid.SHORT);
+        setViewMode("VIEW");
+        ToastAndroid.show("Nota actualizada!", ToastAndroid.SHORT);
       }
     } catch (error) {
-      Alert.alert('Error', 'No se pudo actualizar la nota.');
+      Alert.alert("Error", "No se pudo actualizar la nota.");
     }
   };
 
@@ -279,12 +283,12 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
 
     setNoteContent((prev: any) => ({
       ...prev,
-      [field]: text || '',
+      [field]: text || "",
     }));
   };
 
   const onEditMode = () => {
-    setViewMode('EDIT');
+    setViewMode("EDIT");
   };
 
   if (isLoading) {
@@ -301,11 +305,11 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
         options={{
           headerShown: true,
           headerRight: () => (
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TouchableOpacity onPress={() => console.log()}>
                 <Icon
                   style={styles.icon}
-                  name='Share2'
+                  name="Share2"
                   size={24}
                   onPress={() => {
                     const html = htmlTemplate(
@@ -319,7 +323,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
                       10,
                       true
                     );
-                    printToFile(html, noteInfo?.title?.toUpperCase() || '--');
+                    printToFile(html, noteInfo?.title?.toUpperCase() || "--");
                   }}
                 />
               </TouchableOpacity>
@@ -330,11 +334,11 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
       <View
         style={[
           styles.titleContainer,
-          { display: isNewNote ? 'none' : 'flex' },
+          { display: isNewNote ? "none" : "flex" },
         ]}
       >
         <Text style={{ fontSize: 22 }}>
-          {isView ? noteInfo?.title?.toUpperCase() : '✏️'}
+          {isView ? noteInfo?.title?.toUpperCase() : "✏️"}
         </Text>
       </View>
       <Text style={styles.dateLabel}>
@@ -348,16 +352,16 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
         Textinput={
           <TextInput
             editable={!isView}
-            placeholder='Titulo'
+            placeholder="Titulo"
             placeholderTextColor={theme.colors.text}
             style={[styles.textInput]}
             multiline
             value={noteContent.title}
-            onChangeText={(text: string) => onContentChange('title', text)}
+            onChangeText={(text: string) => onContentChange("title", text)}
           />
         }
         value={noteContent.content}
-        onChangeText={(text: string) => onContentChange('content', text)}
+        onChangeText={(text: string) => onContentChange("content", text)}
         readOnly={isView}
       />
       {renderActionButtons()}
@@ -370,24 +374,24 @@ const getStyles = ({ colors, dark }: TTheme) =>
     container: {
       flex: 1,
       padding: 5,
-      backgroundColor: dark ? colors.background : '#eee',
+      backgroundColor: dark ? colors.background : "#eee",
     },
     titleContainer: {
       gap: 4,
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: 'transparent',
-      justifyContent: 'center',
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: "transparent",
+      justifyContent: "center",
       marginVertical: 5,
     },
     dateLabel: {
-      textTransform: 'uppercase',
-      textAlign: 'center',
+      textTransform: "uppercase",
+      textAlign: "center",
     },
     textInput: {
       padding: 10,
       fontSize: 26,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       color: colors.text,
       marginVertical: 5,
       // textDecorationStyle: "solid",
@@ -395,63 +399,63 @@ const getStyles = ({ colors, dark }: TTheme) =>
       // textDecorationLine: "underline",
     },
     scrollToTopButton: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 25,
       right: 20,
       backgroundColor: colors.background,
       padding: 10,
       borderRadius: 10,
-      borderColor: '#ddd',
+      borderColor: "#ddd",
       borderWidth: 0.3,
       elevation: 3,
     },
     noteHeader: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
       paddingHorizontal: 4,
       paddingVertical: 10,
       marginTop: 40,
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
     },
     noteListTitle: {
       fontSize: 30,
       marginVertical: 10,
-      fontWeight: 'bold',
-      textAlign: 'center',
+      fontWeight: "bold",
+      textAlign: "center",
       color: colors.notification,
     },
     noteHeaderSubtitle: {
       fontSize: 18,
-      fontWeight: '600',
+      fontWeight: "600",
       color: colors.text,
-      alignSelf: 'flex-start',
+      alignSelf: "flex-start",
     },
     activiyContainer: {
       flex: 1,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
     },
     searchContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-around',
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-around",
       borderRadius: 10,
       marginVertical: 20,
       borderWidth: 1,
       borderColor: colors.notification,
-      borderStyle: 'solid',
-      width: '100%',
-      fontWeight: '100',
-      backgroundColor: colors.notification + '99',
+      borderStyle: "solid",
+      width: "100%",
+      fontWeight: "100",
+      backgroundColor: colors.notification + "99",
     },
     searchIcon: {
       color: colors.text,
       paddingHorizontal: 15,
       borderRadius: 10,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     noteHeaderSearchInput: {
       borderRadius: 10,
@@ -459,32 +463,32 @@ const getStyles = ({ colors, dark }: TTheme) =>
       paddingLeft: 15,
       fontSize: 18,
       flex: 1,
-      fontWeight: '100',
-      backgroundColor: '#ddd',
+      fontWeight: "100",
+      backgroundColor: "#ddd",
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
     },
     cardContainer: {
-      display: 'flex',
+      display: "flex",
       borderRadius: 10,
-      backgroundColor: dark ? '#151517' : colors.card,
+      backgroundColor: dark ? "#151517" : colors.card,
       padding: 15,
       margin: 5,
       elevation: 5,
-      borderColor: '#ddd',
+      borderColor: "#ddd",
       borderWidth: 0.5,
     },
     headerContainer: {
-      position: 'relative',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      position: "relative",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       marginBottom: 8,
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
     },
     cardTitle: {
       fontSize: 18,
-      fontWeight: '600',
+      fontWeight: "600",
       color: colors.notification,
       flex: 1,
     },
@@ -494,28 +498,28 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     separator: {
       height: 1,
-      backgroundColor: colors.notification + '99',
+      backgroundColor: colors.notification + "99",
       marginVertical: 8,
     },
     noResultsContainer: {
       flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       borderRadius: 10,
       paddingBottom: 20,
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
     },
     noResultsText: {
       fontSize: 18,
       color: colors.text,
-      textAlign: 'center',
+      textAlign: "center",
     },
     verseAction: {
-      flexDirection: 'row',
-      backgroundColor: 'transparent',
+      flexDirection: "row",
+      backgroundColor: "transparent",
     },
     icon: {
-      fontWeight: '700',
+      fontWeight: "700",
       marginHorizontal: 10,
       color: colors.primary,
       // fontSize: 24,
