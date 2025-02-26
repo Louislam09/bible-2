@@ -11,41 +11,39 @@ import BottomModal from "@/components/BottomModal";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
-import { useBibleChapter } from "@/context/BibleChapterContext";
 import { useDBContext } from "@/context/databaseContext";
+import useHistoryManager from "@/hooks/useHistoryManager";
 import useParams from "@/hooks/useParams";
+import { bibleState$ } from "@/state/bibleState";
+import { tourState$ } from "@/state/tourState";
 import { EBibleVersions, HomeParams, Screens, TIcon, TTheme } from "@/types";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { use$ } from "@legendapp/state/react";
 import { useNavigation, useRouter } from "expo-router";
 import ProgressBar from "../footer/ProgressBar";
 import Settings from "./Settings";
 import VersionList from "./VersionList";
-import { bibleState$ } from "@/state/bibleState";
 
-interface HeaderInterface {
-  refs: any;
-}
+interface HeaderInterface {}
 
-const BibleHeader: FC<HeaderInterface> = ({ refs }) => {
-  const { bibleVersion, search, dashboard, setting, fav } = refs;
+const BibleHeader: FC<HeaderInterface> = ({}) => {
   const { width } = useWindowDimensions();
   const {
     currentBibleVersion,
     selectBibleVersion,
     goBackOnHistory,
     goForwardOnHistory,
-    isSplitActived,
-    toggleSplitMode,
-    toggleBottomSideSearching,
+    historyManager,
   } = useBibleContext();
-  const { verses, historyManager } = useBibleChapter();
-  const chapterVerseLength = useMemo(() => verses.length, [verses]);
+  const isSplitActived = use$(() => bibleState$.isSplitActived.get());
+
+  const verses = use$(() => bibleState$.bibleData.topVerses.get());
+  const chapterVerseLength = useMemo(() => verses?.length, [verses]);
 
   const {
     goBack,
     goForward,
     history,
-    getCurrentIndex,
     getCurrentItem,
     currentIndex: currentHistoryIndex,
   } = historyManager;
@@ -62,10 +60,10 @@ const BibleHeader: FC<HeaderInterface> = ({ refs }) => {
   const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
-  const canGoForward = !(currentHistoryIndex === history.length - 1);
+  const canGoForward = !(currentHistoryIndex === history?.length - 1);
   const canGoBackward = currentHistoryIndex !== 0;
   const { installedBibles } = useDBContext();
-  const currentItem = getCurrentItem();
+  const currentItem = getCurrentItem?.();
   const currentVerse = currentItem?.verse;
   const currentVersionName =
     installedBibles.find((version) => version.id === currentBibleVersion)
@@ -97,17 +95,16 @@ const BibleHeader: FC<HeaderInterface> = ({ refs }) => {
         name: "SquareSplitVertical",
         action: () => {
           // showToast("⚠️ Esta función está en mantenimiento 🚧");
-          toggleSplitMode();
-          toggleBottomSideSearching(!isSplitActived);
+          bibleState$.handleSplitActived();
         },
-        ref: fav,
+        ref: tourState$.fav,
         isIonicon: false,
         color: isSplitActived ? theme.colors.notification : theme.colors.text,
       },
       {
         name: "ArrowBigLeftDash",
         action: moveBackInHistory,
-        ref: setting,
+        ref: tourState$.setting,
         isIonicon: true,
         disabled: isSplitActived,
         color: canGoBackward ? theme.colors.notification : theme.colors?.text,
@@ -115,12 +112,12 @@ const BibleHeader: FC<HeaderInterface> = ({ refs }) => {
       {
         name: "ArrowBigRightDash",
         action: moveForwardInHistory,
-        ref: search,
+        ref: tourState$.search,
         isIonicon: true,
         disabled: isSplitActived,
         color: canGoForward ? theme.colors.notification : theme.colors?.text,
       },
-      { name: "Search", action: goSearchScreen, ref: search },
+      { name: "Search", action: goSearchScreen, ref: tourState$.search },
     ];
     return options.filter((x) => !x.disabled);
   }, [isSplitActived, canGoForward, canGoBackward]);
@@ -138,7 +135,6 @@ const BibleHeader: FC<HeaderInterface> = ({ refs }) => {
     <View style={styles.header}>
       <View style={{ flexDirection: "row" }}>
         <TouchableOpacity
-          ref={dashboard}
           style={styles.iconContainer}
           onPress={() => router.navigate("(dashboard)")}
         >
@@ -151,7 +147,7 @@ const BibleHeader: FC<HeaderInterface> = ({ refs }) => {
         <View style={styles.headerCenter}>
           {headerIconData.map((icon, index) => (
             <TouchableOpacity
-              ref={icon.ref}
+              ref={icon.ref.get()}
               style={styles.iconContainer}
               key={index}
               onPress={icon?.action}
@@ -170,7 +166,7 @@ const BibleHeader: FC<HeaderInterface> = ({ refs }) => {
           </BottomModal>
         </View>
         <TouchableOpacity
-          ref={bibleVersion}
+          ref={tourState$.bibleVersion.get()}
           style={styles.headerEnd}
           onPress={versionHandlePresentModalPress}
         >

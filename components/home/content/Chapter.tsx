@@ -19,7 +19,7 @@ const Chapter = ({
   estimatedReadingTime,
   initialScrollIndex,
 }: TChapter) => {
-  console.log("🔄 Chapter Component Rendered");
+  console.log("🔄 Chapter Component Rendered", isSplit ? "🔽" : "🔝");
   const { width, height } = useWindowDimensions();
   const theme = useTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);

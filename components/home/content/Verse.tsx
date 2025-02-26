@@ -3,14 +3,13 @@ import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import Walkthrough from "@/components/Walkthrough";
 import { getBookDetail } from "@/constants/BookNames";
-import { useBibleChapter } from "@/context/BibleChapterContext";
 import { useBibleContext } from "@/context/BibleContext";
 import { useMemorization } from "@/context/MemorizationContext";
-import useParams from "@/hooks/useParams";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
-import { HomeParams, IBookVerse, TIcon, TTheme, TVerse } from "@/types";
+import { tourState$ } from "@/state/tourState";
+import { IBookVerse, TIcon, TTheme, TVerse } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { customUnderline } from "@/utils/customStyle";
 import {
@@ -139,25 +138,17 @@ const ActionItem = memo(
 );
 
 const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
-  const params = useParams<HomeParams>();
-  const { isVerseTour } = params;
-  const {
-    currentBibleVersion,
-    // isCopyMode,
-    // toggleCopyMode,
-    fontSize,
-    toggleFavoriteVerse,
-    // noteListPresentModalPress,
-    toggleBottomSideSearching,
-    isBottomSideSearching,
-    isSplitActived,
-  } = useBibleContext();
+  // console.log("🆚", item.verse, isSplit ? "🔽" : "🔝");
+  // const params = useParams<HomeParams>();
+  // const { isVerseTour } = params;
+  const { currentBibleVersion, fontSize, toggleFavoriteVerse } =
+    useBibleContext();
 
+  const isBottomSideSearching = false;
   const { addVerse } = useMemorization();
   const theme = useTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const [isFavorite, setFavorite] = useState(false);
-  // const isStrongSearch = verseInStrongDisplay === item.verse;
   const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
   const verseRef = useRef<any>(null);
   const [stepIndex, setStepIndex] = useState(0);
@@ -184,9 +175,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     () => !item.subheading.includes(null as any),
     [item]
   );
-  console.log("🆚", item.verse);
-
-  const { updateBibleQuery } = useBibleChapter();
 
   const initHighLightedVerseAnimation = () => {
     const loopAnimation = Animated.loop(
@@ -369,7 +357,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       {
         name: "FileDiff",
         action: onCompareClicked,
-        hide: isSplitActived,
+        hide: bibleState$.isSplitActived.get(),
         description: "Comparar",
       },
     ] as TIcon[];
@@ -395,10 +383,10 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     },
   ];
 
-  const displayTour = useMemo(
-    () => item.verse === 1 && verseRef.current && isVerseTour,
-    [isVerseTour, item]
-  );
+  // const displayTour = useMemo(
+  //   () => item.verse === 1 && verseRef.current && isVerseTour,
+  //   [isVerseTour, item]
+  // );
 
   const bgVerseHighlight = animatedVerseHighlight.interpolate({
     inputRange: [0, 1],
@@ -421,8 +409,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         {hasTitle && (
           <VerseTitle
             isSplit={isSplit}
-            isSplitActived={isSplitActived}
-            updateBibleQuery={updateBibleQuery}
             key={item.verse}
             subheading={item.subheading}
           />
@@ -497,7 +483,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
           </ScrollView>
         )}
       </TouchableOpacity>
-      {displayTour && (
+      {tourState$.tourPopoverVisible.get() === "VERSE" && item.verse === 1 && (
         <Walkthrough
           steps={steps}
           setStep={setStepIndex}

@@ -60,7 +60,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       () =>
         justOneSnap
           ? justOneValue || ["30%"]
-          : snaps || ["30%", "50%", "75%", "100%"],
+          : snaps || ["30%", "50%", "75%", "95%"],
       [snaps]
     );
     const [index, setIndex] = useState(0);

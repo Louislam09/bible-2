@@ -1,10 +1,11 @@
 import { useTheme } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
-import Popover from "react-native-popover-view";
+import Popover, { PopoverMode } from "react-native-popover-view";
 import { TStep, TTheme } from "@/types";
 import Icon from "./Icon";
 import { Text, View } from "./Themed";
+import { tourState$ } from "@/state/tourState";
 type TWalkthrough = {
   currentStep: number;
   steps: TStep[] | any[];
@@ -12,6 +13,10 @@ type TWalkthrough = {
 };
 
 const Walkthrough = ({ currentStep, steps, setStep }: TWalkthrough) => {
+  console.log(
+    "🚶‍♂️ Walkthrough Component Rendered",
+    tourState$.tourPopoverVisible.get()
+  );
   const theme = useTheme();
   const styles = getStyles(theme);
   const totalStep = steps.length;
@@ -31,6 +36,7 @@ const Walkthrough = ({ currentStep, steps, setStep }: TWalkthrough) => {
     setStep(currentStep - 1);
   };
   const close = () => {
+    tourState$.setTourPopoverVisible("EMPTY");
     if (action && lastStep) action();
     setStep(-1);
   };
@@ -50,7 +56,6 @@ const Walkthrough = ({ currentStep, steps, setStep }: TWalkthrough) => {
 
     highlightElement();
 
-    // Clean up the highlight when the component unmounts or when the current step changes
     return () => {
       const view = target?.current;
       if (view) {

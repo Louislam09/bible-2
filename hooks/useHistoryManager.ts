@@ -56,7 +56,7 @@ const useHistoryManager = (): HistoryManager => {
             "MMM dd, yyyy - hh:mm a"
           ),
         }));
-        setHistory(formattedData);
+        setHistory(formattedData || []);
         currentIndexRef.current = results.length - 1;
       }
       setIsHistoryInitialized(true);
@@ -102,7 +102,7 @@ const useHistoryManager = (): HistoryManager => {
         setHistory((prevHistory) => {
           let newHistory = [...prevHistory, newItem];
           currentIndexRef.current = newHistory.length - 1;
-          return newHistory;
+          return newHistory || [];
         });
       }
     } catch (error) {
@@ -132,7 +132,7 @@ const useHistoryManager = (): HistoryManager => {
   const deleteOne = async (id: number) => {
     try {
       await executeSql(historyQuery.DELETE_BY_ID, [id]);
-      setHistory((prev) => prev.filter((item) => item.id !== id));
+      setHistory((prev) => prev.filter((item) => item.id !== id) || []);
     } catch (error) {
       console.error("Error deleting history item:", error);
     }
@@ -157,7 +157,7 @@ const useHistoryManager = (): HistoryManager => {
           ...updatedHistory[currentIndex],
           verse: newVerse,
         };
-        return updatedHistory;
+        return updatedHistory || [];
       });
 
       try {

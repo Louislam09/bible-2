@@ -3,8 +3,11 @@ import DailyVerseTwo from "@/components/new-dashboard/DailyVerseTwo";
 import MainSection from "@/components/new-dashboard/MainSection";
 import StudyTools from "@/components/new-dashboard/StudyTools";
 import StatusBarBackground from "@/components/StatusBarBackground";
+import { useBibleContext } from "@/context/BibleContext";
 import { useStorage } from "@/context/LocalstoreContext";
+import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";
+import isWithinTimeframe from "@/utils/isWithinTimeframe";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTheme } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
@@ -12,12 +15,8 @@ import React, { useCallback, useRef } from "react";
 import { ScrollView, StyleSheet, ToastAndroid } from "react-native";
 import { IDashboardOption } from "../../app/(dashboard)";
 import BottomModal from "../BottomModal";
-import VoiceList from "../VoiceList";
 import VersionList from "../home/header/VersionList";
-import { useBibleContext } from "@/context/BibleContext";
-import isWithinTimeframe from "@/utils/isWithinTimeframe";
-import { useBibleChapter } from "@/context/BibleChapterContext";
-import { bibleState$ } from "@/state/bibleState";
+import VoiceList from "../VoiceList";
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
@@ -29,12 +28,12 @@ const SecondDashboard = () => {
   const theme = useTheme();
   const styles = getStyles(theme);
 
-  const { currentBibleVersion, selectBibleVersion } = useBibleContext();
-  const { storedData } = useStorage();
-
   const {
+    currentBibleVersion,
+    selectBibleVersion,
     historyManager: { getCurrentItem },
-  } = useBibleChapter();
+  } = useBibleContext();
+  const { storedData } = useStorage();
 
   const {
     lastBook,
@@ -68,7 +67,7 @@ const SecondDashboard = () => {
     book: lastHistoryBook,
     chapter: lastHistoryChapter,
     verse: lastHistoryVerse,
-  } = (getCurrentItem() as any) || {};
+  } = (getCurrentItem?.() as any) || {};
 
   const homePageInitParams = {
     book: lastHistoryBook || lastBook || "Génesis",

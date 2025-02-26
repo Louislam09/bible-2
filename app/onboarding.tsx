@@ -3,17 +3,18 @@ import { FlashList } from "@shopify/flash-list";
 import Animation from "@/components/Animation";
 import Icon, { IconProps } from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
-import { Stack, useNavigation } from 'expo-router';
-import React from 'react';
+import { Stack, useNavigation } from "expo-router";
+import React from "react";
 import {
   StyleSheet,
   TouchableWithoutFeedback,
   useWindowDimensions,
-} from 'react-native';
-import { Screens, TTheme } from '@/types';
+} from "react-native";
+import { Screens, TTheme } from "@/types";
+import { tourState$ } from "@/state/tourState";
 
 type IDashboardOption = {
-  icon: IconProps['name'];
+  icon: IconProps["name"];
   label: string;
   action: () => void;
   disabled?: boolean;
@@ -24,28 +25,36 @@ type IDashboardOption = {
 const OnboardingScreen = () => {
   const theme = useTheme();
   const styles = getStyles(theme);
-  const dashboardImage = require('../assets/lottie/onboarding.json');
+  const dashboardImage = require("../assets/lottie/onboarding.json");
   const navigation = useNavigation();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
 
   const options: IDashboardOption[] = [
     {
-      icon: 'LetterText',
-      label: 'Versiculo',
-      action: () =>
+      icon: "LetterText",
+      label: "Versiculo",
+      action: () => {
+        tourState$.setTourPopoverVisible("VERSE");
         navigation.navigate(Screens.Home, {
-          book: 'Génesis',
+          book: "Génesis",
           chapter: 1,
           verse: 1,
-          isVerseTour: true,
           isHistory: true,
-        }),
+        });
+      },
     },
     {
-      icon: 'HandHelping',
-      label: 'Funciones',
-      action: () =>
-        navigation.navigate(Screens.Home, { isTour: true, isHistory: true }),
+      icon: "HandHelping",
+      label: "Funciones",
+      action: () => {
+        tourState$.setTourPopoverVisible("FUNCTION");
+        navigation.navigate(Screens.Home, {
+          book: "Génesis",
+          chapter: 1,
+          verse: 1,
+          isHistory: true,
+        });
+      },
     },
   ];
 
@@ -56,15 +65,15 @@ const OnboardingScreen = () => {
         {
           padding: 0,
           flex: 1,
-          display: 'flex',
+          display: "flex",
           width: SCREEN_WIDTH / 3,
-          alignItems: 'center',
-          justifyContent: 'center',
+          alignItems: "center",
+          justifyContent: "center",
         },
       ]}
       disabled={item.disabled}
     >
-      <View style={[styles.card, item.disabled && { backgroundColor: '#ddd' }]}>
+      <View style={[styles.card, item.disabled && { backgroundColor: "#ddd" }]}>
         <Icon name={item.icon} size={40} color={theme.colors.notification} />
         <Text style={[styles.cardLabel]}>{item.label}</Text>
       </View>
@@ -76,20 +85,20 @@ const OnboardingScreen = () => {
       <Stack.Screen options={{ headerShown: true }} />
       <View style={styles.imageContainer}>
         <Animation
-          backgroundColor={'transparent'}
+          backgroundColor={"transparent"}
           source={dashboardImage}
           loop
           size={{ width: 220, height: 220 }}
           colorFilters={[
-            { color: theme.colors.text, keypath: 'Plant' },
-            { color: theme.colors.text, keypath: 'plant leaf 2' },
-            { color: theme.colors.text, keypath: 'plant leaf 1' },
-            { color: theme.colors.text, keypath: 'Gray plant pot' },
-            { color: theme.colors.text, keypath: 'Gray plant leaves' },
-            { color: theme.colors.text, keypath: 'gear 1' },
-            { color: theme.colors.text, keypath: 'gear 2' },
-            { color: theme.colors.text, keypath: 'gear 3' },
-            { color: theme.colors.text, keypath: 'gear 4' },
+            { color: theme.colors.text, keypath: "Plant" },
+            { color: theme.colors.text, keypath: "plant leaf 2" },
+            { color: theme.colors.text, keypath: "plant leaf 1" },
+            { color: theme.colors.text, keypath: "Gray plant pot" },
+            { color: theme.colors.text, keypath: "Gray plant leaves" },
+            { color: theme.colors.text, keypath: "gear 1" },
+            { color: theme.colors.text, keypath: "gear 2" },
+            { color: theme.colors.text, keypath: "gear 3" },
+            { color: theme.colors.text, keypath: "gear 4" },
           ]}
         />
         <Text style={styles.title}>Bienvenido</Text>

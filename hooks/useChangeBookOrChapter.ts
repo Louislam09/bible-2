@@ -1,14 +1,7 @@
-import { NavigationProp, NavigationState } from "@react-navigation/native";
 import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "@/constants/BookNames";
-import { useBibleChapter } from "@/context/BibleChapterContext";
+import { bibleState$ } from "@/state/bibleState";
 
 interface useChangeBookOrChapterProps {
-  // navigation: Omit<
-  //   NavigationProp<ReactNavigation.RootParamList>,
-  //   "getState"
-  // > & {
-  //   getState(): NavigationState | undefined;
-  // };
   isSplit?: boolean;
   book: string;
   chapter: number;
@@ -22,7 +15,6 @@ const useChangeBookOrChapter = ({
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
   const { bookNumber, shortName } =
     DB_BOOK_NAMES.find((x) => x.longName === book) || {};
-  const { updateBibleQuery } = useBibleChapter();
 
   const nextOrPreviousBook = (name: string, chapter: number = 1) => {
     const queryInfo = {
@@ -31,7 +23,7 @@ const useChangeBookOrChapter = ({
       [isSplit ? "bottomSideVerse" : "verse"]: 0,
       isHistory: false,
     };
-    updateBibleQuery({
+    bibleState$.changeBibleQuery({
       ...queryInfo,
       shouldFetch: true,
       isBibleBottom: isSplit,
@@ -50,11 +42,11 @@ const useChangeBookOrChapter = ({
     const _chapter = +(chapter as number) + 1;
     const queryInfo = {
       [isSplit ? "bottomSideBook" : "book"]: book,
-      [isSplit ? "bottomSideChapter" : "chapter"]: _chapter || 0,
-      [isSplit ? "bottomSideVerse" : "verse"]: 0,
+      [isSplit ? "bottomSideChapter" : "chapter"]: _chapter || 1,
+      [isSplit ? "bottomSideVerse" : "verse"]: 1,
       isHistory: false,
     };
-    updateBibleQuery({
+    bibleState$.changeBibleQuery({
       ...queryInfo,
       shouldFetch: true,
       isBibleBottom: isSplit,
@@ -72,10 +64,10 @@ const useChangeBookOrChapter = ({
     const queryInfo = {
       [isSplit ? "bottomSideBook" : "book"]: book,
       [isSplit ? "bottomSideChapter" : "chapter"]: (chapter as number) - 1,
-      [isSplit ? "bottomSideVerse" : "verse"]: 0,
+      [isSplit ? "bottomSideVerse" : "verse"]: 1,
       isHistory: false,
     };
-    updateBibleQuery({
+    bibleState$.changeBibleQuery({
       ...queryInfo,
       shouldFetch: true,
       isBibleBottom: isSplit,

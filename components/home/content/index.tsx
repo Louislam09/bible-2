@@ -4,8 +4,6 @@ import { StyleSheet } from "react-native";
 import { TTheme } from "../../../types";
 
 import { View } from "@/components/Themed";
-import { useBibleChapter } from "@/context/BibleChapterContext";
-import Chapter from "./Chapter";
 
 interface BookContentInterface {
   isSplit: boolean;

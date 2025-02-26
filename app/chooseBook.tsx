@@ -134,8 +134,8 @@ const ChooseBook: React.FC = () => {
   } = useStorage();
   const { book } = routeParam;
   const theme = useTheme();
-  const { viewLayoutGrid, toggleViewLayoutGrid, isBottomSideSearching } =
-    useBibleContext();
+  const { viewLayoutGrid, toggleViewLayoutGrid } = useBibleContext();
+  const isBottomSideSearching = false;
 
   const handlePress = useCallback(
     (item: IDBBookNames) => {

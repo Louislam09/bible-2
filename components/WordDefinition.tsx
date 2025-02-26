@@ -1,13 +1,15 @@
-import { useNavigation, useTheme } from "@react-navigation/native";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { iconSize } from "@/constants/size";
 import Voices from "@/constants/Voices";
 import { wordDefinitionHtmlTemplate } from "@/constants/wordDefinitionHtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
 import { useCustomTheme } from "@/context/ThemeContext";
-import * as Clipboard from "expo-clipboard";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { bibleState$ } from "@/state/bibleState";
+import { DictionaryData, Screens, TTheme } from "@/types";
+import { useNavigation, useTheme } from "@react-navigation/native";
+import * as Clipboard from "expo-clipboard";
 import React, { useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import WebView from "react-native-webview";
@@ -15,10 +17,8 @@ import {
   ShouldStartLoadRequest,
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
-import { DictionaryData, Screens, TTheme } from "@/types";
 import Icon from "./Icon";
 import { Text, View } from "./Themed";
-import { useBibleChapter } from "@/context/BibleChapterContext";
 
 type WordDefinitionProps = {
   wordData: DictionaryData;
@@ -50,7 +50,6 @@ const WordDefinition = ({
     fontSize
   );
   const [height, setHeight] = useState<number | string>("100%");
-  const { updateBibleQuery } = useBibleChapter();
 
   const copyContentToClipboard = () => {
     if (!webViewRef?.current) return;
@@ -77,7 +76,7 @@ const WordDefinition = ({
         chapter: +chapter,
         verse: +verse || 0,
       };
-      updateBibleQuery({ ...queryInfo, shouldFetch: true });
+      bibleState$.changeBibleQuery({ ...queryInfo, shouldFetch: true });
       navigation.navigate(Screens.Home, queryInfo);
     }
 

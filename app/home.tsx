@@ -3,7 +3,6 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 
@@ -32,10 +31,17 @@ import BibleHeader from "@/components/home/header/BibleHeader";
 import StatusBarBackground from "@/components/StatusBarBackground";
 import { useInitialState } from "@/hooks/useInitialState";
 import { useSplitScreen } from "@/hooks/useSplitScreen";
-import { TTheme } from "@/types";
-import { Stack, useNavigation, useRouter } from "expo-router";
-import { bibleState$ } from "@/state/bibleState";
-import { Text } from "@/components/Themed";
+import { bibleState$, getReadingTime } from "@/state/bibleState";
+import { tourState$ } from "@/state/tourState";
+import { IBookVerse, TTheme } from "@/types";
+import { use$, useObservable } from "@legendapp/state/react";
+import { Stack, useNavigation } from "expo-router";
+import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { getDatabaseQueryKey } from "@/constants/databaseNames";
+import { QUERY_BY_DB } from "@/constants/Queries";
+import { batch } from "@legendapp/state";
+import { useDBContext } from "@/context/databaseContext";
+import { BibleChapterProvider } from "@/context/BibleChapterContext";
 
 // Constants
 const MIN_SPLIT_SIZE = 200;
@@ -50,28 +56,28 @@ interface SplitConfig {
 
 interface TutorialStep {
   text: string;
-  target: RefObject<any>;
+  target: RefObject<any> | null;
 }
 
 type HomeScreenProps = {};
 
 const HomeScreen: React.FC<HomeScreenProps> = () => {
   console.log(`🏠 HomeScreen Component Rendered`);
-  const router = useRouter();
   const navigation = useNavigation();
   const theme = useTheme();
-  const { isSplitActived, orientation } = useBibleContext();
+  const { orientation } = useBibleContext();
+  const isSplitActived = use$(() => bibleState$.isSplitActived.get());
+  // const { executeSql, isMyBibleDbLoaded } = useDBContext();
+
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
+  const initialState = useInitialState();
 
   const [stepIndex, setStepIndex] = useState(0);
-
   const isPortrait = orientation === "PORTRAIT";
   const styles = useMemo(
     () => getStyles(theme, isPortrait),
     [theme, isPortrait]
   );
-
-  const initialState = useInitialState();
 
   const { topHeight, topWidth, panResponder, backgroundColor } = useSplitScreen(
     {
@@ -82,148 +88,171 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
     }
   );
 
-  const componentRefs = {
-    book: useRef<any>(null),
-    next: useRef<any>(null),
-    back: useRef<any>(null),
-    audio: useRef<any>(null),
-    dashboard: useRef<any>(null),
-    bibleVersion: useRef<any>(null),
-    search: useRef<any>(null),
-    setting: useRef<any>(null),
-    fav: useRef<any>(null),
-  };
+  const tourPopoverVisible = use$(() => tourState$.tourPopoverVisible.get());
 
   const tutorialSteps = useMemo<TutorialStep[]>(
     () => [
       {
         text: "🏠 Toque aquí para ir a la pantalla principal.",
-        target: componentRefs.dashboard,
+        target: null,
       },
       {
         text: "✂️ Toque aquí para partir la pantalla en dos secciones de escrituras.",
-        target: componentRefs.fav,
+        target: tourState$.fav.get(),
       },
       {
         text: "⏪⏩ Toque las flechas para moverse atras/delante en su historial de busqueda.",
-        target: componentRefs.setting,
+        target: tourState$.setting.get(),
       },
       {
         text: "🔍 Toque aquí para buscar en la escritura.",
-        target: componentRefs.search,
+        target: tourState$.search.get(),
       },
       {
         text: "📑 Toque aquí para cambiar la versión de la escritura.",
-        target: componentRefs.bibleVersion,
+        target: tourState$.bibleVersion.get(),
       },
       {
         text: "📚 Toque aquí para elegir un libro.",
-        target: componentRefs.book,
+        target: tourState$.footerTitleRef.get(),
       },
       {
         text: "⬅️ Toque aquí para retroceder al capítulo anterior.",
-        target: componentRefs.back,
+        target: tourState$.backButton.get(),
       },
       {
         text: "➡️ Toque aquí para pasar al siguiente capítulo.",
-        target: componentRefs.next,
+        target: tourState$.nextButton.get(),
       },
       {
         text: "🔊 Toque aquí para escuchar el capítulo.",
-        target: componentRefs.audio,
+        target: tourState$.audio.get(),
       },
     ],
-    [componentRefs]
+    [tourPopoverVisible]
   );
 
-  const renderSplitScreenDivider = useCallback(() => {
-    if (!isSplitActived) return null;
+  // const shouldFetch = use$(() => bibleState$.bibleQuery.shouldFetch.get());
+  // const bibleQuery = bibleState$.bibleQuery.get();
 
-    return (
-      <Animated.View
-        {...panResponder.panHandlers}
-        style={[styles.slider, { backgroundColor }]}
-      >
-        <View style={styles.sliderHandle} />
-      </Animated.View>
-    );
-  }, [isSplitActived, panResponder, backgroundColor, styles]);
+  // const fetchChapter = async () => {
+  //   console.log("🟢 Fetching chapter 🟢");
+  //   const { book, chapter, verse, isBibleBottom } = bibleQuery;
+  //   const loadingKey = isBibleBottom ? "bottom" : "top";
+  //   const targetBook = isBibleBottom ? bibleQuery.bottomSideBook : book;
+  //   const targetChapter = isBibleBottom
+  //     ? bibleQuery.bottomSideChapter
+  //     : chapter;
+  //   const targetVerse = isBibleBottom ? bibleQuery.bottomSideVerse : verse;
+  //   const currentBook = DB_BOOK_NAMES.find((x) => x.longName === targetBook);
+
+  //   const queryKey = getDatabaseQueryKey(currentBibleVersion);
+  //   const query = QUERY_BY_DB[queryKey];
+  //   const startTime = Date.now();
+  //   try {
+  //     const verses = await executeSql<IBookVerse>(
+  //       query.GET_VERSES_BY_BOOK_AND_CHAPTER,
+  //       [currentBook?.bookNumber, targetChapter || 1],
+  //       "verses"
+  //     );
+
+  //     const endTime = Date.now();
+  //     const executionTime = endTime - startTime;
+
+  //     console.log(
+  //       `📚 ${targetBook} ${targetChapter}:${targetVerse} in ${executionTime} ms. ${verses.length}`
+  //     );
+
+  //     batch(() => {
+  //       bibleState$.bibleQuery.isBibleBottom.set(false);
+  //       bibleState$.bibleQuery.shouldFetch.set(false);
+  //       bibleState$.bibleData[`${loadingKey}Verses`].set(verses);
+  //       bibleState$.readingTimeData[loadingKey].set(getReadingTime(verses));
+  //       bibleState$.isDataLoading[loadingKey].set(false);
+  //       console.log("✅ Data Fetched ✅");
+  //     });
+  //   } catch (error) {
+  //     console.error("Error fetching Bible data:", error);
+  //     batch(() => {
+  //       bibleState$.bibleQuery.isBibleBottom.set(false);
+  //       bibleState$.bibleQuery.shouldFetch.set(false);
+  //       bibleState$.isDataLoading[loadingKey].set(false);
+  //     });
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (!isMyBibleDbLoaded) return;
+  //   if (!bibleQuery.shouldFetch) return;
+  //   fetchChapter();
+  // }, [shouldFetch, isMyBibleDbLoaded]);
 
   const renderBottomContent = useCallback(() => {
-    if (!isSplitActived) return null;
-
     return (
-      <BibleBottom
-        refs={componentRefs}
-        book={initialState.bottomSideBook}
-        chapter={initialState.bottomSideChapter}
-        verse={initialState.bottomSideVerse}
-        height={Animated.subtract(new Animated.Value(SCREEN_HEIGHT), topHeight)}
-        width={Animated.subtract(new Animated.Value(SCREEN_WIDTH), topWidth)}
-        navigation={navigation}
-      />
+      <>
+        <Animated.View
+          {...panResponder.panHandlers}
+          style={[styles.slider, { backgroundColor }]}
+        >
+          <View style={styles.sliderHandle} />
+        </Animated.View>
+        <BibleBottom
+          book={initialState.bottomSideBook}
+          chapter={initialState.bottomSideChapter}
+          verse={initialState.bottomSideVerse}
+          height={Animated.subtract(
+            new Animated.Value(SCREEN_HEIGHT),
+            topHeight
+          )}
+          width={Animated.subtract(new Animated.Value(SCREEN_WIDTH), topWidth)}
+          navigation={navigation}
+        />
+      </>
     );
-  }, [
-    isSplitActived,
-    initialState,
-    componentRefs,
-    SCREEN_HEIGHT,
-    SCREEN_WIDTH,
-    navigation,
-  ]);
+  }, [initialState, SCREEN_HEIGHT, SCREEN_WIDTH, navigation, backgroundColor]);
 
   return (
-    <StatusBarBackground>
-      <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
-        <Stack.Screen options={{ headerShown: false }} />
-        <BibleHeader refs={componentRefs} />
-        <View
-          style={[styles.container, !isPortrait && { flexDirection: "row" }]}
-        >
-          <BibleTop
-            refs={componentRefs}
-            {...{
-              ...initialState,
-              height: topHeight,
-              width: topWidth,
-              navigation,
-            }}
-          />
-          {isSplitActived && (
-            <>
-              {renderSplitScreenDivider()}
-              {renderBottomContent()}
-            </>
-          )}
-        </View>
-        <>
-          <BookContentModals
-            book={initialState.book}
-            chapter={initialState.chapter}
-          />
-          <FloatingButton iconName="NotebookText">
-            <CurrentNoteDetail />
-          </FloatingButton>
-
-          <BottomModal
-            shouldScroll
-            justOneSnap
-            justOneValue={["50%"]}
-            startAT={0}
-            ref={bibleState$.noteListBottomSheetRef.get()}
+    <BibleChapterProvider>
+      <StatusBarBackground>
+        <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
+          <Stack.Screen options={{ headerShown: false }} />
+          <BibleHeader />
+          <View
+            style={[styles.container, !isPortrait && { flexDirection: "row" }]}
           >
-            <NoteNameList />
-          </BottomModal>
-          {componentRefs.book.current && initialState.isTour === true && (
-            <Walkthrough
-              steps={tutorialSteps}
-              setStep={setStepIndex}
-              currentStep={stepIndex}
+            <BibleTop height={topHeight} width={topWidth} />
+            {isSplitActived && <>{renderBottomContent()}</>}
+          </View>
+          <>
+            <BookContentModals
+              book={initialState.book}
+              chapter={initialState.chapter}
             />
-          )}
-        </>
-      </SafeAreaView>
-    </StatusBarBackground>
+            <FloatingButton iconName="NotebookText">
+              <CurrentNoteDetail />
+            </FloatingButton>
+
+            <BottomModal
+              shouldScroll
+              justOneSnap
+              justOneValue={["50%"]}
+              startAT={0}
+              ref={bibleState$.noteListBottomSheetRef.get()}
+            >
+              <NoteNameList />
+            </BottomModal>
+            {tourState$.tourPopoverVisible.get() === "FUNCTION" && (
+              <Walkthrough
+                steps={tutorialSteps}
+                setStep={setStepIndex}
+                currentStep={stepIndex}
+              />
+            )}
+            {/* )} */}
+          </>
+        </SafeAreaView>
+      </StatusBarBackground>
+    </BibleChapterProvider>
   );
 };
 

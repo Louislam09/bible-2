@@ -1,12 +1,15 @@
 import BottomModal from "@/components/BottomModal";
 import DailyVerse from "@/components/DailyVerse";
 import Icon, { IconProps } from "@/components/Icon";
+import { NewFeatureBadge } from "@/components/NewFeatureBadge";
 import { Text, View } from "@/components/Themed";
 import VoiceList from "@/components/VoiceList";
 import VersionList from "@/components/home/header/VersionList";
 import { useBibleContext } from "@/context/BibleContext";
 import { useStorage } from "@/context/LocalstoreContext";
+import { bibleState$ } from "@/state/bibleState";
 import { EBibleVersions, Screens, TTheme } from "@/types";
+import isWithinTimeframe from "@/utils/isWithinTimeframe";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
@@ -15,11 +18,6 @@ import React, { useCallback, useMemo, useRef } from "react";
 import { StyleSheet, ToastAndroid, useWindowDimensions } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import SecondDashboard from "../../components/new-dashboard";
-import { NewFeatureBadge } from "@/components/NewFeatureBadge";
-import isWithinTimeframe from "@/utils/isWithinTimeframe";
-import useHistoryManager from "@/hooks/useHistoryManager";
-import { useBibleChapter } from "@/context/BibleChapterContext";
-import { bibleState$ } from "@/state/bibleState";
 
 export type IDashboardOption = {
   icon: IconProps["name"];
@@ -47,13 +45,11 @@ const Dashboard: React.FC<DashboardProps> = () => {
     currentBibleVersion,
     selectBibleVersion,
     orientation = "PORTRAIT",
+    historyManager: { getCurrentItem },
   } = useBibleContext();
   const theme = useTheme();
 
   const { storedData } = useStorage();
-  const {
-    historyManager: { getCurrentItem },
-  } = useBibleChapter();
   const voiceBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const currentModalOpenRef = useRef<any>(null);

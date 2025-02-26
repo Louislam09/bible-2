@@ -2,15 +2,14 @@ import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
 import ScreenWithAnimation from "@/components/LottieTransitionScreen";
 import { Text, View } from "@/components/Themed";
-import { headerIconSize } from "@/constants/size";
-import { useBibleChapter } from "@/context/BibleChapterContext";
-import { HistoryItem } from "@/hooks/useHistoryManager";
+import { useBibleContext } from "@/context/BibleContext";
+import useHistoryManager, { HistoryItem } from "@/hooks/useHistoryManager";
+import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useRouter } from "expo-router";
-import { ChevronLeft } from "lucide-react-native";
 import React from "react";
 import {
   ActivityIndicator,
@@ -22,7 +21,7 @@ import {
 const HistoryScreen = () => {
   const theme = useTheme();
   const styles = getStyles(theme);
-  const { updateBibleQuery, historyManager } = useBibleChapter();
+  const { historyManager } = useBibleContext();
   const { clear, history, isHistoryInitialized, deleteOne } = historyManager;
   const router = useRouter();
 
@@ -48,7 +47,7 @@ const HistoryScreen = () => {
 
   const onItem = (item: HistoryItem) => {
     const { book, chapter, verse } = item;
-    updateBibleQuery({
+    bibleState$.changeBibleQuery({
       book,
       chapter,
       verse,

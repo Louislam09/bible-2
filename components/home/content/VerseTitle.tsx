@@ -1,5 +1,6 @@
 import { Text, View } from "@/components/Themed";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { bibleState$ } from "@/state/bibleState";
 import extractVersesInfo from "@/utils/extractVersesInfo";
 import { useTheme } from "@react-navigation/native";
 import React from "react";
@@ -7,17 +8,11 @@ import { StyleSheet } from "react-native";
 
 type VerseTitleProps = {
   subheading: string[];
-  updateBibleQuery: any;
-  isSplitActived: any;
   isSplit: any;
 };
 
-const VerseTitle = ({
-  subheading,
-  updateBibleQuery,
-  isSplit,
-  isSplitActived,
-}: VerseTitleProps) => {
+const VerseTitle = ({ subheading, isSplit }: VerseTitleProps) => {
+  const isSplitActived = bibleState$.isSplitActived.get();
   const theme = useTheme();
   const [subTitle, link] = JSON.parse(subheading as any);
   if (!subTitle) return null;
@@ -39,7 +34,7 @@ const VerseTitle = ({
         [isBottom ? "bottomSideChapter" : "chapter"]: chapter,
         [isBottom ? "bottomSideVerse" : "verse"]: verse,
       };
-      updateBibleQuery({
+      bibleState$.changeBibleQuery({
         ...queryInfo,
         shouldFetch: true,
         isBibleBottom: isBottom,

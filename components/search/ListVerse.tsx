@@ -1,16 +1,16 @@
-import { useNavigation, useTheme } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
 import Animation from "@/components/Animation";
 import RenderVerse from "@/components/concordance/RenderVerse";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { useBibleContext } from "@/context/BibleContext";
-import { useEffect, useRef, useState } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, Screens, TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import removeAccent from "@/utils/removeAccent";
-import { useBibleChapter } from "@/context/BibleChapterContext";
+import { useNavigation, useTheme } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
+import { useEffect, useRef, useState } from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -27,7 +27,6 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const notFoundSource = require("../../assets/lottie/notFound.json");
   const searchingSource = require("../../assets/lottie/searching.json");
-  const { updateBibleQuery } = useBibleChapter();
 
   const handleScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -41,7 +40,7 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
       chapter: item.chapter,
       verse: item.verse,
     };
-    updateBibleQuery({ ...queryInfo, shouldFetch: true });
+    bibleState$.changeBibleQuery({ ...queryInfo, shouldFetch: true });
     navigation.navigate(Screens.Home, queryInfo);
   };
 

@@ -1,6 +1,6 @@
 import { Text } from "@/components/Themed";
-import { useBibleChapter } from "@/context/BibleChapterContext";
 import { useBibleContext } from "@/context/BibleContext";
+import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, Screens, TTheme } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
@@ -35,7 +35,6 @@ const StrongSearchContent = ({
   const { fontSize } = useBibleContext();
   const flatListRef = useRef<FlashList<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
-  const { updateBibleQuery } = useBibleChapter();
 
   useEffect(() => {
     if (!data) return;
@@ -54,7 +53,7 @@ const StrongSearchContent = ({
       chapter: item.chapter,
       verse: item.verse,
     };
-    updateBibleQuery({ ...queryInfo, shouldFetch: true });
+    bibleState$.changeBibleQuery({ ...queryInfo, shouldFetch: true });
     navigation.navigate(Screens.Home, queryInfo);
   };
 

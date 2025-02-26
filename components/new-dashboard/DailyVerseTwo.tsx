@@ -3,16 +3,15 @@ import { GET_DAILY_VERSE } from "@/constants/Queries";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
 import { useStorage } from "@/context/LocalstoreContext";
+import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, Screens, TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { showToast } from "@/utils/showToast";
-import { useTheme } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { Text, View } from "../Themed";
 import Icon from "../Icon";
-import { useBibleChapter } from "@/context/BibleChapterContext";
+import { Text, View } from "../Themed";
 
 const defaultDailyVerse = {
   book_number: 0,
@@ -52,7 +51,6 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
   const { currentBibleVersion } = useBibleContext();
   const styles = getStyles(theme);
   const isDefaultVerse = dailyVerseObject?.bookName;
-  const { updateBibleQuery } = useBibleChapter();
 
   useEffect(() => {
     if (!myBibleDB || !executeSql) return;
@@ -119,7 +117,7 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
               chapter: dailyVerse.chapter,
               verse: dailyVerse?.verse,
             };
-            updateBibleQuery({ ...queryInfo, shouldFetch: true });
+            bibleState$.changeBibleQuery({ ...queryInfo, shouldFetch: true });
             navigation.navigate(Screens.Home, queryInfo);
           }}
           style={styles.verseContainer}

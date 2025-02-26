@@ -1,9 +1,8 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { useTheme } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
 import AnimatedDropdown from "@/components/AnimatedDropdown";
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import RenderVerse, { TItem } from "@/components/concordance/RenderVerse";
 import Icon from "@/components/Icon";
+import ScreenWithAnimation from "@/components/LottieTransitionScreen";
 import { Text } from "@/components/Themed";
 import { getDatabaseQueryKey } from "@/constants/databaseNames";
 import { QUERY_BY_DB } from "@/constants/Queries";
@@ -12,26 +11,20 @@ import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
 import { useCustomTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
-import React, {
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { bibleState$ } from "@/state/bibleState";
+import { Screens, TTheme } from "@/types";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useTheme } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
+import { Stack, useNavigation, useRouter } from "expo-router";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
-  BackHandler,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { RootStackScreenProps, Screens, TTheme } from "@/types";
-import { Stack, useNavigation, useRouter } from "expo-router";
-import { useBibleChapter } from "@/context/BibleChapterContext";
-import { singleScreenHeader } from "@/components/common/singleScreenHeader";
-import ScreenWithAnimation from "@/components/LottieTransitionScreen";
 
 const LETTERS = [
   "A",
@@ -132,7 +125,6 @@ const Concordance: React.FC<ConcordanceProps> = () => {
   const [selectedFilterOption, setSelectedFilterOption] =
     useState<any>(defaultFilterOption);
 
-  const { updateBibleQuery } = useBibleChapter();
   function getUniqueBookNames(data: TItem[]) {
     const bookNames = data.map((item: any) => item.bookName);
     return [defaultFilterOption, ...new Set(bookNames)];
@@ -171,7 +163,7 @@ const Concordance: React.FC<ConcordanceProps> = () => {
       chapter: item.chapter,
       verse: item.verse,
     };
-    updateBibleQuery({ ...queryInfo, shouldFetch: true });
+    bibleState$.changeBibleQuery({ ...queryInfo, shouldFetch: true });
     navigation.navigate(Screens.Home, queryInfo);
   };
 

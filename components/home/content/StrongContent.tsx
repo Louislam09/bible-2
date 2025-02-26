@@ -1,4 +1,3 @@
-import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import Icon, { IconProps } from "@/components/Icon";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
@@ -6,9 +5,12 @@ import { SEARCH_STRONG_WORD } from "@/constants/Queries";
 import { iconSize } from "@/constants/size";
 import { useDBContext } from "@/context/databaseContext";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
+import { bibleState$ } from "@/state/bibleState";
+import { modalState$ } from "@/state/modalState";
+import { DictionaryData, IStrongWord, Screens, TTheme } from "@/types";
+import { use$ } from "@legendapp/state/react";
 import React, {
   FC,
-  RefObject,
   useCallback,
   useEffect,
   useMemo,
@@ -24,12 +26,7 @@ import {
 } from "react-native";
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
-import { DictionaryData, IStrongWord, Screens, TTheme } from "@/types";
 import { Text, View } from "../../Themed";
-import { useBibleChapter } from "@/context/BibleChapterContext";
-import { modalState$ } from "@/state/modalState";
-import { bibleState$ } from "@/state/bibleState";
-import { use$ } from "@legendapp/state/react";
 
 type HeaderAction = {
   iconName: IconProps["name"];
@@ -72,7 +69,6 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
   const [sharing, setSharing] = useState(false);
   const [backUrl, setBackUrl] = useState<any>([]);
   const { createAndShareTextFile, printToFile } = usePrintAndShare();
-  const { updateBibleQuery } = useBibleChapter();
   const animatedScaleIcon = useRef(new Animated.Value(1)).current;
   const HTML_DATA = htmlTemplate(values, theme.colors, fontSize);
 
@@ -145,7 +141,7 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
         chapter: +chapter,
         verse: +verse || 0,
       };
-      updateBibleQuery({ ...queryInfo, shouldFetch: true });
+      bibleState$.changeBibleQuery({ ...queryInfo, shouldFetch: true });
       navigation.navigate(Screens.Home, queryInfo);
     }
 

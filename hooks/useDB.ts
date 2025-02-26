@@ -198,11 +198,6 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
     };
   }, [dbName]);
 
-  // useEffect(() => {
-  //   if (!loading) return;
-  //   checkPragmas();
-  // }, [loading]);
-
   return { executeSql, database, loading };
 }
 

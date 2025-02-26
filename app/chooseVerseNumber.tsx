@@ -3,10 +3,9 @@ import OptimizedChapterList from "@/components/optimized-chapter-list";
 import { View } from "@/components/Themed";
 import { DB_BOOK_CHAPTER_VERSES, DB_BOOK_NAMES } from "@/constants/BookNames";
 import { BOOK_IMAGES } from "@/constants/Images";
-import { useBibleChapter } from "@/context/BibleChapterContext";
-import { useBibleContext } from "@/context/BibleContext";
 import useParams from "@/hooks/useParams";
-import { ChooseChapterNumberParams, Screens, TTheme } from "@/types";
+import { bibleState$ } from "@/state/bibleState";
+import { ChooseChapterNumberParams, Screens } from "@/types";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { useTheme } from "@react-navigation/native";
 import { Stack, useNavigation } from "expo-router";
@@ -14,14 +13,13 @@ import { Fragment, useMemo } from "react";
 
 const chooseVerseNumber = () => {
   const routeParam = useParams<ChooseChapterNumberParams>();
-  const { isBottomSideSearching } = useBibleContext();
+  const isBottomSideSearching = false;
   const { book, bottomSideBook, bottomSideChapter, chapter } = routeParam;
   const selectedBook = isBottomSideSearching ? bottomSideBook : book;
   const selectedChapter = isBottomSideSearching ? bottomSideChapter : chapter;
   const navigation = useNavigation();
   const theme = useTheme();
   const displayBookName = renameLongBookName(selectedBook || "");
-  const { updateBibleQuery } = useBibleChapter();
 
   const numberOfVerses = useMemo(() => {
     const bookNumber = DB_BOOK_NAMES.find(
@@ -46,7 +44,7 @@ const chooseVerseNumber = () => {
       shouldFetch: true,
     } as any;
 
-    updateBibleQuery({
+    bibleState$.changeBibleQuery({
       ...params,
       isBibleBottom: isBottomSideSearching,
     });

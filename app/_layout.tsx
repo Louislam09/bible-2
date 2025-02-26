@@ -1,6 +1,5 @@
 import CustomHeaderLeft from "@/components/CustomHeaderLeft";
 import ErrorBoundaryFallback from "@/components/ErrorBoundaryFallback";
-import { BibleChapterProvider } from "@/context/BibleChapterContext";
 import BibleProvider from "@/context/BibleContext";
 import DatabaseProvider from "@/context/databaseContext";
 import StorageProvider from "@/context/LocalstoreContext";
@@ -97,21 +96,21 @@ const App = () => {
           <DatabaseProvider>
             <BibleProvider>
               {/* <ScreenWithAnimation title="Santa Escritura" icon="BookPlus"> */}
-              <BibleChapterProvider>
-                <MemorizationProvider>
-                  <MyThemeProvider>
-                    <GestureHandlerRootView style={{ flex: 1 }}>
-                      <BottomSheetModalProvider>
-                        <StatusBar animated translucent style="auto" />
-                        <Stack
-                          initialRouteName="(dashboard)"
-                          screenOptions={screenOptions}
-                        />
-                      </BottomSheetModalProvider>
-                    </GestureHandlerRootView>
-                  </MyThemeProvider>
-                </MemorizationProvider>
-              </BibleChapterProvider>
+              {/* <BibleChapterProvider> */}
+              <MemorizationProvider>
+                <MyThemeProvider>
+                  <GestureHandlerRootView style={{ flex: 1 }}>
+                    <BottomSheetModalProvider>
+                      <StatusBar animated translucent style="auto" />
+                      <Stack
+                        initialRouteName="(dashboard)"
+                        screenOptions={screenOptions}
+                      />
+                    </BottomSheetModalProvider>
+                  </GestureHandlerRootView>
+                </MyThemeProvider>
+              </MemorizationProvider>
+              {/* </BibleChapterProvider> */}
               {/* </ScreenWithAnimation> */}
             </BibleProvider>
           </DatabaseProvider>

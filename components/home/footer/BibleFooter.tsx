@@ -3,51 +3,36 @@ import { useBibleContext } from "@/context/BibleContext";
 import useAudioPlayer from "@/hooks/useAudioPlayer";
 import { EBibleVersions, Screens } from "@/types";
 import { useTheme } from "@react-navigation/native";
-import { FC, useCallback, useEffect, useMemo, useRef } from "react";
+import { FC, useCallback, useEffect, useRef } from "react";
 import { Animated, TouchableOpacity } from "react-native";
 
 import BottomModal from "@/components/BottomModal";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
-import { useBibleChapter } from "@/context/BibleChapterContext";
 import { useStorage } from "@/context/LocalstoreContext";
 import useBibleReader from "@/hooks/useBibleReading";
 import useInternetConnection from "@/hooks/useInternetConnection";
 import useParams from "@/hooks/useParams";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
+import { bibleState$ } from "@/state/bibleState";
+import { tourState$ } from "@/state/tourState";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation } from "expo-router";
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
-import withRenderCount from "@/components/withRenderCount";
-import { bibleState$ } from "@/state/bibleState";
 
 interface FooterInterface {
-  refs: any;
   isSplit?: boolean;
-  book: any;
-  chapter: any;
-  verse: any;
 }
 
-const BibleFooter: FC<FooterInterface> = ({
-  refs,
-  isSplit,
-  book: bookProp,
-  chapter: chapterProp,
-  verse,
-}) => {
-  const { book: bookRef, back: backRef, next: nextRef, audi: audioRef } = refs;
-  const {
-    currentBibleVersion,
-    isSplitActived,
-    toggleBottomSideSearching,
-    shouldLoopReading,
-    setShouldLoop,
-  } = useBibleContext();
+const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
+  const { currentBibleVersion, shouldLoopReading, setShouldLoop } =
+    useBibleContext();
+  const isSplitActived = bibleState$.isSplitActived.get();
+
   const {
     storedData: { currentVoiceIdentifier, currentVoiceRate = 1 },
   } = useStorage();
@@ -58,20 +43,11 @@ const BibleFooter: FC<FooterInterface> = ({
   const playRef = useRef<BottomSheetModal>(null);
   const navigation = useNavigation();
   const params = useParams();
-  const chpaterInfo = useBibleChapter();
-  const {
-    verses,
-    bibleQuery,
-    updateBibleQuery,
-    historyManager: { getCurrentItem },
-  } = chpaterInfo;
+  const bibleQuery = bibleState$.bibleQuery.get();
 
-  const book = isSplit
-    ? bibleQuery?.bottomSideBook || bookProp
-    : bibleQuery.book || bookProp;
-  const chapter = isSplit
-    ? bibleQuery?.bottomSideChapter || bookProp
-    : bibleQuery.chapter || chapterProp;
+  const book = isSplit ? bibleQuery?.bottomSideBook : bibleQuery.book;
+  const chapter = isSplit ? bibleQuery?.bottomSideChapter : bibleQuery.chapter;
+  const verse = isSplit ? bibleQuery?.bottomSideVerse : bibleQuery.verse;
 
   const { bookNumber } = DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
@@ -85,7 +61,7 @@ const BibleFooter: FC<FooterInterface> = ({
 
   const { verseIndex, startReading, stopReading, isSpeaking, ended, reset } =
     useBibleReader({
-      currentChapterVerses: verses as any,
+      currentChapterVerses: bibleState$.bibleData.topVerses.get() as any,
       currentVoiceIdentifier,
       voiceRate: currentVoiceRate,
     });
@@ -116,12 +92,12 @@ const BibleFooter: FC<FooterInterface> = ({
       [isSplit ? "bottomSideChapter" : "chapter"]: chapter,
       [isSplit ? "bottomSideVerse" : "verse"]: 1,
     };
-    updateBibleQuery({
+    bibleState$.changeBibleQuery({
       ...queryInfo,
       shouldFetch: true,
       isBibleBottom: isSplit,
     });
-    navigation.setParams({ ...queryInfo, isHistory: false });
+    // navigation.setParams({ ...queryInfo, isHistory: false });
   };
 
   function nextChapter() {
@@ -138,12 +114,12 @@ const BibleFooter: FC<FooterInterface> = ({
       [isSplit ? "bottomSideChapter" : "chapter"]: _chapter || 1,
       [isSplit ? "bottomSideVerse" : "verse"]: 1,
     };
-    updateBibleQuery({
+    bibleState$.changeBibleQuery({
       ...queryInfo,
       shouldFetch: true,
       isBibleBottom: isSplit,
     });
-    navigation.setParams({ ...queryInfo, isHistory: false });
+    // navigation.setParams({ ...queryInfo, isHistory: false });
   }
   const previousChapter = () => {
     if (bookNumber !== 10 && chapter === 1) {
@@ -158,22 +134,20 @@ const BibleFooter: FC<FooterInterface> = ({
       [isSplit ? "bottomSideChapter" : "chapter"]: (chapter as number) - 1,
       [isSplit ? "bottomSideVerse" : "verse"]: 1,
     };
-    updateBibleQuery({
+    bibleState$.changeBibleQuery({
       ...queryInfo,
       shouldFetch: true,
       isBibleBottom: isSplit,
     });
-    navigation.setParams({ ...queryInfo, isHistory: false });
+    // navigation.setParams({ ...queryInfo, isHistory: false });
   };
 
   const onSingleFooterTitle = () => {
     bibleState$.clearSelection();
-    toggleBottomSideSearching(isSplit as boolean);
     navigation?.navigate(Screens.ChooseBook, { ...params });
   };
   const onDoubleFooterTitle = () => {
     bibleState$.clearSelection();
-    toggleBottomSideSearching(isSplit as boolean);
     navigation?.navigate(Screens.ChooseChapterNumber, { ...params });
   };
 
@@ -185,7 +159,6 @@ const BibleFooter: FC<FooterInterface> = ({
 
   const onLongFooterTitle = () => {
     bibleState$.clearSelection();
-    toggleBottomSideSearching(isSplit as boolean);
     navigation?.navigate(Screens.ChooseChapterNumber, { ...params });
   };
 
@@ -193,9 +166,7 @@ const BibleFooter: FC<FooterInterface> = ({
     playRef.current?.present();
   }, []);
 
-  const displayBookName = renameLongBookName(isSplit ? bookProp : book);
-
-  // const currentHistoryItemVerse = getCurrentItem()?.verse;
+  const displayBookName = renameLongBookName(book);
 
   return (
     <Animated.View style={[styles.footer]}>
@@ -211,7 +182,10 @@ const BibleFooter: FC<FooterInterface> = ({
         </View>
       )}
       <View style={styles.footerCenter}>
-        <TouchableOpacity ref={backRef} onPress={() => previousChapter()}>
+        <TouchableOpacity
+          ref={tourState$.backButton.get()}
+          onPress={() => previousChapter()}
+        >
           <Icon
             name={"ChevronsLeft"}
             size={FOOTER_ICON_SIZE}
@@ -219,24 +193,20 @@ const BibleFooter: FC<FooterInterface> = ({
           />
         </TouchableOpacity>
         <TouchableOpacity
-          ref={bookRef}
+          ref={tourState$.footerTitleRef.get()}
           style={styles.titleContainer}
           onPress={onPress}
           onLongPress={onLongFooterTitle}
           delayLongPress={200}
         >
           <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
-            {`${displayBookName ?? ""} ${
-              isSplit ? chapterProp : chapter ?? ""
-            }:${verse}`}
+            {`${displayBookName ?? ""} ${chapter ?? ""}:${verse}`}
           </Text>
-          {/* <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
-            {`${displayBookName ?? ""} ${
-              isSplit ? chapterProp : chapter ?? ""
-            }:${isSplitActived ? verse : currentHistoryItemVerse || verse}`}
-          </Text> */}
         </TouchableOpacity>
-        <TouchableOpacity ref={nextRef} onPress={() => nextChapter()}>
+        <TouchableOpacity
+          ref={tourState$.nextButton.get()}
+          onPress={() => nextChapter()}
+        >
           <Icon
             name={"ChevronsRight"}
             size={FOOTER_ICON_SIZE}
@@ -247,7 +217,7 @@ const BibleFooter: FC<FooterInterface> = ({
       {!isSplitActived && (
         <View style={{ flexDirection: "row", backgroundColor: "transparent" }}>
           <TouchableOpacity
-            ref={audioRef}
+            ref={tourState$.audio.get()}
             style={[styles.footerEnd]}
             onPress={playHandlePresentModalPress}
           >
@@ -268,7 +238,9 @@ const BibleFooter: FC<FooterInterface> = ({
             isDownloading,
             isPlaying: _isPlaying,
             playAudio: _playAudio,
-            duration: isRVR ? duration : (verses || []).length,
+            duration: isRVR
+              ? duration
+              : (bibleState$.bibleData.topVerses.get() || []).length,
             position: isRVR ? position : verseIndex,
             nextChapter,
             previousChapter,

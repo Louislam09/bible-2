@@ -1,10 +1,15 @@
-import { useNavigation, useTheme } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
 import Animation from "@/components/Animation";
-import DecoratorLine from "@/components/DecoratorLine";
 import Icon from "@/components/Icon";
 import { Text } from "@/components/Themed";
 import { useBibleContext } from "@/context/BibleContext";
+import { bibleState$ } from "@/state/bibleState";
+import { IVerseItem, Screens, TTheme } from "@/types";
+import copyToClipboard from "@/utils/copyToClipboard";
+import { renameLongBookName } from "@/utils/extractVersesInfo";
+import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { useNavigation, useTheme } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
+import { Stack } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
   ListRenderItem,
@@ -13,12 +18,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { IVerseItem, Screens, TTheme } from "@/types";
-import copyToClipboard from "@/utils/copyToClipboard";
-import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
-import { Stack } from "expo-router";
-import { renameLongBookName } from "@/utils/extractVersesInfo";
-import { useBibleChapter } from "@/context/BibleChapterContext";
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -35,7 +34,6 @@ const FavoriteList = ({ data }: TListVerse) => {
   const flatListRef = useRef<FlashList<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const notFoundSource = require("../../assets/lottie/notFound.json");
-  const { updateBibleQuery } = useBibleChapter();
   useEffect(() => {
     if (!data) return;
     setFilter(data);
@@ -55,7 +53,7 @@ const FavoriteList = ({ data }: TListVerse) => {
       chapter: item.chapter,
       verse: item.verse,
     };
-    updateBibleQuery({ ...queryInfo, shouldFetch: true });
+    bibleState$.changeBibleQuery({ ...queryInfo, shouldFetch: true });
     navigation.navigate(Screens.Home, queryInfo);
   };
 

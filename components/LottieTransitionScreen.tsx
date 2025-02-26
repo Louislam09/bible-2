@@ -20,6 +20,7 @@ type ScreenWithAnimationProps = {
   duration?: number;
   /** A flag indicating whether the animation should play on mount. */
   shouldPlay?: boolean;
+  isVisible?: boolean;
 };
 
 /**
@@ -43,6 +44,7 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
   icon,
   duration = 1500,
   shouldPlay = true,
+  isVisible,
 }) => {
   const [isAnimating, setIsAnimating] = useState(shouldPlay);
   const opacity = useRef(new Animated.Value(0)).current;
@@ -53,12 +55,33 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
     setIsAnimating(false);
   };
 
+  const animateOpacityLoop = () => {
+    return Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          toValue: 0,
+          duration,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  };
+
   useEffect(() => {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: duration,
-      useNativeDriver: true,
-    }).start(({ finished }) => onAnimationFinish(finished));
+    if (isVisible) {
+      animateOpacityLoop();
+    } else {
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: duration,
+        useNativeDriver: true,
+      }).start(({ finished }) => onAnimationFinish(finished));
+    }
 
     if (icon && !animationSource) {
       Animated.loop(

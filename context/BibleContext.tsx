@@ -6,6 +6,7 @@ import {
   DELETE_NOTE_ALL,
   INSERT_FAVORITE_VERSE,
   INSERT_INTO_NOTE,
+  QUERY_BY_DB,
   UPDATE_NOTE_BY_ID,
 } from "@/constants/Queries";
 import useSearch, { UseSearchHookState } from "@/hooks/useSearch";
@@ -32,6 +33,13 @@ import {
 } from "../types";
 import { useDBContext } from "./databaseContext";
 import { useStorage } from "./LocalstoreContext";
+import useHistoryManager, { HistoryManager } from "@/hooks/useHistoryManager";
+import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { getDatabaseQueryKey } from "@/constants/databaseNames";
+import { bibleState$, getReadingTime } from "@/state/bibleState";
+import { batch } from "@legendapp/state";
+import { use$ } from "@legendapp/state/react";
+import ScreenWithAnimation from "@/components/LottieTransitionScreen";
 
 type BibleState = {
   setSearchQuery: Function;
@@ -48,9 +56,6 @@ type BibleState = {
     closeCallback: any
   ) => void;
   selectBibleVersion: (version: string) => Promise<void>;
-  // toggleCopyMode: Function;
-  toggleSplitMode: Function;
-  toggleBottomSideSearching: (value: boolean) => void;
   decreaseFontSize: Function;
   setShouldLoop: (shouldLoop: boolean) => void;
   // setverseInStrongDisplay: (verse: number) => void;
@@ -78,9 +83,8 @@ type BibleState = {
   goBackOnHistory?: (index: number) => void;
   goForwardOnHistory?: (index: number) => void;
   orientation: "LANDSCAPE" | "PORTRAIT";
-  isSplitActived: boolean;
-  isBottomSideSearching: boolean;
   currentBibleLongName: string;
+  historyManager: HistoryManager;
 };
 
 type BibleAction =
@@ -92,15 +96,12 @@ type BibleAction =
   | { type: "SET_SEARCH_QUERY"; payload: string }
   | { type: "GO_BACK"; payload: number }
   | { type: "GO_FORWARD"; payload: number }
-  // | { type: 'SET_VERSE_IN_STRONG_DISPLAY'; payload: number }
   | { type: "SET_VERSE_TO_COMPARE"; payload: number }
   | { type: "SET_CHAPTER_VERSE_LENGTH"; payload: number }
   | { type: "SET_REPEAT_READING"; payload: boolean }
   | { type: "SET_CHAPTER_VERSES"; payload: any[] }
   | { type: "SET_LOCAL_DATA"; payload: any }
-  // | { type: "TOGGLE_COPY_MODE"; payload?: boolean }
   | { type: "TOGGLE_SECOND_SIDE"; payload: boolean }
-  | { type: "TOGGLE_SPLIT_MODE"; payload?: boolean }
   | { type: "TOGGLE_VIEW_LAYOUT_GRID" }
   | { type: "TOGGLE_COPY_SEARCH"; payload: boolean };
 
@@ -119,9 +120,6 @@ const initialContext: BibleState = {
   onDeleteAllNotes: () => {},
   selectFont: () => {},
   selectTheme: () => {},
-  // toggleCopyMode: () => {},
-  toggleSplitMode: () => {},
-  toggleBottomSideSearching: (value: boolean) => {},
   decreaseFontSize: () => {},
   toggleFavoriteVerse: async ({
     bookNumber,
@@ -138,19 +136,17 @@ const initialContext: BibleState = {
   setSearchQuery: () => {},
   selectedFont: TFont.Roboto,
   currentBibleVersion: EBibleVersions.BIBLE,
-  isBottomSideSearching: false,
   fontSize: 24,
   searchState: defaultSearch,
   searchQuery: "",
-  // verseInStrongDisplay: 0,
   shouldLoopReading: false,
   currentTheme: "Blue",
-  isSplitActived: false,
   viewLayoutGrid: true,
   searchHistorial: [],
   currentHistoryIndex: -1,
   orientation: "PORTRAIT",
   currentBibleLongName: "Reina Valera 1960",
+  historyManager: {} as HistoryManager,
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);
@@ -182,16 +178,6 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
         ...state,
         fontSize: state.fontSize - 1,
       };
-    case "TOGGLE_SPLIT_MODE":
-      return {
-        ...state,
-        isSplitActived: !state.isSplitActived,
-      };
-    case "TOGGLE_SECOND_SIDE":
-      return {
-        ...state,
-        isBottomSideSearching: action.payload,
-      };
     case "TOGGLE_VIEW_LAYOUT_GRID":
       return {
         ...state,
@@ -202,11 +188,6 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
         ...state,
         searchQuery: action.payload,
       };
-    // case 'SET_VERSE_IN_STRONG_DISPLAY':
-    //   return {
-    //     ...state,
-    //     verseInStrongDisplay: action.payload,
-    //   };
 
     case "SET_REPEAT_READING":
       return {
@@ -237,17 +218,25 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const { storedData, saveData, isDataLoaded } = useStorage();
+  const { historyManager } = useBibleContext();
   const { currentBibleVersion, fontSize, currentTheme, selectedFont } =
     storedData;
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
   const fontsLoaded = useCustomFonts();
-  const { myBibleDB, executeSql, isInstallBiblesLoaded, installedBibles } =
-    useDBContext();
+  const {
+    myBibleDB,
+    executeSql,
+    isInstallBiblesLoaded,
+    installedBibles,
+    isMyBibleDbLoaded,
+  } = useDBContext();
   const { state: searchState, performSearch } = useSearch({ db: myBibleDB });
   const [currentBibleLongName, setCurrentBibleLongName] = useState(
     getCurrentDbName(currentBibleVersion, installedBibles)
   );
   const [orientation, setOrientation] = useState("PORTRAIT");
+  // const bibleQuery = use$(() => bibleState$.bibleQuery.get());
+  // const shouldFetch = use$(() => bibleState$.bibleQuery.shouldFetch.get());
 
   const getOrientation = () => {
     const { height, width } = Dimensions.get("window");
@@ -285,8 +274,17 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   }, [isDataLoaded]);
 
-  if (!fontsLoaded || !isDataLoaded || !isInstallBiblesLoaded) {
-    return null;
+  if (
+    !fontsLoaded ||
+    !isDataLoaded ||
+    !isInstallBiblesLoaded ||
+    !isMyBibleDbLoaded
+  ) {
+    return (
+      <ScreenWithAnimation isVisible title="Santa Escritura" icon="BookPlus">
+        <></>
+      </ScreenWithAnimation>
+    );
   }
 
   const goBackOnHistory = (index: number) => {
@@ -303,15 +301,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const increaseFontSize = () => {
     dispatch({ type: "INCREASE_FONT_SIZE" });
     saveData({ fontSize: state.fontSize + 1 });
-  };
-  // const toggleCopyMode = () => {
-  //   dispatch({ type: "TOGGLE_COPY_MODE" });
-  // };
-  const toggleSplitMode = () => {
-    dispatch({ type: "TOGGLE_SPLIT_MODE" });
-  };
-  const toggleBottomSideSearching = (value: boolean) => {
-    dispatch({ type: "TOGGLE_SECOND_SIDE", payload: value });
   };
 
   const toggleViewLayoutGrid = () => {
@@ -371,17 +360,12 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   };
   const selectBibleVersion = async (version: string) => {
     dispatch({ type: "SELECT_BIBLE_VERSION", payload: version });
-    // dispatch({ type: 'SET_VERSE_IN_STRONG_DISPLAY', payload: 0 });
     await saveData({ currentBibleVersion: version });
   };
 
   const setSearchQuery = (query: string) => {
     dispatch({ type: "SET_SEARCH_QUERY", payload: query });
   };
-  // const setverseInStrongDisplay = (verse: number) => {
-  //   if (currentBibleVersion !== EBibleVersions.BIBLE) return;
-  //   dispatch({ type: 'SET_VERSE_IN_STRONG_DISPLAY', payload: verse });
-  // };
 
   const setShouldLoop = (shouldLoop: boolean) => {
     const msg = shouldLoop
@@ -405,8 +389,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     onDeleteAllNotes,
     onUpdateNote,
     selectBibleVersion,
-    // toggleCopyMode,
-    toggleSplitMode,
     decreaseFontSize,
     increaseFontSize,
     performSearch: performSearch as typeof performSearch,
@@ -418,7 +400,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     setShouldLoop,
     goBackOnHistory,
     goForwardOnHistory,
-    toggleBottomSideSearching,
+    historyManager,
   };
 
   return (

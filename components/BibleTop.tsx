@@ -1,44 +1,41 @@
-import { useBibleChapter } from "@/context/BibleChapterContext";
 import { useBibleContext } from "@/context/BibleContext";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
+import { bibleState$ } from "@/state/bibleState";
+import { use$ } from "@legendapp/state/react";
+import { useTheme } from "@react-navigation/native";
 import React, { FC, useMemo } from "react";
 import { ActivityIndicator, Animated, StyleSheet } from "react-native";
 import Chapter from "./home/content/Chapter";
 import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
-import { useTheme } from "@react-navigation/native";
 
-// import { observable } from "@legendapp/state";
-// import { enableReactTracking } from "@legendapp/state";
+interface BibleTopProps {
+  height: Animated.Value;
+  width: Animated.Value;
+}
 
-// const page$ = observable(1);
-// enableReactTracking({ auto: true });
-
-const BibleTop: FC<any> = (props) => {
-  console.log("🔝 BibleTop Component Rendered");
+const BibleTop: FC<BibleTopProps> = (props) => {
   const theme = useTheme();
-  const { isSplitActived, orientation } = useBibleContext();
+  const { orientation } = useBibleContext();
   const isPortrait = orientation === "PORTRAIT";
+  const verses = use$(() => bibleState$.bibleData.topVerses.get());
+  const isDataLoading = use$(() => bibleState$.isDataLoading.top.get());
+  const estimatedReadingTime = bibleState$.readingTimeData.top.get();
+  console.log(
+    `🔝 BibleTop Component Rendered 🔄:${isDataLoading} 🧮:${verses.length} ⌚:${estimatedReadingTime}`
+  );
 
-  const {
-    verses,
-    estimatedReadingTime,
-    bibleQuery: { book, chapter, verse },
-    loading,
-  } = useBibleChapter();
-  const memoizedData = useMemo(() => verses, [verses]);
-  const memoizedBook = useMemo(() => book, [book]);
-  const memoizedChapter = useMemo(() => chapter, [chapter]);
-  const memoizedVerse = useMemo(() => verse, [verse]);
+  const isSplitActived = bibleState$.isSplitActived.get();
+  const { book, chapter, verse } = bibleState$.bibleQuery.get();
 
   const { nextChapter, previousChapter } = useChangeBookOrChapter({
-    book: memoizedBook,
-    chapter: memoizedChapter,
+    book,
+    chapter,
   });
 
   const initialScrollIndex = useMemo(
-    () => Math.min(verse - 1, memoizedData.length - 1),
-    [verse, memoizedData]
+    () => Math.min(verse - 1, verses.length - 1),
+    [verse, verses]
   );
 
   const onSwipeRight = () => {
@@ -66,12 +63,12 @@ const BibleTop: FC<any> = (props) => {
   return (
     <Animated.View style={[styles.container, containerStyle]}>
       <SwipeWrapper {...{ onSwipeRight, onSwipeLeft }}>
-        {loading.top ? (
+        {isDataLoading ? (
           <ActivityIndicator />
         ) : (
           <Chapter
-            verses={memoizedData}
-            verse={memoizedVerse || 1}
+            verses={verses}
+            verse={verse || 1}
             estimatedReadingTime={estimatedReadingTime}
             initialScrollIndex={
               initialScrollIndex === 1 ? 0 : initialScrollIndex
@@ -79,7 +76,7 @@ const BibleTop: FC<any> = (props) => {
           />
         )}
       </SwipeWrapper>
-      <BibleFooter isSplit={false} {...props} />
+      <BibleFooter isSplit={false} />
     </Animated.View>
   );
 };
