@@ -23,6 +23,7 @@ import { useNavigation } from "expo-router";
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
+import { batch } from "@legendapp/state";
 
 interface FooterInterface {
   isSplit?: boolean;
@@ -143,11 +144,17 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   };
 
   const onSingleFooterTitle = () => {
-    bibleState$.clearSelection();
+    batch(() => {
+      bibleState$.clearSelection();
+      bibleState$.isBottomBibleSearching.set(!!isSplit);
+    });
     navigation?.navigate(Screens.ChooseBook, { ...params });
   };
   const onDoubleFooterTitle = () => {
-    bibleState$.clearSelection();
+    batch(() => {
+      bibleState$.clearSelection();
+      bibleState$.isBottomBibleSearching.set(!!isSplit);
+    });
     navigation?.navigate(Screens.ChooseChapterNumber, { ...params });
   };
 
@@ -158,7 +165,10 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   });
 
   const onLongFooterTitle = () => {
-    bibleState$.clearSelection();
+    batch(() => {
+      bibleState$.clearSelection();
+      bibleState$.isBottomBibleSearching.set(!!isSplit);
+    });
     navigation?.navigate(Screens.ChooseChapterNumber, { ...params });
   };
 

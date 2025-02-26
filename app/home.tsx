@@ -67,7 +67,6 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   const theme = useTheme();
   const { orientation } = useBibleContext();
   const isSplitActived = use$(() => bibleState$.isSplitActived.get());
-  // const { executeSql, isMyBibleDbLoaded } = useDBContext();
 
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const initialState = useInitialState();
@@ -132,61 +131,6 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
     [tourPopoverVisible]
   );
 
-  // const shouldFetch = use$(() => bibleState$.bibleQuery.shouldFetch.get());
-  // const bibleQuery = bibleState$.bibleQuery.get();
-
-  // const fetchChapter = async () => {
-  //   console.log("🟢 Fetching chapter 🟢");
-  //   const { book, chapter, verse, isBibleBottom } = bibleQuery;
-  //   const loadingKey = isBibleBottom ? "bottom" : "top";
-  //   const targetBook = isBibleBottom ? bibleQuery.bottomSideBook : book;
-  //   const targetChapter = isBibleBottom
-  //     ? bibleQuery.bottomSideChapter
-  //     : chapter;
-  //   const targetVerse = isBibleBottom ? bibleQuery.bottomSideVerse : verse;
-  //   const currentBook = DB_BOOK_NAMES.find((x) => x.longName === targetBook);
-
-  //   const queryKey = getDatabaseQueryKey(currentBibleVersion);
-  //   const query = QUERY_BY_DB[queryKey];
-  //   const startTime = Date.now();
-  //   try {
-  //     const verses = await executeSql<IBookVerse>(
-  //       query.GET_VERSES_BY_BOOK_AND_CHAPTER,
-  //       [currentBook?.bookNumber, targetChapter || 1],
-  //       "verses"
-  //     );
-
-  //     const endTime = Date.now();
-  //     const executionTime = endTime - startTime;
-
-  //     console.log(
-  //       `📚 ${targetBook} ${targetChapter}:${targetVerse} in ${executionTime} ms. ${verses.length}`
-  //     );
-
-  //     batch(() => {
-  //       bibleState$.bibleQuery.isBibleBottom.set(false);
-  //       bibleState$.bibleQuery.shouldFetch.set(false);
-  //       bibleState$.bibleData[`${loadingKey}Verses`].set(verses);
-  //       bibleState$.readingTimeData[loadingKey].set(getReadingTime(verses));
-  //       bibleState$.isDataLoading[loadingKey].set(false);
-  //       console.log("✅ Data Fetched ✅");
-  //     });
-  //   } catch (error) {
-  //     console.error("Error fetching Bible data:", error);
-  //     batch(() => {
-  //       bibleState$.bibleQuery.isBibleBottom.set(false);
-  //       bibleState$.bibleQuery.shouldFetch.set(false);
-  //       bibleState$.isDataLoading[loadingKey].set(false);
-  //     });
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (!isMyBibleDbLoaded) return;
-  //   if (!bibleQuery.shouldFetch) return;
-  //   fetchChapter();
-  // }, [shouldFetch, isMyBibleDbLoaded]);
-
   const renderBottomContent = useCallback(() => {
     return (
       <>
@@ -221,7 +165,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
             style={[styles.container, !isPortrait && { flexDirection: "row" }]}
           >
             <BibleTop height={topHeight} width={topWidth} />
-            {isSplitActived && <>{renderBottomContent()}</>}
+            {isSplitActived && renderBottomContent()}
           </View>
           <>
             <BookContentModals

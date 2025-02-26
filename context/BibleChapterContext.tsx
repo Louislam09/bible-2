@@ -41,8 +41,9 @@ type IBibleQuery = {
 export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
   const { executeSql, isMyBibleDbLoaded } = useDBContext();
   const { storedData, saveData } = useStorage();
+  const [couldSaveInLocal, setCouldSaveInLocal] = useState(false);
 
-  const isSplitActived = use$(() => bibleState$.isSplitActived.get());
+  const isDataLoading = use$(() => bibleState$.isDataLoading.get());
   const bibleQuery = use$(() => bibleState$.bibleQuery.get());
   const shouldFetch = use$(() => bibleState$.bibleQuery.shouldFetch.get());
 
@@ -84,8 +85,9 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
         `📚 ${targetBook} ${targetChapter}:${targetVerse} in ${executionTime} ms. ${verses.length}`
       );
 
+      setCouldSaveInLocal(true);
       batch(() => {
-        bibleState$.bibleQuery.isBibleBottom.set(false);
+        // bibleState$.bibleQuery.isBibleBottom.set(false);
         bibleState$.bibleQuery.shouldFetch.set(false);
         bibleState$.bibleData[`${loadingKey}Verses`].set(verses);
         bibleState$.readingTimeData[loadingKey].set(getReadingTime(verses));
@@ -103,9 +105,9 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    const isDataLoading = bibleState$.isDataLoading.get();
     // Fix this issue
-    if (!isDataLoading.top || !isDataLoading.bottom) {
+
+    if (couldSaveInLocal) {
       const { isBibleBottom, isHistory } = bibleQuery;
       const saveKeyPrefix = isBibleBottom ? "lastBottomSide" : "last";
       const bookValue = isBibleBottom
@@ -118,12 +120,14 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
         ? bibleQuery.bottomSideVerse
         : bibleQuery.verse;
 
-      // saveData({
-      //   [`${saveKeyPrefix}Book`]: bookValue,
-      //   [`${saveKeyPrefix}Chapter`]: chapterValue,
-      //   [`${saveKeyPrefix}Verse`]: verseValue,
-      // });
+      console.log("save to local");
+      saveData({
+        [`${saveKeyPrefix}Book`]: bookValue,
+        [`${saveKeyPrefix}Chapter`]: chapterValue,
+        [`${saveKeyPrefix}Verse`]: verseValue,
+      });
 
+      // TASK: ADD TO HISTORY - PENDING
       // if (!isHistory) {
       //   addToHistory({
       //     book: bookValue,
@@ -132,19 +136,11 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
       //     created_at: "",
       //   });
       // }
-      // setBibleQuery((prev) => ({ ...prev, isHistory: false }));
+      setCouldSaveInLocal(false);
     }
-  }, []);
+  }, [couldSaveInLocal]);
 
   // useEffect(() => {
-  //   if (isSplitActived) {
-  //     console.log("Fetching bottom verses");
-  //     // bibleState$.changeBibleQuery({ isBibleBottom: true, shouldFetch: true });
-  //   }
-  // }, [isSplitActived]);
-
-  // useEffect(() => {
-  //   if (isSplitActived) return;
   //   if (currentHistoryIndex === -1) return;
   //   const currentHistory = getCurrentItem();
   //   if (!currentHistory) return;
@@ -153,14 +149,12 @@ export const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!isMyBibleDbLoaded) return;
-    if (!bibleQuery.shouldFetch) return;
+    if (!shouldFetch) return;
     fetchChapter();
   }, [shouldFetch, isMyBibleDbLoaded]);
 
-  const contextValue = {};
-
   return (
-    <BibleChapterContext.Provider value={contextValue}>
+    <BibleChapterContext.Provider value={{}}>
       {children}
     </BibleChapterContext.Provider>
   );

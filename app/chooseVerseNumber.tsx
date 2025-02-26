@@ -41,7 +41,7 @@ const chooseVerseNumber = () => {
       ...routeParam,
       [isBottomSideSearching ? "bottomSideVerse" : "verse"]: item,
       isHistory: false,
-      shouldFetch: true,
+      // shouldFetch: true,
     } as any;
 
     bibleState$.changeBibleQuery({

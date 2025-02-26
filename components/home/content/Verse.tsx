@@ -139,12 +139,9 @@ const ActionItem = memo(
 
 const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   // console.log("🆚", item.verse, isSplit ? "🔽" : "🔝");
-  // const params = useParams<HomeParams>();
-  // const { isVerseTour } = params;
   const { currentBibleVersion, fontSize, toggleFavoriteVerse } =
     useBibleContext();
 
-  const isBottomSideSearching = false;
   const { addVerse } = useMemorization();
   const theme = useTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
@@ -152,12 +149,15 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
   const verseRef = useRef<any>(null);
   const [stepIndex, setStepIndex] = useState(0);
-  const isBottom = isSplit && isBottomSideSearching;
-  const isTop = !isSplit && !isBottomSideSearching;
   const animatedVerseHighlight = useRef(new Animated.Value(0)).current;
   const wordAndStrongValue = extractWordsWithTags(item.text);
 
   // LEGEND STATE
+  const isBottomBibleSearching = use$(
+    () =>
+      item.verse === bibleState$.currentVerse.get() &&
+      bibleState$.isBottomBibleSearching.get()
+  );
   const verseIsTapped = use$(
     () => item.verse === bibleState$.currentVerse.get()
   );
@@ -170,6 +170,9 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     const selectedVerses = bibleState$.selectedVerses.get();
     return selectedVerses.has(item.verse);
   });
+
+  const isBottom = isSplit && isBottomBibleSearching;
+  const isTop = !isSplit && !isBottomBibleSearching;
 
   const hasTitle = useMemo(
     () => !item.subheading.includes(null as any),
@@ -208,6 +211,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     } else {
       bibleState$.handleTapVerse(item);
     }
+    bibleState$.isBottomBibleSearching.set(!!isSplit);
   }, [item, verseIsTapped, isSplit]);
 
   const onPress = useSingleAndDoublePress({
@@ -382,11 +386,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       target: null,
     },
   ];
-
-  // const displayTour = useMemo(
-  //   () => item.verse === 1 && verseRef.current && isVerseTour,
-  //   [isVerseTour, item]
-  // );
 
   const bgVerseHighlight = animatedVerseHighlight.interpolate({
     inputRange: [0, 1],

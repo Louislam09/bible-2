@@ -16,11 +16,6 @@ type IBibleQuery = {
   shouldFetch: boolean;
 };
 
-// export const currentVerse$ = observable(0);
-export const highlightedVerses$ = observable<IBookVerse[]>([]);
-export const currentBibleVersion$ = observable<string>(EBibleVersions.BIBLE);
-export const fontSize$ = observable<number>(24);
-
 type BibleData = {
   topVerses: IBookVerse[];
   bottomVerses: IBookVerse[];
@@ -71,7 +66,7 @@ export const bibleState$ = observable({
     const newQuery = { ...bibleState$.bibleQuery.get(), ...query };
     batch(() => {
       bibleState$.bibleQuery.set(newQuery);
-      bibleState$.isDataLoading[loadingKey].set(true);
+      bibleState$.isDataLoading[loadingKey].set(query.shouldFetch || false);
     });
   },
   handleSplitActived: () => {

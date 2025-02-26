@@ -23,6 +23,7 @@ import { useNavigation, useRouter } from "expo-router";
 import ProgressBar from "../footer/ProgressBar";
 import Settings from "./Settings";
 import VersionList from "./VersionList";
+import { batch } from "@legendapp/state";
 
 interface HeaderInterface {}
 
@@ -94,8 +95,15 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
       {
         name: "SquareSplitVertical",
         action: () => {
-          // showToast("⚠️ Esta función está en mantenimiento 🚧");
-          bibleState$.handleSplitActived();
+          batch(() => {
+            if (!isSplitActived) {
+              bibleState$.changeBibleQuery({
+                isBibleBottom: true,
+                shouldFetch: true,
+              });
+            }
+            bibleState$.handleSplitActived();
+          });
         },
         ref: tourState$.fav,
         isIonicon: false,

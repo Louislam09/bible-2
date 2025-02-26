@@ -1,5 +1,6 @@
 import { StorageKeys } from "@/constants/StorageKeys";
 import { HistoryItem } from "@/hooks/useHistoryManager";
+import { bibleState$ } from "@/state/bibleState";
 import { EBibleVersions, EThemes, SortOption, TFont } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, {
@@ -96,6 +97,14 @@ const StorageProvider: React.FC<StorageProviderProps> = ({ children }) => {
         if (data) {
           const parsedData = JSON.parse(data) as StoreState;
           setStoredData((prev) => ({ ...prev, ...parsedData }));
+          bibleState$.changeBibleQuery({
+            book: parsedData.lastBook,
+            chapter: parsedData.lastChapter,
+            verse: parsedData.lastVerse,
+            bottomSideBook: parsedData.lastBottomSideBook,
+            bottomSideChapter: parsedData.lastBottomSideChapter,
+            bottomSideVerse: parsedData.lastBottomSideVerse,
+          });
         }
       } catch (error) {
         console.error("Error loading data from AsyncStorage:", error);
