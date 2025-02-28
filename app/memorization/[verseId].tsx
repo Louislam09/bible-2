@@ -1,29 +1,29 @@
-import Animation from '@/components/Animation';
-import CircularProgressBar from '@/components/CircularProgressBar';
-import CofettiAnimation from '@/components/CofettiAnimation';
-import Icon from '@/components/Icon';
-import ScreenWithAnimation from '@/components/LottieTransitionScreen';
-import PracticeTracker from '@/components/memorization/PracticeTracker';
-import { Text, View } from '@/components/Themed';
-import { databaseNames } from '@/constants/databaseNames';
-import { headerIconSize } from '@/constants/size';
-import { useMemorization } from '@/context/MemorizationContext';
-import useDebounce from '@/hooks/useDebounce';
-import useParams from '@/hooks/useParams';
-import { Memorization, MemorizationButtonType, TTheme } from '@/types';
-import isWithinTimeframe from '@/utils/isWithinTimeframe';
-import { showToast } from '@/utils/showToast';
-import { useTheme } from '@react-navigation/native';
-import { Stack, useRouter } from 'expo-router';
-import { Brain, ChevronLeft, icons, Trash2 } from 'lucide-react-native';
-import React from 'react';
+import Animation from "@/components/Animation";
+import CircularProgressBar from "@/components/CircularProgressBar";
+import CofettiAnimation from "@/components/CofettiAnimation";
+import Icon from "@/components/Icon";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
+import PracticeTracker from "@/components/memorization/PracticeTracker";
+import { Text, View } from "@/components/Themed";
+import { databaseNames } from "@/constants/databaseNames";
+import { headerIconSize } from "@/constants/size";
+import { useMemorization } from "@/context/MemorizationContext";
+import useDebounce from "@/hooks/useDebounce";
+import useParams from "@/hooks/useParams";
+import { Memorization, MemorizationButtonType, TTheme } from "@/types";
+import isWithinTimeframe from "@/utils/isWithinTimeframe";
+import { showToast } from "@/utils/showToast";
+import { useTheme } from "@react-navigation/native";
+import { Stack, useRouter } from "expo-router";
+import { Brain, ChevronLeft, icons, Trash2 } from "lucide-react-native";
+import React from "react";
 import {
   ActivityIndicator,
   Alert,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-} from 'react-native';
+} from "react-native";
 
 type TButtonItem = {
   icon: keyof typeof icons;
@@ -45,13 +45,13 @@ const MemorizationScreen = () => {
   const isTestLocked = item.progress < 80;
 
   const currentTimeStat = isWithinTimeframe(
-    '3d',
+    "3d",
     new Date(item?.lastPracticed || 0)
   );
 
   const onActionButtonPress = (type: MemorizationButtonType) => {
     if (type === MemorizationButtonType.Locked) {
-      showToast('Necesitas 80% de progreso para desbloquear.', 'LONG');
+      showToast("Necesitas 80% de progreso para desbloquear.", "LONG");
       return;
     }
     router.push(`memorization/${verseId}/challenge/${type}`);
@@ -59,22 +59,22 @@ const MemorizationScreen = () => {
 
   const actionButtons: TButtonItem[] = [
     {
-      icon: 'BookOpenText',
+      icon: "BookOpenText",
       label: MemorizationButtonType.Read,
       action: onActionButtonPress,
     },
     {
-      icon: 'ListMinus',
+      icon: "ListMinus",
       label: MemorizationButtonType.Blank,
       action: onActionButtonPress,
     },
     {
-      icon: 'Fingerprint',
+      icon: "Fingerprint",
       label: MemorizationButtonType.Type,
       action: onActionButtonPress,
     },
     {
-      icon: isTestLocked ? 'LockKeyhole' : 'CircleCheck',
+      icon: isTestLocked ? "LockKeyhole" : "CircleCheck",
       label: isTestLocked
         ? MemorizationButtonType.Locked
         : MemorizationButtonType.Test,
@@ -83,7 +83,7 @@ const MemorizationScreen = () => {
     },
   ];
 
-  const iconColor = theme.dark ? '#fff' : '#000';
+  const iconColor = theme.dark ? "#fff" : "#000";
   const isCompleted = memorizeProgress === 100;
 
   const onDelete = async (id: number) => {
@@ -94,14 +94,14 @@ const MemorizationScreen = () => {
   const warnBeforeDelete = (id: number) => {
     Alert.alert(
       `Eliminar ${item.verse}`,
-      '¿Estás seguro que quieres eliminar este versículo?',
+      "¿Estás seguro que quieres eliminar este versículo?",
       [
         {
-          text: 'Cancelar',
+          text: "Cancelar",
           onPress: () => {},
-          style: 'cancel',
+          style: "cancel",
         },
-        { text: 'Eliminar', onPress: () => onDelete(id) },
+        { text: "Eliminar", onPress: () => onDelete(id) },
       ]
     );
   };
@@ -128,9 +128,9 @@ const MemorizationScreen = () => {
             <View
               style={{
                 gap: 4,
-                flexDirection: 'row',
-                alignItems: 'center',
-                backgroundColor: 'transparent',
+                flexDirection: "row",
+                alignItems: "center",
+                backgroundColor: "transparent",
               }}
             >
               <Text style={styles.title}>{item.verse}</Text>
@@ -146,7 +146,7 @@ const MemorizationScreen = () => {
             strokeWidth={8}
             progress={memorizeProgress}
             maxProgress={100}
-            color={isCompleted ? '#1ce265' : theme.colors.notification}
+            color={isCompleted ? "#1ce265" : theme.colors.notification}
             backgroundColor={theme.colors.text + 70}
             animationDuration={1000}
           >
@@ -158,13 +158,13 @@ const MemorizationScreen = () => {
         <View style={styles.buttonGrid}>
           {actionButtons.map(({ icon, label, isLock, action }) => {
             const lockTextKey = isLock
-              ? 'isLockLabelText'
-              : 'isUnlockLabelText';
-            const lockBorderKey = isLock ? 'isLockButton' : 'isUnlockButton';
+              ? "isLockLabelText"
+              : "isUnlockLabelText";
+            const lockBorderKey = isLock ? "isLockButton" : "isUnlockButton";
             const isLockButton = isLock !== undefined;
             const lockIconColor = isLockButton
               ? isCompleted
-                ? '#1ce265'
+                ? "#1ce265"
                 : theme.colors.notification
               : theme.colors.text;
 
@@ -211,56 +211,56 @@ const getStyles = ({ colors, dark }: TTheme) =>
       flex: 1,
       zIndex: 99,
       // backgroundColor: colors.text + 20,
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
       padding: 16,
       paddingTop: 0,
     },
     header: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
     },
     title: {
       fontSize: 22,
       color: colors.text,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     version: {
       fontSize: 16,
       color: colors.text,
     },
     progressCircle: {
-      alignItems: 'center',
+      alignItems: "center",
       marginVertical: 20,
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
     },
     progressText: {
       fontSize: 60,
       color: colors.text,
     },
     buttonGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'center',
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "center",
       gap: 30,
       marginVertical: 20,
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
     },
     actionButton: {
       width: 140,
       height: 150,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       // padding: 16,
       borderRadius: 25,
       borderColor: colors.text,
       borderWidth: 2,
     },
     isCompletedButton: {
-      borderColor: '#1ce265',
+      borderColor: "#1ce265",
     },
     isLockButton: {
-      borderColor: dark ? '#fff' : '#000',
+      borderColor: dark ? "#fff" : "#000",
     },
     isUnlockButton: {
       borderColor: colors.notification,
@@ -271,12 +271,12 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontSize: 20,
     },
     isCompletedLabelText: {
-      color: '#1ce265',
+      color: "#1ce265",
       marginTop: 8,
       fontSize: 20,
     },
     isLockLabelText: {
-      color: dark ? '#fff' : '#000',
+      color: dark ? "#fff" : "#000",
       marginTop: 8,
       fontSize: 20,
     },
@@ -296,7 +296,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     practiceTitle: {
       color: colors.text,
       fontSize: 18,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     practiceTime: {
       color: colors.text,
@@ -308,15 +308,15 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginVertical: 8,
     },
     dateContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      justifyContent: "space-between",
       marginVertical: 10,
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
     },
     dateText: {
       color: colors.text,
       fontSize: 14,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     dateSubText: {
       color: colors.text,

@@ -27,8 +27,8 @@ const useChangeBookOrChapter = ({
       ...queryInfo,
       shouldFetch: true,
       isBibleBottom: isSplit,
+      isHistory: false,
     });
-    // navigation.setParams(queryInfo);
   };
 
   function nextChapter() {
@@ -50,8 +50,8 @@ const useChangeBookOrChapter = ({
       ...queryInfo,
       shouldFetch: true,
       isBibleBottom: isSplit,
+      isHistory: false,
     });
-    // navigation.setParams(queryInfo);
   }
   const previousChapter = () => {
     if (bookNumber !== 10 && chapter === 1) {
@@ -71,8 +71,8 @@ const useChangeBookOrChapter = ({
       ...queryInfo,
       shouldFetch: true,
       isBibleBottom: isSplit,
+      isHistory: false,
     });
-    // navigation.setParams(queryInfo);
   };
 
   return {

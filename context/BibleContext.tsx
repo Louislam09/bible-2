@@ -1,45 +1,33 @@
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import {
   DELETE_FAVORITE_VERSE,
   DELETE_NOTE,
   DELETE_NOTE_ALL,
   INSERT_FAVORITE_VERSE,
   INSERT_INTO_NOTE,
-  QUERY_BY_DB,
   UPDATE_NOTE_BY_ID,
 } from "@/constants/Queries";
+import useHistoryManager, { HistoryManager } from "@/hooks/useHistoryManager";
 import useSearch, { UseSearchHookState } from "@/hooks/useSearch";
+import getCurrentDbName from "@/utils/getCurrentDB";
 import React, {
   createContext,
-  useCallback,
   useContext,
   useEffect,
   useReducer,
-  useRef,
   useState,
 } from "react";
 import { Dimensions, ToastAndroid } from "react-native";
-import getCurrentDbName from "@/utils/getCurrentDB";
 import useCustomFonts from "../hooks/useCustomFonts";
 import {
   EBibleVersions,
   EHistoryItem,
   EThemes,
-  IBookVerse,
   IFavoriteVerse,
-  IStrongWord,
   TFont,
 } from "../types";
 import { useDBContext } from "./databaseContext";
 import { useStorage } from "./LocalstoreContext";
-import useHistoryManager, { HistoryManager } from "@/hooks/useHistoryManager";
-import { DB_BOOK_NAMES } from "@/constants/BookNames";
-import { getDatabaseQueryKey } from "@/constants/databaseNames";
-import { bibleState$, getReadingTime } from "@/state/bibleState";
-import { batch } from "@legendapp/state";
-import { use$ } from "@legendapp/state/react";
-import ScreenWithAnimation from "@/components/LottieTransitionScreen";
 
 type BibleState = {
   setSearchQuery: Function;
@@ -218,7 +206,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const { storedData, saveData, isDataLoaded } = useStorage();
-  const { historyManager } = useBibleContext();
+  const historyManager = useHistoryManager();
   const { currentBibleVersion, fontSize, currentTheme, selectedFont } =
     storedData;
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
@@ -235,8 +223,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     getCurrentDbName(currentBibleVersion, installedBibles)
   );
   const [orientation, setOrientation] = useState("PORTRAIT");
-  // const bibleQuery = use$(() => bibleState$.bibleQuery.get());
-  // const shouldFetch = use$(() => bibleState$.bibleQuery.shouldFetch.get());
 
   const getOrientation = () => {
     const { height, width } = Dimensions.get("window");
@@ -281,7 +267,12 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     !isMyBibleDbLoaded
   ) {
     return (
-      <ScreenWithAnimation isVisible title="Santa Escritura" icon="BookPlus">
+      <ScreenWithAnimation
+        // backgroundColor="#0c3e3d"
+        isVisible
+        title="Santa Escritura"
+        icon="BookPlus"
+      >
         <></>
       </ScreenWithAnimation>
     );

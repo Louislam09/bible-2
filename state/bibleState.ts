@@ -1,4 +1,4 @@
-import { EBibleVersions, IBookVerse, IStrongWord } from "@/types";
+import { IBookVerse, IStrongWord } from "@/types";
 import { getChapterTextRaw } from "@/utils/getVerseTextRaw";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { batch, observable } from "@legendapp/state";
@@ -27,12 +27,6 @@ export function getReadingTime(verses: IBookVerse[], wordsPerMinute = 200) {
   return Math.ceil(wordCount / wordsPerMinute);
 }
 
-type ExecuteSql = <T = any>(
-  sql: string,
-  params?: any[],
-  queryName?: string
-) => Promise<T[]>;
-
 export const bibleState$ = observable({
   isBottomBibleSearching: false,
   currentVerse: 0,
@@ -46,6 +40,7 @@ export const bibleState$ = observable({
   strongWord: { text: "", code: "" } as IStrongWord,
   noteListBottomSheetRef: createRef<BottomSheetModal>(),
   isSplitActived: false,
+  currentHistoryIndex: -1,
   bibleQuery: {
     book: "Génesis",
     chapter: 1,
@@ -73,7 +68,6 @@ export const bibleState$ = observable({
     bibleState$.isSplitActived.set(() => !bibleState$.isSplitActived.get());
   },
   handleBottomBibleSearching: (value: boolean) => {
-    console.log("handleBottomBibleSearching", value);
     bibleState$.isBottomBibleSearching.set(() => value);
   },
   handleFloatingNoteButtonPosition: (x: number, y: number) => {
@@ -139,5 +133,8 @@ export const bibleState$ = observable({
   },
   clearSelectedVerseForNote: () => {
     bibleState$.selectedVerseForNote.set(null);
+  },
+  handleCurrentHistoryIndex: (index: number) => {
+    bibleState$.currentHistoryIndex.set(index);
   },
 });

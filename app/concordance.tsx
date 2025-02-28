@@ -2,7 +2,7 @@ import AnimatedDropdown from "@/components/AnimatedDropdown";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import RenderVerse, { TItem } from "@/components/concordance/RenderVerse";
 import Icon from "@/components/Icon";
-import ScreenWithAnimation from "@/components/LottieTransitionScreen";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text } from "@/components/Themed";
 import { getDatabaseQueryKey } from "@/constants/databaseNames";
 import { QUERY_BY_DB } from "@/constants/Queries";
@@ -163,7 +163,11 @@ const Concordance: React.FC<ConcordanceProps> = () => {
       chapter: item.chapter,
       verse: item.verse,
     };
-    bibleState$.changeBibleQuery({ ...queryInfo, shouldFetch: true });
+    bibleState$.changeBibleQuery({
+      ...queryInfo,
+      shouldFetch: true,
+      isHistory: false,
+    });
     navigation.navigate(Screens.Home, queryInfo);
   };
 
@@ -210,7 +214,11 @@ const Concordance: React.FC<ConcordanceProps> = () => {
   );
 
   return (
-    <ScreenWithAnimation icon="List" title="Concordancia Biblica">
+    <ScreenWithAnimation
+      duration={800}
+      icon="List"
+      title="Concordancia Biblica"
+    >
       <View
         style={{
           flex: 1,

@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { Screens, TTheme } from "@/types";
 import lottieAssets from "@/constants/lottieAssets";
-import ScreenWithAnimation from "@/components/LottieTransitionScreen";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 
 type IHymnOption = {
@@ -83,7 +83,7 @@ const ChooseGameScreen = () => {
   );
 
   return (
-    <ScreenWithAnimation speed={1.5} title="Quiz Biblico" icon="Gamepad">
+    <ScreenWithAnimation speed={2} title="Quiz Biblico" icon="Gamepad">
       <View style={styles.container}>
         <Stack.Screen
           options={{

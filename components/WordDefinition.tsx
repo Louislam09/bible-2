@@ -76,7 +76,11 @@ const WordDefinition = ({
         chapter: +chapter,
         verse: +verse || 0,
       };
-      bibleState$.changeBibleQuery({ ...queryInfo, shouldFetch: true });
+      bibleState$.changeBibleQuery({
+        ...queryInfo,
+        shouldFetch: true,
+        isHistory: false,
+      });
       navigation.navigate(Screens.Home, queryInfo);
     }
 

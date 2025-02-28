@@ -1,13 +1,16 @@
 import CustomHeaderLeft from "@/components/CustomHeaderLeft";
 import ErrorBoundaryFallback from "@/components/ErrorBoundaryFallback";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import BibleProvider from "@/context/BibleContext";
 import DatabaseProvider from "@/context/databaseContext";
 import StorageProvider from "@/context/LocalstoreContext";
 import { MemorizationProvider } from "@/context/MemorizationContext";
 import MyThemeProvider from "@/context/ThemeContext";
 import useCachedResources from "@/hooks/useCachedResources";
+import { settingState$ } from "@/state/settingState";
 import { Screens, ScreensName } from "@/types";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { use$ } from "@legendapp/state/react";
 import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -55,6 +58,10 @@ const screenAnimations: TScreensName = {
 
 const App = () => {
   const isLoadingComplete = useCachedResources();
+  const isAnimationDisabled = use$(() =>
+    settingState$.isAnimationDisabled.get()
+  );
+
   async function onFetchUpdateAsync() {
     try {
       const update = await Updates.checkForUpdateAsync();
@@ -79,24 +86,26 @@ const App = () => {
       headerShown: false,
       headerTitleAlign: "center",
       headerTitleStyle: { fontWeight: "bold" },
-      animation: "none",
-      // animation: screenAnimations[props.route.name as Screens],
+      // animation: "none",
+      animation: isAnimationDisabled
+        ? "none"
+        : screenAnimations[props.route.name as Screens],
       headerLeft: () => (
         <CustomHeaderLeft title={ScreensName[props.route.name as Screens]} />
       ),
     };
   };
 
-  if (!isLoadingComplete) {
-    return null;
-  } else {
-    return (
-      <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
+  return (
+    <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
+      <ScreenWithAnimation
+        isVisible={!isLoadingComplete}
+        title="Santa Escritura"
+        icon="BookPlus"
+      >
         <StorageProvider>
           <DatabaseProvider>
             <BibleProvider>
-              {/* <ScreenWithAnimation title="Santa Escritura" icon="BookPlus"> */}
-              {/* <BibleChapterProvider> */}
               <MemorizationProvider>
                 <MyThemeProvider>
                   <GestureHandlerRootView style={{ flex: 1 }}>
@@ -110,14 +119,13 @@ const App = () => {
                   </GestureHandlerRootView>
                 </MyThemeProvider>
               </MemorizationProvider>
-              {/* </BibleChapterProvider> */}
-              {/* </ScreenWithAnimation> */}
             </BibleProvider>
           </DatabaseProvider>
         </StorageProvider>
-      </ErrorBoundary>
-    );
-  }
+      </ScreenWithAnimation>
+    </ErrorBoundary>
+  );
+  // }
 };
 
 export default App;

@@ -39,6 +39,7 @@ const ChooseChapterNumber = () => {
         ...params,
         isBibleBottom: isBottomSideSearching,
         shouldFetch: true,
+        isHistory: false,
       });
       navigation.navigate(Screens.ChooseVerseNumber, params);
     },

@@ -1,5 +1,5 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
-import ScreenWithAnimation from "@/components/LottieTransitionScreen";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { useTheme } from "@react-navigation/native";
 import { Slot, Stack } from "expo-router";
 import React from "react";
@@ -8,7 +8,7 @@ const SearchLayout = () => {
   const theme = useTheme();
 
   return (
-    <ScreenWithAnimation icon="User" title="Personajes Biblicos">
+    <ScreenWithAnimation duration={800} icon="User" title="Personajes Biblicos">
       <Stack.Screen
         options={{
           ...singleScreenHeader({

@@ -29,25 +29,14 @@ interface HeaderInterface {}
 
 const BibleHeader: FC<HeaderInterface> = ({}) => {
   const { width } = useWindowDimensions();
-  const {
-    currentBibleVersion,
-    selectBibleVersion,
-    goBackOnHistory,
-    goForwardOnHistory,
-    historyManager,
-  } = useBibleContext();
+  const { currentBibleVersion, selectBibleVersion, historyManager } =
+    useBibleContext();
+
   const isSplitActived = use$(() => bibleState$.isSplitActived.get());
-
   const verses = use$(() => bibleState$.bibleData.topVerses.get());
-  const chapterVerseLength = useMemo(() => verses?.length, [verses]);
+  const currentHistoryIndex = use$(() => bibleState$.currentHistoryIndex.get());
 
-  const {
-    goBack,
-    goForward,
-    history,
-    getCurrentItem,
-    currentIndex: currentHistoryIndex,
-  } = historyManager;
+  const { goBack, goForward, history, getCurrentItem } = historyManager;
 
   const params = useParams<HomeParams>();
   const { book } = params;
@@ -77,17 +66,39 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
   const goSearchScreen = () => {
     bibleState$.clearSelection();
     // @ts-ignore
-    navigation.navigate(Screens.Search, { book: book });
+    navigation.navigate(Screens.Search, { Book: book });
   };
 
   const moveBackInHistory = () => {
     const index = goBack();
-    goBackOnHistory?.(index);
+    if (index === -1) return;
+    const currentHistory = getCurrentItem() as any;
+    if (!currentHistory) return;
+    bibleState$.handleCurrentHistoryIndex(index);
+    delete currentHistory.created_at;
+    delete currentHistory.id;
+
+    bibleState$.changeBibleQuery({
+      ...currentHistory,
+      isHistory: true,
+      shouldFetch: true,
+    });
   };
 
   const moveForwardInHistory = () => {
     const index = goForward();
-    goForwardOnHistory?.(index);
+    if (index === -1) return;
+    const currentHistory = getCurrentItem() as any;
+    if (!currentHistory) return;
+    bibleState$.handleCurrentHistoryIndex(index);
+    delete currentHistory.created_at;
+    delete currentHistory.id;
+
+    bibleState$.changeBibleQuery({
+      ...currentHistory,
+      isHistory: true,
+      shouldFetch: true,
+    });
   };
 
   const headerIconData = useMemo(() => {
@@ -100,6 +111,7 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
               bibleState$.changeBibleQuery({
                 isBibleBottom: true,
                 shouldFetch: true,
+                isHistory: false,
               });
             }
             bibleState$.handleSplitActived();
@@ -114,20 +126,22 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
         action: moveBackInHistory,
         ref: tourState$.setting,
         isIonicon: true,
-        disabled: isSplitActived,
-        color: canGoBackward ? theme.colors.notification : theme.colors?.text,
+        disabled: !canGoBackward,
+        hide: isSplitActived,
+        color: canGoBackward ? theme.colors.notification : "#7a7a7a",
       },
       {
         name: "ArrowBigRightDash",
         action: moveForwardInHistory,
         ref: tourState$.search,
         isIonicon: true,
-        disabled: isSplitActived,
-        color: canGoForward ? theme.colors.notification : theme.colors?.text,
+        hide: isSplitActived,
+        disabled: !canGoForward,
+        color: canGoForward ? theme.colors.notification : "#7a7a7a",
       },
       { name: "Search", action: goSearchScreen, ref: tourState$.search },
     ];
-    return options.filter((x) => !x.disabled);
+    return options.filter((x) => !x.hide);
   }, [isSplitActived, canGoForward, canGoBackward]);
 
   const onSelect = (version: string) => {
@@ -136,12 +150,12 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
     versionRef.current?.dismiss();
   };
   const progressValue = useMemo(() => {
-    return (currentVerse || 0) / (chapterVerseLength || 10);
-  }, [currentVerse, chapterVerseLength]);
+    return (currentVerse || 0) / (verses?.length || 10);
+  }, [currentVerse, verses]);
 
   return (
     <View style={styles.header}>
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: "row", backgroundColor: "transparent" }}>
         <TouchableOpacity
           style={styles.iconContainer}
           onPress={() => router.navigate("(dashboard)")}
@@ -156,7 +170,7 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
           {headerIconData.map((icon, index) => (
             <TouchableOpacity
               ref={icon.ref.get()}
-              style={styles.iconContainer}
+              style={[styles.iconContainer]}
               key={index}
               onPress={icon?.action}
               onLongPress={icon?.longAction}
@@ -184,7 +198,7 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
             color={theme.colors.primary}
           />
           {!isSmallSDevice && (
-            <Text style={styles.text}>{currentVersionName}</Text>
+            <Text style={styles.text}>{currentVersionName.trim()}</Text>
           )}
         </TouchableOpacity>
         <BottomModal shouldScroll startAT={1} ref={versionRef}>
@@ -215,7 +229,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       alignItems: "center",
       justifyContent: "flex-end",
       paddingHorizontal: 10,
-      paddingVertical: 10,
+      paddingTop: 10,
       backgroundColor: colors.background,
       width: "100%",
       borderWidth: 0.5,
@@ -253,7 +267,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       alignItems: "center",
       justifyContent: "center",
       gap: 4,
-      paddingHorizontal: 10,
+      paddingLeft: 10,
       borderRadius: 50,
     },
     iconContainer: {
@@ -270,9 +284,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       paddingHorizontal: 4,
       fontSize: 18,
       backgroundColor: colors.notification,
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
-      // fontWeight: "bold",
+      borderRadius: 4,
     },
   });
 

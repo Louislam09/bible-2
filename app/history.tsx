@@ -1,6 +1,6 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
-import ScreenWithAnimation from "@/components/LottieTransitionScreen";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
 import { useBibleContext } from "@/context/BibleContext";
 import useHistoryManager, { HistoryItem } from "@/hooks/useHistoryManager";

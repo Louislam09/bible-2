@@ -97,8 +97,8 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
       ...queryInfo,
       shouldFetch: true,
       isBibleBottom: isSplit,
+      isHistory: false,
     });
-    // navigation.setParams({ ...queryInfo, isHistory: false });
   };
 
   function nextChapter() {
@@ -119,8 +119,8 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
       ...queryInfo,
       shouldFetch: true,
       isBibleBottom: isSplit,
+      isHistory: false,
     });
-    // navigation.setParams({ ...queryInfo, isHistory: false });
   }
   const previousChapter = () => {
     if (bookNumber !== 10 && chapter === 1) {
@@ -139,8 +139,8 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
       ...queryInfo,
       shouldFetch: true,
       isBibleBottom: isSplit,
+      isHistory: false,
     });
-    // navigation.setParams({ ...queryInfo, isHistory: false });
   };
 
   const onSingleFooterTitle = () => {

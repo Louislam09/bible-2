@@ -40,7 +40,11 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
       chapter: item.chapter,
       verse: item.verse,
     };
-    bibleState$.changeBibleQuery({ ...queryInfo, shouldFetch: true });
+    bibleState$.changeBibleQuery({
+      ...queryInfo,
+      shouldFetch: true,
+      isHistory: false,
+    });
     navigation.navigate(Screens.Home, queryInfo);
   };
 

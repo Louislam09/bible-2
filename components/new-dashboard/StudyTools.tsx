@@ -4,12 +4,12 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   View,
-} from 'react-native';
-import React from 'react';
-import { IDashboardOption } from '@/app/(dashboard)';
-import { TTheme } from '@/types';
-import Icon from '../Icon';
-import { NewFeatureBadge } from '../NewFeatureBadge';
+} from "react-native";
+import React from "react";
+import { IDashboardOption } from "@/app/(dashboard)";
+import { TTheme } from "@/types";
+import Icon from "../Icon";
+import { NewFeatureBadge } from "../NewFeatureBadge";
 
 type StudyToolsProps = {
   list: IDashboardOption[];
@@ -33,8 +33,11 @@ const StudyTools = ({ list, theme }: StudyToolsProps) => {
             onPress={item.action}
             style={[styles.tool, { width: itemWidth }]}
           >
-            {item.isNew && <NewFeatureBadge style={{ backgroundColor: '#f73043' }} />}
+            {item.isNew && (
+              <NewFeatureBadge style={{ backgroundColor: "#f73043" }} />
+            )}
             <Icon
+              size={24}
               name={item.icon as any}
               color={item.color}
               style={[styles.toolIcon]}
@@ -61,27 +64,27 @@ const getStyles = ({ colors, dark }: TTheme) =>
       color: colors.notification,
       fontSize: 20,
       marginBottom: 12,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     toolsContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'space-between',
+      display: "flex",
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-between",
     },
     tool: {
       backgroundColor: colors.text + 30,
       marginVertical: 4,
       padding: 12,
       borderRadius: 8,
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
     },
     toolIcon: {
       marginRight: 8,
-      color: dark ? '#fff' : colors.text,
+      color: dark ? "#fff" : colors.text,
     },
     toolText: {
-      color: dark ? '#fff' : colors.text,
+      color: dark ? "#fff" : colors.text,
     },
   });

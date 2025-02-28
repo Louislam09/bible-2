@@ -536,5 +536,4 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
   });
 
-// export default Verse;
 export default React.memo(Verse);

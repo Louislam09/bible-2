@@ -75,7 +75,7 @@ const CompareVersions = ({
   const onVerseClick = async (item: IVerseItem, dbID: string) => {
     await selectBibleVersion(dbID);
     navigation.setParams({
-      book: item.bookName,
+      Book: item.bookName,
       chapter: item.chapter,
       verse: item.verse,
     });

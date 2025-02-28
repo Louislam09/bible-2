@@ -47,6 +47,7 @@ const chooseVerseNumber = () => {
     bibleState$.changeBibleQuery({
       ...params,
       isBibleBottom: isBottomSideSearching,
+      isHistory: false,
     });
     navigation.navigate(Screens.Home, params);
   };

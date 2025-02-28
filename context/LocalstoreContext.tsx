@@ -1,6 +1,5 @@
 import { StorageKeys } from "@/constants/StorageKeys";
 import { HistoryItem } from "@/hooks/useHistoryManager";
-import { bibleState$ } from "@/state/bibleState";
 import { EBibleVersions, EThemes, SortOption, TFont } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, {
@@ -10,7 +9,22 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { observable, when } from "@legendapp/state";
+import { use$ } from "@legendapp/state/react";
+import { configureSynced, syncObservable } from "@legendapp/state/sync";
+import { observablePersistAsyncStorage } from "@legendapp/state/persist-plugins/async-storage";
+import { bibleState$ } from "@/state/bibleState";
 
+// Global persistence configuration
+const persistOptions = configureSynced({
+  persist: {
+    plugin: observablePersistAsyncStorage({
+      AsyncStorage,
+    }),
+  },
+});
+
+// Define StoreState type
 type StoreState = {
   lastBook: string;
   lastChapter: number;
@@ -27,7 +41,6 @@ type StoreState = {
   isGridLayout: boolean;
   isShowName: boolean;
   songFontSize: number;
-  history: HistoryItem[];
   currentVoiceIdentifier: string;
   currentVoiceRate: number;
   floatingNoteButtonPosition: { x: number; y: number };
@@ -35,29 +48,7 @@ type StoreState = {
   deleteLastStreakNumber: number;
 };
 
-interface StorageContextProps {
-  storedData: StoreState;
-  saveData: (data: Partial<StoreState>) => Promise<void>;
-  clearData: () => void;
-  isDataLoaded: boolean;
-}
-
-const StorageContext = createContext<StorageContextProps | undefined>(
-  undefined
-);
-
-export const useStorage = () => {
-  const context = useContext(StorageContext);
-  if (!context) {
-    throw new Error("useStorage must be used within a StorageProvider");
-  }
-  return context;
-};
-
-interface StorageProviderProps {
-  children: ReactNode;
-}
-
+// Initial state
 const initialContext: StoreState = {
   lastBook: "Génesis",
   lastChapter: 1,
@@ -74,7 +65,6 @@ const initialContext: StoreState = {
   currentBibleVersion: EBibleVersions.BIBLE,
   isSongLyricEnabled: false,
   songFontSize: 21,
-  history: [],
   currentVoiceIdentifier: "es-us-x-esd-local",
   currentVoiceRate: 1,
   floatingNoteButtonPosition: { x: 0, y: 0 },
@@ -82,77 +72,83 @@ const initialContext: StoreState = {
   deleteLastStreakNumber: 1,
 };
 
-const isArrEqual = (arr1: any[], arr2: any[]) => {
-  return JSON.stringify(arr1) === JSON.stringify(arr2);
+// Create observable store
+const storedData$ = observable(initialContext);
+
+// Sync observable with persistence
+syncObservable(
+  storedData$,
+  persistOptions({
+    persist: {
+      name: StorageKeys.LEGEND,
+    },
+  })
+);
+
+// Define context interface
+interface StorageContextProps {
+  storedData: StoreState;
+  saveData: (data: Partial<StoreState>) => void;
+  clearData: () => void;
+  isLoading: boolean;
+}
+
+const StorageContext = createContext<StorageContextProps | undefined>(
+  undefined
+);
+
+// Hook to use the storage context
+export const useStorage = () => {
+  const context = useContext(StorageContext);
+  if (!context) {
+    throw new Error("useStorage must be used within a StorageProvider");
+  }
+  return context;
 };
 
-const StorageProvider: React.FC<StorageProviderProps> = ({ children }) => {
-  const [storedData, setStoredData] = useState<StoreState>(initialContext);
-  const [dataLoaded, setDataLoaded] = useState(false);
+// Storage Provider Component
+const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const storedData = use$(() => storedData$.get());
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const data = await AsyncStorage.getItem(StorageKeys.BIBLE);
-        if (data) {
-          const parsedData = JSON.parse(data) as StoreState;
-          setStoredData((prev) => ({ ...prev, ...parsedData }));
-          bibleState$.changeBibleQuery({
-            book: parsedData.lastBook,
-            chapter: parsedData.lastChapter,
-            verse: parsedData.lastVerse,
-            bottomSideBook: parsedData.lastBottomSideBook,
-            bottomSideChapter: parsedData.lastBottomSideChapter,
-            bottomSideVerse: parsedData.lastBottomSideVerse,
-          });
-        }
-      } catch (error) {
-        console.error("Error loading data from AsyncStorage:", error);
-      } finally {
-        setDataLoaded(true);
-      }
+    const loadState = async () => {
+      await when(() => storedData$.isPersistLoaded?.get());
+      setIsLoading(false);
     };
 
-    loadData();
+    loadState();
   }, []);
 
-  const saveData = async (data: Partial<StoreState>) => {
-    try {
-      const updatedData = {
-        ...storedData,
-        ...data,
-      };
-      await AsyncStorage.setItem(
-        StorageKeys.BIBLE,
-        JSON.stringify(updatedData)
-      );
-      setStoredData(updatedData);
-    } catch (error) {
-      console.error("Error saving data to AsyncStorage:", error);
-    }
+  const saveData = (data: Partial<StoreState>) => {
+    console.log("💾 Saving data... 💾");
+    storedData$.set((prev) => ({ ...prev, ...data }));
+    bibleState$.changeBibleQuery({
+      book: storedData$.lastBook.get(),
+      chapter: storedData$.lastChapter.get(),
+      verse: storedData$.lastVerse.get(),
+      bottomSideBook: storedData$.lastBottomSideBook.get(),
+      bottomSideChapter: storedData$.lastBottomSideChapter.get(),
+      bottomSideVerse: storedData$.lastBottomSideVerse.get(),
+    });
   };
 
   const clearData = async () => {
-    try {
-      await AsyncStorage.removeItem(StorageKeys.BIBLE);
-      setStoredData(initialContext);
-    } catch (error) {
-      console.error("Error clearing data from AsyncStorage:", error);
-    }
+    console.log("🗑 Clearing data...");
+    await AsyncStorage.removeItem(StorageKeys.LEGEND);
+    storedData$.set(initialContext);
   };
 
   return (
     <StorageContext.Provider
-      value={{
-        storedData,
-        saveData,
-        clearData,
-        isDataLoaded: dataLoaded,
-      }}
+      value={{ storedData, saveData, clearData, isLoading }}
     >
-      {children}
+      {!isLoading ? children : <LoadingComponent />}
     </StorageContext.Provider>
   );
 };
+
+// Placeholder for loading UI
+const LoadingComponent = () => <></>;
 
 export default StorageProvider;

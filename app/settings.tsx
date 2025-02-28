@@ -1,28 +1,28 @@
 import {
   Alert,
   Linking,
-  Platform,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
 
 import Icon, { IconProps } from "@/components/Icon";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import { useBibleContext } from "@/context/BibleContext";
 import { useStorage } from "@/context/LocalstoreContext";
 import { useCustomTheme } from "@/context/ThemeContext";
+import { settingState$ } from "@/state/settingState";
 import { EThemes, RootStackScreenProps, TFont, TTheme } from "@/types";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import Constants from "expo-constants";
 import { Stack, useRouter } from "expo-router";
 import * as Updates from "expo-updates";
 import { useCallback, useMemo } from "react";
-import { headerIconSize } from "@/constants/size";
-import ScreenWithAnimation from "@/components/LottieTransitionScreen";
-import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 
 const URLS = {
   BIBLE: "market://details?id=com.louislam09.bible",
@@ -82,6 +82,9 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
   } = useStorage();
 
   const appVersion = Constants.expoVersion ?? Constants.nativeAppVersion;
+  const isAnimationDisabled = use$(() =>
+    settingState$.isAnimationDisabled.get()
+  );
 
   const checkForUpdate = async () => {
     try {
@@ -161,9 +164,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
   }, []);
 
   const getFontType: any = useCallback(() => {
-    const fontNames = Object.values(TFont) as string[];
-
-    return fontNames.map((font, index) => {
+    return Object.values(TFont).map((font, index) => {
       const name = Object.keys(EThemes)[index];
 
       return {
@@ -175,7 +176,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
         extraText: "font",
       };
     });
-  }, []);
+  }, [theme]);
 
   const toggleHomeScreen = () => {
     saveData({ isGridLayout: !isGridLayout });
@@ -187,7 +188,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
         title: "Configuración",
         options: [
           {
-            label: "Modo Claro / Modo Oscuro",
+            label: theme.dark ? "Modo Oscuro" : "Modo Claro",
             iconName: `${theme.dark ? "Sun" : "Moon"}`,
             action: () => {
               toggleTheme();
@@ -195,8 +196,20 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
             extraText: "Cambiar entre el modo claro y el modo oscuro",
           },
           {
+            label: isAnimationDisabled
+              ? "Activar Animacion"
+              : "Disabilitar Animacion",
+            iconName: "Sparkles",
+            color: isAnimationDisabled
+              ? theme.colors.text
+              : theme.colors.notification,
+            action: () =>
+              settingState$.isAnimationDisabled.set(!isAnimationDisabled),
+            extraText: "Activar o desactivar las animaciones",
+          },
+          {
             label: "Buscar Actualización",
-            iconName: "Download", // Icon for the update button
+            iconName: "Download",
             action: checkForUpdate,
             extraText: "Verificar si hay actualizaciones de la app",
           },
@@ -293,7 +306,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
     ];
 
     return options;
-  }, [theme, fontSize, isGridLayout]);
+  }, [theme, fontSize, isGridLayout, isAnimationDisabled]);
 
   const renderItem = ({ item, index }: { item: TOption; index: number }) => {
     return (
@@ -344,8 +357,11 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
           <Icon
             name={iconName}
             size={30}
-            style={[styles.fontIcon]}
-            color={selectedFont === label ? theme.colors.notification : "#000"}
+            color={
+              selectedFont === label
+                ? theme.colors.notification
+                : theme.colors.background
+            }
           />
 
           {label && (
@@ -380,6 +396,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
               <FlashList
                 data={options}
                 renderItem={renderItem}
+                keyExtractor={(item) => item.label.toString()}
                 estimatedItemSize={50}
                 horizontal
                 contentContainerStyle={{
@@ -423,7 +440,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
   };
 
   return (
-    <ScreenWithAnimation icon="Settings" title="Ajustes">
+    <ScreenWithAnimation duration={800} icon="Settings" title="Ajustes">
       <View key={orientation + theme.dark} style={styles.container}>
         <ScrollView
           style={{
@@ -470,15 +487,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderRadius: 8,
       padding: 16,
       marginVertical: 8,
-      elevation: 5,
-      ...Platform.select({
-        ios: {
-          shadowColor: "black",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.2,
-          shadowRadius: 4,
-        },
-      }),
     },
     listItemLabel: {
       fontSize: 16,
@@ -509,7 +517,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       paddingHorizontal: 20,
       borderColor: colors.text,
       borderWidth: 1,
-      elevation: 7,
       alignItems: "center",
       justifyContent: "space-between",
       gap: 10,
@@ -526,7 +533,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       justifyContent: "space-between",
       padding: 15,
       marginBottom: 10,
-      elevation: 7,
       backgroundColor: colors.background,
       maxHeight: 76,
     },
@@ -550,13 +556,14 @@ const getStyles = ({ colors, dark }: TTheme) =>
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: "transparent",
+      backgroundColor: colors.text,
+      borderRadius: 5,
+      padding: 10,
       gap: 5,
     },
     fontIcon: {
       padding: 20,
       borderRadius: 50,
-      elevation: 5,
       backgroundColor: "white",
       color: "#000",
       paddingHorizontal: 22,

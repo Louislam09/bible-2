@@ -117,7 +117,11 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
               chapter: dailyVerse.chapter,
               verse: dailyVerse?.verse,
             };
-            bibleState$.changeBibleQuery({ ...queryInfo, shouldFetch: true });
+            bibleState$.changeBibleQuery({
+              ...queryInfo,
+              shouldFetch: true,
+              isHistory: false,
+            });
             navigation.navigate(Screens.Home, queryInfo);
           }}
           style={styles.verseContainer}

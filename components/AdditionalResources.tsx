@@ -23,6 +23,7 @@ const AdditionalResources = ({ list, theme }: AdditionalResourcesProps) => {
             style={[styles.tool]}
           >
             <Icon
+              size={24}
               name={item.icon as any}
               color={item.color}
               style={[styles.toolIcon]}
@@ -41,6 +42,7 @@ const AdditionalResources = ({ list, theme }: AdditionalResourcesProps) => {
             style={[styles.tool]}
           >
             <Icon
+              size={24}
               name={item.icon as any}
               color={item.color}
               style={[styles.toolIcon]}

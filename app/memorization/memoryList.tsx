@@ -2,7 +2,7 @@ import Animation from "@/components/Animation";
 import BottomModal from "@/components/BottomModal";
 import CircularProgressBar from "@/components/CircularProgressBar";
 import Icon from "@/components/Icon";
-import ScreenWithAnimation from "@/components/LottieTransitionScreen";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import StreakCard from "@/components/memorization/StreakCard";
 import SortMemoryList from "@/components/SortList";
 import { Text } from "@/components/Themed";
@@ -262,7 +262,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
   return (
     <>
       <ScreenWithAnimation
-        speed={1.5}
+        speed={2}
         title="Memorizar Versos"
         animationSource={sourceMemorization}
       >

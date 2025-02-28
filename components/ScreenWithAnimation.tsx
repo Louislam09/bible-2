@@ -21,6 +21,7 @@ type ScreenWithAnimationProps = {
   /** A flag indicating whether the animation should play on mount. */
   shouldPlay?: boolean;
   isVisible?: boolean;
+  backgroundColor?: any;
 };
 
 /**
@@ -45,6 +46,7 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
   duration = 1500,
   shouldPlay = true,
   isVisible,
+  backgroundColor,
 }) => {
   const [isAnimating, setIsAnimating] = useState(shouldPlay);
   const opacity = useRef(new Animated.Value(0)).current;
@@ -99,15 +101,20 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
         ])
       ).start();
     }
-  }, [opacity, bounceValue, icon, animationSource, duration]);
+  }, [opacity, bounceValue, icon, animationSource, duration, isVisible]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: backgroundColor || theme.colors.background,
+      }}
+    >
       {isAnimating && (
         <View
           style={[
             styles.animationContainer,
-            { backgroundColor: theme.colors.background },
+            { backgroundColor: backgroundColor || theme.colors.background },
           ]}
         >
           {animationSource ? (
@@ -148,7 +155,6 @@ export default ScreenWithAnimation;
 const styles = StyleSheet.create({
   animationContainer: {
     ...StyleSheet.absoluteFillObject,
-    // backgroundColor: "transparent",
     justifyContent: "center",
     alignItems: "center",
   },

@@ -1,4 +1,4 @@
-import ScreenWithAnimation from "@/components/LottieTransitionScreen";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import Note from "@/components/note";
 import { Text } from "@/components/Themed";
 import { GET_ALL_NOTE } from "@/constants/Queries";
@@ -27,7 +27,7 @@ const Notes: React.FC<NotesProps> = ({}) => {
   }, [canFetchNote, myBibleDB, executeSql, shouldRefresh]);
 
   return (
-    <ScreenWithAnimation duration={1000} icon="NotebookPen" title="Mis Notas">
+    <ScreenWithAnimation duration={800} icon="NotebookPen" title="Mis Notas">
       <Note data={data} setShouldFetch={setCanFetchNote} />
     </ScreenWithAnimation>
   );

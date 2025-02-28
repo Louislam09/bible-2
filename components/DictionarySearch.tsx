@@ -28,7 +28,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import ScreenWithAnimation from "./LottieTransitionScreen";
+import ScreenWithAnimation from "./ScreenWithAnimation";
 import { singleScreenHeader } from "./common/singleScreenHeader";
 
 type RenderItem = {
@@ -222,7 +222,7 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
   return (
     <ScreenWithAnimation
       animationSource={searchingSource}
-      speed={1.5}
+      speed={2}
       title="Dictionario"
     >
       <Stack.Screen

@@ -12,6 +12,8 @@ import {
   View,
 } from "react-native";
 import Verse from "./Verse";
+import { bibleState$ } from "@/state/bibleState";
+import { observer } from "@legendapp/state/react";
 
 const Chapter = ({
   verses,
@@ -19,7 +21,10 @@ const Chapter = ({
   estimatedReadingTime,
   initialScrollIndex,
 }: TChapter) => {
-  console.log("🔄 Chapter Component Rendered", isSplit ? "🔽" : "🔝");
+  const bibleSide = isSplit ? "bottom" : "top";
+  const data = bibleState$.bibleData[`${bibleSide}Verses`].get() ?? [];
+  const _initialScrollIndex = Math.min(initialScrollIndex, data.length);
+
   const { width, height } = useWindowDimensions();
   const theme = useTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
@@ -28,15 +33,12 @@ const Chapter = ({
 
   const aspectRadio = height / width;
   const isMobile = +aspectRadio.toFixed(2) > 1.65;
-  const { style } = useHighlightRender();
 
   const renderItem = useCallback(
     ({ item }: any) => (
-      <Animated.View style={[{ borderColor: "red", borderWidth: 1 }, style]}>
-        <Verse item={item} isSplit={!!isSplit} initVerse={initialScrollIndex} />
-      </Animated.View>
+      <Verse item={item} isSplit={!!isSplit} initVerse={_initialScrollIndex} />
     ),
-    [isSplit, initialScrollIndex, style]
+    [isSplit, _initialScrollIndex]
   );
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
@@ -61,21 +63,22 @@ const Chapter = ({
   ]);
 
   useEffect(() => {
-    if (initialScrollIndex !== topVerseRef.current && chapterRef.current) {
+    if (_initialScrollIndex !== topVerseRef.current && chapterRef.current) {
       chapterRef.current?.scrollToIndex({
-        index: initialScrollIndex,
+        index: _initialScrollIndex,
         animated: true,
         viewPosition: 0,
       });
     }
-  }, [initialScrollIndex]);
+  }, [_initialScrollIndex]);
 
   const ListHeader = useCallback(() => {
     return (
       <View style={styles.estimatedContainer}>
         <Text style={[styles.estimatedText]}>
           <Icon size={14} name="Timer" color={theme.colors.notification} />
-          &nbsp; Tiempo de lectura {`~ ${estimatedReadingTime} min(s)\n`}
+          &nbsp; Tiempo de lectura{" "}
+          {`~ ${bibleState$.readingTimeData[bibleSide].get()} min(s)\n`}
         </Text>
       </View>
     );
@@ -92,7 +95,8 @@ const Chapter = ({
         <FlashList
           ref={chapterRef}
           keyExtractor={keyExtractor}
-          data={verses ?? []}
+          // data={verses ?? []}
+          data={data}
           ListHeaderComponent={ListHeader}
           renderItem={renderItem}
           decelerationRate="normal"
@@ -101,7 +105,7 @@ const Chapter = ({
           ListEmptyComponent={() => (
             <LoadingComponent textColor={theme.colors.text} />
           )}
-          initialScrollIndex={initialScrollIndex}
+          initialScrollIndex={_initialScrollIndex}
           viewabilityConfigCallbackPairs={
             viewabilityConfigCallbackPairs.current
           }
@@ -214,4 +218,5 @@ export function useHighlightRender() {
   };
 }
 
-export default React.memo(Chapter);
+export default observer(Chapter);
+// export default React.memo(Chapter);

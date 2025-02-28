@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { Screens, TTheme } from "@/types";
 import lottieAssets from "@/constants/lottieAssets";
-import ScreenWithAnimation from "@/components/LottieTransitionScreen";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 
 type IHymnOption = {
@@ -90,7 +90,7 @@ const HymnScreen = () => {
     <ScreenWithAnimation
       title="Himnarios"
       animationSource={pickARandomAsset}
-      speed={1.5}
+      speed={2}
     >
       <ScrollView style={styles.container}>
         <Stack.Screen

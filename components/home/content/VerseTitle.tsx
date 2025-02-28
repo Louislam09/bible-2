@@ -38,6 +38,7 @@ const VerseTitle = ({ subheading, isSplit }: VerseTitleProps) => {
         ...queryInfo,
         shouldFetch: true,
         isBibleBottom: isBottom,
+        isHistory: false,
       });
       //   navigation.navigate(Screens.Home, { ...queryInfo, isHistory: false });
     };

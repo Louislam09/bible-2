@@ -1,6 +1,6 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import FavoriteList from "@/components/favorite/FavoriteList";
-import ScreenWithAnimation from "@/components/LottieTransitionScreen";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { GET_ALL_FAVORITE_VERSES } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
 import { Stack } from "expo-router";

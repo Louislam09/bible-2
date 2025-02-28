@@ -1,10 +1,4 @@
-import React, {
-  RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { RefObject, useCallback, useMemo, useState } from "react";
 
 import {
   Animated,
@@ -29,19 +23,14 @@ import { useTheme } from "@react-navigation/native";
 
 import BibleHeader from "@/components/home/header/BibleHeader";
 import StatusBarBackground from "@/components/StatusBarBackground";
+import BibleChapterProvider from "@/context/BibleChapterContext";
 import { useInitialState } from "@/hooks/useInitialState";
 import { useSplitScreen } from "@/hooks/useSplitScreen";
-import { bibleState$, getReadingTime } from "@/state/bibleState";
+import { bibleState$ } from "@/state/bibleState";
 import { tourState$ } from "@/state/tourState";
-import { IBookVerse, TTheme } from "@/types";
-import { use$, useObservable } from "@legendapp/state/react";
+import { TTheme } from "@/types";
+import { use$ } from "@legendapp/state/react";
 import { Stack, useNavigation } from "expo-router";
-import { DB_BOOK_NAMES } from "@/constants/BookNames";
-import { getDatabaseQueryKey } from "@/constants/databaseNames";
-import { QUERY_BY_DB } from "@/constants/Queries";
-import { batch } from "@legendapp/state";
-import { useDBContext } from "@/context/databaseContext";
-import { BibleChapterProvider } from "@/context/BibleChapterContext";
 
 // Constants
 const MIN_SPLIT_SIZE = 200;
@@ -67,6 +56,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   const theme = useTheme();
   const { orientation } = useBibleContext();
   const isSplitActived = use$(() => bibleState$.isSplitActived.get());
+  const tourPopoverVisible = use$(() => tourState$.tourPopoverVisible.get());
 
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const initialState = useInitialState();
@@ -86,8 +76,6 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
       minSplitSize: MIN_SPLIT_SIZE,
     }
   );
-
-  const tourPopoverVisible = use$(() => tourState$.tourPopoverVisible.get());
 
   const tutorialSteps = useMemo<TutorialStep[]>(
     () => [
