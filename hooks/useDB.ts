@@ -16,6 +16,7 @@ import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
 import { useEffect, useRef, useState } from "react";
 import { VersionItem } from "./useInstalledBible";
+import { bibleState$ } from "@/state/bibleState";
 
 interface Row {
   [key: string]: any;
@@ -154,8 +155,10 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
 
     async function initializeDatabase() {
       try {
-        setLoading(false);
-        dbInitialized.current = true;
+        // setLoading(false);
+        setDatabase(null);
+        isMounted.current = true;
+        bibleState$.isDataLoading.top.set(true);
         if (database) {
           await database.closeAsync();
         }
@@ -165,12 +168,13 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
         if (isMounted.current) {
           setDatabase(db);
           dbInitialized.current = true;
+          bibleState$.bibleQuery.shouldFetch.set(true);
           setLoading(true);
         }
       } catch (error) {
         console.error("Database initialization error:", error);
         if (isMounted.current) {
-          setLoading(true); // Set loading to true even on error to prevent infinite loading state
+          setLoading(true);
         }
       }
     }
@@ -181,7 +185,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
     return () => {
       isMounted.current = false;
       if (database) {
-        database.closeAsync().catch(console.error);
+        // database.closeAsync().catch(console.error);
       }
     };
   }, [dbName]);

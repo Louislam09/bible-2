@@ -207,24 +207,15 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const storedData = use$(() => ({
-    currentBibleVersion: storedData$.currentBibleVersion.get(),
     fontSize: storedData$.fontSize.get(),
     currentTheme: storedData$.currentTheme.get(),
     selectedFont: storedData$.selectedFont.get(),
-    isDataLoaded: storedData$.isDataLoaded.get(),
   }));
 
   const historyManager = useHistoryManager();
-  const {
-    currentBibleVersion,
-    fontSize,
-    currentTheme,
-    selectedFont,
-    isDataLoaded,
-  } = storedData;
-  // const { fontSize, currentTheme, selectedFont } = storedData;
-  // const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
-  // const isDataLoaded = use$(() => storedData$.isDataLoaded.get());
+  const { fontSize, currentTheme, selectedFont } = storedData;
+  const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
+  const isDataLoaded = use$(() => storedData$.isDataLoaded.get());
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
   const fontsLoaded = useCustomFonts();
   const {
@@ -398,7 +389,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     selectTheme,
     toggleViewLayoutGrid,
     toggleFavoriteVerse,
-    // setverseInStrongDisplay,
     setShouldLoop,
     goBackOnHistory,
     goForwardOnHistory,

@@ -69,7 +69,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   // const initialState = useInitialState();
   const initialState = bibleState$.bibleQuery.get();
 
-  const { style } = useHighlightRender();
+  // const { style } = useHighlightRender();
 
   const [stepIndex, setStepIndex] = useState(0);
   const isPortrait = orientation === "PORTRAIT";
@@ -154,47 +154,47 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   }, [SCREEN_HEIGHT, SCREEN_WIDTH, backgroundColor]);
 
   return (
-    <Animated.View style={[{ flex: 1 }, style]}>
-      <StatusBarBackground>
-        <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
-          <Stack.Screen options={{ headerShown: false }} />
-          <BibleHeader />
-          <View
-            style={[styles.container, !isPortrait && { flexDirection: "row" }]}
-          >
-            <BibleTop height={topHeight} width={topWidth} />
-            {isSplitActived && renderBottomContent()}
-          </View>
-          <>
-            <BookContentModals
-              book={initialState.book}
-              chapter={initialState.chapter}
-            />
-            <FloatingButton iconName="NotebookText">
-              <CurrentNoteDetail />
-            </FloatingButton>
+    // <Animated.View style={[{ flex: 1 }, style]}>
+    <StatusBarBackground>
+      <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
+        <Stack.Screen options={{ headerShown: false }} />
+        <BibleHeader />
+        <View
+          style={[styles.container, !isPortrait && { flexDirection: "row" }]}
+        >
+          <BibleTop height={topHeight} width={topWidth} />
+          {isSplitActived && renderBottomContent()}
+        </View>
+        <>
+          <BookContentModals
+            book={initialState.book}
+            chapter={initialState.chapter}
+          />
+          <FloatingButton iconName="NotebookText">
+            <CurrentNoteDetail />
+          </FloatingButton>
 
-            <BottomModal
-              shouldScroll
-              justOneSnap
-              justOneValue={["50%"]}
-              startAT={0}
-              ref={bibleState$.noteListBottomSheetRef.get()}
-            >
-              <NoteNameList />
-            </BottomModal>
-            {tourState$.tourPopoverVisible.get() === "FUNCTION" && (
-              <Walkthrough
-                steps={tutorialSteps}
-                setStep={setStepIndex}
-                currentStep={stepIndex}
-              />
-            )}
-            {/* )} */}
-          </>
-        </SafeAreaView>
-      </StatusBarBackground>
-    </Animated.View>
+          <BottomModal
+            shouldScroll
+            justOneSnap
+            justOneValue={["50%"]}
+            startAT={0}
+            ref={bibleState$.noteListBottomSheetRef.get()}
+          >
+            <NoteNameList />
+          </BottomModal>
+          {tourState$.tourPopoverVisible.get() === "FUNCTION" && (
+            <Walkthrough
+              steps={tutorialSteps}
+              setStep={setStepIndex}
+              currentStep={stepIndex}
+            />
+          )}
+          {/* )} */}
+        </>
+      </SafeAreaView>
+    </StatusBarBackground>
+    // </Animated.View>
   );
 };
 
