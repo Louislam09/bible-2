@@ -3,7 +3,7 @@ import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import { bibleState$ } from "@/state/bibleState";
 import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
-import React, { FC, useMemo } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Animated, StyleSheet } from "react-native";
 import Chapter from "./home/content/Chapter";
 import BibleFooter from "./home/footer/BibleFooter";
@@ -18,9 +18,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const theme = useTheme();
   const { orientation } = useBibleContext();
   const isPortrait = orientation === "PORTRAIT";
-  // const verses = use$(() => bibleState$.bibleData.topVerses.get());
   const isDataLoading = use$(() => bibleState$.isDataLoading.top.get());
-  // const estimatedReadingTime = bibleState$.readingTimeData.top.get();
   console.log(`🔝 BibleTop Component Rendered 🔄:${isDataLoading} `);
 
   const isSplitActived = bibleState$.isSplitActived.get();

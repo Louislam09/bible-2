@@ -2,7 +2,7 @@ import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import { Text, View } from "@/components/Themed";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
-import { useStorage } from "@/context/LocalstoreContext";
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import useParams from "@/hooks/useParams";
 import {
   BookIndexes,
@@ -12,6 +12,7 @@ import {
   TTheme,
 } from "@/types";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
+import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
@@ -128,10 +129,11 @@ const BookList = React.memo(
 const ChooseBook: React.FC = () => {
   const navigation = useNavigation();
   const routeParam = useParams<ChooseChapterNumberParams>();
-  const {
-    saveData,
-    storedData: { isShowName },
-  } = useStorage();
+  // const {
+  // saveData,
+  // storedData: { isShowName },
+  // } = useStorage();
+  const isShowName = use$(() => storedData$.isShowName.get());
   const { book } = routeParam;
   const theme = useTheme();
   const { viewLayoutGrid, toggleViewLayoutGrid } = useBibleContext();
@@ -151,8 +153,9 @@ const ChooseBook: React.FC = () => {
   );
 
   const handleLongPress = useCallback(() => {
-    saveData({ isShowName: !isShowName });
-  }, [isShowName, saveData]);
+    storedData$.isShowName.set(!isShowName);
+    // saveData({ isShowName: !isShowName });
+  }, [isShowName]);
 
   const [oldTestamentBooks, newTestamentBooks] = useMemo(
     () => [

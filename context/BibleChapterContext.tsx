@@ -2,10 +2,10 @@ import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { getDatabaseQueryKey } from "@/constants/databaseNames";
 import { QUERY_BY_DB } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
-import { useStorage } from "@/context/LocalstoreContext";
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { bibleState$, getReadingTime } from "@/state/bibleState";
 import { IBookVerse } from "@/types";
-import { batch } from "@legendapp/state";
+import { batch, observable } from "@legendapp/state";
 import { use$ } from "@legendapp/state/react";
 import React, {
   createContext,
@@ -14,8 +14,10 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useState,
 } from "react";
 import { useBibleContext } from "./BibleContext";
+import { historyState$ } from "@/state/historyState";
 
 interface BibleChapterContextProps {}
 
@@ -30,42 +32,21 @@ interface PersistChapterDataParams {
 
 const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
   const { executeSql, isMyBibleDbLoaded } = useDBContext();
-  const {
-    saveData,
-    storedData: { currentBibleVersion },
-  } = useStorage();
+  // const {
+  //   storedData: { currentBibleVersion },
+  // } = useStorage();
+  const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
   const {
     historyManager: { add: addToHistory },
   } = useBibleContext();
   const shouldFetch = use$(() => bibleState$.bibleQuery.shouldFetch.get());
+  const currentItem = historyState$.getCurrentItem();
 
-  console.log(`🥳 BibleChapterProvider 🥳 sf:${shouldFetch}`);
+  console.log(`🥳 BibleChapterProvider 🥳 sf:${shouldFetch}`, currentItem);
 
-  const persistChapterData = useCallback(
-    async ({
-      targetBook,
-      targetChapter,
-      targetVerse,
-      isBibleBottom,
-      isHistory,
-    }: PersistChapterDataParams) => {
-      if (!isHistory) {
-        addToHistory({
-          book: targetBook,
-          chapter: targetChapter,
-          verse: targetVerse,
-          created_at: "",
-        });
-      }
-      await saveData({
-        [isBibleBottom ? "lastBottomSideBook" : "lastBook"]: targetBook,
-        [isBibleBottom ? "lastBottomSideChapter" : "lastChapter"]:
-          targetChapter,
-        [isBibleBottom ? "lastBottomSideVerse" : "lastVerse"]: targetVerse,
-      });
-    },
-    []
-  );
+  const addHistoryItem = (book: string, chapter: number, verse: number) => {
+    historyState$.addToHistory({ book, chapter, verse });
+  };
 
   const fetchChapter = async () => {
     const bibleQuery = bibleState$.bibleQuery.get();
@@ -77,6 +58,7 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
       isHistory,
     } = bibleQuery;
     const bibleKey = isBibleBottom ? "bottom" : "top";
+    const storageKey = isBibleBottom ? "lastBottomSide" : "last";
     const targetBook = isBibleBottom ? bibleQuery.bottomSideBook : book;
     const targetChapter = isBibleBottom
       ? bibleQuery.bottomSideChapter
@@ -105,35 +87,17 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
       );
 
       batch(() => {
+        storedData$[`${storageKey}Book`].set(targetBook);
+        storedData$[`${storageKey}Chapter`].set(targetChapter);
+        storedData$[`${storageKey}Verse`].set(targetVerse);
         bibleState$.bibleData[`${bibleKey}Verses`].set(verses);
         bibleState$.readingTimeData[bibleKey].set(getReadingTime(verses));
         bibleState$.isDataLoading[bibleKey].set(false);
         bibleState$.bibleQuery.shouldFetch.set(false);
+        addHistoryItem(targetBook, targetChapter, targetVerse);
         console.log("✅ Data Fetched ✅");
         console.log("✅✅✅✅✅✅✅✅✅");
       });
-
-      // persistChapterData({
-      //   targetBook,
-      //   targetChapter,
-      //   targetVerse,
-      //   isBibleBottom,
-      //   isHistory,
-      // });
-      // saveData({
-      //   [isBibleBottom ? "lastBottomSideBook" : "lastBook"]: book,
-      //   [isBibleBottom ? "lastBottomSideChapter" : "lastChapter"]: chapter,
-      //   [isBibleBottom ? "lastBottomSideVerse" : "lastVerse"]: verse,
-      // });
-
-      // if (!isHistory) {
-      //   addToHistory({
-      //     book: targetBook,
-      //     chapter: targetChapter,
-      //     verse: targetVerse,
-      //     created_at: "",
-      //   });
-      // }
     } catch (error) {
       console.error("Error fetching Bible data:", error);
       batch(() => {

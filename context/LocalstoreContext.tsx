@@ -5,17 +5,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useState,
 } from "react";
-import { observable, when } from "@legendapp/state";
-import { use$ } from "@legendapp/state/react";
+import { observable, syncState, when } from "@legendapp/state";
+import { use$, useObservable } from "@legendapp/state/react";
 import { configureSynced, syncObservable } from "@legendapp/state/sync";
 import { observablePersistAsyncStorage } from "@legendapp/state/persist-plugins/async-storage";
 import { bibleState$ } from "@/state/bibleState";
 
-// Global persistence configuration
 const persistOptions = configureSynced({
   persist: {
     plugin: observablePersistAsyncStorage({
@@ -24,7 +24,6 @@ const persistOptions = configureSynced({
   },
 });
 
-// Define StoreState type
 type StoreState = {
   lastBook: string;
   lastChapter: number;
@@ -46,9 +45,9 @@ type StoreState = {
   floatingNoteButtonPosition: { x: number; y: number };
   memorySortOption: SortOption;
   deleteLastStreakNumber: number;
+  isDataLoaded: boolean;
 };
 
-// Initial state
 const initialContext: StoreState = {
   lastBook: "Génesis",
   lastChapter: 1,
@@ -70,34 +69,31 @@ const initialContext: StoreState = {
   floatingNoteButtonPosition: { x: 0, y: 0 },
   memorySortOption: SortOption.MostRecent,
   deleteLastStreakNumber: 1,
+  isDataLoaded: false,
 };
 
-// Create observable store
-const storedData$ = observable(initialContext);
+export const storedData$ = observable(initialContext);
 
-// Sync observable with persistence
 syncObservable(
   storedData$,
   persistOptions({
     persist: {
-      name: StorageKeys.LEGEND,
+      name: StorageKeys.BIBLE,
     },
   })
 );
 
-// Define context interface
 interface StorageContextProps {
   storedData: StoreState;
   saveData: (data: Partial<StoreState>) => void;
   clearData: () => void;
-  isLoading: boolean;
+  isDataLoaded: boolean;
 }
 
 const StorageContext = createContext<StorageContextProps | undefined>(
   undefined
 );
 
-// Hook to use the storage context
 export const useStorage = () => {
   const context = useContext(StorageContext);
   if (!context) {
@@ -106,32 +102,37 @@ export const useStorage = () => {
   return context;
 };
 
-// Storage Provider Component
 const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const storedData = use$(() => storedData$.get());
-  const [isLoading, setIsLoading] = useState(true);
+  // const storedData = useObservable(storedData$);
+  const syncState$ = syncState(storedData$);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   useEffect(() => {
     const loadState = async () => {
-      await when(() => storedData$.isPersistLoaded?.get());
-      setIsLoading(false);
+      await when(() => syncState$.isPersistLoaded.get());
+      bibleState$.changeBibleQuery({
+        book: storedData$.lastBook.get(),
+        chapter: storedData$.lastChapter.get(),
+        verse: storedData$.lastVerse.get(),
+        bottomSideBook: storedData$.lastBottomSideBook.get(),
+        bottomSideChapter: storedData$.lastBottomSideChapter.get(),
+        bottomSideVerse: storedData$.lastBottomSideVerse.get(),
+      });
+      storedData$.isDataLoaded.set(true);
+      setDataLoaded(true);
     };
 
     loadState();
   }, []);
 
-  const saveData = (data: Partial<StoreState>) => {
+  const saveData = useCallback((data: Partial<StoreState>) => {
     console.log("💾 Saving data... 💾");
-    storedData$.set((prev) => ({ ...prev, ...data }));
-    bibleState$.changeBibleQuery({
-      book: storedData$.lastBook.get(),
-      chapter: storedData$.lastChapter.get(),
-      verse: storedData$.lastVerse.get(),
-      bottomSideBook: storedData$.lastBottomSideBook.get(),
-      bottomSideChapter: storedData$.lastBottomSideChapter.get(),
-      bottomSideVerse: storedData$.lastBottomSideVerse.get(),
+    Object.entries(data).forEach(([key, value]) => {
+      // @ts-ignore
+      storedData$[key as keyof StoreState].set(value as any);
     });
-  };
+  }, []);
 
   const clearData = async () => {
     console.log("🗑 Clearing data...");
@@ -141,14 +142,16 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <StorageContext.Provider
-      value={{ storedData, saveData, clearData, isLoading }}
+      value={{
+        storedData,
+        saveData,
+        clearData,
+        isDataLoaded: dataLoaded,
+      }}
     >
-      {!isLoading ? children : <LoadingComponent />}
+      {children}
     </StorageContext.Provider>
   );
 };
-
-// Placeholder for loading UI
-const LoadingComponent = () => <></>;
 
 export default StorageProvider;

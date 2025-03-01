@@ -27,7 +27,8 @@ import {
   TFont,
 } from "../types";
 import { useDBContext } from "./databaseContext";
-import { useStorage } from "./LocalstoreContext";
+import { storedData$, useStorage } from "./LocalstoreContext";
+import { use$ } from "@legendapp/state/react";
 
 type BibleState = {
   setSearchQuery: Function;
@@ -205,10 +206,22 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
 const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { storedData, saveData, isDataLoaded } = useStorage();
+  const storedData = use$(() => ({
+    currentBibleVersion: storedData$.currentBibleVersion.get(),
+    fontSize: storedData$.fontSize.get(),
+    currentTheme: storedData$.currentTheme.get(),
+    selectedFont: storedData$.selectedFont.get(),
+    isDataLoaded: storedData$.isDataLoaded.get(),
+  }));
+
   const historyManager = useHistoryManager();
-  const { currentBibleVersion, fontSize, currentTheme, selectedFont } =
-    storedData;
+  const {
+    currentBibleVersion,
+    fontSize,
+    currentTheme,
+    selectedFont,
+    isDataLoaded,
+  } = storedData;
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
   const fontsLoaded = useCustomFonts();
   const {
@@ -287,11 +300,11 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const decreaseFontSize = () => {
     dispatch({ type: "DECREASE_FONT_SIZE" });
-    saveData({ fontSize: state.fontSize - 1 });
+    storedData$.fontSize.set(state.fontSize - 1);
   };
   const increaseFontSize = () => {
     dispatch({ type: "INCREASE_FONT_SIZE" });
-    saveData({ fontSize: state.fontSize + 1 });
+    storedData$.fontSize.set(state.fontSize + 1);
   };
 
   const toggleViewLayoutGrid = () => {
@@ -343,15 +356,15 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const selectFont = (font: string) => {
     dispatch({ type: "SELECT_FONT", payload: font });
-    saveData({ selectedFont: font });
+    storedData$.selectedFont.set(font);
   };
   const selectTheme = (theme: keyof typeof EThemes) => {
     dispatch({ type: "SELECT_THEME", payload: theme });
-    saveData({ currentTheme: theme });
+    storedData$.currentTheme.set(theme);
   };
   const selectBibleVersion = async (version: string) => {
     dispatch({ type: "SELECT_BIBLE_VERSION", payload: version });
-    await saveData({ currentBibleVersion: version });
+    storedData$.currentBibleVersion.set(version);
   };
 
   const setSearchQuery = (query: string) => {

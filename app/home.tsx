@@ -1,4 +1,10 @@
-import React, { RefObject, useCallback, useMemo, useState } from "react";
+import React, {
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import {
   Animated,
@@ -31,6 +37,7 @@ import { tourState$ } from "@/state/tourState";
 import { TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
 import { Stack, useNavigation } from "expo-router";
+import { useHighlightRender } from "@/components/home/content/Chapter";
 
 // Constants
 const MIN_SPLIT_SIZE = 200;
@@ -59,7 +66,10 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   const tourPopoverVisible = use$(() => tourState$.tourPopoverVisible.get());
 
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
-  const initialState = useInitialState();
+  // const initialState = useInitialState();
+  const initialState = bibleState$.bibleQuery.get();
+
+  const { style } = useHighlightRender();
 
   const [stepIndex, setStepIndex] = useState(0);
   const isPortrait = orientation === "PORTRAIT";
@@ -141,10 +151,10 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
         />
       </>
     );
-  }, [initialState, SCREEN_HEIGHT, SCREEN_WIDTH, navigation, backgroundColor]);
+  }, [SCREEN_HEIGHT, SCREEN_WIDTH, backgroundColor]);
 
   return (
-    <BibleChapterProvider>
+    <Animated.View style={[{ flex: 1 }, style]}>
       <StatusBarBackground>
         <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
           <Stack.Screen options={{ headerShown: false }} />
@@ -184,7 +194,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
           </>
         </SafeAreaView>
       </StatusBarBackground>
-    </BibleChapterProvider>
+    </Animated.View>
   );
 };
 
