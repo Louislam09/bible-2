@@ -3,7 +3,7 @@ import Icon from "@/components/Icon";
 import { GET_ALL_NOTE } from "@/constants/Queries";
 import { iconSize } from "@/constants/size";
 import { useDBContext } from "@/context/databaseContext";
-import { useStorage } from "@/context/LocalstoreContext";
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { bibleState$ } from "@/state/bibleState";
 import { TNote, TTheme } from "@/types";
 import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
@@ -19,9 +19,7 @@ const NoteNameList: FC<NoteNameListProps> = ({}) => {
   const styles = getStyles(theme);
   const { myBibleDB, executeSql } = useDBContext();
   const [data, setData] = useState<TNote[] | any>(null);
-  const {
-    storedData: { fontSize },
-  } = useStorage();
+  const fontSize = storedData$.fontSize.get();
 
   useEffect(() => {
     if (!myBibleDB || !executeSql) return;

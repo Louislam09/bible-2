@@ -10,7 +10,7 @@ import Tooltip from "@/components/Tooltip";
 import { getBookDetail } from "@/constants/BookNames";
 import { headerIconSize } from "@/constants/size";
 import { useBibleContext } from "@/context/BibleContext";
-import { useStorage } from "@/context/LocalstoreContext";
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { useMemorization } from "@/context/MemorizationContext";
 import { useStreak } from "@/hooks/useStreak";
 import { Memorization, SortOption, TTheme } from "@/types";
@@ -42,6 +42,7 @@ import {
   Alert,
 } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
+import { use$ } from "@legendapp/state/react";
 
 type MemorizationProps = {};
 
@@ -111,12 +112,11 @@ const MemoryList: React.FC<MemorizationProps> = () => {
   const openSwipeableId = useRef<number | null>(null);
   const { currentBibleLongName } = useBibleContext();
   const { verses, deleteVerse, refreshVerses } = useMemorization();
-  const { saveData, storedData } = useStorage();
   const { streak, days, bestStreak } = useStreak();
   const styles = getStyles(theme);
   const sourceMemorization = require("../../assets/lottie/brain.json");
   const notFoundSource = require("../../assets/lottie/notFound.json");
-  const { memorySortOption } = storedData;
+  const memorySortOption = use$(() => storedData$.memorySortOption.get());
 
   const stats = useMemo(
     () => ({
@@ -255,7 +255,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
 
   const handleSort = (sortOption: SortOption) => {
     setSortType(sortOption);
-    saveData({ memorySortOption: sortOption });
+    storedData$.memorySortOption.set(sortOption);
     sortClosePresentModalPress();
   };
 

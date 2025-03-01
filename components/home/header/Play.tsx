@@ -3,7 +3,7 @@ import Icon, { IconProps } from "@/components/Icon";
 import CustomSlider from "@/components/Slider";
 import VoiceList from "@/components/VoiceList";
 import { iconSize } from "@/constants/size";
-import { useStorage } from "@/context/LocalstoreContext";
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { TTheme } from "@/types";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import React, { FC, useCallback, useMemo, useRef } from "react";
@@ -57,16 +57,15 @@ const Play: FC<IPlay> = ({
   setShouldLoop,
 }) => {
   const styles = getStyles(theme);
-  const {
-    saveData,
-    storedData: { currentVoiceRate: voiceRate = 1 },
-  } = useStorage();
+
+  const voiceRate = storedData$.currentVoiceRate.get() || 1;
+
   const voiceBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const voiceRateBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const speedOptions = [0.5, 1, 1.5, 2];
 
   const handleSpeedChange = (newSpeed: number) => {
-    saveData({ currentVoiceRate: newSpeed });
+    storedData$.currentVoiceRate.set(newSpeed);
   };
 
   const voiceHandlePresentModalPress = useCallback(() => {

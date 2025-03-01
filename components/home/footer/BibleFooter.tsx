@@ -10,7 +10,7 @@ import BottomModal from "@/components/BottomModal";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
-import { useStorage } from "@/context/LocalstoreContext";
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import useBibleReader from "@/hooks/useBibleReading";
 import useInternetConnection from "@/hooks/useInternetConnection";
 import useParams from "@/hooks/useParams";
@@ -33,10 +33,8 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const { currentBibleVersion, shouldLoopReading, setShouldLoop } =
     useBibleContext();
   const isSplitActived = bibleState$.isSplitActived.get();
-
-  const {
-    storedData: { currentVoiceIdentifier, currentVoiceRate = 1 },
-  } = useStorage();
+  const currentVoiceIdentifier = storedData$.currentVoiceIdentifier.get();
+  const currentVoiceRate = storedData$.currentVoiceRate.get() || 1;
   const isConnected = useInternetConnection();
   const FOOTER_ICON_SIZE = iconSize;
   const theme = useTheme();

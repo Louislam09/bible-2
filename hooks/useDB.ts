@@ -149,25 +149,13 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
     }
   }
 
-  const checkPragmas = async () => {
-    const journalMode = await executeSql(`PRAGMA journal_mode;`, []);
-    const synchronous = await executeSql(`PRAGMA synchronous;`, []);
-    const tempStore = await executeSql(`PRAGMA temp_store;`, []);
-    const cacheSize = await executeSql(`PRAGMA cache_size;`, []);
-    console.log({
-      journalMode,
-      synchronous,
-      tempStore,
-      cacheSize,
-    });
-  };
-
   useEffect(() => {
     if (!dbName) return;
 
     async function initializeDatabase() {
       try {
         setLoading(false);
+        dbInitialized.current = true;
         if (database) {
           await database.closeAsync();
         }

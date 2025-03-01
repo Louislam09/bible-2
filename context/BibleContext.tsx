@@ -222,6 +222,9 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     selectedFont,
     isDataLoaded,
   } = storedData;
+  // const { fontSize, currentTheme, selectedFont } = storedData;
+  // const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
+  // const isDataLoaded = use$(() => storedData$.isDataLoaded.get());
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
   const fontsLoaded = useCustomFonts();
   const {
@@ -280,17 +283,12 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     !isMyBibleDbLoaded
   ) {
     return (
-      <ScreenWithAnimation
-        // backgroundColor="#0c3e3d"
-        isVisible
-        title="Santa Escritura"
-        icon="BookPlus"
-      >
+      <ScreenWithAnimation isVisible title="Santa Escritura" icon="BookPlus">
         <></>
       </ScreenWithAnimation>
     );
   }
-
+  // if (!isMyBibleDbLoaded) return null;
   const goBackOnHistory = (index: number) => {
     dispatch({ type: "GO_BACK", payload: index });
   };

@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { useStorage } from "@/context/LocalstoreContext";
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import useParams from "./useParams";
 import { HomeParams } from "@/types";
 
@@ -30,8 +30,7 @@ export const DEFAULT_VALUES = {
 
 export const useInitialState = (): InitialState => {
   const routeParams = useParams<HomeParams>();
-
-  const { storedData } = useStorage();
+  const storedData = storedData$.get();
 
   const initialState = useMemo(() => {
     return {

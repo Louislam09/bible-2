@@ -129,10 +129,6 @@ const BookList = React.memo(
 const ChooseBook: React.FC = () => {
   const navigation = useNavigation();
   const routeParam = useParams<ChooseChapterNumberParams>();
-  // const {
-  // saveData,
-  // storedData: { isShowName },
-  // } = useStorage();
   const isShowName = use$(() => storedData$.isShowName.get());
   const { book } = routeParam;
   const theme = useTheme();

@@ -8,7 +8,8 @@ import {
 } from "@/constants/Queries";
 import { showToast } from "@/utils/showToast";
 import { useDBContext } from "@/context/databaseContext";
-import { useStorage } from "@/context/LocalstoreContext";
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
+import { use$ } from "@legendapp/state/react";
 
 type StreakDay = { label: string; date: string; active: boolean; id: number };
 
@@ -26,10 +27,9 @@ export const useStreak = (): Streak => {
   const [bestStreak, setBestStreak] = useState(0);
   const [days, setDays] = useState<StreakDay[]>([]);
   const { myBibleDB, executeSql } = useDBContext();
-  const {
-    saveData,
-    storedData: { deleteLastStreakNumber },
-  } = useStorage();
+  const deleteLastStreakNumber = use$(() =>
+    storedData$.deleteLastStreakNumber.get()
+  );
 
   useEffect(() => {
     if (!myBibleDB || !executeSql) return;
@@ -141,7 +141,7 @@ export const useStreak = (): Streak => {
     try {
       if (!myBibleDB || !executeSql) return;
       await executeSql(DELETE_LAST_STREAK, []);
-      saveData({ deleteLastStreakNumber: 0 });
+      storedData$.deleteLastStreakNumber.set(0);
       refreshStreak();
     } catch (error) {
       console.warn("Error resetting streak:", error);

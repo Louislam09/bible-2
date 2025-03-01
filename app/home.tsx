@@ -58,7 +58,7 @@ interface TutorialStep {
 type HomeScreenProps = {};
 
 const HomeScreen: React.FC<HomeScreenProps> = () => {
-  console.log(`🏠 HomeScreen Component Rendered`);
+  // console.log(`🏠 HomeScreen Component Rendered`);
   const navigation = useNavigation();
   const theme = useTheme();
   const { orientation } = useBibleContext();

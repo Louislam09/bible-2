@@ -2,7 +2,8 @@ import { useState, useCallback } from "react";
 import * as Speech from "expo-speech";
 import Voices from "@/constants/Voices";
 import { SpeechVoice } from "@/types";
-import { useStorage } from "@/context/LocalstoreContext";
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
+import { use$ } from "@legendapp/state/react";
 
 type UseTextToSpeech = {
   speak: (
@@ -19,9 +20,9 @@ type UseTextToSpeechProps = {};
 
 export const useTextToSpeech = ({}: UseTextToSpeechProps): UseTextToSpeech => {
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
-  const {
-    storedData: { currentVoiceIdentifier },
-  } = useStorage();
+  const currentVoiceIdentifier = use$(() =>
+    storedData$.currentVoiceIdentifier.get()
+  );
 
   const speak = useCallback(
     (

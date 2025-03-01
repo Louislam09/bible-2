@@ -175,7 +175,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   const isTop = !isSplit && !isBottomBibleSearching;
 
   const hasTitle = useMemo(
-    () => !item.subheading.includes(null as any),
+    () => item.subheading && !item.subheading?.includes(null as any),
     [item]
   );
 

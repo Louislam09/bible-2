@@ -19,7 +19,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const { orientation } = useBibleContext();
   const isPortrait = orientation === "PORTRAIT";
   const isDataLoading = use$(() => bibleState$.isDataLoading.top.get());
-  console.log(`🔝 BibleTop Component Rendered 🔄:${isDataLoading} `);
+  // console.log(`🔝 BibleTop Component Rendered 🔄:${isDataLoading} `);
 
   const isSplitActived = bibleState$.isSplitActived.get();
   const {

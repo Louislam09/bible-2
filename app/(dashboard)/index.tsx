@@ -6,7 +6,7 @@ import { Text, View } from "@/components/Themed";
 import VoiceList from "@/components/VoiceList";
 import VersionList from "@/components/home/header/VersionList";
 import { useBibleContext } from "@/context/BibleContext";
-import { useStorage } from "@/context/LocalstoreContext";
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { bibleState$ } from "@/state/bibleState";
 import { EBibleVersions, Screens, TTheme } from "@/types";
 import isWithinTimeframe from "@/utils/isWithinTimeframe";
@@ -18,6 +18,7 @@ import React, { useCallback, useMemo, useRef } from "react";
 import { StyleSheet, ToastAndroid, useWindowDimensions } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import SecondDashboard from "../../components/new-dashboard";
+import { use$ } from "@legendapp/state/react";
 
 export type IDashboardOption = {
   icon: IconProps["name"];
@@ -49,7 +50,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
   } = useBibleContext();
   const theme = useTheme();
 
-  const { storedData } = useStorage();
+  const storedData = use$(() => storedData$.get());
   const voiceBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const currentModalOpenRef = useRef<any>(null);
@@ -289,9 +290,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
 };
 
 const MyDashboard = () => {
-  const {
-    storedData: { isGridLayout },
-  } = useStorage();
+  const isGridLayout = use$(() => storedData$.isGridLayout.get());
   return !isGridLayout ? <SecondDashboard /> : <Dashboard />;
 };
 

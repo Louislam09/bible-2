@@ -4,7 +4,7 @@ import MainSection from "@/components/new-dashboard/MainSection";
 import StudyTools from "@/components/new-dashboard/StudyTools";
 import StatusBarBackground from "@/components/StatusBarBackground";
 import { useBibleContext } from "@/context/BibleContext";
-import { useStorage } from "@/context/LocalstoreContext";
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";
 import isWithinTimeframe from "@/utils/isWithinTimeframe";
@@ -33,7 +33,7 @@ const SecondDashboard = () => {
     selectBibleVersion,
     historyManager: { getCurrentItem },
   } = useBibleContext();
-  const { storedData } = useStorage();
+  const storedData = storedData$.get();
 
   const {
     lastBook,

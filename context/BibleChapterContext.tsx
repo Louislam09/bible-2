@@ -31,18 +31,16 @@ interface PersistChapterDataParams {
 }
 
 const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
-  const { executeSql, isMyBibleDbLoaded } = useDBContext();
-  // const {
-  //   storedData: { currentBibleVersion },
-  // } = useStorage();
+  const { executeSql, isMyBibleDbLoaded, myBibleDB } = useDBContext();
+
   const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
-  const {
-    historyManager: { add: addToHistory },
-  } = useBibleContext();
   const shouldFetch = use$(() => bibleState$.bibleQuery.shouldFetch.get());
   const currentItem = historyState$.getCurrentItem();
 
-  console.log(`🥳 BibleChapterProvider 🥳 sf:${shouldFetch}`, currentItem);
+  // console.log(
+  //   `🥳 BibleChapterProvider 🥳 sf:${shouldFetch}`,
+  //   currentBibleVersion
+  // );
 
   const addHistoryItem = (book: string, chapter: number, verse: number) => {
     historyState$.addToHistory({ book, chapter, verse });
@@ -82,9 +80,9 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
       const endTime = Date.now();
       const executionTime = endTime - startTime;
 
-      console.log(
-        `📚 ${targetBook} ${targetChapter}:${targetVerse} in ${executionTime} ms. ${verses.length}`
-      );
+      // console.log(
+      //   `📚 ${targetBook} ${targetChapter}:${targetVerse} in ${executionTime} ms. ${verses.length}`
+      // );
 
       batch(() => {
         storedData$[`${storageKey}Book`].set(targetBook);
@@ -95,7 +93,6 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
         bibleState$.isDataLoading[bibleKey].set(false);
         bibleState$.bibleQuery.shouldFetch.set(false);
         addHistoryItem(targetBook, targetChapter, targetVerse);
-        console.log("✅ Data Fetched ✅");
         console.log("✅✅✅✅✅✅✅✅✅");
       });
     } catch (error) {

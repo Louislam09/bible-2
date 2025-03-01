@@ -3,8 +3,9 @@ import * as SQLite from "expo-sqlite";
 import useInstalledBibles, { VersionItem } from "@/hooks/useInstalledBible";
 import React, { createContext, useContext, useEffect, useMemo } from "react";
 import useDatabase from "../hooks/useDatabase";
-import { useStorage } from "./LocalstoreContext";
+import { storedData$, useStorage } from "./LocalstoreContext";
 import useDB from "@/hooks/useDB";
+import { use$ } from "@legendapp/state/react";
 
 interface Row {
   [key: string]: any;

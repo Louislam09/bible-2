@@ -11,7 +11,7 @@ import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import { useBibleContext } from "@/context/BibleContext";
-import { useStorage } from "@/context/LocalstoreContext";
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { useCustomTheme } from "@/context/ThemeContext";
 import { settingState$ } from "@/state/settingState";
 import { EThemes, RootStackScreenProps, TFont, TTheme } from "@/types";
@@ -74,12 +74,9 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
     fontSize,
     selectedFont,
   } = useBibleContext();
-  const { toggleTheme, schema } = useCustomTheme();
+  const { toggleTheme } = useCustomTheme();
   const styles = getStyles(theme);
-  const {
-    storedData: { isGridLayout },
-    saveData,
-  } = useStorage();
+  const isGridLayout = use$(() => storedData$.isGridLayout.get());
 
   const appVersion = Constants.expoVersion ?? Constants.nativeAppVersion;
   const isAnimationDisabled = use$(() =>
@@ -179,7 +176,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
   }, [theme]);
 
   const toggleHomeScreen = () => {
-    saveData({ isGridLayout: !isGridLayout });
+    storedData$.isGridLayout.set(!isGridLayout);
   };
 
   const sections = useMemo(() => {

@@ -2,12 +2,12 @@ import DecoratorLine from "@/components/DecoratorLine";
 import Icon from "@/components/Icon";
 import { iconSize } from "@/constants/size";
 import { useDBContext } from "@/context/databaseContext";
-import { useStorage } from "@/context/LocalstoreContext";
-import { DBName } from "enums";
+import { storedData$ } from "@/context/LocalstoreContext";
+import { DBName } from "@/enums";
 import { deleteDatabaseFile } from "@/hooks/useDatabase";
+import { EBibleVersions, TTheme } from "@/types";
 import React, { FC } from "react";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
-import { EBibleVersions, TTheme } from "@/types";
 import { Text, View } from "../../Themed";
 
 interface IVersionList {
@@ -29,9 +29,7 @@ const VersionList: FC<IVersionList> = ({
 }) => {
   const styles = getStyles(theme);
   const { installedBibles } = useDBContext();
-  const {
-    storedData: { fontSize },
-  } = useStorage();
+  const fontSize = storedData$.fontSize.get();
 
   const dbNameList = installedBibles || [];
 

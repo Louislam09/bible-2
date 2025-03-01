@@ -1,16 +1,16 @@
-import { useStorage } from '@/context/LocalstoreContext';
-import { TSongItem, TTheme } from '@/types';
-import { useTheme } from '@react-navigation/native';
-import { LinearGradient } from 'expo-linear-gradient';
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
+import { TSongItem, TTheme } from "@/types";
+import { useTheme } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import {
   Animated,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-} from 'react-native';
-import { Text, View } from './Themed';
+} from "react-native";
+import { Text, View } from "./Themed";
 
 type SongViewer = {
   song: TSongItem;
@@ -18,7 +18,7 @@ type SongViewer = {
 
 const SongViewer = ({ song }: SongViewer) => {
   const { title, chorus, stanzas } = song;
-  const scrollViewRef = useRef<ScrollView>(null)
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -27,8 +27,7 @@ const SongViewer = ({ song }: SongViewer) => {
   const slideAnim = useRef(new Animated.Value(50)).current;
   const hasChorus = !!song?.chorus;
   const [isChorus, setIsChorus] = useState(false);
-  const { storedData } = useStorage();
-  const { songFontSize } = storedData;
+  const songFontSize = storedData$.songFontSize.get();
 
   useEffect(() => {
     animateTransition();
@@ -77,7 +76,7 @@ const SongViewer = ({ song }: SongViewer) => {
 
   const renderContent = () => {
     const verse = stanzas[currentVerseIndex];
-    const verseText = verse.replace(/^\(\d+\)\s*/, '');
+    const verseText = verse.replace(/^\(\d+\)\s*/, "");
 
     return (
       <Animated.View
@@ -97,7 +96,7 @@ const SongViewer = ({ song }: SongViewer) => {
                 onPress={() => {}}
                 style={[styles.verseText, { fontSize: songFontSize }]}
               >
-                {chorus?.split('\n').map((line, i) => (
+                {chorus?.split("\n").map((line, i) => (
                   <Text
                     onPress={() => {}}
                     key={`chorus-${i}`}
@@ -109,7 +108,7 @@ const SongViewer = ({ song }: SongViewer) => {
                     }}
                   >
                     {line}
-                    {i < chorus.split('\n').length - 1 ? '\n' : ''}
+                    {i < chorus.split("\n").length - 1 ? "\n" : ""}
                   </Text>
                 ))}
               </Text>
@@ -119,7 +118,7 @@ const SongViewer = ({ song }: SongViewer) => {
               onPress={() => {}}
               style={[styles.verseText, { fontSize: songFontSize }]}
             >
-              {verseText.split('\n').map((line, i) => (
+              {verseText.split("\n").map((line, i) => (
                 <Text
                   onPress={() => {}}
                   key={`verse-${i}`}
@@ -131,7 +130,7 @@ const SongViewer = ({ song }: SongViewer) => {
                   }}
                 >
                   {line}
-                  {i < verseText.split('\n').length - 1 ? '\n' : ''}
+                  {i < verseText.split("\n").length - 1 ? "\n" : ""}
                 </Text>
               ))}
             </Text>
@@ -173,8 +172,8 @@ const SongViewer = ({ song }: SongViewer) => {
                 styles.navButtonText,
                 currentVerseIndex === 0 &&
                   !isChorus &&
-                styles.navButtonDisabled,
-                { color: theme.colors.text.includes('FFF') ? '#000' : '#fff' },
+                  styles.navButtonDisabled,
+                { color: theme.colors.text.includes("FFF") ? "#000" : "#fff" },
               ]}
             >
               Anterior
@@ -213,58 +212,58 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     titleGradient: {
       padding: 20,
-      alignItems: 'center',
+      alignItems: "center",
     },
     title: {
       fontSize: 24,
-      fontWeight: 'bold',
-      color: '#ffffff',
-      textAlign: 'center',
-      textShadowColor: 'rgba(0, 0, 0, 0.2)',
+      fontWeight: "bold",
+      color: "#ffffff",
+      textAlign: "center",
+      textShadowColor: "rgba(0, 0, 0, 0.2)",
       textShadowOffset: { width: 1, height: 1 },
       textShadowRadius: 2,
       marginBottom: 10,
     },
     fontControls: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: "rgba(255, 255, 255, 0.2)",
       borderRadius: 8,
       padding: 4,
     },
     fontButton: {
       padding: 8,
       borderRadius: 4,
-      backgroundColor: 'rgba(255, 255, 255, 0.3)',
+      backgroundColor: "rgba(255, 255, 255, 0.3)",
       marginHorizontal: 8,
     },
     fontButtonText: {
-      color: '#ffffff',
+      color: "#ffffff",
       fontSize: 16,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     fontSizeText: {
-      color: '#ffffff',
+      color: "#ffffff",
       fontSize: 16,
       marginHorizontal: 8,
     },
     contentContainer: {
-      overflow: 'hidden',
+      overflow: "hidden",
       flex: 1,
     },
     contentGradient: {
       padding: 16,
-      height: '100%',
+      height: "100%",
     },
     verseNumber: {
-      fontWeight: 'bold',
+      fontWeight: "bold",
       marginBottom: 16,
       color: colors.notification,
       fontSize: 14,
     },
     verseText: {
       // lineHeight: 28,
-      color: '#495057',
+      color: "#495057",
       marginBottom: 24,
     },
     chorusAfterVerse: {
@@ -272,28 +271,28 @@ const getStyles = ({ colors, dark }: TTheme) =>
       // paddingTop: 16,
     },
     chorusLabel: {
-      fontWeight: 'bold',
+      fontWeight: "bold",
       color: colors.notification,
       fontSize: 16,
       marginBottom: 8,
-      textAlign: 'center',
+      textAlign: "center",
     },
     chorusText: {
       lineHeight: 28,
-      fontStyle: 'italic',
-      color: '#495057',
-      textAlign: 'center',
+      fontStyle: "italic",
+      color: "#495057",
+      textAlign: "center",
     },
     navigationContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      justifyContent: "space-between",
       padding: 16,
       backgroundColor: colors.background,
     },
     navButton: {
       padding: 12,
       borderRadius: 8,
-      width: '45%',
+      width: "45%",
     },
     prevButton: {
       backgroundColor: colors.text,
@@ -302,10 +301,10 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: colors.notification,
     },
     navButtonText: {
-      textAlign: 'center',
-      fontWeight: 'bold',
+      textAlign: "center",
+      fontWeight: "bold",
       fontSize: 16,
-      color: '#FFF',
+      color: "#FFF",
     },
     navButtonDisabled: {
       opacity: 0.4,

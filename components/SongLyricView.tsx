@@ -1,5 +1,5 @@
 import { useBibleContext } from "@/context/BibleContext";
-import { useStorage } from "@/context/LocalstoreContext";
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import React, { FC, useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -12,6 +12,7 @@ import ProgressBar from "./home/footer/ProgressBar";
 import Icon from "./Icon";
 import SwipeWrapper from "./SwipeWrapper";
 import { Text, View } from "./Themed";
+import { use$ } from "@legendapp/state/react";
 
 type Song = {
   title: string;
@@ -32,10 +33,8 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
   const [isChorus, setIsChorus] = useState(false);
   const translateX = useRef(new Animated.Value(0)).current;
   const { orientation } = useBibleContext();
-  const {
-    saveData,
-    storedData: { songFontSize },
-  } = useStorage();
+  const songFontSize = use$(() => storedData$.songFontSize.get());
+
   const animateFontSize = useRef(
     new Animated.Value(songFontSize || 21)
   ).current;
@@ -125,16 +124,14 @@ const SongLyricView: FC<TSongLyricView> = ({ song, theme }) => {
   };
 
   const increaseFont = () => {
-    const value = Math.min(
-      50,
-      Math.max(21, (animateFontSize as any)?._value + 2)
-    );
-    saveData({ songFontSize: value });
+    const maxValue = Math.max(21, (animateFontSize as any)?._value + 2);
+    const value = Math.min(50, maxValue);
+    storedData$.songFontSize.set(value);
     animateFont(value);
   };
   const decreaseFont = () => {
     const value = Math.max(21, (animateFontSize as any)?._value - 2);
-    saveData({ songFontSize: value });
+    storedData$.songFontSize.set(value);
     animateFont(value);
   };
 

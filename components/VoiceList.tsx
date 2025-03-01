@@ -1,6 +1,6 @@
 import { iconSize } from "@/constants/size";
 import Voices from "@/constants/Voices";
-import { useStorage } from "@/context/LocalstoreContext";
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import Checkbox from "expo-checkbox";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import React, { FC, useEffect, useRef, useState } from "react";
@@ -119,10 +119,8 @@ const VoiceItem = ({
 };
 
 const VoiceList: FC<IVoiceList> = ({ theme, shouldPlay = true }) => {
-  const {
-    saveData,
-    storedData: { currentVoiceIdentifier },
-  } = useStorage();
+  const currentVoiceIdentifier = storedData$.currentVoiceIdentifier.get();
+  const fontSize = storedData$.fontSize.get();
   const voices = Voices;
   const currentVoice = voices.find(
     (voice) =>
@@ -132,9 +130,6 @@ const VoiceList: FC<IVoiceList> = ({ theme, shouldPlay = true }) => {
   const [tab, setTab] = useState<string>("masculina");
   const { isSpeaking, speak, stop } = useTextToSpeech({});
   const styles = getStyles(theme);
-  const {
-    storedData: { fontSize },
-  } = useStorage();
 
   const text = `Génesis 1 1.
  En el principio creo dios los cielos y la tierra.`;
@@ -152,7 +147,7 @@ const VoiceList: FC<IVoiceList> = ({ theme, shouldPlay = true }) => {
     }
     if (isSpeaking) stop();
     setSelectedVoice(voice);
-    saveData({ currentVoiceIdentifier: voice.identifier });
+    storedData$.currentVoiceIdentifier.set(voice.identifier);
     if (!shouldPlay && !play) return;
     speak(text, voice, 1);
   };

@@ -2,7 +2,7 @@ import DAILY_VERSES from "@/constants/dailyVerses";
 import { GET_DAILY_VERSE } from "@/constants/Queries";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
-import { useStorage } from "@/context/LocalstoreContext";
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, Screens, TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
@@ -12,6 +12,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "../Icon";
 import { Text, View } from "../Themed";
+import { use$ } from "@legendapp/state/react";
 
 const defaultDailyVerse = {
   book_number: 0,
@@ -42,17 +43,17 @@ type DailyVerseProps = {
 
 const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
   const navigation = useNavigation();
-  const { saveData } = useStorage();
-  const { executeSql, myBibleDB } = useDBContext();
+  const { executeSql, myBibleDB, isMyBibleDbLoaded } = useDBContext();
   const [countPress, setCountPres] = useState(0);
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(
     dailyVerseObject || defaultDailyVerse
   );
-  const { currentBibleVersion } = useBibleContext();
+  const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
   const styles = getStyles(theme);
   const isDefaultVerse = dailyVerseObject?.bookName;
 
   useEffect(() => {
+    if (!isMyBibleDbLoaded) return;
     if (!myBibleDB || !executeSql) return;
     if (isDefaultVerse) return;
     const currentDate: any = new Date();
@@ -63,17 +64,17 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
       DAILY_VERSES[dayPassed] || defaultDailyObject;
     (async () => {
       try {
-        const response: any = await executeSql(GET_DAILY_VERSE, [
-          book_number,
-          chapter,
-          verse,
-        ]);
+        const response: any = await executeSql(
+          GET_DAILY_VERSE,
+          [book_number, chapter, verse],
+          "GET_DAILY_VERSE2"
+        );
         setDailyVerse(response?.length ? response?.[0] : defaultDailyVerse);
       } catch (error) {
         console.log(error);
       }
     })();
-  }, [currentBibleVersion, myBibleDB, dailyVerseObject]);
+  }, [isMyBibleDbLoaded, myBibleDB, dailyVerseObject]);
 
   useEffect(() => {
     setCountPres(0);
@@ -91,9 +92,8 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
       return;
     }
 
-    if (saveData) {
-      saveData({ isSongLyricEnabled: true });
-    }
+    storedData$.isSongLyricEnabled.set(true);
+
     showToast(MESSAGES.success);
   };
 
