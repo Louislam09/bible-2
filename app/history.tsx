@@ -10,7 +10,7 @@ import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -22,8 +22,13 @@ const HistoryScreen = () => {
   const theme = useTheme();
   const styles = getStyles(theme);
   const { historyManager } = useBibleContext();
-  const { clear, history, isHistoryInitialized, deleteOne } = historyManager;
+  const { clear, history, isHistoryInitialized, deleteOne, loadHistory } =
+    historyManager;
   const router = useRouter();
+
+  useEffect(() => {
+    loadHistory();
+  }, []);
 
   const clearHistory = async () => {
     Alert.alert(
@@ -123,7 +128,7 @@ const HistoryScreen = () => {
 
           <FlashList
             data={history.reverse()}
-            keyExtractor={(item) => (item.id as number).toString()}
+            keyExtractor={(item, index) => `history:${index}`}
             renderItem={renderItem}
             estimatedItemSize={60}
             ListEmptyComponent={() => (

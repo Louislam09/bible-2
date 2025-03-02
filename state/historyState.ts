@@ -1,7 +1,6 @@
 import { observable } from "@legendapp/state";
 import { format } from "date-fns";
 
-// Create the observable state for managing history
 export const historyState$ = observable({
   history: [] as {
     id?: number;

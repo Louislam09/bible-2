@@ -29,14 +29,25 @@ interface HeaderInterface {}
 
 const BibleHeader: FC<HeaderInterface> = ({}) => {
   const { width } = useWindowDimensions();
-  const { currentBibleVersion, selectBibleVersion, historyManager } =
-    useBibleContext();
+  const {
+    currentBibleVersion,
+    selectBibleVersion,
+    historyManager,
+    goBackOnHistory,
+    goForwardOnHistory,
+  } = useBibleContext();
 
   const isSplitActived = use$(() => bibleState$.isSplitActived.get());
   const verses = use$(() => bibleState$.bibleData.topVerses.get());
-  const currentHistoryIndex = use$(() => bibleState$.currentHistoryIndex.get());
+  // const currentHistoryIndex = use$(() => bibleState$.currentHistoryIndex.get());
 
-  const { goBack, goForward, history, getCurrentItem } = historyManager;
+  const {
+    goBack,
+    goForward,
+    history,
+    getCurrentItem,
+    currentIndex: currentHistoryIndex,
+  } = historyManager;
 
   const params = useParams<HomeParams>();
   const { book } = params;
@@ -69,36 +80,46 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
     navigation.navigate(Screens.Search, { Book: book });
   };
 
+  // const moveBackInHistory = () => {
+  //   const index = goBack();
+  //   if (index === -1) return;
+  //   const currentHistory = getCurrentItem() as any;
+  //   if (!currentHistory) return;
+  //   bibleState$.handleCurrentHistoryIndex(index);
+  //   delete currentHistory.created_at;
+  //   delete currentHistory.id;
+
+  //   bibleState$.changeBibleQuery({
+  //     ...currentHistory,
+  //     isHistory: true,
+  //     shouldFetch: true,
+  //   });
+  // };
+
+  // const moveForwardInHistory = () => {
+  //   const index = goForward();
+  //   if (index === -1) return;
+  //   const currentHistory = getCurrentItem() as any;
+  //   if (!currentHistory) return;
+  //   bibleState$.handleCurrentHistoryIndex(index);
+  //   delete currentHistory.created_at;
+  //   delete currentHistory.id;
+
+  //   bibleState$.changeBibleQuery({
+  //     ...currentHistory,
+  //     isHistory: true,
+  //     shouldFetch: true,
+  //   });
+  // };
+
   const moveBackInHistory = () => {
     const index = goBack();
-    if (index === -1) return;
-    const currentHistory = getCurrentItem() as any;
-    if (!currentHistory) return;
-    bibleState$.handleCurrentHistoryIndex(index);
-    delete currentHistory.created_at;
-    delete currentHistory.id;
-
-    bibleState$.changeBibleQuery({
-      ...currentHistory,
-      isHistory: true,
-      shouldFetch: true,
-    });
+    goBackOnHistory?.(index);
   };
 
   const moveForwardInHistory = () => {
     const index = goForward();
-    if (index === -1) return;
-    const currentHistory = getCurrentItem() as any;
-    if (!currentHistory) return;
-    bibleState$.handleCurrentHistoryIndex(index);
-    delete currentHistory.created_at;
-    delete currentHistory.id;
-
-    bibleState$.changeBibleQuery({
-      ...currentHistory,
-      isHistory: true,
-      shouldFetch: true,
-    });
+    goForwardOnHistory?.(index);
   };
 
   const headerIconData = useMemo(() => {

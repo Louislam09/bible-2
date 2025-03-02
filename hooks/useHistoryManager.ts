@@ -21,6 +21,7 @@ export type HistoryManager = {
   deleteOne: (id: number) => Promise<void>;
   getHistory: () => HistoryItem[];
   updateVerse: (newVerse: number) => void;
+  loadHistory: () => Promise<void>;
   history: HistoryItem[];
   isHistoryInitialized: boolean;
   currentIndex: number;
@@ -39,6 +40,7 @@ const useHistoryManager = (): HistoryManager => {
   }, [isMyBibleDbLoaded]);
 
   const loadHistory = useCallback(async () => {
+    console.log("loadHistory");
     try {
       const results = await executeSql<HistoryItem>(
         historyQuery.GET_ALL,
@@ -185,6 +187,7 @@ const useHistoryManager = (): HistoryManager => {
       getCurrentIndex,
       updateVerse,
       currentIndex: getCurrentIndex(),
+      loadHistory,
     }),
     [
       {
@@ -200,6 +203,7 @@ const useHistoryManager = (): HistoryManager => {
         getCurrentIndex,
         updateVerse,
         currentIndex: getCurrentIndex(),
+        loadHistory,
       },
     ]
   );

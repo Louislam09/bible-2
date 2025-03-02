@@ -2,46 +2,34 @@ import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { getDatabaseQueryKey } from "@/constants/databaseNames";
 import { QUERY_BY_DB } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
-import { storedData$, useStorage } from "@/context/LocalstoreContext";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { bibleState$, getReadingTime } from "@/state/bibleState";
 import { IBookVerse } from "@/types";
-import { batch, observable } from "@legendapp/state";
+import { batch } from "@legendapp/state";
 import { use$ } from "@legendapp/state/react";
 import React, {
   createContext,
   ReactNode,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
-  useState,
 } from "react";
 import { useBibleContext } from "./BibleContext";
-import { historyState$ } from "@/state/historyState";
 
 interface BibleChapterContextProps {}
 
 const BibleChapterContext = createContext<BibleChapterContextProps>({});
-interface PersistChapterDataParams {
-  targetBook: string;
-  targetChapter: number;
-  targetVerse: number;
-  isBibleBottom: boolean;
-  isHistory: boolean;
-}
 
 const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
   const { executeSql, isMyBibleDbLoaded } = useDBContext();
 
   const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
+  const isSplitActived = use$(() => bibleState$.isSplitActived.get());
   const shouldFetch = use$(() => bibleState$.bibleQuery.shouldFetch.get());
-  // const currentItem = historyState$.getCurrentItem();
   const {
-    historyManager: { add: addToHistory },
+    historyManager: { add: addToHistory, getCurrentItem },
+    currentHistoryIndex,
   } = useBibleContext();
-  // const addHistoryItem = (book: string, chapter: number, verse: number) => {
-  //   historyState$.addToHistory({ book, chapter, verse });
-  // };
 
   const fetchChapter = async () => {
     const bibleQuery = bibleState$.bibleQuery.get();
@@ -108,6 +96,19 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
       });
     }
   };
+
+  useEffect(() => {
+    if (isSplitActived) return;
+    if (currentHistoryIndex === -1) return;
+    console.log("searching history");
+    const currentHistory = getCurrentItem();
+    if (!currentHistory) return;
+    bibleState$.changeBibleQuery({
+      ...currentHistory,
+      isHistory: true,
+      shouldFetch: true,
+    });
+  }, [currentHistoryIndex]);
 
   useEffect(() => {
     if (!isMyBibleDbLoaded) return;

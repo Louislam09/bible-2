@@ -20,6 +20,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const isPortrait = orientation === "PORTRAIT";
   const isDataLoading = use$(() => bibleState$.isDataLoading.top.get());
   // console.log(`🔝 BibleTop Component Rendered 🔄:${isDataLoading} `);
+  const verses = bibleState$.bibleData.topVerses.get() ?? [];
 
   const isSplitActived = bibleState$.isSplitActived.get();
   const {
@@ -33,10 +34,10 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     chapter,
   });
 
-  // const initialScrollIndex = useMemo(
-  //   () => Math.min(verse - 1, verses.length - 1),
-  //   [verse, verses]
-  // );
+  const initialScrollIndex = useMemo(() => {
+    if (verse <= 0) return 0;
+    return Math.min(verse - 1, Math.max(0, verses.length - 1));
+  }, [verse, verses]);
 
   const onSwipeRight = () => {
     previousChapter();
@@ -67,10 +68,12 @@ const BibleTop: FC<BibleTopProps> = (props) => {
           <ActivityIndicator />
         ) : (
           <Chapter
-            verses={[]}
+            verses={verses}
             verse={verse || 1}
             estimatedReadingTime={0}
-            initialScrollIndex={verse === 1 ? 0 : verse || 1}
+            initialScrollIndex={
+              initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
+            }
           />
         )}
       </SwipeWrapper>

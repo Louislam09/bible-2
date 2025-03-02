@@ -22,8 +22,7 @@ const Chapter = ({
   initialScrollIndex,
 }: TChapter) => {
   const bibleSide = isSplit ? "bottom" : "top";
-  const data = bibleState$.bibleData[`${bibleSide}Verses`].get() ?? [];
-  const _initialScrollIndex = Math.min(initialScrollIndex, data.length);
+  const data = verses ?? [];
 
   const { width, height } = useWindowDimensions();
   const theme = useTheme();
@@ -36,9 +35,9 @@ const Chapter = ({
 
   const renderItem = useCallback(
     ({ item }: any) => (
-      <Verse item={item} isSplit={!!isSplit} initVerse={_initialScrollIndex} />
+      <Verse item={item} isSplit={!!isSplit} initVerse={initialScrollIndex} />
     ),
-    [isSplit, _initialScrollIndex]
+    [isSplit, initialScrollIndex]
   );
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
@@ -63,14 +62,14 @@ const Chapter = ({
   ]);
 
   useEffect(() => {
-    if (_initialScrollIndex !== topVerseRef.current && chapterRef.current) {
+    if (initialScrollIndex !== topVerseRef.current && chapterRef.current) {
       chapterRef.current?.scrollToIndex({
-        index: _initialScrollIndex,
+        index: initialScrollIndex,
         animated: true,
         viewPosition: 0,
       });
     }
-  }, [_initialScrollIndex]);
+  }, [initialScrollIndex]);
 
   const ListHeader = useCallback(() => {
     return (
@@ -105,7 +104,7 @@ const Chapter = ({
           ListEmptyComponent={() => (
             <LoadingComponent textColor={theme.colors.text} />
           )}
-          initialScrollIndex={_initialScrollIndex}
+          initialScrollIndex={initialScrollIndex}
           viewabilityConfigCallbackPairs={
             viewabilityConfigCallbackPairs.current
           }
