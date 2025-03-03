@@ -1,3 +1,4 @@
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
 import MyRichEditor from "@/components/RichTextEditor";
 import { Text, View } from "@/components/Themed";
@@ -246,8 +247,9 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
       setViewMode("EDIT");
       setHasUnsavedChanges(true);
     }
-
-    const contentToAdd = `<br> <div>${selectedVerseForNote}</div><br>`;
+    const contentToAdd = selectedVerseForNote
+      ? `<br> <div>${selectedVerseForNote}</div><br>`
+      : "";
     const myContent = `${noteInfo?.note_text || ""} ${contentToAdd}`;
     setNoteContent({
       title: noteInfo?.title || "",
@@ -291,6 +293,21 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
     setViewMode("EDIT");
   };
 
+  const onShare = () => {
+    const html = htmlTemplate(
+      [
+        {
+          definition: noteInfo?.note_text,
+          topic: noteInfo?.title,
+        },
+      ],
+      theme.colors,
+      10,
+      true
+    );
+    printToFile(html, noteInfo?.title?.toUpperCase() || "--");
+  };
+
   if (isLoading) {
     return (
       <View style={styles.activiyContainer}>
@@ -303,32 +320,18 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          headerShown: true,
-          headerRight: () => (
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <TouchableOpacity onPress={() => console.log()}>
-                <Icon
-                  style={styles.icon}
-                  name="Share2"
-                  size={24}
-                  onPress={() => {
-                    const html = htmlTemplate(
-                      [
-                        {
-                          definition: noteInfo?.note_text,
-                          topic: noteInfo?.title,
-                        },
-                      ],
-                      theme.colors,
-                      10,
-                      true
-                    );
-                    printToFile(html, noteInfo?.title?.toUpperCase() || "--");
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
-          ),
+          ...singleScreenHeader({
+            theme,
+            title: "",
+            titleIcon: "NotebookPen",
+            headerRightProps: {
+              headerRightIconColor: theme.colors.primary,
+              headerRightIcon: "Share2",
+              onPress: onShare,
+              disabled: false,
+              style: { opacity: 1 },
+            },
+          }),
         }}
       />
       <View

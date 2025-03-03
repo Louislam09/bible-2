@@ -17,6 +17,7 @@ type SingleScreenHeaderProps = {
   title: string;
   titleIcon: keyof typeof icons;
   titleIconColor?: string;
+  mainIconSize?: number;
   headerRightProps: {
     headerRightIcon?: keyof typeof icons;
     headerRightIconColor: string;
@@ -34,6 +35,7 @@ export const singleScreenHeader = ({
   titleIcon,
   titleIconColor,
   headerRightProps,
+  mainIconSize,
 }: SingleScreenHeaderProps) => {
   const styles = {
     headerTitle: {
@@ -75,7 +77,7 @@ export const singleScreenHeader = ({
         <Icon
           name={titleIcon}
           color={titleIconColor || theme.colors.notification}
-          size={headerIconSize}
+          size={mainIconSize || headerIconSize}
         />
         <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 22 }}>
           {title}

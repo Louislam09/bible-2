@@ -135,7 +135,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
     },
     {
       icon: "Brain",
-      label: "Momorizar",
+      label: "Memorizar",
       action: () => navigation.navigate(Screens.MemorizeVerse),
       color: "#f1abab",
       isNew: isWithinTimeframe("3d", new Date("2025-01-30")).isActive,

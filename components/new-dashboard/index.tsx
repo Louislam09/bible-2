@@ -86,7 +86,6 @@ const SecondDashboard = () => {
       label: "Santa Escritura",
       action: () => navigation.navigate(Screens.Home, homePageInitParams),
       tag: "crown-outline",
-      // longAction: () => navigation.navigate(Screens.History),
     },
     {
       icon: "Music4",
@@ -145,7 +144,7 @@ const SecondDashboard = () => {
     },
     {
       icon: "Brain",
-      label: "Momorizar",
+      label: "Memorizar",
       action: () => navigation.navigate(Screens.MemorizeVerse),
       color: "#f1abab",
       isNew: isWithinTimeframe("1w", new Date("2025-02-04")).isActive,

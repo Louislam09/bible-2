@@ -196,7 +196,9 @@ const CurrentNoteDetail: React.FC<any> = ({}) => {
 
   const addTextToNote = useCallback(() => {
     const isEditMode = !!selectedVerseForNote;
-    const contentToAdd = `<br> <div>${selectedVerseForNote}</div><br>`;
+    const contentToAdd = selectedVerseForNote
+      ? `<br> <div>${selectedVerseForNote}</div><br>`
+      : "";
     const myContent = `${noteInfo?.note_text || ""} ${contentToAdd}`;
     setNoteContent({
       title: noteInfo?.title || "",
