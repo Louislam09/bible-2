@@ -127,7 +127,7 @@ const HistoryScreen = () => {
           />
 
           <FlashList
-            data={history.reverse()}
+            data={history}
             keyExtractor={(item, index) => `history:${index}`}
             renderItem={renderItem}
             estimatedItemSize={60}

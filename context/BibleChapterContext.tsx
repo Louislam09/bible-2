@@ -84,7 +84,6 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
             verse: targetVerse,
             created_at: "",
           });
-        // addHistoryItem(targetBook, targetChapter, targetVerse);
         console.log("✅✅✅✅✅✅✅✅✅");
       });
     } catch (error) {

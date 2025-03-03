@@ -118,6 +118,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         bottomSideBook: storedData$.lastBottomSideBook.get(),
         bottomSideChapter: storedData$.lastBottomSideChapter.get(),
         bottomSideVerse: storedData$.lastBottomSideVerse.get(),
+        isHistory: true,
       });
       storedData$.isDataLoaded.set(true);
       setDataLoaded(true);

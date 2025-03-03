@@ -1,5 +1,6 @@
 import { historyQuery } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
+import { bibleState$ } from "@/state/bibleState";
 import { format } from "date-fns";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -106,6 +107,7 @@ const useHistoryManager = (): HistoryManager => {
           currentIndexRef.current = newHistory.length - 1;
           return newHistory || [];
         });
+        bibleState$.bibleQuery.isHistory.set(false);
       }
     } catch (error) {
       console.error("Error inserting history:", error);
