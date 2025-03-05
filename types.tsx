@@ -530,6 +530,65 @@ export enum QuestionDifficultyKey {
   easy = "Facil",
 }
 
+// LEARN GAME TYPES
+
+export type TrueFalseChallenge = {
+  id: number;
+  question: string;
+  type: "true_false";
+  answer: boolean;
+};
+
+export type MultipleChoiceChallenge = {
+  id: number;
+  question: string;
+  type: "multiple_choice";
+  options: string[];
+  answer: string;
+};
+
+export type FillInTheBlankChallenge = {
+  id: number;
+  question: string;
+  type: "fill_in_the_blank";
+  answer: string;
+};
+
+export type MemoryTaskChallenge = {
+  id: number;
+  question: string;
+  type: "memory_task";
+  hint: string;
+};
+
+export type DragAndDropChallenge = {
+  id: number;
+  question: string;
+  type: "drag_and_drop";
+  correct_order: string[];
+};
+
+export type Challenge =
+  | TrueFalseChallenge
+  | MultipleChoiceChallenge
+  | FillInTheBlankChallenge
+  | MemoryTaskChallenge
+  | DragAndDropChallenge;
+
+export type Lesson = {
+  id: number;
+  title: string;
+  activity: string;
+  challenges: Challenge[];
+};
+
+export type Unit = {
+  id: number;
+  title: string;
+  description: string;
+  lessons: Lesson[];
+};
+
 export enum SortOption {
   MostRecent = "Más reciente",
   LeastRecent = "Menos reciente",

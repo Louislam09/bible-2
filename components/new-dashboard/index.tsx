@@ -156,6 +156,14 @@ const SecondDashboard = () => {
       color: "#6de5cb",
       isNew: isWithinTimeframe("1w", new Date("2025-03-04")).isActive,
     },
+    {
+      icon: "Gamepad2",
+      label: "Aprender",
+      // @ts-ignore
+      action: () => navigation.navigate("learn", {}),
+      color: "#75d0fe",
+      isNew: isWithinTimeframe("1w", new Date("2025-03-04")).isActive,
+    },
   ];
 
   const versionRef = useRef<BottomSheetModal>(null);

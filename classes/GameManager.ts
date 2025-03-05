@@ -1,4 +1,4 @@
-import gameQuestion from '@/constants/gameQuestion';
+import gameQuestion from '@/constants/gameQuestions';
 import { Question, GameProgress, AnswerResult } from '@/types';
 import { generateLevels } from '@/utils/generateLevels';
 
