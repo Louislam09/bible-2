@@ -45,6 +45,7 @@ export enum Screens {
   NoteDetail = "noteDetail",
   History = "history",
   Hymn = "hymn",
+  Timeline = "timeline",
   Game = "(game)",
   ChooseGame = "chooseGame",
   MemorizeVerse = "memorization/memoryList",
@@ -79,6 +80,7 @@ export const ScreensName: TScreensName = {
   [Screens.VerseId]: "Versiculo",
   [Screens.ChallengeTypeId]: "Reto",
   [Screens.History]: "Historial",
+  [Screens.Timeline]: "Linea de tiempo",
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -132,6 +134,7 @@ export type RootStackParamList = {
     | ChooseChapterNumberParams;
   modal: undefined;
   onboarding: undefined;
+  timeline: undefined;
   "memorization/memoryList": undefined;
   song: { isAlegres: boolean };
   "(game)": { questionsPerLevel: number };

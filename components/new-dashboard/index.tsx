@@ -149,6 +149,13 @@ const SecondDashboard = () => {
       color: "#f1abab",
       isNew: isWithinTimeframe("1w", new Date("2025-02-04")).isActive,
     },
+    {
+      icon: "CalendarRange",
+      label: "Linea de tiempo",
+      action: () => navigation.navigate(Screens.Timeline),
+      color: "#6de5cb",
+      isNew: isWithinTimeframe("1w", new Date("2025-03-04")).isActive,
+    },
   ];
 
   const versionRef = useRef<BottomSheetModal>(null);

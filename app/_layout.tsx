@@ -55,6 +55,7 @@ const screenAnimations: TScreensName = {
   [Screens.VerseId]: "slide_from_bottom",
   [Screens.ChallengeTypeId]: "slide_from_left",
   [Screens.History]: "slide_from_bottom",
+  [Screens.Timeline]: "slide_from_bottom",
 };
 
 const App = () => {
@@ -99,33 +100,33 @@ const App = () => {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
-      <ScreenWithAnimation
+      {/* <ScreenWithAnimation
         isVisible={!isLoadingComplete}
         title="Santa Escritura"
         icon="BookPlus"
-      >
-        <StorageProvider>
-          <DatabaseProvider>
-            <BibleProvider>
-              <BibleChapterProvider>
-                <MemorizationProvider>
-                  <MyThemeProvider>
-                    <GestureHandlerRootView style={{ flex: 1 }}>
-                      <BottomSheetModalProvider>
-                        <StatusBar animated translucent style="auto" />
-                        <Stack
-                          initialRouteName="(dashboard)"
-                          screenOptions={screenOptions}
-                        />
-                      </BottomSheetModalProvider>
-                    </GestureHandlerRootView>
-                  </MyThemeProvider>
-                </MemorizationProvider>
-              </BibleChapterProvider>
-            </BibleProvider>
-          </DatabaseProvider>
-        </StorageProvider>
-      </ScreenWithAnimation>
+      > */}
+      <StorageProvider>
+        <DatabaseProvider>
+          <BibleProvider>
+            <BibleChapterProvider>
+              <MemorizationProvider>
+                <MyThemeProvider>
+                  <GestureHandlerRootView style={{ flex: 1 }}>
+                    <BottomSheetModalProvider>
+                      <StatusBar animated translucent style="auto" />
+                      <Stack
+                        initialRouteName="(dashboard)"
+                        screenOptions={screenOptions}
+                      />
+                    </BottomSheetModalProvider>
+                  </GestureHandlerRootView>
+                </MyThemeProvider>
+              </MemorizationProvider>
+            </BibleChapterProvider>
+          </BibleProvider>
+        </DatabaseProvider>
+      </StorageProvider>
+      {/* </ScreenWithAnimation> */}
     </ErrorBoundary>
   );
   // }
