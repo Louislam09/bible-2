@@ -19,6 +19,7 @@ type SingleScreenHeaderProps = {
   titleIconColor?: string;
   mainIconSize?: number;
   headerRightProps: {
+    fillColor?: string;
     headerRightIcon?: keyof typeof icons;
     headerRightIconColor: string;
     style?: StyleProp<ViewStyle>;
@@ -63,6 +64,7 @@ export const singleScreenHeader = ({
             name={headerRightProps.headerRightIcon}
             size={headerIconSize}
             color={headerRightProps.headerRightIconColor}
+            fillColor={headerRightProps.fillColor || ""}
           />
         )}
         {headerRightProps.headerRightText && (

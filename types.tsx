@@ -1,8 +1,3 @@
-/**
- * Learn more about using TypeScript with React Navigation:
- * https://reactnavigation.org/docs/typescript/
- */
-
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
@@ -14,7 +9,6 @@ import {
   Theme,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { IconProps } from "@/components/Icon";
 import { Router } from "expo-router";
 import { icons } from "lucide-react-native";
 import { RefObject } from "react";

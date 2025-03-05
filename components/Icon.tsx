@@ -14,6 +14,7 @@ export interface IconProps {
   strokeWidth?: LucideProps["size"];
   style?: StyleProp<ViewStyle>;
   onPress?: ((event: GestureResponderEvent) => void) | undefined;
+  fillColor?: ColorValue;
 }
 
 const Icon: React.FC<IconProps> = ({
@@ -23,6 +24,7 @@ const Icon: React.FC<IconProps> = ({
   style,
   strokeWidth,
   onPress,
+  fillColor,
 }) => {
   const LucideIcon: React.FC<LucideProps & { color?: ColorValue }> =
     icons[name];
@@ -34,6 +36,7 @@ const Icon: React.FC<IconProps> = ({
       color={color}
       size={size || 14}
       onPress={onPress}
+      fill={fillColor || "none"}
     />
   );
 };
