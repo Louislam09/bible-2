@@ -1,13 +1,48 @@
-import { StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import React from "react";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Stack } from "expo-router";
 import { useTheme } from "@react-navigation/native";
 import { Text, View } from "@/components/Themed";
+import Timeline from "react-native-timeline-flatlist";
+import oldTimeline from "@/constants/oldTimeline";
+
+const data = [
+  {
+    time: "09:00",
+    title: "Archery Training",
+    description:
+      "The Beginner Archery and Beginner Crossbow course does not require you to bring any equipment, since everything you need will be provided for the course. ",
+    circleColor: "#009688",
+    lineColor: "#009688",
+  },
+  {
+    time: "10:45",
+    title: "Play Badminton",
+    description:
+      "Badminton is a racquet sport played using racquets to hit a shuttlecock across a net.",
+  },
+  { time: "12:00", title: "Lunch" },
+  {
+    time: "14:00",
+    title: "Watch Soccer",
+    description:
+      "Team sport played between two teams of eleven players with a spherical ball. ",
+    lineColor: "#009688",
+  },
+  {
+    time: "16:30",
+    title: "Go to Fitness center",
+    description: "Look out for the Best Gym & Fitness Centers around me :)",
+    circleColor: "#009688",
+  },
+];
 
 const timeline = () => {
   const theme = useTheme();
+  const data = oldTimeline.map((x) => ({ ...x, circleColor: "green" }));
+
   return (
     <ScreenWithAnimation
       duration={800}
@@ -15,25 +50,43 @@ const timeline = () => {
       title="Linea de tiempo"
       icon="CalendarRange"
     >
-      <View>
-        <Stack.Screen
-          options={{
-            ...singleScreenHeader({
-              theme,
-              title: "Linea de tiempo",
-              titleIcon: "CalendarRange",
-              titleIconColor: "#6de5cb",
-              headerRightProps: {
-                headerRightIcon: "Trash2",
-                headerRightIconColor: "red",
-                onPress: () => console.log(),
-                disabled: true,
-                style: { opacity: 0 },
-              },
-            }),
+      <Stack.Screen
+        options={{
+          ...singleScreenHeader({
+            theme,
+            title: "Linea de tiempo",
+            titleIcon: "CalendarRange",
+            titleIconColor: "#6de5cb",
+            headerRightProps: {
+              headerRightIcon: "Trash2",
+              headerRightIconColor: "red",
+              onPress: () => console.log(),
+              disabled: true,
+              style: { opacity: 0 },
+            },
+          }),
+        }}
+      />
+      <View style={{ flex: 1, marginTop: 10, paddingHorizontal: 10 }}>
+        <Timeline
+          columnFormat="two-column"
+          style={styles.list}
+          data={data}
+          circleSize={20}
+          circleColor={theme.colors.notification}
+          lineColor={theme.colors.text}
+          timeContainerStyle={{ minWidth: 50 }}
+          timeStyle={{
+            textAlign: "center",
+            backgroundColor: theme.colors.text,
+            color: "white",
+            borderRadius: 13,
+            padding: 4,
           }}
+          descriptionStyle={{ color: theme.colors.text }}
+          innerCircle={"dot"}
+          titleStyle={{ color: theme.colors.notification }}
         />
-        <Text>timeline</Text>
       </View>
     </ScreenWithAnimation>
   );
@@ -41,4 +94,14 @@ const timeline = () => {
 
 export default timeline;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "white",
+  },
+  list: {
+    flex: 1,
+    marginTop: 20,
+  },
+});

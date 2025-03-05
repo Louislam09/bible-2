@@ -6,19 +6,12 @@ import { icons } from "lucide-react-native";
 import Icon from "./Icon";
 
 type ScreenWithAnimationProps = {
-  /** The child components to render once the animation is complete. */
   children: React.ReactNode;
-  /** The source of the Lottie animation. */
   animationSource?: string | AnimationObject | { uri: string };
-  /** The name of the icon to display if no animation source is provided. */
   icon?: keyof typeof icons;
-  /** The title text to display during the animation. */
   title?: string;
-  /** The speed of the animation. */
   speed?: number;
-  /** The duration of the opacity transition in milliseconds. */
   duration?: number;
-  /** A flag indicating whether the animation should play on mount. */
   shouldPlay?: boolean;
   isVisible?: boolean;
   backgroundColor?: any;
