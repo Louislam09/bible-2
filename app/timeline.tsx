@@ -7,6 +7,9 @@ import { useTheme } from "@react-navigation/native";
 import { Text, View } from "@/components/Themed";
 import Timeline from "react-native-timeline-flatlist";
 import oldTimeline from "@/constants/oldTimeline";
+import Icon from "@/components/Icon";
+import MyTimeline from "@/components/timeline/MyTimeline";
+import TimelineList from "@/components/timeline/TimelineList";
 
 const data = [
   {
@@ -41,7 +44,6 @@ const data = [
 
 const timeline = () => {
   const theme = useTheme();
-  const data = oldTimeline.map((x) => ({ ...x, circleColor: "green" }));
 
   return (
     <ScreenWithAnimation
@@ -67,27 +69,9 @@ const timeline = () => {
           }),
         }}
       />
-      <View style={{ flex: 1, marginTop: 10, paddingHorizontal: 10 }}>
-        <Timeline
-          columnFormat="two-column"
-          style={styles.list}
-          data={data}
-          circleSize={20}
-          circleColor={theme.colors.notification}
-          lineColor={theme.colors.text}
-          timeContainerStyle={{ minWidth: 50 }}
-          timeStyle={{
-            textAlign: "center",
-            backgroundColor: theme.colors.text,
-            color: "white",
-            borderRadius: 13,
-            padding: 4,
-          }}
-          descriptionStyle={{ color: theme.colors.text }}
-          innerCircle={"dot"}
-          titleStyle={{ color: theme.colors.notification }}
-        />
-      </View>
+      <TimelineList />
+
+      {/* <MyTimeline /> */}
     </ScreenWithAnimation>
   );
 };

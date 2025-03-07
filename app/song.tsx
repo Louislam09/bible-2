@@ -102,7 +102,6 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
             placeholder="Buscar un himno..."
             style={[styles.noteHeaderSearchInput]}
             onChangeText={filterSongs}
-            // onChangeText={(text) => setSearchText(text)}
             value={searchText}
           />
         </View>
@@ -173,7 +172,6 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
           decelerationRate={"normal"}
           estimatedItemSize={135}
           data={filterData}
-          // renderItem={renderItem as any}
           renderItem={({ item, index }) => (
             <RenderItem
               {...{ theme, styles, onItemClick: handleSongPress }}

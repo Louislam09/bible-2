@@ -88,7 +88,6 @@ const App = () => {
       headerShown: false,
       headerTitleAlign: "center",
       headerTitleStyle: { fontWeight: "bold" },
-      // animation: "none",
       animation: isAnimationDisabled
         ? "none"
         : screenAnimations[props.route.name as Screens],

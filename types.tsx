@@ -614,3 +614,31 @@ export type TPoints = {
   type: MemorizationButtonType;
   negativePoint?: number;
 };
+
+export type TimelineEvent = {
+  id: number;
+  title?: string;
+  image?: string;
+  slug: string;
+  start: number;
+  end: number;
+  row: number;
+  type: string;
+  approx?: boolean;
+  isFixed?: boolean;
+  titleEn?: string;
+};
+
+export type TimelinePeriod = {
+  id: string;
+  image: string;
+  startYear: number;
+  endYear: number;
+  interval: number;
+  color: string;
+  events: TimelineEvent[];
+  description: string;
+  title?: string;
+  sectionTitle: string;
+  subTitle: string;
+};
