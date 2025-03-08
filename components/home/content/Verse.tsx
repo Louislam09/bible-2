@@ -242,7 +242,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     const highlightedVerses = Array.from(
       bibleState$.selectedVerses.get().values()
     ).sort((a, b) => a.verse - b.verse);
-    const value = isMoreThanOneHighted ? highlightedVerses : item;
+    const value = highlightedVerses;
     await copyToClipboard(value);
     bibleState$.clearSelection();
   };
