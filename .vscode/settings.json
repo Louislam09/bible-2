@@ -1,3 +1,4 @@
 {
-    "todo-tree.tree.showBadges": true
+    "geminicodeassist.enable": true,
+    "geminicodeassist.inlineSuggestions.enableAuto": true,
 }

@@ -21,12 +21,12 @@ import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import Icon from "./Icon";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { modalState$ } from "@/state/modalState";
+import { bibleState$ } from "@/state/bibleState";
 
 interface CompareVersionsProps {
   theme: TTheme;
   book: any;
   chapter: any;
-  verse: any;
   navigation: Omit<NavigationProp<ReactNavigation.RootParamList>, "getState">;
 }
 
@@ -34,11 +34,12 @@ const CompareVersions = ({
   theme,
   book,
   chapter,
-  verse,
   navigation,
 }: CompareVersionsProps) => {
   const { installedBibles: dbNames, executeSql } = useDBContext();
-  const [filterData, setFilter] = useState<DatabaseData[]>([]);
+  const [filteredVersionData, setFilteredVersionData] = useState<
+    DatabaseData[]
+  >([]);
   const styles = getStyles(theme);
   const { fontSize, selectBibleVersion } = useBibleContext();
   const flatListRef = useRef<FlashList<any>>(null);
@@ -47,9 +48,8 @@ const CompareVersions = ({
   const [searchParam, setSearchParam] = useState({
     book,
     chapter,
-    verse,
+    verse: bibleState$.verseToCompare.get() || 1,
   });
-
   const { data, error, loading } = useCompareVerses({
     ...searchParam,
     databases: dbNames,
@@ -68,19 +68,19 @@ const CompareVersions = ({
     } else if (error) {
       console.error(error);
     } else {
-      setFilter(data);
+      setFilteredVersionData(data);
     }
   }, [data, loading, error]);
 
-  const onVerseClick = async (item: IVerseItem, dbID: string) => {
-    await selectBibleVersion(dbID);
-    navigation.setParams({
-      Book: item.bookName,
-      chapter: item.chapter,
-      verse: item.verse,
-    });
-    modalState$.closeCompareBottomSheet();
-  };
+  // const onVerseClick = async (item: IVerseItem, dbID: string) => {
+  //   await selectBibleVersion(dbID);
+  //   navigation.setParams({
+  //     Book: item.bookName,
+  //     chapter: item.chapter,
+  //     verse: item.verse,
+  //   });
+  //   modalState$.closeCompareBottomSheet();
+  // };
 
   const onCopy = async (item: IVerseItem, versionName: string) => {
     await copyToClipboard({
@@ -161,11 +161,11 @@ const CompareVersions = ({
       <View
         style={[
           styles.chapterHeader,
-          !filterData.length && { display: "none" },
+          !filteredVersionData.length && { display: "none" },
         ]}
       >
         <Text style={styles.chapterHeaderTitle}>
-          Comparativa de {(filterData ?? []).length} Versiones
+          Comparativa de {(filteredVersionData ?? []).length} Versiones
         </Text>
         <TouchableOpacity
           style={{ alignItems: "center" }}
@@ -204,7 +204,7 @@ const CompareVersions = ({
         ref={flatListRef}
         decelerationRate={"normal"}
         estimatedItemSize={135}
-        data={filterData}
+        data={filteredVersionData}
         renderItem={renderItem as any}
         onScroll={handleScroll}
         keyExtractor={(item: any, index: any) => `fav-${index}`}

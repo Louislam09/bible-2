@@ -138,7 +138,7 @@ const ActionItem = memo(
 );
 
 const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
-  // console.log("🆚", item.verse, isSplit ? "🔽" : "🔝");
+  // console.log("🆚", item.verse);
   const { currentBibleVersion, fontSize, toggleFavoriteVerse } =
     useBibleContext();
 
@@ -233,6 +233,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       verse: item.verse,
       isFav: isFavorite,
     });
+
     setFavorite((prev) => !prev);
     bibleState$.clearSelection();
   };
@@ -365,7 +366,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         description: "Comparar",
       },
     ] as TIcon[];
-  }, [verseIsTapped, isFavorite]);
+  }, [verseIsTapped, isFavorite, item]);
 
   const steps = [
     {

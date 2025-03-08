@@ -60,7 +60,6 @@ const BookContentModals = ({ book, chapter }: any) => {
             theme,
             book,
             chapter,
-            verse: bibleState$.verseToCompare.get() || 1,
             navigation,
             compareRef: modalState$.compareRef.get(),
           }}

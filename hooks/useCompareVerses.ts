@@ -53,14 +53,14 @@ const useCompareVerses = ({
     queryName?: any
   ): Promise<any[]> => {
     try {
-      const startTime = Date.now(); // Start timing
+      const startTime = Date.now();
       if (!database) {
         throw new Error("Database not initialized");
       }
       const statement = await database.prepareAsync(sql);
       try {
         const result = await statement.executeAsync(params);
-        const endTime = Date.now(); // End timing
+        const endTime = Date.now();
         const executionTime = endTime - startTime;
 
         const response = await result.getAllAsync();
@@ -98,7 +98,7 @@ const useCompareVerses = ({
 
           results.push({
             dbItem: databaseItem,
-            value: queryResult?.[0] as Verse,
+            value: (queryResult?.[0] as Verse) || [],
           });
         }
 

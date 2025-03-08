@@ -128,7 +128,6 @@ const App = () => {
       </ScreenWithAnimation>
     </ErrorBoundary>
   );
-  // }
 };
 
 export default App;
