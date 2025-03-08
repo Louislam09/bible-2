@@ -24,6 +24,8 @@ import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
 import { batch } from "@legendapp/state";
+import { BlurView } from "expo-blur";
+import useColorScheme from "@/hooks/useColorScheme";
 
 interface FooterInterface {
   isSplit?: boolean;
@@ -175,6 +177,8 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   }, []);
 
   const displayBookName = renameLongBookName(book);
+  const scheme = useColorScheme();
+  console.log(scheme);
 
   return (
     <Animated.View style={[styles.footer]}>
@@ -259,6 +263,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           }}
         />
       </BottomModal>
+      <BlurView style={styles.blurOverlay} tint={scheme} intensity={50} />
     </Animated.View>
   );
 };

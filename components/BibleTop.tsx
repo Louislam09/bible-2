@@ -8,6 +8,7 @@ import { ActivityIndicator, Animated, StyleSheet } from "react-native";
 import Chapter from "./home/content/Chapter";
 import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
+import { View } from "./Themed";
 
 interface BibleTopProps {
   height: Animated.Value;

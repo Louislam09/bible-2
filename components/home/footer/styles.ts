@@ -10,10 +10,17 @@ export const getStyles = ({ colors }: TTheme) =>
       justifyContent: "space-between",
       width: "100%",
       paddingVertical: 5,
-      backgroundColor: colors.background,
+      // backgroundColor: colors.background + 99,
       paddingHorizontal: 20,
       borderTopColor: colors.border,
       borderTopWidth: 1,
+      position: "absolute",
+      bottom: 0,
+    },
+    blurOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: colors.background + 99,
+      zIndex: -1,
     },
     progressBarContainer: {
       position: "absolute",
