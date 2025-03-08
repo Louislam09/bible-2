@@ -44,6 +44,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const playRef = useRef<BottomSheetModal>(null);
   const navigation = useNavigation();
   const params = useParams();
+  const scheme = useColorScheme();
   const bibleQuery = bibleState$.bibleQuery.get();
 
   const book = isSplit ? bibleQuery?.bottomSideBook : bibleQuery.book;
@@ -177,8 +178,6 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   }, []);
 
   const displayBookName = renameLongBookName(book);
-  const scheme = useColorScheme();
-  console.log(scheme);
 
   return (
     <Animated.View style={[styles.footer]}>
