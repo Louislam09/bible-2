@@ -9,7 +9,7 @@ import useParams from "@/hooks/useParams";
 import { TimelinePeriod, TSongItem } from "@/types";
 import { useTheme } from "@react-navigation/native";
 import { Stack } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import timelineEvents from "@/constants/events";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
@@ -32,11 +32,11 @@ const SingleTimeline = () => {
             titleIcon: "CalendarRange",
             titleIconColor: "#6de5cb",
             headerRightProps: {
-              headerRightIcon: "Trash2",
-              headerRightIconColor: "red",
+              headerRightIcon: "Check",
+              headerRightIconColor: theme.colors.text,
               onPress: () => console.log(),
-              disabled: true,
-              style: { opacity: 0 },
+              disabled: false,
+              style: { opacity: 1 },
             },
           }),
         }}

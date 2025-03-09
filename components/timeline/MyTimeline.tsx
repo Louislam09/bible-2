@@ -1,10 +1,9 @@
-import { Image, StyleSheet } from "react-native";
-import React from "react";
-import Timeline from "react-native-timeline-flatlist";
-import { useTheme } from "@react-navigation/native";
-import { Text, View } from "../Themed";
-import Icon from "../Icon";
 import { TimelineEvent, TimelinePeriod, TTheme } from "@/types";
+import { useTheme } from "@react-navigation/native";
+import React from "react";
+import { Image, StyleSheet } from "react-native";
+import { Text, View } from "../Themed";
+import EventTime from "./EventTime";
 
 type MyTimelineProps = {
   data: TimelinePeriod;
@@ -47,47 +46,53 @@ const MyTimeline = ({ data }: MyTimelineProps) => {
   };
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-    >
-      <Timeline
-        columnFormat="two-column"
-        style={styles.list}
-        data={events}
-        circleColor={theme.colors.notification}
-        innerCircle={"icon"}
-        lineColor={theme.colors.text}
-        iconDefault={
-          <Icon
-            name="Diamond"
-            size={30}
-            fillColor={theme.colors.text}
-            color={theme.colors.text}
-          />
-        }
-        titleStyle={{
-          color: theme.colors.notification,
-          display: "none",
-        }}
-        timeContainerStyle={{ minWidth: 52, marginTop: 0 }}
-        timeStyle={{
-          textAlign: "center",
-          backgroundColor: theme.colors.notification,
-          color: theme.colors.background,
-          borderRadius: 13,
-          padding: 5,
-          fontWeight: "600",
-        }}
-        descriptionStyle={{ display: "none" }}
-        onEventPress={(props) => console.log(props)}
-        renderDetail={renderDetail}
-        separatorStyle={{
-          backgroundColor: theme.colors.border,
-          //   marginVertical: 8,
-        }}
-      />
+    <View style={{ flex: 1 }}>
+      <EventTime data={events} />
+      {/* <BiblicalTimeline data={events} /> */}
     </View>
   );
+  // return (
+  //   <View
+  //     style={[styles.container, { backgroundColor: theme.colors.background }]}
+  //   >
+  //     <Timeline
+  //       columnFormat="two-column"
+  //       style={styles.list}
+  //       data={events}
+  //       circleColor={theme.colors.notification}
+  //       innerCircle={"icon"}
+  //       lineColor={theme.colors.text}
+  //       iconDefault={
+  //         <Icon
+  //           name="Diamond"
+  //           size={30}
+  //           fillColor={theme.colors.text}
+  //           color={theme.colors.text}
+  //         />
+  //       }
+  //       titleStyle={{
+  //         color: theme.colors.notification,
+  //         display: "none",
+  //       }}
+  //       timeContainerStyle={{ minWidth: 52, marginTop: 0 }}
+  //       timeStyle={{
+  //         textAlign: "center",
+  //         backgroundColor: theme.colors.notification,
+  //         color: theme.colors.background,
+  //         borderRadius: 13,
+  //         padding: 5,
+  //         fontWeight: "600",
+  //       }}
+  //       descriptionStyle={{ display: "none" }}
+  //       onEventPress={(props) => console.log(props)}
+  //       renderDetail={renderDetail}
+  //       separatorStyle={{
+  //         backgroundColor: theme.colors.border,
+  //         //   marginVertical: 8,
+  //       }}
+  //     />
+  //   </View>
+  // );
 };
 
 export default MyTimeline;

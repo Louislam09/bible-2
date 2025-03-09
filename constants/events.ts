@@ -49,7 +49,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 664,
-        title: "La Marque de Caïn",
+        title: "La marca de Caïn",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas1582_8-8-2013 9-54-54 AM.jpg",
         slug: "marcado",
@@ -120,7 +120,7 @@ const timelineEvents: TimelinePeriod[] = [
         end: -2532,
         row: 5,
         type: "importante",
-        titleEn: "Jarado",
+        titleEn: "Jared",
       },
       {
         id: 670,
