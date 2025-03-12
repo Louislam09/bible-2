@@ -6,37 +6,18 @@ import { icons } from "lucide-react-native";
 import Icon from "./Icon";
 
 type ScreenWithAnimationProps = {
-  /** The child components to render once the animation is complete. */
   children: React.ReactNode;
-  /** The source of the Lottie animation. */
   animationSource?: string | AnimationObject | { uri: string };
-  /** The name of the icon to display if no animation source is provided. */
   icon?: keyof typeof icons;
-  /** The title text to display during the animation. */
   title?: string;
-  /** The speed of the animation. */
   speed?: number;
-  /** The duration of the opacity transition in milliseconds. */
   duration?: number;
-  /** A flag indicating whether the animation should play on mount. */
   shouldPlay?: boolean;
   isVisible?: boolean;
   backgroundColor?: any;
+  iconColor?: any;
 };
 
-/**
- * A functional component that displays an animation or icon with a transition effect.
- *
- * @param {React.ReactNode} children - The child components to render once the animation is complete.
- * @param {number} [speed=1] - The speed of the animation.
- * @param {string} title - The title text to display during the animation.
- * @param {object} animationSource - The source of the Lottie animation.
- * @param {string} icon - The name of the icon to display if no animation source is provided.
- * @param {number} [duration=1500] - The duration of the opacity transition in milliseconds.
- * @param {boolean} [shouldPlay=true] - A flag indicating whether the animation should play on mount.
- *
- * @returns {JSX.Element} The rendered component.
- */
 const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
   children,
   speed = 1,
@@ -47,6 +28,7 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
   shouldPlay = true,
   isVisible,
   backgroundColor,
+  iconColor,
 }) => {
   const [isAnimating, setIsAnimating] = useState(shouldPlay);
   const opacity = useRef(new Animated.Value(0)).current;
@@ -131,7 +113,11 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
               <Animated.View
                 style={{ transform: [{ translateY: bounceValue }], opacity }}
               >
-                <Icon name={icon} size={100} color={theme.colors.text} />
+                <Icon
+                  name={icon}
+                  size={100}
+                  color={iconColor || theme.colors.text}
+                />
               </Animated.View>
             )
           )}

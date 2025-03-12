@@ -7,6 +7,7 @@ import DatabaseProvider from "@/context/databaseContext";
 import StorageProvider from "@/context/LocalstoreContext";
 import { MemorizationProvider } from "@/context/MemorizationContext";
 import MyThemeProvider from "@/context/ThemeContext";
+import { QueryProvider } from "@/providers/QueryProvider";
 import useCachedResources from "@/hooks/useCachedResources";
 import { settingState$ } from "@/state/settingState";
 import { Screens, ScreensName } from "@/types";
@@ -55,6 +56,8 @@ const screenAnimations: TScreensName = {
   [Screens.VerseId]: "slide_from_bottom",
   [Screens.ChallengeTypeId]: "slide_from_left",
   [Screens.History]: "slide_from_bottom",
+  [Screens.Timeline]: "slide_from_bottom",
+  [Screens.Admin]: "slide_from_bottom",
 };
 
 const App = () => {
@@ -87,7 +90,6 @@ const App = () => {
       headerShown: false,
       headerTitleAlign: "center",
       headerTitleStyle: { fontWeight: "bold" },
-      // animation: "none",
       animation: isAnimationDisabled
         ? "none"
         : screenAnimations[props.route.name as Screens],
@@ -99,17 +101,18 @@ const App = () => {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
-      <ScreenWithAnimation
+      {/* <ScreenWithAnimation
         isVisible={!isLoadingComplete}
         title="Santa Escritura"
         icon="BookPlus"
-      >
-        <StorageProvider>
-          <DatabaseProvider>
-            <BibleProvider>
-              <BibleChapterProvider>
-                <MemorizationProvider>
-                  <MyThemeProvider>
+      > */}
+      <StorageProvider>
+        <DatabaseProvider>
+          <BibleProvider>
+            <BibleChapterProvider>
+              <MemorizationProvider>
+                <MyThemeProvider>
+                  <QueryProvider>
                     <GestureHandlerRootView style={{ flex: 1 }}>
                       <BottomSheetModalProvider>
                         <StatusBar animated translucent style="auto" />
@@ -119,13 +122,14 @@ const App = () => {
                         />
                       </BottomSheetModalProvider>
                     </GestureHandlerRootView>
-                  </MyThemeProvider>
-                </MemorizationProvider>
-              </BibleChapterProvider>
-            </BibleProvider>
-          </DatabaseProvider>
-        </StorageProvider>
-      </ScreenWithAnimation>
+                  </QueryProvider>
+                </MyThemeProvider>
+              </MemorizationProvider>
+            </BibleChapterProvider>
+          </BibleProvider>
+        </DatabaseProvider>
+      </StorageProvider>
+      {/* </ScreenWithAnimation> */}
     </ErrorBoundary>
   );
 };

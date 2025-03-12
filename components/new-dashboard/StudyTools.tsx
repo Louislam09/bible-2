@@ -31,7 +31,13 @@ const StudyTools = ({ list, theme }: StudyToolsProps) => {
           <TouchableOpacity
             key={item.tag + item.label}
             onPress={item.action}
-            style={[styles.tool, { width: itemWidth }]}
+            onLongPress={
+              item.longAction
+                ? item.longAction
+                : () => console.log("no long action")
+            }
+            style={[styles.tool, { width: itemWidth }, item.disabled && { display: 'none' }]}
+            disabled={item.disabled}
           >
             {item.isNew && (
               <NewFeatureBadge style={{ backgroundColor: "#f73043" }} />

@@ -1,15 +1,13 @@
+import { IDashboardOption } from "@/app/(dashboard)";
+import { TTheme } from "@/types";
+import React from "react";
 import {
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
-import React from "react";
-import { Text, View } from "../Themed";
-import { IDashboardOption } from "@/app/(dashboard)";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import Icon from "../Icon";
-import { TTheme } from "@/types";
-import { NewFeatureBadge } from "../NewFeatureBadge";
+import { Text, View } from "../Themed";
 
 type MainSectionProps = {
   list: IDashboardOption[];

@@ -1,0 +1,312 @@
+import timelineEvents from "@/constants/events";
+import { TimelinePeriod, TTheme } from "@/types";
+import { useTheme } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
+import { Text, View } from "../Themed";
+import { useRouter } from "expo-router";
+
+type TimeEventItemProps = {
+  item: TimelinePeriod;
+  onPress: any;
+  isMobile: boolean;
+};
+
+const TimeEventItem = ({ item, onPress, isMobile }: TimeEventItemProps) => {
+  const theme = useTheme();
+  const styles = getStyles(theme);
+
+  const yearSpan = item.endYear - item.startYear;
+  //   const timeLabel =
+  //     yearSpan > 0
+  //       ? `${item.startYear} - ${item.endYear} (${yearSpan} years)`
+  //       : `${item.startYear}`;
+
+  return (
+    <Pressable
+      style={({ pressed }) => [
+        styles.itemContainer,
+        pressed && styles.itemPressed,
+        !isMobile && { marginHorizontal: 4 },
+      ]}
+      onPress={() => onPress(item)}
+    >
+      <View style={styles.contentContainer}>
+        {item.image ? (
+          <View style={styles.imageContainer}>
+            <Image
+              source={{ uri: item.image, cache: "force-cache" }}
+              style={styles.image}
+              resizeMode="cover"
+            />
+            <View style={styles.imageOverlay} />
+          </View>
+        ) : null}
+
+        <View style={styles.headerContainer}>
+          <View
+            style={[
+              styles.titleBadge,
+              { backgroundColor: item.color || theme.colors.primary },
+            ]}
+          >
+            <Text style={styles.titleText}>
+              {item.title || item.sectionTitle}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.textContainer}>
+          <Text style={styles.subtitleText}>{item.subTitle}</Text>
+
+          {item.description && (
+            <Text style={styles.descriptionText} numberOfLines={3}>
+              {item.description}
+            </Text>
+          )}
+        </View>
+
+        <View style={styles.footer}>
+          <View style={styles.eventsIndicator}>
+            <Text style={styles.eventsCount}>
+              {item.events?.length || 0} eventos
+            </Text>
+          </View>
+          <Text style={styles.viewMoreText}>Ver detalles</Text>
+        </View>
+      </View>
+    </Pressable>
+  );
+};
+
+const TimelineList = () => {
+  const theme = useTheme();
+  const styles = getStyles(theme);
+  const events = timelineEvents;
+  const { width, height } = useWindowDimensions();
+  const aspectRadio = height / width;
+  const isMobile = +aspectRadio.toFixed(2) > 1.65;
+  const router = useRouter();
+
+  const handleItemPress = (item: TimelinePeriod) => {
+    router.push({ pathname: `/timeline/${item.id}` });
+  };
+  return (
+    <View style={[styles.container]}>
+      <FlashList
+        data={events}
+        keyExtractor={(item, index) => `timelineEvent:${index}`}
+        renderItem={({ item }) => (
+          <TimeEventItem
+            isMobile={isMobile}
+            item={item}
+            onPress={handleItemPress}
+          />
+        )}
+        estimatedItemSize={150}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.listContent}
+        ListEmptyComponent={() => (
+          <View style={styles.emptyContainer}>
+            <ActivityIndicator size="large" color={theme.colors.primary} />
+            <Text style={styles.emptyText}>Loading timeline events...</Text>
+          </View>
+        )}
+        ListHeaderComponent={() => <View style={styles.listHeader} />}
+        ListFooterComponent={() => <View style={styles.listFooter} />}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        numColumns={isMobile ? 1 : 2}
+      />
+    </View>
+  );
+};
+
+export default TimelineList;
+
+const getStyles = ({ colors, dark }: TTheme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 16,
+      backgroundColor: colors.background,
+    },
+    headerText: {
+      fontSize: 28,
+      fontWeight: "bold",
+      marginBottom: 16,
+      color: colors.text,
+    },
+    listContent: {
+      paddingHorizontal: 8,
+    },
+    listHeader: {
+      height: 8,
+    },
+    listFooter: {
+      height: 24,
+    },
+    separator: {
+      height: 16,
+    },
+    emptyContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      paddingVertical: 48,
+    },
+    emptyText: {
+      marginTop: 16,
+      fontSize: 16,
+      color: colors.text,
+      opacity: 0.7,
+    },
+    itemContainer: {
+      flex: 1,
+      flexDirection: "row",
+      borderRadius: 12,
+      backgroundColor: colors.background,
+      overflow: "hidden",
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    itemPressed: {
+      opacity: 0.9,
+      transform: [{ scale: 0.98 }],
+    },
+    timelineBar: {
+      width: 40,
+      alignItems: "center",
+      paddingTop: 20,
+    },
+    timelineDot: {
+      width: 16,
+      height: 16,
+      borderRadius: 8,
+      zIndex: 1,
+    },
+    timelineLine: {
+      width: 2,
+      flex: 1,
+    },
+    contentContainer: {
+      flex: 1,
+      padding: 16,
+    },
+    imageContainer: {
+      height: 200,
+      borderRadius: 8,
+      overflow: "hidden",
+      marginBottom: 12,
+    },
+    image: {
+      width: "100%",
+      height: "100%",
+    },
+    textContainer: {
+      flex: 1,
+    },
+    periodText: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: colors.primary,
+      marginBottom: 4,
+    },
+    titleText: {
+      fontSize: 18,
+      fontWeight: "bold",
+      color: "white",
+    },
+    subtitleText: {
+      fontSize: 15,
+      color: colors.text,
+      opacity: 0.8,
+      marginBottom: 12,
+    },
+    headerContainer: {
+      marginBottom: 12,
+    },
+    titleBadge: {
+      alignSelf: "flex-start",
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      borderRadius: 12,
+    },
+    imageOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: "rgba(0,0,0,0.1)",
+      borderRadius: 12,
+    },
+    descriptionText: {
+      fontSize: 14,
+      lineHeight: 20,
+      color: colors.text,
+      opacity: 0.8,
+      marginBottom: 12,
+    },
+    eventsContainer: {
+      marginTop: 12,
+      marginBottom: 8,
+    },
+    eventsLabel: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: colors.text,
+      marginBottom: 8,
+    },
+    eventItem: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 8,
+    },
+    eventDot: {
+      width: 6,
+      height: 6,
+      borderRadius: 3,
+      backgroundColor: colors.primary,
+      marginRight: 8,
+    },
+    eventText: {
+      fontSize: 13,
+      color: colors.text,
+      opacity: 0.9,
+      flex: 1,
+    },
+    moreEventsText: {
+      fontSize: 13,
+      color: colors.primary,
+      fontWeight: "500",
+      marginTop: 4,
+    },
+    footer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginTop: 16,
+      paddingTop: 12,
+      borderTopWidth: 1,
+      borderTopColor: colors.border + "40",
+    },
+    eventsIndicator: {
+      backgroundColor: colors.primary + "20",
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      borderRadius: 12,
+    },
+    eventsCount: {
+      fontSize: 12,
+      fontWeight: "600",
+      color: colors.primary,
+    },
+    viewMoreText: {
+      fontSize: 13,
+      fontWeight: "600",
+      color: colors.primary,
+    },
+  });

@@ -11,12 +11,15 @@ import isWithinTimeframe from "@/utils/isWithinTimeframe";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTheme } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { ScrollView, StyleSheet, ToastAndroid } from "react-native";
 import { IDashboardOption } from "../../app/(dashboard)";
 import BottomModal from "../BottomModal";
 import VersionList from "../home/header/VersionList";
 import VoiceList from "../VoiceList";
+import { useSecretUnlock } from "@/hooks/useSecretUnlock";
+import { showToast } from "@/utils/showToast";
+import EmptyStateMessage from "../EmptyStateMessage";
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
@@ -27,6 +30,7 @@ const SecondDashboard = () => {
   const navigation = useNavigation();
   const theme = useTheme();
   const styles = getStyles(theme);
+  const [currentEmpty, setCurrentEmpty] = useState<'doubible' | 'timeline'>('doubible');
 
   const {
     currentBibleVersion,
@@ -34,6 +38,8 @@ const SecondDashboard = () => {
     historyManager: { getCurrentItem },
   } = useBibleContext();
   const storedData = storedData$.get();
+  const { handleTap } = useSecretUnlock();
+  const requestAccessBottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const {
     lastBook,
@@ -42,7 +48,7 @@ const SecondDashboard = () => {
     lastBottomSideBook,
     lastBottomSideChapter,
     lastBottomSideVerse,
-    isSongLyricEnabled,
+    isAdmin
   } = storedData;
 
   const onSelect = (version: string) => {
@@ -52,16 +58,8 @@ const SecondDashboard = () => {
   };
 
   const onSong = useCallback(() => {
-    if (!isSongLyricEnabled) {
-      ToastAndroid.show(
-        "Busca 📖 y presiona el nombre del himnario 🔒🔑",
-        ToastAndroid.LONG
-      );
-      return;
-    }
     navigation.navigate(Screens.Hymn);
-    // navigation.navigate(Screens.Song);
-  }, [navigation, isSongLyricEnabled]);
+  }, [navigation]);
 
   const {
     book: lastHistoryBook,
@@ -85,6 +83,10 @@ const SecondDashboard = () => {
       icon: "Crown",
       label: "Santa Escritura",
       action: () => navigation.navigate(Screens.Home, homePageInitParams),
+      longAction: () => {
+        handleTap("top-left");
+        showToast('Santa Escritura')
+      },
       tag: "crown-outline",
     },
     {
@@ -101,19 +103,43 @@ const SecondDashboard = () => {
     },
   ];
 
+  const requestAccessHandlePresentModalPress = useCallback((state: 'doubible' | 'timeline') => {
+    setCurrentEmpty(state);
+    requestAccessBottomSheetModalRef.current?.present();
+  }, []);
+
+  const stateMessage = {
+    doubible: {
+      "title": "¡Nueva función en desarrollo!",
+      "message": "Estamos trabajando en esta función para ayudarte a aprender más sobre la santa escritura de una manera interactiva. Muy pronto podrás acceder a nuevas herramientas y contenido.",
+      "subText": "Gracias por tu paciencia y apoyo.",
+      email: ''
+    },
+    timeline: {
+      "title": "Línea de tiempo en desarrollo",
+      "message": "Estamos creando una línea de tiempo interactiva para explorar la historia de la santa escritura de manera clara y visual. Pronto podrás recorrer los eventos clave y profundizar en su contexto.",
+      "subText": "Gracias por tu paciencia y entusiasmo.",
+      email: ''
+    }
+  }
+
   const studyToolItems: IDashboardOption[] = [
     {
       icon: "BookA",
       label: "Diccionarios",
       action: () =>
         navigation?.navigate(Screens.DictionarySearch, { word: "" }),
-      color: "#ec899e",
+      color: "#ec899e"
     },
     {
       icon: "SwatchBook",
       label: "Concordancia",
       action: () => navigation.navigate(Screens.Concordance, {}),
       color: "#ffffff",
+      longAction: () => {
+        handleTap("bottom-right");
+        showToast('Concordancia')
+      },
     },
     {
       icon: "NotebookText",
@@ -127,6 +153,10 @@ const SecondDashboard = () => {
       label: "Favoritos",
       action: () => navigation.navigate(Screens.Favorite),
       color: "#fedf75",
+      longAction: () => {
+        handleTap("top-right");
+        showToast('Favoritos')
+      },
     },
     {
       icon: "History",
@@ -149,11 +179,38 @@ const SecondDashboard = () => {
       color: "#f1abab",
       isNew: isWithinTimeframe("1w", new Date("2025-02-04")).isActive,
     },
+    {
+      icon: "CalendarRange",
+      label: "Linea de tiempo",
+      action: () => requestAccessHandlePresentModalPress('timeline'),
+      // action: () => navigation.navigate(Screens.Timeline),
+      color: "#6de5cb",
+      isNew: isWithinTimeframe("1w", new Date("2025-03-04")).isActive,
+    },
+    {
+      icon: "TreeDeciduous",
+      label: "DuoBible",
+      // @ts-ignore
+      action: () => requestAccessHandlePresentModalPress('doubible'),
+      // action: () => navigation.navigate("learn", {}),
+      color: "#4caf50",
+      // color: "#75d0fe",
+      isNew: isWithinTimeframe("1w", new Date("2025-03-04")).isActive,
+    },
+    {
+      icon: "ChartArea",
+      label: "Admin",
+      // @ts-ignore
+      action: () => navigation.navigate("admin", {}),
+      color: "#75d0fe",
+      disabled: !isAdmin
+    },
   ];
 
   const versionRef = useRef<BottomSheetModal>(null);
   const currentModalOpenRef = useRef<any>(null);
   const voiceBottomSheetModalRef = useRef<BottomSheetModal>(null);
+
   const voiceHandlePresentModalPress = useCallback(() => {
     voiceBottomSheetModalRef.current?.present();
     currentModalOpenRef.current = voiceBottomSheetModalRef.current;
@@ -225,6 +282,18 @@ const SecondDashboard = () => {
           <VersionList {...{ currentBibleVersion, onSelect, theme }} />
         </BottomModal>
       </ScrollView>
+
+      <BottomModal
+        justOneSnap
+        showIndicator
+        justOneValue={["60%", "90%"]}
+        startAT={0}
+        ref={requestAccessBottomSheetModalRef}
+      >
+        <EmptyStateMessage info={stateMessage[currentEmpty]}
+          onClose={() => requestAccessBottomSheetModalRef.current?.dismiss()}
+        />
+      </BottomModal>
     </StatusBarBackground>
   );
 };

@@ -1,8 +1,3 @@
-/**
- * Learn more about using TypeScript with React Navigation:
- * https://reactnavigation.org/docs/typescript/
- */
-
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
@@ -14,7 +9,6 @@ import {
   Theme,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { IconProps } from "@/components/Icon";
 import { Router } from "expo-router";
 import { icons } from "lucide-react-native";
 import { RefObject } from "react";
@@ -45,11 +39,13 @@ export enum Screens {
   NoteDetail = "noteDetail",
   History = "history",
   Hymn = "hymn",
+  Timeline = "timeline",
   Game = "(game)",
   ChooseGame = "chooseGame",
   MemorizeVerse = "memorization/memoryList",
   VerseId = "memorization/[verseId]",
   ChallengeTypeId = "memorization/[verseId]/challenge/[typeId]",
+  Admin= "admin"
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -79,6 +75,8 @@ export const ScreensName: TScreensName = {
   [Screens.VerseId]: "Versiculo",
   [Screens.ChallengeTypeId]: "Reto",
   [Screens.History]: "Historial",
+  [Screens.Timeline]: "Linea de tiempo",
+  [Screens.Admin]: "Panel Admin",
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -98,6 +96,7 @@ export type RootTabParamList = {
   favorite: undefined;
   notFound: undefined;
   dictionary: undefined;
+  admin: undefined;
   history: undefined;
   "memorization/memoryList": undefined;
 };
@@ -132,6 +131,7 @@ export type RootStackParamList = {
     | ChooseChapterNumberParams;
   modal: undefined;
   onboarding: undefined;
+  timeline: undefined;
   "memorization/memoryList": undefined;
   song: { isAlegres: boolean };
   "(game)": { questionsPerLevel: number };
@@ -527,6 +527,65 @@ export enum QuestionDifficultyKey {
   easy = "Facil",
 }
 
+// LEARN GAME TYPES
+
+export type TrueFalseChallenge = {
+  id: number;
+  question: string;
+  type: "true_false";
+  answer: boolean;
+};
+
+export type MultipleChoiceChallenge = {
+  id: number;
+  question: string;
+  type: "multiple_choice";
+  options: string[];
+  answer: string;
+};
+
+export type FillInTheBlankChallenge = {
+  id: number;
+  question: string;
+  type: "fill_in_the_blank";
+  answer: string;
+};
+
+export type MemoryTaskChallenge = {
+  id: number;
+  question: string;
+  type: "memory_task";
+  hint: string;
+};
+
+export type DragAndDropChallenge = {
+  id: number;
+  question: string;
+  type: "drag_and_drop";
+  correct_order: string[];
+};
+
+export type Challenge =
+  | TrueFalseChallenge
+  | MultipleChoiceChallenge
+  | FillInTheBlankChallenge
+  | MemoryTaskChallenge
+  | DragAndDropChallenge;
+
+export type Lesson = {
+  id: number;
+  title: string;
+  activity: string;
+  challenges: Challenge[];
+};
+
+export type Unit = {
+  id: number;
+  title: string;
+  description: string;
+  lessons: Lesson[];
+};
+
 export enum SortOption {
   MostRecent = "Más reciente",
   LeastRecent = "Menos reciente",
@@ -557,4 +616,32 @@ export type TPoints = {
   description: string;
   type: MemorizationButtonType;
   negativePoint?: number;
+};
+
+export type TimelineEvent = {
+  id: number;
+  title?: string;
+  image?: string;
+  slug: string;
+  start: number;
+  end: number;
+  row: number;
+  type: string;
+  approx?: boolean;
+  isFixed?: boolean;
+  titleEn?: string;
+};
+
+export type TimelinePeriod = {
+  id: string;
+  image: string;
+  startYear: number;
+  endYear: number;
+  interval: number;
+  color: string;
+  events: TimelineEvent[];
+  description: string;
+  title?: string;
+  sectionTitle: string;
+  subTitle: string;
 };

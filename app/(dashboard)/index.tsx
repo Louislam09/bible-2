@@ -66,7 +66,6 @@ const Dashboard: React.FC<DashboardProps> = () => {
     lastBottomSideBook,
     lastBottomSideChapter,
     lastBottomSideVerse,
-    isSongLyricEnabled,
   } = storedData;
 
   const {
@@ -103,15 +102,8 @@ const Dashboard: React.FC<DashboardProps> = () => {
   };
 
   const onSong = useCallback(() => {
-    if (!isSongLyricEnabled) {
-      ToastAndroid.show(
-        "Busca 📖 y presiona el nombre del himnario 🔒🔑",
-        ToastAndroid.LONG
-      );
-      return;
-    }
     navigation.navigate(Screens.Hymn);
-  }, [navigation, isSongLyricEnabled]);
+  }, [navigation]);
 
   const dashboardItems: IDashboardOption[] = [
     {
