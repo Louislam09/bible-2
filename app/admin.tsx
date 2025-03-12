@@ -25,7 +25,8 @@ const RequestAccessScreen: React.FC = () => {
     const styles = getStyles(theme);
 
     const { mutate: submitRequest, isPending: isSubmitting } = useRequestAccess();
-    const { data: statusResult, refetch: checkStatus, isFetching: isChecking } = useCheckStatus(searchEmail);
+    const { mutate: checkStatus, isPending: isChecking, data: statusResult } = useCheckStatus();
+
     const { data: requests, isFetching: isFetchingRequests } = useGetAllRequests();
     const { mutate: updateStatus } = useUpdateRequestStatus();
     const { mutate: deleteRequest } = useDeleteRequest();
@@ -56,7 +57,7 @@ const RequestAccessScreen: React.FC = () => {
             Alert.alert('Error', 'El correo es requerido');
             return;
         }
-        checkStatus();
+        checkStatus(searchEmail);
     };
 
     const handleUpdateStatus = (id: string, status: RequestStatus['status']) => {

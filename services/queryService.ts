@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import apiService from './requestServices';
 import { ApiResponse, RequestStatus } from './types';
+import { storedData$ } from '@/context/LocalstoreContext';
 
 export const useRequestAccess = () => {
   const queryClient = useQueryClient();
@@ -13,11 +14,17 @@ export const useRequestAccess = () => {
   });
 };
 
-export const useCheckStatus = (email: string) => {
-  return useQuery({
-    queryKey: ['requestStatus', email],
-    queryFn: () => apiService.checkStatus(email),
-    enabled: !!email
+export const useCheckStatus = () => {
+  return useMutation({
+    mutationFn: (email: string) => apiService.checkStatus(email),
+    onSuccess: (data) => {
+      // @ts-ignore
+      const status = data?.requests[0]?.status;
+      if (status === 'approved') {
+        storedData$.isAlegresNuevasUnlocked.set(true);
+        storedData$.hasRequestAccess.set(true);
+      }
+    }
   });
 };
 

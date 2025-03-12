@@ -4,7 +4,7 @@ import Animation from "@/components/Animation";
 import Icon, { IconProps } from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { Stack, useNavigation } from "expo-router";
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import {
   Alert,
   Pressable,
@@ -23,6 +23,7 @@ import RequestAccess from "@/components/admin/RequestAccess";
 import { use$ } from "@legendapp/state/react";
 import { storedData$ } from "@/context/LocalstoreContext";
 import useInternetConnection from "@/hooks/useInternetConnection";
+import { useCheckStatus } from "@/services/queryService";
 
 type IHymnOption = {
   icon: IconProps["name"];
@@ -45,21 +46,25 @@ const HymnScreen = () => {
   const navigation = useNavigation();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const isConnected = useInternetConnection();
-
+  const { mutate: checkStatus, isPending: isChecking } = useCheckStatus();
   const requestAccessBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const isAlegresNuevasUnlocked = use$(() => storedData$.isAlegresNuevasUnlocked.get());
   const hasRequestAccess = use$(() => storedData$.hasRequestAccess.get());
 
   const statusColor = hasRequestAccess ? '#efbf43' : '#FFFFFF';
 
+  useEffect(() => {
+    if(isAlegresNuevasUnlocked || !isConnected) return;
+    checkStatus(storedData$.userData.get()?.email || '');
+  }, [ isAlegresNuevasUnlocked, isConnected])
+
   const voiceHandlePresentModalPress = useCallback(() => {
     if(!isConnected) {
       Alert.alert('Shalom', 'Por favor, conecta a internet para solicitar acceso');
       return
     }
-    
     requestAccessBottomSheetModalRef.current?.present();
-  }, [isConnected]);
+  }, [isConnected, hasRequestAccess]);
 
   const options: IHymnOption[] = [
     {
