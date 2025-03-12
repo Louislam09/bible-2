@@ -15,6 +15,8 @@ import {
 import { TTheme } from '@/types';
 import { useRequestAccess, useCheckStatus, useGetAllRequests, useUpdateRequestStatus, useDeleteRequest } from '@/services/queryService';
 import { RequestStatus } from '@/services/types';
+import { singleScreenHeader } from '@/components/common/singleScreenHeader';
+import { Stack } from 'expo-router';
 
 const RequestAccessScreen: React.FC = () => {
     const [name, setName] = useState<string>('');
@@ -138,7 +140,23 @@ const RequestAccessScreen: React.FC = () => {
     const loading = isSubmitting || isChecking || isFetchingRequests;
 
     return (
-        <StatusBarBackground>
+        <>
+            <Stack.Screen
+          options={{
+            ...singleScreenHeader({
+              theme,
+              title: "Panel Admin",
+              titleIcon: "ChartArea",
+              headerRightProps: {
+                headerRightIcon: "Trash2",
+                headerRightIconColor: "red",
+                onPress: () => console.log(),
+                disabled: true,
+                style: { opacity: 0 },
+              },
+            }),
+          }}
+        />
             <View style={styles.container}>
                 <View style={styles.tabContainer}>
                     <TouchableOpacity
@@ -246,7 +264,7 @@ const RequestAccessScreen: React.FC = () => {
                     </>
                 )}
             </View>
-        </StatusBarBackground>
+        </>
     );
 };
 

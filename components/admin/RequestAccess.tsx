@@ -8,6 +8,7 @@ import { useRequestAccess } from '@/services/queryService';
 import { use$ } from '@legendapp/state/react';
 import { Ionicons } from '@expo/vector-icons';
 import { ERROR_MESSAGES } from '@/constants/errorMessages';
+import EmptyStateMessage from '../EmptyStateMessage';
 
 const RequestAccess = ({ onClose }: { onClose: () => void }) => {
     const theme = useTheme();
@@ -32,8 +33,8 @@ const RequestAccess = ({ onClose }: { onClose: () => void }) => {
             Alert.alert('Éxito', ERROR_MESSAGES.REQUEST_CREATED);
             onClose();
         } catch (error: any) {
-            const errorMessage = error?.message 
-                ? error.message === "Email already has a pending request" 
+            const errorMessage = error?.message
+                ? error.message === "Email already has a pending request"
                     ? ERROR_MESSAGES.EMAIL_EXISTS
                     : ERROR_MESSAGES.CREATE_REQUEST_ERROR
                 : ERROR_MESSAGES.NETWORK_ERROR;
@@ -43,22 +44,13 @@ const RequestAccess = ({ onClose }: { onClose: () => void }) => {
 
     if (hasRequestAccess) {
         return (
-            <View style={styles.container}>
-                <View style={styles.statusContainer}>
-                    <Ionicons name="time-outline" size={50} color={theme.colors.notification} />
-                    <Text style={styles.statusTitle}>Solicitud en Proceso</Text>
-                    <Text style={styles.statusText}>
-                        Hola {userData.name}, tu solicitud está siendo procesada.
-                    </Text>
-                    <Text style={styles.statusSubText}>
-                        Te contactaremos pronto al correo:
-                    </Text>
-                    <Text style={styles.emailText}>{userData.email}</Text>
-                    <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-                        <Text style={styles.closeButtonText}>Cerrar</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+            <EmptyStateMessage info={{
+                title: 'Solicitud en Proceso',
+                message: 'Hola ' + userData.name + ', tu solicitud está siendo procesada.',
+                subText: 'Te contactaremos pronto al correo:',
+                email: userData.email,
+            }} onClose={onClose}
+            />
         );
     }
 
@@ -67,7 +59,7 @@ const RequestAccess = ({ onClose }: { onClose: () => void }) => {
             <Text style={styles.title}>Solicitud de Acceso</Text>
             <TextInput
                 style={styles.input}
-                placeholder="Nombre"
+                placeholder="Nombre completo"
                 placeholderTextColor={theme.colors.text}
                 value={name}
                 onChangeText={setName}

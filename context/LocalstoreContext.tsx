@@ -37,6 +37,7 @@ type StoreState = {
   currentBibleVersion: string;
   isSongLyricEnabled: boolean;
   isAlegresNuevasUnlocked: boolean;
+  isAdmin: boolean;
   hasRequestAccess: boolean;
   isGridLayout: boolean;
   isShowName: boolean;
@@ -66,6 +67,7 @@ const initialContext: StoreState = {
   currentBibleVersion: EBibleVersions.BIBLE,
   isSongLyricEnabled: false,
   isAlegresNuevasUnlocked: false,
+  isAdmin: false,
   hasRequestAccess: false,
   songFontSize: 21,
   currentVoiceIdentifier: "es-us-x-esd-local",
