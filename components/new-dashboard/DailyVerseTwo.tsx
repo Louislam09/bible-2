@@ -44,7 +44,6 @@ type DailyVerseProps = {
 const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
   const navigation = useNavigation();
   const { executeSql, myBibleDB, isMyBibleDbLoaded } = useDBContext();
-  const [countPress, setCountPres] = useState(0);
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(
     dailyVerseObject || defaultDailyVerse
   );
@@ -76,27 +75,6 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
     })();
   }, [isMyBibleDbLoaded, myBibleDB, dailyVerseObject]);
 
-  useEffect(() => {
-    setCountPres(0);
-  }, []);
-
-  const enabledMusic = () => {
-    const MESSAGES = {
-      encourage: "¡Presiona una vez más!",
-      success: "🎵 ¡Modo Himnario habilitado! 🎵 ",
-    };
-
-    if (countPress < 2) {
-      setCountPres((prev) => prev + 1);
-      showToast(MESSAGES.encourage);
-      return;
-    }
-
-    storedData$.isSongLyricEnabled.set(true);
-
-    showToast(MESSAGES.success);
-  };
-
   return (
     <View style={styles.dailyVerseContainer}>
       <TouchableOpacity
@@ -109,7 +87,6 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
         <Text style={styles.title}>Versículo del día</Text>
         <TouchableOpacity
           activeOpacity={0.7}
-          onLongPress={enabledMusic}
           onPress={() => {
             if (isDefaultVerse) return;
             const queryInfo = {

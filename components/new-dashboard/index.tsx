@@ -42,7 +42,6 @@ const SecondDashboard = () => {
     lastBottomSideBook,
     lastBottomSideChapter,
     lastBottomSideVerse,
-    isSongLyricEnabled,
   } = storedData;
 
   const onSelect = (version: string) => {
@@ -52,16 +51,8 @@ const SecondDashboard = () => {
   };
 
   const onSong = useCallback(() => {
-    if (!isSongLyricEnabled) {
-      ToastAndroid.show(
-        "Busca 📖 y presiona el nombre del himnario 🔒🔑",
-        ToastAndroid.LONG
-      );
-      return;
-    }
     navigation.navigate(Screens.Hymn);
-    // navigation.navigate(Screens.Song);
-  }, [navigation, isSongLyricEnabled]);
+  }, [navigation]);
 
   const {
     book: lastHistoryBook,
@@ -166,11 +157,21 @@ const SecondDashboard = () => {
       // color: "#75d0fe",
       isNew: isWithinTimeframe("1w", new Date("2025-03-04")).isActive,
     },
+    {
+      icon: "ChartArea",
+      label: "Admin",
+      // @ts-ignore
+      action: () => navigation.navigate("admin", {}),
+      color: "#4caf50",
+      // color: "#75d0fe",
+      isNew: isWithinTimeframe("1w", new Date("2025-03-04")).isActive,
+    },
   ];
 
   const versionRef = useRef<BottomSheetModal>(null);
   const currentModalOpenRef = useRef<any>(null);
   const voiceBottomSheetModalRef = useRef<BottomSheetModal>(null);
+  
   const voiceHandlePresentModalPress = useCallback(() => {
     voiceBottomSheetModalRef.current?.present();
     currentModalOpenRef.current = voiceBottomSheetModalRef.current;

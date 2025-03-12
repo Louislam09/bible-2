@@ -10,9 +10,12 @@ import {
   TouchableOpacity,
   StatusBar,
 } from "react-native";
+import { ZoomIn } from "react-native-reanimated";
+import PinchZoomView from "./Zoom";
+import BrowserZoomView from "./Zoom";
 
 const { width, height } = Dimensions.get("window");
-const ITEM_HEIGHT = 70;
+const ITEM_HEIGHT = 60;
 const ROWS = 24;
 
 const COLORS = [
@@ -56,17 +59,21 @@ const EventTimeline = ({ data }) => {
     width: Math.max(100, (item.end - item.start) * yearWidth),
     top: (item.row - 1) * ITEM_HEIGHT,
     height: ITEM_HEIGHT - 10,
-    backgroundColor: COLORS[Math.abs(item.titleEn.length % COLORS.length)],
+    backgroundColor:
+      COLORS[Math.abs((item.titleEn || "").length % COLORS.length)],
   });
 
   const renderItems = () =>
-    data.map((item) => (
-      <View key={item.id} style={[styles.item, getItemStyle(item)]}>
+    data.map((item, index) => (
+      <View
+        key={item.titleEn + "as" + index}
+        style={[styles.item, getItemStyle(item)]}
+      >
         {item.image && (
           <Image source={{ uri: item.image }} style={styles.image} />
         )}
         <View style={styles.textContainer}>
-          <Text style={styles.title}>{item.titleEn}</Text>
+          <Text style={styles.title}>{item.titleEn || item.title}</Text>
           <Text style={styles.dates}>
             {Math.abs(item.start)}-{Math.abs(item.end)} BC
             {item.end - item.start > 0 &&
@@ -98,34 +105,32 @@ const EventTimeline = ({ data }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" />
-
-      <ScrollView
-        ref={verticalScrollRef}
-        showsVerticalScrollIndicator={true}
-        style={styles.verticalScroll}
-      >
-        <ScrollView
-          ref={scrollViewRef}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          onScroll={handleScroll}
-          scrollEventThrottle={16}
-        >
-          <View
-            style={[
-              styles.timelineContainer,
-              {
-                width: timelineWidth,
-                height: ROWS * ITEM_HEIGHT,
-              },
-            ]}
+      {/* <PinchZoomView minZoom={0.1} maxZoom={5}> */}
+      <BrowserZoomView>
+        <ScrollView ref={verticalScrollRef} style={styles.verticalScroll}>
+          <ScrollView
+            ref={scrollViewRef}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
           >
-            {renderYearMarkers()}
-            {renderItems()}
-          </View>
+            <View
+              style={[
+                styles.timelineContainer,
+                {
+                  width: timelineWidth,
+                  height: ROWS * ITEM_HEIGHT,
+                },
+              ]}
+            >
+              {renderYearMarkers()}
+              {renderItems()}
+            </View>
+          </ScrollView>
         </ScrollView>
-      </ScrollView>
+      </BrowserZoomView>
+      {/* </PinchZoomView> */}
 
       {/* Current Year Indicator */}
       <View style={styles.currentYearContainer}>

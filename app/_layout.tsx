@@ -7,6 +7,7 @@ import DatabaseProvider from "@/context/databaseContext";
 import StorageProvider from "@/context/LocalstoreContext";
 import { MemorizationProvider } from "@/context/MemorizationContext";
 import MyThemeProvider from "@/context/ThemeContext";
+import { QueryProvider } from "@/providers/QueryProvider";
 import useCachedResources from "@/hooks/useCachedResources";
 import { settingState$ } from "@/state/settingState";
 import { Screens, ScreensName } from "@/types";
@@ -110,15 +111,17 @@ const App = () => {
             <BibleChapterProvider>
               <MemorizationProvider>
                 <MyThemeProvider>
-                  <GestureHandlerRootView style={{ flex: 1 }}>
-                    <BottomSheetModalProvider>
-                      <StatusBar animated translucent style="auto" />
-                      <Stack
-                        initialRouteName="(dashboard)"
-                        screenOptions={screenOptions}
-                      />
-                    </BottomSheetModalProvider>
-                  </GestureHandlerRootView>
+                  <QueryProvider>
+                    <GestureHandlerRootView style={{ flex: 1 }}>
+                      <BottomSheetModalProvider>
+                        <StatusBar animated translucent style="auto" />
+                        <Stack
+                          initialRouteName="(dashboard)"
+                          screenOptions={screenOptions}
+                        />
+                      </BottomSheetModalProvider>
+                    </GestureHandlerRootView>
+                  </QueryProvider>
                 </MyThemeProvider>
               </MemorizationProvider>
             </BibleChapterProvider>

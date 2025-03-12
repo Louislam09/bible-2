@@ -1,6 +1,10 @@
 import { StorageKeys } from "@/constants/StorageKeys";
-import { HistoryItem } from "@/hooks/useHistoryManager";
+import { bibleState$ } from "@/state/bibleState";
 import { EBibleVersions, EThemes, SortOption, TFont } from "@/types";
+import { observable, syncState, when } from "@legendapp/state";
+import { observablePersistAsyncStorage } from "@legendapp/state/persist-plugins/async-storage";
+import { use$ } from "@legendapp/state/react";
+import { configureSynced, syncObservable } from "@legendapp/state/sync";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, {
   createContext,
@@ -10,11 +14,6 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { observable, syncState, when } from "@legendapp/state";
-import { use$, useObservable } from "@legendapp/state/react";
-import { configureSynced, syncObservable } from "@legendapp/state/sync";
-import { observablePersistAsyncStorage } from "@legendapp/state/persist-plugins/async-storage";
-import { bibleState$ } from "@/state/bibleState";
 
 const persistOptions = configureSynced({
   persist: {
@@ -37,12 +36,15 @@ type StoreState = {
   isDarkMode: boolean;
   currentBibleVersion: string;
   isSongLyricEnabled: boolean;
+  isAlegresNuevasUnlocked: boolean;
+  hasRequestAccess: boolean;
   isGridLayout: boolean;
   isShowName: boolean;
   songFontSize: number;
   currentVoiceIdentifier: string;
   currentVoiceRate: number;
   floatingNoteButtonPosition: { x: number; y: number };
+  userData: { name: string; email: string, status: string };
   memorySortOption: SortOption;
   deleteLastStreakNumber: number;
   isDataLoaded: boolean;
@@ -63,10 +65,13 @@ const initialContext: StoreState = {
   isShowName: false,
   currentBibleVersion: EBibleVersions.BIBLE,
   isSongLyricEnabled: false,
+  isAlegresNuevasUnlocked: false,
+  hasRequestAccess: false,
   songFontSize: 21,
   currentVoiceIdentifier: "es-us-x-esd-local",
   currentVoiceRate: 1,
   floatingNoteButtonPosition: { x: 0, y: 0 },
+  userData: { name: "", email: "", status: "" },
   memorySortOption: SortOption.MostRecent,
   deleteLastStreakNumber: 1,
   isDataLoaded: false,

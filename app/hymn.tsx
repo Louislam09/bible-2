@@ -4,8 +4,10 @@ import Animation from "@/components/Animation";
 import Icon, { IconProps } from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { Stack, useNavigation } from "expo-router";
-import React from "react";
+import React, { useCallback, useRef } from "react";
 import {
+  Alert,
+  Pressable,
   ScrollView,
   StyleSheet,
   TouchableWithoutFeedback,
@@ -15,6 +17,12 @@ import { Screens, TTheme } from "@/types";
 import lottieAssets from "@/constants/lottieAssets";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import BottomModal from "@/components/BottomModal";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import RequestAccess from "@/components/admin/RequestAccess";
+import { use$ } from "@legendapp/state/react";
+import { storedData$ } from "@/context/LocalstoreContext";
+import useInternetConnection from "@/hooks/useInternetConnection";
 
 type IHymnOption = {
   icon: IconProps["name"];
@@ -23,6 +31,7 @@ type IHymnOption = {
   disabled?: boolean;
   isIonicon?: boolean;
   tag?: string;
+  isLocked?: boolean;
 };
 
 const getRandomNumberFromLength = (length: number) =>
@@ -35,6 +44,22 @@ const HymnScreen = () => {
   const pickARandomAsset = assets[getRandomNumberFromLength(assets.length)];
   const navigation = useNavigation();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
+  const isConnected = useInternetConnection();
+
+  const requestAccessBottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const isAlegresNuevasUnlocked = use$(() => storedData$.isAlegresNuevasUnlocked.get());
+  const hasRequestAccess = use$(() => storedData$.hasRequestAccess.get());
+
+  const statusColor = hasRequestAccess ? '#efbf43' : '#FFFFFF';
+
+  const voiceHandlePresentModalPress = useCallback(() => {
+    if(!isConnected) {
+      Alert.alert('Shalom', 'Por favor, conecta a internet para solicitar acceso');
+      return
+    }
+    
+    requestAccessBottomSheetModalRef.current?.present();
+  }, [isConnected]);
 
   const options: IHymnOption[] = [
     {
@@ -49,8 +74,21 @@ const HymnScreen = () => {
       icon: "Music2",
       label: "Mensajero de Alegres Nuevas",
       action: () => navigation.navigate(Screens.Song, { isAlegres: true }),
+      isLocked: !isAlegresNuevasUnlocked
     },
   ];
+
+  const LockCard = () => {
+    return (
+      <Pressable
+        style={({ pressed }) => [styles.lockCard, pressed && styles.pressed, { borderColor: statusColor }]}
+        onPress={voiceHandlePresentModalPress}
+      >
+        <Icon name={hasRequestAccess ? 'Clock' : "Lock"} color={statusColor} size={35} />
+        <Text style={[styles.lockTitle, hasRequestAccess && { backgroundColor: statusColor + 99, textAlign: 'center' }]}>{hasRequestAccess ? 'Solicitud en proceso' : 'Solicitar acceso'}</Text>
+      </Pressable>
+    )
+  }
 
   const renderItem = ({
     item,
@@ -60,7 +98,7 @@ const HymnScreen = () => {
     index: number;
   }) => (
     <TouchableWithoutFeedback
-      onPress={item.action}
+      onPress={item.isLocked ? () => { } : item.action}
       style={[
         {
           padding: 0,
@@ -69,11 +107,13 @@ const HymnScreen = () => {
           width: SCREEN_WIDTH / 3,
           alignItems: "center",
           justifyContent: "center",
+          position: 'relative'
         },
       ]}
       disabled={item.disabled}
     >
       <View style={[styles.card, item.disabled && { backgroundColor: "#ddd" }]}>
+        {item.isLocked && <LockCard />}
         <Animation
           style={{ borderColor: "red", borderWidth: 1 }}
           backgroundColor={"transparent"}
@@ -134,6 +174,16 @@ const HymnScreen = () => {
           />
         </View>
       </ScrollView>
+
+      <BottomModal
+        justOneSnap
+        showIndicator
+        justOneValue={["60%", "90%"]}
+        startAT={0}
+        ref={requestAccessBottomSheetModalRef}
+      >
+        <RequestAccess onClose={() => requestAccessBottomSheetModalRef.current?.dismiss()} />
+      </BottomModal>
     </ScreenWithAnimation>
   );
 };
@@ -143,6 +193,37 @@ const getStyles = ({ colors }: TTheme) =>
     container: {
       paddingTop: 50,
       flex: 1,
+    },
+    lockCard: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      backgroundColor: colors.background + 99,
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 99,
+      borderRadius: 15,
+      borderColor: 'white',
+      borderWidth: 2,
+    },
+    pressed: {
+      opacity: 0.8,
+      backgroundColor: colors.background + 99,
+      borderRadius: 15,
+      borderColor: 'white',
+      borderWidth: 2,
+      zIndex: 99,
+    },
+    lockTitle: {
+      fontSize: 22,
+      color: 'white',
+      marginVertical: 4,
+      backgroundColor: colors.notification + 99,
+      paddingHorizontal: 4,
+      borderRadius: 4,
+      fontWeight: 'bold',
     },
     imageContainer: {
       alignItems: "center",
@@ -173,7 +254,7 @@ const getStyles = ({ colors }: TTheme) =>
       borderRadius: 15,
       elevation: 5,
       flex: 1,
-      // height: 150,
+      minHeight: 200,
       margin: 5,
       backgroundColor: "white",
     },
