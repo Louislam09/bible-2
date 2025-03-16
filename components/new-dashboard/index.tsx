@@ -182,8 +182,8 @@ const SecondDashboard = () => {
     {
       icon: "CalendarRange",
       label: "Linea de tiempo",
-      action: () => requestAccessHandlePresentModalPress('timeline'),
-      // action: () => navigation.navigate(Screens.Timeline),
+      // action: () => requestAccessHandlePresentModalPress('timeline'),
+      action: () => navigation.navigate(Screens.Timeline),
       color: "#6de5cb",
       isNew: isWithinTimeframe("1w", new Date("2025-03-04")).isActive,
     },

@@ -10,6 +10,7 @@ import oldTimeline from "@/constants/oldTimeline";
 import Icon from "@/components/Icon";
 import MyTimeline from "@/components/timeline/MyTimeline";
 import TimelineList from "@/components/timeline/TimelineList";
+import CircularSlider from "@/components/timeline/CircularSlider";
 
 const data = [
   {
@@ -69,7 +70,8 @@ const timeline = () => {
           }),
         }}
       />
-      <TimelineList />
+      <CircularSlider />
+      {/* <TimelineList /> */}
 
       {/* <MyTimeline /> */}
     </ScreenWithAnimation>
