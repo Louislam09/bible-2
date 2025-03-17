@@ -11,15 +11,13 @@ const timelineEvents: TimelinePeriod[] = [
     events: [
       {
         id: 1016,
-        title: "Adán",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas2581_8-8-2013%209-50-05%20AM.jpg",
         slug: "Adán",
         start: -3954,
         end: -3024,
         row: 11,
-        type: "importante",
-        titleEn: "Adán",
+        type: "major",
       },
       {
         id: 662,
@@ -31,8 +29,7 @@ const timelineEvents: TimelinePeriod[] = [
         start: -3900,
         end: -3200,
         row: 14,
-        type: "importante",
-        titleEn: "Caín",
+        type: "major",
       },
       {
         id: 663,
@@ -43,9 +40,8 @@ const timelineEvents: TimelinePeriod[] = [
         start: -3897,
         end: -3825,
         row: 16,
-        type: "importante",
+        type: "major",
         isFixed: true,
-        titleEn: "Abel",
       },
       {
         id: 664,
@@ -56,9 +52,8 @@ const timelineEvents: TimelinePeriod[] = [
         start: -3825,
         end: -3825,
         row: 18,
-        type: "importante",
+        type: "major",
         isFixed: true,
-        titleEn: "Caín marcado",
       },
       {
         id: 665,
@@ -69,24 +64,22 @@ const timelineEvents: TimelinePeriod[] = [
         start: -3824,
         end: -2912,
         row: 9,
-        type: "importante",
-        titleEn: "Seth",
+        type: "major",
       },
       {
         id: 666,
-        title: "Hénoc",
+        title: "Enos",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-%20Enos_8-5-2013%205-22-39%20PM.jpg",
         slug: "enos",
         start: -3719,
         end: -2814,
         row: 7,
-        type: "importante",
-        titleEn: "Enos",
+        type: "major",
       },
       {
         id: 667,
-        title: "Kénan",
+        title: "Cainan",
         image:
           "http://timeline.biblehistory.com/media/images/t/Goodsalt-%20cainan_8-5-2013%205-15-02%20PM.jpg",
 
@@ -94,8 +87,7 @@ const timelineEvents: TimelinePeriod[] = [
         start: -3629,
         end: -2719,
         row: 22,
-        type: "importante",
-        titleEn: "Cainan",
+        type: "major",
       },
       {
         id: 668,
@@ -107,24 +99,22 @@ const timelineEvents: TimelinePeriod[] = [
         start: -3559,
         end: -2664,
         row: 16,
-        type: "importante",
-        titleEn: "Mahalaleel",
+        type: "major",
       },
       {
         id: 669,
-        title: "Jérd",
+        title: "Jared",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt- Jared_8-5-2013 5-24-43 PM.jpg",
         slug: "jarado",
         start: -3494,
         end: -2532,
         row: 5,
-        type: "importante",
-        titleEn: "Jared",
+        type: "major",
       },
       {
         id: 670,
-        title: "Hénoc",
+        title: "Enoc",
         image:
           "http://timeline.biblehistory.com/media/images/t/enoch_7-31-2013 12-29-36 PM.jpg",
 
@@ -132,12 +122,11 @@ const timelineEvents: TimelinePeriod[] = [
         start: -3332,
         end: -2967,
         row: 18,
-        type: "importante",
-        titleEn: "Enoc",
+        type: "major",
       },
       {
         id: 671,
-        title: "Mathusalén",
+        title: "Matusalén",
         image:
           "http://timeline.biblehistory.com/media/images/t/tissot-Building_the_Ark_7-31-2013%209-22-14%20AM.jpg",
 
@@ -145,12 +134,10 @@ const timelineEvents: TimelinePeriod[] = [
         start: -3267,
         end: -2298,
         row: 3,
-        type: "importante",
-        titleEn: "Matusalén",
+        type: "major",
       },
       {
         id: 672,
-        title: "Le Ministère Profétique d'Hénoc",
         image:
           "http://timeline.biblehistory.com/media/images/t/Enoch_5-21-2013%209-53-09%20AM.jpg",
 
@@ -158,13 +145,13 @@ const timelineEvents: TimelinePeriod[] = [
         start: -3267,
         end: -2967,
         row: 20,
-        type: "importante",
+        type: "major",
         isFixed: true,
-        titleEn: "Ministerio profético de Enoch",
+        title: "Ministerio profético de Enoch",
       },
       {
         id: 673,
-        title: "Lémec",
+        title: "Lamech",
         image:
           "http://timeline.biblehistory.com/media/images/t/Goodsalt-%20Lamech_8-5-2013%205-27-05%20PM.jpg",
 
@@ -172,8 +159,7 @@ const timelineEvents: TimelinePeriod[] = [
         start: -3080,
         end: -2303,
         row: 14,
-        type: "importante",
-        titleEn: "Lamech",
+        type: "major",
       },
     ],
     description:

@@ -618,6 +618,7 @@ export type TPoints = {
   negativePoint?: number;
 };
 
+// TIMELINE
 export type TimelineEvent = {
   id: number;
   title?: string;
@@ -645,3 +646,5 @@ export type TimelinePeriod = {
   sectionTitle: string;
   subTitle: string;
 };
+
+export type ShallowTimelineSection = Omit<TimelinePeriod, 'events'>
