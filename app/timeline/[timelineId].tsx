@@ -14,13 +14,11 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import timelineEvents from "@/constants/events";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import MyTimeline from "@/components/timeline/MyTimeline";
+import DisplayTimeline from "@/components/timeline/DisplayTimeline";
 
 const SingleTimeline = () => {
   const { timelineId } = useParams();
   const theme = useTheme();
-  const selected = timelineEvents.find(
-    (item) => +item.id === timelineId
-  ) as TimelinePeriod;
 
   return (
     <>
@@ -35,13 +33,13 @@ const SingleTimeline = () => {
               headerRightIcon: "Check",
               headerRightIconColor: theme.colors.text,
               onPress: () => console.log(),
-              disabled: false,
-              style: { opacity: 1 },
+              disabled: true,
+              style: { opacity: 0 },
             },
           }),
         }}
       />
-      <MyTimeline data={selected || {}} />
+      <DisplayTimeline startingSection={timelineId}  />
     </>
   );
 };

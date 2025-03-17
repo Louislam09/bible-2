@@ -39,7 +39,7 @@ export const useTimeline = ({ startYear, endYear, interval }: UseTimelineProps) 
       return `${Math.abs(currentYearNb)} ${yearSuffix}`
     }
   })
-
+ 
   const lineX = useDerivedValue(() => {
     return interpolate(
       x.value,

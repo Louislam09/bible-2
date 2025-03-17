@@ -1,6 +1,7 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
-import NewTimeline from "@/components/timeline/NewTimeline";
+import DisplayTimeline from "@/components/timeline/DisplayTimeline";
+import TimelineList from "@/components/timeline/TimelineList";
 import { useTheme } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import React from "react";
@@ -33,9 +34,7 @@ const timeline = () => {
           }),
         }}
       />
-      <NewTimeline />
-      {/* <CircularSlider /> */}
-      {/* <TimelineList /> */}
+      <TimelineList />
     </ScreenWithAnimation>
   );
 };

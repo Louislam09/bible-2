@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSharedValue } from 'react-native-reanimated'
 import { View } from '../Themed'
 import TimelineCanva from './TimelineCanva'

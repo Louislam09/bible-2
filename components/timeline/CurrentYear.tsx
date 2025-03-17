@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import Animated, {
   Extrapolation,
   SharedValue,
   interpolate,
+  runOnJS,
   useAnimatedStyle,
   useDerivedValue,
 } from 'react-native-reanimated'
@@ -17,6 +18,7 @@ import Icon from '../Icon'
 import { Text } from '../Themed'
 import { StyleSheet } from 'react-native'
 import { useTheme } from '@react-navigation/native';
+import ReText from './ReText'
 
 const CurrentYear = ({
   year,
@@ -57,6 +59,11 @@ const CurrentYear = ({
   const stylezContainer = useAnimatedStyle(() => ({
     transform: [{ translateX: lineX.value }],
   }))
+
+  // const [displayYear, setDisplayYear] = React.useState(year.value)
+  // useDerivedValue(() => {
+  //   runOnJS(setDisplayYear)(year.value)
+  // }, [year])
 
   return (
     <Animated.View
@@ -122,10 +129,10 @@ const CurrentYear = ({
           paddingTop: Platform.OS === 'android' ? 8 : 0,
         }}
       >
-        <Animated.Text
-          style={{ color: 'white', width: 120, textAlign: 'center', fontWeight: 'bold' }}>
-          {year}
-        </Animated.Text>
+        <ReText text={year} style={{ fontWeight: 'bold', color: 'white' }} />
+        {/* <Text style={{ color: 'white', width: 120, textAlign: 'center', fontWeight: 'bold' }}>
+          {displayYear}
+        </Text> */}
       </View>
       <Animated.View
         style={[

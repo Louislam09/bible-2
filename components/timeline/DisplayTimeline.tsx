@@ -8,9 +8,9 @@ import TimelineSection from './TimelineSection'
 
 const omitEvents = ({ events, ...rest }: TimelinePeriod): ShallowTimelineSection => rest
 
-const NewTimeline = () => {
+const DisplayTimeline = ({ startingSection = 0 }: { startingSection: number }) => {
   const theme = useTheme()
-  const [current, setCurrent] = React.useState(0)
+  const [current, setCurrent] = React.useState(startingSection)
   const [entrance, setEntrance] = React.useState<0 | 1>(1)
 
   const onPrev = useCallback(() => {
@@ -31,13 +31,18 @@ const NewTimeline = () => {
         {events?.map((ev: any, i: number) => {
           const prevEvent = events[i - 1] && omitEvents(events[i - 1])
           const nextEvent = events[i + 1] && omitEvents(events[i + 1])
+          const isCurrent = current === i
+
+          if (!isCurrent) {
+            return null
+          }
 
           return (
             <TimelineSection
               {...ev}
-              key={`${i}-${current === i}`}
+              key={`${i}-${isCurrent}`}
               entrance={entrance}
-              isCurrent={current === i}
+              isCurrent={isCurrent}
               isFirst={i === 0}
               isLast={i === events.length - 1}
               onPrev={onPrev}
@@ -52,6 +57,6 @@ const NewTimeline = () => {
   )
 }
 
-export default NewTimeline
+export default DisplayTimeline
 
 const styles = StyleSheet.create({})

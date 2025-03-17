@@ -23,12 +23,6 @@ const TimeEventItem = ({ item, onPress, isMobile }: TimeEventItemProps) => {
   const theme = useTheme();
   const styles = getStyles(theme);
 
-  const yearSpan = item.endYear - item.startYear;
-  //   const timeLabel =
-  //     yearSpan > 0
-  //       ? `${item.startYear} - ${item.endYear} (${yearSpan} years)`
-  //       : `${item.startYear}`;
-
   return (
     <Pressable
       style={({ pressed }) => [
@@ -95,19 +89,19 @@ const TimelineList = () => {
   const isMobile = +aspectRadio.toFixed(2) > 1.65;
   const router = useRouter();
 
-  const handleItemPress = (item: TimelinePeriod) => {
-    router.push({ pathname: `/timeline/${item.id}` });
+  const handleItemPress = (index: number) => {
+    router.push({ pathname: `/timeline/${index}` });
   };
   return (
     <View style={[styles.container]}>
       <FlashList
         data={events}
         keyExtractor={(item, index) => `timelineEvent:${index}`}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <TimeEventItem
             isMobile={isMobile}
             item={item}
-            onPress={handleItemPress}
+            onPress={() => handleItemPress(index)}
           />
         )}
         estimatedItemSize={150}
