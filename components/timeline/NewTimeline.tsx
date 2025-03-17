@@ -1,10 +1,10 @@
-import { StyleSheet } from 'react-native'
-import React, { useCallback } from 'react'
-import { Text, View } from '../Themed'
 import timelineEvents from '@/constants/events'
 import { ShallowTimelineSection, TimelinePeriod } from '@/types'
+import { useTheme } from '@react-navigation/native'
+import React, { useCallback } from 'react'
+import { StyleSheet } from 'react-native'
+import { View } from '../Themed'
 import TimelineSection from './TimelineSection'
-import { useTheme } from '@react-navigation/native';
 
 const omitEvents = ({ events, ...rest }: TimelinePeriod): ShallowTimelineSection => rest
 
@@ -25,14 +25,13 @@ const NewTimeline = () => {
 
   const events = timelineEvents as any;
 
-
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.notification }}>
+    <View style={{ flex: 1, backgroundColor: '#f5f6fa' }}>
       <View style={{ flex: 1, position: 'relative' }}>
         {events?.map((ev: any, i: number) => {
           const prevEvent = events[i - 1] && omitEvents(events[i - 1])
           const nextEvent = events[i + 1] && omitEvents(events[i + 1])
-          
+
           return (
             <TimelineSection
               {...ev}

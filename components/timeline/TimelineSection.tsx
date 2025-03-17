@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSharedValue } from 'react-native-reanimated'
 import { View } from '../Themed'
-import ScrollView from './ScrollView'
+import TimelineCanva from './TimelineCanva'
 import TimelineEvent from './TimelineEvent'
 import { useTimeline } from './useTimeline'
 
@@ -16,6 +16,7 @@ import NextSectionImage from './NextSectionImage'
 import PrevSectionImage from './PrevSectionImage'
 import TimelineFooter from './TimelineFooter'
 
+import { useTheme } from '@react-navigation/native';
 
 interface Props extends TimelinePeriod {
     onPrev: () => void
@@ -49,7 +50,8 @@ const Timeline = ({
     prevEvent,
     nextEvent,
 }: Props) => {
-    const isReady = useSharedValue(0)
+  const theme = useTheme()
+  const isReady = useSharedValue(0)
     const eventModalRef = React.useRef<BottomSheet>(null)
 
     const [event, setEvent] = React.useState<Partial<TimelineEventProps> | null>(
@@ -80,9 +82,7 @@ const Timeline = ({
             <Stack.Screen options={{ headerTitle: title || '' }} />
 
             {!isFirst && <PrevSectionImage x={x} prevEvent={prevEvent} />}
-            {!isLast && (
-                <NextSectionImage x={x} width={width} nextEvent={nextEvent} />
-            )}
+            {!isLast && <NextSectionImage x={x} width={width} nextEvent={nextEvent} />}
             <CurrentSectionImage
                 isReady={isReady}
                 currentEvent={{
@@ -98,7 +98,7 @@ const Timeline = ({
                     interval,
                 }}
             />
-            <ScrollView
+            <TimelineCanva
                 x={x}
                 y={y}
                 width={width}
@@ -111,8 +111,8 @@ const Timeline = ({
                 entrance={entrance}
             >
                 <View style={{ width, height }}>
-                    <View style={{ position: 'relative', width, height }}>
-                        {events.map((event: any, i: number) => (
+                    <View style={{ position: 'relative', width, height, backgroundColor: theme.colors.background + 99, overflow: 'hidden' }}>
+                        {events.map((event, i) => (
                             <TimelineEvent
                                 color={color}
                                 x={x}
@@ -126,7 +126,7 @@ const Timeline = ({
                         ))}
                     </View>
                 </View>
-            </ScrollView>
+            </TimelineCanva>
             <TimelineFooter
                 width={width}
                 x={x}
@@ -135,7 +135,6 @@ const Timeline = ({
                 interval={interval}
             />
             <Line lineX={lineX} color={color} />
-
             <CurrentYear
                 year={year}
                 x={x}
@@ -153,6 +152,7 @@ const Timeline = ({
 
 const styles = StyleSheet.create({
     container: {
+        flex:1,
         position: 'absolute',
         left: 0,
         bottom: 0,

@@ -20,10 +20,10 @@ const SectionImage = ({
   const theme = useTheme()
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'red', flexDirection: 'row' }}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background, flexDirection: 'row' }}>
       <View style={{ width: 60, justifyContent: 'center', alignItems: 'center' }}>
         {direction === 'previous' && (
-          <Icon name="ChevronLeft" size={60} />
+          <Icon name="ChevronLeft" color='white' size={60} />
         )}
       </View>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -62,7 +62,7 @@ const SectionImage = ({
         />
       </View>
       <View style={{ width: 60, justifyContent: 'center', alignItems: 'center' }} >
-        {direction === 'next' && <Icon name="ChevronRight" size={60} />}
+        {direction === 'next' && <Icon color='white' name="ChevronRight" size={60} />}
       </View>
     </View>
   )

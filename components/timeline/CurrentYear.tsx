@@ -124,7 +124,7 @@ const CurrentYear = ({
       >
         <Animated.Text
           style={{ color: 'white', width: 120, textAlign: 'center', fontWeight: 'bold' }}>
-          {year.value}
+          {year}
         </Animated.Text>
       </View>
       <Animated.View

@@ -57,28 +57,11 @@ interface AnimationProps {
   opacity: SharedValue<number>
 }
 
-type WithScrollYParams = Pick<
-  AnimationProps,
-  'translationY' | 'velocityY' | 'state' | 'containerHeight' | 'contentHeight'
->
-
-type WithScrollXParams = Pick<
-  AnimationProps,
-  | 'translationX'
-  | 'velocityX'
-  | 'state'
-  | 'containerWidth'
-  | 'contentWidth'
-  | 'onNext'
-  | 'onPrev'
-  | 'isFirst'
-  | 'isLast'
-  | 'entrance'
->
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    overflow: 'hidden',
   },
 })
 

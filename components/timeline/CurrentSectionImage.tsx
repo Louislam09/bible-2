@@ -7,6 +7,7 @@ import Animated, {
 import SectionImage from './SectionImage'
 import { StyleSheet } from 'react-native'
 import { ShallowTimelineSection } from '@/types'
+import { Text } from '../Themed'
 
 interface Props {
   isReady: SharedValue<number>
@@ -21,7 +22,7 @@ const CurrentSectionImage = ({ isReady, currentEvent }: Props) => {
   })
 
   return (
-    <Animated.View style={[{ ...StyleSheet.absoluteFillObject }, style]}>
+    <Animated.View style={[StyleSheet.absoluteFillObject , style]}>
       <SectionImage {...currentEvent} />
     </Animated.View>
   )

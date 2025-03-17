@@ -13,6 +13,7 @@ const timelineEvents: TimelinePeriod[] = [
         id: 1016,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas2581_8-8-2013%209-50-05%20AM.jpg",
+        title: "Adan",
         slug: "Adán",
         start: -3954,
         end: -3024,
@@ -189,7 +190,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 675,
-        title: "La prédication de Noé",
+        title: "La predicación de Noé",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-pppas0232_8-7-2013%2012-53-32%20PM.jpg",
         slug: "noahs-preaching",
@@ -200,7 +201,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 676,
-        title: "Japhet",
+        title: "Jafet",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/noah_and_helpers_build_ark_3_7-22-2013%202-36-48%20PM.jpg",
@@ -212,7 +213,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 677,
-        title: "Cham",
+        title: "Cam",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Noah%20Sacrifice_5-20-2013%205-44-48%20PM.jpg",
@@ -235,7 +236,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 613,
-        title: "Le Déluge",
+        title: "El Diluvio",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-flood_8-5-2013%203-57-56%20PM.jpg",
         slug: "flood",
@@ -247,7 +248,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 614,
-        title: "Le péché et la malédiction de Cham",
+        title: "El pecado y la maldición de Cam",
         slug: "hams-sin-and-curse",
         start: -2297,
         end: -2297,
@@ -257,7 +258,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 615,
-        title: "Arphaxad",
+        title: "Arfaxad",
         slug: "arphaxad",
         start: -2296,
         end: -1858,
@@ -267,7 +268,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 616,
-        title: "Cush",
+        title: "Cus",
         slug: "cush",
         start: -2295,
         end: -1898,
@@ -277,7 +278,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 617,
-        title: "Migration vers la plaine de Shinar",
+        title: "Migración a la llanura de Sinar",
         slug: "migration-to-plain-of-shinar",
         start: -2280,
         end: -2280,
@@ -299,7 +300,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 618,
-        title: "Schélach",
+        title: "Sala",
         slug: "salah",
         start: -2261,
         end: -1828,
@@ -319,7 +320,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 624,
-        title: "Nimrod a fondé Babylone",
+        title: "Nimrod fundó Babilonia",
         slug: "nimrod-founded-babylon",
         start: -2200,
         end: -2200,
@@ -339,7 +340,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 622,
-        title: "Tour de Babel, division de la Terre",
+        title:"Torre de Babel, división de la Tierra",
         image:
           "http://timeline.biblehistory.com/media/images/t/Cleve-van_construction-tower-babel_8-7-2013%2010-25-44%20AM.jpg",
         slug: "tower-of-babel-division-of-earth",
@@ -351,7 +352,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 625,
-        title: "Nimrod a fondé Ninive",
+        title: "Nimrod fundó Nínive",
         slug: "nimrod-founded-nineveh",
         start: -2195,
         end: -2195,
@@ -373,7 +374,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 626,
-        title: "Réhu",
+        title: "Reu",
         slug: "reu",
         start: -2167,
         end: -1928,
@@ -403,7 +404,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 629,
-        title: "Térach",
+        title: "Téraj",
         slug: "terah",
         start: -2076,
         end: -1871,
@@ -539,7 +540,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 643,
-        title: "Mariage d'Abraham et de Sarah",
+        title: "El pacto con Abraham",
         slug: "marriage-of-abraham-and-sarah",
         start: -1915,
         end: -1809,

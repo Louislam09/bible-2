@@ -105,7 +105,7 @@ const TimelineEvent = ({
   return (
     <TouchableOpacity
       onPress={onOpenEvent}
-      style={[  styles.container,  { left: left + offset, top: top, width: width } ]}
+      style={[ styles.container, { left: left + offset, top: top, width: width }]}
     >
       <Animated.View  style={[ styles.titleContainer, stylez ]}>
         <Text style={{ color: theme.colors.text, fontSize: 12, fontWeight: 'bold' }} numberOfLines={2}>{title}</Text>
