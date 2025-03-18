@@ -1370,7 +1370,7 @@ const timelineEvents: TimelinePeriod[] = [
     events: [
       {
         id: 720,
-        title: "Joseph et la fin de la sécheresse de 7 ans",
+        title: "José y el fin de la sequía de 7 años",
         slug: "joseph-and-end-of-7-year-drought",
         start: -1650,
         end: -1656,
@@ -1380,7 +1380,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 722,
-        title: "Esrom (ou Hezron)",
+        title: "Esrom (o Hezrón)",
         slug: "esrom-or-hezron",
         start: -1593,
         end: -1503,
@@ -1390,7 +1390,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 723,
-        title: "Aram (ou Ram)",
+        title: "Aram (o Ram)",
         slug: "aram-or-ram",
         start: -1523,
         end: -1443,
@@ -1400,7 +1400,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 724,
-        title: "Aminadab (ou Amminidab)",
+        title: "Aminadab (o Amminidab)",
         slug: "aminadab-or-amminidab",
         start: -1453,
         end: -1363,
@@ -1420,8 +1420,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 725,
-        title:
-          "Les Égyptiens chassent les Hyksos, l'Égyptien du Nouveau Royaume",
+        title: "Los egipcios expulsan a los hicsos, el egipcio del Nuevo Reino",
         slug: "egyptians-drive-out-hyksos-new-kingdom-egyptian",
         start: -1566,
         end: -1566,
@@ -1431,7 +1430,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 740,
-        title: "Myriam",
+        title: "Miriam",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Miriam_5-7-2013%2010-25-30%20AM.jpg",
@@ -1443,7 +1442,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1018,
-        title: "Aaron",
+        title: "Aarón",
         image:
           "http://timeline.biblehistory.com/media/images/t/Aaron%20w%20golden%20calf%2019-144_7-22-2013%202-57-17%20PM.jpg",
         slug: "aaron",
@@ -1454,7 +1453,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1014,
-        title: "Moïse",
+        title: "Moisés",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-pppas0220_8-7-2013%201-52-29%20PM.jpg",
         slug: "moses",
@@ -1465,7 +1464,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 728,
-        title: "Naasson (ou Nahshon)",
+        title: "Naasón (o Nahshón)",
         slug: "naasson-or-nahshon",
         start: -1383,
         end: -1273,
@@ -1475,7 +1474,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 727,
-        title: "Moïse commence l'entraînement militaire",
+        title: "Moisés comienza el entrenamiento militar",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas5055_8-6-2013%2012-58-58%20PM.jpg",
         slug: "moses-begins-military-training",
@@ -1487,7 +1486,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 731,
-        title: "Moïse s'enfuit",
+        title: "Moisés huye",
         slug: "moses-flees",
         start: -1486,
         end: -1486,
@@ -1520,7 +1519,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 742,
-        title: "Othniel",
+        title: "Otoniel",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Othoniel_Ben_Kenaz_8-6-2013%201-20-17%20PM.jpg",
@@ -1532,7 +1531,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 733,
-        title: "Eléazar",
+        title: "Eleazar",
         slug: "eleazar",
         start: -1463,
         end: -1353,
@@ -1542,7 +1541,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 734,
-        title: "L'appel prophétique de Moïse",
+        title: "El llamado profético de Moisés",
         slug: "moses-prophetic-call",
         start: -1446,
         end: -1446,
@@ -1552,7 +1551,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 735,
-        title: "L'exode et la traversée de la mer Rouge",
+        title: "El Éxodo y el cruce del Mar Rojo",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-RedSea_8-5-2013%204-01-53%20PM.jpg",
         slug: "exodus-and-the-red-sea-crossing",
@@ -1564,7 +1563,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 736,
-        title: "Don des dix commandements",
+        title: "Entrega de los diez mandamientos",
         slug: "giving-of-the-ten-commandments",
         start: -1446,
         end: -1446,
@@ -1585,7 +1584,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 692,
-        title: "Ruben",
+        title: "Rubén",
         slug: "reuben",
         start: -1706,
         end: -1616,
@@ -1595,7 +1594,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 693,
-        title: "Siméon",
+        title: "Simeón",
         slug: "simeon",
         start: -1705,
         end: -1615,
@@ -1605,7 +1604,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 694,
-        title: "Lévi",
+        title: "Leví",
         slug: "levi",
         start: -1704,
         end: -1567,
@@ -1635,7 +1634,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 695,
-        title: "Juda",
+        title: "Judá",
         slug: "judah",
         start: -1703,
         end: -1603,
@@ -1645,7 +1644,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 698,
-        title: "Nephtali",
+        title: "Neftalí",
         slug: "naphtali",
         start: -1703,
         end: -1605,
@@ -1655,7 +1654,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 701,
-        title: "Asher",
+        title: "Aser",
         slug: "asher",
         start: -1703,
         end: -1601,
@@ -1665,7 +1664,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 702,
-        title: "Issacar",
+        title: "Isacar",
         slug: "issachar",
         start: -1702,
         end: -1599,
@@ -1675,7 +1674,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 703,
-        title: "Zabulon",
+        title: "Zabulón",
         slug: "zebulun",
         start: -1701,
         end: -1602,
@@ -1695,7 +1694,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1017,
-        title: "Joseph",
+        title: "José",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas0659_8-7-2013%203-16-58%20PM.jpg",
         slug: "joseph",
@@ -1706,7 +1705,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 715,
-        title: "Manassé",
+        title: "Manasés",
         slug: "manasseh",
         start: -1668,
         end: -1578,
@@ -1716,7 +1715,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 716,
-        title: "Ephraïm",
+        title: "Efraín",
         slug: "ephraim",
         start: -1665,
         end: -1575,
@@ -1726,7 +1725,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 718,
-        title: "Pharez (ou Perez)",
+        title: "Fares (o Pérez)",
         slug: "pharez-or-perez",
         start: -1663,
         end: -1573,
