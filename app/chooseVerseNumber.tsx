@@ -13,7 +13,7 @@ import { Fragment, useMemo } from "react";
 
 const chooseVerseNumber = () => {
   const routeParam = useParams<ChooseChapterNumberParams>();
-  const isBottomSideSearching = false;
+  const isBottomSideSearching = bibleState$.isBottomBibleSearching.get();
   const { book, bottomSideBook, bottomSideChapter, chapter } = routeParam;
   const selectedBook = isBottomSideSearching ? bottomSideBook : book;
   const selectedChapter = isBottomSideSearching ? bottomSideChapter : chapter;

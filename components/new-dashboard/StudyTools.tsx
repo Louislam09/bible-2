@@ -1,3 +1,6 @@
+import { IDashboardOption } from "@/app/(dashboard)";
+import { TTheme } from "@/types";
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -5,9 +8,6 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import React from "react";
-import { IDashboardOption } from "@/app/(dashboard)";
-import { TTheme } from "@/types";
 import Icon from "../Icon";
 import { NewFeatureBadge } from "../NewFeatureBadge";
 
@@ -25,7 +25,6 @@ const StudyTools = ({ list, theme }: StudyToolsProps) => {
   return (
     <View style={styles.studyTools}>
       <Text style={styles.sectionTitle}>Herramientas de Estudio</Text>
-
       <View style={styles.toolsContainer}>
         {list.map((item) => (
           <TouchableOpacity
@@ -40,7 +39,7 @@ const StudyTools = ({ list, theme }: StudyToolsProps) => {
             disabled={item.disabled}
           >
             {item.isNew && (
-              <NewFeatureBadge style={{ backgroundColor: "#f73043" }} />
+              <NewFeatureBadge title="Disponible" style={{ backgroundColor: "#f73043",  borderColor: theme.colors.background, borderWidth: 2 }} />
             )}
             <Icon
               size={24}

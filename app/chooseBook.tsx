@@ -4,6 +4,7 @@ import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import useParams from "@/hooks/useParams";
+import { bibleState$ } from "@/state/bibleState";
 import {
   BookIndexes,
   ChooseChapterNumberParams,
@@ -38,7 +39,6 @@ const BookItem = React.memo(
     theme: any;
   }) => {
     const styles = useMemo(() => getStyles(theme), [theme]);
-
     return (
       <TouchableOpacity
         style={[
@@ -133,7 +133,7 @@ const ChooseBook: React.FC = () => {
   const { book } = routeParam;
   const theme = useTheme();
   const { viewLayoutGrid, toggleViewLayoutGrid } = useBibleContext();
-  const isBottomSideSearching = false;
+  const isBottomSideSearching = bibleState$.isBottomBibleSearching.get();
 
   const handlePress = useCallback(
     (item: IDBBookNames) => {

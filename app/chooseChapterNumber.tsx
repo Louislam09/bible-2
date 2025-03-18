@@ -14,7 +14,7 @@ const ChooseChapterNumber = () => {
   const navigation = useNavigation();
   const routeParam = useParams<ChooseChapterNumberParams>();
   const { book, bottomSideBook } = routeParam;
-  const isBottomSideSearching = false;
+  const isBottomSideSearching = bibleState$.isBottomBibleSearching.get();
 
   const selectedBook = isBottomSideSearching ? bottomSideBook : book;
   const displayBookName = renameLongBookName(selectedBook || "");

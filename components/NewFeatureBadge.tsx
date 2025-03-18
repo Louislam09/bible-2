@@ -1,14 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle, StyleProp } from 'react-native';
+import Icon from './Icon';
 
 interface NewFeatureBadgeProps {
   style?: StyleProp<ViewStyle>;
+  title?: string;
 }
 
-export const NewFeatureBadge: React.FC<NewFeatureBadgeProps> = ({ style }) => {
+export const NewFeatureBadge: React.FC<NewFeatureBadgeProps> = ({ style, title }) => {
   return (
     <View style={[styles.badgeContainer, style]}>
-      <Text style={styles.badgeText}>Nuevo</Text>
+      <Text style={styles.badgeText}>{title || 'Nuevo'}</Text>
     </View>
   );
 };
@@ -30,7 +32,12 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
     <View style={[styles.cardContainer, style]}>
       {isNew && <NewFeatureBadge style={styles.badge} />}
       <View style={styles.contentContainer}>
-        {icon && <Text style={styles.icon}>{icon}</Text>}
+        {icon &&  <Icon
+              size={24}
+              name={icon as any}
+              color="#fff" 
+              style={[{  marginRight: 8 }]}
+            />}
         <Text style={styles.title}>{title}</Text>
       </View>
     </View>
@@ -40,7 +47,7 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
 const styles = StyleSheet.create({
   badgeContainer: {
     position: 'absolute',
-    top: -8,
+    top: -12,
     right: -8,
     backgroundColor: '#3B82F6', // blue-500
     paddingVertical: 4,
@@ -59,7 +66,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: '500',
   },
   cardContainer: {
