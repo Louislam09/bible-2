@@ -58,7 +58,7 @@ export default [
       "¿Por qué buscáis a Cristo aquí?\n¡Entre los muertos ya no está!\n¡Ya no lloréis! ¡Cantad, reíd!\nY proclamad: ¡Que Cristo vive y reina ya!",
     stanzas: [
       "(1) ¡Anuncien que Él resucitó! ¡Tomó en la cruz nuestro lugar! ¡Y del sepulcro revivió! ¡Allí a la muerte derrotó!",
-      "(2) Lo vieron tristes sepultar los que en Él tuvieron fe, y su esperanza muerte ya creyeron sepultar con Él.",
+      "(2) Lo vieron tristes sepultar los que en Él tuvieron fe, y su esperanza muerta ya creyeron sepultar con Él.",
       "(3) Pero el sepulcro no logró en sus prisiones retener al Cristo Rey, que vencedor, Dios levantó con Su poder.",
       "(4) ¡Resucitó! Ya no tendrá la tumba sombras para el fiel; aún cuando muera vivirá el que creyere solo en Él.",
     ],
