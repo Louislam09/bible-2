@@ -340,7 +340,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 622,
-        title:"Torre de Babel, división de la Tierra",
+        title: "Torre de Babel, división de la Tierra",
         image:
           "http://timeline.biblehistory.com/media/images/t/Cleve-van_construction-tower-babel_8-7-2013%2010-25-44%20AM.jpg",
         slug: "tower-of-babel-division-of-earth",
@@ -550,7 +550,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 644,
-        title: "Mariage de Nachor et Milca",
+        title: "Matrimonio de Nacor y Milca",
         slug: "marriage-of-nahor-and-milcah",
         start: -1906,
         end: -1850,
@@ -560,7 +560,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 647,
-        title: "Terach quitte Ur pour la ville de Haran",
+        title: "Téraj deja Ur para ir a la ciudad de Harán",
         slug: "terah-leaves-ur-for-city-of-haran",
         start: -1896,
         end: -1896,
@@ -570,7 +570,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 648,
-        title: "Abram appelé et quitte Haran",
+        title: "Abram es llamado y deja Harán",
         slug: "abram-called-and-departs-haran",
         start: -1871,
         end: -1871,
@@ -580,7 +580,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 649,
-        title: "La famine dans le pays",
+        title: "La hambruna en la tierra",
         slug: "famine-in-the-land",
         start: -1871,
         end: -1871,
@@ -590,7 +590,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 650,
-        title: "Sarah et le roi égyptien",
+        title: "Sara y el rey egipcio",
         slug: "sarah-and-egyptian-king",
         start: -1871,
         end: -1871,
@@ -600,7 +600,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 651,
-        title: "Lot déménage à Sodome",
+        title: "Lot se muda a Sodoma",
         slug: "lot-moves-to-sodom",
         start: -1867,
         end: -1867,
@@ -610,7 +610,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 655,
-        title: "Abram livre Sodome aux quatre rois",
+        title: "Abram libera Sodoma de los cuatro reyes",
         slug: "abram-delivers-sodom-from-four-kings",
         start: -1866,
         end: -1866,
@@ -620,7 +620,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 656,
-        title: "Abram béni par Melchisedek",
+        title: "Abram bendecido por Melquisedec",
         slug: "abram-blessed-by-melchizedek",
         start: -1866,
         end: -1866,
@@ -630,7 +630,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 657,
-        title: "L'alliance de Dieu avec Abram / Four à fumée",
+        title: "El pacto de Dios con Abram / Horno humeante",
         slug: "gods-covenant-with-abram-smoking-furnace",
         start: -1865,
         end: -1865,
@@ -640,7 +640,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 654,
-        title: "Laban",
+        title: "Labán",
         slug: "laban",
         start: -1860,
         end: -1760,
@@ -662,7 +662,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 607,
-        title: "Abram devient Abraham, l'alliance de la circoncision",
+        title: "Abram se convierte en Abraham, el pacto de la circuncisión",
         slug: "abram-becomes-abraham-covenant-of-circumcision",
         start: -1852,
         end: -1852,
@@ -683,7 +683,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 652,
-        title: "Lot et ses filles vivent dans une grotte",
+        title: "Lot y sus hijas viven en una cueva",
         slug: "lot-and-daughters-dwell-in-a-cave",
         start: -1850,
         end: -1850,
@@ -693,7 +693,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 658,
-        title: "Sodome détruite",
+        title: "Sodoma destruida",
         slug: "sodom-destroyed",
         start: -1850,
         end: -1850,
@@ -703,7 +703,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 659,
-        title: "Ismaël se moque d'Isaac",
+        title: "Ismael se burla de Isaac",
         slug: "ishmael-mocks-isaac",
         start: -1848,
         end: -1848,
@@ -713,7 +713,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 680,
-        title: "L'appel d'Abraham à sacrifier Isaac",
+        title: "El llamado de Abraham a sacrificar a Isaac",
         slug: "abrahams-call-to-sacrifice-isaac",
         start: -1831,
         end: -1831,
@@ -723,7 +723,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 661,
-        title: "Rebecca",
+        title: "Rebeca",
         slug: "rebekah",
         start: -1830,
         end: -1830,
@@ -733,7 +733,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 601,
-        title: "Isaac & Rebecca mariés",
+        title: "Isaac y Rebeca se casan",
         slug: "isaac-rebekah-married",
         start: -1811,
         end: -1811,
@@ -754,7 +754,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 602,
-        title: "Esau",
+        title: "Esaú",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas0680_8-7-2013%201-46-50%20PM.jpg",
         slug: "esau",
@@ -766,7 +766,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 681,
-        title: "Ésaü vend son droit d'aînesse à Jacob",
+        title: "Esaú vende su primogenitura a Jacob",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas2699_8-13-2013%202-38-44%20PM.jpg",
         slug: "esau-sells-birthright-to-jacob",
@@ -778,7 +778,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 682,
-        title: "La famine dans le pays",
+        title: "La hambruna en la tierra",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-stdas0759_8-5-2013%204-42-14%20PM.jpg",
         slug: "famine-in-the-land-isaac",
@@ -790,7 +790,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 603,
-        title: "Esau épouse deux femmes",
+        title: "Esaú se casa con dos mujeres",
         slug: "esau-marries-two-wives",
         start: -1751,
         end: -1751,
@@ -800,7 +800,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 683,
-        title: "Léa",
+        title: "Lea",
         slug: "leah",
         start: -1731,
         end: -1665,
@@ -810,7 +810,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 684,
-        title: "Rachel",
+        title: "Raquel",
         slug: "rachel",
         start: -1729,
         end: -1685,
@@ -840,7 +840,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 688,
-        title: "Jacob s'est enfui de Canaan, l'échelle de Jacob",
+        title: "Jacob huye de Canaán, la escalera de Jacob",
         slug: "jacob-fled-canaan-jacobs-ladder",
         start: -1714,
         end: -1714,
@@ -850,7 +850,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 689,
-        title: "Esau épouse une troisième femme",
+        title: "Esaú se casa con una tercera mujer",
         slug: "esau-marries-third-wife",
         start: -1714,
         end: -1714,
@@ -860,7 +860,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 690,
-        title: "Jacob termine ses 7 premières années pour Laban",
+        title: "Jacob termina sus primeros 7 años con Labán",
         slug: "jacob-finishes-first-7-years-for-laban",
         start: -1707,
         end: -1707,
@@ -870,7 +870,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 691,
-        title: "Jacob épouse Léa et Rachel",
+        title: "Jacob se casa con Lea y Raquel",
         slug: "jacob-marries-leah-and-rachel",
         start: -1707,
         end: -1707,
@@ -880,7 +880,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 692,
-        title: "Ruben",
+        title: "Rubén",
         slug: "reuben",
         start: -1706,
         end: -1616,
@@ -890,7 +890,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 693,
-        title: "Siméon",
+        title: "Simeón",
         slug: "simeon",
         start: -1705,
         end: -1615,
@@ -900,7 +900,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 694,
-        title: "Lévi",
+        title: "Leví",
         slug: "levi",
         start: -1704,
         end: -1567,
@@ -930,7 +930,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 695,
-        title: "Juda",
+        title: "Judá",
         slug: "judah",
         start: -1703,
         end: -1603,
@@ -940,7 +940,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 698,
-        title: "Nephtali",
+        title: "Neftalí",
         slug: "naphtali",
         start: -1703,
         end: -1605,
@@ -950,7 +950,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 701,
-        title: "Asher",
+        title: "Aser",
         slug: "asher",
         start: -1703,
         end: -1601,
@@ -960,7 +960,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 702,
-        title: "Issacar",
+        title: "Isacar",
         slug: "issachar",
         start: -1702,
         end: -1599,
@@ -970,7 +970,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 703,
-        title: "Zabulon",
+        title: "Zabulón",
         slug: "zebulun",
         start: -1701,
         end: -1602,
@@ -980,7 +980,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 700,
-        title: "Jacob sert Laban durant 7 années supplémentaires",
+        title: "Jacob sirve a Labán durante 7 años adicionales",
         slug: "jacob-finishes-next-7-years-for-laban",
         start: -1700,
         end: -1700,
@@ -1000,7 +1000,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1017,
-        title: "Joseph",
+        title: "José",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas0659_8-7-2013%203-16-58%20PM.jpg",
         slug: "joseph",
@@ -1011,7 +1011,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 705,
-        title: "Jacob quitte Haran",
+        title: "Jacob deja Harán",
         slug: "jacob-leaves-haran",
         start: -1694,
         end: -1694,
@@ -1021,7 +1021,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 706,
-        title: "Jacob lutte contre l'ange",
+        title: "Jacob lucha con el ángel",
         slug: "jacob-wrestles-angel",
         start: -1694,
         end: -1694,
@@ -1031,7 +1031,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 707,
-        title: "L'incident de Dina",
+        title: "El incidente de Dina",
         slug: "the-dinah-incident",
         start: -1685,
         end: -1685,
@@ -1041,7 +1041,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 708,
-        title: "Benjamin",
+        title: "Benjamín",
         slug: "benjamin",
         start: -1685,
         end: -1685,
@@ -1051,7 +1051,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 709,
-        title: "Ruben couche avec Bilha",
+        title: "Rubén se acuesta con Bilha",
         slug: "reuben-lays-with-bilhah",
         start: -1685,
         end: -1685,
@@ -1061,7 +1061,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 710,
-        title: "Jacob vient à Hébron",
+        title: "Jacob llega a Hebrón",
         slug: "jacob-comes-to-hebron",
         start: -1684,
         end: -1684,
@@ -1071,7 +1071,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 711,
-        title: "Les rêves de Joseph",
+        title: "Los sueños de José",
         slug: "josephs-dreams",
         start: -1683,
         end: -1683,
@@ -1081,7 +1081,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 604,
-        title: "Joseph emmené en Égypte",
+        title: "José llevado a Egipto",
         slug: "joseph-taken-to-egypt",
         start: -1683,
         end: -1683,
@@ -1091,7 +1091,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 712,
-        title: "Juda part, il épouse une Cananéenne",
+        title: "Judá se va, se casa con una cananea",
         slug: "judah-leaves-marries-a-canaanite",
         start: -1683,
         end: -1682,
@@ -1101,7 +1101,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 696,
-        title: "L'incident de la femme de Potiphar",
+        title: "El incidente de la esposa de Potifar",
         slug: "potiphars-wife-incident",
         start: -1673,
         end: -1673,
@@ -1111,7 +1111,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 713,
-        title: "Joseph jeté en prison",
+        title: "José es arrojado a la cárcel",
         slug: "joseph-cast-into-prison",
         start: -1673,
         end: -1670,
@@ -1121,7 +1121,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 714,
-        title: "Joseph - le Majordone et le Boulanger jetés en prison",
+        title: "José - el Copero y el Panadero son arrojados a la cárcel",
         slug: "joseph-butler-and-baker-cast-into-prison",
         start: -1671,
         end: -1671,
@@ -1131,7 +1131,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 605,
-        title: "Joseph interprète le rêve du pharaon et se libère",
+        title: "José interpreta el sueño del faraón y es liberado",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas2865_8-6-2013%2011-12-06%20AM.jpg",
         slug: "joseph-freed-pharaohs-dream-7-years-of-plenty",
@@ -1143,7 +1143,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 715,
-        title: "Manassé",
+        title: "Manasés",
         slug: "manasseh",
         start: -1668,
         end: -1578,
@@ -1153,7 +1153,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 716,
-        title: "Ephraïm",
+        title: "Efraín",
         slug: "ephraim",
         start: -1665,
         end: -1575,
@@ -1163,7 +1163,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 717,
-        title: "Juda féconde Tamar",
+        title: "Judá fecunda a Tamar",
         slug: "judah-impregnates-tamar",
         start: -1664,
         end: -1664,
@@ -1173,7 +1173,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 718,
-        title: "Pharez (ou Perez)",
+        title: "Fares (o Pérez)",
         slug: "pharez-or-perez",
         start: -1663,
         end: -1573,
@@ -1183,7 +1183,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 719,
-        title: "7 ans de sécheresse, les frères de Joseph viennent en Egypte",
+        title: "7 años de sequía, los hermanos de José vienen a Egipto",
         slug: "7-year-drought-josephs-brothers-come-to-egypt",
         start: -1663,
         end: -1663,
@@ -1193,7 +1193,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 606,
-        title: "Jacob et sa famille viennent en Égypte",
+        title: "Jacob y su familia vienen a Egipto",
         image:
           "http://timeline.biblehistory.com/media/images/t/735px-Rembrandt_-_Jacob_Blessing_the_Children_of_Joseph_-_WGA19117_8-8-2013%2010-44-05%20AM.jpg",
         slug: "jacob-and-family-come-to-egypt",
@@ -1216,7 +1216,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 676,
-        title: "Japhet",
+        title: "Jafet",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/noah_and_helpers_build_ark_3_7-22-2013%202-36-48%20PM.jpg",
@@ -1228,7 +1228,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 677,
-        title: "Cham",
+        title: "Cam",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Noah%20Sacrifice_5-20-2013%205-44-48%20PM.jpg",
@@ -1251,7 +1251,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 615,
-        title: "Arphaxad",
+        title: "Arfaxad",
         slug: "arphaxad",
         start: -2296,
         end: -1858,
@@ -1261,7 +1261,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 616,
-        title: "Cush",
+        title: "Cus",
         slug: "cush",
         start: -2295,
         end: -1898,
@@ -1283,7 +1283,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 618,
-        title: "Schélach",
+        title: "Sélaj",
         slug: "salah",
         start: -2261,
         end: -1828,
@@ -1293,7 +1293,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 620,
-        title: "Héber",
+        title: "Éber",
         slug: "eber",
         start: -2231,
         end: -1767,
@@ -1315,7 +1315,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 626,
-        title: "Réhu",
+        title: "Reú",
         slug: "reu",
         start: -2167,
         end: -1928,
@@ -1335,7 +1335,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 629,
-        title: "Térach",
+        title: "Téraj",
         slug: "terah",
         start: -2076,
         end: -1871,
@@ -1345,7 +1345,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 635,
-        title: "Haran",
+        title: "Harán",
         slug: "haran",
         start: -1949,
         end: -1879,
