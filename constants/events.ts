@@ -1750,7 +1750,7 @@ const timelineEvents: TimelinePeriod[] = [
     events: [
       {
         id: 738,
-        title: "12 espions entrent en Canaan",
+        title: "12 espías entran en Canaán",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-stdas0100_8-7-2013%202-09-00%20PM.jpg",
         slug: "12-spies-enter-canaan",
@@ -1762,7 +1762,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 739,
-        title: "La rébellion de Coré",
+        title: "La rebelión de Coré",
         slug: "korahs-rebellion",
         start: -1444,
         end: -1444,
@@ -1782,7 +1782,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 743,
-        title: "Balak convoque Balaam",
+        title: "Balac convoca a Balaam",
         image:
           "http://timeline.biblehistory.com/media/images/t/Balaam_5-7-2013%2010-03-25%20AM.jpg",
         slug: "balak-summons-balaam",
@@ -1794,7 +1794,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 745,
-        title: "Balaam maudit Israël",
+        title: "Balaam maldice a Israel",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-pppas0292_8-6-2013%202-12-02%20PM.jpg",
         slug: "balaam-curses-israel",
@@ -1806,7 +1806,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 747,
-        title: "Israël entre en Canaan",
+        title: "Israel entra en Canaán",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-CrossingJordan_8-5-2013%204-04-01%20PM.jpg",
         slug: "israel-enters-canaan",
@@ -1818,7 +1818,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 748,
-        title: "Invasion israélite",
+        title: "Invasión israelita",
         slug: "israelite-invasion",
         start: -1406,
         end: -1400,
@@ -1828,7 +1828,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 746,
-        title: "Joshua appelé, le soleil et la lune s'immobilisent",
+        title: "Josué es llamado, el sol y la luna se detienen",
         slug: "joshua-called-sun-moon-stand-still",
         start: -1405,
         end: -1405,
@@ -1838,7 +1838,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 754,
-        title: "Boaz",
+        title: "Booz",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas0067_8-13-2013%203-13-51%20PM.jpg",
         slug: "boaz",
@@ -1850,7 +1850,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 749,
-        title: "Division de Canaan",
+        title: "División de Canaán",
         slug: "division-of-canaan",
         start: -1400,
         end: -1400,
@@ -1860,7 +1860,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 751,
-        title: "Le territoire revendiqué par Josué",
+        title: "El territorio reclamado por Josué",
         slug: "joshua-claims-territory",
         start: -1399,
         end: -1399,
@@ -1870,7 +1870,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 764,
-        title: "Ruth et Naomi viennent à Bethléem",
+        title: "Rut y Noemí llegan a Belén",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-stdas0718_8-6-2013%203-00-22%20PM.jpg",
         slug: "ruth-and-naomi-come-to-bethlehem",
@@ -1904,7 +1904,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 756,
-        title: "Ehud abat le roi Eglon",
+        title: "Ehud mata al rey Eglón",
         image:
           "http://timeline.biblehistory.com/media/images/t/Speculum_Darmstadt_2505_55r_cropped_8-6-2013%203-28-49%20PM.jpg",
         slug: "40-years-peace-ends-moabite-oppression-begins",
@@ -1916,7 +1916,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 762,
-        title: "Gédeon",
+        title: "Gedeón",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/507px-Gideon_Squeezed_the_Fleece_001_8-6-2013%203-34-47%20PM.jpg",
@@ -1928,7 +1928,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 768,
-        title: "Eli",
+        title: "Elí",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas5083_8-13-2013%203-28-45%20PM.jpg",
@@ -1940,7 +1940,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 770,
-        title: "Sichem détruit",
+        title: "Siquem destruido",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-pppas0498_8-6-2013%204-29-31%20PM.jpg",
         slug: "shechem-destroyed",
@@ -1964,7 +1964,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 775,
-        title: "L'appel prophétique de Samuel",
+        title: "El llamado profético de Samuel",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-pppas0257_8-13-2013%203-55-25%20PM.jpg",
         slug: "prophetic-call-of-samuel",
@@ -1976,7 +1976,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 780,
-        title: "Samuel Juge Israël",
+        title: "Samuel juzga a Israel",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas1474_8-6-2013%203-59-48%20PM.jpg",
         slug: "samuel-judges-israel",
@@ -1988,7 +1988,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 777,
-        title: "Les philistins capturent l'arche",
+        title: "Los filisteos capturan el arca",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-pcmas0005_8-6-2013%204-06-34%20PM.jpg",
         slug: "philistines-capture-ark",
@@ -2000,7 +2000,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 771,
-        title: "Jesse",
+        title: "Jesé",
         slug: "jesse",
         start: -1140,
         end: -1020,
@@ -2010,7 +2010,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 774,
-        title: "Samson",
+        title: "Sansón",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Tissot_Samson_Slays_a_Thousand_Men_8-8-2013%2011-59-12%20AM.jpg",
@@ -2022,7 +2022,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 773,
-        title: "L'oppression philistine",
+        title: "La opresión filistea",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas3460_8-6-2013%204-51-17%20PM.jpg",
         slug: "philistine-oppression-begins",
@@ -2033,7 +2033,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 723,
-        title: "Aram (ou Ram)",
+        title: "Aram (o Ram)",
         slug: "aram-or-ram",
         start: -1523,
         end: -1443,
@@ -2043,7 +2043,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 724,
-        title: "Aminadab (ou Amminidab)",
+        title: "Aminadab (o Amminidab)",
         slug: "aminadab-or-amminidab",
         start: -1453,
         end: -1363,
@@ -2053,7 +2053,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 740,
-        title: "Myriam",
+        title: "Miriam",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Miriam_5-7-2013%2010-25-30%20AM.jpg",
@@ -2065,7 +2065,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1018,
-        title: "Aaron",
+        title: "Aarón",
         image:
           "http://timeline.biblehistory.com/media/images/t/Aaron%20w%20golden%20calf%2019-144_7-22-2013%202-57-17%20PM.jpg",
         slug: "aaron",
@@ -2076,7 +2076,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1014,
-        title: "Moïse",
+        title: "Moisés",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-pppas0220_8-7-2013%201-52-29%20PM.jpg",
         slug: "moses",
@@ -2087,7 +2087,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 728,
-        title: "Naasson (ou Nahshon)",
+        title: "Naasón (o Nahshón)",
         slug: "naasson-or-nahshon",
         start: -1383,
         end: -1273,
@@ -2120,7 +2120,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 742,
-        title: "Othniel",
+        title: "Otoniel",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Othoniel_Ben_Kenaz_8-6-2013%201-20-17%20PM.jpg",
@@ -2132,7 +2132,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 733,
-        title: "Eléazar",
+        title: "Eleazar",
         slug: "eleazar",
         start: -1463,
         end: -1353,
@@ -2142,7 +2142,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 734,
-        title: "L'appel prophétique de Moïse",
+        title: "El llamado profético de Moisés",
         slug: "moses-prophetic-call",
         start: -1446,
         end: -1446,
@@ -2152,7 +2152,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 735,
-        title: "L'exode et la traversée de la mer Rouge",
+        title: "El Éxodo y el cruce del Mar Rojo",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-RedSea_8-5-2013%204-01-53%20PM.jpg",
         slug: "exodus-and-the-red-sea-crossing",
@@ -2164,7 +2164,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 736,
-        title: "Don des dix commandements",
+        title: "Entrega de los diez mandamientos",
         slug: "giving-of-the-ten-commandments",
         start: -1446,
         end: -1446,
