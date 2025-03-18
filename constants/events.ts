@@ -4196,7 +4196,7 @@ const timelineEvents: TimelinePeriod[] = [
     events: [
       {
         id: 475,
-        title: "La femme d'Ezekiel",
+        title: "La esposa de Ezequiel",
         slug: "ezekiels-wife",
         start: -620,
         end: -588,
@@ -4216,7 +4216,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 458,
-        title: "Jehoiachin",
+        title: "Joaquín",
         slug: "jehoiachin",
         start: -616,
         end: -597,
@@ -4226,7 +4226,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1262,
-        title: "Daniel 2 - Le rêve de Nabuchodonosor",
+        title: "Daniel 2 - El sueño de Nabucodonosor",
         slug: "daniel-2-nebuchadnezzars-dream",
         start: -606,
         end: 2020,
@@ -4236,7 +4236,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1269,
-        title: "Daniel 7 - Quatre grandes bêtes",
+        title: "Daniel 7 - Cuatro grandes bestias",
         slug: "daniel-7-four-great-beasts",
         start: -606,
         end: 476,
@@ -4246,7 +4246,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 466,
-        title: "Daniel 1, Daniel Captive",
+        title: "Daniel 1, Daniel cautivo",
         slug: "daniel-1-daniel-captive",
         start: -605,
         end: -605,
@@ -4256,7 +4256,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 477,
-        title: "Evil-Merodach",
+        title: "Evil-Merodac",
         slug: "evilmerodach",
         start: -600,
         end: -560,
@@ -4266,7 +4266,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 517,
-        title: "Salathiel (ou Shealtiel)",
+        title: "Salatiel (o Sealtiel)",
         slug: "salathiel-or-shealtiel",
         start: -600,
         end: -519,
@@ -4276,7 +4276,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 471,
-        title: "2e invasion de Jérusalem par Babylone",
+        title: "Segunda invasión de Jerusalén por Babilonia",
         slug: "2nd-invasion-of-jerusalem-by-babylon",
         start: -597,
         end: -597,
@@ -4286,7 +4286,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 472,
-        title: "Ezekiel fait prisonnier",
+        title: "Ezequiel tomado cautivo",
         slug: "ezekiel-taken-captive",
         start: -597,
         end: -597,
@@ -4296,7 +4296,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 473,
-        title: "Daniel 3, Image d'or",
+        title: "Daniel 3, Imagen de oro",
         slug: "daniel-3-golden-image",
         start: -594,
         end: -594,
@@ -4306,7 +4306,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 476,
-        title: "Le siège final de Jérusalem commence le 15 janvier",
+        title: "El asedio final de Jerusalén comienza el 15 de enero",
         slug: "jerusalems-final-siege-begins-jan-15",
         start: -588,
         end: -588,
@@ -4316,7 +4316,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 465,
-        title: "Judah Falls, 15 août",
+        title: "Judá cae, 15 de agosto",
         slug: "judah-falls-aug-15",
         start: -586,
         end: -586,
@@ -4326,7 +4326,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 480,
-        title: "Chute de Jérusalem 19 juillet",
+        title: "Caída de Jerusalén 19 de julio",
         slug: "fall-of-jerusalem-july-19",
         start: -586,
         end: -586,
@@ -4336,7 +4336,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 487,
-        title: "Belshazzar",
+        title: "Belsasar",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-belshazzar_8-6-2013%202-18-47%20PM.jpg",
@@ -4348,7 +4348,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 469,
-        title: "Cambyses",
+        title: "Cambises",
         slug: "cambyses",
         start: -570,
         end: -522,
@@ -4358,7 +4358,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 485,
-        title: "Rêves d'arbre et d'humiliation de Nabuchodonosor",
+        title: "Sueños del árbol y la humillación de Nabucodonosor",
         slug: "daniel-4-begin-7-yrs-of-beast",
         start: -570,
         end: -570,
@@ -4368,7 +4368,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 490,
-        title: "La santé mentale de Nabuchodonosor revient",
+        title: "La salud mental de Nabucodonosor regresa",
         slug: "nebuchadnezzars-sanity-returns-after-7-yrs-converted",
         start: -563,
         end: -563,
@@ -4378,7 +4378,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 492,
-        title: "Jehoiachin libéré de prison",
+        title: "Joaquín liberado de prisión",
         slug: "jehoiachin-released-from-prison",
         start: -560,
         end: -560,
@@ -4388,7 +4388,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 494,
-        title: "Cyrus II unit la Perse",
+        title: "Ciro II une Persia",
         slug: "cyrus-ii-unites-persia",
         start: -559,
         end: -559,
@@ -4398,7 +4398,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 495,
-        title: "Cambyses II",
+        title: "Cambises II",
         slug: "cambyses-ii",
         start: -553,
         end: -522,
@@ -4408,7 +4408,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 497,
-        title: "Le roi Belshazzar - Babylon Waning",
+        title: "El rey Belsasar - Babilonia en declive",
         slug: "belshazzar-king-babylon-waning",
         start: -553,
         end: -539,
@@ -4418,7 +4418,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 506,
-        title: "Cyrus II à la conquête de Babylone 29 octobre",
+        title: "Ciro II conquista Babilonia 29 de octubre",
         slug: "cyrus-ii-conquers-babylon-oct-29",
         start: -539,
         end: -539,
@@ -4428,7 +4428,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1277,
-        title: "Daniel 8 - Bélier, chèvre et petite corne",
+        title: "Daniel 8 - Carnero, macho cabrío y cuerno pequeño",
         slug: "daniel-8-ram-goat-and-little-horn",
         start: -539,
         end: 2020,
@@ -4438,7 +4438,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1290,
-        title: "Daniel 11 - Roi du Nord/Sud",
+        title: "Daniel 11 - Rey del Norte/Sur",
         slug: "daniel-11-king-of-the-northsouth",
         start: -539,
         end: 2020,
@@ -4448,7 +4448,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 507,
-        title: "Daniel 9, Prière concernant 70 ans",
+        title: "Daniel 9, Oración concerniente a los 70 años",
         slug: "daniel-9-prayer-concerning-70-years",
         start: -538,
         end: -538,
@@ -4458,7 +4458,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 509,
-        title: "Premier décret de Cyrus II, la réinstallation commence",
+        title: "Primer decreto de Ciro II, comienza el reasentamiento",
         slug: "cyrus-ii-first-decree-resettlement-begins",
         start: -537,
         end: -537,
@@ -4468,7 +4468,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 608,
-        title: "Jérusalem reconstruite",
+        title: "Jerusalén reconstruida",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Zerubabbel_3-21-2013%2010-15-56%20AM.jpg",
@@ -4480,7 +4480,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 516,
-        title: "Le bâtiment de reprise du temple de Jérusalem",
+        title: "Reanudación de la construcción del templo de Jerusalén",
         slug: "jerusalem-temple-resume-building",
         start: -520,
         end: -520,
@@ -4490,7 +4490,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 518,
-        title: "Xerxès I",
+        title: "Jerjes I",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-stdas0429_8-28-2013%2012-02-30%20PM.jpg",
@@ -4502,7 +4502,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 523,
-        title: "Esther",
+        title: "Ester",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas1525_8-28-2013%2012-42-28%20PM.jpg",
@@ -4514,7 +4514,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 530,
-        title: "Artaxerxes I",
+        title: "Artajerjes I",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas0699_8-28-2013%2012-48-10%20PM.jpg",
@@ -4526,7 +4526,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 531,
-        title: "La reine Vashti tombe en disgrâce",
+        title: "La reina Vasti cae en desgracia",
         slug: "queen-vashti-falls-into-disfavor",
         start: -483,
         end: -483,
@@ -4546,7 +4546,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 533,
-        title: "Décret sur la mort de Haman Avril 474",
+        title: "Decreto de muerte de Amán Abril 474",
         slug: "hamans-death-decree-april-474",
         start: -474,
         end: -474,
@@ -4556,7 +4556,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 534,
-        title: "Les Juifs délivrés, Mardochée élevé",
+        title: "Los judíos liberados, Mardoqueo elevado",
         slug: "jews-delivered-june-474-mordecai-elevated",
         start: -474,
         end: -474,
@@ -4566,7 +4566,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 535,
-        title: "Nehemiah",
+        title: "Nehemías",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-Nehemiah_8-1-2013%205-36-17%20PM.jpg",
@@ -4578,7 +4578,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 536,
-        title: "Rhesa",
+        title: "Resa",
         slug: "rhesa",
         start: -470,
         end: -390,
@@ -4588,7 +4588,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 537,
-        title: "Darius II",
+        title: "Darío II",
         slug: "darius-ii",
         start: -457,
         end: -405,
@@ -4598,7 +4598,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 538,
-        title: "Décret Artaxerxes I",
+        title: "Decreto de Artajerjes I",
         slug: "artaxerxes-i-decree",
         start: -457,
         end: -457,
@@ -4608,7 +4608,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1283,
-        title: "Prophétie du 2300e jour",
+        title: "Profecía de los 2300 días",
         image:
           "http://timeline.biblehistory.com/media/images/t/Ark_Commandments_2-27-2013-2-58-25-PM_7-18-2013%2011-01-41%20AM.jpg",
         slug: "sanctuary-cleansed-2300-day-prophecy",
@@ -4620,7 +4620,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1386,
-        title: "La prophétie des soixante-dix semaines",
+        title: "La profecía de las setenta semanas",
         image:
           "http://timeline.biblehistory.com/media/images/t/70_weeks_Prophecy_sm_2-26-2013%2011-30-56%20AM.jpg",
         slug: "the-seventyweeks-prophecy",
@@ -4631,7 +4631,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 610,
-        title: "Eliakim",
+        title: "Eliacim",
         slug: "eliakim",
         start: -455,
         end: -392,
@@ -4641,7 +4641,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 542,
-        title: "Joanna (ou Joanan)",
+        title: "Joana (o Joanán)",
         slug: "joanna-or-joanan",
         start: -450,
         end: -370,
@@ -4651,7 +4651,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 543,
-        title: "Artaxerxès II",
+        title: "Artajerjes II",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/800px-Persepolis_Artaxerxes_II_tomb_8-28-2013%201-31-08%20PM.jpg",
@@ -4663,7 +4663,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 540,
-        title: "Néhémie commence à construire les murs de Jérusalem",
+        title: "Nehemías comienza a construir los muros de Jerusalén",
         slug: "nehemiah-starts-to-build-walls-of-jerusalem",
         start: -444,
         end: -444,
@@ -4673,7 +4673,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 541,
-        title: "Le 1er mandat de Néhémie",
+        title: "El primer mandato de Nehemías",
         slug: "nehemiahs-1st-term",
         start: -444,
         end: -432,
@@ -4683,7 +4683,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 545,
-        title: "Ezra, lecture publique de la loi",
+        title: "Esdras, lectura pública de la ley",
         slug: "ezra-public-reading-of-the-law",
         start: -444,
         end: -444,
@@ -4693,7 +4693,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 546,
-        title: "Néhémie, les murs reconstruits",
+        title: "Nehemías, los muros reconstruidos",
         slug: "nehemiah-walls-rebuilt",
         start: -444,
         end: -444,
@@ -4713,7 +4713,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 549,
-        title: "Néhémie retourne à Babylone",
+        title: "Nehemías regresa a Babilonia",
         slug: "nehemiah-returns-to-babylon",
         start: -432,
         end: -432,
@@ -4723,7 +4723,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 551,
-        title: "Juda (ou Joda)",
+        title: "Judá (o Joda)",
         slug: "juda-or-joda",
         start: -430,
         end: -380,
@@ -4733,7 +4733,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 550,
-        title: "Artaxerxes III",
+        title: "Artajerjes III",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Persepolis_Artaxerxes_III_tomb.jpg",
@@ -4745,7 +4745,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 609,
-        title: "Joseph (ou Josech)",
+        title: "José (o Josec)",
         slug: "joseph-or-josech",
         start: -400,
         end: -312,
@@ -4755,7 +4755,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 552,
-        title: "Semei",
+        title: "Semeí",
         slug: "semei",
         start: -380,
         end: -300,
@@ -4765,7 +4765,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 555,
-        title: "Mattathias",
+        title: "Matatías",
         slug: "mattathias-son-of-semei",
         start: -360,
         end: -300,
@@ -4775,7 +4775,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 553,
-        title: "Alexandre le Grand",
+        title: "Alejandro el Grande",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Aleksander-d-store_8-8-2013%201-08-59%20PM.jpg",
@@ -4787,7 +4787,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 560,
-        title: "Maath",
+        title: "Maaz",
         slug: "maath",
         start: -340,
         end: -280,
@@ -4797,7 +4797,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 558,
-        title: "Arbela, Bataille de - Victoire décisive sur la Perse",
+        title: "Arbela, Batalla de - Victoria decisiva sobre Persia",
         slug: "arbela-battle-of-decisive-victory-over-persia",
         start: -331,
         end: -331,
@@ -4807,7 +4807,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 562,
-        title: "Nagge (ou Naggai)",
+        title: "Nagge (o Naggai)",
         slug: "nagge-or-naggai",
         start: -320,
         end: -270,
@@ -4827,7 +4827,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 565,
-        title: "Naum (ou Nahum)",
+        title: "Naum (o Nahum)",
         slug: "naum-or-nahum",
         start: -260,
         end: -180,
@@ -4837,7 +4837,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 567,
-        title: "Amos",
+        title: "Amós",
         slug: "amos",
         start: -230,
         end: -170,
@@ -4847,7 +4847,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 568,
-        title: "Mattathias",
+        title: "Matatías",
         slug: "mattathias-son-of-amos",
         start: -205,
         end: -125,
@@ -4857,7 +4857,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 569,
-        title: "Joseph",
+        title: "José",
         slug: "joseph-son-of-mattathias",
         start: -180,
         end: -120,
@@ -4867,7 +4867,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 572,
-        title: "Antiochus IV persécute les Juifs et profane le temple",
+        title: "Antíoco IV persigue a los judíos y profana el templo",
         slug: "antiochus-iv-persecutes-jews-and-desecrates-temple",
         start: -168,
         end: -168,
@@ -4877,7 +4877,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 574,
-        title: "Les Maccabées restaurent le temple",
+        title: "Los Macabeos restauran el templo",
         slug: "maccabees-restore-temple-religious-freedom-hanukkah",
         start: -165,
         end: -165,
@@ -4887,7 +4887,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 577,
-        title: "Les Juifs indépendants sous la dynastie des Hasmonéens",
+        title: "Los judíos independientes bajo la dinastía de los Hasmoneos",
         slug: "jews-independent-under-hasmonean-dynasty",
         start: -164,
         end: -63,
@@ -4897,7 +4897,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 575,
-        title: "Janna (ou Jannai)",
+        title: "Janna (o Jannai)",
         slug: "janna-or-jannai",
         start: -155,
         end: -96,
@@ -4907,7 +4907,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 578,
-        title: "Melchi (ou Melki)",
+        title: "Melqui (o Melki)",
         slug: "melchi-or-melki",
         start: -132,
         end: -70,
@@ -4917,7 +4917,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 579,
-        title: "Levi",
+        title: "Leví",
         slug: "levi-son-of-melchi",
         start: -105,
         end: -50,
@@ -4927,7 +4927,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1394,
-        title: "Les prophéties de Daniel sur Babylone",
+        title: "Las profecías de Daniel sobre Babilonia",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Statue_Babylon_8-22-2013%2012-11-00%20PM.jpg",
@@ -4939,7 +4939,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1397,
-        title: "Les prophéties médo-perses de Daniel",
+        title: "Las profecías medo-persas de Daniel",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Statue_Persia_8-22-2013%2012-26-38%20PM.jpg",
@@ -4951,7 +4951,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1398,
-        title: "Les prophéties de Daniel sur la Grèce",
+        title: "Las profecías de Daniel sobre Grecia",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Statue_Greece_8-22-2013%202-30-21%20PM.jpg",
@@ -4963,7 +4963,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1399,
-        title: "Les prophéties de Daniel pour la Rome",
+        title: "Las profecías de Daniel sobre Roma",
         image:
           "http://timeline.biblehistory.com/media/images/t/Statue_Rome_8-22-2013%203-26-36%20PM.jpg",
         slug: "daniels-rome-prophecies",
@@ -4975,7 +4975,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 995,
-        title: "Babylone prise par les Chaldéens",
+        title: "Babilonia tomada por los caldeos",
         slug: "babylon-taken-by-chaldeans",
         start: -732,
         end: -539,
@@ -4985,7 +4985,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 422,
-        title: "Hilkiah",
+        title: "Hilkías",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/_GoodSalt-prcas3129_8-27-2013%202-51-48%20PM.jpg",
@@ -5007,7 +5007,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 440,
-        title: "Sophonie appelle à la réforme",
+        title: "Sofonías llama a la reforma",
         slug: "zephaniah-calls-for-reform",
         start: -690,
         end: -609,
@@ -5017,10 +5017,9 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 417,
-        title: "Nahum",
+        title: "Nahúm",
         approx: true,
-        image:
-          "http://timeline.biblehistory.com/media/images/t/Nahum-prophet.jpg",
+        image: "http://timeline.biblehistory.com/media/images/t/Nahum-prophet.jpg",
         slug: "nahum",
         start: -683,
         end: -610,
@@ -5029,7 +5028,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 437,
-        title: "Elmodam (ou Elmadam)",
+        title: "Elmodam (o Elmadam)",
         slug: "elmodam-or-elmadam",
         start: -679,
         end: -587,
@@ -5049,7 +5048,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 433,
-        title: "Josiah",
+        title: "Josías",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Josiah_7-31-2013%204-38-17%20PM.jpg",
@@ -5071,7 +5070,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 435,
-        title: "Jeremiah",
+        title: "Jeremías",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Jeremiah_4-2-2013%202-17-43%20PM.jpg",
@@ -5083,7 +5082,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 489,
-        title: "Melchi",
+        title: "Melqui",
         slug: "melchi",
         start: -635,
         end: -537,
@@ -5093,7 +5092,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 443,
-        title: "Jehoiakim",
+        title: "Joaquim",
         slug: "jehoiakim",
         start: -634,
         end: -598,
@@ -5103,7 +5102,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 445,
-        title: "Nébuchanedsar II",
+        title: "Nabucodonosor II",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-nebuchadnezzar_8-6-2013%2011-02-33%20AM.jpg",
@@ -5115,7 +5114,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 446,
-        title: "Jehoahaz",
+        title: "Joaacaz",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-Jehoahaz_8-6-2013%2011-06-04%20AM.jpg",
@@ -5127,7 +5126,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 451,
-        title: "Ezekiel",
+        title: "Ezequiel",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-ValleyOfDryBones_8-5-2013%204-24-11%20PM.jpg",
