@@ -111,7 +111,7 @@ const Timeline = ({
                 entrance={entrance}
             >
                 <View style={{ width, height }}>
-                    <View style={{ position: 'relative', width, height, backgroundColor: theme.colors.background + 99, overflow: 'hidden' }}>
+                    <View style={{ position: 'relative', width, height, backgroundColor: theme.colors.text + 19, overflow: 'hidden' }}>
                         {events.map((event, i) => (
                             <TimelineEvent
                                 color={color}

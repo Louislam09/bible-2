@@ -91,12 +91,12 @@ const TimelineEvent = ({
             justifyContent: 'center'
           }}
         >
-          <Text style={{ color: theme.dark ? '#fff' : '#000', fontSize: 10 }} numberOfLines={1}>
+          <Text style={{ color:  '#fff', fontSize: 10 }} numberOfLines={1}>
             {title}
           </Text>
         </View>
         <View style={{ backgroundColor: theme.colors.text + 50, paddingHorizontal: 10, justifyContent: 'center' }}>
-          <Text style={{ fontSize: 8 }}>{label}</Text>
+          <Text style={{ fontSize: 8 ,color:  '#fff'}}>{label}</Text>
         </View>
       </TouchableOpacity>
     )
@@ -108,9 +108,9 @@ const TimelineEvent = ({
       style={[ styles.container, { left: left + offset, top: top, width: width }]}
     >
       <Animated.View  style={[ styles.titleContainer, stylez ]}>
-        <Text style={{ color: theme.colors.text, fontSize: 12, fontWeight: 'bold' }} numberOfLines={2}>{title}</Text>
-        <View style={{ borderBottomWidth: 1, borderColor: theme.colors.text+99 }} />
-        <Text style={{ color: theme.colors.text, textAlign: 'center', fontSize: 10 }}>{label}</Text>
+        <Text style={{ color: theme.dark ? '#fff' : '#000', fontSize: 12, fontWeight: 'bold' }} numberOfLines={2}>{title}</Text>
+        <View style={{ borderBottomWidth: 1, borderColor: theme.colors.text + 99 }} />
+        <Text style={{ color: theme.dark ? '#fff' : '#000', fontSize: 10 }}>{label}</Text>
       </Animated.View>
 
       <View style={styles.imageContainer}>
