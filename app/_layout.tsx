@@ -23,13 +23,14 @@ import ErrorBoundary from "react-native-error-boundary";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NativeStackNavigationOptions } from "react-native-screens/lib/typescript/native-stack/types";
+import { StackAnimationTypes } from "react-native-screens";
 
 type ScreenOptionsProps = {
   route: RouteProp<ParamListBase, string>;
   navigation: any;
 };
 
-type TScreensName = { [key in Screens]: string };
+type TScreensName = { [key in Screens]: StackAnimationTypes  };
 
 const screenAnimations: TScreensName = {
   [Screens.Dashboard]: "none",
@@ -58,6 +59,7 @@ const screenAnimations: TScreensName = {
   [Screens.History]: "slide_from_bottom",
   [Screens.Timeline]: "slide_from_bottom",
   [Screens.Admin]: "slide_from_bottom",
+  [Screens.TimelineId]: "slide_from_bottom",
 };
 
 const App = () => {
@@ -101,11 +103,6 @@ const App = () => {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
-      {/* <ScreenWithAnimation
-        isVisible={!isLoadingComplete}
-        title="Santa Escritura"
-        icon="BookPlus"
-      > */}
       <StorageProvider>
         <DatabaseProvider>
           <BibleProvider>
@@ -129,7 +126,6 @@ const App = () => {
           </BibleProvider>
         </DatabaseProvider>
       </StorageProvider>
-      {/* </ScreenWithAnimation> */}
     </ErrorBoundary>
   );
 };

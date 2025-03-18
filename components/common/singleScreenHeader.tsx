@@ -18,6 +18,7 @@ type SingleScreenHeaderProps = {
   titleIcon: keyof typeof icons;
   titleIconColor?: string;
   mainIconSize?: number;
+  goBack?: () => void;
   headerRightProps: {
     fillColor?: string;
     headerRightIcon?: keyof typeof icons;
@@ -37,6 +38,7 @@ export const singleScreenHeader = ({
   titleIconColor,
   headerRightProps,
   mainIconSize,
+  goBack
 }: SingleScreenHeaderProps) => {
   const styles = {
     headerTitle: {
@@ -54,7 +56,7 @@ export const singleScreenHeader = ({
       <ChevronLeft
         color={theme.colors.text}
         size={headerIconSize}
-        onPress={() => router.back()}
+        onPress={() => goBack ? goBack() : router.back()}
       />
     ),
     headerRight: () => (

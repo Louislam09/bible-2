@@ -1,6 +1,5 @@
 import timelineEvents from '@/constants/events'
 import { ShallowTimelineSection, TimelinePeriod } from '@/types'
-import { useTheme } from '@react-navigation/native'
 import React, { useCallback } from 'react'
 import { StyleSheet } from 'react-native'
 import { View } from '../Themed'
@@ -9,7 +8,7 @@ import TimelineSection from './TimelineSection'
 const omitEvents = ({ events, ...rest }: TimelinePeriod): ShallowTimelineSection => rest
 
 const DisplayTimeline = ({ startingSection = 0 }: { startingSection: number }) => {
-  const theme = useTheme()
+  const events = timelineEvents as any;
   const [current, setCurrent] = React.useState(startingSection)
   const [entrance, setEntrance] = React.useState<0 | 1>(1)
 
@@ -23,7 +22,6 @@ const DisplayTimeline = ({ startingSection = 0 }: { startingSection: number }) =
     setCurrent((s) => s + 1)
   }, [])
 
-  const events = timelineEvents as any;
 
   return (
     <View style={{ flex: 1, backgroundColor: '#f5f6fa' }}>

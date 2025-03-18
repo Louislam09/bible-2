@@ -1,27 +1,39 @@
 import timelineEvents from "@/constants/events";
 import { TimelinePeriod, TTheme } from "@/types";
 import { useTheme } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
-import React, { useState } from "react";
+import { AnimatedFlashList, FlashList } from "@shopify/flash-list";
+import { useRouter } from "expo-router";
+import React from "react";
 import {
   ActivityIndicator,
-  Image,
   Pressable,
   StyleSheet,
-  useWindowDimensions,
+  useWindowDimensions
 } from "react-native";
+import Animated, { FadeIn, FadeOut, SharedTransition, withSpring } from "react-native-reanimated";
 import { Text, View } from "../Themed";
-import { useRouter } from "expo-router";
 
 type TimeEventItemProps = {
   item: TimelinePeriod;
   onPress: any;
-  isMobile: boolean;
+  isMobile: boolean;  
+  index: number;
 };
 
-const TimeEventItem = ({ item, onPress, isMobile }: TimeEventItemProps) => {
+const TimeEventItem = ({ item, onPress, isMobile, index }: TimeEventItemProps) => {
   const theme = useTheme();
   const styles = getStyles(theme);
+  // const transitionTag = `image-${item.title || item.sectionTitle}`.replace(/\s+/g, '-');
+  // const imageTransition = SharedTransition.custom((values) => {
+  //   'worklet';
+  //   return {
+  //     height: withSpring(values.targetHeight, { damping: 15, stiffness: 90 }),
+  //     width: withSpring(values.targetWidth, { damping: 15, stiffness: 90 }),
+  //     originX: withSpring(values.targetOriginX, { damping: 15, stiffness: 90 }),
+  //     originY: withSpring(values.targetOriginY, { damping: 15, stiffness: 90 }),
+  //     borderRadius: withSpring(values.targetBorderRadius, { damping: 15, stiffness: 90 }),
+  //   };
+  // })
 
   return (
     <Pressable
@@ -34,10 +46,14 @@ const TimeEventItem = ({ item, onPress, isMobile }: TimeEventItemProps) => {
     >
       <View style={styles.contentContainer}>
         {item.image ? (
-          <View style={styles.imageContainer}>
-            <Image
-              source={{ uri: item.image, cache: "force-cache" }}
-              style={styles.image}
+          <View style={[styles.imageContainer]}>
+            <Animated.Image
+              // sharedTransitionTag={transitionTag}
+              entering={FadeIn.duration(300)}
+              exiting={FadeOut.duration(300)}
+              // sharedTransitionStyle={imageTransition}
+              source={{ uri: item.image }}
+              style={[{ backgroundColor: theme.colors.background, flex: 1, borderRadius: 8 }]}
               resizeMode="cover"
             />
             <View style={styles.imageOverlay} />
@@ -90,17 +106,22 @@ const TimelineList = () => {
   const router = useRouter();
 
   const handleItemPress = (index: number) => {
-    router.push({ pathname: `/timeline/${index}` });
+    router.push({
+      pathname: `/timeline/${index}`,
+    });
   };
+
   return (
-    <View style={[styles.container]}>
-      <FlashList
+    <View
+      style={[styles.container]}>
+      <AnimatedFlashList
         data={events}
         keyExtractor={(item, index) => `timelineEvent:${index}`}
         renderItem={({ item, index }) => (
           <TimeEventItem
             isMobile={isMobile}
             item={item}
+            index={index}
             onPress={() => handleItemPress(index)}
           />
         )}
@@ -198,10 +219,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderRadius: 8,
       overflow: "hidden",
       marginBottom: 12,
-    },
-    image: {
-      width: "100%",
-      height: "100%",
     },
     textContainer: {
       flex: 1,

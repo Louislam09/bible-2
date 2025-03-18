@@ -22,7 +22,8 @@ const RequestAccessScreen: React.FC = () => {
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [searchEmail, setSearchEmail] = useState<string>('');
-    const [activeTab, setActiveTab] = useState<'request' | 'check' | 'all'>('request');
+    const [activeTab, setActiveTab] = useState<'request' | 'check' | 'all'>('all');
+    const [searchQuery, setSearchQuery] = useState<string>('');
     const theme = useTheme();
     const styles = getStyles(theme);
 
@@ -103,6 +104,11 @@ const RequestAccessScreen: React.FC = () => {
         );
     };
 
+    const filteredRequests = (requests as any|| []).filter((request: { name: string; email: string; }) => 
+      request.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      request.email.toLowerCase().includes(searchQuery.toLowerCase())
+    ) || [];
+
     const renderRequestItem: ListRenderItem<RequestStatus> = ({ item }) => (
         <View style={styles.requestItem}>
             <View style={styles.requestInfo}>
@@ -111,22 +117,18 @@ const RequestAccessScreen: React.FC = () => {
                 <Text style={styles.requestStatus}>Estado: {item.status}</Text>
             </View>
             <View style={styles.requestActions}>
-                {item.status === 'pending' && (
-                    <>
-                        <TouchableOpacity
-                            style={[styles.actionButton, styles.approveButton]}
-                            onPress={() => handleUpdateStatus(item.id, 'approved')}
-                        >
-                            <Text style={styles.actionButtonText}>Aprobar</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[styles.actionButton, styles.rejectButton]}
-                            onPress={() => handleUpdateStatus(item.id, 'rejected')}
-                        >
-                            <Text style={styles.actionButtonText}>Rechazar</Text>
-                        </TouchableOpacity>
-                    </>
-                )}
+                {item.status === 'pending' || item.status === 'rejected' && <TouchableOpacity
+                    style={[styles.actionButton, styles.approveButton]}
+                    onPress={() => handleUpdateStatus(item.id, 'approved')}
+                >
+                    <Text style={styles.actionButtonText}>Aprobar</Text>
+                </TouchableOpacity>}
+                {item.status === 'approved' && <TouchableOpacity
+                    style={[styles.actionButton, styles.rejectButton]}
+                    onPress={() => handleUpdateStatus(item.id, 'rejected')}
+                >
+                    <Text style={styles.actionButtonText}>Rechazar</Text>
+                </TouchableOpacity>}
                 <TouchableOpacity
                     style={[styles.actionButton, styles.deleteButton]}
                     onPress={() => handleDeleteRequest(item.id)}
@@ -142,23 +144,23 @@ const RequestAccessScreen: React.FC = () => {
     return (
         <>
             <Stack.Screen
-          options={{
-            ...singleScreenHeader({
-              theme,
-              title: "Panel Admin",
-              titleIcon: "ChartArea",
-              headerRightProps: {
-                headerRightIcon: "Trash2",
-                headerRightIconColor: "red",
-                onPress: () => console.log(),
-                disabled: true,
-                style: { opacity: 0 },
-              },
-            }),
-          }}
-        />
+                options={{
+                    ...singleScreenHeader({
+                        theme,
+                        title: "Panel Admin",
+                        titleIcon: "ChartArea",
+                        headerRightProps: {
+                            headerRightIcon: "Trash2",
+                            headerRightIconColor: "red",
+                            onPress: () => console.log(),
+                            disabled: true,
+                            style: { opacity: 0 },
+                        },
+                    }),
+                }}
+            />
             <View style={styles.container}>
-                <View style={styles.tabContainer}>
+                {/* <View style={styles.tabContainer}>
                     <TouchableOpacity
                         style={[styles.tab, activeTab === 'request' && styles.activeTab]}
                         onPress={() => setActiveTab('request')}
@@ -183,7 +185,7 @@ const RequestAccessScreen: React.FC = () => {
                             Todas
                         </Text>
                     </TouchableOpacity>
-                </View>
+                </View> */}
 
                 {loading ? (
                     <View style={styles.loadingContainer}>
@@ -191,7 +193,7 @@ const RequestAccessScreen: React.FC = () => {
                     </View>
                 ) : (
                     <>
-                        {activeTab === 'request' && (
+                        {/* {activeTab === 'request' && (
                             <ScrollView style={styles.formContainer}>
                                 <Text style={styles.title}>Solicitud de Acceso</Text>
                                 <TextInput
@@ -251,12 +253,22 @@ const RequestAccessScreen: React.FC = () => {
                                     </View>
                                 )}
                             </ScrollView>
-                        )}
+                        )} */}
                         {activeTab === 'all' && (
                             <View style={styles.listContainer}>
+                                <View style={styles.searchContainer}>
+                                    <TextInput
+                                        style={styles.searchInput}
+                                        placeholder="Buscar por nombre o email"
+                                        placeholderTextColor={theme.colors.text}
+                                        value={searchQuery}
+                                        onChangeText={setSearchQuery}
+                                    />
+                                </View>
                                 <FlashList
-                                    data={(Array.isArray(requests) ? requests : []) as any}
+                                    data={filteredRequests}
                                     renderItem={renderRequestItem}
+                                    keyExtractor={item => item.id}
                                     estimatedItemSize={100}
                                 />
                             </View>
@@ -268,7 +280,7 @@ const RequestAccessScreen: React.FC = () => {
     );
 };
 
-const getStyles = ({colors}: TTheme) => StyleSheet.create({
+const getStyles = ({ colors }: TTheme) => StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.background,
@@ -280,7 +292,7 @@ const getStyles = ({colors}: TTheme) => StyleSheet.create({
         alignItems: 'center',
     },
     formContainer: {
-        backgroundColor:colors.background,
+        backgroundColor: colors.background,
         borderRadius: 8,
         padding: 16,
     },
@@ -420,6 +432,19 @@ const getStyles = ({colors}: TTheme) => StyleSheet.create({
         fontSize: 16,
         color: '#666',
         marginTop: 40,
+    },
+    searchContainer: {
+        paddingVertical: 8,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.border,
+    },
+    searchInput: {
+        height: 40,
+        borderWidth: 1,
+        borderColor: colors.border,
+        borderRadius: 8,
+        paddingHorizontal: 12,
+        color: colors.text,
     },
 });
 

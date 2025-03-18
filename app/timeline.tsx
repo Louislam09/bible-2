@@ -1,6 +1,5 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
-import DisplayTimeline from "@/components/timeline/DisplayTimeline";
 import TimelineList from "@/components/timeline/TimelineList";
 import { useTheme } from "@react-navigation/native";
 import { Stack } from "expo-router";

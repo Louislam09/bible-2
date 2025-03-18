@@ -45,7 +45,8 @@ export enum Screens {
   MemorizeVerse = "memorization/memoryList",
   VerseId = "memorization/[verseId]",
   ChallengeTypeId = "memorization/[verseId]/challenge/[typeId]",
-  Admin= "admin"
+  Admin= "admin",
+  TimelineId = "timeline/[timelineId]"
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -77,6 +78,7 @@ export const ScreensName: TScreensName = {
   [Screens.History]: "Historial",
   [Screens.Timeline]: "Linea de tiempo",
   [Screens.Admin]: "Panel Admin",
+  [Screens.TimelineId]: "Linea de Tiempo",
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
