@@ -55,10 +55,15 @@ const SongViewer = ({ song }: SongViewer) => {
       y: 0,
       animated: true,
     });
-    setIsChorus(!isChorus);
-    if (!isChorus && hasChorus) return;
+
+    if (!isChorus && hasChorus) {
+      setIsChorus(true);
+      return;
+    }
+    
     if (currentVerseIndex < stanzas.length - 1) {
-      setCurrentVerseIndex((prev) => prev + 1);
+      setCurrentVerseIndex(prev => prev + 1);
+      setIsChorus(false);
     }
   };
 
@@ -67,10 +72,15 @@ const SongViewer = ({ song }: SongViewer) => {
       y: 0,
       animated: true,
     });
-    setIsChorus(!isChorus);
-    if (!isChorus && hasChorus) return;
+    
+    if (isChorus) {
+      setIsChorus(false);
+      return;
+    }
+    
     if (currentVerseIndex > 0) {
-      setCurrentVerseIndex((prev) => prev - 1);
+      setCurrentVerseIndex(prev => prev - 1);
+      if (hasChorus) setIsChorus(true);
     }
   };
 
