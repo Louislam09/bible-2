@@ -2189,7 +2189,7 @@ const timelineEvents: TimelinePeriod[] = [
     events: [
       {
         id: 781,
-        title: "Saül",
+        title: "Saúl",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/james-tissot-saul-meets-with-samuel-1900_7-30-2013%203-57-41%20PM.jpg",
@@ -2201,7 +2201,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 783,
-        title: "Jonathan",
+        title: "Jonatán",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas0406_8-6-2013%204-56-49%20PM.jpg",
@@ -2213,7 +2213,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 784,
-        title: "Ishbosheth",
+        title: "Isboset",
         image:
           "http://timeline.biblehistory.com/media/images/t/ishbosheth_8-6-2013%205-16-18%20PM.jpg",
         slug: "ishbosheth",
@@ -2225,7 +2225,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 787,
-        title: "Attaque de Jonathan et de son porteur d'armes",
+        title: "Ataque de Jonatán y su escudero",
         image:
           "http://timeline.biblehistory.com/media/images/t/429px-Jonathan-defying-the-outposts-of-the-Philistines-001_8-6-2013%205-28-28%20PM.jpg",
         slug: "jonathan-and-his-armorbearer-attack-philistines",
@@ -2248,7 +2248,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 789,
-        title: "David, un garçon de berger",
+        title: "David, un joven pastor",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-stdas0448_8-6-2013%205-24-40%20PM.jpg",
         slug: "david-a-shepherd-boy",
@@ -2260,7 +2260,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 790,
-        title: "Rejet de Saül",
+        title: "Rechazo de Saúl",
         slug: "rejection-of-saul",
         start: -1029,
         end: -1029,
@@ -2270,7 +2270,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 791,
-        title: "David oint par Samuel",
+        title: "David es ungido por Samuel",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas0756_8-13-2013%204-08-56%20PM.jpg",
         slug: "david-anointed-by-samuel",
@@ -2282,7 +2282,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 792,
-        title: "David tue ses lions",
+        title: "David mata a sus leones",
         slug: "david-slays-his-lions",
         start: -1027,
         end: -1027,
@@ -2292,7 +2292,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 793,
-        title: "David joue pour Saül",
+        title: "David toca para Saúl",
         slug: "david-plays-for-saul",
         start: -1026,
         end: -1026,
@@ -2302,7 +2302,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 795,
-        title: "David et Goliath",
+        title: "David y Goliat",
         slug: "david-and-goliath",
         start: -1025,
         end: -1025,
@@ -2312,7 +2312,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 797,
-        title: "La haine de Saül contre David commence",
+        title: "El odio de Saúl contra David comienza",
         slug: "sauls-hatred-against-david-begins",
         start: -1024,
         end: -1024,
@@ -2322,7 +2322,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 800,
-        title: "David s'échappe chez Samuel",
+        title: "David escapa hacia Samuel",
         slug: "david-escapes-to-samuel",
         start: -1021,
         end: -1021,
@@ -2332,7 +2332,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 804,
-        title: "David va chez Ahimelech, prêtre à Nob",
+        title: "David va con Ahimelec, sacerdote en Nob",
         slug: "david-goes-to-ahimelech-priest-at-nob",
         start: -1020,
         end: -1020,
@@ -2342,7 +2342,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 805,
-        title: "David s'enfuit à Gath et feint la folie",
+        title: "David huye a Gat y finge locura",
         slug: "david-flees-to-gath-feigns-insanity",
         start: -1019,
         end: -1019,
@@ -2352,7 +2352,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 806,
-        title: "David dans une caverne à Adullam",
+        title: "David en una cueva en Adulam",
         slug: "david-in-cave-at-adullam",
         start: -1018,
         end: -1018,
@@ -2362,7 +2362,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 808,
-        title: "David consulte l'éphod et fuit dans le désert de Ziph",
+        title: "David consulta el efod y huye al desierto de Zif",
         slug: "david-consults-ephod-flees-to-wilderness-of-ziph",
         start: -1017,
         end: -1017,
@@ -2372,7 +2372,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 812,
-        title: "Invasion philistine alors que Saül cherche David",
+        title: "Invasión filistea mientras Saúl busca a David",
         slug: "philistine-invasion-while-saul-seeks-david",
         start: -1017,
         end: -1017,
@@ -2382,7 +2382,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 811,
-        title: "David s'enfuit à En Gedi et coupe le vêtement de Saül",
+        title: "David huye a En Gedi y corta la ropa de Saúl",
         slug: "david-flees-to-en-gedi-clips-sauls-garment",
         start: -1016,
         end: -1016,
@@ -2392,7 +2392,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 813,
-        title: "Mephibosheth",
+        title: "Mefiboset",
         slug: "mephibosheth",
         start: -1015,
         end: -969,
@@ -2402,7 +2402,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 814,
-        title: "David s'enfuit dans la région sauvage de Paran",
+        title: "David huye al desierto de Parán",
         slug: "david-flees-to-wilderness-of-paran",
         start: -1015,
         end: -1015,
@@ -2412,7 +2412,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 815,
-        title: "David épouse Abigail",
+        title: "David se casa con Abigail",
         slug: "david-marries-abigail",
         start: -1015,
         end: -1015,
@@ -2422,7 +2422,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 816,
-        title: "David épargne la vie de Saul une deuxième fois",
+        title: "David perdona la vida de Saúl por segunda vez",
         slug: "david-spares-sauls-life-a-2nd-time",
         start: -1014,
         end: -1014,
@@ -2432,7 +2432,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 817,
-        title: "David a reçu Ziklag du Roi Akish",
+        title: "David recibe Siclag del rey Aquis",
         slug: "david-received-ziklag-from-king-achish",
         start: -1014,
         end: -1014,
@@ -2442,7 +2442,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 786,
-        title: "Délivrance de Jabesh, Israël unifié",
+        title: "Liberación de Jabes, Israel unificado",
         slug: "deliverance-of-jabesh-israel-unified",
         start: -1010,
         end: -1010,
@@ -2452,7 +2452,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 818,
-        title: "Raid philistin à Gilboa, Saul consulte une sorcière",
+        title: "Incursión filistea en Gilboa, Saúl consulta a una bruja",
         image:
           "http://timeline.biblehistory.com/media/images/t/saul-and-the-witch-of-endor-1777_7-30-2013%203-19-19%20PM.jpg",
         slug: "philistine-raid-at-gilboa-saul-consults-witch",
@@ -2464,7 +2464,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 820,
-        title: "Amnon",
+        title: "Amnón",
         slug: "amnon",
         start: -1010,
         end: -987,
@@ -2474,7 +2474,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 802,
-        title: "Bathsheba",
+        title: "Betsabé",
         image:
           "http://timeline.biblehistory.com/media/images/t/bathsheba-receiving-david-s-letter_8-5-2013%203-48-46%20PM.jpg",
         slug: "bathsheba",
@@ -2486,7 +2486,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 821,
-        title: "Absalom",
+        title: "Absalón",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-Absalom_8-5-2013%204-42-42%20PM.jpg",
@@ -2498,7 +2498,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 822,
-        title: "David King sur l'Israël unifié",
+        title: "David rey sobre Israel unificado",
         slug: "david-king-over-united-israel",
         start: -1003,
         end: -970,
@@ -2508,7 +2508,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 823,
-        title: "David conquiert Jérusalem des Jébusiens",
+        title: "David conquista Jerusalén de los jebuseos",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas2122_8-5-2013%204-49-03%20PM.jpg",
         slug: "david-conquers-jerusalem-from-jebusites",
@@ -2520,7 +2520,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 824,
-        title: "David défait les ennemis et étend son territoire",
+        title: "David derrota a los enemigos y extiende su territorio",
         slug: "david-defeats-enemies-extends-territory",
         start: -1003,
         end: -997,
@@ -2530,7 +2530,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 827,
-        title: "David présente ses plans pour le temple",
+        title: "David presenta sus planes para el templo",
         image:
           "http://timeline.biblehistory.com/media/images/t/David%20and%20Ark%20of%20the%20Covenant_5-1-2013%2012-17-06%20PM.jpg",
         slug: "david-lays-plans-for-the-temple",
@@ -2542,7 +2542,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 828,
-        title: "David fait preuve de gentillesse envers Mephibosheth",
+        title: "David muestra bondad a Mefiboset",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-DavidMephibosheth_8-5-2013%205-34-41%20PM.jpg",
         slug: "david-shows-kindness-to-mephibosheth",
@@ -2554,7 +2554,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 833,
-        title: "L'adultère de David avec Bethsabée",
+        title: "El adulterio de David con Betsabé",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-jcgas0037_8-5-2013%205-49-36%20PM.jpg",
         slug: "davids-adultery-with-bathsheba",
@@ -2566,7 +2566,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 835,
-        title: "David Rebuked par Nathan",
+        title: "David reprendido por Natán",
         slug: "david-rebuked-by-nathan",
         start: -991,
         end: -991,
@@ -2576,7 +2576,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 836,
-        title: "Mort de l'enfant de David d'un adultère, 1er jugement",
+        title: "Muerte del hijo de David por adulterio, primer juicio",
         slug: "davids-child-from-adultery-dies-1st-judgment",
         start: -991,
         end: -991,
@@ -2586,7 +2586,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 839,
-        title: "David a écrit le psaume 32",
+        title: "David escribió el salmo 32",
         slug: "david-wrote-psalm-32",
         start: -991,
         end: -991,
@@ -2596,7 +2596,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 838,
-        title: "Solomon",
+        title: "Salomón",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-lwjas0181_8-8-2013%2012-16-00%20PM.jpg",
@@ -2608,7 +2608,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 840,
-        title: "Amnon viole sa sœur",
+        title: "Amnón viola a su hermana",
         slug: "amnon-rapes-his-sister",
         start: -989,
         end: -989,
@@ -2618,7 +2618,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 842,
-        title: "Absalom tue Amnon, 2e jugement",
+        title: "Absalón asesina a Amnón, segundo juicio",
         slug: "absalom-murders-amnon-2nd-judgment",
         start: -987,
         end: -987,
@@ -2628,7 +2628,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 843,
-        title: "Absalom revient de Geshur à Jérusalem",
+        title: "Absalón regresa a Jerusalén desde Gesur",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas0690_8-22-2013%202-40-45%20PM.jpg",
         slug: "absalom-returns-to-jerusalem-from-geshur",
@@ -2640,7 +2640,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 844,
-        title: "Absalom réconcilié avec David",
+        title: "Absalón se reconcilia con David",
         slug: "absalom-reconciled-to-david",
         start: -982,
         end: -982,
@@ -2650,7 +2650,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 846,
-        title: "David s'enfuit de Jérusalem",
+        title: "David huye de Jerusalén",
         slug: "david-flees-jerusalem",
         start: -978,
         end: -978,
@@ -2660,7 +2660,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 848,
-        title: "David Numbers Israël",
+        title: "David censa a Israel",
         slug: "david-numbers-israel",
         start: -974,
         end: -974,
@@ -2670,7 +2670,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 850,
-        title: "Rehoboam",
+        title: "Roboam",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-stdas0014_8-22-2013%202-52-06%20PM.jpg",
@@ -2682,7 +2682,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 851,
-        title: "Rébellion d'Adonijah, 4e arrêt",
+        title: "Rebelión de Adonías, cuarto juicio",
         slug: "rebellion-of-adonijah-4th-judgment",
         start: -971,
         end: -971,
@@ -2692,7 +2692,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 852,
-        title: "Hiram offre des compétences et des ressources à Salomon",
+        title: "Hiram ofrece habilidades y recursos a Salomón",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas1633_8-6-2013%209-15-29%20AM.jpg",
         slug: "hiram-offers-skill-and-resources-to-solomon",
@@ -2704,7 +2704,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 855,
-        title: "Salomon épouse la fille du pharaon",
+        title: "Salomón se casa con la hija del faraón",
         slug: "solomon-marries-daughter-of-pharaoh",
         start: -967,
         end: -967,
@@ -2714,7 +2714,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 856,
-        title: "Le pharaon conquiert Gezer, dot pour sa fille",
+        title: "El faraón conquista Gezer, dote para su hija",
         slug: "pharaoh-conquers-gezer-gives-as-present-to-daughter",
         start: -967,
         end: -967,
@@ -2724,7 +2724,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 857,
-        title: "Salomon reçoit la sagesse",
+        title: "Salomón recibe sabiduría",
         slug: "solomon-receives-wisdom",
         start: -967,
         end: -967,
@@ -2734,7 +2734,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 862,
-        title: "Le Seigneur parle à Salomon pour la deuxième fois",
+        title: "El Señor habla a Salomón por segunda vez",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-lwjas0332_8-6-2013%209-42-23%20AM.jpg",
         slug: "lord-speaks-to-solomon-2nd-time",
@@ -2746,7 +2746,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 861,
-        title: "Salomon achève son palais",
+        title: "Salomón completa su palacio",
         slug: "solomon-completes-his-palace",
         start: -946,
         end: -946,
@@ -2756,7 +2756,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 863,
-        title: "Hiram inspecte son paiement dans les villes",
+        title: "Hiram inspecciona su pago en las ciudades",
         slug: "hiram-inspects-his-payment-in-cities",
         start: -946,
         end: -946,
@@ -2766,7 +2766,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 865,
-        title: "Solomon fortifie les villes",
+        title: "Salomón fortifica las ciudades",
         slug: "solomon-works-on-millo-and-building-up-cities",
         start: -945,
         end: -931,
@@ -2776,7 +2776,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 866,
-        title: "Arrivée de la reine de Saba",
+        title: "Llegada de la reina de Saba",
         slug: "arrival-of-queen-of-sheba",
         start: -945,
         end: -945,
@@ -2818,7 +2818,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 873,
-        title: "Baasha",
+        title: "Baasa",
         slug: "baasha",
         start: -933,
         end: -886,
@@ -2828,7 +2828,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 768,
-        title: "Eli",
+        title: "Elí",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas5083_8-13-2013%203-28-45%20PM.jpg",
@@ -2852,7 +2852,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 780,
-        title: "Samuel Juge Israël",
+        title: "Samuel juzga a Israel",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas1474_8-6-2013%203-59-48%20PM.jpg",
         slug: "samuel-judges-israel",
@@ -2864,7 +2864,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 771,
-        title: "Jesse",
+        title: "Jesé",
         slug: "jesse",
         start: -1140,
         end: -1020,
@@ -2874,7 +2874,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 774,
-        title: "Samson",
+        title: "Sansón",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Tissot_Samson_Slays_a_Thousand_Men_8-8-2013%2011-59-12%20AM.jpg",
@@ -2886,7 +2886,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 773,
-        title: "L'oppression philistine",
+        title: "La opresión filistea",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas3460_8-6-2013%204-51-17%20PM.jpg",
         slug: "philistine-oppression-begins",
