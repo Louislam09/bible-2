@@ -2912,7 +2912,7 @@ const timelineEvents: TimelinePeriod[] = [
     events: [
       {
         id: 875,
-        title: "Division d'Israël",
+        title: "División de Israel",
         slug: "division-of-israel",
         start: -930,
         end: -931,
@@ -2922,7 +2922,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 880,
-        title: "Un prophète inconnu maudit l'autel de Jéroboam",
+        title: "Un profeta desconocido maldice el altar de Jeroboam",
         slug: "prophet-from-judah-curses-jeroboams-altar-at-bethel",
         start: -930,
         end: -930,
@@ -2932,7 +2932,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 877,
-        title: "Rehoboam abandonne la vertu",
+        title: "Roboam abandona la virtud",
         slug: "rehoboam-forsakes-righteousness",
         start: -928,
         end: -928,
@@ -2942,7 +2942,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 878,
-        title: "Le temple de Salomon mis à sac par Chishak",
+        title: "El templo de Salomón saqueado por Sisac",
         slug: "solomons-temple-sacked-by-shishak",
         start: -926,
         end: -926,
@@ -2952,7 +2952,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 890,
-        title: "Ahab",
+        title: "Acab",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Elijah_4-17-2013%204-20-32%20PM.jpg",
@@ -2964,7 +2964,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 881,
-        title: "L'enfant de Jéroboam I meurt",
+        title: "El hijo de Jeroboam I muere",
         slug: "jeroboam-is-child-dies",
         start: -915,
         end: -915,
@@ -2974,7 +2974,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 868,
-        title: "Abijah",
+        title: "Abías",
         slug: "abijah",
         start: -913,
         end: -911,
@@ -2984,7 +2984,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 883,
-        title: "Elah",
+        title: "Elá",
         slug: "elah",
         start: -912,
         end: -885,
@@ -3004,7 +3004,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 887,
-        title: "Jehoshaphat",
+        title: "Josafat",
         slug: "jehoshaphat",
         start: -907,
         end: -848,
@@ -3014,7 +3014,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 889,
-        title: "Elijah",
+        title: "Elías",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Elijah%20taken%20up%201005-63_7-22-2013%203-12-23%20PM.JPG",
@@ -3026,7 +3026,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 891,
-        title: "La Palestine envahie par Zerah",
+        title: "Palestina invadida por Zera",
         slug: "palestine-invaded-by-zerah",
         start: -900,
         end: -900,
@@ -3046,7 +3046,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 902,
-        title: "Athaliah",
+        title: "Atalía",
         slug: "athaliah",
         start: -898,
         end: -835,
@@ -3056,7 +3056,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 894,
-        title: "Shalmaneser III",
+        title: "Salmanasar III",
         slug: "shalmaneser-iii",
         start: -894,
         end: -824,
@@ -3066,7 +3066,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 888,
-        title: "Eliakim",
+        title: "Eliacim",
         slug: "eliakim-son-of-melea",
         start: -887,
         end: -807,
@@ -3076,7 +3076,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 899,
-        title: "Elisha",
+        title: "Eliseo",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/ElishaRaisingShunammitesSon.jpg",
@@ -3088,7 +3088,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 904,
-        title: "Omri construit la Samarie",
+        title: "Omri construye Samaria",
         slug: "omri-builds-samaria",
         start: -879,
         end: -879,
@@ -3098,7 +3098,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 905,
-        title: "Ahaziah",
+        title: "Ocozías",
         slug: "ahaziah-9th-king",
         start: -878,
         end: -852,
@@ -3108,7 +3108,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 897,
-        title: "Omri soumet les Moabites",
+        title: "Omri somete a los moabitas",
         slug: "omri-subdues-moabites",
         start: -877,
         end: -877,
@@ -3128,7 +3128,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 911,
-        title: "Asa contracte une maladie des pieds",
+        title: "Asa contrae una enfermedad en los pies",
         slug: "asa-contracts-disease-in-his-feet",
         start: -872,
         end: -872,
@@ -3138,7 +3138,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 912,
-        title: "Obadiah cache les prophètes de Dieu",
+        title: "Abdías esconde a los profetas de Dios",
         image:
           "http://timeline.biblehistory.com/media/images/t/Obadiah_hides_prophets_8-26-2013%205-48-34%20PM.jpg",
         slug: "obadiah-hides-the-prophets-of-god",
@@ -3150,7 +3150,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 914,
-        title: "Josaphat envoie des lévites pour enseigner le droit",
+        title: "Josafat envía levitas a enseñar la ley",
         slug: "jehoshaphat-sends-levites-out-to-teach-the-law",
         start: -869,
         end: -869,
@@ -3160,7 +3160,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 916,
-        title: "Trois ans et demi sans pluie",
+        title: "Tres años y medio sin lluvia",
         slug: "three-and-one-half-years-of-no-rain",
         start: -869,
         end: -866,
@@ -3170,7 +3170,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 901,
-        title: "Jonan (ou Jonam)",
+        title: "Jonán (o Jonam)",
         slug: "jonan-or-jonam",
         start: -867,
         end: -878,
@@ -3180,7 +3180,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 918,
-        title: "Fin de 3 ans et demi sans pluie, Elijah court à l'Horeb",
+        title: "Fin de 3 años y medio sin lluvia, Elías corre al Horeb",
         image:
           "http://timeline.biblehistory.com/media/images/t/_GoodSalt-prcas2859_8-26-2013%206-09-22%20PM.jpg",
         slug: "end-3-12-years-of-no-rain-elijah-runs-to-horeb",
@@ -3192,7 +3192,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 915,
-        title: "Gehazi",
+        title: "Giezi",
         slug: "gehazi",
         start: -864,
         end: -800,
@@ -3202,7 +3202,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 917,
-        title: "Ahaziah",
+        title: "Ocozías",
         slug: "ahaziah-6th-king",
         start: -863,
         end: -841,
@@ -3212,7 +3212,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 922,
-        title: "Le vignoble d'Ahab et Naboth",
+        title: "La viña de Acab y Nabot",
         image:
           "http://timeline.biblehistory.com/media/images/t/456px-Jezebel_has_Naboth_killed_8-27-2013%209-42-38%20AM.jpg",
         slug: "ahab-and-naboths-vineyard",
@@ -3224,7 +3224,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 921,
-        title: "Achab vainc Benhadad Ier de Syrie",
+        title: "Acab derrota a Benhadad I de Siria",
         slug: "ahab-defeats-benhadad-i-of-syria",
         start: -853,
         end: -853,
@@ -3234,7 +3234,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 923,
-        title: "Micaiah Prophétise la défaite d'Achab",
+        title: "Micaías profetiza la derrota de Acab",
         slug: "micaiah-prophesies-defeat-of-ahab",
         start: -853,
         end: -853,
@@ -3244,7 +3244,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 924,
-        title: "Ahab se bat avec Josaphat contre les Syriens",
+        title: "Acab lucha con Josafat contra los sirios",
         slug: "ahab-battles-with-jehoshaphat-against-syrians",
         start: -853,
         end: -853,
@@ -3254,7 +3254,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 925,
-        title: "Ahab se bat contre les Assyriens au Qarqar allié à Ben-hadad",
+        title: "Acab lucha contra los asirios en Qarqar aliado con Benhadad",
         slug: "ahab-battles-assyrians-at-qarqar-allied-w-benhadad",
         start: -853,
         end: -853,
@@ -3264,7 +3264,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 926,
-        title: "Ahaziah d'Israël tente d'intimider Elie",
+        title: "Ocozías de Israel intenta intimidar a Elías",
         slug: "ahaziah-of-israel-tries-to-intimidate-elijah",
         start: -853,
         end: -853,
@@ -3274,7 +3274,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 940,
-        title: "Jehoram de Juda reçoit une lettre d'Élie",
+        title: "Joram de Judá recibe una carta de Elías",
         slug: "jehoram-of-judah-receives-prophetic-writing-from-elijah",
         start: -851,
         end: -851,
@@ -3284,7 +3284,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 928,
-        title: "Elisha raillé par les jeunes au Béthel",
+        title: "Eliseo es burlado por jóvenes en Betel",
         slug: "elisha-mocked-by-youth-at-bethel",
         start: -850,
         end: -850,
@@ -3294,7 +3294,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 933,
-        title: "Joachaz",
+        title: "Joacaz",
         slug: "jehoahaz",
         start: -850,
         end: -798,
@@ -3304,7 +3304,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 931,
-        title: "Elisha et l'huile de la veuve",
+        title: "Eliseo y el aceite de la viuda",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-lwjas0179_8-6-2013%202-49-26%20PM.jpg",
         slug: "elisha-and-the-widows-oil",
@@ -3316,7 +3316,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 936,
-        title: "Elisha purifie le pot de ragoût",
+        title: "Eliseo purifica la olla de estofado",
         slug: "elisha-purifies-the-pot-of-stew",
         start: -848,
         end: -848,
@@ -3326,7 +3326,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 920,
-        title: "Joseph",
+        title: "José",
         slug: "joseph-son-of-jonan",
         start: -847,
         end: -767,
@@ -3336,7 +3336,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 930,
-        title: "Elisha promet un fils à la femme shunamite",
+        title: "Eliseo promete un hijo a la mujer sunamita",
         slug: "elisha-promises-shunammite-woman-a-son",
         start: -847,
         end: -847,
@@ -3346,7 +3346,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 939,
-        title: "Elisha nourrit 100 hommes",
+        title: "Eliseo alimenta a 100 hombres",
         slug: "elisha-feeds-100-men",
         start: -847,
         end: -847,
@@ -3356,7 +3356,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 941,
-        title: "Elisha et le miracle de la tête de hache flottante",
+        title: "Eliseo y el milagro de la cabeza de hacha flotante",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-pppas0209_8-6-2013%203-10-18%20PM.jpg",
         slug: "elisha-and-miracle-of-the-floating-ax-head",
@@ -3368,7 +3368,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 942,
-        title: "Elisha contrecarre les embuscades syriennes",
+        title: "Eliseo frustra las emboscadas sirias",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-stdas0556_8-6-2013%203-12-36%20PM.jpg",
         slug: "elisha-thwarts-syrian-ambushes",
@@ -3380,7 +3380,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 945,
-        title: "Benhadad II : siège de la Samarie et délivrance",
+        title: "Benhadad II: asedio de Samaria y liberación",
         slug: "benhadad-ii-siege-of-samaria-and-deliverance",
         start: -845,
         end: -845,
@@ -3390,7 +3390,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 943,
-        title: "Jehoram de Judah atteint d'une maladie intestinale",
+        title: "Joram de Judá es golpeado por una enfermedad intestinal",
         slug: "jehoram-of-judah-struck-with-bowel-disease",
         start: -843,
         end: -843,
@@ -3400,7 +3400,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 946,
-        title: "Joash (ou Jehoash)",
+        title: "Joás (o Jehoás)",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/_GoodSalt-stdas0028_8-27-2013%2012-10-43%20PM.jpg",
@@ -3412,7 +3412,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 947,
-        title: "Shalmaneser III bat Hazael",
+        title: "Salmanasar III derrota a Hazael",
         slug: "shalmaneser-iii-of-assyria-defeats-hazael-of-damascus",
         start: -841,
         end: -841,
@@ -3422,8 +3422,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 934,
-        title:
-          "Elisha met en garde une femme shunamite contre une famine de 7 ans",
+        title: "Eliseo advierte a una mujer sunamita de una hambruna de 7 años",
         slug: "elisha-warns-shunammite-woman-of-7-year-famine",
         start: -839,
         end: -839,
@@ -3433,7 +3432,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 944,
-        title: "La terre d'une femme shunamite restaurée",
+        title: "La tierra de una mujer sunamita es restaurada",
         image:
           "http://timeline.biblehistory.com/media/images/t/_GoodSalt-prcas0990_8-27-2013%2012-26-23%20PM.jpg",
         slug: "shunammite-womans-land-restored",
@@ -3445,7 +3444,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 938,
-        title: "Naaman guérie, Gehazi Leprous",
+        title: "Naamán es curado, Giezi se vuelve leproso",
         image:
           "http://timeline.biblehistory.com/media/images/t/_GoodSalt-prcas1640_8-27-2013%2012-29-08%20PM.jpg",
         slug: "naaman-healed-gehazi-leprous",
@@ -3457,7 +3456,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 951,
-        title: "Juda",
+        title: "Judá",
         slug: "juda",
         start: -827,
         end: -747,
@@ -3467,7 +3466,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 952,
-        title: "Jehoash",
+        title: "Jehoás",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Golden%20Calf_4-3-2013%205-18-17%20PM.jpg",
@@ -3479,7 +3478,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 960,
-        title: "Jonah",
+        title: "Jonás",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Jonah_7-31-2013%2011-11-16%20AM.jpg",
@@ -3491,7 +3490,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 954,
-        title: "Amaziah",
+        title: "Amasías",
         slug: "amaziah",
         start: -821,
         end: -767,
@@ -3501,7 +3500,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 958,
-        title: "Jéroboam II",
+        title: "Jeroboam II",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-Jeroboam_8-1-2013%205-29-02%20PM.jpg",
@@ -3513,7 +3512,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 957,
-        title: "Uzziah",
+        title: "Uzías",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Rembrandt_Harmensz_van_Rijn_032.jpg",
@@ -3525,7 +3524,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 956,
-        title: "Siméon",
+        title: "Simeón",
         slug: "simeon-son-of-juda",
         start: -807,
         end: -827,
@@ -3535,7 +3534,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 955,
-        title: "Jonas à Ninive",
+        title: "Jonás en Nínive",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas2580_8-6-2013%203-27-53%20PM.jpg",
         slug: "jonah-to-ninevah",
@@ -3547,7 +3546,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 962,
-        title: "Ouziah Azariah, le temps de la prospérité",
+        title: "Uzías Azarías, tiempo de prosperidad",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/_GoodSalt-stdas0031_8-27-2013%201-27-15%20PM.jpg",
@@ -3559,7 +3558,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 964,
-        title: "Lévi",
+        title: "Leví",
         slug: "levi-son-of-simeon",
         start: -787,
         end: -707,
@@ -3569,7 +3568,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 969,
-        title: "Zacharie",
+        title: "Zacarías",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Zechariah_of_Israel_8-27-2013%202-08-27%20PM.png",
@@ -3581,7 +3580,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 972,
-        title: "Jotham",
+        title: "Jotam",
         slug: "jotham",
         start: -773,
         end: -732,
@@ -3591,7 +3590,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1001,
-        title: "Shalmaneser V",
+        title: "Salmanasar V",
         slug: "shalmaneser-v",
         start: -772,
         end: -722,
@@ -3601,7 +3600,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 975,
-        title: "Pekahiah",
+        title: "Pekaías",
         slug: "pekahiah",
         start: -767,
         end: -740,
@@ -3611,7 +3610,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 978,
-        title: "Matthat",
+        title: "Matat",
         slug: "matthat-father-of-jorum",
         start: -767,
         end: -687,
@@ -3621,7 +3620,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 981,
-        title: "Isaiah",
+        title: "Isaías",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Isaiah_7-31-2013%2011-16-12%20AM.jpg",
@@ -3633,7 +3632,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 979,
-        title: "Sargon II",
+        title: "Sargón II",
         slug: "sargon-ii",
         start: -758,
         end: -705,
@@ -3643,7 +3642,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 980,
-        title: "Grand tremblement de terre",
+        title: "Gran terremoto",
         image:
           "http://timeline.biblehistory.com/media/images/t/_GoodSalt-prcas3399_8-27-2013%202-13-06%20PM.jpg",
         slug: "great-earthquake",
@@ -3655,7 +3654,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 982,
-        title: "Ahaz",
+        title: "Acaz",
         slug: "ahaz",
         start: -755,
         end: -715,
@@ -3675,7 +3674,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 989,
-        title: "Ezéchias",
+        title: "Ezequías",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/_GoodSalt-prcas5185_8-27-2013%202-25-13%20PM.jpg",
@@ -3687,10 +3686,9 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 992,
-        title: "Sennacherib",
+        title: "Senaquerib",
         approx: true,
-        image:
-          "http://timeline.biblehistory.com/media/images/t/Sennacherib.jpg",
+        image: "http://timeline.biblehistory.com/media/images/t/Sennacherib.jpg",
         slug: "sennacherib",
         start: -735,
         end: -681,
@@ -3699,7 +3697,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 993,
-        title: "Immanuel",
+        title: "Emanuel",
         slug: "immanuel",
         start: -734,
         end: -734,
@@ -3709,7 +3707,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 995,
-        title: "Babylone prise par les Chaldéens",
+        title: "Babilonia tomada por los caldeos",
         slug: "babylon-taken-by-chaldeans",
         start: -732,
         end: -539,
@@ -3719,7 +3717,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1008,
-        title: "Eliazar",
+        title: "Eliezer",
         slug: "eliezer",
         start: -729,
         end: -647,
@@ -3729,7 +3727,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 997,
-        title: "Célébration de la Pâque réformée en Judée",
+        title: "Celebración de la Pascua reformada en Judá",
         slug: "reformationpassover-celebrated-in-judah-option-1",
         start: -727,
         end: -727,
@@ -3739,7 +3737,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 937,
-        title: "Deuxième invasion d'Israël à partir de l'Assyrie",
+        title: "Segunda invasión de Israel por Asiria",
         slug: "second-invasion-of-israel-from-assyria",
         start: -725,
         end: -722,
@@ -3749,7 +3747,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 988,
-        title: "L'Assyrie envahit le Royaume du Nord",
+        title: "Asiria invade el Reino del Norte",
         slug: "assyria-invades-northern-kingdom",
         start: -725,
         end: -725,
@@ -3759,7 +3757,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 999,
-        title: "Chute de la Samarie",
+        title: "Caída de Samaria",
         slug: "fall-of-samaria",
         start: -722,
         end: -722,
@@ -3769,7 +3767,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 422,
-        title: "Hilkiah",
+        title: "Hilcías",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/_GoodSalt-prcas3129_8-27-2013%202-51-48%20PM.jpg",
@@ -3781,7 +3779,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 418,
-        title: "Jose",
+        title: "José",
         slug: "jose",
         start: -712,
         end: -627,
@@ -3791,7 +3789,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 423,
-        title: "Esarhaddon",
+        title: "Esarhadón",
         slug: "esarhaddon",
         start: -711,
         end: -669,
@@ -3801,7 +3799,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1013,
-        title: "L'invasion des philistins",
+        title: "Invasión de los filisteos",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas1040_8-7-2013%203-36-57%20PM.jpg",
         slug: "invasion-of-philistines",
@@ -3813,7 +3811,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1009,
-        title: "Manasseh",
+        title: "Manasés",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/_GoodSalt-stdas0040_8-27-2013%202-57-15%20PM.jpg",
@@ -3825,7 +3823,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1011,
-        title: "Le soleil revient à 10 degrés, Ezéchias se rétablit",
+        title: "El sol retrocede 10 grados, Ezequías se recupera",
         slug: "sun-goes-back-10-degrees-hezekiah-recovers",
         start: -702,
         end: -702,
@@ -3835,7 +3833,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1012,
-        title: "L'Assyrie conquiert le monde, Sennachérib envahit Juda",
+        title: "Asiria conquista el mundo, Senaquerib invade Judá",
         slug: "assyria-conquers-world-sennacherib-invades-judah",
         start: -701,
         end: -701,
@@ -3845,7 +3843,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1010,
-        title: "Prophétie d'Esaïe concernant Cyrus II",
+        title: "Profecía de Isaías sobre Ciro II",
         slug: "isaiah-prophecy-concerning-cyrus-ii",
         start: -697,
         end: -697,
@@ -3865,7 +3863,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 414,
-        title: "Ashurbanipal",
+        title: "Asurbanipal",
         slug: "ashurbanipal",
         start: -690,
         end: -633,
@@ -3875,7 +3873,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 440,
-        title: "Sophonie appelle à la réforme",
+        title: "Sofonías llama a la reforma",
         slug: "zephaniah-calls-for-reform",
         start: -690,
         end: -609,
@@ -3885,7 +3883,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 415,
-        title: "Sennacherib rase Babylone",
+        title: "Senaquerib arrasa Babilonia",
         slug: "sennacherib-razes-babylon",
         start: -689,
         end: -689,
@@ -3895,7 +3893,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 416,
-        title: "La deuxième invasion de Jérusalem par Sennachérib",
+        title: "Segunda invasión de Jerusalén por Senaquerib",
         image:
           "http://timeline.biblehistory.com/media/images/t/Sennacherib_4-2-2013%203-52-27%20PM.jpg",
         slug: "sennacheribs-2nd-invasion-of-jerusalem",
@@ -3907,10 +3905,9 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 417,
-        title: "Nahum",
+        title: "Nahúm",
         approx: true,
-        image:
-          "http://timeline.biblehistory.com/media/images/t/Nahum-prophet.jpg",
+        image: "http://timeline.biblehistory.com/media/images/t/Nahum-prophet.jpg",
         slug: "nahum",
         start: -683,
         end: -610,
@@ -3919,7 +3916,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 420,
-        title: "Reconstruction de Babylone",
+        title: "Reconstrucción de Babilonia",
         image:
           "http://timeline.biblehistory.com/media/images/t/BabylonRebuilding_7-31-2013%204-39-19%20PM.jpg",
         slug: "babylon-rebuilding",
@@ -3931,7 +3928,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 437,
-        title: "Elmodam (ou Elmadam)",
+        title: "Elmodam (o Elmadam)",
         slug: "elmodam-or-elmadam",
         start: -679,
         end: -587,
@@ -3941,7 +3938,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 421,
-        title: "L'Assyrie d'Esarhaddon envahit l'Egypte",
+        title: "Asiria de Esarhadón invade Egipto",
         slug: "esarhaddon-assyria-invades-egypt",
         start: -675,
         end: -675,
@@ -3951,7 +3948,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 424,
-        title: "Amon",
+        title: "Amón",
         slug: "amon",
         start: -665,
         end: -641,
@@ -3961,7 +3958,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 426,
-        title: "Nahum évoque la chute de Thèbes",
+        title: "Nahúm menciona la caída de Tebas",
         slug: "nahum-refers-to-fall-of-thebes",
         start: -663,
         end: -663,
@@ -3981,7 +3978,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 436,
-        title: "Nahum prédit la chute de Ninive",
+        title: "Nahúm predice la caída de Nínive",
         slug: "nahum-predicts-fall-of-ninevah",
         start: -662,
         end: -662,
@@ -3991,7 +3988,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 433,
-        title: "Josiah",
+        title: "Josías",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Josiah_7-31-2013%204-38-17%20PM.jpg",
@@ -4013,7 +4010,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 439,
-        title: "Ashurbanipal vainc l'Elam",
+        title: "Asurbanipal derrota a Elam",
         slug: "ashurbanipal-defeats-elam",
         start: -645,
         end: -645,
@@ -4023,7 +4020,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 435,
-        title: "Jeremiah",
+        title: "Jeremías",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Jeremiah_4-2-2013%202-17-43%20PM.jpg",
@@ -4035,7 +4032,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 489,
-        title: "Melchi",
+        title: "Melqui",
         slug: "melchi",
         start: -635,
         end: -537,
@@ -4045,7 +4042,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 443,
-        title: "Jehoiakim",
+        title: "Joacim",
         slug: "jehoiakim",
         start: -634,
         end: -598,
@@ -4055,7 +4052,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 447,
-        title: "Josiah se consacre à Dieu",
+        title: "Josías se consagra a Dios",
         image:
           "http://timeline.biblehistory.com/media/images/t/_GoodSalt-prcas3303_8-27-2013%203-56-08%20PM.jpg",
         slug: "josiah-consecrates-himself-to-god",
@@ -4067,7 +4064,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 445,
-        title: "Nébuchanedsar II",
+        title: "Nabucodonosor II",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-nebuchadnezzar_8-6-2013%2011-02-33%20AM.jpg",
@@ -4079,7 +4076,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 446,
-        title: "Jehoahaz",
+        title: "Joacaz",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-Jehoahaz_8-6-2013%2011-06-04%20AM.jpg",
@@ -4091,7 +4088,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 451,
-        title: "Ezekiel",
+        title: "Ezequiel",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-ValleyOfDryBones_8-5-2013%204-24-11%20PM.jpg",
@@ -4103,7 +4100,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 452,
-        title: "Josiah trouve la loi et garde la Pâque",
+        title: "Josías encuentra la ley y celebra la Pascua",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/_GoodSalt-prcas1523_8-27-2013%204-22-30%20PM.jpg",
@@ -4127,7 +4124,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 850,
-        title: "Rehoboam",
+        title: "Roboam",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-stdas0014_8-22-2013%202-52-06%20PM.jpg",
@@ -4171,7 +4168,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 873,
-        title: "Baasha",
+        title: "Baasa",
         slug: "baasha",
         start: -933,
         end: -886,
