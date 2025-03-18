@@ -5837,7 +5837,7 @@ const timelineEvents: TimelinePeriod[] = [
     events: [
       {
         id: 1201,
-        title: "Conversion de Paul",
+        title: "Conversión de Pablo",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas3972_8-7-2013%2010-14-58%20AM.jpg",
         slug: "conversion-of-paul",
@@ -5849,7 +5849,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1202,
-        title: "Paul à Damas et en Arabie",
+        title: "Pablo en Damasco y Arabia",
         image:
           "http://timeline.biblehistory.com/media/images/t/Ananias_restores_sight_of_Saint_Paul_8-1-2013%208-51-07%20AM.jpg",
         slug: "paul-in-damascus-and-arabia",
@@ -5861,7 +5861,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1203,
-        title: "L'évasion de Paul de Damas",
+        title: "La huida de Pablo de Damasco",
         image:
           "http://timeline.biblehistory.com/media/images/t/Paul_being_let_down_in_a_basket_8-1-2013%208-55-33%20AM.jpg",
         slug: "pauls-escape-from-damascus",
@@ -5873,7 +5873,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1205,
-        title: "La mission de Barnabas et Paul à Antioche",
+        title: "La misión de Bernabé y Pablo en Antioquía",
         slug: "barnabas-and-pauls-mission-in-antioch",
         start: 43,
         end: 44,
@@ -5883,7 +5883,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1204,
-        title: "Jacques, le frère de Jean, est martyrisé / Pierre emprisonné",
+        title: "Santiago, el hermano de Juan, es martirizado / Pedro encarcelado",
         slug: "james-the-brother-of-john-is-martyred-peter-imprisoned",
         start: 44,
         end: 44,
@@ -5894,7 +5894,7 @@ const timelineEvents: TimelinePeriod[] = [
       {
         id: 1207,
         title:
-          "Barnabas et Paul emmènent l'aide aux victimes de la famine à Jérusalem",
+          "Bernabé y Pablo llevan ayuda a las víctimas de la hambruna en Jerusalén",
         slug: "barnabas-and-paul-take-famine-relief-to-jerusalem",
         start: 45,
         end: 45,
@@ -5904,7 +5904,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1208,
-        title: "Le premier voyage missionnaire de Paul se termine à Antioche",
+        title: "El primer viaje misionero de Pablo termina en Antioquía",
         slug: "pauls-first-missionary-journey-ending-in-antioch",
         start: 47,
         end: 49,
@@ -5914,7 +5914,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1209,
-        title: "Conseil de Jérusalem",
+        title: "Concilio de Jerusalén",
         slug: "jerusalem-council",
         start: 49,
         end: 49,
@@ -5924,7 +5924,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1210,
-        title: "Le deuxième voyage missionnaire de Paul",
+        title: "El segundo viaje misionero de Pablo",
         slug: "pauls-second-missionary-journey",
         start: 49,
         end: 52,
@@ -5934,7 +5934,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1211,
-        title: "Paul arrive à Corinthe",
+        title: "Pablo llega a Corinto",
         slug: "paul-arrives-at-corinth",
         start: 51,
         end: 51,
@@ -5944,7 +5944,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1212,
-        title: "1 Thessaloniciens écrits",
+        title: "1 Tesalonicenses escrito",
         slug: "1-thessalonians-written",
         start: 51,
         end: 51,
@@ -5954,7 +5954,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1213,
-        title: "2 Thessaloniciens écrits",
+        title: "2 Tesalonicenses escrito",
         slug: "2-thessalonians-written",
         start: 51,
         end: 52,
@@ -5964,7 +5964,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1214,
-        title: "Fin du deuxième voyage missionnaire de Paul",
+        title: "Fin del segundo viaje misionero de Pablo",
         slug: "end-of-pauls-second-missionary-journey",
         start: 52,
         end: 52,
@@ -5974,7 +5974,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1215,
-        title: "Le troisième voyage missionnaire de Paul",
+        title: "El tercer viaje misionero de Pablo",
         slug: "pauls-third-missionary-journey",
         start: 53,
         end: 57,
@@ -5984,7 +5984,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1216,
-        title: "Le livre de 1 Corinthiens",
+        title: "El libro de 1 Corintios",
         slug: "1-corinthians-written",
         start: 56,
         end: 56,
@@ -5994,7 +5994,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1217,
-        title: "Le livre de 2 Corinthiens",
+        title: "El libro de 2 Corintios",
         slug: "2-corinthians-written",
         start: 57,
         end: 57,
@@ -6004,7 +6004,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1218,
-        title: "Épître aux Romains",
+        title: "Epístola a los Romanos",
         slug: "romans-written",
         start: 57,
         end: 58,
@@ -6014,7 +6014,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1220,
-        title: "Paul emprisonné deux ans à Césarée",
+        title: "Pablo encarcelado dos años en Cesarea",
         slug: "paul-imprisoned-two-years-at-caesarea",
         start: 58,
         end: 60,
@@ -6024,7 +6024,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1221,
-        title: "Le voyage de Paul à Rome",
+        title: "El viaje de Pablo a Roma",
         slug: "pauls-journey-to-rome",
         start: 60,
         end: 60,
@@ -6034,7 +6034,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1223,
-        title: "Ephésiens, Colossiens, Philémon Ecrit",
+        title: "Efesios, Colosenses, Filemón escritos",
         slug: "ephesians-colossians-philemon-written",
         start: 60,
         end: 62,
@@ -6044,7 +6044,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1222,
-        title: "Paul emprisonné à Rome pendant deux ans",
+        title: "Pablo encarcelado en Roma durante dos años",
         slug: "paul-imprisoned-in-rome-two-years",
         start: 61,
         end: 62,
@@ -6054,7 +6054,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1224,
-        title: "Philippiens écrits",
+        title: "Filipenses escrito",
         slug: "philippians-written",
         start: 62,
         end: 62,
@@ -6064,7 +6064,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1226,
-        title: "Paul voyage en Crète, en Asie mineure et en Macédoine",
+        title: "Pablo viaja a Creta, Asia Menor y Macedonia",
         slug: "paul-travels-in-crete-asia-minor-and-macedonia",
         start: 63,
         end: 67,
@@ -6074,7 +6074,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1227,
-        title: "1 Pierre écrit",
+        title: "1 Pedro escrito",
         slug: "1-peter-written",
         start: 63,
         end: 63,
@@ -6084,7 +6084,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1228,
-        title: "1 Timothée écrit",
+        title: "1 Timoteo escrito",
         slug: "1-timothy-written",
         start: 65,
         end: 65,
@@ -6094,7 +6094,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1229,
-        title: "Tite écrit",
+        title: "Tito escrito",
         slug: "titus-written",
         start: 65,
         end: 65,
@@ -6104,7 +6104,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1230,
-        title: "2 Pierre écrit",
+        title: "2 Pedro escrito",
         slug: "2-peter-written",
         start: 65,
         end: 65,
@@ -6114,7 +6114,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1231,
-        title: "2 Timothée écrit",
+        title: "2 Timoteo escrito",
         slug: "2-timothy-written",
         start: 66,
         end: 66,
@@ -6124,7 +6124,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1232,
-        title: "Décès de Paul",
+        title: "Muerte de Pablo",
         slug: "death-of-paul",
         start: 67,
         end: 67,
@@ -6134,7 +6134,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1287,
-        title: "Sept trompettes",
+        title: "Siete trompetas",
         image:
           "http://timeline.biblehistory.com/media/images/t/7%20Angels_Z_sm_2-27-2013%201-31-57%20PM.jpg",
         slug: "seven-trumpets",
@@ -6146,7 +6146,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1233,
-        title: "1ère Epitre de Jean",
+        title: "1ª Epístola de Juan",
         slug: "1-john-written",
         start: 90,
         end: 90,
@@ -6156,7 +6156,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1234,
-        title: "2ème Epitre de Jean",
+        title: "2ª Epístola de Juan",
         slug: "2-john-written",
         start: 91,
         end: 91,
@@ -6166,7 +6166,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1235,
-        title: "3ème Epitre de Jean",
+        title: "3ª Epístola de Juan",
         slug: "3-john-written",
         start: 92,
         end: 92,
@@ -6176,7 +6176,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1236,
-        title: "Révélation écrite",
+        title: "Apocalipsis escrito",
         slug: "revelation-written",
         start: 95,
         end: 95,
@@ -6186,7 +6186,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1299,
-        title: "Règne romain de Constantin le Grand",
+        title: "Reinado romano de Constantino el Grande",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-lwjas0188_8-7-2013%209-42-50%20AM.jpg",
         slug: "roman-reign-of-constantine-the-great",
@@ -6198,7 +6198,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1300,
-        title: "Constantin se convertit au christianisme",
+        title: "Constantino se convierte al cristianismo",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-pppas0006_8-7-2013%209-43-49%20AM.jpg",
         slug: "constantine-converts-to-christianity",
@@ -6210,7 +6210,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1301,
-        title: "Édit de Milan (Édit de Tolérance)",
+        title: "Edicto de Milán (Edicto de Tolerancia)",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas2439_8-7-2013%209-46-04%20AM.jpg",
         slug: "edict-of-milan-edict-of-toleration",
@@ -6222,7 +6222,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1238,
-        title: "Église de Smyrne, âge du martyre",
+        title: "Iglesia de Esmirna, era del martirio",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/BambergApocalypseFolio004vJohnWritesToEphesusAndSmyrna_8-8-2013%203-43-29%20PM.JPG",
@@ -6234,7 +6234,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1239,
-        title: "Église de Pergame, âge de la popularité",
+        title: "Iglesia de Pérgamo, era de la popularidad",
         image:
           "http://timeline.biblehistory.com/media/images/t/800px-Drawing_of_ancient_Pergamon_8-8-2013%203-51-21%20PM.jpg",
         slug: "church-of-pergamos-age-of-popularity",
@@ -6246,7 +6246,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 595,
-        title: "Hérode Antipas",
+        title: "Herodes Antipas",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Brooklyn_Museum_Herod_James_Tissot_-_overall.jpg",
@@ -6258,7 +6258,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 597,
-        title: "Peter",
+        title: "Pedro",
         slug: "peter",
         start: -1,
         end: 65,
@@ -6268,7 +6268,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1295,
-        title: "John",
+        title: "Juan",
         slug: "john",
         start: 11,
         end: 99,
@@ -6278,7 +6278,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1294,
-        title: "Paul",
+        title: "Pablo",
         slug: "paul",
         start: 14,
         end: 67,
@@ -6288,7 +6288,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1293,
-        title: "Prophéties de la fin des temps",
+        title: "Profecías del fin de los tiempos",
         image:
           "http://timeline.biblehistory.com/media/images/t/91726832_11_sm_2-27-2013%2011-45-33%20AM.jpg",
         slug: "prophecies-of-the-end-of-time",
@@ -6300,7 +6300,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1237,
-        title: "Église d'Ephèse, âge de l'Église apostolique",
+        title: "Iglesia de Éfeso, era de la Iglesia apostólica",
         image:
           "http://timeline.biblehistory.com/media/images/t/149144388_2-28-2013%209-06-13%20AM.jpg",
         slug: "church-of-ephesus-apostolic-church-age",
