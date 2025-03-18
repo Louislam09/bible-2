@@ -6327,7 +6327,7 @@ const timelineEvents: TimelinePeriod[] = [
     events: [
       {
         id: 1289,
-        title: "Prophéties des 1290 et 1335 jours",
+        title: "Profecías de los 1290 y 1335 días",
         image:
           "http://timeline.biblehistory.com/media/images/t/iStock_000017993646Small_2-27-2013%201-04-14%20PM.jpg",
         slug: "1290-and-1335-day-prophecies",
@@ -6339,7 +6339,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1288,
-        title: "Prophétie des 1260 jours",
+        title: "Profecía de los 1260 días",
         image:
           "http://timeline.biblehistory.com/media/images/t/Rev%2012%20Woman-Dragon_2_2-27-2013%201-25-11%20PM.jpg",
         slug: "1260-day-prophecy",
@@ -6351,7 +6351,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1291,
-        title: "Les deux bêtes de l'Apocalypse 13",
+        title: "Las dos bestias de Apocalipsis 13",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-rev13_8-1-2013%205-34-26%20PM.jpg",
         slug: "the-two-beasts-of-revelation-13",
@@ -6363,7 +6363,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1303,
-        title: 'Peter Waldo crée l\'église "Waldenses"',
+        title: 'Peter Waldo crea la iglesia "Waldenses"',
         slug: "peter-waldo-establishes-waldenses-church",
         start: 1177,
         end: 1177,
@@ -6373,7 +6373,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1310,
-        title: "Le roi Alphonse le Sage",
+        title: "El rey Alfonso el Sabio",
         slug: "king-alfonso-the-wise",
         start: 1221,
         end: 1284,
@@ -6407,7 +6407,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1314,
-        title: "Le grand schisme papal",
+        title: "El gran cisma papal",
         slug: "the-great-papal-schism",
         start: 1378,
         end: 1417,
@@ -6417,7 +6417,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1315,
-        title: "Jérôme de Prague",
+        title: "Jerónimo de Praga",
         slug: "jerome-of-prague",
         start: 1379,
         end: 1416,
@@ -6427,7 +6427,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1312,
-        title: "Les Lollards",
+        title: "Los Lolardos",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas0722_8-28-2013%203-11-16%20PM.jpg",
         slug: "the-lollards",
@@ -6439,7 +6439,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1308,
-        title: "Jan Hus (John Huss) excommunié",
+        title: "Jan Hus (John Huss) excomulgado",
         slug: "jan-hus-john-huss-excommunicated",
         start: 1410,
         end: 1410,
@@ -6449,7 +6449,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1316,
-        title: "Conseil de Constance",
+        title: "Concilio de Constanza",
         slug: "council-of-constance",
         start: 1414,
         end: 1418,
@@ -6459,7 +6459,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1317,
-        title: "Concile de Bâle",
+        title: "Concilio de Basilea",
         slug: "council-of-basel",
         start: 1431,
         end: 1449,
@@ -6479,7 +6479,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1319,
-        title: "La Bible de Gutenberg",
+        title: "La Biblia de Gutenberg",
         slug: "gutenberg-bible",
         start: 1456,
         end: 1456,
@@ -6509,7 +6509,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1322,
-        title: "Le pape Léon X",
+        title: "El papa León X",
         slug: "pope-leo-x",
         start: 1475,
         end: 1521,
@@ -6519,7 +6519,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1357,
-        title: "Thomas More",
+        title: "Tomás Moro",
         slug: "thomas-more",
         start: 1478,
         end: 1535,
@@ -6529,7 +6529,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1323,
-        title: "Martin Luther",
+        title: "Martín Lutero",
         image:
           "http://timeline.biblehistory.com/media/images/t/Martin_Luther_by_Cranach-restoration_8-5-2013%209-13-05%20AM.jpg",
         slug: "martin-luther",
@@ -6623,7 +6623,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1330,
-        title: "Philipp Melanchthon",
+        title: "Felipe Melanchthon",
         slug: "philip-melanchthon",
         start: 1497,
         end: 1560,
@@ -6643,7 +6643,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1334,
-        title: "John Calvin",
+        title: "Juan Calvino",
         image:
           "http://timeline.biblehistory.com/media/images/t/John%20Calvin%20small_2-26-2013%204-55-26%20PM.jpg",
         slug: "john-calvin",
@@ -6654,7 +6654,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1335,
-        title: "Luther se rend à Rome",
+        title: "Lutero viaja a Roma",
         slug: "luther-travels-to-rome",
         start: 1510,
         end: 1510,
@@ -6664,7 +6664,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1336,
-        title: "Luther commence à donner des conférences à Wittenburg",
+        title: "Lutero comienza a dar conferencias en Wittenburg",
         slug: "luther-begins-lecturing-at-wittenburg",
         start: 1512,
         end: 0,
@@ -6685,7 +6685,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1338,
-        title: "Le Nouveau Testament d'Erasmus",
+        title: "El Nuevo Testamento de Erasmo",
         slug: "erasmus-new-testament",
         start: 1516,
         end: 1516,
@@ -6695,7 +6695,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1339,
-        title: "Luther cloue les quatre-vingt-quinze thèses",
+        title: "Lutero clava las noventa y cinco tesis",
         slug: "luther-nails-the-ninetyfive-theses",
         start: 1517,
         end: 1517,
@@ -6705,7 +6705,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1240,
-        title: "Église de Thyatire, âge de l'adversité",
+        title: "Iglesia de Tiatira, era de la adversidad",
         image:
           "http://timeline.biblehistory.com/media/images/t/The_angels_standing_guard_to_the_seven_churches_of_Asia_2-27-2013%205-53-05%20PM.jpg",
         slug: "church-of-thyatira-age-of-adversity",
@@ -6717,7 +6717,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1241,
-        title: "Église de Sardes, époque de la Réforme",
+        title: "Iglesia de Sardis, época de la Reforma",
         slug: "church-of-sardis-reformation-age",
         start: 1517,
         end: 1755,
@@ -6727,7 +6727,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1400,
-        title: "Les prophéties de Daniel sur l'Europe divisée",
+        title: "Las profecías de Daniel sobre Europa dividida",
         image:
           "http://timeline.biblehistory.com/media/images/t/Statue_Feet_8-26-2013%205-37-28%20PM.jpg",
         slug: "daniels-divided-europe-prophecies",
@@ -6739,7 +6739,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1287,
-        title: "Sept trompettes",
+        title: "Siete trompetas",
         image:
           "http://timeline.biblehistory.com/media/images/t/7%20Angels_Z_sm_2-27-2013%201-31-57%20PM.jpg",
         slug: "seven-trumpets",
@@ -6751,7 +6751,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1239,
-        title: "Église de Pergame, âge de la popularité",
+        title: "Iglesia de Pérgamo, era de la popularidad",
         image:
           "http://timeline.biblehistory.com/media/images/t/800px-Drawing_of_ancient_Pergamon_8-8-2013%203-51-21%20PM.jpg",
         slug: "church-of-pergamos-age-of-popularity",
@@ -6761,7 +6761,8 @@ const timelineEvents: TimelinePeriod[] = [
         type: "major",
         isFixed: true,
       },
-    ],
+    ]
+    ,
     title: "Edad Media",
     description:
       "Desde la legalización del cristianismo bajo Constantino hasta la persecución de la Edad Oscura.",
@@ -6778,7 +6779,7 @@ const timelineEvents: TimelinePeriod[] = [
     events: [
       {
         id: 1341,
-        title: "Zwingli commence son ministère",
+        title: "Zwinglio comienza su ministerio",
         slug: "zwingli-begins-his-ministry",
         start: 1520,
         end: 1519,
@@ -6788,7 +6789,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1342,
-        title: "Débat de Leipzig",
+        title: "Debate de Leipzig",
         slug: "leipzig-debate",
         start: 1520,
         end: 1519,
@@ -6808,7 +6809,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1344,
-        title: "Luther excommunié",
+        title: "Lutero excomulgado",
         slug: "luther-excommunicated",
         start: 1521,
         end: 1521,
@@ -6818,7 +6819,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1345,
-        title: "Diète de Worms",
+        title: "Dieta de Worms",
         slug: "diet-of-worms",
         start: 1521,
         end: 1521,
@@ -6828,7 +6829,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1346,
-        title: "Le Nouveau Testament de Luther",
+        title: "El Nuevo Testamento de Lutero",
         slug: "luthers-new-testament",
         start: 1521,
         end: 1522,
@@ -6838,7 +6839,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1347,
-        title: "Les litiges de Zurich",
+        title: "Las disputas de Zúrich",
         slug: "the-zurich-disputations",
         start: 1523,
         end: 1523,
@@ -6848,7 +6849,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1348,
-        title: "Le mouvement anabaptiste",
+        title: "El movimiento anabaptista",
         slug: "the-anabaptist-movement",
         start: 1523,
         end: 1525,
@@ -6858,7 +6859,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1349,
-        title: "La révolte des paysans",
+        title: "La revuelta de los campesinos",
         slug: "the-peasants-revolt",
         start: 1524,
         end: 1525,
@@ -6868,7 +6869,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1350,
-        title: "Luther épouse Katherine von Bora",
+        title: "Lutero se casa con Catalina von Bora",
         slug: "luther-marries-katherine-von-bora",
         start: 1525,
         end: 1525,
@@ -6878,7 +6879,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1352,
-        title: "Le saccage de Rome",
+        title: "El saqueo de Roma",
         slug: "sack-of-rome",
         start: 1527,
         end: 1527,
@@ -6888,7 +6889,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1353,
-        title: "Colloque de Marburg",
+        title: "Coloquio de Marburgo",
         slug: "marburg-colloquy",
         start: 1529,
         end: 1529,
@@ -6898,7 +6899,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1354,
-        title: "Diète d'Augsbourg",
+        title: "Dieta de Augsburgo",
         slug: "diet-of-augsburg",
         start: 1530,
         end: 1530,
@@ -6908,7 +6909,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1355,
-        title: "Thomas Cranmer nommé archevêque de Canterbury",
+        title: "Thomas Cranmer nombrado arzobispo de Canterbury",
         slug: "thomas-cranmer-appointed-archbishop-of-canterbury",
         start: 1533,
         end: 1533,
@@ -6918,7 +6919,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1356,
-        title: "Henry VIII accepté comme chef de l'Eglise anglaise",
+        title: "Enrique VIII reconocido como cabeza de la Iglesia inglesa",
         slug: "henry-viii-acknowledged-as-head-of-the-english-church",
         start: 1534,
         end: 1534,
@@ -6928,9 +6929,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1358,
-        title: "Publication de la première Bible complète en anglais",
-        image:
-          "http://timeline.biblehistory.com/media/images/t/Tyndale_Bible_-_Gospel_of_John_2-26-2013%202-52-00%20PM.jpg",
+        title: "Publicación de la primera Biblia completa en inglés",
         slug: "first-full-english-bible-published",
         start: 1535,
         end: 1535,
@@ -6940,7 +6939,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1359,
-        title: "Dissolution des monastères anglais",
+        title: "Disolución de los monasterios ingleses",
         slug: "dissolution-of-english-monasteries",
         start: 1536,
         end: 1540,
@@ -6950,7 +6949,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1360,
-        title: "Mise en œuvre de la réforme luthérienne au Danemark",
+        title: "Implementación de la Reforma Luterana en Dinamarca",
         slug: "implementation-of-lutheran-reformation-in-denmark",
         start: 1537,
         end: 1537,
@@ -6960,7 +6959,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1361,
-        title: "Calvin envoyé loin de Genève",
+        title: "Calvino es enviado lejos de Ginebra",
         slug: "calvin-sent-away-from-geneva",
         start: 1538,
         end: 1538,
@@ -6970,7 +6969,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1362,
-        title: 'Publication de la "Grande Bible" en Angleterre',
+        title: "Publicación de la 'Gran Biblia' en Inglaterra",
         slug: "publication-of-the-great-bible-in-england",
         start: 1539,
         end: 1539,
@@ -6980,7 +6979,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1363,
-        title: "L'acte des six articles",
+        title: "El Acta de los Seis Artículos",
         slug: "the-act-of-six-articles",
         start: 1539,
         end: 1540,
@@ -6990,7 +6989,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1367,
-        title: "Les Jésuites",
+        title: "Los Jesuitas",
         slug: "the-jesuits",
         start: 1540,
         end: 2020,
@@ -7000,7 +6999,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1364,
-        title: "Diet of Regensburg ",
+        title: "Dieta de Ratisbona",
         slug: "diet-of-regensburg",
         start: 1541,
         end: 1541,
@@ -7010,7 +7009,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1365,
-        title: "Établissement des ordonnances ecclésiastiques de Calvin",
+        title: "Establecimiento de las Ordenanzas Eclesiásticas de Calvino",
         slug: "calvins-ecclesiastical-ordinances-established",
         start: 1541,
         end: 1541,
@@ -7020,7 +7019,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1366,
-        title: "L'Inquisition romaine",
+        title: "La Inquisición Romana",
         slug: "the-roman-inquisition",
         start: 1542,
         end: 1908,
@@ -7030,7 +7029,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1368,
-        title: "Le Conseil de Trente",
+        title: "El Concilio de Trento",
         slug: "the-council-of-trent",
         start: 1545,
         end: 1545,
@@ -7040,9 +7039,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1369,
-        title: "La contre-réforme catholique",
-        image:
-          "http://timeline.biblehistory.com/media/images/t/774px-Westfaelischer_Friede_in_Muenster_Gerard_Terborch_1648_8-5-2013%2010-41-37%20AM.jpg",
+        title: "La Contrarreforma Católica",
         slug: "the-catholic-counterreformation",
         start: 1545,
         end: 1648,
@@ -7052,7 +7049,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1370,
-        title: "Roi Edward VI",
+        title: "Rey Eduardo VI",
         slug: "king-edward-vi",
         start: 1547,
         end: 1553,
@@ -7062,7 +7059,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1372,
-        title: "La paix d'Augsbourg",
+        title: "La Paz de Augsburgo",
         slug: "peace-of-augsburg",
         start: 1555,
         end: 1555,
@@ -7072,7 +7069,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1373,
-        title: "Académie de Genève",
+        title: "Academia de Ginebra",
         slug: "geneva-academy",
         start: 1559,
         end: 0,
@@ -7082,7 +7079,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1374,
-        title: "L'index des livres interdits",
+        title: "El Índice de Libros Prohibidos",
         slug: "the-index-of-prohibited-books",
         start: 1559,
         end: 1966,
@@ -7093,8 +7090,6 @@ const timelineEvents: TimelinePeriod[] = [
       {
         id: 1375,
         title: "Jacobus Arminius",
-        image:
-          "http://timeline.biblehistory.com/media/images/t/James_Arminius_2_2-26-2013%2012-18-25%20PM.jpg",
         slug: "jacobus-arminius",
         start: 1560,
         end: 1609,
@@ -7104,7 +7099,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1376,
-        title: "Wars of Religion in France ",
+        title: "Guerras de Religión en Francia",
         slug: "wars-of-religion-in-france",
         start: 1563,
         end: 1598,
@@ -7114,7 +7109,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1377,
-        title: "Le catéchisme de Heidelberg",
+        title: "El Catecismo de Heidelberg",
         slug: "the-heidelberg-catechism",
         start: 1563,
         end: 1563,
@@ -7124,7 +7119,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1378,
-        title: "Elizabeth I excommuniée",
+        title: "Isabel I excomulgada",
         slug: "elizabeth-i-excommunicated",
         start: 1570,
         end: 1570,
@@ -7134,7 +7129,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1379,
-        title: "Massacre de la Saint-Barthélemy",
+        title: "Masacre de San Bartolomé",
         slug: "st-bartholomews-day-massacre",
         start: 1572,
         end: 1572,
@@ -7144,7 +7139,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1380,
-        title: "Le Livre de Concorde",
+        title: "El Libro de la Concordia",
         slug: "the-book-of-concord",
         start: 1580,
         end: 1580,
@@ -7154,7 +7149,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1381,
-        title: "Synode de Dort",
+        title: "Sínodo de Dort",
         slug: "synod-of-dort",
         start: 1618,
         end: 1619,
@@ -7164,7 +7159,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1382,
-        title: "La guerre de Trente Ans",
+        title: "La Guerra de los Treinta Años",
         slug: "thirty-years-war",
         start: 1618,
         end: 1648,
@@ -7184,7 +7179,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1384,
-        title: "La guerre civile anglaise",
+        title: "La Guerra Civil Inglesa",
         slug: "the-english-civil-war",
         start: 1642,
         end: 1651,
@@ -7194,7 +7189,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1385,
-        title: "The Treaty of Westphalia ",
+        title: "El Tratado de Westfalia",
         slug: "the-treaty-of-westphalia",
         start: 1648,
         end: 1648,
@@ -7204,9 +7199,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1245,
-        title: "La bête s'élève de la terre",
-        image:
-          "http://timeline.biblehistory.com/media/images/t/GoodSalt-beasts_8-5-2013%2011-11-37%20AM.jpg",
+        title: "La bestia se levanta de la tierra",
         slug: "beast-rises-from-the-earth",
         start: 1776,
         end: 1789,
@@ -7216,9 +7209,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1242,
-        title: "Église de Philadelphie, le Grand Siècle des Lumières",
-        image:
-          "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas2121_8-13-2013%202-05-30%20PM.jpg",
+        title: "Iglesia de Filadelfia, la Gran Era de la Ilustración",
         slug: "church-of-philadelphia-great-enlightenment-age",
         start: 1755,
         end: 1844,
@@ -7227,9 +7218,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1289,
-        title: "Prophéties des 1290 et 1335 jours",
-        image:
-          "http://timeline.biblehistory.com/media/images/t/iStock_000017993646Small_2-27-2013%201-04-14%20PM.jpg",
+        title: "Profecías de los 1290 y 1335 días",
         slug: "1290-and-1335-day-prophecies",
         start: 508,
         end: 1798,
@@ -7239,9 +7228,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1288,
-        title: "Prophétie des 1260 jours",
-        image:
-          "http://timeline.biblehistory.com/media/images/t/Rev%2012%20Woman-Dragon_2_2-27-2013%201-25-11%20PM.jpg",
+        title: "Profecía de los 1260 días",
         slug: "1260-day-prophecy",
         start: 538,
         end: 1798,
@@ -7251,9 +7238,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1291,
-        title: "Les deux bêtes de l'Apocalypse 13",
-        image:
-          "http://timeline.biblehistory.com/media/images/t/GoodSalt-rev13_8-1-2013%205-34-26%20PM.jpg",
+        title: "Las dos bestias de Apocalipsis 13",
         slug: "the-two-beasts-of-revelation-13",
         start: 538,
         end: 1798,
@@ -7263,9 +7248,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1312,
-        title: "Les Lollards",
-        image:
-          "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas0722_8-28-2013%203-11-16%20PM.jpg",
+        title: "Los Lolardos",
         slug: "the-lollards",
         start: 1381,
         end: 1532,
@@ -7305,7 +7288,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1322,
-        title: "Le pape Léon X",
+        title: "El Papa León X",
         slug: "pope-leo-x",
         start: 1475,
         end: 1521,
@@ -7325,9 +7308,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1323,
-        title: "Martin Luther",
-        image:
-          "http://timeline.biblehistory.com/media/images/t/Martin_Luther_by_Cranach-restoration_8-5-2013%209-13-05%20AM.jpg",
+        title: "Martín Lutero",
         slug: "martin-luther",
         start: 1483,
         end: 1546,
@@ -7336,10 +7317,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1324,
-        title: "Ulrich Zwingli",
-        approx: true,
-        image:
-          "http://timeline.biblehistory.com/media/images/t/Ulrich-Zwingli-1_8-5-2013%209-17-55%20AM.jpg",
+        title: "Ulrich Zwinglio",
         slug: "ulrich-zwingli",
         start: 1484,
         end: 1531,
@@ -7379,8 +7357,6 @@ const timelineEvents: TimelinePeriod[] = [
       {
         id: 1331,
         title: "William Tyndale",
-        image:
-          "http://timeline.biblehistory.com/media/images/t/494px-William_Tyndale_8-5-2013%209-25-02%20AM.jpg",
         slug: "william-tyndale",
         start: 1492,
         end: 1536,
@@ -7419,7 +7395,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1330,
-        title: "Philipp Melanchthon",
+        title: "Felipe Melanchthon",
         slug: "philip-melanchthon",
         start: 1497,
         end: 1560,
@@ -7439,9 +7415,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1334,
-        title: "John Calvin",
-        image:
-          "http://timeline.biblehistory.com/media/images/t/John%20Calvin%20small_2-26-2013%204-55-26%20PM.jpg",
+        title: "Juan Calvino",
         slug: "john-calvin",
         start: 1509,
         end: 1564,
@@ -7451,8 +7425,6 @@ const timelineEvents: TimelinePeriod[] = [
       {
         id: 1337,
         title: "John Knox",
-        image:
-          "http://timeline.biblehistory.com/media/images/t/92833011_2-26-2013%204-12-16%20PM.jpg",
         slug: "john-knox",
         start: 1513,
         end: 1572,
@@ -7461,9 +7433,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1240,
-        title: "Église de Thyatire, âge de l'adversité",
-        image:
-          "http://timeline.biblehistory.com/media/images/t/The_angels_standing_guard_to_the_seven_churches_of_Asia_2-27-2013%205-53-05%20PM.jpg",
+        title: "Iglesia de Tiatira, la era de la adversidad",
         slug: "church-of-thyatira-age-of-adversity",
         start: 538,
         end: 1798,
@@ -7473,7 +7443,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1241,
-        title: "Église de Sardes, époque de la Réforme",
+        title: "Iglesia de Sardis, la época de la Reforma",
         slug: "church-of-sardis-reformation-age",
         start: 1517,
         end: 1755,
@@ -7483,9 +7453,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1400,
-        title: "Les prophéties de Daniel sur l'Europe divisée",
-        image:
-          "http://timeline.biblehistory.com/media/images/t/Statue_Feet_8-26-2013%205-37-28%20PM.jpg",
+        title: "Las profecías de Daniel sobre Europa dividida",
         slug: "daniels-divided-europe-prophecies",
         start: 476,
         end: 2020,
@@ -7495,9 +7463,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1244,
-        title: "La blessure mortelle",
-        image:
-          "http://timeline.biblehistory.com/media/images/t/Berthier_2-27-2013%205-16-26%20PM.jpg",
+        title: "La herida mortal",
         slug: "deadly-wound-healed",
         start: 1798,
         end: 1929,
@@ -7521,7 +7487,7 @@ const timelineEvents: TimelinePeriod[] = [
     events: [
       {
         id: 1243,
-        title: "Église de Laodicée, âge du jugement",
+        title: "Iglesia de Laodicea, la era del juicio",
         image:
           "http://timeline.biblehistory.com/media/images/t/Hunt_Light_of_the_World_2-27-2013%205-37-22%20PM.jpg",
         slug: "church-of-laodicea-age-of-judgment",
@@ -7533,7 +7499,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1246,
-        title: "Proclamation des messages des trois anges",
+        title: "Proclamación de los mensajes de los tres ángeles",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-lwjas0564_8-7-2013%202-09-59%20PM.jpg",
         slug: "three-angels-messages-proclaimed-to-all-the-earth",
@@ -7545,7 +7511,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1244,
-        title: "La blessure mortelle",
+        title: "La herida mortal",
         image:
           "http://timeline.biblehistory.com/media/images/t/Berthier_2-27-2013%205-16-26%20PM.jpg",
         slug: "deadly-wound-healed",
@@ -7556,7 +7522,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1251,
-        title: "Fin de la période de probation",
+        title: "Fin del período de prueba",
         slug: "close-of-probation",
         start: 2019,
         end: 2019,
@@ -7566,8 +7532,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1247,
-        title:
-          "Persécution mondiale par les bêtes venant de la Mer et de la Terre",
+        title: "Persecución mundial por las bestias del Mar y de la Tierra",
         slug: "global-persecution-by-sea-earth-beasts",
         start: 2020,
         end: 2020,
@@ -7577,7 +7542,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1252,
-        title: "Les sept derniers fléaux",
+        title: "Las siete últimas plagas",
         slug: "seven-last-plagues",
         start: 2020,
         end: 2020,
@@ -7587,7 +7552,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1253,
-        title: "Bataille d'Armageddon",
+        title: "Batalla de Armagedón",
         slug: "battle-of-armageddon",
         start: 2020,
         end: 2020,
@@ -7597,7 +7562,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1254,
-        title: "La chute de Babylone et le Grand Cri",
+        title: "La caída de Babilonia y el Gran Clamor",
         slug: "fall-of-babylon-and-loud-cry",
         start: 2020,
         end: 2020,
@@ -7607,7 +7572,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1255,
-        title: "Le retour du Christ",
+        title: "El regreso de Cristo",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-SecondComing_8-5-2013%2011-56-22%20AM.jpg",
         slug: "return-of-christ",
@@ -7619,7 +7584,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1256,
-        title: "Résurrection et traduction des saints",
+        title: "Resurrección y traslación de los santos",
         slug: "resurrection-and-translation-of-the-saints",
         start: 2020,
         end: 2020,
@@ -7630,7 +7595,7 @@ const timelineEvents: TimelinePeriod[] = [
       {
         id: 1257,
         title:
-          "Emprisonnement de Satan sur Terre / Jugement des saints du Ciel",
+          "Encarcelamiento de Satanás en la Tierra / Juicio de los santos en el Cielo",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-millennium-1_8-5-2013%2012-13-14%20PM.jpg",
         slug: "imprisonment-of-satan-on-earth-judgment-by-saints-in-heaven",
@@ -7641,7 +7606,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1267,
-        title: "La mise en place du Royaume de Dieu - Pierre",
+        title: "El establecimiento del Reino de Dios - La Piedra",
         slug: "gods-kingdom-setup-stone",
         start: 2020,
         end: 2020,
@@ -7651,7 +7616,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1275,
-        title: "Le Jugement",
+        title: "El Juicio",
         slug: "the-judgment",
         start: 1844,
         end: 0,
@@ -7661,7 +7626,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1276,
-        title: "Le royaume éternel du Christ",
+        title: "El reino eterno de Cristo",
         slug: "christs-everlasting-kingdom",
         start: 2020,
         end: 2020,
@@ -7671,7 +7636,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1285,
-        title: "Millénaire",
+        title: "Milenio",
         slug: "millennium",
         start: 2020,
         end: 3020,
@@ -7681,7 +7646,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1286,
-        title: "Les Sept Sceaux",
+        title: "Los Siete Sellos",
         slug: "seven-seals",
         start: 2020,
         end: 2020,
@@ -7691,7 +7656,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1258,
-        title: "La nouvelle Jérusalem descend du Ciel à la Terre",
+        title: "La Nueva Jerusalén desciende del Cielo a la Tierra",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-smcas0179_8-5-2013%201-08-12%20PM.jpg",
         slug: "new-jerusalem-descends-from-heaven-to-earth",
@@ -7703,7 +7668,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1259,
-        title: "Les méchants sont ressuscités sous forme corporelle",
+        title: "Los malvados resucitan en forma corporal",
         image:
           "http://timeline.biblehistory.com/media/images/t/wicked-resurrected_8-5-2013%201-21-14%20PM.jpg",
         slug: "wicked-are-resurrected-in-bodily-form",
@@ -7715,7 +7680,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1260,
-        title: "Les méchants sont détruits à jamais",
+        title: "Los malvados son destruidos para siempre",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-jcgas0071_8-5-2013%201-29-52%20PM.jpg",
         slug: "wicked-are-destroyed-forever",
@@ -7727,7 +7692,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1261,
-        title: "Paradis restauré",
+        title: "Paraíso restaurado",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-pppas0114_8-7-2013%201-56-42%20PM.jpg",
         slug: "paradise-restored",
@@ -7739,7 +7704,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1367,
-        title: "Les Jésuites",
+        title: "Los Jesuitas",
         slug: "the-jesuits",
         start: 1540,
         end: 2020,
@@ -7749,7 +7714,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1366,
-        title: "L'Inquisition romaine",
+        title: "La Inquisición Romana",
         slug: "the-roman-inquisition",
         start: 1542,
         end: 1908,
@@ -7759,7 +7724,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1374,
-        title: "L'index des livres interdits",
+        title: "El Índice de Libros Prohibidos",
         slug: "the-index-of-prohibited-books",
         start: 1559,
         end: 1966,
@@ -7769,7 +7734,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1242,
-        title: "Église de Philadelphie, le Grand Siècle des Lumières",
+        title: "Iglesia de Filadelfia, la Gran Era de la Ilustración",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas2121_8-13-2013%202-05-30%20PM.jpg",
         slug: "church-of-philadelphia-great-enlightenment-age",
