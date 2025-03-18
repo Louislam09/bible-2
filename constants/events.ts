@@ -5162,7 +5162,7 @@ const timelineEvents: TimelinePeriod[] = [
     events: [
       {
         id: 580,
-        title: "Jules César",
+        title: "Julio César",
         image:
           "http://timeline.biblehistory.com/media/images/t/Portrait_of_Julius_Caesar_color_8-8-2013%201-46-35%20PM.jpg",
         slug: "julius-caesar",
@@ -5173,7 +5173,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 581,
-        title: "Simeon",
+        title: "Simeón",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Yegorov-Simeon_the_Righteous.jpg",
@@ -5185,7 +5185,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 582,
-        title: "Anna",
+        title: "Ana",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas4188_8-6-2013%203-54-10%20PM.jpg",
         slug: "anna",
@@ -5197,7 +5197,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 583,
-        title: "Matthat",
+        title: "Matat",
         slug: "matthat-father-of-heli",
         start: -83,
         end: -10,
@@ -5207,7 +5207,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 584,
-        title: "Hérode le Grand",
+        title: "Herodes el Grande",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/HerodtheGreat2_3-20-2013%204-49-58%20PM.jpg",
@@ -5219,7 +5219,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 585,
-        title: "Syrie Royaume séleucide annexé par Rome",
+        title: "Siria, Reino seléucida anexado por Roma",
         slug: "syria-seleucid-kingdom-annexed-by-rome",
         start: -64,
         end: -64,
@@ -5229,7 +5229,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 586,
-        title: "Pompée détruit Jérusalem",
+        title: "Pompeyo destruye Jerusalén",
         slug: "pompey-destroys-jerusalem",
         start: -64,
         end: -64,
@@ -5239,7 +5239,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 598,
-        title: "Auguste César",
+        title: "Augusto César",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Augustus%20Caesar_3-20-2013%204-27-25%20PM.jpg",
@@ -5251,7 +5251,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 587,
-        title: "Heli",
+        title: "Elí",
         slug: "heli",
         start: -55,
         end: 10,
@@ -5261,7 +5261,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 591,
-        title: "Joseph",
+        title: "José",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-pppas0119_8-28-2013%202-33-30%20PM.jpg",
@@ -5273,7 +5273,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 594,
-        title: "L'Egypte a fait une province romaine",
+        title: "Egipto se convierte en una provincia romana",
         slug: "egypt-made-a-roman-province",
         start: -30,
         end: -30,
@@ -5283,7 +5283,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 595,
-        title: "Hérode Antipas",
+        title: "Herodes Antipas",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/Brooklyn_Museum_Herod_James_Tissot_-_overall.jpg",
@@ -5295,7 +5295,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 679,
-        title: "Jésus",
+        title: "Jesús",
         approx: true,
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-Jesus_8-1-2013%205-43-23%20PM.jpg",
@@ -5307,7 +5307,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 597,
-        title: "Peter",
+        title: "Pedro",
         slug: "peter",
         start: -1,
         end: 65,
@@ -5317,7 +5317,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1295,
-        title: "John",
+        title: "Juan",
         slug: "john",
         start: 11,
         end: 99,
@@ -5327,7 +5327,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1294,
-        title: "Paul",
+        title: "Pablo",
         slug: "paul",
         start: 14,
         end: 67,
@@ -5337,7 +5337,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1029,
-        title: "Le ministère de Jean-Baptiste",
+        title: "El ministerio de Juan el Bautista",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas0793_8-28-2013%202-48-58%20PM.jpg",
         slug: "john-the-baptists-ministry",
@@ -5349,7 +5349,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1027,
-        title: "Baptême du Christ",
+        title: "Bautismo de Cristo",
         slug: "baptism-of-christ",
         start: 27,
         end: 27,
@@ -5359,7 +5359,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1028,
-        title: "Le premier ministère du Christ",
+        title: "El primer ministerio de Cristo",
         image:
           "http://timeline.biblehistory.com/media/images/t/GoodSalt-prcas2553_8-6-2013%204-34-53%20PM.jpg",
         slug: "christs-early-ministry",
@@ -5371,7 +5371,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1044,
-        title: "Rejet par le Sanhédrin",
+        title: "Rechazo por el Sanedrín",
         slug: "rejection-by-sanhedrin",
         start: 29,
         end: 29,
@@ -5381,7 +5381,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1050,
-        title: "Démoniaque dans la synagogue",
+        title: "Endemoniado en la sinagoga",
         slug: "demoniac-in-the-synagogue",
         start: 29,
         end: 29,
@@ -5391,7 +5391,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1051,
-        title: "La belle-mère de Peter a guéri",
+        title: "La suegra de Pedro curada",
         slug: "peters-motherinlaw-healed",
         start: 29,
         end: 29,
@@ -5401,7 +5401,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1053,
-        title: "Le premier lépreux guéri",
+        title: "El primer leproso curado",
         slug: "the-first-leper-healed",
         start: 29,
         end: 29,
@@ -5411,7 +5411,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1055,
-        title: "L'appel de Levi Matthew",
+        title: "El llamado de Leví Mateo",
         slug: "call-of-levi-matthew",
         start: 29,
         end: 29,
@@ -5421,7 +5421,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1057,
-        title: "L'homme à la main flétrie",
+        title: "El hombre de la mano seca",
         slug: "man-with-a-withered-hand",
         start: 29,
         end: 29,
@@ -5431,7 +5431,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1059,
-        title: "Nomination des Douze Disciples",
+        title: "Nombramiento de los Doce Discípulos",
         slug: "appointment-of-the-twelve-disciples",
         start: 29,
         end: 29,
@@ -5441,7 +5441,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1060,
-        title: "Sermon sur la montagne",
+        title: "Sermón del monte",
         slug: "sermon-on-the-mount",
         start: 29,
         end: 29,
@@ -5451,7 +5451,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1061,
-        title: "Le serviteur du centurion guéri",
+        title: "El siervo del centurión curado",
         slug: "the-centurions-servant-healed",
         start: 29,
         end: 29,
@@ -5461,7 +5461,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1062,
-        title: "Deux hommes aveugles guéris",
+        title: "Dos hombres ciegos curados",
         slug: "two-blind-men-healed",
         start: 29,
         end: 29,
@@ -5471,7 +5471,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1063,
-        title: "Un démoniaque muet est guéri",
+        title: "Un endemoniado mudo es curado",
         slug: "a-mute-demoniac-is-healed",
         start: 29,
         end: 29,
@@ -5481,7 +5481,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1070,
-        title: "La tempête sur le lac",
+        title: "La tormenta en el lago",
         slug: "the-storm-on-the-lake",
         start: 29,
         end: 29,
@@ -5491,7 +5491,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1071,
-        title: "Les démoniaques de Gadara",
+        title: "Los endemoniados de Gadara",
         slug: "demoniacs-of-gadara",
         start: 29,
         end: 29,
@@ -5501,7 +5501,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1075,
-        title: "L'enquête des Disciples de John",
+        title: "La investigación de los discípulos de Juan",
         slug: "the-inquiry-by-johns-disciples",
         start: 29,
         end: 29,
@@ -5511,7 +5511,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1042,
-        title: "Jean-Baptiste emprisonné",
+        title: "Juan el Bautista encarcelado",
         slug: "john-the-baptist-imprisoned",
         start: 30,
         end: 30,
@@ -5521,7 +5521,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1080,
-        title: "Martyre de Jean-Baptiste",
+        title: "Martirio de Juan el Bautista",
         slug: "martyrdom-of-john-the-baptist",
         start: 30,
         end: 30,
@@ -5531,7 +5531,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1139,
-        title: "Jésus prédit sa mort",
+        title: "Jesús predice su muerte",
         slug: "jesus-foretells-his-death",
         start: 31,
         end: 31,
@@ -5541,7 +5541,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1142,
-        title: "Zachée",
+        title: "Zaqueo",
         slug: "zacchaeus",
         start: 31,
         end: 31,
@@ -5551,7 +5551,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1147,
-        title: "L'entrée triomphale",
+        title: "La entrada triunfal",
         slug: "the-triumphal-entry",
         start: 31,
         end: 31,
@@ -5561,7 +5561,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1167,
-        title: "Célébration de la Pâque",
+        title: "Celebración de la Pascua",
         slug: "celebration-of-the-passover",
         start: 31,
         end: 31,
@@ -5571,7 +5571,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1168,
-        title: "Lavage des pieds des disciples",
+        title: "Lavado de los pies de los discípulos",
         slug: "washing-the-disciples-feet",
         start: 31,
         end: 31,
@@ -5581,7 +5581,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1170,
-        title: "Le traître dévoilé",
+        title: "El traidor revelado",
         slug: "the-betrayer-revealed",
         start: 31,
         end: 31,
@@ -5591,7 +5591,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1183,
-        title: "Procès de nuit devant le Sanhédrin",
+        title: "Juicio nocturno ante el Sanedrín",
         slug: "night-trial-before-sanhedrin",
         start: 31,
         end: 31,
@@ -5601,7 +5601,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1184,
-        title: "Jour du procès devant le Sanhédrin",
+        title: "Juicio diurno ante el Sanedrín",
         slug: "day-trial-before-sanhedrin",
         start: 31,
         end: 31,
@@ -5611,7 +5611,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1185,
-        title: "Confession et suicide de Judas",
+        title: "Confesión y suicidio de Judas",
         slug: "judas-confession-and-suicide",
         start: 31,
         end: 31,
@@ -5621,7 +5621,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1186,
-        title: "Premier procès devant la Cour d'appel Pilate",
+        title: "Primer juicio ante el tribunal de Pilato",
         slug: "first-trial-before-pilate",
         start: 31,
         end: 31,
@@ -5631,7 +5631,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1188,
-        title: "Deuxième procès devant le tribunal de Pilate",
+        title: "Segundo juicio ante el tribunal de Pilato",
         slug: "second-trial-before-pilate",
         start: 31,
         end: 31,
@@ -5641,7 +5641,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1189,
-        title: "La Crucifixion",
+        title: "La crucifixión",
         slug: "the-crucifixion",
         start: 31,
         end: 31,
@@ -5651,7 +5651,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1193,
-        title: "La résurrection",
+        title: "La resurrección",
         slug: "the-resurrection",
         start: 31,
         end: 31,
@@ -5661,7 +5661,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1199,
-        title: "L'Ascension",
+        title: "La ascensión",
         slug: "the-ascension",
         start: 31,
         end: 31,
@@ -5671,7 +5671,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1200,
-        title: "Lapidation de Stephen",
+        title: "Lapidación de Esteban",
         image:
           "http://timeline.biblehistory.com/media/images/t/StStephen_GiacomoCavedone_2-28-2013%202-06-41%20PM.jpg",
         slug: "stoning-of-stephen",
@@ -5683,7 +5683,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1293,
-        title: "Prophéties de la fin des temps",
+        title: "Profecías del fin de los tiempos",
         image:
           "http://timeline.biblehistory.com/media/images/t/91726832_11_sm_2-27-2013%2011-45-33%20AM.jpg",
         slug: "prophecies-of-the-end-of-time",
@@ -5695,7 +5695,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1237,
-        title: "Église d'Ephèse, âge de l'Église apostolique",
+        title: "Iglesia de Éfeso, era de la Iglesia apostólica",
         image:
           "http://timeline.biblehistory.com/media/images/t/149144388_2-28-2013%209-06-13%20AM.jpg",
         slug: "church-of-ephesus-apostolic-church-age",
@@ -5707,7 +5707,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1262,
-        title: "Daniel 2 - Le rêve de Nabuchodonosor",
+        title: "Daniel 2 - El sueño de Nabucodonosor",
         slug: "daniel-2-nebuchadnezzars-dream",
         start: -606,
         end: 2020,
@@ -5717,7 +5717,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1269,
-        title: "Daniel 7 - Quatre grandes bêtes",
+        title: "Daniel 7 - Cuatro grandes bestias",
         slug: "daniel-7-four-great-beasts",
         start: -606,
         end: 476,
@@ -5727,7 +5727,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1277,
-        title: "Daniel 8 - Bélier, chèvre et petite corne",
+        title: "Daniel 8 - Carnero, macho cabrío y cuerno pequeño",
         slug: "daniel-8-ram-goat-and-little-horn",
         start: -539,
         end: 2020,
@@ -5737,7 +5737,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1290,
-        title: "Daniel 11 - Roi du Nord/Sud",
+        title: "Daniel 11 - Rey del Norte/Sur",
         slug: "daniel-11-king-of-the-northsouth",
         start: -539,
         end: 2020,
@@ -5747,7 +5747,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1283,
-        title: "Prophétie du 2300e jour",
+        title: "Profecía de los 2300 días",
         image:
           "http://timeline.biblehistory.com/media/images/t/Ark_Commandments_2-27-2013-2-58-25-PM_7-18-2013%2011-01-41%20AM.jpg",
         slug: "sanctuary-cleansed-2300-day-prophecy",
@@ -5759,7 +5759,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1386,
-        title: "La prophétie des soixante-dix semaines",
+        title: "La profecía de las setenta semanas",
         image:
           "http://timeline.biblehistory.com/media/images/t/70_weeks_Prophecy_sm_2-26-2013%2011-30-56%20AM.jpg",
         slug: "the-seventyweeks-prophecy",
@@ -5770,7 +5770,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 577,
-        title: "Les Juifs indépendants sous la dynastie des Hasmonéens",
+        title: "Los judíos independientes bajo la dinastía de los Hasmoneos",
         slug: "jews-independent-under-hasmonean-dynasty",
         start: -164,
         end: -63,
@@ -5780,7 +5780,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 575,
-        title: "Janna (ou Jannai)",
+        title: "Janna (o Jannai)",
         slug: "janna-or-jannai",
         start: -155,
         end: -96,
@@ -5790,7 +5790,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 578,
-        title: "Melchi (ou Melki)",
+        title: "Melqui (o Melki)",
         slug: "melchi-or-melki",
         start: -132,
         end: -70,
@@ -5800,7 +5800,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 579,
-        title: "Levi",
+        title: "Leví",
         slug: "levi-son-of-melchi",
         start: -105,
         end: -50,
@@ -5810,7 +5810,7 @@ const timelineEvents: TimelinePeriod[] = [
       },
       {
         id: 1399,
-        title: "Les prophéties de Daniel pour la Rome",
+        title: "Las profecías de Daniel sobre Roma",
         image:
           "http://timeline.biblehistory.com/media/images/t/Statue_Rome_8-22-2013%203-26-36%20PM.jpg",
         slug: "daniels-rome-prophecies",
