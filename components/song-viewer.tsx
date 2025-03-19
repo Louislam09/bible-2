@@ -110,12 +110,12 @@ const SongViewer = ({ song }: SongViewer) => {
                   <Text
                     onPress={() => {}}
                     key={`chorus-${i}`}
-                    style={{
-                      backgroundColor:
-                        i % 2 === 0
-                          ? theme.colors.text + 20
-                          : theme.colors.notification + 20,
-                    }}
+                    // style={{
+                    //   backgroundColor:
+                    //     i % 2 === 0
+                    //       ? theme.colors.text + 20
+                    //       : theme.colors.notification + 20,
+                    // }}
                   >
                     {line}
                     {i < chorus.split("\n").length - 1 ? "\n" : ""}
@@ -132,12 +132,12 @@ const SongViewer = ({ song }: SongViewer) => {
                 <Text
                   onPress={() => {}}
                   key={`verse-${i}`}
-                  style={{
-                    backgroundColor:
-                      i % 2 === 0
-                        ? theme.colors.text + 20
-                        : theme.colors.notification + 20,
-                  }}
+                  // style={{
+                  //   backgroundColor:
+                  //     i % 2 === 0
+                  //       ? theme.colors.text + 20
+                  //       : theme.colors.notification + 20,
+                  // }}
                 >
                   {line}
                   {i < verseText.split("\n").length - 1 ? "\n" : ""}
