@@ -7898,4 +7898,2986 @@ export default [
       },
     ],
   },
+  {
+    id: "835",
+    slug: "david-rebuked-by-nathan",
+    title: "David reprendido por Natán",
+    period: "6",
+    description:
+      "Después de que David toma a Betsabé como su esposa, el profeta Natán viene a reprenderlo a través de una parábola. David confiesa su pecado. Natán dice que no morirá, pero su hijo muere a pesar de que David ayuna y ora.",
+    article:
+      'Con el tiempo, el pecado de David salió a la luz. Se supo que David era el padre del niño que nació de Betsabé, y surgieron sospechas de que él había causado la muerte de Urías. David no solo era el gobernante civil de su pueblo, sino también "el ungido del Señor", el líder del pueblo elegido de Dios, y quien debía mantener y hacer cumplir la ley del Señor. David, con su pecado, había traído reproche y deshonra al nombre del Señor. Por lo tanto, Dios envió a Natán a David para entregarle un mensaje de reprensión divina, con el fin de hacer que el rey errante se diera cuenta de la magnitud de su crimen y se arrepintiera.\n\nDavid no tenía excusa. Sabía que estaba equivocado y que la sentencia pronunciada contra él era justa. A pesar de la magnitud de su crimen, su conciencia no estaba muerta. Había logrado ocultar su crimen de los ojos de los hombres por un tiempo, pero no lo había ocultado de Dios. A través de una cadena de circunstancias, el Señor le permitió vislumbrar la terrible naturaleza del crimen que había cometido y pronunciar una sentencia justa contra sí mismo. La aplicación directa de la parábola al rey muestra la santa audacia y fidelidad del profeta de Dios. Esta reprensión franca bien podría haberle costado la vida a Natán, pero no vaciló en cumplir con su deber.\n\nLa audacia y la brusquedad de las palabras de Natán causaron un shock en David que lo despertó del hechizo maligno que sus crímenes habían lanzado sobre él. David había sido esencialmente un hombre bueno, uno que se esforzaba por obedecer al Señor. Pero había cedido a la tentación y, en el intento de cubrir su culpa, se había enredado cada vez más en una red de maldad. Por un tiempo, sus sentidos parecían estar aturdidos por un delirio de poder, prosperidad y perfidia. Ahora, de repente, volvió en sí. David había dado el juicio de que "el hombre que ha hecho esto ciertamente morirá" (v. 5).\n\nPor su propia sentencia, David era quien debía morir. Pero, en cambio, Dios decretó que el hijo de su pecado moriría (ver PP 722). Para David, la muerte del niño sería un castigo mucho mayor que su propia muerte. Como resultado de la amarga experiencia por la que pasaría, David sería llevado a un arrepentimiento y conversión completos.',
+    date: "991 a.C.",
+    scriptures: ["10|12:1-15"],
+    related: [
+      {
+        slug: "david",
+        title: "David",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "David siendo reprendido por el profeta Natán. Detalle de la iglesia de la Magdalena en París.",
+        file: "David rebuked by nathan_7-30-2013 4-42-09 PM.jpg",
+      },
+      {
+        caption: "David y Natán",
+        file: "GoodSalt-NathanAndDavid_8-5-2013 5-51-10 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "836",
+    slug: "davids-child-from-adultery-dies-1st-judgment",
+    title: "El hijo de David fruto del adulterio muere, primer juicio",
+    period: "6",
+    description:
+      "Después de que Natán el profeta confronta a David por su pecado con Betsabé, el profeta predice que el niño morirá. David ayuna y ora, pero el niño muere.",
+    article:
+      'Incluso después de pronunciar un juicio, Dios a veces ha considerado apropiado apartar el castigo en respuesta a un arrepentimiento sincero y súplicas fervientes (Éx. 32:9-14; cf. Jonás 3:4-10). David sabía que Dios era "misericordioso y clemente, lento para la ira y grande en misericordia y verdad" (Éx. 34:6). Por lo tanto, suplicó fervientemente por el perdón y por la vida del niño.\n\nSin embargo, esto no implica que se negara a someterse a la voluntad divina. Simplemente esperaba que la misericordia de Dios pudiera perdonar al niño. Pero el niño murió. La muerte del niño fue la respuesta solemne de Dios a la súplica ferviente del padre. Dios no dio una respuesta favorable a las peticiones de David, pero el rey se sometió humildemente a la voluntad divina. Cuando la respuesta del cielo es contraria a nuestra súplica, debemos recordar que Dios sabe lo que es mejor, y que por alguna razón, a menudo desconocida para nosotros, Él considera que no es lo mejor extender la vida del enfermo.',
+    date: "991 a.C.",
+    scriptures: ["10|12:15-23"],
+    related: [
+      {
+        slug: "david",
+        title: "David",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "David, por tanto, suplicó a Dios por el niño; y David ayunó, y entró, y pasó la noche tendido en tierra. (2 Samuel 12:16)",
+        file: "GoodSalt-prcas2046_8-22-2013 2-18-43 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "838",
+    slug: "solomon",
+    title: "Salomón",
+    period: "6",
+    description:
+      'Su nombre significa "pacífico". Es el segundo hijo de David con Betsabé y sucede a David como rey siendo joven, y reina 40 años como David. Su reinado es una edad dorada de la monarquía con gran esplendor. Salomón es conocido por su asombrosa sabiduría, pero también por sus fracasos morales.',
+    article:
+      'Salomón. Hijo de David y Betsabé (2 Sam. 12:24; 1 Crón. 3:5), y el tercer y último rey de Israel unido, quien reinó desde aproximadamente 971 a 931 a.C. En un pasaje se le llama Jedidías, "amado de Yahvé" (2 Sam. 12:25). Este posiblemente era su nombre personal, y Salomón su nombre de trono, o viceversa.\n\nI. Ascenso. Salomón fue hecho rey poco antes de la muerte de su padre, y debió su corona a la vigilancia del profeta Natán. Al enterarse de que su hermano mayor Adonías, apoyado por Joab, sería proclamado rey, el profeta apeló a David a través de Betsabé para que actuara rápidamente. En respuesta, Salomón, apoyado por el sacerdote Sadoc, Benaía, un alto oficial militar, y la guardia personal de David, fue inmediatamente proclamado rey. Esta acción rápida puso fin a la conspiración de Adonías (1 Reyes 1:5-40).\n\nDespués de la muerte de David, Salomón ejecutó a sus oponentes más violentos. Al mismo tiempo, se casó con una princesa egipcia (cap. 3:1), probablemente una hija de uno de los últimos reyes de la XXI dinastía. Durante una visita a Gabaón, donde estaba el tabernáculo del Señor en ese momento, tuvo un sueño en el que Dios le pidió que expresara sus deseos, y le prometió que se le concederían. En respuesta, Salomón pidió sabiduría, lo que agradó tanto a Dios que también le prometió riqueza y honor además de la sabiduría solicitada (1 Reyes 3:4-15; 2 Crón. 1:3-13).\n\nII. Reinado. Las relaciones de Salomón con otros países durante su reinado de 40 años fueron generalmente buenas. A través de su matrimonio con la princesa egipcia, obtuvo la ciudad de Gezer, que había permanecido en manos cananeas hasta ese momento (1 Reyes 9:16). Solo libró una guerra, contra Hamat-zobá, para asegurar sus posesiones del norte (2 Crón. 8:3). Con Fenicia concluyó un acuerdo comercial (1 Reyes 5:1-12). Aparentemente también tuvo buenas relaciones con otras naciones vecinas, como Amón, Moab, Edom y los estados hititas del norte de Siria, países de los cuales importó mujeres para su harén (cap. 11:1; 14:21). Incluso tuvo contacto con el lejano Saba en el sur de Arabia (cap. 10:1-13). Salomón dividió Israel en 12 provincias administrativas, que no siempre coincidían con los límites tribales.\n\nEstas provincias fueron administradas por un cuerpo competente de oficiales, algunos de los cuales estaban vinculados al rey por lazos matrimoniales (1 Reyes 4:1-19). Para sus extensas empresas de construcción, Salomón inició un sistema de trabajo forzado, que se volvió muy impopular con el tiempo (cap. 5:13-16; 9:15, 20, 23). Además de sus trabajadores, también reclutó a un gran número de israelitas para su infantería, carros y caballería (1 Reyes 9:22).\n\nIII. Actividad constructiva en Jerusalén. Durante muchos años, la atención principal de Salomón se centró en el embellecimiento de su capital. Su padre, David, a quien no se le permitió construir un templo, había acumulado mucho material de construcción para tal estructura (1 Crón. 29:2-8; cf. cap. 17:4), y había comprado un terreno al norte de la "Ciudad de David", el antiguo Monte Moriah. Las actividades de construcción de Salomón en Jerusalén duraron 20 años, 7 de los cuales se dedicaron a construir el magnífico Templo que le trajo gran fama (1 Reyes 6:37, 38), y 13 años a erigir los edificios del palacio (cap. 7:1). El arquitecto de Salomón y algunos de sus constructores eran de Tiro. Los fenicios también le suministraron material para los edificios y los muebles (cap. 5:1-18; 7:13, 14). Se erigieron nuevos muros para el área ampliada de la ciudad (cap. 9:15).\n\nIV. Fracaso. Salomón fue un monarca oriental que amaba el lujo y que, lamentablemente, siguió muchos de los caminos de los déspotas orientales. Entre sus errores más destacados estuvo tomar muchas esposas extranjeras. Estas provocaron deslealtad hacia Dios, lo que a su vez resultó en la ruptura de su imperio después de su muerte. Para acomodar a estas mujeres, erigió santuarios y altares paganos, y él mismo ocasionalmente adoraba en ellos (1 Reyes 11:1-13). Otro error de Salomón fue gravar fuertemente al pueblo durante un período prolongado. Su programa de trabajo forzado fue especialmente impopular y se convirtió en la causa más visible de la ruptura del reino inmediatamente después de su muerte (cap. 12:4-16).\n\nV. Vida religiosa y actividad literaria. Salomón comenzó su reinado como un líder profundamente espiritual de su nación, uno que no deseaba nada más que sabiduría para servir adecuadamente a Dios y a los intereses de su pueblo (1 Reyes 3:3-9). Su oración y su consejo al pueblo en la dedicación del Templo muestran que estaba cerca de Dios (cap. 8:22-61). Sin embargo, su riqueza y lujo, pero especialmente sus muchas esposas, lo corrompieron tanto que finalmente se convirtió en un idólatra (cap. 11:3-8). En su vida posterior, lamentó las locuras de su camino, como lo revelan las declaraciones que hizo en Eclesiastés (cap. 1:1, 12-17; 2:1-11).',
+    date: "989-931 a.C.",
+    scriptures: ["10|12:24", "11|11:43"],
+    related: [
+      {
+        slug: "david",
+        title: "David",
+      },
+      {
+        slug: "rehoboam",
+        title: "Roboam",
+      },
+      {
+        slug: "solomon-marries-daughter-of-pharaoh",
+        title: "Salomón se casa con la hija del faraón",
+      },
+      {
+        slug: "solomon-receives-wisdom",
+        title: "Salomón recibe sabiduría",
+      },
+      {
+        slug: "lord-speaks-to-solomon-2nd-time",
+        title: "El Señor habla a Salomón por segunda vez",
+      },
+      {
+        slug: "solomon-completes-his-palace",
+        title: "Salomón completa su palacio",
+      },
+      {
+        slug: "solomon-works-on-millo-and-building-up-cities",
+        title: "Salomón fortifica ciudades",
+      },
+      {
+        slug: "arrival-of-queen-of-sheba",
+        title: "Llegada de la reina de Saba",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Y cuando la reina de Saba oyó de la fama de Salomón concerniente al nombre del SEÑOR, vino a probarlo con preguntas difíciles. (1 Reyes 10:1)",
+        file: "GoodSalt-lwjas0181_8-8-2013 12-16-00 PM.jpg",
+      },
+      {
+        caption:
+          "Salomón como rey presidiendo una disputa entre dos mujeres que afirman ser la madre del mismo bebé.",
+        file: "GoodSalt-SolomonAndBaby_8-5-2013 4-17-37 PM.jpg",
+      },
+      {
+        caption:
+          "El rey Salomón adorando ídolos, Providence Lithograph Company, 1896",
+        file: "solomon-idols_8-8-2013 12-16-00 PM.jpg",
+      },
+      {
+        caption:
+          "Ilustración del Juicio de Salomón por Gustave Doré, siglo XIX",
+        file: "Solomon_7-30-2013 4-43-34 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "839",
+    slug: "david-wrote-psalm-32",
+    title: "David escribió el Salmo 32",
+    period: "6",
+    description:
+      "David escribe el Salmo 32 después de su grave pecado con Betsabé. Es un salmo de profunda confesión, arrepentimiento y restauración.",
+    article:
+      "El Salmo 32 es un salmo penitencial. Une la penitencia personal con la instrucción a otros. El salmo tiene el profundo propósito de mostrar la bienaventuranza del perdón del pecado. Fue compuesto después de que David cometió su grave pecado con Betsabé y es un registro de su confesión y el perdón que obtuvo (ver 2 Sam. 11; 12). Los versículos 1-5 tratan de la experiencia personal de David; los versículos 6-11 dan consejo. Se informa que este salmo fue uno de los favoritos de Agustín hasta el momento de su muerte. El teólogo tenía el salmo escrito en la pared, para poder verlo desde su lecho de enfermo.",
+    date: "991 a.C.",
+    scriptures: ["19|32:1-11"],
+    related: [
+      {
+        slug: "david",
+        title: "David",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Agustín, Sandro Botticelli, c. 1480 ... El Salmo 32 era uno de los favoritos de Agustín.",
+        file: "390px-Saint_Augustine_-_by_Sandro_Botticelli_050_8-22-2013 2-23-53 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "840",
+    slug: "amnon-rapes-his-sister",
+    title: "Amnón viola a su hermana",
+    period: "6",
+    description:
+      "Amnón se enamora de su media hermana, Tamar. Su amigo Jonadab le aconseja cómo atraer a Tamar a su casa. La viola y luego la desprecia. David es moralmente débil y no hace nada. Absalón, el hermano de Tamar, está furioso y luego asesina a Amnón.",
+    article:
+      "La serie de relatos que siguen (cap. 13 al 21) es un relato de las desgracias que sobrevinieron a David después de su pecado. Crónicas no menciona estas calamidades, ya que ese registro tampoco menciona el pecado de David. Después de su adulterio con Betsabé y su asesinato de Urías, David era un hombre cambiado. Había perdido gran parte de su antigua confianza en sí mismo y ya no era el amo absoluto de su reino. El pueblo ya no tenía una confianza implícita en él y, por lo tanto, era lento para escuchar sus admoniciones sobre las recompensas de la justicia o los males de la transgresión.\n\nCuando veía a otros hacer las cosas por las que él había dado el ejemplo, le resultaba difícil reprenderlos. Sus propios hijos se negaban a obedecerlo y ya no respetaban su consejo. Donde antes había sido fuerte y valiente, ahora se volvía débil y vacilante. Un sentimiento de vergüenza lo acompañaba constantemente. Los siguientes capítulos retratan el curso de los eventos que, al menos en parte, fueron consecuencia de la transgresión de David.\n\nAmnón se enamora de su hermana Tamar. La deseaba y en realidad se enfermó de preocupación por su incapacidad para satisfacer sus deseos con respecto a Tamar. Su amistad con Jonadab lo llevó por un camino malvado. Jonadab sugiere que Amnón finja estar enfermo y le pida a su hermana que le traiga comida, después de lo cual la viola. Sin nadie más en la casa, Tamar no tenía a quién recurrir en sus intentos de resistir el propósito malvado y decidido de su hermano. Primero trató de razonar con él, hablando de lo pecaminoso de tal acto y de su locura.\n\nTamar trató de hacer entrar en razón a Amnón señalando que al hacer tal cosa la deshonraría a ella, la hija del rey y su hermana, de por vida. Si él tenía algún respeto por ella, ciertamente no desearía traer tal humillación sobre ella y sobre la casa del rey. Después de su cruel acto, Amnón odiaba a Tamar. El resultado fue típico. Amnón no estaba movido por el amor, sino por la pasión, y ahora que sus deseos animales estaban satisfechos, no tenía más consideración por su hermana, a quien había agraviado tan cruelmente.",
+    date: "989 a.C.",
+    scriptures: ["10|13:1-33", "10|13:1-33"],
+    related: [
+      {
+        slug: "amnon",
+        title: "Amnón",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Óleo sobre panel de roble de Amnón y Tamar en 1661-1670 por Jan Steen. Ubicado en el Wallraf-Richartz-Museum.",
+        file: "Jan_Steen_001.jpg",
+      },
+    ],
+  },
+  {
+    id: "842",
+    slug: "absalom-murders-amnon-2nd-judgment",
+    title: "Absalón asesina a Amnón, segundo juicio",
+    period: "6",
+    description:
+      "Después de que Amnón viola a su media hermana y David no hace nada al respecto, Absalón, dos años después, invita a su padre y hermanos a esquilar ovejas. David no va, pero Absalón pregunta si Amnón puede ir. David consiente. Mientras Amnón está borracho, Absalón lo asesina.",
+    article:
+      "Absalón busca vengarse de Amnón, quien violó a su hermana. Invita a su padre y hermanos a esquilar ovejas. Esta invitación, por supuesto, incluía a Amnón, ya que el verdadero propósito de Absalón al dar el banquete era asegurar la oportunidad de atraparlo. La profunda astucia de Absalón se revela en esta invitación a David. Difícilmente esperaba que su padre asistiera, pero al insistir, ayudó a disipar las sospechas y alentó la asistencia de Amnón.\n\nDavid declinó la invitación con el argumento de que la asistencia de tantos podría ser una carga para Absalón. Al continuar insistiendo en la asistencia de su padre, Absalón logró disfrazar su verdadero propósito y obtuvo la bendición de David para las festividades. Todo parecía estar por encima de toda sospecha.\n\nLos hijos de David ya eran adultos, pero evidentemente el padre todavía ejercía cierto control sobre sus actividades. Amnón fue especialmente invitado, ya que era el hijo mayor y el heredero aparente, quien podía representar a su padre en el banquete. Al continuar insistiendo, Absalón finalmente quebró la resistencia de su padre y obtuvo su consentimiento para que no solo Amnón, sino todos los príncipes (v. 29) pudieran asistir al banquete.\n\nMientras festejaban y bebían, Absalón golpea a Amnón. En este momento, el segundo hijo de David, Quileab (cap. 3:3), posiblemente ya había muerto, ya que no se menciona en el relato. Si es así, la muerte de Amnón haría de Absalón el siguiente en la línea del trono (ver cap. 3:2, 3). Quizás los sirvientes de Absalón pensaron que sus órdenes de matar a Amnón tenían como objetivo asegurar su propia sucesión al trono.",
+    date: "987 a.C.",
+    scriptures: ["10|13:23-33"],
+    related: [
+      {
+        slug: "absalom",
+        title: "Absalón",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Lienzo del banquete de Absalón por Niccolò de Simone. Fotografiado por Wolfgang Moroder en 2008.",
+        file: "Convito_di_Ansalonne.jpg",
+      },
+    ],
+  },
+  {
+    id: "843",
+    slug: "absalom-returns-to-jerusalem-from-geshur",
+    title: "Absalón regresa a Jerusalén desde Gesur",
+    period: "6",
+    description:
+      "Después de que Absalón asesina a su medio hermano Amnón, huye a Gesur. Joab usa un truco para convencer a David de que permita que Absalón regrese del exilio. Absalón regresa, pero no ve al rey durante 2 años.",
+    article:
+      "Joab había logrado su propósito a través del engaño para convencer a David de reconciliarse con Absalón. El rey sabiamente lo comisionó para llevar las noticias a Absalón y traerlo a casa. Joab tenía buenas razones para agradecer al rey. Si David hubiera tomado una decisión desfavorable, Joab habría sido responsable de la situación. Pero a Absalón no se le permitió estar en presencia de David.\n\nEl asesinato de Amnón por parte de Absalón aún no se había olvidado, y por el bien de la nación y del propio Absalón, David sintió que era necesario mostrar su aborrecimiento por el crimen que se había cometido. Estar en casa pero no poder ver el rostro de su padre o aparecer con sus hermanos en la corte comenzó a afectar la mente de Absalón. Sentía que estaba siendo tratado injustamente, y el pueblo comenzó a simpatizar con él. A los ojos de la nación, era un héroe que debía ser elogiado por un acto de justicia en lugar de un criminal que debía ser evitado por un delito.",
+    date: "984 a.C.",
+    scriptures: ["10|14:1-24", "10|14:1-24"],
+    related: [
+      {
+        slug: "absalom",
+        title: "Absalón",
+      },
+    ],
+    images: [
+      {
+        caption: "Absalón",
+        file: "GoodSalt-prcas0690_8-22-2013 2-40-45 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "844",
+    slug: "absalom-reconciled-to-david",
+    title: "Absalón se reconcilia con David",
+    period: "6",
+    description:
+      "Absalón regresa del exilio en Gesur, pero no ve el rostro del rey David durante 2 años. Intenta obtener una audiencia, pero Joab lo rechaza hasta que Absalón incendia el campo de cebada de Joab. Finalmente, Absalón ve a su padre, quien lo besa y lo perdona.",
+    article:
+      "Después de asesinar a su hermano, Absalón fue desterrado de Jerusalén, pero finalmente fue traído de vuelta por Joab. Sin embargo, no se le permitió ver al rey. Esto naturalmente hizo que Absalón se volviera amargo y melancólico, pensando que estaba siendo tratado injustamente. En sus propios ojos, probablemente sentía que no había hecho nada malo al matar a Amnón, ya que solo había impartido justicia.\n\nAbsalón era egoísta y sin escrúpulos, ambicioso e impulsivo. Era admirado por el pueblo y gradualmente ganaba sus simpatías. No era sabio por parte de David permitir que tal situación continuara. Como Joab había tenido éxito en sus esfuerzos anteriores, Absalón pensó que nuevamente podría ser útil. Pero Joab sin duda sintió que ya había hecho todo lo que era prudente, y que incurriría en el desagrado del rey si tomaba más medidas en el asunto.\n\nAsí que Absalón incendia el campo de cebada de Joab para forzar el asunto. Absalón trató a Joab como su sirviente, dándole órdenes y esperando que las cumpliera. Su conducta revela cuán lejos había llegado en su curso de rebelión y su determinación de obtener una reparación por sus supuestas quejas y una restauración de los privilegios que creía que le correspondían por derecho. No se hizo ningún intento por explicar su incendio.\n\nActuó como si estuviera plenamente en su derecho al tomar las medidas que tomó para llevar a Joab ante él, y como si Joab estuviera obligado a cumplir sus deseos. A Absalón se le había permitido regresar a casa, pero el rey aún se negaba a verlo. Tal tratamiento era para Absalón más irritante que su exilio. En la estimación popular, David era excesivamente severo en su trato hacia su hijo, y el pueblo se inclinaba gradualmente hacia Absalón.\n\nFinalmente, Absalón fue admitido en la presencia real. Se le dio un trato que indicaba una reconciliación al menos externa. Compara a Esaú besando a Jacob, y a José, a sus hermanos (Gén. 33:4; 45:15). El recuerdo de su propia culpa hacía que David fuera indeciso y vacilante. Aparentemente no sabía qué camino tomar o qué curso seguir. Reconocía su deber, pero el recuerdo de su propia transgresión le impedía hacer lo que sabía que debía hacer.",
+    date: "982 a.C.",
+    scriptures: ["10|14:25-33"],
+    related: [
+      {
+        slug: "absalom",
+        title: "Absalón",
+      },
+    ],
+    images: [
+      {
+        caption: "Pilar de Absalón y Tumba de Josafat",
+        file: "GoodSalt-pppas0412_8-22-2013 2-42-19 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "845",
+    slug: "mattatha",
+    title: "Matatías",
+    period: "6",
+    description:
+      'Su nombre significa "regalo". Es el hijo de Natán y el nieto del rey David. Solo se lo menciona en la genealogía de Lucas. Por lo tanto, es un antepasado de Jesucristo. También se escribe "Matatías".',
+    article: "",
+    date: "957-887 a.C.",
+    scriptures: ["42|3:31", "42|3:31"],
+    related: [
+      {
+        slug: "menan",
+        title: "Menán",
+      },
+    ],
+    images: [
+      {
+        caption: "Antepasado de Jesús",
+        file: "AncestorOfJesusColor.jpg",
+      },
+    ],
+  },
+  {
+    id: "846",
+    slug: "david-flees-jerusalem",
+    title: "David huye de Jerusalén",
+    period: "6",
+    description:
+      "Absalón comete traición y reúne gente en Hebrón para proclamarlo rey. David se entera de esto y huye de Jerusalén con vergüenza y tristeza con todos sus sirvientes. Como Cristo, David también asciende al Monte de los Olivos llorando mientras Absalón entra en la ciudad.",
+    article:
+      "Absalón estaba conspirando en secreto para asegurar la corona. Para impresionar al pueblo, asumió una actitud que consideraba apropiada para el heredero aparente. Tenía 50 hombres que corrían delante de él. Una guardia personal para el príncipe. Con estas medidas, Absalón parecía estar reclamando su derecho a suceder en el trono. Esto equivalía a emitir un pronunciamiento general de que se consideraba el próximo rey.\n\nTambién se reunía con la gente en la puerta de la ciudad, el lugar donde se llevaban a cabo los asuntos públicos y donde los jueces tomaban su posición para administrar justicia (ver Gén. 19:1). El pueblo solía acudir al rey para obtener justicia, pero esta era lenta. La preocupación de David por sus problemas, su vacilación en tomar una postura firme para reprender el mal, evidentemente se reflejaba en su administración de los asuntos públicos. Absalón, sin embargo, cortejaba el favor público, colocándose en el camino de la gente y poniendo su tiempo y servicios a su disposición.\n\nAbsalón logró crear un descontento general con la administración del gobierno de David. El pueblo voluble no vio a través de su esquema. Los medios empleados fueron deshonestos e injustos. Absalón engañó deliberadamente al pueblo, creando sospechas, desafección y animosidad contra el rey. En todas partes los hombres alababan a Absalón y criticaban al rey. La gente deseaba que David abdicara para que Absalón pudiera tomar su lugar en el trono.\n\nHebrón fue el lugar elegido como el sitio para la rebelión de Absalón. Era su lugar de nacimiento (cap. 3:2, 3), y el sitio de la primera capital de David. Muchos de los habitantes probablemente no estaban reconciliados con la transferencia de la capital a Jerusalén. Al ser el lugar de nacimiento de Absalón, ofrecía un pretexto plausible para celebrar allí el gran banquete sacrificial en cumplimiento del supuesto voto de Absalón. Absalón pretendía hacer que su regreso a Jerusalén pareciera una providencia de Dios, concedida en respuesta a un voto solemne hecho mientras aún estaba en el exilio en Gesur.\n\nCuando se conoció la rebelión, David sugirió que aquellos que lo apoyaban huyeran de Jerusalén. La decisión fue sabia, ya que David en ese momento estaba totalmente desprevenido para la crisis. En su gran peligro, David sacudió su letargo e indecisión y pareció recuperar algo de su antiguo coraje y rapidez de acción. El resultado demostró que este había sido el curso de acción correcto. Tanto Ahitofel (cap. 17:1, 2) como Husai (cap. 17:7-13) reconocieron que la demora sería fatal, y que la mayor esperanza de éxito de Absalón sería tomar medidas inmediatas contra David. Al huir, David se dio tiempo para preparar una defensa, y al pueblo tiempo para considerar su curso. Así se evitaron los horrores de una larga guerra civil.\n\nDavid temía que en ese momento no pudiera hacer una defensa exitosa en Jerusalén. La desafección dentro de la ciudad, o quizás incluso dentro de su propia casa, podría volver la marea en su contra. No habría el espíritu de unidad que podría haberse esperado si Jerusalén hubiera sido atacada por un enemigo extranjero. Era su propio hijo quien haría el asalto, y sin duda tenía muchos partidarios dentro de la ciudad.",
+    date: "978 a.C.",
+    scriptures: ["10|15:1-37"],
+    related: [
+      {
+        slug: "david",
+        title: "David",
+      },
+    ],
+    images: [
+      {
+        caption: "David huyendo de Jerusalén",
+        file: "GoodSalt-prcas0687_8-6-2013 8-56-02 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "848",
+    slug: "david-numbers-israel",
+    title: "David censa a Israel",
+    period: "6",
+    description:
+      'David realiza un censo de Israel y Judá. Dios no le había pedido específicamente que lo hiciera. Un enemigo (Satanás) lo incita según 1 Crón. 21, pero 2 Sam. 24 dice que el Señor "movió a David". Éxodo 30 tiene pautas sobre esto. El orgullo suele ser el motivo.',
+    article:
+      "Satanás instigó el orgullo y la ambición que llevaron al rey de Israel a promover procedimientos para aumentar el tamaño de su ejército con el propósito de extender los límites de Israel mediante nuevas conquistas militares. David decidió hacer un recuento del número de Israel. No hay nada en la narrativa que indique precisamente cuándo en la vida de David ocurrió este incidente. El hecho de que Joab estuviera ocupado en el trabajo durante casi diez meses (v. 8) muestra que debió ser en un momento de paz. En el relato paralelo (1 Crón. 24:21), la narrativa es seguida inmediatamente por el registro de los preparativos de David para la construcción del Templo.\n\nTanto en Samuel como en Crónicas, estos preparativos se encuentran entre los últimos elementos registrados del reinado de David. Todo esto lleva a la conclusión de que el censo militar tuvo lugar hacia el final del reinado de David. Joab era un general endurecido y sin escrúpulos, pero incluso él podía ver que la realización de tal censo era contraria a los principios fundamentales de la monarquía hebrea. Con una serie de preguntas, intentó hacer que David reconociera la locura de su curso.\n\nMientras se realizaba el censo, David comenzó a reflexionar sobre las implicaciones de lo que había hecho y a darse cuenta de que estaba cometiendo un error. Fue el Espíritu de Dios quien le habló y le mostró la locura de su curso. En profunda humildad, confesó su error ante Dios y pidió perdón.",
+    date: "974 a.C.",
+    scriptures: ["10|24:1-17"],
+    related: [
+      {
+        slug: "david",
+        title: "David",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "David arrepintiéndose de haber realizado un censo, William Brassey Hole",
+        file: "447px-Sorrow-of-King-David-001_8-22-2013 2-46-53 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "849",
+    slug: "jeroboam-i",
+    title: "Jeroboam I",
+    period: "6",
+    description:
+      'El nombre significa "que el pueblo aumente." Es hijo de Nebat y el primer rey de Israel. Es un siervo de Salomón que se rebela contra el rey y huye a Egipto hasta que Salomón muere. Regresa para ser rey de las 10 tribus del norte.',
+    article:
+      'Jeroboam. El primer rey del reino del norte de Israel, generalmente referido como Jeroboam I (c. 931—c. 910 a.C.). Era un efraimita de Zereda, hijo de Nebat y de Zerúa (1 Reyes 11:26). Mientras era capataz de un grupo de constructores durante la construcción del *Millo en Jerusalén, el profeta Ahías de Silo le dijo a Jeroboam que sería rey sobre 10 de las tribus de Israel (vs 27—39). Jeroboam no era un hombre que esperara pacientemente a que Dios llevara a cabo Sus planes y le diera el reino prometido, como David había hecho en circunstancias similares. En cambio, parece que comenzó de inmediato a conspirar contra Salomón (v 27). Cuando esto fue descubierto, Salomón intentó matarlo, pero Jeroboam huyó a Egipto (v 40). \n\nAllí encontró refugio con el faraón Sisac, fundador de la vigésima segunda dinastía, quien parece haber discontinuado la política amistosa de su predecesor hacia Salomón. Cuando Jeroboam en Egipto recibió la noticia de la muerte de Salomón y de que el nuevo rey de Israel sería coronado en Siquem, regresó a Palestina (cap. 12:1—3). De inmediato se convirtió en portavoz del pueblo y exigió una promesa de Roboam, hijo de Salomón, de que se aliviara la carga pública (vs 3—5). Roboam, engañado por el consejo insensato de consejeros inexpertos, se negó a satisfacer las quejas justificadas del pueblo. Como resultado, las 10 tribus del norte declararon su independencia de la casa de David y proclamaron a Jeroboam su rey (vs 6—20).\n\nJeroboam tomó de inmediato medidas drásticas para evitar que los dos reinos se reunieran. Fundó dos nuevos templos, uno en Dan, en la frontera norte del país, y otro en Betel, en la frontera sur, no lejos de la carretera principal a Jerusalén. En ambos lugares se colocaron imágenes de toros como símbolos visibles del culto a Yahweh (1 Reyes 12:26—30). En su proclamación llamando al pueblo a adorar en estos lugares, Jeroboam repitió las palabras que Aarón había pronunciado en el monte Sinaí para reunir al pueblo para la adoración del becerro de oro (cf. 1 Reyes 12:28 con Éx 32:4). \n\nEsta adoración del toro, que probablemente era una imitación de la adoración cananea de El bajo la imagen de un toro, se convirtió en el "pecado de Jeroboam", que fue seguido por prácticamente todos los gobernantes del reino del norte (1 Reyes 15:26, 34 16:19, 31 22:52, etc.). Jeroboam también nombró como sacerdotes a hombres que no eran de la tribu de Leví y ordenó que las principales fiestas se celebraran en el octavo mes, no en el séptimo, como se hacía en Judá (cap. 12:31, 32).',
+    date: "973-910 a.C.",
+    scriptures: ["11|11:26", "11|14:20"],
+    related: [
+      {
+        slug: "nadab",
+        title: "Nadab",
+      },
+      {
+        slug: "prophet-from-judah-curses-jeroboams-altar-at-bethel",
+        title: "Profeta desconocido maldice el altar de Jeroboam",
+      },
+      {
+        slug: "jeroboam-is-child-dies",
+        title: "El hijo de Jeroboam I muere",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Ilustración de Jeroboam colocando dos becerros de oro, Bible Historiale, 1372.",
+        file: "Jeroboam_sets_up_two_golden_calves.jpg",
+      },
+    ],
+  },
+  {
+    id: "850",
+    slug: "rehoboam",
+    title: "Roboam",
+    period: "6",
+    description:
+      'El nombre significa "él agranda al pueblo." Es hijo de Salomón a través de Naamá, una princesa amonita. Tiene 41 años cuando se convierte en rey y rechaza las demandas de alivio de las tribus del norte, que se rebelan y dividen el reino. Reina 18 años.',
+    article:
+      'Roboam. Hijo de Salomón por su esposa amonita Naamá. Comenzó a reinar a los 41 años como el primer rey del reino del sur de Judá, después de la división (1 Reyes 11:43 14:21), y reinó 17 años (c. 931—c. 913 a.C.). En su ascenso, los representantes de la nación se reunieron en Siquem, la ciudad más céntrica del país, para coronar al nuevo rey. Sin embargo, liderados por Jeroboam, primero exigieron que se aliviaran las cargas públicas. Roboam, prometiendo dar su respuesta después de 3 días, mientras tanto buscó el consejo de los ancianos y los jóvenes consejeros del reino. \n\nFinalmente, rechazó el consejo de los ancianos, quienes le instaron a conceder las solicitudes justificadas del pueblo, y aceptó el consejo de los jóvenes, criados con él, quienes le aconsejaron que rechazara las demandas del pueblo. Desafió a los peticionarios declarando que los azotaría con escorpiones en lugar de con látigos, como había hecho su padre. El resultado fue que todas las tribus del norte y del este de Israel rompieron con la casa de David y nombraron a Jeroboam como su rey. Roboam intentó recuperar a las tribus rebeldes enviando a Adoniram, el oficial encargado del trabajo forzado, para mediar. \n\nSin embargo, este hombre, aparentemente debido a un odio violento, fue asesinado de inmediato. Roboam, reconociendo ahora la gravedad de la situación, regresó a Jerusalén y comenzó de inmediato a hacer preparativos militares para la guerra contra Jeroboam, con el fin de recuperar a las tribus rebeldes por la fuerza, y solo desistió cuando el profeta Semaías, en nombre de Dios, prohibió el asalto propuesto (1 Reyes 11:43 a 12:24 2 Crónicas 9:31 a 11:4). Sin embargo, hubo actos de guerra entre las dos naciones durante los últimos años del reinado de Roboam (1 Reyes 14:30).\n\nEl carácter de Roboam mostró que había heredado tanto rasgos buenos como malos de su padre. Obedeció al profeta Semaías al abstenerse de luchar contra Jeroboam (1 Reyes 12:24 2 Crónicas 11:4) se humilló ante Dios en el momento de la invasión de Sisac (2 Crónicas 12:6, 12) recibió en su reino a los sacerdotes y levitas que fueron expulsados del reino del norte debido a la introducción de la adoración del becerro de Jeroboam en Betel y Dan (cap. 11:11—17). Sin embargo, después de haber servido a Dios durante 3 años (v 17), "hizo lo malo" (cap. 12:14) al permitir la construcción de lugares altos paganos, tolerar la práctica de ritos inmorales y adorar a dioses extranjeros (1 Reyes 14:22—24). Roboam tuvo 18 esposas, 60 concubinas, 28 hijos y 60 hijas (2 Crónicas 11:21).',
+    date: "972-913 a.C.",
+    scriptures: ["11|14:31", "11|14:21"],
+    related: [
+      {
+        slug: "solomon",
+        title: "Salomón",
+      },
+      {
+        slug: "rehoboam-forsakes-righteousness",
+        title: "Roboam abandona la justicia",
+      },
+      {
+        slug: "solomons-temple-sacked-by-shishak",
+        title: "El templo de Salomón saqueado por Sisac",
+      },
+      {
+        slug: "abijah",
+        title: "Abías",
+      },
+    ],
+    images: [
+      {
+        caption: "Roboam consultando con sus jóvenes amigos.",
+        file: "GoodSalt-stdas0014_8-22-2013 2-52-06 PM.jpg",
+      },
+      {
+        caption: "La profecía de Ahías a Jeroboam en 1728 por Gerard Hoet.",
+        file: "Ahijahs_and_Jeroboam.jpg",
+      },
+    ],
+  },
+  {
+    id: "851",
+    slug: "rebellion-of-adonijah-4th-judgment",
+    title: "Rebelión de Adonías, 4to Juicio",
+    period: "6",
+    description:
+      'El nombre significa "mi Señor es Yahweh." Busca arrebatar el reino de su medio hermano Salomón. Hace una solicitud a Betsabé, quien a su vez habla con Salomón. El rey reconoce los motivos de Adonías y lo manda a matar.',
+    article:
+      'Adonías, cuyo nombre significa "Yahweh es mi Señor", es el hijo que, cuando David era viejo, aspiró a la corona (1 Reyes 1:5), y fue posteriormente ejecutado por Salomón (1 Reyes 2:24, 25). Después de la muerte de sus tres hermanos mayores, suponiendo que Quileab estaba muerto, Adonías se consideró el heredero legítimo al trono. Se acerca a Betsabé. La mera aparición de Adonías en escena planteó una pregunta sobre sus intenciones. ¿Se había reconciliado con su destino y estaba listo para apoyar a Salomón, o todavía esperaba, por algún medio, asegurar el reino? La referencia de Adonías a su intento fallido de asegurar el trono da evidencia de que el asunto todavía estaba muy vivo en su corazón. Las aprensiones de Betsabé parecen haber estado bien fundadas. \n\nPero, ella va ante el rey en su nombre. Salomón está expresando su disgusto por la miopía de su madre por haberse dejado llevar a tal situación como esta. Las cosas ya eran lo suficientemente malas sin que ella prestara su ayuda a los esfuerzos de Adonías por asegurar el trono. Adonías era, después de todo, el hermano mayor, y muchos pensarían que tenía un reclamo justo al trono. Y a su lado estaban dos de los hombres más influyentes del país, Abiatar, el sumo sacerdote, y Joab, el comandante en jefe, ayudándolo y apoyándolo en todo lo posible. \n\nAhora, la madre del rey se había dejado engañar hasta el punto de que en realidad estaba pidiendo nada menos que el reino para el hijo mayor. Salomón dijo en efecto: "¿Por qué pedir solo por Abisag, por qué no pedir también por el reino? Él es mi hermano mayor, y ¿no le pertenece por derecho? Y como prueba de sus reclamos, ¿no tiene con él a Abiatar el sacerdote y a Joab también, apoyando su causa y dando evidencia a todos de que, de hecho, tiene la razón?" Betsabé evidentemente entendió la reprimenda necesaria. Sabiendo que lo que estaba haciendo estaba de acuerdo con la voluntad del Cielo, Salomón, con una solemne adjuración, dictó sentencia de que Adonías fuera ejecutado ese día.\n\n',
+    date: "971 a.C.",
+    scriptures: ["10|3:4", "11|2:13-25", "11|2:25"],
+    related: [
+      {
+        slug: "david",
+        title: "David",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Allí el sacerdote Sadoc y el profeta Natán lo ungirán como rey sobre Israel",
+        file: "Adonijah-theONLYpic_7-30-2013 4-52-30 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "852",
+    slug: "hiram-offers-skill-and-resources-to-solomon",
+    title: "Hiram ofrece habilidades y recursos a Salomón",
+    period: "6",
+    description:
+      "Hiram, el rey fenicio de Tiro, ofrece ayudar a Salomón en la construcción del templo. Era amigo de David. El rey ofrece cedros del Líbano y trabajadores para ayudar. Los dos reyes tienen un tratado de paz. Salomón le da comida a Hiram.",
+    article:
+      'En 2 Sam. 5:11 y 1 Crón. 14:1 se menciona a Hiram como quien envió obreros y materiales a David para la construcción de su casa. Según Josefo, el Templo fue construido en el año 11 (Antigüedades viii. 3. 1) o 12 (Contra Apión 1. 18) del reinado de Hiram. Dado que la fundación del Templo tuvo lugar en el cuarto año de Salomón (1 Reyes 6:1), el reinado de Hiram debe haber coincidido con el de David por unos siete u ocho años. Después de dar una descripción general del gobierno de Salomón, 1 Reyes 5 continúa con un relato de la gran empresa de su reinado, la construcción del Templo. Un relato paralelo de esta importante empresa se encuentra en 2 Crón. 2 a 4. Explica por qué David no construyó el templo. \n\nNo fue que David estuviera tan ocupado con las guerras durante su reinado que no encontró tiempo u oportunidad para construir el Templo, sino que el Señor no se lo permitió debido a que había sido un hombre de guerra (1 Crón. 22:8). No era el propósito del Señor que Israel estuviera en guerra constante contra sus vecinos. Durante el reinado de David, la guerra fue necesaria para el establecimiento del trono. Pero Dios le había prometido a David un hijo que sería un "hombre de paz", y que Él le "daría paz y tranquilidad a Israel en sus días" (1 Crón. 22:9). El nombre Salomón significa "pacífico". Salomón reconoció que el descanso que disfrutaba le había llegado como una bendición de Dios.\n\nEn 1 Reyes 5 se da una forma abreviada de una parte del mensaje de Salomón a Hiram, que se da de manera más completa en 2 Crón. 2:3—10. La solicitud no era solo para cedros, sino también para madera de almug (2 Crón. 2:8) y abetos (1 Reyes 5:8, 10), y también para "un hombre hábil para trabajar en oro", plata, bronce y hierro (2 Crón. 2:7). A cambio de la madera, Salomón se comprometió a proporcionarle a Hiram provisiones de trigo, cebada, vino y aceite (2 Crón. 2:10 cf. 1 Reyes 5:11). El propósito específico de la construcción del Templo se presenta con mucho más detalle en 2 Crón. 2:4—6. Parece haber habido un acuerdo formal y escrito entre Salomón y Hiram (2 Crón. 2:11). Salomón estableció los términos del contrato, y Hiram los aceptó de inmediato. Hiram acordó entregar la madera deseada por Salomón de acuerdo con las estipulaciones acordadas. \n\nEl acuerdo entre Salomón y Hiram fue mutuamente beneficioso. Salomón necesitaba madera, de la cual tenía poco, y Hiram tenía mucha. Hiram necesitaba alimentos, de los cuales Fenicia producía poco, y de los cuales Israel podía tener un excedente. Ambos dieron de lo que tenían y recibieron lo que necesitaban, y ambos se beneficiaron como resultado. Ambos estaban felices con este arreglo que promovía la prosperidad y la paz.',
+    date: "969 a.C.",
+    scriptures: ["11|5:1-18"],
+    related: [
+      {
+        slug: "solomons-temple-begun",
+        title: "Construcción del Templo de Salomón",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "A cambio de los materiales que el rey Salomón pidió, Hiram recibió provisiones como trigo.",
+        file: "GoodSalt-prcas1633_8-6-2013 9-15-29 AM.jpg",
+      },
+      {
+        caption: "Hiram y Salomón, J.J. Scheuchzer, 1731",
+        file: "Hiram_shows_the_planes_to_Solomon_by_J.J._Scheuchzer_8-22-2013 3-08-44 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "855",
+    slug: "solomon-marries-daughter-of-pharaoh",
+    title: "Salomón se casa con la hija del faraón",
+    period: "6",
+    description:
+      "Salomón hace un tratado con el faraón de Egipto y se casa con su hija. Estos matrimonios tenían propósitos políticos y económicos. Este faraón podría haber sido Siamón, quien le dio a su hija Gezer como dote.",
+    article:
+      "El primer objetivo de Salomón después de tomar el trono fue establecer la seguridad interna. Una vez logrado eso, pudo prestar atención a los intereses externos. El primer elemento mencionado es el matrimonio real con una hija del faraón. En el caso del reinado de David sobre Judá, también se mencionan primero las medidas tomadas para garantizar la seguridad interna (2 Sam. 2:1—32 3:1), seguido de una mención de los hijos y esposas de David (2 Sam. 3:2—5), y después de su unción como rey de Israel (2 Sam. 5:1—3), el primer elemento reportado es el establecimiento de su poder sobre Israel (2 Sam. 5:6—12), seguido una vez más por una mención de sus esposas y concubinas (2 Sam. 5:13—16).\n\nSe cree que el faraón con quien Salomón hizo alianza fue uno de los reyes de la vigésima primera dinastía, cuya capital estaba en Tanis, en el Bajo Egipto. Debe haber sido un predecesor de Sisac (Sheshonk), fundador de la vigésima segunda dinastía, quien invadió Judá en el quinto año de Roboam (1 Reyes 14:25).\n\nLas alianzas políticas a menudo se sellaban con matrimonios entre las familias reales. El historiador sagrado no da ninguna reprimenda por el matrimonio de Salomón con esta princesa idólatra. Simplemente registra el incidente. Pero su ausencia de censura no da sanción al acto. El matrimonio fue una violación directa del mandato de Dios. Aunque la hija del faraón abandonó la religión de su Egipto natal y se unió a los hebreos, entre quienes había venido a vivir (PK 53), este resultado saludable no justificaba el matrimonio extranjero. \n\nEl faraón tomó la ciudad de Gezer de los cananeos y se la presentó a su hija como dote y a la nación de Israel (1 Reyes 9:16). La residencia de la hija del faraón en la Ciudad de David fue solo temporal, hasta que Salomón construyó su propio palacio. Este palacio estaría al norte de la ciudad de David, en el área del Templo. Más tarde se construiría una casa separada para su esposa egipcia (1 Reyes 7:8).",
+    date: "967 a.C.",
+    scriptures: ["11|3:1"],
+    related: [
+      {
+        slug: "solomon",
+        title: "Salomón",
+      },
+      {
+        slug: "pharaoh-conquers-gezer-gives-as-present-to-daughter",
+        title: "El faraón conquista Gezer y se lo da como dote a su hija",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Salomón hizo alianza con el faraón de Egipto y tomó a la hija del faraón, y la llevó a la Ciudad de David.",
+        file: "GoodSalt-prcas3087_8-22-2013 3-12-34 PM.jpg",
+      },
+      {
+        caption:
+          "Esfinge de bronce de Siamón ubicada en el Museo del Louvre en París.",
+        file: "Siamun_4-30-2013 1-05-28 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "856",
+    slug: "pharaoh-conquers-gezer-gives-as-present-to-daughter",
+    title: "El faraón conquista Gezer y se lo da como dote a su hija",
+    period: "6",
+    description:
+      "Salomón se casa con la hija del faraón. Este rey egipcio conquista Gezer y se lo da a su hija como dote.",
+    article:
+      "Gezer era una importante ciudad cananea, en un bastión que se extendía hacia la llanura marítima, a 6 1/4 millas (10 km) al oeste-noroeste de Ajalón, en el límite de Efraín (Josué 16:3). La ciudad fue asignada a los levitas (Josué 21:21), pero no fue tomada en el momento de la conquista (Jueces 1:29), aunque fue tributaria por un tiempo (Josué 16:10). Ocupaba una posición estratégica en la llanura de Ajalón, un importante paso, frecuentemente utilizado por los filisteos para llegar a las tierras altas centrales. \n\nSe menciona en varias ocasiones en relación con las batallas de David (2 Sam. 5:25 1 Crón. 14:16 20:4). Gezer fue tomada por el faraón y dada como dote en la ocasión del matrimonio de su hija con Salomón. Hay varios registros de concesiones de importantes derechos territoriales como dotes en ocasiones de bodas reales en el antiguo Oriente.",
+    date: "967 a.C.",
+    scriptures: ["11|9:15-16"],
+    related: [
+      {
+        slug: "solomon-marries-daughter-of-pharaoh",
+        title: "Salomón se casa con la hija del faraón",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "El faraón, el rey del antiguo Egipto, a menudo se representa usando el tocado nemes y un shendyt ornamentado. Basado en pinturas de tumbas del Reino Nuevo., Jeff Dahl, 2007",
+        file: "Pharaoh_8-22-2013 3-20-52 PM.jpg",
+      },
+      {
+        caption: "Gezer con vista al oeste hacia las tierras altas",
+        file: "Gezer with view west to hill country, tb010412755_4-30-2013 12-53-58 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "857",
+    slug: "solomon-receives-wisdom",
+    title: "Salomón recibe sabiduría",
+    period: "6",
+    description:
+      'Al principio del reinado del rey Salomón, va a Gabaón para ofrecer sacrificios al Señor. En un sueño, Dios le dice: "¡Pide! ¿Qué te daré?" Él pide sabiduría y un corazón entendido. Esto agrada a Dios, quien también promete riquezas y larga vida si es obediente.',
+    article:
+      'Salomón viajó a Gabaón, una ciudad que estaba a casi 6 millas (9.6 km) al noroeste de Jerusalén. Después del éxito de las medidas tomadas para establecer el reino, Salomón celebró un gran festival en Gabaón para toda la nación (2 Crón. 1:1—3), en agradecimiento al Señor por las bendiciones concedidas. El tabernáculo que había sido construido en el desierto estaba ubicado allí (2 Crón. 1:3). Se recordará que, mucho antes, los gabaonitas habían engañado a Josué y, en consecuencia, habían sido sentenciados a ser "cortadores de leña y sacadores de agua para la casa de mi Dios" (Josué 9:23).\n\nUna noche, Salomón tiene un sueño en el que el Señor le habla. En los días del padre de Salomón, David, la voluntad del Señor se había revelado a los hombres a través de los profetas Natán y Gad (2 Sam. 7:2—17 12:1—14 24:11—14), y a través de servicios especiales realizados por los sacerdotes (1 Sam. 23:9—12 30:7, 8). Dios sabía bien lo que Salomón necesitaba, pero le dijo que pidiera. El incidente sería una prueba para el joven rey. Por la naturaleza de su solicitud, Salomón revelaría la naturaleza de su corazón. \n\nSalomón se compara con un niño. Aquí no está transmitiendo la idea de que es un niño en años, sino que se considera un niño en experiencia. Las palabras son de humildad. Con las pesadas responsabilidades de la nación descansando sobre él, se sentía incapaz de la tarea y necesitado de ayuda divina. En el momento de su ascenso, ya estaba casado y probablemente era padre. Esto se sugiere por el hecho de que tenía un hijo de 41 años (2 Crón. 12:13) en el momento de su muerte, después de un reinado de 40 años (1 Reyes 11:42). Entonces, le pide a Dios un corazón entendido.\n\nDios se complace cuando el hombre le pide lo que es sabio y bueno. Trae alegría al corazón de Dios que el hombre se relacione sabiamente con los asuntos de la vida.\nLa sabiduría de Salomón parece haber sido tanto moral como intelectual. Era una sabiduría de tipo práctico, concerniente a todos los departamentos de la vida, concerniente a las cosas y los corazones de los hombres y las obras y pensamientos del Creador. En su sueño, el Señor le asegura su deseo. \n\nEsto no fue simplemente un sueño, sino un sueño de Dios. Salomón tenía toda la seguridad de que el sueño era de inspiración divina y que había entrado en contacto con Dios. Tan seguro estaba de que este era el caso que, inmediatamente después de su regreso a la capital, fue ante el arca y ofreció sacrificios a Dios. El resultado muestra más allá de toda duda que tenía razón y que había recibido un mensaje directo del Señor.',
+    date: "967 a.C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "solomon",
+        title: "Salomón",
+      },
+    ],
+    images: [
+      {
+        caption: "Salomón pidiendo sabiduría",
+        file: "GoodSalt-prcas0245_8-6-2013 9-24-04 AM.jpg",
+      },
+      {
+        caption: "Salomón orando por sabiduría",
+        file: "GoodSalt-prcas0696_8-22-2013 3-22-40 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "858",
+    slug: "solomons-temple-begun",
+    title: "Construcción del Templo de Salomón",
+    period: "6",
+    description:
+      "1 Reyes 6:1 describe un comienzo específico para la construcción del templo de Salomón, lo que sitúa el Éxodo alrededor del 1450 a.C. Algunos ven los 480 años como un número simbólico de 12 generaciones de 25 años cada una, por lo que fechan el Éxodo mucho más tarde (1290 a.C.).",
+    article:
+      'En 1 Reyes 1, el tiempo de la construcción del templo por Salomón está ligado a cuando los israelitas salieron de Egipto. Este versículo sincroniza el año 480 desde el Éxodo con el cuarto año del reinado de Salomón. Esta información es de suma importancia, ya que sobre ella puede basarse el cálculo cronológico hebreo desde Salomón hasta Moisés, y antes. De la precisión de la fecha a.C. asignada al cuarto año de Salomón depende la precisión de todas las demás fechas basadas en ella. \n\nNo hay evidencia para tomar 480 como un número redondo o como 12 generaciones, y ninguna para hacer que cubra el tiempo de los jueces sumando los años de todos los jueces y omitiendo los años de opresión o gobierno extranjero. Cabe señalar que este elemento cronológico, "en el año cuatrocientos ochenta", se da de manera formal y categórica, sin vacilación ni reserva, y con una precisión inusual. No solo se da el año de Salomón y de la era del Éxodo, sino también el mes. Evidentemente, está destinado a ser una sincronización exacta, como en 2 Reyes 18:9, 10 Jer. 25:1, etc.\n\nLa decisión de Salomón de construir el Templo no fue un acto arbitrario, autodevisado, ni fue motivado únicamente por el deseo y la voluntad de su padre David. El motivo que impulsó a Salomón no fue la ambición personal, el amor a la gloria o la pompa, sino el cumplimiento del propósito del Cielo. Había llegado claramente la hora de que se construyera la casa del Señor, y Salomón se entregó de todo corazón a la tarea. \n\nEl período fue uno de descanso y paz, tanto dentro de la nación de Israel como entre las naciones circundantes. También fue un tiempo de prosperidad, lo que permitió a Salomón asegurar los materiales necesarios. El pueblo estaba capacitado y dispuesto a construir. El relato de la construcción del Templo de Salomón también se encuentra en 2 Crón. 3 y 4, pero el registro en Reyes es más antiguo y más completo. El relato paralelo en 2 Crónicas coincide con él en todos los detalles esenciales. Aunque este relato es significativamente más breve que el de Reyes, contiene algunos detalles complementarios.',
+    date: "966-959 a.C.",
+    scriptures: ["11|6:1"],
+    related: [
+      {
+        slug: "hiram-offers-skill-and-resources-to-solomon",
+        title: "Hiram ofrece habilidades y recursos a Salomón",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Salomón y el plan para el Templo, como en 1 Reyes 6, ilustración de una tarjeta bíblica publicada por la Providence Lithograph Company 1896",
+        file: "Solomon_and_the_Plan_for_the_Temple.jpg",
+      },
+      {
+        caption: "Construcción del templo bajo Salomón.",
+        file: "GoodSalt-prcas4419_8-6-2013 9-25-48 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "860",
+    slug: "menan",
+    title: "Menan",
+    period: "6",
+    description:
+      "Es hijo de Matatá o Matatías, y padre de Melea en la genealogía de Jesucristo según Lucas.",
+    article: "",
+    date: "937-857 a.C.",
+    scriptures: ["42|3:31"],
+    related: [
+      {
+        slug: "mattatha",
+        title: "Matatá",
+      },
+      {
+        slug: "melea",
+        title: "Melea",
+      },
+    ],
+    images: [
+      {
+        caption: "Antepasado de Jesús",
+        file: "AncestorOfJesusColor.jpg",
+      },
+    ],
+  },
+  {
+    id: "861",
+    slug: "solomon-completes-his-palace",
+    title: "Salomón completa su palacio",
+    period: "6",
+    description:
+      'La Biblia registra que Salomón "tardó trece años en construir su propia casa, así que terminó toda su casa" (1 Reyes 7:1). Luego enumera otros edificios que también construyó. Su "casa" podría denominarse mejor "palacio".',
+    article:
+      'En 1 Reyes 7 encontramos una breve descripción de las actividades de construcción de Salomón en relación con su propio palacio. La palabra "casa" como se usa aquí no significa una sola estructura, sino el complejo de edificios conectados con el palacio. Había muchos de estos, cuya naturaleza o propósito exacto es en gran parte una cuestión de conjetura. \n\nSin duda, incluían la mayoría de las estructuras generalmente conectadas con un palacio real, como salones de estado, salas de juicio, la residencia real, residencia para la reina, armería, etc. Estos debieron constituir un gran grupo de edificios encerrados en un gran patio. Todas las estructuras de la época de Salomón se construyeron en las dos colinas entre los valles de Cedrón y Tiropeón: el monte Moriah y el monte Sion; de hecho, no había edificios al oeste del valle de Tiropeón hasta los reyes posteriores.\n\nLa Biblia dice que tardó 13 años en completar su trabajo. Los 13 años deben contarse desde el final de los 7 años cuando se completó el Templo, en el año 11 del reinado de Salomón (cap. 6:38). Todo su período de construcción ocupó así 20 años (1 Reyes 9:10 2 Crón. 8:1), desde el cuarto año de su reinado hasta el 24. La construcción del Templo tomó solo siete años porque era una sola estructura, y un largo período de preparación había precedido a la construcción real (1 Crón. 22:2—4). Sin embargo, el complejo del palacio consistía en una gran variedad de edificios para los cuales no se pudo hacer una preparación previa en gran medida.',
+    date: "946 a.C.",
+    scriptures: ["11|7:1-12"],
+    related: [
+      {
+        slug: "solomon",
+        title: "Salomón",
+      },
+      {
+        slug: "hiram-inspects-his-payment-in-cities",
+        title: "Hiram inspecciona su pago en ciudades",
+      },
+    ],
+    images: [
+      {
+        caption: "Construcción del palacio",
+        file: "_GoodSalt-prcas0410_8-26-2013 4-18-24 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "862",
+    slug: "lord-speaks-to-solomon-2nd-time",
+    title: "El Señor habla a Salomón por segunda vez",
+    period: "6",
+    description:
+      "La segunda aparición de Dios a Salomón, como apareció en Gabaón, es para hablar de las bendiciones prometidas a David. Estas promesas son condicionales a la obediencia al Señor. El templo mismo perduraría si Israel permanecía fiel.",
+    article:
+      'El trabajo en el Templo comenzó en el cuarto año de Salomón (cap. 6:1), y se completó 7 años después, en su año 11 (cap. 6:38). La construcción del palacio tomó otros 13 años (cap. 7:1). Así, el programa de construcción combinado de Salomón del Templo y el palacio tomó 20 años (cap. 9:10 2 Crón. 8:1), completándose en el año 24 de su reinado. Surge una pregunta sobre el significado exacto de las palabras, "cuando Salomón hubo terminado". ¿Significa esto que no fue hasta el final del período de 20 años de construcción que el Señor se apareció a Salomón con el mensaje de que su oración ofrecida en la dedicación del Templo había sido escuchada? Si es así, ¿cuándo fue dedicado el Templo, poco después de su finalización, o después de una espera de 13 años, hasta que se completó todo el programa de construcción? \n\nSi el Templo fue dedicado poco después de su finalización, ¿esperaría el Señor 13 años antes de decirle a Salomón que su oración había sido respondida? ¿O podría ser que la dedicación no tuvo lugar hasta 13 años después de la finalización del Templo? Estas son preguntas que, debido a la brevedad de la narrativa, no podemos responder con absoluta certeza. Sin embargo, parece que la respuesta a la oración de Salomón llegó poco después de la pronunciación de esa oración.\n\nDios se había aparecido por primera vez a Salomón en un sueño por la noche, dado en Gabaón al principio de su reinado (cap. 3:4—15). Nuevamente se le dio una visión nocturna, pero este mensaje presenta un contraste con el mensaje de la visión anterior. Entonces, el tema predominante fue uno de promesa y aliento (cap. 3:12—14 6:12, 13) ahora nuevamente había promesas y aliento, pero también había advertencias solemnes de los tristes resultados que traería la transgresión. \n\nA Salomón se le dio la seguridad de que sus palabras de súplica sincera habían sido escuchadas. Había hecho todo lo que estaba en su poder para animar al pueblo a ser fiel al Señor y a Sus mandamientos. Dios honró su espíritu y su propósito, y ahora le dio una nueva seguridad del favor divino. Cuántas veces el Señor da a Sus hijos expresiones renovadas de confianza, nuevas apariciones desde lo alto, elogios por los servicios de días anteriores y promesas de favor y bendición para los días venideros.\n\nTodas las promesas de bendición de Dios son condicionales a la obediencia. No podría ser de otra manera. Las leyes de la naturaleza, así como las que gobiernan la conducta moral, son las leyes de Dios, y quien viola esas leyes peca contra sí mismo. Todas las leyes de Dios se dan para el beneficio del hombre y del mundo en el que vive. Cuando estas leyes se violan, el resultado inevitable es el dolor, la enfermedad, el sufrimiento, el pesar y la muerte. Esto es cierto tanto para el individuo como para la nación, para la comunidad como para el mundo. El camino de la obediencia es el único camino de paz y prosperidad, de vida y salud. \n\nEl bienestar de la sociedad, la paz de la nación, la esperanza del mundo, todo requiere que los hombres aprendan la sabiduría y el valor práctico de la obediencia a cada mandamiento de Dios. Cuando Israel todavía era próspero y Salomón todavía era joven, Dios deseaba dejar claro que la transgresión no traería alegría sino tristeza, no bendición sino desastre y muerte.',
+    date: "959 a.C.",
+    scriptures: ["11|9:1-9"],
+    related: [
+      {
+        slug: "solomon",
+        title: "Salomón",
+      },
+    ],
+    images: [
+      {
+        caption: "Salomón orando.",
+        file: "GoodSalt-lwjas0332_8-6-2013 9-42-23 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "863",
+    slug: "hiram-inspects-his-payment-in-cities",
+    title: "Hiram inspecciona su pago en ciudades",
+    period: "6",
+    description:
+      "Hiram recibe 20 ciudades en Galilea como pago de Salomón por todo el trabajo en el templo y el palacio. Hiram no está satisfecho, probablemente esperando tierras más fértiles. Más tarde le da a Salomón 120 talentos de oro, alrededor de 4 1/2 toneladas.",
+    article:
+      "Salomón está construyendo durante 20 años. Estos 20 años comienzan con el cuarto año de Salomón (cap. 6:1), cuando comenzó a construir el Templo. Incluyen los 7 años empleados en el trabajo del Templo (cap. 6:38) y los 13 años durante los cuales se construyó su propia casa (cap. 7:1). El oro que Hiram le dio a Salomón puede no haber sido proporcionado en el momento en que se construyó el Templo, pero probablemente fueron los 120 talentos mencionados en el v. 14. Después de 20 años de construcción, el tesoro de Salomón estaba sin duda considerablemente agotado, y como resultado, Salomón recurrió a Hiram, quien puede haber accedido a proporcionar el oro a cambio de ciertas ciudades de Salomón. \n\nSalomón le da a Hiram 20 ciudades en la tierra de Galilea. Estas ciudades no se mencionan en el pacto hecho entre Salomón y Hiram, por el cual Hiram debía proporcionar madera y mano de obra para las actividades relacionadas con la construcción del Templo, y a cambio recibiría ciertas provisiones de alimentos (1 Reyes 5:5—11). Tampoco se dice nada en el acuerdo original sobre que Hiram proporcionara oro a Salomón. Según las estrictas disposiciones del código mosaico, Salomón no tenía derecho a regalar estas ciudades (Lev. 25:23). Pero tales son las necesidades de una política mundana que las disposiciones técnicas de la ley se dejan de lado fácilmente. \n\nLa región estaba al noroeste del mar de Galilea. La parte occidental de este territorio estaría cerca de las fronteras de Tiro, y por lo tanto se ajustaría a los propósitos tanto de Hiram como de Salomón. Parece que en el momento en que se hizo el pacto, estas ciudades estaban pobladas por habitantes nativos de la tierra en lugar de israelitas, ya que fue 20 años después de que estas ciudades fueron devueltas a Salomón que hombres de Israel fueron llevados por su rey a vivir allí (2 Crón. 8:2). Hiram no estaba satisfecho con las ciudades. Hiram probablemente había puesto sus ojos en la bahía de Accho, o en algunas tierras ricas en granos, y se sintió decepcionado cuando recibió un grupo de ciudades interiores inferiores. \n\nParece que Hiram rechazó el regalo de Salomón y nunca tomó posesión de las ciudades. El ingreso anual de Salomón era de 666 talentos de oro (cap. 10:14). Así, la suma recibida de Hiram sería aproximadamente una sexta parte del ingreso anual de Salomón. Es imposible fijar el valor monetario exacto del talento. Una estimación haría que el peso del talento fuera aproximadamente 34.2 kg., o 75.4 lb.",
+    date: "946 a.C.",
+    scriptures: ["11|9:10-14"],
+    related: [
+      {
+        slug: "solomon-completes-his-palace",
+        title: "Salomón completa su palacio",
+      },
+    ],
+    images: [
+      {
+        caption: "Mar de Galilea, extremo norte desde Tiberíades",
+        file: "Sea of Galilee northern end from Tiberias, tb041003221_4-30-2013 11-55-28 AM.jpg",
+      },
+      {
+        caption: "Mar de Galilea, costa norte",
+        file: "Sea of Galilee northern shore, tb040903268_4-30-2013 11-55-28 AM.jpg",
+      },
+      {
+        caption: "Tiro, vista a lo largo del lado sur del istmo",
+        file: "Tyre, view along southern side of isthmus, adr090508586_4-30-2013 11-55-28 AM.jpg",
+      },
+      {
+        caption: "El ingreso anual de Salomón era de 666 talentos de oro",
+        file: "Gold and Jewelry_4-30-2013 11-55-28 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "865",
+    slug: "solomon-works-on-millo-and-building-up-cities",
+    title: "Salomón fortifica ciudades",
+    period: "6",
+    description:
+      'Salomón entra en una parte gloriosa de su reinado cuando construye la fortificación de Jerusalén y también muchas ciudades. La palabra "Millo" significa relleno y puede haber referido a un área entre las colinas de Sion y Moriah o puede haber sido una ciudadela.',
+    article:
+      'En 1 Reyes 9:15—28 consiste en breves notas históricas y explicativas, pero contiene algunos elementos de gran valor. La leva aquí mencionada se mencionó en el cap. 5:13, 14. Este reclutamiento de mano de obra fue primero para la construcción del Templo y luego para el palacio y otras empresas. La referencia al trabajo en el "Millo" se cree que es una ciudadela, terraza o fortificación en Jerusalén. Dado que David habitaba en la "fortaleza" o "castillo" de la antigua ciudad jebusea capturada por él, más tarde conocida como la "ciudad de David" (2 Sam. 5:7, 9, 1 Crón. 11:5, 7), Millo probablemente era un lugar fuerte en la ciudad cuando fue tomada por David. Probablemente estaba situado en el extremo norte de la ciudad. David (2 Sam. 5:9 1 Crón. 11:8) y Salomón (1 Reyes 9:24 11:27) agregaron a la fortificación temprana, y más tarde Ezequías hizo trabajos adicionales (2 Crón. 32:5). Otros han explicado que Millo era el relleno de tierra a lo largo de la ladera oriental al sur de Moriah.\n\nDavid fortaleció y extendió en gran medida las murallas de la antigua ciudad jebusea, construyendo "alrededor desde Millo hacia adentro" (2 Sam. 5:9). Salomón hizo más reparaciones y adiciones, cerrando ciertos puntos débiles de defensa en la Ciudad de David (1 Reyes 11:27). Los reyes posteriores continuaron haciendo reparaciones y adiciones, hasta que el muro finalmente corría cerca del valle de Hinom al sur (Jer. 19:2), incluyendo un muro doble al sureste cerca del jardín del rey (2 Reyes 25:4), un muro fuera de la Ciudad de David al este, "al lado oeste de Gihón, en el valle" y que iba "alrededor de Ofel" y se elevaba "a una altura muy grande" (2 Crón. 33:14). \n\nLa puerta en la esquina noroeste era una puerta importante llamada "la puerta de la esquina" (Jer. 31:38). Era una sección de este muro norte, "desde la puerta de Efraín hasta la puerta de la esquina, cuatrocientos codos" (2 Reyes 14:13), la que fue derribada por Joás de Israel durante el reinado de Amasías. Uzías reparó y fortaleció el muro, construyendo torres en "la puerta de la esquina, y en la puerta del valle, y en la esquina del muro, y las fortificó" (2 Crón. 26:9). El resto del capítulo enumera otros grandes logros de Salomón.',
+    date: "945-931 a.C.",
+    scriptures: ["11|9:15-28"],
+    related: [
+      {
+        slug: "solomon",
+        title: "Salomón",
+      },
+    ],
+    images: [
+      {
+        caption: "Imagen de la puerta salomónica en Gezer",
+        file: "Gezer Solomonic gate from northeast, tb040607306_4-30-2013 11-33-17 AM.jpg",
+      },
+      {
+        caption: "Imagen de la puerta salomónica en Gezer vista desde el norte",
+        file: "Gezer Solomonic gate from north, tb040607304_4-30-2013 11-33-17 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "866",
+    slug: "arrival-of-queen-of-sheba",
+    title: "Llegada de la Reina de Saba",
+    period: "6",
+    description:
+      "La Reina de Saba del antiguo reino de Sabea escucha sobre la gran riqueza y sabiduría de Salomón. Ella le hace una visita y lo pone a prueba con preguntas difíciles. Ve toda su fama y fortuna y se marcha muy impresionada.",
+    article:
+      'En 1 Reyes 10 leemos sobre la visita de la Reina de Saba para ver el glorioso reino de Salomón. Ha habido considerables diferencias de opinión sobre el país donde reinaba esta reina. Tanto Arabia como Etiopía tienen reclamos sobre tal nombre y tal reina. La expresión "reina del sur", aplicada a la reina de Saba en Mateo 12:42, se aplicaría igualmente bien a una reina de Arabia o de Etiopía. Los resultados de recientes investigaciones arqueológicas en el sur de Arabia tienden a identificar a la reina con este territorio y su capital con Marib, en Yemen. La Saba arábiga era un gran país de especias, y muchos se inclinan a creer que esta fue la Saba cuya reina visitó a Salomón.\n\nElla llegó con una considerable carga de regalos para el rey. Las especias de Arabia han sido famosas durante mucho tiempo. En Ezequiel 27:22, Saba es mencionada como comerciante con Tiro en especias, piedras preciosas y oro. La Biblia dice que ella tenía muchas preguntas para Salomón. Sin duda preguntas que tenían que ver con diversos campos del conocimiento. A estas preguntas Salomón dio respuestas útiles e inteligentes, que dirigieron la mente de la reina a la verdadera fuente de su sabiduría y prosperidad.\n\nDespués de que la reina de Saba hubiera presenciado la sabiduría y las obras de Salomón, respondió, no con palabras que mostraran una mera apreciación formal por la hospitalidad que se le había concedido, sino con palabras que revelaban que su corazón había sido profundamente conmovido. En su respuesta, ella tocó ligeramente toda la magnificencia externa y evidencia de prosperidad mundana y puso el énfasis principal en exaltar al Dios de Salomón, quien le había dado su sabiduría y prosperidad, y su fama, que había recorrido todo el mundo. En lugar de exaltar al agente humano, ella había sido correctamente llevada a dar gloria a Dios.\n\nSu visita puede haber llevado a su conversión. Hay razones para creer que la reina estará entre los salvados en el reino de Dios (Mateo 12:24). Dios pretendía que muchas conversiones como esta resultaran de Israel desempeñando su papel entre los pueblos de la tierra. De aquí y allá entre las naciones, los hombres debían ir a Israel y allí familiarizarse con el Dios de Israel. Por tales medios, la luz debía salir entre todas las naciones.',
+    date: "945 a.C.",
+    scriptures: ["11|10:1-13", "14|9:1-12"],
+    related: [
+      {
+        slug: "solomon",
+        title: "Salomón",
+      },
+    ],
+    images: [
+      {
+        caption: "Salomón recibiendo a la Reina de Saba.",
+        file: "GoodSalt-prcas1821_8-6-2013 10-47-46 AM.jpg",
+      },
+      {
+        caption: "Salomón y la Reina de Saba por Giovanni Demin siglo XIX.",
+        file: "Sheba_demin.jpg",
+      },
+    ],
+  },
+  {
+    id: "868",
+    slug: "abijah",
+    title: "Abías",
+    period: "7",
+    description:
+      'El nombre es más a menudo Abías, que significa "Yahvé es padre". El hijo de Roboam, gobierna Judá durante 3 años. Es descendiente de Absalón y es un rey malvado como su padre. Sale victorioso en una batalla contra Israel, confiando en el Señor.',
+    article:
+      'Abías, nombre que significa "Yahvé es padre".\n\nEl segundo rey de Judá después de Salomón, llamado Abiam por el autor de Reyes. Era hijo de Roboam y gobernó Judá durante 3 años (c. 913-c. 911 a.C.). Por parte de su madre era descendiente de Absalón (1 Reyes 15:2). Siguió a su padre en la maldad, y también continuó la guerra con Jeroboam I (vs 3, 6, 7). En cierta batalla, porque "confió en el Señor Dios", pudo infligir una aplastante derrota a Israel (2 Crónicas 13:3-20). Tuvo 14 esposas, 22 hijos y 16 hijas (v 21). Su biografía fue escrita por el profeta Iddo (v 22).\n\nLa aparente discrepancia en la maternidad de Abías (1 Reyes 15:2 cf. 2 Crónicas 13:2) generalmente se explica de la siguiente manera: "Maaca, la hija de Abisalom" o Absalón, era en realidad la nieta, no la hija, de Absalón. La palabra hebrea para hija puede referirse a cualquier descendiente femenina, sin importar cuán remota sea.',
+    date: "913-911 a.C.",
+    scriptures: ["11|15:1-2", "11|15:8"],
+    related: [
+      {
+        slug: "rehoboam",
+        title: "Roboam",
+      },
+      {
+        slug: "asa",
+        title: "Asa",
+      },
+    ],
+    images: [
+      {
+        caption: "Ahías rasgando su vestido.",
+        file: "GoodSalt-stdas0550_8-6-2013 10-05-53 AM.jpg",
+      },
+      {
+        caption: "Icono de Abías publicado por Guillaume Rouille en 1553.",
+        file: "Abijam_4-30-2013 10-45-21 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "869",
+    slug: "asa",
+    title: "Asa",
+    period: "6",
+    description:
+      'Nombre significa "médico" o "Dios ha sanado". Es hijo de Abías y el tercer rey de Judá. Es un buen rey y busca establecer la verdadera adoración a Dios y eliminar la idolatría y la inmoralidad. Reina durante 41 años y le sucede su hijo.',
+    article:
+      'Asa, nombre que posiblemente significa "Mirto", "médico" o "(Yahvé) ha sanado". El tercer rey de Judá, el reino del sur, que reinó durante 41 años (c. 911-c. 869 a.C.). Fue un buen rey e hizo grandes esfuerzos para purificar la religión de su pueblo. Removió a su "madre" (en realidad abuela), Maaca, la hija de Absalón, del poderoso cargo de reina madre, porque ella había hecho una imagen para Asera. Asa destruyó no solo esta imagen sino también los ídolos de sus predecesores y todos los altares extraños e imágenes del sol. Limpió el país de sus prostitutos cultuales masculinos (sodomitas) y de muchos lugares altos. El pueblo continuó usando los lugares altos restantes para la adoración (1 Reyes 15:9-14; 2 Crónicas 14:1-5; 15:16, 17).\n\nLos primeros 10 años de su reinado fueron pacíficos y se utilizaron para fortalecer las fortificaciones del país y el ejército (2 Crónicas 14:1, 6-8). Por lo tanto, estaba preparado y pudo repeler la invasión de Zera y su gran hueste de africanos (vs 9-15). En el año 15 de su reinado, con la ayuda del profeta Azarías, el hijo de Oded, llevó a cabo una gran reforma religiosa. Volvió a dedicar el altar del holocausto en el Templo e hizo que el pueblo renovara su pacto con Dios (cap. 15:1-15). En el año 36 (probablemente el año 36 después de la división del reino), Baasa de Israel invadió Benjamín y comenzó a fortificar Ramá en el camino principal de Jerusalén hacia el norte, bloqueando así la salida norte de Judá.\n\nSintiendo que no era lo suficientemente fuerte para enfrentar la amenaza de Baasa por la fuerza, Asa ofreció a Ben-hadad I de Damasco un pesado tributo como incentivo para atacar a Israel. Ben-hadad aceptó la oferta y obligó a Baasa a retirarse de Ramá. Asa tomó entonces el material de construcción dejado por Baasa en Ramá y con él construyó Geba y Mizpa (1 Reyes 15:16-22; 2 Crónicas 16:1-6). El acto de Asa de buscar ayuda extranjera desagradó a Dios, quien envió a su profeta Hanani para reprender al rey. Asa rechazó este mensaje y encarceló a Hanani. También maltrató a otros súbditos bien intencionados durante la última parte de su reinado (2 Crónicas 16:7-10). Los últimos años de su reinado estuvieron marcados por un severo sufrimiento debido a una enfermedad en sus pies. Durante este tiempo, aparentemente dejó que su hijo Josafat actuara como corregente y se encargara de los deberes administrativos. Asa fue enterrado en una tumba que había preparado para sí mismo en Jerusalén (1 Reyes 15:23; 2 Crónicas 16:12-14).',
+    date: "936-870 a.C.",
+    scriptures: ["11|15:9-10", "11|15:24"],
+    related: [
+      {
+        slug: "abijah",
+        title: "Abías",
+      },
+      {
+        slug: "jehoshaphat",
+        title: "Josafat",
+      },
+      {
+        slug: "palestine-invaded-by-zerah",
+        title: "Palestina Invadida por Zera",
+      },
+      {
+        slug: "asa-contracts-disease-in-his-feet",
+        title: "Asa Contrae Enfermedad en sus Pies",
+      },
+    ],
+    images: [
+      {
+        caption: "El joven Rey Asa",
+        file: "GoodSalt-stdas0016_8-6-2013 10-53-13 AM.jpg",
+      },
+      {
+        caption:
+          "Asa destruye los ídolos y prohíbe la adoración en santuarios locales en 1372 por un ilustrador desconocido de la 'Biblia Historiale' de Petrus Comestor",
+        file: "Asa_destroys_the_idols.jpg",
+      },
+    ],
+  },
+  {
+    id: "870",
+    slug: "benhadad-i",
+    title: "Ben-hadad I",
+    period: "6",
+    description:
+      'Nombre significa "hijo del dios Hadad". Es hijo de Tabrimón y aliado de Baasa, rey de Israel. En una lucha entre Judá e Israel, Asa lo induce a hacer una alianza contra Israel.',
+    article:
+      'Ben-hadad, nombre significa "hijo de (el dios) Hadad". Ben-hadad I, hijo de Tabrimón, nieto de Hezión (1 Reyes 15:18) y bisnieto de Rezón (cap. 11:23). Reinó desde c. 900 hasta c. 870 a.C. Era aliado de Baasa, rey de Israel, pero en la lucha entre Judá e Israel fue inducido por Asa, rey de Judá, a romper su alianza y atacar a Israel (1 Reyes 15:16-21; 2 Crónicas 16:1-5). Indujo a Omri a admitir empresas arameas en Samaria (ver 1 Reyes 20:34).',
+    date: "936-870 a.C.",
+    scriptures: ["11|15:16-21"],
+    related: [
+      {
+        slug: "benhadad-ii",
+        title: "Ben-hadad II",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Estela de Baal de Hadad, el dios de la tormenta y la lluvia de donde se originó el nombre Ben-hadad. La estela data aproximadamente del 1499 - 1299 a.C. y se encuentra en el Museo del Louvre en París.",
+        file: "Hadad_4-30-2013 10-39-18 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "872",
+    slug: "nadab",
+    title: "Nadab",
+    period: "6",
+    description:
+      'Nombre significa "generoso". Es hijo de Jeroboam I y el segundo rey de Israel. Reina por menos de dos años y es un rey malvado como su padre. Mientras ataca Gebetón es asesinado por Baasa, quien luego toma su trono.',
+    article:
+      'Nadab, nombre significa "generoso". Hijo y sucesor de Jeroboam I, y el segundo rey del reino del norte de Israel. Reinó por menos de 2 años (c. 910-909 a.C.) y siguió a su padre en todos sus malos caminos (1 Reyes 15:25, 26). Mientras sitiaba Gebetón, que pertenecía a los filisteos en ese momento, fue asesinado por Baasa, quien luego usurpó el trono para sí mismo y posteriormente exterminó a todos los parientes de la casa de Jeroboam (vs 27-29). Esta masacre cumplió la profecía de Ahías concerniente a Jeroboam (cap. 14:10, 11).',
+    date: "933-909 a.C.",
+    scriptures: ["11|15:25", "11|15:28"],
+    related: [
+      {
+        slug: "jeroboam-i",
+        title: "Jeroboam I",
+      },
+    ],
+    images: [
+      {
+        caption: "Ilustración de Nadab en 1553 publicada por Guillaume Rouille",
+        file: "Nadab_of_Israel.jpg",
+      },
+    ],
+  },
+  {
+    id: "873",
+    slug: "baasha",
+    title: "Baasa",
+    period: "6",
+    description:
+      'Nombre significa "valentía". Es hijo de Ahías y el tercer rey de Israel. La ciudad de Tirsa es su capital y es enterrado allí después de reinar 24 años. Es un rey malvado. Debido a la idolatría, Jehú predice que su casa será destruida.',
+    article:
+      "Baasa. Hijo de Ahías, de la tribu de Isacar, el tercer rey del reino del norte de Israel. Adquirió el trono matando al rey Nadab durante un asedio a la ciudad filistea de Gebetón (1 Reyes 15:27, 28). Uno de los primeros actos de su reinado fue exterminar a todos los parientes restantes de Jeroboam I, cumpliendo así la predicción del profeta Ahías (vs 29, 30; cap. 14:10, 11). Los 24 años del reinado de Baasa (c. 909-c. 886 a.C.) estuvieron marcados por la maldad (1 Reyes 15:34) y por la guerra continua con el reino del sur (v 32). Su intento de construir Ramá como fortaleza militar dentro de la frontera de Judá fracasó cuando Asa de Judá contrató a Ben-hadad I de Damasco contra él (1 Reyes 15:16-21; 2 Crónicas 16:1-6). El profeta Jehú predijo la exterminación de la dinastía de Baasa (1 Reyes 16:1-4).",
+    date: "933-886 a.C.",
+    scriptures: ["11|15:27", "11|16:6"],
+    related: [
+      {
+        slug: "ahijah",
+        title: "Ahías",
+      },
+      {
+        slug: "elah",
+        title: "Ela",
+      },
+    ],
+    images: [
+      {
+        caption: "Ilustración de Baasa en 1553 publicada por Guillaume Rouille",
+        file: "Baasha_of_Israel_8-26-2013 4-51-17 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "875",
+    slug: "division-of-israel",
+    title: "División de Israel",
+    period: "7",
+    description:
+      "Cuando el rey Roboam no escuchará ni aliviará los impuestos del pueblo, las tribus del norte de Israel se rebelan y cortan lazos con Judá, las tribus del sur.",
+    article: "",
+    date: "931 a.C.",
+    scriptures: ["11|12:16-20", "11|12:16-20"],
+    related: [],
+    images: [
+      {
+        caption:
+          "El Reino Unido de Salomón se divide, con Jeroboam gobernando sobre el Reino del Norte de Israel. Esta imagen en el dominio público tomada de la publicación de la Sociedad Bíblica Americana de 1888.",
+        file: "The_divided_kingdom_4-30-2013 10-26-47 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "876",
+    slug: "melea",
+    title: "Melea",
+    period: "7",
+    description:
+      'Nombre significa "plenitud". Es hijo de Menán y un antepasado de Jesucristo mencionado en la genealogía de Lucas. No aparece en ningún otro lugar de la Biblia.',
+    article: "",
+    date: "907-827 a.C.",
+    scriptures: ["42|3:31"],
+    related: [
+      {
+        slug: "menan",
+        title: "Menán",
+      },
+      {
+        slug: "eliakim-son-of-melea",
+        title: "Eliaquim",
+      },
+    ],
+    images: [
+      {
+        caption: "Antepasado de Jesús",
+        file: "AncestorOfJesusColor.jpg",
+      },
+    ],
+  },
+  {
+    id: "877",
+    slug: "rehoboam-forsakes-righteousness",
+    title: "Roboam Abandona la Justicia",
+    period: "7",
+    description:
+      'Roboam reina en Judá durante 17 años, en Jerusalén. Durante este tiempo "Judá hizo lo malo ante los ojos del Señor" (1 Reyes 14:22). En 2 Crónicas 12:1 dice que "abandonó la ley del Señor".',
+    article:
+      'Durante el reinado de Roboam, Judá hizo el mal. El motivo principal en los registros de Reyes parece ser revelar la parte que cada individuo jugó en la historia religiosa del reino. En los casos de ciertos reyes, la información es que fue el gobernante quien hizo el mal (2 Reyes 17:2; 21:2, 20; 23:32, 37; 24:9, 19), pero en el caso de Roboam, el registro establece que "Judá hizo el mal". La apostasía en Judá fue evidentemente la cosecha de la semilla mortal sembrada por el mal ejemplo de Salomón, bajo cuya idolatría habían crecido los jóvenes de la nación. Roboam era débil y vacilante, y no tomó la iniciativa para restringir al pueblo cuando hacían el mal.\n\nHubo repetidos mandatos de destruir los pilares erigidos por los cananeos, así como de cortar y quemar sus bosques (Éx. 23:24; 34:13; Deut. 7:5; 12:3; ver en Deut. 16:22). Los pilares erigidos por Jacob (Gén. 28:18; 31:13; 35:14) no eran objetos de adoración (ver en Gén. 28:18). También había prostitutos masculinos del templo. Llevaban a cabo su abominable comercio bajo una sanción religiosa. Fue por la práctica de tales abominaciones que los antiguos habitantes de la tierra debían ser expulsados, y ahora el pueblo de Judá los estaba rivalizando en maldad (ver 1 Reyes 15:12; 2 Reyes 23:7).',
+    date: "928 a.C.",
+    scriptures: ["11|14:22-24", "11|14:22-24", "14|12:1-2"],
+    related: [
+      {
+        slug: "rehoboam",
+        title: "Roboam",
+      },
+    ],
+    images: [
+      {
+        caption: "Roboam",
+        file: "GoodSalt-prcas2642_8-6-2013 11-10-31 AM.jpg",
+      },
+      {
+        caption:
+          "Hubo repetidos mandatos de destruir los pilares erigidos por los cananeos, así como de cortar y quemar sus bosques.",
+        file: "Pillar_4-30-2013 10-22-03 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "878",
+    slug: "solomons-temple-sacked-by-shishak",
+    title: "Templo de Salomón Saqueado por Sisac",
+    period: "7",
+    description:
+      "Con el reino de Roboam dividido, Sisac I, el rey de Egipto invade Palestina y se lleva los tesoros de Jerusalén acumulados durante el tiempo de David y Salomón. Deja registros de sus hazañas en las paredes del templo de Karnak.",
+    article:
+      "Sisac. Conocido en la historia egipcia como Sheshonk I. Fue el fundador de la Dinastía Veintidós de Egipto. Realizó su famosa incursión contra Judá en el quinto año de Roboam. Este registro está notablemente confirmado por la célebre inscripción en Karnak, que enumera las conquistas de Sheshonk y lista las ciudades capturadas en esa campaña. Entre los lugares que pueden identificarse hay muchos dentro de las fronteras de Israel, principalmente en la llanura de Esdraelón, como Taanac, Meguido, Bet-sán, Sunem y otros. Socoh y Arad son las únicas ciudades bien conocidas en Judá cuyos nombres se han leído.\n\nAlgunos han pensado que en el momento de este ataque, las ciudades antes mencionadas en Israel habían sido capturadas y estaban siendo ocupadas por Roboam, con el resultado de que Jeroboam invitó a su antiguo protector a efectuar un rescate. Es más probable que Sheshonk tuviera ciertos agravios contra Jeroboam, quien posiblemente no cumplió las promesas hechas antes de convertirse en rey sobre Israel. El fragmento de una estela de victoria encontrada en la excavación de Meguido indica que Sheshonk trató a esa ciudad como conquistada y no como liberada.\n\nHay un toque de patetismo en este saqueo de los tesoros del Templo, que David y Salomón habían reunido laboriosamente y que eran la gloria de todo Israel. Pero esta triste experiencia fue solo un anticipo de días más tristes por venir. El hecho de que los escudos de bronce fueran entregados al jefe de la guardia indica que los escudos de oro habían sido para uso de la guardia en ocasiones de Estado.",
+    date: "926 a.C.",
+    scriptures: ["14|12:1-12", "11|14:25-28"],
+    related: [
+      {
+        slug: "rehoboam",
+        title: "Roboam",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "El relieve de la campaña de Sisac I a Canaán lista en las paredes exteriores del sur del templo de Karnak, al norte de Luxor, Egipto.",
+        file: "Shishak_4-18-2013 11-40-09 AM.jpg",
+      },
+      {
+        caption: "El Templo.",
+        file: "_GoodSalt-prcas4559_8-26-2013 5-14-15 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "880",
+    slug: "prophet-from-judah-curses-jeroboams-altar-at-bethel",
+    title: "Profeta Desconocido Maldice el Altar de Jeroboam",
+    period: "7",
+    description:
+      "Jeroboam establece nuevos centros de adoración en el dividido reino del norte en Dan y Betel y crea dos becerros de oro para que la gente los adore. Un profeta desconocido de Judá condena el altar en Betel y la mano de Jeroboam se seca y el altar se parte.",
+    article:
+      "Jeroboam oficiaba como sacerdote en la dedicación del nuevo altar en Betel, tratando de investirlo con una santidad que ganaría para él el homenaje y respeto del pueblo, Dios no podía permitir que el desafío audaz del rey quedara sin reprensión. Un profeta desconocido de Judá entra en escena.\n\nPara que Jeroboam y el pueblo pudieran quedar impresionados de que el hombre de Dios era un verdadero profeta y que su mensaje de advertencia tenía peso, dio una sorprendente profecía, que se cumpliría inmediatamente. Es peligroso para cualquiera, sea quien sea, levantar su mano contra un hombre enviado con un mensaje solemne de Dios. El brazo extendido fue inmediatamente golpeado, para infundir terror en los corazones tanto del rey como del pueblo, e impresionarlos nuevamente de que tenían ante ellos a un verdadero profeta de Dios.\n\nEl altar también se partió en dos. Esta manifestación de la presencia y poder del Señor era algo que no podía ser exitosamente contradicho. En lugar de quedar persuadidos de la solemnidad del altar y la santidad de su rey sacerdotal, el pueblo ahora se dio cuenta de que Jeroboam estaba actuando en desafío directo al Cielo y atrayendo sobre sí mismo la reprimenda divina.\n\nEl rey había sido humillado. También había sido llevado a darse cuenta de que estaba tratando con un hombre de Dios, quien, bajo las circunstancias, solo podía liberarlo de su aprieto actual. La restauración del brazo tras la sumisión del rey y la oración del profeta estaba diseñada para dar a Jeroboam otra oportunidad de arrepentimiento. Aún no había ido demasiado lejos para que el Señor lo perdonara. Si el rey hubiera estado dispuesto a ir hasta el final, y hubiera pedido una restauración de corazón además de mano, se habría abierto el camino para un retorno de la nación a Dios y una poderosa reforma en toda la tierra de Israel.\n\nLa oferta del rey fue impulsada no por gratitud sino por política. Una aceptación de hospitalidad y recompensa habría implicado a los ojos del pueblo que el profeta condonaba el curso del rey y habría servido para destruir la solemne impresión que había hecho. También habría creado una impresión desfavorable respecto a su carácter y misión. El firme rechazo a recibir la recompensa ofrecida por el rey colocó al profeta en terreno ventajoso e hizo una profunda impresión tanto en el rey como en el pueblo.",
+    date: "930 a.C.",
+    scriptures: ["11|13:1-10"],
+    related: [
+      {
+        slug: "jeroboam-i",
+        title: "Jeroboam I",
+      },
+    ],
+    images: [
+      {
+        caption: "La apostasía de Jeroboam.",
+        file: "_GoodSalt-prcas0875_8-26-2013 5-09-12 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "881",
+    slug: "jeroboam-is-child-dies",
+    title: "Muerte del hijo de Jeroboam I",
+    period: "7",
+    description:
+      "Abías, el hijo de Jeroboam, enferma. El rey envía a su esposa a Silo para consultar al profeta Ahías sobre qué sucederá con el niño. Su esposa se disfraza, pero el profeta sabe que ella viene. Él predice el desastre sobre la casa del rey y el niño muere.",
+    article:
+      'Este evento es seleccionado para mostrar la persistencia de Jeroboam en su camino de maldad y los juicios que caerían sobre él y su casa como resultado. El nombre del hijo, Abías, significa "Jehová es mi padre", y probablemente indica que cuando nació el niño, Jeroboam no tenía intención de abandonar la adoración a Jehová. La coincidencia del nombre con el del hijo de Roboam, Abiam (v. 31), o Abías (2 Crón. 12:16), es interesante. Posiblemente sea más que una coincidencia, ya que los nacimientos de los dos hijos pudieron haber ocurrido aproximadamente al mismo tiempo, cuando Jeroboam gozaba del favor de Salomón.\n\nAnteriormente, Ahías había sido enviado a Jeroboam con las alentadoras palabras de que sería rey, y que si era fiel, el Señor estaría con él y le daría una casa segura (cap. 11:38). Pero Jeroboam no había obedecido los mandamientos del Señor, había pecado gravemente y había llevado a Israel al pecado. En un momento en que el rey buscaba una palabra de esperanza, Dios solo podía darle un mensaje de reprensión. Jeroboam tenía ante sí el ejemplo de la vida descarriada de Salomón. De hecho, había recibido su reino porque había sido quitado al hijo de Salomón, Roboam.\n\nPor lo tanto, Jeroboam se presentaba sin excusa ante Dios y ante todo Israel. Había habido pecadores entre los líderes de Israel antes de los días de Jeroboam, pero ninguno que igualara a Jeroboam en sus graves iniquidades. Jeroboam repudió al Dios que le había dado el reino, sirviendo a ídolos en su lugar. Las advertencias que se le habían dado, las despreció con desprecio. La herencia de Dios había sido puesta en sus manos como un encargo sagrado, pero no fue fiel. El pueblo de Israel fue deliberadamente llevado al pecado, animado a dar la espalda al Señor, que los había liberado de Egipto y les había dado la Tierra Prometida.\n\nTodos los varones de la familia de Jeroboam serían ejecutados, de modo que su casa perecería. Esto lo hizo Baasa (cap. 15:29). La frase utilizada para denotar a los varones era una expresión común de la época, desde los tiempos de David (1 Sam. 25:22, 34), pasando por Baasa (1 Reyes 16:11), hasta Acab (1 Reyes 21:21; 2 Reyes 9:8), y es un término de desprecio aplicado a los varones que están condenados a la destrucción total. El profeta dice que su hijo morirá. Apenas un mensaje para consolar el corazón adolorido de una madre o para un padre que espera ansiosamente la curación de su hijo. La muerte del niño sería para Jeroboam un símbolo del destino de su casa, que, si continuaba en sus malos caminos, sería completamente destruida. Quizás la muerte de este hijo podría tocar tanto el corazón del rey como para llevarlo a la razón y a Dios.',
+    date: "915 AC",
+    scriptures: ["11|14:1-18"],
+    related: [
+      {
+        slug: "jeroboam-i",
+        title: "Jeroboam I",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "La esposa de Jeroboam yendo al profeta Ahías para preguntar sobre su hijo enfermo.",
+        file: "GoodSalt-prcas0704_8-6-2013 11-46-08 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "882",
+    slug: "omri",
+    title: "Omri",
+    period: "6",
+    description:
+      "Después de que Elá es asesinado, Omri, su capitán, es nombrado el sexto rey del reino del norte de Israel y reina durante 12 años. Establece Samaria como capital. Es poderoso pero hace el mal a los ojos de Dios. Su hijo es Acab.",
+    article:
+      'Omri, el sexto rey del reino del norte de Israel (c. 885—c. 874 a.C.) y fundador de una dinastía fuerte que reinó durante aproximadamente 44 años (c. 885—841 a.C.), una quinta parte de la duración del reino. Antes de convertirse en rey, Omri era un comandante del ejército del rey Elá. Estaba luchando contra los filisteos en Gibetón cuando Zimri, un oficial de la caballería, asesinó a Elá y usurpó el trono. Cuando esta noticia llegó al ejército, inmediatamente proclamó a Omri como rey y marchó contra Zimri en Tirsa, la capital. Zimri, reconociendo que no podía mantener el trono contra el ejército de Omri, se suicidó. Su reinado duró solo 7 días (1 Reyes 16:8—10, 15—20). Sin embargo, Omri tuvo que luchar durante más de 4 años contra Tibni, otro contendiente al trono que tenía un considerable seguimiento, antes de convertirse en el único gobernante de Israel.\n\nEl reinado de Omri fue de gran importancia política. Trasladó la capital a Samaria (1 Reyes 16:24), una ubicación estratégicamente mucho mejor que Tirsa. Al seleccionar un sitio completamente deshabitado que no tenía historia ni tradición, Omri demostró mucha sabiduría política e hizo por Israel lo que David había hecho por Judá al seleccionar Jerusalén. Subyugó a Moab, como lo atestigua la *Estela de Moab del rey Mesa. La inscripción dice en parte: "Omri, rey de Israel, había oprimido a Moab durante muchos días, porque Quemos estaba enojado con su tierra. ... Y Omri había ocupado la tierra de Mehedeba, y (Israel) habitó allí sus días y la mitad de los días de su hijo, 40 años". Que la conquista de Moab por Omri fue un negocio rentable se ve por el tributo que Moab pagó a su hijo Acab.\n\nAscendió, probablemente anualmente, a 100,000 corderos y la lana de 100,000 carneros (2 Reyes 3:4). Con sus vecinos fenicios, Omri estableció relaciones cordiales y coronó estas relaciones al casar a su hijo Acab con Jezabel, la hija de Etbaal, rey de Tiro, llamado "rey de los sidonios" en 1 Reyes 16:31, según el uso antiguo. El resultado de esta alianza con los fenicios fue la introducción del culto a Baal y Asera en Israel en una medida previamente desconocida (vs 32, 33).\n\nNo se sabe mucho sobre las relaciones de Omri con los sirios de Damasco, excepto que concedió concesiones económicas a Damasco y permitió que los comerciantes sirios tuvieran bazares en Samaria (1 Reyes 20:34, RSV). Se desconoce si esto fue un acuerdo puramente económico o una concesión después de una derrota militar. No hay evidencia de ningún encuentro con los asirios, pero durante los siguientes 150 años los registros asirios se refieren a Israel como la "tierra de Omri" o la "casa de Omri".\n\nIncluso llaman a Jehú, el exterminador de la dinastía de Omri, un "hijo de Omri". La personalidad de Omri, su éxito político o sus empresas comerciales parecen haberle ganado esta fama a los ojos de sus contemporáneos y generaciones posteriores. En vista de esto, Omri debe ser considerado uno de los reyes más notables de Israel, aunque la Biblia dedica poco espacio a él, señalando que hizo "el mal a los ojos del Señor", incluso peor "que todos los que fueron antes de él" (1 Reyes 16:25, RSV).',
+    date: "940-874 a.C.",
+    scriptures: ["11|16:28"],
+    related: [
+      {
+        slug: "ahab",
+        title: "Acab",
+      },
+      {
+        slug: "omri-builds-samaria",
+        title: "Omri construye Samaria",
+      },
+      {
+        slug: "omri-subdues-moabites",
+        title: "Omri somete a los moabitas",
+      },
+    ],
+    images: [
+      {
+        caption: "Ilustración de Omri en 1553 publicada por Guillaume Rouille",
+        file: "Omri_Rex.jpg",
+      },
+      {
+        caption: "Omri adorando ídolos",
+        file: "_GoodSalt-prcas3256_8-26-2013 4-37-47 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "883",
+    slug: "elah",
+    title: "Elá",
+    period: "7",
+    description:
+      'El nombre significa "Baal ruge". Es el hijo de Baasa y el cuarto rey de Israel en el reino del norte. Es asesinado por Zimri, un comandante de su caballería, en cumplimiento de una profecía de Jehú a Baasa. Reina por no más de un año.',
+    article:
+      'El nombre significa "roble" o "fuerza". Es el hijo de Baasa y el cuarto rey de Israel en el reino del norte. Es asesinado por Zimri, un comandante de su caballería, en cumplimiento de una profecía de Jehú a Baasa. Reina por no más de un año.',
+    date: "912-885 a.C.",
+    scriptures: ["11|16:8", "11|16:12-13"],
+    related: [
+      {
+        slug: "baasha",
+        title: "Baasa",
+      },
+    ],
+    images: [
+      {
+        caption: "Ilustración de Elá en 1553 publicada por Guillaume Rouille",
+        file: "Elah_Rex_8-26-2013 5-17-35 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "887",
+    slug: "jehoshaphat",
+    title: "Josafat",
+    period: "7",
+    description:
+      'El nombre significa "Dios ha juzgado". Es el hijo de Asa y Azuba, el cuarto rey del reino del sur de Judá. Reina 25 años, parcialmente con su padre, y es un rey justo que enseña la Ley. A veces se une con Acab, por lo que es reprendido.',
+    article:
+      'Josafat, nombre que significa "Yahvé ha juzgado". El cuarto rey del reino del sur de Judá, que reinó 25 años (c. 872—c. 848 a.C.). Hay razones para creer que estuvo asociado con su padre Asa en el trono durante los últimos años del reinado de Asa, cuando el monarca mayor fue afectado por una enfermedad en los pies.\n\nEl hijo de Josafat, Joram, fue corregente con su padre hacia el final del reinado de Josafat (2 Reyes 8:16 cf. cap. 1:17 2 Crónicas 20:31). El reinado único de Josafat duró solo unos 17 años. Se describe como un buen rey que no sirvió a dioses extranjeros, aunque muchos de sus súbditos todavía adoraban en lugares altos que no habían sido eliminados (1 Reyes 22:43 2 Crónicas 17:3). En su tercer año envió príncipes, levitas y sacerdotes por todo el país de Judá para enseñar al pueblo los principios de la Ley de Dios (2 Crónicas 17:7—9). Dios lo bendijo por estas cosas. Pudo hacer la paz con Israel y también ganar el respeto y el favor de las naciones circundantes, algunas de las cuales le enviaron regalos (1 Reyes 22:44 2 Crónicas 17:11). Fue lamentable que conectara su casa con la de Omri de Israel, al tomar a Atalía, la hija idólatra de Acab, como esposa para su hijo (2 Reyes 8:18).\n\nMientras visitaba a Acab después de la batalla de Qarqar en 853 a.C., Josafat fue inducido por el rey de Israel a acompañarlo en una campaña para recuperar Ramot de Galaad de los sirios. La campaña no tuvo éxito y en la batalla resultante Acab fue herido de muerte, pero Josafat escapó (1 Reyes 22:1—38 2 Crónicas 18:1—34). La fraternización de Josafat con el malvado rey de Israel fue severamente reprendida por el profeta Jehú, hijo de Hanani (2 Crónicas 19:1, 2). Al regresar del norte, Josafat continuó las reformas religiosas y judiciales iniciadas por su padre (1 Reyes 22:46 2 Crónicas 17:6). También instituyó un cuerpo judicial en Jerusalén para actuar como el tribunal más alto del país (2 Crónicas 19:4—11). Se le llama Josafat en Mateo 1:18, KJV.\n\nMás tarde en su reinado, los amonitas, moabitas y edomitas se unieron e invadieron Judá desde el sur. Josafat buscó al Señor para la liberación, y el Señor honró su solicitud. Los aliados enemigos comenzaron a pelear entre sí y en una sangrienta batalla se destruyeron mutuamente (2 Crónicas 20:1—30). Probablemente fue este desastre lo que le dio a Josafat acceso a la fortaleza edomita de Ezión-geber, aparentemente no ocupada por Judá desde los tiempos de Salomón.\n\nOcozías de Israel se unió a él en una empresa para construir una flota de barcos que se utilizaría para expediciones comerciales. Pero los barcos naufragaron, presumiblemente en una tormenta. Ocozías parece haber sugerido un segundo intento, pero Josafat se negó, ya que había sido reprendido por el profeta Eliezer por unirse al malvado rey de Israel (1 Reyes 22:48, 49 2 Crónicas 20:35—37). Más tarde, Josafat se unió a Joram, otro hijo de Acab, en una campaña contra Moab que tuvo cierto éxito (2 Reyes 3:4—27). Josafat fue enterrado en las tumbas reales de Jerusalén (2 Crónicas 21:1).',
+    date: "907-848 a.C.",
+    scriptures: ["11|22:41", "11|22:50"],
+    related: [
+      {
+        slug: "asa",
+        title: "Asa",
+      },
+      {
+        slug: "jehoshaphat-sends-levites-out-to-teach-the-law",
+        title: "Josafat envía levitas a enseñar la Ley",
+      },
+    ],
+    images: [
+      {
+        caption: "El buen rey Josafat.",
+        file: "GoodSalt-prcas0289_8-6-2013 11-57-48 AM.jpg",
+      },
+      {
+        caption:
+          "Josafat y Acab preguntan a los profetas (2 Crónicas, Capítulo 18). Grabado en madera después de un dibujo de Julius Schnorr von Carolsfeld (pintor alemán, 1794 - 1872)",
+        file: "Jehoshaphat Allies with Ahab_4-17-2013 4-42-42 PM.jpg",
+      },
+      {
+        caption: "Tell er-Rumeith, posible Ramot de Galaad",
+        file: "Tell er-Rumeith, possible Ramoth Gilead, from east, tb060503012_4-17-2013 4-42-42 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "888",
+    slug: "eliakim-son-of-melea",
+    title: "Eliakim",
+    period: "7",
+    description:
+      'El nombre significa "a quien Dios levantará". Es el hijo de Melea (Lucas 3:30) y probablemente nieto de Natán, por lo tanto, un antepasado de Jesucristo.',
+    article: "",
+    date: "887-807 a.C.",
+    scriptures: ["42|3:30"],
+    related: [
+      {
+        slug: "melea",
+        title: "Melea",
+      },
+      {
+        slug: "jonan-or-jonam",
+        title: "Jonán (o Jonam)",
+      },
+    ],
+    images: [
+      {
+        caption: "Antepasado de Jesús",
+        file: "AncestorOfJesusColor.jpg",
+      },
+    ],
+  },
+  {
+    id: "889",
+    slug: "elijah",
+    title: "Elías",
+    period: "7",
+    description:
+      'El nombre significa "el Señor es mi Dios". Es un tisbita y probablemente el mayor reformador espiritual de toda la Escritura. Trabaja en el reino del norte de Israel durante el tiempo de Acab y Jezabel. Habla contra la adoración de Baal y muestra la victoria en el Monte Carmelo.',
+    article:
+      'Elías, nombre que significa "Yahvé es mi Dios". Mensajero especial de Dios para el reino del norte de Israel durante la gran apostasía bajo Acab (c. 874—853 a.C.) y Jezabel, cuando la adoración de Baal prácticamente suplantó la adoración al verdadero Dios. Solo se le identifica como "el tisbita" (1 Reyes 17:1). Un hombre de gran fe en Dios y celo audaz por Dios, Elías fácilmente califica entre los más grandes de los profetas.\n\nLa alta estima en la que los judíos de siglos posteriores tenían a Elías es evidente por la expectativa popular, basada en la predicción de Malaquías 4:5, 6, de que el profeta regresaría a la tierra para anunciar la aparición inminente del Mesías (ver Mateo 17:10—12). Jesús identificó el ministerio de Juan el Bautista con el predicho por Malaquías (cap. 11:14), habiendo ya declarado que no había ninguno mayor que Juan (v 11). Hasta donde se sabe, Elías fue la única persona, excepto Enoc, honrada con la traslación al cielo sin ver la muerte (2 Reyes 2:11, 12). También fue elegido para acompañar a Moisés, el gran legislador, en la transfiguración de Cristo (Mateo 17:3).\n\nCuando Acab comenzó su reinado, había pasado un poco más de medio siglo desde la muerte de Salomón y la división del reino, desde que Israel, el reino del norte, había caído rápidamente en la apostasía. Pero Acab "hizo lo malo ante los ojos del Señor más que todos los que fueron antes de él", al casarse con Jezabel, hija de un rey fenicio, y adoptar su religión, convirtiéndose así en un adorador de Baal (1 Reyes 16:30, 31). No solo eso, sino que erigió un templo a Baal en Samaria (vs 32, 33) y así "Acab hizo más para provocar la ira del Señor Dios de Israel que todos los reyes de Israel que fueron antes de él" (v 33). Tales eran las condiciones cuando el Señor comisionó a Elías para visitar a Acab en la corte y anunciar una severa sequía de duración no especificada (cap. 17:1) como castigo remedial.\n\nLa intensidad de la hambruna y la gravedad con la que Acab vio la situación se reflejan en la reacción aprensiva de Obadías, el oficial de la casa de Acab, a quien Elías se presentó (vs 7—14). El desafío inicial de Acab al encontrarse con Elías, "¿Eres tú el que perturba a Israel?", fue rápidamente silenciado por la acusación divina de que el propio Acab era el culpable de la difícil situación de la nación, y por la orden de que el rey apareciera de inmediato en el Monte Carmelo, junto con todos los profetas de Baal y Asera (1 Reyes 18:17—19).\n\nEn el Carmelo, la cuestión de Baal versus el Señor como el verdadero Dios se sometió a una prueba dramática diseñada para llevar al rey y al pueblo a una decisión en el asunto (vs 20—40). El pueblo reconoció al Señor como el verdadero Dios, y por orden de Elías mataron a todos los profetas de Baal (vs 39, 40). Luego, para demostrar que la sequía había sido un juicio divino sobre la tierra, y como secuela de la admisión del pueblo de que el Señor es el verdadero Dios, cayó una abundancia de lluvia (vs 41—46).\n\nEnfurecida por el giro de los eventos, Jezabel amenazó la vida del profeta, con el resultado de que Elías se refugió en una huida apresurada hacia el sur, al desierto de Sinaí, donde se alojó en una cueva una vez más fue sostenido milagrosamente (1 Reyes 19:1—9). Cuando el Señor lo llamó para que diera cuenta de su huida ignominiosa de la amenaza a su vida por parte de Jezabel, Elías protestó que él solo, de todo Israel, había permanecido leal a Dios, y que ahora incluso su vida estaba en peligro (vs 10—14). Entonces Dios reprendió tácitamente a Su profeta errante y le asignó más tareas: ungir a Jehú como rey de Israel en lugar de Acab, a Hazael como el azote de Israel debido a su apostasía, y a Eliseo como sucesor de Elías (vs 15—21).',
+    date: "904-850 a.C.",
+    scriptures: ["11|17:1", "12|2:11-12"],
+    related: [
+      {
+        slug: "three-and-one-half-years-of-no-rain",
+        title: "Tres años y medio sin lluvia",
+      },
+      {
+        slug: "end-3-12-years-of-no-rain-elijah-runs-to-horeb",
+        title: "Fin de 3 1/2 años sin lluvia, Elías huye a Horeb",
+      },
+      {
+        slug: "ahaziah-of-israel-tries-to-intimidate-elijah",
+        title: "Ocozías de Israel intenta intimidar a Elías",
+      },
+      {
+        slug: "jehoram-of-judah-receives-prophetic-writing-from-elijah",
+        title: "Joram de Judá recibe una carta de Elías",
+      },
+    ],
+    images: [
+      {
+        caption: "Elías llevado al cielo",
+        file: "Elijah taken up 1005-63_7-22-2013 3-12-23 PM.JPG",
+      },
+      {
+        caption:
+          "Elías en el Monte Carmelo con los profetas de Baal, William Brassey Hole",
+        file: "425px-Elijahs-sacrifice-at-mount-Carmel-001_8-8-2013 12-29-23 PM.jpg",
+      },
+      {
+        caption:
+          "Elías en el monte de la transfiguración con Jesús, James Jacques Joseph Tissot, c. 1886 - 1894",
+        file: "385px-Transfiguration_005_8-8-2013 12-29-23 PM.jpg",
+      },
+      {
+        caption:
+          "Iglesia del Profeta Elías sentada en lo alto de un acantilado en Protaras, Chipre",
+        file: "Church of the Prophet Elijah, Cyprus_4-17-2013 4-31-44 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "890",
+    slug: "ahab",
+    title: "Acab",
+    period: "7",
+    description:
+      'El nombre significa "hermano del padre". Es el hijo de Omri y el séptimo rey de Israel. Su esposa es Jezabel, quien es una influencia malvada y fomenta la adoración de Baal. Es fuertemente reprendido por Elías y busca matarlo. Famoso por la batalla con Ben-hadad.',
+    article:
+      'Acab, nombre que significa "hermano del padre". El octavo rey (si se incluye a Tibni en el conteo) del reino del norte de Israel, hijo y sucesor de Omri. Reinó 22 años, desde 874 hasta 853 a.C. Estaba casado con Jezabel, la hija de Etbaal, "rey de los sidonios" (1 Reyes 16:31). Fue un fuerte líder militar, manteniendo a los moabitas en sumisión (2 Reyes 3:4, 5 Estela de Moab, línea 8). Vivió en términos amistosos con los fenicios y mantuvo la paz con Judá, cuyo príncipe heredero se casó con la hija de Acab, Atalía (2 Reyes 8:18, 26).\n\nDerrotó a los sirios dos veces en batalla y poseía el ejército más grande de cualquier nación entre Asiria y Egipto. Cuando Ben-hadad II de Damasco con 32 aliados sitió Samaria, Acab lo rechazó (1 Reyes 20:1—21) y un año después le infligió una derrota aún más severa en la batalla de Afec (vs 22—30), y lo capturó. Sin embargo, Acab se mostró tontamente magnánimo y perdonó la vida de Ben-hadad, incluso lo liberó. Ben-hadad prometió devolver ciertas ciudades que su padre había conquistado del padre de Acab, Omri, o posiblemente, como algunos piensan, de Baasa (ver cap. 15:18—22), y también hizo concesiones económicas al permitir que los comerciantes israelitas abrieran tiendas en los bazares de Damasco (cap. 20:31—34, RSV).\n\nCuando los asirios bajo Salmanasar III amenazaron con poner fin a la independencia de los pequeños estados en Siria y Palestina, se formó una coalición de 12 naciones bajo el liderazgo de Damasco para enfrentar al enemigo común. Las inscripciones de Salmanasar muestran que de los ejércitos aliados, Acab (llamado A\'abbu mat Sir\'ilâ, "Acab el israelita") tenía la mayor fuerza de carros, 2,000 de un total de 3,940, y una formidable infantería de 10,000 soldados de un total de unos 60,000. La batalla (que no se menciona en la Biblia) tuvo lugar en Qarqar en el Orontes en el centro de Siria en el sexto año de Salmanasar, que puede fecharse, con un alto grado de certeza, en 853 a.C.\n\nEl registro de la participación de Acab en esta batalla ayuda a proporcionar la primera sincronización entre la historia bíblica y la secular (ver Cronología, V, 3). Aunque los aliados no obtuvieron una victoria decisiva, los asirios se vieron obligados a retirarse y dejar Siria temporalmente sin conquistar. Tan pronto como se disipó la amenaza común, la alianza se rompió y las antiguas rencillas entre las diversas naciones pequeñas en Siria y Palestina continuaron. Acab también partió de inmediato para tomar la ciudad de Ramot de Galaad de los arameos de Siria, que la habían ocupado durante algún tiempo. En una batalla por esta ciudad, Acab fue herido de muerte (1 Reyes 22:2—36). Su cuerpo fue llevado a Samaria para ser enterrado, y, como el Señor había predicho a través de Elías (cap. 21:19), los perros lamieron la sangre de Acab, que había manchado el carro (cap. 22:38).',
+    date: "918-853 a.C.",
+    scriptures: ["11|16:29", "11|22:35-37"],
+    related: [
+      {
+        slug: "omri",
+        title: "Omri",
+      },
+      {
+        slug: "athaliah",
+        title: "Atalía",
+      },
+      {
+        slug: "ahaziah-9th-king",
+        title: "Ocozías",
+      },
+      {
+        slug: "obadiah-hides-the-prophets-of-god",
+        title: "Obadías esconde a los profetas de Dios",
+      },
+      {
+        slug: "ahab-and-naboths-vineyard",
+        title: "Acab y la viña de Nabot",
+      },
+      {
+        slug: "ahab-defeats-benhadad-i-of-syria",
+        title: "Acab derrota a Ben-hadad I de Siria",
+      },
+      {
+        slug: "micaiah-prophesies-defeat-of-ahab",
+        title: "Micaías profetiza la derrota de Acab",
+      },
+      {
+        slug: "ahab-battles-with-jehoshaphat-against-syrians",
+        title: "Acab lucha con Josafat contra los sirios",
+      },
+      {
+        slug: "ahab-battles-assyrians-at-qarqar-allied-w-benhadad",
+        title: "Acab lucha contra los asirios en Qarqar aliado con Ben-hadad",
+      },
+    ],
+    images: [
+      {
+        caption: "Elías denunciando al rey Acab",
+        file: "Elijah_4-17-2013 4-20-32 PM.jpg",
+      },
+      {
+        caption: "La muerte de Jezabel por Gustave Doré en 1866",
+        file: "The_Death_of_Jezebel_4-17-2013 4-20-32 PM.jpg",
+      },
+      {
+        caption: "Tell er-Rumeith, posible Ramot de Galaad",
+        file: "Tell er-Rumeith, possible Ramoth Gilead, from east, tb060503012_4-17-2013 4-20-32 PM.jpg",
+      },
+      {
+        caption: "Laderas verdes en primavera en el este de Samaria",
+        file: "Green hillsides in spring in eastern Samaria, tb031405462_4-17-2013 4-20-32 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "891",
+    slug: "palestine-invaded-by-zerah",
+    title: "Palestina invadida por Zera",
+    period: "7",
+    description:
+      'El nombre significa "resplandeciente". Es un "etíope" y comandante de las fuerzas nubias de Egipto que intenta saquear Jerusalén como Sisac con un gran ejército, pero es derrotado en la batalla en Maresa.',
+    article:
+      "Zera el etíope. Hasta ahora no hemos podido identificar a Zera en los registros contemporáneos. Dado que había cusitas en el oeste de Arabia y el este de África bordeando el Mar Rojo (ver Génesis 10:6), Zera puede haber sido de esa región. Puede haber tenido fuerzas auxiliares libias en su ejército, de Egipto, donde gobernaba una dinastía libia. Asa había hecho lo que pudo para construir las defensas nacionales y entrenar un ejército (2 Crónicas 14:6—8). Así que cuando Zera atacó, Judá estaba listo.\n\nAsa había preparado ciudades de defensa y tenía un ejército grande y bien equipado. Pero su confianza no estaba solo en las armas o los hombres, sino en Dios. Al enfrentarse al enemigo, lo hizo en el nombre del Señor y como representante de Dios. Al enfrentarse a Zera en el nombre del Señor, Asa sintió que su propia derrota sería una derrota para el Señor. El Señor permitió que Asa obtuviera una victoria asombrosa. Judá tenía enemigos poderosos, tanto al norte como al sur.\n\nDejada a sí misma, rápidamente habría sucumbido ante la fuerza superior de las fuerzas en su contra. Pero con la ayuda de Dios era invencible. El ataque de Zera fue la última amenaza seria que Judá enfrentaría desde el sur. De ahí en adelante, sus enemigos vinieron del norte: primero, Asiria bajo Senaquerib, y luego Babilonia bajo Nabucodonosor, quien llevó a la nación a la ruina.",
+    date: "900 a.C.",
+    scriptures: ["14|14:9-15", "14|16:8"],
+    related: [
+      {
+        slug: "asa",
+        title: "Asa",
+      },
+    ],
+    images: [
+      {
+        caption: "Ejército invasor.",
+        file: "GoodSalt-prcas1040_8-6-2013 12-10-11 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "892",
+    slug: "benhadad-ii",
+    title: "Ben-hadad II",
+    period: "7",
+    description:
+      'El nombre significa "hijo del dios Hadad". Probablemente es el hijo de Ben-hadad I y gobernante de Damasco que lucha contra Acab de Israel y no tiene éxito en sitiar Samaria. Acab lo libera imprudentemente en una segunda batalla. Hazael lo asesina.',
+    article:
+      'Ben-hadad, nombre que significa "hijo de (el dios) Hadad". Ben-hadad II, probablemente hijo y sucesor de Ben-hadad I. Gobernó sobre Damasco desde c. 870 hasta c. 842 a.C. Luchó contra Acab de Israel y sitió sin éxito Samaria. También fue derrotado en la batalla de Afec en un segundo intento de someter a Israel. En esta batalla fue capturado, pero Acab le perdonó la vida después de que el rey prometió devolver a Israel las ciudades conquistadas de Galilea, admitir empresas comerciales de Israel en Damasco y entrar en un tratado (1 Reyes 20:1—34).\n\nProbablemente este tratado fue una alianza contra Asiria, ya que en 853 a.C. tanto Acab como Ben-hadad lucharon como aliados en la batalla de Qarqar contra Salmanasar III. La batalla no fue decisiva, y los aliados no fueron derrotados hasta la sumisión. Salmanasar III menciona tres campañas más contra Damasco durante el reinado de Ben-hadad (849, 848, 845 a.C.), pero parecen no haber tenido un éxito duradero. La alianza de Damasco e Israel fue de corta duración. En el mismo año en que se libró la batalla de Qarqar, Acab libró una guerra contra Ben-hadad y fue asesinado en Ramot de Galaad.\n\nMás tarde, Ben-hadad invadió Israel nuevamente, pero levantó el sitio al rumor de que los hititas o egipcios se acercaban para ayudar a Israel (2 Reyes 6:24 a 7:16). Alrededor de 842 a.C. fue asesinado por Hazael, quien se convirtió en su sucesor y fundador de una nueva dinastía aramea en Damasco (cap. 8:15). Una estela erigida por Ben-hadad, llamado aquí Bar Hadad, dedicada a su dios Melqart, fue encontrada en Bureij, a unas 4.5 millas (c. 7 km) al norte de Alepo en el norte de Siria. El Bar Hadad de esta estela fue considerado por W. F. Albright como Ben-hadad I, pero estudios posteriores han hecho más probable que fuera el príncipe heredero en el reinado de Ben-hadad II (F. M. Cross, BASOR 205 [Feb., 1972], 36—42).',
+    date: "900-841 a.C.",
+    scriptures: ["12|8:15"],
+    related: [
+      {
+        slug: "benhadad-i",
+        title: "Ben-hadad I",
+      },
+    ],
+    images: [
+      {
+        caption: "Rey Ben-hadad II",
+        file: "king-ben-hadad-ii_8-6-2013 12-14-11 PM.jpg",
+      },
+      {
+        caption:
+          "Elías denunciando al rey Acab por perdonar la vida de Ben-hadad II.",
+        file: "Elijah_4-17-2013 4-09-40 PM.jpg",
+      },
+      {
+        caption: "Puerta de Damasco.",
+        file: "Damascus Gate, tb010907368_4-17-2013 4-09-40 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "894",
+    slug: "shalmaneser-iii",
+    title: "Salmanasar III",
+    period: "7",
+    description:
+      "Salmanasar III fue el primer rey asirio en entrar en contacto con Israel. Jehú, rey de Israel, es mencionado en una de sus estelas de victoria.",
+    article:
+      "Salmanasar III (859—834 a.C.), hijo de Asurnasirpal II. Fue un gran guerrero y el primer rey asirio en entrar en contacto con Israel. En su primer año libró una guerra agresiva en el norte de Siria, lo que provocó que varios reyes de Siria y Palestina formaran una liga para enfrentar su amenaza. Doce reyes en total se unieron a la liga, a quienes Salmanasar encontró en su sexto año (853 a.C.) en Qarqar en el centro de Siria.\n\nLos ejércitos aliados fueron liderados por Ben-hadad de Damasco y el rey de Hamat. Acab de Israel proporcionó 10,000 soldados de infantería y 2,000 carros, aproximadamente la mitad de todos los carros de los ejércitos aliados. Salmanasar afirma haber ganado una victoria, pero se duda de la veracidad de su afirmación, ya que regresó de inmediato a Asiria y, por lo tanto, debió haber sido debilitado. Regresó después de 5 años, pero fue nuevamente detenido por los aliados, y nuevamente durante la campaña siguiente. Sin embargo, finalmente pudo romper el poder de la liga en su decimocuarto año (845 a.C.), y en su decimoctavo año (841 a.C.) derrotó al rey Hazael de Damasco en el Monte Hermón.\n\nLos reyes de Tiro y Sidón, así como el rey Jehú de Israel, pagaron tributo y de inmediato se convirtieron en vasallos asirios. En el famoso Obelisco Negro, encontrado en 1845 por Henry Layard en Nimrud, y ahora en el Museo Británico, se representa en escultura el pago del tributo de Jehú. En la segunda de las cinco filas de relieves, se ve a Jehú besando el suelo a los pies de Salmanasar y ofreciéndole, como tributo, barras y vasijas de metales preciosos, que son llevados por cortesanos israelitas.",
+    date: "894-824 a.C.",
+    scriptures: ["12|17:3", "12|18:9"],
+    related: [
+      {
+        slug: "shalmaneser-iii-of-assyria-defeats-hazael-of-damascus",
+        title: "Salmanasar III derrota a Hazael",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Estatua de basalto del rey Salmanasar II, 858-824 a.C. (Período neoasirio). Encontrada en Assur (Qala't Sharqat).",
+        file: "King_Shalmaneser_III_Istanbul_Museum.JPG",
+      },
+      {
+        caption:
+          "Obelisco Negro de Salmanasar III, erigido en 825 a.C., ubicado en el Museo Británico.",
+        file: "Shalmaneser III_4-17-2013 3-42-38 PM.jpg",
+      },
+      {
+        caption:
+          'El "Obelisco Negro" de Salmanasar III (reinó 858-824 a.C.) es una escultura en bajorrelieve de piedra caliza negra neoasiria de Nimrud (antigua Kalhu), en el norte de Irak.',
+        file: "Black Obelisk of Shalmanese III_4-17-2013 3-42-38 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "897",
+    slug: "omri-subdues-moabites",
+    title: "Omri somete a los moabitas",
+    period: "7",
+    description:
+      "Omri conquista a los moabitas como lo muestra la Estela de Moab del rey Mesa. Moab paga tributo al hijo de Omri, Acab, como se muestra en 2 Reyes 3:4.",
+    article:
+      'En este momento, Moab estaba situado directamente al este del bajo Jordán y el Mar Muerto. La región era fértil y bien regada, y era, en general, un gran país de pastoreo. Incluso hoy en día es conocido por sus rebaños y sus manadas. El rey de Moab en aquellos tiempos antiguos puede compararse con un jeque árabe moderno, cuya riqueza se estima por el tamaño de sus rebaños y el número de su ganado.\n\nLos israelitas pagaban tributo a Moab. El registro en 2 Reyes 3:4 de la servidumbre de Moab a Israel en los días de Mesa está corroborado por la Estela de Moab. Ese registro habla de la opresión de Moab durante muchos años por Omri y Acab y de la exitosa revuelta de Mesa. El pago de tributo en especie era habitual en el Oriente en este momento. Los asirios a menudo recibían tributo en ganado, caballos, ovejas y otras mercancías. Josafat recibió como tributo de los árabes "siete mil setecientos carneros y siete mil setecientos machos cabríos" (2 Crónicas 17:11).',
+    date: "877 a.C.",
+    scriptures: ["12|3:4"],
+    related: [
+      {
+        slug: "omri",
+        title: "Omri",
+      },
+    ],
+    images: [
+      {
+        caption:
+          'Estela de Mesa (también conocida como la "Estela de Moab") en el Museo del Louvre, Exploraciones en Tierras Bíblicas Durante el Siglo XIX. por H. V. Hilprecht, 1903',
+        file: "378px-Mesha_stele_8-26-2013 5-38-45 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "898",
+    slug: "jehoram-of-judah",
+    title: "Joram de Judá",
+    period: "7",
+    description: "El quinto rey de Judá, frecuentemente llamado Joram.",
+    article:
+      'Nombre que significa "Yahvé es exaltado". El quinto rey de Judá, frecuentemente llamado Joram. Los datos cronológicos bíblicos (1 Reyes 22:42 2 Reyes 1:17 3:1) indican que Joram estuvo asociado con su padre Josafat en el trono durante unos 5 o 6 años (c. 854—c. 848 a.C.), antes de convertirse en el único gobernante. Reinó durante menos de 8 años (2 Crónicas 21:5), c. 848—841 a.C. Estaba casado con Atalía, una hija de Acab, y siguió a su esposa en la adoración de Baal, como su suegro había seguido a Jezabel (2 Reyes 8:18, 26 2 Crónicas 21:6, 11). Después de la muerte de su padre, Joram asesinó a todos sus hermanos y otros príncipes de Judá (2 Crónicas 21:1—4).\n\nSu maldad no quedó sin castigo, ya que una calamidad tras otra lo afligió, como Elías le había predicho en una carta (vs 12—15). Primero, los edomitas se rebelaron, y aunque Joram pudo derrotarlos, permanecieron independientes (2 Reyes 8:20—22 2 Crónicas 21:8—10). Así, Judá perdió las minas de cobre de Edom y la ciudad de Ezión-geber con las instalaciones portuarias de la ciudad.\n\nLuego, Libná se rebeló (2 Reyes 8:22 2 Crónicas 21:10) y durante una invasión de los filisteos y tribus del noroeste de Arabia, Jerusalén fue saqueada, el palacio fue saqueado, y el harén del rey y todos sus hijos, excepto el más joven, fueron tomados cautivos (2 Crónicas 21:16, 17 2 Crónicas 22:1). Finalmente, una enfermedad intestinal incurable atormentó al rey durante los últimos dos años de su vida (cap. 21:18, 19). Murió sin ser llorado y fue enterrado en Jerusalén, pero no en las tumbas reales (v 20).',
+    date: "883-841 a.C.",
+    scriptures: ["12|3:1", "14|21:19"],
+    related: [
+      {
+        slug: "ahaziah-6th-king",
+        title: "Ocozías",
+      },
+      {
+        slug: "jehoram-of-judah-struck-with-bowel-disease",
+        title: "Joram de Judá afectado por una enfermedad intestinal",
+      },
+    ],
+    images: [
+      {
+        caption: '"Joram es traspasado por una flecha" James Tissot',
+        file: "Jehoram_8-6-2013 1-37-09 PM.jpg",
+      },
+      {
+        caption: "Montañas edomitas alrededor de Sela",
+        file: "Edomite mountains around Sela, tb061404233_4-17-2013 3-37-52 PM.jpg",
+      },
+      {
+        caption: "Tel Burna, posible Libná",
+        file: "Tel Burna, possible Libnah, from northwest, tb011606862_4-17-2013 3-37-52 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "899",
+    slug: "elisha",
+    title: "Eliseo",
+    period: "7",
+    description:
+      'El nombre significa "Dios es salvación". Es el hijo de Safat y sucesor de Elías. Pide una doble porción del Espíritu y trabaja como profeta-pastor en el norte de Israel durante unos 50 años, marcados por muchos milagros. Establece la escuela de los profetas.',
+    article:
+      'Eliseo, nombre que significa "Dios es salvación". Hijo de Safat, de Abel-meholá, el profeta que sucedió a Elías como enviado especial de Dios al reino del norte de Israel. Su ministerio como profeta-pastor abarcó los reinados de Joram, Jehú, Joacaz y Joás del reino del norte, y así duró desde al menos 852 a.C. hasta alrededor de 798 a.C., un período de más de medio siglo. En el escenario nacional completó la erradicación de la adoración de Baal iniciada por Elías, aconsejó al rey de Israel sobre la política nacional y tomó un intenso interés personal en los problemas y necesidades de los individuos con los que su ministerio lo puso en contacto.\n\nSupervisó las llamadas "escuelas de los profetas" fundadas dos siglos antes por Samuel, y así hizo lo que quizás fue su mayor contribución individual a la vida espiritual de la nación. En presencia de la necesidad, siempre fue solícito y generoso; en presencia de un entendimiento limitado de la voluntad divina, fue tolerante y paciente; en presencia del peligro, manifestó firmeza y valor inquebrantable; en presencia del mal, fue severo y severo sin ser vengativo. Mientras que Elías tendía a ser ascético en el vestir y la dieta, en el lugar de residencia y en sus contactos limitados con la gente, al menos según el registro, Eliseo vivía cerca de la gente a la que servía y amaba la vida social.\n\nA diferencia de la vida de Elías, que apareció en el escenario de la historia sagrada para unos pocos eventos impactantes, la vida de Eliseo se registra como un ministerio constante durante el cual constantemente ministraba a las necesidades de sus semejantes como individuos, así como a la vida espiritual de la nación en su conjunto. Aunque por un tiempo parece haber habido una respuesta alentadora por parte de la nación a su liderazgo como profeta, las reformas que puso en marcha fueron de corta duración y no impidieron la disolución completa del reino del norte unos 75 años después de su muerte.',
+    date: "885-798 a.C.",
+    scriptures: ["11|19:16", "12|13:20"],
+    related: [
+      {
+        slug: "gehazi",
+        title: "Giezi",
+      },
+      {
+        slug: "elisha-mocked-by-youth-at-bethel",
+        title: "Eliseo burlado por jóvenes en Betel",
+      },
+      {
+        slug: "elisha-and-the-widows-oil",
+        title: "Eliseo y el aceite de la viuda",
+      },
+      {
+        slug: "elisha-purifies-the-pot-of-stew",
+        title: "Eliseo purifica la olla de estofado",
+      },
+      {
+        slug: "elisha-promises-shunammite-woman-a-son",
+        title: "Eliseo promete un hijo a la mujer sunamita",
+      },
+      {
+        slug: "elisha-feeds-100-men",
+        title: "Eliseo alimenta a 100 hombres",
+      },
+      {
+        slug: "elisha-and-miracle-of-the-floating-ax-head",
+        title: "Eliseo y el milagro del hacha flotante",
+      },
+      {
+        slug: "elisha-thwarts-syrian-ambushes",
+        title: "Eliseo frustra las emboscadas sirias",
+      },
+      {
+        slug: "benhadad-ii-siege-of-samaria-and-deliverance",
+        title: "Ben-hadad II asedia Samaria y la liberación",
+      },
+      {
+        slug: "elisha-warns-shunammite-woman-of-7-year-famine",
+        title: "Eliseo advierte a la mujer sunamita de 7 años de hambruna",
+      },
+      {
+        slug: "shunammite-womans-land-restored",
+        title: "La tierra de la mujer sunamita es restaurada",
+      },
+      {
+        slug: "naaman-healed-gehazi-leprous",
+        title: "Naamán sanado, Giezi leproso",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Eliseo levantando al hijo de la sunamita por un editor desconocido de Tarjetas Bíblicas antes de 1923",
+        file: "ElishaRaisingShunammitesSon.jpg",
+      },
+      {
+        caption: "Eliseo y el ejército enviado por Dios.",
+        file: "GoodSalt-ElishaAndArmy_8-5-2013 4-18-39 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "901",
+    slug: "jonan-or-jonam",
+    title: "Jonán (o Jonam)",
+    period: "7",
+    description:
+      'El nombre significa "Dios es gracioso". También escrito Jonam, aparece en la genealogía de Lucas como el hijo de Eliakim y padre de José, y por lo tanto un antepasado de Jesucristo. No se sabe nada más sobre él.',
+    article: "",
+    date: "867-878 a.C.",
+    scriptures: ["42|3:30"],
+    related: [
+      {
+        slug: "eliakim-son-of-melea",
+        title: "Eliakim",
+      },
+      {
+        slug: "joseph-son-of-jonan",
+        title: "José",
+      },
+    ],
+    images: [
+      {
+        caption: "Antepasado de Jesús",
+        file: "GoodSalt-prcas3975_8-21-2013 2-44-38 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "902",
+    slug: "atalia",
+    title: "Atalía",
+    period: "7",
+    description:
+      'El nombre significa "Dios es exaltado" o "a quien Dios aflige". Es hija de Acab y Jezabel, y esposa de Joram, rey de Judá. Sigue los caminos de su padre. Cuando su esposo muere, decide ser reina y mata a todos los herederos excepto a Joás.',
+    article:
+      'Atalía, nombre que significa "Yahvé es exaltado". Esposa del rey Joram de Judá, hija de Acab y nieta de Omri (2 Reyes 8:18, 26; 2 Crónicas 21:6; 22:2), la única reina reinante en la historia hebrea del Antiguo Testamento. Usurpó el trono cuando Jehú de Israel mató a su hijo Ocozías (841 a.C.). Para asegurar su posición, ordenó matar a todos los descendientes de su hijo.\n\nSin embargo, sin su conocimiento, Joás, un hijo infante de Ocozías, escapó de la masacre y fue escondido por Jehosheba, la esposa del sumo sacerdote Joiada (2 Reyes 11:1, 2; 2 Crónicas 22:10, 11). Habiendo sido criada en la casa idólatra de Acab y Jezabel, Atalía introdujo la adoración de Baal en Judá (2 Reyes 11:18; 2 Crónicas 23:17). En su séptimo año de reinado (835 a.C.), en una insurrección contra su gobierno, Atalía fue asesinada y el niño Joás fue coronado (2 Reyes 11:3-16; 2 Crónicas 22:12; 23:1-16).',
+    date: "898-835 a.C.",
+    scriptures: ["14|22:2", "14|23:15"],
+    related: [
+      {
+        slug: "acab",
+        title: "Acab",
+      },
+    ],
+    images: [
+      {
+        caption: "La coronación de Joás y la muerte de Atalía",
+        file: "_GoodSalt-prcas0707_8-26-2013 5-20-59 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "904",
+    slug: "omri-construye-samaria",
+    title: "Omri construye Samaria",
+    period: "7",
+    description:
+      "Omri traslada estratégicamente la capital de Israel a Samaria desde Tirsa, una ubicación mucho mejor políticamente.",
+    article:
+      "El ascenso de Omri marcó un nuevo período de gobierno estable y prosperidad para el reino del norte. Mientras la capital estaba en Tirsa, la nación había pasado por un largo período de disensión e inquietud. Posiblemente, las semillas de desafección aún acechaban en Tirsa, lo que llevó a Omri a decidir un nuevo sitio para su capital. La colina de Samaria, a 7 1/4 millas (11.6 km) al noroeste de Siquem, fue el sitio seleccionado. Habría sido difícil encontrar un lugar más perfecto para la capital de la nación. Su posición era de gran belleza, con vistas al mar y al campo por millas a la redonda.\n\nEstaba situada en el corazón de la tierra. Militarmente, la colina, con sus lados empinados, estaba admirablemente adaptada para la defensa, como lo demuestran los largos asedios que soportó (1 Reyes 20:1; 2 Reyes 6:24; 17:5; 18:9, 10). El país circundante era singularmente productivo. En la colina había abundantes manantiales de agua. Su historia vindicó la sagacidad de su fundador, ya que Samaria continuó como la capital de Israel hasta el final de la historia de la nación. Las excavaciones en el antiguo sitio de Samaria fechan los niveles más bajos de la ciudad en la época de Omri.",
+    date: "879 a.C.",
+    scriptures: ["11|16:24"],
+    related: [
+      {
+        slug: "omri",
+        title: "Omri",
+      },
+    ],
+    images: [
+      {
+        caption: "Laderas verdes en primavera en el este de Samaria",
+        file: "Green hillsides in spring in eastern Samaria, tb031405462_4-17-2013 2-57-22 PM.jpg",
+      },
+      {
+        caption: "Colinas del este de Samaria",
+        file: "Hills of eastern Samaria, tb120806829_4-17-2013 2-57-22 PM.jpg",
+      },
+      {
+        caption: "Samaria desde el oeste",
+        file: "Samaria from west, tb050106488_4-17-2013 2-57-22 PM.jpg",
+      },
+      {
+        caption: "Panorama de Tirsa",
+        file: "Shechem to Tirzah panorama, tb12080681p_4-17-2013 2-57-22 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "905",
+    slug: "ocozias-9no-rey",
+    title: "Ocozías",
+    period: "7",
+    description:
+      'El nombre significa "sostenido por Dios". Es el sucesor de Acab y el noveno rey del reino del norte de Israel, cuyo reinado dura 2 años. Hace el mal ante los ojos de Dios. Cae por una celosía y consulta a Baal-Zebub sobre cuándo morirá. Elías lo intercepta.',
+    article:
+      'Ocozías, nombre que significa "Yahvé ha tomado (mi mano)". El noveno rey de Israel, el reino del norte (si se incluye a Tibni en el conteo). Ocozías sucedió a su padre Acab en el trono y reinó menos de 2 años (c. 853-852 a.C.). Es inusual que su madre, probablemente Jezabel, no sea mencionada por su nombre. Fiel a la tradición familiar, "hizo lo malo ante los ojos del Señor" y sirvió a Baal (1 Reyes 22:40, 51-53). Se unió a Josafat de Judá para construir una flota de barcos que serían enviados a Ofir en busca de oro. Los barcos naufragaron en Ezión-geber, en el golfo de Acaba, probablemente en una de las peligrosas tormentas que surgen muy repentinamente allí.\n\nOcozías aparentemente propuso un segundo intento, pero Josafat declinó después de ser advertido por un profeta en contra de unirse al malvado rey de Israel (1 Reyes 22:48, 49; 2 Crónicas 20:35-37). La rebelión de Moab parece haber ocurrido durante su reinado, pero no se hizo nada para obligar a ese país a volver a la sumisión (2 Reyes 1:1). Ocozías resultó gravemente herido cuando "cayó por una celosía" en su palacio. Cuando envió mensajeros a Baal-zebub, dios de Ecrón, para pedirle curación, sus hombres fueron interceptados por Elías, quien los envió de regreso con la noticia de que el rey moriría a causa de sus heridas (vs 2-4). Como murió sin un hijo, el trono pasó a su hermano Joram (v 17).',
+    date: "878-852 a.C.",
+    scriptures: ["11|22:51", "12|1:17"],
+    related: [
+      {
+        slug: "acab",
+        title: "Acab",
+      },
+      {
+        slug: "joram",
+        title: "Joram",
+      },
+    ],
+    images: [
+      {
+        caption: "Ocozías o 'Ocozías', Guillaume Rouille, 1553",
+        file: "Ahaziah_of_Israel_8-26-2013 5-35-25 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "906",
+    slug: "joram",
+    title: "Joram",
+    period: "7",
+    description:
+      "Décimo rey del reino del norte de Israel, a veces llamado Jehoram. Era hijo de Acab y Jezabel y sucedió a su hermano mayor Ocozías como el último rey de la dinastía de Omri.",
+    article:
+      'Joram (jo`ram) significa "Yahvé es exaltado". Joram fue el décimo rey del reino del norte de Israel (si se incluye a Tibni en el conteo), a veces llamado Jehoram. Era hijo de Acab y Jezabel y sucedió a su hermano mayor Ocozías como el último rey de la dinastía de Omri. Reinó durante doce años. Fue algo menos idólatra que su padre y removió la columna de Baal, aunque la adoración de Baal parece haber continuado hasta la época de Jehú, aunque de una forma menos oficial.\n\nJoram probablemente fue el rey al que Ben-hadad II de Damasco envió a su comandante Naamán para ser curado de la lepra (2 Reyes 5:1-7), y el rey no identificado al que Eliseo reveló los movimientos del ejército sirio, y quien alimentó a los soldados enemigos después de que fueron cegados en Dotán (2 Reyes 6:8-23). Fue asesinado por Jehú mientras se recuperaba de una herida que recibió en una guerra contra los sirios.',
+    date: "877-840 a.C.",
+    scriptures: ["12|3:1", "12|9:24"],
+    related: [
+      {
+        slug: "ocozias-9no-rey",
+        title: "Ocozías",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Ilustración de Joram de Judá en 1553 publicada por Guillaume Rouille",
+        file: "Joram_of_Israel.jpg",
+      },
+    ],
+  },
+  {
+    id: "907",
+    slug: "jehu",
+    title: "Jehú",
+    period: "7",
+    description:
+      'El nombre significa "Jehová es Él". Undécimo rey del norte de Israel, que reinó 28 años, fundador de la dinastía más larga y fuerte del norte, oficial del ejército bajo Acab y Joram. Conocido por su furiosa conducción de carros, matar a Jezabel y eliminar la adoración de Baal.',
+    article:
+      'Jehú, nombre que significa "Yahvé es Él (es decir, el Dios)". El undécimo rey de Israel (si se incluye a Tibni en el conteo), que reinó durante 28 años (c. 841-c. 814 a.C.) y se convirtió en el fundador de la dinastía más fuerte y de mayor duración del reino del norte. Era hijo de Josafat (no el rey de Judá) y nieto de Nimsi. Sin embargo, a veces se le llama simplemente hijo de Nimsi (1 Reyes 19:16; 2 Reyes 9:2). Jehú fue un oficial del ejército bajo Acab y Joram, y fue conocido por su furiosa conducción de carros (2 Reyes 9:20).\n\nMientras estaba ocupado en el asedio de Ramot de Galaad, fue ungido rey para suceder a Acab por uno de los jóvenes ayudantes de Eliseo (1 Reyes 19:16; 2 Reyes 9:1-10). Apoyado por sus compañeros oficiales, inmediatamente condujo a Jezreel, donde el rey Joram se recuperaba de las heridas recibidas en Ramot de Galaad. Al llegar allí, mató al rey (2 Reyes 9:11-26) e hirió mortalmente a Ocozías, rey de Judá, que estaba visitando a Joram (v 27). También mató a Jezabel, la reina madre de Israel (vs 30-37), a 70 príncipes de la casa de Acab (cap. 10:1-11), y a 42 parientes cercanos de Ocozías de Judá (2 Reyes 10:12-14; 2 Crónicas 22:8; cf. Oseas 1:4).\n\nDespués de que Jehú exterminó así la casa de Acab, que había originado la adoración de Baal en Israel, se volvió contra los adoradores de Baal en general. Astutamente se proclamó un ardiente seguidor de Baal e invitó a todos los hombres de ideas afines al templo de Baal. Cuando todos estaban reunidos y adorando, ordenó a sus soldados que mataran a todos en el templo de Baal. El edificio fue entonces profanado y convertido en un retrete (2 Reyes 10:18-28). Debido a que Jehú había sido celoso en erradicar la adoración de Baal, el Señor prometió que su dinastía continuaría por 4 generaciones más (v 30). Sin embargo, Jehú no rompió con la adoración del becerro de Jeroboam, y por lo tanto fue responsable de la continuación de la idolatría de Israel (vs 29, 31).\n\nDurante el año en que Jehú llegó al trono (841/40 a.C.), el rey Salmanasar III de Asiria invadió Siria, y Jehú consideró prudente reunirse con él como vasallo con tributo en lugar de como enemigo. Esta sumisión de Jehú está registrada en el famoso Obelisco Negro, que fue encontrado por Layard en las ruinas de Nimrud (bíblica Cala) y que ahora se encuentra en el Museo Británico. Este obelisco tiene una representación pictórica de Jehú, la única representación pictórica contemporánea de cualquier rey hebreo. Salmanasar III fue sucedido por reyes débiles, una circunstancia que le dio a Hazael de Damasco libertad para volverse contra Israel. Debido a que Jehú no era lo suficientemente fuerte para enfrentarse a los arameos, estos le quitaron todos los territorios israelitas al este del Jordán (2 Reyes 10:32, 33; cf. Amós 1:3).',
+    date: "876-814 a.C.",
+    scriptures: ["11|19:16", "12|10:35"],
+    related: [
+      {
+        slug: "joacaz",
+        title: "Joacaz",
+      },
+    ],
+    images: [
+      {
+        caption:
+          'Jehú, Guillaume Rouille, "Promptuarii Iconum Insigniorum", 1553',
+        file: "Jehu_8-26-2013 5-41-48 PM.jpg",
+      },
+      {
+        caption:
+          "Representación de Jehú, rey de Israel, dando tributo al rey Salmanasar III de Asiria, en el Obelisco Negro de Salmanasar III de Nimrud (circa 827 a.C.) en el Museo Británico (Londres)., Steven G. Johnson, 2010",
+        file: "800px-Jehu-Obelisk-cropped_8-26-2013 5-41-48 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "911",
+    slug: "asa-contrae-enfermedad-en-sus-pies",
+    title: "Asa contrae una enfermedad en sus pies",
+    period: "7",
+    description:
+      "Asa, el tercer rey de Judá (reino del sur), reinó 41 años y fue un buen rey. En sus últimos años desarrolló algún tipo de enfermedad en sus pies y aparentemente dejó que su hijo Josafat actuara como corregente.",
+    article: "",
+    date: "872 a.C.",
+    scriptures: ["11|15:23"],
+    related: [
+      {
+        slug: "asa",
+        title: "Asa",
+      },
+    ],
+    images: [
+      {
+        caption: "Asa destruyendo los ídolos.",
+        file: "_GoodSalt-prcas3123_8-26-2013 5-45-07 PM.jpg",
+      },
+      {
+        caption:
+          "Ilustración de Asa destruyendo los ídolos y prohibiendo la adoración en los santuarios locales por Petrus Comestor.",
+        file: "Asa_destroys_the_idols_4-17-2013 12-52-08 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "912",
+    slug: "abdias-esconde-a-los-profetas-de-dios",
+    title: "Abdías esconde a los profetas de Dios",
+    period: "7",
+    description:
+      'El nombre significa "siervo del Señor". Abdías es como un primer ministro para el malvado rey Acab. Es un devoto seguidor de Dios y cuando Jezabel masacra a los profetas, Abdías esconde a 100 en dos cuevas y los cuida.',
+    article:
+      "El carácter de Abdías estaba en consonancia con el significado de su nombre (el siervo del Señor). Es significativo que el rey mantuviera a un hombre en un cargo tan importante a quien sabía que era un siervo del Señor. Pero Acab sabía que este hombre, que era fiel a Dios, también sería fiel en la administración de los asuntos de la casa real. El odio traicionero de Jezabel por el Señor y Sus siervos se describe claramente en 1 Reyes 18.\n\nNo es hasta aquí que se nos da una imagen de la severidad de la persecución contra el pueblo de Dios, y quién era su espíritu líder. La reina Jezabel, enfurecida por el mensaje de Elías que cerró los cielos para que no lloviera, estaba decidida a que el profeta y todos los que se asociaran con él en el servicio de Jehová fueran asesinados. De hecho, aparte de la hambruna, la devoción de Jezabel a Baal la haría hostil a los profetas de Dios.\n\nAbdías esconde a 100 profetas de ella en una cueva. Los profetas aquí mencionados eran evidentemente miembros de las escuelas de los profetas. Eran un grupo de eruditos y predicadores proféticos que originalmente fueron entrenados bajo los profetas y dedicaron sus vidas a la promulgación del mensaje de una vida justa y santa. El hecho de que 100 de ellos fueran escondidos por Abdías muestra que debían ser bastante numerosos incluso en Israel, que durante tanto tiempo había ido en contra de los caminos del Señor. Esconderlos en una cueva no fue demasiado difícil.\n\nLas cuevas eran comunes en Palestina. Solo en la región del Monte Carmelo se han contado más de 2,000 cuevas. Las cuevas en Palestina eran tanto naturales como hechas por el hombre, y servían como hogares, tumbas, almacenes, cisternas o establos para el ganado. En tiempos de guerra y opresión, ofrecían excelentes lugares de refugio (Josué 10:16-27; Jueces 6:2; 1 Samuel 13:6; 22:1; 24:3-10; 2 Samuel 23:13).",
+    date: "870 a.C.",
+    scriptures: ["11|18:3-4"],
+    related: [
+      {
+        slug: "acab",
+        title: "Acab",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Abdías escondiendo a los profetas de Dios, Johann Christoph Weigel, 1695",
+        file: "Obadiah_hides_prophets_8-26-2013 5-48-34 PM.jpg",
+      },
+      {
+        caption: "Abdías por James Tissot",
+        file: "obadiah_tissot_640x425_8-6-2013 1-56-36 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "914",
+    slug: "josafat-envia-levitas-a-ensenar-la-ley",
+    title: "Josafat envía levitas a enseñar la Ley",
+    period: "7",
+    description:
+      "En el tercer año de su reinado, Josafat, el cuarto rey del reino del sur de Judá, envía príncipes, levitas y sacerdotes por toda la tierra para enseñar la ley de Dios. Dios lo bendice enormemente en este momento.",
+    article:
+      "El rey Josafat envió a los príncipes en varias partes de la tierra y les ordenó que organizaran la instrucción del pueblo, presumiblemente por los levitas y sacerdotes. Ellos mismos no hicieron la predicación real. Moisés había dado instrucciones importantes que, si se seguían, significarían mucho para la nación. Josafat entendió que la prosperidad de su nación dependía de la obediencia a los mandamientos del Señor.\n\nPor lo tanto, hizo todo lo que estaba en su poder para asegurarse de que el pueblo se familiarizara con los requisitos divinos, para que pudieran apartarse del pecado y caminar plenamente en los caminos del Señor. El rey envió a estos líderes espirituales por todas las ciudades. Las medidas de Josafat no fueron a medias. Por todo el país se enviaron sacerdotes con la comisión de instruir al pueblo en la ley del Señor y los caminos de la justicia. Un despertar espiritual en todas partes de la nación fue el resultado de los esfuerzos sinceros del rey por su pueblo. Se convirtió en el primer gran rey reformador de Judá.",
+    date: "869 a.C.",
+    scriptures: ["14|17:7-12"],
+    related: [
+      {
+        slug: "josafat",
+        title: "Josafat",
+      },
+    ],
+    images: [
+      {
+        caption: "Josafat envía levitas a enseñar la Ley.",
+        file: "GoodSalt-prcas2686_8-6-2013 1-59-43 PM.jpg",
+      },
+      {
+        caption: "Frontón de la tumba de Josafat en Jerusalén",
+        file: "Tomb of Jehoshaphat pediment, tb012603234 copy_4-17-2013 12-16-10 PM.jpg",
+      },
+      {
+        caption:
+          "Josafat y Acab preguntan a los profetas (2 Crónicas, Capítulo 18). Grabado en madera basado en un dibujo de Julius Schnorr von Carolsfeld (pintor alemán, 1794 - 1872)",
+        file: "Jehoshaphat Allies with Ahab_4-17-2013 12-16-10 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "915",
+    slug: "giezi",
+    title: "Giezi",
+    period: "7",
+    description:
+      'El nombre significa "valle de la visión". Es el sirviente de Eliseo que muestra compasión hacia la mujer sunamita, pero codicia los regalos de Naamán, el leproso sirio. Recibe la lepra de Naamán. Más tarde habla con el rey Joram sobre los grandes hechos de Eliseo.',
+    article:
+      "Giezi es el sirviente de Eliseo. Aparece primero en una luz favorable cuando muestra simpatía hacia una mujer sunamita sin hijos (2 Reyes 4:14), y cuando muestra celo por el honor del profeta, a quien pensaba que no se le estaba mostrando el respeto adecuado (v 27). Más tarde se le representa como codicioso y mentiroso. A Naamán, el comandante sirio a quien Eliseo había curado de la lepra, le hizo parecer que el profeta había roto su palabra. Como castigo, la lepra de Naamán cayó sobre él (cap. 5:20-27). Su encuentro con el rey de Israel después de una hambruna de siete años (cap. 8:4-6) parece haber ocurrido antes de que fuera castigado con la lepra perpetua.",
+    date: "864-800 a.C.",
+    scriptures: ["12|4:12-36", "12|5:20-27", "12|8:4-5"],
+    related: [
+      {
+        slug: "eliseo",
+        title: "Eliseo",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Giezi intenta despertar al hijo de la mujer sunamita con el bastón de Eliseo, grabado de Bernhard Rode antes de 1780",
+        file: "Gehazi_7-30-2013 5-24-12 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "916",
+    slug: "tres-anos-y-medio-sin-lluvia",
+    title: "Tres años y medio sin lluvia",
+    period: "7",
+    description:
+      'Dios llama a Elías para que hable con el rey Acab, un rey malvado de Israel, y le diga que no habrá lluvia "excepto por mi palabra". Luego, Dios le dice a Elías que vaya y se esconda.',
+    article:
+      'Aquí comienza una nueva sección de Reyes, completamente diferente en espíritu de lo que ha pasado antes. En lugar de unos pocos hechos fríos sobre los reinados malvados de los reyes, ahora encontramos un relato de algunas de las hazañas más emocionantes de los más grandes profetas. Las historias son detalladas y gráficas, llenas de belleza espiritual e instrucción moral. Elías aparece en escena como un hombre con una misión urgente para Dios. La hora es de crisis. El pecado ha invadido la tierra, y si no se detiene, pronto envolverá a todos en una ruina trágica.\n\nElías se enfrenta al enemigo como un valiente guerrero de Dios, dando testimonio de Él con palabras y hechos, viviendo la vida de un recluso, o parándose valientemente en las alturas del Carmelo, llamando fuego del cielo, y blandiendo la espada de la venganza en la matanza de los profetas de Baal. A medida que el relato fascinante se desarrolla con su cuenta de coraje, fe, asombrosa fidelidad, afecto bondadoso o celo sincero en el servicio a Dios, es imposible no ver en el profeta un tipo del mayor Elías que aún estaba por venir (Mateo 17:10-12). El nombre Elías se adaptaba bien al profeta para su misión. Significa "Jehová es mi Dios".\n\nLa historia de Elías se introduce con una abrupta dramatización. No hay introducción, nada sobre el llamado del profeta, nada sobre sus primeras experiencias. Se le menciona por nombre como uno de los habitantes de Galaad, y luego se presenta ante el rey entregando su solemne mensaje de juicio por venir. En la soledad de las montañas de Galaad, el corazón de Elías se había conmovido profundamente al pensar en la creciente marea de apostasía que inundaba la tierra.\n\nSu alma estaba angustiada y su indignación se despertó, y oró con gran fervor para que algo sucediera para detener la marea del mal, que si era necesario, vinieran juicios para hacer que el pueblo recapacitara y les ayudara a ver la locura de confiar en Baal. Su oración fue escuchada, y Elías fue enviado al rey con su sorprendente mensaje de juicio por venir. Baal era adorado como la fuente de la vida y la bendición, como el gran dios de la tormenta, que suministraba a la tierra la humedad y daba a la tierra su aumento. Ahora Israel aprendería que Baal no podía proporcionar estas bendiciones.',
+    date: "869-866 a.C.",
+    scriptures: ["11|17:1"],
+    related: [
+      {
+        slug: "elias",
+        title: "Elías",
+      },
+    ],
+    images: [
+      {
+        caption: "Elías denunciando a Acab",
+        file: "Elijah_4-17-2013 12-29-51 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "917",
+    slug: "ocozias-6to-rey",
+    title: "Ocozías",
+    period: "7",
+    description:
+      'El nombre significa "Yahvé ha tomado mi mano". Es el hijo más joven de Joram y Atalía, el sexto rey de Judá. Reinó por menos de un año. Se unió a su tío Joram de Israel para luchar contra Hazael. Huyó pero fue herido de muerte.',
+    article:
+      'Ocozías, nombre que significa "Yahvé ha tomado (mi mano)". El sexto rey del reino del sur de Judá, que reinó por menos de un año (c. 841 a.C.). En 2 Crónicas 21:17 se le llama Joacaz, un nombre en el que las dos partes componentes de Ocozías simplemente se invierten, dejando el significado sin cambios. "Azarías" en 2 Crónicas 22:6 probablemente debería leerse "Ocozías", en armonía con la LXX, la Siríaca y 15 manuscritos hebreos. Ocozías era el hijo más joven de Joram y Atalía, y siguió a su padre en la maldad. Llegó al trono a la edad de 22 años (2 Reyes 8:26; 2 Crónicas 22:1-4).\n\nSe unió a su tío Joram (o Jehoram) de Israel para luchar contra Hazael de Damasco en Ramot de Galaad. Joram fue herido en esta batalla y se retiró a Jezreel para recuperarse de sus heridas. Mientras estaba allí, Ocozías lo visitó (2 Reyes 8:28, 29; 2 Crónicas 22:5, 6), y fue durante su estancia en Jezreel que Jehú se rebeló. Al llegar a Jezreel, este nuevo aspirante al trono mató a Joram. Ocozías huyó pero fue herido de muerte. Su cuerpo fue llevado a Jerusalén para ser enterrado (2 Reyes 9:27-29; 2 Crónicas 22:7-9). Después de su muerte, su madre Atalía mató a sus herederos (excepto al infante Joás, que fue escondido) y tomó el trono (2 Reyes 11:1-3).',
+    date: "863-841 a.C.",
+    scriptures: ["12|8:26", "12|9:27-29"],
+    related: [
+      {
+        slug: "joram-de-juda",
+        title: "Joram de Judá",
+      },
+      {
+        slug: "joas-o-joas",
+        title: "Joás (o Joás)",
+      },
+    ],
+    images: [
+      {
+        caption: "Ocozías herido de muerte.",
+        file: "jehu-ahaziah-joram_8-6-2013 2-08-32 PM.jpg",
+      },
+      {
+        caption: "Tell er-Rumeith, posible Ramot de Galaad",
+        file: "Tell er-Rumeith, possible Ramoth Gilead, from east, tb060503012_4-17-2013 11-59-25 AM.jpg",
+      },
+      {
+        caption: "Llanuras de Ramot de Galaad",
+        file: "Ramoth Gilead plains, tb031701151_4-17-2013 11-59-25 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "918",
+    slug: "fin-de-tres-anos-y-medio-sin-lluvia-elias-huye-a-horeb",
+    title: "Fin de tres años y medio sin lluvia, Elías huye a Horeb",
+    period: "7",
+    description:
+      "Al final de una sequía de 3 años y medio, Elías llama a Acab para que traiga a todos los profetas de Baal al Monte Carmelo para un enfrentamiento. Ellos claman a su dios para que responda con fuego, pero sin resultado. Dios responde a la oración de Elías. Luego ora 7 veces antes de que llegue la lluvia.",
+    article:
+      "Acab le contó a Jezabel cómo Dios respondió en el Monte Carmelo. Era un relato maravilloso de lo que Elías había hecho a través del poder y la fuerza de Dios. Pero no tuvo ningún efecto en tocar el corazón de Jezabel y provocar un deseo de enmendar sus malos caminos. Escuchar la verdad simplemente endurece donde no salva. Ella se enojó y amenazó su vida. Aquí estaba un hombre de Dios que había hecho un valiente servicio por su maestro, y ahora estaba amenazado de muerte por sus nobles esfuerzos.\n\nNo es en este mundo que los justos reciben sus justas recompensas por el servicio realizado en el nombre del Señor. Una de las aparentes tragedias de la vida es que aquellos que hacen más en la causa de la justicia son también aquellos que sufren más. La razón puede no siempre ser entendida. Pero hay consuelo en el pensamiento de que Jesús, el sin pecado, sufrió más de lo que cualquier hijo de la humanidad será llamado a sufrir. El siervo no es mayor que su señor.\n\nElías huyó por su vida. Después de una victoria tan completa sobre los profetas de Baal, y después de una gran muestra de coraje, parecería que el profeta de Dios estaría listo para enfrentar cualquier prueba de fe. Uno podría suponer que Elías, habiendo tenido una evidencia tan marcada de la presencia y bendición de Dios, nunca dejaría que su coraje fallara. Pero estaba sufriendo la reacción que tan frecuentemente sigue a un éxito marcado.\n\nHabía esperado que la gloriosa victoria en el Carmelo rompiera el hechizo de Jezabel sobre el rey. Cuando el profeta fue informado de la resistencia obstinada de la reina al nuevo llamado a la reforma, fue más de lo que podía soportar. No estaba preparado para el odio frío, calculado y determinado de esta reina malvada. Solo podía pensar en cómo escapar de las garras de un enemigo tan amargado e implacable. Sin pensar en las consecuencias de su curso, huyó por su vida.",
+    date: "866 a.C.",
+    scriptures: ["11|19:1-10"],
+    related: [
+      {
+        slug: "elias",
+        title: "Elías",
+      },
+    ],
+    images: [
+      {
+        caption: "Elías y los profetas de Baal",
+        file: "_GoodSalt-prcas2859_8-26-2013 6-09-22 PM.jpg",
+      },
+      {
+        caption:
+          "Elías alimentado por cuervos durante los 3 años y medio de sequía",
+        file: "_GoodSalt-prcas0461_8-26-2013 6-09-22 PM.jpg",
+      },
+      {
+        caption: "Elías huyendo de Jezabel",
+        file: "_GoodSalt-pppas0430_8-26-2013 6-09-22 PM.jpg",
+      },
+      {
+        caption: "Elías y la voz apacible y delicada.",
+        file: "_GoodSalt-prcas2858_8-27-2013 9-35-16 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "920",
+    slug: "jose-hijo-de-jonan",
+    title: "José",
+    period: "7",
+    description:
+      'El nombre significa "que él añada". Es el hijo de Jonán mencionado en la genealogía de Jesucristo en Lucas. Nota: hay muchos José diferentes en la Biblia.',
+    article: "",
+    date: "847-767 a.C.",
+    scriptures: ["42|3:30"],
+    related: [
+      {
+        slug: "jonan-o-jonam",
+        title: "Jonán (o Jonam)",
+      },
+      {
+        slug: "juda",
+        title: "Judá",
+      },
+    ],
+    images: [
+      {
+        caption: "Antepasado de Jesús",
+        file: "AncestorOfJesusColor.jpg",
+      },
+    ],
+  },
+  {
+    id: "921",
+    slug: "ahab-derrota-a-benhadad-i-de-siria",
+    title: "Acab derrota a Benhadad I de Siria",
+    period: "7",
+    description:
+      "Benhadad I de Damasco ataca Samaria. Acab lo repele y un año después lo hace aún más severamente en la batalla de Afec y lo captura. Pero Acab tontamente lo libera y le perdona la vida.",
+    article:
+      "Este capítulo (1 Reyes 20) es bastante diferente en contenido y espíritu de la mayoría del material en Reyes. Proporciona una imagen interesante y valiosa de la vida política de la época. Benhadad se había convertido en un rey poderoso y ahora ocupaba la posición dominante entre los gobernantes del occidente de Asia, como lo evidencia el hecho de que los registros asirios lo mencionan primero entre los aliados occidentales que lucharon contra Salmanasar III en Qarqar.\n\nCuando Benhadad asedia Samaria, exige que Acab se rinda. En medio de las amenazas, un profeta del Señor se acerca a Acab y le asegura la victoria a través de los jóvenes de Israel. Siete mil se reúnen al mediodía, cuando al calor del día los atacantes probablemente descansaban desarmados, sin esperar ser atacados. Benhadad en ese momento probablemente estaba bajo la influencia del alcohol, incapaz de evaluar la situación o tomar decisiones sabias. Dado que la salida se hizo al mediodía, el acercamiento fue detectado y no hubo una sorpresa completa.\n\nSe envió una palabra al rey de que un grupo de hebreos se acercaba. En su arrogancia, Benhadad ordenó que todos los hebreos fueran capturados, ya sea que hubieran salido para negociar términos de paz, para rendirse o cualquiera que fuera su propósito. Los hombres atacaron. Lucharon hombre a hombre y mano a mano. Un grupo alerta de arqueros o lanceros podría haber mantenido a raya a la pequeña banda de hebreos, pero los sirios no se dieron cuenta de la situación hasta que fue demasiado tarde. El pánico se apoderó del ejército, y huyeron.",
+    date: "853 a.C.",
+    scriptures: ["11|20:1-21"],
+    related: [
+      {
+        slug: "ahab",
+        title: "Acab",
+      },
+    ],
+    images: [
+      {
+        caption: "Soldados en batalla",
+        file: "_GoodSalt-pppas0190_8-27-2013 9-51-41 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "922",
+    slug: "ahab-y-la-viña-de-nabot",
+    title: "Acab y la viña de Nabot",
+    period: "7",
+    description:
+      "El rey Acab quiere una viña cerca del palacio en Jezreel que pertenece a Nabot. Como no quiere venderla al rey y la ley prohíbe tomar legalmente la tierra a menos que el dueño o sus herederos estén muertos, Jezabel trama malvadamente la muerte de Nabot.",
+    article:
+      'La viña de Nabot, codiciada por el rey Acab, estaba en la ciudad de Jezreel en la llanura de Esdrelón, al norte del monte Gilboa. Estaba en la ladera de un descenso empinado y rocoso que bajaba hacia el norte y el este. Como las antiguas viñas parecen haber estado al este de la ciudad, el palacio de Acab probablemente estaba en el mismo lado (ver cap. 18:45), ofreciendo una vista espléndida hacia el Jordán. Acab habló con Nabot. Este relato revela la disposición codiciosa, caprichosa y egoísta del rey, y la fría y calculadora crueldad de la reina.\n\nNabot, por supuesto, no estaba dispuesto a perder su viña. Para Nabot, parecía incorrecto deshacerse de su propiedad. El código levítico establecía que "la herencia de los hijos de Israel" no podía "pasar de tribu en tribu", sino que cada uno debía "mantenerse en la herencia de la tribu de sus padres" (Núm. 36:7-9). Si por alguna razón se vendía una propiedad, se establecían regulaciones específicas para su devolución periódica a las familias de los dueños originales (Lev. 25:13-28). Nabot creía que era contrario al propósito espiritual de la ley levítica transferir su herencia al rey.\n\nAcab había regresado a casa "triste y disgustado" al enterarse de que sus tratos con Benhadad no estaban de acuerdo con el propósito de Dios (cap. 20:43). Al no poder asegurar la viña en la que había puesto su corazón, volvió a casa "triste y disgustado". Su actitud era como la de un niño mimado y egoísta, interesado solo en sí mismo. Cuando no conseguía lo que quería, se volvía hosco y enojado, se negaba a comer y se arrojaba en su cama.\n\nTodo su reino parecía no significarle nada mientras no poseyera la viña de Nabot. La respuesta de Jezabel estaba llena de amargura y desprecio. ¿Un hombre que es señor del reino necesita admitir que no puede asegurar un pequeño terreno? ¿Acaso Acab, el rey, se está dejando frustrar por un sujeto insignificante? El asunto podría manejarse fácilmente: ella se encargaría del asunto y le mostraría cómo se hacen estas cosas.\n\nPara Acab, evidentemente, no importaba cómo Jezabel obtuviera la viña, siempre y fuera obtenida. No la detuvo de escribir cartas en su nombre, selladas con su sello, y así se volvió igualmente responsable con ella por el vil acto. La rápida aquiescencia de los gobernantes de la ciudad en llevar a cabo este complot es característica de lo peor que se puede encontrar en el despotismo oriental. La palabra del rey era ley. Incluso un asesinato vil se llevaría a cabo bajo el pretexto de justicia. Esta sumisión de los ancianos y nobles implicaba una profunda degradación moral entre el pueblo.\n\nParece que, según 2 Reyes 9:26, no solo Nabot, sino también sus hijos fueron apedreados. Cuando Acán fue ejecutado, sus hijos e hijas fueron apedreados con él (Josué 7:24-25). Con los hijos de Nabot fuera del camino, no habría herederos que reclamaran la viña. El crimen se volvió doblemente atroz. Nabot estaba muerto, y sus hijos con él, y toda su propiedad ahora pertenecía al dominio real. Sin preocuparse por las consecuencias, Acab inmediatamente tomó la propiedad como suya.',
+    date: "855 a.C.",
+    scriptures: ["11|21:1-16"],
+    related: [
+      {
+        slug: "ahab",
+        title: "Acab",
+      },
+    ],
+    images: [
+      {
+        caption: "La muerte de Nabot, Caspar Luiken, 1712",
+        file: "456px-Jezebel_has_Naboth_killed_8-27-2013 9-42-38 AM.jpg",
+      },
+      {
+        caption:
+          "Elías reprendiendo a Acab en la viña de Nabot, Sir Francis Dicksee",
+        file: "772px-Jezabel-and-Ahab-Meeting-Elijah-in-Naboth-s-Vineyard_8-27-2013 9-42-38 AM.jpg",
+      },
+      {
+        caption: "Elías reprendiendo a Acab en la viña de Nabot",
+        file: "_GoodSalt-prcas3482_8-27-2013 9-42-38 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "923",
+    slug: "micaías-profetiza-la-derrota-de-acab",
+    title: "Micaías profetiza la derrota de Acab",
+    period: "7",
+    description:
+      "Cuando Josafat, rey de Judá, insiste en que Acab, rey de Israel, traiga a un verdadero profeta de Dios para compartir el resultado de una batalla, Micaías irónicamente está de acuerdo con los falsos profetas, pero luego dice la verdad. Predice la muerte de Acab en Ramot de Galaad.",
+    article:
+      'Josafat ya estaba en alianza con Acab, alianza formada por el matrimonio de la hija de Acab, Atalía, con el hijo y heredero de Josafat, Joram (2 Reyes 8:18, 27). Dado que Ocozías, el hijo de esta unión, tenía 22 años en el momento de su ascensión (2 Reyes 8:26), la alianza debía existir desde hacía algún tiempo. El hecho de que los reyes que sucedieron a Josafat en Judá sean Joram y Ocozías (2 Reyes 8:16, 25), y que los dos hijos de Acab que lo sucedieron en el trono se llamaran Ocozías y Joram (1 Reyes 22:40; 2 Reyes 1:17; 3:1), es una indicación adicional de la amistad existente entre las dos casas reales en ese momento.\n\nJudá, al igual que Israel, parece haber tenido un ejército equipado con caballería y carros. Josafat era un líder militar fuerte, temido y respetado por las naciones circundantes (2 Crón. 17:10-19). Josafat, con su característica piedad (1 Reyes 22:43; cf. 2 Crón. 17:3-9; 19:3-11; 20:5-32), sugirió a Acab que se consultara al Señor antes de emprender la expedición, y que la consulta se hiciera ese día. Se llamó a los profetas. Estos probablemente no eran profetas de Baal, ya que es poco probable que Acab hubiera insultado a Josafat, quien había pedido explícitamente un profeta del Señor (Yahweh), convocando a los profetas declarados de una deidad pagana. Afirmaban hablar en nombre de Jehová, pero eran falsos profetas que predecían que Dios "entregaría". El rey de Judá está claramente insatisfecho con los profetas de Israel, lo que indica que deben ser colocados en una categoría completamente diferente de los profetas del verdadero Dios y el único "Señor", Jehová. A partir de aquí, sin embargo, la palabra Yahweh es usada tanto por el verdadero profeta de Jehová como por los otros para el Dios que adoran, como "Señor" (vs. 8, 11, 12, 14-17, 19, 21, 24). Se llama a un profeta de Yahweh. Había un hombre, según Acab, de quien era posible consultar a Yahweh, pero a Acab no le gustaba. Este hombre era un verdadero profeta de Jehová. Josefo afirma que era Micaías (Antigüedades viii. 14. 5) quien había profetizado el mal sobre Acab por la conducta imprudente del rey hacia Benhadad (cap. 20:35-43). Acab odiaba a Micaías. El mal suele odiar al bien. Micaías era odiado por Acab porque sus palabras no estaban en línea con los deseos del malvado rey de Israel, quien quería salirse con la suya y quería profetas que profetizaran en consecuencia.\n\nMicaías aparece, en una ironía dramática, para tomar y burlarse de las palabras de los falsos profetas. "Sí, \'ve y prospera\', eso es lo que los profetas te han estado diciendo, y \'el Señor lo entregará en manos del rey\'. Solo inténtalo y verás qué sucederá". Se puede escuchar el desprecio y el sarcasmo en la voz de Micaías mientras repite el mensaje que el rey había escuchado de "todos los profetas", el único mensaje que quería escuchar. Acab parece haber sentido de inmediato que el profeta hablaba con ironía. Acab estaba lo suficientemente familiarizado con Dios y con los hombres que falsamente afirmaban hablar en Su nombre como para saber que Micaías no pretendía que sus palabras fueran tomadas en serio.\n\nMicaías ahora cambia su tono y se vuelve profundamente serio. Entrega el mensaje que le fue dado por Dios. Israel sería dispersado sobre los montes y regresaría a sus hogares sin su rey. Acab, con su acto de violencia hacia Micaías, revela al hombre malvado que es. Encarcela al profeta cuyo consejo, si se hubiera seguido, le habría salvado la vida. Acab quiere que Israel piense que no cree en el profeta y que está seguro de que regresará sano y salvo. Pero su conducta posterior (v. 30) muestra que probablemente tenía serias dudas sobre el resultado del enfrentamiento al que se estaba comprometiendo. Micaías acepta el desafío del rey y quiere que todo el pueblo tome nota. Si Acab regresa en paz, entonces admitirá que el Señor no ha hablado por él y que es un falso profeta. Lo contrario, por supuesto, también es cierto. Si el rey no regresa en paz, entonces toda la nación puede saber que los 400 profetas que han hablado tan fuerte y audazmente no son más que engañadores y que el Señor no está con ellos. Es una prueba justa (Deut. 18:22).',
+    date: "853 a.C.",
+    scriptures: ["11|22:4-28", "14|18:6-27"],
+    related: [
+      {
+        slug: "ahab",
+        title: "Acab",
+      },
+    ],
+    images: [
+      {
+        caption: "La profecía de Micaías, Johann Christoph Weigel, 1695",
+        file: "Micaiah's_prophecy_8-27-2013 10-58-58 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "924",
+    slug: "acab-batalla-con-josafat-contra-los-sirios",
+    title: "Acab batalla con Josafat contra los sirios",
+    period: "7",
+    description:
+      "Acab desea recuperar Ramot de Galaad e invita a su aliado, Josafat de Judá, a unirse a él para atacar a los sirios. Micaías, el profeta de Yahweh, predice su perdición y fracaso, y la muerte, lo cual se cumple.",
+    article:
+      "Podría haberse esperado que Josafat, quien había pedido un profeta del Señor (v. 5), escuchara el mensaje del profeta y se negara a ir a la expedición que Micaías había predicho que terminaría en desastre. Es cierto que se había comprometido imprudentemente, con una promesa solemne (v. 4), a tomar parte en la guerra, y evidentemente estaba ligado a Acab por una alianza militar, pero podría haberle dejado claro a Acab que no podía ir en contra de la voluntad del Señor. De hecho, al hacerlo, podría haber disuadido a Acab de emprender la guerra. Al estar dispuesto a acompañar a Acab, Josafat estaba alentando a Acab a buscar el desastre. Como estaba, Josafat recibió una severa reprimenda del Señor por haberse unido a esta empresa (2 Crón. 19:2).\n\nLa precaución de Acab (disfrazarse) es característica de su temperamento de media creencia y media incredulidad. En el fondo de su corazón, sabía que Micaías era un verdadero profeta, y tenía el temor de que su profecía se cumpliera. Pero haría todo lo posible para evitar el cumplimiento de la predicción. Las mayores victorias y derrotas de la vida a veces dependen de causas que parecen pequeñas. El arquero sirio, disparando su arco al azar, mató a un rey y ganó una batalla. Es poco probable que el hombre que disparó la flecha supiera el resultado de su tiro.\n\nLos disparos al azar a veces son disparos del destino. Pero es bueno saber que ninguna flecha del destino puede golpear sin el conocimiento de Aquel que gobierna todo. El conductor podía girar el carro, pero no podía girar las manecillas del reloj del destino. La última hora de Acab había llegado, y sabía que la profecía de Micaías era verdadera. Acab hizo un valiente intento por seguir adelante, permitiendo que lo sostuvieran en su carro hasta el final. La muerte del rey al atardecer fue la muerte de las esperanzas de Israel de victoria. No solo Acab, con su terquedad, se llevó a sí mismo a una tumba sin gloria, sino que trajo tragedia y derrota a toda una nación.",
+    date: "853 a.C.",
+    scriptures: ["11|22:29-40"],
+    related: [
+      {
+        slug: "ahab",
+        title: "Acab",
+      },
+    ],
+    images: [
+      {
+        caption: "La profecía de Micaías",
+        file: "_GoodSalt-prcas4903_8-27-2013 11-04-43 AM.jpg",
+      },
+      {
+        caption:
+          'Josafat, Guillaume Rouille, "Promptuarii Iconum Insigniorum", 1553',
+        file: "Josaphat_rex_8-27-2013 11-04-43 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "925",
+    slug: "acab-batalla-contra-los-asirios-en-qarqar-aliado-con-ben-hadad",
+    title: "Acab batalla contra los asirios en Qarqar aliado con Ben-hadad",
+    period: "7",
+    description:
+      "La batalla entre los asirios y el rey Acab en alianza con Benhadad ocurre en Qarqar, en el Orontes, en el centro de Siria, en el sexto año de Salmanasar. Esta fecha muy específica proporciona una sincronización temprana entre la Biblia y la historia secular.",
+    article: "",
+    date: "853 a.C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "ahab",
+        title: "Acab",
+      },
+    ],
+    images: [
+      {
+        caption:
+          'El rey Acab, Guillaume Rouille, "Promptuarii Iconum Insigniorum", 1553',
+        file: "Ahab_rex_8-27-2013 11-14-36 AM.png",
+      },
+    ],
+  },
+  {
+    id: "926",
+    slug: "ocozías-de-israel-intimida-a-elías",
+    title: "Ocozías de Israel intenta intimidar a Elías",
+    period: "7",
+    description:
+      "Cuando Ocozías cae y se lastima, busca consejo de Baal-Zebub sobre si se recuperará. Elías intercepta a los mensajeros con malas noticias. Ocozías envía dos compañías de hombres para intimidar a Elías, pero son destruidos por el fuego.",
+    article:
+      "Cuando Ocozías cae y se lastima, busca consejo de Baal-Zebub sobre si se recuperará. Elías intercepta a los mensajeros con malas noticias. Ocozías envía dos compañías de hombres para intimidar a Elías, pero son destruidos por el fuego. Aquellos que se apartan del verdadero Dios hacia los dioses de los paganos encuentran no la vida, sino la muerte. Solo Dios es el autor de la vida, y es en Su poder sanar y restaurar. Cuando Satanás, bajo sistemas de religión falsa, promete sanar, es solo para llevar a los individuos bajo el control de su cruel voluntad, para gobernarlos con un poder que parece imposible de romper. Cuando los mensajeros regresaron tan rápido de su misión, Ocozías supo que no podían haber completado su viaje a Ecrón, y quiso saber la razón. Los mensajeros no reconocieron a Elías o pensaron que era mejor no decirle al rey quién había enviado la advertencia.\n\nEl envío de una delegación por parte de Ocozías para consultar al dios de Ecrón fue un acto de desprecio público y abierto hacia Jehová. Este fue un insulto a la Majestad del cielo que no podía quedar sin reprensión. Israel debía aprender que los dioses de los filisteos eran impotentes para dar ayuda en la hora de la necesidad, y que Jehová aún estaba sentado en Su trono eterno. Tan pronto como se entregó el mensaje, Ocozías pudo haber sabido que solo podía haber venido de Elías, pues ¿quién más hablaría con tanta certeza y valentía? El rey estaba bien familiarizado con la apariencia del profeta, por lo que pidió una descripción para establecer la identificación. Ocozías odiaba pero temía al profeta. El mensaje de perdición no llevó al rey al arrepentimiento. Sabía que era un hombre moribundo, pero estaba lleno de amargura y enojo, y estaba decidido a enviar a buscar al profeta para evitar, si era posible, el juicio amenazado. Se envió una banda de 50 hombres armados para intimidar al profeta.\n\nEl recurso de Ocozías a la amenaza en un esfuerzo por persuadir a Elías de retractarse de su pronunciamiento de perdición fue tonto. Mostró que el rey tenía la misma actitud que su padre. Acab había responsabilizado a Elías por la sequía desastrosa en Israel (1 Reyes 18:17). Ahora Ocozías, con el mismo razonamiento pervertido, responsabilizaba a Elías por las consecuencias que sabía que seguramente seguirían a la palabra del profeta. Tal intento arrogante de dictar al profeta y así revertir los planes de Dios no podía quedar sin reprensión. La ira de Dios cayó sobre la compañía de soldados. Contra la presunción y la rebelión de Ocozías, la majestad y la supremacía de Dios se revelaron. Al enviar un segundo grupo de 50, Ocozías mostró su perversidad y terquedad. Había recibido evidencia abrumadora del desagrado divino por su curso, pero estaba decidido a perseguir obstinadamente sus propósitos mal dirigidos.",
+    date: "853 a.C.",
+    scriptures: ["12|1:2-12"],
+    related: [
+      {
+        slug: "elijah",
+        title: "Elías",
+      },
+    ],
+    images: [
+      {
+        caption: "Los mensajeros de Ocozías con Elías, Gustave Doré, 1866",
+        file: "482px-094.Elijah_Destroys_the_Messengers_of_Ahaziah_8-27-2013 11-21-10 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "928",
+    slug: "eliseo-burlado-por-jóvenes-en-betel",
+    title: "Eliseo burlado por jóvenes en Betel",
+    period: "7",
+    description:
+      "Después de la ascensión de Elías, Eliseo va a construir las escuelas de los profetas y es burlado por jóvenes o hombres jóvenes al pasar por Betel. Esta burla no es pasada por alto. El juicio de Dios viene sobre los jóvenes a través de osos, y 42 mueren.",
+    article:
+      'Eliseo era un profeta de paz con un mensaje de paz. Su trabajo era traer vida y alegría al pueblo de Israel. Mientras entraba en esta importante misión, varios jóvenes salieron de la ciudad de Betel para burlarse de él y ridiculizar su trabajo como mensajero de Dios. Los jóvenes se burlaron de él diciendo: "Sube, calvo". La ascensión de Elías había sido un evento muy solemne. Dios había llevado a Su fiel siervo a Sí mismo sin permitirle probar la muerte. Los jóvenes de Betel habían oído hablar de la traslación de Elías, y hicieron de esta ocasión sagrada el tema de burlas y burlas.\n\nElías se había ido, y ahora se volvieron contra Eliseo, llamándolo burlonamente para que también hiciera su ascenso y se fuera de su medio. Los jóvenes estaban inspirados por Satanás, quien buscaba hacer lo que podía para contrarrestar el efecto del solemne evento que había ocurrido y que no podía dejar de dejar una profunda impresión en el pueblo de la tierra. Mientras Eliseo entraba en su trabajo, Satanás buscaba derrotar los planes y propósitos de Dios. Si se hubiera permitido que la burla de estos jóvenes pasara desapercibida, el trabajo que Dios pretendía hacer a través de Eliseo se habría retrasado mucho, y se habría ganado una victoria para la causa del mal. La ocasión requería una acción rápida y decisiva.\n\nEliseo era por naturaleza un hombre de bondad. Pero hay límites incluso para la bondad en la obra del Señor. El honor del nombre de Dios debe ser mantenido, y Sus obras solemnes no deben ser objeto de burla y burla por parte de la chusma impía. Un profeta de Dios debe ser respetado y su autoridad debe ser mantenida. La firmeza, la decisión y la acción resuelta son marcas de liderazgo en aquellos a quienes Dios llama a llevar responsabilidades por Él. Este no era el momento para la debilidad o la indecisión. Volviéndose hacia la multitud de jóvenes groseros y disolutos, Eliseo, bajo la inspiración del cielo, pronunció sobre ellos la maldición de Dios. El juicio que siguió vino de Dios. La severidad del castigo estaba en consonancia con la gravedad de los problemas en juego.\n\nSe necesitaba un ejemplo señalado para frenar el crecimiento de la irreligión y mostrar al pueblo cuán terrible es burlarse de las obras de Dios o despreciar a los ministros designados del cielo. Los hombres santos de Dios deben ser tratados con reverencia y respeto, porque están llamados a trabajar y hablar en nombre del Señor. Están aquí como representantes de Dios, y al mostrarles deshonra, los hombres muestran deshonra a Dios. El Señor hace responsables a los hombres por el trato que dan a Sus ministros elegidos. El terrible juicio que cayó sobre los jóvenes burlones de Betel muestra cuán terrible es despreciar la santidad o mostrar falta de respeto por un mensajero de Dios.',
+    date: "850 a.C.",
+    scriptures: ["12|2:23-24"],
+    related: [
+      {
+        slug: "elisha",
+        title: "Eliseo",
+      },
+    ],
+    images: [
+      {
+        caption: "Osos atacan a los jóvenes debido a su burla hacia Eliseo.",
+        file: "GoodSalt-pppas0202_8-6-2013 2-41-23 PM.jpg",
+      },
+      {
+        caption:
+          "Eliseo va a construir las escuelas de los profetas y es burlado por jóvenes o hombres jóvenes al pasar por Betel. El juicio de Dios viene sobre los jóvenes a través de osos, y 42 mueren.",
+        file: "Bear_4-8-2013 4-12-08 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "930",
+    slug: "eliseo-promete-a-la-mujer-sunamita-un-hijo",
+    title: "Eliseo promete a la mujer sunamita un hijo",
+    period: "7",
+    description:
+      "La bondad de una mujer sunamita y su esposo es devuelta cuando Eliseo es tratado con hospitalidad. Él pregunta qué puede hacer por ellos y luego les promete un hijo. Este hijo luego muere, pero es resucitado.",
+    article:
+      "Sunem es una ciudad en el valle de Jezreel, a unas 5 millas (8 km) al norte-noroeste del monte Gilboa, y quizás a 16 millas (25.6 km) o más del monte Carmelo, donde Eliseo parece haber hecho su hogar en ese momento (v. 25). En sus viajes de ida y vuelta por el reino, Eliseo pasaba frecuentemente por este pueblo, ahora Sôlem. Una mujer de alto rango a menudo instaba a Eliseo a quedarse en su casa y la de su esposo. A Eliseo se le extendió la hospitalidad de este hogar cómodo. Los hombres de Dios tienen las mismas necesidades de comida y refugio que sus semejantes, y aprecian las bendiciones de la comunión y la amistad cristiana. La vida de un fiel siervo de Dios a menudo se hace feliz y agradable por las cortesías amables que le extienden aquellos a quienes está aquí para servir.\n\nCon el tiempo, decidió construir una habitación en su casa para que el profeta se quedara. Las riquezas a menudo hacen que el poseedor sea egocéntrico y olvidadizo de las necesidades y deseos de los demás. Pero evidentemente este no era el caso de esta noble mujer de Sunem. Era una gran mujer, pero no perdió el contacto común. No vivía solo para sí misma, sino que se esforzaba por hacer felices a los demás. Teniendo sus propias necesidades bien provistas, compartía sus posesiones con los demás. Tenía sus propias preocupaciones y responsabilidades domésticas, pero no permitía que los deberes de su hogar la hicieran olvidar las necesidades y comodidades de Eliseo y quizás de muchos otros. En sus viajes, Eliseo a menudo esperaba con ansias las horas agradables de descanso y relajación que serían suyas cuando llegara al pueblo de Sunem. La hospitalidad amable ayuda a traer entre los hijos de la tierra un poco de la paz y la amistad del cielo.\n\nLa sunamita había sido amable con Eliseo, y él sería amable con ella. Pero, ¿qué podía hacer para devolverle los favores que le había otorgado? Ella no necesitaba cosas materiales. Pero Eliseo quería darle algún token de su aprecio. Un corazón noble no le gusta recibir un favor y no hacer ningún retorno. Así que le preguntó qué podía hacer por ella. La pregunta era una pregunta de prueba, porque revelaría exactamente lo que había en el corazón de la mujer. ¿Había recibido al profeta en nombre de un profeta, o tenía un deseo secreto de alguna recompensa? Notó que ella no tenía un hijo y predijo que el próximo año en ese momento tendría un hijo.",
+    date: "847 a.C.",
+    scriptures: ["12|4:8-37"],
+    related: [
+      {
+        slug: "elisha",
+        title: "Eliseo",
+      },
+    ],
+    images: [
+      {
+        caption: "La habitación de Eliseo...",
+        file: "_GoodSalt-prcas0110_8-27-2013 11-39-44 AM.jpg",
+      },
+      {
+        caption:
+          "La bondad de una mujer sunamita y su esposo es devuelta cuando Eliseo es tratado con hospitalidad. Él pregunta qué puede hacer por ellos y luego les promete un hijo.",
+        file: "GoodSalt-stdas0347_8-6-2013 2-58-46 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "931",
+    slug: "eliseo-y-el-aceite-de-la-viuda",
+    title: "Eliseo y el aceite de la viuda",
+    period: "7",
+    description:
+      'El esposo de una mujer muere. Él es uno de los "hijos de los profetas". Ella tiene deudas y puede perder a sus dos hijos. Pide ayuda a Eliseo y milagrosamente recibe aceite para pagar sus deudas.',
+    article:
+      'El esposo de una mujer muere. Él es uno de los "hijos de los profetas". Ella tiene deudas y puede perder a sus dos hijos. Pide ayuda a Eliseo y milagrosamente recibe aceite para pagar sus deudas. Cuando preguntó: "¿Qué debo hacer?", la pregunta reveló el espíritu amable del profeta. Eliseo era un hombre interesado en la gente, siempre amistoso, siempre simpático y siempre dispuesto a ayudar. Cuando el rey lo llamó, estaba listo para satisfacer las necesidades de todo el ejército, y cuando una viuda pobre y sin amigos lo llamó, no la rechazó.\n\nPreguntó: "¿Qué tienes?" Dios usa lo que tenemos. No está limitado en Sus recursos o Sus poderes, y podría haber satisfecho fácilmente las necesidades de la mujer sin su olla de aceite. Pero tomó lo que ella tenía y puso Su bendición sobre ello. La olla de aceite no era mucho, pero en la mano de Dios y con Su bendición, fue suficiente para satisfacer todas sus necesidades. La olla de aceite era el signo de la máxima pobreza de la viuda, pero también era el medio empleado por el Señor para satisfacer todas sus necesidades.',
+    date: "849 a.C.",
+    scriptures: ["12|4:1-7"],
+    related: [
+      {
+        slug: "elisha",
+        title: "Eliseo",
+      },
+    ],
+    images: [
+      {
+        caption: "La viuda vertiendo aceite después del milagro.",
+        file: "GoodSalt-lwjas0179_8-6-2013 2-49-26 PM.jpg",
+      },
+      {
+        caption:
+          'Entonces él dijo: "Ve, pide prestadas vasijas de todas partes, de todos tus vecinos, vasijas vacías; no recojas solo unas pocas" (2 Reyes 4:3).',
+        file: "Clay Pots_4-8-2013 3-41-34 PM.jpg",
+      },
+      {
+        caption: "La viuda y el aceite.",
+        file: "_GoodSalt-stdas0460_8-27-2013 11-34-01 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "933",
+    slug: "joacaz",
+    title: "Joacaz",
+    period: "7",
+    description:
+      'Su nombre significa "Yahweh ha tomado mi mano". Es el hijo y sucesor de Jehú, rey de Israel durante 17 años. Sigue los caminos malvados de Jeroboam, pero clama a Dios cuando los sirios los oprimen y finalmente son expulsados por su hijo Joás.',
+    article:
+      'Joacaz, cuyo nombre significa "Yahweh ha tomado (mi mano)". El duodécimo rey de Israel (si se incluye a Tibni en la cuenta), hijo y sucesor de Jehú. Gobernó 17 años (c. 814-c. 798 a.C.). El debilitado reino que heredó de su padre sufrió numerosos desastres como castigo por su propia apostasía (2 Reyes 13:1-3). Dos reyes de Damasco, primero Hazael y luego Ben-hadad III, oprimieron a Israel, reduciendo sus defensas a 50 jinetes, 10 carros y 10,000 soldados de infantería (vs 3, 7).\n\nSi recordamos que Acab pudo reunir 2,000 carros menos de 50 años antes, la extensión de la decadencia militar del reino es claramente evidente. En su desesperación, Joacaz se volvió al Señor, y como resultado de una conversión parcial recibió algún alivio inesperado a través de un "salvador" (vs 4, 5), por el cual probablemente se indica al rey asirio Adadnirari III (c. 810-782 a.C.). Adadnirari invadió Siria en 806 y obligó al rey de Damasco a pagar tributo, empobreciendo el reino hasta tal punto que durante algún tiempo los reyes de Damasco no pudieron molestar a Israel.\n\nAlgunos ven evidencia de esta identificación del "salvador" en el hecho de que la segunda parte del nombre de Adadnirari, que se deriva del verbo acadio narâru, "ayudar", significa "ayudador", una palabra estrechamente relacionada con "salvador". Joacaz fue enterrado en Samaria y fue sucedido en el trono por su hijo Joás, o Joás (v 9).',
+    date: "850-798 a.C.",
+    scriptures: ["12|13:1", "12|13:9"],
+    related: [
+      {
+        slug: "jehu",
+        title: "Jehú",
+      },
+      {
+        slug: "joás",
+        title: "Joás",
+      },
+    ],
+    images: [
+      {
+        caption: "Joacaz",
+        file: "Jehoahaz_of_Israel_8-6-2013 2-46-18 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "934",
+    slug: "eliseo-advierte-a-la-mujer-sunamita-de-una-hambruna-de-7-años",
+    title: "Eliseo advierte a la mujer sunamita de una hambruna de 7 años",
+    period: "7",
+    description:
+      "Una hambruna de siete años está por venir a Israel, y Eliseo advierte a la mujer sunamita que huya. Ella va a Filistea y, cuando regresa, le pide al rey que le devuelvan su propiedad. Giezi, el sirviente de Eliseo, ayuda en el proceso.",
+    article:
+      "Este incidente ocurrió algún tiempo después del registrado en el cap. 4:8-37, pero no sabemos cuánto tiempo después. En el momento de la restauración del hijo, el esposo todavía estaba vivo. Pero ahora hay indicaciones de que ella pudo haberse convertido en viuda. Al menos su esposo no es mencionado, y las instrucciones dadas para dejar su hogar una vez próspero parecen estar dirigidas a alguien que no tenía la ayuda guía de un esposo. Eliseo tomó un interés amable en las personas a las que fue llamado a servir. Trataba de ser un amigo para todos.\n\nDondequiera que pudiera hacer algo para aligerar y mejorar la situación de alguien, allí estaba listo para ayudar. Había tiempos difíciles por delante, y la mujer fue aconsejada a partir por un tiempo para residir en algún lugar donde la situación sería más fácil que en su hogar en Sunem. Él le advirtió de una hambruna de siete años. Esta hambruna ocurrió en algún momento durante el reinado de Joram de Israel, pero exactamente cuándo, es imposible decirlo. La mujer de Sunem había aprendido que hay bendiciones en el camino de la obediencia. La instrucción dada fue por la dirección de Dios, y aunque las dificultades y las penurias aún estaban por delante, los resultados habrían sido mucho peores si se hubiera negado a obedecer esas instrucciones.",
+    date: "839 a.C.",
+    scriptures: ["12|8:1-6"],
+    related: [
+      {
+        slug: "elisha",
+        title: "Eliseo",
+      },
+    ],
+    images: [
+      {
+        caption: "Eliseo y la mujer sunamita",
+        file: "_GoodSalt-prcas1498_8-27-2013 12-24-12 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "936",
+    slug: "eliseo-purifica-la-olla-de-guiso",
+    title: "Eliseo purifica la olla de guiso",
+    period: "7",
+    description:
+      'Eliseo está enseñando a los hijos de los profetas en Gilgal. Cuando se hace un guiso, alguien accidentalmente recoge una planta venenosa. Cuando los hombres se quejan de que "hay muerte en la olla", Eliseo arroja un poco de harina y el guiso se vuelve bueno.',
+    article:
+      'Elías había hecho mucho para construir la obra del Señor al mostrar interés en estos importantes centros de entrenamiento donde los jóvenes podían recibir una preparación para una vida de ministerio a sus semejantes. Eliseo continuó su interés en estas escuelas. A menudo las visitaba para dar el aliento y el consejo necesarios. Una vez visitó Gilgal durante una hambruna. Elías vino a visitar y estaba sentado hablando con los hijos de los profetas. La ocasión probablemente era de instrucción espiritual. Como María se sentó a los pies de Jesús, así estos jóvenes se sentaron ante Eliseo y aprendieron de él lecciones de Dios. Estas serían consideradas horas preciosas, y el Espíritu Santo estaría presente, trayendo a las mentes de los jóvenes lecciones de fe y confianza en Dios. Aprendieron a apreciar las cosas del Espíritu más que su comida diaria.\n\nEn algún momento, Eliseo instruyó que se preparara una olla para comida. La comida espiritual es importante, pero el cuerpo también necesita ser alimentado. Eliseo probablemente se sintió conmovido al ver en las formas delgadas de los estudiantes los efectos de la hambruna que estaba devastando la tierra. Interesado en su bienestar espiritual, también se interesó en sus necesidades temporales. Se dieron órdenes de que se preparara la gran olla, para que todos pudieran ser alimentados. Las escuelas de los profetas probablemente estaban situadas en comunidades rurales, donde los estudiantes tendrían la oportunidad de cultivar su propia comida y recibir una formación en labores agrícolas. Debido a la escasez de alimentos, los estudiantes en las escuelas proféticas evidentemente se vieron obligados a salir a los campos a buscar comida.\n\nUn hombre encontró una vid silvestre con una calabaza. El tipo exacto de planta mencionada aquí no ha sido identificado positivamente. Algunos han tomado que se refiere a una especie de pepino o calabaza silvestre, con forma de huevo y con un sabor amargo. Cuando se come, causa dolor y purgas violentas. Los jóvenes pueden haber tomado estos pepinos silvestres por los comunes, que eran muy apreciados como alimento (Núm. 11:5). El hecho de que un hombre sea un profeta no le da todo el conocimiento, ni lo excusa de ejercer todo cuidado y precaución. Este joven, sin conocer la naturaleza de las hierbas ante él, recogió veneno y puso en peligro las vidas de todos los que participaron de los frutos de su trabajo.\n\nMientras el guiso se cocinaba, alguien exclamó: "¡Hay muerte en la olla!" Probablemente el sabor amargo reveló de inmediato el hecho de que la comida era venenosa. Puede haber sido mezclada en la olla con otras hierbas que eran perfectamente saludables, pero las calabazas esparcieron su veneno por toda la olla. El pecado es el veneno de la muerte. Su influencia se extiende. Eliseo pide un poco de harina. Si la harina era un antídoto natural para las hierbas venenosas no se revela. Puede haber tenido el mismo significado que la sal que fue arrojada a las aguas contaminadas de Jericó (cap. 2:20-22). La harina era saludable, una fuente de vida y salud para aquellos que la consumían.\n\nEn la mano del profeta, se convirtió en un símbolo de vida que contrarrestó los efectos malignos de las semillas de la muerte. Aquí hay una lección espiritual. El evangelio de Cristo es el pan de vida para aquellos bajo la condenación de la muerte. No importa cuánto tiempo o cuánto el pecador haya participado del fruto maligno de la muerte, hay poder en el evangelio para sanar y restaurar. Todo el mal que el pecado ha causado, el Espíritu Santo tiene el poder de deshacer. Dios tiene el antídoto para toda forma de mal. Cristo es la fuente de vida eterna para todo hombre que tiene la voluntad de vivir (Juan 6:27, 33, 35).',
+    date: "848 a.C.",
+    scriptures: ["12|4:38-41"],
+    related: [
+      {
+        slug: "elisha",
+        title: "Eliseo",
+      },
+    ],
+    images: [
+      {
+        caption: '"El profeta Eliseo" por Giorgio Vasari, c. 1566',
+        file: "the-prophet-elisha_8-6-2013 2-56-22 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "937",
+    slug: "segunda-invasión-de-israel-desde-asiria",
+    title: "Segunda invasión de Israel desde Asiria",
+    period: "7",
+    description:
+      "Durante el reinado malvado de Oseas en Israel, Asiria asedia Samaria durante tres años y lleva a Israel cautivo a Asiria debido a sus pecados contra Dios.",
+    article:
+      "La Biblia menciona a Salmanasar como el que comenzó el asedio, pero no nombra al rey que tomó la ciudad. La Crónica Babilónica afirma que la ciudad de Shamarain (probablemente Samaria) cayó durante el reinado de Salmanasar, pero su sucesor, Sargón II, hizo la afirmación, en documentos escritos hacia el final de su reinado, de que él mismo capturó la ciudad de Samaria al comienzo de su reinado. Si esta afirmación es cierta, entonces podría haber sido en la capacidad de comandante general de los ejércitos asirios y no como rey que efectuó la captura de la ciudad. Los historiadores difieren, pero parece haber evidencia razonable de su caída en la última parte del reinado de Salmanasar.\n\nIsrael había pecado. Esta fue la razón principal de la caída de Israel. Difícilmente podrían mostrar una ingratitud más baja que olvidar la misericordia y la bondad de Dios. La idolatría implicaba infinitamente más culpa entre los hebreos que entre otros pueblos, porque los paganos tenían solo un grado limitado de iluminación y no habían experimentado las maravillosas bendiciones que Dios había otorgado a Su pueblo elegido. Los israelitas sabían por su propia experiencia personal que Dios era amable y benéfico, y a pesar de todo esto, se apartaron de Él para adorar a dioses falsos.\n\nLos gobernantes de Israel eran responsables de llevar a su pueblo al pecado. Introdujeron y alentaron la adoración de dioses falsos como Baal, y apartaron al pueblo de la adoración de Jehová a las formas más corruptas de adoración. Sin embargo, el pueblo no estaba por ello sin excusa. Los hombres son responsables individualmente por sus actos. El mal comportamiento del líder no proporciona excusa para que los seguidores adopten el mismo curso pecaminoso. Sin embargo, los israelitas dependían en gran medida de la instrucción oral. Las copias de la Ley eran raras, y pocos, si es que alguno, tenían el privilegio de tener las Sagradas Escrituras en sus hogares. El pueblo recibía su conocimiento de la voluntad de Dios a través de los sacerdotes y otros líderes religiosos. Si estos instructores espirituales enseñaban y practicaban el mal, el resultado natural sería que aquellos bajo su cargo siguieran el mismo curso. La mayoría de los israelitas carecían de una experiencia religiosa personal.\n\nAsí que fueron llevados cautivos. Un pequeño remanente permaneció (ver 2 Crón. 34:9). Estos se casaron con los paganos, adoptaron sus costumbres y olvidaron tanto las costumbres de sus padres que el pueblo de Judá se negó a considerarlos como hermanos. Después de algunos años, establecieron un templo propio en el monte Gerizim, donde adoraban y llevaban a cabo su ritual como rival del Templo en Jerusalén. El pueblo que fue llevado cautivo nunca regresó. Algunos de sus descendientes se unieron al remanente de Judá que regresó bajo el decreto de Ciro (Esdras 1:1-4). Otros se casaron con los pueblos donde vivían, aceptaron su religión y sus costumbres, y perdieron su identidad. Algunos, sin duda, permanecieron fieles a sus convicciones religiosas, dejando que su luz brillara en las tierras a las que fueron llevados, e influyendo en algunos allí para que aceptaran la adoración del único Dios verdadero.",
+    date: "725-722 a.C.",
+    scriptures: ["12|17:5-23"],
+    related: [
+      {
+        slug: "oseas",
+        title: "Oseas",
+      },
+    ],
+    images: [
+      {
+        caption: "Asiria invade Israel.",
+        file: "GoodSalt-prcas3126_8-6-2013 3-47-37 PM.jpg",
+      },
+      {
+        caption: "Un lamassu del palacio de Sargón II en Dur-Sharrukin.",
+        file: "Human_headed_winged_bull_profile_4-4-2013 11-32-32 AM.jpg",
+      },
+      {
+        caption:
+          "Sargón II y un dignatario. Bajo relieve de la pared izquierda del palacio de Sargón II en Dur Sharrukin en Asiria (ahora Khorsabad en Irak), c. 716-713 a.C. Ubicado en el Museo del Louvre en París.",
+        file: "Sargon II_4-4-2013 11-32-32 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "938",
+    slug: "naamán-sanado-giezi-leproso",
+    title: "Naamán sanado, Giezi leproso",
+    period: "7",
+    description:
+      'Naamán, un leproso sirio, busca sanidad del "profeta en Israel" cuando una joven cautiva le cuenta a su esposa sobre Eliseo. Viaja con regalos y es sanado después de lavarse en el Jordán. Giezi, el sirviente de Eliseo, codiciosamente busca los regalos y contrae lepra.',
+    article:
+      "Siria a menudo estaba en guerra con Israel, pero este era evidentemente un período de paz. Solo un corto tiempo antes, Acab había sido asesinado en batalla contra Benhadad (1 Reyes 22:34-37). El nombre del rey de Israel no se da, pero se cree que los eventos tuvieron lugar durante el reinado de Joram, el hijo de Acab. La narrativa revela las cambiantes fortunas de las naciones y da una imagen interesante de las relaciones internacionales y las costumbres de la época. Naamán era una persona importante en Siria. Había ganado honor y fama por las victorias que había ayudado a Siria a lograr, pero tenía la desgracia de ser leproso. Sin embargo, mantuvo su posición como comandante de los ejércitos sirios, aunque debió haber estado seriamente discapacitado por la terrible enfermedad con la que estaba afligido.\n\nEn las frecuentes incursiones fronterizas, una joven cautiva fue tomada y sirvió a la esposa de Naamán. La joven cautiva vivía la vida de una esclava, obligada a servir en el hogar del comandante de los ejércitos que habían derrotado a Israel. Pero debió haber sido fiel en su servicio, de lo contrario no habría sido empleada en el hogar de un funcionario importante. Notó la lepra de Naamán y habló con la esposa de Naamán. Aunque era una cautiva, la joven no olvidó su tierra natal ni a su Dios. Tampoco pensó mal de aquellos que la habían tomado cautiva y la habían forzado a una servidumbre involuntaria.\n\nLlena de amor hacia su Dios, su corazón se llenó de simpatía por su amo enfermo y su esposa. En lugar de desearle mal a Naamán debido a las desgracias que le habían ocurrido, le deseó bien y esperó su recuperación de su terrible enfermedad. Recordando las obras maravillosas de Eliseo en su tierra natal, tenía fe de que el profeta podía sanar a Naamán de su lepra. Lo que Dios había hecho a través de Su siervo en Israel, ella creía que también podía hacerlo hacia aquellos de una raza extranjera.\n\nEs decir, Naamán fue a su señor, el rey de Siria, y le relató las palabras de la joven cautiva. La joven no entendía el significado de sus palabras de fe en Dios. Naamán creyó porque la joven creyó, y llevó su testimonio ante el rey de Siria. Así, Benhadad aprendería que el Dios de Israel era un Dios de poder y un Dios de amor. Había derrotado a los ejércitos de Israel en batalla, y podría haber sido llevado a creer que los dioses de Siria eran más poderosos que Jehová. Pero aprendería que el Dios de Israel podía hacer lo que estaba más allá del poder de los hombres y más allá del poder de los dioses sirios. El mayor testimonio que se puede dar en nombre del Dios del cielo es el testimonio de una persona cuya vida refleja una confianza implícita en Él. El testimonio de la joven llevó a Naamán a buscar a Eliseo en Israel y fue sanado.",
+    date: "830 a.C.",
+    scriptures: ["12|5:1-27"],
+    related: [
+      {
+        slug: "elisha",
+        title: "Eliseo",
+      },
+    ],
+    images: [
+      {
+        caption: "La joven cautiva",
+        file: "_GoodSalt-prcas1640_8-27-2013 12-29-08 PM.jpg",
+      },
+      {
+        caption: "Naamán visita a Eliseo",
+        file: "_GoodSalt-prcas0458_8-27-2013 12-29-08 PM.jpg",
+      },
+      {
+        caption: "Naamán es sanado.",
+        file: "GoodSalt-lwjas0178_8-6-2013 3-15-21 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "939",
+    slug: "elias-alimenta-a-100-hombres",
+    title: "Elías alimenta a 100 hombres",
+    period: "7",
+    description:
+      "Un regalo de pan es llevado a Elías, quien instruye a su sirviente a alimentar a 100 hombres. El sirviente duda, pero Elías repite la instrucción y los hombres son alimentados, sobrándoles comida. La historia refleja la alimentación de una multitud por Jesús con pan en Mateo 14:14-21.",
+    article:
+      'Según la ley de Moisés, todos los primeros frutos de la cosecha debían ser ofrecidos a Dios y dados a los sacerdotes (Núm. 18:12, 13; Deut. 18:4). En este caso, un fiel adorador de Jehová llevó sus primeros frutos a Elías, "el hombre de Dios". Los sacerdotes levitas habían abandonado el reino del norte mucho antes (2 Crón. 11:13, 14), y algunos de los piadosos en Israel probablemente reconocieron en los profetas a los representantes de Jehová a quienes podían llevar las ofrendas requeridas por la ley para los sacerdotes.\n\nElías instruyó que esta comida fuera dada al pueblo. Era un tiempo de necesidad, incluso para el profeta y los que estaban con él. La gente tenía hambre y necesitaba comida. Elías podría haber pensado en sí mismo y en sus propios intereses, pero en cambio pensó en los del pueblo. Así también Jesús, cuando estaba con sus discípulos en un lugar desierto, "vio una gran multitud y tuvo compasión de ellos" (Mateo 14:14). Cuando llegó la noche, los discípulos querían despedirlos para que pudieran encontrar comida, pero las palabras de Jesús fueron: "No es necesario que se vayan; dadles vosotros de comer" (Mateo 14:16). Dios todavía habla a sus hijos hoy mientras miran a las multitudes cansadas y necesitadas de la tierra: "Dad al pueblo para que coma".\n\nEl sirviente miró los primeros frutos con ojos humanos, pero Elías miró ese mismo regalo de comida con los ojos de la fe y de Dios. Para el sirviente, la orden del profeta parecía casi tonta e imposible de cumplir. ¿Qué harían 20 pequeños panes de cebada y un poco de grano para satisfacer el hambre de 100 hombres? Elías habló por inspiración. Un profeta que habla en nombre del Señor siempre habla las palabras de Dios. Hay un poder infinito en Dios. Sus recursos pueden suplir las necesidades de todos. El toque de su mano puede hacer que la provisión más escasa se multiplique. Fue el poder de Dios lo que hizo que esos pocos panes se multiplicaran hasta que todos los presentes tuvieron suficiente para satisfacer sus necesidades. El agricultor desconocido trajo su regalo de primeros frutos a Elías como una ofrenda a Dios. El Señor aceptó ese regalo y puso su bendición sobre él.\n\nEl cielo está más cerca de la tierra de lo que muchos creen. Dios siempre está interesado en sus hijos necesitados de la tierra, y está listo en todo momento para suplir sus necesidades. No hay tierra o pueblo en la tierra donde el poder de Dios no esté constantemente en operación, supliendo las necesidades de los necesitados. Cada jardín y campo productivo da testimonio del poder milagroso de Dios y su amor sin límites. Dios siempre está trabajando, cuidando los intereses de los frágiles hijos de la tierra. Las manifestaciones de su amor y poder pueden no verse hoy de manera tan marcada como en los días de Elías, pero si nuestros ojos pudieran abrirse, reconoceríamos mucho más claramente y con mucha más frecuencia que Dios todavía está presente y que todavía trata con amor y misericordia a los hijos necesitados de la tierra. Los hijos fieles de Dios todavía pueden traer sus regalos al Señor, y con su poder y bendición, sus escasas provisiones pueden multiplicarse para suplir las necesidades temporales y espirituales de las multitudes de la tierra. Lo que el mundo necesita hoy es mucha más fe y discernimiento espiritual, el valor y la compasión, la fuerza y el espíritu del profeta Elías.',
+    date: "847 a.C.",
+    scriptures: ["12|4:42-44"],
+    related: [
+      {
+        slug: "elias",
+        title: "Elías",
+      },
+    ],
+    images: [
+      {
+        caption: "Elías alimentando a 100 hombres, Tintoretto, c. 1577-78",
+        file: "427px-Tintoretto_Jacopo_-_Elisha_Multiplies_the_Bread_-_1577-78_8-27-2013 11-53-26 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "940",
+    slug: "jehoram-de-juda-recibe-escritura-profetica-de-elias",
+    title: "Jehoram de Judá recibe una carta de Elías",
+    period: "7",
+    description:
+      "Jehoram es un rey malvado de Judá. Está casado con Atalía, la hija de Acab, y hace que Judá se aparte de Dios. Una carta es escrita y enviada a él por Elías, prediciendo graves aflicciones para su pueblo y enfermedad y muerte para él mismo.",
+    article: "",
+    date: "851 a.C.",
+    scriptures: ["14|21:12-15"],
+    related: [
+      {
+        slug: "elias",
+        title: "Elías",
+      },
+    ],
+    images: [
+      {
+        caption: "Icono de Jehoram de Judá por Guillaume Rouille en 1553.",
+        file: "Jehoram_of_Judah_4-4-2013 10-46-21 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "941",
+    slug: "elias-y-el-milagro-del-hacha-que-flota",
+    title: "Elías y el milagro del hacha que flota",
+    period: "7",
+    description:
+      "Mientras cortaban árboles para obtener madera para una escuela para los hijos de los profetas, una cabeza de hacha de hierro prestada cae al Jordán. Piden ayuda a Elías. Él corta un palo y lo arroja al agua, y la cabeza del hacha flota y es recuperada.",
+    article:
+      'Los hijos de los profetas eran estudiantes en una de las escuelas de los profetas, probablemente la de Jericó, ya que fueron al Jordán para conseguir madera (v. 2). Cuando le explicaron a Elías que la escuela había crecido y ya no podía albergar a los estudiantes, alguien sugirió que la ampliaran. Estos jóvenes no tenían miedo al trabajo. Uno de los objetivos de las escuelas de los profetas era dar a los estudiantes una formación práctica para la vida. Los jóvenes eran entrenados para trabajar como la gente a su alrededor, ya que no debían mantenerse alejados de aquellos a quienes tenían la responsabilidad de servir. Entrenar las manos estaba en perfecta armonía con entrenar la mente y el corazón.\n\nElías estuvo de acuerdo con el plan. El hecho de que se le pidiera permiso a Elías y que fuera él quien diera las órdenes para proceder con el proyecto muestra que el profeta era un hombre de autoridad, teniendo bajo su cargo la dirección de las diversas escuelas. Primero le pidieron permiso para ir y hacer el trabajo ellos mismos, y luego extendieron la invitación a Elías para que los acompañara. Él accedió a ir. Elías era un hombre del pueblo. Estaba igualmente cómodo con reyes y generales que con los trabajadores en su labor diaria. Nunca se mantuvo distante. Dondequiera que hubiera una oportunidad de servir, dondequiera que su presencia fuera bienvenida, allí deseaba estar. Cuanto mayor era el líder, mayor era la disposición a servir.\n\nUn estudiante pidió prestada un hacha para el trabajo. Los judíos usaban hierro para las cabezas de hacha desde muy temprano. Una cabeza de hacha en esos días no era más segura que en los tiempos modernos, ya que la legislación de Moisés trata casos en los que una cabeza de hacha se desprende de la madera mientras un hombre está talando un árbol (Deut. 19:5). Cuando la cabeza del hacha prestada se desprendió del mango y cayó al río, el estudiante exclamó: "¡Era prestada!" Elías preguntó dónde había caído y luego cortó un palo y lo arrojó al agua. La cabeza del hacha flotó y fue recuperada.',
+    date: "846 a.C.",
+    scriptures: ["12|6:1-7"],
+    related: [
+      {
+        slug: "elias",
+        title: "Elías",
+      },
+    ],
+    images: [
+      {
+        caption: "Elías recupera la cabeza del hacha que flota",
+        file: "GoodSalt-pppas0209_8-6-2013 3-10-18 PM.jpg",
+      },
+      {
+        caption: "Río Jordán",
+        file: "Jordan River north of Sea of Galilee, tb032807009_4-4-2013 10-45-07 AM.jpg",
+      },
+      {
+        caption: "Fotografía de cerca del río Jordán",
+        file: "Jordan River north of Sea of Galilee, tb053106694_4-4-2013 10-45-07 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "942",
+    slug: "elias-frustra-emboscadas-sirias",
+    title: "Elías frustra las emboscadas sirias",
+    period: "7",
+    description:
+      "Elías informa al rey de Israel sobre varias emboscadas colocadas por el rey de Damasco, y luego es el objetivo de un ataque sirio.",
+    article:
+      "Elías informa al rey de Israel sobre varias emboscadas colocadas por el rey de Damasco, y luego es el objetivo de un ataque sirio. Sin embargo, ciega a los soldados sirios y los lleva a la capital, Samaria, entregándolos al rey y recomendando que sean alimentados y enviados a casa.",
+    date: "845 a.C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "elias",
+        title: "Elías",
+      },
+    ],
+    images: [
+      {
+        caption: "Elías guía a los sirios ciegos",
+        file: "GoodSalt-stdas0556_8-6-2013 3-12-36 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "943",
+    slug: "jehoram-de-juda-golpeado-con-enfermedad-intestinal",
+    title: "Jehoram de Judá es golpeado con una enfermedad intestinal",
+    period: "7",
+    description:
+      "Jehoram, un rey malvado de Judá casado con Atalía, la hija de Acab, gobierna durante 8 años y sufre varias calamidades debido a su pecado, incluyendo una enfermedad intestinal incurable de la cual muere. No es llorado, sino enterrado en Jerusalén.",
+    article: "\n",
+    date: "843 a.C.",
+    scriptures: ["14|21:18-19"],
+    related: [
+      {
+        slug: "jehoram-de-juda",
+        title: "Jehoram de Judá",
+      },
+    ],
+    images: [
+      {
+        caption: "Icono de Jehoram de Judá por Guillaume Rouille en 1553.",
+        file: "Jehoram_of_Judah_4-4-2013 10-24-08 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "944",
+    slug: "tierra-de-la-mujer-sunamita-restaurada",
+    title: "La tierra de la mujer sunamita es restaurada",
+    period: "7",
+    description:
+      "Elías advierte a la mujer de Sunem que habrá una hambruna de 7 años. Ella deja Israel, vive con los filisteos, regresa y el rey se ha apoderado de su tierra. Ella viene al rey mientras Giezi está contando el milagro de su hijo. El rey le devuelve su tierra.",
+    article: "\n",
+    date: "832 a.C.",
+    scriptures: ["12|8:1-6"],
+    related: [
+      {
+        slug: "elias",
+        title: "Elías",
+      },
+    ],
+    images: [
+      {
+        caption: "Elías y la mujer sunamita",
+        file: "_GoodSalt-prcas0990_8-27-2013 12-26-23 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "945",
+    slug: "asedio-de-samaria-por-benhadad-ii-y-liberacion",
+    title: "El asedio de Samaria por Benhadad II y la liberación",
+    period: "7",
+    description:
+      "Benhadad II de Siria asedia Samaria y crea una hambruna en la ciudad, lo que lleva a incidentes extremos debido al hambre. Joram culpa a Elías por la hambruna y quiere su cabeza. Elías predice que todo cambiará en un día y que Dios los liberará.",
+    article:
+      "Benhadad II asedió Samaria. El primer Benhadad fue contemporáneo de Asa (1 Reyes 15:18-20). Benhadad II es el mismo rey a quien Acab había derrotado dos veces, y a quien había mostrado una indulgencia inoportuna, recibiendo una reprimenda profética (1 Reyes 20:1-42). Este ataque a Samaria no fue una incursión fronteriza menor, sino una guerra seria de la máxima intensidad. Benhadad probablemente aprovechó un momento en que Salmanasar no estaba involucrado en campañas activas en el área mediterránea. Era un tiempo de hambruna, que no era raro en Israel. En el tiempo de Elías hubo una sequía que duró tres años y medio (1 Reyes 17:1 a 8:1; Lucas 4:25; Santiago 5:17), y en los días de Elías hubo una hambruna de siete años (2 Reyes 8:1). La hambruna actual, sin embargo, fue el resultado del asedio.\n\nCuando las cosas se volvieron extremas dentro de la ciudad, el rey Joram culpó a Elías de la situación. Elías había llamado al pueblo al arrepentimiento y sin duda les había dejado claro que si no dejaban sus pecados y no se volvían al Señor con todo su corazón, podían esperar problemas y angustia. El rey estaba amargado contra el profeta y ahora buscaba culparlo por la continuación del asedio y la hambruna. Al hacerlo, siguió el mismo camino que su hermano Ocozías y su padre Acab. Un hombre verdaderamente arrepentido habría llevado cilicio abiertamente en lugar de en secreto, y no se habría vuelto contra el profeta de Dios. La decapitación no era una forma común de castigo entre los judíos, pero era común en Asiria y otras naciones vecinas. Con su corazón lleno de amargura y ira, Joram ahora amenazó a Elías con esta horrible forma de castigo capital.\n\nJoram buscó quitarle la vida a Elías y envió a un hombre con órdenes de decapitar al profeta. Pero antes de su llegada, el Señor advirtió a Elías de las intenciones del rey, para que el asunto pudiera ser claramente presentado ante los líderes de la tierra. Acab, el padre de Joram, era culpable no solo de la sangre de Nabot, sino también de los profetas que fueron asesinados por Jezabel con su pleno consentimiento. Incluso su fiel sirviente Abdías temía que Acab lo mataría cuando se le dijo que fuera a él con un mensaje sobre Elías (1 Reyes 18:9).\n\nJoram, el hijo de un asesino, poseía los mismos rasgos malvados que su padre. El verdugo ya estaba en camino, pero Elías no mostró preocupación. Era un profeta del Señor y sabía que su vida estaba en las manos de Dios y no a merced de hombres malvados. Siguiendo de cerca al verdugo, llegó el rey para ver si sus órdenes habían sido cumplidas. Elías es perdonado y declara que en un día todo cambiará, y eso es lo que sucedió. Samaria fue liberada.",
+    date: "845 a.C.",
+    scriptures: ["12|6:24-33", "12|7:1-20"],
+    related: [
+      {
+        slug: "elias",
+        title: "Elías",
+      },
+    ],
+    images: [
+      {
+        caption:
+          'El rey Joram de Israel, Guillaume Rouille, "Promptuarii Iconum Insigniorum", 1553',
+        file: "Joram_of_Israel_8-27-2013 12-06-45 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "946",
+    slug: "joas-o-jehoas",
+    title: "Joás (o Jehoás)",
+    period: "7",
+    description:
+      'El nombre significa "Yahweh ha dado". El hijo de Ocozías, quien es asesinado mientras Joás (o Jehoás) es un niño. Su abuela toma la corona y mata a todos los herederos excepto a Joás, quien es escondido y luego coronado a los 7 años. Ayuda a su tío a restaurar el culto.',
+    article:
+      'Jehoás (o Joás), cuyo nombre significa "Yahweh ha dado". El octavo gobernante del reino del sur de Judá, más a menudo llamado Joás. Reinó 40 años (c. 835 - c. 796 a.C.). En 841 a.C., cuando era solo un infante, su padre, Ocozías, fue asesinado por el rey Jehú de Israel. Entonces Atalía, la madre de Ocozías, tomó el trono después de matar a todos los hijos de Ocozías excepto a un hijo infante. Este niño fue salvado solo porque la hermana de su padre, Jehosheba, esposa del sumo sacerdote Joiada, lo llevó y lo mantuvo escondido (2 Reyes 11:1-3; 2 Crónicas 22:10-12).\n\nEn el séptimo año del reinado de Atalía, Joiada presentó al joven príncipe a los oficiales del ejército y ganó su apoyo en su plan para derrocar a Atalía y hacer rey a Joás. Bajo la protección del ejército, el plan se llevó a cabo y el niño fue proclamado rey en el Templo. Atalía, atraída por las aclamaciones, se dirigió al Templo, pero fue asesinada en el camino (2 Reyes 11:4-16; 2 Crónicas 23:1-15). Joiada inmediatamente se dispuso a restaurar el culto a Dios y a destruir el templo de Baal. Cuando el joven rey creció, reparó el Templo, que ahora tenía casi 150 años, pero permitió que los lugares altos continuaran y se usaran como lugares de culto (2 Reyes 11:17 a 12:16; 2 Crónicas 23:16 a 24:16).\n\nSin embargo, después de la muerte de Joiada, el rey cambió considerablemente y se convirtió en un adorador de Asera y otros ídolos. Cuando fue reprendido por esto por el hijo de su benefactor, Zacarías, ordenó que lo apedrearan (2 Crónicas 24:17-22; cf. Lucas 11:51). También sufrió una grave derrota militar cuando Hazael de Damasco invadió Judá después de tomar la ciudad filistea de Gat. Solo pudo comprar su seguridad y la de Jerusalén entregando a los arameos todos los tesoros del palacio y del Templo (2 Reyes 12:17, 18; 2 Crónicas 24:23, 24). Poco después de esta derrota, fue asesinado en su cama por dos de sus propios cortesanos (2 Reyes 12:20, 21; 2 Crónicas 24:25, 26). Fue enterrado en la Ciudad de David, pero no en las tumbas reales. Su hijo Amasías lo sucedió en el trono.',
+    date: "842-796 a.C.",
+    scriptures: ["12|11:2", "12|12:20-21"],
+    related: [
+      {
+        slug: "ocozias-6to-rey",
+        title: "Ocozías",
+      },
+      {
+        slug: "amasias",
+        title: "Amasías",
+      },
+      {
+        slug: "jeroboam-ii",
+        title: "Jeroboam II",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Joás es coronado rey a los siete años de edad (2 Crónicas, Capítulo 23,24).",
+        file: "_GoodSalt-stdas0028_8-27-2013 12-10-43 PM.jpg",
+      },
+      {
+        caption: "La coronación de Joás",
+        file: "_GoodSalt-pppas0413_8-27-2013 12-10-43 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "947",
+    slug: "shalmaneser-iii-de-asiria-derrota-a-hazael-de-damasco",
+    title: "Shalmaneser III derrota a Hazael",
+    period: "7",
+    description:
+      "El rey de Asiria finalmente logra derrotar a la coalición de reyes que incluía a Siria e Israel. Asiria se convierte en la nueva potencia predominante en la región e Israel se ve obligado a pagar tributo.",
+    article:
+      "Shalmaneser III (859-834 a.C.), hijo de Ashurnasirpal II. Fue un gran guerrero y el primer rey asirio en entrar en contacto con Israel. En su primer año, libró una guerra agresiva en el norte de Siria, lo que llevó a varios reyes de Siria y Palestina a formar una liga para enfrentar su amenaza. Doce reyes en total se unieron a la liga, a quienes Shalmaneser enfrentó en su sexto año (853 a.C.) en Qarqar, en el centro de Siria.\n\nLos ejércitos aliados fueron liderados por Benhadad de Damasco y el rey de Hamat. Acab de Israel proporcionó 10,000 soldados de infantería y 2,000 carros, aproximadamente la mitad de todos los carros de los ejércitos aliados. Shalmaneser afirma haber ganado una victoria, pero la veracidad de su afirmación es dudosa, ya que regresó de inmediato a Asiria, y por lo tanto debió haber sido debilitado. Regresó después de 5 años, pero fue nuevamente detenido por los aliados, y nuevamente durante la campaña siguiente. Sin embargo, finalmente pudo romper el poder de la liga en su decimocuarto año (845 a.C.), y en su decimoctavo año (841 a.C.) derrotó al rey Hazael de Damasco en el monte Hermón.\n\nLos reyes de Tiro y Sidón, así como el rey Jehú de Israel, pagaron tributo y de inmediato se convirtieron en vasallos asirios. En el famoso Obelisco Negro, encontrado en 1845 por Henry Layard en Nimrud y ahora en el Museo Británico, se representa en escultura el pago del tributo de Jehú. En la segunda de las cinco filas de relieves, se ve a Jehú besando el suelo a los pies de Shalmaneser y ofreciéndole, como tributo, barras y vasijas de metales preciosos, que son llevados por cortesanos israelitas.",
+    date: "841 a.C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "shalmaneser-iii",
+        title: "Shalmaneser III",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Obelisco Negro de Shalmaneser III, erigido en 825 a.C. Ubicado en el Museo Británico.",
+        file: "Shalmaneser III_4-3-2013 5-25-11 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "951",
+    slug: "juda",
+    title: "Judá",
+    period: "7",
+    description:
+      'El nombre significa "que Dios sea alabado". Hay muchos nombres similares y diferentes ortografías para "Judá": Judah, Judas, etc. Este "Judá" (KJV) se encuentra en la genealogía de Jesús en Lucas como el hijo de José. Era de Judá antes del exilio a Babilonia.',
+    article: "",
+    date: "827-747 a.C.",
+    scriptures: ["42|3:30"],
+    related: [
+      {
+        slug: "jose-hijo-de-jonan",
+        title: "José",
+      },
+      {
+        slug: "simeon-hijo-de-juda",
+        title: "Simeón",
+      },
+    ],
+    images: [
+      {
+        caption: "Antepasado de Jesús",
+        file: "GoodSalt-wjpas0408_8-21-2013 2-44-59 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "952",
+    slug: "jehoas",
+    title: "Jehoás",
+    period: "7",
+    description:
+      "El decimotercer rey del reino del norte de Israel (si se incluye a Tibni en la cuenta). Jehoás, frecuentemente llamado Joás, sucedió a su padre Jehoacaz como el tercer rey de la dinastía de Jehú y reinó 16 años.",
+    article:
+      'Jehoás significa "Yahweh ha dado". El decimotercer rey del reino del norte de Israel (si se incluye a Tibni en la cuenta). Jehoás, frecuentemente llamado Joás, sucedió a su padre Jehoacaz como el tercer rey de la dinastía de Jehú y reinó 16 años. Retuvo el culto nacional a los becerros de Jeroboam, pero era un admirador de Elías, de quien recibió la promesa de que derrotaría a los arameos. Derrotó a Benhadad III tres veces y recuperó los territorios israelitas en Transjordania que su padre había perdido ante Hazael. Más tarde en su reinado, fue desafiado a la guerra por el rey de Judá, a quien derrotó. Saqueó Jerusalén y derribó 400 codos de la muralla de la ciudad antes de retirarse.',
+    date: "825-782 a.C.",
+    scriptures: ["12|13:10-13"],
+    related: [
+      {
+        slug: "jehoacaz",
+        title: "Jehoacaz",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Jehoás retuvo el culto nacional a los becerros de Jeroboam, pero era un admirador de Elías, de quien recibió la promesa de que derrotaría a los arameos.",
+        file: "Golden Calf_4-3-2013 5-18-17 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "954",
+    slug: "amasias",
+    title: "Amasías",
+    period: "7",
+    description:
+      'El nombre significa "fortalecido por Jehová". Hijo de Joás, el noveno rey de Judá, reino del sur, que reinó durante 29 años. Es fiel a Dios al principio de su reinado, pero se aparta de Dios después de la victoria sobre Edom. Es asesinado en Laquis.',
+    article:
+      'Amasías, cuyo nombre significa "Yahweh es fuerte", fue el noveno rey de Judá, el reino del sur, que reinó durante 29 años (c. 796 - c. 767 a.C.). Sucedió a su padre Joás, quien había sido asesinado por el asesinato del sacerdote Zacarías. Cuando Amasías se sintió firmemente establecido en el trono, ejecutó a los asesinos de su padre, pero perdonó a sus hijos, en armonía con los principios establecidos por Moisés en la Ley (2 Reyes 14:1-6; 2 Crónicas 24:23-26; 2 Crónicas 25:1-4; cf. Deuteronomio 24:16).\n\nPlaneó una campaña militar contra Edom y, para ayudarlo, contrató a 100,000 tropas de Israel, pero por consejo de un hombre de Dios las despidió. Amargamente decepcionados, estos hombres rechazados saquearon las ciudades de Judá al norte de Bet-horón en su camino a casa. Mientras tanto, Amasías atacó a los edomitas y los derrotó completamente en el Valle de la Sal. También tomó *Sela, su capital. Dada la posición supuestamente inexpugnable de Sela, esta victoria fue un logro militar importante (2 Reyes 14:7; 2 Crónicas 25:5-12). Aunque Amasías había sido fiel a Dios al principio de su reinado (2 Reyes 14:3; 2 Crónicas 25:2), después de su victoria sobre Edom comenzó a adorar a los dioses edomitas que había traído a Jerusalén.\n\nComo un profeta le había advertido (2 Crónicas 25:14-16), este acto de idolatría causó su caída. Siguiendo cierto consejo, desafió a Jehoás (Joás) de Israel a la batalla, pero fue derrotado gravemente en Bet-semes. Jehoás llevó a Amasías a Jerusalén, saqueó sus tesoros, tomó rehenes y derribó una parte de las defensas de la ciudad capital de Judá (2 Reyes 14:8-14; 2 Crónicas 25:17-24). Más tarde, se formó una conspiración contra Amasías. Huyó a Laquis, pero fue asesinado allí. Fue enterrado en Jerusalén en una tumba real (2 Reyes 14:19, 20; 2 Crónicas 25:27, 28).',
+    date: "821-767 a.C.",
+    scriptures: ["12|14:1", "12|14:19"],
+    related: [
+      {
+        slug: "joas-o-jehoas",
+        title: "Joás (o Jehoás)",
+      },
+      {
+        slug: "uzzias",
+        title: "Uzías",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Ilustración de Amasías en 1553 publicada por Guillaume Rouille",
+        file: "Amasias_8-27-2013 1-16-04 PM.jpg",
+      },
+      {
+        caption: "Montañas edomitas alrededor de Sela",
+        file: "Edomite mountains around Sela, tb061404233_4-3-2013 5-01-31 PM.jpg",
+      },
+      {
+        caption: "Laquis desde el noroeste",
+        file: "Lachish from northwest, tb022201262 copy_4-3-2013 5-01-31 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "955",
+    slug: "jonas-a-ninive",
+    title: "Jonás a Nínive",
+    period: "7",
+    description:
+      "Dios llama a Jonás a profetizar a Nínive. Al principio huye en dirección opuesta, pero después de ser arrojado por la borda y tragado por una ballena, y luego vomitado en tierra seca, escucha nuevamente el llamado de Dios para ir a Nínive. Esta vez obedece y va.",
+    article:
+      "Dios llama a Jonás a profetizar a Nínive. Al principio huye en dirección opuesta, pero después de ser arrojado por la borda y tragado por una ballena, y luego vomitado en tierra seca, escucha nuevamente el llamado de Dios para ir a Nínive. Esta vez obedece y va. Probablemente fue en el tiempo de Adad-nirari III (810-782 a.C.) que Jonás predicó su mensaje de advertencia en las calles de esa ciudad, resultando en un arrepentimiento temporal y un aplazamiento de la condena inminente que había sido pronunciada sobre la malvada Nínive (Jonás 1-4; cf. 2 Reyes 14:25).",
+    date: "790 a.C.",
+    scriptures: ["32|3:3"],
+    related: [
+      {
+        slug: "jonas",
+        title: "Jonás",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Jonás siendo arrojado por la borda mientras la ballena se acerca.",
+        file: "GoodSalt-prcas2580_8-6-2013 3-27-53 PM.jpg",
+      },
+      {
+        caption: "Jonás obteniendo pasaje en un barco.",
+        file: "Jonah_7-31-2013 11-12-33 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "956",
+    slug: "simeon-hijo-de-juda",
+    title: "Simeón",
+    period: "7",
+    description:
+      'El nombre significa "escucha" o "Dios escucha mi oración". Es el hijo de Judá en la genealogía de Lucas, un judaíta y antepasado de Jesucristo. También se escribe "Simeón" (KJV).',
+    article: "",
+    date: "807-827 a.C.",
+    scriptures: ["42|3:30"],
+    related: [
+      {
+        slug: "juda",
+        title: "Judá",
+      },
+      {
+        slug: "levi-hijo-de-simeon",
+        title: "Leví",
+      },
+    ],
+    images: [
+      {
+        caption: "Antepasado de Jesús",
+        file: "GoodSalt-wjpas02002_8-21-2013 2-50-50 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "957",
+    slug: "uzzias",
+    title: "Uzías",
+    period: "7",
+    description:
+      'El nombre significa "Dios es mi fuerza". Hijo de Amasías, rey de Judá, reino del sur, durante 52 años. Es un buen rey, pero tolera algo de idolatría. Su éxito lo lleva a entrar en el templo para presumir de hacer funciones sacerdotales, pero contrae lepra.',
+    article:
+      'Uzías, cuyo nombre significa "Yahweh es mi fuerza", fue el décimo gobernante del reino de Judá, que reinó durante 52 años (c. 790 - c. 739 a.C.). También fue llamado Azarías. Este probablemente era su nombre original, y Uzías su nombre de trono (2 Reyes 15:1; cf. 2 Crónicas 26:1). Uzías parece haber sido elevado a la posición de coreyente con su padre después de que su padre Amasías sufriera una grave derrota a manos de Jehoás de Israel.\n\nEsta conclusión se puede extraer no solo de una interpretación de los datos cronológicos dados en la Biblia, sino también de la observación de que "él [Azarías] construyó Elat, ... después de que el rey [Amasías] durmió con sus padres" (2 Reyes 14:22; 2 Crónicas 26:2). Aparentemente, su reinado en solitario no comenzó hasta el año 27 (c. 767 a.C.) del reinado de Jeroboam II (2 Reyes 15:1), por lo que el coreinado parece haber durado unos 24 años. Uzías es conocido por reconstruir el ejército de Judá, promover la agricultura de su país y reorganizar sus defensas (2 Crónicas 26:9-15). También fue responsable de restaurar la fama militar de su nación con una serie de victorias sobre ciudades filisteas y tribus árabes, y forzando a los amonitas a pagarle tributo (vs 6-8).\n\nSe le describe como un buen rey, aunque toleró la adoración de otros dioses en los lugares altos (2 Reyes 15:3, 4; 2 Crónicas 26:4, 5). Finalmente, sin embargo, su éxito y poder lo llevaron a presumir de entrar en el Templo para ejercer funciones sacerdotales ofreciendo incienso. El sumo sacerdote Azarías y 80 sacerdotes protestaron contra esta presunción, y Dios castigó al rey con lepra incurable. Desde ese momento hasta su muerte, vivió como leproso en una casa separada, mientras su hijo Jotam reinaba como coreyente (2 Reyes 15:5; 2 Crónicas 26:16-21). Durante el reinado de Uzías, los profetas Amós, Oseas e Isaías comenzaron su ministerio (Amós 1:1; Oseas 1:1; Isaías 1:1). Un severo terremoto ocurrió en su tiempo (Amós 1:1; Zacarías 14:5).\n\nEl Dr. E. L. Sukenik encontró una tableta de piedra en el Museo Arqueológico Ruso en el Monte de los Olivos en 1931 con la siguiente inscripción aramea: "Aquí fueron traídos los huesos de Uzías, rey de Judá—no abrir". Dado que esta inscripción data de alrededor de la época de Cristo, muestra que al comienzo de la era cristiana, la tumba original del rey, aparentemente aún conocida por la gente de Jerusalén, había sido perturbada, y que sus huesos habían sido trasladados a un nuevo lugar de descanso, donde parece que se colocó esta tableta. (W. F. Albright, BASOR 44 [1931], 8-10; E. L. Sukenik, QSPEF 63 [1931], 217-221.)',
+    date: "808-739 a.C.",
+    scriptures: ["12|15:1", "12|15:7"],
+    related: [
+      {
+        slug: "amasias",
+        title: "Amasías",
+      },
+      {
+        slug: "uzzias-azarias-tiempo-prospero",
+        title: "Uzías Azarías, Tiempo Próspero",
+      },
+      {
+        slug: "jotam",
+        title: "Jotam",
+      },
+    ],
+    images: [
+      {
+        caption: "El rey Uzías pintado por Rembrandt en 1635.",
+        file: "Rembrandt_Harmensz_van_Rijn_032.jpg",
+      },
+    ],
+  },
+  {
+    id: "958",
+    slug: "jeroboam-ii",
+    title: "Jeroboam II",
+    period: "7",
+    description:
+      'El nombre significa "que el pueblo se multiplique". Es el hijo de Joás, el decimocuarto rey de Israel y se le llama Jeroboam II para distinguirlo de Jeroboam I. Es uno de los reyes más fuertes de Israel y reinó durante 41 años. Amós y Oseas vivieron entonces.',
+    article:
+      "Jeroboam II. El decimocuarto rey de Israel (si se incluye a Tibni en la cuenta), hijo de Joás (o Jehoás), a veces llamado Jeroboam II para distinguirlo de Jeroboam I. Su reinado duró 41 años (c. 793 - c. 753 a.C., incluyendo un coreinado de 11 años con su padre c. 793 - c. 782 a.C., como parece indicarse a partir de sincronismos cronológicos. Ver Cronología, V, 2). Antes del reinado de Jeroboam o durante los primeros años de su gobierno, el profeta *Jonás predijo que el nuevo rey recuperaría los territorios en el norte y el este que en tiempos pasados habían pertenecido a Israel (2 Reyes 14:25). Jeroboam cumplió esta profecía. Se convirtió en el rey más fuerte de la dinastía de Jehú, si no de todos los reyes que ocuparon el trono del reino del norte. El registro bíblico sobre su reinado es extremadamente breve, consistiendo en solo 7 versículos (vs 23-29), sin embargo, el breve relato de sus éxitos militares muestra claramente que ningún gobernante del reino del norte, ni antes ni después de él, pudo señalar mayores logros que Jeroboam II. Conquistó Damasco y Hamat en el Orontes, y recuperó la mayor parte del territorio de Siria y Transjordania hasta el Mar Muerto, de modo que su territorio incluía todo lo que David y Salomón habían poseído, con la excepción de Judá. Fue afortunado para él que Asiria estuviera experimentando un período de debilidad durante su reinado, y por lo tanto no pudo interferir con sus actividades expansionistas.\n\nMientras el reino de Israel disfrutaba de prestigio político y prosperidad económica, el estado moral y religioso era extremadamente bajo. La sombría imagen pintada por los profetas Amós y Oseas de las condiciones prevalecientes bajo Jeroboam muestra que, a pesar de los sacrificios extravagantes y la celebración de fiestas religiosas, el país estaba moralmente corrupto (Amós 5:21, 22; 2:6-8; Oseas 6:6-10). Solo 6 meses después de la muerte de Jeroboam, su dinastía llegó a su fin con el asesinato de su hijo Zacarías (2 Reyes 15:8-11). Es sorprendente que, a pesar de la gran maldad prevaleciente, se ejerciera cierta medida de tolerancia religiosa. Cuando Amós, un ciudadano del reino del sur, pronunció sus profecías de desgracia contra la casa de Jeroboam en la ciudad santuario de Betel, el sacerdote de Betel informó el asunto al rey, pero no se hizo nada contra Amós excepto que se le pidió que abandonara el territorio del reino del norte (Amós 7:10-17).",
+    date: "820-753 a.C.",
+    scriptures: ["12|14:23", "12|14:29"],
+    related: [
+      {
+        slug: "joas-o-jehoas",
+        title: "Joás (o Jehoás)",
+      },
+      {
+        slug: "zacarias",
+        title: "Zacarías",
+      },
+    ],
+    images: [
+      {
+        caption: "Jeroboam inclinándose ante un ídolo.",
+        file: "GoodSalt-Jeroboam_8-1-2013 5-29-02 PM.jpg",
+      },
+      {
+        caption:
+          "Ilustración de Jeroboam en 1553 publicada por Guillaume Rouille",
+        file: "Jeroboam_II.jpg",
+      },
+    ],
+  },
+  {
+    id: "960",
+    slug: "jonas",
+    title: "Jonás",
+    period: "7",
+    description:
+      'El nombre significa "paloma". Es el hijo de Amitai, un profeta en Israel, reino del norte, durante el reinado de Jeroboam II. Dios lo llama a profetizar a Nínive, una ciudad extranjera. Huye, pero después de ser tragado por una ballena, termina en Nínive.',
+    article:
+      'Jonás, cuyo nombre significa "paloma", fue un profeta del reino del norte de Israel cuyo ministerio probablemente ocurrió antes o durante la primera parte del reinado de Jeroboam II (c. 793 - c. 753 a.C., casi 1.5 siglos después de la muerte de Salomón y la división del reino c. 931 a.C.). Era hijo de Amitai (Jonás 1:1), y su hogar estaba en Gat-hefer en Galilea (2 Reyes 14:25).\n\nAparte de la información dada en el libro de Jonás, el único hecho conocido sobre él es que en algún momento durante el reinado de Jeroboam, o antes, predijo la restauración de la frontera norte de Israel (v. 25). Algo así como Elías el tisbita, Jonás aparece repentinamente en escena cuando Dios lo envía a Nínive (Jonás 1:2). Al no tener deseo de ir como profeta a una ciudad extranjera como Nínive, y no preocuparse por la conversión de sus habitantes, Jonás se dirige en la dirección opuesta, hacia Tarsis, probablemente la clásica Tartesos en la costa sur de España (v. 3).\n\nMientras el barco navegaba probablemente hacia el norte a la vista de la costa, se encontró con una violenta tormenta, que su capitán atribuyó a la ira de los dioses contra alguien a bordo. Al echar suertes, Jonás es revelado como la persona culpable (Jonás 1:7-11). Con un notable valor físico, propone que lo arrojen por la borda para que la tormenta cese y el barco se salve (v. 12). Esta demostración de valor físico contrasta marcadamente con la cobardía moral de Jonás al intentar huir de Dios. Aunque Jonás es arrojado por la borda, su vida es salvada por "un gran pez" (v. 17), en cuyo vientre pasa los siguientes "tres días y tres noches"—un período de 24 horas, junto con porciones no especificadas del día anterior y el día siguiente.\n\nLa oración de arrepentimiento de Jonás es honrada, y el pez lo deposita "en tierra seca" (cap. 2:1, 10). Ahora puede haberse encontrado frente a la isla de Chipre, a unos 150 mi. (c. 240 km.) más cerca de Nínive que cuando había abordado el barco. Dios lo comisiona nuevamente para ir a Nínive, y él responde sin más preguntas (cap. 3:1-3). Los ninivitas se arrepienten y Dios perdona la ciudad (vs 5-10). A pesar de la misericordia mostrada hacia él, Jonás resiente la misericordia de Dios extendida a la gente de Nínive (cap. 4:1, 2), y está "muy enojado". Pero mediante una lección objetiva, Dios le muestra a Jonás la necedad de su actitud y justifica la decisión de perdonar a la gente de Nínive (vs 4-11).',
+    date: "823-720 a.C.",
+    scriptures: ["32|1:1"],
+    related: [
+      {
+        slug: "jonas-a-ninive",
+        title: "Jonás a Nínive",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "El profeta Jonás, como lo representó Miguel Ángel en la Capilla Sixtina en 1461-1484.",
+        file: "Jonah_7-31-2013 11-11-16 AM.jpg",
+      },
+      {
+        caption:
+          "Ilustración del profeta Jonás nadando lejos de la boca abierta de una gran ballena",
+        file: "Jonah overboard_7-31-2013 11-11-16 AM.jpg",
+      },
+      {
+        caption: 'Jonás, cuyo nombre significa "paloma".',
+        file: "Jonah water_7-31-2013 11-11-16 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "961",
+    slug: "amos-el-profeta",
+    title: "Amós",
+    period: "7",
+    description:
+      'El nombre significa "carga" o "llevar una carga". Es uno de los 12 profetas menores enviados por Dios al reino del norte de Israel durante el tiempo de Jeroboam II (reino del norte) y Uzías (reino del sur). Es un pastor de oficio de Tecoa en Judá.',
+    article:
+      'Amós, cuyo nombre significa "levantar (una carga)", "llevar (una carga)", fue un profeta de la ciudad de Tecoa, en Judá, a quien Dios envió con un mensaje al reino del norte, Israel. El libro de Amós es un registro de ese mensaje y de su experiencia al entregarlo. Nuestro conocimiento sobre el profeta es escaso y debe ser extraído de su libro.\n\nSu hogar estaba en Tecoa, un pequeño pueblo al borde del desierto de Judá que cae en colinas ondulantes hacia el Mar Muerto, a unas 12 millas (c. 19 km.) de distancia. Antes de su llamado al oficio profético, Amós era un pastor que dedicaba parte de su tiempo a cuidar higueras y recolectar su fruto, que se asemeja a los higos (cap. 7:14). Aunque provenía de uno de los caminos más humildes de la vida, Amós era un hombre de inteligencia natural, de profunda inclinación religiosa y con agudos poderes de observación.\n\nEra modesto, pero valiente y sin miedo cuando era llamado a dar testimonio contra los males de su tiempo. El mensaje que llevaba era gráfico y poderoso. Algunos han concluido, a partir de su mención de cinco de las naciones vecinas, que pudo haber viajado hasta Damasco y Egipto (cap. 1).',
+    date: "814-740 a.C.",
+    scriptures: ["30|1:1"],
+    related: [
+      {
+        slug: "gran-terremoto",
+        title: "Gran Terremoto",
+      },
+    ],
+    images: [
+      {
+        caption: "Amós el profeta",
+        file: "GoodSalt-prcas1809_8-6-2013 3-22-54 PM.jpg",
+      },
+      {
+        caption: "Profeta Amós, antiguo ícono ortodoxo ruso del siglo XVIII",
+        file: "Amos-prophet.jpg",
+      },
+      {
+        caption: "Desierto de Judea cerca de Jericó",
+        file: "Judean wilderness near Jericho, tb113006559_4-3-2013 4-16-51 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "962",
+    slug: "uzzias-azarias-tiempo-prospero",
+    title: "Uzías Azarías, Tiempo Próspero",
+    period: "7",
+    description:
+      "Uzías, décimo gobernante del reino de Judá durante 52 años (también llamado Azarías), es muy próspero al principio de su reinado, construyendo el ejército, promoviendo la agricultura y reorganizando su defensa. Tiene varias victorias militares, pero se vuelve orgulloso.",
+    article:
+      'En 2 Crónicas 26 leemos sobre las aventuras militares de Uzías, sus obras públicas y su fuerza en armas. Esta sección se encuentra solo en Crónicas y es una contribución importante a la información sobre la naturaleza del reinado de Uzías. Se cree que "Azriau de Iauda" en los registros asirios era Azarías (Uzías) de Judá. Si es así, estos registros (ver 2 Reyes 14:28; 16:5) confirman la imagen dada en la Biblia de la importancia militar de Uzías. Tiglat-pileser III tiene varias referencias a "Azriau de Iauda" (ver v. 13).',
+    date: "790-770 a.C.",
+    scriptures: ["14|26:6-15"],
+    related: [
+      {
+        slug: "uzzias",
+        title: "Uzías",
+      },
+    ],
+    images: [
+      {
+        caption: "El orgullo y el castigo de Uzías",
+        file: "_GoodSalt-stdas0031_8-27-2013 1-27-15 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "964",
+    slug: "levi-hijo-de-simeon",
+    title: "Leví",
+    period: "7",
+    description:
+      'El nombre significa "unido" o "adjunto". Hijo de Simeón, un judaíta que aparece en la genealogía de Cristo en Lucas.',
+    article: "",
+    date: "787-707 a.C.",
+    scriptures: ["42|3:29"],
+    related: [
+      {
+        slug: "simeon-hijo-de-juda",
+        title: "Simeón",
+      },
+      {
+        slug: "matat-padre-de-jorum",
+        title: "Matat",
+      },
+    ],
+    images: [
+      {
+        caption: "La tribu de Leví",
+        file: "Levi_7-31-2013 11-13-36 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "967",
+    slug: "menahem",
+    title: "Menahem",
+    period: "7",
+    description:
+      'El nombre significa "consolador". Es el hijo de Gadi y el decimoséptimo rey del reino del norte de Israel, y reinó durante 10 años. Para ganar el apoyo asirio, grava fuertemente a los hombres ricos de Israel. Es un rey malvado que destruye Tifsa cuando se rebelan.',
+    article:
+      'Menahem, cuyo nombre significa "consolador", fue el decimoséptimo rey del reino del norte de Israel (si se incluye a Tibni en la cuenta), que reinó durante 10 años (c. 752 - c. 742 a.C.). Probablemente era gobernador de Tirsa cuando Salum, después de asesinar a Zacarías (probablemente en Ibleam), se hizo rey en Samaria. Menahem inmediatamente se dirigió a la capital, mató a Salum y se hizo rey (2 Reyes 15:8-10, 13, 14). Para ganar el apoyo asirio para su posición incierta, pagó un pesado tributo de 1,000 talentos de plata a Tiglat-pileser III (llamado Pul en v 19). Recaudó el dinero gravando a 60,000 hombres ricos de Israel con la cantidad de 50 siclos cada uno (vs 19, 20). El pago de este tributo se menciona en una inscripción cuneiforme de Tiglat-pileser excavada en Calah (ANET 283). El rey Menahem fue malvado como sus predecesores (v 18). En Tifsa cometió un acto atroz. Los ciudadanos de ese lugar no querían aceptarlo como rey, por lo que capturó la ciudad, mató a todos los hombres y abrió el vientre de todas las mujeres embarazadas (v 16).',
+    date: "802-742 a.C.",
+    scriptures: ["12|15:17", "12|15:22"],
+    related: [
+      {
+        slug: "pecaias",
+        title: "Pecaias",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Ilustración de Menahem en 1553 publicada por Guillaume Rouille.",
+        file: "Manahen-Menahem.jpg",
+      },
+      {
+        caption:
+          "Para ganar el apoyo asirio para su posición incierta, pagó un pesado tributo de 1,000 talentos de plata a Tiglat-pileser III (llamado Pul en v 19). El pago de este tributo se menciona en una inscripción cuneiforme de Tiglat-pileser excavada en Calah (ANET 283).",
+        file: "Cuneiform_4-3-2013 4-02-46 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "969",
+    slug: "zacarias",
+    title: "Zacarías",
+    period: "7",
+    description:
+      'El nombre significa "Yahweh ha recordado". Es el hijo de Jeroboam II, y el decimoquinto rey del reino del norte de Israel. Con él termina la dinastía de Jehú. Es asesinado en Ibleam por Salum después de reinar solo 6 meses. Es un rey malvado.',
+    article:
+      "Zacarías es el decimoquinto rey del reino del norte de Israel, si se incluye a Tibni en la cuenta, llamado Zacarías en la KJV. Era el hijo de Jeroboam II, y con él terminó la dinastía de Jehú (ver 2 Reyes 10:30), cuando fue asesinado en Ibleam por Salum después de un breve reinado que duró solo 6 meses c. 753-752 a.C. (caps. 14:29; 15:8-12).",
+    date: "776-752 a.C.",
+    scriptures: ["12|15:8", "12|15:10"],
+    related: [
+      {
+        slug: "jeroboam-ii",
+        title: "Jeroboam II",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Zacarías de Israel, rey del reino del norte de Israel, hijo de Jeroboam II, ícono de Guillaume Rouille en 1553.",
+        file: "Zechariah_of_Israel_8-27-2013 2-08-27 PM.png",
+      },
+    ],
+  },
+  {
+    id: "972",
+    slug: "jotam",
+    title: "Jotam",
+    period: "7",
+    description:
+      'El nombre significa "Yahweh es perfecto". Es el hijo de Uzías y el undécimo rey de Judá, que reinó durante 20 años, probablemente como coreyente con su padre parte del tiempo. Se le describe como mayormente un buen rey y está en la genealogía de Mateo.',
+    article:
+      'Jotam, cuyo nombre significa "Yahweh es perfecto", fue el undécimo gobernante del reino de Judá, que reinó durante 20 años (c. 705 - c. 731 a.C.). En 2 Reyes 15:33 y 2 Crónicas 27:1, 16 se le atribuyen 16 años de reinado. Sin embargo, en 2 Reyes 15:30 el asesinato de Pecaj se sitúa en su vigésimo año. Esta aparente discrepancia puede explicarse asumiendo que abdicó en favor de su hijo Acaz después de un reinado de 16 años, pero vivió al menos otros 4 años, y que los escribas continuaron fechando eventos según su reinado. Tuvo un coreinado con su padre Uzías también, tomando el trono cuando su padre se convirtió en leproso (2 Reyes 15:5; 2 Crónicas 26:21).\n\nSe le describe como un buen rey como su padre, aunque permitió que el pueblo adorara en los lugares altos, como se había hecho durante siglos (2 Reyes 15:34, 35; 2 Crónicas 27:2). Construyó la puerta alta del Templo, reparó el muro en Ofel, al sur del Templo, fundó ciudades en las partes montañosas de su país y erigió castillos y torres en los bosques (2 Reyes 15:35; 2 Crónicas 27:3, 4). Derrotó a los amonitas y los obligó a pagar tributo (2 Crónicas 27:5). En su reinado, Pecaj de Israel y Rezín de Damasco comenzaron una invasión de Judá (2 Reyes 15:37), posiblemente porque no se unió a ellos en una alianza contra Asiria. Está listado en la genealogía de Jesucristo según Mateo (Mateo 1:9).',
+    date: "773-732 a.C.",
+    scriptures: ["12|15:32", "12|15:38", "40|1:9"],
+    related: [
+      {
+        slug: "uzzias",
+        title: "Uzías",
+      },
+      {
+        slug: "acaz",
+        title: "Acaz",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Jotam está listado en la genealogía de Jesucristo según Mateo (Mateo 1:9).",
+        file: "200px-Joatham_rex_8-6-2013 3-30-34 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "975",
+    slug: "pecaias",
+    title: "Pecaias",
+    period: "7",
+    description:
+      'El nombre significa "Yahweh ha abierto los ojos". Es el hijo de Menahem y el decimoctavo rey del reino del norte de Israel. Reinó durante 2 años. Es malvado como su padre y sigue la adoración del becerro de Jeroboam I. Es asesinado por Pecaj.',
+    article:
+      'Pecaias, cuyo nombre significa "Yahweh ha abierto (los ojos)", fue el decimoctavo rey de Israel, si se incluye a Tibni en la cuenta. Reinó en Samaria durante 2 años (c. 742 - c. 740 a.C.), pero no se sabe nada más de él excepto que fue malvado como su padre, Menahem, y siguió la adoración del becerro de Jeroboam I (2 Reyes 15:22-24). Fue asesinado por Pecaj, un oficial del ejército, quien luego usurpó el trono para sí mismo (v 25).',
+    date: "767-740 a.C.",
+    scriptures: ["12|15:23", "12|15:25"],
+    related: [
+      {
+        slug: "menahem",
+        title: "Menahem",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Ilustración de Pecaias en 1553 publicada por Guillaume Rouille",
+        file: "Phacea-Pekahiah.jpg",
+      },
+      {
+        caption:
+          "Pecaias reinó durante 2 años. Es malvado como su padre y sigue la adoración del becerro de Jeroboam I.",
+        file: "Golden Calf_4-3-2013 3-54-59 PM.jpg",
+      },
+    ],
+  },
 ] as BibleTimelineEvent[];
