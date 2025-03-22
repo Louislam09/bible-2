@@ -2154,7 +2154,6 @@ export default [
       },
     ],
   },
-  // here
   {
     id: "549",
     slug: "nehemiah-returns-to-babylon",
@@ -2804,7 +2803,6 @@ export default [
       },
     ],
   },
-  // here 1
   {
     id: "613",
     slug: "flood",
@@ -3310,6 +3308,550 @@ export default [
     ],
   },
   {
+    id: "640",
+    slug: "abraham",
+    title: "Abraham",
+    period: "3",
+    description:
+      'El nombre significa "padre de una multitud". Es el hijo de Taré y padre de Isaac. Abram, más tarde Abraham, fue llamado por Dios para dejar Ur y dirigirse a la tierra de Canaán, donde sus descendientes se convertirían en una gran nación. Es conocido como un amigo de Dios.',
+    article:
+      "Abraham nació en el año 1950 a.C., dejó Harán para ir a Canaán después de la muerte de su padre en 1875 a.C., visitó Egipto entre 1875 y 1864 a.C., y murió en 1775 a.C. después de haber vivido en Canaán durante 100 años. Nació en Ur, en el sur de Mesopotamia, durante el período neosumeria. Alrededor del año 1960 a.C., según la llamada Cronología Baja, poco antes de su nacimiento, la fuerte tercera dinastía de Ur, que había gobernado durante más de 100 años, llegó a su fin y fue reemplazada por las dinastías rivales de Isin y Larsa, bajo las cuales Ur declinó en importancia como centro político en el valle de Mesopotamia.\n\nDurante los 75 años que Abraham vivió en Ur y Harán, el país estuvo bajo el dominio de gobernantes sumerios, aunque los amorreos, que ya habían tomado la mayor parte de Siria y Palestina, estaban entrando en Mesopotamia. Para el año 1830 a.C., fundaron la poderosa primera dinastía de Babilonia, cuyo sexto rey, Hammurabi (c. 1728-1686 a.C.), se convirtió en el gobernante más fuerte.\n\nCuando Abraham entró en Canaán, encontró el país en gran parte en manos de los amorreos. Sin embargo, el país no era un estado unificado, sino que consistía en numerosas ciudades-estado de varios tamaños con reyes y pequeños reyes de origen amorreo formando la clase gobernante. Egipto, por otro lado, estaba en ese momento gobernado por los poderosos reyes de la duodécima dinastía (1991 a c. 1780 a.C.). Si Abraham estuvo en Egipto entre 1875 y 1864 a.C. (ver Génesis 12), debió haber conocido a Sesostris III como rey de Egipto, quien gobernó desde 1878 hasta 1840 a.C.\n\nSegún registros antiguos, este rey llevó a cabo una campaña militar en Palestina, dirigida contra Skmm, que probablemente es Siquem, pero no ocupó el país. Parece que la campaña fue una incursión punitiva y que su objetivo no era la conquista. Durante el tiempo de Abraham ocurrieron las campañas militares descritas en Génesis 14. Sin embargo, ninguno de los reyes mencionados en la narrativa puede ser identificado con monarcas conocidos de fuentes seculares, aunque la evidencia arqueológica confirma la narrativa.\n\nLas exploraciones de Albright y Glueck han sacado a la luz evidencia de que una cultura floreciente y muchas ciudades en Transjordania fueron destruidas en el siglo XX o XIX a.C., y que el país permaneció casi completamente deshabitado durante varios siglos después. También hay alguna evidencia de que Sodoma y Gomorra, que presumiblemente se encontraban en el extremo sur del Mar Muerto, fueron destruidas en ese momento (ver Sodoma). Las ciudades de Sodoma y Gomorra se mencionan en un texto cuneiforme de *Ebla del período prepatriarcal.\n\nLa vida de Abraham puede considerarse bajo cuatro períodos principales: (1) Su vida antes de su viaje a Canaán, a la edad de 75 años. (2) Su primera estancia en Canaán hasta el nacimiento de su hijo Isaac, un período de 25 años. (3) Su vida desde el nacimiento de Isaac hasta la muerte de Sara y el matrimonio de Isaac con Rebeca, unos 40 años. (4) Su vida posterior, vejez y muerte, unos 35 años.",
+    date: "1946-1771 a.C.",
+    scriptures: ["1|11:26", "1|25:8", "1|11:26", "1|25:8"],
+    related: [
+      {
+        slug: "terah",
+        title: "Taré",
+      },
+      {
+        slug: "marriage-of-abraham-and-sarah",
+        title: "Matrimonio de Abraham y Sara",
+      },
+      {
+        slug: "abram-called-and-departs-haran",
+        title: "Abram llamado y parte de Harán",
+      },
+      {
+        slug: "famine-in-the-land",
+        title: "Hambre en la tierra",
+      },
+      {
+        slug: "sarah-and-egyptian-king",
+        title: "Sara y el rey egipcio",
+      },
+      {
+        slug: "abram-delivers-sodom-from-four-kings",
+        title: "Abram libera a Sodoma de cuatro reyes",
+      },
+      {
+        slug: "abram-blessed-by-melchizedek",
+        title: "Abram bendecido por Melquisedec",
+      },
+      {
+        slug: "gods-covenant-with-abram-smoking-furnace",
+        title: "El pacto de Dios con Abram / Horno humeante",
+      },
+      {
+        slug: "ishmael-conceived",
+        title: "Ismael concebido",
+      },
+      {
+        slug: "ishmael",
+        title: "Ismael",
+      },
+      {
+        slug: "abram-becomes-abraham-covenant-of-circumcision",
+        title: "Abram se convierte en Abraham, Pacto de la circuncisión",
+      },
+      {
+        slug: "isaac",
+        title: "Isaac",
+      },
+      {
+        slug: "abrahams-call-to-sacrifice-isaac",
+        title: "El llamado de Abraham a sacrificar a Isaac",
+      },
+    ],
+    images: [
+      {
+        caption: "Abraham y Sara",
+        file: "Sarah_Abraham_8-8-2013 10-08-24 AM.jpg",
+      },
+      {
+        caption: "El sacrificio de Abraham",
+        file: "GoodSalt-prcas1802_8-7-2013 1-15-13 PM.jpg",
+      },
+      {
+        caption: "El patriarca Abraham",
+        file: "Abraham 1200-16_7-22-2013 2-44-35 PM.jpg",
+      },
+      {
+        caption: "Abraham dejando Ur de los caldeos",
+        file: "GoodSalt-prcas0864_8-7-2013 1-15-13 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "641",
+    slug: "sarah",
+    title: "Sara",
+    period: "3",
+    description:
+      'Su nombre significa "princesa". Es la hija de Taré y esposa y hermana de Abram. Tenían el mismo padre, pero no la misma madre. Sarai, más tarde Sara, se convirtió en la madre de un hijo prometido (Rom. 4:19), Isaac, a través del cual vino el Salvador.',
+    article:
+      "La esposa de Abraham (Gn 11:29) e hija de su padre, pero no de su madre (cap 20:12). Era unos 10 años más joven que Abraham (cap 17:17), y por lo tanto tenía unos 65 años cuando su esposo dejó Harán a la edad de 75 años (cap 12:4). Poco después de su llegada a Palestina, estalló una hambruna que los obligó a ir a Egipto para mantener viva a su gran familia. Temiendo que la belleza de Sara, a pesar de su edad, atraería la atención de los egipcios, Abraham fingió que era su hermana.\n\nAl presentarse ahora como soltera, fue llevada al harén del faraón. Pero el rey la devolvió a Abraham cuando se supo su verdadero estado, con una reprimenda por el engaño de Abraham y una solicitud de que Abraham abandonara el país (vs 10-20). Abraham no aprendió de esta experiencia, sino que volvió a hacer pasar a Sara como su hermana, esta vez en el país de Abimelec de Gerar (cap 20:1-18). Cuando tenía unos 75 años (cf. caps 16:16, 17:17), Sara perdió la esperanza de ser madre y le pidió a su esposo que tuviera un hijo a través de Agar, su esclava egipcia.\n\nAl hacer esta propuesta, Sara siguió una costumbre de su Mesopotamia natal. El resultado fue el nacimiento de Ismael (cap 16:1-16). Más tarde, cuando tenía unos 89 años, Sara recibió una promesa definitiva de que daría a luz a un hijo dentro de un año. Fue en esta ocasión que su nombre, que hasta entonces había sido Sarai, fue cambiado a Sara. La promesa se cumplió con el nacimiento de Isaac. Durante la fiesta del destete de Isaac, Sara vio a Ismael burlándose de Isaac (Gn 21:9, Gál 4:29), por lo que exigió que Ismael y Agar fueran expulsados de la familia.\n\nPor dirección de Dios, Abraham obedeció a regañadientes (Gn 21:9-14). No se registra nada más de Sara excepto que murió a la edad de 127 años en Quiriat-arba, o Hebrón (Gn 23:1-2). Fue enterrada en la cueva de Macpela, que Abraham compró después de su muerte como sepulcro familiar (vs 19-20). Isaías se refiere a Sara como la madre de la nación israelita (Is 51:2), y Pablo escribe sobre ella como la madre del hijo de la promesa (Rom 4:19, 9:9). Pedro la menciona como un ejemplo de una buena esposa (1 Pe 3:6), y en Heb 11:11 es alabada por su fe.",
+    date: "1936-1809 a.C.",
+    scriptures: ["1|23:1-2", "1|20:12"],
+    related: [
+      {
+        slug: "terah",
+        title: "Taré",
+      },
+    ],
+    images: [
+      {
+        caption: "Abraham, Isaac y Sara",
+        file: "GoodSalt-prcas5769_8-7-2013 1-18-26 PM.jpg",
+      },
+      {
+        caption: "La tumba de Sara en la cueva de Macpela en Hebrón.",
+        file: "Hebron Machpelah, Sarah's cenotaph_5-15-2013 5-42-24 PM.jpg",
+      },
+      {
+        caption: "Cueva de Macpela en Hebrón",
+        file: "Hebron Machpelah_5-15-2013 5-42-24 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "642",
+    slug: "lot",
+    title: "Lot",
+    period: "3",
+    description:
+      'El nombre significa "velo" o "cubierta". Es el hijo de Harán y sobrino de Abraham. Fue con su tío a Canaán y después de que sus pastores discutieran sobre los pastos, se separaron. Lot eligió el valle del Jordán y más tarde perdió a su esposa cerca de Sodoma.',
+    article:
+      'Hijo de Harán, el hermano de Abraham (Gn 11:26-27). Lot fue con la familia de su abuelo desde Ur al norte de Mesopotamia (v 31). Más tarde acompañó a Abraham a Canaán (cap 12:4-5), y también a Egipto (cap 13:1). Como su tío Abraham, Lot tenía grandes rebaños, y cuando los pastores de las dos familias discutieron sobre los pastos disponibles, Abraham sugirió una separación. Lot estuvo de acuerdo y eligió el valle del Jordán.\n\nFinalmente, seleccionó la próspera pero malvada ciudad de Sodoma como su residencia (vs 5-13). Cuando Quedorlaomer y sus confederados capturaron Sodoma, Lot y su familia fueron llevados como prisioneros, pero fueron rescatados por Abraham y luego regresaron a Sodoma (cap 14:12, 16). La maldad de las ciudades en el área donde Lot vivía se volvió tan grande que Dios decidió destruirlas. Sin embargo, como Lot era un hombre justo (2 Pe 2:7, RVR), se enviaron ángeles para rescatarlo a él y a su familia. Apareciendo en forma humana, los ángeles fueron recibidos en el hogar hospitalario de Lot.\n\nCuando los sodomitas intentaron violar a los invitados de Lot, él consideró que estaba obligado, según la costumbre oriental de la hospitalidad, a proteger el honor y las vidas de sus invitados a cualquier costo, incluso si eso significaba entregar a sus propias hijas (Gn 19:1-14). Los dos invitados le advirtieron que huyera de la ciudad para salvar su vida y las vidas de su familia. Sin embargo, sus yernos, y probablemente sus familias, se burlaron de su mensaje y se negaron a abandonar la ciudad condenada. A la mañana siguiente, instado por los ángeles a apresurarse, Lot, con su esposa y sus dos hijas solteras, huyeron de la ciudad hacia el pequeño pueblo de Zoar.\n\nSu esposa, al no prestar atención a la instrucción divina, pereció durante la huida y se convirtió en una columna de sal, posiblemente al ser engullida por masas de sal que caían (vs 15-26). Lot y sus hijas huyeron más tarde a las colinas, donde vivieron en una cueva. Durante su estancia en las solitarias colinas al este del Jordán, dos hijos nacieron de las hijas a través de uniones incestuosas con su padre. Fueron llamados Moab (probablemente significa "[semilla] del padre") y Ben-ammi ("hijo de mi pueblo"), y fueron los antepasados de los moabitas y los amonitas (vs 31-38). La memoria de Lot todavía perdura en el área de su estancia. La traducción al inglés del nombre árabe moderno para el Mar Muerto es el "Mar de Lot".',
+    date: "1925-1825 a.C.",
+    scriptures: ["1|11:27"],
+    related: [
+      {
+        slug: "haran",
+        title: "Harán",
+      },
+      {
+        slug: "lot-moves-to-sodom",
+        title: "Lot se muda a Sodoma",
+      },
+      {
+        slug: "lot-and-daughters-dwell-in-a-cave",
+        title: "Lot y sus hijas habitan en una cueva",
+      },
+    ],
+    images: [
+      {
+        caption: "Lot y su familia siendo sacados de Sodoma por los ángeles",
+        file: "GoodSalt-pppas0304_8-7-2013 1-20-30 PM.jpg",
+      },
+      {
+        caption: "La esposa de Lot, una columna de sal.",
+        file: "GoodSalt-Lot_8-5-2013 4-01-25 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "643",
+    slug: "marriage-of-abraham-and-sarah",
+    title: "Matrimonio de Abraham y Sara",
+    period: "3",
+    description:
+      'Génesis 11 dice que "Abram y Nacor tomaron esposas: el nombre de la esposa de Abram era Sarai". Central en la historia de la familia de Abraham es la declaración en el v. 30: "Pero Sarai era estéril; no tenía hijo".',
+    article:
+      "La esposa de Abram, Sarai, era su media hermana, hija de Taré por otra esposa que no era la madre de Abram (ver cap. 20:12). El matrimonio con una media hermana, y con otros parientes cercanos, fue posteriormente prohibido por el código civil mosaico, aunque aparentemente todavía estaba permitido en el tiempo de Abram (ver Lev. 18:6, 9, 14).",
+    date: "1915-1809 a.C.",
+    scriptures: ["1|11:29"],
+    related: [
+      {
+        slug: "abraham",
+        title: "Abraham",
+      },
+    ],
+    images: [
+      {
+        caption:
+          'Génesis 11 dice que "Abram y Nacor tomaron esposas: el nombre de la esposa de Abram era Sarai.',
+        file: "GoodSalt-pppas0289_8-5-2013 3-08-46 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "644",
+    slug: "marriage-of-nahor-and-milcah",
+    title: "Matrimonio de Nacor y Milca",
+    period: "3",
+    description:
+      'Génesis 11:29 dice que Nacor tomó una esposa, cuyo nombre era "Milca, la hija de Harán, el padre de Milca y el padre de Iscá". Nacor es hermano de su padre. Milca tuvo 8 hijos, entre los cuales estaba Betuel, el padre de Rebeca.',
+    article:
+      "Milca. Esta hija de Harán, que se había casado con su tío Nacor (cap. 11:29), había dado a luz a ocho hijos, nombrados en los siguientes versículos. No se implica que Milca había comenzado recientemente a tener hijos (ver en cap. 11:30), sino que habían pasado muchos años desde que Abraham había tenido noticias de la familia de Nacor.",
+    date: "1906-1850 a.C.",
+    scriptures: ["1|11:29"],
+    related: [],
+    images: [
+      {
+        caption:
+          'Génesis 11:29 dice que Nacor tomó una esposa, cuyo nombre era "Milca, la hija de Harán, el padre de Milca y el padre de Iscá.',
+        file: "GoodSalt-lwjas0463_8-5-2013 3-07-41 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "647",
+    slug: "terah-leaves-ur-for-city-of-haran",
+    title: "Taré deja Ur por la ciudad de Harán",
+    period: "3",
+    description:
+      "Taré toma a su hijo Abraham, su nieto Lot y su nuera Sarai y deja Ur de los caldeos y se dirige hacia Canaán. Primero van a Harán, donde Taré muere más tarde.",
+    article:
+      'Salieron. Las Escrituras dejan claro que fue a Abram a quien Dios se reveló en Ur de los caldeos, y no a Taré, como podría inferirse de este pasaje. Esteban les dijo a sus oyentes que Abram había dejado "Mesopotamia, antes de habitar en Harán, en respuesta a un mandato explícito dirigido a él personalmente por Dios (Hch 7:2-3). Dios más tarde le recordó a Abram que lo había sacado de Ur de los caldeos (Gn 15:7), no de Harán (ver también Neh 9:7).\n\nConcluimos que el llamado de Abram ocurrió en dos etapas. El primer llamado, cuando vivía en Ur, fue a dejar su tribu ancestral, pero el segundo, en Harán, fue a abandonar a sus parientes inmediatos, incluso la casa de su padre. Cuando llegó el primer llamado a Abram, obedeció de inmediato y dejó el viejo entorno para encontrar un nuevo hogar en el país que Dios prometió proporcionarle. Debió haber tenido una influencia considerable sobre su padre, Taré, su hermano Nacor y su sobrino Lot, porque todos eligieron acompañarlo.\n\nPara ir a la tierra de Canaán. Esto indica que Canaán fue su destino desde el principio. Había dos rutas posibles de viaje desde Ur en el sur de Mesopotamia hasta Canaán. Una ruta atravesaba directamente el gran desierto de Arabia, pero una gran caravana de rebaños, manadas y muchos sirvientes no podía atravesar tal terreno. La otra ruta subía por el Éufrates, cruzaba el estrecho desierto del norte de Siria y luego bajaba por el valle del Orontes hacia Canaán. Obviamente, esta era la forma en que debían viajar.\n\nLlegaron a Harán. Harán está situado en el río Balikh en el norte de Mesopotamia, a mitad de camino entre Ur y Canaán. No se da la razón de esta interrupción del viaje, pero pudo haber sido ocasionada por el atractivo de la región, o más probablemente por la edad avanzada y la debilidad de Taré. Para la mayor parte de la familia, Harán se convirtió en un lugar de residencia permanente, lo que implica, quizás, que el atractivo de la región pudo haber llevado a la decisión original de detenerse allí. Los valles de Balikh y Chabur contienen tierras de pastoreo fértiles. Es posible que toda la región estuviera escasamente poblada y pareciera ofrecer buenas posibilidades para aumentar la riqueza de la familia antes de continuar hacia Canaán.',
+    date: "1896 a.C.",
+    scriptures: ["1|11:31"],
+    related: [
+      {
+        slug: "terah",
+        title: "Taré",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Abraham dando consejo a Sarai, pintura de James Tissot entre 1896-1902.",
+        file: "Abram and Sarai_5-15-2013 5-18-40 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "648",
+    slug: "abram-called-and-departs-haran",
+    title: "Abram llamado y parte de Harán",
+    period: "3",
+    description:
+      "Dios llama a Abram, más tarde Abraham, a dejar su país y la casa de su padre para ir a una tierra donde Él lo hará una gran nación. Génesis 12:4 dice que en este momento Abram tenía 75 años. Lot fue con ellos, junto con todas sus posesiones.",
+    article:
+      'Vete de aquí. A partir de ahora, Abram es el héroe de la narrativa de Génesis. Esta es la primera revelación divina registrada a Abram, aunque se sabe por Hch 7:2 que Dios se le había aparecido al menos una vez antes. La palabra de Jehová comienza con un mandato, continúa con una promesa y termina con una bendición. Estos tres aspectos significativos caracterizan cada manifestación de Dios al hombre. Las promesas de Dios se cumplen y Sus bendiciones se reciben solo cuando Sus mandatos son obedecidos. Los hombres generalmente desean compartir las bendiciones de Dios y realizar Sus promesas sin cooperar con Sus requisitos.\n\nEl llamado del Señor requería que Abram hiciera una ruptura completa con el pasado. No solo tenía que dejar la tierra de los dos ríos, Mesopotamia, en la que se encontraban Ur y Harán, sino que también tenía que renunciar a los lazos familiares e incluso a la casa de su padre, para nunca regresar a los de su propia sangre y raza. Fue una prueba severa. Harán y Ur compartían la misma civilización y estándares de vida. Todo esto cambiaría inmediatamente cuando dejara la tierra de los dos ríos y cruzara a Siria y Palestina. En lugar de tierras de pastoreo fértiles, encontraría un país montañoso y densamente boscoso. En lugar de vivir entre pueblos relacionados y altamente civilizados, estaría viviendo entre tribus de una cultura materialmente inferior y una religión especialmente degradada.\n\nUna tierra que te mostraré. Génesis 11:31 indica que el destino original de Abram había sido Canaán. Obviamente, Dios debió haber especificado Canaán como la tierra hacia la cual debía dirigir sus pasos. En esta ocasión (cap. 12:1) no se menciona Canaán, pero está claro que Abram sabía que Canaán era el lugar donde Dios quería que fuera. Partió con Canaán en mente (v. 5). La declaración de Pablo en Heb. 11:8 de que Abram "salió, sin saber a dónde iba" aparentemente se refiere al hecho de que a partir de entonces no tendría un lugar de residencia seguro, sino que sería un peregrino y un extranjero (ver Heb. 11:9). A partir de entonces, Dios lo guiaría día a día, y nunca sabría con mucha anticipación lo que el futuro podría deparar.',
+    date: "1871 a.C.",
+    scriptures: ["1|12:1-3"],
+    related: [
+      {
+        slug: "abraham",
+        title: "Abraham",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Ahora el SEÑOR había dicho a Abram: Vete de tu tierra, de entre tus parientes y de la casa de tu padre, a la tierra que te mostraré: (Génesis 12:1)",
+        file: "GoodSalt-Abram_8-5-2013 4-01-46 PM.jpg",
+      },
+      {
+        caption:
+          "Abraham viajando a Canaán, 'La Santa Biblia' de Gustave Doré, grabado por Pisan, 1866",
+        file: "journey-to-canaan_8-8-2013 10-20-48 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "649",
+    slug: "famine-in-the-land",
+    title: "Hambre en la tierra",
+    period: "3",
+    description:
+      'Génesis 12 dice que una hambruna "severa" llegó a Canaán, por lo que Abram "bajó a Egipto".',
+    article:
+      "Abram apenas había pasado por la Tierra Prometida cuando una severa hambruna lo obligó a dejarla. Canaán, aunque naturalmente fértil, estaba sujeto a visitaciones de sequía, especialmente en aquellos años cuando las lluvias de noviembre y diciembre, de las que dependía el país, fallaban o eran escasas (Gn. 26:1, 41:56, 1 Reyes 17:1, Hageo 1:10-11). La ocurrencia de esta hambruna justo en el momento en que Abram entraba en la tierra fue una prueba adicional de su fe. Era para enseñarle lecciones de sumisión, fe y paciencia. Debía darse cuenta de que incluso en la Tierra Prometida, la comida y las bendiciones provienen solo del Señor.\n\nAl estar en el sur de Canaán, Abram encontró natural dirigirse a Egipto, el país de la abundancia, para encontrar sustento. Aunque Egipto mismo ocasionalmente sufría de hambruna debido a la falta de inundaciones del Nilo, era conocido por los países circundantes como un refugio en tiempos de necesidad. Los registros egipcios antiguos mencionan repetidamente el hecho de que los asiáticos entraban en el país para alimentar a sus rebaños hambrientos.",
+    date: "1871 a.C.",
+    scriptures: ["1|12:10"],
+    related: [
+      {
+        slug: "abraham",
+        title: "Abraham",
+      },
+    ],
+    images: [
+      {
+        caption:
+          'Génesis 12 dice que una hambruna "severa" llegó a Canaán, por lo que Abram "bajó a Egipto".',
+        file: "GoodSalt-pppas0193_8-5-2013 3-13-35 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "650",
+    slug: "sarah-and-egyptian-king",
+    title: "Sara y el rey egipcio",
+    period: "3",
+    description:
+      "Abram lleva a su familia a Egipto debido a una severa hambruna. Está preocupado de que lo maten y le quiten a su hermosa esposa, por lo que le dice a Sarai que diga que es su hermana. El faraón toma a Sarai, pero su casa es plagada. Se entera de que Abram ha mentido.",
+    article:
+      "Esta es su esposa. Abram descubriría en Egipto que la astucia humana es inútil y que la liberación del miedo y la perplejidad solo viene del Señor (Sal. 105:14-15). Al acercarse a Egipto, Abram temió por su vida debido a la belleza de Sarai, su esposa. Como ella era su media hermana, se sintió justificado al pedirle que se hiciera pasar por su hermana (ver Gn. 20:12). La conducta de los cananeos, como se ve más tarde en el caso de los hombres de Sodoma (cap. 19:4-11), es evidencia de que tenía razones para su ansiedad. Su experiencia en Egipto muestra aún más claramente que, desde un punto de vista humano, sus temores estaban bien fundados. Pero la precaución que tomó no surgió de la fe.\n\nElla era muy hermosa. ¿Cómo podría Sarai, a la edad de 65 años, haber sido tan atractiva como sugiere este incidente? Debe recordarse que en el tiempo de Abram, la esperanza de vida era el doble de lo que es ahora, y Sarai, que murió a la edad de 127 años (cap. 23:1), estaba por lo tanto en la mediana edad. Se sabe que los faraones se sentían atraídos por el cutis más claro de las mujeres extranjeras y aseguraban niñas libias, hititas, mesopotámicas y palestinas para el harén real.\n\nEl Señor plagó al faraón. La extremidad del hombre es la oportunidad de Dios. Aunque Abram había fallado a Dios, Dios intervino en su favor. No se puede determinar la naturaleza de estas plagas, pero obviamente eran de tal naturaleza que protegían a Sarai del deshonor y convencían al faraón de que debía devolverla a Abram. Sarai misma pudo haber revelado su estado marital real, o Dios pudo haber hablado directamente al faraón como lo hizo más tarde con Abimelec (ver cap. 20:3).\n\nEsta experiencia debería haber enseñado a Abram a confiar en Dios en lugar de en sus propios dispositivos astutos.\n\nTómala y vete. Reconociendo que las plagas habían venido sobre él debido al desagrado de Dios, el monarca no se atrevió a tratar duramente a Abram, sino que buscó, más bien, mitigar la ira de Dios proporcionándole un salvoconducto para salir del país. La gracia del faraón y la misericordia de Dios lo habían humillado, y en silencio reconoció su culpa. ¡Qué deshonra viene a la causa de Dios cuando Sus representantes, como resultado de cursos de acción mal aconsejados y vergonzosos, se traen sobre sí mismos reproches bien merecidos de los hombres del mundo!",
+    date: "1871 a.C.",
+    scriptures: ["1|12:11-20"],
+    related: [
+      {
+        slug: "abraham",
+        title: "Abraham",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Sara en el palacio del faraón. Artista: James Joseph Jacques Tissot, c. entre 1896 y 1902",
+        file: "Sarai_Is_Taken_to_Palace_of_Pharaoh_Tissot_7-31-2013 1-21-17 PM.jpg",
+      },
+      {
+        caption: "Las pirámides de Giza. Artista: David Roberts, c. 1838",
+        file: "David_Roberts_Cheops_Chepren_7-31-2013 1-33-51 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "651",
+    slug: "lot-moves-to-sodom",
+    title: "Lot se muda a Sodoma",
+    period: "3",
+    description:
+      'Abram y Lot tienen muchos rebaños y "la tierra no podía sostenerlos" (Gn. 13:6). Abram sugiere que se separen y le da a Lot la elección de la tierra. Lot elige el fértil valle del Jordán y viaja "hacia el este" hacia Sodoma, una mala decisión.',
+    article:
+      'Su sustancia era grande. La prosperidad del tío se derramó sobre su sobrino. Lot, el único otro miembro de la familia de Taré que había obedecido el mandato de Dios de ir a Canaán, compartió la bendición prometida a Abram. Dado que la tierra ya estaba ocupada por los cananeos y las montañas de Canaán estaban densamente boscosas, como muestran los registros antiguos, había escasas tierras de pastoreo permanentes para los grandes rebaños y manadas de los recién llegados.\n\nQue no haya contienda. Las disputas de los pastores probablemente se reflejaron en la actitud y conducta de Lot. Ansioso por evitar la discordia y la enemistad entre él y su sobrino, Abram propuso la separación de sus rebaños y manadas como una solución a la dificultad. En vista del hecho de que Lot era su menor, y que toda la tierra había sido prometida a Abram, sus tratos con Lot reflejan un espíritu verdaderamente generoso. La nobleza de alma revelada en esta ocasión contrasta marcadamente con la debilidad de carácter que había exhibido recientemente en Egipto. Abram demostró ser un hombre de paz.\n\n¿No está toda la tierra delante de ti? Aunque nombrado heredero de todo el país, Abram manifestó verdadera humildad al subordinar sus propios intereses a los de Lot y permitirle tomar tanta tierra como quisiera. Abram renunció a sus propios derechos por el bien de la paz, pero al hacerlo se ganó nuestro más alto respeto. Mostró un espíritu generoso, una nobleza de mente, un carácter digno de emulación. Hacer lo contrario de lo que hizo habría sido seguir los principios egoístas que generalmente gobiernan a los hombres en sus tratos entre sí. Pero un hombre espiritual vive según principios más elevados y mira más allá de las ventajas temporales de este mundo a las ganancias eternas. Esto es lo que Abram hizo al frustrar el propósito de Satanás de crear discordia y contienda entre él y su sobrino.\n\nLot eligió. Atraído por su belleza y fertilidad y sin tener en cuenta otras consideraciones, Lot eligió el valle del Jordán como su futuro lugar de residencia. Impulsado por el egoísmo y guiado solo por sus propias inclinaciones y la perspectiva de una ventaja temporal, Lot tomó la decisión fatídica de su vida. Esta decisión lo llevó a través de una serie de experiencias desafortunadas que pusieron en peligro su vida, su alma y su familia. Dejando a Abram en Betel, Lot y su familia partieron hacia el este.\n\nPlantó su tienda hacia Sodoma. Deseoso de establecerse en las inmediaciones de las ciudades del valle del Jordán, en cuya riqueza esperaba compartir, Lot contrasta marcadamente con su tío, que permaneció como un vagabundo durante toda su vida (ver Heb. 11:9). La experiencia de Lot es una lección para el cristiano que es tentado a elegir asociados terrenales y ganancias temporales a cambio de la felicidad eterna. Primero "miró", y luego "eligió". Dejando el valle del Jordán, al norte del Mar Muerto, plantó su tienda hacia Sodoma, luego se mudó a la ciudad (ver Gn. 14:12, 19:1). Aunque él mismo era justo, su decisión fatídica significó la pérdida de casi todo lo que le era querido.',
+    date: "1867 a.C.",
+    scriptures: ["1|13:5-13"],
+    related: [
+      {
+        slug: "lot",
+        title: "Lot",
+      },
+    ],
+    images: [
+      {
+        caption: "Abraham y Lot se separan.",
+        file: "GoodSalt-stdas0140_8-13-2013 2-25-21 PM.jpg",
+      },
+      {
+        caption:
+          'Abram dijo a Lot: "No haya contienda entre tú y yo, ni entre mis pastores y tus pastores, porque somos parientes cercanos. ¿No está toda la tierra delante de ti? Sepárate ahora de mí. Si vas a la izquierda, yo iré a la derecha, pero si vas a la derecha, yo iré a la izquierda." (Génesis, Capítulo 13, 8-9). Grabado en madera después de un dibujo de Julius Schnorr von Carolsfeld (pintor alemán, 1794 - 1872)',
+        file: "Abram and Lot_5-15-2013 4-48-43 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "652",
+    slug: "lot-and-daughters-dwell-in-a-cave",
+    title: "Lot y sus hijas habitan en una cueva",
+    period: "3",
+    description:
+      "Cuando Lot, su esposa y sus dos hijas escapan de Sodoma, pierde a su esposa, pero sus dos hijas escapan a Zoar y habitan en una cueva. Las dos hijas dan a luz a través de su padre a los padres de los moabitas y amonitas.",
+    article:
+      'Embarazadas por su padre. En esta acción, las hijas de Lot revelaron la influencia maligna de Sodoma. Habían crecido hasta la edad adulta en un país donde la embriaguez y todas las formas de inmoralidad eran rampantes; en consecuencia, su juicio era débil y su conciencia estaba adormecida. Lot había podido proteger a sus hijas de convertirse en víctimas de los sodomitas (ver v. 8), pero no había tenido tanto éxito en fijar los principios del bien en sus corazones. Son más dignas de lástima que de culpa, ya que el propio Lot compartió su pecado. Él fue responsable de las circunstancias que llevaron a ello, como también lo fue de beber el vino que le ofrecieron (ver en cap. 9:21). El precio que Lot pagó por unos pocos años en Sodoma fue la pérdida de toda su familia. Los viles e idólatras moabitas y amonitas fueron su única descendencia.\n\nMoab. Antepasado de los moabitas. Su nombre probablemente significa "de mi padre", como lo traduce la LXX. Aunque primos de los israelitas, los moabitas siempre fueron sus enemigos. Originalmente habitaban el país entre el Arnón y el Zered, al este del Mar Muerto. Desde el tiempo de David hasta el de Acab, estuvieron temporalmente sometidos a sus vecinos occidentales, pero recuperaron la independencia bajo su rey Mesa (2 Reyes 3:4-5), quien extendió su territorio hacia el norte.\n\nBen-ammi. El nombre del antepasado de los amonitas probablemente significa "hijo de mi pueblo". Con esto, su madre expresó el hecho de que su padre y su madre eran de una misma familia. Su hijo era en realidad su propio medio hermano, pero sus antepasados también eran los suyos. Los amonitas se convirtieron en nómadas y vivieron en la parte oriental de la región entre el Jaboc y el Arnón. El nombre de su fortaleza, Rabat Amón, se perpetúa en el nombre Amán, la actual capital del Reino de Jordania.\n\nLa historia de Lot y su familia es trágica. Una mancha permanece en su memoria para todas las generaciones. Su pecado fue perdonado, pero el mal de años dedicados al placer y al beneficio vivió después de él durante generaciones.',
+    date: "1850 a.C.",
+    scriptures: ["1|19:30"],
+    related: [
+      {
+        slug: "lot",
+        title: "Lot",
+      },
+    ],
+    images: [
+      {
+        caption: "Lot y sus hijas huyen de Sodoma.",
+        file: "GoodSalt-pppas0304_8-13-2013 2-28-19 PM.jpg",
+      },
+      {
+        caption:
+          "Lot y sus hijas huyen de Sodoma, Providence Lithograph Company, 1908",
+        file: "526px-Lot_and_his_daughters_flee_Sodom_-_Genesis19-17_8-5-2013 3-50-53 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "654",
+    slug: "laban",
+    title: "Labán",
+    period: "3",
+    description:
+      'El nombre significa "blanco". Es el hijo de Betuel, quien era hijo de Nacor, el hermano de Abraham. Labán vivía en Harán en Mesopotamia. Su hermana, Rebeca, se convirtió en la esposa de Isaac. Jacob más tarde huyó a Labán y se casó con sus hijas, Lea y Raquel.',
+    article:
+      "El hijo de Betuel y nieto del hermano de Abraham, Nacor. Vivía en Harán en Padán-aram (Gn 24:10, 15, 28:5, 10, 29:4-5). Cuando el siervo de Abraham llegó a Harán y pidió a la hermana de Labán, Rebeca, como esposa para Isaac, Labán y su padre Betuel consintieron, especialmente cuando vieron los ricos regalos enviados por Abraham (cap 24:28-31, 50-60).\n\nEl hecho de que Labán se mencione antes que su padre (v 50) puede indicar que Labán se había convertido en el jefe de la familia, posiblemente debido a la incapacidad de su padre. Cuando Jacob se vio obligado a huir de su hermano Esaú, encontró refugio con su tío Labán, quien poseía esclavos y grandes rebaños de ovejas y cabras (caps 29:16, 24, 29, 31:38). Aquí Jacob se enamoró de Raquel, la menor de las dos hijas de Labán, pero al no tener dote, trabajó como pastor para Labán durante 7 años para obtenerla como esposa (cap 29:15-20).\n\nSin embargo, Labán lo engañó fraudulentamente para que se casara primero con su hermana mayor, Lea, y luego le dio a Raquel también con la condición de que trabajara otros 7 años (vs 21-28). Después, se quedó 6 años más con Labán y recibió ovejas y cabras como pago por sus servicios (cap 30:25-43). Cuando Labán y sus hijos se pusieron celosos debido a la rápida acumulación de riqueza de Jacob, Jacob dejó la casa de su suegro y huyó hacia Canaán con su familia y rebaños.\n\nLabán lo persiguió y lo alcanzó en el monte Galaad (cap 31:1-23). Tenía la intención de obligar a Jacob a regresar a Padán-aram, pero Dios le prohibió castigar a Jacob (v 24). Por lo tanto, los dos hombres concluyeron un tratado de amistad y luego se separaron, Jacob continuó hacia Canaán y Labán regresó a su hogar en Harán (caps 31:25 a 32:1). Labán al menos prestó servicio de labios a Yahweh, el Dios de Abraham (caps 24:50, 30:27), aunque adoraba a otros dioses, ya que tenía figurillas de deidades paganas (heb. terafim) en su casa (cap 31:30, 32-35, cf. 35:4). También practicaba la adivinación, como indica el texto hebreo de cap 30:27 (ver RVR).",
+    date: "1860-1760 a.C.",
+    scriptures: ["1|24:29"],
+    related: [
+      {
+        slug: "leah",
+        title: "Lea",
+      },
+      {
+        slug: "rachel",
+        title: "Raquel",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Labán buscando sus ídolos robados, Bartolomé Esteban Murillo, 1670",
+        file: "Laban_Searching_for_his_Stolen_Household_gods_8-5-2013 3-34-26 PM.JPG",
+      },
+    ],
+  },
+  {
+    id: "655",
+    slug: "abram-delivers-sodom-from-four-kings",
+    title: "Abram libera a Sodoma de cuatro reyes",
+    period: "3",
+    description:
+      "Cuatro reyes de Mesopotamia invaden Canaán y finalmente se llevan a Lot y su familia y bienes. Cuando Abraham se entera de esto, toma a 318 hombres y rescata a Lot, y todas las personas y posesiones son devueltas. Luego paga diezmos a Melquisedec.",
+    article:
+      'Sus sirvientes entrenados. Abram es el único patriarca que aparece en el papel de líder militar. No perdió tiempo en hacer preparativos para rescatar a su sobrino, sino que partió inmediatamente en su persecución, con sus propios sirvientes y los de sus amigos amorreos (v. 24). La palabra hebrea traducida aquí como "sirvientes entrenados" no aparece en ningún otro lugar de la Biblia, pero se identifica en una carta de Taanac del siglo XV a.C. como una palabra cananea que significa "sirvientes".\n\nNacidos en la casa de Abram, sus 318 "sirvientes entrenados" podían ser confiables. Esto sugiere que Abram poseía más de 318 sirvientes varones, si no se incluyen los obtenidos durante su reciente estancia en Egipto (cap. 12:16, 16:1). Se desconoce cuántos seguidores y sirvientes de los tres amigos de Abram lo siguieron en su misión de rescate, pero probablemente constituían una adición sustancial a su ejército. La idea de que las fuerzas de Abram pudieran derrotar a un enemigo tan poderoso ha sido a menudo objeto de crítica. Sin embargo, la historia registra muchos ejemplos de grandes ejércitos siendo derrotados por fuerzas más pequeñas. Además, los ejércitos antiguos eran muy pequeños según los estándares modernos.\n\nLos derrotó. En un falso sentido de seguridad, el invicto ejército mesopotámico había relajado su vigilancia. Al acercarse al enemigo, Abram dividió sus fuerzas en varios grupos y los sorprendió con un ataque nocturno. Cuando los asaltantes de Abram cayeron sobre el campamento enemigo desde diferentes direcciones, se produjo tanta confusión que el poderoso ejército mesopotámico huyó, dejando todo el botín y los cautivos atrás.\n\nLos persiguió hasta Hoba. Hoba no ha sido definitivamente identificada, pero Damasco se encuentra a unas 40 millas al noreste de Dan. Abram persiguió a los enemigos que huían lo suficiente como para evitar que reagruparan sus fuerzas y volvieran a atacarlo. Su victoria fue completa.\n\nTrajo de vuelta a todos. Aunque aparentemente poseía genio militar, Abram ciertamente no partió en persecución de los ejércitos profesionales de los reyes conquistadores sin antes ponerse bajo la dirección y protección de Dios. Su fe intrépida y espíritu desinteresado fueron ampliamente recompensados. No es seguro si Pablo incluyó a Abram cuando habló de héroes de la fe que "se hicieron valientes en la batalla" (Heb. 11:34).',
+    date: "1866 a.C.",
+    scriptures: ["1|14:1-17"],
+    related: [
+      {
+        slug: "abraham",
+        title: "Abraham",
+      },
+    ],
+    images: [
+      {
+        caption: "Abram rescata a Lot y a los otros cautivos",
+        file: "GoodSalt-stdas0385_8-5-2013 3-29-06 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "656",
+    slug: "abram-blessed-by-melchizedek",
+    title: "Abram bendecido por Melquisedec",
+    period: "3",
+    description:
+      "Después de liberar a Lot y al rey de Sodoma de cuatro reyes invasores, Abram es recibido por Melquisedec, el sacerdote-rey de Salem, y le da diezmos. Salem es más tarde la ciudad de Jerusalén.",
+    article:
+      'Melquisedec. El sacerdote-rey de Salem se une al rey de Sodoma para dar la bienvenida a Abram. En los días de Abram, Jerusalén era conocida como Salem, o Shalem, "paz" o "seguridad" (ver Sal. 76:2). La ciudad de Jerusalén se atestigua por primera vez en los registros egipcios del siglo XIX a.C., y entonces estaba gobernada por reyes amorreos. Jerusalén significa "ciudad de paz", y Melquisedec, "mi rey es justo" o "Rey de justicia", como se interpreta el nombre en Heb. 7:2. Mientras que el rey de Sodoma vino a encontrarse con Abram con el propósito de obtener la liberación de sus súbditos (Gn. 14:21), Melquisedec vino a bendecir al comandante victorioso.\n\nPan y vino. Estos eran los principales productos de Canaán. El propósito de la reunión de Melquisedec con Abram con pan y vino ha sido objeto de mucha especulación. Algunos han pensado que estos se presentaron a Abram y sus soldados como refrigerios, otros los consideran simbólicos de la transferencia del suelo de Canaán al patriarca. Lo más probable es que simplemente fueran un gesto de gratitud hacia Abram por recuperar la paz, la libertad y la prosperidad en la tierra.\n\nEl Dios altísimo. Es sorprendente encontrar entre los malvados cananeos y amorreos del tiempo de Abram un gobernante local que no solo era leal al verdadero Dios, sino que también oficiaba en capacidad sacerdotal (cf. Éx. 2:16). Muestra que Dios todavía tenía a Sus fieles dispersos aquí y allá. Aunque en minoría, los verdaderos siervos de Dios no habían desaparecido de la faz de la tierra. Dios nunca ha estado sin testigos fieles, por oscuro que sea el período o por malvada que sea su gente.\n\nLos comentaristas bíblicos han especulado mucho sobre la persona de Melquisedec, un sacerdote-rey que aparece repentinamente en la narrativa bíblica solo para desaparecer nuevamente en la oscuridad impenetrable de la historia antigua. Tal especulación es casi completamente sin valor. Su aparición inesperada lo convierte en cierto sentido en una figura atemporal, y su sacerdocio en un tipo del sacerdocio de Jesucristo.\n\nDiezmos de todo. Que Abram, y no Melquisedec, fue el que pagó los diezmos, se declara claramente en Heb. 7:4. Dar la décima parte del botín tomado del enemigo fue un reconocimiento del sacerdocio divino de Melquisedec, y prueba que Abram estaba bien familiarizado con la institución sagrada del pago de diezmos.\n\nEsta es la primera mención del diezmo, reconocido repetidamente tanto en el Antiguo como en el Nuevo Testamento como un requisito divino (ver Gn. 28:22, Lev. 27:30-33, Núm. 18:21-28, Neh. 13:12, Mat. 23:23, Heb. 7:8).\n\nQue Abram pagó diezmos muestra claramente que esta institución no fue un expediente temporal posterior para proveer los servicios sacrificiales, sino que fue una práctica instituida divinamente desde los primeros tiempos. Al devolver a Dios una décima parte de sus ingresos, el creyente reconoce la propiedad de Dios sobre toda su propiedad.',
+    date: "1866 a.C.",
+    scriptures: ["1|14:18-20"],
+    related: [
+      {
+        slug: "abraham",
+        title: "Abraham",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Melquisedec bendiciendo a Abram. Artista: Desconocido, c. 1897",
+        file: "Foster_Bible_Pictures_0028-1-Melchizedek_7-31-2013 1-54-19 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "657",
+    slug: "gods-covenant-with-abram-smoking-furnace",
+    title: "El pacto de Dios con Abram / Horno humeante",
+    period: "3",
+    description:
+      "Dios se aparece a Abram en una visión para hacer un pacto de que sería el padre de una gran nación. Dios le dice que cuente las estrellas. Abram cree. Luego Dios le instruye que corte cinco animales por la mitad y aparece en humo y fuego con una promesa.",
+    article:
+      'Dios se reveló a Abram en una visión. Abram todavía estaba preocupado por no tener un heredero. Así que Dios condescendió en entrar en un pacto solemne con Abram, en una forma habitual entre los antiguos. La expresión "concluir" o "hacer" un pacto (v. 18), literalmente, "cortar" un pacto, se derivó de la práctica aquí descrita. Los animales que Abram fue dirigido a usar eran precisamente los que más tarde fueron prescritos como bestias sacrificiales por Moisés (ver Éx. 29:15, Núm. 15:27, 19:2, Deut. 21:3, Lev. 1:14). El requisito de que los cuadrúpedos fueran "de tres años" especifica animales maduros.\n\nCada uno de los tres animales fue sacrificado y dividido, y las dos mitades colocadas una contra la otra, con un espacio entre ellas. Las aves fueron sacrificadas, pero no divididas. Una probablemente se colocó en un lado y la otra en el lado opuesto. Aquellos que entraban en el pacto debían caminar entre las piezas divididas, simbólicamente jurando obediencia perpetua a las disposiciones así solemnemente acordadas. Las vidas de los animales comprometían las vidas de aquellos que participaban en el pacto. Esta práctica permaneció en vigor durante muchos siglos, ya que la encontramos practicada en el tiempo de Jeremías (Jer. 34:18-19).\n\nLa fe de Abram y su confianza infantil en Dios no lo hicieron "justo"; más bien, el Señor "lo contó por justicia". Por primera vez, estos importantes conceptos, fe y justificación, se unen. Es obvio que Abram no tenía "justicia" hasta que Dios se la acreditó. Y si él no la tenía, ningún hombre la ha tenido jamás. Abram era un pecador y necesitaba redención, como todo ser humano; pero cuando la justicia le fue imputada, la misericordia y la gracia también se extendieron, efectuando el perdón de su pecado y trayendo las recompensas de la justicia. Aquí, por primera vez, se presenta la importancia completa de la fe. Aquí también, por primera vez, se menciona la justicia imputada.\n\nLa fase final de la revelación divina estaba diseñada para impresionar a Abram con la certeza de las promesas de Dios. Un "horno humeante" o "antorcha ardiente", símbolos de la presencia divina, pasó entre los cadáveres divididos, como Abram mismo había hecho antes, a la luz del día. Que esto no fue meramente una visión es evidente por el hecho de que los animales fueron totalmente consumidos. Por esta señal visible, Dios confirmó Su pacto con Abram, quien así, por primera vez, contempló el símbolo sagrado de la presencia divina.',
+    date: "1865 a.C.",
+    scriptures: ["1|15:1-21"],
+    related: [
+      {
+        slug: "abraham",
+        title: "Abraham",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Dios se aparece a Abram en una visión para hacer un pacto de que sería el padre de una gran nación y Dios le dice que cuente las estrellas.",
+        file: "Stars_5-15-2013 3-58-46 PM.jpg",
+      },
+      {
+        caption:
+          "Abram guardando su sacrificio. Artista: James Joseph Jacques Tissot, c. 1896-1902",
+        file: "tissot-Abram_Guarding_His_Sacrifice_001_7-31-2013 2-14-29 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "658",
+    slug: "sodom-destroyed",
+    title: "Sodoma destruida",
+    period: "3",
+    description:
+      "Sodoma y su ciudad hermana Gomorra son destruidas por fuego del cielo debido a la maldad de sus habitantes. La esposa de Lot y sus dos hijas apenas escapan, pero la esposa de Lot mira hacia atrás y se convierte en una columna de sal. La Biblia a menudo alude a Sodoma.",
+    article:
+      'Sodoma. Quemando la ciudad amurallada, una ciudad en el valle de Sidim (Gn. 13:10, 14:1-16). La maldad de sus habitantes hizo que cayera fuego del cielo, por el cual fue destruida (18:16-33, 19:1-29, Deut. 23:17). Esta ciudad y su terrible destrucción se mencionan frecuentemente en las Escrituras (Deut. 29:23, 32:32, Isa. 1:9-10, 3:9, 13:19, Jer. 23:14, Eze. 16:46-56, Sof. 2:9, Mat. 10:15, Rom. 9:29, 2 Pe. 2:6, etc.).\n\nNo se ha descubierto ningún rastro de ella o de las otras ciudades de la llanura, tan completa fue su destrucción. Justo enfrente del sitio de Zoar, en la costa suroeste del Mar Muerto, hay una cadena de colinas bajas, formando una masa de sal mineral llamada Jebel Usdum, "el monte de Sodoma". Se ha concluido, a partir de esto y de otras consideraciones, que las ciudades de la llanura estaban en el extremo sur del Mar Muerto. Otros, sin embargo, con mucha mayor probabilidad, sostienen que estaban en el extremo norte del mar. [en 1897].',
+    date: "1850 a.C.",
+    scriptures: ["1|19:1-29"],
+    related: [],
+    images: [
+      {
+        caption: "Lot huyendo de Sodoma, Benjamin West, 1810",
+        file: "lot_fleeing_sodom_benjaminwest_1810_8-7-2013 10-45-30 AM.jpg",
+      },
+      {
+        caption:
+          "La destrucción de Sodoma y Gomorra, pintura de John Martin en 1852 en la Galería de Arte Laing",
+        file: "John_Martin_-_Sodom_and_Gomorrah.jpg",
+      },
+    ],
+  },
+  {
+    id: "659",
+    slug: "ishmael-mocks-isaac",
+    title: "Ismael se burla de Isaac",
+    period: "3",
+    description:
+      'Abraham hace una fiesta cuando Isaac es destetado, probablemente alrededor de los 3 años de edad. Sara ve a Ismael "burlarse" de Isaac, una risa que le desea daño, y le pide a Abraham que expulse a Agar e Ismael, lo cual hace.',
+    article:
+      'Algunos comentaristas traducen la palabra hebrea "burlarse" como "jugar" y concluyen que la declaración de Sara en el siguiente versículo fue el resultado de los celos. Piensan que no podía soportar la idea de que Ismael compartiera la herencia de Abraham. Otros explican este texto a la luz de la explicación de Pablo de que Ismael fue expulsado de la casa de su padre por perseguir a Isaac (Gál. 4:29-30).\n\nSegún la mayoría de los casos en los que se usa la forma intensiva de este verbo, Ismael estaba "siempre burlándose" o provocando a Isaac. Ismael era 14 años mayor que Isaac, y por lo tanto tenía unos 17 años cuando Isaac fue destetado (ver cap. 16:3, 21:5). Sin duda, siempre se había considerado a sí mismo como el hijo mayor y heredero de Abraham. El nacimiento de Isaac, sin embargo, y la fiesta del destete hicieron evidente que el hijo de Sara lo reemplazaría, y como resultado, sus celos se despertaron. No es de extrañar que Ismael se burlara de Isaac por ser el menor y, por lo tanto, no elegible para los derechos y privilegios de la primogenitura.\n\nSara le pide a Abraham que "expulse a esta sierva". Las palabras de Sara, que reflejan celos y desprecio, apenas parecen apropiadas para alguien que había sugerido el matrimonio de Agar con Abraham en primer lugar (cap. 16:2-3). Sara se refirió a Agar como una esclava y a Ismael como el hijo de una esclava. Por supuesto, Sara tenía el derecho de exigir que se aclarara legalmente el estatus de su propio hijo, para que no surgiera ninguna pregunta después de la muerte de Abraham. Por lo tanto, Sara le pidió a su esposo que enviara a Agar lejos y que repudiara a Ismael.',
+    date: "1848 a.C.",
+    scriptures: ["1|21:9"],
+    related: [
+      {
+        slug: "ishmael",
+        title: "Ismael",
+      },
+    ],
+    images: [
+      {
+        caption: "Agar e Ismael son enviados lejos, Guercino, 1657",
+        file: "799px-Guercino_Abramo_ripudia_Agar_8-5-2013 4-11-28 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "661",
+    slug: "rebekah",
+    title: "Rebeca",
+    period: "3",
+    description:
+      'El nombre significa "yugo" o "equipo". Es la hija de Betuel y la esposa de Isaac. Es encontrada por el siervo de Abraham, quien es enviado a encontrar una esposa para Isaac entre su pueblo. Exhibió algo de la misma decepción que su hermano Labán.',
+    article:
+      "Hija de Betuel, el sobrino de Abraham (Gn 22:23). Vivió en Padán-aram hasta que fue persuadida por el siervo de Abraham, quien había sido enviado por su amo para buscar una esposa para Isaac, para acompañarlo a Canaán y convertirse en la esposa de Isaac (cap 24:1-67). Finalmente, 20 años después de su matrimonio, dio a luz a gemelos, Esaú y Jacob (cap 25:19-26). En una ocasión, cuando la familia vivía en Gerar, Isaac intentó hacer pasar a Rebeca como su hermana (cap 26:6-11), como Abraham, su padre, había hecho con Sara muchos años antes (cap 12:1-20).\n\nRebeca favoreció a su hijo menor, Jacob (cap 25:28), y lo dirigió a engañar a su padre ciego para obtener la bendición paterna que Isaac planeaba pronunciar sobre Esaú (cap 27:1-29). Al enterarse de que Esaú planeaba matar a su hermano por haberle robado sus derechos, Rebeca planeó la partida de Jacob hacia Padán-aram y lo ayudó en su huida (vs 41-46). Parece que murió durante los 20 años de ausencia de Jacob, pero no se registran las circunstancias de su muerte. Sin embargo, Jacob habla de su madre como enterrada en la cueva de Macpela (cap 49:31).",
+    date: "1830 a.C.",
+    scriptures: ["1|22:23", "1|49:31"],
+    related: [],
+    images: [
+      {
+        caption: "Rebeca dando de beber a los camellos de Eliezer.",
+        file: "GoodSalt-pppas0037_8-13-2013 2-32-23 PM.jpg",
+      },
+      {
+        caption:
+          "El siervo de Abraham, Eliezer, y Rebeca, Providence Lithograph Company, 1908",
+        file: "Rebekah_and_Eliezer_001_7-31-2013 4-05-13 PM.jpg",
+      },
+    ],
+  },
+  {
     id: "662",
     slug: "cain",
     title: "Caín",
@@ -3792,41 +4334,659 @@ export default [
     ],
   },
   {
-    id: "1016",
-    slug: "adam",
-    title: "Adán",
-    period: "1",
+    id: "679",
+    slug: "jesus",
+    title: "Jesús",
+    period: "9",
     description:
-      "El nombre significa 'rojo' o 'hombre'. Es el primer hombre, creado por Dios, cuya esposa fue Eva. Adán recibió autoridad sobre la tierra. El pecado entró al mundo cuando Adán y Eva comieron del fruto prohibido en el Jardín del Edén, su hogar que perdieron pero que será restaurado.",
+      'El nombre significa "Yahweh es salvación." Cristo nace de la virgen María, es el Hijo de Dios y el Salvador del mundo, el Mesías. Es crucificado y al tercer día resucita de entre los muertos. Es completamente humano y completamente divino. Jesús regresará.',
     article:
-      "El primer miembro de la familia humana, creado por Dios del polvo de la tierra (Génesis 2:7). Su esposa, Eva, fue formada de una costilla de su costado (vs 21, 22). Adán recibió autoridad sobre la tierra y todas las criaturas vivientes (capítulo 1:26) y se le ordenó poblar el mundo (v 28). Él y su esposa fueron colocados en un 'jardín al oriente en Edén' y se les dio la tarea de cuidarlo (capítulo 2:8, 15). El producto de las plantas y los árboles sería su alimento (capítulo 1:29).",
-    date: "3954-3024 a.C.",
-    scriptures: ["1|2:7", "1|5:5"],
+      'Jesucristo. [Gr. Iesous (una transliteración del arameo Yeshüa\' del heb. Yehôshüa\', "Josué", que significa "Yahweh es salvación"), Christos (una traducción del heb. Mashîach, "Mesías", que significa "ungido", o "el ungido").] El Salvador del mundo, el Mesías. En los tiempos del Nuevo Testamento, Yeshüa\', "Jesús", era un nombre común para los niños judíos. Expresaba la fe de los padres en Dios y en Su promesa de Uno que traería salvación a Israel.\n\nEl ángel Gabriel instruyó a José a llamar al primogénito de María con este nombre, y la razón dada fue: "Él salvará a su pueblo de sus pecados" (Mt 1:21). "Cristo" no era un nombre personal por el cual la gente lo conocía mientras estuvo en la tierra, sino un título usado para identificarlo como Aquel en quien las promesas y profecías mesiánicas del Antiguo Testamento encontraron su cumplimiento. Para aquellos que creían en Él como enviado de Dios, Él era el Cristo, es decir, el Mesías, el Ungido por Dios para ser el Salvador del mundo. Cuando se usan juntos, como en Mt 1:18, 16:20, Mc 1:1, los dos nombres, Jesús y Cristo, constituyen una confesión de fe de que Jesús de Nazaret, el Hijo de María, es verdaderamente el Cristo, el Mesías (Mt 1:1, Hch 2:38).\n\nTambién debía ser conocido por el título Emmanuel, "Dios con nosotros", en reconocimiento de Su deidad y nacimiento virginal (Mt 1:23, cf. Is 7:14, 9:6-7). La designación usual de Cristo para Sí mismo era "el Hijo del hombre" (Mc 2:10, etc.), una expresión nunca usada por otros al hablar de Él o dirigirse a Él. Con este título, que parece tener implicaciones mesiánicas, Jesús enfatizaba Su humanidad, sin duda pensando en Sí mismo como la Simiente prometida de Gn 3:15, 22:18, cf. Gál 3:16.\n\nJesús rara vez usó el título "Hijo de Dios", que enfatiza la deidad, para referirse a Sí mismo (Jn 9:35-37, RV 10:36), aunque a menudo se refería a Dios como Su Padre (Mt 16:17, etc.). Sin embargo, el Padre lo llamó Su Hijo (Lc 3:22, 9:35), y Juan el Bautista (Jn 1:34) y los Doce (Mt 14:33, 16:16) lo llamaron "Hijo de Dios". Fue la afirmación de Jesús de que Dios era Su Padre en un sentido especial, y más tarde Su admisión de que Él era el Hijo de Dios, lo que los judíos tomaron como justificación para Su condenación y muerte (Lc 22:70-71).\n\nGabriel explicó que Jesús debía ser llamado el Hijo de Dios en virtud de Su nacimiento de María por el poder del Espíritu Santo (Lc 1:35, cf. Heb 1:5), y Pablo declaró que la resurrección de Jesús de entre los muertos lo designó "Hijo de Dios" con poder (Rom 1:4, RVR). Sus discípulos frecuentemente se dirigían a Él como "Maestro" (Mc 4:38, 9:38, etc.), y eventualmente, en reconocimiento de Su deidad, como "Señor" (Jn 14:5, 8, 20:28). El término "hijo de David" era una designación mesiánica popular usada por gobernantes y personas por igual (Mt 12:23, 22:42, Mc 12:35, etc.) como expresión de esperanza de liberación de la opresión política.',
+    date: "4 a.C. - 31 d.C.",
+    scriptures: ["40|2:1-2", "42|2:7"],
     related: [
       {
-        slug: "cain",
-        title: "Caín",
+        slug: "joseph-husband-of-mary",
+        title: "José",
       },
       {
-        slug: "abel",
-        title: "Abel",
+        slug: "incarnation-of-jesus",
+        title: "Encarnación de Jesús",
       },
       {
-        slug: "seth",
-        title: "Set",
+        slug: "christs-early-ministry",
+        title: "El ministerio temprano de Cristo",
+      },
+      {
+        slug: "christs-ministry-in-judea",
+        title: "El ministerio de Cristo en Judea",
+      },
+      {
+        slug: "galilean-ministry",
+        title: "Ministerio en Galilea",
+      },
+      {
+        slug: "christs-ministry-in-judea-and-peraea",
+        title: "El ministerio de Cristo en Judea y Perea",
+      },
+      {
+        slug: "passion-week",
+        title: "Semana de la Pasión",
+      },
+      {
+        slug: "resurrection-through-ascension",
+        title: "Resurrección hasta la Ascensión",
+      },
+    ],
+    images: [
+      {
+        caption: "Jesús con un grupo de niños.",
+        file: "GoodSalt-Jesus_8-1-2013 5-43-23 PM.jpg",
+      },
+      {
+        caption: "El Sermón del Monte, Carl Heinrich Bloch",
+        file: "Bloch-SermonOnTheMount_8-8-2013 2-45-23 PM.jpg",
+      },
+      {
+        caption:
+          "Entonces salió Jesús, llevando la corona de espinas y el manto de púrpura. Y Pilato les dijo: ¡He aquí el hombre! (Juan 19:5) Antonio Ciseri, 1871",
+        file: "Eccehomo1_8-8-2013 2-45-23 PM.jpg",
+      },
+      {
+        caption: "La segunda venida de Cristo.",
+        file: "Second_Coming_3-20-2013 2-47-58 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "680",
+    slug: "abrahams-call-to-sacrifice-isaac",
+    title: "El llamado de Abraham a sacrificar a Isaac",
+    period: "3",
+    description:
+      'Dios prueba la fe de Abraham al llamarlo a ofrecer a su hijo como sacrificio. "Dios proveerá" expresa su fe en la providencia de Dios. El Señor detiene a Abraham y provee un carnero atrapado en un matorral como sacrificio.',
+    article:
+      'Aproximadamente 17 años tranquilos pasan en silencio. Isaac era ahora un joven de 20 años (ver en cap. 21:14 PP 147). Habían pasado 17 años desde que Abraham había recibido su último mensaje registrado de Dios. De repente, llegó una nueva revelación, proponiendo la mayor prueba que podría venir a un ser humano. Una visión, que llegó a Abraham de noche, fue la octava ocasión en que Dios habló a Abraham. Experiencias previas habían enseñado a Abraham a reconocer la voz de Dios inmediatamente, y estaba listo para responder. Esta breve conversación introductoria consiste en solo dos palabras en hebreo, y en este sentido difiere de ocasiones similares en el pasado.\n\nDios le dice a Abraham que tome a su único hijo a la tierra de Moriah y lo ofrezca como sacrificio. Si estas palabras fueron pronunciadas lentamente, como es probable, Abraham debió sentir, en secuencia, orgullo, miedo y asombro. La repetición fue calculada por Dios para despertar el afecto paternal y preparar a Abraham para la severa prueba que pronto seguiría. Al llamar a Isaac, el "único hijo" de Abraham, Dios implicó que solo él era considerado un heredero legítimo de la promesa. El sacrificio de seres humanos, particularmente de infantes, era común en la antigüedad. Tanto la Biblia como la arqueología afirman que los cananeos practicaban tales ritos.\n\nLa idea de sacrificar al primogénito a la deidad no era, por lo tanto, algo extraño para Abraham. Aunque Dios prohibió explícitamente tales sacrificios (Lev. 18:21), no es seguro que Abraham estuviera claro al respecto. De hecho, solo bajo el supuesto de que no entendía esta prohibición divina podemos explicar su falta de protesta ante el mandato de Dios de ofrecer a su hijo.\n\nEn la prueba suprema de una vida larga y llena de eventos, Abraham obedeció sin hacer una sola pregunta, sin ofrecer una sola objeción y sin buscar consejo humano. Cuando se trata de principios, el cristiano maduro no pide más que una percepción clara del deber. Su cooperación surge de un corazón rebosante de amor y devoción. Vive como en la misma presencia de Dios, sin consideraciones humanas que nublen su comprensión de la verdad y el deber. Sin embargo, en esta ocasión, ¡qué lucha debió haber tenido lugar en el corazón del "amigo de Dios", no sobre si obedecería, sino más bien por la seguridad divina de que sus sentidos y su razón no lo estaban engañando!\n\nPadre e hijo comenzaron el ascenso en silencio, Abraham en meditación y oración, e Isaac reflexionando sobre el inusual silencio de su padre en cuanto a la naturaleza y el propósito de su viaje. Solo con su padre, la soledad invitó a Isaac a expresar su desconcierto por la ausencia de un cordero. Al llegar al lugar donde siglos más tarde se erigiría el Templo, padre e hijo construyeron un altar. Salem, la ciudad de Melquisedec, estaba apenas a un tiro de piedra al sur. Un poco más al noroeste estaba la colina que más tarde se conocería como Gólgota.\n\nCuando todo estuvo completo, y no quedó nada más que colocar el sacrificio sobre el altar, Abraham le contó temblorosamente a Isaac todo lo que Dios le había revelado, y probablemente añadió su propia fe en la restauración de Isaac. Es difícil imaginar los sentimientos mezclados que debieron surgir en el pecho de Isaac: asombro, terror, sumisión, y finalmente fe y confianza. Si esa era la voluntad de Dios, lo consideraría un honor entregar su vida en sacrificio. Un joven de 20 años, fácilmente podría haber resistido; en cambio, animó a su padre en los momentos finales previos al clímax.\n\nQue Isaac entendió y compartió la fe de su padre fue un noble tributo al cuidadoso entrenamiento que había recibido durante su infancia y juventud. Isaac se convirtió así en un tipo apropiado del Hijo de Dios, quien se sometió a la voluntad de Su Padre (Mt. 26:39). En cada caso, el padre entregó a su único hijo. Habiendo colocado a la víctima atada sobre la leña, Abraham estaba listo para el último acto, el sacrificio de su hijo y el encendido de la pila de leña. Como un tipo del Cordero perfecto de Dios, Isaac no ofreció resistencia y no expresó queja alguna (ver Is. 53:7).\n\nPero el ángel del Señor detuvo a Abraham. El patriarca había demostrado ampliamente su fe y obediencia y había satisfecho plenamente los requisitos de su Dios. Jehová no deseaba la muerte de Isaac; de hecho, no estaba interesado en ofrendas sacrificiales como tales. Pero siempre ha deseado la obediencia voluntaria de Sus siervos (1 Sam. 15:22, Oseas 6:6). En cuanto a la voluntad y el propósito del padre y el hijo, el sacrificio estaba completo. Dios aceptó la devoción de sus corazones como un don mucho más aceptable a Sus ojos, y tomó la voluntad por la obra (Heb. 11:17).\n\nLa voz celestial también testifica del rechazo de Dios a los sacrificios humanos (ver Deut. 12:31, 2 Reyes 17:17, 2 Crón. 28:3, Jer. 19:5, Eze. 16:20-21). Las afirmaciones de los críticos bíblicos de que los hebreos, como parte de su orden regular de servicio, practicaban el rito del sacrificio humano, tan común entre los cananeos y otros pueblos de la antigüedad, carece de fundamento.',
+    date: "1831 a.C.",
+    scriptures: ["1|22:1-19"],
+    related: [
+      {
+        slug: "abraham",
+        title: "Abraham",
       },
     ],
     images: [
       {
         caption:
-          "Y el Señor Dios plantó un jardín al oriente en Edén; y allí puso al hombre que había formado. (Génesis 2:8)",
-        file: "GoodSalt-prcas2581_8-8-2013 9-50-05 AM.jpg",
+          "Y él dijo: Toma ahora a tu hijo, tu único, Isaac, a quien amas, y vete a la tierra de Moriah, y ofrécelo allí en holocausto sobre uno de los montes que yo te diré. (Génesis 22:2)",
+        file: "GoodSalt-prcas1499_8-13-2013 2-31-01 PM.jpg",
+      },
+      {
+        caption: "La obediencia de Abraham. Artista: Richard Andre, c. 1884",
+        file: "Abraham_obeys_God_7-31-2013 3-43-46 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "681",
+    slug: "esau-sells-birthright-to-jacob",
+    title: "Esau vende su primogenitura a Jacob",
+    period: "3",
+    description:
+      'Esau llega cansado y hambriento de cazar. Jacob le ofrece un guiso si Esau "vende" su primogenitura. Esau acepta y hace un juramento.',
+    article:
+      'La diferencia de carácter entre los dos hermanos pronto se hizo evidente en una situación singular, que resultó ser un punto de inflexión en sus vidas. Jacob había cocinado una comida de lentejas (v. 34). Las lentejas rojas son hasta el día de hoy un alimento favorito en Palestina, donde se preparan con cebollas, ajo, arroz y aceite de oliva. Ocasionalmente, también se añade carne. Esau le pide a Jacob que lo "alimente". La palabra traducida como "alimentar" solo aparece en este pasaje y significa "comer vorazmente" o "devorar".\n\nJacob sabía de la profecía del ángel sobre él y su hermano, hecha antes de su nacimiento. Ahora aprovechó lo que le pareció una oportunidad justa, aunque inusual. Bajo la legislación mosaica, los privilegios del primogénito eran: (1) la sucesión a la autoridad oficial del padre, (2) la herencia de una doble porción de la propiedad del padre, (3) el privilegio de convertirse en el sacerdote de la familia (ver Éx. 22:29, Núm. 8:14-17, Deut. 21:17).\n\nPara los descendientes de Abraham, la primogenitura también implicaba: (1) la sucesión a la promesa de la Canaán terrenal y otras bendiciones del pacto, (2) el honor de ser un progenitor de la Simiente prometida. La propuesta de Jacob fue deshonesta y despreciable. Revela, además, un espíritu de impaciencia y una falta de confianza en la providencia divina, similar a la manifestada por Abraham en su matrimonio con Agar (Gn. 16:3). Las condiciones de venta de Jacob fueron exigentes, egoístas y bajas. La teoría de que el fin justifica los medios no tiene la aprobación del cielo (ver Mt. 4:3-4). Dios no pudo aprobar el acto, pero lo permitió para el eventual cumplimiento de Su propósito.\n\nLa KJV deja la impresión de que Esau quiso decir: "Moriré de hambre si no consigo comida inmediatamente. En ese caso, mi primogenitura no me serviría de nada. Por lo tanto, es mejor para mí conseguir comida y vivir sin una primogenitura que morir ahora mientras la poseo". Muchos comentaristas han seguido esta línea de razonamiento. Otra explicación entiende esta expresión como: "Tarde o temprano moriré de todos modos, y entonces no importará si poseo la primogenitura o no".\n\nEsta última interpretación parece más plausible a la luz de las palabras del v. 34, que dice que él "despreció su primogenitura". Al ser indiferente a las bendiciones que le correspondían, Esau las consideró livianamente y, por lo tanto, no era digno de ellas. La conducta de Jacob en esta transacción es difícil de defender. Su actitud y palabras revelan premeditación. Es un error peligroso y a veces fatal anticiparse y correr delante de la Providencia, que a su debido tiempo y sin maquinaciones humanas cumplirá el propósito divino.\n\nPara Esau, lo único valioso era la satisfacción momentánea del apetito; las bendiciones espirituales futuras parecían remotas e irreales. En esto, se mostró como una "persona profana [irreligiosa]" (Heb. 12:16), insensible a las cosas espirituales. No le importaba nada más que la gratificación del deseo sensual. Como el bruto mudo, basaba sus decisiones solo en consideraciones sensoriales del momento.\n\nLa medida en que una persona está dispuesta a sacrificar deseos presentes por un bien futuro es una medida precisa de la madurez emocional y espiritual. Sobre esta base, solo el cristiano puede llegar a ser completamente maduro, ya que solo él está listo y dispuesto a renunciar a todo lo que esta vida tiene para ofrecer para que pueda ser considerado digno de la vida venidera (ver 2 Cor. 4:17-18, Fil. 3:7-15, Hch. 20:24, Lc. 20:34-35, Heb. 11:10).\n\nLa forma trivial en que Esau vendió su primogenitura por un plato de lentejas demostró su falta de idoneidad para convertirse en heredero de las promesas de Dios. Aunque la conducta de Jacob no puede ser condonada, la de Esau merece la más severa condena. Jacob se arrepintió y fue perdonado; Esau estaba más allá del perdón, porque su arrepentimiento consistió solo en lamentar los resultados de su acto precipitado, no en el acto en sí (Heb. 12:16-17).',
+    date: "1760 a.C.",
+    scriptures: ["1|25:29-34"],
+    related: [
+      {
+        slug: "esau",
+        title: "Esau",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Entonces Jacob dio a Esaú pan y potaje de lentejas; y él comió y bebió, y se levantó y se fue. Así menospreció Esaú la primogenitura. (Génesis 25:34)",
+        file: "GoodSalt-prcas2699_8-13-2013 2-38-44 PM.jpg",
       },
       {
         caption:
-          "Creación de Adán por Miguel Ángel entre 1508 y 1512. Ubicado en la Capilla Sixtina.",
-        file: "Adam_4-4-2013 10-22-05 AM.jpg",
+          "Esaú vendiendo su primogenitura por lentejas, Richard Andre, 1884",
+        file: "Esau_Despised_His_Birthright_001_7-31-2013 4-11-23 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "682",
+    slug: "famine-in-the-land-isaac",
+    title: "Hambre en la tierra",
+    period: "3",
+    description:
+      "Debido a una hambruna, Isaac se muda a Gerar en lugar de Egipto y, como su padre, miente sobre su esposa. Más tarde, Dios bendice la agricultura de Isaac y le piden que abandone el área. Esta es la primera historia completa de Isaac en Génesis, sus primeros pasos de fe.",
+    article:
+      "Cuando llegó una hambruna a la tierra, el Señor se apareció a Isaac. Esta es la primera revelación divina registrada que se le otorga a Isaac. Varias promesas hechas anteriormente a Abraham ahora se repiten a Isaac (ver caps. 12:3, 15:5, 22:17-18). La obediencia del padre se da como la razón de las bendiciones que vendrían sobre el hijo. También es una promesa implícita de que una acción similar por parte de Isaac traería resultados similares. Santiago explica que la fe de Abraham, por la cual fue justamente alabado por Pablo (Rom. 4:1-5), fue perfeccionada por su obediencia (Stg. 2:21-23). Ni la confianza ni la obediencia están completas sin la otra. Cada vez que Dios hablaba, Abraham siempre obedecía sin demora (Gn. 12:1-4, 22:1-3).\n\nMientras estuvo en Gerar, Isaac mintió sobre Rebeca. Como Abraham había declarado que su esposa era su hermana (caps. 12:11-12, 20:2, 11), también lo hizo Isaac; pero la manera en que Dios protegió a Rebeca fue muy diferente a la forma en que Sarah fue preservada. Nadie la tocó. Esta experiencia y otra (cap. 25:28) son los únicos casos registrados en la vida de Isaac de desviación de la rectitud estricta. Avergonzado de su propia conducta, Abraham puede no haber advertido a Isaac narrando sus propios fracasos en este sentido. Más probablemente, sin embargo, Abraham le había contado a Isaac, pero, como sucede tan a menudo, Isaac tuvo que aprender la lección por sí mismo a través de una experiencia amarga. ¡Cuántas veces los pecados de los padres se perpetúan en sus hijos! Pero las debilidades hereditarias nunca liberan a los hijos de la responsabilidad personal por sus propios errores (ver Eze. 18:20).\n\nDios bendijo abundantemente a Isaac mientras estuvo en Gerar. Aunque los patriarcas vivían, en general, una vida seminómada, sus hábitos diferían considerablemente de los de los beduinos actuales. Estos últimos ni cultivan la tierra ni poseen grandes rebaños y manadas como lo hacían los patriarcas. Aunque el valle de Gerar es excepcionalmente fértil, un aumento de cien veces en el rendimiento del grano es aproximadamente el máximo para Palestina, donde normalmente es de treinta a cincuenta veces (ver Mt. 13:23). La bendición especial de Dios descansó sobre Isaac.",
+    date: "1753 a.C.",
+    scriptures: ["1|26:1-16"],
+    related: [
+      {
+        slug: "isaac",
+        title: "Isaac",
+      },
+    ],
+    images: [
+      {
+        caption: "Hambre en la tierra...",
+        file: "GoodSalt-stdas0759_8-5-2013 4-42-14 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "683",
+    slug: "leah",
+    title: "Leah",
+    period: "3",
+    description:
+      'El nombre significa "cansada". Es la hija de Labán y la hermana mayor de Raquel. Tiene ojos "cansados" o "delicados" y es menos atractiva. Labán engaña a Jacob, quien se casa con ella y con Raquel. Se convierte en madre de seis de los hijos de Jacob.',
+    article:
+      'La hija mayor de Labán, quien a través de un engaño fue dada a Jacob en lugar de Raquel, su hermana menor, por quien había servido 7 años. Leah era menos atractiva que su hermana, teniendo ojos "tiernos" (heb. rak, "débiles") (Gn 29:16-26). Se convirtió en la madre de 6 de los hijos de Jacob: Rubén, Simeón, Leví, Judá, Isacar y Zabulón, y de Dina, una hija (caps 31-35, 30:17-21). Fue enterrada en el sepulcro familiar de Macpela (cap 49:31). En Rut 4:11, Leah se menciona igualmente con Raquel como una fundadora honrada de Israel.',
+    date: "1731-1665 a.C.",
+    scriptures: ["1|29:16", "1|49:31"],
+    related: [
+      {
+        slug: "laban",
+        title: "Labán",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Leah de Miguel Ángel en la tumba de Julio II en San Pietro in Vincoli. Foto de Yair Haklai, 2009.",
+        file: "Michelangelo-Leah.jpg",
+      },
+    ],
+  },
+  {
+    id: "684",
+    slug: "rachel",
+    title: "Raquel",
+    period: "3",
+    description:
+      'El nombre significa "oveja". Es la hija menor de Labán. Jacob la ama y trabaja catorce años para tenerla como esposa. Al regresar a Canaán, toma los ídolos de su padre. Es la madre de José y muere dando a luz a Benjamín.',
+    article:
+      'Raquel. La hija menor de Labán, la segunda esposa de Jacob y la madre de José y Benjamín. Como Labán era el tío de Jacob, por parte de su madre, Raquel era prima de Jacob (cf. Gn 28:2, 29:9-10). Jacob conoció a Raquel por primera vez en el pozo cerca de Harán al llegar a Padán-aram, donde había sido enviado para encontrar una esposa. Después de quitar cortésmente la piedra de la boca del pozo y dar de beber a su rebaño (Gn 29:10), Jacob saludó a Raquel con un beso y se presentó (vs 11-12).\n\nAparentemente, Jacob se enamoró de Raquel a primera vista, y su afecto por ella creció hasta ser genuino y profundo (v 20). Labán recibió a Jacob en su hogar (vs 13-14), y después de un mes lo contrató para cuidar de sus rebaños y manadas (v 15, cf. cap 30:31), con el entendimiento de que Raquel se convertiría en la esposa de Jacob a cambio de 7 años de servicio (cap 29:15-19). Como Jacob había llegado sin dinero, y por lo tanto no podía pagar por su futura esposa, era necesario que trabajara para cumplir con el precio estipulado.\n\nCuando pasaron los 7 años, Labán sustituyó subrepticiamente a Leah, la hermana mayor de Raquel, y Jacob, el engañador astuto (cap 27), se encontró engañado (cap 29:21-25). Bajo el pretexto de que la costumbre prohibía casar a una hija menor antes que a su hermana mayor, Labán propuso a Jacob que las festividades nupciales ya comenzadas continuaran durante la semana nupcial (cf. Jue 14:12), al final de la cual también le daría a Raquel, a cambio de otros 7 años de servicio (Gn 29:26-27, 30). Para su gran consternación y profunda decepción, "Raquel era estéril" (v 31). Leah, por otro lado, dio a luz varios hijos (vs 32-35). Celosa de Leah, Raquel culpó a Jacob de su esterilidad y le exigió petulantemente hijos (cap 30:1), pero él le recordó que el asunto estaba en manos de Dios (v 2).\n\nRaquel entonces le dio a Jacob su sierva Bilha como concubina (v 3), siguiendo la costumbre oriental antigua por la cual los hijos de una concubina se convertían en hijos legales de la esposa legítima. Dan y Neftalí nacieron de esta unión (vs 4-8). En una ocasión, Raquel negoció con Leah por las mandrágoras recogidas por su hijo Rubén (v 14), la mandrágora siendo una hierba de la familia de la belladona que la gente del Cercano Oriente creía que promovía la fertilidad.\n\nCon el tiempo, "Dios se acordó de Raquel", y ella dio a luz a José (vs 22-24). Después de 20 años de servicio (cap 31:38), Jacob dejó subrepticiamente a Labán para regresar a Canaán, con sus esposas, rebaños y manadas (vs 1-18, 20). Varios años más tarde, en un viaje desde Betel, Raquel dio a luz a Benjamín, pero murió en el parto y fue enterrada cerca de Efrata (vs 16-19), donde se construyó un pilar para marcar su tumba (v 20). El profundo amor de Jacob por Raquel se refleja en su mención de ella muchos años después de su muerte (Gn 48:7).',
+    date: "1729-1685 a.C.",
+    scriptures: ["1|29:16", "1|35:16-20"],
+    related: [
+      {
+        slug: "laban",
+        title: "Labán",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Jacob conoce a Raquel en el pozo, James Joseph Jacques Tissot, 1902",
+        file: "Jacob_and_Rachel_at_the_Well_8-5-2013 4-49-09 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "685",
+    slug: "zilpah",
+    title: "Zilpa",
+    period: "3",
+    description:
+      'Su nombre significa "caída". Es la sierva de Leah y, como era costumbre, fue dada a Jacob como concubina para tener más hijos. Se convirtió en la madre de Gad y Aser.',
+    article:
+      "Una sierva de [Labán] dada a su hija Leah cuando se casó con Jacob (Gn 29:24). Siguiendo el ejemplo de su hermana Raquel, Leah le dio a Zilpa a su esposo como concubina para obtener más hijos a través de ella. Zilpa se convirtió en la madre de Gad y de Aser (caps 30:3, 9-13, 35:26, 46:16-18).",
+    date: "1727-1670 a.C.",
+    scriptures: ["1|29:24", "1|30:9-13"],
+    related: [],
+    images: [
+      {
+        caption: "",
+        file: "GoodSalt-smcas0151_8-5-2013 5-37-55 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "686",
+    slug: "bilhah",
+    title: "Bilha",
+    period: "3",
+    description:
+      'El nombre significa "vacilante" o "tímida". Es la sierva de Raquel y fue dada por Raquel a Jacob para que le diera hijos, ya que su "vientre estaba cerrado". Es la madre de Dan y Neftalí. Rubén comete adulterio con ella y es maldecido por Jacob.',
+    article: "",
+    date: "1724-1664 a.C.",
+    scriptures: ["1|29:29", "1|30:1-8"],
+    related: [],
+    images: [
+      {
+        caption:
+          "Y Labán dio a Raquel su hija Bilha, su sierva, para que fuera su sierva. (Génesis 29:29)",
+        file: "GoodSalt-dmtas0134_8-5-2013 5-37-51 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "688",
+    slug: "jacob-fled-canaan-jacobs-ladder",
+    title: "Jacob huye de Canaán, la escalera de Jacob",
+    period: "3",
+    description:
+      "Jacob huye de Esaú, quien intenta matarlo por robarle su primogenitura. Isaac lo bendice y luego lo envía a Padán Aram para encontrar una esposa. En el camino, Jacob tiene un sueño de una escalera que llega al cielo. Se despierta y llama al lugar Betel.",
+    article:
+      'Jacob roba la bendición y la primogenitura de su hermano. La desesperación de Esaú pronto se convirtió en odio mortal por su hermano, pero por respeto a su padre decidió ahorrarle el dolor y la vergüenza del acto de fratricidio planeado. Pensando que la enfermedad de su padre terminaría en una muerte temprana, pospuso su acto planeado de asesinato. No podía saber, por supuesto, que su padre se recuperaría y viviría 43 años más.\n\nCuando Rebeca fue informada de la intención de Esaú de asesinar a su hermano, le aconsejó a Jacob que se exiliara voluntariamente por "algunos días", pensando que la disposición vacilante de Esaú traería un cambio de corazón. Aceptando la propuesta de Rebeca, Isaac tomó la iniciativa de enviar a Jacob a Padán-aram (ver en cap. 25:20). Ya sea que supiera o no del complot de Esaú, Isaac sin duda se dio cuenta de que sería prudente que Jacob y Esaú se separaran hasta que la tensión en casa disminuyera. Jacob partió en obediencia al deseo de su madre y al mandato de su padre (ver Prov. 1:8). Aunque tenía 77 años (ver en Gn. 27:1), todavía respetaba a sus padres y se sometía a su autoridad.\n\nAl final del segundo día de su viaje, Jacob llegó a las cercanías de la ciudad de Luz (v. 19), a unas 50 millas al norte de Beersheba. Eligió no pasar la noche dentro de la ciudad misma por temor a los cananeos. Jacob tomó una piedra y la puso "bajo su cabeza" o "como cabecera". Una almohada en nuestro sentido de la palabra parece haber sido desconocida para los antiguos. En muchos países orientales, la gente usaba cabeceras hechas de madera, arcilla, piedra o metal, y todavía lo hacen. La piedra se menciona aquí en anticipación del uso que se le daría más adelante en la narrativa (v. 22).\n\nMientras Jacob yacía allí, cansado, solo y triste, su corazón se volvió en oración a Dios. Tal fue el trasfondo mental de su sueño. Solo después de dos largos días, durante los cuales tuvo la oportunidad de reflexionar sobre su curso de acción y darse cuenta de su propia impotencia, Dios se le apareció. En la providencia de Dios, la demora es a menudo el medio utilizado para purificar el alma y llevar a un hombre a arrojarse sin reservas a la misericordia y la gracia de Dios. La escalera era un símbolo visible de la comunión real e ininterrumpida entre Dios en el cielo y Su pueblo en la tierra. Los ángeles ascienden para presentar las necesidades de los hombres ante Dios, y descienden con promesas de asistencia y protección divinas.\n\nLa escalera parecía descansar sobre la tierra, donde Jacob yacía, solo, destituido y abandonado por los hombres. Arriba, en el cielo, estaba Jehová. Proclamándose a Jacob como el Dios de sus padres, no solo le confirmó todas las promesas hechas a sus padres—la posesión de Canaán, una descendencia numerosa y la bendición a todos los hombres—sino que le garantizó protección en su viaje y un regreso seguro a casa. Como el cumplimiento de esta promesa a Jacob todavía estaba lejano, Dios añadió la firme seguridad: "No te dejaré hasta que haya hecho lo que te he dicho".\n\nCuando Jacob despierta, concluye: "El Señor está en este lugar". La declaración de Jacob no es evidencia, como sugieren algunos comentaristas, de que Jacob concebía a Dios como apareciendo solo en ciertos lugares consagrados, y que había tropezado con uno de ellos. Es, más bien, una expresión de su sorpresa y alegría al descubrir que, aunque había imaginado que estaba solo, en realidad estaba en la misma compañía de Dios. La declaración de Jacob fue, en cierto sentido, una autoacusación. Admitió que la falta de fe había provocado sus pensamientos de desaliento.\n\nFue cuando se sintió más abandonado que encontró a Dios más cerca y más real para él que nunca antes. La piedra que había sido su cabecera se convirtió en un monumento para conmemorar la revelación que había recibido de Dios. Derramó aceite sobre ella para consagrarla como un memorial a la misericordia allí revelada (ver Éx. 30:26-30). Este "pilar" no fue en ningún sentido hecho un objeto de adoración. Luego llamó al lugar Betel. Por traducción, "Casa de Dios".',
+    date: "1714 a.C.",
+    scriptures: ["1|27:41-46", "1|28:1-5"],
+    related: [
+      {
+        slug: "jacob",
+        title: "Jacob",
+      },
+    ],
+    images: [
+      {
+        caption: "El sueño de Jacob",
+        file: "GoodSalt-prcas2856_8-7-2013 2-02-59 PM.jpg",
+      },
+      {
+        caption: "El sueño de Jacob",
+        file: "GoodSalt-stdas0111_8-5-2013 5-56-14 PM.jpg",
+      },
+      {
+        caption:
+          "Los 699 escalones de la escalera de Jacob, desde Jamestown en Santa Elena hasta la cima de Ladder Hill.",
+        file: "Jacobs Ladder_5-13-2013 3-46-48 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "689",
+    slug: "esau-marries-third-wife",
+    title: "Esaú se casa con su tercera esposa",
+    period: "3",
+    description:
+      "Cuando Esaú escucha el mandato de Isaac de no tomar una cananea como esposa y que sus padres están descontentos cuando lo hizo, va a Ismael y toma a Mahalat como esposa. Ella es la hija de Ismael, el hijo de Abraham.",
+    article:
+      'En la bendición de Jacob por Isaac y la comisión de Jacob de tomar una esposa de entre sus parientes en Mesopotamia, Esaú percibió el profundo descontento que sus padres sentían hacia sus esposas hititas. Sin duda con la intención de complacer a sus padres, fue a buscar una esposa de la familia de su abuelo Abraham, como Jacob fue instruido a hacer de la familia de su tío materno, Labán.\n\nMahalat, o Basemat (cap. 36:3), a quien tomó como esposa, estaba relacionada con Isaac como la esposa de Jacob, Raquel, lo estaba con su madre Rebeca. Esaú se casó con la sobrina de su padre; Jacob, con la de su madre. El ir "a Ismael" debe significar ir "a la familia de Ismael", ya que Ismael murió unos 14 años antes de este tiempo (ver en caps. 25:19, 27:1).',
+    date: "1714 a.C.",
+    scriptures: ["1|28:6-9"],
+    related: [
+      {
+        slug: "esau",
+        title: "Esaú",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Cuando Esaú escucha el mandato de Isaac de no tomar una cananea como esposa y que sus padres están descontentos cuando lo hizo, va a Ismael y toma a Mahalat como esposa.",
+        file: "GoodSalt-lwjas0172_8-5-2013 5-40-54 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "690",
+    slug: "jacob-finishes-first-7-years-for-laban",
+    title: "Jacob termina los primeros 7 años para Labán",
+    period: "3",
+    description:
+      'Jacob acepta trabajar siete años para Labán a cambio de la mano de Raquel en matrimonio. Le parecen "solo unos días" debido al amor que le tiene. Después de siete años, solicita que Raquel sea su esposa.',
+    article:
+      "Jacob, profundamente enamorado de Raquel, estuvo inmediatamente dispuesto a llegar a un acuerdo con su tío. La propuesta de Jacob se basó en parte en el hecho de que no estaba en condiciones de pagar la dote habitual y en parte en su conocimiento de que la situación en casa haría necesario una estadía bastante prolongada con Labán. El asentimiento de Labán se explica únicamente por la codicia, que se hizo más evidente con el tiempo.\n\nJacob dio evidencia de su afecto devoto por Raquel, no solo por su disposición a servir siete años por ella, sino aún más por el espíritu con el que trabajó para su tío avaricioso. Muchos como fueron los días que debían pasar antes de que Raquel se convirtiera en su novia, fueron hechos felices por su amor por ella. Las palabras usadas por Moisés para expresar la profundidad del amor de Jacob respiran afecto puro y devoción tierna.",
+    date: "1707 a.C.",
+    scriptures: ["1|29:18-21"],
+    related: [
+      {
+        slug: "jacob",
+        title: "Jacob",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Y Jacob sirvió siete años por Raquel; y le parecieron como unos pocos días, por el amor que le tenía. (Génesis 29:20)",
+        file: "GoodSalt-lwjas0585_8-5-2013 5-48-58 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "691",
+    slug: "jacob-marries-leah-and-rachel",
+    title: "Jacob se casa con Leah y Raquel",
+    period: "3",
+    description:
+      "Jacob desea casarse con Raquel y trabaja para Labán durante siete años, después de lo cual Labán engaña a Jacob y le da a Leah, su hija mayor. Jacob se enoja y exige a Raquel, a quien recibe después de aceptar trabajar otros siete años.",
+    article:
+      'Es un comentario interesante sobre Labán que Jacob encontró necesario recordarle la expiración de los siete años. Se preparó una gran fiesta de bodas, probablemente durando una semana entera (v. 27), según la costumbre habitual. El engaño de Labán a Jacob fue posible debido a la costumbre de velar a la novia y llevarla al novio "por la noche".\n\nAunque las niñas generalmente tenían poca elección en la selección de sus maridos, el consentimiento de Leah era necesario para el éxito de esta propuesta baja. Ella misma debió haber amado a Jacob, para aprobar y cooperar en el plan de perjudicar tanto a su hermana como a su futuro esposo al casarse con uno que ni la buscaba ni la amaba. La duplicidad de Labán resultó en una rivalidad de por vida entre las dos hermanas (ver cap. 30:14-16).\n\nA la mañana siguiente, Jacob, el maestro del engaño, se despertó para encontrarse como víctima del engaño. La justicia inexorable le había pagado el doble por su doble trato. En defensa propia, Labán alegó un requisito imaginario de la costumbre social local. Si esto hubiera sido realmente la costumbre en Harán, como lo era en algunos otros países antiguos, debería haberle dicho a Jacob cuando este propuso trabajar por Raquel. Sin embargo, el voto de Jacob a Dios en Betel, y su anhelo por Raquel, lo llevaron a quedarse con Labán en lugar de repudiar el matrimonio como podría haberlo hecho.\n\nEstá claro que Jacob no sirvió otros siete años antes de que Raquel se convirtiera en su esposa. Esto ocurrió al final de la semana festiva de Leah. El acto de bigamia de Jacob no debe ser juzgado por una disposición posterior en la ley mosaica que prohibía el matrimonio con dos hermanas concurrentemente (Lev. 18:18). Al mismo tiempo, el doble matrimonio de Jacob no puede justificarse sobre la base de que la bendición de Dios eventualmente lo convirtió en el medio de multiplicar la descendencia de Jacob y así cumplir Su promesa. Dios simplemente anuló los errores de los hombres; incluso estos no pudieron frustrar Su propósito (ver Sal. 76:10).\n\nLa bigamia que había sido ocasionada por el engaño de Labán y el afecto de Jacob trajo fricción y arrepentimiento a los hogares de ambos hombres. En esta escuela de aflicción, Jacob aprendió que "el camino de los transgresores es duro" (Prov. 13:15). Los celos y la miseria que acompañaron este matrimonio son un comentario sobre la prohibición específica de Moisés contra el matrimonio de un hombre con dos hermanas concurrentemente (Lev. 18:18).',
+    date: "1707 a.C.",
+    scriptures: ["1|29:15-30"],
+    related: [
+      {
+        slug: "jacob",
+        title: "Jacob",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "La bigamia que había sido ocasionada por el engaño de Labán y el afecto de Jacob trajo fricción y arrepentimiento a los hogares de ambos hombres.",
+        file: "jacob-laban_8-5-2013 5-52-10 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "692",
+    slug: "reuben",
+    title: "Rubén",
+    period: "3",
+    description:
+      'El nombre significa "he aquí un hijo". Es el hijo mayor de Jacob y Leah. Rubén comete adulterio con Bilha, la concubina de Jacob, y pierde la bendición del primogénito. No es cómplice en el complot de sus hermanos para vender a José, pero lo salva del asesinato.',
+    article:
+      "El hijo mayor de Jacob y Leah (Gn 29:31-32, 35:23, 46:8, 1 Cr 2:1, 5:1). En cuanto a su historia de vida, se menciona primero por encontrar mandrágoras en el campo, que Raquel deseaba (Gn 30:14); luego por su inmoralidad con Bilha (cap 35:22), por lo que más tarde perdió la bendición de su padre que le habría correspondido como primogénito (cap 49:3-4); tercero, por su intento de salvar a José de sus hermanos asesinos al inducirlos a arrojarlo a una cisterna en lugar de matarlo (cap 37:21-29).\n\nAunque no traicionó a sus hermanos ante su padre, no fue cómplice en su complot contra José (cap 42:22). Más tarde, cuando Jacob temió enviar a Benjamín a Egipto, Rubén ofreció a dos de sus propios hijos como garantía de la seguridad de Benjamín (v 37). En su lecho de muerte, Jacob expresó la decepción que la conducta de su hijo primogénito le había causado y describió su carácter como inestable como el agua (cap 49:3-4). Los hijos de Rubén fueron Hanoc, Falú, Hezrón y Carmi (Gn 46:8-9, Éx 6:14, 1 Cr 5:3).",
+    date: "1706-1616 a.C.",
+    scriptures: ["1|29:32"],
+    related: [
+      {
+        slug: "jacob",
+        title: "Jacob",
+      },
+      {
+        slug: "reuben-lays-with-bilhah",
+        title: "Rubén se acuesta con Bilha",
+      },
+    ],
+    images: [
+      {
+        caption: "Símbolo de la tribu de Rubén",
+        file: "Ruben_8-6-2013 8-34-32 AM.JPG",
+      },
+    ],
+  },
+  {
+    id: "693",
+    slug: "simeon",
+    title: "Simeón",
+    period: "3",
+    description:
+      'El nombre significa "escucha". Es el segundo hijo de Jacob y Leah. Simeón y Leví masacran a los hombres de Siquem por humillar a su hermana Dina. Es elegido por José para ser retenido como garantía en Egipto hasta que Benjamín regrese.',
+    article:
+      "El segundo hijo de Leah y Jacob (Gn 29:33). Él y su hermano Leví masacraron a los hombres de Siquem en venganza por la humillación de su hermana Dina (cap 34:25-31). Simeón fue seleccionado por José para ser mantenido atado en prisión como garantía hasta que los otros hermanos regresaran con Benjamín (cap 42:24).\n\nSimeón tuvo seis hijos, de los cuales cinco se convirtieron en antepasados de familias tribales (Gn 46:10, Núm 26:12-14, 1 Cr 4:24). Cuando Jacob, en su lecho de muerte, bendijo a sus hijos, condenó la crueldad de Simeón y Leví y predijo que sus descendientes se dividirían y dispersarían en Israel (Gn 49:5-7).",
+    date: "1705-1615 a.C.",
+    scriptures: ["1|29:33"],
+    related: [
+      {
+        slug: "jacob",
+        title: "Jacob",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Simeón y Leví matan a los siquemitas en 1728 por Gerard Hoet de las Bibliotecas de la Universidad de Oklahoma",
+        file: "Figures_Simeon_Levi_Slay_Sichemites.jpg",
+      },
+      {
+        caption: "Símbolo de la tribu de Simeón",
+        file: "Tribe_of_Simeon_Symbol_001_8-6-2013 8-43-24 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "694",
+    slug: "levi",
+    title: "Leví",
+    period: "3",
+    description:
+      'El nombre significa "unido". Es el tercer hijo de Jacob y Leah. Su nombre proviene del deseo de Leah de que Jacob se una a ella. Leví y Simeón son conocidos por vengar a su hermana Dina. También es pasado por alto para recibir la bendición de su padre.',
+    article:
+      "El tercer hijo de Jacob por Leah (Gn 29:34). El único evento registrado de la vida de Leví es su participación en la masacre de Hamor, Siquem y el resto de la población masculina de la ciudad de Siquem, en represalia por la humillación de Dina, la hermana de Leví (cap 34:25-31). Este acto criminal de Leví y su hermano Simeón fue recordado por Jacob en su lecho de muerte, y su fuerte desaprobación probablemente fue la razón por la que pasó por alto a estos dos hermanos y dio la bendición del primogénito, que había sido perdida por Rubén, a Judá, el cuarto hijo (cap 29:35).\n\nLeví tuvo tres hijos: Gersón (a veces escrito Gersón), Coat y Merari (cap 46:11). Murió a la edad de 137 años (Éx 6:16). Se convirtió en el antepasado de la tribu de los *Levitas, que fueron elegidos para servir en el santuario.",
+    date: "1704-1567 a.C.",
+    scriptures: ["1|29:34", "2|6:16"],
+    related: [
+      {
+        slug: "jacob",
+        title: "Jacob",
+      },
+      {
+        slug: "the-dinah-incident",
+        title: "El incidente de Dina",
+      },
+    ],
+    images: [
+      {
+        caption: "Símbolo de la tribu de Leví",
+        file: "Tribe_of_Levi_Symbol_001_8-6-2013 8-43-56 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "695",
+    slug: "judah",
+    title: "Judá",
+    period: "3",
+    description:
+      'El nombre significa "alabanza". El cuarto hijo de Jacob y Leah, su nombre proviene de las palabras de Leah después de su nacimiento: "Ahora alabaré al Señor". Judá intercede por José para que su vida sea perdonada. Recibe la bendición del primogénito de Jacob.',
+    article:
+      'El cuarto hijo de Jacob por su esposa Leah (Gn 29:32-35). Se casó con una chica cananea, Súa, con quien se había familiarizado a través de un amigo cananeo (cap 38:1-2). Ella le dio tres hijos: Er, Onán y Selá (vs 3-5). Como esposa para su hijo Er, tomó a Tamar, otra chica cananea (v 6). Cuando Er murió sin hijos, Judá le dio a Tamar a Onán, en armonía con la costumbre de la época (vs 7-8). Cuando Onán murió sin dejar un heredero (vs 9-10), Tamar regresó a la casa de su padre, con la promesa de Judá, sin embargo, de que se le daría a Selá tan pronto como alcanzara la edad de madurez (v 11).\n\nCuando Judá no cumplió su palabra, Tamar obtuvo descendencia por engaño del propio Judá y le dio dos hijos: Fares y Zara (vs 12-30). Aunque Judá se revela moralmente aberrante en ciertos aspectos, en muchos otros aspectos su carácter parece haber sido más ejemplar que el de sus hermanos. No participó en la masacre de Siquem por Simeón y Leví (cap 34), y fue él quien, en un intento de salvar a José, propuso a sus hermanos que José fuera vendido en lugar de asesinado (cap 37:26-28).\n\nMás tarde, en Egipto, mostró mucha nobleza de carácter cuando José, sin ser reconocido por sus hermanos, quiso detener a Benjamín por haber robado supuestamente una copa de plata. Judá elocuentemente suplicó en nombre de su hermano menor y se ofreció a sí mismo como prisionero a José para obtener la liberación de Benjamín (Gn 44). Cuando Jacob y su familia emigraron a Egipto, Judá fue elegido para preceder a la compañía y anunciar la llegada de Jacob a José (cap 46:28). Cuando Jacob bendijo a sus hijos en su lecho de muerte, le dio a Judá las bendiciones debidas al primogénito (cap 49:8-12), pasando por alto a Rubén por su pecado de incesto (v 4), y a Simeón y Leví, por su asesinato de los siquemitas (vs 5-7).\n\nLas profecías pronunciadas en ese momento se cumplieron más tarde. La tribu de Judá se convirtió en la más importante de las tribus de Israel, y Fares (KJV "Fares"), uno de los hijos de Judá, se convirtió en el antepasado de David y de la casa real del reino del sur (Rut 4:18-22, 1 Cr 2:3-15, 3:1-6) y del Señor Jesús, el Salvador de la humanidad (Mt 1:3-16).',
+    date: "1703-1603 a.C.",
+    scriptures: ["1|29:35"],
+    related: [
+      {
+        slug: "jacob",
+        title: "Jacob",
+      },
+      {
+        slug: "judah-leaves-marries-a-canaanite",
+        title: "Judá se va, se casa con una cananea",
+      },
+      {
+        slug: "judah-impregnates-tamar",
+        title: "Judá embaraza a Tamar",
+      },
+      {
+        slug: "pharez-or-perez",
+        title: "Fares (o Fares)",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Judá suplicando por su hermano menor Benjamín ante José en Egipto, William Brassey Hole",
+        file: "Judah-pleading-before-Joseph-for-his-brother-Benjamin-001_7-31-2013 5-06-18 PM.jpg",
+      },
+      {
+        caption: "Símbolo de la tribu de Judá",
+        file: "Tribe_of_Judah_Symbol_001_8-6-2013 8-53-34 AM.jpg",
+      },
+      {
+        caption: "León de la tribu de Judá",
+        file: "GoodSalt-dpbas0002_8-6-2013 8-53-34 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "696",
+    slug: "potiphars-wife-incident",
+    title: "El incidente de la esposa de Potifar",
+    period: "3",
+    description:
+      'Potifar compra a José como siervo. La esposa de Potifar intenta seducir a José para que se acueste con ella. Él se niega. Cuando no hay hombres en la casa, ella agarra su manto y dice: "Acuéstate conmigo". Él huye de la casa dejando su manto. José es puesto en prisión.',
+    article:
+      'En este momento de crisis, la integridad personal de José se destaca en marcado contraste con la de sus hermanos. ¿Qué habrían hecho Rubén (cap. 35:22) o Judá (cap. 38:16) bajo las circunstancias? No es de extrañar que Jacob favoreciera a José, y que Potifar sintiera tal confianza en él. Esta confianza en él reforzó su sereno propósito de ser fiel a Dios, e hizo aún más deseables para él sus elevados ideales de honor e integridad personal. El carácter de José se mantuvo firme bajo un ataque persistente. Sabiamente, se negó incluso a estar en su compañía. Al negarse, José reveló sinceridad, sabiduría y determinación en el camino correcto. Cuanto más fuerte era la tentación, más resuelto se volvía en resistirla.\n\nAl repetir su historia a su esposo, la esposa de Potifar indirectamente lo culpó a él por el supuesto agravio al referirse a José como "el siervo hebreo que nos has traído" (v. 17). La acción de Potifar de confinar a José con ofensores políticos puede considerarse una extrema indulgencia en vista del castigo que se administraba habitualmente por el crimen del que se le acusaba. En tiempos posteriores, el castigo por un intento de adulterio era mil golpes en las plantas de los pies, y por la violación de una mujer libre era aún más severo (Diodoro i. 78).\n\nLa indulgencia de Potifar sin duda reflejaba su confianza en la integridad de José, y en contraste, muy poco respeto por el relato de su esposa sobre el episodio. Sin embargo, el castigo de José parece haber sido severo al principio, ya que le sucedió más de lo que implica la narrativa de Génesis. Según Sal. 105:18, sus "pies" fueron "heridos con grillos", y "fue puesto en hierro".\n\nHay un papiro egipcio, ahora en el Museo Británico, que relata una "historia de los dos hermanos" superficialmente similar a la historia de José y la esposa de Potifar. Numerosos eruditos lo han tomado como el original de la historia de la experiencia de José, y aunque los dos son similares en algunos aspectos, las diferencias superan con creces las similitudes. La historia egipcia, además, tiene un escenario mitológico y es de origen posterior al libro de Génesis por al menos 250 años.',
+    date: "1673 a.C.",
+    scriptures: ["1|39:1-20"],
+    related: [],
+    images: [
+      {
+        caption: "José y la esposa de Potifar, Battistello Caracciolo",
+        file: "Joseph_and_Potiphar's_wife_001_8-6-2013 10-56-50 AM.jpg",
+      },
+      {
+        caption: "José y la esposa de Potifar, pintura de Guido Reni en 1631.",
+        file: "Joseph and Potiphar's Wife 2_5-9-2013 2-21-54 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "697",
+    slug: "dan",
+    title: "Dan",
+    period: "3",
+    description:
+      'El nombre significa "juez" o "Dios ha juzgado". Es el quinto hijo de Jacob a través de Bilha, la sierva de Raquel. Jacob lo bendice diciendo: "Dan juzgará a su pueblo". Su tribu es la última en recibir su herencia en la tierra prometida.',
+    article:
+      'El quinto hijo de Jacob. Su madre fue Bilha, la sierva de Raquel (Gn 30:6, "Dios me ha juzgado", heb. dananni). La bendición pronunciada sobre él por su padre fue: "Dan juzgará a su pueblo" (Gn 49:16), probablemente en alusión al liderazgo de Sansón, quien era de la tribu de Dan.\nLa tribu de Dan tenía su lugar en la marcha por el desierto en el lado norte del tabernáculo (Núm 2:25, 31; 10:25). Fue la última de las tribus en recibir una porción en la Tierra Prometida. Su posición y extensión se describen en Jos 19:40-48.\nEl territorio de Dan se extendía desde el oeste de Efraín y Benjamín hasta el mar.',
+    date: "1704-1604 a.C.",
+    scriptures: ["1|30:4-6"],
+    related: [
+      {
+        slug: "jacob",
+        title: "Jacob",
+      },
+    ],
+    images: [
+      {
+        caption: "Símbolo de la tribu de Dan",
+        file: "Tribe_of_Dan_Symbol_001_8-6-2013 8-46-20 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "698",
+    slug: "naphtali",
+    title: "Neftalí",
+    period: "3",
+    description:
+      'El nombre significa "lucha". Es el quinto hijo de Jacob a través de la sierva de Raquel, Bilha, y es nombrado así porque Raquel "luchó" con su hermana por tener hijos y prevaleció.',
+    article:
+      'Un hijo de Jacob y de la sierva de Raquel, Bilha. El nombre le fue dado por Raquel para indicar cómo había "luchado" en competencia con su hermana para obtener un hijo como una marca del favor de Dios (Gn 30:7-8). Fue el padre de cuatro hijos y el antepasado de la tribu que llevó su nombre (Gn 46:24, Núm 26:48-49).',
+    date: "1703-1605 a.C.",
+    scriptures: ["1|30:7-8"],
+    related: [
+      {
+        slug: "jacob",
+        title: "Jacob",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Símbolo de la tribu de Neftalí por la Edición del Maestro de la S.S.: La Santa Biblia. Nueva York: Henry Frowde, Editor de la Universidad de Oxford, 1896.",
+        file: "Naftali.JPG",
+      },
+    ],
+  },
+  {
+    id: "699",
+    slug: "gad",
+    title: "Gad",
+    period: "3",
+    description:
+      'El nombre significa "fortuna". Es el séptimo hijo de Jacob por Zilpa, la sierva de Leah, y hermano de Aser. Jacob predice que los descendientes de Gad serán empujados por enemigos fuertes, pero prevalecerán contra ellos. Gad tiene siete hijos.',
+    article:
+      "Un hijo de Jacob por Zilpa, la sierva de Leah (Gn 30:10-11). Jacob predijo que los descendientes de Gad serían presionados por fuerzas hostiles, pero se mantendrían firmes contra ellas (cap 49:19). De los siete hijos de Gad (cap 46:16), al menos seis fueron cabezas de familias tribales (Núm 26:15-18).",
+    date: "1704-1600 a.C.",
+    scriptures: ["1|30:9-11"],
+    related: [
+      {
+        slug: "jacob",
+        title: "Jacob",
+      },
+    ],
+    images: [
+      {
+        caption: "Símbolo de la tribu de Gad.",
+        file: "Gade2.JPG",
+      },
+    ],
+  },
+  {
+    id: "700",
+    slug: "jacob-finishes-next-7-years-for-laban",
+    title: "Jacob termina los siguientes 7 años para Labán",
+    period: "3",
+    description:
+      "Labán engaña a Jacob y le da a su hija mayor, Leah, en matrimonio. Jacob exige a Raquel y, después de recibirla como su esposa, sirve a Labán otros siete años. Casarse con dos hermanas crea conflictos familiares para Jacob.",
+    article:
+      'Está claro que Jacob no sirvió otros siete años antes de que Raquel se convirtiera en su esposa. Esto ocurrió al final de la semana festiva de Leah. El acto de bigamia de Jacob no debe ser juzgado por una disposición posterior en la ley mosaica que prohibía el matrimonio con dos hermanas concurrentemente (Lev. 18:18). Al mismo tiempo, el doble matrimonio de Jacob no puede justificarse sobre la base de que la bendición de Dios eventualmente lo convirtió en el medio de multiplicar la descendencia de Jacob y así cumplir Su promesa. Dios simplemente anuló los errores de los hombres; incluso estos no pudieron frustrar Su propósito (ver Sal. 76:10).\n\nLa bigamia que había sido ocasionada por el engaño de Labán y el afecto de Jacob trajo fricción y arrepentimiento a los hogares de ambos hombres. En esta escuela de aflicción, Jacob aprendió que "el camino de los transgresores es duro" (Prov. 13:15). Los celos y la miseria que acompañaron este matrimonio son un comentario sobre la prohibición específica de Moisés contra el matrimonio de un hombre con dos hermanas concurrentemente (Lev. 18:18).',
+    date: "1700 a.C.",
+    scriptures: ["1|29:28-30"],
+    related: [
+      {
+        slug: "jacob",
+        title: "Jacob",
+      },
+    ],
+    images: [
+      {
+        caption: "Jacob y Raquel, Ephraim Moshe Lilien",
+        file: "Jakob_und_Rahel_8-6-2013 9-07-10 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "701",
+    slug: "asher",
+    title: "Aser",
+    period: "3",
+    description:
+      'El nombre significa "feliz". Es el octavo hijo de Jacob a través de Zilpa, la sierva de Leah. Tiene cuatro hijos y una hija. Se sabe poco de Aser y su tribu. Ana, la profetisa, proviene de esta tribu (Lucas 2:36).',
+    article:
+      "El octavo hijo de Jacob por Zilpa, la sierva de Leah (Gn 30:12-13, 35:26). Tuvo cuatro hijos y una hija (Gn 46:17, 1 Cr 7:30), y se convirtió en el fundador de una tribu.",
+    date: "1703-1601 a.C.",
+    scriptures: ["1|30:12-13"],
+    related: [
+      {
+        slug: "jacob",
+        title: "Jacob",
+      },
+    ],
+    images: [
+      {
+        caption: "Símbolo de la tribu de Aser",
+        file: "Tribe_of_Asher_Symbol_001_8-6-2013 8-56-01 AM.jpg",
       },
     ],
   },
 ];
+// {
+//   id: "1016",
+//   slug: "adam",
+//   title: "Adán",
+//   period: "1",
+//   description:
+//     "El nombre significa 'rojo' o 'hombre'. Es el primer hombre, creado por Dios, cuya esposa fue Eva. Adán recibió autoridad sobre la tierra. El pecado entró al mundo cuando Adán y Eva comieron del fruto prohibido en el Jardín del Edén, su hogar que perdieron pero que será restaurado.",
+//   article:
+//     "El primer miembro de la familia humana, creado por Dios del polvo de la tierra (Génesis 2:7). Su esposa, Eva, fue formada de una costilla de su costado (vs 21, 22). Adán recibió autoridad sobre la tierra y todas las criaturas vivientes (capítulo 1:26) y se le ordenó poblar el mundo (v 28). Él y su esposa fueron colocados en un 'jardín al oriente en Edén' y se les dio la tarea de cuidarlo (capítulo 2:8, 15). El producto de las plantas y los árboles sería su alimento (capítulo 1:29).",
+//   date: "3954-3024 a.C.",
+//   scriptures: ["1|2:7", "1|5:5"],
+//   related: [
+//     {
+//       slug: "cain",
+//       title: "Caín",
+//     },
+//     {
+//       slug: "abel",
+//       title: "Abel",
+//     },
+//     {
+//       slug: "seth",
+//       title: "Set",
+//     },
+//   ],
+//   images: [
+//     {
+//       caption:
+//         "Y el Señor Dios plantó un jardín al oriente en Edén; y allí puso al hombre que había formado. (Génesis 2:8)",
+//       file: "GoodSalt-prcas2581_8-8-2013 9-50-05 AM.jpg",
+//     },
+//     {
+//       caption:
+//         "Creación de Adán por Miguel Ángel entre 1508 y 1512. Ubicado en la Capilla Sixtina.",
+//       file: "Adam_4-4-2013 10-22-05 AM.jpg",
+//     },
+//   ],
+// },
