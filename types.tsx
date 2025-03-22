@@ -45,8 +45,8 @@ export enum Screens {
   MemorizeVerse = "memorization/memoryList",
   VerseId = "memorization/[verseId]",
   ChallengeTypeId = "memorization/[verseId]/challenge/[typeId]",
-  Admin= "admin",
-  TimelineId = "timeline/[timelineId]"
+  Admin = "admin",
+  TimelineId = "timeline/[timelineId]",
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -649,4 +649,26 @@ export type TimelinePeriod = {
   subTitle: string;
 };
 
-export type ShallowTimelineSection = Omit<TimelinePeriod, 'events'>
+export type ShallowTimelineSection = Omit<TimelinePeriod, "events">;
+export interface BibleTimelineEvent {
+  id: string;
+  slug: string;
+  title: string;
+  period: string;
+  description: string;
+  article: string;
+  date: string;
+  scriptures: any[];
+  related: BibleTimelineEventRelated[];
+  images: BibleTimelineEventImage[];
+}
+
+interface BibleTimelineEventImage {
+  caption: string;
+  file: string;
+}
+
+interface BibleTimelineEventRelated {
+  slug: string;
+  title: string;
+}
