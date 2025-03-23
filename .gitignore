@@ -15,7 +15,7 @@ android/
 .DS_Store
 .env
 .env*.local
-
+todo
 todo.ts
 todolist.md
 
