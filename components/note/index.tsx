@@ -48,6 +48,7 @@ interface ActionButtonProps {
     color: string;
     action: () => void;
     label?: string;
+    hide?: boolean;
   };
   index: number;
   styles: any;
@@ -61,31 +62,27 @@ const ActionButton = ({ item, index, styles, theme }: ActionButtonProps) => {
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.sequence([
+    const showAnimation = Animated.sequence([
       Animated.delay(index * 100),
-
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 1,
-          duration: 400,
+          duration: 300,
           useNativeDriver: true,
           easing: Easing.out(Easing.cubic),
         }),
-
         Animated.spring(scaleAnim, {
           toValue: 1,
           friction: 6,
           tension: 40,
           useNativeDriver: true,
         }),
-
         Animated.spring(translateYAnim, {
           toValue: 0,
           friction: 7,
           tension: 50,
           useNativeDriver: true,
         }),
-
         Animated.timing(rotateAnim, {
           toValue: 1,
           duration: 400,
@@ -93,8 +90,33 @@ const ActionButton = ({ item, index, styles, theme }: ActionButtonProps) => {
           easing: Easing.out(Easing.back(1.5)),
         }),
       ]),
-    ]).start();
-  }, [fadeAnim, scaleAnim, translateYAnim, rotateAnim, index]);
+    ]);
+
+    const hideAnimation = Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+        easing: Easing.in(Easing.cubic),
+      }),
+      Animated.timing(scaleAnim, {
+        toValue: 0.5,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateYAnim, {
+        toValue: 50,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]);
+
+    if (item.hide) {
+      hideAnimation.start();
+    } else {
+      showAnimation.start();
+    }
+  }, [fadeAnim, scaleAnim, translateYAnim, rotateAnim, index, item.hide]);
 
   const spin = rotateAnim.interpolate({
     inputRange: [0, 1],
@@ -157,7 +179,7 @@ const ActionButton = ({ item, index, styles, theme }: ActionButtonProps) => {
             alignItems: "center",
           }}
         >
-          <Icon color={theme.colors.text} name={item.name as any} size={30} />
+          <Icon color={"#fff"} name={item.name as any} size={30} />
         </TouchableOpacity>
       </Animated.View>
     </View>
@@ -166,16 +188,30 @@ const ActionButton = ({ item, index, styles, theme }: ActionButtonProps) => {
 
 const Backdrop = ({ visible, onPress, theme }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const [shouldRender, setShouldRender] = useState(visible);
 
   useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: visible ? 1 : 0,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
+    if (visible) {
+      setShouldRender(true);
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+        easing: Easing.out(Easing.cubic),
+      }).start();
+    } else {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+        easing: Easing.in(Easing.cubic),
+      }).start(() => {
+        setShouldRender(false);
+      });
+    }
   }, [visible]);
 
-  if (!visible) return null;
+  if (!shouldRender) return null;
 
   return (
     <TouchableWithoutFeedback onPress={onPress}>
