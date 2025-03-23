@@ -35,23 +35,10 @@ const DisplaySong = () => {
     <>
       <Stack.Screen
         options={{
-          // headerShown: true,
-          // headerTitle: "",
           animation: "slide_from_bottom",
-          // headerLeft: () => <CustomHeaderLeft title="Himnario" />,
-          // headerRight: () => (
-          //   <View style={styles.headerActions}>
-          //     <TouchableOpacity onPress={increaseFont} style={{}}>
-          //       <Icon name="AArrowUp" size={24} color={theme.colors.text} />
-          //     </TouchableOpacity>
-          //     <TouchableOpacity onPress={decreaseFont} style={{}}>
-          //       <Icon name="AArrowDown" size={24} color={theme.colors.text} />
-          //     </TouchableOpacity>
-          //   </View>
-          // ),
           ...singleScreenHeader({
             theme,
-            title: "Himnario",
+            title: "Himno",
             titleIcon: "Music4",
             headerRightProps: {
               headerRightIcon: "AArrowDown",
@@ -59,6 +46,20 @@ const DisplaySong = () => {
               onPress: () => console.log(),
               disabled: false,
               style: { opacity: 1 },
+              RightComponent: () => (
+                <View style={styles.headerActions}>
+                  <TouchableOpacity onPress={increaseFont} style={{}}>
+                    <Icon name="AArrowUp" size={24} color={theme.colors.text} />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={decreaseFont} style={{}}>
+                    <Icon
+                      name="AArrowDown"
+                      size={24}
+                      color={theme.colors.text}
+                    />
+                  </TouchableOpacity>
+                </View>
+              ),
             },
           }),
         }}

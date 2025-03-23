@@ -20,6 +20,7 @@ type SingleScreenHeaderProps = {
   mainIconSize?: number;
   goBack?: () => void;
   headerRightProps: {
+    RightComponent?: any;
     fillColor?: string;
     headerRightIcon?: keyof typeof icons;
     headerRightIconColor: string;
@@ -38,7 +39,7 @@ export const singleScreenHeader = ({
   titleIconColor,
   headerRightProps,
   mainIconSize,
-  goBack
+  goBack,
 }: SingleScreenHeaderProps) => {
   const styles = {
     headerTitle: {
@@ -49,6 +50,22 @@ export const singleScreenHeader = ({
     },
   } as any;
 
+  const RightHeaderComponent = () => (
+    <TouchableOpacity {...headerRightProps}>
+      {headerRightProps.headerRightIcon && (
+        <Icon
+          name={headerRightProps.headerRightIcon}
+          size={headerIconSize}
+          color={headerRightProps.headerRightIconColor}
+          fillColor={headerRightProps.fillColor || ""}
+        />
+      )}
+      {headerRightProps.headerRightText && (
+        <Text style={{ fontSize: 18 }}>{headerRightProps.headerRightText}</Text>
+      )}
+    </TouchableOpacity>
+  );
+
   return {
     headerShown: true,
     headerBackVisible: false,
@@ -56,26 +73,10 @@ export const singleScreenHeader = ({
       <ChevronLeft
         color={theme.colors.text}
         size={headerIconSize}
-        onPress={() => goBack ? goBack() : router.back()}
+        onPress={() => (goBack ? goBack() : router.back())}
       />
     ),
-    headerRight: () => (
-      <TouchableOpacity {...headerRightProps}>
-        {headerRightProps.headerRightIcon && (
-          <Icon
-            name={headerRightProps.headerRightIcon}
-            size={headerIconSize}
-            color={headerRightProps.headerRightIconColor}
-            fillColor={headerRightProps.fillColor || ""}
-          />
-        )}
-        {headerRightProps.headerRightText && (
-          <Text style={{ fontSize: 18 }}>
-            {headerRightProps.headerRightText}
-          </Text>
-        )}
-      </TouchableOpacity>
-    ),
+    headerRight: headerRightProps.RightComponent || RightHeaderComponent,
     headerTitle: () => (
       <View style={styles.headerTitle}>
         <Icon
