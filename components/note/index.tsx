@@ -24,6 +24,7 @@ import {
   ActivityIndicator,
   Alert,
   Animated,
+  Easing,
   Keyboard,
   StyleSheet,
   TextInput,
@@ -46,6 +47,7 @@ interface ActionButtonProps {
     name: string;
     color: string;
     action: () => void;
+    label?: string;
   };
   index: number;
   styles: any;
@@ -54,47 +56,142 @@ interface ActionButtonProps {
 
 const ActionButton = ({ item, index, styles, theme }: ActionButtonProps) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const translateYAnim = useRef(new Animated.Value(100)).current;
+  const scaleAnim = useRef(new Animated.Value(0.5)).current;
+  const translateYAnim = useRef(new Animated.Value(50)).current;
+  const rotateAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 500,
-        delay: index * 200,
-        useNativeDriver: true,
-      }),
-      Animated.timing(translateYAnim, {
-        toValue: 0,
-        duration: 500,
-        delay: index * 200,
-        useNativeDriver: true,
-      }),
+    Animated.sequence([
+      Animated.delay(index * 100),
+
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+          easing: Easing.out(Easing.cubic),
+        }),
+
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          friction: 6,
+          tension: 40,
+          useNativeDriver: true,
+        }),
+
+        Animated.spring(translateYAnim, {
+          toValue: 0,
+          friction: 7,
+          tension: 50,
+          useNativeDriver: true,
+        }),
+
+        Animated.timing(rotateAnim, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+          easing: Easing.out(Easing.back(1.5)),
+        }),
+      ]),
     ]).start();
-  }, [fadeAnim, translateYAnim, index]);
+  }, [fadeAnim, scaleAnim, translateYAnim, rotateAnim, index]);
+
+  const spin = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["45deg", "0deg"],
+  });
 
   return (
-    <Animated.View
-      key={`button-${item.name}`}
-      style={[
-        styles.scrollToTopButton,
-        {
-          bottom: item.bottom,
-          backgroundColor: item.color,
+    <View style={{ flexGrow: 0, zIndex: 11 }}>
+      <Animated.Text
+        style={[
+          {
+            fontSize: 18,
+            position: "absolute",
+            color: "white",
+            right: 80,
+            bottom: item.bottom + 10,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            borderRadius: 8,
+            backgroundColor: theme.colors.background + 80,
+          },
+          {
+            opacity: fadeAnim,
+            transform: [{ translateY: translateYAnim }, { scale: scaleAnim }],
+          },
+        ]}
+      >
+        {item.label}
+      </Animated.Text>
+
+      <Animated.View
+        key={`button-${item.name}`}
+        style={[
+          styles.scrollToTopButton,
+          {
+            bottom: item.bottom,
+            backgroundColor: item.color,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.3,
+            shadowRadius: 3,
+            elevation: 5,
+          },
+          {
+            opacity: fadeAnim,
+            transform: [
+              { translateY: translateYAnim },
+              { scale: scaleAnim },
+              { rotate: spin },
+            ],
+          },
+        ]}
+      >
+        <TouchableOpacity
+          onPress={() => item.action()}
+          style={{
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Icon color={theme.colors.text} name={item.name as any} size={30} />
+        </TouchableOpacity>
+      </Animated.View>
+    </View>
+  );
+};
+
+const Backdrop = ({ visible, onPress, theme }: any) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: visible ? 1 : 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  }, [visible]);
+
+  if (!visible) return null;
+
+  return (
+    <TouchableWithoutFeedback onPress={onPress}>
+      <Animated.View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(0,0,0,.6)",
           opacity: fadeAnim,
-          transform: [{ translateY: translateYAnim }],
-        },
-      ]}
-    >
-      <TouchableOpacity onPress={item.action}>
-        <Icon
-          style={[{}]}
-          color={theme.colors.text}
-          name={item.name as any}
-          size={30}
-        />
-      </TouchableOpacity>
-    </Animated.View>
+          zIndex: 1,
+        }}
+      />
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -273,7 +370,7 @@ const Note = ({ data, setShouldFetch }: TListVerse) => {
     setShouldFetch((prev: any) => !prev);
   };
 
-  const showMoreOptionHandle = () => {
+  const showMoreOptionHandle: () => void = () => {
     setShowMoreOptions((prev) => !prev);
   };
 
@@ -290,10 +387,11 @@ const Note = ({ data, setShouldFetch }: TListVerse) => {
           name: "Plus",
           color: theme.colors.notification,
           action: onCreateNewNote,
-          hide: false,
+          hide: !showMoreOptions,
+          label: "Añadir",
         },
         {
-          bottom: 90,
+          bottom: 25,
           name: "EllipsisVertical",
           color: "#008CBA",
           action: showMoreOptionHandle,
@@ -305,6 +403,7 @@ const Note = ({ data, setShouldFetch }: TListVerse) => {
           color: "#008CBA",
           action: onImportNotes,
           hide: !showMoreOptions,
+          label: "Importar",
         },
         {
           bottom: 155,
@@ -312,6 +411,15 @@ const Note = ({ data, setShouldFetch }: TListVerse) => {
           color: "#45a049",
           action: exportNotes,
           hide: !showMoreOptions,
+          label: "Exportar",
+        },
+        {
+          bottom: 220,
+          name: "ChevronDown",
+          color: theme.colors.notification,
+          action: showMoreOptionHandle,
+          hide: !showMoreOptions,
+          label: "Cerrar",
         },
       ].filter((item) => !item.hide),
     [showMoreOptions]
@@ -486,6 +594,7 @@ const Note = ({ data, setShouldFetch }: TListVerse) => {
             backgroundColor: theme.dark ? theme.colors.background : "#eee",
           }}
         >
+          <Backdrop visible={showMoreOptions} onPress={dismiss} theme={theme} />
           {NoteHero()}
           {error && <Text style={styles.textError}>{error}</Text>}
           <FlashList
