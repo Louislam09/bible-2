@@ -12,6 +12,7 @@ import { Stack } from "expo-router";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { use$ } from "@legendapp/state/react";
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 
 const DisplaySong = () => {
   const { songId, isAlegres } = useParams();
@@ -34,20 +35,32 @@ const DisplaySong = () => {
     <>
       <Stack.Screen
         options={{
-          headerShown: true,
-          headerTitle: "",
+          // headerShown: true,
+          // headerTitle: "",
           animation: "slide_from_bottom",
-          headerLeft: () => <CustomHeaderLeft title="Himnario" />,
-          headerRight: () => (
-            <View style={styles.headerActions}>
-              <TouchableOpacity onPress={increaseFont} style={{}}>
-                <Icon name="AArrowUp" size={24} color={theme.colors.text} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={decreaseFont} style={{}}>
-                <Icon name="AArrowDown" size={24} color={theme.colors.text} />
-              </TouchableOpacity>
-            </View>
-          ),
+          // headerLeft: () => <CustomHeaderLeft title="Himnario" />,
+          // headerRight: () => (
+          //   <View style={styles.headerActions}>
+          //     <TouchableOpacity onPress={increaseFont} style={{}}>
+          //       <Icon name="AArrowUp" size={24} color={theme.colors.text} />
+          //     </TouchableOpacity>
+          //     <TouchableOpacity onPress={decreaseFont} style={{}}>
+          //       <Icon name="AArrowDown" size={24} color={theme.colors.text} />
+          //     </TouchableOpacity>
+          //   </View>
+          // ),
+          ...singleScreenHeader({
+            theme,
+            title: "Himnario",
+            titleIcon: "Music4",
+            headerRightProps: {
+              headerRightIcon: "AArrowDown",
+              headerRightIconColor: theme.colors.text,
+              onPress: () => console.log(),
+              disabled: false,
+              style: { opacity: 1 },
+            },
+          }),
         }}
       />
       <SongViewer song={selected} />

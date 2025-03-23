@@ -60,9 +60,9 @@ const SongViewer = ({ song }: SongViewer) => {
       setIsChorus(true);
       return;
     }
-    
+
     if (currentVerseIndex < stanzas.length - 1) {
-      setCurrentVerseIndex(prev => prev + 1);
+      setCurrentVerseIndex((prev) => prev + 1);
       setIsChorus(false);
     }
   };
@@ -72,14 +72,14 @@ const SongViewer = ({ song }: SongViewer) => {
       y: 0,
       animated: true,
     });
-    
+
     if (isChorus) {
       setIsChorus(false);
       return;
     }
-    
+
     if (currentVerseIndex > 0) {
-      setCurrentVerseIndex(prev => prev - 1);
+      setCurrentVerseIndex((prev) => prev - 1);
       if (hasChorus) setIsChorus(true);
     }
   };
@@ -107,16 +107,7 @@ const SongViewer = ({ song }: SongViewer) => {
                 style={[styles.verseText, { fontSize: songFontSize }]}
               >
                 {chorus?.split("\n").map((line, i) => (
-                  <Text
-                    onPress={() => {}}
-                    key={`chorus-${i}`}
-                    // style={{
-                    //   backgroundColor:
-                    //     i % 2 === 0
-                    //       ? theme.colors.text + 20
-                    //       : theme.colors.notification + 20,
-                    // }}
-                  >
+                  <Text onPress={() => {}} key={`chorus-${i}`}>
                     {line}
                     {i < chorus.split("\n").length - 1 ? "\n" : ""}
                   </Text>
@@ -129,16 +120,7 @@ const SongViewer = ({ song }: SongViewer) => {
               style={[styles.verseText, { fontSize: songFontSize }]}
             >
               {verseText.split("\n").map((line, i) => (
-                <Text
-                  onPress={() => {}}
-                  key={`verse-${i}`}
-                  // style={{
-                  //   backgroundColor:
-                  //     i % 2 === 0
-                  //       ? theme.colors.text + 20
-                  //       : theme.colors.notification + 20,
-                  // }}
-                >
+                <Text onPress={() => {}} key={`verse-${i}`}>
                   {line}
                   {i < verseText.split("\n").length - 1 ? "\n" : ""}
                 </Text>

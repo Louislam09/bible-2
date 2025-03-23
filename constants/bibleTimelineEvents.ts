@@ -10880,4 +10880,8111 @@ export default [
       },
     ],
   },
+  {
+    id: "977",
+    slug: "hoshea",
+    title: "Oseas",
+    period: "7",
+    description:
+      'El nombre significa "Yahvé salva". Es hijo de Elá, el vigésimo y último rey del reino del norte de Israel. Reina durante 9 años y "hizo lo malo ante los ojos del Señor". Asesina a Peka y usurpa el trono. Paga tributo a Asiria y luego es llevado cautivo.',
+    article:
+      'Oseas, nombre que significa "Yahvé salva". El vigésimo (si se incluye a Tibni) y último rey de Israel (732-722 a.C.). Con la probable connivencia de Tiglat-pileser III, rey de Asiria, Oseas asesinó a Peka y usurpó el trono. Cuando Salmanasar V, sucesor de Tiglat-pileser, apareció en Palestina, Oseas pagó tributo a Asiria y fue confirmado en su cargo. Sin embargo, más tarde hizo una alianza con Egipto y se separó de Asiria, lo que resultó en que Salmanasar marchara contra Israel y sitiara Samaria, tomando la ciudad después de tres años. Esto probablemente ocurrió en el último año de la vida de Salmanasar, aunque Sargón II, su sucesor, afirmó haber capturado la ciudad. Oseas fue llevado cautivo y encarcelado (2 Reyes 15:30; 17:1-6).',
+    date: "762-722 a.C.",
+    scriptures: ["12|17:1", "12|15:30"],
+    related: [
+      {
+        slug: "segunda-invasion-de-israel-desde-asiria",
+        title: "Segunda Invasión de Israel desde Asiria",
+      },
+      {
+        slug: "asiria-invade-el-reino-del-norte",
+        title: "Asiria Invade el Reino del Norte",
+      },
+    ],
+    images: [
+      {
+        caption: "Ilustración de Oseas en 1553 publicada por Guillaume Rouille",
+        file: "Hosea_rex.jpg",
+      },
+    ],
+  },
+  {
+    id: "978",
+    slug: "matat-padre-de-jorim",
+    title: "Matat",
+    period: "7",
+    description:
+      'El nombre significa "regalo". Es hijo de Leví y padre de Jorim, un judaíta, mencionado en la genealogía de Cristo según Lucas. Hay otro Matat que también es hijo de otro Leví mencionado más adelante como padre de Helí.',
+    article: "",
+    date: "767-687 a.C.",
+    scriptures: ["42|3:29"],
+    related: [
+      {
+        slug: "levi-hijo-de-simeon",
+        title: "Leví",
+      },
+      {
+        slug: "jorim",
+        title: "Jorim",
+      },
+    ],
+    images: [
+      {
+        caption: "Matat.",
+        file: "GoodSalt-stdas0056_8-7-2013 2-02-54 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "979",
+    slug: "sargon-ii",
+    title: "Sargón II",
+    period: "7",
+    description:
+      'El nombre significa "el dios ha designado al rey". Después de la muerte de Salmanasar, es un general asirio que se establece en el trono. Afirma haber capturado Samaria y deportado a los israelitas y sus dioses (becerros de oro).',
+    article:
+      "Sargón. El nombre de varios reyes mesopotámicos, de los cuales solo Sargón II (722-705 a.C.) de Asiria aparece en la Biblia. Sargón II se menciona en la Biblia solo en Isaías 20:1, en relación con una campaña contra Asdod. El primer nombre de un rey asirio en ser descifrado fue el de Sargón II. El desciframiento se realizó a mediados del siglo XIX, cuando la asiriología estaba en su infancia, y con ello la arqueología bíblica obtuvo uno de sus primeros triunfos, ya que el nombre de Sargón era completamente desconocido excepto por su única aparición en el libro de Isaías.\n\nSargón tomó el trono de Asiria después de la muerte de Salmanasar V. Probablemente fue un usurpador, aunque afirmó, según un texto conservado, haber sido hijo de Tiglat-pileser III. Fue un rey poderoso y un gran conquistador, y se convirtió en el fundador de la dinastía más poderosa de gobernantes asirios, bajo los cuales el imperio alcanzó sus mayores triunfos. En sus inscripciones posteriores, afirma haber capturado Samaria y haber deportado a 27,290 israelitas, y a sus dioses, probablemente refiriéndose a los becerros de oro que Jeroboam I había erigido en Betel y Dan. Sin embargo, a partir de los datos cronológicos de la Biblia, parece más probable que Samaria cayó poco antes de la muerte de Salmanasar V, cuando Sargón todavía era el comandante del ejército.\n\nNo obstante, Sargón pudo haber sido responsable del trasplante de la población de Samaria a otras partes del imperio (2 Reyes 17:6), y de los asentamientos iniciales de colonos de Babilonia y otros lugares (v. 24) en el territorio de Samaria. Sargón llevó a cabo muchas campañas militares durante su reinado de 17 años, pero se desconoce si luchó contra el rey Ezequías, aunque se autodenominó el subyugador de Judá y afirmó que ese país le pagó tributo. Es especialmente conocido como el constructor de una nueva capital, Dür-Sharrukên, ahora Khorsabad, a unas 10 millas (unos 16 km) al noreste de Nínive. Dür-Sharrukên fue la primera ciudad palaciega asiria excavada. Sargón fue sucedido en 705 a.C. por su hijo Senaquerib.",
+    date: "758-705 a.C.",
+    scriptures: ["23|20:1"],
+    related: [
+      {
+        slug: "senaquerib",
+        title: "Senaquerib",
+      },
+    ],
+    images: [
+      {
+        caption: "Un lamassu del palacio de Sargón II en Dur-Sharrukin.",
+        file: "Human_headed_winged_bull_profile_4-3-2013 3-51-35 PM.jpg",
+      },
+      {
+        caption:
+          "Sargón II y un dignatario. Bajo relieve de la pared izquierda del palacio de Sargón II en Dur Sharrukin en Asiria (ahora Khorsabad en Irak), c. 716-713 a.C. Ubicado en el Museo del Louvre en París.",
+        file: "Sargon II_4-3-2013 3-51-35 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "980",
+    slug: "gran-terremoto",
+    title: "Gran Terremoto",
+    period: "7",
+    description:
+      "El terremoto más importante mencionado en el Antiguo Testamento se menciona en Amós 1:1 y Zacarías 14:5 y ocurre durante el reinado de Uzías, el décimo gobernante del reino del norte de Judá.",
+    article:
+      "Amós 1:1 hace referencia a un terremoto muy importante en la historia del Antiguo Testamento. La historia secular aún no ha arrojado luz sobre este evento. Sin embargo, mucho después, el profeta Zacarías menciona este terremoto (ver cap. 14:5). Evidentemente, fue lo suficientemente grave como para dejar una impresión en las generaciones posteriores. Josefo declara que este terremoto ocurrió cuando el rey Uzías entró presumuosamente en el Templo para quemar incienso (Antigüedades ix. 10. 4; ver 2 Crónicas 26:16-21).",
+    date: "757 a.C.",
+    scriptures: ["30|1:1", "38|14:5"],
+    related: [
+      {
+        slug: "amos-el-profeta",
+        title: "Amós",
+      },
+    ],
+    images: [
+      {
+        caption: "El rey Uzías en el templo",
+        file: "_GoodSalt-prcas3399_8-27-2013 2-13-06 PM.jpg",
+      },
+      {
+        caption:
+          "El terremoto más importante mencionado en el Antiguo Testamento se menciona en Amós 1:1 y Zacarías 14:5",
+        file: "Earthquake_4-3-2013 3-47-11 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "981",
+    slug: "isaías",
+    title: "Isaías",
+    period: "7",
+    description:
+      'El nombre significa "Yahvé salva". Hijo de Amoz y quizás el más grande de los profetas del Antiguo Testamento. Vive durante el tiempo de Uzías, Jotam, Acaz y Ezequías. Vive en Jerusalén y reprende sin temor los pecados de Judá y probablemente es un mártir.',
+    article:
+      'Isaías, nombre que significa "Yahvé salva". El más grande de los profetas hebreos y autor del libro que lleva su nombre. Era hijo de Amoz (Is 1:1; no Amós) y llegó al oficio profético hacia el final del reinado de Uzías (Azarías), c. 790-c. 739 a.C., y también sirvió bajo Jotam, Acaz y Ezequías (m. c. 686). La tradición lo hace primo de Uzías.\n\nLa cronología de las campañas de Senaquerib en Judá (caps. 36 y 37) muestra que Isaías permaneció activo en el oficio profético aproximadamente hasta el final del reinado de Ezequías, y que su ministerio abarcó más de medio siglo. Llamado a ser profeta en su juventud, Isaías se dedicó completamente al servicio de Dios en el momento de su única visión registrada, en la que una realización de la infinita santidad del carácter de Dios produjo una conversión y respuesta más profunda de su parte que la que había experimentado antes (cap. 6).\n\nSus contemporáneos en el oficio profético fueron Oseas en el reino del norte de Israel (Os 1:1) y Miqueas en el reino del sur de Judá (Mi 1:1). Isaías, un hombre elocuente, educado y culto, vivió en Jerusalén y sirvió como consejero político y religioso de la nación. Intentó mantener a Judá firme y leal a Dios durante los turbulentos e inciertos años que presenciaron la disolución del reino del norte de Israel y su caída en 723/22 a.C., y a través de las repetidas invasiones asirias de Judá en los años siguientes.\n\nSin temor, reprendió los pecados del pueblo, aconsejó a los gobernantes que confiaran en el Señor en lugar de depender de alianzas extranjeras enredadas, previó el cautiverio babilónico y escribió extensamente sobre la gloriosa restauración que culminaría en la venida del Mesías y el establecimiento de Su reino eterno, si el pueblo de Dios cooperaba con Él.\n\nLa influencia de Isaías fue en gran parte responsable de la reforma efectuada por Ezequías, a quien animó y guió durante todo su reinado. Su consejo y admonición fueron principalmente responsables de persuadir al rey y al pueblo para que se mantuvieran firmes cuando Senaquerib amenazó con tomar Jerusalén. Según la tradición, Isaías cayó mártir a manos del hijo de Ezequías, Manasés, quien abolió las reformas instituidas por su padre y, presumiblemente, hizo aserrar al profeta (cf. Heb 11:37).',
+    date: "766-686 a.C.",
+    scriptures: ["23|1:1", "58|11:37"],
+    related: [
+      {
+        slug: "profecía-de-isaías-sobre-ciro-ii",
+        title: "Profecía de Isaías sobre Ciro II",
+      },
+    ],
+    images: [
+      {
+        caption: "El profeta Isaías, Providence Lithograph Company, 1904",
+        file: "Isaiah_7-31-2013 11-16-12 AM.jpg",
+      },
+      {
+        caption:
+          "Isaías caminando por las calles de Jerusalén, William Brassey Hole",
+        file: "441px-Isaiah-witnesses-the-vice-and-folly-of-Jerusalem-001_8-8-2013 12-37-55 PM.jpg",
+      },
+      {
+        caption:
+          "También oí la voz del Señor, diciendo: ¿A quién enviaré, y quién irá por nosotros? Entonces dije: Heme aquí, envíame a mí. (Isaías 6:8)",
+        file: "GoodSalt-prcas0778-Isaiah_8-8-2013 12-37-55 PM.jpg",
+      },
+      {
+        caption: "Isaías, Miguel Ángel Buonarroti, 1509, Capilla Sixtina",
+        file: "589px-Michelangelo_profeti_Isaiah_01_8-8-2013 12-37-55 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "982",
+    slug: "acaz",
+    title: "Acaz",
+    period: "7",
+    description:
+      'El nombre significa "poseedor" o "él ha tomado". Es hijo de Jotam y el duodécimo rey de Judá. Es un rey malvado que hace que su hijo "pase por el fuego". Reina durante 16 años y muere a la edad de 35 años. Es sucedido por su hijo Ezequías.',
+    article:
+      'Acaz, nombre que significa "él ha tomado". El duodécimo ocupante del trono del reino de Judá, quien reinó aproximadamente 20 años (c. 735-c. 715 a.C.), si se incluyen los años de sus presuntos correinados, con su padre, Jotam, y con su hijo Ezequías. Después de la muerte de su padre, reinó 16 años (2 Reyes 16:2; 2 Crónicas 28:1). Acaz fue un idólatra, hizo pasar a su hijo por el fuego y adoró a dioses extraños en los lugares altos, en las colinas y bajo los árboles (2 Reyes 16:3, 4; 2 Crónicas 28:2-4, 23-25). Al principio de su reinado, mientras su padre aún vivía, Peka de Israel y Rezín de Damasco comenzaron a invadir Judá (2 Reyes 15:37; 16:5).\n\nEl pretexto para esta acción militar fue probablemente la negativa de Acaz a unirse a estos dos reyes en una alianza contra Asiria. Fue en relación con esta crisis que el profeta Isaías fue enviado a Acaz para asegurarle la ayuda de Dios en su lucha contra Israel y los sirios, y evidentemente también para advertirle contra la solicitud de ayuda extranjera (Is 7). Sin embargo, Acaz no apreció este consejo y recurrió a Tiglat-pileser III de Asiria en busca de ayuda, enviándole un gran regalo de dinero tomado de los tesoros del Templo y del palacio.\n\nTiglat-pileser respondió invadiendo Israel y sitiando Damasco (2 Reyes 16:5-9; 2 Crónicas 28:6-21). Damasco fue capturada y Rezín asesinado, y gran parte del territorio de Israel fue tomado de Peka y convertido en una provincia asiria (ver 2 Reyes 15:29). Fue probablemente con la connivencia de Tiglat-pileser que Peka fue asesinado por Oseas, quien usurpó el trono para sí mismo y fue confirmado en su cargo por el rey asirio. Mientras Tiglat-pileser estaba en Damasco, Acaz fue a encontrarse con él, aparentemente para rendir homenaje como vasallo junto con los sirios. Envió a casa un modelo de un altar extranjero que había visto en Damasco, con la orden de que se construyera uno similar para el Templo en Jerusalén. Este probablemente era un altar asirio para ser utilizado en la adoración de los dioses nacionales asirios. Reemplazó el altar de los holocaustos de Salomón (2 Reyes 16:10-16). Oseas, Miqueas e Isaías profetizaron durante el reinado de Acaz (Os 1:1; Mi 1:1; Is 1:1; 7:1-16). Acaz está incluido en la genealogía de Jesucristo (Mt 1:9 KJV "Acaz").',
+    date: "755-715 a.C.",
+    scriptures: ["12|16:1", "12|16:20"],
+    related: [
+      {
+        slug: "jotam",
+        title: "Jotam",
+      },
+      {
+        slug: "ezequías",
+        title: "Ezequías",
+      },
+      {
+        slug: "emanuel",
+        title: "Emanuel",
+      },
+    ],
+    images: [
+      {
+        caption: "Ilustración de Acaz en 1553 publicada por Guillaume Rouille",
+        file: "Ahaz.png",
+      },
+      {
+        caption: "El rey Acaz",
+        file: "_GoodSalt-prcas3503_8-27-2013 2-17-07 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "983",
+    slug: "salum",
+    title: "Salum",
+    period: "7",
+    description:
+      'El nombre significa "recompensa". Hijo de Jabes, conspira contra y asesina a Zacarías y usurpa el trono del reino del norte de Israel. Reina durante un mes y es a su vez asesinado por Menajem, quien lo sucede en el trono.',
+    article:
+      'Salum, nombre que significa "recompensa". El decimosexto rey de Israel (si se incluye a Tibni en el conteo), quien reinó en Samaria durante 1 mes (c. 752 a.C.), después de asesinar a Zacarías, el último rey de la dinastía de Jehú. Salum fue a su vez asesinado por Menajem, quien lo sucedió en el trono (2 Reyes 15:8-15).',
+    date: "800-752 a.C.",
+    scriptures: ["12|15:10", "12|15:14"],
+    related: [
+      {
+        slug: "hilcías",
+        title: "Hilcías",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Fresco pintado por Miguel Ángel y sus asistentes para la Capilla Sixtina en el Vaticano entre 1508 y 1512",
+        file: "Zacharias_Michelangelo_4-3-2013 3-18-00 PM_7-18-2013 1-31-26 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "988",
+    slug: "asiria-invade-el-reino-del-norte",
+    title: "Asiria Invade el Reino del Norte",
+    period: "7",
+    description:
+      'Salmanasar comienza un asedio de 3 años contra Samaria. Sargón II afirma en documentos encontrados que él capturó la ciudad. Los israelitas son llevados cautivos y dispersos para que "no quedara ninguno" (2 Reyes 17:18) debido a sus grandes pecados contra Dios.',
+    article:
+      'Salmanasar comenzó un asedio de tres años (ver en cap. 18:9, 10) de Samaria. La Biblia menciona a Salmanasar como el que comenzó el asedio, pero no nombra al rey que tomó la ciudad. La Crónica Babilónica afirma que la ciudad de Shamarain (probablemente Samaria) cayó durante el reinado de Salmanasar, pero su sucesor, Sargón II, afirmó, en documentos escritos hacia el final de su reinado, que él mismo capturó la ciudad de Samaria al comienzo de su reinado. Si esta afirmación es cierta, entonces podría haber sido en su capacidad de comandante general de los ejércitos asirios y no como rey que efectuó la captura de la ciudad. Los historiadores difieren, pero parece haber evidencia razonable de que su caída ocurrió en la última parte del reinado de Salmanasar.\n\nEl plural "ellos" es de interés en referencia a quién tomó la ciudad. Podría referirse a los asirios en general, pero eso es poco probable, ya que el versículo anterior habla de Salmanasar como el que vino contra Samaria y la sitió. Se ha sugerido que el "ellos" aquí probablemente se refiere a Salmanasar y alguien asociado con él. Este podría haber sido el general de Salmanasar y su sucesor en el trono, Sargón.',
+    date: "725 a.C.",
+    scriptures: ["12|17:5", "12|18:9-10"],
+    related: [
+      {
+        slug: "oseas",
+        title: "Oseas",
+      },
+    ],
+    images: [
+      {
+        caption: "Cautiverio y caída de Israel",
+        file: "_GoodSalt-stdas0037B_8-27-2013 2-39-01 PM.jpg",
+      },
+      {
+        caption: "Cautiverio y caída de Israel",
+        file: "_GoodSalt-stdas0037_8-27-2013 2-39-01 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "989",
+    slug: "ezequías",
+    title: "Ezequías",
+    period: "7",
+    description:
+      'El nombre significa "Yahvé ha fortalecido". Es hijo de Acaz y el decimotercer rey del reino del sur de Judá. Reina durante 29 años como un buen rey con muchos logros, incluyendo la construcción del túnel de Siloé para llevar agua a Jerusalén.',
+    article:
+      'Ezequías, nombre que significa "Yahvé ha fortalecido". Hijo de Acaz y el decimotercer rey de Judá. Su reinado de 29 años (registrado en 2 Reyes 18:2; 2 Crónicas 29:1) probablemente se cuenta desde la muerte de su padre (c. 715 a.C.). Durante 10 años de los 29, su hijo Manasés probablemente fue correy con él. Pero aparentemente Ezequías había gobernado conjuntamente con su padre durante 14 años antes de eso, estando así en el trono un total de 43 años (c. 729 - c. 686 a.C., según las sincronías de la Biblia y la cronología asiria). Ezequías fue un buen gobernante y rompió con las prácticas malvadas de su padre tan pronto como fue libre de hacerlo.\n\nReparó y limpió el Templo, reorganizó los servicios religiosos y celebró una gran Pascua a la que invitó a las diez tribus del norte. Eliminó los lugares altos, destruyó los ídolos e incluso la serpiente de bronce que databa de los tiempos de Moisés, ya que se estaba utilizando para fines idolátricos (2 Reyes 18:3-6; 2 Crónicas 29:1 a 31:21). También hizo que se recopilaran y registraran proverbios inéditos de Salomón (Proverbios 25:1).\n\nSu reinado estuvo marcado por una notable prosperidad. Obtuvo el control sobre la llanura filistea (2 Reyes 18:8), construyó ciudades de almacenamiento y rediles (2 Crónicas 32:27-29) y fortificó el muro de Jerusalén (Is 22:10). Pero su mayor logro técnico fue llevar agua al interior de Jerusalén. Su túnel excavado en la roca de Siloé, de 1,749 pies (unos 533 m) de largo, conectó un túnel antiguo desde el manantial de Gihón, en el valle de Cedrón, con un nuevo estanque más bajo dentro de la ciudad (2 Reyes 20:20; 2 Crónicas 32:4, 30; cf. Eclesiástico 48:17; ver Siloé).\n\nEzequías es más conocido por su valiente lucha contra el poderoso Imperio Asirio y por su fe en Dios durante una de las invasiones de Senaquerib, una fe que fue recompensada con la destrucción milagrosa de un gran ejército asirio.\n\nAdemás de Isaías, los profetas Oseas y Miqueas estuvieron activos en la época de Ezequías (Os 1:1; Mi 1:1). Cuando Ezequías murió, c. 686 a.C., su hijo Manasés, quien parece haber estado asociado con él durante algunos años en el trono, se convirtió en el único gobernante.',
+    date: "741-686 a.C.",
+    scriptures: ["12|18:1", "12|20:21"],
+    related: [
+      {
+        slug: "acaz",
+        title: "Acaz",
+      },
+      {
+        slug: "reforma-pascua-celebrada-en-judá-opción-1",
+        title: "Reforma-Pascua Celebrada en Judá",
+      },
+      {
+        slug: "invasión-de-los-filisteos",
+        title: "Invasión de los Filisteos",
+      },
+      {
+        slug: "manasés-rey-de-judá",
+        title: "Manasés",
+      },
+      {
+        slug: "el-sol-retrocede-10-grados-ezequías-se-recupera",
+        title: "El Sol Retrocede 10 Grados, Ezequías se Recupera",
+      },
+    ],
+    images: [
+      {
+        caption: "Ezequías reabre el templo",
+        file: "_GoodSalt-prcas5185_8-27-2013 2-25-13 PM.jpg",
+      },
+      {
+        caption: "El túnel de Ezequías en Jerusalén.",
+        file: "Hezekiah's Tunnel, tb110705527_4-3-2013 2-53-34 PM.jpg",
+      },
+      {
+        caption: "Ídolos siendo derribados",
+        file: "_GoodSalt-stdas0687_8-27-2013 2-25-13 PM.jpg",
+      },
+      {
+        caption: "Invasión de Senaquerib",
+        file: "_GoodSalt-prcas3298_8-27-2013 2-25-13 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "991",
+    slug: "jorim",
+    title: "Jorim",
+    period: "7",
+    description:
+      'El nombre significa "Yahvé es exaltado". Es hijo de Matat en la genealogía de Lucas, un judaíta y ancestro de Cristo.',
+    article: "",
+    date: "747-667 a.C.",
+    scriptures: ["42|3:29"],
+    related: [
+      {
+        slug: "matat-padre-de-jorim",
+        title: "Matat",
+      },
+      {
+        slug: "eliezer",
+        title: "Eliezer",
+      },
+    ],
+    images: [
+      {
+        caption: "Antepasado de Jesús",
+        file: "AncestorOfJesusColor.jpg",
+      },
+    ],
+  },
+  {
+    id: "992",
+    slug: "senaquerib",
+    title: "Senaquerib",
+    period: "7",
+    description:
+      'El nombre significa "que el dios Sin aumente mis hermanos". Es hijo de Sargón II, un gran rey asirio que gobierna durante 25 años. Su asedio contra Laquis es bien recordado. Asedia Jerusalén pero no tiene éxito. Ezequías le paga tributo.',
+    article:
+      'El nombre de Senaquerib significa "que (el dios) Sin aumente mis hermanos". Un rey asirio que sucedió a su padre Sargón II en 705 a.C. y gobernó durante 25 años (705-681 a.C.). Es más recordado en la historia secular por su destructiva y sin sentido destrucción de Babilonia en 689 a.C. y en la Biblia por la catástrofe que sufrió su ejército en Jerusalén poco después.\n\nEn la ascensión de Senaquerib, Merodac-Baladán, antiguo rey de Babilonia, intentó liberarse del yugo asirio, pero él y su aliado elamita fueron derrotados. La siguiente campaña importante de Senaquerib se llevó a cabo en el oeste en 701 a.C., donde una revuelta en Siria y Palestina exigió su atención. Primero capturó varias ciudades fenicias y luego marchó contra el centro de la rebelión en Palestina, las ciudades filisteas y el reino de Judá.\n\nSenaquerib afirma haber tomado 46 ciudades fortificadas de Ezequías de Judá, además de muchas aldeas, y haber llevado cautivos a 200,150 personas (el asiriólogo A. Ungnad cree que el número debería leerse 2,150), además de una enorme cantidad de botín. Su asedio de Laquis, probablemente la ciudad fortaleza más fuerte de Judá con la excepción de Jerusalén, se menciona en la Biblia (2 Reyes 18:14, 17; 19:8) y también es representado por Senaquerib en largos relieves de piedra. Jerusalén fue sitiada por un tiempo por un ejército asirio, pero no fue tomada (cap. 18:17). Así que Senaquerib solo pudo afirmar que había hecho de Ezequías "un prisionero en Jerusalén, su residencia real, como un pájaro en una jaula.\n\nLo rodeé con terraplenes para molestar a los que salían por la puerta de la ciudad". Como su atención era urgentemente necesaria en el este, Senaquerib tuvo que conformarse con recibir un pesado tributo de Ezequías, que se menciona en la Biblia y en los registros del rey asirio (2 Reyes 18:14-16). La versión detallada asiria de esta campaña, inscrita en prismas de arcilla bien conservados, coincide en todos los puntos principales con los registros bíblicos, aunque muestra diferencias en los detalles.\n\nDurante los siguientes 10 años, Senaquerib estuvo ocupado principalmente con asuntos en Babilonia y Elam. Finalmente, se cansó tanto de las frecuentes rebeliones de Babilonia que destruyó la ciudad de manera despiadada y completa, e incluso inundó toda el área desviando el Éufrates, para transformar la tierra circundante en un pantano y así evitar la resurrección de la ciudad. Poco después, debió haber llevado a cabo otra campaña militar contra Ezequías, porque 2 Reyes 19:9 menciona un intento de Tirhakah, el rey nubio de Egipto, de ayudar a Ezequías durante una campaña de Senaquerib. Dado que Tirhakah no dejó Nubia, su tierra natal, hasta aproximadamente 689 a.C., cuando se convirtió en correy con su hermano a la edad de 20 años, esto haría imposible que hubiera participado en los eventos descritos si ocurrieron en el año 701 a.C. Anteriormente se creía que, aunque no se convirtió en rey de Egipto hasta aproximadamente 690 a.C., podría haber sido un general del ejército. Si las declaraciones de Tirhakah sobre su edad son correctas, la única manera de sincronizar la declaración de cap. 19:9 con su contexto es asumir una segunda campaña hacia el final del reinado de Ezequías. Evidentemente, las ciudades fortificadas fueron tomadas y se pagó tributo en la primera campaña, y Jerusalén fue salvada por intervención divina en la segunda. Es intrascendente que las opiniones difieran sobre dónde viene la división en la narrativa, que fue escrita para mostrar el cuidado sobreviniente de Dios por aquellos que lo buscan, no para proporcionar un esquema cronológico. Senaquerib afirma la captura de 46 ciudades amuralladas de Judá.',
+    date: "735-681 a.C.",
+    scriptures: ["12|18:17-37", "12|19:1-37", "12|19:37"],
+    related: [
+      {
+        slug: "sargón-ii",
+        title: "Sargón II",
+      },
+      {
+        slug: "asaradón",
+        title: "Asaradón",
+      },
+      {
+        slug: "asiria-conquista-el-mundo-senaquerib-invade-judá",
+        title: "Asiria Conquista el Mundo, Senaquerib Invade Judá",
+      },
+      {
+        slug: "senaquerib-destruye-babilonia",
+        title: "Senaquerib Destruye Babilonia",
+      },
+      {
+        slug: "segunda-invasión-de-senaquerib-a-jerusalén",
+        title: "Segunda Invasión de Senaquerib a Jerusalén",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Senaquerib durante su guerra babilónica, relieve de su palacio en Nínive. Ubicado en el dominio público.",
+        file: "Sennacherib.jpg",
+      },
+    ],
+  },
+  {
+    id: "993",
+    slug: "emanuel",
+    title: "Emanuel",
+    period: "7",
+    description:
+      'El nombre significa "Dios está con nosotros". Nombre de un niño-signo hablado a Acaz por Isaías que sería una señal de la liberación prometida de Judá. Acaz siguió alejándose de Dios. Isaías luego aplica el nombre a la tierra de Judá. Su cumplimiento supremo es en Jesús.',
+    article:
+      'Emanuel, nombre que significa "Dios está con nosotros". El niño-signo predicho por el profeta Isaías en conversación con Acaz, rey de Judá (Is 7:14), aplicado por Mateo a Jesús de Nazaret (Mt 1:23). Alarmado por una alianza entre Peka, rey de Israel, y Rezín, rey de Siria, contra Judá (Is 7:2, 5, 6), Acaz recurrió a Tiglat-pileser III, rey de Asiria, en busca de ayuda (2 Reyes 16:6-9; 2 Crónicas 28:16; Is 8:9-12). Anticipando un ataque inminente, Acaz salió a inspeccionar el suministro de agua de la ciudad. Isaías lo encontró en el camino con el mensaje de no temer a Peka y Rezín, sino de confiar en el Señor (Is 7:4-7; 8:13, 14).\n\nComo señal de la liberación prometida, Isaías, cuyo nombre significa "Yahvé salva", predijo el nacimiento de un hijo que se llamaría Emanuel, que significa "Dios está con nosotros", como una señal y recordatorio de la presencia permanente de Dios. Antes de que este niño-signo alcanzara la edad de responsabilidad, tanto Peka como Rezín caerían ante los asirios (cap. 8:7, 8, 16). Esta predicción, hecha alrededor del 734 a.C., se cumplió literalmente. Tiglat-pileser capturó Damasco y mató a Rezín 2 años después (2 Reyes 16:9, 10), luego devastó Galaad y Galilea, tomó un gran número de cautivos y organizó el asesinato de Peka (2 Reyes 15:29, 30; 1 Crónicas 5:26; Is 8:4).\n\nEl reino de Israel desapareció por completo 12 años después, con la caída de Samaria ante los asirios en 723/22 a.C. (cf. Is 7:8). Las repetidas invasiones asirias durante los siguientes años también devastaron toda la tierra de Judá, excepto la propia Jerusalén (2 Reyes 18:13 a 19:34; 2 Crónicas 32:1-20; Is 36:1 a 37:20). Sin embargo, Dios estuvo con Su pueblo para salvar al remanente en Jerusalén de una manera milagrosa (2 Reyes 19:35-37; 2 Crónicas 32:21, 22; Is 37:21-38). Si Acaz hubiera confiado en el Señor, Judá se habría librado de esta terrible experiencia, como lo implica el nombre del niño-signo: "Dios está con nosotros" (Is 7:14). Pero la persistente negativa de Acaz a confiar en el Señor en lugar de en la alianza asiria resultó en un gran sufrimiento para Judá (cap. 8:7, 8, 21, 22). En ironía, el profeta se refiere a Judá como la tierra de Emanuel—"Dios está con nosotros"—comparando lo que realmente ocurrió con lo que podría haber sido (vs 8, 10).\n\nMateo (Mt 1:23; cf. Is 7:14) cita Is 7:14 y lo aplica a Cristo. El nombre Emanuel, por lo tanto, se originó en una situación histórica real como una promesa de que Dios estaría con Su pueblo para liberarlos de sus enemigos inmediatos. Pero Isaías también miró hacia adelante por inspiración al momento en que Dios enviaría a Su propio Hijo, el verdadero Emanuel, quien liberaría a Su pueblo de todos sus enemigos. Por inspiración, Mateo tomó así la profecía de Isaías y declaró que se cumpliría en la persona de Jesucristo, quien nació de una virgen y quien, en el sentido supremo, es "Dios con nosotros".',
+    date: "734 a.C.",
+    scriptures: ["23|7:14", "23|8:8"],
+    related: [
+      {
+        slug: "acaz",
+        title: "Acaz",
+      },
+    ],
+    images: [
+      {
+        caption:
+          'Emanuel, nombre que significa "Dios está con nosotros". El niño-signo predicho por el profeta Isaías en conversación con Acaz, rey de Judá (Is 7:14), aplicado por Mateo a Jesús de Nazaret.',
+        file: "_GoodSalt-prcas3016_8-27-2013 2-31-40 PM.jpg",
+      },
+      {
+        caption: "El profeta Isaías",
+        file: "_GoodSalt-prcas3300_8-27-2013 2-31-40 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "995",
+    slug: "babilonia-tomada-por-los-caldeos",
+    title: "Babilonia tomada por los caldeos",
+    period: "7",
+    description:
+      "Los caldeos lograron tomar el control de Babilonia más de una vez, eventualmente fundando el Imperio Caldeo del período neobabilónico.",
+    article:
+      "Una tribu de la Baja Mesopotamia estrechamente relacionada con los arameos. Aparecen por primera vez en los registros asirios de la época de Ashurnasirpal II 884-859 a.C., que muestran que fueron fundadores de varias tribus, de las cuales la más conocida fue la de Bît¯Yakin, que se estableció en el lado occidental del río Tigris en la cabecera del Golfo Pérsico y que constantemente amenazaba a Babilonia. Los caldeos lograron varias veces ganar el control de Babilonia antes de la fundación del Imperio Caldeo. Por ejemplo, Ukinzer se hizo rey de Babilonia 732/31-729 a.C., y Mardukapaliddina, el Merodac-Baladán de la Biblia, logró esta hazaña dos veces 721-710/09 y 703-702 a.C.. Nabopolasar 626-605 a.C., el fundador del Imperio Neobabilónico, era un caldeo. Es a este Imperio Caldeo o Neobabilónico al que se refiere la Biblia cuando habla de la nación caldea Jer 21:4; Ez 1:3, etc..",
+    date: "732-539 a.C.",
+    scriptures: [],
+    related: [],
+    images: [
+      {
+        caption: "El imperio neobabilónico.",
+        file: "Neo-Babylonian_Empire_4-3-2013 2-17-52 PM.jpg",
+      },
+      {
+        caption:
+          "La Puerta de Ishtar de Babilonia reconstruida en el Museo de Pérgamo en Berlín.",
+        file: "Ishtar Gate_4-3-2013 2-17-52 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "997",
+    slug: "reforma-pascua-celebrada-en-judá-opción-1",
+    title: "Reforma-Pascua Celebrada en Judá",
+    period: "7",
+    description:
+      "Ezequías es un buen rey, a diferencia de su padre. Repara el Templo y organiza los servicios religiosos. También invita a las 10 tribus del norte a venir a Jerusalén para celebrar la Pascua. Es un tiempo inusual de reforma.",
+    article:
+      "Ezequías invita tanto a Israel como a Judá a celebrar la Pascua. Esto muestra la preocupación de Ezequías no solo por Judá, sino también por Israel. Habiendo restaurado la adoración en el Templo, envió cartas por todo el territorio de Israel invitando a su gente a venir al servicio de la Pascua. Efraín y Manasés eran las principales tribus en el territorio del reino del norte que aún no habían sido llevadas al cautiverio. Las tribus al este del Jordán y las tribus del norte habían sufrido deportaciones anteriores (2 Reyes 15:29; 1 Crónicas 5:26). El evento tuvo lugar en el segundo mes. El trabajo de limpieza y santificación del Templo no se completó hasta el día 16 del primer mes (cap. 29:17), y el servicio de la Pascua generalmente comenzaba el día 14 del primer mes (Éxodo 12:2, 6; Levítico 23:5). Pero en casos de emergencia, la ley permitía a los individuos observar la Pascua el día 14 del segundo mes (Números 9:6-11).\n\nEl gobierno de Judá decretó que se enviara palabra a los habitantes de Israel invitándolos a la Pascua. La narrativa no implica que la proclamación en sí fuera de naturaleza de un decreto oficial. Ezequías difícilmente podría haber hecho una proclamación oficial en el reino de Oseas sin la cooperación del rey israelita, y la narrativa no indica tal cooperación.\n\nEn los días de Roboam de Judá, muchos de los fieles en Israel abandonaron su nación para poder adorar al Señor en Jerusalén (cap. 11:16, 17), y en los días de Asa, muchos israelitas nuevamente se unieron a sus hermanos en Judá (cap. 15:9). Jeroboam había establecido la adoración de los becerros de oro en Betel y Dan para evitar que su gente fuera a Jerusalén a adorar (1 Reyes 12:27-33), y Baasa fortificó Ramá, cerca de la frontera, para evitar que los israelitas se apartaran hacia Judá (2 Crónicas 16:1). Pero ahora, después de tanto tiempo, la situación estaba abierta para una invitación a adorar en Jerusalén.\n\nOseas, un títere de Asiria (ver en 2 Reyes 17:1), gobernando sobre un reino ya parcialmente desmembrado, probablemente era demasiado débil o indiferente para interferir con los mensajeros de Ezequías. La actitud de las tribus del norte era, en general, de hostilidad hacia Dios y Su adoración. A pesar de la apostasía general, algunos de las tribus del norte respondieron a la amable invitación de Ezequías y vinieron a Jerusalén para el servicio de la Pascua. No importa cuán extendida esté la apostasía, el Señor siempre tiene unos pocos fieles que permanecen leales a Él (ver Romanos 9:27; 11:3, 5).\n\nLa última ocasión anterior en que fue posible que el pueblo de Israel y Judá se uniera en tal festival en Jerusalén fue en la época de Salomón, cuando el reino todavía estaba unido. Después de la división, no fueron posibles servicios religiosos comunes que incluyeran a los ciudadanos de ambas naciones, excepto cuando los israelitas dejaron el reino del norte para migrar a Judá. Ahora la nación del norte estaba tan debilitada que nuevamente era posible que los israelitas que lo deseaban vinieran a Jerusalén para adorar.",
+    date: "727 a.C.",
+    scriptures: ["14|30:1-27"],
+    related: [
+      {
+        slug: "ezequías",
+        title: "Ezequías",
+      },
+    ],
+    images: [
+      {
+        caption: "Pascua con el rey Ezequías",
+        file: "_GoodSalt-stdas0036_8-27-2013 2-35-05 PM.jpg",
+      },
+      {
+        caption: "Celebración de la Pascua.",
+        file: "GoodSalt-wjpas0786_8-6-2013 3-45-15 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "999",
+    slug: "caída-de-samaria",
+    title: "Caída de Samaria",
+    period: "7",
+    description:
+      "Después de un asedio de 3 años contra Samaria, los asirios capturan con éxito la ciudad y se llevan a sus ciudadanos. Estas personas son reemplazadas por otras de Babilonia y Siria (ver 2 Reyes 17:24). Israel como pueblo y reino del norte deja de existir.",
+    article:
+      'La Biblia dice de este asedio de Samaria que "La tomaron". El plural "ellos" es de interés. Podría referirse a los asirios en general, pero eso es poco probable, ya que el versículo anterior habla de Salmanasar como el que vino contra Samaria y la sitió. Se ha sugerido que el "ellos" aquí probablemente se refiere a Salmanasar y alguien asociado con él. Este podría haber sido el general de Salmanasar y su sucesor en el trono, Sargón (ver en cap. 17:6).',
+    date: "722 a.C.",
+    scriptures: ["12|18:10"],
+    related: [],
+    images: [
+      {
+        caption: "La caída de Samaria",
+        file: "_GoodSalt-prcas0465_8-27-2013 2-43-23 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1001",
+    slug: "salmanasar-v",
+    title: "Salmanasar V",
+    period: "7",
+    description:
+      'El nombre significa "el dios Shulman es superior". Hijo y sucesor de Tiglat-pileser III. Cuando el rey Oseas de Israel se vuelve hacia Egipto, Salmanasar marcha hacia Samaria y comienza un asedio de 3 años que termina con la caída de Samaria justo antes de su muerte.',
+    article:
+      "Salmanasar V (727-722 a.C.), hijo y sucesor de Tiglat-pileser III. Casi no han sobrevivido registros contemporáneos de este rey, y nuestro conocimiento de los eventos de su breve reinado depende principalmente de la Biblia (2 Reyes 17:3; 18:9) y de Josefo (Ant. ix. 14). Al principio de su reinado, llevó a cabo una campaña contra los fenicios. En este momento, el rey Oseas de Israel aseguró a Salmanasar de su lealtad, pero más tarde, confiando en Egipto, se rebeló contra su señor asirio. Salmanasar marchó hacia Israel y comenzó el asedio de 3 años de Samaria que terminó con la destrucción de la ciudad, la deportación de su población y el cese del reino de Israel (2 Reyes 17:3-6). Aunque Sargón II, el sucesor de Salmanasar, afirmó más tarde haber conquistado Samaria en su primer año de reinado, los datos cronológicos de la Biblia parecen indicar que Samaria cayó poco antes de la muerte de Salmanasar, en 723/22 a.C..",
+    date: "772-722 a.C.",
+    scriptures: ["12|17:3", "12|18:9"],
+    related: [],
+    images: [
+      {
+        caption:
+          "Ilustración de Salmanasar V en 1553 publicada por Guillaume Rouille",
+        file: "Shalmaneser_V.jpg",
+      },
+    ],
+  },
+  {
+    id: "1008",
+    slug: "eliezer",
+    title: "Eliezer",
+    period: "7",
+    description:
+      'El nombre significa "mi Dios es un ayudante". Es hijo de Jorim y un judaíta mencionado en la genealogía de Jesucristo según Lucas.',
+    article: "",
+    date: "729-647 a.C.",
+    scriptures: ["42|3:29"],
+    related: [
+      {
+        slug: "jorim",
+        title: "Jorim",
+      },
+      {
+        slug: "josé",
+        title: "José",
+      },
+    ],
+    images: [
+      {
+        caption: "Antepasado de Jesús",
+        file: "GoodSalt-wjpas0014_8-21-2013 2-45-05 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1009",
+    slug: "manasés-rey-de-judá",
+    title: "Manasés",
+    period: "7",
+    description:
+      'El nombre significa "hacer olvidar". Es hijo de Ezequías y el decimocuarto rey de Judá, quien reina durante 55 años. No sigue el buen ejemplo de Ezequías y erige altares a Baal y sacrifica a uno de sus hijos al fuego. Más tarde se arrepiente en Asiria.',
+    article:
+      'Manasés fue el decimocuarto gobernante del reino de Judá; reinó durante 55 años (c. 697 - c. 642 a.C.), durante parte de los cuales aparentemente fue correy con su padre Ezequías. Un antiguo sello hebreo, publicado en 1963, lleva la inscripción "Perteneciente a Manasés, hijo del rey". Por razones paleográficas, el sello puede fecharse en el siglo VIII o VII a.C.\n\nEs posible que este sello perteneciera a Manasés, hijo del rey Ezequías, antes de ascender al trono, aunque podría haber pertenecido a otro príncipe real del mismo nombre que vivió un poco antes o después que el rey Manasés. No siguió el buen ejemplo de su padre, sino que fue más malvado que cualquiera de sus predecesores. Reestableció los lugares altos, erigió un altar a Baal e hizo un objeto de culto a Asera. Adoró a muchos otros dioses en los atrios del Templo y sacrificó a uno de sus hijos por el fuego. Ignoró las advertencias de los profetas sobre las consecuencias de sus malas acciones y persiguió a muchos seguidores del verdadero Dios, como lo indica la declaración de que derramó mucha sangre inocente (2 Reyes 21:1-16; 2 Crónicas 33:1-10).\n\nComo castigo por sus malas acciones, Dios lo entregó en manos de los reyes asirios. Tanto Esarhadón como Asurbanipal mencionan a Manasés como alguien que les pagó tributo, un rey escribiendo su nombre como Menasi y el otro como Minsie. Sin embargo, parece haber sido un vasallo desleal, ya que en una ocasión fue llevado cautivo a Babilonia—que en ese momento era parte del Imperio Asirio—por Esarhadón o Asurbanipal. Sin embargo, se le permitió regresar cuando el rey asirio aparentemente se convenció de que Manasés sería leal en el futuro.\n\nAunque no se ha encontrado un registro no bíblico del cautiverio de Manasés en fuentes cuneiformes, la experiencia no carece de paralelos. Por ejemplo, el gobernante egipcio Necao (I), rey de Sais, fue hecho rey vasallo de Egipto por Esarhadón. Después de la muerte de Esarhadón, Necao se rebeló contra Asiria y fue llevado a Mesopotamia como prisionero. Mientras estuvo allí, logró ganarse la confianza de Asurbanipal, quien lo perdonó y lo restauró en su trono en Sais. Mientras estaba cautivo en Babilonia, Manasés se arrepintió, y después de su regreso a Jerusalén intentó deshacer su anterior maldad eliminando la idolatría de su reino y del Templo.\n\nSin embargo, no abolió los lugares altos, aunque permitió que solo se adorara al verdadero Dios en ellos. El cronista registra que se dedicó a una extensa actividad de construcción en Jerusalén y que fortaleció el ejército (2 Crónicas 33:11-17). Después de un reinado de más años que el de cualquier otro rey hebreo, Manasés murió, dejando el trono a su hijo Amón. Fue enterrado en el jardín de su propia casa (2 Reyes 21:18; 2 Crónicas 33:20).',
+    date: "709-642 a.C.",
+    scriptures: ["12|21:3", "12|21:18"],
+    related: [
+      {
+        slug: "ezequías",
+        title: "Ezequías",
+      },
+      {
+        slug: "amón",
+        title: "Amón",
+      },
+    ],
+    images: [
+      {
+        caption: "Manasés llevado cautivo",
+        file: "_GoodSalt-stdas0040_8-27-2013 2-57-15 PM.jpg",
+      },
+      {
+        caption: "El arrepentimiento de Manasés",
+        file: "_GoodSalt-prcas3302_8-27-2013 2-57-15 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1010",
+    slug: "profecía-de-isaías-sobre-ciro-ii",
+    title: "Profecía de Isaías sobre Ciro II",
+    period: "7",
+    description:
+      "Isaías hace una predicción asombrosa sobre Ciro, un rey pagano, a quien nombra antes de su nacimiento como uno que restauraría a Israel del cautiverio babilónico. Muestra el conocimiento previo y la soberanía de Dios.",
+    article:
+      'Esta es una profecía notable en que menciona a Ciro por nombre, un siglo y medio antes de su tiempo, y predice el papel notable que desempeñaría en la liberación de los judíos (para una profecía similar dada con anticipación sobre la reforma de Josías, ver 1 Reyes 13:2). Ciro debe haberse sorprendido mucho al enterarse de que una profecía judía lo nombraba, describía su captura de Babilonia y predecía su política hacia los judíos cautivos, un siglo y medio antes de su nacimiento. Se refiere a Ciro como "Mi pastor". Al derrocar a Babilonia y liberar a los judíos, Ciro hizo por Israel literal lo que Cristo logrará por todos Sus elegidos en el derrocamiento de la Babilonia mística y la liberación de Su pueblo de su dominio (Apocalipsis 18:2-4, 20; 19:1, 2). Poco después de capturar Babilonia, Ciro emitió el decreto que permitió a los judíos cautivos regresar a su tierra y reconstruir el Templo (2 Crónicas 36:22, 23; ver Esdras 1:1-4).',
+    date: "697 a.C.",
+    scriptures: ["23|44:28", "23|45:1-6"],
+    related: [
+      {
+        slug: "isaías",
+        title: "Isaías",
+      },
+    ],
+    images: [
+      {
+        caption: "El profeta Isaías",
+        file: "GoodSalt-prcas0291_8-6-2013 4-05-45 PM.jpg",
+      },
+      {
+        caption:
+          "Este cilindro de arcilla está inscrito en cuneiforme babilónico y es un relato de Ciro, rey de Persia (559-530 a.C.), sobre su conquista de Babilonia en 539 a.C. y la captura de Nabonido, el último rey babilónico.",
+        file: "GettyImages_122227260_2_sm_4-3-2013 12-06-01 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1011",
+    slug: "el-sol-retrocede-10-grados-ezequías-se-recupera",
+    title: "El Sol Retrocede 10 Grados, Ezequías se Recupera",
+    period: "7",
+    description:
+      "Ezequías se enferma gravemente y está cerca de la muerte. Isaías le dice que morirá. Ezequías clama a Dios, quien lo escucha y promete 15 años más de vida. Pide una señal y el reloj de sol retrocede 10 grados. Más tarde muestra sus tesoros a Berodac-Baladán.",
+    article:
+      'La enfermedad de Ezequías ocurrió alrededor del tiempo de la primera invasión de Senaquerib en el año 14 de Ezequías. En relación con la promesa de la curación de Ezequías, el Señor dijo que libraría a Jerusalén de la mano del rey de Asiria y que añadiría 15 años al reinado de Ezequías (cap. 20:6). Esto encaja con los detalles de la primera campaña de Senaquerib contra Judá en el año 14 de Ezequías (ver en cap. 18:13), y el hecho de que Ezequías reinó 29 años (cap. 18:2). Relatos paralelos de la enfermedad y recuperación de Ezequías se encuentran en Isaías 38, 39 y en 2 Crónicas 32:24-31.\n\nCuando el profeta le dijo a Ezequías que moriría, Ezequías no concluyó que era inútil orar, como si el mensaje profético hubiera hecho la muerte inevitable. Si oramos, Dios puede hacer por nosotros lo que no podría hacer si no oráramos. Sin embargo, las solicitudes de sanación deben hacerse con un espíritu de sumisión. Solo Dios sabe si responder a una petición funcionará para el bien de los interesados y redundará en Su gloria. Al orar por los enfermos, algunos han cometido el error de casi exigir que se les dé la vida del sufriente. En muchos casos, las vidas de aquellos que fueron así perdonadas no trajeron gloria a Dios. Hubiera sido mejor que estas almas pasaran a su descanso mientras tenían la esperanza de la salvación. La extensión de la vida de Ezequías condujo al gran error en la vida del rey (vs 12-19). Si hubiera añadido a su oración "pero no se haga mi voluntad, sino la tuya" (Mateo 26:39), podría haber muerto con el registro de su vida sin mancha.\n\nLa respuesta de Ezequías llegó rápidamente. Antes de que Isaías saliera de los recintos del palacio, se le ordenó regresar. Dios siempre escucha al hombre que derrama su alma en oración sincera. La respuesta puede no ser como se espera, o tan inmediata o directa como fue el caso de Ezequías, pero el Señor escucha de todos modos y obra todas las cosas para bien de los que lo aman (Romanos 8:28).\n\nEzequías deseaba una señal inmediata de que el Señor haría lo que había dicho que haría (ver sobre Josué 7:14; Jueces 6:36). En el curso normal de los eventos, la sombra en un reloj de sol avanzaría gradualmente con el movimiento hacia adelante del sol, pero que de repente retrocediera sería un evento muy notable, y por esta razón Ezequías eligió esta señal. No hay beneficio en especular sobre cómo Dios realiza Sus milagros. La señal llegó como una intervención directa de Dios.',
+    date: "702 a.C.",
+    scriptures: ["12|20:1-19", "14|32:31"],
+    related: [
+      {
+        slug: "ezequías",
+        title: "Ezequías",
+      },
+    ],
+    images: [
+      {
+        caption: "La enfermedad de Ezequías",
+        file: "_GoodSalt-prcas3299_8-27-2013 3-00-37 PM.jpg",
+      },
+      {
+        caption: "La oración de Ezequías",
+        file: "_GoodSalt-stdas0470_8-27-2013 3-00-37 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1012",
+    slug: "asiria-conquista-el-mundo-senaquerib-invade-judá",
+    title: "Asiria Conquista el Mundo, Senaquerib Invade Judá",
+    period: "7",
+    description:
+      "Durante el reinado del rey Ezequías de Judá, Senaquerib toma 46 ciudades fortificadas. Ezequías le paga tributo. Pero Isaías predice que no tomarán Jerusalén. Dios protegerá a un remanente.",
+    article:
+      'En 2 Reyes 18 leemos sobre la primera de las famosas campañas de Senaquerib contra Ezequías. La narrativa va desde los capítulos 18:13 hasta 19:37. El mismo relato, en un lenguaje prácticamente idéntico, se encuentra en los capítulos 36 y 37 de Isaías. Esto sugeriría que Isaías fue el autor de esta porción de 2 Reyes. Una historia algo abreviada en 2 Crónicas 32:1-22 da detalles de los preparativos de guerra de Ezequías.\n\nLos eruditos no están de acuerdo sobre si la narrativa describe una o dos campañas. La mayoría de los comentaristas modernos han sostenido que el relato describe una campaña y que los eventos pertenecen todos al año 14 de Ezequías, 701 a.C. Otros han sostenido que el relato combina los registros de dos campañas asirias, la primera en el año 14 del reinado de Ezequías, en la que se tomaron las ciudades fortificadas de Judá, y la segunda hacia el final del reinado de Ezequías, cuando una gran sección del ejército asirio fue destruida (cap. 19:35). A favor de la primera opinión está el hecho de que no parece haber una ruptura natural en la narrativa bíblica. Además, las fuentes asirias describen una campaña de Senaquerib generalmente fechada en el año 701 a.C., pero no mencionan positivamente una campaña posterior contra Judá, aunque los registros pueden estar incompletos, o puede que Senaquerib haya omitido deliberadamente de sus anales un registro de su derrota. En cuanto a la campaña de 701 a.C., Senaquerib afirma que encerró a "Ezequías como un pájaro en una jaula", una descripción que encaja igualmente con una campaña que arrasó las ciudades fortificadas de Judá como con una que amenazó más directamente a Jerusalén.\n\nLos extensos preparativos de defensa de Ezequías (ver 2 Crónicas 32:2-6) sugieren algún intervalo considerable entre las dos campañas; también el hecho de que la narrativa bíblica parece indicar que la muerte de Senaquerib ocurrió poco después de su regreso de su intento fallido contra Jerusalén. Si hubo solo una campaña en 701 a.C., su asesinato ocurriría unos 20 años después de su regreso a Asiria. Además, las inscripciones en las que Tirhakah (cap. 19:9) da su edad como 20 años en el momento en que se convirtió en correy con su hermano en 690 a.C., indican que nació alrededor del año 709 a.C. Esto haría imposible que hubiera participado en los eventos descritos si ocurrieron en el año 701 a.C. Anteriormente se creía que, aunque no se convirtió en rey de Egipto hasta alrededor de 690 a.C., podría haber sido un general del ejército. Si las declaraciones de Tirhakah sobre su edad son correctas, la única manera de sincronizar la declaración de cap. 19:9 con su contexto es asumir una segunda campaña hacia el final del reinado de Ezequías. Evidentemente, las ciudades fortificadas fueron tomadas y se pagó tributo en la primera campaña, y Jerusalén fue salvada por intervención divina en la segunda. Es intrascendente que las opiniones difieran sobre dónde viene la división en la narrativa, que fue escrita para mostrar el cuidado sobreviniente de Dios por aquellos que lo buscan, no para proporcionar un esquema cronológico. Senaquerib afirma la captura de 46 ciudades amuralladas de Judá.',
+    date: "701 a.C.",
+    scriptures: ["12|18:13"],
+    related: [
+      {
+        slug: "senaquerib",
+        title: "Senaquerib",
+      },
+    ],
+    images: [
+      {
+        caption: "Ejército asirio",
+        file: "Assyrian Army_7-31-2013 12-08-53 PM.jpg",
+      },
+      {
+        caption:
+          "Senaquerib durante su guerra babilónica, relieve de su palacio en Nínive. Ubicado en el dominio público.",
+        file: "Sennacherib_4-2-2013 5-44-38 PM.jpg",
+      },
+      {
+        caption:
+          "Estatua del profeta Isaías en Roma, Italia. Famosa Plaza de España (Piazza di Spagna).",
+        file: "Isaiah_4-2-2013 5-44-38 PM.jpg",
+      },
+      {
+        caption: "Senaquerib sitiando Judá",
+        file: "i33-sennacherib-besieged-judah_8-6-2013 4-00-40 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1013",
+    slug: "invasión-de-los-filisteos",
+    title: "Invasión de los Filisteos",
+    period: "7",
+    description:
+      "Ezequías hace planes para liberarse de Asiria, por lo que busca traer a las ciudades costeras a una coalición contra los asirios. Los filisteos están bajo control asirio y pagan tributo a Sargón.",
+    article: "",
+    date: "710 a.C.",
+    scriptures: ["12|18:8"],
+    related: [
+      {
+        slug: "ezequías",
+        title: "Ezequías",
+      },
+    ],
+    images: [
+      {
+        caption: "Invasión de los filisteos",
+        file: "GoodSalt-prcas1040_8-7-2013 3-36-57 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1014",
+    slug: "moisés",
+    title: "Moisés",
+    period: "4",
+    description:
+      "Es hijo de Amram y Jocabed, el hermano menor de Aarón y Miriam. Moisés fue el gran libertador de Israel de Egipto, un líder a través de las peregrinaciones en el desierto, un gran legislador y escritor del Pentateuco.",
+    article:
+      'Moisés. El libertador del pueblo hebreo de la esclavitud egipcia, su líder a través de las peregrinaciones en el desierto, su gran legislador y el autor del Pentateuco.\n\nMoisés pasó los primeros 40 años de su vida probablemente bajo los reyes de la dinastía XVIII: Tutmosis I (c. 1542 - c. 1524 a.C.), y Tutmosis II (c. 1524 - c. 1504 a.C.), y la reina Hatshepsut (c. 1504 - c. 1486 a.C.), una hija de Tutmosis I y, según la cronología aquí sugerida, sin duda la "hija de Faraón" mencionada en Éxodo 2:5-10. Moisés era hijo de Amram y Jocabed, y descendiente de Leví en la cuarta generación (Éxodo 6:16-20), de la familia de Coat (vs 18-20). Su hermano Aarón era 3 años mayor que él (Éxodo 7:7), y tenía una hermana mayor, Miriam (Éxodo 15:20; cf. 2:6, 7).\n\nAl nacer Moisés, los hijos de Israel habían estado en Egipto unos 135 años. Los hebreos se habían multiplicado rápidamente hasta que "la tierra estaba llena de ellos" y se habían vuelto "más y más poderosos" que los egipcios, o al menos estos últimos así lo afirmaban (Éxodo 1:7-9). Debido a que los hebreos eran numéricamente fuertes, y porque los egipcios necesitaban urgentemente mano de obra barata para sus vastos proyectos de construcción, no es de extrañar que los reyes de esta nueva dinastía instituyeran una política de mantenerlos en servidumbre con trabajos forzados (vs 10-14).\n\nNo se sabe cuánto tiempo antes del nacimiento de Moisés los hebreos fueron puestos a trabajar construyendo las "ciudades de almacenamiento, Pitón y Ramesés" (v 11) y fueron obligados a "servir con rigor" (vs 12-14). Pero cuanto más los egipcios los oprimían, "más se multiplicaban y crecían" (Éxodo 1:12), y los esfuerzos por controlar el rápido aumento de la población resultaron completamente ineficaces.\n\nAl nacer, los padres de Moisés reconocieron que era "un niño hermoso" (Éxodo 2:2). Sus esfuerzos por preservar con vida a Moisés se mencionan en Hebreos 11:23 como un acto de fe, lo que implica quizás una conciencia por su parte de que Dios lo había destinado para un papel importante e intervendría para preservar su vida. Al poner a Moisés en un arca de juncos y colocarlo en el seno del Nilo, Jocabed estaba cumpliendo con la letra de la ley que requería que los niños varones fueran ofrecidos en sacrificio al Nilo, que los egipcios adoraban como un dios, suponiendo que sus aguas tenían el poder de impartir fertilidad y garantizar una larga vida.\n\nLa visita de la hija de Faraón al río "para lavarse" (Éxodo 2:5) pudo haber sido un lavado ritual diseñado para asegurar estos supuestos beneficios para ella. La aparición de Moisés flotando en su pequeño arca de juncos como si fuera un regalo del dios Nilo, en respuesta a sus oraciones, aparentemente la impresionó como un buen augurio. La princesa tomó al niño como suyo, contratando a su propia madre como su nodriza.\n\nCuando tenía 40 años (Hechos 7:23)—c. 1485 a.C.—Moisés sabía que había llegado el momento en que debía elegir entre su fe hebrea y el trono de Egipto. La lealtad innata a Dios (Hebreos 11:24-26) y una conciencia del propósito de Dios para su vida (Hechos 7:25) llevaron a Moisés a echar su suerte con su propio pueblo y "sufrir aflicción" con ellos en lugar de "disfrutar de los placeres del pecado por un tiempo" (Hebreos 11:25). Actuando precipitadamente, Moisés mató a un egipcio capataz (Éxodo 2:11, 12), y con este acto imprudente jugó en manos de sus enemigos, quizás especialmente de Tutmosis III, quien ahora tendría una razón legítima para llevar a Moisés a juicio y destruirlo. Es muy posible que estas fueran las circunstancias que llevaron a Moisés a huir de Egipto y encontrar refugio en la tierra de Madián al este (v 15).\n\nBajo la guía divina, Moisés condujo a Israel fuera de la tierra de su servidumbre (Éxodo 13:17-22). Después de una serie de crisis y liberaciones providenciales, Moisés y el pueblo hebreo llegaron al Monte Sinaí (Éxodo 19:1, 2). En el monte, Moisés recibió directamente de Dios instrucciones para el establecimiento de la nación hebrea como una teocracia (Éxodo 24:9-11; 33:11, 17-23; 34:5-29, etc.), incluyendo la ley básica de los Diez Mandamientos, que también fueron hablados audiblemente a toda la congregación (Éxodo 20:1-18) y más tarde inscritos en dos tablas de piedra y preservados en el arca (Éxodo 31:18; 34:1-4; Deuteronomio 10:1-5).\n\nComo portavoz de Dios, Moisés llevó al pueblo a la relación de pacto que constituía una teocracia (Éxodo 19:5-8; 24:3-8). Dios luego llamó a Moisés a reunirse con Él en el monte (Éxodo 24:12), donde le reveló planes completos para la construcción del tabernáculo, que sería Su morada como su rey (Éxodo 25-31), y al mismo tiempo también le dio las dos tablas de la ley (Éxodo 31:18).',
+    date: "1526-1406 a.C.",
+    scriptures: ["2|6:20", "5|34:5"],
+    related: [
+      {
+        slug: "amram",
+        title: "Amram",
+      },
+      {
+        slug: "moisés-comienza-entrenamiento-militar",
+        title: "Moisés Comienza Entrenamiento Militar",
+      },
+      {
+        slug: "moisés-huye",
+        title: "Moisés Huye",
+      },
+      {
+        slug: "llamado-profético-de-moisés",
+        title: "Llamado Profético de Moisés",
+      },
+      {
+        slug: "moisés-golpea-la-roca-en-cades",
+        title: "Moisés Golpea la Roca en Cades",
+      },
+    ],
+    images: [
+      {
+        caption: "Los hijos de Israel cruzando el Mar Rojo",
+        file: "GoodSalt-pppas0220_8-7-2013 1-52-29 PM.jpg",
+      },
+      {
+        caption:
+          "Litografía en color vintage de 1880 que muestra el hallazgo de Moisés.",
+        file: "Moses Nile_5-7-2013 12-05-45 PM.jpg",
+      },
+      {
+        caption:
+          "Moisés y la zarza ardiente en el Monte Horeb. Esta ventana se encuentra en la catedral de Bruselas y fue creada en 1866.",
+        file: "Moses and Burning Bush_5-7-2013 12-05-45 PM.jpg",
+      },
+      {
+        caption:
+          'Bergamo - "Passaggio del Mar Rosso" de Luca Giordano. Cruzando el Mar Rojo del año 1681. Pintura de la iglesia Santa Maria Maggiore el 26 de enero de 2013, en Bergamo, Italia.',
+        file: "Moses and Red Sea_5-7-2013 12-05-45 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1015",
+    slug: "jacob",
+    title: "Jacob",
+    period: "3",
+    description:
+      'El nombre significa "suplantador". Es el segundo de los hijos gemelos de Isaac y Rebeca. Se convierte en pastor y engaña a su padre para obtener la primogenitura de Esaú. Huye a Harán, se casa con Lea y Raquel, y se convierte en el progenitor de las 12 tribus.',
+    article:
+      'Jacob. El segundo hijo de Isaac, gemelo de Esaú, padre de los 12 patriarcas y progenitor del pueblo hebreo. Rebeca, la esposa de Isaac, dio a luz a Esaú y Jacob 20 años después de su matrimonio con Isaac. Había sido estéril, e Isaac había intercedido ante el Señor en su nombre cuando tenía unos 60 años (Gén 25:21, 22). Antes del nacimiento de los gemelos, el Señor le dijo a Rebeca que el mayor serviría al menor, indicando así que Jacob sería el heredero de la primogenitura (v. 23).\n\nEl nombre Jacob conmemora el hecho de que Jacob nació agarrando el talón de Esaú, un incidente que los padres notaron y que más tarde parecieron tomar como un presagio de la relación destinada entre los dos hermanos (Gén 25:26 27:36 Hos 12:3). Mientras Esaú se dedicaba a la vida aventurera del cazador, en la que sobresalía, Jacob creció para ser un "hombre tranquilo" que prefería la rutina doméstica y pastoral del campamento (Gén 25:27, RSV).\n\nSe desarrolló una rivalidad entre los dos hermanos porque Isaac favorecía a Esaú, su primogénito, mientras que Rebeca prefería a Jacob. Isaac parece nunca haberse reconciliado por completo con la idea de que Jacob debía ser su heredero, como lo implicaba la comunicación prenatal del Señor a Rebeca (Gén 25:23), pero aparentemente prefería a Esaú porque admiraba sus rasgos audaces, aventureros y masculinos. Rebeca, por otro lado, se mantuvo fiel a la admonición prenatal, sin duda apreciando también la disposición práctica y trabajadora de Jacob (v. 28).',
+    date: "1791-1644 a.C.",
+    scriptures: ["1|25:21-26", "1|49:33"],
+    related: [
+      {
+        slug: "isaac",
+        title: "Isaac",
+      },
+      {
+        slug: "jacob-fled-canaan-jacobs-ladder",
+        title: "Jacob huye de Canaán, la escalera de Jacob",
+      },
+      {
+        slug: "jacob-finishes-first-7-years-for-laban",
+        title: "Jacob termina los primeros 7 años para Labán",
+      },
+      {
+        slug: "jacob-marries-leah-and-rachel",
+        title: "Jacob se casa con Lea y Raquel",
+      },
+      {
+        slug: "reuben",
+        title: "Rubén",
+      },
+      {
+        slug: "simeon",
+        title: "Simeón",
+      },
+      {
+        slug: "levi",
+        title: "Leví",
+      },
+      {
+        slug: "dan",
+        title: "Dan",
+      },
+      {
+        slug: "gad",
+        title: "Gad",
+      },
+      {
+        slug: "judah",
+        title: "Judá",
+      },
+      {
+        slug: "naphtali",
+        title: "Neftalí",
+      },
+      {
+        slug: "asher",
+        title: "Aser",
+      },
+      {
+        slug: "issachar",
+        title: "Isacar",
+      },
+      {
+        slug: "zebulun",
+        title: "Zabulón",
+      },
+      {
+        slug: "jacob-finishes-next-7-years-for-laban",
+        title: "Jacob termina los siguientes 7 años para Labán",
+      },
+      {
+        slug: "dinah",
+        title: "Dina",
+      },
+      {
+        slug: "joseph",
+        title: "José",
+      },
+      {
+        slug: "jacob-leaves-haran",
+        title: "Jacob deja Harán",
+      },
+      {
+        slug: "jacob-wrestles-angel",
+        title: "Jacob lucha con el ángel",
+      },
+      {
+        slug: "benjamin",
+        title: "Benjamín",
+      },
+      {
+        slug: "jacob-comes-to-hebron",
+        title: "Jacob llega a Hebrón",
+      },
+    ],
+    images: [
+      {
+        caption: "Jacob luchando con el ángel",
+        file: "GoodSalt-Jacob_8-5-2013 4-05-57 PM.jpg",
+      },
+      {
+        caption:
+          "Los 699 escalones de la escalera de Jacob, desde Jamestown en Santa Elena hasta la cima de Ladder Hill",
+        file: "Jacobs Ladder_5-13-2013 4-41-12 PM.jpg",
+      },
+      {
+        caption: "El sueño de Jacob de la escalera",
+        file: "GoodSalt-prcas0129_8-7-2013 1-37-03 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1016",
+    slug: "adam",
+    title: "Adán",
+    period: "1",
+    description:
+      'El nombre significa "rojo" o "hombre". Es el primer hombre, creado por Dios, cuya esposa fue Eva. A Adán se le dio autoridad sobre la tierra. El pecado entró a través de Adán y Eva al comer el fruto prohibido en el Jardín del Edén, su hogar que se perdió, pero que será restaurado.',
+    article:
+      'El primer miembro de la familia humana, creado por Dios del polvo de la tierra (Gén 2:7). Su esposa, Eva, fue formada de una costilla de su costado (vs 21, 22). A Adán se le dio autoridad sobre la tierra y todas las criaturas vivientes (cap. 1:26) y se le ordenó poblar el mundo (v. 28). Él y su esposa fueron colocados en un "jardín al este del Edén" y se les dio la tarea de cuidarlo (cap. 2:8, 15). El producto de las plantas y los árboles sería su alimento (cap. 1:29).\n\nAdán y Eva fueron creados perfectos (Gén 1:31) y, por lo tanto, sin pecado. Pero también fueron creados con el poder de elegir, y así tuvieron la libertad de desobedecer a Dios. Fueron probados por medio del "árbol del conocimiento del bien y del mal", cuyo fruto Dios les prohibió probar o incluso tocar (caps. 2:17 3:3). Eva fue engañada por la serpiente para comer del árbol, y luego persuadió a Adán para que también comiera (cap. 3:1—7). Por este acto de desobediencia, trajeron la maldición del pecado sobre sí mismos y sus hijos, y fueron expulsados del jardín (vs 8—24).\n\nDespués de la expulsión del Jardín del Edén, Adán y Eva se convirtieron en los padres de Caín, Abel, Set y "hijos e hijas" (caps. 4:1, 2, 25 5:4). Adán tenía 930 años cuando murió (cap. 5:5). No se sabe cuánto tiempo vivió en el Edén, aunque fue solo un período comparativamente corto, ya que solo tenía 130 años cuando nació Set (v. 3), lo que evidentemente fue algún tiempo después de la expulsión (cf. cap. 4:1—25). A través del pecado de Adán, la muerte vino sobre toda la familia humana (Rom 5:12—14 Efe 2:12). Sin embargo, Cristo, el segundo Adán (1 Cor 15:45—47), venció donde el primer Adán falló (cf. Mt 4:1—10), y mediante Su sacrificio hizo posible nuestra redención de los resultados del pecado de Adán (Heb 5:9 9:28).',
+    date: "3954-3024 a.C.",
+    scriptures: ["1|2:7", "1|5:5"],
+    related: [
+      {
+        slug: "cain",
+        title: "Caín",
+      },
+      {
+        slug: "abel",
+        title: "Abel",
+      },
+      {
+        slug: "seth",
+        title: "Set",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Y el Señor Dios plantó un jardín al este del Edén; y allí puso al hombre que había formado. (Génesis 2:8)",
+        file: "GoodSalt-prcas2581_8-8-2013 9-50-05 AM.jpg",
+      },
+      {
+        caption:
+          "La creación de Adán por Miguel Ángel entre 1508 y 1512. Ubicado en la Capilla Sixtina.",
+        file: "Adam_4-4-2013 10-22-05 AM.jpg",
+      },
+      {
+        caption:
+          "Y el Señor Dios formó al hombre del polvo de la tierra... (Génesis 2:7)",
+        file: "formed-man_8-8-2013 9-37-48 AM.jpg",
+      },
+      {
+        caption:
+          "Vidriera que representa a Eva ofreciendo el fruto del conocimiento del bien y del mal a Adán.",
+        file: "Adam3_4-4-2013 10-22-05 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1017",
+    slug: "joseph",
+    title: "José",
+    period: "3",
+    description:
+      'El nombre significa "añadir" o "aumentar". El mayor de los dos hijos de Jacob con Raquel. Jacob favoreció a José, el hijo de "su vejez", lo que creó celos entre sus hermanos, quienes buscaron matarlo, pero lo vendieron como esclavo. Se convirtió en un príncipe en Egipto.',
+    article:
+      "El hijo de Jacob, nacido de su amada esposa Raquel después de un largo período de esterilidad. En su nacimiento, Jacob había servido a Labán durante 14 años, por lo que tenía 91 años (cf. Gén 41:46 45:6 47:9); esto fue 6 años antes de que la familia regresara a Canaán (caps. 30:22—26 31:41). Debido a que José era el primer hijo de su esposa favorita, Jacob mostró favoritismo hacia el niño, especialmente después de la muerte de Raquel.\n\nDemostró esta actitud al proporcionarle a José una prenda costosa, como la que usaban los jóvenes nobles (cap. 37:3). Los celos creados por esto aumentaron cuando José les contó a sus hermanos dos sueños en los que había visto a todos los miembros de su familia, incluidos sus padres, inclinándose ante él (vs 4—11). Cuando tenía 17 años, su padre lo envió a Siquem para visitar a sus hermanos, que estaban pastoreando los rebaños de la familia allí. Al llegar a Siquem, descubrió que habían pasado a Dotán, por lo que los buscó allí.\n\nTan pronto como lo vieron, conspiraron para matarlo, pero Rubén, esperando salvarlo, persuadió a los demás para que lo arrojaran a un pozo vacío. Sin embargo, cuando, en ausencia de Rubén, llegó una caravana de ismaelitas y madianitas que viajaban a Egipto, los otros hermanos lo vendieron a estos comerciantes como esclavo. Para engañar a su padre, mancharon la prenda de José con la sangre de una cabra sacrificada para ese propósito, y llevaron la prenda manchada de sangre a su padre, diciendo que la habían encontrado. Jacob concluyó que José había sido despedazado por un animal salvaje (vs 12—33).\n\nDespués de ser vendido a los comerciantes egipcios y enviado a Egipto, José trabajó para Potifar antes de ser encarcelado y luego elevado al poder. Los dos hijos de José se convirtieron en los antepasados de dos tribus grandes e importantes, Efraín y Manasés, pero el nombre de José se usa con frecuencia en el AT para denotar las tribus combinadas o el reino del norte en su conjunto (Jos 16:1, 4 Jue 1:22 1 Re 11:28 Sal 78:67 Eze 37:16, etc.).",
+    date: "1700-1590 a.C.",
+    scriptures: ["1|30:22-24", "1|50:26"],
+    related: [
+      {
+        slug: "jacob",
+        title: "Jacob",
+      },
+      {
+        slug: "josephs-dreams",
+        title: "Los sueños de José",
+      },
+      {
+        slug: "joseph-taken-to-egypt",
+        title: "José llevado a Egipto",
+      },
+      {
+        slug: "joseph-cast-into-prison",
+        title: "José encarcelado",
+      },
+      {
+        slug: "joseph-butler-and-baker-cast-into-prison",
+        title: "José - El copero y el panadero encarcelados",
+      },
+      {
+        slug: "joseph-freed-pharaohs-dream-7-years-of-plenty",
+        title: "José interpreta el sueño del faraón y es liberado",
+      },
+      {
+        slug: "manasseh",
+        title: "Manasés",
+      },
+      {
+        slug: "ephraim",
+        title: "Efraín",
+      },
+      {
+        slug: "7-year-drought-josephs-brothers-come-to-egypt",
+        title: "7 años de sequía, los hermanos de José vienen a Egipto",
+      },
+      {
+        slug: "joseph-and-end-of-7-year-drought",
+        title: "José y el fin de los 7 años de sequía",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Ahora Israel amaba a José más que a todos sus hijos, porque era el hijo de su vejez; y le hizo una túnica de muchos colores. (Génesis 37:3)",
+        file: "GoodSalt-prcas0659_8-7-2013 3-16-58 PM.jpg",
+      },
+      {
+        caption:
+          "José interpreta el sueño del faraón (Génesis, Capítulo 24, 29-32). Grabado en madera después de un dibujo de Julius Schnorr von Carolsfeld (pintor alemán, 1794 - 1872)",
+        file: "Joseph_5-9-2013 1-49-22 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1018",
+    slug: "aaron",
+    title: "Aarón",
+    period: "4",
+    description:
+      'El nombre posiblemente significa "montañés" o "montaña de fuerza". Es el hijo mayor de Amram y Jocabed y hermano de Moisés. Se casa con Elisabet y tiene 4 hijos. Es nombrado portavoz de Moisés y ungido como el primer sumo sacerdote en el santuario.',
+    article:
+      'Aarón. Hijo de Amram y Jocabed (Éx 6:20), y descendiente de Leví (1 Cr 6:1—3). Tenía una hermana mayor, Miriam (Éx 7:7 cf. cap. 2:4), y un hermano menor, Moisés (cap. 7:7). Se casó con Elisabet, una hija de Aminadab, de la tribu de Judá, quien le dio cuatro hijos: Nadab, Abiú, Eleazar e Itamar (cap. 6:23). Aarón entra en la narrativa bíblica cuando el Señor lo comisionó para ir de Egipto a encontrarse con su hermano Moisés en el monte Horeb (Éx 4:27). Allí los dos conferenciaron sobre regresar a Egipto para lograr la liberación de su pueblo de la esclavitud (v. 28).\n\nEl Señor ya se había aparecido a Moisés y le había indicado que Aarón sería su portavoz en la nueva asignación (vs 14—16). Desde ese momento en adelante, los dos hermanos trabajaron codo a codo para asegurar la libertad de sus parientes oprimidos (vs 29, 30, etc.). Incluso después de la salida de Egipto, Aarón continuó, al menos en ocasiones, como portavoz de Moisés ante los hijos de Israel (cap. 16:9, 10). En Refidim, a poca distancia del desierto de Sin, Aarón y Hur sostuvieron los brazos levantados de Moisés en la batalla exitosa contra una banda de amalecitas (cap. 17:12).\n\nDurante el campamento en el monte Sinaí, Aarón y sus hijos Nadab y Abiú, junto con 70 de los ancianos de Israel, recibieron el privilegio especial de acompañar a Moisés más allá de los límites al pie de la montaña, que el pueblo en general no podía pasar (Éx 24:1—11). Durante la prolongada ausencia de Moisés del campamento, Aarón accedió a la demanda del pueblo de "dioses" visibles al hacer un becerro de oro y liderar su adoración (cap. 32). Mientras los israelitas aún estaban acampados en Sinaí, Aarón y sus hijos fueron nombrados y consagrados para servir como sacerdotes en el santuario (Éx 28:40 a 29:37 40:13—16 Lev 8). Aarón sirvió como sumo sacerdote durante 38 años, hasta unos pocos meses antes de la entrada en Canaán (Núm 20:22—29).\n\nPoco después de la salida de Sinaí, Aarón y Miriam se unieron para oponerse a Moisés como comandante supremo de Israel, bajo Dios, y reclamaron para sí mismos una voz en la administración de la nación. Dios silenció decisivamente a los dos que habían presumido desafiar al que Él había nombrado líder (Núm 12:1—15). Algo más tarde, un grupo de levitas descontentos se unió con ciertos hombres de la tribu de Rubén, y otros, en revuelta contra el liderazgo de Moisés y Aarón, y una vez más Dios vindicó a Sus líderes elegidos (cap. 16).\n\nPara que no quedara ninguna duda sobre el hecho de que era Dios quien había nombrado a Aarón para tener a cargo la vida religiosa de la nación, Dios dio una prueba dramática al hacer que la vara de Aarón brotara, floreciera y diera almendras en una noche (cap. 17). Hacia el final de los 40 años en el desierto, casi en las fronteras de Canaán, Aarón se unió a Moisés en una demostración de impaciencia en Cades, donde este último impetuosamente golpeó la roca de la que fluiría agua para el pueblo. Como resultado, los dos hermanos fueron excluidos de entrar en la Tierra Prometida (cap. 20:7—13).\n\nNo mucho después de la experiencia en Cades, el pueblo de Israel levantó el campamento y viajó alrededor de las fronteras de Edom, habiéndose negado el permiso para tomar una ruta más directa a través de ese país. En el camino, el Señor dirigió a Moisés y Aarón que este último debía prepararse para dejar sus deberes y morir (Núm 20:22—24 cf. Deut 10:6).\n\nPor orden divina, las vestiduras del sumo sacerdote fueron quitadas de Aarón y colocadas sobre su hijo Eleazar, en señal de su sucesión como sumo sacerdote (Núm 20:25—28). Aarón murió a la edad de 123 años (cf. Éx 7:7 Deut 34:7) y fue enterrado en el monte Hor, en la frontera de Edom (Núm 20:27, 28 33:37—39 Deut 32:50). Fue llorado por Israel durante un período de 30 días (Núm 20:29).',
+    date: "1529-1406 a.C.",
+    scriptures: ["2|6:20", "4|20:22-29"],
+    related: [
+      {
+        slug: "amram",
+        title: "Amram",
+      },
+      {
+        slug: "eleazar",
+        title: "Eleazar",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "La Fontana dell'Acqua Felice de tres arcos (diseñada por Domenico Fontana, 1587). Aarón guía a su pueblo hacia el manantial ubicado en Roma, Italia.",
+        file: "Aaron w golden calf 19-144_7-22-2013 2-57-17 PM.jpg",
+      },
+      {
+        caption:
+          'Moisés y Aarón se presentan ante el faraón para informarle lo que Dios ordena. "Moisés y Aarón ante el faraón" William Hole',
+        file: "Moses-and-Aaron-before-Pharaoh-001_7-31-2013 4-25-53 PM.jpg",
+      },
+      {
+        caption: "Aarón construyendo el becerro de oro",
+        file: "GoodSalt-AaronGoldenCalf_8-1-2013 5-27-38 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1027",
+    slug: "baptism-of-christ",
+    title: "Bautismo de Cristo",
+    period: "9",
+    description:
+      "Jesús viene de Galilea al Jordán para ser bautizado por su primo, Juan, para cumplir toda justicia.",
+    article:
+      "Era ahora el otoño del año 27 d.C., y Juan el Bautista había estado predicando posiblemente durante unos seis meses (ver en Mt 3:1). El otoño era el tiempo de tres importantes festivales: (1) Rosh Hashaná, o el festival del toque de las trompetas (ver Vol. I, p. 709 ver en Lev 23:24 Núm 29:1) (2) Yom Kipur, el Día de la Expiación (ver Vol. I, pp. 705, 706, 710 ver en Éx 30:10 Lev 16) (3) la Fiesta de los Tabernáculos (ver Vol. I, p. 710 ver en Éx 23:16 Lev 23:34). En el tercer festival, todos los varones debían presentarse ante el Señor en Jerusalén (Éx 23:14—17).\n\nDado que el bautismo de Cristo ocurrió en el otoño, es razonable pensar que pudo haber sido en conexión con Su presencia allí en esta temporada festiva. Cuando Jesús escuchó el mensaje proclamado por Juan, reconoció Su llamado. Esto marcó el cierre de Su vida privada en Nazaret y el comienzo de Sus tres años y medio de ministerio público, desde el otoño del año 27 d.C. hasta la primavera del año 31 d.C.\n\nAunque Jesús y Juan estaban relacionados por sangre, no habían tenido un conocimiento directo. Juan había escuchado de los eventos relacionados con el nacimiento y la infancia de Jesús, y creía que Él era el Mesías. Además, le había sido revelado a Juan que el Mesías buscaría el bautismo en sus manos, y que entonces se daría una señal que lo identificaría como el Mesías. Juan estaba impresionado con la perfección del carácter del que estaba ante él y con su propia necesidad como pecador.",
+    date: "27 d.C.",
+    scriptures: ["40|3:13-17", "41|1:9-11", "42|3:21-22", "43|1:29-34"],
+    related: [
+      {
+        slug: "christs-early-ministry",
+        title: "El ministerio temprano de Cristo",
+      },
+    ],
+    images: [
+      {
+        caption: "Río Jordán al norte del Mar de Galilea",
+        file: "GoodSalt-prcas2628_8-6-2013 4-33-46 PM.jpg",
+      },
+      {
+        caption: "Río Jordán al norte del Mar de Galilea",
+        file: "Jordan River north of Sea of Galilee, tb053106694_3-20-2013 1-03-09 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1028",
+    slug: "christs-early-ministry",
+    title: "El ministerio temprano de Cristo",
+    period: "9",
+    description:
+      "Después de ser bautizado, Jesús es llevado por el Espíritu al desierto para ser tentado. Luego regresa y comienza su ministerio público: llamando a Sus primeros discípulos, realizando Su primer milagro, limpiando el Templo, haciendo un viaje a Galilea, etc.",
+    article: "",
+    date: "27-28 d.C.",
+    scriptures: ["40|4:1-11", "43|1:35-51", "43|2:1-11", "42|4:14"],
+    related: [
+      {
+        slug: "jesus",
+        title: "Jesús",
+      },
+      {
+        slug: "john-the-baptists-ministry",
+        title: "El ministerio de Juan el Bautista",
+      },
+      {
+        slug: "baptism-of-christ",
+        title: "Bautismo de Cristo",
+      },
+      {
+        slug: "christs-wilderness-temptations",
+        title: "Las tentaciones de Cristo en el desierto",
+      },
+      {
+        slug: "jesus-declared-the-lamb-of-god",
+        title: 'Jesús declarado el "Cordero de Dios"',
+      },
+      {
+        slug: "first-disciples-called",
+        title: "Los primeros discípulos llamados",
+      },
+      {
+        slug: "wedding-feast-at-cana",
+        title: "La boda en Caná",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Después de ser bautizado, Jesús es llevado por el Espíritu al desierto para ser tentado.",
+        file: "GoodSalt-prcas2553_8-6-2013 4-34-53 PM.jpg",
+      },
+      {
+        caption: "El primer milagro de Jesús, convertir el agua en vino.",
+        file: "GoodSalt-pppas0482_8-28-2013 2-52-24 PM.jpg",
+      },
+      {
+        caption: "Jesús limpia el templo.",
+        file: "GoodSalt-prcas4105_8-28-2013 2-52-24 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1029",
+    slug: "john-the-baptists-ministry",
+    title: "El ministerio de Juan el Bautista",
+    period: "9",
+    description:
+      "Juan el Bautista fue un precursor de Cristo, preparando el camino para el ministerio de Jesús. Era de apariencia y carácter rudo y hablaba la verdad de manera directa. Su ministerio alcanzó su punto máximo cuando Jesús fue bautizado.",
+    article:
+      'Juan era unos seis meses mayor que Jesús, y es razonable pensar que su ministerio comenzó unos seis meses antes que el de Cristo. Así, Juan pudo haber comenzado en la primavera del mismo año, quizás alrededor de la temporada de la Pascua. Grandes multitudes se acercaban o salían de Jerusalén en las cercanías del lugar donde Juan estaba predicando. Las ilustraciones aptas que Juan usó en su predicación implican que el tiempo de la cosecha (primavera) no estaba lejos.\n\n"En aquellos días" los judíos que vivían en Palestina, particularmente en Judea, estaban al borde de la revolución. Desde la asignación de los procuradores romanos para gobernar Judea en el año 6 d.C., tras el destierro de Arquelao por Augusto, la presencia de oficiales y soldados romanos, el ejercicio de la autoridad romana y la consiguiente afluencia de costumbres paganas habían resultado en un levantamiento tras otro. Miles de los hombres más valientes de Israel habían pagado con su sangre por su patriotismo. Las condiciones eran tales que el pueblo anhelaba un líder fuerte que los liberara del cruel yugo de Roma.\n\nJuan el Bautista. Jesús dijo de Juan que "entre los que nacen de mujer no se ha levantado uno mayor que Juan el Bautista" (Lucas 7:28). Era "más que un profeta" (ver en Mt 11:9). La influencia de Juan con el pueblo eventualmente se volvió tan grande que Herodes Antipas al principio dudó en hacerle daño (Mt 14:1, 5 Mr 11:32), y los líderes judíos no se atrevieron a hablar abiertamente en su contra (Mt 21:26 Lc 20:6). Josefo da un relato vívido de Juan el Bautista que coincide estrechamente con el de los Evangelios (Antigüedades xviii. 5. 2).\n\nDesierto de Judea. Esta expresión generalmente se refiere a las colinas escarpadas y áridas entre el Mar Muerto y la cresta de la cadena montañosa central de Palestina, una región de poca lluvia y pocos habitantes. Juan había pasado gran parte de su tiempo como joven en el desierto (Lc 1:80). Sus padres probablemente vivían en o cerca de Hebrón, no lejos de las fronteras occidentales de este "desierto". En los tiempos del Nuevo Testamento, el término desierto se usaba para referirse tanto a las colinas escarpadas al oeste del Mar Muerto como a la parte baja del valle del Jordán. Según Lucas 3:3, Juan iba de un lugar a otro, subiendo y bajando por el valle del Jordán. Entre Jericó y el Mar Muerto, el desierto de Judea se encontraba con el del Jordán. El ministerio de Juan aparentemente comenzó en esta zona.\n\nJuan no solo proclama el establecimiento del "reino de los cielos" (v. 2), sino que anuncia la llegada inminente de su rey. La figura retórica empleada representa los preparativos que deben hacerse antes de la llegada anunciada del rey. Cuando un monarca oriental tenía la intención de visitar partes de su reino, enviaba mensajeros a cada distrito que iba a visitar, anunciando su visita anticipada y convocando a los habitantes a prepararse para su llegada. Se esperaba que los habitantes locales de cada distrito "prepararan" la carretera por la que viajaría, ya que normalmente se hacía poco para mantener los caminos. En algunas tierras orientales todavía es costumbre reparar los caminos por los que el rey o alguna otra celebridad está a punto de viajar.',
+    date: "25-27 d.C.",
+    scriptures: ["40|3:1-12", "41|1:1-8", "42|3:2-18", "43|1:15-36"],
+    related: [
+      {
+        slug: "christs-early-ministry",
+        title: "El ministerio temprano de Cristo",
+      },
+    ],
+    images: [
+      {
+        caption: "El nacimiento de Juan el Bautista",
+        file: "GoodSalt-prcas0793_8-28-2013 2-48-58 PM.jpg",
+      },
+      {
+        caption: "El ministerio de Juan el Bautista",
+        file: "GoodSalt-stdas0068_8-28-2013 2-48-58 PM.jpg",
+      },
+      {
+        caption: "Juan el Bautista bautizando a Jesús",
+        file: "GoodSalt-stdas0069_8-28-2013 2-48-58 PM.jpg",
+      },
+      {
+        caption: "Juan el Bautista en prisión",
+        file: "GoodSalt-prcas1431_8-28-2013 2-48-58 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1032",
+    slug: "tentaciones-de-cristo-en-el-desierto",
+    title: "Las Tentaciones de Cristo en el Desierto",
+    period: "9",
+    description:
+      'Después de ser bautizado, Jesús es "llevado por el Espíritu al desierto para ser tentado por el diablo." Jesús ayuna y ora durante cuarenta días y noches. Es tentado tres veces y vence citando las Escrituras. Sale victorioso.',
+    article:
+      'Desde su nacimiento, Jesús había estado bajo la guía e instrucción del Espíritu Santo (ver Mateo 3:16; Lucas 2:52), pero en el momento de su bautismo, el Espíritu descendió sobre Él en gran medida para dotarlo de sabiduría y habilidad para su misión designada (Hechos 10:38; cf. cap. 1:8). Jesús fue "guiado, paso a paso, por la voluntad del Padre", en armonía con "el plan" que "estaba delante de Él, perfecto en todos sus detalles", "antes de venir a la tierra". Marcos usa una expresión aún más fuerte, diciendo: "El Espíritu lo impulsó al desierto" (Marcos 1:12).\n\nEl sitio tradicional de la tentación se encuentra en las colinas escarpadas y áridas al oeste de Jericó, llamado Quarantania en alusión a los 40 días que Jesús pasó en el desierto. El bautismo ocurrió en el Jordán, al este de Jericó, y el hecho de que Jesús regresara allí al final de los 40 días implica que el desierto de la tentación no estaba muy lejos. Siendo este el caso, es completamente posible que Jesús se retirara a la región desértica cerca del Monte Nebo en las montañas de Abarim, al este del Mar Muerto. Fue desde las alturas del Monte Nebo que "el Señor le mostró [a Moisés] toda la tierra" (Deuteronomio 34:1-4), y puede haber sido desde ese mismo lugar, "un monte muy alto", que el diablo presentó a Cristo "todos los reinos del mundo" (Mateo 4:8).\n\nEl diablo siempre nos ataca en nuestros momentos de mayor debilidad, pues es entonces cuando es más probable que caigamos. Por esta razón, es de vital importancia mantener las facultades físicas, mentales y emocionales en un alto nivel de fortaleza y eficiencia. Cualquier cosa que debilite estas facultades debilita nuestra defensa contra las artimañas del tentador. Cosas como el exceso de trabajo, la falta de ejercicio, el comer en exceso, una dieta deficiente, la falta de sueño, o cualquier cosa que disminuya la alerta intelectual y el control emocional tienden a abrir el camino para que el maligno entre en el alma. Entretener pensamientos de desánimo, derrota o resentimiento tendrá el mismo efecto.\n\nEl príncipe de este mundo vino a Cristo y no encontró en Él nada que respondiera, ni siquiera en el más mínimo grado, a la tentación. El Hijo de Dios, "en semejanza de carne de pecado, ... condenó al pecado en la carne" (Romanos 8:3), y si nosotros acudimos a Él con fe—si elegimos "no andar según la carne, sino según el Espíritu" (Romanos 8:4)—Él, por Su gracia, nos habilitará para caminar así. Si nos sometemos a Dios, también podremos resistir al diablo, y él huirá de nosotros (ver Santiago 4:7, 8). Dios será para nosotros una defensa segura (Proverbios 18:10).',
+    date: "27 d.C.",
+    scriptures: ["40|4:1-11", "41|1:12-13", "42|4:1-13"],
+    related: [
+      {
+        slug: "ministerio-temprano-de-cristo",
+        title: "Ministerio Temprano de Cristo",
+      },
+    ],
+    images: [
+      {
+        caption: "Jesús en el desierto de la tentación",
+        file: "GoodSalt-prcas0969_8-28-2013 2-54-39 PM.jpg",
+      },
+      {
+        caption: "Después fue atendido por ángeles",
+        file: "GoodSalt-lwjas0313_8-6-2013 4-35-41 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1033",
+    slug: "jesus-declarado-el-cordero-de-dios",
+    title: 'Jesús declarado el "Cordero de Dios"',
+    period: "9",
+    description:
+      'Cuando Juan el Bautista ve a Jesús en el Jordán, señala a Cristo y dice: "¡He aquí el Cordero de Dios, que quita el pecado del mundo!"',
+    article:
+      'La delegación de Jerusalén se había ido. Evidentemente no tomaron en serio a Juan, o habrían presionado su investigación más a fondo, para descubrir, si fuera posible, de quién hablaba (ver v. 26). El día anterior, Jesús no había sido identificado por la referencia indirecta de Juan como el Mesías (v. 26). Ahora es señalado entre la multitud. ¡Qué privilegio ser el primero en proclamar (ver Mateo 3:1) a Jesús, Aquel de quien todos los profetas de antaño dieron testimonio, como el verdadero sacrificio! ¡Cuál de los profetas no se habría emocionado con tal privilegio! No es de extrañar que Jesús más tarde hablara de Juan como un profeta mayor que todos los que habían surgido en Israel (Lucas 7:28).\n\nSolo Juan usa la designación "Cordero de Dios" para Cristo, aunque Lucas (Hechos 8:32) y Pedro (1 Pedro 1:19) tienen comparaciones similares (cf. Isaías 53:7). Juan el Bautista presentó a Jesús como "el Cordero de Dios" a Juan el evangelista (ver Juan 1:35, 36), y para el discípulo este título debe haber tenido un profundo significado. La figura, que enfatiza la inocencia y la perfección del carácter de Jesús, y así la naturaleza vicaria de Su sacrificio (Isaías 53:4-6, 11, 12; ver Éxodo 12:5), recuerda al cordero pascual de Egipto, que tipificaba la liberación de la esclavitud del pecado.\n\n"Cristo, nuestra Pascua, ha sido sacrificado por nosotros" (1 Corintios 5:7). Mediante la figura de un cordero, Juan identifica al Mesías sufriente como Aquel en quien el sistema sacrificial de los tiempos del Antiguo Testamento alcanza realidad y significado. En la previsión y el propósito divinos, Él era "el Cordero inmolado desde la fundación del mundo" (Apocalipsis 13:8).',
+    date: "27 d.C.",
+    scriptures: ["43|1:19-34"],
+    related: [
+      {
+        slug: "ministerio-temprano-de-cristo",
+        title: "Ministerio Temprano de Cristo",
+      },
+    ],
+    images: [
+      {
+        caption:
+          'Cuando Juan el Bautista ve a Jesús en el Jordán, señala a Cristo y dice: "¡He aquí el Cordero de Dios, que quita el pecado del mundo!"',
+        file: "GoodSalt-pppas0495_8-28-2013 2-56-06 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1034",
+    slug: "llamado-de-los-primeros-discipulos",
+    title: "Llamado de los Primeros Discípulos",
+    period: "9",
+    description:
+      'Después de Su bautismo, dos discípulos escuchan a Juan hablar de Jesús como el "Cordero de Dios". Lo siguen. Son Andrés y Pedro. Se presume que Juan es el otro. Más tarde, Felipe y Natanael se unen como los primeros discípulos de Cristo.',
+    article:
+      'Andrés y Juan fueron los primeros seguidores. Pronto Pedro, Felipe y Natanael (Bartolomé) se unieron a ellos (ver Juan 1:40, 43, 45; ver Marcos 3:16-18). Los seguidores no abandonaron en ese momento permanentemente su ocupación habitual para convertirse en discípulos en el sentido pleno de la palabra. No fue hasta más de un año después, en la primavera del año 29 d.C., que recibieron el llamado al discipulado permanente (ver Lucas 5:1, 11). Solo entonces se pudo decir que "lo dejaron todo y lo siguieron" (Lucas 5:11). El nombramiento formal de los Doce llegó incluso más tarde, durante el verano del mismo año (ver Marcos 3:14).\n\nJuan y Andrés deseaban conversar con Jesús sobre la declaración del v. 36, "¡He aquí el Cordero de Dios!" Todavía no pensaban en seguirlo en el sentido formal de convertirse en seguidores regulares (ver v. 43). Probablemente era finales del otoño o principios del invierno del año 27 d.C. (ver La Cronología de Lucas 3:1, 2). Lo siguieron intermitentemente durante el siguiente año y medio antes de que Él les hiciera el llamado al discipulado permanente (ver Lucas 5:11). El nombramiento formal de los Doce por parte de Jesús no tuvo lugar hasta finales del verano del año 29 d.C. (ver Marcos 3:13-19). Los cinco que "siguieron" a Jesús en el Jordán lo hicieron simplemente en el sentido de aceptar el testimonio de Juan sobre Su mesianismo.',
+    date: "27 d.C.",
+    scriptures: ["43|1:35-51"],
+    related: [
+      {
+        slug: "ministerio-temprano-de-cristo",
+        title: "Ministerio Temprano de Cristo",
+      },
+    ],
+    images: [
+      {
+        caption: "Jesús y Sus discípulos",
+        file: "GoodSalt-stdas0613_8-6-2013 4-36-41 PM.jpg",
+      },
+      {
+        caption:
+          "Estatua de San Pedro, uno de los patronos y santos de Roma. Ubicada cerca de las escaleras de la basílica en la parte frontal de la plaza en la Ciudad del Vaticano (fue esculpida por Giuseppe De Fabris en 1838-40)",
+        file: "Saint Peter_3-20-2013 12-37-32 PM.jpg",
+      },
+      {
+        caption:
+          "Estatua de San Juan en la entrada del puente Milvio en Roma, Italia.",
+        file: "Saint John_3-20-2013 12-37-32 PM.jpg",
+      },
+      {
+        caption:
+          "Estatua de San Felipe en el Puente de Carlos en Praga. San Felipe Benizi de Damiani también es conocido como San Felipe Benicio o Benicio.",
+        file: "Saint Philip_3-20-2013 12-37-32 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1035",
+    slug: "banquete-de-bodas-en-cana",
+    title: "Banquete de Bodas en Caná",
+    period: "9",
+    description:
+      "En un banquete de bodas en Caná, Jesús realiza Su primer milagro. El anfitrión se queda sin vino. Jesús les invita a llenar seis tinajas de piedra con agua. Luego instruye a alguien a llevar una copa al anfitrión, quien descubre que es el mejor jugo de uva que jamás haya probado.",
+    article:
+      'Mientras asistía a un banquete de bodas en Caná, el vino se acabó. La confianza de María al acudir a Jesús con el problema es digna de mención. Como hijo obediente, Jesús siempre había estado atento a sus deseos y había encontrado una solución apropiada para cada problema. No está claro si María esperaba que Jesús realizara un milagro, algo que no había hecho antes (ver v. 11), según el relato del Evangelio. Posiblemente la presencia de Jesús y Sus discípulos había atraído a una multitud.\n\nJesús habló respetuosamente a Su madre. Que María no entendió la respuesta de Jesús como una negativa es evidente por sus instrucciones a los sirvientes (ver Juan 2:5). Ella estaba segura de que Jesús supliría la necesidad en Su propio tiempo y manera. A lo largo de Su vida privada en Nazaret, Jesús había honrado la autoridad de Su madre; de hecho, siempre permaneció como un hijo obediente en la esfera donde esa relación prevalecía adecuadamente. Pero ahora ya no era un individuo privado, y María no apreciaba plenamente los límites que esto imponía a su autoridad sobre Jesús. Podría sentir que tenía el derecho, al menos en cierto grado, de dirigirlo en Su misión. En consecuencia, en estas palabras claras pero corteses, Jesús buscó aclararle la distinción entre Su relación con ella como el Hijo del hombre y como el Hijo de Dios. Su amor por ella no había cambiado, pero ahora Él debía trabajar día a día bajo la dirección de Su Padre celestial.\n\nMaría aparentemente esperaba que Jesús, en esta ocasión, se proclamara a Sí mismo como el Mesías, pero el momento para tal anuncio no había llegado. Había un tiempo designado para cada evento en Su vida. No fue hasta el final de Su ministerio que Jesús reclamó públicamente ser el Mesías, y debido a esta afirmación fue crucificado. No fue hasta la noche de la traición que Jesús dijo: "Mi tiempo está cerca" (Mateo 26:18).\n\nCuando Cristo convirtió el agua en vino, este milagro proporcionó a los primeros discípulos la primera evidencia visible del poder divino obrando a través de Cristo, los fortaleció contra la incredulidad y la antipatía de los líderes judíos, y les brindó su primera oportunidad de testificar sobre su fe recién encontrada. Además, honró la confianza de María. De manera práctica, expresó el interés compasivo de Jesús en la felicidad humana.',
+    date: "27 d.C.",
+    scriptures: ["43|2:1-12"],
+    related: [
+      {
+        slug: "ministerio-temprano-de-cristo",
+        title: "Ministerio Temprano de Cristo",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Jesús en el banquete de bodas. Matrimonio en Caná por James Tissot",
+        file: "Marriage_at_Cana_001_8-1-2013 9-29-08 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1036",
+    slug: "ministerio-de-cristo-en-judea",
+    title: "Ministerio de Cristo en Judea",
+    period: "9",
+    description:
+      "Después de comenzar Su ministerio y llamar a Sus primeros discípulos, Jesús hace Su aparición en Judea limpiando primero el Templo en Jerusalén. Cristo es recibido en Jerusalén, enseña a Nicodemo sobre el nuevo nacimiento y discute sobre Juan el Bautista.",
+    article: "\n",
+    date: "27-28 d.C.",
+    scriptures: ["43|2:13-25", "43|3:1-36", "43|4:1-4"],
+    related: [
+      {
+        slug: "jesus",
+        title: "Jesús",
+      },
+      {
+        slug: "primera-limpieza-del-templo-primera-pascua",
+        title: "Primera Limpieza del Templo, Primera Pascua",
+      },
+      {
+        slug: "discusion-con-nicodemo",
+        title: "Discusión con Nicodemo",
+      },
+      {
+        slug: "la-mujer-samaritana",
+        title: "La Mujer Samaritana",
+      },
+      {
+        slug: "el-invalido-en-el-estanque-de-bethesda-segunda-pascua",
+        title: "El Inválido en el Estanque de Bethesda, Segunda Pascua",
+      },
+      {
+        slug: "rechazo-por-el-sanedrin",
+        title: "Rechazo por el Sanedrín",
+      },
+      {
+        slug: "juan-el-bautista-encarcelado",
+        title: "Juan el Bautista Encarcelado",
+      },
+    ],
+    images: [
+      {
+        caption: "Jesús y Nicodemo, William Brassey Hole",
+        file: "Jesus_Counsels_Nicodemus_One_Night_001_8-8-2013 3-12-10 PM.jpg",
+      },
+      {
+        caption: "Jesús limpiando el templo de los cambistas",
+        file: "GoodSalt-prcas0402_8-8-2013 3-12-10 PM.jpg",
+      },
+      {
+        caption: "Templo de Herodes, Juan R. Cuadra, 1998",
+        file: "Jerus-n4i_8-8-2013 3-12-10 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1042",
+    slug: "juan-el-bautista-encarcelado",
+    title: "Juan el Bautista Encarcelado",
+    period: "9",
+    description:
+      "Herodes el tetrarca tiene una relación adúltera con Herodías, la esposa de su hermano Felipe. Cuando Juan el Bautista habla en contra de este pecado, Herodes encarcela a Juan.",
+    article:
+      "Lucas hace referencia al encarcelamiento y la muerte de Juan el Bautista en este punto para completar su relato sobre Juan antes de proceder a narrar el ministerio de Cristo. Parece que Juan no fue encarcelado hasta varios meses, quizás un año o más, después del bautismo de Jesús, aproximadamente en el tiempo de la Pascua del año 29 d.C. Permaneció en prisión hasta principios de la primavera del año 30 d.C., y fue decapitado unas semanas antes de la Pascua de ese año.\n\nA Herodes le pareció que el pueblo estaba listo para hacer lo que Juan les dijera, y Herodes temía que el resultado fuera un levantamiento popular (Antigüedades xviii. 5. 2 DA 360). Josefo no menciona el asunto de Herodías en relación con el encarcelamiento de Juan, aunque en otro lugar menciona el matrimonio de Herodías con Antipas (Antigüedades xviii. 5. 4). Así, Josefo probablemente registra la razón públicamente alegada por Herodes para encarcelar a Juan. Sería poco probable que Herodes anunciara como su razón para hacerlo el asunto privado de Herodías, del cual los judíos en general desaprobaban.\n\nSegún Josefo (Antigüedades xviii. 5. 2), la prisión en la que Juan fue colocado era la fortaleza de Maqueronte, en Perea, al este del Mar Muerto. El sitio de Maqueronte fue descubierto en 1807, y aún se pueden ver las ruinas de las mazmorras. Sin embargo, en vista de la secuencia de eventos en Marcos 6:17-30, algunos eruditos piensan que la celebración del cumpleaños pudo haber tenido lugar en Tiberíades, y por lo tanto cuestionan la precisión de la declaración de Josefo.",
+    date: "30 d.C.",
+    scriptures: ["40|14:3-5", "42|3:19-20"],
+    related: [
+      {
+        slug: "ministerio-de-cristo-en-judea",
+        title: "Ministerio de Cristo en Judea",
+      },
+      {
+        slug: "martirio-de-juan-el-bautista",
+        title: "Martirio de Juan el Bautista",
+      },
+    ],
+    images: [
+      {
+        caption: "Juan el Bautista en prisión.",
+        file: "john_the_baptist_in_prison_8-1-2013 2-13-42 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1044",
+    slug: "rechazo-por-el-sanedrin",
+    title: "Rechazo por el Sanedrín",
+    period: "9",
+    description:
+      "Después de sanar a un hombre junto al estanque de Bethesda en sábado, los líderes judíos se enojan mucho con Cristo por quebrantar la ley. Jesús les habla y dice que no hace nada por Su propia voluntad, sino solo la voluntad de Dios.",
+    article:
+      "Después de sanar a un inválido en sábado, Jesús fue llevado ante el Sanedrín y acusado de quebrantar el sábado, y a esta acusación se añadió la de blasfemia (v. 18). Los líderes de la nación buscaron contrarrestar la influencia indudablemente grande de Jesús sobre el pueblo. Además, pusieron espías para vigilarlo, aparentemente para construir un caso, de modo que pudieran condenarlo a muerte.\n\nCon su acción de censurar públicamente a Jesús en la primavera del año 29 d.C., los líderes judíos buscaron socavar Su autoridad e influencia con el pueblo. Hicieron una proclamación pública advirtiendo a la nación contra Él y pusieron espías para seguirlo en un esfuerzo por encontrar causa para una acción legal en Su contra. Con pleno conocimiento de que su oposición a Él era sin excusa, se volvieron aún más amargos hacia Él a partir de entonces, y comenzaron a hacer planes para quitarle la vida. Este designio lo llevaron a cabo dos años después, en la Pascua del año 31 d.C.\n\nPara la primavera del año 29 d.C., tenían amplia evidencia de Su mesianismo—sabían de la visión de Zacarías (Lucas 1:5-20), del anuncio a los pastores (Lucas 2:8-12), de la llegada de los magos (Mateo 2:1, 2), de la visita de Jesús al Templo a la edad de 12 años (Lucas 2:42-50), del testimonio de Juan el Bautista sobre Cristo como el Mesías (Juan 1:19-34). Más recientemente, habían tenido evidencia adicional de la perfección evidente en el carácter de Jesús, de la solidez de Sus enseñanzas y del carácter divino de Sus milagros. Añadido a todo esto, tenían las profecías. Estas, los judíos debieron haberse impresionado de que se estaban cumpliendo en los eventos que entonces ocurrían.",
+    date: "29 d.C.",
+    scriptures: ["43|5:16-47"],
+    related: [
+      {
+        slug: "ministerio-de-cristo-en-judea",
+        title: "Ministerio de Cristo en Judea",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Fariseos y los herodianos conspiran contra Jesús, James Tissot",
+        file: "Pharisees_and_the_Herodians_Conspire_Against_Jesus_001_8-1-2013 9-42-24 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1046",
+    slug: "ministerio-en-galilea",
+    title: "Ministerio en Galilea",
+    period: "9",
+    description:
+      'Después de que Jesús escucha que Juan el Bautista fue puesto en prisión, Cristo va a Galilea. Comienza a predicar: "Arrepentíos, porque el reino de los cielos se ha acercado."',
+    article:
+      'Algo del éxito del ministerio temprano de Jesús en Judea es evidente por la queja de los discípulos de Juan de que "todos vienen a él" (Juan 3:26), y por la respuesta de Juan: "Él debe aumentar, pero yo debo disminuir" (v. 30). A pesar de la aparente popularidad y éxito de Cristo, Su ministerio en Judea dio poco fruto. Aunque los breves comentarios de Juan constituyen nuestra suma de información sobre lo que ocurrió durante este período, está claro que un período considerable de tiempo fue ocupado así. Evidentemente (Juan 3:22-24), Juan el Bautista y Jesús estaban predicando en Judea durante este tiempo, y la marea de la popularidad fluía gradualmente de Juan hacia Jesús.\n\nEl rechazo de Jesús por el Sanedrín después de la sanidad en Bethesda (Juan 5:16, 18) puso fin a Su obra en Judea y lo llevó a Su partida hacia Galilea y al comienzo formal de Su ministerio allí. Otro factor contribuyente fue el reciente encarcelamiento de Juan el Bautista (Mateo 4:12; Marcos 1:14; ver Juan 4:1). Es interesante notar que el encarcelamiento de Juan el Bautista coincide aproximadamente con el rechazo de Jesús por los líderes judíos y el cierre de Su ministerio temprano en Judea, y que la muerte de Juan ocurrió aproximadamente un año después, poco antes de la crisis que puso fin a la obra de Cristo en Galilea. Fue el encarcelamiento de Juan, junto con Su propio rechazo por los líderes judíos, lo que llevó a Jesús a retirarse a Galilea y llevar a cabo Su obra allí.\n\nAl estar a cierta distancia de Jerusalén, y por lo tanto menos sujetos a la influencia de los líderes religiosos allí, los judíos de Galilea eran más sencillos de corazón y de mente abierta. Estaban menos bajo el control de los prejuicios religiosos que sus compatriotas en Judea. Eran más sinceros y sinceros, y más dispuestos a escuchar el mensaje de Cristo sin prejuicios. De hecho, su entusiasmo por escuchar lo que Él tenía que decir hizo necesario que Él fuera de un lugar a otro, para evitar que el entusiasmo llegara a tal punto que pudiera ser interpretado por las autoridades como un peligro para la paz y la seguridad de la nación.',
+    date: "29 d.C.",
+    scriptures: ["40|4:12", "41|1:14-15", "42|4:14-15"],
+    related: [
+      {
+        slug: "jesus",
+        title: "Jesús",
+      },
+      {
+        slug: "el-hijo-del-noble",
+        title: "El Hijo del Noble",
+      },
+      {
+        slug: "primer-rechazo-en-nazaret",
+        title: "Primer Rechazo en Nazaret",
+      },
+      {
+        slug: "traslado-a-capernaum",
+        title: "Traslado a Capernaum",
+      },
+      {
+        slug: "el-llamado-junto-al-mar",
+        title: "El Llamado Junto al Mar",
+      },
+      {
+        slug: "endemoniado-en-la-sinagoga",
+        title: "Endemoniado en la Sinagoga",
+      },
+      {
+        slug: "suegra-de-pedro-sanada",
+        title: "Suegra de Pedro Sanada",
+      },
+      {
+        slug: "primer-viaje-por-galilea",
+        title: "Primer Viaje por Galilea",
+      },
+      {
+        slug: "el-primer-leproso-sanado",
+        title: "El Primer Leproso Sanado",
+      },
+      {
+        slug: "paralitico-bajado-por-el-techo",
+        title: "Paralítico Bajado por el Techo",
+      },
+      {
+        slug: "llamado-de-levi-mateo",
+        title: "Llamado de Leví Mateo",
+      },
+      {
+        slug: "arrancar-espigas-en-sabado",
+        title: "Arrancar Espigas en Sábado",
+      },
+      {
+        slug: "hombre-con-la-mano-seca",
+        title: "Hombre con la Mano Seca",
+      },
+      {
+        slug: "popularidad-de-jesus",
+        title: "Popularidad de Jesús",
+      },
+      {
+        slug: "nombramiento-de-los-doce-discipulos",
+        title: "Nombramiento de los Doce Discípulos",
+      },
+      {
+        slug: "sermon-del-monte",
+        title: "Sermón del Monte",
+      },
+      {
+        slug: "siervo-del-centurion-sanado",
+        title: "Siervo del Centurión Sanado",
+      },
+      {
+        slug: "dos-hombres-ciegos-sanados",
+        title: "Dos Hombres Ciegos Sanados",
+      },
+      {
+        slug: "un-endemoniado-mudo-es-sanado",
+        title: "Un Endemoniado Mudo es Sanado",
+      },
+      {
+        slug: "segundo-viaje-por-galilea",
+        title: "Segundo Viaje por Galilea",
+      },
+      {
+        slug: "hijo-de-la-viuda-de-nain-resucitado",
+        title: "Hijo de la Viuda de Naín Resucitado",
+      },
+      {
+        slug: "endemoniado-ciego-y-mudo-pecado-imperdonable",
+        title: "Endemoniado Ciego y Mudo, Pecado Imperdonable",
+      },
+      {
+        slug: "madre-y-hermanos-de-jesus",
+        title: "Madre y Hermanos de Jesús",
+      },
+      {
+        slug: "sermon-junto-al-mar-muchas-parabolas",
+        title: "Sermón Junto al Mar, Muchas Parábolas",
+      },
+      {
+        slug: "la-tormenta-en-el-lago",
+        title: "La Tormenta en el Lago",
+      },
+      {
+        slug: "endemoniados-de-gadara",
+        title: "Endemoniados de Gadara",
+      },
+      {
+        slug: "banquete-de-mateo",
+        title: "Banquete de Mateo",
+      },
+      {
+        slug: "jesus-cuestionado-sobre-el-ayuno",
+        title: "Jesús Cuestionado sobre el Ayuno",
+      },
+      {
+        slug: "mujer-invalida-sanada-hija-de-jairo-resucitada",
+        title: "Mujer Inválida Sanada / Hija de Jairo Resucitada",
+      },
+      {
+        slug: "consulta-de-los-discipulos-de-juan",
+        title: "Consulta de los Discípulos de Juan",
+      },
+      {
+        slug: "elogio-de-jesus-a-juan",
+        title: "Elogio de Jesús a Juan",
+      },
+      {
+        slug: "tercer-viaje-por-galilea",
+        title: "Tercer Viaje por Galilea",
+      },
+      {
+        slug: "segundo-rechazo-en-nazaret",
+        title: "Segundo Rechazo en Nazaret",
+      },
+      {
+        slug: "costo-del-discipulado",
+        title: "Costo del Discipulado",
+      },
+      {
+        slug: "alimentacion-de-los-cinco-mil-tercera-pascua",
+        title: "Alimentación de los Cinco Mil, Tercera Pascua",
+      },
+      {
+        slug: "jesus-camina-sobre-el-lago",
+        title: "Jesús Camina sobre el Lago",
+      },
+      {
+        slug: "sermon-sobre-el-pan-de-vida-rechazo-en-galilea",
+        title: "Sermón sobre el Pan de Vida, Rechazo en Galilea",
+      },
+      {
+        slug: "controversia-sobre-la-tradicion-y-la-contaminacion-ceremonial",
+        title: "Controversia sobre la Contaminación Ceremonial",
+      },
+    ],
+    images: [
+      {
+        caption: '"Cristo predicando a Sus discípulos" William Hole',
+        file: "Christ_preaching_to_His_disciples_and_others-Sermon_on_the_Mount_001_8-1-2013 9-56-11 AM.jpg",
+      },
+      {
+        caption:
+          "Fue el encarcelamiento de Juan, junto con Su propio rechazo por los líderes judíos, lo que llevó a Jesús a retirarse a Galilea y llevar a cabo Su obra allí.",
+        file: "Galilee north of Horns of Hattin, tb041003207_3-20-2013 11-39-39 AM.jpg",
+      },
+      {
+        caption: "Acantilados de Arbel y Mar de Galilea",
+        file: "Arbel cliffs and Sea of Galilee from west, tb022107215_3-20-2013 11-39-39 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1050",
+    slug: "endemoniado-en-la-sinagoga",
+    title: "Endemoniado en la Sinagoga",
+    period: "9",
+    description:
+      "Mientras está en Capernaum, Jesús entra en la sinagoga y está enseñando a la gente cuando aparece un hombre poseído por un demonio. Cristo reprende al demonio y este lo deja. Todas las personas se asombran de Su autoridad y poder.",
+    article:
+      'Mientras enseñaba en la sinagoga de Capernaum un sábado, un endemoniado comenzó a gritar a Jesús. La gente escuchaba y se asombraba de la enseñanza de Cristo. La interrupción del endemoniado ocurrió en el punto donde Cristo hablaba de Su misión de liberar a los que eran esclavos del pecado y de Satanás. En esta experiencia, Cristo se enfrentó una vez más al enemigo al que había derrotado en el desierto de la tentación. La audiencia escuchaba atentamente el mensaje que Cristo llevaba, y Satanás diseñó de esta manera desviar la atención de la gente de la verdad que estaba encontrando terreno fértil en al menos algunos de sus corazones.\n\nEl espíritu maligno saludó a Jesús como Uno que estaba en una relación particularmente cercana con Dios. En otras ocasiones, los demonios se dirigieron a Él como el "Hijo de Dios" (Mateo 8:29; Lucas 8:28), el mismo título que llevó a los líderes judíos a desear Su muerte (Juan 5:17, 18) y eventualmente a condenarlo. Jesús "censuró" al espíritu maligno sin, sin embargo, traer una "acusación injuriosa" contra él (ver Judas 9). La reprensión parece haber sido administrada porque el espíritu se dirigió a Él como el Mesías. Jesús sabía bien que una afirmación abierta de la mesianidad en este momento solo predispondría a muchas mentes en Su contra. Además, la turbulenta situación política en Palestina produjo muchos falsos mesías, que propusieron liderar a sus compatriotas en una revuelta contra Roma, y Jesús buscó evitar ser considerado un mesías político en el sentido popular. Esto habría cegado a la gente ante la verdadera naturaleza de Su misión y habría ofrecido a las autoridades un pretexto para silenciar Sus labores.',
+    date: "29 d.C.",
+    scriptures: ["41|1:21-28", "42|4:31-37"],
+    related: [
+      {
+        slug: "ministerio-en-galilea",
+        title: "Ministerio en Galilea",
+      },
+    ],
+    images: [
+      {
+        caption: '"Hombre Poseído en la Sinagoga" James Tissot',
+        file: "Possessed_Man_in_the_Synagogue_8-1-2013 10-36-12 AM.jpg",
+      },
+      {
+        caption: "Interior de la sinagoga de Capernaum",
+        file: "Capernaum synagogue interior, tb102602011 copy_3-20-2013 10-58-21 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1051",
+    slug: "suegra-de-pedro-sanada",
+    title: "Suegra de Pedro Sanada",
+    period: "9",
+    description:
+      "Después de salir de la sinagoga de Capernaum, Jesús entra en la casa de la suegra de Simón Pedro, donde ella está enferma con fiebre alta. Jesús reprende la fiebre y esta la deja. Luego ella se levanta y les sirve.",
+    article:
+      "Durante el ministerio en Galilea, Jesús se hospedó repetidamente en la casa de Simón Pedro. Su consejo a los Doce, de permanecer en una casa durante su estancia en un pueblo (Marcos 6:10), sin duda era consistente con Su propia práctica. Pedro es el único de los Doce específicamente mencionado como casado, aunque, en vista del hecho de que la mayoría de los judíos estaban casados, se ha pensado que probablemente la mayoría, si no todos, de los otros discípulos también tenían esposas.\n\nLa sanidad de la suegra de Pedro es el primer milagro registrado por los tres escritores sinópticos. El relato de Marcos proporciona varios detalles que faltan en los otros. La Biblia dice que Jesús la tomó de la mano. Este acto fue un toque personal de amorosa simpatía comúnmente empleado por Jesús (ver Mateo 9:25; Marcos 5:41; 8:23; 9:27). El contacto con el poder divino, a través de la fe, sanó a esta mujer. El alma que está enferma de pecado también necesita sentir el toque de una mano que esté caliente con simpatía.",
+    date: "29 d.C.",
+    scriptures: ["40|8:14-17", "41|1:29-34", "42|4:38-41"],
+    related: [
+      {
+        slug: "ministerio-en-galilea",
+        title: "Ministerio en Galilea",
+      },
+    ],
+    images: [
+      {
+        caption: '"Sanidad de la Suegra de Pedro" James Tissot',
+        file: "Healing_of_Peters_Mother-in-law_001_8-1-2013 10-39-09 AM.jpg",
+      },
+      {
+        caption: "Casa de Pedro en Capernaum, dominio público",
+        file: "800px-Cafarnao_-_Saint_Peter_house_8-28-2013 3-05-04 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1053",
+    slug: "el-primer-leproso-sanado",
+    title: "El Primer Leproso Sanado",
+    period: "9",
+    description:
+      'Después de presentar el Sermón del Monte, Jesús desciende y multitudes lo siguen. Un leproso se acerca a Él y dice: "Señor, si quieres, puedes limpiarme". Jesús lo toca y dice: "Quiero, sé limpio". El leproso es sanado.',
+    article:
+      "Al sanar a un leproso, Jesús derribó los prejuicios contra aquellos con esta enfermedad. Los judíos popularmente consideraban la lepra como un juicio divino sobre el pecado (a lo que también atribuían el nacer ciego; ver Juan 9:2). Habían absorbido una vieja idea pagana (ver un texto de augurio babilónico en Archiv für Orientforshung 18:62 nombrando ciertos síntomas, aparentemente de lepra, como significado de abandono por Dios y el hombre). Por lo tanto, no hicieron esfuerzos para aliviar o curar; de hecho, no conocían remedio para la verdadera lepra—solo el aislamiento.\n\nEl leproso probablemente dudó en acercarse a Jesús. Tres grandes obstáculos probablemente se presentaron a la mente de este hombre afligido, cualquiera de los cuales podría haber sido suficiente para hacer que la perspectiva de sanidad pareciera remota, si no imposible. En primer lugar, hasta donde se sabe, no había registro de tal sanidad desde la de Naamán, unos 800 años antes. Un segundo obstáculo, aún más formidable, era la creencia popular de que estaba bajo la maldición de Dios. ¿Estaría Jesús dispuesto a sanarlo? El tercer obstáculo presentaba un problema más práctico. ¿Cómo podría acercarse lo suficiente a Jesús para presentar su petición? La ley ritual estrictamente le prohibía acercarse o mezclarse con otros, y dondequiera que Jesús iba, la gente se agolpaba a Su alrededor. Esto efectivamente le impedía al hombre sufriente estar en la presencia inmediata de Jesús.\n\nCuando el hombre le pidió a Jesús que lo sanara, Jesús tocó al leproso. Sabía que tocar a un hombre leproso significaba impureza; sin embargo, lo hizo con valentía. Como ningún ser humano podía entonces curar la lepra, el hecho de que Jesús lo hiciera implicaba que Él tenía poder divino. Esto le dio fe a la gente de que Él también podía limpiar el alma del pecado. Jesús había venido a la tierra con el propósito específico de limpiar a los pecadores, cuya enfermedad espiritual era más mortal que la lepra.",
+    date: "29 d.C.",
+    scriptures: ["40|8:2-4", "41|1:40-45", "42|5:12-16"],
+    related: [
+      {
+        slug: "ministerio-en-galilea",
+        title: "Ministerio en Galilea",
+      },
+    ],
+    images: [
+      {
+        caption: "Cristo sanando a leprosos en las calles de Capernaum.",
+        file: "Leprosy2_3-20-2013 10-31-37 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1055",
+    slug: "llamado-de-levi-mateo",
+    title: "Llamado de Leví Mateo",
+    period: "9",
+    description:
+      "Mateo, un recaudador de impuestos, despreciado por muchos de sus compatriotas judíos, especialmente los fariseos, es llamado por Jesús para convertirse en discípulo. Cristo está menos preocupado por la imagen y más preocupado por salvar a todas las personas. Mateo lo deja todo y sigue a Jesús.",
+    article:
+      'Cristo llamó a Leví Mateo para ser Su discípulo. Lucas usa el nombre Leví (cap. 5:27), pero Mateo en la misma historia prefiere el nombre Mateo (cap. 9:9). Que los dos nombres se refieren al mismo hombre se indica además por el hecho de que Mateo también es llamado "el publicano [recaudador de impuestos]" (cap. 10:3), y por el hecho de que en sus listas de los Doce, los otros Evangelios tienen a Mateo y no a Leví (Marcos 3:18; Lucas 6:15; cf. Hechos 1:13). Era común que los judíos tuvieran más de un nombre, como Simón Pedro y Juan Marcos.\n\nMateo era un recaudador de impuestos y su oficina de impuestos aparentemente estaba "junto al mar" (v. 13), y probablemente era una oficina en la que Herodes Antipas recaudaba ingresos de caravanas y viajeros que pasaban por la carretera principal de Damasco y el Este a Ptolemais (Accho) en el Mediterráneo (ver Isaías 9:1), o sobre el Lago de Galilea desde el territorio de Herodes Felipe. En la opinión popular, los recaudadores de impuestos eran considerados despreciables. No solo eran frecuentemente agentes de la opresión romana, sino que también a menudo eran extorsionadores por su propia cuenta, que hacían uso de su poder oficial para oprimir y defraudar al pueblo. Eran odiados y despreciados por todos, como marginados sociales y religiosos.\n\nCuando Cristo ve a Mateo, le dice: "Sígueme". El lenguaje usual que Cristo usaba al extender Su invitación al discipulado (ver Mateo 4:19; Juan 1:43). Llamado a tomar la gran decisión de su vida en un momento de aviso, Mateo estaba listo; tal decisión presupondría que ya había tenido contacto previo con Jesús. En su corazón debía haber ya un anhelo de seguirlo. Pero como sabía muy bien la actitud de los rabinos hacia los recaudadores de impuestos, probablemente no se le ocurrió que este gran Rabino se dignaría a tenerlo entre Sus discípulos. Lucas (cap. 5:28) añade que Mateo "lo dejó todo" para seguir a Jesús; dejó un negocio rentable para servir sin paga.',
+    date: "29 d.C.",
+    scriptures: ["40|9:9", "41|2:13-14", "42|5:27-28"],
+    related: [
+      {
+        slug: "ministerio-en-galilea",
+        title: "Ministerio en Galilea",
+      },
+    ],
+    images: [
+      {
+        caption: '"Llamado de Mateo" James Tissot',
+        file: "Calling_of_Saint_Matthew_001_8-1-2013 10-44-08 AM.jpg",
+      },
+      {
+        caption:
+          "Mateo, un recaudador de impuestos, despreciado por muchos de sus compatriotas judíos, especialmente los fariseos, es llamado por Jesús para convertirse en discípulo.",
+        file: "Ancient Coins_3-20-2013 10-22-44 AM.jpg",
+      },
+      {
+        caption:
+          "Estatua de San Mateo, una de las esculturas de los Doce Apóstoles dentro de la Basílica de San Juan de Letrán. Roma, Italia. Escultura de Camillo Rusconi (1658, Milán - 1728, Roma).",
+        file: "Saint Matthew_3-20-2013 10-22-44 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1057",
+    slug: "hombre-con-la-mano-seca",
+    title: "Hombre con la Mano Seca",
+    period: "9",
+    description:
+      "Los fariseos buscan atrapar a Jesús preguntándole si sanaría a un hombre en sábado. Jesús llama su atención sobre una ley del sábado que permite ayudar a un animal. Les recuerda cuánto más valiosa es una persona. Luego sana al hombre.",
+    article:
+      'Cuando Cristo entró en una sinagoga, se encontró con un hombre que tenía la mano seca. Los fariseos estaban observando para ver si Jesús sanaría al hombre con el fin de acusarlo de quebrantar la ley. Jesús le pregunta al grupo si es lícito hacer el bien o dar vida en sábado. Su silencio hosco fue una admisión de derrota. Encuentros previos con Jesús les habían enseñado que nada se ganaba desafiándolo públicamente, pues Él siempre lograba volver sus propios argumentos en su contra de tal manera que revelaba la verdad y hacía evidente para la gente que la posición rabínica era insostenible. La Biblia dice que Cristo se enojó y se entristeció por ellos. A menudo se dice que la única ira sin pecado es la ira contra el pecado. Dios odia el pecado, pero ama al pecador. Los mortales que yerran a menudo cometen el error de odiar al pecador y amar el pecado. La ira contra el mal como mal, sin deseo o designio malvado hacia otros, ciertamente puede considerarse un rasgo de carácter recomendable.\n\nMarcos registra los sentimientos personales de Jesús. Él estaba "entristecido" porque los líderes judíos usaban sus altos cargos y posiciones para tergiversar el carácter y los requisitos de Dios. Sin duda también estaba "entristecido" por los resultados que esto tendría sobre estos líderes mismos y sobre aquellos que seguían sus ideas engañosas. El griego implica que la reacción inicial de ira de Jesús fue momentánea, pero Su preocupación por estos hijos desorientados, alejados de su Padre celestial y malinterpretando Su amor por ellos, continuó.',
+    date: "29 d.C.",
+    scriptures: ["40|12:9-14", "41|3:1-6", "42|6:6-11"],
+    related: [
+      {
+        slug: "ministerio-en-galilea",
+        title: "Ministerio en Galilea",
+      },
+    ],
+    images: [
+      {
+        caption: '"Hombre con la Mano Seca" James Tissot',
+        file: "Man_with_the_Withered_Hand_001_8-1-2013 11-05-28 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1059",
+    slug: "nombramiento-de-los-doce-discipulos",
+    title: "Nombramiento de los Doce Discípulos",
+    period: "9",
+    description:
+      "Jesús nombra a doce discípulos no solo para que lo sigan, sino para ser enviados a predicar, sanar y expulsar demonios. La Biblia enumera sus nombres: Pedro, Jacobo, Juan, Andrés, Felipe, Bartolomé, Mateo, Tomás, Jacobo, Tadeo, Simón y Judas.",
+    article:
+      "Dejando a Sus seguidores para pasar la noche al pie de la montaña, Jesús mismo pasó toda la noche en oración en algún lugar apartado en las colinas sobre ellos (Lucas 6:12). Probablemente era finales del verano del año 29 d.C. (ver Mateo 5:1). A menudo Jesús dedicaba una noche entera a la oración. Por lo general, tales instancias mencionadas por los diversos escritores de los evangelios precedían puntos de decisión o crisis en la vida o el ministerio del Salvador.\n\nLa noche pasada en oración precedió la ordenación de los Doce, el Sermón del Monte y el comienzo del Segundo Viaje por Galilea. Jesús específicamente llamó a 12 hombres a Sí mismo. Aparentemente había un grupo algo más grande de seguidores, del cual los Doce fueron seleccionados. Ninguno de los Doce fue elegido por perfección, ya sea en carácter o en habilidad. Cristo seleccionó hombres que estaban dispuestos y eran capaces de aprender, cuyos caracteres podrían ser transformados. Todos tenían defectos serios cuando fueron llamados, pero estos, por Su gracia, fueron removidos (excepto en el caso de Judas), y en su lugar Jesús plantó las preciosas semillas del carácter divino que germinaron, crecieron hasta la madurez y luego produjeron el fruto de un carácter semejante al de Cristo (Gálatas 5:22, 23). Cristo toma a los hombres donde están y, si están dispuestos y son sumisos, los transforma en lo que Él desea que sean. Él nombra a hombres y mujeres para posiciones de responsabilidad, no porque los considere completamente preparados para las demandas que estas posiciones hacen de ellos, sino porque, al leer sus corazones, Él discierne habilidades latentes que, bajo la guía divina, pueden ser alentadas y desarrolladas para Su gloria y para el avance de Su reino.",
+    date: "29 d.C.",
+    scriptures: ["41|3:13-19", "42|6:12-16"],
+    related: [
+      {
+        slug: "ministerio-en-galilea",
+        title: "Ministerio en Galilea",
+      },
+    ],
+    images: [
+      {
+        caption: '"Jesús Discute con Sus Discípulos" James Tissot',
+        file: "Jesus_Discourses_with_His_Disciples_001_8-1-2013 11-10-58 AM.jpg",
+      },
+      {
+        caption:
+          "Estatua de San Jacobo ubicada en la Basílica de San Juan de Letrán en Roma, Italia.",
+        file: "Saint James_3-20-2013 9-43-11 AM.jpg",
+      },
+      {
+        caption:
+          "Estatua de San Juan en la entrada del puente Milvio en Roma, Italia.",
+        file: "Saint John_3-20-2013 9-43-11 AM.jpg",
+      },
+      {
+        caption:
+          "Estatua de San Andrés, quien fue asesinado sobre una cruz en forma de X. Estatua en el lado de la Catedral de Sevilla, España",
+        file: "Saint Andrew_3-20-2013 9-43-11 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1060",
+    slug: "sermon-del-monte",
+    title: "Sermón del Monte",
+    period: "9",
+    description:
+      "Así como Moisés dio la ley que Dios le dio desde una montaña, Cristo también da la ley con aún más profundidad y explicación a la gente.",
+    article:
+      'El nombramiento de los Doce constituyó el primer paso en la organización de la iglesia cristiana. Cristo era el Rey en este nuevo reino de la gracia divina, los Doce eran sus ciudadanos fundadores, o súbditos (ver Marcos 3:14). En el mismo día en que los Doce se convirtieron en ciudadanos fundadores del reino, el Rey dio Su discurso inaugural, en el que estableció las condiciones de la ciudadanía, proclamó la ley del reino y delineó sus objetivos. El Sermón del Monte es, por lo tanto, a la vez el discurso inaugural de Cristo como Rey del reino de la gracia y también la constitución del reino. Poco después del establecimiento formal del reino y la proclamación de su constitución, vino el segundo viaje por Galilea, durante el cual Jesús dio una demostración vívida y completa de las formas en que el reino, sus principios y su poder pueden ser de beneficio para los hombres.\n\nLa montaña en la que Cristo pronunció el Sermón del Monte ha sido llamada el "Sinaí del Nuevo Testamento", en cuanto que tiene la misma relación con la iglesia cristiana que el Monte Sinaí tuvo con la nación judía. Fue en el Sinaí donde Dios proclamó la ley divina. Fue en la montaña desconocida de Galilea donde Jesús reafirmó la ley divina, explicando su verdadero significado con mayor detalle y aplicando sus preceptos a los problemas de la vida diaria.',
+    date: "29 d.C.",
+    scriptures: ["40|5:1-48", "42|6:17-49"],
+    related: [
+      {
+        slug: "ministerio-en-galilea",
+        title: "Ministerio en Galilea",
+      },
+    ],
+    images: [
+      {
+        caption: "El Sermón del Monte, pintura de Carl Heinrich Bloch.",
+        file: "Bloch-SermonOnTheMount_3-20-2013 9-33-20 AM.jpg",
+      },
+      {
+        caption: '"El Sermón de las Bienaventuranzas" James Tissot',
+        file: "The_Sermon_on_the_Mount_010_8-1-2013 11-34-44 AM.jpg",
+      },
+      {
+        caption:
+          '"Vosotros sois la luz del mundo. Una ciudad asentada sobre un monte no se puede esconder. Ni se enciende una luz y se pone debajo de un almud, sino sobre el candelero, y alumbra a todos los que están en casa. Así alumbre vuestra luz delante de los hombres, para que vean vuestras buenas obras y glorifiquen a vuestro Padre que está en los cielos." (Mateo 5:14-16)',
+        file: "Oil Lamp_3-20-2013 9-36-48 AM.jpg",
+      },
+      {
+        caption:
+          '"Vosotros sois la sal de la tierra; pero si la sal se desvaneciere, ¿con qué será salada? No sirve más para nada, sino para ser echada fuera y hollada por los hombres." (Mateo 5:13)',
+        file: "Salt_3-20-2013 9-36-48 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1061",
+    slug: "siervo-del-centurion-sanado",
+    title: "Siervo del Centurión Sanado",
+    period: "9",
+    description:
+      "Un centurión romano en Capernaum se acerca a Jesús pidiendo la sanidad de su siervo. Jesús dice que irá, pero el centurión dice que no es digno de que Cristo vaya a su casa, pero que puede sanar con solo una palabra. Jesús se maravilla de la fe de este hombre.",
+    article:
+      'Después de dar el sermón del monte, Cristo entró en Capernaum. Parece que la delegación de ancianos que llevaba la petición del centurión se encontró con Jesús cuando Él regresaba a la ciudad. El siervo de este hombre estaba enfermo. Este "siervo" era muy estimado por el centurión, sin duda por el valioso servicio que había prestado. El término en sí puede o no implicar afecto personal, pero en este caso particular, el centurión estaba "afectuosamente apegado" al esclavo. El siervo estaba a punto de morir. El conocimiento del centurión sobre Jesús se limitaba a los informes que le habían llegado sobre los grandes hechos del Salvador. Nunca había visto a Jesús antes de esta ocasión.\n\nLos ancianos de la ciudad se acercan a Jesús en nombre de este centurión. Estos pueden haber sido los ciudadanos principales de la ciudad o el consejo de ancianos de la sinagoga local (ver p. 56), o pueden haber servido en ambas capacidades. En los propios ojos del centurión, él era indigno (vs. 6, 7). En los ojos de los "ancianos", él era "digno" (v. 4). Una conciencia de la propia indignidad es una recomendación del más alto orden. Pero con el centurión parece que esta evaluación de su estatus ante Jesús era más que humildad. Aunque creyente en el verdadero Dios, el centurión aún no era un prosélito completo, y por lo tanto, a los ojos de los judíos, todavía era un gentil y, por lo tanto, no era elegible para participar en los servicios religiosos (ver vs. 2, 5). Verdaderamente humilde de corazón ante Dios, y probablemente consciente también de su estatus a los ojos de los judíos, buscó evitar avergonzar a Jesús obligándolo a entrar en una casa gentil. Esto, en el mejor de los casos, sería repulsivo para un judío piadoso y sin duda lo haría ceremonialmente impuro (ver Juan 18:28).\n\nAunque el centurión protestó su propia indignidad, Jesús más tarde dijo de él: "No he hallado tanta fe, no, ni en Israel" (v. 9). La fe notable de este supuesto gentil lo hizo más digno a los ojos del cielo que cualquiera de los compatriotas de Jesús. La fe del centurión de que una palabra de Jesús sería suficiente para sanar a su siervo era extraordinaria en sí misma. El hecho de que el centurión nunca había visto o conversado con Jesús hizo que esa fe fuera aún más notable, particularmente en vista de la lentitud de los judíos e incluso de los propios discípulos de Cristo para ejercer la fe (Mateo 6:30; 8:26; 16:8; ver Marcos 4:40; Lucas 8:25; 12:28; 17:6). Pero el hecho de que el centurión era—oficialmente, desde el punto de vista judío—un gentil, hizo que su fe pareciera grande, casi más allá de la creencia.',
+    date: "29 d.C.",
+    scriptures: ["40|8:5-13", "42|7:1-10"],
+    related: [
+      {
+        slug: "ministerio-en-galilea",
+        title: "Ministerio en Galilea",
+      },
+    ],
+    images: [
+      {
+        caption:
+          '"El Centurión suplica a Jesús en nombre de su siervo" William Hole',
+        file: "The-centurion-beseeching-Jesus-on-behalf-of-his-servant-001_8-1-2013 11-38-13 AM.jpg",
+      },
+      {
+        caption:
+          "Un centurión romano en Capernaum se acerca a Jesús pidiendo la sanidad de su siervo.",
+        file: "Roman Centurion_3-20-2013 9-26-37 AM.jpg",
+      },
+      {
+        caption:
+          "Capernaum y Monte de las Bienaventuranzas desde el Mar de Galilea.",
+        file: "Capernaum and Mount of Beatitudes from Sea of Galilee, tb100805596_3-20-2013 9-26-37 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1062",
+    slug: "dos-hombres-ciegos-sanados",
+    title: "Dos Hombres Ciegos Sanados",
+    period: "9",
+    description:
+      'Mientras Jesús sale de Capernaum, dos hombres ciegos se acercan a Él buscando ser sanados. Cristo les pregunta si creen que Él puede sanarlos. Responden: "Sí, Señor". Jesús los sana y les dice que no se lo digan a nadie, pero ellos difunden la noticia.',
+    article:
+      "Dos hombres ciegos claman a Jesús, el Hijo de David, para ser sanados. Su uso de este término indica que los ciegos reconocieron a Jesús como el Mesías. Jesús les preguntó si realmente creían que Él podía sanarlos. Sin el ejercicio de la fe de su parte, Cristo no podría ejercer Su poder en su favor. La fe del hombre debe levantarse para encontrarse y unirse con el poder de Dios para que las bendiciones, ya sean físicas o espirituales, puedan ser impartidas y recibidas (ver Hebreos 11:6). Cristo los sana y les dice que no le cuenten a nadie sobre la sanidad, pero ellos difunden la noticia de todos modos.\n",
+    date: "29 d.C.",
+    scriptures: ["40|9:27-31"],
+    related: [
+      {
+        slug: "ministerio-en-galilea",
+        title: "Ministerio en Galilea",
+      },
+    ],
+    images: [
+      {
+        caption: '"Dos Hombres Ciegos en Jericó" James Tissot',
+        file: "Two_Blind_Men_at_Jericho_001_8-1-2013 11-40-27 AM.jpg",
+      },
+      {
+        caption:
+          "Dos hombres ciegos claman a Jesús, el Hijo de David, para ser sanados.",
+        file: "Blind Man_3-20-2013 9-18-51 AM.jpg",
+      },
+      {
+        caption:
+          "Mientras Jesús sale de Capernaum, dos hombres ciegos se acercan a Él buscando ser sanados.",
+        file: "Capernaum and Mount of Beatitudes from Sea of Galilee, tb100805596_3-20-2013 9-18-51 AM.jpg",
+      },
+      {
+        caption:
+          "La fe del hombre debe levantarse para encontrarse y unirse con el poder de Dios para que las bendiciones, ya sean físicas o espirituales, puedan ser impartidas y recibidas.",
+        file: "GoodSalt-pppas0335_8-7-2013 1-50-48 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1063",
+    slug: "un-endemoniado-mudo-es-sanado",
+    title: "Un Endemoniado Mudo es Sanado",
+    period: "9",
+    description:
+      "Un hombre que no puede hablar y que está poseído por un demonio es llevado a Jesús. Cristo expulsa al demonio y la capacidad de hablar del hombre es restaurada. Todas las personas se asombran, pero los fariseos critican a Jesús, diciendo que expulsa demonios por el poder del diablo.",
+    article:
+      "Un endemoniado mudo es llevado a Jesús. Cuando un hombre carece de la capacidad o la fe para acudir a Jesús para la sanidad del cuerpo o del alma, es afortunado de tener a alguien interesado en él para llevarlo (cf. Marcos 2:2, 3). Cristo sanó al hombre y él habló. Esta fue una evidencia tangible de la sanidad. Este es el último milagro registrado durante varios meses, el siguiente siendo la alimentación de los 5,000 la siguiente primavera. Si Jesús se retiró durante el invierno después del segundo viaje por Galilea no se menciona. La emoción popular ocasionada por los muchos milagros de Jesús tendía a oscurecer el objetivo principal del Salvador al realizarlos—el avance del reino de los cielos en los corazones y las vidas de los hombres. Probablemente, desesperados por silenciar a Cristo o por volver al pueblo en Su contra, los fariseos buscaron hacer creer que Su poder de hacer milagros constituía evidencia de que Cristo estaba en liga con Satanás. El hecho de que Mateo aquí no registre ninguna respuesta por parte de Jesús sugiere la posibilidad de que los fariseos no avanzaran esta afirmación en Su presencia, sino que más bien la circularan entre la gente.",
+    date: "29 d.C.",
+    scriptures: ["40|9:32-34"],
+    related: [
+      {
+        slug: "ministerio-en-galilea",
+        title: "Ministerio en Galilea",
+      },
+    ],
+    images: [
+      {
+        caption: '"Hombre Ciego y Mudo Poseído por Demonios" James Tissot',
+        file: "Blind_and_Mute_Man_Possessed_by_Devils_001_8-1-2013 11-42-04 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1070",
+    slug: "la-tormenta-en-el-lago",
+    title: "La tormenta en el lago",
+    period: "9",
+    description:
+      "Cristo y Sus discípulos suben a un bote para cruzar un lago. Se levanta una tormenta y amenaza con hundir el bote. Jesús está durmiendo y es despertado. Reprende a los vientos. Sus discípulos se maravillan de que Él tenga autoridad sobre todas las fuerzas del mal.",
+    article:
+      'Según el relato en Marcos, Cristo ya estaba en el pequeño bote de pesca y simplemente permaneció allí sin bajar a tierra para despedir a la gente (cap. 4:1, 36). Sin embargo, dado que Mateo ha separado de su contexto la historia de la tormenta en el lago (ver cap. 8:18), aparentemente considera necesario, en esta conexión también, registrar que Jesús entró en el bote (ver cap. 13:2). Probablemente era casi el anochecer cuando los discípulos empujaron el bote desde la orilla. Esta embarcación era sin duda el "pequeño barco" puesto a disposición de Jesús (ver Marcos 3:9). Había varios otros botes de pesca que partieron de la orilla al mismo tiempo para cruzar el lago con Jesús (ver Marcos 4:36).\n\nSe desató una tempestad. La palabra griega es seismos, "un temblor", "una conmoción", "una tempestad" o "un terremoto". Nuestra palabra en inglés seismograph se deriva en parte de esta raíz. Aquí seismos denota la turbulencia del mar y la fuerza terrible de las ráfagas furiosas de viento al golpear el bote. El lago de Galilea es conocido por sus repentinas tormentas de gran intensidad. En esta ocasión, los vientos barrieron salvajemente las aguas del lago desde los desfiladeros de las montañas a lo largo de la orilla oriental. Sin embargo, la tarde había estado tranquila, y los discípulos probablemente no anticiparon un clima tormentoso.\n\nEl bote comenzó a llenarse con tal rapidez que los discípulos perdieron la esperanza de achicar el agua antes de que se hundiera por completo. Varios de los discípulos eran pescadores expertos que habían pasado gran parte de sus vidas en el lago de Galilea y sabían cómo manejar un bote en una tormenta. Pero toda su experiencia y habilidad les falló en esta ocasión. La Biblia dice que Jesús estaba durmiendo en el bote. Este es el único caso registrado de Jesús durmiendo. Vencido por el cansancio y el hambre al final de un día agotador, sin duda se durmió rápidamente (ver Mateo 8:18 Marcos 4:38).\n\nLos discípulos llamaron a Jesús dos veces en la oscuridad, solo para que sus voces fueran ahogadas por el ruido de la tormenta. Entonces, un repentino destello de relámpago les reveló que Jesús todavía estaba durmiendo, por lo que "vinieron a Él y lo despertaron" (Lucas 8:24). Asombrados de que pudiera dormir a través de la furia del viento y asombrados por Su aparente indiferencia en medio de sus frenéticos esfuerzos por salvar el barco y sus propias vidas, le hablaron con cierto reproche: "¿No te importa que perezcamos?" (Marcos 4:38). Aunque los discípulos habían visto muchas evidencias maravillosas del poder divino, parece que antes de este momento Jesús no había mostrado control sobre las fuerzas de la naturaleza, y quizás no se les había ocurrido que Él pudiera hacerlo. Pero Cristo se levantó y calmó la tormenta. Esta se calmó tan repentinamente como había surgido. Sin duda, el silencio de la naturaleza fue tan sorprendente e impresionante como lo había sido la inesperada furia del viento y las olas.\nAsí como Cristo calmó los vientos y las olas de Galilea, Él es capaz de calmar las tormentas de la vida que a menudo estallan inesperadamente y con violencia sobre el alma humana. Con demasiada frecuencia, la razón por la que no experimentamos Su poder en nuestras vidas es que estamos "temerosos" y tenemos "poca fe".\n',
+    date: "29 d.C.",
+    scriptures: ["40|8:18-27", "41|4:35-41", "42|8:22-25"],
+    related: [
+      {
+        slug: "ministerio-en-galilea",
+        title: "Ministerio en Galilea",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Cristo en la tormenta en el lago de Galilea, pintura de Rembrandt en 1633. Ubicada en el Museo Isabella Steward Gardner en Boston.",
+        file: "Storm in the Sea_3-19-2013 5-12-48 PM.jpg",
+      },
+      {
+        caption: "Tormenta sobre el mar de Galilea.",
+        file: "Storm over Sea of Galilee, tb011212500_3-19-2013 5-12-48 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1071",
+    slug: "endemoniados-de-gadara",
+    title: "Endemoniados de Gadara",
+    period: "9",
+    description:
+      "Después de cruzar el lago con Sus discípulos, Jesús es recibido por dos endemoniados en el país de los gadarenos. Cristo se presenta ante ellos y expulsa al demonio hacia una manada de cerdos. Los hombres son restaurados a su sano juicio y se les dice que se queden y den testimonio.",
+    article:
+      'El día anterior, Jesús había pronunciado el Sermón junto al mar, que consistía principalmente en parábolas (ver Mateo 13), en algún lugar a lo largo de la orilla de Galilea que limita con la llanura de Genesaret (ver Mateo 13:1). La distancia a través del lago en este punto era de aproximadamente 7 millas (11 km.). Fue durante este cruce que Jesús calmó la tormenta (ver Mateo 8:18). Su propósito al cruzar a la orilla oriental menos poblada en este momento era disfrutar de un breve respiro de las multitudes que ahora lo presionaban hasta el punto de que a menudo tenía poco o ningún tiempo incluso para comer y dormir (ver Marcos 3:20).\nCuando el bote llegó a esta región, se vieron a dos hombres salvajes acercándose. Para cuando los endemoniados llegaron al lugar donde Jesús estaba, los discípulos habían huido aterrorizados, y el Salvador estaba solo con los dos hombres poseídos por demonios. De alguna manera, parecían percibir vagamente que aquí había un amigo, no un enemigo, y se postraron en el suelo a los pies de Jesús. Su sola presencia a menudo parecía impresionar profundamente incluso a Sus peores enemigos (ver Mateo 21:12, 13 Juan 2:15).\n\nLos demonios desafiaron la autoridad de Jesús (ver cap. 1:27 ver cap. 2:10) y básicamente dijeron: "¿Qué derecho tienes para interferir conmigo?" Parecería que los espíritus malignos hablaban directamente a través de uno de los endemoniados de Gadara a Cristo, ya que Jesús se dirige al "espíritu inmundo" en lugar de al hombre mismo (ver Marcos 5:8). En consecuencia, el reconocimiento de Jesús como el "Hijo del Dios Altísimo" representa el conocimiento que los espíritus poseían, no los endemoniados. Cristo expulsó a los demonios hacia una manada de cerdos cercana y les pidió a los hombres restaurados que se quedaran en esta región y compartieran su testimonio con la gente incrédula.',
+    date: "29 d.C.",
+    scriptures: ["40|8:28-34", "41|5:1-20", "42|8:26-39"],
+    related: [
+      {
+        slug: "ministerio-en-galilea",
+        title: "Ministerio en Galilea",
+      },
+    ],
+    images: [
+      {
+        caption: "Jesús con los endemoniados.",
+        file: "Demoniacs_8-1-2013 12-05-39 PM.jpg",
+      },
+      {
+        caption:
+          "Después de cruzar el lago con Sus discípulos, Jesús es recibido por dos endemoniados en el país de los gadarenos. Cristo se presenta ante ellos y expulsa al demonio hacia una manada de cerdos.",
+        file: "Pigs_3-19-2013 5-09-22 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1075",
+    slug: "la-indagacion-de-los-discipulos-de-juan",
+    title: "La indagación de los discípulos de Juan",
+    period: "9",
+    description:
+      "Desde la prisión, Juan el Bautista escucha sobre las obras de Cristo. Envía a dos discípulos a cuestionar a Cristo. La fe de Juan vacila, pero Jesús lo anima a mirar las señales de Su ministerio. Cristo afirma el papel y la obra de Juan.",
+    article:
+      'Una pregunta sobre la mesianidad de Jesús se originó con los discípulos de Juan, no con Juan mismo, y Juan estaba perturbado de que estos hombres albergaran incredulidad con respecto a su propio testimonio de que Jesús era de hecho el Prometido. Si los propios discípulos del Bautista dudaban de su mensaje, ¿cómo podrían esperar que otros creyeran? Había algunas cosas que Juan no entendía, como la verdadera naturaleza del reino mesiánico y por qué Jesús no hacía nada para lograr su liberación de la prisión. Pero a pesar de las dudas que lo atormentaban, no renunció a su fe de que Jesús era de hecho el Cristo. La decepción y la ansiedad perturbaban el alma del solitario prisionero, pero se abstuvo de discutir estas perplejidades de su propia mente con sus discípulos.\n\nCon la esperanza de que una entrevista personal con Jesús confirmara su fe, de que traerían un mensaje fortalecedor de la fe para sus otros discípulos, y de que podría recibir un mensaje personal para aclarar su propio pensamiento, Juan envió a los dos hombres a Jesús. Dios permite que horas de perplejidad lleguen incluso a los más dignos y confiables de Sus siervos, para fortalecer su fe y confianza en Él. A veces, cuando es necesario para su propio desarrollo de carácter o para el bien de la causa de Dios en la tierra, Él les permite pasar por experiencias que parecen sugerir que Él los ha olvidado. En vista de esto, se puede entender fácilmente que la experiencia de Juan en prisión durante un período de aproximadamente un año fue, en la providencia misericordiosa de Dios, permitida como un medio de aliento para innumerables miles de otros que, en años posteriores, deben sufrir el martirio. Sabiendo que la fe de Juan no fallaría (ver 1 Corintios 10:13), Dios fortaleció al profeta para que perseverara. Firme hasta el final, Juan, incluso en prisión y en la muerte, se erige como "una luz ardiente y resplandeciente" (Juan 5:35), su fortaleza y paciencia iluminando el oscuro camino de la vida para los mártires de Jesús a lo largo de los siglos.',
+    date: "29 d.C.",
+    scriptures: ["40|11:2-6", "42|7:18-23"],
+    related: [
+      {
+        slug: "ministerio-en-galilea",
+        title: "Ministerio en Galilea",
+      },
+    ],
+    images: [
+      {
+        caption: "Juan el Bautista por James Tissot",
+        file: "John the Baptist 1039-27_8-1-2013 1-57-32 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1080",
+    slug: "martirio-de-juan-el-bautista",
+    title: "Martirio de Juan el Bautista",
+    period: "9",
+    description:
+      "Juan el Bautista habla en contra de la relación adúltera de Herodes el tetrarca y la esposa de su hermano, Herodías. Ella idea un plan para que Herodes destruya a Juan, quien es decapitado.",
+    article:
+      "Los extensos trabajos de los Doce durante el curso de la Tercera Gira por Galilea fueron evidentemente suficientes para llamar la atención generalizada sobre Jesús y Su obra, y para despertar el temor de Herodes de que Jesús era Juan resucitado de entre los muertos. Mientras que en las dos expediciones evangelísticas anteriores había habido solo un grupo yendo de aldea en aldea, ahora había siete. Evidentemente, los informes que llegaban a Herodes, desde todos los rincones, revelaban una rápida extensión del evangelio. Mientras que en el pasado Jesús podía haber parecido a las autoridades no más que un predicador itinerante solitario acompañado por un grupo variopinto de seguidores, ahora era evidente que representaba un movimiento mucho más grande. Herodes ya no podía evitar oír hablar de Él. Se preguntaba si Jesús era Juan el Bautista resucitado de entre los muertos. Parece que fue una combinación de superstición y una conciencia culpable lo que llevó a Herodes a esta conclusión.\n\nJuan había hablado en contra del pecado de Herodes de tomar a la esposa de Felipe, Herodías, y casarse con ella. Por su parte, Herodes había divorciado a la hija de Aretas, rey de Arabia. Así, Herodes y Herodías tenían cada uno un cónyuge vivo. Como resultado del divorcio de Herodes de su antigua esposa, su padre, Aretas, le declaró la guerra a Herodes y lo derrotó. Esta derrota fue vista por los judíos como un juicio divino sobre Herodes debido a su alianza indefendible con Herodías (José, Antigüedades xviii. 5. 1, 2).\n\nSin duda, Herodes había escuchado personalmente la predicación de Juan, y por un tiempo pareció que cedería al llamado al arrepentimiento. La ley de Moisés prohibía estrictamente un matrimonio como el de Herodes y Herodías (Lev. 18:16 20:21), y, según Josefo, los judíos desaprobaban completamente la unión (Antigüedades xviii. 5. 4). Herodías odiaba a Juan y esperó su momento para matarlo. Conociendo la influencia que Juan había ejercido sobre la mente de Herodes Antipas (ver v. 20), Herodías probablemente temía que el tetrarca pudiera divorciarse de ella, como Juan había aconsejado. Sus maquinaciones malvadas finalmente dieron fruto cuando Herodes celebró un banquete en el que la hija de Herodías, Salomé, bailó. Él prometió imprudentemente darle cualquier cosa que quisiera. Cuando ella le preguntó a su madre, esta le dijo que pidiera la cabeza de Juan el Bautista. Así terminó la vida del más grande de los profetas.",
+    date: "30 d.C.",
+    scriptures: ["40|14:1-12", "41|6:14-29", "42|9:7-9"],
+    related: [
+      {
+        slug: "juan-el-bautista-encarcelado",
+        title: "Juan el Bautista encarcelado",
+      },
+    ],
+    images: [
+      {
+        caption: '"La hija de Herodías bailando" por James Tissot',
+        file: "GoodSalt-stdas0094_8-6-2013 4-14-04 PM.jpg",
+      },
+      {
+        caption: "Templo herodiano en Samaria",
+        file: "Samaria Herodian temple, tb050106508 copy_3-19-2013 3-11-58 PM.jpg",
+      },
+      {
+        caption: "Vista de Samaria",
+        file: "Samaria from north, tb070507860_3-19-2013 3-11-58 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1096",
+    slug: "ministerio-de-cristo-en-judea-y-perea",
+    title: "Ministerio de Cristo en Judea y Perea",
+    period: "9",
+    description:
+      "Jesús deja Galilea para llevar a cabo Su ministerio en Judea y Perea. Asiste a la fiesta de los tabernáculos, enseña en el templo, ministra a una adúltera y realiza muchas otras sanaciones y enseñanzas antes de Su semana final, cuando es crucificado.",
+    article: "\n",
+    date: "30 d.C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "jesus",
+        title: "Jesús",
+      },
+      {
+        slug: "viaje-secreto-a-la-fiesta-de-los-tabernaculos",
+        title: "Viaje secreto a la fiesta de los tabernáculos",
+      },
+      {
+        slug: "ensenanza-en-el-templo",
+        title: "Enseñanza en el templo",
+      },
+      {
+        slug: "la-adultera",
+        title: "La adúltera",
+      },
+      {
+        slug: "la-luz-del-mundo",
+        title: "La luz del mundo",
+      },
+      {
+        slug: "la-discusion-sobre-el-linaje-de-abraham",
+        title: "La discusión sobre el linaje de Abraham",
+      },
+      {
+        slug: "el-hombre-ciego-de-nacimiento",
+        title: "El hombre ciego de nacimiento",
+      },
+      {
+        slug: "el-buen-pastor",
+        title: "El buen pastor",
+      },
+      {
+        slug: "ministerio-en-samaria-y-perea",
+        title: "Ministerio en Samaria y Perea",
+      },
+      {
+        slug: "pruebas-de-discipulado",
+        title: "Pruebas de discipulado",
+      },
+      {
+        slug: "mision-de-los-setenta",
+        title: "Misión de los setenta",
+      },
+      {
+        slug: "el-buen-samaritano",
+        title: "El buen samaritano",
+      },
+      {
+        slug: "en-la-casa-de-maria-y-marta",
+        title: "En la casa de María y Marta",
+      },
+      {
+        slug: "en-la-fiesta-de-la-dedicacion",
+        title: "En la fiesta de la dedicación",
+      },
+      {
+        slug: "instruccion-sobre-la-oracion",
+        title: "Instrucción sobre la oración",
+      },
+      {
+        slug: "la-luz-interior",
+        title: "La luz interior",
+      },
+      {
+        slug: "cenando-con-un-fariseo",
+        title: "Cenando con un fariseo",
+      },
+      {
+        slug: "una-advertencia-contra-los-fariseos",
+        title: "Una advertencia contra los fariseos",
+      },
+      {
+        slug: "la-locura-de-las-riquezas",
+        title: "La locura de las riquezas",
+      },
+      {
+        slug: "esperando-el-regreso-del-maestro",
+        title: "Esperando el regreso del maestro",
+      },
+      {
+        slug: "justicia-y-misericordia-divina",
+        title: "Justicia y misericordia divina",
+      },
+      {
+        slug: "la-mujer-enferma",
+        title: "La mujer enferma",
+      },
+      {
+        slug: "crecimiento-del-reino-de-los-cielos",
+        title: "Crecimiento del reino de los cielos",
+      },
+      {
+        slug: "una-advertencia-del-juicio-divino",
+        title: "Una advertencia del juicio divino",
+      },
+      {
+        slug: "cenando-con-un-principal-fariseo",
+        title: "Cenando con un principal fariseo",
+      },
+      {
+        slug: "el-gran-banquete",
+        title: "El gran banquete",
+      },
+      {
+        slug: "mas-costos-del-discipulado",
+        title: "Más costos del discipulado",
+      },
+      {
+        slug: "la-parabola-de-la-oveja-perdida",
+        title: "La parábola de la oveja perdida",
+      },
+      {
+        slug: "la-moneda-perdida",
+        title: "La moneda perdida",
+      },
+      {
+        slug: "el-hijo-prodigo",
+        title: "El hijo pródigo",
+      },
+      {
+        slug: "el-mayordomo-infiel",
+        title: "El mayordomo infiel",
+      },
+      {
+        slug: "el-rico-y-lazaro",
+        title: "El rico y Lázaro",
+      },
+      {
+        slug: "perdon-fe-y-servicio",
+        title: "Perdón, fe y servicio",
+      },
+      {
+        slug: "la-resurreccion-de-lazaro",
+        title: "La resurrección de Lázaro",
+      },
+      {
+        slug: "retiro-a-efrain",
+        title: "Retiro a Efraín",
+      },
+      {
+        slug: "los-diez-leprosos",
+        title: "Los diez leprosos",
+      },
+      {
+        slug: "cuando-y-como-viene-el-reino",
+        title: "Cuándo y cómo viene el reino",
+      },
+      {
+        slug: "el-juez-injusto",
+        title: "El juez injusto",
+      },
+      {
+        slug: "el-fariseo-y-el-publicano",
+        title: "El fariseo y el publicano",
+      },
+      {
+        slug: "matrimonio-y-divorcio",
+        title: "Matrimonio y divorcio",
+      },
+      {
+        slug: "bendicion-de-los-ninos",
+        title: "Bendición de los niños",
+      },
+      {
+        slug: "el-joven-rico",
+        title: "El joven rico",
+      },
+      {
+        slug: "obreros-en-la-vina",
+        title: "Obreros en la viña",
+      },
+      {
+        slug: "jesus-predice-su-muerte",
+        title: "Jesús predice Su muerte",
+      },
+      {
+        slug: "la-ambicion-de-jacobo-y-juan",
+        title: "La ambición de Jacobo y Juan",
+      },
+      {
+        slug: "bartimeo-el-ciego",
+        title: "Bartimeo el ciego",
+      },
+      {
+        slug: "zaqueo",
+        title: "Zaqueo",
+      },
+      {
+        slug: "el-noble-y-las-monedas",
+        title: "El noble y las monedas",
+      },
+    ],
+    images: [
+      {
+        caption: "Colinas de Judea cerca de Debir, Khirbet Rabud.",
+        file: "Judean hills near Debir, Khirbet Rabud, tb030407777_3-19-2013 11-04-37 AM.jpg",
+      },
+      {
+        caption:
+          "Uno de los ministerios de Jesús en Judea y Perea es ministrar a una adúltera.",
+        file: "Woman Taken in Adultery_3-19-2013 11-04-37 AM.jpg",
+      },
+      {
+        caption:
+          "Jesús deja Galilea para llevar a cabo Su ministerio en Judea y Perea.",
+        file: "Kursi steep slope and Sea of Galilee, tb032707889_3-19-2013 11-04-37 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1139",
+    slug: "jesus-predice-su-muerte",
+    title: "Jesús predice Su muerte",
+    period: "9",
+    description:
+      "Mientras viaja a Jerusalén para la Pascua, Jesús lleva a Sus discípulos aparte y les dice lo que está por venir. Los discípulos saben que los gobernantes quieren destruir a Cristo, pero no comprenden lo que sucederá y su significado.",
+    article:
+      'Durante estos últimos meses de Su vida en la tierra, Jesús había estado entrando y saliendo de Jerusalén y Judea varias veces, pero dedicó la mayor parte de Su ministerio a Samaria y Perea. Ahora era probablemente finales de marzo o principios de abril del año 31 d.C. Jesús llegó a Betania el viernes antes de la Pascua. Fue probablemente en el camino, antes de llegar a Jericó, que ocurrieron los incidentes de Mateo 20:17—28. Jesús informó a los discípulos que sería traicionado y condenado a muerte.\n\nLos judíos habían estado conspirando para matar a Jesús desde la sanación del hombre inválido en el estanque de Bethesda dos años antes, y habían puesto espías para seguirlo dondequiera que fuera. El éxito de Su misión en Galilea los llevó a intensificar estos esfuerzos. Posteriormente, durante el curso del ministerio en Perea, hicieron repetidos intentos de arrestarlo y matarlo. Sus planes ahora estaban tomando una forma más definida, particularmente desde la resurrección de Lázaro unas semanas antes de este momento. Por primera vez, Jesús menciona específicamente el hecho de que los gentiles, las autoridades romanas, serán instrumentales en Su muerte. Tres años antes, Jesús le había dicho a Nicodemo que debía ser "levantado", lo que implicaba la crucifixión (ver Juan 3:14). Ahora, por primera vez, predice claramente la manera de Su muerte.',
+    date: "31 d.C.",
+    scriptures: ["40|20:17-19", "41|10:32-34", "42|18:31-34"],
+    related: [
+      {
+        slug: "ministerio-de-cristo-en-judea-y-perea",
+        title: "Ministerio de Cristo en Judea y Perea",
+      },
+    ],
+    images: [
+      {
+        caption: '"Exhortación a los apóstoles" por James Tissot',
+        file: "Exhortation_to_the_Apostles_001_8-6-2013 4-51-34 PM.jpg",
+      },
+      {
+        caption: "Vista de Jerusalén desde el sureste",
+        file: "Jerusalem aerial from southeast, tb010703208_3-7-2013 5-07-19 PM.jpg",
+      },
+      {
+        caption: "Colinas de Judea cerca de Debir, Khirbet Rabud",
+        file: "Judean hills near Debir, Khirbet Rabud, tb030407777_3-7-2013 5-07-19 PM.jpg",
+      },
+      {
+        caption: "Estanques de Bethesda donde Jesús sanó al hombre ciego",
+        file: "Pools of Bethesda and Crusader chapel, tb011612845_3-7-2013 5-07-19 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1142",
+    slug: "zaqueo",
+    title: "Zaqueo",
+    period: "9",
+    description:
+      "Mientras Jesús pasa por Jericó en Su camino a Jerusalén, Zaqueo, un recaudador de impuestos, quiere verlo. Su baja estatura le dificulta ver por encima de las multitudes. Así que trepa a un árbol. Cristo lo nota y lo visita en su casa.",
+    article:
+      'Zaqueo, cuyo nombre significa "inocente", era un recaudador de impuestos judío en Jericó que, cuando Jesús pasó por la ciudad, hizo esfuerzos especiales para verlo. Jesús reconoció en él un alma honesta, se quedó en su casa y lo convirtió (Lucas 19:1—10).',
+    date: "31 d.C.",
+    scriptures: ["42|19:1-10"],
+    related: [
+      {
+        slug: "ministerio-de-cristo-en-judea-y-perea",
+        title: "Ministerio de Cristo en Judea y Perea",
+      },
+    ],
+    images: [
+      {
+        caption: "Jesús comiendo con Zaqueo",
+        file: "GoodSalt-prcas0188_8-28-2013 4-00-51 PM.jpg",
+      },
+      {
+        caption: "Zaqueo por Niels Larsen Stevns.",
+        file: "Zacchaeus _3-7-2013 11-23-22 AM.jpg",
+      },
+      {
+        caption:
+          "Árbol de sicómoro en Jericó, se cree que es el árbol que Zaqueo trepó para ver a Jesús.",
+        file: "Sycamore-fig tree, Jericho, tb052205965 copy_3-7-2013 11-23-22 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1146",
+    slug: "semana-de-la-pasion",
+    title: "Semana de la Pasión",
+    period: "9",
+    description:
+      "La Semana de la Pasión es la última semana de la vida de Jesús antes de ser crucificado. Está marcada por la entrada triunfal un domingo y la resurrección el domingo siguiente. Está marcada por la enseñanza, la Última Cena, la traición, el juicio y la crucifixión.",
+    article:
+      "Unas semanas después de la resurrección de Lázaro, Jesús una vez más dirigió Sus pasos hacia Jerusalén. Descansando en Betania durante el sábado, fue entretenido en la casa de Simón. Alrededor de ese tiempo, Judas fue al palacio del sumo sacerdote con una oferta para traicionar a Jesús en sus manos. El domingo, Jesús entró triunfalmente en Jerusalén, manifestándose públicamente como el Mesías-Rey.\n\nLa emoción de la gente que había venido a Jerusalén para asistir a la Pascua se elevó al máximo y lo aclamaron como rey. Los discípulos de Jesús sin duda tomaron Su aceptación de este homenaje como prueba de que sus esperanzas estaban a punto de cumplirse, y la multitud creyó que la hora de su emancipación de los romanos había llegado. Jesús sabía que este curso de acción lo llevaría a la cruz, pero era Su propósito llamar públicamente la atención de todos hacia el sacrificio que estaba a punto de hacer. El lunes, limpió el Templo por segunda vez, repitiendo así al final de Su ministerio el mismo acto con el que había abierto Su obra tres años antes.\n\nEsa noche, Jesús se retiró con cuatro de Sus discípulos al Monte de los Olivos, donde delineó lo que aún debía suceder antes del establecimiento de Su reino visible en la tierra. El miércoles de la Semana de la Pasión, Jesús pasó en retiro con Sus discípulos. El jueves por la noche celebró la Pascua con ellos, instituyendo al mismo tiempo la ordenanza de la Última Cena. Después de la cena, les aconsejó extensamente sobre el futuro y Su eventual regreso. Esa noche, Jesús fue arrestado, y la mañana siguiente compareció primero ante las autoridades judías y luego ante Pilato y Herodes. Jesús fue condenado a muerte por los judíos, y la sentencia recibió la ratificación renuente del procurador romano. Ese mismo día, Jesús fue llevado a ser crucificado.",
+    date: "31 d.C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "jesus",
+        title: "Jesús",
+      },
+      {
+        slug: "la-cena-de-simon",
+        title: "La cena de Simón",
+      },
+      {
+        slug: "el-complot-de-la-traicion",
+        title: "El complot de la traición",
+      },
+      {
+        slug: "la-entrada-triunfal",
+        title: "La entrada triunfal",
+      },
+      {
+        slug: "la-higuera-estéril",
+        title: "La higuera estéril",
+      },
+      {
+        slug: "segunda-limpieza-del-templo",
+        title: "Segunda limpieza del templo",
+      },
+      {
+        slug: "los-lideres-desafian-la-autoridad-de-jesus",
+        title: "Los líderes desafían la autoridad de Jesús",
+      },
+      {
+        slug: "los-dos-hijos",
+        title: "Los dos hijos",
+      },
+      {
+        slug: "los-labradores-malvados",
+        title: "Los labradores malvados",
+      },
+      {
+        slug: "el-hombre-sin-vestido-de-boda",
+        title: "El hombre sin vestido de boda",
+      },
+      {
+        slug: "pagar-tributo-al-cesar",
+        title: "Pagar tributo al César",
+      },
+      {
+        slug: "matrimonio-y-la-resurreccion",
+        title: "Matrimonio y la resurrección",
+      },
+      {
+        slug: "el-mandamiento-mas-grande",
+        title: "El mandamiento más grande",
+      },
+      {
+        slug: "jesus-silencia-a-sus-criticos",
+        title: "Jesús silencia a Sus críticos",
+      },
+      {
+        slug: "ayes-sobre-los-escribas-y-fariseos",
+        title: "Ayes sobre los escribas y fariseos",
+      },
+      {
+        slug: "las-monedas-de-la-viuda",
+        title: "Las monedas de la viuda",
+      },
+      {
+        slug: "entrevista-con-ciertos-griegos",
+        title: "Entrevista con ciertos griegos",
+      },
+      {
+        slug: "rechazo-final-por-los-lideres-judios",
+        title: "Rechazo final por los líderes judíos",
+      },
+      {
+        slug: "retiro-al-monte-de-los-olivos",
+        title: "Retiro al Monte de los Olivos",
+      },
+      {
+        slug: "las-diez-virgenes",
+        title: "Las diez vírgenes",
+      },
+      {
+        slug: "los-talentos",
+        title: "Los talentos",
+      },
+      {
+        slug: "las-ovejas-y-las-cabras",
+        title: "Las ovejas y las cabras",
+      },
+      {
+        slug: "preparacion-para-la-pascua",
+        title: "Preparación para la Pascua",
+      },
+      {
+        slug: "celebracion-de-la-pascua",
+        title: "Celebración de la Pascua",
+      },
+      {
+        slug: "lavando-los-pies-de-los-discipulos",
+        title: "Lavando los pies de los discípulos",
+      },
+      {
+        slug: "la-ultima-cena",
+        title: "La Última Cena",
+      },
+      {
+        slug: "el-traidor-revelado",
+        title: "El traidor revelado",
+      },
+      {
+        slug: "consejo-de-despedida",
+        title: "Consejo de despedida",
+      },
+      {
+        slug: "retiro-a-getsemani",
+        title: "Retiro a Getsemaní",
+      },
+      {
+        slug: "una-advertencia-a-pedro-y-los-diez",
+        title: "Una advertencia a Pedro y los diez",
+      },
+      {
+        slug: "la-vid-verdadera",
+        title: "La vid verdadera",
+      },
+      {
+        slug: "una-advertencia-de-persecucion",
+        title: "Una advertencia de persecución",
+      },
+      {
+        slug: "la-venida-del-consolador",
+        title: "La venida del Consolador",
+      },
+      {
+        slug: "la-oracion-intercesora-de-jesus",
+        title: "La oración intercesora de Jesús",
+      },
+      {
+        slug: "getsemani",
+        title: "Getsemaní",
+      },
+      {
+        slug: "audiencia-ante-anas",
+        title: "Audiencia ante Anás",
+      },
+      {
+        slug: "juicio-nocturno-ante-el-sanedrin",
+        title: "Juicio nocturno ante el Sanedrín",
+      },
+      {
+        slug: "juicio-diurno-ante-el-sanedrin",
+        title: "Juicio diurno ante el Sanedrín",
+      },
+      {
+        slug: "confesion-y-suicidio-de-judas",
+        title: "Confesión y suicidio de Judas",
+      },
+      {
+        slug: "primer-juicio-ante-pilato",
+        title: "Primer juicio ante Pilato",
+      },
+      {
+        slug: "audiencia-ante-herodes-antipas",
+        title: "Audiencia ante Herodes Antipas",
+      },
+      {
+        slug: "segundo-juicio-ante-pilato",
+        title: "Segundo juicio ante Pilato",
+      },
+      {
+        slug: "la-crucifixion",
+        title: "La crucifixión",
+      },
+      {
+        slug: "el-entierro",
+        title: "El entierro",
+      },
+      {
+        slug: "la-guardia-en-la-tumba",
+        title: "La guardia en la tumba",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Procesión del Domingo de Ramos en un mural en la iglesia de Betfagé",
+        file: "Palm Sunday_3-7-2013 10-32-33 AM.jpg",
+      },
+      {
+        caption: "La Última Cena, pintura",
+        file: "Last Supper_3-7-2013 10-32-33 AM.jpg",
+      },
+      {
+        caption:
+          "La estatua esculpida por Ignazio Jacometti (1854) representa a Judas besando a Jesucristo como señal de traición.",
+        file: "Judas Betrays_3-7-2013 10-32-33 AM.jpg",
+      },
+      {
+        caption: "Fotografía de la silueta de la crucifixión de Jesús.",
+        file: "Crucifixcirion_3-7-2013 10-32-33 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1147",
+    slug: "la-entrada-triunfal",
+    title: "La entrada triunfal",
+    period: "9",
+    description:
+      "Cuando Jesús llega a Jerusalén, envía a dos discípulos por delante para asegurar un burro y su cría. Son llevados a Jesús y Él monta el burro hacia Jerusalén como el Rey legítimo. Esto enfurece a los líderes, quienes lo rechazan y luego crucifican a Cristo.",
+    article:
+      'La entrada triunfal de Cristo en Jerusalén tuvo lugar el domingo antes de la Pascua, que cayó en viernes en el año 31 d.C. Jesús había llegado a Betania, a unas 2 millas de Jerusalén, el viernes anterior y había descansado allí durante el sábado. Los cuatro evangelistas registran la Entrada Triunfal. El relato de la Entrada Triunfal se da en su forma más simple en Juan, y se relata con mayor extensión por Lucas. Los detalles dados por los cuatro evangelistas varían de un escritor a otro, lo que indica relatos separados, pero no son contradictorios sino más bien complementarios.\n\nLos preparativos para la Entrada Triunfal comenzaron, aparentemente, a última hora de la mañana, ya que fue alrededor de la hora del sacrificio de la tarde, aproximadamente a las 3:00 P.M., cuando Jesús llegó a la cima del Monte de los Olivos con vista a Jerusalén y los eventos llegaron a su clímax. Fue mucho más tarde cuando finalmente llegó al Templo. Mientras que en el pasado Jesús había tomado todas las precauciones contra cualquier demostración popular que lo reconociera como el Mesías, ahora no solo alienta esto, sino que toma la iniciativa para que suceda.\n\nSin duda, los discípulos y muchos de la gente esperaban que Jesús estableciera Su reino en esta temporada pascual. Cualquier sorpresa que los discípulos pudieron haber experimentado surgió del hecho de que Jesús ahora aparentemente revertía Su actitud anterior hacia la publicidad. Este cambio de actitud debió haber llenado a los discípulos de un entusiasmo y esperanza injustificados. No entendieron el verdadero significado del evento hasta después de la resurrección.\n\nJesús estaba siguiendo la costumbre de una entrada real a la ciudad, como en los días de antaño. Su hora había llegado, y por primera vez se presentó a Israel como su Rey legítimo, Aquel que se sentaría en el trono de David. Jesús más tarde reconoció el título "Rey de los judíos" (Lucas 23:3 Juan 18:33, 34, 37), pero se apresuró a agregar: "Mi reino no es de este mundo" (Juan 18:36). Pero los líderes judíos se negaron a aceptarlo como su Rey.\n\nJesús no estaba apareciendo ahora en Su papel como Rey del reino de gloria (ver Mateo 25:31), sino como Rey del reino espiritual de la gracia divina. Jesús sabía que este episodio en Su misión de vida inevitablemente lo llevaría a la cruz, sin embargo, lo llevó a cabo con firmeza y propósito. Era necesario que los ojos de todos los hombres se volvieran hacia Él en los últimos días de Su vida, para que todos pudieran entender, si querían, el significado de Su misión en la tierra.',
+    date: "31 d.C.",
+    scriptures: ["40|21:1-11", "41|11:1-11", "42|19:29-44", "43|12:12-19"],
+    related: [
+      {
+        slug: "semana-de-la-pasion",
+        title: "Semana de la Pasión",
+      },
+    ],
+    images: [
+      {
+        caption: "La entrada triunfal",
+        file: "GoodSalt-prcas2556_8-28-2013 4-05-22 PM.jpg",
+      },
+      {
+        caption: "La entrada triunfal",
+        file: "GoodSalt-prcas0143_8-28-2013 4-05-22 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1167",
+    slug: "celebracion-de-la-pascua",
+    title: "Celebración de la Pascua",
+    period: "9",
+    description:
+      "Cristo celebra Su última Pascua en la Tierra con Sus discípulos en el aposento alto de una casa. Mientras comienzan a comer, Jesús les dice que uno de los discípulos lo traicionará.",
+    article:
+      'La hora había llegado para la comida de la Pascua. Era el jueves por la noche. Jesús instituyó la ordenanza cristiana de la Última Cena durante el curso de la comida regular de la Pascua. El grupo se reclinó en una mesa, como era común en los banquetes antiguos orientales (ver Marcos 2:15). En la primera comida de la Pascua, los participantes debían estar de pie mientras comían, listos para partir de Egipto. Sin embargo, después de entrar en la Tierra Prometida, ya no estaban de pie, sino que se sentaban o reclinaban. Mientras que en la primera Pascua su postura de pie indicaba su prisa por partir, la postura reclinada ahora indicaba compostura y seguridad en la tierra que se les había prometido.\n\nEsta resultó ser la última ocasión en la que los Doce estuvieron juntos en un solo lugar. Fue la última vez que Jesús estaría junto con Sus amados discípulos antes de la agonía de la traición, el juicio y la crucifixión. Este, el clímax de Su ministerio terrenal, siempre había estado ante Él mientras trabajaba entre los hombres. Durante casi un año, Jesús había estado diligentemente tratando de preparar a Sus seguidores para los eventos de estas últimas horas de Su vida. Esta fue la cuarta Pascua del ministerio de Jesús, la tercera celebrada con los discípulos en Jerusalén. Sin embargo, no todos ellos habían estado presentes como miembros de este grupo en ninguna de las ocasiones anteriores: las Pascuas de los años 28 y 29 d.C., que ocurrieron antes de la selección y nombramiento de los Doce en el verano del año 29 d.C. Definitivamente fue la comida de la Pascua lo que Jesús y los Doce celebraron juntos en esta ocasión.\n\nEsta fue la última temporada de Pascua en la que los seguidores de Cristo podrían participar significativamente. El velo rasgado en el Templo en el momento de la muerte de Cristo en la cruz (ver Mateo 27:51) fue la señal del cielo de que los símbolos del sistema religioso judío se volvieron obsoletos cuando Cristo, a quien todas estas cosas apuntaban (ver Colosenses 2:17), dio Su vida como rescate por muchos. Jesús estaba a punto de reemplazar los símbolos del pasado muerto con los símbolos vivos de Su propio cuerpo y Su sangre derramada. La celebración final y completa de la liberación del pecado tendría lugar en el reino de "gloria", del cual Cristo ya les había hablado a los discípulos (ver Mateo 25:31). Esta declaración de Jesús es probablemente una referencia a "la cena de las bodas del Cordero" (ver Apocalipsis 19:7—9), celebrada en conmemoración del hecho de que "el Señor Dios omnipotente reina" (ver vs. 1—6).',
+    date: "31 d.C.",
+    scriptures: ["40|26:20", "41|14:17-18", "42|22:14-16"],
+    related: [
+      {
+        slug: "semana-de-la-pasion",
+        title: "Semana de la Pasión",
+      },
+    ],
+    images: [
+      {
+        caption: "Jesús celebrando la Pascua con Sus discípulos.",
+        file: "GoodSalt-wjpas0354_8-7-2013 9-14-41 AM.jpg",
+      },
+      {
+        caption: "Imagen del aposento alto como es hoy",
+        file: "Upper Room interior, tb070807015_3-6-2013 1-09-13 PM.jpg",
+      },
+      {
+        caption: "Pintura de la Última Cena",
+        file: "Last Supper_3-6-2013 1-09-13 PM.jpg",
+      },
+      {
+        caption: "Imagen del aposento alto como es hoy",
+        file: "Upper Room interior, tb070807004_3-6-2013 1-09-13 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1168",
+    slug: "lavando-los-pies-de-los-discipulos",
+    title: "Lavando los pies de los discípulos",
+    period: "9",
+    description:
+      "Mientras se preparan para celebrar la Pascua, los discípulos discuten sobre quién será el más grande en el reino de Dios. Jesús se pone una toalla y comienza a lavar los pies de cada discípulo, enseñándoles que los siervos son los grandes en el reino de Dios.",
+    article:
+      "Cristo lavó los pies de Sus discípulos. Este incidente ocurrió en conexión con la cena pascual el jueves por la noche de la Semana de la Pasión. Anteriormente en Su ministerio, Jesús había declarado que Su hora aún no había llegado (ver cap. 2:4). Ahora la hora de la crisis había llegado. Esa misma noche sería traicionado en manos de Sus enemigos, y antes de que pasara el día judío, que comenzaba al atardecer, Jesús descansaría en la tumba de José.\n\nEl lavado de los pies probablemente tuvo lugar al principio de la comida, en conexión con la cena pascual (ver Lucas 22:24). No todos los detalles del procedimiento durante la Última Cena son mencionados por los escritores de los evangelios, por lo que no se puede saber con certeza en qué punto durante el ritual pascual (ver Mateo 26:21)—si es que Jesús siguió minuciosamente el ritual habitual en esta ocasión—se introdujo la Última Cena. Jesús se levantó de la mesa y se quitó Su manto exterior. Tomó una toalla y comenzó a lavar los pies de los discípulos. Según la costumbre judía, que se remonta probablemente a la época de Jesús, lavar los pies del maestro era uno de los deberes de un esclavo extranjero, pero no se esperaba de un esclavo judío. Sin embargo, era un servicio que una esposa le debía a su esposo, y los hijos a su padre. El servicio era, por lo tanto, considerado como servil. Dado que no había ningún sirviente presente en la ocasión de la Última Cena, uno de los discípulos debería haber emprendido la tarea, pero ninguno se ofreció.",
+    date: "31 d.C.",
+    scriptures: ["42|22:24-30", "43|13:1-17"],
+    related: [
+      {
+        slug: "semana-de-la-pasion",
+        title: "Semana de la Pasión",
+      },
+    ],
+    images: [
+      {
+        caption: "Jesús lavando los pies de Pedro.",
+        file: "GoodSalt-wjpas0096_8-7-2013 9-22-15 AM.jpg",
+      },
+      {
+        caption: "Pintura de la Última Cena",
+        file: "Last Supper_3-6-2013 12-44-26 PM.jpg",
+      },
+      {
+        caption:
+          "Cristo lavó los pies de Sus discípulos. Este incidente ocurrió en conexión con la cena pascual el jueves por la noche de la Semana de la Pasión.",
+        file: "Foot Washing_3-6-2013 12-44-26 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1170",
+    slug: "el-traidor-revelado",
+    title: "El traidor revelado",
+    period: "9",
+    description:
+      "Mientras celebra la Pascua con Sus discípulos, Jesús predice que uno de ellos lo traicionará. Ellos se preguntan quién es y le preguntan a Cristo. Él les dice que es aquel que moja el pan en el plato cuando Él lo hace. Judas es el traidor.",
+    article:
+      'Según el registro, esta es la primera vez que Jesús anuncia claramente que uno de los Doce lo traicionará. Todos se sorprendieron, pero ninguno sospechaba de Judas. Sin embargo, este último comenzó a darse cuenta de que Jesús leía su oscuro secreto como un libro abierto. Las cinco declaraciones de Jesús que revelan al conspirador fueron pronunciadas en el siguiente orden progresivo: (1) Las palabras, "No todos están limpios" (Juan 13:11), fueron pronunciadas durante el lavado de los pies. (2) La siguiente declaración, "El que come pan conmigo ha levantado contra mí su talón" (Juan 13:18), fue hecha cuando los discípulos volvieron a tomar sus lugares en la mesa. (3) El anuncio de Mateo 26:21, "Uno de ustedes me traicionará", siguió unos momentos después. (4) Las palabras, "El que mete la mano conmigo en el plato, ese me traicionará" (v. 23), probablemente llegaron en algún momento durante la Última Cena. (5) El reconocimiento final, "Tú lo has dicho" (v. 25), llegó al final de la Última Cena y llevó a Judas a salir de la habitación de inmediato.',
+    date: "31 d.C.",
+    scriptures: ["40|26:21-25", "41|14:18-21", "42|22:21-23", "43|13:21-30"],
+    related: [
+      {
+        slug: "semana-de-la-pasion",
+        title: "Semana de la Pasión",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Judas, en la Última Cena, dándose cuenta de que Jesús conoce su plan.",
+        file: "GoodSalt-prcas1012_8-7-2013 9-26-24 AM.jpg",
+      },
+      {
+        caption:
+          "Verona - Captura de Cristo o Arresto de Jesús por N. Giolfino (1476 - 1555) de la Capilla Avanzi en la iglesia de San Bernardino.",
+        file: "judas1_3-6-2013 12-35-14 PM.jpg",
+      },
+      {
+        caption: "Matzá, el pan que se come durante la Pascua.",
+        file: "Passover matza, tb042000100_3-6-2013 12-35-14 PM.jpg",
+      },
+      {
+        caption:
+          "La estatua esculpida por Ignazio Jacometti (1854) representa a Judas besando a Jesucristo como señal de traición.",
+        file: "judas_3-6-2013 12-35-14 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1183",
+    slug: "juicio-nocturno-ante-el-sanedrin",
+    title: "Juicio nocturno ante el Sanedrín",
+    period: "9",
+    description:
+      "En un juicio nocturno ante el Sanedrín (el consejo de líderes judíos), Jesús se presenta ante Caifás y es interrogado. Se presentan testigos falsos para testificar contra Jesús. Después de exigir que Jesús hable, el sumo sacerdote condena a Cristo.",
+    article:
+      'Jesús fue arrestado alrededor de la medianoche. Su juicio consistió en dos fases, la primera siendo el juicio eclesiástico ante las autoridades religiosas judías, y la segunda el juicio civil ante Pilato y Herodes. Se le dieron dos audiencias preliminares, una ante Anás solo y otra ante Anás y Caifás, y fue llevado dos veces ante el Sanedrín, primero de noche y luego de día. Apareció dos veces ante Pilato y una vez ante Herodes, entre las dos apariciones ante Pilato.\n\nEn este primer juicio nocturno, Cristo fue llevado ante Caifás. El Sanedrín estaba compuesto por miembros de estos dos grupos, y de los sacerdotes. Todos están listados en el pasaje paralelo en Marcos (cap. 14:53). Se reunieron para este juicio nocturno de Jesús, aproximadamente a las 3 A.M. Los miembros del Sanedrín que eran amistosos hacia Jesús, o al menos interesados en darle una audiencia justa, fueron deliberadamente excluidos (ver v. 66).\n\nEste "consejo" era el Gran Sanedrín, que normalmente consistía en 71 miembros, y que era, en ese momento, el cuerpo ejecutivo, legislativo y judicial más alto. Durante dos años, el Sanedrín había tenido espías siguiendo a Jesús, para que todo lo que Él decía y hacía fuera reportado. Pero estos espías no habían regresado con ninguna información útil para los propósitos malvados de los líderes. Determinaron matarlo. Pero no tenían ningún caso contra Jesús, por mucho que lo despreciaran, y en su prisa no habían tenido tiempo de fabricar uno. Esperaban desacreditar a Jesús ante los ojos de sus compatriotas probando el cargo de blasfemia, y acusarlo ante los romanos de sedición. No pudieron encontrar ni siquiera testigos falsos cuyos relatos pudieran hacerse coincidir. Finalmente, dos testigos se presentaron, pero incluso estos dos últimos en realidad no estaban de acuerdo (Marcos 14:59) en puntos esenciales, y su testimonio era vago y contradictorio. Sin embargo, el sumo sacerdote fingió aceptar su testimonio (Mateo 26:62), aunque sabía bien que Jesús no podía ser sentenciado en base a él.\n\nCaifás exigió que Jesús respondiera bajo juramento a la pregunta que ahora se le hacía. A pesar del testimonio de todos los testigos falsos, el Sanedrín todavía no tenía ningún caso contra Jesús. Caifás esperaba hacer que Jesús se incriminara a sí mismo. Esto también era ilegal. Un hombre no podía ser condenado por su propio testimonio. Caifás fingió llevar a Cristo ante el tribunal de Dios. Jesús había evitado hacer la afirmación directa de ser el Mesías, o Cristo, quizás en parte porque en la imaginación popular el Mesías iba a liderar a los judíos en una revuelta armada contra Roma. Jesús les prohibió a Sus discípulos hacer la afirmación por Él (cap. 16:20). Esta no era la primera vez que se le hacía la pregunta a Jesús (ver Juan 10:24). Cuando fue puesto bajo juramento, Jesús no se negó a testificar; de hecho, fue precisamente entonces cuando testificó.\n\nCaifás entonces rasgó sus vestiduras. Esto es, como señal de estar abrumado por la indignación justa ante la supuesta blasfemia de Jesús (ver v. 64). La ley mosaica prohibía al sumo sacerdote rasgar sus vestiduras (Lev. 10:6 21:10), la razón era que sus vestiduras representaban el carácter perfecto de Jesucristo. Caifás, por lo tanto, se condenó a sí mismo ante la misma ley que pretendía defender, y se descalificó para servir como sumo sacerdote. Sin embargo, las regulaciones rabínicas permitían que alguien que escuchaba blasfemia rasgara sus vestiduras. Pero Jesús no había blasfemado, ni en realidad ni según la definición rabínica aceptada (ver Mateo 26:65). Este fue un voto ilegal, ya que se tomó de noche. Aunque se votó, el veredicto no tenía validez en la ley a menos que fuera ratificado por los romanos.',
+    date: "31 d.C.",
+    scriptures: ["40|26:57-75", "41|14:53-72", "42|22:54-65", "43|18:25-27"],
+    related: [
+      {
+        slug: "semana-de-la-pasion",
+        title: "Semana de la Pasión",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Cristo ante Caifás, pintura de Matthias Stom a principios de la década de 1630.",
+        file: "Mattias_Stom,_Christ_before_Caiaphas_3-6-2013 10-48-54 AM.jpg",
+      },
+      {
+        caption: "Jesús ante el Sanedrín",
+        file: "GoodSalt-pppas0165_8-7-2013 9-47-59 AM.jpg",
+      },
+      {
+        caption:
+          "Ahora los que habían arrestado a Jesús lo llevaron a Caifás, el sumo sacerdote, en cuya casa se habían reunido los expertos en la ley y los ancianos. (Mateo, Capítulo 26, 57). Grabado en madera después de un dibujo de Julius Schnorr von Carolsfeld (pintor alemán, 1794 - 1872)",
+        file: "iStock_000018819993XSmall_3-6-2013 10-48-54 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1184",
+    slug: "juicio-diurno-ante-el-sanedrin",
+    title: "Juicio diurno ante el Sanedrín",
+    period: "9",
+    description:
+      "Después de un juicio nocturno, el Sanedrín se reúne para deliberar y decide atar a Jesús y llevarlo ante Poncio Pilato, el gobernador de Judea.",
+    article:
+      'El juicio nocturno ante miembros seleccionados del Sanedrín (ver Mateo 26:57—75), celebrado en la casa del sumo sacerdote, no fue una sesión oficial, a pesar de que se escuchó testimonio y se tomó una decisión. Era necesario emitir una convocatoria formal para una reunión del Sanedrín tan pronto como saliera el sol, alrededor de las 5:30 A.M. en esa época del año en la latitud de Jerusalén. Por lo tanto, los aspectos esenciales del juicio nocturno tuvieron que repetirse. El juicio diurno, por lo tanto, se asemeja, en sus características principales, al juicio nocturno. Que la sesión nocturna fue una reunión del Sanedrín se indica en la declaración de que "tan pronto como fue de día, el Sanedrín se reunió de nuevo".\n\nCristo fue llevado desde la sala de guardia en el palacio del sumo sacerdote a la cámara del consejo del Sanedrín. Aquí fue interrogado: "¿Eres tú el Cristo?" La sesión nocturna ya había considerado la respuesta de Cristo a esta pregunta como una razón adecuada para condenarlo a muerte (ver Mateo 26:63—66). La pregunta fue repetida para que todos la escucharan. Muchos miembros del Sanedrín estaban ahora presentes que no habían estado en la sesión nocturna, aunque Nicodemo y José de Arimatea no habían sido convocados. Jesús ya les había dicho una vez, una hora o más antes (ver Mateo 26:64). No estaban interesados en los hechos del caso y se negarían a examinar la evidencia. Jesús había discutido las evidencias de Su mesianismo, probablemente en este mismo salón, dos años antes (ver Juan 5:17—47, especialmente vs. 31—39).\n\nJesús respondió: "Tú lo has dicho". Esta es simplemente una forma idiomática de decir "Sí" (ver Marcos 14:62 Mateo 26:64). El "Hijo del hombre" es "el Cristo" (Lucas 22:67). Ver Mateo 1:1 Marcos 2:10. Esta fue la tercera condena de Jesús a manos de los líderes judíos, y la tercera escena de abuso y burla siguió rápidamente. Excepto por la presencia restringida de los soldados romanos, Jesús sin duda habría sido asesinado por la multitud en la misma presencia del Sanedrín. Si Jesús no hubiera sido lo que afirmaba ser, los líderes judíos habrían estado absolutamente en lo correcto. Pero porque Él era todo lo que afirmaba ser, estaban eterna e irremediablemente equivocados.',
+    date: "31 d.C.",
+    scriptures: ["40|27:1", "41|15:1", "42|22:66-71"],
+    related: [
+      {
+        slug: "semana-de-la-pasion",
+        title: "Semana de la Pasión",
+      },
+    ],
+    images: [
+      {
+        caption: '"El juicio matutino de Jesús" por James Tissot',
+        file: "The_Morning_Judgment_of_Jesus_001_8-7-2013 9-50-45 AM.jpg",
+      },
+      {
+        caption: "Arte que representa a Jesús ante Pilato",
+        file: "Jesus Before Pilate_3-6-2013 10-40-53 AM.jpg",
+      },
+      {
+        caption: "Vista del desierto de Judea hacia el este desde Zif",
+        file: "Judean wilderness view east from Ziph panorama, tb111706663_3-6-2013 10-40-53 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1185",
+    slug: "confesion-y-suicidio-de-judas",
+    title: "Confesión y suicidio de Judas",
+    period: "9",
+    description:
+      "Judas, el discípulo que traicionó a Cristo en manos de los líderes judíos, descubre que Cristo no se libera a Sí mismo, sino que está siendo condenado. Confiesa a los principales sacerdotes que ha traicionado sangre inocente, arroja su dinero y se ahorca.",
+    article:
+      "Cuando Jesús se sometió a la sentencia de muerte, Judas confesó públicamente su acto traicionero y devolvió las 30 piezas de plata (cap. 27:3, 4), un acto que sin duda avergonzó mucho a los líderes judíos. Más tarde, se suicidó, y el dinero de la traición fue gastado en el campo del alfarero (Mateo 27:5—10 Hechos 1:18, 19).",
+    date: "31 d.C.",
+    scriptures: ["40|27:3-10"],
+    related: [
+      {
+        slug: "semana-de-la-pasion",
+        title: "Semana de la Pasión",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Judas devolviendo las treinta piezas de plata, pintura de Rembrandt en 1629, ubicada en el Castillo Mulgrave en Lythe, North Yorkshire.",
+        file: "Judas_Returning_the_Thirty_Silver_Pieces_-_Rembrandt_3-6-2013 10-27-26 AM.jpg",
+      },
+      {
+        caption:
+          "La estatua esculpida por Ignazio Jacometti (1854) representa a Judas besando a Jesucristo como señal de traición.",
+        file: "iStock_000009373328XSmall_3-6-2013 10-27-26 AM.jpg",
+      },
+      {
+        caption:
+          "Verona - Captura de Cristo o Arresto de Jesús por N. Giolfino (1476 - 1555) de la Capilla Avanzi en la iglesia de San Bernardino.",
+        file: "162720026_3-6-2013 10-27-26 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1186",
+    slug: "primer-juicio-ante-pilato",
+    title: "Primer juicio ante Pilato",
+    period: "9",
+    description:
+      "Los líderes judíos llevan a Cristo ante Pilato, el gobernador de Judea, para que Jesús sea condenado a muerte. Él interroga a Jesús y trata de que Cristo se defienda. Jesús permanece en silencio.",
+    article:
+      'Los líderes judíos llevaron a Cristo ante Pilato para ser juzgado. Lucas enumera tres de los cargos presentados contra Jesús por las autoridades judías. Aquí, lo acusan de ser un agitador revolucionario. A lo largo de Su ministerio, Jesús había tenido mucho cuidado de evitar proporcionar cualquier base válida para un cargo como el que ahora se le presentaba (ver Mateo 14:22 16:20 Marcos 1:45 6:42 Juan 6:15).\n\nEste cargo fabricado estaba directamente relacionado con los falsos conceptos mesiánicos que tenían los líderes judíos (ver Lucas 4:19). Tres días antes de esto, los fariseos habían hecho todo lo posible para atraer a Jesús a hacer la declaración que ahora afirmaban que Él había hecho, pero su intento terminó en un fracaso ignominioso (ver Mateo 22:15—22). En segundo lugar, Jesús fue acusado de decir que estaba en contra de pagar tributo al César. El tercer cargo fue que Cristo afirmaba ser rey. Jesús nunca había hecho tal afirmación directamente. Sin duda, estaban pensando en Su entrada triunfal en Jerusalén, pero cinco días antes de esto, un evento que todos los miembros de la nación judía tomaron como equivalente a una declaración de Jesús de que estaba asumiendo el trono de David (ver Mateo 21:5, 9).\n\nLa multitud era feroz y urgente en sus demandas. Insistieron persistentemente en que Pilato accediera a sus demandas. Afirmaron que Jesús incitaba al pueblo. Este cargo era, por supuesto, demasiado cierto, aunque no en el sentido que los líderes querían que Pilato creyera. Durante las últimas semanas, particularmente desde la resurrección de Lázaro, la opinión popular era cada vez más favorable a Jesús. Anteriormente, los sacerdotes y gobernantes mismos habían admitido entre ellos que "el mundo se ha ido tras él" (Juan 12:19).\n\nJudea. Literalmente, Judea aquí probablemente se usa de manera inclusiva para referirse a toda Palestina israelita (ver cap. 1:5 7:17). Sin embargo, Lucas también usa el término en referencia a Judea propiamente dicha (ver Lucas 2:4 Hechos 1:8 8:1). Sin embargo, Lucas parece ser el único escritor del Nuevo Testamento que usa el término en el sentido más amplio.',
+    date: "31 d.C.",
+    scriptures: ["40|27:2-14", "41|15:2-5", "42|23:1-5", "43|18:28-38"],
+    related: [
+      {
+        slug: "semana-de-la-pasion",
+        title: "Semana de la Pasión",
+      },
+    ],
+    images: [
+      {
+        caption: "Arte que representa a Jesús ante Pilato",
+        file: "92832140_2-28-2013 5-01-18 PM.jpg",
+      },
+      {
+        caption:
+          'Ecce Homo ("He aquí el Hombre"), representación de Pilato presentando a Jesús azotado al pueblo de Jerusalén por Antonio Ciseri en 1871.',
+        file: "Eccehomo1_2-28-2013 5-01-18 PM.jpg",
+      },
+      {
+        caption:
+          'Cristo y Pilato ("¿Qué es la verdad?") pintura de Nikolai Ge en 1890.',
+        file: "What-is-truth02_2-28-2013 5-01-18 PM.jpg",
+      },
+      {
+        caption:
+          "Ilustración de Pilato lavándose las manos en un tazón mientras ordena que Jesús sea azotado y Barrabás sea liberado",
+        file: "98955409_2-28-2013 5-01-18 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1188",
+    slug: "segundo-juicio-ante-pilato",
+    title: "Segundo juicio ante Pilato",
+    period: "9",
+    description:
+      "En el segundo juicio de Jesús ante Pilato, el gobernador piensa liberar a Cristo ofreciendo liberar a uno de dos prisioneros. La multitud vota por Barrabás y grita para crucificar a Cristo. Pilato se lava las manos y envía a Cristo a ser ejecutado.",
+    article:
+      "Los Evangelios mencionan a Pilato principalmente en relación con el juicio de Jesús. En ese momento, estaba en medio de su mandato. Sabiendo que era extremadamente impopular, estaba ansioso por complacer a los judíos en un asunto que no le costaba nada, aunque se dio cuenta de que las acusaciones presentadas contra Jesús eran falsas.",
+    date: "31 d.C.",
+    scriptures: ["40|27:15-26", "41|15:6-15", "43|18:39-40", "43|19:5-16"],
+    related: [
+      {
+        slug: "semana-de-la-pasion",
+        title: "Semana de la Pasión",
+      },
+    ],
+    images: [
+      {
+        caption: "Arte que representa a Jesús ante Pilato",
+        file: "92832140_2-28-2013 4-59-10 PM.jpg",
+      },
+      {
+        caption:
+          'Ecce Homo ("He aquí el Hombre"), representación de Pilato presentando a Jesús azotado al pueblo de Jerusalén por Antonio Ciseri en 1871.',
+        file: "Eccehomo1_2-28-2013 4-59-10 PM.jpg",
+      },
+      {
+        caption:
+          'Cristo y Pilato ("¿Qué es la verdad?") pintura de Nikolai Ge en 1890.',
+        file: "What-is-truth02_2-28-2013 4-59-10 PM.jpg",
+      },
+      {
+        caption: "Jesús ante Pilato",
+        file: "GoodSalt-prcas0827_8-7-2013 9-57-45 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1189",
+    slug: "la-crucifixion",
+    title: "La crucifixión",
+    period: "9",
+    description:
+      "Después del juicio de Pilato, los soldados desnudan a Jesús, le ponen un manto escarlata y una corona de espinas y se burlan de Él inclinándose como el Rey de los judíos. Lo azotan y lo llevan a ser crucificado con dos ladrones.",
+    article:
+      "Jesús fue crucificado. La crucifixión es el acto de fijar a una persona condenada a una cruz, ya sea atando las manos y los pies a ella o clavándolos. Como con Cristo, era común azotar a las víctimas antes de la crucifixión, y luego requerirles que llevaran la cruz, o una viga de ella, al lugar de la ejecución (Juan 19:1, 17). En 1968 se descubrieron varias tumbas judías al norte de Jerusalén. Una de ellas, que data del siglo I d.C., contenía los huesos de un hombre llamado Jehohanan, que al momento de su muerte tenía entre 24 y 28 años. La evidencia mostró que había sido crucificado. Ambos huesos del talón fueron encontrados traspasados por un gran clavo y los huesos de las espinillas fueron encontrados intencionalmente rotos. Fue la primera vez que se encontraron los restos de un individuo crucificado en una excavación arqueológica en Palestina.",
+    date: "31 d.C.",
+    scriptures: ["40|27:27-56", "41|15:16-41", "42|23:26-49", "43|19:17-37"],
+    related: [
+      {
+        slug: "semana-de-la-pasion",
+        title: "Semana de la Pasión",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "La crucifixión de Jesucristo, James Jacques Joseph Tissot, 1886 - 1894",
+        file: "461px-The_Death_of_Jesus_001_8-8-2013 3-30-02 PM.jpg",
+      },
+      {
+        caption: "Cristo llevando la cruz al Gólgota.",
+        file: "147051574_2-28-2013 4-52-27 PM.jpg",
+      },
+      {
+        caption: "Jesús en la cruz.",
+        file: "GoodSalt-Crucifixion_8-5-2013 4-32-15 PM.jpg",
+      },
+      {
+        caption:
+          "José de Arimatea buscando el cuerpo de Jesús ante Pilato, James Jacques Joseph Tissot, 1886 - 1894",
+        file: "Joseph_of_Arimathaea_8-8-2013 3-33-01 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1192",
+    slug: "resurreccion-hasta-la-ascension",
+    title: "Resurrección hasta la Ascensión",
+    period: "9",
+    description:
+      "Durante cuarenta días, Jesús se apareció a Sus seguidores después de Su resurrección de entre los muertos y antes de Su ascensión desde la montaña al cielo.",
+    article: "",
+    date: "31 d.C.",
+    scriptures: ["44|1:1-3"],
+    related: [
+      {
+        slug: "jesus",
+        title: "Jesús",
+      },
+      {
+        slug: "la-resurreccion",
+        title: "La resurrección",
+      },
+      {
+        slug: "el-camino-a-emaus",
+        title: "El camino a Emaús",
+      },
+      {
+        slug: "primera-aparicion-en-el-aposento-alto",
+        title: "Primera aparición en el aposento alto",
+      },
+      {
+        slug: "segunda-aparicion-en-el-aposento-alto",
+        title: "Segunda aparición en el aposento alto",
+      },
+      {
+        slug: "aparicion-junto-al-lago-en-galilea",
+        title: "Aparición junto al mar de Galilea",
+      },
+      {
+        slug: "aparicion-en-una-montana-en-galilea",
+        title: "Última reunión de Jesús con los discípulos",
+      },
+      {
+        slug: "la-ascension",
+        title: "La ascensión",
+      },
+      {
+        slug: "jacobo-el-hermano-de-juan-es-martirizado-pedro-encarcelado",
+        title: "Jacobo, el hermano de Juan, es martirizado / Pedro encarcelado",
+      },
+      {
+        slug: "concilio-de-jerusalen",
+        title: "Concilio de Jerusalén",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Jesús sale de la tumba en una representación de la resurrección de Jesucristo.",
+        file: "iStock_000008712641XSmall_2-28-2013 4-21-58 PM.jpg",
+      },
+      {
+        caption:
+          "Oasis en el desierto de Israel en el lugar de Emaús cerca de Jerusalén donde Jesús caminó.",
+        file: "iStock_000013254854Small_2-28-2013 4-21-58 PM.jpg",
+      },
+      {
+        caption: "Mar de Galilea cerca de Capernaúm",
+        file: "92093438_2-28-2013 4-21-58 PM.jpg",
+      },
+      {
+        caption:
+          "Ascensión de Cristo por Benvenuto Tisi en 1520, ubicada en la Galleria Nazionale d'Arte Antica.",
+        file: "Ascension of Christ_2-28-2013 4-21-58 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1193",
+    slug: "la-resurreccion",
+    title: "La resurrección",
+    period: "9",
+    description:
+      "Jesús muere en la cruz el viernes por la tarde. Temprano el domingo por la mañana, un ángel desciende del cielo, hace rodar la piedra y llama a Jesús desde la tumba. Los soldados caen como muertos al suelo. Cristo resucita de entre los muertos.",
+    article:
+      "La Biblia enseña que la resurrección de Cristo de la tumba es un hecho histórico literal. La tumba vigilada pero vacía, con las vestiduras dejadas atrás de manera ordenada (Juan 20:6, 7), convenció a Juan de la Resurrección (Juan 20:8, 9). Las teorías de que Jesús se desmayó pero no murió, que el cuerpo fue robado por los discípulos, que una tumba vacía fue confundida con la de Jesús, o que José de Arimatea removió el cuerpo requieren más fe para creer que la aceptación de los eventos registrados en el NT. También hubo el testimonio de la guardia romana (Mateo 28:11f.), el anuncio de los ángeles en la tumba (versículos 4—7), y el testimonio de aquellos resucitados con Cristo (Mateo 27:52, 53).\n\nIncluso más fuerte es la evidencia encontrada en las 10 apariciones post-resurrección de nuestro Señor. Cinco de estas tuvieron lugar el día de la Resurrección: a María Magdalena (Juan 20:11—18), a las otras mujeres (Mateo 28:8—10), a Simón Pedro (Lucas 24:33—35 1 Corintios 15:5), a Cleofás y un compañero en el camino a Emaús (Lucas 24:33—34), y a los 10 discípulos en Jerusalén (Juan 20:19—31). Cinco apariciones adicionales ocurrieron más tarde: a los 11 en Jerusalén (Juan 20:26—28), a los siete junto al mar de Galilea (Juan 21:1—23), a más de 500 en una montaña en Galilea (Mateo 28:16—20 1 Corintios 15:6), a Jacobo (1 Corintios 15:7), y a los 11 en Jerusalén y Betania (Lucas 24:44—49).",
+    date: "31 d.C.",
+    scriptures: ["40|28:1-15", "41|16:1-11", "42|24:1-12", "43|20:1-18"],
+    related: [
+      {
+        slug: "resurreccion-hasta-la-ascension",
+        title: "Resurrección hasta la Ascensión",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Jesús sale de la tumba en una representación de la resurrección de Jesucristo.",
+        file: "iStock_000008712641XSmall_2-28-2013 4-15-02 PM.jpg",
+      },
+      {
+        caption:
+          "Representación de la mano de Cristo después de la resurrección",
+        file: "155228514_2-28-2013 4-15-02 PM.jpg",
+      },
+      {
+        caption:
+          "Una tumba cerca de Nazaret, Israel, que data del siglo I. Similar a la tumba de Cristo con la piedra rodada sobre la entrada.",
+        file: "120759703_2-28-2013 4-15-02 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1199",
+    slug: "la-ascension",
+    title: "La ascensión",
+    period: "9",
+    description:
+      "Jesús se reúne por última vez con Sus discípulos en las laderas del Monte de los Olivos cerca de Betania. Levanta Sus manos para bendecirlos mientras asciende al cielo. Los discípulos luego regresan a Jerusalén para comenzar su gran obra de difundir el evangelio.",
+    article:
+      "La ascensión de nuestro Señor, que tuvo lugar 40 días después de la resurrección. Por cálculo inclusivo, 40 días desde un domingo terminarían en un jueves, que durante siglos los cristianos han tomado como el día de la ascensión (Hechos 1:3—11). El lugar desde el cual Jesús ascendió fue el Monte de los Olivos (v. 12), un lugar en las cercanías de Betania (Lucas 24:50). El evento fue presenciado por los Once (Hechos 1:12, 13) y posiblemente otros. La ascensión marca el cierre del ministerio terrenal de nuestro Señor y el comienzo de Su ministerio en el cielo en nuestro favor (Hebreos 4:14—16 9:24). Como evento histórico, la ascensión es una garantía de que Cristo regresará para recibirnos (Hechos 1:11 cf. Juan 14:1—3).",
+    date: "31 d.C.",
+    scriptures: ["41|16:19-20", "42|24:50-53"],
+    related: [
+      {
+        slug: "resurreccion-hasta-la-ascension",
+        title: "Resurrección hasta la Ascensión",
+      },
+    ],
+    images: [
+      {
+        caption: "Jesús ascendiendo al cielo",
+        file: "499px-Jesus_returns_to_the_Father_7-31-2013 5-49-04 PM.jpg",
+      },
+      {
+        caption: "Los discípulos observando la ascensión de Cristo.",
+        file: "GoodSalt-prcas5050_8-7-2013 10-12-24 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1200",
+    slug: "apedreamiento-de-esteban",
+    title: "Apedreamiento de Esteban",
+    period: "9",
+    description:
+      'Esteban se presenta ante el consejo judío y habla con valentía sobre Jesucristo. El consejo es "herido en el corazón" y se enoja con él. Lo expulsan de la ciudad y lo apedrean. Este es el sello final del rechazo de la nación judía a Cristo.',
+    article:
+      'El discurso de Esteban despertó la indignación de la gente y los gobernantes. Fue arrestado y llevado ante el consejo (v. 12). Allí fue confrontado con cargos de haber hablado contra el Templo y la Ley, y de haber enseñado que Jesús destruiría el Templo (Hechos 6:13—15 7:1). En su defensa, Esteban presentó un resumen de la historia del pueblo elegido de Dios, comenzando con Abraham (Hechos 7:2), y trató de mostrar que los hebreos habían rechazado consistentemente el liderazgo de Dios y ahora habían rechazado a Su Mesías.\n\nSintiendo, evidentemente por la reacción de sus oyentes, que su defensa había fallado y que sus enemigos estaban decididos a quitarle la vida, Esteban terminó abruptamente su línea de razonamiento y comenzó una severa acusación contra sus acusadores (Hechos 7:51—53). Finalmente, cuando sus enemigos manifestaron la mayor ira (v. 54), él, "lleno del Espíritu Santo", tuvo una visión de Jesús a la diestra de Dios (v. 55). Describió esta visión a su audiencia, quienes se taparon los oídos ante lo que consideraban blasfemia, lo arrastraron fuera de la ciudad y lo apedrearon (vs. 56—58). "Y hombres piadosos llevaron a Esteban a su sepultura, e hicieron gran duelo por él" (Hechos 8:2). La muerte de Esteban, que tuvo lugar solo unos años después de la vida terrenal de Jesús, comenzó la primera ola de persecución que azotó a la iglesia. Los creyentes se vieron obligados a abandonar Jerusalén, y así la semilla del evangelio de Jesucristo se extendió más lejos (v. 1).',
+    date: "34 d.C.",
+    scriptures: ["44|7:59"],
+    related: [],
+    images: [
+      {
+        caption:
+          "Pintura de San Esteban en Gloria por Giacomo Cavedone en 1601.",
+        file: "StStephen_GiacomoCavedone_2-28-2013 2-06-41 PM.jpg",
+      },
+      {
+        caption:
+          "El apedreamiento de San Esteban por Vittore Carpaccio en 1520.",
+        file: "Vittore_Carpaccio_084_2-28-2013 2-06-41 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1201",
+    slug: "conversion-de-pablo",
+    title: "Conversión de Pablo",
+    period: "10",
+    description:
+      "Pablo persigue a la iglesia y consiente el apedreamiento y la muerte de Esteban. En el camino a Damasco, Pablo se encuentra con Cristo y cae cegado. El Señor le dice qué hacer y adónde ir. Más tarde, Ananías ora por su sanación y lo bautiza.",
+    article:
+      'Fue en una de estas excursiones perseguidoras que el curso de la vida de Pablo fue espectacular y completamente cambiado. Al enterarse de que había cristianos en Damasco, buscó del sumo sacerdote cartas—evidentemente cartas de extradición—autorizándolo a arrestar y llevar a Jerusalén a cualquier cristiano encontrado en esa ciudad (Hechos 9:1, 2). Cuando Pablo se acercaba a Damasco al mediodía con un grupo de hombres para ayudarlo en sus designios asesinos, de repente fue rodeado por una luz cegadora, más brillante que el sol. Pablo y sus compañeros cayeron al suelo (Hechos 26:14), y una voz, identificando a su dueño como Jesús de Nazaret, preguntó: "Saulo, Saulo, ¿por qué me persigues?", añadiendo: "Dura cosa te es dar coces contra el aguijón". Pablo, abrumado por la experiencia, preguntó qué debía hacer, tras lo cual Jesús le informó que se convertiría en un testigo de Él ante los gentiles (vs. 16, 17). Se le instruyó que fuera a Damasco, donde recibiría más información. Mientras tanto, sus asombrados y temerosos compañeros, que se habían levantado del suelo (ver Hechos 9:7), no entendieron nada de lo que estaba sucediendo, ya que aunque vieron la luz y escucharon las palabras de Jesús, no pudieron entender lo que se decía (cf. Hechos 9:7 22:9). Al levantarse, Pablo descubrió que estaba ciego.\n\nEn esa condición, Pablo fue llevado por sus compañeros a la casa de un tal Judas en Damasco, donde se quedó tres días sin comer ni beber (Hechos 9:8, 9, 11). Mientras Pablo estaba en oración, Jesús se apareció en visión a un tal Ananías y lo dirigió a la casa de Judas, en la "calle que se llama Derecha", donde encontraría a Pablo, quien había tenido una visión de su llegada. Ananías respetuosamente le recordó a Jesús los actos de persecución de Pablo, pero se le informó que el antiguo perseguidor había sido elegido por Dios (vs. 11—16). Siguiendo las instrucciones, Ananías encontró a Pablo y puso sus manos sobre él, tras lo cual la vista de Pablo fue restaurada inmediatamente y recibió el don del Espíritu Santo y fue bautizado (vs. 17, 18).',
+    date: "35 d.C.",
+    scriptures: ["44|9:1-19"],
+    related: [
+      {
+        slug: "pablo",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "La conversión de Pablo",
+        file: "GoodSalt-prcas3972_8-7-2013 10-14-58 AM.jpg",
+      },
+      {
+        caption:
+          "Conversión en el camino a Damasco, Providence Lithograph Company, 1900",
+        file: "Pauls-conversion_7-31-2013 5-59-43 PM.jpg",
+      },
+      {
+        caption: "Vista panorámica de la ciudad de Damasco.",
+        file: "147094593_2-28-2013 1-58-30 PM.jpg",
+      },
+      {
+        caption:
+          "Ananías restaurando la vista de San Pablo por Pietro da Cortona en 1631.",
+        file: "Saint_Paul_Ananias_Sight_Restored_2-28-2013 1-58-30 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1202",
+    slug: "pablo-en-damasco-y-arabia",
+    title: "Pablo en Damasco y Arabia",
+    period: "10",
+    description:
+      "Después de ser convertido, Pablo inmediatamente predica de Cristo en Damasco. Pasa 3 años en Arabia. De vuelta en Damasco, su vida es amenazada y escapa al ser bajado por el muro de la ciudad en una canasta por la noche. Luego va a Jerusalén.",
+    article:
+      'Después de encontrarse con Cristo y quedar ciego, Pablo fue llevado por sus compañeros a la casa de un tal Judas en Damasco, donde se quedó tres días sin comer ni beber (Hechos 9:8, 9, 11). Mientras Pablo estaba en oración, Jesús se apareció en visión a un tal Ananías y lo dirigió a la casa de Judas, en la "calle que se llama Derecha", donde encontraría a Pablo, quien había tenido una visión de su llegada. Ananías respetuosamente le recordó a Jesús los actos de persecución de Pablo, pero se le informó que el antiguo perseguidor había sido elegido por Dios (vs. 11—16). Siguiendo las instrucciones, Ananías encontró a Pablo y puso sus manos sobre él, tras lo cual la vista de Pablo fue restaurada inmediatamente y recibió el don del Espíritu Santo y fue bautizado (vs. 17, 18).\n\nNo se sabe cuánto tiempo permaneció Pablo en Damasco después de esto. El registro parece indicar que fue un breve período (Hechos 9:19). Sabemos que se asoció con los cristianos allí. Además, fiel a su carácter—y para asombro de quienes lo conocían—comenzó a predicar en las sinagogas al Cristo que una vez había vilipendiado pero que recientemente había llegado a adorar (vs. 19—21). Tan poderosa y convincentemente predicó que nadie pudo derrotar su lógica o negar su poder (v. 22).\n\n3. Preparación y Predicación Temprana. La narrativa en Hechos omite el próximo evento en la vida de Pablo, pero Pablo se refiere a él en el libro de Gálatas, donde dice que después de su conversión y su primera breve incursión evangelística, fue a Arabia y regresó a Damasco (Gálatas 1:17), antes de su viaje a Jerusalén registrado en Hechos 9:26 Gálatas 1:18). El área exacta a la que se refiere como "Arabia" es desconocida (aunque probablemente era el país de los nabateos), al igual que el tiempo que permaneció allí. Este período de retiro le dio tiempo para meditar sobre el gran cambio que había llegado a su vida, la soledad en la que reexaminar, cuidadosa y orando, todo el fundamento de sus nuevas convicciones a la luz de las Escrituras, y la oportunidad de establecer para siempre su fe en Cristo y en Su evangelio.',
+    date: "35-38 d.C.",
+    scriptures: ["44|9:20-25", "48|1:17-18"],
+    related: [
+      {
+        slug: "pablo",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Ananías restaurando la vista de Pablo por orden de Dios, Pietro De Cortana, 1631",
+        file: "Ananias_restores_sight_of_Saint_Paul_8-1-2013 8-51-07 AM.jpg",
+      },
+      {
+        caption: "Mapa de Damasco.",
+        file: "iStock_000006380388Small_2-28-2013 1-54-36 PM.jpg",
+      },
+      {
+        caption: "Vista panorámica de la ciudad de Damasco.",
+        file: "147094593_2-28-2013 1-54-36 PM.jpg",
+      },
+      {
+        caption:
+          "La Gran Mezquita de Damasco, también conocida como la Mezquita Omeya, es una de las más grandes del mundo. Esta imagen muestra una vista del patio de mármol",
+        file: "156880720_2-28-2013 1-54-36 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1203",
+    slug: "escape-de-pablo-de-damasco",
+    title: "Escape de Pablo de Damasco",
+    period: "10",
+    description:
+      "Cuando los líderes judíos intentan capturar y matar a Saulo, él escapa de Damasco y va a Jerusalén. Aquí los creyentes son escépticos de su conversión, pero llegan a creerle. Cuando su vida es nuevamente amenazada, es enviado a Tarso por un período.",
+    article:
+      "Siguiendo este aparente período de inacción, Pablo una vez más regresó a Damasco (Gálatas 1:17), desde donde la narrativa continúa en Hechos 9. Pablo, al parecer, reanudó su predicación en las sinagogas con los mismos resultados que antes (v. 22). En consecuencia, los judíos hicieron planes para asesinarlo (vs. 23, 24). Fueron apoyados en su esquema por el gobernador de la ciudad, que servía bajo el rey nabateo Aretas (2 Corintios 11:32, 33). Dado que Aretas gobernó esa área probablemente entre el 37 d.C. y alrededor del 54 d.C., este evento debe haber ocurrido en algún momento dentro de este período. Sin embargo, los soldados, que vigilaban las puertas para evitar que Pablo escapara de la ciudad, se vieron frustrados en su diseño, ya que algunos de los creyentes locales bajaron a Pablo en una canasta desde una ventana de una casa construida en el muro de la ciudad, lo que le permitió evadir a sus enemigos (Hechos 9:25, 2 Corintios 11:33).\n\nCon su oportunidad de trabajar en Damasco terminada, Pablo dirigió sus ojos hacia Jerusalén. Tres años habían pasado desde su conversión, pero hasta este momento no había tenido contacto con ninguno de los líderes de la iglesia (Gálatas 1:17, 18), un hecho que más tarde ofreció como prueba de que su evangelio no se originó con los discípulos de Cristo, sino con Cristo mismo (Gálatas 1:10—12 cf. 1 Corintios 15:3—8). Su razón principal para ir allí era ver a Pedro (Gálatas 1:18). Al llegar a la ciudad, intentó unirse con Pedro y los otros creyentes como un hermano cristiano, pero rápidamente descubrió que tres años no habían sido suficientes para borrar el recuerdo de sus anteriores persecuciones, o para eliminar su miedo y sospecha de él (Hechos 9:26). El impasse resultante fue roto por el chipriota Bernabé, quien mostró su confianza en el relato de Pablo de su experiencia relatándolo a los demás en presencia de Pablo (v. 27).\n\nPablo demostró la autenticidad de su experiencia predicando a Jesús en la ciudad de Jerusalén. Su lógica incontrovertible despertó la ira de ciertos judíos helenísticos, quienes se propusieron quitarle la vida (Hechos 9:29). En un relato posterior de su experiencia (Hechos 22:17—21), Pablo contó cómo Dios se le apareció en una visión en el Templo, y sobre sus protestas lo dirigió a salir de Jerusalén, informándole que los judíos no recibirían su mensaje, y que sería enviado a los gentiles. Sus hermanos inmediatamente lo acompañaron al puerto de Cesarea (Hechos 9:30), a unas 53 millas (c. 85 km.) al noroeste de Jerusalén. Allí probablemente lo colocaron en un barco para asegurar su escape de sus enemigos.",
+    date: "38 d.C.",
+    scriptures: ["48|1:18", "44|9:23-30"],
+    related: [
+      {
+        slug: "pablo",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Pablo escapando de Damasco al ser bajado en una canasta, Matthias Gerung",
+        file: "Paul_being_let_down_in_a_basket_8-1-2013 8-55-33 AM.jpg",
+      },
+      {
+        caption:
+          "Pablo escapando de Damasco al ser bajado en una canasta, Hechos: 9:25",
+        file: "The_Escape_of_Paul_002_8-1-2013 8-55-33 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1204",
+    slug: "jacobo-el-hermano-de-juan-es-martirizado-pedro-encarcelado",
+    title: "Jacobo, el hermano de Juan, es martirizado / Pedro encarcelado",
+    period: "10",
+    description:
+      "Herodes (Agripa I) persigue a la iglesia. Hace matar a Jacobo, el hermano de Juan. Luego captura a Pedro y lo pone en prisión. Un ángel lo libera milagrosamente mientras la iglesia ora fervientemente por su liberación. Más tarde, Agripa muere de una muerte violenta.",
+    article:
+      "Si el apóstol hubiera sido culpable de blasfemia o herejía, el Sanedrín lo habría sentenciado a muerte por apedreamiento. Como en el caso de Juan el Bautista (Mateo 14:10), la decapitación del apóstol Jacobo muestra que su muerte fue decretada por un gobernante civil, que empleó métodos romanos de castigo (cf. Mateo 20:23). Por qué Herodes habría seleccionado a Jacobo como su primera víctima solo puede ser conjeturado, pero como Jacobo predicaba el evangelio, puede haber continuado ocupando la posición prominente que había compartido con Pedro y Juan en la historia del evangelio.\n\nPuede haber sido marcado por una vehemencia natural, ya que fue llamado hijo del trueno (Marcos 3:17). Una tradición, conservada por Eusebio (Historia Eclesiástica ii. 9) de Clemente de Alejandría, registra que el acusador de Jacobo se convirtió cuando vio la fe y la paciencia de su víctima. Jacobo llenó un ministerio corto de solo 13 años después de la ascensión de Cristo. De los apóstoles, murió primero, mientras que Juan, su hermano, probablemente fue el último de los Doce en morir.",
+    date: "44 d.C.",
+    scriptures: ["44|12:1-24"],
+    related: [
+      {
+        slug: "resurreccion-hasta-la-ascension",
+        title: "Resurrección hasta la Ascensión",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Jacobo, el hermano de Juan, James Jacques Joseph Tissot, 1894",
+        file: "Saint_James_Major_001_8-1-2013 9-23-46 AM.jpg",
+      },
+      {
+        caption: "Pedro siendo liberado de la prisión por un ángel del Señor",
+        file: "Peter-freed-from-prison-by-Angel_8-1-2013 9-23-46 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1205",
+    slug: "mision-de-bernabe-y-pablo-en-antioquia",
+    title: "Misión de Bernabé y Pablo en Antioquía",
+    period: "10",
+    description:
+      "Cuando la iglesia es perseguida después del martirio de Esteban, el evangelio se extiende a Antioquía, donde Bernabé es enviado a trabajar. Más tarde lleva a Saulo y trabajan allí durante un año entero. La iglesia crece. Los discípulos son llamados cristianos por primera vez aquí.",
+    article:
+      "Mientras tanto, durante la estancia de Pablo en Cilicia, el cristianismo había estado progresando en otras áreas. Un interés creciente se había desarrollado en Antioquía de Siria, y Bernabé había sido enviado desde Jerusalén para fomentarlo (Hechos 11:19—24). Decidiendo que necesitaba ayuda, viajó a Tarso, encontró a Pablo y lo llevó de regreso a Antioquía con él (vs. 25, 26). Pablo y Bernabé trabajaron juntos allí durante un año completo, con un éxito notable.",
+    date: "43-44 d.C.",
+    scriptures: ["44|11:19-26"],
+    related: [
+      {
+        slug: "pablo",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Pablo y Bernabé en Listra (Hechos, Capítulo 14). Grabado en madera después de un dibujo de Julius Schnorr von Carolsfeld (pintor alemán, 1794 - 1872) de mi archivo, publicado en 1877.",
+        file: "iStock_000018499170Small_2-28-2013 1-34-51 PM.jpg",
+      },
+      {
+        caption: "Pablo y Bernabé, Providence Lithograph Company, 1901",
+        file: "Acts_11_19-30_Paul_and_Barnabas_sent_as_far_as_Antioch_002_8-1-2013 9-00-50 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1207",
+    slug: "bernabe-y-pablo-llevan-ayuda-para-la-hambruna-a-jerusalen",
+    title: "Bernabé y Pablo llevan ayuda para la hambruna a Jerusalén",
+    period: "10",
+    description:
+      "Profetas vienen a Antioquía desde Jerusalén y hablan de una hambruna que vendrá en el mundo. Los discípulos deciden enviar ayuda a los hermanos en Judea y envían ayuda a través de Bernabé y Saulo.",
+    article:
+      "Mientras trabajaban en Antioquía, ciertos individuos con el don profético vinieron desde Jerusalén (Hechos 11:27). Uno de ellos, de nombre Agabo, fue inspirado divinamente para predecir una hambruna mundial (v. 28). Como resultado de esto, los creyentes en Antioquía determinaron enviar ayuda a los cristianos de Judea. Eligieron a Pablo y Bernabé para llevar la contribución a Judea (vs. 29, 30). Al cumplir su misión, Pablo y Bernabé regresaron a Antioquía, llevando consigo a Juan Marcos, un pariente de Bernabé (Hechos 12:25 cf. Colosenses 4:10).",
+    date: "45 d.C.",
+    scriptures: ["44|11:27-30"],
+    related: [
+      {
+        slug: "pablo",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "Pablo y Bernabé",
+        file: "GoodSalt-prcas3939_8-7-2013 10-19-26 AM.jpg",
+      },
+      {
+        caption: "Estatua del apóstol Pablo en el Vaticano.",
+        file: "156361886_2-28-2013 1-19-20 PM.jpg",
+      },
+      {
+        caption: "La profecía de Agabo por Louis Cheron en 1687.",
+        file: "Agabus_2-28-2013 1-19-20 PM.JPG",
+      },
+    ],
+  },
+  {
+    id: "1208",
+    slug: "primer-viaje-misionero-de-pablo-terminando-en-antioquia",
+    title: "Primer viaje misionero de Pablo terminando en Antioquía",
+    period: "10",
+    description:
+      'Pablo y Bernabé son elegidos para ir a los gentiles. Salen de Antioquía y navegan hacia Chipre con Juan Marcos. En Perge, Juan Marcos regresa a Jerusalén. Después de ir a la "otra" Antioquía, Listra, Iconio, Derbe y Atalia, regresan a casa.',
+    article:
+      'Mientras estaba en Antioquía por segunda vez, Pablo recibió el llamado que lo inició en sus grandes viajes misioneros a Asia Menor y Europa, lo que le valió el título de "Apóstol de los Gentiles". Mientras ciertos miembros de la iglesia "ministraban al Señor y ayunaban", fueron ordenados por el Espíritu Santo a apartar a Pablo y Bernabé para una obra especial (Hechos 13:2). Esto se hizo, acompañado de ayuno y oración solemnes; luego, dirigidos por el Espíritu Santo, esos apóstoles partieron en el Primer Viaje Misionero, acompañados por Juan Marcos (vs. 3, 5). Primer Viaje Misionero. Yendo a Seleucia, que era el puerto de Antioquía, a unas 16 millas (c. 25.5 km.) de esa ciudad, tomaron un barco hacia la isla de Chipre (Hechos 13:4).',
+    date: "47-49 d.C.",
+    scriptures: ["44|13:2-52", "44|14:1-28"],
+    related: [
+      {
+        slug: "pablo",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "Pablo predicando en Antioquía",
+        file: "GoodSalt-prcas3931_8-7-2013 10-17-44 AM.jpg",
+      },
+      {
+        caption:
+          'Mapa de la República de Chipre. Fuente: "World reference atlas"',
+        file: "iStock_000008997722Small_2-28-2013 12-56-10 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1209",
+    slug: "concilio-de-jerusalen",
+    title: "Concilio de Jerusalén",
+    period: "10",
+    description:
+      "Personas de Judea insisten en que los nuevos creyentes gentiles deben ser circuncidados para ser verdaderamente cristianos. Se convoca un concilio especial en Jerusalén en el que deciden en contra de este requisito, pero enumeran algunos otros requisitos.",
+    article:
+      "Al llegar a Jerusalén, Pablo y sus compañeros fueron recibidos cordialmente por los creyentes (Hechos 15:4). Comenzaron a contar cómo Dios había bendecido la obra entre los gentiles, pero ciertos fariseos, miembros de la iglesia, pronto plantearon la cuestión de la necesidad de la circuncisión y el cumplimiento de la ley mosaica (v. 5). En consecuencia, se convocó un concilio para decidir la cuestión (v. 6). El asunto fue debatido extensamente, con Pedro, Bernabé y Pablo hablando en contra de imponer la ley ceremonial a los gentiles (vs. 7—12). Su punto de vista prevaleció, y se dictaminó que los conversos gentiles no debían ser obligados a circuncidarse o a cumplir la Ley de Moisés. Sin embargo, se les dijo que se abstuvieran de las contaminaciones de los ídolos, la fornicación, lo estrangulado y la sangre (vs. 13—21).",
+    date: "49 d.C.",
+    scriptures: ["44|15:1-31"],
+    related: [
+      {
+        slug: "resurreccion-hasta-la-ascension",
+        title: "Resurrección hasta la Ascensión",
+      },
+    ],
+    images: [
+      {
+        caption: "Estatua del apóstol Pablo en el Vaticano.",
+        file: "GoodSalt-stdas0323_8-6-2013 5-05-20 PM.jpg",
+      },
+      {
+        caption:
+          "La estatua de San Pedro, uno de los patrones y santos de Roma. Ubicada cerca de las escaleras de la basílica en la parte frontal de la plaza en la Ciudad del Vaticano (fue esculpida por Giuseppe De Fabris en 1838-40)",
+        file: "154186198_2-28-2013 12-49-31 PM.jpg",
+      },
+      {
+        caption:
+          "Pablo y Bernabé en Listra (Hechos, Capítulo 14). Grabado en madera después de un dibujo de Julius Schnorr von Carolsfeld (pintor alemán, 1794 - 1872) de mi archivo, publicado en 1877.",
+        file: "iStock_000018499170Small_2-28-2013 12-49-31 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1210",
+    slug: "segundo-viaje-misionero-de-pablo",
+    title: "Segundo viaje misionero de Pablo",
+    period: "10",
+    description:
+      "Después de una disputa aguda con Bernabé sobre llevar a Juan Marcos en un viaje misionero, Pablo y Silas comienzan un segundo viaje para visitar iglesias y establecer nuevas. Timoteo se une a ellos en el viaje. Visitan muchos lugares y regresan a Jerusalén.",
+    article:
+      "Pablo y Silas ahora comenzaron lo que se conoce como el Segundo Viaje Misionero de Pablo. Viajando por tierra, visitaron las iglesias en Siria y Cilicia (Hechos 15:40, 41). Sin duda visitaron a los creyentes en la ciudad natal de Pablo, Tarso, en esta última provincia. Al llegar al área de Derbe y Listra, Pablo encontró otro compañero de viaje, Timoteo, un joven de buena reputación, cuya madre era judía y su padre griego (Hechos 16:1—3).",
+    date: "49-52 d.C.",
+    scriptures: ["44|15:36-41"],
+    related: [
+      {
+        slug: "pablo",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "Estatua del apóstol Pablo en el Vaticano.",
+        file: "GoodSalt-prcas3982_8-6-2013 5-10-39 PM.jpg",
+      },
+      {
+        caption: "Antiguo bazar en Tarso, Turquía",
+        file: "119645001_2-28-2013 12-40-43 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1211",
+    slug: "pablo-llega-a-corinto",
+    title: "Pablo llega a Corinto",
+    period: "10",
+    description:
+      "Después de dejar Atenas, Pablo viaja a Corinto, donde más tarde se le unen Silas y Timoteo. Establece la iglesia en Corinto mientras trabaja como fabricante de tiendas. Conoce a Aquila y Priscila. Escribe 1 y 2 Tesalonicenses.",
+    article:
+      "Tras su experiencia en Atenas, Pablo viajó solo hacia el oeste hasta Corinto (Hechos 18:1). Allí entró en contacto con Aquila y su esposa, Priscila, judíos que habían llegado recientemente de Italia tras un decreto del emperador Claudio que prohibía a los judíos en Roma (v. 2). Dado que estas personas, como Pablo, eran fabricantes de tiendas, se quedó con ellos y ejerció su oficio (v. 3). Pablo probablemente llegó a Corinto a principios del año 51 d.C.; permaneció allí más de un año y seis meses (Hechos 18:11, 18). Al principio trabajó con los judíos en la sinagoga (v. 4), como era su costumbre al entrar en una nueva ciudad. Sin embargo, cuando una vez más la mayoría de los judíos se opusieron y lo insultaron, se apartó de ellos y comenzó a trabajar más directamente para los gentiles (v. 6). Al no poder predicar más en la sinagoga, celebró sus servicios en una casa propiedad de un adorador de Dios, junto a la sinagoga (v. 7). El evangelio dio mucho fruto en esa ciudad, y entre los conversos estaba el gobernante de la sinagoga (v. 8).\n\nMientras tanto, Silas y Timoteo habían llegado con noticias alentadoras de la fidelidad de los tesalonicenses (Hechos 18:5 1 Tesalonicenses 3:6). Estas noticias inspiraron a Pablo, probablemente en el año 51 d.C., a escribir 1 Tesalonicenses, su primera epístola que se ha conservado. Esto fue seguido—posiblemente a finales del 51 o principios del 52—por 2 Tesalonicenses. Finalmente, la persecución activa, que generalmente llegaba tan rápidamente en otras ciudades, comenzó a amenazar a Pablo también en Corinto. Sus enemigos judíos lo acusaron ante Galión, el procónsul de Acaya, de enseñar una religión no reconocida legalmente por Roma. Sin embargo, Galión expulsó a los acusadores, negándose a involucrarse en un caso que consideraba una disputa sobre la ley judía, más que la romana. En esto, la multitud agarró al gobernante de la sinagoga en ese momento y lo golpeó a la vista de Galión (Hechos 18:12—17).",
+    date: "51 d.C.",
+    scriptures: ["44|18:1-17"],
+    related: [
+      {
+        slug: "pablo",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "Pablo en Corinto",
+        file: "GoodSalt-prcas3899_8-6-2013 5-09-48 PM.jpg",
+      },
+      {
+        caption: "Estatua del apóstol Pablo en el Vaticano.",
+        file: "156361886_2-28-2013 12-29-54 PM.jpg",
+      },
+      {
+        caption:
+          "Un busto del emperador romano, Claudio (10 a.C. - 54 d.C.), colocado sobre un pergamino decorativo que está inscrito en latín, circa 30 d.C. (Foto de Hulton Archive/Getty Images",
+        file: "iStock_000003837512Small_2-28-2013 12-29-55 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1212",
+    slug: "1-thessalonians-written",
+    title: "1 Tesalonicenses escrita",
+    period: "10",
+    description:
+      "Después de predicar el evangelio a los tesalonicenses, Pablo, Silas y Timoteo dejan la ciudad debido a disturbios. Más tarde, mientras está en Corinto, Pablo escribe la carta de 1 Tesalonicenses.",
+    article:
+      "La iglesia en Tesalónica, a la que se dirigió 1 Tesalonicenses, había sido fundada por Pablo durante su Segundo Viaje Misionero, entre los años 49 y 52 d.C. Tesalónica, la capital de Macedonia, estaba gobernada por siete politarcas bajo un prefecto y tenía una población de unos 200,000 habitantes. Se desconoce cuánto tiempo permaneció Pablo allí antes de que los disturbios incitados por los judíos lo obligaran a dejar la ciudad y continuar su viaje. Su estancia parece haber sido bastante corta, como se puede deducir de su deseo de regresar a Tesalónica lo antes posible para completar el trabajo que consideraba que necesitaba su atención. Desde Tesalónica, Pablo fue primero a Berea y luego a Atenas, dejando convertidos en cada lugar cuando partió.\n\nDesde Atenas, Pablo envió a Timoteo a Tesalónica, ya que no podía ir personalmente (1 Tesalonicenses 2:17 a 3:6). Para cuando Timoteo regresó con Silas, Pablo ya se había trasladado a Corinto (Hechos 18:5), donde Timoteo le informó sobre la condición espiritual de la iglesia en Tesalónica. Pablo, al darse cuenta de que ciertos malentendidos sobre sus enseñanzas necesitaban atención inmediata, escribió una carta conocida como 1 Tesalonicenses. Parece, por lo tanto, que 1 Tesalonicenses fue escrita poco después de la llegada de Pablo a Corinto. Según la cronología tentativa del ministerio de Pablo aceptada en este comentario, esto sería en el año 51 d.C.",
+    date: "51 d.C.",
+    scriptures: ["44|18:1"],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Carta de Pablo a los Tesalonicenses, Providence Lithograph Company, 1908",
+        file: "Pauls_Instructions_To_The_Thessalonians-1_Thessalonians_5_12_-_24a_8-1-2013 9-58-18 AM.jpg",
+      },
+      {
+        caption: "Corinto antiguo.",
+        file: "157994115_2-28-2013 12-20-43 PM.jpg",
+      },
+      {
+        caption:
+          "Tesalónica, la segunda ciudad más grande de Grecia. Al frente la antigua muralla de la ciudad, al fondo el mar Egeo y el monte Olimpo.",
+        file: "iStock_000017330944Small_2-28-2013 12-20-43 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1213",
+    slug: "2-thessalonians-written",
+    title: "2 Tesalonicenses escrita",
+    period: "10",
+    description:
+      "Es probable que 2 Tesalonicenses, escrita por Pablo mientras estaba en Corinto, llegara a esta iglesia no más de unas pocas semanas o meses después de que se escribiera la primera carta. En esta carta, asegura a los creyentes que Cristo aún no ha venido.",
+    article:
+      "Esta carta no pudo haber sido escrita mucho después de la primera, ya que su contenido es similar, y los mismos asociados de Pablo, Silas y Timoteo, son mencionados al principio de la carta. Esta segunda carta probablemente fue motivada por el regreso de Tesalónica del portador de la primera epístola, de quien Pablo supo que sus palabras sobre la inminencia de la segunda venida estaban siendo malinterpretadas y mal aplicadas por ciertos elementos en la iglesia. Por lo tanto, Pablo dio a esta nueva exposición de su enseñanza sobre la segunda venida de Cristo un tono fuertemente profético, revelando a sus lectores que ciertos grandes eventos, especialmente el reinado del Anticristo, precederían el regreso de Cristo. Estas consideraciones son la base para fechar la segunda carta a los Tesalonicenses no mucho después de la primera, ya sea en los últimos meses del año 51 d.C. o en los primeros meses del año 52 d.C., mientras Pablo estaba ocupado en la construcción de la iglesia cristiana en Corinto.",
+    date: "51-52 d.C.",
+    scriptures: ["53|1:1"],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "La segunda epístola del apóstol Pablo a los Tesalonicenses.",
+        file: "95269051_2-28-2013 12-18-23 PM.jpg",
+      },
+      {
+        caption: "Corinto antiguo.",
+        file: "157994115_2-28-2013 12-18-23 PM.jpg",
+      },
+      {
+        caption:
+          "Tesalónica, la segunda ciudad más grande de Grecia. Al frente la antigua muralla de la ciudad, al fondo el mar Egeo y el monte Olimpo.",
+        file: "iStock_000017330944Small_2-28-2013 12-18-23 PM.jpg",
+      },
+      {
+        caption: "Estatua del apóstol Pablo en el Vaticano.",
+        file: "156361886_2-28-2013 12-18-23 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1214",
+    slug: "end-of-pauls-second-missionary-journey",
+    title: "Fin del Segundo Viaje Misionero de Pablo",
+    period: "10",
+    description:
+      "Pablo termina su segundo viaje misionero y llega a Cesarea. Va a saludar y visitar la iglesia en Jerusalén por un corto tiempo, pero luego viaja a Antioquía, donde pasa algún tiempo trabajando con la iglesia.",
+    article:
+      "Después de un período no especificado, durante el cual aparentemente pudo predicar sin oposición activa, Pablo zarpó hacia Siria, acompañado por Priscila y Aquila (Hechos 18:18). Se detuvo brevemente en Éfeso y predicó en la sinagoga. Su mensaje fue recibido con favor por sus oyentes, que probablemente eran tanto gentiles como judíos, y fue invitado a quedarse más tiempo. Sin embargo, decidió continuar su viaje, prometiendo regresar si era posible. Tomó un barco hacia Cesarea, dejando a Priscila y Aquila en Éfeso, sin duda para continuar el trabajo comenzado allí. Al llegar a Cesarea, visitó brevemente Jerusalén para saludar a la iglesia y luego continuó hacia Antioquía, desde donde habían comenzado sus viajes misioneros (vs. 19-22). Así terminó el Segundo Viaje Misionero de Pablo, que había durado unos 3 años, probablemente desde algún momento del año 49 d.C. hasta finales del año 52 d.C.",
+    date: "52 d.C.",
+    scriptures: ["44|18:22-23"],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "Estatua del apóstol Pablo en el Vaticano.",
+        file: "GoodSalt-stdas0539_8-6-2013 5-11-07 PM.jpg",
+      },
+      {
+        caption: "Puerto antiguo en Cesarea",
+        file: "100249641_2-28-2013 12-08-34 PM.jpg",
+      },
+      {
+        caption:
+          "La fachada frontal y el patio del edificio de la biblioteca en Éfeso es una imponente estructura antigua griega y romana. Construida con piedra antigua y reconstruida por arqueólogos, es una parada turística popular cerca de la ciudad de Izmir en Turquía.",
+        file: "149144388_2-28-2013 12-08-34 PM.jpg",
+      },
+      {
+        caption: "Acrópolis en Bergama en Turquía",
+        file: "iStock_000013048147Small_2-28-2013 12-08-34 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1215",
+    slug: "pauls-third-missionary-journey",
+    title: "Tercer Viaje Misionero de Pablo",
+    period: "10",
+    description:
+      "Pablo comienza su tercer viaje misionero desde Antioquía (como en sus dos primeros viajes). Viaja por Asia Menor, pasa tres años en Éfeso, recorre Macedonia y está tres meses en Corinto antes de regresar a Jerusalén.",
+    article:
+      'No se sabe cuánto tiempo permaneció Pablo en Antioquía después de su Segundo Viaje Misionero. Es probable que pasaran algunos meses, al menos, antes de que partiera de allí en su Tercer Viaje Misionero. "Recorrió toda la región de Galacia y Frigia", fortaleciendo las iglesias que había establecido anteriormente (Hechos 18:23). Después de pasar por las "costas superiores", finalmente llegó a Éfeso (cap. 19:1), que sería su centro principal durante este itinerario.',
+    date: "53-57 d.C.",
+    scriptures: ["44|18:23", "44|19:1-7"],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "Estatua del apóstol Pablo en el Vaticano.",
+        file: "GoodSalt-prcas3982_8-6-2013 5-11-27 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1216",
+    slug: "1-corinthians-written",
+    title: "1 Corintios escrita",
+    period: "10",
+    description:
+      "El apóstol Pablo escribió el libro de 1 Corintios hacia el final de una estancia de tres años en Éfeso, probablemente en la primavera. Algunos fechan la escritura en el año 56 d.C. basándose en el juicio de Pablo ante Galión en Corinto.",
+    article:
+      'Primera Corintios fue escrita desde Éfeso (1 Corintios 16:8). Esta ciudad fue el escenario de los trabajos de Pablo durante "tres años" (Hechos 20:31) y el centro principal de sus actividades durante su Tercer Viaje Misionero (Hechos 19; 20:1). Estaba a punto de partir hacia Grecia y Macedonia cuando se escribió la carta, pero esperaba permanecer en Éfeso "hasta Pentecostés" (1 Corintios 16:5-8). Sin embargo, las circunstancias aceleraron su partida (Hechos 19:21 a 20:3). Estas observaciones nos permiten fechar la carta en la primavera del año 56 d.C.',
+    date: "56 d.C.",
+    scriptures: ["46|16:8", "44|20:31"],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Pablo y los líderes efesios, Providence Lithograph Company, 1897",
+        file: "Saint_Paul_addresses_the_Ephesian_elders_-_Acts_20_-_35_8-1-2013 10-23-44 AM.jpg",
+      },
+      {
+        caption:
+          "Corriendo la carrera cristiana. 1 Corintios 9:24-27, Providence Lithograph Company, 1896",
+        file: "Christian_self-restraint_1_Corinthians_9_19_-_27_8-1-2013 10-23-44 AM.jpg",
+      },
+      {
+        caption:
+          "El capítulo del amor, 1 Corintios 13, Providence Lithograph Company, 1896",
+        file: "The_greatest_of_these_is_charity_1_Corinthians_13_13_8-1-2013 10-23-44 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1217",
+    slug: "2-corinthians-written",
+    title: "2 Corintios escrita",
+    period: "10",
+    description:
+      "Pablo escribió el libro de 2 Corintios desde Macedonia, dentro de un año de haber escrito el libro de 1 Corintios, como se puede ver en la carta misma (2 Corintios 7:5). Los falsos maestros hicieron que la segunda visita de Pablo a Corinto fuera desafiante. Su carta aborda esto.",
+    article:
+      "Pablo hizo al menos tres visitas y escribió tres, quizás cuatro, epístolas a la iglesia en Corinto. La primera visita, alrededor del año 51 d.C., durante su Segundo Viaje Misionero, duró un año y medio (Hechos 18:11). En ese momento, Pablo fundó y organizó la iglesia. Continuó manteniendo contacto con ella de vez en cuando a través de representantes (2 Corintios 12:17). Su primer contacto escrito con ella se menciona en 1 Corintios 5:9. Este documento ahora se presume perdido. Hacia el final de más de dos años pasados en Éfeso, en el tercer viaje, escribió lo que ahora se conoce como Primera Corintios (cap. 16:8).",
+    date: "57 d.C.",
+    scriptures: ["47|7:5"],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "La segunda epístola del apóstol Pablo a los Corintios.",
+        file: "95266347_2-28-2013 11-33-53 AM.jpg",
+      },
+      {
+        caption: "Estatua del apóstol Pablo en el Vaticano.",
+        file: "156361886_2-28-2013 11-33-53 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1218",
+    slug: "romans-written",
+    title: "Romanos escrita",
+    period: "10",
+    description:
+      "El libro de Romanos fue escrito por el apóstol Pablo. Su carta a la iglesia en Roma es su mayor tratado teológico sobre la salvación.",
+    article: "\n",
+    date: "57-58 d.C.",
+    scriptures: ["45|1:1"],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "La epístola del apóstol Pablo a los Romanos.",
+        file: "GoodSalt-lwjas0435_8-7-2013 1-30-40 PM.jpg",
+      },
+      {
+        caption: "Estatua del apóstol Pablo en el Vaticano.",
+        file: "156361886_2-28-2013 11-29-20 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1220",
+    slug: "paul-imprisoned-two-years-at-caesarea",
+    title: "Pablo encarcelado dos años en Cesarea",
+    period: "10",
+    description:
+      "Después de ser arrestado en Jerusalén, Pablo es enviado a Cesarea, donde es encarcelado durante dos años. Durante este tiempo es llevado ante Félix, quien más tarde es reemplazado por Porcio Festo. Apela a César y es enviado a Roma.",
+    article:
+      'En Cesarea, Pablo fue entregado a Félix, el gobernador de Judea, con una carta de Lisias. Félix interrogó a Pablo y luego ordenó que lo confinaran en el *pretorio hasta que sus acusadores judíos llegaran desde Jerusalén (Hechos 23:25-35). Después de 5 días, Ananías, el sumo sacerdote, acompañado por ciertos ancianos y un orador profesional llamado Tértulo, aparecieron y acusaron a Pablo de sedición y de profanación del Templo (cap. 24:1-9). Después de que el acusado habló en su propia defensa, Félix pospuso la decisión hasta que hubiera más evidencia disponible. Mientras tanto, a Pablo se le concedió una gran medida de libertad (vs. 10-23). Algún tiempo después, fue llevado nuevamente ante Félix y su esposa judía, Drusila. Aparentemente, esta audiencia no fue en forma de juicio, sino simplemente una excusa para escuchar lo que Pablo tenía que decir. En esta ocasión, Pablo "razonó sobre la justicia, la templanza y el juicio venidero", con el resultado de que la conciencia de Félix se vio muy, pero evidentemente solo temporalmente, perturbada (vs. 24, 25). Después de este evento, Pablo fue mantenido como prisionero durante 2 años, hasta que Félix fue reemplazado por Porcio Festo (vs. 26, 27). Esto fue alrededor del año 60 d.C.\n\nCasi tan pronto como Festo asumió el cargo, los judíos solicitaron que enviara a Pablo a Jerusalén para ser juzgado, con la intención de asesinarlo en el camino desde Cesarea. Festo se negó, pero los invitó a presentar sus cargos contra el apóstol en Cesarea. Esto hicieron, presentando muchas acusaciones sin pruebas. Festo preguntó si Pablo estaría dispuesto a ser juzgado en Jerusalén. Sin duda, considerando que una orden para renovar el juicio en Jerusalén sería equivalente a una sentencia de muerte, Pablo decidió invocar sus derechos como ciudadano romano y apeló a César (Nerón, ver César, 4). La apelación fue aceptada, y Pablo esperó el transporte a Roma, a salvo del alcance de sus enojados compatriotas (Hechos 25:1-12).\n\nPoco después de esto, Herodes Agripa II, rey de los territorios al norte y este de Judea, llegó con su hermana *Bernice para hacer una visita de cortesía a Festo, el nuevo gobernador de Judea. Festo les relató la historia de Pablo, tras lo cual Agripa solicitó escuchar al apóstol personalmente. Al día siguiente, Pablo fue llevado ante los gobernantes (Hechos 25:13-27) y se le permitió hablar. Describió su trasfondo, su conversión al cristianismo y sus experiencias de persecución por parte de los judíos. Cuando habló de Jesús y Su resurrección de entre los muertos, el pagano Festo declaró que el apóstol estaba loco. Sin embargo, Pablo apeló fuertemente a las convicciones del rey, pero sin aparente éxito. Después de la defensa de Pablo, los gobernantes decidieron que el prisionero podría haber sido liberado si no hubiera apelado a César (Hechos 26:1-32).',
+    date: "58-60 d.C.",
+    scriptures: ["44|24:27", "44|23:23-24"],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "Estatua del apóstol Pablo en el Vaticano.",
+        file: "GoodSalt-prcas4004_8-6-2013 5-11-56 PM.jpg",
+      },
+      {
+        caption: "Puerto antiguo en Cesarea",
+        file: "100249641_2-28-2013 11-25-58 AM.jpg",
+      },
+      {
+        caption:
+          "Vidriera en la Catedral de San Pablo, Melbourne, que representa una escena del Libro de los Hechos con San Pablo, Porcio Festo, Agripa y Berenice.",
+        file: "Festus_window_large_2-28-2013 11-25-58 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1221",
+    slug: "pauls-journey-to-rome",
+    title: "El viaje de Pablo a Roma",
+    period: "10",
+    description:
+      "Pablo, acusado por los líderes judíos, apela a César y es llevado en barco a Roma. En el camino, naufragan en Malta. Tres meses después, zarparon hacia Roma.",
+    article:
+      'La decisión de enviar a Pablo a Roma (probablemente en la primavera del año 60 d.C.) fue tomada, y él, junto con otros prisioneros programados para el mismo viaje, fue puesto bajo la custodia de un centurión llamado Julio, quien fue encargado de llevarlos a la capital (Hechos 27:1). Durante este viaje, Pablo tuvo al menos dos compañeros cristianos, Aristarco (v. 2) y Lucas, el escritor de Hechos, como se muestra por el uso frecuente de "nosotros" en la narrativa. Poco después de la partida, la embarcación se detuvo en Sidón. Allí, Pablo, que fue tratado bien por el centurión, fue permitido visitar a los creyentes. Desde Sidón, el barco navegó entre la isla de Chipre y el continente y finalmente llegó a Mira en Licia (vs. 3-5), donde toda la compañía abordó otro barco con destino a Italia (v. 6). Este barco tenía entonces 276 personas a bordo (v. 37). Finalmente, el barco llegó a la isla de Creta (B-3/4) y con dificultad navegó hacia un lugar llamado Buenos Puertos (vs. 7, 8). Allí pasaron algún tiempo, debatiendo si, debido a lo avanzado de la temporada, el viaje debería continuar. Pablo aconsejó en contra de hacerlo, pero el dueño del barco y el capitán hablaron a favor, y el centurión fue influenciado por estos últimos. Como Buenos Puertos no era adecuado para pasar el invierno, decidieron intentar llegar a Fenice (Fénix), más adelante en la costa de Creta (vs. 9-12). Por lo tanto, tan pronto como surgió un viento favorable, dejaron Buenos Puertos y se dirigieron hacia Fenice.\n\nPoco después, sin embargo, se levantó una gran tempestad, soplando desde el este o este-noreste, que empujó el barco. Cuando encontraron refugio temporal bajo la protección de una pequeña isla llamada Clauda (Cauda), lograron subir el bote del barco, que hasta entonces había sido remolcado. Al día siguiente, como la tormenta continuaba sin cesar, se consideró necesario aligerar el barco arrojando parte de la carga (cf. v. 38). La tempestad persistió durante varios días hasta que se abandonó toda esperanza (Hechos 27:20). En ese momento, Pablo tuvo una visión en la que se le mostró que no se perderían vidas y que tendría la oportunidad de presentarse ante César. Relató esta experiencia a sus compañeros, exhortándolos a tener valor (vs. 21-26). Finalmente, una noche, dos semanas después de que comenzara la tormenta, los marineros sospecharon que estaban cerca de tierra. El amanecer reveló una tierra desconocida con una bahía. Decidieron intentar dirigir el barco hacia la bahía. Al acercarse a tierra, fueron atrapados por violentas corrientes cruzadas, que arrojaron el barco contra las rocas, donde quedó varado. La popa fue entonces destrozada por las olas. Los soldados, obviamente considerando que eran responsables de los prisioneros con sus propias vidas, instaron a que los prisioneros fueran asesinados para evitar que escaparan. Sin embargo, el centurión, queriendo salvar a Pablo, lo prohibió. En cambio, ordenó que todos intentaran llegar a tierra como pudieran, y todos a bordo llegaron a tierra sanos y salvos (vs. 39-44). La tierra resultó ser la isla de Malta.\n\nLa gente de Malta trató al grupo náufrago con hospitalidad y se esforzó por atender sus necesidades. Finalmente, después de pasar 3 meses en la isla (v. 11), la compañía náufraga zarpó hacia Roma, probablemente en la primavera del año 61 d.C., en un barco alejandrino que había pasado el invierno allí (vs. 8-11).',
+    date: "60 d.C.",
+    scriptures: ["44|27:1-44"],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "Pablo naufraga en la isla de Melita",
+        file: "Saint_Paul_shipwrecked_8-1-2013 11-39-50 AM.jpg",
+      },
+      {
+        caption:
+          "Vista de la Ventana Azul en Dwejra, Gozo, Malta. Posiblemente la vista natural más hermosa de las islas maltesas, visitada por miles de personas cada año.",
+        file: "78254686_2-28-2013 11-20-41 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1222",
+    slug: "paul-imprisoned-in-rome-two-years",
+    title: "Pablo encarcelado en Roma dos años",
+    period: "10",
+    description:
+      "Después de llegar a Roma como prisionero, Pablo recibe cierta libertad y se reúne con los líderes judíos para compartir el evangelio. El libro de Hechos termina con una nota positiva de que Pablo pudo difundir el evangelio desde el mismo centro de la civilización en Roma.",
+    article:
+      'Al llegar a Roma, Pablo, junto con los otros prisioneros, fue entregado al "capitán de la guardia" (Hechos 28:16, RVR), probablemente el jefe de la Guardia Pretoriana (la guardia imperial estacionada en Roma) a cargo de los prisioneros que apelaban al emperador. En ese momento, el cargo lo ocupaba Burro, un hombre de buenos principios, cuya influencia restrictiva había ayudado a frenar los excesos del emperador Nerón. Pablo, presumiblemente por recomendación del centurión que lo había escoltado desde Cesarea, fue permitido quedarse en sus propios aposentos, aunque vigilado por un soldado (v. 16), a quien estaba encadenado (ver Hechos 28:20; cf. Efesios 6:20; Colosenses 4:18).\n\nTres días después de su llegada a Roma, Pablo invitó a los ancianos judíos a visitarlo. Después de explicarles la razón de su encarcelamiento, acordaron un momento para que Pablo les expusiera las doctrinas cristianas. En el día señalado, muchos vinieron a su alojamiento para escucharlo mientras "testificaba del reino de Dios". Esta reunión duró todo el día, durante el cual las verdades que Pablo predicaba fueron sin duda debatidas. Al final de la reunión, algunos creyeron y otros, probablemente la mayoría, no lo hicieron: "no estuvieron de acuerdo entre sí". En ese momento, Pablo citó Isaías 6:9-10, reprendiendo a los incrédulos por negarse a aceptar la luz que les había llegado (Hechos 28:17-28). El libro de Hechos y el relato bíblico de la vida del apóstol terminan abruptamente en este punto con la declaración de que Pablo, claramente aún prisionero, pudo vivir durante 2 años en su propio alojamiento alquilado, obviamente bajo vigilancia, y tuvo visitantes a quienes predicó a Cristo (vs. 30, 31).\n\nPara el resto de la historia de la vida de Pablo, debemos depender de escasas pistas encontradas en sus diversas epístolas escritas durante y después de su primer encarcelamiento en Roma, de declaraciones contenidas en otros escritos antiguos y de la tradición. Las epístolas de Efesios, Filipenses, Colosenses y Filemón fueron escritas durante este primer período en Roma. Estas epístolas revelan que el encarcelamiento fue una experiencia difícil para el anciano apóstol (Efesios 3:1; 6:20; Colosenses 4:18; Filemón 1, 9, 10). De Hechos 27:2 y Efesios 6:21 sabemos que Lucas, Aristarco y Tíquico fueron sus compañeros. También tuvo consigo a Marcos, Justo, Epafras y Demas, posiblemente solo a tiempo parcial (Colosenses 4:10-12, 14; cf. 2 Timoteo 4:10). Epafrodito entregó las epístolas de Pablo a los Filipenses (Filipenses 2:25-30). Tíquico llevó la carta a los Efesios (Efesios 6:21, 22) y, acompañado por Onésimo, la carta a los Colosenses (Colosenses 4:7-9) y la dirigida al dueño cristiano de esclavos, Filemón. Onésimo, el esclavo de Filemón que había escapado a Roma, parece haberse convertido por Pablo en Roma (Colosenses 4:9; Filemón 10). De Filipenses 4:18 aprendemos que los Filipenses enviaron regalos a Pablo entregados por Epafrodito.',
+    date: "61-62 d.C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Pablo en Roma como prisionero, Providence Lithograph Company, 1897",
+        file: "Paul_A_Prisoner-Acts_28_11_-_31a_8-1-2013 11-53-33 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1223",
+    slug: "ephesians-colossians-philemon-written",
+    title: "Efesios, Colosenses, Filemón escritas",
+    period: "10",
+    description:
+      'Pablo escribió las cartas de Efesios, Colosenses y Filemón mientras era prisionero en Roma. Hace referencia en Filipenses 2:24 (y Filemón 22) a su "pronta liberación". Efesios y Colosenses tienen fuertes similitudes en contenido y estilo.',
+    article:
+      "Desde los primeros tiempos, Roma ha sido considerada como el lugar desde donde se enviaron las epístolas de la prisión. Generalmente se han fechado en la última parte del encarcelamiento del apóstol allí, ya que en ellas expresa la esperanza de ser liberado, por lo que debe haber tenido alguna razón (Filipenses 2:24; Filemón 22). Su encarcelamiento en Roma duró dos años (Hechos 28:30), desde la primavera del año 60 d.C. hasta el 62, según la cronología del ministerio de Pablo. Por lo tanto, Efesios, Colosenses y Filemón pueden fecharse alrededor del año 62 d.C.",
+    date: "60-62 d.C.",
+    scriptures: ["49|1:1", "51|1:1", "57|1:1"],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "El apóstol Pablo, James Jacques Joseph Tissot",
+        file: "Saint_Paul_01_8-1-2013 11-44-59 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1224",
+    slug: "philippians-written",
+    title: "Filipenses escrita",
+    period: "10",
+    description:
+      "Pablo probablemente escribió el libro de Filipenses desde la prisión. Los eruditos debaten si fue desde Roma o desde Cesarea. La carta es una de las más optimistas de todos sus escritos, dando la impresión de que pronto sería liberado de la prisión.",
+    article:
+      "La carta a los Filipenses es probablemente la última de las epístolas de la prisión. Implica que Pablo había estado en Roma algún tiempo y ya había visto un considerable fruto de sus labores (ver Filipenses 1:12-14). Además, toda la atmósfera de la carta es de felicidad. Aparentemente, Pablo esperaba un resultado favorable de su apelación a César (Hechos 25:10-12), lo que le permitiría una vez más visitar su amada iglesia en Filipos (Filipenses 2:24). Al mismo tiempo, sus palabras no dejan duda en la mente de sus lectores de que una decisión desfavorable no lo habría encontrado desprevenido (Filipenses 1:19, 20, 22-25). Por lo tanto, se puede concluir que Filipenses fue probablemente escrita en el año 62 d.C.",
+    date: "62 d.C.",
+    scriptures: ["50|1:1"],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "La carta de Pablo a los Filipenses.",
+        file: "GoodSalt-fjgps0824_8-7-2013 1-29-31 PM.jpg",
+      },
+      {
+        caption: "Estatua del apóstol Pablo en el Vaticano.",
+        file: "156361886_2-28-2013 11-01-20 AM.jpg",
+      },
+      {
+        caption: "Carta de Pablo a los Filipenses",
+        file: "GoodSalt-stdas0488_8-7-2013 2-20-33 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1226",
+    slug: "paul-travels-in-crete-asia-minor-and-macedonia",
+    title: "Pablo viaja por Creta, Asia Menor y Macedonia",
+    period: "10",
+    description:
+      "Después de estar encarcelado durante 2 años, Pablo es liberado y realiza viajes misioneros. Las referencias en 1 Timoteo y Tito indican la libertad que tenía durante este tiempo en Creta, Asia Menor y Macedonia. Finalmente es arrestado por segunda vez.",
+    article:
+      "Al final de 2 años (probablemente en el año 63 d.C.), Pablo fue juzgado ante el tribunal de Nerón y liberado. Las epístolas escritas durante este período de libertad, 1 Timoteo y Tito, muestran que el apóstol una vez más realizó viajes misioneros después de su liberación. Clemente de Roma (La Primera Epístola de Clemente a los Corintios 5) dice que Pablo predicó tanto en el Este como en el Oeste. Dado que el apóstol había planeado ir a España (Romanos 15:24, 28), es posible que ahora visitara ese país. El Fragmento Muratoriano (c. 190 d.C.) afirma que sí visitó España. Pablo probablemente también llevó a cabo su propósito expreso de visitar Filipos (Filipenses 2:24) y Colosas (Filemón 22; cf. Colosenses 4:9; Filemón 10). De 1 Timoteo 1:3 podemos concluir que fue a Macedonia y Éfeso. También aparentemente visitó Creta (Tito 1:5), y posiblemente Corinto (2 Timoteo 4:20). También pudo haber pasado un invierno (quizás en el año 65 d.C.) en Nicópolis (Tito 3:12), en la costa occidental de Grecia.",
+    date: "63-67 d.C.",
+    scriptures: ["45|15:24-28", "50|2:24", "54|1:3", "56|1:5"],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "La playa escondida de Balos en la isla de Creta, Grecia. Creta es la más grande de las islas griegas y la quinta más grande del Mar Mediterráneo con 8,336 km² (3,219 millas cuadradas).",
+        file: "iStock_000009355560Small_2-28-2013 10-53-55 AM.jpg",
+      },
+      {
+        caption: "Estatua del apóstol Pablo en el Vaticano.",
+        file: "156361886_2-28-2013 10-53-55 AM.jpg",
+      },
+      {
+        caption: "Busto de mármol de Nerón en los Museos Capitolinos, Roma.",
+        file: "92821560_2-28-2013 10-53-55 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1227",
+    slug: "1-peter-written",
+    title: "1 Pedro escrita",
+    period: "10",
+    description:
+      'El libro de 1 Pedro indica que Pedro fue el autor de esta carta (1:1). Probablemente fue escrita desde Roma ("Babilonia", 5:13) en la primera mitad de los años 60. Según la tradición, Pedro murió como mártir en Roma después de la gran persecución de Nerón.',
+    article:
+      'La fecha precisa de la escritura de esta epístola no puede determinarse. La carta fue escrita probablemente desde Roma, como sugiere el nombre "Babilonia" (ver 5:13). Esto significaría que fue escrita cerca del final de la vida del apóstol. La ausencia de cualquier referencia a la presencia de Pedro en Roma en las cartas de Pablo desde esa ciudad sugiere que Pedro no llegó allí hasta aproximadamente el momento del arresto final de Pablo, alrededor del año 66 d.C. Aunque no se puede decir nada definitivo sobre la fecha de 1 Pedro, lo anterior sugiere como una fecha probable la mitad de los años 60 del siglo I. La epístola refleja la existencia de una actitud hostil hacia los cristianos (2:12; 4:12-16). Esto puede sugerir el tiempo de la persecución de Nerón, que comenzó en el año 64 d.C.',
+    date: "63 d.C.",
+    scriptures: ["60|1:1"],
+    related: [
+      {
+        slug: "peter",
+        title: "Pedro",
+      },
+    ],
+    images: [
+      {
+        caption: "Pedro, James Jacques Joseph Tissot",
+        file: "GoodSalt-lwjas0190_8-6-2013 5-13-14 PM.jpg",
+      },
+      {
+        caption: "Plaza de San Pedro en la Ciudad del Vaticano, Roma",
+        file: "147090912_2-28-2013 10-37-53 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1228",
+    slug: "1-timothy-written",
+    title: "1 Timoteo escrita",
+    period: "10",
+    description:
+      "El libro de 1 Timoteo fue escrito por Pablo, probablemente después de su liberación de la prisión en Roma. Después de visitar Éfeso, fue a Macedonia, donde escribió esta carta de instrucción a su joven asociado en el ministerio, Timoteo.",
+    article:
+      "Dado que Pablo había indicado en sus epístolas de la prisión que estaba ansioso por ver las iglesias en Asia y Macedonia lo antes posible (Filipenses 2:24; Filemón 22), puede suponerse que viajó a esas tierras orientales poco después de su liberación. Visitó Éfeso, la ciudad principal de la provincia de Asia, antes de proceder a Macedonia (1 Timoteo 1:3), donde estaba la amada iglesia de Filipos. La primera carta a Timoteo fue escrita después de estas visitas, por lo que puede fecharse aproximadamente un año después de su liberación, probablemente en el año 65 d.C.",
+    date: "65 d.C.",
+    scriptures: ["54|1:1-3"],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "La primera epístola del apóstol Pablo a Timoteo.",
+        file: "iStock_000005781352Small_2-28-2013 10-41-33 AM.jpg",
+      },
+      {
+        caption: "Estatua del apóstol Pablo en el Vaticano.",
+        file: "156361886_2-28-2013 10-41-33 AM.jpg",
+      },
+      {
+        caption:
+          "La fachada frontal y el patio del edificio de la biblioteca en Éfeso es una imponente estructura antigua griega y romana. Construida con piedra antigua y reconstruida por arqueólogos, es una parada turística popular cerca de la ciudad de Izmir en Turquía.",
+        file: "149144388_2-28-2013 10-41-33 AM.jpg",
+      },
+      {
+        caption: "Acrópolis en Bergama en Turquía",
+        file: "iStock_000013048147Small_2-28-2013 10-41-33 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1229",
+    slug: "titus-written",
+    title: "Tito escrita",
+    period: "10",
+    description:
+      "Pablo escribió el libro de Tito probablemente después de su primera liberación de la prisión en Roma. Fue escrita a su colaborador en el ministerio, Tito, quien trabajaba en la isla de Creta. Pablo indica que escribió desde Nicópolis.",
+    article:
+      "La carta a Tito parece haber sido escrita algo más tarde que 1 Timoteo, aunque trata asuntos muy similares a los discutidos en la primera carta a Timoteo. Se refiere al trabajo de Pablo en la isla de Creta, que debe haber tenido lugar también durante este último viaje misionero (Tito 1:5). Sin embargo, cuando se escribió la carta, Pablo ya había dejado la isla y probablemente había ido a Grecia, dejando a Tito a cargo del trabajo en Creta. Informando a Tito de sus planes para pasar el próximo invierno en Nicópolis, en la costa occidental de Grecia, le pidió a su joven colaborador que lo encontrara allí (3:12). Si se permite un año para el viaje de Pablo por Asia Menor y Macedonia, y algún tiempo para su trabajo en Creta y Grecia, su carta a Tito puede fecharse alrededor del año 65 d.C.",
+    date: "65 d.C.",
+    scriptures: ["56|3:12"],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "La epístola de Pablo a Tito.",
+        file: "95269125_2-28-2013 10-50-06 AM.jpg",
+      },
+      {
+        caption: "Arco de Tito en Roma, Italia.",
+        file: "95231678_2-28-2013 10-50-06 AM.jpg",
+      },
+      {
+        caption: "Estatua del apóstol Pablo en el Vaticano.",
+        file: "156361886_2-28-2013 10-50-06 AM.jpg",
+      },
+      {
+        caption:
+          "La playa escondida de Balos en la isla de Creta, Grecia. Creta es la más grande de las islas griegas y la quinta más grande del Mar Mediterráneo con 8,336 km² (3,219 millas cuadradas).",
+        file: "iStock_000009355560Small_2-28-2013 10-50-37 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1230",
+    slug: "2-peter-written",
+    title: "2 Pedro escrita",
+    period: "10",
+    description:
+      "Pedro escribió el libro de 2 Pedro. Según la carta (1:13-14), esperaba morir pronto. La tradición es que murió bajo la mano de Nerón, lo que situaría este libro alrededor del año 65 d.C. Probablemente fue escrita desde Roma.",
+    article:
+      'Segunda Pedro está dirigida a "los que han alcanzado una fe igualmente preciosa con nosotros" (cap. 1:1), presumiblemente refiriéndose a los lectores de la primera epístola (ver p. 547). Esto parece confirmarse en el cap. 3:1. Pedro debió haber sido martirizado a más tardar en el año 65 d.C. Su segunda epístola se cree que fue escrita poco antes de esta fecha. No hay evidencia para determinar dónde se escribió la epístola, pero lo más probable es que fuera Roma.',
+    date: "65 d.C.",
+    scriptures: ["61|1:1"],
+    related: [
+      {
+        slug: "peter",
+        title: "Pedro",
+      },
+    ],
+    images: [
+      {
+        caption: "La segunda epístola general de Pedro",
+        file: "118300582_2-28-2013 10-35-30 AM.jpg",
+      },
+      {
+        caption: "Plaza de San Pedro en la Ciudad del Vaticano, Roma",
+        file: "147090912_2-28-2013 10-35-30 AM.jpg",
+      },
+      {
+        caption: "Busto de mármol de Nerón en los Museos Capitolinos, Roma.",
+        file: "92821560_2-28-2013 10-35-30 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1231",
+    slug: "2-timothy-written",
+    title: "2 Timoteo escrita",
+    period: "10",
+    description:
+      "Pablo escribió 2 Timoteo durante su encarcelamiento final en Roma, probablemente en el otoño del año 66 d.C. Claramente es un momento difícil para Pablo. Parece haber tenido una audiencia y estaba esperando otra.",
+    article:
+      "Después de su arresto, probablemente en el año 66 d.C., Pablo fue una vez más transportado a Roma. En el momento en que escribió su segunda carta a Timoteo, parece que ya había tenido una audiencia pero aún no había sido sentenciado (2 Timoteo 4:17). Aunque aparentemente tenía pocas esperanzas de un veredicto favorable (v. 6), parece haber pensado que podría pasar al menos el siguiente invierno en Roma (v. 21), posiblemente porque sabía por experiencia lo lentos que trabajaban los tribunales romanos. Si esta expectativa resultó ser cierta, y Pablo murió en el año 67 d.C., la segunda carta a Timoteo puede fecharse en el otoño del año 66 d.C.",
+    date: "66 d.C.",
+    scriptures: ["55|1:8"],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "La segunda epístola del apóstol Pablo a Timoteo.",
+        file: "95269098_2-28-2013 10-27-37 AM.jpg",
+      },
+      {
+        caption: "Estatua del apóstol Pablo en el Vaticano.",
+        file: "156361886_2-28-2013 10-27-37 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1232",
+    slug: "death-of-paul",
+    title: "Muerte de Pablo",
+    period: "10",
+    description:
+      "La Biblia no da claramente un relato de la muerte de Pablo, aunque sus cartas muestran que la muerte es inminente (2 Timoteo 4:7, 8). La tradición afirma que Pablo fue decapitado.",
+    article:
+      "Los primeros autores cristianos son unánimes al declarar que Pablo murió bajo Nerón en Roma. Su ejecución, que la tradición dice fue por decapitación en algún lugar de la Vía Ostiense, debe haber tenido lugar al menos en el año 68 d.C., ya que Nerón mismo murió ese año. Fue ejecutado probablemente en algún momento entre los años 66 y 68 d.C.",
+    date: "67 d.C.",
+    scriptures: ["55|4:7-8"],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "Estatua del apóstol Pablo en el Vaticano.",
+        file: "156361886_2-28-2013 10-18-53 AM.jpg",
+      },
+      {
+        caption:
+          "Conversión en el camino a Damasco, pintura de Caravaggio en 1601 ubicada en Santa Maria del Popolo, Roma.",
+        file: "Pauls Conversion_2-28-2013 10-18-53 AM.jpg",
+      },
+      {
+        caption: "Busto de mármol de Nerón en los Museos Capitolinos, Roma.",
+        file: "92821560_2-28-2013 10-18-53 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1233",
+    slug: "1-john-written",
+    title: "1 Juan escrita",
+    period: "10",
+    description:
+      'El estilo claro y el griego simple utilizado en 1 Juan muestran claros vínculos con el escritor como Juan, el hijo de Zebedeo y discípulo de Jesús. Las referencias que hace a "hijitos" y ser llamado "el anciano" apuntan a una fecha de escritura tardía en su vida.',
+    article:
+      'Parece que es imposible llegar a una conclusión firme sobre la datación relativa de las dos obras basándose en la evidencia interna. Sin embargo, está claro que la epístola fue escrita por un hombre anciano que podía dirigirse correctamente a sus conversos como "hijitos" (cap. 2:1, 12, 18, 28; 3:7, 18; 4:4; 5:21). El destino de la carta no se indica, pero obviamente está dirigida a un grupo conocido de cristianos con quienes el reverenciado autor estaba personalmente familiarizado. No se ha presentado ninguna razón concluyente para rechazar la tradición ampliamente sostenida de que fue escrita por Juan en su vejez a los creyentes en Éfeso, o al menos en Asia Menor, donde había ministrado. La fecha de escritura es probablemente durante la primera mitad de los años 90 del siglo I d.C.',
+    date: "90 d.C.",
+    scriptures: ["1|43|2:1"],
+    related: [
+      {
+        slug: "john",
+        title: "Juan",
+      },
+    ],
+    images: [
+      {
+        caption: "Dibujo de Juan en la isla de Patmos.",
+        file: "Prophet_2-28-2013 10-12-23 AM.jpg",
+      },
+      {
+        caption: "La tumba tradicional de San Juan en Éfeso, Turquía.",
+        file: "759px-Tomb_of_St_John_2-28-2013 10-12-23 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1234",
+    slug: "2-john-written",
+    title: "Escrita de 2 Juan",
+    period: "10",
+    description:
+      'El estilo de 2 Juan (al igual que 1 Juan) apunta a Juan, el discípulo de Jesús, como el autor. La fecha de la escritura es probablemente a principios de los años 90 y encaja con la descripción que Juan hace de sí mismo ("el anciano"). Fue escrita para advertir sobre los falsos maestros.',
+    article:
+      "Parece probable que esta carta fue escrita después de la primera epístola, y, si Juan es aceptado como el autor, poco después de la primera carta, en vista de la edad del apóstol. El factor adicional que la segunda epístola saca a la luz es que los falsos maestros se estaban aprovechando de la hospitalidad cristiana para diseminar doctrinas erróneas.",
+    date: "91 d.C.",
+    scriptures: ["2|43|1:1"],
+    related: [
+      {
+        slug: "john",
+        title: "Juan",
+      },
+    ],
+    images: [
+      {
+        caption: "Juan el Evangelista, también conocido como Juan el Revelador",
+        file: "600px-St_John_the_Evangelist_014_8-1-2013 1-56-03 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1235",
+    slug: "3-john-written",
+    title: "Escrita de 3 Juan",
+    period: "10",
+    description:
+      "Debido a las muchas similitudes con 1 y 2 Juan, sabemos que esta es la tercera de un trío de cartas. Fue escrita en la última parte de la vida de Juan a una persona específica llamada Gayo.",
+    article:
+      "Varias cosas apuntan a un desarrollo de la situación revelada en la segunda epístola de Juan, y hacen de la tercera la última del trío de cartas que se han conservado para nosotros. Esto no quiere decir que Juan no escribiera otras cartas. No hay evidencia que demuestre que la carta a la que se refiere el versículo 9 era la segunda epístola, aunque es una posibilidad atractiva y no hay forma de determinar la cantidad de tiempo que pasó entre la escritura de la segunda epístola y la de la tercera, pero parece probable que el intervalo fue breve, ya que las cartas están tan estrechamente relacionadas en estilo y contenido.",
+    date: "92 d.C.",
+    scriptures: ["3|43|1:1"],
+    related: [
+      {
+        slug: "john",
+        title: "Juan",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Juan el Evangelista, también conocido como Juan el Revelador, James Jacques Joseph Tissot",
+        file: "GoodSalt-prcas1771_8-7-2013 1-26-22 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1236",
+    slug: "revelation-written",
+    title: "Escrita del Apocalipsis",
+    period: "10",
+    description:
+      "Muchos escritores cristianos de la iglesia primitiva señalan a Juan, el discípulo de Jesús, como el escritor del libro del Apocalipsis. Escribió sobre las visiones que le fueron dadas de las cosas por venir mientras era un prisionero exiliado en la isla de Patmos durante el reinado de Domiciano.",
+    article:
+      'El testimonio de los primeros escritores cristianos es casi unánime en que el libro del Apocalipsis fue escrito durante el reinado de Domiciano. Ireneo, quien afirma haber tenido una conexión personal con Juan a través de Policarpo, declara sobre el Apocalipsis: "Porque eso fue visto no hace mucho tiempo, sino casi en nuestros días, hacia el final del reinado de Domiciano" (op. cit. v. 30. 3 ANF, vol. 1, pp. 559, 560). Victorino (murió c. 303 d.C.) dice: "Cuando Juan dijo estas cosas, estaba en la isla de Patmos, condenado a los trabajos de las minas por el César Domiciano. Allí, por lo tanto, vio el Apocalipsis" (Comentario sobre el Apocalipsis, sobre el cap. 10:11 ANF, vol. 7, p. 353 ver en Ap. 1:9). Eusebio (op. cit. iii. 20. 8, 9) registra que Juan fue enviado a Patmos por Domiciano, y que cuando aquellos que habían sido injustamente desterrados por Domiciano fueron liberados por su sucesor, Nerva (96-98 d.C. ver Vol. VI, p. 87), el apóstol regresó a Éfeso. Tal testimonio cristiano primitivo lleva a los autores de este comentario a situar la escritura del Apocalipsis durante el reinado de Domiciano, que terminó en el año 96 d.C.',
+    date: "95 d.C.",
+    scriptures: ["66|1:1-2"],
+    related: [
+      {
+        slug: "john",
+        title: "Juan",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Juan el Revelador en la isla de Patmos, Tobias Verhaecht, 1598",
+        file: "GoodSalt-stdas0439_8-6-2013 5-16-56 PM.jpg",
+      },
+      {
+        caption: "Juan el Revelador en la isla de Patmos.",
+        file: "_98A1499_DTK_Z_2-28-2013 9-09-51 AM.jpg",
+      },
+      {
+        caption:
+          "Juan el Revelador en visión, Providence Lithograph Company, 1904",
+        file: "Message_of_the_Risen_Christ-Revelation_1_18a_8-1-2013 2-14-46 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1237",
+    slug: "church-of-ephesus-apostolic-church-age",
+    title: "Iglesia de Éfeso, Era de la Iglesia Apostólica",
+    period: "9",
+    description:
+      "El mensaje a la iglesia de Éfeso es uno de pureza y representa a la iglesia del primer siglo. Se le amonesta a recordar su primer amor. Éfeso era una importante ciudad portuaria en Asia Menor (actual Turquía occidental).",
+    article:
+      'El libro del Apocalipsis se presenta como una carta a siete iglesias ubicadas en Asia Menor (véase Apocalipsis 1:4). Si bien todo el libro estaba destinado a que las siete iglesias lo leyeran, se encuentran mensajes específicos para cada iglesia en los capítulos 2 y 3. Estas antiguas cartas no sólo animaron a siete iglesias locales cuando se entregaron hace 2.000 años, sino que tienen un valor universal para las iglesias de todas las épocas. Los mensajes a estas iglesias también parecen describir épocas de la historia de la iglesia desde la época de Cristo hasta nuestros días. El número siete es una figura clave en el libro del Apocalipsis. Tiene un significado espiritual más profundo en la profecía. Es el "príncipe" de los números en las Escrituras y representa la integridad y la perfección. Los mensajes a las siete iglesias son perfectos para que todas las iglesias los lean y estudien.\n\nCarta a la Iglesia de Éfeso\nLa primera carta en Apocalipsis 2:1-7 fue escrita a la iglesia de Éfeso, una ciudad portuaria en la parte suroeste de Asia Menor. Era una ciudad líder y un punto focal del comercio. Como un círculo gigante (de unos 80 kilómetros alrededor), las siete iglesias se presentan cada una con un mensaje que va en el sentido de las agujas del reloj desde Éfeso hasta Laodicea. Éfeso representa a la nueva y pura iglesia del primer siglo. El nombre "Éfeso" significa "deseable". La iglesia es elogiada por su paciencia y duro trabajo, pero es reprendida por perder su primer amor.\n\nComo cada carta, este mensaje comienza con una breve descripción de una cualidad de Cristo. "Escribe al ángel de la iglesia en Éfeso: El que tiene las siete estrellas en su diestra, el que anda en medio de los siete candeleros de oro, dice esto" (v. 1). Además, como las otras cartas, ésta comienza con una palabra de afirmación. La iglesia de Éfeso es elogiada por su obra y paciencia. No temen tratar con el mal.\n\nPero, Éfeso es reprendida por haber dejado su "primer amor". Dios los llama a arrepentirse y volver a sus "primeras obras" o el candelero en medio de ellos será quitado. El fervor de esta joven iglesia en la difusión del evangelio fue fuerte y apasionado cuando el derramamiento del Espíritu Santo lanzó a los nuevos creyentes. Pero el tiempo y la persecución comenzaron a hacer que algunas de las luces brillantes se apagaran. Algunos líderes fueron martirizados, otros se volvieron complacientes. Durante la época de Juan en la isla de Patmos parecía que el candelero (la luz del Espíritu Santo) se extinguiría.\n\nPero Dios no había olvidado a su pueblo. Se envió un mensaje de advertencia para desafiar a la nueva iglesia a volver a su primer amor. Al igual que los recién casados que comienzan a olvidar los tiernos afectos de los primeros años de matrimonio, esta iglesia necesitaba recibir el amor de Dios de vuelta en sus corazones y ser motivada a servir con una pasión nacida del amor por Jesús. La iglesia de Éfeso también fue afirmada por odiar las obras de los "nicolaítas", un grupo que aparentemente estaba introduciendo herejías en la iglesia.\nEl versículo 7 termina con dos mensajes. "El que tiene oído, oiga lo que el Espíritu dice a las iglesias". En otras palabras, estos mensajes son para cualquiera que esté dispuesto a escuchar honestamente al Espíritu Santo. La carta termina con una promesa para los vencedores. "Al que venciere, le daré a comer del árbol de la vida, el cual está en medio del paraíso de Dios". Así como la iglesia de Éfeso venció las "falsas enseñanzas" que se estaban difundiendo, así también todos los creyentes no deben comer del árbol del conocimiento del bien y del mal. Cuando alguien vence, comerá del árbol de la vida.\n\nIglesias y cristianos sin amor en la actualidad\nAunque el mensaje a la iglesia de Éfeso fue escrito hace 2.000 años para una iglesia en Asia Menor, la carta es relevante hoy en día, tanto para las iglesias individuales como para cada cristiano. Cuando se plantan iglesias, pueden surgir con un celo contagioso para testificar y compartir el amor de Cristo. Pero las iglesias pueden pasar por ciclos y perder este primer amor. No deben olvidar los fundamentos de su primera obra evangelística. El amor de Jesús no sólo es necesario cuando una iglesia comienza, sino que debe permanecer en el torrente sanguíneo de la organización a lo largo de toda su vida.\n\nAsí también cada uno que viene a Cristo debe permanecer con Cristo. Las primeras atenciones de nuestra relación amorosa con Jesús deben permanecer vivas durante toda nuestra andadura con Dios. El tiempo dedicado al estudio de la Biblia y a la oración no puede dejarse de lado si queremos mantener nuestra fe. Compartir nuestro testimonio con otros y dar nuestro testimonio personal necesita mantenerse fresco y vivo o perderemos nuestro primer amor y la luz de la presencia de Dios se apagará de nuestras vidas. ¿Mantendrás tu primer amor con Jesús?',
+    date: "31-100 d.C.",
+    scriptures: ["66|2:1-7"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "La fachada frontal y el patio del edificio de la biblioteca de Éfeso es una imponente estructura griega y romana antigua. Construida con piedra antigua y reconstruida por arqueólogos, es una popular parada turística cerca de la ciudad de Izmir en Turquía.",
+        file: "149144388_2-28-2013 9-06-13 AM.jpg",
+      },
+      {
+        caption:
+          "Mosaico en la Basílica de San Marcos que representa a los ángeles que custodian las siete iglesias de Asia.",
+        file: "The_angels_standing_guard_to_the_seven_churches_of_Asia_2-28-2013 9-06-13 AM.jpg",
+      },
+      {
+        caption: "Acrópolis en Bergama en Turquía",
+        file: "iStock_000013048147Small_2-28-2013 9-06-13 AM.jpg",
+      },
+      {
+        caption: "Las Siete Iglesias de Asia Menor.",
+        file: "GoodSalt-7 churches_8-5-2013 4-09-10 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1238",
+    slug: "church-of-smyrna-age-of-martyrdom",
+    title: "Iglesia de Esmirna, Era del Martirio",
+    period: "10",
+    description:
+      "El mensaje a la iglesia de Esmirna es a una iglesia perseguida y representa un tiempo de persecución en la iglesia (siglos II y III). Esmirna también era una ciudad portuaria. Esta iglesia no recibió ninguna corrección, sino que fue animada a ser fiel hasta la muerte.",
+    article:
+      'Esmirna fue la segunda de las siete iglesias enumeradas en el libro del Apocalipsis que recibió un mensaje especial de Cristo. Aunque era una ciudad antigua situada a unos 80 kilómetros al norte de Éfeso en Asia Menor que sufrió persecución, también es una iglesia que representa un período de la historia durante el cual el pueblo de Dios sufrió mucho derramamiento de sangre. La carta a la iglesia de Esmirna es una carta a todos los cristianos que sufren por su fe. A diferencia de la mayoría de las otras cartas a las iglesias, esta iglesia no recibe una reprensión.\n\nTribulación en Esmirna\nEl nombre "Esmirna" posiblemente se deriva de la palabra "mirra". Esta antigua ciudad en un tiempo produjo una goma aromática utilizada en el embalsamamiento de los muertos. Otros creen que el nombre proviene de una antigua diosa llamada Samorna. El propósito de la carta a Esmirna es proporcionar esperanza y valor a una iglesia cuyos miembros estaban muriendo por su creencia en Jesús. La carta comienza con una referencia a Jesucristo como el "Primero y el Último, el que estuvo muerto y revivió" (Apocalipsis 2:8). Estas son palabras significativas para una iglesia cuyos miembros estaban dando sus vidas por Cristo. Jesús dice que conoce su "tribulación". El período de la historia de la iglesia representado por Esmirna se extiende desde el final del primer siglo (alrededor del año 100 d.C.) hasta el momento en que Constantino habló favorablemente de los cristianos (alrededor del año 313 d.C.). Este segmento de tiempo de 200 años está marcado por un importante derramamiento de sangre entre los cristianos. Los gobernantes romanos como Trajano, Adriano y Marco Aurelio comenzaron persecuciones que se hicieron más sistemáticas bajo Decio y Valeriano. La peor opresión ocurrió bajo Diocleciano (284-305). Esmirna representa con razón la "Era del Martirio" en la historia de la iglesia cristiana.\n\nLa carta sugiere que algunos "que dicen ser judíos y no lo son, sino sinagoga de Satanás" pueden indicar que algunos judíos (o personas que figurativamente se llamaban a sí mismos judíos) estaban denunciando a los cristianos a las autoridades. Del libro de los Hechos sabemos que hubo judíos que difamaron a los cristianos. Esmirna tenía una gran población judía durante la época de Juan. La palabra Satanás significa "acusador" y las tramas contra los cristianos podrían haberse hecho en las sinagogas judías. Pero Jesús dice: "No temas en nada lo que vas a padecer. He aquí, el diablo echará a algunos de vosotros en la cárcel, para que seáis probados..." (v. 10). Desde Trajano hasta Constantino, el arresto y el encarcelamiento de cristianos crecieron cada vez más.\n\nDiez Días\nUna referencia interesante en esta carta dice: "...tendréis tribulación por diez días" (v. 10). Esto ha sido tomado por algunos como un "período general de tiempo". Pero muchos estudiosos de la Biblia han aplicado el principio de "día por año" de la interpretación profética (véase Daniel 7:25) para significar 10 años. Esa aplicación ciertamente encaja con el tiempo más severo de persecución para los cristianos comenzado bajo Diocleciano desde el 303 al 313 d.C. Durante este período se hizo un esfuerzo para eliminar completamente a los cristianos. Las Escrituras fueron reunidas y quemadas y se hizo un enfoque especial para capturar y destruir al clero. Jesús dijo en la carta a Esmirna: "Sé fiel hasta la muerte, y yo te daré la corona de la vida" (v. 10). La palabra "corona" habla de la guirnalda de victoria dada a los ganadores en los juegos griegos. Aunque algunos serían ejecutados, Cristo asegura a todos los que son vencedores en la fe que recibirán la corona de la vida eterna.\n\nNinguna Segunda Muerte\nAl igual que con la carta a Éfeso, esta carta también concluye con "El que tiene oído, oiga lo que el Espíritu dice a las iglesias. El que venciere, no sufrirá daño de la segunda muerte" (v. 11). La "primera muerte" es un final temporal de la vida. La "segunda muerte" habla de una muerte eterna de la que nadie resucitará (véase Hechos 24:15 y Apocalipsis 20:14).\n\nSi has experimentado pruebas debido a tu fe en Jesús, puedes encontrar esperanza en el mensaje a la iglesia de Esmirna. Cristo sabe de tus tribulaciones. El Señor está consciente de los desafíos que enfrentas y te asegura que incluso ante la muerte puedes tener la seguridad de la vida eterna. ¡Sé fiel! Aquel que es el Primero y el Último, que estuvo muerto y está vivo, te sostiene en Sus manos. Jesús no permitirá que seas dañado por la segunda muerte.',
+    date: "100-313 d.C.",
+    scriptures: ["66|2:8-11"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Juan escribiendo a Esmirna y Éfeso, Auftraggeber: Otto III. oder Heinrich II.",
+        file: "BambergApocalypseFolio004vJohnWritesToEphesusAndSmyrna_8-8-2013 3-43-29 PM.JPG",
+      },
+      {
+        caption: "Las Siete Iglesias de Asia Menor.",
+        file: "GoodSalt-7 churches_8-5-2013 4-08-22 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1239",
+    slug: "church-of-pergamos-age-of-popularity",
+    title: "Iglesia de Pérgamo, Era de la Popularidad",
+    period: "10",
+    description:
+      'La carta a la iglesia de Pérgamo advierte contra el compromiso y describe un tiempo después de las persecuciones de Diocleciano cuando el imperio romano se "cristianizó" y el papado se levantó como un poder político.',
+    article:
+      'La tercera carta a las siete iglesias en Apocalipsis 2 y 3 es a la iglesia en Pérgamo (o Pérgamo). Su mensaje está dirigido a una iglesia comprometida. Pérgamo había sido la capital de la provincia romana de Asia durante 200 años y fue un centro de vida intelectual y cultural en el mundo griego. Cristo afirma a aquellos en esta iglesia que se aferran a Su nombre, pero reprende a otros que se aferran a falsas doctrinas. A diferencia de la iglesia de Éfeso (fuerte en doctrina y débil en amor), la iglesia de Pérgamo es débil en doctrina. Esta iglesia representa un período de compromiso en la historia (313-538 d.C.) cuando el cristianismo se hizo generalmente aceptado y las doctrinas paganas se arrastraron en las enseñanzas de la iglesia.\n\nLa Impresionante Ciudad\nNinguna de las otras ciudades de las siete iglesias puede compararse con Pérgamo. Estaba situada a unos 80 kilómetros al norte de Esmirna. Aunque Éfeso estaba creciendo y compitiendo con Pérgamo como un centro líder en Asia Menor, los arqueólogos han revelado estructuras increíbles de esta antigua ciudad. El más famoso es el Altar de Pérgamo (Gran Altar de Zeus). Este templo ha sido reconstruido y es visto como uno de los pináculos de la cultura helenística. Debe haber sido una atracción para los cristianos que vivían allí. Caminar entre logros humanos impresionantes puede llevar a comprometer las verdades divinas.\n\nCristo es presentado en la carta a Pérgamo como Aquel "que tiene la espada aguda de dos filos" (Apocalipsis 2:12). La verdad debe cortar profundamente para revelar el compromiso. Jesús dice que esta iglesia mora cerca del "trono de Satanás", probablemente refiriéndose a la adoración al emperador introducida en los templos paganos del Imperio Romano. El ambiente pagano se estaba mezclando lentamente con el cristianismo y erosionando la verdad. Esta fue la "Era de la Popularidad". También fue el momento en que la influencia del papado romano creció en poder en Europa Occidental. El período de la historia de la iglesia representado por Pérgamo es desde la época de Constantino (alrededor del 313 d.C.) hasta el 538 d.C.\n\nPérgamo es reprendida por mantener "la doctrina de Balaam" (v. 14). Dos piedras de tropiezo en el antiguo Israel (véase Números 22-25) se encuentran en esta iglesia: idolatría e inmoralidad sexual. No sólo se practicaban en el culto al templo, sino que representan un compromiso espiritual en la adoración a Dios. La fornicación simboliza a la iglesia pura de Dios siendo infiel al mantener la doctrina pura. Cristo llama a esta iglesia a arrepentirse. No se necesita menos que un cambio completo para una iglesia que ha permitido que las falsas enseñanzas entren. A menos que la gente se arrepienta, Cristo "peleará contra ellos con la espada" de Su boca (v. 16), que es la verdad o la Palabra de Dios.\n\nPromesas a los Vencedores\nPara aquellos que vencen en Pérgamo, Jesús promete algo del "maná escondido" para comer. Esto puede referirse al maná que Aarón colocó en un jarro delante del Arca del Pacto en el santuario del desierto. Una aplicación más profunda probablemente apunta a Jesús mismo, quien es el pan de vida. Cristo también dice: "Le daré una piedrecita blanca, y en la piedrecita escrito un nombre nuevo, el cual ninguno conoce sino aquel que lo recibe" (v. 17). Muchos creen que esta piedrecita blanca se refiere a una antigua costumbre de los jurados de dar una piedra negra o una piedra blanca para condenar o absolver a las personas en juicio. El "nombre nuevo" probablemente enseña que así como nuestros nombres bíblicos indican el carácter de una persona, un nombre nuevo indicaría los nuevos caracteres que los cristianos reciben al permanecer fieles a la verdad.\n\nMuchos cristianos hoy en día viven en lugares de compromiso. Las personas cercanas al mundo pueden quedar prendadas por las estructuras impresionantes del hombre (seculares o religiosas) y encontrar demasiado fácil decir: "No importa". La verdad le importa a Dios. La iglesia que se vuelve laxa en la enseñanza de la verdad clara permitirá que el compromiso se arrastre en su doctrina y práctica. Los miembros que quieren ser aceptados por la comunidad a expensas de su fe están cometiendo adulterio espiritual. Jesús tiene un sermón de una sola palabra para tales iglesias, "¡Arrepiéntanse!" Debemos dar la vuelta y abandonar todas las creencias que mezclan la verdad y el error. Sólo aquellos que se arrepienten comerán el verdadero Maná del cielo, Jesucristo. Sólo aquellos que permanezcan fieles a la palabra de Dios recibirán nuevos caracteres que durarán mucho más que las ruinas de una vez famosa ciudad llamada Pérgamo.',
+    date: "313-538 d.C.",
+    scriptures: ["66|2:12-17"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "La antigua ciudad de Pérgamo, El Folleto del Museo de Pérgamo, Berlín",
+        file: "800px-Drawing_of_ancient_Pergamon_8-8-2013 3-51-21 PM.jpg",
+      },
+      {
+        caption:
+          "La antigua ciudad de Pérgamo, El Folleto del Museo de Pérgamo, Berlín",
+        file: "View_of_ancient_Pergamon_8-8-2013 3-51-21 PM.jpg",
+      },
+      {
+        caption: "Fotografía del palacio de Diocleciano.",
+        file: "99027544_2-27-2013 5-57-14 PM.jpg",
+      },
+      {
+        caption: "Las Siete Iglesias de Asia Menor.",
+        file: "GoodSalt-7 churches_8-5-2013 4-08-10 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1240",
+    slug: "church-of-thyatira-age-of-adversity",
+    title: "Iglesia de Tiatira, Era de la Adversidad",
+    period: "11",
+    description:
+      "El mensaje a la iglesia de Tiatira habla de la apostasía de la iglesia en la Edad Oscura y más tarde en la Edad Media. La Biblia no estaba disponible para la mayoría y la tradición fue elevada. La gente buscaba la salvación por obras. También habla de la reforma.",
+    article:
+      'Continuando a través del círculo de siete iglesias en Apocalipsis 2 y 3, Cristo da un mensaje a la cuarta iglesia llamada Tiatira. Esta iglesia se movió más allá del compromiso y hacia la apostasía. Un lenguaje fuerte describe los eventos en Tiatira: Jezabel, inmoralidad sexual y tribulación. Tiatira encaja en un período de la historia de la iglesia medieval justo antes del tiempo de la reforma. Fue la "Era de la Adversidad" cuando se promovió la salvación por obras. La iglesia en este momento comenzó a moverse en la dirección correcta cuando la doctrina de la salvación por la fe en Jesucristo fue presentada por los reformadores.\n\nUna Iglesia Corrupta\nTiatira estaba situada a unos 50 kilómetros al sureste de Pérgamo. Era una ciudad conocida por un floreciente número de oficios y comercios. Era prominente para el teñido de telas. El nombre de esta ciudad puede significar "dulce sabor del trabajo" y describiría cómo esta iglesia era conocida por sus "obras, amor, servicio y fe" (v. 19). Tiatira tenía corrupción en medio de ella, pero no todos habían apostatado.\n\nCristo es presentado a esta iglesia como "el Hijo de Dios, que tiene ojos como llama de fuego, y sus pies semejantes al bronce bruñido" (Apocalipsis 2:18). La iglesia ve a Jesús de pies a cabeza. Sus ojos ven sus obras. Sus pies son fuertes y firmes. Cristo no se mueve fácilmente mientras condena "a aquella mujer Jezabel" que seduce "a mis siervos a cometer inmoralidad sexual y a comer cosas sacrificadas a los ídolos" (v. 20). Una mujer pura, en las Escrituras, representa la verdadera iglesia de Dios. Jezabel, una mujer inmoral, representa una iglesia en apostasía. Ella ha sido infiel a la doctrina. Esto describe el poder de la iglesia corrupta de la Edad Oscura. Durante este tiempo, el cristianismo medieval absorbió formas y prácticas paganas.\n\nDios llamó a la iglesia a arrepentirse pero "ella no lo hizo", así que ella y sus "hijos" espirituales sufrirán una gran tribulación. La madre ramera y su descendencia presentan una iglesia con sus adherentes enfrentando serias consecuencias por permitir una mezcla de verdad y error en las enseñanzas de la Biblia. Podría ser difícil de leer, "mataré a sus hijos" (v. 23), pero nos recuerda lo que finalmente sucederá al alejarse de Dios, la fuente de la vida. La historia del Antiguo Testamento del rey Acab y la reina Jezabel nos ayuda a entender cuánto odia el Señor la apostasía. Los israelitas mezclaron el paganismo en sus ceremonias religiosas. Era detestable para Dios. ¿Recuerdas lo que pasó con los "hijos" de Acab (véase 2 Reyes 10:7)? Fueron ejecutados.\n\nSin embargo, no todos se han extraviado en Tiatira. "Pero a vosotros, y a los demás que están en Tiatira", dice Jesús, "retened lo que tenéis hasta que yo venga" (v. 25). No todos han seguido a la iglesia falsa o han "conocido las profundidades de Satanás" (v. 24) o sus caminos. Dios tiene un remanente en cada época que permanece fiel a sus votos de cristianismo. Durante la Edad Oscura, los poderes religiosos y políticos unieron sus manos para perseguir al pueblo de Dios. Pero Apocalipsis promete a aquellos que vencen, "le daré poder sobre las naciones" (v. 26). La venida de la Reforma Protestante ayudó a mover la iglesia de vuelta en la dirección correcta. Grandes hombres como Martín Lutero se levantaron contra la iglesia y el estado para sostener la verdad. Incluso el lenguaje del v. 28 sobre la "estrella de la mañana" se ha utilizado para describir las brillantes obras de Juan Wycliffe, uno de los primeros reformadores protestantes.\n\nIglesias en Apostasía\nHay iglesias hoy en día que han seguido el compromiso hacia la apostasía. La verdad bíblica ha sido reemplazada por las tradiciones de la humanidad. Muchos nunca se han detenido a considerar que las creencias largamente apreciadas no tienen fundamento en las Escrituras, sino que provienen de una mezcla de ideas paganas y algunas verdades bíblicas. Al igual que la iglesia en Tiatira, no debemos cometer "inmoralidad sexual" al adulterarnos espiritualmente con falsas enseñanzas. Escudriñad las Escrituras. Aferraos a la verdad.\n\nEn la misma línea hay iglesias que buscan aceptación en la comunidad pero comprometen las normas bíblicas. El deseo de recibir la alabanza de los líderes seculares y políticos lleva a algunas comunidades de fe a volverse como Jezabel y mezclar la verdad con el error. El mensaje de Cristo a Tiatira es relevante para las iglesias en nuestros días que han "comido alimentos sacrificados a los ídolos", iglesias que comprometerán las enseñanzas bíblicas con el fin de obtener la aceptación en el mundo. Algún día las iglesias falsas y las religiones falsas serán "hechas pedazos como vasos de alfarero\'" (v. 27).\n',
+    date: "538-1798 d.C.",
+    scriptures: ["66|2:18-29"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Mosaico en la Basílica de San Marcos que representa a los ángeles que custodian las siete iglesias de Asia.",
+        file: "The_angels_standing_guard_to_the_seven_churches_of_Asia_2-27-2013 5-53-05 PM.jpg",
+      },
+      {
+        caption: "Las Siete Iglesias de Asia Menor.",
+        file: "GoodSalt-7 churches_8-5-2013 4-08-00 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1241",
+    slug: "church-of-sardis-reformation-age",
+    title: "Iglesia de Sardis, Era de la Reforma",
+    period: "11",
+    description:
+      "El mensaje a la iglesia de Sardis es a una iglesia muerta, tal vez después de los comienzos de la Reforma cuando se encontró cayendo en la ortodoxia. Estaba muerta aunque afirmaba estar viva. Una disminución en la persecución condujo a una laxitud.",
+    article:
+      'Sardis es la quinta de siete iglesias a quienes Cristo envió un mensaje en Apocalipsis 2 y 3. Esta es una iglesia con una reputación de estar viva, pero está muerta. Jesús no da ninguna recomendación a Sardis. Se le llama a estar atenta porque está lista para morir. La iglesia de Sardis representa un tiempo en la historia de la iglesia después de la Reforma en los siglos XVII y XVIII cuando muchos cayeron en el descuido sobre la espiritualidad. Con la protección del estado y credos rígidos, muchos estaban contentos con una forma de piedad pero carecían de poder. Proporciona una advertencia para los cristianos hoy en día para tener una experiencia genuina con Cristo.\n\nMás Allá de la Reputación\nSardis estaba situada a unos 50 kilómetros al sureste de Tiatira. Tenía una hermosa acrópolis en la cima de la montaña y fue la capital del antiguo reino de Lidia, una ciudad muy importante en el Imperio Persa. La ciudad tenía una reputación de grandeza que iba más allá de la realidad. Cuando Juan escribió el Apocalipsis, Sardis se quedó atrás de Éfeso y Pérgamo en estatus. La caída de Sardis representa bien esta reputación. El confiado Rey Creso se sintió completamenteseguro de ser conquistado por Ciro de Persia. La ciudad, situada en la cima del Monte Tmolus, proporcionaba paredes escarpadas de protección de cientos de pies de altura. La advertencia de Jesús de venir como ladrón en la noche encaja bien con la historia de Sardis porque los hombres de Ciro escalaron la pared con la ayuda de una grieta en el acantilado para atacar la ciudad desprotegida por la noche.\n\nJesús dijo: "Yo conozco tus obras, que tienes nombre de que vives, y estás muerto" (Apocalipsis 3:1). La fuerte reprensión es similar a las denuncias mordaces que Cristo hizo a los líderes religiosos de Su día. A Sardis se le dice que esté "vigilante" y que "fortalezca las cosas que quedan, que están a punto de morir" (v. 2). La iglesia no está totalmente muerta, pero al borde. Jesús dice: "No he hallado tus obras perfectas delante de Dios" (v. 2). La vida que vivían no coincidía con las palabras que profesaban. El remedio es recordar cómo recibieron el evangelio por primera vez y arrepentirse. Si la iglesia responde, caminarán con Cristo en "blanco", lo cual representa la pureza de la vida y la doctrina. Esta iglesia puede no tener su nombre borrado del libro de la vida si se arrepiente.\n\nEl período en la historia de la iglesia después de la Reforma Protestante es bien descrito por la iglesia de Sardis. Representa la esterilidad de la ortodoxia protestante cuando las iglesias resolvieron la controversia doctrinal con credos inflexibles. Las iglesias nacionales fueron establecidas y protegidas por el gobierno. Este fue también un tiempo cuando los descubrimientos científicos hicieron grandes avances. El racionalismo planteó preguntas sobre la exactitud de las Escrituras y llevó a muchos a dejar de lado la verdad doctrinal. Las filosofías humanas se mezclaron con la Biblia para hacer la verdad más "razonable". La frialdad espiritual resultó y las iglesias de esta era podrían ser descritas como verdaderamente muertas.\n\nDar la Vuelta\n\nEl "blanco" referido en la declaración de Jesús (v. 4) nos habla de la pureza de Su justicia que cubre nuestros pecados. El blanco es un color "puro" y la iglesia que está muerta está contaminada por el pecado. Necesita arrepentirse y recibir a Cristo de nuevo. Jesús dice: "No borraré su nombre del Libro de la Vida" (v. 5). A veces en las cortes antiguas el nombre de un ciudadano era borrado de los registros de una ciudad antes de que el criminal fuera condenado. De manera similar, podemos perder nuestra ciudadanía en el cielo si no nos arrepentimos y regresamos a Dios.\n\nAl igual que la antigua Sardis, ¿tenemos una reputación de vernos bien como cristianos, pero por dentro estamos muertos? ¿Asistimos a iglesias que son bien respetadas en la comunidad pero que no tienen vida espiritual dentro? ¿Las enseñanzas a las que nos aferramos están fundadas claramente en la palabra de Dios o las filosofías de la humanidad han diluido las verdades de la Biblia? Jesús dice: "Arrepiéntete. Aferraos a lo que es bueno. Pero vigilad cuidadosamente o podéis morir completamente y tener vuestro nombre quitado del Libro de la Vida. No contaminéis vuestras vidas con las filosofías del mundo. Caminad conmigo y seréis vestidos con mi justicia. Confesaré vuestro nombre delante de mi Padre y sus ángeles". Escuchad lo que el Espíritu está diciendo a la iglesia de Sardis.\n\n\n',
+    date: "1517-1755 d.C.",
+    scriptures: ["66|3:1-6"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption: "Adoración en la sinagoga.",
+        file: "GoodSalt-pppas0444_8-13-2013 2-02-27 PM.jpg",
+      },
+      {
+        caption: "Las Siete Iglesias de Asia Menor, Nathan Eady",
+        file: "GoodSalt-7 churches_8-5-2013 4-07-37 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1242",
+    slug: "church-of-philadelphia-great-enlightenment-age",
+    title: "Iglesia de Filadelfia, Gran Era de la Ilustración",
+    period: "12",
+    description:
+      "El mensaje a la iglesia de Filadelfia es uno que representa el avance del evangelio en el siglo XIX cuando la iglesia era pequeña pero estaba creciendo. Representa a la iglesia del gran despertar del segundo advenimiento.",
+    article:
+      'Filadelfia es la sexta de las siete iglesias a las que Cristo envió mensajes especiales en el libro del Apocalipsis. El nombre de esta ciudad significa "amor fraternal" y describe una iglesia que no recibe ninguna condenación, sólo ánimo. Para las personas que probablemente fueron expulsadas de sus sinagogas judías locales por ser cristianas, Jesús da la seguridad de su seguridad en el templo de arriba. El período de la historia de la iglesia descrito por Filadelfia encaja con los movimientos misioneros del siglo XIX cuando una pasión por difundir el evangelio creó un vínculo de amor entre aquellos que anticipaban el pronto regreso de Cristo.\n\nAmor Fraternal\nFiladelfia, la ciudad del amor fraternal, estaba situada a unos 40 kilómetros al sureste de Sardis en Asia Menor. Fue fundada en el 138 a.C. y destruida por un terremoto en el 17 d.C. Tiberio, el emperador romano, reconstruyó la ciudad. Debido a su belleza, los escritores antiguos se refirieron a la nueva ciudad como "Pequeña Atenas". El hecho de que la carta de Juan desde Patmos no contenga ninguna reprensión indica el hermoso espíritu de esta iglesia. Incluso hoy en día, la ciudad, ahora llamada Alashehir, es conocida por su gente amable.\n\nCristo es descrito como "santo y verdadero" a esta iglesia fiel. Jesús es divino y genuino. Es descrito como "El que tiene la llave de David, el que abre y nadie cierra, y cierra y nadie abre" (Apocalipsis 3:7). Esta imagen enfatiza la eminencia de Cristo como el que controla las puertas del cielo y el templo de Dios. Si la "sinagoga de Satanás" (v. 9) habla de aquellos que expulsaron a los cristianos, entonces el mensaje de seguridad dado a esta iglesia es apropiado. "Podéis haber sido expulsados en la tierra, pero no sois expulsados en el cielo". Jesús incluso dice que estos perseguidores algún día "se postrarán a tus pies, y conocerán que yo te he amado" (v. 9).\n\nEs especialmente significativo que a los vencedores se les diga: "Yo le haré columna en el templo de mi Dios, y nunca más saldrá de allí" (v. 12). El lugar central y más importante del universo es el trono de Dios. Estar seguro del acceso continuo a Dios, nunca "salir" (o ser expulsado) da a estos creyentes un sentido de cuánto el Señor desea que estén cerca. Además, hay tres referencias a "escribir" de la ciudad de Dios, el nombre de Dios, y un nuevo nombre. ¿Qué mayor marca de aceptación podría dar Jesús a Sus preciosos siervos que identificarlos claramente como Suyos.\n\nUn Fervor Misionero\nEl gran movimiento misionero de la última parte del siglo XVIII y la primera parte del siglo XIX es capturado por la iglesia de Filadelfia. El avance del evangelio durante este tiempo muestra una iglesia fiel a su llamado. Estos movimientos evangélicos en Europa y los Estados Unidos hicieron hincapié en la piedad práctica y revivieron la fe de la gente en la preparación para la venida de Cristo. Tal fervor no había existido desde los primeros días de la Reforma.\n\nHay una aplicación más profunda del lenguaje de "puerta cerrada" y "puerta abierta" para este período de la historia de la iglesia. Cuando estudiamos la gran ilustración de la salvación que se encuentra en el santuario, vemos dos fases de trabajo: el servicio diario para ministrar a los individuos que buscan la limpieza del pecado y el servicio anual (Día de la Expiación) que fue un día de juicio. El servicio diario estaba ligado al lugar santo y el anual al lugar santísimo. Los estudiosos de la profecía bíblica han descubierto que un cambio del trabajo de Cristo en el santuario celestial tuvo lugar en el año 1844 d.C. (véase la profecía de Daniel 8:14). Así como Cristo entró en el lugar santísimo al ascender al cielo, así ahora nuestro Sumo Sacerdote ha "cerrado" la puerta del trabajo en un compartimento y ha "abierto" una puerta en el santísimo. El lenguaje a la iglesia de Filadelfia habla de esta transición especial que nos prepara para la pronta venida de Jesús.\n\nLas iglesias hoy en día necesitan recuperar el fervor misionero de difundir el evangelio a la luz del Segundo Adviento. Los cristianos individuales que buscan la verdad dondequiera que les lleve, incluso si son expulsados de sus iglesias, continuarán siguiendo a Jesús con la seguridad de que una puerta está abierta por una mano amorosa. Cristo dice: "¡He aquí, yo vengo pronto! Retén lo que tienes, para que ninguno tome tu corona" (v. 11). Cuando somos pacientes y perseverantes, tal como Cristo lo fue mientras estaba en la tierra, podemos estar seguros de un lugar en el templo celestial de Dios donde nunca seremos expulsados.',
+    date: "1755-1844 d.C.",
+    scriptures: ["66|3:7-13"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption: "Creyentes en adoración",
+        file: "GoodSalt-prcas2121_8-13-2013 2-05-30 PM.jpg",
+      },
+      {
+        caption: "Creyentes fieles",
+        file: "GoodSalt-7 churches_8-5-2013 4-07-50 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1243",
+    slug: "church-of-laodicea-age-of-judgment",
+    title: "Iglesia de Laodicea, Era del Juicio",
+    period: "13",
+    description:
+      "El último mensaje a la iglesia de Laodicea representa a la iglesia en los últimos días hasta el tiempo de la segunda venida de Cristo. Es un mensaje de advertencia a una iglesia que se siente rica, pero es pobre. La iglesia es tibia y necesita despertar.",
+    article:
+      'El último mensaje a las siete iglesias de Apocalipsis 2 y 3 se da a la iglesia de Laodicea. El nombre de esta iglesia significa "un pueblo juzgado". La reprensión más aguda se da a la iglesia final. Es tibia y ciega a sus propias necesidades. Cristo está listo para escupir a esta iglesia de Su boca. Pero un mensaje de consejo muestra Su amor por un pueblo autoengañado. Jesús ofrece las mismas cosas que esta iglesia piensa que no necesita. Él pacientemente llama a la puerta de esta iglesia buscando entrar. A los vencedores de Laodicea, se les da la mayor de todas las promesas, sentarse con Jesús en Su trono. Laodicea representa perfectamente la pereza y la autosuficiencia de la iglesia al final de los tiempos.\n\nUna Iglesia Autoengañada\nLaodicea era una ciudad rica en Asia Menor situada a unos 70 kilómetros al sureste de Filadelfia. A diferencia de las ciudades cercanas de Hierápolis (conocida por sus aguas termales) o Colosas (conocida por su agua fría fresca), esta ciudad tenía que canalizar el agua. Cuando llegaba, estaba tibia y desagradable. Jesús describió las obras de esta iglesia como ni frías ni calientes. "Por cuanto eres tibio... te vomitaré de mi boca" (Apocalipsis 3:16). Dios detesta la mediocridad porque incluso una iglesia fría tiene la oportunidad de reconocer su seria condición.\n\n"No sabes..." marca a Laodicea. Esta iglesia sentía que era rica y que no necesitaba nada. En realidad, era un centro bancario prominente conocido por su autosuficiencia. Cuando fue destruida por un terremoto, rechazó la ayuda del emperador para reconstruirse. Laodicea también era famosa por su tela de lana negra y una escuela de medicina del primer siglo que se especializaba en ungüento para los ojos. A esta iglesia rica Jesús dijo: "No sabes que eres desventurado, miserable, pobre, ciego y desnudo" (v. 17). Este es un lenguaje bastante fuerte para una ciudad orgullosa.\n\nAunque rica, Cristo les ofrece oro refinado en fuego (el oro puro de la fe). Aunque famosa por su negocio textil, Jesús los llama "desnudos" y les ofrece las vestiduras blancas de Su justicia. Aunque conocida por una escuela de medicina que vendía un ungüento especial para los ojos, el Señor dice que están "ciegos" y necesitan Su colirio para ver. Jesús ama a esta iglesia. "Yo reprendo y castigo a todos los que amo; sé, pues, celoso, y arrepiéntete" (v. 19). La palabra raíz para celoso (fervor) significa "caliente". El Señor quiere que esta iglesia esté en llamas y ofrece ayuda. Pero Dios no se impone a Laodicea. "He aquí, yo estoy a la puerta y llamo; si alguno oye mi voz y abre la puerta, entraré a él..." (v. 20).\n\nLa Promesa Final\nLas promesas a las siete iglesias han ido aumentando lentamente en número. Uno podría esperar que el número de promesas sea el más alto para la última iglesia, pero sólo se le da una. Sin embargo, supera a todas las demás. "Al que venciere, le daré que se siente conmigo en mi trono..." (v. 21). Es una promesa que consume todas las promesas. Sentarse con Cristo en Su trono significa que tienes todo lo que podrías desear o necesitar.\n\nMuchas iglesias hoy en día están en una condición casi sin esperanza, no porque no haya esperanza, sino porque no reconocen la seriedad de su necesidad. En una era de prosperidad y materialismo, la iglesia puede mirar a su alrededor y contar grandes ofrendas financieras, un gran número de miembros, numerosas instituciones levantadas, casas de adoración en todo el mundo, y todas las buenas obras que ha logrado desde su inicio. Puede sentarse y sentir que ha llegado. Pero una iglesia que descansa en sus propios laureles es una iglesia que es pobre, ciega y desnuda. Nunca puede la iglesia confiar en sus propias obras para asegurar la salvación. Ninguna condición puede ser peor que un estado de autoengaño porque esta iglesia no siente ninguna necesidad de despertar.\n\nAunque el más agudo de todos los mensajes se da a Laodicea, no es una iglesia sin esperanza. Jesús se preocupa profundamente por esta última iglesia representada por el tiempo antes de Su segunda venida. Es una iglesia de la hora del juicio en la que los eventos finales de la historia de la tierra culminarán. Su llamada de atención se combina con un toque amoroso y persistente. Jesús desea tener comunión con Laodicea y elevarla para que se siente con Él en Su trono celestial. Su riqueza material y sus grandes logros no son rival para la justicia de Cristo que ninguna cantidad de dinero puede comprar.',
+    date: "1844 d.C.",
+    scriptures: ["66|3:14-22"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "La pintura de Holman Hunt, La Luz del Mundo, inspirada en la metáfora de Apocalipsis 3:20 de Cristo llamando a la puerta de la Iglesia Laodicense en marzo de 1851, ubicada en la Galería de Arte de Manchester.",
+        file: "Hunt_Light_of_the_World_2-27-2013 5-37-22 PM.jpg",
+      },
+      {
+        caption:
+          "El misterio de las siete estrellas que viste en mi diestra, y de los siete candeleros de oro. Las siete estrellas son los ángeles de las siete iglesias, y los siete candeleros son las siete iglesias. (Apocalipsis 1:20)",
+        file: "GoodSalt-7 churches_8-5-2013 4-07-26 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1244",
+    slug: "deadly-wound-healed",
+    title: "La Herida Mortal",
+    period: "13",
+    description:
+      'La profecía de Apocalipsis 13:3 de que la cabeza de la bestia parecería estar "mortalmente herida" vio su cumplimiento en 1798, cuando el ejército francés entró en Roma y tomó cautivo al Papa Pío VI. Fue curada posteriormente con el restablecimiento del papado i',
+    article:
+      'En Apocalipsis 13:3, la Biblia predice que la bestia, el papado, parecería perder su poder por completo y luego, posteriormente, recuperaría ese poder de tal manera que todo el mundo se maravillaría tras ella. El ejército francés de Napoleón, dirigido por Louis-Alexandre Berthier, entró en Roma y puso fin al reinado político de 1.260 años del papado al tomar al Papa Pío VI, la "cabeza" de la iglesia de Roma, como prisionero a Francia en febrero de 1798.\n\nSin embargo, esa herida fue curada en el año 1929 cuando Mussolini ejecutó el Concordato de 1929 con el Papa Pío XI, restaurando las propiedades y poderes que habían sido quitados a la iglesia en 1798. En ese momento, la Ciudad del Vaticano fue establecida como un poder político soberano. Hoy en día, la restauración e influencia del papado, con más de mil millones de seguidores, en los asuntos mundiales es atestiguada por el hecho de que la mayoría de los países del mundo tienen representantes políticos en la Ciudad del Vaticano.',
+    date: "1798-1929 d.C.",
+    scriptures: ["66|13:3"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "El Mariscal Louis-Alexandre Berthier pintura de Jacques Augustin Catherine Pajou en 1808.",
+        file: "Berthier_2-27-2013 5-16-26 PM.jpg",
+      },
+      {
+        caption: "Napoleón Bonaparte, Jacques-Louis David, 1800",
+        file: "510px-Jacques-Louis_David_007_8-5-2013 11-24-45 AM.jpg",
+      },
+      {
+        caption: "Benito Mussolini, Muzej Revolucije Narodnosti Jugoslavije",
+        file: "Benito_Mussolini_in_1937_8-5-2013 11-24-45 AM.jpg",
+      },
+      {
+        caption: "Firma del Tratado de Letrán en 1929, Achille Beltrame",
+        file: "402px-La_Domenica_del_Corriere_1929_february_24_8-5-2013 11-24-45 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1245",
+    slug: "beast-rises-from-the-earth",
+    title: "La Bestia Surge de la Tierra",
+    period: "12",
+    description:
+      'La bestia que "surge de la tierra" sale de un lugar que no es populoso. Esta segunda bestia encaja con la descripción del surgimiento de los Estados Unidos de América, que creció en poder cuando la primera bestia entró en cautiverio.',
+    article:
+      'En Apocalipsis 13 otra bestia surge de la tierra. Es decir, otra además de la que ya se ha mencionado (v. 1). El griego implica que es del mismo tipo que la primera bestia. Esto se confirma a medida que sus características se despliegan. Trabaja en estrecha colaboración con la primera bestia. Se levanta "de la tierra". El profeta ve la acción como si estuviera sucediendo. La primera bestia surgió del mar (véase el v. 1). Las cuatro bestias de Dan. 7 también surgieron del mar (v. 3). Dado que "mar" representa pueblos y naciones (véase Ap. 13:1 17:1, 2, 8), se puede suponer razonablemente que "tierra" representa una región escasamente poblada. Por lo tanto, la nación así representada no surgiría por guerra, conquista y ocupación, sino que se desarrollaría hasta alcanzar la grandeza en una región de pocos habitantes.\n\nMuchos comentaristas han visto en esta segunda bestia un símbolo de los Estados Unidos de América. Este poder cumple con precisión las especificaciones de la profecía. Cuando la primera bestia estaba entrando en cautiverio en 1798 (véase Ap. 13:10) los Estados Unidos estaban creciendo en prominencia y poder. La nación surgió, no en el Viejo Mundo, con sus multitudes de gente, sino en el Nuevo Mundo, con sus relativamente pocos habitantes.\n\nTenía dos cuernos. Estos pueden ser tomados para representar las dos características notables del sistema de gobierno americano, la libertad civil y religiosa, las cuales están garantizadas en la Constitución de los Estados Unidos. La libertad civil encontró su expresión en una forma republicana de gobierno y la libertad religiosa en el protestantismo.\n\nUn cordero. Un símbolo de juventud e intención pacífica. Otras naciones han sido descritas como bestias salvajes debido a sus actitudes belicosas. Esta bestia con los cuernos de un cordero bien podría indicar una nación que, al principio de su historia, no tenía tales aspiraciones. Su principal preocupación era vivir pacíficamente, ordenar sus propios asuntos, y ser un refugio de descanso para los oprimidos de muchas naciones.\n\nHablaba como dragón. Se puede citar evidencia textual (cf. p. 10) para la lectura "está hablando". Este tiempo verbal concuerda con el de los siguientes versículos, que describen las actividades de la bestia durante el período en que habla como dragón. La narración de sus hazañas se cuenta en el dramático tiempo presente. Hay una sorprendente contradicción entre la apariencia y las acciones de la bestia. En apariencia es gentil y aparentemente inofensiva, pero en acción es perseguidora y cruel, como revelan los vv. 12-18. Cuando la profecía se aplica a los Estados Unidos, es inmediatamente evidente que el cumplimiento de la predicción es futuro. Los Estados Unidos hoy en día continúan manteniendo los principios de libertad garantizados en la Constitución. La manera en que un cambio en la política será llevado a cabo se describe en la presente profecía. El cambio viene en relación con la crisis final inmediatamente anterior al tiempo en que "los reinos de este mundo... se conviertan en los reinos de nuestro Señor, y de su Cristo".',
+    date: "1776-1789 d.C.",
+    scriptures: ["66|13:11-18"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Y vi otra bestia que subía de la tierra; y tenía dos cuernos semejantes a los de un cordero, pero hablaba como dragón. (Apocalipsis 13:11)",
+        file: "GoodSalt-beasts_8-5-2013 11-11-37 AM.jpg",
+      },
+      {
+        caption:
+          "Y vi otra bestia que subía de la tierra; y tenía dos cuernos semejantes a los de un cordero, pero hablaba como dragón. (Apocalipsis 13:11)",
+        file: "iStock_000001771067Small_2-27-2013 5-06-23 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1246",
+    slug: "three-angels-messages-proclaimed-to-all-the-earth",
+    title: "Mensajes de los Tres Ángeles Proclamados",
+    period: "13",
+    description:
+      "Los mensajes de los tres ángeles de Apocalipsis 14 son mensajes del tiempo del fin que deben ser dados antes de que Cristo venga. La proclamación de estos mensajes comenzó en 1844 y continuará hasta que Cristo venga.",
+    article:
+      'Tres ángeles en Apocalipsis 14:6-11 simbolizan la proclamación de mensajes del tiempo del fin que el pueblo remanente de Dios debe dar al mundo en preparación para el inminente regreso de Cristo. Mientras que Apocalipsis 13 muestra la obra del dragón en los eventos finales, Apocalipsis 14 muestra la obra del pueblo de Dios antes de que Jesús regrese. Esta iglesia remanente, de la que se habla en 18:1-4, es comisionada a "profetizar de nuevo" después de un tiempo amargo de decepción (véase 10:11). Aunque los ángeles ayudan en la obra de ayudar a la humanidad a difundir el evangelio, es la obra de la iglesia final predicar la salvación a todo el mundo (véase Mateo 28:18-20). Los tres ángeles representan al pueblo de Dios que proclamará un mensaje final a todos en la tierra.\n\nEl Primer Ángel\nLa esencia del mensaje del primer ángel es el "evangelio eterno" (Apocalipsis 14:6). Debe ser predicado a toda nación, tribu, lengua y pueblo. Es un mensaje universal que debe ser proclamado con "voz fuerte" (v. 7). Tres partes están delineadas en esta comunicación. La primera es: "Temed a Dios y dadle gloria". Temer a Dios significa reverenciar al Señor. Una manera de glorificar a Dios es cuidando nuestros cuerpos (véase 1 Corintios 10:31). La segunda parte dice: "...porque la hora de su juicio ha llegado". Cuando la profecía de los 2300 días de Daniel 8:14 llegó a su cumplimiento en el año 1844 d.C., el mensaje del primer ángel estaba siendo proclamado. La tercera parte dice: "...y adorad a aquel que hizo el cielo y la tierra, el mar y las fuentes de las aguas". Aquí hay una clara referencia al cuarto mandamiento que declara el sábado del séptimo día como un memorial de la creación. La advertencia final de Dios al mundo es adorar y obedecer Sus mandamientos. Esto contrasta fuertemente con la bestia y el dragón que buscan la adoración y la obediencia de toda la humanidad.\n\nEl Segundo Ángel\n"Babilonia ha caído" simboliza el mensaje del segundo ángel. Babilonia tiene sus orígenes en Génesis 11 cuando la humanidad desobedeció a Dios y buscó construir una torre para salvarse a sí misma. Babel (relacionado con Babilonia) significa confusión. Los israelitas fueron llevados más tarde a la ciudad de Babilonia, pero en los días de Juan la "gran ciudad" yacía en ruinas. Babilonia representa un poder que desafía a Dios y oprime al pueblo del Señor. Su contraparte es Jerusalén, que representa el reino de Dios. El imperio de Roma fue referido como Babilonia (véase 1 Pedro 5:13) y este poder creció durante la Edad Media para manifestarse en el poder papal que se opuso a Dios. Ella "ha hecho beber a todas las naciones del vino del furor de su fornicación" (Apocalipsis 14:8). Esta iglesia falsa empuja sus enseñanzas falsificadas a "todas las naciones". La fornicación muestra su infidelidad a Dios al conectar la iglesia con el estado (véase 17:5).\n\nEl Tercer Ángel\nLa advertencia más terrible y solemne en la Biblia se encuentra en el mensaje del tercer ángel. El primer ángel proclama el evangelio y llama a la gente a adorar a Dios como Creador porque el tiempo del juicio ha llegado. El segundo ángel advierte contra las formas de adoración creadas por la humanidad. Ahora con más intensidad se da otra advertencia a aquellos que adoran a la bestia y a su imagen. Apartarse del evangelio conduce finalmente a seguir las falsas enseñanzas de la bestia. Apocalipsis 13:5 describe esta unión de iglesia y estado que persigue al pueblo de Dios durante 1260 años. Sólo dos grupos existirán en los días finales: aquellos que adoran a Dios y aquellos que adoran a la bestia. La gente que rechaza a Dios como Creador (y Su día de adoración, el sábado del séptimo día que muestra Su Señorío sobre toda la creación) recibirá la marca de la bestia.\n\nLos seguidores de la bestia "beberán del vino de la ira de Dios, que ha sido vaciado puro en la copa de su indignación" (14:10). En el juicio justo de Dios, el Señor pondrá fin al pecado y a los pecadores. Para poner fin a la gran guerra entre el bien y el mal habrá dolor en ambos lados. El pueblo de Dios experimenta la ira del dragón. Pero los seguidores de la bestia experimentarán la ira de Dios contra el pecado. El Señor tiene a Su pueblo en todas las iglesias, pero a través del mensaje del tercer ángel Su misericordia llama a todos a separarse del dragón. "Salid de ella, pueblo mío, para que no seáis partícipes de sus pecados, ni recibáis parte de sus plagas; porque sus pecados han llegado hasta el cielo, y Dios se ha acordado de sus maldades" (18:4, 5).\n',
+    date: "1844-Futuro",
+    scriptures: ["66|14:6-12"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption: "Los tres ángeles de Apocalipsis 14",
+        file: "GoodSalt-lwjas0564_8-7-2013 2-09-59 PM.jpg",
+      },
+      {
+        caption:
+          "La advertencia más terrible y solemne de la Biblia se encuentra en el mensaje del tercer ángel.",
+        file: "GoodSalt-2angels2_8-5-2013 11-38-35 AM.jpg",
+      },
+      {
+        caption:
+          "Tres ángeles en Apocalipsis 14:6-11 simbolizan la proclamación de mensajes del tiempo del fin que el pueblo remanente de Dios debe dar al mundo en preparación para el inminente regreso de Cristo.",
+        file: "GoodSalt-3angels1_8-5-2013 11-38-35 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1247",
+    slug: "global-persecution-by-sea-earth-beasts",
+    title: "Persecución Global por las Bestias del Mar y la Tierra",
+    period: "13",
+    description:
+      'Antes de que Cristo venga, la obra de la "bestia de la tierra" y la "bestia del mar" se combinará (Ap. 13:12, 15) para traer persecución global sobre el pueblo de Dios, insistiendo en que todos adoren la imagen de la bestia.',
+    article:
+      'La imagen simbólica que Juan vio en visión se animó por el poder milagroso de la segunda bestia. La nueva organización comienza a funcionar, y al igual que su predecesora, amenaza con la extinción a aquellos que se niegan a cumplir. Lo primero que esta imagen recién formada hace es "hablar", sin duda a través de sus leyes y estatutos. Habiendo hablado oficialmente a través de sus leyes, la imagen luego las pone en efecto. Dado que estas son leyes religiosas, se cruzarán con las convicciones concienzudas de muchos. La fuerza será ejercida en la ejecución de estos estatutos. Esta es la historia de los siglos.\n\nLa legislación en asuntos de religión siempre ha sido seguida por la persecución. Así fue durante la Edad Media: testigo la masacre de los albigenses, valdenses y otros, por el poder civil, por supuesto, pero impulsada por la iglesia dominante del día. En su intento de hacer que todos los habitantes de la tierra den lealtad a la primera bestia (véase el v. 8) la segunda bestia emitirá un decreto amenazando con la muerte a todos los que mantengan su lealtad a Dios. Todos son afectados por esta legislación. Aparentemente sólo el remanente fiel se niega a cumplir (véase el v. 8 cf. Ap. 12:17).',
+    date: "Futuro",
+    scriptures: ["66|13:14-18", "41|13:20", "40|24:22"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption: "Las bestias de Apocalipsis",
+        file: "GoodSalt-mmmas0005_8-7-2013 10-16-10 AM.jpg",
+      },
+      {
+        caption: "Juan el Revelador en la isla de Patmos.",
+        file: "_98A1499_DTK_Z_2-27-2013 4-53-13 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1251",
+    slug: "close-of-probation",
+    title: "Cierre de la Gracia",
+    period: "13",
+    description:
+      'Antes de la segunda venida de Cristo, un decreto saldrá terminando la gracia (un tiempo para aceptar la gracia de Dios) de todos los que viven. Este "cierre de la gracia" significa que todos los que han rechazado la misericordia de Dios ya no tendrán otra oportunidad de recibirla.',
+    article:
+      'GRACIA. \nLa oportunidad proporcionada a la humanidad para aceptar la gracia divina y para prepararse para la vida eterna, y el tiempo asignado para este propósito. Los adventistas del séptimo día creen que la gracia de un individuo se cierra con la muerte. Además, sostienen que antes de la segunda venida de Cristo, un decreto que termina la gracia para todos los que entonces viven saldrá: "El que es injusto, sea injusto todavía...; y el que es justo, sea justo todavía: ... Y he aquí yo vengo pronto, y mi galardón conmigo, para recompensar a cada uno según sea su obra" (Ap. 22:11, 12). Este decreto marca el cierre de la gracia.\n\nDurante el tiempo de gracia, Cristo está ministrando como el sumo sacerdote del cristiano en el santuario celestial, aplicando a cada pecador arrepentido los méritos de Su expiación vicaria y la gracia para triunfar sobre el mundo, la carne y el diablo. Después del cierre de la gracia, aquellos que han rechazado la misericordia divina no tendrán más oportunidad, o segunda oportunidad, de aceptar la salvación, ni lo harían si se les diera la oportunidad. No sabemos exactamente el tiempo del cierre de la gracia para toda la humanidad.',
+    date: "Futuro",
+    scriptures: ["66|22:11-12"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Por tanto, teniendo un gran sumo sacerdote que traspasado los cielos, Jesús el Hijo de Dios, retengamos nuestra profesión. Porque no tenemos un sumo sacerdote que no pueda compadecerse de nuestras debilidades, sino uno que fue tentado en todo según nuestra semejanza, pero sin pecado. (Hebreos 4:14-15)",
+        file: "GoodSalt-JesusHighPriest_8-5-2013 11-54-29 AM.jpg",
+      },
+      {
+        caption: "El arca y los 10 mandamientos",
+        file: "Ark Commandments_2-27-2013 1-57-55 PM_7-22-2013 2-40-02 PM.jpg",
+      },
+      {
+        caption:
+          "Antes de la segunda venida de Cristo, un decreto saldrá terminando la gracia (un tiempo para aceptar la gracia de Dios) de todos los que viven.",
+        file: "GoodSalt-earthsprobation_8-5-2013 11-54-29 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1252",
+    slug: "seven-last-plagues",
+    title: "Las Siete Últimas Plagas",
+    period: "13",
+    description:
+      "Las siete últimas plagas habladas en Apocalipsis 15 y 16 son la ira divina de Dios sobre los pecadores no arrepentidos que rechazan Su misericordia. Caen después del cierre de la gracia y antes de la segunda venida de Cristo en un período de tiempo relativamente corto en el futuro.",
+    article:
+      'Las siete últimas plagas sobre los impíos se describen en Apocalipsis 15 y 16 y demuestran las consecuencias plenas y naturales de volverse contra Dios. Las víctimas de estas plagas han resistido consistentemente el llamado del Señor al arrepentimiento. Se niegan y están resueltos para siempre en su decisión de "blasfemar al Dios del cielo" (Apocalipsis 16:11). El derramamiento de sangre de estos eventos coincide con el crimen de destruir al pueblo de Dios a lo largo de los siglos. Como las plagas cayeron sobre Egipto justo antes de la liberación de los hijos de Israel, así también estas plagas caerán sobre la tierra justo antes de que Jesús regrese. Parece que las siete últimas plagas son tanto literales como espirituales en naturaleza. No son universales en su distribución y no dañan al pueblo de Dios. Se derraman sin misericordia.\n\nLas Primeras Cinco Plagas\nApocalipsis 15 introduce las siete últimas plagas de Apocalipsis 16. En un lenguaje que recuerda a la liberación de los israelitas de Egipto, el pueblo de Dios está a punto de ver el poder del Todopoderoso contra la injusticia. Los ángeles vienen de la sala del trono de Dios con tazones para ser derramados sobre la tierra. Al igual que el incienso de las oraciones del pueblo de Dios sobre el altar del incienso, la ira contra el pecado ha llegado a un punto en el que la injusticia se encuentra deficiente.\n\n⋅ El Primer Tazón: Cuando el primer ángel derrama un tazón sobre la tierra, terribles y repugnantes llagas vienen sobre los hombres "que tenían la marca de la bestia y los que adoraban su imagen" (16:2). El pueblo de Dios está sellado e ileso de todas las plagas.\n\n⋅ El Segundo Tazón: El resultado del segundo ángel derramando un tazón es que el mar se vuelve como sangre y "todo ser viviente en el mar murió" (16:3). Obviamente, esto causaría una gran catástrofe para la raza humana.\n\n⋅ El Tercer Tazón: El tercer tazón de ira causa que toda el agua dulce se vuelva como sangre (16:4). Los versículos 5-7 muestran que el "crimen encaja con el castigo" ya que los impíos han "derramado la sangre de los santos y profetas".\n\n⋅ El Cuarto Tazón: El sol quema a los hombres como resultado del cuarto tazón. En contraste con la cuarta trompeta (que oscureció el sol), aquí vemos lo opuesto. Los hombres todavía no se arrepienten sino que "blasfemaron el nombre de Dios" (16:9).\n\n⋅ El Quinto Tazón: En esta plaga el "trono de la bestia" se envuelve en oscuridad. También blasfemaron el nombre de Dios y "no se arrepintieron" (16:11). Tal oscuridad muestra el poder de Dios sobre el poder falso.\n\nEl Sexto Tazón: El Éufrates Se Seca\nCuando el sexto tazón se derrama, el "gran río Éufrates" se "seca" para que el "camino de los reyes del oriente sea preparado" (v. 12). Así como este río irrigó la antigua Babilonia, así en un sentido espiritual representa una línea de vida para la bestia. Los reyes del oriente indican la venida de la gloria y el poder de Dios (véase Mateo 24:27 y Ezequiel 43:1). La historia de Ciro y Darío conquistando Babilonia al desviar el río Éufrates, que les dio acceso para conquistar la ciudad, abre nuestra comprensión a la caída del poder de la bestia en los últimos días (véase Daniel 5).\n\nComo ranas resbaladizas que saltan por todas partes, tres espíritus malignos salen del dragón, la bestia y el falso profeta (la falsa trinidad). Son "espíritus de demonios, realizando señales" (v. 14). Dios advierte a Su pueblo que vele y no sea engañado.\n\nArmagedón y el Séptimo Tazón\nAl final de la sexta plaga los espíritus malignos reúnen a los reyes de la tierra "en el lugar que en hebreo se llama Armagedón" (16:16). Mientras que algunos creen que esta es una batalla literal en un valle literal en Palestina, el lenguaje enfatiza que esta es la gran y final batalla entre Cristo y Satanás, entre las fuerzas del bien y del mal. Es el último gran esfuerzo del diablo para exterminar al pueblo de Dios. Hay tres historias que nos señalan el mensaje espiritual de Armagedón (Débora, Gedeón y Josías). El pueblo de Dios es superado en número pero en una situación desesperada el Señor trae la victoria.\n\nLa venida de la séptima plaga está marcada con una voz que dice: "¡Está hecho!" (v. 17). Hay relámpagos, truenos y un poderoso terremoto. Babilonia se derrumba, caen grandes piedras de granizo, las islas desaparecen y la gente blasfema a Dios. Jesús viene y libera a Sus hijos. El pueblo del Señor nunca necesita temer que alguna plaga alguna vez vendrá sobre ellos (véase el Salmo 91:9, 10).',
+    date: "Futuro",
+    scriptures: ["66|15:1-8"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption:
+          'El Segundo Tazón: El resultado del segundo ángel derramando un tazón es que el mar se vuelve como sangre y "todo ser viviente en el mar murió" (16:3).',
+        file: "GoodSalt-smcas0137_8-7-2013 10-23-56 AM.jpg",
+      },
+      {
+        caption: "Las siete últimas plagas, Matthias Gerung,",
+        file: "revelation-plagues_8-7-2013 10-23-56 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1253",
+    slug: "battle-of-armageddon",
+    title: "Batalla de Armagedón",
+    period: "13",
+    description:
+      "La batalla de Armagedón es un conflicto entre las fuerzas del bien y del mal que culminará justo antes de la segunda venida de Cristo. Es simbólica en naturaleza, pero terminará en la destrucción de los impíos.",
+    article:
+      'ARMAGEDÓN. (De la transliteración griega de una frase hebrea desconocida que usualmente se piensa que es Har-megido, "Monte Meguido".) La palabra "Armagedón" ocurre en la Biblia sólo en Ap. 16:16, como el nombre hebreo de un "lugar" al cual tres "espíritus inmundos" (v. 13) reúnen a "los reyes de la tierra" para "la batalla de aquel gran día del Dios Todopoderoso" (v. 14)-la designación de Juan para lo que popularmente se llama la batalla de Armagedón.\n\nLa reunión en Armagedón es la característica principal de la sexta plaga (vv. 12-16). El sexto ángel derrama su "tazón" sobre "el gran río Éufrates", cuya "agua se secó, para preparar el camino para los reyes del oriente". Entonces tres "espíritus demoníacos" semejantes a ranas salen de las bocas del "dragón", la "bestia" y el "falso profeta" a "los reyes de todo el mundo, para reunirlos para la batalla en el gran día del Dios Todopoderoso" (vv. 13-16, RSV). La sexta plaga se cierra con las naciones de la tierra reunidas para la batalla, y el contexto implica que la batalla se une cuando el séptimo ángel derrama el vial de la séptima plaga.\n\nEn el uso popular "Armagedón" significa cualquier conflicto militar importante que involucre a muchas naciones, aunque usualmente sin referencia al significado bíblico del término. Armagedón no fue dado énfasis específico por los primeros intérpretes protestantes, pero en las primeras cuatro décadas del siglo XIX, el aumento del énfasis en la inminencia del fin de varios períodos proféticos en las profecías de Daniel y Apocalipsis llevó a un mayor interés en el tema de Armagedón. Un gran grupo de expositores enseñó que los eventos predichos en Ap. 16:12-16 eran paralelos a los de Dan. 11:44, 45, ya que en ambos casos el establecimiento del reino eterno de Cristo sigue casi inmediatamente. Además, se señaló que el "rey del norte" de Dan. 11:40-45, a quien muchos identificaron con el Imperio Otomano, ocupó la zona drenada por el río Éufrates, que se menciona en Ap. 16:12.\n\nSu creencia de que los turcos fueron referidos por "el gran río Éufrates" bajo la sexta trompeta (Ap. 9:14) fortaleció la convicción de que el Éufrates mencionado bajo la sexta plaga debe referirse al mismo poder. El hecho de que a lo largo del siglo XIX el territorio del Imperio Otomano se estaba disminuyendo progresivamente ("secando"), junto con la creencia en la inminencia del evento predicho, tendió a confirmar esta interpretación. Políticamente y en la prensa pública el Imperio Turco fue referido como "el hombre enfermo de Oriente", y su desaparición se suponía inminente. Los eventos contemporáneos fueron interpretados como parte del proceso de secado al que Ap. 16:12 se refería. La "cuestión oriental" ocupó la continua atención de los líderes políticos a lo largo del siglo, y de los intérpretes de la profecía bíblica también.',
+    date: "Futuro",
+    scriptures: ["66|16:12-16"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption: "La batalla de Armagedón",
+        file: "GoodSalt-smcas0097_8-7-2013 10-25-58 AM.jpg",
+      },
+      {
+        caption: '"El Gran Día de Su Ira" por John Martin, 1853',
+        file: "TateImages_N05613_Z2_2-27-2013 4-31-39 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1254",
+    slug: "fall-of-babylon-and-loud-cry",
+    title: "Caída de Babilonia y Fuerte Clamor",
+    period: "13",
+    description:
+      'Babilonia simboliza una iglesia apóstata y se predice que caerá en Apocalipsis 14:8. En Apocalipsis 18 se presenta la caída de "la gran ramera", incluyendo la frase "en una hora ha venido tu juicio". Ella ya no destruirá a los santos de Dios.',
+    article:
+      'Babilonia es un símbolo en Apocalipsis para las organizaciones religiosas apóstatas que se oponen a Cristo y Su pueblo en la tierra, especialmente al final de los tiempos. En Apocalipsis 14 leemos sobre la caída de Babilonia en el mensaje del segundo ángel. Apocalipsis 18 se extiende sobre su destrucción con un "fuerte clamor" final para "salir de ella" para que la gente no comparta su destrucción final. Mientras que Apocalipsis 17 describe a Babilonia como una "madre de rameras" (v. 5) y una prostituta que es ejecutada, Apocalipsis 18 usa una metáfora de una ciudad rica siendo saqueada. Aunque el término Babilonia se ha usado a lo largo de los siglos para describir diferentes organizaciones que se oponen a Dios y persiguen a Su pueblo, la Babilonia moderna representa a todas las iglesias cristianas que se han apartado del "evangelio eterno", incluyendo la gran apostasía romana de los primeros siglos cristianos y la partida más reciente del protestantismo tradicional.\n\nCaída de Babilonia\nApocalipsis 18:2 nos dice, "Ha caído Babilonia la grande..." Explica, "Porque sus pecados han llegado hasta el cielo, y Dios se ha acordado de sus maldades" (v. 5). Ha llegado el momento para que Dios la juzgue. Esta organización ha seducido a los "reyes de la tierra" para cometer fornicación con ella (Apocalipsis 17:2). ¿Cuáles son sus pecados? Apocalipsis nos dice orgullo y arrogancia (17:4 18:7, 16), desafío a Dios y persecución de Su pueblo (16:19 17:6 18:24), y una alianza ilícita con los poderes políticos de la tierra (17:2, 3 18:9). Dios da a la gente completa libertad de elección para elegir la salvación. Satanás obliga a la gente con fuerza a seguirlo.\n\nLos primeros cristianos comenzaron a identificar a Babilonia con Roma (1 Pedro 5:13) al igual que los primeros Padres de la Iglesia como Tertuliano e Ireneo. Durante el Gran Despertar al amanecer del siglo XIX, un número creciente de creyentes adventistas vieron a Babilonia como un símbolo para las iglesias apóstatas caídas, especialmente aquellas que fueron sostenidas por los poderes civiles. La caída de Babilonia es algo que ha estado sucediendo progresivamente, pero estará completa cuando las principales iglesias protestantes colaboren con la Iglesia de Roma en un intento de coaccionar la conciencia.\n\nEl castigo de Babilonia delineado en Apocalipsis 18 encaja con su crimen. Ella es para "Darle a ella... el doble según sus obras" (v. 7). Su lujo y gloria vinieron a expensas de otros. Ella afirma sentarse como una reina, pero ella es una madre de rameras (17:5) y ella caerá junto con sus hijas (iglesias que se unen a ella). Las plagas vendrán sobre ella, especialmente la séptima plaga (véase 16:19). Los reyes de la tierra se lamentan, los comerciantes lloran su destrucción. Sin embargo, el cielo se alegra en la destrucción final de esta organización porque "en ella se halló la sangre de los profetas y de los santos, y de todos los que han sido muertos en la tierra" (18:24).\n\nFuerte Clamor\nEl fuerte clamor de Apocalipsis 18 es Dios en Su misericordia diciendo, "Salid de ella [Babilonia], pueblo mío, para que no seáis partícipes de sus pecados, ni recibáis parte de sus plagas" (v. 4). El Señor distingue entre una organización falsa e individuos en iglesias apóstatas. Este fuerte clamor es la apelación final del cielo a la humanidad, el último mensaje en la Escritura llamando a la humanidad a aceptar el evangelio. El llamado está unido con el mensaje del tercer ángel de Apocalipsis 14:9-11 donde el evangelio falsificado de Babilonia es revelado. Este fuerte clamor es una oferta final para unirse al pueblo remanente de Dios y separarse de las falsas enseñanzas que exaltan a la humanidad. Este mensaje comenzó a salir alrededor del cierre de la profecía de 2,300 años en el año 1844 d.C. y se extiende hasta la venida de Cristo.\n\nAquellos que toman el llamado y se separan de Babilonia, que se convierten en mensajeros de esta advertencia final, serán como luces que "iluminan" la tierra con gloria (18:1). Estos siervos de Dios proclamarán con poder al mundo el último llamado del cielo. Mientras que los poderes de la tierra se unen para hacer la guerra contra los mandamientos de Dios, habrá un pueblo que guarda los mandamientos que preferiría morir antes que aceptar la marca de la bestia y transgredir las leyes de Dios. Muchos saldrán de Babilonia para unirse al último pueblo remanente de Dios y defender la verdad aunque amenazados por un decreto de muerte. En este tiempo la gracia terminará. El destino final de todos estará fijado para siempre. Entonces Cristo vendrá. Entonces Babilonia será destruida.',
+    date: "Futuro",
+    scriptures: ["66|14:6-8", "66|18:1-24"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption: "La ramera sobre la bestia",
+        file: "GoodSalt-smcas0108_8-7-2013 10-39-52 AM.jpg",
+      },
+      {
+        caption: "Quinto Florens Tertuliano",
+        file: "497px-Tertullian_8-7-2013 10-39-52 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1255",
+    slug: "return-of-christ",
+    title: "Regreso de Cristo",
+    period: "13",
+    description:
+      "La 2da venida de Cristo es la bendita esperanza de la iglesia, el gran clímax del evangelio. La venida del Salvador será literal, personal, visible y mundial. El tiempo de ese evento aún no ha sido revelado, pero vendrá después de la 7ma plaga.",
+    article:
+      'SEGUNDO ADVENIMIENTO. El regreso de Jesucristo a la tierra como Rey de reyes y Señor de señores. Aunque la frase en sí misma no ocurre en la Biblia, la enseñanza del regreso de Cristo constituye un tema favorito de los escritores del Nuevo Testamento, quienes hablan, por ejemplo, de la aparición de nuestro Señor una "segunda vez" (Heb. 9:28). Jesús mismo prometió: "Volveré otra vez" (Juan 14:3).\n\nEl término más frecuente del Nuevo Testamento para el Segundo Advenimiento es parusía, que significa "presencia" (literalmente, "un estar al lado"), y por extensión la "venida" y la "llegada" que resultan en "presencia". La palabra ocurre 24 veces en el Nuevo Testamento. En Filipenses 2:12 Pablo contrasta su presencia (parusía) entre los filipenses con su ausencia (apousia) de ellos (cf. 2 Cor. 10:10). Más frecuentemente, sin embargo, el contexto requiere el significado de "llegada" o "venida" para parusía. Por ejemplo, la llegada (parusía) de Estéfanas, Fortunato y Acaico de Corinto trajo alegría a Pablo y refrescó su espíritu (1 Cor. 16:17, 18). La llegada (parusía) de Tito con buenas noticias de Corinto consoló a Pablo en su preocupación por la iglesia allí (2 Cor. 7:6). Mientras era prisionero en Roma, Pablo expresó la esperanza de ser liberado y de venir (parusía) de nuevo a los filipenses (Fil. 1:26).\n\nOtro término usado para el Advenimiento es apokalypsis, que significa "revelación", "desvelo", "divulgación" (1 Cor. 1:7 2 Tes. 1:7 1 Pedro 1:7, 13). En Su primera venida la gloria de Cristo estaba escondida, y Su deidad estaba envuelta con la humanidad. Pero en Su segunda aparición Su gloria y majestad serán reveladas para que todos la contemplen (Mat. 24:30).',
+    date: "Futuro",
+    scriptures: ["43|14:3"],
+    related: [
+      {
+        slug: "christs-everlasting-kingdom",
+        title: "Reino Eterno de Cristo",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "He aquí que viene con las nubes, y todo ojo le verá, y los que le traspasaron; y todos los linajes de la tierra harán lamentación por él. Sí, amén. (Apocalipsis 1:7)",
+        file: "GoodSalt-SecondComing_8-5-2013 11-56-22 AM.jpg",
+      },
+      {
+        caption:
+          "El Rey de Reyes regresa. Cristo recibe el reino de Su Padre y luego regresa a la Tierra por Sus santos.",
+        file: "GoodSalt-lwjas0156_LG_2-27-2013 4-07-01 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1256",
+    slug: "resurrection-and-translation-of-the-saints",
+    title: "Resurrección y Traslación de los Santos",
+    period: "13",
+    description:
+      "Cuando Cristo regrese por segunda vez a esta tierra, los justos muertos serán resucitados y, junto con los justos vivos, serán trasladados al cielo. La Biblia enseña que los impíos vivos en ese momento serán destruidos.",
+    article:
+      'El Nuevo Testamento presenta el Segundo Advenimiento como acompañado por la resurrección de los justos (Lucas 14:14 Juan 5:28, 29 6:40, 44 11:24 Hechos 24:14, 15 1 Cor. 15:22, 23 1 Tes. 4:15-18), y esta resurrección a la vida e inmortalidad (Lucas 20:35, 36 1 Cor. 15:52, 53) es el comienzo del milenio (Ap. 19 20).\n\nEl Segundo Advenimiento marcará el fin del orden mundial presente, y por lo tanto se habla de él como el "fin del mundo" (Mat. 13:39, 40, 49 24:3 28:20). La frase traducida como "fin del mundo" podría traducirse mejor como "finalización de la era" o "consumación de la era". El Nuevo Testamento ve el tiempo como una sucesión de eras. La eternidad pasada se conoce literalmente como "desde las eras" (Efe. 3:9 Col. 1:26 1 Cor. 2:7).\n\nLa eternidad futura se describe con expresiones que significan literalmente "en las eras" (traducido como "para siempre" Lucas 1:33 Rom. 1:25 2 Cor. 11:31 Judas 25 etc.), "en las eras de las eras" (traducido como "para siempre jamás" etc. Gál. 1:5 1 Pedro 4:11 Ap. 1:18 etc.), o simplemente "eras venideras" (Efe. 2:7). La existencia humana se piensa como dividida en la era presente y la era por venir (Mat. 12:32 Efe. 1:21). La presente es una era malvada (Gál. 1:4 cf. Lucas 20:34) en la que los hombres mueren. Esta era continuará hasta la Parusía y el juicio, cuando la era por venir comenzará. La tierra permanecerá, pero más tarde será renovada para eliminar todos los rastros del pecado y la muerte.',
+    date: "Futuro",
+    scriptures: ["52|4:16-17", "43|5:28-29", "27|12:2", "66|22:12"],
+    related: [
+      {
+        slug: "christs-everlasting-kingdom",
+        title: "Reino Eterno de Cristo",
+      },
+    ],
+    images: [
+      {
+        caption: "Tumbas vacías después de la resurrección",
+        file: "GoodSalt-chuas0017_8-7-2013 10-34-29 AM.jpg",
+      },
+      {
+        caption:
+          'La segunda venida de Cristo cuando Él regrese "para dar a cada uno según su obra (Apocalipsis 22:12)',
+        file: "Second_Coming_2-27-2013 4-05-47 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1257",
+    slug: "imprisonment-of-satan-on-earth-judgment-by-saints-in-heaven",
+    title:
+      "Encarcelamiento de Satanás en la Tierra / Juicio por los Santos en el Cielo",
+    period: "13",
+    description:
+      'Milenio significa "1,000 años". Es un período de tiempo en Apocalipsis 20 marcado por dos resurrecciones. Los justos muertos son resucitados y se unen a los justos vivos en el cielo. Satanás está atado a la tierra. Los impíos se levantan al final para ser juzgados.',
+    article:
+      'Apocalipsis 20:3 dice claramente que Satanás es un prisionero en el abismo, o pozo sin fondo, durante 1,000 años. La confusión es sobre la naturaleza de este abismo. La palabra griega es "abussos," la misma palabra usada en la Septuaginta en Génesis 1:2 para la tierra pre-Creación. Además, Apocalipsis 12:12 dice que Satanás fue atado a la tierra después de la cruz, y 2 Pedro 2:4 dice que Satanás y sus ángeles fueron enviados al "infierno" para ser reservados para el juicio. Por lo tanto, están reservados para el juicio en la tierra. Esto también nos muestra que el "infierno" está en la tierra, no debajo de ella. Se muestra a los santos juzgando en Apocalipsis 20:4-6.',
+    date: "Futuro",
+    scriptures: ["66|20:1-14"],
+    related: [
+      {
+        slug: "millennium",
+        title: "Milenio",
+      },
+    ],
+    images: [
+      {
+        caption: "Satanás atado a la tierra desolada.",
+        file: "GoodSalt-millennium-1_8-5-2013 12-13-14 PM.jpg",
+      },
+      {
+        caption: "Los 1000 años",
+        file: "GoodSalt-millennium-2_8-5-2013 12-13-14 PM.jpg",
+      },
+      {
+        caption: "Juicio por los Santos en el Cielo",
+        file: "judgement-angels_8-5-2013 12-13-14 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1258",
+    slug: "new-jerusalem-descends-from-heaven-to-earth",
+    title: "La Nueva Jerusalén Desciende del Cielo a la Tierra",
+    period: "13",
+    description:
+      "Al final del milenio Cristo, Su pueblo, y la Ciudad Santa (la Nueva Jerusalén) regresan a esta tierra. Jesús viene como Rey sobre toda la tierra.",
+    article:
+      'La capital de esa nueva tierra será la Nueva Jerusalén, la cual, después del milenio, desciende del cielo y se establece sobre esta tierra (Ap. 21:1, 2, 10 Heb. 11:10, 14-16). Esta ciudad se describe en detalle en Ap. 21 y 22. La presencia de la ciudad significa la presencia de Dios, porque después de que Juan vio la Ciudad Santa descender él "oyó una gran voz del cielo que decía: He aquí el tabernáculo de Dios con los hombres, y él morará con ellos; y ellos serán su pueblo, y Dios mismo estará con ellos como su Dios" (Ap. 21:3).',
+    date: "Después del Milenio",
+    scriptures: ["66|20:5-10", "66|21:1-27"],
+    related: [
+      {
+        slug: "millennium",
+        title: "Milenio",
+      },
+    ],
+    images: [
+      {
+        caption: "La Nueva Jerusalén descendiendo del cielo",
+        file: "GoodSalt-smcas0179_8-5-2013 1-08-12 PM.jpg",
+      },
+      {
+        caption: "El hogar de los santos...",
+        file: "GoodSalt-pppas0357_8-5-2013 1-08-12 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1259",
+    slug: "wicked-are-resurrected-in-bodily-form",
+    title: "Los Impíos son Resucitados en Forma Corporal",
+    period: "13",
+    description:
+      "Al final del milenio cuando Cristo y Su pueblo regresan a la tierra, los impíos son resucitados. Este es el gran juicio del trono blanco donde los impíos son juzgados. Da a Satanás una última oportunidad de engañar.",
+    article:
+      'La Biblia enseña que habrá dos resurrecciones generales, una de los justos, para vida, y la otra de los injustos, para condenación (Juan 5:28, 29 Hechos 24:15). Estas dos resurrecciones generales están separadas por los "mil años" de Ap. 20:4, 5. Aquellos que tienen parte en la primera resurrección son "bienaventurados y santos" (v. 6) y sobre ellos la "segunda muerte", "el lago de fuego" al final del milenio (v. 14), no tiene poder. La primera resurrección-"la resurrección de los justos" (Lucas 14:14)-tiene lugar en relación con el Segundo Advenimiento (1 Cor. 15:22, 23 1 Tes. 4:15-18).',
+    date: "Después del Milenio",
+    scriptures: ["66|20:5", "43|5:29", "66|20:13"],
+    related: [
+      {
+        slug: "millennium",
+        title: "Milenio",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Los impíos de todas las edades son resucitados, fotograma de los Eventos Finales de la Profecía Bíblica DVD producido por Amazing Facts.",
+        file: "wicked-resurrected_8-5-2013 1-21-14 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1260",
+    slug: "wicked-are-destroyed-forever",
+    title: "Los Impíos son Destruidos para Siempre",
+    period: "13",
+    description:
+      "Después del gran juicio del trono blanco al final de los 1,000 años los impíos son destruidos. Fuego desciende del cielo y los consume. Este lago de fuego se habla como la segunda muerte y es eterno.",
+    article:
+      'En cuanto a la naturaleza y el efecto del fuego del infierno, la enseñanza bíblica es clara. En Mat. 3:12 los pecadores se comparan con la paja que se quema con "fuego inextinguible" (cf. Marcos 9:43-48 Lucas 3:9). En Mat. 25:41 los impíos se representan como consignados al "fuego eterno [aioµnios]". Y en Mat. 5:22 Jesús se refirió al juicio final sobre los impíos como "fuego del infierno". Los tres pasajes se refieren a los fuegos del último día que devorarán a los impíos y todas sus obras. Este fuego purgará la tierra (2 Pedro 3:10-12 Lucas 3:17). Se encenderá después de que todos los finalmente impenitentes que suban en la segunda resurrección (Ap. 20:5) sean reunidos bajo Satanás alrededor de la Nueva Jerusalén (v. 9). (En otras palabras, no está ardiendo ahora). El diablo, sus malvados confederados, y todos los que han sido engañados por ellos son echados en este lago de fuego (vv. 10, 14, 15).\n\nEste fuego es la segunda muerte, de la cual no habrá resurrección. La palabra usualmente traducida como "eterno" o "sempiterno", y una vez "para siempre", significa literalmente, "durando por una era", en el sentido de ser continuo y no sujeto a cambios caprichosos. Las palabras en español "eterno" y "sempiterno", por otro lado, implican una duración ilimitada. La duración significada debe ser determinada por la naturaleza de la persona o cosa que describe. En el Nuevo Testamento esta palabra se usa para describir tanto el destino de los impíos como la recompensa de los justos. Siguiendo el principio anterior, encontramos que la recompensa de los justos es la vida a la que no hay fin, mientras que la recompensa o juicio de los impíos es la muerte a la que no hay fin (cf. Rom. 6:23). En Juan 3:16 la "vida eterna" está en contraste con "perecer".\n\nLa palabra "inextinguible" puede ser entendida de manera similar. Jeremías predijo que Dios encendería un fuego en Jerusalén que "no se apagará" (Jer. 17:27). Esta predicción se cumplió cuando la ciudad fue destruida por Nabucodonosor (2 Crón. 36:19-21). Obviamente ese fuego no está ardiendo hoy. Fue inextinguible en el sentido de que los judíos fueron incapaces de apagarlo. Ardió hasta que destruyó su ciudad y se apagó.\n',
+    date: "Después del Milenio",
+    scriptures: ["66|20:9-15"],
+    related: [
+      {
+        slug: "millennium",
+        title: "Milenio",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "La destrucción de los impíos es un acto doloroso para Dios. Diles: Vivo yo, dice el Señor DIOS, que no me complazco en la muerte del impío, sino en que el impío se aparte de su camino y viva: apartaos, apartaos de vuestros malos caminos; ¿por qué moriréis, oh casa de Israel? (Ezequiel 33:11)",
+        file: "GoodSalt-jcgas0071_8-5-2013 1-29-52 PM.jpg",
+      },
+      {
+        caption: "El fuego consume a Satanás y a los impíos; limpia la tierra.",
+        file: "iStock_000013529130Small_2-27-2013 3-52-28 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1261",
+    slug: "paradise-restored",
+    title: "Paraíso Restaurado",
+    period: "13",
+    description:
+      "Después del milenio y los impíos son juzgados y destruidos, la tierra es purificada con fuego y entonces Dios crea la tierra nueva. La Nueva Jerusalén se ha convertido en el centro del universo. El pueblo de Dios vivirá para siempre en la tierra.",
+    article:
+      'Apocalipsis 21 habla de un cielo nuevo y una tierra nueva. Al usar la palabra "nuevo", Juan probablemente está enfatizando el hecho de que los cielos nuevos y la tierra nueva serán creados a partir de los elementos purificados de lo viejo, y por lo tanto serán nuevos en calidad, diferentes. Los cielos nuevos y la tierra nueva son, entonces, una re-creación, una formación de nuevo de los elementos existentes, y no una creación ex nihilo. Compare 2 Pedro 3:13.',
+    date: "Después del Milenio",
+    scriptures: ["66|21:1-8"],
+    related: [
+      {
+        slug: "millennium",
+        title: "Milenio",
+      },
+    ],
+    images: [
+      {
+        caption: "Jesús con los niños en el cielo",
+        file: "GoodSalt-pppas0114_8-7-2013 1-56-42 PM.jpg",
+      },
+      {
+        caption: "Jesús a las puertas de la ciudad.",
+        file: "GoodSalt-dpbas0007_8-5-2013 1-39-34 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1262",
+    slug: "daniel-2-nebuchadnezzars-dream",
+    title: "Daniel 2 - El Sueño de Nabucodonosor",
+    period: "8",
+    description:
+      "Nabucodonosor, Rey de Babilonia, tiene un sueño de una gran imagen. Se despierta y se siente turbado por el sueño. Llama a sus sabios para que le digan el sueño. No pueden y son condenados a morir. Pero Daniel ora y Dios se lo revela.",
+    article:
+      'Hace más de 2,600 años un antiguo rey tuvo un sueño sobre una gran imagen hecha de diferentes metales. Cuando despertó fue perturbado por la visión y llamó a sus sabios para que le dijeran el sueño y lo interpretaran. Cuando no pudieron se enfureció y planeó destruirlos. Entonces un joven llamado Daniel se presentó y ofreció revelar e interpretar el sueño. Esa noche Dios le abrió la visión a Daniel quien entonces le contó al rey. Daniel fue honrado por el rey por explicar el sueño. La historia se encuentra en Daniel 2, un libro profético del Antiguo Testamento.\n\nDios reveló un panorama extenso de la historia mundial a Nabucodonosor, rey de Babilonia. En el sueño vio una estatua gigante hecha de varios metales. La cabeza del enorme ídolo estaba hecha de oro, el pecho y los brazos eran de plata, los muslos de bronce, las piernas de hierro y los pies de hierro mezclado con arcilla. En el sueño el rey vio una piedra destrozando la imagen. La estatua rota fue molida a pedazos como paja y el viento la dispersó. Finalmente, la piedra creció hasta convertirse en una gran montaña que llenó toda la tierra.\n\nEl rey probablemente se sentó al borde de su asiento preguntándose, "¿Qué significa el sueño?" Daniel entonces interpretó el sueño al rey. El sueño presenta cuatro imperios mundiales que sucesivamente gobernarían cada uno. Después de estos cuatro reinos existiría una conglomeración de naciones débiles y fuertes. Los cambios en el valor del metal desde la cabeza de la estatua hasta los pies indican que la gloria de cada reino disminuiría comparada con la anterior. A medida que aumenta la dureza de los metales, desde la cabeza hasta los pies, así la fuerza de cada imperio sucesivo sería mayor.\n\nReino de Oro: Babilonia\nBabilonia es representada por la cabeza de oro. Gobernó desde el 605 a.C. hasta el 539 a.C. Fue un reino literalmente adornado con oro. Su capital no tuvo rival entre ninguna otra nación que le siguió. Babilonia es legendaria por sus hermosos jardines colgantes. Sus reyes pensaron que su ciudad era inconquistable. Las murallas masivas de la ciudad parecían imposibles de penetrar. Sin embargo, tal como la Biblia predijo, Babilonia fue conquistada por Ciro, rey del Imperio Persa.\n\nReino de Plata: Medo-Persia\nMedo-Persia fue el siguiente imperio mundial representado por el pecho y los brazos de plata de la estatua. Se describe como un reino "inferior" y gobernó desde el 539 a.C. hasta el 331 a.C. Los imperios medos más antiguos y persas más nuevos derrocaron a Babilonia. La Biblia incluso predijo 100 años antes el nombre del general (Isaías 44:27, 28 45:1).\n\nReino de Bronce: Grecia\nGrecia, sabemos por nuestros libros de historia mundial, fue el siguiente reino conquistador del mundo descrito en la imagen como bronce. El imperio de Alejandro fue conocido por su vasto territorio. Gran parte de la armadura de los griegos estaba hecha de bronce. Los griegos gobernaron desde el 331 a.C. hasta el 168 a.C. Más tarde fue dividido en cuatro reinos antes de ser conquistado por el siguiente imperio.\n\nReino de Hierro: Roma\nRoma fue el último y el más fuerte de los cuatro reinos. Es apropiadamente representado por el metal fuerte de hierro y duró el más largo, desde el 168 a.C. hasta el 351 d.C. Tal como se predijo en el sueño, ningún otro reino individual gobernó el mundo después del Imperio Romano. Roma ha sido descrita como una "monarquía de hierro" y se convirtió en una potencia mundial a través del poder y la fuerza.\n\nReino de Arcilla: Roma Dividida\nLos pies de la imagen estaban hechos de hierro mezclado con arcilla indicando que el Imperio Romano sería dividido en naciones en parte débiles y en parte fuertes. Los bárbaros invadieron Roma y una mezcla de diez países formaron la fundación de la Europa moderna hoy en día. Aunque muchas potencias mundiales han intentado unir estas naciones, la Biblia correctamente predijo "no se unirán el uno al otro" (Daniel 2:43).\n\nEl Reino Aún por Venir: Piedra Cortada sin Manos\nEl clímax dramático del sueño del Rey Nabucodonosor fue ver una piedra "cortada sin manos" golpear la imagen y destrozarla. Para un rey idólatra que pensó que su reino duraría para siempre, el Dios del cielo reveló que los reinos terrenales todos pasarán. El movimiento de las naciones no está en la mano de ningún gobernante humano. Dios dirige finalmente los asuntos temporales de la tierra y Su reino se establecerá para siempre. Ningún esfuerzo humano establecerá el reino glorioso de Cristo que vendrá en la segunda venida de Jesús.\n\nDaniel termina su presentación al Rey Nabucodonosor diciendo, "El sueño es cierto, y su interpretación segura" (Daniel 2:45). Los registros históricos han confirmado estas palabras y ahora vivimos "en los dedos de los pies" de esta imagen esperando el gran día cuando Cristo vendrá y establecerá Su reino que durará para siempre.',
+    date: "606 a.C.-Futuro",
+    scriptures: ["27|2:1-49"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+      {
+        slug: "gods-kingdom-setup-stone",
+        title: "Establecimiento del Reino de Dios - Piedra",
+      },
+    ],
+    images: [
+      {
+        caption: "Daniel ante el Rey Nabucodonosor",
+        file: "GoodSalt-pppas0414_8-8-2013 12-45-07 PM.jpg",
+      },
+      {
+        caption:
+          "El sueño de Nabucodonosor descrito en Daniel 2 ocurrió alrededor del 603 a.C. La estatua profética de Daniel 2, que representa los diversos reinos de la tierra a través de la historia.",
+        file: "lwjas0518_2-25-2013 4-53-15 PM.jpg",
+      },
+      {
+        caption: "Daniel discutiendo con el rey el sueño de Nabucodonosor.",
+        file: "GoodSalt-Daniel2_8-5-2013 4-26-26 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1267",
+    slug: "gods-kingdom-setup-stone",
+    title: "Establecimiento del Reino de Dios - Piedra",
+    period: "13",
+    description:
+      "La imagen en el sueño de Nabucodonosor que representaba los reinos es destruida por una piedra que se convierte en una montaña y llena toda la tierra. La piedra es cortada de una montaña sin manos (i.e. el reino de Dios que gobernará para siempre).",
+    article:
+      'La palabra "piedra" usada en Daniel 2:45 se usa para describir losas, piedras de honda, piedras labradas, vasos de piedra, piedras preciosas. La palabra "roca" se usa frecuentemente de Dios (Deut. 32:4, 18 1 Sam. 2:2 etc.), y la interpretación ofrecida por Daniel es en sí misma suficiente para identificar el símbolo como el reino de Dios. La referencia a este reino siendo cortado "sin manos" muestra que tiene un origen sobrehumano. Será fundado, no por las ingeniosas manos del hombre, sino por la poderosa mano de Dios.',
+    date: "Futuro",
+    scriptures: ["27|2:45"],
+    related: [
+      {
+        slug: "daniel-2-nebuchadnezzars-dream",
+        title: "Daniel 2 - El Sueño de Nabucodonosor",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "La imagen en el sueño de Nabucodonosor que representaba los reinos es destruida por una piedra que se convierte en una montaña y llena toda la tierra. La piedra es cortada de una montaña sin manos (i.e. el reino de Dios que gobernará para siempre).",
+        file: "GoodSalt-stone_8-5-2013 12-19-26 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1269",
+    slug: "daniel-7-four-great-beasts",
+    title: "Daniel 7 - Cuatro Grandes Bestias",
+    period: "8",
+    description:
+      "Daniel tiene una visión de cuatro bestias saliendo del mar. Como la imagen de Daniel 2, estas bestias representan diferentes reinos que sucesivamente gobernarán la tierra. Daniel recibe una vista pictórica de la historia mundial a través de símbolos de animales.",
+    article:
+      'Daniel 7 contiene una visión extraña. El profeta ve cuatro vientos agitando el mar. De repente, de las aguas emergen cuatro bestias diferentes. La primera era como un león con alas de águila. Sus alas son arrancadas y el animal se convierte en un hombre con un corazón. La segunda bestia era como un oso. Fue levantada en un lado y tenía tres costillas en su boca. La tercera era como un leopardo con cuatro alas. También tenía cuatro cabezas. Pero el animal más extraño aún estaba por venir.\n\nLa cuarta bestia era diferente a lo que Daniel había visto antes. Era indescriptible y diferente a las otras tres. Este monstruo era "terrible, espantoso y sumamente fuerte". Tenía grandes dientes de hierro y devoraba todo a su paso. Extrañamente tenía 10 cuernos. Mientras el profeta miraba los cuernos notó un cuerno pequeño creciendo de entre los 10 cuernos y arrancando tres de ellos. El cuerno pequeño tenía ojos de hombre y habló palabras "pomposas".\n\nEntonces Daniel vio tronos y al "Anciano de Días" descrito vistiendo una vestidura blanca como la nieve con miles ministrando delante de él. Una escena de juicio estaba teniendo lugar en el contexto de las "palabras pomposas" del cuerno pequeño. Finalmente, uno como "el Hijo del Hombre" vino al "Anciano de Días". Se le dio dominio eterno y todo el pueblo le sirvió. Su reino nunca sería destruido.\n\nLa visión turbó profundamente a Daniel. En su sueño se acercó a alguien "que estaba allí" y pidió una explicación. La interpretación dada hace eco a la visión de Nabucodonosor en Daniel 2, pero con más detalles sobre la cuarta bestia. El intérprete dijo que las cuatro bestias representaban cuatro reinos. De un estudio de Daniel 2 y la historia mundial, no es difícil determinar estos cuatro reinos.\n\nLos Primeros Tres Reinos\nBabilonia es representada como un león con alas de águila. Los dos grandes animales carnívoros de la tierra y el cielodescriben este noble reino. Los descubrimientos arqueológicos modernos de la antigua Babilonia han revelado que el símbolo de un león con alas como un águila fue usado en su arquitectura y diseño. Tal vez el "corazón de hombre" dado a este reino representa la experiencia humillante de Nabucodonosor de la que se habla en Daniel 4.\n\nMedo-Persia es apropiadamente representado por un oso levantado en un lado ya que el imperio medo en declive se integró en el imperio persa más nuevo y en crecimiento. Las tres costillas en la boca del oso son víctimas de su descripción conquistadora, "Levántate, devora mucha carne!" Los tres son muy probablemente Lidia, Babilonia y Egipto que Medo-Persia conquistó.\n\nGrecia, bajo el liderazgo de Alejandro Magno, conquistó el mundo con gran velocidad. Sus ejércitos se movieron rápidamente. La semejanza de un leopardo con alas encaja con el Imperio Griego. Pero, ¿por qué cuatro cabezas? Después de que Alejandro Magno murió, su reino fue dividido en cuatro territorios: Macedonia, Pérgamo, Egipto y Siria).\n\nLa Cuarta Bestia y el Cuerno Pequeño\nRoma representa la cuarta bestia. No sólo se confirma esto a través de un estudio de la historia mundial, sino que Daniel 2 y la gran imagen en la visión de Nabucodonosor del cuarto reino apuntan a esta "monarquía de hierro". Esta bestia tiene "enormes dientes de hierro". Así como la imagen de Daniel 2 tiene piernas de hierro que conducen a pies de hierro mezclado con arcilla, el Imperio Romano eventualmente se convirtió en un reino dividido de 10 naciones representadas por 10 cuernos. Cuando la ciudad de Roma cayó ante los bárbaros en el 476 d.C., se sentaron las bases para la Europa moderna.\n\nPero, ¿cuál es el significado del "cuerno pequeño"? Aunque la Biblia no nombra específicamente este poder, Daniel 7 da varias marcas de identificación para él.\n\nPrimero, comienza pequeño y se levanta de entre los diez cuernos, arrancando tres de estos poderes. Se levanta de la división del Imperio Romano.\n\nSegundo, tiene ojos de hombre y habla palabras pomposas contra Dios. Se describe como "diferente" de los otros poderes. Es más que un poder político, tiene una agenda religiosa.\n\nTercero, persigue al pueblo de Dios por un período de tiempo dado (un tiempo y tiempos y medio tiempo), que en la profecía bíblica equivale a 3 ½ años proféticos o 1260 años.\n\nCuarto, tiene la intención de "cambiar los tiempos y la ley". El ejemplo más obvio de "tiempo" en la ley de los 10 mandamientos de Dios sería el sábado del séptimo día.\n\nPor lo tanto, podemos identificar este poder del cuerno pequeño si podemos determinar qué poder surgió del Imperio Romano cuando fue dividido, qué poder comenzó pequeño y se hizo fuerte, qué poder tenía una agenda religiosa y política, qué poder habló contra Dios y buscó cambiar la ley de Dios, y qué poder persiguió al pueblo de Dios durante un período de 1,260 años (desde aproximadamente el 538 d.C. hasta el 1798). ¿Qué poder religioso podría ser este?',
+    date: "606 a.C.-476 d.C.",
+    scriptures: ["27|7:1-28"],
+    related: [
+      {
+        slug: "daniel",
+        title: "Daniel",
+      },
+      {
+        slug: "the-judgment",
+        title: "El Juicio",
+      },
+      {
+        slug: "christs-everlasting-kingdom",
+        title: "Reino Eterno de Cristo",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Un león con alas de águila es un símbolo apropiado para Babilonia. El león alado se encuentra en objetos de arte babilónicos. La combinación de león y águila era un motivo común: más a menudo un león con alas de águila, a veces con garras o un pico un compuesto similar era el águila con cabeza de león. El león alado es una de las formas de la bestia a menudo representada en combate con Marduk, el dios patrón de la ciudad de Babilonia.",
+        file: "Lions_cmyk_2-27-2013 3-17-29 PM.jpg",
+      },
+      {
+        caption:
+          'El oso representaba el imperio de Medo-Persia. Las tres costillas en su boca representaban los tres reinos que esta coalición derrotó en su ascenso al poder: Babilonia, Lidia y Egipto. Fue "levantado en un lado", lo que simbolizaba el eventual dominio de los persas sobre los medos.',
+        file: "Daniel 7 Bear_cmyk_2-27-2013 3-17-29 PM.jpg",
+      },
+      {
+        caption:
+          'Los reinos de Persia y Grecia están claramente identificados en Daniel 11:2. El versículo 3 dice: "Un rey poderoso se levantará, quien gobernará con gran dominio..." No sólo Alejandro Magno encaja con esta descripción, sino que la descripción de su reino siendo "despedazado y dividido hacia los cuatro vientos" (v. 4) es paralelo a Daniel 7:6 que describe a Grecia como un leopardo con cuatro alas y cuatro cabezas.',
+        file: "Leopard_2_cmyk_2-27-2013 3-17-29 PM.jpg",
+      },
+      {
+        caption:
+          'La cuarta bestia que sale del mar en el sueño de Daniel se describe como "espantosa y terrible". Tenía dientes de hierro y pisoteaba todo bajo sus pies. Representa el reino de Roma cuando era una nación fuerte. Tenía diez cuernos.',
+        file: "Daniel 7 cover art 2_2-27-2013 3-17-29 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1275",
+    slug: "the-judgment",
+    title: "El Juicio",
+    period: "13",
+    description:
+      "El sueño de Daniel de cuatro bestias es seguido por un sueño del Anciano de Días sentado y los libros fueron abiertos. Describe un juicio sobre el que Dios preside. Esta escena sigue a las afirmaciones hechas por el cuerno pequeño en Daniel 7:8.",
+    article:
+      'Daniel 7:9, 10 no puede representar la segunda venida de Cristo a esta tierra, porque Cristo viene al "Anciano de Días". La venida de Cristo al lugar santísimo para la limpieza del santuario se representa aquí.',
+    date: "1844-",
+    scriptures: ["27|7:9-10"],
+    related: [
+      {
+        slug: "daniel-7-four-great-beasts",
+        title: "Daniel 7 - Cuatro Grandes Bestias",
+      },
+    ],
+    images: [
+      {
+        caption: "El Juicio.",
+        file: "GoodSalt-pppas0230_8-13-2013 2-08-02 PM.jpg",
+      },
+      {
+        caption: "Representación artística del tabernáculo del desierto.",
+        file: "Wilderness Tabernacle  BBL1075-106a_2-27-2013 3-02-38 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1276",
+    slug: "christs-everlasting-kingdom",
+    title: "Reino Eterno de Cristo",
+    period: "13",
+    description:
+      'Después de una visión de cuatro bestias y una escena de juicio, Daniel ve "Uno como el Hijo del Hombre," a quien se le dio "un dominio eterno." Aquí el reino del cielo se establece para siempre. "No pasará" o "será destruido."',
+    article:
+      "En Lucas 19:12-15 Cristo se representa como un noble que hizo su viaje a un país lejano para recibir para sí un reino, y para regresar. Al cierre de Su ministerio sacerdotal en el santuario, mientras todavía está en el cielo, Cristo recibe el reino de Su Padre y luego regresa a la Tierra por Sus santos.",
+    date: "Futuro",
+    scriptures: ["27|7:13-14"],
+    related: [
+      {
+        slug: "daniel-7-four-great-beasts",
+        title: "Daniel 7 - Cuatro Grandes Bestias",
+      },
+      {
+        slug: "return-of-christ",
+        title: "Regreso de Cristo",
+      },
+      {
+        slug: "resurrection-and-translation-of-the-saints",
+        title: "Resurrección y Traslación de los Santos",
+      },
+    ],
+    images: [
+      {
+        caption: "Representación artística del hogar de los santos...",
+        file: "GoodSalt-smcas0096_8-5-2013 12-49-49 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1277",
+    slug: "daniel-8-ram-goat-and-little-horn",
+    title: "Daniel 8 - Carnero, Cabra y Cuerno Pequeño",
+    period: "8",
+    description:
+      "Daniel tiene otra visión de un carnero (Medo-Persia) y una cabra (Grecia). El carnero es fuerte y poderoso, pero la cabra macho viene y pisotea al carnero. Luego, un cuerno crece de los cuatro cuernos de la cabra. Se vuelve extremadamente fuerte y se exalta a sí mismo.",
+    article: "\n",
+    date: "539 a. C.-Futuro",
+    scriptures: ["27|8:1-27"],
+    related: [
+      {
+        slug: "daniel",
+        title: "Daniel",
+      },
+      {
+        slug: "sanctuary-cleansed-2300-day-prophecy",
+        title: "Profecía de 2300 Días",
+      },
+    ],
+    images: [
+      {
+        caption: "Carnero y Cabra luchando",
+        file: "GoodSalt-GoatAndRam_8-1-2013 5-33-31 PM.jpg",
+      },
+      {
+        caption: "Carnero y cabra luchando",
+        file: "The Scape Goat 1165-148_7-24-2013 3-29-57 PM.jpg",
+      },
+      {
+        caption: "Dibujo de un carnero",
+        file: "77382542_5_2-27-2013 2-53-21 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1283",
+    slug: "sanctuary-cleansed-2300-day-prophecy",
+    title: "Profecía de 2300 Días",
+    period: "8",
+    description:
+      "La profecía de los 2300 días es la profecía de tiempo más larga en las Escrituras. Describe un período que se extiende desde el mandato de reconstruir Jerusalén (457 a. C.) hasta la purificación del santuario celestial (1844 d. C.), una obra de juicio final en el cielo.",
+    article:
+      'La profecía de tiempo más larga de la Biblia se encuentra en Daniel 8:14. "Y me dijo: Hasta dos mil trescientas tardes y mañanas; luego el santuario será purificado" (NVI). Este asombroso período de la historia puede entenderse, como otras profecías en Daniel, utilizando el principio historicista de "un día por un año" de la interpretación profética (véase Números 14:34 y Ezequiel 4:4-6). Esto significa que los 2300 días representan simbólicamente 2300 años. El período de tiempo se puede calcular estudiando Daniel 9 para comenzar en 457 a. C. y extenderse hasta 1844 d. C. La purificación del santuario es una referencia a la obra del "Día de la Expiación" de Cristo en el santuario celestial del juicio y la eliminación del pecado.\n\nPurificación del Santuario\nHubo un intenso interés en la profecía durante el segundo gran despertar del Advenimiento en América a finales del siglo XVIII y principios del XIX. Muchos creían que la referencia a Daniel 8:14 y la purificación del santuario se refería a la purificación de la tierra (purificada por el fuego) en la segunda venida de Cristo. Pero después de fijar una fecha y sentirse decepcionados, muchos perdieron su interés en la profecía. Pero un pequeño grupo perseveró y llegó a comprender que esta referencia hablaba de un evento que tenía lugar en el cielo. Dado que el santuario terrenal (y sus servicios) era una copia del santuario celestial (véase Hebreos 9), comprender el Día de la Expiación abrió una ventana de comprensión a la obra de Cristo en el santuario celestial.\n\nEl santuario ilustra tres partes de la obra de Jesús para nuestra salvación: su sacrificio sustitutorio, su mediación sacerdotal y el juicio final. Cuando Jesús murió en la cruz y luego entró al cielo, comenzó su papel de mediador de la humanidad (véase 1 Timoteo 2:5). Esto estaba representado por los sacrificios diarios en el santuario terrenal. Pero, una vez al año, el santuario terrenal era "purificado" de los pecados a través del Día de la Expiación. Así como los pecados se colocaban sobre el sacerdote y en el santuario en la tierra, así Cristo tomó nuestros pecados sobre sí mismo. Este día ilustró el proceso de juicio que trataba con la erradicación del pecado. Prefiguró la obra de Cristo de desterrar el pecado por toda la eternidad. Este aspecto de la obra de juicio comienza con una investigación antes de llevarse a cabo.\n\nDaniel 8:14 se refiere al papel de Cristo de purificar el santuario celestial mediante el examen de los registros en preparación para la eliminación final del pecado de los libros celestiales. Daniel 7:9, 10 habla de este tiempo de juicio. En particular, el poder del "cuerno pequeño" que ha estado librando una guerra contra el pueblo de Dios es condenado. Este poder religio-político se ha opuesto a "los sacrificios continuos [la obra sacerdotal de Cristo]; y echó por tierra la verdad" (8:12).\n\nDaniel 9 Explica Daniel 8\nDaniel 8:27 nos dice que después de ver esta visión, Daniel quedó "asombrado por la visión, pero nadie la entendió". En respuesta a la oración de Daniel para entender la visión del capítulo 8, el ángel Gabriel viene a explicar lo que vio. El único elemento que no se cubre en Daniel 8 es el período de tiempo. La profecía de las 70 semanas de Daniel 9 desvela el misterio de la profecía de los 2300 días. Esta profecía comienza con: "Setenta semanas están determinadas sobre tu pueblo y sobre tu santa ciudad..." (v. 24). La palabra "determinadas" también puede entenderse como "cortadas". Estas 70 semanas son parte de los 2300 días.\n\nEl comienzo de las 70 semanas (y la profecía de los 2300 días) se declara claramente: "Sabe, pues, y entiende que desde la salida de la orden para restaurar y edificar Jerusalén hasta el Mesías Príncipe, habrá siete semanas, y sesenta y dos semanas..." (v. 25). Esto tuvo lugar en 457 a. C. y el séptimo año de Artajerjes. Las 70 semanas (o 490 años) terminaron, por lo tanto, en el año 34 d. C. Quedan 1810 años y cuando se añaden al año 34 d. C. nos lleva al año 1844.\nLa culminación de la profecía de los 2300 días en 1844 d. C. fue cuando Cristo vino ante el Anciano de Días (Daniel 7:13) y comenzó la fase final de su ministerio de sumo sacerdote en el santuario celestial. Su ministerio fue el "antitipo" del Día de la Expiación, es decir, la imagen más completa de lo que simbolizaba el santuario terrenal. Esta obra, descrita en Daniel 7, representa una fase de juicio que requirió una investigación que tiene lugar antes de la segunda venida de Cristo cuando Él regrese "para dar a cada uno según sus obras (Apocalipsis 22:12).',
+    date: "457 a. C.-1844 d. C.",
+    scriptures: ["27|8:14", "27|9:24-27"],
+    related: [
+      {
+        slug: "daniel-8-ram-goat-and-little-horn",
+        title: "Daniel 8 - Carnero, Cabra y Cuerno Pequeño",
+      },
+    ],
+    images: [
+      {
+        caption: "El Arca del Pacto en el Antiguo Testamento.",
+        file: "Ark_Commandments_2-27-2013-2-58-25-PM_7-18-2013 11-01-41 AM.jpg",
+      },
+      {
+        caption: "Representación artística del tabernáculo del desierto.",
+        file: "Wilderness Tabernacle  BBL1075-106a_2-27-2013 1-57-55 PM.jpg",
+      },
+      {
+        caption:
+          'La segunda venida de Cristo cuando regrese "para dar a cada uno según sus obras (Apocalipsis 22:12)',
+        file: "Second_Coming_2-27-2013 1-57-55 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1285",
+    slug: "millennium",
+    title: "Milenio",
+    period: "13",
+    description:
+      "La Biblia enseña que Jesús viene pronto. ¿Pero qué sucede después? ¿A dónde van los salvos (justos)? ¿Qué pasa con los perdidos? ¿Y qué pasa con la tierra? Apocalipsis 20 discute un período de 1000 años después de que venga Cristo.",
+    article:
+      'La Biblia enseña que Jesús viene pronto. ¿Pero qué sucede después? ¿A dónde van los salvos (justos)? ¿Qué pasa con los perdidos (injustos)? ¿Y qué pasa con la tierra? Muchos estudiantes de la Biblia se han hecho estas preguntas y se han planteado una variedad de respuestas diferentes. En Apocalipsis 20 se describe un período de 1000 años del que obtenemos la palabra "milenio". Inmediatamente después de que venga Jesús, la Biblia nos dice que Satanás es "atado... por mil años" (v. 2). Durante este tiempo, los justos están en el cielo y al final del milenio, la Ciudad Santa descenderá a esta tierra. Veamos lo que la Biblia dice que sucederá al comienzo, durante y después del milenio.\n\nComienzo del Milenio\nApocalipsis 19 y 20 fluyen juntos como una sola unidad. En Apocalipsis 19:11-21 Cristo viene a la tierra. En un lenguaje gráfico, los impíos son destruidos (véase también 2 Tesalonicenses 1:7-8). En Apocalipsis 20:4-6 hay una clara referencia a una primera resurrección de los justos a la venida de Cristo. En 1 Tesalonicenses 4:16-18 Pablo también describe este glorioso día en que somos arrebatados en el aire para estar con el Señor. Jesús nos dice que volverá a la tierra y nos llevará a estar donde Él está (Juan 14:1-3). Durante este tiempo, Satanás está atado por mil años. Es arrojado a un abismo sin fondo y permanece allí hasta el final del milenio. La tierra ya ha sido arruinada por las siete últimas plagas, pero ahora está completamente desolada de personas (Apocalipsis 20:5). Encontramos una descripción del Antiguo Testamento de este tiempo donde la tierra está "sin forma y vacía" (Jeremías 4:23), que es el mismo lenguaje que describe la tierra antes de que se creara nada (Génesis 1:2).\n\nDurante el Milenio\nMientras Satanás está atado a esta tierra, los justos están en el cielo con Jesús. Apocalipsis 20:4 habla de "tronos" y "juicio" y "reinando con Cristo". Aunque los impíos son muertos a la venida de Cristo, la compasión y la justicia de Dios son tan fuertes que los justos podrán revisar todos los registros de cada persona en el universo. Se da un período de tiempo para que los santos revisen los casos, especialmente de los perdidos y los ángeles caídos. Pablo dice: “¿No sabéis que los santos juzgarán al mundo?” (1 Corintios 6:2). Judas 6 describe cómo incluso los ángeles serán juzgados: "Y a los ángeles que no guardaron su dignidad, sino que abandonaron su propia morada, los ha guardado bajo oscuridad, en prisiones eternas, para el juicio del gran día." Satanás y sus ángeles malos estarán atados a esta tierra desolada durante 1000 años sin nada que hacer más que reflexionar sobre sus actos pecaminosos.\n\nDespués del Milenio\nLa Biblia dice: "Cuando los mil años hayan terminado, Satanás será soltado de su prisión" (Apocalipsis 20:7). Sale a engañar a las naciones, lo que significa que los impíos volverán a la vida. Esta resurrección es descrita por Jesús cuando habla de "la resurrección de condenación" (Juan 5:29). Apocalipsis 20:5 describe a estos como "el resto de los muertos" que "no volvieron a vivir hasta que los mil años se acabaron". Cuando Satanás engaña una vez más a los impíos, los reúne para unirse y atacar el "campamento de los santos y la ciudad amada" (v. 9). Pero son destruidos. Esta destrucción se produce junto con el juicio del "gran trono blanco" (v. 11) que demuestra una vez por todas la justicia y la misericordia de Dios, incluso en la destrucción final del pecado. Esta destrucción se describe como que ocurre con "fuego y azufre" (v. 10) y sus resultados son eternos. Aunque algunos interpretan este fuego infernal como interminable, la Biblia muestra que la naturaleza de este fuego "para siempre" es durar el tiempo que sea necesario para hacer su trabajo (véase Malaquías 4:1-3). Este fuego consumidor también se menciona en Judas 7, 2 Pedro 2:6 e Isaías 47:14.\n\nSi bien algunos creen que el milenio ocurre después de 1000 años de progreso humano (postmilenialismo) y otros piensan que el milenio es un símbolo de toda la Era Cristiana (amilenialismo), la Biblia lo describe como 1000 años literales después de la segunda venida de Cristo (premilenialismo). Después de la destrucción de los impíos, Satanás, sus ángeles malos y todo el pecado, la tierra será limpiada con fuego. Juan luego describe lo que vio después: "Vi un cielo nuevo y una tierra nueva; porque el primer cielo y la primera tierra habían pasado" (Apocalipsis 21:1). ¡Qué tiempo tan glorioso será ese!',
+    date: "Futuro",
+    scriptures: ["66|20:1-15"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+      {
+        slug: "imprisonment-of-satan-on-earth-judgment-by-saints-in-heaven",
+        title:
+          "Encarcelamiento de Satanás en la Tierra / Juicio por los Santos en el Cielo",
+      },
+      {
+        slug: "new-jerusalem-descends-from-heaven-to-earth",
+        title: "La Nueva Jerusalén Desciende del Cielo a la Tierra",
+      },
+      {
+        slug: "wicked-are-resurrected-in-bodily-form",
+        title: "Los Impíos Resucitan en Forma Corporal",
+      },
+      {
+        slug: "wicked-are-destroyed-forever",
+        title: "Los Impíos son Destruidos para Siempre",
+      },
+      {
+        slug: "paradise-restored",
+        title: "Paraíso Restaurado",
+      },
+    ],
+    images: [
+      {
+        caption: '"Infierno" de Steve Creitz.',
+        file: "satan on earth_Z_2-27-2013 1-52-08 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1286",
+    slug: "seven-seals",
+    title: "Siete Sellos",
+    period: "13",
+    description:
+      "Como las siete iglesias en Apocalipsis 2 y 3, aquí hay una visión cósmica de la gran batalla entre el bien y el mal, entre Cristo y Satanás. Cuando Jesús rompe los siete sellos que mantienen cerrado un rollo, tienen lugar eventos dramáticos.",
+    article:
+      'El libro de Apocalipsis está lleno de símbolos, típico de los libros bíblicos que hablan sobre el tiempo del fin. En el capítulo 6 leemos sobre sellos, criaturas vivientes y caballos. Como las siete iglesias en Apocalipsis 2 y 3, aquí hay una visión cósmica de la gran batalla entre el bien y el mal, entre Cristo y Satanás. Cuando Jesús rompe los siete sellos que mantienen cerrado un rollo, tienen lugar eventos dramáticos que describen el progreso del evangelio, la reacción del mundo y el impacto en el pueblo de Dios a través de las edades. No solo hay una aplicación histórica a los siete sellos, sino una aplicación universal a cada persona a la que se le presenta el evangelio. El capítulo 6 termina con la pregunta: "¿Quién podrá sostenerse?" El capítulo 7 responde a esa pregunta antes de pasar al séptimo sello que se encuentra en Apocalipsis 8.\n\nCuatro Jinetes\nApocalipsis 6 comienza con cuatro jinetes que salen del salón del trono del cielo (véase Apocalipsis 4 y 5) con mensajes. ¿Qué significan?\n\n⋅ Primer Sello: Un caballo blanco sale con un arco. Una corona está sobre su cabeza y salió "conquistando y para conquistar". Esta imagen describe la pureza de la iglesia apostólica (31-100 d. C.) cuando su fe y celo hicieron quizás el mayor avance del evangelio en la historia. Así también la recepción del evangelio trae la pureza blanca de la justicia de Cristo a nuestros corazones cuando conquistamos el pecado.\n\n⋅ Segundo Sello: Un caballo rojo emerge luego quitando "la paz de la tierra, y que la gente se mate entre sí..." (v. 4). La violenta persecución de la iglesia bajo las manos de los césares romanos representa la condición de la iglesia desde aproximadamente el 100 al 313 d. C. El color de este caballo nos recuerda la sangre derramada de Cristo que trae paz. El evangelio también es como una espada que puede causar división.\n\n⋅ Tercer Sello: Luego sale un caballo negro con un par de balanzas y una voz dice: "Un litro de trigo por un denario, y tres litros de cebada por un denario; y no dañes el aceite ni el vino" (v. 6). Si el blanco representa la pureza, entonces el negro hablaría de corrupción que entró en el cristianismo cuando la iglesia y el estado se unieron en el siglo IV. Las referencias a la cebada y un denario hablan de un tiempo de hambre de la palabra de Dios (el Pan de vida).\n\n⋅ Cuarto Sello: El cuarto caballo es de color verde pálido y su jinete se llama "Muerte, y el Hades lo siguió" (v. 8). Se le dio poder para matar con la espada, el hambre y la muerte. Nos recuerda la edad oscura antes de la Reforma (538-1517 d. C.) cuando la sociedad estaba tan debilitada por los estragos de la guerra que apenas podía protegerse. A menos que el evangelio sea recibido y crezca en la vida (como una planta verde viva), se vuelve pálido y muere.\n\n⋅ Quinto Sello: Aquí vemos simbolizada la voz de los mártires clamando: "¿Hasta cuándo, Señor, santo y verdadero, juzgarás y vengarás nuestra sangre...?" (v. 10). Se les asegura que llegará un momento en que todo se corregirá. Esto sería muy significativo para los perseguidos justo antes y durante la gran Reforma en la Baja Edad Media (1517-1755 d. C.). Se les da una túnica blanca como la que reciben todos los seguidores de Jesús al aceptar la justicia de Cristo.\n\n⋅ Sexto Sello: Se producen perturbaciones cósmicas cuando se abre el sexto sello. Hay un gran terremoto, el sol se vuelve negro, la luna se vuelve roja sangre y las estrellas del cielo caen. Quizás el gran terremoto de Lisboa marque bien el comienzo de este período (1755 d. C.) que poco después fue seguido por una gran oscuridad del sol en 1780 y una lluvia de meteoritos inusualmente espectacular en 1833. Este período se llamó el Gran Despertar y abrió un tiempo de notable interés en la profecía bíblica.\n\nApocalipsis 6:14-16 indica que ocurrirán catástrofes aún mayores antes de que venga Cristo. La pregunta al final del capítulo: "¿Quién podrá sostenerse?" se responde en Apocalipsis 7. En el capítulo 8 volvemos al séptimo sello.\n\n⋅ Séptimo Sello: Cuando se abre este sello, se les dan a siete ángeles siete trompetas para que suenen. Las referencias a las trompetas, un incensario de oro, el altar y el incienso hablan del servicio del santuario cuando las oraciones del pueblo de Dios ascienden y el Señor responde. Las trompetas volverán a sonar y Dios actuará en nombre de su pueblo justo antes de que venga Cristo.',
+    date: "Futuro",
+    scriptures: ["66|6:1-17", "66|8:1-6"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption: "Los cuatro jinetes del Apocalipsis.",
+        file: "GoodSalt-smcas0138_8-5-2013 1-04-37 PM.jpg",
+      },
+      {
+        caption: "Cuatro jinetes saliendo del salón del trono del cielo.",
+        file: "Daniel_And_Revelation_cover_cmyk_2_2-27-2013 1-44-07 PM_7-22-2013 2-35-31 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1287",
+    slug: "seven-trumpets",
+    title: "Siete Trompetas",
+    period: "10",
+    description:
+      "Dios es consciente de cada injusticia cometida contra su pueblo. Apocalipsis 8 y 9 presentan siete trompetas tocadas por siete ángeles que anuncian juicios que caen sobre aquellos que han atacado a los hijos del Señor (véase 6:10).",
+    article:
+      'Dios es consciente de cada injusticia cometida contra su pueblo. Apocalipsis 8 y 9 presentan siete trompetas tocadas por siete ángeles que anuncian juicios que caen sobre aquellos que han atacado a los hijos del Señor (véase 6:10). Las trompetas se usan en la Biblia para la adoración, la batalla y la celebración. El lenguaje del santuario abre esta sección de Apocalipsis mostrando que el incienso (oraciones de los santos) se eleva a Dios y sigue el juicio. El Señor responde cuando suenan las trompetas. La secuencia de trompetas no solo representa un lapso de la historia desde la cruz hasta la segunda venida de Jesús, sino también un juicio preliminar que cae sobre los impíos justo antes de que venga Cristo. Las trompetas y los juicios están llenos de símbolos que muestran que Dios escucha los gritos de su pueblo.\n\n⋅ La Primera Trompeta: Cuando el primer ángel toca una trompeta (Apocalipsis 8:7) hay granizo, fuego y sangre arrojados a la tierra. Quemas un tercio de toda la vegetación. Algunos ven esta trompeta representando los juicios que cayeron sobre Jerusalén en el siglo I (véase Lucas 21:20-24). Es importante recordar que estos juicios no caen sobre "los santos" (8:5 y 9:4).\n\n⋅ La Segunda Trompeta: El primer juicio destruye un tercio de toda la vegetación. El segundo juicio golpea un tercio del océano (8:8, 9). Los animales y los barcos son destruidos. Algunos ven este juicio como la representación de la caída de Roma en el siglo V d. C., lo que habría sido, para los primeros lectores de Apocalipsis, un sueño hecho realidad. Dios actuará en nombre de su pueblo en el momento adecuado.\n\n⋅ La Tercera Trompeta: En el tercer juicio, un tercio de toda el agua dulce es golpeada y se vuelve tan amarga que destruye a la gente (8:10, 11). Si el agua pura representa la verdad de Cristo, entonces el agua amarga habla de idolatría y falsas enseñanzas, que se hicieron prominentes durante la apostasía de la iglesia en la Edad Media. También puede representar la invasión y los estragos de los hunos en el siglo V. En las cuatro primeras trompetas hay un patrón de "un tercio" que muestra que estos no son los juicios completos o finales.\n\n⋅ La Cuarta Trompeta: El impacto en la naturaleza continúa simbolizando los juicios sobre los impíos que dañan al pueblo de Dios. En la cuarta trompeta, los cielos son golpeados con un tercio de oscuridad. Ciertamente, la oscuridad espiritual llegó durante la Edad Media y la Ilustración cuando se plantearon dudas sobre Dios y las Escrituras. Esto también podría describir la extinción del gobierno romano.\n\n⋅ La Quinta Trompeta: Las siguientes tres trompetas se introducen con las palabras: "¡Ay, ay, ay..." (8:13) indicando una intensidad en los juicios. La quinta trompeta está llena de imágenes malvadas de un abismo sin fondo, humo, langostas y escorpiones. El lenguaje demoníaco muestra el creciente enfoque de Satanás para engañar a la gente. Describe el creciente secularismo y escepticismo del siglo XIX. Fue entonces cuando se propusieron dudas sobre la creación. Algunos también ven esta trompeta aplicada al poder ascendente de los sarracenos.\n\n⋅ La Sexta Trompeta: Similar a la quinta trompeta, pero con mayor intensidad, este juicio utiliza imágenes militares que conducen a la batalla de Armagedón. Representa la oposición a los hijos de Dios al final de los tiempos. También se ha aplicado al Medio Oriente y al Imperio Otomano. Utilizando el principio de un día por un año, se han aplicado plazos al tormento de los otomanos al Imperio Bizantino. Lo que está claro es que Satanás quiere destruir al pueblo de Dios, pero el Señor los protege.\nHay un intermedio entre la sexta y la séptima trompetas en el que Juan, en los capítulos 10 y 11, describe las experiencias del pueblo de Dios justo antes del cierre de la probación. Satanás ha estado reuniendo y preparando su ejército para la batalla, por lo que Dios está preparando un pueblo para resistir las amenazas del diablo.\n\n⋅ La Séptima Trompeta: La séptima trompeta marca el comienzo del fin de la probación para las personas en la tierra (10:7), pero deben ocurrir más eventos antes del regreso de Cristo. La última trompeta describe el tercer "Ay" (11:14). Leemos: "Las naciones se enojaron..." (11:18). El Señor también está enojado por la injusticia. Su respuesta es la justa "ira de Dios" cuando se vierten más juicios en las siete últimas plagas (cap. 16). La referencia al santuario celestial (11:19) apunta al final de la profecía de los 2300 días que tuvo lugar en 1844 d. C.',
+    date: "70-Futuro",
+    scriptures: ["66|8:1-13", "66|9:1-21", "66|11:15-19"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption: "Los siete ángeles con siete trompetas.",
+        file: "7 Angels_Z_sm_2-27-2013 1-31-57 PM.jpg",
+      },
+      {
+        caption:
+          "El cuarto ángel hace sonar su trompeta por Beato Escorial en 955.",
+        file: "4 Trumpet_2-27-2013 1-31-57 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1288",
+    slug: "1260-day-prophecy",
+    title: "Profecía de 1260 Días",
+    period: "11",
+    description:
+      "La profecía de los 1260 días se menciona más de siete veces en la Biblia y se usa para describir cuánto tiempo sería perseguido el pueblo de Dios.",
+    article:
+      'La Biblia predijo que el verdadero pueblo de Dios sería perseguido durante un período de 1260 días proféticos. Esta profecía predijo que la iglesia de Dios huiría al desierto para mantenerse a salvo. Los 1260 días también se describen como "un tiempo, tiempos y medio tiempo" (Apocalipsis 12:14), 42 meses (11:2) o tres años y medio. Estos "días" deben entenderse como días proféticos, o años reales según el principio de "un día por un año" de la interpretación profética (véase Números 14:34 y Ezequiel 4:4-6). En Daniel 7, este es el período en el que gobierna el "cuerno pequeño". Una interpretación historicista de esta profecía la sitúa desde el 538 d. C. hasta el 1798, durante el cual la iglesia apóstata buscó destruir a los "herejes" que, de hecho, eran el pueblo remanente de Dios.\n\nDaniel 7\nEn la visión de Daniel de cuatro bestias que salieron del mar, la cuarta era "terrible y espantosa" (Daniel 7:7). Daniel "quiso saber la verdad sobre la cuarta bestia" (v. 19) y el cuerno pequeño que "estaba haciendo la guerra contra los santos, y prevaleciendo contra ellos" (v. 21). La bestia se identifica como un reino y los cuernos de la bestia como "diez reyes" (v. 24). El cuerno pequeño surge después de ellos y somete a tres reyes. Luego dice: "Hablará palabras arrogantes contra el Altísimo, y perseguirá a los santos del Altísimo, e intentará cambiar los tiempos y la ley. Entonces los santos serán entregados en su mano por un tiempo, tiempos y medio tiempo" (v. 25).\n\nUn "tiempo" (año) y "tiempos" (dos años) y "medio tiempo" (1/2 año) pueden entenderse como 3 años y 1/2 (o 42 meses). Dado que un año profético equivale a 12 meses de 30 días proféticos, esto sumaría 1260 días proféticos. Para comprender claramente el significado de este período de tiempo, encontramos en otras partes de las Escrituras el principio de tomar un día por un año en la profecía. Una aplicación se encuentra en Números 14:34. Israel no pudo entrar en la Tierra Prometida debido a su falta de fe. Entonces Dios les dijo que por cada "día" que espiaron la tierra permanecerían en el desierto por un "año" (40 días = 40 años). Y así, los 1260 días pueden entenderse como 1260 años durante los cuales el poder del cuerno pequeño perseguiría al pueblo de Dios.\n\nApocalipsis 12\nLa misma profecía básica se describe en Apocalipsis 12 cuando una mujer pura, que representa a la iglesia, está a punto de dar a luz y un dragón espera devorar a su hijo. Cuando su Hijo (Cristo) es "levantado a Dios y a su trono" (v. 5), la mujer (iglesia) "huyó al desierto, donde tiene un lugar preparado por Dios, para que la alimenten allí mil doscientos sesenta días" (v. 6). Más adelante en el capítulo, el dragón persigue a la mujer a la que "se le dieron dos alas de una gran águila, para que volara al desierto a su lugar, donde es alimentada por un tiempo, tiempos y medio tiempo, de la presencia de la serpiente" (v. 14). Aquí vemos la misma profecía repetida en un lenguaje diferente. ¿Quién es este poder dirigido por el dragón (Satanás) que se va a "hacer la guerra con el resto de su descendencia, los que guardan los mandamientos de Dios y tienen el testimonio de Jesucristo" (v. 17)?\n\nLa Iglesia Apóstata\nLa persecución de la iglesia de Dios vino primero a través de la Roma pagana. La Biblia predijo que la apostasía eventualmente vendría de dentro de la iglesia (véase Mateo 24:4, 5 y Hechos 20:29). A medida que la autoridad de la iglesia local se erosionaba, el obispo de Roma surgió como el poder supremo dentro del cristianismo. Bajo este liderazgo, la iglesia cristiana cayó aún más profundamente en la apostasía. Los compromisos entre el paganismo y el cristianismo llevaron a un sistema de religión falsa.\n\nCuando el emperador romano Justiniano declaró al obispo de Roma como el jefe de todas las iglesias, su general (Belisario) liberó Roma en 538 d. C. Ahora el obispo podía ejercer todos los poderes que se le otorgaban como la "Santa Sede". Esta es la fecha de inicio de la profecía de 1260 años. Pronto, la iglesia, con la ayuda del estado, intentó imponer sus decretos a todos los cristianos. Muchos fueron encarcelados o ejecutados durante este tiempo en nombre de Dios. Luego, en 1798, 1260 años después del 538 d. C., el papado recibió un golpe mortal (véase Apocalipsis 13:3) cuando el ejército de Napoleón colocó al papa a merced del gobierno francés. Por orden de Napoleón, el general Berthier entró en Roma y puso fin al gobierno político del papado. Esto marcó el final de la profecía de 1260 años.',
+    date: "538-1798 d. C.",
+    scriptures: ["66|12:14", "27|7:25"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption: "La mujer y el dragón de Apocalipsis 12.",
+        file: "Rev 12 Woman-Dragon_2_2-27-2013 1-25-11 PM.jpg",
+      },
+      {
+        caption:
+          "Detalle de un retrato contemporáneo de Justiniano I en la Basílica de San Vitale, Rávena.",
+        file: "Meister_von_San_Vitale_in_Ravenna_2-27-2013 1-25-11 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1289",
+    slug: "1290-and-1335-day-prophecies",
+    title: "Profecías de 1290 y 1335 Días",
+    period: "11",
+    description:
+      "Hay dos profecías de tiempo en la última parte de Daniel 12. Las profecías de tiempo de 1290 y 1335 días están relacionadas con las otras profecías en Daniel y se superponen a un período de historia similar.",
+    article:
+      'Hay dos profecías de tiempo en la última parte de Daniel 12. El versículo 11 dice: "Desde el tiempo en que se quite el continuo, y se ponga la abominación desoladora, habrá mil doscientos noventa días" (NVI). El versículo 12 agrega: "Bienaventurado el que espera, y llega a los mil trescientos treinta y cinco días". Las profecías de tiempo de 1290 y 1335 días están relacionadas con las otras profecías en Daniel y se superponen a un período de historia similar.\n\nBasándose en el principio de repetición y ampliación, los 1290 días comienzan durante el tiempo de Daniel y se extienden hasta el tiempo del fin, al igual que las otras profecías principales de este libro (Daniel 2, Daniel 7, Daniel 8 y 9, y Daniel 10-12). Estas profecías paralelas cubren el mismo lapso de tiempo, enfatizando un aspecto diferente. Una interpretación historicista de los 1290 días entiende que estos días proféticos son 1290 años. Comienzan en el 508 d. C. y terminan en el 1798 d. C., la misma fecha de finalización de la profecía de 1260 años (véase Daniel 12:7). La profecía de 1335 días se extiende 45 años más allá de 1798 hasta 1843/44 cuando tuvo lugar un evento crucial en el cielo.\n\nLa Abominación Desoladora y 1290 Días\n¿Qué es la "abominación desoladora" que viene después de que se quite el "continuo" del que se habla en Daniel 12:11? En un pasaje paralelo, Daniel 11:31 también describe que se quita el "continuo". En el capítulo 11 entendemos que el ministerio intercesor de Cristo fue usurpado por la obra de los sacerdotes a través de la misa y la confesión. Al sacrificar a Cristo de nuevo en cada misa, un poder religioso ha eliminado el ministerio celestial de Cristo. Esta "eliminación" que prepara para la abominación desoladora marca el punto de inicio de la profecía de 1290 años. Algo sucedió en el siglo VI para establecer la abominación desoladora.\n\nEn 496, Clodoveo, rey de los francos, se unió a la fe católica. Las tribus germánicas desmantelaron el Imperio Romano y se opusieron al papa en Roma. Pero Clodoveo derrotó a los visigodos y se convirtió en el primer poder gubernamental en unirse a la creciente Iglesia Romana. Después de derrotar a los godos, se reunió con representantes bizantinos en 508 que lo nombraron cónsul honorario de Roma. Aquí estuvo la primera conexión entre la iglesia y el estado (francos y papado) para formar una unión para hacer cumplir la legislación religiosa. Es el comienzo de la abominación desoladora. Por extraño que parezca, el mismo país que primero se unió a las filas de la iglesia en Roma fue el mismo país que provocó su desaparición en 1798 cuando Napoleón hizo que el papa fuera hecho prisionero.\n\nAlgunos intérpretes ven el "continuo" que se quita en Daniel 12:11 (y 8:11) como "paganismo" y un poder perseguidor (Roma pagana) que dio paso a la abominación desoladora provocada por un nuevo poder perseguidor (Roma papal). Independientemente de cómo se interprete el "continuo", está claro que entra en juego un poder religioso apóstata y continúa la obra de eliminar la obra expiatoria de Cristo en el cielo y haciendo cumplir una enseñanza hasta el punto de la persecución.\n\nLos 1335 Días\nNo se menciona ningún evento específico para el comienzo de los 1335 días (años), pero el contexto muestra que comenzó al mismo tiempo que los 1290 días (años). Si esto es cierto y ambas profecías comienzan al mismo tiempo, entonces la profecía de 1335 terminaría 45 años después de 1798, que sería 1843. Este período de tiempo fue el final de la profecía de tiempo más larga de las Escrituras, la profecía de 2300 días (años) de Daniel 8:14. Marcó no solo el gran despertar del advenimiento, sino también la obra de purificación en el santuario celestial en la que Cristo pasó de su papel de nuestro Sumo Sacerdote del Lugar Santo al Lugar Santísimo. El papel de Jesús en el cielo como nuestro intercesor adquirió una mayor importancia cuando comenzó la obra de la purificación del santuario celestial del pecado, tal como lo representaba el santuario terrenal en el servicio del Día de la Expiación.\n\nAunque algunos estudiantes de la Biblia buscan interpretar las profecías de 1290 y 1335 días como años literales aún en el futuro, esto no se puede apoyar en Daniel, donde hay claras conexiones entre las profecías principales. Daniel 12:11, 12 no es una nueva profecía que cubre un período de historia diferente. Daniel 12:6 pregunta: "¿Cuánto durará el cumplimiento de estas maravillas?" e indica una referencia a Daniel 11 y la eliminación del continuo, también mencionado allí.',
+    date: "508-1798 d. C.",
+    scriptures: ["27|12:11-12"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption: "Busto de mármol de Napoleón",
+        file: "iStock_000017993646Small_2-27-2013 1-04-14 PM.jpg",
+      },
+      {
+        caption: "Cripta de Napoleón en Les Invalides, París, Francia.",
+        file: "154970219_7-24-2013 3-41-10 PM.jpg",
+      },
+      {
+        caption:
+          '"Napoleón cruzando el paso de San Bernardo" el 20 de mayo de 1800. Pintura de Jacques-Louis David.',
+        file: "42-28945692_cmyk_sm_2-27-2013 1-04-14 PM.jpg",
+      },
+      {
+        caption:
+          "Retrato de Clodoveo I por Francois-Louis Dejuinne (1786-1844).",
+        file: "Clovis the Frank_2-27-2013 1-04-14 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1290",
+    slug: "daniel-11-king-of-the-northsouth",
+    title: "Daniel 11 - Rey del Norte/Sur",
+    period: "8",
+    description:
+      "Daniel 11 es un capítulo fascinante pero desafiante de las Escrituras para entender. Se describen batallas entre poderes terrenales, pero en última instancia, Dios es el gobernante de todo. Al final (12:4) Miguel (Cristo) se levanta y pone fin al mal.",
+    article:
+      'Daniel 11 es un capítulo fascinante pero desafiante de las Escrituras para entender. Se describen batallas entre poderes, pero en última instancia, Dios es el gobernante de todo. Al final (12:4) Miguel (Cristo) se levanta y pone fin al mal. Se identifican el reino de Persia y Grecia (11:2), y que el "rey poderoso" (v. 3) es una referencia a Alejandro Magno. Después de su muerte, el imperio de Alejandro se dividió en cuatro territorios (v. 4). A medida que se desarrollan las batallas entre el rey del sur y el rey del norte, la historia presenta diferentes reyes de los imperios seléucida y ptolemaico (al norte y al sur de Palestina) que están en guerra. Luego, los versículos 21-39 presentan un poder blasfemo que coincide con el carácter del cuerno pequeño en Daniel 7 y 8. Y los versículos 40-45 parecen describir un conflicto entre dos poderes que libran una guerra justo antes de que regrese Cristo.\n\nPersia y Grecia\nLos reinos de Persia y Grecia se identifican claramente en Daniel 11:2. El versículo 3 dice: "Se levantará un rey poderoso, que gobernará con gran dominio..." No solo Alejandro Magno encaja en esta descripción, sino que la descripción de su reino que se "rompe y se divide hacia los cuatro vientos" (v. 4) es paralela a Daniel 7:6 que describe a Grecia como un leopardo con cuatro alas y cuatro cabezas. Los cuatro generales de Alejandro finalmente dividieron el imperio, que luego fue conquistado por el siguiente imperio mundial, Roma. La interacción de poderes entre el Imperio Ptolemaico (Egipto gobernado por la dinastía griega, rey del sur) y el Imperio Seléucida (Siria, rey del norte) presentan batallas alrededor de Tierra Santa que incluyeron a varios reyes de ambos lados. El pueblo de Dios se encontró entre estas dos facciones.\n\nUn Poder Vil y Blasfemo\nEl versículo 21 dice: "Y en su lugar se levantará un hombre despreciable, al que no se le dará la honra de la realeza; pero vendrá en paz, y tomará el reino con engaño". Aunque este hombre despreciable no se menciona específicamente como "el rey del norte" en Daniel 11, las características coinciden con la descripción del poder del cuerno pequeño de Daniel 7 y 8. El Imperio Romano fue el siguiente poder mundial gobernante según Daniel 2:40. En Daniel 8:9 vemos que Roma conquistó la "Tierra Gloriosa" de Israel. Así también Daniel 9:25, 26 identificó este poder como no solo "cortando" al Mesías, sino destruyendo la ciudad y el santuario. Todo esto sucedió bajo el gobierno de la Roma Imperial.\n\nEventos Futuros\nEl versículo 45 aún está en el futuro. "Y plantará las tiendas de su palacio entre los mares y el monte santo y glorioso; pero llegará a su fin, y nadie le ayudará". Daniel 11 contiene paralelos con otras profecías que describen estos últimos poderes malignos que llegan a su fin. Daniel 2:35 dice: "Entonces el hierro, el barro, el bronce, la plata y el oro fueron destrozados juntos, y se volvieron como la paja de las eras de verano; el viento se los llevó, de modo que no se encontró rastro de ellos..." Podemos saber con seguridad que cuando las últimas batallas contra el verdadero pueblo remanente de Dios tengan lugar durante los eventos finales de la historia de la Tierra, Miguel, el gran príncipe, se levantará. "Y en aquel tiempo será librado tu pueblo, todos los que se hallen escritos en el libro" (Daniel 12:1).',
+    date: "539 a. C.-Futuro",
+    scriptures: ["27|11:1-45"],
+    related: [
+      {
+        slug: "daniels-babylon-prophecies",
+        title: "Profecías de Daniel sobre Babilonia",
+      },
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+      {
+        slug: "daniels-divided-europe-prophecies",
+        title: "Profecías de Daniel sobre la Europa Dividida",
+      },
+      {
+        slug: "peter-waldo-establishes-waldenses-church",
+        title: "Pedro Waldo Establece la Iglesia Valdense",
+      },
+      {
+        slug: "king-alfonso-the-wise",
+        title: "El Rey Alfonso el Sabio",
+      },
+      {
+        slug: "the-great-papal-schism",
+        title: "El Gran Cisma Papal",
+      },
+      {
+        slug: "jerome-of-prague",
+        title: "Jerónimo de Praga",
+      },
+      {
+        slug: "the-lollards",
+        title: "Los Lollardos",
+      },
+      {
+        slug: "jan-hus-john-huss-excommunicated",
+        title: "Jan Hus (Juan Huss) Excomulgado",
+      },
+      {
+        slug: "council-of-constance",
+        title: "Concilio de Constanza",
+      },
+      {
+        slug: "council-of-basel",
+        title: "Concilio de Basilea",
+      },
+      {
+        slug: "jacques-lefevre",
+        title: "Jacques Lefèvre",
+      },
+      {
+        slug: "gutenberg-bible",
+        title: "Biblia de Gutenberg",
+      },
+      {
+        slug: "desiderius-erasmus",
+        title: "Desiderio Erasmo",
+      },
+      {
+        slug: "guillaume-briconnet",
+        title: "Guillermo Briconnet",
+      },
+      {
+        slug: "pope-leo-x",
+        title: "Papa León X",
+      },
+      {
+        slug: "thomas-more",
+        title: "Tomás Moro",
+      },
+      {
+        slug: "martin-luther",
+        title: "Martín Lutero",
+      },
+      {
+        slug: "ulrich-zwingli",
+        title: "Ulrico Zwinglio",
+      },
+      {
+        slug: "hugh-latimer",
+        title: "Hugo Latimer",
+      },
+      {
+        slug: "thomas-cranmer",
+        title: "Tomás Cranmer",
+      },
+      {
+        slug: "william-farel",
+        title: "Guillermo Farel",
+      },
+      {
+        slug: "william-tyndale",
+        title: "Guillermo Tyndale",
+      },
+      {
+        slug: "olaf-petri",
+        title: "Olaf Petri",
+      },
+      {
+        slug: "hans-tausen",
+        title: "Hans Tausen",
+      },
+      {
+        slug: "menno-simons",
+        title: "Menno Simons",
+      },
+      {
+        slug: "philip-melanchthon",
+        title: "Felipe Melanchthon",
+      },
+      {
+        slug: "laurentius-petri",
+        title: "Laurentius Petri",
+      },
+      {
+        slug: "john-calvin",
+        title: "Juan Calvino",
+      },
+      {
+        slug: "luther-travels-to-rome",
+        title: "Lutero viaja a Roma",
+      },
+      {
+        slug: "luther-begins-lecturing-at-wittenburg",
+        title: "Lutero comienza a dar clases en Wittenberg",
+      },
+      {
+        slug: "john-knox",
+        title: "Juan Knox",
+      },
+      {
+        slug: "erasmus-new-testament",
+        title: "Nuevo Testamento de Erasmo",
+      },
+      {
+        slug: "zwingli-begins-his-ministry",
+        title: "Zwinglio comienza su ministerio",
+      },
+      {
+        slug: "leipzig-debate",
+        title: "Debate de Leipzig",
+      },
+      {
+        slug: "exsurge-domine",
+        title: "Exsurge Domine",
+      },
+      {
+        slug: "luthers-new-testament",
+        title: "Nuevo Testamento de Lutero",
+      },
+      {
+        slug: "the-zurich-disputations",
+        title: "Las Disputas de Zúrich",
+      },
+      {
+        slug: "the-anabaptist-movement",
+        title: "El Movimiento Anabautista",
+      },
+      {
+        slug: "the-peasants-revolt",
+        title: "La Rebelión de los Campesinos",
+      },
+      {
+        slug: "luther-marries-katherine-von-bora",
+        title: "Lutero se casa con Catalina de Bora",
+      },
+      {
+        slug: "sack-of-rome",
+        title: "Saqueo de Roma",
+      },
+      {
+        slug: "marburg-colloquy",
+        title: "Coloquio de Marburgo",
+      },
+      {
+        slug: "diet-of-augsburg",
+        title: "Dieta de Augsburgo",
+      },
+      {
+        slug: "thomas-cranmer-appointed-archbishop-of-canterbury",
+        title: "Tomás Cranmer nombrado Arzobispo de Canterbury",
+      },
+      {
+        slug: "henry-viii-acknowledged-as-head-of-the-english-church",
+        title: "Enrique VIII reconocido como jefe de la Iglesia Inglesa",
+      },
+      {
+        slug: "first-full-english-bible-published",
+        title: "Primera Biblia completa en inglés publicada",
+      },
+      {
+        slug: "dissolution-of-english-monasteries",
+        title: "Disolución de los monasterios ingleses",
+      },
+      {
+        slug: "implementation-of-lutheran-reformation-in-denmark",
+        title: "Implementación de la Reforma Luterana en Dinamarca",
+      },
+      {
+        slug: "calvin-sent-away-from-geneva",
+        title: "Calvino enviado lejos de Ginebra",
+      },
+      {
+        slug: "publication-of-the-great-bible-in-england",
+        title: 'Publicación de la "Gran Biblia" en Inglaterra',
+      },
+      {
+        slug: "the-act-of-six-articles",
+        title: "El Acta de los Seis Artículos",
+      },
+      {
+        slug: "the-jesuits",
+        title: "Los Jesuitas",
+      },
+      {
+        slug: "diet-of-regensburg",
+        title: "Dieta de Ratisbona",
+      },
+      {
+        slug: "calvins-ecclesiastical-ordinances-established",
+        title: "Ordenanzas eclesiásticas de Calvino establecidas",
+      },
+      {
+        slug: "the-roman-inquisition",
+        title: "La Inquisición Romana",
+      },
+      {
+        slug: "the-council-of-trent",
+        title: "El Concilio de Trento",
+      },
+      {
+        slug: "king-edward-vi",
+        title: "Rey Eduardo VI",
+      },
+      {
+        slug: "queen-mary-i",
+        title: "Reina María I",
+      },
+      {
+        slug: "peace-of-augsburg",
+        title: "Paz de Augsburgo",
+      },
+      {
+        slug: "geneva-academy",
+        title: "Academia de Ginebra",
+      },
+      {
+        slug: "the-index-of-prohibited-books",
+        title: "El Índice de Libros Prohibidos",
+      },
+      {
+        slug: "jacobus-arminius",
+        title: "Jacobo Arminio",
+      },
+      {
+        slug: "wars-of-religion-in-france",
+        title: "Guerras de Religión en Francia",
+      },
+      {
+        slug: "the-heidelberg-catechism",
+        title: "El Catecismo de Heidelberg",
+      },
+      {
+        slug: "elizabeth-i-excommunicated",
+        title: "Isabel I excomulgada",
+      },
+      {
+        slug: "st-bartholomews-day-massacre",
+        title: "Masacre del Día de San Bartolomé",
+      },
+      {
+        slug: "the-book-of-concord",
+        title: "El Libro de la Concordia",
+      },
+      {
+        slug: "synod-of-dort",
+        title: "Sínodo de Dort",
+      },
+      {
+        slug: "thirty-years-war",
+        title: "Guerra de los Treinta Años",
+      },
+      {
+        slug: "john-bunyan",
+        title: "Juan Bunyan",
+      },
+      {
+        slug: "the-english-civil-war",
+        title: "La Guerra Civil Inglesa",
+      },
+      {
+        slug: "the-treaty-of-westphalia",
+        title: "El Tratado de Westfalia",
+      },
+    ],
+    images: [
+      {
+        caption: "Retrato de Alejandro Magno por Rembrandt",
+        file: "92825930_2-27-2013 12-03-05 PM.jpg",
+      },
+      {
+        caption: "Mapa del Imperio Griego 331 - 168 a. C.",
+        file: "greece_map_2-27-2013 12-03-05 PM.jpg",
+      },
+      {
+        caption:
+          'Los reinos de Persia y Grecia se identifican claramente en Daniel 11:2. El versículo 3 dice: "Se levantará un rey poderoso, que gobernará con gran dominio..." No solo Alejandro Magno encaja en esta descripción, sino que la descripción de su reino que se "rompe y se divide hacia los cuatro vientos" (v. 4) es paralela a Daniel 7:6 que describe a Grecia como un leopardo con cuatro alas y cuatro cabezas.',
+        file: "Leopard_2_cmyk_2-27-2013 12-03-05 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1291",
+    slug: "the-two-beasts-of-revelation-13",
+    title: "Las Dos Bestias de Apocalipsis 13",
+    period: "11",
+    description:
+      "Apocalipsis 13 describe simbólicamente a 2 bestias que son aliadas de un dragón. Esta falsa trinidad libra una guerra del fin de los tiempos contra el pueblo de Dios. Los tres poderes malignos trabajan en cooperación con la iglesia y el estado para imponer la adoración a la imagen de la bestia.",
+    article:
+      'Apocalipsis 13 describe simbólicamente dos bestias que son aliadas de un dragón. Esta falsa trinidad libra una guerra del fin de los tiempos contra el pueblo de Dios. Los tres poderes malignos trabajan en cooperación con la iglesia y el estado para imponer la adoración a la imagen de la bestia. Ambas bestias, una del mar y otra de la tierra, imitan las características de Cristo y el Espíritu Santo. Antes de que venga Cristo, esta unión religiosa apóstata buscará hacer que todos en la tierra reciban una marca que signifique su lealtad a este poder hasta el punto de la muerte. Ambas bestias en última instancia reciben su poder del dragón, identificado en Apocalipsis 12:9 como "la serpiente antigua, que se llama diablo y Satanás, el cual engaña a todo el mundo".\n\nLa Bestia del Mar\nLa primera bestia, descrita en Apocalipsis 13:1, se levanta "del mar" y tiene siete cabezas, diez cuernos y diez coronas. Aparece como una mezcla de bestias (como un leopardo, pies como un oso, boca como un león) descritas en Daniel 7:4-8. Recibe autoridad del dragón y en algún momento es "herida de muerte" (v. 3). Pero luego esta herida fue sanada y la gente se maravilló, se preguntó y adoró a la bestia.\n\nLos eruditos bíblicos durante cientos de años han entendido que esta primera bestia representa al papado, que creció en poder después del tiempo del dragón (Roma Imperial), especialmente durante la Edad Media. Salió "del mar", es decir, entre una parte más poblada de la tierra. El dragón, que representa principalmente a Satanás, usó el Imperio Romano para establecer esta bestia marina. Se le dio autoridad por 42 meses. En la profecía bíblica, un día representa un año, por lo que 42 meses equivalen a 1260 años. Con una fecha de inicio de 538 d. C. cuando se estableció el poder papal, determinamos la fecha de finalización cuando en 1798 Berthier, el jefe del ejército francés, entró en Roma y tomó al papa prisionero, poniendo fin temporalmente al poder del papado. Sin embargo, durante un período de tiempo, esta "herida fue sanada" (v. 3).\n\nLa Bestia de la Tierra\nOtra bestia se describe en Apocalipsis 13 que es diferente de la bestia del mar. Esta sale "de la tierra" (v. 11). Tiene dos cuernos "semejantes a los de un cordero", pero habla "como dragón". Aunque esta bestia comienza pequeña, desde una zona menos densamente poblada de la tierra algún tiempo después de la herida de la primera bestia, crece en poder. Muchos eruditos bíblicos ven a los Estados Unidos de América como esta potencia bestial. Como nación protestante con influencia religiosa en el mundo, algún día unirá fuerzas con la otra bestia para hacer cumplir sus leyes. Asumiendo un papel principal, la bestia de la tierra ayuda a restablecer la obra de la bestia del mar en preparación para los eventos finales en la tierra. Así como el Espíritu Santo descendió del cielo como fuego, esta potencia bestial también hará grandes señales y prodigios. Instituye la pena de muerte contra todos los que no adoren la imagen de la bestia.\n\nLa Marca de la Bestia\nComo una forma de control, los poderes de la bestia instituirán medidas para coaccionar a la gente a adorar la imagen de la bestia. Apocalipsis describe "la marca de la bestia" como una forma de identificar a los seguidores de la bestia. Esta marca, simbólica en su naturaleza, está en las frentes y las manos de las personas, indicando el consentimiento de la mente y la acción a las leyes de este poder. La gente no puede "comprar ni vender" a menos que tenga esta marca. El sello de Dios contrasta con la marca de la bestia. El sello de Dios se encuentra en aquellos que guardan sus mandamientos (14:1, 12). El cuarto mandamiento, el sábado del séptimo día, contiene el corazón del pacto de Dios con su pueblo, mostrando su nombre, título y base de autoridad (Creador). El sello falso (la marca de la bestia) se opondría al verdadero sábado bíblico. La Roma papal ha establecido claramente su autoridad para cambiar la ley de Dios cuando afirma, por su propia autoridad, hacer del domingo el verdadero día de adoración.\n\nComo una forma adicional de confirmar la identidad de esta primera potencia bestial, Apocalipsis dice que el "número de la bestia" (que es diferente de la "marca de la bestia") es el número de un hombre. El número 666 puede entenderse como que se aplica al título del papado. También es un número que está engañosamente cerca del número perfecto de Dios, siete. La marca de la bestia no es un número secreto incrustado debajo de la piel o tatuado en el cuerpo. No tiene nada que ver con los números de la seguridad social o los códigos informáticos. Simplemente simboliza la elección de aquellos que siguen las leyes del hombre sobre los Diez Mandamientos de Dios.',
+    date: "538-1798 d. C.",
+    scriptures: ["66|13:1-18"],
+    related: [
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+    ],
+    images: [
+      {
+        caption: "La primera bestia descrita en Apocalipsis 13",
+        file: "GoodSalt-rev13_8-1-2013 5-34-26 PM.jpg",
+      },
+      {
+        caption: "La segunda bestia descrita en Apocalipsis 13",
+        file: "GoodSalt-rev13-2_8-1-2013 5-34-26 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1293",
+    slug: "prophecies-of-the-end-of-time",
+    title: "Profecías del Fin de los Tiempos",
+    period: "9",
+    description:
+      "La Biblia predice eventos que ocurrirán antes del regreso de Cristo. La mayoría de estas profecías se encuentran en Daniel y Apocalipsis, pero también en Mateo 24, Marcos 13 y Lucas 21.",
+    article:
+      'Creyendo que "toda la Escritura es inspirada por Dios" (2 Tim. 3:16), la mayoría de los cristianos aceptan la validez de la profecía bíblica (aquí entendida en el sentido limitado de la profecía predictiva). La Biblia está repleta de casos en los que Dios predijo eventos futuros para permitir que los humanos cooperen inteligentemente con su propósito divino para ellos. Sin embargo, cuando los cristianos hablan de "profecías e interpretación profética", se refieren con mayor frecuencia a las profecías de Daniel y el Apocalipsis y a los pasajes escatológicos dispersos en otras partes tanto del Antiguo como del Nuevo Testamento.\n',
+    date: "34-Futuro",
+    scriptures: ["40|24:1-51", "41|13:1-37", "42|21:5-38"],
+    related: [
+      {
+        slug: "daniel-2-nebuchadnezzars-dream",
+        title: "Daniel 2 - El Sueño de Nabucodonosor",
+      },
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+      {
+        slug: "church-of-ephesus-apostolic-church-age",
+        title: "Iglesia de Éfeso, Era de la Iglesia Apostólica",
+      },
+      {
+        slug: "prophecies-of-the-end-of-time",
+        title: "Profecías del Fin de los Tiempos",
+      },
+      {
+        slug: "seven-trumpets",
+        title: "Siete Trompetas",
+      },
+      {
+        slug: "church-of-smyrna-age-of-martyrdom",
+        title: "Iglesia de Esmirna, Era del Martirio",
+      },
+      {
+        slug: "church-of-pergamos-age-of-popularity",
+        title: "Iglesia de Pérgamo, Era de la Popularidad",
+      },
+      {
+        slug: "1290-and-1335-day-prophecies",
+        title: "Profecías de 1290 y 1335 Días",
+      },
+      {
+        slug: "1260-day-prophecy",
+        title: "Profecía de 1260 Días",
+      },
+      {
+        slug: "the-two-beasts-of-revelation-13",
+        title: "Las Dos Bestias de Apocalipsis 13",
+      },
+      {
+        slug: "church-of-thyatira-age-of-adversity",
+        title: "Iglesia de Tiatira, Era de la Adversidad",
+      },
+      {
+        slug: "church-of-sardis-reformation-age",
+        title: "Iglesia de Sardis, Era de la Reforma",
+      },
+      {
+        slug: "church-of-philadelphia-great-enlightenment-age",
+        title: "Iglesia de Filadelfia, Era de la Gran Ilustración",
+      },
+      {
+        slug: "beast-rises-from-the-earth",
+        title: "Bestia que se levanta de la tierra",
+      },
+      {
+        slug: "deadly-wound-healed",
+        title: "Herida Mortal Sanada",
+      },
+      {
+        slug: "church-of-laodicea-age-of-judgment",
+        title: "Iglesia de Laodicea, Era del Juicio",
+      },
+      {
+        slug: "three-angels-messages-proclaimed-to-all-the-earth",
+        title: "Mensajes de los Tres Ángeles Proclamados",
+      },
+      {
+        slug: "close-of-probation",
+        title: "Cierre de la Probación",
+      },
+      {
+        slug: "global-persecution-by-sea-earth-beasts",
+        title: "Persecución Global por las Bestias del Mar y la Tierra",
+      },
+      {
+        slug: "seven-last-plagues",
+        title: "Siete Últimas Plagas",
+      },
+      {
+        slug: "battle-of-armageddon",
+        title: "Batalla de Armagedón",
+      },
+      {
+        slug: "fall-of-babylon-and-loud-cry",
+        title: "Caída de Babilonia y Gran Clamor",
+      },
+      {
+        slug: "millennium",
+        title: "Milenio",
+      },
+      {
+        slug: "seven-seals",
+        title: "Siete Sellos",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Mosaico en la Basílica de San Marcos querepresenta a los ángeles que custodian las siete iglesias de Asia.",
+        file: "91726832_11_sm_2-27-2013 11-45-33 AM.jpg",
+      },
+      {
+        caption: "Dibujo de los siete ángeles y las siete trompetas.",
+        file: "7 Angels_Z_sm_2-27-2013 11-45-33 AM.jpg",
+      },
+      {
+        caption: "La mujer de Apocalipsis 12.",
+        file: "IMG_6022_2_flat_no_lines_sm_2-27-2013 11-45-33 AM.jpg",
+      },
+      {
+        caption: "'Infierno' de Steven Creitz.",
+        file: "satan on earth_Z_2-27-2013 11-45-33 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1294",
+    slug: "paul",
+    title: "Pablo",
+    period: "9",
+    description:
+      "Pablo, el gran apóstol de los gentiles, se presenta en el libro de Hechos como Saulo, quien perseguía a la iglesia. Después de su conversión en el camino a Damasco, lleva el evangelio a los no judíos, levantando muchas iglesias nuevas en Asia Menor.",
+    article:
+      'El nombre significa "pequeño" o "diminuto". El gran apóstol de los gentiles. Se presenta en la Biblia como Saulo (gr. Saulos, del heb. Sha\'ül, "preguntado [a Dios]" o "prestado [a Dios]" Hechos 7:58) y se le menciona con ese nombre en la narrativa del libro de Hechos hasta el capítulo 13:9. Ha habido mucha especulación sobre por qué, a mitad del libro de Hechos, Saulo se menciona abruptamente como Pablo, y se le llama exclusivamente por ese nombre a partir de ese momento, excepto cuando él mismo relata la historia de su conversión (capítulos 22:7, 13 26:14). Una respuesta simple y plausible es que él, como otros (Hechos 1:23 13:1 Col 4:11, etc.), tenía más de un nombre; en su caso, un nombre hebreo, Saulo, y un nombre romano helenizado, Paulos o Pablo.\n\nSu nombre hebreo probablemente se usaba comúnmente en su casa y en su trato con los judíos. Su nombre grecorromano estaría en consonancia con la influencia y el entorno helenístico de la ciudad donde nació, y con su envidiable condición de ciudadano romano. Más tarde, cuando comenzó su trabajo entre los gentiles, fue ventajoso que se le conociera como Pablo. Es digno de mención que hasta Hechos 13 Pablo se menciona solo en referencia a su contacto con los judíos. Pero en ese capítulo comienza el registro de sus actividades entre los gentiles, al igual que el uso de su nombre gentil, Pablo.',
+    date: "14-67 d. C.",
+    scriptures: ["44|7:58"],
+    related: [
+      {
+        slug: "paul",
+        title: "Pablo",
+      },
+      {
+        slug: "conversion-of-paul",
+        title: "Conversión de Pablo",
+      },
+      {
+        slug: "paul-in-damascus-and-arabia",
+        title: "Pablo en Damasco y Arabia",
+      },
+      {
+        slug: "pauls-escape-from-damascus",
+        title: "La huida de Pablo de Damasco",
+      },
+      {
+        slug: "barnabas-and-pauls-mission-in-antioch",
+        title: "Barnabas y la misión de Pablo en Antioquía",
+      },
+      {
+        slug: "barnabas-and-paul-take-famine-relief-to-jerusalem",
+        title: "Barnabas y Pablo llevan ayuda contra el hambre a Jerusalén",
+      },
+      {
+        slug: "pauls-first-missionary-journey-ending-in-antioch",
+        title: "El primer viaje misionero de Pablo que termina en Antioquía",
+      },
+      {
+        slug: "pauls-second-missionary-journey",
+        title: "El segundo viaje misionero de Pablo",
+      },
+      {
+        slug: "paul-arrives-at-corinth",
+        title: "Pablo llega a Corinto",
+      },
+      {
+        slug: "1-thessalonians-written",
+        title: "1 Tesalonicenses Escrito",
+      },
+      {
+        slug: "2-thessalonians-written",
+        title: "2 Tesalonicenses Escrito",
+      },
+      {
+        slug: "end-of-pauls-second-missionary-journey",
+        title: "Fin del segundo viaje misionero de Pablo",
+      },
+      {
+        slug: "pauls-third-missionary-journey",
+        title: "El tercer viaje misionero de Pablo",
+      },
+      {
+        slug: "1-corinthians-written",
+        title: "1 Corintios Escrito",
+      },
+      {
+        slug: "2-corinthians-written",
+        title: "2 Corintios Escrito",
+      },
+      {
+        slug: "romans-written",
+        title: "Romanos Escrito",
+      },
+      {
+        slug: "paul-imprisoned-two-years-at-caesarea",
+        title: "Pablo encarcelado dos años en Cesarea",
+      },
+      {
+        slug: "pauls-journey-to-rome",
+        title: "El viaje de Pablo a Roma",
+      },
+      {
+        slug: "ephesians-colossians-philemon-written",
+        title: "Efesios, Colosenses, Filemón Escrito",
+      },
+      {
+        slug: "paul-imprisoned-in-rome-two-years",
+        title: "Pablo encarcelado en Roma dos años",
+      },
+      {
+        slug: "philippians-written",
+        title: "Filipenses Escrito",
+      },
+      {
+        slug: "paul-travels-in-crete-asia-minor-and-macedonia",
+        title: "Pablo viaja por Creta, Asia Menor y Macedonia",
+      },
+      {
+        slug: "1-timothy-written",
+        title: "1 Timoteo Escrito",
+      },
+      {
+        slug: "titus-written",
+        title: "Tito Escrito",
+      },
+      {
+        slug: "2-timothy-written",
+        title: "2 Timoteo Escrito",
+      },
+      {
+        slug: "death-of-paul",
+        title: "Muerte de Pablo",
+      },
+    ],
+    images: [
+      {
+        caption: "El apóstol Pablo",
+        file: "GoodSalt-pppas0205_8-6-2013 4-32-53 PM.jpg",
+      },
+      {
+        caption: "Pablo el fabricante de tiendas",
+        file: "GoodSalt-prcas2539_8-28-2013 2-44-27 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1295",
+    slug: "john",
+    title: "Juan",
+    period: "9",
+    description:
+      "Juan, el hijo de Zebedeo y hermano de Santiago, fue discípulo de Jesús y miembro de su círculo íntimo. Jesús le encomendó el cuidado de su madre en la cruz. Juan fue desterrado a Patmos. Escribió un evangelio, tres epístolas y Apocalipsis.",
+    article:
+      'El nombre significa "Yahvé es misericordioso". Hijo de Zebedeo, y aparentemente Salomé, y hermano de Santiago (Mt 4:21; 27:56; cf. Mc 15:40; 16:1; Jn 19:25; Hechos 12:1, 2). El hecho de que Santiago se mencione generalmente primero cuando aparecen juntos los nombres de los 2 discípulos implica que Juan era el menor de los dos. Zebedeo y sus 2 hijos eran pescadores de oficio, y aparentemente bastante prósperos (Mc 1:19, 20). Juan aparentemente entra en la narración del Evangelio en Jn 1:35-40 como un discípulo anónimo, entre la multitud que escucha a Juan el Bautista junto al río Jordán. En ese caso, él y Andrés, el hermano de Simón Pedro, fueron los primeros discípulos de Juan el Bautista en seguir a Jesús. Juan aparentemente regresó con Jesús a Galilea unos días después y asistió a las festividades de la boda en Caná (cap. 2:1-11).\n\nJuan estuvo con Jesús de forma intermitente durante el año siguiente, el período de su ministerio en Judea, pero también dedicó parte de su tiempo al negocio de la pesca; pero cuando Jesús comenzó su ministerio en Galilea, invitó a Juan y a su hermano, y a Pedro y Andrés también, a convertirse en discípulos permanentes (Lc 5:1-11). Unos meses después, Juan estuvo entre los 12 elegidos para ser apóstoles (Mt 10:2). A partir de entonces, Juan estuvo íntimamente asociado con Jesús en sus labores. Con Pedro y Santiago, Juan fue miembro del círculo íntimo de asociados de Jesús.\n\nFue testigo de la resurrección de la hija de Jairo (Mc 5:37), y estuvo presente en la Transfiguración (cap. 9:2) y de nuevo en Getsemaní (cap. 14:33). Juan dio evidencia de una disposición impetuosa en varias ocasiones, como cuando reprendió a alguien que trabajó en el nombre de Cristo pero no se había convertido formalmente en discípulo (Lc 9:49), y cuando propuso llamar fuego del cielo sobre los habitantes de una aldea samaritana que habían negado a Cristo el privilegio de dormir en su pueblo (versículos 52-56). Reveló egoísmo en la ocasión en que él y su hermano buscaron lugares de honor junto a Jesús en su futuro reino, pero también demostró celo y lealtad al declararse listo para enfrentar la muerte con su Maestro (Mt 20:20-24; Mc 10:35-41).\n\nDurante su asociación con Jesús, Juan parece haberse entregado plenamente a la influencia suavizante y sometedora del Salvador, con el resultado de que su carácter se transformó. Aparentemente entró en una comunión con Jesús más profunda y rica que la de los otros apóstoles (véase Jn 21:20). En la Última Cena ocupó el lugar junto a Jesús (cap. 13:23). Cuando Jesús fue arrestado en Getsemaní, Juan lo siguió al palacio del sumo sacerdote, donde parece haber sido conocido, y luego al Calvario (capítulos 18:15; 19:26).\n\nEn la cruz, Jesús encomendó a su madre María al amoroso cuidado de Juan (cap. 19:27). Temprano el domingo por la mañana, al escuchar el informe de que la tumba de Jesús estaba vacía, Juan y Pedro corrieron juntos al sepulcro para investigar y se convirtieron en testigos del hecho de que Jesús había resucitado (cap. 20:1-10). Juan estuvo presente la noche del día de la resurrección, cuando Jesús se apareció a los discípulos en el aposento alto, y también una semana después (Lc 24:33-43; Jn 20:19-30; 1 Cor 15:5). Fue uno de un grupo de discípulos que habían ido a pescar, a quienes Jesús se apareció en las orillas del mar de Galilea (Jn 21:1-7).\n\nDespués de la ascensión, Juan permaneció con los otros 10 apóstoles en el aposento alto de Jerusalén (Hechos 1:13), y posteriormente se unió a Pedro en el trabajo misionero en la ciudad de Jerusalén (cap. 3:1). A pesar del encarcelamiento, ambos apóstoles testificaron con valentía de su fe en Jesús (cap. 4:19). Más tarde, Pedro y Juan fueron a Samaria para ayudar a Felipe (cap. 8:14). Juan posiblemente estuvo entre los "apóstoles y ancianos que estaban en Jerusalén" durante varios años (véase Hechos 16:4; Gál 2:9). La tradición, apoyada por la implicación en Apoc 1:11, sugiere que durante los últimos años de su vida Juan estuvo a cargo de las iglesias en la provincia romana de Asia Menor, con sede en Éfeso.\n\nDe allí fue desterrado por Domiciano a la isla de Patmos (v. 9), pero se cree que fue liberado cuando Nerva se convirtió en emperador en el año 96 d. C. Según la tradición, Policarpo, Papías e Ignacio fueron alumnos de Juan. Después de su liberación, según la tradición, Juan residió en Éfeso y murió durante el reinado de Trajano, 98-117 d. C. Hacia el final de su vida, Juan escribió el libro de Apocalipsis y también el Evangelio y las tres epístolas que llevan su nombre.\n',
+    date: "11-99 d. C.",
+    scriptures: ["40|4:21"],
+    related: [
+      {
+        slug: "1-john-written",
+        title: "1 Juan Escrito",
+      },
+      {
+        slug: "2-john-written",
+        title: "2 Juan Escrito",
+      },
+      {
+        slug: "3-john-written",
+        title: "3 Juan Escrito",
+      },
+      {
+        slug: "revelation-written",
+        title: "Apocalipsis Escrito",
+      },
+    ],
+    images: [
+      {
+        caption: "Juan en la escena de la crucifixión con María",
+        file: "GoodSalt-pppas0013_8-28-2013 2-42-06 PM.jpg",
+      },
+      {
+        caption: "Juan el Revelador en la isla de Patmos.",
+        file: "_98A1499_DTK_Z_2-27-2013 11-31-14 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1297",
+    slug: "constantine-the-great",
+    title: "Constantino el Grande",
+    period: "10",
+    description:
+      "Constantino legalizó el cristianismo en el imperio romano por primera vez, pero introdujo muchas influencias paganas en la iglesia.",
+    article:
+      "El emperador romano Constantino I, también conocido como Constantino el Grande o San Constantino, gobernó desde 306 hasta 337 d. C. Vivió desde aproximadamente el 27 de febrero de 272 hasta el 22 de mayo de 337. Constantino fue el primer emperador romano en convertirse al cristianismo, y junto con su coemperador Licinio emitió el Edicto de Milán en 313. Este edicto declaró la tolerancia religiosa en todo el imperio.\n\n\n",
+    date: "272-337 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "roman-reign-of-constantine-the-great",
+        title: "Reinado Romano de Constantino el Grande",
+      },
+      {
+        slug: "constantine-converts-to-christianity",
+        title: "Constantino se convierte al cristianismo",
+      },
+      {
+        slug: "edict-of-milan-edict-of-toleration",
+        title: "Edicto de Milán (Edicto de Tolerancia)",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Cara del Emperador Constantino en la sala del Museo Capitolino, Roma, Italia. Fechado alrededor del 313-324 d. C.",
+        file: "iStock_000011604133Small_2-27-2013 11-13-31 AM.jpg",
+      },
+      {
+        caption:
+          "Estatua del emperador romano Constantino el Grande (274-337 d. C.) fuera de la York Minster, Yorkshire, Inglaterra. Proclamado Emperador Romano en York en 306 d. C.",
+        file: "iStock_000004215098XSmall_2-27-2013 11-13-31 AM.jpg",
+      },
+      {
+        caption: "Arco de Constantino y Coliseo, Roma, Italia",
+        file: "93247152_2-27-2013 11-13-31 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1299",
+    slug: "roman-reign-of-constantine-the-great",
+    title: "Reinado Romano de Constantino el Grande",
+    period: "10",
+    description:
+      "Constantino legalizó el cristianismo en toda Roma durante su reinado como emperador.",
+    article:
+      "Flavio Valerio Aurelio Constantino Augusto, conocido como Constantino el Grande, Constantino I y San Constantino, sirvió como Emperador de Roma desde 306 hasta 337 d. C. Se le atribuye el haber traído la tolerancia religiosa al Imperio en 313.\n",
+    date: "306-337 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "constantine-the-great",
+        title: "Constantino el Grande",
+      },
+    ],
+    images: [
+      {
+        caption: "Arco de Constantino y Coliseo, Roma, Italia",
+        file: "GoodSalt-lwjas0188_8-7-2013 9-42-50 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1300",
+    slug: "constantine-converts-to-christianity",
+    title: "Constantino se convierte al cristianismo",
+    period: "10",
+    description:
+      "Constantino atribuyó su conversión al cristianismo a una visión supuestamente de Dios después de una victoria militar.",
+    article:
+      'El emperador Constantino el Grande tuvo una poderosa experiencia en la Batalla del Puente Milvio en 312 d. C. Antes de que comenzara la batalla, se dice que miró hacia el sol y vio una cruz hecha de luz sobre él, junto con palabras en griego que significan "¡Con esto, vence!" Posteriormente, ordenó a sus tropas que colocaran el símbolo cristiano Chi-Rho en sus escudos, y el ejército obtuvo la victoria.\n',
+    date: "312 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "constantine-the-great",
+        title: "Constantino el Grande",
+      },
+    ],
+    images: [
+      {
+        caption: "Conversión de Constantino",
+        file: "GoodSalt-pppas0006_8-7-2013 9-43-49 AM.jpg",
+      },
+      {
+        caption: "Conversión de Constantino, Jacopo Vignali",
+        file: "Constantine's_conversion_8-1-2013 3-13-29 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1301",
+    slug: "edict-of-milan-edict-of-toleration",
+    title: "Edicto de Milán (Edicto de Tolerancia)",
+    period: "10",
+    description:
+      "Constantino y su coemperador legalizaron el cristianismo en toda Roma en 313 d. C.",
+    article:
+      "Los coemperadores romanos Constantino y Licinio se reunieron en Milán en 313 d. C. para asegurar su alianza a través del matrimonio de Licinio con Constancia, la hermanastra de Constantino. Fue aquí donde los hombres elaboraron el Edicto de Milán, a veces denominado Edicto de Tolerancia. Este edicto otorgó tolerancia a todas las religiones del Imperio, incluido el cristianismo, que había sido duramente perseguido durante la década anterior. La religión cristiana recibió reconocimiento legal por primera vez, y los cristianos recibieron la plena restitución de las propiedades confiscadas durante las persecuciones. El edicto utiliza la frase latina summa divintas, un término general que se refiere a la divinidad, en lugar de nombres o términos religiosos específicos.",
+    date: "313 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "constantine-the-great",
+        title: "Constantino el Grande",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Cara del Emperador Constantino en la sala del Museo Capitolino, Roma, Italia. Fechado alrededor del 313-324 d. C.",
+        file: "GoodSalt-prcas2439_8-7-2013 9-46-04 AM.jpg",
+      },
+      {
+        caption:
+          "Estatua del emperador romano Constantino el Grande (274-337 d. C.) fuera de la York Minster, Yorkshire, Inglaterra. Proclamado Emperador Romano en York en 306 d. C.",
+        file: "iStock_000004215098XSmall_2-26-2013 6-11-04 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1303",
+    slug: "peter-waldo-establishes-waldenses-church",
+    title: "Pedro Waldo Establece la Iglesia Valdense",
+    period: "11",
+    description:
+      "Pedro Waldo es el fundador comúnmente aceptado de la iglesia valdense.",
+    article:
+      "Diferentes fuentes atribuyen el establecimiento del movimiento valdense a varias personas y períodos históricos, pero los valdenses mismos le dan crédito a Pedro Waldo. La predicación callejera de Waldo comenzó en Lyon en el año 1177 d. C.",
+    date: "1177 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Estatua de Pedro Waldo en el Monumento a Lutero en Worms, Alemania",
+        file: "WaldoAtLutherDenkmal_2-27-2013 12-18-17 PM.jpg",
+      },
+      {
+        caption: "Valdense",
+        file: "wal_8-6-2013 12-24-44 PM.jpg",
+      },
+      {
+        caption: "Valdense",
+        file: "wal2_8-6-2013 12-24-44 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1305",
+    slug: "john-wycliffe",
+    title: "Juan Wycliffe",
+    period: "11",
+    description:
+      "Juan Wycliffe fue un poderoso reformador temprano que vivió y trabajó en Inglaterra.",
+    article:
+      "Juan Wycliffe nació en 1328 en una familia inglesa terrateniente. Su vida puede entenderse mejor en tres etapas. Durante la primera etapa de su vida, Wycliffe participó en Oxford. Aunque comenzó como estudiante, finalmente se convirtió en Maestro del Balliol College. Para pagar sus estudios, Wycliffe aceptó un cargo eclesiástico, lo que le permitió continuar su educación en Oxford hasta 1371. Durante este período se hizo muy conocido como filósofo y teólogo. Además, cerca del final de este tiempo, Wycliffe se hizo conocido por sus puntos de vista radicales sobre el gobierno de la iglesia, que afirmaban a Cristo como la cabeza de la iglesia e insistían en que los líderes impíos no tenían autoridad legítima.\n\nLa segunda etapa de la vida de Wycliffe fue entre 1371 y 1378. Durante este tiempo, Wycliffe habló en contra de la riqueza sin precedentes de la Iglesia Católica, que en ese momento estaba exenta de impuestos. Como resultado de sus enseñanzas amenazantes, Wycliffe dependió en gran medida de la protección de Juan de Gaunt, duque de Lancaster. Sin embargo, cuando el rey Eduardo III murió en 1377, el poder del duque se redujo significativamente. Además, en 1378 comenzó el Gran Cisma Papal (durante el cual hubo tres papas rivales en un momento dado), y la iglesia fue más fácilmente manipulada. Esto significaba que el gobierno inglés no necesitaba tanto apoyo de las enseñanzas de Wycliffe. Como resultado, incluso en esta etapa temprana de la Reforma Inglesa, las reformas principales fueron impulsadas más por razones políticas que teológicas. Este factor motivador continuó permeando a lo largo de la Reforma Inglesa en años posteriores.\n\nLa tercera etapa de la vida de Wycliffe comenzó en 1378 y terminó con su muerte. Con menos demanda en sus servicios públicos, Wycliffe pudo volver a sus estudios. A medida que sus ideas se volvieron aún más radicales a los ojos de la iglesia, fue despedido de Oxford y se retiró a Lutterworth. Mientras estuvo allí, Wycliffe dedicó su tiempo a escribir y predicar. Fue durante este tiempo que comenzó a traducir la Biblia al inglés de la Vulgata latina, una de sus mayores contribuciones a la reforma. Wycliffe vivió en Lutterworth hasta que sufrió dos derrames cerebrales, el primero en 1382 y el segundo en 1384, que resultaron en su muerte.\n\nCuriosamente, la historia de Wycliffe no termina con su muerte. El 4 de mayo de 1415, en el Concilio de Constanza, Wycliffe fue declarado hereje. En 1428, 44 años después de la muerte de Wycliffe, el Papa Martín V ordenó que el cuerpo de Juan Wycliffe fuera exhumado y quemado públicamente. Después de que esto sucediera, sus cenizas fueron arrojadas al río Swift, que corría a través de Lutterworth.\n\nAlgunas de las obras importantes de Juan Wycliffe incluyen: La verdad de la Sagrada Escritura, que sostenía la Biblia como el estándar de autoridad para el cual se probaban todas las demás, incluido el papa; El poder del Papa, que ilustraba que el papado era un cargo establecido por el hombre, no por Dios; y Sobre la Eucaristía, que negaba la doctrina católica de la transubstanciación (que los elementos de la cena del Señor se transforman literalmente en el cuerpo y la sangre de Cristo).\n",
+    date: "1328-1384 d. C.",
+    scriptures: [],
+    related: [],
+    images: [
+      {
+        caption: "Juan Wycliffe.",
+        file: "GoodSalt-prcas1203_8-13-2013 1-50-17 PM.jpg",
+      },
+      {
+        caption: "Retrato del reformador religioso Juan Wycliffe",
+        file: "92836852_2-26-2013 5-48-40 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1306",
+    slug: "jan-hus-john-huss",
+    title: "Jan Hus (Juan Huss)",
+    period: "11",
+    description:
+      "Huss fue un reformador temprano en Bohemia. Murió una muerte de mártir.",
+    article:
+      "Juan Huss nació alrededor de 1372 en una familia bohemia pobre. En 1390, comenzó sus estudios en la Universidad de Praga. En 1401, Jerónimo de Praga trajo muchas de las obras más radicales de Juan Wycliffe a Bohemia (esencialmente la actual República Checa). Alrededor de la misma época (1402), Huss fue elegido rector y predicador de la Capilla de Belén en Praga. Gran influencia de Wycliffe, Huss comenzó a hacerse eco de sus enseñanzas: que la autoridad de los líderes de la iglesia estaba corrupta y que la Palabra de Dios podía ser la única guía verdadera.\n\nEn 1403, los escritos de Wycliffe fueron prohibidos en la Universidad de Praga; sin embargo, esto se debió al voto de la mayoría alemana. De hecho, había tres veces más alemanes que bohemios. Sin embargo, para 1409, el rey de Bohemia pudo destituir a la mayoría alemana (lo que resultó en que los alemanes fundaran su propia universidad en Leipzig) y nombró a Huss como rector de la Universidad de Praga.\n\nHuss encontró resistencia inmediata por parte del arzobispo de Praga, un hombre llamado Zbynek. El arzobispo obtuvo un mandato del papa que prohibía la predicación en todas las capillas, pero Huss se negó a obedecer esta orden y continuó predicando. Como resultado, el arzobispo de Praga excomulgó a Huss en 1410. Al mismo tiempo, el arzobispo ordenó que se quemaran públicamente 200 volúmenes de las obras de Wycliffe.\n\nLas tensiones en la Europa papal continuaron intensificándose, y en 1412 el Papa Juan XXIII comenzó una cruzada contra Nápoles. Enfurecido aún más por las acciones impías del papa, Huss habló contra Roma con aún más fervor. Como resultado, Huss fue excomulgado oficialmente desde la sede en Roma y toda la ciudad de Praga fue puesta bajo interdicto papal (que negaba a todos los ciudadanos el acceso a la Iglesia y sus sacramentos) hasta que Huss pudiera ser removido. Huss finalmente cumplió y se retiró al sur de Bohemia, donde pasó su tiempo escribiendo.\n\nEn 1414, el Concilio de Constanza comenzó a intentar curar el Gran Cisma Papal (durante el cual hubo tres papas rivales). El emperador Segismundo invitó a Huss a asistir y le prometió darle salvoconducto. Huss dudó pero decidió ir. En un mes, fue capturado por leales papales y encarcelado. Huss esperó en prisión hasta su juicio el 6 de julio de 1415. Las autoridades del concilio exigieron que Huss se retractara de sus creencias, pero él se negó. Como resultado, Huss fue arrastrado fuera de la ciudad y quemado en la hoguera.\n\nEl martirio de Huss enfureció a sus seguidores en Bohemia. Finalmente estalló una guerra civil, pero el movimiento de reforma continuó. Finalmente, los seguidores de Huss se conectaron con los valdenses, y durante la Reforma Protestante se fusionaron con los seguidores de Martín Lutero y Juan Calvino.\n\nAlgunas de las obras importantes de Juan Huss incluyen: La Iglesia y la Simonia.",
+    date: "1372-1415 d. C.",
+    scriptures: [],
+    related: [],
+    images: [
+      {
+        caption: "Juan Huss.",
+        file: "GoodSalt-prcas2470_8-13-2013 1-52-01 PM.jpg",
+      },
+      {
+        caption:
+          "Jan Hus, un hereje del siglo XV (según lo declarado por la Iglesia de Roma), es un símbolo del nacionalismo checo, y también lo es su monumento.",
+        file: "iStock_000018819337Small_2-26-2013 5-47-23 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1308",
+    slug: "jan-hus-john-huss-excommunicated",
+    title: "Jan Hus (Juan Huss) Excomulgado",
+    period: "11",
+    description:
+      'Los intentos de reforma de Huss fueron detenidos por su excomunión de la iglesia en 1410 por el "antipapa" Alejandro V.',
+    article:
+      "El Papa Alejandro V facultó al Arzobispo para tomar medidas contra todas las formas de wycliffismo, incluidas las reformas husitas, en su bula papal fechada el 20 de diciembre de 1409. Ordenó la entrega de todos sus libros, la revocación de sus doctrinas y el cese de la predicación libre. Hus apeló al papa después de la publicación de la bula en 1410 sin éxito. Hus y sus seguidores fueron excomulgados, y todo el material de Wycliffe fue quemado.",
+    date: "1410 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Jan Hus, un hereje del siglo XV, es un símbolo del nacionalismo checo, y también lo es su monumento. Colocado en la Plaza de la Ciudad Vieja durante el Renacimiento Nacional Checo en 1915, Jan Hus vigila Praga y mantiene a raya a los invasores extranjeros.",
+        file: "iStock_000018819337Small_2-26-2013 5-55-20 PM.jpg",
+      },
+      {
+        caption: "Retrato del Papa Alejandro V en el siglo XV.",
+        file: "Antipope_Alexander_V.JPG",
+      },
+    ],
+  },
+  {
+    id: "1310",
+    slug: "king-alfonso-the-wise",
+    title: "El Rey Alfonso el Sabio",
+    period: "11",
+    description:
+      "Ordenó que la Biblia se tradujera al español. La Biblia Alfonsina es una de las primeras traducciones de la Biblia a un idioma común en Europa occidental.",
+    article:
+      'Alfonso X, también llamado "el Sabio", fue rey de Castilla. Nació el 23 de noviembre de 1221 y murió el 4 de abril de 1284. Cerca del final de su vida, Alfonso el Sabio encargó la impresión de una Biblia en idioma español. La Biblia Alfonsina se publicó en 1280 y es una de las primeras traducciones de la Biblia a un idioma común.\\n',
+    date: "1221-1284 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "El Reino de Castilla en España",
+        file: "GoodSalt-lwjas0332_8-7-2013 9-49-12 AM.jpg",
+      },
+      {
+        caption:
+          "Castillo de Alarcón, vista desde la segunda puerta, España. La ubicación de residencia de muchos de los reyes de Castilla.",
+        file: "Castle in Castile small_2-26-2013 5-58-56 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1312",
+    slug: "the-lollards",
+    title: "Los Lollardos",
+    period: "11",
+    description:
+      "Los discípulos de Juan Wycliffe en Inglaterra se conocieron como los lollardos. Prepararon el camino para la reforma inglesa distribuyendo la Biblia en inglés.",
+    article:
+      "Los lollardos fueron un grupo de cristianos en gran parte compuesto por seguidores de Juan Wycliffe. No está claro si todos los lollardos fueron wycliffitas, pero sin embargo compartían sus convicciones. Además, el origen preciso de los lollardos se debate entre los académicos. Juan Wycliffe ciertamente tuvo seguidores durante su vida, pero probablemente no fue hasta después de su muerte que algunos de ellos comenzaron a tomar el nombre de 'lollardos'.\n\nLos lollardos estaban convencidos de que la Biblia era para el pueblo y, por lo tanto, trabajaron para traducir la Biblia al inglés. También predicarían contra los pastores que ocupaban cargos civiles, la adoración de imágenes, el requisito del celibato clerical y las peregrinaciones. Al igual que Wycliffe, los lollardos también rechazaron la doctrina de la transubstanciación (que los elementos de la cena del Señor se transforman literalmente en el cuerpo y la sangre de Cristo) y las oraciones por los muertos.\n\nLos lollardos fueron muy radicales y, a veces, propensos a disturbios civiles. Sin embargo, no todos los lollardos recurrieron a medidas violentas. En realidad, gran parte del trabajo que realizaron, especialmente en la traducción de la Biblia al inglés, preparó el camino para la Reforma Inglesa. Es durante la Reforma Inglesa que los lollardos comienzan a desaparecer simplemente fusionándose con otros reformadores ingleses.",
+    date: "1381-1532 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Los Lollardos",
+        file: "GoodSalt-prcas0722_8-28-2013 3-11-16 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1314",
+    slug: "the-great-papal-schism",
+    title: "El Gran Cisma Papal",
+    period: "11",
+    description:
+      "Cisma papal que duró casi cuatro décadas. En un momento dado, hubo tres papas que afirmaban ser el Vicario de Cristo.",
+    article:
+      'El Gran Cisma Papal comenzó después de la muerte del Papa Gregorio XI. Cuando el cónclave de cardenales se reunió en abril de 1378 para elegir un nuevo papa, fueron prácticamente obligados por una multitud enojada a elegir a un italiano. Un cardenal arzobispo llamado Prignano fue seleccionado y se convirtió en el nuevo papa: Urbano VI.\n\nUrbano VI rápidamente demostró tener un temperamento violento y un estilo de liderazgo autocrático. Comenzó a insultar a los cardenales franceses, exigiéndoles que detuvieran su "tonta charla". Pronto la crisis llegó a un punto crítico. La mayoría de los cardenales convocaron una reunión el 9 de agosto de 1378 y anularon la elección del Papa Urbano VI. A su vez, eligieron a Roberto de Ginebra, un francés, como el nuevo papa en septiembre de 1378. Los cardenales decidieron además que Aviñón volvería a ser reconocida como la sede papal y Roberto tomó el nombre de Clemente VII.\n\nAhora, con dos papas rivales, la iglesia occidental estaba dividida. Ninguno de los papas estaba dispuesto a ceder al otro, y ambos estaban listos para luchar para mantener su posición. Durante 11 años, Urbano VI y Clemente VII lucharon por el poder papal completo. Urbano VI murió el 15 de octubre de 1389. El siguiente papa en esta línea fue Bonifacio IX (1389-1404). Inocencio VII (1404-1406) vino después de Bonifacio, seguido por Gregorio XII (1406-1415). La otra línea de papas continuó después de la muerte de Clemente VII (1394) por Benedicto XIII (1394-1422).\n\nEl Gran Cisma Papal se convirtió en la preocupación de toda la iglesia occidental. Dado que los papas no estaban dispuestos a renunciar a su poder, la solución tuvo que venir de fuera del papado. Las universidades estuvieron muy involucradas. La teoría prominente utilizada se conoce hoy como la teoría conciliar, que esencialmente sugería que un concilio general debería tener supremacía sobre el papa. Esto condujo al Concilio de Pisa, que comenzó el 25 de marzo de 1409.\n\nEl Concilio de Pisa esperaba proporcionar la solución, pero en realidad se sumó a la controversia. Durante el concilio, Pierre Philargis fue elegido papa para disipar a los otros dos reclamantes. Pero el Concilio de Pisa simplemente agregó otro papa a la conquista del poder. Ahora había tres papas rivales, todos afirmando ser el sucesor de Pedro y el verdadero Vicario de Cristo.\n\nPhilargis no sobrevivió mucho tiempo y murió dentro de un año de su elección. Baltazar Cossa fue elegido para reemplazarlo, convirtiéndose en Juan XXIII. El 5 de noviembre de 1414, se inauguró el Concilio de Constanza para intentar nuevamente una resolución. Los tres papas fueron invitados a asistir, pero Juan XXIII fue el único que vino. Como resultado del concilio, Juan XXIII fue depuesto, Gregorio XII renunció a regañadientes y Benedicto XIII huyó a España y vivió en el exilio hasta su muerte. En su lugar, el concilio eligió a Otto Colonna, quien se convirtió en el Papa Martín V en noviembre de 1417. Después de 39 años, terminó el Gran Cisma Papal.',
+    date: "1378-1417 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Papa Clemente VII",
+        file: "Pope_Clement_VII_8-1-2013 5-47-59 PM.JPG",
+      },
+      {
+        caption: "Papa Urbano VI",
+        file: "Papa_Urbanus_VI_8-1-2013 5-47-59 PM.jpg",
+      },
+      {
+        caption:
+          "Palacio de los Papas en Aviñón, Provenza, Francia. La nueva sede papal en Francia.",
+        file: "Palace of popes small_2-26-2013 5-47-17 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1315",
+    slug: "jerome-of-prague",
+    title: "Jerónimo de Praga",
+    period: "11",
+    description:
+      "Un seguidor de Huss que trabajó para eliminar las doctrinas de la iglesia que consideraba corruptas, lo que finalmente provocó su muerte en la hoguera.",
+    article:
+      "Jerónimo nació en Bohemia (esencialmente la actual República Checa) en 1379. En 1398 se graduó en la Universidad de Praga y luego viajó a Oxford para continuar sus estudios. Fue en Oxford donde se familiarizó con los escritos de Juan Wycliffe. Algún tiempo después, Jerónimo presentó los escritos de Wycliffe a Juan Huss en Praga.\n\nLa vida de Jerónimo estuvo dedicada a la causa de la reforma. Fue encarcelado numerosas veces debido a sus puntos de vista radicales contra la Iglesia Católica. El 30 de mayo de 1416, Jerónimo fue condenado como hereje y quemado en la hoguera.",
+    date: "1379-1416 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Jerónimo",
+        file: "GoodSalt-prcas1846_8-28-2013 3-10-16 PM.jpg",
+      },
+      {
+        caption:
+          "Jerónimo de Praga (1379 al 30 de mayo de 1416) fue parte del movimiento prerreformista. Fue uno de los principales seguidores y amigos de Juan Huss y estuvo muy influenciado por los escritos de Juan Wycliffe.",
+        file: "iStock_000020354782Small_2-26-2013 5-35-23 PM.jpg",
+      },
+      {
+        caption:
+          "Jan Hus, un hereje del siglo XV, es un símbolo del nacionalismo checo, y también lo es su monumento. Colocado en la Plaza de la Ciudad Vieja durante el Renacimiento Nacional Checo en 1915, Jan Hus vigila Praga y mantiene a raya a los invasores extranjeros.",
+        file: "iStock_000018819337Small_2-26-2013 5-35-23 PM.jpg",
+      },
+      {
+        caption:
+          "Palacio Karolinum, complejo educativo medieval, antigua universidad internacional europea del Emperador Protector Carlos IV en Praga, República Checa.",
+        file: "135159658_2-26-2013 5-35-23 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1316",
+    slug: "council-of-constance",
+    title: "Concilio de Constanza",
+    period: "11",
+    description:
+      "Un concilio ecuménico celebrado de 1414 a 1418. Puso fin al Gran Cisma Papal y eligió al Papa Martín V. También condenó y ejecutó a Juan Huss.",
+    article:
+      "El Concilio de Constanza se inauguró oficialmente el 5 de noviembre de 1414 y duró tres años y medio. En total, consistió en 45 sesiones completas, junto con otras diversas reuniones de comités y diversas reuniones. El concilio tuvo una asistencia masiva y representó a todas las partes de la cristiandad. Además de numerosos delegados, asistieron al concilio en algún momento 29 cardenales, 3 patriarcas, 33 arzobispos, 150 obispos, más de 100 abades y alrededor de 300 teólogos.\n\nEl concilio fue monumental en varios aspectos. Primero, se votó que la autoridad suprema de la iglesia residía en el concilio ecuménico. Segundo, el papa siempre está sujeto al juicio del concilio ecuménico. Tercero, es posible que un papa se equivoque e incluso se convierta en hereje. Por último, el papa puede ser removido de su cargo si no sirve a la iglesia.\n\nAdemás de limitar el poder papal, Constanza también terminó el Gran Cisma Papal (durante el cual hubo tres papas rivales) al deponer a los reclamantes anteriores y elegir a Martín V como el nuevo papa, declaró a Juan Wycliffe hereje 31 años después de su muerte y condenó a Juan Huss por herejía y lo quemó en la hoguera.",
+    date: "1414-1418 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Concilio de Constanza, 1417.",
+        file: "92822597_2-26-2013 5-30-11 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1317",
+    slug: "council-of-basel",
+    title: "Concilio de Basilea",
+    period: "11",
+    description:
+      "Convocado por el Papa Martín V para tratar la cuestión de la supremacía papal y la herejía husita.",
+    article:
+      "El Papa Martín V convocó el Concilio de Basilea en 1431, pero murió antes de que pudiera reunirse. Eugenio IV llegó al poder a continuación y se opuso firmemente al movimiento conciliar (que afirmaba que la autoridad de un concilio general estaba por encima de la autoridad del papa). Por lo tanto, Eugenio disolvió el concilio antes de que comenzara oficialmente y dedicó su pontificado a la restauración de la supremacía papal. El papa encontró resistencia inmediata. Como resultado, surgieron dos facciones. Algunos eran leales al papa, quien había establecido un concilio diferente en una ciudad italiana, Ferrara. Dos años después, ese concilio se trasladó a Florencia. El otro grupo se resistió a Eugenio IV permaneciendo en Basilea y celebrando su propio concilio. En este concilio en Basilea, los delegados depusieron a Eugenio y eligieron a su propio papa, Félix V, en 1439. Sin embargo, Eugenio demostró ser demasiado poderoso y Félix renunció en 1449. El Concilio de Basilea fue trasladado luego a Lausana, donde votó para disolverse.\n\nMientras se celebraba el Concilio de Basilea, también intentó sofocar el movimiento husita. Después del martirio de Juan Huss, hubo una protesta nacional en Bohemia. En 1420, los husitas publicaron los Cuatro Artículos de Praga, que exigían la libertad de predicar y el fin del poder mundano dentro de la iglesia, entre otras cosas. Sin embargo, los husitas estaban perfectamente unidos. Los taboritas fueron el grupo más radical de los dos grupos principales. Los taboritas sostenían que cualquier práctica que no estuviera específicamente descrita en la Biblia debía abandonarse. No veneraban santos, no oraban por los muertos, no creían en la transubstanciación ni en la validez de las indulgencias.\n\nEl otro grupo husita se conoció como los utraquistas. Este grupo abandonó sus creencias y se reunió con la Iglesia Católica en el Concilio de Basilea. Sin embargo, este no fue el consenso de todos los husitas, y el remanente de este movimiento mantuvo sus creencias y luego se unió a la Reforma Protestante.\n",
+    date: "1431-1449 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Retrato del Papa Martín V en el siglo XVI.",
+        file: "Pisanello_copia_da_Ritratto_di_Martino_2-26-2013 5-24-38 PM.jpg",
+      },
+      {
+        caption:
+          "Retrato del Papa Eugenio IV por Jean Fouquet en el siglo XVI.",
+        file: "PapstEugen_2-26-2013 5-24-38 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1318",
+    slug: "jacques-lefevre",
+    title: "Jacques Lefèvre",
+    period: "11",
+    description:
+      "También conocido como Jacob Faber Stapulensis, un teólogo francés que fue precursor de la reforma protestante en Francia.",
+    article:
+      "Jacques Lefèvre nació de padres humildes alrededor de 1455. Un teólogo humanista francés, dedicó su vida al estudio de la Biblia. Produjo varios comentarios y tradujo la Biblia al francés. Completó el Nuevo Testamento en 1523 y el Antiguo Testamento en 1528. Su traducción de toda la Biblia se publicó en 1530. Lefèvre murió alrededor de 1536.\n",
+    date: "1455-1536 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Retrato de Lefèvre d'Étaples.",
+        file: "FaberStapulensis_2-26-2013 5-20-26 PM.jpg",
+      },
+      {
+        caption: "Mapa de Francia.",
+        file: "82090076_2-26-2013 5-20-26 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1319",
+    slug: "gutenberg-bible",
+    title: "Biblia de Gutenberg",
+    period: "11",
+    description:
+      "Una Biblia impresa con tipos móviles y el primer libro importante producido en una imprenta.",
+    article:
+      "La primera edición de la Vulgata latina de Jerónimo de Praga fue el primer libro importante que se imprimió en la imprenta de Gutenberg. Como resultado, se conoció como la Biblia de Gutenberg y se imprimió alrededor de 1455. Poco después, se imprimieron muchos otros libros religiosos en la imprenta de Gutenberg. Como resultado de esta imprenta, la Biblia y otras obras religiosas se pusieron a disposición del pueblo a un precio asequible. Para 1501 había más de 110 lugares en Europa que tenían al menos una imprenta. Algunas ciudades, como Venecia, tenían numerosas imprentas.\n\nComo resultado de la imprenta de Gutenberg, la Reforma Protestante pudo extenderse como la pólvora. Solo tardó dos semanas en que las Noventa y cinco Tesis de Lutero se distribuyeran por toda Alemania. El resto de Europa tuvo acceso a la obra de Lutero en un mes.\n",
+    date: "1456 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Página de la Biblia de Gutenberg",
+        file: "Cuttenburg Bible small_2-26-2013 5-20-53 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1320",
+    slug: "desiderius-erasmus",
+    title: "Desiderio Erasmo",
+    period: "11",
+    description:
+      "Un erudito católico comprometido con la reforma de la iglesia desde dentro. Nunca se unió formalmente al movimiento de reforma que vio.",
+    article:
+      "Desiderio Erasmo nació en los Países Bajos de un sacerdote. En algún momento de su infancia, sus padres fallecieron y Erasmo quedó al cuidado de tutores. En lugar de cuidarlo en casa, sus tutores lo enviaron a una escuela en Deventer. En 1487 ingresó en un monasterio agustino y fue ordenado sacerdote en 1492. En 1495 comenzó sus estudios en la Universidad de París, que era el centro del escolasticismo (una mezcla de teología basada principalmente en la Tradición y la filosofía). Erasmo rápidamente se aburrió de los debates teológicos que tuvieron lugar y se fue a Inglaterra en 1499.\n\nEn Inglaterra, Erasmo se inspiró para estudiar el Nuevo Testamento a través de la influencia de Juan Colet. Rápidamente regresó a la Europa continental y comenzó a estudiar griego en 1500. Nueve años después regresó a Inglaterra como instructor de griego y profesor de divinidad en la Universidad de Cambridge. En 1516 publicó un Nuevo Testamento griego con anotaciones y su propia traducción latina. La segunda edición de este libro salió en 1519.\n\nErasmo fue el erudito más conocido de Europa en los albores de la Reforma Protestante. Como resultado de su fama, Erasmo fue una fuerza poderosa durante la Reforma. Atacó persistentemente el monasticismo, los clérigos corruptos e incluso el papado mismo. También criticó a los cardenales y obispos por sus diversos abusos en la iglesia. Los ataques de Erasmo fueron tan contundentes que después de que comenzó la Reforma, sus libros se agregaron al Índice de Libros Prohibidos de los católicos junto con las obras de Martín Lutero y otros reformadores.",
+    date: "1466-1536 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Desiderio Erasmo en 1523 como lo representó Hans Holbein el Joven, ubicado en la National Gallery.",
+        file: "Holbein-erasmus_2-26-2013 5-17-48 PM.jpg",
+      },
+      {
+        caption:
+          "Una de las universidades más antiguas del mundo, fundada en el siglo XII",
+        file: "138043455_2-26-2013 5-17-48 PM.jpg",
+      },
+      {
+        caption:
+          "Una vista de la Universidad de Cambridge (King's College), Cambridgeshire, Inglaterra.",
+        file: "137837525_2-26-2013 5-17-48 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1321",
+    slug: "guillaume-briconnet",
+    title: "Guillermo Briconnet",
+    period: "11",
+    description:
+      "Obispo de Meaux de 1516 a 1534. Implementó la reforma en su diócesis con la ayuda de los conocidos humanistas evangélicos Guillermo Farel y Jacques Lefèvre.",
+    article:
+      "Guillermo Briconnet fue el obispo de Meaux y vivió de 1470 a 1534. Briconnet trabajó estrechamente con los primeros reformadores, incluido Jacques Lefèvre. Briconnet también estaba intrépidamente dedicado a la Biblia e incluso financió una traducción del Nuevo Testamento al francés. Además, este obispo de Meaux animó a la gente de su diócesis a leer las Escrituras.\n\nDespués de que el emperador Carlos V capturó al rey Francisco I de Francia, Briconnet fue acusado de herejía. Como resultado, Briconnet no se unió a la Reforma Protestante, sino que comenzó a contradecir abiertamente a Lutero en 1523.",
+    date: "1470-1534 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Retrato de Guillermo Briçonnet en el siglo XVI.",
+        file: "Guillaume_Briconnet_2-26-2013 5-11-36 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1322",
+    slug: "pope-leo-x",
+    title: "Papa León X",
+    period: "11",
+    description:
+      "Papa de 1513 a 1521. Otorgó indulgencias a quienes donaron a la reconstrucción de la Basílica de San Pedro. También desafió las Noventa y cinco Tesis de Martín Lutero.",
+    article:
+      "El Papa León X ocupó el cargo de obispo de Roma, o papa, de 1513 a 1521. Durante su papado logró mucho para la causa de Roma. En 1516 escribió Pastor Aeternus, que efectivamente puso fin al movimiento conciliar (que afirmaba que la autoridad de un concilio general estaba por encima de la autoridad del papa) que se hizo contundente en el Concilio de Constanza. Como resultado, se declaró nuevamente que el papa tenía la máxima autoridad dentro de la Iglesia Católica.\n\nPara reconstruir la Catedral de San Pedro, que permanece en pie en la Ciudad del Vaticano, León X renovó la venta de indulgencias. Pronto se contrataron predicadores de indulgencias para promover este esfuerzo. Quizás el predicador de indulgencias más conocido en ese momento fue Juan Tetzel. Martín Lutero reprendió abiertamente a Tetzel y otros predicadores de indulgencias. Como resultado, el Papa León X excomulgó a Martín Lutero el 3 de enero de 1521. León X murió de malaria en diciembre de ese mismo año.\n",
+    date: "1475-1521 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Retrato del Papa León X por Pedro Pablo Rubens ubicado en el Museo Plantin-Moretus, Amberes.",
+        file: "Leo_X_Rubens_2-26-2013 5-09-07 PM.jpg",
+      },
+      {
+        caption:
+          "Vista sobre el Tíber y la Catedral de San Pedro por la noche, Roma.",
+        file: "154415582_2-26-2013 5-09-07 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1323",
+    slug: "martin-luther",
+    title: "Martín Lutero",
+    period: "11",
+    description:
+      "Monje alemán y profesor de teología que desafió la venta de indulgencias por parte de la Iglesia Católica Romana.",
+    article:
+      "Martín Lutero nació en la ciudad del este de Alemania de Eisleben en 1483. Lutero finalmente se unió a los frailes agustinos en Erfurt y comenzó a estudiar teología. Con el tiempo, se convirtió en profesor de teología en la Universidad de Wittenberg. En 1517, Lutero escribió sus Noventa y cinco Tesis y las clavó en la puerta de la Iglesia del Castillo en Wittenberg el 31 de octubre de ese mismo año.\n\nLas Noventa y cinco Tesis de Lutero reaccionaron con fuerza contra tres temas principales: los gastos extravagantes del papado, el abuso de la autoridad papal (especialmente sobre el purgatorio) y la abominación de la venta de indulgencias.\n\nCuando Lutero publicó sus Noventa y cinco Tesis, su intención no era derrocar el sistema. Lutero aparentemente no era consciente de que sus ideas radicales amenazaban la misma autoridad del papado o los concilios ecuménicos. Fue durante las entrevistas de Lutero con el cardenal Cajetano (12-14 de octubre de 1518) que se dio cuenta por primera vez de que el papa reclamaba autoridad sobre las Escrituras. Además, Lutero no era consciente de que su punto de vista supremo de las Escrituras entraba en conflicto con los concilios ecuménicos hasta el Debate de Leipzig en 1519. No fue hasta 1520, tres años después de sus Noventa y cinco Tesis, que Lutero comenzó a escribir y declarar abiertamente que la autoridad de la Escritura estaba por encima del papa y los concilios ecuménicos.\n\nComo resultado, Lutero comenzó a dedicar su vida a las Escrituras, proclamando su suprema autoridad. El 3 de enero de 1521, Lutero fue excomulgado de la Iglesia Católica, lo que permitió que el protestantismo floreciera.\n\nPoco después de su excomunión, Martín Lutero compareció ante la Dieta de Worms y se negó a retractarse de sus creencias. Después de tomar esa posición por su fe, Martín Lutero se escondió en el Castillo de Wartburg y comenzó a traducir el Nuevo Testamento al alemán. Su Nuevo Testamento se publicó en septiembre de 1522 y, para 1534, se habían vendido alrededor de 200.000 ejemplares. Para 1534, Lutero había terminado de traducir el Antiguo Testamento y en septiembre la Biblia de Wittenberg estuvo disponible para el público.\n\nA lo largo de su vida, Martín Lutero escribió muchos tratados y folletos. Algunos de los más importantes incluyen: Noventa y cinco Tesis (1517), La libertad de un cristiano (1520), El cautiverio babilónico de la Iglesia (1520), Sobre la autoridad secular (1523), El libre albedrío (1524), La esclavitud del albedrío (1525), El catecismo pequeño (1529), El gran catecismo (1529) y su Comentario a Gálatas (1531).\n\nMartín Lutero murió en 1546. Su muerte fue celebrada con un tremendo honor. Se pronunciaron tres sermones fúnebres. El primer sermón fue dado en su ciudad natal de Eisleben. Otros dos fueron dados en Wittenberg, el primero por Johannes Bugenhagen y el segundo por Felipe Melanchthon.\n",
+    date: "1483-1546 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Martín Lutero, Lucas Cranach",
+        file: "Martin_Luther_by_Cranach-restoration_8-5-2013 9-13-05 AM.jpg",
+      },
+      {
+        caption: "La plaza en Eisleben, lugar de nacimiento de Lutero",
+        file: "IMG_5489_2-26-2013 5-13-35 PM.JPG",
+      },
+      {
+        caption: "La iglesia en Wittenberg",
+        file: "IMG_5450_2-26-2013 5-13-35 PM.JPG",
+      },
+      {
+        caption:
+          "De joven, Lutero habría mirado por la ventana al mundo exterior. (Ventana al castillo de Wittenberg",
+        file: "IMG_0675_2-26-2013 5-13-35 PM.JPG",
+      },
+    ],
+  },
+  {
+    id: "1324",
+    slug: "ulrich-zwingli",
+    title: "Ulrico Zwinglio",
+    period: "11",
+    description: "Un líder del movimiento de reforma en Suiza.",
+    article:
+      "Ulrico Zwinglio nació el 1 de enero de 1484 en Wildhaus, Toggenburg, ubicado en el este de Suiza. Gran parte de la infancia de Zwinglio transcurrió en su tierra natal alpina observando la naturaleza y reflexionando sobre el Creador.\n\nZwinglio comenzó sus estudios en Viena, pero los terminó en Basilea. En 1504 recibió su licenciatura y luego una maestría en 1506. También en 1506, Zwinglio conoció a un hombre llamado Tomás Wyttenbach, quien alejó a Zwinglio del pensamiento filosófico inútil hacia un estilo de vida pastoral. Como resultado, Zwinglio fue ordenado el 29 de septiembre de 1506 como párroco de Glarus.\n\nDurante estos primeros años, Zwinglio fue un sacerdote leal dedicado a sus deberes. Sin embargo, en 1518 Zwinglio comenzó a predicar sistemáticamente a partir de la Biblia. Incluso predicó a partir de libros completos de la Biblia, una práctica radical en ese momento. Esto llevó a Zwinglio a comenzar sus escritos de reforma. Su primera obra de reforma se escribió en 1522. En los años siguientes, las reformas de Zwinglio fueron tan poderosas en Suiza que para 1525 se abolió la misa en Zúrich.\n\nLa Iglesia Católica Romana se vio amenazada por Zwinglio y estalló la guerra en Suiza en 1529. Durante la guerra, Zwinglio trabajaba como capellán y murió en el campo de batalla de Kappel. Debido a que Zwinglio fue considerado un hereje, su cuerpo fue quemado y sus cenizas diseminadas.\n\nSin embargo, Zwinglio es considerado el fundador del protestantismo suizo, y la obra que comenzó no terminó con su muerte.\n\nAlgunos de sus trabajos importantes incluyen La claridad y certeza de la Palabra de Dios y la Confesión de fe.\n",
+    date: "1484-1531 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Ulrico Zwinglio, Museo de Arte de Winterthur, 1531",
+        file: "Ulrich-Zwingli-1_8-5-2013 9-17-55 AM.jpg",
+      },
+      {
+        caption:
+          "Ciudad de Zúrich donde pasó la mayor parte de su tiempo enseñando.",
+        file: "Zurich City_2-26-2013 5-05-04 PM.jpg",
+      },
+      {
+        caption: "Estatua de Ulrico Zwinglio en Zúrich",
+        file: "Zwingli_2-26-2013 5-05-04 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1325",
+    slug: "hugh-latimer",
+    title: "Hugo Latimer",
+    period: "11",
+    description:
+      "Parte de la Reforma Inglesa, fue quemado en la hoguera en octubre de 1555.",
+    article:
+      'Hugo Latimer nació alrededor de 1485 y comenzó a estudiar latín a la edad de cuatro años. Más tarde asistió a la Universidad de Cambridge y en 1510 se asoció con el Clare College. En sus primeros años, Latimer se opuso a la Reforma Protestante y, mientras estuvo en la universidad, dedicó su tiempo a refutar la teología de la reforma. Finalmente, un hombre llamado Tomás Bilney entró en la vida de Latimer y las cosas comenzaron a cambiar. Bilney ayudó a convertir a Latimer, y los dos hombres comenzaron a predicar contra la tiranía papal.\n\nEn 1539, Latimer habló en contra de los Seis Artículos del rey Enrique VIII, lo que resultó en su encarcelamiento en la Torre de Londres. Cuando Eduardo VI llegó al poder, Latimer fue liberado de prisión y comenzó a predicar nuevamente. Sin embargo, el reinado de Eduardo VI fue corto, y cuando María I la "Sanguinaria" llegó al poder, Latimer fue nuevamente encarcelado y juzgado. Su juicio comenzó el 14 de abril de 1554, pero se resistió a los acusadores papales al poner su fe en la Biblia y solo en la Biblia.\n\nFinalmente, cuando los gobernantes papistas se cansaron de la resistencia de Latimer, fue atado a una estaca fuera del Balliol College en Oxford y quemado vivo en octubre de 1555.\n\nLatimer es recordado por rechazar la idea católica de la transubstanciación (que los elementos de la cena del Señor se transforman literalmente en el cuerpo y la sangre de Cristo) y la naturaleza meritoria de la Misa.\n',
+    date: "1485-1555 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Retrato de Hugo Latimer.",
+        file: "121235094_2-27-2013 2-21-47 PM.jpg",
+      },
+      {
+        caption:
+          "Una vista de la Universidad de Cambridge (King's College), Cambridgeshire, Inglaterra.",
+        file: "137837525_2-27-2013 2-21-47 PM.jpg",
+      },
+      {
+        caption:
+          "Grabado antiguo del rey Eduardo VI. Grabado de una foto de 1854 y trabajo en color de D. Walker.",
+        file: "iStock_000008869749Medium_2-27-2013 2-21-47 PM.jpg",
+      },
+      {
+        caption:
+          "El Balliol College de la Universidad de Oxford, se dice que fue fundado en 1263 y es el colegio más antiguo de la universidad de Oxford",
+        file: "90960955_2-27-2013 2-21-47 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1326",
+    slug: "thomas-cranmer",
+    title: "Tomás Cranmer",
+    period: "11",
+    description:
+      "Arzobispo de Canterbury y líder de la Reforma Inglesa. Fue martirizado en 1556.",
+    article:
+      'En 1533, Tomás Cranmer se convirtió en arzobispo de Canterbury. En ese mismo año, Tomás Cromwell se convirtió en la persona más prominente del gobierno real de Inglaterra. Ambos hombres simpatizaban con la causa protestante. Como resultado, ambos trabajaron diligentemente para incorporar la teología protestante en los primeros documentos doctrinales de la Reforma Inglesa. En 1536, se escribieron los Diez Artículos, y luego, en 1537, se publicó el Libro del Obispo. Ambos libros fueron extremadamente influyentes en la difusión de las enseñanzas protestantes por toda la tierra. De hecho, para 1538 se convirtió en ley real que una Biblia en inglés se encontraría en cada iglesia parroquial.\n\nDesafortunadamente, en julio de 1540, el rey se convenció de que Tomás Cromwell era un hereje y lo ejecutó junto con algunos de sus otros colegas. Sin embargo, Tomás Cranmer logró escapar y, después de la muerte del rey Enrique VIII en 1547, continuó liderando la Reforma Inglesa.\n\nSin embargo, Cranmer no experimentó una libertad ilimitada para expresar sus puntos de vista religiosos. El rey Eduardo VI llegó al poder a la edad de nueve años y no pudo gobernar con autoridad. Como resultado, Cranmer solo tuvo apoyo limitado. Sin embargo, en julio de 1547, comenzó a predicar una serie de 12 sermones que se centraban en la doctrina de la justificación por la fe sola y la autoridad suprema de la Biblia. Entre 1549 y 1552, Cranmer participó en la preparación del primer Libro de Oración Común. En junio de 1553, preparó los Cuarenta y dos Artículos, que promulgaron sus puntos de vista sobre la justificación por la fe y la autoridad de las Escrituras. El rey Eduardo VI murió menos de un mes después de esta publicación, y María la "Sanguinaria" dirigió la Iglesia de Inglaterra de regreso hacia el catolicismo romano.\n\nPoco después de que María Tudor se convirtiera en reina de Inglaterra, Cranmer fue encarcelado durante dos años y medio. Durante este tiempo, se le presionó para que renunciara a su fe, pero nunca lo hizo. Como resultado, fue quemado en la hoguera en 1556, solo dos años antes de la muerte de la reina María en noviembre de 1558.\n',
+    date: "1489-1556 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Retrato de Cranmer después de la muerte de Enrique VIII por un artista desconocido. Se decía que su barba significaba su luto por el rey y su rechazo de la vieja Iglesia.",
+        file: "Thomas_Cranmer_2-26-2013 4-56-08 PM.png",
+      },
+      {
+        caption:
+          "El rey Enrique VIII de Inglaterra reinó de 1509 a 1547. Uno de los monarcas más famosos de Inglaterra, lanzó la Reforma Inglesa y rompió con la Iglesia de Roma, creando la Iglesia de Inglaterra. Tuvo seis esposas, incluida Ana Bolena. Tenga en cuenta el grabado de una foto de 1855 y la tonificación de D. Walker",
+        file: "iStock_000008858855Small_2-26-2013 4-56-08 PM.jpg",
+      },
+      {
+        caption:
+          "Grabado antiguo del rey Eduardo VI. Grabado de una foto de 1854 y trabajo en color de D. Walker.",
+        file: "iStock_000008869749Medium_2-26-2013 4-56-08 PM.jpg",
+      },
+      {
+        caption:
+          "Grabado antiguo coloreado de 1875 que muestra el traje de la reina María I de Inglaterra.",
+        file: "iStock_000009087127Small_2-26-2013 4-56-08 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1327",
+    slug: "william-farel",
+    title: "Guillermo Farel",
+    period: "11",
+    description:
+      "Un evangelista francés y fundador de la Iglesia Reformada. Parte del círculo de Meaux y trabajó estrechamente con Juan Calvino.",
+    article:
+      "Guillermo Farel nació en 1489. Su vida estuvo dedicada a predicar y hablar en contra de la Iglesia Romana. Fue estudiante de Jacques Lefèvre en sus primeros años. En 1532 se estableció en Ginebra, Suiza. Farel también fue el responsable de convencer a Juan Calvino para que se quedara en Ginebra y convirtiera la ciudad en la sociedad cristiana ideal. Aunque Farel fue un buen amigo de Calvino, su teología estaba más cerca de la de Martín Lutero. Irónicamente, al estar en desacuerdo con Juan Calvino, Guillermo Farel fue desterrado de Ginebra en 1538. Después de esto, Farel se mudó a Neuchâtel, donde vivió hasta su muerte en 1565.\n",
+    date: "1489-1565 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Óleo sobre madera, siglo XVI en la Bibliothèque Publique et Universitaire, Ginebra.",
+        file: "William-Farel_2-26-2013 4-50-15 PM.jpg",
+      },
+      {
+        caption: "Imagen de Jacques Lefèvre d'Étaples.",
+        file: "FaberStapulensis_2-26-2013 4-50-15 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1328",
+    slug: "hans-tausen",
+    title: "Hans Tausen",
+    period: "11",
+    description: "La figura principal de la Reforma Danesa.",
+    article:
+      "Hans Tausen fue un reformador danés. Nació en Dinamarca en 1494 y murió en 1561. En mayo de 1523, Tausen viajó a Wittenberg y estudió con Martín Lutero. A partir de ese momento predicó la fe protestante. En 1542, Tausen se convirtió en obispo de Ribe, ocupando ese cargo durante 22 años. En 1535 publicó el Pentateuco en idioma danés, lo que nunca antes se había hecho.\n",
+    date: "1494-1561 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Vista del casco antiguo de Ribe, Dinamarca.",
+        file: "96868092_2-26-2013 4-47-08 PM.jpg",
+      },
+      {
+        caption: "Retrato del reformador danés Hans Tausen de joven.",
+        file: "Tausen_7-22-2013 4-27-38 PM.JPG",
+      },
+    ],
+  },
+  {
+    id: "1329",
+    slug: "menno-simons",
+    title: "Menno Simons",
+    period: "11",
+    description:
+      "Un líder religioso anabautista contemporáneo de la Reforma Protestante. Sus seguidores se conocieron como menonitas.",
+    article:
+      "Menno Simons nació alrededor de 1496 en una ciudad del norte de Holanda llamada Frisia. Se convirtió en sacerdote en 1524, pero pronto comenzó a dudar de la doctrina de la transubstanciación (que los elementos de la cena del Señor se transforman literalmente en el cuerpo y la sangre de Cristo). Como resultado, comenzó a leer la Biblia por primera vez para buscar las respuestas a sus preguntas. Concluyó que las enseñanzas romanas eran falsas, pero no comenzó a hablar abiertamente contra la Iglesia Católica hasta 1536. Fue en este momento que se convirtió en un predicador itinerante de los anabautistas. Para 1554 estaba listo para escribir. Se estableció en Holstein, Alemania, y trabajó allí en paz hasta su muerte en 1561.\n\nMenno Simons fue parte del movimiento anabautista. Sus seguidores se conocieron como menonitas y todavía existen hoy.\n",
+    date: "1496-1561 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          '"Menno Simons de Frisia" Grabado de 1608 por Christoffel van Sichem.',
+        file: "MennoSimons_2-26-2013 4-44-16 PM.gif",
+      },
+      {
+        caption:
+          "Dos molinos de viento históricos holandeses que se encuentran en Frisia, Holanda.",
+        file: "iStock_000006742422Small_2-26-2013 4-44-16 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1330",
+    slug: "philip-melanchthon",
+    title: "Felipe Melanchthon",
+    period: "11",
+    description:
+      "Reformador alemán y amigo cercano de Martín Lutero. Es conocido como el primer teólogo sistemático de la Reforma Protestante.",
+    article:
+      "Felipe Melanchthon nació en 1497. Era alemán y estudió en las universidades de Heidelberg y Tubinga. En 1518 se convirtió en profesor de griego en la Universidad de Wittenberg. Naturalmente, estuvo muy influenciado por Martín Lutero y rápidamente se unió a las filas de la Reforma Protestante. Melanchthon se convirtió en el amigo más cercano de Lutero, y los dos trabajaron incansablemente durante la Reforma a pesar de algunas diferencias teológicas.\n\nMelanchthon escribió la Confesión de Augsburgo, que sigue siendo un documento importante en las iglesias luteranas. En 1521 escribió Lugares comunes, su obra teológica principal. Este libro sufrió varias revisiones, y la edición final (1555) parecía desviarse demasiado de la teología de Martín Lutero. Por lo tanto, después de la muerte de Lutero en 1546, Melanchthon recibió numerosos ataques de aquellos que sentían que negaba la herencia de Lutero. Murió en 1560.\n",
+    date: "1497-1560 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Felipe Melanchthon, Hans Holbein el Joven, 1535",
+        file: "Philip_Melanchthon_by_Hans_Holbein_the_Younger_8-5-2013 9-32-01 AM.jpg",
+      },
+      {
+        caption: "Retrato de Felipe Melanchthon, por Lucas Cranach el Viejo.",
+        file: "PhilippMelanchthon_2-26-2013 4-40-32 PM.jpg",
+      },
+      {
+        caption: "Retrato de Felipe Melanchthon",
+        file: "596px-Philipp_Melanchthon_3_8-5-2013 9-32-01 AM.jpg",
+      },
+      {
+        caption: "Melanchthonhaus, casa de Felipe Melanchthon en Wittenberg",
+        file: "Wittenberg_Melachtonhaus_8-5-2013 9-32-01 AM.JPG",
+      },
+    ],
+  },
+  {
+    id: "1331",
+    slug: "william-tyndale",
+    title: "Guillermo Tyndale",
+    period: "11",
+    description:
+      "Un reformador inglés que se hizo conocido por traducir la Biblia al inglés.",
+    article:
+      'Guillermo Tyndale nació en 1495 en una ciudad llamada Gloucestershire. En 1512 asistió a la Universidad de Oxford y obtuvo una maestría. Tyndale tenía mucha educación, especialmente en lingüística. Hablaba siete idiomas diferentes. Como resultado, comenzó a traducir la Biblia al inglés del griego y el hebreo. Sin embargo, este fue un acto ilegal. Según la Constitución de Oxford de 1408, era ilegal que un individuo tradujera la Biblia al inglés. Sin embargo, Tyndale recurrió a medios ilegales y se fue a Alemania en 1524 para trabajar en su traducción.\n\nA principios de 1526, la versión del Nuevo Testamento de Guillermo Tyndale se imprimió en Worms. No pasó mucho tiempo antes de que se trajeran ilegalmente copias a Inglaterra. Tyndale luego se mudó a Amberes para trabajar en la traducción del Antiguo Testamento. Para 1535 había traducido el Pentateuco y el libro de Jonás, pero fue traicionado antes de la finalización del Antiguo Testamento. Enrique Phillips, el supuesto discípulo de Tyndale, traicionó a Tyndale a las autoridades, quienes lo encarcelaron.\n\nMientras Tyndale estaba en prisión, Miles Coverdale (1488-1568) terminó de traducir el Antiguo Testamento, pero no de fuentes hebreas. Coverdale no sabía hebreo y usó fuentes latinas, que incorporaban algunos errores. Sin embargo, Coverdale imprimió la primera edición completa de la Biblia en inglés en 1535.\n\nEn octubre siguiente (1536), Tyndale fue ahorcado y luego quemado en la hoguera. Según Juan Foxe, mientras moría, Tyndale gritó en voz alta: "¡Señor, abre los ojos del rey de Inglaterra!" Sorprendentemente, los ojos del rey finalmente se abrieron, porque en 1538 la Biblia en inglés fue colocada en cada iglesia de Inglaterra por ley real. Esa Biblia, llamada la "Gran Biblia", se construyó esencialmente a partir del trabajo de Guillermo Tyndale.',
+    date: "1492-1536 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Guillermo Tyndale, Libro de los Mártires de Foxe",
+        file: "494px-William_Tyndale_8-5-2013 9-25-02 AM.jpg",
+      },
+      {
+        caption:
+          "El martirio de Tyndale, El libro del horizonte del mundo isabelino, 1563",
+        file: "tyndale-death_8-5-2013 9-25-02 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1332",
+    slug: "olaf-petri",
+    title: "Olaf Petri",
+    period: "11",
+    description: "Una de las figuras principales de la reforma en Suecia.",
+    article:
+      "Olaf Petri nació el 6 de enero de 1493. Durante su vida como clérigo, fue escritor y principal reformador en Suecia. Olaf completó una maestría en la Universidad de Wittenberg en 1518, donde conoció a Martín Lutero y Felipe Melanchthon. Regresó a Suecia en 1519. En octubre de 1524, Olaf y Laurentius fueron excomulgados por herejía. Sin embargo, en 1531, el rey proclamó a Suecia luterana en el Concilio de Uppsala.\n\nOlaf fue responsable del primer Nuevo Testamento sueco, publicado en 1526, y también contribuyó a la primera Biblia sueca, que apareció alrededor de 1541. Olaf murió el 19 de abril de 1552 en Estocolmo, Suecia.\n\n\n\n\n",
+    date: "1493-1552 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Panorámica aérea de Estocolmo, Suecia.",
+        file: "133746091_2-26-2013 4-31-06 PM.jpg",
+      },
+      {
+        caption: "Mapa de Noruega, Suecia y Finlandia.",
+        file: "iStock_000007563998XSmall_2-26-2013 4-31-06 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1333",
+    slug: "laurentius-petri",
+    title: "Laurentius Petri",
+    period: "11",
+    description:
+      "El primer arzobispo luterano evangélico de Suecia y una figura principal de la reforma en Suecia.",
+    article:
+      "Laurentius Petri nació en 1499. Junto con su hermano Olaf y el rey Gustavo Vasa, Laurentius es considerado uno de los reformadores protestantes suecos. Laurentius estudió en Alemania en 1520 y, mientras estuvo allí, conoció a Martín Lutero.\n\nCuando el rey Gustavo proclamó a Suecia protestante en el Concilio de Uppsala en 1531, Laurentius fue declarado el nuevo arzobispo de Suecia. Junto con su hermano Olaf, Laurentius fue una de las personas que supervisó la primera traducción de la Biblia al sueco, que apareció alrededor de 1541. Laurentius murió en octubre de 1573.\n",
+    date: "1499-1573 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Gustavo I retratado en 1542 por Jakob Bincks.",
+        file: "Gustav_Vasa_2-26-2013 4-26-37 PM.jpg",
+      },
+      {
+        caption: "Mapa de Noruega, Suecia y Finlandia.",
+        file: "iStock_000007563998XSmall_2-26-2013 4-26-37 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1334",
+    slug: "john-calvin",
+    title: "Juan Calvino",
+    period: "11",
+    description:
+      "Teólogo francés de la Reforma Protestante y fundador de la teología calvinista.",
+    article:
+      "Juan Calvino nació el 10 de julio de 1509 en el norte de Francia. Durante su vida, asistió a las universidades de París, Orleans y Brujas. Entre 1532 y 1533, Calvino se asoció con la Reforma Protestante. Entre 1536 y 1538 trabajó en Ginebra, Suiza. Como resultado de algunos problemas en el gobierno de la iglesia, Calvino dejó Ginebra por un tiempo, regresando en 1541. Permaneció en Ginebra hasta su muerte el 27 de mayo de 1564.\n\nCalvino fue un orador apasionado. Además de hablar en contra de la Iglesia Católica, escribió contra los anabautistas y los luteranos. A pesar de esto, Calvino se consideraba un seguidor de Martín Lutero y veía su trabajo como una continuación del de Lutero.\n\nLa obra más popular de Calvino se llama Instrucción en la religión cristiana o Institutos. Aunque la primera edición se publicó en 1536, la edición final y definitiva se completó en 1559 y era cinco veces más grande que la original. Los Institutos se publicaron junto con los comentarios de Calvino sobre las Escrituras",
+    date: "1509-1564 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Retrato de Juan Calvino por Konrad Meyer",
+        file: "John Calvin small_2-26-2013 4-55-26 PM.jpg",
+      },
+      {
+        caption: "Juan Calvino, artista desconocido (Escuela flamenca)",
+        file: "488px-John_Calvin_-_Young_8-5-2013 9-40-09 AM.jpg",
+      },
+      {
+        caption: "Idelette Calvino - esposa de Juan Calvino, Xavier Würth",
+        file: "Idelette_Calvin_8-5-2013 9-40-09 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1335",
+    slug: "luther-travels-to-rome",
+    title: "Lutero viaja a Roma",
+    period: "11",
+    description:
+      "Aunque Lutero sí viajó a Roma en 1510, la verdad detrás de las diversas historias es incierta.",
+    article:
+      "El viaje de Martín Lutero a Roma es quizás una de las historias más confusas de su vida, llena de leyendas y misterios. En diferentes momentos, incluso Lutero se contradijo a sí mismo al relatar la historia a otros. Además, los dos primeros biógrafos de la vida de Lutero, Melanchthon y Mathesius, comparten diferentes historias del viaje de Lutero. Desafortunadamente, la verdad del viaje de Lutero a Roma seguirá siendo un misterio.\n\nSin embargo, Lutero sí viajó a Roma en 1510, pero en ese momento no estaba lo suficientemente maduro en su fe como para darse cuenta de todos los abusos de Roma. No fue hasta el 31 de octubre de 1517 que se hicieron públicas las Noventa y cinco Tesis. Además, no fue hasta 1519 que Lutero comenzó a creer que el papa era el anticristo.",
+    date: "1510 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Camino que lleva a Roma",
+        file: "IMG_8625_2-26-2013 4-52-44 PM.JPG",
+      },
+      {
+        caption: "Calles de Roma",
+        file: "IMG_0091_2-26-2013 4-52-44 PM.JPG",
+      },
+      {
+        caption: "Lutero habría visto el Coliseo.",
+        file: "IMG_8792_2-26-2013 4-52-44 PM.JPG",
+      },
+      {
+        caption: "Retrato de Martín Lutero por Lucas Cranach el Viejo.",
+        file: "92831905_2-26-2013 4-15-16 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1336",
+    slug: "luther-begins-lecturing-at-wittenburg",
+    title: "Lutero comienza a dar clases en Wittenberg",
+    period: "11",
+    description:
+      "Lutero se convirtió en profesor en la Universidad de Wittenberg en 1512 y mantuvo el puesto durante el resto de su carrera.",
+    article:
+      'Lutero comenzó a enseñar en Wittenberg en 1512 y ocupó este puesto durante el resto de su vida. Fue en algún momento entre 1512 y 1519 que hizo su "descubrimiento de la Reforma" mientras se preparaba para sus conferencias en Wittenberg.\n',
+    date: "1512-",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Martín Lutero",
+        file: "GoodSalt-prcas2471_8-28-2013 3-14-46 PM.jpg",
+      },
+      {
+        caption: "Entrada a la escuela en la Universidad de Wittenberg",
+        file: "IMG_0532_2-26-2013 5-02-26 PM.JPG",
+      },
+      {
+        caption: "Posible puesto de enseñanza en Wittenberg",
+        file: "IMG_0669_2-26-2013 5-02-26 PM.JPG",
+      },
+      {
+        caption: "Aula escolar Wittenberg",
+        file: "IMG_5408_2-26-2013 5-02-26 PM.JPG",
+      },
+    ],
+  },
+  {
+    id: "1337",
+    slug: "john-knox",
+    title: "Juan Knox",
+    period: "11",
+    description:
+      "Un sacerdote y líder de la Reforma Protestante en Escocia. Finalmente se convirtió en el capellán del rey Eduardo VI de Inglaterra.",
+    article:
+      'Juan Knox nació alrededor de 1513 cerca de Edimburgo, Escocia. Asistió a la Universidad de St. Andrews y se convirtió al protestantismo alrededor de los 30 años. Knox viajó al extranjero durante unos 13 años. En 1553, huyó al continente para escapar de la ira de la reina María la "Sanguinaria". Como resultado, Knox comenzó a pastorear una congregación en Fráncfort, Alemania. Mientras estuvo en Fráncfort, comenzó a causar controversia al ir más allá del Libro de Oración Común. El Libro de Oración Común fue compilado por Tomás Cranmer y se consideró el libro oficial de servicio. Al introducir enseñanzas que no estaban contenidas en este libro, Juan Knox fue considerado demasiado radical. Sin embargo, Knox introdujo un estilo de adoración más reformado, que agitó a los conservadores. Como resultado, Knox fue expulsado de Fráncfort y se mudó a Ginebra, Suiza.\n\nEn 1559, Juan Knox regresó a Escocia y continuó ayudando a reformar la iglesia. Mientras estuvo allí, publicó el Libro de Disciplina y el Libro de Orden Común. Knox murió en 1572.\n\n\n\n\n',
+    date: "1513-1572 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "El reformador protestante escocés Juan Knox.",
+        file: "92833011_2-26-2013 4-12-16 PM.jpg",
+      },
+      {
+        caption:
+          "Casa de Juan Knox en Royal Mile, Edimburgo. Juan Knox fue un clérigo. Nacido en Haddington, East Lothian, Knox fue conocido como el padre de la Reforma Protestante en Escocia.",
+        file: "139881064_2-26-2013 4-12-16 PM.jpg",
+      },
+      {
+        caption:
+          "Grabado antiguo del rey Eduardo VI. Grabado de una foto de 1854 y trabajo en color de D. Walker.",
+        file: "iStock_000008869749Medium_2-26-2013 4-12-16 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1338",
+    slug: "erasmus-new-testament",
+    title: "Nuevo Testamento de Erasmo",
+    period: "11",
+    description:
+      "Publicó un Nuevo Testamento griego anotado con una nueva traducción latina, basada en varios manuscritos diferentes.",
+    article:
+      "En 1516, Desiderio Erasmo publicó una nueva traducción del Nuevo Testamento al latín. En esta misma publicación, Erasmo proporcionó anotaciones al texto griego original. Esta compilación griega del Nuevo Testamento se convirtió en la primera edición publicada del Nuevo Testamento griego en la historia. Se produjo una segunda edición en 1519, que tuvo una tremenda influencia en la traducción alemana de Lutero. La tercera edición se publicó en 1522.\n\n\n",
+    date: "1516 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Retrato de Desiderio Erasmo de Róterdam por Hans Holbein el Joven en 1523 ubicado en la National Gallery.",
+        file: "Holbein-erasmus_2-26-2013 4-07-32 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1339",
+    slug: "luther-nails-the-ninetyfive-theses",
+    title: "Lutero clava las Noventa y cinco Tesis",
+    period: "11",
+    description:
+      "Las Noventa y cinco Tesis fueron publicadas por Lutero en la puerta de la Iglesia del Castillo en Wittenberg. Conocido como el ímpetu de la Reforma Protestante.",
+    article:
+      "El 31 de octubre de 1517 (Día de Todos los Santos), Martín Lutero clavó una copia de sus Noventa y cinco Tesis en la puerta de la iglesia de Wittenberg. Las Noventa y cinco Tesis trataban principalmente de la venta de indulgencias, que eran documentos que la gente podía comprar para escapar del purgatorio. El mismo día, escribió una carta al arzobispo de Maguncia expresando sus preocupaciones por la iglesia. Incluyó con la carta una copia de sus Noventa y cinco Tesis.\n",
+    date: "1517 d. C.",
+    scriptures: [],
+    related: [],
+    images: [
+      {
+        caption:
+          "Martín Lutero clava las 95 tesis, fotograma de The Bride, The Beast, and Babylon DVD de Amazing Facts",
+        file: "martin-luther-95-theses_8-5-2013 10-01-29 AM.jpg",
+      },
+      {
+        caption: "Puertas de la Iglesia del Castillo en Wittenberg",
+        file: "IMG_0491_2-26-2013 4-39-48 PM.JPG",
+      },
+      {
+        caption: "Iglesia del Castillo de Wittenberg",
+        file: "IMG_0517_2-26-2013 4-39-48 PM.JPG",
+      },
+      {
+        caption: "Martín Lutero clava las 95 tesis",
+        file: "GoodSalt-pppas0099_8-7-2013 10-01-14 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1341",
+    slug: "zwingli-begins-his-ministry",
+    title: "Zwinglio comienza su ministerio",
+    period: "12",
+    description:
+      "Zwinglio comenzó su ministerio en enero de 1519 en Zúrich, Suiza.",
+    article: "\n",
+    date: "1519 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Huldrych Zwinglio como lo representó Hans Asper en un retrato al óleo de 1531 ubicado en el Museo de Arte de Winterthur.",
+        file: "Ulrich-Zwingli-1_2-26-2013 3-57-30 PM.jpg",
+      },
+      {
+        caption: "Zúrich al atardecer.",
+        file: "115811519_2-26-2013 3-57-30 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1342",
+    slug: "leipzig-debate",
+    title: "Debate de Leipzig",
+    period: "12",
+    description:
+      "Este debate tuvo lugar en Leipzig en 1519 e incluyó temas como el libre albedrío, la gracia, las indulgencias y la autoridad papal.",
+    article:
+      "El Debate de Leipzig comenzó como resultado de los debates escritos de Karlstadt, colega de Lutero, con Juan Eck (un teólogo católico) sobre las Noventa y cinco Tesis de Lutero. Como resultado de su diálogo, Lutero fue incluido en la discusión. Las cosas continuaron intensificándose hasta que se propuso un debate formal. El Debate de Leipzig se celebró en la Universidad de Leipzig entre el 27 de junio y el 16 de julio de 1519.\n\nLos debates comenzaron con la discusión del libre albedrío y la relación entre la gracia y las obras. Eck estaba ganando los debates antes de que llegara Lutero el 4 de julio. Cuando llegó Lutero, Eck comenzó una nueva estrategia. Quería derribar a Lutero e intentó acorralarlo. Juan Huss no era popular en Leipzig (debido a las guerras husitas y su condena como hereje) y Eck intentaba hacer que Lutero dijera algo que lo identificara con Huss. Si se pudiera establecer un vínculo en la teología entre Lutero y Huss, entonces los ciudadanos de Leipzig se encargarían del problema de Eck: Lutero. Dado que Juan Tetzel había asociado previamente a Lutero con Juan Huss y ambos reformadores hablaron con firmeza contra el papado, la táctica de Eck de culpa por asociación fue fácil.\n\nComo resultado del Debate de Leipzig, Lutero comenzó a darse cuenta, quizás por primera vez, de que la autoridad de los concilios también debe estar sujeta a las Escrituras. Por lo tanto, de esta manera, el Debate de Leipzig ayudó a Lutero a comprender realmente que toda autoridad terrenal debe estar sujeta a la Palabra de Dios.\n\nJuan Eck continuó luchando contra Lutero después del Debate de Leipzig y fue el hombre que realmente escribió la mayor parte de Exsurge Domine, la bula papal que amenazó a Lutero con la excomunión.",
+    date: "1519 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Sala de conciertos Gewandhaus con la fuente Mende y el nuevo campus universitario en Augustusplatz en Leipzig, Alemania.",
+        file: "iStock_000020888696Small_2-26-2013 3-53-42 PM.jpg",
+      },
+      {
+        caption: "Retrato de Martín Lutero por Lucas Cranach el Viejo.",
+        file: "92831905_2-26-2013 3-53-42 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1343",
+    slug: "exsurge-domine",
+    title: "Exsurge Domine",
+    period: "12",
+    description:
+      "Una bula papal emitida por el Papa León X en junio de 1520 para condenar partes de las Noventa y cinco Tesis de Lutero y amenazarlo con la excomunión a menos que se retractara.",
+    article:
+      "La bula papal Exsurge Domine (tomada de las dos primeras palabras latinas del documento), que amenazaba a Martín Lutero con la excomunión, se publicó en junio de 1520. Para evitar la excomunión, Lutero tenía 60 días para retractarse de sus creencias. La respuesta de Lutero se dio el 10 de diciembre de 1520, 60 días después de que la bula le fuera entregada en Wittenberg. Con una multitud de estudiantes y profesores, Lutero pronunció un discurso y luego arrojó la bula papal al fuego y la quemó. El Vaticano respondió el 3 de enero de 1521, mediante la cual Lutero fue formalmente excomulgado en otra bula papal.\n",
+    date: "1520 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Boletín papal excomulgando a Martín Lutero.",
+        file: "92821452_2-26-2013 3-47-50 PM.jpg",
+      },
+      {
+        caption: "Retrato de Martín Lutero por Lucas Cranach el Viejo.",
+        file: "92831905_2-26-2013 3-47-50 PM.jpg",
+      },
+      {
+        caption:
+          "Retrato del Papa León X por Pedro Pablo Rubens ubicado en el Museo Plantin-Moretus, Amberes.",
+        file: "Leo_X_Rubens_2-26-2013 3-47-50 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1344",
+    slug: "luther-excommunicated",
+    title: "Lutero excomulgado",
+    period: "12",
+    description:
+      "Lutero fue excomulgado por sus ideas por el Papa León X el 3 de enero de 1521.",
+    article: "\n",
+    date: "1521 d. C.",
+    scriptures: [],
+    related: [],
+    images: [
+      {
+        caption:
+          "Retrato del Papa León X por Pedro Pablo Rubens ubicado en el Museo Plantin-Moretus, Amberes.",
+        file: "Leo_X_Rubens_2-26-2013 3-42-18 PM.jpg",
+      },
+      {
+        caption: "Bula del Papa León contra las enseñanzas de Lutero",
+        file: "440px-Bulla-contra-errores_8-5-2013 10-16-24 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1345",
+    slug: "diet-of-worms",
+    title: "Dieta de Worms",
+    period: "12",
+    description:
+      "Una asamblea formal que se reunió en Worms, Alemania, en 1521 para discutir a Lutero y sus escritos.",
+    article:
+      'Muchos en Europa reaccionaron con fuerza a la excomunión de Lutero. El emperador Carlos V no fue la excepción. No quería que Lutero fuera condenado sin una audiencia pública; por lo tanto, el 6 de marzo de 1521, encargó a Lutero que compareciera ante una dieta (una asamblea legislativa) en Worms. La primera comparecencia de Martín Lutero ante la dieta fue el 17 de abril de 1521.\n\nEl esplendor del ambiente fue inicialmente intimidante e inesperado para Lutero. Por lo tanto, cuando se le pidió que se retractara de sus creencias, lo tomaron por sorpresa y no se sintió preparado para responder a la asamblea de una manera justa. Pidió un día para preparar una respuesta. Al día siguiente, 18 de abril, Lutero le dijo valientemente a la dieta: "Mi conciencia está cautiva de la Palabra de Dios. No puedo, no quiero retractarme de nada, porque no es seguro ni correcto actuar contra la propia conciencia. Dios ayúdame."\n\nLutero dejó la Dieta de Worms en paz, pero fue secuestrado por caballeros amistosos y escoltado al Castillo de Wartburg para su propia protección. Permaneció en Wartburg durante 10 meses y trabajó en la traducción del Nuevo Testamento al alemán. Después de completar esa tarea, regresó a Wittenberg.',
+    date: "1521 d. C.",
+    scriptures: [],
+    related: [],
+    images: [
+      {
+        caption:
+          "Martín Lutero en la Dieta de Worms, pintura de Anton von Werner en 1877",
+        file: "1024px-Diet_Of-Worms_2-26-2013 3-39-08 PM.jpg",
+      },
+      {
+        caption:
+          "Castillo del siglo XII Wartburg en Turingia, Alemania del Este, el lugar donde Martín Lutero tradujo la Biblia al alemán.",
+        file: "89919232_2-26-2013 3-39-08 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1346",
+    slug: "luthers-new-testament",
+    title: "Nuevo Testamento de Lutero",
+    period: "12",
+    description:
+      "Lutero publicó su traducción del Nuevo Testamento al alemán en 1522.",
+    article:
+      "Durante el tiempo que Lutero pasó en el castillo de Wartburg, escribió sermones. Pero su obra más importante fue la traducción del Nuevo Testamento al alemán. Aunque fue una tarea extremadamente difícil, completó su traducción en solo 11 semanas.\n\nLutero llevó su Nuevo Testamento a Wittenberg en marzo de 1522, y Felipe Melanchthon corrigió los textos en busca de errores. El producto final se publicó en septiembre de 1522 y estuvo dedicado al protector y amigo de Lutero, Federico, duque de Sajonia.\n",
+    date: "1521-1522 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Retrato de Martín Lutero por Lucas Cranach el Viejo.",
+        file: "92831905_2-26-2013 3-35-13 PM.jpg",
+      },
+      {
+        caption:
+          "Castillo del siglo XII Wartburg en Turingia, Alemania del Este, el lugar donde Martín Lutero tradujo la Biblia al alemán.",
+        file: "89919232_2-26-2013 3-35-13 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1347",
+    slug: "the-zurich-disputations",
+    title: "Las Disputas de Zúrich",
+    period: "12",
+    description:
+      "Los debates de Zúrich fueron el resultado de la predicación de Zwinglio en Zúrich y sus enfrentamientos con el obispo de Constanza.",
+    article:
+      "Las Disputas de Zúrich comenzaron el 29 de enero de 1523 en el edificio del Ayuntamiento. La primera de estas reuniones marcó el comienzo de la Reforma legal en Zúrich. El primer debate terminó con una nota positiva. El alcalde declaró que Ulrico Zwinglio estaba justificado en sus creencias de la Reforma. Debido a que Zwinglio no fue visto como un hereje, el cantón de Zúrich esencialmente adoptó las enseñanzas de Ulrico. Naturalmente, Zwinglio se volvió más diligente en la enseñanza del pueblo. Sin embargo, como resultado de la enseñanza de Zwinglio contra las imágenes e íconos en las iglesias, la gente comenzó a desfigurar estatuas y cuadros públicos. Este acto cuestionable reunió nuevamente a las autoridades para abordar el problema.\n\nLa segunda disputa ocurrió en octubre de 1523 y se reunió durante dos días. Más de 800 personas asistieron cuando Zwinglio presentó sus puntos de vista al Consejo de Zúrich. Como resultado, el consejo siguió nuevamente la enseñanza de Zwinglio y votó para eliminar las imágenes de las iglesias de manera pacífica. El segundo día de esta reunión, Zwinglio discutió temas relacionados con la Misa. Los católicos creían que la Misa era un sacrificio, pero Zwinglio disputó la noción. En su opinión, la Misa solo debería ayudar a las personas a recordar la muerte de Cristo en la cruz. Después de que el Consejo de Zúrich considerara lo que Zwinglio afirmó, lo aceptaron y encargaron a la gente que difundiera la palabra a toda la gente del cantón.\n\nLa tercera disputa continuó tratando temas relacionados con la Misa, y como resultado de una cuarta disputa, se abolió la Misa.",
+    date: "1523 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Estatua en homenaje a Ulrico Zwinglio en Zúrich.",
+        file: "Zwingli_2-26-2013 4-02-56 PM.jpg",
+      },
+      {
+        caption: "La ciudad de Zúrich, lugar de las Disputas",
+        file: "Zurich City_2-26-2013 4-02-56 PM.jpg",
+      },
+      {
+        caption: "La iglesia de Ulrico Zwinglio en Zúrich",
+        file: "Church_2-26-2013 4-02-56 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1348",
+    slug: "the-anabaptist-movement",
+    title: "El Movimiento Anabautista",
+    period: "12",
+    description: "Una reacción en el siglo XVI contra el bautismo de infantes.",
+    article:
+      'Los anabautistas son considerados parte de la Reforma Radical; sus creencias fueron consideradas más radicales que las de Lutero, Calvino o Zwinglio. Debido a que el Movimiento Anabautista no estaba perfectamente unificado, es casi imposible clasificar sus creencias de manera definitiva. Sin embargo, una creencia, sin embargo, parece ser un atributo común: los anabautistas rechazaron el bautismo infantil. De hecho, el nombre "anabautistas" significa "rebautizadores". Sin embargo, los anabautistas no creían realmente en el rebautismo, sino en el bautismo de adultos. No consideraban válido el bautismo infantil, por lo que los anabautistas no consideraban este "rebautismo" como un segundo bautismo.\n\nAlgunos anabautistas eran pacifistas, pero otros probablemente participaron en la Guerra de los Campesinos. Algunos anabautistas, como Hans Denck o Hans Hut, también rechazaron las doctrinas de la Reforma de la justicia por la fe y Sola Scriptura (solo las Escrituras). Sin embargo, los anabautistas jugaron un papel vital dentro de la Reforma y muchas sectas, como los menonitas y los amish, permanecen en comunión hoy.',
+    date: "1523-1525 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Un anabautista siendo quemado, Jan Luyken, 1685",
+        file: "711px-Witch-scene4_8-28-2013 3-17-55 PM.JPG",
+      },
+    ],
+  },
+  {
+    id: "1349",
+    slug: "the-peasants-revolt",
+    title: "La Rebelión de los Campesinos",
+    period: "12",
+    description:
+      "Una serie de revueltas del siglo XVI en Alemania debido a problemas económicos y religiosos. Abrazó principios de la Reforma Protestante.",
+    article:
+      'En 1524 y 1525, los campesinos alemanes y austriacos participaron en la Rebelión de los Campesinos. La rebelión comenzó en la zona de la Selva Negra en el verano de 1524. Para la primavera siguiente, había penetrado prácticamente en todas las regiones de Alemania. En marzo de 1525, algunos de los líderes campesinos escribieron sus creencias/objetivos en Doce Artículos. La mayoría de estos artículos hablaban en contra de los abusos económicos y sociales. Como una forma de justificar sus quejas, utilizaron la teología de Martín Lutero. Aunque Lutero simpatizaba en cierta medida con las preocupaciones de los campesinos, estaba en contra de la violencia e intentó convencerlos de que resolvieran el problema pacíficamente. Sin embargo, dado que los campesinos no hicieron caso de su consejo y continuaron recurriendo a la violencia, Lutero arremetió con fuerza contra los revolucionarios en mayo de 1525. Alrededor de la misma época (15 de mayo), el ejército protestante y católico derrotaron a los campesinos en la Batalla de Frankenhausen. Esto no terminó la matanza. Para sentar un precedente, muchos de los campesinos supervivientes fueron brutalmente asesinados para asegurar que los revolucionarios nunca volvieran a levantarse.\n\nComo resultado de la Rebelión de los Campesinos, la Reforma Protestante se vio drásticamente inhibida. En el caso de Lutero, perdió la confianza de que la autoridad de la Escritura sola pudiera gobernar al pueblo. En una carta escrita a Jorge Spalatin en enero de 1527, Lutero lamentó: "Hasta ahora he estado cultivando la vana esperanza de que los hombres puedan ser dirigidos por el evangelio. Pero el hecho es que destruyen el evangelio y desean ser constreñidos por la ley y la espada." Como resultado, el concepto de iglesia de Lutero siguió siendo sorprendentemente similar al modelo católico romano, con el pastor cumpliendo esencialmente el mismo papel que el sacerdote católico.',
+    date: "1524-1525 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "El pueblo de Schiltach en la Selva Negra, Alemania. El lugar de inicio de la Rebelión de los Campesinos.",
+        file: "BlackForest Small_2-26-2013 3-30-56 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1350",
+    slug: "luther-marries-katherine-von-bora",
+    title: "Lutero se casa con Catalina de Bora",
+    period: "12",
+    description:
+      "Martín Lutero se casó con Catalina de Bora, una ex monja, en 1525.",
+    article:
+      'Durante la Rebelión de los Campesinos, Martín Lutero se casó con la monja Catalina de Bora. Catalina había huido del convento de Wittenberg unos dos años antes con un grupo de "hermanas". El resto de las monjas se casaron rápidamente, pero Catalina se negó al matrimonio al principio. El mismo Lutero, aunque anteriormente se resistía al matrimonio, fue influenciado para casarse por su padre, quien quería nietos para continuar con el nombre de la familia. Al final, Martín y Catalina creyeron que el matrimonio sería una buena idea. El 13 de junio de 1525 se casaron: Martín a la edad de 42 años y Catalina a los 26.\n',
+    date: "1525 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Retrato de Martín Lutero por Lucas Cranach el Viejo",
+        file: "92831905_2-26-2013 3-20-10 PM.jpg",
+      },
+      {
+        caption:
+          "Retrato de Catalina de Bora por Lucas Cranach el Viejo en 1526 ubicado en Alemania.",
+        file: "Katharina-von-Bora-05_2-26-2013 3-20-10 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1352",
+    slug: "sack-of-rome",
+    title: "Saqueo de Roma",
+    period: "12",
+    description:
+      "Ataque a la ciudad de Roma por tropas amotinadas, que fue atribuido al emperador Carlos V.",
+    article:
+      'Aunque algunos académicos creen que el emperador Carlos V fue responsable del saqueo de Roma en 1527, esta conexión no se puede establecer firmemente. Anteriormente, Carlos V había sido leal al papado, pero debido a la obra de Martín Lutero, los príncipes alemanes se estaban volviendo más persuadidos hacia el protestantismo y comenzaron a resistir la autoridad del Emperador. Debido a las simpatías protestantes en Alemania, Carlos V no pudo encontrar mucho apoyo por parte del papado. El Emperador luchaba por mantener unidas sus tierras y el papa intentaba mantener unida la Iglesia. Como resultado, la relación entre el Papa Clemente VII y el Emperador Carlos V fue inestable en el mejor de los casos.\n\nEn cualquier caso, Roma fue atacada el 6 de mayo de 1527, y hubo un caos total durante más de una semana. Durante ese tiempo, Roma, la "Ciudad Eterna", fue gobernada por la anarquía y la barbarie.\n\nDebido a las malas relaciones entre el Emperador y el papa, Carlos V fue culpado del ataque. Rápidamente se absolvió de cualquier participación, pero Clemente VII y Carlos V continuaron luchando hasta la muerte de los papas. Sin embargo, el nuevo papa, Pablo III, tomó más medidas para lograr la unidad con el emperador.',
+    date: "1527 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "El saqueo de Roma en 1527, pintura de Johannes Lingelbach en el siglo XVII",
+        file: "Sack_of_Rome_of_1527_by_Johannes_Lingelbach_17th_century_2-26-2013 3-16-35 PM.jpg",
+      },
+      {
+        caption:
+          "Primer plano de la Estatua de Carlos V, ubicada en la Puerta del Sol, Madrid, España.",
+        file: "iStock_000017218179Medium_2-26-2013 3-16-35 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1353",
+    slug: "marburg-colloquy",
+    title: "Coloquio de Marburgo",
+    period: "12",
+    description:
+      "Una reunión celebrada en el castillo de Marburgo, Alemania, para resolver un desacuerdo entre Lutero y Zwinglio sobre la presencia de Cristo en la Cena del Señor.",
+    article:
+      "El Coloquio de Marburgo (un coloquio es una reunión formal de teólogos que se reúnen para discutir diversos temas teológicos) trató el tema de la Cena del Señor. La pregunta principal esencialmente preguntaba si la presencia de Cristo estaba literalmente en el pan y el vino o si era simplemente simbólica. Los debates tuvieron lugar entre un grupo suizo y el grupo de Wittenberg y se reunieron entre el 1 y el 4 de octubre de 1529.\n\nEl grupo suizo incluía a Ulrico Zwinglio, Juan Ecolampadius, Martín Bucero, Wolfgang Capito y Gaspar Sturm. El grupo de Wittenberg incluía a Martín Lutero, Felipe Melanchthon, Federico Myconius, Justo Jonas, Justo Menio, Gaspar Cruciger y Jorge Roerer.\n\nAunque los dos grupos no llegaron a un acuerdo en Marburgo, todos firmaron los Artículos de Marburgo. En los Artículos, los dos grupos encontraron acuerdo en 14 de 15 puntos. Sin embargo, los suizos continuaron creyendo que la presencia real de Cristo no estaba en el pan y el vino, y el grupo de Wittenberg creía que sí.",
+    date: "1529 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Talla de madera anónima, 1557",
+        file: "Marburger-Religionsgesprach_2-26-2013 3-13-29 PM.jpg",
+      },
+      {
+        caption: "Retrato de Martín Lutero por Lucas Cranach el Viejo.",
+        file: "92831905_2-26-2013 3-13-29 PM.jpg",
+      },
+      {
+        caption:
+          "Huldrych Zwinglio como lo representó Hans Asper en un retrato al óleo de 1531 ubicado en el Museo de Arte de Winterthur.",
+        file: "Ulrich-Zwingli-1_2-26-2013 3-13-29 PM.jpg",
+      },
+    ],
+  },
+  // part 7
+  {
+    id: "1354",
+    slug: "diet-of-augsburg",
+    title: "Dieta de Augsburgo",
+    period: "12",
+    description:
+      "Una reunión en 1530 en Augsburgo, Alemania, que intentó tratar con las tensiones resultantes de la Reforma Protestante.",
+    article:
+      "El Emperador Carlos V convocó la Dieta (una asamblea legislativa) de Augsburgo en 1530. Era su deseo resolver los asuntos sobre la Cena del Señor, lo que el Coloquio de Marburgo no había logrado hacer el año anterior. Aunque los asuntos relacionados con la presencia real de Cristo en la Cena del Señor aún no se resolvieron, quizás el mayor logro de la Dieta de Augsburgo fue la Confesión de Augsburgo, que irónicamente causó más división. La Confesión de Augsburgo fue escrita por Felipe Melanchthon y fue aprobada por Martín Lutero.\n\nLa Confesión de Augsburgo está escrita en dos partes. La primera sección contiene los principales artículos de fe luteranos. La segunda sección trata asuntos específicos, como la Cena del Señor, la negación del celibato clerical y el repudio de los votos monásticos. Aunque la Confesión de Augsburgo ahora se considera un documento luterano, Felipe Melanchthon continuamente enfatizó que aquellos que firmaron el documento no tenían la intención de separarse de la fe católica. Además, afirmaba que no estaba creando nuevas doctrinas o teologías. En realidad, era muy pasiva. Evitaba temas muy debatidos como la transubstanciación (que los elementos de la Cena del Señor se convierten literalmente en el cuerpo y la sangre de Cristo), el purgatorio, la veneración de los santos, o incluso el sacerdocio de todos los creyentes. Sin embargo, una doctrina que se destacó fue la comprensión luterana de la justificación por la fe. Finalmente, con respecto a la unidad de la iglesia, la Confesión de Augsburgo enfatizó la importancia de la palabra (o el Evangelio correctamente predicado) y los Sacramentos (correctamente administrados).\n\nA pesar de la supuesta posición neutral de la Confesión de Augsburgo, al firmar el documento, los príncipes alemanes tomaron una valiente postura contra el Emperador Carlos V (quien intentaba reunir sus territorios con el catolicismo). Sin embargo, el emperador no aceptó su insubordinación y les dio un plazo para retractarse. La guerra civil era muy probable (entre católicos y protestantes), pero el emperador se distrajo con asuntos extranjeros. Los términos de paz entre católicos y protestantes finalmente se redactaron en Núremberg en 1532 y se evitó la guerra por el momento.\n",
+    date: "1530 AD",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: " Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Primer plano de la estatua de Carlos V, ubicada en la Puerta del Sol, Madrid, España.",
+        file: "iStock_000017218179Medium_2-26-2013 3-09-48 PM.jpg",
+      },
+      {
+        caption: "Retrato de Felipe Melanchthon por Lucas Cranach el Viejo.",
+        file: "PhilippMelanchthon_2-26-2013 3-09-48 PM.jpg",
+      },
+      {
+        caption: "Retrato de Martín Lutero por Lucas Cranach el Viejo.",
+        file: "92831905_2-26-2013 3-09-48 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1355",
+    slug: "thomas-cranmer-appointed-archbishop-of-canterbury",
+    title: "Thomas Cranmer Nombrado Arzobispo de Canterbury",
+    period: "12",
+    description:
+      "Cranmer fue nombrado Arzobispo de Canterbury en 1533, gracias a la influencia de Enrique VIII y la familia de Ana Bolena.",
+    article: "\n",
+    date: "1533 AD",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: " Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Retrato de Cranmer después de la muerte de Enrique VIII por un artista desconocido. Se decía que su barba significaba su luto por el rey y su rechazo a la antigua Iglesia, Artista Desconocido",
+        file: "Thomas_Cranmer_2-26-2013 3-01-14 PM.png",
+      },
+    ],
+  },
+  {
+    id: "1356",
+    slug: "henry-viii-acknowledged-as-head-of-the-english-church",
+    title: "Enrique VIII Aceptado como Cabeza de la Iglesia Inglesa",
+    period: "12",
+    description:
+      "Como resultado del Acta de Supremacía y la excomunión de Enrique VIII, el rey fue reconocido como cabeza suprema de la Iglesia de Inglaterra.",
+    article: "\n",
+    date: "1534 AD",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: " Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "El Rey Enrique VIII de Inglaterra reinó desde 1509 hasta 1547. Uno de los monarcas más famosos de Inglaterra, inició la Reforma Inglesa y rompió con la Iglesia de Roma, creando la Iglesia de Inglaterra. Tuvo seis esposas incluyendo a Ana Bolena. Grabado de 1855, foto y tonalidades por D Walker",
+        file: "iStock_000008858855Small_2-26-2013 2-55-54 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1357",
+    slug: "thomas-more",
+    title: "Tomás Moro",
+    period: "11",
+    description:
+      "Un abogado inglés y consejero de Enrique VIII que se opuso a la Reforma Protestante.",
+    article:
+      "Tomás Moro fue un abogado y, durante un tiempo, canciller del Rey Enrique VIII. Moro estaba ardientemente en contra de la Reforma Protestante y se ofendió especialmente tanto con Martín Lutero como con William Tyndale. Cerca del final de la vida de Moro, el Rey Enrique VIII comenzó a cambiar las leyes de la Iglesia de Inglaterra. Moro comenzó a oponerse al rey y a sus cambios radicales. La ruptura final entre ambos hombres se produjo cuando Enrique VIII se declaró a sí mismo como cabeza de la Iglesia de Inglaterra en el Acta de Supremacía. Cualquiera que estuviera en desacuerdo con el nuevo decreto del rey era declarado hereje. Como resultado, Moro fue encarcelado y finalmente ejecutado en la Torre de Londres en 1535.\n\nEn 1516, Moro publicó el popular libro Utopía. En 1935, Tomás Moro fue canonizado como santo en la Iglesia Católica Romana por sus reacciones contra Enrique VIII y el protestantismo en general.\n",
+    date: "1478-1535 AD",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: " Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Grabado antiguo de 1835 que muestra a Sir Tomás Moro, también conocido como Santo Tomás Moro.",
+        file: "iStock_000013748528Medium_2-26-2013 2-55-02 PM.jpg",
+      },
+      {
+        caption: "Ilustración para la primera edición de Utopía de 1516.",
+        file: "Isola_di_Utopia_Moro_2-26-2013 2-55-02 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1358",
+    slug: "first-full-english-bible-published",
+    title: "Primera Biblia Completa en Inglés Publicada",
+    period: "12",
+    description:
+      "Conocida como la Biblia de Tyndale, fue la primera traducida de las lenguas originales (hebreo, griego) al inglés.",
+    article: "\n",
+    date: "1535 AD",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: " Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Primera página del Evangelio de San Juan, de la impresión de Peter Schoeffer de 1526 de la traducción al inglés de la Biblia por William Tyndale.",
+        file: "Tyndale_Bible_-_Gospel_of_John_2-26-2013 2-52-00 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1359",
+    slug: "dissolution-of-english-monasteries",
+    title: "Disolución de los Monasterios Ingleses",
+    period: "12",
+    description:
+      "Con la autoridad otorgada por el Acta de Supremacía, Enrique VIII disolvió todos los monasterios, conventos, prioratos y fraternidades en su reino.",
+    article:
+      "El Acta de Supremacía declaró al Rey de Inglaterra (y sus sucesores) como cabeza absoluta de la Iglesia de Inglaterra. Como resultado, en 1536, Enrique VIII ordenó que aquellos monasterios que producían menos de 200 libras al año fueran disueltos y la propiedad entregada a la corona. Este acto causó la única rebelión importante de la Reforma Inglesa. Esta revuelta se conoció como la Peregrinación de Gracia, y fue el catalizador para dar el golpe final a los monasterios en Inglaterra. Enrique VIII se enfureció con los revolucionarios y obligó a los monasterios más grandes a entregar sus propiedades al rey. Esta cesión de propiedades comenzó en 1539.\n",
+    date: "1536-1540 AD",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: " Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Retrato del Rey Enrique VIII por Hans Holbein el Joven en 1537. Esta pintura se encuentra actualmente en la Galería de Arte Walker, Liverpool.",
+        file: "Henry-VIII-kingofengland_1491-1547_2-26-2013 2-45-50 PM.jpg",
+      },
+      {
+        caption:
+          "Estandarte de las Santas Heridas, utilizado durante la Peregrinación de Gracia. Una contrarevolución inglesa en 1536 contra el cisma de la Iglesia Católica y contra la destrucción de los monasterios.",
+        file: "Banner_of_the_Holy_Wounds_2-26-2013 2-45-50 PM.png",
+      },
+    ],
+  },
+  {
+    id: "1360",
+    slug: "implementation-of-lutheran-reformation-in-denmark",
+    title: "Implementación de la Reforma Luterana en Dinamarca",
+    period: "12",
+    description:
+      "Cristián III, rey de Dinamarca, implementó el luteranismo en su reino al llegar al trono alrededor de 1536.",
+    article:
+      "Cristián II era el rey de Dinamarca cuando comenzó la Reforma. Aunque inicialmente estaba interesado en el luteranismo, lo rechazó rápidamente. Sin embargo, en 1523, perdió su trono ante Federico I.\n\nAlgún tiempo después, Cristián II comenzó a intentar recuperar su trono. Federico I murió en 1533, pero la agitación política continuó. La guerra civil siguió durante tres años en Dinamarca, y Cristián III finalmente salió victorioso. Cristián III, a diferencia de Cristián II, estaba comprometido con el luteranismo y declaró al país luterano en 1536. Cuando Cristián III fue coronado rey en 1537, un pastor luterano colocó la corona real en la cabeza del rey.\n",
+    date: "1537 AD",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: " Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Retrato del Rey danés Cristián II por Jakob Binck en 1550.",
+        file: "Christian_III_of_Denmark_2-26-2013 2-39-33 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1361",
+    slug: "calvin-sent-away-from-geneva",
+    title: "Calvino Expulsado de Ginebra",
+    period: "12",
+    description:
+      "Calvino fue expulsado de Ginebra en 1538 después de protestar contra una decisión de usar pan sin levadura para la Eucaristía.",
+    article: "\n",
+    date: "1538 AD",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: " Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Juan Calvino",
+        file: "GoodSalt-prcas2429_8-28-2013 3-19-07 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1362",
+    slug: "publication-of-the-great-bible-in-england",
+    title: 'Publicación de la "Gran Biblia" en Inglaterra',
+    period: "12",
+    description:
+      "También conocida como la Biblia de Cranmer, la primera Biblia autorizada en inglés para ser leída en voz alta durante el servicio religioso.",
+    article:
+      'El trabajo de traducción de esta Biblia fue supervisado por Miles Coverdale y fue esencialmente una versión revisada de la "Biblia de Matthew", que fue obra de John Rogers. La Biblia de Matthew era la mejor compilación de las traducciones de William Tyndale.\n\nDurante el proceso y la preparación de la Gran Biblia, Thomas Cromwell apoyó a Coverdale. Y en septiembre de 1538, Cromwell declaró en nombre del rey que cada iglesia en Inglaterra debería tener una Biblia en inglés.\n',
+    date: "1539 AD",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: " Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "De: Las Cartas de los Mártires: recopiladas y publicadas en 1564; Miles Coverdale; Londres: J.F. Shaw; 1837",
+        file: "Myles_Coverdale_2-26-2013 2-31-27 PM.jpg",
+      },
+      {
+        caption: "William Tyndale",
+        file: "GoodSalt-prcas0612_8-6-2013 5-49-04 PM.jpg",
+      },
+      {
+        caption:
+          "Grabado de John Rogers (c. 1500 - 1555), posiblemente por Willem van de Passe.",
+        file: "John_Rogers_-_Willem_van_de_Passe_2-26-2013 2-31-27 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1363",
+    slug: "the-act-of-six-articles",
+    title: "El Acta de los Seis Artículos",
+    period: "12",
+    description:
+      "Reafirmó la doctrina católica en seis asuntos, incluyendo la transubstanciación, el celibato y las misas privadas.",
+    article:
+      "El Parlamento inglés aprobó el Acta de los Seis Artículos en 1539 durante el reinado del Rey Enrique VIII. El documento era muy dogmático. Las personas que no creían en la transubstanciación (que los elementos de la Cena del Señor se convierten literalmente en el cuerpo y la sangre de Cristo) eran recompensadas con la pena de muerte y la Corona confiscaba sus propiedades. De hecho, estas personas ni siquiera tenían la opción de retractarse. Los Seis Artículos también reafirmaron la doctrina católica en otros cinco asuntos: retener el cáliz de los laicos durante la comunión, el celibato clerical, los votos de castidad, las misas privadas y la confesión auricular.\n\n\n",
+    date: "1539-1540 AD",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: " Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Uno de los borradores finales de los Seis artículos (1539), enmendado de puño y letra del Rey Enrique VIII.",
+        file: "796px-The_Act_of_Six_Articles_1539_2-26-2013 2-26-29 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1365",
+    slug: "calvins-ecclesiastical-ordinances-established",
+    title: "Ordenanzas Eclesiásticas de Calvino Establecidas",
+    period: "12",
+    description:
+      "Consistían en cuatro ordenanzas: pastores para predicar, doctores para instruir a los creyentes, ancianos para disciplinar y diáconos para cuidar de los pobres.",
+    article:
+      'Juan Calvino fue recibido de nuevo en Ginebra, Suiza, en 1541. En menos de dos meses, logró promulgar sus Ordenanzas Eclesiásticas. Estas ordenanzas estaban esencialmente diseñadas para lograr una "disciplina pura". En este sentido, Ginebra iba a ser considerada la verdadera ciudad cristiana. Dentro de esta nueva disciplina, había cuatro posiciones que se debían mantener en la iglesia. El primer cargo tenía la máxima autoridad, que era el pastor. Luego venía el anciano, después el diácono y finalmente el doctor (o maestro). El pastor y el anciano eran responsables de mantener la disciplina eclesiástica, mientras que el diácono y el doctor servían a la iglesia en otras capacidades diversas.\n\nLas Ordenanzas Eclesiásticas eran increíblemente estrictas. Los pastores y ancianos se reunían semanalmente (todos los jueves) para administrar la disciplina eclesiástica. Este grupo, conocido como el Consistorio, tenía el poder de excomulgar y entregar a la(s) persona(s) rechazada(s) a las autoridades seculares para ser castigadas.\n',
+    date: "1541 AD",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: " Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Juan Calvino, Eugène Delacroix por Adolphe Wacquez, 1866",
+        file: "John_Calvin_07_8-7-2013 8-57-57 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1366",
+    slug: "the-roman-inquisition",
+    title: "La Inquisición Romana",
+    period: "12",
+    description:
+      "Consistía en tribunales celebrados por la Iglesia Católica Romana para procesar crímenes contra la doctrina de la iglesia.",
+    article:
+      "Desde la época del Emperador Constantino (c. 313), las autoridades papales a menudo actuaron como inquisidores, castigando a personas o grupos que ofendían a la Iglesia Católica. A finales del siglo XV, la Inquisición Española se lanzó principalmente contra el pueblo judío. Sin embargo, durante la Contrarreforma Católica, la Inquisición alcanzó su cenit en su intento de erradicar el protestantismo.\n\nEn 1542, el Papa Pablo III revivió la Inquisición en Italia y la basó en el modelo español (utilizado previamente durante el reinado de Fernando e Isabel). La Inquisición Romana comenzó con el establecimiento de la Congregación del Santo Oficio. Dentro de esta organización, el cargo de Inquisidor General tenía la autoridad para eliminar la herejía por cualquier medio necesario.\n\nEn 1908, la Congregación del Santo Oficio pasó a llamarse Suprema Sagrada Congregación del Santo Oficio. En 1965, como resultado del Concilio Vaticano II, el nombre cambió nuevamente a Congregación de la Doctrina de la Fe. Sin embargo, el objetivo principal de esa oficina nunca ha cambiado: mantener/proteger la ortodoxia católica.\n",
+    date: "1542-1908 AD",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: " Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Galileo ante la Inquisición Romana, Cristiano Banti, 1857",
+        file: "Galileo_facing_the_Roman_Inquisition_8-5-2013 10-29-04 AM.jpg",
+      },
+      {
+        caption: "La Inquisición Romana, Edouard Moyse",
+        file: "Edouard_Moyse_-_Inquisition_-_Google_Art_Project_8-5-2013 10-29-04 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1367",
+    slug: "the-jesuits",
+    title: "Los Jesuitas",
+    period: "12",
+    description:
+      "Fundados por Ignacio en 1540 como una orden religiosa masculina bajo la Iglesia Católica Romana.",
+    article:
+      'Ignacio de Loyola organizó a los jesuitas, o la Compañía de Jesús, en 1540.\n\nIgnacio tuvo una experiencia similar a la de Martín Lutero. Estaba completamente angustiado por sus pecados y luchaba tremendamente. Lutero eventualmente descubrió el significado de la justicia por la fe y encontró consuelo en las Escrituras. Ignacio, por otro lado, creó un método basado en el logro humano a través del ejercicio espiritual. Su libro Ejercicios Espirituales (basado en la salvación por obras) se volvió muy popular y ayudó a guiar a la Iglesia Católica durante la Contrarreforma (la respuesta católica a la Reforma Protestante).\n\nIgnacio reunió a un pequeño grupo de hombres que compartían sus ideales, y el grupo comenzó a difundir su mensaje de "reforma". En el verano de 1539, Ignacio presentó sus ideas al Papa Pablo III y, en septiembre de 1540, el papa emitió una bula que puso a la Compañía de Jesús en posición oficial dentro de la Iglesia Católica.\n\nUna sociedad elitista, los jesuitas eran increíblemente disciplinados. El proceso de iniciación para convertirse en miembro tomaba 12 años, que estaban llenos de rigurosos estudios, tanto en filosofía como en teología. A pesar de la intensidad del entrenamiento, la Orden Jesuita era extremadamente popular y para 1556 (el año en que murió Ignacio) la Orden tenía más de 900 miembros. Eventualmente la Orden creció hasta aproximadamente 30,000 y continuó manteniendo ese número durante décadas.\n\nLos jesuitas dedicaron gran parte de su tiempo y energía a erradicar el protestantismo e intentar restaurar el catolicismo en Europa. Sin embargo, su actitud elitista, mentalidad extremista y eventualmente colapso financiero llevaron a la Compañía de Jesús a su fin por un tiempo. En 1773, el Papa Clemente XIV terminó oficialmente la Orden Jesuita. Sin embargo, la Compañía de Jesús no desapareció por completo y fue revitalizada en 1814 por el Papa Pío VII y continúa hasta el día de hoy.',
+    date: "1540-Futuro",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: " Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Pintura de Ignacio de Loyola por Peter Paul Rubens en el siglo XVII.",
+        file: "St_Ignatius_of_Loyola_2-26-2013 2-15-12 PM.jpg",
+      },
+      {
+        caption: "Emblema IHS de los jesuitas",
+        file: "1000px-Ihs-logo_svg_2-26-2013 2-15-12 PM.png",
+      },
+    ],
+  },
+  {
+    id: "1368",
+    slug: "the-council-of-trent",
+    title: "El Concilio de Trento",
+    period: "12",
+    description:
+      "Convocado para emitir condenas contra las herejías protestantes y para reafirmar y definir las enseñanzas de la iglesia.",
+    article:
+      'El Concilio de Trento comenzó el 13 de diciembre de 1545 y terminó el 4 de diciembre de 1563. El concilio consistió en 25 sesiones diferentes e involucró a tres papas diferentes: Pablo III (1534-1549), Julio III (1550-1555) y Pío IV (1559-1565).\n\nEl Concilio de Trento estableció los precedentes de la Iglesia Católica, que permanecieron hasta que la iglesia fue reinterpretada en el Concilio Vaticano II (1962-1965).\n\nEn esencia, el Concilio de Trento buscó distinguir a la Iglesia Católica Romana de todas las denominaciones protestantes. Por lo tanto, era extremadamente antiprotestante y retrataba a la Iglesia Católica Romana como la única iglesia verdadera: la iglesia "Una, Santa, Católica y Apostólica" de Dios.\n\nAl principio del concilio, la doctrina de Sola Scriptura (sólo la Biblia) fue rechazada, y la tradición y la Escritura fueron consideradas iguales en teoría. El concilio no definió esta relación entre tradición y Escritura; por lo tanto, la tradición generalmente tenía primacía sobre la Escritura en la práctica real. El concilio también pronunció que la Vulgata Latina (no escrita en un lenguaje común) era la oficial y única Escritura verdadera. Además, condenó a aquellos que intentaban interpretar la Escritura de cualquier manera que contradijera a la Iglesia Católica Romana.',
+    date: "1545 AD",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: " Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Una sesión del Concilio de Trento en 1555. El Concilio de Trento fue un Concilio Ecuménico de la Iglesia Católica Romana. Se considera uno de los concilios más importantes de la Iglesia.",
+        file: "Council_of_Trent_8-5-2013 10-34-06 AM.JPG",
+      },
+      {
+        caption: "El Concilio de Trento",
+        file: "800px-Tridentinum2_8-5-2013 10-34-06 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1369",
+    slug: "the-catholic-counterreformation",
+    title: "La Contrarreforma Católica",
+    period: "12",
+    description:
+      "La respuesta católica a la Reforma Protestante. Comenzó con el Concilio de Trento en 1545 y terminó con la conclusión de la Guerra de los Treinta Años en 1648.",
+    article:
+      "La Contrarreforma fue una respuesta católica a la Reforma Protestante. Comenzó con el Concilio de Trento (1545-1563) y terminó con el Tratado de Westfalia, que efectivamente puso fin a la Guerra de los Treinta Años.\n\nLa Contrarreforma se ilustra mejor con las reformas eclesiásticas del Concilio de Trento, el resurgimiento de la Inquisición, la aparición del Índice de Libros Prohibidos y la obra de los jesuitas.\n",
+    date: "1545-1648 d. C.",
+    scriptures: [],
+    related: [],
+    images: [
+      {
+        caption:
+          "Ratificación de la Paz de Münster entre España y la República Holandesa en el ayuntamiento de Münster, 15 de mayo de 1648. Óleo sobre lienzo de Gerard ter Borch (1617-1681).",
+        file: "774px-Westfaelischer_Friede_in_Muenster_Gerard_Terborch_1648_8-5-2013 10-41-37 AM.jpg",
+      },
+      {
+        caption: "Firma del Tratado de Münster",
+        file: "WestphaliaIPM_8-5-2013 10-41-37 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1370",
+    slug: "king-edward-vi",
+    title: "Rey Eduardo VI",
+    period: "12",
+    description:
+      "Se convirtió en rey de Inglaterra a la edad de nueve años. Durante su reinado, el protestantismo creció, pero murió en 1553, allanando el camino para la reina María.",
+    article:
+      'Eduardo VI se convirtió en rey el 28 de enero de 1547; solo tenía nueve años. Debido a su corta edad, su coronación fue modelada según la de Josías en el Antiguo Testamento. Eduardo VI fue tutelado por maestros protestantes y leía su Biblia todos los días. Durante su reinado, se llevaron a cabo varias reformas a través de la influencia de Tomás Cranmer y otros.\n\nEl reinado del rey Eduardo VI fue muy breve. Murió el 6 de julio de 1553, a la edad de 15 años, y fue sucedido por la reina María I, también conocida como "María la Sanguinaria". La reina María dedicó su reinado a la restauración del catolicismo, lo que obstaculizó significativamente la Reforma Inglesa.\n',
+    date: "1547-1553 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Grabado antiguo del rey Eduardo VI. Grabado de una foto de 1854 y trabajo en color de D. Walker.",
+        file: "iStock_000008869749Medium_2-26-2013 2-04-31 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1371",
+    slug: "queen-mary-i",
+    title: "Reina María I",
+    period: "12",
+    description:
+      "También conocida como María la Sanguinaria, dedicó su reinado a la restauración del catolicismo y la erradicación del protestantismo.",
+    article:
+      'María I es quizás más conocida como "María la Sanguinaria", un epíteto que recibió como resultado de sus numerosas ejecuciones de creyentes protestantes. Este reinado de terror comenzó a desarrollarse el 4 de febrero de 1555, cuando Juan Rogers, un protestante que había ayudado a crear una Biblia inglesa, fue quemado vivo. Rogers fue simplemente el primero de los aproximadamente 300 que morirían a manos de María la Sanguinaria durante los siguientes tres años. Ana Bolena llegó al poder cuando María murió el 17 de noviembre de 1558 y tomó el nombre de reina Isabel I (1558-1603).\n',
+    date: "1553-1558 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Retrato de la reina María por Antonis Mor en 1554.",
+        file: "Maria_Tudor1_2-26-2013 2-01-48 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1372",
+    slug: "peace-of-augsburg",
+    title: "Paz de Augsburgo",
+    period: "12",
+    description:
+      "Un acuerdo que garantizaba a protestantes y católicos igual seguridad en el Imperio de los Habsburgo dividido.",
+    article:
+      "Como resultado de la Reforma Protestante, Europa estaba literalmente destrozada. La desunión y el caos parecían abundar, y la orden y la autoridad eran muy deficientes. En abril de 1546, el emperador Carlos V (leal al catolicismo) atacó a los príncipes alemanes (leales al protestantismo). Debido a que los príncipes habían estado divididos en el liderazgo, no estaban preparados para tomar represalias de manera suficiente. Dos años después, Carlos V obtuvo una victoria decisiva en la Batalla de Mühlberg. Como resultado, restableció el catolicismo en Alemania, conocido como el Interim de Augsburgo.\n\nSin embargo, el Interim de Augsburgo no pudo aplicarse porque la gente del continente exigió libertad religiosa. Carlos V continuó intentando luchar y recuperar el control de su Imperio, pero perdió gran parte de su apoyo. Finalmente se rindió, en gran parte debido a problemas de salud, y vivió el resto de sus días en un monasterio español. Después de su retiro, el Imperio de los Habsburgo se dividió. El hijo del Emperador, Felipe, tomó el control de España, Borgoña y partes de Italia, y el hermano de Carlos V, Fernando, tomó Alemania y las regiones orientales.\n\nPara establecer la paz, fueron necesarias concesiones religiosas. La Paz de Augsburgo se creó en 1555 para cumplir ese propósito. Como resultado, a los protestantes que aceptaron la Confesión de Augsburgo se les prometió igual seguridad y derechos que a los católicos en esas regiones.",
+    date: "1555 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "La Conferencia de Augsburgo, siglo XVI",
+        file: "Peace-of-augsburg_1555_8-7-2013 9-06-10 AM.jpg",
+      },
+      {
+        caption: "La primera página del tratado",
+        file: "358px-Druck_Augsburger_Reichsfrieden_8-7-2013 9-06-10 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1373",
+    slug: "geneva-academy",
+    title: "Academia de Ginebra",
+    period: "12",
+    description:
+      "Comenzó en 1559 para enseñar a los estudiantes las doctrinas protestantes según lo entendido por Juan Calvino. Finalmente evolucionó hasta convertirse en la Universidad de Ginebra, que todavía está activa hoy.",
+    article:
+      "La Academia de Ginebra se estableció como un centro de aprendizaje para educar a las personas de la manera que Juan Calvino consideraba mejor. Se inauguró el 5 de junio de 1559, y Teodoro de Beza fue su primer rector.\n\nLa Academia de Ginebra fue muy próspera en sus primeros años y jugó un papel crítico en la difusión del mensaje calvinista a otros países. La gran mayoría de los estudiantes de la academia provenían de países que no eran Suiza, aunque al principio, principalmente de Francia. Los hombres que vinieron a estudiar a esta institución regresaron a sus hogares y difundieron las doctrinas calvinistas. Calvino murió cinco años después de la apertura de la academia, pero esta continuó creciendo. Con el tiempo, la Academia de Ginebra se convirtió en la Universidad de Ginebra, que permanece en Suiza en la actualidad.\n",
+    date: "1559-",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Teodoro de Beza, óleo sobre madera, 1577",
+        file: "462px-Theodore-de-Beze-2_8-7-2013 9-11-50 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1374",
+    slug: "the-index-of-prohibited-books",
+    title: "El Índice de Libros Prohibidos",
+    period: "12",
+    description:
+      "Una lista oficial de libros que la Iglesia Católica consideraba heréticos. A los católicos se les prohibió leer cualquier libro de la lista hasta 1966.",
+    article:
+      "Antes del Índice de Libros Prohibidos, la Iglesia Católica prohibió e incluso quemó muchos libros (incluidas Biblias). Cuando el Papa Pablo IV escribió el primer borrador del Índice en 1559, fue una defensa directa contra el protestantismo. En 1564, el Papa Pío IV publicó un Índice actualizado. El siguiente papa, Pío V (1566-1572), estableció la Congregación del Índice, que continuó revisando los libros que se publicaban. A medida que aparecían nuevos libros en el mercado, el Índice de Libros Prohibidos continuó creciendo.\n\nCuando se publicó por primera vez el Índice, incluía libros de los reformadores más destacados: Lutero, Zwinglio, Calvino, Erasmo, etc. La edición final (la 20ª) del Índice se publicó en 1948 bajo el reinado del Papa Pío XII (1939-1958). El Papa Pablo VI finalmente abolió el Índice de Libros Prohibidos en 1966 poco después del Concilio Vaticano II (1962-1965).\n",
+    date: "1559-1966 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          'El Index Librorum Prohibitorum ("Lista de libros prohibidos") es una lista de publicaciones que la Iglesia Católica censuró por ser un peligro para sí misma y sus miembros. Portada de la edición de 1564, impresa en Venecia.',
+        file: "Index_Librorum_Prohibitorum_1_2-26-2013 12-22-05 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1375",
+    slug: "jacobus-arminius",
+    title: "Jacobo Arminio",
+    period: "12",
+    description:
+      "Se opuso a las doctrinas de la predestinación de Juan Calvino, dando origen al arminianismo.",
+    article:
+      "Jacobo Arminio fue un holandés nacido el 10 de octubre de 1560. Estudió teología en Ginebra con Teodoro de Beza, quien fue el primer rector de la Academia de Ginebra. En 1603, Arminio se convirtió en profesor de teología en la Universidad de Leiden. Fue un profesor popular, pero rápidamente entró en conflicto con Francisco Gomarus, quien discrepó con Jacobo sobre la predestinación. Gomarus, al igual que Juan Calvino, creía que Dios había elegido de antemano a los que serían salvos y a los que serían perdidos. Sin embargo, según Arminio, los humanos fueron salvos según su respuesta a Dios, no según la elección divina de Dios. El rechazo de Arminio a la predestinación comenzó a causar división dentro de las iglesias calvinistas.\n\nArmínio murió en 1609. Sin embargo, justo antes de su muerte, pidió un sínodo para revisar la Confesión Belga. Para el momento del Sínodo de Dort en 1618, se había formado una oposición extrema. Por un lado, los remonstrantes (o arminianos) tomaron una posición contra la predestinación, y por el otro lado, los contrarremonstrantes (o calvinistas) la defendieron enérgicamente. Según los argumentos contrarremons-trantes, creían que los arminianos (o remonstrantes) estaban volviendo al catolicismo porque los remonstrantes creían que los humanos tenían un papel en su propia salvación. Por lo tanto, a medida que avanzaba el Sínodo de Dort, los líderes remonstrantes fueron expulsados del concilio y los cánones de Dordrecht proclamaron la fe calvinista en oposición al arminianismo.\n\nAntes de Arminio, grupos como los anabautistas y los valdenses tenían puntos de vista similares sobre el libre albedrío de la humanidad. Además, otras denominaciones cristianas han surgido de las tradiciones de fe iniciadas por Arminio. Algunas de estas denominaciones incluyen a los bautistas, metodistas y adventistas del séptimo día.",
+    date: "1560-1609 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Retrato de Jacobo Arminio por David Bailly (1584-1657) en 1620.",
+        file: "James_Arminius_2_2-26-2013 12-18-25 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1377",
+    slug: "the-heidelberg-catechism",
+    title: "El Catecismo de Heidelberg",
+    period: "12",
+    description:
+      "Escrito según la tradición reformada (o calvinista) de la fe y todavía en uso hoy en día.",
+    article:
+      "Federico III, el elector del Palatinado, encargó el Catecismo de Heidelberg en 1563. Había aceptado la fe reformada (calvinismo) en 1561 y expulsó a todos los ministros luteranos de su territorio. Se trajeron ministros calvinistas para reemplazarlos, y dos de ellos, Gaspar Oleviano y Zacarías Ursino, escribieron el Catecismo de Heidelberg en 1563. Esta obra se convirtió en uno de los catecismos reformados que sigue siendo autoritario en la actualidad.",
+    date: "1563 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Edición de 1563 del Catecismo de Heidelberg",
+        file: "Heidelberger_Katechismus_1563_2-26-2013 12-11-44 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1378",
+    slug: "elizabeth-i-excommunicated",
+    title: "Isabel I excomulgada",
+    period: "12",
+    description:
+      "El Papa Pío V excomulgó a Isabel I en un intento de hacer que el pueblo inglés usurpara su poder y restaurara Inglaterra a la fe católica.",
+    article:
+      "Después del reinado de María la Sanguinaria, Isabel I terminó con las feroces persecuciones de los protestantes. En lugar de castigar a la reina por su fe católica menos que ardiente, el Vaticano esperaba recuperar Inglaterra a través del arte de la diplomacia.\n\nDurante unos 10 años, nada parecía avanzar, por lo que el Papa Pío V recurrió a medidas más drásticas. En 1569 estalló una rebelión en el norte. Con la esperanza de que el pueblo de la reina derrocara la Corona, el papa excomulgó a Isabel I. Sin embargo, la rebelión ya había sido sofocada cuando Regnans in Excelsis, una bula papal, llegó a Inglaterra.\n\nComo resultado, Isabel comenzó a perseguir a los sacerdotes católicos que vivían en Inglaterra y a ejecutarlos por traición. Durante su reinado, fueron asesinados más de 200 sacerdotes católicos.\n",
+    date: "1570 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Grabado antiguo de la reina Isabel I de Inglaterra, que reinó de 1558 a 1603. También se la conocía como la Reina Virgen, Gloriana o la Buena Reina Bess. Este grabado se basa en el famoso retrato Arcoíris de la Reina pintado en 1600. Tenga en cuenta el grabado de una foto de 1855 y el trabajo en color de D. Walker.",
+        file: "iStock_000008992535Medium_2-26-2013 12-09-58 PM.jpg",
+      },
+      {
+        caption: "Retrato del Papa Pío V por El Greco (1541-1614)",
+        file: "El_Greco_050_2-26-2013 12-04-14 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1379",
+    slug: "st-bartholomews-day-massacre",
+    title: "Masacre del Día de San Bartolomé",
+    period: "12",
+    description:
+      "Consistió en turbas enfurecidas que mataron a miles de hugonotes durante un período de varios días.",
+    article:
+      "Durante la Reforma Francesa, hubo guerras intermitentes entre los hugonotes y los católicos. Durante un tiempo de paz relativa, comenzó una gran masacre en París.\n\nLa matanza comenzó el 23 de agosto de 1572 (Día de San Bartolomé) cuando muchos líderes hugonotes fueron asesinados en sus camas o asesinados mientras intentaban escapar. Las turbas sanguinarias continuaron moviéndose por París, matando a cualquiera que se cruzara en su camino durante un período de tres días. La violencia finalmente se extendió a otras ciudades, y miles más fueron asesinados. Alrededor de 20.000 personas murieron durante la masacre y, aparentemente, el río Ródano se volvió rojo sangre con numerosos cadáveres flotando río abajo.\n",
+    date: "1572 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Pintura de François Dubois, un pintor hugonote nacido alrededor de 1529 en Amiens, que se estableció en Suiza. Aunque Dubois no fue testigo de la masacre, representa el cuerpo del almirante Coligny colgando de una ventana en la parte trasera a la derecha. En la parte trasera izquierda, se muestra a Catalina de Médicis saliendo del Château du Louvre para inspeccionar un montón de cadáveres.",
+        file: "Francois_Dubois_001_2-26-2013 11-42-27 AM.jpg",
+      },
+      {
+        caption:
+          "Preparación para la masacre del Día de San Bartolomé, pintura del siglo XIX de Carl Jacob Wilhelm Huhn",
+        file: "Huns_003_2-26-2013 11-42-27 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1380",
+    slug: "the-book-of-concord",
+    title: "El Libro de la Concordia",
+    period: "12",
+    description:
+      "Una colección de 10 documentos creenciales que sintetizan la fe luterana.",
+    article:
+      "El Libro de la Concordia se considera una síntesis de la fe luterana. Es una recopilación de diez documentos creenciales, que siguen siendo autoritarios para la comunidad luterana. Se publicó por primera vez en 1580.",
+    date: "1580 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Portada de la edición alemana de 1580 del Libro de la Concordia",
+        file: "Concordia_Dresden_1580_-_fba_2-26-2013 11-38-37 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1381",
+    slug: "synod-of-dort",
+    title: "Sínodo de Dort",
+    period: "12",
+    description:
+      "Un sínodo reformado holandés que comenzó en oposición al arminianismo.",
+    article:
+      'La Iglesia Reformada Holandesa convocó el Sínodo de Dort para abordar los problemas del arminianismo. Las reuniones comenzaron el 13 de noviembre de 1618 y terminaron el 9 de mayo de 1619. Como resultado, se presentaron los Cánones de Dordrecht y luego se agregaron al Catecismo de Heidelberg.\n\nEn inglés, los Cánones de Dordrecht forman un acrónimo de cinco puntos: TULIP. T = depravación total; U = elección incondicional; L = expiación limitada; I = gracia irresistible; P = perseverancia de los santos. Este acrónimo describe adecuadamente el concepto reformado o calvinista de la doble predestinación (que algunos están predestinados a ser salvados, otros a ser perdidos). Esencialmente, el hombre está completamente contaminado con el pecado (depravación total), Dios literalmente elige quién será salvado y perdido independientemente de las obras (elección incondicional), Cristo murió solo para salvar a los elegidos (expiación limitada), es imposible que los elegidos resistan la gracia de Dios (gracia irresistible), y ningún cristiano elegido o "verdadero" puede perderse jamás (perseverancia de los santos).\n',
+    date: "1618-1619 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Sínodo de Dordrecht (1729), por Bernard Picart.",
+        file: "Synodedordrecht_2-26-2013 11-29-31 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1382",
+    slug: "thirty-years-war",
+    title: "Guerra de los Treinta Años",
+    period: "12",
+    description:
+      "Una guerra en Europa entre fuerzas protestantes y católicas, que duró de 1618 a 1648.",
+    article:
+      "En 1617, Fernando de Estiria fue elegido rey de Bohemia (esencialmente la actual República Checa). En ese momento, Bohemia era protestante, pero los jesuitas habían educado al nuevo rey. Los protestantes reaccionaron contra su elección el 23 de mayo de 1618, cuando marcharon al palacio real de Praga y arrojaron a los miembros del personal del rey por las ventanas (una caída de 50 pies). Esto provocó el comienzo de la Guerra de los Treinta Años.\n\nLas fuerzas protestantes se organizaron rápidamente y erradicaron a todos los jesuitas de Bohemia y confiscaron varias propiedades católicas. También rechazaron a Fernando de Estiria como su rey y eligieron a Federico V en su lugar. Sin embargo, en 1620, menos de un año después de su elección, Federico V perdió una batalla importante en la Montaña Blanca y fue depuesto como rey.\n\nLa Batalla de la Montaña Blanca podría haber terminado la guerra, pero numerosos mercenarios tenían intereses creados en la lucha en curso. Esto prolongó la guerra hasta 1625, cuando el rey danés (protestante), Christian IV (1588-1648), se involucró en el conflicto. Sin embargo, Christian IV sufrió una devastadora derrota en la Batalla de Lutter en 1626. Como resultado de esta tremenda victoria para las fuerzas católicas, se aprobó el Edicto de Restitución. Este edicto requería que los luteranos devolvieran las propiedades de la Iglesia y convirtió a los seguidores de Juan Calvino en forajidos. Varias ciudades también se vieron obligadas a aceptar nuevamente la fe católica bajo pena de muerte.\n\nJusto cuando el emperador estaba a punto de restablecer el catolicismo en todas las tierras europeas, los suecos acudieron al rescate. Gustavo Adolfo (1594-1632) fue el rey protestante de Suecia y un fantástico estratega militar. En 1631, llevó a los protestantes a la victoria en la Batalla de Breitenfeld. Sin embargo, Adolfo murió al año siguiente en la Batalla de Lützen (1532).\n\nFinalmente, los franceses se unieron a los protestantes suecos y la guerra continuó durante otros 13 años. El Tratado de Westfalia finalmente terminó la guerra en 1648. No hubo un verdadero ganador entre las fuerzas católicas y protestantes. Más bien, el Tratado de Westfalia promovió la idea de la tolerancia religiosa. Como resultado, el catolicismo, el calvinismo y el luteranismo fueron religiones legalmente reconocidas en sus áreas respectivas.\n",
+    date: "1618-1648 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "La victoria de Gustavo Adolfo en la Batalla de Breitenfeld, Johann Walter, 1632",
+        file: "Strasbourg_walter_gustave_adolphe_2-26-2013 11-58-51 AM.JPG",
+      },
+      {
+        caption: "Federico V, Gerard van Honthorst, 1634",
+        file: "421px-Gerard_van_Honthorst_006_8-7-2013 9-40-25 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1383",
+    slug: "john-bunyan",
+    title: "Juan Bunyan",
+    period: "12",
+    description:
+      "Un maestro de la Biblia inglés encarcelado por predicar sin licencia. Autor de Gracia Abundante al Jefe de los Pecadores y El Progreso del Peregrino.",
+    article:
+      "Juan Bunyan nació en una familia inglesa pobre el 28 de noviembre de 1628. Entre 1644 y 1647, durante la Guerra Civil Inglesa, Bunyan sirvió en el ejército parlamentario. En 1649, se casó. Como resultado de la influencia de su esposa, Bunyan comenzó a buscar a Dios. En 1653 se convirtió en miembro de la Iglesia de San Juan en Bedford. Con el tiempo, comenzó a predicar. Aunque sin educación, Bunyan ganó partidarios, como Juan Owen, un administrador de la Universidad de Oxford que admiraba el conocimiento de Bunyan de la Biblia inglesa.\n\nEn 1660, Carlos II regresó al poder y se restablecieron las leyes anglicanas. Ese mismo año, Bunyan fue encarcelado por predicar sin licencia. Permaneció en prisión hasta 1672 porque se negó a dejar de predicar. En 1677 regresó a prisión por un breve período por el mismo delito.\n\nMientras Bunyan estaba en prisión, su tiempo se aprovechó bien. Escribió dos de sus libros más populares, Gracia Abundante al Jefe de los Pecadores, una autobiografía, y El Progreso del Peregrino, el famoso cuento alegórico de un cristiano en un viaje a la Ciudad Celestial.\n\nLa primera parte de El Progreso del Peregrino (la historia de Christian) se publicó en 1678, y la segunda parte (la historia de Cristiana) se publicó en 1684. No fue hasta 1728, después de la muerte de Bunyan en 1688, que las dos historias se combinaron en un solo volumen encuadernado. Esta obra magistral de Bunyan nunca ha estado fuera de impresión y se ha traducido a más de 100 idiomas.\n\nOtros libros de Juan Bunyan incluyen La vida y muerte del Sr. Badman (1680), La guerra santa (1682) y La obra de Jesucristo como abogado (1688).\n",
+    date: "1628-1688 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Dibujo de Juan Bunyan (1628-1688)",
+        file: "John_Bunyan_2-26-2013 11-24-34 AM.jpg",
+      },
+      {
+        caption:
+          "El lugar de nacimiento de Juan Bunyan. Grabado en acero con color a mano, publicado en The Youth's Magazine, 1848. Harrowden, Bedfordshire",
+        file: "Birth_place_of_Bunyan_2-26-2013 11-24-34 AM.jpg",
+      },
+      {
+        caption: "Juan Bunyan en prisión, La enciclopedia bautista, 1881",
+        file: "bunyan-prison_8-7-2013 9-48-49 AM.jpg",
+      },
+      {
+        caption:
+          "La carga de Christian del libro El Progreso del Peregrino, Rachael Robinson Elmer",
+        file: "Christians-burden_8-7-2013 5-49-23 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1384",
+    slug: "the-english-civil-war",
+    title: "La Guerra Civil Inglesa",
+    period: "12",
+    description:
+      "Comenzó en 1642 y terminó en 1651. Las batallas se libraron principalmente entre el rey Carlos I y el ejército parlamentario.",
+    article:
+      "Los académicos no están de acuerdo sobre quién es responsable de comenzar la Guerra Civil Inglesa, pero el rey Carlos I (1625-1649) tiene al menos parte de la culpa. Carlos I fue muy insensible hacia los puritanos en Inglaterra. Sin embargo, los puritanos no carecían de apoyo. Hubo muchos miembros del Parlamento que eran puritanos o respetaban la fe puritana.\n\nEn 1637 comenzó la guerra escocesa, una rebelión contra Carlos I. Los escoceses finalmente comenzaron a invadir Inglaterra, lo que obligó a Carlos I a recurrir al Parlamento en busca de ayuda. Durante algunos años, los asuntos continuaron intensificándose en Inglaterra. Finalmente, en junio de 1642, el Parlamento aprobó las Diecinueve Proposiciones, que limitaban severamente la autoridad del rey. Como resultado, Carlos I se negó a aceptar el documento. La respuesta del rey comenzó la inesperada Guerra Civil Inglesa.\n\nLa guerra terminó el 3 de septiembre de 1651, en la Batalla de Worcester. Justo antes de esto, en 1649, el rey Carlos I había sido decapitado por un ejército dirigido por el líder puritano Oliver Cromwell.",
+    date: "1642-1651 d. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Batalla de Naseby, por un artista desconocido. La victoria del Nuevo Modelo del Ejército Parlamentario, bajo el mando de Sir Thomas Fairfax y Oliver Cromwell, sobre el ejército realista, comandado por el príncipe Rupert, en la Batalla de Naseby (14 de junio de 1645) marcó el punto de inflexión decisivo en la Guerra Civil Inglesa.",
+        file: "Battle_of_Naseby_2-26-2013 11-20-49 AM.jpg",
+      },
+      {
+        caption: "Retrato de Carlos I (1652-1649) por Daniel Mytens.",
+        file: "King Charles 1s_2-26-2013 11-50-00 AM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1386",
+    slug: "the-seventyweeks-prophecy",
+    title: "La Profecía de las Setenta Semanas",
+    period: "8",
+    description:
+      "La profecía de las setenta semanas de Daniel 9 se centra en la nación y el pueblo judíos. Al profeta Daniel se le muestra un período de tiempo que incluye la venida del Mesías y el fin del sistema de sacrificios con el evangelio yendo a los gentiles.",
+    article:
+      'Daniel 9 contiene una interesante profecía sobre setenta semanas, o 490 días. La Biblia enseña que en la profecía, un día representa un año (véase Números 14:34; Ezequiel 4:6). Entonces, ¿qué significa esta profecía de 490 años? Encontramos la respuesta al ver la conexión entre Daniel 8 y 9. Daniel no pudo escuchar el mensaje completo de Daniel 8 y se enfermó (8:27). Pero en Daniel 9:20-23, el ángel Gabriel regresa para darle más comprensión de una parte de la gran profecía de 2300 días (años), en particular la parte que se relaciona con "tu pueblo" (v. 24), la nación judía.\n\nDaniel 9:24 nos dice: "Setenta semanas están determinadas sobre tu pueblo y sobre tu santa ciudad, para acabar con la prevaricación, y para poner fin al pecado, y para expiar la iniquidad, para traer la justicia eterna, para sellar la visión y la profecía, y para ungir al Santísimo."\n\nLa palabra "determinadas" significa "cortadas". Las 70 semanas (o 490 años) son una parte de la profecía más grande de 2300 días. Podemos conocer el comienzo de estas dos profecías de Daniel 9:25: "Sabe, pues, y entiende que desde la salida de la orden para restaurar y edificar Jerusalén hasta el Mesías Príncipe, habrá siete semanas, y sesenta y dos semanas". Esta orden fue dada por Artajerjes Longimano y entró en vigencia en el otoño de 457 a. C.\n\n¿Qué representan "siete semanas y sesenta y dos semanas" (o 69 semanas, que representan 483 años)? Si sumamos 483 años a 457 a. C., llegamos a la fecha del bautismo de Jesús en el otoño del año 27 d. C., cuando Cristo fue "ungido" (que es el significado de la palabra "mesías") por el Espíritu Santo. Cuando Jesús comenzó su ministerio, la Biblia dice: "El tiempo se ha cumplido" (Marcos 1:15), mostrando el cumplimiento de este período de tiempo.\n\nDaniel 9:26 dice: "Y después de las sesenta y dos semanas se quitará la vida al Mesías", lo cual es un claro cumplimiento de la crucifixión de Jesús en el Calvario por los pecados de todo el mundo; esto tuvo lugar en el año 31 d. C. De hecho, el versículo 27 dice específicamente: "Pero en medio de la semana hará cesar el sacrificio y la ofrenda", lo que encaja perfectamente en el período de tiempo del ministerio de Jesús. Sabemos que incluso la cortina del templo que separaba el Lugar Santo y el Lugar Santísimo se rasgó por la mitad, lo que significa este fin del sistema de sacrificios.\n\nEsta última "semana" (7 años) terminó en el año 34 d. C. cuando tuvieron lugar varios eventos importantes. En ese año, el concilio judío rechazó el evangelio al apedrear a Esteban, sellando así su rechazo a Cristo. En este momento, los discípulos fueron dispersados y comenzaron a predicar el evangelio a los gentiles. Saulo, quien se convirtió en Pablo, comenzó su trabajo poco después de este evento.\n\nY así, las 70 semanas (o 490 años) de Daniel 9 fueron decretadas para los judíos y Jerusalén. Fue un período de tiempo "cortado" (o una parte de) la mayor profecía de 2300 días (años) de Daniel 8 y en realidad nos da la clave para entender tanto el comienzo (457 a. C.) de la profecía más larga de las Escrituras, como también el fin. Cuando quitamos 70 semanas (490 años) de 2300 días (años), nos quedan 1810 años. Al agregar este número al año 34 d. C., llegamos al año 1844 d. C. (Consulte el artículo sobre la profecía de los 2300 días para obtener más información).',
+    date: "457 a. C.-34 d. C.",
+    scriptures: ["27|9:20-27"],
+    related: [],
+    images: [
+      {
+        caption:
+          "Setenta semanas están determinadas sobre tu pueblo y sobre tu santa ciudad, para acabar con la prevaricación, y para poner fin al pecado, y para expiar la iniquidad, para traer la justicia eterna, para sellar la visión y la profecía, y para ungir al Santísimo. (Daniel 9:24)",
+        file: "70_weeks_Prophecy_sm_2-26-2013 11-30-56 AM.jpg",
+      },
+      {
+        caption:
+          "Sabe, pues, y entiende que desde la salida de la orden para restaurar y edificar Jerusalén hasta el Mesías Príncipe, habrá siete semanas, y sesenta y dos semanas: la calle será reedificada, y el muro, aunque en tiempos difíciles.",
+        file: "GoodSalt-lwjas0141_8-28-2013 1-27-20 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1394",
+    slug: "daniels-babylon-prophecies",
+    title: "Profecías de Daniel sobre Babilonia",
+    period: "8",
+    description:
+      "En el libro de Daniel, el reino de Babilonia se simboliza tanto con un león con alas de águila (Daniel 7) como con la cabeza de oro en la gran visión del profeta de la estatua (Daniel 2).",
+    article:
+      'Según el Génesis, la ciudad de Babilonia era parte del reino fundado por Nemrod, el bisnieto de Noé (Génesis 10:8-10). Existían varias ciudades-estado independientes en los valles del Tigris y el Éufrates en este período de tiempo temprano. A lo largo de cientos de años, el territorio quedaría bajo el control de varias tribus y reinos, y la influencia de Babilonia aumentaría y disminuiría según quienes la controlaran.\n\nLuego, después de un período de dominio asirio, Babilonia volvió a independizarse bajo el gobierno caldeo y finalmente asumió el liderazgo del mundo. Nabucodonosor II (626-605 a. C.) fue el fundador de lo que se denomina el Imperio caldeo o neobabilónico, que tuvo su edad de oro en los días del rey Nabucodonosor II (605-562 a. C.), y duró hasta que Babilonia cayó ante los medos y persas en 539.\n\nEn la visión de Daniel, capítulo 2, la cabeza de oro se refiere al reino de la ciudad-estado de Babilonia. Daniel habla de Nabucodonosor II como un "rey de reyes". En sus inscripciones, Nabucodonosor II atribuye este éxito real a su dios Marduk, pero Daniel corrige esta idea errónea, afirmando que es el Dios del cielo quien ha otorgado tal poder al rey.\n\nEn Daniel 7, el león con alas de águila es un símbolo apropiado para Babilonia. El león alado se encuentra en objetos de arte babilónicos y es una de las formas que a menudo se representan en combate con Marduk, el dios patrón de la ciudad de Babilonia. Otros profetas se refirieron al rey Nabucodonosor II con figuras similares (Jer. 4:7; Jer. 50:17, 44 Lam. 4:19; Eze. 17:3, 12; Hab. 1:8).\n\nEl león como el rey de las bestias y el águila como el rey de las aves representaban apropiadamente el imperio de Babilonia en el apogeo de su gloria. El poder de Nabucodonosor II se sintió desde el Mediterráneo hasta el Golfo Pérsico, y desde Asia Menor hasta Egipto.\n\nCuando se le arrancaron las alas, el león ya no pudo volar como un águila sobre su presa. Esto sin duda se refiere al momento en que gobernantes menos poderosos siguieron a Nabucodonosor II en Babilonia, gobernantes bajo cuya administración Babilonia perdió gloria y poder. Algunos han sugerido una posible referencia también a la vida posterior de Nabucodonosor II, cuando durante siete años fue privado no solo de su poder sino también de su razón (Daniel 4:31-33).\n\nLa referencia a un león parado como un hombre es indicativa de la pérdida de cualidades similares a las de un león. En sus años de declive, Babilonia se debilitó y debilitó por la riqueza y el lujo, y cayó presa del reino medo-persa. Algunos ven en la expresión "corazón de hombre" la desaparición de la característica animal de avaricia y ferocidad y la humanización del rey de Babilonia. Esto podría aplicarse a Nabucodonosor II después de su humillante experiencia, pero no sería una representación adecuada del reino en sus últimos años.\n',
+    date: "605-539 a. C.",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption: "Reino de Babilonia: una cabeza de oro",
+        file: "Statue_Babylon_8-22-2013 12-11-00 PM.jpg",
+      },
+      {
+        caption:
+          "Un león con alas de águila es un símbolo apropiado para Babilonia. El león alado se encuentra en objetos de arte babilónicos. La combinación de león y águila era un motivo común, más a menudo un león con alas de águila, a veces con garras o un pico; un compuesto similar era el águila con cabeza de león. El león alado es una de las formas de la bestia que a menudo se representa en combate con Marduk, el dios patrón de la ciudad de Babilonia.",
+        file: "Lions_cmyk_8-22-2013 12-11-00 PM.jpg",
+      },
+      {
+        caption:
+          "El león alado, o lamassu, era un motivo decorativo común en Babilonia y se ha identificado en muchos hallazgos arqueológicos.",
+        file: "Human_headed_winged_bull_profile_8-22-2013 12-11-00 PM.jpg",
+      },
+      {
+        caption: "El Imperio Babilónico 606 - 536 a. C.",
+        file: "babylon_map_8-22-2013 12-11-00 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1397",
+    slug: "daniels-medopersia-prophecies",
+    title: "Profecías de Daniel sobre Medo-Persia",
+    period: "8",
+    description:
+      "El reino de Medo-Persia se menciona tres veces en el libro de Daniel. En Daniel 2, es el reino de plata, la nación que conquista Babilonia. En Daniel 7, es el oso levantado de un lado. En Daniel 8, es el carnero con dos grandes cuernos.",
+    article:
+      'El Imperio Medo-Persa es un actor clave en las profecías de Daniel. Se le llama Imperio Medo-Persa porque era una combinación de Media y Persia después de que el conquistador persa Ciro (c. 553-530 a. C.) se apoderó de Media, antes de que finalmente derrotara a Babilonia.\n\nAños antes, bajo guía profética, el profeta Isaías había descrito la obra de Ciro (Isa. 45:1). Este conquistador de Media pronto derrotó a las tribus vecinas y gobernó desde Ararat en el norte hasta el sureste de Babilonia y el Golfo Pérsico en el sur. Para completar su imperio, derrotó al rico Creso de Lidia en 547 a. C. y luego tomó Babilonia con una brillante estrategia en 539 a. C. Ciro, y reconoció que el Señor le había dado todos estos reinos (2 Crón. 36:23 Esd. 1:2).\n\nMencionado en la profecía de Daniel, capítulo 2, de la estatua, como la plata es inferior al oro, el Imperio Medo-Persa aún era inferior a los babilonios en posición y poder mundial. Si bien Medo-Persia abarcaba más territorio, era inferior en magnificencia general. De hecho, los conquistadores medos y persas adoptaron la cultura de la compleja civilización babilónica,porque la suya estaba mucho menos desarrollada. En Daniel 7, Medo-Persia está representada como un oso. Como la plata es inferior al oro, así, en algunos aspectos, el oso es inferior al león. El oso es, sin embargo, cruel y rapaz, características que se atribuyen a los medos en Isaías 13:17, 18. El intérprete (v. 16) no explica el oso desigual de la visión. Sin embargo, una comparación con el capítulo 8:3 y 20 indica que el reino estaba compuesto por dos partes. De los medos y los persas, los persas se convirtieron en la potencia dominante. Hablando de tres costillas, estas no se mencionan en la interpretación (versículos 17-27), pero muchos comentaristas las han considerado un símbolo de las tres potencias principales que fueron conquistadas por el Imperio Medo-Persa: Lidia, Babilonia y Egipto.Ciro fue tolerante con otras religiones y favoreció especialmente a las personas que habían sido subyugadas por los babilonios, restaurando los templos y los modos de adoración de estas personas y permitiendo que los exiliados regresaran a sus países de origen. Entre los que se beneficiaron de estas políticas favorables estuvieron los judíos, quienes recibieron permiso para regresar a Palestina y reconstruir su Templo en Jerusalén (2 Crón. 36:22, 23 Esd. 1:1-11 6:2-5). Ver Ciro. Después de la muerte de Ciro, le sucedió su hijo Cambises (530-522 a. C.), quien no se menciona en la Biblia. Darío, un pariente lejano, luego se levantó para reclamar la realeza (522-486 a. C.). Darío I demostró ser un monarca fuerte y un gran organizador, que gobernó su vasto imperio con una mano benévola y pacífica. Durante los primeros años de su reinado, los judíos, que habían sido obstaculizados en la reconstrucción del templo en Jerusalén después del tiempo de Ciro, finalmente completaron esta obra sin interferencias bajo un decreto extremadamente favorable emitido por Darío (Esd. 4:24 a 6:15). Darío fue sucedido por Jerjes I (486-465 a. C.), quien sufrió fuertes derrotas en Grecia. Destruyó parcialmente Babilonia después de un segundo levantamiento allí contra su gobierno, cumpliendo en parte las profecías sobre el destino de Babilonia hechas mucho antes por Isaías y Jeremías (véase Isa. 13:17-22; Jer. 50:9-16). En la Biblia, Jerjes se menciona con el nombre de Asuero. Artajerjes I (465-423 a. C.), hijo de Jerjes, ascendió al trono tras el asesinato de su padre, gobernando durante cuatro décadas. Bajo su gobierno, Esdras, un erudito judío, regresó a Jerusalén en 457 a. C. con autoridad para reorganizar el servicio judicial y civil de la provincia de Judá según la ley mosaica (Esd. 7:1, 6, 11-26). También bajo su gobierno, Nehemías fue nombrado gobernador de Judá y se le permitió fortificar Jerusalén (Neh. 2:5-8). Darío II (423-404 a. C.) ascendió al trono después de un breve intervalo, aparentemente el último gobernante persa mencionado en el Antiguo Testamento, probablemente el "Darío el persa" de Neh. 12:22, de cuyo reinado tenemos las últimas listas de personal del templo que se dan en la Biblia. En Daniel 8, Daniel tiene un sueño de un carnero y una cabra macho, representando nuevamente el Imperio Medo-Persa. El carnero se describe como que tiene dos grandes cuernos, uno más alto que el otro. El libro de Daniel se refiere repetidamente a la nación que conquistó Babilonia como la de "los medos y los persas" y representa ese imperio dual en otras partes como una sola bestia. Medo-Persia fue conquistada más tarde por Alejandro Magno de Grecia.',
+    date: "539-331 a. C.",
+    scriptures: [],
+    related: [],
+    images: [
+      {
+        caption: "El Imperio Medo-Persa 539 - 331 a. C.",
+        file: "Statue_Persia_8-22-2013 12-26-38 PM.jpg",
+      },
+      {
+        caption:
+          'El oso representaba el imperio de Medo-Persia. Las tres costillas en su boca representaban los tres reinos que esta coalición derrotó en su ascenso al poder: Babilonia, Lidia y Egipto. Fue "levantado de un lado", lo que simbolizaba el dominio eventual de los persas sobre los medos.',
+        file: "Daniel_7_Bear_8-22-2013 12-26-38 PM.jpg",
+      },
+      {
+        caption: "Daniel en Visión",
+        file: "Daniel He-Goat and Ram_8-22-2013 12-26-38 PM.jpg",
+      },
+      {
+        caption: "El Imperio Medo-Persa 539 - 331 a. C.",
+        file: "persia_map_8-22-2013 12-26-38 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1398",
+    slug: "daniels-greece-prophecies",
+    title: "Profecías de Daniel sobre Grecia",
+    period: "8",
+    description:
+      "En el libro de Daniel, el reino de Grecia se simboliza con un leopardo con cuatro alas y cuatro cabezas (Daniel 7), una cabra macho con cuatro cuernos (Daniel 8) y como los muslos de bronce de la gran imagen de la estatua en Daniel 2.",
+    article:
+      'La palabra hebrea para Grecia es Yawan (Javan), que es el nombre de uno de los hijos de Jafet. Javan se menciona en la genealogía inmediatamente después de Madai, el progenitor de los medos (véase Génesis 10:2). Aproximadamente en el momento en que los israelitas se estaban estableciendo en Canaán, esas tribus indoeuropeas llamadas más tarde griegas estaban migrando en oleadas sucesivas a la región del Egeo (Grecia continental, las islas y las costas occidentales de Asia Menor), conquistando o expulsando a los habitantes mediterráneos anteriores. Estos desplazamientos estuvieron conectados con el movimiento de los Pueblos del Mar (incluidos los filisteos) hacia las costas del Mediterráneo oriental.\n\nCuando pensamos en la antigua Grecia, pensamos principalmente en la edad de oro de la civilización griega en el siglo V a. C. Este florecimiento de la cultura griega siguió al período del mayor esfuerzo unido de las ciudades-estado divididas: la exitosa defensa de Grecia contra Persia alrededor del tiempo de la reina Ester. Luego, en 336 a. C., Alejandro Magno sucedió en el trono de Macedonia, un estado semigriego en la frontera norte de Grecia. Entre los factores que impulsaron al joven rey en sus planes estaban la ambición personal, la necesidad de expansión económica, el deseo de difundir la cultura griega y una animosidad natural hacia los persas debido a sus relaciones pasadas con sus compatriotas.\n\nEl último rey reinante del Imperio Persa, Darío III (Codomano), fue derrotado por Alejandro en las batallas de Gránico (334 a. C.), Iso (333 a. C.) y Arbela (331 a. C.). Después, sus soldados macedonios y griegos irrumpieron en Asia Menor, Siria y Palestina hasta la antigua tierra del Nilo, que fácilmente cayó en sus manos. Luego tomó Mesopotamia y la patria persa, presionando hasta llegar al valle del Indo. Luego se dispuso a consolidar su imperio y establecer una unión entre Oriente y Occidente, eligiendo la antigua ciudad de Babilonia como su capital y residencia, pero su muerte temprana puso fin a sus planes.\n\nEn Daniel 2, Grecia se simboliza con el leopardo, un animal feroz y carnívoro conocido por su agilidad, con cuatro alas y cuatro cabezas. Aunque el leopardo es en sí mismo una criatura veloz, la visión representaba al animal con cuatro alas agregadas, denotando una velocidad superlativa. El símbolo describe de manera muy adecuada la velocidad relámpago con la que Alejandro y sus macedonios en menos de una década entraron en posesión del imperio más grande que el mundo había conocido. No hay otro ejemplo en la antigüedad de movimientos de tropas tan rápidos a una escala tan grande y exitosa.\n\nLas cuatro cabezas representaban los cuatro reinos (luego reducidos a tres) que ocuparon el territorio de las conquistas de Alejandro. Durante algunos años después de su muerte, los generales de Alejandro intentaron preservar la unidad de su vasto imperio. Alejandro murió sin organizar la sucesión a su trono, y apenas más de 20 años después de su muerte, el último retador fuerte al poder central fue derrotado por una coalición de cuatro generales: Ptolomeo, Casandro, Lisímaco y Seleuco, quienes dividieron el imperio en cuatro reinos. Si bien uno cayó en poco tiempo, los otros tres continuaron de alguna manera hasta que fueron absorbidos, pieza por pieza, por el creciente poder de Roma.\n\nEn Daniel 8, Grecia se conoce como una cabra macho con cuatro cuernos. La "Grecia" de Daniel 8:21 no se refiere a las ciudades-estado divididas de la Grecia clásica, sino al reino macedonio posterior que conquistó Persia bajo Alejandro. Los macedonios conquistaron las ciudades griegas y las incorporaron por primera vez en un estado fuerte y unido. Alejandro Magno, heredando el reino recién expandido de su padre, se propuso extender el dominio macedonio y la cultura griega hacia el este, y conquistó a los persas. La profecía representa al reino de Grecia como sucesor de Persia, porque Grecia nunca se unió en un reino hasta la formación del Imperio Macedonio, que reemplazó a Persia como la principal potencia mundial de esa época (para profecías paralelas, véase en los capítulos 7:6 8:5-8, 21, 22 11:2-4). No hasta los días de Alejandro se pudo hacer referencia al "primer rey" (cap. 8:21) de un imperio griego que era un "rey poderoso" con "gran dominio".\n',
+    date: "323-168 a. C.",
+    scriptures: [],
+    related: [],
+    images: [
+      {
+        caption: "Reino de Grecia: un vientre y muslos de bronce",
+        file: "Statue_Greece_8-22-2013 2-30-21 PM.jpg",
+      },
+      {
+        caption: "El leopardo de Daniel 7 con cuatro cabezas y cuatro alas",
+        file: "Leopard_2_8-22-2013 2-30-21 PM.jpg",
+      },
+      {
+        caption: "Cabra macho y carnero",
+        file: "Daniel He-Goat and Ram_7-22-2013 3-58-02 PM_8-22-2013 2-30-21 PM.jpg",
+      },
+      {
+        caption: "Imperio griego 331 - 168 a. C.",
+        file: "greece_map_8-22-2013 2-30-21 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1399",
+    slug: "daniels-rome-prophecies",
+    title: "Profecías de Daniel sobre Roma",
+    period: "8",
+    description:
+      'El reino de Roma se simboliza en el libro de Daniel como el cuarto reino de hierro en el sueño de Nabucodonosor de una gran imagen, una bestia "terrible y espantosa" con dientes de hierro y diez cuernos (Daniel 7), y como un cuerno pequeño (Daniel 8).',
+    article:
+      'La Biblia menciona por primera vez el Imperio Romano en Daniel 2, como el cuarto reino de hierro. Es el reino que sucedió a los restos divididos del Imperio griego de Alejandro. Le siguen pies de hierro mezclados con barro, lo que significa que una parte de Roma sobreviviría al imperio mundial sucesor.\n\nLa Roma temprana fue establecida por tribus latinas que habían llegado a Italia en oleadas sucesivas aproximadamente en el momento en que otras tribus indoeuropeas relacionadas se habían establecido en Grecia. Desde aproximadamente el siglo VIII hasta el V a. C., la ciudad-estado fue gobernada por reyes vecinos. Alrededor del año 500 a. C., el estado romano se convirtió en una república, y permaneció como república durante casi 500 años. Para el año 265 a. C., toda Italia estaba bajo control romano. Para el año 200 a. C., Roma había salido victoriosa de la lucha contra su poderoso rival Cartago. A partir de entonces, Roma primero dominó y luego absorbió los tres reinos supervivientes de Alejandro (véase en Dan. 7:6), y así se convirtió en la siguiente gran potencia mundial. Este cuarto imperio fue el más longevo y extenso de los cuatro, extendiéndose hasta el siglo II cristiano, desde Gran Bretaña hasta el Éufrates.\n\nEn cuanto a Daniel 2, la historia confirma esta descripción de Roma, que ganó su territorio por la fuerza o el temor a su poderío armado. Aplastando a un oponente tras otro, se convirtió en la conquistadora agresiva e irresistible del mundo mediterráneo y Europa occidental. A principios de la era cristiana y un poco más tarde, el poderío de hierro de las legiones romanas estuvo detrás de la Pax Romana: la paz romana. Roma fue el imperio más grande y fuerte que el mundo había conocido.\n\nEn Daniel 7, presumiblemente, no había paralelo en el mundo natural mediante el cual designar a la criatura horrible, "terrible y espantosa, extremadamente fuerte", como fue el caso de las tres primeras bestias. Sin embargo, no hay duda de que representa el mismo poder que se representa con las piernas de hierro de la gran imagen (véase Dan. 2:40). Está claro en la historia que la potencia mundial que sucedió al tercer imperio profético fue Roma. Si bien la transición fue gradual, por lo que es difícil señalar un evento específico como el que marca el cambio, algunos historiadores enfatizan el año 168 a. C. porque para entonces Roma había conquistado Macedonia y había salvado a Egipto de caer en el reino seléucida, de modo que virtualmente controlaba los tres reinos, aunque todavía solo había conquistado uno de ellos.\n\nCon respecto a los grandes y grotescos dientes de hierro de la bestia, hablan de la crueldad y la fuerza de Roma, como un animal desgarra y devora a su presa; Roma devoró naciones y pueblos en sus conquistas. A veces, ciudades enteras fueron destruidas, como en el caso de Corinto en 146 a. C., mientras que reinos como Macedonia y los seléucidas fueron divididos en provincias.\n\nEl Cuerno Pequeño\n\nTanto en los capítulos 7 como en el 8 de Daniel, el "cuerno pequeño" marca un gran enemigo del pueblo escogido de Dios, y Roma y su eventual progenie lo demuestran históricamente. Para los antiguos hebreos, un pueblo familiarizado con la forma en que los animales domésticos como los carneros y los toros usaban sus cuernos para defenderse y atacar, el cuerno se convirtió naturalmente en un símbolo de poder. Los pasajes que describen el "cuerno pequeño" y sus actividades son los capítulos 7:8, 20-26; 8:9-14, 23-26. Los pasajes paralelos cuyo contexto pone de manifiesto que se están describiendo el mismo poder y los mismos acontecimientos en lenguaje literal son los capítulos 9:26, 27; 11:29-45; 12:1, 6-11. Las características atribuidas al cuerno pequeño en los capítulos 7 y 8, y las actividades que se le atribuyen entre las dos visiones describen el mismo poder en diferentes aspectos de su actividad y desde un punto de vista ligeramente diferente. En cada caso, el "cuerno" es "pequeño" cuando se ve por primera vez en el escenario profético (capítulos 7:8; 8:9), pero con el tiempo crece hasta ser muy grande (capítulos 7:20; 8:9). En el capítulo 7 surge "entre" (v. 8) y "después" (v. 24) de los 10 cuernos de la cuarta bestia terrible (v. 7), desplazando a 3 de los 10 a medida que surge (versículos 8, 20, 24), mientras que el cuerno pequeño del capítulo 8 surge después de que hayan aparecido los "cuatro notables" cuernos que reemplazaron el "gran cuerno" del carnero, hacia el final del dominio ejercido por los 4 cuernos "cuando los transgresores hayan llegado a su límite" (versículos 23, 24). Se dice que el cuerno pequeño del capítulo 7 tiene "ojos como los ojos de un hombre" (versículos 8, 20), y se dice que el cuerno pequeño del capítulo 8 es "astuto" en sus métodos de operación (v. 25, RSV). La interpretación del cuerno pequeño del capítulo 7 implica claramente que representa a un "rey" (v. 24), mientras que el del capítulo 8 se declara específicamente como que representa a un "rey" (v. 23). El cuerno del capítulo 7 hace "guerra contra los santos", prevalece contra ellos y los desgasta (versículos 21, 25); el cuerno del capítulo 8 derriba a algunos del "ejército", es decir, el "pueblo santo", al suelo y los pisotea (versículos 10, 13, 24). Con su "boca que hablaba cosas muy grandes", el cuerno del capítulo 7 habla "grandes palabras contra el Altísimo" e intenta "cambiar los tiempos y las leyes" ordenadas por el Altísimo (versículos 20, 25); el cuerno del capítulo 8 "se engrandeció hasta el príncipe del ejército" (v. 11), quien se describe en el v. 25 como el "Príncipe de los príncipes", obviamente el Señor, y "echó por tierra la verdad" (v. 12). El período de tiempo durante el cual el cuerno pequeño oprime a "los santos del Altísimo" se dice que es "un tiempo, tiempos y medio tiempo" (Dan. 7:25; cf. cap. 12:7, "tiempo, tiempos y medio"). El cuerno pequeño del capítulo 8 quita "el sacrificio continuo" y derriba "el lugar de su santuario" (v. 11), pero después de un período llamado "dos mil trescientos días" (v. 14) el santuario es "limpiado" (KJV), o "restaurado a su estado legítimo" (RSV). En el capítulo 7, la venida del "Anciano de días" en juicio priva al cuerno pequeño de su poder y otorga el reino a los "santos del Altísimo" (versículos 18, 22, 26, 27). En el capítulo 8, al final del período de tiempo especificado, el santuario es "limpiado" de la "transgresión de la desolación" erigida en él por el cuerno pequeño (versículos 13, 14). En el capítulo 9:26, 27, el mismo poder destruye Jerusalén y el templo, haciendo que "el sacrificio y la ofrenda cesen" y desolando el santuario. En el capítulo 11:30, 31, el mismo poder entra en "la tierra gloriosa"—Palestina—(versículos 16, 41, 45), se levanta contra "el príncipe del pacto" (v. 22), contamina el santuario y quita el sacrificio continuo, establece la abominación desoladora (versículos 30, 31) y conspira para eliminar la adoración del verdadero Dios (v. 30), todo por "un tiempo, tiempos y medio tiempo" (cap. 12:7). Jesús aplicó la profecía paralela de Dan. 11:31 y 12:11 a los romanos (véase Mt. 24:15-20; cf. Lc. 21:20-24), una predicción que se cumplió en el año 70 d. C. cuando estos últimos destruyeron Jerusalén y el templo y pusieron fin a la nación judía. Algunos intérpretes protestantes han adoptado la antigua interpretación judía; otros han aplicado la profecía del cuerno pequeño, primero a los eventos del año 70 d. C., y segundo a la Roma papal en siglos pasados, cuando era intolerante con toda disidencia y disidentes y perseguía a quienes no consentían en su autoridad.',
+    date: "168 a. C.-476 d. C.",
+    scriptures: [],
+    related: [],
+    images: [
+      {
+        caption: "Reino de Roma: piernas de hierro",
+        file: "Statue_Rome_8-22-2013 3-26-36 PM.jpg",
+      },
+      {
+        caption: "La Bestia de Hierro de Roma",
+        file: "GoodSalt-pcmas0019_8-22-2013 3-26-36 PM.jpg",
+      },
+      {
+        caption:
+          'La cuarta bestia que sale del mar en el sueño de Daniel se describe como "terrible y espantosa". Tenía dientes de hierro y pisoteaba todo bajo sus pies. Representa al reino de Roma cuando era una nación fuerte. Tenía diez cuernos.',
+        file: "Daniel 7 cover art_8-22-2013 3-26-36 PM.jpg",
+      },
+      {
+        caption: "El Imperio Romano 168 a. C. - 476 d. C.",
+        file: "rome_map_8-22-2013 3-26-36 PM.jpg",
+      },
+    ],
+  },
+  {
+    id: "1400",
+    slug: "daniels-divided-europe-prophecies",
+    title: "Profecías de Daniel sobre la Europa Dividida",
+    period: "11",
+    description:
+      "La Biblia describe la potencia mundial después de la caída de Roma como un cuerno pequeño en Daniel 8, como uno de los 11 cuernos mencionados en Daniel 7, y en el gran sueño de Nabucodonosor de una imagen como los pies hechos de hierro mezclado con barro.",
+    article:
+      'En el gran sueño de Daniel 2, se describen los pies de la estatua. Aunque menciona los dedos de los pies, Daniel no llama específicamente la atención sobre su número. Sí menciona que el reino de Roma debía dividirse en diferentes estados nacionales. Muchos comentaristas han sostenido que los dedos de los pies, de los cuales presumiblemente había 10, corresponden a los 10 cuernos de la cuarta bestia del capítulo 7 de Daniel.\n\nDespués de que las tribus bárbaras invadieron y destruyeron el Imperio Romano, la mayoría de los comentaristas están de acuerdo en que se fundaron 10 reinos: los ostrogodos, los visigodos, los francos, los vándalos, los suevos, los alamanes, los anglosajones, los hérulos, los lombardos y los burgundios. El período fue de gran agitación, confusión y cambio, durante el cual un gran número de estados aseguraron su independencia.\n\nAsí como Roma había perdido su tenacidad y fuerza de hierro, sus sucesores fueron manifiestamente débiles, la mezcla de barro con el hierro: un "barro cenagoso". Daniel también dice que este "reino" sería "parcialmente fuerte". Estos reinos bárbaros diferían mucho en destreza militar y eventualmente se establecerían en la Europa que conocemos hoy.\nEn Daniel 7, vemos que este barro cenagoso y diez dedos de los pies se explican como "diez reyes" (v. 24). Si los "cuatro reyes" del v. 17 representan reinos (véase en el v. 3), paralelos a los cuatro imperios del capítulo 2, entonces hay plena razón para entender a estos "diez reyes" también como reinos, así como los cuatro cuernos de la cabra son "cuatro reinos" (cap. 8:22). Las invasiones sucesivas del Imperio Romano por numerosas tribus germánicas, y el reemplazo del imperio por varios estados o monarquías separados, son hechos históricos bien establecidos.\n\nDaniel 2:43 también habla de la "simiente de hombres". Muchos comentaristas se refieren a esto a los matrimonios reales, aunque la intención de la declaración puede ser más amplia. La palabra para hombre es \'enash\', "humanidad". "Semilla" significa descendientes. Por lo tanto, también puede haber una indicación general de un cambio de poblaciones, pero con el nacionalismo aún fuerte. Pero sea como fuere, estas naciones "no se unirán", no se volverán a unir. La profecía de Daniel se ha mantenido y se mantendrá a prueba del tiempo. Algunas potencias mundiales han sido débiles, otras fuertes. Los intentos de unir en un gran imperio a las diversas naciones que surgieron del cuarto imperio han terminado en fracaso. Temporalmente, ciertas secciones se han unido, pero la unión no ha resultado pacífica ni permanente. También ha habido muchas alianzas políticas entre las naciones. Los estadistas con visión de futuro han intentado de diversas maneras lograr una federación de naciones que funcione con éxito, pero todos esos intentos han resultado decepcionantes.\n\nEl Cuerno Pequeño\n\nUn símbolo en el libro de Daniel (capítulos 7 y 8) para un gran enemigo del pueblo elegido de Dios es el "poder del cuerno pequeño". Para los antiguos hebreos, un pueblo familiarizado con la forma en que los animales domésticos como los carneros y los toros usaban sus cuernos para defenderse y atacar, el cuerno se convirtió naturalmente en un símbolo de poder. Los pasajes que describen el "cuerno pequeño" y sus actividades son los capítulos 7:8, 20-26; 8:9-14, 23-26. Los pasajes paralelos cuyo contexto pone de manifiesto que se están describiendo el mismo poder y los mismos acontecimientos en lenguaje literal son los capítulos 9:26, 27; 11:29-45; 12:1, 6-11. Las características atribuidas al cuerno pequeño en los capítulos 7 y 8, y las actividades que se le atribuyen entre las dos visiones describen el mismo poder en diferentes aspectos de su actividad y desde un punto de vista ligeramente diferente. En cada caso, el "cuerno" es "pequeño" cuando se ve por primera vez en el escenario profético (capítulos 7:8; 8:9), pero con el tiempo crece hasta ser muy grande (capítulos 7:20; 8:9). En el capítulo 7 surge "entre" (v. 8) y "después" (v. 24) de los 10 cuernos de la cuarta bestia terrible (v. 7), desplazando a 3 de los 10 a medida que surge (versículos 8, 20, 24), mientras que el cuerno pequeño del capítulo 8 surge después de que hayan aparecido los "cuatro notables" cuernos que reemplazaron el "gran cuerno" del carnero, hacia el final del dominio ejercido por los 4 cuernos "cuando los transgresores hayan llegado a su límite" (versículos 23, 24). El cuerno pequeño del capítulo 7 se dice que tiene "ojos como los ojos de un hombre" (versículos 8, 20), y se dice que el cuerno pequeño del capítulo 8 es "astuto" en sus métodos de operación (v. 25, RSV). La interpretación del cuerno pequeño del capítulo 7 implica claramente que representa a un "rey" (v. 24), mientras que el del capítulo 8 se declara específicamente como que representa a un "rey" (v. 23). El cuerno del capítulo 7 hace "guerra contra los santos", prevalece contra ellos y los desgasta (versículos 21, 25); el cuerno del capítulo 8 derriba a algunos del "ejército", es decir, el "pueblo santo", al suelo y los pisotea (versículos 10, 13, 24). Con su "boca que hablaba cosas muy grandes", el cuerno del capítulo 7 habla "grandes palabras contra el Altísimo" e intenta "cambiar los tiempos y las leyes" ordenadas por el Altísimo (versículos 20, 25); el cuerno del capítulo 8 "se engrandeció hasta el príncipe del ejército" (v. 11), quien se describe en el v. 25 como el "Príncipe de los príncipes", obviamente el Señor, y "echó por tierra la verdad" (v. 12). El período de tiempo durante el cual el cuerno pequeño oprime a "los santos del Altísimo" se dice que es "un tiempo, tiempos y medio tiempo" (Dan. 7:25; cf. cap. 12:7, "tiempo, tiempos y medio"). El cuerno pequeño del capítulo 8 quita "el sacrificio continuo" y derriba "el lugar de su santuario" (v. 11), pero después de un período llamado "dos mil trescientos días" (v. 14) el santuario es "limpiado" (KJV), o "restaurado a su estado legítimo" (RSV). En el capítulo 7, la venida del "Anciano de días" en juicio priva al cuerno pequeño de su poder y otorga el reino a los "santos del Altísimo" (versículos 18, 22, 26, 27). En el capítulo 8, al final del período de tiempo especificado, el santuario es "limpiado" de la "transgresión de la desolación" erigida en él por el cuerno pequeño (versículos 13, 14). En el capítulo 9:26, 27, el mismo poder destruye Jerusalén y el templo, haciendo que "el sacrificio y la ofrenda cesen" y desolando el santuario. En el capítulo 11:30, 31, el mismo poder entra en "la tierra gloriosa"—Palestina—(versículos 16, 41, 45), se levanta contra "el príncipe del pacto" (v. 22), contamina el santuario y quita el sacrificio continuo, establece la abominación desoladora (versículos 30, 31) y conspira para eliminar la adoración del verdadero Dios (v. 30), todo por "un tiempo, tiempos y medio tiempo" (cap. 12:7). Jesús aplicó la profecía paralela de Dan. 11:31 y 12:11 a los romanos (véase Mt. 24:15-20; cf. Lc. 21:20-24), una predicción que se cumplió en el año 70 d. C. cuando Roma destruyó Jerusalén y el templo y puso fin a la nación judía. Algunos intérpretes protestantes han adoptado la antigua interpretación judía; otros han aplicado la profecía del cuerno pequeño, primero a los eventos del año 70 d. C., y segundo a la Roma papal en siglos pasados, cuando era intolerante con toda disidencia y disidentes y perseguía a quienes no consentían en su autoridad.\n',
+    date: "476-Futuro",
+    scriptures: [],
+    related: [
+      {
+        slug: "daniel-11-king-of-the-northsouth",
+        title: "Daniel 11 - Rey del Norte/Sur",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "Reino de Europa dividido: pies en parte de hierro y en parte de barro",
+        file: "Statue_Feet_8-26-2013 5-37-28 PM.jpg",
+      },
+      {
+        caption:
+          "La cuarta bestia en el sueño de Daniel representa a Roma. Diez cuernos simbolizan diez reinos.",
+        file: "Daniel_7_8-26-2013 5-37-28 PM.jpg",
+      },
+    ],
+  },
 ] as BibleTimelineEvent[];
