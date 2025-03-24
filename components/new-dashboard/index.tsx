@@ -20,6 +20,7 @@ import VoiceList from "../VoiceList";
 import { useSecretUnlock } from "@/hooks/useSecretUnlock";
 import { showToast } from "@/utils/showToast";
 import EmptyStateMessage from "../EmptyStateMessage";
+import GoogleAuth from "../GoogleAuth";
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
@@ -30,7 +31,9 @@ const SecondDashboard = () => {
   const navigation = useNavigation();
   const theme = useTheme();
   const styles = getStyles(theme);
-  const [currentEmpty, setCurrentEmpty] = useState<'doubible' | 'timeline'>('doubible');
+  const [currentEmpty, setCurrentEmpty] = useState<"doubible" | "timeline">(
+    "doubible"
+  );
 
   const {
     currentBibleVersion,
@@ -48,7 +51,7 @@ const SecondDashboard = () => {
     lastBottomSideBook,
     lastBottomSideChapter,
     lastBottomSideVerse,
-    isAdmin
+    isAdmin,
   } = storedData;
 
   const onSelect = (version: string) => {
@@ -85,7 +88,7 @@ const SecondDashboard = () => {
       action: () => navigation.navigate(Screens.Home, homePageInitParams),
       longAction: () => {
         handleTap("top-left");
-        showToast('Santa Escritura')
+        showToast("Santa Escritura");
       },
       tag: "crown-outline",
     },
@@ -103,25 +106,30 @@ const SecondDashboard = () => {
     },
   ];
 
-  const requestAccessHandlePresentModalPress = useCallback((state: 'doubible' | 'timeline') => {
-    setCurrentEmpty(state);
-    requestAccessBottomSheetModalRef.current?.present();
-  }, []);
+  const requestAccessHandlePresentModalPress = useCallback(
+    (state: "doubible" | "timeline") => {
+      setCurrentEmpty(state);
+      requestAccessBottomSheetModalRef.current?.present();
+    },
+    []
+  );
 
   const stateMessage = {
     doubible: {
-      "title": "¡Nueva función en desarrollo!",
-      "message": "Estamos trabajando en esta función para ayudarte a aprender más sobre la santa escritura de una manera interactiva. Muy pronto podrás acceder a nuevas herramientas y contenido.",
-      "subText": "Gracias por tu paciencia y apoyo.",
-      email: ''
+      title: "¡Nueva función en desarrollo!",
+      message:
+        "Estamos trabajando en esta función para ayudarte a aprender más sobre la santa escritura de una manera interactiva. Muy pronto podrás acceder a nuevas herramientas y contenido.",
+      subText: "Gracias por tu paciencia y apoyo.",
+      email: "",
     },
     timeline: {
-      "title": "Línea de tiempo en desarrollo",
-      "message": "Estamos creando una línea de tiempo interactiva para explorar la historia de la santa escritura de manera clara y visual. Pronto podrás recorrer los eventos clave y profundizar en su contexto.",
-      "subText": "Gracias por tu paciencia y entusiasmo.",
-      email: ''
-    }
-  }
+      title: "Línea de tiempo en desarrollo",
+      message:
+        "Estamos creando una línea de tiempo interactiva para explorar la historia de la santa escritura de manera clara y visual. Pronto podrás recorrer los eventos clave y profundizar en su contexto.",
+      subText: "Gracias por tu paciencia y entusiasmo.",
+      email: "",
+    },
+  };
 
   const studyToolItems: IDashboardOption[] = [
     {
@@ -129,7 +137,7 @@ const SecondDashboard = () => {
       label: "Diccionarios",
       action: () =>
         navigation?.navigate(Screens.DictionarySearch, { word: "" }),
-      color: "#ec899e"
+      color: "#ec899e",
     },
     {
       icon: "SwatchBook",
@@ -138,7 +146,7 @@ const SecondDashboard = () => {
       color: "#ffffff",
       longAction: () => {
         handleTap("bottom-right");
-        showToast('Concordancia')
+        showToast("Concordancia");
       },
     },
     {
@@ -155,7 +163,7 @@ const SecondDashboard = () => {
       color: "#fedf75",
       longAction: () => {
         handleTap("top-right");
-        showToast('Favoritos')
+        showToast("Favoritos");
       },
     },
     {
@@ -190,7 +198,7 @@ const SecondDashboard = () => {
       icon: "TreeDeciduous",
       label: "DuoBible",
       // @ts-ignore
-      action: () => requestAccessHandlePresentModalPress('doubible'),
+      action: () => requestAccessHandlePresentModalPress("doubible"),
       // action: () => navigation.navigate("learn", {}),
       color: "#4caf50",
       // color: "#75d0fe",
@@ -202,7 +210,7 @@ const SecondDashboard = () => {
       // @ts-ignore
       action: () => navigation.navigate("admin", {}),
       color: "#75d0fe",
-      disabled: !isAdmin
+      disabled: !isAdmin,
     },
   ];
 
@@ -269,6 +277,7 @@ const SecondDashboard = () => {
     <StatusBarBackground>
       <ScrollView style={styles.container}>
         <DailyVerseTwo theme={theme} />
+        <GoogleAuth onSuccess={console.log} />
         <MainSection list={mainActionItems} theme={theme} />
         <StudyTools list={studyToolItems} theme={theme} />
         <AdditionalResources list={additionalResourceList} theme={theme} />
@@ -289,7 +298,8 @@ const SecondDashboard = () => {
         startAT={0}
         ref={requestAccessBottomSheetModalRef}
       >
-        <EmptyStateMessage info={stateMessage[currentEmpty]}
+        <EmptyStateMessage
+          info={stateMessage[currentEmpty]}
           onClose={() => requestAccessBottomSheetModalRef.current?.dismiss()}
         />
       </BottomModal>
