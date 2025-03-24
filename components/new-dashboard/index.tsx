@@ -4,23 +4,22 @@ import MainSection from "@/components/new-dashboard/MainSection";
 import StudyTools from "@/components/new-dashboard/StudyTools";
 import StatusBarBackground from "@/components/StatusBarBackground";
 import { useBibleContext } from "@/context/BibleContext";
-import { storedData$, useStorage } from "@/context/LocalstoreContext";
+import { storedData$ } from "@/context/LocalstoreContext";
+import { useSecretUnlock } from "@/hooks/useSecretUnlock";
 import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";
 import isWithinTimeframe from "@/utils/isWithinTimeframe";
+import { showToast } from "@/utils/showToast";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTheme } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import React, { useCallback, useRef, useState } from "react";
-import { ScrollView, StyleSheet, ToastAndroid } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { IDashboardOption } from "../../app/(dashboard)";
 import BottomModal from "../BottomModal";
+import EmptyStateMessage from "../EmptyStateMessage";
 import VersionList from "../home/header/VersionList";
 import VoiceList from "../VoiceList";
-import { useSecretUnlock } from "@/hooks/useSecretUnlock";
-import { showToast } from "@/utils/showToast";
-import EmptyStateMessage from "../EmptyStateMessage";
-import GoogleAuth from "../GoogleAuth";
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
@@ -212,6 +211,13 @@ const SecondDashboard = () => {
       color: "#75d0fe",
       disabled: !isAdmin,
     },
+    {
+      icon: "DoorOpen",
+      label: "loginS",
+      // @ts-ignore
+      action: () => navigation.navigate("login", {}),
+      color: "#75d0fe",
+    },
   ];
 
   const versionRef = useRef<BottomSheetModal>(null);
@@ -277,7 +283,6 @@ const SecondDashboard = () => {
     <StatusBarBackground>
       <ScrollView style={styles.container}>
         <DailyVerseTwo theme={theme} />
-        <GoogleAuth onSuccess={console.log} />
         <MainSection list={mainActionItems} theme={theme} />
         <StudyTools list={studyToolItems} theme={theme} />
         <AdditionalResources list={additionalResourceList} theme={theme} />
