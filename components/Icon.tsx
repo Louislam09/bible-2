@@ -24,7 +24,7 @@ const Icon: React.FC<IconProps> = ({
   style,
   strokeWidth,
   onPress,
-  fillColor,
+  fillColor, 
 }) => {
   const LucideIcon: React.FC<LucideProps & { color?: ColorValue }> =
     icons[name];

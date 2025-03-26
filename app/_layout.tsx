@@ -13,6 +13,7 @@ import { settingState$ } from "@/state/settingState";
 import { Screens, ScreensName } from "@/types";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
+import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
 import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -24,6 +25,11 @@ import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NativeStackNavigationOptions } from "react-native-screens/lib/typescript/native-stack/types";
 import { StackAnimationTypes } from "react-native-screens";
+
+// Enable React tracking for LegendState
+enableReactTracking({
+  auto: true,
+});
 
 type ScreenOptionsProps = {
   route: RouteProp<ParamListBase, string>;

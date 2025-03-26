@@ -24,6 +24,7 @@ import CurrentNoteDetail from "@/components/CurrentNoteDetail";
 import FloatingButton from "@/components/FloatingButton";
 import NoteNameList from "@/components/home/NoteNameList";
 import Walkthrough from "@/components/Walkthrough";
+import PasswordSetupNotification from "@/components/PasswordSetupNotification";
 import { useTheme } from "@react-navigation/native";
 // import CustomHeader from "../components/home/header";
 
@@ -73,6 +74,11 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
 
   const [stepIndex, setStepIndex] = useState(0);
   const isPortrait = orientation === "PORTRAIT";
+
+  // Create Animated values at the component top level
+  const screenHeightValue = useMemo(() => new Animated.Value(SCREEN_HEIGHT), [SCREEN_HEIGHT]);
+  const screenWidthValue = useMemo(() => new Animated.Value(SCREEN_WIDTH), [SCREEN_WIDTH]);
+
   const styles = useMemo(
     () => getStyles(theme, isPortrait),
     [theme, isPortrait]
@@ -143,18 +149,17 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
           chapter={initialState.bottomSideChapter}
           verse={initialState.bottomSideVerse}
           height={Animated.subtract(
-            new Animated.Value(SCREEN_HEIGHT),
+            screenHeightValue,
             topHeight
           )}
-          width={Animated.subtract(new Animated.Value(SCREEN_WIDTH), topWidth)}
+          width={Animated.subtract(screenWidthValue, topWidth)}
           navigation={navigation}
         />
       </>
     );
-  }, [SCREEN_HEIGHT, SCREEN_WIDTH, backgroundColor]);
+  }, [SCREEN_HEIGHT, SCREEN_WIDTH, backgroundColor, screenHeightValue, screenWidthValue]);
 
   return (
-    // <Animated.View style={[{ flex: 1 }, style]}>
     <StatusBarBackground>
       <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
         <Stack.Screen options={{ headerShown: false }} />
@@ -190,11 +195,11 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
               currentStep={stepIndex}
             />
           )}
-          {/* )} */}
+          {/* Password setup notification for Google-authenticated users */}
+          <PasswordSetupNotification />
         </>
       </SafeAreaView>
     </StatusBarBackground>
-    // </Animated.View>
   );
 };
 

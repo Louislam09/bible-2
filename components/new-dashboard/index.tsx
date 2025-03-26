@@ -13,13 +13,14 @@ import { showToast } from "@/utils/showToast";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTheme } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { IDashboardOption } from "../../app/(dashboard)";
 import BottomModal from "../BottomModal";
 import EmptyStateMessage from "../EmptyStateMessage";
 import VersionList from "../home/header/VersionList";
 import VoiceList from "../VoiceList";
+import { pb } from "@/globalConfig";
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
@@ -278,6 +279,18 @@ const SecondDashboard = () => {
       },
     ],
   };
+
+  // useEffect(() => {
+  //   console.log(';aadsa', pb.authStore)
+  //   async function fetchUser() {
+  //     const record = await pb.collection('users').getList()
+  //   //   const record = await pb.collection('users').getOne('5ytt3w7g323a282', {
+  //   //     expand: 'relField1,relField2.subRelField',
+  //   // });
+  //     console.log({record})
+  //   } 
+  //   // fetchUser()
+  // },[])
 
   return (
     <StatusBarBackground>
