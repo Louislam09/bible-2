@@ -59,6 +59,8 @@ const screenAnimations: TScreensName = {
   [Screens.Timeline]: "slide_from_bottom",
   [Screens.Admin]: "slide_from_bottom",
   [Screens.TimelineId]: "slide_from_bottom",
+  [Screens.Login]: "slide_from_right",
+  [Screens.Register]: "slide_from_right",
 };
 
 const App = () => {

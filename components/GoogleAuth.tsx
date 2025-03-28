@@ -69,10 +69,10 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({
     }
   };
 
-  useEffect(() => {
-    console.log("Checking for existing session...", pb.authStore.record);
-    // checkExistingSession();
-  }, []);
+  // useEffect(() => {
+  //   console.log("Checking for existing session...", pb.authStore.record);
+  //   // checkExistingSession();
+  // }, []);
 
   const handleAuthenticationError = (error: Error) => {
     console.log("Error de autenticación:", error);

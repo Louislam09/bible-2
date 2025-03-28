@@ -77,13 +77,6 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
 
   return (
     <View style={styles.dailyVerseContainer}>
-      {/* <TouchableOpacity
-        onPress={() => navigation.navigate(Screens.Onboarding)}
-        style={styles.infoIcon}
-      >
-        <Icon name={"Info"} size={20} color={"white"} />
-      </TouchableOpacity> */}
-
       <View style={styles.verseTitle}>
         <Icon
           name={"BookOpen"}
@@ -140,7 +133,7 @@ const getStyles = ({ colors }: TTheme) =>
       paddingHorizontal: 18,
       marginBottom: 16,
       borderRadius: 16,
-      gap: 16,
+      gap: 8,
     },
     infoIcon: {
       position: "absolute",

@@ -100,11 +100,16 @@ const SecondDashboard = () => {
       action: onSong,
     },
     {
-      icon: "Search",
-      label: "Buscador",
-      // @ts-ignore
-      action: () => navigation.navigate(Screens.Search, {}),
+      icon: "Cloudy",
+      label: "Sincronizar",
+      action: () => navigation.navigate(Screens.Login),
     },
+    // {
+    //   icon: "Search",
+    //   label: "Buscador",
+    //   // @ts-ignore
+    //   action: () => navigation.navigate(Screens.Search, {}),
+    // },
   ];
 
   const requestAccessHandlePresentModalPress = useCallback(
@@ -199,8 +204,8 @@ const SecondDashboard = () => {
       icon: "TreeDeciduous",
       label: "DuoBible",
       // @ts-ignore
-      action: () => requestAccessHandlePresentModalPress("doubible"),
-      // action: () => navigation.navigate("learn", {}),
+      // action: () => requestAccessHandlePresentModalPress("doubible"),
+      action: () => navigation.navigate("learn", {}),
       color: "#4caf50",
       // color: "#75d0fe",
       isNew: isWithinTimeframe("1w", new Date("2025-03-04")).isActive,
@@ -214,12 +219,19 @@ const SecondDashboard = () => {
       disabled: !isAdmin,
     },
     {
-      icon: "DoorOpen",
-      label: "loginS",
-      // @ts-ignore
-      action: () => navigation.navigate("login", {}),
-      color: "#75d0fe",
+      icon: "UserSearch",
+      label: "Buscar \nPersonaje",
+      isIonicon: true,
+      action: () => navigation.navigate(Screens.Character),
+      color: "#cec8ff",
     },
+    // {
+    //   icon: "DoorOpen",
+    //   label: "loginS",
+    //   // @ts-ignore
+    //   action: () => navigation.navigate("login", {}),
+    //   color: "#75d0fe",
+    // },
   ];
 
   const versionRef = useRef<BottomSheetModal>(null);
@@ -245,11 +257,10 @@ const SecondDashboard = () => {
         color: "#b76e5b",
       },
       {
-        icon: "UserSearch",
-        label: "Buscar \nPersonaje",
-        isIonicon: true,
-        action: () => navigation.navigate(Screens.Character),
-        color: "#cec8ff",
+        icon: "FileStack",
+        label: "Versiones",
+        action: versionHandlePresentModalPress,
+        color: "#beeaff",
       },
       {
         icon: "AudioLines",
@@ -266,9 +277,9 @@ const SecondDashboard = () => {
         color: "#2cc47d",
       },
       {
-        icon: "FileStack",
-        label: "Versiones",
-        action: versionHandlePresentModalPress,
+        icon: "Info",
+        label: "Incorporación",
+        action: () => navigation.navigate(Screens.Onboarding),
         color: "#beeaff",
       },
       {
@@ -284,7 +295,7 @@ const SecondDashboard = () => {
   return (
     <StatusBarBackground>
       <ScrollView style={styles.container}>
-        {user && <ProfileCard user={user} />}
+        <ProfileCard user={user} />
         <DailyVerseTwo theme={theme} />
         <MainSection list={mainActionItems} theme={theme} />
         <StudyTools list={studyToolItems} theme={theme} />

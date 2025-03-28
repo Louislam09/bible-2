@@ -63,7 +63,7 @@ export const loginWithEmailPassword = async (
     return authData.record as pbUser;
   } catch (error) {
     console.log("Error logging in with email/password:", error);
-    throw error;
+    throw "No se pudo autenticar";
   }
 };
 

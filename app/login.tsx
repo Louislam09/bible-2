@@ -1,22 +1,23 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  Switch,
-  ActivityIndicator,
-} from "react-native";
-import { useRouter } from "expo-router";
-import { authState$ } from "@/state/authState";
-import { useStorage } from "@/context/LocalstoreContext";
-import { use$ } from "@legendapp/state/react";
 import GoogleAuth from "@/components/GoogleAuth";
-import { useCustomTheme } from "@/context/ThemeContext";
-import { useBibleContext } from "@/context/BibleContext";
-import OAuthGoogleLogin from "@/components/PocketbaseGoogleAuth";
-import { TTheme } from "@/types";
-import { ThemeProvider, useTheme } from "@react-navigation/native";
 import { Text, View } from "@/components/Themed";
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import { useBibleContext } from "@/context/BibleContext";
+import { storedData$ } from "@/context/LocalstoreContext";
+import { useCustomTheme } from "@/context/ThemeContext";
+import AuthProvider from "@/providers/AuthProvider";
+import { authState$ } from "@/state/authState";
+import { TTheme } from "@/types";
+import { use$ } from "@legendapp/state/react";
+import { useTheme } from "@react-navigation/native";
+import { Stack, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Switch,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -32,6 +33,12 @@ const LoginScreen = () => {
   const isLoading = use$(() => authState$.isLoading.get());
   const theme = useTheme();
   const styles = getStyles(theme);
+
+  useEffect(() => {
+    const userData = storedData$.user.get();
+
+    if (userData) router.replace("(dashboard)");
+  }, []);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -62,17 +69,25 @@ const LoginScreen = () => {
     }
   };
 
-  const handleGoogleLogin = async (userData: any) => {
-    try {
-      // Set cloud sync preference based on user choice
-      // toggleCloudSync(enableSync);
-    } catch (error) {
-      console.error("Error setting cloud sync preference:", error);
-    }
-  };
-
   return (
     <View style={[styles.container]}>
+      <Stack.Screen
+        options={{
+          ...singleScreenHeader({
+            theme,
+            title: "Iniciar session",
+            titleIcon: "LogIn",
+            headerRightProps: {
+              headerRightIcon: "Trash2",
+              headerRightIconColor: "red",
+              onPress: () => {},
+              disabled: false,
+              style: { opacity: 0 },
+            },
+            goBack: () => router.push("/(dashboard)"),
+          }),
+        }}
+      />
       <Text style={[styles.title]}>Bienvenido de Nuevo</Text>
 
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
@@ -80,7 +95,7 @@ const LoginScreen = () => {
       <TextInput
         style={[styles.input]}
         placeholder="Correo Electrónico"
-        placeholderTextColor={theme.colors.text + 99}
+        placeholderTextColor={theme.colors.text}
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
@@ -90,7 +105,7 @@ const LoginScreen = () => {
       <TextInput
         style={[styles.input]}
         placeholder="Contraseña"
-        placeholderTextColor={theme.colors.text + 99}
+        placeholderTextColor={theme.colors.text}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -127,7 +142,7 @@ const LoginScreen = () => {
         )}
       </TouchableOpacity>
 
-      <GoogleAuth onSuccess={handleGoogleLogin} />
+      <GoogleAuth onSuccess={() => {}} />
       {/* <OAuthGoogleLogin /> */}
 
       <TouchableOpacity onPress={() => router.push("/register")}>
@@ -161,11 +176,13 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     input: {
       height: 50,
-      borderRadius: 8,
+      borderRadius: 5,
+      borderWidth: 1,
       paddingHorizontal: 15,
       marginBottom: 15,
-      borderWidth: 1,
-      borderColor: colors.text + 80,
+      borderColor: colors.text,
+      color: colors.primary,
+      backgroundColor: colors.card,
     },
     button: {
       height: 50,

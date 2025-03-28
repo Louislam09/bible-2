@@ -47,6 +47,8 @@ export enum Screens {
   ChallengeTypeId = "memorization/[verseId]/challenge/[typeId]",
   Admin = "admin",
   TimelineId = "timeline/[timelineId]",
+  Login = "login",
+  Register = "register",
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -79,6 +81,8 @@ export const ScreensName: TScreensName = {
   [Screens.Timeline]: "Linea de tiempo",
   [Screens.Admin]: "Panel Admin",
   [Screens.TimelineId]: "Linea de Tiempo",
+  [Screens.Login]: "Iniciar Sesión",
+  [Screens.Register]: "Crear una cuenta",
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -99,6 +103,8 @@ export type RootTabParamList = {
   notFound: undefined;
   dictionary: undefined;
   admin: undefined;
+  login: undefined;
+  register: undefined;
   history: undefined;
   "memorization/memoryList": undefined;
 };
@@ -119,7 +125,7 @@ export type RootStackParamList = {
   chooseBook:
     | NavigatorScreenParams<RootTabParamList>
     | ChooseChapterNumberParams;
-  search: NavigatorScreenParams<RootTabParamList> | { book?: string };
+  "(search)": NavigatorScreenParams<RootTabParamList> | { book?: string };
   concordance: NavigatorScreenParams<RootTabParamList> | {};
   strongSearchEntire:
     | NavigatorScreenParams<RootTabParamList>
@@ -140,6 +146,8 @@ export type RootStackParamList = {
   hymn: undefined;
   history: undefined;
   notFound: undefined;
+  [Screens.Login]: undefined;
+  [Screens.Register]: undefined;
 };
 
 export type HomeParams = {
