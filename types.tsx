@@ -682,3 +682,15 @@ export type GoogleUser = {
   picture: string;
   verified_email: boolean;
 };
+export interface pbUser {
+  avatar: string;
+  collectionId: string;
+  collectionName: string;
+  created: string;
+  email: string;
+  emailVisibility: boolean;
+  id: string;
+  name: string;
+  updated: string;
+  verified: boolean;
+}

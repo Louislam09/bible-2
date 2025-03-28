@@ -1,6 +1,5 @@
 import CustomHeaderLeft from "@/components/CustomHeaderLeft";
 import ErrorBoundaryFallback from "@/components/ErrorBoundaryFallback";
-import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import BibleChapterProvider from "@/context/BibleChapterContext";
 import BibleProvider from "@/context/BibleContext";
 import DatabaseProvider from "@/context/databaseContext";
@@ -30,7 +29,7 @@ type ScreenOptionsProps = {
   navigation: any;
 };
 
-type TScreensName = { [key in Screens]: StackAnimationTypes  };
+type TScreensName = { [key in Screens]: StackAnimationTypes };
 
 const screenAnimations: TScreensName = {
   [Screens.Dashboard]: "none",

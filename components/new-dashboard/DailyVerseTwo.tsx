@@ -13,6 +13,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "../Icon";
 import { Text, View } from "../Themed";
 import { use$ } from "@legendapp/state/react";
+import ProfileCard from "../UserProfile";
 
 const defaultDailyVerse = {
   book_number: 0,
@@ -47,7 +48,7 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(
     dailyVerseObject || defaultDailyVerse
   );
-  const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
+  const user = use$(() => storedData$.user.get());
   const styles = getStyles(theme);
   const isDefaultVerse = dailyVerseObject?.bookName;
 
@@ -83,6 +84,15 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
       >
         <Icon name={"Info"} size={20} color={"white"} />
       </TouchableOpacity>
+      <View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+        }}
+      >
+        {user && <ProfileCard user={user} />}
+      </View>
       <View style={styles.header}>
         <Text style={styles.title}>Versículo del día</Text>
         <TouchableOpacity

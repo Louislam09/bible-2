@@ -14,11 +14,13 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import { useNavigation } from "expo-router";
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { StyleSheet, ToastAndroid, useWindowDimensions } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import SecondDashboard from "../../components/new-dashboard";
 import { use$ } from "@legendapp/state/react";
+import { authState$ } from "@/state/authState";
+import ProfileCardProps from "@/components/UserProfile";
 
 export type IDashboardOption = {
   icon: IconProps["name"];
@@ -283,6 +285,33 @@ const Dashboard: React.FC<DashboardProps> = () => {
 
 const MyDashboard = () => {
   const isGridLayout = use$(() => storedData$.isGridLayout.get());
+  const { loadFromCloud } = useStorage();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const isLoggedIn = await authState$.checkSession();
+        console.log({ isLoggedIn });
+
+        if (isLoggedIn) {
+          // Load user settings from cloud
+          await loadFromCloud();
+          console.log("🔃 Load user notes");
+          // await notesState$.fetchNotes();
+        } else {
+          console.log(" User is not authenticated");
+          // router.replace("/login");
+        }
+      } catch (error: any) {
+        console.error("Error checking authentication:", error);
+        console.error("Original Erorr:", error.originalError);
+        // router.replace("/login");
+      }
+    };
+
+    checkAuth();
+  }, []);
+
   return !isGridLayout ? <SecondDashboard /> : <Dashboard />;
 };
 

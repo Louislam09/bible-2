@@ -51,6 +51,7 @@ const SecondDashboard = () => {
     lastBottomSideChapter,
     lastBottomSideVerse,
     isAdmin,
+    user,
   } = storedData;
 
   const onSelect = (version: string) => {

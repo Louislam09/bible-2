@@ -1,68 +1,60 @@
 import { observable } from "@legendapp/state";
+
 import { pb } from "@/globalConfig";
 import { authState$ } from "./authState";
 
-// Define the note interface
-export interface Note {
-  id?: string;
+export interface TNote {
+  id: string;
   title: string;
   content: string;
-  tags?: string[];
-  verseReference?: string;
   created?: string;
   updated?: string;
 }
 
-// Define the notes state interface
 export interface NotesState {
-  notes: Note[];
+  notes: TNote[];
   isLoading: boolean;
   error: string | null;
-  
-  // Methods
-  fetchNotes: () => Promise<Note[]>;
-  addNote: (note: Note) => Promise<Note>;
-  updateNote: (id: string, note: Partial<Note>) => Promise<Note>;
+
+  fetchNotes: () => Promise<TNote[]>;
+  addNote: (note: TNote) => Promise<TNote>;
+  updateNote: (id: string, note: Partial<TNote>) => Promise<TNote>;
   deleteNote: (id: string) => Promise<boolean>;
-  getNoteById: (id: string) => Note | undefined;
-  getNotesByTag: (tag: string) => Note[];
-  getNotesByVerseReference: (reference: string) => Note[];
+  getNoteById: (id: string) => TNote | undefined;
   clearError: () => void;
 }
 
-// Create the observable notes state
 export const notesState$ = observable<NotesState>({
   notes: [],
   isLoading: false,
   error: null,
-  
-  // Fetch all notes for the current user
+
   fetchNotes: async () => {
     try {
       notesState$.isLoading.set(true);
       notesState$.error.set(null);
-      
+
       const user = authState$.user.get();
-      
+
       if (!user) {
         throw new Error("No hay usuario autenticado para obtener notas");
       }
-      
-      const result = await pb.collection('notes').getList(1, 100, {
+
+      const result = await pb.collection("notes").getList(1, 100, {
         filter: `user = "${user.id}"`,
-        sort: '-created',
+        sort: "-created",
       });
-      
-      const notes = result.items.map(item => ({
+
+      const notes = result.items.map((item) => ({
         id: item.id,
         title: item.title,
         content: item.content,
         tags: item.tags || [],
-        verseReference: item.verseReference || '',
+        verseReference: item.verseReference || "",
         created: item.created,
         updated: item.updated,
       }));
-      
+
       notesState$.notes.set(notes);
       return notes;
     } catch (error: any) {
@@ -74,41 +66,36 @@ export const notesState$ = observable<NotesState>({
       notesState$.isLoading.set(false);
     }
   },
-  
-  // Add a new note
-  addNote: async (note: Note) => {
+
+  addNote: async (note: TNote) => {
     try {
       notesState$.isLoading.set(true);
       notesState$.error.set(null);
-      
+
       const user = authState$.user.get();
-      
+
       if (!user) {
         throw new Error("No hay usuario autenticado para crear nota");
       }
-      
-      const newNote = await pb.collection('notes').create({
+
+      const newNote = await pb.collection("notes").create({
         title: note.title,
         content: note.content,
-        tags: note.tags || [],
-        verseReference: note.verseReference || '',
         user: user.id,
       });
-      
-      const createdNote: Note = {
+
+      const createdNote: TNote = {
         id: newNote.id,
         title: newNote.title,
         content: newNote.content,
-        tags: newNote.tags || [],
-        verseReference: newNote.verseReference || '',
         created: newNote.created,
         updated: newNote.updated,
       };
-      
+
       // Update the local state
       const currentNotes = notesState$.notes.get();
       notesState$.notes.set([createdNote, ...currentNotes]);
-      
+
       return createdNote;
     } catch (error: any) {
       const errorMessage = error.message || "Error al crear nota";
@@ -119,44 +106,39 @@ export const notesState$ = observable<NotesState>({
       notesState$.isLoading.set(false);
     }
   },
-  
-  // Update an existing note
-  updateNote: async (id: string, note: Partial<Note>) => {
+
+  updateNote: async (id: string, note: Partial<TNote>) => {
     try {
       notesState$.isLoading.set(true);
       notesState$.error.set(null);
-      
+
       const user = authState$.user.get();
-      
+
       if (!user) {
         throw new Error("No hay usuario autenticado para actualizar nota");
       }
-      
-      const updatedNote = await pb.collection('notes').update(id, {
+
+      const updatedNote = await pb.collection("notes").update(id, {
         title: note.title,
         content: note.content,
-        tags: note.tags,
-        verseReference: note.verseReference,
       });
-      
-      const resultNote: Note = {
+
+      const resultNote: TNote = {
         id: updatedNote.id,
         title: updatedNote.title,
         content: updatedNote.content,
-        tags: updatedNote.tags || [],
-        verseReference: updatedNote.verseReference || '',
         created: updatedNote.created,
         updated: updatedNote.updated,
       };
-      
+
       // Update the local state
       const currentNotes = notesState$.notes.get();
-      const updatedNotes = currentNotes.map((n: Note) => 
-        n.id === id ? resultNote : n
+      const updatedNotes = currentNotes.map((mappedNote: TNote) =>
+        mappedNote.id === id ? resultNote : mappedNote
       );
-      
+
       notesState$.notes.set(updatedNotes);
-      
+
       return resultNote;
     } catch (error: any) {
       const errorMessage = error.message || "Error al actualizar nota";
@@ -167,27 +149,26 @@ export const notesState$ = observable<NotesState>({
       notesState$.isLoading.set(false);
     }
   },
-  
-  // Delete a note
+
   deleteNote: async (id: string) => {
     try {
       notesState$.isLoading.set(true);
       notesState$.error.set(null);
-      
+
       const user = authState$.user.get();
-      
+
       if (!user) {
         throw new Error("No hay usuario autenticado para eliminar nota");
       }
-      
-      await pb.collection('notes').delete(id);
-      
+
+      await pb.collection("notes").delete(id);
+
       // Update the local state
       const currentNotes = notesState$.notes.get();
-      const updatedNotes = currentNotes.filter((n: Note) => n.id !== id);
-      
+      const updatedNotes = currentNotes.filter((n: TNote) => n.id !== id);
+
       notesState$.notes.set(updatedNotes);
-      
+
       return true;
     } catch (error: any) {
       const errorMessage = error.message || "Error al eliminar nota";
@@ -198,27 +179,13 @@ export const notesState$ = observable<NotesState>({
       notesState$.isLoading.set(false);
     }
   },
-  
-  // Get a note by ID
-  getNoteById: (id: string): Note | undefined => {
+
+  getNoteById: (id: string): TNote | undefined => {
     const notes = notesState$.notes.get();
-    return notes.find((note: Note) => note.id === id);
+    return notes.find((note: TNote) => note.id === id);
   },
-  
-  // Get notes by tag
-  getNotesByTag: (tag: string) => {
-    const notes = notesState$.notes.get();
-    return notes.filter((note: Note) => note.tags?.includes(tag));
-  },
-  
-  // Get notes by verse reference
-  getNotesByVerseReference: (reference: string) => {
-    const notes = notesState$.notes.get();
-    return notes.filter((note: Note) => note.verseReference === reference);
-  },
-  
-  // Clear any error
+
   clearError: () => {
     notesState$.error.set(null);
-  }
+  },
 });
