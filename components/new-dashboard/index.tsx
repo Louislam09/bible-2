@@ -99,17 +99,19 @@ const SecondDashboard = () => {
       isIonicon: true,
       action: onSong,
     },
-    {
-      icon: "Cloudy",
-      label: "Sincronizar",
-      action: () => navigation.navigate(Screens.Login),
-    },
-    // {
-    //   icon: "Search",
-    //   label: "Buscador",
-    //   // @ts-ignore
-    //   action: () => navigation.navigate(Screens.Search, {}),
-    // },
+    user
+      ? {
+          icon: "NotebookText",
+          label: "Notas",
+          action: () =>
+            navigation.navigate(Screens.Notes, { shouldRefresh: false }),
+          color: theme.colors.notification,
+        }
+      : {
+          icon: "Cloudy",
+          label: "Sincronizar",
+          action: () => navigation.navigate(Screens.Login),
+        },
   ];
 
   const requestAccessHandlePresentModalPress = useCallback(
