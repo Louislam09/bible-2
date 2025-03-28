@@ -284,7 +284,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
 };
 
 const MyDashboard = () => {
-  const isGridLayout = use$(() => storedData$.isGridLayout.get());
+  // const isGridLayout = use$(() => storedData$.isGridLayout.get());
   const { loadFromCloud } = useStorage();
 
   useEffect(() => {
@@ -312,7 +312,8 @@ const MyDashboard = () => {
     checkAuth();
   }, []);
 
-  return !isGridLayout ? <SecondDashboard /> : <Dashboard />;
+  return <SecondDashboard />;
+  // return !isGridLayout ? <SecondDashboard /> : <Dashboard />;
 };
 
 export default MyDashboard;

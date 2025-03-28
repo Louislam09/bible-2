@@ -176,7 +176,8 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
   }, [theme]);
 
   const toggleHomeScreen = () => {
-    storedData$.isGridLayout.set(!isGridLayout);
+    console.log("toggleHomeScreen");
+    // storedData$.isGridLayout.set(!isGridLayout);
   };
 
   const sections = useMemo(() => {
@@ -459,7 +460,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
                     : theme.colors.notification,
                   onPress: toggleHomeScreen,
                   disabled: false,
-                  style: { opacity: 1 },
+                  style: { opacity: 0 },
                 },
               }),
             }}

@@ -48,7 +48,6 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(
     dailyVerseObject || defaultDailyVerse
   );
-  const user = use$(() => storedData$.user.get());
   const styles = getStyles(theme);
   const isDefaultVerse = dailyVerseObject?.bookName;
 
@@ -78,49 +77,53 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
 
   return (
     <View style={styles.dailyVerseContainer}>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => navigation.navigate(Screens.Onboarding)}
         style={styles.infoIcon}
       >
         <Icon name={"Info"} size={20} color={"white"} />
-      </TouchableOpacity>
-      <View
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
+      </TouchableOpacity> */}
+
+      <View style={styles.verseTitle}>
+        <Icon
+          name={"BookOpen"}
+          size={24}
+          color={theme.dark ? "#ffffff" : theme.colors.text + 99}
+        />
+        <Text style={styles.title}>Versículo del Día</Text>
+      </View>
+      <Icon
+        name={"Quote"}
+        size={34}
+        // color={theme.colors.text + 70}
+        color={theme.dark ? "#ffffff4c" : theme.colors.text + 70}
+        style={styles.quoteIcon}
+      />
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() => {
+          if (isDefaultVerse) return;
+          const queryInfo = {
+            book: dailyVerse.bookName,
+            chapter: dailyVerse.chapter,
+            verse: dailyVerse?.verse,
+          };
+          bibleState$.changeBibleQuery({
+            ...queryInfo,
+            shouldFetch: true,
+            isHistory: false,
+          });
+          navigation.navigate(Screens.Home, queryInfo);
         }}
+        style={[styles.verseContainer, { position: "relative" }]}
       >
-        {user && <ProfileCard user={user} />}
-      </View>
-      <View style={styles.header}>
-        <Text style={styles.title}>Versículo del día</Text>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => {
-            if (isDefaultVerse) return;
-            const queryInfo = {
-              book: dailyVerse.bookName,
-              chapter: dailyVerse.chapter,
-              verse: dailyVerse?.verse,
-            };
-            bibleState$.changeBibleQuery({
-              ...queryInfo,
-              shouldFetch: true,
-              isHistory: false,
-            });
-            navigation.navigate(Screens.Home, queryInfo);
-          }}
-          style={styles.verseContainer}
-        >
-          <Text style={styles.verseRef}>
-            {`${dailyVerse.bookName} ${dailyVerse.chapter}:${dailyVerse?.verse}`}
-          </Text>
-          <Text style={styles.verseText}>{`${
-            dailyVerse?.verse
-          } ${getVerseTextRaw(dailyVerse?.text || "")}`}</Text>
-        </TouchableOpacity>
-      </View>
+        <Text style={styles.verseText}>{`${getVerseTextRaw(
+          dailyVerse?.text || ""
+        )}`}</Text>
+      </TouchableOpacity>
+      <Text style={styles.verseRef}>
+        {`${dailyVerse.bookName} ${dailyVerse.chapter}:${dailyVerse?.verse}`}
+      </Text>
     </View>
   );
 };
@@ -128,13 +131,16 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     dailyVerseContainer: {
-      backgroundColor: "transparent",
-      alignItems: "center",
+      alignItems: "flex-start",
       justifyContent: "center",
       width: "100%",
-      minHeight: 140,
       flex: 1,
-      marginTop: 10,
+      backgroundColor: colors.text + 20,
+      padding: 15,
+      paddingHorizontal: 18,
+      marginBottom: 16,
+      borderRadius: 16,
+      gap: 16,
     },
     infoIcon: {
       position: "absolute",
@@ -142,35 +148,37 @@ const getStyles = ({ colors }: TTheme) =>
       right: 0,
       zIndex: 100,
     },
-    header: {
-      backgroundColor: "transparent",
-      marginBottom: 16,
+    quoteIcon: {
+      position: "absolute",
+      top: 10,
+      right: 10,
+      zIndex: -1,
+    },
+    verseTitle: {
+      flexDirection: "row",
       alignItems: "center",
+      gap: 8,
+      backgroundColor: "transparent",
     },
     title: {
-      width: "100%",
-      color: colors.notification,
-      fontSize: 24,
+      fontSize: 18,
       fontWeight: "bold",
-      marginBottom: 8,
     },
     verseContainer: {
-      backgroundColor: colors.text + 20,
-      padding: 12,
       borderRadius: 8,
+      alignItems: "flex-start",
     },
     verseRef: {
       color: colors.text,
       fontSize: 18,
       fontStyle: "italic",
-      textAlign: "center",
-      fontWeight: "bold",
+      alignSelf: "flex-end",
     },
     verseText: {
       color: colors.text,
       fontSize: 18,
       fontStyle: "italic",
-      textAlign: "center",
+      zIndex: 1,
     },
   });
 

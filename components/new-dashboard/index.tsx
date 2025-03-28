@@ -20,6 +20,7 @@ import BottomModal from "../BottomModal";
 import EmptyStateMessage from "../EmptyStateMessage";
 import VersionList from "../home/header/VersionList";
 import VoiceList from "../VoiceList";
+import ProfileCard from "../UserProfile";
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
@@ -283,6 +284,7 @@ const SecondDashboard = () => {
   return (
     <StatusBarBackground>
       <ScrollView style={styles.container}>
+        {user && <ProfileCard user={user} />}
         <DailyVerseTwo theme={theme} />
         <MainSection list={mainActionItems} theme={theme} />
         <StudyTools list={studyToolItems} theme={theme} />
