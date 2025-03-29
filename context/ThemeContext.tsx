@@ -25,7 +25,8 @@ const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const { currentTheme } = useBibleContext();
   const colorScheme = Appearance.getColorScheme();
   const themes = getThemes();
-  const { DarkTheme, LightTheme } = themes[currentTheme];
+  // const { DarkTheme, LightTheme } = themes[currentTheme];
+  const { DarkTheme, LightTheme } = themes["BlackWhite"];
   const theme = { dark: DarkTheme, light: LightTheme };
   const [schema, setSchema] = useState<"light" | "dark">(
     colorScheme === "dark" ? "dark" : "light"
@@ -51,9 +52,7 @@ const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   return (
     <ThemeContext.Provider value={{ schema, toggleTheme }}>
-      <ThemeProvider value={theme[schema]}>
-        {children}
-      </ThemeProvider>
+      <ThemeProvider value={theme[schema]}>{children}</ThemeProvider>
     </ThemeContext.Provider>
   );
 };

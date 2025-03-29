@@ -130,6 +130,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const isAuthenticated = false;
   // const isAuthenticated = use$(() => authState$.isAuthenticated.get());
   const enableCloudSync = use$(() => storedData$.enableCloudSync.get());
+  console.log({ enableCloudSync });
 
   useEffect(() => {
     const loadState = async () => {

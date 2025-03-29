@@ -56,7 +56,7 @@ export const bibleState$ = observable({
   bibleData: { topVerses: [], bottomVerses: [] } as BibleData,
   readingTimeData: { top: 0, bottom: 0 },
   changeBibleQuery: (query: Partial<IBibleQuery>) => {
-    console.log("🟡 ChangeBibleQuery 🟡");
+    // console.log("🟡 ChangeBibleQuery 🟡");
     const loadingKey = query.isBibleBottom ? "bottom" : "top";
     const newQuery = { ...bibleState$.bibleQuery.get(), ...query };
     batch(() => {

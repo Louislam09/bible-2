@@ -4,6 +4,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  Switch,
 } from "react-native";
 
 import Icon, { IconProps } from "@/components/Icon";
@@ -14,15 +15,20 @@ import { useBibleContext } from "@/context/BibleContext";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { useCustomTheme } from "@/context/ThemeContext";
 import { settingState$ } from "@/state/settingState";
+import { authState$ } from "@/state/authState";
 import { EThemes, RootStackScreenProps, TFont, TTheme } from "@/types";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
+import * as Updates from "expo-updates";
 import Constants from "expo-constants";
 import { Stack, useRouter } from "expo-router";
-import * as Updates from "expo-updates";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
+import FontSelector from "@/components/FontSelector";
+import BottomModal from "@/components/BottomModal";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import ColorSelector from "@/components/ColorSelector";
 
 const URLS = {
   BIBLE: "market://details?id=com.louislam09.bible",
@@ -53,6 +59,10 @@ type TOption = {
   isFont5?: boolean;
   isValue?: boolean;
   color?: any;
+  isDisabled?: boolean;
+  renderSwitch?: boolean;
+  onToggle?: (value: boolean) => void;
+  value?: boolean;
 };
 
 type TSection = {
@@ -66,22 +76,119 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
   const router = useRouter();
   const theme = useTheme();
   const {
-    selectTheme,
     orientation = "PORTRAIT",
-    selectFont,
     decreaseFontSize,
     increaseFontSize,
     fontSize,
+    currentTheme,
+    selectTheme,
+    selectFont,
     selectedFont,
   } = useBibleContext();
   const { toggleTheme } = useCustomTheme();
   const styles = getStyles(theme);
   const isGridLayout = use$(() => storedData$.isGridLayout.get());
+  const enableCloudSync = use$(() => storedData$.enableCloudSync.get());
+  const isSyncedWithCloud = use$(() => storedData$.isSyncedWithCloud.get());
+  const isAuthenticated = use$(() => authState$.isAuthenticated.get());
+  const { toggleCloudSync, syncWithCloud, loadFromCloud } = useStorage();
+  const [currentSetting, setCurrentBottomSetting] = useState<
+    "font" | "theme" | "fontSize"
+  >("font");
 
   const appVersion = Constants.expoVersion ?? Constants.nativeAppVersion;
   const isAnimationDisabled = use$(() =>
     settingState$.isAnimationDisabled.get()
   );
+
+  const settingBottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  const settingHandlePresentModalPress = useCallback(
+    (setting: "font" | "theme" | "fontSize") => {
+      setCurrentBottomSetting(setting);
+      settingBottomSheetModalRef.current?.present();
+    },
+    []
+  );
+
+  const handleLogout = async () => {
+    try {
+      await authState$.logout();
+      Alert.alert("Sesión Cerrada", "Has cerrado sesión correctamente.");
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+      Alert.alert("Error", "No se pudo cerrar la sesión.");
+    }
+  };
+
+  const handleLogin = () => {
+    router.push("/login");
+  };
+
+  const handleToggleCloudSync = (value: boolean) => {
+    if (value && !isAuthenticated) {
+      Alert.alert(
+        "Iniciar Sesión Requerido",
+        "Necesitas iniciar sesión para activar la sincronización con la nube.",
+        [
+          { text: "Cancelar", style: "cancel" },
+          { text: "Iniciar Sesión", onPress: handleLogin },
+        ]
+      );
+      return;
+    }
+
+    toggleCloudSync(value);
+
+    if (value && isAuthenticated) {
+      // If enabling cloud sync and authenticated, sync immediately
+      syncWithCloud();
+    }
+  };
+
+  const handleSyncNow = async () => {
+    if (!isAuthenticated) {
+      Alert.alert(
+        "Iniciar Sesión Requerido",
+        "Necesitas iniciar sesión para sincronizar con la nube.",
+        [
+          { text: "Cancelar", style: "cancel" },
+          { text: "Iniciar Sesión", onPress: handleLogin },
+        ]
+      );
+      return;
+    }
+
+    if (!enableCloudSync) {
+      Alert.alert(
+        "Sincronización Desactivada",
+        "Activa la sincronización con la nube primero.",
+        [
+          { text: "Cancelar", style: "cancel" },
+          {
+            text: "Activar y Sincronizar",
+            onPress: () => {
+              toggleCloudSync(true);
+              syncWithCloud();
+            },
+          },
+        ]
+      );
+      return;
+    }
+
+    try {
+      const success = await syncWithCloud();
+      if (success) {
+        Alert.alert("Éxito", "Configuración sincronizada con la nube.");
+      } else {
+        Alert.alert("Error", "No se pudo sincronizar con la nube.");
+      }
+    } catch (error) {
+      console.error("Error al sincronizar:", error);
+      Alert.alert("Error", "No se pudo sincronizar con la nube.");
+    }
+  };
 
   const checkForUpdate = async () => {
     try {
@@ -116,21 +223,6 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
 
   const openAppInStore = async (appPackage: string) => {
     await Linking.openURL(appPackage);
-  };
-
-  const warnBeforeDelete = () => {
-    Alert.alert(
-      "Borrar Historial",
-      "¿Estás seguro que quieres borrar el historial de busqueda?",
-      [
-        {
-          text: "Cancelar",
-          onPress: () => {},
-          style: "destructive",
-        },
-        { text: "Borrar", onPress: () => console.log?.() },
-      ]
-    );
   };
 
   const sendEmail = async (email: string) => {
@@ -176,205 +268,204 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
   }, [theme]);
 
   const toggleHomeScreen = () => {
-    console.log("toggleHomeScreen");
-    // storedData$.isGridLayout.set(!isGridLayout);
+    storedData$.isGridLayout.set(!isGridLayout);
   };
 
-  const sections = useMemo(() => {
-    const options: TSection[] = [
-      {
-        title: "Configuración",
-        options: [
-          {
-            label: theme.dark ? "Modo Oscuro" : "Modo Claro",
-            iconName: `${theme.dark ? "Sun" : "Moon"}`,
-            action: () => {
-              toggleTheme();
-            },
-            extraText: "Cambiar entre el modo claro y el modo oscuro",
+  const sections: TSection[] = [
+    {
+      title: "Cuenta",
+      options: [
+        {
+          label: isAuthenticated ? "Cerrar Sesión" : "Iniciar Sesión",
+          iconName: "User",
+          action: isAuthenticated ? handleLogout : handleLogin,
+          extraText: isAuthenticated
+            ? "Cerrar sesión de tu cuenta"
+            : "Iniciar sesión para sincronizar tus datos",
+        },
+        {
+          label: "Sincronización con la nube",
+          iconName: "Cloudy",
+          color: !enableCloudSync
+            ? theme.colors.text
+            : theme.colors.notification,
+          action: () => handleToggleCloudSync(!enableCloudSync),
+          extraText: enableCloudSync
+            ? "Desactivar sincronización con la nube"
+            : "Activar sincronización con la nube",
+          isValue: true,
+          value: enableCloudSync,
+          renderSwitch: true,
+          onToggle: handleToggleCloudSync,
+        },
+        {
+          label: "Sincronizar ahora",
+          iconName: "RefreshCw",
+          action: handleSyncNow,
+          extraText: "Sincronizar manualmente con la nube",
+          isDisabled: !enableCloudSync || !isAuthenticated,
+        },
+      ],
+    },
+    {
+      title: "Configuración",
+      options: [
+        {
+          label: theme.dark ? "Modo Oscuro" : "Modo Claro",
+          iconName: `${theme.dark ? "Sun" : "Moon"}`,
+          action: () => {
+            toggleTheme();
           },
-          {
-            label: isAnimationDisabled
-              ? "Activar Animacion"
-              : "Disabilitar Animacion",
-            iconName: "Sparkles",
-            color: isAnimationDisabled
-              ? theme.colors.text
-              : theme.colors.notification,
-            action: () =>
-              settingState$.isAnimationDisabled.set(!isAnimationDisabled),
-            extraText: "Activar o desactivar las animaciones",
-          },
-          {
-            label: "Buscar Actualización",
-            iconName: "Download",
-            action: checkForUpdate,
-            extraText: "Verificar si hay actualizaciones de la app",
-          },
-        ],
-      },
-      {
-        title: "Tipografia",
-        id: "fontFamily",
-        withIcon: true,
-        options: [...getFontType()],
-      },
-      {
-        title: "Tamaño de Letra",
-        id: "font",
-        withIcon: true,
-        options: [
-          {
-            label: "",
-            iconName: `AArrowDown`,
-            action: () => {
-              decreaseFontSize();
-            },
-            extraText: "",
-          },
-          {
-            label: fontSize,
-            isValue: true,
-            iconName: `ChartNoAxesColumn`,
-            action: () => {},
-            extraText: "",
-          },
-          {
-            label: "",
-            iconName: `AArrowUp`,
-            action: () => {
-              increaseFontSize();
-            },
-            extraText: "",
-          },
-        ],
-      },
-      {
-        title: "Temas",
-        id: "tema",
-        options: [...getColosTheme()],
-      },
-      {
-        title: "Más Aplicaciones",
-        options: [
-          {
-            label: "Santa Biblia RV60: Audio",
-            iconName: "Crown",
-            action: () => openAppInStore(URLS.BIBLE),
-            extraText: "Descárgala y explora la Palabra de Dios.",
-          },
-          {
-            label: "Mira Más Apps",
-            iconName: "Play",
-            action: () => openAppInStore(URLS.MORE_APPS),
-            isFont5: true,
-            extraText: "Ver todas nuestras aplicaciones",
-          },
-        ],
-      },
-      {
-        title: "Versión",
-        options: [
-          {
-            label: `Versión ${appVersion}`,
-            iconName: "Info",
-            action: () => {}, // No action needed
-            extraText: `Fecha de Lanzamiento: Mar 13, 2024`,
-          },
-        ],
-      },
-      {
-        title: "About",
-        options: [
-          {
-            label: "Contactame",
-            iconName: "Mail",
-            action: () => sendEmail(URLS.ME),
-            extraText: "Envíanos un correo electrónico",
-          },
-          {
-            label: "Mira Más Apps",
-            iconName: "Play",
-            action: () => openAppInStore(URLS.MORE_APPS),
-            isFont5: true,
-            extraText: "Ver todas nuestras aplicaciones",
-          },
-        ],
-      },
-    ];
+          extraText: "Cambiar entre el modo claro y el modo oscuro",
+        },
+        {
+          label: isAnimationDisabled
+            ? "Activar Animacion"
+            : "Disabilitar Animacion",
+          iconName: "Sparkles",
+          color: isAnimationDisabled
+            ? theme.colors.text
+            : theme.colors.notification,
+          action: () =>
+            settingState$.isAnimationDisabled.set(!isAnimationDisabled),
+          extraText: "Activar o desactivar las animaciones",
+          isValue: true,
+          value: !isAnimationDisabled,
+          renderSwitch: true,
+          onToggle: (value) => settingState$.isAnimationDisabled.set(!value),
+        },
+        {
+          label: "Tipografia",
+          iconName: "Type",
+          action: () => settingHandlePresentModalPress("font"),
+          extraText: "Toca para cambiar Tipografia",
+        },
+        {
+          label: "Tamaño de Letra",
+          iconName: "ALargeSmall",
+          action: () => settingHandlePresentModalPress("fontSize"),
+          extraText: "Toca para cambiar Tamaño de Letra",
+        },
+        {
+          label: "Temas",
+          iconName: "PaintBucket",
+          action: () => settingHandlePresentModalPress("theme"),
+          extraText: "Toca para cambiar Temas",
+        },
+        {
+          label: "Buscar Actualización",
+          iconName: "Download",
+          action: checkForUpdate,
+          extraText: "Verificar si hay actualizaciones de la app",
+        },
+      ],
+    },
+    {
+      title: "Más Aplicaciones",
+      options: [
+        {
+          label: "Santa Biblia RV60: Audio",
+          iconName: "Crown",
+          action: () => openAppInStore(URLS.BIBLE),
+          extraText: "Descárgala y explora la Palabra de Dios.",
+        },
+        {
+          label: "Mira Más Apps",
+          iconName: "Play",
+          action: () => openAppInStore(URLS.MORE_APPS),
+          isFont5: true,
+          extraText: "Ver todas nuestras aplicaciones",
+        },
+      ],
+    },
+    {
+      title: "Versión",
+      options: [
+        {
+          label: `Versión ${appVersion}`,
+          iconName: "Info",
+          action: () => {}, // No action needed
+          extraText: `Fecha de Lanzamiento: Mar 13, 2024`,
+        },
+      ],
+    },
+    {
+      title: "About",
+      options: [
+        {
+          label: "Contactame",
+          iconName: "Mail",
+          action: () => sendEmail(URLS.ME),
+          extraText: "Envíanos un correo electrónico",
+        },
+        {
+          label: "Mira Más Apps",
+          iconName: "Play",
+          action: () => openAppInStore(URLS.MORE_APPS),
+          isFont5: true,
+          extraText: "Ver todas nuestras aplicaciones",
+        },
+      ],
+    },
+  ];
 
-    return options;
-  }, [theme, fontSize, isGridLayout, isAnimationDisabled]);
-
-  const renderItem = ({ item, index }: { item: TOption; index: number }) => {
+  const renderItem = ({ item }: { item: TOption }) => {
     return (
       <TouchableOpacity
-        onPress={item.action}
-        key={item + "+" + index}
         style={[
-          styles.listItem,
-          { backgroundColor: item.iconName, justifyContent: "center" },
+          styles.optionContainer,
+          item.isDisabled && styles.disabledOption,
         ]}
+        onPress={item.action}
+        disabled={item.isDisabled}
       >
-        <Text
-          style={[
-            styles.listItemLabel,
-            {
-              color: "white",
-              fontWeight: "bold",
-            },
-            item.extraText === "font" && {
-              color: theme.dark ? "#000" : "white",
-              fontFamily: item.label,
-              fontWeight: "600",
-            },
-          ]}
-        >
-          {item.label}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
-  const renderFontItem = (item: TOption, index: number) => {
-    const { label, iconName, isValue, action } = item;
-
-    if (isValue) {
-      return (
-        <Text
-          key={index}
-          style={[styles.fontSize, { color: theme.colors.notification }]}
-        >
-          {label}
-        </Text>
-      );
-    }
-    return (
-      <TouchableOpacity key={index} onPress={() => action()}>
-        <View style={styles.fontItem}>
-          <Icon
-            name={iconName}
-            size={30}
-            color={
-              selectedFont === label
-                ? theme.colors.notification
-                : theme.colors.background
-            }
-          />
-
-          {label && (
-            <Text
-              style={[
-                styles.fontLabel,
-                selectedFont === label && {
-                  color: theme.colors.notification,
-                },
-              ]}
-            >
-              {label}
-            </Text>
+        <View style={styles.optionLeftContainer}>
+          {item.isFont5 ? (
+            <FontAwesome5
+              name={item.iconName as any}
+              size={20}
+              color={theme.colors.text}
+              style={styles.optionIcon}
+            />
+          ) : (
+            <Icon
+              name={item.iconName}
+              size={20}
+              color={theme.colors.text}
+              style={styles.optionIcon}
+            />
           )}
+          <View style={styles.optionTextContainer}>
+            <Text style={styles.optionLabel}>{item.label}</Text>
+            {item.extraText && (
+              <Text style={styles.optionExtraText}>{item.extraText}</Text>
+            )}
+            {item.isValue && (
+              <Text style={styles.optionValue}>
+                {item.value ? "Activado" : "Desactivado"}
+              </Text>
+            )}
+            {item.label === "Sincronización con la nube" && enableCloudSync && (
+              <Text
+                style={[
+                  styles.syncStatus,
+                  { color: isSyncedWithCloud ? "green" : "orange" },
+                ]}
+              >
+                {isSyncedWithCloud ? "✅ Sincronizado" : "⚠️ No sincronizado"}
+              </Text>
+            )}
+          </View>
         </View>
+        {item.renderSwitch && (
+          <Switch
+            value={item.value}
+            onValueChange={item.onToggle}
+            trackColor={{ false: "#767577", true: theme.colors.primary }}
+            thumbColor={item.value ? "#f4f3f4" : "#f4f3f4"}
+            disabled={item.isDisabled}
+          />
+        )}
       </TouchableOpacity>
     );
   };
@@ -437,6 +528,81 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
     );
   };
 
+  const renderFontItem = (item: TOption, index: number) => {
+    const { label, iconName, isValue, action } = item;
+
+    if (isValue) {
+      return (
+        <Text
+          key={index}
+          style={[styles.fontSize, { color: theme.colors.notification }]}
+        >
+          {label}
+        </Text>
+      );
+    }
+    return (
+      <TouchableOpacity key={index} onPress={() => action()}>
+        <View style={styles.fontItem}>
+          <Icon
+            name={iconName}
+            size={30}
+            color={
+              selectedFont === label
+                ? theme.colors.notification
+                : theme.colors.background
+            }
+          />
+
+          {label && (
+            <Text
+              style={[
+                styles.fontLabel,
+                selectedFont === label && {
+                  color: theme.colors.notification,
+                },
+              ]}
+            >
+              {label}
+            </Text>
+          )}
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const handleFontChange = (fontFamily: string) => {
+    selectFont(fontFamily);
+  };
+
+  const handleColorChange = (colorOption: any) => {
+    console.log(colorOption);
+    // selectTheme(colorOption);
+  };
+
+  const Font = () => {
+    return (
+      <FontSelector
+        onSelectFont={handleFontChange}
+        initialFont={selectedFont}
+      />
+    );
+  };
+  const ThemeColor = () => {
+    return (
+      <ColorSelector
+        onSelectColor={handleColorChange}
+        initialColor={currentTheme}
+      />
+    );
+  };
+
+  const BottomChild = {
+    font: <Font />,
+    theme: <ThemeColor />,
+    fontSize: <ThemeColor />,
+  };
+
   return (
     <ScreenWithAnimation duration={800} icon="Settings" title="Ajustes">
       <View key={orientation + theme.dark} style={styles.container}>
@@ -468,6 +634,18 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
 
           {sections.map(SettingSection)}
         </ScrollView>
+
+        <BottomModal
+          justOneSnap
+          showIndicator
+          justOneValue={["70%"]}
+          startAT={0}
+          ref={settingBottomSheetModalRef}
+          shouldScroll
+        >
+          {BottomChild[currentSetting]}
+          {/* <Font /> */}
+        </BottomModal>
       </View>
     </ScreenWithAnimation>
   );
@@ -574,6 +752,44 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontWeight: "bold",
       color: "#000",
       fontSize: 30,
+    },
+    optionContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: 15,
+      marginVertical: 5,
+      backgroundColor: colors.background,
+      borderRadius: 5,
+    },
+    optionLeftContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    optionIcon: {
+      marginRight: 10,
+    },
+    optionTextContainer: {
+      flex: 1,
+    },
+    optionLabel: {
+      fontSize: 16,
+      color: colors.text,
+    },
+    optionExtraText: {
+      fontSize: 12,
+      color: colors.text,
+    },
+    optionValue: {
+      fontSize: 12,
+      color: colors.text,
+    },
+    disabledOption: {
+      opacity: 0.5,
+    },
+    syncStatus: {
+      fontSize: 12,
+      marginTop: 4,
     },
   });
 

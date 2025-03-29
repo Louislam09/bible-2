@@ -48,9 +48,9 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
       : chapter;
     const targetVerse = isBibleBottom ? bibleQuery.bottomSideVerse : verse;
     const currentBook = DB_BOOK_NAMES.find((x) => x.longName === targetBook);
-    console.log(
-      `🟢 Fetching chapter 🟢 ${targetBook} ${targetChapter}:${targetVerse}`
-    );
+    // console.log(
+    //   `🟢 Fetching chapter 🟢 ${targetBook} ${targetChapter}:${targetVerse}`
+    // );
 
     const queryKey = getDatabaseQueryKey(currentBibleVersion);
     const query = QUERY_BY_DB[queryKey];

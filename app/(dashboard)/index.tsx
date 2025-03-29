@@ -291,7 +291,6 @@ const MyDashboard = () => {
     const checkAuth = async () => {
       try {
         const isLoggedIn = await authState$.checkSession();
-        console.log({ isLoggedIn });
 
         if (isLoggedIn) {
           // Load user settings from cloud
