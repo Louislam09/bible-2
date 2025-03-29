@@ -25,8 +25,8 @@ const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const { currentTheme } = useBibleContext();
   const colorScheme = Appearance.getColorScheme();
   const themes = getThemes();
-  // const { DarkTheme, LightTheme } = themes[currentTheme];
-  const { DarkTheme, LightTheme } = themes["BlackWhite"];
+  const { DarkTheme, LightTheme } = themes[currentTheme];
+  // const { DarkTheme, LightTheme } = themes["BlackWhite"];
   const theme = { dark: DarkTheme, light: LightTheme };
   const [schema, setSchema] = useState<"light" | "dark">(
     colorScheme === "dark" ? "dark" : "light"

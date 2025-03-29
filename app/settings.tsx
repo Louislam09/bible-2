@@ -29,6 +29,8 @@ import FontSelector from "@/components/FontSelector";
 import BottomModal from "@/components/BottomModal";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import ColorSelector from "@/components/ColorSelector";
+import FontSizeAdjuster from "@/components/FontSizeAdjuster";
+import getMinMaxFontSize from "@/utils/getMinMaxFontSize";
 
 const URLS = {
   BIBLE: "market://details?id=com.louislam09.bible",
@@ -236,36 +238,6 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
 
     await Linking.openURL(mailtoUrl);
   };
-
-  const getColosTheme: any = useCallback(() => {
-    return Object.values(EThemes).map((color, index) => {
-      const name = Object.keys(EThemes)[index];
-
-      return {
-        label: colorNames[name],
-        iconName: color,
-        action: () => {
-          selectTheme(name);
-        },
-        extraText: "",
-      };
-    });
-  }, []);
-
-  const getFontType: any = useCallback(() => {
-    return Object.values(TFont).map((font, index) => {
-      const name = Object.keys(EThemes)[index];
-
-      return {
-        label: font,
-        iconName: theme.colors.text,
-        action: () => {
-          selectFont(font);
-        },
-        extraText: "font",
-      };
-    });
-  }, [theme]);
 
   const toggleHomeScreen = () => {
     storedData$.isGridLayout.set(!isGridLayout);
@@ -575,9 +547,16 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
     selectFont(fontFamily);
   };
 
-  const handleColorChange = (colorOption: any) => {
-    console.log(colorOption);
-    // selectTheme(colorOption);
+  const handleColorChange = (colorOption: {
+    label: any;
+    color: EThemes;
+    value: string;
+  }) => {
+    selectTheme(colorOption.value);
+  };
+
+  const handleFontSizeChange = (size: number) => {
+    console.log({ size });
   };
 
   const Font = () => {
@@ -597,10 +576,25 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
     );
   };
 
+  const fontSizes = getMinMaxFontSize();
+
+  const FontSize = () => {
+    return (
+      <FontSizeAdjuster
+        onSizeChange={handleFontSizeChange}
+        initialSize={fontSize}
+        fontFamily={selectedFont}
+        minSize={fontSizes.minPx}
+        maxSize={fontSizes.maxPx}
+        step={1}
+      />
+    );
+  };
+
   const BottomChild = {
     font: <Font />,
     theme: <ThemeColor />,
-    fontSize: <ThemeColor />,
+    fontSize: <FontSize />,
   };
 
   return (
@@ -644,7 +638,6 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
           shouldScroll
         >
           {BottomChild[currentSetting]}
-          {/* <Font /> */}
         </BottomModal>
       </View>
     </ScreenWithAnimation>

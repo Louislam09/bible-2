@@ -1,15 +1,15 @@
-import { TTheme } from "@/types";
+import { TFont, TTheme } from "@/types";
 import { useTheme } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
+  SafeAreaView,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
-  SafeAreaView,
 } from "react-native";
+import Icon from "./Icon";
 import { Text, View } from "./Themed";
 
-// Define types for props
 type FontFamily = string;
 
 interface FontSelectorProps {
@@ -25,21 +25,7 @@ const FontSelector: React.FC<FontSelectorProps> = ({
   const theme = useTheme();
   const styles = getStyles(theme);
 
-  const fonts: FontFamily[] = [
-    "Roboto",
-    "OpenSans",
-    "Cardo",
-    "Inter",
-    "InterBold",
-    "DMSans",
-    "DMSansBold",
-    "Manrope",
-    "ManropeBold",
-    "Poppins",
-    "PoppinsBold",
-    "EBGaramond",
-    "EBGaramondBold",
-  ];
+  const fonts: FontFamily[] = Object.values(TFont);
 
   const handleFontSelect = (font: FontFamily): void => {
     setSelectedFont(font);
@@ -59,26 +45,35 @@ const FontSelector: React.FC<FontSelectorProps> = ({
       </View>
 
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.fontList}>
-        {fonts.map((font) => (
-          <TouchableOpacity
-            key={font}
-            style={[
-              styles.fontOption,
-              selectedFont === font && styles.selectedFontOption,
-            ]}
-            onPress={() => handleFontSelect(font)}
-            accessibilityLabel={`Select ${font} font`}
-            accessibilityRole="button"
-            accessibilityState={{ selected: selectedFont === font }}
-          >
-            <Text style={[styles.fontLabel, { fontFamily: font }]}>{font}</Text>
-            {selectedFont === font && (
-              <View style={styles.checkmark}>
-                <Text style={styles.checkmarkText}>✓</Text>
-              </View>
-            )}
-          </TouchableOpacity>
-        ))}
+        {fonts.map((font) => {
+          const isSelected = selectedFont === font;
+          return (
+            <TouchableOpacity
+              key={font}
+              style={[
+                styles.fontOption,
+                isSelected && styles.selectedFontOption,
+              ]}
+              onPress={() => handleFontSelect(font)}
+              accessibilityLabel={`Select ${font} font`}
+              accessibilityRole="button"
+              accessibilityState={{ selected: isSelected }}
+            >
+              <Text style={[styles.fontLabel, { fontFamily: font }]}>
+                {font}
+              </Text>
+              {isSelected && (
+                <Icon
+                  name="CircleCheck"
+                  size={22}
+                  color="white"
+                  fillColor="#4ec9b0"
+                  style={{ position: "absolute", top: 2, right: 2 }}
+                />
+              )}
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
     </SafeAreaView>
   );
@@ -101,22 +96,21 @@ const getStyles = ({ colors, dark }: TTheme) =>
       display: "flex",
       flexDirection: "row",
       flexWrap: "wrap",
-      gap: 8,
+      justifyContent: "space-between",
+      gap: 10,
     },
     fontOption: {
-      flexDirection: "row",
-      justifyContent: "space-between",
+      backgroundColor: colors.text + 99,
+      flexGrow: 1,
+      justifyContent: "center",
       alignItems: "center",
       padding: 16,
-      backgroundColor: colors.text + 99,
       borderRadius: 8,
-      marginBottom: 8,
-      gap: 10,
     },
     selectedFontOption: {
       backgroundColor: colors.notification,
-      borderColor: colors.notification + 30,
-      borderWidth: 1,
+      borderWidth: 2,
+      borderColor: dark ? "#fff" : "#000",
     },
     fontLabel: {
       fontSize: 16,

@@ -445,15 +445,15 @@ export enum EBookIndexesAudio {
 }
 
 export enum EThemes {
-  BlackWhite = "#000",
-  BlueGray = "#8EACBB",
   Blue = "#2a7ac6",
-  Green = "#78b0a4",
   Red = "#FF5252",
-  Orange = "#9f463c",
   Cyan = "#20acb6",
-  Purple = "#2032ac",
   Pink = "#aa2c50",
+  Purple = "#2032ac",
+  BlueGray = "#8EACBB",
+  Green = "#78b0a4",
+  Orange = "#9f463c",
+  BlackWhite = "#000",
   BlueLight = "#3b88bf",
   BlueGreen = "#239db8",
   PinkLight = "#874a69",
