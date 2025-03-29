@@ -105,24 +105,6 @@ const FontSizeAdjuster: React.FC<FontSizeAdjusterProps> = ({
           El Señor es mi pastor; nada me faltará.
         </Text>
       </View>
-
-      <View style={styles.sizeComparisonContainer}>
-        <Text style={styles.sizeComparisonLabel}>Comparación de tamaño:</Text>
-        <View style={styles.sizeComparison}>
-          <Text style={[styles.smallSizeText, { fontFamily }]}>
-            Pequeña (12px)
-          </Text>
-          <Text style={[styles.mediumSizeText, { fontFamily }]}>
-            Mediana (16px)
-          </Text>
-          <Text style={[styles.largeSizeText, { fontFamily }]}>
-            Grande (24px)
-          </Text>
-          <Text style={[styles.previewText, { fontSize, fontFamily }]}>
-            Actual ({fontSize}px)
-          </Text>
-        </View>
-      </View>
     </SafeAreaView>
   );
 };
@@ -180,7 +162,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       padding: 16,
       backgroundColor: colors.text + 30,
       borderRadius: 8,
-      marginBottom: 16,
+      marginVertical: 16,
     },
     previewLabel: {
       fontSize: 14,
