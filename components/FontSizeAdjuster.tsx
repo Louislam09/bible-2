@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { TTheme } from "@/types";
 import { Text, View } from "./Themed";
 import CustomSlider from "./Slider";
+import useDebounce from "@/hooks/useDebounce";
 
 interface FontSizeAdjusterProps {
-  onSizeChange: (size: number) => void;
+  onSizeChange: (size: number, adjustmentType: "decrease" | "increase") => void;
   initialSize?: number;
   minSize?: number;
   maxSize?: number;
@@ -25,12 +26,21 @@ const FontSizeAdjuster: React.FC<FontSizeAdjusterProps> = ({
   const [fontSize, setFontSize] = useState<number>(initialSize);
   const theme = useTheme();
   const styles = getStyles(theme);
+  const debouncedSearchText = useDebounce(fontSize, 500);
+
+  const debouncedOnSizeChange = useCallback(
+    debounce((size: number, type: "decrease" | "increase") => {
+      console.log({ size, type });
+      onSizeChange(size, type);
+    }, 300),
+    []
+  );
 
   const handleIncrease = (): void => {
     if (fontSize < maxSize) {
       const newSize = Math.min(fontSize + step, maxSize);
       setFontSize(newSize);
-      onSizeChange(newSize);
+      debouncedOnSizeChange(newSize, "increase");
     }
   };
 
@@ -38,14 +48,8 @@ const FontSizeAdjuster: React.FC<FontSizeAdjusterProps> = ({
     if (fontSize > minSize) {
       const newSize = Math.max(fontSize - step, minSize);
       setFontSize(newSize);
-      onSizeChange(newSize);
+      debouncedOnSizeChange(newSize, "decrease");
     }
-  };
-
-  const handleSliderChange = (value: number): void => {
-    const newSize = Math.round(value);
-    setFontSize(newSize);
-    onSizeChange(newSize);
   };
 
   const decreaseOpacity = fontSize <= minSize ? 0.3 : 1;
@@ -82,22 +86,6 @@ const FontSizeAdjuster: React.FC<FontSizeAdjusterProps> = ({
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
-      <View
-        style={{
-          marginBottom: 24,
-          height: 40,
-        }}
-      >
-        <CustomSlider
-          options={[minSize, 22, maxSize]}
-          initialValue={fontSize}
-          onChange={handleSliderChange}
-          activeColor={theme.colors.notification}
-          inactiveColor="#D1D8E0"
-          textColor={theme.colors.text}
-          labels={["Pequeña", "Mediana", "Grande"]}
-        />
-      </View>
 
       <View style={styles.previewContainer}>
         <Text style={styles.previewLabel}>Preview:</Text>
@@ -108,6 +96,18 @@ const FontSizeAdjuster: React.FC<FontSizeAdjusterProps> = ({
     </SafeAreaView>
   );
 };
+
+// Add debounce utility function at the top of the file
+function debounce<T extends (...args: any[]) => void>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({

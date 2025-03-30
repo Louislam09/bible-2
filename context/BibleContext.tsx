@@ -45,7 +45,7 @@ type BibleState = {
     closeCallback: any
   ) => void;
   selectBibleVersion: (version: string) => Promise<void>;
-  decreaseFontSize: Function;
+  handleFontSize: (value: number) => void;
   setShouldLoop: (shouldLoop: boolean) => void;
   // setverseInStrongDisplay: (verse: number) => void;
   toggleFavoriteVerse: ({
@@ -79,8 +79,7 @@ type BibleState = {
 type BibleAction =
   | { type: "SELECT_FONT"; payload: string }
   | { type: "SELECT_THEME"; payload: keyof typeof EThemes }
-  | { type: "INCREASE_FONT_SIZE" }
-  | { type: "DECREASE_FONT_SIZE" }
+  | { type: "INCREASE_DECREASE_FONT_SIZE"; payload: number }
   | { type: "SELECT_BIBLE_VERSION"; payload: string }
   | { type: "SET_SEARCH_QUERY"; payload: string }
   | { type: "GO_BACK"; payload: number }
@@ -109,7 +108,7 @@ const initialContext: BibleState = {
   onDeleteAllNotes: () => {},
   selectFont: () => {},
   selectTheme: () => {},
-  decreaseFontSize: () => {},
+  handleFontSize: () => {},
   toggleFavoriteVerse: async ({
     bookNumber,
     chapter,
@@ -157,15 +156,10 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
         ...state,
         currentBibleVersion: action.payload,
       };
-    case "INCREASE_FONT_SIZE":
+    case "INCREASE_DECREASE_FONT_SIZE":
       return {
         ...state,
-        fontSize: state.fontSize + 1,
-      };
-    case "DECREASE_FONT_SIZE":
-      return {
-        ...state,
-        fontSize: state.fontSize - 1,
+        fontSize: action.payload,
       };
     case "TOGGLE_VIEW_LAYOUT_GRID":
       return {
@@ -287,13 +281,9 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     dispatch({ type: "GO_FORWARD", payload: index });
   };
 
-  const decreaseFontSize = () => {
-    dispatch({ type: "DECREASE_FONT_SIZE" });
-    storedData$.fontSize.set(state.fontSize - 1);
-  };
-  const increaseFontSize = () => {
-    dispatch({ type: "INCREASE_FONT_SIZE" });
-    storedData$.fontSize.set(state.fontSize + 1);
+  const handleFontSize = (value: number) => {
+    dispatch({ type: "INCREASE_DECREASE_FONT_SIZE", payload: value });
+    storedData$.fontSize.set(value);
   };
 
   const toggleViewLayoutGrid = () => {
@@ -382,8 +372,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     onDeleteAllNotes,
     onUpdateNote,
     selectBibleVersion,
-    decreaseFontSize,
-    increaseFontSize,
+    handleFontSize,
     performSearch: performSearch as typeof performSearch,
     setSearchQuery,
     selectTheme,

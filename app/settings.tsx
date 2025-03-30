@@ -79,8 +79,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
   const theme = useTheme();
   const {
     orientation = "PORTRAIT",
-    decreaseFontSize,
-    increaseFontSize,
+    handleFontSize,
     fontSize,
     currentTheme,
     selectTheme,
@@ -556,7 +555,8 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
   };
 
   const handleFontSizeChange = (size: number) => {
-    console.log({ size });
+    console.log("fontSize", size);
+    handleFontSize(size);
   };
 
   const Font = () => {
