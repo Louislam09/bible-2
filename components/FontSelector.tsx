@@ -131,7 +131,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     previewContainer: {
       marginBottom: 8,
       padding: 16,
-      backgroundColor: colors.background,
+      backgroundColor: colors.text + 30,
       borderRadius: 8,
     },
     previewLabel: {

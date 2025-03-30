@@ -65,6 +65,7 @@ type TOption = {
   renderSwitch?: boolean;
   onToggle?: (value: boolean) => void;
   value?: boolean;
+  withAnimation?: boolean;
 };
 
 type TSection = {
@@ -88,6 +89,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
   } = useBibleContext();
   const { toggleTheme } = useCustomTheme();
   const styles = getStyles(theme);
+  const fontSizes = getMinMaxFontSize();
   const isGridLayout = use$(() => storedData$.isGridLayout.get());
   const enableCloudSync = use$(() => storedData$.enableCloudSync.get());
   const isSyncedWithCloud = use$(() => storedData$.isSyncedWithCloud.get());
@@ -250,9 +252,12 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
           label: isAuthenticated ? "Cerrar Sesión" : "Iniciar Sesión",
           iconName: "User",
           action: isAuthenticated ? handleLogout : handleLogin,
+          color: theme.colors.notification,
           extraText: isAuthenticated
             ? "Cerrar sesión de tu cuenta"
             : "Iniciar sesión para sincronizar tus datos",
+
+          withAnimation: true,
         },
         {
           label: "Sincronización con la nube",
@@ -306,10 +311,11 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
           onToggle: (value) => settingState$.isAnimationDisabled.set(!value),
         },
         {
-          label: "Tipografia",
-          iconName: "Type",
-          action: () => settingHandlePresentModalPress("font"),
-          extraText: "Toca para cambiar Tipografia",
+          label: "Temas",
+          iconName: "PaintBucket",
+          action: () => settingHandlePresentModalPress("theme"),
+          extraText: "Toca para cambiar Temas",
+          color: theme.colors.notification,
         },
         {
           label: "Tamaño de Letra",
@@ -318,10 +324,10 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
           extraText: "Toca para cambiar Tamaño de Letra",
         },
         {
-          label: "Temas",
-          iconName: "PaintBucket",
-          action: () => settingHandlePresentModalPress("theme"),
-          extraText: "Toca para cambiar Temas",
+          label: "Tipografia",
+          iconName: "Type",
+          action: () => settingHandlePresentModalPress("font"),
+          extraText: "Toca para cambiar Tipografia",
         },
         {
           label: "Buscar Actualización",
@@ -445,56 +451,31 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
     return (
       <View style={styles.sectionContainer} key={index}>
         <Text style={styles.sectionTitle}>{title}</Text>
-
-        {id ? (
-          id === "font" ? (
-            <View style={[styles.listItem, styles.historyItem]}>
-              {options.map(renderFontItem)}
-            </View>
-          ) : (
-            <View style={[styles.popularWordsContainer]}>
-              <FlashList
-                data={options}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.label.toString()}
-                estimatedItemSize={50}
-                horizontal
-                contentContainerStyle={{
-                  padding: 5,
-                  paddingTop: 1,
-                  paddingLeft: 1,
-                  backgroundColor: theme.colors.background,
-                }}
-              />
-            </View>
-          )
-        ) : (
-          options.map((item, itemIndex) => (
-            <TouchableOpacity
-              activeOpacity={0.9}
-              key={itemIndex}
-              style={[styles.listItem, styles.historyItem]}
-              onPress={item.action}
-            >
-              <Text style={[styles.listHistoryLabel]}>
-                {item?.label}
-                {"\n"}
-                <Text style={styles.itemDate}>{item.extraText}</Text>
-              </Text>
-              <TouchableOpacity>
-                {item.isFont5 ? (
-                  <FontAwesome5 name="google-play" size={26} color={"green"} />
-                ) : (
-                  <Icon
-                    size={26}
-                    name={item.iconName || "Sun"}
-                    color={item.color || theme.colors.text}
-                  />
-                )}
-              </TouchableOpacity>
+        {options.map((item, itemIndex) => (
+          <TouchableOpacity
+            activeOpacity={0.9}
+            key={itemIndex}
+            style={[styles.listItem, styles.historyItem]}
+            onPress={item.action}
+          >
+            <Text style={[styles.listHistoryLabel]}>
+              {item?.label}
+              {"\n"}
+              <Text style={styles.itemDate}>{item.extraText}</Text>
+            </Text>
+            <TouchableOpacity>
+              {item.isFont5 ? (
+                <FontAwesome5 name="google-play" size={26} color={"green"} />
+              ) : (
+                <Icon
+                  size={26}
+                  name={item.iconName || "Sun"}
+                  color={item.color || theme.colors.text}
+                />
+              )}
             </TouchableOpacity>
-          ))
-        )}
+          </TouchableOpacity>
+        ))}
       </View>
     );
   };
@@ -558,27 +539,26 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
     handleFontSize(size);
   };
 
-  const Font = () => {
-    return (
+  const Font = useMemo(() => {
+    return () => (
       <FontSelector
         onSelectFont={handleFontChange}
         initialFont={selectedFont}
       />
     );
-  };
-  const ThemeColor = () => {
-    return (
+  }, [handleFontChange, selectedFont]);
+
+  const ThemeColor = useMemo(() => {
+    return () => (
       <ColorSelector
         onSelectColor={handleColorChange}
         initialColor={currentTheme}
       />
     );
-  };
+  }, [handleColorChange, currentTheme]);
 
-  const fontSizes = getMinMaxFontSize();
-
-  const FontSize = () => {
-    return (
+  const FontSize = useMemo(() => {
+    return () => (
       <FontSizeAdjuster
         onSizeChange={handleFontSizeChange}
         initialSize={fontSize}
@@ -588,7 +568,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
         step={1}
       />
     );
-  };
+  }, [handleFontSizeChange, fontSize, selectedFont]);
 
   const BottomChild = {
     font: <Font />,
