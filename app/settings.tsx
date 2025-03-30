@@ -555,7 +555,6 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
   };
 
   const handleFontSizeChange = (size: number) => {
-    console.log("fontSize", size);
     handleFontSize(size);
   };
 

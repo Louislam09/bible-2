@@ -30,7 +30,6 @@ const FontSizeAdjuster: React.FC<FontSizeAdjusterProps> = ({
 
   const debouncedOnSizeChange = useCallback(
     debounce((size: number, type: "decrease" | "increase") => {
-      console.log({ size, type });
       onSizeChange(size, type);
     }, 300),
     []
