@@ -84,7 +84,7 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
             verse: targetVerse,
             created_at: "",
           });
-        console.log("✅✅✅✅✅✅✅✅✅");
+        // console.log("✅✅✅✅✅✅✅✅✅");
       });
     } catch (error) {
       console.error("Error fetching Bible data:", error);

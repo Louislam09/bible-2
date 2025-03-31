@@ -7,7 +7,7 @@ import { use$ } from "@legendapp/state/react";
 import { configureSynced, syncObservable } from "@legendapp/state/sync";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { pb } from "@/globalConfig";
-// import { authState$ } from "@/state/authState";
+
 import React, {
   createContext,
   ReactNode,
@@ -16,6 +16,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import CloudSyncPopup from "@/components/SyncPopup";
 
 const persistOptions = configureSynced({
   persist: {
@@ -127,14 +128,15 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const storedData = use$(() => storedData$.get());
   const syncState$ = syncState(storedData$);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [settingId, setSettingId] = useState("");
   const isAuthenticated = false;
-  // const isAuthenticated = use$(() => authState$.isAuthenticated.get());
-  const enableCloudSync = use$(() => storedData$.enableCloudSync.get());
-  console.log({ enableCloudSync });
+  // const enableCloudSync = use$(() => storedData$.enableCloudSync.get());
 
   useEffect(() => {
     const loadState = async () => {
+      console.log("LOAD STATE FINISHED");
       await when(() => syncState$.isPersistLoaded.get());
+
       bibleState$.changeBibleQuery({
         book: storedData$.lastBook.get(),
         chapter: storedData$.lastChapter.get(),
@@ -146,25 +148,23 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       });
       storedData$.isDataLoaded.set(true);
       setDataLoaded(true);
-
-      // Only try to load from cloud if user is authenticated AND cloud sync is enabled
-      if (pb.authStore.isValid && storedData$.enableCloudSync.get()) {
-        loadFromCloud();
-      }
+      // if (!storedData.isSyncedWithCloud) return;
+      // if (pb.authStore.isValid && storedData$.enableCloudSync.get()) {
+      //   loadFromCloud("loadState");
+      // }
     };
 
     loadState();
   }, []);
 
-  // Listen for authentication changes to sync settings
   useEffect(() => {
     const unsubscribe = pb.authStore.onChange((token, model) => {
+      console.log({ token, model });
       if (token && model && storedData$.enableCloudSync.get()) {
         console.log(
           "🚪 User just logged in and cloud sync is enabled, try to load their settings"
         );
-        // User just logged in and cloud sync is enabled, try to load their settings
-        loadFromCloud();
+        // loadFromCloud("subscribe");
       }
     });
 
@@ -173,13 +173,24 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     };
   }, []);
 
-  // Listen for cloud sync preference changes
-  useEffect(() => {
-    if (enableCloudSync && isAuthenticated) {
-      // If user enables cloud sync and is authenticated, sync immediately
-      syncWithCloud();
-    }
-  }, [enableCloudSync, isAuthenticated]);
+  // useEffect(() => {
+  //   if (!settingId) return;
+  //   console.log({ settingId });
+  //   const unsubscribe = pb.collection("user_settings").subscribe(
+  //     settingId,
+  //     function (e) {
+  //       console.log("subscribed:user_settings");
+  //       console.log(e.action);
+  //       console.log(e.record);
+  //     },
+  //     {
+  //       /* other options like: filter, expand, custom headers, etc. */
+  //     }
+  //   );
+  //   return () => {
+  //     pb.collection("user_settings").unsubscribe(settingId);
+  //   };
+  // }, [settingId]);
 
   const saveData = useCallback((data: Partial<StoreState>) => {
     console.log("💾 Saving data... 💾");
@@ -188,7 +199,8 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       storedData$[key as keyof StoreState].set(value as any);
     });
 
-    // Only sync with cloud if user is authenticated AND cloud sync is enabled
+    storedData$.isSyncedWithCloud.set(false);
+
     if (pb.authStore.isValid && storedData$.enableCloudSync.get()) {
       syncWithCloud();
     }
@@ -203,121 +215,132 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     storedData$.enableCloudSync.set(enable);
 
     if (enable && pb.authStore.isValid) {
-      // If enabling cloud sync and user is authenticated, sync immediately
       syncWithCloud();
     }
   };
 
-  // Sync local settings to PocketBase
   const syncWithCloud = async (): Promise<boolean> => {
-    console.log("🔃 syncWithCloud called!");
-    return false;
-    //   try {
-    //   const user = authState$.user.get();
+    console.log("🔃 syncWithCloud 🔃!");
+    try {
+      const user = storedData.user;
 
-    //   if (!user) {
-    //     console.log("No hay usuario autenticado para guardar configuración");
-    //     return false;
-    //   }
+      if (!user) {
+        console.log("No hay usuario autenticado para guardar configuración");
+        return false;
+      }
 
-    //   if (!storedData$.enableCloudSync.get()) {
-    //     console.log("Sincronización con la nube está desactivada");
-    //     return false;
-    //   }
+      if (!storedData$.enableCloudSync.get()) {
+        console.log("Sincronización con la nube está desactivada");
+        return false;
+      }
 
-    //   // Get current settings
-    //   const settings = storedData$.get();
+      const settings = storedData$.get();
 
-    //   // Check if settings record exists
-    //   const existingSettings = await pb
-    //     .collection("user_settings")
-    //     .getList(1, 1, {
-    //       filter: `user = "${user.id}"`,
-    //     });
+      const existingSettings = await pb
+        .collection("user_settings")
+        .getList(1, 1, {
+          filter: `user = "${user.id}"`,
+        });
 
-    //   if (existingSettings.items.length > 0) {
-    //     // Update existing settings
-    //     await pb
-    //       .collection("user_settings")
-    //       .update(existingSettings.items[0].id, {
-    //         settings: JSON.stringify(settings),
-    //         user: user.id,
-    //       });
-    //   } else {
-    //     // Create new settings
-    //     await pb.collection("user_settings").create({
-    //       settings: JSON.stringify(settings),
-    //       user: user.id,
-    //     });
-    //   }
+      if (existingSettings.items.length > 0) {
+        setSettingId(existingSettings.items[0].id);
+        await pb
+          .collection("user_settings")
+          .update(existingSettings.items[0].id, {
+            settings: JSON.stringify(settings),
+            user: user.id,
+          });
+      } else {
+        const mySetting = await pb.collection("user_settings").create({
+          settings: JSON.stringify(settings),
+          user: user.id,
+        });
+        mySetting.collectionId;
+        setSettingId(mySetting.collectionId);
+      }
 
-    //   storedData$.isSyncedWithCloud.set(true);
-    //   console.log("✅ Configuración sincronizada con la nube");
-    //   return true;
-    // } catch (error) {
-    //   console.error("Error al sincronizar con la nube:", error);
-    //   return false;
-    // }
+      storedData$.isSyncedWithCloud.set(true);
+      console.log("✅ Configuración sincronizada con la nube");
+      return true;
+    } catch (error) {
+      console.error("Error al sincronizar con la nube:", error);
+      return false;
+    }
   };
 
-  // Load settings from PocketBase
-  const loadFromCloud = async (): Promise<boolean> => {
-    console.log("🧠 loadFromCloud called!");
-    return false;
-    //   try {
-    //   const user = authState$.user.get();
+  const loadFromCloud = async (msg?: string): Promise<boolean> => {
+    console.log("> LOAD FROM COULD from :", msg);
+    try {
+      storedData$.isDataLoaded.set(false);
+      const user = storedData.user;
 
-    //   if (!user) {
-    //     console.log("No hay usuario autenticado para cargar configuración");
-    //     return false;
-    //   }
+      if (!user) {
+        console.log("No hay usuario autenticado para cargar configuración");
+        return false;
+      }
 
-    //   if (!storedData$.enableCloudSync.get()) {
-    //     console.log("Sincronización con la nube está desactivada");
-    //     return false;
-    //   }
+      if (!storedData$.enableCloudSync.get()) {
+        console.log("Sincronización con la nube está desactivada");
+        return false;
+      }
 
-    //   // Get settings from PocketBase
-    //   const existingSettings = await pb
-    //     .collection("user_settings")
-    //     .getList(1, 1, {
-    //       filter: `user = "${user.id}"`,
-    //     });
+      const existingSettings = await pb
+        .collection("user_settings")
+        .getList(1, 1, {
+          filter: `user = "${user.id}"`,
+        });
 
-    //   if (existingSettings.items.length > 0) {
-    //     const settingsData = JSON.parse(existingSettings.items[0].settings);
+      if (existingSettings.items.length > 0) {
+        const settingsData = existingSettings.items[0].settings;
 
-    //     // Update user data from auth
-    //     if (user.name || user.email) {
-    //       settingsData.userData = {
-    //         name: user.name || "",
-    //         email: user.email || "",
-    //         status: settingsData.userData?.status || "",
-    //       };
-    //     }
+        if (user.name || user.email) {
+          settingsData.userData = {
+            name: user.name || "",
+            email: user.email || "",
+            status: settingsData.userData?.status || "",
+          };
+        }
 
-    //     // Preserve the enableCloudSync setting from local storage
-    //     const enableCloudSync = storedData$.enableCloudSync.get();
+        const enableCloudSync = storedData$.enableCloudSync.get();
 
-    //     // Update local state with settings from server
-    //     storedData$.set({
-    //       ...settingsData,
-    //       enableCloudSync, // Keep local preference for cloud sync
-    //       isDataLoaded: true,
-    //       isSyncedWithCloud: true,
-    //     });
+        storedData$.set({
+          ...settingsData,
+          enableCloudSync,
+          isDataLoaded: true,
+          isSyncedWithCloud: true,
+        });
+        console.log("✅ Configuración cargada desde la nube");
+        return true;
+      }
 
-    //     console.log("✅ Configuración cargada desde la nube");
-    //     return true;
-    //   }
+      await syncWithCloud();
+      return false;
+    } catch (error) {
+      console.error("Error al cargar desde la nube:", error);
+      return false;
+    } finally {
+      storedData$.isDataLoaded.set(true);
+    }
+  };
 
-    //   // If no settings found, sync current settings to cloud
-    //   await syncWithCloud();
-    //   return false;
-    // } catch (error) {
-    //   console.error("Error al cargar desde la nube:", error);
-    //   return false;
-    // }
+  const [syncModalVisible, setSyncModalVisible] = useState<boolean>(false);
+  const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
+
+  const handleSync = async (): Promise<void> => {
+    // Simulate sync with cloud
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const success = true;
+
+        if (success) {
+          const currentTime = new Date().toISOString();
+          setLastSyncTime(currentTime);
+          resolve();
+        } else {
+          reject("Network connection failed");
+        }
+      }, 2000);
+    });
   };
 
   return (
@@ -326,7 +349,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         storedData,
         saveData,
         clearData,
-        isDataLoaded: dataLoaded,
+        isDataLoaded: storedData.isDataLoaded,
         syncWithCloud,
         loadFromCloud,
         toggleCloudSync,
@@ -334,6 +357,12 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       }}
     >
       {children}
+      <CloudSyncPopup
+        visible={syncModalVisible}
+        onClose={() => setSyncModalVisible(false)}
+        onSync={handleSync}
+        lastSyncTime={lastSyncTime}
+      />
     </StorageContext.Provider>
   );
 };

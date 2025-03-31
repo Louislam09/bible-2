@@ -6,21 +6,19 @@ import { Text, View } from "@/components/Themed";
 import VoiceList from "@/components/VoiceList";
 import VersionList from "@/components/home/header/VersionList";
 import { useBibleContext } from "@/context/BibleContext";
-import { storedData$, useStorage } from "@/context/LocalstoreContext";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { bibleState$ } from "@/state/bibleState";
 import { EBibleVersions, Screens, TTheme } from "@/types";
 import isWithinTimeframe from "@/utils/isWithinTimeframe";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import { useNavigation } from "expo-router";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { StyleSheet, ToastAndroid, useWindowDimensions } from "react-native";
+import React, { useCallback, useMemo, useRef } from "react";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import SecondDashboard from "../../components/new-dashboard";
-import { use$ } from "@legendapp/state/react";
-import { authState$ } from "@/state/authState";
-import ProfileCardProps from "@/components/UserProfile";
 
 export type IDashboardOption = {
   icon: IconProps["name"];
@@ -284,35 +282,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
 };
 
 const MyDashboard = () => {
-  // const isGridLayout = use$(() => storedData$.isGridLayout.get());
-  const { loadFromCloud } = useStorage();
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const isLoggedIn = await authState$.checkSession();
-
-        if (isLoggedIn) {
-          // Load user settings from cloud
-          await loadFromCloud();
-          console.log("🔃 Load user notes");
-          // await notesState$.fetchNotes();
-        } else {
-          console.log(" User is not authenticated");
-          // router.replace("/login");
-        }
-      } catch (error: any) {
-        console.error("Error checking authentication:", error);
-        console.error("Original Erorr:", error.originalError);
-        // router.replace("/login");
-      }
-    };
-
-    checkAuth();
-  }, []);
-
   return <SecondDashboard />;
-  // return !isGridLayout ? <SecondDashboard /> : <Dashboard />;
 };
 
 export default MyDashboard;

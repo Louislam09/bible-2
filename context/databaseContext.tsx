@@ -46,10 +46,14 @@ export const DatabaseContext =
 const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const {
-    isDataLoaded,
-    storedData: { currentBibleVersion },
-  } = useStorage();
+  // const {
+  //   isDataLoaded,
+  //   storedData: { currentBibleVersion },
+  // } = useStorage();
+  const { currentBibleVersion, isDataLoaded } = use$(() => ({
+    currentBibleVersion: storedData$.currentBibleVersion.get(),
+    isDataLoaded: storedData$.isDataLoaded.get(),
+  }));
   const { installedBibles, loading, refreshDatabaseList, installedDictionary } =
     useInstalledBibles();
   const currentDbName = useMemo(

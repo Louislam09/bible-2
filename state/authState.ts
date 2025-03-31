@@ -1,6 +1,6 @@
 import { storedData$ } from "@/context/LocalstoreContext";
 import { loginWithEmailPassword, pb, setUserPassword } from "@/globalConfig";
-import { GoogleUser, pbUser } from "@/types";
+import { pbUser } from "@/types";
 import { observable } from "@legendapp/state";
 import { StorageService } from "@/services/StorageService";
 
@@ -117,6 +117,7 @@ export const authState$ = observable<AuthState>({
   },
 
   checkSession: async () => {
+    console.log("🔎 checking session 🔍");
     try {
       authState$.isLoading.set(true);
 

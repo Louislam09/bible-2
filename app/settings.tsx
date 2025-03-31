@@ -279,6 +279,9 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
           iconName: "RefreshCw",
           action: handleSyncNow,
           extraText: "Sincronizar manualmente con la nube",
+          color: isSyncedWithCloud
+            ? theme.colors.notification
+            : theme.colors.text,
           isDisabled: !enableCloudSync || !isAuthenticated,
         },
       ],

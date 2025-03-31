@@ -15,6 +15,7 @@ import Icon from "./Icon";
 import { Text, View } from "./Themed";
 import Tooltip from "./Tooltip";
 import { use$ } from "@legendapp/state/react";
+import CloudSyncPopup from "./SyncPopup";
 
 interface ProfileCardProps {
   user: pbUser | null;
@@ -62,6 +63,26 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
         }, 500);
       },
     },
+  };
+
+  const [syncModalVisible, setSyncModalVisible] = useState<boolean>(false);
+  const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
+
+  const handleSync = async (): Promise<void> => {
+    // Simulate sync with cloud
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const success = true;
+
+        if (success) {
+          const currentTime = new Date().toISOString();
+          setLastSyncTime(currentTime);
+          resolve();
+        } else {
+          reject("Network connection failed");
+        }
+      }, 2000);
+    });
   };
 
   const tooltipData = tooltipInfo[isAuth ? "logout" : "login"];
@@ -116,6 +137,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
         />
       </TouchableOpacity>
 
+      <CloudSyncPopup
+        visible={syncModalVisible}
+        onClose={() => setSyncModalVisible(false)}
+        onSync={handleSync}
+        lastSyncTime={lastSyncTime}
+      />
       <Tooltip
         offset={-20}
         target={userRef}
@@ -150,6 +177,28 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
           >
             {tooltipData.description}
           </Text>
+
+          <TouchableOpacity
+            onPress={() => setSyncModalVisible(true)}
+            style={{
+              paddingVertical: 12,
+              borderRadius: 8,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: theme.colors.notification,
+              marginVertical: 10,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              {"Sync with Cloud"}
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() => tooltipData.action()}
             style={{

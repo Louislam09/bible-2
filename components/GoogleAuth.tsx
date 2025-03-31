@@ -1,11 +1,10 @@
-// components/GoogleAuth.tsx
+import { authState$ } from "@/state/authState";
 import { pbUser, TTheme } from "@/types";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@react-navigation/native";
 import * as AuthSession from "expo-auth-session";
 import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -14,12 +13,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { pb } from "../globalConfig";
-import { authState$ } from "@/state/authState";
 
-// Complete the browser authentication session
 WebBrowser.maybeCompleteAuthSession();
 
-// Define the AuthProviderInfo interface
 interface AuthProviderInfo {
   name: string;
   state: string;
@@ -65,6 +61,7 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({
 
       router.replace("/(dashboard)");
     } catch (error: any) {
+      console.log(error.originalError, error);
       handleAuthenticationError(new Error("Error al autenticar con Google"));
     }
   };

@@ -29,6 +29,7 @@ import {
 import { useDBContext } from "./databaseContext";
 import { storedData$, useStorage } from "./LocalstoreContext";
 import { use$ } from "@legendapp/state/react";
+import { authState$ } from "@/state/authState";
 
 type BibleState = {
   setSearchQuery: Function;
@@ -204,12 +205,20 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     fontSize: storedData$.fontSize.get(),
     currentTheme: storedData$.currentTheme.get(),
     selectedFont: storedData$.selectedFont.get(),
+    currentBibleVersion: storedData$.currentBibleVersion.get(),
+    isDataLoaded: storedData$.isDataLoaded.get(),
   }));
+  const {
+    fontSize,
+    currentTheme,
+    selectedFont,
+    currentBibleVersion,
+    isDataLoaded,
+  } = storedData;
+  // const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
+  // const isDataLoaded = use$(() => storedData$.isDataLoaded.get());
 
   const historyManager = useHistoryManager();
-  const { fontSize, currentTheme, selectedFont } = storedData;
-  const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
-  const isDataLoaded = use$(() => storedData$.isDataLoaded.get());
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
   const fontsLoaded = useCustomFonts();
   const {
@@ -241,6 +250,10 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [currentBibleVersion, installedBibles]);
 
   useEffect(() => {
+    console.log({ isDataLoaded });
+  }, [isDataLoaded]);
+
+  useEffect(() => {
     getOrientation();
     const subscription = Dimensions.addEventListener("change", getOrientation);
     return () => {
@@ -250,6 +263,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     if (!isDataLoaded) return;
+    authState$.checkSession();
     dispatch({
       type: "SET_LOCAL_DATA",
       payload: {
@@ -273,7 +287,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
       </ScreenWithAnimation>
     );
   }
-  // if (!isMyBibleDbLoaded) return null;
+
   const goBackOnHistory = (index: number) => {
     dispatch({ type: "GO_BACK", payload: index });
   };
