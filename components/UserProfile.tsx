@@ -7,6 +7,7 @@ import { User } from "lucide-react-native";
 import React, { useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Image,
   StyleSheet,
   TouchableOpacity,
@@ -16,6 +17,7 @@ import { Text, View } from "./Themed";
 import Tooltip from "./Tooltip";
 import { use$ } from "@legendapp/state/react";
 import CloudSyncPopup from "./SyncPopup";
+import { storedData$ } from "@/context/LocalstoreContext";
 
 interface ProfileCardProps {
   user: pbUser | null;
@@ -24,7 +26,6 @@ interface ProfileCardProps {
 const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
   const nameInfo = user?.name.split(" ") || [];
   const firstName = nameInfo[0];
-  // const lastName = nameInfo[1];
   const theme = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
@@ -37,6 +38,20 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
     icon: "Search",
     label: "Buscador",
     action: () => navigation.navigate(Screens.Search, {}),
+  };
+
+  const onLogout = () => {
+    Alert.alert(
+      "Cerrar Sesión",
+      "¿Estás seguro de que deseas cerrar tu sesión?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Cerrar Sesión",
+          onPress: () => authState$.logout().then(console.log),
+        },
+      ]
+    );
   };
 
   const tooltipInfo = {
@@ -59,7 +74,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
       action: async () => {
         setOpenUser(false);
         setTimeout(() => {
-          authState$.logout().then(console.log);
+          onLogout();
         }, 500);
       },
     },
@@ -68,24 +83,19 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
   const [syncModalVisible, setSyncModalVisible] = useState<boolean>(false);
   const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
 
-  const handleSync = async (): Promise<void> => {
-    // Simulate sync with cloud
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const success = true;
-
-        if (success) {
-          const currentTime = new Date().toISOString();
-          setLastSyncTime(currentTime);
-          resolve();
-        } else {
-          reject("Network connection failed");
-        }
-      }, 2000);
-    });
-  };
-
   const tooltipData = tooltipInfo[isAuth ? "logout" : "login"];
+
+  const onSync = () => {
+    if (!storedData$.user.get()) {
+      setOpenUser(false);
+      setTimeout(() => {
+        navigation.navigate(Screens.Login);
+      }, 500);
+      return;
+    }
+
+    setSyncModalVisible(true);
+  };
 
   return (
     <View style={styles.userInfoContainer}>
@@ -140,7 +150,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
       <CloudSyncPopup
         visible={syncModalVisible}
         onClose={() => setSyncModalVisible(false)}
-        onSync={handleSync}
         lastSyncTime={lastSyncTime}
       />
       <Tooltip
@@ -179,7 +188,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
           </Text>
 
           <TouchableOpacity
-            onPress={() => setSyncModalVisible(true)}
+            onPress={() => onSync()}
             style={{
               paddingVertical: 12,
               borderRadius: 8,
@@ -196,7 +205,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
                 color: "white",
               }}
             >
-              {"Sync with Cloud"}
+              {"Sincronizar con la nube"}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity

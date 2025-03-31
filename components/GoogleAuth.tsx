@@ -53,10 +53,8 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({
           WebBrowser.openAuthSessionAsync(url, REDIRECT_URI);
         },
       });
-      console.log("User ID:", authData.record.id);
       console.log("UserLogined", pb.authStore.isValid);
       authState$.loginWithGoogle(pb.authStore.record as pbUser, authData.token);
-      // pb.authStore.save(pb.authStore.token, authData.record);
       setLoading(false);
 
       router.replace("/(dashboard)");
@@ -65,11 +63,6 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({
       handleAuthenticationError(new Error("Error al autenticar con Google"));
     }
   };
-
-  // useEffect(() => {
-  //   console.log("Checking for existing session...", pb.authStore.record);
-  //   // checkExistingSession();
-  // }, []);
 
   const handleAuthenticationError = (error: Error) => {
     console.log("Error de autenticación:", error);

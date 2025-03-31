@@ -389,67 +389,6 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
     },
   ];
 
-  const renderItem = ({ item }: { item: TOption }) => {
-    return (
-      <TouchableOpacity
-        style={[
-          styles.optionContainer,
-          item.isDisabled && styles.disabledOption,
-        ]}
-        onPress={item.action}
-        disabled={item.isDisabled}
-      >
-        <View style={styles.optionLeftContainer}>
-          {item.isFont5 ? (
-            <FontAwesome5
-              name={item.iconName as any}
-              size={20}
-              color={theme.colors.text}
-              style={styles.optionIcon}
-            />
-          ) : (
-            <Icon
-              name={item.iconName}
-              size={20}
-              color={theme.colors.text}
-              style={styles.optionIcon}
-            />
-          )}
-          <View style={styles.optionTextContainer}>
-            <Text style={styles.optionLabel}>{item.label}</Text>
-            {item.extraText && (
-              <Text style={styles.optionExtraText}>{item.extraText}</Text>
-            )}
-            {item.isValue && (
-              <Text style={styles.optionValue}>
-                {item.value ? "Activado" : "Desactivado"}
-              </Text>
-            )}
-            {item.label === "Sincronización con la nube" && enableCloudSync && (
-              <Text
-                style={[
-                  styles.syncStatus,
-                  { color: isSyncedWithCloud ? "green" : "orange" },
-                ]}
-              >
-                {isSyncedWithCloud ? "✅ Sincronizado" : "⚠️ No sincronizado"}
-              </Text>
-            )}
-          </View>
-        </View>
-        {item.renderSwitch && (
-          <Switch
-            value={item.value}
-            onValueChange={item.onToggle}
-            trackColor={{ false: "#767577", true: theme.colors.primary }}
-            thumbColor={item.value ? "#f4f3f4" : "#f4f3f4"}
-            disabled={item.isDisabled}
-          />
-        )}
-      </TouchableOpacity>
-    );
-  };
-
   const SettingSection = ({ title, options, id }: TSection, index: any) => {
     return (
       <View style={styles.sectionContainer} key={index}>
@@ -480,49 +419,6 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
           </TouchableOpacity>
         ))}
       </View>
-    );
-  };
-
-  const renderFontItem = (item: TOption, index: number) => {
-    const { label, iconName, isValue, action } = item;
-
-    if (isValue) {
-      return (
-        <Text
-          key={index}
-          style={[styles.fontSize, { color: theme.colors.notification }]}
-        >
-          {label}
-        </Text>
-      );
-    }
-    return (
-      <TouchableOpacity key={index} onPress={() => action()}>
-        <View style={styles.fontItem}>
-          <Icon
-            name={iconName}
-            size={30}
-            color={
-              selectedFont === label
-                ? theme.colors.notification
-                : theme.colors.background
-            }
-          />
-
-          {label && (
-            <Text
-              style={[
-                styles.fontLabel,
-                selectedFont === label && {
-                  color: theme.colors.notification,
-                },
-              ]}
-            >
-              {label}
-            </Text>
-          )}
-        </View>
-      </TouchableOpacity>
     );
   };
 

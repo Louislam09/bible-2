@@ -30,6 +30,7 @@ import { useDBContext } from "./databaseContext";
 import { storedData$, useStorage } from "./LocalstoreContext";
 import { use$ } from "@legendapp/state/react";
 import { authState$ } from "@/state/authState";
+import { settingState$ } from "@/state/settingState";
 
 type BibleState = {
   setSearchQuery: Function;
@@ -75,6 +76,7 @@ type BibleState = {
   orientation: "LANDSCAPE" | "PORTRAIT";
   currentBibleLongName: string;
   historyManager: HistoryManager;
+  syncLocalSettings: () => void;
 };
 
 type BibleAction =
@@ -123,6 +125,7 @@ const initialContext: BibleState = {
   setLocalData: () => {},
   performSearch: () => {},
   setSearchQuery: () => {},
+  syncLocalSettings: () => {},
   selectedFont: TFont.Roboto,
   currentBibleVersion: EBibleVersions.BIBLE,
   fontSize: 24,
@@ -205,18 +208,13 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     fontSize: storedData$.fontSize.get(),
     currentTheme: storedData$.currentTheme.get(),
     selectedFont: storedData$.selectedFont.get(),
-    currentBibleVersion: storedData$.currentBibleVersion.get(),
-    isDataLoaded: storedData$.isDataLoaded.get(),
   }));
-  const {
-    fontSize,
-    currentTheme,
-    selectedFont,
-    currentBibleVersion,
-    isDataLoaded,
-  } = storedData;
-  // const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
-  // const isDataLoaded = use$(() => storedData$.isDataLoaded.get());
+  const { fontSize, currentTheme, selectedFont } = storedData;
+  const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
+  const isDataLoaded = use$(() => storedData$.isDataLoaded.get());
+  const requiresSettingsReloadAfterSync = use$(() =>
+    settingState$.requiresSettingsReloadAfterSync.get()
+  );
 
   const historyManager = useHistoryManager();
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
@@ -243,27 +241,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  useEffect(() => {
-    setCurrentBibleLongName(
-      getCurrentDbName(currentBibleVersion, installedBibles)
-    );
-  }, [currentBibleVersion, installedBibles]);
-
-  useEffect(() => {
-    console.log({ isDataLoaded });
-  }, [isDataLoaded]);
-
-  useEffect(() => {
-    getOrientation();
-    const subscription = Dimensions.addEventListener("change", getOrientation);
-    return () => {
-      subscription?.remove();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!isDataLoaded) return;
-    authState$.checkSession();
+  const syncLocalSettings = async () => {
     dispatch({
       type: "SET_LOCAL_DATA",
       payload: {
@@ -273,7 +251,40 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
         selectedFont,
       },
     });
+  };
+
+  useEffect(() => {
+    setCurrentBibleLongName(
+      getCurrentDbName(currentBibleVersion, installedBibles)
+    );
+  }, [currentBibleVersion, installedBibles]);
+
+  useEffect(() => {
+    if (!isDataLoaded) return;
+    const initLocalSettings = async () => {
+      await authState$.checkSession();
+      syncLocalSettings();
+    };
+
+    initLocalSettings();
   }, [isDataLoaded]);
+
+  useEffect(() => {
+    if (requiresSettingsReloadAfterSync) {
+      console.log(fontSize, currentTheme, selectedFont);
+      console.log("⚠  Need to reload settings");
+    } else {
+      console.log("⚠  No Need to reload settings");
+    }
+  }, [requiresSettingsReloadAfterSync, fontSize, currentTheme, selectedFont]);
+
+  useEffect(() => {
+    getOrientation();
+    const subscription = Dimensions.addEventListener("change", getOrientation);
+    return () => {
+      subscription?.remove();
+    };
+  }, []);
 
   if (
     !fontsLoaded ||
@@ -380,6 +391,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     orientation,
     searchState,
     currentBibleLongName,
+    historyManager,
     selectFont,
     onSaveNote,
     onDeleteNote,
@@ -395,7 +407,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     setShouldLoop,
     goBackOnHistory,
     goForwardOnHistory,
-    historyManager,
+    syncLocalSettings,
   };
 
   return (

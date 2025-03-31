@@ -9,34 +9,34 @@ import {
   ModalProps,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
+import { settingState$ } from "@/state/settingState";
 
 interface CloudSyncPopupProps {
   visible: boolean;
   onClose: () => void;
-  onSync: () => Promise<void>;
   lastSyncTime?: string | null;
 }
 
 const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
   visible,
   onClose,
-  onSync,
   lastSyncTime,
 }) => {
   const [syncing, setSyncing] = useState<boolean>(false);
   const [syncComplete, setSyncComplete] = useState<boolean>(false);
   const [syncError, setSyncError] = useState<string | null>(null);
+  const { loadFromCloud } = useStorage();
 
   const handleSync = async (): Promise<void> => {
     try {
       setSyncing(true);
       setSyncError(null);
-      await onSync();
+      await loadFromCloud();
       setSyncComplete(true);
 
-      // Reset state after showing success for 2 seconds
       setTimeout(() => {
-        setSyncComplete(false);
+        settingState$.requiresSettingsReloadAfterSync.set(true);
         onClose();
       }, 2000);
     } catch (error) {
@@ -63,7 +63,7 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
           <View style={styles.header}>
-            <Text style={styles.title}>Cloud Sync</Text>
+            <Text style={styles.title}>Sincronización de nubes</Text>
             <TouchableOpacity onPress={onClose} disabled={syncing}>
               <Ionicons name="close" size={24} color="#555" />
             </TouchableOpacity>
@@ -81,10 +81,10 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
 
           <Text style={styles.description}>
             {syncComplete
-              ? "Your data has been successfully synced to the cloud!"
+              ? "¡Tus datos se han sincronizado exitosamente con la nube!"
               : syncError
-              ? `Sync failed: ${syncError}`
-              : "Sync your data to the cloud to access it from all your devices."}
+              ? `Error de sincronización: ${syncError}`
+              : "Sincroniza tus datos con la nube para acceder a ellos desde todos tus dispositivos."}
           </Text>
 
           {!syncComplete && (
@@ -94,7 +94,7 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
                 onPress={onClose}
                 disabled={syncing}
               >
-                <Text style={styles.cancelButtonText}>Later</Text>
+                <Text style={styles.cancelButtonText}>Más tarde</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -109,14 +109,14 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
                 {syncing ? (
                   <ActivityIndicator color="#fff" size="small" />
                 ) : (
-                  <Text style={styles.syncButtonText}>Sync Now</Text>
+                  <Text style={styles.syncButtonText}>Sincronizar ahora</Text>
                 )}
               </TouchableOpacity>
             </View>
           )}
 
           <Text style={styles.lastSyncText}>
-            Last sync: {formattedLastSync}
+            Última sincronización: {formattedLastSync}
           </Text>
         </View>
       </View>

@@ -1,12 +1,13 @@
 import { StorageKeys } from "@/constants/StorageKeys";
+import { pb } from "@/globalConfig";
 import { bibleState$ } from "@/state/bibleState";
+import { settingState$ } from "@/state/settingState";
 import { EBibleVersions, EThemes, pbUser, SortOption, TFont } from "@/types";
 import { observable, syncState, when } from "@legendapp/state";
 import { observablePersistAsyncStorage } from "@legendapp/state/persist-plugins/async-storage";
 import { use$ } from "@legendapp/state/react";
 import { configureSynced, syncObservable } from "@legendapp/state/sync";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { pb } from "@/globalConfig";
 
 import React, {
   createContext,
@@ -16,7 +17,6 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import CloudSyncPopup from "@/components/SyncPopup";
 
 const persistOptions = configureSynced({
   persist: {
@@ -130,7 +130,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [dataLoaded, setDataLoaded] = useState(false);
   const [settingId, setSettingId] = useState("");
   const isAuthenticated = false;
-  // const enableCloudSync = use$(() => storedData$.enableCloudSync.get());
 
   useEffect(() => {
     const loadState = async () => {
@@ -148,10 +147,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       });
       storedData$.isDataLoaded.set(true);
       setDataLoaded(true);
-      // if (!storedData.isSyncedWithCloud) return;
-      // if (pb.authStore.isValid && storedData$.enableCloudSync.get()) {
-      //   loadFromCloud("loadState");
-      // }
     };
 
     loadState();
@@ -159,7 +154,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = pb.authStore.onChange((token, model) => {
-      console.log({ token, model });
       if (token && model && storedData$.enableCloudSync.get()) {
         console.log(
           "🚪 User just logged in and cloud sync is enabled, try to load their settings"
@@ -172,25 +166,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       unsubscribe();
     };
   }, []);
-
-  // useEffect(() => {
-  //   if (!settingId) return;
-  //   console.log({ settingId });
-  //   const unsubscribe = pb.collection("user_settings").subscribe(
-  //     settingId,
-  //     function (e) {
-  //       console.log("subscribed:user_settings");
-  //       console.log(e.action);
-  //       console.log(e.record);
-  //     },
-  //     {
-  //       /* other options like: filter, expand, custom headers, etc. */
-  //     }
-  //   );
-  //   return () => {
-  //     pb.collection("user_settings").unsubscribe(settingId);
-  //   };
-  // }, [settingId]);
 
   const saveData = useCallback((data: Partial<StoreState>) => {
     console.log("💾 Saving data... 💾");
@@ -268,19 +243,13 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  const loadFromCloud = async (msg?: string): Promise<boolean> => {
-    console.log("> LOAD FROM COULD from :", msg);
+  const loadFromCloud = async (): Promise<boolean> => {
+    console.log("> LOAD FROM COULD from :");
     try {
-      storedData$.isDataLoaded.set(false);
       const user = storedData.user;
 
       if (!user) {
         console.log("No hay usuario autenticado para cargar configuración");
-        return false;
-      }
-
-      if (!storedData$.enableCloudSync.get()) {
-        console.log("Sincronización con la nube está desactivada");
         return false;
       }
 
@@ -323,46 +292,20 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  const [syncModalVisible, setSyncModalVisible] = useState<boolean>(false);
-  const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
-
-  const handleSync = async (): Promise<void> => {
-    // Simulate sync with cloud
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const success = true;
-
-        if (success) {
-          const currentTime = new Date().toISOString();
-          setLastSyncTime(currentTime);
-          resolve();
-        } else {
-          reject("Network connection failed");
-        }
-      }, 2000);
-    });
-  };
-
   return (
     <StorageContext.Provider
       value={{
         storedData,
+        isDataLoaded: storedData.isDataLoaded,
+        isAuthenticated: isAuthenticated,
         saveData,
         clearData,
-        isDataLoaded: storedData.isDataLoaded,
         syncWithCloud,
         loadFromCloud,
         toggleCloudSync,
-        isAuthenticated: isAuthenticated,
       }}
     >
       {children}
-      <CloudSyncPopup
-        visible={syncModalVisible}
-        onClose={() => setSyncModalVisible(false)}
-        onSync={handleSync}
-        lastSyncTime={lastSyncTime}
-      />
     </StorageContext.Provider>
   );
 };
