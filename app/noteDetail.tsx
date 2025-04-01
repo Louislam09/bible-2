@@ -3,12 +3,11 @@ import Icon from "@/components/Icon";
 import MyRichEditor from "@/components/RichTextEditor";
 import { Text, View } from "@/components/Themed";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
-import { GET_NOTE_BY_ID } from "@/constants/Queries";
 import { useBibleContext } from "@/context/BibleContext";
-import { useDBContext } from "@/context/databaseContext";
 import useDebounce from "@/hooks/useDebounce";
 import useParams from "@/hooks/useParams";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
+import { useNoteService } from "@/services/noteService";
 import { bibleState$ } from "@/state/bibleState";
 import { EViewMode, Screens, TNote, TTheme } from "@/types";
 import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
@@ -40,9 +39,8 @@ type NoteDetailParams = { noteId: number | null; isNewNote: boolean };
 const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
   const theme = useTheme();
   const navigation = useNavigation();
-  const { myBibleDB, executeSql } = useDBContext();
   const styles = useMemo(() => getStyles(theme), [theme]);
-  const { onSaveNote, onUpdateNote } = useBibleContext();
+  const { getNoteById, createNote, updateNote } = useNoteService();
   const selectedVerseForNote = use$(() =>
     bibleState$.selectedVerseForNote.get()
   );
@@ -92,9 +90,10 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
           return;
         }
         setLoading(true);
-        if (!myBibleDB || !executeSql) return;
-        const note = await executeSql(GET_NOTE_BY_ID, [noteId]);
-        setNoteInfo(note[0] as TNote);
+        const note = await getNoteById(noteId);
+        if (note) {
+          setNoteInfo(note as TNote);
+        }
       } catch (error) {
         Alert.alert(
           "Error",
@@ -118,9 +117,6 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
       navigation.setOptions({
         headerTitle: "📝",
       });
-    } else {
-      // const headerTitle = isView ? noteInfo?.title?.toUpperCase() : '✏️';
-      // navigation.setOptions({ headerTitle });
     }
   }, [isView, noteInfo, isNewNote]);
 
@@ -157,10 +153,15 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
       }
       if (!noteContent.title) noteContent.title = defaultTitle;
       setHasUnsavedChanges(false);
-      await onSaveNote(noteContent, () =>
-        navigation.navigate(Screens.Notes, { shouldRefresh: true })
-      );
-      ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
+      const success = await createNote({
+        title: noteContent.title,
+        content: noteContent.content
+      });
+      
+      if (success) {
+        navigation.navigate(Screens.Notes, { shouldRefresh: true });
+        ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
+      }
     } catch (error) {
       Alert.alert("Error", "No se pudo guardar la nota.");
     }
@@ -265,11 +266,18 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
 
   const onUpdate = async (id: number, goToViewMode = false) => {
     try {
-      await onUpdateNote(noteContent, id, afterSaving);
-      setHasUnsavedChanges(false);
-      if (goToViewMode) {
-        setViewMode("VIEW");
-        ToastAndroid.show("Nota actualizada!", ToastAndroid.SHORT);
+      const success = await updateNote(id, {
+        title: noteContent.title,
+        content: noteContent.content
+      });
+      
+      if (success) {
+        afterSaving();
+        setHasUnsavedChanges(false);
+        if (goToViewMode) {
+          setViewMode("VIEW");
+          ToastAndroid.show("Nota actualizada!", ToastAndroid.SHORT);
+        }
       }
     } catch (error) {
       Alert.alert("Error", "No se pudo actualizar la nota.");

@@ -4,6 +4,7 @@ import { Text, View } from "@/components/Themed";
 import { headerIconSize } from "@/constants/size";
 import { useBibleContext } from "@/context/BibleContext";
 import useNotesExportImport from "@/hooks/useNotesExportImport";
+import { useNoteService } from "@/services/noteService";
 import { IVerseItem, Screens, TNote, TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -41,6 +42,7 @@ type TListVerse = {
   data: IVerseItem[] | any;
   setShouldFetch: any;
 };
+
 interface ActionButtonProps {
   item: {
     bottom: number;
@@ -234,8 +236,8 @@ const Backdrop = ({ visible, onPress, theme }: any) => {
 const Note = ({ data, setShouldFetch }: TListVerse) => {
   const theme = useTheme();
   const navigation = useNavigation();
-  const { onDeleteNote, onDeleteAllNotes, currentBibleLongName } =
-    useBibleContext();
+  const { currentBibleLongName } = useBibleContext();
+  const { deleteNote, deleteAllNotes } = useNoteService();
   const { exportNotes, importNotes, error, isLoading } = useNotesExportImport();
   const selectedVerseForNote = use$(() =>
     bibleState$.selectedVerseForNote.get()
@@ -288,7 +290,7 @@ const Note = ({ data, setShouldFetch }: TListVerse) => {
   const onDelete = async (id: number) => {
     closeCurrentSwiped(id);
     setTimeout(async () => {
-      await onDeleteNote(id);
+      await deleteNote(id);
       setShouldFetch((prev: any) => !prev);
       ToastAndroid.show("Nota borrada!", ToastAndroid.SHORT);
       setSearchText("");
@@ -296,7 +298,7 @@ const Note = ({ data, setShouldFetch }: TListVerse) => {
   };
 
   const onDeleteAll = async () => {
-    await onDeleteAllNotes();
+    await deleteAllNotes();
     setShouldFetch((prev: any) => !prev);
     ToastAndroid.show("Todas las notas han sido borradas!", ToastAndroid.SHORT);
     setSearchText("");
