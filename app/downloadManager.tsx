@@ -26,7 +26,7 @@ const DownloadManager: React.FC<DownloadManagerProps> = ({}) => {
   const [isMyDownloadTab, setIsMyDownloadTab] = useState(false);
   const [searchText, setSearchText] = useState<any>(null);
   const debouncedSearchText = useDebounce(searchText, 500);
-  const isConnected = useInternetConnection();
+  const {isConnected} = useInternetConnection();
 
   const DownloadManagerHeader = () => {
     return (

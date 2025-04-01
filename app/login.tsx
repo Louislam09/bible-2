@@ -4,7 +4,6 @@ import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useCustomTheme } from "@/context/ThemeContext";
-import AuthProvider from "@/providers/AuthProvider";
 import { authState$ } from "@/state/authState";
 import { TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
@@ -54,10 +53,7 @@ const LoginScreen = () => {
       const success = await authState$.login(email, password);
 
       if (success) {
-        // Set cloud sync preference based on user choice
-        // toggleCloudSync(enableSync);
-
-        // Navigate to home screen
+        storedData$.enableCloudSync.set(true);
         router.replace("/(dashboard)");
       } else {
         setError("Correo electrónico o contraseña incorrectos");

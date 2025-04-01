@@ -271,12 +271,24 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     if (requiresSettingsReloadAfterSync) {
-      console.log(fontSize, currentTheme, selectedFont);
-      console.log("⚠  Need to reload settings");
-    } else {
-      console.log("⚠  No Need to reload settings");
+      console.log("⚠ Reloading settings after cloud sync");
+      
+      // Update local state with the latest values from storedData$
+      dispatch({
+        type: "SET_LOCAL_DATA",
+        payload: {
+          currentBibleVersion: storedData$.currentBibleVersion.get(),
+          fontSize: storedData$.fontSize.get(),
+          currentTheme: storedData$.currentTheme.get(),
+          selectedFont: storedData$.selectedFont.get(),
+          viewLayoutGrid: storedData$.isGridLayout.get(),
+        },
+      });
+      
+      // Reset the flag after handling the reload
+      settingState$.requiresSettingsReloadAfterSync.set(false);
     }
-  }, [requiresSettingsReloadAfterSync, fontSize, currentTheme, selectedFont]);
+  }, [requiresSettingsReloadAfterSync]);
 
   useEffect(() => {
     getOrientation();

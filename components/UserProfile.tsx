@@ -94,7 +94,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
       return;
     }
 
-    setSyncModalVisible(true);
+      setOpenUser(false);
+      setSyncModalVisible(true);
   };
 
   return (
@@ -170,7 +171,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
               fontSize: 18,
               fontWeight: "bold",
               marginBottom: 12,
-              color: "white",
+              color: theme.colors.text,
               textAlign: "center",
             }}
           >
@@ -179,7 +180,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
           <Text
             style={{
               fontSize: 14,
-              color: "white",
+              color: theme.colors.text,
               marginBottom: 16,
               textAlign: "center",
             }}
@@ -215,7 +216,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
               borderRadius: 8,
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: "white",
+              backgroundColor: theme.colors.text+80,
             }}
           >
             <Text

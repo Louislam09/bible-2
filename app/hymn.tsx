@@ -45,7 +45,7 @@ const HymnScreen = () => {
   const pickARandomAsset = assets[getRandomNumberFromLength(assets.length)];
   const navigation = useNavigation();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
-  const isConnected = useInternetConnection();
+  const {isConnected} = useInternetConnection();
   const { mutate: checkStatus, isPending: isChecking } = useCheckStatus();
   const requestAccessBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const isAlegresNuevasUnlocked = use$(() => storedData$.isAlegresNuevasUnlocked.get());

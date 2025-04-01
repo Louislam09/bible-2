@@ -38,7 +38,6 @@ const RegisterScreen = () => {
 
   const handleRegister = async () => {
     try {
-      // Validar entradas
       if (!name || !email || !password || !confirmPassword) {
         Alert.alert("Error", "Por favor completa todos los campos");
         return;
@@ -50,20 +49,17 @@ const RegisterScreen = () => {
       }
       setLoading(true);
 
-      // Crear el usuario
       const data = {
         name,
         email,
         password,
         passwordConfirm: confirmPassword,
       };
-      console.log(data);
       await pb.collection("users").create(data);
 
       const success = await authState$.login(email, password);
       if (success) {
-        // Set cloud sync preference based on user choice
-        // toggleCloudSync(enableSync);
+        storedData$.enableCloudSync.set(true);
         router.replace("/(dashboard)");
       } else {
         throw new Error("Falló el registro");

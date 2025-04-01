@@ -55,7 +55,6 @@ const useDraggableElement = ({
     const { x, y } = ensureWithinBounds(panState.x, panState.y);
     pan.setValue({ x, y });
     setPanState({ x, y });
-    // saveData({ floatingNoteButtonPosition: { x, y } });
     bibleState$.handleFloatingNoteButtonPosition(x, y);
   }, [SCREEN_WIDTH, SCREEN_HEIGHT, enabled]);
 
@@ -89,7 +88,6 @@ const useDraggableElement = ({
           // @ts-ignore
           const y = pan.y._value;
           bibleState$.handleFloatingNoteButtonPosition(x, y);
-          // saveData({ floatingNoteButtonPosition: { x, y } });
           setPanState({ x, y });
         },
       }),

@@ -16,7 +16,10 @@ import React, {
   useContext,
   useEffect,
   useState,
+  useRef,
 } from "react";
+import { Alert } from "react-native";
+import useInternetConnection from "@/hooks/useInternetConnection";
 
 const persistOptions = configureSynced({
   persist: {
@@ -103,13 +106,11 @@ syncObservable(
 
 interface StorageContextProps {
   storedData: StoreState;
-  saveData: (data: Partial<StoreState>) => void;
   clearData: () => void;
   isDataLoaded: boolean;
   syncWithCloud: () => Promise<boolean>;
   loadFromCloud: () => Promise<boolean>;
   toggleCloudSync: (enable: boolean) => void;
-  isAuthenticated: boolean;
 }
 
 const StorageContext = createContext<StorageContextProps | undefined>(
@@ -127,9 +128,10 @@ export const useStorage = () => {
 const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const storedData = use$(() => storedData$.get());
   const syncState$ = syncState(storedData$);
-  const [dataLoaded, setDataLoaded] = useState(false);
-  const [settingId, setSettingId] = useState("");
-  const isAuthenticated = false;
+  const [syncTimeout, setSyncTimeout] = useState<NodeJS.Timeout | null>(null);
+  const preventSyncLoopRef = useRef(false);
+  const ignoreNextChangeRef = useRef(false);
+  const {isConnected} = useInternetConnection();
 
   useEffect(() => {
     const loadState = async () => {
@@ -146,7 +148,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         isHistory: true,
       });
       storedData$.isDataLoaded.set(true);
-      setDataLoaded(true);
     };
 
     loadState();
@@ -164,22 +165,47 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     return () => {
       unsubscribe();
+      if (syncTimeout) {
+        clearTimeout(syncTimeout);
+      }
     };
-  }, []);
+  }, [syncTimeout]);
 
-  const saveData = useCallback((data: Partial<StoreState>) => {
-    console.log("💾 Saving data... 💾");
-    Object.entries(data).forEach(([key, value]) => {
-      // @ts-ignore
-      storedData$[key as keyof StoreState].set(value as any);
+  useEffect(() => {
+    const unsubscribeFromChanges = storedData$.onChange((value) => {
+      if (ignoreNextChangeRef.current) {
+        ignoreNextChangeRef.current = false;
+        return;
+      }
+      
+      if (storedData$.isSyncedWithCloud.get() && !preventSyncLoopRef.current) {
+        preventSyncLoopRef.current = true;
+        ignoreNextChangeRef.current = true;
+        storedData$.isSyncedWithCloud.set(false);
+        preventSyncLoopRef.current = false;
+      }
+      
+      if (pb.authStore.isValid && storedData$.enableCloudSync.get()) {
+        if (syncTimeout) {
+          clearTimeout(syncTimeout);
+        }
+        
+        const newTimeout = setTimeout(() => {
+          console.log("⏱️ Debounce timeout completed, syncing with cloud...");
+          syncWithCloud();
+        }, 5000);
+        
+        setSyncTimeout(newTimeout);
+      }
     });
-
-    storedData$.isSyncedWithCloud.set(false);
-
-    if (pb.authStore.isValid && storedData$.enableCloudSync.get()) {
-      syncWithCloud();
-    }
-  }, []);
+    
+    return () => {
+      unsubscribeFromChanges();
+      if (syncTimeout) {
+        clearTimeout(syncTimeout);
+      }
+    };
+  }, [syncTimeout]);
 
   const clearData = async () => {
     console.log("🗑 Clearing data...");
@@ -187,6 +213,15 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   const toggleCloudSync = (enable: boolean) => {
+    if (enable && !isConnected) {
+      Alert.alert(
+        "Sin conexión a Internet",
+        "No se puede activar la sincronización con la nube sin conexión a Internet. Por favor, inténtalo de nuevo cuando estés conectado."
+      );
+      return;
+    }
+    
+    ignoreNextChangeRef.current = true;
     storedData$.enableCloudSync.set(enable);
 
     if (enable && pb.authStore.isValid) {
@@ -196,8 +231,17 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   const syncWithCloud = async (): Promise<boolean> => {
     console.log("🔃 syncWithCloud 🔃!");
+    
+    if (!isConnected) {
+      Alert.alert(
+        "Sin conexión a Internet",
+        "No se puede sincronizar con la nube sin conexión a Internet. Por favor, inténtalo de nuevo cuando estés conectado."
+      );
+      return false;
+    }
+    
     try {
-      const user = storedData.user;
+      const user = storedData$.user.get();
 
       if (!user) {
         console.log("No hay usuario autenticado para guardar configuración");
@@ -218,7 +262,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         });
 
       if (existingSettings.items.length > 0) {
-        setSettingId(existingSettings.items[0].id);
         await pb
           .collection("user_settings")
           .update(existingSettings.items[0].id, {
@@ -226,14 +269,13 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
             user: user.id,
           });
       } else {
-        const mySetting = await pb.collection("user_settings").create({
+        await pb.collection("user_settings").create({
           settings: JSON.stringify(settings),
           user: user.id,
         });
-        mySetting.collectionId;
-        setSettingId(mySetting.collectionId);
       }
 
+      ignoreNextChangeRef.current = true;
       storedData$.isSyncedWithCloud.set(true);
       console.log("✅ Configuración sincronizada con la nube");
       return true;
@@ -245,8 +287,17 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   const loadFromCloud = async (): Promise<boolean> => {
     console.log("> LOAD FROM COULD from :");
+    
+    if (!isConnected) {
+      Alert.alert(
+        "Sin conexión a Internet",
+        "No se pueden cargar los datos desde la nube sin conexión a Internet. Por favor, inténtalo de nuevo cuando estés conectado."
+      );
+      return false;
+    }
+    
     try {
-      const user = storedData.user;
+      const user = storedData$.user.get();
 
       if (!user) {
         console.log("No hay usuario autenticado para cargar configuración");
@@ -271,13 +322,30 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         }
 
         const enableCloudSync = storedData$.enableCloudSync.get();
-
+        
+        // Prevent triggering the onChange handler for this update
+        ignoreNextChangeRef.current = true;
         storedData$.set({
           ...settingsData,
           enableCloudSync,
           isDataLoaded: true,
           isSyncedWithCloud: true,
         });
+        
+        // Update the Bible query with the loaded settings
+        bibleState$.changeBibleQuery({
+          book: settingsData.lastBook,
+          chapter: settingsData.lastChapter,
+          verse: settingsData.lastVerse,
+          bottomSideBook: settingsData.lastBottomSideBook,
+          bottomSideChapter: settingsData.lastBottomSideChapter,
+          bottomSideVerse: settingsData.lastBottomSideVerse,
+          isHistory: true,
+        });
+        
+        // Set flag to trigger UI update in BibleProvider
+        settingState$.requiresSettingsReloadAfterSync.set(true);
+        
         console.log("✅ Configuración cargada desde la nube");
         return true;
       }
@@ -288,6 +356,8 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       console.error("Error al cargar desde la nube:", error);
       return false;
     } finally {
+      // Prevent triggering the onChange handler for this update
+      ignoreNextChangeRef.current = true;
       storedData$.isDataLoaded.set(true);
     }
   };
@@ -297,8 +367,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       value={{
         storedData,
         isDataLoaded: storedData.isDataLoaded,
-        isAuthenticated: isAuthenticated,
-        saveData,
         clearData,
         syncWithCloud,
         loadFromCloud,

@@ -11,6 +11,8 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { settingState$ } from "@/state/settingState";
+import { useTheme } from "@react-navigation/native";
+import { TTheme } from "@/types";
 
 interface CloudSyncPopupProps {
   visible: boolean;
@@ -23,6 +25,8 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
   onClose,
   lastSyncTime,
 }) => {
+  const theme = useTheme();
+  const styles = getStyles(theme);
   const [syncing, setSyncing] = useState<boolean>(false);
   const [syncComplete, setSyncComplete] = useState<boolean>(false);
   const [syncError, setSyncError] = useState<string | null>(null);
@@ -32,17 +36,25 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
     try {
       setSyncing(true);
       setSyncError(null);
-      await loadFromCloud();
-      setSyncComplete(true);
-
-      setTimeout(() => {
-        settingState$.requiresSettingsReloadAfterSync.set(true);
-        onClose();
-      }, 2000);
+      
+      // Load settings from cloud
+      const success = await loadFromCloud();
+      
+      if (success) {
+        setSyncComplete(true);
+        
+        // Give a short delay before closing to show the success state
+        setTimeout(() => {
+          setSyncComplete(false);
+          onClose();
+        }, 2000);
+      } else {
+        setSyncError("No se pudieron cargar los datos desde la nube");
+      }
     } catch (error) {
       console.error("Sync error:", error);
       setSyncError(
-        typeof error === "string" ? error : "Failed to sync with cloud"
+        typeof error === "string" ? error : "Error al sincronizar con la nube"
       );
     } finally {
       setSyncing(false);
@@ -51,13 +63,13 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
 
   const formattedLastSync = lastSyncTime
     ? new Date(lastSyncTime).toLocaleString()
-    : "Never";
+    : "- -- ----";
 
   return (
     <Modal
       visible={visible}
       transparent={true}
-      animationType="slide"
+      animationType="fade"
       onRequestClose={onClose}
     >
       <View style={styles.modalOverlay}>
@@ -124,23 +136,18 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = ({ colors, dark  }: TTheme) => StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: colors.background + 70,
     justifyContent: "center",
     alignItems: "center",
   },
   modalContainer: {
     width: "85%",
-    backgroundColor: "white",
+    backgroundColor: colors.background,
     borderRadius: 16,
     padding: 24,
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
   },
   header: {
     flexDirection: "row",
@@ -151,7 +158,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#333",
+    color: colors.text,
   },
   iconContainer: {
     alignItems: "center",
@@ -160,7 +167,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 16,
-    color: "#555",
+    color: colors.text,
     textAlign: "center",
     marginBottom: 24,
     lineHeight: 22,
@@ -178,18 +185,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   cancelButton: {
-    backgroundColor: "#f5f5f5",
+    backgroundColor: colors.text + 80,
     marginRight: 8,
   },
   syncButton: {
-    backgroundColor: "#4A80F0",
+    backgroundColor: colors.notification,
     marginLeft: 8,
   },
   disabledButton: {
-    backgroundColor: "#a0b9f8",
+    backgroundColor: colors.text + 80,
   },
   cancelButtonText: {
-    color: "#555",
+    color: !dark ? 'white': colors.text,
     fontWeight: "600",
     fontSize: 16,
   },
@@ -200,7 +207,7 @@ const styles = StyleSheet.create({
   },
   lastSyncText: {
     fontSize: 12,
-    color: "#888",
+    color: colors.text,
     textAlign: "center",
   },
 });

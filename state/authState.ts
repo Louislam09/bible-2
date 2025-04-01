@@ -3,11 +3,17 @@ import { loginWithEmailPassword, pb, setUserPassword } from "@/globalConfig";
 import { pbUser } from "@/types";
 import { observable } from "@legendapp/state";
 import { StorageService } from "@/services/StorageService";
+import { Alert } from "react-native";
+
+// Create a separate function to check internet connection
+// This is needed because hooks can't be used directly in the observable
+
 
 export interface AuthState {
   user: pbUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isConnectedToInternet: boolean;
   error: string | null;
 
   login: (email: string, password: string) => Promise<pbUser>;
@@ -30,8 +36,17 @@ export const authState$ = observable<AuthState>({
   isAuthenticated: false,
   isLoading: false,
   error: null,
+  isConnectedToInternet: true,
 
   login: async (email: string, password: string) => {
+    if (!authState$.isConnectedToInternet.get()) {
+      Alert.alert(
+        "Sin conexión a Internet",
+        "No se puede iniciar sesión sin conexión a Internet. Por favor, inténtalo de nuevo cuando estés conectado."
+      );
+      throw new Error("No hay conexión a Internet");
+    }
+    
     try {
       authState$.isLoading.set(true);
       authState$.error.set(null);
@@ -52,18 +67,26 @@ export const authState$ = observable<AuthState>({
     }
   },
 
-  loginWithGoogle: async (userData: pbUser, token: string) => {
+  loginWithGoogle: async (googleUserInfo: pbUser, accessToken: string) => {
+    if (!authState$.isConnectedToInternet.get()) {
+      Alert.alert(
+        "Sin conexión a Internet",
+        "No se puede iniciar sesión con Google sin conexión a Internet. Por favor, inténtalo de nuevo cuando estés conectado."
+      );
+      throw new Error("No hay conexión a Internet");
+    }
+    
     try {
       authState$.isLoading.set(true);
       authState$.error.set(null);
 
-      pb.authStore.save(token, userData);
-      await StorageService.saveSession(pb.authStore.token, userData);
+      pb.authStore.save(accessToken, googleUserInfo);
+      await StorageService.saveSession(pb.authStore.token, googleUserInfo);
 
-      authState$.user.set(userData);
+      authState$.user.set(googleUserInfo);
       authState$.isAuthenticated.set(true);
 
-      return userData;
+      return googleUserInfo;
     } catch (error: any) {
       const errorMessage =
         error.message || "Error al iniciar sesión con Google";
@@ -75,13 +98,24 @@ export const authState$ = observable<AuthState>({
   },
 
   logout: async () => {
+    if (!authState$.isConnectedToInternet.get()) {
+      Alert.alert(
+        "Sin conexión a Internet",
+        "No se puede cerrar sesión sin conexión a Internet. Por favor, inténtalo de nuevo cuando estés conectado."
+      );
+      throw new Error("No hay conexión a Internet");
+    }
+    
     try {
       authState$.isLoading.set(true);
+      pb.authStore.clear();
       await StorageService.clearSession();
+
       authState$.user.set(null);
       authState$.isAuthenticated.set(false);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error al cerrar sesión:", error);
+      throw error;
     } finally {
       authState$.isLoading.set(false);
     }

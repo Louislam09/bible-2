@@ -37,7 +37,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const isSplitActived = bibleState$.isSplitActived.get();
   const currentVoiceIdentifier = storedData$.currentVoiceIdentifier.get();
   const currentVoiceRate = storedData$.currentVoiceRate.get() || 1;
-  const isConnected = useInternetConnection();
+  const {isConnected} = useInternetConnection();
   const FOOTER_ICON_SIZE = iconSize;
   const theme = useTheme();
   const styles = getStyles(theme);
