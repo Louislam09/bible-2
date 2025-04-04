@@ -273,7 +273,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     if (requiresSettingsReloadAfterSync) {
       console.log("⚠ Reloading settings after cloud sync");
       
-      // Update local state with the latest values from storedData$
       dispatch({
         type: "SET_LOCAL_DATA",
         payload: {
@@ -285,7 +284,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
         },
       });
       
-      // Reset the flag after handling the reload
       settingState$.requiresSettingsReloadAfterSync.set(false);
     }
   }, [requiresSettingsReloadAfterSync]);

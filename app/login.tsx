@@ -53,7 +53,6 @@ const LoginScreen = () => {
       const success = await authState$.login(email, password);
 
       if (success) {
-        storedData$.enableCloudSync.set(true);
         router.replace("/(dashboard)");
       } else {
         setError("Correo electrónico o contraseña incorrectos");

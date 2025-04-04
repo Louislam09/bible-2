@@ -40,7 +40,6 @@ import { bibleState$ } from "@/state/bibleState";
 
 type TListVerse = {
   data: IVerseItem[] | any;
-  setShouldFetch: any;
 };
 
 interface ActionButtonProps {
@@ -233,7 +232,7 @@ const Backdrop = ({ visible, onPress, theme }: any) => {
   );
 };
 
-const Note = ({ data, setShouldFetch }: TListVerse) => {
+const Note = ({ data }: TListVerse) => {
   const theme = useTheme();
   const navigation = useNavigation();
   const { currentBibleLongName } = useBibleContext();
@@ -291,7 +290,7 @@ const Note = ({ data, setShouldFetch }: TListVerse) => {
     closeCurrentSwiped(id);
     setTimeout(async () => {
       await deleteNote(id);
-      setShouldFetch((prev: any) => !prev);
+      bibleState$.toggleReloadNotes()
       ToastAndroid.show("Nota borrada!", ToastAndroid.SHORT);
       setSearchText("");
     }, 300);
@@ -299,7 +298,7 @@ const Note = ({ data, setShouldFetch }: TListVerse) => {
 
   const onDeleteAll = async () => {
     await deleteAllNotes();
-    setShouldFetch((prev: any) => !prev);
+    bibleState$.toggleReloadNotes()
     ToastAndroid.show("Todas las notas han sido borradas!", ToastAndroid.SHORT);
     setSearchText("");
   };
@@ -405,7 +404,7 @@ const Note = ({ data, setShouldFetch }: TListVerse) => {
 
   const onImportNotes = async () => {
     await importNotes();
-    setShouldFetch((prev: any) => !prev);
+    bibleState$.toggleReloadNotes()
   };
 
   const showMoreOptionHandle: () => void = () => {

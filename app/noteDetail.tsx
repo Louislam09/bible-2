@@ -159,6 +159,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
       });
       
       if (success) {
+        bibleState$.toggleReloadNotes()
         navigation.navigate(Screens.Notes, { shouldRefresh: true });
         ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
       }
@@ -277,7 +278,8 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
         if (goToViewMode) {
           setViewMode("VIEW");
           ToastAndroid.show("Nota actualizada!", ToastAndroid.SHORT);
-        }
+        bibleState$.toggleReloadNotes()
+      }
       }
     } catch (error) {
       Alert.alert("Error", "No se pudo actualizar la nota.");

@@ -36,6 +36,7 @@ export const bibleState$ = observable({
   selectedVerseForNote: observable<string | null>(null),
   lastSelectedVerse: null as IBookVerse | null,
   currentNoteId: null as number | null,
+  reloadNotes: false,
   floatingNoteButtonPosition: { x: 0, y: 75 },
   strongWord: { text: "", code: "" } as IStrongWord,
   noteListBottomSheetRef: createRef<BottomSheetModal>(),
@@ -137,4 +138,7 @@ export const bibleState$ = observable({
   handleCurrentHistoryIndex: (index: number) => {
     bibleState$.currentHistoryIndex.set(index);
   },
+  toggleReloadNotes: () => {
+    bibleState$.reloadNotes.set(() => !bibleState$.reloadNotes.get());
+  }
 });

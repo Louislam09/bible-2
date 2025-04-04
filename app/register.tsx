@@ -59,7 +59,6 @@ const RegisterScreen = () => {
 
       const success = await authState$.login(email, password);
       if (success) {
-        storedData$.enableCloudSync.set(true);
         router.replace("/(dashboard)");
       } else {
         throw new Error("Falló el registro");

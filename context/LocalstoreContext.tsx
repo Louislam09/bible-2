@@ -56,7 +56,6 @@ type StoreState = {
   deleteLastStreakNumber: number;
   isDataLoaded: boolean;
   isSyncedWithCloud: boolean;
-  enableCloudSync: boolean;
   user: pbUser | null;
   token: string;
 };
@@ -88,7 +87,6 @@ const initialContext: StoreState = {
   deleteLastStreakNumber: 1,
   isDataLoaded: false,
   isSyncedWithCloud: false,
-  enableCloudSync: false,
   user: null,
   token: "",
 };
@@ -155,7 +153,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = pb.authStore.onChange((token, model) => {
-      if (token && model && storedData$.enableCloudSync.get()) {
+      if (token && model) {
         console.log(
           "🚪 User just logged in and cloud sync is enabled, try to load their settings"
         );
@@ -173,6 +171,10 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribeFromChanges = storedData$.onChange((value) => {
+      if(value) {
+        console.log(value)
+        return
+      }
       if (ignoreNextChangeRef.current) {
         ignoreNextChangeRef.current = false;
         return;
@@ -185,7 +187,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         preventSyncLoopRef.current = false;
       }
       
-      if (pb.authStore.isValid && storedData$.enableCloudSync.get()) {
+      if (pb.authStore.isValid) {
         if (syncTimeout) {
           clearTimeout(syncTimeout);
         }
@@ -222,7 +224,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
     
     ignoreNextChangeRef.current = true;
-    storedData$.enableCloudSync.set(enable);
 
     if (enable && pb.authStore.isValid) {
       syncWithCloud();
@@ -230,8 +231,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   const syncWithCloud = async (): Promise<boolean> => {
-    console.log("🔃 syncWithCloud 🔃!");
-    
     if (!isConnected) {
       Alert.alert(
         "Sin conexión a Internet",
@@ -245,11 +244,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
       if (!user) {
         console.log("No hay usuario autenticado para guardar configuración");
-        return false;
-      }
-
-      if (!storedData$.enableCloudSync.get()) {
-        console.log("Sincronización con la nube está desactivada");
         return false;
       }
 
@@ -286,8 +280,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   const loadFromCloud = async (): Promise<boolean> => {
-    console.log("> LOAD FROM COULD from :");
-    
     if (!isConnected) {
       Alert.alert(
         "Sin conexión a Internet",
@@ -321,18 +313,14 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           };
         }
 
-        const enableCloudSync = storedData$.enableCloudSync.get();
-        
         // Prevent triggering the onChange handler for this update
         ignoreNextChangeRef.current = true;
         storedData$.set({
           ...settingsData,
-          enableCloudSync,
           isDataLoaded: true,
           isSyncedWithCloud: true,
         });
         
-        // Update the Bible query with the loaded settings
         bibleState$.changeBibleQuery({
           book: settingsData.lastBook,
           chapter: settingsData.lastChapter,
@@ -356,7 +344,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       console.error("Error al cargar desde la nube:", error);
       return false;
     } finally {
-      // Prevent triggering the onChange handler for this update
       ignoreNextChangeRef.current = true;
       storedData$.isDataLoaded.set(true);
     }

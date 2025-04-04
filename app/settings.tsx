@@ -91,7 +91,6 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
   const styles = getStyles(theme);
   const fontSizes = getMinMaxFontSize();
   const isGridLayout = use$(() => storedData$.isGridLayout.get());
-  const enableCloudSync = use$(() => storedData$.enableCloudSync.get());
   const isSyncedWithCloud = use$(() => storedData$.isSyncedWithCloud.get());
   const isAuthenticated = use$(() => authState$.isAuthenticated.get());
   const { toggleCloudSync, syncWithCloud, loadFromCloud } = useStorage();
@@ -128,27 +127,6 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
     router.push("/login");
   };
 
-  const handleToggleCloudSync = (value: boolean) => {
-    if (value && !isAuthenticated) {
-      Alert.alert(
-        "Iniciar Sesión Requerido",
-        "Necesitas iniciar sesión para activar la sincronización con la nube.",
-        [
-          { text: "Cancelar", style: "cancel" },
-          { text: "Iniciar Sesión", onPress: handleLogin },
-        ]
-      );
-      return;
-    }
-
-    toggleCloudSync(value);
-
-    if (value && isAuthenticated) {
-      // If enabling cloud sync and authenticated, sync immediately
-      syncWithCloud();
-    }
-  };
-
   const handleSyncNow = async () => {
     if (!isAuthenticated) {
       Alert.alert(
@@ -157,24 +135,6 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
         [
           { text: "Cancelar", style: "cancel" },
           { text: "Iniciar Sesión", onPress: handleLogin },
-        ]
-      );
-      return;
-    }
-
-    if (!enableCloudSync) {
-      Alert.alert(
-        "Sincronización Desactivada",
-        "Activa la sincronización con la nube primero.",
-        [
-          { text: "Cancelar", style: "cancel" },
-          {
-            text: "Activar y Sincronizar",
-            onPress: () => {
-              toggleCloudSync(true);
-              syncWithCloud();
-            },
-          },
         ]
       );
       return;
@@ -260,21 +220,6 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
           withAnimation: true,
         },
         {
-          label: "Sincronización con la nube",
-          iconName: "Cloudy",
-          color: !enableCloudSync
-            ? theme.colors.text
-            : theme.colors.notification,
-          action: () => handleToggleCloudSync(!enableCloudSync),
-          extraText: enableCloudSync
-            ? "Desactivar sincronización con la nube"
-            : "Activar sincronización con la nube",
-          isValue: true,
-          value: enableCloudSync,
-          renderSwitch: true,
-          onToggle: handleToggleCloudSync,
-        },
-        {
           label: "Sincronizar ahora",
           iconName: "RefreshCw",
           action: handleSyncNow,
@@ -282,7 +227,7 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
           color: isSyncedWithCloud
             ? theme.colors.notification
             : theme.colors.text,
-          isDisabled: !enableCloudSync || !isAuthenticated,
+          isDisabled: !isAuthenticated,
         },
       ],
     },
@@ -490,20 +435,17 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
                 title: "Ajustes",
                 titleIcon: "Settings",
                 headerRightProps: {
-                  headerRightIcon: isGridLayout
-                    ? "LayoutGrid"
-                    : "LayoutPanelTop",
+                  headerRightIcon: 'RefreshCw',
                   headerRightIconColor: isGridLayout
                     ? "#fff"
                     : theme.colors.notification,
-                  onPress: toggleHomeScreen,
-                  disabled: false,
+                  onPress: () => {},
+                  disabled: true,
                   style: { opacity: 0 },
                 },
               }),
             }}
           />
-
           {sections.map(SettingSection)}
         </ScrollView>
 

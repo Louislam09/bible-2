@@ -1,20 +1,18 @@
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import Note from "@/components/note";
-import { Text } from "@/components/Themed";
 import { useNoteService } from "@/services/noteService";
 import useParams from "@/hooks/useParams";
 import { TNote } from "@/types";
 import React, { useEffect, useState } from "react";
+import { bibleState$ } from "@/state/bibleState";
+import { use$ } from "@legendapp/state/react";
 
 type NotesProps = {};
-type NoteParam = { shouldRefresh: boolean };
 
 const Notes: React.FC<NotesProps> = ({}) => {
-  const routeParams = useParams<NoteParam>();
-  const { shouldRefresh } = routeParams;
   const { getAllNotes } = useNoteService();
   const [data, setData] = useState<TNote | any>(null);
-  const [canFetchNote, setCanFetchNote] = useState(false);
+  const reloadNotes = use$(() => bibleState$.reloadNotes.get())
 
   useEffect(() => {
     const getNotes = async () => {
@@ -22,11 +20,11 @@ const Notes: React.FC<NotesProps> = ({}) => {
       setData(notes ?? []);
     };
     getNotes();
-  }, [canFetchNote, shouldRefresh]);
+  }, [reloadNotes]);
 
   return (
     <ScreenWithAnimation duration={800} icon="NotebookPen" title="Mis Notas">
-      <Note data={data} setShouldFetch={setCanFetchNote} />
+      <Note data={data} />
     </ScreenWithAnimation>
   );
 };
