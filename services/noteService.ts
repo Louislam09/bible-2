@@ -28,20 +28,37 @@ export const useNoteService = () => {
 
   const generateAndAssignUUID = async () => {
     try {
-      if(storedData$.isUUIDGenerated.get()) return true;
-      const query = `SELECT id FROM notes WHERE uuid IS NULL OR uuid = ''`
+        // First check if we've already generated UUIDs
+      if (storedData$.isUUIDGenerated.get()) {
+        console.log("UUIDs already generated for all notes");
+        return true;
+      }
+
+      // Get all notes that don't have a UUID or have an empty UUID
+      const query = `SELECT id FROM notes WHERE uuid IS NULL OR uuid = '' OR uuid = 'null' OR uuid = 'undefined'`;
       const notes = await executeSql<TNote>(query, [], "generateUUID");
-     
+      
+      if (notes.length === 0) {
+        // If no notes need UUIDs, mark as generated and return
+        storedData$.isUUIDGenerated.set(true);
+        return true;
+      }
+
+      // For each note without a UUID, generate a new one
       for (const row of notes) {
         const newUUID = Crypto.randomUUID();
         await executeSql(`UPDATE notes SET uuid = ? WHERE id = ?`, [newUUID, row.id]);
+        console.log(`Assigned UUID ${newUUID} to note with ID ${row.id}`);
       }
 
-      console.log("UUIDs generados y asignados a las notas existentes.");
+      // After generating UUIDs, update the flag
       storedData$.isUUIDGenerated.set(true);
+      
+      console.log(`Successfully generated UUIDs for ${notes.length} notes`);
       return true;
     } catch (error) {
-      console.error("Error al generar UUID:", error);
+      console.error("Error al generar UUIDs:", error);
+      Alert.alert("Error", "No se pudieron generar UUIDs para las notas");
       return false;
     }
   }

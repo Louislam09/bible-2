@@ -10,7 +10,7 @@ export interface NotesState {
   error: string | null;
 
   fetchNotes: () => Promise<TNote[]>;
-  addNote: (note: TNote) => Promise<TNote>;
+  addNote: (note: TNote) => Promise<TNote | undefined>;
   updateNote: (id: string, note: Partial<TNote>) => Promise<TNote>;
   deleteNote: (id: string) => Promise<boolean>;
   getNoteById: (id: string) => TNote | undefined;
@@ -67,34 +67,71 @@ export const notesState$ = observable<NotesState>({
       const user = authState$.user.get();
 
       if (!user) {
-        throw new Error("No hay usuario autenticado para crear nota");
+        throw new Error(
+          "No hay usuario autenticado para crear/actualizar nota"
+        );
       }
 
-      const newNote = await pb.collection("notes").create({
-        title: note.title,
-        note_text: note.note_text,
-        user: user.id,
-        uuid: note.uuid,
-      });
+      try {
+        const existingNote = await pb
+          .collection("notes")
+          .getFirstListItem(`uuid = "${note.uuid}"`);
 
-      const createdNote: TNote = {
-        id: newNote.id as any,
-        title: newNote.title,
-        note_text: newNote.note_text,
-        uuid: newNote.uuid,
-        created_at: newNote.created,
-        updated_at: newNote.updated,
-      };
+        if (existingNote) {
+          const updatedNote = await pb
+            .collection("notes")
+            .update(existingNote.id, {
+              title: note.title,
+              note_text: note.note_text,
+            });
 
-      // Update the local state
-      const currentNotes = notesState$.notes.get();
-      notesState$.notes.set([createdNote, ...currentNotes]);
+          const resultNote: TNote = {
+            id: updatedNote.id as any,
+            title: updatedNote.title,
+            note_text: updatedNote.note_text,
+            uuid: updatedNote.uuid,
+            created_at: updatedNote.created,
+            updated_at: updatedNote.updated,
+          };
 
-      return createdNote;
+          const currentNotes = notesState$.notes.get();
+          const updatedNotes = currentNotes.map((mappedNote: TNote) =>
+            (mappedNote.id as any) === existingNote.id ? resultNote : mappedNote
+          );
+
+          notesState$.notes.set(updatedNotes);
+
+          return resultNote;
+        }
+      } catch (error: any) {
+        if (error?.originalError?.response?.code === 404) {
+          const newNote = await pb.collection("notes").create({
+            title: note.title,
+            note_text: note.note_text,
+            user: user.id,
+            uuid: note.uuid,
+          });
+
+          const createdNote: TNote = {
+            id: newNote.id as any,
+            title: newNote.title,
+            note_text: newNote.note_text,
+            uuid: newNote.uuid,
+            created_at: newNote.created,
+            updated_at: newNote.updated,
+          };
+
+          const currentNotes = notesState$.notes.get();
+          notesState$.notes.set([createdNote, ...currentNotes]);
+
+          return createdNote;
+        }
+      throw error;
+      }
     } catch (error: any) {
-      const errorMessage = error.message || "Error al crear nota";
+      const errorMessage = error.message || "Error al crear/actualizar nota";
       notesState$.error.set(errorMessage);
-      console.error("Error adding note:", error);
+      console.error("Error adding/updating note:", error);
       throw error;
     } finally {
       notesState$.isLoading.set(false);
@@ -160,7 +197,9 @@ export const notesState$ = observable<NotesState>({
 
       // Update the local state
       const currentNotes = notesState$.notes.get();
-      const updatedNotes = currentNotes.filter((n: TNote) => (n.id as any) !== id);
+      const updatedNotes = currentNotes.filter(
+        (n: TNote) => (n.id as any) !== id
+      );
 
       notesState$.notes.set(updatedNotes);
 
