@@ -1,15 +1,8 @@
 import { observable } from "@legendapp/state";
 
 import { pb } from "@/globalConfig";
+import { TNote } from "@/types";
 import { authState$ } from "./authState";
-
-export interface TNote {
-  id: string;
-  title: string;
-  content: string;
-  created?: string;
-  updated?: string;
-}
 
 export interface NotesState {
   notes: TNote[];
@@ -46,13 +39,12 @@ export const notesState$ = observable<NotesState>({
       });
 
       const notes = result.items.map((item) => ({
-        id: item.id,
+        id: item.id as any,
         title: item.title,
-        content: item.content,
-        tags: item.tags || [],
-        verseReference: item.verseReference || "",
-        created: item.created,
-        updated: item.updated,
+        note_text: item.note_text,
+        uuid: item.uuid,
+        created_at: item.created,
+        updated_at: item.updated,
       }));
 
       notesState$.notes.set(notes);
@@ -80,16 +72,18 @@ export const notesState$ = observable<NotesState>({
 
       const newNote = await pb.collection("notes").create({
         title: note.title,
-        content: note.content,
+        note_text: note.note_text,
         user: user.id,
+        uuid: note.uuid,
       });
 
       const createdNote: TNote = {
-        id: newNote.id,
+        id: newNote.id as any,
         title: newNote.title,
-        content: newNote.content,
-        created: newNote.created,
-        updated: newNote.updated,
+        note_text: newNote.note_text,
+        uuid: newNote.uuid,
+        created_at: newNote.created,
+        updated_at: newNote.updated,
       };
 
       // Update the local state
@@ -120,21 +114,22 @@ export const notesState$ = observable<NotesState>({
 
       const updatedNote = await pb.collection("notes").update(id, {
         title: note.title,
-        content: note.content,
+        note_text: note.note_text,
       });
 
       const resultNote: TNote = {
-        id: updatedNote.id,
+        id: updatedNote.id as any,
         title: updatedNote.title,
-        content: updatedNote.content,
-        created: updatedNote.created,
-        updated: updatedNote.updated,
+        note_text: updatedNote.note_text,
+        uuid: updatedNote.uuid,
+        created_at: updatedNote.created,
+        updated_at: updatedNote.updated,
       };
 
       // Update the local state
       const currentNotes = notesState$.notes.get();
       const updatedNotes = currentNotes.map((mappedNote: TNote) =>
-        mappedNote.id === id ? resultNote : mappedNote
+        (mappedNote.id as any) === id ? resultNote : mappedNote
       );
 
       notesState$.notes.set(updatedNotes);
@@ -165,7 +160,7 @@ export const notesState$ = observable<NotesState>({
 
       // Update the local state
       const currentNotes = notesState$.notes.get();
-      const updatedNotes = currentNotes.filter((n: TNote) => n.id !== id);
+      const updatedNotes = currentNotes.filter((n: TNote) => (n.id as any) !== id);
 
       notesState$.notes.set(updatedNotes);
 
@@ -182,7 +177,7 @@ export const notesState$ = observable<NotesState>({
 
   getNoteById: (id: string): TNote | undefined => {
     const notes = notesState$.notes.get();
-    return notes.find((note: TNote) => note.id === id);
+    return notes.find((note: TNote) => (note.id as any) === id);
   },
 
   clearError: () => {

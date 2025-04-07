@@ -36,7 +36,7 @@ import {
 type NoteDetailProps = {};
 type NoteDetailParams = { noteId: number | null; isNewNote: boolean };
 
-const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
+const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
   const theme = useTheme();
   const navigation = useNavigation();
   const styles = useMemo(() => getStyles(theme), [theme]);
@@ -155,9 +155,9 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
       setHasUnsavedChanges(false);
       const success = await createNote({
         title: noteContent.title,
-        content: noteContent.content
+        note_text: noteContent.content
       });
-      
+
       if (success) {
         bibleState$.toggleReloadNotes()
         navigation.navigate(Screens.Notes, { shouldRefresh: true });
@@ -178,7 +178,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
         "Guardar cambios",
         "Tienes cambios sin guardar, ¿quieres salir sin guardar?",
         [
-          { text: "Cancelar", style: "cancel", onPress: () => {} },
+          { text: "Cancelar", style: "cancel", onPress: () => { } },
           {
             text: "Salir sin guardar",
             style: "destructive",
@@ -269,17 +269,17 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
     try {
       const success = await updateNote(id, {
         title: noteContent.title,
-        content: noteContent.content
+        note_text: noteContent.content
       });
-      
+
       if (success) {
         afterSaving();
         setHasUnsavedChanges(false);
         if (goToViewMode) {
           setViewMode("VIEW");
           ToastAndroid.show("Nota actualizada!", ToastAndroid.SHORT);
-        bibleState$.toggleReloadNotes()
-      }
+          bibleState$.toggleReloadNotes()
+        }
       }
     } catch (error) {
       Alert.alert("Error", "No se pudo actualizar la nota.");

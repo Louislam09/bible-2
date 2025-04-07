@@ -3,9 +3,7 @@ import Icon from "@/components/Icon";
 import { iconSize } from "@/constants/size";
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
-import { DBName } from "@/enums";
-import { deleteDatabaseFile } from "@/hooks/useDatabase";
-import { EBibleVersions, TTheme } from "@/types";
+import { TTheme } from "@/types";
 import React, { FC } from "react";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { Text, View } from "../../Themed";
@@ -15,12 +13,6 @@ interface IVersionList {
   onSelect: Function;
   theme: TTheme;
 }
-
-const onLongPress = (version: any) => {
-  deleteDatabaseFile(
-    version === EBibleVersions.BIBLE ? DBName.BIBLE : DBName.NTV
-  );
-};
 
 const VersionList: FC<IVersionList> = ({
   currentBibleVersion,

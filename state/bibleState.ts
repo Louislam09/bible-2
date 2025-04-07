@@ -37,6 +37,7 @@ export const bibleState$ = observable({
   lastSelectedVerse: null as IBookVerse | null,
   currentNoteId: null as number | null,
   reloadNotes: false,
+  isSyncingNotes: false,
   floatingNoteButtonPosition: { x: 0, y: 75 },
   strongWord: { text: "", code: "" } as IStrongWord,
   noteListBottomSheetRef: createRef<BottomSheetModal>(),

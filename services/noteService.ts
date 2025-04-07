@@ -7,22 +7,17 @@ import {
   UPDATE_NOTE_BY_ID,
 } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
+import { storedData$ } from "@/context/LocalstoreContext";
+import { TNote } from "@/types";
+import * as Crypto from 'expo-crypto';
 import { Alert } from "react-native";
-
-export interface NoteData {
-  id?: number;
-  title: string;
-  note_text: string;
-  created_at?: string;
-  updated_at?: string;
-}
 
 export const useNoteService = () => {
   const { executeSql } = useDBContext();
 
-  const getAllNotes = async (): Promise<NoteData[]> => {
+  const getAllNotes = async (): Promise<TNote[]> => {
     try {
-      const notes = await executeSql<NoteData>(GET_ALL_NOTE, [], "getAllNotes");
+      const notes = await executeSql<TNote>(GET_ALL_NOTE, [], "getAllNotes");
       return notes;
     } catch (error) {
       console.error("Error al obtener notas:", error);
@@ -31,9 +26,29 @@ export const useNoteService = () => {
     }
   };
 
-  const getNoteById = async (id: number): Promise<NoteData | null> => {
+  const generateAndAssignUUID = async () => {
     try {
-      const notes = await executeSql<NoteData>(
+      if(storedData$.isUUIDGenerated.get()) return true;
+      const query = `SELECT id FROM notes WHERE uuid IS NULL OR uuid = ''`
+      const notes = await executeSql<TNote>(query, [], "generateUUID");
+     
+      for (const row of notes) {
+        const newUUID = Crypto.randomUUID();
+        await executeSql(`UPDATE notes SET uuid = ? WHERE id = ?`, [newUUID, row.id]);
+      }
+
+      console.log("UUIDs generados y asignados a las notas existentes.");
+      storedData$.isUUIDGenerated.set(true);
+      return true;
+    } catch (error) {
+      console.error("Error al generar UUID:", error);
+      return false;
+    }
+  }
+
+  const getNoteById = async (id: number): Promise<TNote | null> => {
+    try {
+      const notes = await executeSql<TNote>(
         GET_NOTE_BY_ID,
         [id],
         "getNoteById"
@@ -46,14 +61,14 @@ export const useNoteService = () => {
     }
   };
 
-  const createNote = async (data: {
-    title: string;
-    content: string;
-  }): Promise<boolean> => {
+  const createNote = async (data: Partial<TNote>): Promise<boolean> => {
     try {
+      const newUUID = data.uuid || Crypto.randomUUID();
+      const createdAt = data.created_at || new Date().toISOString();
+      const updatedAt = data.updated_at || new Date().toISOString();
       await executeSql(
         INSERT_INTO_NOTE,
-        [data.title, data.content],
+        [newUUID, data.title, data.note_text, createdAt, updatedAt],
         "createNote"
       );
       return true;
@@ -66,12 +81,13 @@ export const useNoteService = () => {
 
   const updateNote = async (
     id: number,
-    data: { title: string; content: string }
+    data: Partial<TNote>
   ): Promise<boolean> => {
     try {
+      const updatedAt = data.updated_at || new Date().toISOString();
       await executeSql(
         UPDATE_NOTE_BY_ID,
-        [data.title, data.content, id],
+        [data.title, data.note_text, updatedAt, id],
         "updateNote"
       );
       return true;
@@ -111,5 +127,6 @@ export const useNoteService = () => {
     updateNote,
     deleteNote,
     deleteAllNotes,
+    generateAndAssignUUID
   };
 };

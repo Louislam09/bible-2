@@ -9,17 +9,17 @@ import { use$ } from "@legendapp/state/react";
 import { configureSynced, syncObservable } from "@legendapp/state/sync";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import useInternetConnection from "@/hooks/useInternetConnection";
 import React, {
   createContext,
   ReactNode,
   useCallback,
   useContext,
   useEffect,
-  useState,
   useRef,
+  useState,
 } from "react";
 import { Alert } from "react-native";
-import useInternetConnection from "@/hooks/useInternetConnection";
 
 const persistOptions = configureSynced({
   persist: {
@@ -47,6 +47,7 @@ type StoreState = {
   hasRequestAccess: boolean;
   isGridLayout: boolean;
   isShowName: boolean;
+  isUUIDGenerated: boolean;
   songFontSize: number;
   currentVoiceIdentifier: string;
   currentVoiceRate: number;
@@ -75,6 +76,7 @@ const initialContext: StoreState = {
   isShowName: false,
   currentBibleVersion: EBibleVersions.BIBLE,
   isSongLyricEnabled: false,
+  isUUIDGenerated: false,
   isAlegresNuevasUnlocked: false,
   isAdmin: false,
   hasRequestAccess: false,
@@ -129,7 +131,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [syncTimeout, setSyncTimeout] = useState<NodeJS.Timeout | null>(null);
   const preventSyncLoopRef = useRef(false);
   const ignoreNextChangeRef = useRef(false);
-  const {isConnected} = useInternetConnection();
+  const { isConnected } = useInternetConnection();
 
   useEffect(() => {
     const loadState = async () => {
@@ -171,36 +173,32 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribeFromChanges = storedData$.onChange((value) => {
-      if(value) {
-        console.log(value)
-        return
-      }
       if (ignoreNextChangeRef.current) {
         ignoreNextChangeRef.current = false;
         return;
       }
-      
+
       if (storedData$.isSyncedWithCloud.get() && !preventSyncLoopRef.current) {
         preventSyncLoopRef.current = true;
         ignoreNextChangeRef.current = true;
         storedData$.isSyncedWithCloud.set(false);
         preventSyncLoopRef.current = false;
       }
-      
+
       if (pb.authStore.isValid) {
         if (syncTimeout) {
           clearTimeout(syncTimeout);
         }
-        
+
         const newTimeout = setTimeout(() => {
           console.log("⏱️ Debounce timeout completed, syncing with cloud...");
           syncWithCloud();
         }, 5000);
-        
+
         setSyncTimeout(newTimeout);
       }
     });
-    
+
     return () => {
       unsubscribeFromChanges();
       if (syncTimeout) {
@@ -222,7 +220,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       );
       return;
     }
-    
+
     ignoreNextChangeRef.current = true;
 
     if (enable && pb.authStore.isValid) {
@@ -238,7 +236,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       );
       return false;
     }
-    
+
     try {
       const user = storedData$.user.get();
 
@@ -287,7 +285,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       );
       return false;
     }
-    
+
     try {
       const user = storedData$.user.get();
 
@@ -320,7 +318,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           isDataLoaded: true,
           isSyncedWithCloud: true,
         });
-        
+
         bibleState$.changeBibleQuery({
           book: settingsData.lastBook,
           chapter: settingsData.lastChapter,
@@ -330,10 +328,10 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           bottomSideVerse: settingsData.lastBottomSideVerse,
           isHistory: true,
         });
-        
+
         // Set flag to trigger UI update in BibleProvider
         settingState$.requiresSettingsReloadAfterSync.set(true);
-        
+
         console.log("✅ Configuración cargada desde la nube");
         return true;
       }

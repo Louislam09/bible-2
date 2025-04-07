@@ -1,21 +1,16 @@
 import {
   GET_ALL_NOTE,
   GET_NOTE_BY_ID,
-  INSERT_IMPORTED_INTO_NOTE,
+  INSERT_INTO_NOTE,
 } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
+import { useNoteService } from "@/services/noteService";
+import { TNote } from "@/types";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { useState } from "react";
 
-type Note = {
-  id: number;
-  title: string;
-  note_text: string;
-  created_at: string;
-  updated_at: string | null;
-};
 
 type UseNotesExportImport = {
   exportNotes: (noteId?: number) => Promise<void>;
@@ -27,28 +22,20 @@ type UseNotesExportImport = {
 const useNotesExportImport = (): UseNotesExportImport => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { myBibleDB, executeSql } = useDBContext();
+  const { createNote, getAllNotes: fetchAllNotes, getNoteById: fetchNoteById } = useNoteService();
 
   const getAllNotes = async () => {
-    if (!myBibleDB || !executeSql) return;
-    const notes = await executeSql(GET_ALL_NOTE, []);
-    return notes as Note[];
+    const notes = await fetchAllNotes()
+    return notes as TNote[];
   };
 
   const getNoteById = async (noteId: number) => {
-    if (!myBibleDB || !executeSql) return;
-    const notes = await executeSql(GET_NOTE_BY_ID, [noteId]);
-    return notes as Note[];
+    const notes = await fetchNoteById(noteId)
+    return [notes] as TNote[];
   };
 
-  const saveNote = async (note: Note) => {
-    if (!myBibleDB || !executeSql) return;
-    await executeSql(INSERT_IMPORTED_INTO_NOTE, [
-      note.title,
-      note.note_text,
-      note.created_at,
-      note.updated_at,
-    ]);
+  const saveNote = async (note: TNote) => {
+    await createNote(note)
   };
 
   const exportNotes = async (noteId?: number) => {
@@ -116,7 +103,7 @@ const useNotesExportImport = (): UseNotesExportImport => {
         throw new Error("Formato de archivo de importación no válido");
       }
 
-      importData.notes.forEach(async (note: Note) => {
+      importData.notes.forEach(async (note: TNote) => {
         await saveNote(note);
       });
     } catch (err) {

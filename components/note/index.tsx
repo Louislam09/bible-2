@@ -3,14 +3,21 @@ import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { headerIconSize } from "@/constants/size";
 import { useBibleContext } from "@/context/BibleContext";
+import { useStorage } from "@/context/LocalstoreContext";
 import useNotesExportImport from "@/hooks/useNotesExportImport";
 import { useNoteService } from "@/services/noteService";
+import { authState$ } from "@/state/authState";
+import { bibleState$ } from "@/state/bibleState";
+import { notesState$ } from "@/state/notesState";
 import { IVerseItem, Screens, TNote, TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { observable } from "@legendapp/state";
+import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { format } from "date-fns";
+import * as Crypto from 'expo-crypto';
 import { Stack, useNavigation } from "expo-router";
 import { Download, NotebookText, Trash2 } from "lucide-react-native";
 import React, {
@@ -35,8 +42,6 @@ import {
 } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { singleScreenHeader } from "../common/singleScreenHeader";
-import { use$ } from "@legendapp/state/react";
-import { bibleState$ } from "@/state/bibleState";
 
 type TListVerse = {
   data: IVerseItem[] | any;
@@ -50,6 +55,8 @@ interface ActionButtonProps {
     action: () => void;
     label?: string;
     hide?: boolean;
+    isSync?: boolean;
+    isDownload?: boolean;
   };
   index: number;
   styles: any;
@@ -61,6 +68,8 @@ const ActionButton = ({ item, index, styles, theme }: ActionButtonProps) => {
   const scaleAnim = useRef(new Animated.Value(0.5)).current;
   const translateYAnim = useRef(new Animated.Value(50)).current;
   const rotateAnim = useRef(new Animated.Value(0)).current;
+  const syncRotateAnim = useRef(new Animated.Value(0)).current;
+  const isSyncingNotes = use$(() => bibleState$.isSyncingNotes.get())
 
   useEffect(() => {
     const showAnimation = Animated.sequence([
@@ -124,6 +133,36 @@ const ActionButton = ({ item, index, styles, theme }: ActionButtonProps) => {
     outputRange: ["45deg", "0deg"],
   });
 
+  const startRotation = () => {
+    Animated.loop(
+      Animated.timing(syncRotateAnim, {
+        toValue: 1,
+        duration: 2000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    ).start();
+  };
+
+  const stopRotation = () => {
+    syncRotateAnim.stopAnimation();
+    syncRotateAnim.setValue(0);
+  };
+
+  useEffect(() => {
+    if (!item.isSync) return
+    if (isSyncingNotes) {
+      startRotation()
+    } else {
+      stopRotation()
+    }
+  }, [item.isSync, isSyncingNotes])
+
+  const rotate = syncRotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["-360deg", "0deg"],
+  });
+
   return (
     <View style={{ flexGrow: 0, zIndex: 11 }}>
       <Animated.Text
@@ -155,11 +194,6 @@ const ActionButton = ({ item, index, styles, theme }: ActionButtonProps) => {
           {
             bottom: item.bottom,
             backgroundColor: item.color,
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.3,
-            shadowRadius: 3,
-            elevation: 5,
           },
           {
             opacity: fadeAnim,
@@ -180,7 +214,13 @@ const ActionButton = ({ item, index, styles, theme }: ActionButtonProps) => {
             alignItems: "center",
           }}
         >
-          <Icon color={"#fff"} name={item.name as any} size={30} />
+          {(item.isSync || item.isDownload) && isSyncingNotes ? (
+            <Animated.View style={{ transform: [{ rotate }] }}>
+              <Icon color={"#fff"} name={item.isDownload ? 'Loader' : item.name as any} size={30} />
+            </Animated.View>
+          ) : (
+            <Icon color={"#fff"} name={item.name as any} size={30} />
+          )}
         </TouchableOpacity>
       </Animated.View>
     </View>
@@ -236,11 +276,13 @@ const Note = ({ data }: TListVerse) => {
   const theme = useTheme();
   const navigation = useNavigation();
   const { currentBibleLongName } = useBibleContext();
-  const { deleteNote, deleteAllNotes } = useNoteService();
+  const { deleteNote, deleteAllNotes, getAllNotes, createNote, updateNote } = useNoteService();
   const { exportNotes, importNotes, error, isLoading } = useNotesExportImport();
   const selectedVerseForNote = use$(() =>
     bibleState$.selectedVerseForNote.get()
   );
+  const isAuthenticated = use$(() => authState$.isAuthenticated.get());
+  const { syncWithCloud, loadFromCloud } = useStorage();
 
   const styles = getStyles(theme);
   const notFoundSource = require("../../assets/lottie/notFound.json");
@@ -248,6 +290,7 @@ const Note = ({ data }: TListVerse) => {
   const [filterData, setFilterData] = useState([]);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const [searchText, setSearchText] = useState<any>(null);
+  const [showSearch, setShowSearch] = useState(false);
   const flatListRef = useRef<FlashList<any>>(null);
 
   const noteCountTitle = useMemo(
@@ -258,10 +301,10 @@ const Note = ({ data }: TListVerse) => {
   const noteList = useMemo(() => {
     return searchText
       ? filterData.filter(
-          (x: any) =>
-            removeAccent(x.title).indexOf(searchText.toLowerCase()) !== -1 ||
-            removeAccent(x.note_text).indexOf(searchText.toLowerCase()) !== -1
-        )
+        (x: any) =>
+          removeAccent(x.title).indexOf(searchText.toLowerCase()) !== -1 ||
+          removeAccent(x.note_text).indexOf(searchText.toLowerCase()) !== -1
+      )
       : filterData;
   }, [searchText, filterData]);
 
@@ -290,7 +333,7 @@ const Note = ({ data }: TListVerse) => {
     closeCurrentSwiped(id);
     setTimeout(async () => {
       await deleteNote(id);
-      bibleState$.toggleReloadNotes()
+      bibleState$.toggleReloadNotes();
       ToastAndroid.show("Nota borrada!", ToastAndroid.SHORT);
       setSearchText("");
     }, 300);
@@ -298,7 +341,7 @@ const Note = ({ data }: TListVerse) => {
 
   const onDeleteAll = async () => {
     await deleteAllNotes();
-    bibleState$.toggleReloadNotes()
+    bibleState$.toggleReloadNotes();
     ToastAndroid.show("Todas las notas han sido borradas!", ToastAndroid.SHORT);
     setSearchText("");
   };
@@ -343,43 +386,49 @@ const Note = ({ data }: TListVerse) => {
     );
   };
 
-  const warnBeforeDeleteAll = () => {
-    Alert.alert(
-      "Eliminar Todas las Notas",
-      "¿Estás seguro que quieres eliminar todas las notas?",
-      [
-        {
-          text: "Cancelar",
-          onPress: () => {},
-          style: "cancel",
-        },
-        { text: "Eliminar", onPress: () => onDeleteAll() },
-      ]
-    );
-  };
-
   const onOpenNoteDetail = useCallback((id: number) => {
     navigation.navigate(Screens.NoteDetail, { noteId: id, isNewNote: false });
   }, []);
 
+  const toggleSearch = () => {
+    setShowSearch((prev) => !prev);
+    if (showSearch) {
+      setSearchText("");
+    }
+  };
+
   const NoteHero = () => {
     return (
-      <View style={[styles.noteHeader]}>
-        <View style={styles.searchContainer}>
-          <Ionicons
-            style={styles.searchIcon}
-            name="search"
-            size={24}
-            color={theme.colors.notification}
-          />
-          <TextInput
-            placeholder="Buscar en tus notas..."
-            style={[styles.noteHeaderSearchInput]}
-            onChangeText={(text) => setSearchText(text)}
-            value={searchText}
-          />
-        </View>
-      </View>
+      <>
+        <Animated.View
+          style={[
+            styles.noteHeader,
+            {
+              height: showSearch ? "auto" : 0,
+              opacity: showSearch ? 1 : 0,
+              overflow: "hidden",
+            },
+          ]}
+        >
+          <View style={styles.searchContainer}>
+            <Ionicons
+              style={styles.searchIcon}
+              name="search"
+              size={24}
+              color={theme.colors.notification}
+            />
+            <TextInput
+              placeholder="Buscar en tus notas..."
+              style={[styles.noteHeaderSearchInput]}
+              onChangeText={(text) => setSearchText(text)}
+              value={searchText}
+            />
+          </View>
+        </Animated.View>
+        <Text style={{ paddingHorizontal: 4, fontSize: 18 }}>
+          {(noteList || []).length} {noteList.length > 1 ? "notas" : "nota"}
+        </Text>
+      </>
     );
   };
 
@@ -404,7 +453,7 @@ const Note = ({ data }: TListVerse) => {
 
   const onImportNotes = async () => {
     await importNotes();
-    bibleState$.toggleReloadNotes()
+    bibleState$.toggleReloadNotes();
   };
 
   const showMoreOptionHandle: () => void = () => {
@@ -414,6 +463,126 @@ const Note = ({ data }: TListVerse) => {
   const dismiss = () => {
     Keyboard.dismiss();
     setShowMoreOptions(false);
+  };
+
+  const handleLogin = () => {
+    navigation.navigate(Screens.Login);
+  };
+
+  const handleSyncNow = async () => {
+    if (!isAuthenticated) {
+      Alert.alert(
+        "Iniciar Sesión Requerido",
+        "Necesitas iniciar sesión para sincronizar con la nube.",
+        [
+          { text: "Cancelar", style: "cancel" },
+          { text: "Iniciar Sesión", onPress: handleLogin },
+        ]
+      );
+      return;
+    }
+    bibleState$.isSyncingNotes.set(true)
+    try {
+      const success = await syncWithCloud();
+      if (success) {
+        Alert.alert("Éxito", "Notas sincronizada con la nube.");
+      } else {
+        Alert.alert("Error", "No se pudo sincronizar con la nube.");
+      }
+    } catch (error) {
+      console.error("Error al sincronizar:", error);
+      Alert.alert("Error", "No se pudo sincronizar con la nube.");
+    }
+    bibleState$.isSyncingNotes.set(false)
+  };
+
+
+  const handleSyncToCloud = async () => {
+    bibleState$.isSyncingNotes.set(true);
+    try {
+      const notes = await getAllNotes();
+
+      if (!authState$.user.get()) {
+        Alert.alert(
+          "Sincronización requerida",
+          "Debes iniciar sesión para sincronizar tus notas con la nube"
+        );
+        return;
+      }
+
+      for (const note of notes) {
+        if (!note.uuid) {
+          console.warn("Nota sin UUID, no se puede sincronizar:", note.id);
+          continue;
+        }
+
+        try {
+          await notesState$.addNote(note);
+        } catch (error) {
+          console.error("Error al sincronizar nota:", note.id, error);
+        }
+      }
+
+      ToastAndroid.show("Notas sincronizadas con la nube", ToastAndroid.SHORT);
+    } catch (error) {
+      console.error("Error al sincronizar notas con la nube:", error);
+      ToastAndroid.show("Error al sincronizar notas", ToastAndroid.SHORT);
+    } finally {
+      bibleState$.isSyncingNotes.set(false);
+    }
+  };
+
+  const handleDownloadFromCloud = async () => {
+    bibleState$.isSyncingNotes.set(true);
+    try {
+      if (!authState$.user.get()) {
+        Alert.alert(
+          "Sincronización requerida",
+          "Debes iniciar sesión para descargar tus notas desde la nube"
+        );
+        return;
+      }
+
+      const cloudNotes = await notesState$.fetchNotes();
+      const localNotes = await getAllNotes();
+
+      for (const cloudNote of cloudNotes) {
+        if (!cloudNote.uuid) {
+          console.warn("Nota en la nube sin UUID, se omite:", cloudNote.id);
+          continue;
+        }
+
+        try {
+          const existingNote = localNotes.find(n => n.uuid === cloudNote.uuid);
+
+          if (existingNote) {
+            await updateNote(existingNote.id, {
+              title: cloudNote.title,
+              note_text: cloudNote.note_text,
+              updated_at: cloudNote.updated_at,
+            });
+          } else {
+            await createNote({
+              uuid: cloudNote.uuid,
+              title: cloudNote.title,
+              note_text: cloudNote.note_text,
+              created_at: cloudNote.created_at,
+              updated_at: cloudNote.updated_at,
+            });
+          }
+        } catch (error) {
+          console.error("Error al guardar nota local:", cloudNote.id, error);
+        }
+      }
+
+      ToastAndroid.show("Notas descargadas desde la nube", ToastAndroid.SHORT);
+    } catch (error) {
+      console.error("Error al descargar notas desde la nube:", error);
+      ToastAndroid.show("Error al descargar notas", ToastAndroid.SHORT);
+    } finally {
+      bibleState$.toggleReloadNotes();
+      bibleState$.isSyncingNotes.set(false);
+    }
   };
 
   const actionButtons = useMemo(
@@ -452,6 +621,24 @@ const Note = ({ data }: TListVerse) => {
         },
         {
           bottom: 220,
+          name: "Download",
+          color: '#2da5ff',
+          action: handleDownloadFromCloud,
+          hide: !showMoreOptions,
+          label: "Sincronizar desde la nube",
+          isDownload: true
+        },
+        {
+          bottom: 280,
+          name: "RefreshCw",
+          color: '#2da5ff',
+          action: handleSyncToCloud,
+          hide: !showMoreOptions,
+          label: "Guardar en la nube",
+          isSync: true
+        },
+        {
+          bottom: 340,
           name: "ChevronDown",
           color: theme.colors.notification,
           action: showMoreOptionHandle,
@@ -594,12 +781,13 @@ const Note = ({ data }: TListVerse) => {
     );
   };
 
-  if (isLoading)
+  if (isLoading) {
     return (
       <View>
         <ActivityIndicator />
       </View>
     );
+  }
 
   return (
     <Fragment>
@@ -610,10 +798,12 @@ const Note = ({ data }: TListVerse) => {
             title: "Mis Notas",
             titleIcon: "NotebookPen",
             headerRightProps: {
-              headerRightIconColor: "red",
-              headerRightText: `${(noteList || []).length} 📝`,
-              onPress: () => console.log(),
-              disabled: true,
+              headerRightIcon: "Search",
+              headerRightIconColor: showSearch
+                ? theme.colors.notification
+                : theme.colors.text,
+              onPress: toggleSearch,
+              disabled: false,
               style: { opacity: 1 },
             },
           }),
@@ -698,7 +888,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       padding: 10,
       borderRadius: 10,
       elevation: 3,
-      borderWidth: 1,
+      borderWidth: 0,
       borderColor: colors.notification,
     },
     noteHeader: {

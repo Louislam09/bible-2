@@ -10,13 +10,13 @@ import {
   CREATE_STREAK_TABLE,
   historyQuery,
 } from "@/constants/Queries";
+import { bibleState$ } from "@/state/bibleState";
 import { showToast } from "@/utils/showToast";
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
 import { useEffect, useRef, useState } from "react";
 import { VersionItem } from "./useInstalledBible";
-import { bibleState$ } from "@/state/bibleState";
 
 interface Row {
   [key: string]: any;
@@ -150,9 +150,36 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
     }
   }
 
+  async function checkAndCreateColumn(
+    db: SQLite.SQLiteDatabase,
+    tableName: string,
+    columnName: string,
+    columnType: string
+  ) {
+    const createColumnQuery = `ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${columnType}`;
+    try {
+      const statement = await db.prepareAsync(`PRAGMA table_info(${tableName});`);
+      const result = await statement.executeAsync([]);
+      const columns = await result.getAllAsync();
+      const hasColumn = columns.some(
+        (column: any) => column.name === columnName
+      );
+      await statement.finalizeAsync();
+      
+      if (!hasColumn) {
+        await db.execAsync(createColumnQuery);
+      }
+
+    } catch (error) {
+      console.error(
+        `Error creating column ${createColumnQuery} In ${db.databaseName} :`,
+        error
+      );
+    }
+  }
+
   useEffect(() => {
     if (!dbName) return;
-
     async function initializeDatabase() {
       try {
         // setLoading(false);
@@ -165,6 +192,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
         if (!dbName) return;
         const db = await openDatabase(dbName);
         await createTables(db);
+        await checkAndCreateColumn(db, "notes", "uuid", "TEXT");
         if (isMounted.current) {
           setDatabase(db);
           dbInitialized.current = true;
