@@ -1,16 +1,9 @@
-import {
-  GET_ALL_NOTE,
-  GET_NOTE_BY_ID,
-  INSERT_INTO_NOTE,
-} from "@/constants/Queries";
-import { useDBContext } from "@/context/databaseContext";
 import { useNoteService } from "@/services/noteService";
 import { TNote } from "@/types";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { useState } from "react";
-
 
 type UseNotesExportImport = {
   exportNotes: (noteId?: number) => Promise<void>;
@@ -43,34 +36,30 @@ const useNotesExportImport = (): UseNotesExportImport => {
       setIsLoading(true);
       setError(null);
 
-      // Get all notes from the database
       const notes = noteId ? await getNoteById(noteId) : await getAllNotes();
 
-      // Create export data with metadata
       const exportData = {
         version: "1.0",
         exportDate: new Date().toString(),
         notes,
       };
 
-      // Create temporary file
       const fileUri = `${FileSystem.documentDirectory}bible_notes_export.json`;
       await FileSystem.writeAsStringAsync(
         fileUri,
         JSON.stringify(exportData, null, 2)
       );
 
-      // Share the file
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(fileUri, {
           mimeType: "application/json",
-          dialogTitle: "Export Bible Notes",
+          dialogTitle: "Guardar en el dispositivo",
           UTI: "public.json",
         });
       }
     } catch (err) {
       setError(
-        "Error al exportar notas: " +
+        "Error al guardar nota en el dispositivo: " +
           (err instanceof Error ? err.message : String(err))
       );
     } finally {
@@ -83,7 +72,6 @@ const useNotesExportImport = (): UseNotesExportImport => {
       setIsLoading(true);
       setError(null);
 
-      // Pick a document
       const result = await DocumentPicker.getDocumentAsync({
         type: "application/json",
       });
@@ -92,13 +80,11 @@ const useNotesExportImport = (): UseNotesExportImport => {
         return;
       }
 
-      // Read the file
       const fileContent = await FileSystem.readAsStringAsync(
         result.assets[0].uri
       );
       const importData = JSON.parse(fileContent);
 
-      // Validate the import data
       if (!importData.version || !Array.isArray(importData.notes)) {
         throw new Error("Formato de archivo de importación no válido");
       }

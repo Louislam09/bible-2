@@ -1,7 +1,5 @@
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import Note from "@/components/note";
-import { storedData$ } from "@/context/LocalstoreContext";
-import useParams from "@/hooks/useParams";
 import { useNoteService } from "@/services/noteService";
 import { bibleState$ } from "@/state/bibleState";
 import { TNote } from "@/types";
@@ -17,7 +15,7 @@ const Notes: React.FC<NotesProps> = ({ }) => {
 
   useEffect(() => {
     const getNotes = async () => {
-        await generateAndAssignUUID();
+      await generateAndAssignUUID();
       const notes = await getAllNotes();
       setData(notes ?? []);
     };

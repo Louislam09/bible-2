@@ -12,12 +12,10 @@ import { notesState$ } from "@/state/notesState";
 import { IVerseItem, Screens, TNote, TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { observable } from "@legendapp/state";
 import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { format } from "date-fns";
-import * as Crypto from 'expo-crypto';
 import { Stack, useNavigation } from "expo-router";
 import { Download, NotebookText, Trash2 } from "lucide-react-native";
 import React, {
@@ -367,8 +365,8 @@ const Note = ({ data }: TListVerse) => {
   };
   const warnBeforeExporting = (id: number) => {
     Alert.alert(
-      "Exportar Nota",
-      "¿Estás seguro que quieres exportar esta nota?",
+      "Guardar en el dispositivo",
+      "¿Estás seguro que quieres Guardar en el dispositivo esta nota?",
       [
         {
           text: "Cancelar",
@@ -376,7 +374,7 @@ const Note = ({ data }: TListVerse) => {
           style: "cancel",
         },
         {
-          text: "Exportar",
+          text: "Guardar",
           onPress: () => {
             exportNotes(id);
             closeCurrentSwiped(id);
@@ -594,7 +592,7 @@ const Note = ({ data }: TListVerse) => {
           color: theme.colors.notification,
           action: onCreateNewNote,
           hide: !showMoreOptions,
-          label: "Añadir",
+          label: "Nueva nota",
         },
         {
           bottom: 25,
@@ -609,7 +607,7 @@ const Note = ({ data }: TListVerse) => {
           color: "#008CBA",
           action: onImportNotes,
           hide: !showMoreOptions,
-          label: "Importar",
+          label: "Cargar desde el dispositivo",
         },
         {
           bottom: 155,
@@ -617,7 +615,7 @@ const Note = ({ data }: TListVerse) => {
           color: "#45a049",
           action: exportNotes,
           hide: !showMoreOptions,
-          label: "Exportar",
+          label: "Guardar en el dispositivo",
         },
         {
           bottom: 220,
@@ -625,7 +623,7 @@ const Note = ({ data }: TListVerse) => {
           color: '#2da5ff',
           action: handleDownloadFromCloud,
           hide: !showMoreOptions,
-          label: "Sincronizar desde la nube",
+          label: "Cargar desde la cuenta",
           isDownload: true
         },
         {
@@ -634,7 +632,7 @@ const Note = ({ data }: TListVerse) => {
           color: '#2da5ff',
           action: handleSyncToCloud,
           hide: !showMoreOptions,
-          label: "Guardar en la nube",
+          label: "Guardar en la cuenta",
           isSync: true
         },
         {
@@ -643,7 +641,7 @@ const Note = ({ data }: TListVerse) => {
           color: theme.colors.notification,
           action: showMoreOptionHandle,
           hide: !showMoreOptions,
-          label: "Cerrar",
+          label: "Cerrar menú",
         },
       ].filter((item) => !item.hide),
     [showMoreOptions]
@@ -770,10 +768,10 @@ const Note = ({ data }: TListVerse) => {
               style={{
                 backgroundColor: "transparent",
                 justifyContent: "center",
-                alignItems: "center",
+                alignItems: "center"
               }}
             >
-              <NotebookText size={50} color={theme.colors.text} />
+              <NotebookText size={30} color={theme.colors.text} />
             </View>
           </View>
         </TouchableOpacity>

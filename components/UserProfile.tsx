@@ -1,6 +1,8 @@
+import { storedData$ } from "@/context/LocalstoreContext";
 import { POCKETBASE_URL } from "@/globalConfig";
 import { authState$ } from "@/state/authState";
 import { pbUser, Screens, TTheme } from "@/types";
+import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { User } from "lucide-react-native";
@@ -13,11 +15,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Icon from "./Icon";
+import CloudSyncPopup from "./SyncPopup";
 import { Text, View } from "./Themed";
 import Tooltip from "./Tooltip";
-import { use$ } from "@legendapp/state/react";
-import CloudSyncPopup from "./SyncPopup";
-import { storedData$ } from "@/context/LocalstoreContext";
 
 interface ProfileCardProps {
   user: pbUser | null;
@@ -94,8 +94,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
       return;
     }
 
-      setOpenUser(false);
-      setSyncModalVisible(true);
+    setOpenUser(false);
+    setSyncModalVisible(true);
   };
 
   return (
@@ -216,14 +216,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
               borderRadius: 8,
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: theme.colors.text+80,
+              backgroundColor: theme.colors.text + 80,
             }}
           >
             <Text
               style={{
                 fontSize: 16,
                 fontWeight: "bold",
-                color: theme.colors.card,
+                color: 'white',
               }}
             >
               {tooltipData.buttonText}
