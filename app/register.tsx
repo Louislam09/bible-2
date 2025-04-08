@@ -1,29 +1,30 @@
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import GoogleAuth from "@/components/GoogleAuth";
+import { storedData$ } from "@/context/LocalstoreContext";
+import { pb } from "@/globalConfig";
+import { authState$ } from "@/state/authState";
+import { TTheme } from "@/types";
+import { use$ } from "@legendapp/state/react";
+import { useTheme } from "@react-navigation/native";
+import { Stack, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-  View,
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Alert,
-  ActivityIndicator,
+  View,
 } from "react-native";
-import { Stack, useRouter } from "expo-router";
-import { pb } from "@/globalConfig";
-import GoogleAuth from "@/components/GoogleAuth";
-import { useTheme } from "@react-navigation/native";
-import { TTheme } from "@/types";
-import { singleScreenHeader } from "@/components/common/singleScreenHeader";
-import { authState$ } from "@/state/authState";
-import { use$ } from "@legendapp/state/react";
-import { storedData$ } from "@/context/LocalstoreContext";
 
 const RegisterScreen = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
   const theme = useTheme();
   const styles = getStyles(theme as TTheme);
@@ -37,9 +38,16 @@ const RegisterScreen = () => {
   }, []);
 
   const handleRegister = async () => {
+    console.log('handleRegister', email, password, confirmPassword);
+
     try {
       if (!name || !email || !password || !confirmPassword) {
         Alert.alert("Error", "Por favor completa todos los campos");
+        return;
+      }
+
+      if (password.length < 6) {
+        Alert.alert("Error", "La contraseña debe tener al menos 6 caracteres");
         return;
       }
 
@@ -103,7 +111,7 @@ const RegisterScreen = () => {
             headerRightProps: {
               headerRightIcon: "Trash2",
               headerRightIconColor: "red",
-              onPress: () => {},
+              onPress: () => { },
               disabled: false,
               style: { opacity: 0 },
             },

@@ -11,6 +11,7 @@ import { Screens, TTheme } from "@/types";
 import isWithinTimeframe from "@/utils/isWithinTimeframe";
 import { showToast } from "@/utils/showToast";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import React, { useCallback, useRef, useState } from "react";
@@ -19,8 +20,8 @@ import { IDashboardOption } from "../../app/(dashboard)";
 import BottomModal from "../BottomModal";
 import EmptyStateMessage from "../EmptyStateMessage";
 import VersionList from "../home/header/VersionList";
-import VoiceList from "../VoiceList";
 import ProfileCard from "../UserProfile";
+import VoiceList from "../VoiceList";
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
@@ -52,8 +53,8 @@ const SecondDashboard = () => {
     lastBottomSideChapter,
     lastBottomSideVerse,
     isAdmin,
-    user,
   } = storedData;
+  const user = use$(() => storedData$.user.get()) || null;
 
   const onSelect = (version: string) => {
     bibleState$.clearSelection();
@@ -101,17 +102,17 @@ const SecondDashboard = () => {
     },
     user
       ? {
-          icon: "NotebookText",
-          label: "Notas",
-          action: () =>
-            navigation.navigate(Screens.Notes, { shouldRefresh: false }),
-          color: theme.colors.notification,
-        }
+        icon: "NotebookText",
+        label: "Notas",
+        action: () =>
+          navigation.navigate(Screens.Notes, { shouldRefresh: false }),
+        color: theme.colors.notification,
+      }
       : {
-          icon: "Cloudy",
-          label: "Sincronizar",
-          action: () => navigation.navigate(Screens.Login),
-        },
+        icon: "Cloudy",
+        label: "Sincronizar",
+        action: () => navigation.navigate(Screens.Login),
+      },
   ];
 
   const requestAccessHandlePresentModalPress = useCallback(

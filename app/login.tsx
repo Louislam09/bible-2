@@ -1,9 +1,7 @@
 import GoogleAuth from "@/components/GoogleAuth";
 import { Text, View } from "@/components/Themed";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
-import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
-import { useCustomTheme } from "@/context/ThemeContext";
 import { authState$ } from "@/state/authState";
 import { TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
@@ -20,10 +18,6 @@ import {
 
 const LoginScreen = () => {
   const router = useRouter();
-  const { schema } = useCustomTheme();
-  const { currentTheme } = useBibleContext();
-  const isDark = schema === "dark";
-  // const { toggleCloudSync } = useStorage();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -49,7 +43,6 @@ const LoginScreen = () => {
       setLoading(true);
       setError("");
 
-      // Login with email and password
       const success = await authState$.login(email, password);
 
       if (success) {
@@ -75,8 +68,8 @@ const LoginScreen = () => {
             headerRightProps: {
               headerRightIcon: "Trash2",
               headerRightIconColor: "red",
-              onPress: () => {},
-              disabled: false,
+              onPress: () => { },
+              disabled: true,
               style: { opacity: 0 },
             },
             goBack: () => router.push("/(dashboard)"),
@@ -137,7 +130,7 @@ const LoginScreen = () => {
         )}
       </TouchableOpacity>
 
-      <GoogleAuth onSuccess={() => {}} />
+      <GoogleAuth onSuccess={() => { }} />
       {/* <OAuthGoogleLogin /> */}
 
       <TouchableOpacity onPress={() => router.push("/register")}>

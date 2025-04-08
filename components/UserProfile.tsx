@@ -33,6 +33,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
   const [openUser, setOpenUser] = useState(false);
   const isAuth = authState$.isAuthenticated.get();
   const isLoading = use$(() => authState$.isLoading.get());
+  const avatarUrl = user ? `${POCKETBASE_URL}/api/files/${user.collectionId}/${user.id}/${user.avatar}` : ''
+  const defaultAvatar = user ? `https://robohash.org/set_set10/bgset_bg1/${user.id}?size=200x200` : '';
 
   const searchIcon = {
     icon: "Search",
@@ -104,17 +106,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
         {user ? (
           <View style={styles.userHeader}>
             <View style={styles.avatarContainer}>
-              {user.avatar ? (
-                <Image
-                  source={{
-                    uri: `${POCKETBASE_URL}/api/files/${user.collectionId}/${user.id}/${user.avatar}`,
-                  }}
-                  style={styles.avatar}
-                  resizeMode="cover"
-                />
-              ) : (
-                <User color={theme.colors.text} size={40} />
-              )}
+              <Image
+                source={{
+                  uri: user.avatar ? avatarUrl : defaultAvatar,
+                }}
+                style={styles.avatar}
+                resizeMode="cover"
+              />
             </View>
             <View style={{ display: "flex", backgroundColor: "transparent" }}>
               {isLoading ? (
