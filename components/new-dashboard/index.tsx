@@ -207,8 +207,8 @@ const SecondDashboard = () => {
       icon: "TreeDeciduous",
       label: "DuoBible",
       // @ts-ignore
-      // action: () => requestAccessHandlePresentModalPress("doubible"),
-      action: () => navigation.navigate("learn", {}),
+      action: () => requestAccessHandlePresentModalPress("doubible"),
+      // action: () => navigation.navigate("learn", {}),
       color: "#4caf50",
       // color: "#75d0fe",
       isNew: isWithinTimeframe("1w", new Date("2025-03-04")).isActive,

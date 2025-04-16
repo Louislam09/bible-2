@@ -154,7 +154,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = pb.authStore.onChange((token, model) => {
+    const unsubscribe = pb.authStore.onChange((token: any, model: any) => {
       if (token && model) {
         console.log(
           "🚪 User just logged in and cloud sync is enabled, try to load their settings"
@@ -177,6 +177,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         ignoreNextChangeRef.current = false;
         return;
       }
+      console.log("🔄 Data changed:", value.value);
 
       if (storedData$.isSyncedWithCloud.get() && !preventSyncLoopRef.current) {
         preventSyncLoopRef.current = true;

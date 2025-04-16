@@ -99,7 +99,7 @@ const LoginScreen = () => {
         secureTextEntry
       />
 
-      <View style={styles.syncContainer}>
+      {/* <View style={styles.syncContainer}>
         <Text style={[styles.syncText]}>Sincronizar con la nube</Text>
         <Switch
           value={enableSync}
@@ -110,13 +110,13 @@ const LoginScreen = () => {
           }}
           thumbColor={theme.colors.notification}
         />
-      </View>
+      </View> */}
 
-      <Text style={[styles.syncDescription]}>
+      {/* <Text style={[styles.syncDescription]}>
         {enableSync
           ? "Tus configuraciones se sincronizarán con la nube"
           : "La aplicación funcionará sin conexión (puedes activar la sincronización más tarde)"}
-      </Text>
+      </Text> */}
 
       <TouchableOpacity
         style={[styles.button]}
