@@ -31,6 +31,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import ColorSelector from "@/components/ColorSelector";
 import FontSizeAdjuster from "@/components/FontSizeAdjuster";
 import getMinMaxFontSize from "@/utils/getMinMaxFontSize";
+import CloudSyncFloatingButton from "@/components/CloudSyncFloatingButton";
 
 const URLS = {
   BIBLE: "market://details?id=com.louislam09.bible",
@@ -422,7 +423,8 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
 
   return (
     <ScreenWithAnimation duration={800} icon="Settings" title="Ajustes">
-      <View key={orientation + theme.dark} style={styles.container}>
+        <CloudSyncFloatingButton />
+        <View key={orientation + theme.dark} style={styles.container}>
         <ScrollView
           style={{
             backgroundColor: theme.colors.background,

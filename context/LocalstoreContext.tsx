@@ -20,6 +20,7 @@ import React, {
   useState,
 } from "react";
 import { Alert } from "react-native";
+import { showToast } from "@/utils/showToast";
 
 const persistOptions = configureSynced({
   persist: {
@@ -108,6 +109,7 @@ interface StorageContextProps {
   storedData: StoreState;
   clearData: () => void;
   isDataLoaded: boolean;
+  hasPendingCloudSync: boolean;
   syncWithCloud: () => Promise<boolean>;
   loadFromCloud: () => Promise<boolean>;
   toggleCloudSync: (enable: boolean) => void;
@@ -128,9 +130,7 @@ export const useStorage = () => {
 const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const storedData = use$(() => storedData$.get());
   const syncState$ = syncState(storedData$);
-  const [syncTimeout, setSyncTimeout] = useState<NodeJS.Timeout | null>(null);
-  const preventSyncLoopRef = useRef(false);
-  const ignoreNextChangeRef = useRef(false);
+  const [hasPendingCloudSync, setHasPendingCloudSync] = useState(false);
   const { isConnected } = useInternetConnection();
 
   useEffect(() => {
@@ -159,50 +159,16 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     } else {
       console.log("❌ User is not set or not authenticated");
     }
-    return () => {
-      if (syncTimeout) {
-        clearTimeout(syncTimeout);
-      }
-    };
   }, [pb.authStore.isValid]);
 
   useEffect(() => {
-    // if (storedData) return;
-    // console.log("NO DEBERIA DE VERME");
     const unsubscribeFromChanges = storedData$.onChange((value) => {
-      if (ignoreNextChangeRef.current) {
-        ignoreNextChangeRef.current = false;
-        return;
-      }
-
-      if (storedData$.isSyncedWithCloud.get() && !preventSyncLoopRef.current) {
-        preventSyncLoopRef.current = true;
-        ignoreNextChangeRef.current = true;
-        storedData$.isSyncedWithCloud.set(false);
-        preventSyncLoopRef.current = false;
-      }
-
-      if (pb.authStore.isValid) {
-        if (syncTimeout) {
-          clearTimeout(syncTimeout);
-        }
-
-        const newTimeout = setTimeout(() => {
-          console.log("⏱️ Debounce timeout completed, syncing with cloud...");
-          syncWithCloud();
-        }, 5000);
-
-        setSyncTimeout(newTimeout);
+      if (storedData$.user.get() && pb.authStore.isValid) {
+        setHasPendingCloudSync(true);
       }
     });
-
-    return () => {
-      unsubscribeFromChanges();
-      if (syncTimeout) {
-        clearTimeout(syncTimeout);
-      }
-    };
-  }, [syncTimeout]);
+    return () => unsubscribeFromChanges();
+  }, []);
 
   const clearData = async () => {
     console.log("🗑 Clearing data...");
@@ -218,7 +184,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       return;
     }
 
-    ignoreNextChangeRef.current = true;
 
     if (enable && pb.authStore.isValid) {
       syncWithCloud();
@@ -229,33 +194,28 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     if (!isConnected) {
       Alert.alert(
         "Sin conexión a Internet",
-        "No se puede sincronizar con la nube sin conexión a Internet. Por favor, inténtalo de nuevo cuando estés conectado."
+        "No se pueden sincronizar los datos con la nube sin conexión a Internet. Por favor, inténtalo de nuevo cuando estés conectado."
       );
       return false;
     }
 
     try {
       const user = storedData$.user.get();
-
       if (!user) {
-        console.log("No hay usuario autenticado para guardar configuración");
+        console.log("No hay usuario autenticado para sincronizar");
         return false;
       }
-
       const settings = storedData$.get();
-
       const existingSettings = await pb
         .collection("user_settings")
         .getList(1, 1, {
           filter: `user = "${user.id}"`,
         });
-
       if (existingSettings.items.length > 0) {
         await pb
           .collection("user_settings")
           .update(existingSettings.items[0].id, {
             settings: JSON.stringify(settings),
-            user: user.id,
           });
       } else {
         await pb.collection("user_settings").create({
@@ -264,9 +224,10 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         });
       }
 
-      ignoreNextChangeRef.current = true;
       storedData$.isSyncedWithCloud.set(true);
-      console.log("✅ Configuración sincronizada con la nube");
+      setHasPendingCloudSync(false);
+      // console.log("✅ Configuración sincronizada con la nube");
+      showToast("✅ Configuración sincronizada con la nube");
       return true;
     } catch (error) {
       console.error("Error al sincronizar con la nube:", error);
@@ -308,7 +269,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           };
         }
 
-        ignoreNextChangeRef.current = true;
         storedData$.set({
           ...settingsData,
           isDataLoaded: true,
@@ -338,7 +298,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       return false;
     } finally {
       console.log("📌Configuración cargada desde la nube");
-      ignoreNextChangeRef.current = true;
       storedData$.isDataLoaded.set(true);
     }
   };
@@ -348,6 +307,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       value={{
         storedData,
         isDataLoaded: storedData.isDataLoaded,
+        hasPendingCloudSync,
         clearData,
         syncWithCloud,
         loadFromCloud,
