@@ -193,6 +193,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
         const db = await openDatabase(dbName);
         await createTables(db);
         await checkAndCreateColumn(db, "notes", "uuid", "TEXT");
+        await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
         if (isMounted.current) {
           setDatabase(db);
           dbInitialized.current = true;

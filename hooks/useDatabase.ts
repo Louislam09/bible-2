@@ -1,5 +1,6 @@
 import {
   CREATE_COLUMN_UPDATED_AT_IN_NOTE_TABLE,
+  CREATE_COLUMN_UUID_IN_FAVORITE_VERSES_TABLE,
   CREATE_COLUMN_UUID_IN_NOTE_TABLE,
   CREATE_FAVORITE_VERSES_TABLE,
   CREATE_MEMORIZATION_TABLE,
@@ -220,12 +221,12 @@ function useDatabase({
           await executeSql(db, 'PRAGMA journal_mode = WAL;');
           await executeSql(db, 'PRAGMA optimize;');
         }
-
         await createTable(db, CREATE_FAVORITE_VERSES_TABLE);
         await createTable(db, CREATE_NOTE_TABLE);
         await createTable(db, CREATE_MEMORIZATION_TABLE);
         await createTable(db, CREATE_STREAK_TABLE);
         await addColumnIfNotExists(db, 'uuid',CREATE_COLUMN_UUID_IN_NOTE_TABLE);
+        await addColumnIfNotExists(db, 'uuid',CREATE_COLUMN_UUID_IN_FAVORITE_VERSES_TABLE);
         databases.push(db);
       }
       return databases;

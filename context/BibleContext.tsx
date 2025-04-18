@@ -1,12 +1,11 @@
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import {
-  DELETE_FAVORITE_VERSE,
   DELETE_NOTE,
   DELETE_NOTE_ALL,
-  INSERT_FAVORITE_VERSE,
   INSERT_INTO_NOTE,
   UPDATE_NOTE_BY_ID,
 } from "@/constants/Queries";
+import { useFavoriteVerseService } from "@/services/favoriteVerseService";
 import useHistoryManager, { HistoryManager } from "@/hooks/useHistoryManager";
 import useSearch, { UseSearchHookState } from "@/hooks/useSearch";
 import getCurrentDbName from "@/utils/getCurrentDB";
@@ -231,6 +230,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     getCurrentDbName(currentBibleVersion, installedBibles)
   );
   const [orientation, setOrientation] = useState("PORTRAIT");
+  const { addFavoriteVerse, removeFavoriteVerse } = useFavoriteVerseService();
 
   const getOrientation = () => {
     const { height, width } = Dimensions.get("window");
@@ -331,15 +331,17 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     verse,
     isFav,
   }: IFavoriteVerse) => {
-    if (!myBibleDB || !executeSql) return;
-    const params = isFav
-      ? [bookNumber, chapter, verse]
-      : [bookNumber, chapter, verse, bookNumber, chapter, verse];
-    await executeSql(
-      isFav ? DELETE_FAVORITE_VERSE : INSERT_FAVORITE_VERSE,
-      params
-    );
+    try {
+      if (isFav) {
+        await removeFavoriteVerse(bookNumber, chapter, verse);
+      } else {
+        await addFavoriteVerse(bookNumber, chapter, verse);
+      }
+    } catch (error) {
+      console.error("Error toggling favorite verse:", error);
+    }
   };
+
 
   const onSaveNote = async (
     data: { title: string; content: string },
