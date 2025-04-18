@@ -135,7 +135,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     const loadState = async () => {
-      console.log("LOAD STATE FINISHED");
       await when(() => syncState$.isPersistLoaded.get());
 
       bibleState$.changeBibleQuery({
@@ -154,30 +153,27 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = pb.authStore.onChange((token: any, model: any) => {
-      if (token && model) {
-        console.log(
-          "🚪 User just logged in and cloud sync is enabled, try to load their settings"
-        );
-        // loadFromCloud("subscribe");
-      }
-    });
-
+    if (storedData$.user.get() && pb.authStore.isValid) {
+      console.log("✅ User is set and authenticated, loading from cloud...");
+      loadFromCloud();
+    } else {
+      console.log("❌ User is not set or not authenticated");
+    }
     return () => {
-      unsubscribe();
       if (syncTimeout) {
         clearTimeout(syncTimeout);
       }
     };
-  }, [syncTimeout]);
+  }, [pb.authStore.isValid]);
 
   useEffect(() => {
+    // if (storedData) return;
+    // console.log("NO DEBERIA DE VERME");
     const unsubscribeFromChanges = storedData$.onChange((value) => {
       if (ignoreNextChangeRef.current) {
         ignoreNextChangeRef.current = false;
         return;
       }
-      console.log("🔄 Data changed:", value.value);
 
       if (storedData$.isSyncedWithCloud.get() && !preventSyncLoopRef.current) {
         preventSyncLoopRef.current = true;
@@ -312,7 +308,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           };
         }
 
-        // Prevent triggering the onChange handler for this update
         ignoreNextChangeRef.current = true;
         storedData$.set({
           ...settingsData,
@@ -333,7 +328,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         // Set flag to trigger UI update in BibleProvider
         settingState$.requiresSettingsReloadAfterSync.set(true);
 
-        console.log("✅ Configuración cargada desde la nube");
         return true;
       }
 
@@ -343,6 +337,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       console.error("Error al cargar desde la nube:", error);
       return false;
     } finally {
+      console.log("📌Configuración cargada desde la nube");
       ignoreNextChangeRef.current = true;
       storedData$.isDataLoaded.set(true);
     }
