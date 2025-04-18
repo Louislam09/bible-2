@@ -55,7 +55,6 @@ export const useFavoriteVerseService = () => {
 
   const generateAndAssignUUID = async () => {
     try {
-      // Get all favorite_verses that don't have a UUID or have an empty/invalid UUID
       const verses = await executeSql(GET_FAVORITE_VERSES_WITHOUT_UUID, [], "generateFavoriteVerseUUID");
       if (verses.length === 0) {
         console.log("UUIDs already generated for all favorite_verses");
