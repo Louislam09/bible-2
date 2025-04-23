@@ -5,8 +5,7 @@ import { favoriteState$ } from "@/state/favoriteState";
 import { TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, StyleSheet, TouchableOpacity } from 'react-native';
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { Animated, Easing, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 
 interface ActionButtonProps {
     item: {
@@ -59,8 +58,7 @@ export const Backdrop = ({ visible, onPress, theme }: any) => {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    backgroundColor: "red",
-                    // backgroundColor: "rgba(0,0,0,.6)",
+                    backgroundColor: "rgba(0,0,0,.6)",
                     opacity: fadeAnim,
                     zIndex: 1,
                 }}
@@ -71,6 +69,7 @@ export const Backdrop = ({ visible, onPress, theme }: any) => {
 
 const ActionButton = ({ item, index, theme }: ActionButtonProps) => {
     const styles = getStyles(theme);
+    const isDark = theme.dark;
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const scaleAnim = useRef(new Animated.Value(0.5)).current;
     const translateYAnim = useRef(new Animated.Value(50)).current;
@@ -172,7 +171,7 @@ const ActionButton = ({ item, index, theme }: ActionButtonProps) => {
 
     return (
         <View style={{ flexGrow: 0, zIndex: 11 }}>
-            <Animated.Text
+            {item.label && <Animated.Text
                 style={[
                     {
                         fontSize: 18,
@@ -183,7 +182,7 @@ const ActionButton = ({ item, index, theme }: ActionButtonProps) => {
                         paddingHorizontal: 10,
                         paddingVertical: 5,
                         borderRadius: 8,
-                        backgroundColor: theme.colors.background + 80,
+                        backgroundColor: isDark ? theme.colors.background + 80 : 'black',
                     },
                     {
                         opacity: fadeAnim,
@@ -192,7 +191,7 @@ const ActionButton = ({ item, index, theme }: ActionButtonProps) => {
                 ]}
             >
                 {item.label}
-            </Animated.Text>
+            </Animated.Text>}
 
             <Animated.View
                 key={`button-${item.name}`}

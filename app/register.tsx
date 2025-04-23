@@ -39,7 +39,6 @@ const RegisterScreen = () => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Animation values
   const fadeAnim = useState(new Animated.Value(0))[0];
   const slideAnim = useState(new Animated.Value(50))[0];
 
@@ -52,7 +51,6 @@ const RegisterScreen = () => {
     const userData = storedData$.user.get();
     if (userData) router.replace("(dashboard)");
 
-    // Run entrance animations
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -66,7 +64,6 @@ const RegisterScreen = () => {
       })
     ]).start();
 
-    // Handle keyboard show/hide
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       () => setKeyboardVisible(true)
@@ -94,7 +91,6 @@ const RegisterScreen = () => {
 
   const handleRegister = async () => {
     try {
-      // Form validation
       if (!name || !email || !password || !confirmPassword) {
         showErrorAlert("Campos incompletos", "Por favor completa todos los campos");
         return;
@@ -128,7 +124,6 @@ const RegisterScreen = () => {
 
       const success = await authState$.login(email, password);
       if (success) {
-        // Show a brief success animation before redirecting
         setTimeout(() => {
           router.replace("/(dashboard)");
         }, 500);

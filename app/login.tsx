@@ -46,7 +46,6 @@ const LoginScreen = () => {
     const userData = storedData$.user.get();
     if (userData) router.replace("(dashboard)");
 
-    // Run entrance animations
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -60,7 +59,6 @@ const LoginScreen = () => {
       })
     ]).start();
 
-    // Handle keyboard show/hide
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       () => setKeyboardVisible(true)
@@ -82,7 +80,6 @@ const LoginScreen = () => {
   };
 
   const handleLogin = async () => {
-    // Form validation
     if (!email || !password) {
       setError("Por favor, ingresa tu correo y contraseña");
       return;
@@ -105,7 +102,6 @@ const LoginScreen = () => {
       const success = await authState$.login(email, password);
 
       if (success) {
-        // Show a brief success animation before redirecting
         setTimeout(() => {
           router.replace("/(dashboard)");
         }, 500);
@@ -259,11 +255,7 @@ const LoginScreen = () => {
               <View style={styles.divider} />
             </View>
 
-            <GoogleAuth
-              onSuccess={() => router.replace("/(dashboard)")}
-            // buttonStyle={styles.googleButton}
-            // textStyle={styles.googleButtonText}
-            />
+            <GoogleAuth onSuccess={() => router.replace("/(dashboard)")} />
 
             <TouchableOpacity
               onPress={() => router.push("/register")}

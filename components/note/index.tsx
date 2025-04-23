@@ -61,51 +61,6 @@ interface ActionButtonProps {
   theme: any;
 }
 
-// const Backdrop = ({ visible, onPress, theme }: any) => {
-//   const fadeAnim = useRef(new Animated.Value(0)).current;
-//   const [shouldRender, setShouldRender] = useState(visible);
-
-//   useEffect(() => {
-//     if (visible) {
-//       setShouldRender(true);
-//       Animated.timing(fadeAnim, {
-//         toValue: 1,
-//         duration: 300,
-//         useNativeDriver: true,
-//         easing: Easing.out(Easing.cubic),
-//       }).start();
-//     } else {
-//       Animated.timing(fadeAnim, {
-//         toValue: 0,
-//         duration: 200,
-//         useNativeDriver: true,
-//         easing: Easing.in(Easing.cubic),
-//       }).start(() => {
-//         setShouldRender(false);
-//       });
-//     }
-//   }, [visible]);
-
-//   if (!shouldRender) return null;
-
-//   return (
-//     <TouchableWithoutFeedback onPress={onPress}>
-//       <Animated.View
-//         style={{
-//           position: "absolute",
-//           top: 0,
-//           left: 0,
-//           right: 0,
-//           bottom: 0,
-//           backgroundColor: "rgba(0,0,0,.6)",
-//           opacity: fadeAnim,
-//           zIndex: 1,
-//         }}
-//       />
-//     </TouchableWithoutFeedback>
-//   );
-// };
-
 const Note = ({ data }: TListVerse) => {
   const theme = useTheme();
   const navigation = useNavigation();
@@ -259,7 +214,7 @@ const Note = ({ data }: TListVerse) => {
             />
           </View>
         </Animated.View>
-        <Text style={{ paddingHorizontal: 4, fontSize: 18 }}>
+        <Text style={{ paddingHorizontal: 4, fontSize: 18, marginBottom: 10 }}>
           {(noteList || []).length} {noteList.length > 1 ? "notas" : "nota"}
         </Text>
       </>
@@ -652,7 +607,6 @@ const Note = ({ data }: TListVerse) => {
           style={{
             flex: 1,
             padding: 5,
-            backgroundColor: theme.dark ? theme.colors.background : "#eee",
           }}
         >
           <Backdrop visible={showMoreOptions} onPress={dismiss} theme={theme} />
@@ -695,7 +649,7 @@ const Note = ({ data }: TListVerse) => {
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     contentContainerStyle: {
-      backgroundColor: dark ? colors.background : "#eee",
+      // backgroundColor: dark ? colors.background : "#eee",
       paddingVertical: 20,
     },
     textError: { textAlign: "center", color: "#e74856" },
