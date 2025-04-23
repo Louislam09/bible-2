@@ -1,5 +1,6 @@
 import { authState$ } from "@/state/authState";
 import { pbUser, TTheme } from "@/types";
+import { AntDesign } from '@expo/vector-icons';
 import { useTheme } from "@react-navigation/native";
 import * as AuthSession from "expo-auth-session";
 import { useRouter } from "expo-router";
@@ -90,11 +91,14 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({
       {loading ? (
         <ActivityIndicator color="#fff" size="small" />
       ) : (
-        <Text style={styles.googleButtonText}>
-          {isRegistration
-            ? "Registrarse con Google"
-            : "Iniciar sesión con Google"}
-        </Text>
+        <>
+          <AntDesign name="google" size={20} color="white" style={styles.googleIcon} />
+          <Text style={styles.googleButtonText}>
+            {isRegistration
+              ? "Registrarse con Google"
+              : "Iniciar sesión con Google"}
+          </Text>
+        </>
       )}
     </TouchableOpacity>
   );
@@ -107,9 +111,14 @@ const getStyles = ({ colors }: TTheme) =>
       padding: 15,
       borderRadius: 5,
       alignItems: "center",
+      flexDirection: "row",
+      justifyContent: "center",
     },
     disabledButton: {
       opacity: 0.7,
+    },
+    googleIcon: {
+      marginRight: 10,
     },
     googleButtonText: {
       color: "#fff",
