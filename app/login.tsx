@@ -4,16 +4,26 @@ import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { authState$ } from "@/state/authState";
 import { TTheme } from "@/types";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import { Stack, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Animated,
+  Dimensions,
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity
 } from "react-native";
+
+const { width } = Dimensions.get('window');
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -21,20 +31,70 @@ const LoginScreen = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [enableSync, setEnableSync] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  // Animation values
+  const fadeAnim = useState(new Animated.Value(0))[0];
+  const slideAnim = useState(new Animated.Value(50))[0];
+
   const isLoading = use$(() => authState$.isLoading.get());
   const theme = useTheme();
   const styles = getStyles(theme);
 
   useEffect(() => {
     const userData = storedData$.user.get();
-
     if (userData) router.replace("(dashboard)");
+
+    // Run entrance animations
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 800,
+        useNativeDriver: true,
+      })
+    ]).start();
+
+    // Handle keyboard show/hide
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => setKeyboardVisible(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => setKeyboardVisible(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
   }, []);
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleLogin = async () => {
+    // Form validation
     if (!email || !password) {
       setError("Por favor, ingresa tu correo y contraseña");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setError("Por favor, ingresa un correo electrónico válido");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("La contraseña debe tener al menos 6 caracteres");
       return;
     }
 
@@ -45,7 +105,10 @@ const LoginScreen = () => {
       const success = await authState$.login(email, password);
 
       if (success) {
-        router.replace("/(dashboard)");
+        // Show a brief success animation before redirecting
+        setTimeout(() => {
+          router.replace("/(dashboard)");
+        }, 500);
       } else {
         setError("Correo electrónico o contraseña incorrectos");
       }
@@ -56,145 +119,315 @@ const LoginScreen = () => {
     }
   };
 
+  const handleForgotPassword = () => {
+    router.push("/forgot-password");
+  };
+
   return (
-    <View style={[styles.container]}>
-      <Stack.Screen
-        options={{
-          ...singleScreenHeader({
-            theme,
-            title: "Iniciar session",
-            titleIcon: "LogIn",
-            headerRightProps: {
-              headerRightIcon: "Trash2",
-              headerRightIconColor: "red",
-              onPress: () => { },
-              disabled: true,
-              style: { opacity: 0 },
-            },
-            goBack: () => router.push("/(dashboard)"),
-          }),
-        }}
-      />
-      <Text style={[styles.title]}>Bienvenido de Nuevo</Text>
-
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
-      <TextInput
-        style={[styles.input]}
-        placeholder="Correo Electrónico"
-        placeholderTextColor={theme.colors.text}
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
-
-      <TextInput
-        style={[styles.input]}
-        placeholder="Contraseña"
-        placeholderTextColor={theme.colors.text}
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-
-      <TouchableOpacity
-        style={[styles.button]}
-        onPress={handleLogin}
-        disabled={loading || isLoading}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        keyboardShouldPersistTaps="handled"
       >
-        {loading || isLoading ? (
-          <ActivityIndicator color={theme.colors.text} />
-        ) : (
-          <Text style={styles.buttonText}>Iniciar Sesión</Text>
-        )}
-      </TouchableOpacity>
+        <View style={[styles.container]}>
+          <Stack.Screen
+            options={{
+              ...singleScreenHeader({
+                theme,
+                title: "Iniciar sesión",
+                titleIcon: "LogIn",
+                headerRightProps: {
+                  headerRightIcon: "Trash2",
+                  headerRightIconColor: "red",
+                  onPress: () => { },
+                  disabled: true,
+                  style: { opacity: 0 },
+                },
+                goBack: () => router.push("/(dashboard)"),
+              }),
+            }}
+          />
 
-      <GoogleAuth onSuccess={() => { }} />
+          {!isKeyboardVisible && (
+            <Animated.View
+              style={[
+                styles.logoContainer,
+                { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }
+              ]}
+            >
+              <Image
+                source={require('../assets/images/icon.png')}
+                style={styles.logo}
+                resizeMode="contain"
+              />
+            </Animated.View>
+          )}
 
-      <TouchableOpacity onPress={() => router.push("/register")}>
-        <Text style={[styles.linkText]}>¿No tienes una cuenta? Regístrate</Text>
-      </TouchableOpacity>
+          <Animated.View
+            style={[
+              styles.formContainer,
+              { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }
+            ]}
+          >
+            <Text style={[styles.title]}>Bienvenido de Nuevo</Text>
+            <Text style={[styles.subtitle]}>Inicia sesión para continuar</Text>
 
-      <TouchableOpacity
-        style={styles.skipButton}
-        onPress={() => router.replace("/(dashboard)")}
-      >
-        <Text style={[styles.skipText]}>Continuar sin iniciar sesión</Text>
-      </TouchableOpacity>
-    </View>
+            {error ? (
+              <View style={styles.errorContainer}>
+                <MaterialCommunityIcons name="alert-circle" size={18} color="red" />
+                <Text style={styles.errorText}>{error}</Text>
+              </View>
+            ) : null}
+
+            <View style={styles.inputContainer}>
+              <MaterialCommunityIcons
+                name="email-outline"
+                size={20}
+                color={theme.colors.text}
+                style={styles.inputIcon}
+              />
+              <TextInput
+                style={[styles.input]}
+                placeholder="Correo Electrónico"
+                placeholderTextColor={theme.colors.text + '80'}
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+              />
+            </View>
+
+            <View style={styles.inputContainer}>
+              <MaterialCommunityIcons
+                name="lock-outline"
+                size={20}
+                color={theme.colors.text}
+                style={styles.inputIcon}
+              />
+              <TextInput
+                style={[styles.input]}
+                placeholder="Contraseña"
+                placeholderTextColor={theme.colors.text + '80'}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+                returnKeyType="done"
+                onSubmitEditing={handleLogin}
+              />
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setShowPassword(!showPassword)}
+              >
+                <MaterialCommunityIcons
+                  name={showPassword ? "eye-off" : "eye"}
+                  size={20}
+                  color={theme.colors.text}
+                />
+              </TouchableOpacity>
+            </View>
+
+            {/* <TouchableOpacity
+              style={styles.forgotPasswordContainer}
+              onPress={handleForgotPassword}
+            >
+              <Text style={styles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
+            </TouchableOpacity> */}
+
+            <TouchableOpacity
+              style={[
+                styles.button,
+                (loading || isLoading) && styles.buttonDisabled
+              ]}
+              onPress={handleLogin}
+              disabled={loading || isLoading}
+              activeOpacity={0.8}
+            >
+              {loading || isLoading ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text style={styles.buttonText}>Iniciar Sesión</Text>
+              )}
+            </TouchableOpacity>
+
+            <View style={styles.dividerContainer}>
+              <View style={styles.divider} />
+              <Text style={styles.dividerText}>o</Text>
+              <View style={styles.divider} />
+            </View>
+
+            <GoogleAuth
+              onSuccess={() => router.replace("/(dashboard)")}
+            // buttonStyle={styles.googleButton}
+            // textStyle={styles.googleButtonText}
+            />
+
+            <TouchableOpacity
+              onPress={() => router.push("/register")}
+              style={styles.registerContainer}
+            >
+              <Text style={styles.registerText}>
+                ¿No tienes una cuenta? <Text style={styles.linkText}>Regístrate</Text>
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.skipButton}
+              onPress={() => router.replace("/(dashboard)")}
+            >
+              <Text style={[styles.skipText]}>Continuar sin iniciar sesión</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
+    scrollContainer: {
+      flexGrow: 1,
+    },
     container: {
       flex: 1,
       padding: 20,
       justifyContent: "center",
       backgroundColor: colors.background,
     },
+    logoContainer: {
+      alignItems: 'center',
+      marginBottom: 30,
+    },
+    logo: {
+      width: width * 0.5,
+      height: 100,
+    },
+    formContainer: {
+      width: '100%',
+    },
     title: {
-      fontSize: 24,
+      fontSize: 28,
       fontWeight: "bold",
-      marginBottom: 20,
+      marginBottom: 8,
       textAlign: "center",
       color: colors.text,
     },
-    input: {
-      height: 50,
-      borderRadius: 5,
-      borderWidth: 1,
-      paddingHorizontal: 15,
+    subtitle: {
+      fontSize: 16,
+      marginBottom: 25,
+      textAlign: "center",
+      color: colors.text + '90',
+    },
+    errorContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: 'rgba(255,0,0,0.1)',
+      borderRadius: 8,
+      padding: 10,
       marginBottom: 15,
-      borderColor: colors.text,
-      color: colors.primary,
+    },
+    errorText: {
+      color: "red",
+      marginLeft: 8,
+    },
+    inputContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      height: 55,
+      borderRadius: 12,
+      borderWidth: 1,
+      marginBottom: 16,
+      borderColor: colors.border,
       backgroundColor: colors.card,
+      paddingHorizontal: 15,
+    },
+    inputIcon: {
+      marginRight: 10,
+    },
+    input: {
+      flex: 1,
+      color: colors.text,
+      fontSize: 16,
+    },
+    eyeIcon: {
+      padding: 8,
+    },
+    forgotPasswordContainer: {
+      alignItems: 'flex-end',
+      marginBottom: 20,
+    },
+    forgotPasswordText: {
+      color: colors.notification,
+      fontSize: 14,
     },
     button: {
-      height: 50,
-      borderRadius: 8,
+      height: 55,
+      borderRadius: 12,
       justifyContent: "center",
       alignItems: "center",
-      marginTop: 10,
       marginBottom: 20,
       backgroundColor: colors.notification,
+      shadowColor: colors.notification,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+      elevation: 5,
+    },
+    buttonDisabled: {
+      opacity: 0.7,
     },
     buttonText: {
       color: "white",
       fontSize: 16,
       fontWeight: "bold",
     },
+    dividerContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginVertical: 20,
+    },
+    divider: {
+      flex: 1,
+      height: 1,
+      backgroundColor: colors.border,
+    },
+    dividerText: {
+      paddingHorizontal: 15,
+      color: colors.text,
+    },
+    googleButton: {
+      height: 55,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+      backgroundColor: colors.card,
+    },
+    googleButtonText: {
+      color: colors.text,
+    },
+    registerContainer: {
+      alignItems: 'center',
+      marginTop: 25,
+    },
+    registerText: {
+      fontSize: 15,
+      color: colors.text,
+    },
     linkText: {
-      textAlign: "center",
-      marginTop: 20,
       color: colors.notification,
-    },
-    errorText: {
-      color: "red",
-      marginBottom: 15,
-      textAlign: "center",
-    },
-    syncContainer: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      marginBottom: 5,
-    },
-    syncText: {
-      fontSize: 16,
-    },
-    syncDescription: {
-      fontSize: 12,
-      marginBottom: 15,
-      fontStyle: "italic",
+      fontWeight: 'bold',
     },
     skipButton: {
-      marginTop: 30,
+      marginTop: 20,
       alignItems: "center",
     },
     skipText: {
       fontSize: 14,
+      color: colors.text + '80',
       textDecorationLine: "underline",
     },
   });

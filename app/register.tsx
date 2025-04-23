@@ -4,6 +4,7 @@ import { storedData$ } from "@/context/LocalstoreContext";
 import { pb } from "@/globalConfig";
 import { authState$ } from "@/state/authState";
 import { TTheme } from "@/types";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import { Stack, useRouter } from "expo-router";
@@ -11,13 +12,21 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Animated,
+  Dimensions,
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
+
+const { width } = Dimensions.get('window');
 
 const RegisterScreen = () => {
   const [name, setName] = useState("");
@@ -25,37 +34,89 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Animation values
+  const fadeAnim = useState(new Animated.Value(0))[0];
+  const slideAnim = useState(new Animated.Value(50))[0];
+
   const router = useRouter();
   const theme = useTheme();
   const styles = getStyles(theme as TTheme);
-  const [loading, setLoading] = useState(false);
   const isLoading = use$(() => authState$.isLoading.get());
 
   useEffect(() => {
     const userData = storedData$.user.get();
-
     if (userData) router.replace("(dashboard)");
+
+    // Run entrance animations
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 800,
+        useNativeDriver: true,
+      })
+    ]).start();
+
+    // Handle keyboard show/hide
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => setKeyboardVisible(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => setKeyboardVisible(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
   }, []);
 
-  const handleRegister = async () => {
-    console.log('handleRegister', email, password, confirmPassword);
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
+  const showErrorAlert = (title: string, message: string) => {
+    Alert.alert(title, message);
+    setError(message);
+  };
+
+  const handleRegister = async () => {
     try {
+      // Form validation
       if (!name || !email || !password || !confirmPassword) {
-        Alert.alert("Error", "Por favor completa todos los campos");
+        showErrorAlert("Campos incompletos", "Por favor completa todos los campos");
+        return;
+      }
+
+      if (!validateEmail(email)) {
+        showErrorAlert("Correo inválido", "Por favor ingresa un correo electrónico válido");
         return;
       }
 
       if (password.length < 6) {
-        Alert.alert("Error", "La contraseña debe tener al menos 6 caracteres");
+        showErrorAlert("Contraseña débil", "La contraseña debe tener al menos 6 caracteres");
         return;
       }
 
       if (password !== confirmPassword) {
-        Alert.alert("Error", "Las contraseñas no coinciden");
+        showErrorAlert("Contraseñas no coinciden", "Las contraseñas no coinciden");
         return;
       }
+
       setLoading(true);
+      setError("");
 
       const data = {
         name,
@@ -67,7 +128,10 @@ const RegisterScreen = () => {
 
       const success = await authState$.login(email, password);
       if (success) {
-        router.replace("/(dashboard)");
+        // Show a brief success animation before redirecting
+        setTimeout(() => {
+          router.replace("/(dashboard)");
+        }, 500);
       } else {
         throw new Error("Falló el registro");
       }
@@ -79,14 +143,14 @@ const RegisterScreen = () => {
       }
 
       if (error.originalError?.data?.data?.email?.message) {
-        Alert.alert(
+        showErrorAlert(
           "Error de Registro",
           error.originalError.data.data.email.message
         );
       } else if (error.originalError?.data?.message) {
-        Alert.alert("Error de Registro", error.originalError.data.message);
+        showErrorAlert("Error de Registro", error.originalError.data.message);
       } else {
-        Alert.alert(
+        showErrorAlert(
           "Error de Registro",
           "El registro falló. Por favor intenta de nuevo."
         );
@@ -97,136 +161,332 @@ const RegisterScreen = () => {
   };
 
   const handleGoogleSuccess = (user: any) => {
-    router.replace("/home");
+    router.replace("/(dashboard)");
   };
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <Stack.Screen
-        options={{
-          ...singleScreenHeader({
-            theme,
-            title: "Crear Cuenta",
-            titleIcon: "LogIn",
-            headerRightProps: {
-              headerRightIcon: "Trash2",
-              headerRightIconColor: "red",
-              onPress: () => { },
-              disabled: false,
-              style: { opacity: 0 },
-            },
-            goBack: () => router.push("/(dashboard)"),
-          }),
-        }}
-      />
-      <View style={[styles.container]}>
-        <Text style={[styles.title]}>
-          ¡Bienvenido! {"\n"}Regístrate para comenzar
-        </Text>
-
-        <TextInput
-          style={[styles.input]}
-          placeholder="Nombre Completo"
-          placeholderTextColor={theme.colors.text}
-          value={name}
-          onChangeText={setName}
-          autoCapitalize="words"
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        keyboardShouldPersistTaps="handled"
+      >
+        <Stack.Screen
+          options={{
+            ...singleScreenHeader({
+              theme,
+              title: "Crear Cuenta",
+              titleIcon: "UserPlus",
+              headerRightProps: {
+                headerRightIcon: "Trash2",
+                headerRightIconColor: "red",
+                onPress: () => { },
+                disabled: false,
+                style: { opacity: 0 },
+              },
+              goBack: () => router.push("/(dashboard)"),
+            }),
+          }}
         />
 
-        <TextInput
-          style={[styles.input]}
-          placeholder="Correo Electrónico"
-          placeholderTextColor={theme.colors.text}
-          value={email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-          keyboardType="email-address"
-        />
-
-        <TextInput
-          style={[styles.input]}
-          placeholder="Contraseña"
-          placeholderTextColor={theme.colors.text}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-
-        <TextInput
-          style={[styles.input]}
-          placeholder="Confirmar Contraseña"
-          placeholderTextColor={theme.colors.text}
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-        />
-
-        <TouchableOpacity style={[styles.button]} onPress={handleRegister}>
-          {loading || isLoading ? (
-            <ActivityIndicator color={theme.colors.text} />
-          ) : (
-            <Text style={[styles.buttonText]}>Registrarse</Text>
+        <View style={[styles.container]}>
+          {!isKeyboardVisible && (
+            <Animated.View
+              style={[
+                styles.logoContainer,
+                { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }
+              ]}
+            >
+              <Image
+                source={require('../assets/images/icon.png')}
+                style={styles.logo}
+                resizeMode="contain"
+              />
+            </Animated.View>
           )}
-        </TouchableOpacity>
 
-        <Text style={[styles.orText]}>O</Text>
+          <Animated.View
+            style={[
+              styles.formContainer,
+              { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }
+            ]}
+          >
+            <Text style={[styles.title]}>
+              ¡Bienvenido!{"\n"}
+              <Text style={styles.subtitle}>Crea tu cuenta para comenzar</Text>
+            </Text>
 
-        <GoogleAuth isRegistration={true} onSuccess={handleGoogleSuccess} />
+            {error ? (
+              <View style={styles.errorContainer}>
+                <MaterialCommunityIcons name="alert-circle" size={18} color="red" />
+                <Text style={styles.errorText}>{error}</Text>
+              </View>
+            ) : null}
 
-        <TouchableOpacity onPress={() => router.push("/login")}>
-          <Text style={[styles.linkText]}>
-            ¿Ya tienes una cuenta? Inicia Sesión
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+            <View style={styles.inputContainer}>
+              <MaterialCommunityIcons
+                name="account-outline"
+                size={20}
+                color={theme.colors.text}
+                style={styles.inputIcon}
+              />
+              <TextInput
+                style={[styles.input]}
+                placeholder="Nombre Completo"
+                placeholderTextColor={theme.colors.text + '80'}
+                value={name}
+                onChangeText={setName}
+                autoCapitalize="words"
+                returnKeyType="next"
+              />
+            </View>
+
+            <View style={styles.inputContainer}>
+              <MaterialCommunityIcons
+                name="email-outline"
+                size={20}
+                color={theme.colors.text}
+                style={styles.inputIcon}
+              />
+              <TextInput
+                style={[styles.input]}
+                placeholder="Correo Electrónico"
+                placeholderTextColor={theme.colors.text + '80'}
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                returnKeyType="next"
+              />
+            </View>
+
+            <View style={styles.inputContainer}>
+              <MaterialCommunityIcons
+                name="lock-outline"
+                size={20}
+                color={theme.colors.text}
+                style={styles.inputIcon}
+              />
+              <TextInput
+                style={[styles.input]}
+                placeholder="Contraseña"
+                placeholderTextColor={theme.colors.text + '80'}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+                returnKeyType="next"
+              />
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setShowPassword(!showPassword)}
+              >
+                <MaterialCommunityIcons
+                  name={showPassword ? "eye-off" : "eye"}
+                  size={20}
+                  color={theme.colors.text}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <MaterialCommunityIcons
+                name="lock-check-outline"
+                size={20}
+                color={theme.colors.text}
+                style={styles.inputIcon}
+              />
+              <TextInput
+                style={[styles.input]}
+                placeholder="Confirmar Contraseña"
+                placeholderTextColor={theme.colors.text + '80'}
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                secureTextEntry={!showConfirmPassword}
+                returnKeyType="done"
+                onSubmitEditing={handleRegister}
+              />
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                <MaterialCommunityIcons
+                  name={showConfirmPassword ? "eye-off" : "eye"}
+                  size={20}
+                  color={theme.colors.text}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity
+              style={[
+                styles.button,
+                (loading || isLoading) && styles.buttonDisabled
+              ]}
+              onPress={handleRegister}
+              disabled={loading || isLoading}
+              activeOpacity={0.8}
+            >
+              {loading || isLoading ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text style={[styles.buttonText]}>Crear Cuenta</Text>
+              )}
+            </TouchableOpacity>
+
+            <View style={styles.dividerContainer}>
+              <View style={styles.divider} />
+              <Text style={styles.dividerText}>o</Text>
+              <View style={styles.divider} />
+            </View>
+
+            <GoogleAuth
+              isRegistration={true}
+              onSuccess={handleGoogleSuccess}
+            // buttonStyle={styles.googleButton}
+            // textStyle={styles.googleButtonText}
+            />
+
+            <TouchableOpacity
+              onPress={() => router.push("/login")}
+              style={styles.loginContainer}
+            >
+              <Text style={styles.loginText}>
+                ¿Ya tienes una cuenta? <Text style={styles.linkText}>Inicia Sesión</Text>
+              </Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
+    scrollContainer: {
+      flexGrow: 1,
+    },
     container: {
       flex: 1,
-      justifyContent: "center",
       padding: 20,
+      justifyContent: "center",
       backgroundColor: colors.background,
     },
-    title: {
-      fontSize: 24,
-      fontWeight: "bold",
+    logoContainer: {
+      alignItems: 'center',
       marginBottom: 20,
+    },
+    logo: {
+      width: width * 0.5,
+      height: 100,
+    },
+    formContainer: {
+      width: '100%',
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: "bold",
+      marginBottom: 25,
       textAlign: "center",
-      color: colors.primary,
+      color: colors.text,
+    },
+    subtitle: {
+      fontSize: 18,
+      fontWeight: "normal",
+      color: colors.text + '90',
+    },
+    errorContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: 'rgba(255,0,0,0.1)',
+      borderRadius: 8,
+      padding: 10,
+      marginBottom: 15,
+    },
+    errorText: {
+      color: "red",
+      marginLeft: 8,
+    },
+    inputContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      height: 55,
+      borderRadius: 12,
+      borderWidth: 1,
+      marginBottom: 16,
+      borderColor: colors.border,
+      backgroundColor: colors.card,
+      paddingHorizontal: 15,
+    },
+    inputIcon: {
+      marginRight: 10,
     },
     input: {
-      height: 50,
-      borderWidth: 1,
-      borderRadius: 5,
-      paddingHorizontal: 15,
-      marginBottom: 15,
-      borderColor: colors.text,
-      color: colors.primary,
-      backgroundColor: colors.card,
+      flex: 1,
+      color: colors.text,
+      fontSize: 16,
+    },
+    eyeIcon: {
+      padding: 8,
     },
     button: {
-      padding: 15,
-      borderRadius: 5,
+      height: 55,
+      borderRadius: 12,
+      justifyContent: "center",
       alignItems: "center",
-      backgroundColor: colors.text,
+      marginTop: 10,
+      backgroundColor: colors.notification,
+      shadowColor: colors.notification,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+      elevation: 5,
+    },
+    buttonDisabled: {
+      opacity: 0.7,
     },
     buttonText: {
+      color: "white",
+      fontSize: 16,
       fontWeight: "bold",
-      color: colors.background,
     },
-    orText: {
-      textAlign: "center",
-      marginVertical: 15,
-      color: colors.primary,
+    dividerContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginVertical: 20,
+    },
+    divider: {
+      flex: 1,
+      height: 1,
+      backgroundColor: colors.border,
+    },
+    dividerText: {
+      paddingHorizontal: 15,
+      color: colors.text,
+    },
+    googleButton: {
+      height: 55,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+      backgroundColor: colors.card,
+    },
+    googleButtonText: {
+      color: colors.text,
+    },
+    loginContainer: {
+      alignItems: 'center',
+      marginTop: 25,
+    },
+    loginText: {
+      fontSize: 15,
+      color: colors.text,
     },
     linkText: {
-      textAlign: "center",
-      marginTop: 15,
-      color: colors.primary,
+      color: colors.notification,
+      fontWeight: 'bold',
     },
   });
 
