@@ -104,7 +104,7 @@ AND v.verse = fv.verse
 WHERE v.book_number = ?
 AND v.chapter = ?;`;
 
-export const GET_ALL_FAVORITE_VERSES = `select v.*, fv.id,b.long_name as bookName from verses v
+export const GET_ALL_FAVORITE_VERSES = `select v.*, fv.id,b.long_name as bookName, fv.uuid as uuid from verses v
 inner join books b
 on b.book_number = v.book_number
 inner join favorite_verses fv 

@@ -1,17 +1,25 @@
 import Animation from "@/components/Animation";
 import Icon from "@/components/Icon";
+import ActionButton, { Backdrop } from "@/components/note/ActionButton";
 import { Text } from "@/components/Themed";
 import { useBibleContext } from "@/context/BibleContext";
+import { useFavoriteVerseService } from "@/services/favoriteVerseService";
+import { authState$ } from "@/state/authState";
 import { bibleState$ } from "@/state/bibleState";
+import { favoriteState$ } from "@/state/favoriteState";
 import { IVerseItem, Screens, TTheme } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { showToast } from "@/utils/showToast";
+import { use$ } from "@legendapp/state/react";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import { Stack } from "expo-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  Alert,
+  Keyboard,
   ListRenderItem,
   Platform,
   StyleSheet,
@@ -20,26 +28,39 @@ import {
 } from "react-native";
 
 type TListVerse = {
-  data: IVerseItem[] | any;
-  isLoading: boolean;
 };
 
-const FavoriteList = ({ data }: TListVerse) => {
+const FavoriteList = ({ }: TListVerse) => {
   const [filterData, setFilter] = useState([]);
   const theme = useTheme();
   const navigation = useNavigation();
   const styles = getStyles(theme);
+  const [showMoreOptions, setShowMoreOptions] = useState(false);
+  const [data, setData] = useState<any | null>(null);
+
   const { toggleFavoriteVerse, currentBibleLongName, orientation } =
     useBibleContext();
+
+  const { addFavoriteVerse, getAllFavoriteVerses, removeFavoriteVerse } = useFavoriteVerseService();
+
   const flatListRef = useRef<FlashList<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const notFoundSource = require("../../assets/lottie/notFound.json");
+  const reloadFavorites = use$(() => bibleState$.reloadFavorites.get())
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const verses = await getAllFavoriteVerses();
+      setData(verses ?? []);
+    }
+    fetchData();
+
+  }, [reloadFavorites]);
+
   useEffect(() => {
     if (!data) return;
     setFilter(data);
   }, [data]);
-
-  if (!data) return;
 
   const handleScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -143,10 +164,134 @@ const FavoriteList = ({ data }: TListVerse) => {
       </TouchableOpacity>
     );
   };
+  const showMoreOptionHandle: () => void = () => {
+    setShowMoreOptions((prev) => !prev);
+  };
+
+  const handleSyncToCloud = async () => {
+    try {
+      const favoriteVerses = await getAllFavoriteVerses();
+      if (!authState$.user.get()) {
+        Alert.alert(
+          "Sincronización requerida",
+          "Debes iniciar sesión para sincronizar tus versiculos favoritos con la nube"
+        );
+        return;
+      }
+
+      for (const favoriteVerse of favoriteVerses) {
+        if (!favoriteVerse.uuid) {
+          console.warn("Favorito sin UUID, no se puede sincronizar:", favoriteVerse.id);
+          continue;
+        }
+
+        try {
+          await favoriteState$.addFavorite(favoriteVerse);
+        } catch (error) {
+          console.error("Error al sincronizar nota:", favoriteVerse.id, error);
+        }
+      }
+
+      showToast("Versiculos favoritos sincronizados con la nube")
+    } catch (error) {
+      console.error("Error al sincronizar Versiculos favoritos con la nube:", error);
+      showToast("Error al sincronizar Versiculos favoritos")
+    }
+  };
+
+  const handleDownloadFromCloud = async () => {
+    try {
+      if (!authState$.user.get()) {
+        Alert.alert(
+          "Sincronización requerida",
+          "Debes iniciar sesión para descargar tus Versiculos favoritos desde la nube"
+        );
+        return;
+      }
+
+      const favoriteCloudEntries = await favoriteState$.fetchFavorites();
+      const localFavorites = await getAllFavoriteVerses();
+
+      for (const cloudFavoriteVerse of favoriteCloudEntries) {
+        if (!cloudFavoriteVerse.uuid) {
+          console.warn("Favorito en la nube sin UUID, se omite:", cloudFavoriteVerse.id);
+          continue;
+        }
+
+        try {
+          const existingFavoriteEntry = localFavorites.find(n => n.uuid === cloudFavoriteVerse.uuid);
+
+          if (existingFavoriteEntry) {
+            console.log("Favorito ya existe localmente, se omite:", existingFavoriteEntry.id);
+          } else {
+
+            await addFavoriteVerse(cloudFavoriteVerse.book_number, cloudFavoriteVerse.chapter, cloudFavoriteVerse.verse, cloudFavoriteVerse.uuid);
+          }
+        } catch (error) {
+          console.error("Error al guardar nota local:", cloudFavoriteVerse.id, error);
+        }
+      }
+
+      showToast("Versiculos favoritos descargados desde la nube")
+    } catch (error) {
+      console.error("Error al descargar notas desde la nube:", error);
+      showToast("Error al descargar notas")
+    } finally {
+      bibleState$.toggleReloadFavorites();
+    }
+  };
+
+  const actionButtons = useMemo(
+    () =>
+      [
+        {
+          bottom: 25,
+          name: "EllipsisVertical",
+          color: "#008CBA",
+          action: showMoreOptionHandle,
+          hide: showMoreOptions,
+        },
+        {
+          bottom: 25,
+          name: "Import",
+          color: "#008CBA",
+          action: handleDownloadFromCloud,
+          hide: !showMoreOptions,
+          label: "Cargar desde la cuenta",
+          isSync: true
+        },
+        {
+          bottom: 90,
+          name: "Share",
+          color: "#45a049",
+          action: handleSyncToCloud,
+          hide: !showMoreOptions,
+          label: "Guardar en la cuenta",
+          isSync: true
+        },
+        {
+          bottom: 155,
+          name: "ChevronDown",
+          color: theme.colors.notification,
+          action: showMoreOptionHandle,
+          hide: !showMoreOptions,
+          label: "Cerrar menú",
+        },
+      ].filter((item) => !item.hide),
+    [showMoreOptions]
+  );
+
+  const dismiss = () => {
+    Keyboard.dismiss();
+    setShowMoreOptions(false);
+  };
+  if (!data) return;
 
   return (
     <View key={orientation + theme.dark} style={{ flex: 1 }}>
       <Stack.Screen options={{ headerShown: true }} />
+      <Backdrop visible={showMoreOptions} onPress={dismiss} theme={theme} />
+
       <FlashList
         ref={flatListRef}
         ListHeaderComponent={SearchedHeader}
@@ -174,6 +319,14 @@ const FavoriteList = ({ data }: TListVerse) => {
           </View>
         }
       />
+      {actionButtons.map((item, index) => (
+        <ActionButton
+          key={index}
+          theme={theme}
+          item={item}
+          index={index}
+        />
+      ))}
       {renderScrollToTopButton()}
     </View>
   );

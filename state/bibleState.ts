@@ -37,6 +37,7 @@ export const bibleState$ = observable({
   lastSelectedVerse: null as IBookVerse | null,
   currentNoteId: null as number | null,
   reloadNotes: false,
+  reloadFavorites: false,
   isSyncingNotes: false,
   floatingNoteButtonPosition: { x: 0, y: 75 },
   strongWord: { text: "", code: "" } as IStrongWord,
@@ -141,5 +142,8 @@ export const bibleState$ = observable({
   },
   toggleReloadNotes: () => {
     bibleState$.reloadNotes.set(() => !bibleState$.reloadNotes.get());
+  },
+  toggleReloadFavorites: () => {
+    bibleState$.reloadFavorites.set(() => !bibleState$.reloadFavorites.get());
   }
 });

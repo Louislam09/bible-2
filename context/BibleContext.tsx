@@ -5,10 +5,14 @@ import {
   INSERT_INTO_NOTE,
   UPDATE_NOTE_BY_ID,
 } from "@/constants/Queries";
-import { useFavoriteVerseService } from "@/services/favoriteVerseService";
 import useHistoryManager, { HistoryManager } from "@/hooks/useHistoryManager";
 import useSearch, { UseSearchHookState } from "@/hooks/useSearch";
+import { useFavoriteVerseService } from "@/services/favoriteVerseService";
+import { authState$ } from "@/state/authState";
+import { bibleState$ } from "@/state/bibleState";
+import { settingState$ } from "@/state/settingState";
 import getCurrentDbName from "@/utils/getCurrentDB";
+import { use$ } from "@legendapp/state/react";
 import React, {
   createContext,
   useContext,
@@ -26,10 +30,7 @@ import {
   TFont,
 } from "../types";
 import { useDBContext } from "./databaseContext";
-import { storedData$, useStorage } from "./LocalstoreContext";
-import { use$ } from "@legendapp/state/react";
-import { authState$ } from "@/state/authState";
-import { settingState$ } from "@/state/settingState";
+import { storedData$ } from "./LocalstoreContext";
 
 type BibleState = {
   setSearchQuery: Function;
@@ -104,27 +105,27 @@ const initialContext: BibleState = {
   selectBibleVersion: (version: string) => {
     return new Promise((resolve) => resolve());
   },
-  onSaveNote: () => {},
-  onUpdateNote: () => {},
-  onDeleteNote: () => {},
-  onDeleteAllNotes: () => {},
-  selectFont: () => {},
-  selectTheme: () => {},
-  handleFontSize: () => {},
+  onSaveNote: () => { },
+  onUpdateNote: () => { },
+  onDeleteNote: () => { },
+  onDeleteAllNotes: () => { },
+  selectFont: () => { },
+  selectTheme: () => { },
+  handleFontSize: () => { },
   toggleFavoriteVerse: async ({
     bookNumber,
     chapter,
     verse,
     isFav,
-  }: IFavoriteVerse) => {},
-  setShouldLoop: (shouldLoop: boolean) => {},
+  }: IFavoriteVerse) => { },
+  setShouldLoop: (shouldLoop: boolean) => { },
   // setverseInStrongDisplay: (verse: number) => {},
-  increaseFontSize: () => {},
-  toggleViewLayoutGrid: () => {},
-  setLocalData: () => {},
-  performSearch: () => {},
-  setSearchQuery: () => {},
-  syncLocalSettings: () => {},
+  increaseFontSize: () => { },
+  toggleViewLayoutGrid: () => { },
+  setLocalData: () => { },
+  performSearch: () => { },
+  setSearchQuery: () => { },
+  syncLocalSettings: () => { },
   selectedFont: TFont.Roboto,
   currentBibleVersion: EBibleVersions.BIBLE,
   fontSize: 24,
@@ -272,7 +273,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (requiresSettingsReloadAfterSync) {
       console.log("⚠ Reloading settings after cloud sync");
-      
+
       dispatch({
         type: "SET_LOCAL_DATA",
         payload: {
@@ -283,7 +284,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
           viewLayoutGrid: storedData$.isGridLayout.get(),
         },
       });
-      
+
       settingState$.requiresSettingsReloadAfterSync.set(false);
     }
   }, [requiresSettingsReloadAfterSync]);
@@ -336,6 +337,8 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
         await removeFavoriteVerse(bookNumber, chapter, verse);
       } else {
         await addFavoriteVerse(bookNumber, chapter, verse);
+        bibleState$.toggleReloadFavorites();
+
       }
     } catch (error) {
       console.error("Error toggling favorite verse:", error);

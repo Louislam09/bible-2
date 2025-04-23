@@ -11,9 +11,8 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   StyleSheet,
-  Switch,
   TextInput,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
 
 const LoginScreen = () => {
@@ -99,25 +98,6 @@ const LoginScreen = () => {
         secureTextEntry
       />
 
-      {/* <View style={styles.syncContainer}>
-        <Text style={[styles.syncText]}>Sincronizar con la nube</Text>
-        <Switch
-          value={enableSync}
-          onValueChange={setEnableSync}
-          trackColor={{
-            false: theme.colors.text,
-            true: theme.colors.notification,
-          }}
-          thumbColor={theme.colors.notification}
-        />
-      </View> */}
-
-      {/* <Text style={[styles.syncDescription]}>
-        {enableSync
-          ? "Tus configuraciones se sincronizarán con la nube"
-          : "La aplicación funcionará sin conexión (puedes activar la sincronización más tarde)"}
-      </Text> */}
-
       <TouchableOpacity
         style={[styles.button]}
         onPress={handleLogin}
@@ -131,7 +111,6 @@ const LoginScreen = () => {
       </TouchableOpacity>
 
       <GoogleAuth onSuccess={() => { }} />
-      {/* <OAuthGoogleLogin /> */}
 
       <TouchableOpacity onPress={() => router.push("/register")}>
         <Text style={[styles.linkText]}>¿No tienes una cuenta? Regístrate</Text>

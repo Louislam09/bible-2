@@ -10,6 +10,7 @@ import { configureSynced, syncObservable } from "@legendapp/state/sync";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import useInternetConnection from "@/hooks/useInternetConnection";
+import { showToast } from "@/utils/showToast";
 import React, {
   createContext,
   ReactNode,
@@ -20,7 +21,6 @@ import React, {
   useState,
 } from "react";
 import { Alert } from "react-native";
-import { showToast } from "@/utils/showToast";
 
 const persistOptions = configureSynced({
   persist: {
@@ -49,6 +49,7 @@ type StoreState = {
   isGridLayout: boolean;
   isShowName: boolean;
   isUUIDGenerated: boolean;
+  isFavUUIDGenerated: boolean;
   songFontSize: number;
   currentVoiceIdentifier: string;
   currentVoiceRate: number;
@@ -78,6 +79,7 @@ const initialContext: StoreState = {
   currentBibleVersion: EBibleVersions.BIBLE,
   isSongLyricEnabled: false,
   isUUIDGenerated: false,
+  isFavUUIDGenerated: false,
   isAlegresNuevasUnlocked: false,
   isAdmin: false,
   hasRequestAccess: false,

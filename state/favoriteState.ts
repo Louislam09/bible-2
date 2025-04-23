@@ -1,5 +1,5 @@
-import { observable } from "@legendapp/state";
 import { pb } from "@/globalConfig";
+import { observable } from "@legendapp/state";
 import { authState$ } from "./authState";
 
 export interface FavoriteVerse {
@@ -32,25 +32,26 @@ export const favoriteState$ = observable<FavoriteState>({
       favoriteState$.error.set(null);
       const user = authState$.user.get();
       if (!user) throw new Error("No hay usuario autenticado para obtener favoritos");
+     
       const result = await pb.collection("favorite_verses").getList(1, 100, {
         filter: `user = \"${user.id}\"`,
-        sort: "-created",
       });
+     
       const favorites = result.items.map((item: any) => ({
         id: item.id,
         book_number: item.book_number,
         chapter: item.chapter,
         verse: item.verse,
         uuid: item.uuid,
-        created_at: item.created,
-        updated_at: item.updated,
       }));
+     
       favoriteState$.favorites.set(favorites);
       return favorites;
     } catch (error: any) {
+
       const errorMessage = error.message || "Error al obtener favoritos";
       favoriteState$.error.set(errorMessage);
-      console.error("Error fetching favorites:", error);
+      console.error("Error fetching favorites:", error.originalError);
       return [];
     } finally {
       favoriteState$.isLoading.set(false);
@@ -80,9 +81,15 @@ export const favoriteState$ = observable<FavoriteState>({
         }
         } catch (error: any) {
           if (error?.originalError?.response?.code === 404) {
+            const favToAdd = {
+              book_number: fav.book_number,
+              chapter: fav.chapter,
+              verse: fav.verse,
+              uuid: fav.uuid,
+            }
             // Not found, create new
             const newFav = await pb.collection("favorite_verses").create({
-              ...fav,
+              ...favToAdd,
               user: user.id,
             });
             const createdFav: FavoriteVerse = {

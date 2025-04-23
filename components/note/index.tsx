@@ -1,5 +1,6 @@
 import Animation from "@/components/Animation";
 import Icon from "@/components/Icon";
+import ActionButton, { Backdrop } from "@/components/note/ActionButton";
 import { Text, View } from "@/components/Themed";
 import { headerIconSize } from "@/constants/size";
 import { useBibleContext } from "@/context/BibleContext";
@@ -30,13 +31,12 @@ import {
   ActivityIndicator,
   Alert,
   Animated,
-  Easing,
   Keyboard,
   StyleSheet,
   TextInput,
   ToastAndroid,
   TouchableOpacity,
-  TouchableWithoutFeedback,
+  TouchableWithoutFeedback
 } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { singleScreenHeader } from "../common/singleScreenHeader";
@@ -61,214 +61,50 @@ interface ActionButtonProps {
   theme: any;
 }
 
-const ActionButton = ({ item, index, styles, theme }: ActionButtonProps) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.5)).current;
-  const translateYAnim = useRef(new Animated.Value(50)).current;
-  const rotateAnim = useRef(new Animated.Value(0)).current;
-  const syncRotateAnim = useRef(new Animated.Value(0)).current;
-  const isSyncingNotes = use$(() => bibleState$.isSyncingNotes.get())
+// const Backdrop = ({ visible, onPress, theme }: any) => {
+//   const fadeAnim = useRef(new Animated.Value(0)).current;
+//   const [shouldRender, setShouldRender] = useState(visible);
 
-  useEffect(() => {
-    const showAnimation = Animated.sequence([
-      Animated.delay(index * 100),
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-          easing: Easing.out(Easing.cubic),
-        }),
-        Animated.spring(scaleAnim, {
-          toValue: 1,
-          friction: 6,
-          tension: 40,
-          useNativeDriver: true,
-        }),
-        Animated.spring(translateYAnim, {
-          toValue: 0,
-          friction: 7,
-          tension: 50,
-          useNativeDriver: true,
-        }),
-        Animated.timing(rotateAnim, {
-          toValue: 1,
-          duration: 400,
-          useNativeDriver: true,
-          easing: Easing.out(Easing.back(1.5)),
-        }),
-      ]),
-    ]);
+//   useEffect(() => {
+//     if (visible) {
+//       setShouldRender(true);
+//       Animated.timing(fadeAnim, {
+//         toValue: 1,
+//         duration: 300,
+//         useNativeDriver: true,
+//         easing: Easing.out(Easing.cubic),
+//       }).start();
+//     } else {
+//       Animated.timing(fadeAnim, {
+//         toValue: 0,
+//         duration: 200,
+//         useNativeDriver: true,
+//         easing: Easing.in(Easing.cubic),
+//       }).start(() => {
+//         setShouldRender(false);
+//       });
+//     }
+//   }, [visible]);
 
-    const hideAnimation = Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: true,
-        easing: Easing.in(Easing.cubic),
-      }),
-      Animated.timing(scaleAnim, {
-        toValue: 0.5,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-      Animated.timing(translateYAnim, {
-        toValue: 50,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-    ]);
+//   if (!shouldRender) return null;
 
-    if (item.hide) {
-      hideAnimation.start();
-    } else {
-      showAnimation.start();
-    }
-  }, [fadeAnim, scaleAnim, translateYAnim, rotateAnim, index, item.hide]);
-
-  const spin = rotateAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["45deg", "0deg"],
-  });
-
-  const startRotation = () => {
-    Animated.loop(
-      Animated.timing(syncRotateAnim, {
-        toValue: 1,
-        duration: 2000,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      })
-    ).start();
-  };
-
-  const stopRotation = () => {
-    syncRotateAnim.stopAnimation();
-    syncRotateAnim.setValue(0);
-  };
-
-  useEffect(() => {
-    if (!item.isSync) return
-    if (isSyncingNotes) {
-      startRotation()
-    } else {
-      stopRotation()
-    }
-  }, [item.isSync, isSyncingNotes])
-
-  const rotate = syncRotateAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["-360deg", "0deg"],
-  });
-
-  return (
-    <View style={{ flexGrow: 0, zIndex: 11 }}>
-      <Animated.Text
-        style={[
-          {
-            fontSize: 18,
-            position: "absolute",
-            color: "white",
-            right: 80,
-            bottom: item.bottom + 10,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-            borderRadius: 8,
-            backgroundColor: theme.colors.background + 80,
-          },
-          {
-            opacity: fadeAnim,
-            transform: [{ translateY: translateYAnim }, { scale: scaleAnim }],
-          },
-        ]}
-      >
-        {item.label}
-      </Animated.Text>
-
-      <Animated.View
-        key={`button-${item.name}`}
-        style={[
-          styles.scrollToTopButton,
-          {
-            bottom: item.bottom,
-            backgroundColor: item.color,
-          },
-          {
-            opacity: fadeAnim,
-            transform: [
-              { translateY: translateYAnim },
-              { scale: scaleAnim },
-              { rotate: spin },
-            ],
-          },
-        ]}
-      >
-        <TouchableOpacity
-          onPress={() => item.action()}
-          style={{
-            width: "100%",
-            height: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {(item.isSync || item.isDownload) && isSyncingNotes ? (
-            <Animated.View style={{ transform: [{ rotate }] }}>
-              <Icon color={"#fff"} name={item.isDownload ? 'Loader' : item.name as any} size={30} />
-            </Animated.View>
-          ) : (
-            <Icon color={"#fff"} name={item.name as any} size={30} />
-          )}
-        </TouchableOpacity>
-      </Animated.View>
-    </View>
-  );
-};
-
-const Backdrop = ({ visible, onPress, theme }: any) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const [shouldRender, setShouldRender] = useState(visible);
-
-  useEffect(() => {
-    if (visible) {
-      setShouldRender(true);
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-        easing: Easing.out(Easing.cubic),
-      }).start();
-    } else {
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: true,
-        easing: Easing.in(Easing.cubic),
-      }).start(() => {
-        setShouldRender(false);
-      });
-    }
-  }, [visible]);
-
-  if (!shouldRender) return null;
-
-  return (
-    <TouchableWithoutFeedback onPress={onPress}>
-      <Animated.View
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "rgba(0,0,0,.6)",
-          opacity: fadeAnim,
-          zIndex: 1,
-        }}
-      />
-    </TouchableWithoutFeedback>
-  );
-};
+//   return (
+//     <TouchableWithoutFeedback onPress={onPress}>
+//       <Animated.View
+//         style={{
+//           position: "absolute",
+//           top: 0,
+//           left: 0,
+//           right: 0,
+//           bottom: 0,
+//           backgroundColor: "rgba(0,0,0,.6)",
+//           opacity: fadeAnim,
+//           zIndex: 1,
+//         }}
+//       />
+//     </TouchableWithoutFeedback>
+//   );
+// };
 
 const Note = ({ data }: TListVerse) => {
   const theme = useTheme();
@@ -846,7 +682,6 @@ const Note = ({ data }: TListVerse) => {
             <ActionButton
               key={index}
               theme={theme}
-              styles={styles}
               item={item}
               index={index}
             />
@@ -864,7 +699,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       paddingVertical: 20,
     },
     textError: { textAlign: "center", color: "#e74856" },
-
     date: {
       color: colors.notification,
       textAlign: "right",
