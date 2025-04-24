@@ -61,6 +61,7 @@ type StoreState = {
   isSyncedWithCloud: boolean;
   user: pbUser | null;
   token: string;
+  lastSyncTime: string;
 };
 
 const initialContext: StoreState = {
@@ -94,6 +95,7 @@ const initialContext: StoreState = {
   isSyncedWithCloud: false,
   user: null,
   token: "",
+  lastSyncTime: ''
 };
 
 export const storedData$ = observable(initialContext);

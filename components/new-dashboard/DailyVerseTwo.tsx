@@ -1,19 +1,14 @@
 import DAILY_VERSES from "@/constants/dailyVerses";
 import { GET_DAILY_VERSE } from "@/constants/Queries";
-import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
-import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, Screens, TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
-import { showToast } from "@/utils/showToast";
 import { useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "../Icon";
 import { Text, View } from "../Themed";
-import { use$ } from "@legendapp/state/react";
-import ProfileCard from "../UserProfile";
 
 const defaultDailyVerse = {
   book_number: 0,
