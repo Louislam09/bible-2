@@ -1,12 +1,13 @@
-import React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
 import { TTheme } from "@/types";
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { Animated, StyleSheet, TouchableOpacity } from "react-native";
 import { Text, View } from "./Themed";
 
 type TabNavigationProps = {
   theme: TTheme;
   isMyDownloadTab: boolean;
-  setIsMyDownloadTab: any;
+  setIsMyDownloadTab: (value: boolean) => void;
 };
 
 const TabNavigation = ({
@@ -23,26 +24,40 @@ const TabNavigation = ({
         style={[
           styles.tab,
           !isMyDownloadTab && styles.activeTab,
-          { borderColor: theme.colors.notification },
         ]}
+        activeOpacity={0.7}
       >
+        <Ionicons
+          name="cloud-download-outline"
+          size={22}
+          color={!isMyDownloadTab ? theme.colors.notification : theme.colors.text + '70'}
+          style={styles.tabIcon}
+        />
         <Text
           style={[styles.tabText, !isMyDownloadTab && styles.activeTabText]}
         >
-          Modulos
+          Módulos
         </Text>
+        {!isMyDownloadTab && <View style={styles.activeIndicator} />}
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => setIsMyDownloadTab(true)}
         style={[
           styles.tab,
           isMyDownloadTab && styles.activeTab,
-          { borderColor: theme.colors.notification },
         ]}
+        activeOpacity={0.7}
       >
+        <Ionicons
+          name="folder-open-outline"
+          size={22}
+          color={isMyDownloadTab ? theme.colors.notification : theme.colors.text + '70'}
+          style={styles.tabIcon}
+        />
         <Text style={[styles.tabText, isMyDownloadTab && styles.activeTabText]}>
           Mis Descargas
         </Text>
+        {isMyDownloadTab && <View style={styles.activeIndicator} />}
       </TouchableOpacity>
     </View>
   );
@@ -53,29 +68,44 @@ const getStyles = ({ colors, dark }: TTheme) =>
     container: {
       flexDirection: "row",
       alignItems: "center",
-      paddingVertical: 10,
+      justifyContent: "space-between",
+      paddingVertical: 6,
       backgroundColor: "transparent",
+      marginHorizontal: -6,
     },
     tab: {
       flex: 1,
-      // borderWidth: 1,
-      paddingHorizontal: 10,
-      marginHorizontal: 5,
-      paddingVertical: 5,
+      paddingVertical: 12,
       alignItems: "center",
       justifyContent: "center",
-      borderRadius: 10,
+      borderRadius: 12,
+      flexDirection: "row",
+      position: "relative",
+      marginHorizontal: 6,
     },
     activeTab: {
-      // backgroundColor: colors.notification,
-      borderBottomWidth: 2,
+      backgroundColor: colors.card,
     },
     tabText: {
-      fontSize: 20,
-      color: colors.text,
+      fontSize: 16,
+      fontWeight: "500",
+      color: colors.text + '70',
     },
     activeTabText: {
-      color: dark ? "white" : "#000",
+      color: colors.notification,
+      fontWeight: "600",
+    },
+    tabIcon: {
+      marginRight: 8,
+    },
+    activeIndicator: {
+      position: "absolute",
+      bottom: 0,
+      height: 3,
+      width: "40%",
+      backgroundColor: colors.notification,
+      borderTopLeftRadius: 2,
+      borderTopRightRadius: 2,
     },
   });
 
