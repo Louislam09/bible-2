@@ -1,15 +1,16 @@
-import React, { useEffect } from 'react';
-import { Alert, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
-import { useTheme } from '@react-navigation/native';
-import { TTheme } from '@/types';
-import { Text } from '../Themed';
+import { ERROR_MESSAGES } from '@/constants/errorMessages';
 import { storedData$ } from '@/context/LocalstoreContext';
 import { useRequestAccess } from '@/services/queryService';
-import { use$ } from '@legendapp/state/react';
-import { ERROR_MESSAGES } from '@/constants/errorMessages';
-import EmptyStateMessage from '../EmptyStateMessage';
 import { authState$ } from '@/state/authState';
+import { TTheme } from '@/types';
+import removeAccent from '@/utils/removeAccent';
+import { use$ } from '@legendapp/state/react';
+import { useTheme } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
+import React, { useEffect } from 'react';
+import { Alert, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import EmptyStateMessage from '../EmptyStateMessage';
+import { Text } from '../Themed';
 
 const RequestAccess = ({ onClose }: { onClose: () => void }) => {
     const theme = useTheme();
@@ -45,12 +46,12 @@ const RequestAccess = ({ onClose }: { onClose: () => void }) => {
                 'Necesitas iniciar sesión para solicitar acceso.',
                 [
                     { text: 'Cancelar', style: 'cancel' },
-                    { 
-                        text: 'Iniciar Sesión', 
+                    {
+                        text: 'Iniciar Sesión',
                         onPress: () => {
                             onClose();
                             router.push('/login');
-                        } 
+                        }
                     },
                 ]
             );
@@ -68,10 +69,10 @@ const RequestAccess = ({ onClose }: { onClose: () => void }) => {
         }
 
         try {
-            await requestAccess({ name: submitName, email: submitEmail });
+            await requestAccess({ name: removeAccent(submitName), email: submitEmail });
             storedData$.hasRequestAccess.set(true);
             storedData$.userData.set({ name: submitName, email: submitEmail, status: 'pending' });
-            
+
             if (!isAutoSubmit) {
                 Alert.alert('Éxito', ERROR_MESSAGES.REQUEST_CREATED);
                 onClose();
@@ -105,13 +106,13 @@ const RequestAccess = ({ onClose }: { onClose: () => void }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Solicitud de Acceso</Text>
-            
+
             {!isAuthenticated && (
                 <Text style={styles.loginMessage}>
                     Para solicitar acceso, primero debes iniciar sesión.
                 </Text>
             )}
-            
+
             <TextInput
                 style={styles.input}
                 placeholder="Nombre completo"
@@ -136,10 +137,10 @@ const RequestAccess = ({ onClose }: { onClose: () => void }) => {
                 disabled={isPending}
             >
                 <Text style={styles.buttonText}>
-                    {!isAuthenticated 
-                        ? 'Iniciar Sesión' 
-                        : isPending 
-                            ? 'Enviando...' 
+                    {!isAuthenticated
+                        ? 'Iniciar Sesión'
+                        : isPending
+                            ? 'Enviando...'
                             : 'Enviar Solicitud'}
                 </Text>
             </TouchableOpacity>
