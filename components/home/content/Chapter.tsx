@@ -43,7 +43,6 @@ const Chapter = ({
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
       const newTopVerse = viewableItems[0].item.verse;
-      console.log("Top verse changed:", newTopVerse);
       bibleState$.handleCurrentHistoryIndex(newTopVerse)
       if (topVerseRef.current !== newTopVerse) {
         topVerseRef.current = newTopVerse;
