@@ -337,11 +337,11 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
         await removeFavoriteVerse(bookNumber, chapter, verse);
       } else {
         await addFavoriteVerse(bookNumber, chapter, verse);
-        bibleState$.toggleReloadFavorites();
-
       }
     } catch (error) {
       console.error("Error toggling favorite verse:", error);
+    } finally {
+      bibleState$.toggleReloadFavorites();
     }
   };
 

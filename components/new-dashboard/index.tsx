@@ -219,7 +219,7 @@ const SecondDashboard = () => {
       // @ts-ignore
       action: () => navigation.navigate("admin", {}),
       color: "#75d0fe",
-      // disabled: !isAdmin,
+      disabled: !isAdmin,
     },
     {
       icon: "UserSearch",

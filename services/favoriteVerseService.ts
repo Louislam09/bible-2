@@ -61,7 +61,6 @@ export const useFavoriteVerseService = () => {
     try {
 
        if (storedData$.isFavUUIDGenerated.get()) {
-          console.log("UUIDs already generated for all favorites");
           return true;
         }
 

@@ -27,6 +27,7 @@ import Walkthrough from "@/components/Walkthrough";
 import { useTheme } from "@react-navigation/native";
 // import CustomHeader from "../components/home/header";
 
+import { useHighlightRender } from "@/components/home/content/Chapter";
 import BibleHeader from "@/components/home/header/BibleHeader";
 import StatusBarBackground from "@/components/StatusBarBackground";
 import BibleChapterProvider from "@/context/BibleChapterContext";
@@ -37,7 +38,6 @@ import { tourState$ } from "@/state/tourState";
 import { TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
 import { Stack, useNavigation } from "expo-router";
-import { useHighlightRender } from "@/components/home/content/Chapter";
 
 // Constants
 const MIN_SPLIT_SIZE = 200;
@@ -58,7 +58,6 @@ interface TutorialStep {
 type HomeScreenProps = {};
 
 const HomeScreen: React.FC<HomeScreenProps> = () => {
-  // console.log(`🏠 HomeScreen Component Rendered`);
   const navigation = useNavigation();
   const theme = useTheme();
   const { orientation } = useBibleContext();

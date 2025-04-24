@@ -23,9 +23,9 @@ import { useNavigation, useRouter } from "expo-router";
 import ProgressBar from "../footer/ProgressBar";
 import VersionList from "./VersionList";
 
-interface HeaderInterface {}
+interface HeaderInterface { }
 
-const BibleHeader: FC<HeaderInterface> = ({}) => {
+const BibleHeader: FC<HeaderInterface> = ({ }) => {
   const { width } = useWindowDimensions();
   const {
     currentBibleVersion,
@@ -37,7 +37,7 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
 
   const isSplitActived = use$(() => bibleState$.isSplitActived.get());
   const verses = use$(() => bibleState$.bibleData.topVerses.get());
-  // const currentHistoryIndex = use$(() => bibleState$.currentHistoryIndex.get());
+  const currentHistoryIndexState = use$(() => bibleState$.currentHistoryIndex.get());
 
   const {
     goBack,
@@ -137,8 +137,8 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
     versionRef.current?.dismiss();
   };
   const progressValue = useMemo(() => {
-    return (currentVerse || 0) / (verses?.length || 10);
-  }, [currentVerse, verses]);
+    return (currentHistoryIndexState || 0) / (verses?.length || 10);
+  }, [currentHistoryIndexState, verses]);
 
   return (
     <View style={styles.header}>
