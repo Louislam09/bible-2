@@ -53,7 +53,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       bundleIdentifier: getUniqueIdentifier(),
     },
     android: {
-      versionCode: 13,
+      versionCode: 14,
       icon: './assets/images/icon.png',
       adaptiveIcon: {
         foregroundImage: './assets/images/adaptive-icon.png',
