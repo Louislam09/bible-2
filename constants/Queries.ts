@@ -20,21 +20,31 @@ export const CREATE_FAVORITE_VERSES_TABLE = `CREATE TABLE IF NOT EXISTS favorite
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   book_number INTEGER,
   chapter INTEGER,
-  verse INTEGER
+  verse INTEGER,
+  uuid TEXT
 );`;
+
+export const CREATE_COLUMN_UUID_IN_FAVORITE_VERSES_TABLE = `ALTER TABLE favorite_verses ADD COLUMN uuid TEXT;`;
+
+export const GET_FAVORITE_VERSES_WITHOUT_UUID = `SELECT id FROM favorite_verses WHERE uuid IS NULL OR uuid = '' OR uuid = 'null' OR uuid = 'undefined'`;
+
+export const UPDATE_FAVORITE_VERSE_UUID_BY_ID = `UPDATE favorite_verses SET uuid = ? WHERE id = ?`;
+
 export const CREATE_NOTE_TABLE = `CREATE TABLE IF NOT EXISTS notes (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   note_text TEXT,
   title TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  uuid TEXT
 );`;
 
 export const CREATE_COLUMN_UPDATED_AT_IN_NOTE_TABLE = `ALTER TABLE notes ADD COLUMN updated_at TIMESTAMP;`;
+export const CREATE_COLUMN_UUID_IN_NOTE_TABLE = `ALTER TABLE notes ADD COLUMN uuid TEXT;`;
 
-export const INSERT_INTO_NOTE = `INSERT INTO notes (title, note_text, created_at, updated_at) 
-values (?, ?, datetime('now', 'localtime'), datetime('now', 'localtime'));`;
-export const INSERT_IMPORTED_INTO_NOTE = `INSERT INTO notes (title, note_text, created_at, updated_at) VALUES (?, ?, ?, ?)`;
+export const INSERT_INTO_NOTE = `INSERT INTO notes (uuid, title, note_text, created_at, updated_at) 
+VALUES (?, ?, ?, ?, ?);`;
+
 export const GET_NOTE_BY_ID = `SELECT * FROM notes where id = ?`;
 export const GET_ALL_NOTE = `SELECT * FROM notes
 ORDER BY 
@@ -49,14 +59,14 @@ ORDER BY
     ELSE created_at 
   END DESC;`;
 
-export const INSERT_FAVORITE_VERSE = `INSERT INTO favorite_verses (book_number, chapter, verse) 
-SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM favorite_verses 
+export const INSERT_FAVORITE_VERSE = `INSERT INTO favorite_verses (book_number, chapter, verse, uuid) 
+SELECT ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM favorite_verses 
   WHERE book_number = ? AND chapter = ? AND verse = ?);`;
 export const DELETE_FAVORITE_VERSE = `DELETE FROM favorite_verses WHERE book_number = ? AND chapter = ? AND verse = ?;`;
 export const DELETE_NOTE = `DELETE FROM notes WHERE id = ?;`;
 export const DELETE_NOTE_ALL = `DELETE FROM notes;`;
 export const UPDATE_NOTE_BY_ID = `UPDATE notes set title = ?, note_text = ?, 
-  updated_at = datetime('now', 'localtime') where id = ?`;
+  updated_at = ? where id = ?`;
 
 export const GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV = `SELECT 
     v.*,
@@ -94,7 +104,7 @@ AND v.verse = fv.verse
 WHERE v.book_number = ?
 AND v.chapter = ?;`;
 
-export const GET_ALL_FAVORITE_VERSES = `select v.*, fv.id,b.long_name as bookName from verses v
+export const GET_ALL_FAVORITE_VERSES = `select v.*, fv.id,b.long_name as bookName, fv.uuid as uuid from verses v
 inner join books b
 on b.book_number = v.book_number
 inner join favorite_verses fv 

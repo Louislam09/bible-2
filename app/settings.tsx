@@ -1,11 +1,21 @@
 import {
   Alert,
+  Animated,
+  Easing,
+  KeyboardAvoidingView,
   Linking,
+  Platform,
   ScrollView,
   StyleSheet,
+  Switch,
+  TextInput,
   TouchableOpacity,
 } from "react-native";
 
+import BottomModal from "@/components/BottomModal";
+import ColorSelector from "@/components/ColorSelector";
+import FontSelector from "@/components/FontSelector";
+import FontSizeAdjuster from "@/components/FontSizeAdjuster";
 import Icon, { IconProps } from "@/components/Icon";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
@@ -13,24 +23,28 @@ import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { useCustomTheme } from "@/context/ThemeContext";
+import { authState$ } from "@/state/authState";
 import { settingState$ } from "@/state/settingState";
-import { EThemes, RootStackScreenProps, TFont, TTheme } from "@/types";
+import { EThemes, RootStackScreenProps, TTheme } from "@/types";
+import getMinMaxFontSize from "@/utils/getMinMaxFontSize";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
 import Constants from "expo-constants";
 import { Stack, useRouter } from "expo-router";
 import * as Updates from "expo-updates";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const URLS = {
   BIBLE: "market://details?id=com.louislam09.bible",
   MORE_APPS: "market://search?q=pub:Luis_Martinez",
   ME: "louislam09@hotmail.com",
+  RATE_APP: "market://details?id=com.louislam09.bible",
 };
 
-const colorNames: any = {
+const colorNames: Record<string, string> = {
   Orange: "Naranja",
   BlackWhite: "Negro",
   Cyan: "Cian",
@@ -52,7 +66,12 @@ type TOption = {
   action: () => void;
   isFont5?: boolean;
   isValue?: boolean;
-  color?: any;
+  color?: string;
+  isDisabled?: boolean;
+  renderSwitch?: boolean;
+  value?: boolean;
+  withAnimation?: boolean;
+  badge?: string;
 };
 
 type TSection = {
@@ -62,29 +81,152 @@ type TSection = {
   id?: string;
 };
 
-const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
+const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
   const router = useRouter();
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
   const {
-    selectTheme,
     orientation = "PORTRAIT",
-    selectFont,
-    decreaseFontSize,
-    increaseFontSize,
+    handleFontSize,
     fontSize,
+    currentTheme,
+    selectTheme,
+    selectFont,
     selectedFont,
   } = useBibleContext();
   const { toggleTheme } = useCustomTheme();
   const styles = getStyles(theme);
+  const fontSizes = getMinMaxFontSize();
   const isGridLayout = use$(() => storedData$.isGridLayout.get());
+  const isSyncedWithCloud = use$(() => storedData$.isSyncedWithCloud.get());
+  const isAuthenticated = use$(() => authState$.isAuthenticated.get());
+  const { toggleCloudSync, syncWithCloud, loadFromCloud } = useStorage();
+  const [currentSetting, setCurrentBottomSetting] = useState<
+    "font" | "theme" | "fontSize"
+  >("font");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
+
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
   const appVersion = Constants.expoVersion ?? Constants.nativeAppVersion;
   const isAnimationDisabled = use$(() =>
     settingState$.isAnimationDisabled.get()
   );
 
+  const settingBottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  useEffect(() => {
+    const loadLastSyncTime = async () => {
+      try {
+        const time = await storedData$.lastSyncTime?.get();
+        if (time) {
+          setLastSyncTime(new Date(time).toLocaleString());
+        }
+      } catch (error) {
+        console.error("Error loading last sync time:", error);
+      }
+    };
+
+    loadLastSyncTime();
+  }, []);
+
+  const settingHandlePresentModalPress = useCallback(
+    (setting: "font" | "theme" | "fontSize") => {
+      setCurrentBottomSetting(setting);
+      settingBottomSheetModalRef.current?.present();
+    },
+    [isAnimationDisabled]
+  );
+
+  const onLogout = () => {
+    Alert.alert(
+      "Cerrar Sesión",
+      "¿Estás seguro de que deseas cerrar tu sesión?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Cerrar Sesión",
+          onPress: () => handleLogout(),
+        },
+      ]
+    );
+  };
+
+  const handleLogout = async () => {
+    try {
+      Animated.timing(fadeAnim, {
+        toValue: 0.5,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+
+      await authState$.logout();
+
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+
+      Alert.alert("Sesión Cerrada", "Has cerrado sesión correctamente.");
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+      Alert.alert("Error", "No se pudo cerrar la sesión.");
+
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
+  const handleLogin = () => {
+    router.push("/login");
+  };
+
+  const handleSyncNow = async () => {
+    if (!isAuthenticated) {
+      Alert.alert(
+        "Iniciar Sesión Requerido",
+        "Necesitas iniciar sesión para sincronizar con la nube.",
+        [
+          { text: "Cancelar", style: "cancel" },
+          { text: "Iniciar Sesión", onPress: handleLogin },
+        ]
+      );
+      return;
+    }
+
+    try {
+      setIsSyncing(true);
+
+      const success = await syncWithCloud();
+
+      if (success) {
+        const now = new Date().toISOString();
+        await storedData$.lastSyncTime.set(now);
+        setLastSyncTime(new Date(now).toLocaleString());
+
+        Alert.alert("Éxito", "Configuración sincronizada con la nube.");
+      } else {
+        Alert.alert("Error", "No se pudo sincronizar con la nube.");
+      }
+    } catch (error) {
+      console.error("Error al sincronizar:", error);
+      Alert.alert("Error", "No se pudo sincronizar con la nube.");
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   const checkForUpdate = async () => {
     try {
+      setIsUpdating(true);
+
       const update = await Updates.checkForUpdateAsync();
       if (update.isAvailable) {
         Alert.alert(
@@ -101,16 +243,21 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
     } catch (error) {
       console.error("Error al verificar actualizaciones:", error);
       Alert.alert("Error", "Ocurrió un error al verificar actualizaciones.");
+    } finally {
+      setIsUpdating(false);
     }
   };
 
   const applyUpdate = async () => {
     try {
+      setIsUpdating(true);
+
       await Updates.fetchUpdateAsync();
-      await Updates.reloadAsync(); // Reinicia la app para aplicar la actualización
+      await Updates.reloadAsync();
     } catch (error) {
       console.error("Error al actualizar:", error);
       Alert.alert("Error", "Ocurrió un error al actualizar la aplicación.");
+      setIsUpdating(false);
     }
   };
 
@@ -118,25 +265,10 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
     await Linking.openURL(appPackage);
   };
 
-  const warnBeforeDelete = () => {
-    Alert.alert(
-      "Borrar Historial",
-      "¿Estás seguro que quieres borrar el historial de busqueda?",
-      [
-        {
-          text: "Cancelar",
-          onPress: () => {},
-          style: "destructive",
-        },
-        { text: "Borrar", onPress: () => console.log?.() },
-      ]
-    );
-  };
-
   const sendEmail = async (email: string) => {
     const emailAddress = email;
-    const subject = "";
-    const body = "";
+    const subject = "Consulta sobre la Aplicación";
+    const body = `Versión de la aplicación: ${appVersion}\nDispositivo: ${Platform.OS} ${Platform.Version}`;
 
     const mailtoUrl = `mailto:${emailAddress}?subject=${encodeURIComponent(
       subject
@@ -145,360 +277,458 @@ const SettingsScren: React.FC<RootStackScreenProps<"settings">> = ({}) => {
     await Linking.openURL(mailtoUrl);
   };
 
-  const getColosTheme: any = useCallback(() => {
-    return Object.values(EThemes).map((color, index) => {
-      const name = Object.keys(EThemes)[index];
-
-      return {
-        label: colorNames[name],
-        iconName: color,
-        action: () => {
-          selectTheme(name);
-        },
-        extraText: "",
-      };
-    });
-  }, []);
-
-  const getFontType: any = useCallback(() => {
-    return Object.values(TFont).map((font, index) => {
-      const name = Object.keys(EThemes)[index];
-
-      return {
-        label: font,
-        iconName: theme.colors.text,
-        action: () => {
-          selectFont(font);
-        },
-        extraText: "font",
-      };
-    });
-  }, [theme]);
+  const rateApp = async () => {
+    await Linking.openURL(URLS.RATE_APP);
+  };
 
   const toggleHomeScreen = () => {
     storedData$.isGridLayout.set(!isGridLayout);
   };
 
-  const sections = useMemo(() => {
-    const options: TSection[] = [
-      {
-        title: "Configuración",
-        options: [
-          {
-            label: theme.dark ? "Modo Oscuro" : "Modo Claro",
-            iconName: `${theme.dark ? "Sun" : "Moon"}`,
-            action: () => {
-              toggleTheme();
-            },
-            extraText: "Cambiar entre el modo claro y el modo oscuro",
-          },
-          {
-            label: isAnimationDisabled
-              ? "Activar Animacion"
-              : "Disabilitar Animacion",
-            iconName: "Sparkles",
-            color: isAnimationDisabled
-              ? theme.colors.text
-              : theme.colors.notification,
-            action: () =>
-              settingState$.isAnimationDisabled.set(!isAnimationDisabled),
-            extraText: "Activar o desactivar las animaciones",
-          },
-          {
-            label: "Buscar Actualización",
-            iconName: "Download",
-            action: checkForUpdate,
-            extraText: "Verificar si hay actualizaciones de la app",
-          },
-        ],
-      },
-      {
-        title: "Tipografia",
-        id: "fontFamily",
-        withIcon: true,
-        options: [...getFontType()],
-      },
-      {
-        title: "Tamaño de Letra",
-        id: "font",
-        withIcon: true,
-        options: [
-          {
-            label: "",
-            iconName: `AArrowDown`,
-            action: () => {
-              decreaseFontSize();
-            },
-            extraText: "",
-          },
-          {
-            label: fontSize,
-            isValue: true,
-            iconName: `ChartNoAxesColumn`,
-            action: () => {},
-            extraText: "",
-          },
-          {
-            label: "",
-            iconName: `AArrowUp`,
-            action: () => {
-              increaseFontSize();
-            },
-            extraText: "",
-          },
-        ],
-      },
-      {
-        title: "Temas",
-        id: "tema",
-        options: [...getColosTheme()],
-      },
-      {
-        title: "Más Aplicaciones",
-        options: [
-          {
-            label: "Santa Biblia RV60: Audio",
-            iconName: "Crown",
-            action: () => openAppInStore(URLS.BIBLE),
-            extraText: "Descárgala y explora la Palabra de Dios.",
-          },
-          {
-            label: "Mira Más Apps",
-            iconName: "Play",
-            action: () => openAppInStore(URLS.MORE_APPS),
-            isFont5: true,
-            extraText: "Ver todas nuestras aplicaciones",
-          },
-        ],
-      },
-      {
-        title: "Versión",
-        options: [
-          {
-            label: `Versión ${appVersion}`,
-            iconName: "Info",
-            action: () => {}, // No action needed
-            extraText: `Fecha de Lanzamiento: Mar 13, 2024`,
-          },
-        ],
-      },
-      {
-        title: "About",
-        options: [
-          {
-            label: "Contactame",
-            iconName: "Mail",
-            action: () => sendEmail(URLS.ME),
-            extraText: "Envíanos un correo electrónico",
-          },
-          {
-            label: "Mira Más Apps",
-            iconName: "Play",
-            action: () => openAppInStore(URLS.MORE_APPS),
-            isFont5: true,
-            extraText: "Ver todas nuestras aplicaciones",
-          },
-        ],
-      },
-    ];
-
-    return options;
-  }, [theme, fontSize, isGridLayout, isAnimationDisabled]);
-
-  const renderItem = ({ item, index }: { item: TOption; index: number }) => {
-    return (
-      <TouchableOpacity
-        onPress={item.action}
-        key={item + "+" + index}
-        style={[
-          styles.listItem,
-          { backgroundColor: item.iconName, justifyContent: "center" },
-        ]}
-      >
-        <Text
-          style={[
-            styles.listItemLabel,
-            {
-              color: "white",
-              fontWeight: "bold",
-            },
-            item.extraText === "font" && {
-              color: theme.dark ? "#000" : "white",
-              fontFamily: item.label,
-              fontWeight: "600",
-            },
-          ]}
-        >
-          {item.label}
-        </Text>
-      </TouchableOpacity>
-    );
+  const toggleAnimation = () => {
+    settingState$.isAnimationDisabled.set(!isAnimationDisabled);
   };
 
-  const renderFontItem = (item: TOption, index: number) => {
-    const { label, iconName, isValue, action } = item;
+  const sections: TSection[] = [
+    {
+      title: "Cuenta",
+      id: "account",
+      options: [
+        {
+          label: isAuthenticated ? "Cerrar Sesión" : "Iniciar Sesión",
+          iconName: "User",
+          action: isAuthenticated ? onLogout : handleLogin,
+          color: theme.colors.notification,
+          extraText: isAuthenticated
+            ? "Cerrar sesión de tu cuenta"
+            : "Iniciar sesión para sincronizar tus datos",
+          withAnimation: true,
+        },
+        {
+          label: "Sincronizar ahora",
+          iconName: isSyncing ? "Loader" : "RefreshCw",
+          action: handleSyncNow,
+          extraText: lastSyncTime
+            ? `Última sincronización: ${lastSyncTime}`
+            : "Sincronizar manualmente con la nube",
+          color: isSyncedWithCloud
+            ? theme.colors.notification
+            : theme.colors.text,
+          isDisabled: !isAuthenticated || isSyncing,
+        },
+      ],
+    },
+    {
+      title: "Apariencia",
+      id: "appearance",
+      options: [
+        {
+          label: theme.dark ? "Modo Oscuro" : "Modo Claro",
+          iconName: `${theme.dark ? "Sun" : "Moon"}`,
+          action: toggleTheme,
+          extraText: "Cambiar entre el modo claro y el modo oscuro",
+          renderSwitch: true,
+          value: theme.dark,
+        },
+        {
+          label: "Temas",
+          iconName: "PaintBucket",
+          action: () => settingHandlePresentModalPress("theme"),
+          extraText: "Personaliza el color del tema",
+          color: theme.colors.notification,
+          badge: colorNames[currentTheme] || currentTheme,
+        },
+        {
+          label: "Tipografía",
+          iconName: "Type",
+          action: () => settingHandlePresentModalPress("font"),
+          extraText: "Cambiar el tipo de letra",
+          badge: selectedFont.split('-')[0],
+        },
+        {
+          label: "Tamaño de Letra",
+          iconName: "ALargeSmall",
+          action: () => settingHandlePresentModalPress("fontSize"),
+          extraText: "Ajustar el tamaño del texto",
+          badge: `${fontSize}px`,
+        },
+      ],
+    },
+    {
+      title: "Comportamiento",
+      id: "behavior",
+      options: [
+        {
+          label: isAnimationDisabled
+            ? "Activar Animaciones"
+            : "Desactivar Animaciones",
+          iconName: "Sparkles",
+          color: isAnimationDisabled
+            ? theme.colors.text
+            : theme.colors.notification,
+          action: toggleAnimation,
+          extraText: "Activar o desactivar las animaciones",
+          renderSwitch: true,
+          value: !isAnimationDisabled,
+        },
+        {
+          label: isGridLayout ? "Vista de Lista" : "Vista de Cuadrícula",
+          iconName: isGridLayout ? "List" : "LayoutGrid",
+          action: toggleHomeScreen,
+          extraText: "Cambiar el diseño de la pantalla principal",
+          renderSwitch: true,
+          value: isGridLayout,
+        },
+      ],
+    },
+    {
+      title: "Aplicación",
+      id: "app",
+      options: [
+        {
+          label: "Buscar Actualización",
+          iconName: isUpdating ? "Loader" : "Download",
+          action: checkForUpdate,
+          extraText: "Verificar si hay actualizaciones de la app",
+          isDisabled: isUpdating,
+        },
+        {
+          label: "Calificar App",
+          iconName: "Star",
+          action: rateApp,
+          extraText: "Valora nuestra aplicación en la tienda",
+          color: "gold",
+        },
+      ],
+    },
+    {
+      title: "Más Aplicaciones",
+      id: "more-apps",
+      options: [
+        {
+          label: "Santa Biblia RV60: Audio",
+          iconName: "BookOpen",
+          action: () => openAppInStore(URLS.BIBLE),
+          extraText: "Descárgala y explora la Palabra de Dios.",
+        },
+        {
+          label: "Mira Más Apps",
+          iconName: "ExternalLink",
+          action: () => openAppInStore(URLS.MORE_APPS),
+          extraText: "Ver todas nuestras aplicaciones",
+        },
+      ],
+    },
+    {
+      title: "Versión",
+      id: "version",
+      options: [
+        {
+          label: `Versión ${appVersion}`,
+          iconName: "Info",
+          action: () => { },
+          extraText: `Fecha de Lanzamiento: Mar 13, 2024`,
+        },
+      ],
+    },
+    {
+      title: "Acerca de",
+      id: "about",
+      options: [
+        {
+          label: "Contáctame",
+          iconName: "Mail",
+          action: () => sendEmail(URLS.ME),
+          extraText: "Envíanos un correo electrónico",
+        },
+      ],
+    },
+  ];
 
-    if (isValue) {
-      return (
-        <Text
-          key={index}
-          style={[styles.fontSize, { color: theme.colors.notification }]}
-        >
-          {label}
-        </Text>
+  const filteredSections = useMemo(() => {
+    if (!searchQuery) return sections;
+
+    return sections.map(section => {
+      const filteredOptions = section.options.filter(option =>
+        option.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (option.extraText && option.extraText.toLowerCase().includes(searchQuery.toLowerCase()))
       );
-    }
-    return (
-      <TouchableOpacity key={index} onPress={() => action()}>
-        <View style={styles.fontItem}>
-          <Icon
-            name={iconName}
-            size={30}
-            color={
-              selectedFont === label
-                ? theme.colors.notification
-                : theme.colors.background
-            }
-          />
 
-          {label && (
-            <Text
-              style={[
-                styles.fontLabel,
-                selectedFont === label && {
-                  color: theme.colors.notification,
-                },
-              ]}
-            >
-              {label}
-            </Text>
+      return {
+        ...section,
+        options: filteredOptions
+      };
+    }).filter(section => section.options.length > 0);
+  }, [sections, searchQuery]);
+
+  const handleFontChange = (fontFamily: string) => {
+    selectFont(fontFamily);
+  };
+
+  const handleColorChange = (colorOption: {
+    label: any;
+    color: EThemes;
+    value: string;
+  }) => {
+    selectTheme(colorOption.value);
+  };
+
+  const handleFontSizeChange = (size: number) => {
+    handleFontSize(size);
+  };
+
+  const syncRotateAnim = useRef(new Animated.Value(0)).current;
+  const rotate = syncRotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["-360deg", "0deg"],
+  });
+
+  const startRotation = () => {
+    Animated.loop(
+      Animated.timing(syncRotateAnim, {
+        toValue: 1,
+        duration: 2000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    ).start();
+  };
+
+  const stopRotation = () => {
+    syncRotateAnim.stopAnimation();
+    syncRotateAnim.setValue(0);
+  };
+
+  useEffect(() => {
+    if (isSyncing) {
+      startRotation()
+    } else {
+      stopRotation()
+    }
+  }, [isSyncing])
+
+  const SettingItem = useCallback(({ item }: { item: TOption }) => {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.7}
+        style={[
+          styles.listItem,
+          styles.historyItem,
+          item.isDisabled && styles.disabledOption
+        ]}
+        onPress={item.action}
+        disabled={item.isDisabled}
+      >
+        <View style={styles.optionLeftSection}>
+          <Text style={[styles.listHistoryLabel]}>
+            {item.label}
+            {"\n"}
+            <Text style={styles.itemDate}>{item.extraText}</Text>
+          </Text>
+
+          {item.badge && (
+            <View style={styles.badgeContainer}>
+              <Text style={styles.badgeText}>{item.badge}</Text>
+            </View>
+          )}
+        </View>
+
+        <View style={styles.optionRightSection}>
+          {item.renderSwitch ? (
+            <Switch
+              value={item.value}
+              onValueChange={() => item.action()}
+              trackColor={{
+                false: theme.dark ? '#555' : '#ddd',
+                true: theme.colors.notification
+              }}
+              thumbColor={item.value ? '#fff' : '#f4f3f4'}
+              ios_backgroundColor="#3e3e3e"
+            />
+          ) : (
+            item.isFont5 ? (
+              <FontAwesome5 name="google-play" size={26} color={"green"} />
+            ) : isSyncing && item.iconName === 'Loader' ? (
+              <Animated.View style={{ transform: [{ rotate }] }}>
+                <Icon
+                  size={26}
+                  name={item.iconName || "Loader"}
+                  color={item.color || theme.colors.text}
+                />
+              </Animated.View>
+            ) : (
+              <Icon
+                size={26}
+                name={item.iconName || "Sun"}
+                color={item.color || theme.colors.text}
+              />
+            )
           )}
         </View>
       </TouchableOpacity>
     );
-  };
+  }, [styles, theme]);
 
-  const SettingSection = ({ title, options, id }: TSection, index: any) => {
+  const SettingSection = useCallback(({ title, options, id }: TSection, index: number) => {
+    if (options.length === 0) return null;
+
     return (
-      <View style={styles.sectionContainer} key={index}>
+      <Animated.View
+        style={[styles.sectionContainer, { opacity: fadeAnim }]}
+        key={id || index}
+      >
         <Text style={styles.sectionTitle}>{title}</Text>
-
-        {id ? (
-          id === "font" ? (
-            <View style={[styles.listItem, styles.historyItem]}>
-              {options.map(renderFontItem)}
-            </View>
-          ) : (
-            <View style={[styles.popularWordsContainer]}>
-              <FlashList
-                data={options}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.label.toString()}
-                estimatedItemSize={50}
-                horizontal
-                contentContainerStyle={{
-                  padding: 5,
-                  paddingTop: 1,
-                  paddingLeft: 1,
-                  backgroundColor: theme.colors.background,
-                }}
-              />
-            </View>
-          )
-        ) : (
-          options.map((item, itemIndex) => (
-            <TouchableOpacity
-              activeOpacity={0.9}
-              key={itemIndex}
-              style={[styles.listItem, styles.historyItem]}
-              onPress={item.action}
-            >
-              <Text style={[styles.listHistoryLabel]}>
-                {item?.label}
-                {"\n"}
-                <Text style={styles.itemDate}>{item.extraText}</Text>
-              </Text>
-              <TouchableOpacity>
-                {item.isFont5 ? (
-                  <FontAwesome5 name="google-play" size={26} color={"green"} />
-                ) : (
-                  <Icon
-                    size={26}
-                    name={item.iconName || "Sun"}
-                    color={item.color || theme.colors.text}
-                  />
-                )}
-              </TouchableOpacity>
-            </TouchableOpacity>
-          ))
-        )}
-      </View>
+        {options.map((item, itemIndex) => (
+          <SettingItem key={`${id}-${itemIndex}`} item={item} />
+        ))}
+      </Animated.View>
     );
+  }, [SettingItem, styles, fadeAnim]);
+
+  const Font = useMemo(() => {
+    return () => (
+      <FontSelector
+        onSelectFont={handleFontChange}
+        initialFont={selectedFont}
+      />
+    );
+  }, [handleFontChange, selectedFont]);
+
+  const ThemeColor = useMemo(() => {
+    return () => (
+      <ColorSelector
+        onSelectColor={handleColorChange}
+        initialColor={currentTheme}
+      />
+    );
+  }, [handleColorChange, currentTheme]);
+
+  const FontSize = useMemo(() => {
+    return () => (
+      <FontSizeAdjuster
+        onSizeChange={handleFontSizeChange}
+        initialSize={fontSize}
+        fontFamily={selectedFont}
+        minSize={fontSizes.minPx}
+        maxSize={fontSizes.maxPx}
+        step={1}
+      />
+    );
+  }, [handleFontSizeChange, fontSize, selectedFont, fontSizes]);
+
+  const BottomChild = {
+    font: <Font />,
+    theme: <ThemeColor />,
+    fontSize: <FontSize />,
   };
 
   return (
     <ScreenWithAnimation duration={800} icon="Settings" title="Ajustes">
-      <View key={orientation + theme.dark} style={styles.container}>
-        <ScrollView
+      <ScrollView key={orientation + theme.dark} style={styles.container}>
+        <Stack.Screen
+          options={{
+            ...singleScreenHeader({
+              theme,
+              title: "Ajustes",
+              titleIcon: "Settings",
+              headerRightProps: {
+                headerRightIcon: 'RefreshCw',
+                headerRightIconColor: isSyncing
+                  ? theme.colors.notification
+                  : "transparent",
+                onPress: () => { },
+                disabled: true,
+                style: { opacity: 0 },
+              },
+            }),
+          }}
+        />
+
+        <View style={styles.searchContainer}>
+          <Icon name="Search" size={20} color={theme.colors.text} style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Buscar ajustes..."
+            placeholderTextColor={theme.dark ? "#999" : "#777"}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            clearButtonMode="while-editing"
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery("")} style={styles.clearButton}>
+              <Icon name="X" size={16} color={theme.colors.text} />
+            </TouchableOpacity>
+          )}
+        </View>
+
+        <KeyboardAvoidingView
           style={{
             backgroundColor: theme.colors.background,
           }}
+          contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}
         >
-          <Stack.Screen
-            options={{
-              ...singleScreenHeader({
-                theme,
-                title: "Ajustes",
-                titleIcon: "Settings",
-                headerRightProps: {
-                  headerRightIcon: isGridLayout
-                    ? "LayoutGrid"
-                    : "LayoutPanelTop",
-                  headerRightIconColor: isGridLayout
-                    ? "#fff"
-                    : theme.colors.notification,
-                  onPress: toggleHomeScreen,
-                  disabled: false,
-                  style: { opacity: 1 },
-                },
-              }),
-            }}
-          />
+          {filteredSections.length > 0 ? (
+            filteredSections.map(SettingSection)
+          ) : (
+            <View style={styles.noResultsContainer}>
+              <Icon name="Search" size={50} color={theme.colors.text} style={{ opacity: 0.5 }} />
+              <Text style={styles.noResultsText}>No se encontraron resultados</Text>
+              <Text style={styles.noResultsSubText}>Intenta con otra búsqueda</Text>
+            </View>
+          )}
+        </KeyboardAvoidingView>
 
-          {sections.map(SettingSection)}
-        </ScrollView>
-      </View>
+        <BottomModal
+          justOneSnap
+          showIndicator
+          justOneValue={["70%"]}
+          startAT={0}
+          ref={settingBottomSheetModalRef}
+          shouldScroll
+        >
+          {BottomChild[currentSetting]}
+        </BottomModal>
+      </ScrollView>
     </ScreenWithAnimation>
   );
 };
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
-    popularWordsContainer: {
-      height: 60,
-    },
-    card: {
-      backgroundColor: "white",
-      borderWidth: 1,
-      borderColor: colors.notification,
-      borderRadius: 8,
-      padding: 16,
-      marginVertical: 8,
-    },
-    listItemLabel: {
-      fontSize: 16,
-    },
     container: {
       flex: 1,
-      alignItems: "center",
-      justifyContent: "flex-start",
-      backgroundColor: colors.background,
+      backgroundColor: dark ? colors.background : colors.text + 20,
+    },
+    searchContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderColor: colors.text + 70,
+      backgroundColor: colors.text + 20,
+      borderRadius: 10,
+      marginHorizontal: 15,
+      marginVertical: 10,
+      paddingHorizontal: 10,
+      paddingVertical: Platform.OS === 'ios' ? 8 : 2,
+      borderWidth: 1,
+    },
+    searchIcon: {
+      marginRight: 8,
+      opacity: 0.7,
+    },
+    searchInput: {
+      flex: 1,
+      color: colors.text,
+      fontSize: 16,
+      padding: 8,
+    },
+    clearButton: {
+      padding: 8,
     },
     sectionContainer: {
       padding: 15,
       alignItems: "center",
       justifyContent: "flex-start",
-      backgroundColor: colors.background,
+      backgroundColor: dark ? colors.background : colors.text + 20,
     },
     sectionTitle: {
       color: colors.notification,
@@ -506,23 +736,21 @@ const getStyles = ({ colors, dark }: TTheme) =>
       paddingLeft: 15,
       marginBottom: 10,
       fontWeight: "bold",
+      fontSize: 16,
+      letterSpacing: 0.5,
     },
     listItem: {
       flex: 1,
       minWidth: 100,
       flexDirection: "row",
       paddingHorizontal: 20,
-      borderColor: colors.text,
+      borderColor: colors.text + 70,
       borderWidth: 1,
       alignItems: "center",
       justifyContent: "space-between",
       gap: 10,
       marginHorizontal: 5,
-      borderRadius: 5,
-    },
-    historyContainer: {
-      flex: 1,
-      width: "100%",
+      borderRadius: 10,
     },
     historyItem: {
       width: "100%",
@@ -530,50 +758,65 @@ const getStyles = ({ colors, dark }: TTheme) =>
       justifyContent: "space-between",
       padding: 15,
       marginBottom: 10,
-      backgroundColor: colors.background,
-      maxHeight: 76,
+      backgroundColor: colors.text + 20,
+      maxHeight: 90,
     },
     listHistoryLabel: {
       fontSize: 16,
-      fontWeight: "bold",
+      fontWeight: "600",
       color: colors.text,
     },
     itemDate: {
       fontSize: 12,
+      color: dark ? '#ffffff' : "#000000",
+      marginTop: 4,
+    },
+    optionLeftSection: {
+      flex: 1,
+      flexDirection: 'column',
+      backgroundColor: 'transparent',
+    },
+    optionRightSection: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      minWidth: 50,
+      backgroundColor: 'transparent',
+    },
+    disabledOption: {
+      opacity: 0.5,
+    },
+    badgeContainer: {
+      backgroundColor: colors.notification,
+      borderRadius: 12,
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+      marginTop: 5,
+      alignSelf: 'flex-start',
+    },
+    badgeText: {
+      fontSize: 10,
+      color: '#fff',
+      fontWeight: 'bold',
+    },
+    noResultsContainer: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingTop: 100,
+      backgroundColor: dark ? colors.background : colors.text + 20,
+    },
+    noResultsText: {
+      fontSize: 18,
+      fontWeight: 'bold',
       color: colors.text,
+      marginTop: 20,
     },
-    fontSizeContainer: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-around",
-      gap: 10,
-      width: "90%",
-    },
-    fontItem: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: colors.text,
-      borderRadius: 5,
-      padding: 10,
-      gap: 5,
-    },
-    fontIcon: {
-      padding: 20,
-      borderRadius: 50,
-      backgroundColor: "white",
-      color: "#000",
-      paddingHorizontal: 22,
-    },
-    fontLabel: {
-      color: dark ? "#fff" : "#000",
-      fontWeight: "bold",
-    },
-    fontSize: {
-      fontWeight: "bold",
-      color: "#000",
-      fontSize: 30,
+    noResultsSubText: {
+      fontSize: 14,
+      color: dark ? '#999' : '#777',
+      marginTop: 10,
     },
   });
 
-export default SettingsScren;
+export default SettingsScreen;

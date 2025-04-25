@@ -29,7 +29,7 @@ export function useSecretUnlock(): UseSecretUnlockReturn {
     setTapSequence(newSequence);
     if (newSequence.join(",") === SECRET_PATTERN.join(",")) {
       showToast("Admin Mode Unlocked!");
-      storedData$.isAdmin.set(true);
+      storedData$.isAdmin.set(!storedData$.isAdmin.get());
     }
   }
 

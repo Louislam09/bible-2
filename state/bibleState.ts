@@ -36,6 +36,9 @@ export const bibleState$ = observable({
   selectedVerseForNote: observable<string | null>(null),
   lastSelectedVerse: null as IBookVerse | null,
   currentNoteId: null as number | null,
+  reloadNotes: false,
+  reloadFavorites: false,
+  isSyncingNotes: false,
   floatingNoteButtonPosition: { x: 0, y: 75 },
   strongWord: { text: "", code: "" } as IStrongWord,
   noteListBottomSheetRef: createRef<BottomSheetModal>(),
@@ -56,7 +59,7 @@ export const bibleState$ = observable({
   bibleData: { topVerses: [], bottomVerses: [] } as BibleData,
   readingTimeData: { top: 0, bottom: 0 },
   changeBibleQuery: (query: Partial<IBibleQuery>) => {
-    console.log("🟡 ChangeBibleQuery 🟡");
+    // console.log("🟡 ChangeBibleQuery 🟡");
     const loadingKey = query.isBibleBottom ? "bottom" : "top";
     const newQuery = { ...bibleState$.bibleQuery.get(), ...query };
     batch(() => {
@@ -137,4 +140,10 @@ export const bibleState$ = observable({
   handleCurrentHistoryIndex: (index: number) => {
     bibleState$.currentHistoryIndex.set(index);
   },
+  toggleReloadNotes: () => {
+    bibleState$.reloadNotes.set(() => !bibleState$.reloadNotes.get());
+  },
+  toggleReloadFavorites: () => {
+    bibleState$.reloadFavorites.set(() => !bibleState$.reloadFavorites.get());
+  }
 });

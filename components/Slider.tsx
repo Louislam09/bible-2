@@ -16,6 +16,7 @@ interface CustomSliderProps {
   activeColor?: string;
   inactiveColor?: string;
   textColor?: string;
+  labels?: string[];
 }
 
 const useSlider = (
@@ -80,6 +81,7 @@ const CustomSlider: React.FC<CustomSliderProps> = ({
   inactiveColor = "#bdc3c7",
   textColor = "#2c3e50",
   height = 10,
+  labels = "x",
 }) => {
   const [sliderWidth, setSliderWidth] = useState(0);
 
@@ -99,6 +101,8 @@ const CustomSlider: React.FC<CustomSliderProps> = ({
     inputRange: [0, 1],
     outputRange: ["0%", "100%"],
   });
+
+  const isLabels = Array.isArray(labels);
 
   return (
     <View style={[styles.container]} onLayout={handleLayout}>
@@ -129,7 +133,7 @@ const CustomSlider: React.FC<CustomSliderProps> = ({
               },
             ]}
           >
-            {option}x
+            {`${isLabels ? "" : option} ${isLabels ? labels[index] : labels}`}
           </Text>
         ))}
       </View>

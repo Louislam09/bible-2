@@ -1,34 +1,30 @@
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import Note from "@/components/note";
-import { Text } from "@/components/Themed";
-import { GET_ALL_NOTE } from "@/constants/Queries";
-import { useDBContext } from "@/context/databaseContext";
-import useParams from "@/hooks/useParams";
+import { useNoteService } from "@/services/noteService";
+import { bibleState$ } from "@/state/bibleState";
 import { TNote } from "@/types";
+import { use$ } from "@legendapp/state/react";
 import React, { useEffect, useState } from "react";
 
 type NotesProps = {};
-type NoteParam = { shouldRefresh: boolean };
 
-const Notes: React.FC<NotesProps> = ({}) => {
-  const routeParams = useParams<NoteParam>();
-  const { shouldRefresh } = routeParams;
-  const { myBibleDB, executeSql } = useDBContext();
+const Notes: React.FC<NotesProps> = ({ }) => {
+  const { getAllNotes, generateAndAssignUUID } = useNoteService();
   const [data, setData] = useState<TNote | any>(null);
-  const [canFetchNote, setCanFetchNote] = useState(false);
+  const reloadNotes = use$(() => bibleState$.reloadNotes.get())
 
   useEffect(() => {
-    if (!myBibleDB || !executeSql) return;
     const getNotes = async () => {
-      const notes = await executeSql<TNote>(GET_ALL_NOTE);
+      await generateAndAssignUUID();
+      const notes = await getAllNotes();
       setData(notes ?? []);
     };
     getNotes();
-  }, [canFetchNote, myBibleDB, executeSql, shouldRefresh]);
+  }, [reloadNotes]);
 
   return (
     <ScreenWithAnimation duration={800} icon="NotebookPen" title="Mis Notas">
-      <Note data={data} setShouldFetch={setCanFetchNote} />
+      <Note data={data} />
     </ScreenWithAnimation>
   );
 };

@@ -12,22 +12,20 @@ import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
 import { useDBContext } from "@/context/databaseContext";
-import useHistoryManager from "@/hooks/useHistoryManager";
 import useParams from "@/hooks/useParams";
 import { bibleState$ } from "@/state/bibleState";
 import { tourState$ } from "@/state/tourState";
 import { EBibleVersions, HomeParams, Screens, TIcon, TTheme } from "@/types";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { batch } from "@legendapp/state";
 import { use$ } from "@legendapp/state/react";
 import { useNavigation, useRouter } from "expo-router";
 import ProgressBar from "../footer/ProgressBar";
-import Settings from "./Settings";
 import VersionList from "./VersionList";
-import { batch } from "@legendapp/state";
 
-interface HeaderInterface {}
+interface HeaderInterface { }
 
-const BibleHeader: FC<HeaderInterface> = ({}) => {
+const BibleHeader: FC<HeaderInterface> = ({ }) => {
   const { width } = useWindowDimensions();
   const {
     currentBibleVersion,
@@ -39,7 +37,7 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
 
   const isSplitActived = use$(() => bibleState$.isSplitActived.get());
   const verses = use$(() => bibleState$.bibleData.topVerses.get());
-  // const currentHistoryIndex = use$(() => bibleState$.currentHistoryIndex.get());
+  const currentHistoryIndexState = use$(() => bibleState$.currentHistoryIndex.get());
 
   const {
     goBack,
@@ -79,38 +77,6 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
     // @ts-ignore
     navigation.navigate(Screens.Search, { Book: book });
   };
-
-  // const moveBackInHistory = () => {
-  //   const index = goBack();
-  //   if (index === -1) return;
-  //   const currentHistory = getCurrentItem() as any;
-  //   if (!currentHistory) return;
-  //   bibleState$.handleCurrentHistoryIndex(index);
-  //   delete currentHistory.created_at;
-  //   delete currentHistory.id;
-
-  //   bibleState$.changeBibleQuery({
-  //     ...currentHistory,
-  //     isHistory: true,
-  //     shouldFetch: true,
-  //   });
-  // };
-
-  // const moveForwardInHistory = () => {
-  //   const index = goForward();
-  //   if (index === -1) return;
-  //   const currentHistory = getCurrentItem() as any;
-  //   if (!currentHistory) return;
-  //   bibleState$.handleCurrentHistoryIndex(index);
-  //   delete currentHistory.created_at;
-  //   delete currentHistory.id;
-
-  //   bibleState$.changeBibleQuery({
-  //     ...currentHistory,
-  //     isHistory: true,
-  //     shouldFetch: true,
-  //   });
-  // };
 
   const moveBackInHistory = () => {
     const index = goBack();
@@ -171,8 +137,8 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
     versionRef.current?.dismiss();
   };
   const progressValue = useMemo(() => {
-    return (currentVerse || 0) / (verses?.length || 10);
-  }, [currentVerse, verses]);
+    return (currentHistoryIndexState || 0) / (verses?.length || 10);
+  }, [currentHistoryIndexState, verses]);
 
   return (
     <View style={styles.header}>
@@ -204,9 +170,6 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
               />
             </TouchableOpacity>
           ))}
-          <BottomModal startAT={2} ref={fontBottomSheetModalRef}>
-            <Settings theme={theme} />
-          </BottomModal>
         </View>
         <TouchableOpacity
           ref={tourState$.bibleVersion.get()}

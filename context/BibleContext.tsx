@@ -1,15 +1,18 @@
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import {
-  DELETE_FAVORITE_VERSE,
   DELETE_NOTE,
   DELETE_NOTE_ALL,
-  INSERT_FAVORITE_VERSE,
   INSERT_INTO_NOTE,
   UPDATE_NOTE_BY_ID,
 } from "@/constants/Queries";
 import useHistoryManager, { HistoryManager } from "@/hooks/useHistoryManager";
 import useSearch, { UseSearchHookState } from "@/hooks/useSearch";
+import { useFavoriteVerseService } from "@/services/favoriteVerseService";
+import { authState$ } from "@/state/authState";
+import { bibleState$ } from "@/state/bibleState";
+import { settingState$ } from "@/state/settingState";
 import getCurrentDbName from "@/utils/getCurrentDB";
+import { use$ } from "@legendapp/state/react";
 import React, {
   createContext,
   useContext,
@@ -27,8 +30,7 @@ import {
   TFont,
 } from "../types";
 import { useDBContext } from "./databaseContext";
-import { storedData$, useStorage } from "./LocalstoreContext";
-import { use$ } from "@legendapp/state/react";
+import { storedData$ } from "./LocalstoreContext";
 
 type BibleState = {
   setSearchQuery: Function;
@@ -45,7 +47,7 @@ type BibleState = {
     closeCallback: any
   ) => void;
   selectBibleVersion: (version: string) => Promise<void>;
-  decreaseFontSize: Function;
+  handleFontSize: (value: number) => void;
   setShouldLoop: (shouldLoop: boolean) => void;
   // setverseInStrongDisplay: (verse: number) => void;
   toggleFavoriteVerse: ({
@@ -74,13 +76,13 @@ type BibleState = {
   orientation: "LANDSCAPE" | "PORTRAIT";
   currentBibleLongName: string;
   historyManager: HistoryManager;
+  syncLocalSettings: () => void;
 };
 
 type BibleAction =
   | { type: "SELECT_FONT"; payload: string }
   | { type: "SELECT_THEME"; payload: keyof typeof EThemes }
-  | { type: "INCREASE_FONT_SIZE" }
-  | { type: "DECREASE_FONT_SIZE" }
+  | { type: "INCREASE_DECREASE_FONT_SIZE"; payload: number }
   | { type: "SELECT_BIBLE_VERSION"; payload: string }
   | { type: "SET_SEARCH_QUERY"; payload: string }
   | { type: "GO_BACK"; payload: number }
@@ -103,26 +105,27 @@ const initialContext: BibleState = {
   selectBibleVersion: (version: string) => {
     return new Promise((resolve) => resolve());
   },
-  onSaveNote: () => {},
-  onUpdateNote: () => {},
-  onDeleteNote: () => {},
-  onDeleteAllNotes: () => {},
-  selectFont: () => {},
-  selectTheme: () => {},
-  decreaseFontSize: () => {},
+  onSaveNote: () => { },
+  onUpdateNote: () => { },
+  onDeleteNote: () => { },
+  onDeleteAllNotes: () => { },
+  selectFont: () => { },
+  selectTheme: () => { },
+  handleFontSize: () => { },
   toggleFavoriteVerse: async ({
     bookNumber,
     chapter,
     verse,
     isFav,
-  }: IFavoriteVerse) => {},
-  setShouldLoop: (shouldLoop: boolean) => {},
+  }: IFavoriteVerse) => { },
+  setShouldLoop: (shouldLoop: boolean) => { },
   // setverseInStrongDisplay: (verse: number) => {},
-  increaseFontSize: () => {},
-  toggleViewLayoutGrid: () => {},
-  setLocalData: () => {},
-  performSearch: () => {},
-  setSearchQuery: () => {},
+  increaseFontSize: () => { },
+  toggleViewLayoutGrid: () => { },
+  setLocalData: () => { },
+  performSearch: () => { },
+  setSearchQuery: () => { },
+  syncLocalSettings: () => { },
   selectedFont: TFont.Roboto,
   currentBibleVersion: EBibleVersions.BIBLE,
   fontSize: 24,
@@ -157,15 +160,10 @@ const bibleReducer = (state: BibleState, action: BibleAction): BibleState => {
         ...state,
         currentBibleVersion: action.payload,
       };
-    case "INCREASE_FONT_SIZE":
+    case "INCREASE_DECREASE_FONT_SIZE":
       return {
         ...state,
-        fontSize: state.fontSize + 1,
-      };
-    case "DECREASE_FONT_SIZE":
-      return {
-        ...state,
-        fontSize: state.fontSize - 1,
+        fontSize: action.payload,
       };
     case "TOGGLE_VIEW_LAYOUT_GRID":
       return {
@@ -211,11 +209,14 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     currentTheme: storedData$.currentTheme.get(),
     selectedFont: storedData$.selectedFont.get(),
   }));
-
-  const historyManager = useHistoryManager();
   const { fontSize, currentTheme, selectedFont } = storedData;
   const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
   const isDataLoaded = use$(() => storedData$.isDataLoaded.get());
+  const requiresSettingsReloadAfterSync = use$(() =>
+    settingState$.requiresSettingsReloadAfterSync.get()
+  );
+
+  const historyManager = useHistoryManager();
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
   const fontsLoaded = useCustomFonts();
   const {
@@ -230,6 +231,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     getCurrentDbName(currentBibleVersion, installedBibles)
   );
   const [orientation, setOrientation] = useState("PORTRAIT");
+  const { addFavoriteVerse, removeFavoriteVerse } = useFavoriteVerseService();
 
   const getOrientation = () => {
     const { height, width } = Dimensions.get("window");
@@ -240,22 +242,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  useEffect(() => {
-    setCurrentBibleLongName(
-      getCurrentDbName(currentBibleVersion, installedBibles)
-    );
-  }, [currentBibleVersion, installedBibles]);
-
-  useEffect(() => {
-    getOrientation();
-    const subscription = Dimensions.addEventListener("change", getOrientation);
-    return () => {
-      subscription?.remove();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!isDataLoaded) return;
+  const syncLocalSettings = async () => {
     dispatch({
       type: "SET_LOCAL_DATA",
       payload: {
@@ -265,7 +252,50 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
         selectedFont,
       },
     });
+  };
+
+  useEffect(() => {
+    setCurrentBibleLongName(
+      getCurrentDbName(currentBibleVersion, installedBibles)
+    );
+  }, [currentBibleVersion, installedBibles]);
+
+  useEffect(() => {
+    if (!isDataLoaded) return;
+    const initLocalSettings = async () => {
+      await authState$.checkSession();
+      syncLocalSettings();
+    };
+
+    initLocalSettings();
   }, [isDataLoaded]);
+
+  useEffect(() => {
+    if (requiresSettingsReloadAfterSync) {
+      console.log("⚠ Reloading settings after cloud sync");
+
+      dispatch({
+        type: "SET_LOCAL_DATA",
+        payload: {
+          currentBibleVersion: storedData$.currentBibleVersion.get(),
+          fontSize: storedData$.fontSize.get(),
+          currentTheme: storedData$.currentTheme.get(),
+          selectedFont: storedData$.selectedFont.get(),
+          viewLayoutGrid: storedData$.isGridLayout.get(),
+        },
+      });
+
+      settingState$.requiresSettingsReloadAfterSync.set(false);
+    }
+  }, [requiresSettingsReloadAfterSync]);
+
+  useEffect(() => {
+    getOrientation();
+    const subscription = Dimensions.addEventListener("change", getOrientation);
+    return () => {
+      subscription?.remove();
+    };
+  }, []);
 
   if (
     !fontsLoaded ||
@@ -279,7 +309,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
       </ScreenWithAnimation>
     );
   }
-  // if (!isMyBibleDbLoaded) return null;
+
   const goBackOnHistory = (index: number) => {
     dispatch({ type: "GO_BACK", payload: index });
   };
@@ -287,13 +317,9 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     dispatch({ type: "GO_FORWARD", payload: index });
   };
 
-  const decreaseFontSize = () => {
-    dispatch({ type: "DECREASE_FONT_SIZE" });
-    storedData$.fontSize.set(state.fontSize - 1);
-  };
-  const increaseFontSize = () => {
-    dispatch({ type: "INCREASE_FONT_SIZE" });
-    storedData$.fontSize.set(state.fontSize + 1);
+  const handleFontSize = (value: number) => {
+    dispatch({ type: "INCREASE_DECREASE_FONT_SIZE", payload: value });
+    storedData$.fontSize.set(value);
   };
 
   const toggleViewLayoutGrid = () => {
@@ -306,15 +332,19 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     verse,
     isFav,
   }: IFavoriteVerse) => {
-    if (!myBibleDB || !executeSql) return;
-    const params = isFav
-      ? [bookNumber, chapter, verse]
-      : [bookNumber, chapter, verse, bookNumber, chapter, verse];
-    await executeSql(
-      isFav ? DELETE_FAVORITE_VERSE : INSERT_FAVORITE_VERSE,
-      params
-    );
+    try {
+      if (isFav) {
+        await removeFavoriteVerse(bookNumber, chapter, verse);
+      } else {
+        await addFavoriteVerse(bookNumber, chapter, verse);
+      }
+    } catch (error) {
+      console.error("Error toggling favorite verse:", error);
+    } finally {
+      bibleState$.toggleReloadFavorites();
+    }
   };
+
 
   const onSaveNote = async (
     data: { title: string; content: string },
@@ -376,14 +406,14 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     orientation,
     searchState,
     currentBibleLongName,
+    historyManager,
     selectFont,
     onSaveNote,
     onDeleteNote,
     onDeleteAllNotes,
     onUpdateNote,
     selectBibleVersion,
-    decreaseFontSize,
-    increaseFontSize,
+    handleFontSize,
     performSearch: performSearch as typeof performSearch,
     setSearchQuery,
     selectTheme,
@@ -392,7 +422,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     setShouldLoop,
     goBackOnHistory,
     goForwardOnHistory,
-    historyManager,
+    syncLocalSettings,
   };
 
   return (

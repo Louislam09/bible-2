@@ -1,187 +1,307 @@
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
+import { Stack, useRouter } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  BackHandler,
+  Platform,
+  RefreshControl,
+  View as RNView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import DatabaseDownloadItem from "@/components/DatabaseDownloadItem";
 import TabNavigation from "@/components/DownloadManagerTab";
 import FileList from "@/components/FileList";
 import NoInternetSplash from "@/components/NoInternetSplash";
 import { Text, View } from "@/components/Themed";
 import bibleDatabases from "@/constants/bibleDatabases";
-import { Stack, useRouter } from "expo-router";
 import useDebounce from "@/hooks/useDebounce";
 import useInternetConnection from "@/hooks/useInternetConnection";
-// import useNetworkStatus from "@/hooks/useNetworkInfo";
-import React, { useEffect, useState } from "react";
-import { BackHandler, StyleSheet, TextInput } from "react-native";
 import { DownloadBibleItem, TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
 
 type DownloadManagerProps = {};
 
-const DownloadManager: React.FC<DownloadManagerProps> = ({}) => {
+const DownloadManager: React.FC<DownloadManagerProps> = () => {
   const router = useRouter();
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
   const styles = getStyles(theme);
   const databasesToDownload: DownloadBibleItem[] = bibleDatabases;
   const [isMyDownloadTab, setIsMyDownloadTab] = useState(false);
-  const [searchText, setSearchText] = useState<any>(null);
+  const [searchText, setSearchText] = useState<string>("");
+  const [refreshing, setRefreshing] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const debouncedSearchText = useDebounce(searchText, 500);
-  const isConnected = useInternetConnection();
+  const { isConnected } = useInternetConnection();
 
-  const DownloadManagerHeader = () => {
+  useEffect(() => {
+    const backAction = () => {
+      if (isSearchFocused) {
+        setIsSearchFocused(false);
+        setSearchText("");
+        return true;
+      }
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, [isSearchFocused]);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
+  const clearSearch = () => {
+    setSearchText("");
+  };
+
+  const AnimatedSearchBar = () => {
     return (
-      <View style={[styles.noteHeader]}>
-        <Text style={[styles.noteListTitle]}>Gestor de Modulos</Text>
-        {!isMyDownloadTab && (
-          <View style={styles.searchContainer}>
+      <View style={styles.searchContainer}>
+        <Ionicons
+          style={styles.searchIcon}
+          name='search'
+          size={20}
+          color={isSearchFocused ? theme.colors.text : theme.colors.notification}
+        />
+        <TextInput
+          placeholder='Buscar un módulo...'
+          placeholderTextColor={theme.colors.text}
+          style={[styles.noteHeaderSearchInput]}
+          onChangeText={text => setSearchText(text)}
+          value={searchText}
+          onFocus={() => setIsSearchFocused(true)}
+          onBlur={() => setIsSearchFocused(false)}
+          returnKeyType="search"
+        />
+        {searchText.length > 0 && (
+          <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
             <Ionicons
-              style={styles.searchIcon}
-              name='search'
-              size={24}
-              color={theme.colors.notification}
+              name='close-circle'
+              size={20}
+              color={theme.colors.text + '80'}
             />
-            <TextInput
-              placeholder='Buscar un modulo...'
-              style={[styles.noteHeaderSearchInput]}
-              onChangeText={(text) => setSearchText(text)}
-              value={searchText}
-            />
-          </View>
+          </TouchableOpacity>
         )}
       </View>
     );
   };
 
-  // if (!isConnected) {
-  //   return <NoInternetSplash theme={theme} />;
-  // }
+  const filteredDatabases = debouncedSearchText
+    ? databasesToDownload.filter(
+      (version) =>
+        removeAccent(version.name).toLowerCase().includes(
+          removeAccent(debouncedSearchText).toLowerCase()
+        ) ||
+        removeAccent(version.storedName).toLowerCase().includes(
+          removeAccent(debouncedSearchText).toLowerCase()
+        )
+    )
+    : databasesToDownload;
+
+  const NoModulesFound = () => (
+    <View style={styles.emptyStateContainer}>
+      <MaterialCommunityIcons
+        name="database-search-outline"
+        size={80}
+        color={theme.colors.notification + '60'}
+      />
+      <Text style={styles.emptyStateText}>
+        No se encontraron módulos para "{debouncedSearchText}"
+      </Text>
+      <TouchableOpacity
+        style={styles.emptyStateButton}
+        onPress={clearSearch}
+      >
+        <Text style={styles.emptyStateButtonText}>Limpiar búsqueda</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  if (!isConnected && !isMyDownloadTab) {
+    return <NoInternetSplash theme={theme} />;
+  }
 
   return (
-    <View style={{ paddingHorizontal: 20, flex: 1 }}>
+    <View style={[styles.container, { paddingTop: insets.top + 30 }]}>
       <Stack.Screen
         options={{
-          headerShown: true,
-          headerTitle: '',
+          headerShown: false,
         }}
       />
-      {DownloadManagerHeader()}
-      <TabNavigation {...{ isMyDownloadTab, setIsMyDownloadTab, theme }} />
-      {!isMyDownloadTab ? (
+
+      <View style={styles.headerContainer}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.noteListTitle}>Gestor de Módulos</Text>
+          {!isMyDownloadTab && AnimatedSearchBar()}
+          {/* {!isMyDownloadTab && <AnimatedSearchBar />} */}
+        </View>
+
+        <TabNavigation {...{ isMyDownloadTab, setIsMyDownloadTab, theme }} />
+      </View>
+
+      {isMyDownloadTab ? (
+        <FileList />
+      ) : (
         <FlashList
           ListHeaderComponent={
-            <Text style={{ fontSize: 28, marginBottom: 10 }}>Modulos</Text>
+            <RNView style={styles.listHeaderContainer}>
+              <Text style={styles.sectionTitle}>
+                {filteredDatabases.length} {filteredDatabases.length === 1 ? 'Módulo' : 'Módulos'} disponibles
+              </Text>
+              {!isConnected && (
+                <View style={styles.offlineIndicator}>
+                  <Ionicons name="cloud-offline-outline" size={16} color="#e74856" />
+                  <Text style={styles.offlineText}>Offline</Text>
+                </View>
+              )}
+            </RNView>
           }
-          contentContainerStyle={{ paddingVertical: 10 }}
+          contentContainerStyle={styles.listContent}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
-          estimatedItemSize={10}
+          estimatedItemSize={80}
           renderItem={(props) => (
             <DatabaseDownloadItem {...{ theme, isConnected, ...props }} />
           )}
-          data={
-            debouncedSearchText
-              ? databasesToDownload.filter(
-                  (version) =>
-                    removeAccent(version.name).indexOf(
-                      debouncedSearchText.toLowerCase()
-                    ) !== -1 ||
-                    removeAccent(version.storedName).indexOf(
-                      debouncedSearchText.toLowerCase()
-                    ) !== -1
-                )
-              : databasesToDownload
-          }
-          keyExtractor={(item: DownloadBibleItem, index: any) =>
-            `download-${item.storedName}`
+          data={filteredDatabases}
+          keyExtractor={(item: DownloadBibleItem) => `download-${item.storedName}`}
+          ListEmptyComponent={debouncedSearchText ? <NoModulesFound /> : null}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={[theme.colors.primary]}
+              tintColor={theme.colors.primary}
+            />
           }
         />
-      ) : (
-        <FileList />
       )}
     </View>
   );
 };
 
-const getStyles = ({ colors }: TTheme) =>
+const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
-    itemContainer: {
-      display: "flex",
-      paddingVertical: 10,
+    container: {
+      flex: 1,
+      paddingHorizontal: 16,
     },
-    itemContent: {
-      display: "flex",
-      alignItems: "center",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      width: "100%",
+    headerContainer: {
+      paddingBottom: 8,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+      marginBottom: 8,
+      paddingHorizontal: 4,
     },
-    separator: {
-      height: 1,
-      backgroundColor: colors.notification + "40",
-      marginVertical: 8,
-    },
-    icon: {
-      fontWeight: "700",
-      marginHorizontal: 10,
-      color: colors.notification + "90",
-      fontSize: 28,
-    },
-    sizeText: {
-      color: colors.notification,
-    },
-    noteHeader: {
-      display: "flex",
+    titleContainer: {
       alignItems: "center",
       justifyContent: "center",
-      paddingHorizontal: 4,
       paddingTop: 10,
       backgroundColor: "transparent",
-      // borderWidth: 1,
-      // borderColor: "red",
+    },
+    listHeaderContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: 8,
+    },
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: colors.text,
+    },
+    listContent: {
+      paddingBottom: 20,
     },
     noteListTitle: {
-      fontSize: 30,
-      marginVertical: 10,
+      fontSize: 28,
+      marginVertical: 12,
       fontWeight: "bold",
       textAlign: "center",
       color: colors.notification,
     },
-    noteHeaderSubtitle: {
-      fontSize: 18,
-      fontWeight: "600",
-      color: colors.text,
-      alignSelf: "flex-start",
-    },
     searchContainer: {
-      display: "flex",
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "space-around",
-      borderRadius: 10,
-      marginTop: 20,
-      marginBottom: 10,
+      borderRadius: 20,
+      marginVertical: 12,
       borderWidth: 1,
-      borderColor: colors.notification,
-      borderStyle: "solid",
       width: "100%",
-      fontWeight: "100",
-      backgroundColor: colors.notification + "99",
+      height: 48,
+      backgroundColor: colors.notification + '20',
+      borderColor: colors.text,
     },
     searchIcon: {
-      color: colors.text,
-      paddingHorizontal: 15,
-      borderRadius: 10,
-      fontWeight: "bold",
+      paddingHorizontal: 12,
+    },
+    clearButton: {
+      padding: 8,
+      marginRight: 4,
     },
     noteHeaderSearchInput: {
-      borderRadius: 10,
-      padding: 10,
-      paddingLeft: 15,
-      fontSize: 18,
       flex: 1,
-      fontWeight: "100",
-      backgroundColor: "#ddd",
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
+      fontSize: 16,
+      padding: Platform.OS === 'ios' ? 12 : 8,
+      color: colors.text,
+      backgroundColor: 'transparent',
+    },
+    separator: {
+      height: 1,
+      backgroundColor: colors.border,
+      marginVertical: 8,
+    },
+    emptyStateContainer: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 20,
+      marginTop: 50,
+    },
+    emptyStateText: {
+      fontSize: 16,
+      textAlign: 'center',
+      marginTop: 12,
+      color: colors.text + '90',
+    },
+    emptyStateButton: {
+      marginTop: 16,
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+      backgroundColor: colors.notification + '30',
+      borderRadius: 20,
+    },
+    emptyStateButtonText: {
+      color: colors.notification,
+      fontWeight: '600',
+    },
+    offlineIndicator: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: '#e7485620',
+      paddingHorizontal: 12,
+      paddingVertical: 4,
+      borderRadius: 16,
+    },
+    offlineText: {
+      color: '#e74856',
+      fontSize: 12,
+      fontWeight: '600',
+      marginLeft: 4,
     },
   });
 

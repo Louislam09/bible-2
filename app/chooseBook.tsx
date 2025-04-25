@@ -150,7 +150,6 @@ const ChooseBook: React.FC = () => {
 
   const handleLongPress = useCallback(() => {
     storedData$.isShowName.set(!isShowName);
-    // saveData({ isShowName: !isShowName });
   }, [isShowName]);
 
   const [oldTestamentBooks, newTestamentBooks] = useMemo(

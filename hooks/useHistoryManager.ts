@@ -41,7 +41,6 @@ const useHistoryManager = (): HistoryManager => {
   }, [isMyBibleDbLoaded]);
 
   const loadHistory = useCallback(async () => {
-    console.log("loadHistory");
     try {
       const results = await executeSql<HistoryItem>(
         historyQuery.GET_ALL,

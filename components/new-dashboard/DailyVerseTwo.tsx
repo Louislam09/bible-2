@@ -1,18 +1,14 @@
 import DAILY_VERSES from "@/constants/dailyVerses";
 import { GET_DAILY_VERSE } from "@/constants/Queries";
-import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
-import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, Screens, TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
-import { showToast } from "@/utils/showToast";
 import { useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "../Icon";
 import { Text, View } from "../Themed";
-import { use$ } from "@legendapp/state/react";
 
 const defaultDailyVerse = {
   book_number: 0,
@@ -47,7 +43,6 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(
     dailyVerseObject || defaultDailyVerse
   );
-  const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
   const styles = getStyles(theme);
   const isDefaultVerse = dailyVerseObject?.bookName;
 
@@ -77,40 +72,46 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
 
   return (
     <View style={styles.dailyVerseContainer}>
-      <TouchableOpacity
-        onPress={() => navigation.navigate(Screens.Onboarding)}
-        style={styles.infoIcon}
-      >
-        <Icon name={"Info"} size={20} color={"white"} />
-      </TouchableOpacity>
-      <View style={styles.header}>
-        <Text style={styles.title}>Versículo del día</Text>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => {
-            if (isDefaultVerse) return;
-            const queryInfo = {
-              book: dailyVerse.bookName,
-              chapter: dailyVerse.chapter,
-              verse: dailyVerse?.verse,
-            };
-            bibleState$.changeBibleQuery({
-              ...queryInfo,
-              shouldFetch: true,
-              isHistory: false,
-            });
-            navigation.navigate(Screens.Home, queryInfo);
-          }}
-          style={styles.verseContainer}
-        >
-          <Text style={styles.verseRef}>
-            {`${dailyVerse.bookName} ${dailyVerse.chapter}:${dailyVerse?.verse}`}
-          </Text>
-          <Text style={styles.verseText}>{`${
-            dailyVerse?.verse
-          } ${getVerseTextRaw(dailyVerse?.text || "")}`}</Text>
-        </TouchableOpacity>
+      <View style={styles.verseTitle}>
+        <Icon
+          name={"BookOpen"}
+          size={24}
+          color={theme.dark ? "#ffffff" : theme.colors.text + 99}
+        />
+        <Text style={styles.title}>Versículo del Día</Text>
       </View>
+      <Icon
+        name={"Quote"}
+        size={34}
+        // color={theme.colors.text + 70}
+        color={theme.dark ? "#ffffff4c" : theme.colors.text + 70}
+        style={styles.quoteIcon}
+      />
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() => {
+          if (isDefaultVerse) return;
+          const queryInfo = {
+            book: dailyVerse.bookName,
+            chapter: dailyVerse.chapter,
+            verse: dailyVerse?.verse,
+          };
+          bibleState$.changeBibleQuery({
+            ...queryInfo,
+            shouldFetch: true,
+            isHistory: false,
+          });
+          navigation.navigate(Screens.Home, queryInfo);
+        }}
+        style={[styles.verseContainer, { position: "relative" }]}
+      >
+        <Text style={styles.verseText}>{`${getVerseTextRaw(
+          dailyVerse?.text || ""
+        )}`}</Text>
+      </TouchableOpacity>
+      <Text style={styles.verseRef}>
+        {`${dailyVerse.bookName} ${dailyVerse.chapter}:${dailyVerse?.verse}`}
+      </Text>
     </View>
   );
 };
@@ -118,13 +119,16 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     dailyVerseContainer: {
-      backgroundColor: "transparent",
-      alignItems: "center",
+      alignItems: "flex-start",
       justifyContent: "center",
       width: "100%",
-      minHeight: 140,
       flex: 1,
-      marginTop: 10,
+      backgroundColor: colors.text + 20,
+      padding: 15,
+      paddingHorizontal: 18,
+      marginBottom: 16,
+      borderRadius: 16,
+      gap: 8,
     },
     infoIcon: {
       position: "absolute",
@@ -132,35 +136,37 @@ const getStyles = ({ colors }: TTheme) =>
       right: 0,
       zIndex: 100,
     },
-    header: {
-      backgroundColor: "transparent",
-      marginBottom: 16,
+    quoteIcon: {
+      position: "absolute",
+      top: 10,
+      right: 10,
+      zIndex: -1,
+    },
+    verseTitle: {
+      flexDirection: "row",
       alignItems: "center",
+      gap: 8,
+      backgroundColor: "transparent",
     },
     title: {
-      width: "100%",
-      color: colors.notification,
-      fontSize: 24,
+      fontSize: 18,
       fontWeight: "bold",
-      marginBottom: 8,
     },
     verseContainer: {
-      backgroundColor: colors.text + 20,
-      padding: 12,
       borderRadius: 8,
+      alignItems: "flex-start",
     },
     verseRef: {
       color: colors.text,
       fontSize: 18,
       fontStyle: "italic",
-      textAlign: "center",
-      fontWeight: "bold",
+      alignSelf: "flex-end",
     },
     verseText: {
       color: colors.text,
       fontSize: 18,
       fontStyle: "italic",
-      textAlign: "center",
+      zIndex: 1,
     },
   });
 

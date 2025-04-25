@@ -1,11 +1,9 @@
-import { defaultDatabases } from "@/constants/databaseNames";
-import * as SQLite from "expo-sqlite";
-import useInstalledBibles, { VersionItem } from "@/hooks/useInstalledBible";
-import React, { createContext, useContext, useEffect, useMemo } from "react";
-import useDatabase from "../hooks/useDatabase";
-import { storedData$, useStorage } from "./LocalstoreContext";
 import useDB from "@/hooks/useDB";
+import useInstalledBibles, { VersionItem } from "@/hooks/useInstalledBible";
 import { use$ } from "@legendapp/state/react";
+import * as SQLite from "expo-sqlite";
+import React, { createContext, useContext, useMemo } from "react";
+import { storedData$ } from "./LocalstoreContext";
 
 interface Row {
   [key: string]: any;
@@ -37,7 +35,7 @@ const initialContext: DatabaseContextType = {
   installedDictionary: [],
   isInstallBiblesLoaded: false,
   isMyBibleDbLoaded: false,
-  refreshDatabaseList: () => {},
+  refreshDatabaseList: () => { },
 };
 
 export const DatabaseContext =
@@ -46,10 +44,14 @@ export const DatabaseContext =
 const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const {
-    isDataLoaded,
-    storedData: { currentBibleVersion },
-  } = useStorage();
+  // const {
+  //   isDataLoaded,
+  //   storedData: { currentBibleVersion },
+  // } = useStorage();
+  const { currentBibleVersion, isDataLoaded } = use$(() => ({
+    currentBibleVersion: storedData$.currentBibleVersion.get(),
+    isDataLoaded: storedData$.isDataLoaded.get(),
+  }));
   const { installedBibles, loading, refreshDatabaseList, installedDictionary } =
     useInstalledBibles();
   const currentDbName = useMemo(

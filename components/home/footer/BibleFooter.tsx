@@ -19,13 +19,14 @@ import { bibleState$ } from "@/state/bibleState";
 import { tourState$ } from "@/state/tourState";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { batch } from "@legendapp/state";
 import { useNavigation } from "expo-router";
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
-import { batch } from "@legendapp/state";
 // import { BlurView } from "expo-blur";
 import useColorScheme from "@/hooks/useColorScheme";
+import { use$ } from "@legendapp/state/react";
 
 interface FooterInterface {
   isSplit?: boolean;
@@ -37,7 +38,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const isSplitActived = bibleState$.isSplitActived.get();
   const currentVoiceIdentifier = storedData$.currentVoiceIdentifier.get();
   const currentVoiceRate = storedData$.currentVoiceRate.get() || 1;
-  const isConnected = useInternetConnection();
+  const { isConnected } = useInternetConnection();
   const FOOTER_ICON_SIZE = iconSize;
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -50,6 +51,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const book = isSplit ? bibleQuery?.bottomSideBook : bibleQuery.book;
   const chapter = isSplit ? bibleQuery?.bottomSideChapter : bibleQuery.chapter;
   const verse = isSplit ? bibleQuery?.bottomSideVerse : bibleQuery.verse;
+  const currentHistoryIndexState = use$(() => bibleState$.currentHistoryIndex.get());
 
   const { bookNumber } = DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
@@ -211,7 +213,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           delayLongPress={200}
         >
           <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
-            {`${displayBookName ?? ""} ${chapter ?? ""}:${verse}`}
+            {`${displayBookName ?? ""} ${chapter ?? ""}:${isSplitActived ? verse : currentHistoryIndexState || verse}`}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity

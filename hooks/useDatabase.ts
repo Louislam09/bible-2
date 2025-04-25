@@ -1,5 +1,7 @@
 import {
   CREATE_COLUMN_UPDATED_AT_IN_NOTE_TABLE,
+  CREATE_COLUMN_UUID_IN_FAVORITE_VERSES_TABLE,
+  CREATE_COLUMN_UUID_IN_NOTE_TABLE,
   CREATE_FAVORITE_VERSES_TABLE,
   CREATE_MEMORIZATION_TABLE,
   CREATE_NOTE_TABLE,
@@ -97,10 +99,10 @@ function useDatabase({
     }
   };
 
-  async function checkIfColumnExist(database: SQLite.SQLiteDatabase) {
+  async function checkIfColumnExist(database: SQLite.SQLiteDatabase, columnName: string) {
     try {
       const data = await executeSql(database, `PRAGMA table_info(notes);`, []);
-      return data.map((x) => x.name).includes('updated_at');
+      return data.map((x) => x.name).includes(columnName);
     } catch (error) {
       return await new Promise((resolve) => resolve([]));
     }
@@ -108,10 +110,12 @@ function useDatabase({
 
   async function addColumnIfNotExists(
     database: SQLite.SQLiteDatabase,
+    columnName: string,
     createColumnQuery: string
   ) {
     try {
-      const hasColumn = await checkIfColumnExist(database);
+      console.log('Checking if column exists:', columnName);
+      const hasColumn = await checkIfColumnExist(database, columnName);
       if (!hasColumn) {
         await database.execAsync(createColumnQuery);
       }
@@ -217,12 +221,12 @@ function useDatabase({
           await executeSql(db, 'PRAGMA journal_mode = WAL;');
           await executeSql(db, 'PRAGMA optimize;');
         }
-
         await createTable(db, CREATE_FAVORITE_VERSES_TABLE);
         await createTable(db, CREATE_NOTE_TABLE);
         await createTable(db, CREATE_MEMORIZATION_TABLE);
         await createTable(db, CREATE_STREAK_TABLE);
-        // await addColumnIfNotExists(db, CREATE_COLUMN_UPDATED_AT_IN_NOTE_TABLE);
+        await addColumnIfNotExists(db, 'uuid',CREATE_COLUMN_UUID_IN_NOTE_TABLE);
+        await addColumnIfNotExists(db, 'uuid',CREATE_COLUMN_UUID_IN_FAVORITE_VERSES_TABLE);
         databases.push(db);
       }
       return databases;

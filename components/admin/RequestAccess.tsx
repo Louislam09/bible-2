@@ -1,44 +1,93 @@
-import React from 'react';
-import { Alert, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
-import { useTheme } from '@react-navigation/native';
-import { TTheme } from '@/types';
-import { Text } from '../Themed';
+import { ERROR_MESSAGES } from '@/constants/errorMessages';
 import { storedData$ } from '@/context/LocalstoreContext';
 import { useRequestAccess } from '@/services/queryService';
+import { authState$ } from '@/state/authState';
+import { TTheme } from '@/types';
+import removeAccent from '@/utils/removeAccent';
 import { use$ } from '@legendapp/state/react';
-import { Ionicons } from '@expo/vector-icons';
-import { ERROR_MESSAGES } from '@/constants/errorMessages';
+import { useTheme } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
+import React, { useEffect } from 'react';
+import { Alert, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import EmptyStateMessage from '../EmptyStateMessage';
+import { Text } from '../Themed';
 
 const RequestAccess = ({ onClose }: { onClose: () => void }) => {
     const theme = useTheme();
+    const router = useRouter();
     const styles = getStyles(theme);
     const { mutateAsync: requestAccess, isPending } = useRequestAccess();
     const hasRequestAccess = use$(() => storedData$.hasRequestAccess.get());
     const userData = use$(() => storedData$.userData.get());
-
+    const isAuthenticated = use$(() => authState$.isAuthenticated.get());
+    const user = use$(() => authState$.user.get());
     const [name, setName] = React.useState('');
     const [email, setEmail] = React.useState('');
 
-    const handleSubmit = async () => {
-        if (!name || !email) {
-            Alert.alert('Error', ERROR_MESSAGES.EMPTY_FIELDS);
+    // Auto-fill form with user data if authenticated
+    useEffect(() => {
+        if (isAuthenticated && user) {
+            setName(user.name || '');
+            setEmail(user.email || '');
+        }
+    }, [isAuthenticated, user]);
+
+    // Auto-submit access request if user is authenticated and hasn't requested access yet
+    useEffect(() => {
+        if (isAuthenticated && user && !hasRequestAccess && user.name && user.email) {
+            handleSubmit(true);
+        }
+    }, [isAuthenticated, user, hasRequestAccess]);
+
+    const handleSubmit = async (isAutoSubmit = false) => {
+        if (!isAuthenticated) {
+            Alert.alert(
+                'Iniciar Sesión Requerido',
+                'Necesitas iniciar sesión para solicitar acceso.',
+                [
+                    { text: 'Cancelar', style: 'cancel' },
+                    {
+                        text: 'Iniciar Sesión',
+                        onPress: () => {
+                            onClose();
+                            router.push('/login');
+                        }
+                    },
+                ]
+            );
+            return;
+        }
+
+        const submitName = user?.name || name;
+        const submitEmail = user?.email || email;
+
+        if (!submitName || !submitEmail) {
+            if (!isAutoSubmit) {
+                Alert.alert('Error', ERROR_MESSAGES.EMPTY_FIELDS);
+            }
             return;
         }
 
         try {
-            await requestAccess({ name, email });
+            await requestAccess({ name: removeAccent(submitName), email: submitEmail });
             storedData$.hasRequestAccess.set(true);
-            storedData$.userData.set({ name, email, status: 'pending' });
-            Alert.alert('Éxito', ERROR_MESSAGES.REQUEST_CREATED);
-            onClose();
+            storedData$.userData.set({ name: submitName, email: submitEmail, status: 'pending' });
+
+            if (!isAutoSubmit) {
+                Alert.alert('Éxito', ERROR_MESSAGES.REQUEST_CREATED);
+                onClose();
+            } else {
+                onClose();
+            }
         } catch (error: any) {
-            const errorMessage = error?.message
-                ? error.message === "Email already has a pending request"
-                    ? ERROR_MESSAGES.EMAIL_EXISTS
-                    : ERROR_MESSAGES.CREATE_REQUEST_ERROR
-                : ERROR_MESSAGES.NETWORK_ERROR;
-            Alert.alert('Error', errorMessage);
+            if (!isAutoSubmit) {
+                const errorMessage = error?.message
+                    ? error.message === "Email already has a pending request"
+                        ? ERROR_MESSAGES.EMAIL_EXISTS
+                        : ERROR_MESSAGES.CREATE_REQUEST_ERROR
+                    : ERROR_MESSAGES.NETWORK_ERROR;
+                Alert.alert('Error', errorMessage);
+            }
         }
     };
 
@@ -57,12 +106,20 @@ const RequestAccess = ({ onClose }: { onClose: () => void }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Solicitud de Acceso</Text>
+
+            {!isAuthenticated && (
+                <Text style={styles.loginMessage}>
+                    Para solicitar acceso, primero debes iniciar sesión.
+                </Text>
+            )}
+
             <TextInput
                 style={styles.input}
                 placeholder="Nombre completo"
                 placeholderTextColor={theme.colors.text}
                 value={name}
                 onChangeText={setName}
+                editable={!isAuthenticated || !user?.name}
             />
             <TextInput
                 style={styles.input}
@@ -72,14 +129,19 @@ const RequestAccess = ({ onClose }: { onClose: () => void }) => {
                 onChangeText={setEmail}
                 keyboardType="email-address"
                 autoCapitalize="none"
+                editable={!isAuthenticated || !user?.email}
             />
             <TouchableOpacity
                 style={styles.button}
-                onPress={handleSubmit}
+                onPress={() => handleSubmit(false)}
                 disabled={isPending}
             >
                 <Text style={styles.buttonText}>
-                    {isPending ? 'Enviando...' : 'Enviar Solicitud'}
+                    {!isAuthenticated
+                        ? 'Iniciar Sesión'
+                        : isPending
+                            ? 'Enviando...'
+                            : 'Enviar Solicitud'}
                 </Text>
             </TouchableOpacity>
         </View>
@@ -97,6 +159,13 @@ const getStyles = (theme: TTheme) =>
             marginBottom: 16,
             textAlign: 'center',
             color: theme.colors.text,
+        },
+        loginMessage: {
+            fontSize: 14,
+            marginBottom: 16,
+            textAlign: 'center',
+            color: theme.colors.text,
+            fontStyle: 'italic',
         },
         input: {
             height: 40,

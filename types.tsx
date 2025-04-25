@@ -15,7 +15,7 @@ import { RefObject } from "react";
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
+    interface RootParamList extends RootStackParamList { }
   }
 }
 
@@ -47,6 +47,8 @@ export enum Screens {
   ChallengeTypeId = "memorization/[verseId]/challenge/[typeId]",
   Admin = "admin",
   TimelineId = "timeline/[timelineId]",
+  Login = "login",
+  Register = "register",
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -79,6 +81,8 @@ export const ScreensName: TScreensName = {
   [Screens.Timeline]: "Linea de tiempo",
   [Screens.Admin]: "Panel Admin",
   [Screens.TimelineId]: "Linea de Tiempo",
+  [Screens.Login]: "Iniciar Sesión",
+  [Screens.Register]: "Crear una cuenta",
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -99,6 +103,8 @@ export type RootTabParamList = {
   notFound: undefined;
   dictionary: undefined;
   admin: undefined;
+  login: undefined;
+  register: undefined;
   history: undefined;
   "memorization/memoryList": undefined;
 };
@@ -113,24 +119,24 @@ export type RootStackParamList = {
   downloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
   notes: NavigatorScreenParams<RootTabParamList> | { shouldRefresh: boolean };
   noteDetail:
-    | NavigatorScreenParams<RootTabParamList>
-    | { noteId: number | null; isNewNote: boolean };
+  | NavigatorScreenParams<RootTabParamList>
+  | { noteId: number | null; isNewNote: boolean };
   character: NavigatorScreenParams<RootTabParamList> | undefined;
   chooseBook:
-    | NavigatorScreenParams<RootTabParamList>
-    | ChooseChapterNumberParams;
-  search: NavigatorScreenParams<RootTabParamList> | { book?: string };
+  | NavigatorScreenParams<RootTabParamList>
+  | ChooseChapterNumberParams;
+  "(search)": NavigatorScreenParams<RootTabParamList> | { book?: string };
   concordance: NavigatorScreenParams<RootTabParamList> | {};
   strongSearchEntire:
-    | NavigatorScreenParams<RootTabParamList>
-    | { paramCode: string };
+  | NavigatorScreenParams<RootTabParamList>
+  | { paramCode: string };
   dictionary: NavigatorScreenParams<RootTabParamList> | { word: string };
   chooseChapterNumber:
-    | NavigatorScreenParams<RootTabParamList>
-    | ChooseChapterNumberParams;
+  | NavigatorScreenParams<RootTabParamList>
+  | ChooseChapterNumberParams;
   chooseVerseNumber:
-    | NavigatorScreenParams<RootTabParamList>
-    | ChooseChapterNumberParams;
+  | NavigatorScreenParams<RootTabParamList>
+  | ChooseChapterNumberParams;
   modal: undefined;
   onboarding: undefined;
   timeline: undefined;
@@ -140,6 +146,8 @@ export type RootStackParamList = {
   hymn: undefined;
   history: undefined;
   notFound: undefined;
+  [Screens.Login]: undefined;
+  [Screens.Register]: undefined;
 };
 
 export type HomeParams = {
@@ -248,6 +256,7 @@ export type TNote = {
   id: number;
   title: string;
   note_text: string;
+  uuid: string;
   created_at: string;
   updated_at?: string;
 };
@@ -437,15 +446,15 @@ export enum EBookIndexesAudio {
 }
 
 export enum EThemes {
-  BlackWhite = "#000",
-  BlueGray = "#8EACBB",
   Blue = "#2a7ac6",
-  Green = "#78b0a4",
   Red = "#FF5252",
-  Orange = "#9f463c",
   Cyan = "#20acb6",
-  Purple = "#2032ac",
   Pink = "#aa2c50",
+  Purple = "#2032ac",
+  BlueGray = "#8EACBB",
+  Green = "#78b0a4",
+  Orange = "#9f463c",
+  BlackWhite = "#000",
   BlueLight = "#3b88bf",
   BlueGreen = "#239db8",
   PinkLight = "#874a69",
@@ -671,4 +680,26 @@ interface BibleTimelineEventImage {
 interface BibleTimelineEventRelated {
   slug: string;
   title: string;
+}
+
+export type GoogleUser = {
+  email: string;
+  family_name: string;
+  given_name: string;
+  id: string;
+  name: string;
+  picture: string;
+  verified_email: boolean;
+};
+export interface pbUser {
+  avatar: string;
+  collectionId: string;
+  collectionName: string;
+  created: string;
+  email: string;
+  emailVisibility: boolean;
+  id: string;
+  name: string;
+  updated: string;
+  verified: boolean;
 }

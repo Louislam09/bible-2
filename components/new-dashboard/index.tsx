@@ -4,22 +4,24 @@ import MainSection from "@/components/new-dashboard/MainSection";
 import StudyTools from "@/components/new-dashboard/StudyTools";
 import StatusBarBackground from "@/components/StatusBarBackground";
 import { useBibleContext } from "@/context/BibleContext";
-import { storedData$, useStorage } from "@/context/LocalstoreContext";
+import { storedData$ } from "@/context/LocalstoreContext";
+import { useSecretUnlock } from "@/hooks/useSecretUnlock";
 import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";
 import isWithinTimeframe from "@/utils/isWithinTimeframe";
+import { showToast } from "@/utils/showToast";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import React, { useCallback, useRef, useState } from "react";
-import { ScrollView, StyleSheet, ToastAndroid } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { IDashboardOption } from "../../app/(dashboard)";
 import BottomModal from "../BottomModal";
-import VersionList from "../home/header/VersionList";
-import VoiceList from "../VoiceList";
-import { useSecretUnlock } from "@/hooks/useSecretUnlock";
-import { showToast } from "@/utils/showToast";
 import EmptyStateMessage from "../EmptyStateMessage";
+import VersionList from "../home/header/VersionList";
+import ProfileCard from "../UserProfile";
+import VoiceList from "../VoiceList";
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
@@ -30,7 +32,9 @@ const SecondDashboard = () => {
   const navigation = useNavigation();
   const theme = useTheme();
   const styles = getStyles(theme);
-  const [currentEmpty, setCurrentEmpty] = useState<'doubible' | 'timeline'>('doubible');
+  const [currentEmpty, setCurrentEmpty] = useState<"doubible" | "timeline">(
+    "doubible"
+  );
 
   const {
     currentBibleVersion,
@@ -48,8 +52,9 @@ const SecondDashboard = () => {
     lastBottomSideBook,
     lastBottomSideChapter,
     lastBottomSideVerse,
-    isAdmin
+    isAdmin,
   } = storedData;
+  const user = use$(() => storedData$.user.get()) || null;
 
   const onSelect = (version: string) => {
     bibleState$.clearSelection();
@@ -85,7 +90,7 @@ const SecondDashboard = () => {
       action: () => navigation.navigate(Screens.Home, homePageInitParams),
       longAction: () => {
         handleTap("top-left");
-        showToast('Santa Escritura')
+        showToast("Santa Escritura");
       },
       tag: "crown-outline",
     },
@@ -95,33 +100,45 @@ const SecondDashboard = () => {
       isIonicon: true,
       action: onSong,
     },
-    {
-      icon: "Search",
-      label: "Buscador",
-      // @ts-ignore
-      action: () => navigation.navigate(Screens.Search, {}),
-    },
+    user
+      ? {
+        icon: "NotebookText",
+        label: "Notas",
+        action: () =>
+          navigation.navigate(Screens.Notes, { shouldRefresh: false }),
+        color: theme.colors.notification,
+      }
+      : {
+        icon: "Cloudy",
+        label: "Sincronizar",
+        action: () => navigation.navigate(Screens.Login),
+      },
   ];
 
-  const requestAccessHandlePresentModalPress = useCallback((state: 'doubible' | 'timeline') => {
-    setCurrentEmpty(state);
-    requestAccessBottomSheetModalRef.current?.present();
-  }, []);
+  const requestAccessHandlePresentModalPress = useCallback(
+    (state: "doubible" | "timeline") => {
+      setCurrentEmpty(state);
+      requestAccessBottomSheetModalRef.current?.present();
+    },
+    []
+  );
 
   const stateMessage = {
     doubible: {
-      "title": "¡Nueva función en desarrollo!",
-      "message": "Estamos trabajando en esta función para ayudarte a aprender más sobre la santa escritura de una manera interactiva. Muy pronto podrás acceder a nuevas herramientas y contenido.",
-      "subText": "Gracias por tu paciencia y apoyo.",
-      email: ''
+      title: "¡Nueva función en desarrollo!",
+      message:
+        "Estamos trabajando en esta función para ayudarte a aprender más sobre la santa escritura de una manera interactiva. Muy pronto podrás acceder a nuevas herramientas y contenido.",
+      subText: "Gracias por tu paciencia y apoyo.",
+      email: "",
     },
     timeline: {
-      "title": "Línea de tiempo en desarrollo",
-      "message": "Estamos creando una línea de tiempo interactiva para explorar la historia de la santa escritura de manera clara y visual. Pronto podrás recorrer los eventos clave y profundizar en su contexto.",
-      "subText": "Gracias por tu paciencia y entusiasmo.",
-      email: ''
-    }
-  }
+      title: "Línea de tiempo en desarrollo",
+      message:
+        "Estamos creando una línea de tiempo interactiva para explorar la historia de la santa escritura de manera clara y visual. Pronto podrás recorrer los eventos clave y profundizar en su contexto.",
+      subText: "Gracias por tu paciencia y entusiasmo.",
+      email: "",
+    },
+  };
 
   const studyToolItems: IDashboardOption[] = [
     {
@@ -129,7 +146,7 @@ const SecondDashboard = () => {
       label: "Diccionarios",
       action: () =>
         navigation?.navigate(Screens.DictionarySearch, { word: "" }),
-      color: "#ec899e"
+      color: "#ec899e",
     },
     {
       icon: "SwatchBook",
@@ -138,7 +155,7 @@ const SecondDashboard = () => {
       color: "#ffffff",
       longAction: () => {
         handleTap("bottom-right");
-        showToast('Concordancia')
+        showToast("Concordancia");
       },
     },
     {
@@ -155,7 +172,7 @@ const SecondDashboard = () => {
       color: "#fedf75",
       longAction: () => {
         handleTap("top-right");
-        showToast('Favoritos')
+        showToast("Favoritos");
       },
     },
     {
@@ -190,7 +207,7 @@ const SecondDashboard = () => {
       icon: "TreeDeciduous",
       label: "DuoBible",
       // @ts-ignore
-      action: () => requestAccessHandlePresentModalPress('doubible'),
+      action: () => requestAccessHandlePresentModalPress("doubible"),
       // action: () => navigation.navigate("learn", {}),
       color: "#4caf50",
       // color: "#75d0fe",
@@ -202,8 +219,22 @@ const SecondDashboard = () => {
       // @ts-ignore
       action: () => navigation.navigate("admin", {}),
       color: "#75d0fe",
-      disabled: !isAdmin
+      disabled: !isAdmin,
     },
+    {
+      icon: "UserSearch",
+      label: "Buscar \nPersonaje",
+      isIonicon: true,
+      action: () => navigation.navigate(Screens.Character),
+      color: "#cec8ff",
+    },
+    // {
+    //   icon: "DoorOpen",
+    //   label: "loginS",
+    //   // @ts-ignore
+    //   action: () => navigation.navigate("login", {}),
+    //   color: "#75d0fe",
+    // },
   ];
 
   const versionRef = useRef<BottomSheetModal>(null);
@@ -229,11 +260,10 @@ const SecondDashboard = () => {
         color: "#b76e5b",
       },
       {
-        icon: "UserSearch",
-        label: "Buscar \nPersonaje",
-        isIonicon: true,
-        action: () => navigation.navigate(Screens.Character),
-        color: "#cec8ff",
+        icon: "FileStack",
+        label: "Versiones",
+        action: versionHandlePresentModalPress,
+        color: "#beeaff",
       },
       {
         icon: "AudioLines",
@@ -250,9 +280,9 @@ const SecondDashboard = () => {
         color: "#2cc47d",
       },
       {
-        icon: "FileStack",
-        label: "Versiones",
-        action: versionHandlePresentModalPress,
+        icon: "Info",
+        label: "Incorporación",
+        action: () => navigation.navigate(Screens.Onboarding),
         color: "#beeaff",
       },
       {
@@ -268,6 +298,7 @@ const SecondDashboard = () => {
   return (
     <StatusBarBackground>
       <ScrollView style={styles.container}>
+        <ProfileCard user={user} />
         <DailyVerseTwo theme={theme} />
         <MainSection list={mainActionItems} theme={theme} />
         <StudyTools list={studyToolItems} theme={theme} />
@@ -289,7 +320,8 @@ const SecondDashboard = () => {
         startAT={0}
         ref={requestAccessBottomSheetModalRef}
       >
-        <EmptyStateMessage info={stateMessage[currentEmpty]}
+        <EmptyStateMessage
+          info={stateMessage[currentEmpty]}
           onClose={() => requestAccessBottomSheetModalRef.current?.dismiss()}
         />
       </BottomModal>

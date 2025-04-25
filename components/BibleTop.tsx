@@ -37,7 +37,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
 
   const initialScrollIndex = useMemo(() => {
     if (verse <= 0) return 0;
-    return Math.min(verse - 1, Math.max(0, verses.length - 1));
+    return Math.min(verse, Math.max(0, verses.length - 1));
   }, [verse, verses]);
 
   const onSwipeRight = () => {

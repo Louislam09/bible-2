@@ -9,21 +9,27 @@ import {
 } from "@/services/queryService";
 import { RequestStatus } from "@/services/types";
 import { TTheme } from "@/types";
+import removeAccent from "@/utils/removeAccent";
 import { useTheme } from "@react-navigation/native";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { format } from "date-fns";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { icons } from "lucide-react-native";
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  RefreshControl,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type ApprovalStatus = {
   [key: string]: {
@@ -33,16 +39,234 @@ type ApprovalStatus = {
   };
 };
 
+const approvalStatus: ApprovalStatus = {
+  pending: {
+    icon: "Clock",
+    color: "#efbf43",
+    label: "Solicitud en proceso",
+  },
+  approved: {
+    icon: "Check",
+    color: "#16A34A",
+    label: "Aprobado",
+  },
+  rejected: {
+    icon: "X",
+    color: "#DC2626",
+    label: "Rechazado",
+  },
+};
+
+// Separate request item component for better organization
+const RequestItem = ({
+  item,
+  onUpdateStatus,
+  onDeleteRequest
+}: {
+  item: RequestStatus;
+  onUpdateStatus: (id: string, status: RequestStatus["status"]) => void;
+  onDeleteRequest: (id: string) => void;
+}) => {
+  const theme = useTheme();
+  const styles = getStyles(theme);
+
+  const statusIcon = approvalStatus[item.status].icon;
+  const statusColor = approvalStatus[item.status].color;
+  const statusLabel = approvalStatus[item.status].label;
+
+  return (
+    <View style={[styles.requestItem, { borderLeftWidth: 4, borderLeftColor: statusColor }]}>
+      <View style={styles.requestInfo}>
+        <View style={styles.requestDetails}>
+          <Text style={styles.requestName}>{item.name}</Text>
+          <Text style={styles.requestEmail}>{item.email}</Text>
+          <View style={[styles.statusBadge, { backgroundColor: `${statusColor}20` }]}>
+            <Icon name={statusIcon} color={statusColor} size={16} />
+            <Text style={[styles.statusLabel, { color: statusColor }]}>{statusLabel}</Text>
+          </View>
+          <Text style={styles.requestDate}>
+            {format(new Date(item.created_at), "dd MMM yyyy, hh:mm a")}
+          </Text>
+        </View>
+        <Icon name={statusIcon} color={statusColor} size={28} />
+      </View>
+      <View style={styles.requestActions}>
+        <TouchableOpacity
+          style={[
+            styles.actionButton,
+            styles.approveButton,
+            { opacity: item.status === "approved" ? 0.5 : 1 },
+          ]}
+          onPress={() => onUpdateStatus(item.id, "approved")}
+          disabled={item.status === "approved"}
+          accessibilityLabel="Aprobar solicitud"
+        >
+          <Icon name="Check" color="#fff" size={16} />
+          <Text style={styles.actionButtonText}>Aprobar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.actionButton,
+            styles.rejectButton,
+            { opacity: item.status === "rejected" ? 0.5 : 1 },
+          ]}
+          onPress={() => onUpdateStatus(item.id, "rejected")}
+          disabled={item.status === "rejected"}
+          accessibilityLabel="Rechazar solicitud"
+        >
+          <Icon name="X" color="#fff" size={16} />
+          <Text style={styles.actionButtonText}>Rechazar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.actionButton, styles.deleteButton]}
+          onPress={() => onDeleteRequest(item.id)}
+          accessibilityLabel="Eliminar solicitud"
+        >
+          <Icon name="Trash2" color="#fff" size={16} />
+          <Text style={styles.actionButtonText}>Eliminar</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
+
+// Tab component for better reusability
+const TabButton = ({
+  title,
+  isActive,
+  onPress,
+  icon,
+}: {
+  title: string;
+  isActive: boolean;
+  onPress: () => void;
+  icon: keyof typeof icons;
+}) => {
+  const theme = useTheme();
+  const styles = getStyles(theme);
+
+  return (
+    <TouchableOpacity
+      style={[styles.tab, isActive && styles.activeTab]}
+      onPress={onPress}
+      accessibilityRole="tab"
+      accessibilityState={{ selected: isActive }}
+    >
+      <Icon
+        name={icon}
+        color={isActive ? "#fff" : theme.colors.text}
+        size={18}
+      />
+      <Text style={[styles.tabText, isActive && styles.activeTabText]}>
+        {title}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
+// Filter components
+const FilterOption = ({
+  label,
+  value,
+  currentFilter,
+  onSelect,
+}: {
+  label: string;
+  value: string | null;
+  currentFilter: string | null;
+  onSelect: (value: string | null) => void;
+}) => {
+  const theme = useTheme();
+  const styles = getStyles(theme);
+  const isSelected = value === currentFilter;
+
+  return (
+    <TouchableOpacity
+      style={[styles.filterOption, isSelected && styles.selectedFilterOption]}
+      onPress={() => onSelect(value)}
+    >
+      <Text
+        style={[
+          styles.filterOptionText,
+          isSelected && styles.selectedFilterOptionText
+        ]}
+      >
+        {label}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
+// Search bar component
+const SearchBar = ({
+  value,
+  onChangeText,
+  placeholder,
+}: {
+  value: string;
+  onChangeText: (text: string) => void;
+  placeholder: string;
+}) => {
+  const theme = useTheme();
+  const styles = getStyles(theme);
+
+  return (
+    <View style={styles.searchContainer}>
+      <Icon name="Search" color={theme.colors.text} size={20} style={styles.searchIcon} />
+      <TextInput
+        style={styles.searchInput}
+        placeholder={placeholder}
+        placeholderTextColor={`${theme.colors.text}80`}
+        value={value}
+        onChangeText={onChangeText}
+        returnKeyType="search"
+        clearButtonMode="while-editing"
+        accessibilityLabel={placeholder}
+      />
+      {value.length > 0 && (
+        <TouchableOpacity onPress={() => onChangeText("")}>
+          <Icon name="X" color={theme.colors.text} size={20} />
+        </TouchableOpacity>
+      )}
+    </View>
+  );
+};
+
+// Empty state component
+const EmptyState = ({
+  icon,
+  title,
+  message,
+}: {
+  icon: keyof typeof icons;
+  title: string;
+  message: string;
+}) => {
+  const theme = useTheme();
+  const styles = getStyles(theme);
+
+  return (
+    <View style={styles.emptyStateContainer}>
+      <Icon name={icon} color={`${theme.colors.text}60`} size={64} />
+      <Text style={styles.emptyStateTitle}>{title}</Text>
+      <Text style={styles.emptyStateMessage}>{message}</Text>
+    </View>
+  );
+};
+
 const RequestAccessScreen: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [searchEmail, setSearchEmail] = useState<string>("");
-  const [activeTab, setActiveTab] = useState<"request" | "check" | "all">(
-    "all"
-  );
+  const [activeTab, setActiveTab] = useState<"request" | "check" | "all">("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<RequestStatus["status"] | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
   const theme = useTheme();
   const styles = getStyles(theme);
+  const insets = useSafeAreaInsets();
+  const router = useRouter();
 
   const { mutate: submitRequest, isPending: isSubmitting } = useRequestAccess();
   const {
@@ -51,14 +275,36 @@ const RequestAccessScreen: React.FC = () => {
     data: statusResult,
   } = useCheckStatus();
 
-  const { data: requests, isFetching: isFetchingRequests } =
-    useGetAllRequests();
-  const { mutate: updateStatus } = useUpdateRequestStatus();
-  const { mutate: deleteRequest } = useDeleteRequest();
-  const requestsOrdenByCreatedAsc = ((requests as any) || []).sort(
-    (a: RequestStatus, b: RequestStatus) =>
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  );
+  const {
+    data: requests,
+    isFetching: isFetchingRequests,
+    refetch
+  } = useGetAllRequests();
+
+  const { mutate: updateStatus, isPending: isUpdating } = useUpdateRequestStatus();
+  const { mutate: deleteRequest, isPending: isDeleting } = useDeleteRequest();
+
+  // Better sorting and filtering
+  const filteredAndSortedRequests = useMemo(() => {
+    if (!requests) return [];
+
+    // First sort by date
+    const sortedRequests = [...requests as any].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+
+    // Then apply filters
+    return sortedRequests.filter((request) => {
+      const matchesSearch =
+        searchQuery.trim() === "" ||
+        request.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        request.email.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesStatus = statusFilter === null || request.status === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [requests, searchQuery, statusFilter]);
 
   const handleSubmitRequest = () => {
     if (!name.trim() || !email.trim()) {
@@ -66,8 +312,15 @@ const RequestAccessScreen: React.FC = () => {
       return;
     }
 
+    // Simple email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Alert.alert("Error", "Por favor ingresa un correo electrónico válido");
+      return;
+    }
+
     submitRequest(
-      { name, email },
+      { name: removeAccent(name), email },
       {
         onSuccess: () => {
           Alert.alert(
@@ -76,6 +329,10 @@ const RequestAccessScreen: React.FC = () => {
           );
           setName("");
           setEmail("");
+          Keyboard.dismiss();
+          // Switch to check tab to see status
+          setActiveTab("check");
+          setSearchEmail(email);
         },
         onError: (error) => {
           Alert.alert(
@@ -94,10 +351,19 @@ const RequestAccessScreen: React.FC = () => {
       Alert.alert("Error", "El correo es requerido");
       return;
     }
+
+    // Simple email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(searchEmail)) {
+      Alert.alert("Error", "Por favor ingresa un correo electrónico válido");
+      return;
+    }
+
     checkStatus(searchEmail);
+    Keyboard.dismiss();
   };
 
-  const handleUpdateStatus = (id: string, status: RequestStatus["status"]) => {
+  const handleUpdateStatus = useCallback((id: string, status: RequestStatus["status"]) => {
     updateStatus(
       { id, status },
       {
@@ -114,9 +380,9 @@ const RequestAccessScreen: React.FC = () => {
         },
       }
     );
-  };
+  }, [updateStatus]);
 
-  const handleDeleteRequest = (id: string) => {
+  const handleDeleteRequest = useCallback((id: string) => {
     Alert.alert(
       "Confirmar Eliminación",
       "¿Estás seguro que deseas eliminar esta solicitud?",
@@ -146,85 +412,234 @@ const RequestAccessScreen: React.FC = () => {
         },
       ]
     );
-  };
+  }, [deleteRequest]);
 
-  const filteredRequests =
-    ((requestsOrdenByCreatedAsc as any) || []).filter(
-      (request: { name: string; email: string }) =>
-        request.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        request.email.toLowerCase().includes(searchQuery.toLowerCase())
-    ) || [];
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  }, [refetch]);
 
-  const approvalStatus: ApprovalStatus = {
-    pending: {
-      icon: "Clock",
-      color: "#efbf43",
-      label: "Solicitud en proceso",
-    },
-    approved: {
-      icon: "Check",
-      color: "#16A34A",
-      label: "Aprobado",
-    },
-    rejected: {
-      icon: "X",
-      color: "#DC2626",
-      label: "Rechazado",
-    },
-  };
-
-  const renderRequestItem: ListRenderItem<RequestStatus> = ({ item }) => {
-    const statudIcon = approvalStatus[item.status].icon;
-    const statusColor = approvalStatus[item.status].color;
-    const statusLabel = approvalStatus[item.status].label;
-
+  const renderRequestItem: ListRenderItem<RequestStatus> = useCallback(({ item }) => {
     return (
-      <View style={[styles.requestItem, { borderColor: statusColor }]}>
-        <View style={styles.requestInfo}>
-          <View>
-            <Text style={styles.requestName}>{item.name}</Text>
-            <Text style={styles.requestEmail}>{item.email}</Text>
-            <Text style={styles.requestName}>{statusLabel}</Text>
-            <Text style={styles.requestDate}>
-              {format(new Date(item.created_at), "dd MMM yyyy, hh:mm a")}
-              {/* {new Date(item.created_at).toLocaleString()} */}
-            </Text>
-          </View>
-          <Icon name={statudIcon} color={statusColor} size={24} />
-        </View>
-        <View style={styles.requestActions}>
-          <TouchableOpacity
-            style={[
-              styles.actionButton,
-              styles.approveButton,
-              { opacity: item.status === "approved" ? 0.5 : 1 },
-            ]}
-            onPress={() => handleUpdateStatus(item.id, "approved")}
-          >
-            <Text style={styles.actionButtonText}>Aprobar</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.actionButton,
-              styles.rejectButton,
-              { opacity: item.status === "rejected" ? 0.5 : 1 },
-            ]}
-            onPress={() => handleUpdateStatus(item.id, "rejected")}
-          >
-            <Text style={styles.actionButtonText}>Rechazar</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.actionButton, styles.deleteButton]}
-            onPress={() => handleDeleteRequest(item.id)}
-          >
-            <Text style={styles.actionButtonText}>Eliminar</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <RequestItem
+        item={item}
+        onUpdateStatus={handleUpdateStatus}
+        onDeleteRequest={handleDeleteRequest}
+      />
     );
-  };
+  }, [handleUpdateStatus, handleDeleteRequest]);
 
-  const loading = isSubmitting || isChecking || isFetchingRequests;
+  const loading = isSubmitting || isChecking || isFetchingRequests || isUpdating || isDeleting;
+
+  // Render different content based on the active tab
+  const renderContent = () => {
+    if (loading && !isRefreshing) {
+      return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={theme.colors.notification} />
+          <Text style={styles.loadingText}>Cargando...</Text>
+        </View>
+      );
+    }
+
+    switch (activeTab) {
+      case "request":
+        return (
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.formContainer}
+            keyboardVerticalOffset={100}
+          >
+            <View style={styles.formHeader}>
+              <Icon name="UserPlus" color={theme.colors.text} size={24} />
+              <Text style={styles.title}>Solicitud de Acceso</Text>
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={styles.formLabel}>Nombre completo</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Ingrese su nombre"
+                placeholderTextColor={`${theme.colors.text}80`}
+                value={name}
+                onChangeText={setName}
+                returnKeyType="next"
+                accessibilityLabel="Nombre completo"
+              />
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={styles.formLabel}>Correo electrónico</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Ingrese su correo"
+                placeholderTextColor={`${theme.colors.text}80`}
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                returnKeyType="done"
+                accessibilityLabel="Correo electrónico"
+              />
+            </View>
+
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleSubmitRequest}
+              disabled={isSubmitting}
+              accessibilityLabel="Enviar solicitud de acceso"
+            >
+              {isSubmitting ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <>
+                  <Icon name="Send" color="#fff" size={16} style={styles.buttonIcon} />
+                  <Text style={styles.submitButtonText}>Enviar Solicitud</Text>
+                </>
+              )}
+            </TouchableOpacity>
+          </KeyboardAvoidingView>
+        );
+
+      case "check":
+        return (
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.formContainer}
+            keyboardVerticalOffset={100}
+          >
+            <View style={styles.formHeader}>
+              <Icon name="Search" color={theme.colors.text} size={24} />
+              <Text style={styles.title}>Verificar Estado</Text>
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={styles.formLabel}>Correo electrónico</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Ingrese su correo para verificar"
+                placeholderTextColor={`${theme.colors.text}80`}
+                value={searchEmail}
+                onChangeText={setSearchEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                returnKeyType="search"
+                accessibilityLabel="Correo electrónico para verificar"
+              />
+            </View>
+
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleCheckStatus}
+              disabled={isChecking}
+              accessibilityLabel="Verificar estado de solicitud"
+            >
+              {isChecking ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <>
+                  <Icon name="Search" color="#fff" size={16} style={styles.buttonIcon} />
+                  <Text style={styles.submitButtonText}>Verificar Estado</Text>
+                </>
+              )}
+            </TouchableOpacity>
+
+            {statusResult && statusResult.data && (
+              <View style={styles.statusResultContainer}>
+                <Text style={styles.statusTitle}>Resultado de la búsqueda:</Text>
+                <RequestItem
+                  item={statusResult.data}
+                  onUpdateStatus={handleUpdateStatus}
+                  onDeleteRequest={handleDeleteRequest}
+                />
+              </View>
+            )}
+
+            {statusResult && !statusResult.data && (
+              <View style={styles.statusResultContainer}>
+                <EmptyState
+                  icon="CircleAlert"
+                  title="No encontrado"
+                  message="No se encontró ninguna solicitud con el correo proporcionado."
+                />
+              </View>
+            )}
+          </KeyboardAvoidingView>
+        );
+
+      case "all":
+      default:
+        return (
+          <View style={styles.listContainer}>
+            <SearchBar
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              placeholder="Buscar por nombre o email"
+            />
+
+            <View style={styles.filterContainer}>
+              <Text style={styles.filterLabel}>Filtrar por estado:</Text>
+              <View style={styles.filterOptions}>
+                <FilterOption
+                  label="Todos"
+                  value={null}
+                  currentFilter={statusFilter}
+                  onSelect={setStatusFilter as any}
+                />
+                <FilterOption
+                  label="Pendientes"
+                  value="pending"
+                  currentFilter={statusFilter}
+                  onSelect={setStatusFilter as any}
+                />
+                <FilterOption
+                  label="Aprobados"
+                  value="approved"
+                  currentFilter={statusFilter}
+                  onSelect={setStatusFilter as any}
+                />
+                <FilterOption
+                  label="Rechazados"
+                  value="rejected"
+                  currentFilter={statusFilter}
+                  onSelect={setStatusFilter as any}
+                />
+              </View>
+            </View>
+
+            <Text style={styles.resultCount}>
+              Mostrando {filteredAndSortedRequests.length} {filteredAndSortedRequests.length === 1 ? 'solicitud' : 'solicitudes'}
+            </Text>
+
+            {filteredAndSortedRequests.length > 0 ? (
+              <FlashList
+                data={filteredAndSortedRequests}
+                renderItem={renderRequestItem}
+                keyExtractor={(item) => item.id}
+                estimatedItemSize={150}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={isRefreshing}
+                    onRefresh={handleRefresh}
+                    colors={[theme.colors.notification]}
+                    tintColor={theme.colors.notification}
+                  />
+                }
+              />
+            ) : (
+              <EmptyState
+                icon="Inbox"
+                title="Sin resultados"
+                message="No se encontraron solicitudes que coincidan con tu búsqueda."
+              />
+            )}
+          </View>
+        );
+    }
+  };
 
   return (
     <>
@@ -232,134 +647,40 @@ const RequestAccessScreen: React.FC = () => {
         options={{
           ...singleScreenHeader({
             theme,
-            title: "Panel Admin",
-            titleIcon: "ChartArea",
+            title: "Gestión de Accesos",
+            titleIcon: "ShieldCheck",
             headerRightProps: {
-              headerRightIcon: "Trash2",
-              headerRightIconColor: "red",
-              onPress: () => console.log(),
-              disabled: true,
-              style: { opacity: 0 },
+              headerRightIcon: "House",
+              headerRightIconColor: theme.colors.text,
+              onPress: () => router.push("/"),
+              disabled: false,
             },
           }),
         }}
       />
       <View style={styles.container}>
-        {/* <View style={styles.tabContainer}>
-                    <TouchableOpacity
-                        style={[styles.tab, activeTab === 'request' && styles.activeTab]}
-                        onPress={() => setActiveTab('request')}
-                    >
-                        <Text style={[styles.tabText, activeTab === 'request' && styles.activeTabText]}>
-                            Solicitar
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[styles.tab, activeTab === 'check' && styles.activeTab]}
-                        onPress={() => setActiveTab('check')}
-                    >
-                        <Text style={[styles.tabText, activeTab === 'check' && styles.activeTabText]}>
-                            Verificar
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[styles.tab, activeTab === 'all' && styles.activeTab]}
-                        onPress={() => setActiveTab('all')}
-                    >
-                        <Text style={[styles.tabText, activeTab === 'all' && styles.activeTabText]}>
-                            Todas
-                        </Text>
-                    </TouchableOpacity>
-                </View> */}
+        <View style={styles.tabContainer}>
+          <TabButton
+            title="Solicitudes"
+            isActive={activeTab === "all"}
+            onPress={() => setActiveTab("all")}
+            icon="Inbox"
+          />
+          <TabButton
+            title="Solicitar"
+            isActive={activeTab === "request"}
+            onPress={() => setActiveTab("request")}
+            icon="UserPlus"
+          />
+          <TabButton
+            title="Verificar"
+            isActive={activeTab === "check"}
+            onPress={() => setActiveTab("check")}
+            icon="Search"
+          />
+        </View>
 
-        {loading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={theme.colors.notification} />
-          </View>
-        ) : (
-          <>
-            {/* {activeTab === 'request' && (
-                            <ScrollView style={styles.formContainer}>
-                                <Text style={styles.title}>Solicitud de Acceso</Text>
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Nombre"
-                                    placeholderTextColor={theme.colors.text}
-                                    value={name}
-                                    onChangeText={setName}
-                                />
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Correo"
-                                    placeholderTextColor={theme.colors.text}
-                                    value={email}
-                                    onChangeText={setEmail}
-                                    keyboardType="email-address"
-                                    autoCapitalize="none"
-                                />
-                                <TouchableOpacity
-                                    style={styles.submitButton}
-                                    onPress={handleSubmitRequest}
-                                    disabled={loading}
-                                >
-                                    <Text style={styles.submitButtonText}>Enviar Solicitud</Text>
-                                </TouchableOpacity>
-                            </ScrollView>
-                        )}
-
-                        {activeTab === 'check' && (
-                            <ScrollView style={styles.formContainer}>
-                                <Text style={styles.title}>Verificar Estado</Text>
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Correo"
-                                    placeholderTextColor={theme.colors.text}
-                                    value={searchEmail}
-                                    onChangeText={setSearchEmail}
-                                    keyboardType="email-address"
-                                    autoCapitalize="none"
-                                />
-                                <TouchableOpacity
-                                    style={styles.submitButton}
-                                    onPress={handleCheckStatus}
-                                    disabled={loading}
-                                >
-                                    <Text style={styles.submitButtonText}>Verificar</Text>
-                                </TouchableOpacity>
-
-                                {statusResult && (
-                                    <View style={styles.statusContainer}>
-                                        <Text style={styles.statusTitle}>Resultado:</Text>
-                                        <FlashList
-                                            data={[statusResult.data]}
-                                            renderItem={renderRequestItem}
-                                            estimatedItemSize={10}
-                                        />
-                                    </View>
-                                )}
-                            </ScrollView>
-                        )} */}
-            {activeTab === "all" && (
-              <View style={styles.listContainer}>
-                <View style={styles.searchContainer}>
-                  <TextInput
-                    style={styles.searchInput}
-                    placeholder="Buscar por nombre o email"
-                    placeholderTextColor={theme.colors.text}
-                    value={searchQuery}
-                    onChangeText={setSearchQuery}
-                  />
-                </View>
-                <FlashList
-                  data={filteredRequests}
-                  renderItem={renderRequestItem}
-                  keyExtractor={(item) => item.id}
-                  estimatedItemSize={100}
-                />
-              </View>
-            )}
-          </>
-        )}
+        {renderContent()}
       </View>
     </>
   );
@@ -370,57 +691,85 @@ const getStyles = ({ colors }: TTheme) =>
     container: {
       flex: 1,
       backgroundColor: colors.background,
-      padding: 16,
     },
     loadingContainer: {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
     },
+    loadingText: {
+      marginTop: 16,
+      fontSize: 16,
+      color: colors.text,
+    },
     formContainer: {
+      flex: 1,
       backgroundColor: colors.background,
-      borderRadius: 8,
-      padding: 16,
+      padding: 20,
+    },
+    formHeader: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 24,
+    },
+    formGroup: {
+      marginBottom: 16,
+    },
+    formLabel: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: colors.text,
+      marginBottom: 8,
     },
     input: {
-      height: 40,
-      borderColor: colors.text,
+      height: 50,
+      borderColor: colors.border,
       borderWidth: 1,
-      marginBottom: 12,
-      paddingHorizontal: 8,
+      paddingHorizontal: 16,
       borderRadius: 8,
       color: colors.text,
+      backgroundColor: `${colors.card}50`,
+      fontSize: 16,
     },
     submitButton: {
       backgroundColor: colors.notification,
-      padding: 12,
+      padding: 16,
       borderRadius: 8,
       alignItems: "center",
+      marginTop: 8,
+      flexDirection: "row",
+      justifyContent: "center",
     },
     submitButtonText: {
       color: "white",
       fontSize: 16,
       fontWeight: "600",
     },
+    buttonIcon: {
+      marginRight: 8,
+    },
     title: {
       fontSize: 24,
       fontWeight: "600",
-      marginBottom: 20,
-      textAlign: "center",
+      marginLeft: 12,
       color: colors.text,
     },
     tabContainer: {
       flexDirection: "row",
-      marginBottom: 20,
-      borderRadius: 8,
-      overflow: "hidden",
-      borderColor: colors.text,
-      borderWidth: 1,
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      backgroundColor: colors.card,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
     },
     tab: {
       flex: 1,
       paddingVertical: 12,
       alignItems: "center",
+      flexDirection: "row",
+      justifyContent: "center",
+      borderRadius: 8,
+      marginHorizontal: 4,
     },
     activeTab: {
       backgroundColor: colors.notification,
@@ -429,6 +778,7 @@ const getStyles = ({ colors }: TTheme) =>
       fontSize: 14,
       fontWeight: "500",
       color: colors.text,
+      marginLeft: 6,
     },
     activeTabText: {
       color: "white",
@@ -436,27 +786,31 @@ const getStyles = ({ colors }: TTheme) =>
     },
     listContainer: {
       flex: 1,
+      padding: 16,
     },
     requestItem: {
-      backgroundColor: colors.background,
-      borderRadius: 8,
+      backgroundColor: colors.card,
+      borderRadius: 12,
       padding: 16,
       marginBottom: 12,
       elevation: 2,
       shadowColor: "#000",
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.2,
-      shadowRadius: 2,
-      borderColor: colors.text,
-      borderWidth: 1,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
     },
     requestInfo: {
-      marginBottom: 12,
+      marginBottom: 16,
       flexDirection: "row",
       justifyContent: "space-between",
+      alignItems: "flex-start",
+    },
+    requestDetails: {
+      flex: 1,
+      marginRight: 12,
     },
     requestName: {
-      fontSize: 16,
+      fontSize: 18,
       fontWeight: "600",
       marginBottom: 4,
       color: colors.text,
@@ -467,14 +821,19 @@ const getStyles = ({ colors }: TTheme) =>
       marginBottom: 8,
       opacity: 0.7,
     },
-    requestStatus: {
-      fontSize: 12,
-      fontWeight: "bold",
+    statusBadge: {
+      flexDirection: "row",
+      alignItems: "center",
       paddingVertical: 4,
       paddingHorizontal: 8,
-      borderRadius: 4,
+      borderRadius: 16,
       alignSelf: "flex-start",
-      color: colors.text,
+      marginBottom: 8,
+    },
+    statusLabel: {
+      fontSize: 12,
+      fontWeight: "600",
+      marginLeft: 4,
     },
     requestDate: {
       fontSize: 12,
@@ -488,15 +847,17 @@ const getStyles = ({ colors }: TTheme) =>
     actionButton: {
       paddingVertical: 8,
       paddingHorizontal: 12,
-      borderRadius: 4,
+      borderRadius: 8,
       marginLeft: 8,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
     },
     approveButton: {
       backgroundColor: "#16A34A",
     },
     rejectButton: {
       backgroundColor: "#DC2626",
-      marginHorizontal: 8,
     },
     deleteButton: {
       backgroundColor: "#6B0000",
@@ -505,34 +866,95 @@ const getStyles = ({ colors }: TTheme) =>
       color: "#fff",
       fontWeight: "600",
       fontSize: 12,
+      marginLeft: 4,
     },
-    statusContainer: {
-      marginTop: 20,
+    statusResultContainer: {
+      marginTop: 24,
     },
     statusTitle: {
       fontSize: 16,
       fontWeight: "600",
-      marginBottom: 8,
+      marginBottom: 12,
       color: colors.text,
-    },
-    noRequests: {
-      textAlign: "center",
-      fontSize: 16,
-      color: "#666",
-      marginTop: 40,
     },
     searchContainer: {
       paddingVertical: 8,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
-    searchInput: {
-      height: 40,
+      borderRadius: 8,
+      marginBottom: 16,
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: `${colors.card}50`,
       borderWidth: 1,
       borderColor: colors.border,
-      borderRadius: 8,
       paddingHorizontal: 12,
+    },
+    searchIcon: {
+      marginRight: 8,
+      opacity: 0.7,
+    },
+    searchInput: {
+      flex: 1,
+      height: 40,
       color: colors.text,
+      fontSize: 16,
+    },
+    filterContainer: {
+      marginBottom: 16,
+    },
+    filterLabel: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: colors.text,
+      marginBottom: 8,
+    },
+    filterOptions: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+    },
+    filterOption: {
+      paddingVertical: 6,
+      paddingHorizontal: 12,
+      borderRadius: 16,
+      marginRight: 8,
+      marginBottom: 8,
+      backgroundColor: `${colors.card}50`,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    selectedFilterOption: {
+      backgroundColor: `${colors.notification}20`,
+      borderColor: colors.notification,
+    },
+    filterOptionText: {
+      fontSize: 12,
+      color: colors.text,
+    },
+    selectedFilterOptionText: {
+      color: colors.notification,
+      fontWeight: "600",
+    },
+    resultCount: {
+      fontSize: 14,
+      color: `${colors.text}80`,
+      marginBottom: 12,
+    },
+    emptyStateContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      paddingHorizontal: 24,
+    },
+    emptyStateTitle: {
+      fontSize: 20,
+      fontWeight: "600",
+      color: colors.text,
+      marginTop: 16,
+      marginBottom: 8,
+    },
+    emptyStateMessage: {
+      fontSize: 16,
+      color: `${colors.text}80`,
+      textAlign: "center",
     },
   });
 

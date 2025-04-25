@@ -1,28 +1,14 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import FavoriteList from "@/components/favorite/FavoriteList";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
-import { GET_ALL_FAVORITE_VERSES } from "@/constants/Queries";
-import { useDBContext } from "@/context/databaseContext";
-import { Stack } from "expo-router";
-import React, { useEffect, useState } from "react";
 import { useTheme } from "@react-navigation/native";
+import { Stack } from "expo-router";
+import React from "react";
 type FavoriteProps = {};
 
 const Favorite: React.FC<FavoriteProps> = () => {
-  const { myBibleDB, executeSql } = useDBContext();
-  const [data, setData] = useState<any | null>(null);
   const startSource = require("../assets/lottie/star.json");
   const theme = useTheme();
-
-  useEffect(() => {
-    (async () => {
-      if (!myBibleDB || !executeSql) return;
-      const verses = await executeSql(GET_ALL_FAVORITE_VERSES, []);
-      setData(verses ?? []);
-    })();
-
-    return () => {};
-  }, [myBibleDB]);
 
   return (
     <ScreenWithAnimation
@@ -38,7 +24,7 @@ const Favorite: React.FC<FavoriteProps> = () => {
             titleIcon: "Star",
             headerRightProps: {
               headerRightIconColor: "#fedf75",
-              headerRightText: `${(data || []).length} ⭐`,
+              headerRightText: `⭐`,
               onPress: () => console.log(),
               disabled: true,
               style: {
@@ -51,7 +37,7 @@ const Favorite: React.FC<FavoriteProps> = () => {
           }),
         }}
       />
-      <FavoriteList isLoading={false} data={data} />
+      <FavoriteList />
     </ScreenWithAnimation>
   );
 };

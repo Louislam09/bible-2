@@ -1,6 +1,8 @@
 import Icon from "@/components/Icon";
 import { Text } from "@/components/Themed";
+import { bibleState$ } from "@/state/bibleState";
 import { IBookVerse, TChapter, TTheme } from "@/types";
+import { observer } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
@@ -12,8 +14,6 @@ import {
   View,
 } from "react-native";
 import Verse from "./Verse";
-import { bibleState$ } from "@/state/bibleState";
-import { observer } from "@legendapp/state/react";
 
 const Chapter = ({
   verses,
@@ -43,6 +43,7 @@ const Chapter = ({
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
       const newTopVerse = viewableItems[0].item.verse;
+      bibleState$.handleCurrentHistoryIndex(newTopVerse)
       if (topVerseRef.current !== newTopVerse) {
         topVerseRef.current = newTopVerse;
       }
@@ -66,7 +67,7 @@ const Chapter = ({
       chapterRef.current?.scrollToIndex({
         index: initialScrollIndex,
         animated: true,
-        viewPosition: 0,
+        // viewPosition: 0.5,
       });
     }
   }, [initialScrollIndex]);
@@ -112,12 +113,12 @@ const Chapter = ({
           disableAutoLayout
           disableHorizontalListHeightMeasurement
           ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
-          // decelerationRate="normal"
-          // onEndReached={onEndReached}
-          // maintainVisibleContentPosition={{
-          //   minIndexForVisible: 0,
-          //   autoscrollToTopThreshold: 10,
-          // }}
+        // decelerationRate="normal"
+        // onEndReached={onEndReached}
+        // maintainVisibleContentPosition={{
+        //   minIndexForVisible: 0,
+        //   autoscrollToTopThreshold: 10,
+        // }}
         />
       </View>
     </View>
