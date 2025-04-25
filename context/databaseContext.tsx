@@ -5,10 +5,6 @@ import * as SQLite from "expo-sqlite";
 import React, { createContext, useContext, useMemo } from "react";
 import { storedData$ } from "./LocalstoreContext";
 
-interface Row {
-  [key: string]: any;
-}
-
 type DatabaseContextType = {
   myBibleDB?: SQLite.SQLiteDatabase | null;
   executeSql: <T = any>(
@@ -23,11 +19,6 @@ type DatabaseContextType = {
   refreshDatabaseList: () => void;
 };
 
-enum DBs {
-  MYBIBLE,
-  NTV,
-}
-
 const initialContext: DatabaseContextType = {
   myBibleDB: null,
   executeSql: async (sql: string, params?: any[], queryName?: string) => [],
@@ -41,19 +32,12 @@ const initialContext: DatabaseContextType = {
 export const DatabaseContext =
   createContext<DatabaseContextType>(initialContext);
 
-const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  // const {
-  //   isDataLoaded,
-  //   storedData: { currentBibleVersion },
-  // } = useStorage();
+const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { currentBibleVersion, isDataLoaded } = use$(() => ({
     currentBibleVersion: storedData$.currentBibleVersion.get(),
     isDataLoaded: storedData$.isDataLoaded.get(),
   }));
-  const { installedBibles, loading, refreshDatabaseList, installedDictionary } =
-    useInstalledBibles();
+  const { installedBibles, isLoaded, refreshDatabaseList, installedDictionary } = useInstalledBibles();
   const currentDbName = useMemo(
     () => installedBibles?.find((x) => x.id === currentBibleVersion),
     [installedBibles, currentBibleVersion]
@@ -63,14 +47,14 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     database: myBibleDB,
     executeSql,
     loading: isMyBibleDbLoaded,
-  } = useDB({ dbName: isDataLoaded ? currentDbName : undefined });
+  } = useDB({ dbName: (isDataLoaded && isLoaded) ? currentDbName : undefined });
 
   const dbContextValue = {
     myBibleDB,
     executeSql,
     installedBibles,
     installedDictionary,
-    isInstallBiblesLoaded: !loading,
+    isInstallBiblesLoaded: isLoaded,
     refreshDatabaseList,
     isMyBibleDbLoaded,
   };

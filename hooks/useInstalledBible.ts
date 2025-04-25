@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
-import * as FileSystem from "expo-file-system";
+import bibleDatabases from "@/constants/bibleDatabases";
 import {
   databaseNames,
   getDatabaseExt,
+  initSQLiteDir,
   SQLiteDirPath,
 } from "@/constants/databaseNames";
-import bibleDatabases from "@/constants/bibleDatabases";
 import { DATABASE_TYPE } from "@/types";
+import * as FileSystem from "expo-file-system";
+import { useEffect, useState } from "react";
 
 export type VersionItem = {
   id: string;
@@ -58,6 +59,7 @@ const useInstalledBibles = () => {
   useEffect(() => {
     const checkInstalledBible = async () => {
       try {
+        await initSQLiteDir();
         const files = await FileSystem.readDirectoryAsync(bibleDirectory);
         const bibleFiles = files.filter((file) => file.endsWith(bibleExt));
         const dicFiles = files.filter((file) => file.endsWith(dicExt));
@@ -73,7 +75,7 @@ const useInstalledBibles = () => {
     checkInstalledBible();
   }, [refreshList]);
 
-  return { installedBibles, installedDictionary, loading, refreshDatabaseList };
+  return { installedBibles, installedDictionary, isLoaded: !loading, refreshDatabaseList };
 };
 
 export default useInstalledBibles;

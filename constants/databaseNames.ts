@@ -1,6 +1,6 @@
 import { DBName } from '@/enums';
-import * as FileSystem from 'expo-file-system';
 import { DATABASE_TYPE } from '@/types';
+import * as FileSystem from 'expo-file-system';
 export const SQLiteDirPath = `${FileSystem.documentDirectory}SQLite`;
 export const baseDownloadUrl = 'https://www.ph4.org';
 export const dbFileExt = '-bible.db';
@@ -58,7 +58,6 @@ export const initDir = async (dirName: string) => {
 
 export const initSQLiteDir = async () => {
   const sqliteDir = await FileSystem.getInfoAsync(SQLiteDirPath);
-
   if (!sqliteDir.exists) {
     await FileSystem.makeDirectoryAsync(SQLiteDirPath);
   } else if (!sqliteDir.isDirectory) {
