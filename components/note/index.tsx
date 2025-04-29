@@ -35,6 +35,7 @@ import {
   Animated,
   Keyboard,
   Platform,
+  RefreshControl,
   View as RNView,
   StyleSheet,
   TextInput,
@@ -75,6 +76,9 @@ const Note = ({ data }: TListVerse) => {
   const swipeableRefs = useRef<Map<number, Swipeable | null>>(new Map());
   const openSwipeableId = useRef<number | null>(null);
   const searchInputRef = useRef<TextInput>(null);
+
+  const [refreshing, setRefreshing] = useState(false);
+
 
   const noteList = useMemo(() => {
     if (!searchText) return filterData;
@@ -311,6 +315,12 @@ const Note = ({ data }: TListVerse) => {
       ToastAndroid.show("Error al importar notas", ToastAndroid.SHORT);
     }
   }, [importNotes]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    bibleState$.toggleReloadNotes()
+    setRefreshing(false);
+  }, []);
 
   const actionButtons = useMemo(
     () =>
@@ -670,6 +680,15 @@ const Note = ({ data }: TListVerse) => {
             accessible={true}
             accessibilityLabel="Lista de notas"
             accessibilityRole="list"
+
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={[theme.colors.notification]}
+                tintColor={theme.colors.notification}
+              />
+            }
           />
 
           {/* Action Buttons */}

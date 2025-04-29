@@ -71,7 +71,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
 
   const rotate = rotation.interpolate({
     inputRange: [0, 1],
-    outputRange: ["0deg", "-360deg"],
+    outputRange: ["0deg", "360deg"],
   });
 
   useEffect(() => {
@@ -218,7 +218,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
             <Icon
               style={[{}]}
               color={theme.colors.notification}
-              name={isView ? "Pencil" : isTyping ? "RefreshCcw" : "Save"}
+              name={isView ? "Pencil" : isTyping ? "Loader" : "Save"}
               size={30}
             />
           </Animated.View>

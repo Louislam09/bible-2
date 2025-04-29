@@ -1,11 +1,15 @@
-import { useTheme } from "@react-navigation/native";
 import Icon from "@/components/Icon";
 import MyRichEditor from "@/components/RichTextEditor";
 import { Text, View } from "@/components/Themed";
 import { GET_NOTE_BY_ID } from "@/constants/Queries";
-import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
 import useDebounce from "@/hooks/useDebounce";
+import { useNoteService } from "@/services/noteService";
+import { bibleState$ } from "@/state/bibleState";
+import { EViewMode, TNote, TTheme } from "@/types";
+import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
+import { use$ } from "@legendapp/state/react";
+import { useTheme } from "@react-navigation/native";
 import React, {
   useCallback,
   useEffect,
@@ -24,16 +28,13 @@ import {
   ToastAndroid,
   TouchableOpacity,
 } from "react-native";
-import { EViewMode, TNote, TTheme } from "@/types";
-import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
-import { bibleState$ } from "@/state/bibleState";
-import { use$ } from "@legendapp/state/react";
 
-const CurrentNoteDetail: React.FC<any> = ({}) => {
+const CurrentNoteDetail: React.FC<any> = ({ }) => {
   const theme = useTheme();
   const { myBibleDB, executeSql } = useDBContext();
   const styles = useMemo(() => getStyles(theme), [theme]);
-  const { onSaveNote, onUpdateNote } = useBibleContext();
+  const { createNote, updateNote } = useNoteService();
+
   const selectedVerseForNote = use$(() =>
     bibleState$.selectedVerseForNote.get()
   );
@@ -63,7 +64,7 @@ const CurrentNoteDetail: React.FC<any> = ({}) => {
 
   const rotate = rotation.interpolate({
     inputRange: [0, 1],
-    outputRange: ["0deg", "-360deg"],
+    outputRange: ["0deg", "360deg"],
   });
 
   useEffect(() => {
@@ -138,12 +139,19 @@ const CurrentNoteDetail: React.FC<any> = ({}) => {
         return;
       }
       if (!noteContent.title) noteContent.title = defaultTitle;
-      await onSaveNote(noteContent, () => setViewMode("VIEW"));
-      if (!myBibleDB || !executeSql) return;
-      const result = await executeSql("SELECT last_insert_rowid() as id");
-      const newNoteId = result[0]?.id;
-      bibleState$.currentNoteId.set(newNoteId);
-      ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
+
+      const success = await createNote({
+        title: noteContent.title,
+        note_text: noteContent.content
+      });
+
+      if (success) {
+        setViewMode("VIEW")
+        const result = await executeSql("SELECT last_insert_rowid() as id");
+        const newNoteId = result[0]?.id;
+        bibleState$.currentNoteId.set(newNoteId);
+        ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
+      }
     } catch (error) {
       Alert.alert("Error", "No se pudo guardar la nota.");
     }
@@ -169,7 +177,7 @@ const CurrentNoteDetail: React.FC<any> = ({}) => {
             <Icon
               style={[{}]}
               color={theme.colors.notification}
-              name={isView ? "Pencil" : isTyping ? "RefreshCcw" : "Save"}
+              name={isView ? "Pencil" : isTyping ? "Loader" : "Save"}
               size={30}
             />
           </Animated.View>
@@ -218,11 +226,20 @@ const CurrentNoteDetail: React.FC<any> = ({}) => {
 
   const onUpdate = async (id: number, goToViewMode = false) => {
     try {
-      await onUpdateNote(noteContent, id, afterSaving);
-      if (goToViewMode) {
-        setViewMode("VIEW");
-        ToastAndroid.show("Nota actualizada!", ToastAndroid.SHORT);
+      const success = await updateNote(id, {
+        title: noteContent.title,
+        note_text: noteContent.content
+      });
+
+      if (success) {
+        afterSaving();
+        if (goToViewMode) {
+          setViewMode("VIEW");
+          ToastAndroid.show("Nota actualizada!", ToastAndroid.SHORT);
+          bibleState$.toggleReloadNotes()
+        }
       }
+
     } catch (error) {
       Alert.alert("Error", "No se pudo actualizar la nota.");
     }

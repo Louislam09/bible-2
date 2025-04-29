@@ -30,7 +30,6 @@ export const useNoteService = () => {
     try {
         // First check if we've already generated UUIDs
       if (storedData$.isUUIDGenerated.get()) {
-        console.log("UUIDs already generated for all notes");
         return true;
       }
 
@@ -48,13 +47,11 @@ export const useNoteService = () => {
       for (const row of notes) {
         const newUUID = Crypto.randomUUID();
         await executeSql(`UPDATE notes SET uuid = ? WHERE id = ?`, [newUUID, row.id]);
-        console.log(`Assigned UUID ${newUUID} to note with ID ${row.id}`);
       }
 
       // After generating UUIDs, update the flag
       storedData$.isUUIDGenerated.set(true);
       
-      console.log(`Successfully generated UUIDs for ${notes.length} notes`);
       return true;
     } catch (error) {
       console.error("Error al generar UUIDs:", error);
