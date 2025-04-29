@@ -30,6 +30,7 @@ import { useTheme } from "@react-navigation/native";
 import { useHighlightRender } from "@/components/home/content/Chapter";
 import BibleHeader from "@/components/home/header/BibleHeader";
 import StatusBarBackground from "@/components/StatusBarBackground";
+import { Text } from "@/components/Themed";
 import BibleChapterProvider from "@/context/BibleChapterContext";
 import { useInitialState } from "@/hooks/useInitialState";
 import { useSplitScreen } from "@/hooks/useSplitScreen";
@@ -174,8 +175,9 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
           </FloatingButton>
 
           <BottomModal
-            shouldScroll
+            // shouldScroll
             justOneSnap
+            showIndicator
             justOneValue={["50%"]}
             startAT={0}
             ref={bibleState$.noteListBottomSheetRef.get()}

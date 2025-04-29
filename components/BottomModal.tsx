@@ -1,3 +1,4 @@
+import { TTheme } from "@/types";
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
@@ -13,7 +14,6 @@ import React, {
   useState,
 } from "react";
 import { BackHandler, StyleProp, StyleSheet, ViewStyle } from "react-native";
-import { TTheme } from "@/types";
 
 type TBottomModal = {
   startAT?: 0 | 1 | 2 | 3;
@@ -102,7 +102,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
           styles.bottomSheet,
           index === 3 && { borderRadius: 0 },
           backgroundColor && { backgroundColor: backgroundColor },
-          style && style,
+          style && style
         ]}
         ref={ref}
         index={startAT ?? 1}

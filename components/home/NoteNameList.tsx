@@ -1,4 +1,3 @@
-import DecoratorLine from "@/components/DecoratorLine";
 import Icon from "@/components/Icon";
 import { GET_ALL_NOTE } from "@/constants/Queries";
 import { iconSize } from "@/constants/size";
@@ -7,190 +6,316 @@ import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { bibleState$ } from "@/state/bibleState";
 import { TNote, TTheme } from "@/types";
 import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
+import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { useTheme } from "@react-navigation/native";
-import React, { FC, useEffect, useState } from "react";
-import { Platform, StyleSheet, TouchableOpacity } from "react-native";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  ActivityIndicator,
+  Animated,
+  Dimensions,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity
+} from "react-native";
 import { Text, View } from "../Themed";
 
-type NoteNameListProps = {};
+type NoteNameListProps = {
+  handleSnapPress?: (index: number) => void;
+};
 
-const NoteNameList: FC<NoteNameListProps> = ({}) => {
+const { width } = Dimensions.get('window');
+const ITEM_HEIGHT = 70;
+
+const NoteNameList: FC<NoteNameListProps> = ({ handleSnapPress }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
   const { myBibleDB, executeSql } = useDBContext();
-  const [data, setData] = useState<TNote[] | any>(null);
+  const [data, setData] = useState<TNote[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const fontSize = storedData$.fontSize.get();
 
-  useEffect(() => {
+  const fetchNotes = useCallback(async () => {
     if (!myBibleDB || !executeSql) return;
-    const getNotes = async () => {
+
+    try {
+      setLoading(true);
       const notes = await executeSql(GET_ALL_NOTE, []);
       setData(notes || []);
-    };
-    getNotes();
-
-    return () => {};
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
   }, [myBibleDB, executeSql]);
 
-  const onItem = (id: number) => {
+  useEffect(() => {
+    fetchNotes();
+    return () => { };
+  }, [fetchNotes]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchNotes();
+  }, [fetchNotes]);
+
+  const onSelectNote = useCallback((id: number) => {
     bibleState$.currentNoteId.set(id);
     bibleState$.closeNoteListBottomSheet();
-  };
+    if (handleSnapPress) {
+      handleSnapPress(0); // Close the bottom sheet
+    }
+  }, [handleSnapPress]);
 
-  return (
-    <View style={[styles.versionContainer]}>
-      <Text
-        style={[
-          styles.title,
-          {
-            textTransform: "capitalize",
-            paddingVertical: 5,
-            fontWeight: "bold",
-          },
-        ]}
-      >
-        Tus Notas
-      </Text>
-      <View
+  const renderItem = useCallback(({ item, index }: any) => {
+    const isEven = index % 2 === 0;
+
+    return (
+      <Animated.View
         style={{
           flexDirection: "row",
           marginVertical: 5,
           backgroundColor: "transparent",
+          alignSelf: "center",
         }}
       >
-        <DecoratorLine theme={theme} color={theme.colors.text} />
         <TouchableOpacity
           style={[
             styles.card,
-            { borderColor: theme.colors.text, borderRadius: 0 },
+            {
+              borderLeftColor: theme.colors.primary,
+              borderLeftWidth: 3,
+            }
           ]}
-          onPress={() => onItem(-1)}
+          activeOpacity={0.7}
+          onPress={() => onSelectNote(item.id)}
         >
-          <Icon name="NotebookText" color={theme.colors.text} size={iconSize} />
-          <View style={{ backgroundColor: "transparent", flex: 1 }}>
+          <View style={styles.noteContent}>
             <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
               style={[
-                styles.versionText,
-                {
-                  color: theme.colors.text,
-                  fontSize,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                },
+                styles.noteTitle,
+                { fontSize: fontSize }
               ]}
             >
-              Crea una nueva nota
+              {item.title}
+            </Text>
+            <Text style={styles.noteDate}>
+              {formatDateShortDayMonth(item.updated_at || item.created_at)}
             </Text>
           </View>
-          <Icon name="NotebookText" color={theme.colors.text} size={iconSize} />
-        </TouchableOpacity>
-        <DecoratorLine theme={theme} color={theme.colors.text} />
-      </View>
-      {data?.map((note: any) => (
-        <View
-          key={note?.id}
-          style={{
-            flexDirection: "row",
-            marginVertical: 5,
-            backgroundColor: "transparent",
-          }}
-        >
-          <DecoratorLine theme={theme} />
-          <TouchableOpacity
-            style={[styles.card, { borderRadius: 0 }]}
-            onPress={() => onItem(note?.id)}
-          >
-            <View style={{ backgroundColor: "transparent", flex: 1 }}>
-              <Text
-                style={[
-                  styles.versionText,
-                  { color: theme.colors.notification, fontSize },
-                ]}
-              >
-                {note.title}
-              </Text>
-              <Text style={[styles.versionText, {}]}>
-                {formatDateShortDayMonth(note.updated_at || note.created_at)}
-              </Text>
-            </View>
+          <View style={styles.iconContainer}>
             <Icon
               name="NotebookText"
-              color={theme.colors.text}
-              size={iconSize}
+              color={isEven ? theme.colors.notification : theme.colors.primary}
+              size={iconSize - 2}
             />
-          </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  }, [theme, styles, fontSize, onSelectNote]);
+
+  const ListHeaderComponent = useMemo(() => (
+    <View style={styles.headerContainer}>
+      <View style={styles.headerTitleContainer}>
+        <Text style={styles.title}>Tus Notas</Text>
+        <View style={styles.notesCountContainer}>
+          <Text style={styles.notesCount}>{data?.length || 0}</Text>
         </View>
-      ))}
+      </View>
+
+      <View style={styles.createNoteContainer}>
+        <TouchableOpacity
+          style={[styles.createNoteCard]}
+          activeOpacity={0.7}
+          onPress={() => onSelectNote(-1)}
+        >
+          <Icon name="Plus" color={theme.colors.notification} size={iconSize} />
+          <View style={styles.createNoteTextContainer}>
+            <Text style={styles.createNoteText}>
+              Crear nueva nota
+            </Text>
+          </View>
+          <Icon name="NotebookText" color={theme.colors.notification} size={iconSize} />
+        </TouchableOpacity>
+      </View>
+    </View>
+  ), [theme, styles, data?.length, onSelectNote]);
+
+  const ListEmptyComponent = useMemo(() => (
+    !loading && (
+      <View style={styles.emptyContainer}>
+        <Icon name="BookOpen" color={theme.colors.text + "70"} size={iconSize * 2} />
+        <Text style={styles.emptyText}>No tienes notas todavía</Text>
+        <Text style={styles.emptySubtext}>Crea una nueva nota para comenzar</Text>
+      </View>
+    )
+  ), [loading, theme, styles]);
+
+  return (
+    <View style={styles.container}>
+      {loading && !data ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={theme.colors.notification} />
+          <Text style={styles.loadingText}>Cargando notas...</Text>
+        </View>
+      ) : (
+        <BottomSheetFlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.listContainer}
+          ListHeaderComponent={ListHeaderComponent}
+          ListEmptyComponent={ListEmptyComponent as any}
+          showsVerticalScrollIndicator={false}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          getItemLayout={(data, index) => (
+            { length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index }
+          )}
+        />
+      )}
     </View>
   );
 };
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
-    plusNote: {
-      backgroundColor: colors.notification,
-      paddingVertical: 5,
+    container: {
+      flex: 1,
+      paddingTop: 15,
+      backgroundColor: 'transparent',
     },
-    listHeader: {
-      width: "90%",
-      backgroundColor: "transparent",
-      flexDirection: "row",
-      marginBottom: 5,
-      alignItems: "center",
-      gap: 4,
+    headerTitleContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 10,
+      backgroundColor: 'transparent',
+    },
+    notesCountContainer: {
+      backgroundColor: colors.notification,
+      width: 30,
+      height: 30,
+      borderRadius: 15,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginLeft: 10,
+    },
+    notesCount: {
+      color: '#FFFFFF',
+      fontWeight: 'bold',
+      fontSize: 14,
+    },
+    listContainer: {
+      paddingBottom: 30,
+    },
+    loadingContainer: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 50,
+      backgroundColor: 'transparent',
+    },
+    loadingText: {
+      marginTop: 10,
+      color: colors.text,
+      fontSize: 16,
+    },
+    headerContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'transparent',
+    },
+    emptyContainer: {
+      padding: 30,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'transparent',
+    },
+    emptyText: {
+      marginTop: 15,
+      color: colors.text,
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    emptySubtext: {
+      marginTop: 5,
+      color: colors.text + "90",
+      fontSize: 14,
     },
     title: {
-      color: "white",
+      color: 'white',
       fontSize: 20,
-      padding: 0,
-      width: "93%",
-      textAlign: "center",
+      fontWeight: 'bold',
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      textAlign: 'center',
+      borderRadius: 20,
       backgroundColor: colors.notification,
+      overflow: 'hidden',
     },
-    versionContainer: {
-      position: "relative",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      paddingVertical: 25,
-      borderRadius: 45,
-      backgroundColor: "transparent",
+    createNoteContainer: {
+      flexDirection: 'row',
+      marginVertical: 15,
+      backgroundColor: 'transparent',
+    },
+    createNoteCard: {
+      flexDirection: 'row',
+      width: '90%',
+      padding: 15,
+      borderRadius: 15,
+      backgroundColor: dark ? colors.card : 'white',
+      borderWidth: 1,
+      borderColor: colors.notification,
+      elevation: 3,
+      shadowColor: colors.notification,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    createNoteTextContainer: {
+      flex: 1,
+      backgroundColor: 'transparent',
+      alignItems: 'center',
+    },
+    createNoteText: {
+      color: colors.notification,
+      fontSize: 16,
+      fontWeight: 'bold',
     },
     card: {
-      display: "flex",
-      flexDirection: "row",
-      width: "90%",
-      padding: 5,
-      elevation: 5,
-      ...Platform.select({
-        ios: {
-          shadowColor: "black",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.2,
-          shadowRadius: 4,
-        },
-      }),
-      paddingVertical: 10,
-      paddingLeft: 10,
-      borderColor: colors.notification + "50",
-      backgroundColor: dark ? colors.background : "white",
-      borderWidth: dark ? 1 : 0,
-      shadowColor: colors.notification,
-      shadowOpacity: 1,
-      shadowRadius: 10,
+      flexDirection: 'row',
+      width: '90%',
+      padding: 15,
+      marginVertical: 3,
       borderRadius: 10,
-      alignItems: "center",
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
+      backgroundColor: dark ? colors.card : 'white',
+      alignItems: 'center',
+      justifyContent: 'space-between',
     },
-    icon: {
-      fontWeight: "700",
-      marginHorizontal: 10,
-      color: colors.notification + "90",
-      fontSize: 28,
+    noteContent: {
+      flex: 1,
+      backgroundColor: 'transparent',
     },
-    versionText: {
+    noteTitle: {
       color: colors.text,
+      fontWeight: '600',
+      marginBottom: 4,
+    },
+    noteDate: {
+      color: colors.text + '80',
+      fontSize: 12,
+    },
+    iconContainer: {
+      backgroundColor: 'transparent',
+      padding: 5,
     },
   });
 
