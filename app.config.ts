@@ -64,7 +64,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       package: getUniqueIdentifier(),
     },
     web: {
-      favicon: './assets/images/favicon.ico',
+      bundler: "metro",
+      output: "static",
+      favicon: "./assets/images/auth.png"
     },
     extra: {
       eas: {

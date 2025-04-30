@@ -1,5 +1,6 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
+import LexicalRichTextEditor from "@/components/LexicalRichTextEditor";
 import MyRichEditor from "@/components/RichTextEditor";
 import { Text, View } from "@/components/Themed";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
@@ -361,7 +362,13 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
             : ((noteInfo?.updated_at || noteInfo?.created_at) as any)
         )}
       </Text>
-      <MyRichEditor
+      <LexicalRichTextEditor
+      // initialContent={noteContent.content}
+      // onChange={(text: string) => onContentChange("content", text)}
+      // readOnly={isView}
+      // placeholder="Escribe tu nota aquí..."
+      />
+      {/* <MyRichEditor
         Textinput={
           <TextInput
             editable={!isView}
@@ -376,7 +383,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
         value={noteContent.content}
         onChangeText={(text: string) => onContentChange("content", text)}
         readOnly={isView}
-      />
+      /> */}
       {renderActionButtons()}
     </View>
   );
