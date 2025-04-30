@@ -13,8 +13,6 @@ import {
   ActivityIndicator,
   Animated,
   Dimensions,
-  Platform,
-  ScrollView,
   StyleSheet,
   TouchableOpacity
 } from "react-native";
@@ -110,7 +108,7 @@ const NoteNameList: FC<NoteNameListProps> = ({ handleSnapPress }) => {
           <View style={styles.iconContainer}>
             <Icon
               name="NotebookText"
-              color={isEven ? theme.colors.notification : theme.colors.primary}
+              color={theme.colors.primary}
               size={iconSize - 2}
             />
           </View>
@@ -191,9 +189,10 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: 'transparent',
     },
     headerTitleContainer: {
+      width: '90%',
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'space-between',
       marginBottom: 10,
       backgroundColor: 'transparent',
     },
@@ -253,10 +252,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontSize: 20,
       fontWeight: 'bold',
       paddingVertical: 10,
-      paddingHorizontal: 20,
       textAlign: 'center',
       borderRadius: 20,
-      backgroundColor: colors.notification,
       overflow: 'hidden',
     },
     createNoteContainer: {
