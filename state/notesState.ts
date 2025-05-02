@@ -223,3 +223,64 @@ export const notesState$ = observable<NotesState>({
     notesState$.error.set(null);
   },
 });
+
+export interface NoteSelectorsState {
+  selectedNoteIds: Set<number>;
+  unselectNote: (id: number) => void;
+  toggleNoteSelection: (id: number) => void;
+  clearSelections: () => void;
+  isSelected: (id: number) => boolean;
+  isSelectionMode: boolean;
+  toggleSelectionMode: () => void;
+  selectAll: (ids: number[]) => void;
+}
+
+export const noteSelectors$ = observable<NoteSelectorsState>({
+  selectedNoteIds: new Set(),
+  isSelectionMode: false,
+  toggleSelectionMode: () => {
+    noteSelectors$.isSelectionMode.set(prev => !prev);
+  },
+
+  unselectNote: (id: number) => {
+    const currentSet = noteSelectors$.selectedNoteIds.get();
+    const newSet = new Set(currentSet);
+    newSet.delete(id);
+    noteSelectors$.selectedNoteIds.set(newSet);
+  },
+
+  toggleNoteSelection: (id: number) => {
+    const currentSet = noteSelectors$.selectedNoteIds.get();
+    const newSet: Set<number> = new Set(currentSet);
+    if (newSet.has(id)) {
+      newSet.delete(id);
+    } else {
+      newSet.add(id);
+    }
+
+    if(newSet.size === 0) {
+      noteSelectors$.isSelectionMode.set(false);
+    } else if(!noteSelectors$.isSelectionMode.get()) {
+      noteSelectors$.isSelectionMode.set(true);
+    }
+    noteSelectors$.selectedNoteIds.set(newSet);
+  },
+
+  isSelected: (id: number): boolean => {
+    const currentSet = noteSelectors$.selectedNoteIds.get();
+    return currentSet.has(id);
+  },
+
+  selectAll: (ids: number[]) => {
+    const newSet = new Set(ids);
+    noteSelectors$.selectedNoteIds.set(newSet);
+    if (newSet.size > 0) {
+      noteSelectors$.isSelectionMode.set(true);
+    }
+  },
+
+  clearSelections: () => {
+    noteSelectors$.selectedNoteIds.set(new Set<number>());
+    noteSelectors$.isSelectionMode.set(false);
+  },
+});

@@ -10,7 +10,7 @@ import { useSyncNotes } from "@/hooks/useSyncNotes";
 import { useNoteService } from "@/services/noteService";
 import { authState$ } from "@/state/authState";
 import { bibleState$ } from "@/state/bibleState";
-import { notesState$ } from "@/state/notesState";
+import { noteSelectors$, notesState$ } from "@/state/notesState";
 import { IVerseItem, Screens, TNote, TTheme } from "@/types";
 import convertHtmlToText from "@/utils/convertHtmlToText";
 import removeAccent from "@/utils/removeAccent";
@@ -38,6 +38,7 @@ import {
   Platform,
   RefreshControl,
   View as RNView,
+  ScrollView,
   StyleSheet,
   TextInput,
   ToastAndroid,
@@ -78,7 +79,8 @@ const Note = ({ data }: TListVerse) => {
   const searchInputRef = useRef<TextInput>(null);
 
   const [refreshing, setRefreshing] = useState(false);
-
+  const isSelectionActive = use$(() => noteSelectors$.isSelectionMode.get());
+  const selectedItems = use$(() => noteSelectors$.selectedNoteIds.get());
 
   const noteList = useMemo(() => {
     if (!searchText) return filterData;
@@ -497,9 +499,17 @@ const Note = ({ data }: TListVerse) => {
             />
           </View>
         </Animated.View>
-        <Text style={styles.notesCountText} accessible={true} accessibilityRole="text">
-          {noteList.length} {noteList.length !== 1 ? "notas" : "nota"}
-        </Text>
+        <View style={styles.chapterHeader}>
+          <Text style={styles.notesCountText} accessible={true} accessibilityRole="text">
+            {noteList.length} {noteList.length !== 1 ? "notas" : "nota"}
+          </Text>
+          <TouchableOpacity
+            style={styles.selectButton}
+            onPress={() => noteSelectors$.toggleSelectionMode()}
+          >
+            <Text style={styles.selectButtonText}>Seleccionar</Text>
+          </TouchableOpacity>
+        </View>
       </>
     );
   }, [showSearch, searchText, noteList.length, styles, theme.colors.notification]);
@@ -531,10 +541,15 @@ const Note = ({ data }: TListVerse) => {
       "MMM dd, yyyy - hh:mm a"
     );
     const preview = item.note_text?.trim().substring(0, 50);
+    const isSelected = selectedItems.has(item.id);
 
     const notePreview = preview ? convertHtmlToText(item.note_text, { maxLength: 100, preserveLineBreaks: false, preserveWhitespace: true }) : '';
 
     const handlePress = () => {
+      if (isSelectionActive) {
+        noteSelectors$.toggleNoteSelection(item.id);
+        return;
+      }
       onOpenNoteDetail(item.id);
     };
 
@@ -542,23 +557,36 @@ const Note = ({ data }: TListVerse) => {
       <Swipeable
         ref={(ref) => swipeableRefs.current.set(item.id, ref)}
         friction={SWIPEABLE_FRICTION}
-        rightThreshold={SWIPEABLE_THRESHOLD}
-        leftThreshold={SWIPEABLE_THRESHOLD}
-        onSwipeableWillOpen={(direction) => onSwipeableWillOpen(direction, item)}
-        onSwipeableOpenStartDrag={(direction) => handleSwipeableOpen(item.id)}
-        renderRightActions={renderRightActions}
-        renderLeftActions={renderLeftActions}
+      // rightThreshold={SWIPEABLE_THRESHOLD}
+      // leftThreshold={SWIPEABLE_THRESHOLD}
+      // onSwipeableWillOpen={(direction) => onSwipeableWillOpen(direction, item)}
+      // onSwipeableOpenStartDrag={(direction) => handleSwipeableOpen(item.id)}
+      // renderRightActions={renderRightActions}
+      // renderLeftActions={renderLeftActions}
       >
         <TouchableOpacity
           style={styles.verseContainer}
           activeOpacity={0.7}
           onPress={handlePress}
+          onLongPress={() => {
+            noteSelectors$.toggleNoteSelection(item.id);
+          }}
           accessible={true}
           accessibilityLabel={`Nota: ${item.title}`}
           accessibilityRole="button"
           accessibilityHint="Pulsa para ver o editar esta nota"
         >
           <View style={styles.verseItem}>
+            {isSelectionActive && (
+              <View style={styles.checkboxContainer}>
+                <View style={[
+                  styles.checkbox,
+                  isSelected && styles.checkboxSelected
+                ]}>
+                  {isSelected && <Icon name="Check" size={16} color="#fff" />}
+                </View>
+              </View>
+            )}
             <View style={styles.verseBody}>
               <Text
                 ellipsizeMode="tail"
@@ -621,7 +649,9 @@ const Note = ({ data }: TListVerse) => {
     styles,
     theme.colors.text,
     theme.colors.notification,
-    onOpenNoteDetail
+    onOpenNoteDetail,
+    isSelectionActive,
+    selectedItems
   ]);
 
   if (isLoading) {
@@ -663,8 +693,8 @@ const Note = ({ data }: TListVerse) => {
           {NoteHero()}
           {error && <Text style={styles.textError} accessible={true} accessibilityRole="alert">{error}</Text>}
 
-          {/* Main Note List */}
           <FlashList
+            extraData={{ refresh: selectedItems.size + +isSelectionActive }}
             contentContainerStyle={styles.flashListContent}
             ref={flatListRef}
             decelerationRate="normal"
@@ -691,8 +721,7 @@ const Note = ({ data }: TListVerse) => {
             }
           />
 
-          {/* Action Buttons */}
-          {actionButtons.map((item, index) => (
+          {!isSelectionActive && actionButtons.map((item, index) => (
             <ActionButton
               key={`action-${item.name}-${index}`}
               theme={theme}
@@ -701,11 +730,66 @@ const Note = ({ data }: TListVerse) => {
             />
           ))}
 
-          {/* Syncing Indicator */}
           {isSyncing && (
             <View style={styles.syncingOverlay}>
               <ActivityIndicator size="large" color={theme.colors.notification} />
               <Text style={styles.syncingText}>Sincronizando...</Text>
+            </View>
+          )}
+
+          {isSelectionActive && (
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: 10, backgroundColor: theme.colors.background, borderTopWidth: 1, borderTopColor: theme.colors.border }}>
+              <TouchableOpacity
+                style={{ alignItems: 'center' }}
+                onPress={() => {
+                  const allSelected = noteList.length === selectedItems.size;
+                  if (allSelected) {
+                    noteSelectors$.clearSelections();
+                  } else {
+                    noteSelectors$.selectAll(noteList.map((note: TNote) => note.id));
+                  }
+                }}
+              >
+                <Ionicons
+                  name={noteList.every((note: TNote) => selectedItems.has(note.id)) ? "close-circle" : "checkmark-done"}
+                  size={24}
+                  color={noteList.every((note: TNote) => selectedItems.has(note.id)) ? "#FFA500" : theme.colors.notification}
+                />
+                <Text style={{ color: theme.colors.text, marginTop: 4 }}>
+                  {noteList.every((note: TNote) => selectedItems.has(note.id)) ? "Deseleccionar Todo" : "Todo"}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{ alignItems: 'center' }}
+                onPress={() => {
+                  const selectedIds = Array.from(selectedItems);
+                  Alert.alert(
+                    "Eliminar Notas",
+                    `¿Estás seguro que quieres eliminar ${selectedIds.length} notas seleccionadas?`,
+                    [
+                      { text: "Cancelar", style: "cancel" },
+                      {
+                        text: "Eliminar",
+                        onPress: async () => {
+                          for (const id of selectedIds) {
+                            await deleteNote(id);
+                          }
+                          noteSelectors$.clearSelections();
+                          bibleState$.toggleReloadNotes();
+                          ToastAndroid.show(
+                            "Notas eliminadas",
+                            ToastAndroid.SHORT
+                          );
+                        },
+                      },
+                    ]
+                  );
+                }}
+              >
+                <Ionicons name="trash" size={24} color="#F44336" />
+                <Text style={{ color: theme.colors.text, marginTop: 4 }}>Eliminar</Text>
+              </TouchableOpacity>
             </View>
           )}
         </RNView>
@@ -734,6 +818,18 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontSize: 16,
       color: colors.text,
     },
+    selectButton: {
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      borderRadius: 16,
+      backgroundColor: colors.notification + "30",
+      borderColor: colors.text + 50,
+      borderWidth: 1,
+    },
+    selectButtonText: {
+      color: 'white',
+      fontWeight: "700",
+    },
     textError: {
       textAlign: "center",
       color: "#e74856",
@@ -753,8 +849,13 @@ const getStyles = ({ colors, dark }: TTheme) =>
     notesCountText: {
       paddingHorizontal: 4,
       fontSize: 18,
-      marginBottom: 10,
       fontWeight: '600',
+    },
+    chapterHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 10,
     },
     searchContainer: {
       display: "flex",
@@ -835,6 +936,26 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontWeight: '600',
       marginBottom: 6,
       color: colors.text,
+    },
+
+    checkboxContainer: {
+      marginRight: 12,
+      justifyContent: "center",
+      marginBottom: 10
+    },
+    checkbox: {
+      width: 22,
+      height: 22,
+      borderRadius: 11,
+      borderWidth: 2,
+      borderColor: colors.notification,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "transparent",
+    },
+    checkboxSelected: {
+      backgroundColor: colors.notification,
+      borderColor: colors.notification,
     },
     notePreview: {
       fontSize: 14,
