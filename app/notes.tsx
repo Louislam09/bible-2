@@ -9,13 +9,12 @@ import React, { useEffect, useState } from "react";
 type NotesProps = {};
 
 const Notes: React.FC<NotesProps> = ({ }) => {
-  const { getAllNotes, generateAndAssignUUID } = useNoteService();
+  const { getAllNotes } = useNoteService();
   const [data, setData] = useState<TNote | any>(null);
   const reloadNotes = use$(() => bibleState$.reloadNotes.get())
 
   useEffect(() => {
     const getNotes = async () => {
-      await generateAndAssignUUID();
       const notes = await getAllNotes();
       setData(notes ?? []);
     };

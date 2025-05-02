@@ -6,6 +6,7 @@ import { headerIconSize } from "@/constants/size";
 import { useBibleContext } from "@/context/BibleContext";
 import { useStorage } from "@/context/LocalstoreContext";
 import useNotesExportImport from "@/hooks/useNotesExportImport";
+import { useSyncNotes } from "@/hooks/useSyncNotes";
 import { useNoteService } from "@/services/noteService";
 import { authState$ } from "@/state/authState";
 import { bibleState$ } from "@/state/bibleState";
@@ -60,9 +61,8 @@ const Note = ({ data }: TListVerse) => {
   const { deleteNote, deleteAllNotes, getAllNotes, createNote, updateNote } = useNoteService();
   const { exportNotes, importNotes, error, isLoading } = useNotesExportImport();
   const selectedVerseForNote = use$(() => bibleState$.selectedVerseForNote.get());
-  const isAuthenticated = use$(() => authState$.isAuthenticated.get());
   const isSyncing = use$(() => bibleState$.isSyncingNotes.get());
-  const { syncWithCloud } = useStorage();
+  const { syncNotes, syncSingleNote } = useSyncNotes();
 
   const styles = getStyles(theme);
   const notFoundSource = require("../../assets/lottie/notFound.json");

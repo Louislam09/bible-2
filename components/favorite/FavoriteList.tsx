@@ -34,11 +34,9 @@ import { Swipeable } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type TListVerse = {
-  // Type could be extended later if needed
 };
 
 const FavoriteList = ({ }: TListVerse) => {
-  // State management
   const [filterData, setFilterData] = useState<(IVerseItem & { id: number })[]>([]);
   const [originalData, setOriginalData] = useState<(IVerseItem & { id: number })[]>([]);
   const [loading, setLoading] = useState(true);

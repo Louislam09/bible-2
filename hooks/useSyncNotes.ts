@@ -101,8 +101,8 @@ export const useSyncNotes = () => {
             for (const localNote of localNotes) {
                 const matchingNote = cloudNotes.find(
                     (cloudNote) =>
-                        cloudNote.title === localNote.title &&
-                        cloudNote.note_text === localNote.note_text
+                        cloudNote.title === localNote.title
+                        //&& cloudNote.note_text === localNote.note_text
                 );
 
                 if (matchingNote) {
@@ -115,7 +115,6 @@ export const useSyncNotes = () => {
                         );
                     }
                 } else {
-                    // No existe en la nube
                     await uploadNoteToCloud(localNote);
                 }
             }

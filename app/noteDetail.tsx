@@ -362,11 +362,6 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
             : ((noteInfo?.updated_at || noteInfo?.created_at) as any)
         )}
       </Text>
-      {/* <LexicalRichTextEditor /> */}
-      {/* initialContent={noteContent.content} */}
-      {/* onChange={(text: string) => onContentChange("content", text)} */}
-      {/* readOnly={isView} */}
-      {/* placeholder="Escribe tu nota aquí..." */}
 
       <MyRichEditor
         Textinput={
