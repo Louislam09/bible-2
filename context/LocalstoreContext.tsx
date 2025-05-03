@@ -135,6 +135,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const storedData = use$(() => storedData$.get());
   const syncState$ = syncState(storedData$);
   const [hasPendingCloudSync, setHasPendingCloudSync] = useState(false);
+  const [isSyncing, setSyncing] = useState(false);
   const { isConnected } = useInternetConnection();
 
   useEffect(() => {
@@ -240,6 +241,11 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   const loadFromCloud = async (): Promise<boolean> => {
+    if (isSyncing) {
+      console.log("Sincronización en curso, no se puede cargar desde la nube.");
+      return false;
+    }
+
     if (!isConnected) {
       Alert.alert(
         "Sin conexión a Internet",
@@ -255,7 +261,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         console.log("No hay usuario autenticado para cargar configuración");
         return false;
       }
-
+      setSyncing(true);
       const existingSettings = await pb
         .collection("user_settings")
         .getList(1, 1, {
@@ -289,7 +295,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           isHistory: true,
         });
 
-        // Set flag to trigger UI update in BibleProvider
         settingState$.requiresSettingsReloadAfterSync.set(true);
 
         return true;
@@ -297,12 +302,14 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
       await syncWithCloud();
       return false;
-    } catch (error) {
+    } catch (error: any) {
+      console.log("Error al cargar desde la nube:", error.originalError);
       console.error("Error al cargar desde la nube:", error);
       return false;
     } finally {
       console.log("📌Configuración cargada desde la nube");
       storedData$.isDataLoaded.set(true);
+      setSyncing(false);
     }
   };
 
