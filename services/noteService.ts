@@ -3,6 +3,7 @@ import {
   DELETE_NOTE_ALL,
   GET_ALL_NOTE,
   GET_NOTE_BY_ID,
+  GET_NOTES_BY_IDS,
   INSERT_INTO_NOTE,
   UPDATE_NOTE_BY_ID,
 } from "@/constants/Queries";
@@ -74,6 +75,23 @@ export const useNoteService = () => {
       return null;
     }
   };
+  const getNotesByIds = async (ids: number[]): Promise<TNote[] | null> => {
+    const idsString = ids.join(",");
+    const getNotesByIdQuery = `${GET_NOTES_BY_IDS} (${idsString})`;
+
+    try {
+      const notes = await executeSql<TNote>(
+        getNotesByIdQuery,
+        [],
+        "getNoteById"
+      );
+      return notes.length > 0 ? notes : null;
+    } catch (error) {
+      console.error(`Error al obtener nota con ID ${ids}:`, error);
+      Alert.alert("Error", "No se pudo cargar la nota");
+      return null;
+    }
+  };
 
   const createNote = async (data: Partial<TNote>): Promise<boolean> => {
     try {
@@ -137,6 +155,7 @@ export const useNoteService = () => {
   return {
     getAllNotes,
     getNoteById,
+    getNotesByIds,
     createNote,
     updateNote,
     deleteNote,

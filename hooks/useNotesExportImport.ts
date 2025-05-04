@@ -6,7 +6,7 @@ import * as Sharing from "expo-sharing";
 import { useState } from "react";
 
 type UseNotesExportImport = {
-  exportNotes: (noteId?: number) => Promise<void>;
+  exportNotes: (noteId?: number[]) => Promise<void>;
   importNotes: () => Promise<void>;
   isLoading: boolean;
   error: string | null;
@@ -15,29 +15,23 @@ type UseNotesExportImport = {
 const useNotesExportImport = (): UseNotesExportImport => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { createNote, getAllNotes: fetchAllNotes, getNoteById: fetchNoteById } = useNoteService();
+  const { createNote, getAllNotes: fetchAllNotes,  getNotesByIds } = useNoteService();
 
   const getAllNotes = async () => {
     const notes = await fetchAllNotes()
     return notes as TNote[];
   };
 
-  const getNoteById = async (noteId: number) => {
-    const notes = await fetchNoteById(noteId)
-    return [notes] as TNote[];
-  };
-
   const saveNote = async (note: TNote) => {
     await createNote(note)
   };
 
-  const exportNotes = async (noteId?: number) => {
+  const exportNotes = async (noteIds?: number[]) => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const notes = noteId ? await getNoteById(noteId) : await getAllNotes();
-
+      const notes = noteIds ? await getNotesByIds(noteIds) : await getAllNotes();
       const exportData = {
         version: "1.0",
         exportDate: new Date().toString(),

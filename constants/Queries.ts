@@ -46,6 +46,7 @@ export const INSERT_INTO_NOTE = `INSERT INTO notes (uuid, title, note_text, crea
 VALUES (?, ?, ?, ?, ?);`;
 
 export const GET_NOTE_BY_ID = `SELECT * FROM notes where id = ?`;
+export const GET_NOTES_BY_IDS = `SELECT * FROM notes where id in`;
 export const GET_ALL_NOTE = `SELECT * FROM notes
 ORDER BY 
   CASE 
