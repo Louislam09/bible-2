@@ -299,9 +299,9 @@ const Note = ({ data }: TListVerse) => {
     );
   }
 
-  const handleExportSelectedNotes = () => {
+  const handleExportSelectedNotes = async () => {
     const ids = Array.from(selectedItems);
-    exportNotes(ids);
+    await exportNotes(ids);
   }
 
   const noteActionButtons = useMemo(
@@ -384,12 +384,12 @@ const Note = ({ data }: TListVerse) => {
         },
         label: noteList.every((note: TNote) => selectedItems.has(note.id)) ? "Cancelar" : "Todo"
       },
-      {
-        name: "Download",
-        color: theme.colors.notification,
-        action: handleExportSelectedNotes,
-        label: "Guardar",
-      },
+      // {
+      //   name: "Download",
+      //   color: theme.colors.notification,
+      //   action: handleExportSelectedNotes,
+      //   label: "Guardar",
+      // },
       {
         name: "Share2",
         color: theme.colors.notification,

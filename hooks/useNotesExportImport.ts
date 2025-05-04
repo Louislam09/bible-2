@@ -30,8 +30,9 @@ const useNotesExportImport = (): UseNotesExportImport => {
     try {
       setIsLoading(true);
       setError(null);
-
+      
       const notes = noteIds ? await getNotesByIds(noteIds) : await getAllNotes();
+      
       const exportData = {
         version: "1.0",
         exportDate: new Date().toString(),

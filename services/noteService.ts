@@ -78,7 +78,6 @@ export const useNoteService = () => {
   const getNotesByIds = async (ids: number[]): Promise<TNote[] | null> => {
     const idsString = ids.join(",");
     const getNotesByIdQuery = `${GET_NOTES_BY_IDS} (${idsString})`;
-
     try {
       const notes = await executeSql<TNote>(
         getNotesByIdQuery,

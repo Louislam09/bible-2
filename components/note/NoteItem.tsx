@@ -49,7 +49,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
         <TouchableOpacity
             style={styles.verseContainer}
             activeOpacity={0.7}
-            onPress={handlePress}
+            onPress={() => handlePress()}
             onLongPress={() => noteSelectors$.toggleNoteSelection(item.id)}
             accessible={true}
             accessibilityLabel={`Nota: ${item.title}`}
