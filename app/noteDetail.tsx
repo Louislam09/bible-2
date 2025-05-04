@@ -345,23 +345,21 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
           }),
         }}
       />
-      <View
-        style={[
-          styles.titleContainer,
-          { display: isNewNote ? "none" : "flex" },
-        ]}
-      >
-        <Text style={{ fontSize: 22 }}>
-          {isView ? noteInfo?.title?.toUpperCase() : "✏️"}
-        </Text>
-      </View>
-      <Text style={styles.dateLabel}>
-        {formatDateShortDayMonth(
-          isNewNote
-            ? new Date()
-            : ((noteInfo?.updated_at || noteInfo?.created_at) as any)
-        )}
-      </Text>
+      {isView && (
+        <View style={styles.titleContainer}>
+          <Text style={{ fontSize: 22 }}>
+            {noteInfo?.title?.toUpperCase() || defaultTitle}
+          </Text>
+          <Text style={styles.dateLabel}>
+            {formatDateShortDayMonth(isNewNote ? new Date() : ((noteInfo?.updated_at || noteInfo?.created_at) as any), {
+              weekday: 'short',
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric'
+            })}
+          </Text>
+        </View>
+      )}
 
       <MyRichEditor
         Textinput={
@@ -393,15 +391,21 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     titleContainer: {
       gap: 4,
-      flexDirection: "row",
       alignItems: "center",
       backgroundColor: "transparent",
       justifyContent: "center",
       marginVertical: 5,
+      flexDirection: "column",
     },
     dateLabel: {
-      textTransform: "uppercase",
-      textAlign: "center",
+      // textTransform: "uppercase",
+      // textAlign: "center",
+      fontSize: 12,
+      color: colors.text,
+      letterSpacing: 1,
+      opacity: 0.7,
+      marginBottom: 8,
+      textTransform: 'uppercase',
     },
     textInput: {
       padding: 10,

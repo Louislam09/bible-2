@@ -1,115 +1,20 @@
+import ColorPicker from "@/components/ColorPicker";
 import Icon from "@/components/Icon";
-import { Text, View } from "@/components/Themed";
+import { View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
 import { TTheme } from "@/types";
 import { useTheme } from "@react-navigation/native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Animated, Dimensions, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import {
   RichEditor,
   RichToolbar,
   actions,
 } from "react-native-pell-rich-editor";
-const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const handleHead = ({ tintColor, label }: any) => (
   <Icon color={tintColor} size={iconSize} name={label} />
 );
-
-const ColorPicker = ({ onSelectColor, mainColor, onClose }: any) => {
-  const colors = [
-    mainColor,
-    "#000000", // Black
-    "#FFFFFF", // White
-    "#FF0000", // Red
-    "#FF7F00", // Orange
-    "#FFFF00", // Yellow
-    "#00FF00", // Green
-    "#00FFFF", // Cyan
-    "#0000FF", // Blue
-    "#7F00FF", // Purple
-    "#FF1493", // Deep Pink
-    "#FF69B4", // Hot Pink
-    "#8B4513", // Saddle Brown
-    "#A52A2A", // Brown
-    "#808080", // Gray
-  ];
-
-  return (
-    <Animated.View
-      style={styles.colorPickerContainer}
-    >
-      <View style={styles.colorPickerHeader}>
-        <Text style={styles.colorPickerTitle}>Seleccionar color</Text>
-        <TouchableOpacity onPress={onClose}>
-          <Icon name="X" size={22} color="#fff" />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.colorGrid}>
-        {colors.map((color) => (
-          <TouchableOpacity
-            key={color}
-            onPress={() => onSelectColor(color)}
-            style={[
-              styles.colorButton,
-              { backgroundColor: color },
-              color === mainColor && styles.selectedColor
-            ]}
-          />
-        ))}
-      </View>
-    </Animated.View>
-  );
-};
-
-const styles = StyleSheet.create({
-  colorPickerContainer: {
-    position: 'absolute',
-    bottom: 70,
-    left: 16,
-    right: 16,
-    backgroundColor: '#333',
-    borderRadius: 16,
-    padding: 16,
-    zIndex: 9999,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  colorPickerTitle: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  colorPickerHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-    backgroundColor: 'transparent',
-  },
-
-  colorGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    backgroundColor: 'transparent',
-  },
-  colorButton: {
-    width: SCREEN_WIDTH / 8 - 16,
-    height: SCREEN_WIDTH / 8 - 16,
-    margin: 4,
-    borderRadius: SCREEN_WIDTH / 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.2)',
-  },
-  selectedColor: {
-    borderWidth: 2,
-    borderColor: '#fff',
-  },
-});
 
 interface IRichEditor {
   onChangeText: any;
@@ -194,7 +99,7 @@ const MyRichEditor: React.FC<IRichEditor> = ({
           ref={richTextRef}
           placeholder="Escribe aqui..."
           editorStyle={{
-            backgroundColor: theme.colors.text + "30",
+            backgroundColor: theme.colors.text + 30,
             color: theme.colors.text,
             caretColor: theme.colors.notification,
             placeholderColor: theme.colors.text + 90,

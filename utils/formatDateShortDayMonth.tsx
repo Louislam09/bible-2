@@ -1,10 +1,10 @@
-export const formatDateShortDayMonth = (dateString: string | number) => {
+export const formatDateShortDayMonth = (dateString: string | number, options?: Intl.DateTimeFormatOptions) => {
   const date = new Date(dateString);
-  const options = {
+  const _options = {
     weekday: 'short',
     year: 'numeric',
     month: 'short',
     day: 'numeric',
   } as any;
-  return date.toLocaleDateString('es-ES', options);
+  return date.toLocaleDateString('es-ES', options || _options);
 };

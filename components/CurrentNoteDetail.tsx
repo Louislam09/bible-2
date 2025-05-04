@@ -169,7 +169,7 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
               padding: 10,
               borderRadius: 10,
             },
-            (keyboardOpen || !isView) && { bottom: 150 },
+            (keyboardOpen || !isView) && { bottom: 70 },
           ]}
           onPress={isView ? onEditMode : onSave}
         >
@@ -271,13 +271,31 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.dateLabel}>
+      {/* {isView && <Text style={styles.dateLabel}>
         {formatDateShortDayMonth(
           isNewNote
             ? new Date()
             : ((noteInfo?.updated_at || noteInfo?.created_at) as any)
         )}
-      </Text>
+      </Text>} */}
+
+      {isView && (
+        <View style={styles.titleContainer}>
+          <Text style={{ fontSize: 22 }}>
+            {noteInfo?.title?.toUpperCase() || defaultTitle}
+          </Text>
+          <Text style={styles.dateLabel}>
+            {formatDateShortDayMonth(isNewNote ? new Date() : ((noteInfo?.updated_at || noteInfo?.created_at) as any), {
+              weekday: 'short',
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric'
+            })}
+          </Text>
+        </View>
+      )}
+
+
       <MyRichEditor
         shouldOpenKeyboard={shouldOpenKeyboard}
         isModal
@@ -313,6 +331,14 @@ const getStyles = ({ colors, dark }: TTheme) =>
       textTransform: "uppercase",
       textAlign: "center",
     },
+    titleContainer: {
+      gap: 4,
+      alignItems: "center",
+      backgroundColor: "transparent",
+      justifyContent: "center",
+      marginVertical: 5,
+      flexDirection: "column",
+    },
     textInput: {
       padding: 10,
       fontSize: 26,
@@ -322,7 +348,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     scrollToTopButton: {
       position: "absolute",
-      bottom: 25,
+      bottom: 15,
       right: 20,
       backgroundColor: colors.background,
       padding: 10,
