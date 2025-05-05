@@ -1,9 +1,11 @@
-const { getDefaultConfig } = require('expo/metro-config');
+// const { getDefaultConfig } = require('@expo/metro-config');
+const { getDefaultConfig } = require("expo/metro-config");
 
-const defaultConfig = getDefaultConfig(__dirname);
+/** @type {import('expo/metro-config').MetroConfig} */
+const config = getDefaultConfig(__dirname); 
 
-defaultConfig.resolver.assetExts.push('db');
-defaultConfig.resolver.assetExts.push('mp3');
-defaultConfig.resolver.assetExts.push('SQLite3');
+config.resolver.assetExts.push('db');
+config.resolver.assetExts.push('mp3');
+config.resolver.assetExts.push('SQLite3');
 
-module.exports = defaultConfig;
+module.exports = config;

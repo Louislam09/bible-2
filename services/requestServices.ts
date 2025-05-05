@@ -1,22 +1,25 @@
 // apiService.ts
-import axios, { AxiosError, AxiosInstance } from 'axios';
-import { AccessRequest, ApiResponse, RequestStatus } from './types';
+import { ApiResponse, RequestStatus } from './types';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
-const apiClient: AxiosInstance = axios.create({
-    baseURL: API_BASE_URL,
+// Default fetch options
+const defaultOptions = {
     headers: {
         'Content-Type': 'application/json',
     },
-    timeout: 10000, // 10 seconds timeout
-});
+    // Note: fetch doesn't support timeout directly, would need AbortController for that
+};
 
 const apiService = {
     requestAccess: async (name: string, email: string): Promise<ApiResponse<RequestStatus>> => {
         try {
-            const response = await apiClient.post<ApiResponse<RequestStatus>>('/request-access', { name, email });
-            return response.data;
+            const response = await fetch(`${API_BASE_URL}/request-access`, {
+                method: 'POST',
+                ...defaultOptions,
+                body: JSON.stringify({ name, email })
+            });
+            return handleResponse<ApiResponse<RequestStatus>>(response);
         } catch (error) {
             throw handleApiError(error);
         }
@@ -24,8 +27,12 @@ const apiService = {
 
     checkStatus: async (email: string): Promise<ApiResponse<RequestStatus>> => {
         try {
-            const response = await apiClient.post<ApiResponse<RequestStatus>>('/check-status', { email });
-            return response.data;
+            const response = await fetch(`${API_BASE_URL}/check-status`, {
+                method: 'POST',
+                ...defaultOptions,
+                body: JSON.stringify({ email })
+            });
+            return handleResponse<ApiResponse<RequestStatus>>(response);
         } catch (error) {
             throw handleApiError(error);
         }
@@ -33,8 +40,11 @@ const apiService = {
 
     getAllRequests: async (): Promise<ApiResponse<RequestStatus[]>> => {
         try {
-            const response = await apiClient.get<ApiResponse<RequestStatus[]>>('/requests');
-            return response.data;
+            const response = await fetch(`${API_BASE_URL}/requests`, {
+                method: 'GET',
+                ...defaultOptions
+            });
+            return handleResponse<ApiResponse<RequestStatus[]>>(response);
         } catch (error) {
             throw handleApiError(error);
         }
@@ -42,8 +52,12 @@ const apiService = {
 
     updateRequestStatus: async (id: string, status: RequestStatus['status']): Promise<ApiResponse<RequestStatus>> => {
         try {
-            const response = await apiClient.put<ApiResponse<RequestStatus>>(`/requests/${id}`, { status });
-            return response.data;
+            const response = await fetch(`${API_BASE_URL}/requests/${id}`, {
+                method: 'PUT',
+                ...defaultOptions,
+                body: JSON.stringify({ status })
+            });
+            return handleResponse<ApiResponse<RequestStatus>>(response);
         } catch (error) {
             throw handleApiError(error);
         }
@@ -51,33 +65,31 @@ const apiService = {
 
     deleteRequest: async (id: string): Promise<ApiResponse<void>> => {
         try {
-            const response = await apiClient.delete<ApiResponse<void>>(`/requests/${id}`);
-            return response.data;
+            const response = await fetch(`${API_BASE_URL}/requests/${id}`, {
+                method: 'DELETE',
+                ...defaultOptions
+            });
+            return handleResponse<ApiResponse<void>>(response);
         } catch (error) {
             throw handleApiError(error);
         }
     },
 };
 
-const handleApiError = (error: unknown): Error => {
-    if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<{ message: string }>;
-        if (axiosError.response) {
-            const { status, data } = axiosError.response;
+// Helper function to handle fetch responses
+const handleResponse = async <T>(response: Response): Promise<T> => {
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage = errorData?.message || `Error: ${response.status} ${response.statusText}`;
+        throw new Error(errorMessage);
+    }
+    return await response.json() as T;
+};
 
-            switch (status) {
-                case 400:
-                    return new Error(data?.message || 'Invalid input');
-                case 404:
-                    return new Error(data?.message || 'Resource not found');
-                case 409:
-                    return new Error(data?.message || 'Email already registered');
-                default:
-                    return new Error(data?.message || 'An unexpected error occurred');
-            }
-        } else if (axiosError.request) {
-            return new Error('No response from server. Please check your connection');
-        }
+const handleApiError = (error: unknown): Error => {
+    if (error instanceof Error) {
+        // For network errors or other exceptions
+        return error;
     }
     return new Error('Failed to send request');
 };

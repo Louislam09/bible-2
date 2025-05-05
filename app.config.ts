@@ -38,6 +38,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     icon: './assets/images/icon.png',
     scheme: 'sb-rv60',
     userInterfaceStyle: 'automatic',
+    newArchEnabled: true,
     splash: {
       image: './assets/images/splash.png',
       resizeMode: 'contain',
@@ -53,6 +54,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       bundleIdentifier: getUniqueIdentifier(),
     },
     android: {
+      // @ts-ignore
+      edgeToEdgeEnabled: true,
       versionCode: 15,
       icon: './assets/images/icon.png',
       adaptiveIcon: {
@@ -95,9 +98,16 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           iCloudContainerEnvironment: 'Production',
         },
       ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Allow Santa Escritura to access your microphone."
+        }
+      ],
       'expo-asset',
       'expo-font',
       'expo-router',
+      "expo-web-browser"
     ],
     runtimeVersion: {
       policy: 'nativeVersion',
