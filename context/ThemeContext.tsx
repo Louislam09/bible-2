@@ -22,15 +22,15 @@ interface ThemeProviderProps {
 }
 
 const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const { currentTheme } = useBibleContext();
+  const { currentTheme, selectedFont } = useBibleContext();
   const colorScheme = Appearance.getColorScheme();
   const themes = getThemes();
   const { DarkTheme, LightTheme } = themes[currentTheme];
-  // const { DarkTheme, LightTheme } = themes["BlackWhite"];
   const theme = { dark: DarkTheme, light: LightTheme };
   const [schema, setSchema] = useState<"light" | "dark">(
     colorScheme === "dark" ? "dark" : "light"
   );
+  console.log('selectedFont', selectedFont);
 
   useEffect(() => {
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
@@ -49,10 +49,28 @@ const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     }
     setSchema((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
-
   return (
     <ThemeContext.Provider value={{ schema, toggleTheme }}>
-      <ThemeProvider value={theme[schema]}>{children}</ThemeProvider>
+      {/* <ThemeProvider value={{
+        ...theme[schema],
+        fonts: {
+          regular: { fontFamily: selectedFont, fontWeight: "400" },
+          medium: { fontFamily: selectedFont, fontWeight: "500" },
+          bold: { fontFamily: selectedFont, fontWeight: "700" },
+          heavy: { fontFamily: selectedFont, fontWeight: "900" },
+        }
+      }}> */}
+      <ThemeProvider value={{
+        ...theme[schema],
+        fonts: {
+          regular: { fontFamily: selectedFont, fontWeight: "400" },
+          medium: { fontFamily: selectedFont, fontWeight: "500" },
+          bold: { fontFamily: selectedFont, fontWeight: "700" },
+          heavy: { fontFamily: selectedFont, fontWeight: "900" },
+        }
+      }}>
+        {children}
+      </ThemeProvider>
     </ThemeContext.Provider>
   );
 };

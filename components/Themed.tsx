@@ -1,8 +1,8 @@
 import { Text as DefaultText, View as DefaultView } from "react-native";
 
+import { TFont, TTheme } from '@/types';
 import { useTheme } from "@react-navigation/native";
 import { createElement } from "react";
-import { TFont, TTheme } from '@/types';
 import { useBibleContext } from '../context/BibleContext';
 
 export const NativeDefaultView =
