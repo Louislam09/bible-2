@@ -152,7 +152,11 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
         await onUpdate(noteId, true);
         return;
       }
-      if (!noteContent.title) noteContent.title = defaultTitle;
+      const date = new Date().toLocaleDateString();
+      const uniqueSuffix = Date.now().toString(36).slice(-4);
+      if (!noteContent.title) {
+        noteContent.title = `${defaultTitle} ${date} - ${uniqueSuffix}`
+      }
       setHasUnsavedChanges(false);
       const success = await createNote({
         title: noteContent.title,
@@ -270,8 +274,9 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
     try {
       const success = await updateNote(id, {
         title: noteContent.title,
-        note_text: noteContent.content
-      });
+        note_text: noteContent.content,
+        uuid: noteInfo?.uuid,
+      }, true);
 
       if (success) {
         afterSaving();

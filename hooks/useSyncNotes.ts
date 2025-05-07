@@ -2,8 +2,9 @@ import { GET_ALL_NOTE } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
 import { pb } from "@/globalConfig";
 import { authState$ } from "@/state/authState";
+import { bibleState$ } from "@/state/bibleState";
+import { notesState$ } from "@/state/notesState";
 import { TNote } from "@/types";
-import * as Crypto from "expo-crypto";
 import { Alert } from "react-native";
 
 export const useSyncNotes = () => {
@@ -49,43 +50,33 @@ export const useSyncNotes = () => {
 
     const uploadNoteToCloud = async (note: TNote) => {
         try {
-            const uuid = note.uuid || Crypto.randomUUID();
-            const createdAt = note.created_at || new Date().toISOString();
-            const updatedAt = note.updated_at || new Date().toISOString();
+            const resultNote = await notesState$.addNote(note);
+            const uuid = resultNote?.uuid || note.uuid
 
-            await pb.collection("notes").create({
-                uuid,
-                title: note.title,
-                note_text: note.note_text,
-                created_at: createdAt,
-                updated_at: updatedAt,
-            });
-
-            if (!note.uuid) {
-                await executeSql(
-                    `UPDATE notes SET uuid = ? WHERE id = ?`,
-                    [uuid, note.id],
-                    "uploadNote-updateUUID"
-                );
-            }
-        } catch (error) {
-            console.error("Error uploading note:", error);
+            await executeSql(
+                `UPDATE notes SET uuid = ? WHERE id = ?`,
+                [uuid, note.id],
+                "uploadNote-updateUUID"
+            );
+        } catch (error: any) {
+            console.error("Error uploading note:", error.message, error.originalError);
         }
     };
 
     const updateNoteInCloud = async (note: TNote) => {
         try {
             const updatedAt = new Date().toISOString();
+            const id = note.id as any
 
-            await pb.collection("notes").update(note.uuid, {
+            await pb.collection("notes").update(id, {
                 title: note.title,
                 note_text: note.note_text,
                 updated_at: updatedAt,
             });
 
             await executeSql(
-                `UPDATE notes SET updated_at = ? WHERE id = ?`,
-                [updatedAt, note.id],
+                `UPDATE notes SET updated_at = ? WHERE uuid = ?`,
+                [updatedAt, note.uuid],
                 "updateNote-syncUpdatedAt"
             );
         } catch (error) {
@@ -95,35 +86,68 @@ export const useSyncNotes = () => {
 
     const syncNotes = async () => {
         try {
+            bibleState$.isSyncingNotes.set(true);
             const localNotes = await fetchLocalNotes();
             const cloudNotes = await fetchCloudNotes();
 
             for (const localNote of localNotes) {
-                const matchingNote = cloudNotes.find(
-                    (cloudNote) =>
-                        cloudNote.title === localNote.title
-                        //&& cloudNote.note_text === localNote.note_text
+                const matchingCloudNote = cloudNotes.find(
+                    (cloudNote) => cloudNote.uuid === localNote.uuid || cloudNote.title.toLowerCase() === localNote.title.toLowerCase()
                 );
 
-                if (matchingNote) {
-                    // Ya existe en la nube
-                    if (!localNote.uuid) {
+                if (matchingCloudNote) {
+                    // Always ensure UUID is synced locally
+                    await executeSql(
+                        `UPDATE notes SET uuid = ? WHERE id = ?`,
+                        [matchingCloudNote.uuid, localNote.id],
+                        "syncNotes-updateUUID"
+                    );
+
+                    const localUpdated = new Date(localNote.updated_at || '').getTime();
+                    const cloudUpdated = new Date(matchingCloudNote.updated_at || '').getTime();
+
+                    if (cloudUpdated > localUpdated) {
+                        // Cloud version is newer, update local
                         await executeSql(
-                            `UPDATE notes SET uuid = ? WHERE id = ?`,
-                            [matchingNote.uuid, localNote.id],
-                            "syncNotes-updateUUID"
+                            `UPDATE notes SET title = ?, note_text = ?, updated_at = ?, created_at = ? WHERE uuid = ?`,
+                            [
+                                matchingCloudNote.title,
+                                matchingCloudNote.note_text,
+                                matchingCloudNote.updated_at,
+                                matchingCloudNote.created_at,
+                                matchingCloudNote.uuid,
+                            ],
+                            "syncNotes-updateLocalFromCloud"
                         );
+                    } else if (localUpdated > cloudUpdated) {
+                        // Local version is newer, update cloud
+                        await updateNoteInCloud({ ...localNote, id: matchingCloudNote.id });
                     }
                 } else {
+                    // No matching cloud note, upload local note
                     await uploadNoteToCloud(localNote);
                 }
             }
 
-            //   storedData$.isSynced.set(true);
-            console.log("Notas sincronizadas correctamente");
+            // Handle cloud-only notes that don't exist locally
+            for (const cloudNote of cloudNotes) {
+                const existsLocally = localNotes.find((localNote) => localNote.uuid === cloudNote.uuid);
+                if (!existsLocally) {
+                    await executeSql(
+                        `INSERT INTO notes (title, note_text, uuid, created_at, updated_at) VALUES (?, ?, ?, ?, ?)`,
+                        [cloudNote.title, cloudNote.note_text, cloudNote.uuid, cloudNote.created_at, cloudNote.updated_at],
+                        "syncNotes-insertLocalFromCloud"
+                    );
+                }
+            }
+
+            console.log("Sincronización completa entre local y nube.");
         } catch (error) {
             console.error("Error durante la sincronización:", error);
             Alert.alert("Error", "No se pudieron sincronizar las notas");
+        } finally {
+            bibleState$.toggleReloadNotes();
+            bibleState$.isSyncingNotes.set(false);
         }
     };
 
@@ -139,8 +163,52 @@ export const useSyncNotes = () => {
         }
     };
 
+    const downloadCloudNotesToLocal = async () => {
+        try {
+            bibleState$.isSyncingNotes.set(true);
+            const cloudNotes = await fetchCloudNotes();
+            const localNotes = await fetchLocalNotes();
+
+            for (const cloudNote of cloudNotes) {
+                const existsLocally = localNotes.find((localNote) => localNote.uuid === cloudNote.uuid);
+
+                if (existsLocally) {
+                    const cloudUpdated = new Date(cloudNote.updated_at || '').getTime();
+                    const localUpdated = new Date(existsLocally.updated_at || '').getTime();
+
+                    if (cloudUpdated > localUpdated) {
+                        await executeSql(
+                            `UPDATE notes SET title = ?, note_text = ?, updated_at = ?, created_at = ? WHERE uuid = ?`,
+                            [cloudNote.title, cloudNote.note_text, cloudNote.updated_at, cloudNote.created_at, cloudNote.uuid],
+                            "updateLocalNote-fromCloud"
+                        );
+                        console.log(`Nota actualizada: ${cloudNote.title}`);
+                    } else {
+                        console.log(`Nota ignorada (local más reciente): ${cloudNote.title}`);
+                    }
+                } else {
+                    await executeSql(
+                        `INSERT INTO notes (title, note_text, uuid, created_at, updated_at) VALUES (?, ?, ?, ?, ?)`,
+                        [cloudNote.title, cloudNote.note_text, cloudNote.uuid, cloudNote.created_at, cloudNote.updated_at],
+                        "insertLocalNote-fromCloud"
+                    );
+                    console.log(`Nota insertada: ${cloudNote.title}`);
+                }
+            }
+
+            console.log("Notas de la nube descargadas y almacenadas localmente");
+        } catch (error) {
+            console.error("Error al descargar y almacenar notas de la nube:", error);
+            Alert.alert("Error", "No se pudieron descargar las notas de la nube");
+        } finally {
+            bibleState$.toggleReloadNotes();
+            bibleState$.isSyncingNotes.set(false);
+        }
+    };
+
     return {
         syncNotes,
         syncSingleNote,
+        downloadCloudNotesToLocal
     };
 };

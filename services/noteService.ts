@@ -9,7 +9,10 @@ import {
 } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { pb } from "@/globalConfig";
+import { notesState$ } from "@/state/notesState";
 import { TNote } from "@/types";
+import checkConnection from "@/utils/checkConnection";
 import * as Crypto from 'expo-crypto';
 import { Alert } from "react-native";
 
@@ -29,7 +32,7 @@ export const useNoteService = () => {
 
   const generateAndAssignUUID = async () => {
     try {
-        // First check if we've already generated UUIDs
+      // First check if we've already generated UUIDs
       if (storedData$.isUUIDGenerated.get()) {
         return true;
       }
@@ -37,7 +40,7 @@ export const useNoteService = () => {
       // Get all notes that don't have a UUID or have an empty UUID
       const query = `SELECT id FROM notes WHERE uuid IS NULL OR uuid = '' OR uuid = 'null' OR uuid = 'undefined'`;
       const notes = await executeSql<TNote>(query, [], "generateUUID");
-      
+
       if (notes.length === 0) {
         // If no notes need UUIDs, mark as generated and return
         storedData$.isUUIDGenerated.set(true);
@@ -52,7 +55,7 @@ export const useNoteService = () => {
 
       // After generating UUIDs, update the flag
       storedData$.isUUIDGenerated.set(true);
-      
+
       return true;
     } catch (error) {
       console.error("Error al generar UUIDs:", error);
@@ -92,7 +95,7 @@ export const useNoteService = () => {
     }
   };
 
-  const createNote = async (data: Partial<TNote>): Promise<boolean> => {
+  const createNote = async (data: Partial<TNote>, sendToCloud: boolean = true): Promise<boolean> => {
     try {
       const newUUID = data.uuid || Crypto.randomUUID();
       const createdAt = data.created_at || new Date().toISOString();
@@ -102,6 +105,20 @@ export const useNoteService = () => {
         [newUUID, data.title, data.note_text, createdAt, updatedAt],
         "createNote"
       );
+      const createdNotes = {
+        id: 0,
+        title: data.title || '',
+        note_text: data.note_text || '',
+        uuid: newUUID,
+        created_at: createdAt,
+        updated_at: updatedAt,
+      }
+
+      const isConnected = await checkConnection();
+      if (isConnected && sendToCloud) {
+        await notesState$.addNote(createdNotes)
+      }
+
       return true;
     } catch (error) {
       console.error("Error al crear nota:", error);
@@ -111,8 +128,9 @@ export const useNoteService = () => {
   };
 
   const updateNote = async (
-    id: number,
-    data: Partial<TNote>
+    id: number | string,
+    data: Partial<TNote>,
+    sendToCloud: boolean = false
   ): Promise<boolean> => {
     try {
       const updatedAt = data.updated_at || new Date().toISOString();
@@ -121,9 +139,19 @@ export const useNoteService = () => {
         [data.title, data.note_text, updatedAt, id],
         "updateNote"
       );
+
+      const isConnected = await checkConnection();
+      if (isConnected && sendToCloud) {
+        const existing = await pb.collection("notes").getFirstListItem(`uuid = "${data.uuid}"`);
+        await notesState$.updateNote(existing.id, {
+          title: data.title || '',
+          note_text: data.note_text || '',
+        })
+      }
+
       return true;
-    } catch (error) {
-      console.error(`Error al actualizar nota con ID ${id}:`, error);
+    } catch (error: any) {
+      console.error(`Error al actualizar nota con ID ${data.uuid}:`, error.message, error.originalError);
       Alert.alert("Error", "No se pudo actualizar la nota");
       return false;
     }

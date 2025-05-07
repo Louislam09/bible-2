@@ -82,7 +82,7 @@ const MyRichEditor: React.FC<IRichEditor> = ({
 
   return (
     <View style={{ flex: 1 }}>
-      {(!readOnly || isModal) && <>{Textinput}</>}
+      {(!readOnly) && <>{Textinput}</>}
       <ScrollView ref={scrollViewRef}>
         <RichEditor
           pasteAsPlainText

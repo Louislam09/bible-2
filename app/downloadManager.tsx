@@ -39,7 +39,7 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const debouncedSearchText = useDebounce(searchText, 500);
-  const { isConnected } = useInternetConnection();
+  const { isConnected, checkConnection } = useInternetConnection();
 
   useEffect(() => {
     const backAction = () => {
@@ -133,7 +133,7 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
     </View>
   );
 
-  if (!isConnected && !isMyDownloadTab) {
+  if ((!checkConnection()) && !isMyDownloadTab) {
     return <NoInternetSplash theme={theme} />;
   }
 

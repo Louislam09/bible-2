@@ -1,8 +1,8 @@
 import { storedData$ } from "@/context/LocalstoreContext";
 import { loginWithEmailPassword, pb, setUserPassword } from "@/globalConfig";
+import { StorageService } from "@/services/StorageService";
 import { pbUser } from "@/types";
 import { observable } from "@legendapp/state";
-import { StorageService } from "@/services/StorageService";
 import { Alert } from "react-native";
 
 // Create a separate function to check internet connection
@@ -29,6 +29,7 @@ export interface AuthState {
   ) => Promise<boolean>;
   checkSession: () => Promise<boolean>;
   clearError: () => void;
+  ensureAuthenticated: (msg: string, callback: () => void) => boolean;
 }
 
 export const authState$ = observable<AuthState>({
@@ -46,7 +47,7 @@ export const authState$ = observable<AuthState>({
       );
       throw new Error("No hay conexión a Internet");
     }
-    
+
     try {
       authState$.isLoading.set(true);
       authState$.error.set(null);
@@ -75,7 +76,7 @@ export const authState$ = observable<AuthState>({
       );
       throw new Error("No hay conexión a Internet");
     }
-    
+
     try {
       authState$.isLoading.set(true);
       authState$.error.set(null);
@@ -105,7 +106,7 @@ export const authState$ = observable<AuthState>({
       );
       throw new Error("No hay conexión a Internet");
     }
-    
+
     try {
       authState$.isLoading.set(true);
       pb.authStore.clear();
@@ -181,6 +182,21 @@ export const authState$ = observable<AuthState>({
     } finally {
       authState$.isLoading.set(false);
     }
+  },
+
+  ensureAuthenticated: (msg: string, callback: () => void) => {
+    if (!authState$.user.get()) {
+      Alert.alert(
+        "Iniciar Sesión Requerido",
+        msg,
+        [
+          { text: "Cancelar", style: "cancel" },
+          { text: "Iniciar Sesión", onPress: callback },
+        ]
+      );
+      return false
+    }
+    return true
   },
 
   clearError: () => {
