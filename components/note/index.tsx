@@ -5,14 +5,12 @@ import NoteItem from "@/components/note/NoteItem";
 import { Text, View } from "@/components/Themed";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
-import useInternetConnection from "@/hooks/useInternetConnection";
 import useNotesExportImport from "@/hooks/useNotesExportImport";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { useSyncNotes } from "@/hooks/useSyncNotes";
 import { useNoteService } from "@/services/noteService";
-import { authState$ } from "@/state/authState";
 import { bibleState$ } from "@/state/bibleState";
-import { noteSelectors$, notesState$ } from "@/state/notesState";
+import { noteSelectors$ } from "@/state/notesState";
 import { IVerseItem, Screens, TNote, TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -52,13 +50,11 @@ const Note = ({ data }: TListVerse) => {
   const theme = useTheme();
   const navigation = useNavigation();
   const { currentBibleLongName } = useBibleContext();
-  const { deleteNote, getAllNotes, createNote, updateNote } = useNoteService();
-  const { exportNotes, importNotes, error, isLoading } = useNotesExportImport();
+  const { deleteNote, exportNotes, importNotes } = useNoteService();
   const selectedVerseForNote = use$(() => bibleState$.selectedVerseForNote.get());
   const isSyncing = use$(() => bibleState$.isSyncingNotes.get());
-  const { syncNotes, syncSingleNote, downloadCloudNotesToLocal } = useSyncNotes();
+  const { syncNotes, downloadCloudNotesToLocal } = useSyncNotes();
   const { printToFile } = usePrintAndShare();
-  const { isConnected, checkConnection } = useInternetConnection();
 
   const styles = getStyles(theme);
   const notFoundSource = require("../../assets/lottie/notFound.json");
@@ -101,6 +97,7 @@ const Note = ({ data }: TListVerse) => {
     }
   }, [showSearch]);
 
+
   const showAddNoteAlert = () => {
     ToastAndroid.show(
       "Seleccione la nota a la que quieres añadir el versiculo",
@@ -127,10 +124,6 @@ const Note = ({ data }: TListVerse) => {
     Keyboard.dismiss();
     setShowMoreOptions(false);
   }, []);
-
-  const handleLogin = useCallback(() => {
-    navigation.navigate(Screens.Login);
-  }, [navigation]);
 
   const showMoreOptionHandle = useCallback(() => {
     setShowMoreOptions((prev) => !prev);
@@ -174,6 +167,7 @@ const Note = ({ data }: TListVerse) => {
 
   const handleDeleteSelectedNotes = () => {
     const selectedIds = Array.from(selectedItems);
+
     Alert.alert(
       "Eliminar Notas",
       `¿Estás seguro que quieres eliminar ${selectedIds.length} notas seleccionadas?`,
@@ -183,7 +177,9 @@ const Note = ({ data }: TListVerse) => {
           text: "Eliminar",
           onPress: async () => {
             for (const id of selectedIds) {
-              await deleteNote(id);
+              const currentNote = noteList.find((note: TNote) => note.id === id);
+              if (!currentNote) continue;
+              await deleteNote(currentNote);
             }
             noteSelectors$.clearSelections();
             bibleState$.toggleReloadNotes();
@@ -199,6 +195,7 @@ const Note = ({ data }: TListVerse) => {
 
   const handleExportSelectedNotes = async () => {
     const ids = Array.from(selectedItems);
+    console.log("Exporting notes with IDs:", ids);
     await exportNotes(ids);
   }
 
@@ -388,14 +385,14 @@ const Note = ({ data }: TListVerse) => {
     );
   }, [styles, theme.colors, notFoundSource, currentBibleLongName, searchText]);
 
-  if (isLoading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={theme.colors.notification} />
-        <Text style={styles.loadingText}>Cargando notas...</Text>
-      </View>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <View style={styles.loadingContainer}>
+  //       <ActivityIndicator size="large" color={theme.colors.notification} />
+  //       <Text style={styles.loadingText}>Cargando notas...</Text>
+  //     </View>
+  //   );
+  // }
 
   const screenOptions: any = useMemo(() => {
     return {
@@ -425,7 +422,7 @@ const Note = ({ data }: TListVerse) => {
         <RNView style={styles.container}>
           <Backdrop visible={showMoreOptions} onPress={dismiss} theme={theme} />
           {NoteHero()}
-          {error && <Text style={styles.textError} accessible={true} accessibilityRole="alert">{error}</Text>}
+          {/* {error && <Text style={styles.textError} accessible={true} accessibilityRole="alert">{error}</Text>} */}
 
           <FlashList
             contentContainerStyle={styles.flashListContent}
