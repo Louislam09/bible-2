@@ -153,15 +153,53 @@ export const useSyncNotes = () => {
 
     const syncSingleNote = async (note: TNote) => {
         try {
+            bibleState$.isSyncingNotes.set(true);
+            const user = authState$.user.get();
+            if (!user) {
+                throw new Error("Usuario no autenticado.");
+            }
+
             if (note.uuid) {
-                await updateNoteInCloud(note);
+                // Try fetching the cloud version by UUID
+                const cloudNote = await pb.collection("notes").getFirstListItem(`uuid = "${note.uuid}"`, {
+                    sort: "-updated",
+                }).catch(() => null);
+
+                if (cloudNote) {
+                    const localUpdated = new Date(note.updated_at || "").getTime();
+                    const cloudUpdated = new Date(cloudNote.updated || "").getTime();
+
+                    if (cloudUpdated > localUpdated) {
+                        // Cloud is newer → update local
+                        await executeSql(
+                            `UPDATE notes SET title = ?, note_text = ?, updated_at = ?, created_at = ? WHERE uuid = ?`,
+                            [cloudNote.title, cloudNote.note_text, cloudNote.updated, cloudNote.created, cloudNote.uuid],
+                            "syncSingleNote-updateLocalFromCloud"
+                        );
+                    } else if (localUpdated > cloudUpdated) {
+                        // Local is newer → update cloud
+                        await pb.collection("notes").update(cloudNote.id, {
+                            title: note.title,
+                            note_text: note.note_text,
+                            updated_at: note.updated_at,
+                        });
+                    } else {
+                        console.log("syncSingleNote: nota ya sincronizada");
+                    }
+                } else {
+                    await uploadNoteToCloud(note);
+                }
             } else {
                 await uploadNoteToCloud(note);
             }
         } catch (error) {
-            console.error("Error sync de nota individual:", error);
+            console.error("Error en syncSingleNote:", error);
+            Alert.alert("Error", "No se pudo sincronizar la nota individual.");
+        } finally {
+            bibleState$.isSyncingNotes.set(false);
         }
     };
+
 
     const downloadCloudNotesToLocal = async () => {
         try {

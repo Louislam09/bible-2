@@ -53,7 +53,7 @@ const Note = ({ data }: TListVerse) => {
   const { deleteNote, exportNotes, importNotes } = useNoteService();
   const selectedVerseForNote = use$(() => bibleState$.selectedVerseForNote.get());
   const isSyncing = use$(() => bibleState$.isSyncingNotes.get());
-  const { syncNotes, downloadCloudNotesToLocal } = useSyncNotes();
+  const { syncNotes, downloadCloudNotesToLocal, syncSingleNote } = useSyncNotes();
   const { printToFile } = usePrintAndShare();
 
   const styles = getStyles(theme);
@@ -192,6 +192,20 @@ const Note = ({ data }: TListVerse) => {
       ]
     );
   }
+  const handleSyncSelectedNotes = async () => {
+    const selectedIds = Array.from(selectedItems);
+    for (const id of selectedIds) {
+      const currentNote = noteList.find((note: TNote) => note.id === id);
+      if (!currentNote) continue;
+      await syncSingleNote(currentNote);
+    }
+    noteSelectors$.clearSelections();
+    bibleState$.toggleReloadNotes();
+    ToastAndroid.show(
+      "Notas sincronizadas",
+      ToastAndroid.SHORT
+    );
+  }
 
   const handleExportSelectedNotes = async () => {
     const ids = Array.from(selectedItems);
@@ -278,6 +292,12 @@ const Note = ({ data }: TListVerse) => {
           }
         },
         label: noteList.every((note: TNote) => selectedItems.has(note.id)) ? "Cancelar" : "Todo"
+      },
+      {
+        name: "RefreshCw",
+        color: theme.colors.notification,
+        action: handleSyncSelectedNotes,
+        label: "Sincronizar",
       },
       {
         name: "Download",
@@ -385,15 +405,6 @@ const Note = ({ data }: TListVerse) => {
     );
   }, [styles, theme.colors, notFoundSource, currentBibleLongName, searchText]);
 
-  // if (isLoading) {
-  //   return (
-  //     <View style={styles.loadingContainer}>
-  //       <ActivityIndicator size="large" color={theme.colors.notification} />
-  //       <Text style={styles.loadingText}>Cargando notas...</Text>
-  //     </View>
-  //   );
-  // }
-
   const screenOptions: any = useMemo(() => {
     return {
       theme,
@@ -422,8 +433,13 @@ const Note = ({ data }: TListVerse) => {
         <RNView style={styles.container}>
           <Backdrop visible={showMoreOptions} onPress={dismiss} theme={theme} />
           {NoteHero()}
-          {/* {error && <Text style={styles.textError} accessible={true} accessibilityRole="alert">{error}</Text>} */}
-
+          {isSelectionActive && (
+            <View style={styles.noteHeader}>
+              <Text style={styles.notesCountText} accessible={true} accessibilityRole="text">
+                {selectedItems.size} {selectedItems.size !== 1 ? "notas" : "nota"} seleccionada{selectedItems.size > 1 ? "s" : ""}
+              </Text>
+            </View>
+          )}
           <FlashList
             contentContainerStyle={styles.flashListContent}
             ref={flatListRef}
