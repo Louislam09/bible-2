@@ -5,13 +5,13 @@ import NoteItem from "@/components/note/NoteItem";
 import { Text, View } from "@/components/Themed";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
-import useNotesExportImport from "@/hooks/useNotesExportImport";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { useSyncNotes } from "@/hooks/useSyncNotes";
 import { useNoteService } from "@/services/noteService";
 import { bibleState$ } from "@/state/bibleState";
 import { noteSelectors$ } from "@/state/notesState";
 import { IVerseItem, Screens, TNote, TTheme } from "@/types";
+import checkConnection from "@/utils/checkConnection";
 import removeAccent from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { use$ } from "@legendapp/state/react";
@@ -193,6 +193,12 @@ const Note = ({ data }: TListVerse) => {
     );
   }
   const handleSyncSelectedNotes = async () => {
+    const isConnected = await checkConnection();
+    console.log("Conexión a Internet:", isConnected);
+    if (!isConnected) {
+      Alert.alert("Sin conexión", "No hay conexión a Internet para sincronizar las notas.");
+      return;
+    }
     const selectedIds = Array.from(selectedItems);
     for (const id of selectedIds) {
       const currentNote = noteList.find((note: TNote) => note.id === id);

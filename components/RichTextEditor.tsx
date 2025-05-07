@@ -86,7 +86,7 @@ const MyRichEditor: React.FC<IRichEditor> = ({
       <ScrollView ref={scrollViewRef}>
         <RichEditor
           pasteAsPlainText
-          initialHeight={200}
+          initialHeight={600}
           onCursorPosition={(cursorY) => {
             setCursorY(cursorY);
           }}
