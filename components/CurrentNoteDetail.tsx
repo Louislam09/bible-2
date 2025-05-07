@@ -138,8 +138,11 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
         await onUpdate(noteId, true);
         return;
       }
-      if (!noteContent.title) noteContent.title = defaultTitle;
-
+      const date = new Date().toLocaleDateString();
+      const uniqueSuffix = Date.now().toString(36).slice(-4);
+      if (!noteContent.title) {
+        noteContent.title = `${defaultTitle} ${date} - ${uniqueSuffix}`
+      }
       const success = await createNote({
         title: noteContent.title,
         note_text: noteContent.content
@@ -228,8 +231,9 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
     try {
       const success = await updateNote(id, {
         title: noteContent.title,
-        note_text: noteContent.content
-      });
+        note_text: noteContent.content,
+        uuid: noteInfo?.uuid,
+      }, true);
 
       if (success) {
         afterSaving();
@@ -271,14 +275,6 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
 
   return (
     <View style={styles.container}>
-      {/* {isView && <Text style={styles.dateLabel}>
-        {formatDateShortDayMonth(
-          isNewNote
-            ? new Date()
-            : ((noteInfo?.updated_at || noteInfo?.created_at) as any)
-        )}
-      </Text>} */}
-
       {isView && (
         <View style={styles.titleContainer}>
           <Text style={{ fontSize: 22 }}>

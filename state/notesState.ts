@@ -2,6 +2,7 @@ import { observable } from "@legendapp/state";
 
 import { pb } from "@/globalConfig";
 import { TNote } from "@/types";
+import * as Crypto from "expo-crypto";
 import { authState$ } from "./authState";
 
 export interface NotesState {
@@ -13,7 +14,7 @@ export interface NotesState {
   addNote: (note: TNote) => Promise<TNote | undefined>;
   updateNote: (id: string, note: Partial<TNote>) => Promise<TNote>;
   deleteNote: (id: string) => Promise<boolean>;
-  getNoteById: (id: string) => TNote | undefined;
+  getNoteByUUID: (id: string) => TNote | undefined;
   clearError: () => void;
 }
 
@@ -59,7 +60,7 @@ export const notesState$ = observable<NotesState>({
     }
   },
 
-  addNote: async (note: TNote) => {
+  addNote: async (note: Partial<TNote>) => {
     try {
       notesState$.isLoading.set(true);
       notesState$.error.set(null);
@@ -109,7 +110,7 @@ export const notesState$ = observable<NotesState>({
             title: note.title,
             note_text: note.note_text,
             user: user.id,
-            uuid: note.uuid,
+            uuid: note.uuid || Crypto.randomUUID(),
           });
 
           const createdNote: TNote = {
@@ -126,7 +127,7 @@ export const notesState$ = observable<NotesState>({
 
           return createdNote;
         }
-      throw error;
+        throw error;
       }
     } catch (error: any) {
       const errorMessage = error.message || "Error al crear/actualizar nota";
@@ -214,9 +215,10 @@ export const notesState$ = observable<NotesState>({
     }
   },
 
-  getNoteById: (id: string): TNote | undefined => {
+  getNoteByUUID: (uuid: string): TNote | undefined => {
     const notes = notesState$.notes.get();
-    return notes.find((note: TNote) => (note.id as any) === id);
+    // const notes = await pb.collection("notes").getFirstListItem(`uuid = "${uuid}"`);
+    return notes.find((note: TNote) => (note.uuid as any) === uuid);
   },
 
   clearError: () => {
@@ -258,9 +260,9 @@ export const noteSelectors$ = observable<NoteSelectorsState>({
       newSet.add(id);
     }
 
-    if(newSet.size === 0) {
+    if (newSet.size === 0) {
       noteSelectors$.isSelectionMode.set(false);
-    } else if(!noteSelectors$.isSelectionMode.get()) {
+    } else if (!noteSelectors$.isSelectionMode.get()) {
       noteSelectors$.isSelectionMode.set(true);
     }
     noteSelectors$.selectedNoteIds.set(newSet);

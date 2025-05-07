@@ -1,22 +1,28 @@
+import * as FileSystem from "expo-file-system";
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
-import * as FileSystem from "expo-file-system";
 
 const usePrintAndShare = () => {
   const printToFile = async (html: string, fileName: string) => {
-    const { uri } = await Print.printToFileAsync({ html });
-    const newUri = `${FileSystem.cacheDirectory}${fileName}.pdf`;
+    try {
+      const { uri } = await Print.printToFileAsync({ html });
+      const sanitizedFileName = fileName.replace(/\//g, "_");
+      const newUri = `${FileSystem.cacheDirectory}${sanitizedFileName}.pdf`;
 
-    await FileSystem.moveAsync({
-      from: uri,
-      to: newUri,
-    });
+      await FileSystem.moveAsync({
+        from: uri,
+        to: newUri,
+      });
 
-    await shareAsync(newUri, {
-      UTI: ".pdf",
-      mimeType: "application/pdf",
-      dialogTitle: "Santa Escritura",
-    });
+      await shareAsync(newUri, {
+        UTI: ".pdf",
+        mimeType: "application/pdf",
+        dialogTitle: "Santa Escritura",
+      });
+    } catch (error) {
+      console.error("Error printing to file:", error);
+    }
+
   };
 
   const createAndShareTextFile = async (
@@ -24,7 +30,8 @@ const usePrintAndShare = () => {
     _fileName: string,
     extWithDot: string = ".txt"
   ) => {
-    const fileName = `${FileSystem.documentDirectory}${_fileName}${extWithDot}`;
+    const sanitizedFileName = _fileName.replace(/\//g, "_");
+    const fileName = `${FileSystem.documentDirectory}${sanitizedFileName}${extWithDot}`;
 
     await FileSystem.writeAsStringAsync(fileName, textContent);
 

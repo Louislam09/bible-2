@@ -189,17 +189,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
   };
 
   const handleSyncNow = async () => {
-    if (!isAuthenticated) {
-      Alert.alert(
-        "Iniciar Sesión Requerido",
-        "Necesitas iniciar sesión para sincronizar con la nube.",
-        [
-          { text: "Cancelar", style: "cancel" },
-          { text: "Iniciar Sesión", onPress: handleLogin },
-        ]
-      );
-      return;
-    }
+    if (!authState$.ensureAuthenticated("Necesitas iniciar sesión para sincronizar con la nube.", handleLogin)) return
 
     try {
       setIsSyncing(true);

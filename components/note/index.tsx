@@ -5,14 +5,13 @@ import NoteItem from "@/components/note/NoteItem";
 import { Text, View } from "@/components/Themed";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
-import useNotesExportImport from "@/hooks/useNotesExportImport";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { useSyncNotes } from "@/hooks/useSyncNotes";
 import { useNoteService } from "@/services/noteService";
-import { authState$ } from "@/state/authState";
 import { bibleState$ } from "@/state/bibleState";
-import { noteSelectors$, notesState$ } from "@/state/notesState";
+import { noteSelectors$ } from "@/state/notesState";
 import { IVerseItem, Screens, TNote, TTheme } from "@/types";
+import checkConnection from "@/utils/checkConnection";
 import removeAccent from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { use$ } from "@legendapp/state/react";
@@ -51,11 +50,10 @@ const Note = ({ data }: TListVerse) => {
   const theme = useTheme();
   const navigation = useNavigation();
   const { currentBibleLongName } = useBibleContext();
-  const { deleteNote, getAllNotes, createNote, updateNote } = useNoteService();
-  const { exportNotes, importNotes, error, isLoading } = useNotesExportImport();
+  const { deleteNote, exportNotes, importNotes } = useNoteService();
   const selectedVerseForNote = use$(() => bibleState$.selectedVerseForNote.get());
   const isSyncing = use$(() => bibleState$.isSyncingNotes.get());
-  const { syncNotes, syncSingleNote } = useSyncNotes();
+  const { syncNotes, downloadCloudNotesToLocal, syncSingleNote } = useSyncNotes();
   const { printToFile } = usePrintAndShare();
 
   const styles = getStyles(theme);
@@ -99,6 +97,7 @@ const Note = ({ data }: TListVerse) => {
     }
   }, [showSearch]);
 
+
   const showAddNoteAlert = () => {
     ToastAndroid.show(
       "Seleccione la nota a la que quieres añadir el versiculo",
@@ -126,114 +125,6 @@ const Note = ({ data }: TListVerse) => {
     setShowMoreOptions(false);
   }, []);
 
-  const handleLogin = useCallback(() => {
-    navigation.navigate(Screens.Login);
-  }, [navigation]);
-
-  const handleSyncToCloud = useCallback(async () => {
-    bibleState$.isSyncingNotes.set(true);
-    try {
-      const notes = await getAllNotes();
-
-      if (!authState$.user.get()) {
-        Alert.alert(
-          "Iniciar Sesión Requerido",
-          "Necesitas iniciar sesión para guardar con la nube.",
-          [
-            { text: "Cancelar", style: "cancel" },
-            { text: "Iniciar Sesión", onPress: handleLogin },
-          ]
-        );
-        return;
-      }
-
-      for (const note of notes) {
-        if (!note.uuid) {
-          console.warn("Nota sin UUID, no se puede sincronizar:", note.id);
-          continue;
-        }
-
-        try {
-          await notesState$.addNote(note);
-        } catch (error) {
-          console.error("Error al sincronizar nota:", note.id, error);
-        }
-      }
-
-      ToastAndroid.show("Notas sincronizadas con la nube", ToastAndroid.SHORT);
-    } catch (error) {
-      console.error("Error al sincronizar notas con la nube:", error);
-      ToastAndroid.show("Error al sincronizar notas", ToastAndroid.SHORT);
-    } finally {
-      bibleState$.isSyncingNotes.set(false);
-    }
-  }, [getAllNotes]);
-
-  const handleDownloadFromCloud = useCallback(async () => {
-    bibleState$.isSyncingNotes.set(true);
-    try {
-      if (!authState$.user.get()) {
-        Alert.alert(
-          "Iniciar Sesión Requerido",
-          "Debes iniciar sesión para descargar tus notas desde la nube",
-          [
-            { text: "Cancelar", style: "cancel" },
-            { text: "Iniciar Sesión", onPress: handleLogin },
-          ]
-        );
-        return;
-      }
-
-      const cloudNotes = await notesState$.fetchNotes();
-      const localNotes = await getAllNotes();
-
-      let updatedCount = 0;
-      let createdCount = 0;
-
-      for (const cloudNote of cloudNotes) {
-        if (!cloudNote.uuid) {
-          console.warn("Nota en la nube sin UUID, se omite:", cloudNote.id);
-          continue;
-        }
-
-        try {
-          const existingNote = localNotes.find(n => n.uuid === cloudNote.uuid);
-
-          if (existingNote) {
-            await updateNote(existingNote.id, {
-              title: cloudNote.title,
-              note_text: cloudNote.note_text,
-              updated_at: cloudNote.updated_at,
-            });
-            updatedCount++;
-          } else {
-            await createNote({
-              uuid: cloudNote.uuid,
-              title: cloudNote.title,
-              note_text: cloudNote.note_text,
-              created_at: cloudNote.created_at,
-              updated_at: cloudNote.updated_at,
-            });
-            createdCount++;
-          }
-        } catch (error) {
-          console.error("Error al guardar nota local:", cloudNote.id, error);
-        }
-      }
-
-      ToastAndroid.show(
-        `Notas descargadas: ${createdCount} nuevas, ${updatedCount} actualizadas`,
-        ToastAndroid.SHORT
-      );
-    } catch (error) {
-      console.error("Error al descargar notas desde la nube:", error);
-      ToastAndroid.show("Error al descargar notas", ToastAndroid.SHORT);
-    } finally {
-      bibleState$.toggleReloadNotes();
-      bibleState$.isSyncingNotes.set(false);
-    }
-  }, [getAllNotes, updateNote, createNote]);
-
   const showMoreOptionHandle = useCallback(() => {
     setShowMoreOptions((prev) => !prev);
     AccessibilityInfo.announceForAccessibility(
@@ -257,7 +148,7 @@ const Note = ({ data }: TListVerse) => {
     setRefreshing(false);
   }, []);
 
-  const handleShareSelectedNotes = () => {
+  const handleShareSelectedNotes = async () => {
     const note = noteList.find((note: TNote) => selectedItems.has(note.id));
     if (!note) return;
     const html = htmlTemplate(
@@ -271,11 +162,12 @@ const Note = ({ data }: TListVerse) => {
       10,
       true
     );
-    printToFile(html, note?.title?.toUpperCase() || "--");
+    await printToFile(html, note?.title?.toUpperCase() || "--");
   };
 
   const handleDeleteSelectedNotes = () => {
     const selectedIds = Array.from(selectedItems);
+
     Alert.alert(
       "Eliminar Notas",
       `¿Estás seguro que quieres eliminar ${selectedIds.length} notas seleccionadas?`,
@@ -285,7 +177,9 @@ const Note = ({ data }: TListVerse) => {
           text: "Eliminar",
           onPress: async () => {
             for (const id of selectedIds) {
-              await deleteNote(id);
+              const currentNote = noteList.find((note: TNote) => note.id === id);
+              if (!currentNote) continue;
+              await deleteNote(currentNote);
             }
             noteSelectors$.clearSelections();
             bibleState$.toggleReloadNotes();
@@ -298,9 +192,30 @@ const Note = ({ data }: TListVerse) => {
       ]
     );
   }
+  const handleSyncSelectedNotes = async () => {
+    const isConnected = await checkConnection();
+    console.log("Conexión a Internet:", isConnected);
+    if (!isConnected) {
+      Alert.alert("Sin conexión", "No hay conexión a Internet para sincronizar las notas.");
+      return;
+    }
+    const selectedIds = Array.from(selectedItems);
+    for (const id of selectedIds) {
+      const currentNote = noteList.find((note: TNote) => note.id === id);
+      if (!currentNote) continue;
+      await syncSingleNote(currentNote);
+    }
+    noteSelectors$.clearSelections();
+    bibleState$.toggleReloadNotes();
+    ToastAndroid.show(
+      "Notas sincronizadas",
+      ToastAndroid.SHORT
+    );
+  }
 
   const handleExportSelectedNotes = async () => {
     const ids = Array.from(selectedItems);
+    console.log("Exporting notes with IDs:", ids);
     await exportNotes(ids);
   }
 
@@ -342,7 +257,7 @@ const Note = ({ data }: TListVerse) => {
           bottom: 220,
           name: "Download",
           color: '#2da5ff',
-          action: handleDownloadFromCloud,
+          action: downloadCloudNotesToLocal,
           hide: !showMoreOptions,
           label: "Cargar desde la cuenta",
           isDownload: true
@@ -351,7 +266,7 @@ const Note = ({ data }: TListVerse) => {
           bottom: 280,
           name: "RefreshCw",
           color: '#2da5ff',
-          action: handleSyncToCloud,
+          action: syncNotes,
           hide: !showMoreOptions,
           label: "Guardar en la cuenta",
           isSync: true
@@ -366,7 +281,7 @@ const Note = ({ data }: TListVerse) => {
         },
       ].filter((item) => !item.hide),
     [showMoreOptions, theme.colors.notification, onCreateNewNote, onImportNotes,
-      exportNotes, handleDownloadFromCloud, handleSyncToCloud, showMoreOptionHandle]
+      exportNotes, showMoreOptionHandle]
   );
 
   const selectionActionButtons = useMemo(
@@ -384,12 +299,18 @@ const Note = ({ data }: TListVerse) => {
         },
         label: noteList.every((note: TNote) => selectedItems.has(note.id)) ? "Cancelar" : "Todo"
       },
-      // {
-      //   name: "Download",
-      //   color: theme.colors.notification,
-      //   action: handleExportSelectedNotes,
-      //   label: "Guardar",
-      // },
+      {
+        name: "RefreshCw",
+        color: theme.colors.notification,
+        action: handleSyncSelectedNotes,
+        label: "Sincronizar",
+      },
+      {
+        name: "Download",
+        color: theme.colors.notification,
+        action: handleExportSelectedNotes,
+        label: "Guardar",
+      },
       {
         name: "Share2",
         color: theme.colors.notification,
@@ -405,7 +326,7 @@ const Note = ({ data }: TListVerse) => {
         label: "Eliminar",
       },
     ],
-    [selectedItems.size, noteList, theme.colors.notification, deleteNote, handleShareSelectedNotes, handleDeleteSelectedNotes]
+    [selectedItems.size, noteList, theme.colors.notification, handleExportSelectedNotes, handleShareSelectedNotes, handleDeleteSelectedNotes]
   );
 
   const renderItem: ListRenderItem<TNote> = useCallback(({ item }) => {
@@ -490,15 +411,6 @@ const Note = ({ data }: TListVerse) => {
     );
   }, [styles, theme.colors, notFoundSource, currentBibleLongName, searchText]);
 
-  if (isLoading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={theme.colors.notification} />
-        <Text style={styles.loadingText}>Cargando notas...</Text>
-      </View>
-    );
-  }
-
   const screenOptions: any = useMemo(() => {
     return {
       theme,
@@ -527,8 +439,13 @@ const Note = ({ data }: TListVerse) => {
         <RNView style={styles.container}>
           <Backdrop visible={showMoreOptions} onPress={dismiss} theme={theme} />
           {NoteHero()}
-          {error && <Text style={styles.textError} accessible={true} accessibilityRole="alert">{error}</Text>}
-
+          {isSelectionActive && (
+            <View style={styles.noteHeader}>
+              <Text style={styles.notesCountText} accessible={true} accessibilityRole="text">
+                {selectedItems.size} {selectedItems.size !== 1 ? "notas" : "nota"} seleccionada{selectedItems.size > 1 ? "s" : ""}
+              </Text>
+            </View>
+          )}
           <FlashList
             contentContainerStyle={styles.flashListContent}
             ref={flatListRef}
