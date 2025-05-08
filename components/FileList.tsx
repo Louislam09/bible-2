@@ -127,19 +127,38 @@ const FileList = () => {
   );
 
   const refreshDatabase = async (dbName: VersionItem) => {
-    console.log("Refreshing database:", dbName);
-    try {
-      const db = await reDownloadDatabase(dbName);
-      if (db) {
-        selectBibleVersion(dbName.id);
-      } else {
-        setError("Error al volver a descargar la base de datos");
-      }
-    } catch (err) {
-      setError("Error al volver a descargar la base de datos");
-      console.error("Error al volver a descargar la base de datos:", err);
-    }
-  }
+    Alert.alert(
+      "Actualizar módulo",
+      `¿Quieres descargar de nuevo "${dbName.name}"? Esto reemplazará los datos actuales de la biblia, notas, favoritos, etc.`,
+      [
+        {
+          text: "No, cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Sí, actualizar",
+          onPress: async () => {
+            console.log("Iniciando actualización de base de datos:", dbName);
+            try {
+              const db = await reDownloadDatabase(dbName);
+              if (db) {
+                selectBibleVersion(dbName.id);
+                Alert.alert(
+                  "Actualización exitosa",
+                  `"${dbName.name}" se ha actualizado correctamente.`
+                );
+              } else {
+                setError("Hubo un problema al descargar la base de datos.");
+              }
+            } catch (err) {
+              setError("Hubo un problema al descargar la base de datos.");
+              console.error("Error al descargar la base de datos:", err);
+            }
+          },
+        },
+      ]
+    );
+  };
 
   const renderItem = ({ item, index }: { item: string; index: number }) => {
     const versionItem = [...installedBibles, ...installedDictionary].find(
