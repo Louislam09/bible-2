@@ -17,6 +17,7 @@ type DatabaseContextType = {
   isInstallBiblesLoaded: boolean;
   isMyBibleDbLoaded: boolean;
   refreshDatabaseList: () => void;
+  reDownloadDatabase: (_dbName?: VersionItem) => Promise<SQLite.SQLiteDatabase | undefined>
 };
 
 const initialContext: DatabaseContextType = {
@@ -27,6 +28,7 @@ const initialContext: DatabaseContextType = {
   isInstallBiblesLoaded: false,
   isMyBibleDbLoaded: false,
   refreshDatabaseList: () => { },
+  reDownloadDatabase: (_dbName?: VersionItem) => Promise.resolve(undefined),
 };
 
 export const DatabaseContext =
@@ -47,6 +49,7 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({ children })
     database: myBibleDB,
     executeSql,
     loading: isMyBibleDbLoaded,
+    reDownloadDatabase
   } = useDB({ dbName: (isDataLoaded && isLoaded) ? currentDbName : undefined });
 
   const dbContextValue = {
@@ -57,6 +60,7 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({ children })
     isInstallBiblesLoaded: isLoaded,
     refreshDatabaseList,
     isMyBibleDbLoaded,
+    reDownloadDatabase
   };
 
   return (

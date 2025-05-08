@@ -1,6 +1,7 @@
 import { defaultDatabases } from "@/constants/databaseNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
+import { VersionItem } from "@/hooks/useInstalledBible";
 import { TTheme } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
@@ -11,7 +12,6 @@ import {
   ActivityIndicator,
   Alert,
   RefreshControl,
-  View as RNView,
   StyleSheet,
   TouchableOpacity
 } from "react-native";
@@ -25,7 +25,7 @@ const FileList = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const { refreshDatabaseList, installedBibles, installedDictionary } =
+  const { refreshDatabaseList, installedBibles, installedDictionary, reDownloadDatabase } =
     useDBContext();
   const { selectBibleVersion, fontSize } = useBibleContext();
 
@@ -33,6 +33,13 @@ const FileList = () => {
 
   const fetchFiles = async () => {
     const fileList = await FileSystem.readDirectoryAsync(extractionPath);
+
+    // for (const file of fileList) {
+    //   const fileUri = `${extractionPath}${file}`;
+    //   await FileSystem.deleteAsync(fileUri, { idempotent: true });
+    //   console.log(`Deleted file: ${fileUri}`);
+    // }
+    // console.log(fileList);
     try {
       setFiles(fileList.filter((file) => file.endsWith(".db") || file.endsWith(".zip")));
     } catch (err) {
@@ -118,6 +125,22 @@ const FileList = () => {
       </View>
     </View>
   );
+
+  const refreshDatabase = async (dbName: VersionItem) => {
+    console.log("Refreshing database:", dbName);
+    try {
+      const db = await reDownloadDatabase(dbName);
+      if (db) {
+        selectBibleVersion(dbName.id);
+      } else {
+        setError("Error al volver a descargar la base de datos");
+      }
+    } catch (err) {
+      setError("Error al volver a descargar la base de datos");
+      console.error("Error al volver a descargar la base de datos:", err);
+    }
+  }
+
   const renderItem = ({ item, index }: { item: string; index: number }) => {
     const versionItem = [...installedBibles, ...installedDictionary].find(
       (version) => version.path.includes(item)
@@ -162,6 +185,19 @@ const FileList = () => {
             )}
           </View>
 
+          {!allowDelete && (
+            <TouchableOpacity
+              style={styles.redownloadButton}
+              onPress={() => refreshDatabase(versionItem!)}
+            >
+              <Icon
+                name="RefreshCcw"
+                size={20}
+                color={theme.colors.primary}
+              />
+            </TouchableOpacity>
+          )}
+
           {allowDelete && (
             <TouchableOpacity
               style={styles.deleteButton}
@@ -178,6 +214,7 @@ const FileList = () => {
       </View>
     );
   };
+
 
   if (loading) {
     return (
@@ -346,7 +383,13 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontSize: 10,
       fontWeight: "600",
       color: colors.notification,
-    }
+    },
+    redownloadButton: {
+      padding: 8,
+      borderRadius: 8,
+      backgroundColor: colors.notification + "20",
+      marginLeft: "auto",
+    },
   });
 
 export default FileList;

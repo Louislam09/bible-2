@@ -44,13 +44,13 @@ const useInstalledBibles = () => {
 
         return findBible
           ? {
-              id: findBible.storedName,
-              name: findBible.name,
-              description: findBible.key,
-              size: findBible.size,
-              path: `${bibleDirectory}${file}`,
-              shortName: findBible.storedName,
-            }
+            id: findBible.storedName,
+            name: findBible.name,
+            description: findBible.key,
+            size: findBible.size,
+            path: `${bibleDirectory}${file}`,
+            shortName: findBible.storedName,
+          }
           : null;
       })
       .filter((x) => x) as any;

@@ -159,10 +159,10 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     if (storedData$.user.get() && pb.authStore.isValid) {
-      console.log("✅ User is set and authenticated, loading from cloud...");
+      // console.log("✅ User is set and authenticated, loading from cloud...");
       loadFromCloud();
     } else {
-      console.log("❌ User is not set or not authenticated");
+      // console.log("❌ User is not set or not authenticated");
     }
   }, [pb.authStore.isValid]);
 

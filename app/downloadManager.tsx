@@ -2,7 +2,7 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useRouter } from "expo-router";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   BackHandler,
@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import DatabaseDownloadItem from "@/components/DatabaseDownloadItem";
 import TabNavigation from "@/components/DownloadManagerTab";
 import FileList from "@/components/FileList";
@@ -133,21 +134,33 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
     </View>
   );
 
+  const screenOptions: any = useMemo(() => {
+    return {
+      theme,
+      title: "Gestor de Módulos",
+      titleIcon: "Download",
+      headerRightProps: {
+        headerRightIcon: "Search",
+        headerRightIconColor: theme.colors.text,
+        onPress: () => console.log(),
+        disabled: true,
+        style: { opacity: 0 },
+      },
+    };
+  }, [theme.colors]);
+
   if ((!checkConnection()) && !isMyDownloadTab) {
     return <NoInternetSplash theme={theme} />;
   }
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 30 }]}>
-      <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
-      />
+    <View style={[styles.container, {}]}>
+
+      <Stack.Screen options={singleScreenHeader(screenOptions)} />
 
       <View style={styles.headerContainer}>
         <View style={styles.titleContainer}>
-          <Text style={styles.noteListTitle}>Gestor de Módulos</Text>
+          {/* <Text style={styles.noteListTitle}>Gestor de Módulos</Text> */}
           {!isMyDownloadTab && AnimatedSearchBar()}
           {/* {!isMyDownloadTab && <AnimatedSearchBar />} */}
         </View>
