@@ -1,6 +1,5 @@
 import {
   dbFileExt,
-  initSQLiteDir,
   isDefaultDatabase,
   SQLiteDirPath,
 } from "@/constants/databaseNames";
@@ -88,7 +87,10 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
       ? `${databaseItem.id}.db`
       : `${databaseItem.id}${dbFileExt}`;
     const localURI = databaseItem.path;
-    await initSQLiteDir();
+
+    if (!(await FileSystem.getInfoAsync(localFolder)).exists) {
+      await FileSystem.makeDirectoryAsync(localFolder);
+    }
 
     if (_isDefaultDatabase) {
       let asset =
@@ -163,7 +165,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
         (column: any) => column.name === columnName
       );
       await statement.finalizeAsync();
-      
+
       if (!hasColumn) {
         await db.execAsync(createColumnQuery);
       }
