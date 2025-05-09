@@ -1,7 +1,3 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
-import { NavigationProp, NavigationState } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
 import Animation from "@/components/Animation";
 import { Text } from "@/components/Themed";
 import WordDefinition from "@/components/WordDefinition";
@@ -9,6 +5,13 @@ import { useDBContext } from "@/context/databaseContext";
 import { useCustomTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
 import useDictionaryData, { DatabaseData } from "@/hooks/useDictionaryData";
+import { modalState$ } from "@/state/modalState";
+import { DictionaryData, Screens, TTheme } from "@/types";
+import { pluralToSingular } from "@/utils/removeAccent";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
+import { NavigationProp, NavigationState } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
 import React, {
   RefObject,
   useCallback,
@@ -24,10 +27,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { DictionaryData, TTheme } from "@/types";
-import { pluralToSingular } from "@/utils/removeAccent";
 import BackButton from "./BackButton";
-import { modalState$ } from "@/state/modalState";
 
 type RenderItem = {
   item: DatabaseData;
@@ -205,7 +205,7 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
 
   const onNavToManagerDownload = useCallback(() => {
     // @ts-ignore
-    navigation.navigate("DownloadManager");
+    navigation.navigate(Screens.DownloadManager);
   }, [navigation]);
 
   if (dbNames.length === 0) {
