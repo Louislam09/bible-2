@@ -5,7 +5,6 @@ import StudyTools from "@/components/new-dashboard/StudyTools";
 import StatusBarBackground from "@/components/StatusBarBackground";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
-import { useSecretUnlock } from "@/hooks/useSecretUnlock";
 import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";
 import isWithinTimeframe from "@/utils/isWithinTimeframe";
@@ -42,7 +41,6 @@ const SecondDashboard = () => {
     historyManager: { getCurrentItem },
   } = useBibleContext();
   const storedData = storedData$.get();
-  const { handleTap } = useSecretUnlock();
   const requestAccessBottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const {
@@ -89,7 +87,6 @@ const SecondDashboard = () => {
       label: "Santa Escritura",
       action: () => navigation.navigate(Screens.Home, homePageInitParams),
       longAction: () => {
-        handleTap("top-left");
         showToast("Santa Escritura");
       },
       tag: "crown-outline",
@@ -154,7 +151,6 @@ const SecondDashboard = () => {
       action: () => navigation.navigate(Screens.Concordance, {}),
       color: "#ffffff",
       longAction: () => {
-        handleTap("bottom-right");
         showToast("Concordancia");
       },
     },
@@ -171,7 +167,6 @@ const SecondDashboard = () => {
       action: () => navigation.navigate(Screens.Favorite),
       color: "#fedf75",
       longAction: () => {
-        handleTap("top-right");
         showToast("Favoritos");
       },
     },
@@ -228,13 +223,6 @@ const SecondDashboard = () => {
       action: () => navigation.navigate(Screens.Character),
       color: "#cec8ff",
     },
-    // {
-    //   icon: "DoorOpen",
-    //   label: "loginS",
-    //   // @ts-ignore
-    //   action: () => navigation.navigate("login", {}),
-    //   color: "#75d0fe",
-    // },
   ];
 
   const versionRef = useRef<BottomSheetModal>(null);
