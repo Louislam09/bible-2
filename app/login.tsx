@@ -43,8 +43,15 @@ const LoginScreen = () => {
   const styles = getStyles(theme);
 
   useEffect(() => {
-    const userData = storedData$.user.get();
-    if (userData) router.replace("(dashboard)");
+    const checkExistingSession = async () => {
+      const isValid = await authState$.checkSession();
+      console.log({ isValid })
+      if (isValid) {
+        router.replace("(dashboard)");
+      }
+    };
+
+    checkExistingSession();
 
     Animated.parallel([
       Animated.timing(fadeAnim, {

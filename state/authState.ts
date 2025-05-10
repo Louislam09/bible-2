@@ -2,12 +2,12 @@ import { storedData$ } from "@/context/LocalstoreContext";
 import { loginWithEmailPassword, pb, setUserPassword } from "@/globalConfig";
 import { StorageService } from "@/services/StorageService";
 import { pbUser } from "@/types";
+import { checkConnection } from "@/utils/checkConnection";
 import { observable } from "@legendapp/state";
 import { Alert } from "react-native";
 
 // Create a separate function to check internet connection
 // This is needed because hooks can't be used directly in the observable
-
 
 export interface AuthState {
   user: pbUser | null;
@@ -40,24 +40,31 @@ export const authState$ = observable<AuthState>({
   isConnectedToInternet: true,
 
   login: async (email: string, password: string) => {
-    if (!authState$.isConnectedToInternet.get()) {
-      Alert.alert(
-        "Sin conexión a Internet",
-        "No se puede iniciar sesión sin conexión a Internet. Por favor, inténtalo de nuevo cuando estés conectado."
-      );
-      throw new Error("No hay conexión a Internet");
-    }
-
     try {
-      authState$.isLoading.set(true);
-      authState$.error.set(null);
+      const isOnline = await checkConnection();
 
+      if (!isOnline) {
+        // Check stored credentials for offline login
+        const storedUser = storedData$.user.get();
+        const storedToken = storedData$.token.get();
+
+        if (storedUser?.email === email) {
+          console.log("📱 Offline login - using stored credentials");
+          authState$.user.set(storedUser);
+          authState$.isAuthenticated.set(true);
+          return storedUser;
+        } else {
+          throw new Error("No se puede verificar las credenciales sin conexión");
+        }
+      }
+
+      // Online login logic
+      authState$.isLoading.set(true);
       const userData = await loginWithEmailPassword(email, password);
       await StorageService.saveSession(pb.authStore.token, userData);
 
       authState$.user.set(userData);
       authState$.isAuthenticated.set(true);
-
       return userData;
     } catch (error: any) {
       const errorMessage = error.message || "Error al iniciar sesión";
@@ -152,32 +159,27 @@ export const authState$ = observable<AuthState>({
   },
 
   checkSession: async () => {
-    // console.log("🔎 checking session 🔍");
     try {
+      console.log("🔍 Checking session...");
       authState$.isLoading.set(true);
 
-      const token = storedData$.token.get();
-      const userData = storedData$.user.get();
+      const isOnline = await checkConnection();
+      console.log("📡 Network status:", isOnline ? "online" : "offline");
 
-      if (token && userData) {
-        if (pb.authStore.token !== token) {
-          pb.authStore.save(token, userData);
-        }
-
-        if (pb.authStore.isValid) {
-          const user = pb.authStore.record as pbUser;
-          authState$.user.set(user);
-          authState$.isAuthenticated.set(true);
-          return true;
-        } else {
-          await StorageService.clearSession();
-        }
+      const isValid = await StorageService.validateSession();
+      if (isValid) {
+        const userData = isOnline ? pb.authStore.record : storedData$.user.get();
+        authState$.user.set(userData as pbUser);
+        authState$.isAuthenticated.set(true);
+        return true;
       }
 
+      await StorageService.clearSession();
+      authState$.user.set(null);
+      authState$.isAuthenticated.set(false);
       return false;
     } catch (error) {
-      console.error("Error al verificar la sesión:", error);
-      await StorageService.clearSession();
+      console.error("Error checking session:", error);
       return false;
     } finally {
       authState$.isLoading.set(false);
@@ -203,3 +205,12 @@ export const authState$ = observable<AuthState>({
     authState$.error.set(null);
   },
 });
+
+// Only run token refresh when online
+setInterval(async () => {
+  const isOnline = await checkConnection();
+  if (authState$.isAuthenticated.get() && isOnline) {
+    console.log("⏰ Running periodic session check...");
+    await StorageService.validateSession();
+  }
+}, 30 * 60 * 1000);
