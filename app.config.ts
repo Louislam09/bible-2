@@ -100,7 +100,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       'expo-router',
     ],
     runtimeVersion: {
-      policy: 'nativeVersion',
+      policy: 'appVersion',
     },
   };
 };
