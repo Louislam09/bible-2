@@ -84,7 +84,7 @@ export const refreshSession = async (): Promise<boolean> => {
     }
 
     // Attempt to refresh the token
-    await pb.collection('users').authRefresh();
+    // await pb.collection('users').authRefresh();
     return true;
   } catch (error) {
     console.error('Error refreshing session:', error);
