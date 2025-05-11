@@ -1,14 +1,14 @@
 import Animation from "@/components/Animation";
 import BottomModal from "@/components/BottomModal";
-import Icon, { IconProps } from "@/components/Icon";
+import Icon from "@/components/Icon";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
 import RequestAccess from "@/components/admin/RequestAccess";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import lottieAssets from "@/constants/lottieAssets";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { useAccessRequest } from "@/hooks/useAccessRequest";
 import useInternetConnection from "@/hooks/useInternetConnection";
-import { useCheckStatus } from "@/services/queryService";
 import { Screens, TTheme } from "@/types";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
@@ -154,14 +154,13 @@ const BibleQuote = ({ verse, reference }: BibleVerse) => {
   );
 };
 
-
 const HymnScreen = () => {
   const theme = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const { isConnected } = useInternetConnection();
-  const { mutate: checkStatus, isPending: isChecking } = useCheckStatus();
+  const { requestAccess, loading: isLoading, status } = useAccessRequest()
   const requestAccessBottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const isAlegresNuevasUnlocked = use$(() => storedData$.isAlegresNuevasUnlocked.get());
@@ -173,16 +172,7 @@ const HymnScreen = () => {
 
   const statusColor = hasRequestAccess ? '#efbf43' : '#FFFFFF';
 
-  useEffect(() => {
-    if (isAlegresNuevasUnlocked || !isConnected) return;
-    const userEmail = storedData$.userData.get()?.email || '';
-    if (userEmail) {
-      checkStatus(userEmail);
-    }
-  }, [isAlegresNuevasUnlocked, isConnected]);
-
   const handleRequestAccessPress = useCallback(() => {
-
     if (!isConnected) {
       Alert.alert(
         'Shalom',
@@ -270,7 +260,7 @@ const HymnScreen = () => {
           />
         </View>
 
-        {isChecking ? (
+        {isLoading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={theme.colors.notification} />
             <Text style={styles.loadingText}>Verificando acceso...</Text>
@@ -307,7 +297,9 @@ const HymnScreen = () => {
         ref={requestAccessBottomSheetModalRef}
       >
         <RequestAccess
+          onRequest={requestAccess}
           onClose={() => requestAccessBottomSheetModalRef.current?.dismiss()}
+          isPending={isLoading}
         />
       </BottomModal>
     </ScreenWithAnimation>
