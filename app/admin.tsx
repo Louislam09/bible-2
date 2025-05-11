@@ -1,15 +1,12 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
 import {
-  useCheckStatus,
   useDeleteRequest,
   useGetAllRequests,
-  useRequestAccess,
-  useUpdateRequestStatus,
+  useUpdateRequestStatus
 } from "@/services/queryService";
 import { RequestStatus } from "@/services/types";
 import { TTheme } from "@/types";
-import removeAccent from "@/utils/removeAccent";
 import { useTheme } from "@react-navigation/native";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { format } from "date-fns";
@@ -19,15 +16,12 @@ import React, { useCallback, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
   RefreshControl,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -57,7 +51,6 @@ const approvalStatus: ApprovalStatus = {
   },
 };
 
-// Separate request item component for better organization
 const RequestItem = ({
   item,
   onUpdateStatus,
@@ -79,13 +72,13 @@ const RequestItem = ({
       <View style={styles.requestInfo}>
         <View style={styles.requestDetails}>
           <Text style={styles.requestName}>{item.name}</Text>
-          <Text style={styles.requestEmail}>{item.email}</Text>
+          {/* <Text style={styles.requestEmail}>email</Text> */}
           <View style={[styles.statusBadge, { backgroundColor: `${statusColor}20` }]}>
             <Icon name={statusIcon} color={statusColor} size={16} />
             <Text style={[styles.statusLabel, { color: statusColor }]}>{statusLabel}</Text>
           </View>
           <Text style={styles.requestDate}>
-            {format(new Date(item.created_at), "dd MMM yyyy, hh:mm a")}
+            {format(new Date(item.created), "dd MMM yyyy, hh:mm a")}
           </Text>
         </View>
         <Icon name={statusIcon} color={statusColor} size={28} />
@@ -255,9 +248,6 @@ const EmptyState = ({
 };
 
 const RequestAccessScreen: React.FC = () => {
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [searchEmail, setSearchEmail] = useState<string>("");
   const [activeTab, setActiveTab] = useState<"request" | "check" | "all">("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<RequestStatus["status"] | null>(null);
@@ -268,13 +258,6 @@ const RequestAccessScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
 
-  const { mutate: submitRequest, isPending: isSubmitting } = useRequestAccess();
-  const {
-    mutate: checkStatus,
-    isPending: isChecking,
-    data: statusResult,
-  } = useCheckStatus();
-
   const {
     data: requests,
     isFetching: isFetchingRequests,
@@ -284,7 +267,6 @@ const RequestAccessScreen: React.FC = () => {
   const { mutate: updateStatus, isPending: isUpdating } = useUpdateRequestStatus();
   const { mutate: deleteRequest, isPending: isDeleting } = useDeleteRequest();
 
-  // Better sorting and filtering
   const filteredAndSortedRequests = useMemo(() => {
     if (!requests) return [];
 
@@ -305,63 +287,6 @@ const RequestAccessScreen: React.FC = () => {
       return matchesSearch && matchesStatus;
     });
   }, [requests, searchQuery, statusFilter]);
-
-  const handleSubmitRequest = () => {
-    if (!name.trim() || !email.trim()) {
-      Alert.alert("Error", "El nombre y el correo son requeridos");
-      return;
-    }
-
-    // Simple email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      Alert.alert("Error", "Por favor ingresa un correo electrónico válido");
-      return;
-    }
-
-    submitRequest(
-      { name: removeAccent(name), email },
-      {
-        onSuccess: () => {
-          Alert.alert(
-            "Éxito",
-            "Tu solicitud de acceso ha sido enviada exitosamente"
-          );
-          setName("");
-          setEmail("");
-          Keyboard.dismiss();
-          // Switch to check tab to see status
-          setActiveTab("check");
-          setSearchEmail(email);
-        },
-        onError: (error) => {
-          Alert.alert(
-            "Error",
-            error instanceof Error
-              ? error.message
-              : "Error al enviar la solicitud"
-          );
-        },
-      }
-    );
-  };
-
-  const handleCheckStatus = () => {
-    if (!searchEmail.trim()) {
-      Alert.alert("Error", "El correo es requerido");
-      return;
-    }
-
-    // Simple email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(searchEmail)) {
-      Alert.alert("Error", "Por favor ingresa un correo electrónico válido");
-      return;
-    }
-
-    checkStatus(searchEmail);
-    Keyboard.dismiss();
-  };
 
   const handleUpdateStatus = useCallback((id: string, status: RequestStatus["status"]) => {
     updateStatus(
@@ -430,9 +355,8 @@ const RequestAccessScreen: React.FC = () => {
     );
   }, [handleUpdateStatus, handleDeleteRequest]);
 
-  const loading = isSubmitting || isChecking || isFetchingRequests || isUpdating || isDeleting;
+  const loading = isFetchingRequests || isUpdating || isDeleting;
 
-  // Render different content based on the active tab
   const renderContent = () => {
     if (loading && !isRefreshing) {
       return (
@@ -444,130 +368,6 @@ const RequestAccessScreen: React.FC = () => {
     }
 
     switch (activeTab) {
-      case "request":
-        return (
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.formContainer}
-            keyboardVerticalOffset={100}
-          >
-            <View style={styles.formHeader}>
-              <Icon name="UserPlus" color={theme.colors.text} size={24} />
-              <Text style={styles.title}>Solicitud de Acceso</Text>
-            </View>
-
-            <View style={styles.formGroup}>
-              <Text style={styles.formLabel}>Nombre completo</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Ingrese su nombre"
-                placeholderTextColor={`${theme.colors.text}80`}
-                value={name}
-                onChangeText={setName}
-                returnKeyType="next"
-                accessibilityLabel="Nombre completo"
-              />
-            </View>
-
-            <View style={styles.formGroup}>
-              <Text style={styles.formLabel}>Correo electrónico</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Ingrese su correo"
-                placeholderTextColor={`${theme.colors.text}80`}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                returnKeyType="done"
-                accessibilityLabel="Correo electrónico"
-              />
-            </View>
-
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={handleSubmitRequest}
-              disabled={isSubmitting}
-              accessibilityLabel="Enviar solicitud de acceso"
-            >
-              {isSubmitting ? (
-                <ActivityIndicator size="small" color="#fff" />
-              ) : (
-                <>
-                  <Icon name="Send" color="#fff" size={16} style={styles.buttonIcon} />
-                  <Text style={styles.submitButtonText}>Enviar Solicitud</Text>
-                </>
-              )}
-            </TouchableOpacity>
-          </KeyboardAvoidingView>
-        );
-
-      case "check":
-        return (
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.formContainer}
-            keyboardVerticalOffset={100}
-          >
-            <View style={styles.formHeader}>
-              <Icon name="Search" color={theme.colors.text} size={24} />
-              <Text style={styles.title}>Verificar Estado</Text>
-            </View>
-
-            <View style={styles.formGroup}>
-              <Text style={styles.formLabel}>Correo electrónico</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Ingrese su correo para verificar"
-                placeholderTextColor={`${theme.colors.text}80`}
-                value={searchEmail}
-                onChangeText={setSearchEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                returnKeyType="search"
-                accessibilityLabel="Correo electrónico para verificar"
-              />
-            </View>
-
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={handleCheckStatus}
-              disabled={isChecking}
-              accessibilityLabel="Verificar estado de solicitud"
-            >
-              {isChecking ? (
-                <ActivityIndicator size="small" color="#fff" />
-              ) : (
-                <>
-                  <Icon name="Search" color="#fff" size={16} style={styles.buttonIcon} />
-                  <Text style={styles.submitButtonText}>Verificar Estado</Text>
-                </>
-              )}
-            </TouchableOpacity>
-
-            {statusResult && statusResult.data && (
-              <View style={styles.statusResultContainer}>
-                <Text style={styles.statusTitle}>Resultado de la búsqueda:</Text>
-                <RequestItem
-                  item={statusResult.data}
-                  onUpdateStatus={handleUpdateStatus}
-                  onDeleteRequest={handleDeleteRequest}
-                />
-              </View>
-            )}
-
-            {statusResult && !statusResult.data && (
-              <View style={styles.statusResultContainer}>
-                <EmptyState
-                  icon="CircleAlert"
-                  title="No encontrado"
-                  message="No se encontró ninguna solicitud con el correo proporcionado."
-                />
-              </View>
-            )}
-          </KeyboardAvoidingView>
-        );
-
       case "all":
       default:
         return (
@@ -653,32 +453,21 @@ const RequestAccessScreen: React.FC = () => {
               headerRightIcon: "House",
               headerRightIconColor: theme.colors.text,
               onPress: () => router.push("/"),
-              disabled: false,
+              disabled: true,
+              style: { opacity: 0 }
             },
           }),
         }}
       />
       <View style={styles.container}>
-        <View style={styles.tabContainer}>
+        {/* <View style={styles.tabContainer}>
           <TabButton
             title="Solicitudes"
             isActive={activeTab === "all"}
             onPress={() => setActiveTab("all")}
             icon="Inbox"
           />
-          <TabButton
-            title="Solicitar"
-            isActive={activeTab === "request"}
-            onPress={() => setActiveTab("request")}
-            icon="UserPlus"
-          />
-          <TabButton
-            title="Verificar"
-            isActive={activeTab === "check"}
-            onPress={() => setActiveTab("check")}
-            icon="Search"
-          />
-        </View>
+        </View> */}
 
         {renderContent()}
       </View>

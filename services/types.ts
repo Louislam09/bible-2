@@ -6,9 +6,8 @@ export interface AccessRequest {
 export interface RequestStatus {
   id: string;
   name: string;
-  email: string;
   status: "pending" | "approved" | "rejected";
-  created_at: string;
+  created: string;
 }
 
 export interface ApiResponse<T> {
