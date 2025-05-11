@@ -13,7 +13,6 @@ export interface AuthState {
   user: pbUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  isConnectedToInternet: boolean;
   error: string | null;
 
   login: (email: string, password: string) => Promise<pbUser>;
@@ -37,7 +36,6 @@ export const authState$ = observable<AuthState>({
   isAuthenticated: false,
   isLoading: false,
   error: null,
-  isConnectedToInternet: true,
 
   login: async (email: string, password: string) => {
     try {
@@ -75,21 +73,12 @@ export const authState$ = observable<AuthState>({
     }
   },
 
-  loginWithGoogle: async (googleUserInfo: pbUser, accessToken: string) => {
-    if (!authState$.isConnectedToInternet.get()) {
-      Alert.alert(
-        "Sin conexión a Internet",
-        "No se puede iniciar sesión con Google sin conexión a Internet. Por favor, inténtalo de nuevo cuando estés conectado."
-      );
-      throw new Error("No hay conexión a Internet");
-    }
-
+  loginWithGoogle: async (googleUserInfo: pbUser, token: string) => {
     try {
       authState$.isLoading.set(true);
       authState$.error.set(null);
-
-      pb.authStore.save(accessToken, googleUserInfo);
-      await StorageService.saveSession(pb.authStore.token, googleUserInfo);
+      pb.authStore.save(token, googleUserInfo);
+      await StorageService.saveSession(token, googleUserInfo);
 
       authState$.user.set(googleUserInfo);
       authState$.isAuthenticated.set(true);
@@ -106,14 +95,6 @@ export const authState$ = observable<AuthState>({
   },
 
   logout: async () => {
-    if (!authState$.isConnectedToInternet.get()) {
-      Alert.alert(
-        "Sin conexión a Internet",
-        "No se puede cerrar sesión sin conexión a Internet. Por favor, inténtalo de nuevo cuando estés conectado."
-      );
-      throw new Error("No hay conexión a Internet");
-    }
-
     try {
       authState$.isLoading.set(true);
       pb.authStore.clear();
@@ -159,27 +140,28 @@ export const authState$ = observable<AuthState>({
   },
 
   checkSession: async () => {
+    // console.log("🔎 checking session 🔍");
     try {
-      console.log("🔍 Checking session...");
       authState$.isLoading.set(true);
-
-      const isOnline = await checkConnection();
-      console.log("📡 Network status:", isOnline ? "online" : "offline");
-
-      const isValid = await StorageService.validateSession();
-      if (isValid) {
-        const userData = isOnline ? pb.authStore.record : storedData$.user.get();
-        authState$.user.set(userData as pbUser);
-        authState$.isAuthenticated.set(true);
-        return true;
+      const token = storedData$.token.get();
+      const userData = storedData$.user.get();
+      if (token && userData) {
+        if (pb.authStore.token !== token) {
+          pb.authStore.save(token, userData);
+        }
+        if (pb.authStore.isValid) {
+          const user = pb.authStore.record as pbUser;
+          authState$.user.set(user);
+          authState$.isAuthenticated.set(true);
+          return true;
+        } else {
+          await StorageService.clearSession();
+        }
       }
-
-      await StorageService.clearSession();
-      authState$.user.set(null);
-      authState$.isAuthenticated.set(false);
       return false;
     } catch (error) {
-      console.error("Error checking session:", error);
+      console.error("Error al verificar la sesión:", error);
+      // await StorageService.clearSession();
       return false;
     } finally {
       authState$.isLoading.set(false);
@@ -205,12 +187,3 @@ export const authState$ = observable<AuthState>({
     authState$.error.set(null);
   },
 });
-
-// Only run token refresh when online
-setInterval(async () => {
-  const isOnline = await checkConnection();
-  if (authState$.isAuthenticated.get() && isOnline) {
-    console.log("⏰ Running periodic session check...");
-    await StorageService.validateSession();
-  }
-}, 30 * 60 * 1000);

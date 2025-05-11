@@ -264,7 +264,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     if (!isDataLoaded) return;
     const initLocalSettings = async () => {
       await authState$.checkSession();
-      syncLocalSettings();
+      await syncLocalSettings();
     };
 
     initLocalSettings();

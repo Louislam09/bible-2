@@ -1,19 +1,19 @@
 // components/SetPasswordScreen.tsx
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
-import { pb, setUserPassword } from '../globalConfig';
-import { useTheme } from '@react-navigation/native';
 import { TTheme } from '@/types';
+import { useTheme } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { pb, setUserPassword } from '../globalConfig';
 
 interface SetPasswordScreenProps {
   onSuccess?: () => void;
   onCancel?: () => void;
 }
 
-const SetPasswordScreen: React.FC<SetPasswordScreenProps> = ({ 
-  onSuccess, 
-  onCancel 
+const SetPasswordScreen: React.FC<SetPasswordScreenProps> = ({
+  onSuccess,
+  onCancel
 }) => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -25,36 +25,36 @@ const SetPasswordScreen: React.FC<SetPasswordScreenProps> = ({
   const handleSetPassword = async () => {
     try {
       setLoading(true);
-      
+
       // Validate passwords
       if (!newPassword || newPassword.length < 8) {
         Alert.alert('Password Error', 'Password must be at least 8 characters long.');
         return;
       }
-      
+
       if (newPassword !== confirmPassword) {
         Alert.alert('Password Error', 'Passwords do not match.');
         return;
       }
-      
+
       // Check if user is authenticated
       if (!pb.authStore.isValid) {
         Alert.alert('Authentication Error', 'You must be logged in to set a password.');
         return;
       }
-      
+
       // Set the user's password
-      const userId = pb.authStore.model?.id;
+      const userId = pb.authStore.record?.id;
       if (!userId) {
         Alert.alert('Error', 'User ID not found.');
         return;
       }
-      
+
       const success = await setUserPassword(userId, newPassword);
-      
+
       if (success) {
         Alert.alert(
-          'Success', 
+          'Success',
           'Your password has been set. You can now log in with your email and password.',
           [
             {
@@ -84,7 +84,7 @@ const SetPasswordScreen: React.FC<SetPasswordScreenProps> = ({
       <Text style={styles.description}>
         Setting a password will allow you to log in with your email and password in addition to Google authentication.
       </Text>
-      
+
       <TextInput
         style={styles.input}
         placeholder="New Password"
@@ -93,7 +93,7 @@ const SetPasswordScreen: React.FC<SetPasswordScreenProps> = ({
         onChangeText={setNewPassword}
         secureTextEntry
       />
-      
+
       <TextInput
         style={styles.input}
         placeholder="Confirm Password"
@@ -102,9 +102,9 @@ const SetPasswordScreen: React.FC<SetPasswordScreenProps> = ({
         onChangeText={setConfirmPassword}
         secureTextEntry
       />
-      
-      <TouchableOpacity 
-        style={[styles.button, loading && styles.disabledButton]} 
+
+      <TouchableOpacity
+        style={[styles.button, loading && styles.disabledButton]}
         onPress={handleSetPassword}
         disabled={loading}
       >
@@ -112,10 +112,10 @@ const SetPasswordScreen: React.FC<SetPasswordScreenProps> = ({
           {loading ? 'Setting Password...' : 'Set Password'}
         </Text>
       </TouchableOpacity>
-      
+
       {onCancel && (
-        <TouchableOpacity 
-          style={styles.cancelButton} 
+        <TouchableOpacity
+          style={styles.cancelButton}
           onPress={onCancel}
           disabled={loading}
         >

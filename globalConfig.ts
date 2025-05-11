@@ -77,38 +77,3 @@ export const configureOAuth2Redirect = () => {
   });
 };
 
-export const refreshSession = async (): Promise<boolean> => {
-  try {
-    if (!pb.authStore.isValid || !pb.authStore.model) {
-      return false;
-    }
-
-    // Attempt to refresh the token
-    await pb.collection('users').authRefresh();
-    return true;
-  } catch (error) {
-    console.error('Error refreshing session:', error);
-    return false;
-  }
-};
-
-export const validateAndRefreshSession = async (): Promise<boolean> => {
-  try {
-    if (!pb.authStore.isValid) {
-      return false;
-    }
-
-    // If token is about to expire (less than 5 minutes remaining)
-    const tokenExpiration = pb.authStore.model?.$expirationTime || 0;
-    const fiveMinutes = 5 * 60 * 1000;
-
-    if (tokenExpiration - Date.now() < fiveMinutes) {
-      return await refreshSession();
-    }
-
-    return true;
-  } catch (error) {
-    console.error('Error validating session:', error);
-    return false;
-  }
-};

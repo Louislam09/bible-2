@@ -54,7 +54,6 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({
           WebBrowser.openAuthSessionAsync(url, REDIRECT_URI);
         },
       });
-      console.log("UserLogined", pb.authStore.isValid);
       authState$.loginWithGoogle(pb.authStore.record as pbUser, authData.token);
       setLoading(false);
 

@@ -29,7 +29,7 @@ const PasswordSetupNotification: React.FC<PasswordSetupNotificationProps> = ({
 
   //   try {
   //     // Get current user data
-  //     const userData = pb.authStore.model as pbUser;
+  //     const userData = pb.authStore.record as pbUser;
 
   //     // Check if user was created with Google and hasn't set a password
   //     if (userData.lastGoogleToken && userData.hasSetPassword === false) {

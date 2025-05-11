@@ -159,10 +159,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     if (storedData$.user.get() && pb.authStore.isValid) {
-      // console.log("✅ User is set and authenticated, loading from cloud...");
       loadFromCloud();
-    } else {
-      // console.log("❌ User is not set or not authenticated");
     }
   }, [pb.authStore.isValid]);
 
@@ -269,7 +266,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         });
 
       if (existingSettings.items.length > 0) {
-        const settingsData = existingSettings.items[0].settings;
+        const settingsData = existingSettings.items[0].settings as StoreState;
 
         if (user.name || user.email) {
           settingsData.userData = {
@@ -283,6 +280,8 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           ...settingsData,
           isDataLoaded: true,
           isSyncedWithCloud: true,
+          token: storedData$.get().token,
+          user: storedData$.get().user
         });
 
         bibleState$.changeBibleQuery({
