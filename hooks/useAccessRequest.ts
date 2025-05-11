@@ -15,14 +15,13 @@ export function useAccessRequest() {
 
     const fetchRequestStatus = async () => {
         const isConnected = await checkConnection();
-        if (!isConnected || storedData$.isAlegresNuevasUnlocked.get()) {
+        if (!isConnected) {
             setLoading(false)
             return
         }
 
         const user = authState$.user.get();
         const userId = user?.id || pb.authStore.record?.id;
-        console.log({ userId, aid: pb.authStore.record?.id })
         try {
             setLoading(true);
             if (!pb.authStore.isValid) throw new Error("Not authenticated");
@@ -30,7 +29,6 @@ export function useAccessRequest() {
             const request: RecordModel = await pb
                 .collection("access_requests")
                 .getFirstListItem(`user.id="${userId}"`, { requestKey: null });
-            console.log('fetchRequestStatus', { request })
             if (request.status === 'approved') {
                 storedData$.isAlegresNuevasUnlocked.set(true);
                 storedData$.hasRequestAccess.set(true);
