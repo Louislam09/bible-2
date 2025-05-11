@@ -173,6 +173,8 @@ const HymnScreen = () => {
   const statusColor = hasRequestAccess ? '#efbf43' : '#FFFFFF';
 
   useEffect(() => {
+    // storedData$.isAlegresNuevasUnlocked.set(false);
+    // storedData$.hasRequestAccess.set(false);
     if (isAlegresNuevasUnlocked || !isConnected) return;
     console.log({ status })
     if (status === 'approved') {

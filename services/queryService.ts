@@ -63,7 +63,8 @@ export const useGetAllRequests = () => {
   };
   return useQuery({
     queryKey: ['requests'],
-    queryFn: getAllRequests
+    queryFn: getAllRequests,
+    staleTime: 0, // Data is always considered stale
   });
 };
 

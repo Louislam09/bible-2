@@ -31,6 +31,12 @@ export function useAccessRequest() {
                 .collection("access_requests")
                 .getFirstListItem(`user.id="${userId}"`, { requestKey: null });
             console.log('fetchRequestStatus', { request })
+            if (request.status === 'approved') {
+                storedData$.isAlegresNuevasUnlocked.set(true);
+                storedData$.hasRequestAccess.set(true);
+            } else if (request.status === 'rejected') {
+                storedData$.isAlegresNuevasUnlocked.set(false);
+            }
             setStatus(request.status as AccessStatus);
         } catch (err: any) {
             console.log('fetchRequestStatus', { err })

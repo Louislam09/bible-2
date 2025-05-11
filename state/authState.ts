@@ -207,10 +207,10 @@ export const authState$ = observable<AuthState>({
 });
 
 // Only run token refresh when online
-setInterval(async () => {
-  const isOnline = await checkConnection();
-  if (authState$.isAuthenticated.get() && isOnline) {
-    console.log("⏰ Running periodic session check...");
-    await StorageService.validateSession();
-  }
-}, 30 * 60 * 1000);
+// setInterval(async () => {
+//   const isOnline = await checkConnection();
+//   if (authState$.isAuthenticated.get() && isOnline) {
+//     console.log("⏰ Running periodic session check...");
+//     await StorageService.validateSession();
+//   }
+// }, 30 * 60 * 1000);

@@ -30,8 +30,11 @@ const RequestAccess = ({ onClose, onRequest, isPending }: IRequestAccess) => {
 
     // Auto-fill form with user data if authenticated
     useEffect(() => {
-        // storedData$.hasRequestAccess.set(false);
-        // console.log('adasd')
+        if (!isAuthenticated) {
+            onClose();
+            router.push('/login');
+            return;
+        }
 
         if (isAuthenticated && user) {
             setName(user.name || '');
@@ -114,16 +117,7 @@ const RequestAccess = ({ onClose, onRequest, isPending }: IRequestAccess) => {
                 onChangeText={setName}
                 editable={!isAuthenticated || !user?.name}
             />}
-            {/* <TextInput
-                style={styles.input}
-                placeholder="Correo"
-                placeholderTextColor={theme.colors.text}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                editable={!isAuthenticated || !user?.email}
-            /> */}
+
             <TouchableOpacity
                 style={styles.button}
                 onPress={() => handleSubmit(false)}
