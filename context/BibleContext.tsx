@@ -232,6 +232,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   );
   const [orientation, setOrientation] = useState("PORTRAIT");
   const { addFavoriteVerse, removeFavoriteVerse } = useFavoriteVerseService();
+  const logo = require('../assets/images/icon.png')
 
   const getOrientation = () => {
     const { height, width } = Dimensions.get("window");
@@ -304,7 +305,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     !isMyBibleDbLoaded
   ) {
     return (
-      <ScreenWithAnimation isVisible title="Santa Escritura" icon="BookPlus">
+      <ScreenWithAnimation imageSource={logo} isVisible titleColor={'white'} backgroundColor='#0d3f3e' iconColor='white' title="Cargado..." icon="BookPlus">
         <></>
       </ScreenWithAnimation>
     );

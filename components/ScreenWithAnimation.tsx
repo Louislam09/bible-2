@@ -1,21 +1,24 @@
+import { useTheme } from "@react-navigation/native";
 import LottieView, { AnimationObject } from "lottie-react-native";
+import { icons } from "lucide-react-native";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { Animated, StyleSheet, View } from "react-native";
-import { useTheme } from "@react-navigation/native";
-import { icons } from "lucide-react-native";
 import Icon from "./Icon";
 
 type ScreenWithAnimationProps = {
   children: React.ReactNode;
   animationSource?: string | AnimationObject | { uri: string };
   icon?: keyof typeof icons;
+  imageSource?: any;
   title?: string;
   speed?: number;
   duration?: number;
   shouldPlay?: boolean;
   isVisible?: boolean;
   backgroundColor?: any;
+  titleColor?: any;
   iconColor?: any;
+  loop?: boolean;
 };
 
 const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
@@ -27,8 +30,11 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
   duration = 1500,
   shouldPlay = true,
   isVisible,
+  loop,
   backgroundColor,
+  titleColor,
   iconColor,
+  imageSource
 }) => {
   const [isAnimating, setIsAnimating] = useState(shouldPlay);
   const opacity = useRef(new Animated.Value(0)).current;
@@ -104,26 +110,36 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
               source={animationSource}
               autoPlay
               speed={speed}
-              loop={false}
+              loop={loop || false}
               style={{ width: 300, height: 300 }}
               onAnimationFinish={onAnimationFinish}
             />
+          ) : imageSource ? (
+            <Animated.Image
+              source={imageSource}
+              style={{
+                width: 300,
+                height: 300,
+                opacity,
+                transform: [{ translateY: bounceValue }],
+              }}
+              resizeMode="contain"
+            />
           ) : (
-            icon && (
-              <Animated.View
-                style={{ transform: [{ translateY: bounceValue }], opacity }}
-              >
-                <Icon
-                  name={icon}
-                  size={100}
-                  color={iconColor || theme.colors.text}
-                />
-              </Animated.View>
-            )
+            <Animated.View
+              style={{ transform: [{ translateY: bounceValue }], opacity }}
+            >
+              <Icon
+                name={icon! || 'BookPlus'}
+                size={100}
+                color={iconColor || theme.colors.text}
+              />
+            </Animated.View>
+
           )}
           {title && (
             <Animated.Text
-              style={{ color: theme.colors.text, fontSize: 28, opacity }}
+              style={{ color: titleColor || theme.colors.text, fontSize: 28, opacity }}
             >
               {title}
             </Animated.Text>
