@@ -1,81 +1,80 @@
-import { ConfigContext, ExpoConfig } from '@expo/config';
+import { ConfigContext, ExpoConfig } from "@expo/config";
 
-const IS_DEV = process.env.APP_VARIANT === 'development';
-const IS_PREVIEW = process.env.APP_VARIANT === 'preview';
+const IS_DEV = process.env.APP_VARIANT === "development";
+const IS_PREVIEW = process.env.APP_VARIANT === "preview";
 
 const getUniqueIdentifier = () => {
   if (IS_DEV) {
-    return 'com.louislam09.bible.dev';
+    return "com.louislam09.bible.dev";
   }
 
   if (IS_PREVIEW) {
-    return 'com.louislam09.bible.preview';
+    return "com.louislam09.bible.preview";
   }
 
-  return 'com.louislam09.bible';
+  return "com.louislam09.bible";
 };
 
 const getAppName = () => {
   if (IS_DEV) {
-    return 'Santa Escritura (Dev)';
+    return "Santa Escritura (Dev)";
   }
 
   if (IS_PREVIEW) {
-    return 'Santa Escritura (Preview)';
+    return "Santa Escritura (Preview)";
   }
 
-  return 'Santa Escritura';
+  return "Santa Escritura";
 };
-
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   return {
     ...config,
     name: getAppName(),
-    slug: 'bible',
-    version: '1.2.0',
-    orientation: 'default',
-    icon: './assets/images/icon.png',
-    scheme: 'sb-rv60',
-    userInterfaceStyle: 'automatic',
+    slug: "bible",
+    version: "1.2.0",
+    orientation: "default",
+    icon: "./assets/images/icon.png",
+    scheme: "sb-rv60",
+    userInterfaceStyle: "automatic",
     splash: {
-      image: './assets/images/splash.png',
-      resizeMode: 'contain',
-      backgroundColor: '#0c3e3d',
+      image: "./assets/images/splash.png",
+      resizeMode: "contain",
+      backgroundColor: "#0c3e3d",
     },
     updates: {
       fallbackToCacheTimeout: 0,
-      url: 'https://u.expo.dev/ae41abb8-478d-4cd9-9b64-47b9486e2c5f',
+      url: "https://u.expo.dev/ae41abb8-478d-4cd9-9b64-47b9486e2c5f",
     },
     ios: {
       supportsTablet: true,
-      backgroundColor: '#0c3e3d',
+      backgroundColor: "#0c3e3d",
       bundleIdentifier: getUniqueIdentifier(),
     },
     android: {
       versionCode: 16,
-      icon: './assets/images/icon.png',
+      icon: "./assets/images/icon.png",
       adaptiveIcon: {
-        foregroundImage: './assets/images/adaptive-icon.png',
-        monochromeImage: './assets/images/monochrome-icon.png',
-        backgroundImage: './assets/images/adaptive-icon.png',
-        backgroundColor: '#0c3e3d',
+        foregroundImage: "./assets/images/adaptive-icon.png",
+        monochromeImage: "./assets/images/monochrome-icon.png",
+        backgroundImage: "./assets/images/adaptive-icon.png",
+        backgroundColor: "#0c3e3d",
       },
       package: getUniqueIdentifier(),
     },
     web: {
       bundler: "metro",
       output: "static",
-      favicon: "./assets/images/auth.png"
+      favicon: "./assets/images/auth.png",
     },
     extra: {
       eas: {
-        projectId: 'ae41abb8-478d-4cd9-9b64-47b9486e2c5f',
+        projectId: "ae41abb8-478d-4cd9-9b64-47b9486e2c5f",
       },
     },
     plugins: [
       [
-        'expo-build-properties',
+        "expo-build-properties",
         {
           android: {
             enableProguardInReleaseBuilds: true,
@@ -84,23 +83,24 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         },
       ],
       [
-        'expo-updates',
+        "expo-updates",
         {
-          username: 'louislam09',
+          username: "louislam09",
         },
       ],
       [
-        'expo-document-picker',
+        "expo-document-picker",
         {
-          iCloudContainerEnvironment: 'Production',
+          iCloudContainerEnvironment: "Production",
         },
       ],
-      'expo-asset',
-      'expo-font',
-      'expo-router',
+      "expo-asset",
+      "expo-font",
+      "expo-router",
+      "expo-web-browser",
     ],
     runtimeVersion: {
-      policy: 'nativeVersion',
+      policy: "nativeVersion",
     },
   };
 };

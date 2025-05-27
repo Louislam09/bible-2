@@ -30,7 +30,7 @@ interface UseDatabase {
     queryName?: string
   ) => Promise<T[]>;
   loading: boolean;
-  reDownloadDatabase: (_dbName?: VersionItem) => Promise<SQLite.SQLiteDatabase>
+  reDownloadDatabase: (_dbName?: VersionItem) => Promise<SQLite.SQLiteDatabase>;
 }
 
 type TUseDatabase = {
@@ -126,17 +126,24 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
       if (database) {
         await database.closeAsync();
       }
-      if (!currentDatabaseName) throw new Error("Database name is not defined.");
+      if (!currentDatabaseName)
+        throw new Error("Database name is not defined.");
 
       const isDefault = isDefaultDatabase(currentDatabaseName.id);
-      const finalDatabasePath = isDefault ? `${currentDatabaseName.id}.db` : `${currentDatabaseName.id}${dbFileExt}`;
+      const finalDatabasePath = isDefault
+        ? `${currentDatabaseName.id}.db`
+        : `${currentDatabaseName.id}${dbFileExt}`;
       const dbItemFilePath = currentDatabaseName.path;
 
       const dbFileInfo = await FileSystem.getInfoAsync(dbItemFilePath);
       if (dbFileInfo.exists) {
         await FileSystem.deleteAsync(dbItemFilePath, { idempotent: true });
-        await FileSystem.deleteAsync(`${dbItemFilePath}-wal`, { idempotent: true });
-        await FileSystem.deleteAsync(`${dbItemFilePath}-shm`, { idempotent: true });
+        await FileSystem.deleteAsync(`${dbItemFilePath}-wal`, {
+          idempotent: true,
+        });
+        await FileSystem.deleteAsync(`${dbItemFilePath}-shm`, {
+          idempotent: true,
+        });
       }
 
       // Force re-download the asset
@@ -152,7 +159,8 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
       await asset.downloadAsync();
 
       const remoteURI = asset.localUri;
-      if (!remoteURI) throw new Error("Asset download failed or URI not found.");
+      if (!remoteURI)
+        throw new Error("Asset download failed or URI not found.");
 
       await FileSystem.copyAsync({
         from: remoteURI,
@@ -162,7 +170,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
       // Open and reinitialize
       const db = await SQLite.openDatabaseAsync(finalDatabasePath);
       showToast("Biblia refrescada y reinicializada");
-      if (!_dbName) return db
+      if (!_dbName) return db;
       await db.execAsync("PRAGMA journal_mode = WAL");
       await db.execAsync("PRAGMA synchronous = OFF");
       await db.execAsync("PRAGMA temp_store = MEMORY");
@@ -178,7 +186,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
         setLoading(true);
         bibleState$.bibleQuery.shouldFetch.set(true);
       }
-      return db
+      return db;
     } catch (error) {
       console.error("Error redownloading database:", error);
       showToast("❌ No se pudo descargar la base de datos");
@@ -191,7 +199,9 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
       const localFolder = SQLiteDirPath;
       const databaseItemId = databaseItem.id;
       const isDefaultDatabaseItem = isDefaultDatabase(databaseItemId);
-      const finalDatabasePath = isDefaultDatabaseItem ? `${databaseItem.id}.db` : `${databaseItem.id}${dbFileExt}`;
+      const finalDatabasePath = isDefaultDatabaseItem
+        ? `${databaseItem.id}.db`
+        : `${databaseItem.id}${dbFileExt}`;
       const dbItemFilePath = databaseItem.path;
 
       if (!(await FileSystem.getInfoAsync(localFolder)).exists) {
@@ -281,7 +291,9 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
   ) {
     const createColumnQuery = `ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${columnType}`;
     try {
-      const statement = await db.prepareAsync(`PRAGMA table_info(${tableName});`);
+      const statement = await db.prepareAsync(
+        `PRAGMA table_info(${tableName});`
+      );
       const result = await statement.executeAsync([]);
       const columns = await result.getAllAsync();
       const hasColumn = columns.some(
@@ -292,10 +304,9 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
       if (!hasColumn) {
         await db.execAsync(createColumnQuery);
       }
-
     } catch (error) {
       console.error(
-        `Error creating column ${createColumnQuery} In ${db.databaseName} :`,
+        `Error creating column ${createColumnQuery} In ${db.databasePath} :`,
         error
       );
     }
