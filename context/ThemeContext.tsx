@@ -52,7 +52,19 @@ const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   return (
     <ThemeContext.Provider value={{ schema, toggleTheme }}>
-      <ThemeProvider value={theme[schema]}>{children}</ThemeProvider>
+      <ThemeProvider
+        value={{
+          ...theme[schema],
+          fonts: {
+            regular: "Poppins-Regular",
+            medium: "Poppins-Medium",
+            bold: "Poppins-Bold",
+            heavy: "Poppins-Heavy",
+          },
+        }}
+      >
+        {children}
+      </ThemeProvider>
     </ThemeContext.Provider>
   );
 };
