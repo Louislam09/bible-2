@@ -2,8 +2,7 @@ export const quoteTemplates = [
   {
     id: 1,
     name: "Inspiración Verde Elegante",
-    description:
-      "Un diseño elegante con tonos verdes y tipografía sofisticada para inspirar paz y reflexión.",
+    description: "Un diseño elegante con tonos verdes y tipografía sofisticada para inspirar paz y reflexión.",
     template: `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -87,8 +86,7 @@ export const quoteTemplates = [
   {
     id: 2,
     name: "Reflexión Azul Real",
-    description:
-      "Fondo azul real y detalles modernos que evocan profundidad y serenidad en cada cita.",
+    description: "Fondo azul real y detalles modernos que evocan profundidad y serenidad en cada cita.",
     template: `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -167,8 +165,7 @@ export const quoteTemplates = [
   {
     id: 3,
     name: "Sabiduría Violeta Clásica",
-    description:
-      "Estilo clásico en violeta, ideal para transmitir sabiduría y solemnidad bíblica.",
+    description: "Estilo clásico en violeta, ideal para transmitir sabiduría y solemnidad bíblica.",
     template: `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -247,8 +244,7 @@ export const quoteTemplates = [
   {
     id: 4,
     name: "Serenidad Pastel Suave",
-    description:
-      "Colores pastel suaves y ambiente sereno para una experiencia de lectura reconfortante.",
+    description: "Colores pastel suaves y ambiente sereno para una experiencia de lectura reconfortante.",
     template: `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -321,8 +317,7 @@ export const quoteTemplates = [
   {
     id: 5,
     name: "Gracia Lavanda",
-    description:
-      "Diseño en tonos lavanda con elegancia y gracia, perfecto para citas inspiradoras.",
+    description: "Diseño en tonos lavanda con elegancia y gracia, perfecto para citas inspiradoras.",
     template: `<!DOCTYPE html>
 <html lang="es">
 <head>
