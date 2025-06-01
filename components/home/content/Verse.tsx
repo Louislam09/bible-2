@@ -40,6 +40,7 @@ import {
 } from "react-native";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
 import VerseTitle from "./VerseTitle";
+import { useRouter } from "expo-router";
 
 type VerseProps = TVerse & {
   isSplit: boolean;
@@ -248,7 +249,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     bibleState$.clearSelection();
   };
 
-  const addVerseToNote = async () => {
+  const onVerseToNote = async () => {
     const shouldReturn = true;
     const isMoreThanOneHighted = bibleState$.selectedVerses.get().size > 1;
     const highlightedVerses = Array.from(
@@ -259,6 +260,15 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     bibleState$.handleSelectVerseForNote(verseToAdd);
     bibleState$.clearSelection();
     if (!bibleState$.currentNoteId.get()) bibleState$.openNoteListBottomSheet();
+  };
+
+  const onQuote = () => {
+    const verseText = getVerseTextRaw(item.text);
+    const reference = `${getBookDetail(item.book_number).longName} ${
+      item.chapter
+    }:${item.verse}`;
+    bibleState$.handleSelectVerseForNote(verseText);
+    router.push({ pathname: "/quote", params: { text: verseText, reference } });
   };
 
   const onWordClicked = (code: string) => {
@@ -326,6 +336,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     bibleState$.clearSelection();
   };
 
+  const router = useRouter();
+
   const verseActions: TIcon[] = useMemo(() => {
     return [
       {
@@ -336,7 +348,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       },
       {
         name: "NotebookPen",
-        action: addVerseToNote,
+        action: onVerseToNote,
         hide: false,
         description: "Anotar",
       },
@@ -364,6 +376,12 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         action: onCompareClicked,
         hide: bibleState$.isSplitActived.get(),
         description: "Comparar",
+      },
+      {
+        name: "Quote",
+        action: onQuote,
+        hide: false,
+        description: "Cita",
       },
     ] as TIcon[];
   }, [verseIsTapped, isFavorite, item]);

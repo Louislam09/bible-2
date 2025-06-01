@@ -15,13 +15,14 @@ import { RefObject } from "react";
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList { }
+    interface RootParamList extends RootStackParamList {}
   }
 }
 
 export enum Screens {
   Dashboard = "(dashboard)",
   Settings = "settings",
+  Quote = "quote",
   Home = "home",
   Search = "(search)",
   Concordance = "concordance",
@@ -56,6 +57,7 @@ type TScreensName = { [key in Screens]: string };
 export const ScreensName: TScreensName = {
   [Screens.Home]: "Santa Escritura",
   [Screens.Search]: "Busqueda",
+  [Screens.Quote]: "Cita",
   [Screens.Concordance]: "Concordancia",
   [Screens.ChooseBook]: "Libros",
   [Screens.ChooseChapterNumber]: "Capitulos",
@@ -89,6 +91,7 @@ export const ScreensName: TScreensName = {
 export type RootTabParamList = {
   dashboard: undefined;
   settings: undefined;
+  quote: undefined;
   home: undefined;
   chooseGame: undefined;
   book: undefined;
@@ -112,6 +115,7 @@ export type RootTabParamList = {
 export type RootStackParamList = {
   dashboard: NavigatorScreenParams<RootTabParamList> | undefined;
   settings: NavigatorScreenParams<RootTabParamList> | undefined;
+  quote: NavigatorScreenParams<RootTabParamList> | undefined;
   home: NavigatorScreenParams<RootTabParamList> | HomeParams;
   book: NavigatorScreenParams<RootTabParamList> | undefined;
   favorite: NavigatorScreenParams<RootTabParamList> | undefined;
@@ -119,24 +123,24 @@ export type RootStackParamList = {
   downloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
   notes: NavigatorScreenParams<RootTabParamList> | { shouldRefresh: boolean };
   noteDetail:
-  | NavigatorScreenParams<RootTabParamList>
-  | { noteId: number | null; isNewNote: boolean };
+    | NavigatorScreenParams<RootTabParamList>
+    | { noteId: number | null; isNewNote: boolean };
   character: NavigatorScreenParams<RootTabParamList> | undefined;
   chooseBook:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
   "(search)": NavigatorScreenParams<RootTabParamList> | { book?: string };
   concordance: NavigatorScreenParams<RootTabParamList> | {};
   strongSearchEntire:
-  | NavigatorScreenParams<RootTabParamList>
-  | { paramCode: string };
+    | NavigatorScreenParams<RootTabParamList>
+    | { paramCode: string };
   dictionary: NavigatorScreenParams<RootTabParamList> | { word: string };
   chooseChapterNumber:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
   chooseVerseNumber:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
   modal: undefined;
   onboarding: undefined;
   timeline: undefined;
