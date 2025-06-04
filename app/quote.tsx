@@ -15,6 +15,9 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Dimensions,
+  Animated,
+  PanResponder,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { Stack, useNavigation, useLocalSearchParams } from "expo-router";
@@ -31,6 +34,12 @@ import * as Crypto from "expo-crypto";
 import { quoteTemplates } from "@/constants/quoteTemplates";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { WebView } from "react-native-webview";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
+import { QuoteCard } from "@/components/quote/QuoteCard";
+import { QuoteNavigationDots } from "@/components/quote/QuoteNavigationDots";
+import { CustomQuoteMode } from "@/components/quote/CustomQuoteMode";
+import { useQuoteCardStack } from "@/hooks/useQuoteCardStack";
 
 const COLORS = [
   "#2EC4F1", // blue
@@ -55,13 +64,20 @@ const COLORS = [
   "#F06292", // light pink
   "#607D8B", // blue grey
 ];
-const FONTS = [
-  { label: "Aa", fontFamily: "System", fontWeight: "400" as const },
-  { label: "Aa", fontFamily: "serif", fontWeight: "400" as const },
-  { label: "Aa", fontFamily: "sans-serif", fontWeight: "700" as const },
-  { label: "Aa", fontFamily: "monospace", fontWeight: "400" as const },
-  { label: "Aa", fontFamily: "System", fontWeight: "700" as const },
-];
+
+type FontType = {
+  readonly label: "Aa";
+  readonly fontFamily: "System" | "serif" | "sans-serif" | "monospace";
+  readonly fontWeight: "400" | "700";
+};
+
+const FONTS: readonly FontType[] = [
+  { label: "Aa", fontFamily: "System", fontWeight: "400" },
+  { label: "Aa", fontFamily: "serif", fontWeight: "400" },
+  { label: "Aa", fontFamily: "sans-serif", fontWeight: "700" },
+  { label: "Aa", fontFamily: "monospace", fontWeight: "400" },
+  { label: "Aa", fontFamily: "System", fontWeight: "700" },
+] as const;
 
 type QuoteProps = {};
 
@@ -74,20 +90,34 @@ const Quote: React.FC<QuoteProps> = () => {
   const [quoteText, setQuoteText] = useState("");
   const [title, setTitle] = useState("");
   const [selectedColor, setSelectedColor] = useState(COLORS[0]);
-  const [selectedFont, setSelectedFont] = useState(FONTS[0]);
+  const [selectedFont, setSelectedFont] = useState<FontType>(FONTS[0]);
   const [selectedTemplate, setSelectedTemplate] = useState(quoteTemplates[0]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [customMode, setCustomMode] = useState(false);
   const [reference, setReference] = useState("");
-
-  const selectTemplateHtml = useMemo(
-    () =>
-      selectedTemplate.template
-        .replace(/{{ref}}/g, reference)
-        .replace(/{{text}}/g, getVerseTextRaw(quoteText)),
-    [selectedTemplate]
-  );
+  const webViewRef = useRef<WebView>(null);
+  const [screenshotUri, setScreenshotUri] = useState<string | null>(null);
+  const [currentTemplateIndex, setCurrentTemplateIndex] = useState(0);
+  const {
+    pan,
+    rotate,
+    currentCardScale,
+    currentCardOpacity,
+    panResponder,
+    renderCardRange,
+    screenWidth,
+  } = useQuoteCardStack({
+    currentIndex: currentTemplateIndex,
+    totalTemplates: quoteTemplates.length,
+    onIndexChange: setCurrentTemplateIndex,
+  });
+  console.log(renderCardRange);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const titleOpacity = useRef(new Animated.Value(1)).current;
+  const subTitleOpacity = useRef(new Animated.Value(1)).current;
+  const titleTranslateY = useRef(new Animated.Value(0)).current;
+  const subTitleTranslateY = useRef(new Animated.Value(0)).current;
 
   const selectedVerse = use$(() => bibleState$.selectedVerseForNote.get());
   const params = useLocalSearchParams();
@@ -103,7 +133,6 @@ const Quote: React.FC<QuoteProps> = () => {
     } else {
       setReference("");
     }
-    // console.log({ params, selectedVerse });
   }, [params, selectedVerse]);
 
   useEffect(() => {
@@ -123,30 +152,174 @@ const Quote: React.FC<QuoteProps> = () => {
     }
   }, [selectedTemplate, customMode, params, selectedVerse]);
 
-  const handleSave = async () => {
-    if (!quoteText.trim()) {
-      Alert.alert("Error", "Please enter a quote before saving");
-      return;
+  useEffect(() => {
+    if (!customMode) {
+      setSelectedTemplate(quoteTemplates[currentTemplateIndex]);
     }
-    setIsSaving(true);
+    if (scrollViewRef.current) {
+      const dotWidth = 8 + 8;
+      const centerOffset = screenWidth / 2 - dotWidth / 2;
+      const scrollToX = currentTemplateIndex * dotWidth - centerOffset;
+      const maxScrollX = (quoteTemplates.length + 1) * dotWidth - screenWidth;
+      const limitedScrollToX = Math.max(0, Math.min(maxScrollX, scrollToX));
+
+      scrollViewRef.current.scrollTo({ x: limitedScrollToX, animated: true });
+    }
+  }, [currentTemplateIndex, customMode, screenWidth]);
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(titleOpacity, {
+        toValue: 0,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+      Animated.timing(subTitleOpacity, {
+        toValue: 0,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+      Animated.timing(titleTranslateY, {
+        toValue: -20,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+      Animated.timing(subTitleTranslateY, {
+        toValue: -20,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      if (!customMode) {
+        setSelectedTemplate(quoteTemplates[currentTemplateIndex]);
+      }
+      Animated.parallel([
+        Animated.timing(titleOpacity, {
+          toValue: 1,
+          duration: 150,
+          delay: 50,
+          useNativeDriver: true,
+        }),
+        Animated.timing(subTitleOpacity, {
+          toValue: 1,
+          duration: 150,
+          delay: 50,
+          useNativeDriver: true,
+        }),
+        Animated.timing(titleTranslateY, {
+          toValue: 0,
+          duration: 150,
+          delay: 50,
+          useNativeDriver: true,
+        }),
+        Animated.timing(subTitleTranslateY, {
+          toValue: 0,
+          duration: 150,
+          delay: 50,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    });
+  }, [currentTemplateIndex, customMode, screenWidth]);
+
+  const captureScreenshot = () => {
+    const script = `
+      (function() {
+        try {
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          const html = document.documentElement;
+          
+          canvas.width = html.scrollWidth;
+          canvas.height = html.scrollHeight;
+          
+          // Create a temporary div to render the content
+          const tempDiv = document.createElement('div');
+          tempDiv.style.position = 'absolute';
+          tempDiv.style.left = '-9999px';
+          tempDiv.style.top = '-9999px';
+          tempDiv.innerHTML = html.innerHTML;
+          document.body.appendChild(tempDiv);
+          
+          // Use html2canvas-like approach
+          const data = '<svg xmlns="http://www.w3.org/2000/svg" width="' + canvas.width + '" height="' + canvas.height + '">' +
+            '<foreignObject width="100%" height="100%">' +
+            '<div xmlns="http://www.w3.org/1999/xhtml" style="background-color: ${
+              customMode ? selectedColor : "transparent"
+            }">' +
+            tempDiv.innerHTML +
+            '</div>' +
+            '</foreignObject>' +
+            '</svg>';
+          
+          const img = new Image();
+          img.onload = function() {
+            context.drawImage(img, 0, 0);
+            const base64 = canvas.toDataURL('image/png');
+            window.ReactNativeWebView.postMessage(base64);
+            document.body.removeChild(tempDiv);
+          };
+          img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(data)));
+        } catch (error) {
+          window.ReactNativeWebView.postMessage(JSON.stringify({ error: error.message }));
+        }
+      })();
+      true;
+    `;
+
+    webViewRef.current?.injectJavaScript(script);
+  };
+
+  const handleWebViewMessage = async (event: any) => {
     try {
-      await createNote(
-        {
-          title: title || "Untitled Quote",
-          note_text: quoteText,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          uuid: Crypto.randomUUID(),
-        },
-        true
+      console.log(
+        "Received message from WebView:",
+        event.nativeEvent.data.substring(0, 100) + "..."
       );
-      Alert.alert("Success", "Quote saved successfully");
-      navigation.goBack();
-    } catch (error) {
-      Alert.alert("Error", "Failed to save quote");
-      console.error("Error saving quote:", error);
-    } finally {
-      setIsSaving(false);
+
+      const data = event.nativeEvent.data;
+
+      // Check if it's an error message
+      if (data.startsWith("{")) {
+        const errorData = JSON.parse(data);
+        if (errorData.error) {
+          throw new Error(errorData.error as string);
+        }
+      }
+
+      // Check if it's a base64 image
+      if (data.startsWith("data:image/png;base64,")) {
+        const imageData = data.replace("data:image/png;base64,", "");
+        const fileUri = FileSystem.documentDirectory + "quote-screenshot.png";
+
+        console.log("Saving screenshot to:", fileUri);
+
+        await FileSystem.writeAsStringAsync(fileUri, imageData, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+
+        console.log("Screenshot saved successfully");
+        setScreenshotUri(fileUri);
+
+        if (await Sharing.isAvailableAsync()) {
+          console.log("Sharing screenshot...");
+          await Sharing.shareAsync(fileUri, {
+            mimeType: "image/png",
+            dialogTitle: "Share Quote",
+            UTI: "public.png",
+          });
+          console.log("Share dialog opened");
+        } else {
+          console.log("Sharing not available");
+          Alert.alert("Error", "Sharing is not available on this device");
+        }
+      }
+    } catch (error: any) {
+      console.error("Error handling screenshot:", error);
+      Alert.alert(
+        "Error",
+        "Failed to capture screenshot: " + (error?.message || "Unknown error")
+      );
     }
   };
 
@@ -157,34 +330,71 @@ const Quote: React.FC<QuoteProps> = () => {
     }
     setIsLoading(true);
     try {
-      const verseText = getVerseTextRaw(quoteText);
-      const verseRef = reference;
-      let html = selectTemplateHtml;
+      console.log("Starting share process...");
+
       if (customMode) {
-        html = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;width:100vw;background:${selectedColor};flex-direction:column;"><span style=\"color:#fff;font-size:2.5em;font-family:${selectedFont.fontFamily};font-weight:${selectedFont.fontWeight};\">${verseText}</span><span style=\"color:#fff;font-size:1.2em;margin-top:2em;opacity:0.8;\">${verseRef}</span></div>`;
+        console.log("Custom mode detected, updating WebView content...");
+        const verseText = getVerseTextRaw(quoteText);
+        const verseRef = reference;
+        const html = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;width:100vw;background:${selectedColor};flex-direction:column;"><span style=\"color:#fff;font-size:2.5em;font-family:${selectedFont.fontFamily};font-weight:${selectedFont.fontWeight};\">${verseText}</span><span style=\"color:#fff;font-size:1.2em;margin-top:2em;opacity:0.8;\">${verseRef}</span></div>`;
+
+        // Wait a bit for the content to render
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        webViewRef.current?.injectJavaScript(
+          `document.body.innerHTML = \`${html}\`; true;`
+        );
+
+        // Wait a bit more for the content to be fully rendered
+        await new Promise((resolve) => setTimeout(resolve, 500));
       }
-      await printToFile(html, title || "Quote");
-    } catch (error) {
-      Alert.alert("Error", "Failed to share quote");
-      console.error("Error sharing quote:", error);
+
+      console.log("Capturing screenshot...");
+      captureScreenshot();
+    } catch (error: any) {
+      console.error("Error in handleShare:", error);
+      Alert.alert(
+        "Error",
+        "Failed to share quote: " + (error?.message || "Unknown error")
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Card preview style
-  const previewStyle = useMemo(
-    () => [styles.cardPreview, { backgroundColor: selectedColor }],
-    [selectedColor, styles.cardPreview]
-  );
-  const previewTextStyle = useMemo(
-    () => ({
-      ...styles.cardText,
-      fontFamily: customMode ? selectedFont.fontFamily : undefined,
-      fontWeight: customMode ? selectedFont.fontWeight : undefined,
-    }),
-    [customMode, selectedFont, styles.cardText]
-  );
+  const handleDotPress = (index: number) => {
+    if (index < quoteTemplates.length) {
+      setCurrentTemplateIndex(index);
+      setCustomMode(false);
+    } else {
+      setCustomMode(true);
+    }
+  };
+
+  const screenOptions: any = useMemo(() => {
+    return {
+      theme,
+      title: "Create Quote",
+      titleIcon: "Quote",
+      headerRightProps: {
+        headerRightIconColor: theme.colors.text,
+        RightComponent: () => (
+          <View style={styles.headerButtons}>
+            <TouchableOpacity
+              onPress={handleShare}
+              disabled={isLoading}
+              style={styles.headerButton}
+            >
+              {isLoading ? (
+                <ActivityIndicator color={theme.colors.text} />
+              ) : (
+                <Icon name="Share2" size={24} color={theme.colors.text} />
+              )}
+            </TouchableOpacity>
+          </View>
+        ),
+      },
+    };
+  }, [theme.colors, handleShare, isLoading]);
 
   return (
     <KeyboardAvoidingView
@@ -192,186 +402,94 @@ const Quote: React.FC<QuoteProps> = () => {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.container}>
-        <Stack.Screen
-          options={{
-            ...singleScreenHeader({
-              theme,
-              title: "Create Quote",
-              titleIcon: "Quote",
-              headerRightProps: {
-                headerRightIconColor: theme.colors.text,
-                RightComponent: () => (
-                  <View style={styles.headerButtons}>
-                    <TouchableOpacity
-                      onPress={handleShare}
-                      disabled={isLoading}
-                      style={styles.headerButton}
-                    >
-                      {isLoading ? (
-                        <ActivityIndicator color={theme.colors.text} />
-                      ) : (
-                        <Icon
-                          name="Share2"
-                          size={24}
-                          color={theme.colors.text}
-                        />
-                      )}
-                    </TouchableOpacity>
-                    {/* <TouchableOpacity
-                      onPress={handleSave}
-                      disabled={isSaving}
-                      style={styles.headerButton}
-                    >
-                      {isSaving ? (
-                        <ActivityIndicator color={theme.colors.text} />
-                      ) : (
-                        <Icon name="Save" size={24} color={theme.colors.text} />
-                      )}
-                    </TouchableOpacity> */}
-                  </View>
-                ),
+        <Stack.Screen options={singleScreenHeader(screenOptions)} />
+        <View style={styles.headerContent}>
+          <Animated.Text
+            style={[
+              styles.mainTitle,
+              {
+                opacity: titleOpacity,
+                transform: [{ translateY: titleTranslateY }],
               },
-            }),
-          }}
-        />
-        {customMode ? (
-          <>
-            <View style={styles.previewContainer}>
-              <TouchableOpacity
-                activeOpacity={1}
-                style={previewStyle}
-                onPress={() => {}}
-              >
-                <TextInput
-                  style={previewTextStyle}
-                  value={quoteText}
-                  onChangeText={setQuoteText}
-                  multiline
-                  textAlign="center"
-                  placeholder="Your verse here..."
-                  placeholderTextColor="#fff9"
-                />
-                <TextInput
-                  style={styles.referenceText}
-                  value={reference}
-                  onChangeText={setReference}
-                  textAlign="center"
-                  placeholder="Reference (Book Chapter:Verse)"
-                  placeholderTextColor="#fff9"
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.pickerRow}>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {COLORS.map((color) => (
-                  <TouchableOpacity
-                    key={color}
-                    style={[
-                      styles.colorCircle,
-                      {
-                        backgroundColor: color,
-                        borderWidth: selectedColor === color ? 3 : 1,
-                        borderColor:
-                          selectedColor === color
-                            ? "#fff"
-                            : theme.colors.primary,
-                      },
-                    ]}
-                    onPress={() => {
-                      setSelectedColor(color);
-                      setCustomMode(true);
-                    }}
-                  />
-                ))}
-              </ScrollView>
-            </View>
-            <View style={styles.pickerRow}>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {FONTS.map((font, idx) => (
-                  <TouchableOpacity
-                    key={idx}
-                    style={[
-                      styles.fontCircle,
-                      {
-                        borderWidth: selectedFont === font ? 3 : 1,
-                        borderColor:
-                          selectedFont === font ? theme.colors.primary : "#fff",
-                      },
-                    ]}
-                    onPress={() => {
-                      setSelectedFont(font);
-                      setCustomMode(true);
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: font.fontFamily,
-                        fontWeight: font.fontWeight,
-                        color: "#fff",
-                        fontSize: 18,
-                      }}
-                    >
-                      {font.label}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
-          </>
-        ) : (
-          <WebView
-            originWhitelist={["*"]}
-            style={[styles.webviewPreview]}
-            source={{
-              html: selectTemplateHtml,
-            }}
-            scrollEnabled={false}
-          />
-        )}
-
-        <View style={styles.templateSection}>
-          <Text style={styles.templateTitle}>Templates</Text>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.templateList}
+            ]}
           >
-            {quoteTemplates.map((template) => (
-              <TouchableOpacity
-                key={template.id}
-                style={[
-                  styles.templateCard,
-                  selectedTemplate.id === template.id &&
-                    styles.selectedTemplate,
-                ]}
-                onPress={() => {
-                  setSelectedTemplate(template);
-                  setCustomMode(false);
-                }}
-              >
-                <Text style={styles.templateName}>{template.name}</Text>
-                <Text style={styles.templateDescription} numberOfLines={2}>
-                  {template.description}
-                </Text>
-              </TouchableOpacity>
-            ))}
-            <TouchableOpacity
-              style={[
-                styles.templateCard,
-                customMode && {
-                  borderColor: theme.colors.notification,
-                  borderWidth: 2,
-                },
-              ]}
-              onPress={() => setCustomMode(true)}
-            >
-              <Text style={styles.templateName}>Custom</Text>
-              <Text style={styles.templateDescription} numberOfLines={2}>
-                Create your own style
-              </Text>
-            </TouchableOpacity>
-          </ScrollView>
+            {customMode
+              ? "Custom"
+              : quoteTemplates[currentTemplateIndex]?.name || "Loading..."}
+          </Animated.Text>
+          <Animated.Text
+            style={[
+              styles.subTitle,
+              {
+                opacity: subTitleOpacity,
+                transform: [{ translateY: subTitleTranslateY }],
+              },
+            ]}
+          >
+            {customMode
+              ? "Create your own style"
+              : quoteTemplates[currentTemplateIndex]?.description ||
+                "Select a template"}
+          </Animated.Text>
         </View>
+        {customMode ? (
+          <CustomQuoteMode
+            selectedColor={selectedColor}
+            selectedFont={selectedFont}
+            quoteText={quoteText}
+            reference={reference}
+            onColorSelect={(color) => {
+              setSelectedColor(color);
+              setCustomMode(true);
+            }}
+            onFontSelect={(font) => {
+              setSelectedFont(font);
+              setCustomMode(true);
+            }}
+            onQuoteTextChange={setQuoteText}
+            onReferenceChange={setReference}
+            colors={COLORS}
+            fonts={FONTS}
+          />
+        ) : (
+          <View style={styles.templateContent}>
+            {renderCardRange.map((index) => {
+              const template = quoteTemplates[index];
+              const isCurrent = index === currentTemplateIndex;
+              const distance = Math.abs(index - currentTemplateIndex);
+
+              return (
+                <QuoteCard
+                  key={template.id.toString()}
+                  template={{
+                    id: template.id.toString(),
+                    template: template.template,
+                  }}
+                  index={index}
+                  isCurrent={isCurrent}
+                  distance={distance}
+                  currentTemplateIndex={currentTemplateIndex}
+                  pan={pan}
+                  rotate={rotate}
+                  currentCardScale={currentCardScale}
+                  currentCardOpacity={currentCardOpacity}
+                  screenWidth={screenWidth}
+                  panResponder={panResponder}
+                  reference={reference}
+                  quoteText={quoteText}
+                  onWebViewMessage={handleWebViewMessage}
+                />
+              );
+            })}
+          </View>
+        )}
+        <QuoteNavigationDots
+          currentIndex={currentTemplateIndex}
+          totalTemplates={quoteTemplates.length}
+          customMode={customMode}
+          onDotPress={handleDotPress}
+          scrollViewRef={scrollViewRef}
+        />
       </View>
     </KeyboardAvoidingView>
   );
@@ -382,91 +500,30 @@ const getStyles = ({ colors }: TTheme) =>
     container: {
       flex: 1,
       backgroundColor: colors.background,
-    },
-    previewContainer: {
-      flex: 1,
-      justifyContent: "center",
       alignItems: "center",
-      marginVertical: 16,
+      paddingTop: 20,
     },
-    cardPreview: {
-      width: "100%",
-      height: 350,
-      borderRadius: 24,
-      justifyContent: "center",
+    headerContent: {
       alignItems: "center",
-      marginBottom: 12,
-      padding: 24,
-    },
-    cardText: {
-      color: "#fff",
-      fontSize: 32,
-      textAlign: "center",
-      fontWeight: "400",
-    },
-    pickerRow: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginBottom: 8,
-      marginHorizontal: 8,
-      minHeight: 48,
-    },
-    colorCircle: {
-      width: 36,
-      height: 36,
-      borderRadius: 18,
-      marginHorizontal: 6,
-      borderColor: "#fff",
-      borderWidth: 1,
-    },
-    fontCircle: {
-      width: 44,
-      height: 44,
-      borderRadius: 22,
-      marginHorizontal: 6,
-      backgroundColor: "#2228",
-      justifyContent: "center",
-      alignItems: "center",
-      borderColor: "#fff",
-      borderWidth: 1,
-    },
-    templateSection: {
-      marginTop: 10,
       marginBottom: 20,
     },
-    templateTitle: {
-      fontSize: 18,
+    mainTitle: {
+      fontSize: 24,
       fontWeight: "bold",
-      marginBottom: 12,
       color: colors.text,
-      marginLeft: 8,
     },
-    templateList: {
-      flexDirection: "row",
-      paddingBottom: 8,
-    },
-    templateCard: {
-      backgroundColor: colors.card,
-      padding: 16,
-      borderRadius: 12,
-      marginRight: 12,
-      width: 200,
-      borderWidth: 1,
-      borderColor: colors.border,
-    },
-    selectedTemplate: {
-      borderColor: colors.notification,
-      borderWidth: 2,
-    },
-    templateName: {
+    subTitle: {
       fontSize: 16,
-      fontWeight: "bold",
-      color: colors.text,
-      marginBottom: 8,
-    },
-    templateDescription: {
-      fontSize: 14,
       color: colors.text + "99",
+      textAlign: "center",
+      marginHorizontal: 20,
+      marginTop: 5,
+    },
+    templateContent: {
+      flex: 1,
+      width: "100%",
+      alignItems: "center",
+      justifyContent: "center",
     },
     headerButtons: {
       flexDirection: "row",
@@ -475,20 +532,6 @@ const getStyles = ({ colors }: TTheme) =>
     },
     headerButton: {
       padding: 8,
-    },
-    referenceText: {
-      color: "#fff",
-      fontSize: 16,
-      textAlign: "center",
-      marginTop: 8,
-    },
-    webviewPreview: {
-      width: "100%",
-      height: "100%",
-      padding: 10,
-      borderRadius: 24,
-      overflow: "hidden",
-      marginBottom: 12,
     },
   });
 

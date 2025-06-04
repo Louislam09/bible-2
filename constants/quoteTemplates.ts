@@ -2788,7 +2788,7 @@ export const quoteTemplates = [
   </head>
   <body>
     <div class="illuminated-quote">
-      <p class="quote-text-scriptorium"><span class="drop-cap">{{text.charAt(0)}}</span>{{text.substring(1)}}</p>
+      <p class="quote-text-scriptorium"><span class="drop-cap">{{text}}</span></p>
       <p class="quote-ref-scribe">{{ref}}</p>
     </div>
   </body>

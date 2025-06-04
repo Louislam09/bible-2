@@ -43,7 +43,7 @@ const SwipeWrapper = forwardRef<View, SwipeWrapperProps>(
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
         <FlingGestureHandler
-          // numberOfPointers={2}
+          numberOfPointers={2}
           direction={Directions.LEFT}
           onHandlerStateChange={({ nativeEvent }) => {
             if (nativeEvent.state === State.END) {
@@ -52,7 +52,7 @@ const SwipeWrapper = forwardRef<View, SwipeWrapperProps>(
           }}
         >
           <FlingGestureHandler
-            // numberOfPointers={2}
+            numberOfPointers={2}
             direction={Directions.RIGHT}
             onHandlerStateChange={({ nativeEvent }) => {
               if (nativeEvent.state === State.END) {

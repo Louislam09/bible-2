@@ -347,6 +347,12 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         description: "Copiar",
       },
       {
+        name: "Quote",
+        action: onQuote,
+        hide: false,
+        description: "Cita",
+      },
+      {
         name: "NotebookPen",
         action: onVerseToNote,
         hide: false,
@@ -376,12 +382,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         action: onCompareClicked,
         hide: bibleState$.isSplitActived.get(),
         description: "Comparar",
-      },
-      {
-        name: "Quote",
-        action: onQuote,
-        hide: false,
-        description: "Cita",
       },
     ] as TIcon[];
   }, [verseIsTapped, isFavorite, item]);
