@@ -3216,10 +3216,10 @@ export const quoteTemplates = [
         <p class="quote-ref-signed">{{ref}}</p>
       </div>
       <div class="stamp-area">
-        <span>AIR MAIL</span>
+        <span>FE MAIL</span>
       </div>
       <div class="postmark-area">
-        <span class="postmark-text">VIA AEREA<br>INSPIRA-EXPRESS</span>
+        <span class="postmark-text">VÍA DE FE<br>INSPIRA EXPRESS</span>
       </div>
     </div>
   </body>

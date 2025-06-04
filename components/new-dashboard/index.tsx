@@ -150,6 +150,7 @@ const SecondDashboard = () => {
       label: "Cita",
       action: () => navigation.navigate(Screens.Quote),
       color: "#ffffff",
+      disabled: !isAdmin,
     },
     {
       icon: "SwatchBook",
