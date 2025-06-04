@@ -1,45 +1,33 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Alert,
-  ActivityIndicator,
-  TextInput,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  Dimensions,
-  Animated,
-  PanResponder,
-} from "react-native";
-import { useTheme } from "@react-navigation/native";
-import { Stack, useNavigation, useLocalSearchParams } from "expo-router";
-import { Text } from "@/components/Themed";
-import Icon from "@/components/Icon";
-import MyRichEditor from "@/components/RichTextEditor";
-import usePrintAndShare from "@/hooks/usePrintAndShare";
-import { TNote, TTheme } from "@/types";
-import { use$ } from "@legendapp/state/react";
-import { bibleState$ } from "@/state/bibleState";
-import { useNoteService } from "@/services/noteService";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
-import * as Crypto from "expo-crypto";
-import { quoteTemplates } from "@/constants/quoteTemplates";
-import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
-import { WebView } from "react-native-webview";
-import * as FileSystem from "expo-file-system";
-import * as Sharing from "expo-sharing";
+import Icon from "@/components/Icon";
+import { CustomQuoteMode } from "@/components/quote/CustomQuoteMode";
 import { QuoteCard } from "@/components/quote/QuoteCard";
 import { QuoteNavigationDots } from "@/components/quote/QuoteNavigationDots";
-import { CustomQuoteMode } from "@/components/quote/CustomQuoteMode";
+import { quoteTemplates } from "@/constants/quoteTemplates";
+import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { useQuoteCardStack } from "@/hooks/useQuoteCardStack";
+import { useNoteService } from "@/services/noteService";
+import { bibleState$ } from "@/state/bibleState";
+import { TTheme } from "@/types";
+import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { use$ } from "@legendapp/state/react";
+import { useTheme } from "@react-navigation/native";
+import * as FileSystem from "expo-file-system";
+import { Stack, useLocalSearchParams, useNavigation } from "expo-router";
+import * as Sharing from "expo-sharing";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Animated,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { WebView } from "react-native-webview";
 
 const COLORS = [
   "#2EC4F1", // blue
@@ -381,7 +369,7 @@ const Quote: React.FC<QuoteProps> = () => {
   const screenOptions: any = useMemo(() => {
     return {
       theme,
-      title: "Create Quote",
+      title: "Crear cita",
       titleIcon: "Quote",
       headerRightProps: {
         headerRightIconColor: theme.colors.text,
