@@ -22,6 +22,7 @@ interface QuoteCardProps {
   reference: string;
   quoteText: string;
   onWebViewMessage: (event: any) => void;
+  webViewRef: React.RefObject<WebView>;
 }
 
 export const QuoteCard: React.FC<QuoteCardProps> = ({
@@ -39,6 +40,7 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
   reference,
   quoteText,
   onWebViewMessage,
+  webViewRef,
 }) => {
   const relativeIndex = index - currentTemplateIndex;
 
@@ -90,6 +92,7 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
       {...(isCurrent ? panResponder.panHandlers : {})}
     >
       <WebView
+        ref={isCurrent ? webViewRef : null}
         key={template.id}
         originWhitelist={["*"]}
         style={styles.webviewPreview}

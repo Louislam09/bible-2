@@ -112,7 +112,6 @@ const Quote: React.FC<QuoteProps> = () => {
     totalTemplates: quoteTemplates.length,
     onIndexChange: setCurrentTemplateIndex,
   });
-  console.log(renderCardRange);
   const scrollViewRef = useRef<ScrollView>(null);
   const titleOpacity = useRef(new Animated.Value(1)).current;
   const subTitleOpacity = useRef(new Animated.Value(1)).current;
@@ -224,44 +223,60 @@ const Quote: React.FC<QuoteProps> = () => {
 
   const captureScreenshot = () => {
     const script = `
-      (function() {
+      (async function() {
         try {
-          const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d');
-          const html = document.documentElement;
-          
-          canvas.width = html.scrollWidth;
-          canvas.height = html.scrollHeight;
-          
-          // Create a temporary div to render the content
-          const tempDiv = document.createElement('div');
-          tempDiv.style.position = 'absolute';
-          tempDiv.style.left = '-9999px';
-          tempDiv.style.top = '-9999px';
-          tempDiv.innerHTML = html.innerHTML;
-          document.body.appendChild(tempDiv);
-          
-          // Use html2canvas-like approach
-          const data = '<svg xmlns="http://www.w3.org/2000/svg" width="' + canvas.width + '" height="' + canvas.height + '">' +
-            '<foreignObject width="100%" height="100%">' +
-            '<div xmlns="http://www.w3.org/1999/xhtml" style="background-color: ${
-              customMode ? selectedColor : "transparent"
-            }">' +
-            tempDiv.innerHTML +
-            '</div>' +
-            '</foreignObject>' +
-            '</svg>';
-          
-          const img = new Image();
-          img.onload = function() {
-            context.drawImage(img, 0, 0);
-            const base64 = canvas.toDataURL('image/png');
-            window.ReactNativeWebView.postMessage(base64);
-            document.body.removeChild(tempDiv);
-          };
-          img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(data)));
-        } catch (error) {
-          window.ReactNativeWebView.postMessage(JSON.stringify({ error: error.message }));
+          // Load html2canvas if not present
+          if (!window.html2canvas) {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+            script.onload = capture;
+            document.body.appendChild(script);
+          } else {
+            capture();
+          }
+  
+          function capture() {
+            // Get the root element of the WebView content
+            const rootElement = document.documentElement;
+            if (!rootElement) {
+              window.ReactNativeWebView.postMessage(JSON.stringify({
+                error: 'Could not find root element'
+              }));
+              return;
+            }
+
+            // Get the dimensions of the content
+            const rect = rootElement.getBoundingClientRect();
+            console.log('Content dimensions:', {
+              width: rect.width,
+              height: rect.height
+            });
+
+            window.html2canvas(rootElement, {
+              backgroundColor: '${customMode ? selectedColor : null}',
+              scale: 2,
+              width: rect.width,
+              height: rect.height,
+              logging: true,
+              useCORS: true,
+              allowTaint: true
+            }).then(canvas => {
+              console.log('Canvas created successfully');
+              const base64 = canvas.toDataURL('image/png');
+              console.log('Base64 data length:', base64.length);
+              window.ReactNativeWebView.postMessage(base64);
+            }).catch(err => {
+              console.error('html2canvas error:', err);
+              window.ReactNativeWebView.postMessage(JSON.stringify({
+                error: 'html2canvas failed: ' + err.message
+              }));
+            });
+          }
+        } catch (err) {
+          console.error('Unexpected error:', err);
+          window.ReactNativeWebView.postMessage(JSON.stringify({
+            error: 'Unexpected error: ' + err.message
+          }));
         }
       })();
       true;
@@ -272,11 +287,6 @@ const Quote: React.FC<QuoteProps> = () => {
 
   const handleWebViewMessage = async (event: any) => {
     try {
-      console.log(
-        "Received message from WebView:",
-        event.nativeEvent.data.substring(0, 100) + "..."
-      );
-
       const data = event.nativeEvent.data;
 
       // Check if it's an error message
@@ -292,48 +302,43 @@ const Quote: React.FC<QuoteProps> = () => {
         const imageData = data.replace("data:image/png;base64,", "");
         const fileUri = FileSystem.documentDirectory + "quote-screenshot.png";
 
-        console.log("Saving screenshot to:", fileUri);
-
         await FileSystem.writeAsStringAsync(fileUri, imageData, {
           encoding: FileSystem.EncodingType.Base64,
         });
 
-        console.log("Screenshot saved successfully");
         setScreenshotUri(fileUri);
 
         if (await Sharing.isAvailableAsync()) {
-          console.log("Sharing screenshot...");
           await Sharing.shareAsync(fileUri, {
             mimeType: "image/png",
-            dialogTitle: "Share Quote",
+            dialogTitle: "Cita de compartir",
             UTI: "public.png",
           });
-          console.log("Share dialog opened");
         } else {
-          console.log("Sharing not available");
-          Alert.alert("Error", "Sharing is not available on this device");
+          Alert.alert(
+            "Error",
+            "Compartir no está disponible en este dispositivo"
+          );
         }
       }
     } catch (error: any) {
       console.error("Error handling screenshot:", error);
       Alert.alert(
         "Error",
-        "Failed to capture screenshot: " + (error?.message || "Unknown error")
+        "No se pudo capturar la captura de pantalla: " +
+          (error?.message || "Unknown error")
       );
     }
   };
 
   const handleShare = async () => {
     if (!quoteText.trim()) {
-      Alert.alert("Error", "Please enter a quote before sharing");
+      Alert.alert("Error", "Por favor, ingrese una cita antes de compartir");
       return;
     }
     setIsLoading(true);
     try {
-      console.log("Starting share process...");
-
       if (customMode) {
-        console.log("Custom mode detected, updating WebView content...");
         const verseText = getVerseTextRaw(quoteText);
         const verseRef = reference;
         const html = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;width:100vw;background:${selectedColor};flex-direction:column;"><span style=\"color:#fff;font-size:2.5em;font-family:${selectedFont.fontFamily};font-weight:${selectedFont.fontWeight};\">${verseText}</span><span style=\"color:#fff;font-size:1.2em;margin-top:2em;opacity:0.8;\">${verseRef}</span></div>`;
@@ -346,15 +351,18 @@ const Quote: React.FC<QuoteProps> = () => {
 
         // Wait a bit more for the content to be fully rendered
         await new Promise((resolve) => setTimeout(resolve, 500));
+      } else {
+        // In template mode, make sure we're capturing from the current card
+        await new Promise((resolve) => setTimeout(resolve, 300));
       }
 
-      console.log("Capturing screenshot...");
       captureScreenshot();
     } catch (error: any) {
       console.error("Error in handleShare:", error);
       Alert.alert(
         "Error",
-        "Failed to share quote: " + (error?.message || "Unknown error")
+        "No se pudo compartir la cita: " +
+          (error?.message || "Error desconocido")
       );
     } finally {
       setIsLoading(false);
@@ -394,7 +402,7 @@ const Quote: React.FC<QuoteProps> = () => {
         ),
       },
     };
-  }, [theme.colors, handleShare, isLoading]);
+  }, [theme.colors, handleShare, isLoading, currentTemplateIndex]);
 
   return (
     <KeyboardAvoidingView
@@ -478,6 +486,7 @@ const Quote: React.FC<QuoteProps> = () => {
                   reference={reference}
                   quoteText={quoteText}
                   onWebViewMessage={handleWebViewMessage}
+                  webViewRef={webViewRef}
                 />
               );
             })}

@@ -397,177 +397,84 @@ export const quoteTemplates = [
     description:
       "Un diseño elegante con tonos verdes y tipografía sofisticada para inspirar paz y reflexión. Incluye botón de descarga.",
     template: `<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Proverbio Inspirador</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&family=Montserrat&display=swap');
+ <html lang="es">
+ <head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=0.5" />
+ <title>Proverbio Inspirador</title>
+ <style>
+   @import url('https:fonts.googleapis.com/css2?family=Playfair+Display&family=Montserrat&display=swap');
 
-  body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column; /* Stack quote box and button */
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #1f4037, #99f2c8);
-    font-family: 'Montserrat', sans-serif;
-    color: #1a1a1a;
-    padding: 1rem; /* Padding for content */
-    box-sizing: border-box;
-  }
+   body {
+     margin: 0;
+     height: 100vh;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     background: linear-gradient(135deg, #1f4037, #99f2c8);
+     font-family: 'Montserrat', sans-serif;
+     color: #1a1a1a;
+     margin: 0 1rem;
+       margin: 0 1rem;
+   }
 
-  .quote-box {
-    background: rgba(255, 255, 255, 0.85);
-    border-radius: 25px;
-    padding: 3rem 4rem;
-    max-width: 650px;
-    width: 100%; /* Responsive width */
-    box-shadow: 0 25px 40px rgba(0,0,0,0.25);
-    position: relative;
-    text-align: center;
-    margin-bottom: 2rem; /* Space for the button */
-  }
+   .quote-box {
+     background: rgba(255, 255, 255, 0.85);
+     border-radius: 25px;
+     padding: 3rem 4rem;
+     max-width: 650px;
+     box-shadow: 0 25px 40px rgba(0,0,0,0.25);
+     position: relative;
+     text-align: center;
+   }
 
-  .quote-box::before, .quote-box::after {
-    font-family: 'Playfair Display', serif;
-    font-size: 6rem;
-    position: absolute;
-    color: rgba(31, 64, 55, 0.15);
-    user-select: none;
-  }
+   .quote-box::before, .quote-box::after {
+     font-family: 'Playfair Display', serif;
+     font-size: 6rem;
+     position: absolute;
+     color: rgba(31, 64, 55, 0.15);
+     user-select: none;
+   }
 
-  .quote-box::before {
-    content: '“';
-    top: 15px;
-    left: 20px;
-  }
+   .quote-box::before {
+     content: '“';
+     top: 15px;
+     left: 20px;
+   }
 
-  .quote-box::after {
-    content: '”';
-    bottom: 15px;
-    right: 20px;
-  }
+   .quote-box::after {
+     content: '”';
+     bottom: 15px;
+     right: 20px;
+   }
 
-  .quote-text {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.8rem;
-    font-weight: 700;
-    line-height: 1.35;
-    margin-bottom: 1.5rem;
-  }
+   .quote-text {
+     font-family: 'Playfair Display', serif;
+     font-size: 2.8rem;
+     font-weight: 700;
+     line-height: 1.35;
+     margin-bottom: 1.5rem;
+   }
 
-  .verse {
-    font-size: 1.3rem;
-    font-style: italic;
-    color: #555;
-  }
-
-  #downloadBtn {
-    background-color: #1f4037;
-    color: #f0f0f0;
-    border: none;
-    padding: 12px 25px;
-    border-radius: 15px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  }
-
-  #downloadBtn:hover {
-    background-color: #2a5a4a;
-    transform: translateY(-2px);
-  }
-  #downloadBtn:active {
-    transform: translateY(0px);
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .quote-box {
-      padding: 2rem 2.5rem;
-    }
-    .quote-text {
-      font-size: 2.2rem;
-    }
-    .verse {
-      font-size: 1.1rem;
-    }
-    .quote-box::before, .quote-box::after {
-      font-size: 4rem;
-    }
-     .quote-box::before { top: 10px; left: 15px; }
-     .quote-box::after { bottom: 10px; right: 15px; }
-  }
-   @media (max-width: 480px) {
-    .quote-box {
-      padding: 1.5rem 2rem;
-    }
-    .quote-text {
-      font-size: 1.8rem;
-    }
-    .verse {
-      font-size: 1rem;
-    }
-     #downloadBtn {
-        padding: 10px 20px;
-        font-size: 0.9rem;
-     }
-  }
-</style>
-</head>
-<body>
-  <div class="quote-box">
-    <p class="quote-text">
-      "{{text}}"
-    </p>
-    <p class="verse">
-     {{ref}}
-    </p>
-  </div>
-  <button id="downloadBtn">Descargar Cita</button>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const downloadButton = document.getElementById('downloadBtn');
-      if (downloadButton) {
-        downloadButton.addEventListener('click', function() {
-          const quoteBoxToCapture = document.querySelector('.quote-box');
-          if (quoteBoxToCapture) {
-            html2canvas(quoteBoxToCapture, {
-              backgroundColor: null, // Use element's existing background
-              useCORS: true,      // For external resources like fonts
-              scale: 2            // Increase scale for better resolution
-            }).then(canvas => {
-              const image = canvas.toDataURL('image/png');
-              const link = document.createElement('a');
-              link.href = image;
-              link.download = 'cita_inspiradora.png';
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-            }).catch(err => {
-              console.error("Error al generar la imagen:", err);
-              alert("Hubo un error al generar la imagen. Por favor, inténtelo de nuevo.");
-            });
-          } else {
-            console.error("Elemento .quote-box no encontrado.");
-            alert("Error: No se pudo encontrar el contenido de la cita para descargar.");
-          }
-        });
-      } else {
-         console.error("Botón de descarga #downloadBtn no encontrado.");
-      }
-    });
-  </script>
-</body>
-</html>
-`,
+   .verse {
+     font-size: 1.3rem;
+     font-style: italic;
+     color: #555;
+   }
+ </style>
+ </head>
+ <body>
+   <div class="quote-box">
+     <p class="quote-text">
+       "{{text}}"
+     </p>
+     <p class="verse">
+      {{ref}}
+     </p>
+   </div>
+ </body>
+ </html>
+ `,
   },
   {
     id: 2,
