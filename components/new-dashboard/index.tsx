@@ -150,6 +150,7 @@ const SecondDashboard = () => {
       label: "Cita",
       action: () => navigation.navigate(Screens.Quote),
       color: "#CDAA7D",
+      isNew: isWithinTimeframe("1w", new Date("2025-06-05")).isActive,
     },
     {
       icon: "SwatchBook",
