@@ -3,6 +3,8 @@ import { StyleSheet, Dimensions, Animated } from "react-native";
 import { WebView } from "react-native-webview";
 import { TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import ViewShot, { ViewShotProperties } from "react-native-view-shot";
+import { useViewShot } from "@/hooks/useViewShot";
 
 interface QuoteCardProps {
   template: {
@@ -21,8 +23,8 @@ interface QuoteCardProps {
   panResponder: any;
   reference: string;
   quoteText: string;
-  onWebViewMessage: (event: any) => void;
   webViewRef: React.RefObject<WebView>;
+  viewShotRef: React.RefObject<ViewShot>;
 }
 
 export const QuoteCard: React.FC<QuoteCardProps> = ({
@@ -39,10 +41,15 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
   panResponder,
   reference,
   quoteText,
-  onWebViewMessage,
   webViewRef,
+  viewShotRef,
 }) => {
   const relativeIndex = index - currentTemplateIndex;
+  const { viewShotRef: useViewShotRef } = useViewShot({
+    fileName: `quote_${template.id}`,
+    quality: 1,
+    format: "png",
+  });
 
   // Animated values for explicit scale and opacity animation
   const scaleAnim = useRef(
@@ -91,26 +98,35 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
       ]}
       {...(isCurrent ? panResponder.panHandlers : {})}
     >
-      <WebView
-        ref={isCurrent ? webViewRef : null}
-        key={template.id}
-        originWhitelist={["*"]}
-        style={styles.webviewPreview}
-        source={{
-          html: template.template
-            .replace(/{{ref}}/g, reference)
-            .replace(/{{text}}/g, getVerseTextRaw(quoteText)),
+      <ViewShot
+        ref={isCurrent ? viewShotRef : null}
+        options={{
+          format: "png",
+          quality: 1,
+          result: "tmpfile",
         }}
-        scrollEnabled={false}
-        onMessage={onWebViewMessage}
-        javaScriptEnabled={true}
-        domStorageEnabled={true}
-        startInLoadingState={true}
-        onError={(syntheticEvent) => {
-          const { nativeEvent = {} } = syntheticEvent;
-          console.warn("WebView error: ", nativeEvent);
-        }}
-      />
+        style={styles.viewShot}
+      >
+        <WebView
+          ref={isCurrent ? webViewRef : null}
+          key={template.id}
+          originWhitelist={["*"]}
+          style={styles.webviewPreview}
+          source={{
+            html: template.template
+              .replace(/{{ref}}/g, reference)
+              .replace(/{{text}}/g, getVerseTextRaw(quoteText)),
+          }}
+          scrollEnabled={false}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}
+          startInLoadingState={true}
+          onError={(syntheticEvent) => {
+            const { nativeEvent = {} } = syntheticEvent;
+            console.warn("WebView error: ", nativeEvent);
+          }}
+        />
+      </ViewShot>
     </Animated.View>
   );
 };
@@ -135,6 +151,11 @@ const styles = StyleSheet.create({
     right: "5%",
     top: 0,
     bottom: 0,
+  },
+  viewShot: {
+    flex: 1,
+    width: "100%",
+    backgroundColor: "transparent",
   },
   webviewPreview: {
     flex: 1,

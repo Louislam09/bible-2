@@ -99,17 +99,17 @@ const SecondDashboard = () => {
     },
     user
       ? {
-          icon: "NotebookText",
-          label: "Notas",
-          action: () =>
-            navigation.navigate(Screens.Notes, { shouldRefresh: false }),
-          color: theme.colors.notification,
-        }
+        icon: "NotebookText",
+        label: "Notas",
+        action: () =>
+          navigation.navigate(Screens.Notes, { shouldRefresh: false }),
+        color: theme.colors.notification,
+      }
       : {
-          icon: "Cloudy",
-          label: "Sincronizar",
-          action: () => navigation.navigate(Screens.Login),
-        },
+        icon: "Cloudy",
+        label: "Sincronizar",
+        action: () => navigation.navigate(Screens.Login),
+      },
   ];
 
   const requestAccessHandlePresentModalPress = useCallback(
