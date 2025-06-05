@@ -33,7 +33,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     ...config,
     name: getAppName(),
     slug: 'bible',
-    version: '1.2.0',
+    version: '1.2.1',
     orientation: 'default',
     icon: './assets/images/icon.png',
     scheme: 'sb-rv60',
@@ -100,7 +100,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       'expo-router',
     ],
     runtimeVersion: {
-      policy: 'nativeVersion',
+      policy: 'appVersion',
     },
   };
 };

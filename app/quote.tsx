@@ -6,6 +6,7 @@ import { QuoteNavigationDots } from "@/components/quote/QuoteNavigationDots";
 import { quoteTemplates } from "@/constants/quoteTemplates";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { useQuoteCardStack } from "@/hooks/useQuoteCardStack";
+import { useViewShot } from "@/hooks/useViewShot";
 import { useNoteService } from "@/services/noteService";
 import { bibleState$ } from "@/state/bibleState";
 import { TTheme } from "@/types";
@@ -33,9 +34,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { WebView } from "react-native-webview";
-import { useViewShot } from "@/hooks/useViewShot";
 import ViewShot from "react-native-view-shot";
+import { WebView } from "react-native-webview";
 
 const COLORS = [
   "#2EC4F1", // blue
@@ -186,21 +186,6 @@ const Quote: React.FC<QuoteProps> = () => {
     return FAMOUS_VERSES[randomIndex];
   }, []);
 
-  // useEffect(() => {
-  //   if (params?.text && typeof params.text === "string") {
-  //     setQuoteText(params.text);
-  //   } else if (selectedVerse) {
-  //     setQuoteText(selectedVerse);
-  //   } else {
-  //     setQuoteText(randomVerse.text);
-  //   }
-  //   if (params?.reference && typeof params.reference === "string") {
-  //     setReference(params.reference);
-  //   } else {
-  //     setReference(randomVerse.reference);
-  //   }
-  // }, [params, selectedVerse, randomVerse]);
-
   useEffect(() => {
     if (!customMode && selectedTemplate) {
       setSelectedColor(COLORS[0]);
@@ -328,7 +313,7 @@ const Quote: React.FC<QuoteProps> = () => {
       Alert.alert(
         "Error",
         "No se pudo compartir la cita: " +
-          (error?.message || "Error desconocido")
+        (error?.message || "Error desconocido")
       );
     } finally {
       setIsLoading(false);
@@ -354,6 +339,12 @@ const Quote: React.FC<QuoteProps> = () => {
         RightComponent: () => (
           <View style={styles.headerButtons}>
             <TouchableOpacity
+              onPress={() => setCustomMode(!customMode)}
+              style={styles.headerButton}
+            >
+              <Icon name={customMode ? "GalleryHorizontal" : "Brush"} size={24} color={theme.colors.text} />
+            </TouchableOpacity>
+            <TouchableOpacity
               onPress={handleShare}
               disabled={isLoading}
               style={styles.headerButton}
@@ -368,7 +359,7 @@ const Quote: React.FC<QuoteProps> = () => {
         ),
       },
     };
-  }, [theme.colors, handleShare, isLoading, currentTemplateIndex]);
+  }, [theme.colors, handleShare, isLoading, setCustomMode]);
 
   return (
     <KeyboardAvoidingView
@@ -388,7 +379,7 @@ const Quote: React.FC<QuoteProps> = () => {
             ]}
           >
             {customMode
-              ? "Custom"
+              ? "Personaliza tu cita"
               : quoteTemplates[currentTemplateIndex]?.name || "Loading..."}
           </Animated.Text>
           <Animated.Text
@@ -401,9 +392,9 @@ const Quote: React.FC<QuoteProps> = () => {
             ]}
           >
             {customMode
-              ? "Create your own style"
+              ? "Crea tu propio estilo"
               : quoteTemplates[currentTemplateIndex]?.description ||
-                "Select a template"}
+              "Select a template"}
           </Animated.Text>
         </View>
         {customMode ? (
@@ -424,6 +415,7 @@ const Quote: React.FC<QuoteProps> = () => {
             onReferenceChange={setReference}
             colors={COLORS}
             fonts={FONTS}
+            viewShotRef={viewShotRef}
           />
         ) : (
           <View style={styles.templateContent}>
@@ -458,13 +450,13 @@ const Quote: React.FC<QuoteProps> = () => {
             })}
           </View>
         )}
-        <QuoteNavigationDots
+        {!customMode && <QuoteNavigationDots
           currentIndex={currentTemplateIndex}
           totalTemplates={quoteTemplates.length}
           customMode={customMode}
           onDotPress={handleDotPress}
           scrollViewRef={scrollViewRef}
-        />
+        />}
       </View>
     </KeyboardAvoidingView>
   );
@@ -503,10 +495,12 @@ const getStyles = ({ colors }: TTheme) =>
     headerButtons: {
       flexDirection: "row",
       alignItems: "center",
-      gap: 16,
+      gap: 12,
+      marginRight: 8,
     },
     headerButton: {
       padding: 8,
+      borderRadius: 8,
     },
   });
 

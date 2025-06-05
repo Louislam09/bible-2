@@ -1,14 +1,14 @@
-import React from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  TextStyle,
-} from "react-native";
 import { Text } from "@/components/Themed";
-import { TTheme } from "@/types";
+import React, { RefObject, useState } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View
+} from "react-native";
+import ViewShot from "react-native-view-shot";
+import Icon from "../Icon";
 
 type FontType = {
   readonly label: "Aa";
@@ -27,6 +27,7 @@ interface CustomQuoteModeProps {
   onReferenceChange: (text: string) => void;
   colors: string[];
   fonts: readonly FontType[];
+  viewShotRef?: RefObject<ViewShot>;
 }
 
 export const CustomQuoteMode: React.FC<CustomQuoteModeProps> = ({
@@ -40,39 +41,70 @@ export const CustomQuoteMode: React.FC<CustomQuoteModeProps> = ({
   onReferenceChange,
   colors,
   fonts,
+  viewShotRef,
 }) => {
+  const [isEditing, setIsEditing] = useState(false);
+
   return (
     <View style={styles.customModeContainer}>
       <View style={styles.previewContainer}>
-        <TouchableOpacity
-          activeOpacity={1}
-          style={[styles.cardPreview, { backgroundColor: selectedColor }]}
-          onPress={() => {}}
-        >
-          <TextInput
-            style={[
-              styles.cardText,
-              {
-                fontFamily: selectedFont.fontFamily,
-                fontWeight: selectedFont.fontWeight,
-              },
-            ]}
-            value={quoteText}
-            onChangeText={onQuoteTextChange}
-            multiline
-            textAlign="center"
-            placeholder="Your verse here..."
-            placeholderTextColor="#fff9"
-          />
-          <TextInput
-            style={styles.referenceText}
-            value={reference}
-            onChangeText={onReferenceChange}
-            textAlign="center"
-            placeholder="Reference (Book Chapter:Verse)"
-            placeholderTextColor="#fff9"
-          />
-        </TouchableOpacity>
+        <View style={styles.previewWrapper}>
+          <ViewShot
+            ref={viewShotRef}
+            options={{
+              format: "png",
+              quality: 1,
+              result: "tmpfile"
+            }}
+            style={styles.viewShotContainer}
+          >
+            <View style={[styles.cardPreview, { backgroundColor: selectedColor }]}>
+              {isEditing ? (
+                <View style={styles.editContainer}>
+                  <TextInput
+                    style={[
+                      styles.cardText,
+                      {
+                        fontFamily: selectedFont.fontFamily,
+                        fontWeight: selectedFont.fontWeight,
+                      },
+                    ]}
+                    value={quoteText}
+                    onChangeText={onQuoteTextChange}
+                    multiline
+                    autoFocus
+                  />
+                  <TextInput
+                    style={[styles.referenceTextInput]}
+                    value={reference}
+                    onChangeText={onReferenceChange}
+                  />
+                </View>
+              ) : (
+                <>
+                  <Text
+                    style={[
+                      styles.cardText,
+                      {
+                        fontFamily: selectedFont.fontFamily,
+                        fontWeight: selectedFont.fontWeight,
+                      },
+                    ]}
+                  >
+                    {quoteText}
+                  </Text>
+                  <Text style={styles.referenceText}>{reference}</Text>
+                </>
+              )}
+            </View>
+          </ViewShot>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => setIsEditing(!isEditing)}
+          >
+            <Icon name={isEditing ? "Check" : "Pen"} size={20} color="#fff" />
+          </TouchableOpacity>
+        </View>
       </View>
       <View style={styles.pickerRow}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -130,6 +162,10 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 20,
   },
+  previewWrapper: {
+    position: "relative",
+    width: "100%",
+  },
   previewContainer: {
     flex: 1,
     justifyContent: "center",
@@ -138,12 +174,13 @@ const styles = StyleSheet.create({
   },
   cardPreview: {
     width: "100%",
-    height: 350,
+    aspectRatio: 0.7,
     borderRadius: 24,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 12,
     padding: 24,
+    position: "relative",
   },
   cardText: {
     color: "#fff",
@@ -182,5 +219,37 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     marginTop: 8,
+  },
+  referenceTextInput: {
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 8,
+    minWidth: 100,
+    padding: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255, 255, 255, 0.3)",
+  },
+  viewShotContainer: {
+    width: "100%",
+    backgroundColor: "transparent",
+  },
+  editButton: {
+    position: "absolute",
+    top: 12,
+    right: 12,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1,
+  },
+  editContainer: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
