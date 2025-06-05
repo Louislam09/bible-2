@@ -1,4 +1,5 @@
 import { Text } from "@/components/Themed";
+import { useTheme } from "@react-navigation/native";
 import React, { RefObject, useState } from "react";
 import {
   ScrollView,
@@ -12,7 +13,7 @@ import Icon from "../Icon";
 
 type FontType = {
   readonly label: "Aa";
-  readonly fontFamily: "System" | "serif" | "sans-serif" | "monospace";
+  readonly fontFamily: "System" | "serif" | "sans-serif" | "monospace" | "cursive" | "fantasy" | "emoji";
   readonly fontWeight: "400" | "700";
 };
 
@@ -43,7 +44,17 @@ export const CustomQuoteMode: React.FC<CustomQuoteModeProps> = ({
   fonts,
   viewShotRef,
 }) => {
+  const { dark } = useTheme();
+  const highColor = dark ? "#fff" : "#000";
+  const lowColor = dark ? "#000" : "#fff";
+
   const [isEditing, setIsEditing] = useState(false);
+
+  const renderCheckmark = () => (
+    <View style={styles.checkmarkOverlay}>
+      <Icon name="Check" size={16} color="#fff" />
+    </View>
+  );
 
   return (
     <View style={styles.customModeContainer}>
@@ -93,7 +104,12 @@ export const CustomQuoteMode: React.FC<CustomQuoteModeProps> = ({
                   >
                     {quoteText}
                   </Text>
-                  <Text style={styles.referenceText}>{reference}</Text>
+                  <Text style={[
+                    styles.referenceText,
+                    {
+                      fontFamily: selectedFont.fontFamily,
+                    },
+                  ]}>{reference}</Text>
                 </>
               )}
             </View>
@@ -106,52 +122,61 @@ export const CustomQuoteMode: React.FC<CustomQuoteModeProps> = ({
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.pickerRow}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {colors.map((color) => (
-            <TouchableOpacity
-              key={color}
-              style={[
-                styles.colorCircle,
-                {
-                  backgroundColor: color,
-                  borderWidth: selectedColor === color ? 3 : 1,
-                  borderColor: selectedColor === color ? "#fff" : "#000",
-                },
-              ]}
-              onPress={() => onColorSelect(color)}
-            />
-          ))}
-        </ScrollView>
-      </View>
-      <View style={styles.pickerRow}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {fonts.map((font, idx) => (
-            <TouchableOpacity
-              key={idx}
-              style={[
-                styles.fontCircle,
-                {
-                  borderWidth: selectedFont === font ? 3 : 1,
-                  borderColor: selectedFont === font ? "#fff" : "#000",
-                },
-              ]}
-              onPress={() => onFontSelect(font)}
-            >
-              <Text
-                style={{
-                  fontFamily: font.fontFamily,
-                  fontWeight: font.fontWeight,
-                  color: "#fff",
-                  fontSize: 18,
-                }}
-              >
-                {font.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
+      {!isEditing &&
+        <>
+          <View style={styles.pickerRow}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {colors.map((color) => (
+                <View key={color} style={styles.circleContainer}>
+                  <TouchableOpacity
+                    style={[
+                      styles.colorCircle,
+                      {
+                        backgroundColor: color,
+                        borderWidth: selectedColor === color ? 3 : 1,
+                        borderColor: selectedColor === color ? highColor : lowColor,
+                      },
+                    ]}
+                    onPress={() => onColorSelect(color)}
+                  >
+                    {selectedColor === color && renderCheckmark()}
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+          <View style={styles.pickerRow}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {fonts.map((font, idx) => (
+                <TouchableOpacity
+                  key={idx}
+                  style={[
+                    styles.fontCircle,
+                    {
+                      backgroundColor: selectedFont === font ? highColor : selectedColor + 30,
+                      borderWidth: selectedFont === font ? 3 : 1,
+                      borderColor: selectedFont === font ? highColor : lowColor,
+
+                    },
+                  ]}
+                  onPress={() => onFontSelect(font)}
+                >
+                  <Text
+                    style={{
+                      fontFamily: font.fontFamily,
+                      fontWeight: font.fontWeight,
+                      color: selectedFont === font ? lowColor : highColor,
+                      fontSize: 18,
+                    }}
+                  >
+                    {font.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </>
+      }
     </View>
   );
 };
@@ -194,6 +219,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     marginHorizontal: 8,
     minHeight: 48,
+    backgroundColor: "transparent",
   },
   colorCircle: {
     width: 36,
@@ -224,6 +250,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     textAlign: "center",
+    fontWeight: "400",
     marginTop: 8,
     minWidth: 100,
     padding: 4,
@@ -249,6 +276,22 @@ const styles = StyleSheet.create({
   editContainer: {
     flex: 1,
     width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  checkmarkOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 18,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  circleContainer: {
+    position: "relative",
     justifyContent: "center",
     alignItems: "center",
   },

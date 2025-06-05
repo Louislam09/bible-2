@@ -39,12 +39,12 @@ import { WebView } from "react-native-webview";
 
 const COLORS = [
   "#2EC4F1", // blue
-  "#4FC3F7", // light blue
-  "#64B5F6", // sky blue
-  "#81C784", // green
-  "#AED581", // light green
-  "#DCE775", // yellow green
-  "#FFF176", // yellow
+  "#0288D1", // darker light blue (replaced #4FC3F7)
+  "#1976D2", // darker sky blue (replaced #64B5F6)
+  "#81C784", // green (already good)
+  "#689F38", // darker light green (replaced #AED581)
+  "#AFB42B", // darker yellow green (replaced #DCE775)
+  "#FBC02D", // darker yellow (replaced #FFF176)
   "#FFB300", // orange
   "#FF7043", // deep orange
   "#D84315", // burnt orange
@@ -57,13 +57,14 @@ const COLORS = [
   "#388E3C", // dark green
   "#C62828", // red
   "#AD1457", // pink
-  "#F06292", // light pink
-  "#607D8B", // blue grey
+  "#C2185B", // darker light pink (replaced #F06292)
+  "#455A64", // darker blue grey (replaced #607D8B)
 ];
+
 
 type FontType = {
   readonly label: "Aa";
-  readonly fontFamily: "System" | "serif" | "sans-serif" | "monospace";
+  readonly fontFamily: "System" | "serif" | "sans-serif" | "monospace" | "cursive" | "fantasy" | "emoji";
   readonly fontWeight: "400" | "700";
 };
 
@@ -73,6 +74,9 @@ const FONTS: readonly FontType[] = [
   { label: "Aa", fontFamily: "sans-serif", fontWeight: "700" },
   { label: "Aa", fontFamily: "monospace", fontWeight: "400" },
   { label: "Aa", fontFamily: "System", fontWeight: "700" },
+  { label: "Aa", fontFamily: "cursive", fontWeight: "400" },
+  { label: "Aa", fontFamily: "fantasy", fontWeight: "400" },
+  { label: "Aa", fontFamily: "emoji", fontWeight: "400" },
 ] as const;
 
 const FAMOUS_VERSES = [
