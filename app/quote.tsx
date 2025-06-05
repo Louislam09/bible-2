@@ -34,6 +34,8 @@ import {
   View,
 } from "react-native";
 import { WebView } from "react-native-webview";
+import { useViewShot } from "@/hooks/useViewShot";
+import ViewShot from "react-native-view-shot";
 
 const COLORS = [
   "#2EC4F1", // blue
@@ -174,6 +176,7 @@ const Quote: React.FC<QuoteProps> = () => {
   const subTitleOpacity = useRef(new Animated.Value(1)).current;
   const titleTranslateY = useRef(new Animated.Value(0)).current;
   const subTitleTranslateY = useRef(new Animated.Value(0)).current;
+  const viewShotRef = useRef<ViewShot>(null);
 
   const selectedVerse = use$(() => bibleState$.selectedVerseForNote.get());
   const params = useLocalSearchParams();
@@ -287,115 +290,12 @@ const Quote: React.FC<QuoteProps> = () => {
     });
   }, [currentTemplateIndex, customMode, screenWidth]);
 
-  const captureScreenshot = () => {
-    const script = `
-      (async function() {
-        try {
-          // Load html2canvas if not present
-          if (!window.html2canvas) {
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
-            script.onload = capture;
-            document.body.appendChild(script);
-          } else {
-            capture();
-          }
-  
-          function capture() {
-            // Get the root element of the WebView content
-            const rootElement = document.documentElement;
-            if (!rootElement) {
-              window.ReactNativeWebView.postMessage(JSON.stringify({
-                error: 'Could not find root element'
-              }));
-              return;
-            }
-
-            // Get the dimensions of the content
-            const rect = rootElement.getBoundingClientRect();
-            console.log('Content dimensions:', {
-              width: rect.width,
-              height: rect.height
-            });
-
-            window.html2canvas(rootElement, {
-              backgroundColor: '${customMode ? selectedColor : null}',
-              scale: 2,
-              width: rect.width,
-              height: rect.height,
-              logging: true,
-              useCORS: true,
-              allowTaint: true
-            }).then(canvas => {
-              console.log('Canvas created successfully');
-              const base64 = canvas.toDataURL('image/png');
-              console.log('Base64 data length:', base64.length);
-              window.ReactNativeWebView.postMessage(base64);
-            }).catch(err => {
-              console.error('html2canvas error:', err);
-              window.ReactNativeWebView.postMessage(JSON.stringify({
-                error: 'html2canvas failed: ' + err.message
-              }));
-            });
-          }
-        } catch (err) {
-          console.error('Unexpected error:', err);
-          window.ReactNativeWebView.postMessage(JSON.stringify({
-            error: 'Unexpected error: ' + err.message
-          }));
-        }
-      })();
-      true;
-    `;
-
-    webViewRef.current?.injectJavaScript(script);
-  };
-
-  const handleWebViewMessage = async (event: any) => {
-    try {
-      const data = event.nativeEvent.data;
-
-      // Check if it's an error message
-      if (data.startsWith("{")) {
-        const errorData = JSON.parse(data);
-        if (errorData.error) {
-          throw new Error(errorData.error as string);
-        }
-      }
-
-      // Check if it's a base64 image
-      if (data.startsWith("data:image/png;base64,")) {
-        const imageData = data.replace("data:image/png;base64,", "");
-        const fileUri = FileSystem.documentDirectory + "quote-screenshot.png";
-
-        await FileSystem.writeAsStringAsync(fileUri, imageData, {
-          encoding: FileSystem.EncodingType.Base64,
-        });
-
-        setScreenshotUri(fileUri);
-
-        if (await Sharing.isAvailableAsync()) {
-          await Sharing.shareAsync(fileUri, {
-            mimeType: "image/png",
-            dialogTitle: "Cita de compartir",
-            UTI: "public.png",
-          });
-        } else {
-          Alert.alert(
-            "Error",
-            "Compartir no está disponible en este dispositivo"
-          );
-        }
-      }
-    } catch (error: any) {
-      console.error("Error handling screenshot:", error);
-      Alert.alert(
-        "Error",
-        "No se pudo capturar la captura de pantalla: " +
-          (error?.message || "Unknown error")
-      );
-    }
-  };
+  const { captureAndShare } = useViewShot({
+    fileName: "quote",
+    quality: 1,
+    format: "png",
+    viewShotRef,
+  });
 
   const handleShare = async () => {
     if (!quoteText.trim()) {
@@ -422,7 +322,7 @@ const Quote: React.FC<QuoteProps> = () => {
         await new Promise((resolve) => setTimeout(resolve, 300));
       }
 
-      captureScreenshot();
+      await captureAndShare();
     } catch (error: any) {
       console.error("Error in handleShare:", error);
       Alert.alert(
@@ -551,8 +451,8 @@ const Quote: React.FC<QuoteProps> = () => {
                   panResponder={panResponder}
                   reference={reference}
                   quoteText={quoteText}
-                  onWebViewMessage={handleWebViewMessage}
                   webViewRef={webViewRef}
+                  viewShotRef={viewShotRef}
                 />
               );
             })}
