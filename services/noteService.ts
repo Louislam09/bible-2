@@ -9,6 +9,7 @@ import {
 } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
 import { pb } from "@/globalConfig";
+import { authState$ } from "@/state/authState";
 import { notesState$ } from "@/state/notesState";
 import { TNote } from "@/types";
 import checkConnection from "@/utils/checkConnection";
@@ -20,6 +21,7 @@ import { Alert } from "react-native";
 
 export const useNoteService = () => {
   const { executeSql } = useDBContext();
+  const user = authState$.user.get();
 
   const getAllNotes = async (): Promise<TNote[]> => {
     try {
@@ -87,13 +89,14 @@ export const useNoteService = () => {
       }
 
       const isConnected = await checkConnection();
-      if (isConnected && sendToCloud) {
+
+      if (isConnected && sendToCloud && user) {
         await notesState$.addNote(createdNotes)
       }
 
       return true;
     } catch (error) {
-      console.error("Error al crear nota:", error);
+      console.log("Error al crear nota:", error);
       Alert.alert("Error", "No se pudo crear la nota");
       return false;
     }
@@ -113,7 +116,7 @@ export const useNoteService = () => {
       );
 
       const isConnected = await checkConnection();
-      if (isConnected && sendToCloud) {
+      if (isConnected && sendToCloud && user) {
         const existing = await pb.collection("notes").getFirstListItem(`uuid = "${data.uuid}"`);
         await notesState$.updateNote(existing.id, {
           title: data.title || '',
