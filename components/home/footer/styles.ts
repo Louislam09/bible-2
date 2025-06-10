@@ -13,7 +13,7 @@ export const getStyles = ({ colors }: TTheme) =>
       backgroundColor: colors.background + 99,
       paddingHorizontal: 20,
       // borderTopColor: colors.border,
-      borderTopWidth: 1,
+      // borderTopWidth: 1,
       position: "absolute",
       bottom: 0,
     },

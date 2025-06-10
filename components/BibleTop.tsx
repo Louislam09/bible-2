@@ -1,3 +1,4 @@
+import ProgressBar from "@/components/home/footer/ProgressBar";
 import BibleHeader from "@/components/home/header/BibleHeader";
 import { useBibleContext } from "@/context/BibleContext";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
@@ -81,33 +82,46 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     [widthOrHeight, props, isSplitActived, theme.colors.background]
   );
 
-  const headerTranslateY = headerHeight.interpolate({
-    inputRange: [0, 1],
-    outputRange: [-57, 0],
-  });
-
   const headerStyle = {
-    // transform: [{ scaleY: headerHeight }, { translateY: headerTranslateY }],
     transform: [{ scaleY: headerHeight }],
     opacity: headerHeight,
   };
 
-  const footerTranslateY = footerHeight.interpolate({
-    inputRange: [0, 1],
-    outputRange: [46, 0],
-  });
-
   const footerStyle = {
-    // transform: [{ scaleY: footerHeight }, { translateY: footerTranslateY }],
     transform: [{ scaleY: footerHeight }],
     opacity: footerHeight,
   };
+
+  const progressTranslateY = headerHeight.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [1, 28, 47],
+  });
+
+  const progressStyle = {
+    transform: [{ translateY: progressTranslateY }],
+    opacity: 1,
+  }
+
+  const currentHistoryIndexState = use$(() => bibleState$.currentHistoryIndex.get());
+  const progressValue = useMemo(() => {
+    return (currentHistoryIndexState || 0) / (verses?.length || 10);
+  }, [currentHistoryIndexState, verses]);
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
       <Animated.View style={[styles.header, headerStyle]}>
         <BibleHeader />
       </Animated.View>
+      {!isSplitActived && <Animated.View style={[styles.progressContainer, progressStyle]}>
+        <ProgressBar
+          hideCircle
+          height={4}
+          color={theme.colors.notification}
+          barColor={theme.colors.text}
+          progress={progressValue}
+          circleColor={theme.colors.notification}
+        />
+      </Animated.View>}
       <SwipeWrapper {...{ onSwipeRight, onSwipeLeft }}>
         {isDataLoading ? (
           <ActivityIndicator />
@@ -147,6 +161,16 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 1,
+  },
+  progressContainer: {
+    position: 'absolute',
+    width: "100%",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1,
+    backgroundColor: 'transparent',
+    paddingHorizontal: 8,
   },
 });
 

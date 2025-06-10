@@ -137,9 +137,9 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
     selectBibleVersion(version);
     versionRef.current?.dismiss();
   };
-  const progressValue = useMemo(() => {
-    return (currentHistoryIndexState || 0) / (verses?.length || 10);
-  }, [currentHistoryIndexState, verses]);
+  // const progressValue = useMemo(() => {
+  //   return (currentHistoryIndexState || 0) / (verses?.length || 10);
+  // }, [currentHistoryIndexState, verses]);
 
   return (
     <LinearGradient
@@ -193,7 +193,7 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
           <VersionList {...{ currentBibleVersion, onSelect, theme }} />
         </BottomModal>
       </View>
-      {!isSplitActived && (
+      {/* {!isSplitActived && (
         <View style={[styles.progressContainer]}>
           <ProgressBar
             hideCircle
@@ -204,7 +204,7 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
             circleColor={theme.colors.notification}
           />
         </View>
-      )}
+      )} */}
     </LinearGradient>
   );
 };
