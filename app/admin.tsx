@@ -582,11 +582,6 @@ const getStyles = ({ colors }: TTheme) =>
       borderRadius: 12,
       padding: 16,
       marginBottom: 12,
-      elevation: 2,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
     },
     requestInfo: {
       marginBottom: 16,

@@ -433,11 +433,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       alignItems: "center",
       marginTop: 10,
       backgroundColor: colors.notification,
-      shadowColor: colors.notification,
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 8,
-      elevation: 5,
     },
     buttonDisabled: {
       opacity: 0.7,

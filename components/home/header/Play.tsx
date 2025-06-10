@@ -307,15 +307,6 @@ const getStyles = ({ colors }: TTheme) =>
       borderRadius: 8,
       padding: 5,
       marginVertical: 8,
-      elevation: 5,
-      ...Platform.select({
-        ios: {
-          shadowColor: "black",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.2,
-          shadowRadius: 4,
-        },
-      }),
     },
     versionText: {
       color: "#000",

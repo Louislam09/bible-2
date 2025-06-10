@@ -1,8 +1,8 @@
-import { FlashList } from "@shopify/flash-list";
 import { useBibleContext } from "@/context/BibleContext";
+import { EThemes, TTheme } from "@/types";
+import { FlashList } from "@shopify/flash-list";
 import React, { FC } from "react";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
-import { EThemes, TTheme } from "@/types";
 import { Text, View } from "../../Themed";
 
 interface ISelectThemeList {
@@ -93,15 +93,6 @@ const getStyles = ({ colors }: TTheme) =>
       borderRadius: 8,
       padding: 16,
       marginVertical: 8,
-      elevation: 5,
-      ...Platform.select({
-        ios: {
-          shadowColor: "black",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.2,
-          shadowRadius: 4,
-        },
-      }),
     },
     themeCard: {
       display: "flex",

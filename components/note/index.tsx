@@ -631,11 +631,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: colors.card,
       marginHorizontal: 4,
       marginVertical: 3,
-      elevation: 1,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.1,
-      shadowRadius: 1,
     },
     verseItem: {
       flex: 1,

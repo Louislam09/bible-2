@@ -1,11 +1,11 @@
-import lottieAssets from '@/constants/lottieAssets';
-import { GameProgress } from '@/types';
-import React, { useEffect, useMemo } from 'react';
-import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Animation from '../Animation';
-import { useRouter } from 'expo-router';
-import { usePlaySound } from '@/hooks/usePlaySound';
 import { SOUNDS } from '@/constants/gameSound';
+import lottieAssets from '@/constants/lottieAssets';
+import { usePlaySound } from '@/hooks/usePlaySound';
+import { GameProgress } from '@/types';
+import { useRouter } from 'expo-router';
+import React, { useEffect, useMemo } from 'react';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Animation from '../Animation';
 import CofettiAnimation from '../CofettiAnimation';
 
 interface IGameOverScreen {
@@ -115,11 +115,6 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: 'center',
     width: '90%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
   },
   title: {
     fontSize: 24,

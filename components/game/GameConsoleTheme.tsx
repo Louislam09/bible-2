@@ -1,13 +1,13 @@
+import useGameAnimation from '@/hooks/useGameAnimation';
 import { ICardTheme, QuestionDifficulty } from '@/types';
 import { shuffleOptions } from '@/utils/shuffleOptions';
+import { Lightbulb, Zap } from 'lucide-react-native';
 import React, { useMemo } from 'react';
 import { Animated, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Icon from '../Icon';
-import useGameAnimation from '@/hooks/useGameAnimation';
-import { Lightbulb, Zap } from 'lucide-react-native';
 import ProgressBar from '../home/footer/ProgressBar';
-import QuestionOptionItem from './QuestionOptionItem';
+import Icon from '../Icon';
 import Feedback from './Feedback';
+import QuestionOptionItem from './QuestionOptionItem';
 
 const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext, progress, selectedAnswer, title }: ICardTheme) => {
     const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion]);
@@ -53,19 +53,19 @@ const GameConsoleTheme = ({ router, feedback, currentQuestion, onAnswer, onNext,
 
                 <ScrollView style={styles.optionsContainer}>
                     <Animated.View style={{ opacity: optionsOpacity }}>
-                    {currentOptions.map((option, i) => (
-                        <QuestionOptionItem
-                            key={i}
-                            index={i}
-                            theme='GameConsole'
-                            isCorrect={option === currentQuestion?.correct}
-                            isSelected={selectedAnswer === option}
-                            onAnswer={onAnswer}
-                            selectedAnswer={selectedAnswer}
-                            showResult={selectedAnswer !== null}
-                            value={option}
-                        />
-                    ))}
+                        {currentOptions.map((option, i) => (
+                            <QuestionOptionItem
+                                key={i}
+                                index={i}
+                                theme='GameConsole'
+                                isCorrect={option === currentQuestion?.correct}
+                                isSelected={selectedAnswer === option}
+                                onAnswer={onAnswer}
+                                selectedAnswer={selectedAnswer}
+                                showResult={selectedAnswer !== null}
+                                value={option}
+                            />
+                        ))}
                     </Animated.View>
 
                     {feedback && (
@@ -169,13 +169,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#34d399',
     },
-    shadowProp: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-        elevation: 3,
-    },
+    shadowProp: {},
     consoleBorder: {
         borderColor: '#34d399',
     },

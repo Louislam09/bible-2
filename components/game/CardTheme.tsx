@@ -1,3 +1,4 @@
+import ProgressBar from '@/components/home/footer/ProgressBar';
 import useGameAnimation from '@/hooks/useGameAnimation';
 import { ICardTheme, QuestionDifficulty } from '@/types';
 import { shuffleOptions } from '@/utils/shuffleOptions';
@@ -6,9 +7,8 @@ import React, { useMemo } from 'react';
 import { Animated, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Icon from '../Icon';
-import QuestionOptionItem from './QuestionOptionItem';
-import ProgressBar from '@/components/home/footer/ProgressBar';
 import Feedback from './Feedback';
+import QuestionOptionItem from './QuestionOptionItem';
 
 const CardTheme = ({ scrollViewRef, router, feedback, currentQuestion, onAnswer, onNext, progress, selectedAnswer, title }: ICardTheme) => {
     const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion]);
@@ -62,7 +62,7 @@ const CardTheme = ({ scrollViewRef, router, feedback, currentQuestion, onAnswer,
 
                 <Animated.View style={[styles.optionsContainer, { opacity: optionsOpacity }]}>
                     {currentOptions.map((option, i) => (
-                        <QuestionOptionItem 
+                        <QuestionOptionItem
                             key={i}
                             index={i}
                             theme='Card'
@@ -96,13 +96,7 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
     },
-    shadowProp: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-        elevation: 3,
-    },
+    shadowProp: {},
     safeArea: {
         flex: 1,
     },

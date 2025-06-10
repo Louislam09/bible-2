@@ -1,13 +1,13 @@
+import useGameAnimation from '@/hooks/useGameAnimation';
 import { ICardTheme, QuestionDifficulty } from '@/types';
 import { shuffleOptions } from '@/utils/shuffleOptions';
+import { CloudLightning, Lightbulb } from 'lucide-react-native';
 import React, { useMemo } from 'react';
 import { Animated, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
-import Icon from '../Icon';
-import useGameAnimation from '@/hooks/useGameAnimation';
-import { CloudLightning, Lightbulb } from 'lucide-react-native';
 import ProgressBar from '../home/footer/ProgressBar';
-import QuestionOptionItem from './QuestionOptionItem';
+import Icon from '../Icon';
 import Feedback from './Feedback';
+import QuestionOptionItem from './QuestionOptionItem';
 
 const NeonTheme = ({ router, title, currentQuestion, onAnswer, onNext, progress, selectedAnswer, feedback }: ICardTheme) => {
     const currentOptions = useMemo(() => shuffleOptions(currentQuestion?.options), [currentQuestion]);
@@ -20,7 +20,7 @@ const NeonTheme = ({ router, title, currentQuestion, onAnswer, onNext, progress,
         <SafeAreaView style={[styles.container, { backgroundColor: '#030712' }]}>
             <View style={styles.header}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Icon onPress={() => router.back()} name="ChevronLeft" color="#22d3ee" size={32} />
+                    <Icon onPress={() => router.back()} name="ChevronLeft" color="#22d3ee" size={32} />
                     {!isSmallSDevice && <Text style={styles.neonTitle}>{title}</Text>}
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
@@ -136,11 +136,6 @@ const styles = StyleSheet.create({
         padding: 24,
     },
     neonShadow: {
-        shadowColor: '#22d3ee',
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-        elevation: 5,
     },
     neonQuestionText: {
         color: '#22d3ee',

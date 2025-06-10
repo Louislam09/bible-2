@@ -1,6 +1,6 @@
+import { DragAndDropChallenge, FillInTheBlankChallenge, MemoryTaskChallenge, MultipleChoiceChallenge, Challenge as TChallenge, TrueFalseChallenge } from '@/types'
 import React, { FC, useState } from 'react'
-import { StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native'
-import { Challenge as TChallenge, TrueFalseChallenge, MultipleChoiceChallenge, FillInTheBlankChallenge, MemoryTaskChallenge, DragAndDropChallenge } from '@/types'
+import { ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
 import { Text, View } from '../Themed'
 
 type ChallengeProps = {
@@ -250,11 +250,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 8,
         padding: 16,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
     },
     questionText: {
         fontSize: 18,

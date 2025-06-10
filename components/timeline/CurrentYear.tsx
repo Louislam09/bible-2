@@ -12,13 +12,13 @@ import Animated, {
 import { Platform } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { useMediaQueriesArray } from './useMediaQueries'
-import { offset, wp, wpUI } from './timelineConstants'
+import { useTheme } from '@react-navigation/native'
+import { StyleSheet } from 'react-native'
 import Icon from '../Icon'
 import { Text } from '../Themed'
-import { StyleSheet } from 'react-native'
-import { useTheme } from '@react-navigation/native';
 import ReText from './ReText'
+import { offset, wp, wpUI } from './timelineConstants'
+import { useMediaQueriesArray } from './useMediaQueries'
 
 const CurrentYear = ({
   year,
@@ -130,18 +130,10 @@ const CurrentYear = ({
         }}
       >
         <ReText text={year} style={{ fontWeight: 'bold', color: 'white' }} />
-        {/* <Text style={{ color: 'white', width: 120, textAlign: 'center', fontWeight: 'bold' }}>
-          {displayYear}
-        </Text> */}
       </View>
       <Animated.View
         style={[
           {
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 1 },
-            shadowOpacity: 0.18,
-            shadowRadius: 1.0,
-            elevation: 1,
             position: 'absolute',
             left: 0,
             bottom: 0,

@@ -1,10 +1,10 @@
-import React, { useRef, useEffect } from "react";
-import { StyleSheet, Dimensions, Animated } from "react-native";
-import { WebView } from "react-native-webview";
+import { useViewShot } from "@/hooks/useViewShot";
 import { TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import React, { useEffect, useRef } from "react";
+import { Animated, Dimensions, StyleSheet } from "react-native";
 import ViewShot, { ViewShotProperties } from "react-native-view-shot";
-import { useViewShot } from "@/hooks/useViewShot";
+import { WebView } from "react-native-webview";
 
 interface QuoteCardProps {
   template: {
@@ -138,14 +138,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: "hidden",
     backgroundColor: "transparent",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 6.84,
-    elevation: 10,
     position: "absolute",
     left: "5%",
     right: "5%",

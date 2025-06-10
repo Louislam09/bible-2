@@ -813,15 +813,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderRadius: 10,
       padding: 12,
       flex: 1,
-      elevation: 3,
-      ...Platform.select({
-        ios: {
-          shadowColor: "black",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 3,
-        },
-      }),
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
       borderColor: colors.notification + "40",
@@ -896,15 +887,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: colors.notification,
       padding: 12,
       borderRadius: 30,
-      elevation: 5,
-      ...Platform.select({
-        ios: {
-          shadowColor: "black",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.3,
-          shadowRadius: 4,
-        },
-      }),
     },
     noResultsContainer: {
       flex: 1,

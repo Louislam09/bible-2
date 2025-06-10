@@ -525,11 +525,6 @@ const getStyles = ({ colors, dark = false }: TTheme) =>
       borderRadius: 12,
       borderWidth: 1,
       borderColor: colors.border,
-      shadowColor: dark ? 'transparent' : colors.border,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: dark ? 0 : 2,
       overflow: 'hidden',
     },
     currentBibleContainer: {

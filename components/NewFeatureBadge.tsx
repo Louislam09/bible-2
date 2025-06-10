@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ViewStyle, StyleProp } from 'react-native';
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import Icon from './Icon';
 
 interface NewFeatureBadgeProps {
@@ -32,12 +32,12 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
     <View style={[styles.cardContainer, style]}>
       {isNew && <NewFeatureBadge style={styles.badge} />}
       <View style={styles.contentContainer}>
-        {icon &&  <Icon
-              size={24}
-              name={icon as any}
-              color="#fff" 
-              style={[{  marginRight: 8 }]}
-            />}
+        {icon && <Icon
+          size={24}
+          name={icon as any}
+          color="#fff"
+          style={[{ marginRight: 8 }]}
+        />}
         <Text style={styles.title}>{title}</Text>
       </View>
     </View>
@@ -53,16 +53,6 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 12,
-    // Add shadow for iOS
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    // Add shadow for Android
-    elevation: 2,
   },
   badgeText: {
     color: '#FFFFFF',

@@ -101,20 +101,7 @@ const NoteItem: React.FC<NoteItemProps> = ({
                     <NotebookText
                         size={30}
                         color={theme.colors.text}
-                        style={{
-                            opacity: 0.8,
-                            ...Platform.select({
-                                android: {
-                                    elevation: 2,
-                                },
-                                ios: {
-                                    shadowColor: '#000',
-                                    shadowOffset: { width: 1, height: 1 },
-                                    shadowOpacity: 0.2,
-                                    shadowRadius: 1,
-                                },
-                            }),
-                        }}
+                        style={{ opacity: 0.8 }}
                     />
                 </View>
             </View>
@@ -131,11 +118,6 @@ const getStyles = ({ colors }: TTheme) =>
             backgroundColor: colors.card,
             marginHorizontal: 4,
             marginVertical: 3,
-            elevation: 1,
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 1 },
-            shadowOpacity: 0.1,
-            shadowRadius: 1,
         },
         verseItem: {
             flex: 1,

@@ -1,13 +1,13 @@
+import { TTheme } from "@/types";
+import { useTheme } from "@react-navigation/native";
 import React, { useEffect, useRef } from "react";
 import {
-  StyleSheet,
-  ScrollView,
   Animated,
+  ScrollView,
+  StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
-import { useTheme } from "@react-navigation/native";
-import { TTheme } from "@/types";
 
 interface QuoteNavigationDotsProps {
   currentIndex: number;
@@ -160,11 +160,6 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 3,
-    elevation: 3,
   },
   inactiveDot: {
     width: 8,
