@@ -157,7 +157,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
     <StatusBarBackground>
       <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
         <Stack.Screen options={{ headerShown: false }} />
-        <BibleHeader />
+        {/* <BibleHeader /> */}
         <View
           style={[styles.container, !isPortrait && { flexDirection: "row" }]}
         >

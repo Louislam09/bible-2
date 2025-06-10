@@ -170,7 +170,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     const selectedVerses = bibleState$.selectedVerses.get();
     return selectedVerses.has(item.verse);
   });
-  const links = use$(() => bibleState$.bibleData.topLinks.get());
+  const links = use$(() => bibleState$.bibleData[isSplit ? 'bottomLinks' : 'topLinks'].get());
   const verseLink = links?.filter((link) => link.verse === item.verse);
 
 

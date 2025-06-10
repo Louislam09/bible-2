@@ -1,7 +1,7 @@
 import Icon from "@/components/Icon";
 import { Text } from "@/components/Themed";
 import { bibleState$ } from "@/state/bibleState";
-import { IBookVerse, TChapter, TTheme } from "@/types";
+import { IBookVerse, TTheme } from "@/types";
 import { observer } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
@@ -9,17 +9,36 @@ import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   ActivityIndicator,
   Animated,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   StyleSheet,
   useWindowDimensions,
   View,
 } from "react-native";
 import Verse from "./Verse";
 
+interface TChapter {
+  verses: IBookVerse[];
+  isSplit?: boolean;
+  estimatedReadingTime: number;
+  initialScrollIndex: number;
+  onScroll?: (direction: 'up' | 'down') => void;
+}
+
+interface TChapter {
+  verses: IBookVerse[];
+  isSplit?: boolean;
+  estimatedReadingTime: number;
+  initialScrollIndex: number;
+  onScroll?: (direction: 'up' | 'down') => void;
+}
+
 const Chapter = ({
   verses,
   isSplit,
   estimatedReadingTime,
   initialScrollIndex,
+  onScroll,
 }: TChapter) => {
   const bibleSide = isSplit ? "bottom" : "top";
   const data = verses ?? [];
@@ -29,6 +48,8 @@ const Chapter = ({
   const styles = useMemo(() => getStyles(theme), [theme]);
   const chapterRef = useRef<FlashList<any>>(null);
   const topVerseRef = useRef<number | null>(null);
+  const lastOffset = useRef(0);
+  const lastScrollTime = useRef(Date.now());
 
   const aspectRadio = height / width;
   const isMobile = +aspectRadio.toFixed(2) > 1.65;
@@ -89,6 +110,24 @@ const Chapter = ({
     []
   );
 
+  const handleScroll = useCallback(({ nativeEvent }: { nativeEvent: any }) => {
+    const now = Date.now();
+    const minScrollTime = 50; // Minimum time between scroll events to process
+
+    if (now - lastScrollTime.current < minScrollTime) {
+      return;
+    }
+
+    const currentOffset = nativeEvent.contentOffset.y;
+    const direction = currentOffset > lastOffset.current ? 'down' : 'up';
+
+    if (Math.abs(currentOffset - lastOffset.current) > 10) { // Minimum scroll distance
+      onScroll?.(direction);
+      lastOffset.current = currentOffset;
+      lastScrollTime.current = now;
+    }
+  }, [onScroll]);
+
   return (
     <View style={styles.chapterContainer}>
       <View style={[styles.verseContent]}>
@@ -114,6 +153,8 @@ const Chapter = ({
           disableHorizontalListHeightMeasurement
           ListHeaderComponentStyle={{ paddingTop: 70 }}
           ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
         // decelerationRate="normal"
         // onEndReached={onEndReached}
         // maintainVisibleContentPosition={{
