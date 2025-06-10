@@ -48,7 +48,6 @@ const VersionList: FC<IVersionList> = ({
             backgroundColor: "transparent",
           }}
         >
-          <DecoratorLine theme={theme} />
           <TouchableOpacity
             style={[styles.card]}
             onPress={() => onSelect(version.id)}
@@ -62,7 +61,7 @@ const VersionList: FC<IVersionList> = ({
               >
                 {version.shortName}
               </Text>
-              <Text style={[styles.versionText, { fontSize }]}>
+              <Text style={[styles.versionText, {}]}>
                 {version.name}
               </Text>
             </View>
@@ -89,7 +88,10 @@ const getStyles = ({ colors, dark }: TTheme) =>
       padding: 0,
       width: "90%",
       textAlign: "center",
-      backgroundColor: colors.notification,
+      backgroundColor: colors.notification + "99",
+      fontWeight: "bold",
+      borderRadius: 10,
+      marginBottom: 10,
     },
     versionContainer: {
       position: "relative",
@@ -105,27 +107,13 @@ const getStyles = ({ colors, dark }: TTheme) =>
       flexDirection: "row",
       width: "90%",
       padding: 5,
-      elevation: 5,
-      ...Platform.select({
-        ios: {
-          shadowColor: "black",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.2,
-          shadowRadius: 4,
-        },
-      }),
       paddingVertical: 10,
       paddingLeft: 10,
-      borderColor: colors.notification + "50",
-      backgroundColor: dark ? colors.background : "white",
-      borderWidth: dark ? 1 : 0,
-      shadowColor: colors.notification,
-      shadowOpacity: 1,
-      shadowRadius: 10,
-      borderRadius: 10,
       alignItems: "center",
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
+      backgroundColor: colors.background + "80",
+      borderLeftColor: colors.primary,
+      borderLeftWidth: 3,
+      borderRadius: 10,
     },
     icon: {
       fontWeight: "700",
@@ -135,6 +123,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     versionText: {
       color: colors.text,
+      fontWeight: "600",
     },
   });
 

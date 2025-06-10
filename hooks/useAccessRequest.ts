@@ -130,7 +130,6 @@ export function useAccessRequest() {
         };
     }, [recordId]);
 
-
     useEffect(() => {
         fetchRequestStatus();
     }, []);

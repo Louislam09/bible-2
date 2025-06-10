@@ -154,7 +154,6 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   }, [SCREEN_HEIGHT, SCREEN_WIDTH, backgroundColor]);
 
   return (
-    // <Animated.View style={[{ flex: 1 }, style]}>
     <StatusBarBackground>
       <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
         <Stack.Screen options={{ headerShown: false }} />
@@ -175,7 +174,6 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
           </FloatingButton>
 
           <BottomModal
-            // shouldScroll
             justOneSnap
             showIndicator
             justOneValue={["50%"]}
@@ -191,11 +189,9 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
               currentStep={stepIndex}
             />
           )}
-          {/* )} */}
         </>
       </SafeAreaView>
     </StatusBarBackground>
-    // </Animated.View>
   );
 };
 

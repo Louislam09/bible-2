@@ -260,7 +260,7 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
             <FlashList
               key={schema}
               contentContainerStyle={{
-                backgroundColor: theme.dark ? theme.colors.background : "#eee",
+                backgroundColor: "transparent",
               }}
               decelerationRate={"normal"}
               estimatedItemSize={135}
@@ -286,13 +286,13 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
                 >
                   <Animation
                     animationRef={animationRef}
-                    backgroundColor={theme.colors.background}
+                    backgroundColor={'transparent'}
                     source={searchingSource}
                   />
                   {wordNotFoundInDictionary && searchDebounce !== "" ? (
                     <Text style={[styles.noResultsText, { fontSize }]}>
                       No encontramos resultados para: {"\n"}
-                      <Text style={{ color: theme.colors.notification }}>
+                      <Text style={{ color: theme.colors.notification, textDecorationLine: "underline" }}>
                         {searchDebounce}
                       </Text>
                     </Text>

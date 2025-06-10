@@ -1,11 +1,11 @@
 import { iconSize } from "@/constants/size";
 import Voices from "@/constants/Voices";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
-import Checkbox from "expo-checkbox";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { SpeechVoice, TTheme } from "@/types";
+import Checkbox from "expo-checkbox";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { Animated, Platform, StyleSheet, TouchableOpacity } from "react-native";
-import { SpeechVoice, TTheme } from "@/types";
 import CustomTabs, { TabItemType } from "./CustomTabs";
 import DecoratorLine from "./DecoratorLine";
 import Icon from "./Icon";
@@ -67,7 +67,6 @@ const VoiceItem = ({
         { flexDirection: "row", marginVertical: 5 },
       ]}
     >
-      <DecoratorLine theme={theme} />
       <TouchableOpacity
         key={voice.identifier}
         style={[styles.card]}
@@ -95,7 +94,7 @@ const VoiceItem = ({
               value={selectedVoice.name === voice.name}
             />
           </View>
-          <Text style={[styles.versionText, { fontSize }]}>{voice.name}</Text>
+          <Text style={[styles.versionText, {}]}>{voice.name}</Text>
         </View>
         <TouchableOpacity
           onPress={() => playItem(voice, true)}
@@ -217,7 +216,9 @@ const getStyles = ({ colors, dark }: TTheme) =>
       padding: 0,
       width: "90%",
       textAlign: "center",
-      backgroundColor: colors.notification,
+      backgroundColor: colors.notification + "99",
+      fontWeight: "bold",
+      borderRadius: 10,
     },
     versionContainer: {
       position: "relative",
@@ -233,27 +234,13 @@ const getStyles = ({ colors, dark }: TTheme) =>
       flexDirection: "row",
       width: "90%",
       padding: 5,
-      elevation: 5,
-      ...Platform.select({
-        ios: {
-          shadowColor: "black",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.2,
-          shadowRadius: 4,
-        },
-      }),
       paddingVertical: 10,
       paddingLeft: 10,
-      borderColor: colors.notification + "50",
-      backgroundColor: dark ? colors.background : "white",
-      borderWidth: dark ? 1 : 0,
-      shadowColor: colors.notification,
-      shadowOpacity: 1,
-      shadowRadius: 10,
-      borderRadius: 10,
       alignItems: "center",
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
+      backgroundColor: colors.background + "80",
+      borderLeftColor: colors.primary,
+      borderLeftWidth: 3,
+      borderRadius: 10,
     },
     icon: {
       fontWeight: "700",

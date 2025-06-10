@@ -41,6 +41,7 @@ const BookContentModals = ({ book, chapter }: any) => {
       </BottomSheet>
 
       <BottomModal
+        style={styles.bottomSheet}
         backgroundColor={theme.dark ? theme.colors.background : "#eee"}
         shouldScroll
         startAT={2}

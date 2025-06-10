@@ -160,7 +160,7 @@ const HymnScreen = () => {
   const navigation = useNavigation();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const { isConnected } = useInternetConnection();
-  const { requestAccess, loading: isLoading, status } = useAccessRequest()
+  const { requestAccess, loading: isLoading } = useAccessRequest()
   const requestAccessBottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const isAlegresNuevasUnlocked = use$(() => storedData$.isAlegresNuevasUnlocked.get());
@@ -260,24 +260,24 @@ const HymnScreen = () => {
           />
         </View>
 
-        {isLoading ? (
+        {/* {isLoading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={theme.colors.notification} />
             <Text style={styles.loadingText}>Verificando acceso...</Text>
           </View>
         ) : (
-          <View style={[styles.optionContainer, { width: SCREEN_WIDTH }]}>
-            <FlashList
-              contentContainerStyle={styles.listContainer}
-              data={options}
-              keyExtractor={(item) => item.label}
-              renderItem={renderItem}
-              estimatedItemSize={200}
-              numColumns={2}
-              showsVerticalScrollIndicator={false}
-            />
-          </View>
-        )}
+        )} */}
+        <View style={[styles.optionContainer, { width: SCREEN_WIDTH }]}>
+          <FlashList
+            contentContainerStyle={styles.listContainer}
+            data={options}
+            keyExtractor={(item) => item.label}
+            renderItem={renderItem}
+            estimatedItemSize={200}
+            numColumns={2}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
 
         {!isConnected && (
           <View style={styles.offlineNotice}>
@@ -359,11 +359,6 @@ const getStyles = ({ colors }: TTheme) =>
       padding: 10,
       paddingHorizontal: 18,
       borderRadius: 15,
-      elevation: 5,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
       flex: 1,
       minHeight: 220,
       margin: 8,
