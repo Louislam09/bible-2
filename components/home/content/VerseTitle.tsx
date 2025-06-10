@@ -99,9 +99,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   chip: {
-    borderRadius: 20,
-    paddingVertical: 4,
-    paddingHorizontal: 12,
+    borderRadius: 10,
+    paddingVertical: 2,
+    paddingHorizontal: 6,
     marginVertical: 4,
     borderWidth: 1,
     flexDirection: 'row',
