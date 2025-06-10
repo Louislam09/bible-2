@@ -22,6 +22,7 @@ import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import React, {
   memo,
   useCallback,
@@ -40,7 +41,6 @@ import {
 } from "react-native";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
 import VerseTitle from "./VerseTitle";
-import { useRouter } from "expo-router";
 
 type VerseProps = TVerse & {
   isSplit: boolean;
@@ -139,7 +139,6 @@ const ActionItem = memo(
 );
 
 const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
-  // console.log("🆚", item.verse);
   const { currentBibleVersion, fontSize, toggleFavoriteVerse } =
     useBibleContext();
 
@@ -171,6 +170,9 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     const selectedVerses = bibleState$.selectedVerses.get();
     return selectedVerses.has(item.verse);
   });
+  const links = use$(() => bibleState$.bibleData.topLinks.get());
+  const verseLink = links?.filter((link) => link.verse === item.verse);
+
 
   const isBottom = isSplit && isBottomBibleSearching;
   const isTop = !isSplit && !isBottomBibleSearching;
@@ -264,9 +266,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const onQuote = () => {
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item.book_number).longName} ${
-      item.chapter
-    }:${item.verse}`;
+    const reference = `${getBookDetail(item.book_number).longName} ${item.chapter
+      }:${item.verse}`;
     bibleState$.handleSelectVerseForNote(verseText);
     router.push({ pathname: "/quote", params: { text: verseText, reference } });
   };
@@ -369,8 +370,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         name: "Brain",
         action: () =>
           onMemorizeVerse(
-            `${getBookDetail(item.book_number).longName} ${item?.chapter}:${
-              item?.verse
+            `${getBookDetail(item.book_number).longName} ${item?.chapter}:${item?.verse
             }`
           ),
         color: "#f1abab",
@@ -429,6 +429,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
             isSplit={isSplit}
             key={item.verse}
             subheading={item.subheading}
+            links={verseLink?.[0]?.subheading}
           />
         )}
 

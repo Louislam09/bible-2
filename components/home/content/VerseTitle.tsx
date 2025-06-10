@@ -4,21 +4,21 @@ import { bibleState$ } from "@/state/bibleState";
 import extractVersesInfo from "@/utils/extractVersesInfo";
 import { useTheme } from "@react-navigation/native";
 import React from "react";
-import { StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 
 type VerseTitleProps = {
   subheading: string[];
+  links?: string;
   isSplit: any;
 };
 
-const VerseTitle = ({ subheading, isSplit }: VerseTitleProps) => {
+const VerseTitle = ({ subheading, isSplit, links }: VerseTitleProps) => {
   const isSplitActived = bibleState$.isSplitActived.get();
   const theme = useTheme();
   const [subTitle, link] = JSON.parse(subheading as any);
-  if (!subTitle) return null;
-  const linkVerses = link
-    ? link.split("—").map((linkVerse: any) => extractVersesInfo(linkVerse))
-    : [];
+  const linkVerses = link ? link.split("—").map((linkVerse: any) => extractVersesInfo(linkVerse)) : [];
+  const verseLinks = links ? links.split(";").map((linkVerse: any) => extractVersesInfo(linkVerse)) : [];
+  const myLinks = links ? verseLinks : linkVerses;
 
   const renderItem = (verseInfo: any, index: number) => {
     const { bookNumber, chapter, verse, endVerse } = verseInfo;
@@ -40,30 +40,40 @@ const VerseTitle = ({ subheading, isSplit }: VerseTitleProps) => {
         isBibleBottom: isBottom,
         isHistory: false,
       });
-      //   navigation.navigate(Screens.Home, { ...queryInfo, isHistory: false });
     };
 
     return bookName ? (
-      <Text
+      <Pressable
         key={index}
         onPress={onLink}
-        style={[
-          styles.verse,
-          styles.link,
-          { color: theme.colors.notification },
+        style={({ pressed }) => [
+          styles.chip,
+          {
+            backgroundColor: pressed ? theme.colors.border : theme.dark ? theme.colors.text + 40 : theme.colors.notification + 40,
+            borderColor: theme.colors.text + 80,
+          }
         ]}
       >
-        {`${bookName} ${chapter}:${verse}${endVerse && `-${endVerse}`}`}
-      </Text>
+        <Text
+          style={[
+            styles.chipText,
+            { color: theme.colors.text }
+          ]}
+        >
+          {`${bookName} ${chapter}:${verse}${endVerse ? `-${endVerse}` : ''}`}
+        </Text>
+      </Pressable>
     ) : null;
   };
 
   return (
     <View>
-      <Text style={[styles.verse, { color: theme.colors.notification }]}>
-        {subTitle}
-      </Text>
-      <View style={{ flexDirection: "row" }}>{linkVerses.map(renderItem)}</View>
+      {subTitle && (
+        <Text style={[styles.verse, { color: theme.colors.notification }]}>
+          {subTitle}
+        </Text>
+      )}
+      <View style={styles.chipContainer}>{myLinks.map(renderItem)}</View>
     </View>
   );
 };
@@ -80,12 +90,26 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingVertical: 5,
   },
-  link: {
-    fontSize: 18,
+  chipContainer: {
+    flexDirection: "row",
+    flexWrap: 'wrap',
+    gap: 8,
+    paddingHorizontal: 16,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  chip: {
+    borderRadius: 20,
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    marginVertical: 4,
+    borderWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  chipText: {
+    fontSize: 14,
     fontWeight: "bold",
-    paddingVertical: 5,
-    textDecorationColor: "white",
-    textDecorationLine: "underline",
-    textDecorationStyle: "solid",
   },
 });

@@ -1,4 +1,4 @@
-import { IBookVerse, IStrongWord } from "@/types";
+import { IBibleLink, IBookVerse, IStrongWord } from "@/types";
 import { getChapterTextRaw } from "@/utils/getVerseTextRaw";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { batch, observable } from "@legendapp/state";
@@ -19,6 +19,8 @@ type IBibleQuery = {
 type BibleData = {
   topVerses: IBookVerse[];
   bottomVerses: IBookVerse[];
+  topLinks?: IBibleLink[];
+  bottomLinks?: IBibleLink[];
 };
 
 export function getReadingTime(verses: IBookVerse[], wordsPerMinute = 200) {
@@ -56,7 +58,7 @@ export const bibleState$ = observable({
     shouldFetch: true,
   },
   isDataLoading: { top: true, bottom: false },
-  bibleData: { topVerses: [], bottomVerses: [] } as BibleData,
+  bibleData: { topVerses: [], bottomVerses: [], topLinks: [], bottomLinks: [] } as BibleData,
   readingTimeData: { top: 0, bottom: 0 },
   changeBibleQuery: (query: Partial<IBibleQuery>) => {
     // console.log("🟡 ChangeBibleQuery 🟡");

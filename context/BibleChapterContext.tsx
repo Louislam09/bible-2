@@ -1,3 +1,4 @@
+import bibleLinks from "@/constants/bibleLinks";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { getDatabaseQueryKey } from "@/constants/databaseNames";
 import { QUERY_BY_DB } from "@/constants/Queries";
@@ -16,7 +17,7 @@ import React, {
 } from "react";
 import { useBibleContext } from "./BibleContext";
 
-interface BibleChapterContextProps {}
+interface BibleChapterContextProps { }
 
 const BibleChapterContext = createContext<BibleChapterContextProps>({});
 
@@ -61,6 +62,7 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
         [currentBook?.bookNumber, targetChapter || 1],
         "verses"
       );
+      const links = bibleLinks.filter((link) => link.book_number === currentBook?.bookNumber && link.chapter === targetChapter);
 
       const endTime = Date.now();
       const executionTime = endTime - startTime;
@@ -74,6 +76,7 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
         storedData$[`${storageKey}Chapter`].set(targetChapter);
         storedData$[`${storageKey}Verse`].set(targetVerse);
         bibleState$.bibleData[`${bibleKey}Verses`].set(verses);
+        bibleState$.bibleData[`${bibleKey}Links`].set(links);
         bibleState$.readingTimeData[bibleKey].set(getReadingTime(verses));
         bibleState$.isDataLoading[bibleKey].set(false);
         bibleState$.bibleQuery.shouldFetch.set(false);
