@@ -101,7 +101,11 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
         backgroundStyle={[
           styles.bottomSheet,
           index === 3 && { borderRadius: 0 },
-          backgroundColor && { backgroundColor: backgroundColor },
+          {
+            backgroundColor: backgroundColor
+              ? `${backgroundColor}99`
+              : `${theme.colors.background}99`,
+          },
           style && style
         ]}
         ref={ref}
@@ -135,7 +139,6 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     bottomSheet: {
-      backgroundColor: colors.background,
       borderColor: colors.notification,
       borderWidth: 2,
     },

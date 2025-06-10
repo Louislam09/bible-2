@@ -3,6 +3,7 @@ import { useBibleContext } from "@/context/BibleContext";
 import useAudioPlayer from "@/hooks/useAudioPlayer";
 import { EBibleVersions, Screens } from "@/types";
 import { useTheme } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
 import { FC, useCallback, useEffect, useRef } from "react";
 import { Animated, TouchableOpacity } from "react-native";
 
@@ -12,6 +13,7 @@ import { Text, View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import useBibleReader from "@/hooks/useBibleReading";
+import useColorScheme from "@/hooks/useColorScheme";
 import useInternetConnection from "@/hooks/useInternetConnection";
 import useParams from "@/hooks/useParams";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
@@ -20,13 +22,11 @@ import { tourState$ } from "@/state/tourState";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { batch } from "@legendapp/state";
+import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "expo-router";
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
-// import { BlurView } from "expo-blur";
-import useColorScheme from "@/hooks/useColorScheme";
-import { use$ } from "@legendapp/state/react";
 
 interface FooterInterface {
   isSplit?: boolean;
@@ -182,7 +182,15 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const displayBookName = renameLongBookName(book);
 
   return (
-    <Animated.View style={[styles.footer]}>
+    <LinearGradient
+      colors={[
+        "transparent",
+        theme.colors.background + "99",
+        theme.colors.background + "ee",
+      ]}
+      style={styles.footer}
+    >
+      {/* <Animated.View style={[styles.footer]}> */}
       {isPlaying && (
         <View style={[styles.progressBarContainer]}>
           <ProgressBar
@@ -212,9 +220,13 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           onLongPress={onLongFooterTitle}
           delayLongPress={200}
         >
-          <Text style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}>
-            {`${displayBookName ?? ""} ${chapter ?? ""}:${isSplitActived ? verse : currentHistoryIndexState || verse}`}
-          </Text>
+          <Text
+            style={[
+              styles.bookLabel,
+              { fontSize: FOOTER_ICON_SIZE - 5 },
+            ]}
+          >{`${displayBookName ?? ""} ${chapter ?? ""}:${isSplitActived ? verse : currentHistoryIndexState || verse
+            }`}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           ref={tourState$.nextButton.get()}
@@ -264,8 +276,8 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           }}
         />
       </BottomModal>
-      {/* <BlurView style={styles.blurOverlay} tint={scheme} intensity={50} /> */}
-    </Animated.View>
+      {/* </Animated.View> */}
+    </LinearGradient>
   );
 };
 

@@ -1,5 +1,5 @@
-import { StyleSheet } from "react-native";
 import { TTheme } from "@/types";
+import { StyleSheet } from "react-native";
 
 export const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
@@ -12,15 +12,10 @@ export const getStyles = ({ colors }: TTheme) =>
       paddingVertical: 5,
       backgroundColor: colors.background + 99,
       paddingHorizontal: 20,
-      borderTopColor: colors.border,
+      // borderTopColor: colors.border,
       borderTopWidth: 1,
       position: "absolute",
       bottom: 0,
-    },
-    blurOverlay: {
-      ...StyleSheet.absoluteFillObject,
-      backgroundColor: colors.background + 99,
-      zIndex: -1,
     },
     progressBarContainer: {
       position: "absolute",

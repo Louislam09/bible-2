@@ -39,7 +39,6 @@ const BookContentModals = ({ book, chapter }: any) => {
           />
         </BottomSheetScrollView>
       </BottomSheet>
-      <View></View>
 
       <BottomModal
         backgroundColor={theme.dark ? theme.colors.background : "#eee"}
@@ -78,8 +77,8 @@ const getStyles = ({ colors }: TTheme) =>
       width: "100%",
     },
     bottomSheet: {
-      backgroundColor: colors.background,
-      borderColor: colors.notification,
+      backgroundColor: colors.background + 99,
+      borderColor: colors.notification + 99,
       borderWidth: 2,
     },
   });

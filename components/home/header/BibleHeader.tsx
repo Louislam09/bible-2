@@ -1,4 +1,5 @@
 import { useTheme } from "@react-navigation/native";
+import { LinearGradient } from 'expo-linear-gradient';
 import React, { FC, useCallback, useMemo, useRef } from "react";
 import {
   StyleSheet,
@@ -141,7 +142,10 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
   }, [currentHistoryIndexState, verses]);
 
   return (
-    <View style={styles.header}>
+    <LinearGradient
+      colors={[theme.colors.background + 'ee', theme.colors.background + '99', 'transparent']}
+      style={styles.header}
+    >
       <View style={{ flexDirection: "row", backgroundColor: "transparent" }}>
         <TouchableOpacity
           style={styles.iconContainer}
@@ -201,27 +205,28 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
           />
         </View>
       )}
-    </View>
+    </LinearGradient>
   );
 };
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     header: {
-      position: "relative",
+      position: "absolute",
+      top: 0,
       display: "flex",
       alignItems: "center",
       justifyContent: "flex-end",
       paddingHorizontal: 10,
       paddingTop: 10,
-      backgroundColor: colors.background,
       width: "100%",
-      borderWidth: 0.5,
+      // borderWidth: 0.5,
+      zIndex: 10,
     },
     progressContainer: {
       width: "100%",
       marginVertical: 8,
-      backgroundColor: colors.background,
+      backgroundColor: colors.background + 99,
     },
     versionContainer: {
       position: "relative",
@@ -267,7 +272,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       color: dark ? "white" : colors.background,
       paddingHorizontal: 4,
       fontSize: 18,
-      backgroundColor: colors.notification,
+      backgroundColor: colors.notification + 99,
       borderRadius: 4,
     },
   });

@@ -214,7 +214,7 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
         <Ionicons
           name="cloud-download-outline"
           size={50}
-          color={theme.colors.text}
+          color={theme.dark ? theme.colors.text : "#fff"}
         />
         <Text style={styles.emptyText}>
           No tienes ningún diccionario descargado. {"\n"}
@@ -460,11 +460,12 @@ const getStyles = ({ colors, dark }: TTheme) =>
     emptyText: {
       textAlign: "center",
       marginVertical: 20,
-      color: colors.text,
+      color: dark ? colors.text : "#fff",
+      fontWeight: dark ? "normal" : "bold",
       fontSize: 18,
     },
     linkText: {
-      color: colors.primary,
+      color: dark ? colors.primary : "#fff",
       textDecorationLine: "underline",
       fontSize: 18,
     },

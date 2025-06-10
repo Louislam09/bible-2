@@ -112,6 +112,7 @@ const Chapter = ({
           onEndReachedThreshold={0.5}
           disableAutoLayout
           disableHorizontalListHeightMeasurement
+          ListHeaderComponentStyle={{ paddingTop: 70 }}
           ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
         // decelerationRate="normal"
         // onEndReached={onEndReached}

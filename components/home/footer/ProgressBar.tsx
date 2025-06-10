@@ -1,4 +1,5 @@
 import { View } from "@/components/Themed";
+import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useRef } from "react";
 import { Animated } from "react-native";
 
@@ -53,19 +54,27 @@ const ProgressBar = ({
         style={{
           position: 'relative',
           height: height,
-          backgroundColor: barColor + '99',
+          backgroundColor: barColor + '30',
           borderRadius: 15,
           flex: 1,
+          overflow: 'hidden',
         }}
       >
         <Animated.View
           style={{
             height: '100%',
             width: progressWidth,
-            backgroundColor: color,
             borderRadius: 15,
+            overflow: 'hidden',
           }}
-        />
+        >
+          <LinearGradient
+            colors={[color + 'aa', color + 99, color + 'ee', color]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={{ flex: 1 }}
+          />
+        </Animated.View>
         {!hideCircle && (
           <Animated.View
             style={{

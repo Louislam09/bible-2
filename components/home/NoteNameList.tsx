@@ -244,11 +244,11 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     emptySubtext: {
       marginTop: 5,
-      color: colors.text + "90",
+      color: dark ? colors.text + "90" : colors.text,
       fontSize: 14,
     },
     title: {
-      color: 'white',
+      color: dark ? 'white' : colors.text,
       fontSize: 20,
       fontWeight: 'bold',
       paddingVertical: 10,
