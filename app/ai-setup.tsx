@@ -4,6 +4,7 @@ import { storedData$ } from "@/context/LocalstoreContext";
 import { TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
+import * as Clipboard from 'expo-clipboard';
 import { Stack, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -93,11 +94,23 @@ export default function AISetupScreen() {
           onChangeText={setApiKey}
           secureTextEntry
         />
-
         {currentKey && (
-          <Text style={[styles.currentKeyText, { color: theme.colors.text }]}>
-            API Key actual configurada
-          </Text>
+          <View style={styles.currentKeyContainer}>
+            <Text style={[styles.currentKeyText, { color: theme.colors.text }]}>
+              API Key actual configurada
+            </Text>
+            <TouchableOpacity
+              style={styles.copyButton} onPress={async () => {
+                await Clipboard.setStringAsync(currentKey);
+              }}
+            >
+              <Icon
+                name="Copy"
+                size={20}
+                color={theme.colors.notification}
+              />
+            </TouchableOpacity>
+          </View>
         )}
 
         <TouchableOpacity
@@ -165,11 +178,19 @@ const getStyles = (theme: TTheme) =>
       paddingHorizontal: 15,
       marginBottom: 20,
       fontSize: 16,
+    }, currentKeyContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 20,
     },
     currentKeyText: {
       fontSize: 14,
-      marginBottom: 20,
+      marginRight: 10,
       textAlign: "center",
+    },
+    copyButton: {
+      padding: 8,
     },
     saveButton: {
       height: 50,
