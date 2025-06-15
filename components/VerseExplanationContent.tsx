@@ -1,7 +1,7 @@
 import { useGoogleAI } from "@/hooks/useGoogleAI";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
-import { TTheme } from "@/types";
+import { Screens, TTheme } from "@/types";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
@@ -25,6 +25,7 @@ import { use$ } from "@legendapp/state/react";
 type VerseExplanationProps = {
   theme: TTheme;
   fontSize: number;
+  navigation: any;
 };
 
 const DEFAULT_HEIGHT = 1200;
@@ -65,6 +66,7 @@ Génesis 1:1 declara la creación *ex nihilo* de los cielos y la tierra por Dios
 const VerseExplanationContent: React.FC<VerseExplanationProps> = ({
   theme,
   fontSize,
+  navigation,
 }) => {
   const verse = use$(() => bibleState$.verseToExplain.get());
   const { explanation, loading, error, fetchExplanation } = useGoogleAI();
@@ -100,7 +102,8 @@ const VerseExplanationContent: React.FC<VerseExplanationProps> = ({
     }
   }, [verse, retryCount]);
 
-  const handleRetry = () => {
+  const handleConfigAi = () => {
+    navigation.navigate(Screens.AISetup);
     setRetryCount((prev) => prev + 1);
   };
 
@@ -197,7 +200,7 @@ const VerseExplanationContent: React.FC<VerseExplanationProps> = ({
             theme={theme}
             fontSize={fontSize}
             error={error}
-            onRetry={handleRetry}
+            onConfigAi={handleConfigAi}
           />
         )}
         {!loading && !error && (
@@ -255,8 +258,8 @@ const ErrorComponent: React.FC<{
   theme: TTheme;
   fontSize: number;
   error: string;
-  onRetry: () => void;
-}> = ({ theme, fontSize, error, onRetry }) => {
+  onConfigAi: () => void;
+}> = ({ theme, fontSize, error, onConfigAi }) => {
   return (
     <View style={getErrorStyles(theme).container}>
       <Text style={getErrorStyles(theme).icon}>⚠️</Text>
@@ -270,7 +273,7 @@ const ErrorComponent: React.FC<{
       </Text>
       <TouchableOpacity
         style={getErrorStyles(theme).retryButton}
-        onPress={onRetry}
+        onPress={onConfigAi}
       >
         <Text
           style={[
@@ -278,7 +281,7 @@ const ErrorComponent: React.FC<{
             { fontSize: fontSize * 0.9 },
           ]}
         >
-          🔄 Intentar de nuevo
+          🔄 Configurar IA
         </Text>
       </TouchableOpacity>
     </View>

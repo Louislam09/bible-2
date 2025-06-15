@@ -53,7 +53,11 @@ const BookContentModals = ({ book, chapter }: any) => {
         <BottomSheetScrollView
           contentContainerStyle={{ backgroundColor: "transparent" }}
         >
-          <VerseExplanationContent theme={theme} fontSize={fontSize} />
+          <VerseExplanationContent
+            navigation={navigation}
+            theme={theme}
+            fontSize={fontSize}
+          />
         </BottomSheetScrollView>
       </BottomSheet>
 

@@ -35,7 +35,7 @@ export default function AISetupScreen() {
   };
 
   const openGoogleAIDocs = () => {
-    Linking.openURL("https://ai.google.dev/");
+    Linking.openURL("https://aistudio.google.com/app/apikey");
   };
 
   return (
@@ -56,9 +56,7 @@ export default function AISetupScreen() {
         </Text>
 
         <View style={styles.steps}>
-          <Text style={styles.step}>
-            1. Ve a Google AI Studio (ai.google.dev)
-          </Text>
+          <Text style={styles.step}>1. Ve a Google AI Studio</Text>
           <Text style={styles.step}>2. Crea una cuenta o inicia sesión</Text>
           <Text style={styles.step}>3. Genera una nueva API key</Text>
           <Text style={styles.step}>4. Copia y pega tu API key aquí</Text>
