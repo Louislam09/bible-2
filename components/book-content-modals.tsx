@@ -45,6 +45,20 @@ const BookContentModals = ({ book, chapter }: any) => {
         backgroundColor={theme.dark ? theme.colors.background : "#eee"}
         shouldScroll
         startAT={2}
+        ref={modalState$.explainVerseRef.get()}
+      >
+        {/* <BottomSheetScrollView
+          contentContainerStyle={{ backgroundColor: "transparent" }}
+        >
+        </BottomSheetScrollView> */}
+        <VerseExplanationContent theme={theme} fontSize={fontSize} />
+      </BottomModal>
+
+      <BottomModal
+        style={styles.bottomSheet}
+        backgroundColor={theme.dark ? theme.colors.background : "#eee"}
+        shouldScroll
+        startAT={2}
         ref={modalState$.dictionaryRef.get()}
       >
         <DictionaryContent
@@ -62,19 +76,6 @@ const BookContentModals = ({ book, chapter }: any) => {
             navigation,
             compareRef: modalState$.compareRef.get(),
           }}
-        />
-      </BottomModal>
-
-      <BottomModal
-        style={styles.bottomSheet}
-        backgroundColor={theme.dark ? theme.colors.background : "#eee"}
-        shouldScroll
-        startAT={2}
-        ref={modalState$.explainVerseRef.get()}
-      >
-        <VerseExplanationContent
-          theme={theme}
-          fontSize={fontSize}
         />
       </BottomModal>
     </>

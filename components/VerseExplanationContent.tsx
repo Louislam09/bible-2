@@ -239,24 +239,7 @@ const VerseExplanationContent: React.FC<VerseExplanationProps> = ({
     }
   };
 
-  console.log("htmlResponse", { explanation });
-
   const styles = getStyles(theme, fontSize);
-
-  if (loading) {
-    return <LoadingComponent theme={theme} fontSize={fontSize} />;
-  }
-
-  if (error) {
-    return (
-      <ErrorComponent
-        theme={theme}
-        fontSize={fontSize}
-        error={error}
-        onRetry={handleRetry}
-      />
-    );
-  }
 
   return (
     <Animated.View
@@ -311,18 +294,30 @@ const VerseExplanationContent: React.FC<VerseExplanationProps> = ({
 
       {/* Content */}
       <View style={styles.webviewWrapper}>
-        <WebView
-          ref={webViewRef}
-          style={{ flex: 1, backgroundColor: "transparent" }}
-          source={{ html: htmlResponse }}
-          onMessage={(event) => {
-            const isNumber = !isNaN(+event.nativeEvent.data);
-            if (isNumber) {
-              setHeight(+event.nativeEvent.data || DEFAULT_HEIGHT);
-            }
-          }}
-          scrollEnabled
-        />
+        {loading && <LoadingComponent theme={theme} fontSize={fontSize} />}
+        {error && (
+          <ErrorComponent
+            theme={theme}
+            fontSize={fontSize}
+            error={error}
+            onRetry={handleRetry}
+          />
+        )}
+        {!loading && !error && (
+          <WebView
+            ref={webViewRef}
+            style={{ flex: 1, backgroundColor: "transparent" }}
+            source={{ html: htmlResponse }}
+            onMessage={(event) => {
+              console.log("event", event.nativeEvent.data);
+              const isNumber = !isNaN(+event.nativeEvent.data);
+              if (isNumber) {
+                setHeight(+event.nativeEvent.data || DEFAULT_HEIGHT);
+              }
+            }}
+            scrollEnabled
+          />
+        )}
       </View>
     </Animated.View>
   );
