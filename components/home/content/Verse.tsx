@@ -76,7 +76,7 @@ const ActionItem = memo(
   ({ index, action, styles, theme, item }: ActionItemProps) => {
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const translateXAnim = useRef(new Animated.Value(300)).current;
-    const actionToHide = ["Copy", "NotebookPen"];
+    const actionToHide = ["Copy", "NotebookPen", "Sparkles"];
     const lastSelectedItem = use$(() => {
       const selectedVerses = bibleState$.selectedVerses.get();
       return (
@@ -365,9 +365,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       {
         name: "Sparkles",
         action: onExplainWithAI,
-        hide: false,
         description: "Explicar",
-        color: "#f1c40f",
+        color: "#f1c40f"
       },
       {
         name: "Quote",

@@ -58,6 +58,7 @@ const AiTextScannerAnimation: React.FC<{
                     const colorSet = COLOR_SETS[index % COLOR_SETS.length];
                     return (
                         <AnimatedWord
+                            mainColor={theme.colors.text}
                             key={index}
                             word={word}
                             active={activeIndexes.includes(index)}
@@ -76,7 +77,8 @@ const AnimatedWord: React.FC<{
     active: boolean;
     fontSize: number;
     colors: string[];
-}> = ({ word, active, fontSize, colors }) => {
+    mainColor: string
+}> = ({ word, active, fontSize, colors, mainColor }) => {
     const pulse = useSharedValue(0);
 
     useEffect(() => {
@@ -95,8 +97,8 @@ const AnimatedWord: React.FC<{
     );
 
     const style = useAnimatedStyle(() => ({
-        color: active ? color.value : "#999",
-        opacity: active ? 1 : 0.6,
+        color: active ? color.value : mainColor,
+        opacity: active ? 1 : 0.7,
         transform: [{ scale: withTiming(active ? 1.1 : 1, { duration: 150 }) }],
     }));
 

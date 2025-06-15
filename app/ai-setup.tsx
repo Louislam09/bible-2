@@ -1,26 +1,26 @@
+import Icon from "@/components/Icon";
+import { Text } from "@/components/Themed";
+import { storedData$ } from "@/context/LocalstoreContext";
+import { TTheme } from "@/types";
+import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import { Stack, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
+  Linking,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   View,
-  Linking,
 } from "react-native";
-import { Text } from "@/components/Themed";
-import { TTheme } from "@/types";
-import Icon from "@/components/Icon";
-import { storedData$ } from "@/context/LocalstoreContext";
-import { use$ } from "@legendapp/state/react";
 
 export default function AISetupScreen() {
   const theme = useTheme();
   const router = useRouter();
   const styles = getStyles(theme as TTheme);
-  const [apiKey, setApiKey] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
   const currentKey = use$(() => storedData$.googleAIKey.get());
+  const [apiKey, setApiKey] = useState(currentKey);
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = async () => {
     try {
