@@ -2,7 +2,7 @@ import { useGoogleAI } from "@/hooks/useGoogleAI";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
 import { TTheme } from "@/types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Animated,
@@ -75,62 +75,8 @@ const VerseExplanationContent: React.FC<VerseExplanationProps> = ({
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const webViewRef = React.useRef<WebView>(null);
 
-  useEffect(() => {
-    if (verse.text) {
-      //   fetchExplanation(verse);
-      // Fade in animation
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 600,
-          useNativeDriver: true,
-        }),
-        Animated.timing(slideAnim, {
-          toValue: 0,
-          duration: 600,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }
-  }, [verse, retryCount]);
-
-  const handleRetry = () => {
-    setRetryCount((prev) => prev + 1);
-  };
-
-  const handleCopy = async () => {
-    try {
-      await Clipboard.setStringAsync(explanation || "");
-      setCopySuccess(true);
-      Vibration.vibrate(50); // Haptic feedback
-      setTimeout(() => setCopySuccess(false), 3000);
-    } catch (error) {
-      console.error("Error copying text:", error);
-      Alert.alert("Error", "No se pudo copiar el texto");
-    }
-  };
-
-  const generatePDF = async () => {
-    setIsGeneratingPDF(true);
-    try {
-      const { uri } = await Print.printToFileAsync({
-        html: htmlResponse,
-        base64: false,
-      });
-
-      await Sharing.shareAsync(uri, {
-        mimeType: "application/pdf",
-        dialogTitle: "Compartir Explicación Bíblica",
-      });
-    } catch (error) {
-      console.error("Error generating/sharing PDF:", error);
-      Alert.alert("Error", "No se pudo generar el PDF");
-    } finally {
-      setIsGeneratingPDF(false);
-    }
-  };
-
-  const htmlResponse = `
+  const htmlResponse = useMemo(() => {
+    return `
     <!DOCTYPE html>
     <html>
     <head>
@@ -236,6 +182,64 @@ const VerseExplanationContent: React.FC<VerseExplanationProps> = ({
     </body>
     </html>
   `;
+  }, [explanation]);
+
+  useEffect(() => {
+    if (verse.text) {
+      fetchExplanation(verse);
+      // Fade in animation
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [verse, retryCount]);
+
+  const handleRetry = () => {
+    setRetryCount((prev) => prev + 1);
+  };
+
+  const handleCopy = async () => {
+    try {
+      await Clipboard.setStringAsync(explanation || "");
+      setCopySuccess(true);
+      Vibration.vibrate(50); // Haptic feedback
+      setTimeout(() => setCopySuccess(false), 3000);
+    } catch (error) {
+      console.error("Error copying text:", error);
+      Alert.alert("Error", "No se pudo copiar el texto");
+    }
+  };
+
+  const generatePDF = async () => {
+    setIsGeneratingPDF(true);
+    try {
+      const { uri } = await Print.printToFileAsync({
+        html: htmlResponse,
+        base64: false,
+      });
+
+      await Sharing.shareAsync(uri, {
+        mimeType: "application/pdf",
+        dialogTitle: "Compartir Explicación Bíblica",
+      });
+    } catch (error) {
+      console.error("Error generating/sharing PDF:", error);
+      Alert.alert("Error", "No se pudo generar el PDF");
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
+
+  console.log("htmlResponse", { explanation });
 
   const styles = getStyles(theme, fontSize);
 
@@ -309,7 +313,7 @@ const VerseExplanationContent: React.FC<VerseExplanationProps> = ({
       <View style={styles.webviewWrapper}>
         <WebView
           ref={webViewRef}
-          style={{ backgroundColor: "transparent" }}
+          style={{ flex: 1, backgroundColor: "transparent" }}
           source={{ html: htmlResponse }}
           onMessage={(event) => {
             const isNumber = !isNaN(+event.nativeEvent.data);
@@ -395,6 +399,7 @@ const getStyles = (theme: TTheme, fontSize: number) =>
     container: {
       flex: 1,
       backgroundColor: "transparent",
+      width: "100%",
     },
     header: {
       display: "flex",
@@ -448,7 +453,6 @@ const getStyles = (theme: TTheme, fontSize: number) =>
     },
     webviewWrapper: {
       width: "100%",
-      padding: 0,
       height: "100%",
       backgroundColor: "transparent",
     },
