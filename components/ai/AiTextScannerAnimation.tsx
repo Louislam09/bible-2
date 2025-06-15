@@ -22,7 +22,9 @@ const AiTextScannerAnimation: React.FC<{
     verse: string;
     fontSize: number;
     theme: TTheme;
-}> = ({ verse, fontSize, theme }) => {
+    style?: any,
+    noTitle?: boolean
+}> = ({ verse, fontSize, theme, style, noTitle = false }) => {
     const words = verse.split(" ");
     const [activeIndexes, setActiveIndexes] = useState<number[]>([]);
     useEffect(() => {
@@ -40,7 +42,7 @@ const AiTextScannerAnimation: React.FC<{
 
     return (
         <View style={styles.wrapper}>
-            <Text
+            {!noTitle && <Text
                 style={{
                     fontSize: fontSize * 0.85,
                     color: theme.colors.text,
@@ -49,9 +51,9 @@ const AiTextScannerAnimation: React.FC<{
                 }}
             >
                 Analizando el versículo...
-            </Text>
+            </Text>}
 
-            <View style={styles.lineWrap}>
+            <View style={[styles.lineWrap, style]}>
                 {words.map((word, index) => {
                     const colorSet = COLOR_SETS[index % COLOR_SETS.length];
                     return (
@@ -109,7 +111,6 @@ const styles = StyleSheet.create({
     wrapper: {
         alignItems: "center",
         justifyContent: "center",
-        paddingVertical: 28,
         paddingHorizontal: 16,
     },
     lineWrap: {

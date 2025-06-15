@@ -3,12 +3,14 @@ import CompareVersions from "@/components/CompareVersions";
 import DictionaryContent from "@/components/DictionaryContent";
 import AiVerseExplanationContent from "@/components/ai/AiVerseExplanationContent";
 import { useBibleContext } from "@/context/BibleContext";
+import { useGoogleAI } from "@/hooks/useGoogleAI";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
 import { TTheme } from "@/types";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { use$ } from "@legendapp/state/react";
 import { useNavigation, useTheme } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import StrongContent from "./home/content/StrongContent";
 
@@ -17,6 +19,21 @@ const BookContentModals = ({ book, chapter }: any) => {
   const { fontSize } = useBibleContext();
   const styles = getStyles(theme);
   const navigation = useNavigation();
+  const aiResponse = useGoogleAI();
+  const verse = use$(() => bibleState$.verseToExplain.get());
+
+  useEffect(() => {
+    if (aiResponse.loading) return
+    if (verse.text) aiResponse.fetchExplanation(verse);
+  }, [verse, aiResponse]);
+
+  useEffect(() => {
+    if (!aiResponse.loading && !!aiResponse.explanation.length) {
+      console.log('openExplainVerseBottomSheet')
+      bibleState$.handleVerseWithAiAnimation(0);
+      modalState$.openExplainVerseBottomSheet();
+    }
+  }, [aiResponse.loading])
 
   return (
     <>
@@ -47,9 +64,7 @@ const BookContentModals = ({ book, chapter }: any) => {
         index={-1}
         ref={modalState$.explainVerseRef.get()}
         handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
-        onClose={() =>
-          bibleState$.handleVerseToExplain({ text: "", reference: "" })
-        }
+        onClose={() => bibleState$.handleVerseToExplain({ text: "", reference: "" })}
       >
         <BottomSheetScrollView
           contentContainerStyle={{ backgroundColor: "transparent" }}
@@ -58,6 +73,7 @@ const BookContentModals = ({ book, chapter }: any) => {
             navigation={navigation}
             theme={theme}
             fontSize={fontSize}
+            aiResponse={aiResponse}
           />
         </BottomSheetScrollView>
       </BottomSheet>

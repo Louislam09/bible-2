@@ -32,6 +32,7 @@ export function getReadingTime(verses: IBookVerse[], wordsPerMinute = 200) {
 export const bibleState$ = observable({
   isBottomBibleSearching: false,
   currentVerse: 0,
+  verseWithAiAnimation: 0,
   verseToCompare: 0,
   verseToExplain: { text: "", reference: "" },
   isVerseDoubleTagged: false,
@@ -145,10 +146,14 @@ export const bibleState$ = observable({
   },
   toggleReloadNotes: () => {
     bibleState$.reloadNotes.set(() => !bibleState$.reloadNotes.get());
-  }, toggleReloadFavorites: () => {
+  },
+  toggleReloadFavorites: () => {
     bibleState$.reloadFavorites.set(() => !bibleState$.reloadFavorites.get());
   },
   handleVerseToExplain: (verse: { text: string; reference: string }) => {
     bibleState$.verseToExplain.set(verse);
-  }
+  },
+  handleVerseWithAiAnimation: (verseNumber: number) => {
+    bibleState$.verseWithAiAnimation.set(verseNumber);
+  },
 });

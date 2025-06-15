@@ -1,3 +1,4 @@
+import AiTextScannerAnimation from "@/components/ai/AiTextScannerAnimation";
 import DisplayStrongWord from "@/components/DisplayStrongWord";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
@@ -161,6 +162,9 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   const verseIsTapped = use$(
     () => item.verse === bibleState$.currentVerse.get()
   );
+  const verseWithAiAnimation = use$(
+    () => item.verse === bibleState$.verseWithAiAnimation.get()
+  );
   const isVerseDoubleTagged = use$(
     () =>
       item.verse === bibleState$.currentVerse.get() &&
@@ -243,7 +247,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   };
 
   const onCopy = async () => {
-    const isMoreThanOneHighted = bibleState$.selectedVerses.get().size > 1;
     const highlightedVerses = Array.from(
       bibleState$.selectedVerses.get().values()
     ).sort((a, b) => a.verse - b.verse);
@@ -267,9 +270,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const onQuote = () => {
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item.book_number).longName} ${
-      item.chapter
-    }:${item.verse}`;
+    const reference = `${getBookDetail(item.book_number).longName} ${item.chapter
+      }:${item.verse}`;
     bibleState$.handleSelectVerseForNote(verseText);
     router.push({ pathname: "/quote", params: { text: verseText, reference } });
   };
@@ -339,13 +341,15 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     bibleState$.clearSelection();
   };
 
+
   const onExplainWithAI = () => {
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item.book_number).longName} ${
-      item.chapter
-    }:${item.verse}`;
+    const reference = `${getBookDetail(item.book_number).longName} ${item.chapter
+      }:${item.verse}`;
+
+    bibleState$.handleVerseWithAiAnimation(item.verse);
     bibleState$.handleVerseToExplain({ text: verseText, reference });
-    modalState$.openExplainVerseBottomSheet();
+    // modalState$.openExplainVerseBottomSheet();
   };
 
   const router = useRouter();
@@ -390,8 +394,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         name: "Brain",
         action: () =>
           onMemorizeVerse(
-            `${getBookDetail(item.book_number).longName} ${item?.chapter}:${
-              item?.verse
+            `${getBookDetail(item.book_number).longName} ${item?.chapter}:${item?.verse
             }`
           ),
         color: "#f1abab",
@@ -454,55 +457,69 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
           />
         )}
 
-        <Animated.Text
-          style={[
-            styles.verse,
-            // styledVerseHighlight,
-            (verseIsTapped || verseShowAction) && styles.highlightCopy,
-            { fontSize, backgroundColor: bgVerseHighlight },
-          ]}
-          aria-selected
-          selectable={false}
-          selectionColor={theme.colors.notification || "white"}
-        >
-          <Text style={[styles.verseNumber]}>
-            {isFavorite && (
-              <MaterialCommunityIcons size={14} name="star" color="#ffd41d" />
-            )}
-            &nbsp;{item.verse}&nbsp;
-          </Text>
-
-          {/* HIGHLIGHT */}
-          {verseIsTapped && (isBottom || isTop) ? (
-            <>
-              {isVerseDoubleTagged ? (
-                <RenderTextWithClickableWords
-                  theme={theme}
-                  text={item.text}
-                  onWordClick={onWordClicked}
-                />
-              ) : (
-                <DisplayStrongWord
-                  data={validStrongList(wordAndStrongValue)}
-                  highlightStyle={{
-                    color: theme.colors.notification,
-                    backgroundColor: theme?.colors.notification + "30",
-                    fontSize,
-                  }}
-                  nonHightlistedStyle={{
-                    fontSize,
-                    ...customUnderline,
-                  }}
-                  style={[styles.verseBody]}
-                  onWordClick={onStrongWordClicked}
-                  onNonHightlistedWordClick={onNonHightlistedWordClick}
-                />
+        {verseWithAiAnimation ? (
+          <AiTextScannerAnimation
+            noTitle
+            verse={`${item.verse} ${getVerseTextRaw(item.text)}`}
+            fontSize={fontSize}
+            theme={theme}
+            style={{
+              alignItems: 'flex-start',
+              justifyContent: 'flex-start',
+            }}
+          />
+        ) : (
+          <Animated.Text
+            style={[
+              styles.verse,
+              // styledVerseHighlight,
+              (verseIsTapped || verseShowAction) && styles.highlightCopy,
+              { fontSize, backgroundColor: bgVerseHighlight },
+            ]}
+            aria-selected
+            selectable={false}
+            selectionColor={theme.colors.notification || "white"}
+          >
+            <Text style={[styles.verseNumber]}>
+              {isFavorite && (
+                <MaterialCommunityIcons size={14} name="star" color="#ffd41d" />
               )}
-            </>
-          ) : (
-            <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
-          )}
-        </Animated.Text>
+              &nbsp;{item.verse}&nbsp;
+            </Text>
+
+            {/* HIGHLIGHT */}
+            {verseIsTapped && (isBottom || isTop) ? (
+              <>
+                {isVerseDoubleTagged ? (
+                  <RenderTextWithClickableWords
+                    theme={theme}
+                    text={item.text}
+                    onWordClick={onWordClicked}
+                  />
+                ) : (
+                  <DisplayStrongWord
+                    data={validStrongList(wordAndStrongValue)}
+                    highlightStyle={{
+                      color: theme.colors.notification,
+                      backgroundColor: theme?.colors.notification + "30",
+                      fontSize,
+                    }}
+                    nonHightlistedStyle={{
+                      fontSize,
+                      ...customUnderline,
+                    }}
+                    style={[styles.verseBody]}
+                    onWordClick={onStrongWordClicked}
+                    onNonHightlistedWordClick={onNonHightlistedWordClick}
+                  />
+                )}
+              </>
+            ) : (
+              <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
+            )}
+          </Animated.Text>
+        )}
+
 
         {/* ACTIONS */}
         {verseShowAction && (

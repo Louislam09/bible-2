@@ -3,6 +3,7 @@ import AiTextScannerAnimation from "@/components/ai/AiTextScannerAnimation";
 import { aiHtmlTemplate, aiHtmlTemplatePrint } from "@/constants/HtmlTemplate";
 import { iconSize } from "@/constants/size";
 import { useGoogleAI } from "@/hooks/useGoogleAI";
+import { useNoteService } from "@/services/noteService";
 import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
@@ -13,66 +14,98 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Animated,
+  Pressable,
   StyleSheet,
   TouchableOpacity,
   Vibration,
-  View
+  View,
 } from "react-native";
 import { WebView } from "react-native-webview";
-import Icon from "../Icon";
+import Icon, { IconProps } from "../Icon";
 import { Text } from "../Themed";
+import { aiMockResponse } from "@/constants/aiPrompts";
 
 type VerseExplanationProps = {
   theme: TTheme;
   fontSize: number;
   navigation: any;
+  aiResponse: AIResponse;
 };
+
+interface AIResponse {
+  explanation: string;
+  loading: boolean;
+  error: string | null;
+  fetchExplanation: (verse: {
+    text: string;
+    reference: string;
+  }) => Promise<void>;
+}
 
 const DEFAULT_HEIGHT = 1200;
 const EXTRA_HEIGHT_TO_ADJUST = 150;
+
+type HeaderAction = {
+  iconName: IconProps["name"];
+  description: string;
+  onAction: () => void;
+  disabled?: boolean;
+};
+
+function extractTitleFromResponse(response: string): string | null {
+  const titleMatch = response.match(/🔖\s*\*\*(.+?)\*\*/);
+  return titleMatch ? titleMatch[1].trim() : null;
+}
 
 const AiVerseExplanationContent: React.FC<VerseExplanationProps> = ({
   theme,
   fontSize,
   navigation,
+  aiResponse,
 }) => {
   const verse = use$(() => bibleState$.verseToExplain.get());
-  const { explanation, loading, error, fetchExplanation } = useGoogleAI();
+  const { explanation, loading, error } = aiResponse;
   //   const explanation = mock;
   const [fadeAnim] = useState(new Animated.Value(0));
   const [slideAnim] = useState(new Animated.Value(-50));
   const [height, setHeight] = useState(DEFAULT_HEIGHT);
-  const [retryCount, setRetryCount] = useState(0);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [isNoteSaved, setIsNoteSaved] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const webViewRef = React.useRef<WebView>(null);
+  const { createNote } = useNoteService();
 
   const htmlResponse = useMemo(() => {
     return aiHtmlTemplate(explanation, theme.colors, fontSize, false);
   }, [explanation, fontSize]);
 
   useEffect(() => {
-    if (verse.text) {
-      fetchExplanation(verse);
-      // Fade in animation
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 600,
-          useNativeDriver: true,
-        }),
-        Animated.timing(slideAnim, {
-          toValue: 0,
-          duration: 600,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }
-  }, [verse, retryCount]);
+    // Fade in animation
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
 
   const handleConfigAi = () => {
     navigation.navigate(Screens.AISetup);
-    setRetryCount((prev) => prev + 1);
+  };
+
+  const handleSaveNote = async () => {
+    const titleFromExplanation = extractTitleFromResponse(explanation);
+    await createNote({
+      title: titleFromExplanation || "Explicación Bíblica",
+      note_text: htmlResponse,
+    });
+    setIsNoteSaved(true);
   };
 
   const handleCopy = async () => {
@@ -109,6 +142,60 @@ const AiVerseExplanationContent: React.FC<VerseExplanationProps> = ({
 
   const styles = getStyles(theme, fontSize);
 
+  const headerActions: HeaderAction[] = useMemo(
+    () => [
+      {
+        iconName: loading ? "Loader" : isNoteSaved ? "Check" : "NotebookPen",
+        description: loading
+          ? "Generando..."
+          : isNoteSaved
+          ? "¡Nota guardada!"
+          : "Guardar nota",
+        onAction: () => handleSaveNote(),
+        disabled: loading || isNoteSaved,
+      },
+      {
+        iconName: copySuccess ? "CircleCheck" : "Copy",
+        description: copySuccess ? "¡Copiado!" : "Copiar",
+        onAction: () => handleCopy(),
+      },
+      {
+        iconName: isGeneratingPDF ? "Loader" : "Share2",
+        description: isGeneratingPDF ? "Generando..." : "Compartir PDF",
+        onAction: () => generatePDF(),
+      },
+    ],
+    [loading, isGeneratingPDF, copySuccess, isNoteSaved]
+  );
+
+  const RenderItem = ({ item }: { item: HeaderAction }) => {
+    return (
+      <Animated.View style={[styles.actionItem]}>
+        <Pressable
+          android_ripple={{
+            color: item.disabled
+              ? theme.colors.background + 50
+              : theme.colors.background,
+            foreground: true,
+            radius: 10,
+          }}
+          style={{
+            opacity: item.disabled ? 0.5 : 1,
+          }}
+          onPress={item.onAction}
+          disabled={item.disabled}
+        >
+          <Icon
+            name={item.iconName}
+            size={iconSize}
+            color={theme.colors.notification}
+          />
+        </Pressable>
+        <Text style={styles.actionItemText}>{item.description}</Text>
+      </Animated.View>
+    );
+  };
+
   return (
     <Animated.View
       style={[
@@ -120,49 +207,26 @@ const AiVerseExplanationContent: React.FC<VerseExplanationProps> = ({
         },
       ]}
     >
-      {/* Header with Actions */}
       <View style={styles.header}>
         <View style={styles.actionContainer}>
-          <TouchableOpacity
-            style={[styles.actionItem, copySuccess && styles.successButton]}
-            onPress={handleCopy}
-            disabled={copySuccess}
-          >
-            <Icon
-              name={copySuccess ? "CircleCheck" : "Copy"}
-              size={iconSize}
-              color={copySuccess ? "#10b981" : theme.colors.notification}
-            />
-            <Text
-              style={[
-                styles.actionItemText,
-                { color: copySuccess ? "#10b981" : theme.colors.text },
-              ]}
-            >
-              {copySuccess ? "¡Copiado!" : "Copiar"}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.actionItem, isGeneratingPDF && styles.loadingButton]}
-            onPress={generatePDF}
-            disabled={isGeneratingPDF}
-          >
-            <Icon
-              name={isGeneratingPDF ? "Loader" : "Share"}
-              size={iconSize}
-              color={theme.colors.notification}
-            />
-            <Text style={styles.actionItemText}>
-              {isGeneratingPDF ? "Generando..." : "Compartir PDF"}
-            </Text>
-          </TouchableOpacity>
+          {headerActions.map((item, index) => (
+            <RenderItem key={index} item={item} />
+          ))}
         </View>
       </View>
 
-      {/* Content */}
       <View style={styles.webviewWrapper}>
-        {loading && <AiTextScannerAnimation verse={verse.text} theme={theme} fontSize={fontSize} />}
+        {loading && (
+          <AiTextScannerAnimation
+            verse={verse.text}
+            theme={theme}
+            fontSize={fontSize}
+            style={{
+              alignItems: "flex-start",
+              justifyContent: "flex-start",
+            }}
+          />
+        )}
         {error && (
           <AiErrorAlert
             theme={theme}
@@ -190,7 +254,6 @@ const AiVerseExplanationContent: React.FC<VerseExplanationProps> = ({
   );
 };
 
-
 const getStyles = (theme: TTheme, fontSize: number) =>
   StyleSheet.create({
     container: {
@@ -204,7 +267,6 @@ const getStyles = (theme: TTheme, fontSize: number) =>
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
-      width: "90%",
       backgroundColor: "transparent",
     },
     actionContainer: {

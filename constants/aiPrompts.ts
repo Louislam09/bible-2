@@ -10,6 +10,9 @@ export const userPrompt = (verse: { text: string; reference: string }) => `
     Eres un experto en estudios bíblicos, con dominio del hebreo, griego y teología. Explica el siguiente versículo siguiendo esta estructura académica y exegética, basada exclusivamente en la Biblia (usando la Reina-Valera 1960 como base). No incluyas reflexiones personales ni aplicaciones devocionales.
     
     Estructura esperada:
+    🔖 **Título sugerido para notas:**  
+Antes de comenzar, genera un título claro, preciso y académico que resuma el tema central del versículo en 3 a 7 palabras (como si fuera el título de una sección de estudio bíblico). No pongas comillas, ni adornos.
+
     
     📖 **Versículo y Referencia:**  
     Incluye el texto del versículo completo y su referencia (RVR1960).
@@ -27,7 +30,6 @@ export const userPrompt = (verse: { text: string; reference: string }) => `
     "${verse.text}"  
     (${verse.reference})
     `;
-
 
 export const aiMockResponse = `📖 **Versículo y Referencia:**
     
