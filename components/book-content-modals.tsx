@@ -1,7 +1,7 @@
 import BottomModal from "@/components/BottomModal";
 import CompareVersions from "@/components/CompareVersions";
 import DictionaryContent from "@/components/DictionaryContent";
-import VerseExplanationContent from "@/components/VerseExplanationContent";
+import AiVerseExplanationContent from "@/components/ai/AiVerseExplanationContent";
 import { useBibleContext } from "@/context/BibleContext";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
@@ -39,6 +39,7 @@ const BookContentModals = ({ book, chapter }: any) => {
           />
         </BottomSheetScrollView>
       </BottomSheet>
+
       <BottomSheet
         backgroundStyle={styles.bottomSheet}
         enablePanDownToClose
@@ -53,7 +54,7 @@ const BookContentModals = ({ book, chapter }: any) => {
         <BottomSheetScrollView
           contentContainerStyle={{ backgroundColor: "transparent" }}
         >
-          <VerseExplanationContent
+          <AiVerseExplanationContent
             navigation={navigation}
             theme={theme}
             fontSize={fontSize}
