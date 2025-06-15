@@ -341,7 +341,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     bibleState$.clearSelection();
   };
 
-
   const onExplainWithAI = () => {
     const verseText = getVerseTextRaw(item.text);
     const reference = `${getBookDetail(item.book_number).longName} ${item.chapter
@@ -350,6 +349,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     bibleState$.handleVerseWithAiAnimation(item.verse);
     bibleState$.handleVerseToExplain({ text: verseText, reference });
     modalState$.closeExplainVerseBottomSheet();
+    bibleState$.clearSelection();
   };
 
   const router = useRouter();
