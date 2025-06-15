@@ -189,7 +189,13 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
   };
 
   const handleSyncNow = async () => {
-    if (!authState$.ensureAuthenticated("Necesitas iniciar sesión para sincronizar con la nube.", handleLogin)) return
+    if (
+      !authState$.ensureAuthenticated(
+        "Necesitas iniciar sesión para sincronizar con la nube.",
+        handleLogin
+      )
+    )
+      return;
 
     try {
       setIsSyncing(true);
@@ -309,6 +315,19 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
       ],
     },
     {
+      title: "Inteligencia Artificial",
+      id: "ai",
+      options: [
+        {
+          label: "Configurar API Key de Google AI",
+          iconName: "Brain",
+          action: () => router.push("/ai-setup"),
+          extraText: "Configura tu API key para usar la IA de Google",
+          color: theme.colors.notification,
+        },
+      ],
+    },
+    {
       title: "Apariencia",
       id: "appearance",
       options: [
@@ -333,7 +352,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
           iconName: "Type",
           action: () => settingHandlePresentModalPress("font"),
           extraText: "Cambiar el tipo de letra",
-          badge: selectedFont.split('-')[0],
+          badge: selectedFont.split("-")[0],
         },
         {
           label: "Tamaño de Letra",
@@ -416,7 +435,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
         {
           label: `Versión ${appVersion}`,
           iconName: "Info",
-          action: () => { },
+          action: () => {},
           extraText: `Fecha de Lanzamiento: Mar 13, 2024`,
         },
       ],
@@ -438,17 +457,23 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
   const filteredSections = useMemo(() => {
     if (!searchQuery) return sections;
 
-    return sections.map(section => {
-      const filteredOptions = section.options.filter(option =>
-        option.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (option.extraText && option.extraText.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
+    return sections
+      .map((section) => {
+        const filteredOptions = section.options.filter(
+          (option) =>
+            option.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (option.extraText &&
+              option.extraText
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase()))
+        );
 
-      return {
-        ...section,
-        options: filteredOptions
-      };
-    }).filter(section => section.options.length > 0);
+        return {
+          ...section,
+          options: filteredOptions,
+        };
+      })
+      .filter((section) => section.options.length > 0);
   }, [sections, searchQuery]);
 
   const handleFontChange = (fontFamily: string) => {
@@ -491,54 +516,54 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
 
   useEffect(() => {
     if (isSyncing) {
-      startRotation()
+      startRotation();
     } else {
-      stopRotation()
+      stopRotation();
     }
-  }, [isSyncing])
+  }, [isSyncing]);
 
-  const SettingItem = useCallback(({ item }: { item: TOption }) => {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.7}
-        style={[
-          styles.listItem,
-          styles.historyItem,
-          item.isDisabled && styles.disabledOption
-        ]}
-        onPress={item.action}
-        disabled={item.isDisabled}
-      >
-        <View style={styles.optionLeftSection}>
-          <Text style={[styles.listHistoryLabel]}>
-            {item.label}
-            {"\n"}
-            <Text style={styles.itemDate}>{item.extraText}</Text>
-          </Text>
+  const SettingItem = useCallback(
+    ({ item }: { item: TOption }) => {
+      return (
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={[
+            styles.listItem,
+            styles.historyItem,
+            item.isDisabled && styles.disabledOption,
+          ]}
+          onPress={item.action}
+          disabled={item.isDisabled}
+        >
+          <View style={styles.optionLeftSection}>
+            <Text style={[styles.listHistoryLabel]}>
+              {item.label}
+              {"\n"}
+              <Text style={styles.itemDate}>{item.extraText}</Text>
+            </Text>
 
-          {item.badge && (
-            <View style={styles.badgeContainer}>
-              <Text style={styles.badgeText}>{item.badge}</Text>
-            </View>
-          )}
-        </View>
+            {item.badge && (
+              <View style={styles.badgeContainer}>
+                <Text style={styles.badgeText}>{item.badge}</Text>
+              </View>
+            )}
+          </View>
 
-        <View style={styles.optionRightSection}>
-          {item.renderSwitch ? (
-            <Switch
-              value={item.value}
-              onValueChange={() => item.action()}
-              trackColor={{
-                false: theme.dark ? '#555' : '#ddd',
-                true: theme.colors.notification
-              }}
-              thumbColor={item.value ? '#fff' : '#f4f3f4'}
-              ios_backgroundColor="#3e3e3e"
-            />
-          ) : (
-            item.isFont5 ? (
+          <View style={styles.optionRightSection}>
+            {item.renderSwitch ? (
+              <Switch
+                value={item.value}
+                onValueChange={() => item.action()}
+                trackColor={{
+                  false: theme.dark ? "#555" : "#ddd",
+                  true: theme.colors.notification,
+                }}
+                thumbColor={item.value ? "#fff" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+              />
+            ) : item.isFont5 ? (
               <FontAwesome5 name="google-play" size={26} color={"green"} />
-            ) : isSyncing && item.iconName === 'Loader' ? (
+            ) : isSyncing && item.iconName === "Loader" ? (
               <Animated.View style={{ transform: [{ rotate }] }}>
                 <Icon
                   size={26}
@@ -552,28 +577,32 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
                 name={item.iconName || "Sun"}
                 color={item.color || theme.colors.text}
               />
-            )
-          )}
-        </View>
-      </TouchableOpacity>
-    );
-  }, [styles, theme]);
+            )}
+          </View>
+        </TouchableOpacity>
+      );
+    },
+    [styles, theme]
+  );
 
-  const SettingSection = useCallback(({ title, options, id }: TSection, index: number) => {
-    if (options.length === 0) return null;
+  const SettingSection = useCallback(
+    ({ title, options, id }: TSection, index: number) => {
+      if (options.length === 0) return null;
 
-    return (
-      <Animated.View
-        style={[styles.sectionContainer, { opacity: fadeAnim }]}
-        key={id || index}
-      >
-        <Text style={styles.sectionTitle}>{title}</Text>
-        {options.map((item, itemIndex) => (
-          <SettingItem key={`${id}-${itemIndex}`} item={item} />
-        ))}
-      </Animated.View>
-    );
-  }, [SettingItem, styles, fadeAnim]);
+      return (
+        <Animated.View
+          style={[styles.sectionContainer, { opacity: fadeAnim }]}
+          key={id || index}
+        >
+          <Text style={styles.sectionTitle}>{title}</Text>
+          {options.map((item, itemIndex) => (
+            <SettingItem key={`${id}-${itemIndex}`} item={item} />
+          ))}
+        </Animated.View>
+      );
+    },
+    [SettingItem, styles, fadeAnim]
+  );
 
   const Font = useMemo(() => {
     return () => (
@@ -622,11 +651,11 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
               title: "Ajustes",
               titleIcon: "Settings",
               headerRightProps: {
-                headerRightIcon: 'RefreshCw',
+                headerRightIcon: "RefreshCw",
                 headerRightIconColor: isSyncing
                   ? theme.colors.notification
                   : "transparent",
-                onPress: () => { },
+                onPress: () => {},
                 disabled: true,
                 style: { opacity: 0 },
               },
@@ -635,7 +664,12 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
         />
 
         <View style={styles.searchContainer}>
-          <Icon name="Search" size={20} color={theme.colors.text} style={styles.searchIcon} />
+          <Icon
+            name="Search"
+            size={20}
+            color={theme.colors.text}
+            style={styles.searchIcon}
+          />
           <TextInput
             style={styles.searchInput}
             placeholder="Buscar ajustes..."
@@ -645,7 +679,10 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
             clearButtonMode="while-editing"
           />
           {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery("")} style={styles.clearButton}>
+            <TouchableOpacity
+              onPress={() => setSearchQuery("")}
+              style={styles.clearButton}
+            >
               <Icon name="X" size={16} color={theme.colors.text} />
             </TouchableOpacity>
           )}
@@ -661,9 +698,18 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
             filteredSections.map(SettingSection)
           ) : (
             <View style={styles.noResultsContainer}>
-              <Icon name="Search" size={50} color={theme.colors.text} style={{ opacity: 0.5 }} />
-              <Text style={styles.noResultsText}>No se encontraron resultados</Text>
-              <Text style={styles.noResultsSubText}>Intenta con otra búsqueda</Text>
+              <Icon
+                name="Search"
+                size={50}
+                color={theme.colors.text}
+                style={{ opacity: 0.5 }}
+              />
+              <Text style={styles.noResultsText}>
+                No se encontraron resultados
+              </Text>
+              <Text style={styles.noResultsSubText}>
+                Intenta con otra búsqueda
+              </Text>
             </View>
           )}
         </KeyboardAvoidingView>
@@ -690,15 +736,15 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: dark ? colors.background : colors.text + 20,
     },
     searchContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       borderColor: colors.text + 70,
       backgroundColor: colors.text + 20,
       borderRadius: 10,
       marginHorizontal: 15,
       marginVertical: 10,
       paddingHorizontal: 10,
-      paddingVertical: Platform.OS === 'ios' ? 8 : 2,
+      paddingVertical: Platform.OS === "ios" ? 8 : 2,
       borderWidth: 1,
     },
     searchIcon: {
@@ -758,20 +804,20 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     itemDate: {
       fontSize: 12,
-      color: dark ? '#ffffff' : "#000000",
+      color: dark ? "#ffffff" : "#000000",
       marginTop: 4,
     },
     optionLeftSection: {
       flex: 1,
-      flexDirection: 'column',
-      backgroundColor: 'transparent',
+      flexDirection: "column",
+      backgroundColor: "transparent",
     },
     optionRightSection: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-end",
       minWidth: 50,
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
     },
     disabledOption: {
       opacity: 0.5,
@@ -782,29 +828,29 @@ const getStyles = ({ colors, dark }: TTheme) =>
       paddingHorizontal: 8,
       paddingVertical: 2,
       marginTop: 5,
-      alignSelf: 'flex-start',
+      alignSelf: "flex-start",
     },
     badgeText: {
       fontSize: 10,
-      color: '#fff',
-      fontWeight: 'bold',
+      color: "#fff",
+      fontWeight: "bold",
     },
     noResultsContainer: {
       flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       paddingTop: 100,
       backgroundColor: dark ? colors.background : colors.text + 20,
     },
     noResultsText: {
       fontSize: 18,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       color: colors.text,
       marginTop: 20,
     },
     noResultsSubText: {
       fontSize: 14,
-      color: dark ? '#999' : '#777',
+      color: dark ? "#999" : "#777",
       marginTop: 10,
     },
   });

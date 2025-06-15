@@ -15,7 +15,7 @@ import { RefObject } from "react";
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList { }
+    interface RootParamList extends RootStackParamList {}
   }
 }
 
@@ -50,6 +50,7 @@ export enum Screens {
   TimelineId = "timeline/[timelineId]",
   Login = "login",
   Register = "register",
+  AISetup = "ai-setup",
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -85,6 +86,7 @@ export const ScreensName: TScreensName = {
   [Screens.TimelineId]: "Linea de Tiempo",
   [Screens.Login]: "Iniciar Sesión",
   [Screens.Register]: "Crear una cuenta",
+  [Screens.AISetup]: "Configuración de IA",
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -123,24 +125,24 @@ export type RootStackParamList = {
   downloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
   notes: NavigatorScreenParams<RootTabParamList> | { shouldRefresh: boolean };
   noteDetail:
-  | NavigatorScreenParams<RootTabParamList>
-  | { noteId: number | null; isNewNote: boolean };
+    | NavigatorScreenParams<RootTabParamList>
+    | { noteId: number | null; isNewNote: boolean };
   character: NavigatorScreenParams<RootTabParamList> | undefined;
   chooseBook:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
   "(search)": NavigatorScreenParams<RootTabParamList> | { book?: string };
   concordance: NavigatorScreenParams<RootTabParamList> | {};
   strongSearchEntire:
-  | NavigatorScreenParams<RootTabParamList>
-  | { paramCode: string };
+    | NavigatorScreenParams<RootTabParamList>
+    | { paramCode: string };
   dictionary: NavigatorScreenParams<RootTabParamList> | { word: string };
   chooseChapterNumber:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
   chooseVerseNumber:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
   modal: undefined;
   onboarding: undefined;
   timeline: undefined;
@@ -152,6 +154,7 @@ export type RootStackParamList = {
   notFound: undefined;
   [Screens.Login]: undefined;
   [Screens.Register]: undefined;
+  [Screens.AISetup]: undefined;
 };
 
 export type HomeParams = {

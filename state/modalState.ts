@@ -1,11 +1,12 @@
-import { observable } from "@legendapp/state";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { observable } from "@legendapp/state";
 import { createRef } from "react";
 
 export const modalState$ = observable({
   compareRef: createRef<BottomSheetModal>(),
   strongSearchRef: createRef<BottomSheetModal>(),
   dictionaryRef: createRef<BottomSheetModal>(),
+  explainVerseRef: createRef<BottomSheetModal>(),
   searchWordOnDic: "",
   isSheetClosed: true,
 
@@ -29,8 +30,13 @@ export const modalState$ = observable({
   openDictionaryBottomSheet: (text: string) => {
     modalState$.setSearchWordOnDic(text);
     modalState$.dictionaryRef.current?.present();
-  },
-  closeDictionaryBottomSheet: () => {
+  }, closeDictionaryBottomSheet: () => {
     modalState$.dictionaryRef.current?.dismiss();
+  },
+  openExplainVerseBottomSheet: () => {
+    modalState$.explainVerseRef.current?.present();
+  },
+  closeExplainVerseBottomSheet: () => {
+    modalState$.explainVerseRef.current?.dismiss();
   },
 });

@@ -1,6 +1,7 @@
 import BottomModal from "@/components/BottomModal";
 import CompareVersions from "@/components/CompareVersions";
 import DictionaryContent from "@/components/DictionaryContent";
+import VerseExplanationContent from "@/components/VerseExplanationContent";
 import { useBibleContext } from "@/context/BibleContext";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
@@ -10,7 +11,6 @@ import { useNavigation, useTheme } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet } from "react-native";
 import StrongContent from "./home/content/StrongContent";
-import { View } from "./Themed";
 
 const BookContentModals = ({ book, chapter }: any) => {
   const theme = useTheme();
@@ -53,7 +53,6 @@ const BookContentModals = ({ book, chapter }: any) => {
           fontSize={fontSize}
         />
       </BottomModal>
-
       <BottomModal shouldScroll startAT={3} ref={modalState$.compareRef.get()}>
         <CompareVersions
           {...{
@@ -63,6 +62,19 @@ const BookContentModals = ({ book, chapter }: any) => {
             navigation,
             compareRef: modalState$.compareRef.get(),
           }}
+        />
+      </BottomModal>
+
+      <BottomModal
+        style={styles.bottomSheet}
+        backgroundColor={theme.dark ? theme.colors.background : "#eee"}
+        shouldScroll
+        startAT={2}
+        ref={modalState$.explainVerseRef.get()}
+      >
+        <VerseExplanationContent
+          theme={theme}
+          fontSize={fontSize}
         />
       </BottomModal>
     </>

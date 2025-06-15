@@ -33,6 +33,7 @@ export const bibleState$ = observable({
   isBottomBibleSearching: false,
   currentVerse: 0,
   verseToCompare: 0,
+  verseToExplain: { text: "", reference: "" },
   isVerseDoubleTagged: false,
   selectedVerses: observable(new Map<number, IBookVerse>()),
   selectedVerseForNote: observable<string | null>(null),
@@ -144,8 +145,10 @@ export const bibleState$ = observable({
   },
   toggleReloadNotes: () => {
     bibleState$.reloadNotes.set(() => !bibleState$.reloadNotes.get());
-  },
-  toggleReloadFavorites: () => {
+  }, toggleReloadFavorites: () => {
     bibleState$.reloadFavorites.set(() => !bibleState$.reloadFavorites.get());
+  },
+  handleVerseToExplain: (verse: { text: string; reference: string }) => {
+    bibleState$.verseToExplain.set(verse);
   }
 });

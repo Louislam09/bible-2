@@ -62,6 +62,7 @@ const screenAnimations: TScreensName = {
   [Screens.Login]: "slide_from_right",
   [Screens.Register]: "slide_from_right",
   [Screens.Quote]: "slide_from_right",
+  [Screens.AISetup]: "slide_from_right",
 };
 
 const App = () => {

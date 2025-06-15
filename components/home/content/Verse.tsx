@@ -337,6 +337,13 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     bibleState$.clearSelection();
   };
 
+  const onExplainWithAI = () => {
+    const verseText = getVerseTextRaw(item.text);
+    const reference = `${getBookDetail(item.book_number).longName} ${item.chapter}:${item.verse}`;
+    bibleState$.handleVerseToExplain({ text: verseText, reference });
+    modalState$.openExplainVerseBottomSheet();
+  }
+
   const router = useRouter();
 
   const verseActions: TIcon[] = useMemo(() => {
@@ -348,21 +355,30 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         description: "Copiar",
       },
       {
+        name: "Sparkles",
+        action: onExplainWithAI,
+        hide: false,
+        description: "Explicar",
+        color: "#f1c40f"
+      },
+      {
         name: "Quote",
         action: onQuote,
         hide: false,
         description: "Cita",
+        color: "#CDAA7D",
       },
       {
         name: "NotebookPen",
         action: onVerseToNote,
         hide: false,
         description: "Anotar",
+        color: theme.colors.notification,
       },
       {
         name: isFavorite ? "Star" : "StarOff",
         action: onFavorite,
-        color: isFavorite ? theme.colors.notification : "",
+        color: isFavorite ? theme.colors.notification : '#fedf75',
         hide: false,
         description: "Favorito",
       },

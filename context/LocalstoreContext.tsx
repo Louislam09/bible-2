@@ -62,6 +62,7 @@ type StoreState = {
   user: pbUser | null;
   token: string;
   lastSyncTime: string;
+  googleAIKey: string;
 };
 
 const initialContext: StoreState = {
@@ -95,7 +96,8 @@ const initialContext: StoreState = {
   isSyncedWithCloud: false,
   user: null,
   token: "",
-  lastSyncTime: ''
+  lastSyncTime: "",
+  googleAIKey: "",
 };
 
 export const storedData$ = observable(initialContext);
@@ -185,7 +187,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       );
       return;
     }
-
 
     if (enable && pb.authStore.isValid) {
       syncWithCloud();
@@ -281,7 +282,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           isDataLoaded: true,
           isSyncedWithCloud: true,
           token: storedData$.get().token,
-          user: storedData$.get().user
+          user: storedData$.get().user,
         });
 
         bibleState$.changeBibleQuery({
