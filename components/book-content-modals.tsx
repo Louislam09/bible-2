@@ -39,20 +39,33 @@ const BookContentModals = ({ book, chapter }: any) => {
           />
         </BottomSheetScrollView>
       </BottomSheet>
+      <BottomSheet
+        backgroundStyle={styles.bottomSheet}
+        enablePanDownToClose
+        snapPoints={["30%", "60%"]}
+        index={-1}
+        ref={modalState$.explainVerseRef.get()}
+        handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
+        onClose={() =>
+          bibleState$.handleVerseToExplain({ text: "", reference: "" })
+        }
+      >
+        <BottomSheetScrollView
+          contentContainerStyle={{ backgroundColor: "transparent" }}
+        >
+          <VerseExplanationContent theme={theme} fontSize={fontSize} />
+        </BottomSheetScrollView>
+      </BottomSheet>
 
-      <BottomModal
+      {/* <BottomModal
         style={styles.bottomSheet}
         backgroundColor={theme.dark ? theme.colors.background : "#eee"}
         shouldScroll
         startAT={2}
         ref={modalState$.explainVerseRef.get()}
       >
-        {/* <BottomSheetScrollView
-          contentContainerStyle={{ backgroundColor: "transparent" }}
-        >
-        </BottomSheetScrollView> */}
         <VerseExplanationContent theme={theme} fontSize={fontSize} />
-      </BottomModal>
+      </BottomModal> */}
 
       <BottomModal
         style={styles.bottomSheet}

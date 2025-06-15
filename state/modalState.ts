@@ -24,19 +24,29 @@ export const modalState$ = observable({
   },
   openStrongSearchBottomSheet: () => {
     modalState$.isSheetClosed.set(false);
-    console.log(modalState$.strongSearchRef.current);
+    modalState$.explainVerseRef.current?.close();
     modalState$.strongSearchRef.current?.expand();
   },
   openDictionaryBottomSheet: (text: string) => {
     modalState$.setSearchWordOnDic(text);
     modalState$.dictionaryRef.current?.present();
-  }, closeDictionaryBottomSheet: () => {
+  },
+  closeDictionaryBottomSheet: () => {
     modalState$.dictionaryRef.current?.dismiss();
   },
   openExplainVerseBottomSheet: () => {
-    modalState$.explainVerseRef.current?.present();
+    modalState$.isSheetClosed.set(false);
+    modalState$.strongSearchRef.current?.close();
+    modalState$.explainVerseRef.current?.expand();
   },
   closeExplainVerseBottomSheet: () => {
+    modalState$.isSheetClosed.set(true);
     modalState$.explainVerseRef.current?.dismiss();
   },
+  // openExplainVerseBottomSheet: () => {
+  //   modalState$.explainVerseRef.current?.present();
+  // },
+  // closeExplainVerseBottomSheet: () => {
+  //   modalState$.explainVerseRef.current?.dismiss();
+  // },
 });

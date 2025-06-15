@@ -19,6 +19,8 @@ import * as Clipboard from "expo-clipboard";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
 import { iconSize } from "@/constants/size";
+import { aiHtmlTemplate, aiHtmlTemplatePrint } from "@/constants/HtmlTemplate";
+import { use$ } from "@legendapp/state/react";
 
 type VerseExplanationProps = {
   theme: TTheme;
@@ -64,7 +66,7 @@ const VerseExplanationContent: React.FC<VerseExplanationProps> = ({
   theme,
   fontSize,
 }) => {
-  const verse = bibleState$.verseToExplain.get();
+  const verse = use$(() => bibleState$.verseToExplain.get());
   const { explanation, loading, error, fetchExplanation } = useGoogleAI();
   //   const explanation = mock;
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -76,113 +78,8 @@ const VerseExplanationContent: React.FC<VerseExplanationProps> = ({
   const webViewRef = React.useRef<WebView>(null);
 
   const htmlResponse = useMemo(() => {
-    return `
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Explicación Bíblica - IA</title>
-        <style>
-            body {
-                font-family: 'Georgia', 'Times New Roman', serif;
-                padding: 30px;
-                line-height: 1.8;
-                color: ${theme.colors.text};
-                max-width: 100%;
-                margin: 0 auto;
-                background: transparent;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-            }
-            .header {
-                text-align: center;
-                margin-bottom: 40px;
-                padding-bottom: 20px;
-                border-bottom: 2px solid ${theme.colors.border};
-            }
-            .title {
-                font-size: 24px;
-                font-weight: bold;
-                color: ${theme.colors.text};
-                margin-bottom: 10px;
-            }
-            .subtitle {
-                font-size: 14px;
-                color: ${theme.colors.text};
-                font-style: italic;
-            }
-            .content {
-                background: transparent;
-                padding: 0;
-                border-radius: 0;
-                box-shadow: none;
-                width: 100%;
-                box-sizing: border-box;
-            }
-            h1, h2, h3 {
-                color: ${theme.colors.text};
-                margin-top: 30px;
-                margin-bottom: 15px;
-            }
-            p {
-                margin-bottom: 15px;
-                text-align: justify;
-            }
-            strong {
-                color: ${theme.colors.notification};
-            }
-            em {
-                color: ${theme.colors.text};
-            }
-            blockquote {
-                border-left: 4px solid ${theme.colors.notification};
-                padding-left: 20px;
-                margin: 20px 0;
-                font-style: italic;
-                padding: 15px 20px;
-                border-radius: 0;
-            }
-            .footer {
-                text-align: center;
-                margin-top: 40px;
-                padding-top: 20px;
-                border-top: 1px solid ${theme.colors.border};
-                font-size: 12px;
-                color: ${theme.colors.text};
-            }
-        </style>
-    </head>
-    <body>
-        <div class="header">
-            <div class="title">📖 Explicación Bíblica</div>
-            <div class="subtitle">Generado por Inteligencia Artificial • ${new Date().toLocaleDateString(
-              "es-ES"
-            )}</div>
-        </div>
-        <div class="content">
-            ${
-              explanation
-                ?.replace(/\n\n/g, "</p><p>")
-                .replace(/\n/g, "<br/>")
-                .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-                .replace(/\*(.*?)\*/g, "<em>$1</em>")
-                .replace(/^(.+)$/gm, "<p>$1</p>") || ""
-            }
-        </div>
-        <div class="footer">
-            Esta explicación fue generada por IA y puede contener interpretaciones subjetivas.<br/>
-            Siempre consulte con líderes espirituales calificados para un estudio más profundo.
-        </div>
-        <script>
-            window.ReactNativeWebView.postMessage(document.body.scrollHeight);
-        </script>
-    </body>
-    </html>
-  `;
-  }, [explanation]);
+    return aiHtmlTemplate(explanation, theme.colors, fontSize, false);
+  }, [explanation, fontSize]);
 
   useEffect(() => {
     if (verse.text) {
@@ -223,7 +120,7 @@ const VerseExplanationContent: React.FC<VerseExplanationProps> = ({
     setIsGeneratingPDF(true);
     try {
       const { uri } = await Print.printToFileAsync({
-        html: htmlResponse,
+        html: aiHtmlTemplatePrint(explanation),
         base64: false,
       });
 
@@ -309,7 +206,6 @@ const VerseExplanationContent: React.FC<VerseExplanationProps> = ({
             style={{ flex: 1, backgroundColor: "transparent" }}
             source={{ html: htmlResponse }}
             onMessage={(event) => {
-              console.log("event", event.nativeEvent.data);
               const isNumber = !isNaN(+event.nativeEvent.data);
               if (isNumber) {
                 setHeight(+event.nativeEvent.data || DEFAULT_HEIGHT);
@@ -393,7 +289,9 @@ const getStyles = (theme: TTheme, fontSize: number) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: "transparent",
+      backgroundColor: theme.dark
+        ? theme.colors.background + 99
+        : theme.colors.background,
       width: "100%",
     },
     header: {
@@ -468,7 +366,7 @@ const getLoadingStyles = (theme: TTheme) =>
     subText: {
       marginTop: 8,
       color: theme.colors.text,
-      opacity: 0.6,
+      opacity: 0.8,
       textAlign: "center",
     },
   });

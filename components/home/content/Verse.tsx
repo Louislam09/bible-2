@@ -170,9 +170,10 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     const selectedVerses = bibleState$.selectedVerses.get();
     return selectedVerses.has(item.verse);
   });
-  const links = use$(() => bibleState$.bibleData[isSplit ? 'bottomLinks' : 'topLinks'].get());
+  const links = use$(() =>
+    bibleState$.bibleData[isSplit ? "bottomLinks" : "topLinks"].get()
+  );
   const verseLink = links?.filter((link) => link.verse === item.verse);
-
 
   const isBottom = isSplit && isBottomBibleSearching;
   const isTop = !isSplit && !isBottomBibleSearching;
@@ -266,8 +267,9 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const onQuote = () => {
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item.book_number).longName} ${item.chapter
-      }:${item.verse}`;
+    const reference = `${getBookDetail(item.book_number).longName} ${
+      item.chapter
+    }:${item.verse}`;
     bibleState$.handleSelectVerseForNote(verseText);
     router.push({ pathname: "/quote", params: { text: verseText, reference } });
   };
@@ -339,10 +341,12 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const onExplainWithAI = () => {
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item.book_number).longName} ${item.chapter}:${item.verse}`;
+    const reference = `${getBookDetail(item.book_number).longName} ${
+      item.chapter
+    }:${item.verse}`;
     bibleState$.handleVerseToExplain({ text: verseText, reference });
     modalState$.openExplainVerseBottomSheet();
-  }
+  };
 
   const router = useRouter();
 
@@ -359,7 +363,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         action: onExplainWithAI,
         hide: false,
         description: "Explicar",
-        color: "#f1c40f"
+        color: "#f1c40f",
       },
       {
         name: "Quote",
@@ -378,7 +382,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       {
         name: isFavorite ? "Star" : "StarOff",
         action: onFavorite,
-        color: isFavorite ? theme.colors.notification : '#fedf75',
+        color: isFavorite ? theme.colors.notification : "#fedf75",
         hide: false,
         description: "Favorito",
       },
@@ -386,7 +390,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         name: "Brain",
         action: () =>
           onMemorizeVerse(
-            `${getBookDetail(item.book_number).longName} ${item?.chapter}:${item?.verse
+            `${getBookDetail(item.book_number).longName} ${item?.chapter}:${
+              item?.verse
             }`
           ),
         color: "#f1abab",
