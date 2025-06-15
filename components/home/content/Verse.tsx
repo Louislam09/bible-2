@@ -349,7 +349,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
     bibleState$.handleVerseWithAiAnimation(item.verse);
     bibleState$.handleVerseToExplain({ text: verseText, reference });
-    // modalState$.openExplainVerseBottomSheet();
+    modalState$.closeExplainVerseBottomSheet();
   };
 
   const router = useRouter();

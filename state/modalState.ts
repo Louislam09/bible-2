@@ -41,7 +41,7 @@ export const modalState$ = observable({
   },
   closeExplainVerseBottomSheet: () => {
     modalState$.isSheetClosed.set(true);
-    modalState$.explainVerseRef.current?.dismiss();
+    modalState$.explainVerseRef.current?.close();
   },
   // openExplainVerseBottomSheet: () => {
   //   modalState$.explainVerseRef.current?.present();
