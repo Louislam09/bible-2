@@ -35,7 +35,7 @@ const AiErrorAlert: React.FC<{
                         { fontSize: fontSize * 0.9 },
                     ]}
                 >
-                    🔄 Configurar IA
+                    Configurar IA
                 </Text>
             </TouchableOpacity>
         </View>
@@ -74,7 +74,7 @@ const getErrorStyles = (theme: TTheme) =>
         },
         retryText: {
             color: "white",
-            fontWeight: "600",
+            fontWeight: "bold",
         },
     });
 

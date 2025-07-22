@@ -28,11 +28,11 @@ const BookContentModals = ({ book, chapter }: any) => {
   }, [verse, aiResponse]);
 
   useEffect(() => {
-    if (!aiResponse.loading && !!aiResponse.explanation.length) {
+    if (!aiResponse.loading) {
       bibleState$.handleVerseWithAiAnimation(0);
       modalState$.openExplainVerseBottomSheet();
     }
-  }, [aiResponse.loading])
+  }, [aiResponse])
 
   return (
     <>
@@ -76,16 +76,6 @@ const BookContentModals = ({ book, chapter }: any) => {
           />
         </BottomSheetScrollView>
       </BottomSheet>
-
-      {/* <BottomModal
-        style={styles.bottomSheet}
-        backgroundColor={theme.dark ? theme.colors.background : "#eee"}
-        shouldScroll
-        startAT={2}
-        ref={modalState$.explainVerseRef.get()}
-      >
-        <VerseExplanationContent theme={theme} fontSize={fontSize} />
-      </BottomModal> */}
 
       <BottomModal
         style={styles.bottomSheet}

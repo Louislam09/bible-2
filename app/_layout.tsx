@@ -63,6 +63,7 @@ const screenAnimations: TScreensName = {
   [Screens.Register]: "slide_from_right",
   [Screens.Quote]: "slide_from_right",
   [Screens.AISetup]: "slide_from_right",
+  [Screens.AISearch]: "slide_from_right",
 };
 
 const App = () => {
@@ -80,7 +81,7 @@ const App = () => {
         await Updates.reloadAsync();
         ToastAndroid.show("Actualizada ✅", ToastAndroid.SHORT);
       }
-    } catch (error) {}
+    } catch (error) { }
   }
 
   useEffect(() => {

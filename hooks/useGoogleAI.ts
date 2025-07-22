@@ -26,6 +26,7 @@ export const useGoogleAI = (): UseGoogleAIResponse => {
   }) => {
     if (!googleAIKey) {
       setError("Por favor, configura tu API key de Google AI en los ajustes.");
+      setLoading(false);
       return;
     }
 

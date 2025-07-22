@@ -155,7 +155,7 @@ const BibleAIScreen = ({ }) => {
           <TouchableOpacity
             style={[styles.searchButton, loading && styles.searchButtonDisabled]}
             onPress={handleSearch}
-            disabled={loading}
+            disabled={loading || !googleAIKey}
           >
             {loading ? (
               <ActivityIndicator size="small" color="white" />
@@ -166,110 +166,120 @@ const BibleAIScreen = ({ }) => {
         </View>
 
         {/* Translation Selector */}
-        <View style={styles.translationContainer}>
+        {googleAIKey && <View style={styles.translationContainer}>
           <Text style={styles.translationLabel}>Traducción: </Text>
           <TouchableOpacity style={styles.translationSelector}>
             <Text style={styles.translationText}>{selectedTranslation}</Text>
-            <ChevronDown size={16} color={theme.colors.text} />
+            {/* <ChevronDown size={16} color={theme.colors.text} /> */}
           </TouchableOpacity>
-        </View>
+        </View>}
 
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          {/* Loading State */}
-          {loading && (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color={theme.colors.notification} />
-              <Text style={styles.loadingText}>
-                Buscando en las escrituras...
-              </Text>
-            </View>
-          )}
+        {!googleAIKey ? (
+          <View style={styles.errorContainer}>
+            <Icon name="MessageCircleWarning" size={48} color={theme.colors.notification} />
+            <Text style={styles.errorText}>No se ha configurado la API key de Google AI</Text>
+            <TouchableOpacity style={styles.retryButton} onPress={() => router.push(Screens.AISetup)}>
+              <Text style={styles.retryButtonText}>Configurar</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+            {/* Loading State */}
+            {loading && (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color={theme.colors.notification} />
+                <Text style={styles.loadingText}>
+                  Buscando en las escrituras...
+                </Text>
+              </View>
+            )}
 
-          {/* Error State */}
-          {error && !loading && (
-            <View style={styles.errorContainer}>
-              <Icon name="CircleAlert" size={48} color="#d32f2f" />
-              <Text style={styles.errorText}>Algo salió mal</Text>
-              <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
-                <Text style={styles.retryButtonText}>Reintentar</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+            {error && !loading && (
+              <View style={styles.errorContainer}>
+                <Icon name="CircleAlert" size={48} color="#d32f2f" />
+                <Text style={styles.errorText}>Algo salió mal</Text>
+                <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
+                  <Text style={styles.retryButtonText}>Reintentar</Text>
+                </TouchableOpacity>
+              </View>
+            )}
 
-          {/* Empty State */}
-          {isEmpty && !loading && !error && (
-            <BibleEmptyState
-              onExamplePress={(question) => {
-                setSearchQuery(question);
-                searchBible(question, selectedTranslation);
-              }}
-            />
-          )}
-
-          {/* Predicted Answer */}
-          {predictedAnswer && !loading && (
-            <View style={styles.predictedAnswerCard}>
-              <Text style={styles.predictedAnswerTitle}>Respuesta Predicha*</Text>
-              <Text style={styles.answerTitle}>{predictedAnswer.title}</Text>
-              <Text style={styles.answerDescription}>
-                {predictedAnswer.description}
-              </Text>
-              <Text style={styles.answerReference}>
-                {predictedAnswer.reference}
-              </Text>
-            </View>
-          )}
-
-          {/* Tabs - only show if we have results */}
-          {hasResults && !loading && (
-            <View style={styles.tabContainer}>
-              <TabButton
-                title={`Versículos (${verses.length})`}
-                isActive={activeTab === "Verses"}
-                onPress={() => setActiveTab("Verses")}
+            {/* Empty State */}
+            {isEmpty && !loading && !error && (
+              <BibleEmptyState
+                onExamplePress={(question) => {
+                  setSearchQuery(question);
+                  searchBible(question, selectedTranslation);
+                }}
               />
-              <TabButton
-                title={`Artículos (${articles.length})`}
-                isActive={activeTab === "Articles"}
-                onPress={() => setActiveTab("Articles")}
-              />
-            </View>
-          )}
+            )}
 
-          {/* Content based on active tab */}
-          {hasResults && !loading && (
-            <View style={styles.resultsContainer}>
-              {activeTab === "Verses" &&
-                verses.map((verse, index) => (
-                  <TouchableOpacity onPress={() => onVersePress(verse.reference)} key={index} style={styles.verseCard}>
-                    <Text style={styles.verseReference}>{verse.reference}</Text>
-                    <Text style={styles.verseText}>{verse.text}</Text>
-                    {verse.relevance && (
-                      <Text style={styles.verseRelevance}>{verse.relevance}</Text>
-                    )}
-                  </TouchableOpacity>
-                ))}
+            {/* Predicted Answer */}
+            {predictedAnswer && !loading && (
+              <View style={styles.predictedAnswerCard}>
+                <Text style={styles.predictedAnswerTitle}>Respuesta Predicha*</Text>
+                <Text style={styles.answerTitle}>{predictedAnswer.title}</Text>
+                <Text style={styles.answerDescription}>
+                  {predictedAnswer.description}
+                </Text>
+                <Text style={styles.answerReference}>
+                  {predictedAnswer.reference}
+                </Text>
+              </View>
+            )}
 
-              {activeTab === "Articles" &&
-                articles.map((article, index) => (
-                  <View key={index} style={styles.articleCard}>
-                    <Text style={styles.articleTitle}>{article.title}</Text>
-                    <Text style={styles.articleSummary}>{article.summary}</Text>
-                    {article.keyPoints && article.keyPoints.length > 0 && (
-                      <View style={styles.keyPointsContainer}>
-                        <Text style={styles.keyPointsTitle}>Key Points:</Text>
-                        {article.keyPoints.map((point, pointIndex) => (
-                          <Text key={pointIndex} style={styles.keyPoint}>
-                            • {point}
-                          </Text>
-                        ))}
-                      </View>
-                    )}
-                  </View>
-                ))}
-            </View>
-          )}
-        </ScrollView>
+            {/* Tabs - only show if we have results */}
+            {hasResults && !loading && (
+              <View style={styles.tabContainer}>
+                <TabButton
+                  title={`Versículos (${verses.length})`}
+                  isActive={activeTab === "Verses"}
+                  onPress={() => setActiveTab("Verses")}
+                />
+                <TabButton
+                  title={`Artículos (${articles.length})`}
+                  isActive={activeTab === "Articles"}
+                  onPress={() => setActiveTab("Articles")}
+                />
+              </View>
+            )}
+
+            {/* Content based on active tab */}
+            {hasResults && !loading && (
+              <View style={styles.resultsContainer}>
+                {activeTab === "Verses" &&
+                  verses.map((verse, index) => (
+                    <TouchableOpacity onPress={() => onVersePress(verse.reference)} key={index} style={styles.verseCard}>
+                      <Text style={styles.verseReference}>{verse.reference}</Text>
+                      <Text style={styles.verseText}>{verse.text}</Text>
+                      {verse.relevance && (
+                        <Text style={styles.verseRelevance}>{verse.relevance}</Text>
+                      )}
+                    </TouchableOpacity>
+                  ))}
+
+                {activeTab === "Articles" &&
+                  articles.map((article, index) => (
+                    <View key={index} style={styles.articleCard}>
+                      <Text style={styles.articleTitle}>{article.title}</Text>
+                      <Text style={styles.articleSummary}>{article.summary}</Text>
+                      {article.keyPoints && article.keyPoints.length > 0 && (
+                        <View style={styles.keyPointsContainer}>
+                          <Text style={styles.keyPointsTitle}>Key Points:</Text>
+                          {article.keyPoints.map((point, pointIndex) => (
+                            <Text key={pointIndex} style={styles.keyPoint}>
+                              • {point}
+                            </Text>
+                          ))}
+                        </View>
+                      )}
+                    </View>
+                  ))}
+              </View>
+            )}
+          </ScrollView>
+        )}
+
       </SafeAreaView>
     </ScreenWithAnimation>
   );
@@ -442,7 +452,7 @@ const getStyles = ({ colors }: TTheme) => StyleSheet.create({
   },
   errorText: {
     fontSize: 16,
-    color: "#d32f2f",
+    color: colors.notification,
     marginTop: 16,
     marginBottom: 20,
   },
