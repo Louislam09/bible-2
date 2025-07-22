@@ -15,9 +15,8 @@ import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import {
-  ActivityIndicator,
   Alert,
   Animated,
   Pressable,
@@ -32,13 +31,26 @@ interface BibleVerse {
   reference: string;
 }
 
-const getRandomNumberFromLength = (length: number): number => Math.floor(Math.random() * length);
+const getRandomNumberFromLength = (length: number): number =>
+  Math.floor(Math.random() * length);
 
 const BIBLE_VERSES: readonly BibleVerse[] = [
-  { verse: "Cantad alegres a Dios, \nhabitantes de toda la tierra.", reference: "Salmos 100:1" },
-  { verse: "Cantad al Señor cántico nuevo; \ncantad al Señor, toda la tierra.", reference: "Salmos 96:1" },
-  { verse: "Cantaré eternamente las misericordias del Señor.", reference: "Salmos 89:1" },
-  { verse: "Cantad a Dios, cantad; \ncantad a nuestro Rey, cantad.", reference: "Salmos 47:6" },
+  {
+    verse: "Cantad alegres a Dios, \nhabitantes de toda la tierra.",
+    reference: "Salmos 100:1",
+  },
+  {
+    verse: "Cantad al Señor cántico nuevo; \ncantad al Señor, toda la tierra.",
+    reference: "Salmos 96:1",
+  },
+  {
+    verse: "Cantaré eternamente las misericordias del Señor.",
+    reference: "Salmos 89:1",
+  },
+  {
+    verse: "Cantad a Dios, cantad; \ncantad a nuestro Rey, cantad.",
+    reference: "Salmos 47:6",
+  },
 ];
 
 interface HymnOptionItem {
@@ -58,7 +70,14 @@ interface HymnOptionProps {
   statusColor: string;
 }
 
-const HymnOption: React.FC<HymnOptionProps> = ({ item, onPress, isLocked, onRequestAccess, hasRequestAccess, statusColor }) => {
+const HymnOption: React.FC<HymnOptionProps> = ({
+  item,
+  onPress,
+  isLocked,
+  onRequestAccess,
+  hasRequestAccess,
+  statusColor,
+}) => {
   const theme = useTheme();
   const styles = getStyles(theme);
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -94,38 +113,43 @@ const HymnOption: React.FC<HymnOptionProps> = ({ item, onPress, isLocked, onRequ
       onPressOut={handlePressOut}
       onPress={handlePress}
       disabled={isLocked && !onRequestAccess}
-      accessibilityLabel={`${item.label}${isLocked ? ' (Bloqueado)' : ''}`}
+      accessibilityLabel={`${item.label}${isLocked ? " (Bloqueado)" : ""}`}
       accessibilityRole="button"
-      accessibilityHint={isLocked ? "Pulse para solicitar acceso" : "Pulse para abrir himnario"}
+      accessibilityHint={
+        isLocked ? "Pulse para solicitar acceso" : "Pulse para abrir himnario"
+      }
     >
-      <Animated.View style={[
-        styles.card,
-        { transform: [{ scale: scaleAnim }] }
-      ]}>
+      <Animated.View
+        style={[styles.card, { transform: [{ scale: scaleAnim }] }]}
+      >
         {isLocked && (
           <Pressable
             style={({ pressed }) => [
               styles.lockCard,
               pressed && styles.pressed,
-              { borderColor: statusColor }
+              { borderColor: statusColor },
             ]}
             onPress={onRequestAccess}
-            accessibilityLabel={hasRequestAccess ? "Solicitud en proceso" : "Solicitar acceso"}
+            accessibilityLabel={
+              hasRequestAccess ? "Solicitud en proceso" : "Solicitar acceso"
+            }
             accessibilityRole="button"
           >
             <Icon
-              name={hasRequestAccess ? 'Clock' : "Lock"}
+              name={hasRequestAccess ? "Clock" : "Lock"}
               color={statusColor}
               size={35}
             />
-            <Text style={[
-              styles.lockTitle,
-              hasRequestAccess && {
-                backgroundColor: statusColor + 99,
-                textAlign: 'center'
-              }
-            ]}>
-              {hasRequestAccess ? 'Solicitud en proceso' : 'Solicitar acceso'}
+            <Text
+              style={[
+                styles.lockTitle,
+                hasRequestAccess && {
+                  backgroundColor: statusColor + 99,
+                  textAlign: "center",
+                },
+              ]}
+            >
+              {hasRequestAccess ? "Solicitud en proceso" : "Solicitar acceso"}
             </Text>
           </Pressable>
         )}
@@ -140,7 +164,6 @@ const HymnOption: React.FC<HymnOptionProps> = ({ item, onPress, isLocked, onRequ
     </TouchableOpacity>
   );
 };
-
 
 const BibleQuote = ({ verse, reference }: BibleVerse) => {
   const theme = useTheme();
@@ -160,24 +183,28 @@ const HymnScreen = () => {
   const navigation = useNavigation();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const { isConnected } = useInternetConnection();
-  const { requestAccess, loading: isLoading } = useAccessRequest()
+  const { requestAccess, loading: isLoading } = useAccessRequest();
   const requestAccessBottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const isAlegresNuevasUnlocked = use$(() => storedData$.isAlegresNuevasUnlocked.get());
+  const isAlegresNuevasUnlocked = use$(() =>
+    storedData$.isAlegresNuevasUnlocked.get()
+  );
   const hasRequestAccess = use$(() => storedData$.hasRequestAccess.get());
-  const [selectedVerse] = useState(() => BIBLE_VERSES[getRandomNumberFromLength(BIBLE_VERSES.length)]);
+  const [selectedVerse] = useState(
+    () => BIBLE_VERSES[getRandomNumberFromLength(BIBLE_VERSES.length)]
+  );
 
   const assets = [...Object.values(lottieAssets)];
   const pickARandomAsset = assets[getRandomNumberFromLength(assets.length)];
 
-  const statusColor = hasRequestAccess ? '#efbf43' : '#FFFFFF';
+  const statusColor = hasRequestAccess ? "#efbf43" : "#FFFFFF";
 
   const handleRequestAccessPress = useCallback(() => {
     if (!isConnected) {
       Alert.alert(
-        'Shalom',
-        'Por favor, conecta a internet para solicitar acceso',
-        [{ text: 'Entendido', style: 'default' }]
+        "Shalom",
+        "Por favor, conecta a internet para solicitar acceso",
+        [{ text: "Entendido", style: "default" }]
       );
       return;
     }
@@ -185,9 +212,12 @@ const HymnScreen = () => {
     requestAccessBottomSheetModalRef.current?.present();
   }, [isConnected, hasRequestAccess]);
 
-  const navigateToSongs = useCallback((isAlegres: boolean) => {
-    navigation.navigate(Screens.Song, { isAlegres });
-  }, [navigation]);
+  const navigateToSongs = useCallback(
+    (isAlegres: boolean) => {
+      navigation.navigate(Screens.Song, { isAlegres });
+    },
+    [navigation]
+  );
 
   const options = [
     {
@@ -206,16 +236,19 @@ const HymnScreen = () => {
     },
   ];
 
-  const renderItem = useCallback(({ item }: { item: HymnOptionItem }) => (
-    <HymnOption
-      item={item}
-      onPress={item.action}
-      isLocked={item.isLocked}
-      onRequestAccess={handleRequestAccessPress}
-      hasRequestAccess={hasRequestAccess}
-      statusColor={statusColor}
-    />
-  ), [hasRequestAccess, statusColor, handleRequestAccessPress]);
+  const renderItem = useCallback(
+    ({ item }: { item: HymnOptionItem }) => (
+      <HymnOption
+        item={item}
+        onPress={item.action}
+        isLocked={item.isLocked}
+        onRequestAccess={handleRequestAccessPress}
+        hasRequestAccess={hasRequestAccess}
+        statusColor={statusColor}
+      />
+    ),
+    [hasRequestAccess, statusColor, handleRequestAccessPress]
+  );
 
   return (
     <ScreenWithAnimation
@@ -366,34 +399,34 @@ const getStyles = ({ colors }: TTheme) =>
       overflow: "hidden",
     },
     lockCard: {
-      position: 'absolute',
+      position: "absolute",
       top: 0,
       right: 0,
       bottom: 0,
       left: 0,
-      backgroundColor: colors.background + 'DD',
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: colors.background + "DD",
+      justifyContent: "center",
+      alignItems: "center",
       zIndex: 99,
       borderRadius: 15,
-      borderColor: 'white',
+      borderColor: "white",
       borderWidth: 2,
     },
     pressed: {
       opacity: 0.8,
-      backgroundColor: colors.background + 'E6',
+      backgroundColor: colors.background + "E6",
       borderWidth: 2,
       zIndex: 99,
     },
     lockTitle: {
       fontSize: 18,
-      color: 'white',
+      color: "white",
       marginVertical: 8,
       backgroundColor: colors.notification + 99,
       paddingHorizontal: 12,
       paddingVertical: 4,
       borderRadius: 8,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       letterSpacing: 0.5,
     },
     cardLabel: {
@@ -419,7 +452,7 @@ const getStyles = ({ colors }: TTheme) =>
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: colors.background + 'AA',
+      backgroundColor: colors.background + "AA",
       padding: 10,
       borderRadius: 8,
       marginHorizontal: 20,

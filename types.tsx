@@ -19,6 +19,14 @@ declare global {
   }
 }
 
+export enum Collections {
+  Users = "users",
+  AccessRequest = "access_requests",
+  Settings = "user_settings",
+  Notes = "notes",
+  Favorites = "favorite_verses",
+}
+
 export enum Screens {
   Dashboard = "(dashboard)",
   Settings = "settings",
@@ -34,6 +42,7 @@ export enum Screens {
   Notes = "notes",
   Onboarding = "onboarding",
   Character = "character",
+  AISearch = "ai-search",
   Song = "song",
   StrongSearchEntire = "searchStrongWordEntire",
   DictionarySearch = "dictionary",
@@ -76,6 +85,7 @@ export const ScreensName: TScreensName = {
   [Screens.NoteDetail]: "Nota",
   [Screens.Hymn]: "Selecciona un himnario",
   [Screens.Game]: "Juego Biblico",
+  [Screens.AISearch]: "Busqueda Inteligente",
   [Screens.ChooseGame]: "Seleccionar Juego",
   [Screens.MemorizeVerse]: "Memorizar Verso",
   [Screens.VerseId]: "Versiculo",
@@ -155,6 +165,7 @@ export type RootStackParamList = {
   [Screens.Login]: undefined;
   [Screens.Register]: undefined;
   [Screens.AISetup]: undefined;
+  [Screens.AISearch]: undefined;
 };
 
 export type HomeParams = {
@@ -706,6 +717,7 @@ export type GoogleUser = {
   picture: string;
   verified_email: boolean;
 };
+
 export interface pbUser {
   avatar: string;
   collectionId: string;
@@ -717,4 +729,13 @@ export interface pbUser {
   name: string;
   updated: string;
   verified: boolean;
+}
+
+export interface RequestData {
+  id: string;
+  user: string;
+  name: string;
+  status: string;
+  created: string;
+  updated: string;
 }

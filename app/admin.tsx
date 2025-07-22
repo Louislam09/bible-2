@@ -1,17 +1,18 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
+import useRealtimeCollection from "@/hooks/useRealtimeCollection";
 import {
   useDeleteRequest,
-  useGetAllRequests,
-  useUpdateRequestStatus
+  useUpdateRequestStatus,
 } from "@/services/queryService";
 import { RequestStatus } from "@/services/types";
-import { TTheme } from "@/types";
+import { Collections, RequestData, TTheme } from "@/types";
 import { useTheme } from "@react-navigation/native";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { format } from "date-fns";
 import { Stack, useRouter } from "expo-router";
 import { icons } from "lucide-react-native";
+import { RecordModel } from "pocketbase";
 import React, { useCallback, useMemo, useState } from "react";
 import {
   ActivityIndicator,
@@ -21,7 +22,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -54,7 +55,7 @@ const approvalStatus: ApprovalStatus = {
 const RequestItem = ({
   item,
   onUpdateStatus,
-  onDeleteRequest
+  onDeleteRequest,
 }: {
   item: RequestStatus;
   onUpdateStatus: (id: string, status: RequestStatus["status"]) => void;
@@ -68,14 +69,26 @@ const RequestItem = ({
   const statusLabel = approvalStatus[item.status].label;
 
   return (
-    <View style={[styles.requestItem, { borderLeftWidth: 4, borderLeftColor: statusColor }]}>
+    <View
+      style={[
+        styles.requestItem,
+        { borderLeftWidth: 4, borderLeftColor: statusColor },
+      ]}
+    >
       <View style={styles.requestInfo}>
         <View style={styles.requestDetails}>
           <Text style={styles.requestName}>{item.name}</Text>
           {/* <Text style={styles.requestEmail}>email</Text> */}
-          <View style={[styles.statusBadge, { backgroundColor: `${statusColor}20` }]}>
+          <View
+            style={[
+              styles.statusBadge,
+              { backgroundColor: `${statusColor}20` },
+            ]}
+          >
             <Icon name={statusIcon} color={statusColor} size={16} />
-            <Text style={[styles.statusLabel, { color: statusColor }]}>{statusLabel}</Text>
+            <Text style={[styles.statusLabel, { color: statusColor }]}>
+              {statusLabel}
+            </Text>
           </View>
           <Text style={styles.requestDate}>
             {format(new Date(item.created), "dd MMM yyyy, hh:mm a")}
@@ -123,40 +136,6 @@ const RequestItem = ({
   );
 };
 
-// Tab component for better reusability
-const TabButton = ({
-  title,
-  isActive,
-  onPress,
-  icon,
-}: {
-  title: string;
-  isActive: boolean;
-  onPress: () => void;
-  icon: keyof typeof icons;
-}) => {
-  const theme = useTheme();
-  const styles = getStyles(theme);
-
-  return (
-    <TouchableOpacity
-      style={[styles.tab, isActive && styles.activeTab]}
-      onPress={onPress}
-      accessibilityRole="tab"
-      accessibilityState={{ selected: isActive }}
-    >
-      <Icon
-        name={icon}
-        color={isActive ? "#fff" : theme.colors.text}
-        size={18}
-      />
-      <Text style={[styles.tabText, isActive && styles.activeTabText]}>
-        {title}
-      </Text>
-    </TouchableOpacity>
-  );
-};
-
 // Filter components
 const FilterOption = ({
   label,
@@ -181,7 +160,7 @@ const FilterOption = ({
       <Text
         style={[
           styles.filterOptionText,
-          isSelected && styles.selectedFilterOptionText
+          isSelected && styles.selectedFilterOptionText,
         ]}
       >
         {label}
@@ -205,7 +184,12 @@ const SearchBar = ({
 
   return (
     <View style={styles.searchContainer}>
-      <Icon name="Search" color={theme.colors.text} size={20} style={styles.searchIcon} />
+      <Icon
+        name="Search"
+        color={theme.colors.text}
+        size={20}
+        style={styles.searchIcon}
+      />
       <TextInput
         style={styles.searchInput}
         placeholder={placeholder}
@@ -248,9 +232,13 @@ const EmptyState = ({
 };
 
 const RequestAccessScreen: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"request" | "check" | "all">("all");
+  const [activeTab, setActiveTab] = useState<"request" | "check" | "all">(
+    "all"
+  );
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [statusFilter, setStatusFilter] = useState<RequestStatus["status"] | null>(null);
+  const [statusFilter, setStatusFilter] = useState<
+    RequestStatus["status"] | null
+  >(null);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
   const theme = useTheme();
@@ -260,100 +248,118 @@ const RequestAccessScreen: React.FC = () => {
 
   const {
     data: requests,
-    isFetching: isFetchingRequests,
-    refetch
-  } = useGetAllRequests();
+    loading: isFetchingRequests,
+    error: requestError,
+  } = useRealtimeCollection<RequestData & RecordModel>({
+    collection: Collections.AccessRequest,
+    options: {
+      expand: "user",
+      sort: "-created",
+    },
+  });
 
-  const { mutate: updateStatus, isPending: isUpdating } = useUpdateRequestStatus();
+  const { mutate: updateStatus, isPending: isUpdating } =
+    useUpdateRequestStatus();
   const { mutate: deleteRequest, isPending: isDeleting } = useDeleteRequest();
 
   const filteredAndSortedRequests = useMemo(() => {
     if (!requests) return [];
 
     // First sort by date
-    const sortedRequests = [...requests as any].sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    const sortedRequests = [...(requests as any)].sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
 
     // Then apply filters
     return sortedRequests.filter((request) => {
       const matchesSearch =
         searchQuery.trim() === "" ||
-        request.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        request.email.toLowerCase().includes(searchQuery.toLowerCase());
+        request?.name?.toLowerCase().includes(searchQuery?.toLowerCase()) ||
+        request?.email?.toLowerCase().includes(searchQuery?.toLowerCase());
 
-      const matchesStatus = statusFilter === null || request.status === statusFilter;
+      const matchesStatus =
+        statusFilter === null || request.status === statusFilter;
 
       return matchesSearch && matchesStatus;
     });
   }, [requests, searchQuery, statusFilter]);
 
-  const handleUpdateStatus = useCallback((id: string, status: RequestStatus["status"]) => {
-    updateStatus(
-      { id, status },
-      {
-        onSuccess: () => {
-          Alert.alert("Éxito", "Estado actualizado exitosamente");
-        },
-        onError: (error) => {
-          Alert.alert(
-            "Error",
-            error instanceof Error
-              ? error.message
-              : "Error al actualizar el estado"
-          );
-        },
-      }
-    );
-  }, [updateStatus]);
-
-  const handleDeleteRequest = useCallback((id: string) => {
-    Alert.alert(
-      "Confirmar Eliminación",
-      "¿Estás seguro que deseas eliminar esta solicitud?",
-      [
+  const handleUpdateStatus = useCallback(
+    (id: string, status: RequestStatus["status"]) => {
+      updateStatus(
+        { id, status },
         {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Eliminar",
-          style: "destructive",
-          onPress: () => {
-            deleteRequest(id, {
-              onSuccess: () => {
-                Alert.alert("Éxito", "Solicitud eliminada exitosamente");
-              },
-              onError: (error) => {
-                Alert.alert(
-                  "Error",
-                  error instanceof Error
-                    ? error.message
-                    : "Error al eliminar la solicitud"
-                );
-              },
-            });
+          onSuccess: () => {
+            Alert.alert("Éxito", "Estado actualizado exitosamente");
           },
-        },
-      ]
-    );
-  }, [deleteRequest]);
+          onError: (error) => {
+            Alert.alert(
+              "Error",
+              error instanceof Error
+                ? error.message
+                : "Error al actualizar el estado"
+            );
+          },
+        }
+      );
+    },
+    [updateStatus]
+  );
+
+  const handleDeleteRequest = useCallback(
+    (id: string) => {
+      Alert.alert(
+        "Confirmar Eliminación",
+        "¿Estás seguro que deseas eliminar esta solicitud?",
+        [
+          {
+            text: "Cancelar",
+            style: "cancel",
+          },
+          {
+            text: "Eliminar",
+            style: "destructive",
+            onPress: () => {
+              deleteRequest(id, {
+                onSuccess: () => {
+                  Alert.alert("Éxito", "Solicitud eliminada exitosamente");
+                },
+                onError: (error) => {
+                  Alert.alert(
+                    "Error",
+                    error instanceof Error
+                      ? error.message
+                      : "Error al eliminar la solicitud"
+                  );
+                },
+              });
+            },
+          },
+        ]
+      );
+    },
+    [deleteRequest]
+  );
 
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
-    await refetch();
+    console.log("refreshing");
     setIsRefreshing(false);
-  }, [refetch]);
+  }, []);
 
-  const renderRequestItem: ListRenderItem<RequestStatus> = useCallback(({ item }) => {
-    return (
-      <RequestItem
-        item={item}
-        onUpdateStatus={handleUpdateStatus}
-        onDeleteRequest={handleDeleteRequest}
-      />
-    );
-  }, [handleUpdateStatus, handleDeleteRequest]);
+  const renderRequestItem: ListRenderItem<RequestStatus> = useCallback(
+    ({ item }) => {
+      return (
+        <RequestItem
+          item={item}
+          onUpdateStatus={handleUpdateStatus}
+          onDeleteRequest={handleDeleteRequest}
+        />
+      );
+    },
+    [handleUpdateStatus, handleDeleteRequest]
+  );
 
   const loading = isFetchingRequests || isUpdating || isDeleting;
 
@@ -409,7 +415,10 @@ const RequestAccessScreen: React.FC = () => {
             </View>
 
             <Text style={styles.resultCount}>
-              Mostrando {filteredAndSortedRequests.length} {filteredAndSortedRequests.length === 1 ? 'solicitud' : 'solicitudes'}
+              Mostrando {filteredAndSortedRequests.length}{" "}
+              {filteredAndSortedRequests.length === 1
+                ? "solicitud"
+                : "solicitudes"}
             </Text>
 
             {filteredAndSortedRequests.length > 0 ? (
@@ -454,23 +463,12 @@ const RequestAccessScreen: React.FC = () => {
               headerRightIconColor: theme.colors.text,
               onPress: () => router.push("/"),
               disabled: true,
-              style: { opacity: 0 }
+              style: { opacity: 0 },
             },
           }),
         }}
       />
-      <View style={styles.container}>
-        {/* <View style={styles.tabContainer}>
-          <TabButton
-            title="Solicitudes"
-            isActive={activeTab === "all"}
-            onPress={() => setActiveTab("all")}
-            icon="Inbox"
-          />
-        </View> */}
-
-        {renderContent()}
-      </View>
+      <View style={styles.container}>{renderContent()}</View>
     </>
   );
 };
@@ -693,7 +691,7 @@ const getStyles = ({ colors }: TTheme) =>
     },
     filterOptions: {
       flexDirection: "row",
-      flexWrap: "wrap",
+      // flexWrap: "wrap",
     },
     filterOption: {
       paddingVertical: 6,

@@ -146,6 +146,13 @@ const SecondDashboard = () => {
       color: "#ec899e",
     },
     {
+      icon: "Sparkles",
+      label: "Busqueda inteligente",
+      isIonicon: true,
+      action: () => navigation.navigate(Screens.AISearch),
+      color: "#fedf75",
+    },
+    {
       icon: "Quote",
       label: "Cita",
       action: () => navigation.navigate(Screens.Quote),
@@ -230,6 +237,7 @@ const SecondDashboard = () => {
       action: () => navigation.navigate(Screens.Character),
       color: "#cec8ff",
     },
+
   ];
 
   const versionRef = useRef<BottomSheetModal>(null);

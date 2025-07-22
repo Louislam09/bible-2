@@ -2,7 +2,6 @@ import AiErrorAlert from "@/components/ai/AiErrorAlert";
 import AiTextScannerAnimation from "@/components/ai/AiTextScannerAnimation";
 import { aiHtmlTemplate, aiHtmlTemplatePrint } from "@/constants/HtmlTemplate";
 import { iconSize } from "@/constants/size";
-import { useGoogleAI } from "@/hooks/useGoogleAI";
 import { useNoteService } from "@/services/noteService";
 import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";

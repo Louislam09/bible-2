@@ -35,11 +35,22 @@ const StudyTools = ({ list, theme }: StudyToolsProps) => {
                 ? item.longAction
                 : () => console.log("no long action")
             }
-            style={[styles.tool, { width: itemWidth }, item.disabled && { display: 'none' }]}
+            style={[
+              styles.tool,
+              { width: itemWidth },
+              item.disabled && { display: "none" },
+            ]}
             disabled={item.disabled}
           >
             {item.isNew && (
-              <NewFeatureBadge title="Disponible" style={{ backgroundColor: "#f73043",  borderColor: theme.colors.background, borderWidth: 2 }} />
+              <NewFeatureBadge
+                title="Disponible"
+                style={{
+                  backgroundColor: "#f73043",
+                  borderColor: theme.colors.background,
+                  borderWidth: 2,
+                }}
+              />
             )}
             <Icon
               size={24}
@@ -91,5 +102,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     toolText: {
       color: dark ? "#fff" : colors.text,
+      flex: 1,
     },
   });
