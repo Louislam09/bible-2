@@ -27,12 +27,6 @@ const BookContentModals = ({ book, chapter }: any) => {
     if (verse.text) aiResponse.fetchExplanation(verse);
   }, [verse, aiResponse]);
 
-  useEffect(() => {
-    if (!aiResponse.loading) {
-      bibleState$.handleVerseWithAiAnimation(0);
-      modalState$.openExplainVerseBottomSheet();
-    }
-  }, [aiResponse])
 
   return (
     <>

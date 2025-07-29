@@ -1,7 +1,9 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { userPrompt } from "@/constants/aiPrompts";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { bibleState$ } from "@/state/bibleState";
+import { modalState$ } from "@/state/modalState";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { use$ } from "@legendapp/state/react";
-import { AiInstructions, userPrompt } from "@/constants/aiPrompts";
 import { useState } from "react";
 
 interface UseGoogleAIResponse {
@@ -52,8 +54,8 @@ export const useGoogleAI = (): UseGoogleAIResponse => {
       ]);
 
       const response = await result.response;
-      // console.log("response", response.text());
       setExplanation(response.text());
+      modalState$.openExplainVerseBottomSheet();
     } catch (err: any) {
       console.error("Error fetching explanation:", err);
 
@@ -86,6 +88,7 @@ export const useGoogleAI = (): UseGoogleAIResponse => {
       }
     } finally {
       setLoading(false);
+      bibleState$.handleVerseWithAiAnimation(0);
     }
   };
 
