@@ -89,12 +89,15 @@ const RequestAccess = ({ onClose, onRequest, isPending }: IRequestAccess) => {
 
     if (hasRequestAccess) {
         return (
-            <EmptyStateMessage info={{
-                title: 'Solicitud en Proceso',
-                message: 'Hola ' + userData.name + ', tu solicitud está siendo procesada.',
-                subText: 'Te contactaremos pronto al correo:',
-                email: userData.email,
-            }} onClose={onClose}
+            <EmptyStateMessage
+                info={{
+                    title: 'Solicitud en Proceso',
+                    message: 'Hola ' + userData.name + ', tu solicitud está siendo procesada.',
+                    subText: 'Te contactaremos pronto al correo:',
+                    email: userData.email,
+                }}
+                onClose={onClose}
+                onResend={() => handleSubmit(false)}
             />
         );
     }

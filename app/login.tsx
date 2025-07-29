@@ -45,7 +45,6 @@ const LoginScreen = () => {
   useEffect(() => {
     const checkExistingSession = async () => {
       const isValid = await authState$.checkSession();
-      console.log({ isValid })
       if (isValid) {
         router.replace("(dashboard)");
       }

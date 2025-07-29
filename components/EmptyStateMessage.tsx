@@ -1,9 +1,9 @@
-import { StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { Ionicons } from '@expo/vector-icons'
-import { Text, View } from './Themed'
 import { TTheme } from '@/types';
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
+import React from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View } from './Themed';
 
 type EmptyStateMessageProps = {
     info: {
@@ -13,29 +13,35 @@ type EmptyStateMessageProps = {
         email: string
     },
     onClose: () => void
+    onResend: () => void
 }
 
-const EmptyStateMessage = ({ info, onClose }: EmptyStateMessageProps) => {
+const EmptyStateMessage = ({ info, onClose, onResend }: EmptyStateMessageProps) => {
     const theme = useTheme();
     const styles = getStyles(theme);
-  return (
-    <View style={styles.container}>
-    <View style={styles.statusContainer}>
-        <Ionicons name="time-outline" size={50} color={theme.colors.notification} />
-        <Text style={styles.statusTitle}>{info.title}</Text>
-        <Text style={styles.statusText}>
-            {info.message}
-        </Text>
-        <Text style={styles.statusSubText}>
-            {info.subText}
-        </Text>
-        <Text style={styles.emailText}>{info.email}</Text>
-        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeButtonText}>Cerrar</Text>
-        </TouchableOpacity>
-    </View>
-</View>
-  )
+    return (
+        <View style={styles.container}>
+            <View style={styles.statusContainer}>
+                <Ionicons name="time-outline" size={50} color={theme.colors.notification} />
+                <Text style={styles.statusTitle}>{info.title}</Text>
+                <Text style={styles.statusText}>
+                    {info.message}
+                </Text>
+                <Text style={styles.statusSubText}>
+                    {info.subText}
+                </Text>
+                <Text style={styles.emailText}>{info.email}</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', width: '100%', gap: 10 }}>
+                    <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+                        <Text style={styles.closeButtonText}>Cerrar</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.closeButton, { backgroundColor: 'transparent', borderColor: theme.colors.notification, borderWidth: 1 }]} onPress={onResend}>
+                        <Text style={styles.closeButtonText}>Reenviar</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </View>
+    )
 }
 
 export default EmptyStateMessage

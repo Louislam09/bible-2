@@ -7,15 +7,19 @@ import RequestAccess from "@/components/admin/RequestAccess";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import lottieAssets from "@/constants/lottieAssets";
 import { storedData$ } from "@/context/LocalstoreContext";
-import { useAccessRequest } from "@/hooks/useAccessRequest";
+import { pb } from "@/globalConfig";
 import useInternetConnection from "@/hooks/useInternetConnection";
-import { Screens, TTheme } from "@/types";
+import useRealtimeCollection from "@/hooks/useRealtimeCollection";
+import { authState$ } from "@/state/authState";
+import { Collections, RequestData, Screens, TTheme } from "@/types";
+import checkConnection from "@/utils/checkConnection";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
-import React, { useCallback, useRef, useState } from "react";
+import { RecordModel } from "pocketbase";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Alert,
   Animated,
@@ -29,6 +33,11 @@ import {
 interface BibleVerse {
   verse: string;
   reference: string;
+}
+enum AccessStatus {
+  Pending = "pending",
+  Approved = "approved",
+  Rejected = "rejected",
 }
 
 const getRandomNumberFromLength = (length: number): number =>
@@ -183,7 +192,6 @@ const HymnScreen = () => {
   const navigation = useNavigation();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const { isConnected } = useInternetConnection();
-  const { requestAccess, loading: isLoading } = useAccessRequest();
   const requestAccessBottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const isAlegresNuevasUnlocked = use$(() =>
@@ -196,8 +204,27 @@ const HymnScreen = () => {
 
   const assets = [...Object.values(lottieAssets)];
   const pickARandomAsset = assets[getRandomNumberFromLength(assets.length)];
-
   const statusColor = hasRequestAccess ? "#efbf43" : "#FFFFFF";
+
+  const {
+    data: request,
+    loading: isFetchingRequests,
+    refetch
+  } = useRealtimeCollection<RequestData & RecordModel, true>({
+    collection: Collections.AccessRequest,
+    options: {},
+    byUser: true,
+  });
+
+  useEffect(() => {
+    if (!request?.id || isFetchingRequests) return
+    if (request.status === 'approved') {
+      storedData$.isAlegresNuevasUnlocked.set(true);
+      storedData$.hasRequestAccess.set(true);
+    } else if ([AccessStatus.Pending, AccessStatus.Rejected].includes(request.status as AccessStatus)) {
+      storedData$.isAlegresNuevasUnlocked.set(false);
+    }
+  }, [request, isFetchingRequests]);
 
   const handleRequestAccessPress = useCallback(() => {
     if (!isConnected) {
@@ -250,6 +277,43 @@ const HymnScreen = () => {
     [hasRequestAccess, statusColor, handleRequestAccessPress]
   );
 
+  const requestAccess = async (name: string) => {
+    const isConnected = await checkConnection();
+    if (!isConnected) {
+      Alert.alert("Sin conexión", "No hay conexión a Internet para solicitar accesso.");
+      return;
+    }
+    const user = authState$.user.get();
+    const userId = user?.id || pb.authStore.record?.id;
+    try {
+      if (!pb.authStore.isValid) throw new Error("Not authenticated");
+
+      const existing = await pb
+        .collection("access_requests")
+        .getFirstListItem(`user.id="${userId}" && status="pending"`);
+
+      refetch()
+    } catch (err: any) {
+      if (err.status !== 404) {
+        console.log('--------errr-----------', err.message || "Unknown error");
+        return;
+      }
+
+      try {
+        const created = await pb.collection("access_requests").create({
+          user: userId,
+          name: name || "",
+          status: "pending",
+        });
+
+        refetch()
+      } catch (createErr: any) {
+        console.log(createErr.message || "Failed to request access");
+      } finally {
+      }
+    }
+  };
+
   return (
     <ScreenWithAnimation
       title="Himnarios"
@@ -293,13 +357,6 @@ const HymnScreen = () => {
           />
         </View>
 
-        {/* {isLoading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={theme.colors.notification} />
-            <Text style={styles.loadingText}>Verificando acceso...</Text>
-          </View>
-        ) : (
-        )} */}
         <View style={[styles.optionContainer, { width: SCREEN_WIDTH }]}>
           <FlashList
             contentContainerStyle={styles.listContainer}
@@ -330,9 +387,9 @@ const HymnScreen = () => {
         ref={requestAccessBottomSheetModalRef}
       >
         <RequestAccess
-          onRequest={requestAccess}
+          onRequest={requestAccess as any}
           onClose={() => requestAccessBottomSheetModalRef.current?.dismiss()}
-          isPending={isLoading}
+          isPending={isFetchingRequests}
         />
       </BottomModal>
     </ScreenWithAnimation>
