@@ -79,7 +79,6 @@ const NotificationSettingsScreen = () => {
   const loadPreferences = async () => {
     try {
       const preferences = notificationService.getNotificationPreferences();
-      console.log({ preferences });
       const [h, m] = preferences?.dailyVerseTime?.split(":") || ["08", "00"];
       setSelectedHour(h);
       setSelectedMinute(m);

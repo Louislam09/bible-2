@@ -303,11 +303,6 @@ const HymnScreen = () => {
         .collection(Collections.AccessRequest)
         .getFirstListItem(`user.id="${userId}" && status="pending"`);
 
-      const admins = await pb.collection(Collections.Users).getFullList({
-        filter: `isAdmin=true`,
-      });
-      console.log({ admins });
-
       refetch();
     } catch (err: any) {
       if (err.status !== 404) {

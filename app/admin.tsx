@@ -303,7 +303,6 @@ const RequestAccessScreen: React.FC = () => {
     async (item: RequestStatus, status: RequestStatus["status"]) => {
       try {
         const { id, user } = item;
-        console.log({ user, status });
         let currentUserPushToken = null;
 
         const currentUserSettings = await pb
@@ -393,7 +392,6 @@ const RequestAccessScreen: React.FC = () => {
 
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
-    console.log("refreshing");
     setIsRefreshing(false);
   }, []);
 

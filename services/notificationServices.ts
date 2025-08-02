@@ -105,7 +105,7 @@ export const useNotificationService = () => {
         const currentPrefs = getNotificationPreferences();
         const updatedPrefs = { ...currentPrefs, ...preferences };
         storedData$.notificationPreferences.set(updatedPrefs);
-        await syncWithCloud();
+        await syncWithCloud({ alert: false });
     };
 
     const requestPermissions = async (): Promise<boolean> => {
@@ -202,7 +202,7 @@ export const useNotificationService = () => {
     };
 
     const scheduleDailyVerseNotification = async (time: string): Promise<string | null> => {
-        const [hour = 8, minute = 0] = time.split(":").map(Number);
+        const [hour = 8, minute = 2] = time.split(":").map(Number);
 
         return await scheduleNotification(
             {

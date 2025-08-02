@@ -2,13 +2,14 @@ import DAILY_VERSES from "@/constants/dailyVerses";
 import { GET_DAILY_VERSE } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
 import { bibleState$ } from "@/state/bibleState";
-import { IVerseItem, Screens, TTheme } from "@/types";
+import { IVerseItem, pbUser, Screens, TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "../Icon";
 import { Text, View } from "../Themed";
+import { useNotificationService } from "@/services/notificationServices";
 
 const defaultDailyVerse = {
   book_number: 0,
@@ -35,9 +36,11 @@ type DailyVerseProps = {
     is_favorite: boolean;
   };
   theme: TTheme;
+  user: pbUser | null;
 };
 
-const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
+const DailyVerseTwo = ({ dailyVerseObject, theme, user }: DailyVerseProps) => {
+  const { sendCustomNotification } = useNotificationService();
   const navigation = useNavigation();
   const { executeSql, myBibleDB, isMyBibleDbLoaded } = useDBContext();
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(
@@ -63,7 +66,25 @@ const DailyVerseTwo = ({ dailyVerseObject, theme }: DailyVerseProps) => {
           [book_number, chapter, verse],
           "GET_DAILY_VERSE2"
         );
-        setDailyVerse(response?.length ? response?.[0] : defaultDailyVerse);
+        const dailyVerseData = response?.length
+          ? response?.[0]
+          : defaultDailyVerse;
+        setDailyVerse(dailyVerseData);
+
+        // if (user) {
+        //   const nameInfo = user?.name?.split(" ") || [];
+        //   const userName = nameInfo[0];
+
+        //   const ref = `${dailyVerseData?.bookName} ${dailyVerseData?.chapter}:${dailyVerseData?.verse}`;
+        //   const verseText = getVerseTextRaw(dailyVerseData?.text);
+
+        //   const title = user
+        //     ? `✨ Shalom, ${userName}! — Verso del Día ✨`
+        //     : "✨Shalom! — Verso del Día ✨";
+        //   const body = `📖 ${ref}\n\n“${verseText}”\n`;
+
+        //   sendCustomNotification(title, body, { type: "daily-verse" }, 1);
+        // }
       } catch (error) {
         console.log(error);
       }

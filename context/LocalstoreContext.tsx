@@ -108,9 +108,9 @@ const initialContext: StoreState = {
   googleAIKey: "",
   notificationPreferences: {
     notificationEnabled: true,
-    dailyVerseEnabled: false,
+    dailyVerseEnabled: true,
     dailyVerseTime: "08:00",
-    devotionalReminder: false,
+    devotionalReminder: true,
     memorizationReminder: false,
     pushToken: null,
   },
@@ -132,7 +132,7 @@ interface StorageContextProps {
   clearData: () => void;
   isDataLoaded: boolean;
   hasPendingCloudSync: boolean;
-  syncWithCloud: () => Promise<boolean>;
+  syncWithCloud: ({ alert }: { alert?: boolean }) => Promise<boolean>;
   loadFromCloud: () => Promise<boolean>;
   toggleCloudSync: (enable: boolean) => void;
   updateNotificationPreferences: (
@@ -209,11 +209,15 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
 
     if (enable && pb.authStore.isValid) {
-      syncWithCloud();
+      syncWithCloud({});
     }
   };
 
-  const syncWithCloud = async (): Promise<boolean> => {
+  const syncWithCloud = async ({
+    alert = true,
+  }: {
+    alert?: boolean;
+  }): Promise<boolean> => {
     if (!isConnected) {
       Alert.alert(
         "Sin conexión a Internet",
@@ -249,8 +253,10 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
       storedData$.isSyncedWithCloud.set(true);
       setHasPendingCloudSync(false);
-      // console.log("✅ Configuración sincronizada con la nube");
-      showToast("✅ Configuración sincronizada con la nube");
+
+      if (alert) {
+        showToast("✅ Configuración sincronizada con la nube");
+      }
       return true;
     } catch (error) {
       console.error("Error al sincronizar con la nube:", error);
@@ -320,7 +326,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         return true;
       }
 
-      await syncWithCloud();
+      await syncWithCloud({});
       return false;
     } catch (error: any) {
       console.log("Error al cargar desde la nube:", error.originalError);

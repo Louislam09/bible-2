@@ -200,7 +200,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
     try {
       setIsSyncing(true);
 
-      const success = await syncWithCloud();
+      const success = await syncWithCloud({});
 
       if (success) {
         const now = new Date().toISOString();
@@ -448,7 +448,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
         {
           label: `Versión ${appVersion}`,
           iconName: "Info",
-          action: () => { },
+          action: () => {},
           extraText: `Fecha de Lanzamiento: Mar 13, 2024`,
         },
       ],
@@ -668,7 +668,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
                 headerRightIconColor: isSyncing
                   ? theme.colors.notification
                   : "transparent",
-                onPress: () => { },
+                onPress: () => {},
                 disabled: true,
                 style: { opacity: 0 },
               },
