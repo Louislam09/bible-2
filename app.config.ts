@@ -44,7 +44,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     ...config,
     name: getAppName(),
     slug: "bible",
-    version: "1.2.1",
+    version: "1.3.0",
     orientation: "default",
     icon: "./assets/images/icon.png",
     scheme: "sb-rv60",
@@ -67,7 +67,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       },
     },
     android: {
-      versionCode: 16,
+      versionCode: 17,
       icon: "./assets/images/icon.png",
       adaptiveIcon: {
         foregroundImage: "./assets/images/adaptive-icon.png",
