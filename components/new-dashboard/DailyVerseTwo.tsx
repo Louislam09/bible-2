@@ -40,7 +40,7 @@ type DailyVerseProps = {
 };
 
 const DailyVerseTwo = ({ dailyVerseObject, theme, user }: DailyVerseProps) => {
-  const { sendCustomNotification } = useNotificationService();
+  const { scheduleDailyVerseNotification } = useNotificationService();
   const navigation = useNavigation();
   const { executeSql, myBibleDB, isMyBibleDbLoaded } = useDBContext();
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(
@@ -71,19 +71,10 @@ const DailyVerseTwo = ({ dailyVerseObject, theme, user }: DailyVerseProps) => {
           : defaultDailyVerse;
         setDailyVerse(dailyVerseData);
 
+        // Example of how to schedule a daily verse notification with the actual verse data
+        // Uncomment this if you want to schedule notifications when the component loads
         // if (user) {
-        //   const nameInfo = user?.name?.split(" ") || [];
-        //   const userName = nameInfo[0];
-
-        //   const ref = `${dailyVerseData?.bookName} ${dailyVerseData?.chapter}:${dailyVerseData?.verse}`;
-        //   const verseText = getVerseTextRaw(dailyVerseData?.text);
-
-        //   const title = user
-        //     ? `✨ Shalom, ${userName}! — Verso del Día ✨`
-        //     : "✨Shalom! — Verso del Día ✨";
-        //   const body = `📖 ${ref}\n\n“${verseText}”\n`;
-
-        //   sendCustomNotification(title, body, { type: "daily-verse" }, 1);
+        //   await scheduleDailyVerseNotification("08:00", user, executeSql);
         // }
       } catch (error) {
         console.log(error);

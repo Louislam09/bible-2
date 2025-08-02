@@ -1,50 +1,10 @@
-/**
- * Notification Services for Bible App
- * 
- * This service provides comprehensive notification functionality for the Bible app,
- * including daily verse notifications, devotional reminders, and memorization reminders.
- * 
- * Usage Examples:
- * 
- * // Basic usage
- * const notificationService = useNotificationService();
- * 
- * // Request permissions
- * const hasPermission = await notificationService.requestPermissions();
- * 
- * // Schedule daily verse notification
- * await notificationService.scheduleDailyVerseNotification("08:00");
- * 
- * // Send test notification
- * await notificationService.sendTestNotification();
- * 
- * // Update notification settings
- * await notificationService.updateNotificationSettings({
- *   dailyVerseEnabled: true,
- *   dailyVerseTime: "09:00",
- *   devotionalReminder: true,
- *   memorizationReminder: false
- * });
- * 
- * // Send custom notification
- * await notificationService.sendCustomNotification(
- *   "Custom Title",
- *   "Custom message",
- *   { type: "custom" },
- *   5 // delay in seconds
- * );
- * 
- * // Cancel all notifications
- * await notificationService.cancelAllNotifications();
- * 
- * // Get scheduled notifications
- * const scheduled = await notificationService.getScheduledNotifications();
- */
-
-import * as Notifications from "expo-notifications";
-import { Platform, Alert } from "react-native";
+import { useDBContext } from "@/context/databaseContext";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { showToast } from "@/utils/showToast";
+import * as Notifications from "expo-notifications";
+import { useCallback } from "react";
+import { Alert, Platform } from "react-native";
+import { getDailyVerseData } from "./dailyVerseService";
 
 export interface NotificationPreferences {
     notificationEnabled: boolean;
@@ -84,6 +44,7 @@ export type SendPushNotificationToUserProps = {
 
 export const useNotificationService = () => {
     const { syncWithCloud } = useStorage();
+    const { executeSql, isMyBibleDbLoaded } = useDBContext();
     const getNotificationPreferences = (): NotificationPreferences => {
         const defaultPreferences = {
             notificationEnabled: true,
@@ -201,14 +162,38 @@ export const useNotificationService = () => {
         }
     };
 
-    const scheduleDailyVerseNotification = async (time: string): Promise<string | null> => {
+    const scheduleDailyVerseNotification = useCallback(async (
+        time: string,
+    ): Promise<string | null> => {
         const [hour = 8, minute = 2] = time.split(":").map(Number);
+
+        // Get the daily verse data if database access is available
+        let dailyVerseData = null;
+        if (executeSql && isMyBibleDbLoaded) {
+            dailyVerseData = await getDailyVerseData(executeSql);
+        }
+
+        // Prepare notification content
+        const user = storedData$.user.get() || null;
+        const nameInfo = user?.name?.split(" ") || [];
+        const userName = nameInfo[0];
+
+        const title = user
+            ? `✨ Shalom, ${userName}! — Verso del Día ✨`
+            : "✨ Shalom! — Verso del Día ✨";
+
+        const body = dailyVerseData
+            ? `📖 ${dailyVerseData.ref}\n\n"${dailyVerseData.text}"\n\nTómate un momento para reflexionar en la Palabra de Dios.`
+            : "Tu versículo diario está listo. Tómate un momento para reflexionar en la Palabra de Dios.";
 
         return await scheduleNotification(
             {
-                title: "📖 Versículo del Día",
-                body: "Tu versículo diario está listo. Tómate un momento para reflexionar en la Palabra de Dios.",
-                data: { type: "daily-verse" },
+                title,
+                body,
+                data: {
+                    type: "daily-verse",
+                    verseData: dailyVerseData
+                },
             },
             {
                 hour: hour,
@@ -216,7 +201,7 @@ export const useNotificationService = () => {
                 repeats: true,
             }
         );
-    };
+    }, [isMyBibleDbLoaded])
 
     const scheduleDevotionalReminder = async (hour: number = 9, minute: number = 0): Promise<string | null> => {
         return await scheduleNotification(
