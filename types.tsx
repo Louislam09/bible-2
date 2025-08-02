@@ -60,6 +60,7 @@ export enum Screens {
   Login = "login",
   Register = "register",
   AISetup = "ai-setup",
+  Notification = "notification",
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -97,6 +98,7 @@ export const ScreensName: TScreensName = {
   [Screens.Login]: "Iniciar Sesión",
   [Screens.Register]: "Crear una cuenta",
   [Screens.AISetup]: "Configuración de IA",
+  [Screens.Notification]: "Notificacion",
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -121,6 +123,7 @@ export type RootTabParamList = {
   login: undefined;
   register: undefined;
   history: undefined;
+  notification: undefined;
   "memorization/memoryList": undefined;
 };
 
@@ -160,6 +163,7 @@ export type RootStackParamList = {
   song: { isAlegres: boolean };
   "(game)": { questionsPerLevel: number };
   hymn: undefined;
+  notification: undefined;
   history: undefined;
   notFound: undefined;
   [Screens.Login]: undefined;
@@ -729,6 +733,7 @@ export interface pbUser {
   name: string;
   updated: string;
   verified: boolean;
+  isAdmin?: boolean;
 }
 
 export interface RequestData {

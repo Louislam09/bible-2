@@ -315,6 +315,19 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
       ],
     },
     {
+      title: "Notificaciones",
+      id: "notifications",
+      options: [
+        {
+          label: "Notificaciones",
+          iconName: "Bell",
+          action: () => router.push("/notification"),
+          extraText: "Configura las notificaciones de la aplicación",
+          color: theme.colors.notification,
+        },
+      ],
+    },
+    {
       title: "Inteligencia Artificial",
       id: "ai",
       options: [
@@ -435,7 +448,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
         {
           label: `Versión ${appVersion}`,
           iconName: "Info",
-          action: () => {},
+          action: () => { },
           extraText: `Fecha de Lanzamiento: Mar 13, 2024`,
         },
       ],
@@ -655,7 +668,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
                 headerRightIconColor: isSyncing
                   ? theme.colors.notification
                   : "transparent",
-                onPress: () => {},
+                onPress: () => { },
                 disabled: true,
                 style: { opacity: 0 },
               },

@@ -5,12 +5,13 @@ import { Text, View } from "@/components/Themed";
 import Walkthrough from "@/components/Walkthrough";
 import { getBookDetail } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { useMemorization } from "@/context/MemorizationContext";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
 import { tourState$ } from "@/state/tourState";
-import { IBookVerse, TIcon, TTheme, TVerse } from "@/types";
+import { IBookVerse, Screens, TIcon, TTheme, TVerse } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { customUnderline } from "@/utils/customStyle";
 import {
@@ -33,6 +34,7 @@ import React, {
   useState,
 } from "react";
 import {
+  Alert,
   Animated,
   Easing,
   Pressable,
@@ -152,6 +154,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   const [stepIndex, setStepIndex] = useState(0);
   const animatedVerseHighlight = useRef(new Animated.Value(0)).current;
   const wordAndStrongValue = extractWordsWithTags(item.text);
+  const googleAIKey = use$(() => storedData$.googleAIKey.get());
 
   // LEGEND STATE
   const isBottomBibleSearching = use$(
@@ -342,6 +345,20 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   };
 
   const onExplainWithAI = () => {
+    if (!googleAIKey) {
+      Alert.alert(
+        "Aviso",
+        "No se ha configurado la API key de Google AI",
+        [
+          { text: "Cancelar", style: "cancel" },
+          {
+            text: "Configurar",
+            onPress: () => router.push(Screens.AISetup),
+          },
+        ]
+      );
+      return
+    }
     const verseText = getVerseTextRaw(item.text);
     const reference = `${getBookDetail(item.book_number).longName} ${item.chapter
       }:${item.verse}`;

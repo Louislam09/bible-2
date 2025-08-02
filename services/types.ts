@@ -8,6 +8,7 @@ export interface RequestStatus {
   name: string;
   status: "pending" | "approved" | "rejected";
   created: string;
+  user: string;
 }
 
 export interface ApiResponse<T> {

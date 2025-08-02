@@ -5,6 +5,7 @@ import StudyTools from "@/components/new-dashboard/StudyTools";
 import StatusBarBackground from "@/components/StatusBarBackground";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { useNotification } from "@/context/NotificationContext";
 import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";
 import isWithinTimeframe from "@/utils/isWithinTimeframe";
@@ -12,8 +13,9 @@ import { showToast } from "@/utils/showToast";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
+import * as Notifications from "expo-notifications";
 import { useNavigation } from "expo-router";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { IDashboardOption } from "../../app/(dashboard)";
 import BottomModal from "../BottomModal";
@@ -42,6 +44,7 @@ const SecondDashboard = () => {
   } = useBibleContext();
   const storedData = storedData$.get();
   const requestAccessBottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const { notification, expoPushToken, error } = useNotification();
 
   const {
     lastBook,
@@ -50,9 +53,10 @@ const SecondDashboard = () => {
     lastBottomSideBook,
     lastBottomSideChapter,
     lastBottomSideVerse,
-    isAdmin,
+    isAdmin: _isAdmin,
   } = storedData;
   const user = use$(() => storedData$.user.get()) || null;
+  const isAdmin = _isAdmin || user?.isAdmin;
 
   const onSelect = (version: string) => {
     bibleState$.clearSelection();
@@ -99,17 +103,17 @@ const SecondDashboard = () => {
     },
     user
       ? {
-        icon: "NotebookText",
-        label: "Notas",
-        action: () =>
-          navigation.navigate(Screens.Notes, { shouldRefresh: false }),
-        color: theme.colors.notification,
-      }
+          icon: "NotebookText",
+          label: "Notas",
+          action: () =>
+            navigation.navigate(Screens.Notes, { shouldRefresh: false }),
+          color: theme.colors.notification,
+        }
       : {
-        icon: "Cloudy",
-        label: "Sincronizar",
-        action: () => navigation.navigate(Screens.Login),
-      },
+          icon: "Cloudy",
+          label: "Sincronizar",
+          action: () => navigation.navigate(Screens.Login),
+        },
   ];
 
   const requestAccessHandlePresentModalPress = useCallback(
@@ -237,7 +241,6 @@ const SecondDashboard = () => {
       action: () => navigation.navigate(Screens.Character),
       color: "#cec8ff",
     },
-
   ];
 
   const versionRef = useRef<BottomSheetModal>(null);

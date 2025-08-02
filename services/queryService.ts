@@ -72,7 +72,6 @@ export const useUpdateRequestStatus = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, status }: { id: string; status: RequestStatus['status'] }) => {
-      console.log({ id, status })
       try {
         const updatedRequest = await pb.collection('access_requests').update(id, {
           status,

@@ -7,6 +7,7 @@ export const GOOGLE_REDIRECT_URI = "com.louislam09.bible";
 export const POCKETBASE_URL = process.env.EXPO_PUBLIC_POCKETBASE_URL;
 export const TEMP_PASSWORD = process.env.EXPO_PUBLIC_TEMP_PASSWORD;
 export const APP_DEEPLINK_URI = "https://louislam09.github.io/bible-deeplink";
+export const IS_DEV = process.env.EXPO_PUBLIC_APP_VARIANT === "development";
 
 import PocketBase from "pocketbase";
 import { pbUser } from "./types";
@@ -76,4 +77,3 @@ export const configureOAuth2Redirect = () => {
     );
   });
 };
-

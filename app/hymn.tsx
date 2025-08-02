@@ -10,6 +10,7 @@ import { storedData$ } from "@/context/LocalstoreContext";
 import { pb } from "@/globalConfig";
 import useInternetConnection from "@/hooks/useInternetConnection";
 import useRealtimeCollection from "@/hooks/useRealtimeCollection";
+import { useNotificationService } from "@/services/notificationServices";
 import { authState$ } from "@/state/authState";
 import { Collections, RequestData, Screens, TTheme } from "@/types";
 import checkConnection from "@/utils/checkConnection";
@@ -193,6 +194,7 @@ const HymnScreen = () => {
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const { isConnected } = useInternetConnection();
   const requestAccessBottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const { sendPushNotificationToUser } = useNotificationService();
 
   const isAlegresNuevasUnlocked = use$(() =>
     storedData$.isAlegresNuevasUnlocked.get()
@@ -209,19 +211,25 @@ const HymnScreen = () => {
   const {
     data: request,
     loading: isFetchingRequests,
-    refetch
+    refetch,
   } = useRealtimeCollection<RequestData & RecordModel, true>({
     collection: Collections.AccessRequest,
-    options: {},
+    options: {
+      expand: "user",
+    },
     byUser: true,
   });
 
   useEffect(() => {
-    if (!request?.id || isFetchingRequests) return
-    if (request.status === 'approved') {
+    if (!request?.id || isFetchingRequests) return;
+    if (request.status === "approved") {
       storedData$.isAlegresNuevasUnlocked.set(true);
       storedData$.hasRequestAccess.set(true);
-    } else if ([AccessStatus.Pending, AccessStatus.Rejected].includes(request.status as AccessStatus)) {
+    } else if (
+      [AccessStatus.Pending, AccessStatus.Rejected].includes(
+        request.status as AccessStatus
+      )
+    ) {
       storedData$.isAlegresNuevasUnlocked.set(false);
     }
   }, [request, isFetchingRequests]);
@@ -280,7 +288,10 @@ const HymnScreen = () => {
   const requestAccess = async (name: string) => {
     const isConnected = await checkConnection();
     if (!isConnected) {
-      Alert.alert("Sin conexión", "No hay conexión a Internet para solicitar accesso.");
+      Alert.alert(
+        "Sin conexión",
+        "No hay conexión a Internet para solicitar accesso."
+      );
       return;
     }
     const user = authState$.user.get();
@@ -289,24 +300,29 @@ const HymnScreen = () => {
       if (!pb.authStore.isValid) throw new Error("Not authenticated");
 
       const existing = await pb
-        .collection("access_requests")
+        .collection(Collections.AccessRequest)
         .getFirstListItem(`user.id="${userId}" && status="pending"`);
 
-      refetch()
+      const admins = await pb.collection(Collections.Users).getFullList({
+        filter: `isAdmin=true`,
+      });
+      console.log({ admins });
+
+      refetch();
     } catch (err: any) {
       if (err.status !== 404) {
-        console.log('--------errr-----------', err.message || "Unknown error");
+        console.log("--------errr-----------", err.message || "Unknown error");
         return;
       }
 
       try {
-        const created = await pb.collection("access_requests").create({
+        const created = await pb.collection(Collections.AccessRequest).create({
           user: userId,
           name: name || "",
           status: "pending",
         });
 
-        refetch()
+        refetch();
       } catch (createErr: any) {
         console.log(createErr.message || "Failed to request access");
       } finally {

@@ -1,12 +1,18 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
+import { pb } from "@/globalConfig";
 import useRealtimeCollection from "@/hooks/useRealtimeCollection";
+import {
+  NotificationPreferences,
+  useNotificationService,
+} from "@/services/notificationServices";
 import {
   useDeleteRequest,
   useUpdateRequestStatus,
 } from "@/services/queryService";
 import { RequestStatus } from "@/services/types";
 import { Collections, RequestData, TTheme } from "@/types";
+import { showToast } from "@/utils/showToast";
 import { useTheme } from "@react-navigation/native";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { format } from "date-fns";
@@ -58,7 +64,10 @@ const RequestItem = ({
   onDeleteRequest,
 }: {
   item: RequestStatus;
-  onUpdateStatus: (id: string, status: RequestStatus["status"]) => void;
+  onUpdateStatus: (
+    item: RequestStatus,
+    status: RequestStatus["status"]
+  ) => void;
   onDeleteRequest: (id: string) => void;
 }) => {
   const theme = useTheme();
@@ -67,6 +76,10 @@ const RequestItem = ({
   const statusIcon = approvalStatus[item.status].icon;
   const statusColor = approvalStatus[item.status].color;
   const statusLabel = approvalStatus[item.status].label;
+
+  const onUpdate = ({ status }: { status: RequestStatus["status"] }) => {
+    onUpdateStatus(item, status);
+  };
 
   return (
     <View
@@ -103,7 +116,7 @@ const RequestItem = ({
             styles.approveButton,
             { opacity: item.status === "approved" ? 0.5 : 1 },
           ]}
-          onPress={() => onUpdateStatus(item.id, "approved")}
+          onPress={() => onUpdate({ status: "approved" })}
           disabled={item.status === "approved"}
           accessibilityLabel="Aprobar solicitud"
         >
@@ -116,7 +129,7 @@ const RequestItem = ({
             styles.rejectButton,
             { opacity: item.status === "rejected" ? 0.5 : 1 },
           ]}
-          onPress={() => onUpdateStatus(item.id, "rejected")}
+          onPress={() => onUpdate({ status: "rejected" })}
           disabled={item.status === "rejected"}
           accessibilityLabel="Rechazar solicitud"
         >
@@ -240,6 +253,7 @@ const RequestAccessScreen: React.FC = () => {
     RequestStatus["status"] | null
   >(null);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const { sendPushNotificationToUser } = useNotificationService();
 
   const theme = useTheme();
   const styles = getStyles(theme);
@@ -286,23 +300,58 @@ const RequestAccessScreen: React.FC = () => {
   }, [requests, searchQuery, statusFilter]);
 
   const handleUpdateStatus = useCallback(
-    (id: string, status: RequestStatus["status"]) => {
-      updateStatus(
-        { id, status },
-        {
-          onSuccess: () => {
-            Alert.alert("Éxito", "Estado actualizado exitosamente");
-          },
-          onError: (error) => {
-            Alert.alert(
-              "Error",
-              error instanceof Error
-                ? error.message
-                : "Error al actualizar el estado"
-            );
-          },
+    async (item: RequestStatus, status: RequestStatus["status"]) => {
+      try {
+        const { id, user } = item;
+        console.log({ user, status });
+        let currentUserPushToken = null;
+
+        const currentUserSettings = await pb
+          .collection(Collections.Settings)
+          .getFirstListItem(`user = "${user}"`);
+
+        if (currentUserSettings) {
+          const currentUserNotificationPreferences = currentUserSettings
+            ?.settings?.notificationPreferences as NotificationPreferences;
+
+          if (currentUserNotificationPreferences?.notificationEnabled) {
+            currentUserPushToken = currentUserNotificationPreferences.pushToken;
+          }
         }
-      );
+
+        updateStatus(
+          { id, status },
+          {
+            onSuccess: () => {
+              showToast("Estado actualizado exitosamente", "SHORT");
+              if (currentUserPushToken) {
+                sendPushNotificationToUser({
+                  pushToken: currentUserPushToken,
+                  title: "📖 Solicitud de acceso al himnario",
+                  body: `Tu solicitud ha sido ${
+                    status === "approved"
+                      ? "aprobada ✅. Ya puedes acceder al himnario."
+                      : "rechazada ❌. Si crees que se trata de un error, contáctanos."
+                  }`,
+                  options: {
+                    badge: 1,
+                  },
+                });
+              }
+            },
+            onError: (error) => {
+              Alert.alert(
+                "Error",
+                error instanceof Error
+                  ? error.message
+                  : "Error al actualizar el estado"
+              );
+            },
+          }
+        );
+      } catch (error: any) {
+        console.log({ error }, error.originalError);
+      }
     },
     [updateStatus]
   );

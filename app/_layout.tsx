@@ -6,8 +6,8 @@ import DatabaseProvider from "@/context/databaseContext";
 import StorageProvider from "@/context/LocalstoreContext";
 import { MemorizationProvider } from "@/context/MemorizationContext";
 import MyThemeProvider from "@/context/ThemeContext";
-import { QueryProvider } from "@/providers/QueryProvider";
 import useCachedResources from "@/hooks/useCachedResources";
+import { QueryProvider } from "@/providers/QueryProvider";
 import { settingState$ } from "@/state/settingState";
 import { Screens, ScreensName } from "@/types";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
@@ -21,8 +21,36 @@ import { ToastAndroid } from "react-native";
 import ErrorBoundary from "react-native-error-boundary";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { NativeStackNavigationOptions } from "react-native-screens/lib/typescript/native-stack/types";
 import { StackAnimationTypes } from "react-native-screens";
+import { NativeStackNavigationOptions } from "react-native-screens/lib/typescript/native-stack/types";
+
+import { NotificationProvider } from "@/context/NotificationContext";
+import * as Notifications from "expo-notifications";
+import * as TaskManager from "expo-task-manager";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
+
+const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
+
+TaskManager.defineTask(
+  BACKGROUND_NOTIFICATION_TASK,
+  ({ data, error, executionInfo }) => {
+    console.log("✅ Received a notification in the background!", {
+      data,
+      error,
+      executionInfo,
+    });
+    // Do something with the notification data
+  }
+);
+
+Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
 
 type ScreenOptionsProps = {
   route: RouteProp<ParamListBase, string>;
@@ -64,6 +92,7 @@ const screenAnimations: TScreensName = {
   [Screens.Quote]: "slide_from_right",
   [Screens.AISetup]: "slide_from_right",
   [Screens.AISearch]: "slide_from_right",
+  [Screens.Notification]: "slide_from_right",
 };
 
 const App = () => {
@@ -81,7 +110,7 @@ const App = () => {
         await Updates.reloadAsync();
         ToastAndroid.show("Actualizada ✅", ToastAndroid.SHORT);
       }
-    } catch (error) { }
+    } catch (error) {}
   }
 
   useEffect(() => {
@@ -112,19 +141,21 @@ const App = () => {
           <BibleProvider>
             <BibleChapterProvider>
               <MemorizationProvider>
-                <MyThemeProvider>
-                  <QueryProvider>
-                    <GestureHandlerRootView style={{ flex: 1 }}>
-                      <BottomSheetModalProvider>
-                        <StatusBar animated translucent style="auto" />
-                        <Stack
-                          initialRouteName="(dashboard)"
-                          screenOptions={screenOptions}
-                        />
-                      </BottomSheetModalProvider>
-                    </GestureHandlerRootView>
-                  </QueryProvider>
-                </MyThemeProvider>
+                <NotificationProvider>
+                  <MyThemeProvider>
+                    <QueryProvider>
+                      <GestureHandlerRootView style={{ flex: 1 }}>
+                        <BottomSheetModalProvider>
+                          <StatusBar animated translucent style="auto" />
+                          <Stack
+                            initialRouteName="(dashboard)"
+                            screenOptions={screenOptions}
+                          />
+                        </BottomSheetModalProvider>
+                      </GestureHandlerRootView>
+                    </QueryProvider>
+                  </MyThemeProvider>
+                </NotificationProvider>
               </MemorizationProvider>
             </BibleChapterProvider>
           </BibleProvider>

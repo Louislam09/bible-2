@@ -63,6 +63,14 @@ type StoreState = {
   token: string;
   lastSyncTime: string;
   googleAIKey: string;
+  notificationPreferences: {
+    notificationEnabled: boolean;
+    dailyVerseEnabled: boolean;
+    dailyVerseTime: string;
+    devotionalReminder: boolean;
+    memorizationReminder: boolean;
+    pushToken: string | null;
+  };
 };
 
 const initialContext: StoreState = {
@@ -98,6 +106,14 @@ const initialContext: StoreState = {
   token: "",
   lastSyncTime: "",
   googleAIKey: "",
+  notificationPreferences: {
+    notificationEnabled: true,
+    dailyVerseEnabled: false,
+    dailyVerseTime: "08:00",
+    devotionalReminder: false,
+    memorizationReminder: false,
+    pushToken: null,
+  },
 };
 
 export const storedData$ = observable(initialContext);
@@ -119,6 +135,10 @@ interface StorageContextProps {
   syncWithCloud: () => Promise<boolean>;
   loadFromCloud: () => Promise<boolean>;
   toggleCloudSync: (enable: boolean) => void;
+  updateNotificationPreferences: (
+    preferences: StoreState["notificationPreferences"]
+  ) => void;
+  getNotificationPreferences: () => StoreState["notificationPreferences"];
 }
 
 const StorageContext = createContext<StorageContextProps | undefined>(
@@ -313,6 +333,16 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
+  const updateNotificationPreferences = (
+    preferences: StoreState["notificationPreferences"]
+  ) => {
+    storedData$.notificationPreferences.set(preferences);
+  };
+
+  const getNotificationPreferences = () => {
+    return storedData$.notificationPreferences.get();
+  };
+
   return (
     <StorageContext.Provider
       value={{
@@ -323,6 +353,8 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         syncWithCloud,
         loadFromCloud,
         toggleCloudSync,
+        updateNotificationPreferences,
+        getNotificationPreferences,
       }}
     >
       {children}

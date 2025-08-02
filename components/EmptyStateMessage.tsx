@@ -13,7 +13,7 @@ type EmptyStateMessageProps = {
         email: string
     },
     onClose: () => void
-    onResend: () => void
+    onResend?: () => void
 }
 
 const EmptyStateMessage = ({ info, onClose, onResend }: EmptyStateMessageProps) => {
@@ -35,9 +35,9 @@ const EmptyStateMessage = ({ info, onClose, onResend }: EmptyStateMessageProps) 
                     <TouchableOpacity style={styles.closeButton} onPress={onClose}>
                         <Text style={styles.closeButtonText}>Cerrar</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.closeButton, { backgroundColor: 'transparent', borderColor: theme.colors.notification, borderWidth: 1 }]} onPress={onResend}>
-                        <Text style={styles.closeButtonText}>Reenviar</Text>
-                    </TouchableOpacity>
+                    {onResend && <TouchableOpacity style={[styles.closeButton, { backgroundColor: 'transparent', borderColor: theme.colors.notification, borderWidth: 1 }]} onPress={onResend}>
+                        <Text style={[styles.closeButtonText, { color: theme.colors.notification }]}>Reenviar</Text>
+                    </TouchableOpacity>}
                 </View>
             </View>
         </View>
