@@ -2,7 +2,7 @@ import { useDBContext } from "@/context/databaseContext";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { showToast } from "@/utils/showToast";
 import * as Notifications from "expo-notifications";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Alert, Platform } from "react-native";
 import { getDailyVerseData } from "./dailyVerseService";
 
@@ -45,6 +45,7 @@ export type SendPushNotificationToUserProps = {
 export const useNotificationService = () => {
     const { syncWithCloud } = useStorage();
     const { executeSql, isMyBibleDbLoaded } = useDBContext();
+    const [error, setError] = useState<string | null>(null);
     const getNotificationPreferences = (): NotificationPreferences => {
         const defaultPreferences = {
             notificationEnabled: true,
@@ -157,6 +158,7 @@ export const useNotificationService = () => {
             return notificationId;
         } catch (error) {
             console.error("Error scheduling notification:", error);
+            setError(JSON.stringify(error, null, 2));
             showToast("No se pudo programar la notificación", "SHORT");
             return null;
         }
@@ -526,5 +528,6 @@ export const useNotificationService = () => {
         initializeNotifications,
         sendCustomNotification,
         sendPushNotificationToUser,
+        error,
     };
 };

@@ -56,6 +56,9 @@ const NotificationSettingsScreen = () => {
   const [selectedMinute, setSelectedMinute] = useState("00");
   const [isScheduling] = useState(false);
 
+  const user = use$(() => storedData$.user.get()) || null;
+  const isAdmin = user?.isAdmin;
+
   const notificationPreferences = use$(() => {
     const preferences = storedData$.notificationPreferences.get();
     const defaultPreferences = {
@@ -237,6 +240,29 @@ const NotificationSettingsScreen = () => {
         id: "debug",
         options: [
           {
+            label: "Estado de Notificaciones",
+            extraText: notificationService.error
+              ? JSON.stringify(notificationService.error)
+              : "Sin errores",
+            // extraText: error ? "Hay errores" : "Sin errores",
+            iconName: "Bell" as keyof typeof icons,
+            action: () => {
+              if (notificationService.error) {
+                try {
+                  Alert.alert(
+                    "Error",
+                    JSON.stringify(notificationService.error, null, 2)
+                  );
+                } catch (error) {
+                  console.log(error);
+                }
+              }
+            },
+            color: notificationService.error
+              ? "red"
+              : theme.colors.notification,
+          },
+          {
             label: "Token Push",
             extraText: `Token: ${expoPushToken}`,
             // extraText: expoPushToken ? "Token configurado" : "No disponible",
@@ -252,7 +278,7 @@ const NotificationSettingsScreen = () => {
           },
           {
             label: "Estado de Error",
-            extraText: JSON.stringify(error),
+            extraText: error ? JSON.stringify(error) : "Sin errores",
             // extraText: error ? "Hay errores" : "Sin errores",
             iconName: "BadgeAlert" as keyof typeof icons,
             action: () => {
@@ -263,10 +289,10 @@ const NotificationSettingsScreen = () => {
             color: error ? "red" : theme.colors.notification,
           },
         ],
-        hide: !IS_DEV,
+        hide: !IS_DEV && !isAdmin,
       },
     ].filter((section) => !section.hide);
-  }, [notificationPreferences]);
+  }, [notificationPreferences, isAdmin]);
 
   const SettingItem = useCallback(
     ({ item }: { item: TOption }) => {
