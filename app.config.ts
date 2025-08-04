@@ -77,6 +77,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       },
       package: getUniqueIdentifier(),
       googleServicesFile: googleServicesFile(),
+      permissions: ["android.permission.SCHEDULE_EXACT_ALARM"],
     },
     web: {
       bundler: "metro",
