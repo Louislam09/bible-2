@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "scripts": {
-    "start": "APP_VARIANT=development expo start --dev-client",
+    "start": "expo start --dev-client",
     "dev": "APP_VARIANT=development expo start --dev-client",
     "preview": "APP_VARIANT=preview expo start --dev-client",
     "android": "expo run:android",

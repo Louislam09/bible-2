@@ -175,15 +175,15 @@ const NotificationSettingsScreen = () => {
           },
           ...(notificationPreferences.dailyVerseEnabled
             ? [
-                {
-                  label: "Hora de Notificación",
-                  extraText: "Configura cuándo recibir el versículo diario",
-                  iconName: "Clock" as keyof typeof icons,
-                  action: () => setModalVisible(true),
-                  badge: notificationPreferences.dailyVerseTime,
-                  color: theme.colors.notification,
-                },
-              ]
+              {
+                label: "Hora de Notificación",
+                extraText: "Configura cuándo recibir el versículo diario",
+                iconName: "Clock" as keyof typeof icons,
+                action: () => setModalVisible(true),
+                badge: notificationPreferences.dailyVerseTime,
+                color: theme.colors.notification,
+              },
+            ]
             : []),
         ],
         hide: !notificationPreferences.notificationEnabled,
@@ -383,7 +383,7 @@ const NotificationSettingsScreen = () => {
               headerRightProps: {
                 headerRightIcon: "Settings",
                 headerRightIconColor: theme.colors.notification,
-                onPress: () => {},
+                onPress: () => { },
                 disabled: true,
                 style: { opacity: 0 },
               },
@@ -422,7 +422,6 @@ const NotificationSettingsScreen = () => {
                             backgroundColor: theme.colors.background,
                             color: theme.colors.text,
                           }}
-                          // color={theme.colors.text}
                           key={val}
                           label={val}
                           value={val}
@@ -441,18 +440,20 @@ const NotificationSettingsScreen = () => {
                     dropdownIconColor={theme.colors.text}
                     mode="dropdown"
                   >
-                    {["00", "15", "30", "45"].map((val) => (
-                      <Picker.Item
-                        style={{
-                          backgroundColor: theme.colors.background,
-                          color: theme.colors.text,
-                        }}
-                        color={theme.colors.text}
-                        key={val}
-                        label={val}
-                        value={val}
-                      />
-                    ))}
+                    {Array.from({ length: 60 }).map((_, i) => {
+                      const val = String(i).padStart(2, "0");
+                      return (
+                        <Picker.Item
+                          style={{
+                            backgroundColor: theme.colors.background,
+                            color: theme.colors.text,
+                          }}
+                          key={val}
+                          label={val}
+                          value={val}
+                        />
+                      );
+                    })}
                   </Picker>
                 </View>
               </View>

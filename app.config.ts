@@ -33,7 +33,7 @@ const googleServicesFile = () => {
   }
 
   if (IS_PREVIEW) {
-    return "./google-services-dev.json";
+    return "./google-services.json";
   }
 
   return "./google-services.json";
@@ -77,7 +77,11 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       },
       package: getUniqueIdentifier(),
       googleServicesFile: googleServicesFile(),
-      permissions: ["android.permission.SCHEDULE_EXACT_ALARM"],
+      permissions: [
+        "android.permission.SCHEDULE_EXACT_ALARM",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.VIBRATE"
+      ],
     },
     web: {
       bundler: "metro",

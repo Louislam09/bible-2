@@ -46,6 +46,7 @@ export const useNotificationService = () => {
     const { syncWithCloud } = useStorage();
     const { executeSql, isMyBibleDbLoaded } = useDBContext();
     const [error, setError] = useState<string | null>(null);
+
     const getNotificationPreferences = (): NotificationPreferences => {
         const defaultPreferences = {
             notificationEnabled: true,
@@ -165,14 +166,19 @@ export const useNotificationService = () => {
     };
 
     const scheduleDailyVerseNotification = useCallback(async (
-        time: string,
+        time: string = '08:00'
     ): Promise<string | null> => {
         const [hour = 8, minute = 2] = time.split(":").map(Number);
 
         // Get the daily verse data if database access is available
         let dailyVerseData = null;
         if (executeSql && isMyBibleDbLoaded) {
-            dailyVerseData = await getDailyVerseData(executeSql);
+            try {
+                dailyVerseData = await getDailyVerseData(executeSql);
+            } catch (error) {
+                console.warn('Could not get daily verse data:', error);
+                setError(JSON.stringify(error, null, 2));
+            }
         }
 
         // Prepare notification content
@@ -198,8 +204,8 @@ export const useNotificationService = () => {
                 },
             },
             {
-                hour: hour,
-                minute: minute,
+                hour: hour || 8,
+                minute: minute || 0,
                 repeats: true,
             }
         );
@@ -329,8 +335,12 @@ export const useNotificationService = () => {
             const currentPrefs = getNotificationPreferences();
             const updatedPrefs = { ...currentPrefs, ...preferences };
 
-            // Update preferences
-            updateNotificationPreferences(updatedPrefs);
+            try {
+                // Update preferences
+                updateNotificationPreferences(updatedPrefs);
+            } catch (error) {
+
+            }
             const hasChanged = {
                 notificationEnabled: preferences.hasOwnProperty('notificationEnabled'),
                 dailyVerseEnabled: preferences.hasOwnProperty('dailyVerseEnabled'),

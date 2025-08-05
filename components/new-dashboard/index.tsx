@@ -13,9 +13,9 @@ import { showToast } from "@/utils/showToast";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
-import * as Notifications from "expo-notifications";
+// import * as Notifications from "expo-notifications";
 import { useNavigation } from "expo-router";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { IDashboardOption } from "../../app/(dashboard)";
 import BottomModal from "../BottomModal";
@@ -23,7 +23,6 @@ import EmptyStateMessage from "../EmptyStateMessage";
 import VersionList from "../home/header/VersionList";
 import ProfileCard from "../UserProfile";
 import VoiceList from "../VoiceList";
-
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
   manager: IDashboardOption[];
@@ -63,6 +62,18 @@ const SecondDashboard = () => {
     selectBibleVersion(version);
     versionRef.current?.dismiss();
   };
+
+  // useEffect(() => {
+  // Notifications.scheduleNotificationAsync({
+  //   content: {
+  //     title: "Time's up!",
+  //     body: 'Change sides!',
+  //   },
+  //   trigger: {
+  //     seconds: 3,
+  //   },
+  // });
+  // }, [])
 
   const onSong = useCallback(() => {
     navigation.navigate(Screens.Hymn);

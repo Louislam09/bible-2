@@ -305,7 +305,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     !isMyBibleDbLoaded
   ) {
     return (
-      <ScreenWithAnimation imageSource={logo} isVisible titleColor={'white'} backgroundColor='#0d3f3e' iconColor='white' title="Cargado..." icon="BookPlus">
+      <ScreenWithAnimation imageSource={logo} isVisible titleColor={'white'} backgroundColor='#0d3f3e' iconColor='white' title="Cargando..." icon="BookPlus">
         <></>
       </ScreenWithAnimation>
     );
