@@ -29,14 +29,15 @@ const getAppName = () => {
 
 const googleServicesFile = () => {
   if (IS_DEV) {
-    return "./google-services-dev.json";
+    return process.env.GOOGLE_SERVICES_JSON;
+    // return "./google-services-dev.json";
   }
 
   if (IS_PREVIEW) {
     return "./google-services.json";
   }
 
-  return "./google-services.json";
+  return process.env.GOOGLE_SERVICES_JSON;
 };
 
 export default ({ config }: ConfigContext): ExpoConfig => {
@@ -68,7 +69,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       },
     },
     android: {
-      versionCode: 17,
+      versionCode: 25,
       icon: "./assets/images/icon.png",
       adaptiveIcon: {
         foregroundImage: "./assets/images/adaptive-icon.png",
@@ -127,6 +128,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       "expo-asset",
       "expo-font",
       "expo-router",
+      "expo-web-browser"
     ],
     runtimeVersion: {
       policy: "appVersion",

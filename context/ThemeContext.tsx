@@ -22,7 +22,7 @@ interface ThemeProviderProps {
 }
 
 const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const { currentTheme } = useBibleContext();
+  const { currentTheme, selectedFont } = useBibleContext();
   const colorScheme = Appearance.getColorScheme();
   const themes = getThemes();
   const { DarkTheme, LightTheme } = themes[currentTheme];
@@ -50,9 +50,38 @@ const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     setSchema((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
+  // regular: { fontFamily: selectedFont, fontWeight: "400" },
+  // medium: { fontFamily: selectedFont, fontWeight: "500" },
+  // bold: { fontFamily: selectedFont, fontWeight: "700" },
+  // heavy: { fontFamily: selectedFont, fontWeight: "900" },
+
   return (
     <ThemeContext.Provider value={{ schema, toggleTheme }}>
-      <ThemeProvider value={theme[schema]}>{children}</ThemeProvider>
+      <ThemeProvider
+        value={{
+          ...theme[schema],
+          fonts: {
+            regular: {
+              fontFamily: selectedFont,
+              fontWeight: "400" as const,
+            },
+            medium: {
+              fontFamily: selectedFont,
+              fontWeight: "500" as const,
+            },
+            bold: {
+              fontFamily: selectedFont,
+              fontWeight: "700" as const,
+            },
+            heavy: {
+              fontFamily: selectedFont,
+              fontWeight: "900" as const,
+            },
+          },
+        }}
+      >
+        {children}
+      </ThemeProvider>
     </ThemeContext.Provider>
   );
 };
