@@ -3,14 +3,13 @@ import { Text } from "@/components/Themed";
 import WordDefinition from "@/components/WordDefinition";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
-import { useCustomTheme } from "@/context/ThemeContext";
+import { useTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
 import useDictionaryData, { DatabaseData } from "@/hooks/useDictionaryData";
 import useParams from "@/hooks/useParams";
 import { DictionaryData, Screens, TTheme } from "@/types";
 import { pluralToSingular } from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useRouter } from "expo-router";
 import React, {
@@ -105,8 +104,7 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
   const { fontSize } = useBibleContext();
   const [selectedWord, setSelectedWord] = useState<any>(null);
   const [filterData, setFilterData] = useState<DatabaseData[]>([]);
-  const theme = useTheme();
-  const { schema } = useCustomTheme();
+  const { theme, schema } = useTheme();
   const router = useRouter();
   const styles = getStyles(theme);
   const [searchText, setSearchText] = useState<any>(word ? word : "");

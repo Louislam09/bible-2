@@ -1,4 +1,4 @@
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import * as Clipboard from "expo-clipboard";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
@@ -24,7 +24,7 @@ const DEFAULT_HEIGHT = 1200;
 const EXTRA_HEIGHT_TO_ADJUST = 150;
 
 export default function AIResponseHmlRender({ response }: AIResponseProps) {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const [copySuccess, setCopySuccess] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [fadeAnim] = useState(new Animated.Value(0));

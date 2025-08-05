@@ -6,9 +6,10 @@ import useParams from "@/hooks/useParams";
 import { bibleState$ } from "@/state/bibleState";
 import { ChooseChapterNumberParams, Screens } from "@/types";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { Stack, useNavigation } from "expo-router";
 import React, { Fragment, useCallback, useMemo } from "react";
+import { View } from "@/components/Themed";
 
 const ChooseChapterNumber = () => {
   const navigation = useNavigation();
@@ -18,7 +19,7 @@ const ChooseChapterNumber = () => {
 
   const selectedBook = isBottomSideSearching ? bottomSideBook : book;
   const displayBookName = renameLongBookName(selectedBook || "");
-  const theme = useTheme();
+  const { theme } = useTheme();
 
   const numberOfChapters = useMemo(() => {
     return Array.from(
@@ -52,7 +53,7 @@ const ChooseChapterNumber = () => {
         options={{
           ...singleScreenHeader({
             theme,
-            title: "Capitulos",
+            title: "Capítulos",
             titleIcon: "List",
             headerRightProps: {
               headerRightIconColor: "red",
@@ -63,12 +64,14 @@ const ChooseChapterNumber = () => {
           }),
         }}
       />
-      <OptimizedChapterList
-        bookName={displayBookName}
-        chapters={numberOfChapters}
-        onChapterSelect={handleChapterSelect}
-        bookImageUri={BOOK_IMAGES[selectedBook ?? "Génesis"]}
-      />
+      <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+        <OptimizedChapterList
+          bookName={displayBookName}
+          chapters={numberOfChapters}
+          onChapterSelect={handleChapterSelect}
+          bookImageUri={BOOK_IMAGES[selectedBook ?? "Génesis"]}
+        />
+      </View>
     </Fragment>
   );
 };

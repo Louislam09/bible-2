@@ -1,5 +1,6 @@
 import getThemes from "@/constants/themeColors";
-import { ThemeProvider } from "@react-navigation/native";
+import { TTheme } from "@/types";
+import { use$ } from "@legendapp/state/react";
 import React, {
   createContext,
   ReactNode,
@@ -8,11 +9,11 @@ import React, {
   useState,
 } from "react";
 import { Appearance } from "react-native";
-import { useBibleContext } from "./BibleContext";
-
+import { storedData$ } from "./LocalstoreContext";
 interface ThemeContextProps {
   schema: "light" | "dark";
   toggleTheme: (schema?: "light" | "dark") => void;
+  theme: TTheme;
 }
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
@@ -22,7 +23,10 @@ interface ThemeProviderProps {
 }
 
 const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const { currentTheme, selectedFont } = useBibleContext();
+  // const { currentTheme, selectedFont } = useBibleContext();
+  const currentTheme = use$(
+    () => storedData$.currentTheme.get() || "BlackWhite"
+  );
   const colorScheme = Appearance.getColorScheme();
   const themes = getThemes();
   const { DarkTheme, LightTheme } = themes[currentTheme];
@@ -56,8 +60,10 @@ const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   // heavy: { fontFamily: selectedFont, fontWeight: "900" },
 
   return (
-    <ThemeContext.Provider value={{ schema, toggleTheme }}>
-      <ThemeProvider
+    <ThemeContext.Provider
+      value={{ schema, toggleTheme, theme: theme[schema] }}
+    >
+      {/* <ThemeProvider
         value={{
           ...theme[schema],
           fonts: {
@@ -81,12 +87,13 @@ const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         }}
       >
         {children}
-      </ThemeProvider>
+      </ThemeProvider> */}
+      {children}
     </ThemeContext.Provider>
   );
 };
 
-export const useCustomTheme = (): ThemeContextProps => {
+export const useTheme = (): ThemeContextProps => {
   const context = useContext(ThemeContext);
   if (!context) {
     throw new Error("useTheme must be used within a ThemeProvider");

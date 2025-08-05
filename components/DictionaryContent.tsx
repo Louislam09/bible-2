@@ -2,18 +2,16 @@ import Animation from "@/components/Animation";
 import { Text } from "@/components/Themed";
 import WordDefinition from "@/components/WordDefinition";
 import { useDBContext } from "@/context/databaseContext";
-import { useCustomTheme } from "@/context/ThemeContext";
+import { useTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
 import useDictionaryData, { DatabaseData } from "@/hooks/useDictionaryData";
 import { modalState$ } from "@/state/modalState";
 import { DictionaryData, Screens, TTheme } from "@/types";
 import { pluralToSingular } from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { NavigationProp, NavigationState } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import React, {
-  RefObject,
   useCallback,
   useEffect,
   useMemo,
@@ -123,7 +121,7 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
 }) => {
   const [selectedWord, setSelectedWord] = useState<any>(null);
   const [filterData, setFilterData] = useState<DatabaseData[]>([]);
-  const { schema } = useCustomTheme();
+  const { schema } = useTheme();
   const styles = getStyles(theme);
   const word = modalState$.searchWordOnDic.get();
   const [searchText, setSearchText] = useState<any>(word ? word : "");
@@ -286,13 +284,18 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
                 >
                   <Animation
                     animationRef={animationRef}
-                    backgroundColor={'transparent'}
+                    backgroundColor={"transparent"}
                     source={searchingSource}
                   />
                   {wordNotFoundInDictionary && searchDebounce !== "" ? (
                     <Text style={[styles.noResultsText, { fontSize }]}>
                       No encontramos resultados para: {"\n"}
-                      <Text style={{ color: theme.colors.notification, textDecorationLine: "underline" }}>
+                      <Text
+                        style={{
+                          color: theme.colors.notification,
+                          textDecorationLine: "underline",
+                        }}
+                      >
                         {searchDebounce}
                       </Text>
                     </Text>

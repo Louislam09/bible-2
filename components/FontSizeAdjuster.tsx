@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
 import { Text, View } from "./Themed";
 import CustomSlider from "./Slider";
@@ -24,7 +24,7 @@ const FontSizeAdjuster: React.FC<FontSizeAdjusterProps> = ({
   fontFamily = "System",
 }) => {
   const [fontSize, setFontSize] = useState<number>(initialSize);
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const debouncedSearchText = useDebounce(fontSize, 500);
 

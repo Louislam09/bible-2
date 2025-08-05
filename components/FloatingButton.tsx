@@ -2,7 +2,7 @@ import { iconSize } from "@/constants/size";
 import { useBibleContext } from "@/context/BibleContext";
 import useDraggableElement from "@/hooks/useDraggableBox";
 import { TTheme } from "@/types";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { Router } from "expo-router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -31,7 +31,7 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({
   children,
   iconName,
 }) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const { orientation } = useBibleContext();
   const selectedVerseForNote = use$(() =>

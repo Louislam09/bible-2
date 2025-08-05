@@ -3,6 +3,7 @@ import Icon from "@/components/Icon";
 import ActionButton, { Backdrop } from "@/components/note/ActionButton";
 import { Text, View as ThemedView } from "@/components/Themed";
 import { useBibleContext } from "@/context/BibleContext";
+import { useTheme } from "@/context/ThemeContext";
 import { useFavoriteVerseService } from "@/services/favoriteVerseService";
 import { authState$ } from "@/state/authState";
 import { bibleState$ } from "@/state/bibleState";
@@ -13,7 +14,7 @@ import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { showToast } from "@/utils/showToast";
 import { use$ } from "@legendapp/state/react";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 // import * as Haptics from "expo-haptics";
 import { Stack, useRouter } from "expo-router";
@@ -28,17 +29,20 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-type TListVerse = {
-};
+type TListVerse = {};
 
-const FavoriteList = ({ }: TListVerse) => {
-  const [filterData, setFilterData] = useState<(IVerseItem & { id: number })[]>([]);
-  const [originalData, setOriginalData] = useState<(IVerseItem & { id: number })[]>([]);
+const FavoriteList = ({}: TListVerse) => {
+  const [filterData, setFilterData] = useState<(IVerseItem & { id: number })[]>(
+    []
+  );
+  const [originalData, setOriginalData] = useState<
+    (IVerseItem & { id: number })[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -51,15 +55,17 @@ const FavoriteList = ({ }: TListVerse) => {
   const swipeableRefs = useRef<{ [key: number]: Swipeable | null }>({});
 
   // Hooks
-  const theme = useTheme();
+  const { theme } = useTheme();
   const navigation = useNavigation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const styles = getStyles(theme);
   const notFoundSource = require("../../assets/lottie/notFound.json");
 
-  const { toggleFavoriteVerse, currentBibleLongName, orientation } = useBibleContext();
-  const { addFavoriteVerse, getAllFavoriteVerses, removeFavoriteVerse } = useFavoriteVerseService();
+  const { toggleFavoriteVerse, currentBibleLongName, orientation } =
+    useBibleContext();
+  const { addFavoriteVerse, getAllFavoriteVerses, removeFavoriteVerse } =
+    useFavoriteVerseService();
   const reloadFavorites = use$(() => bibleState$.reloadFavorites.get());
   const isLoggedIn = use$(() => !!authState$.user.get());
 
@@ -96,7 +102,7 @@ const FavoriteList = ({ }: TListVerse) => {
     }
 
     const lowerQuery = searchQuery.toLowerCase();
-    const filtered = originalData.filter(item => {
+    const filtered = originalData.filter((item) => {
       return (
         item.bookName?.toLowerCase().includes(lowerQuery) ||
         getVerseTextRaw(item.text).toLowerCase().includes(lowerQuery) ||
@@ -107,42 +113,48 @@ const FavoriteList = ({ }: TListVerse) => {
     setFilterData(filtered);
   }, [searchQuery, originalData]);
 
-  const onVerseClick = useCallback((item: IVerseItem & { id: number }) => {
-    if (selectionMode) {
-      toggleSelection(item.id as any);
-      return;
-    }
+  const onVerseClick = useCallback(
+    (item: IVerseItem & { id: number }) => {
+      if (selectionMode) {
+        toggleSelection(item.id as any);
+        return;
+      }
 
-    const queryInfo = {
-      book: item.bookName,
-      chapter: item.chapter,
-      verse: item.verse,
-    };
-
-    bibleState$.changeBibleQuery({
-      ...queryInfo,
-      shouldFetch: true,
-      isHistory: false,
-    });
-
-    navigation.navigate(Screens.Home, queryInfo);
-  }, [navigation, selectionMode]);
-
-  const onRemoveFavorite = useCallback(async (item: IVerseItem & { id: number }) => {
-    try {
-      toggleFavoriteVerse({
-        bookNumber: item.book_number,
+      const queryInfo = {
+        book: item.bookName,
         chapter: item.chapter,
         verse: item.verse,
-        isFav: true,
+      };
+
+      bibleState$.changeBibleQuery({
+        ...queryInfo,
+        shouldFetch: true,
+        isHistory: false,
       });
 
-      showToast("Versículo removido de favoritos");
-    } catch (error) {
-      console.error("Error removing favorite:", error);
-      showToast("Error al eliminar versículo favorito");
-    }
-  }, [removeFavoriteVerse, toggleFavoriteVerse]);
+      navigation.navigate(Screens.Home, queryInfo);
+    },
+    [navigation, selectionMode]
+  );
+
+  const onRemoveFavorite = useCallback(
+    async (item: IVerseItem & { id: number }) => {
+      try {
+        toggleFavoriteVerse({
+          bookNumber: item.book_number,
+          chapter: item.chapter,
+          verse: item.verse,
+          isFav: true,
+        });
+
+        showToast("Versículo removido de favoritos");
+      } catch (error) {
+        console.error("Error removing favorite:", error);
+        showToast("Error al eliminar versículo favorito");
+      }
+    },
+    [removeFavoriteVerse, toggleFavoriteVerse]
+  );
 
   const onCopy = useCallback(async (item: IVerseItem) => {
     try {
@@ -154,21 +166,23 @@ const FavoriteList = ({ }: TListVerse) => {
   }, []);
 
   const onShare = useCallback((item: IVerseItem) => {
-    const verseReference = `${renameLongBookName(item.bookName)} ${item.chapter}:${item.verse}`;
+    const verseReference = `${renameLongBookName(item.bookName)} ${
+      item.chapter
+    }:${item.verse}`;
     const verseText = getVerseTextRaw(item.text);
 
     showToast("Función de compartir implementada");
   }, []);
 
   const toggleSelectionMode = useCallback(() => {
-    setSelectionMode(prev => !prev);
+    setSelectionMode((prev) => !prev);
     if (selectionMode) {
       setSelectedItems(new Set());
     }
   }, [selectionMode]);
 
   const toggleSelection = useCallback((id: number) => {
-    setSelectedItems(prev => {
+    setSelectedItems((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
         newSet.delete(id);
@@ -180,7 +194,7 @@ const FavoriteList = ({ }: TListVerse) => {
   }, []);
 
   const selectAll = useCallback(() => {
-    const allIds = filterData.map(item => item.id);
+    const allIds = filterData.map((item) => item.id);
     setSelectedItems(new Set(allIds));
   }, [filterData]);
 
@@ -197,15 +211,15 @@ const FavoriteList = ({ }: TListVerse) => {
       [
         {
           text: "Cancelar",
-          style: "cancel"
+          style: "cancel",
         },
         {
           text: "Eliminar",
           style: "destructive",
           onPress: async () => {
             try {
-              const deletePromises = Array.from(selectedItems).map(id => {
-                const verse = originalData.find(v => v.id === id);
+              const deletePromises = Array.from(selectedItems).map((id) => {
+                const verse = originalData.find((v) => v.id === id);
                 if (!verse) return Promise.resolve();
 
                 return toggleFavoriteVerse({
@@ -218,8 +232,12 @@ const FavoriteList = ({ }: TListVerse) => {
 
               await Promise.all(deletePromises);
 
-              setFilterData(prev => prev.filter(item => !selectedItems.has(item.id)));
-              setOriginalData(prev => prev.filter(item => !selectedItems.has(item.id)));
+              setFilterData((prev) =>
+                prev.filter((item) => !selectedItems.has(item.id))
+              );
+              setOriginalData((prev) =>
+                prev.filter((item) => !selectedItems.has(item.id))
+              );
 
               setSelectionMode(false);
               setSelectedItems(new Set());
@@ -229,8 +247,8 @@ const FavoriteList = ({ }: TListVerse) => {
               console.error("Error deleting favorites:", error);
               showToast("Error al eliminar favoritos");
             }
-          }
-        }
+          },
+        },
       ]
     );
   }, [selectedItems, originalData, removeFavoriteVerse, toggleFavoriteVerse]);
@@ -244,8 +262,8 @@ const FavoriteList = ({ }: TListVerse) => {
           { text: "Cancelar", style: "cancel" },
           {
             text: "Iniciar sesión",
-            onPress: () => router.push("/auth/login")
-          }
+            onPress: () => router.push("/auth/login"),
+          },
         ]
       );
       return;
@@ -262,7 +280,10 @@ const FavoriteList = ({ }: TListVerse) => {
       let syncCount = 0;
       for (const favoriteVerse of favoriteVerses) {
         if (!favoriteVerse.uuid) {
-          console.warn("Favorito sin UUID, no se puede sincronizar:", favoriteVerse.id);
+          console.warn(
+            "Favorito sin UUID, no se puede sincronizar:",
+            favoriteVerse.id
+          );
           continue;
         }
 
@@ -270,14 +291,21 @@ const FavoriteList = ({ }: TListVerse) => {
           await favoriteState$.addFavorite(favoriteVerse);
           syncCount++;
         } catch (error) {
-          console.error("Error al sincronizar versículo:", favoriteVerse.id, error);
+          console.error(
+            "Error al sincronizar versículo:",
+            favoriteVerse.id,
+            error
+          );
         }
       }
 
       showToast(`${syncCount} versículos favoritos sincronizados con la nube`);
       // // Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } catch (error) {
-      console.error("Error al sincronizar versículos favoritos con la nube:", error);
+      console.error(
+        "Error al sincronizar versículos favoritos con la nube:",
+        error
+      );
       showToast("Error al sincronizar versículos favoritos");
     } finally {
       setShowMoreOptions(false);
@@ -293,8 +321,8 @@ const FavoriteList = ({ }: TListVerse) => {
           { text: "Cancelar", style: "cancel" },
           {
             text: "Iniciar sesión",
-            onPress: () => router.push(Screens.Login)
-          }
+            onPress: () => router.push(Screens.Login),
+          },
         ]
       );
       return;
@@ -313,15 +341,23 @@ const FavoriteList = ({ }: TListVerse) => {
 
       for (const cloudFavoriteVerse of favoriteCloudEntries) {
         if (!cloudFavoriteVerse.uuid) {
-          console.warn("Favorito en la nube sin UUID, se omite:", cloudFavoriteVerse.id);
+          console.warn(
+            "Favorito en la nube sin UUID, se omite:",
+            cloudFavoriteVerse.id
+          );
           continue;
         }
 
         try {
-          const existingFavoriteEntry = localFavorites.find(n => n.uuid === cloudFavoriteVerse.uuid);
+          const existingFavoriteEntry = localFavorites.find(
+            (n) => n.uuid === cloudFavoriteVerse.uuid
+          );
 
           if (existingFavoriteEntry) {
-            console.log("Favorito ya existe localmente, se omite:", existingFavoriteEntry.id);
+            console.log(
+              "Favorito ya existe localmente, se omite:",
+              existingFavoriteEntry.id
+            );
           } else {
             await addFavoriteVerse(
               cloudFavoriteVerse.book_number,
@@ -332,13 +368,18 @@ const FavoriteList = ({ }: TListVerse) => {
             downloadCount++;
           }
         } catch (error) {
-          console.error("Error al guardar versículo local:", cloudFavoriteVerse.id, error);
+          console.error(
+            "Error al guardar versículo local:",
+            cloudFavoriteVerse.id,
+            error
+          );
         }
       }
 
-      showToast(`${downloadCount} versículos favoritos descargados desde la nube`);
+      showToast(
+        `${downloadCount} versículos favoritos descargados desde la nube`
+      );
       // // Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-
     } catch (error) {
       console.error("Error al descargar versículos desde la nube:", error);
       showToast("Error al descargar versículos");
@@ -349,7 +390,7 @@ const FavoriteList = ({ }: TListVerse) => {
   }, [isLoggedIn, getAllFavoriteVerses, addFavoriteVerse, router]);
 
   const showMoreOptionHandle = useCallback(() => {
-    setShowMoreOptions(prev => !prev);
+    setShowMoreOptions((prev) => !prev);
   }, []);
 
   const dismiss = useCallback(() => {
@@ -357,135 +398,144 @@ const FavoriteList = ({ }: TListVerse) => {
     setShowMoreOptions(false);
   }, []);
 
-  const renderItem: ListRenderItem<IVerseItem & { id: number }> = useCallback(({ item, index }) => {
-    const isSelected = selectedItems.has(item.id);
+  const renderItem: ListRenderItem<IVerseItem & { id: number }> = useCallback(
+    ({ item, index }) => {
+      const isSelected = selectedItems.has(item.id);
 
-    const renderRightActions = (progress: any, dragX: any) => {
-      const trans = dragX.interpolate({
-        inputRange: [-80, 0],
-        outputRange: [0, 80],
-        extrapolate: 'clamp',
-      });
+      const renderRightActions = (progress: any, dragX: any) => {
+        const trans = dragX.interpolate({
+          inputRange: [-80, 0],
+          outputRange: [0, 80],
+          extrapolate: "clamp",
+        });
+
+        return (
+          <View style={styles.rightSwipeActions}>
+            <Animated.View
+              style={[
+                styles.deleteAction,
+                {
+                  transform: [{ translateX: trans }],
+                },
+              ]}
+            >
+              <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={() => {
+                  swipeableRefs.current[item.id]?.close();
+                  Alert.alert(
+                    "Eliminar favorito",
+                    "¿Estás seguro de eliminar este versículo de tus favoritos?",
+                    [
+                      { text: "Cancelar", style: "cancel" },
+                      {
+                        text: "Eliminar",
+                        style: "destructive",
+                        onPress: () => onRemoveFavorite(item),
+                      },
+                    ]
+                  );
+                }}
+              >
+                <Icon name="Trash2" size={24} color="#fff" />
+              </TouchableOpacity>
+            </Animated.View>
+          </View>
+        );
+      };
 
       return (
-        <View style={styles.rightSwipeActions}>
-          <Animated.View
-            style={[
-              styles.deleteAction,
-              {
-                transform: [{ translateX: trans }],
-              },
-            ]}
-          >
-            <TouchableOpacity
-              style={styles.deleteButton}
-              onPress={() => {
-                swipeableRefs.current[item.id]?.close();
-                Alert.alert(
-                  "Eliminar favorito",
-                  "¿Estás seguro de eliminar este versículo de tus favoritos?",
-                  [
-                    { text: "Cancelar", style: "cancel" },
-                    {
-                      text: "Eliminar",
-                      style: "destructive",
-                      onPress: () => onRemoveFavorite(item)
-                    }
-                  ]
-                );
-              }}
-            >
-              <Icon name="Trash2" size={24} color="#fff" />
-            </TouchableOpacity>
-          </Animated.View>
-        </View>
-      );
-    };
-
-    return (
-      <Swipeable
-        ref={(ref) => (swipeableRefs.current[item.id] = ref)}
-        renderRightActions={renderRightActions}
-        friction={2}
-        overshootRight={false}
-        enabled={!selectionMode}
-      >
-        <TouchableOpacity
-          style={[
-            styles.itemContainer,
-            isSelected && styles.selectedItem
-          ]}
-          activeOpacity={0.8}
-          onPress={() => onVerseClick(item)}
-          onLongPress={() => {
-            if (!selectionMode) {
-              setSelectionMode(true);
-              toggleSelection(item.id);
-              // // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-            }
-          }}
+        <Swipeable
+          ref={(ref) => (swipeableRefs.current[item.id] = ref)}
+          renderRightActions={renderRightActions}
+          friction={2}
+          overshootRight={false}
+          enabled={!selectionMode}
         >
-          <View style={styles.cardContainer}>
-            {selectionMode && (
-              <View style={styles.checkboxContainer}>
-                <View style={[
-                  styles.checkbox,
-                  isSelected && styles.checkboxSelected
-                ]}>
-                  {isSelected && <Icon name="Check" size={16} color="#fff" />}
-                </View>
-              </View>
-            )}
-
-            <View style={styles.headerContainer}>
-              <Text style={styles.cardTitle}>
-                {`${renameLongBookName(item.bookName)} ${item.chapter}:${item.verse}`}
-              </Text>
-
-              {!selectionMode && (
-                <View style={styles.verseAction}>
-                  <TouchableOpacity
-                    style={styles.actionIconButton}
-                    onPress={() => onCopy(item)}
-                    accessibilityLabel="Copiar versículo"
+          <TouchableOpacity
+            style={[styles.itemContainer, isSelected && styles.selectedItem]}
+            activeOpacity={0.8}
+            onPress={() => onVerseClick(item)}
+            onLongPress={() => {
+              if (!selectionMode) {
+                setSelectionMode(true);
+                toggleSelection(item.id);
+                // // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              }
+            }}
+          >
+            <View style={styles.cardContainer}>
+              {selectionMode && (
+                <View style={styles.checkboxContainer}>
+                  <View
+                    style={[
+                      styles.checkbox,
+                      isSelected && styles.checkboxSelected,
+                    ]}
                   >
-                    <Icon size={20} name="Copy" />
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={styles.actionIconButton}
-                    onPress={() => onShare(item)}
-                    accessibilityLabel="Compartir versículo"
-                  >
-                    <Icon size={20} name="Share2" />
-                  </TouchableOpacity>
+                    {isSelected && <Icon name="Check" size={16} color="#fff" />}
+                  </View>
                 </View>
               )}
-            </View>
 
-            <Text style={styles.verseBody} numberOfLines={3}>
-              {getVerseTextRaw(item.text)}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </Swipeable>
-    );
-  }, [
-    styles,
-    selectionMode,
-    selectedItems,
-    onVerseClick,
-    onRemoveFavorite,
-    onCopy,
-    onShare,
-    toggleSelection
-  ]);
+              <View style={styles.headerContainer}>
+                <Text style={styles.cardTitle}>
+                  {`${renameLongBookName(item.bookName)} ${item.chapter}:${
+                    item.verse
+                  }`}
+                </Text>
+
+                {!selectionMode && (
+                  <View style={styles.verseAction}>
+                    <TouchableOpacity
+                      style={styles.actionIconButton}
+                      onPress={() => onCopy(item)}
+                      accessibilityLabel="Copiar versículo"
+                    >
+                      <Icon size={20} name="Copy" />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={styles.actionIconButton}
+                      onPress={() => onShare(item)}
+                      accessibilityLabel="Compartir versículo"
+                    >
+                      <Icon size={20} name="Share2" />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+
+              <Text style={styles.verseBody} numberOfLines={3}>
+                {getVerseTextRaw(item.text)}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </Swipeable>
+      );
+    },
+    [
+      styles,
+      selectionMode,
+      selectedItems,
+      onVerseClick,
+      onRemoveFavorite,
+      onCopy,
+      onShare,
+      toggleSelection,
+    ]
+  );
 
   const SearchedHeader = useCallback(() => {
     return (
       <View style={styles.headerCompositeContainer}>
         <View style={styles.searchContainer}>
-          <Icon name="Search" size={20} color={theme.colors.text} style={styles.searchIcon} />
+          <Icon
+            name="Search"
+            size={20}
+            color={theme.colors.text}
+            style={styles.searchIcon}
+          />
           <TextInput
             style={styles.searchInput}
             placeholder="Buscar en favoritos..."
@@ -505,7 +555,10 @@ const FavoriteList = ({ }: TListVerse) => {
         {filterData.length > 0 && (
           <View style={styles.chapterHeader}>
             <Text style={styles.chapterHeaderTitle}>
-              {filterData.length} {filterData.length === 1 ? "versículo favorito" : "versículos favoritos"}
+              {filterData.length}{" "}
+              {filterData.length === 1
+                ? "versículo favorito"
+                : "versículos favoritos"}
             </Text>
 
             {filterData.length > 1 && !selectionMode && (
@@ -522,7 +575,8 @@ const FavoriteList = ({ }: TListVerse) => {
         {selectionMode && (
           <View style={styles.selectionToolbar}>
             <Text style={styles.selectedCount}>
-              {selectedItems.size} {selectedItems.size === 1 ? "seleccionado" : "seleccionados"}
+              {selectedItems.size}{" "}
+              {selectedItems.size === 1 ? "seleccionado" : "seleccionados"}
             </Text>
 
             <View style={styles.selectionActions}>
@@ -573,7 +627,7 @@ const FavoriteList = ({ }: TListVerse) => {
     selectAll,
     deselectAll,
     deleteSelected,
-    styles
+    styles,
   ]);
 
   const EmptyComponent = useCallback(() => {
@@ -586,7 +640,9 @@ const FavoriteList = ({ }: TListVerse) => {
             loop={true}
             style={styles.animation}
           /> */}
-          <Text style={styles.loadingText}>Cargando versículos favoritos...</Text>
+          <Text style={styles.loadingText}>
+            Cargando versículos favoritos...
+          </Text>
         </View>
       );
     }
@@ -626,14 +682,7 @@ const FavoriteList = ({ }: TListVerse) => {
         )}
       </View>
     );
-  }, [
-    loading,
-    searchQuery,
-    currentBibleLongName,
-    navigation,
-    theme,
-    styles
-  ]);
+  }, [loading, searchQuery, currentBibleLongName, navigation, theme, styles]);
 
   const actionButtons = useMemo(() => {
     const buttons = [
@@ -673,10 +722,8 @@ const FavoriteList = ({ }: TListVerse) => {
       },
     ];
 
-    return buttons.filter(item => !item.hide);
-  }, [
-    showMoreOptions
-  ]);
+    return buttons.filter((item) => !item.hide);
+  }, [showMoreOptions]);
 
   if (loading && !filterData.length) {
     return (
@@ -729,15 +776,8 @@ const FavoriteList = ({ }: TListVerse) => {
       />
 
       {actionButtons.map((item, index) => (
-        <ActionButton
-          key={index}
-          theme={theme}
-          item={item}
-          index={index}
-        />
-
+        <ActionButton key={index} theme={theme} item={item} index={index} />
       ))}
-
     </ThemedView>
   );
 };
@@ -966,7 +1006,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     checkboxContainer: {
       marginRight: 12,
       justifyContent: "center",
-      marginBottom: 10
+      marginBottom: 10,
     },
     checkbox: {
       width: 22,
@@ -984,7 +1024,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     buttonLoader: {
       position: "absolute",
-    }
-  })
+    },
+  });
 
 export default FavoriteList;

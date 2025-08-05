@@ -1,16 +1,16 @@
-import { useTheme } from "@react-navigation/native";
+// import { useTheme } from "@/context/ThemeContext";
 import React, { useState } from "react";
 import {
   Pressable,
   ScrollView,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { TTheme } from "@/types";
 import Animation from "./Animation";
 import Icon from "./Icon";
-import { Text } from "./Themed";
 
 type ErrorBoundaryFallbackProps = {
   error: string | any;
@@ -21,13 +21,24 @@ const ErrorBoundaryFallback = ({
   resetError,
   error,
 }: ErrorBoundaryFallbackProps) => {
-  const theme = useTheme();
+  const theme = {
+    dark: false,
+    colors: {
+      primary: "#9cbbd0",
+      backgroundContrast: "#0a0e11",
+      background: "#0a0e11",
+      card: "#0a0e11",
+      text: "#9cbbd0",
+      border: "#2e5978",
+      notification: "#408dc4",
+    },
+  };
   const styles = getStyles(theme);
   const dashboardImage = require("../assets/lottie/error.json");
   const [showErrorDetails, setShowErrorDetails] = useState(false);
 
   return (
-    <ScrollView style={{}}>
+    <ScrollView style={{ backgroundColor: theme.colors.background }}>
       <View style={styles.container}>
         <Text
           style={[

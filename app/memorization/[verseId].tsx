@@ -13,7 +13,7 @@ import useParams from "@/hooks/useParams";
 import { Memorization, MemorizationButtonType, TTheme } from "@/types";
 import isWithinTimeframe from "@/utils/isWithinTimeframe";
 import { showToast } from "@/utils/showToast";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { Stack, useRouter } from "expo-router";
 import { Brain, ChevronLeft, icons, Trash2 } from "lucide-react-native";
 import React from "react";
@@ -37,7 +37,7 @@ const MemorizationScreen = () => {
   const { verses, deleteVerse } = useMemorization();
   const item = verses.find((x) => x.id === verseId) as Memorization;
   if (!item) return <ActivityIndicator />;
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const router = useRouter();
   const memorizeProgress = useDebounce(item.progress, 1000);

@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import Icon from "../Icon";
 import { TTheme } from "@/types";
-import { ThemeProvider, useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 
 interface FAQItemProps {
   question: string;
@@ -20,7 +20,7 @@ interface FAQItemProps {
 }
 
 const FAQItem = ({ question, children, isFirst, isLast }: FAQItemProps) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const [expanded, setExpanded] = useState(false);
 
@@ -51,7 +51,7 @@ const FAQItem = ({ question, children, isFirst, isLast }: FAQItemProps) => {
 };
 
 const BiblicalChronologyFAQ = () => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   return (
     <SafeAreaView style={styles.container}>
@@ -240,7 +240,7 @@ const getStyles = ({ colors }: TTheme) =>
       borderColor: colors.text + 10,
       borderWidth: 1,
       borderBottomWidth: 1,
-      overflow: 'hidden'
+      overflow: "hidden",
     },
     firstItem: {
       borderTopLeftRadius: 8,

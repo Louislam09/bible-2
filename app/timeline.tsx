@@ -4,19 +4,18 @@ import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import BiblicalChronologyFAQ from "@/components/timeline/TimelineFAQ";
 import TimelineList from "@/components/timeline/TimelineList";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { Stack } from "expo-router";
 import React, { useCallback, useRef } from "react";
 import { StyleSheet } from "react-native";
 
 const timeline = () => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const timelineFaqBottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const timelineFaqHandlePresentModalPress = useCallback(() => {
     timelineFaqBottomSheetModalRef.current?.present();
   }, []);
-
 
   return (
     <ScreenWithAnimation

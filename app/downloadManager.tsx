@@ -1,5 +1,5 @@
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -11,7 +11,7 @@ import {
   View as RNView,
   StyleSheet,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -31,7 +31,7 @@ type DownloadManagerProps = {};
 
 const DownloadManager: React.FC<DownloadManagerProps> = () => {
   const router = useRouter();
-  const theme = useTheme();
+  const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const styles = getStyles(theme);
   const databasesToDownload: DownloadBibleItem[] = bibleDatabases;
@@ -76,15 +76,17 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
       <View style={styles.searchContainer}>
         <Ionicons
           style={styles.searchIcon}
-          name='search'
+          name="search"
           size={20}
-          color={isSearchFocused ? theme.colors.text : theme.colors.notification}
+          color={
+            isSearchFocused ? theme.colors.text : theme.colors.notification
+          }
         />
         <TextInput
-          placeholder='Buscar un módulo...'
+          placeholder="Buscar un módulo..."
           placeholderTextColor={theme.colors.text}
           style={[styles.noteHeaderSearchInput]}
-          onChangeText={text => setSearchText(text)}
+          onChangeText={(text) => setSearchText(text)}
           value={searchText}
           onFocus={() => setIsSearchFocused(true)}
           onBlur={() => setIsSearchFocused(false)}
@@ -93,9 +95,9 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
         {searchText.length > 0 && (
           <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
             <Ionicons
-              name='close-circle'
+              name="close-circle"
               size={20}
-              color={theme.colors.text + '80'}
+              color={theme.colors.text + "80"}
             />
           </TouchableOpacity>
         )}
@@ -105,14 +107,14 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
 
   const filteredDatabases = debouncedSearchText
     ? databasesToDownload.filter(
-      (version) =>
-        removeAccent(version.name).toLowerCase().includes(
-          removeAccent(debouncedSearchText).toLowerCase()
-        ) ||
-        removeAccent(version.storedName).toLowerCase().includes(
-          removeAccent(debouncedSearchText).toLowerCase()
-        )
-    )
+        (version) =>
+          removeAccent(version.name)
+            .toLowerCase()
+            .includes(removeAccent(debouncedSearchText).toLowerCase()) ||
+          removeAccent(version.storedName)
+            .toLowerCase()
+            .includes(removeAccent(debouncedSearchText).toLowerCase())
+      )
     : databasesToDownload;
 
   const NoModulesFound = () => (
@@ -120,15 +122,12 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
       <MaterialCommunityIcons
         name="database-search-outline"
         size={80}
-        color={theme.colors.notification + '60'}
+        color={theme.colors.notification + "60"}
       />
       <Text style={styles.emptyStateText}>
         No se encontraron módulos para "{debouncedSearchText}"
       </Text>
-      <TouchableOpacity
-        style={styles.emptyStateButton}
-        onPress={clearSearch}
-      >
+      <TouchableOpacity style={styles.emptyStateButton} onPress={clearSearch}>
         <Text style={styles.emptyStateButtonText}>Limpiar búsqueda</Text>
       </TouchableOpacity>
     </View>
@@ -149,13 +148,12 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
     };
   }, [theme.colors]);
 
-  if ((!checkConnection()) && !isMyDownloadTab) {
+  if (!checkConnection() && !isMyDownloadTab) {
     return <NoInternetSplash theme={theme} />;
   }
 
   return (
     <View style={[styles.container, {}]}>
-
       <Stack.Screen options={singleScreenHeader(screenOptions)} />
 
       <View style={styles.headerContainer}>
@@ -175,11 +173,17 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
           ListHeaderComponent={
             <RNView style={styles.listHeaderContainer}>
               <Text style={styles.sectionTitle}>
-                {filteredDatabases.length} {filteredDatabases.length === 1 ? 'Módulo' : 'Módulos'} disponibles
+                {filteredDatabases.length}{" "}
+                {filteredDatabases.length === 1 ? "Módulo" : "Módulos"}{" "}
+                disponibles
               </Text>
               {!isConnected && (
                 <View style={styles.offlineIndicator}>
-                  <Ionicons name="cloud-offline-outline" size={16} color="#e74856" />
+                  <Ionicons
+                    name="cloud-offline-outline"
+                    size={16}
+                    color="#e74856"
+                  />
                   <Text style={styles.offlineText}>Offline</Text>
                 </View>
               )}
@@ -192,7 +196,9 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
             <DatabaseDownloadItem {...{ theme, isConnected, ...props }} />
           )}
           data={filteredDatabases}
-          keyExtractor={(item: DownloadBibleItem) => `download-${item.storedName}`}
+          keyExtractor={(item: DownloadBibleItem) =>
+            `download-${item.storedName}`
+          }
           ListEmptyComponent={debouncedSearchText ? <NoModulesFound /> : null}
           refreshControl={
             <RefreshControl
@@ -228,9 +234,9 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: "transparent",
     },
     listHeaderContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       paddingVertical: 8,
     },
     sectionTitle: {
@@ -256,7 +262,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderWidth: 1,
       width: "100%",
       height: 48,
-      backgroundColor: colors.notification + '20',
+      backgroundColor: colors.notification + "20",
       borderColor: colors.text,
     },
     searchIcon: {
@@ -269,9 +275,9 @@ const getStyles = ({ colors, dark }: TTheme) =>
     noteHeaderSearchInput: {
       flex: 1,
       fontSize: 16,
-      padding: Platform.OS === 'ios' ? 12 : 8,
+      padding: Platform.OS === "ios" ? 12 : 8,
       color: colors.text,
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
     },
     separator: {
       height: 1,
@@ -280,40 +286,40 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     emptyStateContainer: {
       flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       padding: 20,
       marginTop: 50,
     },
     emptyStateText: {
       fontSize: 16,
-      textAlign: 'center',
+      textAlign: "center",
       marginTop: 12,
-      color: colors.text + '90',
+      color: colors.text + "90",
     },
     emptyStateButton: {
       marginTop: 16,
       paddingHorizontal: 20,
       paddingVertical: 10,
-      backgroundColor: colors.notification + '30',
+      backgroundColor: colors.notification + "30",
       borderRadius: 20,
     },
     emptyStateButtonText: {
       color: colors.notification,
-      fontWeight: '600',
+      fontWeight: "600",
     },
     offlineIndicator: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: '#e7485620',
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: "#e7485620",
       paddingHorizontal: 12,
       paddingVertical: 4,
       borderRadius: 16,
     },
     offlineText: {
-      color: '#e74856',
+      color: "#e74856",
       fontSize: 12,
-      fontWeight: '600',
+      fontWeight: "600",
       marginLeft: 4,
     },
   });

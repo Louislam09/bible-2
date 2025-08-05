@@ -1,4 +1,4 @@
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import LottieView, { AnimationObject } from "lottie-react-native";
 import { icons } from "lucide-react-native";
 import React, { FC, useEffect, useRef, useState } from "react";
@@ -34,12 +34,12 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
   backgroundColor,
   titleColor,
   iconColor,
-  imageSource
+  imageSource,
 }) => {
   const [isAnimating, setIsAnimating] = useState(shouldPlay);
   const opacity = useRef(new Animated.Value(0)).current;
   const bounceValue = useRef(new Animated.Value(0)).current;
-  const theme = useTheme();
+  const { theme } = useTheme();
 
   const onAnimationFinish = (isCancelled: boolean) => {
     setIsAnimating(false);
@@ -130,16 +130,19 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
               style={{ transform: [{ translateY: bounceValue }], opacity }}
             >
               <Icon
-                name={icon! || 'BookPlus'}
+                name={icon! || "BookPlus"}
                 size={100}
                 color={iconColor || theme.colors.text}
               />
             </Animated.View>
-
           )}
           {title && (
             <Animated.Text
-              style={{ color: titleColor || theme.colors.text, fontSize: 28, opacity }}
+              style={{
+                color: titleColor || theme.colors.text,
+                fontSize: 28,
+                opacity,
+              }}
             >
               {title}
             </Animated.Text>

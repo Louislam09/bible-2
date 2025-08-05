@@ -1,5 +1,5 @@
 import { TTheme } from "@/types";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import React, { useEffect, useRef } from "react";
 import {
   Animated,
@@ -24,7 +24,7 @@ export const QuoteNavigationDots: React.FC<QuoteNavigationDotsProps> = ({
   onDotPress,
   scrollViewRef,
 }) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const dotAnimations = useRef<Animated.Value[]>([]);
 
   // Initialize animations for each dot

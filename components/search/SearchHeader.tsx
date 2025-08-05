@@ -1,24 +1,24 @@
-import { View } from '@/components/Themed';
-import { useBibleContext } from '@/context/BibleContext';
-import useDebounce from '@/hooks/useDebounce';
-import { TTheme } from '@/types';
-import removeAccent from '@/utils/removeAccent';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { useTheme } from '@react-navigation/native';
-import { useRouter } from 'expo-router';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View } from "@/components/Themed";
+import { useBibleContext } from "@/context/BibleContext";
+import useDebounce from "@/hooks/useDebounce";
+import { TTheme } from "@/types";
+import removeAccent from "@/utils/removeAccent";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useTheme } from "@/context/ThemeContext";
+import { useRouter } from "expo-router";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 
 type SearchHeaderProps = {};
 
 const SearchHeader: React.FC<SearchHeaderProps> = () => {
   const router = useRouter();
-  const theme = useTheme();
+  const { theme } = useTheme();
   const textInputRef = useRef<TextInput>(null);
   const styles = getStyles(theme);
   const { performSearch, setSearchQuery, searchQuery } = useBibleContext();
 
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 500);
 
   const handelSearch = async (query: string) => {
@@ -49,29 +49,29 @@ const SearchHeader: React.FC<SearchHeaderProps> = () => {
 
   const clearText = () => {
     textInputRef.current?.clear();
-    handelSearch('');
+    handelSearch("");
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => router.push('(dashboard)')}>
-        <Ionicons style={styles.icon} name='arrow-back' size={24} />
+      <TouchableOpacity onPress={() => router.push("(dashboard)")}>
+        <Ionicons style={styles.icon} name="arrow-back" size={24} />
       </TouchableOpacity>
       <TextInput
         ref={textInputRef}
-        placeholder='Buscar'
+        placeholder="Buscar"
         style={styles.saerchInput}
         placeholderTextColor={theme.colors.text}
         onChangeText={handelSearch}
-        defaultValue={searchQuery ?? ''}
-        clearButtonMode='always'
+        defaultValue={searchQuery ?? ""}
+        clearButtonMode="always"
       />
       <TouchableOpacity onPress={clearText} style={{ padding: 5 }}>
         <Ionicons
           style={{ color: theme.colors.text }}
-          name='close-circle-outline'
+          name="close-circle-outline"
           size={20}
-          color='gray'
+          color="gray"
         />
       </TouchableOpacity>
     </View>
@@ -81,28 +81,28 @@ const SearchHeader: React.FC<SearchHeaderProps> = () => {
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     container: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       padding: 10,
       height: 70,
       backgroundColor: colors.background,
     },
     checkboxContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
     },
     checkboxItem: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
     },
     saerchInput: {
       flex: 1,
       fontSize: 22,
       borderBottomColor: colors.notification,
       borderBottomWidth: 1,
-      borderStyle: 'solid',
+      borderStyle: "solid",
       color: colors.text,
       paddingVertical: 5,
     },

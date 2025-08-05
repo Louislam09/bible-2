@@ -23,7 +23,7 @@ import {
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { useRouter } from "expo-router";
 import React, {
   memo,
@@ -146,7 +146,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     useBibleContext();
 
   const { addVerse } = useMemorization();
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const [isFavorite, setFavorite] = useState(false);
   const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
@@ -273,8 +273,9 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const onQuote = () => {
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item.book_number).longName} ${item.chapter
-      }:${item.verse}`;
+    const reference = `${getBookDetail(item.book_number).longName} ${
+      item.chapter
+    }:${item.verse}`;
     bibleState$.handleSelectVerseForNote(verseText);
     router.push({ pathname: "/quote", params: { text: verseText, reference } });
   };
@@ -346,22 +347,19 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const onExplainWithAI = () => {
     if (!googleAIKey) {
-      Alert.alert(
-        "Aviso",
-        "No se ha configurado la API key de Google AI",
-        [
-          { text: "Cancelar", style: "cancel" },
-          {
-            text: "Configurar",
-            onPress: () => router.push(Screens.AISetup),
-          },
-        ]
-      );
-      return
+      Alert.alert("Aviso", "No se ha configurado la API key de Google AI", [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Configurar",
+          onPress: () => router.push(Screens.AISetup),
+        },
+      ]);
+      return;
     }
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item.book_number).longName} ${item.chapter
-      }:${item.verse}`;
+    const reference = `${getBookDetail(item.book_number).longName} ${
+      item.chapter
+    }:${item.verse}`;
 
     bibleState$.handleVerseWithAiAnimation(item.verse);
     bibleState$.handleVerseToExplain({ text: verseText, reference });
@@ -383,7 +381,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         name: "Sparkles",
         action: onExplainWithAI,
         description: "Explicar",
-        color: "#f1c40f"
+        color: "#f1c40f",
       },
       {
         name: "Quote",
@@ -410,7 +408,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         name: "Brain",
         action: () =>
           onMemorizeVerse(
-            `${getBookDetail(item.book_number).longName} ${item?.chapter}:${item?.verse
+            `${getBookDetail(item.book_number).longName} ${item?.chapter}:${
+              item?.verse
             }`
           ),
         color: "#f1abab",
@@ -480,8 +479,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
             fontSize={fontSize}
             theme={theme}
             style={{
-              alignItems: 'flex-start',
-              justifyContent: 'flex-start',
+              alignItems: "flex-start",
+              justifyContent: "flex-start",
             }}
           />
         ) : (
@@ -535,7 +534,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
             )}
           </Animated.Text>
         )}
-
 
         {/* ACTIONS */}
         {verseShowAction && (

@@ -11,7 +11,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { settingState$ } from "@/state/settingState";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
 
 interface CloudSyncPopupProps {
@@ -25,7 +25,7 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
   onClose,
   lastSyncTime,
 }) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const [syncing, setSyncing] = useState<boolean>(false);
   const [syncComplete, setSyncComplete] = useState<boolean>(false);
@@ -36,13 +36,13 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
     try {
       setSyncing(true);
       setSyncError(null);
-      
+
       // Load settings from cloud
       const success = await loadFromCloud();
-      
+
       if (success) {
         setSyncComplete(true);
-        
+
         // Give a short delay before closing to show the success state
         setTimeout(() => {
           setSyncComplete(false);
@@ -136,80 +136,81 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
   );
 };
 
-const getStyles = ({ colors, dark  }: TTheme) => StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: colors.background + 70,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContainer: {
-    width: "85%",
-    backgroundColor: colors.background,
-    borderRadius: 16,
-    padding: 24,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: colors.text,
-  },
-  iconContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 20,
-  },
-  description: {
-    fontSize: 16,
-    color: colors.text,
-    textAlign: "center",
-    marginBottom: 24,
-    lineHeight: 22,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 16,
-  },
-  button: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  cancelButton: {
-    backgroundColor: colors.text + 80,
-    marginRight: 8,
-  },
-  syncButton: {
-    backgroundColor: colors.notification,
-    marginLeft: 8,
-  },
-  disabledButton: {
-    backgroundColor: colors.text + 80,
-  },
-  cancelButtonText: {
-    color: !dark ? 'white': colors.text,
-    fontWeight: "600",
-    fontSize: 16,
-  },
-  syncButtonText: {
-    color: "white",
-    fontWeight: "600",
-    fontSize: 16,
-  },
-  lastSyncText: {
-    fontSize: 12,
-    color: colors.text,
-    textAlign: "center",
-  },
-});
+const getStyles = ({ colors, dark }: TTheme) =>
+  StyleSheet.create({
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: colors.background + 70,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    modalContainer: {
+      width: "85%",
+      backgroundColor: colors.background,
+      borderRadius: 16,
+      padding: 24,
+    },
+    header: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 16,
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: colors.text,
+    },
+    iconContainer: {
+      alignItems: "center",
+      justifyContent: "center",
+      marginVertical: 20,
+    },
+    description: {
+      fontSize: 16,
+      color: colors.text,
+      textAlign: "center",
+      marginBottom: 24,
+      lineHeight: 22,
+    },
+    buttonContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginBottom: 16,
+    },
+    button: {
+      flex: 1,
+      paddingVertical: 12,
+      borderRadius: 8,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    cancelButton: {
+      backgroundColor: colors.text + 80,
+      marginRight: 8,
+    },
+    syncButton: {
+      backgroundColor: colors.notification,
+      marginLeft: 8,
+    },
+    disabledButton: {
+      backgroundColor: colors.text + 80,
+    },
+    cancelButtonText: {
+      color: !dark ? "white" : colors.text,
+      fontWeight: "600",
+      fontSize: 16,
+    },
+    syncButtonText: {
+      color: "white",
+      fontWeight: "600",
+      fontSize: 16,
+    },
+    lastSyncText: {
+      fontSize: 12,
+      color: colors.text,
+      textAlign: "center",
+    },
+  });
 
 export default CloudSyncPopup;

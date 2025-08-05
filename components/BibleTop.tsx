@@ -4,8 +4,15 @@ import { useBibleContext } from "@/context/BibleContext";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import { bibleState$ } from "@/state/bibleState";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@react-navigation/native";
-import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTheme } from "@/context/ThemeContext";
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { ActivityIndicator, Animated, StyleSheet } from "react-native";
 import Chapter from "./home/content/Chapter";
 import BibleFooter from "./home/footer/BibleFooter";
@@ -18,7 +25,7 @@ interface BibleTopProps {
 }
 
 const BibleTop: FC<BibleTopProps> = (props) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const { orientation } = useBibleContext();
   const isPortrait = orientation === "PORTRAIT";
   const isDataLoading = use$(() => bibleState$.isDataLoading.top.get());
@@ -57,8 +64,8 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const headerHeight = useRef(new Animated.Value(1)).current;
   const footerHeight = useRef(new Animated.Value(1)).current;
 
-  const handleScroll = useCallback((direction: 'up' | 'down') => {
-    const toValue = direction === 'up' ? 1 : 0;
+  const handleScroll = useCallback((direction: "up" | "down") => {
+    const toValue = direction === "up" ? 1 : 0;
     Animated.parallel([
       Animated.timing(headerHeight, {
         toValue,
@@ -100,9 +107,11 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const progressStyle = {
     transform: [{ translateY: progressTranslateY }],
     opacity: 1,
-  }
+  };
 
-  const currentHistoryIndexState = use$(() => bibleState$.currentHistoryIndex.get());
+  const currentHistoryIndexState = use$(() =>
+    bibleState$.currentHistoryIndex.get()
+  );
   const progressValue = useMemo(() => {
     return (currentHistoryIndexState || 0) / (verses?.length || 10);
   }, [currentHistoryIndexState, verses]);
@@ -112,28 +121,31 @@ const BibleTop: FC<BibleTopProps> = (props) => {
       <Animated.View style={[styles.header, headerStyle]}>
         <BibleHeader />
       </Animated.View>
-      {!isSplitActived && <Animated.View style={[styles.progressContainer, progressStyle]}>
-        <ProgressBar
-          hideCircle
-          height={4}
-          color={theme.colors.notification}
-          barColor={theme.colors.text}
-          progress={progressValue}
-          circleColor={theme.colors.notification}
-        />
-      </Animated.View>}
+      {!isSplitActived && (
+        <Animated.View style={[styles.progressContainer, progressStyle]}>
+          <ProgressBar
+            hideCircle
+            height={4}
+            color={theme.colors.notification}
+            barColor={theme.colors.text}
+            progress={progressValue}
+            circleColor={theme.colors.notification}
+          />
+        </Animated.View>
+      )}
       <SwipeWrapper {...{ onSwipeRight, onSwipeLeft }}>
         {isDataLoading ? (
           <ActivityIndicator />
-        ) : (<Chapter
-          verses={verses}
-          isSplit={false}
-          estimatedReadingTime={0}
-          initialScrollIndex={
-            initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
-          }
-          onScroll={handleScroll}
-        />
+        ) : (
+          <Chapter
+            verses={verses}
+            isSplit={false}
+            estimatedReadingTime={0}
+            initialScrollIndex={
+              initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
+            }
+            onScroll={handleScroll}
+          />
         )}
       </SwipeWrapper>
       <Animated.View style={[styles.footer, footerStyle]}>
@@ -149,27 +161,27 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   header: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     zIndex: 1,
   },
   footer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
     zIndex: 1,
   },
   progressContainer: {
-    position: 'absolute',
+    position: "absolute",
     width: "100%",
     top: 0,
     left: 0,
     right: 0,
     zIndex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     paddingHorizontal: 8,
   },
 });

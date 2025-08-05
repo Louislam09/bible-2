@@ -89,5 +89,8 @@ export const singleScreenHeader = ({
         </Text>
       </View>
     ),
+    headerStyle: {
+      backgroundColor: theme.colors.background,
+    },
   };
 };

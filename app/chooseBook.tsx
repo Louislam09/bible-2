@@ -2,7 +2,7 @@ import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import { Text, View } from "@/components/Themed";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
-import { storedData$, useStorage } from "@/context/LocalstoreContext";
+import { storedData$ } from "@/context/LocalstoreContext";
 import useParams from "@/hooks/useParams";
 import { bibleState$ } from "@/state/bibleState";
 import {
@@ -14,11 +14,12 @@ import {
 } from "@/types";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
 import React, { useCallback, useMemo } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import StatusBarBackground from "@/components/StatusBarBackground";
 
 const BookItem = React.memo(
   ({
@@ -131,7 +132,7 @@ const ChooseBook: React.FC = () => {
   const routeParam = useParams<ChooseChapterNumberParams>();
   const isShowName = use$(() => storedData$.isShowName.get());
   const { book } = routeParam;
-  const theme = useTheme();
+  const { theme } = useTheme();
   const { viewLayoutGrid, toggleViewLayoutGrid } = useBibleContext();
   const isBottomSideSearching = bibleState$.isBottomBibleSearching.get();
 

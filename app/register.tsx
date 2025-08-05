@@ -4,9 +4,9 @@ import { storedData$ } from "@/context/LocalstoreContext";
 import { pb } from "@/globalConfig";
 import { authState$ } from "@/state/authState";
 import { TTheme } from "@/types";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { Stack, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -23,10 +23,10 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const RegisterScreen = () => {
   const [name, setName] = useState("");
@@ -43,7 +43,7 @@ const RegisterScreen = () => {
   const slideAnim = useState(new Animated.Value(50))[0];
 
   const router = useRouter();
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme as TTheme);
   const isLoading = use$(() => authState$.isLoading.get());
 
@@ -61,15 +61,15 @@ const RegisterScreen = () => {
         toValue: 0,
         duration: 800,
         useNativeDriver: true,
-      })
+      }),
     ]).start();
 
     const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
+      "keyboardDidShow",
       () => setKeyboardVisible(true)
     );
     const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
+      "keyboardDidHide",
       () => setKeyboardVisible(false)
     );
 
@@ -92,22 +92,34 @@ const RegisterScreen = () => {
   const handleRegister = async () => {
     try {
       if (!name || !email || !password || !confirmPassword) {
-        showErrorAlert("Campos incompletos", "Por favor completa todos los campos");
+        showErrorAlert(
+          "Campos incompletos",
+          "Por favor completa todos los campos"
+        );
         return;
       }
 
       if (!validateEmail(email)) {
-        showErrorAlert("Correo inválido", "Por favor ingresa un correo electrónico válido");
+        showErrorAlert(
+          "Correo inválido",
+          "Por favor ingresa un correo electrónico válido"
+        );
         return;
       }
 
       if (password.length < 6) {
-        showErrorAlert("Contraseña débil", "La contraseña debe tener al menos 6 caracteres");
+        showErrorAlert(
+          "Contraseña débil",
+          "La contraseña debe tener al menos 6 caracteres"
+        );
         return;
       }
 
       if (password !== confirmPassword) {
-        showErrorAlert("Contraseñas no coinciden", "Las contraseñas no coinciden");
+        showErrorAlert(
+          "Contraseñas no coinciden",
+          "Las contraseñas no coinciden"
+        );
         return;
       }
 
@@ -177,7 +189,7 @@ const RegisterScreen = () => {
               headerRightProps: {
                 headerRightIcon: "Trash2",
                 headerRightIconColor: "red",
-                onPress: () => { },
+                onPress: () => {},
                 disabled: false,
                 style: { opacity: 0 },
               },
@@ -191,11 +203,11 @@ const RegisterScreen = () => {
             <Animated.View
               style={[
                 styles.logoContainer,
-                { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }
+                { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
               ]}
             >
               <Image
-                source={require('../assets/images/auth.png')}
+                source={require("../assets/images/auth.png")}
                 style={styles.logo}
                 resizeMode="contain"
               />
@@ -205,7 +217,7 @@ const RegisterScreen = () => {
           <Animated.View
             style={[
               styles.formContainer,
-              { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }
+              { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
             ]}
           >
             <Text style={[styles.title]}>
@@ -215,7 +227,11 @@ const RegisterScreen = () => {
 
             {error ? (
               <View style={styles.errorContainer}>
-                <MaterialCommunityIcons name="alert-circle" size={18} color="red" />
+                <MaterialCommunityIcons
+                  name="alert-circle"
+                  size={18}
+                  color="red"
+                />
                 <Text style={styles.errorText}>{error}</Text>
               </View>
             ) : null}
@@ -230,7 +246,7 @@ const RegisterScreen = () => {
               <TextInput
                 style={[styles.input]}
                 placeholder="Nombre Completo"
-                placeholderTextColor={theme.colors.text + '80'}
+                placeholderTextColor={theme.colors.text + "80"}
                 value={name}
                 onChangeText={setName}
                 autoCapitalize="words"
@@ -248,7 +264,7 @@ const RegisterScreen = () => {
               <TextInput
                 style={[styles.input]}
                 placeholder="Correo Electrónico"
-                placeholderTextColor={theme.colors.text + '80'}
+                placeholderTextColor={theme.colors.text + "80"}
                 value={email}
                 onChangeText={setEmail}
                 autoCapitalize="none"
@@ -267,7 +283,7 @@ const RegisterScreen = () => {
               <TextInput
                 style={[styles.input]}
                 placeholder="Contraseña"
-                placeholderTextColor={theme.colors.text + '80'}
+                placeholderTextColor={theme.colors.text + "80"}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
@@ -295,7 +311,7 @@ const RegisterScreen = () => {
               <TextInput
                 style={[styles.input]}
                 placeholder="Confirmar Contraseña"
-                placeholderTextColor={theme.colors.text + '80'}
+                placeholderTextColor={theme.colors.text + "80"}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
                 secureTextEntry={!showConfirmPassword}
@@ -317,7 +333,7 @@ const RegisterScreen = () => {
             <TouchableOpacity
               style={[
                 styles.button,
-                (loading || isLoading) && styles.buttonDisabled
+                (loading || isLoading) && styles.buttonDisabled,
               ]}
               onPress={handleRegister}
               disabled={loading || isLoading}
@@ -339,8 +355,8 @@ const RegisterScreen = () => {
             <GoogleAuth
               isRegistration={true}
               onSuccess={handleGoogleSuccess}
-            // buttonStyle={styles.googleButton}
-            // textStyle={styles.googleButtonText}
+              // buttonStyle={styles.googleButton}
+              // textStyle={styles.googleButtonText}
             />
 
             <TouchableOpacity
@@ -348,7 +364,8 @@ const RegisterScreen = () => {
               style={styles.loginContainer}
             >
               <Text style={styles.loginText}>
-                ¿Ya tienes una cuenta? <Text style={styles.linkText}>Inicia Sesión</Text>
+                ¿Ya tienes una cuenta?{" "}
+                <Text style={styles.linkText}>Inicia Sesión</Text>
               </Text>
             </TouchableOpacity>
           </Animated.View>
@@ -370,7 +387,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: colors.background,
     },
     logoContainer: {
-      alignItems: 'center',
+      alignItems: "center",
       marginBottom: 20,
     },
     logo: {
@@ -378,7 +395,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       height: 100,
     },
     formContainer: {
-      width: '100%',
+      width: "100%",
     },
     title: {
       fontSize: 28,
@@ -390,12 +407,12 @@ const getStyles = ({ colors, dark }: TTheme) =>
     subtitle: {
       fontSize: 18,
       fontWeight: "normal",
-      color: colors.text + '90',
+      color: colors.text + "90",
     },
     errorContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: 'rgba(255,0,0,0.1)',
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: "rgba(255,0,0,0.1)",
       borderRadius: 8,
       padding: 10,
       marginBottom: 15,
@@ -405,8 +422,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginLeft: 8,
     },
     inputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       height: 55,
       borderRadius: 12,
       borderWidth: 1,
@@ -443,8 +460,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontWeight: "bold",
     },
     dividerContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginVertical: 20,
     },
     divider: {
@@ -467,7 +484,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       color: colors.text,
     },
     loginContainer: {
-      alignItems: 'center',
+      alignItems: "center",
       marginTop: 25,
     },
     loginText: {
@@ -476,7 +493,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     linkText: {
       color: colors.notification,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
   });
 

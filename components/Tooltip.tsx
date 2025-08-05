@@ -1,8 +1,8 @@
-import { TTheme } from '@/types';
-import { useTheme } from '@react-navigation/native';
-import React, { Children, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
-import Popover from 'react-native-popover-view';
+import { useTheme } from "@/context/ThemeContext";
+import { TTheme } from "@/types";
+import React, { Children, useEffect } from "react";
+import { StyleSheet, View } from "react-native";
+import Popover from "react-native-popover-view";
 
 interface ITooltip {
   target: any;
@@ -19,7 +19,7 @@ const Tooltip = ({
   onClose,
   children,
 }: ITooltip) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
 
   useEffect(() => {
@@ -51,9 +51,9 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     container: {
       width: 350,
-      maxWidth: '100%',
+      maxWidth: "100%",
       borderRadius: 10,
-      overflow: 'hidden',
+      overflow: "hidden",
       backgroundColor: colors.background,
     },
   });

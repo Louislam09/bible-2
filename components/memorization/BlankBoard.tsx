@@ -1,10 +1,10 @@
-import { TTheme } from '@/types';
-import removeAccent from '@/utils/removeAccent';
-import { useTheme } from '@react-navigation/native';
-import React, { useState, useEffect, useMemo } from 'react';
-import { TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
-import { Text, View } from '../Themed';
-import ProgressBar from '../home/footer/ProgressBar';
+import { TTheme } from "@/types";
+import removeAccent from "@/utils/removeAccent";
+import { useTheme } from "@/context/ThemeContext";
+import React, { useState, useEffect, useMemo } from "react";
+import { TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
+import { Text, View } from "../Themed";
+import ProgressBar from "../home/footer/ProgressBar";
 
 type BlankBoardProps = {
   verse: string;
@@ -16,10 +16,10 @@ type VersePart = string | null;
 
 const BlankBoard: React.FC<BlankBoardProps> = ({
   verse: phrase,
-  reference = '',
+  reference = "",
   onFinished,
 }) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const [answers, setAnswers] = useState<string[]>([]);
   const [correctAnswers, setCorrentAnswers] = useState<string[]>([]);
@@ -68,12 +68,12 @@ const BlankBoard: React.FC<BlankBoardProps> = ({
     const hiddenWords: string[] = [];
 
     const wordsToHide = parts
-      .filter((part) => part.trim() !== '')
+      .filter((part) => part.trim() !== "")
       .sort(() => 0.5 - Math.random())
       .slice(0, Math.floor(parts.length / 4));
 
     parts.forEach((part) => {
-      if (part.trim() === '') {
+      if (part.trim() === "") {
         processedParts.push(part);
       } else {
         if (wordsToHide.includes(part)) {
@@ -101,8 +101,8 @@ const BlankBoard: React.FC<BlankBoardProps> = ({
   const checkFilledBlank = (blankIndex: number) => {
     const isFilled = !!answers[blankIndex];
     const isCorrent =
-      removeAccent(answers[blankIndex] || '') ===
-      removeAccent(correctAnswers[blankIndex] || '');
+      removeAccent(answers[blankIndex] || "") ===
+      removeAccent(correctAnswers[blankIndex] || "");
     const isCurrentBlank = blankIndex === currentIndex;
 
     return { isFilled, isCorrent, isCurrentBlank };
@@ -124,26 +124,26 @@ const BlankBoard: React.FC<BlankBoardProps> = ({
         <ProgressBar
           hideCircle
           height={4}
-          color={'#dc2626'}
+          color={"#dc2626"}
           barColor={theme.colors.text}
           progress={mistakes / 1}
-          circleColor='transparent'
+          circleColor="transparent"
         />
         <View style={styles.reference}>
-          <Text style={styles.referenceText}>{reference || ''}</Text>
+          <Text style={styles.referenceText}>{reference || ""}</Text>
         </View>
       </View>
 
       <View style={styles.verseContainer}>
         {verseParts.map((part, index) => {
-          if (index === 0 && part?.trim() === '') return;
+          if (index === 0 && part?.trim() === "") return;
           if (part === null) {
             const blankIndex = verseParts
               .slice(0, index)
               .filter((p) => p === null).length;
             const { isCorrent, isCurrentBlank, isFilled } =
               checkFilledBlank(blankIndex);
-            const key = isCorrent ? 'correctText' : 'incorrectText';
+            const key = isCorrent ? "correctText" : "incorrectText";
 
             return (
               <TouchableOpacity
@@ -159,7 +159,7 @@ const BlankBoard: React.FC<BlankBoardProps> = ({
                 onPress={() => {}}
               >
                 <Text style={[styles.blankText, isFilled && styles[key]]}>
-                  {isFilled ? correctAnswers[blankIndex] : ''}
+                  {isFilled ? correctAnswers[blankIndex] : ""}
                 </Text>
               </TouchableOpacity>
             );
@@ -197,8 +197,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     verseContainer: {
       flex: 1,
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
     },
     verseText: {
       color: colors.text,
@@ -209,8 +209,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: colors.text + 40,
       // minWidth: 60,
       height: 30,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       // marginHorizontal: 2,
       // marginVertical: 2,
       borderRadius: 5,
@@ -219,14 +219,14 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: colors.text,
     },
     filled: {
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
     },
     correctText: {
-      color: '#1ce265',
+      color: "#1ce265",
       fontSize: 20,
     },
     incorrectText: {
-      color: '#dc2626',
+      color: "#dc2626",
       fontSize: 20,
     },
     blankText: {
@@ -240,13 +240,13 @@ const getStyles = ({ colors, dark }: TTheme) =>
     referenceText: {
       color: colors.text,
       fontSize: 20,
-      fontWeight: '700',
+      fontWeight: "700",
     },
     wordBank: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       padding: 20,
-      justifyContent: 'center',
+      justifyContent: "center",
       gap: 10,
     },
     word: {
@@ -259,7 +259,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     wordText: {
       color: colors.card,
       fontSize: 20,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
   });
 

@@ -1,6 +1,6 @@
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { TSongItem, TTheme } from "@/types";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import {
@@ -20,7 +20,7 @@ const SongViewer = ({ song }: SongViewer) => {
   const { title, chorus, stanzas } = song;
   const scrollViewRef = useRef<ScrollView>(null);
 
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
   const fadeAnim = useRef(new Animated.Value(0)).current;

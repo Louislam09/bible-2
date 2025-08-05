@@ -3,7 +3,7 @@ import { Text } from "@/components/Themed";
 import { bibleState$ } from "@/state/bibleState";
 import { IBookVerse, TTheme } from "@/types";
 import { observer } from "@legendapp/state/react";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { FlashList } from "@shopify/flash-list";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
@@ -22,7 +22,7 @@ interface TChapter {
   isSplit?: boolean;
   estimatedReadingTime: number;
   initialScrollIndex: number;
-  onScroll?: (direction: 'up' | 'down') => void;
+  onScroll?: (direction: "up" | "down") => void;
 }
 
 interface TChapter {
@@ -30,7 +30,7 @@ interface TChapter {
   isSplit?: boolean;
   estimatedReadingTime: number;
   initialScrollIndex: number;
-  onScroll?: (direction: 'up' | 'down') => void;
+  onScroll?: (direction: "up" | "down") => void;
 }
 
 const Chapter = ({
@@ -44,7 +44,7 @@ const Chapter = ({
   const data = verses ?? [];
 
   const { width, height } = useWindowDimensions();
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const chapterRef = useRef<FlashList<any>>(null);
   const topVerseRef = useRef<number | null>(null);
@@ -64,7 +64,7 @@ const Chapter = ({
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
       const newTopVerse = viewableItems[0].item.verse;
-      bibleState$.handleCurrentHistoryIndex(newTopVerse)
+      bibleState$.handleCurrentHistoryIndex(newTopVerse);
       if (topVerseRef.current !== newTopVerse) {
         topVerseRef.current = newTopVerse;
       }
@@ -110,23 +110,27 @@ const Chapter = ({
     []
   );
 
-  const handleScroll = useCallback(({ nativeEvent }: { nativeEvent: any }) => {
-    const now = Date.now();
-    const minScrollTime = 50; // Minimum time between scroll events to process
+  const handleScroll = useCallback(
+    ({ nativeEvent }: { nativeEvent: any }) => {
+      const now = Date.now();
+      const minScrollTime = 50; // Minimum time between scroll events to process
 
-    if (now - lastScrollTime.current < minScrollTime) {
-      return;
-    }
+      if (now - lastScrollTime.current < minScrollTime) {
+        return;
+      }
 
-    const currentOffset = nativeEvent.contentOffset.y;
-    const direction = currentOffset > lastOffset.current ? 'down' : 'up';
+      const currentOffset = nativeEvent.contentOffset.y;
+      const direction = currentOffset > lastOffset.current ? "down" : "up";
 
-    if (Math.abs(currentOffset - lastOffset.current) > 10) { // Minimum scroll distance
-      onScroll?.(direction);
-      lastOffset.current = currentOffset;
-      lastScrollTime.current = now;
-    }
-  }, [onScroll]);
+      if (Math.abs(currentOffset - lastOffset.current) > 10) {
+        // Minimum scroll distance
+        onScroll?.(direction);
+        lastOffset.current = currentOffset;
+        lastScrollTime.current = now;
+      }
+    },
+    [onScroll]
+  );
 
   return (
     <View style={styles.chapterContainer}>
@@ -155,12 +159,12 @@ const Chapter = ({
           ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
           onScroll={handleScroll}
           scrollEventThrottle={16}
-        // decelerationRate="normal"
-        // onEndReached={onEndReached}
-        // maintainVisibleContentPosition={{
-        //   minIndexForVisible: 0,
-        //   autoscrollToTopThreshold: 10,
-        // }}
+          // decelerationRate="normal"
+          // onEndReached={onEndReached}
+          // maintainVisibleContentPosition={{
+          //   minIndexForVisible: 0,
+          //   autoscrollToTopThreshold: 10,
+          // }}
         />
       </View>
     </View>
@@ -226,7 +230,7 @@ const getStyles = ({ colors }: TTheme) =>
 export function useHighlightRender() {
   const animation = useRef(new Animated.Value(0)).current;
   const renderCount = useRef(0);
-  const theme = useTheme();
+  const { theme } = useTheme();
 
   useEffect(() => {
     // Increment render count

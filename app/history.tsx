@@ -7,7 +7,7 @@ import { HistoryItem } from "@/hooks/useHistoryManager";
 import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useMemo } from "react";
@@ -20,11 +20,12 @@ import {
 } from "react-native";
 
 const HistoryScreen = () => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const colorScheme = useColorScheme();
   const styles = useMemo(() => getStyles(theme), [theme, colorScheme]);
   const { historyManager } = useBibleContext();
-  const { clear, history, isHistoryInitialized, deleteOne, loadHistory } = historyManager;
+  const { clear, history, isHistoryInitialized, deleteOne, loadHistory } =
+    historyManager;
   const router = useRouter();
 
   useEffect(() => {
@@ -32,7 +33,6 @@ const HistoryScreen = () => {
   }, []);
 
   const clearHistory = useCallback(async () => {
-
     Alert.alert(
       "Borrar Historial",
       "¿Estás seguro de que quieres borrar todo el historial?",
@@ -53,61 +53,74 @@ const HistoryScreen = () => {
     );
   }, [clear]);
 
-  const navigateToHistoryItem = useCallback(async (item: HistoryItem) => {
-    const { book, chapter, verse } = item;
+  const navigateToHistoryItem = useCallback(
+    async (item: HistoryItem) => {
+      const { book, chapter, verse } = item;
 
-    bibleState$.changeBibleQuery({
-      book,
-      chapter,
-      verse,
-      shouldFetch: true,
-      isHistory: true,
-    });
-    router.push(Screens.Home);
-  }, [router]);
+      bibleState$.changeBibleQuery({
+        book,
+        chapter,
+        verse,
+        shouldFetch: true,
+        isHistory: true,
+      });
+      router.push(Screens.Home);
+    },
+    [router]
+  );
 
   const handleDeleteItem = useCallback(async (id: number) => {
     deleteOne(id);
   }, []);
 
-  const renderItem = useCallback(({ item }: { item: HistoryItem }) => (
-    <TouchableOpacity
-      style={styles.historyItem}
-      activeOpacity={0.7}
-      onPress={() => navigateToHistoryItem(item)}
-      accessible={true}
-      accessibilityLabel={`${renameLongBookName(item.book)} capítulo ${item.chapter} versículo ${item.verse}, leído el ${item.created_at || 'fecha desconocida'}`}
-      accessibilityHint="Toca para ir a este versículo"
-      accessibilityRole="button"
-    >
-      <View style={styles.historyItemContent}>
-        <Text style={styles.bookText} numberOfLines={1} ellipsizeMode="tail">
-          {renameLongBookName(item.book)} {item.chapter}:{item.verse}
-        </Text>
-        <Text style={styles.dateText}>{item.created_at || "-"}</Text>
-      </View>
+  const renderItem = useCallback(
+    ({ item }: { item: HistoryItem }) => (
       <TouchableOpacity
-        onPress={() => handleDeleteItem(item?.id as number)}
-        style={styles.deleteButton}
+        style={styles.historyItem}
+        activeOpacity={0.7}
+        onPress={() => navigateToHistoryItem(item)}
         accessible={true}
-        accessibilityLabel="Eliminar de historial"
+        accessibilityLabel={`${renameLongBookName(item.book)} capítulo ${
+          item.chapter
+        } versículo ${item.verse}, leído el ${
+          item.created_at || "fecha desconocida"
+        }`}
+        accessibilityHint="Toca para ir a este versículo"
         accessibilityRole="button"
-        hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
       >
-        <Icon name="Trash2" size={20} color="red" />
+        <View style={styles.historyItemContent}>
+          <Text style={styles.bookText} numberOfLines={1} ellipsizeMode="tail">
+            {renameLongBookName(item.book)} {item.chapter}:{item.verse}
+          </Text>
+          <Text style={styles.dateText}>{item.created_at || "-"}</Text>
+        </View>
+        <TouchableOpacity
+          onPress={() => handleDeleteItem(item?.id as number)}
+          style={styles.deleteButton}
+          accessible={true}
+          accessibilityLabel="Eliminar de historial"
+          accessibilityRole="button"
+          hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
+        >
+          <Icon name="Trash2" size={20} color="red" />
+        </TouchableOpacity>
       </TouchableOpacity>
-    </TouchableOpacity>
-  ), [styles, navigateToHistoryItem, handleDeleteItem]);
+    ),
+    [styles, navigateToHistoryItem, handleDeleteItem]
+  );
 
-  const EmptyListComponent = useCallback(() => (
-    <View style={styles.emptyContainer}>
-      <Icon name="History" size={48} color={theme.colors.text + '80'} />
-      <Text style={styles.emptyText}>No se encontró historial</Text>
-      <Text style={styles.emptySubtext}>
-        Los versículos que leas aparecerán aquí
-      </Text>
-    </View>
-  ), [styles, theme.colors.text]);
+  const EmptyListComponent = useCallback(
+    () => (
+      <View style={styles.emptyContainer}>
+        <Icon name="History" size={48} color={theme.colors.text + "80"} />
+        <Text style={styles.emptyText}>No se encontró historial</Text>
+        <Text style={styles.emptySubtext}>
+          Los versículos que leas aparecerán aquí
+        </Text>
+      </View>
+    ),
+    [styles, theme.colors.text]
+  );
 
   if (!isHistoryInitialized) {
     return (
@@ -194,12 +207,12 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginBottom: 12,
       borderRadius: 12,
       borderColor: colors.text + 20,
-      backgroundColor: dark ? colors.card : colors.text + '10',
+      backgroundColor: dark ? colors.card : colors.text + "10",
       borderWidth: 1,
     },
     historyItemContent: {
       flex: 1,
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
       marginRight: 12,
     },
     bookText: {
@@ -210,7 +223,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     dateText: {
       fontSize: 14,
-      color: colors.text + '99',
+      color: colors.text + "99",
     },
     deleteButton: {
       padding: 8,
@@ -221,7 +234,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
       gap: 12,
     },
     emptyText: {
@@ -232,7 +245,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     emptySubtext: {
       fontSize: 14,
-      color: colors.text + '99',
+      color: colors.text + "99",
       textAlign: "center",
       paddingHorizontal: 20,
     },

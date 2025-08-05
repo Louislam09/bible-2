@@ -1,23 +1,23 @@
-import { Text, View } from '@/components/Themed';
-import Tooltip from '@/components/Tooltip';
-import BlankChallenge from '@/components/memorization/BlankChallenge';
-import PointsCard from '@/components/memorization/PointCard';
-import ReadChallenge from '@/components/memorization/ReadChallenge';
-import TypeChallenge from '@/components/memorization/TypeChallenge';
-import { DB_BOOK_NAMES } from '@/constants/BookNames';
-import { GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE } from '@/constants/Queries';
-import { headerIconSize } from '@/constants/size';
-import { useMemorization } from '@/context/MemorizationContext';
-import { useDBContext } from '@/context/databaseContext';
-import useParams from '@/hooks/useParams';
-import { useStreak } from '@/hooks/useStreak';
-import { Memorization, MemorizationButtonType, TPoints, TTheme } from '@/types';
-import { parseBibleReferences } from '@/utils/extractVersesInfo';
-import { useTheme } from '@react-navigation/native';
-import { Stack, useRouter } from 'expo-router';
-import { ChevronLeft, CircleHelp } from 'lucide-react-native';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View } from "@/components/Themed";
+import Tooltip from "@/components/Tooltip";
+import BlankChallenge from "@/components/memorization/BlankChallenge";
+import PointsCard from "@/components/memorization/PointCard";
+import ReadChallenge from "@/components/memorization/ReadChallenge";
+import TypeChallenge from "@/components/memorization/TypeChallenge";
+import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE } from "@/constants/Queries";
+import { headerIconSize } from "@/constants/size";
+import { useMemorization } from "@/context/MemorizationContext";
+import { useDBContext } from "@/context/databaseContext";
+import useParams from "@/hooks/useParams";
+import { useStreak } from "@/hooks/useStreak";
+import { Memorization, MemorizationButtonType, TPoints, TTheme } from "@/types";
+import { parseBibleReferences } from "@/utils/extractVersesInfo";
+import { useTheme } from "@/context/ThemeContext";
+import { Stack, useRouter } from "expo-router";
+import { ChevronLeft, CircleHelp } from "lucide-react-native";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { ActivityIndicator, StyleSheet, TouchableOpacity } from "react-native";
 
 type ParamProps = {
   typeId: MemorizationButtonType;
@@ -39,7 +39,7 @@ const Type = () => {
     [verseId]
   );
 
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
 
   const [openHelp, setOpenHelp] = React.useState(false);
@@ -59,32 +59,32 @@ const Type = () => {
     [MemorizationButtonType.Read]: {
       point: 5,
       maxPoint: 20,
-      description: 'Toca para revelar el versículo por sección',
+      description: "Toca para revelar el versículo por sección",
       type,
     },
     [MemorizationButtonType.Blank]: {
       point: 5,
       maxPoint: 40,
-      description: 'Selecciona una palabra para llenar cada espacio en blanco',
+      description: "Selecciona una palabra para llenar cada espacio en blanco",
       type,
     },
     [MemorizationButtonType.Type]: {
       point: 15,
       maxPoint: 80,
-      description: 'Escribe la primera letra de cada palabra',
+      description: "Escribe la primera letra de cada palabra",
       type,
     },
     [MemorizationButtonType.Test]: {
       point: 20,
       maxPoint: 100,
-      description: 'Escribe la primera letra de cada palabra',
+      description: "Escribe la primera letra de cada palabra",
       type,
       negativePoint: -10,
     },
     [MemorizationButtonType.Locked]: {
       point: 0,
       maxPoint: 0,
-      description: '',
+      description: "",
       type,
     },
   };
@@ -112,7 +112,7 @@ const Type = () => {
         setItem(data[0] as any);
         setLoadiing(false);
       } catch (error) {
-        console.warn('Error refreshVerses:', error);
+        console.warn("Error refreshVerses:", error);
       }
     };
     getCurrentItem();
@@ -121,7 +121,7 @@ const Type = () => {
   const onUpdateProgress = async (value: number) => {
     const currentTypeInfo = typeInfo[type];
     if (memorizeItem.progress >= currentTypeInfo.maxPoint) {
-      console.log('No more point on this challenge', memorizeItem.progress);
+      console.log("No more point on this challenge", memorizeItem.progress);
       return;
     }
     const progressValue = value + memorizeItem.progress;
@@ -166,9 +166,9 @@ const Type = () => {
             <View
               style={{
                 gap: 4,
-                flexDirection: 'row',
-                alignItems: 'center',
-                backgroundColor: 'transparent',
+                flexDirection: "row",
+                alignItems: "center",
+                backgroundColor: "transparent",
               }}
             >
               <Text style={styles.title}>{type}</Text>
@@ -206,7 +206,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     title: {
       fontSize: 22,
       color: colors.text,
-      fontWeight: '600',
+      fontWeight: "600",
     },
-    version: { fontSize: 16, color: '#B0BEC5' },
+    version: { fontSize: 16, color: "#B0BEC5" },
   });

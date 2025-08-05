@@ -1,5 +1,5 @@
 import { TFont, TTheme } from "@/types";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import React, { useState } from "react";
 import {
   SafeAreaView,
@@ -22,7 +22,7 @@ const FontSelector: React.FC<FontSelectorProps> = ({
   initialFont = "Roboto",
 }) => {
   const [selectedFont, setSelectedFont] = useState<FontFamily>(initialFont);
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
 
   const fonts: FontFamily[] = Object.values(TFont);

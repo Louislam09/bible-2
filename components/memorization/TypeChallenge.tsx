@@ -4,16 +4,16 @@ import {
   TouchableOpacity,
   TextInput,
   Keyboard,
-} from 'react-native';
-import React, { FC, useEffect, useRef, useState } from 'react';
-import { Text, View } from '../Themed';
-import { IVerseItem, MemorizationButtonType, TPoints, TTheme } from '@/types';
-import { getVerseTextRaw } from '@/utils/getVerseTextRaw';
-import { splitText } from '@/utils/groupBy';
-import { useTheme } from '@react-navigation/native';
-import { useRouter } from 'expo-router';
-import ProgressBar from '../home/footer/ProgressBar';
-import removeAccent from '@/utils/removeAccent';
+} from "react-native";
+import React, { FC, useEffect, useRef, useState } from "react";
+import { Text, View } from "../Themed";
+import { IVerseItem, MemorizationButtonType, TPoints, TTheme } from "@/types";
+import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { splitText } from "@/utils/groupBy";
+import { useTheme } from "@/context/ThemeContext";
+import { useRouter } from "expo-router";
+import ProgressBar from "../home/footer/ProgressBar";
+import removeAccent from "@/utils/removeAccent";
 
 type TypeChallengeProps = {
   item: IVerseItem;
@@ -27,7 +27,7 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
   onUpdateProgress,
 }) => {
   const router = useRouter();
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [started, setStarted] = useState(false);
@@ -37,11 +37,11 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
   >([]);
   const isTestChallenge = typeInfo.type === MemorizationButtonType.Test;
 
-  const text = getVerseTextRaw(item?.text || '');
+  const text = getVerseTextRaw(item?.text || "");
   const words = text
-    .replace(/«.*»/, '')
-    .split(' ')
-    .filter((x: string) => x !== '*' && x !== '');
+    .replace(/«.*»/, "")
+    .split(" ")
+    .filter((x: string) => x !== "*" && x !== "");
 
   const verseReference = `${item?.bookName} ${item?.chapter}:${item?.verse}`;
   const parts =
@@ -122,10 +122,10 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
           style={[
             styles.verseText,
             index === currentIndex && styles.currentWord,
-            { color: 'transparent' },
+            { color: "transparent" },
           ]}
         >
-          {word}{' '}
+          {word}{" "}
         </Text>
       );
     }
@@ -136,11 +136,11 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
         style={[
           styles.verseText,
           {
-            color: completed.isCorrect ? '#1ce265' : '#dc2626',
+            color: completed.isCorrect ? "#1ce265" : "#dc2626",
           },
         ]}
       >
-        {word}{' '}
+        {word}{" "}
       </Text>
     );
   };
@@ -153,18 +153,18 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
           style={styles.hiddenInput}
           onKeyPress={(e) => handleKeyPress(e.nativeEvent.key)}
           autoFocus
-          autoCapitalize='none'
+          autoCapitalize="none"
           autoCorrect={false}
           blurOnSubmit={false}
         />
-        <View style={{ marginBottom: 20, width: '100%' }}>
+        <View style={{ marginBottom: 20, width: "100%" }}>
           <ProgressBar
             hideCircle
             height={4}
-            color={'#dc2626'}
+            color={"#dc2626"}
             barColor={theme.colors.text}
             progress={mistakes / allowNumberOfMistakes}
-            circleColor='transparent'
+            circleColor="transparent"
           />
           <Text style={styles.verseReference}>{verseReference}</Text>
         </View>
@@ -175,7 +175,7 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
               <View style={styles.progressContainer}>
                 <Text style={styles.progressText}>Errores: {mistakes}</Text>
                 <Text style={styles.progressText}>
-                  Progreso:{' '}
+                  Progreso:{" "}
                   {Math.round((currentIndex / (parts.length - 1)) * 100)}%
                 </Text>
               </View>
@@ -228,23 +228,23 @@ const getStyles = ({ colors, dark }: TTheme) =>
     container: {
       padding: 16,
       flex: 1,
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      justifyContent: "space-between",
+      alignItems: "center",
     },
     hiddenInput: {
-      position: 'absolute',
+      position: "absolute",
       width: 1,
       height: 1,
       opacity: 0,
     },
     gameContainer: {
-      width: '100%',
+      width: "100%",
       flex: 1,
-      justifyContent: 'space-between',
+      justifyContent: "space-between",
     },
     progressContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      justifyContent: "space-between",
       marginBottom: 20,
     },
     progressText: {
@@ -252,22 +252,22 @@ const getStyles = ({ colors, dark }: TTheme) =>
       color: colors.text,
     },
     wordsContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       marginBottom: 20,
     },
     introContainer: {
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       flex: 1,
     },
     introText: {
-      textAlign: 'center',
+      textAlign: "center",
       fontSize: 20,
       marginBottom: 16,
     },
     instructionText: {
-      textAlign: 'center',
+      textAlign: "center",
       fontSize: 16,
       color: colors.text,
       opacity: 0.8,
@@ -279,27 +279,27 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     currentWord: {
       opacity: 1,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     verseReference: {
       marginTop: 10,
       fontSize: 20,
       color: colors.text,
-      fontWeight: '500',
-      textAlign: 'left',
+      fontWeight: "500",
+      textAlign: "left",
     },
     completedButton: {
-      width: '100%',
+      width: "100%",
       backgroundColor: colors.text,
       borderRadius: 12,
       paddingVertical: 12,
-      alignItems: 'center',
+      alignItems: "center",
       marginTop: 20,
     },
     completedButtonText: {
       fontSize: 18,
-      color: dark ? '#000' : '#fff',
-      fontWeight: '400',
+      color: dark ? "#000" : "#fff",
+      fontWeight: "400",
     },
   });
 

@@ -3,13 +3,12 @@ import { Text } from "@/components/Themed";
 import hymnSong from "@/constants/hymnSong";
 import AlegreSongs from "@/constants/songs";
 import { useBibleContext } from "@/context/BibleContext";
-import { useCustomTheme } from "@/context/ThemeContext";
+import { useTheme } from "@/context/ThemeContext";
 import useParams from "@/hooks/useParams";
 import { RootStackScreenProps, TSongItem, TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
 // import removeAccent from '@/utils/removeAccent';
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useRouter } from "expo-router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -65,9 +64,8 @@ const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
 };
 
 const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
-  const theme = useTheme();
   const { isAlegres } = useParams();
-  const { schema } = useCustomTheme();
+  const { schema, theme } = useTheme();
   const router = useRouter();
   const Songs = isAlegres ? AlegreSongs : hymnSong;
   const [filterData, setFilterData] = useState<TSongItem[]>(Songs);

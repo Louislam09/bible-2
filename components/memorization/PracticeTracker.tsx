@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-import { Memorization, TTheme } from '@/types';
-import { useTheme } from '@react-navigation/native';
-import Icon from '../Icon';
-import ProgressBar from '../home/footer/ProgressBar';
-import { formatDateShortDayMonth } from '@/utils/formatDateShortDayMonth';
-import { icons } from 'lucide-react-native';
-import { Text, View } from '../Themed';
+import React, { useState, useEffect } from "react";
+import { StyleSheet } from "react-native";
+import { Memorization, TTheme } from "@/types";
+import { useTheme } from "@/context/ThemeContext";
+import Icon from "../Icon";
+import ProgressBar from "../home/footer/ProgressBar";
+import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
+import { icons } from "lucide-react-native";
+import { Text, View } from "../Themed";
 
 interface PracticeTrackerProps {
   item: Memorization;
@@ -17,29 +17,29 @@ const PracticeTracker: React.FC<PracticeTrackerProps> = ({
   item,
   currentTimeStat,
 }) => {
-  const [status, setStatus] = useState('');
-  const theme = useTheme();
-  const [iconName, setIconName] = useState<keyof typeof icons>('CircleCheck');
+  const [status, setStatus] = useState("");
+  const { theme } = useTheme();
+  const [iconName, setIconName] = useState<keyof typeof icons>("CircleCheck");
   const [iconColor, setIconColor] = useState(theme.colors.notification);
   const styles = getStyles(theme);
 
   useEffect(() => {
     if (item.progress >= 100) {
-      setStatus('Completado');
-      setIconName('CircleCheck');
-      setIconColor('#1ce265');
+      setStatus("Completado");
+      setIconName("CircleCheck");
+      setIconColor("#1ce265");
     } else if (currentTimeStat.remainingTime < 0) {
-      setStatus('Atrasado');
-      setIconName('CircleAlert');
-      setIconColor('#e63946');
+      setStatus("Atrasado");
+      setIconName("CircleAlert");
+      setIconColor("#e63946");
     } else if (currentTimeStat.isActive) {
-      setStatus('En Progreso');
-      setIconName('Clock');
+      setStatus("En Progreso");
+      setIconName("Clock");
       setIconColor(theme.colors.notification);
     } else {
-      setStatus('Necesita Práctica');
-      setIconName('AlarmClockCheck');
-      setIconColor('#ffcc00');
+      setStatus("Necesita Práctica");
+      setIconName("AlarmClockCheck");
+      setIconColor("#ffcc00");
     }
   }, [item.progress, currentTimeStat]);
 
@@ -67,20 +67,20 @@ const PracticeTracker: React.FC<PracticeTrackerProps> = ({
       </View>
 
       <View style={styles.dateContainer}>
-        <View style={{ backgroundColor: 'transparent' }}>
+        <View style={{ backgroundColor: "transparent" }}>
           <Text style={[styles.dateText, { color: theme.colors.text }]}>
             Añadido
           </Text>
           <Text style={styles.dateSubText}>
-            {formatDateShortDayMonth(item?.addedDate || '')}
+            {formatDateShortDayMonth(item?.addedDate || "")}
           </Text>
         </View>
-        <View style={{ backgroundColor: 'transparent' }}>
+        <View style={{ backgroundColor: "transparent" }}>
           <Text style={[styles.dateText, { color: theme.colors.text }]}>
             Última práctica
           </Text>
           <Text style={styles.dateSubText}>
-            {formatDateShortDayMonth(item?.lastPracticed || '')}
+            {formatDateShortDayMonth(item?.lastPracticed || "")}
           </Text>
         </View>
       </View>
@@ -101,7 +101,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     practiceTitle: {
       color: colors.text,
       fontSize: 18,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     practiceTime: {
       color: colors.text,
@@ -113,25 +113,25 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginVertical: 8,
     },
     dateContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      justifyContent: "space-between",
       marginVertical: 10,
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
     },
     dateText: {
       color: colors.text,
       fontSize: 14,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     dateSubText: {
       color: colors.text,
       fontSize: 14,
     },
     headerContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      backgroundColor: 'transparent',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      backgroundColor: "transparent",
     },
     progressContainer: {
       marginVertical: 10,

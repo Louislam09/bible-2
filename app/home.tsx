@@ -1,10 +1,4 @@
-import React, {
-  RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { RefObject, useCallback, useMemo, useState } from "react";
 
 import {
   Animated,
@@ -24,15 +18,10 @@ import CurrentNoteDetail from "@/components/CurrentNoteDetail";
 import FloatingButton from "@/components/FloatingButton";
 import NoteNameList from "@/components/home/NoteNameList";
 import Walkthrough from "@/components/Walkthrough";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 // import CustomHeader from "../components/home/header";
 
-import { useHighlightRender } from "@/components/home/content/Chapter";
-import BibleHeader from "@/components/home/header/BibleHeader";
 import StatusBarBackground from "@/components/StatusBarBackground";
-import { Text } from "@/components/Themed";
-import BibleChapterProvider from "@/context/BibleChapterContext";
-import { useInitialState } from "@/hooks/useInitialState";
 import { useSplitScreen } from "@/hooks/useSplitScreen";
 import { bibleState$ } from "@/state/bibleState";
 import { tourState$ } from "@/state/tourState";
@@ -60,16 +49,13 @@ type HomeScreenProps = {};
 
 const HomeScreen: React.FC<HomeScreenProps> = () => {
   const navigation = useNavigation();
-  const theme = useTheme();
+  const { theme } = useTheme();
   const { orientation } = useBibleContext();
   const isSplitActived = use$(() => bibleState$.isSplitActived.get());
   const tourPopoverVisible = use$(() => tourState$.tourPopoverVisible.get());
 
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
-  // const initialState = useInitialState();
   const initialState = bibleState$.bibleQuery.get();
-
-  // const { style } = useHighlightRender();
 
   const [stepIndex, setStepIndex] = useState(0);
   const isPortrait = orientation === "PORTRAIT";

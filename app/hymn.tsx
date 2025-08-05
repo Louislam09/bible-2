@@ -16,7 +16,7 @@ import { Collections, RequestData, Screens, TTheme } from "@/types";
 import checkConnection from "@/utils/checkConnection";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
 import { RecordModel } from "pocketbase";
@@ -88,7 +88,7 @@ const HymnOption: React.FC<HymnOptionProps> = ({
   hasRequestAccess,
   statusColor,
 }) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
@@ -176,7 +176,7 @@ const HymnOption: React.FC<HymnOptionProps> = ({
 };
 
 const BibleQuote = ({ verse, reference }: BibleVerse) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
 
   return (
@@ -188,7 +188,7 @@ const BibleQuote = ({ verse, reference }: BibleVerse) => {
 };
 
 const HymnScreen = () => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
   const { width: SCREEN_WIDTH } = useWindowDimensions();

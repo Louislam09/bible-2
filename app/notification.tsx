@@ -11,7 +11,7 @@ import {
 } from "@/services/notificationServices";
 import { use$ } from "@legendapp/state/react";
 import { Picker } from "@react-native-picker/picker";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { Stack } from "expo-router";
 import { icons } from "lucide-react-native";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -46,7 +46,7 @@ type TSection = {
 };
 
 const NotificationSettingsScreen = () => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const { expoPushToken, error } = useNotification();
   const notificationService = useNotificationService();
   const styles = getStyles(theme);
@@ -175,15 +175,15 @@ const NotificationSettingsScreen = () => {
           },
           ...(notificationPreferences.dailyVerseEnabled
             ? [
-              {
-                label: "Hora de Notificación",
-                extraText: "Configura cuándo recibir el versículo diario",
-                iconName: "Clock" as keyof typeof icons,
-                action: () => setModalVisible(true),
-                badge: notificationPreferences.dailyVerseTime,
-                color: theme.colors.notification,
-              },
-            ]
+                {
+                  label: "Hora de Notificación",
+                  extraText: "Configura cuándo recibir el versículo diario",
+                  iconName: "Clock" as keyof typeof icons,
+                  action: () => setModalVisible(true),
+                  badge: notificationPreferences.dailyVerseTime,
+                  color: theme.colors.notification,
+                },
+              ]
             : []),
         ],
         hide: !notificationPreferences.notificationEnabled,
@@ -383,7 +383,7 @@ const NotificationSettingsScreen = () => {
               headerRightProps: {
                 headerRightIcon: "Settings",
                 headerRightIconColor: theme.colors.notification,
-                onPress: () => { },
+                onPress: () => {},
                 disabled: true,
                 style: { opacity: 0 },
               },

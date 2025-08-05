@@ -3,17 +3,17 @@ import {
   TouchableWithoutFeedback,
   Button,
   TouchableOpacity,
-} from 'react-native';
-import React, { FC, Fragment, useEffect, useState } from 'react';
-import { Text, View } from '../Themed';
-import { IVerseItem, TTheme } from '@/types';
-import { getVerseTextRaw } from '@/utils/getVerseTextRaw';
-import { splitText } from '@/utils/groupBy';
-import { useTheme } from '@react-navigation/native';
-import { useRouter } from 'expo-router';
-import removeAccent from '@/utils/removeAccent';
-import BlankBoard from './BlankBoard';
-import ProgressBar from '../home/footer/ProgressBar';
+} from "react-native";
+import React, { FC, Fragment, useEffect, useState } from "react";
+import { Text, View } from "../Themed";
+import { IVerseItem, TTheme } from "@/types";
+import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { splitText } from "@/utils/groupBy";
+import { useTheme } from "@/context/ThemeContext";
+import { useRouter } from "expo-router";
+import removeAccent from "@/utils/removeAccent";
+import BlankBoard from "./BlankBoard";
+import ProgressBar from "../home/footer/ProgressBar";
 
 type BlankChallengeProps = {
   item: IVerseItem | any;
@@ -33,13 +33,13 @@ const BlankChallenge: FC<BlankChallengeProps> = ({
   onUpdateProgress,
 }) => {
   const router = useRouter();
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const [started, setStarted] = useState(false);
   const [isChallengeCompleted, setIsChallengeCompleted] = useState(false);
-  const text = getVerseTextRaw(item?.text || '')
-    .replace(/«.*»/, '')
-    .replace('*', '');
+  const text = getVerseTextRaw(item?.text || "")
+    .replace(/«.*»/, "")
+    .replace("*", "");
   const verseReference = `${item?.bookName} ${item?.chapter}:${item?.verse}`;
   const allowNumberOfMistakes = 1;
 
@@ -58,7 +58,7 @@ const BlankChallenge: FC<BlankChallengeProps> = ({
 
   return (
     <TouchableWithoutFeedback
-      style={{ flex: 1, borderWidth: 1, borderColor: 'red' }}
+      style={{ flex: 1, borderWidth: 1, borderColor: "red" }}
       onPress={onPress}
     >
       <View style={styles.container}>
@@ -97,40 +97,40 @@ const getStyles = ({ colors, dark }: TTheme) =>
     container: {
       padding: 16,
       flex: 1,
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      width: '100%',
+      justifyContent: "space-between",
+      alignItems: "center",
+      width: "100%",
     },
     introContainer: {
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       flex: 1,
     },
     introText: {
-      textAlign: 'center',
+      textAlign: "center",
       fontSize: 20,
     },
     instructionText: {
-      textAlign: 'center',
+      textAlign: "center",
       fontSize: 16,
       color: colors.text,
       opacity: 0.8,
     },
     completedButton: {
-      width: '100%',
+      width: "100%",
       backgroundColor: colors.text,
       borderRadius: 12,
       paddingVertical: 12,
-      alignItems: 'center',
+      alignItems: "center",
       marginTop: 20,
     },
     completedButtonText: {
       fontSize: 18,
-      color: dark ? '#000' : '#fff',
-      fontWeight: '400',
+      color: dark ? "#000" : "#fff",
+      fontWeight: "400",
     },
     verseText: {
-      textAlign: 'left',
+      textAlign: "left",
       fontSize: 22,
       gap: 2,
     },
@@ -138,8 +138,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginTop: 5,
       fontSize: 20,
       color: colors.text,
-      fontWeight: 'bold',
-      textAlign: 'left',
+      fontWeight: "bold",
+      textAlign: "left",
     },
     hideVerse: {
       backgroundColor: colors.background,
@@ -147,31 +147,31 @@ const getStyles = ({ colors, dark }: TTheme) =>
       // marginRight: 10,
     },
     wordBank: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       padding: 20,
-      justifyContent: 'center',
+      justifyContent: "center",
       gap: 10,
     },
     word: {
-      backgroundColor: '#303030',
+      backgroundColor: "#303030",
       paddingVertical: 10,
       paddingHorizontal: 20,
       borderRadius: 20,
     },
     wordText: {
-      color: 'white',
+      color: "white",
       fontSize: 16,
     },
 
     verseContainer: {
       flex: 1,
       padding: 20,
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
     },
     blankText: {
-      color: 'white',
+      color: "white",
       fontSize: 16,
     },
     // verseText: {
@@ -179,16 +179,16 @@ const getStyles = ({ colors, dark }: TTheme) =>
     //   fontSize: 18,
     // },
     blank: {
-      backgroundColor: '#404040',
+      backgroundColor: "#404040",
       minWidth: 60,
       height: 30,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       marginHorizontal: 2,
       marginVertical: 2,
       borderRadius: 5,
     },
     selectedBlank: {
-      backgroundColor: '#606060',
+      backgroundColor: "#606060",
     },
   });

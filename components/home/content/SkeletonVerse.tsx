@@ -1,10 +1,10 @@
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { View } from "@/components/Themed";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 
 const SkeletonVerse = ({ index }: any) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const colorMode = theme.dark ? "dark" : "dark";
 
   return (

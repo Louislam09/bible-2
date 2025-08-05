@@ -1,4 +1,4 @@
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "@/components/Animation";
 import Icon, { IconProps } from "@/components/Icon";
@@ -23,7 +23,7 @@ type IDashboardOption = {
 };
 
 const OnboardingScreen = () => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const dashboardImage = require("../assets/lottie/onboarding.json");
   const navigation = useNavigation();

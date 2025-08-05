@@ -1,4 +1,4 @@
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { FlashList } from "@shopify/flash-list";
 import Animation from "@/components/Animation";
 import Icon, { IconProps } from "@/components/Icon";
@@ -28,7 +28,7 @@ const getRandomNumberFromLength = (length: number) =>
   Math.floor(Math.random() * length);
 
 const ChooseGameScreen = () => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const assets = [...Object.values(lottieAssets)];
   const pickARandomAsset = assets[getRandomNumberFromLength(assets.length)];

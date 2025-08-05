@@ -7,7 +7,7 @@ import useParams from "@/hooks/useParams";
 import { bibleState$ } from "@/state/bibleState";
 import { ChooseChapterNumberParams, Screens } from "@/types";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { Stack, useNavigation } from "expo-router";
 import { Fragment, useMemo } from "react";
 
@@ -18,7 +18,7 @@ const chooseVerseNumber = () => {
   const selectedBook = isBottomSideSearching ? bottomSideBook : book;
   const selectedChapter = isBottomSideSearching ? bottomSideChapter : chapter;
   const navigation = useNavigation();
-  const theme = useTheme();
+  const { theme } = useTheme();
   const displayBookName = renameLongBookName(selectedBook || "");
 
   const numberOfVerses = useMemo(() => {

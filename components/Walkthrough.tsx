@@ -1,4 +1,4 @@
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import React, { useEffect } from "react";
 import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Popover, { PopoverMode } from "react-native-popover-view";
@@ -17,7 +17,7 @@ const Walkthrough = ({ currentStep, steps, setStep }: TWalkthrough) => {
     "🚶‍♂️ Walkthrough Component Rendered",
     tourState$.tourPopoverVisible.get()
   );
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const totalStep = steps.length;
   const lastStep = currentStep === totalStep - 1;

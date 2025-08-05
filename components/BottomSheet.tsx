@@ -3,7 +3,7 @@ import BottomSheet, {
   BottomSheetHandleProps,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import React, {
   forwardRef,
   useCallback,

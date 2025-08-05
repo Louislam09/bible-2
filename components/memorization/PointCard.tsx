@@ -1,8 +1,8 @@
-import { TTheme } from '@/types';
-import { useTheme } from '@react-navigation/native';
-import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, View } from '../Themed';
+import { TTheme } from "@/types";
+import { useTheme } from "@/context/ThemeContext";
+import React from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View } from "../Themed";
 
 type PointsCardProps = {
   typeInfo: TPoints;
@@ -15,7 +15,7 @@ type TPoints = {
 };
 
 const PointsCard = ({ typeInfo }: PointsCardProps) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const { description, maxPoint, point } = typeInfo;
 
@@ -25,11 +25,11 @@ const PointsCard = ({ typeInfo }: PointsCardProps) => {
         <View style={styles.pointsContainer}>
           <Text style={styles.points}>
             <Text style={styles.bold}>{point}</Text>
-            {'\n'}Puntos
+            {"\n"}Puntos
           </Text>
           <Text style={styles.points}>
             <Text style={styles.bold}>{maxPoint}</Text>
-            {'\n'}Tope de Puntos
+            {"\n"}Tope de Puntos
           </Text>
         </View>
         <TouchableOpacity>
@@ -50,31 +50,31 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     content: {
       backgroundColor: colors.background,
-      alignItems: 'center',
+      alignItems: "center",
     },
     pointsContainer: {
       backgroundColor: colors.background,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: '100%',
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "100%",
       marginBottom: 12,
     },
     points: {
       backgroundColor: colors.background,
       color: colors.text,
       fontSize: 18,
-      textAlign: 'center',
+      textAlign: "center",
       marginHorizontal: 20,
     },
     bold: {
-      fontWeight: 'bold',
+      fontWeight: "bold",
       fontSize: 24,
     },
     tapText: {
       color: colors.text,
       fontSize: 15,
-      textAlign: 'center',
+      textAlign: "center",
       marginBottom: 8,
     },
     footer: {
@@ -82,8 +82,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontSize: 12,
     },
     link: {
-      color: '#66A3FF',
-      textDecorationLine: 'underline',
+      color: "#66A3FF",
+      textDecorationLine: "underline",
     },
   });
 

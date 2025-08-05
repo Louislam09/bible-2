@@ -12,7 +12,7 @@ import { bibleState$ } from "@/state/bibleState";
 import { TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import * as FileSystem from "expo-file-system";
 import { Stack, useLocalSearchParams, useNavigation } from "expo-router";
 import * as Sharing from "expo-sharing";
@@ -61,10 +61,16 @@ const COLORS = [
   "#455A64", // darker blue grey (replaced #607D8B)
 ];
 
-
 type FontType = {
   readonly label: "Aa";
-  readonly fontFamily: "System" | "serif" | "sans-serif" | "monospace" | "cursive" | "fantasy" | "emoji";
+  readonly fontFamily:
+    | "System"
+    | "serif"
+    | "sans-serif"
+    | "monospace"
+    | "cursive"
+    | "fantasy"
+    | "emoji";
   readonly fontWeight: "400" | "700";
 };
 
@@ -145,7 +151,7 @@ const FAMOUS_VERSES = [
 type QuoteProps = {};
 
 const Quote: React.FC<QuoteProps> = () => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const navigation = useNavigation();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const { printToFile } = usePrintAndShare();
@@ -317,7 +323,7 @@ const Quote: React.FC<QuoteProps> = () => {
       Alert.alert(
         "Error",
         "No se pudo compartir la cita: " +
-        (error?.message || "Error desconocido")
+          (error?.message || "Error desconocido")
       );
     } finally {
       setIsLoading(false);
@@ -346,7 +352,11 @@ const Quote: React.FC<QuoteProps> = () => {
               onPress={() => setCustomMode(!customMode)}
               style={styles.headerButton}
             >
-              <Icon name={customMode ? "GalleryHorizontal" : "Brush"} size={24} color={theme.colors.text} />
+              <Icon
+                name={customMode ? "GalleryHorizontal" : "Brush"}
+                size={24}
+                color={theme.colors.text}
+              />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleShare}
@@ -398,7 +408,7 @@ const Quote: React.FC<QuoteProps> = () => {
             {customMode
               ? "Crea tu propio estilo"
               : quoteTemplates[currentTemplateIndex]?.description ||
-              "Select a template"}
+                "Select a template"}
           </Animated.Text>
         </View>
         {customMode ? (
@@ -454,13 +464,15 @@ const Quote: React.FC<QuoteProps> = () => {
             })}
           </View>
         )}
-        {!customMode && <QuoteNavigationDots
-          currentIndex={currentTemplateIndex}
-          totalTemplates={quoteTemplates.length}
-          customMode={customMode}
-          onDotPress={handleDotPress}
-          scrollViewRef={scrollViewRef}
-        />}
+        {!customMode && (
+          <QuoteNavigationDots
+            currentIndex={currentTemplateIndex}
+            totalTemplates={quoteTemplates.length}
+            customMode={customMode}
+            onDotPress={handleDotPress}
+            scrollViewRef={scrollViewRef}
+          />
+        )}
       </View>
     </KeyboardAvoidingView>
   );

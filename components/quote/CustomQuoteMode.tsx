@@ -1,19 +1,26 @@
 import { Text } from "@/components/Themed";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import React, { RefObject, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import ViewShot from "react-native-view-shot";
 import Icon from "../Icon";
 
 type FontType = {
   readonly label: "Aa";
-  readonly fontFamily: "System" | "serif" | "sans-serif" | "monospace" | "cursive" | "fantasy" | "emoji";
+  readonly fontFamily:
+    | "System"
+    | "serif"
+    | "sans-serif"
+    | "monospace"
+    | "cursive"
+    | "fantasy"
+    | "emoji";
   readonly fontWeight: "400" | "700";
 };
 
@@ -65,11 +72,13 @@ export const CustomQuoteMode: React.FC<CustomQuoteModeProps> = ({
             options={{
               format: "png",
               quality: 1,
-              result: "tmpfile"
+              result: "tmpfile",
             }}
             style={styles.viewShotContainer}
           >
-            <View style={[styles.cardPreview, { backgroundColor: selectedColor }]}>
+            <View
+              style={[styles.cardPreview, { backgroundColor: selectedColor }]}
+            >
               {isEditing ? (
                 <View style={styles.editContainer}>
                   <TextInput
@@ -104,12 +113,16 @@ export const CustomQuoteMode: React.FC<CustomQuoteModeProps> = ({
                   >
                     {quoteText}
                   </Text>
-                  <Text style={[
-                    styles.referenceText,
-                    {
-                      fontFamily: selectedFont.fontFamily,
-                    },
-                  ]}>{reference}</Text>
+                  <Text
+                    style={[
+                      styles.referenceText,
+                      {
+                        fontFamily: selectedFont.fontFamily,
+                      },
+                    ]}
+                  >
+                    {reference}
+                  </Text>
                 </>
               )}
             </View>
@@ -122,7 +135,7 @@ export const CustomQuoteMode: React.FC<CustomQuoteModeProps> = ({
           </TouchableOpacity>
         </View>
       </View>
-      {!isEditing &&
+      {!isEditing && (
         <>
           <View style={styles.pickerRow}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -134,7 +147,8 @@ export const CustomQuoteMode: React.FC<CustomQuoteModeProps> = ({
                       {
                         backgroundColor: color,
                         borderWidth: selectedColor === color ? 3 : 1,
-                        borderColor: selectedColor === color ? highColor : lowColor,
+                        borderColor:
+                          selectedColor === color ? highColor : lowColor,
                       },
                     ]}
                     onPress={() => onColorSelect(color)}
@@ -153,10 +167,10 @@ export const CustomQuoteMode: React.FC<CustomQuoteModeProps> = ({
                   style={[
                     styles.fontCircle,
                     {
-                      backgroundColor: selectedFont === font ? highColor : selectedColor + 30,
+                      backgroundColor:
+                        selectedFont === font ? highColor : selectedColor + 30,
                       borderWidth: selectedFont === font ? 3 : 1,
                       borderColor: selectedFont === font ? highColor : lowColor,
-
                     },
                   ]}
                   onPress={() => onFontSelect(font)}
@@ -176,7 +190,7 @@ export const CustomQuoteMode: React.FC<CustomQuoteModeProps> = ({
             </ScrollView>
           </View>
         </>
-      }
+      )}
     </View>
   );
 };

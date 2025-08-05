@@ -3,8 +3,8 @@ import { Text } from "@/components/Themed";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@react-navigation/native";
-import * as Clipboard from 'expo-clipboard';
+import { useTheme } from "@/context/ThemeContext";
+import * as Clipboard from "expo-clipboard";
 import { Stack, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -16,7 +16,7 @@ import {
 } from "react-native";
 
 export default function AISetupScreen() {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const router = useRouter();
   const styles = getStyles(theme as TTheme);
   const currentKey = use$(() => storedData$.googleAIKey.get());
@@ -100,15 +100,12 @@ export default function AISetupScreen() {
               API Key actual configurada
             </Text>
             <TouchableOpacity
-              style={styles.copyButton} onPress={async () => {
+              style={styles.copyButton}
+              onPress={async () => {
                 await Clipboard.setStringAsync(currentKey);
               }}
             >
-              <Icon
-                name="Copy"
-                size={20}
-                color={theme.colors.notification}
-              />
+              <Icon name="Copy" size={20} color={theme.colors.notification} />
             </TouchableOpacity>
           </View>
         )}
@@ -178,10 +175,11 @@ const getStyles = (theme: TTheme) =>
       paddingHorizontal: 15,
       marginBottom: 20,
       fontSize: 16,
-    }, currentKeyContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
+    },
+    currentKeyContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
       marginBottom: 20,
     },
     currentKeyText: {

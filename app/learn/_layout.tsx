@@ -2,11 +2,11 @@ import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import StatusBarBackground from "@/components/StatusBarBackground";
 import { Slot, Stack } from "expo-router";
 import React from "react";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 
 const LearnLayout = () => {
-  const theme = useTheme();
+  const { theme } = useTheme();
 
   return (
     <ScreenWithAnimation title="DuoBible" icon="Gamepad2" iconColor={"#4caf50"}>

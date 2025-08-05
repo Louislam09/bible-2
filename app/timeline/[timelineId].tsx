@@ -1,14 +1,14 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import DisplayTimeline from "@/components/timeline/DisplayTimeline";
 import useParams from "@/hooks/useParams";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { Stack, useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet } from "react-native";
 
 const SingleTimeline = () => {
   const { timelineId } = useParams();
-  const theme = useTheme();
+  const { theme } = useTheme();
   const router = useRouter();
 
   return (
@@ -20,7 +20,7 @@ const SingleTimeline = () => {
             title: "Linea de tiempo",
             titleIcon: "CalendarRange",
             titleIconColor: "#6de5cb",
-            goBack: () => router.navigate('/timeline'),
+            goBack: () => router.navigate("/timeline"),
             headerRightProps: {
               headerRightIcon: "Check",
               headerRightIconColor: theme.colors.text,
@@ -31,7 +31,7 @@ const SingleTimeline = () => {
           }),
         }}
       />
-      <DisplayTimeline startingSection={timelineId}  />
+      <DisplayTimeline startingSection={timelineId} />
     </>
   );
 };

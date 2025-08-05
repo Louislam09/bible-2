@@ -13,7 +13,7 @@ import { View, Text } from "../Themed";
 import { calculateLabel, offset, rowToPx } from "./timelineConstants";
 import { TimelineEvent as TimelineEventType, TTheme } from "@/types";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 
 interface Props extends TimelineEventType {
   color: string;
@@ -50,7 +50,7 @@ const TimelineEvent = ({
   eventModalRef,
   setEvent,
 }: Props) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const { current: top } = React.useRef(rowToPx(row));
   const { current: left } = React.useRef(yearsToPx(start));

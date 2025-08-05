@@ -9,7 +9,7 @@ import { bibleState$ } from "@/state/bibleState";
 import { EViewMode, TNote, TTheme } from "@/types";
 import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import React, {
   useCallback,
   useEffect,
@@ -29,8 +29,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-const CurrentNoteDetail: React.FC<any> = ({ }) => {
-  const theme = useTheme();
+const CurrentNoteDetail: React.FC<any> = ({}) => {
+  const { theme } = useTheme();
   const { myBibleDB, executeSql } = useDBContext();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const { createNote, updateNote } = useNoteService();
@@ -141,15 +141,15 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
       const date = new Date().toLocaleDateString();
       const uniqueSuffix = Date.now().toString(36).slice(-4);
       if (!noteContent.title) {
-        noteContent.title = `${defaultTitle} ${date} - ${uniqueSuffix}`
+        noteContent.title = `${defaultTitle} ${date} - ${uniqueSuffix}`;
       }
       const success = await createNote({
         title: noteContent.title,
-        note_text: noteContent.content
+        note_text: noteContent.content,
       });
 
       if (success) {
-        setViewMode("VIEW")
+        setViewMode("VIEW");
         const result = await executeSql("SELECT last_insert_rowid() as id");
         const newNoteId = result[0]?.id;
         bibleState$.currentNoteId.set(newNoteId);
@@ -229,21 +229,24 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
 
   const onUpdate = async (id: number, goToViewMode = false) => {
     try {
-      const success = await updateNote(id, {
-        title: noteContent.title,
-        note_text: noteContent.content,
-        uuid: noteInfo?.uuid,
-      }, true);
+      const success = await updateNote(
+        id,
+        {
+          title: noteContent.title,
+          note_text: noteContent.content,
+          uuid: noteInfo?.uuid,
+        },
+        true
+      );
 
       if (success) {
         afterSaving();
         if (goToViewMode) {
           setViewMode("VIEW");
           ToastAndroid.show("Nota actualizada!", ToastAndroid.SHORT);
-          bibleState$.toggleReloadNotes()
+          bibleState$.toggleReloadNotes();
         }
       }
-
     } catch (error) {
       Alert.alert("Error", "No se pudo actualizar la nota.");
     }
@@ -281,16 +284,20 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
             {noteInfo?.title?.toUpperCase() || defaultTitle}
           </Text>
           <Text style={styles.dateLabel}>
-            {formatDateShortDayMonth(isNewNote ? new Date() : ((noteInfo?.updated_at || noteInfo?.created_at) as any), {
-              weekday: 'short',
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric'
-            })}
+            {formatDateShortDayMonth(
+              isNewNote
+                ? new Date()
+                : ((noteInfo?.updated_at || noteInfo?.created_at) as any),
+              {
+                weekday: "short",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              }
+            )}
           </Text>
         </View>
       )}
-
 
       <MyRichEditor
         shouldOpenKeyboard={shouldOpenKeyboard}

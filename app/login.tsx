@@ -4,9 +4,9 @@ import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { authState$ } from "@/state/authState";
 import { TTheme } from "@/types";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { Stack, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -20,10 +20,10 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -39,7 +39,7 @@ const LoginScreen = () => {
   const slideAnim = useState(new Animated.Value(50))[0];
 
   const isLoading = use$(() => authState$.isLoading.get());
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
 
   useEffect(() => {
@@ -62,15 +62,15 @@ const LoginScreen = () => {
         toValue: 0,
         duration: 800,
         useNativeDriver: true,
-      })
+      }),
     ]).start();
 
     const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
+      "keyboardDidShow",
       () => setKeyboardVisible(true)
     );
     const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
+      "keyboardDidHide",
       () => setKeyboardVisible(false)
     );
 
@@ -144,7 +144,7 @@ const LoginScreen = () => {
                 headerRightProps: {
                   headerRightIcon: "Trash2",
                   headerRightIconColor: "red",
-                  onPress: () => { },
+                  onPress: () => {},
                   disabled: true,
                   style: { opacity: 0 },
                 },
@@ -157,11 +157,11 @@ const LoginScreen = () => {
             <Animated.View
               style={[
                 styles.logoContainer,
-                { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }
+                { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
               ]}
             >
               <Image
-                source={require('../assets/images/auth.png')}
+                source={require("../assets/images/auth.png")}
                 style={styles.logo}
                 resizeMode="contain"
               />
@@ -171,7 +171,7 @@ const LoginScreen = () => {
           <Animated.View
             style={[
               styles.formContainer,
-              { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }
+              { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
             ]}
           >
             <Text style={[styles.title]}>Bienvenido de Nuevo</Text>
@@ -179,7 +179,11 @@ const LoginScreen = () => {
 
             {error ? (
               <View style={styles.errorContainer}>
-                <MaterialCommunityIcons name="alert-circle" size={18} color="red" />
+                <MaterialCommunityIcons
+                  name="alert-circle"
+                  size={18}
+                  color="red"
+                />
                 <Text style={styles.errorText}>{error}</Text>
               </View>
             ) : null}
@@ -194,7 +198,7 @@ const LoginScreen = () => {
               <TextInput
                 style={[styles.input]}
                 placeholder="Correo Electrónico"
-                placeholderTextColor={theme.colors.text + '80'}
+                placeholderTextColor={theme.colors.text + "80"}
                 value={email}
                 onChangeText={setEmail}
                 autoCapitalize="none"
@@ -213,7 +217,7 @@ const LoginScreen = () => {
               <TextInput
                 style={[styles.input]}
                 placeholder="Contraseña"
-                placeholderTextColor={theme.colors.text + '80'}
+                placeholderTextColor={theme.colors.text + "80"}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
@@ -242,7 +246,7 @@ const LoginScreen = () => {
             <TouchableOpacity
               style={[
                 styles.button,
-                (loading || isLoading) && styles.buttonDisabled
+                (loading || isLoading) && styles.buttonDisabled,
               ]}
               onPress={handleLogin}
               disabled={loading || isLoading}
@@ -268,7 +272,8 @@ const LoginScreen = () => {
               style={styles.registerContainer}
             >
               <Text style={styles.registerText}>
-                ¿No tienes una cuenta? <Text style={styles.linkText}>Regístrate</Text>
+                ¿No tienes una cuenta?{" "}
+                <Text style={styles.linkText}>Regístrate</Text>
               </Text>
             </TouchableOpacity>
 
@@ -276,7 +281,9 @@ const LoginScreen = () => {
               style={styles.skipButton}
               onPress={() => router.replace("/(dashboard)")}
             >
-              <Text style={[styles.skipText]}>Continuar sin iniciar sesión</Text>
+              <Text style={[styles.skipText]}>
+                Continuar sin iniciar sesión
+              </Text>
             </TouchableOpacity>
           </Animated.View>
         </View>
@@ -297,7 +304,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: colors.background,
     },
     logoContainer: {
-      alignItems: 'center',
+      alignItems: "center",
       marginBottom: 30,
     },
     logo: {
@@ -305,7 +312,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       height: 100,
     },
     formContainer: {
-      width: '100%',
+      width: "100%",
     },
     title: {
       fontSize: 28,
@@ -318,12 +325,12 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontSize: 16,
       marginBottom: 25,
       textAlign: "center",
-      color: colors.text + '90',
+      color: colors.text + "90",
     },
     errorContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: 'rgba(255,0,0,0.1)',
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: "rgba(255,0,0,0.1)",
       borderRadius: 8,
       padding: 10,
       marginBottom: 15,
@@ -333,8 +340,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginLeft: 8,
     },
     inputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       height: 55,
       borderRadius: 12,
       borderWidth: 1,
@@ -355,7 +362,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       padding: 8,
     },
     forgotPasswordContainer: {
-      alignItems: 'flex-end',
+      alignItems: "flex-end",
       marginBottom: 20,
     },
     forgotPasswordText: {
@@ -379,8 +386,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontWeight: "bold",
     },
     dividerContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginVertical: 20,
     },
     divider: {
@@ -403,7 +410,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       color: colors.text,
     },
     registerContainer: {
-      alignItems: 'center',
+      alignItems: "center",
       marginTop: 25,
     },
     registerText: {
@@ -412,7 +419,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     linkText: {
       color: colors.notification,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     skipButton: {
       marginTop: 20,
@@ -420,7 +427,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     skipText: {
       fontSize: 14,
-      color: colors.text + '80',
+      color: colors.text + "80",
       textDecorationLine: "underline",
     },
   });

@@ -3,11 +3,12 @@ import RenderVerse from "@/components/concordance/RenderVerse";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { useBibleContext } from "@/context/BibleContext";
+import { useTheme } from "@/context/ThemeContext";
 import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, Screens, TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import removeAccent from "@/utils/removeAccent";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
@@ -19,7 +20,7 @@ type TListVerse = {
 
 const ListVerse = ({ data, isLoading }: TListVerse) => {
   const animationRef = useRef<any>(null);
-  const theme = useTheme();
+  const { theme } = useTheme();
   const navigation = useNavigation();
   const styles = getStyles(theme);
   const { searchQuery: query } = useBibleContext();

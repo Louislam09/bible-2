@@ -1,14 +1,14 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import FavoriteList from "@/components/favorite/FavoriteList";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { Stack } from "expo-router";
 import React from "react";
 type FavoriteProps = {};
 
 const Favorite: React.FC<FavoriteProps> = () => {
   const startSource = require("../assets/lottie/star.json");
-  const theme = useTheme();
+  const { theme } = useTheme();
 
   return (
     <ScreenWithAnimation

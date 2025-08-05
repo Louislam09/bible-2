@@ -15,7 +15,7 @@ import checkConnection from "@/utils/checkConnection";
 import removeAccent from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
 import React, {
@@ -38,7 +38,7 @@ import {
   TextInput,
   ToastAndroid,
   TouchableOpacity,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from "react-native";
 import { singleScreenHeader } from "../common/singleScreenHeader";
 
@@ -47,13 +47,16 @@ type TListVerse = {
 };
 
 const Note = ({ data }: TListVerse) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const navigation = useNavigation();
   const { currentBibleLongName } = useBibleContext();
   const { deleteNote, exportNotes, importNotes } = useNoteService();
-  const selectedVerseForNote = use$(() => bibleState$.selectedVerseForNote.get());
+  const selectedVerseForNote = use$(() =>
+    bibleState$.selectedVerseForNote.get()
+  );
   const isSyncing = use$(() => bibleState$.isSyncingNotes.get());
-  const { syncNotes, downloadCloudNotesToLocal, syncSingleNote } = useSyncNotes();
+  const { syncNotes, downloadCloudNotesToLocal, syncSingleNote } =
+    useSyncNotes();
   const { printToFile } = usePrintAndShare();
 
   const styles = getStyles(theme);
@@ -75,9 +78,10 @@ const Note = ({ data }: TListVerse) => {
     if (!searchText) return filterData;
 
     const searchLower = removeAccent(searchText.toLowerCase());
-    return filterData.filter((x: TNote) =>
-      removeAccent(x.title).toLowerCase().includes(searchLower) ||
-      removeAccent(x.note_text).toLowerCase().includes(searchLower)
+    return filterData.filter(
+      (x: TNote) =>
+        removeAccent(x.title).toLowerCase().includes(searchLower) ||
+        removeAccent(x.note_text).toLowerCase().includes(searchLower)
     );
   }, [searchText, filterData]);
 
@@ -97,7 +101,6 @@ const Note = ({ data }: TListVerse) => {
     }
   }, [showSearch]);
 
-
   const showAddNoteAlert = () => {
     ToastAndroid.show(
       "Seleccione la nota a la que quieres añadir el versiculo",
@@ -109,9 +112,12 @@ const Note = ({ data }: TListVerse) => {
     navigation.navigate(Screens.NoteDetail, { noteId: null, isNewNote: true });
   };
 
-  const onOpenNoteDetail = useCallback((id: number) => {
-    navigation.navigate(Screens.NoteDetail, { noteId: id, isNewNote: false });
-  }, [navigation]);
+  const onOpenNoteDetail = useCallback(
+    (id: number) => {
+      navigation.navigate(Screens.NoteDetail, { noteId: id, isNewNote: false });
+    },
+    [navigation]
+  );
 
   const toggleSearch = useCallback(() => {
     setShowSearch((prev) => !prev);
@@ -144,7 +150,7 @@ const Note = ({ data }: TListVerse) => {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    bibleState$.toggleReloadNotes()
+    bibleState$.toggleReloadNotes();
     setRefreshing(false);
   }, []);
 
@@ -177,26 +183,28 @@ const Note = ({ data }: TListVerse) => {
           text: "Eliminar",
           onPress: async () => {
             for (const id of selectedIds) {
-              const currentNote = noteList.find((note: TNote) => note.id === id);
+              const currentNote = noteList.find(
+                (note: TNote) => note.id === id
+              );
               if (!currentNote) continue;
               await deleteNote(currentNote);
             }
             noteSelectors$.clearSelections();
             bibleState$.toggleReloadNotes();
-            ToastAndroid.show(
-              "Notas eliminadas",
-              ToastAndroid.SHORT
-            );
+            ToastAndroid.show("Notas eliminadas", ToastAndroid.SHORT);
           },
         },
       ]
     );
-  }
+  };
   const handleSyncSelectedNotes = async () => {
     const isConnected = await checkConnection();
     console.log("Conexión a Internet:", isConnected);
     if (!isConnected) {
-      Alert.alert("Sin conexión", "No hay conexión a Internet para sincronizar las notas.");
+      Alert.alert(
+        "Sin conexión",
+        "No hay conexión a Internet para sincronizar las notas."
+      );
       return;
     }
     const selectedIds = Array.from(selectedItems);
@@ -207,17 +215,14 @@ const Note = ({ data }: TListVerse) => {
     }
     noteSelectors$.clearSelections();
     bibleState$.toggleReloadNotes();
-    ToastAndroid.show(
-      "Notas sincronizadas",
-      ToastAndroid.SHORT
-    );
-  }
+    ToastAndroid.show("Notas sincronizadas", ToastAndroid.SHORT);
+  };
 
   const handleExportSelectedNotes = async () => {
     const ids = Array.from(selectedItems);
     console.log("Exporting notes with IDs:", ids);
     await exportNotes(ids);
-  }
+  };
 
   const noteActionButtons = useMemo(
     () =>
@@ -256,20 +261,20 @@ const Note = ({ data }: TListVerse) => {
         {
           bottom: 220,
           name: "Download",
-          color: '#2da5ff',
+          color: "#2da5ff",
           action: downloadCloudNotesToLocal,
           hide: !showMoreOptions,
           label: "Cargar desde la cuenta",
-          isDownload: true
+          isDownload: true,
         },
         {
           bottom: 280,
           name: "RefreshCw",
-          color: '#2da5ff',
+          color: "#2da5ff",
           action: syncNotes,
           hide: !showMoreOptions,
           label: "Guardar en la cuenta",
-          isSync: true
+          isSync: true,
         },
         {
           bottom: 340,
@@ -280,15 +285,25 @@ const Note = ({ data }: TListVerse) => {
           label: "Cerrar menú",
         },
       ].filter((item) => !item.hide),
-    [showMoreOptions, theme.colors.notification, onCreateNewNote, onImportNotes,
-      exportNotes, showMoreOptionHandle]
+    [
+      showMoreOptions,
+      theme.colors.notification,
+      onCreateNewNote,
+      onImportNotes,
+      exportNotes,
+      showMoreOptionHandle,
+    ]
   );
 
   const selectionActionButtons = useMemo(
     () => [
       {
-        name: noteList.every((note: TNote) => selectedItems.has(note.id)) ? "CircleX" : "CheckCheck",
-        color: noteList.every((note: TNote) => selectedItems.has(note.id)) ? "#FFA500" : theme.colors.notification,
+        name: noteList.every((note: TNote) => selectedItems.has(note.id))
+          ? "CircleX"
+          : "CheckCheck",
+        color: noteList.every((note: TNote) => selectedItems.has(note.id))
+          ? "#FFA500"
+          : theme.colors.notification,
         action: () => {
           const allSelected = noteList.length === selectedItems.size;
           if (allSelected) {
@@ -297,7 +312,9 @@ const Note = ({ data }: TListVerse) => {
             noteSelectors$.selectAll(noteList.map((note: TNote) => note.id));
           }
         },
-        label: noteList.every((note: TNote) => selectedItems.has(note.id)) ? "Cancelar" : "Todo"
+        label: noteList.every((note: TNote) => selectedItems.has(note.id))
+          ? "Cancelar"
+          : "Todo",
       },
       {
         name: "RefreshCw",
@@ -326,18 +343,22 @@ const Note = ({ data }: TListVerse) => {
         label: "Eliminar",
       },
     ],
-    [selectedItems.size, noteList, theme.colors.notification, handleExportSelectedNotes, handleShareSelectedNotes, handleDeleteSelectedNotes]
+    [
+      selectedItems.size,
+      noteList,
+      theme.colors.notification,
+      handleExportSelectedNotes,
+      handleShareSelectedNotes,
+      handleDeleteSelectedNotes,
+    ]
   );
 
-  const renderItem: ListRenderItem<TNote> = useCallback(({ item }) => {
-    return (
-      <NoteItem
-        item={item}
-        onPress={onOpenNoteDetail}
-        theme={theme}
-      />
-    );
-  }, [isSelectionActive, selectedItems, theme, onOpenNoteDetail]);
+  const renderItem: ListRenderItem<TNote> = useCallback(
+    ({ item }) => {
+      return <NoteItem item={item} onPress={onOpenNoteDetail} theme={theme} />;
+    },
+    [isSelectionActive, selectedItems, theme, onOpenNoteDetail]
+  );
 
   const NoteHero = useCallback(() => {
     return (
@@ -376,7 +397,11 @@ const Note = ({ data }: TListVerse) => {
           </View>
         </Animated.View>
         <View style={styles.chapterHeader}>
-          <Text style={styles.notesCountText} accessible={true} accessibilityRole="text">
+          <Text
+            style={styles.notesCountText}
+            accessible={true}
+            accessibilityRole="text"
+          >
             {noteList.length} {noteList.length !== 1 ? "notas" : "nota"}
           </Text>
           <TouchableOpacity
@@ -388,7 +413,13 @@ const Note = ({ data }: TListVerse) => {
         </View>
       </>
     );
-  }, [showSearch, searchText, noteList.length, styles, theme.colors.notification]);
+  }, [
+    showSearch,
+    searchText,
+    noteList.length,
+    styles,
+    theme.colors.notification,
+  ]);
 
   const ListEmptyComponent = useCallback(() => {
     return (
@@ -398,7 +429,11 @@ const Note = ({ data }: TListVerse) => {
           source={notFoundSource}
           loop={false}
         />
-        <Text style={styles.noResultsText} accessible={true} accessibilityRole="text">
+        <Text
+          style={styles.noResultsText}
+          accessible={true}
+          accessibilityRole="text"
+        >
           <Text style={{ color: theme.colors.notification }}>
             ({currentBibleLongName})
           </Text>{" "}
@@ -441,8 +476,14 @@ const Note = ({ data }: TListVerse) => {
           {NoteHero()}
           {isSelectionActive && (
             <View style={styles.noteHeader}>
-              <Text style={styles.notesCountText} accessible={true} accessibilityRole="text">
-                {selectedItems.size} {selectedItems.size !== 1 ? "notas" : "nota"} seleccionada{selectedItems.size > 1 ? "s" : ""}
+              <Text
+                style={styles.notesCountText}
+                accessible={true}
+                accessibilityRole="text"
+              >
+                {selectedItems.size}{" "}
+                {selectedItems.size !== 1 ? "notas" : "nota"} seleccionada
+                {selectedItems.size > 1 ? "s" : ""}
               </Text>
             </View>
           )}
@@ -455,14 +496,11 @@ const Note = ({ data }: TListVerse) => {
             renderItem={renderItem}
             keyExtractor={(item: TNote) => `note-${item.id}`}
             ListEmptyComponent={ListEmptyComponent}
-            ListFooterComponent={
-              <View style={styles.listFooter} />
-            }
+            ListFooterComponent={<View style={styles.listFooter} />}
             removeClippedSubviews={true}
             accessible={true}
             accessibilityLabel="Lista de notas"
             accessibilityRole="list"
-
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
@@ -473,18 +511,22 @@ const Note = ({ data }: TListVerse) => {
             }
           />
 
-          {!isSelectionActive && noteActionButtons.map((item, index) => (
-            <ActionButton
-              key={`action-${item.name}-${index}`}
-              theme={theme}
-              item={item}
-              index={index}
-            />
-          ))}
+          {!isSelectionActive &&
+            noteActionButtons.map((item, index) => (
+              <ActionButton
+                key={`action-${item.name}-${index}`}
+                theme={theme}
+                item={item}
+                index={index}
+              />
+            ))}
 
           {isSyncing && (
             <View style={styles.syncingOverlay}>
-              <ActivityIndicator size="large" color={theme.colors.notification} />
+              <ActivityIndicator
+                size="large"
+                color={theme.colors.notification}
+              />
               <Text style={styles.syncingText}>Sincronizando...</Text>
             </View>
           )}
@@ -494,7 +536,7 @@ const Note = ({ data }: TListVerse) => {
               {selectionActionButtons.map((item, index) => (
                 <TouchableOpacity
                   key={index}
-                  style={{ alignItems: 'center', opacity: item.hide ? 0.5 : 1 }}
+                  style={{ alignItems: "center", opacity: item.hide ? 0.5 : 1 }}
                   onPress={() => item.action()}
                   disabled={item.hide}
                   accessible={true}
@@ -502,12 +544,11 @@ const Note = ({ data }: TListVerse) => {
                   accessibilityRole="button"
                   accessibilityHint={"Pulsa para " + item.label}
                 >
-                  <Icon
-                    name={item.name as any}
-                    size={24}
-                    color={item.color}
-                  />
-                  <Text style={{ color: theme.colors.text, marginTop: 4 }}> {item.label} </Text>
+                  <Icon name={item.name as any} size={24} color={item.color} />
+                  <Text style={{ color: theme.colors.text, marginTop: 4 }}>
+                    {" "}
+                    {item.label}{" "}
+                  </Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -525,12 +566,12 @@ const getStyles = ({ colors, dark }: TTheme) =>
       padding: 5,
     },
     flashListContent: {
-      backgroundColor: colors.background
+      backgroundColor: colors.background,
     },
     loadingContainer: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       backgroundColor: colors.background,
     },
     loadingText: {
@@ -547,7 +588,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderWidth: 1,
     },
     selectButtonText: {
-      color: 'white',
+      color: "white",
       fontWeight: "700",
     },
     textError: {
@@ -569,7 +610,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     notesCountText: {
       paddingHorizontal: 4,
       fontSize: 18,
-      fontWeight: '600',
+      fontWeight: "600",
     },
     chapterHeader: {
       flexDirection: "row",
@@ -607,7 +648,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: "#ddd",
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
-      color: '#000',
+      color: "#000",
     },
     noResultsContainer: {
       flex: 1,
@@ -648,7 +689,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     verseText: {
       fontSize: 18,
-      fontWeight: '600',
+      fontWeight: "600",
       marginBottom: 6,
       color: colors.text,
     },
@@ -656,7 +697,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     checkboxContainer: {
       marginRight: 12,
       justifyContent: "center",
-      marginBottom: 10
+      marginBottom: 10,
     },
     checkbox: {
       width: 22,
@@ -695,7 +736,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       width: 40,
       height: 40,
       borderRadius: 20,
-      overflow: 'hidden',
+      overflow: "hidden",
     },
     renderActionButton: {
       justifyContent: "center",
@@ -708,30 +749,30 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: colors.background,
     },
     syncingOverlay: {
-      position: 'absolute',
+      position: "absolute",
       top: 0,
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: 'rgba(0,0,0,0.5)',
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: "rgba(0,0,0,0.5)",
+      justifyContent: "center",
+      alignItems: "center",
       zIndex: 100,
     },
     syncingText: {
-      color: '#fff',
+      color: "#fff",
       fontSize: 18,
       marginTop: 10,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     selectionActionButtonsContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       padding: 10,
       backgroundColor: colors.background,
       borderTopWidth: 1,
-      borderTopColor: colors.border
+      borderTopColor: colors.border,
     },
   });
 

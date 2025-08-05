@@ -22,7 +22,7 @@ import { Text, View } from "@/components/Themed";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
-import { useCustomTheme } from "@/context/ThemeContext";
+import { useTheme } from "@/context/ThemeContext";
 import { authState$ } from "@/state/authState";
 import { settingState$ } from "@/state/settingState";
 import { EThemes, RootStackScreenProps, TTheme } from "@/types";
@@ -30,7 +30,6 @@ import getMinMaxFontSize from "@/utils/getMinMaxFontSize";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@react-navigation/native";
 import Constants from "expo-constants";
 import { Stack, useRouter } from "expo-router";
 import * as Updates from "expo-updates";
@@ -83,7 +82,6 @@ type TSection = {
 
 const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
   const router = useRouter();
-  const theme = useTheme();
   const insets = useSafeAreaInsets();
   const {
     orientation = "PORTRAIT",
@@ -94,7 +92,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
     selectFont,
     selectedFont,
   } = useBibleContext();
-  const { toggleTheme } = useCustomTheme();
+  const { toggleTheme, theme } = useTheme();
   const styles = getStyles(theme);
   const fontSizes = getMinMaxFontSize();
   const isGridLayout = use$(() => storedData$.isGridLayout.get());

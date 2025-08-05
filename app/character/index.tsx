@@ -1,10 +1,9 @@
 import { Text } from "@/components/Themed";
 import Characters from "@/constants/Characters";
-import { useCustomTheme } from "@/context/ThemeContext";
+import { useTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
@@ -60,8 +59,7 @@ type CharacterProps = {};
 
 const Character: React.FC<CharacterProps> = () => {
   const [filterData] = useState(Characters);
-  const theme = useTheme();
-  const { schema } = useCustomTheme();
+  const { theme, schema } = useTheme();
   const router = useRouter();
   const styles = getStyles(theme);
   const [searchText, setSearchText] = useState<any>(null);

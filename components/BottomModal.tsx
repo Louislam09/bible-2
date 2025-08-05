@@ -5,7 +5,7 @@ import {
   BottomSheetScrollView,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import React, {
   forwardRef,
   useCallback,
@@ -54,7 +54,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
     },
     ref
   ) => {
-    const theme = _theme || useTheme();
+    const { theme } = useTheme();
     const styles = getStyles(theme);
     const snapPoints = useMemo(
       () =>
@@ -106,7 +106,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
               ? `${backgroundColor}99`
               : `${theme.colors.background}99`,
           },
-          style && style
+          style && style,
         ]}
         ref={ref}
         index={startAT ?? 1}

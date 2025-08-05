@@ -3,7 +3,7 @@ import { POCKETBASE_URL } from "@/globalConfig";
 import { authState$ } from "@/state/authState";
 import { pbUser, Screens, TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { useNavigation } from "expo-router";
 import { User } from "lucide-react-native";
 import React, { useRef, useState } from "react";
@@ -26,15 +26,19 @@ interface ProfileCardProps {
 const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
   const nameInfo = user?.name.split(" ") || [];
   const firstName = nameInfo[0];
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
   const userRef = useRef(null);
   const [openUser, setOpenUser] = useState(false);
   const isAuth = authState$.isAuthenticated.get();
   const isLoading = use$(() => authState$.isLoading.get());
-  const avatarUrl = user ? `${POCKETBASE_URL}/api/files/${user.collectionId}/${user.id}/${user.avatar}` : ''
-  const defaultAvatar = user ? `https://robohash.org/set_set10/bgset_bg1/${user.id}?size=200x200` : '';
+  const avatarUrl = user
+    ? `${POCKETBASE_URL}/api/files/${user.collectionId}/${user.id}/${user.avatar}`
+    : "";
+  const defaultAvatar = user
+    ? `https://robohash.org/set_set10/bgset_bg1/${user.id}?size=200x200`
+    : "";
 
   const searchIcon = {
     icon: "Search",
@@ -221,7 +225,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
               style={{
                 fontSize: 16,
                 fontWeight: "bold",
-                color: 'white',
+                color: "white",
               }}
             >
               {tooltipData.buttonText}

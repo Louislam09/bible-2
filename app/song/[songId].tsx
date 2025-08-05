@@ -7,7 +7,7 @@ import hymnSong from "@/constants/hymnSong";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import useParams from "@/hooks/useParams";
 import { TSongItem } from "@/types";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { Stack } from "expo-router";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
@@ -16,7 +16,7 @@ import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 
 const DisplaySong = () => {
   const { songId, isAlegres } = useParams();
-  const theme = useTheme();
+  const { theme } = useTheme();
   const Songs = isAlegres ? AlegreSongs : hymnSong;
   const selected = Songs.find((item) => +item.id === songId) as TSongItem;
 

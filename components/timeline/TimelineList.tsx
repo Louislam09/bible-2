@@ -1,6 +1,6 @@
 import timelineEvents from "@/constants/events";
 import { TimelinePeriod, TTheme } from "@/types";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { AnimatedFlashList, FlashList } from "@shopify/flash-list";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -8,20 +8,30 @@ import {
   ActivityIndicator,
   Pressable,
   StyleSheet,
-  useWindowDimensions
+  useWindowDimensions,
 } from "react-native";
-import Animated, { FadeIn, FadeOut, SharedTransition, withSpring } from "react-native-reanimated";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  SharedTransition,
+  withSpring,
+} from "react-native-reanimated";
 import { Text, View } from "../Themed";
 
 type TimeEventItemProps = {
   item: TimelinePeriod;
   onPress: any;
-  isMobile: boolean;  
+  isMobile: boolean;
   index: number;
 };
 
-const TimeEventItem = ({ item, onPress, isMobile, index }: TimeEventItemProps) => {
-  const theme = useTheme();
+const TimeEventItem = ({
+  item,
+  onPress,
+  isMobile,
+  index,
+}: TimeEventItemProps) => {
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   // const transitionTag = `image-${item.title || item.sectionTitle}`.replace(/\s+/g, '-');
   // const imageTransition = SharedTransition.custom((values) => {
@@ -53,7 +63,13 @@ const TimeEventItem = ({ item, onPress, isMobile, index }: TimeEventItemProps) =
               exiting={FadeOut.duration(300)}
               // sharedTransitionStyle={imageTransition}
               source={{ uri: item.image }}
-              style={[{ backgroundColor: theme.colors.background, flex: 1, borderRadius: 8 }]}
+              style={[
+                {
+                  backgroundColor: theme.colors.background,
+                  flex: 1,
+                  borderRadius: 8,
+                },
+              ]}
               resizeMode="cover"
             />
             <View style={styles.imageOverlay} />
@@ -97,7 +113,7 @@ const TimeEventItem = ({ item, onPress, isMobile, index }: TimeEventItemProps) =
 };
 
 const TimelineList = () => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const events = timelineEvents;
   const { width, height } = useWindowDimensions();
@@ -112,8 +128,7 @@ const TimelineList = () => {
   };
 
   return (
-    <View
-      style={[styles.container]}>
+    <View style={[styles.container]}>
       <AnimatedFlashList
         data={events}
         keyExtractor={(item, index) => `timelineEvent:${index}`}

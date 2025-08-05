@@ -6,7 +6,6 @@ import {
   NavigatorScreenParams,
   ParamListBase,
   RouteProp,
-  Theme,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Router } from "expo-router";
@@ -371,8 +370,16 @@ export interface IBibleLink {
   verse: number;
 }
 
-export type TTheme = Theme & {
-  colors?: { backgroundContrast?: string };
+export type TTheme = {
+  dark: boolean;
+  colors: {
+    primary: string;
+    background: string;
+    card: string;
+    text: string;
+    border: string;
+    notification: string;
+  };
 };
 
 export enum BookIndexes {

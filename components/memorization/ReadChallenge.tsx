@@ -2,14 +2,14 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   TouchableOpacity,
-} from 'react-native';
-import React, { FC, useState } from 'react';
-import { Text, View } from '../Themed';
-import { IVerseItem, TTheme } from '@/types';
-import { getVerseTextRaw } from '@/utils/getVerseTextRaw';
-import { splitText } from '@/utils/groupBy';
-import { useTheme } from '@react-navigation/native';
-import { useRouter } from 'expo-router';
+} from "react-native";
+import React, { FC, useState } from "react";
+import { Text, View } from "../Themed";
+import { IVerseItem, TTheme } from "@/types";
+import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { splitText } from "@/utils/groupBy";
+import { useTheme } from "@/context/ThemeContext";
+import { useRouter } from "expo-router";
 
 type TPoints = {
   point: number;
@@ -29,13 +29,13 @@ const ReadChallenge: FC<ReadChallengeProps> = ({
   onUpdateProgress,
 }) => {
   const router = useRouter();
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [started, setStarted] = useState(false);
   const [currentParts, setCurrentParts] = useState<string[]>([]);
-  const text = getVerseTextRaw(item?.text || '');
-  const splitByComma = text.replace(/«.*?»/, '').split(/[,;]/);
+  const text = getVerseTextRaw(item?.text || "");
+  const splitByComma = text.replace(/«.*?»/, "").split(/[,;]/);
   const verseReference = `${item?.bookName} ${item?.chapter}:${item?.verse}`;
   const parts =
     splitByComma.length <= 1
@@ -57,22 +57,22 @@ const ReadChallenge: FC<ReadChallengeProps> = ({
 
   return (
     <TouchableWithoutFeedback
-      style={{ flex: 1, borderWidth: 1, borderColor: 'red' }}
+      style={{ flex: 1, borderWidth: 1, borderColor: "red" }}
       onPress={onPress}
     >
       <View style={styles.container}>
         {started && (
-          <View style={{ width: '100%' }}>
+          <View style={{ width: "100%" }}>
             <Text style={styles.verseText}>
               {currentParts.map((part, index) => {
                 const isCurrent = index === currentIndex;
-                if (index === parts.length - 1) return '';
+                if (index === parts.length - 1) return "";
                 return (
                   <Text
-                    style={{ color: isCurrent ? theme.colors.text : '#bebebd' }}
+                    style={{ color: isCurrent ? theme.colors.text : "#bebebd" }}
                     key={index}
                   >
-                    {`${part.trim()}`}{' '}
+                    {`${part.trim()}`}{" "}
                   </Text>
                 );
               })}
@@ -107,41 +107,41 @@ const getStyles = ({ colors, dark }: TTheme) =>
     container: {
       padding: 16,
       flex: 1,
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      justifyContent: "space-between",
+      alignItems: "center",
     },
     introContainer: {
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       flex: 1,
     },
     introText: {
-      textAlign: 'center',
+      textAlign: "center",
       fontSize: 20,
     },
     completedButton: {
-      width: '100%',
+      width: "100%",
       backgroundColor: colors.text,
       borderRadius: 12,
       paddingVertical: 12,
-      alignItems: 'center',
+      alignItems: "center",
       marginTop: 20,
     },
     completedButtonText: {
       fontSize: 18,
-      color: dark ? '#000' : '#fff',
-      fontWeight: '400',
+      color: dark ? "#000" : "#fff",
+      fontWeight: "400",
     },
     verseText: {
-      textAlign: 'left',
-      color: '#cfcfce',
+      textAlign: "left",
+      color: "#cfcfce",
       fontSize: 22,
     },
     verseReference: {
       marginTop: 5,
       fontSize: 20,
       color: colors.text,
-      fontWeight: 'bold',
-      textAlign: 'left',
+      fontWeight: "bold",
+      textAlign: "left",
     },
   });

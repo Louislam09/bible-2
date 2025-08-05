@@ -16,7 +16,7 @@ import {
   FontAwesome,
 } from "@expo/vector-icons";
 import { BibleTimelineEvent, TTheme } from "@/types";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 
 interface RelatedPerson {
   slug: string;
@@ -106,7 +106,7 @@ const BiblicalEventDetail: React.FC<BiblicalEventDetailProps> = ({
     "description" | "article" | "references"
   >("description");
   const [imageIndex, setImageIndex] = useState<number>(0);
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const noData = bibleTimelineEvent.title ? false : true;
   const images = bibleTimelineEvent.images;

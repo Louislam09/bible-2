@@ -21,7 +21,7 @@ import NextSectionImage from "./NextSectionImage";
 import PrevSectionImage from "./PrevSectionImage";
 import TimelineFooter from "./TimelineFooter";
 
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import BiblicalEventDetail from "./EventDetail";
 import BottomModal from "../BottomModal";
 import bibleTimelineEvents from "@/constants/bibleTimelineEvents";
@@ -58,7 +58,7 @@ const Timeline = ({
   prevEvent,
   nextEvent,
 }: Props) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const isReady = useSharedValue(0);
   const eventModalRef = React.useRef<BottomSheet>(null);
 

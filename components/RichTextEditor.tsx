@@ -3,7 +3,7 @@ import Icon from "@/components/Icon";
 import { View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
 import { TTheme } from "@/types";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import {
@@ -33,7 +33,7 @@ const MyRichEditor: React.FC<IRichEditor> = ({
   isModal,
   shouldOpenKeyboard,
 }) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const richTextRef = useRef<RichEditor>(null);
   const scrollViewRef = useRef<ScrollView>(null);
@@ -82,7 +82,7 @@ const MyRichEditor: React.FC<IRichEditor> = ({
 
   return (
     <View style={{ flex: 1 }}>
-      {(!readOnly) && <>{Textinput}</>}
+      {!readOnly && <>{Textinput}</>}
       <ScrollView ref={scrollViewRef}>
         <RichEditor
           pasteAsPlainText
@@ -113,7 +113,7 @@ const MyRichEditor: React.FC<IRichEditor> = ({
         />
       </ScrollView>
 
-      {(colorVisible && !readOnly) && (
+      {colorVisible && !readOnly && (
         <ColorPicker
           mainColor={theme.colors.text}
           onSelectColor={onSelectColor}

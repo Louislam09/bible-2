@@ -16,7 +16,7 @@ import { useStreak } from "@/hooks/useStreak";
 import { Memorization, SortOption, TTheme } from "@/types";
 import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { format } from "date-fns";
 import { Stack, useRouter } from "expo-router";
@@ -104,7 +104,7 @@ const sortVerses = (
 };
 
 const MemoryList: React.FC<MemorizationProps> = () => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const router = useRouter();
   const sortRef = useRef<BottomSheetModal>(null);
   const streakTooltipRef = useRef(null);

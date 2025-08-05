@@ -22,7 +22,7 @@ import ErrorBoundary from "react-native-error-boundary";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StackAnimationTypes } from "react-native-screens";
-import { NativeStackNavigationOptions } from "react-native-screens/lib/typescript/native-stack/types";
+import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 
 import { NotificationProvider } from "@/context/NotificationContext";
 import * as Notifications from "expo-notifications";
@@ -33,6 +33,8 @@ Notifications.setNotificationHandler({
     shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
   }),
 });
 
@@ -40,7 +42,7 @@ const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
 
 TaskManager.defineTask(
   BACKGROUND_NOTIFICATION_TASK,
-  ({ data, error, executionInfo }) => {
+  async ({ data, error, executionInfo }) => {
     console.log("✅ Received a notification in the background!", {
       data,
       error,
@@ -138,11 +140,11 @@ const App = () => {
     <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
       <StorageProvider>
         <DatabaseProvider>
-          <BibleProvider>
-            <BibleChapterProvider>
-              <MemorizationProvider>
-                <NotificationProvider>
-                  <MyThemeProvider>
+          <MyThemeProvider>
+            <BibleProvider>
+              <BibleChapterProvider>
+                <MemorizationProvider>
+                  <NotificationProvider>
                     <QueryProvider>
                       <GestureHandlerRootView style={{ flex: 1 }}>
                         <BottomSheetModalProvider>
@@ -154,11 +156,11 @@ const App = () => {
                         </BottomSheetModalProvider>
                       </GestureHandlerRootView>
                     </QueryProvider>
-                  </MyThemeProvider>
-                </NotificationProvider>
-              </MemorizationProvider>
-            </BibleChapterProvider>
-          </BibleProvider>
+                  </NotificationProvider>
+                </MemorizationProvider>
+              </BibleChapterProvider>
+            </BibleProvider>
+          </MyThemeProvider>
         </DatabaseProvider>
       </StorageProvider>
     </ErrorBoundary>

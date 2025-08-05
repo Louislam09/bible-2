@@ -1,5 +1,5 @@
-import { useTheme } from "@react-navigation/native";
-import { LinearGradient } from 'expo-linear-gradient';
+import { useTheme } from "@/context/ThemeContext";
+import { LinearGradient } from "expo-linear-gradient";
 import React, { FC, useCallback, useMemo, useRef } from "react";
 import {
   StyleSheet,
@@ -24,9 +24,9 @@ import { useNavigation, useRouter } from "expo-router";
 import ProgressBar from "../footer/ProgressBar";
 import VersionList from "./VersionList";
 
-interface HeaderInterface { }
+interface HeaderInterface {}
 
-const BibleHeader: FC<HeaderInterface> = ({ }) => {
+const BibleHeader: FC<HeaderInterface> = ({}) => {
   const { width } = useWindowDimensions();
   const {
     currentBibleVersion,
@@ -38,7 +38,9 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
 
   const isSplitActived = use$(() => bibleState$.isSplitActived.get());
   const verses = use$(() => bibleState$.bibleData.topVerses.get());
-  const currentHistoryIndexState = use$(() => bibleState$.currentHistoryIndex.get());
+  const currentHistoryIndexState = use$(() =>
+    bibleState$.currentHistoryIndex.get()
+  );
 
   const {
     goBack,
@@ -50,7 +52,7 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
 
   const params = useParams<HomeParams>();
   const { book } = params;
-  const theme = useTheme();
+  const { theme } = useTheme();
   const router = useRouter();
   const navigation = useNavigation();
   const isSmallSDevice = width < 300;
@@ -143,7 +145,11 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
 
   return (
     <LinearGradient
-      colors={[theme.colors.background + 'ee', theme.colors.background + '99', 'transparent']}
+      colors={[
+        theme.colors.background + "ee",
+        theme.colors.background + "99",
+        "transparent",
+      ]}
       style={styles.header}
     >
       <View style={{ flexDirection: "row", backgroundColor: "transparent" }}>

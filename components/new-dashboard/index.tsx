@@ -12,7 +12,7 @@ import isWithinTimeframe from "@/utils/isWithinTimeframe";
 import { showToast } from "@/utils/showToast";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 // import * as Notifications from "expo-notifications";
 import { useNavigation } from "expo-router";
 import React, { useCallback, useRef, useState } from "react";
@@ -23,14 +23,16 @@ import EmptyStateMessage from "../EmptyStateMessage";
 import VersionList from "../home/header/VersionList";
 import ProfileCard from "../UserProfile";
 import VoiceList from "../VoiceList";
+import { Text, View } from "../Themed";
+
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
   manager: IDashboardOption[];
 }
 
-const SecondDashboard = () => {
+const NewDashboard = () => {
   const navigation = useNavigation();
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const [currentEmpty, setCurrentEmpty] = useState<"doubible" | "timeline">(
     "doubible"
@@ -62,18 +64,6 @@ const SecondDashboard = () => {
     selectBibleVersion(version);
     versionRef.current?.dismiss();
   };
-
-  // useEffect(() => {
-  // Notifications.scheduleNotificationAsync({
-  //   content: {
-  //     title: "Time's up!",
-  //     body: 'Change sides!',
-  //   },
-  //   trigger: {
-  //     seconds: 3,
-  //   },
-  // });
-  // }, [])
 
   const onSong = useCallback(() => {
     navigation.navigate(Screens.Hymn);
@@ -118,7 +108,7 @@ const SecondDashboard = () => {
           label: "Notas",
           action: () =>
             navigation.navigate(Screens.Notes, { shouldRefresh: false }),
-          color: theme.colors.notification,
+          color: theme.colors?.notification || "#78b0a4",
         }
       : {
           icon: "Cloudy",
@@ -188,7 +178,7 @@ const SecondDashboard = () => {
       label: "Notas",
       action: () =>
         navigation.navigate(Screens.Notes, { shouldRefresh: false }),
-      color: theme.colors.notification,
+      color: theme.colors?.notification || "#78b0a4",
     },
     {
       icon: "Star",
@@ -355,4 +345,4 @@ const getStyles = ({ colors }: TTheme) =>
     },
   });
 
-export default SecondDashboard;
+export default NewDashboard;

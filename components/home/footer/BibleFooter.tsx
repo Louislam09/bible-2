@@ -2,7 +2,7 @@ import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
 import useAudioPlayer from "@/hooks/useAudioPlayer";
 import { EBibleVersions, Screens } from "@/types";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { LinearGradient } from "expo-linear-gradient";
 import { FC, useCallback, useEffect, useRef } from "react";
 import { Animated, TouchableOpacity } from "react-native";
@@ -40,7 +40,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const currentVoiceRate = storedData$.currentVoiceRate.get() || 1;
   const { isConnected } = useInternetConnection();
   const FOOTER_ICON_SIZE = iconSize;
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const playRef = useRef<BottomSheetModal>(null);
   const navigation = useNavigation();
@@ -51,7 +51,9 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const book = isSplit ? bibleQuery?.bottomSideBook : bibleQuery.book;
   const chapter = isSplit ? bibleQuery?.bottomSideChapter : bibleQuery.chapter;
   const verse = isSplit ? bibleQuery?.bottomSideVerse : bibleQuery.verse;
-  const currentHistoryIndexState = use$(() => bibleState$.currentHistoryIndex.get());
+  const currentHistoryIndexState = use$(() =>
+    bibleState$.currentHistoryIndex.get()
+  );
 
   const { bookNumber } = DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
@@ -221,12 +223,10 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           delayLongPress={200}
         >
           <Text
-            style={[
-              styles.bookLabel,
-              { fontSize: FOOTER_ICON_SIZE - 5 },
-            ]}
-          >{`${displayBookName ?? ""} ${chapter ?? ""}:${isSplitActived ? verse : currentHistoryIndexState || verse
-            }`}</Text>
+            style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}
+          >{`${displayBookName ?? ""} ${chapter ?? ""}:${
+            isSplitActived ? verse : currentHistoryIndexState || verse
+          }`}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           ref={tourState$.nextButton.get()}

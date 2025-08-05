@@ -1,5 +1,5 @@
 import { Text, View } from "@/components/Themed";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import React, { useCallback } from "react";
 import { Image, StyleSheet, TouchableOpacity } from "react-native";
@@ -38,7 +38,8 @@ const OptimizedChapterList = ({
   onChapterSelect,
   bookImageUri,
 }: OptimizedChapterListProps) => {
-  const { colors } = useTheme();
+  const { theme } = useTheme();
+  const { colors } = theme;
 
   const ListHeader = useCallback(
     () => (
@@ -94,6 +95,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
+    backgroundColor: "transparent",
   },
   bookImage: {
     resizeMode: "contain",

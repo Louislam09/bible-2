@@ -1,18 +1,19 @@
-import { useTheme } from "@react-navigation/native";
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from "@/constants/Queries";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
-import React, { useEffect, useMemo, useState } from "react";
-import { Animated, BackHandler, StyleSheet, Text } from "react-native";
+import { useTheme } from "@/context/ThemeContext";
+import useParams from "@/hooks/useParams";
+import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, TTheme } from "@/types";
+import { Stack } from "expo-router";
+import React, { useEffect, useMemo, useState } from "react";
+import { Animated, StyleSheet, Text } from "react-native";
 import AnimatedDropdown from "../components/AnimatedDropdown";
 import Icon from "../components/Icon";
 import StrongSearchContent from "../components/StrongSearchContent";
 import { View } from "../components/Themed";
-import useParams from "@/hooks/useParams";
-import { Stack, useRouter } from "expo-router";
-import { bibleState$ } from "@/state/bibleState";
 
 enum CognateBook {
   NEW_VOW = "newVow",
@@ -28,10 +29,9 @@ type SearchStrongWordEntireProps = {};
 type SearchStrongWordEntireParams = { paramCode: string };
 
 const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
-  const router = useRouter();
   const params = useParams<SearchStrongWordEntireParams>();
   const { paramCode } = params;
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const { myBibleDB, executeSql } = useDBContext();
   const [data, setData] = useState<IVerseItem[] | null>(null);
@@ -90,7 +90,22 @@ const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
         paddingTop: 10,
       }}
     >
-      <Stack.Screen options={{ headerShown: true }} />
+      <Stack.Screen
+        options={{
+          ...singleScreenHeader({
+            theme,
+            title: "Palabras de Strong",
+            titleIcon: "BookA",
+            headerRightProps: {
+              headerRightIcon: "Settings",
+              headerRightIconColor: theme.colors.notification,
+              onPress: () => {},
+              disabled: true,
+              style: { opacity: 0 },
+            },
+          }),
+        }}
+      />
       <View style={{ paddingHorizontal: 15 }}>
         <View
           style={[

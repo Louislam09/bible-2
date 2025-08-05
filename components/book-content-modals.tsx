@@ -9,13 +9,14 @@ import { modalState$ } from "@/state/modalState";
 import { TTheme } from "@/types";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import StrongContent from "./home/content/StrongContent";
+import { useTheme } from "@/context/ThemeContext";
 
 const BookContentModals = ({ book, chapter }: any) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const { fontSize } = useBibleContext();
   const styles = getStyles(theme);
   const navigation = useNavigation();
@@ -23,10 +24,9 @@ const BookContentModals = ({ book, chapter }: any) => {
   const verse = use$(() => bibleState$.verseToExplain.get());
 
   useEffect(() => {
-    if (aiResponse.loading) return
+    if (aiResponse.loading) return;
     if (verse.text) aiResponse.fetchExplanation(verse);
   }, [verse, aiResponse]);
-
 
   return (
     <>
@@ -57,7 +57,9 @@ const BookContentModals = ({ book, chapter }: any) => {
         index={-1}
         ref={modalState$.explainVerseRef.get()}
         handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
-        onClose={() => bibleState$.handleVerseToExplain({ text: "", reference: "" })}
+        onClose={() =>
+          bibleState$.handleVerseToExplain({ text: "", reference: "" })
+        }
       >
         <BottomSheetScrollView
           contentContainerStyle={{ backgroundColor: "transparent" }}

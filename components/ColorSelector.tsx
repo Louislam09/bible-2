@@ -6,7 +6,7 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { Text, View } from "./Themed";
 import Icon from "./Icon";
 
@@ -52,7 +52,7 @@ const ColorSelector: React.FC<ColorSelectorProps> = ({
       };
     });
   }, []);
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getStyles(theme);
   const colors = getColosTheme();
   const initialColorObj =

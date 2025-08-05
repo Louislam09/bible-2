@@ -13,7 +13,7 @@ import { bibleState$ } from "@/state/bibleState";
 import { EViewMode, Screens, TNote, TTheme } from "@/types";
 import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { Stack, useNavigation } from "expo-router";
 import React, {
   useCallback,
@@ -37,8 +37,8 @@ import {
 type NoteDetailProps = {};
 type NoteDetailParams = { noteId: number | null; isNewNote: boolean };
 
-const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
-  const theme = useTheme();
+const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
+  const { theme } = useTheme();
   const navigation = useNavigation();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const { getNoteById, createNote, updateNote } = useNoteService();
@@ -155,16 +155,16 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
       const date = new Date().toLocaleDateString();
       const uniqueSuffix = Date.now().toString(36).slice(-4);
       if (!noteContent.title) {
-        noteContent.title = `${defaultTitle} ${date} - ${uniqueSuffix}`
+        noteContent.title = `${defaultTitle} ${date} - ${uniqueSuffix}`;
       }
       setHasUnsavedChanges(false);
       const success = await createNote({
         title: noteContent.title,
-        note_text: noteContent.content
+        note_text: noteContent.content,
       });
 
       if (success) {
-        bibleState$.toggleReloadNotes()
+        bibleState$.toggleReloadNotes();
         navigation.navigate(Screens.Notes, { shouldRefresh: true });
         ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
       }
@@ -183,7 +183,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
         "Guardar cambios",
         "Tienes cambios sin guardar, ¿quieres salir sin guardar?",
         [
-          { text: "Cancelar", style: "cancel", onPress: () => { } },
+          { text: "Cancelar", style: "cancel", onPress: () => {} },
           {
             text: "Salir sin guardar",
             style: "destructive",
@@ -272,11 +272,15 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
 
   const onUpdate = async (id: number, goToViewMode = false) => {
     try {
-      const success = await updateNote(id, {
-        title: noteContent.title,
-        note_text: noteContent.content,
-        uuid: noteInfo?.uuid,
-      }, true);
+      const success = await updateNote(
+        id,
+        {
+          title: noteContent.title,
+          note_text: noteContent.content,
+          uuid: noteInfo?.uuid,
+        },
+        true
+      );
 
       if (success) {
         afterSaving();
@@ -284,7 +288,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
         if (goToViewMode) {
           setViewMode("VIEW");
           ToastAndroid.show("Nota actualizada!", ToastAndroid.SHORT);
-          bibleState$.toggleReloadNotes()
+          bibleState$.toggleReloadNotes();
         }
       }
     } catch (error) {
@@ -356,12 +360,17 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
             {noteInfo?.title?.toUpperCase() || defaultTitle}
           </Text>
           <Text style={styles.dateLabel}>
-            {formatDateShortDayMonth(isNewNote ? new Date() : ((noteInfo?.updated_at || noteInfo?.created_at) as any), {
-              weekday: 'short',
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric'
-            })}
+            {formatDateShortDayMonth(
+              isNewNote
+                ? new Date()
+                : ((noteInfo?.updated_at || noteInfo?.created_at) as any),
+              {
+                weekday: "short",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              }
+            )}
           </Text>
         </View>
       )}
@@ -410,7 +419,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       letterSpacing: 1,
       opacity: 0.7,
       marginBottom: 8,
-      textTransform: 'uppercase',
+      textTransform: "uppercase",
     },
     textInput: {
       padding: 10,

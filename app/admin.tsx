@@ -13,7 +13,7 @@ import {
 import { RequestStatus } from "@/services/types";
 import { Collections, RequestData, TTheme } from "@/types";
 import { showToast } from "@/utils/showToast";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { format } from "date-fns";
 import { Stack, useRouter } from "expo-router";
@@ -70,7 +70,7 @@ const RequestItem = ({
   ) => void;
   onDeleteRequest: (id: string) => void;
 }) => {
-  const theme = useTheme();
+  const { theme }= useTheme();
   const styles = getStyles(theme);
 
   const statusIcon = approvalStatus[item.status].icon;
@@ -161,7 +161,7 @@ const FilterOption = ({
   currentFilter: string | null;
   onSelect: (value: string | null) => void;
 }) => {
-  const theme = useTheme();
+  const { theme }= useTheme();
   const styles = getStyles(theme);
   const isSelected = value === currentFilter;
 
@@ -192,7 +192,7 @@ const SearchBar = ({
   onChangeText: (text: string) => void;
   placeholder: string;
 }) => {
-  const theme = useTheme();
+  const { theme }= useTheme();
   const styles = getStyles(theme);
 
   return (
@@ -232,7 +232,7 @@ const EmptyState = ({
   title: string;
   message: string;
 }) => {
-  const theme = useTheme();
+  const { theme }= useTheme();
   const styles = getStyles(theme);
 
   return (
@@ -255,7 +255,7 @@ const RequestAccessScreen: React.FC = () => {
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const { sendPushNotificationToUser } = useNotificationService();
 
-  const theme = useTheme();
+  const { theme }= useTheme();
   const styles = getStyles(theme);
   const insets = useSafeAreaInsets();
   const router = useRouter();
