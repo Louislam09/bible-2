@@ -43,6 +43,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   return {
     ...config,
     name: getAppName(),
+    owner: "louislam09",
     slug: "bible",
     version: "1.3.0",
     orientation: "default",
@@ -129,6 +130,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     ],
     runtimeVersion: {
       policy: "appVersion",
-    },
+    }
   };
 };
