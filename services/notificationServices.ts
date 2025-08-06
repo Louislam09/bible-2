@@ -158,15 +158,16 @@ export const useNotificationService = () => {
 
             return notificationId;
         } catch (error) {
-            console.error("Error scheduling notification:", error);
-            setError(JSON.stringify(error, null, 2));
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            console.error("Error scheduling notification:", errorMessage);
+            setError(errorMessage);
             showToast("No se pudo programar la notificación", "SHORT");
             return null;
         }
     };
 
     const scheduleDailyVerseNotification = useCallback(async (
-        time: string = '08:00'
+        time: string = '08:00', test: boolean = false
     ): Promise<string | null> => {
         const [hour = 8, minute = 2] = time.split(":").map(Number);
 
@@ -194,21 +195,55 @@ export const useNotificationService = () => {
             ? `📖 ${dailyVerseData.ref}\n\n"${dailyVerseData.text}"\n\nTómate un momento para reflexionar en la Palabra de Dios.`
             : "Tu versículo diario está listo. Tómate un momento para reflexionar en la Palabra de Dios.";
 
-        return await scheduleNotification(
-            {
-                title,
-                body,
-                data: {
-                    type: "daily-verse",
-                    verseData: dailyVerseData
-                },
-            },
-            {
-                hour: hour || 8,
-                minute: minute || 0,
-                repeats: true,
+        if (test) {
+            try {
+                const notificationId = await Notifications.scheduleNotificationAsync({
+                    content: {
+                        title,
+                        body,
+                        data: {
+                            type: "daily-verse",
+                            verseData: dailyVerseData
+                        },
+                        sound: true,
+                        priority: Notifications.AndroidNotificationPriority.HIGH,
+                    },
+                    trigger: {
+                        type: Notifications.SchedulableTriggerInputTypes.DAILY, // ✅ REQUIRED: Must specify trigger type
+                        hour: hour,
+                        minute: minute,
+                        channelId: 'daily-verse', // ✅ Use specific channel
+                    } as Notifications.DailyTriggerInput,
+                });
+                return notificationId;
+            } catch (error) {
+                const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+                console.error("Error scheduling notification:", errorMessage);
+                setError(errorMessage);
+                showToast("No se pudo programar la notificación", "SHORT");
+                return null;
             }
-        );
+        } else {
+            return await scheduleNotification(
+                {
+                    title,
+                    body,
+                    data: {
+                        type: "daily-verse",
+                        verseData: dailyVerseData
+                    },
+                    sound: true,
+                    priority: Notifications.AndroidNotificationPriority.HIGH,
+                },
+                {
+                    type: 'daily',
+                    hour: hour || 8,
+                    minute: minute || 0,
+                    repeats: true,
+                    channelId: 'daily-verse',
+                } as Notifications.DailyTriggerInput
+            );
+        }
     }, [isMyBibleDbLoaded])
 
     const scheduleDevotionalReminder = async (hour: number = 9, minute: number = 0): Promise<string | null> => {

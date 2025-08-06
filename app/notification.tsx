@@ -111,6 +111,14 @@ const NotificationSettingsScreen = () => {
     await notificationService.sendTestNotification();
   };
 
+  const testNotificationSchedule = async () => {
+    // current time in one minute in the future
+    const now = new Date();
+    const oneMinuteFromNow = new Date(now.getTime() + 60000);
+    const timeStr = `${oneMinuteFromNow.getHours()}:${oneMinuteFromNow.getMinutes()}`;
+    await notificationService.scheduleDailyVerseNotification(timeStr, true);
+  };
+
   const handleNotificationEnabled = async () => {
     if (!notificationPreferences.notificationEnabled) {
       const hasPermission = await notificationService.requestPermissions();
@@ -175,15 +183,15 @@ const NotificationSettingsScreen = () => {
           },
           ...(notificationPreferences.dailyVerseEnabled
             ? [
-              {
-                label: "Hora de Notificación",
-                extraText: "Configura cuándo recibir el versículo diario",
-                iconName: "Clock" as keyof typeof icons,
-                action: () => setModalVisible(true),
-                badge: notificationPreferences.dailyVerseTime,
-                color: theme.colors.notification,
-              },
-            ]
+                {
+                  label: "Hora de Notificación",
+                  extraText: "Configura cuándo recibir el versículo diario",
+                  iconName: "Clock" as keyof typeof icons,
+                  action: () => setModalVisible(true),
+                  badge: notificationPreferences.dailyVerseTime,
+                  color: theme.colors.notification,
+                },
+              ]
             : []),
         ],
         hide: !notificationPreferences.notificationEnabled,
@@ -239,6 +247,13 @@ const NotificationSettingsScreen = () => {
         title: "Información de Debug",
         id: "debug",
         options: [
+          {
+            label: "Probar Notificación Programada",
+            extraText: "Envía una notificación de prueba programada",
+            iconName: "ConciergeBell" as keyof typeof icons,
+            action: testNotificationSchedule,
+            color: "gold",
+          },
           {
             label: "Estado de Notificaciones",
             extraText: notificationService.error
@@ -383,7 +398,7 @@ const NotificationSettingsScreen = () => {
               headerRightProps: {
                 headerRightIcon: "Settings",
                 headerRightIconColor: theme.colors.notification,
-                onPress: () => { },
+                onPress: () => {},
                 disabled: true,
                 style: { opacity: 0 },
               },
