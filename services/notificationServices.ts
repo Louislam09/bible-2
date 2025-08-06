@@ -209,7 +209,7 @@ export const useNotificationService = () => {
                         priority: Notifications.AndroidNotificationPriority.HIGH,
                     },
                     trigger: {
-                        type: Notifications.SchedulableTriggerInputTypes.DAILY, // ✅ REQUIRED: Must specify trigger type
+                        type: 'daily', // ✅ REQUIRED: Must specify trigger type
                         hour: hour,
                         minute: minute,
                         channelId: 'daily-verse', // ✅ Use specific channel
@@ -239,7 +239,7 @@ export const useNotificationService = () => {
                     type: 'daily',
                     hour: hour || 8,
                     minute: minute || 0,
-                    repeats: true,
+                    // repeats: true,
                     channelId: 'daily-verse',
                 } as Notifications.DailyTriggerInput
             );
