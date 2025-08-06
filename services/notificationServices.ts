@@ -212,7 +212,7 @@ export const useNotificationService = () => {
                         type: 'daily', // ✅ REQUIRED: Must specify trigger type
                         hour: hour,
                         minute: minute,
-                        // channelId: 'daily-verse', // ✅ Use specific channel
+                        channelId: 'daily-verse', // ✅ Use specific channel
                     } as Notifications.DailyTriggerInput,
                 });
                 return notificationId;
@@ -240,7 +240,7 @@ export const useNotificationService = () => {
                     hour: hour || 8,
                     minute: minute || 0,
                     // repeats: true,
-                    // channelId: 'daily-verse',
+                    channelId: 'daily-verse',
                 } as Notifications.DailyTriggerInput
             );
         }
@@ -256,9 +256,8 @@ export const useNotificationService = () => {
             {
                 hour: hour,
                 minute: minute,
-                // repeats: true,
-                type: 'daily' as Notifications.SchedulableTriggerInputTypes
-            } as Notifications.DailyTriggerInput
+                repeats: true,
+            }
         );
     };
 
@@ -275,10 +274,9 @@ export const useNotificationService = () => {
                 },
                 {
                     hour: 9,
-                    minute: 1,
-                    // repeats: true,
-                    type: 'daily' as Notifications.SchedulableTriggerInputTypes
-                } as Notifications.DailyTriggerInput
+                    minute: 0,
+                    repeats: true,
+                }
             )
         );
 
@@ -293,9 +291,8 @@ export const useNotificationService = () => {
                 {
                     hour: 15,
                     minute: 0,
-                    // repeats: true,
-                    type: 'daily' as Notifications.SchedulableTriggerInputTypes
-                } as Notifications.DailyTriggerInput
+                    repeats: true,
+                }
             )
         );
 
@@ -404,11 +401,10 @@ export const useNotificationService = () => {
                     sound: true,
                 },
                 trigger: {
-                    type: 'daily',
-                    hour: hour,
-                    minute: minute,
+                    type: 'timeInterval',
                     channelId: 'daily-verse',
-                } as Notifications.DailyTriggerInput,
+                    seconds: 10,
+                } as Notifications.TimeIntervalTriggerInput,
             });
 
             console.log(`✅ Daily verse notification scheduled for ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`);
@@ -416,7 +412,7 @@ export const useNotificationService = () => {
 
         } catch (error) {
             console.error("Error scheduling daily verse notification:", error);
-            setError(`Notification error: ${error.message || String(error)}`);
+            setError(`Notification error: ${error?.message || String(error)}`);
             return null;
         }
     }, []);
