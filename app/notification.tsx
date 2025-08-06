@@ -116,7 +116,7 @@ const NotificationSettingsScreen = () => {
     const now = new Date();
     const oneMinuteFromNow = new Date(now.getTime() + 60000);
     const timeStr = `${oneMinuteFromNow.getHours()}:${oneMinuteFromNow.getMinutes()}`;
-    await notificationService.scheduleDailyVerseNotification(timeStr, true);
+    await notificationService.scheduleDailyVerseNotification2(timeStr);
   };
 
   const handleNotificationEnabled = async () => {

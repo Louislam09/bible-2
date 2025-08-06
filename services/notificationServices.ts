@@ -212,7 +212,7 @@ export const useNotificationService = () => {
                         type: 'daily', // ✅ REQUIRED: Must specify trigger type
                         hour: hour,
                         minute: minute,
-                        channelId: 'daily-verse', // ✅ Use specific channel
+                        // channelId: 'daily-verse', // ✅ Use specific channel
                     } as Notifications.DailyTriggerInput,
                 });
                 return notificationId;
@@ -240,7 +240,7 @@ export const useNotificationService = () => {
                     hour: hour || 8,
                     minute: minute || 0,
                     // repeats: true,
-                    channelId: 'daily-verse',
+                    // channelId: 'daily-verse',
                 } as Notifications.DailyTriggerInput
             );
         }
@@ -256,8 +256,9 @@ export const useNotificationService = () => {
             {
                 hour: hour,
                 minute: minute,
-                repeats: true,
-            }
+                // repeats: true,
+                type: 'daily' as Notifications.SchedulableTriggerInputTypes
+            } as Notifications.DailyTriggerInput
         );
     };
 
@@ -274,9 +275,10 @@ export const useNotificationService = () => {
                 },
                 {
                     hour: 9,
-                    minute: 0,
-                    repeats: true,
-                }
+                    minute: 1,
+                    // repeats: true,
+                    type: 'daily' as Notifications.SchedulableTriggerInputTypes
+                } as Notifications.DailyTriggerInput
             )
         );
 
@@ -291,8 +293,9 @@ export const useNotificationService = () => {
                 {
                     hour: 15,
                     minute: 0,
-                    repeats: true,
-                }
+                    // repeats: true,
+                    type: 'daily' as Notifications.SchedulableTriggerInputTypes
+                } as Notifications.DailyTriggerInput
             )
         );
 
@@ -363,6 +366,61 @@ export const useNotificationService = () => {
         }
     };
 
+    const scheduleDailyVerseNotification2 = useCallback(async (
+        time: string = '08:00'
+    ): Promise<string | null> => {
+        try {
+            const [hour = 8, minute = 0] = time.split(":").map(Number);
+
+            // Validate inputs
+            if (isNaN(hour) || isNaN(minute) || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+                console.error('Invalid time values:', { hour, minute, time });
+                return null;
+            }
+
+            const user = storedData$.user.get() || null;
+            const userName = user?.name?.split(" ")[0] || "";
+
+            const title = userName
+                ? `✨ Shalom, ${userName}! — Verso del Día ✨`
+                : "✨ Shalom! — Verso del Día ✨";
+
+            const body = "Tu versículo diario está listo. Tómate un momento para reflexionar en la Palabra de Dios.";
+
+            const hasPermission = await requestPermissions();
+            if (!hasPermission) return null;
+
+            await setupNotificationChannel();
+
+            const notificationId = await Notifications.scheduleNotificationAsync({
+                content: {
+                    title: title.substring(0, 100),
+                    body: body.substring(0, 500),
+                    data: {
+                        type: "daily-verse",        // Simple string
+                        timestamp: Date.now(),      // Simple number  
+                        hasUser: !!userName         // Simple boolean
+                    },
+                    sound: true,
+                },
+                trigger: {
+                    type: 'daily',
+                    hour: hour,
+                    minute: minute,
+                    channelId: 'daily-verse',
+                } as Notifications.DailyTriggerInput,
+            });
+
+            console.log(`✅ Daily verse notification scheduled for ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`);
+            return notificationId;
+
+        } catch (error) {
+            console.error("Error scheduling daily verse notification:", error);
+            setError(`Notification error: ${error.message || String(error)}`);
+            return null;
+        }
+    }, []);
+
     const updateNotificationSettings = async (
         preferences: Partial<NotificationPreferences>
     ): Promise<boolean> => {
@@ -395,7 +453,7 @@ export const useNotificationService = () => {
             if (hasChanged.dailyVerseEnabled || hasChanged.dailyVerseTime) {
                 // Handle daily verse notification
                 if (updatedPrefs.dailyVerseEnabled) {
-                    await scheduleDailyVerseNotification(updatedPrefs.dailyVerseTime);
+                    await scheduleDailyVerseNotification2(updatedPrefs.dailyVerseTime);
                 } else {
                     // Cancel existing daily verse notifications
                     const scheduledNotifications = await getScheduledNotifications();
@@ -562,6 +620,7 @@ export const useNotificationService = () => {
         setupNotificationChannel,
         scheduleNotification,
         scheduleDailyVerseNotification,
+        scheduleDailyVerseNotification2,
         scheduleDevotionalReminder,
         scheduleDevotionalReminders,
         scheduleMemorizationReminder,
