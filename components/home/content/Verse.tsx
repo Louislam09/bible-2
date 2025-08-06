@@ -7,6 +7,7 @@ import { getBookDetail } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMemorization } from "@/context/MemorizationContext";
+import { useTheme } from "@/context/ThemeContext";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
@@ -23,7 +24,6 @@ import {
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@/context/ThemeContext";
 import { useRouter } from "expo-router";
 import React, {
   memo,
@@ -455,6 +455,12 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       onLayout={() => {
         if (initVerse === item.verse) initHighLightedVerseAnimation();
       }}
+      style={
+        {
+          // borderColor: "red",
+          // borderWidth: 1,
+        }
+      }
     >
       <TouchableOpacity
         onPress={onPress}
@@ -484,18 +490,17 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
             }}
           />
         ) : (
-          <Animated.Text
+          <Animated.View
             style={[
               styles.verse,
-              // styledVerseHighlight,
               (verseIsTapped || verseShowAction) && styles.highlightCopy,
-              { fontSize, backgroundColor: bgVerseHighlight },
+              // { backgroundColor: bgVerseHighlight },
             ]}
             aria-selected
-            selectable={false}
-            selectionColor={theme.colors.notification || "white"}
+            // selectable={false}
+            // selectionColor={theme.colors.notification || "white"}
           >
-            <Text style={[styles.verseNumber]}>
+            <Text style={[styles.verseNumber, { fontSize }]}>
               {isFavorite && (
                 <MaterialCommunityIcons size={14} name="star" color="#ffd41d" />
               )}
@@ -530,9 +535,11 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
                 )}
               </>
             ) : (
-              <Text style={styles.verseBody}>{getVerseTextRaw(item.text)}</Text>
+              <Text style={[styles.verseBody, { fontSize }]}>
+                {getVerseTextRaw(item.text)}
+              </Text>
             )}
-          </Animated.Text>
+          </Animated.View>
         )}
 
         {/* ACTIONS */}
@@ -554,13 +561,13 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
           </ScrollView>
         )}
       </TouchableOpacity>
-      {tourState$.tourPopoverVisible.get() === "VERSE" && item.verse === 1 && (
+      {/* {tourState$.tourPopoverVisible.get() === "VERSE" && item.verse === 1 && (
         <Walkthrough
           steps={steps}
           setStep={setStepIndex}
           currentStep={stepIndex}
         />
-      )}
+      )} */}
     </View>
   );
 };
@@ -586,8 +593,11 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     verse: {
       position: "relative",
-      paddingLeft: 20,
-      marginVertical: 4,
+      // paddingLeft: 20,
+      // marginVertical: 4,
+      display: "flex",
+      alignItems: "flex-start",
+      flexDirection: "row",
     },
     highlightCopy: {
       backgroundColor: colors.notification + "20",

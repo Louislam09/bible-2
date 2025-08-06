@@ -251,7 +251,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "flex-end",
-      backgroundColor: "none",
+      backgroundColor: "transparent",
       gap: 15,
       flex: 1,
     },

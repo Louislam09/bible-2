@@ -95,7 +95,7 @@ const Chapter = ({
 
   const ListHeader = useCallback(() => {
     return (
-      <View style={styles.estimatedContainer}>
+      <View style={[styles.estimatedContainer]}>
         <Text style={[styles.estimatedText]}>
           <Icon size={14} name="Timer" color={theme.colors.notification} />
           &nbsp; Tiempo de lectura{" "}
@@ -139,7 +139,7 @@ const Chapter = ({
           ref={chapterRef}
           keyExtractor={keyExtractor}
           // data={verses ?? []}
-          data={data}
+          data={data.slice(0, 2)}
           ListHeaderComponent={ListHeader}
           renderItem={renderItem}
           decelerationRate="normal"
