@@ -24,6 +24,8 @@
     "@expo-google-fonts/eb-garamond": "^0.2.3",
     "@expo-google-fonts/inter": "^0.2.3",
     "@expo-google-fonts/manrope": "^0.2.3",
+    "@expo-google-fonts/noto-sans-hebrew": "^0.4.0",
+    "@expo-google-fonts/noto-serif": "^0.4.0",
     "@expo-google-fonts/poppins": "^0.2.3",
     "@expo/cli": "^0.21.8",
     "@expo/vector-icons": "^14.0.3",

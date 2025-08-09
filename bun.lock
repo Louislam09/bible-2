@@ -9,6 +9,8 @@
         "@expo-google-fonts/eb-garamond": "^0.2.3",
         "@expo-google-fonts/inter": "^0.2.3",
         "@expo-google-fonts/manrope": "^0.2.3",
+        "@expo-google-fonts/noto-sans-hebrew": "^0.4.0",
+        "@expo-google-fonts/noto-serif": "^0.4.0",
         "@expo-google-fonts/poppins": "^0.2.3",
         "@expo/cli": "^0.21.8",
         "@expo/vector-icons": "^14.0.3",
@@ -384,6 +386,10 @@
     "@expo-google-fonts/inter": ["@expo-google-fonts/inter@0.2.3", "", {}, "sha512-iHK9FI+dnE45X5c2Z5hSFwNH4zUWethizpbv3XUn0FIGw5jwvzriENz0a6wCdkI4/d+1QkurnHo5XHti7TbNJA=="],
 
     "@expo-google-fonts/manrope": ["@expo-google-fonts/manrope@0.2.3", "", {}, "sha512-2M9hzi5ku97ZbheGMyzqIdiIEmve0/ihBk9nVWRy2lVIchWqR2k2yIQPS7jKC/Az/e43tW3POLNeU6gQJQL9hw=="],
+
+    "@expo-google-fonts/noto-sans-hebrew": ["@expo-google-fonts/noto-sans-hebrew@0.4.0", "", {}, "sha512-ti9G0NYACe61dNqBvLU0JSw5xTxhjcg9Sw+GsnwVZ0RPJC2xx8E7+S0UzoeHuMBWABTq/xXN4baMkpof5ZkbeQ=="],
+
+    "@expo-google-fonts/noto-serif": ["@expo-google-fonts/noto-serif@0.4.0", "", {}, "sha512-I0sXixBi6emfQl9B4VeahTELKnj1eGcTBh2iw2XeJJiQrRnFCylw8uB+Y7bSg7sUzYnM1vLWPKFntItUIwqMJw=="],
 
     "@expo-google-fonts/poppins": ["@expo-google-fonts/poppins@0.2.3", "", {}, "sha512-PXkur1ZY/puy1PwVFYPJx8qiI3dtBzC2ig1bo53swCt7/sI7krCGYRO6hLBNp15M0kcNh2J4cCR9ZQyFxsving=="],
 

@@ -374,7 +374,7 @@ const getStyles = ({ colors }: TTheme) =>
       paddingHorizontal: 4,
     },
     actionItemText: {
-      fontSize: 12,
+      fontSize: 16,
       color: colors.text,
       textAlign: "center",
       fontWeight: "bold",

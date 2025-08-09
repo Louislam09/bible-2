@@ -80,6 +80,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       googleServicesFile: googleServicesFile(),
       permissions: [
         "android.permission.SCHEDULE_EXACT_ALARM",
+        // "android.permission.USE_EXACT_ALARM",
         "android.permission.RECEIVE_BOOT_COMPLETED",
         "android.permission.VIBRATE"
       ],

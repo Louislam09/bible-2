@@ -236,10 +236,15 @@ export enum TFont {
   ManropeBold = "ManropeBold",
   PoppinsBold = "PoppinsBold",
   EBGaramondBold = "EBGaramondBold",
+  NotoSerif = "NotoSerif",
+  NotoSerifBold = "NotoSerifBold",
+  NotoSansHebrew = "NotoSansHebrew",
+  NotoSansHebrewBold = "NotoSansHebrewBold",
 }
 export enum EBibleVersions {
   BIBLE = "bible",
   NTV = "ntv-bible",
+  INTERLINEAL = "HSB+",
 }
 
 export type DownloadBibleItem = {

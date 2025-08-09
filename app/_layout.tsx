@@ -96,7 +96,7 @@ const screenAnimations: TScreensName = {
 };
 
 const App = () => {
-  const isLoadingComplete = useCachedResources();
+  // const isLoadingComplete = useCachedResources();
   const isAnimationDisabled = use$(() =>
     settingState$.isAnimationDisabled.get()
   );

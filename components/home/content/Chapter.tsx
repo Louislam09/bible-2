@@ -1,7 +1,9 @@
+import HebrewVerse from "@/components/home/content/HebrewVerse";
 import Icon from "@/components/Icon";
 import { Text } from "@/components/Themed";
+import { useBibleContext } from "@/context/BibleContext";
 import { bibleState$ } from "@/state/bibleState";
-import { IBookVerse, TTheme } from "@/types";
+import { EBibleVersions, IBookVerse, TTheme } from "@/types";
 import { observer } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
@@ -9,8 +11,6 @@ import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   ActivityIndicator,
   Animated,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
   StyleSheet,
   useWindowDimensions,
   View,
@@ -22,7 +22,7 @@ interface TChapter {
   isSplit?: boolean;
   estimatedReadingTime: number;
   initialScrollIndex: number;
-  onScroll?: (direction: 'up' | 'down') => void;
+  onScroll?: (direction: "up" | "down") => void;
 }
 
 interface TChapter {
@@ -30,7 +30,7 @@ interface TChapter {
   isSplit?: boolean;
   estimatedReadingTime: number;
   initialScrollIndex: number;
-  onScroll?: (direction: 'up' | 'down') => void;
+  onScroll?: (direction: "up" | "down") => void;
 }
 
 const Chapter = ({
@@ -50,21 +50,26 @@ const Chapter = ({
   const topVerseRef = useRef<number | null>(null);
   const lastOffset = useRef(0);
   const lastScrollTime = useRef(Date.now());
+  const { currentBibleVersion } = useBibleContext();
 
   const aspectRadio = height / width;
   const isMobile = +aspectRadio.toFixed(2) > 1.65;
+  const isInterlineal = currentBibleVersion === EBibleVersions.INTERLINEAL;
 
   const renderItem = useCallback(
-    ({ item }: any) => (
-      <Verse item={item} isSplit={!!isSplit} initVerse={initialScrollIndex} />
-    ),
-    [isSplit, initialScrollIndex]
+    ({ item }: any) =>
+      isInterlineal ? (
+        <HebrewVerse item={item} />
+      ) : (
+        <Verse item={item} isSplit={!!isSplit} initVerse={initialScrollIndex} />
+      ),
+    [isSplit, initialScrollIndex, isInterlineal]
   );
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
       const newTopVerse = viewableItems[0].item.verse;
-      bibleState$.handleCurrentHistoryIndex(newTopVerse)
+      bibleState$.handleCurrentHistoryIndex(newTopVerse);
       if (topVerseRef.current !== newTopVerse) {
         topVerseRef.current = newTopVerse;
       }
@@ -94,7 +99,7 @@ const Chapter = ({
   }, [initialScrollIndex]);
 
   const ListHeader = useCallback(() => {
-    return (
+    return isInterlineal ? null : (
       <View style={styles.estimatedContainer}>
         <Text style={[styles.estimatedText]}>
           <Icon size={14} name="Timer" color={theme.colors.notification} />
@@ -103,30 +108,34 @@ const Chapter = ({
         </Text>
       </View>
     );
-  }, [estimatedReadingTime]);
+  }, [estimatedReadingTime, isInterlineal]);
 
   const keyExtractor = useCallback(
     (item: IBookVerse) => `${item.book_number}-${item.chapter}-${item.verse}`,
     []
   );
 
-  const handleScroll = useCallback(({ nativeEvent }: { nativeEvent: any }) => {
-    const now = Date.now();
-    const minScrollTime = 50; // Minimum time between scroll events to process
+  const handleScroll = useCallback(
+    ({ nativeEvent }: { nativeEvent: any }) => {
+      const now = Date.now();
+      const minScrollTime = 50; // Minimum time between scroll events to process
 
-    if (now - lastScrollTime.current < minScrollTime) {
-      return;
-    }
+      if (now - lastScrollTime.current < minScrollTime) {
+        return;
+      }
 
-    const currentOffset = nativeEvent.contentOffset.y;
-    const direction = currentOffset > lastOffset.current ? 'down' : 'up';
+      const currentOffset = nativeEvent.contentOffset.y;
+      const direction = currentOffset > lastOffset.current ? "down" : "up";
 
-    if (Math.abs(currentOffset - lastOffset.current) > 10) { // Minimum scroll distance
-      onScroll?.(direction);
-      lastOffset.current = currentOffset;
-      lastScrollTime.current = now;
-    }
-  }, [onScroll]);
+      if (Math.abs(currentOffset - lastOffset.current) > 10) {
+        // Minimum scroll distance
+        onScroll?.(direction);
+        lastOffset.current = currentOffset;
+        lastScrollTime.current = now;
+      }
+    },
+    [onScroll]
+  );
 
   return (
     <View style={styles.chapterContainer}>
@@ -135,7 +144,7 @@ const Chapter = ({
           ref={chapterRef}
           keyExtractor={keyExtractor}
           // data={verses ?? []}
-          data={data}
+          data={data.slice(0, 10)}
           ListHeaderComponent={ListHeader}
           renderItem={renderItem}
           decelerationRate="normal"
@@ -155,12 +164,12 @@ const Chapter = ({
           ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
           onScroll={handleScroll}
           scrollEventThrottle={16}
-        // decelerationRate="normal"
-        // onEndReached={onEndReached}
-        // maintainVisibleContentPosition={{
-        //   minIndexForVisible: 0,
-        //   autoscrollToTopThreshold: 10,
-        // }}
+          // decelerationRate="normal"
+          // onEndReached={onEndReached}
+          // maintainVisibleContentPosition={{
+          //   minIndexForVisible: 0,
+          //   autoscrollToTopThreshold: 10,
+          // }}
         />
       </View>
     </View>

@@ -18,11 +18,23 @@ import {
   EBGaramond_400Regular,
   EBGaramond_700Bold,
 } from '@expo-google-fonts/eb-garamond';
+// NotoSerif
+import {
+  NotoSerif_400Regular,
+  NotoSerif_700Bold,
+} from '@expo-google-fonts/noto-serif';
+
+import {
+  NotoSansHebrew_400Regular,
+  NotoSansHebrew_700Bold,
+} from '@expo-google-fonts/noto-sans-hebrew';
+
+import { FontAwesome } from "@expo/vector-icons";
 import { TFont } from '../types';
 
 type FontMapping = Record<TFont, number | any>;
 
-const useCustomFonts = () => {
+const useBibleFonts = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   const [googleFontsLoaded] = useFonts({
@@ -36,6 +48,10 @@ const useCustomFonts = () => {
     Poppins_700Bold,
     EBGaramond_400Regular,
     EBGaramond_700Bold,
+    NotoSerif_400Regular,
+    NotoSerif_700Bold,
+    NotoSansHebrew_400Regular,
+    NotoSansHebrew_700Bold,
   });
 
   useEffect(() => {
@@ -54,6 +70,11 @@ const useCustomFonts = () => {
         [TFont.PoppinsBold]: Poppins_700Bold,
         [TFont.EBGaramond]: EBGaramond_400Regular,
         [TFont.EBGaramondBold]: EBGaramond_700Bold,
+        [TFont.NotoSerif]: NotoSerif_400Regular,
+        [TFont.NotoSerifBold]: NotoSerif_700Bold,
+        [TFont.NotoSansHebrew]: NotoSansHebrew_400Regular,
+        [TFont.NotoSansHebrewBold]: NotoSansHebrew_700Bold,
+        ...FontAwesome.font,
       };
 
       await Font.loadAsync(fontMapping);
@@ -68,4 +89,4 @@ const useCustomFonts = () => {
   return fontsLoaded && googleFontsLoaded;
 };
 
-export default useCustomFonts;
+export default useBibleFonts;

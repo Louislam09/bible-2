@@ -4,7 +4,6 @@ import { FlashList } from "@shopify/flash-list";
 import { Stack, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  ActivityIndicator,
   BackHandler,
   Platform,
   RefreshControl,

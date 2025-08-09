@@ -402,7 +402,6 @@ export const useNotificationService = () => {
                 },
                 trigger: {
                     type: 'timeInterval',
-                    channelId: 'daily-verse',
                     seconds: 10,
                 } as Notifications.TimeIntervalTriggerInput,
             });
@@ -412,7 +411,7 @@ export const useNotificationService = () => {
 
         } catch (error) {
             console.error("Error scheduling daily verse notification:", error);
-            setError(`Notification error: ${error?.message || String(error)}`);
+            setError(`Notification error: ${error?.message || String(error)} ${String(error)}`);
             return null;
         }
     }, []);

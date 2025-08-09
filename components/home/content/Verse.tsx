@@ -346,18 +346,14 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const onExplainWithAI = () => {
     if (!googleAIKey) {
-      Alert.alert(
-        "Aviso",
-        "No se ha configurado la API key de Google AI",
-        [
-          { text: "Cancelar", style: "cancel" },
-          {
-            text: "Configurar",
-            onPress: () => router.push(Screens.AISetup),
-          },
-        ]
-      );
-      return
+      Alert.alert("Aviso", "No se ha configurado la API key de Google AI", [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Configurar",
+          onPress: () => router.push(Screens.AISetup),
+        },
+      ]);
+      return;
     }
     const verseText = getVerseTextRaw(item.text);
     const reference = `${getBookDetail(item.book_number).longName} ${item.chapter
@@ -371,6 +367,10 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const router = useRouter();
 
+  const onInterlinear = () => {
+    console.log("onInterlinear");
+  };
+
   const verseActions: TIcon[] = useMemo(() => {
     return [
       {
@@ -380,10 +380,16 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         description: "Copiar",
       },
       {
+        name: "BookType",
+        action: onInterlinear,
+        description: "Interlinear",
+        color: "#f79c67",
+      },
+      {
         name: "Sparkles",
         action: onExplainWithAI,
         description: "Explicar",
-        color: "#f1c40f"
+        color: "#f1c40f",
       },
       {
         name: "Quote",
@@ -480,15 +486,14 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
             fontSize={fontSize}
             theme={theme}
             style={{
-              alignItems: 'flex-start',
-              justifyContent: 'flex-start',
+              alignItems: "flex-start",
+              justifyContent: "flex-start",
             }}
           />
         ) : (
           <Animated.Text
             style={[
               styles.verse,
-              // styledVerseHighlight,
               (verseIsTapped || verseShowAction) && styles.highlightCopy,
               { fontSize, backgroundColor: bgVerseHighlight },
             ]}
@@ -535,7 +540,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
             )}
           </Animated.Text>
         )}
-
 
         {/* ACTIONS */}
         {verseShowAction && (
@@ -588,7 +592,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     verse: {
       position: "relative",
-      paddingLeft: 20,
+      paddingHorizontal: 25,
       marginVertical: 4,
     },
     highlightCopy: {

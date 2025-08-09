@@ -33,7 +33,7 @@ const FileList = () => {
 
   const fetchFiles = async () => {
     const fileList = await FileSystem.readDirectoryAsync(extractionPath);
-
+    console.log(fileList)
     // for (const file of fileList) {
     //   const fileUri = `${extractionPath}${file}`;
     //   await FileSystem.deleteAsync(fileUri, { idempotent: true });
@@ -61,10 +61,10 @@ const FileList = () => {
     }
   }, []);
 
-  const deleteFile = async (fileName: string, versionName: string) => {
+  const deleteFile = async (item: VersionItem) => {
     Alert.alert(
       "Eliminar módulo",
-      `¿Estás seguro que deseas eliminar "${versionName}"?`,
+      `¿Estás seguro que deseas eliminar "${item.name}"?`,
       [
         {
           text: "Cancelar",
@@ -75,9 +75,8 @@ const FileList = () => {
           style: "destructive",
           onPress: async () => {
             try {
-              const fileUri = `${extractionPath}${fileName}`;
+              const fileUri = item.path;
               await FileSystem.deleteAsync(fileUri, { idempotent: true });
-              setFiles(files.filter((file) => file !== fileName));
               refreshDatabaseList();
               selectBibleVersion(defaultDatabases[0]);
             } catch (err) {
@@ -160,10 +159,8 @@ const FileList = () => {
     );
   };
 
-  const renderItem = ({ item, index }: { item: string; index: number }) => {
-    const versionItem = [...installedBibles, ...installedDictionary].find(
-      (version) => version.path.includes(item)
-    );
+  const renderItem = ({ item, index }: { item: VersionItem; index: number }) => {
+    const versionItem = item
     const allowDelete = !defaultDatabases.includes(versionItem?.id as string);
     const isBible = index < installedBibles.length;
 
@@ -187,7 +184,7 @@ const FileList = () => {
                 !allowDelete && { color: theme.colors.notification }
               ]}
             >
-              {versionItem?.shortName || item}
+              {versionItem?.shortName || '-'}
             </Text>
             <Text
               style={[
@@ -195,7 +192,7 @@ const FileList = () => {
                 !allowDelete && { color: theme.colors.text + "70" }
               ]}
             >
-              {versionItem?.name || item}
+              {versionItem?.name || '-'}
             </Text>
             {!allowDelete && (
               <View style={styles.defaultBadge}>
@@ -220,7 +217,7 @@ const FileList = () => {
           {allowDelete && (
             <TouchableOpacity
               style={styles.deleteButton}
-              onPress={() => deleteFile(item, versionItem?.name || item)}
+              onPress={() => deleteFile(item)}
             >
               <Icon
                 name="Trash2"
@@ -233,7 +230,6 @@ const FileList = () => {
       </View>
     );
   };
-
 
   if (loading) {
     return (
@@ -251,9 +247,9 @@ const FileList = () => {
   return (
     <FlashList
       estimatedItemSize={80}
-      data={[...installedBibles, ...installedDictionary].map((item) => item.id)}
+      data={[...installedBibles, ...installedDictionary]}
       renderItem={renderItem}
-      keyExtractor={(item) => item}
+      keyExtractor={(item) => item.id}
       contentContainerStyle={styles.listContent}
       ListEmptyComponent={<EmptyComponent />}
       refreshControl={

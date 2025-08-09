@@ -21,7 +21,7 @@ import React, {
   useState,
 } from "react";
 import { Dimensions, ToastAndroid } from "react-native";
-import useCustomFonts from "../hooks/useCustomFonts";
+import useBibleFonts from "@/hooks/useBibleFonts";
 import {
   EBibleVersions,
   EHistoryItem,
@@ -105,27 +105,27 @@ const initialContext: BibleState = {
   selectBibleVersion: (version: string) => {
     return new Promise((resolve) => resolve());
   },
-  onSaveNote: () => { },
-  onUpdateNote: () => { },
-  onDeleteNote: () => { },
-  onDeleteAllNotes: () => { },
-  selectFont: () => { },
-  selectTheme: () => { },
-  handleFontSize: () => { },
+  onSaveNote: () => {},
+  onUpdateNote: () => {},
+  onDeleteNote: () => {},
+  onDeleteAllNotes: () => {},
+  selectFont: () => {},
+  selectTheme: () => {},
+  handleFontSize: () => {},
   toggleFavoriteVerse: async ({
     bookNumber,
     chapter,
     verse,
     isFav,
-  }: IFavoriteVerse) => { },
-  setShouldLoop: (shouldLoop: boolean) => { },
+  }: IFavoriteVerse) => {},
+  setShouldLoop: (shouldLoop: boolean) => {},
   // setverseInStrongDisplay: (verse: number) => {},
-  increaseFontSize: () => { },
-  toggleViewLayoutGrid: () => { },
-  setLocalData: () => { },
-  performSearch: () => { },
-  setSearchQuery: () => { },
-  syncLocalSettings: () => { },
+  increaseFontSize: () => {},
+  toggleViewLayoutGrid: () => {},
+  setLocalData: () => {},
+  performSearch: () => {},
+  setSearchQuery: () => {},
+  syncLocalSettings: () => {},
   selectedFont: TFont.Roboto,
   currentBibleVersion: EBibleVersions.BIBLE,
   fontSize: 24,
@@ -218,7 +218,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const historyManager = useHistoryManager();
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
-  const fontsLoaded = useCustomFonts();
+  const fontsLoaded = useBibleFonts();
   const {
     myBibleDB,
     executeSql,
@@ -232,7 +232,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   );
   const [orientation, setOrientation] = useState("PORTRAIT");
   const { addFavoriteVerse, removeFavoriteVerse } = useFavoriteVerseService();
-  const logo = require('../assets/images/icon.png')
+  const logo = require("../assets/images/icon.png");
 
   const getOrientation = () => {
     const { height, width } = Dimensions.get("window");
@@ -305,7 +305,15 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     !isMyBibleDbLoaded
   ) {
     return (
-      <ScreenWithAnimation imageSource={logo} isVisible titleColor={'white'} backgroundColor='#0d3f3e' iconColor='white' title="Cargando..." icon="BookPlus">
+      <ScreenWithAnimation
+        imageSource={logo}
+        isVisible
+        titleColor={"white"}
+        backgroundColor="#0d3f3e"
+        iconColor="white"
+        title=""
+        icon="BookPlus"
+      >
         <></>
       </ScreenWithAnimation>
     );
@@ -345,7 +353,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
       bibleState$.toggleReloadFavorites();
     }
   };
-
 
   const onSaveNote = async (
     data: { title: string; content: string },
