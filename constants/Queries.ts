@@ -246,6 +246,7 @@ type TQuery = {
   GET_SUBTITLE_BY_BOOK_AND_CHAPTER: string;
   SEARCH_TEXT_QUERY: string;
   GET_VERSES_FOR_CONCORDANCIA: string;
+  GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE: string;
 };
 
 export const QUERY_BY_DB: { [key in string]: TQuery } = {
@@ -256,6 +257,7 @@ export const QUERY_BY_DB: { [key in string]: TQuery } = {
     GET_SUBTITLE_BY_BOOK_AND_CHAPTER: `Select * from subheadings where book_number = ? and chapter = ?;`,
     SEARCH_TEXT_QUERY: SEARCH_TEXT_QUERY_NEW,
     GET_VERSES_FOR_CONCORDANCIA,
+    GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE: GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE,
   },
   [EBibleVersions.NTV]: {
     GET_VERSE_NUMBER_QUERY: `SELECT COUNT(v.verse) AS verse_count FROM books b LEFT JOIN verses v ON b.book_number = v.book_number
@@ -265,6 +267,7 @@ export const QUERY_BY_DB: { [key in string]: TQuery } = {
     GET_SUBTITLE_BY_BOOK_AND_CHAPTER: `Select * from stories where book_number = ? and chapter = ?;`,
     SEARCH_TEXT_QUERY: `SELECT v.*, b.long_name as bookName FROM verses v inner join books b on b.book_number = v.book_number where`,
     GET_VERSES_FOR_CONCORDANCIA: GET_VERSES_FOR_CONCORDANCIA_OTHERS,
+    GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE: GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE,
   },
   OTHERS: {
     GET_VERSE_NUMBER_QUERY: `SELECT COUNT(v.verse) AS verse_count FROM books b LEFT JOIN verses v ON b.book_number = v.book_number
@@ -274,5 +277,6 @@ export const QUERY_BY_DB: { [key in string]: TQuery } = {
     GET_SUBTITLE_BY_BOOK_AND_CHAPTER: `Select * from stories where book_number = ? and chapter = ?;`,
     SEARCH_TEXT_QUERY: `SELECT v.*, b.long_name as bookName FROM verses v inner join books b on b.book_number = v.book_number where`,
     GET_VERSES_FOR_CONCORDANCIA: GET_VERSES_FOR_CONCORDANCIA_OTHERS,
+    GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE: GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE,
   },
 };

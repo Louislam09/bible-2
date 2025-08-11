@@ -7,7 +7,13 @@ import { useDBContext } from "@/context/databaseContext";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
-import { DictionaryData, IStrongWord, Screens, TTheme } from "@/types";
+import {
+  DictionaryData,
+  EBibleVersions,
+  IStrongWord,
+  Screens,
+  TTheme,
+} from "@/types";
 import { use$ } from "@legendapp/state/react";
 import React, {
   FC,
@@ -27,6 +33,8 @@ import {
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { Text, View } from "../../Themed";
+import useBibleDb from "@/hooks/useBibleDb";
+import { useBibleContext } from "@/context/BibleContext";
 
 type HeaderAction = {
   iconName: IconProps["name"];
@@ -71,6 +79,10 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
   const { createAndShareTextFile, printToFile } = usePrintAndShare();
   const animatedScaleIcon = useRef(new Animated.Value(1)).current;
   const HTML_DATA = htmlTemplate(values, theme.colors, fontSize);
+  const { currentBibleVersion } = useBibleContext();
+  const isInterlineal = currentBibleVersion === EBibleVersions.INTERLINEAL;
+
+  const { executeSql: executeSqlBible } = useBibleDb({ databaseId: "bible" });
 
   useEffect(() => {
     const loopAnimation = Animated.loop(
@@ -111,10 +123,9 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
       if (!isMyBibleDbLoaded || !strongCode) return;
 
       try {
-        const dictionaryData = await executeSql(
-          SEARCH_STRONG_WORD,
-          strongCode.split(",")
-        );
+        const dictionaryData = isInterlineal
+          ? await executeSqlBible(SEARCH_STRONG_WORD, strongCode.split(","))
+          : await executeSql(SEARCH_STRONG_WORD, strongCode.split(","));
 
         if (dictionaryData?.length) {
           setValues(dictionaryData as DictionaryData[]);

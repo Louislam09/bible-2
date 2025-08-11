@@ -35,6 +35,7 @@ export const bibleState$ = observable({
   verseWithAiAnimation: 0,
   verseToCompare: 0,
   verseToExplain: { text: "", reference: "" },
+  verseToInterlinear: { book_number: 0, chapter: 0, verse: 0 },
   isVerseDoubleTagged: false,
   selectedVerses: observable(new Map<number, IBookVerse>()),
   selectedVerseForNote: observable<string | null>(null),
@@ -155,5 +156,8 @@ export const bibleState$ = observable({
   },
   handleVerseWithAiAnimation: (verseNumber: number) => {
     bibleState$.verseWithAiAnimation.set(verseNumber);
+  },
+  handleVerseToInterlinear: (verse: { book_number: number; chapter: number; verse: number }) => {
+    bibleState$.verseToInterlinear.set(verse);
   },
 });

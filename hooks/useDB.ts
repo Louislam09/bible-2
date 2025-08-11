@@ -312,6 +312,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
         if (database) {
           await database.closeAsync();
         }
+        // setDatabase(null);
         if (!dbName) return;
         const db = await openDatabase(dbName);
 

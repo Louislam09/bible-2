@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { TFont, TTheme } from "@/types";
 import { useBibleContext } from "@/context/BibleContext";
-
+import Translator, { useTranslator } from "react-native-translator";
+import { LANGUAGE_CODES, TRANSLATOR_TYPES } from "react-native-translator";
+import { bibleState$ } from "@/state/bibleState";
+import { modalState$ } from "@/state/modalState";
+import { parseText } from "@/utils/interleanerHelper";
 interface VerseItem {
   book_number: number;
   chapter: number;
@@ -16,50 +20,126 @@ interface Props {
   item: VerseItem;
 }
 
+interface Segment {
+  key: number;
+  hebrew: string;
+  strong: string;
+  translit: string;
+  english: string;
+  spanish: string;
+}
+
+// const parseText = (text: string) => {
+//   //   const regex = /<e>(.*?)<\/e>\s*<S>(.*?)<\/S>\s*<n>(.*?)<\/n>\s*([^<]*)\s*<ns>(.*?)<\/ns>/g;
+//   const regex =
+//     /<e>(.*?)<\/e>\s*<S>(.*?)<\/S>\s*<n>(.*?)<\/n>\s*([^<]*)\s*(?:<ns>(.*?)<\/ns>)?/g;
+//   let match;
+//   const segments: Segment[] = [];
+//   let index = 0;
+
+//   while ((match = regex.exec(text)) !== null) {
+//     const [_, hebrew, strong, translit, english, spanish] = match;
+//     segments.push({
+//       key: index++,
+//       hebrew,
+//       strong,
+//       translit,
+//       english: english?.trim() || "",
+//       spanish: spanish?.trim() || "",
+//     });
+//   }
+
+//   return segments;
+// };
+
 const HebrewVerse: React.FC<Props> = ({ item }) => {
   const theme = useTheme();
   const { currentBibleVersion, fontSize } = useBibleContext();
   const styles = getStyles(theme, 16);
+  const segments = useMemo(() => parseText(item.text), [item.text]);
+  const [translations, setTranslations] = useState<{ [key: string]: string }>(
+    {}
+  );
+  const { translate } = useTranslator();
 
-  const renderParsedText = () => {
-    const regex = /<e>(.*?)<\/e>\s*<S>(.*?)<\/S>\s*<n>(.*?)<\/n>\s*([^<]*)/g;
-    const segments = [];
-    let match;
-    let index = 0;
+  const getTranslations = useCallback(async (segment: Segment) => {
+    const translation = await translate("en", "es", segment.english);
+    setTranslations((prev) => ({
+      ...prev,
+      [segment.english.trim()]: translation,
+    }));
+  }, []);
 
-    while ((match = regex.exec(item.text)) !== null) {
-      const [_, hebrew, strong, translit, english] = match;
+  const handlePress = useCallback((segment: Segment) => {
+    console.log("pressed", { segment });
+  }, []);
 
-      segments.push(
-        <TouchableOpacity
-          key={index++}
-          style={styles.wordColumn}
-          onPress={() => {
-            console.log("pressed", { hebrew, strong, translit, english });
-          }}
-        >
-          {/* Lexical Identifier (Strong's Number) */}
-          <Text style={styles.lexicalId}>{strong}</Text>
+  const onStrongPress = useCallback((segment: Segment) => {
+    const NT_BOOK_NUMBER = 470;
+    const cognate = item.book_number < NT_BOOK_NUMBER ? "H" : "G";
 
-          {/* Transliteration */}
-          <Text style={styles.transliteration}>{translit}</Text>
+    const addCognate = (tagValue: string) =>
+      tagValue
+        .split(",")
+        .map((code) => `${cognate}${code}`)
+        .join(",");
 
-          {/* Hebrew Script */}
-          <Text style={styles.hebrewScript}>{hebrew}</Text>
+    const searchCode = addCognate(segment.strong || "");
+    const value = {
+      text: segment.hebrew,
+      code: searchCode,
+    };
+    bibleState$.handleStrongWord(value);
+    modalState$.openStrongSearchBottomSheet();
+  }, []);
 
-          {/* English Translation */}
-          <Text style={styles.englishTranslation}>{english.trim() || "-"}</Text>
-        </TouchableOpacity>
-      );
-    }
-
-    return segments;
-  };
+  const onEnglishPress = useCallback((segment: Segment) => {
+    console.log("onEnglishPress", { segment });
+    getTranslations(segment);
+  }, []);
 
   return (
     <View style={styles.container}>
       <Text style={[styles.reference]}>{item.verse}</Text>
-      <View style={styles.wordsGrid}>{renderParsedText()}</View>
+      {/* <View style={styles.wordsGrid}>{renderParsedText()}</View> */}
+      <View style={styles.wordsGrid}>
+        {segments.map((segment) => (
+          <View key={segment.key} style={styles.wordColumn}>
+            <Text
+              style={styles.lexicalId}
+              onPress={() => onStrongPress(segment)}
+            >
+              {segment.strong}
+            </Text>
+            <Text
+              style={styles.transliteration}
+              onPress={() => handlePress(segment)}
+            >
+              {segment.translit}
+            </Text>
+            <Text
+              style={styles.hebrewScript}
+              onPress={() => handlePress(segment)}
+            >
+              {segment.hebrew}
+            </Text>
+            <Text
+              style={styles.englishTranslation}
+              onPress={() => onEnglishPress(segment)}
+            >
+              {translations[segment.english] || segment.english || "-"}
+            </Text>
+            {segment.spanish && (
+              <Text
+                style={styles.spanishTranslation}
+                onPress={() => onEnglishPress(segment)}
+              >
+                {segment.spanish || "-"}
+              </Text>
+            )}
+          </View>
+        ))}
+      </View>
     </View>
   );
 };
@@ -74,11 +154,15 @@ const getStyles = ({ colors }: TTheme, fontSize: number) =>
       alignItems: "flex-end",
     },
     reference: {
-      fontSize: fontSize,
+      fontSize: fontSize + 7,
       color: colors.notification,
-      textAlign: "left",
-      marginTop: 8,
+      textAlign: "right",
+      marginVertical: 10,
       fontWeight: "bold",
+      backgroundColor: colors.notification + 30,
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+      borderRadius: 4,
     },
     wordsGrid: {
       flexDirection: "row-reverse",
@@ -118,6 +202,13 @@ const getStyles = ({ colors }: TTheme, fontSize: number) =>
     englishTranslation: {
       fontSize: fontSize + 2,
       color: colors.notification,
+      marginBottom: 4,
+      textAlign: "center",
+      flexWrap: "wrap",
+    },
+    spanishTranslation: {
+      fontSize: fontSize + 2,
+      color: colors.notification + 99,
       marginBottom: 4,
       textAlign: "center",
       flexWrap: "wrap",

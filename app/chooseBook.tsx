@@ -8,6 +8,7 @@ import { bibleState$ } from "@/state/bibleState";
 import {
   BookIndexes,
   ChooseChapterNumberParams,
+  EBibleVersions,
   IDBBookNames,
   Screens,
   TTheme,
@@ -132,8 +133,10 @@ const ChooseBook: React.FC = () => {
   const isShowName = use$(() => storedData$.isShowName.get());
   const { book } = routeParam;
   const theme = useTheme();
-  const { viewLayoutGrid, toggleViewLayoutGrid } = useBibleContext();
+  const { viewLayoutGrid, toggleViewLayoutGrid, currentBibleVersion } =
+    useBibleContext();
   const isBottomSideSearching = bibleState$.isBottomBibleSearching.get();
+  const isInterlineal = currentBibleVersion === EBibleVersions.INTERLINEAL;
 
   const handlePress = useCallback(
     (item: IDBBookNames) => {
@@ -208,20 +211,27 @@ const ChooseBook: React.FC = () => {
             startIndex={0}
             theme={theme}
           />
-          <Text
-            style={[styles.sectionTitle, { color: theme.colors.notification }]}
-          >
-            {"Nuevo Pacto"}
-          </Text>
-          <BookList
-            data={newTestamentBooks}
-            viewLayoutGrid={viewLayoutGrid}
-            isShowName={isShowName}
-            book={book as string}
-            onBookPress={handlePress}
-            startIndex={BookIndexes.Malaquias}
-            theme={theme}
-          />
+          {!isInterlineal && (
+            <>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  { color: theme.colors.notification },
+                ]}
+              >
+                {"Nuevo Pacto"}
+              </Text>
+              <BookList
+                data={newTestamentBooks}
+                viewLayoutGrid={viewLayoutGrid}
+                isShowName={isShowName}
+                book={book as string}
+                onBookPress={handlePress}
+                startIndex={BookIndexes.Malaquias}
+                theme={theme}
+              />
+            </>
+          )}
         </View>
       </ScrollView>
     </View>
