@@ -140,7 +140,7 @@ const extractAndSaveFiles = async (
           fileName,
           newExt: getDatabaseExt(databaseType),
         });
-
+        console.log({ newFileName, databaseType, fileName })
         await saveFileToPhone(newFileName, fileContent, extractionPath);
         filesExtracted++;
       }

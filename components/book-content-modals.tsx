@@ -1,23 +1,21 @@
+import AiVerseExplanationContent from "@/components/ai/AiVerseExplanationContent";
 import BottomModal from "@/components/BottomModal";
 import CompareVersions from "@/components/CompareVersions";
 import DictionaryContent from "@/components/DictionaryContent";
-import AiVerseExplanationContent from "@/components/ai/AiVerseExplanationContent";
+import { getBookDetail } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { useGoogleAI } from "@/hooks/useGoogleAI";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
-import { EBibleVersions, IBookVerse, TTheme } from "@/types";
+import { IBookVerseInterlinear, TTheme } from "@/types";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
 import { useNavigation, useTheme } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
-import StrongContent from "./home/content/StrongContent";
 import HebrewVerse from "./home/content/HebrewVerse";
+import StrongContent from "./home/content/StrongContent";
 import { Text } from "./Themed";
-import useBibleDb from "@/hooks/useBibleDb";
-import { QUERY_BY_DB } from "@/constants/Queries";
-import { getBookDetail } from "@/constants/BookNames";
 
 const mockVerse = {
   book_number: 10,
@@ -35,38 +33,11 @@ const BookContentModals = ({ book, chapter }: any) => {
   const aiResponse = useGoogleAI();
   const verse = use$(() => bibleState$.verseToExplain.get());
   const verseToInterlinear = use$(() => bibleState$.verseToInterlinear.get());
-  const { executeSql: executeSqlBible } = useBibleDb({
-    databaseId: EBibleVersions.INTERLINEAL,
-  });
-
-  const [interlinealVerse, setInterlinealVerse] = useState<IBookVerse>();
 
   useEffect(() => {
     if (aiResponse.loading) return;
     if (verse.text) aiResponse.fetchExplanation(verse);
   }, [verse, aiResponse]);
-
-  useEffect(() => {
-    const fetchInterlineal = async () => {
-      const { book_number, chapter, verse } = verseToInterlinear;
-      if (!book_number || !chapter || !verse) return;
-
-      console.log("fetchInterlineal", {
-        book_number,
-        chapter,
-        verse,
-      });
-
-      const query = QUERY_BY_DB.OTHERS;
-      const verses = await executeSqlBible(
-        query.GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE,
-        [book_number, chapter || 1, verse || 1],
-        "verses"
-      );
-      setInterlinealVerse(verses?.[0] as IBookVerse);
-    };
-    fetchInterlineal();
-  }, [verseToInterlinear]);
 
   return (
     <>
@@ -102,6 +73,7 @@ const BookContentModals = ({ book, chapter }: any) => {
             book_number: 0,
             chapter: 0,
             verse: 0,
+            text: {} as IBookVerseInterlinear,
           })
         }
       >
@@ -119,7 +91,7 @@ const BookContentModals = ({ book, chapter }: any) => {
             {getBookDetail(verseToInterlinear.book_number)?.longName || ""}
             {` ${verseToInterlinear.chapter}:${verseToInterlinear.verse}`}
           </Text>
-          {interlinealVerse && <HebrewVerse item={interlinealVerse as any} />}
+          <HebrewVerse item={verseToInterlinear.text as any} />
         </BottomSheetScrollView>
       </BottomSheet>
 

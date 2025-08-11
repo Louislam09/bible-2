@@ -1,4 +1,4 @@
-import { IBibleLink, IBookVerse, IStrongWord } from "@/types";
+import { IBibleLink, IBookVerse, IBookVerseInterlinear, IStrongWord } from "@/types";
 import { getChapterTextRaw } from "@/utils/getVerseTextRaw";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { batch, observable } from "@legendapp/state";
@@ -21,6 +21,7 @@ type BibleData = {
   bottomVerses: IBookVerse[];
   topLinks?: IBibleLink[];
   bottomLinks?: IBibleLink[];
+  interlinearVerses?: IBookVerse[];
 };
 
 export function getReadingTime(verses: IBookVerse[], wordsPerMinute = 200) {
@@ -35,7 +36,12 @@ export const bibleState$ = observable({
   verseWithAiAnimation: 0,
   verseToCompare: 0,
   verseToExplain: { text: "", reference: "" },
-  verseToInterlinear: { book_number: 0, chapter: 0, verse: 0 },
+  verseToInterlinear: {
+    book_number: 0,
+    chapter: 0,
+    verse: 0,
+    text: {} as IBookVerseInterlinear,
+  },
   isVerseDoubleTagged: false,
   selectedVerses: observable(new Map<number, IBookVerse>()),
   selectedVerseForNote: observable<string | null>(null),
@@ -61,7 +67,7 @@ export const bibleState$ = observable({
     shouldFetch: true,
   },
   isDataLoading: { top: true, bottom: false },
-  bibleData: { topVerses: [], bottomVerses: [], topLinks: [], bottomLinks: [] } as BibleData,
+  bibleData: { topVerses: [], bottomVerses: [], topLinks: [], bottomLinks: [], interlinearVerses: [] } as BibleData,
   readingTimeData: { top: 0, bottom: 0 },
   changeBibleQuery: (query: Partial<IBibleQuery>) => {
     // console.log("🟡 ChangeBibleQuery 🟡");
@@ -157,7 +163,12 @@ export const bibleState$ = observable({
   handleVerseWithAiAnimation: (verseNumber: number) => {
     bibleState$.verseWithAiAnimation.set(verseNumber);
   },
-  handleVerseToInterlinear: (verse: { book_number: number; chapter: number; verse: number }) => {
+  handleVerseToInterlinear: (verse: {
+    book_number: number;
+    chapter: number;
+    verse: number;
+    text: IBookVerseInterlinear;
+  }) => {
     bibleState$.verseToInterlinear.set(verse);
   },
 });

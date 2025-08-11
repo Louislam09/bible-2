@@ -167,10 +167,13 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
       await db.execAsync("PRAGMA synchronous = OFF");
       await db.execAsync("PRAGMA temp_store = MEMORY");
       await db.execAsync("PRAGMA cache_size = 16384");
+      console.log({ _dbName })
 
-      await createTables(db);
-      await checkAndCreateColumn(db, "notes", "uuid", "TEXT");
-      await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
+      if (_dbName?.id !== "interlinear-bible") {
+        await createTables(db);
+        await checkAndCreateColumn(db, "notes", "uuid", "TEXT");
+        await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
+      }
 
       if (isMounted.current) {
         setDatabase(db);

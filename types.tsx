@@ -244,6 +244,7 @@ export enum TFont {
 export enum EBibleVersions {
   BIBLE = "bible",
   NTV = "ntv-bible",
+  INT = "interlinear-bible",
   INTERLINEAL = "HSB+",
 }
 
@@ -365,6 +366,15 @@ export interface IBookVerse {
   verse: number;
   subheading: string[];
   is_favorite: any;
+  id?: any;
+  intText?: string;
+}
+export interface IBookVerseInterlinear {
+  book_number: number;
+  chapter: number;
+  text: string;
+  verse: number;
+  is_favorite?: any;
   id?: any;
 }
 

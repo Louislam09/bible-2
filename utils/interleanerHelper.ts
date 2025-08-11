@@ -28,14 +28,16 @@ interface Segment {
 
 export const parseText = (text: string) => {
     //   const regex = /<e>(.*?)<\/e>\s*<S>(.*?)<\/S>\s*<n>(.*?)<\/n>\s*([^<]*)\s*<ns>(.*?)<\/ns>/g;
-    const regex =
-        /<e>(.*?)<\/e>\s*<S>(.*?)<\/S>\s*<n>(.*?)<\/n>\s*([^<]*)\s*(?:<ns>(.*?)<\/ns>)?/g;
+    // const regex =
+    //     /<e>(.*?)<\/e>\s*<S>(.*?)<\/S>\s*<n>(.*?)<\/n>\s*([^<]*)\s*(?:<ns>(.*?)<\/ns>)?/g;
+    const regex = /<e>(.*?)<\/e>\s*<S>(.*?)<\/S>\s*(?:<ns>(.*?)<\/ns>)?\s*<n>(.*?)<\/n>\s*([^<]*)/g;
+
     let match;
     const segments: Segment[] = [];
     let index = 0;
 
     while ((match = regex.exec(text)) !== null) {
-        const [_, hebrew, strong, translit, english, spanish] = match;
+        const [_, hebrew, strong, spanish, translit, english] = match;
         segments.push({
             key: index++,
             hebrew,

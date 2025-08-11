@@ -80,7 +80,10 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
   const animatedScaleIcon = useRef(new Animated.Value(1)).current;
   const HTML_DATA = htmlTemplate(values, theme.colors, fontSize);
   const { currentBibleVersion } = useBibleContext();
-  const isInterlineal = currentBibleVersion === EBibleVersions.INTERLINEAL;
+  const isInterlineal = [
+    EBibleVersions.INT,
+    EBibleVersions.INTERLINEAL,
+  ].includes(currentBibleVersion as EBibleVersions);
 
   const { executeSql: executeSqlBible } = useBibleDb({ databaseId: "bible" });
 

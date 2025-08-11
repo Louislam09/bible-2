@@ -1,5 +1,5 @@
 import { useTheme } from "@react-navigation/native";
-import { LinearGradient } from 'expo-linear-gradient';
+import { LinearGradient } from "expo-linear-gradient";
 import React, { FC, useCallback, useMemo, useRef } from "react";
 import {
   StyleSheet,
@@ -24,9 +24,9 @@ import { useNavigation, useRouter } from "expo-router";
 import ProgressBar from "../footer/ProgressBar";
 import VersionList from "./VersionList";
 
-interface HeaderInterface { }
+interface HeaderInterface {}
 
-const BibleHeader: FC<HeaderInterface> = ({ }) => {
+const BibleHeader: FC<HeaderInterface> = ({}) => {
   const { width } = useWindowDimensions();
   const {
     currentBibleVersion,
@@ -38,7 +38,9 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
 
   const isSplitActived = use$(() => bibleState$.isSplitActived.get());
   const verses = use$(() => bibleState$.bibleData.topVerses.get());
-  const currentHistoryIndexState = use$(() => bibleState$.currentHistoryIndex.get());
+  const currentHistoryIndexState = use$(() =>
+    bibleState$.currentHistoryIndex.get()
+  );
 
   const {
     goBack,
@@ -60,7 +62,10 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
   const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
-  const isInterlineal = currentBibleVersion === EBibleVersions.INTERLINEAL
+  const isInterlineal = [
+    EBibleVersions.INT,
+    EBibleVersions.INTERLINEAL,
+  ].includes(currentBibleVersion as EBibleVersions);
   const canGoForward = !(currentHistoryIndex === history?.length - 1);
   const canGoBackward = currentHistoryIndex !== 0;
   const { installedBibles } = useDBContext();
@@ -144,7 +149,11 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
 
   return (
     <LinearGradient
-      colors={[theme.colors.background + 'ee', theme.colors.background + '99', 'transparent']}
+      colors={[
+        theme.colors.background + "ee",
+        theme.colors.background + "99",
+        "transparent",
+      ]}
       style={styles.header}
     >
       <View style={{ flexDirection: "row", backgroundColor: "transparent" }}>
@@ -187,7 +196,9 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
             color={theme.colors.primary}
           />
           {!isSmallSDevice && (
-            <Text style={styles.text}>{isInterlineal ? 'Interlineal' : currentVersionName.trim()}</Text>
+            <Text style={styles.text}>
+              {isInterlineal ? "Interlineal" : currentVersionName.trim()}
+            </Text>
           )}
         </TouchableOpacity>
         <BottomModal shouldScroll startAT={1} ref={versionRef}>

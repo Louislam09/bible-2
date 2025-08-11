@@ -21,6 +21,7 @@ import {
   WordTagPair,
 } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { mergeTexts } from "@/utils/interleanerHelper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
@@ -155,6 +156,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   const animatedVerseHighlight = useRef(new Animated.Value(0)).current;
   const wordAndStrongValue = extractWordsWithTags(item.text);
   const googleAIKey = use$(() => storedData$.googleAIKey.get());
+  const NT_BOOK_NUMBER = 470;
+  const isNewTestament = item.book_number >= NT_BOOK_NUMBER;
 
   // LEGEND STATE
   const isBottomBibleSearching = use$(
@@ -370,10 +373,21 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   const router = useRouter();
 
   const onInterlinear = () => {
+    const currentInterlinear =
+      bibleState$.bibleData.interlinearVerses.get()?.[item.verse - 1];
+    const mergeText = mergeTexts(item.text, currentInterlinear?.text || "");
+    // console.log("mergeText", currentInterlinear);
+
     bibleState$.handleVerseToInterlinear({
       book_number: item.book_number,
       chapter: item.chapter,
       verse: item.verse,
+      text: {
+        book_number: item.book_number,
+        chapter: item.chapter,
+        verse: item.verse,
+        text: mergeText,
+      },
     });
     modalState$.openInterlinealBottomSheet();
   };
@@ -391,6 +405,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         action: onInterlinear,
         description: "Interlinear",
         color: "#f79c67",
+        hide: isNewTestament,
       },
       {
         name: "Sparkles",
@@ -438,7 +453,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         description: "Comparar",
       },
     ] as TIcon[];
-  }, [verseIsTapped, isFavorite, item]);
+  }, [verseIsTapped, isFavorite, item, isNewTestament]);
 
   const steps = [
     {

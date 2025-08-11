@@ -55,7 +55,10 @@ const Chapter = ({
 
   const aspectRadio = height / width;
   const isMobile = +aspectRadio.toFixed(2) > 1.65;
-  const isInterlineal = currentBibleVersion === EBibleVersions.INTERLINEAL;
+  const isInterlineal = [
+    EBibleVersions.INT,
+    EBibleVersions.INTERLINEAL,
+  ].includes(currentBibleVersion as EBibleVersions);
 
   const renderItem = useCallback(
     ({ item }: any) =>

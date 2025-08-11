@@ -136,7 +136,10 @@ const ChooseBook: React.FC = () => {
   const { viewLayoutGrid, toggleViewLayoutGrid, currentBibleVersion } =
     useBibleContext();
   const isBottomSideSearching = bibleState$.isBottomBibleSearching.get();
-  const isInterlineal = currentBibleVersion === EBibleVersions.INTERLINEAL;
+  const isInterlineal = [
+    EBibleVersions.INT,
+    EBibleVersions.INTERLINEAL,
+  ].includes(currentBibleVersion as EBibleVersions);
 
   const handlePress = useCallback(
     (item: IDBBookNames) => {
@@ -184,7 +187,7 @@ const ChooseBook: React.FC = () => {
               onPress: () => toggleViewLayoutGrid(),
               onLongPress: handleLongPress,
               disabled: false,
-              style: { opacity: 1 },
+              style: { opacity: 0 },
             },
           }),
         }}
@@ -204,7 +207,7 @@ const ChooseBook: React.FC = () => {
           </Text>
           <BookList
             data={oldTestamentBooks}
-            viewLayoutGrid={viewLayoutGrid}
+            viewLayoutGrid
             isShowName={isShowName}
             book={book as string}
             onBookPress={handlePress}
@@ -223,7 +226,7 @@ const ChooseBook: React.FC = () => {
               </Text>
               <BookList
                 data={newTestamentBooks}
-                viewLayoutGrid={viewLayoutGrid}
+                viewLayoutGrid
                 isShowName={isShowName}
                 book={book as string}
                 onBookPress={handlePress}

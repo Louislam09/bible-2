@@ -13,7 +13,7 @@ import {
   Alert,
   RefreshControl,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import Icon from "./Icon";
 import { Text, View } from "./Themed";
@@ -25,15 +25,20 @@ const FileList = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const { refreshDatabaseList, installedBibles, installedDictionary, reDownloadDatabase } =
-    useDBContext();
+  const {
+    refreshDatabaseList,
+    installedBibles,
+    installedDictionary,
+    reDownloadDatabase,
+    interlinearService,
+  } = useDBContext();
   const { selectBibleVersion, fontSize } = useBibleContext();
 
   const extractionPath = `${FileSystem.documentDirectory}SQLite/`;
 
   const fetchFiles = async () => {
     const fileList = await FileSystem.readDirectoryAsync(extractionPath);
-    console.log(fileList)
+    console.log(fileList);
     // for (const file of fileList) {
     //   const fileUri = `${extractionPath}${file}`;
     //   await FileSystem.deleteAsync(fileUri, { idempotent: true });
@@ -41,7 +46,9 @@ const FileList = () => {
     // }
     // console.log(fileList);
     try {
-      setFiles(fileList.filter((file) => file.endsWith(".db") || file.endsWith(".zip")));
+      setFiles(
+        fileList.filter((file) => file.endsWith(".db") || file.endsWith(".zip"))
+      );
     } catch (err) {
       setError("Error fetching files");
       console.error("Error fetching files:", err);
@@ -68,7 +75,7 @@ const FileList = () => {
       [
         {
           text: "Cancelar",
-          style: "cancel"
+          style: "cancel",
         },
         {
           text: "Eliminar",
@@ -83,8 +90,8 @@ const FileList = () => {
               setError("Error deleting file");
               console.error("Error deleting file:", err);
             }
-          }
-        }
+          },
+        },
       ]
     );
   };
@@ -95,7 +102,11 @@ const FileList = () => {
 
   const EmptyComponent = () => (
     <View style={styles.emptyContainer}>
-      <Ionicons name="folder-open-outline" size={80} color={theme.colors.border} />
+      <Ionicons
+        name="folder-open-outline"
+        size={80}
+        color={theme.colors.border}
+      />
       <Text style={styles.emptyTitle}>No tienes módulos instalados</Text>
       <Text style={styles.emptySubtitle}>
         Descarga módulos bíblicos y diccionarios desde la pestaña "Módulos"
@@ -107,10 +118,7 @@ const FileList = () => {
     <View style={styles.errorContainer}>
       <Ionicons name="alert-circle-outline" size={60} color="#e74856" />
       <Text style={styles.errorText}>{error}</Text>
-      <TouchableOpacity
-        style={styles.retryButton}
-        onPress={fetchFiles}
-      >
+      <TouchableOpacity style={styles.retryButton} onPress={fetchFiles}>
         <Text style={styles.retryButtonText}>Reintentar</Text>
       </TouchableOpacity>
     </View>
@@ -126,6 +134,13 @@ const FileList = () => {
   );
 
   const refreshDatabase = async (dbName: VersionItem) => {
+    if (dbName.id === "interlinear-bible") {
+      Alert.alert(
+        "Actualizar módulo",
+        `¿Quieres descargar de nuevo "${dbName.name}"? Esto reemplazará los datos actuales de la biblia, notas, favoritos, etc.`
+      );
+      return;
+    }
     Alert.alert(
       "Actualizar módulo",
       `¿Quieres descargar de nuevo "${dbName.name}"? Esto reemplazará los datos actuales de la biblia, notas, favoritos, etc.`,
@@ -159,16 +174,28 @@ const FileList = () => {
     );
   };
 
-  const renderItem = ({ item, index }: { item: VersionItem; index: number }) => {
-    const versionItem = item
+  const renderItem = ({
+    item,
+    index,
+  }: {
+    item: VersionItem;
+    index: number;
+  }) => {
+    const versionItem = item;
     const allowDelete = !defaultDatabases.includes(versionItem?.id as string);
     const isBible = index < installedBibles.length;
 
     return (
       <View>
-        {index === 0 && renderSection("Biblias & Diccionarios", installedBibles.length + (installedDictionary.length || 0))}
+        {index === 0 &&
+          renderSection(
+            "Biblias & Diccionarios",
+            installedBibles.length + (installedDictionary.length || 0)
+          )}
 
-        <View style={[styles.itemContainer, !allowDelete && styles.defaultItem]}>
+        <View
+          style={[styles.itemContainer, !allowDelete && styles.defaultItem]}
+        >
           <View style={styles.itemIconContainer}>
             <Ionicons
               name={isBible ? "book-outline" : "library-outline"}
@@ -181,18 +208,18 @@ const FileList = () => {
             <Text
               style={[
                 styles.itemTitle,
-                !allowDelete && { color: theme.colors.notification }
+                !allowDelete && { color: theme.colors.notification },
               ]}
             >
-              {versionItem?.shortName || '-'}
+              {versionItem?.shortName || "-"}
             </Text>
             <Text
               style={[
                 styles.itemSubTitle,
-                !allowDelete && { color: theme.colors.text + "70" }
+                !allowDelete && { color: theme.colors.text + "70" },
               ]}
             >
-              {versionItem?.name || '-'}
+              {versionItem?.name || "-"}
             </Text>
             {!allowDelete && (
               <View style={styles.defaultBadge}>
@@ -206,11 +233,7 @@ const FileList = () => {
               style={styles.redownloadButton}
               onPress={() => refreshDatabase(versionItem!)}
             >
-              <Icon
-                name="RefreshCcw"
-                size={20}
-                color={theme.colors.primary}
-              />
+              <Icon name="RefreshCcw" size={20} color={theme.colors.primary} />
             </TouchableOpacity>
           )}
 
@@ -219,11 +242,7 @@ const FileList = () => {
               style={styles.deleteButton}
               onPress={() => deleteFile(item)}
             >
-              <Icon
-                name="Trash2"
-                size={20}
-                color="#e74856"
-              />
+              <Icon name="Trash2" size={20} color="#e74856" />
             </TouchableOpacity>
           )}
         </View>
@@ -279,9 +298,9 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: colors.card,
     },
     defaultItem: {
-      backgroundColor: colors.card + '80',
+      backgroundColor: colors.card + "80",
       borderWidth: 1,
-      borderColor: colors.notification + '30',
+      borderColor: colors.notification + "30",
     },
     itemIconContainer: {
       width: 40,
@@ -289,7 +308,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderRadius: 20,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: colors.notification + '20',
+      backgroundColor: colors.notification + "20",
       marginRight: 12,
     },
     itemContent: {

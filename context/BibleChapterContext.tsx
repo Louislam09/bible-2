@@ -5,7 +5,7 @@ import { QUERY_BY_DB } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { bibleState$, getReadingTime } from "@/state/bibleState";
-import { IBookVerse } from "@/types";
+import { EBibleVersions, IBookVerse } from "@/types";
 import { batch } from "@legendapp/state";
 import { use$ } from "@legendapp/state/react";
 import React, {
@@ -17,12 +17,14 @@ import React, {
 } from "react";
 import { useBibleContext } from "./BibleContext";
 
-interface BibleChapterContextProps { }
+interface BibleChapterContextProps {}
 
 const BibleChapterContext = createContext<BibleChapterContextProps>({});
 
 const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
-  const { executeSql, isMyBibleDbLoaded } = useDBContext();
+  const { executeSql, isMyBibleDbLoaded, interlinearService } = useDBContext();
+  const { isLoaded: interlinearIsLoaded, executeSql: executeSqlInterlinear } =
+    interlinearService;
 
   const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
   const isSplitActived = use$(() => bibleState$.isSplitActived.get());
@@ -31,6 +33,11 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     historyManager: { add: addToHistory, getCurrentItem },
     currentHistoryIndex,
   } = useBibleContext();
+
+  const isInterlineal = [
+    EBibleVersions.INT,
+    EBibleVersions.INTERLINEAL,
+  ].includes(currentBibleVersion as EBibleVersions);
 
   const fetchChapter = async () => {
     const bibleQuery = bibleState$.bibleQuery.get();
@@ -49,6 +56,7 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
       : chapter;
     const targetVerse = isBibleBottom ? bibleQuery.bottomSideVerse : verse;
     const currentBook = DB_BOOK_NAMES.find((x) => x.longName === targetBook);
+
     // console.log(
     //   `🟢 Fetching chapter 🟢 ${targetBook} ${targetChapter}:${targetVerse}`
     // );
@@ -57,12 +65,30 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     const query = QUERY_BY_DB[queryKey];
     const startTime = Date.now();
     try {
-      const verses = await executeSql<IBookVerse>(
-        query.GET_VERSES_BY_BOOK_AND_CHAPTER,
+      let verses: IBookVerse[] = [];
+      if (!isInterlineal) {
+        verses = await executeSql<IBookVerse>(
+          query.GET_VERSES_BY_BOOK_AND_CHAPTER,
+          [currentBook?.bookNumber, targetChapter || 1],
+          "verses"
+        );
+      }
+
+      const interlinearVerses = await executeSqlInterlinear<IBookVerse>(
+        query.GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_INTERLINEAR,
         [currentBook?.bookNumber, targetChapter || 1],
         "verses"
       );
-      const links = bibleLinks.filter((link) => link.book_number === currentBook?.bookNumber && link.chapter === targetChapter);
+
+      // console.log({
+      //   intLen: interlinearVerses.length,
+      //   verseLne: verses.length,
+      // });
+      const links = bibleLinks.filter(
+        (link) =>
+          link.book_number === currentBook?.bookNumber &&
+          link.chapter === targetChapter
+      );
 
       const endTime = Date.now();
       const executionTime = endTime - startTime;
@@ -75,7 +101,10 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
         storedData$[`${storageKey}Book`].set(targetBook);
         storedData$[`${storageKey}Chapter`].set(targetChapter);
         storedData$[`${storageKey}Verse`].set(targetVerse);
-        bibleState$.bibleData[`${bibleKey}Verses`].set(verses);
+        bibleState$.bibleData.interlinearVerses.set(interlinearVerses);
+        bibleState$.bibleData[`${bibleKey}Verses`].set(
+          isInterlineal ? interlinearVerses : verses
+        );
         bibleState$.bibleData[`${bibleKey}Links`].set(links);
         bibleState$.readingTimeData[bibleKey].set(getReadingTime(verses));
         bibleState$.isDataLoading[bibleKey].set(false);
@@ -113,10 +142,10 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
   }, [currentHistoryIndex]);
 
   useEffect(() => {
-    if (!isMyBibleDbLoaded) return;
+    if (!isMyBibleDbLoaded || !interlinearIsLoaded) return;
     if (!shouldFetch) return;
     fetchChapter();
-  }, [shouldFetch, isMyBibleDbLoaded]);
+  }, [shouldFetch, isMyBibleDbLoaded, interlinearIsLoaded]);
 
   const contextValue = useMemo(() => ({}), []);
   return (

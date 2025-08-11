@@ -1,16 +1,27 @@
 import ProgressBar from "@/components/home/footer/ProgressBar";
 import BibleHeader from "@/components/home/header/BibleHeader";
+import Icon from "@/components/Icon";
 import { useBibleContext } from "@/context/BibleContext";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import { bibleState$ } from "@/state/bibleState";
 import { use$ } from "@legendapp/state/react";
 import { useTheme } from "@react-navigation/native";
-import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { ActivityIndicator, Animated, StyleSheet } from "react-native";
 import Chapter from "./home/content/Chapter";
 import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
-import { View } from "./Themed";
+import { Text, View } from "./Themed";
+import { getBookDetail } from "@/constants/BookNames";
+import { EBibleVersions } from "@/types";
+import { storedData$ } from "@/context/LocalstoreContext";
 
 interface BibleTopProps {
   height: Animated.Value;
@@ -22,8 +33,17 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const { orientation } = useBibleContext();
   const isPortrait = orientation === "PORTRAIT";
   const isDataLoading = use$(() => bibleState$.isDataLoading.top.get());
-  // console.log(`🔝 BibleTop Component Rendered 🔄:${isDataLoading} `);
   const verses = bibleState$.bibleData.topVerses.get() ?? [];
+  const currentBook = bibleState$.bibleQuery.get().book;
+  const bookInfo = getBookDetail(currentBook);
+  const NT_BOOK_NUMBER = 470;
+  const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
+  const isInterlineal = [
+    EBibleVersions.INT,
+    EBibleVersions.INTERLINEAL,
+  ].includes(currentBibleVersion as EBibleVersions);
+  const isNewTestamentAndInterlinear =
+    bookInfo.bookNumber >= NT_BOOK_NUMBER && isInterlineal;
 
   const isSplitActived = bibleState$.isSplitActived.get();
   const {
@@ -57,8 +77,8 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const headerHeight = useRef(new Animated.Value(1)).current;
   const footerHeight = useRef(new Animated.Value(1)).current;
 
-  const handleScroll = useCallback((direction: 'up' | 'down') => {
-    const toValue = direction === 'up' ? 1 : 0;
+  const handleScroll = useCallback((direction: "up" | "down") => {
+    const toValue = direction === "up" ? 1 : 0;
     Animated.parallel([
       Animated.timing(headerHeight, {
         toValue,
@@ -100,9 +120,11 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const progressStyle = {
     transform: [{ translateY: progressTranslateY }],
     opacity: 1,
-  }
+  };
 
-  const currentHistoryIndexState = use$(() => bibleState$.currentHistoryIndex.get());
+  const currentHistoryIndexState = use$(() =>
+    bibleState$.currentHistoryIndex.get()
+  );
   const progressValue = useMemo(() => {
     return (currentHistoryIndexState || 0) / (verses?.length || 10);
   }, [currentHistoryIndexState, verses]);
@@ -112,28 +134,89 @@ const BibleTop: FC<BibleTopProps> = (props) => {
       <Animated.View style={[styles.header, headerStyle]}>
         <BibleHeader />
       </Animated.View>
-      {!isSplitActived && <Animated.View style={[styles.progressContainer, progressStyle]}>
-        <ProgressBar
-          hideCircle
-          height={4}
-          color={theme.colors.notification}
-          barColor={theme.colors.text}
-          progress={progressValue}
-          circleColor={theme.colors.notification}
-        />
-      </Animated.View>}
+      {!isSplitActived && (
+        <Animated.View style={[styles.progressContainer, progressStyle]}>
+          <ProgressBar
+            hideCircle
+            height={4}
+            color={theme.colors.notification}
+            barColor={theme.colors.text}
+            progress={progressValue}
+            circleColor={theme.colors.notification}
+          />
+        </Animated.View>
+      )}
       <SwipeWrapper {...{ onSwipeRight, onSwipeLeft }}>
         {isDataLoading ? (
           <ActivityIndicator />
-        ) : (<Chapter
-          verses={verses}
-          isSplit={false}
-          estimatedReadingTime={0}
-          initialScrollIndex={
-            initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
-          }
-          onScroll={handleScroll}
-        />
+        ) : isNewTestamentAndInterlinear ? (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              paddingHorizontal: 20,
+            }}
+          >
+            {/* Icon */}
+            <View style={{ marginBottom: 20 }}>
+              <Icon
+                name="BookType"
+                size={60}
+                color={theme.colors.text + "60"}
+              />
+            </View>
+
+            {/* Main Title */}
+            <Text
+              style={{
+                color: theme.colors.text,
+                fontSize: 18,
+                fontWeight: "600",
+                marginBottom: 12,
+                textAlign: "center",
+              }}
+            >
+              Interlinear no disponible
+            </Text>
+
+            {/* Description */}
+            <Text
+              style={{
+                color: theme.colors.text + "CC",
+                fontSize: 14,
+                lineHeight: 20,
+                marginBottom: 16,
+                textAlign: "center",
+              }}
+            >
+              Los versículos del Nuevo Pacto no están disponibles en formato
+              interlinear en este momento.
+            </Text>
+
+            {/* Action Text */}
+            <Text
+              style={{
+                color: theme.colors.notification,
+                fontSize: 14,
+                fontWeight: "500",
+                textAlign: "center",
+              }}
+            >
+              Selecciona un versículo del Antiguo Pacto para usar la función
+              interlinear
+            </Text>
+          </View>
+        ) : (
+          <Chapter
+            verses={verses}
+            isSplit={false}
+            estimatedReadingTime={0}
+            initialScrollIndex={
+              initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
+            }
+            onScroll={handleScroll}
+          />
         )}
       </SwipeWrapper>
       <Animated.View style={[styles.footer, footerStyle]}>
@@ -149,27 +232,27 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   header: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     zIndex: 1,
   },
   footer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
     zIndex: 1,
   },
   progressContainer: {
-    position: 'absolute',
+    position: "absolute",
     width: "100%",
     top: 0,
     left: 0,
     right: 0,
     zIndex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     paddingHorizontal: 8,
   },
 });

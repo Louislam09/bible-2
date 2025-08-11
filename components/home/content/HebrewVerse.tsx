@@ -123,18 +123,20 @@ const HebrewVerse: React.FC<Props> = ({ item }) => {
             >
               {segment.hebrew}
             </Text>
-            <Text
-              style={styles.englishTranslation}
-              onPress={() => onEnglishPress(segment)}
-            >
-              {translations[segment.english] || segment.english || "-"}
-            </Text>
-            {segment.spanish && (
+
+            {segment.spanish ? (
               <Text
                 style={styles.spanishTranslation}
                 onPress={() => onEnglishPress(segment)}
               >
                 {segment.spanish || "-"}
+              </Text>
+            ) : (
+              <Text
+                style={styles.englishTranslation}
+                onPress={() => onEnglishPress(segment)}
+              >
+                {translations[segment.english] || segment.english || "-"}
               </Text>
             )}
           </View>
@@ -208,7 +210,7 @@ const getStyles = ({ colors }: TTheme, fontSize: number) =>
     },
     spanishTranslation: {
       fontSize: fontSize + 2,
-      color: colors.notification + 99,
+      color: colors.notification,
       marginBottom: 4,
       textAlign: "center",
       flexWrap: "wrap",
