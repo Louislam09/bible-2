@@ -1,4 +1,3 @@
-// import { LANGUAGE_CODES } from "react-native-translator";
 
 export function mergeTexts(textStrong: string, textInterlenear: string) {
     // 1. Crear un mapa Strong → traducción española

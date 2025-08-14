@@ -15,7 +15,6 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import { TranslatorProvider } from "react-native-translator";
 import Verse from "./Verse";
 
 interface TChapter {
@@ -145,43 +144,41 @@ const Chapter = ({
   );
 
   return (
-    <TranslatorProvider>
-      <View style={styles.chapterContainer}>
-        <View style={[styles.verseContent]}>
-          <FlashList
-            ref={chapterRef}
-            keyExtractor={keyExtractor}
-            data={data ?? []}
-            // data={data.slice(0, 1)}
-            ListHeaderComponent={ListHeader}
-            renderItem={renderItem}
-            decelerationRate="normal"
-            estimatedItemSize={isMobile ? 162 : 100}
-            removeClippedSubviews
-            ListEmptyComponent={() => (
-              <LoadingComponent textColor={theme.colors.text} />
-            )}
-            initialScrollIndex={initialScrollIndex}
-            viewabilityConfigCallbackPairs={
-              viewabilityConfigCallbackPairs.current
-            }
-            onEndReachedThreshold={0.5}
-            disableAutoLayout
-            disableHorizontalListHeightMeasurement
-            ListHeaderComponentStyle={{ paddingTop: 70 }}
-            ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
+    <View style={styles.chapterContainer}>
+      <View style={[styles.verseContent]}>
+        <FlashList
+          ref={chapterRef}
+          keyExtractor={keyExtractor}
+          data={data ?? []}
+          // data={data.slice(0, 1)}
+          ListHeaderComponent={ListHeader}
+          renderItem={renderItem}
+          decelerationRate="normal"
+          estimatedItemSize={isMobile ? 162 : 100}
+          removeClippedSubviews
+          ListEmptyComponent={() => (
+            <LoadingComponent textColor={theme.colors.text} />
+          )}
+          initialScrollIndex={initialScrollIndex}
+          viewabilityConfigCallbackPairs={
+            viewabilityConfigCallbackPairs.current
+          }
+          onEndReachedThreshold={0.5}
+          disableAutoLayout
+          disableHorizontalListHeightMeasurement
+          ListHeaderComponentStyle={{ paddingTop: 70 }}
+          ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
           // decelerationRate="normal"
           // onEndReached={onEndReached}
           // maintainVisibleContentPosition={{
           //   minIndexForVisible: 0,
           //   autoscrollToTopThreshold: 10,
           // }}
-          />
-        </View>
+        />
       </View>
-    </TranslatorProvider>
+    </View>
   );
 };
 
