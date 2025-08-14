@@ -28,6 +28,7 @@ interface TChapter {
 
 interface TChapter {
   verses: IBookVerse[];
+  interlinearVerses: IBookVerse[];
   isSplit?: boolean;
   estimatedReadingTime: number;
   initialScrollIndex: number;
@@ -36,13 +37,13 @@ interface TChapter {
 
 const Chapter = ({
   verses,
+  interlinearVerses,
   isSplit,
   estimatedReadingTime,
   initialScrollIndex,
   onScroll,
 }: TChapter) => {
   const bibleSide = isSplit ? "bottom" : "top";
-  const data = verses ?? [];
 
   const { width, height } = useWindowDimensions();
   const theme = useTheme();
@@ -59,6 +60,8 @@ const Chapter = ({
     EBibleVersions.INT,
     EBibleVersions.INTERLINEAL,
   ].includes(currentBibleVersion as EBibleVersions);
+
+  const data = isInterlineal ? interlinearVerses : verses;
 
   const renderItem = useCallback(
     ({ item }: any) =>
@@ -169,12 +172,12 @@ const Chapter = ({
             ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
             onScroll={handleScroll}
             scrollEventThrottle={16}
-            // decelerationRate="normal"
-            // onEndReached={onEndReached}
-            // maintainVisibleContentPosition={{
-            //   minIndexForVisible: 0,
-            //   autoscrollToTopThreshold: 10,
-            // }}
+          // decelerationRate="normal"
+          // onEndReached={onEndReached}
+          // maintainVisibleContentPosition={{
+          //   minIndexForVisible: 0,
+          //   autoscrollToTopThreshold: 10,
+          // }}
           />
         </View>
       </View>

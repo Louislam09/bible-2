@@ -59,27 +59,27 @@ const DailyVerseTwo = ({ dailyVerseObject, theme, user }: DailyVerseProps) => {
 
     const { book_number, chapter, verse } =
       DAILY_VERSES[dayPassed] || defaultDailyObject;
-    (async () => {
-      try {
-        const response: any = await executeSql(
-          GET_DAILY_VERSE,
-          [book_number, chapter, verse],
-          "GET_DAILY_VERSE2"
-        );
-        const dailyVerseData = response?.length
-          ? response?.[0]
-          : defaultDailyVerse;
-        setDailyVerse(dailyVerseData);
+    // (async () => {
+    //   try {
+    //     const response: any = await executeSql(
+    //       GET_DAILY_VERSE,
+    //       [book_number, chapter, verse],
+    //       "GET_DAILY_VERSE2"
+    //     );
+    //     const dailyVerseData = response?.length
+    //       ? response?.[0]
+    //       : defaultDailyVerse;
+    //     setDailyVerse(dailyVerseData);
 
-        // Example of how to schedule a daily verse notification with the actual verse data
-        // Uncomment this if you want to schedule notifications when the component loads
-        // if (user) {
-        //   await scheduleDailyVerseNotification("08:00", user, executeSql);
-        // }
-      } catch (error) {
-        console.log(error);
-      }
-    })();
+    //     // Example of how to schedule a daily verse notification with the actual verse data
+    //     // Uncomment this if you want to schedule notifications when the component loads
+    //     // if (user) {
+    //     //   await scheduleDailyVerseNotification("08:00", user, executeSql);
+    //     // }
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // })();
   }, [isMyBibleDbLoaded, myBibleDB, dailyVerseObject]);
 
   return (

@@ -6,6 +6,7 @@ const guitar = require('../assets/lottie/guitar.json');
 const shelo = require('../assets/lottie/shelo.json');
 const guitarNotes = require('../assets/lottie/guitar-notes.json');
 const star = require('../assets/lottie/star.json');
+const searching = require('../assets/lottie/searching.json');
 
 export default {
   sing2,
@@ -16,4 +17,5 @@ export default {
   shelo,
   guitarNotes,
   star,
+  downloading: searching, // Using searching animation for downloading
 };

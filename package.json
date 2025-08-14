@@ -70,6 +70,7 @@
     "expo-task-manager": "~11.8.2",
     "expo-updates": "0.25.28",
     "expo-web-browser": "~13.0.3",
+    "fflate": "^0.8.2",
     "jszip": "^3.10.1",
     "lottie-react-native": "6.7.0",
     "lucide-react-native": "^0.438.0",

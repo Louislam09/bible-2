@@ -17,6 +17,8 @@ import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
 import { useEffect, useRef, useState } from "react";
 import { VersionItem } from "./useInstalledBible";
+import unzipFile from "@/utils/unzipFile";
+import { dbDownloadState$ } from "@/state/dbDownloadState";
 
 interface Row {
   [key: string]: any;
@@ -31,6 +33,7 @@ interface UseDatabase {
   ) => Promise<T[]>;
   loading: boolean;
   reDownloadDatabase: (_dbName?: VersionItem) => Promise<SQLite.SQLiteDatabase>
+  openDatabaseFromZip(databaseItem: VersionItem, isReDownload?: boolean): Promise<SQLite.SQLiteDatabase | undefined>
 }
 
 type TUseDatabase = {
@@ -40,6 +43,7 @@ type TUseDatabase = {
 enum DEFAULT_DATABASE {
   BIBLE = "bible",
   NTV = "ntv-bible",
+  INTERLINEAR = "interlinear-bible",
 }
 
 function useDB({ dbName }: TUseDatabase): UseDatabase {
@@ -57,21 +61,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
       const startTime = Date.now();
       if (!database || !dbInitialized.current) {
         return [];
-        // throw new Error("Database not initialized");
       }
-      // if (database) {
-      //   const valid = await isDatabaseValid(database);
-      //   console.log({ valid });
-
-      //   if (!valid) {
-      //     try {
-      //       await reDownloadDatabase();
-
-      //     } catch (error) {
-      //       console.log("Error re-downloading database:", error);
-      //     }
-      //   }
-      // }
 
       const statement = await database.prepareAsync(sql);
       try {
@@ -93,7 +83,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
     }
   };
 
-  async function isDatabaseValid(db: SQLite.SQLiteDatabase): Promise<boolean> {
+  async function isDatabaseValid(db: SQLite.SQLiteDatabase, tableNameToCheck: string): Promise<boolean> {
     if (!dbName) return false;
     const dbItemFilePath = dbName.path;
     const info = await FileSystem.getInfoAsync(dbItemFilePath);
@@ -109,7 +99,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
 
       const tableNames = tables.map((t: any) => t.name);
       // console.log("Tables in database:", tableNames);
-      return tableNames.includes("verses");
+      return tableNames.includes(tableNameToCheck);
     } catch (e) {
       console.error("Validation query failed:", e);
       return false;
@@ -189,6 +179,133 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
     }
   }
 
+  async function downloadZipFromAsset(asset: Asset, dbItemZipPath: string) {
+    let fileInfo = await FileSystem.getInfoAsync(dbItemZipPath);
+    if (fileInfo.exists) return dbItemZipPath;
+
+    let remoteURI = asset.localUri as string;
+    fileInfo = await FileSystem.getInfoAsync(dbItemZipPath);
+
+    if (!fileInfo.exists) {
+      await FileSystem.copyAsync({
+        from: remoteURI,
+        to: dbItemZipPath,
+      });
+    }
+
+    return dbItemZipPath;
+  }
+
+  async function openDatabaseFromZip(databaseItem: VersionItem, isReDownload: boolean = false) {
+    try {
+
+      if (isReDownload) {
+        dbDownloadState$.isDownloading.set(true);
+        dbDownloadState$.dbItem.set(databaseItem);
+
+        setDatabase(null);
+        isMounted.current = true;
+        bibleState$.isDataLoading.top.set(true);
+        if (database) {
+          await database.closeAsync();
+        }
+      }
+
+      const localFolder = SQLiteDirPath;
+      const databaseItemId = databaseItem.id;
+      const isDefaultDatabaseItem = isDefaultDatabase(databaseItemId);
+      const finalDatabasePath = isDefaultDatabaseItem ? `${databaseItem.id}.db` : `${databaseItem.id}${dbFileExt}`;
+      const dbItemFilePath = databaseItem.path;
+      const dbItemZipPath = `${localFolder}/${databaseItemId}.zip`;
+
+      // check folter existant if not create it
+      const dirInfo = await FileSystem.getInfoAsync(localFolder);
+      if (!dirInfo.exists) {
+        await FileSystem.makeDirectoryAsync(localFolder, { intermediates: true });
+      }
+
+      // check if the db already exist
+      console.log('Checking if the db already exist');
+      const dbInfo = await FileSystem.getInfoAsync(dbItemFilePath);
+
+      if (!dbInfo.exists) {
+        let asset;
+        // check download the zip
+        console.log('Database does not exist');
+
+        switch (databaseItemId) {
+          case DEFAULT_DATABASE.BIBLE:
+            asset = await Asset.fromModule(require("../assets/db/bible.zip")).downloadAsync();
+            break;
+          case DEFAULT_DATABASE.NTV:
+            asset = await Asset.fromModule(require("../assets/db/ntv-bible.zip")).downloadAsync();
+            break;
+          default:
+            asset = await Asset.fromModule(require("../assets/db/interlinear-bible.zip")).downloadAsync();
+            break;
+        }
+
+        await downloadZipFromAsset(asset, dbItemZipPath);
+
+        // Unzip, extract the db, save it and delete the zip
+        await unzipFile({
+          zipFileUri: dbItemZipPath,
+          onProgress: (msg) => {
+            dbDownloadState$.progressText.set(msg);
+            // Also update the global progress state
+            bibleState$.databaseProgress.set({
+              stage: 'extracting',
+              message: msg,
+              percentage: 50,
+              databaseName: databaseItem.name || databaseItem.id
+            });
+          },
+        });
+      }
+
+      // open the database
+      let db = await SQLite.openDatabaseAsync(finalDatabasePath);
+      if (isDefaultDatabaseItem) {
+        const isInterlinear = databaseItemId === DEFAULT_DATABASE.INTERLINEAR;
+
+        // check if the database is valid
+        const valid = await isDatabaseValid(db, isInterlinear ? "interlinear" : "verses");
+        console.log('Database is valid', valid)
+
+        if (!valid) {
+          // delete the database
+          await db.closeAsync();
+          await FileSystem.deleteAsync(dbItemFilePath, { idempotent: true });
+          await FileSystem.deleteAsync(`${dbItemFilePath}-wal`, { idempotent: true });
+          await FileSystem.deleteAsync(`${dbItemFilePath}-shm`, { idempotent: true });
+          return undefined
+        }
+      }
+
+      // Optimize the database
+      if (isDefaultDatabaseItem) {
+        try {
+          await db.execAsync("PRAGMA journal_mode = WAL");
+          // await db.execAsync("PRAGMA synchronous = NORMAL");
+          await db.execAsync("PRAGMA synchronous = OFF");
+          await db.execAsync("PRAGMA temp_store = MEMORY");
+          await db.execAsync("PRAGMA cache_size = 16384");
+          // await db.execAsync("PRAGMA cache_size = -10000");
+
+          showToast("✔");
+        } catch (error) {
+          console.warn("Error applying optimization settings:", error);
+        }
+      }
+
+      return db;
+    } catch (error) {
+      console.log("[Error] opening database from zip:", error);
+      showToast("❌ No se pudo abrir la base de datos");
+      throw error;
+    }
+  }
+
   async function openDatabase(databaseItem: VersionItem) {
     try {
       const localFolder = SQLiteDirPath;
@@ -224,7 +341,8 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
       let db = await SQLite.openDatabaseAsync(finalDatabasePath);
 
       if (isDefaultDatabaseItem) {
-        const valid = await isDatabaseValid(db);
+        const isInterlinear = databaseItemId === DEFAULT_DATABASE.INTERLINEAR;
+        const valid = await isDatabaseValid(db, isInterlinear ? "interlinear" : "verses");
         if (!valid && isDefaultDatabaseItem) {
           try {
             db = await reDownloadDatabase();
@@ -305,19 +423,17 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
   }
 
   useEffect(() => {
-    if (!dbName) return;
+    if (!dbName || dbName) return;
     async function initializeDatabase() {
       try {
-        // setLoading(false);
         setDatabase(null);
         isMounted.current = true;
         bibleState$.isDataLoading.top.set(true);
-        if (database) {
-          await database.closeAsync();
-        }
-        // setDatabase(null);
+
         if (!dbName) return;
-        const db = await openDatabase(dbName);
+
+        const db = await openDatabaseFromZip(dbName);
+        if (!db) return;
 
         await createTables(db);
         await checkAndCreateColumn(db, "notes", "uuid", "TEXT");
@@ -333,6 +449,11 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
         if (isMounted.current) {
           setLoading(true);
         }
+      } finally {
+        if (isMounted.current) {
+          setLoading(true);
+          bibleState$.isDataLoading.top.set(false);
+        }
       }
     }
 
@@ -342,12 +463,12 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
     return () => {
       isMounted.current = false;
       if (database) {
-        // database.closeAsync().catch(console.error);
+        database.closeAsync().catch(err => { });
       }
     };
   }, [dbName]);
 
-  return { executeSql, database, loading, reDownloadDatabase };
+  return { executeSql, database, loading, reDownloadDatabase, openDatabaseFromZip };
 }
 
 export default useDB;

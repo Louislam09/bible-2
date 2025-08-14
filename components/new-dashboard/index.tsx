@@ -23,6 +23,7 @@ import EmptyStateMessage from "../EmptyStateMessage";
 import VersionList from "../home/header/VersionList";
 import ProfileCard from "../UserProfile";
 import VoiceList from "../VoiceList";
+import DatabaseDebug from "../DatabaseDebug";
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
   manager: IDashboardOption[];
@@ -315,6 +316,7 @@ const SecondDashboard = () => {
   return (
     <StatusBarBackground>
       <ScrollView style={styles.container}>
+        {/* <DatabaseDebug /> */}
         <ProfileCard user={user} />
         <DailyVerseTwo user={user} theme={theme} />
         <MainSection list={mainActionItems} theme={theme} />

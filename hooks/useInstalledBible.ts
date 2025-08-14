@@ -51,15 +51,15 @@ const useInstalledBibles = () => {
             path: `${bibleDirectory}${file}`,
             shortName: findBible.storedName,
           }
-          // : null;
-          : ['bible.db', 'ntv-bible.db'].includes(file) ? null : {
-            id: file,
-            name: file,
-            description: file,
-            size: 0,
-            path: `${bibleDirectory}${file}`,
-            shortName: file,
-          };
+          : null;
+        // : ['bible.db', 'ntv-bible.db'].includes(file) ? null : {
+        //   id: file,
+        //   name: file,
+        //   description: file,
+        //   size: 0,
+        //   path: `${bibleDirectory}${file}`,
+        //   shortName: file,
+        // };
       })
       .filter((x) => x) as any;
   };

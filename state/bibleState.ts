@@ -40,7 +40,7 @@ export const bibleState$ = observable({
     book_number: 0,
     chapter: 0,
     verse: 0,
-    text: {} as IBookVerseInterlinear,
+    text: "",
   },
   isVerseDoubleTagged: false,
   selectedVerses: observable(new Map<number, IBookVerse>()),
@@ -67,6 +67,12 @@ export const bibleState$ = observable({
     shouldFetch: true,
   },
   isDataLoading: { top: true, bottom: false },
+  databaseProgress: {
+    stage: 'preparing' as 'preparing' | 'downloading' | 'extracting' | 'converting' | 'writing' | 'verifying',
+    message: '',
+    percentage: 0,
+    databaseName: ''
+  },
   bibleData: { topVerses: [], bottomVerses: [], topLinks: [], bottomLinks: [], interlinearVerses: [] } as BibleData,
   readingTimeData: { top: 0, bottom: 0 },
   changeBibleQuery: (query: Partial<IBibleQuery>) => {
@@ -167,7 +173,7 @@ export const bibleState$ = observable({
     book_number: number;
     chapter: number;
     verse: number;
-    text: IBookVerseInterlinear;
+    text: string;
   }) => {
     bibleState$.verseToInterlinear.set(verse);
   },

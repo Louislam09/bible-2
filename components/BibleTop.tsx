@@ -34,6 +34,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const isPortrait = orientation === "PORTRAIT";
   const isDataLoading = use$(() => bibleState$.isDataLoading.top.get());
   const verses = bibleState$.bibleData.topVerses.get() ?? [];
+  const interlinearVerses = bibleState$.bibleData.interlinearVerses.get() ?? [];
   const currentBook = bibleState$.bibleQuery.get().book;
   const bookInfo = getBookDetail(currentBook);
   const NT_BOOK_NUMBER = 470;
@@ -210,6 +211,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
         ) : (
           <Chapter
             verses={verses}
+            interlinearVerses={interlinearVerses}
             isSplit={false}
             estimatedReadingTime={0}
             initialScrollIndex={

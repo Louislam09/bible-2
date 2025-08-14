@@ -30,6 +30,7 @@ const FileList = () => {
     installedBibles,
     installedDictionary,
     reDownloadDatabase,
+    openDatabaseFromZip,
     interlinearService,
   } = useDBContext();
   const { selectBibleVersion, fontSize } = useBibleContext();
@@ -38,13 +39,8 @@ const FileList = () => {
 
   const fetchFiles = async () => {
     const fileList = await FileSystem.readDirectoryAsync(extractionPath);
-    console.log(fileList);
-    // for (const file of fileList) {
-    //   const fileUri = `${extractionPath}${file}`;
-    //   await FileSystem.deleteAsync(fileUri, { idempotent: true });
-    //   console.log(`Deleted file: ${fileUri}`);
-    // }
-    // console.log(fileList);
+    console.log({ fileList });
+
     try {
       setFiles(
         fileList.filter((file) => file.endsWith(".db") || file.endsWith(".zip"))
@@ -85,6 +81,7 @@ const FileList = () => {
               const fileUri = item.path;
               await FileSystem.deleteAsync(fileUri, { idempotent: true });
               refreshDatabaseList();
+              await onRefresh()
               selectBibleVersion(defaultDatabases[0]);
             } catch (err) {
               setError("Error deleting file");
@@ -134,13 +131,15 @@ const FileList = () => {
   );
 
   const refreshDatabase = async (dbName: VersionItem) => {
-    if (dbName.id === "interlinear-bible") {
+    const isInterlinear = dbName.id.includes("interlinear");
+    if (isInterlinear) {
       Alert.alert(
         "Actualizar módulo",
         `¿Quieres descargar de nuevo "${dbName.name}"? Esto reemplazará los datos actuales de la biblia, notas, favoritos, etc.`
       );
       return;
     }
+
     Alert.alert(
       "Actualizar módulo",
       `¿Quieres descargar de nuevo "${dbName.name}"? Esto reemplazará los datos actuales de la biblia, notas, favoritos, etc.`,
@@ -154,7 +153,8 @@ const FileList = () => {
           onPress: async () => {
             console.log("Iniciando actualización de base de datos:", dbName);
             try {
-              const db = await reDownloadDatabase(dbName);
+              const db = await openDatabaseFromZip(dbName, true);
+              // const db = await reDownloadDatabase(dbName);
               if (db) {
                 selectBibleVersion(dbName.id);
                 Alert.alert(
@@ -174,7 +174,7 @@ const FileList = () => {
     );
   };
 
-  const renderItem = ({
+  const renderItem = useCallback(({
     item,
     index,
   }: {
@@ -183,6 +183,7 @@ const FileList = () => {
   }) => {
     const versionItem = item;
     const allowDelete = !defaultDatabases.includes(versionItem?.id as string);
+    // const allowDelete = !defaultDatabases.includes(versionItem?.id as string);
     const isBible = index < installedBibles.length;
 
     return (
@@ -194,7 +195,7 @@ const FileList = () => {
           )}
 
         <View
-          style={[styles.itemContainer, !allowDelete && styles.defaultItem]}
+          style={[styles.itemContainer, styles.defaultItem]}
         >
           <View style={styles.itemIconContainer}>
             <Ionicons
@@ -216,7 +217,7 @@ const FileList = () => {
             <Text
               style={[
                 styles.itemSubTitle,
-                !allowDelete && { color: theme.colors.text + "70" },
+                !allowDelete && { color: theme.colors.primary },
               ]}
             >
               {versionItem?.name || "-"}
@@ -237,18 +238,18 @@ const FileList = () => {
             </TouchableOpacity>
           )}
 
-          {allowDelete && (
-            <TouchableOpacity
-              style={styles.deleteButton}
-              onPress={() => deleteFile(item)}
-            >
-              <Icon name="Trash2" size={20} color="#e74856" />
-            </TouchableOpacity>
-          )}
+          {/* {allowDelete && ( */}
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={() => deleteFile(item)}
+          >
+            <Icon name="Trash2" size={20} color="#e74856" />
+          </TouchableOpacity>
+          {/* )} */}
         </View>
       </View>
     );
-  };
+  }, [theme]);
 
   if (loading) {
     return (
@@ -322,7 +323,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     itemSubTitle: {
       fontSize: 14,
-      color: colors.text + "80",
+      color: colors.primary,
       marginTop: 2,
     },
     deleteButton: {
@@ -423,6 +424,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderRadius: 8,
       backgroundColor: colors.notification + "20",
       marginLeft: "auto",
+      marginHorizontal: 8
     },
   });
 

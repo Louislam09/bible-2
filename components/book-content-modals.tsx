@@ -73,7 +73,7 @@ const BookContentModals = ({ book, chapter }: any) => {
             book_number: 0,
             chapter: 0,
             verse: 0,
-            text: {} as IBookVerseInterlinear,
+            text: "",
           })
         }
       >
@@ -91,7 +91,7 @@ const BookContentModals = ({ book, chapter }: any) => {
             {getBookDetail(verseToInterlinear.book_number)?.longName || ""}
             {` ${verseToInterlinear.chapter}:${verseToInterlinear.verse}`}
           </Text>
-          <HebrewVerse item={verseToInterlinear.text as any} />
+          <HebrewVerse item={verseToInterlinear as any} />
         </BottomSheetScrollView>
       </BottomSheet>
 

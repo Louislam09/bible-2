@@ -17,12 +17,12 @@ import React, {
 } from "react";
 import { useBibleContext } from "./BibleContext";
 
-interface BibleChapterContextProps {}
+interface BibleChapterContextProps { }
 
 const BibleChapterContext = createContext<BibleChapterContextProps>({});
 
 const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
-  const { executeSql, isMyBibleDbLoaded, interlinearService } = useDBContext();
+  const { executeSql, isMyBibleDbLoaded, interlinearService, mainBibleService } = useDBContext();
   const { isLoaded: interlinearIsLoaded, executeSql: executeSqlInterlinear } =
     interlinearService;
 
@@ -72,6 +72,12 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
           [currentBook?.bookNumber, targetChapter || 1],
           "verses"
         );
+      } else {
+        verses = await mainBibleService.executeSql<IBookVerse>(
+          query.GET_VERSES_BY_BOOK_AND_CHAPTER,
+          [currentBook?.bookNumber, targetChapter || 1],
+          "verses"
+        );
       }
 
       const interlinearVerses = await executeSqlInterlinear<IBookVerse>(
@@ -80,10 +86,10 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
         "verses"
       );
 
-      // console.log({
-      //   intLen: interlinearVerses.length,
-      //   verseLne: verses.length,
-      // });
+      console.log({
+        intLen: interlinearVerses.length,
+        verseLne: verses.length,
+      });
       const links = bibleLinks.filter(
         (link) =>
           link.book_number === currentBook?.bookNumber &&
@@ -102,9 +108,10 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
         storedData$[`${storageKey}Chapter`].set(targetChapter);
         storedData$[`${storageKey}Verse`].set(targetVerse);
         bibleState$.bibleData.interlinearVerses.set(interlinearVerses);
-        bibleState$.bibleData[`${bibleKey}Verses`].set(
-          isInterlineal ? interlinearVerses : verses
-        );
+        bibleState$.bibleData[`${bibleKey}Verses`].set(verses);
+        // bibleState$.bibleData[`${bibleKey}Verses`].set(
+        //   isInterlineal ? interlinearVerses : verses
+        // );
         bibleState$.bibleData[`${bibleKey}Links`].set(links);
         bibleState$.readingTimeData[bibleKey].set(getReadingTime(verses));
         bibleState$.isDataLoading[bibleKey].set(false);

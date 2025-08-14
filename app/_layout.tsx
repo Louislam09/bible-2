@@ -27,6 +27,8 @@ import { NativeStackNavigationOptions } from "react-native-screens/lib/typescrip
 import { NotificationProvider } from "@/context/NotificationContext";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
+import DatabaseLoadingModal from "@/components/DatabaseLoadingModal";
+import { useDatabaseLoadingModal } from "@/hooks/useDatabaseLoadingModal";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -100,6 +102,7 @@ const App = () => {
   const isAnimationDisabled = use$(() =>
     settingState$.isAnimationDisabled.get()
   );
+  // const { isVisible, progress } = useDatabaseLoadingModal();
 
   async function onFetchUpdateAsync() {
     try {
@@ -151,6 +154,11 @@ const App = () => {
                             initialRouteName="(dashboard)"
                             screenOptions={screenOptions}
                           />
+                          {/* <DatabaseLoadingModal
+                            visible={isVisible}
+                            progress={progress}
+                            databaseName={progress?.databaseName}
+                          /> */}
                         </BottomSheetModalProvider>
                       </GestureHandlerRootView>
                     </QueryProvider>

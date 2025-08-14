@@ -93,18 +93,18 @@ AND v.chapter = ?
 GROUP BY v.book_number, v.chapter, v.verse;
 `;
 export const GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_INTERLINEAR = `SELECT 
-    v.*,
+    inter.*,
     CASE 
         WHEN fv.id IS NOT NULL THEN 1 
         ELSE 0 
     END AS is_favorite
-FROM interlinear v
+FROM interlinear inter
 LEFT JOIN favorite_verses fv 
-    ON v.book_number = fv.book_number 
-    AND v.chapter = fv.chapter 
-    AND v.verse = fv.verse
-WHERE v.book_number = ? 
-AND v.chapter = ?;
+    ON inter.book_number = fv.book_number 
+    AND inter.chapter = fv.chapter 
+    AND inter.verse = fv.verse
+WHERE inter.book_number = ? 
+AND inter.chapter = ?;
 `;
 // export const GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_INTERLINEAR = `SELECT 
 //     v.*,
@@ -294,6 +294,16 @@ type TQuery = {
 
 export const QUERY_BY_DB: { [key in string]: TQuery } = {
   [EBibleVersions.BIBLE]: {
+    GET_VERSE_NUMBER_QUERY: `SELECT COUNT(v.verse) AS verse_count FROM books b LEFT JOIN verses v ON b.book_number = v.book_number
+    WHERE b.long_name = ? AND v.chapter = ? GROUP BY v.chapter ORDER BY v.verse;`,
+    GET_VERSES_BY_BOOK_AND_CHAPTER: GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV,
+    GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_INTERLINEAR: GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_INTERLINEAR,
+    GET_SUBTITLE_BY_BOOK_AND_CHAPTER: `Select * from subheadings where book_number = ? and chapter = ?;`,
+    SEARCH_TEXT_QUERY: SEARCH_TEXT_QUERY_NEW,
+    GET_VERSES_FOR_CONCORDANCIA,
+    GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE: GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE,
+  },
+  [EBibleVersions.INT]: {
     GET_VERSE_NUMBER_QUERY: `SELECT COUNT(v.verse) AS verse_count FROM books b LEFT JOIN verses v ON b.book_number = v.book_number
     WHERE b.long_name = ? AND v.chapter = ? GROUP BY v.chapter ORDER BY v.verse;`,
     GET_VERSES_BY_BOOK_AND_CHAPTER: GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV,

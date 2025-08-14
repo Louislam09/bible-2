@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from "react";
-import * as FileSystem from "expo-file-system";
-import { Asset } from "expo-asset";
-import * as SQLite from "expo-sqlite";
-import unzipFile from "@/utils/unzipFile";
 import { dbFileExt, SQLiteDirPath } from "@/constants/databaseNames";
 import { CREATE_FAVORITE_VERSES_TABLE } from "@/constants/Queries";
+import unzipFile from "@/utils/unzipFile";
+import { Asset } from "expo-asset";
+import * as FileSystem from "expo-file-system";
+import * as SQLite from "expo-sqlite";
+import { useEffect, useRef, useState } from "react";
 
 interface Row {
     [key: string]: any;
@@ -21,7 +21,12 @@ export interface UseInterlinearDatabase {
     error: Error | null;
 }
 
-export function useInterlinearDB(onProgress?: (msg: string) => void): UseInterlinearDatabase {
+interface UseInterlinearDB {
+    isInterlinear?: boolean;
+    onProgress?: (msg: string) => void;
+}
+
+export function useInterlinearDB({ isInterlinear, onProgress }: UseInterlinearDB): UseInterlinearDatabase {
     const [database, setDatabase] = useState<SQLite.SQLiteDatabase | null>(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState<Error | null>(null);
@@ -72,7 +77,6 @@ export function useInterlinearDB(onProgress?: (msg: string) => void): UseInterli
             await statement.finalizeAsync();
 
             const tableNames = tables.map((t: any) => t.name);
-            console.log({ tableNames });
             return tableNames.includes("interlinear");
         } catch (e) {
             console.error("Validation query failed:", e);
@@ -95,6 +99,13 @@ export function useInterlinearDB(onProgress?: (msg: string) => void): UseInterli
         }
     }
 
+    const resetState = () => {
+        setDatabase(null);
+        setIsLoaded(false);
+        setError(null);
+        isMounted.current = true;
+    };
+
     useEffect(() => {
         async function prepareDb() {
             try {
@@ -116,7 +127,7 @@ export function useInterlinearDB(onProgress?: (msg: string) => void): UseInterli
                 const info = await FileSystem.getInfoAsync(INTERLINEAR_DB_PATH);
                 if (!info.exists) {
                     // Copy zip asset to local FS
-                    const asset = Asset.fromModule(require("../assets/db/interlinear.zip"));
+                    const asset = Asset.fromModule(require("../assets/db/interlinear-bible.zip"));
                     await asset.downloadAsync();
 
                     const zipUri = asset.localUri || asset.uri;
@@ -169,6 +180,11 @@ export function useInterlinearDB(onProgress?: (msg: string) => void): UseInterli
         }
 
         prepareDb();
+        // console.log('useInterlinearDB', isInterlinear);
+        // if (!isInterlinear) {
+        // } else {
+        //     resetState();
+        // }
 
         return () => {
             isMounted.current = false;
@@ -176,7 +192,7 @@ export function useInterlinearDB(onProgress?: (msg: string) => void): UseInterli
                 // database.closeAsync().catch(console.error);
             }
         };
-    }, []);
+    }, [isInterlinear]);
 
     return { database, isLoaded, error, executeSql };
 }
