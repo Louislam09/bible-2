@@ -61,9 +61,9 @@ const HebrewVerse: React.FC<Props> = ({ item, withBackground = false }) => {
       <View
         style={[
           styles.wordsGrid,
-          // withBackground && {
-          //   backgroundColor: theme.colors.background,
-          // },
+          withBackground && {
+            backgroundColor: theme.colors.background,
+          },
         ]}
       >
         <Text style={[styles.reference]}>{item.verse}</Text>
@@ -122,29 +122,31 @@ const getStyles = ({ colors }: TTheme, fontSize: number) =>
     reference: {
       fontSize: fontSize + 7,
       color: colors.text,
-      textAlign: "right",
+      // textAlign: "right",
       fontWeight: "bold",
-      zIndex: 1,
-      position: "absolute",
+      // zIndex: 1,
+      // position: "relative",
       backgroundColor: colors.notification + 70,
-      paddingHorizontal: 10,
-      paddingVertical: 5,
+      paddingHorizontal: 5,
+      paddingVertical: 15,
       borderRadius: 4,
-      bottom: 0,
-      left: 0,
-      borderBottomRightRadius: 0,
-      borderBottomLeftRadius: 0,
-      borderTopLeftRadius: 0,
+      display: "flex",
+      // height: 60,
+      // bottom: 0,
+      // left: 0,
+      // borderBottomRightRadius: 0,
+      // borderBottomLeftRadius: 0,
+      // borderTopLeftRadius: 0,
     },
     wordsGrid: {
       position: "relative",
       flexDirection: "row-reverse",
       flexWrap: "wrap",
       gap: 8,
-      backgroundColor: colors.text + "09",
+      backgroundColor: colors.card,
       padding: 5,
       borderRadius: 4,
-      elevation: 1,
+      elevation: 10,
       paddingVertical: 10,
     },
     wordColumn: {

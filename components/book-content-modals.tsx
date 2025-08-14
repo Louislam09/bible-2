@@ -42,27 +42,10 @@ const BookContentModals = ({ book, chapter }: any) => {
   return (
     <>
       <BottomSheet
-        backgroundStyle={styles.bottomSheet}
-        enablePanDownToClose
-        snapPoints={["30%", "60%"]}
-        index={-1}
-        ref={modalState$.strongSearchRef.get()}
-        handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
-        onClose={() => bibleState$.handleStrongWord({ text: "", code: "" })}
-      >
-        <BottomSheetScrollView
-          contentContainerStyle={{ backgroundColor: "transparent" }}
-        >
-          <StrongContent
-            navigation={navigation}
-            theme={theme}
-            fontSize={fontSize}
-          />
-        </BottomSheetScrollView>
-      </BottomSheet>
-
-      <BottomSheet
-        backgroundStyle={styles.bottomSheet}
+        backgroundStyle={{
+          ...styles.bottomSheet,
+          backgroundColor: theme.colors.background,
+        }}
         enablePanDownToClose
         snapPoints={["30%", "60%", "100%"]}
         index={-1}
@@ -92,8 +75,27 @@ const BookContentModals = ({ book, chapter }: any) => {
               {getBookDetail(verseToInterlinear.book_number)?.longName || ""}
               {` ${verseToInterlinear.chapter}:${verseToInterlinear.verse}`}
             </Text>
-            <HebrewVerse item={verseToInterlinear as any} />
+            <HebrewVerse withBackground item={verseToInterlinear as any} />
           </View>
+        </BottomSheetScrollView>
+      </BottomSheet>
+      <BottomSheet
+        backgroundStyle={styles.bottomSheet}
+        enablePanDownToClose
+        snapPoints={["30%", "60%"]}
+        index={-1}
+        ref={modalState$.strongSearchRef.get()}
+        handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
+        onClose={() => bibleState$.handleStrongWord({ text: "", code: "" })}
+      >
+        <BottomSheetScrollView
+          contentContainerStyle={{ backgroundColor: "transparent" }}
+        >
+          <StrongContent
+            navigation={navigation}
+            theme={theme}
+            fontSize={fontSize}
+          />
         </BottomSheetScrollView>
       </BottomSheet>
 

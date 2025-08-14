@@ -82,7 +82,7 @@ const initialContext: StoreState = {
   lastBottomSideVerse: 0,
   currentTheme: "Green",
   fontSize: 24,
-  selectedFont: TFont.NotoSerif,
+  selectedFont: TFont.NotoSansHebrew,
   isDarkMode: true,
   isGridLayout: false,
   isShowName: false,
