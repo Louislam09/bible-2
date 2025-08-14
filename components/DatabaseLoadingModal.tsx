@@ -134,12 +134,12 @@ const DatabaseLoadingModal: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(
-      "DatabaseLoadingModal",
-      `${progress.databaseName} ${visible} ${progress.stage} ${progress.message} ${progress.percentage}`
-    );
-  }, [progress, visible]);
+  // useEffect(() => {
+  //   console.log(
+  //     "DatabaseLoadingModal",
+  //     `${progress.databaseName} ${visible} ${progress.stage} ${progress.message} ${progress.percentage}`
+  //   );
+  // }, [progress, visible]);
 
   return (
     // <Modal
