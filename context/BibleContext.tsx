@@ -32,7 +32,7 @@ import {
 import { useDBContext } from "./databaseContext";
 import { storedData$ } from "./LocalstoreContext";
 import DatabaseLoadingModal from "@/components/DatabaseLoadingModal";
-import { useDatabaseLoadingModal } from "@/hooks/useDatabaseLoadingModal";
+import { dbDownloadState$ } from "@/state/dbDownloadState";
 
 type BibleState = {
   setSearchQuery: Function;
@@ -214,6 +214,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const { fontSize, currentTheme, selectedFont } = storedData;
   const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
   const isDataLoaded = use$(() => storedData$.isDataLoaded.get());
+  const isDownloadingDB = use$(() => dbDownloadState$.isDownloadingDB.get());
   const requiresSettingsReloadAfterSync = use$(() =>
     settingState$.requiresSettingsReloadAfterSync.get()
   );
@@ -235,7 +236,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const [orientation, setOrientation] = useState("PORTRAIT");
   const { addFavoriteVerse, removeFavoriteVerse } = useFavoriteVerseService();
   const logo = require("../assets/images/icon.png");
-  const { isVisible, progress, resetProgress } = useDatabaseLoadingModal();
 
   const getOrientation = () => {
     const { height, width } = Dimensions.get("window");
@@ -301,35 +301,27 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, []);
 
-  // console.log({ isDataLoaded, isInstallBiblesLoaded, fontsLoaded, isMyBibleDbLoaded })
-
   if (
     !fontsLoaded ||
     !isDataLoaded ||
     !isInstallBiblesLoaded ||
-    !isMyBibleDbLoaded
+    !isMyBibleDbLoaded ||
+    isDownloadingDB
   ) {
     return (
-      <DatabaseLoadingModal
-        visible={isVisible}
-        progress={progress}
-        databaseName={progress?.databaseName}
-      />
-      // <ScreenWithAnimation
-      //   imageSource={logo}
-      //   isVisible
-      //   titleColor={"white"}
-      //   backgroundColor="#0d3f3e"
-      //   iconColor="white"
-      //   title="Cargando..."
-      //   icon="BookPlus"
-      // >
-      //   <></>
-
-      // </ScreenWithAnimation>
+      <ScreenWithAnimation
+        imageSource={logo}
+        isVisible
+        titleColor={"white"}
+        backgroundColor="#0d3f3e"
+        iconColor="white"
+        title="Cargando..."
+        icon="BookPlus"
+        customContent={isDownloadingDB ? <DatabaseLoadingModal /> : null}
+      >
+        <></>
+      </ScreenWithAnimation>
     );
-  } else {
-    resetProgress();
   }
 
   const goBackOnHistory = (index: number) => {

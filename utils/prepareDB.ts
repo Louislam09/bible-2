@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Asset } from "expo-asset";
 import { VersionItem } from "@/hooks/useInstalledBible";
 import { dbFileExt, isDefaultDatabase, SQLiteDirPath } from "@/constants/databaseNames";
+import { dbDownloadState$ } from "@/state/dbDownloadState";
 
 type PrepareDatabaseProps = {
     databaseItem: VersionItem;
@@ -15,6 +16,7 @@ type PrepareDatabaseProps = {
         stage: 'preparing' | 'downloading' | 'extracting' | 'converting' | 'writing' | 'verifying';
         message: string;
         percentage?: number;
+        isDownloadingDB?: boolean;
     }) => void;
 }
 
@@ -64,11 +66,12 @@ export const prepareDatabase = async ({ databaseItem, isReDownload = false, onPr
         if (alreadyExtracted && !isReDownload) {
             const dbExists = await FileSystem.getInfoAsync(DB_PATH);
             if (dbExists.exists && dbExists.size! > 0) {
-                console.log(`📖 DB ${DB_FILENAME} already ready (${(dbExists.size! / (1024 * 1024)).toFixed(2)} MB)`);
+                // console.log(`📖 DB ${DB_FILENAME} already ready (${(dbExists.size! / (1024 * 1024)).toFixed(2)} MB)`);
                 return await SQLite.openDatabaseAsync(DB_FILENAME);
             }
         }
 
+        dbDownloadState$.isDownloadingDB.set(true);
         onProgress?.({
             stage: 'preparing',
             message: `Preparando ${DB_NAME}...`,
@@ -106,7 +109,13 @@ export const prepareDatabase = async ({ databaseItem, isReDownload = false, onPr
         const zipBase64 = await FileSystem.readAsStringAsync(assetUri, {
             encoding: FileSystem.EncodingType.Base64,
         });
-        console.log("🔹 Zip Base64: length", zipBase64.length);
+        // console.log("🔹 Zip Base64: length", zipBase64.length);
+
+        onProgress?.({
+            stage: 'downloading',
+            message: `Descargando ${DB_NAME}...`,
+            percentage: 30
+        });
 
         // 2. Convert to Uint8Array
         // @ts-ignore
@@ -115,6 +124,12 @@ export const prepareDatabase = async ({ databaseItem, isReDownload = false, onPr
         // 3. Decompress with JSZip
         const zip = await JSZip.loadAsync(zipData);
         const zipFiles = Object.keys(zip.files);
+
+        onProgress?.({
+            stage: 'verifying',
+            message: `Verificando archivo...`,
+            percentage: 35
+        });
 
         // 4. Find .db file
         let dbFileName = zipFiles.find(name =>
@@ -133,16 +148,19 @@ export const prepareDatabase = async ({ databaseItem, isReDownload = false, onPr
 
         // 5. Extract .db file content using the working pattern from unzipFile.ts
         const dbFile = zip.files[dbFileName];
-        const fileContent = await dbFile.async("uint8array");
+        // const fileContent = await dbFile.async("uint8array");
+        const base64String = await dbFile.async("base64")
 
         onProgress?.({
             stage: 'converting',
-            message: `Convirtiendo ${(fileContent.byteLength / (1024 * 1024)).toFixed(2)} MB...`,
+            message: `Convirtiendo ${(base64String.length / (1024 * 1024)).toFixed(2)} MB...`,
             percentage: 60
         });
 
         // 6. Convert to Base64 using the proven working method
-        const base64String = uint8ArrayToBase64(fileContent);
+        // const base64String = await dbFile.async("base64")
+        // console.log('fileBase64', base64String.length)
+        // const base64String = uint8ArrayToBase64(fileContent);
 
         onProgress?.({
             stage: 'writing',
@@ -167,13 +185,13 @@ export const prepareDatabase = async ({ databaseItem, isReDownload = false, onPr
             throw new Error("Failed to create database file");
         }
 
-        const expectedSize = fileContent.byteLength;
+        // const expectedSize = fileContent.byteLength;
         const actualSize = finalFileInfo.size!;
 
         // 9. Verify sizes match (allow small variance due to filesystem)
-        if (Math.abs(actualSize - expectedSize) > 1024) { // Allow 1KB variance
-            console.warn(`⚠️ Size mismatch detected! Expected: ${expectedSize}, Got: ${actualSize}`);
-        }
+        // if (Math.abs(actualSize - expectedSize) > 1024) { // Allow 1KB variance
+        //     console.warn(`⚠️ Size mismatch detected! Expected: ${expectedSize}, Got: ${actualSize}`);
+        // }
 
         await AsyncStorage.setItem(dbStorageKey, "1");
 
@@ -192,7 +210,8 @@ export const prepareDatabase = async ({ databaseItem, isReDownload = false, onPr
             onProgress?.({
                 stage: 'verifying',
                 message: `¡Base de datos lista!`,
-                percentage: 100
+                percentage: 100,
+                isDownloadingDB: false
             });
 
             return db;
@@ -215,7 +234,7 @@ export const prepareDatabase = async ({ databaseItem, isReDownload = false, onPr
             const fileInfo = await FileSystem.getInfoAsync(DB_PATH);
             if (fileInfo.exists) {
                 await FileSystem.deleteAsync(DB_PATH);
-                console.log("🧹 Database file deleted");
+                // console.log("🧹 Database file deleted");
             }
 
         } catch (cleanupError) {

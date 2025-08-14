@@ -16,6 +16,7 @@ interface VerseItem {
 
 interface Props {
   item: VerseItem;
+  withBackground?: boolean;
 }
 
 interface Segment {
@@ -27,11 +28,12 @@ interface Segment {
   spanish: string;
 }
 
-const HebrewVerse: React.FC<Props> = ({ item }) => {
+const HebrewVerse: React.FC<Props> = ({ item, withBackground = false }) => {
   const theme = useTheme();
   const { currentBibleVersion, fontSize } = useBibleContext();
   const styles = getStyles(theme, 16);
-  const verseWithStrong = bibleState$.bibleData.topVerses.get()?.[item.verse - 1];
+  const verseWithStrong =
+    bibleState$.bibleData.topVerses.get()?.[item.verse - 1];
   const mergeText = mergeTexts(verseWithStrong?.text || "", item.text);
   const segments = useMemo(() => parseText(mergeText), [item.text, mergeText]);
 
@@ -56,10 +58,17 @@ const HebrewVerse: React.FC<Props> = ({ item }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.wordsGrid}>
+      <View
+        style={[
+          styles.wordsGrid,
+          // withBackground && {
+          //   backgroundColor: theme.colors.background,
+          // },
+        ]}
+      >
         <Text style={[styles.reference]}>{item.verse}</Text>
         {segments.map((segment) => (
-          <View key={segment.key} style={styles.wordColumn}>
+          <View key={segment.key} style={[styles.wordColumn]}>
             <Text
               style={styles.lexicalId}
               onPress={() => onStrongPress(segment)}
@@ -116,18 +125,19 @@ const getStyles = ({ colors }: TTheme, fontSize: number) =>
       textAlign: "right",
       fontWeight: "bold",
       zIndex: 1,
-      position: 'absolute',
+      position: "absolute",
       backgroundColor: colors.notification + 70,
       paddingHorizontal: 10,
       paddingVertical: 5,
       borderRadius: 4,
-      bottom: 0, left: 0,
+      bottom: 0,
+      left: 0,
       borderBottomRightRadius: 0,
       borderBottomLeftRadius: 0,
       borderTopLeftRadius: 0,
     },
     wordsGrid: {
-      position: 'relative',
+      position: "relative",
       flexDirection: "row-reverse",
       flexWrap: "wrap",
       gap: 8,
@@ -138,7 +148,7 @@ const getStyles = ({ colors }: TTheme, fontSize: number) =>
       paddingVertical: 10,
     },
     wordColumn: {
-      position: 'relative',
+      position: "relative",
       paddingRight: 7,
       alignItems: "flex-end",
       justifyContent: "flex-end",

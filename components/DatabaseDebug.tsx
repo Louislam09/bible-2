@@ -8,7 +8,7 @@ const DatabaseDebug: React.FC = () => {
 
   const testDatabase = async () => {
     try {
-      setDebugInfo("Testing database...");
+      setDebugInfo(`Testing database... ${database?.databaseName}`);
 
       if (!database) {
         setDebugInfo("Database is null");
@@ -29,28 +29,31 @@ const DatabaseDebug: React.FC = () => {
         [],
         "table_check"
       );
-      console.log("result2", result2);
+      // console.log("result2", result2);
+      // write the tables name ex: "verses", "dictionary", "notes", "favorite_verses"
+      const tables = result2.map((item: any) => item.name);
+      setDebugInfo((prev) => prev + `\n✓ Tables: ${tables.join(", ")}`);
 
       if (result2.length === 0) {
-        setDebugInfo((prev) => prev + "\n✗ Dictionary table not found");
+        setDebugInfo((prev) => prev + "\n✗ Verses table not found");
         return;
       }
 
-      setDebugInfo((prev) => prev + "\n✓ Dictionary table exists");
+      setDebugInfo((prev) => prev + "\n✓ Verses table exists");
 
       // Test count query
       const result3 = await executeSql(
-        "SELECT COUNT(*) as count FROM dictionary",
+        "SELECT COUNT(*) as count FROM verses where book_number = 10 AND chapter = 1 AND verse = 1",
         [],
         "count_test"
       );
       const count = (result3[0] as any)?.count || 0;
-      setDebugInfo((prev) => prev + `\n✓ Dictionary has ${count} records`);
+      setDebugInfo((prev) => prev + `\n✓ Verses has record ${count}`);
 
       // Test the actual search query
       const result4 = await executeSql(
-        "SELECT * FROM dictionary WHERE topic LIKE ? ORDER BY length(topic) LIMIT 5",
-        ["%test%"],
+        "SELECT * FROM verses WHERE book_number = 10 AND chapter = 1 AND verse = 1",
+        [],
         "search_test"
       );
       setDebugInfo(

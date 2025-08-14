@@ -17,12 +17,17 @@ import React, {
 } from "react";
 import { useBibleContext } from "./BibleContext";
 
-interface BibleChapterContextProps { }
+interface BibleChapterContextProps {}
 
 const BibleChapterContext = createContext<BibleChapterContextProps>({});
 
 const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
-  const { executeSql, isMyBibleDbLoaded, interlinearService, mainBibleService } = useDBContext();
+  const {
+    executeSql,
+    isMyBibleDbLoaded,
+    interlinearService,
+    mainBibleService,
+  } = useDBContext();
   const { isLoaded: interlinearIsLoaded, executeSql: executeSqlInterlinear } =
     interlinearService;
 
@@ -138,7 +143,6 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (isSplitActived) return;
     if (currentHistoryIndex === -1) return;
-    console.log("searching history");
     const currentHistory = getCurrentItem();
     if (!currentHistory) return;
     bibleState$.changeBibleQuery({

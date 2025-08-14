@@ -11,23 +11,26 @@ import * as SQLite from "expo-sqlite";
 import { useEffect, useRef, useState } from "react";
 import { VersionItem } from "./useInstalledBible";
 import * as FileSystem from "expo-file-system";
+import { dbDownloadState$ } from "@/state/dbDownloadState";
+import { databaseNames } from "@/constants/databaseNames";
 
 interface Row {
   [key: string]: any;
 }
 
-interface UseLoadDB {
+export interface UseLoadDB {
   database: SQLite.SQLiteDatabase | null;
   executeSql: <T = any>(
     sql: string,
     params?: any[],
     queryName?: string
   ) => Promise<T[]>;
-  loading: boolean;
+  isLoaded: boolean;
 }
 
-type TUseLoadDB = {
-  dbName: VersionItem | undefined;
+export type TUseLoadDB = {
+  currentBibleVersion: VersionItem | undefined;
+  isInterlinear: boolean;
 };
 
 enum DEFAULT_DATABASE {
@@ -36,11 +39,13 @@ enum DEFAULT_DATABASE {
   INTERLINEAR = "interlinear-bible",
 }
 
-const useLoadDatabase = ({ dbName }: TUseLoadDB): UseLoadDB => {
+const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): UseLoadDB => {
   const [database, setDatabase] = useState<SQLite.SQLiteDatabase | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [isLoaded, setLoaded] = useState(false);
   const isMounted = useRef(true);
   const dbInitialized = useRef(false);
+  const [defaultDbName] = databaseNames
+  const dbName = isInterlinear ? defaultDbName : currentBibleVersion
 
   const executeSql = async (
     sql: string,
@@ -143,12 +148,12 @@ const useLoadDatabase = ({ dbName }: TUseLoadDB): UseLoadDB => {
     }
   }
 
-
   useEffect(() => {
     if (!dbName) return;
     async function initializeDatabase() {
       try {
         setDatabase(null);
+        // setLoaded(false);
         isMounted.current = true;
         bibleState$.isDataLoading.top.set(true);
 
@@ -158,11 +163,10 @@ const useLoadDatabase = ({ dbName }: TUseLoadDB): UseLoadDB => {
         const db = await prepareDatabase({
           databaseItem: dbName,
           onProgress: (progress) => {
+            // console.log('useLoadDatabase: ', progress.stage, progress.message)
             // Update the global state for progress tracking
-            bibleState$.databaseProgress.set({
-              stage: progress.stage,
-              message: progress.message,
-              percentage: progress.percentage || 0,
+            dbDownloadState$.setDownloadProgress({
+              ...progress,
               databaseName: dbName.name || dbName.id
             });
           }
@@ -170,7 +174,7 @@ const useLoadDatabase = ({ dbName }: TUseLoadDB): UseLoadDB => {
 
         const isInterlinear = dbName.id === DEFAULT_DATABASE.INTERLINEAR;
         const valid = await isDatabaseValid(db!, isInterlinear ? "interlinear" : "verses");
-        console.log('Database is valid', valid)
+        // console.log('Database is valid', valid)
 
         if (!valid) {
           // delete the database
@@ -189,16 +193,16 @@ const useLoadDatabase = ({ dbName }: TUseLoadDB): UseLoadDB => {
           setDatabase(db);
           dbInitialized.current = true;
           bibleState$.bibleQuery.shouldFetch.set(true);
-          setLoading(true);
+          setLoaded(true);
         }
       } catch (error) {
         console.error("Database initialization error:", error);
         if (isMounted.current) {
-          setLoading(true);
+          setLoaded(true);
         }
       } finally {
         if (isMounted.current) {
-          setLoading(true);
+          setLoaded(true);
           bibleState$.isDataLoading.top.set(false);
         }
       }
@@ -213,9 +217,9 @@ const useLoadDatabase = ({ dbName }: TUseLoadDB): UseLoadDB => {
         database.closeAsync().catch(err => { });
       }
     };
-  }, [dbName]);
+  }, [dbName, isInterlinear]);
 
-  return { executeSql, database, loading };
+  return { executeSql, database, isLoaded };
 }
 
 export default useLoadDatabase;

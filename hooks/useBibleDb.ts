@@ -1,5 +1,7 @@
-import { getDatabaseExt, isDefaultDatabase } from "@/constants/databaseNames";
-import { DATABASE_TYPE } from "@/types";
+import { databaseNames, getDatabaseExt, isDefaultDatabase } from "@/constants/databaseNames";
+import { dbDownloadState$ } from "@/state/dbDownloadState";
+import { DATABASE_TYPE, DEFAULT_DATABASE } from "@/types";
+import { prepareDatabase } from "@/utils/prepareDB";
 import * as SQLite from "expo-sqlite";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -8,8 +10,9 @@ interface Row {
 }
 
 type UseBibleDbProps = {
-    databaseId: string;
+    databaseId: DEFAULT_DATABASE;
     isInterlinear?: boolean;
+    enabled?: boolean;
 };
 
 export type UseBibleDb = {
@@ -24,12 +27,13 @@ export type UseBibleDb = {
     reopen: () => Promise<void>;
 };
 
-const useBibleDb = ({ databaseId, isInterlinear }: UseBibleDbProps): UseBibleDb => {
+const useBibleDb = ({ databaseId, isInterlinear, enabled = false }: UseBibleDbProps): UseBibleDb => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [db, setDB] = useState<SQLite.SQLiteDatabase | null>(null);
     const activeQueries = useRef<Set<string>>(new Set());
     const isInitializing = useRef(false);
+    const dbName = databaseNames.find(db => db.id === databaseId)
 
     // Helper to open DB
     const openDatabase = useCallback(async () => {
@@ -65,7 +69,37 @@ const useBibleDb = ({ databaseId, isInterlinear }: UseBibleDbProps): UseBibleDb 
 
     // Initialize on mount or when databaseId changes
     useEffect(() => {
-        openDatabase();
+        if (!enabled) return;
+        if (!dbName) return;
+        const initDb = async () => {
+            if (isInitializing.current) return;
+            try {
+                isInitializing.current = true;
+                setIsLoaded(false);
+                const bibleDb = await prepareDatabase({
+                    databaseItem: dbName,
+                    onProgress: (progress) => {
+                        console.log('useBibleDb:', progress.stage, progress.message)
+                        dbDownloadState$.setDownloadProgress({
+                            ...progress,
+                            databaseName: dbName.name || dbName.id,
+                        });
+                    }
+                });
+
+                if (!bibleDb) return;
+                setDB(bibleDb);
+                setIsLoaded(true);
+            } catch (error) {
+                setError("Failed to initialize database");
+                setIsLoaded(false);
+            } finally {
+                isInitializing.current = false;
+            }
+        }
+
+        initDb();
+
 
         return () => {
             if (db) {
@@ -73,7 +107,7 @@ const useBibleDb = ({ databaseId, isInterlinear }: UseBibleDbProps): UseBibleDb 
                 setDB(null);
             }
         };
-    }, [databaseId, isInterlinear]);
+    }, [databaseId, isInterlinear, enabled]);
 
     const executeSql = useCallback(
         async <T = any>(sql: string, params: any[] = [], queryName?: string): Promise<T[]> => {

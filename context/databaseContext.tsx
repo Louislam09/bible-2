@@ -1,17 +1,15 @@
-import useDB from "@/hooks/useDB";
 import useInstalledBibles, { VersionItem } from "@/hooks/useInstalledBible";
-import { use$ } from "@legendapp/state/react";
-import * as SQLite from "expo-sqlite";
-import React, { createContext, useContext, useMemo } from "react";
-import { storedData$ } from "./LocalstoreContext";
 import {
   UseInterlinearDatabase,
   useInterlinearDB,
 } from "@/hooks/useInterlinearDB";
+import useLoadDatabase, { UseLoadDB } from "@/hooks/useLoadDatabase";
+import { DEFAULT_DATABASE, EBibleVersions } from "@/types";
 import { showToast } from "@/utils/showToast";
-import { EBibleVersions } from "@/types";
-import useBibleDb, { UseBibleDb } from "@/hooks/useBibleDb";
-import useLoadDatabase from "@/hooks/useLoadDatabase";
+import { use$ } from "@legendapp/state/react";
+import * as SQLite from "expo-sqlite";
+import React, { createContext, useContext, useEffect, useMemo } from "react";
+import { storedData$ } from "./LocalstoreContext";
 
 type DatabaseContextType = {
   myBibleDB?: SQLite.SQLiteDatabase | null;
@@ -29,7 +27,7 @@ type DatabaseContextType = {
     _dbName?: VersionItem
   ) => Promise<SQLite.SQLiteDatabase | undefined>;
   interlinearService: UseInterlinearDatabase;
-  mainBibleService: UseBibleDb;
+  mainBibleService: UseLoadDB;
   openDatabaseFromZip(
     databaseItem: VersionItem,
     isReDownload?: boolean
@@ -54,11 +52,9 @@ const initialContext: DatabaseContextType = {
     executeSql: async (sql: string, params?: any[], queryName?: string) => [],
   },
   mainBibleService: {
-    db: null,
+    database: null,
     executeSql: async (sql: string, params?: any[], queryName?: string) => [],
     isLoaded: false,
-    error: null,
-    reopen: () => Promise.resolve(),
   },
 };
 
@@ -78,26 +74,11 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     refreshDatabaseList,
     installedDictionary,
   } = useInstalledBibles();
+
   const currentDbName = useMemo(
     () => installedBibles?.find((x) => x.id === currentBibleVersion),
     [installedBibles, currentBibleVersion]
   );
-
-  const {
-    database: myBibleDB,
-    executeSql,
-    loading: isMyBibleDbLoaded,
-  } = useLoadDatabase({
-    dbName: isDataLoaded && isLoaded ? currentDbName : undefined,
-  });
-
-  const {
-    // database: myBibleDB,
-    // executeSql,
-    // loading: isMyBibleDbLoaded,
-    reDownloadDatabase,
-    openDatabaseFromZip,
-  } = useDB({ dbName: isDataLoaded && isLoaded ? currentDbName : undefined });
 
   const isInterlinear = useMemo(
     () =>
@@ -107,23 +88,36 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     [currentBibleVersion]
   );
 
+  const mainBibleService = useLoadDatabase({
+    currentBibleVersion: isDataLoaded && isLoaded ? currentDbName : undefined,
+    isInterlinear,
+  });
+
   const interlinearService = useInterlinearDB({
+    databaseId: DEFAULT_DATABASE.INTERLINEAR,
     isInterlinear,
     onProgress: (msg) => {
       showToast(msg, "SHORT");
     },
+    enabled: mainBibleService.isLoaded,
   });
 
-  const mainBibleService = useBibleDb({ databaseId: "bible", isInterlinear });
+  const reDownloadDatabase: any = () => {
+    console.log("reDownloadDatabase");
+  };
+
+  const openDatabaseFromZip: any = () => {
+    console.log("openDatabaseFromZip");
+  };
 
   const dbContextValue = {
-    myBibleDB,
-    executeSql,
+    myBibleDB: mainBibleService.database,
+    executeSql: mainBibleService.executeSql,
     installedBibles,
     installedDictionary,
     isInstallBiblesLoaded: isLoaded,
     refreshDatabaseList,
-    isMyBibleDbLoaded,
+    isMyBibleDbLoaded: mainBibleService.isLoaded,
     reDownloadDatabase,
     openDatabaseFromZip,
     interlinearService,

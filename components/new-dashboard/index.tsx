@@ -316,8 +316,8 @@ const SecondDashboard = () => {
   return (
     <StatusBarBackground>
       <ScrollView style={styles.container}>
-        {/* <DatabaseDebug /> */}
         <ProfileCard user={user} />
+        {/* <DatabaseDebug /> */}
         <DailyVerseTwo user={user} theme={theme} />
         <MainSection list={mainActionItems} theme={theme} />
         <StudyTools list={studyToolItems} theme={theme} />

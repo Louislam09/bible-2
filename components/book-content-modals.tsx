@@ -15,7 +15,7 @@ import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import HebrewVerse from "./home/content/HebrewVerse";
 import StrongContent from "./home/content/StrongContent";
-import { Text } from "./Themed";
+import { Text, View } from "./Themed";
 
 const mockVerse = {
   book_number: 10,
@@ -80,18 +80,20 @@ const BookContentModals = ({ book, chapter }: any) => {
         <BottomSheetScrollView
           contentContainerStyle={{ backgroundColor: "transparent" }}
         >
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "bold",
-              textAlign: "center",
-              marginBottom: 10,
-            }}
-          >
-            {getBookDetail(verseToInterlinear.book_number)?.longName || ""}
-            {` ${verseToInterlinear.chapter}:${verseToInterlinear.verse}`}
-          </Text>
-          <HebrewVerse item={verseToInterlinear as any} />
+          <View style={{ padding: 10, backgroundColor: "transparent" }}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: "bold",
+                textAlign: "center",
+                // marginBottom: 10,
+              }}
+            >
+              {getBookDetail(verseToInterlinear.book_number)?.longName || ""}
+              {` ${verseToInterlinear.chapter}:${verseToInterlinear.verse}`}
+            </Text>
+            <HebrewVerse item={verseToInterlinear as any} />
+          </View>
         </BottomSheetScrollView>
       </BottomSheet>
 

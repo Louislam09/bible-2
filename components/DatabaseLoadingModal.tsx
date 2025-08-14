@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Modal,
   View,
@@ -13,33 +13,29 @@ import { useTheme } from "@react-navigation/native";
 
 import LottieView from "lottie-react-native";
 import lottieAssets from "@/constants/lottieAssets";
+import { bibleState$ } from "@/state/bibleState";
+import { use$ } from "@legendapp/state/react";
+import { dbDownloadState$ } from "@/state/dbDownloadState";
+import { TTheme } from "@/types";
+import Icon from "./Icon";
+import { icons } from "lucide-react-native";
 
 const { width, height } = Dimensions.get("window");
 
-interface DatabaseLoadingModalProps {
-  visible: boolean;
-  progress: {
-    stage:
-      | "preparing"
-      | "downloading"
-      | "extracting"
-      | "converting"
-      | "writing"
-      | "verifying";
-    message: string;
-    percentage?: number;
-  } | null;
-  databaseName?: string;
-}
-
-const DatabaseLoadingModal: React.FC<DatabaseLoadingModalProps> = ({
-  visible,
-  progress,
-  databaseName = "Base de datos",
-}) => {
+const DatabaseLoadingModal: React.FC = () => {
   const theme = useTheme();
+  const styles = getStyles(theme);
   const spinValue = React.useRef(new Animated.Value(0)).current;
   const pulseValue = React.useRef(new Animated.Value(1)).current;
+  const progress = use$(() => dbDownloadState$.get());
+
+  const visible = useMemo(() => {
+    return (
+      progress.isDownloadingDB &&
+      progress.percentage > 0 &&
+      progress.percentage < 100
+    );
+  }, [progress.isDownloadingDB, progress.percentage]);
 
   React.useEffect(() => {
     if (visible) {
@@ -81,22 +77,22 @@ const DatabaseLoadingModal: React.FC<DatabaseLoadingModalProps> = ({
     outputRange: ["0deg", "360deg"],
   });
 
-  const getStageIcon = (stage: string) => {
+  const getStageIcon = (stage: string): keyof typeof icons => {
     switch (stage) {
       case "preparing":
-        return "settings-outline";
+        return "Settings";
       case "downloading":
-        return "cloud-download-outline";
+        return "Download";
       case "extracting":
-        return "archive-outline";
+        return "Wrench";
       case "converting":
-        return "sync-outline";
+        return "Drum";
       case "writing":
-        return "save-outline";
+        return "Save";
       case "verifying":
-        return "checkmark-circle-outline";
+        return "ListCheck";
       default:
-        return "ellipsis-horizontal";
+        return "Settings";
     }
   };
 
@@ -119,15 +115,127 @@ const DatabaseLoadingModal: React.FC<DatabaseLoadingModalProps> = ({
     }
   };
 
-  const styles = StyleSheet.create({
-    modalOverlay: {
-      flex: 1,
-      backgroundColor: "rgba(0, 0, 0, 0.7)",
-      justifyContent: "center",
-      alignItems: "center",
-    },
+  const getStageMessage = (stage: string) => {
+    switch (stage) {
+      case "preparing":
+        return "Preparando...";
+      case "downloading":
+        return "Descargando...";
+      case "extracting":
+        return "Extrayendo...";
+      case "converting":
+        return "Convirtiendo...";
+      case "writing":
+        return "Guardando...";
+      case "verifying":
+        return "Verificando...";
+      default:
+        return "Descargando...";
+    }
+  };
+
+  useEffect(() => {
+    console.log(
+      "DatabaseLoadingModal",
+      `${progress.databaseName} ${visible} ${progress.stage} ${progress.message} ${progress.percentage}`
+    );
+  }, [progress, visible]);
+
+  return (
+    // <Modal
+    //   visible={visible}
+    //   transparent
+    //   animationType="fade"
+    //   statusBarTranslucent
+    // >
+    // <View style={styles.modalOverlay}>
+    // </View>
+    <Animated.View
+      style={[
+        styles.modalContent,
+        {
+          transform: [{ scale: pulseValue }],
+        },
+      ]}
+    >
+      {/* Lottie Animation */}
+      <View style={styles.lottieContainer}>
+        <LottieView
+          source={lottieAssets.downloading}
+          autoPlay
+          loop
+          style={{ width: "100%", height: "100%" }}
+        />
+      </View>
+
+      {/* Title */}
+      <Text style={styles.title}>
+        Descargando {progress.databaseName || "Base de datos"}
+      </Text>
+      <Text style={styles.subtitle}>
+        Por favor espera mientras preparamos tu base de datos
+      </Text>
+
+      {/* Progress Bar */}
+      <View style={styles.progressContainer}>
+        <View style={styles.progressBar}>
+          <View
+            style={[
+              styles.progressFill,
+              {
+                width: `${progress?.percentage || 0}%`,
+                backgroundColor: progress
+                  ? getStageColor(progress.stage)
+                  : theme.colors.primary,
+              },
+            ]}
+          />
+        </View>
+        <Text style={styles.progressText}>
+          {progress?.percentage || 0}% completado
+        </Text>
+      </View>
+
+      {/* Current Stage */}
+      {progress && (
+        <View style={styles.stageContainer}>
+          <Animated.View
+            style={[
+              styles.stageIcon,
+              {
+                transform: [{ rotate: spin }],
+              },
+            ]}
+          >
+            <Icon
+              name={getStageIcon(progress.stage)}
+              size={24}
+              color={getStageColor(progress.stage)}
+            />
+            {/* <Ionicons
+              name={getStageIcon(progress.stage) as any}
+              size={24}
+              color={getStageColor(progress.stage)}
+            /> */}
+          </Animated.View>
+          <View style={styles.stageContent}>
+            <Text style={styles.stageTitle}>
+              {getStageMessage(progress.stage)}
+            </Text>
+            <Text style={styles.stageMessage}>{progress.message || "---"}</Text>
+          </View>
+          <Text style={styles.percentageText}>{progress.percentage}%</Text>
+        </View>
+      )}
+    </Animated.View>
+    // </Modal>
+  );
+};
+
+const getStyles = ({ colors }: TTheme) =>
+  StyleSheet.create({
     modalContent: {
-      backgroundColor: theme.colors.card,
+      backgroundColor: colors.background,
       borderRadius: 20,
       padding: 30,
       width: width * 0.85,
@@ -150,13 +258,13 @@ const DatabaseLoadingModal: React.FC<DatabaseLoadingModalProps> = ({
     title: {
       fontSize: 20,
       fontWeight: "bold",
-      color: theme.colors.text,
+      color: colors.text,
       textAlign: "center",
       marginBottom: 10,
     },
     subtitle: {
       fontSize: 16,
-      color: theme.colors.text,
+      color: colors.text,
       textAlign: "center",
       marginBottom: 20,
       opacity: 0.8,
@@ -167,18 +275,18 @@ const DatabaseLoadingModal: React.FC<DatabaseLoadingModalProps> = ({
     },
     progressBar: {
       height: 6,
-      backgroundColor: theme.colors.border,
+      backgroundColor: colors.border,
       borderRadius: 3,
       overflow: "hidden",
     },
     progressFill: {
       height: "100%",
       borderRadius: 3,
-      backgroundColor: theme.colors.primary,
+      backgroundColor: colors.primary,
     },
     progressText: {
       fontSize: 14,
-      color: theme.colors.text,
+      color: colors.text,
       textAlign: "center",
       marginTop: 8,
       opacity: 0.7,
@@ -186,7 +294,7 @@ const DatabaseLoadingModal: React.FC<DatabaseLoadingModalProps> = ({
     stageContainer: {
       flexDirection: "row",
       alignItems: "center",
-      backgroundColor: theme.colors.background,
+      backgroundColor: colors.background,
       padding: 12,
       borderRadius: 12,
       marginBottom: 15,
@@ -201,108 +309,19 @@ const DatabaseLoadingModal: React.FC<DatabaseLoadingModalProps> = ({
     stageTitle: {
       fontSize: 14,
       fontWeight: "600",
-      color: theme.colors.text,
+      color: colors.text,
       marginBottom: 2,
     },
     stageMessage: {
       fontSize: 12,
-      color: theme.colors.text,
-      opacity: 0.7,
+      color: colors.text,
+      opacity: 0.8,
     },
     percentageText: {
       fontSize: 12,
       fontWeight: "bold",
-      color: theme.colors.primary,
+      color: colors.primary,
     },
   });
-
-  return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="fade"
-      statusBarTranslucent
-    >
-      <View style={styles.modalOverlay}>
-        <Animated.View
-          style={[
-            styles.modalContent,
-            {
-              transform: [{ scale: pulseValue }],
-            },
-          ]}
-        >
-          {/* Lottie Animation */}
-          <View style={styles.lottieContainer}>
-            <LottieView
-              source={lottieAssets.downloading}
-              autoPlay
-              loop
-              style={{ width: "100%", height: "100%" }}
-            />
-          </View>
-
-          {/* Title */}
-          <Text style={styles.title}>Descargando {databaseName}</Text>
-          <Text style={styles.subtitle}>
-            Por favor espera mientras preparamos tu base de datos
-          </Text>
-
-          {/* Progress Bar */}
-          <View style={styles.progressContainer}>
-            <View style={styles.progressBar}>
-              <View
-                style={[
-                  styles.progressFill,
-                  {
-                    width: `${progress?.percentage || 0}%`,
-                    backgroundColor: progress
-                      ? getStageColor(progress.stage)
-                      : theme.colors.primary,
-                  },
-                ]}
-              />
-            </View>
-            <Text style={styles.progressText}>
-              {progress?.percentage || 0}% completado
-            </Text>
-          </View>
-
-          {/* Current Stage */}
-          {progress && (
-            <View style={styles.stageContainer}>
-              <Animated.View
-                style={[
-                  styles.stageIcon,
-                  {
-                    transform: [{ rotate: spin }],
-                  },
-                ]}
-              >
-                <Ionicons
-                  name={getStageIcon(progress.stage) as any}
-                  size={24}
-                  color={getStageColor(progress.stage)}
-                />
-              </Animated.View>
-              <View style={styles.stageContent}>
-                <Text style={styles.stageTitle}>
-                  {progress.stage === "preparing" && "Preparando..."}
-                  {progress.stage === "downloading" && "Descargando..."}
-                  {progress.stage === "extracting" && "Extrayendo..."}
-                  {progress.stage === "converting" && "Convirtiendo..."}
-                  {progress.stage === "writing" && "Guardando..."}
-                  {progress.stage === "verifying" && "Verificando..."}
-                </Text>
-                <Text style={styles.stageMessage}>{progress.message}</Text>
-              </View>
-              <Text style={styles.percentageText}>{progress.percentage}%</Text>
-            </View>
-          )}
-        </Animated.View>
-      </View>
-    </Modal>
-  );
-};
 
 export default DatabaseLoadingModal;

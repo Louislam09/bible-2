@@ -200,7 +200,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
     try {
 
       if (isReDownload) {
-        dbDownloadState$.isDownloading.set(true);
+        dbDownloadState$.isDownloadingDB.set(true);
         dbDownloadState$.dbItem.set(databaseItem);
 
         setDatabase(null);
@@ -251,9 +251,7 @@ function useDB({ dbName }: TUseDatabase): UseDatabase {
         await unzipFile({
           zipFileUri: dbItemZipPath,
           onProgress: (msg) => {
-            dbDownloadState$.progressText.set(msg);
-            // Also update the global progress state
-            bibleState$.databaseProgress.set({
+            dbDownloadState$.setDownloadProgress({
               stage: 'extracting',
               message: msg,
               percentage: 50,

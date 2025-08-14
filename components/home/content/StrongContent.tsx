@@ -33,7 +33,6 @@ import {
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { Text, View } from "../../Themed";
-import useBibleDb from "@/hooks/useBibleDb";
 import { useBibleContext } from "@/context/BibleContext";
 
 type HeaderAction = {
@@ -66,7 +65,8 @@ interface IStrongContent {
 const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
   const data = use$<IStrongWord>(() => bibleState$.strongWord.get());
   const { code, text: word } = data;
-  const { myBibleDB, executeSql, isMyBibleDbLoaded, mainBibleService } = useDBContext();
+  const { myBibleDB, executeSql, isMyBibleDbLoaded, mainBibleService } =
+    useDBContext();
   const [values, setValues] = useState<DictionaryData[]>([
     { definition: "", topic: "" },
   ]);
@@ -121,11 +121,15 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
 
   useEffect(() => {
     const fetchDictionaryData = async () => {
-      if (!isMyBibleDbLoaded || !strongCode || !mainBibleService.isLoaded) return;
+      if (!isMyBibleDbLoaded || !strongCode || !mainBibleService.isLoaded)
+        return;
 
       try {
         const dictionaryData = isInterlineal
-          ? await mainBibleService.executeSql(SEARCH_STRONG_WORD, strongCode.split(","))
+          ? await mainBibleService.executeSql(
+              SEARCH_STRONG_WORD,
+              strongCode.split(",")
+            )
           : await executeSql(SEARCH_STRONG_WORD, strongCode.split(","));
 
         if (dictionaryData?.length) {

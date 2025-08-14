@@ -759,3 +759,9 @@ export interface RequestData {
   created: string;
   updated: string;
 }
+
+export enum DEFAULT_DATABASE {
+  BIBLE = "bible",
+  NTV = "ntv-bible",
+  INTERLINEAR = "interlinear-bible",
+}

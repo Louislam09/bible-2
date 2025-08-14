@@ -1,4 +1,5 @@
 import getThemes from "@/constants/themeColors";
+import { use$ } from "@legendapp/state/react";
 import { ThemeProvider } from "@react-navigation/native";
 import React, {
   createContext,
@@ -8,7 +9,7 @@ import React, {
   useState,
 } from "react";
 import { Appearance } from "react-native";
-import { useBibleContext } from "./BibleContext";
+import { storedData$ } from "./LocalstoreContext";
 
 interface ThemeContextProps {
   schema: "light" | "dark";
@@ -22,11 +23,10 @@ interface ThemeProviderProps {
 }
 
 const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const { currentTheme } = useBibleContext();
+  const currentTheme = use$(() => storedData$.currentTheme.get());
   const colorScheme = Appearance.getColorScheme();
   const themes = getThemes();
   const { DarkTheme, LightTheme } = themes[currentTheme];
-  // const { DarkTheme, LightTheme } = themes["BlackWhite"];
   const theme = { dark: DarkTheme, light: LightTheme };
   const [schema, setSchema] = useState<"light" | "dark">(
     colorScheme === "dark" ? "dark" : "light"

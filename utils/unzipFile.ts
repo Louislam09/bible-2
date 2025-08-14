@@ -75,14 +75,17 @@ const deleteFilesInDirectory = async (directoryUri: string) => {
   }
 };
 
-const saveFileToPhone = async (
-  fileName: string,
-  fileContent: Uint8Array,
-  directory: string
-) => {
+interface SaveFileToPhoneProps {
+  fileName: string;
+  fileContent: Uint8Array;
+  fileBase64?: string;
+  directory: string;
+}
+
+const saveFileToPhone = async ({ fileName, fileContent, fileBase64, directory }: SaveFileToPhoneProps) => {
   try {
     const fileUri = `${directory}${fileName}`;
-    const base64String = uint8ArrayToBase64(fileContent);
+    const base64String = fileBase64 || uint8ArrayToBase64(fileContent);
     await FileSystem.writeAsStringAsync(fileUri, base64String, {
       encoding: FileSystem.EncodingType.Base64,
     });
@@ -128,13 +131,15 @@ const extractAndSaveFiles = async (
       const databaseType = getDatabaseType(fileName);
       const allowTypes = [DATABASE_TYPE.BIBLE, DATABASE_TYPE.DICTIONARY];
       const isDefaultBible = isDefaultDatabase(fileName.replace('.db', ''));
-      console.log({ fileName, databaseType, allowTypes, isDefaultBible })
+      // console.log({ fileName, databaseType, allowTypes, isDefaultBible })
 
       if (!file.dir && allowTypes.includes(databaseType)) {
         onProgress(
           `Extrayendo ${fileName} (${filesExtracted + 1}/${totalFiles})`
         );
         const fileContent = await file.async("uint8array");
+        const fileBase64 = await file.async("base64")
+        console.log('fileBase64', fileBase64.length)
         let newFileName = fileName
         if (!isDefaultBible) {
           newFileName = changeFileNameExt({
@@ -143,7 +148,7 @@ const extractAndSaveFiles = async (
           });
         }
         console.log({ newFileName, fileName })
-        await saveFileToPhone(newFileName, fileContent, extractionPath);
+        await saveFileToPhone({ fileName: newFileName, fileContent, directory: extractionPath, fileBase64 });
         filesExtracted++;
       }
     }
