@@ -3,7 +3,7 @@ import { CREATE_FAVORITE_VERSES_TABLE } from "@/constants/Queries";
 import { bibleState$ } from "@/state/bibleState";
 import { dbDownloadState$ } from "@/state/dbDownloadState";
 import { DEFAULT_DATABASE } from "@/types";
-import { prepareDatabase } from "@/utils/prepareDB";
+import { prepareDatabaseFromDbFile, prepareDatabaseFromZip } from "@/utils/prepareDB";
 import unzipFile from "@/utils/unzipFile";
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
@@ -189,7 +189,7 @@ export function useInterlinearDB({ isInterlinear, onProgress, enabled, databaseI
         }
 
         const initDb = async () => {
-            const interlinearDb = await prepareDatabase({
+            const interlinearDb = await prepareDatabaseFromDbFile({
                 databaseItem: dbName,
                 onProgress: (progress) => {
                     // console.log('useInterlinearDB:', progress.stage, progress.message)

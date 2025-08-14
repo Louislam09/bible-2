@@ -6,7 +6,7 @@ import {
   historyQuery,
 } from "@/constants/Queries";
 import { bibleState$ } from "@/state/bibleState";
-import { prepareDatabase } from "@/utils/prepareDB";
+import { prepareDatabaseFromDbFile, prepareDatabaseFromZip } from "@/utils/prepareDB";
 import * as SQLite from "expo-sqlite";
 import { useEffect, useRef, useState } from "react";
 import { VersionItem } from "./useInstalledBible";
@@ -160,7 +160,7 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
         if (!dbName) return;
 
         // const db = null
-        const db = await prepareDatabase({
+        const db = await prepareDatabaseFromDbFile({
           databaseItem: dbName,
           onProgress: (progress) => {
             // console.log('useLoadDatabase: ', progress.stage, progress.message)

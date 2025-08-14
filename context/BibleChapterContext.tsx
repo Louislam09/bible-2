@@ -91,10 +91,9 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
         "verses"
       );
 
-      console.log({
-        intLen: interlinearVerses.length,
-        verseLne: verses.length,
-      });
+      console.log(
+        `intLen: ${interlinearVerses.length} - verseLen: ${verses.length}`
+      );
       const links = bibleLinks.filter(
         (link) =>
           link.book_number === currentBook?.bookNumber &&

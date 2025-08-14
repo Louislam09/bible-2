@@ -153,14 +153,16 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
           )}
         </View>
       )}
-      <View
-        style={[
-          styles.customContentContainer,
-          { backgroundColor: backgroundColor || theme.colors.background },
-        ]}
-      >
-        {customContent && customContent}
-      </View>
+      {customContent && (
+        <View
+          style={[
+            styles.customContentContainer,
+            { backgroundColor: backgroundColor || theme.colors.background },
+          ]}
+        >
+          {customContent}
+        </View>
+      )}
 
       {!isAnimating && children}
     </View>

@@ -1,7 +1,7 @@
 import { databaseNames, getDatabaseExt, isDefaultDatabase } from "@/constants/databaseNames";
 import { dbDownloadState$ } from "@/state/dbDownloadState";
 import { DATABASE_TYPE, DEFAULT_DATABASE } from "@/types";
-import { prepareDatabase } from "@/utils/prepareDB";
+import { prepareDatabaseFromZip } from "@/utils/prepareDB";
 import * as SQLite from "expo-sqlite";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -76,7 +76,7 @@ const useBibleDb = ({ databaseId, isInterlinear, enabled = false }: UseBibleDbPr
             try {
                 isInitializing.current = true;
                 setIsLoaded(false);
-                const bibleDb = await prepareDatabase({
+                const bibleDb = await prepareDatabaseFromZip({
                     databaseItem: dbName,
                     onProgress: (progress) => {
                         console.log('useBibleDb:', progress.stage, progress.message)

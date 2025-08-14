@@ -3,6 +3,7 @@ import Icon from "@/components/Icon";
 import { CustomQuoteMode } from "@/components/quote/CustomQuoteMode";
 import { QuoteCard } from "@/components/quote/QuoteCard";
 import { QuoteNavigationDots } from "@/components/quote/QuoteNavigationDots";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { quoteTemplates } from "@/constants/quoteTemplates";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { useQuoteCardStack } from "@/hooks/useQuoteCardStack";
@@ -61,10 +62,16 @@ const COLORS = [
   "#455A64", // darker blue grey (replaced #607D8B)
 ];
 
-
 type FontType = {
   readonly label: "Aa";
-  readonly fontFamily: "System" | "serif" | "sans-serif" | "monospace" | "cursive" | "fantasy" | "emoji";
+  readonly fontFamily:
+    | "System"
+    | "serif"
+    | "sans-serif"
+    | "monospace"
+    | "cursive"
+    | "fantasy"
+    | "emoji";
   readonly fontWeight: "400" | "700";
 };
 
@@ -317,7 +324,7 @@ const Quote: React.FC<QuoteProps> = () => {
       Alert.alert(
         "Error",
         "No se pudo compartir la cita: " +
-        (error?.message || "Error desconocido")
+          (error?.message || "Error desconocido")
       );
     } finally {
       setIsLoading(false);
@@ -346,7 +353,11 @@ const Quote: React.FC<QuoteProps> = () => {
               onPress={() => setCustomMode(!customMode)}
               style={styles.headerButton}
             >
-              <Icon name={customMode ? "GalleryHorizontal" : "Brush"} size={24} color={theme.colors.text} />
+              <Icon
+                name={customMode ? "GalleryHorizontal" : "Brush"}
+                size={24}
+                color={theme.colors.text}
+              />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleShare}
@@ -366,103 +377,112 @@ const Quote: React.FC<QuoteProps> = () => {
   }, [theme.colors, handleShare, isLoading, setCustomMode]);
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    <ScreenWithAnimation
+      iconColor="#CDAA7D"
+      duration={800}
+      icon="Quote"
+      title="Crear cita"
     >
-      <View style={styles.container}>
-        <Stack.Screen options={singleScreenHeader(screenOptions)} />
-        <View style={styles.headerContent}>
-          <Animated.Text
-            style={[
-              styles.mainTitle,
-              {
-                opacity: titleOpacity,
-                transform: [{ translateY: titleTranslateY }],
-              },
-            ]}
-          >
-            {customMode
-              ? "Personaliza tu cita"
-              : quoteTemplates[currentTemplateIndex]?.name || "Loading..."}
-          </Animated.Text>
-          <Animated.Text
-            style={[
-              styles.subTitle,
-              {
-                opacity: subTitleOpacity,
-                transform: [{ translateY: subTitleTranslateY }],
-              },
-            ]}
-          >
-            {customMode
-              ? "Crea tu propio estilo"
-              : quoteTemplates[currentTemplateIndex]?.description ||
-              "Select a template"}
-          </Animated.Text>
-        </View>
-        {customMode ? (
-          <CustomQuoteMode
-            selectedColor={selectedColor}
-            selectedFont={selectedFont}
-            quoteText={quoteText}
-            reference={reference}
-            onColorSelect={(color) => {
-              setSelectedColor(color);
-              setCustomMode(true);
-            }}
-            onFontSelect={(font) => {
-              setSelectedFont(font);
-              setCustomMode(true);
-            }}
-            onQuoteTextChange={setQuoteText}
-            onReferenceChange={setReference}
-            colors={COLORS}
-            fonts={FONTS}
-            viewShotRef={viewShotRef}
-          />
-        ) : (
-          <View style={styles.templateContent}>
-            {renderCardRange.map((index) => {
-              const template = quoteTemplates[index];
-              const isCurrent = index === currentTemplateIndex;
-              const distance = Math.abs(index - currentTemplateIndex);
-
-              return (
-                <QuoteCard
-                  key={template.id.toString()}
-                  template={{
-                    id: template.id.toString(),
-                    template: template.template,
-                  }}
-                  index={index}
-                  isCurrent={isCurrent}
-                  distance={distance}
-                  currentTemplateIndex={currentTemplateIndex}
-                  pan={pan}
-                  rotate={rotate}
-                  currentCardScale={currentCardScale}
-                  currentCardOpacity={currentCardOpacity}
-                  screenWidth={screenWidth}
-                  panResponder={panResponder}
-                  reference={reference}
-                  quoteText={quoteText}
-                  webViewRef={webViewRef}
-                  viewShotRef={viewShotRef}
-                />
-              );
-            })}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+      >
+        <View style={styles.container}>
+          <Stack.Screen options={singleScreenHeader(screenOptions)} />
+          <View style={styles.headerContent}>
+            <Animated.Text
+              style={[
+                styles.mainTitle,
+                {
+                  opacity: titleOpacity,
+                  transform: [{ translateY: titleTranslateY }],
+                },
+              ]}
+            >
+              {customMode
+                ? "Personaliza tu cita"
+                : quoteTemplates[currentTemplateIndex]?.name || "Loading..."}
+            </Animated.Text>
+            <Animated.Text
+              style={[
+                styles.subTitle,
+                {
+                  opacity: subTitleOpacity,
+                  transform: [{ translateY: subTitleTranslateY }],
+                },
+              ]}
+            >
+              {customMode
+                ? "Crea tu propio estilo"
+                : quoteTemplates[currentTemplateIndex]?.description ||
+                  "Select a template"}
+            </Animated.Text>
           </View>
-        )}
-        {!customMode && <QuoteNavigationDots
-          currentIndex={currentTemplateIndex}
-          totalTemplates={quoteTemplates.length}
-          customMode={customMode}
-          onDotPress={handleDotPress}
-          scrollViewRef={scrollViewRef}
-        />}
-      </View>
-    </KeyboardAvoidingView>
+          {customMode ? (
+            <CustomQuoteMode
+              selectedColor={selectedColor}
+              selectedFont={selectedFont}
+              quoteText={quoteText}
+              reference={reference}
+              onColorSelect={(color) => {
+                setSelectedColor(color);
+                setCustomMode(true);
+              }}
+              onFontSelect={(font) => {
+                setSelectedFont(font);
+                setCustomMode(true);
+              }}
+              onQuoteTextChange={setQuoteText}
+              onReferenceChange={setReference}
+              colors={COLORS}
+              fonts={FONTS}
+              viewShotRef={viewShotRef}
+            />
+          ) : (
+            <View style={styles.templateContent}>
+              {renderCardRange.map((index) => {
+                const template = quoteTemplates[index];
+                const isCurrent = index === currentTemplateIndex;
+                const distance = Math.abs(index - currentTemplateIndex);
+
+                return (
+                  <QuoteCard
+                    key={template.id.toString()}
+                    template={{
+                      id: template.id.toString(),
+                      template: template.template,
+                    }}
+                    index={index}
+                    isCurrent={isCurrent}
+                    distance={distance}
+                    currentTemplateIndex={currentTemplateIndex}
+                    pan={pan}
+                    rotate={rotate}
+                    currentCardScale={currentCardScale}
+                    currentCardOpacity={currentCardOpacity}
+                    screenWidth={screenWidth}
+                    panResponder={panResponder}
+                    reference={reference}
+                    quoteText={quoteText}
+                    webViewRef={webViewRef}
+                    viewShotRef={viewShotRef}
+                  />
+                );
+              })}
+            </View>
+          )}
+          {!customMode && (
+            <QuoteNavigationDots
+              currentIndex={currentTemplateIndex}
+              totalTemplates={quoteTemplates.length}
+              customMode={customMode}
+              onDotPress={handleDotPress}
+              scrollViewRef={scrollViewRef}
+            />
+          )}
+        </View>
+      </KeyboardAvoidingView>
+    </ScreenWithAnimation>
   );
 };
 

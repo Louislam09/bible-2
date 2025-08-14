@@ -197,36 +197,36 @@ const DatabaseLoadingModal: React.FC = () => {
       </View>
 
       {/* Current Stage */}
-      {progress && (
-        <View style={styles.stageContainer}>
-          <Animated.View
-            style={[
-              styles.stageIcon,
-              {
-                transform: [{ rotate: spin }],
-              },
-            ]}
-          >
-            <Icon
-              name={getStageIcon(progress.stage)}
-              size={24}
-              color={getStageColor(progress.stage)}
-            />
-            {/* <Ionicons
+      {/* {progress && (
+      )} */}
+      <View style={styles.stageContainer}>
+        <Animated.View
+          style={[
+            styles.stageIcon,
+            {
+              transform: [{ scale: pulseValue }],
+            },
+          ]}
+        >
+          <Icon
+            name={getStageIcon(progress.stage)}
+            size={24}
+            color={getStageColor(progress.stage)}
+          />
+          {/* <Ionicons
               name={getStageIcon(progress.stage) as any}
               size={24}
               color={getStageColor(progress.stage)}
             /> */}
-          </Animated.View>
-          <View style={styles.stageContent}>
-            <Text style={styles.stageTitle}>
-              {getStageMessage(progress.stage)}
-            </Text>
-            <Text style={styles.stageMessage}>{progress.message || "---"}</Text>
-          </View>
-          <Text style={styles.percentageText}>{progress.percentage}%</Text>
+        </Animated.View>
+        <View style={styles.stageContent}>
+          <Text style={styles.stageTitle}>
+            {getStageMessage(progress.stage)}
+          </Text>
+          <Text style={styles.stageMessage}>{progress.message || "---"}</Text>
         </View>
-      )}
+        <Text style={styles.percentageText}>{progress.percentage}%</Text>
+      </View>
     </Animated.View>
     // </Modal>
   );
