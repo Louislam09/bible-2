@@ -97,6 +97,7 @@ export const useNotificationService = () => {
 
             return true;
         } catch (error) {
+            setError(JSON.stringify(error, null, 2));
             console.error("Error requesting notification permissions:", error);
             Alert.alert("Error", "No se pudieron solicitar los permisos de notificación");
             return false;
@@ -204,8 +205,9 @@ export const useNotificationService = () => {
             try {
                 dailyVerseData = await getDailyVerseData(executeSql);
             } catch (error) {
-                console.warn('Could not get daily verse data:', error);
-                setError(JSON.stringify(error, null, 2));
+                const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+                console.warn('Could not get daily verse data:', errorMessage);
+                setError(errorMessage);
             }
         }
 
@@ -331,7 +333,9 @@ export const useNotificationService = () => {
                 type: "test"
             });
         } catch (error) {
-            console.error("Error sending test notification:", error);
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            setError(errorMessage);
+            console.error("Error sending test notification:", errorMessage);
             Alert.alert("Error", "No se pudo enviar la notificación de prueba");
         }
     };
@@ -341,7 +345,9 @@ export const useNotificationService = () => {
             await Notifications.cancelAllScheduledNotificationsAsync();
             showToast("Todas las notificaciones canceladas", "SHORT");
         } catch (error) {
-            console.error("Error cancelling notifications:", error);
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            setError(errorMessage);
+            console.error("Error cancelling notifications:", errorMessage);
         }
     };
 
@@ -351,7 +357,9 @@ export const useNotificationService = () => {
             showToast(`✅ Notificación cancelada`, "SHORT");
             console.log(`✅ Notification ${notificationId} cancelled`);
         } catch (error) {
-            console.error(`Error cancelling notification ${notificationId}:`, error);
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            setError(errorMessage);
+            console.error(`Error cancelling notification ${notificationId}:`, errorMessage);
         }
     };
 
@@ -359,7 +367,9 @@ export const useNotificationService = () => {
         try {
             return await Notifications.getAllScheduledNotificationsAsync();
         } catch (error) {
-            console.error("Error getting scheduled notifications:", error);
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            setError(errorMessage);
+            console.error("Error getting scheduled notifications:", errorMessage);
             return [];
         }
     };
@@ -446,7 +456,9 @@ export const useNotificationService = () => {
 
             return true;
         } catch (error) {
-            console.error("Error updating notification settings:", error);
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            setError(errorMessage);
+            console.error("Error updating notification settings:", errorMessage);
             Alert.alert("Error", "No se pudieron actualizar las configuraciones de notificación");
             return false;
         } finally {
@@ -475,7 +487,9 @@ export const useNotificationService = () => {
                 await scheduleMemorizationReminder();
             }
         } catch (error) {
-            console.error("Error initializing notifications:", error);
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            setError(errorMessage);
+            console.error("Error initializing notifications:", errorMessage);
         }
     };
 
@@ -540,7 +554,9 @@ export const useNotificationService = () => {
             return true;
 
         } catch (error) {
-            console.error('Error sending push notification:', error);
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            setError(errorMessage);
+            console.error('Error sending push notification:', errorMessage);
             return false;
         }
     };
