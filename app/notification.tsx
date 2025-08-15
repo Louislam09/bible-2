@@ -114,8 +114,12 @@ const NotificationSettingsScreen = () => {
 
   const testNotificationSchedule = async () => {
     const now = new Date();
-    const oneMinuteFromNow = new Date(now.getTime() + 60000);
-    await notificationService.scheduleAlarm(oneMinuteFromNow, "Test", "Test");
+    const oneMinuteFromNow = new Date(now.getTime() + 3000);
+    await notificationService.scheduleAlarm(
+      oneMinuteFromNow,
+      "Notificacion Programada",
+      "Esto es una prueba de notificacion programada"
+    );
   };
 
   const handleNotificationEnabled = async () => {

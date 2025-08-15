@@ -40,12 +40,14 @@ export async function registerForPushNotificationsAsync() {
     }
     try {
       console.log("🔔 Project ID: ", projectId);
+      const pushToken = await Notifications.getExpoPushTokenAsync();
+      console.log("🔔 Push token: ", pushToken);
       const pushTokenString = (
         await Notifications.getExpoPushTokenAsync({
           projectId,
         })
-      ).data;
-      // console.log("🔔 Push token: ", pushTokenString);
+      )?.data;
+      console.log("🔔 PushTokenString: ", pushTokenString);
       return pushTokenString;
     } catch (e: unknown) {
       throw new Error(`${e}`);
