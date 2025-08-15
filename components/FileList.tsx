@@ -39,7 +39,7 @@ const FileList = () => {
 
   const fetchFiles = async () => {
     const fileList = await FileSystem.readDirectoryAsync(extractionPath);
-    console.log({ fileList });
+    // console.log({ fileList });
 
     try {
       setFiles(
