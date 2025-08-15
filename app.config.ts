@@ -74,7 +74,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         backgroundColor: "#0c3e3d",
       },
       package: getUniqueIdentifier(),
-      googleServicesFile: googleServicesFile(),
+      googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? googleServicesFile(),
       permissions: [
         "android.permission.SCHEDULE_EXACT_ALARM",
         "android.permission.USE_EXACT_ALARM",

@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useCustomTheme } from "@/context/ThemeContext";
 import Constants from "expo-constants";
+export const GOOGLE_SERVICE_JSON = process.env.GOOGLE_SERVICE_JSON;
 
 const DatabaseDebug = () => {
   const { schema } = useCustomTheme();
@@ -110,8 +111,6 @@ const DatabaseDebug = () => {
       console.log("Error", `Failed to clear notifications: ${error}`);
     }
   };
-
-  console.log(notificationError);
 
   return (
     <ScrollView
@@ -344,6 +343,11 @@ const DatabaseDebug = () => {
         )}
       </View>
 
+      <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+        GOOGLE_SERVICE_JSON: {GOOGLE_SERVICE_JSON}{" "}
+        {JSON.stringify(GOOGLE_SERVICE_JSON, null, 2)}
+        --------------------------------------------------------------
+      </Text>
       <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
         {JSON.stringify(Constants.expoConfig, null, 2)}
       </Text>
