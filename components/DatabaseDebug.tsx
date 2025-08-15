@@ -34,8 +34,7 @@ const DatabaseDebug = () => {
       const easConfig = Constants.easConfig;
 
       setFirebaseInfo({
-        bundleIdentifier:
-          expoConfig?.ios?.bundleIdentifier || expoConfig?.android?.package,
+        bundleIdentifier: expoConfig?.android?.package,
         projectId: expoConfig?.extra?.eas?.projectId || easConfig?.projectId,
         appVariant: process.env.APP_VARIANT,
         expoConfig: expoConfig,
@@ -90,6 +89,8 @@ const DatabaseDebug = () => {
         trigger: {
           type: "timeInterval",
           seconds: 60, // 1 minute from now
+          repeats: false,
+          channelId: "default",
         } as Notifications.TimeIntervalTriggerInput,
       });
       Alert.alert("Success", "Scheduled notification for 1 minute from now!");
@@ -342,6 +343,10 @@ const DatabaseDebug = () => {
           </View>
         )}
       </View>
+
+      <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+        {JSON.stringify(Constants.expoConfig, null, 2)}
+      </Text>
 
       {/* Action Buttons */}
       <View style={{ marginBottom: 20 }}>
