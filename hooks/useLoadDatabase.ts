@@ -6,7 +6,7 @@ import {
   historyQuery,
 } from "@/constants/Queries";
 import { bibleState$ } from "@/state/bibleState";
-import { prepareDatabaseFromDbFile, prepareDatabaseFromZip } from "@/utils/prepareDB";
+import { prepareDatabaseFromDbFile } from "@/utils/prepareDB";
 import * as SQLite from "expo-sqlite";
 import { useEffect, useRef, useState } from "react";
 import { VersionItem } from "./useInstalledBible";
