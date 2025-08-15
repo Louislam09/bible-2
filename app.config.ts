@@ -28,14 +28,7 @@ const getAppName = () => {
 };
 
 const googleServicesFile = () => {
-  if (IS_DEV) {
-    return "./google-services-dev.json";
-  }
-
-  if (IS_PREVIEW) {
-    return "./google-services.json";
-  }
-
+  // Use the same Firebase project for all environments
   return "./google-services.json";
 };
 

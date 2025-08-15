@@ -408,7 +408,7 @@ const NotificationSettingsScreen = () => {
         />
 
         {sections.map(SettingSection)}
-        {isAdmin && <DatabaseDebug />}
+        {(isAdmin || IS_DEV) && <DatabaseDebug />}
 
         {/* Time Picker Modal */}
         <Modal

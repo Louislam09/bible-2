@@ -6,6 +6,7 @@ import * as Notifications from "expo-notifications";
 import React, { useEffect, useState } from "react";
 import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useCustomTheme } from "@/context/ThemeContext";
+import Constants from "expo-constants";
 
 const DatabaseDebug = () => {
   const { schema } = useCustomTheme();
@@ -16,6 +17,7 @@ const DatabaseDebug = () => {
   );
   const [notificationPermissions, setNotificationPermissions] =
     useState<any>(null);
+  const [firebaseInfo, setFirebaseInfo] = useState<any>(null);
 
   const user = use$(() => storedData$.user.get()) || null;
   const notificationPreferences =
@@ -23,7 +25,26 @@ const DatabaseDebug = () => {
 
   useEffect(() => {
     loadNotificationInfo();
+    loadFirebaseInfo();
   }, []);
+
+  const loadFirebaseInfo = () => {
+    try {
+      const expoConfig = Constants.expoConfig;
+      const easConfig = Constants.easConfig;
+
+      setFirebaseInfo({
+        bundleIdentifier:
+          expoConfig?.ios?.bundleIdentifier || expoConfig?.android?.package,
+        projectId: expoConfig?.extra?.eas?.projectId || easConfig?.projectId,
+        appVariant: process.env.APP_VARIANT,
+        expoConfig: expoConfig,
+        easConfig: easConfig,
+      });
+    } catch (error) {
+      console.log("Error loading Firebase info:", error);
+    }
+  };
 
   const loadNotificationInfo = async () => {
     try {
@@ -36,7 +57,7 @@ const DatabaseDebug = () => {
       const permissions = await Notifications.getPermissionsAsync();
       setNotificationPermissions(permissions);
     } catch (error) {
-      console.error("Error loading notification info:", error);
+      console.log("Error loading notification info:", error);
     }
   };
 
@@ -53,7 +74,7 @@ const DatabaseDebug = () => {
       Alert.alert("Success", "Test notification sent!");
       loadNotificationInfo(); // Refresh the list
     } catch (error) {
-      Alert.alert("Error", `Failed to send test notification: ${error}`);
+      console.log("Error", `Failed to send test notification: ${error}`);
     }
   };
 
@@ -65,17 +86,17 @@ const DatabaseDebug = () => {
           body: "This is a test notification from debug panel",
           data: { type: "test" },
         },
-        // to be in 2min from now
+        // Schedule for 1 minute from now
         trigger: {
-          type: "daily", // ✅ REQUIRED: Must specify trigger type
-          hour: new Date().getHours(), // 10:00
-          minute: new Date().getMinutes() + 1, // 10:02
-          repeats: true,
-          channelId: "daily-verse", // ✅ Use specific channel
-        } as Notifications.DailyTriggerInput,
+          type: "timeInterval",
+          seconds: 60, // 1 minute from now
+        } as Notifications.TimeIntervalTriggerInput,
       });
+      Alert.alert("Success", "Scheduled notification for 1 minute from now!");
+      loadNotificationInfo(); // Refresh the list
     } catch (error) {
-      Alert.alert("Error", `Failed to send test notification: ${error}`);
+      console.log("Error", `Failed to send test notification: ${error}`);
+      Alert.alert("Error", `Failed to schedule notification: ${error}`);
     }
   };
 
@@ -85,9 +106,11 @@ const DatabaseDebug = () => {
       Alert.alert("Success", "All notifications cleared!");
       loadNotificationInfo(); // Refresh the list
     } catch (error) {
-      Alert.alert("Error", `Failed to clear notifications: ${error}`);
+      console.log("Error", `Failed to clear notifications: ${error}`);
     }
   };
+
+  console.log(notificationError);
 
   return (
     <ScrollView
@@ -290,6 +313,33 @@ const DatabaseDebug = () => {
           <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
             Name: {user.name || "Not set"}
           </Text>
+        )}
+      </View>
+
+      {/* Firebase Info */}
+      <View style={{ marginBottom: 20 }}>
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "bold",
+            color: schema === "dark" ? "#fff" : "#000",
+            marginBottom: 8,
+          }}
+        >
+          Firebase Info
+        </Text>
+        {firebaseInfo && (
+          <View>
+            <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+              Bundle ID: {firebaseInfo.bundleIdentifier}
+            </Text>
+            <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+              Project ID: {firebaseInfo.projectId}
+            </Text>
+            <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+              App Variant: {firebaseInfo.appVariant || "Not set"}
+            </Text>
+          </View>
         )}
       </View>
 
