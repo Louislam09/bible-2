@@ -113,11 +113,9 @@ const NotificationSettingsScreen = () => {
   };
 
   const testNotificationSchedule = async () => {
-    // current time in one minute in the future
     const now = new Date();
     const oneMinuteFromNow = new Date(now.getTime() + 60000);
-    const timeStr = `${oneMinuteFromNow.getHours()}:${oneMinuteFromNow.getMinutes()}`;
-    await notificationService.scheduleDailyVerseNotification2(timeStr);
+    await notificationService.scheduleAlarm(oneMinuteFromNow, "Test", "Test");
   };
 
   const handleNotificationEnabled = async () => {
@@ -408,7 +406,7 @@ const NotificationSettingsScreen = () => {
         />
 
         {sections.map(SettingSection)}
-        {(isAdmin || IS_DEV) && <DatabaseDebug />}
+        {/* {(isAdmin || IS_DEV) && <DatabaseDebug />} */}
 
         {/* Time Picker Modal */}
         <Modal

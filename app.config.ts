@@ -28,6 +28,10 @@ const getAppName = () => {
 };
 
 const googleServicesFile = () => {
+  if (IS_DEV) {
+    return "./google-services-dev.json";
+  }
+
   // Use the same Firebase project for all environments
   return "./google-services.json";
 };
@@ -73,9 +77,11 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       googleServicesFile: googleServicesFile(),
       permissions: [
         "android.permission.SCHEDULE_EXACT_ALARM",
-        // "android.permission.USE_EXACT_ALARM",
+        "android.permission.USE_EXACT_ALARM",
         "android.permission.RECEIVE_BOOT_COMPLETED",
-        "android.permission.VIBRATE"
+        "android.permission.VIBRATE",
+        // "android.permission.WAKE_LOCK",
+        // "android.permission.SYSTEM_ALERT_WINDOW",
       ],
     },
     web: {
@@ -116,6 +122,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           icon: "./assets/images/notification-icon.png",
           color: "#0c3e3d",
           defaultChannel: "default",
+          // enableBackgroundRemoteNotifications: true,
         },
       ],
       "expo-asset",

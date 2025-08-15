@@ -665,13 +665,11 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
               title: "Ajustes",
               titleIcon: "Settings",
               headerRightProps: {
-                headerRightIcon: "RefreshCw",
-                headerRightIconColor: isSyncing
-                  ? theme.colors.notification
-                  : "transparent",
-                onPress: () => {},
-                disabled: true,
-                style: { opacity: 0 },
+                headerRightIcon: "Bell",
+                headerRightIconColor: theme.colors.notification,
+                onPress: () => router.push("/notification"),
+                disabled: false,
+                style: { opacity: 1 },
               },
             }),
           }}

@@ -77,7 +77,13 @@ export const useNotificationService = () => {
             let finalStatus = existingStatus;
 
             if (existingStatus !== "granted") {
-                const { status } = await Notifications.requestPermissionsAsync();
+                const { status } = await Notifications.requestPermissionsAsync({
+                    android: {
+                        allowAlert: true,
+                        allowBadge: true,
+                        allowSound: true,
+                    },
+                });
                 finalStatus = status;
             }
 
@@ -609,6 +615,23 @@ export const useNotificationService = () => {
     };
 
 
+    const scheduleAlarm = async (time: Date, title: string, body: string) => {
+        const trigger = new Date(time);
+
+        return await Notifications.scheduleNotificationAsync({
+            content: {
+                title,
+                body,
+                sound: true,
+            },
+            trigger,
+        });
+    }
+
+    const cancelAlarm = async (notificationId: string) => {
+        await Notifications.cancelScheduledNotificationAsync(notificationId);
+    }
+
     return {
         getNotificationPreferences,
         updateNotificationPreferences,
@@ -628,6 +651,8 @@ export const useNotificationService = () => {
         initializeNotifications,
         sendCustomNotification,
         sendPushNotificationToUser,
+        scheduleAlarm,
+        cancelAlarm,
         error,
     };
 };
