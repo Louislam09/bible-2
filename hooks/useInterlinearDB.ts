@@ -1,10 +1,14 @@
-import { useState, useEffect, useRef } from "react";
-import * as FileSystem from "expo-file-system";
-import { Asset } from "expo-asset";
-import * as SQLite from "expo-sqlite";
-import unzipFile from "@/utils/unzipFile";
-import { dbFileExt, SQLiteDirPath } from "@/constants/databaseNames";
+import { databaseNames, dbFileExt, SQLiteDirPath } from "@/constants/databaseNames";
 import { CREATE_FAVORITE_VERSES_TABLE } from "@/constants/Queries";
+import { bibleState$ } from "@/state/bibleState";
+import { dbDownloadState$ } from "@/state/dbDownloadState";
+import { DEFAULT_DATABASE } from "@/types";
+import { prepareDatabaseFromDbFile, prepareDatabaseFromZip } from "@/utils/prepareDB";
+import unzipFile from "@/utils/unzipFile";
+import { Asset } from "expo-asset";
+import * as FileSystem from "expo-file-system";
+import * as SQLite from "expo-sqlite";
+import { useEffect, useRef, useState } from "react";
 
 interface Row {
     [key: string]: any;
@@ -21,11 +25,19 @@ export interface UseInterlinearDatabase {
     error: Error | null;
 }
 
-export function useInterlinearDB(onProgress?: (msg: string) => void): UseInterlinearDatabase {
+interface UseInterlinearDB {
+    isInterlinear?: boolean;
+    onProgress?: (msg: string) => void;
+    enabled?: boolean;
+    databaseId: DEFAULT_DATABASE;
+}
+
+export function useInterlinearDB({ isInterlinear, onProgress, enabled, databaseId }: UseInterlinearDB): UseInterlinearDatabase {
     const [database, setDatabase] = useState<SQLite.SQLiteDatabase | null>(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState<Error | null>(null);
     const isMounted = useRef(true);
+    const dbName = databaseNames.find(db => db.id === databaseId)
 
     const executeSql = async (
         sql: string,
@@ -72,7 +84,6 @@ export function useInterlinearDB(onProgress?: (msg: string) => void): UseInterli
             await statement.finalizeAsync();
 
             const tableNames = tables.map((t: any) => t.name);
-            console.log({ tableNames });
             return tableNames.includes("interlinear");
         } catch (e) {
             console.error("Validation query failed:", e);
@@ -95,7 +106,16 @@ export function useInterlinearDB(onProgress?: (msg: string) => void): UseInterli
         }
     }
 
+    const resetState = () => {
+        setDatabase(null);
+        setIsLoaded(false);
+        setError(null);
+        isMounted.current = true;
+    };
+
     useEffect(() => {
+        if (!enabled) return;
+        if (!dbName) return;
         async function prepareDb() {
             try {
                 const INTERLINEAR_DB_NAME = `${'interlinear'}${dbFileExt}`;
@@ -116,7 +136,7 @@ export function useInterlinearDB(onProgress?: (msg: string) => void): UseInterli
                 const info = await FileSystem.getInfoAsync(INTERLINEAR_DB_PATH);
                 if (!info.exists) {
                     // Copy zip asset to local FS
-                    const asset = Asset.fromModule(require("../assets/db/interlinear.zip"));
+                    const asset = Asset.fromModule(require("../assets/db/interlinear-bible.zip"));
                     await asset.downloadAsync();
 
                     const zipUri = asset.localUri || asset.uri;
@@ -168,7 +188,46 @@ export function useInterlinearDB(onProgress?: (msg: string) => void): UseInterli
             }
         }
 
-        prepareDb();
+        const initDb = async () => {
+            const interlinearDb = await prepareDatabaseFromDbFile({
+                databaseItem: dbName,
+                onProgress: (progress) => {
+                    // console.log('useInterlinearDB:', progress.stage, progress.message)
+                    dbDownloadState$.setDownloadProgress({
+                        ...progress,
+                        databaseName: dbName.name || dbName.id,
+                    });
+                }
+            });
+
+            if (!interlinearDb) return;
+
+            await createTables(interlinearDb);
+            // Validate the database
+            const valid = await isDatabaseValid(interlinearDb);
+            if (!valid) {
+                // delete the database
+                await FileSystem.deleteAsync(dbName.path, { idempotent: true });
+                throw new Error("Interlinear database validation failed");
+            }
+
+            // Apply optimization settings
+            try {
+                await interlinearDb.execAsync("PRAGMA journal_mode = WAL");
+                await interlinearDb.execAsync("PRAGMA synchronous = OFF");
+                await interlinearDb.execAsync("PRAGMA temp_store = MEMORY");
+                await interlinearDb.execAsync("PRAGMA cache_size = 16384");
+            } catch (error) {
+                console.warn("Error applying optimization settings:", error);
+            }
+
+            if (isMounted.current) {
+                setDatabase(interlinearDb);
+                setIsLoaded(true);
+            }
+        }
+
+        initDb();
 
         return () => {
             isMounted.current = false;
@@ -176,7 +235,7 @@ export function useInterlinearDB(onProgress?: (msg: string) => void): UseInterli
                 // database.closeAsync().catch(console.error);
             }
         };
-    }, []);
+    }, [isInterlinear, enabled]);
 
     return { database, isLoaded, error, executeSql };
 }

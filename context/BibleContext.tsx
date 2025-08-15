@@ -31,6 +31,8 @@ import {
 } from "../types";
 import { useDBContext } from "./databaseContext";
 import { storedData$ } from "./LocalstoreContext";
+import DatabaseLoadingModal from "@/components/DatabaseLoadingModal";
+import { dbDownloadState$ } from "@/state/dbDownloadState";
 
 type BibleState = {
   setSearchQuery: Function;
@@ -212,6 +214,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const { fontSize, currentTheme, selectedFont } = storedData;
   const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
   const isDataLoaded = use$(() => storedData$.isDataLoaded.get());
+  const isDownloadingDB = use$(() => dbDownloadState$.isDownloadingDB.get());
   const requiresSettingsReloadAfterSync = use$(() =>
     settingState$.requiresSettingsReloadAfterSync.get()
   );
@@ -302,7 +305,8 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     !fontsLoaded ||
     !isDataLoaded ||
     !isInstallBiblesLoaded ||
-    !isMyBibleDbLoaded
+    !isMyBibleDbLoaded ||
+    isDownloadingDB
   ) {
     return (
       <ScreenWithAnimation
@@ -311,8 +315,9 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
         titleColor={"white"}
         backgroundColor="#0d3f3e"
         iconColor="white"
-        title=""
+        title="Cargando..."
         icon="BookPlus"
+        customContent={isDownloadingDB ? <DatabaseLoadingModal /> : null}
       >
         <></>
       </ScreenWithAnimation>

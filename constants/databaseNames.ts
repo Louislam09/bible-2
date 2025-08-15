@@ -5,8 +5,8 @@ export const SQLiteDirPath = `${FileSystem.documentDirectory}SQLite`;
 export const baseDownloadUrl = 'https://www.ph4.org';
 export const dbFileExt = '-bible.db';
 export const bibleReadyMsg = '¡Todo listo para usar!';
-export const defaultDatabases = ['bible', 'ntv-bible'];
-// export const defaultDatabases = ['bible', 'ntv-bible', 'interlinear-bible'];
+// export const defaultDatabases = ['bible', 'ntv-bible'];
+export const defaultDatabases = ['bible', 'ntv-bible', 'interlinear-bible'];
 // https://www.ph4.org/_dl.php?back=bbl&a=RV%2760_plus_&b=mybible&c
 
 const databaseExtensions = {

@@ -40,7 +40,7 @@ export const bibleState$ = observable({
     book_number: 0,
     chapter: 0,
     verse: 0,
-    text: {} as IBookVerseInterlinear,
+    text: "",
   },
   isVerseDoubleTagged: false,
   selectedVerses: observable(new Map<number, IBookVerse>()),
@@ -167,7 +167,7 @@ export const bibleState$ = observable({
     book_number: number;
     chapter: number;
     verse: number;
-    text: IBookVerseInterlinear;
+    text: string;
   }) => {
     bibleState$.verseToInterlinear.set(verse);
   },

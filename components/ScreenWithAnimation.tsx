@@ -4,6 +4,7 @@ import { icons } from "lucide-react-native";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { Animated, StyleSheet, View } from "react-native";
 import Icon from "./Icon";
+import { TTheme } from "@/types";
 
 type ScreenWithAnimationProps = {
   children: React.ReactNode;
@@ -19,6 +20,7 @@ type ScreenWithAnimationProps = {
   titleColor?: any;
   iconColor?: any;
   loop?: boolean;
+  customContent?: React.ReactNode;
 };
 
 const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
@@ -34,12 +36,14 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
   backgroundColor,
   titleColor,
   iconColor,
-  imageSource
+  imageSource,
+  customContent,
 }) => {
   const [isAnimating, setIsAnimating] = useState(shouldPlay);
   const opacity = useRef(new Animated.Value(0)).current;
   const bounceValue = useRef(new Animated.Value(0)).current;
   const theme = useTheme();
+  const styles = getStyles(theme);
 
   const onAnimationFinish = (isCancelled: boolean) => {
     setIsAnimating(false);
@@ -98,7 +102,7 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
         backgroundColor: backgroundColor || theme.colors.background,
       }}
     >
-      {isAnimating && (
+      {isAnimating && !customContent && (
         <View
           style={[
             styles.animationContainer,
@@ -130,20 +134,33 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
               style={{ transform: [{ translateY: bounceValue }], opacity }}
             >
               <Icon
-                name={icon! || 'BookPlus'}
+                name={icon! || "BookPlus"}
                 size={100}
                 color={iconColor || theme.colors.text}
               />
             </Animated.View>
-
           )}
           {title && (
             <Animated.Text
-              style={{ color: titleColor || theme.colors.text, fontSize: 28, opacity }}
+              style={{
+                color: titleColor || theme.colors.text,
+                fontSize: 28,
+                opacity,
+              }}
             >
               {title}
             </Animated.Text>
           )}
+        </View>
+      )}
+      {customContent && (
+        <View
+          style={[
+            styles.customContentContainer,
+            { backgroundColor: backgroundColor || theme.colors.background },
+          ]}
+        >
+          {customContent}
         </View>
       )}
 
@@ -154,10 +171,16 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
 
 export default ScreenWithAnimation;
 
-const styles = StyleSheet.create({
-  animationContainer: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
+const getStyles = ({ colors }: TTheme) =>
+  StyleSheet.create({
+    animationContainer: {
+      ...StyleSheet.absoluteFillObject,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    customContentContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+  });

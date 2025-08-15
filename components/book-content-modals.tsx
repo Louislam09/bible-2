@@ -15,7 +15,7 @@ import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import HebrewVerse from "./home/content/HebrewVerse";
 import StrongContent from "./home/content/StrongContent";
-import { Text } from "./Themed";
+import { Text, View } from "./Themed";
 
 const mockVerse = {
   book_number: 10,
@@ -42,6 +42,44 @@ const BookContentModals = ({ book, chapter }: any) => {
   return (
     <>
       <BottomSheet
+        backgroundStyle={{
+          ...styles.bottomSheet,
+          backgroundColor: theme.colors.background,
+        }}
+        enablePanDownToClose
+        snapPoints={["30%", "60%", "100%"]}
+        index={-1}
+        ref={modalState$.interlinealRef.get()}
+        handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
+        onClose={() =>
+          bibleState$.handleVerseToInterlinear({
+            book_number: 0,
+            chapter: 0,
+            verse: 0,
+            text: "",
+          })
+        }
+      >
+        <BottomSheetScrollView
+          contentContainerStyle={{ backgroundColor: "transparent" }}
+        >
+          <View style={{ padding: 10, backgroundColor: "transparent" }}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: "bold",
+                textAlign: "center",
+                // marginBottom: 10,
+              }}
+            >
+              {getBookDetail(verseToInterlinear.book_number)?.longName || ""}
+              {` ${verseToInterlinear.chapter}:${verseToInterlinear.verse}`}
+            </Text>
+            <HebrewVerse withBackground item={verseToInterlinear as any} />
+          </View>
+        </BottomSheetScrollView>
+      </BottomSheet>
+      <BottomSheet
         backgroundStyle={styles.bottomSheet}
         enablePanDownToClose
         snapPoints={["30%", "60%"]}
@@ -58,40 +96,6 @@ const BookContentModals = ({ book, chapter }: any) => {
             theme={theme}
             fontSize={fontSize}
           />
-        </BottomSheetScrollView>
-      </BottomSheet>
-
-      <BottomSheet
-        backgroundStyle={styles.bottomSheet}
-        enablePanDownToClose
-        snapPoints={["30%", "60%", "100%"]}
-        index={-1}
-        ref={modalState$.interlinealRef.get()}
-        handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
-        onClose={() =>
-          bibleState$.handleVerseToInterlinear({
-            book_number: 0,
-            chapter: 0,
-            verse: 0,
-            text: {} as IBookVerseInterlinear,
-          })
-        }
-      >
-        <BottomSheetScrollView
-          contentContainerStyle={{ backgroundColor: "transparent" }}
-        >
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "bold",
-              textAlign: "center",
-              marginBottom: 10,
-            }}
-          >
-            {getBookDetail(verseToInterlinear.book_number)?.longName || ""}
-            {` ${verseToInterlinear.chapter}:${verseToInterlinear.verse}`}
-          </Text>
-          <HebrewVerse item={verseToInterlinear.text as any} />
         </BottomSheetScrollView>
       </BottomSheet>
 

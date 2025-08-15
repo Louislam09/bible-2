@@ -33,7 +33,6 @@ import {
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { Text, View } from "../../Themed";
-import useBibleDb from "@/hooks/useBibleDb";
 import { useBibleContext } from "@/context/BibleContext";
 
 type HeaderAction = {
@@ -66,7 +65,8 @@ interface IStrongContent {
 const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
   const data = use$<IStrongWord>(() => bibleState$.strongWord.get());
   const { code, text: word } = data;
-  const { myBibleDB, executeSql, isMyBibleDbLoaded } = useDBContext();
+  const { myBibleDB, executeSql, isMyBibleDbLoaded, mainBibleService } =
+    useDBContext();
   const [values, setValues] = useState<DictionaryData[]>([
     { definition: "", topic: "" },
   ]);
@@ -84,8 +84,6 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
     EBibleVersions.INT,
     EBibleVersions.INTERLINEAL,
   ].includes(currentBibleVersion as EBibleVersions);
-
-  const { executeSql: executeSqlBible } = useBibleDb({ databaseId: "bible" });
 
   useEffect(() => {
     const loopAnimation = Animated.loop(
@@ -123,11 +121,15 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
 
   useEffect(() => {
     const fetchDictionaryData = async () => {
-      if (!isMyBibleDbLoaded || !strongCode) return;
+      if (!isMyBibleDbLoaded || !strongCode || !mainBibleService.isLoaded)
+        return;
 
       try {
         const dictionaryData = isInterlineal
-          ? await executeSqlBible(SEARCH_STRONG_WORD, strongCode.split(","))
+          ? await mainBibleService.executeSql(
+              SEARCH_STRONG_WORD,
+              strongCode.split(",")
+            )
           : await executeSql(SEARCH_STRONG_WORD, strongCode.split(","));
 
         if (dictionaryData?.length) {
@@ -139,7 +141,7 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
     };
 
     fetchDictionaryData();
-  }, [isMyBibleDbLoaded, strongCode]);
+  }, [isMyBibleDbLoaded, strongCode, mainBibleService]);
 
   const onShouldStartLoadWithRequest = (event: ShouldStartLoadRequest) => {
     const { url } = event;

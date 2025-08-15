@@ -15,7 +15,6 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import { TranslatorProvider } from "react-native-translator";
 import Verse from "./Verse";
 
 interface TChapter {
@@ -28,6 +27,7 @@ interface TChapter {
 
 interface TChapter {
   verses: IBookVerse[];
+  interlinearVerses: IBookVerse[];
   isSplit?: boolean;
   estimatedReadingTime: number;
   initialScrollIndex: number;
@@ -36,13 +36,13 @@ interface TChapter {
 
 const Chapter = ({
   verses,
+  interlinearVerses,
   isSplit,
   estimatedReadingTime,
   initialScrollIndex,
   onScroll,
 }: TChapter) => {
   const bibleSide = isSplit ? "bottom" : "top";
-  const data = verses ?? [];
 
   const { width, height } = useWindowDimensions();
   const theme = useTheme();
@@ -60,9 +60,11 @@ const Chapter = ({
     EBibleVersions.INTERLINEAL,
   ].includes(currentBibleVersion as EBibleVersions);
 
+  const data = isInterlineal && !isSplit ? interlinearVerses : verses;
+
   const renderItem = useCallback(
     ({ item }: any) =>
-      isInterlineal ? (
+      isInterlineal && !isSplit ? (
         <HebrewVerse item={item} />
       ) : (
         <Verse item={item} isSplit={!!isSplit} initVerse={initialScrollIndex} />
@@ -142,43 +144,41 @@ const Chapter = ({
   );
 
   return (
-    <TranslatorProvider>
-      <View style={styles.chapterContainer}>
-        <View style={[styles.verseContent]}>
-          <FlashList
-            ref={chapterRef}
-            keyExtractor={keyExtractor}
-            data={data ?? []}
-            // data={data.slice(0, 1)}
-            ListHeaderComponent={ListHeader}
-            renderItem={renderItem}
-            decelerationRate="normal"
-            estimatedItemSize={isMobile ? 162 : 100}
-            removeClippedSubviews
-            ListEmptyComponent={() => (
-              <LoadingComponent textColor={theme.colors.text} />
-            )}
-            initialScrollIndex={initialScrollIndex}
-            viewabilityConfigCallbackPairs={
-              viewabilityConfigCallbackPairs.current
-            }
-            onEndReachedThreshold={0.5}
-            disableAutoLayout
-            disableHorizontalListHeightMeasurement
-            ListHeaderComponentStyle={{ paddingTop: 70 }}
-            ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
-            // decelerationRate="normal"
-            // onEndReached={onEndReached}
-            // maintainVisibleContentPosition={{
-            //   minIndexForVisible: 0,
-            //   autoscrollToTopThreshold: 10,
-            // }}
-          />
-        </View>
+    <View style={styles.chapterContainer}>
+      <View style={[styles.verseContent]}>
+        <FlashList
+          ref={chapterRef}
+          keyExtractor={keyExtractor}
+          data={data ?? []}
+          // data={data.slice(0, 1)}
+          ListHeaderComponent={ListHeader}
+          renderItem={renderItem}
+          decelerationRate="normal"
+          estimatedItemSize={isMobile ? 162 : 100}
+          removeClippedSubviews
+          ListEmptyComponent={() => (
+            <LoadingComponent textColor={theme.colors.text} />
+          )}
+          initialScrollIndex={initialScrollIndex}
+          viewabilityConfigCallbackPairs={
+            viewabilityConfigCallbackPairs.current
+          }
+          onEndReachedThreshold={0.5}
+          disableAutoLayout
+          disableHorizontalListHeightMeasurement
+          ListHeaderComponentStyle={{ paddingTop: 70 }}
+          ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          // decelerationRate="normal"
+          // onEndReached={onEndReached}
+          // maintainVisibleContentPosition={{
+          //   minIndexForVisible: 0,
+          //   autoscrollToTopThreshold: 10,
+          // }}
+        />
       </View>
-    </TranslatorProvider>
+    </View>
   );
 };
 

@@ -138,11 +138,11 @@ const App = () => {
     <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
       <StorageProvider>
         <DatabaseProvider>
-          <BibleProvider>
-            <BibleChapterProvider>
-              <MemorizationProvider>
-                <NotificationProvider>
-                  <MyThemeProvider>
+          <MyThemeProvider>
+            <BibleProvider>
+              <BibleChapterProvider>
+                <MemorizationProvider>
+                  <NotificationProvider>
                     <QueryProvider>
                       <GestureHandlerRootView style={{ flex: 1 }}>
                         <BottomSheetModalProvider>
@@ -151,14 +151,19 @@ const App = () => {
                             initialRouteName="(dashboard)"
                             screenOptions={screenOptions}
                           />
+                          {/* <DatabaseLoadingModal
+                            visible={isVisible}
+                            progress={progress}
+                            databaseName={progress?.databaseName}
+                          /> */}
                         </BottomSheetModalProvider>
                       </GestureHandlerRootView>
                     </QueryProvider>
-                  </MyThemeProvider>
-                </NotificationProvider>
-              </MemorizationProvider>
-            </BibleChapterProvider>
-          </BibleProvider>
+                  </NotificationProvider>
+                </MemorizationProvider>
+              </BibleChapterProvider>
+            </BibleProvider>
+          </MyThemeProvider>
         </DatabaseProvider>
       </StorageProvider>
     </ErrorBoundary>
