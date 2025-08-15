@@ -1,4 +1,5 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import DatabaseDebug from "@/components/DatabaseDebug";
 import Icon from "@/components/Icon";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
@@ -407,6 +408,7 @@ const NotificationSettingsScreen = () => {
         />
 
         {sections.map(SettingSection)}
+        {isAdmin && <DatabaseDebug />}
 
         {/* Time Picker Modal */}
         <Modal

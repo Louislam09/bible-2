@@ -1,103 +1,369 @@
 import { useDBContext } from "@/context/databaseContext";
+import { useNotification } from "@/context/NotificationContext";
+import { storedData$ } from "@/context/LocalstoreContext";
+import { use$ } from "@legendapp/state/react";
+import * as Notifications from "expo-notifications";
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useCustomTheme } from "@/context/ThemeContext";
 
-const DatabaseDebug: React.FC = () => {
-  const { myBibleDB: database, executeSql } = useDBContext();
-  const [debugInfo, setDebugInfo] = useState<string>("");
+const DatabaseDebug = () => {
+  const { schema } = useCustomTheme();
+  const { executeSql, isMyBibleDbLoaded } = useDBContext();
+  const { expoPushToken, error: notificationError } = useNotification();
+  const [scheduledNotifications, setScheduledNotifications] = useState<any[]>(
+    []
+  );
+  const [notificationPermissions, setNotificationPermissions] =
+    useState<any>(null);
 
-  const testDatabase = async () => {
+  const user = use$(() => storedData$.user.get()) || null;
+  const notificationPreferences =
+    use$(() => storedData$.notificationPreferences.get()) || {};
+
+  useEffect(() => {
+    loadNotificationInfo();
+  }, []);
+
+  const loadNotificationInfo = async () => {
     try {
-      setDebugInfo(`Testing database... ${database?.databaseName}`);
+      // Get scheduled notifications
+      const notifications =
+        await Notifications.getAllScheduledNotificationsAsync();
+      setScheduledNotifications(notifications);
 
-      if (!database) {
-        setDebugInfo("Database is null");
-        return;
-      }
-
-      // Test basic connection
-      const result1 = await executeSql(
-        "SELECT 1 as test",
-        [],
-        "connection_test"
-      );
-      setDebugInfo((prev) => prev + "\n✓ Basic connection test passed");
-
-      // Check if dictionary table exists
-      const result2 = await executeSql(
-        `SELECT name FROM sqlite_master WHERE type='table';`,
-        [],
-        "table_check"
-      );
-      // console.log("result2", result2);
-      // write the tables name ex: "verses", "dictionary", "notes", "favorite_verses"
-      const tables = result2.map((item: any) => item.name);
-      setDebugInfo((prev) => prev + `\n✓ Tables: ${tables.join(", ")}`);
-
-      if (result2.length === 0) {
-        setDebugInfo((prev) => prev + "\n✗ Verses table not found");
-        return;
-      }
-
-      setDebugInfo((prev) => prev + "\n✓ Verses table exists");
-
-      // Test count query
-      const result3 = await executeSql(
-        "SELECT COUNT(*) as count FROM verses where book_number = 10 AND chapter = 1 AND verse = 1",
-        [],
-        "count_test"
-      );
-      const count = (result3[0] as any)?.count || 0;
-      setDebugInfo((prev) => prev + `\n✓ Verses has record ${count}`);
-
-      // Test the actual search query
-      const result4 = await executeSql(
-        "SELECT * FROM verses WHERE book_number = 10 AND chapter = 1 AND verse = 1",
-        [],
-        "search_test"
-      );
-      setDebugInfo(
-        (prev) => prev + `\n✓ Search test returned ${result4.length} results`
-      );
-    } catch (error: any) {
-      setDebugInfo((prev) => prev + `\n✗ Error: ${error.message}`);
-      console.error("Database debug error:", error);
+      // Get notification permissions
+      const permissions = await Notifications.getPermissionsAsync();
+      setNotificationPermissions(permissions);
+    } catch (error) {
+      console.error("Error loading notification info:", error);
     }
   };
 
-  useEffect(() => {
-    if (database) {
-      testDatabase();
+  const testNotification = async () => {
+    try {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "Test Notification",
+          body: "This is a test notification from debug panel",
+          data: { type: "test" },
+        },
+        trigger: null, // Send immediately
+      });
+      Alert.alert("Success", "Test notification sent!");
+      loadNotificationInfo(); // Refresh the list
+    } catch (error) {
+      Alert.alert("Error", `Failed to send test notification: ${error}`);
     }
-  }, [database]);
+  };
+
+  const testNotificationSchedule = async () => {
+    try {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "Test Notification",
+          body: "This is a test notification from debug panel",
+          data: { type: "test" },
+        },
+        // to be in 2min from now
+        trigger: {
+          type: "daily", // ✅ REQUIRED: Must specify trigger type
+          hour: new Date().getHours(), // 10:00
+          minute: new Date().getMinutes() + 1, // 10:02
+          repeats: true,
+          channelId: "daily-verse", // ✅ Use specific channel
+        } as Notifications.DailyTriggerInput,
+      });
+    } catch (error) {
+      Alert.alert("Error", `Failed to send test notification: ${error}`);
+    }
+  };
+
+  const clearAllNotifications = async () => {
+    try {
+      await Notifications.cancelAllScheduledNotificationsAsync();
+      Alert.alert("Success", "All notifications cleared!");
+      loadNotificationInfo(); // Refresh the list
+    } catch (error) {
+      Alert.alert("Error", `Failed to clear notifications: ${error}`);
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Database Debug Info</Text>
-      <Text style={styles.info}>{debugInfo || "Waiting for database..."}</Text>
-      <Button title="Test Again" onPress={testDatabase} />
-    </View>
+    <ScrollView
+      style={{
+        flex: 1,
+        padding: 16,
+        backgroundColor: schema === "dark" ? "#000" : "#fff",
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 20,
+          fontWeight: "bold",
+          color: schema === "dark" ? "#fff" : "#000",
+          marginBottom: 16,
+        }}
+      >
+        Database & Notification Debug
+      </Text>
+
+      {/* Database Info */}
+      <View style={{ marginBottom: 20 }}>
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "bold",
+            color: schema === "dark" ? "#fff" : "#000",
+            marginBottom: 8,
+          }}
+        >
+          Database Status
+        </Text>
+        <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+          Loaded: {isMyBibleDbLoaded ? "✅ Yes" : "❌ No"}
+        </Text>
+      </View>
+
+      {/* Notification Info */}
+      <View style={{ marginBottom: 20 }}>
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "bold",
+            color: schema === "dark" ? "#fff" : "#000",
+            marginBottom: 8,
+          }}
+        >
+          Notification Status
+        </Text>
+        <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+          Push Token: {expoPushToken ? "✅ Set" : "❌ Not set"}
+        </Text>
+        {expoPushToken && (
+          <Text
+            style={{
+              color: schema === "dark" ? "#fff" : "#000",
+              fontSize: 12,
+              marginTop: 4,
+            }}
+          >
+            {expoPushToken.substring(0, 50)}...
+          </Text>
+        )}
+        {notificationError && (
+          <Text style={{ color: "red", marginTop: 4 }}>
+            Error: {notificationError.message}
+          </Text>
+        )}
+      </View>
+
+      {/* Notification Permissions */}
+      {notificationPermissions && (
+        <View style={{ marginBottom: 20 }}>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "bold",
+              color: schema === "dark" ? "#fff" : "#000",
+              marginBottom: 8,
+            }}
+          >
+            Notification Permissions
+          </Text>
+          <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+            Status: {notificationPermissions.status}
+          </Text>
+          <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+            Can Ask Again: {notificationPermissions.canAskAgain ? "Yes" : "No"}
+          </Text>
+        </View>
+      )}
+
+      {/* Notification Preferences */}
+      <View style={{ marginBottom: 20 }}>
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "bold",
+            color: schema === "dark" ? "#fff" : "#000",
+            marginBottom: 8,
+          }}
+        >
+          Notification Preferences
+        </Text>
+        <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+          Enabled:{" "}
+          {notificationPreferences.notificationEnabled ? "✅ Yes" : "❌ No"}
+        </Text>
+        <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+          Daily Verse:{" "}
+          {notificationPreferences.dailyVerseEnabled ? "✅ Yes" : "❌ No"}
+        </Text>
+        <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+          Daily Time: {notificationPreferences.dailyVerseTime || "Not set"}
+        </Text>
+        <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+          Devotional:{" "}
+          {notificationPreferences.devotionalReminder ? "✅ Yes" : "❌ No"}
+        </Text>
+        <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+          Memorization:{" "}
+          {notificationPreferences.memorizationReminder ? "✅ Yes" : "❌ No"}
+        </Text>
+      </View>
+
+      {/* Scheduled Notifications */}
+      <View style={{ marginBottom: 20 }}>
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "bold",
+            color: schema === "dark" ? "#fff" : "#000",
+            marginBottom: 8,
+          }}
+        >
+          Scheduled Notifications ({scheduledNotifications.length})
+        </Text>
+        {scheduledNotifications.map((notification, index) => (
+          <View
+            key={index}
+            style={{
+              marginBottom: 8,
+              padding: 8,
+              backgroundColor: schema === "dark" ? "#333" : "#f0f0f0",
+              borderRadius: 8,
+            }}
+          >
+            <Text
+              style={{
+                color: schema === "dark" ? "#fff" : "#000",
+                fontWeight: "bold",
+              }}
+            >
+              {notification.content.title}
+            </Text>
+            <Text
+              style={{
+                color: schema === "dark" ? "#fff" : "#000",
+                fontSize: 12,
+              }}
+            >
+              {notification.content.body}
+            </Text>
+            <Text
+              style={{
+                color: schema === "dark" ? "#fff" : "#000",
+                fontSize: 10,
+              }}
+            >
+              ID: {notification.identifier}
+            </Text>
+            <Text
+              style={{
+                color: schema === "dark" ? "#fff" : "#000",
+                fontSize: 10,
+              }}
+            >
+              Type: {notification.content.data?.type || "Unknown"}
+            </Text>
+          </View>
+        ))}
+      </View>
+
+      {/* User Info */}
+      <View style={{ marginBottom: 20 }}>
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "bold",
+            color: schema === "dark" ? "#fff" : "#000",
+            marginBottom: 8,
+          }}
+        >
+          User Info
+        </Text>
+        <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+          Logged In: {user ? "✅ Yes" : "❌ No"}
+        </Text>
+        {user && (
+          <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+            Name: {user.name || "Not set"}
+          </Text>
+        )}
+      </View>
+
+      {/* Action Buttons */}
+      <View style={{ marginBottom: 20 }}>
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "bold",
+            color: schema === "dark" ? "#fff" : "#000",
+            marginBottom: 8,
+          }}
+        >
+          Actions
+        </Text>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#007AFF",
+            padding: 12,
+            borderRadius: 8,
+            marginBottom: 8,
+            alignItems: "center",
+          }}
+          onPress={testNotification}
+        >
+          <Text style={{ color: "white", fontWeight: "bold" }}>
+            Send Test Notification
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#007AFF",
+            padding: 12,
+            borderRadius: 8,
+            marginBottom: 8,
+            alignItems: "center",
+          }}
+          onPress={testNotificationSchedule}
+        >
+          <Text style={{ color: "white", fontWeight: "bold" }}>
+            Send Test Notification Schedule
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "red",
+            padding: 12,
+            borderRadius: 8,
+            marginBottom: 8,
+            alignItems: "center",
+          }}
+          onPress={clearAllNotifications}
+        >
+          <Text style={{ color: "white", fontWeight: "bold" }}>
+            Clear All Notifications
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#34C759",
+            padding: 12,
+            borderRadius: 8,
+            alignItems: "center",
+          }}
+          onPress={loadNotificationInfo}
+        >
+          <Text style={{ color: "white", fontWeight: "bold" }}>
+            Refresh Info
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: "#f0f0f0",
-    margin: 10,
-    borderRadius: 8,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  info: {
-    fontSize: 12,
-    fontFamily: "monospace",
-    marginBottom: 10,
-    minHeight: 100,
-  },
-});
 
 export default DatabaseDebug;

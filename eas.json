@@ -29,6 +29,9 @@
       "channel": "preview"
     },
     "production": {
+      "env": {
+        "APP_VARIANT": "production"
+      },
       "ios": {
         "resourceClass": "m-medium"
       },

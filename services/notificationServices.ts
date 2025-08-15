@@ -212,6 +212,7 @@ export const useNotificationService = () => {
                         type: 'daily', // ✅ REQUIRED: Must specify trigger type
                         hour: hour,
                         minute: minute,
+                        repeats: true,
                         channelId: 'daily-verse', // ✅ Use specific channel
                     } as Notifications.DailyTriggerInput,
                 });
@@ -239,7 +240,7 @@ export const useNotificationService = () => {
                     type: 'daily',
                     hour: hour || 8,
                     minute: minute || 0,
-                    // repeats: true,
+                    repeats: true,
                     channelId: 'daily-verse',
                 } as Notifications.DailyTriggerInput
             );
@@ -411,7 +412,7 @@ export const useNotificationService = () => {
 
         } catch (error) {
             console.error("Error scheduling daily verse notification:", error);
-            setError(`Notification error: ${error?.message || String(error)} ${String(error)}`);
+            setError(`Notification error: ${error instanceof Error ? error.message : String(error)}`);
             return null;
         }
     }, []);
