@@ -18,6 +18,10 @@ const BibleBottom: FC<any> = (props) => {
   const estimatedReadingTimeBottom = bibleState$.readingTimeData.bottom.get();
   const isDataLoading = use$(() => bibleState$.isDataLoading.bottom.get());
   const bottomVerses = use$(() => bibleState$.bibleData.bottomVerses.get());
+  const interlinearVerses = use$(
+    () => bibleState$.bibleData.interlinearVerses.get() ?? []
+  );
+
   console.log(
     `🔝 BibleBottom Component Rendered 🔄:${isDataLoading} 🧮:${bottomVerses.length} ⌚:${estimatedReadingTimeBottom}`
   );
@@ -67,8 +71,8 @@ const BibleBottom: FC<any> = (props) => {
         ) : (
           <Chapter
             isSplit
+            interlinearVerses={interlinearVerses}
             verses={bottomVerses}
-            verse={verse || 1}
             estimatedReadingTime={estimatedReadingTimeBottom}
             initialScrollIndex={
               initialScrollIndex === 1 ? 0 : initialScrollIndex

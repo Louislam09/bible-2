@@ -60,11 +60,11 @@ const Chapter = ({
     EBibleVersions.INTERLINEAL,
   ].includes(currentBibleVersion as EBibleVersions);
 
-  const data = isInterlineal ? interlinearVerses : verses;
+  const data = isInterlineal && !isSplit ? interlinearVerses : verses;
 
   const renderItem = useCallback(
     ({ item }: any) =>
-      isInterlineal ? (
+      isInterlineal && !isSplit ? (
         <HebrewVerse item={item} />
       ) : (
         <Verse item={item} isSplit={!!isSplit} initVerse={initialScrollIndex} />
