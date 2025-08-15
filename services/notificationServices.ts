@@ -239,13 +239,15 @@ export const useNotificationService = () => {
             const testTime = new Date(Date.now() + 10000);
             return await scheduleAlarm(testTime, title, body, 'daily-verse', {
                 type: "daily-verse",
-                verseData: dailyVerseData,
+                verseRef: dailyVerseData?.ref || null,
+                verseText: dailyVerseData?.text || null,
                 test: true
             });
         } else {
             return await scheduleAlarm(targetTime, title, body, 'daily-verse', {
                 type: "daily-verse",
-                verseData: dailyVerseData
+                verseRef: dailyVerseData?.ref || null,
+                verseText: dailyVerseData?.text || null
             });
         }
     }, [isMyBibleDbLoaded])
@@ -562,18 +564,78 @@ export const useNotificationService = () => {
     };
 
     const scheduleAlarm = async (time: Date, title: string, body: string, channelId?: string, data?: Record<string, any>) => {
-        const trigger = new Date(time);
+        try {
+            const trigger = new Date(time);
 
-        return await Notifications.scheduleNotificationAsync({
-            content: {
+            // Ensure data is serializable by converting complex objects to strings
+            const serializableData: Record<string, any> = {};
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    const value = data[key];
+                    if (typeof value === 'object' && value !== null) {
+                        // Convert complex objects to JSON strings
+                        try {
+                            serializableData[key] = JSON.stringify(value);
+                        } catch (error) {
+                            // If JSON.stringify fails, convert to string representation
+                            serializableData[key] = String(value);
+                        }
+                    } else {
+                        // Keep primitive values as is
+                        serializableData[key] = value;
+                    }
+                });
+            }
+
+            console.log('🔔 Scheduling notification:', {
                 title,
                 body,
-                sound: true,
-                data: data || {},
-            },
-            trigger,
-            ...(channelId && { channelId }),
-        });
+                channelId,
+                data: serializableData,
+                trigger: trigger.toISOString()
+            });
+
+            const notificationId = await Notifications.scheduleNotificationAsync({
+                content: {
+                    title,
+                    body,
+                    sound: true,
+                    data: serializableData,
+                },
+                trigger,
+                ...(channelId && { channelId }),
+            });
+
+            console.log('✅ Notification scheduled successfully:', notificationId);
+            return notificationId;
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            console.error('❌ Error scheduling notification:', errorMessage);
+
+            // Try again without data if the first attempt fails
+            try {
+                console.log('🔄 Retrying without data...');
+                const fallbackTrigger = new Date(time);
+                const notificationId = await Notifications.scheduleNotificationAsync({
+                    content: {
+                        title,
+                        body,
+                        sound: true,
+                        data: {},
+                    },
+                    trigger: fallbackTrigger,
+                    ...(channelId && { channelId }),
+                });
+
+                Alert.alert(`✅ Notification scheduled successfully (fallback): ${notificationId}`);
+                return notificationId;
+            } catch (fallbackError) {
+                const fallbackErrorMessage = fallbackError instanceof Error ? fallbackError.message : JSON.stringify(fallbackError, null, 2);
+                Alert.alert(`❌ Fallback also failed: ${fallbackErrorMessage}`);
+                setError(fallbackErrorMessage);
+                throw fallbackError;
+            }
+        }
     }
 
     const cancelAlarm = async (notificationId: string) => {
