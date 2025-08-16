@@ -1,12 +1,13 @@
 import { useDBContext } from "@/context/databaseContext";
-import { useNotification } from "@/context/NotificationContext";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { useNotification } from "@/context/NotificationContext";
+import { useCustomTheme } from "@/context/ThemeContext";
+import { showToast } from "@/utils/showToast";
 import { use$ } from "@legendapp/state/react";
+import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import React, { useEffect, useState } from "react";
 import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { useCustomTheme } from "@/context/ThemeContext";
-import Constants from "expo-constants";
 export const GOOGLE_SERVICE_JSON = process.env.GOOGLE_SERVICE_JSON;
 
 const DatabaseDebug = () => {
@@ -80,6 +81,7 @@ const DatabaseDebug = () => {
 
   const testNotificationSchedule = async () => {
     try {
+      const testTime = new Date(Date.now() + 3000);
       await Notifications.scheduleNotificationAsync({
         content: {
           title: "Test Notification",
@@ -88,13 +90,33 @@ const DatabaseDebug = () => {
         },
         // Schedule for 1 minute from now
         trigger: {
-          type: "timeInterval",
-          seconds: 60, // 1 minute from now
-          repeats: false,
-          channelId: "default",
-        } as Notifications.TimeIntervalTriggerInput,
+          date: new Date(testTime),
+          // repeats: false,
+        } as Notifications.DateTriggerInput,
       });
-      Alert.alert("Success", "Scheduled notification for 1 minute from now!");
+      showToast("Scheduled notification for 1 minute from now!");
+      loadNotificationInfo(); // Refresh the list
+    } catch (error) {
+      console.log("Error", `Failed to send test notification: ${error}`);
+      Alert.alert("Error", `Failed to schedule notification: ${error}`);
+    }
+  };
+  const testNotificationSchedule2 = async () => {
+    try {
+      const testTime = new Date(Date.now() + 3000);
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "Test Notification",
+          body: "This is a test notification from debug panel",
+          data: { type: "test" },
+        },
+        // Schedule for 1 minute from now
+        trigger: {
+          seconds: 5,
+          repeats: true
+        } as Notifications.SchedulableNotificationTriggerInput,
+      });
+      showToast("Scheduled notification for 1 minute from now!");
       loadNotificationInfo(); // Refresh the list
     } catch (error) {
       console.log("Error", `Failed to send test notification: ${error}`);
@@ -343,14 +365,14 @@ const DatabaseDebug = () => {
         )}
       </View>
 
-      <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+      {/* <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
         GOOGLE_SERVICE_JSON: {GOOGLE_SERVICE_JSON}{" "}
         {JSON.stringify(GOOGLE_SERVICE_JSON, null, 2)}
         --------------------------------------------------------------
       </Text>
       <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
         {JSON.stringify(Constants.expoConfig, null, 2)}
-      </Text>
+      </Text> */}
 
       {/* Action Buttons */}
       <View style={{ marginBottom: 20 }}>
@@ -390,6 +412,20 @@ const DatabaseDebug = () => {
         >
           <Text style={{ color: "white", fontWeight: "bold" }}>
             Send Test Notification Schedule
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#007AFF",
+            padding: 12,
+            borderRadius: 8,
+            marginBottom: 8,
+            alignItems: "center",
+          }}
+          onPress={testNotificationSchedule2}
+        >
+          <Text style={{ color: "white", fontWeight: "bold" }}>
+            Send Test Notification Schedule 2
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
