@@ -38,13 +38,6 @@ jobs:
       - name: 🏗 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🏗 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "yarn"
-
-  # All dependency installation and EAS CLI setup will use Bun
       - name: 🏗 Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
@@ -58,7 +51,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-bun-
 
-      - name: 📦 Install dependencies with Bun
+      - name: 📦 Install dependencies
         run: |
           bun install
           bun add -g eas-cli@latest
