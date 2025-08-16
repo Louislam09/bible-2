@@ -29,11 +29,11 @@ const getAppName = () => {
 
 const googleServicesFile = () => {
   if (IS_DEV) {
-    return process.env.GOOGLE_SERVICES_JSON ?? "./google-services-dev.json";
+    return process.env.GOOGLE_SERVICES_JSON ?? "./google.services-dev.json";
   }
 
   if (IS_PREVIEW) {
-    return process.env.GOOGLE_SERVICES_JSON ?? "./google-services-preview.json";
+    return process.env.GOOGLE_SERVICES_JSON ?? "./google.services-preview.json";
   }
 
   return process.env.GOOGLE_SERVICES_JSON ?? "./google.services.json";
@@ -50,6 +50,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     icon: "./assets/images/icon.png",
     scheme: "sb-rv60",
     userInterfaceStyle: "automatic",
+    newArchEnabled: true,
     splash: {
       image: "./assets/images/splash.png",
       resizeMode: "contain",
@@ -70,6 +71,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     android: {
       versionCode: 25,
       icon: "./assets/images/icon.png",
+      edgeToEdgeEnabled: true,
       adaptiveIcon: {
         foregroundImage: "./assets/images/adaptive-icon.png",
         monochromeImage: "./assets/images/monochrome-icon.png",

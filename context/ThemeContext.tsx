@@ -1,6 +1,6 @@
 import getThemes from "@/constants/themeColors";
 import { TTheme } from "@/types";
-import { use$, use$ } from "@legendapp/state/react";
+import { use$ } from "@legendapp/state/react";
 import React, {
   createContext,
   ReactNode,
