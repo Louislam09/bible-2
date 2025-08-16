@@ -55,6 +55,7 @@ jobs:
         run: |
           bun install
           bun add -g eas-cli@latest
+          bun add -D react-native-svg-transformer
 
       - name: 📱 Setup EAS build cache
         uses: actions/cache@v3
@@ -95,10 +96,9 @@ jobs:
           if [ -f ./metro.config.js ]; then
             echo "Creating backup of metro.config.js"
             cp ./metro.config.js ./metro.config.js.backup
-            echo "Updating metro.config.js to CommonJS format"
+            echo "Updating metro.config.js to support SVG"
             cat > ./metro.config.js << 'EOFMARKER'
-          /* eslint-disable @typescript-eslint/no-var-requires */
-          const { getDefaultConfig } = require('expo/metro-config');
+          const { getDefaultConfig } = require("expo/metro-config");
 
           const config = getDefaultConfig(__dirname);
 
@@ -115,9 +115,15 @@ jobs:
             sourceExts: [...resolver.sourceExts, 'svg'],
           };
 
+          // Add custom asset extensions
+          config.resolver.assetExts.push("db");
+          config.resolver.assetExts.push("zip");
+          config.resolver.assetExts.push("mp3");
+          config.resolver.assetExts.push("SQLite3");
+
           module.exports = config;
           EOFMARKER
-            echo "metro.config.js updated to CommonJS format"
+            echo "metro.config.js updated to support SVG"
           else
             echo "metro.config.js not found"
           fi
