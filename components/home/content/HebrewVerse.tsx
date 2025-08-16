@@ -143,10 +143,10 @@ const getStyles = ({ colors }: TTheme, fontSize: number) =>
       flexDirection: "row-reverse",
       flexWrap: "wrap",
       gap: 8,
-      backgroundColor: colors.card,
+      // backgroundColor: colors.card,
       padding: 5,
       borderRadius: 4,
-      elevation: 10,
+      // elevation: 10,
       paddingVertical: 10,
     },
     wordColumn: {

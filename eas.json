@@ -29,6 +29,9 @@
       "channel": "preview"
     },
     "production-apk": {
+      "env": {
+        "APP_VARIANT": "production"
+      },
       "distribution": "internal",
       "android": {
         "buildType": "apk"

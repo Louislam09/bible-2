@@ -365,14 +365,15 @@ const DatabaseDebug = () => {
         )}
       </View>
 
-      {/* <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+      <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
         GOOGLE_SERVICE_JSON: {GOOGLE_SERVICE_JSON}{" "}
         {JSON.stringify(GOOGLE_SERVICE_JSON, null, 2)}
         --------------------------------------------------------------
       </Text>
       <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
-        {JSON.stringify(Constants.expoConfig, null, 2)}
-      </Text> */}
+        {JSON.stringify(Constants.expoConfig, null, 10)}
+        {/* {JSON.stringify(Constants.expoConfig, null, 2)} */}
+      </Text>
 
       {/* Action Buttons */}
       <View style={{ marginBottom: 20 }}>
