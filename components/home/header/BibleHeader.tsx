@@ -24,9 +24,9 @@ import { useNavigation, useRouter } from "expo-router";
 import ProgressBar from "../footer/ProgressBar";
 import VersionList from "./VersionList";
 
-interface HeaderInterface {}
+interface HeaderInterface { }
 
-const BibleHeader: FC<HeaderInterface> = ({}) => {
+const BibleHeader: FC<HeaderInterface> = ({ }) => {
   const { width } = useWindowDimensions();
   const {
     currentBibleVersion,
@@ -62,6 +62,10 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
   const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
+  const isInterlineal = [
+    EBibleVersions.INT,
+    EBibleVersions.INTERLINEAL,
+  ].includes(currentBibleVersion as EBibleVersions);
   const canGoForward = !(currentHistoryIndex === history?.length - 1);
   const canGoBackward = currentHistoryIndex !== 0;
   const { installedBibles } = useDBContext();
@@ -192,7 +196,9 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
             color={theme.colors.primary}
           />
           {!isSmallSDevice && (
-            <Text style={styles.text}>{currentVersionName.trim()}</Text>
+            <Text style={styles.text}>
+              {isInterlineal ? "Interlineal" : currentVersionName.trim()}
+            </Text>
           )}
         </TouchableOpacity>
         <BottomModal shouldScroll startAT={1} ref={versionRef}>

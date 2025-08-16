@@ -45,6 +45,22 @@ export interface WordTagPair {
   tagValue: string | null;
 }
 
+// const text2 = `Y la tierra<S>776</S> estaba<S>1961</S> desordenada<S>8414</S> y vacía,<S>922</S> y las tinieblas<S>2822</S> estaban sobre<S>5921</S> <S>6440</S> la faz del abismo,<S>8415</S> y el Espíritu<S>7307</S> de Dios<S>430</S> se movía<S>7363</S> sobre<S>5921</S> <S>6440</S> la faz de las aguas.<S>4325</S> `;
+
+// const regex = /([^\s<]+)?<S>(\d+)<\/S>/g;
+
+// let results = [];
+// let match;
+// while ((match = regex.exec(text2)) !== null) {
+//   results.push({
+//     text: match[1] ? match[1].trim() : null,
+//     number: match[2]
+//   });
+// }
+
+// console.log(results);
+
+
 export function extractWordsWithTags(text: string): WordTagPair[] {
   // The regex now accounts for word boundaries, tags, and punctuation.
   const regex = /(\S+?)(?:<S>(\d+)<\/S>)?(\s|$)/g;

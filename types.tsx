@@ -235,10 +235,16 @@ export enum TFont {
   ManropeBold = "ManropeBold",
   PoppinsBold = "PoppinsBold",
   EBGaramondBold = "EBGaramondBold",
+  NotoSerif = "NotoSerif",
+  NotoSerifBold = "NotoSerifBold",
+  NotoSansHebrew = "NotoSansHebrew",
+  NotoSansHebrewBold = "NotoSansHebrewBold",
 }
 export enum EBibleVersions {
   BIBLE = "bible",
   NTV = "ntv-bible",
+  INT = "interlinear-bible",
+  INTERLINEAL = "HSB+",
 }
 
 export type DownloadBibleItem = {
@@ -359,6 +365,15 @@ export interface IBookVerse {
   verse: number;
   subheading: string[];
   is_favorite: any;
+  id?: any;
+  intText?: string;
+}
+export interface IBookVerseInterlinear {
+  book_number: number;
+  chapter: number;
+  text: string;
+  verse: number;
+  is_favorite?: any;
   id?: any;
 }
 
@@ -750,4 +765,10 @@ export interface RequestData {
   status: string;
   created: string;
   updated: string;
+}
+
+export enum DEFAULT_DATABASE {
+  BIBLE = "bible",
+  NTV = "ntv-bible",
+  INTERLINEAR = "interlinear-bible",
 }

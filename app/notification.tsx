@@ -1,4 +1,5 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import DatabaseDebug from "@/components/DatabaseDebug";
 import Icon from "@/components/Icon";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
@@ -109,6 +110,16 @@ const NotificationSettingsScreen = () => {
 
   const testNotification = async () => {
     await notificationService.sendTestNotification();
+  };
+
+  const testNotificationSchedule = async () => {
+    const now = new Date();
+    const oneMinuteFromNow = new Date(now.getTime() + 3000);
+    await notificationService.scheduleAlarm(
+      oneMinuteFromNow,
+      "Notificacion Programada",
+      "Esto es una prueba de notificacion programada"
+    );
   };
 
   const handleNotificationEnabled = async () => {
@@ -239,6 +250,13 @@ const NotificationSettingsScreen = () => {
         title: "Información de Debug",
         id: "debug",
         options: [
+          {
+            label: "Probar Notificación Programada",
+            extraText: "Envía una notificación de prueba programada",
+            iconName: "ConciergeBell" as keyof typeof icons,
+            action: testNotificationSchedule,
+            color: "gold",
+          },
           {
             label: "Estado de Notificaciones",
             extraText: notificationService.error
@@ -392,6 +410,7 @@ const NotificationSettingsScreen = () => {
         />
 
         {sections.map(SettingSection)}
+        {(isAdmin || IS_DEV) && <DatabaseDebug />}
 
         {/* Time Picker Modal */}
         <Modal

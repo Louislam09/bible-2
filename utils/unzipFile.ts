@@ -7,6 +7,7 @@ import {
   dbFileExt,
   getDatabaseExt,
   getDatabaseType,
+  isDefaultDatabase,
 } from "@/constants/databaseNames";
 import { DATABASE_TYPE } from "@/types";
 export const SQLiteDirPath = `${FileSystem.documentDirectory}SQLite`;
@@ -23,6 +24,9 @@ const uint8ArrayToBase64 = (uint8Array: Uint8Array): string => {
 
 // Function to read and decode ZIP file
 const readZipFile = async (zipFileUri: string): Promise<JSZip> => {
+  console.log('Reading zip file', zipFileUri)
+
+
   try {
     const zipBase64 = await FileSystem.readAsStringAsync(zipFileUri, {
       encoding: FileSystem.EncodingType.Base64,
@@ -71,26 +75,21 @@ const deleteFilesInDirectory = async (directoryUri: string) => {
   }
 };
 
-const saveFileToPhone = async (
-  fileName: string,
-  fileContent: Uint8Array,
-  directory: string
-) => {
+interface SaveFileToPhoneProps {
+  fileName: string;
+  fileContent: Uint8Array;
+  fileBase64?: string;
+  directory: string;
+}
+
+const saveFileToPhone = async ({ fileName, fileContent, fileBase64, directory }: SaveFileToPhoneProps) => {
   try {
     const fileUri = `${directory}${fileName}`;
-    const base64String = uint8ArrayToBase64(fileContent);
+    const base64String = fileBase64 || uint8ArrayToBase64(fileContent);
     await FileSystem.writeAsStringAsync(fileUri, base64String, {
       encoding: FileSystem.EncodingType.Base64,
     });
     console.log("File saved to:", fileUri);
-    // if (await Sharing.isAvailableAsync()) {
-    //   await Sharing.shareAsync(fileUri, {
-    //     mimeType: "application/zip",
-    //     dialogTitle: "Share ZIP file",
-    //   });
-    // } else {
-    //   console.warn("Sharing is not available on this platform");
-    // }
   } catch (error) {
     console.error("Error saving file to phone:", error);
   }
@@ -131,17 +130,25 @@ const extractAndSaveFiles = async (
       const file = zip.files[fileName];
       const databaseType = getDatabaseType(fileName);
       const allowTypes = [DATABASE_TYPE.BIBLE, DATABASE_TYPE.DICTIONARY];
+      const isDefaultBible = isDefaultDatabase(fileName.replace('.db', ''));
+      // console.log({ fileName, databaseType, allowTypes, isDefaultBible })
+
       if (!file.dir && allowTypes.includes(databaseType)) {
         onProgress(
           `Extrayendo ${fileName} (${filesExtracted + 1}/${totalFiles})`
         );
         const fileContent = await file.async("uint8array");
-        const newFileName = changeFileNameExt({
-          fileName,
-          newExt: getDatabaseExt(databaseType),
-        });
-
-        await saveFileToPhone(newFileName, fileContent, extractionPath);
+        const fileBase64 = await file.async("base64")
+        console.log('fileBase64', fileBase64.length)
+        let newFileName = fileName
+        if (!isDefaultBible) {
+          newFileName = changeFileNameExt({
+            fileName,
+            newExt: getDatabaseExt(databaseType),
+          });
+        }
+        console.log({ newFileName, fileName })
+        await saveFileToPhone({ fileName: newFileName, fileContent, directory: extractionPath, fileBase64 });
         filesExtracted++;
       }
     }
@@ -169,6 +176,7 @@ const unzipFile = async ({ zipFileUri, onProgress }: UnzipProps) => {
   } catch (error) {
     onProgress("Error durante el proceso");
     console.error("Error during unzipping process:", error);
+    throw error; // Rethrow to handle in the calling function
   }
 };
 

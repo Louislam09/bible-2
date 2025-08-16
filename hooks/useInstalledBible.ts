@@ -19,8 +19,8 @@ export type VersionItem = {
 };
 
 const useInstalledBibles = () => {
-  const [bible, ntvBible] = databaseNames;
-  const defaultDBs = [bible, ntvBible];
+  const [bible, ntvBible, intBible] = databaseNames;
+  const defaultDBs = [bible, ntvBible, intBible];
   const [installedBibles, setInstalledBibles] =
     useState<VersionItem[]>(defaultDBs);
   const [installedDictionary, setInstalledDictionary] =
@@ -52,6 +52,14 @@ const useInstalledBibles = () => {
             shortName: findBible.storedName,
           }
           : null;
+        // : ['bible.db', 'ntv-bible.db'].includes(file) ? null : {
+        //   id: file,
+        //   name: file,
+        //   description: file,
+        //   size: 0,
+        //   path: `${bibleDirectory}${file}`,
+        //   shortName: file,
+        // };
       })
       .filter((x) => x) as any;
   };

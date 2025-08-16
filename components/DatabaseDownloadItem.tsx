@@ -182,18 +182,11 @@ const DatabaseDownloadItem = ({
         setUnzipProgress(progress);
       };
 
-      // Unzip file
+      // Unzip file and delete zip
       await unzipFile({
         zipFileUri: downloadDest,
         onProgress: progressCallback,
       });
-
-      // Clean up zip file after extraction
-      try {
-        await FileSystem.deleteAsync(downloadDest);
-      } catch (cleanupError) {
-        console.warn("Failed to delete zip file:", cleanupError);
-      }
 
       // Update state and refresh database list
       setIsLoading(false);

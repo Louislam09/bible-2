@@ -1,25 +1,26 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import StatusBarBackground from "@/components/StatusBarBackground";
 import { Text, View } from "@/components/Themed";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { useTheme } from "@/context/ThemeContext";
 import useParams from "@/hooks/useParams";
 import { bibleState$ } from "@/state/bibleState";
 import {
   BookIndexes,
   ChooseChapterNumberParams,
+  EBibleVersions,
   IDBBookNames,
   Screens,
   TTheme,
 } from "@/types";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@/context/ThemeContext";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
 import React, { useCallback, useMemo } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
-import StatusBarBackground from "@/components/StatusBarBackground";
 
 const BookItem = React.memo(
   ({
@@ -133,8 +134,13 @@ const ChooseBook: React.FC = () => {
   const isShowName = use$(() => storedData$.isShowName.get());
   const { book } = routeParam;
   const { theme } = useTheme();
-  const { viewLayoutGrid, toggleViewLayoutGrid } = useBibleContext();
+  const { viewLayoutGrid, toggleViewLayoutGrid, currentBibleVersion } =
+    useBibleContext();
   const isBottomSideSearching = bibleState$.isBottomBibleSearching.get();
+  const isInterlineal = [
+    EBibleVersions.INT,
+    EBibleVersions.INTERLINEAL,
+  ].includes(currentBibleVersion as EBibleVersions);
 
   const handlePress = useCallback(
     (item: IDBBookNames) => {
@@ -182,7 +188,7 @@ const ChooseBook: React.FC = () => {
               onPress: () => toggleViewLayoutGrid(),
               onLongPress: handleLongPress,
               disabled: false,
-              style: { opacity: 1 },
+              style: { opacity: 0 },
             },
           }),
         }}
@@ -202,27 +208,34 @@ const ChooseBook: React.FC = () => {
           </Text>
           <BookList
             data={oldTestamentBooks}
-            viewLayoutGrid={viewLayoutGrid}
+            viewLayoutGrid
             isShowName={isShowName}
             book={book as string}
             onBookPress={handlePress}
             startIndex={0}
             theme={theme}
           />
-          <Text
-            style={[styles.sectionTitle, { color: theme.colors.notification }]}
-          >
-            {"Nuevo Pacto"}
-          </Text>
-          <BookList
-            data={newTestamentBooks}
-            viewLayoutGrid={viewLayoutGrid}
-            isShowName={isShowName}
-            book={book as string}
-            onBookPress={handlePress}
-            startIndex={BookIndexes.Malaquias}
-            theme={theme}
-          />
+          {!isInterlineal && (
+            <>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  { color: theme.colors.notification },
+                ]}
+              >
+                {"Nuevo Pacto"}
+              </Text>
+              <BookList
+                data={newTestamentBooks}
+                viewLayoutGrid
+                isShowName={isShowName}
+                book={book as string}
+                onBookPress={handlePress}
+                startIndex={BookIndexes.Malaquias}
+                theme={theme}
+              />
+            </>
+          )}
         </View>
       </ScrollView>
     </View>

@@ -1,3 +1,4 @@
+import DatabaseLoadingModal from "@/components/DatabaseLoadingModal";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import {
   DELETE_NOTE,
@@ -5,11 +6,13 @@ import {
   INSERT_INTO_NOTE,
   UPDATE_NOTE_BY_ID,
 } from "@/constants/Queries";
+import useBibleFonts from "@/hooks/useBibleFonts";
 import useHistoryManager, { HistoryManager } from "@/hooks/useHistoryManager";
 import useSearch, { UseSearchHookState } from "@/hooks/useSearch";
 import { useFavoriteVerseService } from "@/services/favoriteVerseService";
 import { authState$ } from "@/state/authState";
 import { bibleState$ } from "@/state/bibleState";
+import { dbDownloadState$ } from "@/state/dbDownloadState";
 import { settingState$ } from "@/state/settingState";
 import getCurrentDbName from "@/utils/getCurrentDB";
 import { use$ } from "@legendapp/state/react";
@@ -21,7 +24,6 @@ import React, {
   useState,
 } from "react";
 import { Dimensions, Text, ToastAndroid, View } from "react-native";
-import useCustomFonts from "../hooks/useCustomFonts";
 import {
   EBibleVersions,
   EHistoryItem,
@@ -105,27 +107,27 @@ const initialContext: BibleState = {
   selectBibleVersion: (version: string) => {
     return new Promise((resolve) => resolve());
   },
-  onSaveNote: () => {},
-  onUpdateNote: () => {},
-  onDeleteNote: () => {},
-  onDeleteAllNotes: () => {},
-  selectFont: () => {},
-  selectTheme: () => {},
-  handleFontSize: () => {},
+  onSaveNote: () => { },
+  onUpdateNote: () => { },
+  onDeleteNote: () => { },
+  onDeleteAllNotes: () => { },
+  selectFont: () => { },
+  selectTheme: () => { },
+  handleFontSize: () => { },
   toggleFavoriteVerse: async ({
     bookNumber,
     chapter,
     verse,
     isFav,
-  }: IFavoriteVerse) => {},
-  setShouldLoop: (shouldLoop: boolean) => {},
+  }: IFavoriteVerse) => { },
+  setShouldLoop: (shouldLoop: boolean) => { },
   // setverseInStrongDisplay: (verse: number) => {},
-  increaseFontSize: () => {},
-  toggleViewLayoutGrid: () => {},
-  setLocalData: () => {},
-  performSearch: () => {},
-  setSearchQuery: () => {},
-  syncLocalSettings: () => {},
+  increaseFontSize: () => { },
+  toggleViewLayoutGrid: () => { },
+  setLocalData: () => { },
+  performSearch: () => { },
+  setSearchQuery: () => { },
+  syncLocalSettings: () => { },
   selectedFont: TFont.Roboto,
   currentBibleVersion: EBibleVersions.BIBLE,
   fontSize: 24,
@@ -212,13 +214,14 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   const { fontSize, currentTheme, selectedFont } = storedData;
   const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
   const isDataLoaded = use$(() => storedData$.isDataLoaded.get());
+  const isDownloadingDB = use$(() => dbDownloadState$.isDownloadingDB.get());
   const requiresSettingsReloadAfterSync = use$(() =>
     settingState$.requiresSettingsReloadAfterSync.get()
   );
 
   const historyManager = useHistoryManager();
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
-  const fontsLoaded = useCustomFonts();
+  const fontsLoaded = useBibleFonts();
   const {
     myBibleDB,
     executeSql,
@@ -302,15 +305,22 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     !fontsLoaded ||
     !isDataLoaded ||
     !isInstallBiblesLoaded ||
-    !isMyBibleDbLoaded
+    !isMyBibleDbLoaded ||
+    isDownloadingDB
   ) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={{ fontSize: 20, fontWeight: "bold" }}>Cargando...</Text>
-      </View>
-      // <ScreenWithAnimation imageSource={logo} isVisible titleColor={'white'} backgroundColor='#0d3f3e' iconColor='white' title="Cargando..." icon="BookPlus">
-      //   <></>
-      // </ScreenWithAnimation>
+      <ScreenWithAnimation
+        imageSource={logo}
+        isVisible
+        titleColor={"white"}
+        backgroundColor="#0d3f3e"
+        iconColor="white"
+        title="Cargando..."
+        icon="BookPlus"
+        customContent={isDownloadingDB ? <DatabaseLoadingModal /> : null}
+      >
+        <></>
+      </ScreenWithAnimation>
     );
   }
 

@@ -1,6 +1,6 @@
 import getThemes from "@/constants/themeColors";
 import { TTheme } from "@/types";
-import { use$ } from "@legendapp/state/react";
+import { use$, use$ } from "@legendapp/state/react";
 import React, {
   createContext,
   ReactNode,
@@ -10,6 +10,7 @@ import React, {
 } from "react";
 import { Appearance } from "react-native";
 import { storedData$ } from "./LocalstoreContext";
+
 interface ThemeContextProps {
   schema: "light" | "dark";
   toggleTheme: (schema?: "light" | "dark") => void;
@@ -23,14 +24,10 @@ interface ThemeProviderProps {
 }
 
 const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  // const { currentTheme, selectedFont } = useBibleContext();
-  const currentTheme = use$(
-    () => storedData$.currentTheme.get() || "BlackWhite"
-  );
+  const currentTheme = use$(() => storedData$.currentTheme.get());
   const colorScheme = Appearance.getColorScheme();
   const themes = getThemes();
   const { DarkTheme, LightTheme } = themes[currentTheme];
-  // const { DarkTheme, LightTheme } = themes["BlackWhite"];
   const theme = { dark: DarkTheme, light: LightTheme };
   const [schema, setSchema] = useState<"light" | "dark">(
     colorScheme === "dark" ? "dark" : "light"

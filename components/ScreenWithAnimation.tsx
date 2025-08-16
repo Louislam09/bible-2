@@ -1,4 +1,5 @@
 import { useTheme } from "@/context/ThemeContext";
+import { TTheme } from "@/types";
 import LottieView, { AnimationObject } from "lottie-react-native";
 import { icons } from "lucide-react-native";
 import React, { FC, useEffect, useRef, useState } from "react";
@@ -19,6 +20,7 @@ type ScreenWithAnimationProps = {
   titleColor?: any;
   iconColor?: any;
   loop?: boolean;
+  customContent?: React.ReactNode;
 };
 
 const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
@@ -35,11 +37,13 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
   titleColor,
   iconColor,
   imageSource,
+  customContent,
 }) => {
   const [isAnimating, setIsAnimating] = useState(shouldPlay);
   const opacity = useRef(new Animated.Value(0)).current;
   const bounceValue = useRef(new Animated.Value(0)).current;
   const { theme } = useTheme();
+  const styles = getStyles(theme);
 
   const onAnimationFinish = (isCancelled: boolean) => {
     setIsAnimating(false);
@@ -98,7 +102,7 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
         backgroundColor: backgroundColor || theme.colors.background,
       }}
     >
-      {isAnimating && (
+      {isAnimating && !customContent && (
         <View
           style={[
             styles.animationContainer,
@@ -149,6 +153,16 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
           )}
         </View>
       )}
+      {customContent && (
+        <View
+          style={[
+            styles.customContentContainer,
+            { backgroundColor: backgroundColor || theme.colors.background },
+          ]}
+        >
+          {customContent}
+        </View>
+      )}
 
       {!isAnimating && children}
     </View>
@@ -157,10 +171,16 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
 
 export default ScreenWithAnimation;
 
-const styles = StyleSheet.create({
-  animationContainer: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
+const getStyles = ({ colors }: TTheme) =>
+  StyleSheet.create({
+    animationContainer: {
+      ...StyleSheet.absoluteFillObject,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    customContentContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+  });

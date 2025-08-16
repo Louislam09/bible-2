@@ -1,6 +1,7 @@
 import DAILY_VERSES from "@/constants/dailyVerses";
 import { GET_DAILY_VERSE } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
+import { useNotificationService } from "@/services/notificationServices";
 import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, pbUser, Screens, TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
@@ -9,7 +10,6 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "../Icon";
 import { Text, View } from "../Themed";
-import { useNotificationService } from "@/services/notificationServices";
 
 const defaultDailyVerse = {
   book_number: 0,
@@ -40,9 +40,9 @@ type DailyVerseProps = {
 };
 
 const DailyVerseTwo = ({ dailyVerseObject, theme, user }: DailyVerseProps) => {
-  const { scheduleDailyVerseNotification } = useNotificationService();
+  // const { scheduleDailyVerseNotification } = useNotificationService();
   const navigation = useNavigation();
-  const { executeSql, myBibleDB, isMyBibleDbLoaded } = useDBContext();
+  const { mainBibleService } = useDBContext();
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(
     dailyVerseObject || defaultDailyVerse
   );
@@ -50,8 +50,8 @@ const DailyVerseTwo = ({ dailyVerseObject, theme, user }: DailyVerseProps) => {
   const isDefaultVerse = dailyVerseObject?.bookName;
 
   useEffect(() => {
-    if (!isMyBibleDbLoaded) return;
-    if (!myBibleDB || !executeSql) return;
+    if (!mainBibleService.isLoaded) return;
+    if (!mainBibleService.database || !mainBibleService.executeSql) return;
     if (isDefaultVerse) return;
     const currentDate: any = new Date();
     const lastDayOfYear: any = new Date(currentDate.getFullYear(), 0, 0);
@@ -61,7 +61,7 @@ const DailyVerseTwo = ({ dailyVerseObject, theme, user }: DailyVerseProps) => {
       DAILY_VERSES[dayPassed] || defaultDailyObject;
     (async () => {
       try {
-        const response: any = await executeSql(
+        const response: any = await mainBibleService.executeSql(
           GET_DAILY_VERSE,
           [book_number, chapter, verse],
           "GET_DAILY_VERSE2"
@@ -80,7 +80,7 @@ const DailyVerseTwo = ({ dailyVerseObject, theme, user }: DailyVerseProps) => {
         console.log(error);
       }
     })();
-  }, [isMyBibleDbLoaded, myBibleDB, dailyVerseObject]);
+  }, [mainBibleService.isLoaded, mainBibleService.database, dailyVerseObject]);
 
   return (
     <View style={styles.dailyVerseContainer}>

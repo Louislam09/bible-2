@@ -1,12 +1,12 @@
-import { DictionaryData } from "@/types";
+import { DictionaryData, TFont } from "@/types";
 
 export const htmlTemplate = (
-  content: DictionaryData[] | any,
-  colors: any,
-  fontSize: any,
-  isPrint: boolean = false
+    content: DictionaryData[] | any,
+    colors: any,
+    fontSize: any,
+    isPrint: boolean = false
 ) => {
-  return `
+    return `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -23,6 +23,7 @@ export const htmlTemplate = (
                     font-family: Arial, sans-serif;
                     margin: 20px;
                     padding: 0;
+                    font-family: serif;
                 }
 
                 b{
@@ -45,12 +46,11 @@ export const htmlTemplate = (
         </head>
         <body>
             <h4>
-                ${content?.[0]?.topic || ""} > <a href='S:${
-    content?.[1]?.topic || ""
-  }'>${content?.[1]?.topic || ""}</a> 🔍</h4>
+                ${content?.[0]?.topic || ""} > <a href='S:${content?.[1]?.topic || ""
+        }'>${content?.[1]?.topic || ""}</a> 🔍</h4>
 
         ${(
-          content?.[0]?.definition || "No hay resultado para esta palabra"
+            content?.[0]?.definition || "No hay resultado para esta palabra"
         )?.replaceAll("font", "p")}
             <script>
                 window.ReactNativeWebView.postMessage(document.body.scrollHeight)
@@ -61,12 +61,12 @@ export const htmlTemplate = (
 };
 
 export const aiHtmlTemplate = (
-  explanation: string,
-  colors: any,
-  fontSize: any,
-  isPrint: boolean = false
+    explanation: string,
+    colors: any,
+    fontSize: any,
+    isPrint: boolean = false
 ) => {
-  return `
+    return `
     <!DOCTYPE html>
     <html>
     <head>
@@ -150,18 +150,17 @@ export const aiHtmlTemplate = (
         <div class="header">
             <div class="title">📖 Explicación Bíblica</div>
             <div class="subtitle">Generado por Inteligencia Artificial • ${new Date().toLocaleDateString(
-              "es-ES"
-            )}</div>
+        "es-ES"
+    )}</div>
         </div>
         <div class="content">
-            ${
-              explanation
-                ?.replace(/\n\n/g, "</p><p>")
-                .replace(/\n/g, "<br/>")
-                .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-                .replace(/\*(.*?)\*/g, "<em>$1</em>")
-                .replace(/^(.+)$/gm, "<p>$1</p>") || ""
-            }
+            ${explanation
+            ?.replace(/\n\n/g, "</p><p>")
+            .replace(/\n/g, "<br/>")
+            .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+            .replace(/\*(.*?)\*/g, "<em>$1</em>")
+            .replace(/^(.+)$/gm, "<p>$1</p>") || ""
+        }
         </div>
         <div class="footer">
             Esta explicación fue generada por IA y puede contener interpretaciones subjetivas.<br/>
@@ -175,7 +174,7 @@ export const aiHtmlTemplate = (
   `;
 };
 export const aiHtmlTemplatePrint = (explanation: string) => {
-  return `
+    return `
     <!DOCTYPE html>
     <html>
     <head>
@@ -262,18 +261,17 @@ export const aiHtmlTemplatePrint = (explanation: string) => {
         <div class="header">
             <div class="title">📖 Explicación Bíblica</div>
             <div class="subtitle">Generado por Inteligencia Artificial • ${new Date().toLocaleDateString(
-              "es-ES"
-            )}</div>
+        "es-ES"
+    )}</div>
         </div>
         <div class="content">
-            ${
-              explanation
-                ?.replace(/\n\n/g, "</p><p>")
-                .replace(/\n/g, "<br/>")
-                .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-                .replace(/\*(.*?)\*/g, "<em>$1</em>")
-                .replace(/^(.+)$/gm, "<p>$1</p>") || ""
-            }
+            ${explanation
+            ?.replace(/\n\n/g, "</p><p>")
+            .replace(/\n/g, "<br/>")
+            .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+            .replace(/\*(.*?)\*/g, "<em>$1</em>")
+            .replace(/^(.+)$/gm, "<p>$1</p>") || ""
+        }
         </div>
         <div class="footer">
             Esta explicación fue generada por IA y puede contener interpretaciones subjetivas.<br/>

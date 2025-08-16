@@ -13,10 +13,7 @@ const useCachedResources = () => {
         SplashScreen.preventAutoHideAsync();
 
         // Load fonts
-        await Font.loadAsync({
-          ...FontAwesome.font,
-          "space-mono": require("../assets/fonts/SpaceMono-Regular.ttf"),
-        });
+        await Font.loadAsync({ ...FontAwesome.font });
       } catch (e) {
         console.log(e);
       } finally {

@@ -7,7 +7,13 @@ import { useDBContext } from "@/context/databaseContext";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
-import { DictionaryData, IStrongWord, Screens, TTheme } from "@/types";
+import {
+  DictionaryData,
+  EBibleVersions,
+  IStrongWord,
+  Screens,
+  TTheme,
+} from "@/types";
 import { use$ } from "@legendapp/state/react";
 import React, {
   FC,
@@ -27,6 +33,7 @@ import {
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { Text, View } from "../../Themed";
+import { useBibleContext } from "@/context/BibleContext";
 
 type HeaderAction = {
   iconName: IconProps["name"];
@@ -58,7 +65,8 @@ interface IStrongContent {
 const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
   const data = use$<IStrongWord>(() => bibleState$.strongWord.get());
   const { code, text: word } = data;
-  const { myBibleDB, executeSql, isMyBibleDbLoaded } = useDBContext();
+  const { myBibleDB, executeSql, isMyBibleDbLoaded, mainBibleService } =
+    useDBContext();
   const [values, setValues] = useState<DictionaryData[]>([
     { definition: "", topic: "" },
   ]);
@@ -71,6 +79,11 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
   const { createAndShareTextFile, printToFile } = usePrintAndShare();
   const animatedScaleIcon = useRef(new Animated.Value(1)).current;
   const HTML_DATA = htmlTemplate(values, theme.colors, fontSize);
+  const { currentBibleVersion } = useBibleContext();
+  const isInterlineal = [
+    EBibleVersions.INT,
+    EBibleVersions.INTERLINEAL,
+  ].includes(currentBibleVersion as EBibleVersions);
 
   useEffect(() => {
     const loopAnimation = Animated.loop(
@@ -108,13 +121,16 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
 
   useEffect(() => {
     const fetchDictionaryData = async () => {
-      if (!isMyBibleDbLoaded || !strongCode) return;
+      if (!isMyBibleDbLoaded || !strongCode || !mainBibleService.isLoaded)
+        return;
 
       try {
-        const dictionaryData = await executeSql(
-          SEARCH_STRONG_WORD,
-          strongCode.split(",")
-        );
+        const dictionaryData = isInterlineal
+          ? await mainBibleService.executeSql(
+              SEARCH_STRONG_WORD,
+              strongCode.split(",")
+            )
+          : await executeSql(SEARCH_STRONG_WORD, strongCode.split(","));
 
         if (dictionaryData?.length) {
           setValues(dictionaryData as DictionaryData[]);
@@ -125,7 +141,7 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
     };
 
     fetchDictionaryData();
-  }, [isMyBibleDbLoaded, strongCode]);
+  }, [isMyBibleDbLoaded, strongCode, mainBibleService]);
 
   const onShouldStartLoadWithRequest = (event: ShouldStartLoadRequest) => {
     const { url } = event;
@@ -374,7 +390,7 @@ const getStyles = ({ colors }: TTheme) =>
       paddingHorizontal: 4,
     },
     actionItemText: {
-      fontSize: 12,
+      fontSize: 16,
       color: colors.text,
       textAlign: "center",
       fontWeight: "bold",

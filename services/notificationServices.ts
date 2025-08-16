@@ -77,7 +77,13 @@ export const useNotificationService = () => {
             let finalStatus = existingStatus;
 
             if (existingStatus !== "granted") {
-                const { status } = await Notifications.requestPermissionsAsync();
+                const { status } = await Notifications.requestPermissionsAsync({
+                    android: {
+                        allowAlert: true,
+                        allowBadge: true,
+                        allowSound: true,
+                    },
+                });
                 finalStatus = status;
             }
 
@@ -91,6 +97,7 @@ export const useNotificationService = () => {
 
             return true;
         } catch (error) {
+            setError(JSON.stringify(error, null, 2));
             console.error("Error requesting notification permissions:", error);
             Alert.alert("Error", "No se pudieron solicitar los permisos de notificación");
             return false;
@@ -117,7 +124,7 @@ export const useNotificationService = () => {
 
             await Notifications.setNotificationChannelAsync("devotional", {
                 name: "Recordatorio Devocional",
-                importance: Notifications.AndroidImportance.DEFAULT,
+                importance: Notifications.AndroidImportance.HIGH,
                 vibrationPattern: [0, 250, 250, 250],
                 lightColor: "#0c3e3d",
                 sound: "default",
@@ -125,7 +132,7 @@ export const useNotificationService = () => {
 
             await Notifications.setNotificationChannelAsync("memorization", {
                 name: "Recordatorio de Memorización",
-                importance: Notifications.AndroidImportance.DEFAULT,
+                importance: Notifications.AndroidImportance.HIGH,
                 vibrationPattern: [0, 250, 250, 250],
                 lightColor: "#0c3e3d",
                 sound: "default",
@@ -145,30 +152,52 @@ export const useNotificationService = () => {
 
             await setupNotificationChannel();
 
-            const notificationId = await Notifications.scheduleNotificationAsync({
-                content: {
-                    title: notificationData.title,
-                    body: notificationData.body,
-                    data: notificationData.data || {},
-                    sound: notificationData.sound ?? true,
-                    priority: notificationData.priority || Notifications.AndroidNotificationPriority.MAX,
-                },
-                trigger: trigger || null,
-            });
+            // Convert trigger to Date and use scheduleAlarm for all cases
+            let triggerDate: Date | null = null;
 
-            return notificationId;
+            if (trigger) {
+                if (typeof trigger === 'object') {
+                    if ('date' in trigger) {
+                        triggerDate = trigger.date as Date;
+                    } else if ('seconds' in trigger) {
+                        // Time interval trigger
+                        triggerDate = new Date(Date.now() + (trigger.seconds * 1000));
+                    } else if ('hour' in trigger && 'minute' in trigger) {
+                        // Daily trigger - calculate next occurrence
+                        const now = new Date();
+                        const targetTime = new Date();
+                        targetTime.setHours(trigger.hour || 0, trigger.minute || 0, 0, 0);
+
+                        if (targetTime <= now) {
+                            // If time has passed today, schedule for tomorrow
+                            targetTime.setDate(targetTime.getDate() + 1);
+                        }
+                        triggerDate = targetTime;
+                    }
+                }
+            }
+
+            // Use scheduleAlarm for all notifications
+            if (triggerDate) {
+                return await scheduleAlarm(triggerDate, notificationData.title, notificationData.body, 'default', notificationData.data);
+            } else {
+                // For immediate notifications (no trigger), schedule for 1 second from now
+                const immediateDate = new Date(Date.now() + 1000);
+                return await scheduleAlarm(immediateDate, notificationData.title, notificationData.body, 'default', notificationData.data);
+            }
         } catch (error) {
-            console.error("Error scheduling notification:", error);
-            setError(JSON.stringify(error, null, 2));
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            console.error("Error scheduling notification:", errorMessage);
+            setError(errorMessage);
             showToast("No se pudo programar la notificación", "SHORT");
             return null;
         }
     };
 
     const scheduleDailyVerseNotification = useCallback(async (
-        time: string = '08:00'
+        time: string = '08:00', test: boolean = false
     ): Promise<string | null> => {
-        const [hour = 8, minute = 2] = time.split(":").map(Number);
+        const [hour = 8, minute = 0] = time.split(":").map(Number);
 
         // Get the daily verse data if database access is available
         let dailyVerseData = null;
@@ -176,8 +205,9 @@ export const useNotificationService = () => {
             try {
                 dailyVerseData = await getDailyVerseData(executeSql);
             } catch (error) {
-                console.warn('Could not get daily verse data:', error);
-                setError(JSON.stringify(error, null, 2));
+                const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+                console.warn('Could not get daily verse data:', errorMessage);
+                setError(errorMessage);
             }
         }
 
@@ -194,89 +224,100 @@ export const useNotificationService = () => {
             ? `📖 ${dailyVerseData.ref}\n\n"${dailyVerseData.text}"\n\nTómate un momento para reflexionar en la Palabra de Dios.`
             : "Tu versículo diario está listo. Tómate un momento para reflexionar en la Palabra de Dios.";
 
-        return await scheduleNotification(
-            {
-                title,
-                body,
-                data: {
-                    type: "daily-verse",
-                    verseData: dailyVerseData
-                },
-            },
-            {
-                hour: hour || 8,
-                minute: minute || 0,
-                repeats: true,
-            }
-        );
+        // Calculate the target time for today or tomorrow
+        const now = new Date();
+        const targetTime = new Date();
+        targetTime.setHours(hour, minute, 0, 0);
+
+        if (targetTime <= now) {
+            // If time has passed today, schedule for tomorrow
+            targetTime.setDate(targetTime.getDate() + 1);
+        }
+
+        if (test) {
+            // For test, schedule 10 seconds from now
+            const testTime = new Date(Date.now() + 10000);
+            return await scheduleAlarm(testTime, title, body, 'daily-verse', {
+                type: "daily-verse",
+                verseData: dailyVerseData,
+                test: true
+            });
+        } else {
+            return await scheduleAlarm(targetTime, title, body, 'daily-verse', {
+                type: "daily-verse",
+                verseData: dailyVerseData
+            });
+        }
     }, [isMyBibleDbLoaded])
 
     const scheduleDevotionalReminder = async (hour: number = 9, minute: number = 0): Promise<string | null> => {
-        return await scheduleNotification(
-            {
-                title: "🙏 Tiempo de Devoción",
-                body: "Es hora de tu tiempo devocional. Dedica unos minutos a leer la Biblia y orar.",
-                data: { type: "devotional" },
-            },
-            {
-                hour: hour,
-                minute: minute,
-                repeats: true,
-            }
-        );
+        const title = "🙏 Tiempo de Devoción";
+        const body = "Es hora de tu tiempo devocional. Dedica unos minutos a leer la Biblia y orar.";
+
+        // Calculate the target time for today or tomorrow
+        const now = new Date();
+        const targetTime = new Date();
+        targetTime.setHours(hour, minute, 0, 0);
+
+        if (targetTime <= now) {
+            // If time has passed today, schedule for tomorrow
+            targetTime.setDate(targetTime.getDate() + 1);
+        }
+
+        return await scheduleAlarm(targetTime, title, body, 'devotional', {
+            type: "devotional"
+        });
     };
 
     const scheduleDevotionalReminders = async (): Promise<(string | null)[]> => {
         const reminders = [];
 
         // 9:00 (mañana)
+        const morningTime = new Date();
+        morningTime.setHours(9, 0, 0, 0);
+        if (morningTime <= new Date()) {
+            morningTime.setDate(morningTime.getDate() + 1);
+        }
         reminders.push(
-            await scheduleNotification(
-                {
-                    title: "🙏 Oración de la Mañana",
-                    body: "Es hora de buscar al Eterno en oración y lectura.",
-                    data: { type: "devotional", moment: "shacharit" },
-                },
-                {
-                    hour: 9,
-                    minute: 0,
-                    repeats: true,
-                }
-            )
+            await scheduleAlarm(morningTime, "🙏 Oración de la Mañana", "Es hora de buscar al Eterno en oración y lectura.", 'devotional', {
+                type: "devotional",
+                moment: "shacharit"
+            })
         );
 
         // 15:00 (tarde)
+        const afternoonTime = new Date();
+        afternoonTime.setHours(15, 0, 0, 0);
+        if (afternoonTime <= new Date()) {
+            afternoonTime.setDate(afternoonTime.getDate() + 1);
+        }
         reminders.push(
-            await scheduleNotification(
-                {
-                    title: "🙏 Oración de la Tarde",
-                    body: "Dedica un momento para conectarte con el Creador.",
-                    data: { type: "devotional", moment: "minja" },
-                },
-                {
-                    hour: 15,
-                    minute: 0,
-                    repeats: true,
-                }
-            )
+            await scheduleAlarm(afternoonTime, "🙏 Oración de la Tarde", "Dedica un momento para conectarte con el Creador.", 'devotional', {
+                type: "devotional",
+                moment: "minja"
+            })
         );
 
         return reminders;
     };
 
     const scheduleMemorizationReminder = async (hour: number = 18, minute: number = 0): Promise<string | null> => {
-        return await scheduleNotification(
-            {
-                title: "🧠 Recordatorio de Memorización",
-                body: "Practica el versículo que estás memorizando. La repetición es clave para recordar.",
-                data: { type: "memorization" },
-            },
-            {
-                hour: hour,
-                minute: minute,
-                repeats: true,
-            }
-        );
+        const title = "🧠 Recordatorio de Memorización";
+        const body = "Practica el versículo que estás memorizando. La repetición es clave para recordar.";
+
+        // Calculate the target time for today or tomorrow
+        const now = new Date();
+        const targetTime = new Date();
+        targetTime.setHours(hour, minute, 0, 0);
+
+        if (targetTime <= now) {
+            // If time has passed today, schedule for tomorrow
+            targetTime.setDate(targetTime.getDate() + 1);
+        }
+
+        return await scheduleAlarm(targetTime, title, body, 'memorization', {
+            type: "memorization"
+        });
     };
 
     const sendTestNotification = async (): Promise<void> => {
@@ -286,16 +327,15 @@ export const useNotificationService = () => {
                 return;
             }
 
-            await scheduleNotification(
-                {
-                    title: "🔔 Notificación de Prueba",
-                    body: "¡Esta es una notificación de prueba! Las notificaciones están funcionando correctamente.",
-                    data: { type: "test" },
-                },
-                null // Send immediately
-            );
+            // Schedule test notification for 1 seconds from now
+            const testTime = new Date(Date.now() + 1000);
+            await scheduleAlarm(testTime, "🔔 Notificación de Prueba", "¡Esta es una notificación de prueba! Las notificaciones están funcionando correctamente.", 'default', {
+                type: "test"
+            });
         } catch (error) {
-            console.error("Error sending test notification:", error);
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            setError(errorMessage);
+            console.error("Error sending test notification:", errorMessage);
             Alert.alert("Error", "No se pudo enviar la notificación de prueba");
         }
     };
@@ -305,7 +345,9 @@ export const useNotificationService = () => {
             await Notifications.cancelAllScheduledNotificationsAsync();
             showToast("Todas las notificaciones canceladas", "SHORT");
         } catch (error) {
-            console.error("Error cancelling notifications:", error);
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            setError(errorMessage);
+            console.error("Error cancelling notifications:", errorMessage);
         }
     };
 
@@ -315,7 +357,9 @@ export const useNotificationService = () => {
             showToast(`✅ Notificación cancelada`, "SHORT");
             console.log(`✅ Notification ${notificationId} cancelled`);
         } catch (error) {
-            console.error(`Error cancelling notification ${notificationId}:`, error);
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            setError(errorMessage);
+            console.error(`Error cancelling notification ${notificationId}:`, errorMessage);
         }
     };
 
@@ -323,7 +367,9 @@ export const useNotificationService = () => {
         try {
             return await Notifications.getAllScheduledNotificationsAsync();
         } catch (error) {
-            console.error("Error getting scheduled notifications:", error);
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            setError(errorMessage);
+            console.error("Error getting scheduled notifications:", errorMessage);
             return [];
         }
     };
@@ -396,13 +442,13 @@ export const useNotificationService = () => {
                 if (updatedPrefs.memorizationReminder) {
                     await scheduleMemorizationReminder();
                 } else {
-                    // Cancel existing memorization notifications
                     const scheduledNotifications = await getScheduledNotifications();
                     const memorizationNotifications = scheduledNotifications.filter(
                         notification => notification.content.data?.type === "memorization"
                     );
 
                     for (const notification of memorizationNotifications) {
+                        console.log("🔔 Cancelling notification:", notification);
                         await cancelNotificationById(notification.identifier);
                     }
                 }
@@ -410,7 +456,9 @@ export const useNotificationService = () => {
 
             return true;
         } catch (error) {
-            console.error("Error updating notification settings:", error);
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            setError(errorMessage);
+            console.error("Error updating notification settings:", errorMessage);
             Alert.alert("Error", "No se pudieron actualizar las configuraciones de notificación");
             return false;
         } finally {
@@ -439,7 +487,9 @@ export const useNotificationService = () => {
                 await scheduleMemorizationReminder();
             }
         } catch (error) {
-            console.error("Error initializing notifications:", error);
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            setError(errorMessage);
+            console.error("Error initializing notifications:", errorMessage);
         }
     };
 
@@ -449,18 +499,8 @@ export const useNotificationService = () => {
         data?: Record<string, any>,
         delaySeconds: number = 0
     ): Promise<string | null> => {
-        const trigger = delaySeconds > 0
-            ? { seconds: delaySeconds }
-            : null;
-
-        return await scheduleNotification(
-            {
-                title,
-                body,
-                data,
-            },
-            trigger
-        );
+        const targetTime = new Date(Date.now() + (delaySeconds * 1000));
+        return await scheduleAlarm(targetTime, title, body, 'default', data);
     };
 
     const sendPushNotificationToUser = async ({
@@ -514,11 +554,54 @@ export const useNotificationService = () => {
             return true;
 
         } catch (error) {
-            console.error('Error sending push notification:', error);
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            setError(errorMessage);
+            console.error('Error sending push notification:', errorMessage);
             return false;
         }
     };
 
+    // const scheduleAlarm = async (time: Date, title: string, body: string, channelId?: string, data?: Record<string, any>) => {
+    //     const trigger = new Date(time);
+
+    //     return await Notifications.scheduleNotificationAsync({
+    //         content: {
+    //             title,
+    //             body,
+    //             sound: true,
+    //             data: data || {},
+    //         },
+    //         trigger,
+    //         ...(channelId && { channelId }),
+    //     });
+    // }
+    const scheduleAlarm = async (time: Date, title: string, body: string, channelId?: string, data?: Record<string, any>) => {
+        const sanitizeData = (data: any) => {
+            try {
+                return JSON.parse(JSON.stringify(data ?? {}));
+            } catch {
+                return {};
+            }
+        };
+
+        return await Notifications.scheduleNotificationAsync({
+            content: {
+                title,
+                body,
+                sound: true,
+                data: sanitizeData(data),
+            },
+            trigger: {
+                date: new Date(time),
+                channelId: channelId || 'default',
+            }
+        });
+
+    }
+
+    const cancelAlarm = async (notificationId: string) => {
+        await Notifications.cancelScheduledNotificationAsync(notificationId);
+    }
 
     return {
         getNotificationPreferences,
@@ -538,6 +621,8 @@ export const useNotificationService = () => {
         initializeNotifications,
         sendCustomNotification,
         sendPushNotificationToUser,
+        scheduleAlarm,
+        cancelAlarm,
         error,
     };
 };

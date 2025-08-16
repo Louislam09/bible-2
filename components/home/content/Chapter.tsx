@@ -1,16 +1,16 @@
+import HebrewVerse from "@/components/home/content/HebrewVerse";
 import Icon from "@/components/Icon";
 import { Text } from "@/components/Themed";
-import { bibleState$ } from "@/state/bibleState";
-import { IBookVerse, TTheme } from "@/types";
-import { observer } from "@legendapp/state/react";
+import { useBibleContext } from "@/context/BibleContext";
 import { useTheme } from "@/context/ThemeContext";
+import { bibleState$ } from "@/state/bibleState";
+import { EBibleVersions, IBookVerse, TTheme } from "@/types";
+import { observer } from "@legendapp/state/react";
 import { FlashList } from "@shopify/flash-list";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   ActivityIndicator,
   Animated,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
   StyleSheet,
   useWindowDimensions,
   View,
@@ -27,6 +27,7 @@ interface TChapter {
 
 interface TChapter {
   verses: IBookVerse[];
+  interlinearVerses: IBookVerse[];
   isSplit?: boolean;
   estimatedReadingTime: number;
   initialScrollIndex: number;
@@ -35,13 +36,13 @@ interface TChapter {
 
 const Chapter = ({
   verses,
+  interlinearVerses,
   isSplit,
   estimatedReadingTime,
   initialScrollIndex,
   onScroll,
 }: TChapter) => {
   const bibleSide = isSplit ? "bottom" : "top";
-  const data = verses ?? [];
 
   const { width, height } = useWindowDimensions();
   const { theme } = useTheme();
@@ -50,15 +51,25 @@ const Chapter = ({
   const topVerseRef = useRef<number | null>(null);
   const lastOffset = useRef(0);
   const lastScrollTime = useRef(Date.now());
+  const { currentBibleVersion } = useBibleContext();
 
   const aspectRadio = height / width;
   const isMobile = +aspectRadio.toFixed(2) > 1.65;
+  const isInterlineal = [
+    EBibleVersions.INT,
+    EBibleVersions.INTERLINEAL,
+  ].includes(currentBibleVersion as EBibleVersions);
+
+  const data = isInterlineal && !isSplit ? interlinearVerses : verses;
 
   const renderItem = useCallback(
-    ({ item }: any) => (
-      <Verse item={item} isSplit={!!isSplit} initVerse={initialScrollIndex} />
-    ),
-    [isSplit, initialScrollIndex]
+    ({ item }: any) =>
+      isInterlineal && !isSplit ? (
+        <HebrewVerse item={item} />
+      ) : (
+        <Verse item={item} isSplit={!!isSplit} initVerse={initialScrollIndex} />
+      ),
+    [isSplit, initialScrollIndex, isInterlineal]
   );
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
@@ -94,8 +105,8 @@ const Chapter = ({
   }, [initialScrollIndex]);
 
   const ListHeader = useCallback(() => {
-    return (
-      <View style={[styles.estimatedContainer]}>
+    return isInterlineal ? null : (
+      <View style={styles.estimatedContainer}>
         <Text style={[styles.estimatedText]}>
           <Icon size={14} name="Timer" color={theme.colors.notification} />
           &nbsp; Tiempo de lectura{" "}
@@ -103,7 +114,7 @@ const Chapter = ({
         </Text>
       </View>
     );
-  }, [estimatedReadingTime]);
+  }, [estimatedReadingTime, isInterlineal]);
 
   const keyExtractor = useCallback(
     (item: IBookVerse) => `${item.book_number}-${item.chapter}-${item.verse}`,
@@ -138,8 +149,8 @@ const Chapter = ({
         <FlashList
           ref={chapterRef}
           keyExtractor={keyExtractor}
-          // data={verses ?? []}
-          data={data.slice(0, 2)}
+          data={data ?? []}
+          // data={data.slice(0, 1)}
           ListHeaderComponent={ListHeader}
           renderItem={renderItem}
           decelerationRate="normal"
@@ -159,12 +170,12 @@ const Chapter = ({
           ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
           onScroll={handleScroll}
           scrollEventThrottle={16}
-          // decelerationRate="normal"
-          // onEndReached={onEndReached}
-          // maintainVisibleContentPosition={{
-          //   minIndexForVisible: 0,
-          //   autoscrollToTopThreshold: 10,
-          // }}
+        // decelerationRate="normal"
+        // onEndReached={onEndReached}
+        // maintainVisibleContentPosition={{
+        //   minIndexForVisible: 0,
+        //   autoscrollToTopThreshold: 10,
+        // }}
         />
       </View>
     </View>

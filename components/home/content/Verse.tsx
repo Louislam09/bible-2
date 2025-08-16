@@ -4,6 +4,7 @@ import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import Walkthrough from "@/components/Walkthrough";
 import { getBookDetail } from "@/constants/BookNames";
+import { isDefaultDatabase } from "@/constants/databaseNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMemorization } from "@/context/MemorizationContext";
@@ -22,6 +23,7 @@ import {
   WordTagPair,
 } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { mergeTexts } from "@/utils/interleanerHelper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { use$ } from "@legendapp/state/react";
 import { useRouter } from "expo-router";
@@ -155,6 +157,9 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   const animatedVerseHighlight = useRef(new Animated.Value(0)).current;
   const wordAndStrongValue = extractWordsWithTags(item.text);
   const googleAIKey = use$(() => storedData$.googleAIKey.get());
+  const isDefaultDb = isDefaultDatabase(currentBibleVersion);
+  const NT_BOOK_NUMBER = 470;
+  const isNewTestament = item.book_number >= NT_BOOK_NUMBER || !isDefaultDb;
 
   // LEGEND STATE
   const isBottomBibleSearching = use$(
@@ -273,9 +278,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const onQuote = () => {
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item.book_number).longName} ${
-      item.chapter
-    }:${item.verse}`;
+    const reference = `${getBookDetail(item.book_number).longName} ${item.chapter
+      }:${item.verse}`;
     bibleState$.handleSelectVerseForNote(verseText);
     router.push({ pathname: "/quote", params: { text: verseText, reference } });
   };
@@ -357,9 +361,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       return;
     }
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item.book_number).longName} ${
-      item.chapter
-    }:${item.verse}`;
+    const reference = `${getBookDetail(item.book_number).longName} ${item.chapter
+      }:${item.verse}`;
 
     bibleState$.handleVerseWithAiAnimation(item.verse);
     bibleState$.handleVerseToExplain({ text: verseText, reference });
@@ -369,6 +372,20 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const router = useRouter();
 
+  const onInterlinear = () => {
+    const currentInterlinear =
+      bibleState$.bibleData.interlinearVerses.get()?.[item.verse - 1];
+    // const mergeText = mergeTexts(item.text, currentInterlinear?.text || "");
+
+    bibleState$.handleVerseToInterlinear({
+      book_number: item.book_number,
+      chapter: item.chapter,
+      verse: item.verse,
+      text: currentInterlinear?.text || "",
+    });
+    modalState$.openInterlinealBottomSheet();
+  };
+
   const verseActions: TIcon[] = useMemo(() => {
     return [
       {
@@ -376,6 +393,13 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         action: onCopy,
         hide: false,
         description: "Copiar",
+      },
+      {
+        name: "BookType",
+        action: onInterlinear,
+        description: "Interlinear",
+        color: "#f79c67",
+        hide: isNewTestament,
       },
       {
         name: "Sparkles",
@@ -408,8 +432,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         name: "Brain",
         action: () =>
           onMemorizeVerse(
-            `${getBookDetail(item.book_number).longName} ${item?.chapter}:${
-              item?.verse
+            `${getBookDetail(item.book_number).longName} ${item?.chapter}:${item?.verse
             }`
           ),
         color: "#f1abab",
@@ -423,7 +446,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         description: "Comparar",
       },
     ] as TIcon[];
-  }, [verseIsTapped, isFavorite, item]);
+  }, [verseIsTapped, isFavorite, item, isNewTestament]);
 
   const steps = [
     {
@@ -497,8 +520,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
               // { backgroundColor: bgVerseHighlight },
             ]}
             aria-selected
-            // selectable={false}
-            // selectionColor={theme.colors.notification || "white"}
+          // selectable={false}
+          // selectionColor={theme.colors.notification || "white"}
           >
             <Text style={[styles.verseNumber, { fontSize }]}>
               {isFavorite && (
@@ -593,7 +616,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     verse: {
       position: "relative",
-      // paddingLeft: 20,
+      // paddingHorizontal: 25,
       // marginVertical: 4,
       display: "flex",
       alignItems: "flex-start",

@@ -98,7 +98,7 @@ const screenAnimations: TScreensName = {
 };
 
 const App = () => {
-  const isLoadingComplete = useCachedResources();
+  // const isLoadingComplete = useCachedResources();
   const isAnimationDisabled = use$(() =>
     settingState$.isAnimationDisabled.get()
   );
@@ -153,6 +153,11 @@ const App = () => {
                             initialRouteName="(dashboard)"
                             screenOptions={screenOptions}
                           />
+                          {/* <DatabaseLoadingModal
+                            visible={isVisible}
+                            progress={progress}
+                            databaseName={progress?.databaseName}
+                          /> */}
                         </BottomSheetModalProvider>
                       </GestureHandlerRootView>
                     </QueryProvider>

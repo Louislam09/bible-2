@@ -1,349 +1,472 @@
-import {
-  dbFileExt,
-  isDefaultDatabase,
-  SQLiteDirPath,
-} from "@/constants/databaseNames";
-import {
-  CREATE_FAVORITE_VERSES_TABLE,
-  CREATE_MEMORIZATION_TABLE,
-  CREATE_NOTE_TABLE,
-  CREATE_STREAK_TABLE,
-  historyQuery,
-} from "@/constants/Queries";
-import { bibleState$ } from "@/state/bibleState";
-import { showToast } from "@/utils/showToast";
-import { Asset } from "expo-asset";
-import * as FileSystem from "expo-file-system";
-import * as SQLite from "expo-sqlite";
-import { useEffect, useRef, useState } from "react";
-import { VersionItem } from "./useInstalledBible";
+// import {
+//   dbFileExt,
+//   isDefaultDatabase,
+//   SQLiteDirPath,
+// } from "@/constants/databaseNames";
+// import {
+//   CREATE_FAVORITE_VERSES_TABLE,
+//   CREATE_MEMORIZATION_TABLE,
+//   CREATE_NOTE_TABLE,
+//   CREATE_STREAK_TABLE,
+//   historyQuery,
+// } from "@/constants/Queries";
+// import { bibleState$ } from "@/state/bibleState";
+// import { showToast } from "@/utils/showToast";
+// import { Asset } from "expo-asset";
+// import * as FileSystem from "expo-file-system";
+// import * as SQLite from "expo-sqlite";
+// import { useEffect, useRef, useState } from "react";
+// import { VersionItem } from "./useInstalledBible";
+// import unzipFile from "@/utils/unzipFile";
+// import { dbDownloadState$ } from "@/state/dbDownloadState";
 
-interface Row {
-  [key: string]: any;
-}
+// interface Row {
+//   [key: string]: any;
+// }
 
-interface UseDatabase {
-  database: SQLite.SQLiteDatabase | null;
-  executeSql: <T = any>(
-    sql: string,
-    params?: any[],
-    queryName?: string
-  ) => Promise<T[]>;
-  loading: boolean;
-  reDownloadDatabase: (_dbName?: VersionItem) => Promise<SQLite.SQLiteDatabase>
-}
+// interface UseDatabase {
+//   database: SQLite.SQLiteDatabase | null;
+//   executeSql: <T = any>(
+//     sql: string,
+//     params?: any[],
+//     queryName?: string
+//   ) => Promise<T[]>;
+//   loading: boolean;
+//   reDownloadDatabase: (_dbName?: VersionItem) => Promise<SQLite.SQLiteDatabase>
+//   openDatabaseFromZip(databaseItem: VersionItem, isReDownload?: boolean): Promise<SQLite.SQLiteDatabase | undefined>
+// }
 
-type TUseDatabase = {
-  dbName: VersionItem | undefined;
-};
+// type TUseDatabase = {
+//   dbName: VersionItem | undefined;
+// };
 
-enum DEFAULT_DATABASE {
-  BIBLE = "bible",
-  NTV = "ntv-bible",
-}
+// enum DEFAULT_DATABASE {
+//   BIBLE = "bible",
+//   NTV = "ntv-bible",
+//   INTERLINEAR = "interlinear-bible",
+// }
 
-function useDB({ dbName }: TUseDatabase): UseDatabase {
-  const [database, setDatabase] = useState<SQLite.SQLiteDatabase | null>(null);
-  const [loading, setLoading] = useState(false);
-  const isMounted = useRef(true);
-  const dbInitialized = useRef(false);
+// function useDB({ dbName }: TUseDatabase): UseDatabase {
+//   const [database, setDatabase] = useState<SQLite.SQLiteDatabase | null>(null);
+//   const [loading, setLoading] = useState(false);
+//   const isMounted = useRef(true);
+//   const dbInitialized = useRef(false);
 
-  const executeSql = async (
-    sql: string,
-    params: any[] = [],
-    queryName?: any
-  ): Promise<any[]> => {
-    try {
-      const startTime = Date.now();
-      if (!database || !dbInitialized.current) {
-        return [];
-        // throw new Error("Database not initialized");
-      }
-      // if (database) {
-      //   const valid = await isDatabaseValid(database);
-      //   console.log({ valid });
+//   const executeSql = async (
+//     sql: string,
+//     params: any[] = [],
+//     queryName?: any
+//   ): Promise<any[]> => {
+//     try {
+//       const startTime = Date.now();
+//       if (!database || !dbInitialized.current) {
+//         return [];
+//       }
 
-      //   if (!valid) {
-      //     try {
-      //       await reDownloadDatabase();
+//       const statement = await database.prepareAsync(sql);
+//       try {
+//         const result = await statement.executeAsync(params);
+//         const endTime = Date.now();
+//         const executionTime = endTime - startTime;
 
-      //     } catch (error) {
-      //       console.log("Error re-downloading database:", error);
-      //     }
-      //   }
-      // }
+//         const response = await result.getAllAsync();
+//         if (queryName) {
+//           // console.log(`Query ${queryName} executed in ${executionTime} ms.`);
+//         }
+//         return response as Row[];
+//       } finally {
+//         await statement.finalizeAsync();
+//       }
+//     } catch (error) {
+//       console.error(`"Error executing SQL${sql}:"`, error);
+//       return [];
+//     }
+//   };
 
-      const statement = await database.prepareAsync(sql);
-      try {
-        const result = await statement.executeAsync(params);
-        const endTime = Date.now();
-        const executionTime = endTime - startTime;
+//   async function isDatabaseValid(db: SQLite.SQLiteDatabase, tableNameToCheck: string): Promise<boolean> {
+//     if (!dbName) return false;
+//     const dbItemFilePath = dbName.path;
+//     const info = await FileSystem.getInfoAsync(dbItemFilePath);
+//     if (!info.exists || info.size === 0) return false;
 
-        const response = await result.getAllAsync();
-        if (queryName) {
-          // console.log(`Query ${queryName} executed in ${executionTime} ms.`);
-        }
-        return response as Row[];
-      } finally {
-        await statement.finalizeAsync();
-      }
-    } catch (error) {
-      console.error(`"Error executing SQL${sql}:"`, error);
-      return [];
-    }
-  };
+//     try {
+//       const statement = await db.prepareAsync(
+//         `SELECT name FROM sqlite_master WHERE type='table';`
+//       );
+//       const result = await statement.executeAsync();
+//       const tables = await result.getAllAsync();
+//       await statement.finalizeAsync();
 
-  async function isDatabaseValid(db: SQLite.SQLiteDatabase): Promise<boolean> {
-    if (!dbName) return false;
-    const dbItemFilePath = dbName.path;
-    const info = await FileSystem.getInfoAsync(dbItemFilePath);
-    if (!info.exists || info.size === 0) return false;
+//       const tableNames = tables.map((t: any) => t.name);
+//       // console.log("Tables in database:", tableNames);
+//       return tableNames.includes(tableNameToCheck);
+//     } catch (e) {
+//       console.error("Validation query failed:", e);
+//       return false;
+//     }
+//   }
 
-    try {
-      const statement = await db.prepareAsync(
-        `SELECT name FROM sqlite_master WHERE type='table';`
-      );
-      const result = await statement.executeAsync();
-      const tables = await result.getAllAsync();
-      await statement.finalizeAsync();
+//   async function reDownloadDatabase(_dbName?: VersionItem) {
+//     showToast("Re-downloading database...");
+//     const currentDatabaseName = _dbName || dbName;
+//     try {
+//       setDatabase(null);
+//       isMounted.current = true;
+//       bibleState$.isDataLoading.top.set(true);
+//       if (database) {
+//         await database.closeAsync();
+//       }
+//       if (!currentDatabaseName) throw new Error("Database name is not defined.");
 
-      const tableNames = tables.map((t: any) => t.name);
-      // console.log("Tables in database:", tableNames);
-      return tableNames.includes("verses");
-    } catch (e) {
-      console.error("Validation query failed:", e);
-      return false;
-    }
-  }
+//       const isDefault = isDefaultDatabase(currentDatabaseName.id);
+//       const finalDatabasePath = isDefault ? `${currentDatabaseName.id}.db` : `${currentDatabaseName.id}${dbFileExt}`;
+//       const dbItemFilePath = currentDatabaseName.path;
 
-  async function reDownloadDatabase(_dbName?: VersionItem) {
-    showToast("Re-downloading database...");
-    const currentDatabaseName = _dbName || dbName;
-    try {
-      setDatabase(null);
-      isMounted.current = true;
-      bibleState$.isDataLoading.top.set(true);
-      if (database) {
-        await database.closeAsync();
-      }
-      if (!currentDatabaseName) throw new Error("Database name is not defined.");
+//       const dbFileInfo = await FileSystem.getInfoAsync(dbItemFilePath);
+//       if (dbFileInfo.exists) {
+//         await FileSystem.deleteAsync(dbItemFilePath, { idempotent: true });
+//         await FileSystem.deleteAsync(`${dbItemFilePath}-wal`, { idempotent: true });
+//         await FileSystem.deleteAsync(`${dbItemFilePath}-shm`, { idempotent: true });
+//       }
 
-      const isDefault = isDefaultDatabase(currentDatabaseName.id);
-      const finalDatabasePath = isDefault ? `${currentDatabaseName.id}.db` : `${currentDatabaseName.id}${dbFileExt}`;
-      const dbItemFilePath = currentDatabaseName.path;
+//       // Force re-download the asset
+//       let asset: Asset;
+//       if (currentDatabaseName.id === DEFAULT_DATABASE.BIBLE) {
+//         asset = Asset.fromModule(require("../assets/db/bible.db"));
+//       } else if (currentDatabaseName.id === DEFAULT_DATABASE.NTV) {
+//         asset = Asset.fromModule(require("../assets/db/ntv-bible.db"));
+//       } else {
+//         throw new Error("Unsupported database for redownload.");
+//       }
 
-      const dbFileInfo = await FileSystem.getInfoAsync(dbItemFilePath);
-      if (dbFileInfo.exists) {
-        await FileSystem.deleteAsync(dbItemFilePath, { idempotent: true });
-        await FileSystem.deleteAsync(`${dbItemFilePath}-wal`, { idempotent: true });
-        await FileSystem.deleteAsync(`${dbItemFilePath}-shm`, { idempotent: true });
-      }
+//       await asset.downloadAsync();
 
-      // Force re-download the asset
-      let asset: Asset;
-      if (currentDatabaseName.id === DEFAULT_DATABASE.BIBLE) {
-        asset = Asset.fromModule(require("../assets/db/bible.db"));
-      } else if (currentDatabaseName.id === DEFAULT_DATABASE.NTV) {
-        asset = Asset.fromModule(require("../assets/db/ntv-bible.db"));
-      } else {
-        throw new Error("Unsupported database for redownload.");
-      }
+//       const remoteURI = asset.localUri;
+//       if (!remoteURI) throw new Error("Asset download failed or URI not found.");
 
-      await asset.downloadAsync();
+//       await FileSystem.copyAsync({
+//         from: remoteURI,
+//         to: dbItemFilePath,
+//       });
 
-      const remoteURI = asset.localUri;
-      if (!remoteURI) throw new Error("Asset download failed or URI not found.");
+//       // Open and reinitialize
+//       const db = await SQLite.openDatabaseAsync(finalDatabasePath);
+//       showToast("Biblia refrescada y reinicializada");
+//       if (!_dbName) return db
+//       await db.execAsync("PRAGMA journal_mode = WAL");
+//       await db.execAsync("PRAGMA synchronous = OFF");
+//       await db.execAsync("PRAGMA temp_store = MEMORY");
+//       await db.execAsync("PRAGMA cache_size = 16384");
+//       console.log({ _dbName })
 
-      await FileSystem.copyAsync({
-        from: remoteURI,
-        to: dbItemFilePath,
-      });
+//       if (_dbName?.id !== "interlinear-bible") {
+//         await createTables(db);
+//         await checkAndCreateColumn(db, "notes", "uuid", "TEXT");
+//         await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
+//       }
 
-      // Open and reinitialize
-      const db = await SQLite.openDatabaseAsync(finalDatabasePath);
-      showToast("Biblia refrescada y reinicializada");
-      if (!_dbName) return db
-      await db.execAsync("PRAGMA journal_mode = WAL");
-      await db.execAsync("PRAGMA synchronous = OFF");
-      await db.execAsync("PRAGMA temp_store = MEMORY");
-      await db.execAsync("PRAGMA cache_size = 16384");
+//       if (isMounted.current) {
+//         setDatabase(db);
+//         dbInitialized.current = true;
+//         setLoading(true);
+//         bibleState$.bibleQuery.shouldFetch.set(true);
+//       }
+//       return db
+//     } catch (error) {
+//       console.error("Error redownloading database:", error);
+//       showToast("❌ No se pudo descargar la base de datos");
+//       throw error; // Rethrow to handle in the calling function
+//     }
+//   }
 
-      await createTables(db);
-      await checkAndCreateColumn(db, "notes", "uuid", "TEXT");
-      await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
+//   async function downloadZipFromAsset(asset: Asset, dbItemZipPath: string) {
+//     let fileInfo = await FileSystem.getInfoAsync(dbItemZipPath);
+//     if (fileInfo.exists) return dbItemZipPath;
 
-      if (isMounted.current) {
-        setDatabase(db);
-        dbInitialized.current = true;
-        setLoading(true);
-        bibleState$.bibleQuery.shouldFetch.set(true);
-      }
-      return db
-    } catch (error) {
-      console.error("Error redownloading database:", error);
-      showToast("❌ No se pudo descargar la base de datos");
-      throw error; // Rethrow to handle in the calling function
-    }
-  }
+//     let remoteURI = asset.localUri as string;
+//     fileInfo = await FileSystem.getInfoAsync(dbItemZipPath);
 
-  async function openDatabase(databaseItem: VersionItem) {
-    try {
-      const localFolder = SQLiteDirPath;
-      const databaseItemId = databaseItem.id;
-      const isDefaultDatabaseItem = isDefaultDatabase(databaseItemId);
-      const finalDatabasePath = isDefaultDatabaseItem ? `${databaseItem.id}.db` : `${databaseItem.id}${dbFileExt}`;
-      const dbItemFilePath = databaseItem.path;
+//     if (!fileInfo.exists) {
+//       await FileSystem.copyAsync({
+//         from: remoteURI,
+//         to: dbItemZipPath,
+//       });
+//     }
 
-      if (!(await FileSystem.getInfoAsync(localFolder)).exists) {
-        await FileSystem.makeDirectoryAsync(localFolder);
-      }
+//     return dbItemZipPath;
+//   }
 
-      if (isDefaultDatabaseItem) {
-        let asset =
-          databaseItemId === DEFAULT_DATABASE.BIBLE
-            ? Asset.fromModule(require("../assets/db/bible.db"))
-            : Asset.fromModule(require("../assets/db/ntv-bible.db"));
+//   async function openDatabaseFromZip(databaseItem: VersionItem, isReDownload: boolean = false) {
+//     try {
 
-        if (!asset.downloaded) {
-          await asset.downloadAsync();
-          let remoteURI = asset.localUri;
-          const fileInfo = await FileSystem.getInfoAsync(dbItemFilePath);
+//       if (isReDownload) {
+//         dbDownloadState$.isDownloadingDB.set(true);
+//         dbDownloadState$.dbItem.set(databaseItem);
 
-          if (!fileInfo.exists) {
-            await FileSystem.copyAsync({
-              from: remoteURI as string,
-              to: dbItemFilePath,
-            });
-          }
-        }
-      }
+//         setDatabase(null);
+//         isMounted.current = true;
+//         bibleState$.isDataLoading.top.set(true);
+//         if (database) {
+//           await database.closeAsync();
+//         }
+//       }
 
-      let db = await SQLite.openDatabaseAsync(finalDatabasePath);
+//       const localFolder = SQLiteDirPath;
+//       const databaseItemId = databaseItem.id;
+//       const isDefaultDatabaseItem = isDefaultDatabase(databaseItemId);
+//       const finalDatabasePath = isDefaultDatabaseItem ? `${databaseItem.id}.db` : `${databaseItem.id}${dbFileExt}`;
+//       const dbItemFilePath = databaseItem.path;
+//       const dbItemZipPath = `${localFolder}/${databaseItemId}.zip`;
 
-      if (isDefaultDatabaseItem) {
-        const valid = await isDatabaseValid(db);
-        if (!valid && isDefaultDatabaseItem) {
-          try {
-            db = await reDownloadDatabase();
-            // console.log("Database re-downloaded successfully:", db, valid);
-          } catch (error) {
-            console.log("Error re-downloading database:", error);
-          }
-        }
-      }
+//       // check folter existant if not create it
+//       const dirInfo = await FileSystem.getInfoAsync(localFolder);
+//       if (!dirInfo.exists) {
+//         await FileSystem.makeDirectoryAsync(localFolder, { intermediates: true });
+//       }
 
-      if (isDefaultDatabaseItem) {
-        try {
-          await db.execAsync("PRAGMA journal_mode = WAL");
-          // await db.execAsync("PRAGMA synchronous = NORMAL");
-          await db.execAsync("PRAGMA synchronous = OFF");
-          await db.execAsync("PRAGMA temp_store = MEMORY");
-          await db.execAsync("PRAGMA cache_size = 16384");
-          // await db.execAsync("PRAGMA cache_size = -10000");
+//       // check if the db already exist
+//       console.log('Checking if the db already exist');
+//       const dbInfo = await FileSystem.getInfoAsync(dbItemFilePath);
 
-          showToast("✔");
-        } catch (error) {
-          console.warn("Error applying optimization settings:", error);
-        }
-      }
+//       if (!dbInfo.exists) {
+//         let asset;
+//         // check download the zip
+//         console.log('Database does not exist');
 
-      return db;
-    } catch (error) {
-      console.error("Error opening database:", error);
-      throw error; // Rethrow to handle in the calling function
-    }
-  }
+//         switch (databaseItemId) {
+//           case DEFAULT_DATABASE.BIBLE:
+//             asset = await Asset.fromModule(require("../assets/db/bible.zip")).downloadAsync();
+//             break;
+//           case DEFAULT_DATABASE.NTV:
+//             asset = await Asset.fromModule(require("../assets/db/ntv-bible.zip")).downloadAsync();
+//             break;
+//           default:
+//             asset = await Asset.fromModule(require("../assets/db/interlinear-bible.zip")).downloadAsync();
+//             break;
+//         }
 
-  async function createTables(db: SQLite.SQLiteDatabase) {
-    const tables = [
-      CREATE_FAVORITE_VERSES_TABLE,
-      CREATE_NOTE_TABLE,
-      CREATE_MEMORIZATION_TABLE,
-      CREATE_STREAK_TABLE,
-      historyQuery.CREATE_TABLE,
-    ];
+//         await downloadZipFromAsset(asset, dbItemZipPath);
 
-    try {
-      for (const sql of tables) {
-        await db.execAsync(sql);
-      }
-    } catch (error) {
-      console.error("Error creating tables:", error);
-      throw error; // Rethrow to handle in the calling function
-    }
-  }
+//         // Unzip, extract the db, save it and delete the zip
+//         await unzipFile({
+//           zipFileUri: dbItemZipPath,
+//           onProgress: (msg) => {
+//             dbDownloadState$.setDownloadProgress({
+//               stage: 'extracting',
+//               message: msg,
+//               percentage: 50,
+//               databaseName: databaseItem.name || databaseItem.id
+//             });
+//           },
+//         });
+//       }
 
-  async function checkAndCreateColumn(
-    db: SQLite.SQLiteDatabase,
-    tableName: string,
-    columnName: string,
-    columnType: string
-  ) {
-    const createColumnQuery = `ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${columnType}`;
-    try {
-      const statement = await db.prepareAsync(`PRAGMA table_info(${tableName});`);
-      const result = await statement.executeAsync([]);
-      const columns = await result.getAllAsync();
-      const hasColumn = columns.some(
-        (column: any) => column.name === columnName
-      );
-      await statement.finalizeAsync();
+//       // open the database
+//       let db = await SQLite.openDatabaseAsync(finalDatabasePath);
+//       if (isDefaultDatabaseItem) {
+//         const isInterlinear = databaseItemId === DEFAULT_DATABASE.INTERLINEAR;
 
-      if (!hasColumn) {
-        await db.execAsync(createColumnQuery);
-      }
+//         // check if the database is valid
+//         const valid = await isDatabaseValid(db, isInterlinear ? "interlinear" : "verses");
+//         console.log('Database is valid', valid)
 
-    } catch (error) {
-      console.error(
-        `Error creating column ${createColumnQuery} In ${db.databaseName} :`,
-        error
-      );
-    }
-  }
+//         if (!valid) {
+//           // delete the database
+//           await db.closeAsync();
+//           await FileSystem.deleteAsync(dbItemFilePath, { idempotent: true });
+//           await FileSystem.deleteAsync(`${dbItemFilePath}-wal`, { idempotent: true });
+//           await FileSystem.deleteAsync(`${dbItemFilePath}-shm`, { idempotent: true });
+//           return undefined
+//         }
+//       }
 
-  useEffect(() => {
-    if (!dbName) return;
-    async function initializeDatabase() {
-      try {
-        // setLoading(false);
-        setDatabase(null);
-        isMounted.current = true;
-        bibleState$.isDataLoading.top.set(true);
-        if (database) {
-          await database.closeAsync();
-        }
-        if (!dbName) return;
-        const db = await openDatabase(dbName);
+//       // Optimize the database
+//       if (isDefaultDatabaseItem) {
+//         try {
+//           await db.execAsync("PRAGMA journal_mode = WAL");
+//           // await db.execAsync("PRAGMA synchronous = NORMAL");
+//           await db.execAsync("PRAGMA synchronous = OFF");
+//           await db.execAsync("PRAGMA temp_store = MEMORY");
+//           await db.execAsync("PRAGMA cache_size = 16384");
+//           // await db.execAsync("PRAGMA cache_size = -10000");
 
-        await createTables(db);
-        await checkAndCreateColumn(db, "notes", "uuid", "TEXT");
-        await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
-        if (isMounted.current) {
-          setDatabase(db);
-          dbInitialized.current = true;
-          bibleState$.bibleQuery.shouldFetch.set(true);
-          setLoading(true);
-        }
-      } catch (error) {
-        console.error("Database initialization error:", error);
-        if (isMounted.current) {
-          setLoading(true);
-        }
-      }
-    }
+//           showToast("✔");
+//         } catch (error) {
+//           console.warn("Error applying optimization settings:", error);
+//         }
+//       }
 
-    dbInitialized.current = false;
-    initializeDatabase();
+//       return db;
+//     } catch (error) {
+//       console.log("[Error] opening database from zip:", error);
+//       showToast("❌ No se pudo abrir la base de datos");
+//       throw error;
+//     }
+//   }
 
-    return () => {
-      isMounted.current = false;
-      if (database) {
-        // database.closeAsync().catch(console.error);
-      }
-    };
-  }, [dbName]);
+//   async function openDatabase(databaseItem: VersionItem) {
+//     try {
+//       const localFolder = SQLiteDirPath;
+//       const databaseItemId = databaseItem.id;
+//       const isDefaultDatabaseItem = isDefaultDatabase(databaseItemId);
+//       const finalDatabasePath = isDefaultDatabaseItem ? `${databaseItem.id}.db` : `${databaseItem.id}${dbFileExt}`;
+//       const dbItemFilePath = databaseItem.path;
 
-  return { executeSql, database, loading, reDownloadDatabase };
-}
+//       if (!(await FileSystem.getInfoAsync(localFolder)).exists) {
+//         await FileSystem.makeDirectoryAsync(localFolder);
+//       }
 
-export default useDB;
+//       if (isDefaultDatabaseItem) {
+//         let asset =
+//           databaseItemId === DEFAULT_DATABASE.BIBLE
+//             ? Asset.fromModule(require("../assets/db/bible.db"))
+//             : Asset.fromModule(require("../assets/db/ntv-bible.db"));
+
+//         if (!asset.downloaded) {
+//           await asset.downloadAsync();
+//           let remoteURI = asset.localUri;
+//           const fileInfo = await FileSystem.getInfoAsync(dbItemFilePath);
+
+//           if (!fileInfo.exists) {
+//             await FileSystem.copyAsync({
+//               from: remoteURI as string,
+//               to: dbItemFilePath,
+//             });
+//           }
+//         }
+//       }
+
+//       let db = await SQLite.openDatabaseAsync(finalDatabasePath);
+
+//       if (isDefaultDatabaseItem) {
+//         const isInterlinear = databaseItemId === DEFAULT_DATABASE.INTERLINEAR;
+//         const valid = await isDatabaseValid(db, isInterlinear ? "interlinear" : "verses");
+//         if (!valid && isDefaultDatabaseItem) {
+//           try {
+//             db = await reDownloadDatabase();
+//             // console.log("Database re-downloaded successfully:", db, valid);
+//           } catch (error) {
+//             console.log("Error re-downloading database:", error);
+//           }
+//         }
+//       }
+
+//       if (isDefaultDatabaseItem) {
+//         try {
+//           await db.execAsync("PRAGMA journal_mode = WAL");
+//           // await db.execAsync("PRAGMA synchronous = NORMAL");
+//           await db.execAsync("PRAGMA synchronous = OFF");
+//           await db.execAsync("PRAGMA temp_store = MEMORY");
+//           await db.execAsync("PRAGMA cache_size = 16384");
+//           // await db.execAsync("PRAGMA cache_size = -10000");
+
+//           showToast("✔");
+//         } catch (error) {
+//           console.warn("Error applying optimization settings:", error);
+//         }
+//       }
+
+//       return db;
+//     } catch (error) {
+//       console.error("Error opening database:", error);
+//       throw error; // Rethrow to handle in the calling function
+//     }
+//   }
+
+//   async function createTables(db: SQLite.SQLiteDatabase) {
+//     const tables = [
+//       CREATE_FAVORITE_VERSES_TABLE,
+//       CREATE_NOTE_TABLE,
+//       CREATE_MEMORIZATION_TABLE,
+//       CREATE_STREAK_TABLE,
+//       historyQuery.CREATE_TABLE,
+//     ];
+
+//     try {
+//       for (const sql of tables) {
+//         await db.execAsync(sql);
+//       }
+//     } catch (error) {
+//       console.error("Error creating tables:", error);
+//       throw error; // Rethrow to handle in the calling function
+//     }
+//   }
+
+//   async function checkAndCreateColumn(
+//     db: SQLite.SQLiteDatabase,
+//     tableName: string,
+//     columnName: string,
+//     columnType: string
+//   ) {
+//     const createColumnQuery = `ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${columnType}`;
+//     try {
+//       const statement = await db.prepareAsync(`PRAGMA table_info(${tableName});`);
+//       const result = await statement.executeAsync([]);
+//       const columns = await result.getAllAsync();
+//       const hasColumn = columns.some(
+//         (column: any) => column.name === columnName
+//       );
+//       await statement.finalizeAsync();
+
+//       if (!hasColumn) {
+//         await db.execAsync(createColumnQuery);
+//       }
+
+//     } catch (error) {
+//       console.error(
+//         `Error creating column ${createColumnQuery} In ${db.databaseName} :`,
+//         error
+//       );
+//     }
+//   }
+
+//   useEffect(() => {
+//     if (!dbName || dbName) return;
+//     async function initializeDatabase() {
+//       try {
+//         setDatabase(null);
+//         isMounted.current = true;
+//         bibleState$.isDataLoading.top.set(true);
+
+//         if (!dbName) return;
+
+//         const db = await openDatabaseFromZip(dbName);
+//         if (!db) return;
+
+//         await createTables(db);
+//         await checkAndCreateColumn(db, "notes", "uuid", "TEXT");
+//         await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
+//         if (isMounted.current) {
+//           setDatabase(db);
+//           dbInitialized.current = true;
+//           bibleState$.bibleQuery.shouldFetch.set(true);
+//           setLoading(true);
+//         }
+//       } catch (error) {
+//         console.error("Database initialization error:", error);
+//         if (isMounted.current) {
+//           setLoading(true);
+//         }
+//       } finally {
+//         if (isMounted.current) {
+//           setLoading(true);
+//           bibleState$.isDataLoading.top.set(false);
+//         }
+//       }
+//     }
+
+//     dbInitialized.current = false;
+//     initializeDatabase();
+
+//     return () => {
+//       isMounted.current = false;
+//       if (database) {
+//         database.closeAsync().catch(err => { });
+//       }
+//     };
+//   }, [dbName]);
+
+//   return { executeSql, database, loading, reDownloadDatabase, openDatabaseFromZip };
+// }
+
+// export default useDB;

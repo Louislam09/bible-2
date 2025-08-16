@@ -1,10 +1,14 @@
 import ProgressBar from "@/components/home/footer/ProgressBar";
 import BibleHeader from "@/components/home/header/BibleHeader";
+import Icon from "@/components/Icon";
+import { getBookDetail } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
+import { storedData$ } from "@/context/LocalstoreContext";
+import { useTheme } from "@/context/ThemeContext";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import { bibleState$ } from "@/state/bibleState";
+import { EBibleVersions } from "@/types";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@/context/ThemeContext";
 import React, {
   FC,
   useCallback,
@@ -17,7 +21,7 @@ import { ActivityIndicator, Animated, StyleSheet } from "react-native";
 import Chapter from "./home/content/Chapter";
 import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
-import { View } from "./Themed";
+import { Text, View } from "./Themed";
 
 interface BibleTopProps {
   height: Animated.Value;
@@ -29,8 +33,18 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const { orientation } = useBibleContext();
   const isPortrait = orientation === "PORTRAIT";
   const isDataLoading = use$(() => bibleState$.isDataLoading.top.get());
-  // console.log(`🔝 BibleTop Component Rendered 🔄:${isDataLoading} `);
   const verses = bibleState$.bibleData.topVerses.get() ?? [];
+  const interlinearVerses = bibleState$.bibleData.interlinearVerses.get() ?? [];
+  const currentBook = bibleState$.bibleQuery.get().book;
+  const bookInfo = getBookDetail(currentBook);
+  const NT_BOOK_NUMBER = 470;
+  const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
+  const isInterlineal = [
+    EBibleVersions.INT,
+    EBibleVersions.INTERLINEAL,
+  ].includes(currentBibleVersion as EBibleVersions);
+  const isNewTestamentAndInterlinear =
+    bookInfo.bookNumber >= NT_BOOK_NUMBER && isInterlineal;
 
   const isSplitActived = bibleState$.isSplitActived.get();
   const {
@@ -136,9 +150,68 @@ const BibleTop: FC<BibleTopProps> = (props) => {
       <SwipeWrapper {...{ onSwipeRight, onSwipeLeft }}>
         {isDataLoading ? (
           <ActivityIndicator />
+        ) : isNewTestamentAndInterlinear ? (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              paddingHorizontal: 20,
+            }}
+          >
+            {/* Icon */}
+            <View style={{ marginBottom: 20 }}>
+              <Icon
+                name="BookType"
+                size={60}
+                color={theme.colors.text + "60"}
+              />
+            </View>
+
+            {/* Main Title */}
+            <Text
+              style={{
+                color: theme.colors.text,
+                fontSize: 18,
+                fontWeight: "600",
+                marginBottom: 12,
+                textAlign: "center",
+              }}
+            >
+              Interlinear no disponible
+            </Text>
+
+            {/* Description */}
+            <Text
+              style={{
+                color: theme.colors.text + "CC",
+                fontSize: 14,
+                lineHeight: 20,
+                marginBottom: 16,
+                textAlign: "center",
+              }}
+            >
+              Los versículos del Nuevo Pacto no están disponibles en formato
+              interlinear en este momento.
+            </Text>
+
+            {/* Action Text */}
+            <Text
+              style={{
+                color: theme.colors.notification,
+                fontSize: 14,
+                fontWeight: "500",
+                textAlign: "center",
+              }}
+            >
+              Selecciona un versículo del Antiguo Pacto para usar la función
+              interlinear
+            </Text>
+          </View>
         ) : (
           <Chapter
             verses={verses}
+            interlinearVerses={interlinearVerses}
             isSplit={false}
             estimatedReadingTime={0}
             initialScrollIndex={

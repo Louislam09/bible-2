@@ -1,6 +1,6 @@
 node_modules/
 .expo/
-.github/
+# .github/
 dist/
 npm-debug.*
 *.jks
@@ -34,6 +34,7 @@ web-build/
 google-services.json
 google-services-dev.json
 google-services-prod.json
+google-services-preview.json
 bible-5b3c3-firebase-adminsdk-fbsvc-fe1e12ff4e.json
 
 # Native

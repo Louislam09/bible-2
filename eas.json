@@ -28,7 +28,22 @@
       },
       "channel": "preview"
     },
+    "production-apk": {
+      "env": {
+        "APP_VARIANT": "production"
+      },
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "resourceClass": "m-medium"
+      }
+    },
     "production": {
+      "env": {
+        "APP_VARIANT": "production"
+      },
       "ios": {
         "resourceClass": "m-medium"
       },

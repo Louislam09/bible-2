@@ -313,32 +313,6 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
       ],
     },
     {
-      title: "Notificaciones",
-      id: "notifications",
-      options: [
-        {
-          label: "Notificaciones",
-          iconName: "Bell",
-          action: () => router.push("/notification"),
-          extraText: "Configura las notificaciones de la aplicación",
-          color: theme.colors.notification,
-        },
-      ],
-    },
-    {
-      title: "Inteligencia Artificial",
-      id: "ai",
-      options: [
-        {
-          label: "Configurar API Key de Google AI",
-          iconName: "Brain",
-          action: () => router.push("/ai-setup"),
-          extraText: "Configura tu API key para usar la IA de Google",
-          color: theme.colors.notification,
-        },
-      ],
-    },
-    {
       title: "Apariencia",
       id: "appearance",
       options: [
@@ -374,6 +348,33 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
         },
       ],
     },
+    {
+      title: "Notificaciones",
+      id: "notifications",
+      options: [
+        {
+          label: "Notificaciones",
+          iconName: "Bell",
+          action: () => router.push("/notification"),
+          extraText: "Configura las notificaciones de la aplicación",
+          color: theme.colors.notification,
+        },
+      ],
+    },
+    {
+      title: "Inteligencia Artificial",
+      id: "ai",
+      options: [
+        {
+          label: "Configurar API Key de Google AI",
+          iconName: "Brain",
+          action: () => router.push("/ai-setup"),
+          extraText: "Configura tu API key para usar la IA de Google",
+          color: theme.colors.notification,
+        },
+      ],
+    },
+
     {
       title: "Comportamiento",
       id: "behavior",
@@ -662,13 +663,11 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
               title: "Ajustes",
               titleIcon: "Settings",
               headerRightProps: {
-                headerRightIcon: "RefreshCw",
-                headerRightIconColor: isSyncing
-                  ? theme.colors.notification
-                  : "transparent",
-                onPress: () => {},
-                disabled: true,
-                style: { opacity: 0 },
+                headerRightIcon: "Bell",
+                headerRightIconColor: theme.colors.notification,
+                onPress: () => router.push("/notification"),
+                disabled: false,
+                style: { opacity: 1 },
               },
             }),
           }}

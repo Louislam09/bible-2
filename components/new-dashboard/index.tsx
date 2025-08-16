@@ -6,13 +6,13 @@ import StatusBarBackground from "@/components/StatusBarBackground";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useNotification } from "@/context/NotificationContext";
+import { useTheme } from "@/context/ThemeContext";
 import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";
 import isWithinTimeframe from "@/utils/isWithinTimeframe";
 import { showToast } from "@/utils/showToast";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@/context/ThemeContext";
 // import * as Notifications from "expo-notifications";
 import { useNavigation } from "expo-router";
 import React, { useCallback, useRef, useState } from "react";
@@ -21,9 +21,9 @@ import { IDashboardOption } from "../../app/(dashboard)";
 import BottomModal from "../BottomModal";
 import EmptyStateMessage from "../EmptyStateMessage";
 import VersionList from "../home/header/VersionList";
+import { Text, View } from "../Themed";
 import ProfileCard from "../UserProfile";
 import VoiceList from "../VoiceList";
-import { Text, View } from "../Themed";
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
@@ -104,17 +104,17 @@ const NewDashboard = () => {
     },
     user
       ? {
-          icon: "NotebookText",
-          label: "Notas",
-          action: () =>
-            navigation.navigate(Screens.Notes, { shouldRefresh: false }),
-          color: theme.colors?.notification || "#78b0a4",
-        }
+        icon: "NotebookText",
+        label: "Notas",
+        action: () =>
+          navigation.navigate(Screens.Notes, { shouldRefresh: false }),
+        color: theme.colors?.notification || "#78b0a4",
+      }
       : {
-          icon: "Cloudy",
-          label: "Sincronizar",
-          action: () => navigation.navigate(Screens.Login),
-        },
+        icon: "Cloudy",
+        label: "Sincronizar",
+        action: () => navigation.navigate(Screens.Login),
+      },
   ];
 
   const requestAccessHandlePresentModalPress = useCallback(
@@ -306,6 +306,7 @@ const NewDashboard = () => {
     <StatusBarBackground>
       <ScrollView style={styles.container}>
         <ProfileCard user={user} />
+        {/* <DatabaseDebug /> */}
         <DailyVerseTwo user={user} theme={theme} />
         <MainSection list={mainActionItems} theme={theme} />
         <StudyTools list={studyToolItems} theme={theme} />
