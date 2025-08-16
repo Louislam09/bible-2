@@ -18,7 +18,13 @@ export async function registerForPushNotificationsAsync() {
       await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
     if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
+      const { status } = await Notifications.requestPermissionsAsync({
+        android: {
+          allowAlert: true,
+          allowBadge: true,
+          allowSound: true,
+        },
+      });
       finalStatus = status;
     }
     if (finalStatus !== "granted") {
@@ -33,11 +39,15 @@ export async function registerForPushNotificationsAsync() {
       throw new Error("Project ID not found");
     }
     try {
+      console.log("🔔 Project ID: ", projectId);
+      const pushToken = await Notifications.getExpoPushTokenAsync();
+      console.log("🔔 Push token: ", pushToken);
       const pushTokenString = (
         await Notifications.getExpoPushTokenAsync({
           projectId,
         })
-      ).data;
+      )?.data;
+      console.log("🔔 PushTokenString: ", pushTokenString);
       return pushTokenString;
     } catch (e: unknown) {
       throw new Error(`${e}`);

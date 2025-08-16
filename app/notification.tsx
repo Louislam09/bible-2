@@ -1,4 +1,5 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import DatabaseDebug from "@/components/DatabaseDebug";
 import Icon from "@/components/Icon";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
@@ -112,11 +113,13 @@ const NotificationSettingsScreen = () => {
   };
 
   const testNotificationSchedule = async () => {
-    // current time in one minute in the future
     const now = new Date();
-    const oneMinuteFromNow = new Date(now.getTime() + 60000);
-    const timeStr = `${oneMinuteFromNow.getHours()}:${oneMinuteFromNow.getMinutes()}`;
-    await notificationService.scheduleDailyVerseNotification2(timeStr);
+    const oneMinuteFromNow = new Date(now.getTime() + 3000);
+    await notificationService.scheduleAlarm(
+      oneMinuteFromNow,
+      "Notificacion Programada",
+      "Esto es una prueba de notificacion programada"
+    );
   };
 
   const handleNotificationEnabled = async () => {
@@ -407,6 +410,7 @@ const NotificationSettingsScreen = () => {
         />
 
         {sections.map(SettingSection)}
+        {(isAdmin || IS_DEV) && <DatabaseDebug />}
 
         {/* Time Picker Modal */}
         <Modal

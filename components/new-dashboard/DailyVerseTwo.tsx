@@ -40,7 +40,7 @@ type DailyVerseProps = {
 };
 
 const DailyVerseTwo = ({ dailyVerseObject, theme, user }: DailyVerseProps) => {
-  const { scheduleDailyVerseNotification } = useNotificationService();
+  // const { scheduleDailyVerseNotification } = useNotificationService();
   const navigation = useNavigation();
   const { mainBibleService } = useDBContext();
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(

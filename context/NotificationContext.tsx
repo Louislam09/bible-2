@@ -53,7 +53,10 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         storedData$.notificationPreferences.pushToken.set(token);
         console.log("🔔 Push token saved: ", token);
       },
-      (error) => setError(error)
+      (error) => {
+        console.log("🔔 Error: ", error);
+        setError(error);
+      }
     );
 
     notificationListener.current =

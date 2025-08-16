@@ -32,10 +32,7 @@ const googleServicesFile = () => {
     return "./google-services-dev.json";
   }
 
-  if (IS_PREVIEW) {
-    return "./google-services.json";
-  }
-
+  // Use the same Firebase project for all environments
   return "./google-services.json";
 };
 
@@ -77,12 +74,14 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         backgroundColor: "#0c3e3d",
       },
       package: getUniqueIdentifier(),
-      googleServicesFile: googleServicesFile(),
+      googleServicesFile: process.env.GOOGLE_SERVICE_JSON ?? googleServicesFile(),
       permissions: [
         "android.permission.SCHEDULE_EXACT_ALARM",
-        // "android.permission.USE_EXACT_ALARM",
+        "android.permission.USE_EXACT_ALARM",
         "android.permission.RECEIVE_BOOT_COMPLETED",
-        "android.permission.VIBRATE"
+        "android.permission.VIBRATE",
+        // "android.permission.WAKE_LOCK",
+        // "android.permission.SYSTEM_ALERT_WINDOW",
       ],
     },
     web: {
@@ -123,6 +122,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           icon: "./assets/images/notification-icon.png",
           color: "#0c3e3d",
           defaultChannel: "default",
+          // enableBackgroundRemoteNotifications: true,
         },
       ],
       "expo-asset",
