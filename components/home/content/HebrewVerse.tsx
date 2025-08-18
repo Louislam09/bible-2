@@ -1,9 +1,8 @@
-import { useBibleContext } from "@/context/BibleContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
 import { TFont, TTheme } from "@/types";
 import { mergeTexts, parseText } from "@/utils/interleanerHelper";
-import { useTheme } from "@react-navigation/native";
 import React, { useCallback, useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
 interface VerseItem {
@@ -29,8 +28,7 @@ interface Segment {
 }
 
 const HebrewVerse: React.FC<Props> = ({ item, withBackground = false }) => {
-  const theme = useTheme();
-  const { currentBibleVersion, fontSize } = useBibleContext();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme, 16);
   const verseWithStrong =
     bibleState$.bibleData.topVerses.get()?.[item.verse - 1];

@@ -117,6 +117,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
         ]}
         backdropComponent={renderBackdrop}
         onChange={handleSheetChanges}
+        enableDynamicSizing={false}
       >
         {headerComponent && (
           <BottomSheetView style={{}}>{headerComponent}</BottomSheetView>

@@ -21,6 +21,7 @@ import FileList from "@/components/FileList";
 import FilterList from "@/components/FilterList";
 import Icon from "@/components/Icon";
 import NoInternetSplash from "@/components/NoInternetSplash";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
 import bibleDatabases from "@/constants/bibleDatabases";
 import useDebounce from "@/hooks/useDebounce";
@@ -168,10 +169,11 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
         headerRightIcon: "ListFilter",
         headerRightIconColor: theme.colors.text,
         onPress: () => sortHandlePresentModalPress(),
-        style: { opacity: 1 },
+        disabled: isMyDownloadTab,
+        style: { opacity: isMyDownloadTab ? 0 : 1 },
       },
     } as SingleScreenHeaderProps
-  }, [theme.colors]);
+  }, [theme.colors, isMyDownloadTab]);
 
   const handleFilter = (filterOption: ModulesFilters) => {
     setSelectedFilter(filterOption);
@@ -235,93 +237,47 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
   }, [isMyDownloadTab, filteredDatabases])
 
   return (
-    <View style={[styles.container, {}]}>
+    <>
       <Stack.Screen options={singleScreenHeader(screenOptions)} />
-
-      <View style={styles.headerContainer}>
-        <View style={styles.titleContainer}>
-          {/* <Text style={styles.noteListTitle}>Gestor de Módulos</Text> */}
-          {!isMyDownloadTab && AnimatedSearchBar()}
-          {/* {!isMyDownloadTab && <AnimatedSearchBar />} */}
-        </View>
-
-        <TabNavigation {...{ isMyDownloadTab, setIsMyDownloadTab, theme }} />
-      </View>
-
-      {renderTab()}
-
-      {/* {isMyDownloadTab ? (
-        <FileList />
-      ) : (
-        <FlashList
-          ListHeaderComponent={
-            <RNView style={styles.listHeaderContainer}>
-              <View style={styles.availableIndicator}>
-                <Icon
-                  name="LibraryBig"
-                  size={16}
-                  color={theme.colors.notification}
-                />
-                <Text style={styles.availableText}>
-                  {filteredDatabases.length}{" "}
-                  {filteredDatabases.length === 1 ? "Disponible" : "Disponibles"}{" "}
-                </Text>
-              </View>
-              {!isConnected && (
-                <View style={styles.offlineIndicator}>
-                  <Icon
-                    name="WifiOff"
-                    size={16}
-                    color="#e74856"
-                  />
-                </View>
-              )}
-            </RNView>
-          }
-          contentContainerStyle={styles.listContent}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          estimatedItemSize={80}
-          renderItem={(props) => (
-            <DatabaseDownloadItem {...{ theme, isConnected, ...props }} />
-          )}
-          data={filteredDatabases}
-          keyExtractor={(item: DownloadBibleItem) =>
-            `download-${item.storedName}`
-          }
-          ListEmptyComponent={debouncedSearchText ? <NoModulesFound /> : null}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              colors={[theme.colors.primary]}
-              tintColor={theme.colors.primary}
-            />
-          }
-        />
-      )} */}
-
-      <BottomModal
-        justOneSnap
-        showIndicator
-        justOneValue={["40%"]}
-        startAT={0}
-        style={{
-          borderColor: "transparent",
-          backgroundColor: theme.dark ? theme.colors.background : theme.colors.background,
-          width: "100%",
-        }}
-        ref={sortRef}
+      <ScreenWithAnimation
+        iconColor="#2cc47d"
+        icon="Download"
+        title="Descargar Recursos"
       >
-        <FilterList
-          title="Filtrar lista de recursos"
-          description="Selecciona el criterio para ver tus recursos."
-          onSelect={(value) => handleFilter(value)}
-          options={Object.values(ModulesFilters)}
-          value={selectedFilter}
-          buttonText='Filtrar'
-        />
-      </BottomModal>
-    </View>
+        <View style={[styles.container, {}]}>
+          <View style={styles.headerContainer}>
+            <View style={styles.titleContainer}>
+              {!isMyDownloadTab && AnimatedSearchBar()}
+            </View>
+            <TabNavigation {...{ isMyDownloadTab, setIsMyDownloadTab, theme }} />
+          </View>
+
+          {renderTab()}
+
+          <BottomModal
+            justOneSnap
+            showIndicator
+            justOneValue={["40%"]}
+            startAT={0}
+            style={{
+              borderColor: "transparent",
+              backgroundColor: theme.dark ? theme.colors.background : theme.colors.background,
+              width: "100%",
+            }}
+            ref={sortRef}
+          >
+            <FilterList
+              title="Filtrar lista de recursos"
+              description="Selecciona el criterio para ver tus recursos."
+              onSelect={(value) => handleFilter(value)}
+              options={Object.values(ModulesFilters)}
+              value={selectedFilter}
+              buttonText='Filtrar'
+            />
+          </BottomModal>
+        </View>
+      </ScreenWithAnimation>
+    </>
   );
 };
 
@@ -335,8 +291,8 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     headerContainer: {
       paddingBottom: 8,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
+      // borderBottomWidth: 1,
+      // borderBottomColor: colors.border,
       marginBottom: 8,
       paddingHorizontal: 4,
     },

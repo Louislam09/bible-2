@@ -1,4 +1,5 @@
 import Animation from "@/components/Animation";
+import { singleScreenHeader, SingleScreenHeaderProps } from "@/components/common/singleScreenHeader";
 import Icon, { IconProps } from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { useMyTheme } from "@/context/ThemeContext";
@@ -6,7 +7,7 @@ import { tourState$ } from "@/state/tourState";
 import { Screens, TTheme } from "@/types";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
-import React from "react";
+import React, { useMemo } from "react";
 import {
   StyleSheet,
   TouchableWithoutFeedback,
@@ -80,9 +81,24 @@ const OnboardingScreen = () => {
     </TouchableWithoutFeedback>
   );
 
+  const screenOptions: any = useMemo(() => {
+    return {
+      theme,
+      title: "Bienvenido",
+      titleIcon: "PlaneTakeoff",
+      headerRightProps: {
+        headerRightIcon: "ListFilter",
+        headerRightIconColor: theme.colors.text,
+        onPress: () => console.log(),
+        disabled: true,
+        style: { opacity: 0 },
+      },
+    } as SingleScreenHeaderProps
+  }, [theme.colors]);
+
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ headerShown: true }} />
+      <Stack.Screen options={singleScreenHeader(screenOptions)} />
       <View style={styles.imageContainer}>
         <Animation
           backgroundColor={"transparent"}

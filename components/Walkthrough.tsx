@@ -3,7 +3,7 @@ import { tourState$ } from "@/state/tourState";
 import { TStep, TTheme } from "@/types";
 import React, { useEffect } from "react";
 import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
-import Popover, { PopoverMode } from "react-native-popover-view";
+import Popover from "react-native-popover-view";
 import Icon from "./Icon";
 import { Text, View } from "./Themed";
 type TWalkthrough = {
@@ -13,10 +13,6 @@ type TWalkthrough = {
 };
 
 const Walkthrough = ({ currentStep, steps, setStep }: TWalkthrough) => {
-  console.log(
-    "🚶‍♂️ Walkthrough Component Rendered",
-    tourState$.tourPopoverVisible.get()
-  );
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const totalStep = steps.length;

@@ -2,6 +2,7 @@ import AiVerseExplanationContent from "@/components/ai/AiVerseExplanationContent
 import BottomModal from "@/components/BottomModal";
 import CompareVersions from "@/components/CompareVersions";
 import DictionaryContent from "@/components/DictionaryContent";
+import NoteNameList from "@/components/home/NoteNameList";
 import { getBookDetail } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { useMyTheme } from "@/context/ThemeContext";
@@ -42,16 +43,27 @@ const BookContentModals = ({ book, chapter }: any) => {
 
   return (
     <>
+      <BottomModal
+        justOneSnap
+        showIndicator
+        justOneValue={["50%"]}
+        startAT={0}
+        ref={bibleState$.noteListBottomSheetRef.get()}
+      >
+        <NoteNameList />
+      </BottomModal>
+
       <BottomSheet
+        ref={modalState$.interlinealRef.get()}
+        index={-1}
+        snapPoints={["30%", "60%", "99%"]}
         backgroundStyle={{
           ...styles.bottomSheet,
           backgroundColor: theme.colors.background,
         }}
         enablePanDownToClose
-        snapPoints={["30%", "60%", "100%"]}
-        index={-1}
-        ref={modalState$.interlinealRef.get()}
         handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
+        enableDynamicSizing={false}
         onClose={() =>
           bibleState$.handleVerseToInterlinear({
             book_number: 0,
@@ -80,10 +92,12 @@ const BookContentModals = ({ book, chapter }: any) => {
           </View>
         </BottomSheetScrollView>
       </BottomSheet>
+
       <BottomSheet
         backgroundStyle={styles.bottomSheet}
         enablePanDownToClose
         snapPoints={["30%", "60%"]}
+        enableDynamicSizing={false}
         index={-1}
         ref={modalState$.strongSearchRef.get()}
         handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
@@ -104,6 +118,7 @@ const BookContentModals = ({ book, chapter }: any) => {
         backgroundStyle={styles.bottomSheet}
         enablePanDownToClose
         snapPoints={["30%", "60%"]}
+        enableDynamicSizing={false}
         index={-1}
         ref={modalState$.explainVerseRef.get()}
         handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
@@ -136,6 +151,7 @@ const BookContentModals = ({ book, chapter }: any) => {
           fontSize={fontSize}
         />
       </BottomModal>
+
       <BottomModal shouldScroll startAT={3} ref={modalState$.compareRef.get()}>
         <CompareVersions
           {...{

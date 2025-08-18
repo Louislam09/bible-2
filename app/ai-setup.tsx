@@ -1,3 +1,4 @@
+import { singleScreenHeader, SingleScreenHeaderProps } from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
 import { Text } from "@/components/Themed";
 import { storedData$ } from "@/context/LocalstoreContext";
@@ -6,7 +7,7 @@ import { TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
 import * as Clipboard from "expo-clipboard";
 import { Stack, useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Linking,
   StyleSheet,
@@ -22,6 +23,7 @@ export default function AISetupScreen() {
   const currentKey = use$(() => storedData$.googleAIKey.get());
   const [apiKey, setApiKey] = useState(currentKey);
   const [isSaving, setIsSaving] = useState(false);
+  const [showKey, setSHowKey] = useState(false);
 
   const handleSave = async () => {
     try {
@@ -39,15 +41,24 @@ export default function AISetupScreen() {
     Linking.openURL("https://aistudio.google.com/app/apikey");
   };
 
+  const screenOptions: any = useMemo(() => {
+    return {
+      theme,
+      title: "Configuración de IA",
+      titleIcon: "Settings2",
+      headerRightProps: {
+        headerRightIcon: "ListFilter",
+        headerRightIconColor: theme.colors.text,
+        onPress: () => console.log(),
+        disabled: true,
+        style: { opacity: 0 },
+      },
+    } as SingleScreenHeaderProps
+  }, [theme.colors]);
+
   return (
     <View style={styles.container}>
-      <Stack.Screen
-        options={{
-          title: "Configuración de IA",
-          headerShown: true,
-        }}
-      />
-
+      <Stack.Screen options={singleScreenHeader(screenOptions)} />
       <View style={styles.content}>
         <Text style={styles.title}>Configura tu API Key de Google AI</Text>
 
@@ -92,7 +103,7 @@ export default function AISetupScreen() {
           placeholderTextColor={theme.colors.text + "80"}
           value={apiKey}
           onChangeText={setApiKey}
-          secureTextEntry
+          secureTextEntry={!showKey}
         />
         {currentKey && (
           <View style={styles.currentKeyContainer}>
@@ -106,6 +117,12 @@ export default function AISetupScreen() {
               }}
             >
               <Icon name="Copy" size={20} color={theme.colors.notification} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.copyButton}
+              onPress={(() => setSHowKey(prev => !prev))}
+            >
+              <Icon name={showKey ? "EyeOff" : "Eye"} size={20} color={theme.colors.notification} />
             </TouchableOpacity>
           </View>
         )}
@@ -130,10 +147,11 @@ export default function AISetupScreen() {
   );
 }
 
-const getStyles = (theme: TTheme) =>
+const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor: colors.background
     },
     content: {
       padding: 20,
@@ -142,13 +160,13 @@ const getStyles = (theme: TTheme) =>
       fontSize: 24,
       fontWeight: "bold",
       marginBottom: 20,
-      color: theme.colors.text,
+      color: colors.text,
     },
     description: {
       fontSize: 16,
       marginBottom: 20,
       lineHeight: 24,
-      color: theme.colors.text,
+      color: colors.text,
     },
     steps: {
       marginBottom: 20,
@@ -156,7 +174,7 @@ const getStyles = (theme: TTheme) =>
     step: {
       fontSize: 16,
       marginBottom: 10,
-      color: theme.colors.text,
+      color: colors.text,
     },
     docsButton: {
       flexDirection: "row",

@@ -1,5 +1,5 @@
 import { useMyTheme } from "@/context/ThemeContext";
-import { IBookVerse, SortOption, TTheme } from "@/types";
+import { TTheme } from "@/types";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 

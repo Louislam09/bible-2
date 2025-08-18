@@ -257,11 +257,11 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       paddingVertical: 15,
       paddingHorizontal: 15,
-      backgroundColor: colors.notification + 40,
+      backgroundColor: colors.text + 20,
     },
     questionText: {
       fontSize: 18,
-      color: colors.notification,
+      color: colors.text,
       flex: 1,
     },
     answerContainer: {

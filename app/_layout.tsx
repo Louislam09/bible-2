@@ -28,6 +28,17 @@ import { NotificationProvider } from "@/context/NotificationContext";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
 
+import {
+  configureReanimatedLogger,
+  ReanimatedLogLevel,
+} from 'react-native-reanimated';
+
+// This is the default configuration
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: true, // Reanimated runs in strict mode by default
+});
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldPlaySound: true,

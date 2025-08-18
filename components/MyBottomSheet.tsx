@@ -18,7 +18,7 @@ import { View } from "./Themed";
 
 type Ref = BottomSheet;
 
-interface CustomBottomSheet {
+interface MyBottomSheet {
   startAT?: 0 | 1 | 2 | 3;
   children?: any;
   handleSheetChange?: ((index: number) => void) | undefined;
@@ -27,7 +27,7 @@ interface CustomBottomSheet {
   handleComponent?: React.FC<BottomSheetHandleProps> | null;
 }
 
-const CustomBottomSheet = forwardRef<Ref, CustomBottomSheet>(
+const MyBottomSheet = forwardRef<Ref, MyBottomSheet>(
   (
     {
       children,
@@ -40,7 +40,7 @@ const CustomBottomSheet = forwardRef<Ref, CustomBottomSheet>(
     ref
   ) => {
     const [index, setIndex] = useState(0);
-    const theme = useMyTheme() as TTheme;
+    const { theme } = useMyTheme();
     const styles = getStyles(theme);
     const snapPoints = useMemo(
       () => (justOneSnap ? ["30%"] : snaps || ["30%", "50%", "75%", "100%"]),
@@ -147,4 +147,4 @@ const getStyles = ({ colors }: TTheme) =>
     },
   });
 
-export default CustomBottomSheet;
+export default MyBottomSheet;

@@ -159,15 +159,6 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
             <CurrentNoteDetail />
           </FloatingButton>
 
-          <BottomModal
-            justOneSnap
-            showIndicator
-            justOneValue={["50%"]}
-            startAT={0}
-            ref={bibleState$.noteListBottomSheetRef.get()}
-          >
-            <NoteNameList />
-          </BottomModal>
           {tourState$.tourPopoverVisible.get() === "FUNCTION" && (
             <Walkthrough
               steps={tutorialSteps}
