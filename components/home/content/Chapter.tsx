@@ -6,7 +6,7 @@ import { useMyTheme } from "@/context/ThemeContext";
 import { bibleState$ } from "@/state/bibleState";
 import { EBibleVersions, IBookVerse, TTheme } from "@/types";
 import { observer } from "@legendapp/state/react";
-import { FlashList } from "@shopify/flash-list";
+import { FlashList, FlashListRef } from "@shopify/flash-list";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   ActivityIndicator,
@@ -47,7 +47,7 @@ const Chapter = ({
   const { width, height } = useWindowDimensions();
   const { theme } = useMyTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
-  const chapterRef = useRef<FlashList<any>>(null);
+  const chapterRef = useRef<FlashListRef<any>>(null);
   const topVerseRef = useRef<number | null>(null);
   const lastOffset = useRef(0);
   const lastScrollTime = useRef(Date.now());
@@ -150,11 +150,9 @@ const Chapter = ({
           ref={chapterRef}
           keyExtractor={keyExtractor}
           data={data ?? []}
-          // data={data.slice(0, 1)}
           ListHeaderComponent={ListHeader}
           renderItem={renderItem}
           decelerationRate="normal"
-          estimatedItemSize={isMobile ? 162 : 100}
           removeClippedSubviews
           ListEmptyComponent={() => (
             <LoadingComponent textColor={theme.colors.text} />
@@ -164,9 +162,8 @@ const Chapter = ({
             viewabilityConfigCallbackPairs.current
           }
           onEndReachedThreshold={0.5}
-          disableAutoLayout
-          disableHorizontalListHeightMeasurement
-          ListHeaderComponentStyle={{ paddingTop: 70 }}
+          // disableAutoLayout
+          // ListHeaderComponentStyle={{ paddingTop: 70 }}
           ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
           onScroll={handleScroll}
           scrollEventThrottle={16}

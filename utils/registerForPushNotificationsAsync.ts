@@ -47,7 +47,7 @@ export async function registerForPushNotificationsAsync() {
       const pushTokenString = (
         await Notifications.getDevicePushTokenAsync()
       )?.data;
-      console.log("🔔 PushTokenString: ", pushTokenString);
+      // console.log("🔔 PushTokenString: ", pushTokenString);
       return pushTokenString;
     } catch (e: unknown) {
       throw new Error(`${e}`);

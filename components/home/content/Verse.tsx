@@ -153,7 +153,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   const [isFavorite, setFavorite] = useState(false);
   const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
   const verseRef = useRef<any>(null);
-  const [stepIndex, setStepIndex] = useState(0);
   const animatedVerseHighlight = useRef(new Animated.Value(0)).current;
   const wordAndStrongValue = extractWordsWithTags(item.text);
   const googleAIKey = use$(() => storedData$.googleAIKey.get());
@@ -478,12 +477,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       onLayout={() => {
         if (initVerse === item.verse) initHighLightedVerseAnimation();
       }}
-      style={
-        {
-          // borderColor: "red",
-          // borderWidth: 1,
-        }
-      }
     >
       <TouchableOpacity
         onPress={onPress}
@@ -517,11 +510,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
             style={[
               styles.verse,
               (verseIsTapped || verseShowAction) && styles.highlightCopy,
-              // { backgroundColor: bgVerseHighlight },
             ]}
             aria-selected
-          // selectable={false}
-          // selectionColor={theme.colors.notification || "white"}
           >
             <Text style={[styles.verseNumber, { fontSize }]}>
               {isFavorite && (
@@ -584,13 +574,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
           </ScrollView>
         )}
       </TouchableOpacity>
-      {/* {tourState$.tourPopoverVisible.get() === "VERSE" && item.verse === 1 && (
-        <Walkthrough
-          steps={steps}
-          setStep={setStepIndex}
-          currentStep={stepIndex}
-        />
-      )} */}
     </View>
   );
 };

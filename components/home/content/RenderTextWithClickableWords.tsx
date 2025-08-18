@@ -1,6 +1,7 @@
 import { Text } from "@/components/Themed";
 import React from "react";
 import { TTheme } from "@/types";
+import { useBibleContext } from "@/context/BibleContext";
 
 interface Props {
   text: string;
@@ -19,11 +20,12 @@ const RenderTextWithClickableWords: React.FC<Props> = ({
 }) => {
   const regex = /<S>(\d+)<\/S>/g;
   const words = text.split(regex);
-
-  const isH = highlightedWord?.includes("H") ? "H" : "G";
+  const { fontSize } =
+    useBibleContext();
+  const isHebrew = highlightedWord?.includes("H") ? "H" : "G";
   const isHighlighted = (word: string): boolean => {
     const cleanedHighlight = highlightedWord?.replace(",", "");
-    return cleanedHighlight === `${isH}${word}`;
+    return cleanedHighlight === `${isHebrew}${word}`;
   };
 
   const renderVerse = (word: string, index: number) => {
@@ -38,7 +40,7 @@ const RenderTextWithClickableWords: React.FC<Props> = ({
     if (!shouldRender) return null;
 
     const Componetent = (
-      <Text key={index} onPress={() => onWordClick(word)} style={styles}>
+      <Text key={index} onPress={() => onWordClick(word)} style={[styles, { fontSize }]}>
         {"\u00A0"}
         {word}
       </Text>
@@ -47,7 +49,7 @@ const RenderTextWithClickableWords: React.FC<Props> = ({
     return Componetent;
   };
 
-  return <Text>{words.map(renderVerse)}</Text>;
+  return <Text style={{ fontSize }}>{words.map(renderVerse)}</Text>;
 };
 
 export default RenderTextWithClickableWords;
