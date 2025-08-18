@@ -22,9 +22,9 @@ const Notes: React.FC<NotesProps> = ({ }) => {
   }, [reloadNotes]);
 
   return (
-    <ScreenWithAnimation duration={800} icon="NotebookPen" title="Mis Notas">
+    <>
       <Note data={data} />
-    </ScreenWithAnimation>
+    </>
   );
 };
 

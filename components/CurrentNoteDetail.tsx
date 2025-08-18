@@ -3,13 +3,13 @@ import MyRichEditor from "@/components/RichTextEditor";
 import { Text, View } from "@/components/Themed";
 import { GET_NOTE_BY_ID } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
 import { useNoteService } from "@/services/noteService";
 import { bibleState$ } from "@/state/bibleState";
 import { EViewMode, TNote, TTheme } from "@/types";
 import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@/context/ThemeContext";
 import React, {
   useCallback,
   useEffect,
@@ -29,8 +29,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-const CurrentNoteDetail: React.FC<any> = ({}) => {
-  const { theme } = useTheme();
+const CurrentNoteDetail: React.FC<any> = ({ }) => {
+  const { theme } = useMyTheme();
   const { myBibleDB, executeSql } = useDBContext();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const { createNote, updateNote } = useNoteService();

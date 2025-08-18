@@ -1,6 +1,6 @@
+import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
-import { useTheme } from "@/context/ThemeContext";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Text, View } from "./Themed";
@@ -21,7 +21,7 @@ const EmptyStateMessage = ({
   onClose,
   onResend,
 }: EmptyStateMessageProps) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   return (
     <View style={styles.container}>

@@ -3,7 +3,7 @@ import { Text } from "@/components/Themed";
 import hymnSong from "@/constants/hymnSong";
 import AlegreSongs from "@/constants/songs";
 import { useBibleContext } from "@/context/BibleContext";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import useParams from "@/hooks/useParams";
 import { RootStackScreenProps, TSongItem, TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
@@ -65,7 +65,7 @@ const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
 
 const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
   const { isAlegres } = useParams();
-  const { schema, theme } = useTheme();
+  const { schema, theme } = useMyTheme();
   const router = useRouter();
   const Songs = isAlegres ? AlegreSongs : hymnSong;
   const [filterData, setFilterData] = useState<TSongItem[]>(Songs);

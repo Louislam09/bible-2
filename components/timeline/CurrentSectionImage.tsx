@@ -11,7 +11,7 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import Icon from "../Icon";
 import { Text, View } from "../Themed";
 import { wp } from "./timelineConstants";
@@ -32,7 +32,7 @@ const SectionImage = ({
   direction,
   id,
 }: ShallowTimelineSection & { direction?: "previous" | "next" }) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   // const transitionTag = `image-${title || sectionTitle}`.replace(/\s+/g, '-');
 
   // const imageTransition = SharedTransition.custom((values) => {

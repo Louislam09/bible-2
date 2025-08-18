@@ -1,15 +1,15 @@
-import React from "react";
-import ViewShot from "react-native-view-shot";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
+import React from "react";
 import { Alert } from "react-native";
+import ViewShot from "react-native-view-shot";
 
 interface UseViewShotOptions {
   fileName: string;
   quality?: number;
   format?: "jpg" | "png" | "webm" | "raw";
   result?: "tmpfile" | "base64" | "data-uri";
-  viewShotRef?: React.RefObject<ViewShot>;
+  viewShotRef?: React.RefObject<ViewShot | null>;
 }
 
 export const useViewShot = ({

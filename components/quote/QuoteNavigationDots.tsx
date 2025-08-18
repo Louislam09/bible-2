@@ -1,5 +1,5 @@
+import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
 import React, { useEffect, useRef } from "react";
 import {
   Animated,
@@ -14,7 +14,7 @@ interface QuoteNavigationDotsProps {
   totalTemplates: number;
   customMode: boolean;
   onDotPress: (index: number) => void;
-  scrollViewRef: React.RefObject<ScrollView>;
+  scrollViewRef: React.RefObject<ScrollView | null>;
 }
 
 export const QuoteNavigationDots: React.FC<QuoteNavigationDotsProps> = ({
@@ -24,7 +24,7 @@ export const QuoteNavigationDots: React.FC<QuoteNavigationDotsProps> = ({
   onDotPress,
   scrollViewRef,
 }) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const dotAnimations = useRef<Animated.Value[]>([]);
 
   // Initialize animations for each dot

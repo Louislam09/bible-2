@@ -4,7 +4,7 @@ import CompareVersions from "@/components/CompareVersions";
 import DictionaryContent from "@/components/DictionaryContent";
 import { getBookDetail } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { useGoogleAI } from "@/hooks/useGoogleAI";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
@@ -27,7 +27,7 @@ const mockVerse = {
 };
 
 const BookContentModals = ({ book, chapter }: any) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const { fontSize } = useBibleContext();
   const styles = getStyles(theme);
   const navigation = useNavigation();

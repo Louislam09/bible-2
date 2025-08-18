@@ -1,9 +1,10 @@
 import Animation from "@/components/Animation";
 import BottomModal from "@/components/BottomModal";
 import CircularProgressBar from "@/components/CircularProgressBar";
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
-import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import StreakCard from "@/components/memorization/StreakCard";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import SortMemoryList from "@/components/SortList";
 import { Text } from "@/components/Themed";
 import Tooltip from "@/components/Tooltip";
@@ -12,11 +13,12 @@ import { headerIconSize } from "@/constants/size";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { useMemorization } from "@/context/MemorizationContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { useStreak } from "@/hooks/useStreak";
 import { Memorization, SortOption, TTheme } from "@/types";
 import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useTheme } from "@/context/ThemeContext";
+import { use$ } from "@legendapp/state/react";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { format } from "date-fns";
 import { Stack, useRouter } from "expo-router";
@@ -35,14 +37,13 @@ import React, {
   useState,
 } from "react";
 import {
+  Alert,
+  Animated,
   StyleSheet,
   TouchableOpacity,
   View,
-  Animated,
-  Alert,
 } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { use$ } from "@legendapp/state/react";
 
 type MemorizationProps = {};
 
@@ -63,22 +64,6 @@ const Status = ({ color, value }: StatusProps) => {
         }}
       />
       <Text style={{}}>{value}</Text>
-    </View>
-  );
-};
-
-const Streak = ({ color, value }: StatusProps) => {
-  return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 4,
-        backgroundColor: "transparent",
-      }}
-    >
-      <Zap color={color} size={headerIconSize} />
-      <Text style={{ fontSize: 18 }}>{value}</Text>
     </View>
   );
 };
@@ -104,7 +89,7 @@ const sortVerses = (
 };
 
 const MemoryList: React.FC<MemorizationProps> = () => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const router = useRouter();
   const sortRef = useRef<BottomSheetModal>(null);
   const streakTooltipRef = useRef(null);
@@ -197,7 +182,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
     const isCompleted = item.progress === 100;
     return (
       <Swipeable
-        ref={(ref) => swipeableRefs.current.set(item.id, ref)}
+        ref={(ref) => swipeableRefs.current.set(item.id, ref) as any}
         friction={0.6}
         rightThreshold={150}
         onSwipeableWillOpen={(direction) =>
@@ -259,55 +244,36 @@ const MemoryList: React.FC<MemorizationProps> = () => {
     sortClosePresentModalPress();
   };
 
+  const screenOptions = useMemo(() => {
+    return {
+      theme,
+      title: "Memorizar",
+      titleIcon: "Brain",
+      headerRightProps: {
+        ref: streakTooltipRef,
+        headerRightIcon: "Zap",
+        headerRightText: `${streak}`,
+        headerRightIconColor: streak > 1 ? theme.colors.notification : theme.colors.text,
+        onPress: () => {
+          setOpenStreak(true)
+        },
+        style: { display: 'flex', flexDirection: 'row', gap: 2 },
+      },
+    } as any
+  }, [streak, streakTooltipRef.current])
+
   return (
     <>
+      <Stack.Screen
+        options={{
+          ...singleScreenHeader(screenOptions),
+        }}
+      />
       <ScreenWithAnimation
         speed={2}
         title="Memorizar Versos"
         animationSource={sourceMemorization}
       >
-        <Stack.Screen
-          options={{
-            headerShown: true,
-            headerBackVisible: false,
-            headerLeft: () => (
-              <ChevronLeft
-                color={theme.colors.text}
-                size={headerIconSize}
-                onPress={() => router.back()}
-              />
-            ),
-            headerRight: () => (
-              <TouchableOpacity
-                ref={streakTooltipRef}
-                onPress={() => setOpenStreak(true)}
-              >
-                <Streak
-                  color={
-                    streak > 1 ? theme.colors.notification : theme.colors.text
-                  }
-                  value={streak}
-                />
-              </TouchableOpacity>
-            ),
-            headerTitle: () => (
-              <View
-                style={{
-                  gap: 4,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  backgroundColor: "transparent",
-                }}
-              >
-                <Brain
-                  color={theme.colors.notification}
-                  size={headerIconSize}
-                />
-                <Text style={{ fontSize: 22 }}>Memorizar</Text>
-              </View>
-            ),
-          }}
-        />
         <View
           style={{
             flex: 1,
@@ -394,7 +360,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
           </BottomModal>
 
           <Tooltip
-            offset={-20}
+            offset={10}
             target={streakTooltipRef}
             isVisible={openStreak}
             onClose={() => setOpenStreak(false)}

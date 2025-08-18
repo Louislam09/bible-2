@@ -13,16 +13,16 @@ import { Screens, ScreensName } from "@/types";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
 import { ParamListBase, RouteProp } from "@react-navigation/native";
+import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import * as Updates from "expo-updates";
 import React, { useEffect } from "react";
 import { ToastAndroid } from "react-native";
+import { SystemBars } from "react-native-edge-to-edge";
 import ErrorBoundary from "react-native-error-boundary";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StackAnimationTypes } from "react-native-screens";
-import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 
 import { NotificationProvider } from "@/context/NotificationContext";
 import * as Notifications from "expo-notifications";
@@ -30,7 +30,6 @@ import * as TaskManager from "expo-task-manager";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
-    shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: true,
     shouldShowBanner: true,
@@ -48,7 +47,6 @@ TaskManager.defineTask(
       error,
       executionInfo,
     });
-    // Do something with the notification data
   }
 );
 
@@ -112,7 +110,7 @@ const App = () => {
         await Updates.reloadAsync();
         ToastAndroid.show("Actualizada ✅", ToastAndroid.SHORT);
       }
-    } catch (error) {}
+    } catch (error) { }
   }
 
   useEffect(() => {
@@ -148,16 +146,11 @@ const App = () => {
                     <QueryProvider>
                       <GestureHandlerRootView style={{ flex: 1 }}>
                         <BottomSheetModalProvider>
-                          <StatusBar animated translucent style="auto" />
+                          <SystemBars style="auto" />
                           <Stack
                             initialRouteName="(dashboard)"
                             screenOptions={screenOptions}
                           />
-                          {/* <DatabaseLoadingModal
-                            visible={isVisible}
-                            progress={progress}
-                            databaseName={progress?.databaseName}
-                          /> */}
                         </BottomSheetModalProvider>
                       </GestureHandlerRootView>
                     </QueryProvider>

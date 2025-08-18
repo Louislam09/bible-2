@@ -1,5 +1,5 @@
+import { useMyTheme } from "@/context/ThemeContext";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useTheme } from "@/context/ThemeContext";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -30,7 +30,7 @@ type DownloadManagerProps = {};
 
 const DownloadManager: React.FC<DownloadManagerProps> = () => {
   const router = useRouter();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const insets = useSafeAreaInsets();
   const styles = getStyles(theme);
   const databasesToDownload: DownloadBibleItem[] = bibleDatabases;
@@ -106,14 +106,14 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
 
   const filteredDatabases = debouncedSearchText
     ? databasesToDownload.filter(
-        (version) =>
-          removeAccent(version.name)
-            .toLowerCase()
-            .includes(removeAccent(debouncedSearchText).toLowerCase()) ||
-          removeAccent(version.storedName)
-            .toLowerCase()
-            .includes(removeAccent(debouncedSearchText).toLowerCase())
-      )
+      (version) =>
+        removeAccent(version.name)
+          .toLowerCase()
+          .includes(removeAccent(debouncedSearchText).toLowerCase()) ||
+        removeAccent(version.storedName)
+          .toLowerCase()
+          .includes(removeAccent(debouncedSearchText).toLowerCase())
+    )
     : databasesToDownload;
 
   const NoModulesFound = () => (

@@ -8,7 +8,7 @@ import { isDefaultDatabase } from "@/constants/databaseNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMemorization } from "@/context/MemorizationContext";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
@@ -148,7 +148,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     useBibleContext();
 
   const { addVerse } = useMemorization();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const [isFavorite, setFavorite] = useState(false);
   const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);

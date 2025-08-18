@@ -1,16 +1,16 @@
+import { useMyTheme } from "@/context/ThemeContext";
+import { TTheme } from "@/types";
 import React, { useState } from "react";
 import {
+  SafeAreaView,
+  ScrollView,
   StyleSheet,
-  View,
   Text,
   TouchableOpacity,
-  ScrollView,
-  SafeAreaView,
-  StatusBar,
+  View
 } from "react-native";
+import { SystemBars } from "react-native-edge-to-edge";
 import Icon from "../Icon";
-import { TTheme } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
 
 interface FAQItemProps {
   question: string;
@@ -20,7 +20,7 @@ interface FAQItemProps {
 }
 
 const FAQItem = ({ question, children, isFirst, isLast }: FAQItemProps) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const [expanded, setExpanded] = useState(false);
 
@@ -51,11 +51,11 @@ const FAQItem = ({ question, children, isFirst, isLast }: FAQItemProps) => {
 };
 
 const BiblicalChronologyFAQ = () => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#0c2033" />
+      <SystemBars style="auto" />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.headerContainer}>
           <Text style={styles.headerTitle}>Cronología Bíblica Traducida</Text>

@@ -1,9 +1,12 @@
 import { iconSize } from "@/constants/size";
 import { useBibleContext } from "@/context/BibleContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import useDraggableElement from "@/hooks/useDraggableBox";
+import { bibleState$ } from "@/state/bibleState";
 import { TTheme } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
+import { use$ } from "@legendapp/state/react";
 import { Router } from "expo-router";
+import { icons } from "lucide-react-native";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
@@ -15,9 +18,6 @@ import {
 } from "react-native";
 import Icon from "./Icon";
 import { Text, View } from "./Themed";
-import { icons } from "lucide-react-native";
-import { use$ } from "@legendapp/state/react";
-import { bibleState$ } from "@/state/bibleState";
 
 type FloatingButtonProps = {
   children: React.ReactNode;
@@ -31,7 +31,7 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({
   children,
   iconName,
 }) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const { orientation } = useBibleContext();
   const selectedVerseForNote = use$(() =>
@@ -151,9 +151,9 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({
       height: !expanded
         ? animatedValues.containerHeight
         : animation.interpolate({
-            inputRange: [0, 1],
-            outputRange: ["0%", "100%"],
-          }),
+          inputRange: [0, 1],
+          outputRange: ["0%", "100%"],
+        }),
       borderRadius: animatedValues.borderRadius,
       backgroundColor: animatedValues.backgroundColor,
     }),

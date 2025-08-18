@@ -1,14 +1,14 @@
+import { useMyTheme } from "@/context/ThemeContext";
 import { EThemes, TTheme } from "@/types";
 import React, { useCallback, useState } from "react";
 import {
+  SafeAreaView,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
-  SafeAreaView,
 } from "react-native";
-import { useTheme } from "@/context/ThemeContext";
-import { Text, View } from "./Themed";
 import Icon from "./Icon";
+import { Text, View } from "./Themed";
 
 // Define color types and interface
 type ColorOption = {
@@ -52,7 +52,7 @@ const ColorSelector: React.FC<ColorSelectorProps> = ({
       };
     });
   }, []);
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const colors = getColosTheme();
   const initialColorObj =

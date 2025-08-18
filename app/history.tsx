@@ -3,14 +3,14 @@ import Icon from "@/components/Icon";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
 import { useBibleContext } from "@/context/BibleContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { HistoryItem } from "@/hooks/useHistoryManager";
 import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
-import { useTheme } from "@/context/ThemeContext";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useRouter } from "expo-router";
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { Fragment, useCallback, useEffect, useMemo } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -20,7 +20,7 @@ import {
 } from "react-native";
 
 const HistoryScreen = () => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const colorScheme = useColorScheme();
   const styles = useMemo(() => getStyles(theme), [theme, colorScheme]);
   const { historyManager } = useBibleContext();
@@ -80,11 +80,9 @@ const HistoryScreen = () => {
         activeOpacity={0.7}
         onPress={() => navigateToHistoryItem(item)}
         accessible={true}
-        accessibilityLabel={`${renameLongBookName(item.book)} capítulo ${
-          item.chapter
-        } versículo ${item.verse}, leído el ${
-          item.created_at || "fecha desconocida"
-        }`}
+        accessibilityLabel={`${renameLongBookName(item.book)} capítulo ${item.chapter
+          } versículo ${item.verse}, leído el ${item.created_at || "fecha desconocida"
+          }`}
         accessibilityHint="Toca para ir a este versículo"
         accessibilityRole="button"
       >
@@ -139,42 +137,44 @@ const HistoryScreen = () => {
   }
 
   return (
-    <ScreenWithAnimation
-      duration={800}
-      speed={1}
-      title="Historial"
-      icon="History"
-    >
-      <View style={styles.container} key={`history-container-${theme.dark}`}>
-        <Stack.Screen
-          options={{
-            ...singleScreenHeader({
-              theme,
-              title: "Historial",
-              titleIcon: "History",
-              headerRightProps: {
-                headerRightIcon: "Trash2",
-                headerRightIconColor: "red",
-                onPress: clearHistory,
-                disabled: !history.length,
-                style: { opacity: !history.length ? 0.2 : 1 },
-              },
-            }),
-          }}
-        />
+    <Fragment>
+      <Stack.Screen
+        options={{
+          ...singleScreenHeader({
+            theme,
+            title: "Historial",
+            titleIcon: "History",
+            headerRightProps: {
+              headerRightIcon: "Trash2",
+              headerRightIconColor: "red",
+              onPress: clearHistory,
+              disabled: !history.length,
+              style: { opacity: !history.length ? 0.2 : 1 },
+            },
+          }),
+        }}
+      />
+      <ScreenWithAnimation
+        duration={800}
+        speed={1}
+        title="Historial"
+        icon="History"
+      >
+        <View style={styles.container} key={`history-container-${theme.dark}`}>
 
-        <FlashList
-          data={history}
-          keyExtractor={(item) => `history:${item.id}`}
-          renderItem={renderItem}
-          estimatedItemSize={70}
-          ListEmptyComponent={EmptyListComponent}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.listContent}
-          removeClippedSubviews={true}
-        />
-      </View>
-    </ScreenWithAnimation>
+          <FlashList
+            data={history}
+            keyExtractor={(item) => `history:${item.id}`}
+            renderItem={renderItem}
+            estimatedItemSize={70}
+            ListEmptyComponent={EmptyListComponent}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.listContent}
+            removeClippedSubviews={true}
+          />
+        </View>
+      </ScreenWithAnimation>
+    </Fragment>
   );
 };
 

@@ -5,6 +5,7 @@ import MyRichEditor from "@/components/RichTextEditor";
 import { Text, View } from "@/components/Themed";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
 import useParams from "@/hooks/useParams";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
@@ -13,7 +14,6 @@ import { bibleState$ } from "@/state/bibleState";
 import { EViewMode, Screens, TNote, TTheme } from "@/types";
 import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@/context/ThemeContext";
 import { Stack, useNavigation } from "expo-router";
 import React, {
   useCallback,
@@ -37,8 +37,8 @@ import {
 type NoteDetailProps = {};
 type NoteDetailParams = { noteId: number | null; isNewNote: boolean };
 
-const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
-  const { theme } = useTheme();
+const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
+  const { theme } = useMyTheme();
   const navigation = useNavigation();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const { getNoteById, createNote, updateNote } = useNoteService();
@@ -183,7 +183,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
         "Guardar cambios",
         "Tienes cambios sin guardar, ¿quieres salir sin guardar?",
         [
-          { text: "Cancelar", style: "cancel", onPress: () => {} },
+          { text: "Cancelar", style: "cancel", onPress: () => { } },
           {
             text: "Salir sin guardar",
             style: "destructive",

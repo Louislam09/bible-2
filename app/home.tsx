@@ -18,7 +18,7 @@ import CurrentNoteDetail from "@/components/CurrentNoteDetail";
 import FloatingButton from "@/components/FloatingButton";
 import NoteNameList from "@/components/home/NoteNameList";
 import Walkthrough from "@/components/Walkthrough";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 // import CustomHeader from "../components/home/header";
 
 import StatusBarBackground from "@/components/StatusBarBackground";
@@ -49,7 +49,7 @@ type HomeScreenProps = {};
 
 const HomeScreen: React.FC<HomeScreenProps> = () => {
   const navigation = useNavigation();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const { orientation } = useBibleContext();
   const isSplitActived = use$(() => bibleState$.isSplitActived.get());
   const tourPopoverVisible = use$(() => tourState$.tourPopoverVisible.get());

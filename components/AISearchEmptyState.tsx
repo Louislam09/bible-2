@@ -1,16 +1,16 @@
+import { useMyTheme } from "@/context/ThemeContext";
+import { TTheme } from "@/types";
+import { Ionicons } from "@expo/vector-icons";
+import { icons } from "lucide-react-native";
 import React from "react";
 import {
-  View,
+  Dimensions,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  Dimensions,
+  View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import Icon from "./Icon";
-import { icons } from "lucide-react-native";
-import { TTheme } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
 
 const { width } = Dimensions.get("window");
 
@@ -25,7 +25,7 @@ const BibleEmptyState = ({
 }: {
   onExamplePress: (question: string) => void;
 }) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
 
   const exampleQuestions: ExampleQuestion[] = [

@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from "react";
-import { StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
-import { useTheme } from "@/context/ThemeContext";
-import { TTheme } from "@/types";
-import { Text, View } from "./Themed";
-import CustomSlider from "./Slider";
+import { useMyTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
+import { TTheme } from "@/types";
+import React, { useCallback, useState } from "react";
+import { SafeAreaView, StyleSheet, TouchableOpacity } from "react-native";
+import CustomSlider from "./Slider";
+import { Text, View } from "./Themed";
 
 interface FontSizeAdjusterProps {
   onSizeChange: (size: number, adjustmentType: "decrease" | "increase") => void;
@@ -24,7 +24,7 @@ const FontSizeAdjuster: React.FC<FontSizeAdjusterProps> = ({
   fontFamily = "System",
 }) => {
   const [fontSize, setFontSize] = useState<number>(initialSize);
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const debouncedSearchText = useDebounce(fontSize, 500);
 

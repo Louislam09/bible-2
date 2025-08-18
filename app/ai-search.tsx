@@ -4,12 +4,12 @@ import Icon from "@/components/Icon";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import useBibleAI from "@/hooks/useBibleAI";
 import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";
 import { parseBibleReferences } from "@/utils/extractVersesInfo";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@/context/ThemeContext";
 import { Stack, useRouter } from "expo-router";
 import { ChevronDown } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
@@ -25,12 +25,12 @@ import {
   View,
 } from "react-native";
 
-const BibleAIScreen = ({}) => {
+const BibleAIScreen = ({ }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTranslation, setSelectedTranslation] = useState("RV1960");
   const [activeTab, setActiveTab] = useState("Verses");
   const googleAIKey = use$(() => storedData$.googleAIKey.get());
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const router = useRouter();
 
@@ -97,7 +97,7 @@ const BibleAIScreen = ({}) => {
     const currentBook = DB_BOOK_NAMES.find(
       (x) =>
         x.longName?.toLocaleLowerCase() ===
-          parsedReferences?.book?.toLocaleLowerCase() ||
+        parsedReferences?.book?.toLocaleLowerCase() ||
         x.longName
           ?.toLocaleLowerCase()
           .includes(parsedReferences?.book?.toLocaleLowerCase())
@@ -117,208 +117,211 @@ const BibleAIScreen = ({}) => {
   };
 
   return (
-    <ScreenWithAnimation
-      icon="Sparkles"
-      iconColor="#fedf75"
-      speed={2}
-      title="Busqueda Inteligente"
-    >
-      <SafeAreaView style={styles.container}>
-        <Stack.Screen
-          options={{
-            ...singleScreenHeader({
-              theme,
-              title: "Busqueda Inteligente",
-              titleIcon: "Sparkles",
-              titleIconColor: "#fedf75",
-              headerRightProps: {
-                headerRightIconColor: "",
-                onPress: () => console.log(),
-                disabled: true,
-                style: { opacity: 0 },
-              },
-            }),
-          }}
-        />
+    <>
+      <Stack.Screen
+        options={{
+          ...singleScreenHeader({
+            theme,
+            title: "Busqueda Inteligente",
+            titleIcon: "Sparkles",
+            titleIconColor: "#fedf75",
+            headerRightProps: {
+              headerRightIconColor: "",
+              onPress: () => console.log(),
+              disabled: true,
+              style: { opacity: 0 },
+            },
+          }),
+        }}
+      />
+      <ScreenWithAnimation
+        icon="Sparkles"
+        iconColor="#fedf75"
+        speed={2}
+        title="Busqueda Inteligente"
+      >
+        <SafeAreaView style={styles.container}>
 
-        {/* Search Bar */}
-        <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            placeholder="Haz una pregunta sobre la Biblia..."
-            placeholderTextColor={theme.colors.text + "95"}
-            onSubmitEditing={handleSearch}
-            editable={!loading}
-          />
-          <TouchableOpacity style={styles.clearButton} onPress={handleClear}>
-            <Icon name="X" size={20} color={theme.colors.text + 90} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.searchButton,
-              loading && styles.searchButtonDisabled,
-            ]}
-            onPress={handleSearch}
-            disabled={loading || !googleAIKey}
-          >
-            {loading ? (
-              <ActivityIndicator size="small" color="white" />
-            ) : (
-              <Icon name="Search" size={20} color="white" />
-            )}
-          </TouchableOpacity>
-        </View>
 
-        {/* Translation Selector */}
-        {googleAIKey && (
-          <View style={styles.translationContainer}>
-            <Text style={styles.translationLabel}>Traducción: </Text>
-            <TouchableOpacity style={styles.translationSelector}>
-              <Text style={styles.translationText}>{selectedTranslation}</Text>
-              {/* <ChevronDown size={16} color={theme.colors.text} /> */}
-            </TouchableOpacity>
-          </View>
-        )}
-
-        {!googleAIKey ? (
-          <View style={styles.errorContainer}>
-            <Icon
-              name="MessageCircleWarning"
-              size={48}
-              color={theme.colors.notification}
+          {/* Search Bar */}
+          <View style={styles.searchContainer}>
+            <TextInput
+              style={styles.searchInput}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              placeholder="Haz una pregunta sobre la Biblia..."
+              placeholderTextColor={theme.colors.text + "95"}
+              onSubmitEditing={handleSearch}
+              editable={!loading}
             />
-            <Text style={styles.errorText}>
-              No se ha configurado la API key de Google AI
-            </Text>
+            <TouchableOpacity style={styles.clearButton} onPress={handleClear}>
+              <Icon name="X" size={20} color={theme.colors.text + 90} />
+            </TouchableOpacity>
             <TouchableOpacity
-              style={styles.retryButton}
-              onPress={() => router.push(Screens.AISetup)}
+              style={[
+                styles.searchButton,
+                loading && styles.searchButtonDisabled,
+              ]}
+              onPress={handleSearch}
+              disabled={loading || !googleAIKey}
             >
-              <Text style={styles.retryButtonText}>Configurar</Text>
+              {loading ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <Icon name="Search" size={20} color="white" />
+              )}
             </TouchableOpacity>
           </View>
-        ) : (
-          <ScrollView
-            style={styles.content}
-            showsVerticalScrollIndicator={false}
-          >
-            {/* Loading State */}
-            {loading && (
-              <View style={styles.loadingContainer}>
-                <ActivityIndicator
-                  size="large"
-                  color={theme.colors.notification}
-                />
-                <Text style={styles.loadingText}>
-                  Buscando en las escrituras...
-                </Text>
-              </View>
-            )}
 
-            {error && !loading && (
-              <View style={styles.errorContainer}>
-                <Icon name="CircleAlert" size={48} color="#d32f2f" />
-                <Text style={styles.errorText}>Algo salió mal</Text>
-                <TouchableOpacity
-                  style={styles.retryButton}
-                  onPress={handleRetry}
-                >
-                  <Text style={styles.retryButtonText}>Reintentar</Text>
-                </TouchableOpacity>
-              </View>
-            )}
+          {/* Translation Selector */}
+          {googleAIKey && (
+            <View style={styles.translationContainer}>
+              <Text style={styles.translationLabel}>Traducción: </Text>
+              <TouchableOpacity style={styles.translationSelector}>
+                <Text style={styles.translationText}>{selectedTranslation}</Text>
+                {/* <ChevronDown size={16} color={theme.colors.text} /> */}
+              </TouchableOpacity>
+            </View>
+          )}
 
-            {/* Empty State */}
-            {isEmpty && !loading && !error && (
-              <BibleEmptyState
-                onExamplePress={(question) => {
-                  setSearchQuery(question);
-                  searchBible(question, selectedTranslation);
-                }}
+          {!googleAIKey ? (
+            <View style={styles.errorContainer}>
+              <Icon
+                name="MessageCircleWarning"
+                size={48}
+                color={theme.colors.notification}
               />
-            )}
+              <Text style={styles.errorText}>
+                No se ha configurado la API key de Google AI
+              </Text>
+              <TouchableOpacity
+                style={styles.retryButton}
+                onPress={() => router.push(Screens.AISetup)}
+              >
+                <Text style={styles.retryButtonText}>Configurar</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <ScrollView
+              style={styles.content}
+              showsVerticalScrollIndicator={false}
+            >
+              {/* Loading State */}
+              {loading && (
+                <View style={styles.loadingContainer}>
+                  <ActivityIndicator
+                    size="large"
+                    color={theme.colors.notification}
+                  />
+                  <Text style={styles.loadingText}>
+                    Buscando en las escrituras...
+                  </Text>
+                </View>
+              )}
 
-            {/* Predicted Answer */}
-            {predictedAnswer && !loading && (
-              <View style={styles.predictedAnswerCard}>
-                <Text style={styles.predictedAnswerTitle}>
-                  Respuesta Predicha*
-                </Text>
-                <Text style={styles.answerTitle}>{predictedAnswer.title}</Text>
-                <Text style={styles.answerDescription}>
-                  {predictedAnswer.description}
-                </Text>
-                <Text style={styles.answerReference}>
-                  {predictedAnswer.reference}
-                </Text>
-              </View>
-            )}
+              {error && !loading && (
+                <View style={styles.errorContainer}>
+                  <Icon name="CircleAlert" size={48} color="#d32f2f" />
+                  <Text style={styles.errorText}>Algo salió mal</Text>
+                  <TouchableOpacity
+                    style={styles.retryButton}
+                    onPress={handleRetry}
+                  >
+                    <Text style={styles.retryButtonText}>Reintentar</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
 
-            {/* Tabs - only show if we have results */}
-            {hasResults && !loading && (
-              <View style={styles.tabContainer}>
-                <TabButton
-                  title={`Versículos (${verses.length})`}
-                  isActive={activeTab === "Verses"}
-                  onPress={() => setActiveTab("Verses")}
+              {/* Empty State */}
+              {isEmpty && !loading && !error && (
+                <BibleEmptyState
+                  onExamplePress={(question) => {
+                    setSearchQuery(question);
+                    searchBible(question, selectedTranslation);
+                  }}
                 />
-                <TabButton
-                  title={`Artículos (${articles.length})`}
-                  isActive={activeTab === "Articles"}
-                  onPress={() => setActiveTab("Articles")}
-                />
-              </View>
-            )}
+              )}
 
-            {/* Content based on active tab */}
-            {hasResults && !loading && (
-              <View style={styles.resultsContainer}>
-                {activeTab === "Verses" &&
-                  verses.map((verse, index) => (
-                    <TouchableOpacity
-                      onPress={() => onVersePress(verse.reference)}
-                      key={index}
-                      style={styles.verseCard}
-                    >
-                      <Text style={styles.verseReference}>
-                        {verse.reference}
-                      </Text>
-                      <Text style={styles.verseText}>{verse.text}</Text>
-                      {verse.relevance && (
-                        <Text style={styles.verseRelevance}>
-                          {verse.relevance}
+              {/* Predicted Answer */}
+              {predictedAnswer && !loading && (
+                <View style={styles.predictedAnswerCard}>
+                  <Text style={styles.predictedAnswerTitle}>
+                    Respuesta Predicha*
+                  </Text>
+                  <Text style={styles.answerTitle}>{predictedAnswer.title}</Text>
+                  <Text style={styles.answerDescription}>
+                    {predictedAnswer.description}
+                  </Text>
+                  <Text style={styles.answerReference}>
+                    {predictedAnswer.reference}
+                  </Text>
+                </View>
+              )}
+
+              {/* Tabs - only show if we have results */}
+              {hasResults && !loading && (
+                <View style={styles.tabContainer}>
+                  <TabButton
+                    title={`Versículos (${verses.length})`}
+                    isActive={activeTab === "Verses"}
+                    onPress={() => setActiveTab("Verses")}
+                  />
+                  <TabButton
+                    title={`Artículos (${articles.length})`}
+                    isActive={activeTab === "Articles"}
+                    onPress={() => setActiveTab("Articles")}
+                  />
+                </View>
+              )}
+
+              {/* Content based on active tab */}
+              {hasResults && !loading && (
+                <View style={styles.resultsContainer}>
+                  {activeTab === "Verses" &&
+                    verses.map((verse, index) => (
+                      <TouchableOpacity
+                        onPress={() => onVersePress(verse.reference)}
+                        key={index}
+                        style={styles.verseCard}
+                      >
+                        <Text style={styles.verseReference}>
+                          {verse.reference}
                         </Text>
-                      )}
-                    </TouchableOpacity>
-                  ))}
+                        <Text style={styles.verseText}>{verse.text}</Text>
+                        {verse.relevance && (
+                          <Text style={styles.verseRelevance}>
+                            {verse.relevance}
+                          </Text>
+                        )}
+                      </TouchableOpacity>
+                    ))}
 
-                {activeTab === "Articles" &&
-                  articles.map((article, index) => (
-                    <View key={index} style={styles.articleCard}>
-                      <Text style={styles.articleTitle}>{article.title}</Text>
-                      <Text style={styles.articleSummary}>
-                        {article.summary}
-                      </Text>
-                      {article.keyPoints && article.keyPoints.length > 0 && (
-                        <View style={styles.keyPointsContainer}>
-                          <Text style={styles.keyPointsTitle}>Key Points:</Text>
-                          {article.keyPoints.map((point, pointIndex) => (
-                            <Text key={pointIndex} style={styles.keyPoint}>
-                              • {point}
-                            </Text>
-                          ))}
-                        </View>
-                      )}
-                    </View>
-                  ))}
-              </View>
-            )}
-          </ScrollView>
-        )}
-      </SafeAreaView>
-    </ScreenWithAnimation>
+                  {activeTab === "Articles" &&
+                    articles.map((article, index) => (
+                      <View key={index} style={styles.articleCard}>
+                        <Text style={styles.articleTitle}>{article.title}</Text>
+                        <Text style={styles.articleSummary}>
+                          {article.summary}
+                        </Text>
+                        {article.keyPoints && article.keyPoints.length > 0 && (
+                          <View style={styles.keyPointsContainer}>
+                            <Text style={styles.keyPointsTitle}>Key Points:</Text>
+                            {article.keyPoints.map((point, pointIndex) => (
+                              <Text key={pointIndex} style={styles.keyPoint}>
+                                • {point}
+                              </Text>
+                            ))}
+                          </View>
+                        )}
+                      </View>
+                    ))}
+                </View>
+              )}
+            </ScrollView>
+          )}
+        </SafeAreaView>
+      </ScreenWithAnimation>
+    </>
   );
 };
 

@@ -1,15 +1,15 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import StatusBarBackground from "@/components/StatusBarBackground";
+import { useMyTheme } from "@/context/ThemeContext";
 import { Slot, Stack } from "expo-router";
 import React from "react";
-import { useTheme } from "@/context/ThemeContext";
-import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 
 const LearnLayout = () => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
 
   return (
-    <ScreenWithAnimation title="DuoBible" icon="Gamepad2" iconColor={"#4caf50"}>
+    <>
       <Stack.Screen
         options={{
           ...singleScreenHeader({
@@ -28,8 +28,10 @@ const LearnLayout = () => {
           }),
         }}
       />
-      <Slot />
-    </ScreenWithAnimation>
+      <ScreenWithAnimation title="DuoBible" icon="Gamepad2" iconColor={"#4caf50"}>
+        <Slot />
+      </ScreenWithAnimation>
+    </>
   );
 };
 

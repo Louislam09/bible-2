@@ -2,7 +2,7 @@ import Animation from "@/components/Animation";
 import { Text } from "@/components/Themed";
 import WordDefinition from "@/components/WordDefinition";
 import { useDBContext } from "@/context/databaseContext";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
 import useDictionaryData, { DatabaseData } from "@/hooks/useDictionaryData";
 import { modalState$ } from "@/state/modalState";
@@ -121,7 +121,7 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
 }) => {
   const [selectedWord, setSelectedWord] = useState<any>(null);
   const [filterData, setFilterData] = useState<DatabaseData[]>([]);
-  const { schema } = useTheme();
+  const { schema } = useMyTheme();
   const styles = getStyles(theme);
   const word = modalState$.searchWordOnDic.get();
   const [searchText, setSearchText] = useState<any>(word ? word : "");

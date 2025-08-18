@@ -39,10 +39,13 @@ export async function registerForPushNotificationsAsync() {
       throw new Error("Project ID not found");
     }
     try {
+      // const pushTokenString = (
+      //   await Notifications.getExpoPushTokenAsync({
+      //     projectId,
+      //   })
+      // )?.data;
       const pushTokenString = (
-        await Notifications.getExpoPushTokenAsync({
-          projectId,
-        })
+        await Notifications.getDevicePushTokenAsync()
       )?.data;
       console.log("🔔 PushTokenString: ", pushTokenString);
       return pushTokenString;

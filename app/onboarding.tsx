@@ -1,8 +1,10 @@
-import { useTheme } from "@/context/ThemeContext";
-import { FlashList } from "@shopify/flash-list";
 import Animation from "@/components/Animation";
 import Icon, { IconProps } from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
+import { useMyTheme } from "@/context/ThemeContext";
+import { tourState$ } from "@/state/tourState";
+import { Screens, TTheme } from "@/types";
+import { FlashList } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
 import React from "react";
 import {
@@ -10,8 +12,6 @@ import {
   TouchableWithoutFeedback,
   useWindowDimensions,
 } from "react-native";
-import { Screens, TTheme } from "@/types";
-import { tourState$ } from "@/state/tourState";
 
 type IDashboardOption = {
   icon: IconProps["name"];
@@ -23,7 +23,7 @@ type IDashboardOption = {
 };
 
 const OnboardingScreen = () => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const dashboardImage = require("../assets/lottie/onboarding.json");
   const navigation = useNavigation();

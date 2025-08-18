@@ -1,9 +1,9 @@
 import Icon from "@/components/Icon";
 import { Text } from "@/components/Themed";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@/context/ThemeContext";
 import * as Clipboard from "expo-clipboard";
 import { Stack, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -16,7 +16,7 @@ import {
 } from "react-native";
 
 export default function AISetupScreen() {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const router = useRouter();
   const styles = getStyles(theme as TTheme);
   const currentKey = use$(() => storedData$.googleAIKey.get());

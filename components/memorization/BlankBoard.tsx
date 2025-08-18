@@ -1,8 +1,8 @@
+import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
-import { useTheme } from "@/context/ThemeContext";
-import React, { useState, useEffect, useMemo } from "react";
-import { TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
+import React, { useEffect, useMemo, useState } from "react";
+import { SafeAreaView, StyleSheet, TouchableOpacity } from "react-native";
 import { Text, View } from "../Themed";
 import ProgressBar from "../home/footer/ProgressBar";
 
@@ -19,7 +19,7 @@ const BlankBoard: React.FC<BlankBoardProps> = ({
   reference = "",
   onFinished,
 }) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const [answers, setAnswers] = useState<string[]>([]);
   const [correctAnswers, setCorrentAnswers] = useState<string[]>([]);
@@ -156,7 +156,7 @@ const BlankBoard: React.FC<BlankBoardProps> = ({
                     minWidth: (correctAnswers?.[blankIndex]?.length || 1) * 10,
                   },
                 ]}
-                onPress={() => {}}
+                onPress={() => { }}
               >
                 <Text style={[styles.blankText, isFilled && styles[key]]}>
                   {isFilled ? correctAnswers[blankIndex] : ""}

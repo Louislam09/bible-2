@@ -1,7 +1,7 @@
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useNotification } from "@/context/NotificationContext";
-import { useCustomTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { showToast } from "@/utils/showToast";
 import { use$ } from "@legendapp/state/react";
 import Constants from "expo-constants";
@@ -11,7 +11,7 @@ import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
 export const GOOGLE_SERVICE_JSON = process.env.GOOGLE_SERVICE_JSON;
 
 const DatabaseDebug = () => {
-  const { schema } = useCustomTheme();
+  const { schema } = useMyTheme();
   const { executeSql, isMyBibleDbLoaded } = useDBContext();
   const { expoPushToken, error: notificationError } = useNotification();
   const [scheduledNotifications, setScheduledNotifications] = useState<any[]>(

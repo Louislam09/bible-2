@@ -1,15 +1,15 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import OptimizedChapterList from "@/components/optimized-chapter-list";
+import { View } from "@/components/Themed";
 import { DB_BOOK_CHAPTER_NUMBER } from "@/constants/BookNames";
 import { BOOK_IMAGES } from "@/constants/Images";
+import { useMyTheme } from "@/context/ThemeContext";
 import useParams from "@/hooks/useParams";
 import { bibleState$ } from "@/state/bibleState";
 import { ChooseChapterNumberParams, Screens } from "@/types";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
-import { useTheme } from "@/context/ThemeContext";
 import { Stack, useNavigation } from "expo-router";
 import React, { Fragment, useCallback, useMemo } from "react";
-import { View } from "@/components/Themed";
 
 const ChooseChapterNumber = () => {
   const navigation = useNavigation();
@@ -19,7 +19,7 @@ const ChooseChapterNumber = () => {
 
   const selectedBook = isBottomSideSearching ? bottomSideBook : book;
   const displayBookName = renameLongBookName(selectedBook || "");
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
 
   const numberOfChapters = useMemo(() => {
     return Array.from(

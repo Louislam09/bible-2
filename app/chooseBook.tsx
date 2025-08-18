@@ -4,7 +4,7 @@ import { Text, View } from "@/components/Themed";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import useParams from "@/hooks/useParams";
 import { bibleState$ } from "@/state/bibleState";
 import {
@@ -133,7 +133,7 @@ const ChooseBook: React.FC = () => {
   const routeParam = useParams<ChooseChapterNumberParams>();
   const isShowName = use$(() => storedData$.isShowName.get());
   const { book } = routeParam;
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const { viewLayoutGrid, toggleViewLayoutGrid, currentBibleVersion } =
     useBibleContext();
   const isBottomSideSearching = bibleState$.isBottomBibleSearching.get();

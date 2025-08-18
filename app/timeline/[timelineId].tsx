@@ -1,14 +1,14 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import DisplayTimeline from "@/components/timeline/DisplayTimeline";
+import { useMyTheme } from "@/context/ThemeContext";
 import useParams from "@/hooks/useParams";
-import { useTheme } from "@/context/ThemeContext";
 import { Stack, useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet } from "react-native";
 
 const SingleTimeline = () => {
   const { timelineId } = useParams();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const router = useRouter();
 
   return (

@@ -1,3 +1,4 @@
+import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
 import {
   BottomSheetBackdrop,
@@ -5,7 +6,6 @@ import {
   BottomSheetScrollView,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import { useTheme } from "@/context/ThemeContext";
 import React, {
   forwardRef,
   useCallback,
@@ -54,7 +54,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
     },
     ref
   ) => {
-    const { theme } = useTheme();
+    const { theme } = useMyTheme();
     const styles = getStyles(theme);
     const snapPoints = useMemo(
       () =>

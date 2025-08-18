@@ -1,14 +1,14 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { Slot, Stack } from "expo-router";
 import React from "react";
 
 const SearchLayout = () => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
 
   return (
-    <ScreenWithAnimation duration={800} icon="User" title="Personajes Biblicos">
+    <>
       <Stack.Screen
         options={{
           ...singleScreenHeader({
@@ -25,8 +25,10 @@ const SearchLayout = () => {
           }),
         }}
       />
-      <Slot />
-    </ScreenWithAnimation>
+      <ScreenWithAnimation duration={800} icon="User" title="Personajes Biblicos">
+        <Slot />
+      </ScreenWithAnimation>
+    </>
   );
 };
 

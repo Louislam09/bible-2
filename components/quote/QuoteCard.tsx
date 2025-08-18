@@ -23,8 +23,8 @@ interface QuoteCardProps {
   panResponder: any;
   reference: string;
   quoteText: string;
-  webViewRef: React.RefObject<WebView>;
-  viewShotRef: React.RefObject<ViewShot>;
+  webViewRef: React.RefObject<WebView<{}> | null>;
+  viewShotRef: React.RefObject<ViewShot | null>;
 }
 
 export const QuoteCard: React.FC<QuoteCardProps> = ({

@@ -1,8 +1,12 @@
-import { useTheme } from "@/context/ThemeContext";
-import { FlashList } from "@shopify/flash-list";
 import Animation from "@/components/Animation";
 import Icon, { IconProps } from "@/components/Icon";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import lottieAssets from "@/constants/lottieAssets";
+import { useMyTheme } from "@/context/ThemeContext";
+import { Screens, TTheme } from "@/types";
+import { FlashList } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
 import React, { useMemo } from "react";
 import {
@@ -10,10 +14,6 @@ import {
   TouchableWithoutFeedback,
   useWindowDimensions,
 } from "react-native";
-import { Screens, TTheme } from "@/types";
-import lottieAssets from "@/constants/lottieAssets";
-import ScreenWithAnimation from "@/components/ScreenWithAnimation";
-import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 
 type IHymnOption = {
   icon: IconProps["name"];
@@ -28,7 +28,7 @@ const getRandomNumberFromLength = (length: number) =>
   Math.floor(Math.random() * length);
 
 const ChooseGameScreen = () => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const assets = [...Object.values(lottieAssets)];
   const pickARandomAsset = assets[getRandomNumberFromLength(assets.length)];
@@ -83,41 +83,43 @@ const ChooseGameScreen = () => {
   );
 
   return (
-    <ScreenWithAnimation speed={2} title="Quiz Biblico" icon="Gamepad">
-      <View style={styles.container}>
-        <Stack.Screen
-          options={{
-            ...singleScreenHeader({
-              theme,
-              title: "Quiz Biblico",
-              titleIcon: "Gamepad",
-              headerRightProps: {
-                headerRightIcon: "Trash2",
-                headerRightIconColor: "red",
-                onPress: () => console.log(),
-                disabled: true,
-                style: { opacity: 0 },
-              },
-            }),
-          }}
-        />
-        <View style={styles.imageContainer}>
-          <Text style={styles.subtitle}>Selecciona el modo de juego</Text>
-        </View>
+    <>
+      <Stack.Screen
+        options={{
+          ...singleScreenHeader({
+            theme,
+            title: "Quiz Biblico",
+            titleIcon: "Gamepad",
+            headerRightProps: {
+              headerRightIcon: "Trash2",
+              headerRightIconColor: "red",
+              onPress: () => console.log(),
+              disabled: true,
+              style: { opacity: 0 },
+            },
+          }),
+        }}
+      />
+      <ScreenWithAnimation speed={2} title="Quiz Biblico" icon="Gamepad">
+        <View style={styles.container}>
 
-        <View style={[styles.optionContainer, { width: SCREEN_WIDTH }]}>
-          <FlashList
-            contentContainerStyle={{ padding: 15 }}
-            data={options}
-            keyExtractor={(item) => item.label}
-            renderItem={renderItem}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-            estimatedItemSize={5}
-            numColumns={2}
-          />
+          <View style={styles.imageContainer}>
+            <Text style={styles.subtitle}>Selecciona el modo de juego</Text>
+          </View>
+          <View style={[styles.optionContainer, { width: SCREEN_WIDTH }]}>
+            <FlashList
+              contentContainerStyle={{ padding: 15 }}
+              data={options}
+              keyExtractor={(item) => item.label}
+              renderItem={renderItem}
+              ItemSeparatorComponent={() => <View style={styles.separator} />}
+              estimatedItemSize={5}
+              numColumns={2}
+            />
+          </View>
         </View>
-      </View>
-    </ScreenWithAnimation>
+      </ScreenWithAnimation>
+    </>
   );
 };
 

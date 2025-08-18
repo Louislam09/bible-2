@@ -1,13 +1,15 @@
-import {
-  Image,
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-  ActivityIndicator,
-} from "react-native";
-import React, { useState } from "react";
-import { Text, View } from "../Themed";
 import timelineEvents from "@/constants/events";
+import { useMyTheme } from "@/context/ThemeContext";
+import { TimelineEvent, TimelinePeriod, TTheme } from "@/types";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import Animated, {
   clamp,
   FadeIn,
@@ -20,9 +22,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import { LinearGradient } from "expo-linear-gradient";
-import { TimelineEvent, TimelinePeriod, TTheme } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
+import { Text, View } from "../Themed";
 
 const { width, height } = Dimensions.get("screen");
 const _itemSize = width * 0.24;
@@ -143,7 +143,7 @@ const CarouseItem = ({
 };
 
 const CircularSlider = () => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const events = timelineEvents;
   const eventImages = events.map((event) => event.image);

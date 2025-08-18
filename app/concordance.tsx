@@ -9,7 +9,7 @@ import { QUERY_BY_DB } from "@/constants/Queries";
 import WORDS, { TWord } from "@/constants/words";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
 import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";
@@ -111,7 +111,7 @@ const Concordance: React.FC<ConcordanceProps> = () => {
   const { fontSize, currentBibleVersion } = useBibleContext();
   const [selected, setSelected] = useState<any>(null);
   const [filterData] = useState<TWord[]>(WORDS);
-  const { theme, schema } = useTheme();
+  const { theme, schema } = useMyTheme();
   const router = useRouter();
   const navigation = useNavigation();
   const styles = getStyles(theme);
@@ -147,7 +147,7 @@ const Concordance: React.FC<ConcordanceProps> = () => {
       }
     })();
 
-    return () => {};
+    return () => { };
   }, [myBibleDB, selected]);
 
   const onWordItemClick = (item: TWord) => {
@@ -212,117 +212,121 @@ const Concordance: React.FC<ConcordanceProps> = () => {
   );
 
   return (
-    <ScreenWithAnimation
-      duration={800}
-      icon="List"
-      title="Concordancia Biblica"
-    >
-      <View
-        style={{
-          flex: 1,
-          padding: 5,
-          backgroundColor: theme.dark ? theme.colors.background : "#eee",
+    <>
+      <Stack.Screen
+        options={{
+          ...singleScreenHeader({
+            theme,
+            title: "Concordancia",
+            titleIcon: "List",
+            headerRightProps: {
+              headerRightIconColor: "red",
+              headerRightText: `${(currentList || []).length}📃`,
+              onPress: () => console.log(),
+              disabled: true,
+              style: { opacity: 1 },
+            },
+          }),
         }}
+      />
+      <ScreenWithAnimation
+        duration={800}
+        icon="List"
+        title="Concordancia Biblica"
       >
-        <Stack.Screen
-          options={{
-            ...singleScreenHeader({
-              theme,
-              title: "Concordancia",
-              titleIcon: "List",
-              headerRightProps: {
-                headerRightIconColor: "red",
-                headerRightText: `${(currentList || []).length}📃`,
-                onPress: () => console.log(),
-                disabled: true,
-                style: { opacity: 1 },
-              },
-            }),
+
+        <View
+          style={{
+            flex: 1,
+            padding: 5,
+            backgroundColor: theme.dark ? theme.colors.background : "#eee",
           }}
-        />
-        <>
-          {!showVerseList && ConcordanceHeader()}
-          {showVerseList && (
-            <>
-              <View style={[styles.filterContainer, { minHeight: 45 }]}>
-                <View style={[styles.strongNumber, { paddingHorizontal: 15 }]}>
-                  <Icon name="ListFilter" size={24} color="white" />
+        >
+
+          <>
+            {!showVerseList && ConcordanceHeader()}
+            {showVerseList && (
+              <>
+                <View style={[styles.filterContainer, { minHeight: 45 }]}>
+                  <View style={[styles.strongNumber, { paddingHorizontal: 15 }]}>
+                    <Icon name="ListFilter" size={24} color="white" />
+                  </View>
+                  <View style={styles.pickerContainer}>
+                    <AnimatedDropdown
+                      options={filterOptions}
+                      selectedValue={selectedFilterOption}
+                      onValueChange={setSelectedFilterOption}
+                      theme={theme}
+                    />
+                  </View>
                 </View>
-                <View style={styles.pickerContainer}>
-                  <AnimatedDropdown
-                    options={filterOptions}
-                    selectedValue={selectedFilterOption}
-                    onValueChange={setSelectedFilterOption}
-                    theme={theme}
+              </>
+            )}
+            {showVerseList ? (
+              <FlashList
+                key={schema}
+                contentContainerStyle={{
+                  backgroundColor: theme.dark ? theme.colors.background : "#eee",
+                  paddingVertical: 20,
+                }}
+                decelerationRate={"normal"}
+                estimatedItemSize={135}
+                data={currentList}
+                renderItem={({ item, index }) => (
+                  <RenderVerse
+                    {...{ theme, onItemClick: onVerseClick, index, selected }}
+                    item={item}
                   />
-                </View>
-              </View>
-            </>
-          )}
-          {showVerseList ? (
-            <FlashList
-              key={schema}
-              contentContainerStyle={{
-                backgroundColor: theme.dark ? theme.colors.background : "#eee",
-                paddingVertical: 20,
-              }}
-              decelerationRate={"normal"}
-              estimatedItemSize={135}
-              data={currentList}
-              renderItem={({ item, index }) => (
-                <RenderVerse
-                  {...{ theme, onItemClick: onVerseClick, index, selected }}
-                  item={item}
-                />
-              )}
-              keyExtractor={(item: any, index: any) => `note-${index}`}
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
-            />
-          ) : (
-            <FlashList
-              key={schema}
-              contentContainerStyle={{
-                backgroundColor: theme.dark ? theme.colors.background : "#eee",
-                paddingVertical: 20,
-              }}
-              decelerationRate={"normal"}
-              estimatedItemSize={135}
-              data={
-                debouncedSearchText
-                  ? filterData.filter(
+                )}
+                keyExtractor={(item: any, index: any) => `note-${index}`}
+                ItemSeparatorComponent={() => <View style={styles.separator} />}
+              />
+            ) : (
+              <FlashList
+                key={schema}
+                contentContainerStyle={{
+                  backgroundColor: theme.dark ? theme.colors.background : "#eee",
+                  paddingVertical: 20,
+                }}
+                decelerationRate={"normal"}
+                estimatedItemSize={135}
+                data={
+                  debouncedSearchText
+                    ? filterData.filter(
                       (x: any) =>
                         x.name_lower.indexOf(
                           debouncedSearchText.toLowerCase()
                         ) !== -1
                     )
-                  : filterData
+                    : filterData
                       .filter(
                         (x) => x.first_letter === randomLetter.toLowerCase()
                       )
                       .sort()
-              }
-              renderItem={({ item, index }) => (
-                <RenderWordItem
-                  {...{ theme, styles, onItemClick: onWordItemClick }}
-                  item={item}
-                  index={index}
-                  isList={false}
-                />
-              )}
-              keyExtractor={(item: any, index: any) => `note-${index}`}
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
-              ListEmptyComponent={
-                <View style={styles.noResultsContainer}>
-                  <Text style={styles.noResultsText}>
-                    No hay resultado para esta palabra: {debouncedSearchText}
-                  </Text>
-                </View>
-              }
-            />
-          )}
-        </>
-      </View>
-    </ScreenWithAnimation>
+                }
+                renderItem={({ item, index }) => (
+                  <RenderWordItem
+                    {...{ theme, styles, onItemClick: onWordItemClick }}
+                    item={item}
+                    index={index}
+                    isList={false}
+                  />
+                )}
+                keyExtractor={(item: any, index: any) => `note-${index}`}
+                ItemSeparatorComponent={() => <View style={styles.separator} />}
+                ListEmptyComponent={
+                  <View style={styles.noResultsContainer}>
+                    <Text style={styles.noResultsText}>
+                      No hay resultado para esta palabra: {debouncedSearchText}
+                    </Text>
+                  </View>
+                }
+              />
+            )}
+          </>
+        </View>
+      </ScreenWithAnimation>
+    </>
   );
 };
 

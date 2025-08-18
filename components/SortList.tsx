@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { IBookVerse, SortOption, TTheme } from "@/types";
+import React, { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type SortProps = {
   onSort: (sort: SortOption) => void;
@@ -9,7 +9,7 @@ type SortProps = {
 };
 
 const SortMemoryList = ({ onSort, sortType }: SortProps) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const [selectedSort, setSelectedSort] = useState<SortOption>(sortType);
 

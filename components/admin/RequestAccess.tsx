@@ -1,10 +1,10 @@
 import { ERROR_MESSAGES } from "@/constants/errorMessages";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { authState$ } from "@/state/authState";
 import { TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@/context/ThemeContext";
 import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import {
@@ -24,7 +24,7 @@ type IRequestAccess = {
 };
 
 const RequestAccess = ({ onClose, onRequest, isPending }: IRequestAccess) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const router = useRouter();
   const styles = getStyles(theme);
 
@@ -139,8 +139,8 @@ const RequestAccess = ({ onClose, onRequest, isPending }: IRequestAccess) => {
           {!isAuthenticated
             ? "Iniciar Sesión"
             : isPending
-            ? "Enviando..."
-            : "Enviar Solicitud"}
+              ? "Enviando..."
+              : "Enviar Solicitud"}
         </Text>
       </TouchableOpacity>
     </View>

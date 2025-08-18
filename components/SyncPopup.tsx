@@ -1,18 +1,18 @@
+import { storedData$, useStorage } from "@/context/LocalstoreContext";
+import { useMyTheme } from "@/context/ThemeContext";
+import { settingState$ } from "@/state/settingState";
+import { TTheme } from "@/types";
+import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
-  View,
-  Text,
-  Modal,
-  StyleSheet,
-  TouchableOpacity,
   ActivityIndicator,
+  Modal,
   ModalProps,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { storedData$, useStorage } from "@/context/LocalstoreContext";
-import { settingState$ } from "@/state/settingState";
-import { useTheme } from "@/context/ThemeContext";
-import { TTheme } from "@/types";
 
 interface CloudSyncPopupProps {
   visible: boolean;
@@ -25,7 +25,7 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
   onClose,
   lastSyncTime,
 }) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const [syncing, setSyncing] = useState<boolean>(false);
   const [syncComplete, setSyncComplete] = useState<boolean>(false);
@@ -95,8 +95,8 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
             {syncComplete
               ? "¡Tus datos se han sincronizado exitosamente con la nube!"
               : syncError
-              ? `Error de sincronización: ${syncError}`
-              : "Sincroniza tus datos con la nube para acceder a ellos desde todos tus dispositivos."}
+                ? `Error de sincronización: ${syncError}`
+                : "Sincroniza tus datos con la nube para acceder a ellos desde todos tus dispositivos."}
           </Text>
 
           {!syncComplete && (

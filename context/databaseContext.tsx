@@ -41,7 +41,7 @@ const initialContext: DatabaseContextType = {
   installedDictionary: [],
   isInstallBiblesLoaded: false,
   isMyBibleDbLoaded: false,
-  refreshDatabaseList: () => {},
+  refreshDatabaseList: () => { },
   reDownloadDatabase: (_dbName?: VersionItem) => Promise.resolve(undefined),
   openDatabaseFromZip: (databaseItem: VersionItem, isReDownload?: boolean) =>
     Promise.resolve(undefined as any),
@@ -50,11 +50,13 @@ const initialContext: DatabaseContextType = {
     isLoaded: false,
     error: null,
     executeSql: async (sql: string, params?: any[], queryName?: string) => [],
+    reOpen: (dbName: any) => Promise.resolve(undefined)
   },
   mainBibleService: {
     database: null,
     executeSql: async (sql: string, params?: any[], queryName?: string) => [],
     isLoaded: false,
+    reOpen: (dbName: any) => Promise.resolve(undefined)
   },
 };
 

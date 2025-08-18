@@ -1,22 +1,22 @@
-import React, { useState } from "react";
+import { useMyTheme } from "@/context/ThemeContext";
+import { BibleTimelineEvent, TTheme } from "@/types";
 import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-  SafeAreaView,
-  Dimensions,
-} from "react-native";
-import {
+  FontAwesome,
+  FontAwesome5,
   Ionicons,
   MaterialCommunityIcons,
-  FontAwesome5,
-  FontAwesome,
 } from "@expo/vector-icons";
-import { BibleTimelineEvent, TTheme } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
+import React, { useState } from "react";
+import {
+  Dimensions,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface RelatedPerson {
   slug: string;
@@ -106,7 +106,7 @@ const BiblicalEventDetail: React.FC<BiblicalEventDetailProps> = ({
     "description" | "article" | "references"
   >("description");
   const [imageIndex, setImageIndex] = useState<number>(0);
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const noData = bibleTimelineEvent.title ? false : true;
   const images = bibleTimelineEvent.images;
@@ -157,9 +157,8 @@ const BiblicalEventDetail: React.FC<BiblicalEventDetailProps> = ({
               <Image
                 source={{
                   //   uri: placeholderImages[imageIndex % placeholderImages.length],
-                  uri: `http://timeline.biblehistory.com/media/images/original/${
-                    images[imageIndex % images.length].file
-                  }`,
+                  uri: `http://timeline.biblehistory.com/media/images/original/${images[imageIndex % images.length].file
+                    }`,
                 }}
                 style={styles.image}
                 resizeMode="contain"

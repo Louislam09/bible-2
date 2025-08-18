@@ -3,7 +3,7 @@ import { Text } from "@/components/Themed";
 import WordDefinition from "@/components/WordDefinition";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
 import useDictionaryData, { DatabaseData } from "@/hooks/useDictionaryData";
 import useParams from "@/hooks/useParams";
@@ -27,8 +27,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import ScreenWithAnimation from "./ScreenWithAnimation";
 import { singleScreenHeader } from "./common/singleScreenHeader";
+import ScreenWithAnimation from "./ScreenWithAnimation";
 
 type RenderItem = {
   item: DatabaseData;
@@ -99,12 +99,12 @@ const RenderItem = ({
 
 type DictionarySearchProps = {};
 
-const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
+const DictionarySearch: React.FC<DictionarySearchProps> = ({ }) => {
   const { word } = useParams<{ word: string }>();
   const { fontSize } = useBibleContext();
   const [selectedWord, setSelectedWord] = useState<any>(null);
   const [filterData, setFilterData] = useState<DatabaseData[]>([]);
-  const { theme, schema } = useTheme();
+  const { theme, schema } = useMyTheme();
   const router = useRouter();
   const styles = getStyles(theme);
   const [searchText, setSearchText] = useState<any>(word ? word : "");

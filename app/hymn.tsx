@@ -7,6 +7,7 @@ import RequestAccess from "@/components/admin/RequestAccess";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import lottieAssets from "@/constants/lottieAssets";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { pb } from "@/globalConfig";
 import useInternetConnection from "@/hooks/useInternetConnection";
 import useRealtimeCollection from "@/hooks/useRealtimeCollection";
@@ -16,11 +17,10 @@ import { Collections, RequestData, Screens, TTheme } from "@/types";
 import checkConnection from "@/utils/checkConnection";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@/context/ThemeContext";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
 import { RecordModel } from "pocketbase";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import {
   Alert,
   Animated,
@@ -88,7 +88,7 @@ const HymnOption: React.FC<HymnOptionProps> = ({
   hasRequestAccess,
   statusColor,
 }) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
@@ -176,7 +176,7 @@ const HymnOption: React.FC<HymnOptionProps> = ({
 };
 
 const BibleQuote = ({ verse, reference }: BibleVerse) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
 
   return (
@@ -188,7 +188,7 @@ const BibleQuote = ({ verse, reference }: BibleVerse) => {
 };
 
 const HymnScreen = () => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
@@ -326,84 +326,82 @@ const HymnScreen = () => {
   };
 
   return (
-    <ScreenWithAnimation
-      title="Himnarios"
-      animationSource={pickARandomAsset}
-      speed={2}
-    >
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}
-        showsVerticalScrollIndicator={false}
+    <Fragment>
+      <Stack.Screen
+        options={{
+          ...singleScreenHeader({
+            theme,
+            title: "Himnarios",
+            titleIcon: "Music",
+            headerRightProps: {
+              headerRightIcon: "Trash2",
+              headerRightIconColor: "red",
+              onPress: () => console.log(),
+              disabled: true,
+              style: { opacity: 0 },
+            },
+          }),
+        }}
+      />
+      <ScreenWithAnimation
+        title="Himnarios"
+        animationSource={pickARandomAsset}
+        speed={2}
       >
-        <Stack.Screen
-          options={{
-            ...singleScreenHeader({
-              theme,
-              title: "Himnarios",
-              titleIcon: "Music",
-              headerRightProps: {
-                headerRightIcon: "Trash2",
-                headerRightIconColor: "red",
-                onPress: () => console.log(),
-                disabled: true,
-                style: { opacity: 0 },
-              },
-            }),
-          }}
-        />
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.contentContainer}
+          showsVerticalScrollIndicator={false}
+        >
 
-        <View style={styles.imageContainer}>
-          <BibleQuote
-            verse={selectedVerse.verse}
-            reference={selectedVerse.reference}
-          />
-
-          <Animation
-            backgroundColor={"transparent"}
-            source={pickARandomAsset}
-            loop
-            size={{ width: 220, height: 220 }}
-            style={{ backgroundColor: "transparent" }}
-          />
-        </View>
-
-        <View style={[styles.optionContainer, { width: SCREEN_WIDTH }]}>
-          <FlashList
-            contentContainerStyle={styles.listContainer}
-            data={options}
-            keyExtractor={(item) => item.label}
-            renderItem={renderItem}
-            estimatedItemSize={200}
-            numColumns={2}
-            showsVerticalScrollIndicator={false}
-          />
-        </View>
-
-        {!isConnected && (
-          <View style={styles.offlineNotice}>
-            <Icon name="WifiOff" size={16} color={theme.colors.text} />
-            <Text style={styles.offlineText}>
-              Sin conexión. Algunas funciones pueden estar limitadas.
-            </Text>
+          <View style={styles.imageContainer}>
+            <BibleQuote
+              verse={selectedVerse.verse}
+              reference={selectedVerse.reference}
+            />
+            <Animation
+              backgroundColor={"transparent"}
+              source={pickARandomAsset}
+              loop
+              size={{ width: 220, height: 220 }}
+              style={{ backgroundColor: "transparent" }}
+            />
           </View>
-        )}
-      </ScrollView>
-
-      <BottomModal
-        justOneSnap
-        showIndicator
-        justOneValue={["65%", "90%"]}
-        startAT={0}
-        ref={requestAccessBottomSheetModalRef}
-      >
-        <RequestAccess
-          onRequest={requestAccess as any}
-          onClose={() => requestAccessBottomSheetModalRef.current?.dismiss()}
-          isPending={isFetchingRequests}
-        />
-      </BottomModal>
-    </ScreenWithAnimation>
+          <View style={[styles.optionContainer, { width: SCREEN_WIDTH }]}>
+            <FlashList
+              contentContainerStyle={styles.listContainer}
+              data={options}
+              keyExtractor={(item) => item.label}
+              renderItem={renderItem}
+              estimatedItemSize={200}
+              numColumns={2}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
+          {!isConnected && (
+            <View style={styles.offlineNotice}>
+              <Icon name="WifiOff" size={16} color={theme.colors.text} />
+              <Text style={styles.offlineText}>
+                Sin conexión. Algunas funciones pueden estar limitadas.
+              </Text>
+            </View>
+          )}
+        </ScrollView>
+        <BottomModal
+          justOneSnap
+          showIndicator
+          justOneValue={["65%", "90%"]}
+          startAT={0}
+          ref={requestAccessBottomSheetModalRef}
+        >
+          <RequestAccess
+            onRequest={requestAccess as any}
+            onClose={() => requestAccessBottomSheetModalRef.current?.dismiss()}
+            isPending={isFetchingRequests}
+          />
+        </BottomModal>
+      </ScreenWithAnimation>
+    </Fragment>
   );
 };
 

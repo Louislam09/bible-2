@@ -1,9 +1,9 @@
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
 import LottieView, { AnimationObject } from "lottie-react-native";
 import { icons } from "lucide-react-native";
 import React, { FC, useEffect, useRef, useState } from "react";
-import { Animated, StyleSheet, View } from "react-native";
+import { Animated, SafeAreaView, StyleSheet, View } from "react-native";
 import Icon from "./Icon";
 
 type ScreenWithAnimationProps = {
@@ -42,7 +42,7 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
   const [isAnimating, setIsAnimating] = useState(shouldPlay);
   const opacity = useRef(new Animated.Value(0)).current;
   const bounceValue = useRef(new Animated.Value(0)).current;
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
 
   const onAnimationFinish = (isCancelled: boolean) => {

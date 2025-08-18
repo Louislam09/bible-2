@@ -2,7 +2,7 @@ import HebrewVerse from "@/components/home/content/HebrewVerse";
 import Icon from "@/components/Icon";
 import { Text } from "@/components/Themed";
 import { useBibleContext } from "@/context/BibleContext";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { bibleState$ } from "@/state/bibleState";
 import { EBibleVersions, IBookVerse, TTheme } from "@/types";
 import { observer } from "@legendapp/state/react";
@@ -45,7 +45,7 @@ const Chapter = ({
   const bibleSide = isSplit ? "bottom" : "top";
 
   const { width, height } = useWindowDimensions();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const chapterRef = useRef<FlashList<any>>(null);
   const topVerseRef = useRef<number | null>(null);
@@ -241,7 +241,7 @@ const getStyles = ({ colors }: TTheme) =>
 export function useHighlightRender() {
   const animation = useRef(new Animated.Value(0)).current;
   const renderCount = useRef(0);
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
 
   useEffect(() => {
     // Increment render count

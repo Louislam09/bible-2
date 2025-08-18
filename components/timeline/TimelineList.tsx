@@ -1,6 +1,6 @@
 import timelineEvents from "@/constants/events";
+import { useMyTheme } from "@/context/ThemeContext";
 import { TimelinePeriod, TTheme } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
 import { AnimatedFlashList, FlashList } from "@shopify/flash-list";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -31,7 +31,7 @@ const TimeEventItem = ({
   isMobile,
   index,
 }: TimeEventItemProps) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   // const transitionTag = `image-${item.title || item.sectionTitle}`.replace(/\s+/g, '-');
   // const imageTransition = SharedTransition.custom((values) => {
@@ -113,7 +113,7 @@ const TimeEventItem = ({
 };
 
 const TimelineList = () => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const events = timelineEvents;
   const { width, height } = useWindowDimensions();

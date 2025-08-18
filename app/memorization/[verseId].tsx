@@ -2,18 +2,18 @@ import Animation from "@/components/Animation";
 import CircularProgressBar from "@/components/CircularProgressBar";
 import CofettiAnimation from "@/components/CofettiAnimation";
 import Icon from "@/components/Icon";
-import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import PracticeTracker from "@/components/memorization/PracticeTracker";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
 import { databaseNames } from "@/constants/databaseNames";
 import { headerIconSize } from "@/constants/size";
 import { useMemorization } from "@/context/MemorizationContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
 import useParams from "@/hooks/useParams";
 import { Memorization, MemorizationButtonType, TTheme } from "@/types";
 import isWithinTimeframe from "@/utils/isWithinTimeframe";
 import { showToast } from "@/utils/showToast";
-import { useTheme } from "@/context/ThemeContext";
 import { Stack, useRouter } from "expo-router";
 import { Brain, ChevronLeft, icons, Trash2 } from "lucide-react-native";
 import React from "react";
@@ -37,7 +37,7 @@ const MemorizationScreen = () => {
   const { verses, deleteVerse } = useMemorization();
   const item = verses.find((x) => x.id === verseId) as Memorization;
   if (!item) return <ActivityIndicator />;
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const router = useRouter();
   const memorizeProgress = useDebounce(item.progress, 1000);
@@ -98,7 +98,7 @@ const MemorizationScreen = () => {
       [
         {
           text: "Cancelar",
-          onPress: () => {},
+          onPress: () => { },
           style: "cancel",
         },
         { text: "Eliminar", onPress: () => onDelete(id) },

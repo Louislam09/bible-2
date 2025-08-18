@@ -1,8 +1,8 @@
 import { useBibleContext } from "@/context/BibleContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import { bibleState$ } from "@/state/bibleState";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@/context/ThemeContext";
 import React, { FC, useMemo } from "react";
 import { ActivityIndicator, Animated, StyleSheet } from "react-native";
 import SwipeWrapper from "./SwipeWrapper";
@@ -13,7 +13,7 @@ const BibleBottom: FC<any> = (props) => {
   const { orientation } = useBibleContext();
   const isSplitActived = bibleState$.isSplitActived.get();
   const isPortrait = orientation === "PORTRAIT";
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
 
   const estimatedReadingTimeBottom = bibleState$.readingTimeData.bottom.get();
   const isDataLoading = use$(() => bibleState$.isDataLoading.bottom.get());

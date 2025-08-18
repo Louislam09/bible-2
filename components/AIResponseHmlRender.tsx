@@ -1,4 +1,4 @@
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import * as Clipboard from "expo-clipboard";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
@@ -24,7 +24,7 @@ const DEFAULT_HEIGHT = 1200;
 const EXTRA_HEIGHT_TO_ADJUST = 150;
 
 export default function AIResponseHmlRender({ response }: AIResponseProps) {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const [copySuccess, setCopySuccess] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -116,16 +116,16 @@ export default function AIResponseHmlRender({ response }: AIResponseProps) {
                     <div class="header">
                         <div class="title">📖 Explicación Bíblica</div>
                         <div class="subtitle">Generado por Inteligencia Artificial • ${new Date().toLocaleDateString(
-                          "es-ES"
-                        )}</div>
+      "es-ES"
+    )}</div>
                     </div>
                     <div class="content">
                         ${response
-                          .replace(/\n\n/g, "</p><p>")
-                          .replace(/\n/g, "<br/>")
-                          .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-                          .replace(/\*(.*?)\*/g, "<em>$1</em>")
-                          .replace(/^(.+)$/gm, "<p>$1</p>")}
+        .replace(/\n\n/g, "</p><p>")
+        .replace(/\n/g, "<br/>")
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\*(.*?)\*/g, "<em>$1</em>")
+        .replace(/^(.+)$/gm, "<p>$1</p>")}
                     </div>
                     <div class="footer">
                         Esta explicación fue generada por IA y puede contener interpretaciones subjetivas.<br/>

@@ -1,7 +1,7 @@
 import { defaultDatabases } from "@/constants/databaseNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { VersionItem } from "@/hooks/useInstalledBible";
 import { TTheme } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
@@ -19,7 +19,7 @@ import Icon from "./Icon";
 import { Text, View } from "./Themed";
 
 const FileList = () => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const [files, setFiles] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -30,6 +30,7 @@ const FileList = () => {
     installedBibles,
     installedDictionary,
     reDownloadDatabase,
+    mainBibleService,
     openDatabaseFromZip, interlinearService,
   } = useDBContext();
   const { selectBibleVersion, fontSize } = useBibleContext();
@@ -136,6 +137,7 @@ const FileList = () => {
         "Actualizar módulo",
         `¿Quieres descargar de nuevo "${dbName.name}"? Esto reemplazará los datos actuales de la biblia, notas, favoritos, etc.`
       );
+      interlinearService.reOpen(dbName)
       return;
     }
 
@@ -152,8 +154,7 @@ const FileList = () => {
           onPress: async () => {
             console.log("Iniciando actualización de base de datos:", dbName);
             try {
-              const db = await openDatabaseFromZip(dbName, true);
-              // const db = await reDownloadDatabase(dbName);
+              const db = await mainBibleService.reOpen(dbName);
               if (db) {
                 selectBibleVersion(dbName.id);
                 Alert.alert(

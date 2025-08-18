@@ -2,9 +2,11 @@ import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import DatabaseDebug from "@/components/DatabaseDebug";
 import Icon from "@/components/Icon";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
+import StatusBarBackground from "@/components/StatusBarBackground";
 import { Text, View } from "@/components/Themed";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { useNotification } from "@/context/NotificationContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { IS_DEV } from "@/globalConfig";
 import {
   NotificationPreferences,
@@ -12,7 +14,6 @@ import {
 } from "@/services/notificationServices";
 import { use$ } from "@legendapp/state/react";
 import { Picker } from "@react-native-picker/picker";
-import { useTheme } from "@/context/ThemeContext";
 import { Stack } from "expo-router";
 import { icons } from "lucide-react-native";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -47,7 +48,7 @@ type TSection = {
 };
 
 const NotificationSettingsScreen = () => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const { expoPushToken, error } = useNotification();
   const notificationService = useNotificationService();
   const styles = getStyles(theme);
@@ -186,15 +187,15 @@ const NotificationSettingsScreen = () => {
           },
           ...(notificationPreferences.dailyVerseEnabled
             ? [
-                {
-                  label: "Hora de Notificación",
-                  extraText: "Configura cuándo recibir el versículo diario",
-                  iconName: "Clock" as keyof typeof icons,
-                  action: () => setModalVisible(true),
-                  badge: notificationPreferences.dailyVerseTime,
-                  color: theme.colors.notification,
-                },
-              ]
+              {
+                label: "Hora de Notificación",
+                extraText: "Configura cuándo recibir el versículo diario",
+                iconName: "Clock" as keyof typeof icons,
+                action: () => setModalVisible(true),
+                badge: notificationPreferences.dailyVerseTime,
+                color: theme.colors.notification,
+              },
+            ]
             : []),
         ],
         hide: !notificationPreferences.notificationEnabled,
@@ -390,109 +391,112 @@ const NotificationSettingsScreen = () => {
   );
 
   return (
-    <ScreenWithAnimation duration={800} icon="Bell" title="Notificaciones">
-      <ScrollView style={styles.container}>
-        <Stack.Screen
-          options={{
-            ...singleScreenHeader({
-              theme,
-              title: "Notificaciones",
-              titleIcon: "Bell",
-              headerRightProps: {
-                headerRightIcon: "Settings",
-                headerRightIconColor: theme.colors.notification,
-                onPress: () => {},
-                disabled: true,
-                style: { opacity: 0 },
-              },
-            }),
-          }}
-        />
+    <>
+      <Stack.Screen
+        options={{
+          ...singleScreenHeader({
+            theme,
+            title: "Notificaciones",
+            titleIcon: "Bell",
+            headerRightProps: {
+              headerRightIcon: "Settings",
+              headerRightIconColor: theme.colors.notification,
+              onPress: () => { },
+              disabled: true,
+              style: { opacity: 0 },
+            },
+          }),
+        }}
+      />
+      <ScreenWithAnimation duration={800} icon="Bell" title="Notificaciones">
+        <ScrollView style={styles.container}>
 
-        {sections.map(SettingSection)}
-        {(isAdmin || IS_DEV) && <DatabaseDebug />}
 
-        {/* Time Picker Modal */}
-        <Modal
-          visible={modalVisible}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Selecciona la hora</Text>
+          {sections.map(SettingSection)}
+          {(isAdmin || IS_DEV) && <DatabaseDebug />}
 
-              <View style={styles.pickerContainer}>
-                <View style={styles.pickerSection}>
-                  <Text style={styles.pickerLabel}>Hora</Text>
-                  <Picker
-                    selectedValue={selectedHour}
-                    style={styles.picker}
-                    onValueChange={(itemValue) => setSelectedHour(itemValue)}
-                    dropdownIconColor={theme.colors.text}
-                    mode="dropdown"
-                  >
-                    {Array.from({ length: 24 }).map((_, i) => {
-                      const val = String(i).padStart(2, "0");
-                      return (
-                        <Picker.Item
-                          style={{
-                            backgroundColor: theme.colors.background,
-                            color: theme.colors.text,
-                          }}
-                          key={val}
-                          label={val}
-                          value={val}
-                        />
-                      );
-                    })}
-                  </Picker>
+          {/* Time Picker Modal */}
+          <Modal
+            visible={modalVisible}
+            animationType="slide"
+            transparent={true}
+            onRequestClose={() => setModalVisible(false)}
+          >
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Selecciona la hora</Text>
+
+                <View style={styles.pickerContainer}>
+                  <View style={styles.pickerSection}>
+                    <Text style={styles.pickerLabel}>Hora</Text>
+                    <Picker
+                      selectedValue={selectedHour}
+                      style={styles.picker}
+                      onValueChange={(itemValue) => setSelectedHour(itemValue)}
+                      dropdownIconColor={theme.colors.text}
+                      mode="dropdown"
+                    >
+                      {Array.from({ length: 24 }).map((_, i) => {
+                        const val = String(i).padStart(2, "0");
+                        return (
+                          <Picker.Item
+                            style={{
+                              backgroundColor: theme.colors.background,
+                              color: theme.colors.text,
+                            }}
+                            key={val}
+                            label={val}
+                            value={val}
+                          />
+                        );
+                      })}
+                    </Picker>
+                  </View>
+
+                  <View style={styles.pickerSection}>
+                    <Text style={styles.pickerLabel}>Minutos</Text>
+                    <Picker
+                      selectedValue={selectedMinute}
+                      style={styles.picker}
+                      onValueChange={(itemValue) => setSelectedMinute(itemValue)}
+                      dropdownIconColor={theme.colors.text}
+                      mode="dropdown"
+                    >
+                      {Array.from({ length: 60 }).map((_, i) => {
+                        const val = String(i).padStart(2, "0");
+                        return (
+                          <Picker.Item
+                            style={{
+                              backgroundColor: theme.colors.background,
+                              color: theme.colors.text,
+                            }}
+                            key={val}
+                            label={val}
+                            value={val}
+                          />
+                        );
+                      })}
+                    </Picker>
+                  </View>
                 </View>
 
-                <View style={styles.pickerSection}>
-                  <Text style={styles.pickerLabel}>Minutos</Text>
-                  <Picker
-                    selectedValue={selectedMinute}
-                    style={styles.picker}
-                    onValueChange={(itemValue) => setSelectedMinute(itemValue)}
-                    dropdownIconColor={theme.colors.text}
-                    mode="dropdown"
+                <View style={styles.modalButtons}>
+                  <Pressable
+                    onPress={() => setModalVisible(false)}
+                    style={styles.cancelButton}
                   >
-                    {Array.from({ length: 60 }).map((_, i) => {
-                      const val = String(i).padStart(2, "0");
-                      return (
-                        <Picker.Item
-                          style={{
-                            backgroundColor: theme.colors.background,
-                            color: theme.colors.text,
-                          }}
-                          key={val}
-                          label={val}
-                          value={val}
-                        />
-                      );
-                    })}
-                  </Picker>
+                    <Text style={styles.cancelButtonText}>Cancelar</Text>
+                  </Pressable>
+                  <Pressable onPress={updateTime} style={styles.saveButton}>
+                    <Text style={styles.saveButtonText}>Guardar</Text>
+                  </Pressable>
                 </View>
-              </View>
-
-              <View style={styles.modalButtons}>
-                <Pressable
-                  onPress={() => setModalVisible(false)}
-                  style={styles.cancelButton}
-                >
-                  <Text style={styles.cancelButtonText}>Cancelar</Text>
-                </Pressable>
-                <Pressable onPress={updateTime} style={styles.saveButton}>
-                  <Text style={styles.saveButtonText}>Guardar</Text>
-                </Pressable>
               </View>
             </View>
-          </View>
-        </Modal>
-      </ScrollView>
-    </ScreenWithAnimation>
+          </Modal>
+        </ScrollView>
+      </ScreenWithAnimation>
+    </>
   );
 };
 

@@ -1,11 +1,11 @@
 import React from "react";
 
-import { Image } from "expo-image";
-import { wp } from "./timelineConstants";
+import { useMyTheme } from "@/context/ThemeContext";
 import { ShallowTimelineSection } from "@/types";
-import { Text, View } from "../Themed";
+import { Image } from "expo-image";
 import Icon from "../Icon";
-import { useTheme } from "@/context/ThemeContext";
+import { Text, View } from "../Themed";
+import { wp } from "./timelineConstants";
 
 const width = wp(50, 500);
 
@@ -17,7 +17,7 @@ const SectionImage = ({
   subTitle,
   direction,
 }: ShallowTimelineSection & { direction?: "previous" | "next" }) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
 
   return (
     <View

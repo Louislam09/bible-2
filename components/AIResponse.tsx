@@ -1,4 +1,4 @@
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import * as Clipboard from "expo-clipboard";
 import * as FileSystem from "expo-file-system";
 import * as Print from "expo-print";
@@ -14,7 +14,7 @@ interface AIResponseProps {
 }
 
 export default function AIResponse({ response }: AIResponseProps) {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const [copySuccess, setCopySuccess] = React.useState(false);
 
   const handleCopy = async () => {
@@ -45,8 +45,8 @@ export default function AIResponse({ response }: AIResponseProps) {
                 </head>
                 <body>
                     ${response
-                      .replace(/\n/g, "<br/>")
-                      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")}
+          .replace(/\n/g, "<br/>")
+          .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")}
                 </body>
                 </html>
             `;

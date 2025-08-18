@@ -22,7 +22,7 @@ import { Text, View } from "@/components/Themed";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { authState$ } from "@/state/authState";
 import { settingState$ } from "@/state/settingState";
 import { EThemes, RootStackScreenProps, TTheme } from "@/types";
@@ -92,7 +92,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
     selectFont,
     selectedFont,
   } = useBibleContext();
-  const { toggleTheme, theme } = useTheme();
+  const { toggleTheme, theme } = useMyTheme();
   const styles = getStyles(theme);
   const fontSizes = getMinMaxFontSize();
   const isGridLayout = use$(() => storedData$.isGridLayout.get());
@@ -447,7 +447,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
         {
           label: `Versión ${appVersion}`,
           iconName: "Info",
-          action: () => {},
+          action: () => { },
           extraText: `Fecha de Lanzamiento: Mar 13, 2024`,
         },
       ],
@@ -654,88 +654,91 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
   };
 
   return (
-    <ScreenWithAnimation duration={800} icon="Settings" title="Ajustes">
-      <ScrollView key={orientation + theme.dark} style={styles.container}>
-        <Stack.Screen
-          options={{
-            ...singleScreenHeader({
-              theme,
-              title: "Ajustes",
-              titleIcon: "Settings",
-              headerRightProps: {
-                headerRightIcon: "Bell",
-                headerRightIconColor: theme.colors.notification,
-                onPress: () => router.push("/notification"),
-                disabled: false,
-                style: { opacity: 1 },
-              },
-            }),
-          }}
-        />
+    <>
+      <Stack.Screen
+        options={{
+          ...singleScreenHeader({
+            theme,
+            title: "Ajustes",
+            titleIcon: "Settings",
+            headerRightProps: {
+              headerRightIcon: "Bell",
+              headerRightIconColor: theme.colors.notification,
+              onPress: () => router.push("/notification"),
+              disabled: false,
+              style: { opacity: 1 },
+            },
+          }),
+        }}
+      />
+      <ScreenWithAnimation duration={800} icon="Settings" title="Ajustes">
 
-        <View style={styles.searchContainer}>
-          <Icon
-            name="Search"
-            size={20}
-            color={theme.colors.text}
-            style={styles.searchIcon}
-          />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Buscar ajustes..."
-            placeholderTextColor={theme.dark ? "#999" : "#777"}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            clearButtonMode="while-editing"
-          />
-          {searchQuery.length > 0 && (
-            <TouchableOpacity
-              onPress={() => setSearchQuery("")}
-              style={styles.clearButton}
-            >
-              <Icon name="X" size={16} color={theme.colors.text} />
-            </TouchableOpacity>
-          )}
-        </View>
+        <ScrollView key={orientation + theme.dark} style={styles.container}>
 
-        <KeyboardAvoidingView
-          style={{
-            backgroundColor: theme.colors.background,
-          }}
-          contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}
-        >
-          {filteredSections.length > 0 ? (
-            filteredSections.map(SettingSection)
-          ) : (
-            <View style={styles.noResultsContainer}>
-              <Icon
-                name="Search"
-                size={50}
-                color={theme.colors.text}
-                style={{ opacity: 0.5 }}
-              />
-              <Text style={styles.noResultsText}>
-                No se encontraron resultados
-              </Text>
-              <Text style={styles.noResultsSubText}>
-                Intenta con otra búsqueda
-              </Text>
-            </View>
-          )}
-        </KeyboardAvoidingView>
+          <View style={styles.searchContainer}>
+            <Icon
+              name="Search"
+              size={20}
+              color={theme.colors.text}
+              style={styles.searchIcon}
+            />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Buscar ajustes..."
+              placeholderTextColor={theme.dark ? "#999" : "#777"}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              clearButtonMode="while-editing"
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity
+                onPress={() => setSearchQuery("")}
+                style={styles.clearButton}
+              >
+                <Icon name="X" size={16} color={theme.colors.text} />
+              </TouchableOpacity>
+            )}
+          </View>
 
-        <BottomModal
-          justOneSnap
-          showIndicator
-          justOneValue={["70%"]}
-          startAT={0}
-          ref={settingBottomSheetModalRef}
-          shouldScroll
-        >
-          {BottomChild[currentSetting]}
-        </BottomModal>
-      </ScrollView>
-    </ScreenWithAnimation>
+          <KeyboardAvoidingView
+            style={{
+              backgroundColor: theme.colors.background,
+            }}
+            contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}
+          >
+            {filteredSections.length > 0 ? (
+              filteredSections.map(SettingSection)
+            ) : (
+              <View style={styles.noResultsContainer}>
+                <Icon
+                  name="Search"
+                  size={50}
+                  color={theme.colors.text}
+                  style={{ opacity: 0.5 }}
+                />
+                <Text style={styles.noResultsText}>
+                  No se encontraron resultados
+                </Text>
+                <Text style={styles.noResultsSubText}>
+                  Intenta con otra búsqueda
+                </Text>
+              </View>
+            )}
+          </KeyboardAvoidingView>
+
+          <BottomModal
+            justOneSnap
+            showIndicator
+            justOneValue={["70%"]}
+            startAT={0}
+            ref={settingBottomSheetModalRef}
+            shouldScroll
+          >
+            {BottomChild[currentSetting]}
+          </BottomModal>
+        </ScrollView>
+      </ScreenWithAnimation>
+    </>
   );
 };
 

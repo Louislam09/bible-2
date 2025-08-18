@@ -1,7 +1,7 @@
+import { useMyTheme } from "@/context/ThemeContext";
 import { authState$ } from "@/state/authState";
 import { pbUser, TTheme } from "@/types";
 import { AntDesign } from "@expo/vector-icons";
-import { useTheme } from "@/context/ThemeContext";
 import * as AuthSession from "expo-auth-session";
 import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
@@ -39,7 +39,7 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme as TTheme);
   const REDIRECT_URI = AuthSession.makeRedirectUri();
 

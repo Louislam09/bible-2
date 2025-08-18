@@ -23,6 +23,7 @@ export interface UseInterlinearDatabase {
     ) => Promise<T[]>;
     isLoaded: boolean;
     error: Error | null;
+    reOpen: (dbName: any) => Promise<void>
 }
 
 interface UseInterlinearDB {
@@ -113,121 +114,89 @@ export function useInterlinearDB({ isInterlinear, onProgress, enabled, databaseI
         isMounted.current = true;
     };
 
+    const initDb = async (dbName: any) => {
+        const interlinearDb = await prepareDatabaseFromDbFile({
+            databaseItem: dbName,
+            onProgress: (progress) => {
+                // console.log('useInterlinearDB:', progress.stage, progress.message)
+                dbDownloadState$.setDownloadProgress({
+                    ...progress,
+                    databaseName: dbName.name || dbName.id,
+                });
+            }
+        });
+
+        if (!interlinearDb) return;
+
+        await createTables(interlinearDb);
+        // Validate the database
+        const valid = await isDatabaseValid(interlinearDb);
+        if (!valid) {
+            // delete the database
+            await FileSystem.deleteAsync(dbName.path, { idempotent: true });
+            throw new Error("Interlinear database validation failed");
+        }
+
+        // Apply optimization settings
+        try {
+            await interlinearDb.execAsync("PRAGMA journal_mode = WAL");
+            await interlinearDb.execAsync("PRAGMA synchronous = OFF");
+            await interlinearDb.execAsync("PRAGMA temp_store = MEMORY");
+            await interlinearDb.execAsync("PRAGMA cache_size = 16384");
+        } catch (error) {
+            console.warn("Error applying optimization settings:", error);
+        }
+
+        if (isMounted.current) {
+            setDatabase(interlinearDb);
+            setIsLoaded(true);
+        }
+    }
+
     useEffect(() => {
         if (!enabled) return;
         if (!dbName) return;
-        // async function prepareDb() {
-        //     try {
-        //         const INTERLINEAR_DB_NAME = `${'interlinear'}${dbFileExt}`;
-        //         const INTERLINEAR_DB_DIR = `${SQLiteDirPath}/`;
-        //         const INTERLINEAR_DB_PATH = `${INTERLINEAR_DB_DIR}${INTERLINEAR_DB_NAME}`;
 
-        //         setIsLoaded(false);
-        //         setError(null);
-        //         isMounted.current = true;
-
-        //         // Ensure directory exists
-        //         const dirInfo = await FileSystem.getInfoAsync(INTERLINEAR_DB_DIR);
-        //         if (!dirInfo.exists) {
-        //             await FileSystem.makeDirectoryAsync(INTERLINEAR_DB_DIR, { intermediates: true });
-        //         }
-
-        //         // Check if interlinear.db already extracted
-        //         const info = await FileSystem.getInfoAsync(INTERLINEAR_DB_PATH);
-        //         if (!info.exists) {
-        //             // Copy zip asset to local FS
-        //             const asset = Asset.fromModule(require("../assets/db/interlinear-bible.zip"));
-        //             await asset.downloadAsync();
-
-        //             const zipUri = asset.localUri || asset.uri;
-
-        //             if (!zipUri) {
-        //                 throw new Error("Could not get URI for interlinear.zip asset");
-        //             }
-
-        //             // Unzip the interlinear.zip to extract interlinear.db
-        //             await unzipFile({
-        //                 zipFileUri: zipUri,
-        //                 onProgress: (msg) => {
-        //                     if (onProgress) onProgress(msg);
-        //                 },
+        // const initDb = async () => {
+        //     const interlinearDb = await prepareDatabaseFromDbFile({
+        //         databaseItem: dbName,
+        //         onProgress: (progress) => {
+        //             // console.log('useInterlinearDB:', progress.stage, progress.message)
+        //             dbDownloadState$.setDownloadProgress({
+        //                 ...progress,
+        //                 databaseName: dbName.name || dbName.id,
         //             });
         //         }
+        //     });
 
-        //         // Open the extracted interlinear.db
-        //         const interlinearDb = await SQLite.openDatabaseAsync(INTERLINEAR_DB_NAME);
-        //         await createTables(interlinearDb);
-        //         // Validate the database
-        //         const valid = await isDatabaseValid(interlinearDb);
-        //         if (!valid) {
-        //             // delete the database
-        //             await FileSystem.deleteAsync(INTERLINEAR_DB_PATH, { idempotent: true });
-        //             throw new Error("Interlinear database validation failed");
-        //         }
+        //     if (!interlinearDb) return;
 
-        //         // Apply optimization settings
-        //         try {
-        //             await interlinearDb.execAsync("PRAGMA journal_mode = WAL");
-        //             await interlinearDb.execAsync("PRAGMA synchronous = OFF");
-        //             await interlinearDb.execAsync("PRAGMA temp_store = MEMORY");
-        //             await interlinearDb.execAsync("PRAGMA cache_size = 16384");
-        //         } catch (error) {
-        //             console.warn("Error applying optimization settings:", error);
-        //         }
+        //     await createTables(interlinearDb);
+        //     // Validate the database
+        //     const valid = await isDatabaseValid(interlinearDb);
+        //     if (!valid) {
+        //         // delete the database
+        //         await FileSystem.deleteAsync(dbName.path, { idempotent: true });
+        //         throw new Error("Interlinear database validation failed");
+        //     }
 
-        //         if (isMounted.current) {
-        //             setDatabase(interlinearDb);
-        //             setIsLoaded(true);
-        //         }
-        //     } catch (e) {
-        //         console.error("Error preparing interlinear database:", e);
-        //         if (isMounted.current) {
-        //             setError(e instanceof Error ? e : new Error(String(e)));
-        //             setIsLoaded(false);
-        //         }
+        //     // Apply optimization settings
+        //     try {
+        //         await interlinearDb.execAsync("PRAGMA journal_mode = WAL");
+        //         await interlinearDb.execAsync("PRAGMA synchronous = OFF");
+        //         await interlinearDb.execAsync("PRAGMA temp_store = MEMORY");
+        //         await interlinearDb.execAsync("PRAGMA cache_size = 16384");
+        //     } catch (error) {
+        //         console.warn("Error applying optimization settings:", error);
+        //     }
+
+        //     if (isMounted.current) {
+        //         setDatabase(interlinearDb);
+        //         setIsLoaded(true);
         //     }
         // }
 
-        const initDb = async () => {
-            const interlinearDb = await prepareDatabaseFromDbFile({
-                databaseItem: dbName,
-                onProgress: (progress) => {
-                    // console.log('useInterlinearDB:', progress.stage, progress.message)
-                    dbDownloadState$.setDownloadProgress({
-                        ...progress,
-                        databaseName: dbName.name || dbName.id,
-                    });
-                }
-            });
-
-            if (!interlinearDb) return;
-
-            await createTables(interlinearDb);
-            // Validate the database
-            const valid = await isDatabaseValid(interlinearDb);
-            if (!valid) {
-                // delete the database
-                await FileSystem.deleteAsync(dbName.path, { idempotent: true });
-                throw new Error("Interlinear database validation failed");
-            }
-
-            // Apply optimization settings
-            try {
-                await interlinearDb.execAsync("PRAGMA journal_mode = WAL");
-                await interlinearDb.execAsync("PRAGMA synchronous = OFF");
-                await interlinearDb.execAsync("PRAGMA temp_store = MEMORY");
-                await interlinearDb.execAsync("PRAGMA cache_size = 16384");
-            } catch (error) {
-                console.warn("Error applying optimization settings:", error);
-            }
-
-            if (isMounted.current) {
-                setDatabase(interlinearDb);
-                setIsLoaded(true);
-            }
-        }
-
-        initDb();
+        initDb(dbName);
 
         return () => {
             isMounted.current = false;
@@ -237,5 +206,5 @@ export function useInterlinearDB({ isInterlinear, onProgress, enabled, databaseI
         };
     }, [isInterlinear, enabled]);
 
-    return { database, isLoaded, error, executeSql };
+    return { database, isLoaded, error, executeSql, reOpen: initDb };
 }

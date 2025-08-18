@@ -3,7 +3,7 @@ import Icon from "@/components/Icon";
 import ActionButton, { Backdrop } from "@/components/note/ActionButton";
 import { Text, View as ThemedView } from "@/components/Themed";
 import { useBibleContext } from "@/context/BibleContext";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { useFavoriteVerseService } from "@/services/favoriteVerseService";
 import { authState$ } from "@/state/authState";
 import { bibleState$ } from "@/state/bibleState";
@@ -36,7 +36,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type TListVerse = {};
 
-const FavoriteList = ({}: TListVerse) => {
+const FavoriteList = ({ }: TListVerse) => {
   const [filterData, setFilterData] = useState<(IVerseItem & { id: number })[]>(
     []
   );
@@ -55,7 +55,7 @@ const FavoriteList = ({}: TListVerse) => {
   const swipeableRefs = useRef<{ [key: number]: Swipeable | null }>({});
 
   // Hooks
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const navigation = useNavigation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -166,9 +166,8 @@ const FavoriteList = ({}: TListVerse) => {
   }, []);
 
   const onShare = useCallback((item: IVerseItem) => {
-    const verseReference = `${renameLongBookName(item.bookName)} ${
-      item.chapter
-    }:${item.verse}`;
+    const verseReference = `${renameLongBookName(item.bookName)} ${item.chapter
+      }:${item.verse}`;
     const verseText = getVerseTextRaw(item.text);
 
     showToast("Función de compartir implementada");
@@ -480,9 +479,8 @@ const FavoriteList = ({}: TListVerse) => {
 
               <View style={styles.headerContainer}>
                 <Text style={styles.cardTitle}>
-                  {`${renameLongBookName(item.bookName)} ${item.chapter}:${
-                    item.verse
-                  }`}
+                  {`${renameLongBookName(item.bookName)} ${item.chapter}:${item.verse
+                    }`}
                 </Text>
 
                 {!selectionMode && (

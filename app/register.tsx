@@ -1,12 +1,12 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import GoogleAuth from "@/components/GoogleAuth";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { pb } from "@/globalConfig";
 import { authState$ } from "@/state/authState";
 import { TTheme } from "@/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@/context/ThemeContext";
 import { Stack, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -43,7 +43,7 @@ const RegisterScreen = () => {
   const slideAnim = useState(new Animated.Value(50))[0];
 
   const router = useRouter();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme as TTheme);
   const isLoading = use$(() => authState$.isLoading.get());
 
@@ -189,7 +189,7 @@ const RegisterScreen = () => {
               headerRightProps: {
                 headerRightIcon: "Trash2",
                 headerRightIconColor: "red",
-                onPress: () => {},
+                onPress: () => { },
                 disabled: false,
                 style: { opacity: 0 },
               },
@@ -355,8 +355,8 @@ const RegisterScreen = () => {
             <GoogleAuth
               isRegistration={true}
               onSuccess={handleGoogleSuccess}
-              // buttonStyle={styles.googleButton}
-              // textStyle={styles.googleButtonText}
+            // buttonStyle={styles.googleButton}
+            // textStyle={styles.googleButtonText}
             />
 
             <TouchableOpacity

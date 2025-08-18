@@ -1,7 +1,7 @@
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { IVerseItem, TTheme } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
 import { useRouter } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
 import { Animated, BackHandler, StyleSheet, Text } from "react-native";
@@ -12,10 +12,10 @@ import { View } from "./Themed";
 
 type SearchWordEntireProps = {};
 
-const SearchWordEntire: React.FC<SearchWordEntireProps> = ({}) => {
+const SearchWordEntire: React.FC<SearchWordEntireProps> = ({ }) => {
   const router = useRouter();
   const { searchState, searchQuery } = useBibleContext();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const [data, setData] = useState<IVerseItem[] | null>(null);
   const { fontSize } = useBibleContext();
@@ -47,7 +47,7 @@ const SearchWordEntire: React.FC<SearchWordEntireProps> = ({}) => {
       setData(searchState?.searchResults);
     }
 
-    return () => {};
+    return () => { };
   }, [searchState]);
 
   useEffect(() => {

@@ -1,11 +1,11 @@
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
+import { tourState$ } from "@/state/tourState";
+import { TStep, TTheme } from "@/types";
 import React, { useEffect } from "react";
 import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Popover, { PopoverMode } from "react-native-popover-view";
-import { TStep, TTheme } from "@/types";
 import Icon from "./Icon";
 import { Text, View } from "./Themed";
-import { tourState$ } from "@/state/tourState";
 type TWalkthrough = {
   currentStep: number;
   steps: TStep[] | any[];
@@ -17,7 +17,7 @@ const Walkthrough = ({ currentStep, steps, setStep }: TWalkthrough) => {
     "🚶‍♂️ Walkthrough Component Rendered",
     tourState$.tourPopoverVisible.get()
   );
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const totalStep = steps.length;
   const lastStep = currentStep === totalStep - 1;
@@ -86,9 +86,8 @@ const Walkthrough = ({ currentStep, steps, setStep }: TWalkthrough) => {
 
         <View style={styles.actions}>
           <View style={styles.stepCount}>
-            <Text style={styles.countLabel}>{`${
-              currentStep + 1
-            } de ${totalStep}`}</Text>
+            <Text style={styles.countLabel}>{`${currentStep + 1
+              } de ${totalStep}`}</Text>
           </View>
           <View style={styles.actionButtons}>
             {!firstStep && (

@@ -3,11 +3,11 @@ import { GET_ALL_NOTE } from "@/constants/Queries";
 import { iconSize } from "@/constants/size";
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { bibleState$ } from "@/state/bibleState";
 import { TNote, TTheme } from "@/types";
 import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
 import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
-import { useTheme } from "@/context/ThemeContext";
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
@@ -26,7 +26,7 @@ const { width } = Dimensions.get("window");
 const ITEM_HEIGHT = 70;
 
 const NoteNameList: FC<NoteNameListProps> = ({ handleSnapPress }) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const { myBibleDB, executeSql } = useDBContext();
   const [data, setData] = useState<TNote[] | null>(null);
@@ -51,7 +51,7 @@ const NoteNameList: FC<NoteNameListProps> = ({ handleSnapPress }) => {
 
   useEffect(() => {
     fetchNotes();
-    return () => {};
+    return () => { };
   }, [fetchNotes]);
 
   const onRefresh = useCallback(() => {

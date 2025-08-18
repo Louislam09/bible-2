@@ -8,12 +8,12 @@ import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE } from "@/constants/Queries";
 import { headerIconSize } from "@/constants/size";
 import { useMemorization } from "@/context/MemorizationContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { useDBContext } from "@/context/databaseContext";
 import useParams from "@/hooks/useParams";
 import { useStreak } from "@/hooks/useStreak";
 import { Memorization, MemorizationButtonType, TPoints, TTheme } from "@/types";
 import { parseBibleReferences } from "@/utils/extractVersesInfo";
-import { useTheme } from "@/context/ThemeContext";
 import { Stack, useRouter } from "expo-router";
 import { ChevronLeft, CircleHelp } from "lucide-react-native";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -39,7 +39,7 @@ const Type = () => {
     [verseId]
   );
 
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
 
   const [openHelp, setOpenHelp] = React.useState(false);

@@ -2,8 +2,8 @@ import ColorPicker from "@/components/ColorPicker";
 import Icon from "@/components/Icon";
 import { View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
+import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import {
@@ -33,7 +33,7 @@ const MyRichEditor: React.FC<IRichEditor> = ({
   isModal,
   shouldOpenKeyboard,
 }) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const richTextRef = useRef<RichEditor>(null);
   const scrollViewRef = useRef<ScrollView>(null);

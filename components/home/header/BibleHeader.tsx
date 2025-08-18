@@ -1,4 +1,4 @@
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { FC, useCallback, useMemo, useRef } from "react";
 import {
@@ -52,7 +52,7 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
 
   const params = useParams<HomeParams>();
   const { book } = params;
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const router = useRouter();
   const navigation = useNavigation();
   const isSmallSDevice = width < 300;

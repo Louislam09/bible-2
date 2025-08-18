@@ -1,19 +1,19 @@
-import {
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Button,
-  TouchableOpacity,
-} from "react-native";
-import React, { FC, Fragment, useEffect, useState } from "react";
-import { Text, View } from "../Themed";
+import { useMyTheme } from "@/context/ThemeContext";
 import { IVerseItem, TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { splitText } from "@/utils/groupBy";
-import { useTheme } from "@/context/ThemeContext";
-import { useRouter } from "expo-router";
 import removeAccent from "@/utils/removeAccent";
-import BlankBoard from "./BlankBoard";
+import { useRouter } from "expo-router";
+import React, { FC, Fragment, useEffect, useState } from "react";
+import {
+  Button,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native";
 import ProgressBar from "../home/footer/ProgressBar";
+import { Text, View } from "../Themed";
+import BlankBoard from "./BlankBoard";
 
 type BlankChallengeProps = {
   item: IVerseItem | any;
@@ -33,7 +33,7 @@ const BlankChallenge: FC<BlankChallengeProps> = ({
   onUpdateProgress,
 }) => {
   const router = useRouter();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const [started, setStarted] = useState(false);
   const [isChallengeCompleted, setIsChallengeCompleted] = useState(false);

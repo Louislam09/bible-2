@@ -1,22 +1,22 @@
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import CustomHeaderLeft from "@/components/CustomHeaderLeft";
 import Icon from "@/components/Icon";
 import SongViewer from "@/components/song-viewer";
 import { View } from "@/components/Themed";
-import AlegreSongs from "@/constants/songs";
 import hymnSong from "@/constants/hymnSong";
+import AlegreSongs from "@/constants/songs";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import useParams from "@/hooks/useParams";
 import { TSongItem } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
+import { use$ } from "@legendapp/state/react";
 import { Stack } from "expo-router";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { use$ } from "@legendapp/state/react";
-import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 
 const DisplaySong = () => {
   const { songId, isAlegres } = useParams();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const Songs = isAlegres ? AlegreSongs : hymnSong;
   const selected = Songs.find((item) => +item.id === songId) as TSongItem;
 

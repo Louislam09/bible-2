@@ -1,19 +1,19 @@
-import {
-  StyleSheet,
-  TouchableWithoutFeedback,
-  TouchableOpacity,
-  TextInput,
-  Keyboard,
-} from "react-native";
-import React, { FC, useEffect, useRef, useState } from "react";
-import { Text, View } from "../Themed";
+import { useMyTheme } from "@/context/ThemeContext";
 import { IVerseItem, MemorizationButtonType, TPoints, TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { splitText } from "@/utils/groupBy";
-import { useTheme } from "@/context/ThemeContext";
-import { useRouter } from "expo-router";
-import ProgressBar from "../home/footer/ProgressBar";
 import removeAccent from "@/utils/removeAccent";
+import { useRouter } from "expo-router";
+import React, { FC, useEffect, useRef, useState } from "react";
+import {
+  Keyboard,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native";
+import ProgressBar from "../home/footer/ProgressBar";
+import { Text, View } from "../Themed";
 
 type TypeChallengeProps = {
   item: IVerseItem;
@@ -27,7 +27,7 @@ const TypeChallenge: FC<TypeChallengeProps> = ({
   onUpdateProgress,
 }) => {
   const router = useRouter();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [started, setStarted] = useState(false);

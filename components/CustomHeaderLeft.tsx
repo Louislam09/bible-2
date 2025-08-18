@@ -1,4 +1,4 @@
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native";
 import Icon from "./Icon";
@@ -10,7 +10,7 @@ type CustomHeaderLeftProps = {
 
 const CustomHeaderLeft = ({ title }: CustomHeaderLeftProps) => {
   const router = useRouter();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
 
   const handleGoBack = () => {
     if (router.canGoBack()) {

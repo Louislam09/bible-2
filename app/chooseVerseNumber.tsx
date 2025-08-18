@@ -3,11 +3,11 @@ import OptimizedChapterList from "@/components/optimized-chapter-list";
 import { View } from "@/components/Themed";
 import { DB_BOOK_CHAPTER_VERSES, DB_BOOK_NAMES } from "@/constants/BookNames";
 import { BOOK_IMAGES } from "@/constants/Images";
+import { useMyTheme } from "@/context/ThemeContext";
 import useParams from "@/hooks/useParams";
 import { bibleState$ } from "@/state/bibleState";
 import { ChooseChapterNumberParams, Screens } from "@/types";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
-import { useTheme } from "@/context/ThemeContext";
 import { Stack, useNavigation } from "expo-router";
 import { Fragment, useMemo } from "react";
 
@@ -18,7 +18,7 @@ const chooseVerseNumber = () => {
   const selectedBook = isBottomSideSearching ? bottomSideBook : book;
   const selectedChapter = isBottomSideSearching ? bottomSideChapter : chapter;
   const navigation = useNavigation();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const displayBookName = renameLongBookName(selectedBook || "");
 
   const numberOfVerses = useMemo(() => {

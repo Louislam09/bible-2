@@ -3,7 +3,7 @@ import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from "@/constants/Queries";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import useParams from "@/hooks/useParams";
 import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, TTheme } from "@/types";
@@ -31,7 +31,7 @@ type SearchStrongWordEntireParams = { paramCode: string };
 const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
   const params = useParams<SearchStrongWordEntireParams>();
   const { paramCode } = params;
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const { myBibleDB, executeSql } = useDBContext();
   const [data, setData] = useState<IVerseItem[] | null>(null);
@@ -79,7 +79,7 @@ const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
       setData((searchData as IVerseItem[]) || []);
     })();
 
-    return () => {};
+    return () => { };
   }, [myBibleDB, code, selectedFilterOption]);
 
   return (
@@ -99,7 +99,7 @@ const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
             headerRightProps: {
               headerRightIcon: "Settings",
               headerRightIconColor: theme.colors.notification,
-              onPress: () => {},
+              onPress: () => { },
               disabled: true,
               style: { opacity: 0 },
             },

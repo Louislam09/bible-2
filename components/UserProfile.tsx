@@ -1,9 +1,9 @@
 import { storedData$ } from "@/context/LocalstoreContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { POCKETBASE_URL } from "@/globalConfig";
 import { authState$ } from "@/state/authState";
 import { pbUser, Screens, TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@/context/ThemeContext";
 import { useNavigation } from "expo-router";
 import { User } from "lucide-react-native";
 import React, { useRef, useState } from "react";
@@ -26,7 +26,7 @@ interface ProfileCardProps {
 const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
   const nameInfo = user?.name.split(" ") || [];
   const firstName = nameInfo[0];
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
   const userRef = useRef(null);

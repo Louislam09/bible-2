@@ -1,6 +1,7 @@
 import { ConfigContext, ExpoConfig } from "@expo/config";
 
-const IS_DEV = process.env.APP_VARIANT === "development";
+const IS_DEV = true;
+// const IS_DEV = process.env.APP_VARIANT === "development";
 const IS_PREVIEW = process.env.APP_VARIANT === "preview";
 
 const getUniqueIdentifier = () => {
@@ -71,7 +72,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     android: {
       versionCode: 25,
       icon: "./assets/images/icon.png",
-      edgeToEdgeEnabled: true,
       adaptiveIcon: {
         foregroundImage: "./assets/images/adaptive-icon.png",
         monochromeImage: "./assets/images/monochrome-icon.png",
@@ -88,6 +88,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         // "android.permission.WAKE_LOCK",
         // "android.permission.SYSTEM_ALERT_WINDOW",
       ],
+      edgeToEdgeEnabled: true
     },
     web: {
       bundler: "metro",
@@ -108,6 +109,15 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             usesCleartextTraffic: true,
           },
         },
+      ],
+      [
+        "react-native-edge-to-edge",
+        {
+          "android": {
+            "parentTheme": "Default",
+            "enforceNavigationBarContrast": false
+          }
+        }
       ],
       [
         "expo-updates",

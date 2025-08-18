@@ -2,11 +2,11 @@ import GoogleAuth from "@/components/GoogleAuth";
 import { Text, View } from "@/components/Themed";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { authState$ } from "@/state/authState";
 import { TTheme } from "@/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@/context/ThemeContext";
 import { Stack, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -39,7 +39,7 @@ const LoginScreen = () => {
   const slideAnim = useState(new Animated.Value(50))[0];
 
   const isLoading = use$(() => authState$.isLoading.get());
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
 
   useEffect(() => {
@@ -144,7 +144,7 @@ const LoginScreen = () => {
                 headerRightProps: {
                   headerRightIcon: "Trash2",
                   headerRightIconColor: "red",
-                  onPress: () => {},
+                  onPress: () => { },
                   disabled: true,
                   style: { opacity: 0 },
                 },

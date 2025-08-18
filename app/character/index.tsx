@@ -1,6 +1,6 @@
 import { Text } from "@/components/Themed";
 import Characters from "@/constants/Characters";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -59,7 +59,7 @@ type CharacterProps = {};
 
 const Character: React.FC<CharacterProps> = () => {
   const [filterData] = useState(Characters);
-  const { theme, schema } = useTheme();
+  const { theme, schema } = useMyTheme();
   const router = useRouter();
   const styles = getStyles(theme);
   const [searchText, setSearchText] = useState<any>(null);
@@ -111,9 +111,9 @@ const Character: React.FC<CharacterProps> = () => {
         data={
           searchText
             ? filterData.filter(
-                (x: any) =>
-                  removeAccent(x.topic).indexOf(searchText.toLowerCase()) !== -1
-              )
+              (x: any) =>
+                removeAccent(x.topic).indexOf(searchText.toLowerCase()) !== -1
+            )
             : filterData
         }
         renderItem={({ item, index }) => (

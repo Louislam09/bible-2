@@ -1,10 +1,10 @@
 import { View } from "@/components/Themed";
 import { useBibleContext } from "@/context/BibleContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
 import { TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useTheme } from "@/context/ThemeContext";
 import { useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
@@ -13,7 +13,7 @@ type SearchHeaderProps = {};
 
 const SearchHeader: React.FC<SearchHeaderProps> = () => {
   const router = useRouter();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const textInputRef = useRef<TextInput>(null);
   const styles = getStyles(theme);
   const { performSearch, setSearchQuery, searchQuery } = useBibleContext();

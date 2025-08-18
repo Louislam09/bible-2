@@ -4,7 +4,7 @@ import Icon from "@/components/Icon";
 import { getBookDetail } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import { bibleState$ } from "@/state/bibleState";
 import { EBibleVersions } from "@/types";
@@ -29,7 +29,7 @@ interface BibleTopProps {
 }
 
 const BibleTop: FC<BibleTopProps> = (props) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const { orientation } = useBibleContext();
   const isPortrait = orientation === "PORTRAIT";
   const isDataLoading = use$(() => bibleState$.isDataLoading.top.get());

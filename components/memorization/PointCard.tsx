@@ -1,5 +1,5 @@
+import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Text, View } from "../Themed";
@@ -15,7 +15,7 @@ type TPoints = {
 };
 
 const PointsCard = ({ typeInfo }: PointsCardProps) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const { description, maxPoint, point } = typeInfo;
 

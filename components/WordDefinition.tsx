@@ -3,7 +3,7 @@ import { iconSize } from "@/constants/size";
 import Voices from "@/constants/Voices";
 import { wordDefinitionHtmlTemplate } from "@/constants/wordDefinitionHtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { bibleState$ } from "@/state/bibleState";
@@ -37,7 +37,7 @@ const WordDefinition = ({
   const navigation = _navigation ? _navigation : useNavigation();
   const voice = Voices[randomVoice];
   const { speak, stop, isSpeaking } = useTextToSpeech({ voice });
-  const { schema: themeScheme, theme } = useTheme();
+  const { schema: themeScheme, theme } = useMyTheme();
   const styles = getStyles(theme, themeScheme === "dark");
   const webViewRef = useRef<WebView>(null);
   const { definition, topic } = wordData;

@@ -1,5 +1,5 @@
 import { Text } from "@/components/Themed";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import React, { RefObject, useState } from "react";
 import {
   ScrollView,
@@ -14,13 +14,13 @@ import Icon from "../Icon";
 type FontType = {
   readonly label: "Aa";
   readonly fontFamily:
-    | "System"
-    | "serif"
-    | "sans-serif"
-    | "monospace"
-    | "cursive"
-    | "fantasy"
-    | "emoji";
+  | "System"
+  | "serif"
+  | "sans-serif"
+  | "monospace"
+  | "cursive"
+  | "fantasy"
+  | "emoji";
   readonly fontWeight: "400" | "700";
 };
 
@@ -35,7 +35,7 @@ interface CustomQuoteModeProps {
   onReferenceChange: (text: string) => void;
   colors: string[];
   fonts: readonly FontType[];
-  viewShotRef?: RefObject<ViewShot>;
+  viewShotRef?: RefObject<ViewShot | null>;
 }
 
 export const CustomQuoteMode: React.FC<CustomQuoteModeProps> = ({
@@ -51,7 +51,7 @@ export const CustomQuoteMode: React.FC<CustomQuoteModeProps> = ({
   fonts,
   viewShotRef,
 }) => {
-  const { dark } = useTheme();
+  const { theme: { dark } } = useMyTheme();
   const highColor = dark ? "#fff" : "#000";
   const lowColor = dark ? "#000" : "#fff";
 

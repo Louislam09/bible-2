@@ -1,13 +1,13 @@
+import { useMyTheme } from "@/context/ThemeContext";
 import React from "react";
+import { StyleSheet } from "react-native";
 import Animated, {
   SharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { offset } from "./timelineConstants";
 import { Text, View } from "../Themed";
-import { StyleSheet } from "react-native";
-import { useTheme } from "@/context/ThemeContext";
+import { offset } from "./timelineConstants";
 
 const TimelineFooter = ({
   width,
@@ -23,7 +23,7 @@ const TimelineFooter = ({
   interval: number;
 }) => {
   const [values, setValues] = React.useState<number[]>([]);
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
 
   React.useEffect(() => {
     const array = [];

@@ -1,8 +1,8 @@
 import { Text, View } from "@/components/Themed";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { useMyTheme } from "@/context/ThemeContext";
 import { bibleState$ } from "@/state/bibleState";
 import extractVersesInfo from "@/utils/extractVersesInfo";
-import { useTheme } from "@/context/ThemeContext";
 import React from "react";
 import { Pressable, StyleSheet } from "react-native";
 
@@ -14,7 +14,7 @@ type VerseTitleProps = {
 
 const VerseTitle = ({ subheading, isSplit, links }: VerseTitleProps) => {
   const isSplitActived = bibleState$.isSplitActived.get();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const [subTitle, link] = JSON.parse(subheading as any);
   const linkVerses = link
     ? link.split("—").map((linkVerse: any) => extractVersesInfo(linkVerse))
@@ -56,8 +56,8 @@ const VerseTitle = ({ subheading, isSplit, links }: VerseTitleProps) => {
             backgroundColor: pressed
               ? theme.colors.border
               : theme.dark
-              ? theme.colors.text + 40
-              : theme.colors.notification + 40,
+                ? theme.colors.text + 40
+                : theme.colors.notification + 40,
             borderColor: theme.colors.text + 80,
           },
         ]}

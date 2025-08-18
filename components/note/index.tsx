@@ -2,9 +2,11 @@ import Animation from "@/components/Animation";
 import Icon from "@/components/Icon";
 import ActionButton, { Backdrop } from "@/components/note/ActionButton";
 import NoteItem from "@/components/note/NoteItem";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { useSyncNotes } from "@/hooks/useSyncNotes";
 import { useNoteService } from "@/services/noteService";
@@ -15,7 +17,6 @@ import checkConnection from "@/utils/checkConnection";
 import removeAccent from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { use$ } from "@legendapp/state/react";
-import { useTheme } from "@/context/ThemeContext";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
 import React, {
@@ -47,7 +48,7 @@ type TListVerse = {
 };
 
 const Note = ({ data }: TListVerse) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const navigation = useNavigation();
   const { currentBibleLongName } = useBibleContext();
   const { deleteNote, exportNotes, importNotes } = useNoteService();
@@ -466,95 +467,97 @@ const Note = ({ data }: TListVerse) => {
   return (
     <Fragment>
       <Stack.Screen options={singleScreenHeader(screenOptions)} />
-      <TouchableWithoutFeedback
-        style={{ flex: 1 }}
-        onPress={dismiss}
-        accessible={false}
-      >
-        <RNView style={styles.container}>
-          <Backdrop visible={showMoreOptions} onPress={dismiss} theme={theme} />
-          {NoteHero()}
-          {isSelectionActive && (
-            <View style={styles.noteHeader}>
-              <Text
-                style={styles.notesCountText}
-                accessible={true}
-                accessibilityRole="text"
-              >
-                {selectedItems.size}{" "}
-                {selectedItems.size !== 1 ? "notas" : "nota"} seleccionada
-                {selectedItems.size > 1 ? "s" : ""}
-              </Text>
-            </View>
-          )}
-          <FlashList
-            contentContainerStyle={styles.flashListContent}
-            ref={flatListRef}
-            decelerationRate="normal"
-            estimatedItemSize={135}
-            data={noteList}
-            renderItem={renderItem}
-            keyExtractor={(item: TNote) => `note-${item.id}`}
-            ListEmptyComponent={ListEmptyComponent}
-            ListFooterComponent={<View style={styles.listFooter} />}
-            removeClippedSubviews={true}
-            accessible={true}
-            accessibilityLabel="Lista de notas"
-            accessibilityRole="list"
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-                colors={[theme.colors.notification]}
-                tintColor={theme.colors.notification}
-              />
-            }
-          />
-
-          {!isSelectionActive &&
-            noteActionButtons.map((item, index) => (
-              <ActionButton
-                key={`action-${item.name}-${index}`}
-                theme={theme}
-                item={item}
-                index={index}
-              />
-            ))}
-
-          {isSyncing && (
-            <View style={styles.syncingOverlay}>
-              <ActivityIndicator
-                size="large"
-                color={theme.colors.notification}
-              />
-              <Text style={styles.syncingText}>Sincronizando...</Text>
-            </View>
-          )}
-
-          {isSelectionActive && (
-            <View style={styles.selectionActionButtonsContainer}>
-              {selectionActionButtons.map((item, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={{ alignItems: "center", opacity: item.hide ? 0.5 : 1 }}
-                  onPress={() => item.action()}
-                  disabled={item.hide}
+      <ScreenWithAnimation duration={800} icon="NotebookPen" title="Mis Notas">
+        <TouchableWithoutFeedback
+          style={{ flex: 1 }}
+          onPress={dismiss}
+          accessible={false}
+        >
+          <RNView style={styles.container}>
+            <Backdrop visible={showMoreOptions} onPress={dismiss} theme={theme} />
+            {NoteHero()}
+            {isSelectionActive && (
+              <View style={styles.noteHeader}>
+                <Text
+                  style={styles.notesCountText}
                   accessible={true}
-                  accessibilityLabel={item.label}
-                  accessibilityRole="button"
-                  accessibilityHint={"Pulsa para " + item.label}
+                  accessibilityRole="text"
                 >
-                  <Icon name={item.name as any} size={24} color={item.color} />
-                  <Text style={{ color: theme.colors.text, marginTop: 4 }}>
-                    {" "}
-                    {item.label}{" "}
-                  </Text>
-                </TouchableOpacity>
+                  {selectedItems.size}{" "}
+                  {selectedItems.size !== 1 ? "notas" : "nota"} seleccionada
+                  {selectedItems.size > 1 ? "s" : ""}
+                </Text>
+              </View>
+            )}
+            <FlashList
+              contentContainerStyle={styles.flashListContent}
+              ref={flatListRef}
+              decelerationRate="normal"
+              estimatedItemSize={135}
+              data={noteList}
+              renderItem={renderItem}
+              keyExtractor={(item: TNote) => `note-${item.id}`}
+              ListEmptyComponent={ListEmptyComponent}
+              ListFooterComponent={<View style={styles.listFooter} />}
+              removeClippedSubviews={true}
+              accessible={true}
+              accessibilityLabel="Lista de notas"
+              accessibilityRole="list"
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  colors={[theme.colors.notification]}
+                  tintColor={theme.colors.notification}
+                />
+              }
+            />
+
+            {!isSelectionActive &&
+              noteActionButtons.map((item, index) => (
+                <ActionButton
+                  key={`action-${item.name}-${index}`}
+                  theme={theme}
+                  item={item}
+                  index={index}
+                />
               ))}
-            </View>
-          )}
-        </RNView>
-      </TouchableWithoutFeedback>
+
+            {isSyncing && (
+              <View style={styles.syncingOverlay}>
+                <ActivityIndicator
+                  size="large"
+                  color={theme.colors.notification}
+                />
+                <Text style={styles.syncingText}>Sincronizando...</Text>
+              </View>
+            )}
+
+            {isSelectionActive && (
+              <View style={styles.selectionActionButtonsContainer}>
+                {selectionActionButtons.map((item, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={{ alignItems: "center", opacity: item.hide ? 0.5 : 1 }}
+                    onPress={() => item.action()}
+                    disabled={item.hide}
+                    accessible={true}
+                    accessibilityLabel={item.label}
+                    accessibilityRole="button"
+                    accessibilityHint={"Pulsa para " + item.label}
+                  >
+                    <Icon name={item.name as any} size={24} color={item.color} />
+                    <Text style={{ color: theme.colors.text, marginTop: 4 }}>
+                      {" "}
+                      {item.label}{" "}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+          </RNView>
+        </TouchableWithoutFeedback>
+      </ScreenWithAnimation>
     </Fragment>
   );
 };

@@ -1,6 +1,6 @@
 // components/SetPasswordScreen.tsx
+import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -26,7 +26,7 @@ const SetPasswordScreen: React.FC<SetPasswordScreenProps> = ({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme as TTheme);
 
   const handleSetPassword = async () => {

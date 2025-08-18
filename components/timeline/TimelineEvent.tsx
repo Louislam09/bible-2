@@ -1,19 +1,19 @@
 import React from "react";
 import Animated, {
   Extrapolation,
-  SharedValue,
   interpolate,
+  SharedValue,
   useAnimatedStyle,
   useDerivedValue,
 } from "react-native-reanimated";
 
+import { useMyTheme } from "@/context/ThemeContext";
+import { TimelineEvent as TimelineEventType, TTheme } from "@/types";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
-import { View, Text } from "../Themed";
-import { calculateLabel, offset, rowToPx } from "./timelineConstants";
-import { TimelineEvent as TimelineEventType, TTheme } from "@/types";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { useTheme } from "@/context/ThemeContext";
+import { Text, View } from "../Themed";
+import { calculateLabel, offset, rowToPx } from "./timelineConstants";
 
 interface Props extends TimelineEventType {
   color: string;
@@ -50,7 +50,7 @@ const TimelineEvent = ({
   eventModalRef,
   setEvent,
 }: Props) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const { current: top } = React.useRef(rowToPx(row));
   const { current: left } = React.useRef(yearsToPx(start));

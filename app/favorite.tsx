@@ -1,21 +1,17 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import FavoriteList from "@/components/favorite/FavoriteList";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { Stack } from "expo-router";
-import React from "react";
+import React, { Fragment } from "react";
 type FavoriteProps = {};
 
 const Favorite: React.FC<FavoriteProps> = () => {
   const startSource = require("../assets/lottie/star.json");
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
 
   return (
-    <ScreenWithAnimation
-      title="Favoritos"
-      animationSource={startSource}
-      speed={2}
-    >
+    <Fragment>
       <Stack.Screen
         options={{
           ...singleScreenHeader({
@@ -37,8 +33,15 @@ const Favorite: React.FC<FavoriteProps> = () => {
           }),
         }}
       />
-      <FavoriteList />
-    </ScreenWithAnimation>
+      <ScreenWithAnimation
+        title="Favoritos"
+        animationSource={startSource}
+        speed={2}
+      >
+
+        <FavoriteList />
+      </ScreenWithAnimation>
+    </Fragment>
   );
 };
 

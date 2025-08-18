@@ -1,5 +1,5 @@
+import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
@@ -49,7 +49,7 @@ const StreakCard: React.FC<StreakCardProps> = ({
   bestStreak,
   days = [],
 }) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const steakListRef = useRef<FlashList<any>>(null);
   const [isLayoutMounted, setLayoutMounted] = useState(false);
   const styles = getStyles(theme);

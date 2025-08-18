@@ -1,9 +1,10 @@
+import { useMyTheme } from "@/context/ThemeContext";
+import { TTheme } from "@/types";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetHandleProps,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
-import { useTheme } from "@/context/ThemeContext";
 import React, {
   forwardRef,
   useCallback,
@@ -12,7 +13,6 @@ import React, {
   useState,
 } from "react";
 import { BackHandler, StyleSheet } from "react-native";
-import { TTheme } from "@/types";
 import Icon from "./Icon";
 import { View } from "./Themed";
 
@@ -40,7 +40,7 @@ const CustomBottomSheet = forwardRef<Ref, CustomBottomSheet>(
     ref
   ) => {
     const [index, setIndex] = useState(0);
-    const theme = useTheme() as TTheme;
+    const theme = useMyTheme() as TTheme;
     const styles = getStyles(theme);
     const snapPoints = useMemo(
       () => (justOneSnap ? ["30%"] : snaps || ["30%", "50%", "75%", "100%"]),

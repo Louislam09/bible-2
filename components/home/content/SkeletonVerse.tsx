@@ -1,10 +1,10 @@
-import { useTheme } from "@/context/ThemeContext";
 import { View } from "@/components/Themed";
+import { useMyTheme } from "@/context/ThemeContext";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 
 const SkeletonVerse = ({ index }: any) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const colorMode = theme.dark ? "dark" : "dark";
 
   return (

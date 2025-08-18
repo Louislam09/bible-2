@@ -29,6 +29,7 @@ type SingleScreenHeaderProps = {
     onLongPress?: ((event: GestureResponderEvent) => void) | undefined;
     disabled?: boolean | undefined;
     headerRightText?: string;
+    ref?: React.RefObject<null>
   };
 };
 

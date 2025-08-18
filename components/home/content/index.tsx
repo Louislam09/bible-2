@@ -1,4 +1,4 @@
-import { useTheme } from "@/context/ThemeContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import React, { FC } from "react";
 import { StyleSheet } from "react-native";
 import { TTheme } from "../../../types";
@@ -13,7 +13,7 @@ interface BookContentInterface {
 }
 
 const BookContent: FC<BookContentInterface> = ({ isSplit, verse }) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
 
   return (

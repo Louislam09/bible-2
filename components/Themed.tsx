@@ -1,8 +1,8 @@
 import { Text as DefaultText, View as DefaultView } from "react-native";
 
-import { useTheme } from "@/context/ThemeContext";
-import { createElement } from "react";
+import { useMyTheme } from "@/context/ThemeContext";
 import { TFont, TTheme } from "@/types";
+import { createElement } from "react";
 import { useBibleContext } from "../context/BibleContext";
 
 export const NativeDefaultView =
@@ -20,7 +20,7 @@ export type ViewProps = ThemeProps & DefaultView["props"];
 
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, onPress, ...otherProps } = props;
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const { colors } = theme;
   const { selectedFont } = useBibleContext();
 
@@ -44,7 +44,7 @@ export function Text(props: TextProps) {
 
 export function View(props: ViewProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const { colors } = theme;
 
   return (

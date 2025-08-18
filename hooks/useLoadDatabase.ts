@@ -1,3 +1,4 @@
+import { databaseNames } from "@/constants/databaseNames";
 import {
   CREATE_FAVORITE_VERSES_TABLE,
   CREATE_MEMORIZATION_TABLE,
@@ -6,13 +7,12 @@ import {
   historyQuery,
 } from "@/constants/Queries";
 import { bibleState$ } from "@/state/bibleState";
+import { dbDownloadState$ } from "@/state/dbDownloadState";
 import { prepareDatabaseFromDbFile } from "@/utils/prepareDB";
+import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
 import { useEffect, useRef, useState } from "react";
 import { VersionItem } from "./useInstalledBible";
-import * as FileSystem from "expo-file-system";
-import { dbDownloadState$ } from "@/state/dbDownloadState";
-import { databaseNames } from "@/constants/databaseNames";
 
 interface Row {
   [key: string]: any;
@@ -26,6 +26,7 @@ export interface UseLoadDB {
     queryName?: string
   ) => Promise<T[]>;
   isLoaded: boolean;
+  reOpen: (dbName: any) => Promise<undefined>
 }
 
 export type TUseLoadDB = {
@@ -119,7 +120,7 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
 
     } catch (error) {
       console.error(
-        `Error creating column ${createColumnQuery} In ${db.databaseName} :`,
+        `Error creating column ${createColumnQuery} In ${db.databasePath} :`,
         error
       );
     }
@@ -148,68 +149,69 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
     }
   }
 
-  useEffect(() => {
-    if (!dbName) return;
-    async function initializeDatabase() {
-      try {
-        setDatabase(null);
-        // setLoaded(false);
-        isMounted.current = true;
-        bibleState$.isDataLoading.top.set(true);
+  async function initializeDatabase(dbName: any) {
+    try {
+      setDatabase(null);
+      // setLoaded(false);
+      isMounted.current = true;
+      bibleState$.isDataLoading.top.set(true);
 
-        if (!dbName) return;
+      if (!dbName) return;
 
-        // const db = null
-        const db = await prepareDatabaseFromDbFile({
-          databaseItem: dbName,
-          onProgress: (progress) => {
-            // console.log('useLoadDatabase: ', progress.stage, progress.message)
-            // Update the global state for progress tracking
-            dbDownloadState$.setDownloadProgress({
-              ...progress,
-              databaseName: dbName.name || dbName.id
-            });
-          }
-        });
-
-        const isInterlinear = dbName.id === DEFAULT_DATABASE.INTERLINEAR;
-        const valid = await isDatabaseValid(db!, isInterlinear ? "interlinear" : "verses");
-        // console.log('Database is valid', valid)
-
-        if (!valid) {
-          // delete the database
-          await db?.closeAsync();
-          await FileSystem.deleteAsync(dbName.path, { idempotent: true });
-          await FileSystem.deleteAsync(`${dbName.path}-wal`, { idempotent: true });
-          await FileSystem.deleteAsync(`${dbName.path}-shm`, { idempotent: true });
-          return undefined
+      // const db = null
+      const db = await prepareDatabaseFromDbFile({
+        databaseItem: dbName,
+        onProgress: (progress) => {
+          // console.log('useLoadDatabase: ', progress.stage, progress.message)
+          // Update the global state for progress tracking
+          dbDownloadState$.setDownloadProgress({
+            ...progress,
+            databaseName: dbName.name || dbName.id
+          });
         }
-        if (!db) return;
+      });
 
-        await createTables(db);
-        await checkAndCreateColumn(db, "notes", "uuid", "TEXT");
-        await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
-        if (isMounted.current) {
-          setDatabase(db);
-          dbInitialized.current = true;
-          bibleState$.bibleQuery.shouldFetch.set(true);
-          setLoaded(true);
-        }
-      } catch (error) {
-        console.error("Database initialization error:", error);
-        if (isMounted.current) {
-          setLoaded(true);
-        }
-      } finally {
-        if (isMounted.current) {
-          setLoaded(true);
-          bibleState$.isDataLoading.top.set(false);
-        }
+      const isInterlinear = dbName.id === DEFAULT_DATABASE.INTERLINEAR;
+      const valid = await isDatabaseValid(db!, isInterlinear ? "interlinear" : "verses");
+      // console.log('Database is valid', valid)
+
+      if (!valid) {
+        // delete the database
+        await db?.closeAsync();
+        await FileSystem.deleteAsync(dbName.path, { idempotent: true });
+        await FileSystem.deleteAsync(`${dbName.path}-wal`, { idempotent: true });
+        await FileSystem.deleteAsync(`${dbName.path}-shm`, { idempotent: true });
+        return undefined
+      }
+      if (!db) return;
+
+      await createTables(db);
+      await checkAndCreateColumn(db, "notes", "uuid", "TEXT");
+      await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
+      if (isMounted.current) {
+        setDatabase(db);
+        dbInitialized.current = true;
+        bibleState$.bibleQuery.shouldFetch.set(true);
+        setLoaded(true);
+      }
+    } catch (error) {
+      console.error("Database initialization error:", error);
+      if (isMounted.current) {
+        setLoaded(true);
+      }
+    } finally {
+      if (isMounted.current) {
+        setLoaded(true);
+        bibleState$.isDataLoading.top.set(false);
       }
     }
+  }
+
+  useEffect(() => {
+    if (!dbName) return;
 
     dbInitialized.current = false;
-    initializeDatabase();
+    initializeDatabase(dbName);
 
     return () => {
       isMounted.current = false;
@@ -219,7 +221,7 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
     };
   }, [dbName, isInterlinear]);
 
-  return { executeSql, database, isLoaded };
+  return { executeSql, database, isLoaded, reOpen: initializeDatabase };
 }
 
 export default useLoadDatabase;

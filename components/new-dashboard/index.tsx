@@ -6,7 +6,6 @@ import StatusBarBackground from "@/components/StatusBarBackground";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useNotification } from "@/context/NotificationContext";
-import { useTheme } from "@/context/ThemeContext";
 import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";
 import isWithinTimeframe from "@/utils/isWithinTimeframe";
@@ -14,6 +13,7 @@ import { showToast } from "@/utils/showToast";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
 // import * as Notifications from "expo-notifications";
+import { useMyTheme } from "@/context/ThemeContext";
 import { useNavigation } from "expo-router";
 import React, { useCallback, useRef, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
@@ -32,7 +32,7 @@ export interface IAdditionalResourceList {
 
 const NewDashboard = () => {
   const navigation = useNavigation();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const [currentEmpty, setCurrentEmpty] = useState<"doubible" | "timeline">(
     "doubible"

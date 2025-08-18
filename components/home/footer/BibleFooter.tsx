@@ -1,8 +1,8 @@
 import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import useAudioPlayer from "@/hooks/useAudioPlayer";
 import { EBibleVersions, Screens } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
 import { LinearGradient } from "expo-linear-gradient";
 import { FC, useCallback, useEffect, useRef } from "react";
 import { Animated, TouchableOpacity } from "react-native";
@@ -40,7 +40,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const currentVoiceRate = storedData$.currentVoiceRate.get() || 1;
   const { isConnected } = useInternetConnection();
   const FOOTER_ICON_SIZE = iconSize;
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const playRef = useRef<BottomSheetModal>(null);
   const navigation = useNavigation();
@@ -224,9 +224,8 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
         >
           <Text
             style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}
-          >{`${displayBookName ?? ""} ${chapter ?? ""}:${
-            isSplitActived ? verse : currentHistoryIndexState || verse
-          }`}</Text>
+          >{`${displayBookName ?? ""} ${chapter ?? ""}:${isSplitActived ? verse : currentHistoryIndexState || verse
+            }`}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           ref={tourState$.nextButton.get()}

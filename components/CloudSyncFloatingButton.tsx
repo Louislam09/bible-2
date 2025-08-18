@@ -1,15 +1,15 @@
-import React, { useState, useRef } from "react";
-import { Animated, Easing, TouchableOpacity, StyleSheet } from "react-native";
-import Icon from "./Icon";
 import { useStorage } from "@/context/LocalstoreContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
+import React, { useRef, useState } from "react";
+import { Animated, Easing, StyleSheet, TouchableOpacity } from "react-native";
+import Icon from "./Icon";
 
 const CloudSyncFloatingButton: React.FC = () => {
   const { syncWithCloud, hasPendingCloudSync } = useStorage();
   const [loading, setLoading] = useState(false);
   const spinAnim = useRef(new Animated.Value(0)).current;
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   if (!hasPendingCloudSync) return null;
 

@@ -21,10 +21,10 @@ import NextSectionImage from "./NextSectionImage";
 import PrevSectionImage from "./PrevSectionImage";
 import TimelineFooter from "./TimelineFooter";
 
-import { useTheme } from "@/context/ThemeContext";
-import BiblicalEventDetail from "./EventDetail";
-import BottomModal from "../BottomModal";
 import bibleTimelineEvents from "@/constants/bibleTimelineEvents";
+import { useMyTheme } from "@/context/ThemeContext";
+import BottomModal from "../BottomModal";
+import BiblicalEventDetail from "./EventDetail";
 
 interface Props extends TimelinePeriod {
   onPrev: () => void;
@@ -58,7 +58,7 @@ const Timeline = ({
   prevEvent,
   nextEvent,
 }: Props) => {
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const isReady = useSharedValue(0);
   const eventModalRef = React.useRef<BottomSheet>(null);
 

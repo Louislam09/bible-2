@@ -1,5 +1,5 @@
+import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -13,7 +13,7 @@ const PasswordSetupNotification: React.FC<PasswordSetupNotificationProps> = ({
 }) => {
   const [showNotification, setShowNotification] = useState(false);
   const router = useRouter();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme as TTheme);
 
   // useEffect(() => {

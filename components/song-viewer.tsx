@@ -1,6 +1,6 @@
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
+import { useMyTheme } from "@/context/ThemeContext";
 import { TSongItem, TTheme } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import {
@@ -20,7 +20,7 @@ const SongViewer = ({ song }: SongViewer) => {
   const { title, chorus, stanzas } = song;
   const scrollViewRef = useRef<ScrollView>(null);
 
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -103,11 +103,11 @@ const SongViewer = ({ song }: SongViewer) => {
             <Fragment>
               <Text style={styles.chorusLabel}>CORO</Text>
               <Text
-                onPress={() => {}}
+                onPress={() => { }}
                 style={[styles.verseText, { fontSize: songFontSize }]}
               >
                 {chorus?.split("\n").map((line, i) => (
-                  <Text onPress={() => {}} key={`chorus-${i}`}>
+                  <Text onPress={() => { }} key={`chorus-${i}`}>
                     {line}
                     {i < chorus.split("\n").length - 1 ? "\n" : ""}
                   </Text>
@@ -116,11 +116,11 @@ const SongViewer = ({ song }: SongViewer) => {
             </Fragment>
           ) : (
             <Text
-              onPress={() => {}}
+              onPress={() => { }}
               style={[styles.verseText, { fontSize: songFontSize }]}
             >
               {verseText.split("\n").map((line, i) => (
-                <Text onPress={() => {}} key={`verse-${i}`}>
+                <Text onPress={() => { }} key={`verse-${i}`}>
                   {line}
                   {i < verseText.split("\n").length - 1 ? "\n" : ""}
                 </Text>
@@ -163,8 +163,8 @@ const SongViewer = ({ song }: SongViewer) => {
               style={[
                 styles.navButtonText,
                 currentVerseIndex === 0 &&
-                  !isChorus &&
-                  styles.navButtonDisabled,
+                !isChorus &&
+                styles.navButtonDisabled,
                 { color: theme.colors.text.includes("FFF") ? "#000" : "#fff" },
               ]}
             >
@@ -180,8 +180,8 @@ const SongViewer = ({ song }: SongViewer) => {
               style={[
                 styles.navButtonText,
                 currentVerseIndex === stanzas.length - 1 &&
-                  isChorus &&
-                  styles.navButtonDisabled,
+                isChorus &&
+                styles.navButtonDisabled,
               ]}
             >
               Siguiente

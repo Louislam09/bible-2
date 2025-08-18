@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { useMyTheme } from "@/context/ThemeContext";
 import { Memorization, TTheme } from "@/types";
-import { useTheme } from "@/context/ThemeContext";
-import Icon from "../Icon";
-import ProgressBar from "../home/footer/ProgressBar";
 import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
 import { icons } from "lucide-react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet } from "react-native";
+import Icon from "../Icon";
 import { Text, View } from "../Themed";
+import ProgressBar from "../home/footer/ProgressBar";
 
 interface PracticeTrackerProps {
   item: Memorization;
@@ -18,7 +18,7 @@ const PracticeTracker: React.FC<PracticeTrackerProps> = ({
   currentTimeStat,
 }) => {
   const [status, setStatus] = useState("");
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const [iconName, setIconName] = useState<keyof typeof icons>("CircleCheck");
   const [iconColor, setIconColor] = useState(theme.colors.notification);
   const styles = getStyles(theme);

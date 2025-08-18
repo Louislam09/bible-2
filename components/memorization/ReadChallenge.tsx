@@ -1,15 +1,15 @@
-import {
-  StyleSheet,
-  TouchableWithoutFeedback,
-  TouchableOpacity,
-} from "react-native";
-import React, { FC, useState } from "react";
-import { Text, View } from "../Themed";
+import { useMyTheme } from "@/context/ThemeContext";
 import { IVerseItem, TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { splitText } from "@/utils/groupBy";
-import { useTheme } from "@/context/ThemeContext";
 import { useRouter } from "expo-router";
+import React, { FC, useState } from "react";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { Text, View } from "../Themed";
 
 type TPoints = {
   point: number;
@@ -29,7 +29,7 @@ const ReadChallenge: FC<ReadChallengeProps> = ({
   onUpdateProgress,
 }) => {
   const router = useRouter();
-  const { theme } = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [started, setStarted] = useState(false);
