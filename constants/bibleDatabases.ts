@@ -1,11 +1,11 @@
 export default [
-  {
-    name: "Biblia de estudio hebrea interlineal con vocales, acentos, transliteración y número Strong",
-    url: "_dl.php?back=bbl&a=HSB_plus_&b=mybible&c",
-    key: "HSB+",
-    size: 5459189,
-    storedName: "HSB+",
-  },
+  // {
+  //   name: "Biblia de estudio hebrea interlineal con vocales, acentos, transliteración y número Strong",
+  //   url: "_dl.php?back=bbl&a=HSB_plus_&b=mybible&c",
+  //   key: "HSB+",
+  //   size: 5459189,
+  //   storedName: "HSB+",
+  // },
   {
     name: "Nueva Biblia al Día",
     url: "_dl.php?back=bbl&a=NBD'08&b=mybible&c",

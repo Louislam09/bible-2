@@ -26,7 +26,7 @@ export class DownloadedDatabase {
     try {
       // if (this.db) {
       // await this.db.closeAsync(); // Fermer la base de données
-      await FileSystem.deleteAsync(`${SQLiteDirPath}/${this.name}`); // Supprimer le fichier de la base de données
+      await FileSystem.deleteAsync(`${SQLiteDirPath}/${this.name}`, { idempotent: true });
       return true;
       // }
     } catch (error) {

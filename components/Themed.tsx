@@ -42,14 +42,15 @@ export function Text(props: TextProps) {
   );
 }
 
-export function View(props: ViewProps) {
+export function View(props: ViewProps & { isTransparent?: boolean }) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const { theme } = useMyTheme();
   const { colors } = theme;
 
+
   return (
     <NativeDefaultView
-      style={[{ backgroundColor: colors.background }, style]}
+      style={[{ backgroundColor: props.isTransparent ? 'transparent' : colors.background }, style]}
       {...otherProps}
     />
   );

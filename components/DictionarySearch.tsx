@@ -7,7 +7,7 @@ import { useMyTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
 import useDictionaryData, { DatabaseData } from "@/hooks/useDictionaryData";
 import useParams from "@/hooks/useParams";
-import { DictionaryData, Screens, TTheme } from "@/types";
+import { DictionaryData, ModulesFilters, Screens, TTheme } from "@/types";
 import { pluralToSingular } from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { FlashList } from "@shopify/flash-list";
@@ -130,6 +130,8 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({ }) => {
     [data]
   );
 
+  const hasDictionary = useMemo(() => dbNames.length >= 1, [dbNames])
+
   useEffect(() => {
     if (!loading && !error) {
       setFilterData(data?.sort((a, b) => a.words.length - b.words.length));
@@ -160,8 +162,10 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({ }) => {
           <TextInput
             placeholder="Buscar una palabra..."
             style={[styles.noteHeaderSearchInput]}
+            placeholderTextColor={theme.colors.background}
             onChangeText={onChangeText}
             value={searchText}
+            editable={hasDictionary}
           />
         </View>
         {wordNotFoundInDictionary && searchDebounce !== "" && suggestWord && (
@@ -194,11 +198,41 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({ }) => {
   }, [selectedWord]);
 
   const onNavToManagerDownload = useCallback(() => {
-    router.navigate(Screens.DownloadManager);
+    // router.navigate(Screens.DownloadManager);
+    router.push({
+      pathname: Screens.DownloadManager,
+      params: { filter: ModulesFilters.DICTIONARIES }
+    })
   }, [router]);
 
-  if (dbNames.length === 0) {
-    return (
+
+  const ListEmptyComponent = useCallback(() => {
+    return hasDictionary ? (
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "transparent",
+        }}
+      >
+        <Animation
+          animationRef={animationRef}
+          backgroundColor={theme.colors.background}
+          source={searchingSource}
+        />
+        {wordNotFoundInDictionary && searchDebounce !== "" ? (
+          <Text style={[styles.noResultsText, { fontSize }]}>
+            No encontramos resultados para: {"\n"}
+            <Text style={{ color: theme.colors.notification }}>
+              {searchDebounce}
+            </Text>
+          </Text>
+        ) : (
+          <Text>Buscar un palabra</Text>
+        )}
+      </View>
+    ) : (
       <View style={styles.emptyContainer}>
         <Ionicons
           name="cloud-download-outline"
@@ -214,92 +248,74 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({ }) => {
           </TouchableOpacity>
         </Text>
       </View>
-    );
-  }
+    )
+  }, [hasDictionary, searchDebounce, wordNotFoundInDictionary])
+
+  const screenOptions = useMemo(() => {
+    return {
+      theme,
+      title: "Dictionario",
+      titleIcon: "BookA",
+      headerRightProps: {
+        headerRightIcon: "Trash2",
+        headerRightIconColor: "red",
+        onPress: () => console.log(),
+        disabled: true,
+        style: { opacity: 0 },
+      },
+    } as any
+  }, [])
 
   return (
-    <ScreenWithAnimation
-      animationSource={searchingSource}
-      speed={2}
-      title="Dictionario"
-    >
+    <>
       <Stack.Screen
         options={{
-          ...singleScreenHeader({
-            theme,
-            title: "Dictionario",
-            titleIcon: "BookA",
-            headerRightProps: {
-              headerRightIcon: "Trash2",
-              headerRightIconColor: "red",
-              onPress: () => console.log(),
-              disabled: true,
-              style: { opacity: 0 },
-            },
-          }),
+          ...singleScreenHeader(screenOptions),
         }}
       />
-      <View
-        style={{
-          flex: 1,
-          padding: 5,
-          backgroundColor: theme.dark ? theme.colors.background : "#eee",
-        }}
+
+      <ScreenWithAnimation
+        animationSource={searchingSource}
+        speed={2}
+        title="Dictionario"
       >
-        {selectedWord ? (
-          <WordDefinition subTitle="Definicion" wordData={selectedWord} />
-        ) : (
-          <>
-            {DictionaryHeader()}
-            <FlashList
-              key={schema}
-              contentContainerStyle={{
-                backgroundColor: theme.dark ? theme.colors.background : "#eee",
-                paddingVertical: 20,
-              }}
-              decelerationRate={"normal"}
-              estimatedItemSize={135}
-              data={wordNotFoundInDictionary ? [] : filterData}
-              renderItem={({ item, index }) => (
-                <RenderItem
-                  {...{ theme, styles, onItemClick }}
-                  item={item}
-                  index={index}
-                />
-              )}
-              keyExtractor={(item: any, index: any) => `dictionary-${index}`}
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
-              ListEmptyComponent={
-                <View
-                  style={{
-                    flex: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: "transparent",
-                  }}
-                >
-                  <Animation
-                    animationRef={animationRef}
-                    backgroundColor={theme.colors.background}
-                    source={searchingSource}
+        <View
+          style={{
+            flex: 1,
+            padding: 5,
+            backgroundColor: theme.dark ? theme.colors.background : "#eee",
+          }}
+        >
+          {selectedWord ? (
+            <WordDefinition subTitle="Definicion" wordData={selectedWord} />
+          ) : (
+            <>
+              {DictionaryHeader()}
+              <FlashList
+                key={schema}
+                contentContainerStyle={{
+                  backgroundColor: theme.dark ? theme.colors.background : "#eee",
+                  paddingVertical: 20,
+                }}
+                decelerationRate={"normal"}
+                estimatedItemSize={135}
+                data={wordNotFoundInDictionary ? [] : filterData}
+                renderItem={({ item, index }) => (
+                  <RenderItem
+                    {...{ theme, styles, onItemClick }}
+                    item={item}
+                    index={index}
                   />
-                  {wordNotFoundInDictionary && searchDebounce !== "" ? (
-                    <Text style={[styles.noResultsText, { fontSize }]}>
-                      No encontramos resultados para: {"\n"}
-                      <Text style={{ color: theme.colors.notification }}>
-                        {searchDebounce}
-                      </Text>
-                    </Text>
-                  ) : (
-                    <Text>Buscar un palabra</Text>
-                  )}
-                </View>
-              }
-            />
-          </>
-        )}
-      </View>
-    </ScreenWithAnimation>
+                )}
+                keyExtractor={(item: any, index: any) => `dictionary-${index}`}
+                ItemSeparatorComponent={() => <View style={styles.separator} />}
+                ListEmptyComponent={<ListEmptyComponent />}
+              />
+            </>
+          )}
+        </View>
+      </ScreenWithAnimation>
+    </>
   );
 };
 
@@ -384,6 +400,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: "#ddd",
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
+      color: colors.background
     },
     cardContainer: {
       padding: 15,

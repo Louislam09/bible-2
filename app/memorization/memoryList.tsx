@@ -264,11 +264,7 @@ const MemoryList: React.FC<MemorizationProps> = () => {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          ...singleScreenHeader(screenOptions),
-        }}
-      />
+      <Stack.Screen options={{ ...singleScreenHeader(screenOptions) }} />
       <ScreenWithAnimation
         speed={2}
         title="Memorizar Versos"

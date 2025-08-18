@@ -18,6 +18,7 @@ import {
   Alert,
   Animated,
   Easing,
+  Pressable,
   StyleSheet,
   TouchableOpacity
 } from 'react-native';
@@ -356,97 +357,90 @@ const DatabaseDownloadItem = ({
     setExpandDetails(!expandDetails);
   };
 
+  const isBible = !item.storedName.split('.')[1]
+
   return (
     <Animated.View style={[
       styles.itemContainer,
-      // { height: containerHeight },
       isCurrentBible && styles.currentBibleContainer
-    ]}>
-      {/* Header with name and badge */}
-      <View style={styles.header}>
-        <View style={styles.titleRow}>
-          <Text
-            style={[
-              styles.storedName,
-              item?.disabled && { color: theme.colors.notification + '70' },
-              isCurrentBible && styles.currentBibleText
-            ]}
-          >
-            {storedName}
-          </Text>
-          {isDownloaded && (
-            <Icon
-              size={18}
-              style={styles.badgeIcon}
-              name='BadgeCheck'
-              color={theme.colors.notification}
-            />
-          )}
-          {isCurrentBible && (
-            <View style={styles.currentBadge}>
-              <Text style={styles.currentBadgeText}>EN USO</Text>
-            </View>
-          )}
+    ]}
+    >
+
+      <Pressable onPress={() => toggleExpandDetails()} style={{ flexDirection: 'row', alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
+        <View style={styles.itemIconContainer}>
+          <Ionicons
+            name={isBible ? "book-outline" : "library-outline"}
+            size={22}
+            color={theme.colors.notification}
+          />
         </View>
 
-        <TouchableOpacity
-          style={styles.expandButton}
-          onPress={toggleExpandDetails}
-          hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
-        >
-          <Animated.View style={{ transform: [{ rotate: rotateIcon }] }}>
-            <Icon name="ChevronDown" size={20} color={theme.colors.text} />
-          </Animated.View>
-        </TouchableOpacity>
-      </View>
-
-      {/* Main content */}
-      <View style={styles.itemContent}>
-        <Text
-          style={[
-            styles.bibleName,
-            item?.disabled && { color: theme.colors.text + '70' },
-          ]}
-          numberOfLines={expandDetails ? undefined : 1}
-        >
-          {name}
-        </Text>
-
-        {/* Additional metadata could be displayed here if added to the type */}
-
-        {/* Download/Action buttons */}
-        {!item?.disabled && (
-          <View style={styles.buttonContainer}>
-            {isLoading ? (
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={cancelDownload}
-              >
-                <Icon name="X" size={18} color="#FF0000" />
-              </TouchableOpacity>
-            ) : isDownloaded ? (
-              <TouchableOpacity
-                style={[styles.actionButton, styles.deleteButton]}
-                onPress={deleteBibleFile}
-                disabled={isCurrentBible}
-              >
-                <Icon name="Trash2" size={18} color="#FF0000" />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={[styles.actionButton, styles.downloadButton]}
-                onPress={downloadBible}
-                disabled={!isConnected || isLoading}
-              >
-                <Icon name="Download" size={18} color={theme.colors.primary} />
-              </TouchableOpacity>
+        <View style={styles.itemContent}>
+          <View isTransparent style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
+            <Text
+              style={[
+                styles.itemTitle,
+                { color: theme.colors.notification },
+              ]}
+            >
+              {item?.key || "-"}
+            </Text>
+            {isDownloaded && (
+              <Icon
+                size={18}
+                name='BadgeCheck'
+                color={theme.colors.notification}
+              />
+            )}
+            {isCurrentBible && (
+              <View style={styles.currentBadge}>
+                <Text style={styles.currentBadgeText}>EN USO</Text>
+              </View>
             )}
           </View>
-        )}
-      </View>
+          <Text
+            style={[
+              styles.itemSubTitle,
+              { color: theme.colors.primary },
+            ]}
+            numberOfLines={expandDetails ? undefined : 1}
+          >
+            {item?.name || "-"}
+          </Text>
+          <View style={styles.defaultBadge}>
+            <Icon name='ChartPie' color={theme.colors.notification} size={16} />
+            <Text style={styles.defaultBadgeText}>{formatFileSize(size)}</Text>
+          </View>
+        </View>
 
-      {/* File size indicator */}
-      <FileSizeText />
+        <View style={styles.buttonContainer}>
+          {isLoading ? (
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={cancelDownload}
+            >
+              <Icon name="X" size={18} color="#FF0000" />
+            </TouchableOpacity>
+          ) : isDownloaded ? (
+            <TouchableOpacity
+              style={[styles.actionButton, styles.deleteButton]}
+              onPress={deleteBibleFile}
+              disabled={isCurrentBible}
+            >
+              <Icon name="Trash2" size={18} color="#FF0000" />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={[styles.actionButton, styles.downloadButton]}
+              // style={[styles.redownloadButton]}
+              onPress={downloadBible}
+              disabled={!isConnected || isLoading}
+            >
+              <Icon name="Download" size={20} color={theme.colors.primary} />
+            </TouchableOpacity>
+          )}
+        </View>
+      </Pressable>
 
       {/* Progress bar for download */}
       {!!progress && !isDownloaded && (
@@ -480,6 +474,11 @@ const DatabaseDownloadItem = ({
       {/* Expandable details section */}
       {expandDetails && (
         <Animated.View style={styles.detailsContainer}>
+          {/* File location */}
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Nombre:</Text>
+            <Text style={styles.detailValue} >{item.name}</Text>
+          </View>
           {/* Downloaded date */}
           {isDownloaded && downloadedDate && (
             <View style={styles.detailRow}>
@@ -494,11 +493,7 @@ const DatabaseDownloadItem = ({
             <Text style={styles.detailValue}>{formatFileSize(size)}</Text>
           </View>
 
-          {/* File location */}
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Ubicación:</Text>
-            <Text style={styles.detailValue} numberOfLines={1}>{fileUri}{dbFileExt}</Text>
-          </View>
+
         </Animated.View>
       )}
     </Animated.View>
@@ -510,15 +505,14 @@ export default DatabaseDownloadItem;
 const getStyles = ({ colors, dark = false }: TTheme) =>
   StyleSheet.create({
     itemContainer: {
-      display: 'flex',
-      paddingVertical: 16,
-      paddingHorizontal: 12,
-      marginVertical: 8,
-      backgroundColor: colors.card,
+      padding: 12,
       borderRadius: 12,
+      marginVertical: 4,
+      backgroundColor: colors.card + "80",
       borderWidth: 1,
-      borderColor: colors.border,
-      overflow: 'hidden',
+      borderColor: colors.notification + "50",
+      gap: 2,
+
     },
     currentBibleContainer: {
       borderColor: colors.primary,
@@ -532,11 +526,26 @@ const getStyles = ({ colors, dark = false }: TTheme) =>
       marginBottom: 8,
       backgroundColor: "transparent",
     },
+    itemIconContainer: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: colors.notification + "20",
+      marginRight: 12,
+    },
+    // itemContent: {
+    //   flex: 1,
+    //   justifyContent: "center",
+    //   backgroundColor: "transparent",
+    // },
     titleRow: {
       flexDirection: 'row',
       alignItems: 'center',
       flex: 1,
       backgroundColor: "transparent",
+      gap: 5
     },
     storedName: {
       color: colors.notification,
@@ -549,21 +558,54 @@ const getStyles = ({ colors, dark = false }: TTheme) =>
     },
     expandButton: {
       padding: 4,
+      alignSelf: 'flex-end',
     },
     itemContent: {
       display: 'flex',
-      alignItems: 'center',
-      flexDirection: 'row',
       justifyContent: 'space-between',
       flex: 1,
       marginBottom: 8,
       backgroundColor: "transparent",
+    },
+    itemTitle: {
+      fontSize: 16,
+      fontWeight: "600",
+      textTransform: 'uppercase'
+    },
+    itemSubTitle: {
+      fontSize: 14,
+      color: colors.primary,
+      marginTop: 2,
+    },
+
+    redownloadButton: {
+      padding: 8,
+      borderRadius: 8,
+      backgroundColor: colors.notification + "20",
+      marginLeft: "auto",
+      marginHorizontal: 8
     },
     bibleName: {
       paddingRight: 10,
       flex: 1,
       fontSize: 16,
       fontWeight: '500',
+    },
+    defaultBadge: {
+      backgroundColor: colors.notification + "20",
+      paddingRight: 8,
+      paddingVertical: 2,
+      borderRadius: 12,
+      alignSelf: "flex-start",
+      marginTop: 4,
+      flexDirection: 'row',
+      gap: 4,
+      alignItems: 'center'
+    },
+    defaultBadgeText: {
+      fontSize: 10,
+      fontWeight: "600",
+      color: colors.notification,
     },
     versionBadge: {
       backgroundColor: colors.notification + '20',
@@ -579,7 +621,6 @@ const getStyles = ({ colors, dark = false }: TTheme) =>
     },
     badgeIcon: {
       fontWeight: '700',
-      marginHorizontal: 10,
       color: '#4ec9b0', // Success color from original code
       fontSize: 18,
     },
@@ -600,18 +641,23 @@ const getStyles = ({ colors, dark = false }: TTheme) =>
       alignItems: 'center',
       justifyContent: 'flex-end',
       backgroundColor: "transparent",
+      marginLeft: 4
     },
     actionButton: {
       width: 36,
       height: 36,
-      borderRadius: 18,
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: colors.background,
       borderWidth: 1,
+      padding: 8,
+      borderRadius: 8,
+      marginLeft: "auto",
+      marginHorizontal: 8
     },
     downloadButton: {
       borderColor: colors.primary + '50',
+      backgroundColor: colors.notification + "20",
     },
     deleteButton: {
       borderColor: '#FF000050', // Error with opacity
@@ -619,12 +665,16 @@ const getStyles = ({ colors, dark = false }: TTheme) =>
     cancelButton: {
       width: 36,
       height: 36,
-      borderRadius: 18,
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: '#FF000010', // Error with opacity
       borderWidth: 1,
       borderColor: '#FF000030', // Error with opacity
+
+      padding: 8,
+      borderRadius: 8,
+      marginLeft: "auto",
+      marginHorizontal: 8
     },
     sizeContainer: {
       flexDirection: 'row',

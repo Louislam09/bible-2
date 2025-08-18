@@ -12,7 +12,7 @@ import {
 import Icon from "../Icon";
 import { Text } from "../Themed";
 
-type SingleScreenHeaderProps = {
+export type SingleScreenHeaderProps = {
   theme: TTheme;
   title: string;
   titleIcon: keyof typeof icons;
