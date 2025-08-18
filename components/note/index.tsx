@@ -493,7 +493,7 @@ const Note = ({ data }: TListVerse) => {
               contentContainerStyle={styles.flashListContent}
               ref={flatListRef}
               decelerationRate="normal"
-              estimatedItemSize={135}
+
               data={noteList}
               renderItem={renderItem}
               keyExtractor={(item: TNote) => `note-${item.id}`}

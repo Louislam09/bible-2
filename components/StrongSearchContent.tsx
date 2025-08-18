@@ -89,7 +89,7 @@ const StrongSearchContent = ({
               justOneWord
               theme={theme}
               text={item.text}
-              onWordClick={() => {}}
+              onWordClick={() => { }}
             />
           </Text>
         </View>
@@ -118,7 +118,7 @@ const StrongSearchContent = ({
       <FlashList
         ref={flatListRef}
         decelerationRate={"normal"}
-        estimatedItemSize={135}
+
         data={filterData}
         renderItem={renderItem as any}
         onScroll={handleScroll}

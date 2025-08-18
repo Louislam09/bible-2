@@ -215,7 +215,6 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
         }
         contentContainerStyle={styles.listContent}
         // ItemSeparatorComponent={() => <View style={styles.separator} />}
-        estimatedItemSize={80}
         renderItem={(props) => (
           <DatabaseDownloadItem {...{ theme, isConnected, ...props }} />
         )}

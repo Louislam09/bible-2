@@ -328,8 +328,8 @@ const RequestAccessScreen: React.FC = () => {
                   pushToken: currentUserPushToken,
                   title: "📖 Solicitud de acceso al himnario",
                   body: `Tu solicitud ha sido ${status === "approved"
-                      ? "aprobada ✅. Ya puedes acceder al himnario."
-                      : "rechazada ❌. Si crees que se trata de un error, contáctanos."
+                    ? "aprobada ✅. Ya puedes acceder al himnario."
+                    : "rechazada ❌. Si crees que se trata de un error, contáctanos."
                     }`,
                   options: {
                     badge: 1,
@@ -472,7 +472,6 @@ const RequestAccessScreen: React.FC = () => {
                 data={filteredAndSortedRequests}
                 renderItem={renderRequestItem}
                 keyExtractor={(item) => item.id}
-                estimatedItemSize={150}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}
                 refreshControl={

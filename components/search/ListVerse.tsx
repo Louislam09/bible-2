@@ -90,7 +90,7 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
       <FlashList
         ref={flatListRef}
         decelerationRate={"normal"}
-        estimatedItemSize={135}
+
         data={data}
         renderItem={({ item, index }) => (
           <RenderVerse

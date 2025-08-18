@@ -2,7 +2,6 @@ import AiTextScannerAnimation from "@/components/ai/AiTextScannerAnimation";
 import DisplayStrongWord from "@/components/DisplayStrongWord";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
-import Walkthrough from "@/components/Walkthrough";
 import { getBookDetail } from "@/constants/BookNames";
 import { isDefaultDatabase } from "@/constants/databaseNames";
 import { useBibleContext } from "@/context/BibleContext";
@@ -12,7 +11,6 @@ import { useMyTheme } from "@/context/ThemeContext";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
-import { tourState$ } from "@/state/tourState";
 import { IBookVerse, Screens, TIcon, TTheme, TVerse } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { customUnderline } from "@/utils/customStyle";
@@ -23,7 +21,6 @@ import {
   WordTagPair,
 } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
-import { mergeTexts } from "@/utils/interleanerHelper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { use$ } from "@legendapp/state/react";
 import { useRouter } from "expo-router";
@@ -41,8 +38,7 @@ import {
   Easing,
   Pressable,
   ScrollView,
-  StyleSheet,
-  TouchableOpacity,
+  StyleSheet
 } from "react-native";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
 import VerseTitle from "./VerseTitle";
@@ -144,16 +140,17 @@ const ActionItem = memo(
 );
 
 const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
-  const { currentBibleVersion, fontSize, toggleFavoriteVerse } =
-    useBibleContext();
+  const { toggleFavoriteVerse } = useBibleContext();
 
+  const fontSize = use$(() => storedData$.fontSize.get());
+  const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
   const { addVerse } = useMemorization();
   const { theme } = useMyTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const [isFavorite, setFavorite] = useState(false);
   const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
   const verseRef = useRef<any>(null);
-  const animatedVerseHighlight = useRef(new Animated.Value(0)).current;
+  // const animatedVerseHighlight = useRef(new Animated.Value(0)).current;
   const wordAndStrongValue = extractWordsWithTags(item.text);
   const googleAIKey = use$(() => storedData$.googleAIKey.get());
   const isDefaultDb = isDefaultDatabase(currentBibleVersion);
@@ -194,26 +191,26 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     [item]
   );
 
-  const initHighLightedVerseAnimation = () => {
-    const loopAnimation = Animated.loop(
-      Animated.sequence([
-        Animated.timing(animatedVerseHighlight, {
-          toValue: 1,
-          duration: 300,
-          easing: Easing.inOut(Easing.quad),
-          useNativeDriver: false,
-        }),
-        Animated.timing(animatedVerseHighlight, {
-          toValue: 0,
-          duration: 300,
-          easing: Easing.inOut(Easing.quad),
-          useNativeDriver: false,
-        }),
-      ]),
-      { iterations: 2 }
-    );
-    loopAnimation.start();
-  };
+  // const initHighLightedVerseAnimation = () => {
+  //   const loopAnimation = Animated.loop(
+  //     Animated.sequence([
+  //       Animated.timing(animatedVerseHighlight, {
+  //         toValue: 1,
+  //         duration: 300,
+  //         easing: Easing.inOut(Easing.quad),
+  //         useNativeDriver: false,
+  //       }),
+  //       Animated.timing(animatedVerseHighlight, {
+  //         toValue: 0,
+  //         duration: 300,
+  //         easing: Easing.inOut(Easing.quad),
+  //         useNativeDriver: false,
+  //       }),
+  //     ]),
+  //     { iterations: 2 }
+  //   );
+  //   loopAnimation.start();
+  // };
 
   useEffect(() => {
     setFavorite(!!item.is_favorite);
@@ -447,41 +444,41 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     ] as TIcon[];
   }, [verseIsTapped, isFavorite, item, isNewTestament]);
 
-  const steps = [
-    {
-      text: "Paso 1: 🔍 Haz un toque en cualquier versículo para activar la búsqueda en el original.",
-      target: verseRef,
-      action: () => {
-        onVerseClicked();
-      },
-    },
-    {
-      text: "Paso 2: 👀 Observarás cómo algunas palabras cambian de color.",
-      target: verseRef,
-      action: () =>
-        onStrongWordClicked({ word: "principio", tagValue: "7225" }),
-    },
-    {
-      text: "Paso 3: 📘 Cuando toques cualquier palabra resaltada, verás su significado en el original.",
-      target: null,
-    },
-  ];
+  // const steps = [
+  //   {
+  //     text: "Paso 1: 🔍 Haz un toque en cualquier versículo para activar la búsqueda en el original.",
+  //     target: verseRef,
+  //     action: () => {
+  //       onVerseClicked();
+  //     },
+  //   },
+  //   {
+  //     text: "Paso 2: 👀 Observarás cómo algunas palabras cambian de color.",
+  //     target: verseRef,
+  //     action: () =>
+  //       onStrongWordClicked({ word: "principio", tagValue: "7225" }),
+  //   },
+  //   {
+  //     text: "Paso 3: 📘 Cuando toques cualquier palabra resaltada, verás su significado en el original.",
+  //     target: null,
+  //   },
+  // ];
 
-  const bgVerseHighlight = animatedVerseHighlight.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["transparent", `${theme.colors.notification + "20"}`],
-  });
+  // const bgVerseHighlight = animatedVerseHighlight.interpolate({
+  //   inputRange: [0, 1],
+  //   outputRange: ["transparent", `${theme.colors.notification + "20"}`],
+  // });
 
   return (
     <View
       onLayout={() => {
-        if (initVerse === item.verse) initHighLightedVerseAnimation();
+        // if (initVerse === item.verse) initHighLightedVerseAnimation();
       }}
     >
-      <TouchableOpacity
+      <Pressable
         onPress={onPress}
         onLongPress={onVerseLongPress}
-        activeOpacity={0.9}
+        // activeOpacity={0.9}
         style={styles.verseContainer}
         ref={verseRef}
       >
@@ -573,7 +570,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
             ))}
           </ScrollView>
         )}
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 };

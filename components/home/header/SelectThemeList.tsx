@@ -62,7 +62,6 @@ const SelectThemeList: FC<ISelectThemeList> = ({ selectTheme, theme }) => {
         contentContainerStyle={{ padding: 0 }}
         data={Object.values(EThemes)}
         renderItem={renderItem}
-        estimatedItemSize={5}
         numColumns={3}
       />
     </View>

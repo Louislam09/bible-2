@@ -373,7 +373,6 @@ const HymnScreen = () => {
               data={options}
               keyExtractor={(item) => item.label}
               renderItem={renderItem}
-              estimatedItemSize={200}
               numColumns={2}
               showsVerticalScrollIndicator={false}
             />

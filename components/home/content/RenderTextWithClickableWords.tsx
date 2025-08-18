@@ -32,6 +32,7 @@ const RenderTextWithClickableWords: React.FC<Props> = ({
     const styles = {
       color: theme?.colors.notification ?? "black",
       backgroundColor: theme?.colors.notification + "20",
+      fontSize,
     };
     const isEven = index % 2 === 0;
     if (isEven) return word;
@@ -40,7 +41,7 @@ const RenderTextWithClickableWords: React.FC<Props> = ({
     if (!shouldRender) return null;
 
     const Componetent = (
-      <Text key={index} onPress={() => onWordClick(word)} style={[styles, { fontSize }]}>
+      <Text key={index} onPress={() => onWordClick(word)} style={styles}>
         {"\u00A0"}
         {word}
       </Text>

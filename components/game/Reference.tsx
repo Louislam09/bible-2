@@ -42,10 +42,10 @@ const Reference = ({ target, isVisible, onClose, references }: IReference) => {
             }
 
             if (endVerse || isCompleteChapter) {
-                conditions.push(`(v.book_number = ? AND v.chapter = ? AND v.verse BETWEEN ? AND ?)`); 
+                conditions.push(`(v.book_number = ? AND v.chapter = ? AND v.verse BETWEEN ? AND ?)`);
                 params.push(bookNumber, chapter, (verse || 1), (endVerse || (bookInfo?.verseCount || 1)));
             } else {
-                conditions.push(`(v.book_number = ? AND v.chapter = ? AND v.verse = ?)`); 
+                conditions.push(`(v.book_number = ? AND v.chapter = ? AND v.verse = ?)`);
                 params.push(bookNumber, chapter, verse);
             }
         });
@@ -112,7 +112,7 @@ const Reference = ({ target, isVisible, onClose, references }: IReference) => {
                     }}
                     stickyHeaderIndices={stickyHeaderIndices}
                     getItemType={(item) => (typeof item === 'string' ? 'sectionHeader' : 'row')}
-                    estimatedItemSize={135}
+
                 />
             </View>
         </Popover>

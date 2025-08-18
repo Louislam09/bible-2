@@ -261,7 +261,7 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
                 backgroundColor: "transparent",
               }}
               decelerationRate={"normal"}
-              estimatedItemSize={135}
+
               data={wordNotFoundInDictionary ? [] : filterData}
               renderItem={({ item, index }) => (
                 <RenderItem

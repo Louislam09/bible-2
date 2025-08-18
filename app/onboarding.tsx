@@ -128,7 +128,6 @@ const OnboardingScreen = () => {
           keyExtractor={(item) => item.label}
           renderItem={renderItem}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
-          estimatedItemSize={5}
           numColumns={2}
         />
       </View>

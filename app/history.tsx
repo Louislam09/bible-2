@@ -166,7 +166,6 @@ const HistoryScreen = () => {
             data={history}
             keyExtractor={(item) => `history:${item.id}`}
             renderItem={renderItem}
-            estimatedItemSize={70}
             ListEmptyComponent={EmptyListComponent}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.listContent}

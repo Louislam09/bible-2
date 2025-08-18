@@ -12,7 +12,7 @@ import copyToClipboard from "@/utils/copyToClipboard";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { NavigationProp } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
+import { FlashList, FlashListRef } from "@shopify/flash-list";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ListRenderItem,
@@ -41,7 +41,7 @@ const CompareVersions = ({
   >([]);
   const styles = getStyles(theme);
   const { fontSize, selectBibleVersion } = useBibleContext();
-  const flatListRef = useRef<FlashList<any>>(null);
+  const flatListRef = useRef<FlashListRef<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const notFoundSource = require("../assets/lottie/notFound.json");
   const [searchParam, setSearchParam] = useState({
@@ -105,9 +105,8 @@ const CompareVersions = ({
           </Text>
           <View style={styles.headerContainer}>
             <Text style={[styles.cardTitle, { fontSize }]}>
-              {`${renameLongBookName(item?.bookName)} ${item?.chapter}:${
-                item?.verse
-              }`}
+              {`${renameLongBookName(item?.bookName)} ${item?.chapter}:${item?.verse
+                }`}
             </Text>
             <View style={styles.verseAction}>
               <Icon
@@ -202,7 +201,7 @@ const CompareVersions = ({
       <FlashList
         ref={flatListRef}
         decelerationRate={"normal"}
-        estimatedItemSize={135}
+
         data={filteredVersionData}
         renderItem={renderItem as any}
         onScroll={handleScroll}

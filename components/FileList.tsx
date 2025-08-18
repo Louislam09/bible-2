@@ -266,7 +266,6 @@ const FileList = () => {
 
   return (
     <FlashList
-      estimatedItemSize={80}
       data={[...installedBibles, ...installedDictionary]}
       renderItem={renderItem}
       keyExtractor={(item) => item.id}

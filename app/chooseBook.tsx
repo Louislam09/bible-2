@@ -120,7 +120,6 @@ const BookList = React.memo(
         keyExtractor={keyExtractor}
         data={data}
         renderItem={renderItem}
-        estimatedItemSize={47}
         numColumns={viewLayoutGrid ? (isShowName ? 4 : 5) : 1}
         removeClippedSubviews={true}
       />

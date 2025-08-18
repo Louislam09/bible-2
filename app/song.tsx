@@ -168,7 +168,6 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
             paddingVertical: 20,
           }}
           decelerationRate={"normal"}
-          estimatedItemSize={135}
           data={filterData}
           renderItem={({ item, index }) => (
             <RenderItem

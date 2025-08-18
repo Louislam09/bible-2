@@ -1,6 +1,6 @@
 import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
-import { FlashList, ListRenderItem } from "@shopify/flash-list";
+import { FlashList, FlashListRef, ListRenderItem } from "@shopify/flash-list";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Text, View } from "../Themed";
@@ -50,7 +50,7 @@ const StreakCard: React.FC<StreakCardProps> = ({
   days = [],
 }) => {
   const { theme } = useMyTheme();
-  const steakListRef = useRef<FlashList<any>>(null);
+  const steakListRef = useRef<FlashListRef<any>>(null);
   const [isLayoutMounted, setLayoutMounted] = useState(false);
   const styles = getStyles(theme);
   const startDate = "2025-02-01";
@@ -103,7 +103,6 @@ const StreakCard: React.FC<StreakCardProps> = ({
           onLayout={() => setLayoutMounted(true)}
           decelerationRate="normal"
           horizontal
-          estimatedItemSize={60}
           renderItem={RenderItem as any}
           keyExtractor={(item: any, index: any) => `streak-${index}`}
         />

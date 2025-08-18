@@ -53,7 +53,6 @@ const CustomTabs = ({
       contentContainerStyle={{ backgroundColor: "transparent" }}
       data={tabs}
       renderItem={renderItem}
-      estimatedItemSize={100}
       keyExtractor={(item: any, index: any) => `tab-${index}-${item}`}
     />
   );

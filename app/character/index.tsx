@@ -107,7 +107,6 @@ const Character: React.FC<CharacterProps> = () => {
           paddingVertical: 20,
         }}
         decelerationRate={"normal"}
-        estimatedItemSize={135}
         data={
           searchText
             ? filterData.filter(

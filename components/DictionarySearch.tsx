@@ -298,7 +298,7 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({ }) => {
                   paddingVertical: 20,
                 }}
                 decelerationRate={"normal"}
-                estimatedItemSize={135}
+
                 data={wordNotFoundInDictionary ? [] : filterData}
                 renderItem={({ item, index }) => (
                   <RenderItem

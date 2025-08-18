@@ -75,16 +75,18 @@ const OptimizedChapterList = ({
     <FlashList
       data={chapters}
       renderItem={renderItem}
-      estimatedItemSize={70}
       keyExtractor={keyExtractor}
       numColumns={5}
       ListHeaderComponent={ListHeader}
       contentContainerStyle={styles.flatContainer}
       removeClippedSubviews={true}
       getItemType={() => "chapter"}
+      // overrideItemLayout={(layout, item) => {
+      //   layout.size = 70;
+      //   layout.span = 1;
+      // }}
       overrideItemLayout={(layout, item) => {
-        layout.size = 70;
-        layout.span = 1;
+        layout.span = 1; // Only span is supported
       }}
     />
   );

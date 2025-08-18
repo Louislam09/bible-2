@@ -140,7 +140,6 @@ const TimelineList = () => {
             onPress={() => handleItemPress(index)}
           />
         )}
-        estimatedItemSize={150}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={() => (

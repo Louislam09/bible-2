@@ -270,7 +270,6 @@ const Concordance: React.FC<ConcordanceProps> = () => {
                   paddingVertical: 20,
                 }}
                 decelerationRate={"normal"}
-                estimatedItemSize={135}
                 data={currentList}
                 renderItem={({ item, index }) => (
                   <RenderVerse
@@ -289,7 +288,6 @@ const Concordance: React.FC<ConcordanceProps> = () => {
                   paddingVertical: 20,
                 }}
                 decelerationRate={"normal"}
-                estimatedItemSize={135}
                 data={
                   debouncedSearchText
                     ? filterData.filter(

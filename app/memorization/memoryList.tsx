@@ -322,7 +322,6 @@ const MemoryList: React.FC<MemorizationProps> = () => {
               backgroundColor:
                 data.length > 0 ? "#dc2626" : theme.colors.background,
             }}
-            estimatedItemSize={135}
             renderItem={RenderItem as any}
             data={data}
             keyExtractor={(item: any, index: any) => `memorization-${index}`}
