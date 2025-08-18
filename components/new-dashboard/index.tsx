@@ -272,12 +272,12 @@ const NewDashboard = () => {
         action: versionHandlePresentModalPress,
         color: "#beeaff",
       },
-      {
-        icon: "AudioLines",
-        label: "Selecciona \nUna Voz",
-        action: voiceHandlePresentModalPress,
-        color: "#5bb77b",
-      },
+      // {
+      //   icon: "AudioLines",
+      //   label: "Selecciona \nUna Voz",
+      //   action: voiceHandlePresentModalPress,
+      //   color: "#5bb77b",
+      // },
     ],
     manager: [
       {
@@ -306,7 +306,6 @@ const NewDashboard = () => {
     <StatusBarBackground>
       <ScrollView style={styles.container}>
         <ProfileCard user={user} />
-        {/* <DatabaseDebug /> */}
         <DailyVerseTwo user={user} theme={theme} />
         <MainSection list={mainActionItems} theme={theme} />
         <StudyTools list={studyToolItems} theme={theme} />

@@ -19,7 +19,7 @@ interface Props extends TimelineEventType {
   color: string;
   x: SharedValue<number>;
   yearsToPx: (years: number) => number;
-  eventModalRef: React.RefObject<BottomSheet>;
+  eventModalRef: React.RefObject<BottomSheet | null>;
   openBibleEventBottomSheet: () => void;
   setEvent: (event: Partial<TimelineEventType>) => void;
   calculateEventWidth: (

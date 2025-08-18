@@ -110,32 +110,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: "transparent",
       paddingHorizontal: 10
     },
-    card: {
-      display: "flex",
-      flexDirection: "row",
-      width: "90%",
-      padding: 5,
-      paddingVertical: 10,
-      paddingLeft: 10,
-      alignItems: "center",
-      backgroundColor: colors.background + "80",
-      borderLeftColor: colors.primary,
-      borderLeftWidth: 3,
-      borderRadius: 10,
-    },
-    icon: {
-      fontWeight: "700",
-      marginHorizontal: 10,
-      color: colors.notification + "90",
-      fontSize: 28,
-    },
-    versionText: {
-      color: colors.text,
-      fontWeight: "600",
-    },
-
-    // item
-
     itemContainer: {
       padding: 12,
       borderRadius: 12,
@@ -173,86 +147,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       color: colors.primary,
       marginTop: 2,
     },
-    deleteButton: {
-      padding: 8,
-      borderRadius: 8,
-      backgroundColor: "#e7485620",
-    },
-    loadingContainer: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    loadingText: {
-      marginTop: 12,
-      fontSize: 16,
-      color: colors.text + "90",
-    },
-    emptyContainer: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      paddingTop: 60,
-      paddingHorizontal: 20,
-    },
-    emptyTitle: {
-      fontSize: 20,
-      fontWeight: "600",
-      marginTop: 16,
-      color: colors.text,
-    },
-    emptySubtitle: {
-      fontSize: 16,
-      textAlign: "center",
-      marginTop: 8,
-      color: colors.text + "70",
-    },
-    errorContainer: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      padding: 20,
-    },
-    errorText: {
-      fontSize: 16,
-      textAlign: "center",
-      marginTop: 12,
-      color: "#e74856",
-    },
-    retryButton: {
-      marginTop: 16,
-      paddingHorizontal: 24,
-      paddingVertical: 12,
-      backgroundColor: colors.notification + "30",
-      borderRadius: 20,
-    },
-    retryButtonText: {
-      fontWeight: "600",
-      color: colors.notification,
-    },
-    sectionHeader: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginVertical: 10,
-      paddingHorizontal: 4,
-    },
-    sectionTitle: {
-      fontSize: 18,
-      fontWeight: "600",
-      color: colors.notification,
-    },
-    countBadge: {
-      backgroundColor: colors.notification + "30",
-      paddingHorizontal: 8,
-      paddingVertical: 2,
-      borderRadius: 12,
-      marginLeft: 8,
-    },
-    countText: {
-      fontSize: 12,
-      fontWeight: "500",
-      color: colors.notification,
-    },
     defaultBadge: {
       backgroundColor: colors.notification + "20",
       paddingRight: 8,
@@ -273,8 +167,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginLeft: "auto",
       marginHorizontal: 8
     },
-
-    // 
     tab: {
       flex: 1,
       paddingVertical: 12,
@@ -286,12 +178,9 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginBottom: 20,
       backgroundColor: colors.card,
     },
-
     tabText: {
       fontSize: 16,
-      // fontWeight: "500",
       color: colors.text,
-      // color: colors.notification,
       fontWeight: "600",
     },
     tabIcon: {
