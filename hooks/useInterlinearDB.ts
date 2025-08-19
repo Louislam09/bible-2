@@ -1,11 +1,8 @@
 import { databaseNames, dbFileExt, SQLiteDirPath } from "@/constants/databaseNames";
 import { CREATE_FAVORITE_VERSES_TABLE } from "@/constants/Queries";
-import { bibleState$ } from "@/state/bibleState";
 import { dbDownloadState$ } from "@/state/dbDownloadState";
 import { DEFAULT_DATABASE } from "@/types";
 import { prepareDatabaseFromDbFile } from "@/utils/prepareDB";
-import unzipFile from "@/utils/unzipFile";
-import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
 import { useEffect, useRef, useState } from "react";
