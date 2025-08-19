@@ -493,12 +493,12 @@ export const useNotificationService = () => {
         }
     };
 
-    const sendCustomNotification = async (
+    const sendCustomNotification = async ({ body, delaySeconds = 1, title, data }: {
         title: string,
         body: string,
         data?: Record<string, any>,
-        delaySeconds: number = 0
-    ): Promise<string | null> => {
+        delaySeconds: number
+    }): Promise<string | null> => {
         const targetTime = new Date(Date.now() + (delaySeconds * 1000));
         return await scheduleAlarm(targetTime, title, body, 'default', data);
     };
