@@ -191,7 +191,7 @@ const HymnScreen = () => {
   const navigation = useNavigation();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const netInfo = useNetwork();
-  const { isConnected } = netInfo!
+  const { isConnected } = netInfo
   const requestAccessBottomSheetModalRef = useRef<BottomSheetModal>(null);
   // const { sendPushNotificationToUser } = useNotificationService();
 

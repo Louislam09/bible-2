@@ -43,7 +43,7 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const debouncedSearchText = useDebounce(searchText, 500);
   const netInfo = useNetwork();
-  const { isConnected } = netInfo!
+  const { isConnected } = netInfo
   const [selectedFilter, setSelectedFilter] = useState(filter || ModulesFilters.ALL)
   const sortRef = useRef<BottomSheetModal>(null);
 

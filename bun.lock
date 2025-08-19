@@ -76,7 +76,7 @@
         "react-native-markdown-display": "^7.0.2",
         "react-native-modal": "^13.0.1",
         "react-native-pager-view": "6.7.1",
-        "react-native-pell-rich-editor": "^1.9.0",
+        "react-native-pell-rich-editor": "^1.10.0",
         "react-native-popover-view": "^6.1.0",
         "react-native-reanimated": "3.17.4",
         "react-native-safe-area-context": "5.4.0",
@@ -2253,7 +2253,7 @@
 
     "react-native-pager-view": ["react-native-pager-view@6.7.1", "", { "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-cBSr6xw4g5N7Kd3VGWcf+kmaH7iBWb0DXAf2bVo3bXkzBcBbTOmYSvc0LVLHhUPW8nEq5WjT9LCIYAzgF++EXw=="],
 
-    "react-native-pell-rich-editor": ["react-native-pell-rich-editor@1.9.0", "", { "peerDependencies": { "react-native": ">=0.50.0", "react-native-webview": ">=7.5.2" } }, "sha512-BKzlu++FySzPXrb5bczD8b/ZZJtfzcD4z7FvW7TrH+4OENEQtaIiEMfmb5N09Kv3YVJcfm8fut8Y+GLNAcCQHA=="],
+    "react-native-pell-rich-editor": ["react-native-pell-rich-editor@1.10.0", "", { "peerDependencies": { "react-native": ">=0.50.0", "react-native-webview": ">=7.5.2" } }, "sha512-MRL7lokAQOIxcZ900FxHeVA0B3ZRcFlIhZ9FSQIrjHmutN2at+hax139xV0AQ1DwvJ3fYwlUuTr7Pf4hHpy/PA=="],
 
     "react-native-popover-view": ["react-native-popover-view@6.1.0", "", { "dependencies": { "deprecated-react-native-prop-types": "^2.3.0", "prop-types": "^15.8.1" } }, "sha512-j1CB+yPwTKlBvIJBNb1AwiHyF/r+W5+AJIbHk79GRa+0z6PVtW4C7NWJWPqUVkCMOcJtewl6Pr6f2dc/87cVyQ=="],
 

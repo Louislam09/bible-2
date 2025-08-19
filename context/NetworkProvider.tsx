@@ -1,22 +1,28 @@
-import NetInfo, { NetInfoState } from '@react-native-community/netinfo';
+import { addEventListener, NetInfoState, NetInfoStateType } from '@react-native-community/netinfo';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-// 1. Define the context type (can be null before first update)
-type NetworkContextValue = NetInfoState | null;
+// Default NetInfo state (safe fallback for when real state isn't ready yet)
+const defaultNetInfo: NetInfoState = {
+    type: NetInfoStateType.none,
+    isConnected: false,
+    isInternetReachable: false,
+    details: null,
+};
 
-// 2. Create the context with the correct type
-const NetworkContext = createContext<NetworkContextValue>(null);
+type NetworkContextValue = NetInfoState;
+
+// Create context with default value
+const NetworkContext = createContext<NetworkContextValue>(defaultNetInfo);
 
 type NetworkProviderProps = {
     children: React.ReactNode;
 };
 
-// 3. Provider component
 export const NetworkProvider: React.FC<NetworkProviderProps> = ({ children }) => {
-    const [netInfo, setNetInfo] = useState<NetInfoState | null>(null);
+    const [netInfo, setNetInfo] = useState<NetInfoState>(defaultNetInfo);
 
     useEffect(() => {
-        const unsubscribe = NetInfo.addEventListener(setNetInfo);
+        const unsubscribe = addEventListener(setNetInfo);
         return () => unsubscribe();
     }, []);
 
@@ -27,7 +33,6 @@ export const NetworkProvider: React.FC<NetworkProviderProps> = ({ children }) =>
     );
 };
 
-// 4. Hook with type-safe return
-export function useNetwork(): NetInfoState | null {
+export function useNetwork(): NetInfoState {
     return useContext(NetworkContext);
 }

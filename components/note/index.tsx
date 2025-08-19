@@ -60,7 +60,7 @@ const Note = ({ data }: TListVerse) => {
     useSyncNotes();
   const { printToFile } = usePrintAndShare();
   const netInfo = useNetwork();
-  const { isConnected } = netInfo!
+  const { isConnected } = netInfo
 
   const styles = getStyles(theme);
   const notFoundSource = require("../../assets/lottie/notFound.json");

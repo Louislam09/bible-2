@@ -22,7 +22,7 @@ import { Alert } from "react-native";
 export const useNoteService = () => {
   const { executeSql } = useDBContext();
   const netInfo = useNetwork();
-  const { isConnected } = netInfo!
+  const { isConnected } = netInfo
   const user = authState$.user.get();
 
   const getAllNotes = async (): Promise<TNote[]> => {

@@ -157,7 +157,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [hasPendingCloudSync, setHasPendingCloudSync] = useState(false);
   const [isSyncing, setSyncing] = useState(false);
   const netInfo = useNetwork();
-  const { isConnected } = netInfo!
+  const { isConnected } = netInfo
 
   useEffect(() => {
     const loadState = async () => {
