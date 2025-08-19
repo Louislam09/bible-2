@@ -20,6 +20,7 @@
         "@expo/webpack-config": "~19.0.1",
         "@google/generative-ai": "^0.2.1",
         "@gorhom/bottom-sheet": "^5.2.0",
+        "@legendapp/list": "^2.0.0-beta.0",
         "@legendapp/state": "^3.0.0-beta.26",
         "@react-native-async-storage/async-storage": "2.1.2",
         "@react-native-community/cli-server-api": "^8.0.0",
@@ -513,6 +514,8 @@
     "@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.0", "", {}, "sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ=="],
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.25", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ=="],
+
+    "@legendapp/list": ["@legendapp/list@2.0.0-beta.0", "", { "dependencies": { "use-sync-external-store": "^1.5.0" }, "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-HbOmEA/4pPrCVadYudxy5qvhJ1KNCWBuq8CadDU4awDdbwLsE6GHDrJ38xuBpNG6qF28+ZAOvwdkIHEO6K3d7g=="],
 
     "@legendapp/state": ["@legendapp/state@3.0.0-beta.30", "", { "dependencies": { "use-sync-external-store": "^1.2.2" }, "peerDependencies": { "expo-sqlite": "^15.0.0" }, "optionalPeers": ["expo-sqlite"] }, "sha512-TEPb3SEAJPfLjNsZ54Vb+y5YkZ+ROqDYqmQWpQ1+q1ySitD/zJIVtlxqdLrZAT1FECQgkQzd3G8HY5D9V/V0/g=="],
 

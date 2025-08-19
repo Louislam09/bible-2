@@ -1,5 +1,8 @@
 import { Text, View } from "@/components/Themed";
 import { useMyTheme } from "@/context/ThemeContext";
+import { bibleState$ } from "@/state/bibleState";
+import { LegendList } from "@legendapp/list";
+import { use$ } from "@legendapp/state/react";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import React, { useCallback } from "react";
 import { Image, StyleSheet, TouchableOpacity } from "react-native";
@@ -57,8 +60,9 @@ const OptimizedChapterList = ({
     [bookName, bookImageUri, colors.notification]
   );
 
-  const renderItem: ListRenderItem<number> = useCallback(
-    ({ item }) => (
+  // const renderItem: ListRenderItem<number> = useCallback(
+  const renderItem = useCallback(
+    ({ item }: any) => (
       <ChapterItem
         item={item}
         onPress={onChapterSelect}
@@ -70,8 +74,9 @@ const OptimizedChapterList = ({
   );
 
   const keyExtractor = useCallback((item: number) => item.toString(), []);
+  const isFlashlist = use$(() => bibleState$.isFlashlist.get())
 
-  return (
+  return isFlashlist ? (
     <FlashList
       data={chapters}
       renderItem={renderItem}
@@ -88,6 +93,16 @@ const OptimizedChapterList = ({
       overrideItemLayout={(layout, item) => {
         layout.span = 1; // Only span is supported
       }}
+    />
+  ) : (
+    <LegendList
+      data={chapters}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      numColumns={5}
+      ListHeaderComponent={ListHeader}
+      contentContainerStyle={styles.flatContainer}
+      getItemType={() => "chapter"}
     />
   );
 };

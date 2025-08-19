@@ -16,6 +16,7 @@ import {
   TTheme,
 } from "@/types";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
+import { LegendList } from "@legendapp/list";
 import { use$ } from "@legendapp/state/react";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
@@ -94,8 +95,10 @@ const BookList = React.memo(
     startIndex: number;
     theme: any;
   }) => {
-    const renderItem: ListRenderItem<IDBBookNames> = useCallback(
-      ({ item, index }) => (
+    const isFlashlist = use$(() => bibleState$.isFlashlist.get())
+    const renderItem = useCallback(
+      // const renderItem: ListRenderItem<IDBBookNames> = useCallback(
+      ({ item, index }: any) => (
         <BookItem
           item={item}
           isCurrent={book === item.longName}
@@ -114,7 +117,7 @@ const BookList = React.memo(
       []
     );
 
-    return (
+    return isFlashlist ? (
       <FlashList
         contentContainerStyle={styles.flatContainer}
         keyExtractor={keyExtractor}
@@ -122,6 +125,17 @@ const BookList = React.memo(
         renderItem={renderItem}
         numColumns={viewLayoutGrid ? (isShowName ? 4 : 5) : 1}
         removeClippedSubviews={true}
+      />
+    ) : (
+      <LegendList
+        contentContainerStyle={styles.flatContainer}
+        keyExtractor={keyExtractor}
+        data={data}
+        renderItem={renderItem}
+        numColumns={viewLayoutGrid ? (isShowName ? 4 : 5) : 1}
+        // removeClippedSubviews={true}
+        recycleItems
+      // style={{ backgroundColor: 'blue' }}
       />
     );
   }

@@ -444,31 +444,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     ] as TIcon[];
   }, [verseIsTapped, isFavorite, item, isNewTestament]);
 
-  // const steps = [
-  //   {
-  //     text: "Paso 1: 🔍 Haz un toque en cualquier versículo para activar la búsqueda en el original.",
-  //     target: verseRef,
-  //     action: () => {
-  //       onVerseClicked();
-  //     },
-  //   },
-  //   {
-  //     text: "Paso 2: 👀 Observarás cómo algunas palabras cambian de color.",
-  //     target: verseRef,
-  //     action: () =>
-  //       onStrongWordClicked({ word: "principio", tagValue: "7225" }),
-  //   },
-  //   {
-  //     text: "Paso 3: 📘 Cuando toques cualquier palabra resaltada, verás su significado en el original.",
-  //     target: null,
-  //   },
-  // ];
-
-  // const bgVerseHighlight = animatedVerseHighlight.interpolate({
-  //   inputRange: [0, 1],
-  //   outputRange: ["transparent", `${theme.colors.notification + "20"}`],
-  // });
-
   return (
     <View
       onLayout={() => {
@@ -622,3 +597,4 @@ const getStyles = ({ colors, dark }: TTheme) =>
   });
 
 export default React.memo(Verse);
+// export default withRenderCount(BibleTop);

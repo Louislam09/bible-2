@@ -1,15 +1,12 @@
-import { useStorage } from "@/context/LocalstoreContext";
-import { useState, useRef, useMemo, useEffect } from "react";
+import { bibleState$ } from "@/state/bibleState";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  PanResponder,
   Animated,
+  PanResponder,
   PanResponderGestureState,
   PanResponderInstance,
   useWindowDimensions,
 } from "react-native";
-import { OrientationType } from "@/types";
-import { bibleState$ } from "@/state/bibleState";
-import { use$ } from "@legendapp/state/react";
 
 interface UseDraggableElementProps {
   parentWidth?: number;

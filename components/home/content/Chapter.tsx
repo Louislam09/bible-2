@@ -5,12 +5,14 @@ import { useBibleContext } from "@/context/BibleContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { bibleState$ } from "@/state/bibleState";
 import { EBibleVersions, IBookVerse, TTheme } from "@/types";
-import { observer } from "@legendapp/state/react";
+import { LegendList } from "@legendapp/list";
+import { observer, use$ } from "@legendapp/state/react";
 import { FlashList, FlashListRef } from "@shopify/flash-list";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Animated,
+  Pressable,
   StyleSheet,
   useWindowDimensions,
   View,
@@ -43,6 +45,7 @@ const Chapter = ({
   onScroll,
 }: TChapter) => {
   const bibleSide = isSplit ? "bottom" : "top";
+  const isFlashlist = use$(() => bibleState$.isFlashlist.get())
 
   const { width, height } = useWindowDimensions();
   const { theme } = useMyTheme();
@@ -143,10 +146,17 @@ const Chapter = ({
     [onScroll]
   );
 
+
   return (
     <View style={styles.chapterContainer}>
+      <Pressable
+        style={{ position: "absolute", bottom: 100, right: 10, backgroundColor: isFlashlist ? 'red' : 'blue', padding: 10, zIndex: 122 }}
+        onPress={() => bibleState$.toggleList()}
+      >
+        <Text>{isFlashlist ? 'Flashlist' : 'Legendlist'}</Text>
+      </Pressable>
       <View style={[styles.verseContent]}>
-        <FlashList
+        {isFlashlist ? <FlashList
           ref={chapterRef}
           keyExtractor={keyExtractor}
           data={data ?? []}
@@ -162,18 +172,35 @@ const Chapter = ({
             viewabilityConfigCallbackPairs.current
           }
           onEndReachedThreshold={0.5}
-          // disableAutoLayout
-          // ListHeaderComponentStyle={{ paddingTop: 70 }}
           ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
           onScroll={handleScroll}
           scrollEventThrottle={16}
-        // decelerationRate="normal"
-        // onEndReached={onEndReached}
+        // disableAutoLayout
+        // ListHeaderComponentStyle={{ paddingTop: 70 }}
         // maintainVisibleContentPosition={{
         //   minIndexForVisible: 0,
         //   autoscrollToTopThreshold: 10,
         // }}
-        />
+        /> : (
+          <LegendList
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={keyExtractor}
+            recycleItems
+            ListHeaderComponent={ListHeader}
+            decelerationRate="normal"
+            ListEmptyComponent={() => (<LoadingComponent textColor={theme.colors.text} />)}
+            initialScrollIndex={initialScrollIndex}
+            viewabilityConfigCallbackPairs={
+              viewabilityConfigCallbackPairs.current
+            }
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
+            onScroll={handleScroll}
+
+          // style={{ backgroundColor: 'blue' }}
+          />
+        )}
       </View>
     </View>
   );
