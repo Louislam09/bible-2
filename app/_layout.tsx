@@ -24,6 +24,7 @@ import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StackAnimationTypes } from "react-native-screens";
 
+import { NetworkProvider } from "@/context/NetworkProvider";
 import { NotificationProvider } from "@/context/NotificationContext";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
@@ -136,31 +137,33 @@ const App = () => {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
-      <StorageProvider>
-        <DatabaseProvider>
-          <MyThemeProvider>
-            <BibleProvider>
-              <BibleChapterProvider>
-                <MemorizationProvider>
-                  <NotificationProvider>
-                    <QueryProvider>
-                      <GestureHandlerRootView style={{ flex: 1 }}>
-                        <BottomSheetModalProvider>
-                          <SystemBars style="auto" />
-                          <Stack
-                            initialRouteName="(dashboard)"
-                            screenOptions={screenOptions}
-                          />
-                        </BottomSheetModalProvider>
-                      </GestureHandlerRootView>
-                    </QueryProvider>
-                  </NotificationProvider>
-                </MemorizationProvider>
-              </BibleChapterProvider>
-            </BibleProvider>
-          </MyThemeProvider>
-        </DatabaseProvider>
-      </StorageProvider>
+      <NetworkProvider>
+        <StorageProvider>
+          <DatabaseProvider>
+            <MyThemeProvider>
+              <BibleProvider>
+                <BibleChapterProvider>
+                  <MemorizationProvider>
+                    <NotificationProvider>
+                      <QueryProvider>
+                        <GestureHandlerRootView style={{ flex: 1 }}>
+                          <BottomSheetModalProvider>
+                            <SystemBars style="auto" />
+                            <Stack
+                              initialRouteName="(dashboard)"
+                              screenOptions={screenOptions}
+                            />
+                          </BottomSheetModalProvider>
+                        </GestureHandlerRootView>
+                      </QueryProvider>
+                    </NotificationProvider>
+                  </MemorizationProvider>
+                </BibleChapterProvider>
+              </BibleProvider>
+            </MyThemeProvider>
+          </DatabaseProvider>
+        </StorageProvider>
+      </NetworkProvider>
     </ErrorBoundary>
   );
 };

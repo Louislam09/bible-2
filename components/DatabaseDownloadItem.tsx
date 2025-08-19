@@ -51,7 +51,7 @@ type DownloadBibleItem = {
 type DatabaseDownloadItemProps = {
   item: DownloadBibleItem;
   theme: TTheme;
-  isConnected: boolean;
+  isConnected: boolean | null;
   onDownloadStart?: () => void;
   onDownloadComplete?: (storedName: string) => void;
   onError?: (error: string) => void;

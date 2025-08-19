@@ -6,6 +6,7 @@ import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
+import { useNetwork } from "@/context/NetworkProvider";
 import { useMyTheme } from "@/context/ThemeContext";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { useSyncNotes } from "@/hooks/useSyncNotes";
@@ -13,11 +14,10 @@ import { useNoteService } from "@/services/noteService";
 import { bibleState$ } from "@/state/bibleState";
 import { noteSelectors$ } from "@/state/notesState";
 import { IVerseItem, Screens, TNote, TTheme } from "@/types";
-import checkConnection from "@/utils/checkConnection";
 import removeAccent from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { use$ } from "@legendapp/state/react";
-import { FlashList, ListRenderItem } from "@shopify/flash-list";
+import { FlashList, FlashListRef, ListRenderItem } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
 import React, {
   Fragment,
@@ -59,6 +59,8 @@ const Note = ({ data }: TListVerse) => {
   const { syncNotes, downloadCloudNotesToLocal, syncSingleNote } =
     useSyncNotes();
   const { printToFile } = usePrintAndShare();
+  const netInfo = useNetwork();
+  const { isConnected } = netInfo!
 
   const styles = getStyles(theme);
   const notFoundSource = require("../../assets/lottie/notFound.json");
@@ -68,7 +70,7 @@ const Note = ({ data }: TListVerse) => {
   const [searchText, setSearchText] = useState<string>("");
   const [showSearch, setShowSearch] = useState(false);
 
-  const flatListRef = useRef<FlashList<any>>(null);
+  const flatListRef = useRef<FlashListRef<any>>(null);
   const searchInputRef = useRef<TextInput>(null);
 
   const [refreshing, setRefreshing] = useState(false);
@@ -199,7 +201,6 @@ const Note = ({ data }: TListVerse) => {
     );
   };
   const handleSyncSelectedNotes = async () => {
-    const isConnected = await checkConnection();
     console.log("Conexión a Internet:", isConnected);
     if (!isConnected) {
       Alert.alert(
@@ -493,7 +494,6 @@ const Note = ({ data }: TListVerse) => {
               contentContainerStyle={styles.flashListContent}
               ref={flatListRef}
               decelerationRate="normal"
-
               data={noteList}
               renderItem={renderItem}
               keyExtractor={(item: TNote) => `note-${item.id}`}

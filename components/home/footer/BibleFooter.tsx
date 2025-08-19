@@ -5,16 +5,16 @@ import useAudioPlayer from "@/hooks/useAudioPlayer";
 import { EBibleVersions, Screens } from "@/types";
 import { LinearGradient } from "expo-linear-gradient";
 import { FC, useCallback, useEffect, useRef } from "react";
-import { Animated, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 
 import BottomModal from "@/components/BottomModal";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
-import { storedData$, useStorage } from "@/context/LocalstoreContext";
+import { storedData$ } from "@/context/LocalstoreContext";
+import { useNetwork } from "@/context/NetworkProvider";
 import useBibleReader from "@/hooks/useBibleReading";
 import useColorScheme from "@/hooks/useColorScheme";
-import useInternetConnection from "@/hooks/useInternetConnection";
 import useParams from "@/hooks/useParams";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import { bibleState$ } from "@/state/bibleState";
@@ -38,7 +38,8 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const isSplitActived = bibleState$.isSplitActived.get();
   const currentVoiceIdentifier = storedData$.currentVoiceIdentifier.get();
   const currentVoiceRate = storedData$.currentVoiceRate.get() || 1;
-  const { isConnected } = useInternetConnection();
+  const netInfo = useNetwork();
+  const { isConnected } = netInfo!
   const FOOTER_ICON_SIZE = iconSize;
   const { theme } = useMyTheme();
   const styles = getStyles(theme);

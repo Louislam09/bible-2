@@ -24,8 +24,8 @@ import NoInternetSplash from "@/components/NoInternetSplash";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
 import bibleDatabases from "@/constants/bibleDatabases";
+import { useNetwork } from "@/context/NetworkProvider";
 import useDebounce from "@/hooks/useDebounce";
-import useInternetConnection from "@/hooks/useInternetConnection";
 import useParams from "@/hooks/useParams";
 import { DownloadBibleItem, ModulesFilters, TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
@@ -42,7 +42,8 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const debouncedSearchText = useDebounce(searchText, 500);
-  const { isConnected, checkConnection } = useInternetConnection();
+  const netInfo = useNetwork();
+  const { isConnected } = netInfo!
   const [selectedFilter, setSelectedFilter] = useState(filter || ModulesFilters.ALL)
   const sortRef = useRef<BottomSheetModal>(null);
 
@@ -180,7 +181,7 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
     sortClosePresentModalPress();
   };
 
-  if (!checkConnection() && !isMyDownloadTab) {
+  if (!isConnected && !isMyDownloadTab) {
     return <NoInternetSplash />;
   }
 

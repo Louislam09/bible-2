@@ -27,7 +27,7 @@ interface IPlay {
   previousChapter: () => void;
   book: any;
   chapter: any;
-  isRvr: boolean;
+  isRvr: boolean | null;
   shouldLoopReading: boolean;
   setShouldLoop: (shouldLoop: boolean) => void;
 }

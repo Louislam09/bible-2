@@ -9,16 +9,14 @@ import { use$ } from "@legendapp/state/react";
 import { configureSynced, syncObservable } from "@legendapp/state/sync";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import useInternetConnection from "@/hooks/useInternetConnection";
+import { useNetwork } from "@/context/NetworkProvider";
 import { showToast } from "@/utils/showToast";
 import React, {
   createContext,
   ReactNode,
-  useCallback,
   useContext,
   useEffect,
-  useRef,
-  useState,
+  useState
 } from "react";
 import { Alert } from "react-native";
 
@@ -158,7 +156,8 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const syncState$ = syncState(storedData$);
   const [hasPendingCloudSync, setHasPendingCloudSync] = useState(false);
   const [isSyncing, setSyncing] = useState(false);
-  const { isConnected } = useInternetConnection();
+  const netInfo = useNetwork();
+  const { isConnected } = netInfo!
 
   useEffect(() => {
     const loadState = async () => {

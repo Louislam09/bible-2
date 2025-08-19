@@ -8,11 +8,11 @@ import {
   UPDATE_NOTE_BY_ID,
 } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
+import { useNetwork } from "@/context/NetworkProvider";
 import { pb } from "@/globalConfig";
 import { authState$ } from "@/state/authState";
 import { notesState$ } from "@/state/notesState";
 import { TNote } from "@/types";
-import checkConnection from "@/utils/checkConnection";
 import * as Crypto from 'expo-crypto';
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
@@ -21,6 +21,8 @@ import { Alert } from "react-native";
 
 export const useNoteService = () => {
   const { executeSql } = useDBContext();
+  const netInfo = useNetwork();
+  const { isConnected } = netInfo!
   const user = authState$.user.get();
 
   const getAllNotes = async (): Promise<TNote[]> => {
@@ -88,7 +90,6 @@ export const useNoteService = () => {
         updated_at: updatedAt,
       }
 
-      const isConnected = await checkConnection();
 
       if (isConnected && sendToCloud && user) {
         await notesState$.addNote(createdNotes)
@@ -115,7 +116,6 @@ export const useNoteService = () => {
         "updateNote"
       );
 
-      const isConnected = await checkConnection();
       if (isConnected && sendToCloud && user) {
         const existing = await pb.collection("notes").getFirstListItem(`uuid = "${data.uuid}"`);
         await notesState$.updateNote(existing.id, {
@@ -136,7 +136,6 @@ export const useNoteService = () => {
     try {
       await executeSql(DELETE_NOTE, [data.id], "deleteNote");
 
-      const isConnected = await checkConnection();
       if (isConnected) {
         const existing = await pb.collection("notes").getFirstListItem(`uuid = "${data.uuid}"`);
         await notesState$.deleteNote(existing.id)

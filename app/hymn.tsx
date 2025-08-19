@@ -7,14 +7,12 @@ import RequestAccess from "@/components/admin/RequestAccess";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import lottieAssets from "@/constants/lottieAssets";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { useNetwork } from "@/context/NetworkProvider";
 import { useMyTheme } from "@/context/ThemeContext";
 import { pb } from "@/globalConfig";
-import useInternetConnection from "@/hooks/useInternetConnection";
 import useRealtimeCollection from "@/hooks/useRealtimeCollection";
-import { useNotificationService } from "@/services/notificationServices";
 import { authState$ } from "@/state/authState";
 import { Collections, RequestData, Screens, TTheme } from "@/types";
-import checkConnection from "@/utils/checkConnection";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
 import { FlashList } from "@shopify/flash-list";
@@ -192,9 +190,10 @@ const HymnScreen = () => {
   const styles = getStyles(theme);
   const navigation = useNavigation();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
-  const { isConnected } = useInternetConnection();
+  const netInfo = useNetwork();
+  const { isConnected } = netInfo!
   const requestAccessBottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const { sendPushNotificationToUser } = useNotificationService();
+  // const { sendPushNotificationToUser } = useNotificationService();
 
   const isAlegresNuevasUnlocked = use$(() =>
     storedData$.isAlegresNuevasUnlocked.get()
@@ -286,7 +285,6 @@ const HymnScreen = () => {
   );
 
   const requestAccess = async (name: string) => {
-    const isConnected = await checkConnection();
     if (!isConnected) {
       Alert.alert(
         "Sin conexión",

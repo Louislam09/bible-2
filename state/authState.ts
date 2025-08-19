@@ -2,7 +2,6 @@ import { storedData$ } from "@/context/LocalstoreContext";
 import { loginWithEmailPassword, pb, setUserPassword } from "@/globalConfig";
 import { StorageService } from "@/services/StorageService";
 import { pbUser } from "@/types";
-import { checkConnection } from "@/utils/checkConnection";
 import { observable } from "@legendapp/state";
 import { Alert } from "react-native";
 
@@ -39,23 +38,6 @@ export const authState$ = observable<AuthState>({
 
   login: async (email: string, password: string) => {
     try {
-      const isOnline = await checkConnection();
-
-      if (!isOnline) {
-        // Check stored credentials for offline login
-        const storedUser = storedData$.user.get();
-        const storedToken = storedData$.token.get();
-
-        if (storedUser?.email === email) {
-          console.log("📱 Offline login - using stored credentials");
-          authState$.user.set(storedUser);
-          authState$.isAuthenticated.set(true);
-          return storedUser;
-        } else {
-          throw new Error("No se puede verificar las credenciales sin conexión");
-        }
-      }
-
       // Online login logic
       authState$.isLoading.set(true);
       const userData = await loginWithEmailPassword(email, password);
