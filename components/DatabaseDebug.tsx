@@ -14,6 +14,7 @@ const DatabaseDebug = () => {
   const { schema } = useMyTheme();
   const { executeSql, isMyBibleDbLoaded } = useDBContext();
   const { expoPushToken, error: notificationError } = useNotification();
+
   const [scheduledNotifications, setScheduledNotifications] = useState<any[]>(
     []
   );
@@ -81,11 +82,11 @@ const DatabaseDebug = () => {
 
   const testNotificationSchedule = async () => {
     try {
-      const testTime = new Date(Date.now() + 3000);
+      const testTime = new Date(Date.now() + 5000);
       await Notifications.scheduleNotificationAsync({
         content: {
-          title: "Test Notification",
-          body: "This is a test notification from debug panel",
+          title: "testNotificationSchedule",
+          body: "This is a test notification from testNotificationSchedule",
           data: { type: "test" },
         },
         // Schedule for 1 minute from now
@@ -104,16 +105,16 @@ const DatabaseDebug = () => {
   const testNotificationSchedule2 = async () => {
     try {
       const testTime = new Date(Date.now() + 3000);
+      const fireDate = new Date(Date.now() + 5 * 1000);
       await Notifications.scheduleNotificationAsync({
         content: {
-          title: "Test Notification",
-          body: "This is a test notification from debug panel",
+          title: "testNotificationSchedule2",
+          body: "This is a test notification fromtestNotificationSchedule2",
           data: { type: "test" },
         },
         // Schedule for 1 minute from now
         trigger: {
-          seconds: 5,
-          repeats: true
+          date: fireDate
         } as Notifications.SchedulableNotificationTriggerInput,
       });
       showToast("Scheduled notification for 1 minute from now!");

@@ -161,7 +161,7 @@ export const useNotificationService = () => {
                         triggerDate = trigger.date as Date;
                     } else if ('seconds' in trigger) {
                         // Time interval trigger
-                        triggerDate = new Date(Date.now() + (trigger.seconds * 1000));
+                        triggerDate = new Date(Date.now() + ((trigger?.seconds ?? 0) * 1000));
                     } else if ('hour' in trigger && 'minute' in trigger) {
                         // Daily trigger - calculate next occurrence
                         const now = new Date();
