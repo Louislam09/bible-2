@@ -138,6 +138,14 @@ jobs:
         env:
           NODE_ENV: development
 
+      - name: Prebuild
+        run: |
+          expo prebuild --platform android --non-interactive
+
+      - name: Inject google-services.json
+        run: |
+          printf "%s" "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
+
       - name: 📱 Build Production APK
         if: github.event.inputs.buildType == 'all' || github.event.inputs.buildType == 'prod-apk' || github.event_name == 'push'
         run: |
