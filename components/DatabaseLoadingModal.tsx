@@ -1,29 +1,29 @@
+import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useMemo } from "react";
 import {
-  Modal,
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
   Animated,
+  Dimensions,
   Easing,
+  Modal,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useTheme } from "@react-navigation/native";
 
-import LottieView from "lottie-react-native";
 import lottieAssets from "@/constants/lottieAssets";
+import { useMyTheme } from "@/context/ThemeContext";
 import { bibleState$ } from "@/state/bibleState";
-import { use$ } from "@legendapp/state/react";
 import { dbDownloadState$ } from "@/state/dbDownloadState";
 import { TTheme } from "@/types";
-import Icon from "./Icon";
+import { use$ } from "@legendapp/state/react";
+import LottieView from "lottie-react-native";
 import { icons } from "lucide-react-native";
+import Icon from "./Icon";
 
 const { width, height } = Dimensions.get("window");
 
 const DatabaseLoadingModal: React.FC = () => {
-  const theme = useTheme();
+  const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const spinValue = React.useRef(new Animated.Value(0)).current;
   const pulseValue = React.useRef(new Animated.Value(1)).current;

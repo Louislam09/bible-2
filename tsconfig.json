@@ -7,18 +7,10 @@
         "./*"
       ]
     },
-    "strict": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true
+    "strict": true
   },
   "include": [
     "**/*.ts",
     "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/node_modules/*"
   ]
 }

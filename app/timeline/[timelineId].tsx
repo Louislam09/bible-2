@@ -36,8 +36,6 @@ const SingleTimeline = () => {
   );
 };
 
-export default SingleTimeline;
-
 const styles = StyleSheet.create({
   headerActions: {
     display: "flex",
@@ -46,3 +44,5 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
 });
+
+export default SingleTimeline;
