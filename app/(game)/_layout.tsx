@@ -1,13 +1,14 @@
 import StatusBarBackground from '@/components/StatusBarBackground';
-import { Stack } from "expo-router";
+import { Slot, Stack } from "expo-router";
 import React from 'react';
-import Game from '.';
+// import Game from '.';
 
 const GameLayout = () => {
     return (
         <StatusBarBackground>
             <Stack.Screen options={{ headerShown: false }} />
-            <Game />
+            {/* <Game /> */}
+            <Slot />
         </StatusBarBackground>
     )
 
