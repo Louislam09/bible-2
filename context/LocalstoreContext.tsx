@@ -16,7 +16,7 @@ import React, {
   ReactNode,
   useContext,
   useEffect,
-  useState
+  useState,
 } from "react";
 import { Alert } from "react-native";
 
@@ -69,6 +69,7 @@ type StoreState = {
     memorizationReminder: boolean;
     pushToken: string | null;
   };
+  dbTableCreated: string[];
 };
 
 const initialContext: StoreState = {
@@ -112,6 +113,7 @@ const initialContext: StoreState = {
     memorizationReminder: false,
     pushToken: null,
   },
+  dbTableCreated: [],
 };
 
 export const storedData$ = observable(initialContext);
@@ -157,7 +159,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [hasPendingCloudSync, setHasPendingCloudSync] = useState(false);
   const [isSyncing, setSyncing] = useState(false);
   const netInfo = useNetwork();
-  const { isConnected } = netInfo
+  const { isConnected } = netInfo;
 
   useEffect(() => {
     const loadState = async () => {

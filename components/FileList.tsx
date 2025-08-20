@@ -17,6 +17,7 @@ import {
 } from "react-native";
 import Icon from "./Icon";
 import { Text, View } from "./Themed";
+import { storedData$ } from "@/context/LocalstoreContext";
 
 const FileList = () => {
   const { theme } = useMyTheme();
@@ -29,11 +30,10 @@ const FileList = () => {
     refreshDatabaseList,
     installedBibles,
     installedDictionary,
-    reDownloadDatabase,
     mainBibleService,
-    openDatabaseFromZip, interlinearService,
+    interlinearService,
   } = useDBContext();
-  const { selectBibleVersion, fontSize } = useBibleContext();
+  const { selectBibleVersion } = useBibleContext();
 
   const extractionPath = `${FileSystem.documentDirectory}SQLite/`;
 
@@ -80,8 +80,18 @@ const FileList = () => {
             try {
               const fileUri = item.path;
               await FileSystem.deleteAsync(fileUri, { idempotent: true });
+              await FileSystem.deleteAsync(`${fileUri}-wal`, {
+                idempotent: true,
+              });
+              await FileSystem.deleteAsync(`${fileUri}-shm`, {
+                idempotent: true,
+              });
+              const dbTableCreated = storedData$.dbTableCreated.get();
+              storedData$.dbTableCreated.set(
+                dbTableCreated.filter((db: string) => db !== item.id)
+              );
               refreshDatabaseList();
-              await onRefresh()
+              await onRefresh();
               selectBibleVersion(defaultDatabases[0]);
             } catch (err) {
               setError("Error deleting file");
@@ -137,7 +147,7 @@ const FileList = () => {
         "Actualizar módulo",
         `¿Quieres descargar de nuevo "${dbName.name}"? Esto reemplazará los datos actuales de la biblia, notas, favoritos, etc.`
       );
-      interlinearService.reOpen(dbName)
+      interlinearService.reOpen(dbName);
       return;
     }
 
@@ -174,82 +184,81 @@ const FileList = () => {
     );
   };
 
-  const renderItem = useCallback(({
-    item,
-    index,
-  }: {
-    item: VersionItem;
-    index: number;
-  }) => {
-    const versionItem = item;
-    const allowDelete = !defaultDatabases.includes(versionItem?.id as string);
-    // const allowDelete = !defaultDatabases.includes(versionItem?.id as string);
-    const isBible = index < installedBibles.length;
+  const renderItem = useCallback(
+    ({ item, index }: { item: VersionItem; index: number }) => {
+      const versionItem = item;
+      const allowDelete = !defaultDatabases.includes(versionItem?.id as string);
+      // const allowDelete = !defaultDatabases.includes(versionItem?.id as string);
+      const isBible = index < installedBibles.length;
 
-    return (
-      <View>
-        {index === 0 &&
-          renderSection(
-            "Biblias & Diccionarios",
-            installedBibles.length + (installedDictionary.length || 0)
-          )}
-
-        <View
-          style={[styles.itemContainer, styles.defaultItem]}
-        >
-          <View style={styles.itemIconContainer}>
-            <Ionicons
-              name={isBible ? "book-outline" : "library-outline"}
-              size={22}
-              color={theme.colors.notification}
-            />
-          </View>
-
-          <View style={styles.itemContent}>
-            <Text
-              style={[
-                styles.itemTitle,
-                !allowDelete && { color: theme.colors.notification },
-              ]}
-            >
-              {versionItem?.shortName || "-"}
-            </Text>
-            <Text
-              style={[
-                styles.itemSubTitle,
-                !allowDelete && { color: theme.colors.primary },
-              ]}
-            >
-              {versionItem?.name || "-"}
-            </Text>
-            {!allowDelete && (
-              <View style={styles.defaultBadge}>
-                <Text style={styles.defaultBadgeText}>Predeterminado</Text>
-              </View>
+      return (
+        <View>
+          {index === 0 &&
+            renderSection(
+              "Biblias & Diccionarios",
+              installedBibles.length + (installedDictionary.length || 0)
             )}
-          </View>
 
-          {!allowDelete && (
+          <View style={[styles.itemContainer, styles.defaultItem]}>
+            <View style={styles.itemIconContainer}>
+              <Ionicons
+                name={isBible ? "book-outline" : "library-outline"}
+                size={22}
+                color={theme.colors.notification}
+              />
+            </View>
+
+            <View style={styles.itemContent}>
+              <Text
+                style={[
+                  styles.itemTitle,
+                  !allowDelete && { color: theme.colors.notification },
+                ]}
+              >
+                {versionItem?.shortName || "-"}
+              </Text>
+              <Text
+                style={[
+                  styles.itemSubTitle,
+                  !allowDelete && { color: theme.colors.primary },
+                ]}
+              >
+                {versionItem?.name || "-"}
+              </Text>
+              {!allowDelete && (
+                <View style={styles.defaultBadge}>
+                  <Text style={styles.defaultBadgeText}>Predeterminado</Text>
+                </View>
+              )}
+            </View>
+
+            {!allowDelete && (
+              <TouchableOpacity
+                style={styles.redownloadButton}
+                onPress={() => refreshDatabase(versionItem!)}
+              >
+                <Icon
+                  name="RefreshCcw"
+                  size={20}
+                  color={theme.colors.primary}
+                />
+              </TouchableOpacity>
+            )}
+
+            {/* {allowDelete && ( */}
             <TouchableOpacity
-              style={styles.redownloadButton}
-              onPress={() => refreshDatabase(versionItem!)}
+              style={styles.deleteButton}
+              onPress={() => deleteFile(item)}
             >
-              <Icon name="RefreshCcw" size={20} color={theme.colors.primary} />
+              <Icon name="Trash2" size={20} color="#e74856" />
             </TouchableOpacity>
-          )}
-
-          {/* {allowDelete && ( */}
-          <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={() => deleteFile(item)}
-          >
-            <Icon name="Trash2" size={20} color="#e74856" />
-          </TouchableOpacity>
-          {/* )} */}
+            {/* )} */}
+          </View>
         </View>
-      </View>
-    );
-  }, [theme]);
+      );
+    },
+    [theme]
+  );
 
   if (loading) {
     return (
@@ -423,7 +432,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderRadius: 8,
       backgroundColor: colors.notification + "20",
       marginLeft: "auto",
-      marginHorizontal: 8
+      marginHorizontal: 8,
     },
   });
 

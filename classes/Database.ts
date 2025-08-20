@@ -1,4 +1,5 @@
 import { SQLiteDirPath } from "@/constants/databaseNames";
+import { storedData$ } from "@/context/LocalstoreContext";
 import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
 
@@ -27,6 +28,10 @@ export class DownloadedDatabase {
       // if (this.db) {
       // await this.db.closeAsync(); // Fermer la base de données
       await FileSystem.deleteAsync(`${SQLiteDirPath}/${this.name}`, { idempotent: true });
+      await FileSystem.deleteAsync(`${SQLiteDirPath}/${this.name}-wal`, { idempotent: true });
+      await FileSystem.deleteAsync(`${SQLiteDirPath}/${this.name}-shm`, { idempotent: true });
+      const dbTableCreated = storedData$.dbTableCreated.get();
+      storedData$.dbTableCreated.set(dbTableCreated.filter((db: string) => db !== this.name));
       return true;
       // }
     } catch (error) {

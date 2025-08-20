@@ -4,7 +4,6 @@ import * as SQLite from "expo-sqlite";
 import { dbFileExt, isDefaultDatabase, SQLiteDirPath } from "@/constants/databaseNames";
 import { VersionItem } from "@/hooks/useInstalledBible";
 import { dbDownloadState$ } from "@/state/dbDownloadState";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 // @ts-ignore
 import { Asset } from "expo-asset";
 
@@ -26,7 +25,6 @@ enum DEFAULT_DATABASE {
 
 export const prepareDatabaseFromDbFile = async ({ databaseItem, onProgress }: PrepareDatabaseProps): Promise<SQLite.SQLiteDatabase | null> => {
     try {
-        await AsyncStorage.removeItem(`DB_READY_${databaseItem.id}`);
         const localFolder = SQLiteDirPath;
         const DB_NAME = databaseItem.id;
         const isDefaultDatabaseItem = isDefaultDatabase(DB_NAME);
@@ -47,18 +45,22 @@ export const prepareDatabaseFromDbFile = async ({ databaseItem, onProgress }: Pr
                 break;
         }
 
-        // Check if DB already exists and is valid
-        const dbStorageKey = `DB_READY_${DB_NAME}`;
-        const alreadyExtracted = await AsyncStorage.getItem(dbStorageKey);
 
         const dbExists = await FileSystem.getInfoAsync(DB_PATH);
         if (dbExists.exists && dbExists.size! > 0) {
             console.log(`📖 DB ${DB_FILENAME} already ready (${(dbExists.size! / (1024 * 1024)).toFixed(2)} MB)`);
-            return await SQLite.openDatabaseAsync(DB_FILENAME);
+            const db = await SQLite.openDatabaseAsync(DB_FILENAME);
+            await db.execAsync(`
+                PRAGMA journal_mode = WAL;
+                PRAGMA synchronous = OFF;
+                PRAGMA temp_store = MEMORY;
+                PRAGMA cache_size = 16384;
+            `);
+            return db;
         }
 
         dbDownloadState$.isDownloadingDB.set(true);
-        console.log('IT REACHED HERE', { alreadyExtracted, dbExists })
+        // console.log('IT REACHED HERE', { alreadyExtracted, dbExists })
         onProgress?.({
             stage: 'preparing',
             message: `Preparando ${DB_NAME}...`,
@@ -113,8 +115,6 @@ export const prepareDatabaseFromDbFile = async ({ databaseItem, onProgress }: Pr
             throw new Error("Failed to create database file");
         }
 
-        await AsyncStorage.setItem(dbStorageKey, "1");
-
         onProgress?.({
             stage: 'verifying',
             message: `Probando conexión...`,
@@ -124,8 +124,13 @@ export const prepareDatabaseFromDbFile = async ({ databaseItem, onProgress }: Pr
         // 14. Test database connection before returning
         try {
             const db = await SQLite.openDatabaseAsync(DB_FILENAME);
+            await db.execAsync("PRAGMA journal_mode = WAL");
+            await db.execAsync("PRAGMA synchronous = OFF");
+            await db.execAsync("PRAGMA temp_store = MEMORY");
+            await db.execAsync("PRAGMA cache_size = 16384");
+
             // Try a simple query to verify the database is valid
-            const result = db.getFirstSync("SELECT name FROM sqlite_master WHERE type='table' LIMIT 1;");
+            // const result = db.getFirstSync("SELECT name FROM sqlite_master WHERE type='table' LIMIT 1;");
 
             onProgress?.({
                 stage: 'verifying',
@@ -142,7 +147,6 @@ export const prepareDatabaseFromDbFile = async ({ databaseItem, onProgress }: Pr
 
     } catch (error) {
         console.error("❌ Error in prepareDatabase:", error);
-        await AsyncStorage.removeItem(`DB_READY_${databaseItem.id}`);
         return null;
     }
 };

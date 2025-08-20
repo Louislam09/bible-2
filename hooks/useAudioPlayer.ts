@@ -23,20 +23,16 @@ interface AudioPlayerHookResult {
   duration: number;
 }
 
-const getAudioUrl = (bookNumberForAudio: number, chapter: number) => {
-  return `https://www.wordproaudio.net/bibles/app/audio/6/${bookNumberForAudio}/${chapter}.mp3`;
-};
+// const getAudioUrl = (bookNumberForAudio: number, chapter: number) => {
+//   return `https://www.wordproaudio.net/bibles/app/audio/6/${bookNumberForAudio}/${chapter}.mp3`;
+// };
 
 const useAudioPlayer = ({
   book,
   chapterNumber,
   nextChapter,
 }: AudioPlayerHookProps): AudioPlayerHookResult => {
-  // const audioUrl = getAudioUrl(book, chapterNumber);
   const dbFolder = `${FileSystem.documentDirectory}audio`;
-  // const audioName = `${book}00${chapterNumber}.mp3`;
-  // const localUri = `${dbFolder}/${audioName}`;
-  console.log({ book, chapterNumber });
 
   const audioData = useMemo(() => {
     const audioKey = `${book}-${chapterNumber}`;
@@ -51,7 +47,6 @@ const useAudioPlayer = ({
       localUri,
     };
   }, [book, chapterNumber, dbFolder]);
-  console.log(audioData);
 
   const [isDownloading, setIsDownloading] = useState(false);
   const [autoPlay, setAutoPlay] = useState(false);

@@ -1,5 +1,6 @@
 import { databaseNames, dbFileExt, SQLiteDirPath } from "@/constants/databaseNames";
 import { CREATE_FAVORITE_VERSES_TABLE } from "@/constants/Queries";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { dbDownloadState$ } from "@/state/dbDownloadState";
 import { DEFAULT_DATABASE } from "@/types";
 import { prepareDatabaseFromDbFile } from "@/utils/prepareDB";
@@ -124,8 +125,12 @@ export function useInterlinearDB({ isInterlinear, onProgress, enabled, databaseI
         });
 
         if (!interlinearDb) return;
+        const dbTableCreated = storedData$.dbTableCreated.get();
+        if (!dbTableCreated.includes(dbName.id)) {
+            await createTables(interlinearDb);
+            storedData$.dbTableCreated.set([...dbTableCreated, dbName.id]);
+        }
 
-        await createTables(interlinearDb);
         // Validate the database
         const valid = await isDatabaseValid(interlinearDb);
         if (!valid) {

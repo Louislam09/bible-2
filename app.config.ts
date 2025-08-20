@@ -101,6 +101,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         projectId: "ae41abb8-478d-4cd9-9b64-47b9486e2c5f",
       },
     },
+    experiments: {
+      buildCacheProvider: "eas",
+    },
     plugins: [
       [
         "expo-build-properties",
@@ -148,6 +151,21 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         "expo-audio",
         {
           microphonePermission: `Allow ${getAppName()} to access your microphone.`
+        }
+      ],
+      [
+        "expo-sqlite",
+        {
+          enableFTS: true,
+          useSQLCipher: false,
+          android: {
+            enableFTS: true,
+            useSQLCipher: false
+          },
+          ios: {
+            enableFTS: true,
+            useSQLCipher: false
+          }
         }
       ],
       "expo-asset",

@@ -13,6 +13,7 @@ import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
 import { useEffect, useRef, useState } from "react";
 import { VersionItem } from "./useInstalledBible";
+import { storedData$ } from "@/context/LocalstoreContext";
 
 interface Row {
   [key: string]: any;
@@ -54,7 +55,6 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
     queryName?: any
   ): Promise<any[]> => {
     try {
-      const startTime = Date.now();
       if (!database || !dbInitialized.current) {
         return [];
       }
@@ -62,13 +62,8 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
       const statement = await database.prepareAsync(sql);
       try {
         const result = await statement.executeAsync(params);
-        const endTime = Date.now();
-        const executionTime = endTime - startTime;
-
         const response = await result.getAllAsync();
-        if (queryName) {
-          // console.log(`Query ${queryName} executed in ${executionTime} ms.`);
-        }
+
         return response as Row[];
       } finally {
         await statement.finalizeAsync();
@@ -89,9 +84,7 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
     ];
 
     try {
-      for (const sql of tables) {
-        await db.execAsync(sql);
-      }
+      await db.execAsync(tables.join("\n"));
     } catch (error) {
       console.error("Error creating tables:", error);
       throw error; // Rethrow to handle in the calling function
@@ -141,7 +134,6 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
       await statement.finalizeAsync();
 
       const tableNames = tables.map((t: any) => t.name);
-      // console.log("Tables in database:", tableNames);
       return tableNames.includes(tableNameToCheck);
     } catch (e) {
       console.error("Validation query failed:", e);
@@ -152,18 +144,14 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
   async function initializeDatabase(dbName: any) {
     try {
       setDatabase(null);
-      // setLoaded(false);
       isMounted.current = true;
       bibleState$.isDataLoading.top.set(true);
 
       if (!dbName) return;
 
-      // const db = null
       const db = await prepareDatabaseFromDbFile({
         databaseItem: dbName,
         onProgress: (progress) => {
-          // console.log('useLoadDatabase: ', progress.stage, progress.message)
-          // Update the global state for progress tracking
           dbDownloadState$.setDownloadProgress({
             ...progress,
             databaseName: dbName.name || dbName.id
@@ -173,10 +161,8 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
 
       const isInterlinear = dbName.id === DEFAULT_DATABASE.INTERLINEAR;
       const valid = await isDatabaseValid(db!, isInterlinear ? "interlinear" : "verses");
-      // console.log('Database is valid', valid)
 
       if (!valid) {
-        // delete the database
         await db?.closeAsync();
         await FileSystem.deleteAsync(dbName.path, { idempotent: true });
         await FileSystem.deleteAsync(`${dbName.path}-wal`, { idempotent: true });
@@ -184,10 +170,13 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
         return undefined
       }
       if (!db) return;
+      const dbTableCreated = storedData$.dbTableCreated.get();
+      if (!dbTableCreated.includes(dbName.id)) {
+        await createTables(db);
+        await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
+        storedData$.dbTableCreated.set([...dbTableCreated, dbName.id]);
+      }
 
-      await createTables(db);
-      await checkAndCreateColumn(db, "notes", "uuid", "TEXT");
-      await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
       if (isMounted.current) {
         setDatabase(db);
         dbInitialized.current = true;
