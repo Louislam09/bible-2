@@ -38,10 +38,11 @@ import {
   Easing,
   Pressable,
   ScrollView,
-  StyleSheet
+  StyleSheet,
 } from "react-native";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
 import VerseTitle from "./VerseTitle";
+import { useHaptics } from "@/hooks/useHaptics";
 
 type VerseProps = TVerse & {
   isSplit: boolean;
@@ -74,6 +75,7 @@ const validStrongList = (arr: WordTagPair[]) => {
 
 const ActionItem = memo(
   ({ index, action, styles, theme, item }: ActionItemProps) => {
+    const haptics = useHaptics();
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const translateXAnim = useRef(new Animated.Value(300)).current;
     const actionToHide = ["Copy", "NotebookPen", "Sparkles"];
@@ -113,7 +115,10 @@ const ActionItem = memo(
         ]}
       >
         <Pressable
-          onPress={action.action}
+          onPress={() => {
+            action.action();
+            haptics.selection();
+          }}
           style={[
             {
               display: "flex",
@@ -141,6 +146,7 @@ const ActionItem = memo(
 
 const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   const { toggleFavoriteVerse } = useBibleContext();
+  const haptics = useHaptics();
 
   const fontSize = use$(() => storedData$.fontSize.get());
   const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
@@ -150,7 +156,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   const [isFavorite, setFavorite] = useState(false);
   const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
   const verseRef = useRef<any>(null);
-  // const animatedVerseHighlight = useRef(new Animated.Value(0)).current;
   const wordAndStrongValue = extractWordsWithTags(item.text);
   const googleAIKey = use$(() => storedData$.googleAIKey.get());
   const isDefaultDb = isDefaultDatabase(currentBibleVersion);
@@ -191,27 +196,6 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     [item]
   );
 
-  // const initHighLightedVerseAnimation = () => {
-  //   const loopAnimation = Animated.loop(
-  //     Animated.sequence([
-  //       Animated.timing(animatedVerseHighlight, {
-  //         toValue: 1,
-  //         duration: 300,
-  //         easing: Easing.inOut(Easing.quad),
-  //         useNativeDriver: false,
-  //       }),
-  //       Animated.timing(animatedVerseHighlight, {
-  //         toValue: 0,
-  //         duration: 300,
-  //         easing: Easing.inOut(Easing.quad),
-  //         useNativeDriver: false,
-  //       }),
-  //     ]),
-  //     { iterations: 2 }
-  //   );
-  //   loopAnimation.start();
-  // };
-
   useEffect(() => {
     setFavorite(!!item.is_favorite);
   }, [item]);
@@ -224,6 +208,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       bibleState$.handleTapVerse(item);
     }
     bibleState$.isBottomBibleSearching.set(!!isSplit);
+    haptics.selection();
   }, [item, verseIsTapped, isSplit]);
 
   const onPress = useSingleAndDoublePress({
@@ -236,6 +221,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const onVerseLongPress = useCallback(() => {
     bibleState$.handleLongPressVerse(item);
+    haptics.impact.medium();
   }, [item]);
 
   const onFavorite = async () => {
@@ -274,8 +260,9 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const onQuote = () => {
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item.book_number).longName} ${item.chapter
-      }:${item.verse}`;
+    const reference = `${getBookDetail(item.book_number).longName} ${
+      item.chapter
+    }:${item.verse}`;
     bibleState$.handleSelectVerseForNote(verseText);
     router.push({ pathname: "/quote", params: { text: verseText, reference } });
   };
@@ -357,8 +344,9 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       return;
     }
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item.book_number).longName} ${item.chapter
-      }:${item.verse}`;
+    const reference = `${getBookDetail(item.book_number).longName} ${
+      item.chapter
+    }:${item.verse}`;
 
     bibleState$.handleVerseWithAiAnimation(item.verse);
     bibleState$.handleVerseToExplain({ text: verseText, reference });
@@ -428,7 +416,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         name: "Brain",
         action: () =>
           onMemorizeVerse(
-            `${getBookDetail(item.book_number).longName} ${item?.chapter}:${item?.verse
+            `${getBookDetail(item.book_number).longName} ${item?.chapter}:${
+              item?.verse
             }`
           ),
         color: "#f1abab",
