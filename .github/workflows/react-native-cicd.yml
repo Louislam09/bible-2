@@ -138,6 +138,10 @@ jobs:
         env:
           NODE_ENV: development
 
+      - name: Install Expo CLI
+        run: |
+          bun add -g expo-cli@latest
+
       - name: Prebuild
         run: |
           expo prebuild --platform android --non-interactive
