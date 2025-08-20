@@ -13,7 +13,6 @@ module.exports = function (api) {
           },
         },
       ],
-      // "expo-asset/tools/hashAssetFiles", // 👈 required for expo-updates
       "react-native-reanimated/plugin",
     ],
   };

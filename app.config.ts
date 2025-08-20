@@ -106,9 +106,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         "expo-build-properties",
         {
           android: {
-            compileSdkVersion: 35,
-            targetSdkVersion: 35,
-            buildToolsVersion: "35.0.0",
+            // compileSdkVersion: 35,
+            // targetSdkVersion: 35,
+            // buildToolsVersion: "35.0.0",
             enableProguardInReleaseBuilds: true,
             usesCleartextTraffic: true,
           },
@@ -117,9 +117,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       [
         "react-native-edge-to-edge",
         {
-          "android": {
-            "parentTheme": "Default",
-            "enforceNavigationBarContrast": false
+          android: {
+            parentTheme: "Default",
+            enforceNavigationBarContrast: false
           }
         }
       ],
