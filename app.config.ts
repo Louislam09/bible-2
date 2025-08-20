@@ -60,7 +60,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
     updates: {
       fallbackToCacheTimeout: 0,
-      url: "https://u.expo.dev/ae41abb8-478d-4cd9-9b64-47b9486e2c5f",
+      url: "https://u.expo.dev/ae41abb8-478d-4cd9-9b64-47b9486e2c5f"
     },
     ios: {
       supportsTablet: true,
@@ -143,6 +143,12 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           defaultChannel: "default",
           // enableBackgroundRemoteNotifications: true,
         },
+      ],
+      [
+        "expo-audio",
+        {
+          microphonePermission: `Allow ${getAppName()} to access your microphone.`
+        }
       ],
       "expo-asset",
       "expo-font",

@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Audio } from 'expo-av';
+import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import { SOUNDS } from '@/constants/gameSound';
 
 const soundAssets = {
@@ -12,8 +12,14 @@ const soundAssets = {
 };
 
 export const usePlaySound = (soundFile: string) => {
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentSoundAsset, setCurrentSoundAsset] = useState<number | null>(null);
+  const [isLooping, setIsLooping] = useState(false);
+
+  // Create audio player with the current sound asset
+  const audioPlayer = useAudioPlayer(currentSoundAsset);
+  const audioStatus = useAudioPlayerStatus(audioPlayer);
+
+  const isPlaying = audioStatus.playing;
 
   const play = useCallback(
     async (isLoop: boolean = false) => {
@@ -25,12 +31,11 @@ export const usePlaySound = (soundFile: string) => {
       }
 
       try {
-        const { sound: newSound } = await Audio.Sound.createAsync(soundAsset, {
-          shouldPlay: true,
-          isLooping: isLoop,
-        });
-        setSound(newSound);
-        setIsPlaying(true);
+        setIsLooping(isLoop);
+        setCurrentSoundAsset(soundAsset);
+
+        // The audio will start playing automatically when the source is set
+        // due to the useAudioPlayer hook behavior
       } catch (error) {
         console.error('Error loading or playing sound', error);
       }
@@ -40,18 +45,33 @@ export const usePlaySound = (soundFile: string) => {
 
   // Stop the sound
   const stop = useCallback(async () => {
-    if (sound) {
-      await sound.stopAsync();
-      setIsPlaying(false);
+    if (audioPlayer) {
+      audioPlayer.pause();
+      setCurrentSoundAsset(null);
     }
-  }, [sound]);
+  }, [audioPlayer]);
 
   // Cleanup the sound when the component unmounts
   const cleanup = useCallback(() => {
-    if (sound) {
-      sound.unloadAsync();
+    if (audioPlayer) {
+      audioPlayer.pause();
+      setCurrentSoundAsset(null);
     }
-  }, [sound]);
+  }, [audioPlayer]);
+
+  // Handle looping
+  useEffect(() => {
+    if (audioPlayer && isLooping) {
+      audioPlayer.loop = true;
+    }
+  }, [audioPlayer, isLooping]);
+
+  // Handle sound completion for non-looping sounds
+  useEffect(() => {
+    if (audioStatus.didJustFinish && !isLooping) {
+      setCurrentSoundAsset(null);
+    }
+  }, [audioStatus.didJustFinish, isLooping]);
 
   useEffect(() => {
     return cleanup;

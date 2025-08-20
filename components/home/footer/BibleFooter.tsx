@@ -39,7 +39,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const currentVoiceIdentifier = storedData$.currentVoiceIdentifier.get();
   const currentVoiceRate = storedData$.currentVoiceRate.get() || 1;
   const netInfo = useNetwork();
-  const { isConnected } = netInfo
+  const { isConnected } = netInfo;
   const FOOTER_ICON_SIZE = iconSize;
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
@@ -61,7 +61,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const isRVR = currentBibleVersion === EBibleVersions.BIBLE && isConnected;
   const { isDownloading, isPlaying, playAudio, duration, position } =
     useAudioPlayer({
-      book: bookIndex + 1,
+      book: book,
       chapterNumber: +chapter,
       nextChapter,
     });
@@ -225,8 +225,9 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
         >
           <Text
             style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}
-          >{`${displayBookName ?? ""} ${chapter ?? ""}:${isSplitActived ? verse : currentHistoryIndexState || verse
-            }`}</Text>
+          >{`${displayBookName ?? ""} ${chapter ?? ""}:${
+            isSplitActived ? verse : currentHistoryIndexState || verse
+          }`}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           ref={tourState$.nextButton.get()}

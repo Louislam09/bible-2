@@ -603,6 +603,27 @@ export const useNotificationService = () => {
         await Notifications.cancelScheduledNotificationAsync(notificationId);
     }
 
+    const testNotification = async () => {
+        const now = new Date();
+        const hour = now.getHours();
+        const minute = now.getMinutes();
+        now.setMinutes(minute + 1);
+
+        await Notifications.scheduleNotificationAsync({
+            content: {
+                title: "...",
+                priority: Notifications.AndroidNotificationPriority.MAX,
+                interruptionLevel: 'timeSensitive',
+            },
+            trigger: {
+                type: Notifications.SchedulableTriggerInputTypes.DAILY,
+                channelId: 'default',
+                hour: hour,
+                minute: minute,
+            },
+        });
+    }
+
     return {
         getNotificationPreferences,
         updateNotificationPreferences,
@@ -623,6 +644,7 @@ export const useNotificationService = () => {
         sendPushNotificationToUser,
         scheduleAlarm,
         cancelAlarm,
+        testNotification,
         error,
     };
 };
