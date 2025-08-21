@@ -7,15 +7,31 @@ type SortProps = {
   onSelect: (sort: any) => void;
   value: any;
   title: string;
-  description?: string,
-  options: any[]
-  buttonText: string
+  description?: string;
+  options: any[];
+  buttonText: string;
+  noButton?: boolean;
 };
 
-const FilterList = ({ onSelect, value, title, description, options, buttonText }: SortProps) => {
+const FilterList = ({
+  onSelect,
+  value,
+  title,
+  description,
+  options,
+  buttonText,
+  noButton,
+}: SortProps) => {
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const [selectedSort, setSelectedSort] = useState<any>(value);
+
+  const onOptionPress = (option: any) => {
+    setSelectedSort(option);
+    if (noButton) {
+      onSelect(option);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -28,7 +44,7 @@ const FilterList = ({ onSelect, value, title, description, options, buttonText }
         <TouchableOpacity
           key={option}
           style={styles.option}
-          onPress={() => setSelectedSort(option)}
+          onPress={() => onOptionPress(option)}
         >
           <View style={styles.radioCircle}>
             {selectedSort === option && <View style={styles.selectedCircle} />}
@@ -37,14 +53,16 @@ const FilterList = ({ onSelect, value, title, description, options, buttonText }
         </TouchableOpacity>
       ))}
 
-      <TouchableOpacity
-        style={styles.sortButton}
-        onPress={() => {
-          onSelect(selectedSort);
-        }}
-      >
-        <Text style={styles.sortButtonText}>{buttonText}</Text>
-      </TouchableOpacity>
+      {!noButton && (
+        <TouchableOpacity
+          style={styles.sortButton}
+          onPress={() => {
+            onSelect(selectedSort);
+          }}
+        >
+          <Text style={styles.sortButtonText}>{buttonText}</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

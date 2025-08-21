@@ -4,7 +4,7 @@ import { Text, View } from "@/components/Themed";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { TTheme } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
-import { renameLongBookName } from '@/utils/extractVersesInfo';
+import { renameLongBookName } from "@/utils/extractVersesInfo";
 
 export type TItem = {
   bookName: string;
@@ -49,7 +49,7 @@ const RenderVerse = ({
           <View style={styles.verseAction}>
             <Icon
               size={20}
-              name='Copy'
+              name="Copy"
               style={styles.icon}
               onPress={() => onCopy(item)}
             />
@@ -59,7 +59,12 @@ const RenderVerse = ({
           sanitize={sanitize}
           textToHighlight={item.text}
           searchWords={isArray ? selected : [selected]}
-          highlightStyle={{ color: theme.colors.notification }}
+          highlightStyle={{
+            color: theme.colors.notification,
+            fontSize: 18,
+            fontWeight: "bold",
+            lineHeight: 15,
+          }}
           style={[styles.verseBody]}
           onWordClick={() => {}}
         />

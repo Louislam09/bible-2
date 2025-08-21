@@ -15,7 +15,7 @@ import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { showToast } from "@/utils/showToast";
 import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
+import { FlashList, FlashListRef } from "@shopify/flash-list";
 // import * as Haptics from "expo-haptics";
 import { Stack, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -36,7 +36,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type TListVerse = {};
 
-const FavoriteList = ({ }: TListVerse) => {
+const FavoriteList = ({}: TListVerse) => {
   const [filterData, setFilterData] = useState<(IVerseItem & { id: number })[]>(
     []
   );
@@ -50,7 +50,7 @@ const FavoriteList = ({ }: TListVerse) => {
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
 
-  const flatListRef = useRef<FlashList<any>>(null);
+  const flatListRef = useRef<FlashListRef<any>>(null);
   const scrollY = useRef(new Animated.Value(0)).current;
   const swipeableRefs = useRef<{ [key: number]: Swipeable | null }>({});
 
@@ -166,8 +166,9 @@ const FavoriteList = ({ }: TListVerse) => {
   }, []);
 
   const onShare = useCallback((item: IVerseItem) => {
-    const verseReference = `${renameLongBookName(item.bookName)} ${item.chapter
-      }:${item.verse}`;
+    const verseReference = `${renameLongBookName(item.bookName)} ${
+      item.chapter
+    }:${item.verse}`;
     const verseText = getVerseTextRaw(item.text);
 
     showToast("Función de compartir implementada");
@@ -445,7 +446,7 @@ const FavoriteList = ({ }: TListVerse) => {
 
       return (
         <Swipeable
-          ref={(ref) => (swipeableRefs.current[item.id] = ref)}
+          ref={(ref) => (swipeableRefs.current[item.id] = ref) as any}
           renderRightActions={renderRightActions}
           friction={2}
           overshootRight={false}
@@ -479,8 +480,9 @@ const FavoriteList = ({ }: TListVerse) => {
 
               <View style={styles.headerContainer}>
                 <Text style={styles.cardTitle}>
-                  {`${renameLongBookName(item.bookName)} ${item.chapter}:${item.verse
-                    }`}
+                  {`${renameLongBookName(item.bookName)} ${item.chapter}:${
+                    item.verse
+                  }`}
                 </Text>
 
                 {!selectionMode && (

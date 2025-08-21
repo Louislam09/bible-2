@@ -2,31 +2,30 @@ import Animation from "@/components/Animation";
 import RenderVerse from "@/components/concordance/RenderVerse";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
-import { useBibleContext } from "@/context/BibleContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, Screens, TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import removeAccent from "@/utils/removeAccent";
 import { useNavigation } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
+import { FlashList, FlashListRef } from "@shopify/flash-list";
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
 type TListVerse = {
   data: IVerseItem[] | any;
   isLoading: boolean;
+  searchQuery: string;
 };
 
-const ListVerse = ({ data, isLoading }: TListVerse) => {
+const ListVerse = ({ data, isLoading, searchQuery: query }: TListVerse) => {
   const animationRef = useRef<any>(null);
   const { theme } = useMyTheme();
   const navigation = useNavigation();
   const styles = getStyles(theme);
-  const { searchQuery: query } = useBibleContext();
-  const flatListRef = useRef<FlashList<any>>(null);
+  const flatListRef = useRef<FlashListRef<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
-  const notFoundSource = require("../../assets/lottie/notFound.json");
+  const notFoundSource = require("../../assets/lottie/loading-book.json");
   const searchingSource = require("../../assets/lottie/searching.json");
 
   const handleScroll = (event: any) => {
@@ -51,7 +50,6 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
 
   useEffect(() => {
     if (!animationRef.current) return;
-    // animationRef.current.play();
 
     return () => animationRef.current?.pause();
   }, []);
@@ -90,7 +88,6 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
       <FlashList
         ref={flatListRef}
         decelerationRate={"normal"}
-
         data={data}
         renderItem={({ item, index }) => (
           <RenderVerse
@@ -118,7 +115,11 @@ const ListVerse = ({ data, isLoading }: TListVerse) => {
               backgroundColor={theme.colors.background}
               source={notFoundSource}
             />
-            <Text style={styles.noResultsText}>No encontramos resultados</Text>
+            <Text style={styles.noResultsText}>
+              {query
+                ? `No encontramos resultados para "${query}"`
+                : "No hay resultados"}
+            </Text>
           </View>
         }
       />
@@ -182,6 +183,8 @@ const getStyles = ({ colors }: TTheme) =>
     noResultsText: {
       fontSize: 18,
       color: colors.text,
+      textAlign: "center",
+      paddingHorizontal: 20,
     },
   });
 

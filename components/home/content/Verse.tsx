@@ -560,7 +560,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     verse: {
       position: "relative",
-      // paddingHorizontal: 25,
+      paddingHorizontal: 25,
       // marginVertical: 4,
       display: "flex",
       alignItems: "flex-start",

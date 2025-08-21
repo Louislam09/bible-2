@@ -1,7 +1,8 @@
 import { Text } from "@/components/Themed";
-import React from "react";
+import React, { useMemo } from "react";
 import { TTheme } from "@/types";
 import { useBibleContext } from "@/context/BibleContext";
+import { TextStyle } from "react-native";
 
 interface Props {
   text: string;
@@ -20,20 +21,24 @@ const RenderTextWithClickableWords: React.FC<Props> = ({
 }) => {
   const regex = /<S>(\d+)<\/S>/g;
   const words = text.split(regex);
-  const { fontSize } =
-    useBibleContext();
+  const { fontSize } = useBibleContext();
   const isHebrew = highlightedWord?.includes("H") ? "H" : "G";
   const isHighlighted = (word: string): boolean => {
     const cleanedHighlight = highlightedWord?.replace(",", "");
     return cleanedHighlight === `${isHebrew}${word}`;
   };
 
-  const renderVerse = (word: string, index: number) => {
-    const styles = {
+  const styles = useMemo(() => {
+    return {
       color: theme?.colors.notification ?? "black",
       backgroundColor: theme?.colors.notification + "20",
-      fontSize,
-    };
+      fontWeight: "bold" as const,
+      lineHeight: 16,
+      fontSize: fontSize - 2 || 18,
+    } as TextStyle;
+  }, [fontSize, theme]);
+
+  const renderVerse = (word: string, index: number) => {
     const isEven = index % 2 === 0;
     if (isEven) return word;
 

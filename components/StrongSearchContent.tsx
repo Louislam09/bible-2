@@ -5,7 +5,7 @@ import { IVerseItem, Screens, TTheme } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { useNavigation } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
+import { FlashList, FlashListRef } from "@shopify/flash-list";
 import { useEffect, useRef, useState } from "react";
 import {
   ListRenderItem,
@@ -33,7 +33,7 @@ const StrongSearchContent = ({
   const [filterData, setFilter] = useState([]);
   const styles = getStyles(theme);
   const { fontSize } = useBibleContext();
-  const flatListRef = useRef<FlashList<any>>(null);
+  const flatListRef = useRef<FlashListRef<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
 
   useEffect(() => {
@@ -89,7 +89,7 @@ const StrongSearchContent = ({
               justOneWord
               theme={theme}
               text={item.text}
-              onWordClick={() => { }}
+              onWordClick={() => {}}
             />
           </Text>
         </View>
@@ -118,7 +118,6 @@ const StrongSearchContent = ({
       <FlashList
         ref={flatListRef}
         decelerationRate={"normal"}
-
         data={filterData}
         renderItem={renderItem as any}
         onScroll={handleScroll}

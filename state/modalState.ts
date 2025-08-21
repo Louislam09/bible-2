@@ -8,6 +8,7 @@ export const modalState$ = observable({
   dictionaryRef: createRef<BottomSheetModal>(),
   explainVerseRef: createRef<BottomSheetModal>(),
   interlinealRef: createRef<BottomSheetModal>(),
+  searchFilterRef: createRef<BottomSheetModal>(),
   searchWordOnDic: "",
   isSheetClosed: true,
 
@@ -52,5 +53,11 @@ export const modalState$ = observable({
   closeInterlinealBottomSheet: () => {
     modalState$.isSheetClosed.set(true);
     modalState$.interlinealRef.current?.close();
+  },
+  openSearchFilterBottomSheet: () => {
+    modalState$.searchFilterRef.current?.present();
+  },
+  closeSearchFilterBottomSheet: () => {
+    modalState$.searchFilterRef.current?.dismiss();
   },
 });
