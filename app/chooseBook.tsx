@@ -1,5 +1,8 @@
-import { singleScreenHeader } from "@/components/common/singleScreenHeader";
-import StatusBarBackground from "@/components/StatusBarBackground";
+import {
+  singleScreenHeader,
+  SingleScreenHeaderProps,
+} from "@/components/common/singleScreenHeader";
+import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
@@ -18,7 +21,7 @@ import {
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { LegendList } from "@legendapp/list";
 import { use$ } from "@legendapp/state/react";
-import { FlashList, ListRenderItem } from "@shopify/flash-list";
+import { FlashList } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
 import React, { useCallback, useMemo } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
@@ -46,8 +49,11 @@ const BookItem = React.memo(
       <TouchableOpacity
         style={[
           styles.listItem,
+          {
+            backgroundColor: theme.colors.text + "20",
+            borderColor: item.bookColor + 50,
+          },
           isCurrent && { backgroundColor: theme.colors.notification + "60" },
-          isNewVow && { backgroundColor: theme.colors.text + "20" },
           !isShowName && { justifyContent: "center", height: "auto" },
         ]}
         onPress={onPress}
@@ -95,9 +101,10 @@ const BookList = React.memo(
     startIndex: number;
     theme: any;
   }) => {
-    const isFlashlist = use$(() => bibleState$.isFlashlist.get())
+    const isFlashlist = use$(() => bibleState$.isFlashlist.get());
+    const styles = useMemo(() => getBookstyles(theme), [theme]);
+
     const renderItem = useCallback(
-      // const renderItem: ListRenderItem<IDBBookNames> = useCallback(
       ({ item, index }: any) => (
         <BookItem
           item={item}
@@ -133,9 +140,7 @@ const BookList = React.memo(
         data={data}
         renderItem={renderItem}
         numColumns={viewLayoutGrid ? (isShowName ? 4 : 5) : 1}
-        // removeClippedSubviews={true}
         recycleItems
-      // style={{ backgroundColor: 'blue' }}
       />
     );
   }
@@ -147,6 +152,7 @@ const ChooseBook: React.FC = () => {
   const isShowName = use$(() => storedData$.isShowName.get());
   const { book } = routeParam;
   const { theme } = useMyTheme();
+  const styles = useMemo(() => getBookstyles(theme), [theme]);
   const { viewLayoutGrid, toggleViewLayoutGrid, currentBibleVersion } =
     useBibleContext();
   const isBottomSideSearching = bibleState$.isBottomBibleSearching.get();
@@ -185,27 +191,27 @@ const ChooseBook: React.FC = () => {
     [theme.dark, isShowName, viewLayoutGrid]
   );
 
+  const screenOptions = useMemo(() => {
+    return {
+      theme,
+      title: "Libros",
+      titleIcon: "LibraryBig",
+      headerRightProps: {
+        headerRightIcon: !viewLayoutGrid ? "LayoutGrid" : "List",
+        headerRightIconColor: viewLayoutGrid
+          ? theme.colors.notification
+          : theme.colors.text,
+        onPress: () => toggleViewLayoutGrid(),
+        onLongPress: handleLongPress,
+        disabled: false,
+        style: { opacity: 0 },
+      },
+    } as SingleScreenHeaderProps;
+  }, [theme, viewLayoutGrid]);
+
   return (
     <View style={{ flex: 1 }} key={refreshKey}>
-      <Stack.Screen
-        options={{
-          ...singleScreenHeader({
-            theme,
-            title: "Libros",
-            titleIcon: "LibraryBig",
-            headerRightProps: {
-              headerRightIcon: !viewLayoutGrid ? "LayoutGrid" : "List",
-              headerRightIconColor: viewLayoutGrid
-                ? theme.colors.notification
-                : theme.colors.text,
-              onPress: () => toggleViewLayoutGrid(),
-              onLongPress: handleLongPress,
-              disabled: false,
-              style: { opacity: 0 },
-            },
-          }),
-        }}
-      />
+      <Stack.Screen options={{ ...singleScreenHeader(screenOptions) }} />
 
       <ScrollView
         contentContainerStyle={[
@@ -214,11 +220,16 @@ const ChooseBook: React.FC = () => {
         ]}
       >
         <View style={styles.listWrapper}>
-          <Text
-            style={[styles.sectionTitle, { color: theme.colors.notification }]}
-          >
-            {"Antiguo Pacto"}
-          </Text>
+          <View style={styles.tab}>
+            <Icon
+              name="Hash"
+              size={16}
+              color={theme.colors.text}
+              style={styles.tabIcon}
+            />
+            <Text style={[styles.tabText]}>Antiguo Pacto</Text>
+            <View style={[styles.activeIndicator]} />
+          </View>
           <BookList
             data={oldTestamentBooks}
             viewLayoutGrid
@@ -230,14 +241,16 @@ const ChooseBook: React.FC = () => {
           />
           {!isInterlineal && (
             <>
-              <Text
-                style={[
-                  styles.sectionTitle,
-                  { color: theme.colors.notification },
-                ]}
-              >
-                {"Nuevo Pacto"}
-              </Text>
+              <View style={styles.tab}>
+                <Icon
+                  name="Hash"
+                  size={16}
+                  color={theme.colors.text}
+                  style={styles.tabIcon}
+                />
+                <Text style={[styles.tabText]}> Nuevo Pacto</Text>
+                <View style={[styles.activeIndicator]} />
+              </View>
               <BookList
                 data={newTestamentBooks}
                 viewLayoutGrid
@@ -255,50 +268,82 @@ const ChooseBook: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-    paddingBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginVertical: 5,
-    padding: 15,
-    width: "100%",
-  },
-  listWrapper: {
-    display: "flex",
-    flex: 1,
-    width: "100%",
-    height: "100%",
-  },
-  flatContainer: {
-    backgroundColor: "transparent",
-  },
-  listItem: {
-    display: "flex",
-    borderStyle: "solid",
-    borderWidth: 1,
-    padding: 10,
-    flex: 1,
-    height: 70,
-    alignItems: "center",
-  },
-  listTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  subTitle: {
-    fontSize: 14,
-    opacity: 0.9,
-  },
-  icon: {
-    fontWeight: "900",
-    marginHorizontal: 10,
-  },
-});
+const getBookstyles = ({ colors }: TTheme) =>
+  StyleSheet.create({
+    scrollContainer: {
+      flexGrow: 1,
+      paddingBottom: 40,
+    },
+    sectionTitle: {
+      fontSize: 22,
+      fontWeight: "bold",
+      textAlign: "center",
+      // marginVertical: 5,
+      padding: 15,
+      width: "100%",
+    },
+    listWrapper: {
+      display: "flex",
+      flex: 1,
+      width: "100%",
+      height: "100%",
+    },
+    flatContainer: {
+      backgroundColor: "transparent",
+    },
+    listItem: {
+      display: "flex",
+      borderStyle: "solid",
+      borderWidth: 1,
+      padding: 10,
+      flex: 1,
+      height: 70,
+      alignItems: "center",
+    },
+    listTitle: {
+      fontSize: 18,
+      fontWeight: "bold",
+    },
+    subTitle: {
+      fontSize: 14,
+      opacity: 0.9,
+    },
+    icon: {
+      fontWeight: "900",
+      marginHorizontal: 10,
+    },
+    // tabs
+    tab: {
+      padding: 12,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 10,
+      flexDirection: "row",
+      position: "relative",
+      marginVertical: 10,
+      backgroundColor: colors.text + "20",
+      alignSelf: "center",
+      borderColor: colors.text + 40,
+      borderWidth: 2,
+    },
+    tabText: {
+      fontSize: 16,
+      color: colors.text,
+      fontWeight: "bold",
+    },
+    tabIcon: {
+      marginRight: 8,
+    },
+    activeIndicator: {
+      position: "absolute",
+      bottom: 0,
+      height: 3,
+      width: 100,
+      backgroundColor: colors.notification,
+      borderTopLeftRadius: 2,
+      borderTopRightRadius: 2,
+    },
+  });
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
@@ -343,32 +388,13 @@ const getStyles = ({ colors, dark }: TTheme) =>
       display: "flex",
       borderStyle: "solid",
       borderWidth: 1,
-      borderColor: colors.text + 10,
-      padding: 10,
+      borderColor: colors.text + 40,
+      paddingVertical: 8,
       flex: 1,
       height: 70,
       alignItems: "center",
-    },
-    listViewItem: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      borderStyle: "solid",
-      borderWidth: 0.19,
-      borderColor: "#4a4949",
-
-      borderLeftWidth: 0,
-      borderRightWidth: 0,
-      padding: 15,
-      flex: 1,
-    },
-    listViewTitle: {
-      fontSize: 20,
-      marginVertical: 10,
-      paddingLeft: 15,
-      color: colors.notification,
-      textAlign: "center",
+      borderRadius: 10,
+      margin: 2,
     },
     listTitle: {
       color: colors.text,

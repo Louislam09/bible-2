@@ -49,10 +49,13 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
     registerForPushNotificationsAsync().then(
       (token) => {
         setExpoPushToken(token);
-        // if (token && storedData$.notificationPreferences.pushToken.get() !== token) {
-        storedData$.notificationPreferences.pushToken.set(token);
-        console.log("🔔 Push token saved: ", token);
-        // }
+        if (
+          token &&
+          storedData$.notificationPreferences.pushToken.get() !== token
+        ) {
+          storedData$.notificationPreferences.pushToken.set(token);
+          console.log("🔔 Push token saved: ", token);
+        }
       },
       (error) => {
         console.log("🔔 Error: ", error);
