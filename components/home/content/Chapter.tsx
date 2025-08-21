@@ -8,7 +8,13 @@ import { EBibleVersions, IBookVerse, TTheme } from "@/types";
 import { LegendList } from "@legendapp/list";
 import { observer, use$ } from "@legendapp/state/react";
 import { FlashList, FlashListRef } from "@shopify/flash-list";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   ActivityIndicator,
   Animated,
@@ -45,7 +51,7 @@ const Chapter = ({
   onScroll,
 }: TChapter) => {
   const bibleSide = isSplit ? "bottom" : "top";
-  const isFlashlist = use$(() => bibleState$.isFlashlist.get())
+  const isFlashlist = use$(() => bibleState$.isFlashlist.get());
 
   const { width, height } = useWindowDimensions();
   const { theme } = useMyTheme();
@@ -146,42 +152,50 @@ const Chapter = ({
     [onScroll]
   );
 
-
   return (
     <View style={styles.chapterContainer}>
       <Pressable
-        style={{ position: "absolute", bottom: 100, right: 10, backgroundColor: isFlashlist ? 'red' : 'blue', padding: 10, zIndex: 122 }}
+        style={{
+          position: "absolute",
+          bottom: 100,
+          right: 10,
+          backgroundColor: isFlashlist ? "red" : "blue",
+          padding: 10,
+          zIndex: 122,
+        }}
         onPress={() => bibleState$.toggleList()}
       >
-        <Text>{isFlashlist ? 'Flashlist' : 'Legendlist'}</Text>
+        <Text>{isFlashlist ? "Flashlist" : "Legendlist"}</Text>
       </Pressable>
       <View style={[styles.verseContent]}>
-        {isFlashlist ? <FlashList
-          ref={chapterRef}
-          keyExtractor={keyExtractor}
-          data={data ?? []}
-          ListHeaderComponent={ListHeader}
-          renderItem={renderItem}
-          decelerationRate="normal"
-          removeClippedSubviews
-          ListEmptyComponent={() => (
-            <LoadingComponent textColor={theme.colors.text} />
-          )}
-          initialScrollIndex={initialScrollIndex}
-          viewabilityConfigCallbackPairs={
-            viewabilityConfigCallbackPairs.current
-          }
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
-          onScroll={handleScroll}
-          scrollEventThrottle={16}
-        // disableAutoLayout
-        // ListHeaderComponentStyle={{ paddingTop: 70 }}
-        // maintainVisibleContentPosition={{
-        //   minIndexForVisible: 0,
-        //   autoscrollToTopThreshold: 10,
-        // }}
-        /> : (
+        {isFlashlist ? (
+          <FlashList
+            ref={chapterRef}
+            keyExtractor={keyExtractor}
+            data={data ?? []}
+            ListHeaderComponent={ListHeader}
+            renderItem={renderItem}
+            decelerationRate="normal"
+            removeClippedSubviews
+            ListEmptyComponent={() => (
+              <LoadingComponent textColor={theme.colors.text} />
+            )}
+            initialScrollIndex={initialScrollIndex}
+            viewabilityConfigCallbackPairs={
+              viewabilityConfigCallbackPairs.current
+            }
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
+            ListHeaderComponentStyle={{ paddingTop: 70 }}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+            // disableAutoLayout
+            // maintainVisibleContentPosition={{
+            //   minIndexForVisible: 0,
+            //   autoscrollToTopThreshold: 10,
+            // }}
+          />
+        ) : (
           <LegendList
             data={data}
             renderItem={renderItem}
@@ -189,7 +203,10 @@ const Chapter = ({
             recycleItems
             ListHeaderComponent={ListHeader}
             decelerationRate="normal"
-            ListEmptyComponent={() => (<LoadingComponent textColor={theme.colors.text} />)}
+            ListEmptyComponent={() => (
+              <LoadingComponent textColor={theme.colors.text} />
+            )}
+            ListHeaderComponentStyle={{ paddingTop: 70 }}
             initialScrollIndex={initialScrollIndex}
             viewabilityConfigCallbackPairs={
               viewabilityConfigCallbackPairs.current
@@ -198,7 +215,7 @@ const Chapter = ({
             ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
             onScroll={handleScroll}
 
-          // style={{ backgroundColor: 'blue' }}
+            // style={{ backgroundColor: 'blue' }}
           />
         )}
       </View>

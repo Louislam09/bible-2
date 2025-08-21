@@ -37,11 +37,11 @@ const DisplayStrongWord: React.FC<DisplayStrongWordProps> = ({
   };
 
   return (
-    <Text style={style} {...props}>
+    <Text style={nonHightlistedStyle} {...props}>
       {data?.map((wordItem, index) => {
         const hasValue = !!wordItem?.tagValue;
         const word = wordItem?.word;
-        const space = !!index ? " " : "";
+        const space = "\u00A0";
 
         return !hasValue ? (
           <Text
@@ -49,7 +49,7 @@ const DisplayStrongWord: React.FC<DisplayStrongWordProps> = ({
             key={index}
             style={nonHightlistedStyle}
           >
-            {`${space}${word}`}
+            {`${word}${space}`}
           </Text>
         ) : (
           <Text
@@ -57,7 +57,7 @@ const DisplayStrongWord: React.FC<DisplayStrongWordProps> = ({
             style={highlightStyle}
             onPress={() => handleWordClick(wordItem)}
           >
-            {` ${word}`}
+            {`${word}${space}`}
           </Text>
         );
       })}

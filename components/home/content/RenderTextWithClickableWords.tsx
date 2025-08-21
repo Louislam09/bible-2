@@ -10,6 +10,7 @@ interface Props {
   theme?: TTheme;
   highlightedWord?: string;
   justOneWord?: boolean;
+  verseNumber?: string;
 }
 
 const RenderTextWithClickableWords: React.FC<Props> = ({
@@ -18,6 +19,7 @@ const RenderTextWithClickableWords: React.FC<Props> = ({
   theme,
   highlightedWord,
   justOneWord,
+  verseNumber,
 }) => {
   const regex = /<S>(\d+)<\/S>/g;
   const words = text.split(regex);
@@ -55,7 +57,12 @@ const RenderTextWithClickableWords: React.FC<Props> = ({
     return Componetent;
   };
 
-  return <Text style={{ fontSize }}>{words.map(renderVerse)}</Text>;
+  return (
+    <Text style={{ fontSize }}>
+      {verseNumber || ""}
+      {words.map(renderVerse)}
+    </Text>
+  );
 };
 
 export default RenderTextWithClickableWords;

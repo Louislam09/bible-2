@@ -1,7 +1,6 @@
 import { Text as DefaultText, View as DefaultView } from "react-native";
 
 import { useMyTheme } from "@/context/ThemeContext";
-import { TFont, TTheme } from "@/types";
 import { createElement } from "react";
 import { useBibleContext } from "../context/BibleContext";
 
@@ -36,7 +35,7 @@ export function Text(props: TextProps) {
         },
         style,
       ]}
-      onPress={onPress}
+      {...(onPress ? { onPress } : {})}
       {...otherProps}
     />
   );
@@ -47,10 +46,16 @@ export function View(props: ViewProps & { isTransparent?: boolean }) {
   const { theme } = useMyTheme();
   const { colors } = theme;
 
-
   return (
     <NativeDefaultView
-      style={[{ backgroundColor: props.isTransparent ? 'transparent' : colors.background }, style]}
+      style={[
+        {
+          backgroundColor: props.isTransparent
+            ? "transparent"
+            : colors.background,
+        },
+        style,
+      ]}
       {...otherProps}
     />
   );

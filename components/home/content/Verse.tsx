@@ -39,6 +39,7 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
 import VerseTitle from "./VerseTitle";
@@ -434,120 +435,118 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   }, [verseIsTapped, isFavorite, item, isNewTestament]);
 
   return (
-    <View
-      onLayout={() => {
-        // if (initVerse === item.verse) initHighLightedVerseAnimation();
-      }}
+    <Pressable
+      onPress={onPress}
+      onLongPress={onVerseLongPress}
+      style={styles.verseContainer}
+      ref={verseRef}
     >
-      <Pressable
-        onPress={onPress}
-        onLongPress={onVerseLongPress}
-        // activeOpacity={0.9}
-        style={styles.verseContainer}
-        ref={verseRef}
-      >
-        {hasTitle && (
-          <VerseTitle
-            isSplit={isSplit}
-            key={item.verse}
-            subheading={item.subheading}
-            links={verseLink?.[0]?.subheading}
-          />
-        )}
+      {hasTitle && (
+        <VerseTitle
+          isSplit={isSplit}
+          key={item.verse}
+          subheading={item.subheading}
+          links={verseLink?.[0]?.subheading}
+        />
+      )}
 
-        {verseWithAiAnimation ? (
-          <AiTextScannerAnimation
-            noTitle
-            verse={`${item.verse} ${getVerseTextRaw(item.text)}`}
-            fontSize={fontSize}
-            theme={theme}
-            style={{
-              alignItems: "flex-start",
-              justifyContent: "flex-start",
-            }}
-          />
-        ) : (
-          <Animated.View
-            style={[
-              styles.verse,
-              (verseIsTapped || verseShowAction) && styles.highlightCopy,
-            ]}
-            aria-selected
-          >
-            <Text style={[styles.verseNumber, { fontSize }]}>
-              {isFavorite && (
-                <MaterialCommunityIcons size={14} name="star" color="#ffd41d" />
-              )}
-              &nbsp;{item.verse}&nbsp;
-            </Text>
-
-            {/* HIGHLIGHT */}
-            {verseIsTapped && (isBottom || isTop) ? (
-              <>
-                {isVerseDoubleTagged ? (
-                  <RenderTextWithClickableWords
-                    theme={theme}
-                    text={item.text}
-                    onWordClick={onWordClicked}
-                  />
-                ) : (
+      {verseWithAiAnimation ? (
+        <AiTextScannerAnimation
+          noTitle
+          verse={`${item.verse} ${getVerseTextRaw(item.text)}`}
+          fontSize={fontSize}
+          theme={theme}
+          style={styles.aiTextScannerAnimation}
+        />
+      ) : (
+        <Text
+          style={[
+            styles.verse,
+            (verseIsTapped || verseShowAction) && styles.highlightCopy,
+          ]}
+        >
+          {/* HIGHLIGHT */}
+          {verseIsTapped && (isBottom || isTop) ? (
+            <>
+              {isVerseDoubleTagged ? (
+                <RenderTextWithClickableWords
+                  theme={theme}
+                  text={item.text}
+                  onWordClick={onWordClicked}
+                  verseNumber={`${item.verse} `}
+                />
+              ) : (
+                <>
                   <DisplayStrongWord
                     data={validStrongList(wordAndStrongValue)}
                     highlightStyle={{
                       color: theme.colors.notification,
                       backgroundColor: theme?.colors.notification + "30",
                       fontSize,
+                      letterSpacing: 2,
                     }}
                     nonHightlistedStyle={{
                       fontSize,
                       ...customUnderline,
+                      letterSpacing: 2,
                     }}
-                    style={[styles.verseBody]}
+                    style={[styles.verseBody, { fontSize }]}
                     onWordClick={onStrongWordClicked}
                     onNonHightlistedWordClick={onNonHightlistedWordClick}
                   />
+                </>
+              )}
+            </>
+          ) : (
+            <Text style={[styles.verseBody, { fontSize }]}>
+              <Text
+                onPress={() => console.log("this is working", item.verse)}
+                style={[styles.verseNumber, { fontSize }]}
+              >
+                {isFavorite && (
+                  <Icon
+                    size={14}
+                    name="Star"
+                    fillColor="#ffd41d"
+                    color="#ffd41d"
+                  />
                 )}
-              </>
-            ) : (
-              <Text style={[styles.verseBody, { fontSize }]}>
-                {getVerseTextRaw(item.text)}
+                &nbsp;{item.verse}&nbsp;
               </Text>
-            )}
-          </Animated.View>
-        )}
+              {getVerseTextRaw(item.text)}
+            </Text>
+          )}
+        </Text>
+      )}
 
-        {/* ACTIONS */}
-        {verseShowAction && (
-          <ScrollView
-            horizontal
-            contentContainerStyle={{
-              alignItems: "center",
-              justifyContent: "flex-end",
-            }}
-            style={styles.verseAction}
-          >
-            {verseActions.map((action: TIcon, index) => (
-              <ActionItem
-                key={index}
-                {...{ index, action, styles, theme, item }}
-              />
-            ))}
-          </ScrollView>
-        )}
-      </Pressable>
-    </View>
+      {/* ACTIONS */}
+      {verseShowAction && (
+        <ScrollView
+          horizontal
+          contentContainerStyle={{
+            alignItems: "center",
+            justifyContent: "flex-end",
+          }}
+          style={styles.verseAction}
+        >
+          {verseActions.map((action: TIcon, index) => (
+            <ActionItem
+              key={index}
+              {...{ index, action, styles, theme, item }}
+            />
+          ))}
+        </ScrollView>
+      )}
+    </Pressable>
   );
 };
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     verseContainer: {},
-    verseBody: {
-      color: colors.text,
-      letterSpacing: 2,
-    },
-    verseNumber: {
-      color: colors.notification,
+    aiTextScannerAnimation: {
+      alignItems: "flex-start",
+      justifyContent: "flex-start",
     },
     estimatedContainer: {
       flexDirection: "row",
@@ -561,10 +560,19 @@ const getStyles = ({ colors, dark }: TTheme) =>
     verse: {
       position: "relative",
       paddingHorizontal: 25,
-      // marginVertical: 4,
-      display: "flex",
-      alignItems: "flex-start",
-      flexDirection: "row",
+      marginVertical: 4,
+    },
+    verseNumber: {
+      color: colors.notification,
+      lineHeight: 20,
+      position: "relative",
+    },
+    verseBody: {
+      color: colors.text,
+      letterSpacing: 2,
+      // width: "100%",
+      // borderWidth: 1,
+      // borderColor: "blue",
     },
     highlightCopy: {
       backgroundColor: colors.notification + "20",
