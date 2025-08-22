@@ -20,7 +20,8 @@ import * as Sharing from "expo-sharing";
 import { Alert } from "react-native";
 
 export const useNoteService = () => {
-  const { executeSql } = useDBContext();
+  const { mainBibleService } = useDBContext();
+  const { executeSql } = mainBibleService;
   const netInfo = useNetwork();
   const { isConnected } = netInfo
   const user = authState$.user.get();

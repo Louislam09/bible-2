@@ -11,7 +11,7 @@ import { dbDownloadState$ } from "@/state/dbDownloadState";
 import { prepareDatabaseFromDbFile } from "@/utils/prepareDB";
 import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { VersionItem } from "./useInstalledBible";
 import { storedData$ } from "@/context/LocalstoreContext";
 
@@ -49,12 +49,13 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
   const [defaultDbName] = databaseNames
   const dbName = isInterlinear ? defaultDbName : currentBibleVersion
 
-  const executeSql = async (
+  const executeSql = useCallback(async (
     sql: string,
     params: any[] = [],
     queryName?: any
   ): Promise<any[]> => {
     try {
+      console.log("executeSql", database, dbInitialized.current);
       if (!database || !dbInitialized.current) {
         return [];
       }
@@ -72,7 +73,7 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
       console.error(`"Error executing SQL${sql}:"`, error);
       return [];
     }
-  };
+  }, [database, dbInitialized.current])
 
   async function createTables(db: SQLite.SQLiteDatabase) {
     const tables = [

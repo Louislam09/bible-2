@@ -1,6 +1,8 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import Icon from "@/components/Icon";
 import { Text } from "@/components/Themed";
 import hymnSong from "@/constants/hymnSong";
+import { iconSize } from "@/constants/size";
 import AlegreSongs from "@/constants/songs";
 import { useBibleContext } from "@/context/BibleContext";
 import { useMyTheme } from "@/context/ThemeContext";
@@ -14,13 +16,22 @@ import { Stack, useRouter } from "expo-router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
+  Pressable,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 
-const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
+type RenderItemProps = {
+  item: TSongItem;
+  onItemClick: (id: string) => void;
+  index: number;
+  theme: TTheme;
+};
+
+const RenderItem = ({ item, onItemClick, index, theme }: RenderItemProps) => {
+  const styles = getStyles(theme);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateYAnim = useRef(new Animated.Value(50)).current;
 
@@ -42,24 +53,47 @@ const RenderItem = ({ item, theme, styles, onItemClick, index }: any) => {
   }, [fadeAnim, translateYAnim, index]);
 
   return (
-    <Animated.View
-      style={[
-        {
-          opacity: fadeAnim,
-          transform: [{ translateY: translateYAnim }],
-        },
-      ]}
+    <Pressable
+      key={`${item.id}-${index}`}
+      style={[styles.itemContainer, styles.defaultItem]}
+      onPress={() => onItemClick(item.id)}
     >
-      <TouchableOpacity
-        style={[styles.cardContainer]}
-        onPress={() => onItemClick(item.id)}
-      >
-        <Text>#{item.title}</Text>
-        <Text style={{ color: theme.colors.notification }}>
-          Estrofas: {item.stanzas.length}
+      <View style={styles.itemIconContainer}>
+        <Icon name="Music4" size={22} color={theme.colors.notification} />
+      </View>
+
+      <View style={styles.itemContent}>
+        <Text style={[styles.itemTitle, { color: theme.colors.notification }]}>
+          # {item?.id || "-"}
         </Text>
-      </TouchableOpacity>
-    </Animated.View>
+        <Text style={[styles.itemSubTitle, { color: theme.colors.primary }]}>
+          {item?.title.split("-")[1].trim() || "-"}
+        </Text>
+      </View>
+      <View style={styles.stanzasNumberContainer}>
+        <Text style={styles.stanzasNumberText}>
+          {item?.stanzas.length || "-"}
+        </Text>
+      </View>
+    </Pressable>
+    // <Animated.View
+    //   style={[
+    //     {
+    //       opacity: fadeAnim,
+    //       transform: [{ translateY: translateYAnim }],
+    //     },
+    //   ]}
+    // >
+    //   <TouchableOpacity
+    //     style={[styles.cardContainer]}
+    //     onPress={() => onItemClick(item.id)}
+    //   >
+    //     <Text>#{item.title}</Text>
+    //     <Text style={{ color: theme.colors.notification }}>
+    //       Estrofas: {item.stanzas.length}
+    //     </Text>
+    //   </TouchableOpacity>
+    // </Animated.View>
   );
 };
 
@@ -171,7 +205,7 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
           data={filterData}
           renderItem={({ item, index }) => (
             <RenderItem
-              {...{ theme, styles, onItemClick: handleSongPress }}
+              {...{ theme, onItemClick: handleSongPress }}
               item={item}
               index={index}
             />
@@ -186,6 +220,100 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
+    itemContainer: {
+      padding: 12,
+      borderRadius: 12,
+      marginVertical: 4,
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: colors.card,
+    },
+    defaultItem: {
+      backgroundColor: colors.background + "80",
+      borderWidth: 1,
+      borderColor: colors.notification + "70",
+    },
+    itemIconContainer: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: colors.notification + "20",
+      marginRight: 12,
+    },
+    itemContent: {
+      flex: 1,
+      justifyContent: "center",
+      backgroundColor: "transparent",
+    },
+    itemTitle: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.notification,
+    },
+    itemSubTitle: {
+      fontSize: 14,
+      color: colors.primary,
+      marginTop: 2,
+    },
+    defaultBadge: {
+      backgroundColor: colors.notification + "20",
+      paddingRight: 8,
+      paddingVertical: 2,
+      borderRadius: 12,
+      alignSelf: "flex-start",
+      marginTop: 4,
+    },
+    defaultBadgeText: {
+      fontSize: 10,
+      fontWeight: "600",
+      color: colors.notification,
+    },
+    stanzasNumberContainer: {
+      padding: 10,
+      paddingHorizontal: 15,
+      borderRadius: 8,
+      backgroundColor: colors.notification + "20",
+      marginLeft: "auto",
+      marginHorizontal: 8,
+    },
+    stanzasNumberText: {
+      fontSize: 14,
+      fontWeight: "bold",
+      color: colors.notification,
+    },
+    tab: {
+      flex: 1,
+      paddingVertical: 12,
+      paddingHorizontal: 10,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 12,
+      flexDirection: "row",
+      position: "relative",
+      marginBottom: 20,
+      backgroundColor: colors.card,
+    },
+    tabText: {
+      fontSize: 16,
+      color: colors.text,
+      fontWeight: "600",
+    },
+    tabIcon: {
+      marginRight: 8,
+    },
+    activeIndicator: {
+      position: "absolute",
+      bottom: 0,
+      height: 3,
+      width: "40%",
+      backgroundColor: colors.notification,
+      borderTopLeftRadius: 2,
+      borderTopRightRadius: 2,
+    },
+
+    // tohers
     verseBody: {
       color: colors.text,
       backgroundColor: "transparent",
@@ -267,17 +395,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderBottomLeftRadius: 0,
     },
     cardContainer: {
-      // display: "flex",
-      // borderRadius: 10,
-      // padding: 15,
-      // margin: 5,
-      // elevation: 5,
-      // borderColor: "#ddd",
-      // borderWidth: 1,
-      // flexDirection: "row",
-      // justifyContent: "space-between",
-      // flexWrap: "wrap",
-      // gap: 5,
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",

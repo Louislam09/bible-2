@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import Icon from "../Icon";
 import { Text, View } from "../Themed";
+import { useHaptics } from "@/hooks/useHaptics";
 
 type MainSectionProps = {
   list: IDashboardOption[];
@@ -19,6 +20,7 @@ const MainSection = ({ list, theme }: MainSectionProps) => {
   const columnNumber = 3;
   const itemWidth = SCREEN_WIDTH / columnNumber - 20;
   const styles = getStyles(theme);
+  const haptics = useHaptics();
 
   return (
     <View style={styles.mainSection}>
@@ -27,7 +29,10 @@ const MainSection = ({ list, theme }: MainSectionProps) => {
           activeOpacity={0.8}
           style={[styles.card, { width: itemWidth }]}
           key={item.tag + item.label}
-          onPress={item.action}
+          onPress={() => {
+            item.action();
+            haptics.impact.light();
+          }}
           onLongPress={
             item.longAction
               ? item.longAction

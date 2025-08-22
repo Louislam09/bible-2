@@ -27,25 +27,18 @@ const VersionList: FC<IVersionList> = ({
 
   return (
     <View style={[styles.versionContainer]}>
-      <View
-        style={[
-          styles.tab,
-        ]}
-      >
+      <View style={[styles.tab]}>
         <Icon
           name="BookOpen"
           size={22}
           color={theme.colors.text}
           style={styles.tabIcon}
         />
-        <Text style={[styles.tabText]}>
-          Versiones Disponibles
-        </Text>
+        <Text style={[styles.tabText]}>Versiones Disponibles</Text>
         <View style={styles.activeIndicator} />
       </View>
 
       {dbNameList.map((versionItem, index) => {
-
         return (
           <Pressable
             key={`${versionItem.id}-${index}`}
@@ -62,18 +55,12 @@ const VersionList: FC<IVersionList> = ({
 
             <View style={styles.itemContent}>
               <Text
-                style={[
-                  styles.itemTitle,
-                  { color: theme.colors.notification },
-                ]}
+                style={[styles.itemTitle, { color: theme.colors.notification }]}
               >
                 {versionItem?.shortName || "-"}
               </Text>
               <Text
-                style={[
-                  styles.itemSubTitle,
-                  { color: theme.colors.primary },
-                ]}
+                style={[styles.itemSubTitle, { color: theme.colors.primary }]}
               >
                 {versionItem?.name || "-"}
               </Text>
@@ -87,7 +74,11 @@ const VersionList: FC<IVersionList> = ({
                 style={styles.redownloadButton}
                 onPress={() => console.log(versionItem!)}
               >
-                <Icon name="Check" size={iconSize} color={theme.colors.primary} />
+                <Icon
+                  name="Check"
+                  size={iconSize}
+                  color={theme.colors.primary}
+                />
               </TouchableOpacity>
             )}
           </Pressable>
@@ -99,7 +90,6 @@ const VersionList: FC<IVersionList> = ({
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
-
     versionContainer: {
       position: "relative",
       display: "flex",
@@ -108,7 +98,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       paddingVertical: 25,
       borderRadius: 45,
       backgroundColor: "transparent",
-      paddingHorizontal: 10
+      paddingHorizontal: 10,
     },
     itemContainer: {
       padding: 12,
@@ -140,7 +130,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     itemTitle: {
       fontSize: 16,
       fontWeight: "600",
-      color: colors.notification
+      color: colors.notification,
     },
     itemSubTitle: {
       fontSize: 14,
@@ -165,11 +155,12 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderRadius: 8,
       backgroundColor: colors.notification + "20",
       marginLeft: "auto",
-      marginHorizontal: 8
+      marginHorizontal: 8,
     },
     tab: {
       flex: 1,
       paddingVertical: 12,
+      paddingHorizontal: 10,
       alignItems: "center",
       justifyContent: "center",
       borderRadius: 12,

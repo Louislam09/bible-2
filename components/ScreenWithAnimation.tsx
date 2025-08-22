@@ -46,7 +46,8 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
   const styles = getStyles(theme);
 
   const onAnimationFinish = (isCancelled: boolean) => {
-    setIsAnimating(false);
+    if (!isCancelled) return;
+    setTimeout(() => setIsAnimating(false), 0);
   };
 
   const animateOpacityLoop = () => {

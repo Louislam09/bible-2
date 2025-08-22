@@ -4,7 +4,10 @@ import Icon from "@/components/Icon";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
 import RequestAccess from "@/components/admin/RequestAccess";
-import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import {
+  singleScreenHeader,
+  SingleScreenHeaderProps,
+} from "@/components/common/singleScreenHeader";
 import lottieAssets from "@/constants/lottieAssets";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useNetwork } from "@/context/NetworkProvider";
@@ -18,7 +21,14 @@ import { use$ } from "@legendapp/state/react";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
 import { RecordModel } from "pocketbase";
-import React, { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Alert,
   Animated,
@@ -191,9 +201,8 @@ const HymnScreen = () => {
   const navigation = useNavigation();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const netInfo = useNetwork();
-  const { isConnected } = netInfo
+  const { isConnected } = netInfo;
   const requestAccessBottomSheetModalRef = useRef<BottomSheetModal>(null);
-  // const { sendPushNotificationToUser } = useNotificationService();
 
   const isAlegresNuevasUnlocked = use$(() =>
     storedData$.isAlegresNuevasUnlocked.get()
@@ -323,24 +332,24 @@ const HymnScreen = () => {
     }
   };
 
+  const screenOptions = useMemo(() => {
+    return {
+      theme,
+      title: "Himnarios",
+      titleIcon: "Music",
+      headerRightProps: {
+        headerRightIcon: "Trash2",
+        headerRightIconColor: "red",
+        onPress: () => console.log(),
+        disabled: true,
+        style: { opacity: 0 },
+      },
+    } as SingleScreenHeaderProps;
+  }, []);
+
   return (
-    <Fragment>
-      <Stack.Screen
-        options={{
-          ...singleScreenHeader({
-            theme,
-            title: "Himnarios",
-            titleIcon: "Music",
-            headerRightProps: {
-              headerRightIcon: "Trash2",
-              headerRightIconColor: "red",
-              onPress: () => console.log(),
-              disabled: true,
-              style: { opacity: 0 },
-            },
-          }),
-        }}
-      />
+    <>
+      <Stack.Screen options={{ ...singleScreenHeader(screenOptions) }} />
       <ScreenWithAnimation
         title="Himnarios"
         animationSource={pickARandomAsset}
@@ -351,7 +360,6 @@ const HymnScreen = () => {
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}
         >
-
           <View style={styles.imageContainer}>
             <BibleQuote
               verse={selectedVerse.verse}
@@ -398,7 +406,7 @@ const HymnScreen = () => {
           />
         </BottomModal>
       </ScreenWithAnimation>
-    </Fragment>
+    </>
   );
 };
 
@@ -406,6 +414,7 @@ const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor: colors.background,
     },
     contentContainer: {
       paddingTop: 50,
@@ -423,6 +432,7 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       paddingHorizontal: 20,
       marginBottom: 10,
+      backgroundColor: "transparent",
     },
     verse: {
       fontSize: 20,
@@ -491,6 +501,7 @@ const getStyles = ({ colors }: TTheme) =>
       borderRadius: 8,
       fontWeight: "bold",
       letterSpacing: 0.5,
+      textAlign: "center",
     },
     cardLabel: {
       textAlign: "center",

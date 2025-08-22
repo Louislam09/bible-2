@@ -14,6 +14,7 @@ import { showToast } from "@/utils/showToast";
 import React, {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -200,19 +201,22 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     storedData$.set(initialContext);
   };
 
-  const toggleCloudSync = (enable: boolean) => {
-    if (enable && !isConnected) {
-      Alert.alert(
-        "Sin conexión a Internet",
-        "No se puede activar la sincronización con la nube sin conexión a Internet. Por favor, inténtalo de nuevo cuando estés conectado."
-      );
-      return;
-    }
+  const toggleCloudSync = useCallback(
+    (enable: boolean) => {
+      if (enable && !isConnected) {
+        console.log(
+          "Sin conexión a Internet",
+          "No se puede activar la sincronización con la nube sin conexión a Internet. Por favor, inténtalo de nuevo cuando estés conectado."
+        );
+        return;
+      }
 
-    if (enable && pb.authStore.isValid) {
-      syncWithCloud({});
-    }
-  };
+      if (enable && pb.authStore.isValid) {
+        syncWithCloud({});
+      }
+    },
+    [isConnected]
+  );
 
   const syncWithCloud = async ({
     alert = true,
@@ -265,14 +269,14 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  const loadFromCloud = async (): Promise<boolean> => {
+  const loadFromCloud = useCallback(async (): Promise<boolean> => {
     if (isSyncing) {
       console.log("Sincronización en curso, no se puede cargar desde la nube.");
       return false;
     }
 
     if (!isConnected) {
-      Alert.alert(
+      console.log(
         "Sin conexión a Internet",
         "No se pueden cargar los datos desde la nube sin conexión a Internet. Por favor, inténtalo de nuevo cuando estés conectado."
       );
@@ -338,7 +342,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       storedData$.isDataLoaded.set(true);
       setSyncing(false);
     }
-  };
+  }, [isConnected]);
 
   const updateNotificationPreferences = (
     preferences: StoreState["notificationPreferences"]
