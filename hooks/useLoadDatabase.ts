@@ -55,7 +55,7 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
     queryName?: any
   ): Promise<any[]> => {
     try {
-      console.log("executeSql", database, dbInitialized.current);
+      // console.log("executeSql", database, dbInitialized.current);
       if (!database || !dbInitialized.current) {
         return [];
       }
@@ -135,7 +135,7 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
       await statement.finalizeAsync();
 
       const tableNames = tables.map((t: any) => t.name);
-      return tableNames.includes(tableNameToCheck);
+      return tableNames?.includes(tableNameToCheck);
     } catch (e) {
       console.error("Validation query failed:", e);
       return false;

@@ -1,5 +1,9 @@
 import { Text, View } from "@/components/Themed";
 import Tooltip from "@/components/Tooltip";
+import {
+  singleScreenHeader,
+  SingleScreenHeaderProps,
+} from "@/components/common/singleScreenHeader";
 import BlankChallenge from "@/components/memorization/BlankChallenge";
 import PointsCard from "@/components/memorization/PointCard";
 import ReadChallenge from "@/components/memorization/ReadChallenge";
@@ -139,43 +143,27 @@ const Type = () => {
     );
   };
 
-  if (loading) return <ActivityIndicator />;
+  const screenOptions = useMemo(() => {
+    return {
+      theme,
+      title: type,
+      titleIcon: "Brain",
+      headerRightProps: {
+        ref: currentPopRef,
+        headerRightIcon: "CircleHelp",
+        headerRightIconColor: theme.colors.text,
+        onPress: () => setOpenHelp(true),
+        disabled: false,
+        style: { opacity: 1 },
+      },
+    } as SingleScreenHeaderProps;
+  }, [theme, type]);
+
+  // if (loading) return <ActivityIndicator />;
 
   return (
-    <View style={{ flex: 1 }}>
-      <Stack.Screen
-        options={{
-          headerShown: true,
-          headerBackVisible: false,
-          headerLeft: () => (
-            <ChevronLeft
-              color={theme.colors.text}
-              size={headerIconSize}
-              onPress={() => router.back()}
-            />
-          ),
-          headerRight: () => (
-            <TouchableOpacity
-              ref={currentPopRef}
-              onPress={() => setOpenHelp(true)}
-            >
-              <CircleHelp color={theme.colors.text} size={headerIconSize} />
-            </TouchableOpacity>
-          ),
-          headerTitle: () => (
-            <View
-              style={{
-                gap: 4,
-                flexDirection: "row",
-                alignItems: "center",
-                backgroundColor: "transparent",
-              }}
-            >
-              <Text style={styles.title}>{type}</Text>
-            </View>
-          ),
-        }}
-      />
+    <>
+      <Stack.Screen options={{ ...singleScreenHeader(screenOptions) }} />
       <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
         <Tooltip
           offset={-20}
@@ -195,7 +183,7 @@ const Type = () => {
           <Text>Challenge not found</Text>
         )}
       </View>
-    </View>
+    </>
   );
 };
 

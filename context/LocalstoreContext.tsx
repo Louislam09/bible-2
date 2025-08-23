@@ -93,7 +93,7 @@ const initialContext: StoreState = {
   isAlegresNuevasUnlocked: false,
   isAdmin: false,
   hasRequestAccess: false,
-  songFontSize: 21,
+  songFontSize: 26,
   currentVoiceIdentifier: "es-us-x-esd-local",
   currentVoiceRate: 1,
   floatingNoteButtonPosition: { x: 0, y: 0 },

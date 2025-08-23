@@ -1,11 +1,12 @@
-import Animation from "@/components/Animation";
 import CircularProgressBar from "@/components/CircularProgressBar";
 import CofettiAnimation from "@/components/CofettiAnimation";
+import {
+  singleScreenHeader,
+  SingleScreenHeaderProps,
+} from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
 import PracticeTracker from "@/components/memorization/PracticeTracker";
-import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
-import { databaseNames } from "@/constants/databaseNames";
 import { headerIconSize } from "@/constants/size";
 import { useMemorization } from "@/context/MemorizationContext";
 import { useMyTheme } from "@/context/ThemeContext";
@@ -15,8 +16,8 @@ import { Memorization, MemorizationButtonType, TTheme } from "@/types";
 import isWithinTimeframe from "@/utils/isWithinTimeframe";
 import { showToast } from "@/utils/showToast";
 import { Stack, useRouter } from "expo-router";
-import { Brain, ChevronLeft, icons, Trash2 } from "lucide-react-native";
-import React from "react";
+import { Brain, ChevronLeft, icons } from "lucide-react-native";
+import React, { useMemo } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -98,7 +99,7 @@ const MemorizationScreen = () => {
       [
         {
           text: "Cancelar",
-          onPress: () => { },
+          onPress: () => {},
           style: "cancel",
         },
         { text: "Eliminar", onPress: () => onDelete(id) },
@@ -106,102 +107,89 @@ const MemorizationScreen = () => {
     );
   };
 
+  const screenOptions = useMemo(() => {
+    return {
+      theme,
+      title: item.verse,
+      titleIcon: "Brain",
+      headerRightProps: {
+        headerRightIcon: "Brain",
+        headerRightIconColor: theme.colors.notification,
+        onPress: () => console.log(),
+        disabled: true,
+        style: { opacity: 1 },
+      },
+    } as SingleScreenHeaderProps;
+  }, [theme, item.verse]);
+
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <Stack.Screen
-        options={{
-          headerShown: true,
-          headerBackVisible: false,
-          headerLeft: () => (
-            <ChevronLeft
-              color={theme.colors.text}
-              size={headerIconSize}
-              onPress={() => router.back()}
-            />
-          ),
-          headerRight: () => (
-            <TouchableOpacity onPress={() => console.log(item.id)}>
-              <Brain color={theme.colors.notification} size={headerIconSize} />
-            </TouchableOpacity>
-          ),
-          headerTitle: () => (
-            <View
-              style={{
-                gap: 4,
-                flexDirection: "row",
-                alignItems: "center",
-                backgroundColor: "transparent",
-              }}
+    <>
+      <Stack.Screen options={{ ...singleScreenHeader(screenOptions) }} />
+      <ScrollView style={{ flex: 1, backgroundColor: theme.colors.background }}>
+        <View style={styles.container}>
+          <View style={styles.progressCircle}>
+            {isCompleted && <CofettiAnimation />}
+            <CircularProgressBar
+              size={150}
+              strokeWidth={8}
+              progress={memorizeProgress}
+              maxProgress={100}
+              color={isCompleted ? "#1ce265" : theme.colors.notification}
+              backgroundColor={theme.colors.text + 70}
+              animationDuration={1000}
             >
-              <Text style={styles.title}>{item.verse}</Text>
-            </View>
-          ),
-        }}
-      />
-      <View style={styles.container}>
-        <View style={styles.progressCircle}>
-          {isCompleted && <CofettiAnimation />}
-          <CircularProgressBar
-            size={150}
-            strokeWidth={8}
-            progress={memorizeProgress}
-            maxProgress={100}
-            color={isCompleted ? "#1ce265" : theme.colors.notification}
-            backgroundColor={theme.colors.text + 70}
-            animationDuration={1000}
-          >
-            <Text style={[styles.progressText]}>{memorizeProgress}</Text>
-          </CircularProgressBar>
-        </View>
-
-        {/* Action Buttons */}
-        <View style={styles.buttonGrid}>
-          {actionButtons.map(({ icon, label, isLock, action }) => {
-            const lockTextKey = isLock
-              ? "isLockLabelText"
-              : "isUnlockLabelText";
-            const lockBorderKey = isLock ? "isLockButton" : "isUnlockButton";
-            const isLockButton = isLock !== undefined;
-            const lockIconColor = isLockButton
-              ? isCompleted
-                ? "#1ce265"
-                : theme.colors.notification
-              : theme.colors.text;
-
-            return (
-              <TouchableOpacity
-                onPress={() => action(label)}
-                key={icon}
-                style={[
-                  styles.actionButton,
-                  isLockButton && styles[lockBorderKey],
-                  isLockButton && isCompleted && styles.isCompletedButton,
-                ]}
-              >
-                {isLockButton && isCompleted && <CofettiAnimation />}
-                <Icon
-                  name={icon}
-                  size={75}
-                  color={isLock ? iconColor : lockIconColor}
-                />
-                <Text
+              <Text style={[styles.progressText]}>{memorizeProgress}</Text>
+            </CircularProgressBar>
+          </View>
+          {/* Action Buttons */}
+          <View style={styles.buttonGrid}>
+            {actionButtons.map(({ icon, label, isLock, action }) => {
+              const lockTextKey = isLock
+                ? "isLockLabelText"
+                : "isUnlockLabelText";
+              const lockBorderKey = isLock ? "isLockButton" : "isUnlockButton";
+              const isLockButton = isLock !== undefined;
+              const lockIconColor = isLockButton
+                ? isCompleted
+                  ? "#1ce265"
+                  : theme.colors.notification
+                : theme.colors.text;
+              return (
+                <TouchableOpacity
+                  onPress={() => action(label)}
+                  key={icon}
                   style={[
-                    styles.actionLabel,
-                    isLockButton && styles[lockTextKey],
-                    isLockButton && isCompleted && styles.isCompletedLabelText,
+                    styles.actionButton,
+                    isLockButton && styles[lockBorderKey],
+                    isLockButton && isCompleted && styles.isCompletedButton,
                   ]}
                 >
-                  {label}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
+                  {isLockButton && isCompleted && <CofettiAnimation />}
+                  <Icon
+                    name={icon}
+                    size={75}
+                    color={isLock ? iconColor : lockIconColor}
+                  />
+                  <Text
+                    style={[
+                      styles.actionLabel,
+                      isLockButton && styles[lockTextKey],
+                      isLockButton &&
+                        isCompleted &&
+                        styles.isCompletedLabelText,
+                    ]}
+                  >
+                    {label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+          {/* Practice Tracker */}
+          <PracticeTracker currentTimeStat={currentTimeStat} item={item} />
         </View>
-
-        {/* Practice Tracker */}
-        <PracticeTracker currentTimeStat={currentTimeStat} item={item} />
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 };
 

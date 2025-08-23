@@ -14,7 +14,7 @@ import { RefObject } from "react";
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList { }
+    interface RootParamList extends RootStackParamList {}
   }
 }
 
@@ -60,6 +60,7 @@ export enum Screens {
   Register = "register",
   AISetup = "ai-setup",
   Notification = "notification",
+  SongDetail = "songDetail",
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -98,6 +99,7 @@ export const ScreensName: TScreensName = {
   [Screens.Register]: "Crear una cuenta",
   [Screens.AISetup]: "Configuración de IA",
   [Screens.Notification]: "Notificacion",
+  [Screens.SongDetail]: "Himno",
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -137,24 +139,24 @@ export type RootStackParamList = {
   downloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
   notes: NavigatorScreenParams<RootTabParamList> | { shouldRefresh: boolean };
   noteDetail:
-  | NavigatorScreenParams<RootTabParamList>
-  | { noteId: number | null; isNewNote: boolean };
+    | NavigatorScreenParams<RootTabParamList>
+    | { noteId: number | null; isNewNote: boolean };
   character: NavigatorScreenParams<RootTabParamList> | undefined;
   chooseBook:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
   "(search)": NavigatorScreenParams<RootTabParamList> | { book?: string };
   concordance: NavigatorScreenParams<RootTabParamList> | {};
   strongSearchEntire:
-  | NavigatorScreenParams<RootTabParamList>
-  | { paramCode: string };
+    | NavigatorScreenParams<RootTabParamList>
+    | { paramCode: string };
   dictionary: NavigatorScreenParams<RootTabParamList> | { word: string };
   chooseChapterNumber:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
   chooseVerseNumber:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
   modal: undefined;
   onboarding: undefined;
   timeline: undefined;
@@ -656,11 +658,10 @@ export enum SortOption {
 }
 
 export enum ModulesFilters {
-  ALL = 'Todo',
-  BIBLES = 'Escrituras',
-  DICTIONARIES = 'Diccionarios',
+  ALL = "Todo",
+  BIBLES = "Escrituras",
+  DICTIONARIES = "Diccionarios",
 }
-
 
 export enum MemorizationButtonType {
   Read = "Leer",

@@ -53,7 +53,8 @@ const StreakCard: React.FC<StreakCardProps> = ({
   const steakListRef = useRef<FlashListRef<any>>(null);
   const [isLayoutMounted, setLayoutMounted] = useState(false);
   const styles = getStyles(theme);
-  const startDate = "2025-02-01";
+  // const startDate = "2025-02-01";
+  const startDate = days[0]?.date?.split(" ")[0];
   const dayDatas = useMemo(
     () => generateDateRange(startDate, days.reverse()),
     [days]

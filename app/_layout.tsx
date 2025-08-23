@@ -6,7 +6,6 @@ import DatabaseProvider from "@/context/databaseContext";
 import StorageProvider from "@/context/LocalstoreContext";
 import { MemorizationProvider } from "@/context/MemorizationContext";
 import MyThemeProvider from "@/context/ThemeContext";
-import useCachedResources from "@/hooks/useCachedResources";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { settingState$ } from "@/state/settingState";
 import { Screens, ScreensName } from "@/types";
@@ -94,10 +93,10 @@ const screenAnimations: TScreensName = {
   [Screens.AISetup]: "slide_from_right",
   [Screens.AISearch]: "slide_from_right",
   [Screens.Notification]: "slide_from_right",
+  [Screens.SongDetail]: "slide_from_bottom",
 };
 
 const App = () => {
-  // const isLoadingComplete = useCachedResources();
   const isAnimationDisabled = use$(() =>
     settingState$.isAnimationDisabled.get()
   );
@@ -111,7 +110,7 @@ const App = () => {
         await Updates.reloadAsync();
         ToastAndroid.show("Actualizada ✅", ToastAndroid.SHORT);
       }
-    } catch (error) { }
+    } catch (error) {}
   }
 
   useEffect(() => {
