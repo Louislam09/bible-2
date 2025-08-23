@@ -35,6 +35,10 @@ const SongDetailPage = () => {
   const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const slideAnim = useRef(new Animated.Value(0)).current;
+
+  // Add animated values for background decorations
+  const decorationAnimations = useRef<Animated.Value[]>([]).current;
+
   const hasChorus = !!song?.chorus;
   const [isChorus, setIsChorus] = useState(false);
 
@@ -138,6 +142,79 @@ const SongDetailPage = () => {
     } as SingleScreenHeaderProps;
   }, [theme, songFontSize, song]);
 
+  const backgroundDecorations = useMemo(() => {
+    // make color more neutral 5 and no red
+    const colors = ["#ffffff60"];
+    const sizes = [60, 50, 40, 30];
+    const icons = ["Music", "Music2", "Music3", "Music4", "Guitar", "Piano"];
+    const numberOfIcons = 7;
+
+    const getRandomIcon = () => {
+      return icons[Math.floor(Math.random() * icons.length)];
+    };
+
+    const getRandomColor = () => {
+      return colors[Math.floor(Math.random() * colors.length)];
+    };
+    const getRandomSize = () => {
+      return sizes[Math.floor(Math.random() * sizes.length)];
+    };
+    const getRandomPos = () => {
+      const max = 90;
+      const min = 10;
+      // pos should be within the bottom and right of the screen in percentage
+      const bottom = Math.max(Math.random() * max, min);
+      const right = Math.max(Math.random() * max, min);
+      return {
+        bottom: `${bottom}%`,
+        right: `${right}%`,
+      };
+    };
+
+    const decorations = Array.from({ length: numberOfIcons }, () => ({
+      name: getRandomIcon(),
+      size: getRandomSize(),
+      color: getRandomColor(),
+      pos: getRandomPos(),
+    }));
+
+    // Initialize animation values for each decoration
+    decorationAnimations.length = 0;
+    decorations.forEach(() => {
+      decorationAnimations.push(new Animated.Value(0));
+    });
+
+    return decorations;
+  }, [currentVerseIndex]);
+
+  // Add floating animation effect
+  useEffect(() => {
+    const animations = decorationAnimations.map((anim, index) => {
+      return Animated.loop(
+        Animated.sequence([
+          Animated.timing(anim, {
+            toValue: 1,
+            duration: 3000 + index * 500, // Stagger the animations
+            useNativeDriver: true,
+          }),
+          Animated.timing(anim, {
+            toValue: 0,
+            duration: 3000 + index * 500,
+            useNativeDriver: true,
+          }),
+        ])
+      );
+    });
+
+    // Start all animations
+    Animated.parallel(animations).start();
+
+    return () => {
+      // Clean up animations
+      animations.forEach((anim) => anim.stop());
+    };
+  }, [backgroundDecorations]);
+
   return (
     <>
       <Stack.Screen options={{ ...singleScreenHeader(screenOptions) }} />
@@ -215,6 +292,47 @@ const SongDetailPage = () => {
           </ScrollView>
         </Animated.View>
 
+        {backgroundDecorations.map((item, index) => (
+          <Animated.View
+            key={index}
+            style={[
+              styles.backgroundDecoration,
+              {
+                bottom: item.pos.bottom as any,
+                right: item.pos.right as any,
+                transform: [
+                  {
+                    translateY:
+                      decorationAnimations[index]?.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0, -15], // Gentle floating up and down
+                      }) || 0,
+                  },
+                  {
+                    scale:
+                      decorationAnimations[index]?.interpolate({
+                        inputRange: [0, 0.5, 1],
+                        outputRange: [1, 1.05, 1], // Subtle scale effect
+                      }) || 1,
+                  },
+                ],
+                opacity:
+                  decorationAnimations[index]?.interpolate({
+                    inputRange: [0, 0.5, 1],
+                    outputRange: [0.6, 0.8, 0.6], // Gentle opacity change
+                  }) || 0.6,
+              },
+            ]}
+          >
+            <Icon
+              name={item.name as any}
+              size={item.size}
+              color={item.color}
+              style={styles.backgroundIcon}
+            />
+          </Animated.View>
+        ))}
+
         {/* Navigation */}
         <View style={styles.navigationContainer}>
           <View style={styles.navigationButtons}>
@@ -280,6 +398,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     container: {
       flex: 1,
+      position: "relative",
     },
     titleSection: {
       paddingHorizontal: 20,
@@ -287,6 +406,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       paddingBottom: 20,
       alignItems: "center",
       backgroundColor: "transparent",
+      zIndex: 1,
     },
     hymnNumberContainer: {
       marginBottom: 20,
@@ -334,6 +454,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       paddingHorizontal: 30,
       paddingBottom: 10,
       backgroundColor: "transparent",
+      zIndex: 1,
     },
     contentScrollView: {
       flex: 1,
@@ -358,6 +479,18 @@ const getStyles = ({ colors, dark }: TTheme) =>
       textAlign: "center",
       letterSpacing: 2,
     },
+
+    backgroundDecoration: {
+      position: "absolute",
+      bottom: 104,
+      right: 40,
+      zIndex: 0,
+      backgroundColor: "transparent",
+    },
+    backgroundIcon: {
+      transform: [{ rotate: "15deg" }],
+    },
+
     navigationContainer: {
       paddingHorizontal: 30,
       paddingBottom: 30,
