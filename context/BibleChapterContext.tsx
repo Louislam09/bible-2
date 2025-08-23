@@ -96,8 +96,8 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
       );
       const links = bibleLinks.filter(
         (link) =>
-          link.book_number === currentBook?.bookNumber &&
-          link.chapter === targetChapter
+          link?.book_number === currentBook?.bookNumber &&
+          link?.chapter === targetChapter
       );
 
       const endTime = Date.now();

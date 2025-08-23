@@ -17,6 +17,9 @@ export type SingleScreenHeaderProps = {
   title: string;
   titleIcon: keyof typeof icons;
   titleIconColor?: string;
+  titleTextColor?: string;
+  backgroundColor?: string;
+  headerLeftIconColor?: string;
   mainIconSize?: number;
   goBack?: () => void;
   headerRightProps: {
@@ -38,6 +41,9 @@ export const singleScreenHeader = ({
   title,
   titleIcon,
   titleIconColor,
+  titleTextColor,
+  backgroundColor,
+  headerLeftIconColor,
   headerRightProps,
   mainIconSize,
   goBack,
@@ -72,7 +78,7 @@ export const singleScreenHeader = ({
     headerBackVisible: false,
     headerLeft: () => (
       <ChevronLeft
-        color={theme.colors.text}
+        color={headerLeftIconColor || theme.colors.text}
         size={headerIconSize}
         onPress={() => (goBack ? goBack() : router.back())}
       />
@@ -85,13 +91,17 @@ export const singleScreenHeader = ({
           color={titleIconColor || theme.colors.notification}
           size={mainIconSize || headerIconSize}
         />
-        <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 22 }}>
+        <Text
+          ellipsizeMode="tail"
+          numberOfLines={1}
+          style={{ fontSize: 22, color: titleTextColor || theme.colors.text }}
+        >
           {title}
         </Text>
       </View>
     ),
     headerStyle: {
-      backgroundColor: theme.colors.background,
+      backgroundColor: backgroundColor || theme.colors.background,
     },
   };
 };

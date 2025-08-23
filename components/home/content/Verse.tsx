@@ -161,7 +161,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   const googleAIKey = use$(() => storedData$.googleAIKey.get());
   const isDefaultDb = isDefaultDatabase(currentBibleVersion);
   const NT_BOOK_NUMBER = 470;
-  const isNewTestament = item.book_number >= NT_BOOK_NUMBER || !isDefaultDb;
+  const isNewTestament = item?.book_number >= NT_BOOK_NUMBER || !isDefaultDb;
 
   // LEGEND STATE
   const isBottomBibleSearching = use$(
@@ -227,7 +227,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const onFavorite = async () => {
     await toggleFavoriteVerse({
-      bookNumber: item.book_number,
+      bookNumber: item?.book_number,
       chapter: item.chapter,
       verse: item.verse,
       isFav: isFavorite,
@@ -261,7 +261,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const onQuote = () => {
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item.book_number).longName} ${
+    const reference = `${getBookDetail(item?.book_number).longName} ${
       item.chapter
     }:${item.verse}`;
     bibleState$.handleSelectVerseForNote(verseText);
@@ -280,7 +280,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
     const isDash = word === "-" ? -1 : 0;
     const NT_BOOK_NUMBER = 470;
-    const cognate = item.book_number < NT_BOOK_NUMBER ? "H" : "G";
+    const cognate = item?.book_number < NT_BOOK_NUMBER ? "H" : "G";
     const searchCode = isWordName
       ? `${cognate}${strongValue[wordIndex]}`
       : `${cognate}${code}`;
@@ -298,7 +298,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const onStrongWordClicked = ({ word, tagValue }: WordTagPair) => {
     const NT_BOOK_NUMBER = 470;
-    const cognate = item.book_number < NT_BOOK_NUMBER ? "H" : "G";
+    const cognate = item?.book_number < NT_BOOK_NUMBER ? "H" : "G";
 
     const addCognate = (tagValue: string) =>
       tagValue
@@ -345,7 +345,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       return;
     }
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item.book_number).longName} ${
+    const reference = `${getBookDetail(item?.book_number).longName} ${
       item.chapter
     }:${item.verse}`;
 
@@ -363,7 +363,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     // const mergeText = mergeTexts(item.text, currentInterlinear?.text || "");
 
     bibleState$.handleVerseToInterlinear({
-      book_number: item.book_number,
+      book_number: item?.book_number,
       chapter: item.chapter,
       verse: item.verse,
       text: currentInterlinear?.text || "",
@@ -417,7 +417,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         name: "Brain",
         action: () =>
           onMemorizeVerse(
-            `${getBookDetail(item.book_number).longName} ${item?.chapter}:${
+            `${getBookDetail(item?.book_number).longName} ${item?.chapter}:${
               item?.verse
             }`
           ),

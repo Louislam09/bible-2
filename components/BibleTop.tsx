@@ -79,19 +79,19 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const footerHeight = useRef(new Animated.Value(1)).current;
 
   const handleScroll = useCallback((direction: "up" | "down") => {
-    const toValue = direction === "up" ? 1 : 0;
-    Animated.parallel([
-      Animated.timing(headerHeight, {
-        toValue,
-        duration: 200,
-        useNativeDriver: false,
-      }),
-      Animated.timing(footerHeight, {
-        toValue,
-        duration: 200,
-        useNativeDriver: false,
-      }),
-    ]).start();
+    // const toValue = direction === "up" ? 1 : 0;
+    // Animated.parallel([
+    //   Animated.timing(headerHeight, {
+    //     toValue,
+    //     duration: 200,
+    //     useNativeDriver: false,
+    //   }),
+    //   Animated.timing(footerHeight, {
+    //     toValue,
+    //     duration: 200,
+    //     useNativeDriver: false,
+    //   }),
+    // ]).start();
   }, []);
 
   const containerStyle = useMemo(

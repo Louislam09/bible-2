@@ -54,7 +54,7 @@ export const bibleState$ = observable({
   strongWord: { text: "", code: "" } as IStrongWord,
   noteListBottomSheetRef: createRef<BottomSheetModal>(),
   isSplitActived: false,
-  currentHistoryIndex: -1,
+  currentHistoryIndex: 0,
   bibleQuery: {
     book: "Génesis",
     chapter: 1,

@@ -180,7 +180,7 @@ const Chapter = ({
             ListEmptyComponent={() => (
               <LoadingComponent textColor={theme.colors.text} />
             )}
-            initialScrollIndex={initialScrollIndex}
+            initialScrollIndex={Math.abs(initialScrollIndex || 0)}
             viewabilityConfigCallbackPairs={
               viewabilityConfigCallbackPairs.current
             }
@@ -189,11 +189,6 @@ const Chapter = ({
             ListHeaderComponentStyle={{ paddingTop: 70 }}
             onScroll={handleScroll}
             scrollEventThrottle={16}
-            // disableAutoLayout
-            // maintainVisibleContentPosition={{
-            //   minIndexForVisible: 0,
-            //   autoscrollToTopThreshold: 10,
-            // }}
           />
         ) : (
           <LegendList
@@ -214,8 +209,6 @@ const Chapter = ({
             onEndReachedThreshold={0.5}
             ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
             onScroll={handleScroll}
-
-            // style={{ backgroundColor: 'blue' }}
           />
         )}
       </View>

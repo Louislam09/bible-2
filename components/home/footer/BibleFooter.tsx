@@ -226,7 +226,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           <Text
             style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}
           >{`${displayBookName ?? ""} ${chapter ?? ""}:${
-            isSplitActived ? verse : currentHistoryIndexState || verse
+            isSplitActived ? verse : Math.abs(currentHistoryIndexState) || verse
           }`}</Text>
         </TouchableOpacity>
         <TouchableOpacity

@@ -190,6 +190,9 @@ const SongDetailPage = () => {
       theme,
       title: "Himno",
       titleIcon: "Music2",
+      backgroundColor: "#2c3e50",
+      titleTextColor: "#ecf0f1",
+      headerLeftIconColor: "#ecf0f1",
       headerRightProps: {
         headerRightIcon: "AArrowDown",
         headerRightIconColor: theme.colors.text,
@@ -200,12 +203,20 @@ const SongDetailPage = () => {
           <View style={styles.headerActions}>
             <Animated.View style={{ transform: [{ scale: increaseFontAnim }] }}>
               <TouchableOpacity onPress={increaseFont}>
-                <Icon name="AArrowUp" size={24} color={theme.colors.text} />
+                <Icon
+                  name="AArrowUp"
+                  size={24}
+                  color={theme.colors.notification}
+                />
               </TouchableOpacity>
             </Animated.View>
             <Animated.View style={{ transform: [{ scale: decreaseFontAnim }] }}>
               <TouchableOpacity onPress={decreaseFont}>
-                <Icon name="AArrowDown" size={24} color={theme.colors.text} />
+                <Icon
+                  name="AArrowDown"
+                  size={24}
+                  color={theme.colors.notification}
+                />
               </TouchableOpacity>
             </Animated.View>
           </View>
@@ -291,7 +302,8 @@ const SongDetailPage = () => {
     <>
       <Stack.Screen options={{ ...singleScreenHeader(screenOptions) }} />
       <LinearGradient
-        colors={["#2c3e50", "#34495e", "#3498db"]}
+        colors={["#2c3e50", "#34495e", theme.colors.notification]}
+        // colors={["#2c3e50", "#34495e", "#3498db"]}
         style={styles.container}
       >
         {/* Title Section */}
@@ -555,7 +567,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       textAlign: "center",
       letterSpacing: 2,
     },
-
     backgroundDecoration: {
       position: "absolute",
       bottom: 104,
@@ -566,7 +577,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
     backgroundIcon: {
       transform: [{ rotate: "15deg" }],
     },
-
     navigationContainer: {
       paddingHorizontal: 30,
       paddingBottom: 30,
@@ -598,12 +608,16 @@ const getStyles = ({ colors, dark }: TTheme) =>
       elevation: 5,
     },
     prevButton: {
-      backgroundColor: "#3498db",
-      borderColor: "#3498db",
+      // backgroundColor: "#3498db",
+      // borderColor: "#3498db",
+      backgroundColor: colors.notification,
+      borderColor: colors.notification,
     },
     nextButton: {
-      backgroundColor: "#3498db",
-      borderColor: "#3498db",
+      backgroundColor: colors.notification,
+      borderColor: colors.notification,
+      // backgroundColor: "#3498db",
+      // borderColor: "#3498db",
     },
     navButtonDisabled: {
       opacity: 0.7,
