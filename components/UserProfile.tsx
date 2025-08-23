@@ -18,6 +18,7 @@ import Icon from "./Icon";
 import CloudSyncPopup from "./SyncPopup";
 import { Text, View } from "./Themed";
 import Tooltip from "./Tooltip";
+import { useHaptics } from "@/hooks/useHaptics";
 
 interface ProfileCardProps {
   user: pbUser | null;
@@ -39,11 +40,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
   const defaultAvatar = user
     ? `https://robohash.org/set_set10/bgset_bg1/${user.id}?size=200x200`
     : "";
-
+  const haptics = useHaptics();
   const searchIcon = {
     icon: "Search",
     label: "Buscador",
-    action: () => navigation.navigate(Screens.Search, {}),
+    action: () => {
+      navigation.navigate(Screens.Search, {});
+      haptics.impact.light();
+    },
   };
 
   const onLogout = () => {
@@ -93,6 +97,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
 
   const onSync = () => {
     if (!storedData$.user.get()) {
+      haptics.impact.light();
       setOpenUser(false);
       setTimeout(() => {
         navigation.navigate(Screens.Login);
@@ -106,7 +111,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
 
   return (
     <View style={styles.userInfoContainer}>
-      <TouchableOpacity ref={userRef} onPress={() => setOpenUser(true)}>
+      <TouchableOpacity
+        ref={userRef}
+        onPress={() => {
+          setOpenUser(true);
+          haptics.impact.light();
+        }}
+      >
         {user ? (
           <View style={styles.userHeader}>
             <View style={styles.avatarContainer}>

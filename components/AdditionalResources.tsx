@@ -3,6 +3,7 @@ import { TTheme } from "@/types";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "./Icon";
+import { useHaptics } from "@/hooks/useHaptics";
 
 type AdditionalResourcesProps = {
   list: IAdditionalResourceList;
@@ -11,7 +12,7 @@ type AdditionalResourcesProps = {
 
 const AdditionalResources = ({ list, theme }: AdditionalResourcesProps) => {
   const styles = getStyles(theme);
-
+  const haptics = useHaptics();
   return (
     <View style={styles.additionalResources}>
       <View style={styles.resourceCard}>
@@ -19,7 +20,10 @@ const AdditionalResources = ({ list, theme }: AdditionalResourcesProps) => {
         {list.advancedSearch.map((item) => (
           <TouchableOpacity
             key={item.tag + item.label}
-            onPress={item.action}
+            onPress={() => {
+              item.action();
+              haptics.impact.light();
+            }}
             style={[styles.tool]}
           >
             <Icon
@@ -38,7 +42,10 @@ const AdditionalResources = ({ list, theme }: AdditionalResourcesProps) => {
         {list.manager.map((item) => (
           <TouchableOpacity
             key={item.tag + item.label}
-            onPress={item.action}
+            onPress={() => {
+              item.action();
+              haptics.impact.light();
+            }}
             style={[styles.tool]}
           >
             <Icon

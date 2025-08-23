@@ -1,7 +1,16 @@
+import BottomModal from "@/components/BottomModal";
+import FilterList from "@/components/FilterList";
+import Icon from "@/components/Icon";
+import ListVerse from "@/components/search/ListVerse";
+import { View } from "@/components/Themed";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { useMyTheme } from "@/context/ThemeContext";
+import useDebounce from "@/hooks/useDebounce";
+import { useHaptics } from "@/hooks/useHaptics";
+import { modalState$ } from "@/state/modalState";
 import { IVerseItem, TTheme } from "@/types";
+import removeAccent from "@/utils/removeAccent";
 import { useRouter } from "expo-router";
 import React, {
   useCallback,
@@ -11,27 +20,16 @@ import React, {
   useState,
 } from "react";
 import {
+  ActivityIndicator,
   Animated,
   BackHandler,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  ActivityIndicator,
   TouchableWithoutFeedback,
-  Keyboard,
 } from "react-native";
-import AnimatedDropdown from "@/components/AnimatedDropdown";
-import Icon from "@/components/Icon";
-import ListVerse from "@/components/search/ListVerse";
-import { View } from "@/components/Themed";
-import { Ionicons } from "@expo/vector-icons";
-import useDebounce from "@/hooks/useDebounce";
-import removeAccent from "@/utils/removeAccent";
-import BottomModal from "@/components/BottomModal";
-import FilterList from "@/components/FilterList";
-import { modalState$ } from "@/state/modalState";
-import { dismiss } from "expo-router/build/global-state/routing";
 
 type SearchPageProps = {};
 
@@ -150,8 +148,9 @@ const SearchPage: React.FC<SearchPageProps> = ({}) => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
   const { fontSize } = useBibleContext();
-  const defaultFilterOption = "Filtra por libro";
+  const defaultFilterOption = "Sin filtro";
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const haptics = useHaptics();
 
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -263,6 +262,7 @@ const SearchPage: React.FC<SearchPageProps> = ({}) => {
   }, [router]);
 
   const handleFilterChange = useCallback((option: string) => {
+    haptics.impact.light();
     setSelectedFilter(option);
     modalState$.closeSearchFilterBottomSheet();
   }, []);
@@ -287,29 +287,6 @@ const SearchPage: React.FC<SearchPageProps> = ({}) => {
             onSearch={handleSearch}
             isLoading={isSearching}
           />
-
-          {/* Enhanced filter section with better UX */}
-          {/* {data && data.length > 0 && (
-          <View style={[styles.filterContainer]}>
-            <View
-              style={[styles.strongNumber, { backgroundColor: "transparent" }]}
-            >
-              <Icon name="ListFilter" size={24} color="white" />
-            </View>
-            <View style={styles.pickerContainer}>
-              <AnimatedDropdown
-                withIcon
-                customStyle={{
-                  picker: { padding: 0 },
-                }}
-                options={filterOptions}
-                selectedValue={selectedFilterOption}
-                onValueChange={handleFilterChange}
-                theme={theme}
-              />
-            </View>
-          </View>
-        )} */}
 
           {/* Enhanced results display */}
           {data && data.length > 0 && (

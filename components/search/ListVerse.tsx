@@ -3,6 +3,7 @@ import RenderVerse from "@/components/concordance/RenderVerse";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { useMyTheme } from "@/context/ThemeContext";
+import { useHaptics } from "@/hooks/useHaptics";
 import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, Screens, TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
@@ -27,6 +28,7 @@ const ListVerse = ({ data, isLoading, searchQuery: query }: TListVerse) => {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const notFoundSource = require("../../assets/lottie/loading-book.json");
   const searchingSource = require("../../assets/lottie/searching.json");
+  const haptics = useHaptics();
 
   const handleScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -35,6 +37,7 @@ const ListVerse = ({ data, isLoading, searchQuery: query }: TListVerse) => {
   };
 
   const onVerseClick = async (item: IVerseItem) => {
+    haptics.impact.light();
     const queryInfo = {
       book: item.bookName,
       chapter: item.chapter,
@@ -75,6 +78,7 @@ const ListVerse = ({ data, isLoading, searchQuery: query }: TListVerse) => {
           !showScrollToTop && { display: "none" },
         ]}
         onPress={() => {
+          haptics.impact.light();
           flatListRef?.current?.scrollToOffset({ animated: true, offset: 0 });
         }}
       >

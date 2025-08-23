@@ -123,29 +123,33 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
   const [filterData, setFilterData] = useState<DatabaseData[]>([]);
   const { schema } = useMyTheme();
   const styles = getStyles(theme);
-  const word = modalState$.searchWordOnDic.get();
+  const word = (modalState$.searchWordOnDic.get() || "")?.replace(/[.,;]/g, "");
   const [searchText, setSearchText] = useState<any>(word ? word : "");
   const { installedDictionary: dbNames } = useDBContext();
   const searchDebounce = useDebounce(searchText, 500);
   const searchingSource = require("../assets/lottie/searching.json");
   const animationRef = useRef<any>(null);
+
   useEffect(() => {
     if (!animationRef.current) return;
 
     return () => animationRef.current?.pause();
   }, []);
 
-  const { data, error, loading } = useDictionaryData({
-    searchParam:
-      searchDebounce?.length < 3 ? "" : searchDebounce?.replace(/[.,;]/g, ""),
+  const { data, error, loading, onSearch } = useDictionaryData({
     databases: dbNames,
-    enabled: searchDebounce !== "",
+    enabled: true,
   });
 
   const wordNotFoundInDictionary = useMemo(
     () => data?.every((version) => version.words.length === 0),
     [data]
   );
+
+  useEffect(() => {
+    if (searchDebounce.length < 3) return;
+    onSearch({ searchParam: searchDebounce });
+  }, [searchDebounce]);
 
   useEffect(() => {
     if (!loading && !error) {
@@ -261,7 +265,6 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
                 backgroundColor: "transparent",
               }}
               decelerationRate={"normal"}
-
               data={wordNotFoundInDictionary ? [] : filterData}
               renderItem={({ item, index }) => (
                 <RenderItem

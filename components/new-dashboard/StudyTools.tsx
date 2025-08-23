@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import Icon from "../Icon";
 import { NewFeatureBadge } from "../NewFeatureBadge";
+import { useHaptics } from "@/hooks/useHaptics";
 
 type StudyToolsProps = {
   list: IDashboardOption[];
@@ -21,7 +22,7 @@ const StudyTools = ({ list, theme }: StudyToolsProps) => {
   const columnNumber = 2;
   const itemWidth = SCREEN_WIDTH / columnNumber - 35;
   const styles = getStyles(theme);
-
+  const haptics = useHaptics();
   return (
     <View style={styles.studyTools}>
       <Text style={styles.sectionTitle}>Herramientas de Estudio</Text>
@@ -29,7 +30,10 @@ const StudyTools = ({ list, theme }: StudyToolsProps) => {
         {list.map((item) => (
           <TouchableOpacity
             key={item.tag + item.label}
-            onPress={item.action}
+            onPress={() => {
+              item.action();
+              haptics.impact.light();
+            }}
             onLongPress={
               item.longAction
                 ? item.longAction

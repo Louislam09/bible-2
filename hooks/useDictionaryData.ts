@@ -2,7 +2,7 @@ import { getDatabaseExt } from "@/constants/databaseNames";
 import { SEARCH_DICTIONARY_WORD } from "@/constants/Queries";
 import { DATABASE_TYPE, DictionaryData } from "@/types";
 import * as SQLite from "expo-sqlite";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { VersionItem } from "./useInstalledBible";
 
 interface Verse {
@@ -23,22 +23,20 @@ interface Row {
 }
 
 type UseCompareVersesProps = {
-  searchParam: string;
   enabled: boolean;
   databases: VersionItem[];
 };
 
 const useDictionaryData = ({
-  searchParam,
   databases,
   enabled,
 }: UseCompareVersesProps) => {
   const [data, setData] = useState<DatabaseData[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const dicExt = getDatabaseExt(DATABASE_TYPE.DICTIONARY);
 
-  const executeSql = async (
+  const executeSql = useCallback(async (
     database: SQLite.SQLiteDatabase,
     sql: string,
     params: any[] = [],
@@ -66,43 +64,45 @@ const useDictionaryData = ({
     } catch (error) {
       return [];
     }
-  };
+  }, [])
 
-  useEffect(() => {
-    if (!enabled) return;
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
+  const onSearch = useCallback(async ({ searchParam }: { searchParam: string }) => {
+    if (!enabled || searchParam.length < 3) return;
+    setLoading(true);
+    setError(null);
 
-      try {
-        const results: DatabaseData[] = [];
-        for (const databaseItem of databases) {
-          const dbID = databaseItem.id;
-          const dbNameWithExt = `${dbID}${dicExt}`;
-          const db = await SQLite.openDatabaseAsync(dbNameWithExt);
-          const queryResult = await executeSql(db, SEARCH_DICTIONARY_WORD, [
-            `${searchParam}%`,
-          ]);
+    try {
+      const results: DatabaseData[] = [];
+      for (const databaseItem of databases) {
+        const dbID = databaseItem.id;
+        const dbNameWithExt = `${dbID}${dicExt}`;
+        const db = await SQLite.openDatabaseAsync(dbNameWithExt);
+        const queryResult = await executeSql(db, SEARCH_DICTIONARY_WORD, [
+          `${searchParam}%`,
+        ]);
 
-          await db.closeAsync();
-          results.push({
-            dbShortName: databaseItem.name,
-            words: queryResult as DictionaryData[],
-          });
-        }
-
-        setData(results);
-      } catch (error) {
-        setError("Error fetching data");
-        console.error(error);
-      } finally {
-        setLoading(false);
+        await db.closeAsync();
+        results.push({
+          dbShortName: databaseItem.name,
+          words: queryResult as DictionaryData[],
+        });
       }
-    };
-    fetchData();
-  }, [searchParam, enabled, databases]);
 
-  return { data, loading, error };
+      setData(results);
+    } catch (error) {
+      setError("Error fetching data");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [enabled, databases]);
+
+  // useEffect(() => {
+  //   if (!enabled) return;
+  //   onSearch({ searchParam });
+  // }, [searchParam, enabled, databases]);
+
+  return { data, loading, error, onSearch };
 };
 
 export default useDictionaryData;

@@ -5,6 +5,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { TTheme } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
+import { useHaptics } from "@/hooks/useHaptics";
 
 export type TItem = {
   bookName: string;
@@ -30,8 +31,10 @@ const RenderVerse = ({
   sanitize,
 }: TRenderVerse) => {
   const styles = getStyles(theme);
+  const haptics = useHaptics();
 
   const onCopy = async (item: any) => {
+    haptics.impact.light();
     await copyToClipboard({
       ...item,
       book_number: item.bookNumber || item.book_number,
