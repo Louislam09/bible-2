@@ -9,6 +9,7 @@ import AlegreSongs from "@/constants/songs";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useParams from "@/hooks/useParams";
+import { useHaptics } from "@/hooks/useHaptics";
 import { TSongItem, TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -24,6 +25,7 @@ import {
 const SongDetailPage = () => {
   const { songId, isAlegres } = useParams();
   const { theme } = useMyTheme();
+  const { impact } = useHaptics();
   const Songs = isAlegres ? AlegreSongs : hymnSong;
   const song = Songs.find((item) => +item.id === songId) as TSongItem;
   const songFontSize = use$(() => storedData$.songFontSize.get());
@@ -39,17 +41,53 @@ const SongDetailPage = () => {
   // Add animated values for background decorations
   const decorationAnimations = useRef<Animated.Value[]>([]).current;
 
+  // Add animated values for button interactions
+  const prevButtonAnim = useRef(new Animated.Value(1)).current;
+  const nextButtonAnim = useRef(new Animated.Value(1)).current;
+  const increaseFontAnim = useRef(new Animated.Value(1)).current;
+  const decreaseFontAnim = useRef(new Animated.Value(1)).current;
+
   const hasChorus = !!song?.chorus;
   const [isChorus, setIsChorus] = useState(false);
 
-  const increaseFont = () => {
+  const increaseFont = async () => {
+    impact.light();
     const value = Math.min(40, Math.max(21, (songFontSize as any) + 2));
     storedData$.songFontSize.set(value);
+
+    // Animate button press
+    Animated.sequence([
+      Animated.timing(increaseFontAnim, {
+        toValue: 0.8,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(increaseFontAnim, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
   };
 
-  const decreaseFont = () => {
+  const decreaseFont = async () => {
+    impact.light();
     const value = Math.max(26, (songFontSize as any) - 2);
     storedData$.songFontSize.set(value);
+
+    // Animate button press
+    Animated.sequence([
+      Animated.timing(decreaseFontAnim, {
+        toValue: 0.8,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(decreaseFontAnim, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
   };
 
   useEffect(() => {
@@ -75,11 +113,26 @@ const SongDetailPage = () => {
     ]).start();
   };
 
-  const goToNextVerse = () => {
+  const goToNextVerse = async () => {
+    impact.medium();
     scrollViewRef.current?.scrollTo({
       y: 0,
       animated: true,
     });
+
+    // Animate button press
+    Animated.sequence([
+      Animated.timing(nextButtonAnim, {
+        toValue: 0.9,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+      Animated.timing(nextButtonAnim, {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start();
 
     if (!isChorus && hasChorus) {
       setIsChorus(true);
@@ -92,11 +145,26 @@ const SongDetailPage = () => {
     }
   };
 
-  const goToPrevVerse = () => {
+  const goToPrevVerse = async () => {
+    impact.medium();
     scrollViewRef.current?.scrollTo({
       y: 0,
       animated: true,
     });
+
+    // Animate button press
+    Animated.sequence([
+      Animated.timing(prevButtonAnim, {
+        toValue: 0.9,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+      Animated.timing(prevButtonAnim, {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start();
 
     if (isChorus) {
       setIsChorus(false);
@@ -130,12 +198,16 @@ const SongDetailPage = () => {
         style: { opacity: 1 },
         RightComponent: () => (
           <View style={styles.headerActions}>
-            <TouchableOpacity onPress={increaseFont}>
-              <Icon name="AArrowUp" size={24} color={theme.colors.text} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={decreaseFont}>
-              <Icon name="AArrowDown" size={24} color={theme.colors.text} />
-            </TouchableOpacity>
+            <Animated.View style={{ transform: [{ scale: increaseFontAnim }] }}>
+              <TouchableOpacity onPress={increaseFont}>
+                <Icon name="AArrowUp" size={24} color={theme.colors.text} />
+              </TouchableOpacity>
+            </Animated.View>
+            <Animated.View style={{ transform: [{ scale: decreaseFontAnim }] }}>
+              <TouchableOpacity onPress={decreaseFont}>
+                <Icon name="AArrowDown" size={24} color={theme.colors.text} />
+              </TouchableOpacity>
+            </Animated.View>
           </View>
         ),
       },
@@ -239,7 +311,7 @@ const SongDetailPage = () => {
             <Text style={styles.chorusLabel}>— CORO —</Text>
           ) : (
             <Text style={styles.chorusLabel}>
-              — ESTRÓFA {currentVerseIndex + 1} —
+              — ESTRÓFA {currentVerseIndex + 1} de {stanzas.length} —
             </Text>
           )}
         </View>
@@ -336,51 +408,55 @@ const SongDetailPage = () => {
         {/* Navigation */}
         <View style={styles.navigationContainer}>
           <View style={styles.navigationButtons}>
-            <TouchableOpacity
-              onPress={goToPrevVerse}
-              style={[
-                styles.navButton,
-                styles.prevButton,
-                currentVerseIndex === 0 &&
-                  !isChorus &&
-                  styles.navButtonDisabled,
-              ]}
-              disabled={currentVerseIndex === 0 && !isChorus}
-            >
-              <Text
+            <Animated.View style={{ transform: [{ scale: prevButtonAnim }] }}>
+              <TouchableOpacity
+                onPress={goToPrevVerse}
                 style={[
-                  styles.navButtonText,
+                  styles.navButton,
+                  styles.prevButton,
                   currentVerseIndex === 0 &&
                     !isChorus &&
-                    styles.navButtonTextDisabled,
+                    styles.navButtonDisabled,
                 ]}
+                disabled={currentVerseIndex === 0 && !isChorus}
               >
-                Anterior
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={[
+                    styles.navButtonText,
+                    currentVerseIndex === 0 &&
+                      !isChorus &&
+                      styles.navButtonTextDisabled,
+                  ]}
+                >
+                  Anterior
+                </Text>
+              </TouchableOpacity>
+            </Animated.View>
 
-            <TouchableOpacity
-              onPress={goToNextVerse}
-              style={[
-                styles.navButton,
-                styles.nextButton,
-                currentVerseIndex === stanzas.length - 1 &&
-                  isChorus &&
-                  styles.navButtonDisabled,
-              ]}
-              disabled={currentVerseIndex === stanzas.length - 1 && isChorus}
-            >
-              <Text
+            <Animated.View style={{ transform: [{ scale: nextButtonAnim }] }}>
+              <TouchableOpacity
+                onPress={goToNextVerse}
                 style={[
-                  styles.navButtonText,
+                  styles.navButton,
+                  styles.nextButton,
                   currentVerseIndex === stanzas.length - 1 &&
                     isChorus &&
-                    styles.navButtonTextDisabled,
+                    styles.navButtonDisabled,
                 ]}
+                disabled={currentVerseIndex === stanzas.length - 1 && isChorus}
               >
-                Siguiente
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={[
+                    styles.navButtonText,
+                    currentVerseIndex === stanzas.length - 1 &&
+                      isChorus &&
+                      styles.navButtonTextDisabled,
+                  ]}
+                >
+                  Siguiente
+                </Text>
+              </TouchableOpacity>
+            </Animated.View>
           </View>
         </View>
       </LinearGradient>
