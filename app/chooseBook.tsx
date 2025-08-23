@@ -317,7 +317,7 @@ const getBookstyles = ({ colors }: TTheme) =>
       padding: 12,
       alignItems: "center",
       justifyContent: "center",
-      borderRadius: 10,
+      borderRadius: 4,
       flexDirection: "row",
       position: "relative",
       marginVertical: 10,
@@ -393,7 +393,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       flex: 1,
       height: 70,
       alignItems: "center",
-      borderRadius: 10,
       margin: 2,
     },
     listTitle: {
