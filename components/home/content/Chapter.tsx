@@ -217,7 +217,7 @@ const Chapter = ({
           />
         ) : (
           <LegendList
-            data={data}
+            data={data.slice(0, 2)}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
             recycleItems

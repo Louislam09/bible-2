@@ -66,7 +66,7 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
         await statement.finalizeAsync();
       }
     } catch (error) {
-      console.error(`"Error executing SQL${sql}:"`, error);
+      console.log(`"[useLoadDatabase] Error executing SQL ${sql}:"`, error);
       return [];
     }
   }, [database, dbInitialized.current])
@@ -129,6 +129,7 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
       const result = await statement.executeAsync();
       const tables = await result.getAllAsync();
       await statement.finalizeAsync();
+      console.log({ tables })
 
       const tableNames = tables.map((t: any) => t.name);
       return tableNames?.includes(tableNameToCheck);

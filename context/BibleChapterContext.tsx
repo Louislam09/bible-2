@@ -53,8 +53,6 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     currentBibleVersion as EBibleVersions
   );
 
-  console.log({ isInterlineal, isInterlinearGreek });
-
   const fetchChapter = async () => {
     const bibleQuery = bibleState$.bibleQuery.get();
     const {

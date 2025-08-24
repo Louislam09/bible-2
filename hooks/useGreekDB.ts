@@ -1,5 +1,5 @@
 import { databaseNames, dbFileExt, SQLiteDirPath } from "@/constants/databaseNames";
-import { CREATE_FAVORITE_VERSES_TABLE } from "@/constants/Queries";
+import { CREATE_FAVORITE_VERSES_TABLE, historyQuery } from "@/constants/Queries";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { dbDownloadState$ } from "@/state/dbDownloadState";
 import { DEFAULT_DATABASE } from "@/types";
@@ -63,7 +63,7 @@ export function useGreekDB({ onProgress, enabled, databaseId }: UseGreekDB): Use
                 await statement.finalizeAsync();
             }
         } catch (error) {
-            console.error(`Error executing SQL ${sql}:`, error);
+            console.error(`[useGreekDB] Error executing SQL ${sql}:`, error);
             return [];
         }
     }, [database])
@@ -92,6 +92,7 @@ export function useGreekDB({ onProgress, enabled, databaseId }: UseGreekDB): Use
     async function createTables(db: SQLite.SQLiteDatabase) {
         const tables = [
             CREATE_FAVORITE_VERSES_TABLE,
+            historyQuery.CREATE_TABLE,
         ];
 
         try {

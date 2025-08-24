@@ -1,5 +1,5 @@
 import { databaseNames, dbFileExt, SQLiteDirPath } from "@/constants/databaseNames";
-import { CREATE_FAVORITE_VERSES_TABLE } from "@/constants/Queries";
+import { CREATE_FAVORITE_VERSES_TABLE, historyQuery } from "@/constants/Queries";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { dbDownloadState$ } from "@/state/dbDownloadState";
 import { DEFAULT_DATABASE } from "@/types";
@@ -64,7 +64,7 @@ export function useHebrewDB({ isInterlinear, onProgress, enabled, databaseId }: 
                 await statement.finalizeAsync();
             }
         } catch (error) {
-            console.error(`Error executing SQL ${sql}:`, error);
+            console.error(`[useHebrewDB] Error executing SQL ${sql}:`, error);
             return [];
         }
     }, [database])
@@ -94,6 +94,7 @@ export function useHebrewDB({ isInterlinear, onProgress, enabled, databaseId }: 
     async function createTables(db: SQLite.SQLiteDatabase) {
         const tables = [
             CREATE_FAVORITE_VERSES_TABLE,
+            historyQuery.CREATE_TABLE,
         ];
 
         try {

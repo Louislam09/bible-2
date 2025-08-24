@@ -30,7 +30,6 @@ export const getDatabaseType = (fileName: string) => {
 };
 
 export const getDatabaseQueryKey = (name: string) => {
-  console.log({ name });
   const isDefault = defaultDatabases.includes(name);
   return isDefault ? name : 'OTHERS';
 };

@@ -107,27 +107,27 @@ const initialContext: BibleState = {
   selectBibleVersion: (version: string) => {
     return new Promise((resolve) => resolve());
   },
-  onSaveNote: () => { },
-  onUpdateNote: () => { },
-  onDeleteNote: () => { },
-  onDeleteAllNotes: () => { },
-  selectFont: () => { },
-  selectTheme: () => { },
-  handleFontSize: () => { },
+  onSaveNote: () => {},
+  onUpdateNote: () => {},
+  onDeleteNote: () => {},
+  onDeleteAllNotes: () => {},
+  selectFont: () => {},
+  selectTheme: () => {},
+  handleFontSize: () => {},
   toggleFavoriteVerse: async ({
     bookNumber,
     chapter,
     verse,
     isFav,
-  }: IFavoriteVerse) => { },
-  setShouldLoop: (shouldLoop: boolean) => { },
+  }: IFavoriteVerse) => {},
+  setShouldLoop: (shouldLoop: boolean) => {},
   // setverseInStrongDisplay: (verse: number) => {},
-  increaseFontSize: () => { },
-  toggleViewLayoutGrid: () => { },
-  setLocalData: () => { },
-  performSearch: () => { },
-  setSearchQuery: () => { },
-  syncLocalSettings: () => { },
+  increaseFontSize: () => {},
+  toggleViewLayoutGrid: () => {},
+  setLocalData: () => {},
+  performSearch: () => {},
+  setSearchQuery: () => {},
+  syncLocalSettings: () => {},
   selectedFont: TFont.Roboto,
   currentBibleVersion: EBibleVersions.BIBLE,
   fontSize: 24,
@@ -219,9 +219,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     settingState$.requiresSettingsReloadAfterSync.get()
   );
 
-  const historyManager = useHistoryManager();
-  const [state, dispatch] = useReducer(bibleReducer, initialContext);
-  const fontsLoaded = useBibleFonts();
   const {
     myBibleDB,
     executeSql,
@@ -229,6 +226,11 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     installedBibles,
     isMyBibleDbLoaded,
   } = useDBContext();
+
+  const historyManager = useHistoryManager();
+  const [state, dispatch] = useReducer(bibleReducer, initialContext);
+  const fontsLoaded = useBibleFonts();
+
   const { state: searchState, performSearch } = useSearch({ db: myBibleDB });
   const [currentBibleLongName, setCurrentBibleLongName] = useState(
     getCurrentDbName(currentBibleVersion, installedBibles)

@@ -2,13 +2,7 @@ import { useMyTheme } from "@/context/ThemeContext";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
 import { TFont, TTheme } from "@/types";
-import {
-  GreekSegment,
-  mergeTexts,
-  mergeTextsGreek,
-  parseGreekText,
-  parseText,
-} from "@/utils/interleanerHelper";
+import { GreekSegment, parseGreekText } from "@/utils/interleanerHelper";
 import React, { useCallback, useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
 interface VerseItem {
@@ -69,18 +63,18 @@ const GreekVerse: React.FC<Props> = ({ item, withBackground = false }) => {
         <Text style={[styles.reference]}>{item.verse}</Text>
         {segments.map((segment) => (
           <View key={segment.key} style={[styles.wordColumn]}>
-            <Text
+            {/* <Text
               style={styles.lexicalId}
               onPress={() => onStrongPress(segment)}
             >
               {segment.strong}
-            </Text>
-            <Text
+            </Text> */}
+            {/* <Text
               style={styles.transliteration}
               onPress={() => onStrongPress(segment)}
             >
               {segment.morph}
-            </Text>
+            </Text> */}
             <Text
               style={styles.greekScript}
               onPress={() => onStrongPress(segment)}
@@ -112,13 +106,15 @@ const getStyles = ({ colors }: TTheme, fontSize: number) =>
     },
     reference: {
       fontSize: fontSize + 7,
-      color: colors.text,
+      color: colors.notification,
       fontWeight: "bold",
-      backgroundColor: colors.notification + 70,
-      paddingHorizontal: 5,
-      paddingVertical: 15,
-      borderRadius: 4,
-      height: 60,
+      textDecorationColor: colors.notification,
+      textDecorationLine: "underline",
+      // backgroundColor: colors.notification + 70,
+      // paddingHorizontal: 5,
+      // paddingVertical: 15,
+      // borderRadius: 4,
+      // height: 60,
       // display: "flex",
     },
     wordsGrid: {
@@ -129,12 +125,14 @@ const getStyles = ({ colors }: TTheme, fontSize: number) =>
       padding: 5,
       borderRadius: 4,
       paddingVertical: 10,
+      borderWidth: 1,
+      borderColor: colors.notification,
     },
     wordColumn: {
       position: "relative",
       paddingRight: 7,
-      alignItems: "flex-end",
-      justifyContent: "flex-end",
+      alignItems: "flex-start",
+      justifyContent: "flex-start",
       zIndex: 2,
     },
     lexicalId: {
