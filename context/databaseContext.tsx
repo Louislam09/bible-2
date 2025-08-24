@@ -1,8 +1,5 @@
 import useInstalledBibles, { VersionItem } from "@/hooks/useInstalledBible";
-import {
-  UseInterlinearDatabase,
-  useInterlinearDB,
-} from "@/hooks/useInterlinearDB";
+import { UseHebrewDatabase, useHebrewDB } from "@/hooks/useHebrewDB";
 import useLoadDatabase, { UseLoadDB } from "@/hooks/useLoadDatabase";
 import { DEFAULT_DATABASE, EBibleVersions } from "@/types";
 import { showToast } from "@/utils/showToast";
@@ -10,6 +7,7 @@ import { use$ } from "@legendapp/state/react";
 import * as SQLite from "expo-sqlite";
 import React, { createContext, useContext, useEffect, useMemo } from "react";
 import { storedData$ } from "./LocalstoreContext";
+import { UseGreekDatabase, useGreekDB } from "@/hooks/useGreekDB";
 
 type DatabaseContextType = {
   myBibleDB?: SQLite.SQLiteDatabase | null;
@@ -26,7 +24,8 @@ type DatabaseContextType = {
   reDownloadDatabase: (
     _dbName?: VersionItem
   ) => Promise<SQLite.SQLiteDatabase | undefined>;
-  interlinearService: UseInterlinearDatabase;
+  interlinearService: UseHebrewDatabase;
+  interlinearGreekService: UseGreekDatabase;
   mainBibleService: UseLoadDB;
   openDatabaseFromZip(
     databaseItem: VersionItem,
@@ -41,7 +40,7 @@ const initialContext: DatabaseContextType = {
   installedDictionary: [],
   isInstallBiblesLoaded: false,
   isMyBibleDbLoaded: false,
-  refreshDatabaseList: () => { },
+  refreshDatabaseList: () => {},
   reDownloadDatabase: (_dbName?: VersionItem) => Promise.resolve(undefined),
   openDatabaseFromZip: (databaseItem: VersionItem, isReDownload?: boolean) =>
     Promise.resolve(undefined as any),
@@ -50,13 +49,20 @@ const initialContext: DatabaseContextType = {
     isLoaded: false,
     error: null,
     executeSql: async (sql: string, params?: any[], queryName?: string) => [],
-    reOpen: (dbName: any) => Promise.resolve(undefined)
+    reOpen: (dbName: any) => Promise.resolve(undefined),
+  },
+  interlinearGreekService: {
+    database: null,
+    isLoaded: false,
+    error: null,
+    executeSql: async (sql: string, params?: any[], queryName?: string) => [],
+    reOpen: (dbName: any) => Promise.resolve(undefined),
   },
   mainBibleService: {
     database: null,
     executeSql: async (sql: string, params?: any[], queryName?: string) => [],
     isLoaded: false,
-    reOpen: (dbName: any) => Promise.resolve(undefined)
+    reOpen: (dbName: any) => Promise.resolve(undefined),
   },
 };
 
@@ -84,9 +90,11 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const isInterlinear = useMemo(
     () =>
-      [EBibleVersions.INT, EBibleVersions.INTERLINEAL].includes(
-        currentBibleVersion as EBibleVersions
-      ),
+      [
+        EBibleVersions.INT,
+        EBibleVersions.INTERLINEAL,
+        EBibleVersions.GREEK,
+      ].includes(currentBibleVersion as EBibleVersions),
     [currentBibleVersion]
   );
 
@@ -95,9 +103,17 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     isInterlinear,
   });
 
-  const interlinearService = useInterlinearDB({
+  const interlinearService = useHebrewDB({
     databaseId: DEFAULT_DATABASE.INTERLINEAR,
     isInterlinear,
+    onProgress: (msg) => {
+      showToast(msg, "SHORT");
+    },
+    enabled: mainBibleService.isLoaded,
+  });
+
+  const interlinearGreekService = useGreekDB({
+    databaseId: DEFAULT_DATABASE.GREEK,
     onProgress: (msg) => {
       showToast(msg, "SHORT");
     },
@@ -123,6 +139,7 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     reDownloadDatabase,
     openDatabaseFromZip,
     interlinearService,
+    interlinearGreekService,
     mainBibleService,
   };
 

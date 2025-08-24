@@ -6,6 +6,7 @@ import { VersionItem } from "@/hooks/useInstalledBible";
 import { dbDownloadState$ } from "@/state/dbDownloadState";
 // @ts-ignore
 import { Asset } from "expo-asset";
+import { DEFAULT_DATABASE } from "@/types";
 
 type PrepareDatabaseProps = {
     databaseItem: VersionItem;
@@ -15,12 +16,6 @@ type PrepareDatabaseProps = {
         percentage?: number;
         isDownloadingDB?: boolean;
     }) => void;
-}
-
-enum DEFAULT_DATABASE {
-    BIBLE = "bible",
-    NTV = "ntv-bible",
-    INTERLINEAR = "interlinear-bible",
 }
 
 export const prepareDatabaseFromDbFile = async ({ databaseItem, onProgress }: PrepareDatabaseProps): Promise<SQLite.SQLiteDatabase | null> => {
@@ -40,11 +35,13 @@ export const prepareDatabaseFromDbFile = async ({ databaseItem, onProgress }: Pr
             case DEFAULT_DATABASE.NTV:
                 DB_ASSET = require("../assets/db/ntv-bible.db");
                 break;
+            case DEFAULT_DATABASE.GREEK:
+                DB_ASSET = require("../assets/db/greek-bible.db");
+                break;
             default:
                 DB_ASSET = require("../assets/db/interlinear-bible.db");
                 break;
         }
-
 
         const dbExists = await FileSystem.getInfoAsync(DB_PATH);
         if (dbExists.exists && dbExists.size! > 0) {

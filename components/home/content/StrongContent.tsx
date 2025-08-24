@@ -34,6 +34,7 @@ import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { Text, View } from "../../Themed";
 import { useBibleContext } from "@/context/BibleContext";
+import { useHaptics } from "@/hooks/useHaptics";
 
 type HeaderAction = {
   iconName: IconProps["name"];
@@ -80,6 +81,7 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
   const animatedScaleIcon = useRef(new Animated.Value(1)).current;
   const HTML_DATA = htmlTemplate(values, theme.colors, fontSize);
   const { currentBibleVersion } = useBibleContext();
+  const haptics = useHaptics();
   const isInterlineal = [
     EBibleVersions.INT,
     EBibleVersions.INTERLINEAL,
@@ -185,6 +187,7 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
   };
 
   const onStrongSearchEntire = useCallback(() => {
+    haptics.impact.light();
     const [value1] = values;
     navigation.navigate(Screens.StrongSearchEntire, {
       paramCode: value1?.topic,
@@ -192,6 +195,7 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
   }, [values]);
 
   const onShare = useCallback(async () => {
+    haptics.impact.light();
     const html = htmlTemplate(values, theme.colors, fontSize, true);
     setSharing(true);
     await printToFile(html, word?.toUpperCase() || "--");
@@ -235,7 +239,10 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
             foreground: true,
             radius: 10,
           }}
-          onPress={item.onAction}
+          onPress={() => {
+            haptics.impact.light();
+            item.onAction();
+          }}
         >
           <Icon
             name={item.iconName}

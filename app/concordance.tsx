@@ -108,7 +108,7 @@ type ConcordanceProps = {};
 
 const Concordance: React.FC<ConcordanceProps> = () => {
   const { myBibleDB, executeSql } = useDBContext();
-  const { fontSize, currentBibleVersion } = useBibleContext();
+  const { currentBibleVersion } = useBibleContext();
   const [selected, setSelected] = useState<any>(null);
   const [filterData] = useState<TWord[]>(WORDS);
   const { theme, schema } = useMyTheme();
@@ -118,7 +118,7 @@ const Concordance: React.FC<ConcordanceProps> = () => {
   const [searchText, setSearchText] = useState<any>(null);
   const [randomLetter, setRandomLetter] = useState<string>("");
   const [verseList, setVerseList] = useState<TItem[] | null>(null);
-  const defaultFilterOption = "Filtra por libro";
+  const defaultFilterOption = "Sin filtro";
   const debouncedSearchText = useDebounce(searchText, 500);
   const [selectedFilterOption, setSelectedFilterOption] =
     useState<any>(defaultFilterOption);
@@ -147,7 +147,7 @@ const Concordance: React.FC<ConcordanceProps> = () => {
       }
     })();
 
-    return () => { };
+    return () => {};
   }, [myBibleDB, selected]);
 
   const onWordItemClick = (item: TWord) => {
@@ -234,7 +234,6 @@ const Concordance: React.FC<ConcordanceProps> = () => {
         icon="List"
         title="Concordancia Biblica"
       >
-
         <View
           style={{
             flex: 1,
@@ -242,13 +241,14 @@ const Concordance: React.FC<ConcordanceProps> = () => {
             backgroundColor: theme.dark ? theme.colors.background : "#eee",
           }}
         >
-
           <>
             {!showVerseList && ConcordanceHeader()}
             {showVerseList && (
               <>
                 <View style={[styles.filterContainer, { minHeight: 45 }]}>
-                  <View style={[styles.strongNumber, { paddingHorizontal: 15 }]}>
+                  <View
+                    style={[styles.strongNumber, { paddingHorizontal: 15 }]}
+                  >
                     <Icon name="ListFilter" size={24} color="white" />
                   </View>
                   <View style={styles.pickerContainer}>
@@ -266,7 +266,9 @@ const Concordance: React.FC<ConcordanceProps> = () => {
               <FlashList
                 key={schema}
                 contentContainerStyle={{
-                  backgroundColor: theme.dark ? theme.colors.background : "#eee",
+                  backgroundColor: theme.dark
+                    ? theme.colors.background
+                    : "#eee",
                   paddingVertical: 20,
                 }}
                 decelerationRate={"normal"}
@@ -284,23 +286,25 @@ const Concordance: React.FC<ConcordanceProps> = () => {
               <FlashList
                 key={schema}
                 contentContainerStyle={{
-                  backgroundColor: theme.dark ? theme.colors.background : "#eee",
+                  backgroundColor: theme.dark
+                    ? theme.colors.background
+                    : "#eee",
                   paddingVertical: 20,
                 }}
                 decelerationRate={"normal"}
                 data={
                   debouncedSearchText
                     ? filterData.filter(
-                      (x: any) =>
-                        x.name_lower.indexOf(
-                          debouncedSearchText.toLowerCase()
-                        ) !== -1
-                    )
-                    : filterData
-                      .filter(
-                        (x) => x.first_letter === randomLetter.toLowerCase()
+                        (x: any) =>
+                          x.name_lower.indexOf(
+                            debouncedSearchText.toLowerCase()
+                          ) !== -1
                       )
-                      .sort()
+                    : filterData
+                        .filter(
+                          (x) => x.first_letter === randomLetter.toLowerCase()
+                        )
+                        .sort()
                 }
                 renderItem={({ item, index }) => (
                   <RenderWordItem

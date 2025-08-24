@@ -9,6 +9,7 @@ export const modalState$ = observable({
   explainVerseRef: createRef<BottomSheetModal>(),
   interlinealRef: createRef<BottomSheetModal>(),
   searchFilterRef: createRef<BottomSheetModal>(),
+  strongSearchFilterRef: createRef<BottomSheetModal>(),
   searchWordOnDic: "",
   isSheetClosed: true,
 
@@ -59,5 +60,11 @@ export const modalState$ = observable({
   },
   closeSearchFilterBottomSheet: () => {
     modalState$.searchFilterRef.current?.dismiss();
+  },
+  openStrongSearchFilterBottomSheet: () => {
+    modalState$.strongSearchFilterRef.current?.present();
+  },
+  closeStrongSearchFilterBottomSheet: () => {
+    modalState$.strongSearchFilterRef.current?.dismiss();
   },
 });

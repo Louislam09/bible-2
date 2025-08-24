@@ -6,7 +6,7 @@ export const baseDownloadUrl = 'https://www.ph4.org';
 export const dbFileExt = '-bible.db';
 export const bibleReadyMsg = '¡Todo listo para usar!';
 // export const defaultDatabases = ['bible', 'ntv-bible'];
-export const defaultDatabases = ['bible', 'ntv-bible', 'interlinear-bible'];
+export const defaultDatabases = ['bible', 'ntv-bible', 'interlinear-bible', 'greek-bible'];
 // https://www.ph4.org/_dl.php?back=bbl&a=RV%2760_plus_&b=mybible&c
 
 const databaseExtensions = {
@@ -30,6 +30,7 @@ export const getDatabaseType = (fileName: string) => {
 };
 
 export const getDatabaseQueryKey = (name: string) => {
+  console.log({ name });
   const isDefault = defaultDatabases.includes(name);
   return isDefault ? name : 'OTHERS';
 };
@@ -88,9 +89,17 @@ export const databaseNames = [
     name: 'Berean Interlinear Bible',
     description:
       'La Biblia Bereana es una Biblia de estudio de tres niveles que lo conecta desde una traducción fluida y precisa hasta la raíz de los significados griegos y hebreos.',
-    size: 15571968,
+    size: 23000000,
     path: `${SQLiteDirPath}/${DBName.INT}`,
     shortName: 'INT',
+  },
+  {
+    id: 'greek-bible',
+    name: 'Tischendorf interlineal',
+    description: 'Tischendorf interlineal griego-español',
+    size: 7000000,
+    path: `${SQLiteDirPath}/${DBName.GREEK}`,
+    shortName: 'iTisch+',
   },
   {
     id: 'DIC',

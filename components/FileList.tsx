@@ -32,6 +32,7 @@ const FileList = () => {
     installedDictionary,
     mainBibleService,
     interlinearService,
+    interlinearGreekService,
   } = useDBContext();
   const { selectBibleVersion } = useBibleContext();
 
@@ -148,6 +149,16 @@ const FileList = () => {
         `¿Quieres descargar de nuevo "${dbName.name}"? Esto reemplazará los datos actuales de la biblia, notas, favoritos, etc.`
       );
       interlinearService.reOpen(dbName);
+      return;
+    }
+
+    const isGreekInterlinear = dbName.id.includes("greek");
+    if (isGreekInterlinear) {
+      Alert.alert(
+        "Actualizar módulo",
+        `¿Quieres descargar de nuevo "${dbName.name}"? Esto reemplazará los datos actuales de la biblia, notas, favoritos, etc.`
+      );
+      interlinearGreekService.reOpen(dbName);
       return;
     }
 

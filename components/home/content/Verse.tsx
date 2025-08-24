@@ -269,6 +269,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   };
 
   const onWordClicked = (code: string) => {
+    console.log("code", code);
+    haptics.impact.light();
     const isWordName = isNaN(+code);
     const wordIndex = isWordName
       ? textValue.indexOf(code)
@@ -297,6 +299,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   };
 
   const onStrongWordClicked = ({ word, tagValue }: WordTagPair) => {
+    console.log("word", word);
+    haptics.impact.light();
     const NT_BOOK_NUMBER = 470;
     const cognate = item?.book_number < NT_BOOK_NUMBER ? "H" : "G";
 
@@ -316,6 +320,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   };
 
   const onNonHightlistedWordClick = ({ word }: WordTagPair) => {
+    haptics.impact.light();
     if (word.length < 3) {
       return;
     }

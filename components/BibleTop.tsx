@@ -35,6 +35,8 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const isDataLoading = use$(() => bibleState$.isDataLoading.top.get());
   const verses = bibleState$.bibleData.topVerses.get() ?? [];
   const interlinearVerses = bibleState$.bibleData.interlinearVerses.get() ?? [];
+  const interlinearGreekVerses =
+    bibleState$.bibleData.interlinearGreekVerses.get() ?? [];
   const currentBook = bibleState$.bibleQuery.get().book;
   const bookInfo = getBookDetail(currentBook);
   const NT_BOOK_NUMBER = 470;
@@ -43,8 +45,15 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     EBibleVersions.INT,
     EBibleVersions.INTERLINEAL,
   ].includes(currentBibleVersion as EBibleVersions);
+
+  const isGreekInterlineal = [EBibleVersions.GREEK].includes(
+    currentBibleVersion as EBibleVersions
+  );
   const isNewTestamentAndInterlinear =
     bookInfo.bookNumber >= NT_BOOK_NUMBER && isInterlineal;
+
+  const isOldTestamentAndGreekInterlineal =
+    bookInfo.bookNumber < NT_BOOK_NUMBER && isGreekInterlineal;
 
   const isSplitActived = bibleState$.isSplitActived.get();
   const {
@@ -150,7 +159,8 @@ const BibleTop: FC<BibleTopProps> = (props) => {
       <SwipeWrapper {...{ onSwipeRight, onSwipeLeft }}>
         {isDataLoading ? (
           <ActivityIndicator />
-        ) : isNewTestamentAndInterlinear ? (
+        ) : isNewTestamentAndInterlinear ||
+          isOldTestamentAndGreekInterlineal ? (
           <View
             style={{
               flex: 1,
@@ -191,8 +201,9 @@ const BibleTop: FC<BibleTopProps> = (props) => {
                 textAlign: "center",
               }}
             >
-              Los versículos del Nuevo Pacto no están disponibles en formato
-              interlinear en este momento.
+              Los versículos del {isGreekInterlineal ? "Antiguo" : "Nuevo"}{" "}
+              Pacto no están disponibles en formato interlinear{" "}
+              {isGreekInterlineal ? "griego" : "hebreo"} en este momento.
             </Text>
 
             {/* Action Text */}
@@ -204,14 +215,16 @@ const BibleTop: FC<BibleTopProps> = (props) => {
                 textAlign: "center",
               }}
             >
-              Selecciona un versículo del Antiguo Pacto para usar la función
-              interlinear
+              Selecciona un versículo del{" "}
+              {isGreekInterlineal ? "Nuevo" : "Antiguo"} Pacto para usar la
+              función interlinear {isGreekInterlineal ? "griego" : "hebreo"}
             </Text>
           </View>
         ) : (
           <Chapter
             verses={verses}
             interlinearVerses={interlinearVerses}
+            interlinearGreekVerses={interlinearGreekVerses}
             isSplit={false}
             estimatedReadingTime={0}
             initialScrollIndex={

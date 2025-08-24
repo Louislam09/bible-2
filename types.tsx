@@ -247,6 +247,7 @@ export enum EBibleVersions {
   NTV = "ntv-bible",
   INT = "interlinear-bible",
   INTERLINEAL = "HSB+",
+  GREEK = "greek-bible",
 }
 
 export type DownloadBibleItem = {
@@ -779,4 +780,5 @@ export enum DEFAULT_DATABASE {
   BIBLE = "bible",
   NTV = "ntv-bible",
   INTERLINEAR = "interlinear-bible",
+  GREEK = "greek-bible",
 }

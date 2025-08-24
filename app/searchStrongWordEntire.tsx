@@ -1,4 +1,7 @@
-import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import {
+  singleScreenHeader,
+  SingleScreenHeaderProps,
+} from "@/components/common/singleScreenHeader";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from "@/constants/Queries";
 import { useBibleContext } from "@/context/BibleContext";
@@ -6,14 +9,18 @@ import { useDBContext } from "@/context/databaseContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useParams from "@/hooks/useParams";
 import { bibleState$ } from "@/state/bibleState";
-import { IVerseItem, TTheme } from "@/types";
+import { IVerseItem, ScreensName, TTheme } from "@/types";
 import { Stack } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { Animated, StyleSheet, Text } from "react-native";
+import { Animated, Keyboard, StyleSheet, Text } from "react-native";
 import AnimatedDropdown from "../components/AnimatedDropdown";
 import Icon from "../components/Icon";
 import StrongSearchContent from "../components/StrongSearchContent";
 import { View } from "../components/Themed";
+import { useHaptics } from "@/hooks/useHaptics";
+import { modalState$ } from "@/state/modalState";
+import BottomModal from "@/components/BottomModal";
+import FilterList from "@/components/FilterList";
 
 enum CognateBook {
   NEW_VOW = "newVow",
@@ -36,10 +43,11 @@ const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
   const { myBibleDB, executeSql } = useDBContext();
   const [data, setData] = useState<IVerseItem[] | null>(null);
   const { fontSize } = useBibleContext();
+  const haptics = useHaptics();
   const strongWord = bibleState$.strongWord.get();
   const code = (paramCode || strongWord?.code)?.match(/\d+/)?.[0];
   const cognate = (paramCode || strongWord?.code)?.match(/\w/)?.[0] as string;
-  const defaultFilterOption = "Filtra por libro";
+  const defaultFilterOption = "Sin filtro";
   const bookGroup =
     cognate.toLowerCase() === "g" ? CognateBook.NEW_VOW : CognateBook.OLD_VOW;
   const filterByBookGroup = useMemo(() => {
@@ -79,8 +87,29 @@ const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
       setData((searchData as IVerseItem[]) || []);
     })();
 
-    return () => { };
+    return () => {};
   }, [myBibleDB, code, selectedFilterOption]);
+
+  const screenOptions = useMemo(() => {
+    return {
+      theme,
+      title: "Palabras de Strong",
+      titleIcon: "BookA",
+      headerRightProps: {
+        headerRightIcon: "ListFilter",
+        headerRightIconColor: theme.colors.text,
+        onPress: () => {
+          haptics.impact.light();
+          modalState$.openStrongSearchFilterBottomSheet();
+          if (Keyboard.isVisible()) {
+            Keyboard.dismiss();
+          }
+        },
+        disabled: false,
+        style: { opacity: 1 },
+      },
+    } as SingleScreenHeaderProps;
+  }, [theme]);
 
   return (
     <Animated.View
@@ -90,53 +119,8 @@ const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
         paddingTop: 10,
       }}
     >
-      <Stack.Screen
-        options={{
-          ...singleScreenHeader({
-            theme,
-            title: "Palabras de Strong",
-            titleIcon: "BookA",
-            headerRightProps: {
-              headerRightIcon: "Settings",
-              headerRightIconColor: theme.colors.notification,
-              onPress: () => { },
-              disabled: true,
-              style: { opacity: 0 },
-            },
-          }),
-        }}
-      />
+      <Stack.Screen options={{ ...singleScreenHeader(screenOptions) }} />
       <View style={{ paddingHorizontal: 15 }}>
-        <View
-          style={[
-            styles.filterContainer,
-            { backgroundColor: theme.colors.notification + "99" },
-          ]}
-        >
-          <View
-            style={[
-              styles.strongNumber,
-              {
-                paddingHorizontal: 15,
-                backgroundColor: "transparent",
-              },
-            ]}
-          >
-            <Icon name="ListFilter" size={24} color="white" />
-          </View>
-          <View style={styles.pickerContainer}>
-            <AnimatedDropdown
-              withIcon
-              customStyle={{
-                picker: { padding: 0 },
-              }}
-              options={filterOptions}
-              selectedValue={selectedFilterOption}
-              onValueChange={setSelectedFilterOption}
-              theme={theme}
-            />
-          </View>
-        </View>
         <View
           style={[
             styles.strongNumber,
@@ -150,6 +134,7 @@ const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
             {paramCode?.split(",")?.[0]}
           </Text>
         </View>
+
         <Text style={[styles.resultText, { fontSize }]}>
           Resultado encontrados:{" "}
           <Text style={{ color: theme.colors.notification }}>
@@ -163,6 +148,35 @@ const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
         data={filteredData}
         currentFilter={selectedFilterOption}
       />
+
+      <BottomModal
+        shouldScroll
+        justOneSnap
+        showIndicator
+        justOneValue={["40%"]}
+        startAT={0}
+        style={{
+          borderColor: "transparent",
+          backgroundColor: theme.dark
+            ? theme.colors.background
+            : theme.colors.background,
+          width: "100%",
+        }}
+        ref={modalState$.strongSearchFilterRef.get()}
+      >
+        <FilterList
+          title="Filtrar resultados"
+          description="Selecciona el libro para filtrar los resultados."
+          onSelect={(value) => {
+            setSelectedFilterOption(value);
+            modalState$.closeStrongSearchFilterBottomSheet();
+          }}
+          options={filterOptions}
+          value={selectedFilterOption}
+          buttonText="Filtrar"
+          noButton
+        />
+      </BottomModal>
     </Animated.View>
   );
 };

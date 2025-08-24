@@ -6,13 +6,13 @@ import { DEFAULT_DATABASE } from "@/types";
 import { prepareDatabaseFromDbFile } from "@/utils/prepareDB";
 import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface Row {
     [key: string]: any;
 }
 
-export interface UseInterlinearDatabase {
+export interface UseHebrewDatabase {
     database: SQLite.SQLiteDatabase | null;
     executeSql: <T = any>(
         sql: string,
@@ -24,21 +24,21 @@ export interface UseInterlinearDatabase {
     reOpen: (dbName: any) => Promise<void>
 }
 
-interface UseInterlinearDB {
+interface UseHebrewDB {
     isInterlinear?: boolean;
     onProgress?: (msg: string) => void;
     enabled?: boolean;
     databaseId: DEFAULT_DATABASE;
 }
 
-export function useInterlinearDB({ isInterlinear, onProgress, enabled, databaseId }: UseInterlinearDB): UseInterlinearDatabase {
+export function useHebrewDB({ isInterlinear, onProgress, enabled, databaseId }: UseHebrewDB): UseHebrewDatabase {
     const [database, setDatabase] = useState<SQLite.SQLiteDatabase | null>(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState<Error | null>(null);
     const isMounted = useRef(true);
     const dbName = databaseNames.find(db => db.id === databaseId)
 
-    const executeSql = async (
+    const executeSql = useCallback(async (
         sql: string,
         params: any[] = [],
         queryName?: string
@@ -67,7 +67,8 @@ export function useInterlinearDB({ isInterlinear, onProgress, enabled, databaseI
             console.error(`Error executing SQL ${sql}:`, error);
             return [];
         }
-    };
+    }, [database])
+
 
     async function isDatabaseValid(db: SQLite.SQLiteDatabase): Promise<boolean> {
         const dbItemFilePath = `${SQLiteDirPath}/interlinear${dbFileExt}`;

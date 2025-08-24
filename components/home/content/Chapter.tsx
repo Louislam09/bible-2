@@ -24,6 +24,7 @@ import {
   View,
 } from "react-native";
 import Verse from "./Verse";
+import GreekVerse from "./GreekVerse";
 
 interface TChapter {
   verses: IBookVerse[];
@@ -36,6 +37,7 @@ interface TChapter {
 interface TChapter {
   verses: IBookVerse[];
   interlinearVerses: IBookVerse[];
+  interlinearGreekVerses: IBookVerse[];
   isSplit?: boolean;
   estimatedReadingTime: number;
   initialScrollIndex: number;
@@ -45,6 +47,7 @@ interface TChapter {
 const Chapter = ({
   verses,
   interlinearVerses,
+  interlinearGreekVerses,
   isSplit,
   estimatedReadingTime,
   initialScrollIndex,
@@ -69,16 +72,37 @@ const Chapter = ({
     EBibleVersions.INTERLINEAL,
   ].includes(currentBibleVersion as EBibleVersions);
 
-  const data = isInterlineal && !isSplit ? interlinearVerses : verses;
+  const isGreekInterlineal = [EBibleVersions.GREEK].includes(
+    currentBibleVersion as EBibleVersions
+  );
+
+  const getData = useCallback(() => {
+    if (isInterlineal && !isSplit) {
+      return interlinearVerses;
+    } else if (isGreekInterlineal && !isSplit) {
+      return interlinearGreekVerses;
+    }
+    return verses;
+  }, [
+    isInterlineal,
+    isSplit,
+    isGreekInterlineal,
+    interlinearVerses,
+    interlinearGreekVerses,
+  ]);
+
+  const data = getData() || [];
 
   const renderItem = useCallback(
     ({ item }: any) =>
       isInterlineal && !isSplit ? (
         <HebrewVerse item={item} />
+      ) : isGreekInterlineal ? (
+        <GreekVerse item={item} />
       ) : (
         <Verse item={item} isSplit={!!isSplit} initVerse={initialScrollIndex} />
       ),
-    [isSplit, initialScrollIndex, isInterlineal]
+    [isSplit, initialScrollIndex, isInterlineal, isGreekInterlineal]
   );
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
@@ -126,7 +150,8 @@ const Chapter = ({
   }, [estimatedReadingTime, isInterlineal]);
 
   const keyExtractor = useCallback(
-    (item: IBookVerse) => `${item.book_number}-${item.chapter}-${item.verse}`,
+    (item: IBookVerse) =>
+      `${item?.book_number}-${item?.chapter}-${item?.verse}`,
     []
   );
 
@@ -185,7 +210,7 @@ const Chapter = ({
               viewabilityConfigCallbackPairs.current
             }
             onEndReachedThreshold={0.5}
-            ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
+            ListFooterComponent={<View style={{ paddingBottom: 100 }} />}
             ListHeaderComponentStyle={{ paddingTop: 70 }}
             onScroll={handleScroll}
             scrollEventThrottle={16}
@@ -202,12 +227,12 @@ const Chapter = ({
               <LoadingComponent textColor={theme.colors.text} />
             )}
             ListHeaderComponentStyle={{ paddingTop: 70 }}
-            initialScrollIndex={initialScrollIndex}
+            initialScrollIndex={Math.abs(initialScrollIndex || 0)}
             viewabilityConfigCallbackPairs={
               viewabilityConfigCallbackPairs.current
             }
             onEndReachedThreshold={0.5}
-            ListFooterComponent={<View style={{ paddingBottom: 40 }} />}
+            ListFooterComponent={<View style={{ paddingBottom: 100 }} />}
             onScroll={handleScroll}
           />
         )}

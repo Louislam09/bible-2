@@ -14,6 +14,7 @@ import * as SQLite from "expo-sqlite";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { VersionItem } from "./useInstalledBible";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { DEFAULT_DATABASE } from "@/types";
 
 interface Row {
   [key: string]: any;
@@ -35,11 +36,6 @@ export type TUseLoadDB = {
   isInterlinear: boolean;
 };
 
-enum DEFAULT_DATABASE {
-  BIBLE = "bible",
-  NTV = "ntv-bible",
-  INTERLINEAR = "interlinear-bible",
-}
 
 const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): UseLoadDB => {
   const [database, setDatabase] = useState<SQLite.SQLiteDatabase | null>(null);
@@ -161,6 +157,7 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
       });
 
       const isInterlinear = dbName.id === DEFAULT_DATABASE.INTERLINEAR;
+      const isGreekInterlinear = dbName.id === DEFAULT_DATABASE.GREEK;
       const valid = await isDatabaseValid(db!, isInterlinear ? "interlinear" : "verses");
 
       if (!valid) {

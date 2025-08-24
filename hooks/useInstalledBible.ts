@@ -19,8 +19,8 @@ export type VersionItem = {
 };
 
 const useInstalledBibles = () => {
-  const [bible, ntvBible, intBible] = databaseNames;
-  const defaultDBs = [bible, ntvBible, intBible];
+  const [bible, ntvBible, intBible, greekBible] = databaseNames;
+  const defaultDBs = [bible, ntvBible, intBible, greekBible];
   const [installedBibles, setInstalledBibles] =
     useState<VersionItem[]>(defaultDBs);
   const [installedDictionary, setInstalledDictionary] =

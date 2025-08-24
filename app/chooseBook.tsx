@@ -156,10 +156,14 @@ const ChooseBook: React.FC = () => {
   const { viewLayoutGrid, toggleViewLayoutGrid, currentBibleVersion } =
     useBibleContext();
   const isBottomSideSearching = bibleState$.isBottomBibleSearching.get();
-  const isInterlineal = [
+  const isHebrewInterlineal = [
     EBibleVersions.INT,
     EBibleVersions.INTERLINEAL,
   ].includes(currentBibleVersion as EBibleVersions);
+
+  const isGreekInterlineal = [EBibleVersions.GREEK].includes(
+    currentBibleVersion as EBibleVersions
+  );
 
   const handlePress = useCallback(
     (item: IDBBookNames) => {
@@ -220,26 +224,30 @@ const ChooseBook: React.FC = () => {
         ]}
       >
         <View style={styles.listWrapper}>
-          <View style={styles.tab}>
-            <Icon
-              name="Hash"
-              size={16}
-              color={theme.colors.text}
-              style={styles.tabIcon}
-            />
-            <Text style={[styles.tabText]}>Antiguo Pacto</Text>
-            <View style={[styles.activeIndicator]} />
-          </View>
-          <BookList
-            data={oldTestamentBooks}
-            viewLayoutGrid
-            isShowName={isShowName}
-            book={book as string}
-            onBookPress={handlePress}
-            startIndex={0}
-            theme={theme}
-          />
-          {!isInterlineal && (
+          {!isGreekInterlineal && (
+            <>
+              <View style={styles.tab}>
+                <Icon
+                  name="Hash"
+                  size={16}
+                  color={theme.colors.text}
+                  style={styles.tabIcon}
+                />
+                <Text style={[styles.tabText]}>Antiguo Pacto</Text>
+                <View style={[styles.activeIndicator]} />
+              </View>
+              <BookList
+                data={oldTestamentBooks}
+                viewLayoutGrid
+                isShowName={isShowName}
+                book={book as string}
+                onBookPress={handlePress}
+                startIndex={0}
+                theme={theme}
+              />
+            </>
+          )}
+          {!isHebrewInterlineal && (
             <>
               <View style={styles.tab}>
                 <Icon
@@ -321,10 +329,10 @@ const getBookstyles = ({ colors }: TTheme) =>
       flexDirection: "row",
       position: "relative",
       marginVertical: 10,
-      backgroundColor: colors.text + "20",
+      backgroundColor: "transparent",
       alignSelf: "center",
-      borderColor: colors.text + 40,
-      borderWidth: 2,
+      // borderColor: colors.text + 40,
+      // borderWidth: 2,
     },
     tabText: {
       fontSize: 16,
