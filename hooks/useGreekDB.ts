@@ -126,17 +126,16 @@ export function useGreekDB({ onProgress, enabled, databaseId }: UseGreekDB): Use
 
         if (!greekDb) return;
         const dbTableCreated = storedData$.dbTableCreated.get();
-        if (!dbTableCreated.includes(dbName.id)) {
+        if (!dbTableCreated.includes(dbName.shortName)) {
+            // Validate the database
+            const valid = await isDatabaseValid(greekDb);
+            if (!valid) {
+                // delete the database
+                await FileSystem.deleteAsync(dbName.path, { idempotent: true });
+                throw new Error("Greek database validation failed");
+            }
             await createTables(greekDb);
-            storedData$.dbTableCreated.set([...dbTableCreated, dbName.id]);
-        }
-
-        // Validate the database
-        const valid = await isDatabaseValid(greekDb);
-        if (!valid) {
-            // delete the database
-            await FileSystem.deleteAsync(dbName.path, { idempotent: true });
-            throw new Error("Greek database validation failed");
+            storedData$.dbTableCreated.set([...dbTableCreated, dbName.shortName]);
         }
 
         // Apply optimization settings

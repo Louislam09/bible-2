@@ -45,7 +45,7 @@ export const prepareDatabaseFromDbFile = async ({ databaseItem, onProgress }: Pr
 
         const dbExists = await FileSystem.getInfoAsync(DB_PATH);
         if (dbExists.exists && dbExists.size! > 0) {
-            console.log(`📖 DB ${DB_FILENAME} already ready (${(dbExists.size! / (1024 * 1024)).toFixed(2)} MB)`);
+            // console.log(`📖 DB ${DB_FILENAME} already ready (${(dbExists.size! / (1024 * 1024)).toFixed(2)} MB)`);
             const db = await SQLite.openDatabaseAsync(DB_FILENAME);
             await db.execAsync(`
                 PRAGMA journal_mode = WAL;

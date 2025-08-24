@@ -66,7 +66,7 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
         await statement.finalizeAsync();
       }
     } catch (error) {
-      console.log(`"[useLoadDatabase] Error executing SQL ${sql}:"`, error);
+      console.log(`"[useLoadDatabase - ${dbName?.id}] Error executing SQL ${sql}:"`, error);
       return [];
     }
   }, [database, dbInitialized.current])
@@ -130,7 +130,6 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
       const tables = await result.getAllAsync();
       await statement.finalizeAsync();
       console.log({ tables })
-
       const tableNames = tables.map((t: any) => t.name);
       return tableNames?.includes(tableNameToCheck);
     } catch (e) {
@@ -159,21 +158,22 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
 
       const isInterlinear = dbName.id === DEFAULT_DATABASE.INTERLINEAR;
       const isGreekInterlinear = dbName.id === DEFAULT_DATABASE.GREEK;
-      const valid = await isDatabaseValid(db!, isInterlinear ? "interlinear" : "verses");
-
-      if (!valid) {
-        await db?.closeAsync();
-        await FileSystem.deleteAsync(dbName.path, { idempotent: true });
-        await FileSystem.deleteAsync(`${dbName.path}-wal`, { idempotent: true });
-        await FileSystem.deleteAsync(`${dbName.path}-shm`, { idempotent: true });
-        return undefined
-      }
       if (!db) return;
       const dbTableCreated = storedData$.dbTableCreated.get();
-      if (!dbTableCreated.includes(dbName.id)) {
+      if (!dbTableCreated.includes(dbName.shortName)) {
+        const valid = await isDatabaseValid(db!, isInterlinear ? "interlinear" : "verses");
+
+        if (!valid) {
+          await db?.closeAsync();
+          await FileSystem.deleteAsync(dbName.path, { idempotent: true });
+          await FileSystem.deleteAsync(`${dbName.path}-wal`, { idempotent: true });
+          await FileSystem.deleteAsync(`${dbName.path}-shm`, { idempotent: true });
+          return undefined
+        }
+
         await createTables(db);
         await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
-        storedData$.dbTableCreated.set([...dbTableCreated, dbName.id]);
+        storedData$.dbTableCreated.set([...dbTableCreated, dbName.shortName]);
       }
 
       if (isMounted.current) {

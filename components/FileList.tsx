@@ -89,7 +89,7 @@ const FileList = () => {
               });
               const dbTableCreated = storedData$.dbTableCreated.get();
               storedData$.dbTableCreated.set(
-                dbTableCreated.filter((db: string) => db !== item.id)
+                dbTableCreated.filter((db: string) => db !== item.shortName)
               );
               refreshDatabaseList();
               await onRefresh();

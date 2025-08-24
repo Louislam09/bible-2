@@ -1,5 +1,6 @@
-import useInstalledBibles, { VersionItem } from "@/hooks/useInstalledBible";
+import { UseGreekDatabase, useGreekDB } from "@/hooks/useGreekDB";
 import { UseHebrewDatabase, useHebrewDB } from "@/hooks/useHebrewDB";
+import useInstalledBibles, { VersionItem } from "@/hooks/useInstalledBible";
 import useLoadDatabase, { UseLoadDB } from "@/hooks/useLoadDatabase";
 import { DEFAULT_DATABASE, EBibleVersions } from "@/types";
 import { showToast } from "@/utils/showToast";
@@ -7,7 +8,6 @@ import { use$ } from "@legendapp/state/react";
 import * as SQLite from "expo-sqlite";
 import React, { createContext, useContext, useEffect, useMemo } from "react";
 import { storedData$ } from "./LocalstoreContext";
-import { UseGreekDatabase, useGreekDB } from "@/hooks/useGreekDB";
 
 type DatabaseContextType = {
   myBibleDB?: SQLite.SQLiteDatabase | null;
@@ -21,16 +21,10 @@ type DatabaseContextType = {
   isInstallBiblesLoaded: boolean;
   isMyBibleDbLoaded: boolean;
   refreshDatabaseList: () => void;
-  reDownloadDatabase: (
-    _dbName?: VersionItem
-  ) => Promise<SQLite.SQLiteDatabase | undefined>;
   interlinearService: UseHebrewDatabase;
   interlinearGreekService: UseGreekDatabase;
   mainBibleService: UseLoadDB;
-  openDatabaseFromZip(
-    databaseItem: VersionItem,
-    isReDownload?: boolean
-  ): Promise<SQLite.SQLiteDatabase | undefined>;
+  allBibleLoaded: boolean;
 };
 
 const initialContext: DatabaseContextType = {
@@ -40,10 +34,7 @@ const initialContext: DatabaseContextType = {
   installedDictionary: [],
   isInstallBiblesLoaded: false,
   isMyBibleDbLoaded: false,
-  refreshDatabaseList: () => {},
-  reDownloadDatabase: (_dbName?: VersionItem) => Promise.resolve(undefined),
-  openDatabaseFromZip: (databaseItem: VersionItem, isReDownload?: boolean) =>
-    Promise.resolve(undefined as any),
+  refreshDatabaseList: () => { },
   interlinearService: {
     database: null,
     isLoaded: false,
@@ -64,10 +55,10 @@ const initialContext: DatabaseContextType = {
     isLoaded: false,
     reOpen: (dbName: any) => Promise.resolve(undefined),
   },
+  allBibleLoaded: false,
 };
 
-export const DatabaseContext =
-  createContext<DatabaseContextType>(initialContext);
+const DatabaseContext = createContext<DatabaseContextType>(initialContext);
 
 const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -76,6 +67,7 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     currentBibleVersion: storedData$.currentBibleVersion.get(),
     isDataLoaded: storedData$.isDataLoaded.get(),
   }));
+
   const {
     installedBibles,
     isLoaded,
@@ -117,16 +109,22 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     onProgress: (msg) => {
       showToast(msg, "SHORT");
     },
-    enabled: mainBibleService.isLoaded,
+    enabled: interlinearService.isLoaded,
   });
 
-  const reDownloadDatabase: any = () => {
-    console.log("reDownloadDatabase");
-  };
+  const allBibleLoaded = useMemo(
+    () =>
+      [
+        mainBibleService.isLoaded,
+        interlinearService.isLoaded,
+        interlinearGreekService.isLoaded,
+      ].every((x) => x),
+    [mainBibleService.isLoaded, interlinearService.isLoaded, interlinearGreekService.isLoaded]
+  );
 
-  const openDatabaseFromZip: any = () => {
-    console.log("openDatabaseFromZip");
-  };
+  useEffect(() => {
+    console.log('loaded bibles', { allBibleLoaded });
+  }, [allBibleLoaded]);
 
   const dbContextValue = {
     myBibleDB: mainBibleService.database,
@@ -136,11 +134,10 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     isInstallBiblesLoaded: isLoaded,
     refreshDatabaseList,
     isMyBibleDbLoaded: mainBibleService.isLoaded,
-    reDownloadDatabase,
-    openDatabaseFromZip,
     interlinearService,
     interlinearGreekService,
     mainBibleService,
+    allBibleLoaded
   };
 
   return (
@@ -150,7 +147,7 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-export const useDBContext = (): DatabaseContextType =>
-  useContext(DatabaseContext);
+const useDBContext = (): DatabaseContextType => useContext(DatabaseContext);
 
+export { DatabaseContext, useDBContext };
 export default DatabaseProvider;

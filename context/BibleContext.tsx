@@ -107,27 +107,27 @@ const initialContext: BibleState = {
   selectBibleVersion: (version: string) => {
     return new Promise((resolve) => resolve());
   },
-  onSaveNote: () => {},
-  onUpdateNote: () => {},
-  onDeleteNote: () => {},
-  onDeleteAllNotes: () => {},
-  selectFont: () => {},
-  selectTheme: () => {},
-  handleFontSize: () => {},
+  onSaveNote: () => { },
+  onUpdateNote: () => { },
+  onDeleteNote: () => { },
+  onDeleteAllNotes: () => { },
+  selectFont: () => { },
+  selectTheme: () => { },
+  handleFontSize: () => { },
   toggleFavoriteVerse: async ({
     bookNumber,
     chapter,
     verse,
     isFav,
-  }: IFavoriteVerse) => {},
-  setShouldLoop: (shouldLoop: boolean) => {},
+  }: IFavoriteVerse) => { },
+  setShouldLoop: (shouldLoop: boolean) => { },
   // setverseInStrongDisplay: (verse: number) => {},
-  increaseFontSize: () => {},
-  toggleViewLayoutGrid: () => {},
-  setLocalData: () => {},
-  performSearch: () => {},
-  setSearchQuery: () => {},
-  syncLocalSettings: () => {},
+  increaseFontSize: () => { },
+  toggleViewLayoutGrid: () => { },
+  setLocalData: () => { },
+  performSearch: () => { },
+  setSearchQuery: () => { },
+  syncLocalSettings: () => { },
   selectedFont: TFont.Roboto,
   currentBibleVersion: EBibleVersions.BIBLE,
   fontSize: 24,
@@ -225,9 +225,14 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     isInstallBiblesLoaded,
     installedBibles,
     isMyBibleDbLoaded,
+    allBibleLoaded
   } = useDBContext();
 
-  const historyManager = useHistoryManager();
+  const historyManager = useHistoryManager({
+    executeSql,
+    isMyBibleDbLoaded,
+    allBibleLoaded
+  });
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
   const fontsLoaded = useBibleFonts();
 
@@ -307,7 +312,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     !fontsLoaded ||
     !isDataLoaded ||
     !isInstallBiblesLoaded ||
-    !isMyBibleDbLoaded ||
+    !allBibleLoaded ||
     isDownloadingDB
   ) {
     return (
@@ -317,7 +322,7 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
         titleColor={"white"}
         backgroundColor="#0d3f3e"
         iconColor="white"
-        title="Cargando..."
+        title="..."
         icon="BookPlus"
         customContent={isDownloadingDB ? <DatabaseLoadingModal /> : null}
       >

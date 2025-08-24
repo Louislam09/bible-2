@@ -128,18 +128,20 @@ export function useHebrewDB({ isInterlinear, onProgress, enabled, databaseId }: 
 
         if (!interlinearDb) return;
         const dbTableCreated = storedData$.dbTableCreated.get();
-        if (!dbTableCreated.includes(dbName.id)) {
+        if (!dbTableCreated.includes(dbName.shortName)) {
+
+            // Validate the database
+            const valid = await isDatabaseValid(interlinearDb);
+            if (!valid) {
+                // delete the database
+                await FileSystem.deleteAsync(dbName.path, { idempotent: true });
+                throw new Error("Interlinear database validation failed");
+            }
+
             await createTables(interlinearDb);
-            storedData$.dbTableCreated.set([...dbTableCreated, dbName.id]);
+            storedData$.dbTableCreated.set([...dbTableCreated, dbName.shortName]);
         }
 
-        // Validate the database
-        const valid = await isDatabaseValid(interlinearDb);
-        if (!valid) {
-            // delete the database
-            await FileSystem.deleteAsync(dbName.path, { idempotent: true });
-            throw new Error("Interlinear database validation failed");
-        }
 
         // Apply optimization settings
         try {

@@ -28,17 +28,26 @@ export type HistoryManager = {
   currentIndex: number;
 };
 
-const useHistoryManager = (): HistoryManager => {
-  const { executeSql, isMyBibleDbLoaded } = useDBContext();
+type UseHistoryManager = {
+  executeSql: <T = any>(
+    sql: string,
+    params?: any[],
+    queryName?: string
+  ) => Promise<T[]>;
+  isMyBibleDbLoaded: boolean;
+  allBibleLoaded: boolean;
+};
+
+const useHistoryManager = ({ executeSql, isMyBibleDbLoaded, allBibleLoaded }: UseHistoryManager): HistoryManager => {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [isHistoryInitialized, setIsHistoryInitialized] = useState(false);
   const currentIndexRef = useRef<number>(-1);
 
   useEffect(() => {
-    if (!isMyBibleDbLoaded) return;
+    if (!allBibleLoaded) return;
     if (isHistoryInitialized) return;
     loadHistory();
-  }, [isMyBibleDbLoaded]);
+  }, [allBibleLoaded]);
 
   const loadHistory = useCallback(async () => {
     try {
