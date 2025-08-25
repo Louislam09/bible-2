@@ -1,7 +1,7 @@
 import { ConfigContext, ExpoConfig } from "@expo/config";
 
-// const IS_DEV = true;
-const IS_DEV = process.env.APP_VARIANT === "development";
+const IS_DEV = true;
+// const IS_DEV = process.env.APP_VARIANT === "development";
 const IS_PREVIEW = process.env.APP_VARIANT === "preview";
 // const IS_PREVIEW = true
 
@@ -41,6 +41,36 @@ const googleServicesFile = () => {
   return process.env.GOOGLE_SERVICES_JSON ?? "./google.services.json";
 };
 
+const getAssetPath = () => {
+  if (IS_DEV) {
+    return {
+      icon: "./assets/images/icon-dev.png",
+      splash: "./assets/images/splash-dev.png",
+      adaptiveIcon: "./assets/images/adaptive-icon-dev.png",
+      monochromeImage: "./assets/images/monochrome-icon.png",
+      backgroundImage: "./assets/images/adaptive-icon.png",
+    }
+  }
+
+  if (IS_PREVIEW) {
+    return {
+      icon: "./assets/images/icon-preview.png",
+      splash: "./assets/images/splash-preview.png",
+      adaptiveIcon: "./assets/images/adaptive-icon-preview.png",
+      monochromeImage: "./assets/images/monochrome-icon.png",
+      backgroundImage: "./assets/images/adaptive-icon.png",
+    }
+  }
+
+  return {
+    icon: "./assets/images/icon.png",
+    splash: "./assets/images/splash.png",
+    adaptiveIcon: "./assets/images/adaptive-icon.png",
+    monochromeImage: "./assets/images/monochrome-icon.png",
+    backgroundImage: "./assets/images/adaptive-icon.png",
+  }
+}
+
 export default ({ config }: ConfigContext): ExpoConfig => {
   return {
     ...config,
@@ -49,12 +79,12 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     slug: "bible",
     version: "1.3.0",
     orientation: "default",
-    icon: "./assets/images/icon.png",
+    icon: getAssetPath().icon,
     scheme: "sb-rv60",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
     splash: {
-      image: "./assets/images/splash.png",
+      image: getAssetPath().splash,
       resizeMode: "contain",
       backgroundColor: "#0c3e3d",
     },
@@ -72,11 +102,11 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
     android: {
       versionCode: 25,
-      icon: "./assets/images/icon.png",
+      icon: getAssetPath().icon,
       adaptiveIcon: {
-        foregroundImage: "./assets/images/adaptive-icon.png",
-        monochromeImage: "./assets/images/monochrome-icon.png",
-        backgroundImage: "./assets/images/adaptive-icon.png",
+        foregroundImage: getAssetPath().adaptiveIcon,
+        monochromeImage: getAssetPath().monochromeImage,
+        backgroundImage: getAssetPath().backgroundImage,
         backgroundColor: "#0c3e3d",
       },
       package: getUniqueIdentifier(),
@@ -94,7 +124,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     web: {
       bundler: "metro",
       output: "static",
-      favicon: "./assets/images/auth.png",
+      favicon: getAssetPath().icon,
     },
     extra: {
       eas: {
@@ -141,7 +171,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       [
         "expo-notifications",
         {
-          icon: "./assets/images/notification-icon.png",
+          icon: getAssetPath().icon,
           color: "#0c3e3d",
           defaultChannel: "default",
           // enableBackgroundRemoteNotifications: true,

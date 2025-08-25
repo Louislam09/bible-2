@@ -122,10 +122,6 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     [mainBibleService.isLoaded, interlinearService.isLoaded, interlinearGreekService.isLoaded]
   );
 
-  useEffect(() => {
-    console.log('loaded bibles', { allBibleLoaded });
-  }, [allBibleLoaded]);
-
   const dbContextValue = {
     myBibleDB: mainBibleService.database,
     executeSql: mainBibleService.executeSql,

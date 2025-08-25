@@ -129,7 +129,6 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
       const result = await statement.executeAsync();
       const tables = await result.getAllAsync();
       await statement.finalizeAsync();
-      console.log({ tables })
       const tableNames = tables.map((t: any) => t.name);
       return tableNames?.includes(tableNameToCheck);
     } catch (e) {
