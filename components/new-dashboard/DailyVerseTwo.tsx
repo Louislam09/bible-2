@@ -42,7 +42,7 @@ type DailyVerseProps = {
 const DailyVerseTwo = ({ dailyVerseObject, theme, user }: DailyVerseProps) => {
   // const { scheduleDailyVerseNotification } = useNotificationService();
   const navigation = useNavigation();
-  const { mainBibleService } = useDBContext();
+  const { mainBibleService, allBibleLoaded } = useDBContext();
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(
     dailyVerseObject || defaultDailyVerse
   );
@@ -70,17 +70,11 @@ const DailyVerseTwo = ({ dailyVerseObject, theme, user }: DailyVerseProps) => {
           ? response?.[0]
           : defaultDailyVerse;
         setDailyVerse(dailyVerseData);
-
-        // Example of how to schedule a daily verse notification with the actual verse data
-        // Uncomment this if you want to schedule notifications when the component loads
-        // if (user) {
-        //   await scheduleDailyVerseNotification("08:00", user, executeSql);
-        // }
       } catch (error) {
         console.log(error);
       }
     })();
-  }, [mainBibleService.isLoaded, mainBibleService.database, dailyVerseObject]);
+  }, [allBibleLoaded, dailyVerseObject]);
 
   return (
     <View style={styles.dailyVerseContainer}>

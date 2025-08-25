@@ -74,7 +74,7 @@ const useHistoryManager = ({ executeSql, isMyBibleDbLoaded, allBibleLoaded }: Us
     } catch (error) {
       console.error("Error fetching history:", error);
     }
-  }, [isMyBibleDbLoaded, executeSql]);
+  }, [allBibleLoaded, executeSql]);
 
   const add = useCallback(async (item: HistoryItem) => {
     const lastItem = history[history.length - 1];
@@ -120,7 +120,7 @@ const useHistoryManager = ({ executeSql, isMyBibleDbLoaded, allBibleLoaded }: Us
     } catch (error) {
       console.error("Error inserting history:", error);
     }
-  }, [executeSql, isMyBibleDbLoaded]);
+  }, [executeSql, allBibleLoaded]);
 
   const goBack = (): number => {
     if (currentIndexRef.current > 0) {
@@ -214,7 +214,7 @@ const useHistoryManager = ({ executeSql, isMyBibleDbLoaded, allBibleLoaded }: Us
         updateVerse,
         currentIndex: getCurrentIndex(),
         loadHistory,
-        isMyBibleDbLoaded
+        allBibleLoaded
       },
     ]
   );

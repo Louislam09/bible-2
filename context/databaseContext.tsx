@@ -6,7 +6,7 @@ import { DEFAULT_DATABASE, EBibleVersions } from "@/types";
 import { showToast } from "@/utils/showToast";
 import { use$ } from "@legendapp/state/react";
 import * as SQLite from "expo-sqlite";
-import React, { createContext, useContext, useEffect, useMemo } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo } from "react";
 import { storedData$ } from "./LocalstoreContext";
 
 type DatabaseContextType = {
@@ -25,6 +25,10 @@ type DatabaseContextType = {
   interlinearGreekService: UseGreekDatabase;
   mainBibleService: UseLoadDB;
   allBibleLoaded: boolean;
+  getBibleServices: () => {
+    primaryDB: UseLoadDB | UseHebrewDatabase | UseGreekDatabase | null;
+    baseDB: UseHebrewDatabase | UseGreekDatabase | UseLoadDB | null;
+  };
 };
 
 const initialContext: DatabaseContextType = {
@@ -56,6 +60,10 @@ const initialContext: DatabaseContextType = {
     reOpen: (dbName: any) => Promise.resolve(undefined),
   },
   allBibleLoaded: false,
+  getBibleServices: () => ({
+    primaryDB: null,
+    baseDB: null,
+  }),
 };
 
 const DatabaseContext = createContext<DatabaseContextType>(initialContext);
@@ -84,7 +92,7 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     () =>
       [
         EBibleVersions.INT,
-        EBibleVersions.INTERLINEAL,
+
         EBibleVersions.GREEK,
       ].includes(currentBibleVersion as EBibleVersions),
     [currentBibleVersion]
@@ -122,6 +130,42 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     [mainBibleService.isLoaded, interlinearService.isLoaded, interlinearGreekService.isLoaded]
   );
 
+  const getBibleServices = useCallback(() => {
+    // console.log({ currentBibleVersion })
+    switch (currentBibleVersion) {
+      case EBibleVersions.BIBLE:
+        return {
+          primaryDB: mainBibleService,
+          baseDB: interlinearService,
+        }
+      case EBibleVersions.NTV:
+        return {
+          primaryDB: mainBibleService,
+          baseDB: null,
+        }
+      case EBibleVersions.INT:
+        return {
+          primaryDB: interlinearService,
+          baseDB: mainBibleService,
+        }
+      case EBibleVersions.GREEK:
+        return {
+          primaryDB: interlinearGreekService,
+          baseDB: mainBibleService,
+        }
+      default:
+        return {
+          primaryDB: mainBibleService,
+          baseDB: interlinearService,
+        };
+    }
+  }, [currentBibleVersion, allBibleLoaded]);
+
+  // useEffect(() => {
+  //   console.log({ currentBibleVersion });
+  //   console.log(getBibleServices());
+  // }, [currentBibleVersion, allBibleLoaded]);
+
   const dbContextValue = {
     myBibleDB: mainBibleService.database,
     executeSql: mainBibleService.executeSql,
@@ -133,7 +177,8 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     interlinearService,
     interlinearGreekService,
     mainBibleService,
-    allBibleLoaded
+    allBibleLoaded,
+    getBibleServices,
   };
 
   return (
