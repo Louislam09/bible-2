@@ -13,6 +13,7 @@ import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
 import { useDBContext } from "@/context/databaseContext";
+import { useHaptics } from "@/hooks/useHaptics";
 import useParams from "@/hooks/useParams";
 import { bibleState$ } from "@/state/bibleState";
 import { tourState$ } from "@/state/tourState";
@@ -27,6 +28,7 @@ import VersionList from "./VersionList";
 interface HeaderInterface { }
 
 const BibleHeader: FC<HeaderInterface> = ({ }) => {
+  const haptics = useHaptics();
   const { width } = useWindowDimensions();
   const {
     currentBibleVersion,
@@ -82,16 +84,19 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
     bibleState$.clearSelection();
     // @ts-ignore
     navigation.navigate(Screens.Search, { Book: book });
+    haptics.impact.light();
   };
 
   const moveBackInHistory = () => {
     const index = goBack();
     goBackOnHistory?.(index);
+    haptics.impact.light();
   };
 
   const moveForwardInHistory = () => {
     const index = goForward();
     goForwardOnHistory?.(index);
+    haptics.impact.light();
   };
 
   const headerIconData = useMemo(() => {
@@ -107,6 +112,7 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
                 isHistory: false,
               });
             }
+            haptics.impact.light();
             bibleState$.handleSplitActived();
           });
         },
@@ -141,6 +147,7 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
     bibleState$.clearSelection();
     selectBibleVersion(version);
     versionRef.current?.dismiss();
+    haptics.impact.light();
   };
   // const progressValue = useMemo(() => {
   //   return (currentHistoryIndexState || 0) / (verses?.length || 10);

@@ -15,6 +15,7 @@ import { storedData$ } from "@/context/LocalstoreContext";
 import { useNetwork } from "@/context/NetworkProvider";
 import useBibleReader from "@/hooks/useBibleReading";
 import useColorScheme from "@/hooks/useColorScheme";
+import { useHaptics } from "@/hooks/useHaptics";
 import useParams from "@/hooks/useParams";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import { bibleState$ } from "@/state/bibleState";
@@ -33,6 +34,7 @@ interface FooterInterface {
 }
 
 const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
+  const haptics = useHaptics();
   const { currentBibleVersion, shouldLoopReading, setShouldLoop } =
     useBibleContext();
   const isSplitActived = bibleState$.isSplitActived.get();
@@ -108,6 +110,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   };
 
   function nextChapter() {
+    haptics.impact.light()
     if (DB_BOOK_CHAPTER_NUMBER[book as any] === chapter) {
       if (bookNumber === 730) return;
       const newBookName = DB_BOOK_NAMES[bookIndex + 1].longName;
@@ -128,7 +131,9 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
       isHistory: false,
     });
   }
+
   const previousChapter = () => {
+    haptics.impact.light()
     if (bookNumber !== 10 && chapter === 1) {
       const newBookName = DB_BOOK_NAMES[bookIndex - 1].longName;
       const newChapter = DB_BOOK_CHAPTER_NUMBER[newBookName];
@@ -150,6 +155,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   };
 
   const onSingleFooterTitle = () => {
+    haptics.impact.light()
     batch(() => {
       bibleState$.clearSelection();
       bibleState$.isBottomBibleSearching.set(!!isSplit);
@@ -157,6 +163,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
     navigation?.navigate(Screens.ChooseBook, { ...params });
   };
   const onDoubleFooterTitle = () => {
+    haptics.impact.medium()
     batch(() => {
       bibleState$.clearSelection();
       bibleState$.isBottomBibleSearching.set(!!isSplit);
@@ -175,10 +182,12 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
       bibleState$.clearSelection();
       bibleState$.isBottomBibleSearching.set(!!isSplit);
     });
+    haptics.impact.heavy()
     navigation?.navigate(Screens.ChooseChapterNumber, { ...params });
   };
 
   const playHandlePresentModalPress = useCallback(() => {
+    haptics.impact.light()
     playRef.current?.present();
   }, []);
 
@@ -225,9 +234,8 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
         >
           <Text
             style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}
-          >{`${displayBookName ?? ""} ${chapter ?? ""}:${
-            isSplitActived ? verse : Math.abs(currentHistoryIndexState) || verse
-          }`}</Text>
+          >{`${displayBookName ?? ""} ${chapter ?? ""}:${isSplitActived ? verse : Math.abs(currentHistoryIndexState) || verse
+            }`}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           ref={tourState$.nextButton.get()}

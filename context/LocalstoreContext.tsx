@@ -182,10 +182,10 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (storedData$.user.get() && pb.authStore.isValid) {
+    if (storedData$.user.get() && pb.authStore.isValid && isConnected) {
       loadFromCloud();
     }
-  }, [pb.authStore.isValid]);
+  }, [pb.authStore.isValid, isConnected]);
 
   useEffect(() => {
     const unsubscribeFromChanges = storedData$.onChange((value) => {
@@ -308,13 +308,14 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           };
         }
 
-        storedData$.set({
+        storedData$.set(prev => ({
+          ...prev,
           ...settingsData,
           isDataLoaded: true,
           isSyncedWithCloud: true,
           token: storedData$.get().token,
           user: storedData$.get().user,
-        });
+        }));
 
         bibleState$.changeBibleQuery({
           book: settingsData.lastBook,

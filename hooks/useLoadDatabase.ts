@@ -6,15 +6,15 @@ import {
   CREATE_STREAK_TABLE,
   historyQuery,
 } from "@/constants/Queries";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { bibleState$ } from "@/state/bibleState";
 import { dbDownloadState$ } from "@/state/dbDownloadState";
+import { DEFAULT_DATABASE } from "@/types";
 import { prepareDatabaseFromDbFile } from "@/utils/prepareDB";
 import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { VersionItem } from "./useInstalledBible";
-import { storedData$ } from "@/context/LocalstoreContext";
-import { DEFAULT_DATABASE } from "@/types";
 
 interface Row {
   [key: string]: any;
@@ -160,7 +160,7 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
       const isGreekInterlinear = dbName.id === DEFAULT_DATABASE.GREEK;
       if (!db) return;
       const dbTableCreated = storedData$.dbTableCreated.get();
-      if (!dbTableCreated.includes(dbName.shortName)) {
+      if (!dbTableCreated?.includes(dbName.shortName)) {
         const valid = await isDatabaseValid(db!, isInterlinear ? "interlinear" : "verses");
 
         if (!valid) {
