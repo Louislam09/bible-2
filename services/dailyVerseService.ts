@@ -31,6 +31,7 @@ export const getDailyVerseData = async (
             [book_number, chapter, verse],
             "GET_DAILY_VERSE_NOTIFICATION"
         );
+        console.log("GET_DAILY_VERSE_NOTIFICATION", { book: { book_number, chapter, verse }, response });
 
         if (response?.length) {
             const dailyVerseData = response[0];

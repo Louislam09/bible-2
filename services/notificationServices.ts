@@ -44,7 +44,7 @@ export type SendPushNotificationToUserProps = {
 
 export const useNotificationService = () => {
     const { syncWithCloud } = useStorage();
-    const { executeSql, isMyBibleDbLoaded } = useDBContext();
+    const { getBibleServices, allBibleLoaded } = useDBContext();
     const [error, setError] = useState<string | null>(null);
 
     const getNotificationPreferences = (): NotificationPreferences => {
@@ -140,70 +140,16 @@ export const useNotificationService = () => {
         }
     };
 
-    const scheduleNotification = async (
-        notificationData: NotificationData,
-        trigger?: Notifications.NotificationTriggerInput
-    ): Promise<string | null> => {
-        try {
-            const hasPermission = await requestPermissions();
-            if (!hasPermission) {
-                return null;
-            }
 
-            await setupNotificationChannel();
-
-            // Convert trigger to Date and use scheduleAlarm for all cases
-            let triggerDate: Date | null = null;
-
-            if (trigger) {
-                if (typeof trigger === 'object') {
-                    if ('date' in trigger) {
-                        triggerDate = trigger.date as Date;
-                    } else if ('seconds' in trigger) {
-                        // Time interval trigger
-                        triggerDate = new Date(Date.now() + ((trigger?.seconds ?? 0) * 1000));
-                    } else if ('hour' in trigger && 'minute' in trigger) {
-                        // Daily trigger - calculate next occurrence
-                        const now = new Date();
-                        const targetTime = new Date();
-                        targetTime.setHours(trigger.hour || 0, trigger.minute || 0, 0, 0);
-
-                        if (targetTime <= now) {
-                            // If time has passed today, schedule for tomorrow
-                            targetTime.setDate(targetTime.getDate() + 1);
-                        }
-                        triggerDate = targetTime;
-                    }
-                }
-            }
-
-            // Use scheduleAlarm for all notifications
-            if (triggerDate) {
-                return await scheduleAlarm(triggerDate, notificationData.title, notificationData.body, 'default', notificationData.data);
-            } else {
-                // For immediate notifications (no trigger), schedule for 1 second from now
-                const immediateDate = new Date(Date.now() + 1000);
-                return await scheduleAlarm(immediateDate, notificationData.title, notificationData.body, 'default', notificationData.data);
-            }
-        } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
-            console.error("Error scheduling notification:", errorMessage);
-            setError(errorMessage);
-            showToast("No se pudo programar la notificación", "SHORT");
-            return null;
-        }
-    };
-
-    const scheduleDailyVerseNotification = useCallback(async (
-        time: string = '08:00', test: boolean = false
-    ): Promise<string | null> => {
+    const scheduleDailyVerseNotification = useCallback(async (time: string = '08:00'): Promise<string | null> => {
+        const { primaryDB } = getBibleServices({})
         const [hour = 8, minute = 0] = time.split(":").map(Number);
 
         // Get the daily verse data if database access is available
         let dailyVerseData = null;
-        if (executeSql && isMyBibleDbLoaded) {
+        if (allBibleLoaded) {
             try {
-                dailyVerseData = await getDailyVerseData(executeSql);
+                dailyVerseData = await getDailyVerseData(primaryDB?.executeSql!);
             } catch (error) {
                 const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
                 console.warn('Could not get daily verse data:', errorMessage);
@@ -230,25 +176,25 @@ export const useNotificationService = () => {
         targetTime.setHours(hour, minute, 0, 0);
 
         if (targetTime <= now) {
+            console.log('FOR TOMORROW')
             // If time has passed today, schedule for tomorrow
             targetTime.setDate(targetTime.getDate() + 1);
         }
 
-        if (test) {
-            // For test, schedule 10 seconds from now
-            const testTime = new Date(Date.now() + 10000);
-            return await scheduleAlarm(testTime, title, body, 'daily-verse', {
-                type: "daily-verse",
-                verseData: dailyVerseData,
-                test: true
-            });
-        } else {
-            return await scheduleAlarm(targetTime, title, body, 'daily-verse', {
-                type: "daily-verse",
-                verseData: dailyVerseData
-            });
-        }
-    }, [isMyBibleDbLoaded])
+        return await Notifications.scheduleNotificationAsync({
+            content: {
+                title: title,
+                body: body,
+                data: { type: "daily-verse" },
+            },
+            trigger: {
+                type: Notifications.SchedulableTriggerInputTypes.DAILY,
+                hour: targetTime.getHours(),
+                minute: targetTime.getMinutes(),
+                channelId: 'daily-verse'
+            },
+        });
+    }, [allBibleLoaded])
 
     const scheduleDevotionalReminder = async (hour: number = 9, minute: number = 0): Promise<string | null> => {
         const title = "🙏 Tiempo de Devoción";
@@ -264,8 +210,18 @@ export const useNotificationService = () => {
             targetTime.setDate(targetTime.getDate() + 1);
         }
 
-        return await scheduleAlarm(targetTime, title, body, 'devotional', {
-            type: "devotional"
+        return await Notifications.scheduleNotificationAsync({
+            content: {
+                title: title,
+                body: body,
+                data: { type: "devotional" },
+            },
+            trigger: {
+                type: Notifications.SchedulableTriggerInputTypes.DAILY,
+                hour: targetTime.getHours(),
+                minute: targetTime.getMinutes(),
+                channelId: 'devotional'
+            },
         });
     };
 
@@ -279,9 +235,18 @@ export const useNotificationService = () => {
             morningTime.setDate(morningTime.getDate() + 1);
         }
         reminders.push(
-            await scheduleAlarm(morningTime, "🙏 Oración de la Mañana", "Es hora de buscar al Eterno en oración y lectura.", 'devotional', {
-                type: "devotional",
-                moment: "shacharit"
+            await Notifications.scheduleNotificationAsync({
+                content: {
+                    title: "🙏 Oración de la Mañana",
+                    body: "Es hora de buscar al Eterno en oración y lectura.",
+                    data: { type: "devotional" },
+                },
+                trigger: {
+                    type: Notifications.SchedulableTriggerInputTypes.DAILY,
+                    hour: morningTime.getHours(),
+                    minute: morningTime.getMinutes(),
+                    channelId: 'devotional'
+                },
             })
         );
 
@@ -292,9 +257,18 @@ export const useNotificationService = () => {
             afternoonTime.setDate(afternoonTime.getDate() + 1);
         }
         reminders.push(
-            await scheduleAlarm(afternoonTime, "🙏 Oración de la Tarde", "Dedica un momento para conectarte con el Creador.", 'devotional', {
-                type: "devotional",
-                moment: "minja"
+            await Notifications.scheduleNotificationAsync({
+                content: {
+                    title: "🙏 Oración de la Tarde",
+                    body: "Es hora de buscar al Eterno en oración y lectura.",
+                    data: { type: "devotional" },
+                },
+                trigger: {
+                    type: Notifications.SchedulableTriggerInputTypes.DAILY,
+                    hour: afternoonTime.getHours(),
+                    minute: afternoonTime.getMinutes(),
+                    channelId: 'devotional'
+                },
             })
         );
 
@@ -315,30 +289,22 @@ export const useNotificationService = () => {
             targetTime.setDate(targetTime.getDate() + 1);
         }
 
-        return await scheduleAlarm(targetTime, title, body, 'memorization', {
-            type: "memorization"
+
+        return await Notifications.scheduleNotificationAsync({
+            content: {
+                title: title,
+                body: body,
+                data: { type: "memorization" },
+            },
+            trigger: {
+                type: Notifications.SchedulableTriggerInputTypes.DAILY,
+                hour: targetTime.getHours(),
+                minute: targetTime.getMinutes(),
+                channelId: 'memorization'
+            },
         });
     };
 
-    const sendTestNotification = async (): Promise<void> => {
-        try {
-            const hasPermission = await requestPermissions();
-            if (!hasPermission) {
-                return;
-            }
-
-            // Schedule test notification for 1 seconds from now
-            const testTime = new Date(Date.now() + 1000);
-            await scheduleAlarm(testTime, "🔔 Notificación de Prueba", "¡Esta es una notificación de prueba! Las notificaciones están funcionando correctamente.", 'default', {
-                type: "test"
-            });
-        } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
-            setError(errorMessage);
-            console.error("Error sending test notification:", errorMessage);
-            Alert.alert("Error", "No se pudo enviar la notificación de prueba");
-        }
-    };
 
     const cancelAllNotifications = async (): Promise<void> => {
         try {
@@ -500,7 +466,20 @@ export const useNotificationService = () => {
         delaySeconds: number
     }): Promise<string | null> => {
         const targetTime = new Date(Date.now() + (delaySeconds * 1000));
-        return await scheduleAlarm(targetTime, title, body, 'default', data);
+        return await Notifications.scheduleNotificationAsync({
+            content: {
+                title,
+                body,
+                data: {
+                    type: 'default',
+                    ...data
+                },
+            },
+            trigger: {
+                date: targetTime,
+                channelId: 'default',
+            },
+        });
     };
 
     const sendPushNotificationToUser = async ({
@@ -561,44 +540,6 @@ export const useNotificationService = () => {
         }
     };
 
-    // const scheduleAlarm = async (time: Date, title: string, body: string, channelId?: string, data?: Record<string, any>) => {
-    //     const trigger = new Date(time);
-
-    //     return await Notifications.scheduleNotificationAsync({
-    //         content: {
-    //             title,
-    //             body,
-    //             sound: true,
-    //             data: data || {},
-    //         },
-    //         trigger,
-    //         ...(channelId && { channelId }),
-    //     });
-    // }
-    const scheduleAlarm = async (time: Date, title: string, body: string, channelId?: string, data?: Record<string, any>) => {
-        const sanitizeData = (data: any) => {
-            try {
-                return JSON.parse(JSON.stringify(data ?? {}));
-            } catch {
-                return {};
-            }
-        };
-
-        return await Notifications.scheduleNotificationAsync({
-            content: {
-                title,
-                body,
-                sound: true,
-                data: sanitizeData(data),
-            },
-            trigger: {
-                date: new Date(time),
-                channelId: channelId || 'default',
-            }
-        });
-
-    }
-
     const cancelAlarm = async (notificationId: string) => {
         await Notifications.cancelScheduledNotificationAsync(notificationId);
     }
@@ -629,12 +570,10 @@ export const useNotificationService = () => {
         updateNotificationPreferences,
         requestPermissions,
         setupNotificationChannel,
-        scheduleNotification,
         scheduleDailyVerseNotification,
         scheduleDevotionalReminder,
         scheduleDevotionalReminders,
         scheduleMemorizationReminder,
-        sendTestNotification,
         cancelAllNotifications,
         cancelNotificationById,
         getScheduledNotifications,
@@ -642,7 +581,6 @@ export const useNotificationService = () => {
         initializeNotifications,
         sendCustomNotification,
         sendPushNotificationToUser,
-        scheduleAlarm,
         cancelAlarm,
         testNotification,
         error,

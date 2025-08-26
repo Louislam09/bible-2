@@ -14,6 +14,7 @@ import {
 } from "@/services/notificationServices";
 import { use$ } from "@legendapp/state/react";
 import { Picker } from "@react-native-picker/picker";
+import * as Notifications from "expo-notifications";
 import { Stack } from "expo-router";
 import { icons } from "lucide-react-native";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -110,17 +111,35 @@ const NotificationSettingsScreen = () => {
   };
 
   const testNotification = async () => {
-    await notificationService.sendTestNotification();
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "🔔 Notificación de Prueba",
+        body: "¡Esta es una notificación de prueba! Las notificaciones están funcionando correctamente.",
+        data: { type: "default" },
+      },
+      trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+        seconds: 1,
+        channelId: 'default'
+      },
+    });
   };
 
   const testNotificationSchedule = async () => {
     const now = new Date();
     const oneMinuteFromNow = new Date(now.getTime() + 3000);
-    await notificationService.scheduleAlarm(
-      oneMinuteFromNow,
-      "Notificacion Programada",
-      "Esto es una prueba de notificacion programada"
-    );
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "🔔 Notificación de Prueba Programada",
+        body: "¡Esta es una notificación de prueba! Las notificaciones están funcionando correctamente.",
+        data: { type: "default" },
+      },
+      trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+        seconds: 3,
+        channelId: 'default'
+      },
+    });
   };
 
   const handleNotificationEnabled = async () => {

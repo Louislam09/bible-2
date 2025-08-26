@@ -7,7 +7,7 @@ import { use$ } from "@legendapp/state/react";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import React, { useEffect, useState } from "react";
-import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 export const GOOGLE_SERVICE_JSON = process.env.GOOGLE_SERVICE_JSON;
 
 const DatabaseDebug = () => {
@@ -54,6 +54,7 @@ const DatabaseDebug = () => {
       const notifications =
         await Notifications.getAllScheduledNotificationsAsync();
       setScheduledNotifications(notifications);
+      console.log("Scheduled Notifications:", JSON.stringify(notifications, null, 2));
 
       // Get notification permissions
       const permissions = await Notifications.getPermissionsAsync();
@@ -69,11 +70,14 @@ const DatabaseDebug = () => {
         content: {
           title: "Test Notification",
           body: "This is a test notification from debug panel",
-          data: { type: "test" },
+          data: { type: "default" },
         },
-        trigger: null, // Send immediately
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+          seconds: 1,
+          channelId: 'default'
+        },
       });
-      Alert.alert("Success", "Test notification sent!");
       loadNotificationInfo(); // Refresh the list
     } catch (error) {
       console.log("Error", `Failed to send test notification: ${error}`);
@@ -82,53 +86,32 @@ const DatabaseDebug = () => {
 
   const testNotificationSchedule = async () => {
     try {
-      const testTime = new Date(Date.now() + 5000);
+      const testTime = new Date(Date.now());
+      testTime.setSeconds(testTime.getSeconds() + 60); // Schedule for 1 minute from now
+      console.log({ testTime })
       await Notifications.scheduleNotificationAsync({
         content: {
           title: "testNotificationSchedule",
           body: "This is a test notification from testNotificationSchedule",
-          data: { type: "test" },
+          data: { type: "default" },
         },
         // Schedule for 1 minute from now
         trigger: {
-          date: new Date(testTime),
-          // repeats: false,
-        } as Notifications.DateTriggerInput,
-      });
-      showToast("Scheduled notification for 1 minute from now!");
-      loadNotificationInfo(); // Refresh the list
-    } catch (error) {
-      console.log("Error", `Failed to send test notification: ${error}`);
-      Alert.alert("Error", `Failed to schedule notification: ${error}`);
-    }
-  };
-  const testNotificationSchedule2 = async () => {
-    try {
-      const testTime = new Date(Date.now() + 3000);
-      const fireDate = new Date(Date.now() + 5 * 1000);
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title: "testNotificationSchedule2",
-          body: "This is a test notification fromtestNotificationSchedule2",
-          data: { type: "test" },
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+          seconds: 10,
+          repeats: false,
         },
-        // Schedule for 1 minute from now
-        trigger: {
-          date: fireDate
-        } as Notifications.SchedulableNotificationTriggerInput,
       });
-      showToast("Scheduled notification for 1 minute from now!");
+      showToast("Notification programada para 10 segundos desde ahora!");
       loadNotificationInfo(); // Refresh the list
     } catch (error) {
       console.log("Error", `Failed to send test notification: ${error}`);
-      Alert.alert("Error", `Failed to schedule notification: ${error}`);
     }
   };
 
   const clearAllNotifications = async () => {
     try {
       await Notifications.cancelAllScheduledNotificationsAsync();
-      Alert.alert("Success", "All notifications cleared!");
       loadNotificationInfo(); // Refresh the list
     } catch (error) {
       console.log("Error", `Failed to clear notifications: ${error}`);
@@ -266,7 +249,7 @@ const DatabaseDebug = () => {
             fontSize: 16,
             fontWeight: "bold",
             color: schema === "dark" ? "#fff" : "#000",
-            marginBottom: 8,
+            marginBottom: 8
           }}
         >
           Scheduled Notifications ({scheduledNotifications.length})
@@ -281,6 +264,9 @@ const DatabaseDebug = () => {
               borderRadius: 8,
             }}
           >
+            <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+              {JSON.stringify(notification)}
+            </Text>
             <Text
               style={{
                 color: schema === "dark" ? "#fff" : "#000",
@@ -366,15 +352,14 @@ const DatabaseDebug = () => {
         )}
       </View>
 
-      <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
+      {/* <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
         GOOGLE_SERVICE_JSON: {GOOGLE_SERVICE_JSON}{" "}
         {JSON.stringify(GOOGLE_SERVICE_JSON, null, 2)}
         --------------------------------------------------------------
       </Text>
       <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
         {JSON.stringify(Constants.expoConfig, null, 10)}
-        {/* {JSON.stringify(Constants.expoConfig, null, 2)} */}
-      </Text>
+      </Text> */}
 
       {/* Action Buttons */}
       <View style={{ marginBottom: 20 }}>
@@ -404,7 +389,7 @@ const DatabaseDebug = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={{
-            backgroundColor: "#007AFF",
+            backgroundColor: "#ffa600ff",
             padding: 12,
             borderRadius: 8,
             marginBottom: 8,
@@ -416,20 +401,7 @@ const DatabaseDebug = () => {
             Send Test Notification Schedule
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#007AFF",
-            padding: 12,
-            borderRadius: 8,
-            marginBottom: 8,
-            alignItems: "center",
-          }}
-          onPress={testNotificationSchedule2}
-        >
-          <Text style={{ color: "white", fontWeight: "bold" }}>
-            Send Test Notification Schedule 2
-          </Text>
-        </TouchableOpacity>
+
         <TouchableOpacity
           style={{
             backgroundColor: "red",
