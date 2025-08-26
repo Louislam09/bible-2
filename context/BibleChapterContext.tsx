@@ -1,6 +1,5 @@
 import bibleLinks from "@/constants/bibleLinks";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
-import { getDatabaseQueryKey } from "@/constants/databaseNames";
 import { QUERY_BY_DB } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
@@ -17,29 +16,13 @@ import React, {
   useMemo,
 } from "react";
 import { useBibleContext } from "./BibleContext";
-import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 
 interface BibleChapterContextProps { }
 
 const BibleChapterContext = createContext<BibleChapterContextProps>({});
 
 const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
-  const {
-    executeSql,
-    isMyBibleDbLoaded,
-    interlinearService,
-    mainBibleService,
-    interlinearGreekService,
-    allBibleLoaded,
-    getBibleServices
-  } = useDBContext();
-  const { isLoaded: interlinearIsLoaded, executeSql: executeSqlInterlinear } =
-    interlinearService;
-  const {
-    isLoaded: interlinearGreekIsLoaded,
-    executeSql: executeSqlInterlinearGreek,
-  } = interlinearGreekService;
-
+  const { allBibleLoaded, getBibleServices } = useDBContext();
   const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
   const isSplitActived = use$(() => bibleState$.isSplitActived.get());
   const shouldFetch = use$(() => bibleState$.bibleQuery.shouldFetch.get());
@@ -47,14 +30,6 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     historyManager: { add: addToHistory, getCurrentItem },
     currentHistoryIndex,
   } = useBibleContext();
-
-  const isInterlineal = [
-    EBibleVersions.INTERLINEAR,
-  ].includes(currentBibleVersion as EBibleVersions);
-
-  const isInterlinearGreek = [EBibleVersions.GREEK].includes(
-    currentBibleVersion as EBibleVersions
-  );
 
   const fetchChapter = useCallback(async () => {
     const bibleQuery = bibleState$.bibleQuery.get();
@@ -72,12 +47,14 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
       ? bibleQuery.bottomSideChapter
       : chapter;
     const targetVerse = isBibleBottom ? bibleQuery.bottomSideVerse : verse;
-    const currentBook = DB_BOOK_NAMES.find((x) => x.longName === targetBook);
+    const currentBook = DB_BOOK_NAMES.find((x) => x.longName === targetBook)!;
 
     const isInterlinear = [EBibleVersions.INTERLINEAR, EBibleVersions.GREEK].includes(currentBibleVersion as EBibleVersions);
     const queryKey = isInterlinear ? EBibleVersions.BIBLE : currentBibleVersion;
     const query = QUERY_BY_DB[queryKey] || QUERY_BY_DB['OTHERS'];
-    const { primaryDB, baseDB } = getBibleServices()
+    const NT_BOOK_NUMBER = 470;
+    const isNewCovenant = currentBook.bookNumber >= NT_BOOK_NUMBER;
+    const { primaryDB, baseDB } = getBibleServices({ isNewCovenant })
     if (!primaryDB) return
     const dbname = primaryDB.database?.databasePath.split("/").pop();
     const baseDbname = baseDB?.database?.databasePath.split("/").pop() || "No base db";
@@ -125,7 +102,7 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
             verse: targetVerse,
             created_at: "",
           });
-        // console.log("✅✅✅✅✅✅✅✅✅");
+        console.log("✅✅✅✅✅✅✅✅✅");
       });
     } catch (error) {
       console.error("Error fetching Bible data:", error);

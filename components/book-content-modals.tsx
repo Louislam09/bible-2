@@ -9,13 +9,13 @@ import { useMyTheme } from "@/context/ThemeContext";
 import { useGoogleAI } from "@/hooks/useGoogleAI";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
-import { IBookVerseInterlinear, TTheme } from "@/types";
+import { TTheme } from "@/types";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
-import HebrewVerse from "./home/content/HebrewVerse";
+import InterlinearVerse from "./home/content/InterlinearVerse";
 import StrongContent from "./home/content/StrongContent";
 import { Text, View } from "./Themed";
 
@@ -88,7 +88,7 @@ const BookContentModals = ({ book, chapter }: any) => {
               {getBookDetail(verseToInterlinear.book_number)?.longName || ""}
               {` ${verseToInterlinear.chapter}:${verseToInterlinear.verse}`}
             </Text>
-            <HebrewVerse withBackground item={verseToInterlinear as any} />
+            <InterlinearVerse withBackground item={verseToInterlinear as any} />
           </View>
         </BottomSheetScrollView>
       </BottomSheet>

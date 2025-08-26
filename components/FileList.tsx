@@ -31,8 +31,8 @@ const FileList = () => {
     installedBibles,
     installedDictionary,
     mainBibleService,
-    interlinearService,
-    interlinearGreekService,
+    hebrewInterlinearService: interlinearService,
+    greekInterlinearService: interlinearGreekService,
   } = useDBContext();
   const { selectBibleVersion } = useBibleContext();
 

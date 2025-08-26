@@ -21,11 +21,11 @@ type DatabaseContextType = {
   isInstallBiblesLoaded: boolean;
   isMyBibleDbLoaded: boolean;
   refreshDatabaseList: () => void;
-  interlinearService: UseHebrewDatabase;
-  interlinearGreekService: UseGreekDatabase;
+  hebrewInterlinearService: UseHebrewDatabase;
+  greekInterlinearService: UseGreekDatabase;
   mainBibleService: UseLoadDB;
   allBibleLoaded: boolean;
-  getBibleServices: () => {
+  getBibleServices: ({ isNewCovenant }: { isNewCovenant?: boolean }) => {
     primaryDB: UseLoadDB | UseHebrewDatabase | UseGreekDatabase | null;
     baseDB: UseHebrewDatabase | UseGreekDatabase | UseLoadDB | null;
   };
@@ -39,14 +39,14 @@ const initialContext: DatabaseContextType = {
   isInstallBiblesLoaded: false,
   isMyBibleDbLoaded: false,
   refreshDatabaseList: () => { },
-  interlinearService: {
+  hebrewInterlinearService: {
     database: null,
     isLoaded: false,
     error: null,
     executeSql: async (sql: string, params?: any[], queryName?: string) => [],
     reOpen: (dbName: any) => Promise.resolve(undefined),
   },
-  interlinearGreekService: {
+  greekInterlinearService: {
     database: null,
     isLoaded: false,
     error: null,
@@ -92,7 +92,6 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     () =>
       [
         EBibleVersions.INTERLINEAR,
-
         EBibleVersions.GREEK,
       ].includes(currentBibleVersion as EBibleVersions),
     [currentBibleVersion]
@@ -103,7 +102,7 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     isInterlinear,
   });
 
-  const interlinearService = useHebrewDB({
+  const hebrewInterlinearService = useHebrewDB({
     databaseId: DEFAULT_DATABASE.INTERLINEAR,
     onProgress: (msg) => {
       showToast(msg, "SHORT");
@@ -111,30 +110,30 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     enabled: mainBibleService.isLoaded,
   });
 
-  const interlinearGreekService = useGreekDB({
+  const greekInterlinearService = useGreekDB({
     databaseId: DEFAULT_DATABASE.GREEK,
     onProgress: (msg) => {
       showToast(msg, "SHORT");
     },
-    enabled: interlinearService.isLoaded,
+    enabled: hebrewInterlinearService.isLoaded,
   });
 
   const allBibleLoaded = useMemo(
     () =>
       [
         mainBibleService.isLoaded,
-        interlinearService.isLoaded,
-        interlinearGreekService.isLoaded,
+        hebrewInterlinearService.isLoaded,
+        greekInterlinearService.isLoaded,
       ].every((x) => x),
-    [mainBibleService.isLoaded, interlinearService.isLoaded, interlinearGreekService.isLoaded]
+    [mainBibleService.isLoaded, hebrewInterlinearService.isLoaded, greekInterlinearService.isLoaded]
   );
 
-  const getBibleServices = useCallback(() => {
+  const getBibleServices = useCallback(({ isNewCovenant }: { isNewCovenant?: boolean }) => {
     switch (currentBibleVersion) {
       case EBibleVersions.BIBLE:
         return {
           primaryDB: mainBibleService,
-          baseDB: interlinearService,
+          baseDB: isNewCovenant ? greekInterlinearService : hebrewInterlinearService,
         }
       case EBibleVersions.NTV:
         return {
@@ -144,25 +143,20 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
       case EBibleVersions.INTERLINEAR:
         return {
           primaryDB: mainBibleService,
-          baseDB: interlinearService,
+          baseDB: hebrewInterlinearService,
         }
       case EBibleVersions.GREEK:
         return {
           primaryDB: mainBibleService,
-          baseDB: interlinearGreekService,
+          baseDB: greekInterlinearService,
         }
       default:
         return {
           primaryDB: mainBibleService,
-          baseDB: interlinearService,
+          baseDB: hebrewInterlinearService,
         };
     }
   }, [currentBibleVersion, allBibleLoaded, mainBibleService]);
-
-  // useEffect(() => {
-  //   console.log({ currentBibleVersion });
-  //   console.log(getBibleServices());
-  // }, [currentBibleVersion, allBibleLoaded]);
 
   const dbContextValue = {
     myBibleDB: mainBibleService.database,
@@ -172,8 +166,8 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     isInstallBiblesLoaded: isLoaded,
     refreshDatabaseList,
     isMyBibleDbLoaded: mainBibleService.isLoaded,
-    interlinearService,
-    interlinearGreekService,
+    hebrewInterlinearService,
+    greekInterlinearService,
     mainBibleService,
     allBibleLoaded,
     getBibleServices,

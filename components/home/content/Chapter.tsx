@@ -1,4 +1,3 @@
-import HebrewVerse from "@/components/home/content/HebrewVerse";
 import Icon from "@/components/Icon";
 import { Text } from "@/components/Themed";
 import { useBibleContext } from "@/context/BibleContext";
@@ -12,8 +11,7 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
-  useState,
+  useRef
 } from "react";
 import {
   ActivityIndicator,
@@ -23,8 +21,8 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import InterlinearVerse from "./InterlinearVerse";
 import Verse from "./Verse";
-import GreekVerse from "./GreekVerse";
 
 interface TChapter {
   verses: IBookVerse[];
@@ -89,10 +87,8 @@ const Chapter = ({
 
   const renderItem = useCallback(
     ({ item }: any) =>
-      isHebrewInterlinear && !isSplit ? (
-        <HebrewVerse item={item} />
-      ) : isGreekInterlinear ? (
-        <GreekVerse item={item} />
+      (isHebrewInterlinear || isGreekInterlinear) && !isSplit ? (
+        <InterlinearVerse item={item} />
       ) : (
         <Verse item={item} isSplit={!!isSplit} initVerse={initialScrollIndex} />
       ),

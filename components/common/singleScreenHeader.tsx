@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import Icon from "../Icon";
 import { Text } from "../Themed";
+import * as Haptics from 'expo-haptics';
 
 export type SingleScreenHeaderProps = {
   theme: TTheme;
@@ -80,7 +81,10 @@ export const singleScreenHeader = ({
       <ChevronLeft
         color={headerLeftIconColor || theme.colors.text}
         size={headerIconSize}
-        onPress={() => (goBack ? goBack() : router.back())}
+        onPress={() => {
+          (goBack ? goBack() : router.back())
+          Haptics.selectionAsync();
+        }}
       />
     ),
     headerRight: headerRightProps.RightComponent || RightHeaderComponent,

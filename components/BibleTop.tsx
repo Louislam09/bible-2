@@ -158,7 +158,9 @@ const BibleTop: FC<BibleTopProps> = (props) => {
       )}
       <SwipeWrapper {...{ onSwipeRight, onSwipeLeft }}>
         {isDataLoading ? (
-          <ActivityIndicator />
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator />
+          </View>
         ) : isNewTestamentAndInterlinear ||
           isOldTestamentAndGreekInterlineal ? (
           <View
@@ -244,6 +246,11 @@ const styles = StyleSheet.create({
   container: {
     position: "relative",
     width: "100%",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   header: {
     position: "absolute",
