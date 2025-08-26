@@ -124,9 +124,9 @@ const getStyles = ({ colors }: TTheme, fontSize: number) =>
       gap: 8,
       padding: 5,
       borderRadius: 4,
-      paddingVertical: 10,
-      borderWidth: 1,
-      borderColor: colors.notification,
+      // paddingVertical: 10,
+      // borderWidth: 1,
+      // borderColor: colors.notification,
     },
     wordColumn: {
       position: "relative",

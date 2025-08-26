@@ -11,13 +11,15 @@ import { use$ } from "@legendapp/state/react";
 import React, {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
 } from "react";
 import { useBibleContext } from "./BibleContext";
+import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 
-interface BibleChapterContextProps {}
+interface BibleChapterContextProps { }
 
 const BibleChapterContext = createContext<BibleChapterContextProps>({});
 
@@ -28,6 +30,8 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     interlinearService,
     mainBibleService,
     interlinearGreekService,
+    allBibleLoaded,
+    getBibleServices
   } = useDBContext();
   const { isLoaded: interlinearIsLoaded, executeSql: executeSqlInterlinear } =
     interlinearService;
@@ -45,15 +49,14 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
   } = useBibleContext();
 
   const isInterlineal = [
-    EBibleVersions.INT,
-    EBibleVersions.INTERLINEAL,
+    EBibleVersions.INTERLINEAR,
   ].includes(currentBibleVersion as EBibleVersions);
 
   const isInterlinearGreek = [EBibleVersions.GREEK].includes(
     currentBibleVersion as EBibleVersions
   );
 
-  const fetchChapter = async () => {
+  const fetchChapter = useCallback(async () => {
     const bibleQuery = bibleState$.bibleQuery.get();
     const {
       book: book,
@@ -71,67 +74,46 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     const targetVerse = isBibleBottom ? bibleQuery.bottomSideVerse : verse;
     const currentBook = DB_BOOK_NAMES.find((x) => x.longName === targetBook);
 
-    const queryKey = getDatabaseQueryKey(currentBibleVersion);
-    const query = QUERY_BY_DB[queryKey];
-    const startTime = Date.now();
+    const isInterlinear = [EBibleVersions.INTERLINEAR, EBibleVersions.GREEK].includes(currentBibleVersion as EBibleVersions);
+    const queryKey = isInterlinear ? EBibleVersions.BIBLE : currentBibleVersion;
+    const query = QUERY_BY_DB[queryKey] || QUERY_BY_DB['OTHERS'];
+    const { primaryDB, baseDB } = getBibleServices()
+    if (!primaryDB) return
+    const dbname = primaryDB.database?.databasePath.split("/").pop();
+    const baseDbname = baseDB?.database?.databasePath.split("/").pop() || "No base db";
+    console.log(`-- ${currentBibleVersion} - ${dbname} - ${baseDbname} --`)
 
     try {
-      let verses: IBookVerse[] = [];
-      if (!isInterlineal && !isInterlinearGreek) {
-        verses = await executeSql<IBookVerse>(
-          query.GET_VERSES_BY_BOOK_AND_CHAPTER,
-          [currentBook?.bookNumber, targetChapter || 1],
-          "verses"
-        );
-      } else {
-        verses = await mainBibleService.executeSql<IBookVerse>(
-          query.GET_VERSES_BY_BOOK_AND_CHAPTER,
-          [currentBook?.bookNumber, targetChapter || 1],
-          "verses"
-        );
-      }
-
-      const interlinearHebrewVerses = await executeSqlInterlinear<IBookVerse>(
-        query.GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_INTERLINEAR,
+      let verses: IBookVerse[] = await primaryDB.executeSql<IBookVerse>(
+        query.GET_VERSES_BY_BOOK_AND_CHAPTER,
         [currentBook?.bookNumber, targetChapter || 1],
         "verses"
       );
 
-      const interlinearGreekVerses =
-        await executeSqlInterlinearGreek<IBookVerse>(
-          query.GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_INTERLINEAR_GREEK,
-          [currentBook?.bookNumber, targetChapter || 1],
-          "verses"
-        );
+      let interlinearVerses: IBookVerse[] = []
 
-      console.log(
-        `intLen: ${interlinearHebrewVerses.length} - intGreekLen: ${interlinearGreekVerses.length} - verseLen: ${verses.length}`
-      );
+      if (baseDB) {
+        const baseQuery = QUERY_BY_DB[baseDbname.replace(".db", "")] || QUERY_BY_DB['OTHERS'];
+
+        interlinearVerses = await baseDB.executeSql<IBookVerse>(
+          baseQuery.GET_VERSES_BY_BOOK_AND_CHAPTER,
+          [currentBook?.bookNumber, targetChapter || 1],
+          "interlinearVerses"
+        );
+      }
+
       const links = bibleLinks.filter(
         (link) =>
           link?.book_number === currentBook?.bookNumber &&
           link?.chapter === targetChapter
       );
 
-      // const endTime = Date.now();
-      // const executionTime = endTime - startTime;
-
-      // console.log(
-      //   `📚 ${targetBook} ${targetChapter}:${targetVerse} in ${executionTime} ms. ${verses.length}`
-      // );
-
       batch(() => {
         storedData$[`${storageKey}Book`].set(targetBook);
         storedData$[`${storageKey}Chapter`].set(targetChapter);
         storedData$[`${storageKey}Verse`].set(targetVerse);
-        bibleState$.bibleData.interlinearVerses.set(interlinearHebrewVerses);
-        bibleState$.bibleData.interlinearGreekVerses.set(
-          interlinearGreekVerses
-        );
+        bibleState$.bibleData.interlinearVerses.set(interlinearVerses);
         bibleState$.bibleData[`${bibleKey}Verses`].set(verses);
-        // bibleState$.bibleData[`${bibleKey}Verses`].set(
-        //   isInterlineal ? interlinearVerses : verses
-        // );
         bibleState$.bibleData[`${bibleKey}Links`].set(links);
         bibleState$.readingTimeData[bibleKey].set(getReadingTime(verses));
         bibleState$.isDataLoading[bibleKey].set(false);
@@ -153,7 +135,7 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
         bibleState$.isDataLoading[bibleKey].set(false);
       });
     }
-  };
+  }, [getBibleServices, allBibleLoaded]);
 
   useEffect(() => {
     if (isSplitActived) return;
@@ -168,15 +150,12 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
   }, [currentHistoryIndex]);
 
   useEffect(() => {
-    if (!isMyBibleDbLoaded || !interlinearIsLoaded || !interlinearGreekIsLoaded)
-      return;
+    if (!allBibleLoaded) return;
     if (!shouldFetch) return;
     fetchChapter();
   }, [
     shouldFetch,
-    isMyBibleDbLoaded,
-    interlinearIsLoaded,
-    interlinearGreekIsLoaded,
+    allBibleLoaded
   ]);
 
   const contextValue = useMemo(() => ({}), []);

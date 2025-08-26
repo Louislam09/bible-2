@@ -37,7 +37,6 @@ interface TChapter {
 interface TChapter {
   verses: IBookVerse[];
   interlinearVerses: IBookVerse[];
-  interlinearGreekVerses: IBookVerse[];
   isSplit?: boolean;
   estimatedReadingTime: number;
   initialScrollIndex: number;
@@ -47,7 +46,6 @@ interface TChapter {
 const Chapter = ({
   verses,
   interlinearVerses,
-  interlinearGreekVerses,
   isSplit,
   estimatedReadingTime,
   initialScrollIndex,
@@ -67,42 +65,38 @@ const Chapter = ({
 
   const aspectRadio = height / width;
   const isMobile = +aspectRadio.toFixed(2) > 1.65;
-  const isInterlineal = [
-    EBibleVersions.INT,
-    EBibleVersions.INTERLINEAL,
+  const isHebrewInterlinear = [
+    EBibleVersions.INTERLINEAR,
   ].includes(currentBibleVersion as EBibleVersions);
 
-  const isGreekInterlineal = [EBibleVersions.GREEK].includes(
+  const isGreekInterlinear = [EBibleVersions.GREEK].includes(
     currentBibleVersion as EBibleVersions
   );
 
   const getData = useCallback(() => {
-    if (isInterlineal && !isSplit) {
+    if ((isHebrewInterlinear || isGreekInterlinear) && !isSplit) {
       return interlinearVerses;
-    } else if (isGreekInterlineal && !isSplit) {
-      return interlinearGreekVerses;
     }
     return verses;
   }, [
-    isInterlineal,
+    isHebrewInterlinear,
     isSplit,
-    isGreekInterlineal,
+    isGreekInterlinear,
     interlinearVerses,
-    interlinearGreekVerses,
   ]);
 
   const data = getData() || [];
 
   const renderItem = useCallback(
     ({ item }: any) =>
-      isInterlineal && !isSplit ? (
+      isHebrewInterlinear && !isSplit ? (
         <HebrewVerse item={item} />
-      ) : isGreekInterlineal ? (
+      ) : isGreekInterlinear ? (
         <GreekVerse item={item} />
       ) : (
         <Verse item={item} isSplit={!!isSplit} initVerse={initialScrollIndex} />
       ),
-    [isSplit, initialScrollIndex, isInterlineal, isGreekInterlineal]
+    [isSplit, initialScrollIndex, isHebrewInterlinear, isGreekInterlinear]
   );
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
@@ -138,7 +132,7 @@ const Chapter = ({
   }, [initialScrollIndex]);
 
   const ListHeader = useCallback(() => {
-    return isInterlineal ? null : (
+    return (isHebrewInterlinear || isGreekInterlinear) ? null : (
       <View style={styles.estimatedContainer}>
         <Text style={[styles.estimatedText]}>
           <Icon size={14} name="Timer" color={theme.colors.notification} />
@@ -147,7 +141,7 @@ const Chapter = ({
         </Text>
       </View>
     );
-  }, [estimatedReadingTime, isInterlineal]);
+  }, [estimatedReadingTime, isHebrewInterlinear, isGreekInterlinear]);
 
   const keyExtractor = useCallback(
     (item: IBookVerse) =>

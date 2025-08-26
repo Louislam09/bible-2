@@ -156,10 +156,7 @@ const ChooseBook: React.FC = () => {
   const { viewLayoutGrid, toggleViewLayoutGrid, currentBibleVersion } =
     useBibleContext();
   const isBottomSideSearching = bibleState$.isBottomBibleSearching.get();
-  const isHebrewInterlineal = [
-    EBibleVersions.INT,
-    EBibleVersions.INTERLINEAL,
-  ].includes(currentBibleVersion as EBibleVersions);
+  const isHebrewInterlineal = [EBibleVersions.INTERLINEAR].includes(currentBibleVersion as EBibleVersions);
 
   const isGreekInterlineal = [EBibleVersions.GREEK].includes(
     currentBibleVersion as EBibleVersions

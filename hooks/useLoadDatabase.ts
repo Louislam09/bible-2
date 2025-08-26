@@ -66,7 +66,8 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
         await statement.finalizeAsync();
       }
     } catch (error) {
-      console.log(`"[useLoadDatabase - ${dbName?.id}] Error executing SQL ${sql}:"`, error);
+      console.log("-- Error executing SQL --")
+      // console.log(`"[useLoadDatabase - ${dbName?.id}] Error executing SQL ${sql}:"`, error);
       return [];
     }
   }, [database, dbInitialized.current])
@@ -179,6 +180,9 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
         setDatabase(db);
         dbInitialized.current = true;
         bibleState$.bibleQuery.shouldFetch.set(true);
+        // setTimeout(() => {
+        //   bibleState$.bibleQuery.shouldFetch.set(true);
+        // }, 2000);
         setLoaded(true);
       }
     } catch (error) {
@@ -189,7 +193,7 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
     } finally {
       if (isMounted.current) {
         setLoaded(true);
-        bibleState$.isDataLoading.top.set(false);
+        // bibleState$.isDataLoading.top.set(false);
       }
     }
   }

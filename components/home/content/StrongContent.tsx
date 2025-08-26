@@ -83,8 +83,7 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
   const { currentBibleVersion } = useBibleContext();
   const haptics = useHaptics();
   const isInterlineal = [
-    EBibleVersions.INT,
-    EBibleVersions.INTERLINEAL,
+    EBibleVersions.INTERLINEAR,
   ].includes(currentBibleVersion as EBibleVersions);
 
   useEffect(() => {
@@ -129,9 +128,9 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
       try {
         const dictionaryData = isInterlineal
           ? await mainBibleService.executeSql(
-              SEARCH_STRONG_WORD,
-              strongCode.split(",")
-            )
+            SEARCH_STRONG_WORD,
+            strongCode.split(",")
+          )
           : await executeSql(SEARCH_STRONG_WORD, strongCode.split(","));
 
         if (dictionaryData?.length) {

@@ -22,7 +22,6 @@ type BibleData = {
   topLinks?: IBibleLink[];
   bottomLinks?: IBibleLink[];
   interlinearVerses?: IBookVerse[];
-  interlinearGreekVerses?: IBookVerse[];
 };
 
 export function getReadingTime(verses: IBookVerse[], wordsPerMinute = 200) {
@@ -68,7 +67,7 @@ export const bibleState$ = observable({
     shouldFetch: true,
   },
   isDataLoading: { top: true, bottom: false },
-  bibleData: { topVerses: [], bottomVerses: [], topLinks: [], bottomLinks: [], interlinearVerses: [], interlinearGreekVerses: [] } as BibleData,
+  bibleData: { topVerses: [], bottomVerses: [], topLinks: [], bottomLinks: [], interlinearVerses: [] } as BibleData,
   readingTimeData: { top: 0, bottom: 0 },
   isFlashlist: false,
   toggleList: () => {

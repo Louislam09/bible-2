@@ -85,7 +85,7 @@ export const databaseNames = [
   },
   {
     id: 'interlinear-bible',
-    name: 'Berean Interlinear Bible',
+    name: 'HSB+ (Interlineal Hebreo)',
     description:
       'La Biblia Bereana es una Biblia de estudio de tres niveles que lo conecta desde una traducción fluida y precisa hasta la raíz de los significados griegos y hebreos.',
     size: 23000000,
@@ -94,7 +94,7 @@ export const databaseNames = [
   },
   {
     id: 'greek-bible',
-    name: 'Tischendorf interlineal',
+    name: 'Tischendorf (Interlineal Griego)',
     description: 'Tischendorf interlineal griego-español',
     size: 7000000,
     path: `${SQLiteDirPath}/${DBName.GREEK}`,

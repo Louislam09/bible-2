@@ -91,7 +91,7 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   const isInterlinear = useMemo(
     () =>
       [
-        EBibleVersions.INT,
+        EBibleVersions.INTERLINEAR,
 
         EBibleVersions.GREEK,
       ].includes(currentBibleVersion as EBibleVersions),
@@ -105,7 +105,6 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const interlinearService = useHebrewDB({
     databaseId: DEFAULT_DATABASE.INTERLINEAR,
-    isInterlinear,
     onProgress: (msg) => {
       showToast(msg, "SHORT");
     },
@@ -131,7 +130,6 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const getBibleServices = useCallback(() => {
-    // console.log({ currentBibleVersion })
     switch (currentBibleVersion) {
       case EBibleVersions.BIBLE:
         return {
@@ -143,15 +141,15 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
           primaryDB: mainBibleService,
           baseDB: null,
         }
-      case EBibleVersions.INT:
+      case EBibleVersions.INTERLINEAR:
         return {
-          primaryDB: interlinearService,
-          baseDB: mainBibleService,
+          primaryDB: mainBibleService,
+          baseDB: interlinearService,
         }
       case EBibleVersions.GREEK:
         return {
-          primaryDB: interlinearGreekService,
-          baseDB: mainBibleService,
+          primaryDB: mainBibleService,
+          baseDB: interlinearGreekService,
         }
       default:
         return {
@@ -159,7 +157,7 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
           baseDB: interlinearService,
         };
     }
-  }, [currentBibleVersion, allBibleLoaded]);
+  }, [currentBibleVersion, allBibleLoaded, mainBibleService]);
 
   // useEffect(() => {
   //   console.log({ currentBibleVersion });

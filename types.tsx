@@ -14,7 +14,7 @@ import { RefObject } from "react";
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
+    interface RootParamList extends RootStackParamList { }
   }
 }
 
@@ -139,24 +139,24 @@ export type RootStackParamList = {
   downloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
   notes: NavigatorScreenParams<RootTabParamList> | { shouldRefresh: boolean };
   noteDetail:
-    | NavigatorScreenParams<RootTabParamList>
-    | { noteId: number | null; isNewNote: boolean };
+  | NavigatorScreenParams<RootTabParamList>
+  | { noteId: number | null; isNewNote: boolean };
   character: NavigatorScreenParams<RootTabParamList> | undefined;
   chooseBook:
-    | NavigatorScreenParams<RootTabParamList>
-    | ChooseChapterNumberParams;
+  | NavigatorScreenParams<RootTabParamList>
+  | ChooseChapterNumberParams;
   "(search)": NavigatorScreenParams<RootTabParamList> | { book?: string };
   concordance: NavigatorScreenParams<RootTabParamList> | {};
   strongSearchEntire:
-    | NavigatorScreenParams<RootTabParamList>
-    | { paramCode: string };
+  | NavigatorScreenParams<RootTabParamList>
+  | { paramCode: string };
   dictionary: NavigatorScreenParams<RootTabParamList> | { word: string };
   chooseChapterNumber:
-    | NavigatorScreenParams<RootTabParamList>
-    | ChooseChapterNumberParams;
+  | NavigatorScreenParams<RootTabParamList>
+  | ChooseChapterNumberParams;
   chooseVerseNumber:
-    | NavigatorScreenParams<RootTabParamList>
-    | ChooseChapterNumberParams;
+  | NavigatorScreenParams<RootTabParamList>
+  | ChooseChapterNumberParams;
   modal: undefined;
   onboarding: undefined;
   timeline: undefined;
@@ -245,8 +245,7 @@ export enum TFont {
 export enum EBibleVersions {
   BIBLE = "bible",
   NTV = "ntv-bible",
-  INT = "interlinear-bible",
-  INTERLINEAL = "HSB+",
+  INTERLINEAR = "interlinear-bible",
   GREEK = "greek-bible",
 }
 

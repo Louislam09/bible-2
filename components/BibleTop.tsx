@@ -22,6 +22,7 @@ import Chapter from "./home/content/Chapter";
 import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
 import { Text, View } from "./Themed";
+import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 
 interface BibleTopProps {
   height: Animated.Value;
@@ -35,15 +36,13 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const isDataLoading = use$(() => bibleState$.isDataLoading.top.get());
   const verses = bibleState$.bibleData.topVerses.get() ?? [];
   const interlinearVerses = bibleState$.bibleData.interlinearVerses.get() ?? [];
-  const interlinearGreekVerses =
-    bibleState$.bibleData.interlinearGreekVerses.get() ?? [];
+
   const currentBook = bibleState$.bibleQuery.get().book;
   const bookInfo = getBookDetail(currentBook);
   const NT_BOOK_NUMBER = 470;
   const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
   const isInterlineal = [
-    EBibleVersions.INT,
-    EBibleVersions.INTERLINEAL,
+    EBibleVersions.INTERLINEAR
   ].includes(currentBibleVersion as EBibleVersions);
 
   const isGreekInterlineal = [EBibleVersions.GREEK].includes(
@@ -135,6 +134,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const currentHistoryIndexState = use$(() =>
     bibleState$.currentHistoryIndex.get()
   );
+
   const progressValue = useMemo(() => {
     return (currentHistoryIndexState || 0) / (verses?.length || 10);
   }, [currentHistoryIndexState, verses]);
@@ -224,7 +224,6 @@ const BibleTop: FC<BibleTopProps> = (props) => {
           <Chapter
             verses={verses}
             interlinearVerses={interlinearVerses}
-            interlinearGreekVerses={interlinearGreekVerses}
             isSplit={false}
             estimatedReadingTime={0}
             initialScrollIndex={

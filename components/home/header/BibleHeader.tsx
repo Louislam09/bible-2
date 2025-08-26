@@ -63,8 +63,7 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
   const versionRef = useRef<BottomSheetModal>(null);
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
   const isInterlineal = [
-    EBibleVersions.INT,
-    EBibleVersions.INTERLINEAL,
+    EBibleVersions.INTERLINEAR,
   ].includes(currentBibleVersion as EBibleVersions);
   const canGoForward = !(currentHistoryIndex === history?.length - 1);
   const canGoBackward = currentHistoryIndex !== 0;

@@ -64,9 +64,9 @@ const HebrewVerse: React.FC<Props> = ({ item, withBackground = false }) => {
           },
         ]}
       >
-        <Text style={[styles.reference]}>{item.verse}</Text>
-        {segments.map((segment) => (
+        {segments.map((segment, index) => (
           <View key={segment.key} style={[styles.wordColumn]}>
+            {index === 0 && <Text style={[styles.reference]}>{item.verse}</Text>}
             <Text
               style={styles.lexicalId}
               onPress={() => onStrongPress(segment)}
@@ -119,22 +119,19 @@ const getStyles = ({ colors }: TTheme, fontSize: number) =>
     },
     reference: {
       fontSize: fontSize + 7,
-      color: colors.text,
-      // textAlign: "right",
+      color: colors.notification,
       fontWeight: "bold",
-      // zIndex: 1,
-      // position: "relative",
-      backgroundColor: colors.notification + 70,
-      paddingHorizontal: 5,
-      paddingVertical: 15,
-      borderRadius: 4,
-      display: "flex",
-      // height: 60,
-      // bottom: 0,
-      // left: 0,
-      // borderBottomRightRadius: 0,
-      // borderBottomLeftRadius: 0,
-      // borderTopLeftRadius: 0,
+      textDecorationColor: colors.notification,
+      textDecorationLine: "underline",
+
+      // fontSize: fontSize + 7,
+      // color: colors.text,
+      // fontWeight: "bold",
+      // backgroundColor: colors.notification + 70,
+      // paddingHorizontal: 5,
+      // paddingVertical: 15,
+      // borderRadius: 4,
+      // display: "flex",
     },
     wordsGrid: {
       position: "relative",

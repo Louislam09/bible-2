@@ -25,13 +25,12 @@ export interface UseHebrewDatabase {
 }
 
 interface UseHebrewDB {
-    isInterlinear?: boolean;
     onProgress?: (msg: string) => void;
     enabled?: boolean;
     databaseId: DEFAULT_DATABASE;
 }
 
-export function useHebrewDB({ isInterlinear, onProgress, enabled, databaseId }: UseHebrewDB): UseHebrewDatabase {
+export function useHebrewDB({ onProgress, enabled, databaseId }: UseHebrewDB): UseHebrewDatabase {
     const [database, setDatabase] = useState<SQLite.SQLiteDatabase | null>(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState<Error | null>(null);
@@ -162,46 +161,6 @@ export function useHebrewDB({ isInterlinear, onProgress, enabled, databaseId }: 
     useEffect(() => {
         if (!enabled) return;
         if (!dbName) return;
-
-        // const initDb = async () => {
-        //     const interlinearDb = await prepareDatabaseFromDbFile({
-        //         databaseItem: dbName,
-        //         onProgress: (progress) => {
-        //             // console.log('useInterlinearDB:', progress.stage, progress.message)
-        //             dbDownloadState$.setDownloadProgress({
-        //                 ...progress,
-        //                 databaseName: dbName.name || dbName.id,
-        //             });
-        //         }
-        //     });
-
-        //     if (!interlinearDb) return;
-
-        //     await createTables(interlinearDb);
-        //     // Validate the database
-        //     const valid = await isDatabaseValid(interlinearDb);
-        //     if (!valid) {
-        //         // delete the database
-        //         await FileSystem.deleteAsync(dbName.path, { idempotent: true });
-        //         throw new Error("Interlinear database validation failed");
-        //     }
-
-        //     // Apply optimization settings
-        //     try {
-        //         await interlinearDb.execAsync("PRAGMA journal_mode = WAL");
-        //         await interlinearDb.execAsync("PRAGMA synchronous = OFF");
-        //         await interlinearDb.execAsync("PRAGMA temp_store = MEMORY");
-        //         await interlinearDb.execAsync("PRAGMA cache_size = 16384");
-        //     } catch (error) {
-        //         console.warn("Error applying optimization settings:", error);
-        //     }
-
-        //     if (isMounted.current) {
-        //         setDatabase(interlinearDb);
-        //         setIsLoaded(true);
-        //     }
-        // }
-
         initDb(dbName);
 
         return () => {
@@ -210,7 +169,7 @@ export function useHebrewDB({ isInterlinear, onProgress, enabled, databaseId }: 
                 // database.closeAsync().catch(console.error);
             }
         };
-    }, [isInterlinear, enabled]);
+    }, [enabled]);
 
     return { database, isLoaded, error, executeSql, reOpen: initDb };
 }
