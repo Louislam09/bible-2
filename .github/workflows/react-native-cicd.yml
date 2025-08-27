@@ -142,10 +142,6 @@ jobs:
         run: |
           bun add -g expo-cli@latest
 
-      - name: Prebuild
-        run: |
-          expo prebuild --platform android --non-interactive
-
       - name: 📱 Build Production APK
         if: github.event.inputs.buildType == 'all' || github.event.inputs.buildType == 'prod-apk' || github.event_name == 'push'
         run: |
