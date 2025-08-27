@@ -154,10 +154,28 @@ jobs:
       - name: 🏷️ Generate build information
         id: build-info
         run: |
-          VERSION=$(node -p "require('./app.json').expo.version")
+          # Extract version from app.config.ts using Node.js
+          VERSION=$(node -e "
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Read app.config.ts
+            const configContent = fs.readFileSync('./app.config.ts', 'utf8');
+            
+            // Extract version using regex
+            const versionMatch = configContent.match(/version:\s*['\"]([^'\"]+)['\"]/);
+            if (versionMatch) {
+              console.log(versionMatch[1]);
+            } else {
+              console.log('1.0.0'); // fallback version
+            }
+          ")
           BUILD_NUMBER=$(date +%Y%m%d%H%M)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION"
+          echo "Build number: $BUILD_NUMBER"
+          
           # Generate changelog from commit messages since last tag
           if git describe --tags --abbrev=0 > /dev/null 2>&1; then
             LAST_TAG=$(git describe --tags --abbrev=0)
