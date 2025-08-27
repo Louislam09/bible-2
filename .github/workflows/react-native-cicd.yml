@@ -188,25 +188,137 @@ jobs:
             git log --pretty=format:"- %s" -n 10 > changelog.md
           fi
 
+      - name: 📝 Check build files exist
+        if: (github.event_name == 'workflow_dispatch' && github.event.inputs.skip_to_build_info != 'true') || github.event_name == 'push'
+        run: |
+          echo "Checking if build files exist based on build type..."
+          ls -la *.apk *.aab 2>/dev/null || echo "No build files found"
+          
+          # Determine which files should exist based on build type
+          EXPECTED_FILES=""
+          if [ "${{ github.event.inputs.buildType }}" == "dev" ] || [ "${{ github.event.inputs.buildType }}" == "all" ] || [ "${{ github.event_name }}" == "push" ]; then
+            EXPECTED_FILES="$EXPECTED_FILES ./app-dev.apk"
+          fi
+          if [ "${{ github.event.inputs.buildType }}" == "prod-apk" ] || [ "${{ github.event.inputs.buildType }}" == "all" ] || [ "${{ github.event_name }}" == "push" ]; then
+            EXPECTED_FILES="$EXPECTED_FILES ./app-prod.apk"
+          fi
+          if [ "${{ github.event.inputs.buildType }}" == "prod-aab" ] || [ "${{ github.event.inputs.buildType }}" == "all" ] || [ "${{ github.event_name }}" == "push" ]; then
+            EXPECTED_FILES="$EXPECTED_FILES ./app-prod.aab"
+          fi
+          
+          echo "Expected files: $EXPECTED_FILES"
+          
+          # Check if all expected files exist
+          ALL_EXIST=true
+          for file in $EXPECTED_FILES; do
+            if [ ! -f "$file" ]; then
+              echo "Missing expected file: $file"
+              ALL_EXIST=false
+            else
+              echo "Found file: $file"
+            fi
+          done
+          
+          if [ "$ALL_EXIST" = true ]; then
+            echo "All expected build files exist"
+            echo "build_files_exist=true" >> $GITHUB_OUTPUT
+          else
+            echo "Some expected build files are missing"
+            echo "build_files_exist=false" >> $GITHUB_OUTPUT
+          fi
+        id: check-build-files
+
       - name: 📝 Create GitHub Release
+        if: (github.event_name == 'workflow_dispatch' && github.event.inputs.skip_to_build_info != 'true') || github.event_name == 'push'
+        run: |
+          # Create a list of files to upload based on build type
+          FILES_TO_UPLOAD=""
+          
+          # Check for dev APK
+          if [ "${{ github.event.inputs.buildType }}" == "dev" ] || [ "${{ github.event.inputs.buildType }}" == "all" ] || [ "${{ github.event_name }}" == "push" ]; then
+            if [ -f "./app-dev.apk" ]; then
+              FILES_TO_UPLOAD="$FILES_TO_UPLOAD ./app-dev.apk"
+            fi
+          fi
+          
+          # Check for prod APK
+          if [ "${{ github.event.inputs.buildType }}" == "prod-apk" ] || [ "${{ github.event.inputs.buildType }}" == "all" ] || [ "${{ github.event_name }}" == "push" ]; then
+            if [ -f "./app-prod.apk" ]; then
+              FILES_TO_UPLOAD="$FILES_TO_UPLOAD ./app-prod.apk"
+            fi
+          fi
+          
+          # Check for prod AAB
+          if [ "${{ github.event.inputs.buildType }}" == "prod-aab" ] || [ "${{ github.event.inputs.buildType }}" == "all" ] || [ "${{ github.event_name }}" == "push" ]; then
+            if [ -f "./app-prod.aab" ]; then
+              FILES_TO_UPLOAD="$FILES_TO_UPLOAD ./app-prod.aab"
+            fi
+          fi
+          
+          echo "Files to upload: $FILES_TO_UPLOAD"
+          
+          if [ -n "$FILES_TO_UPLOAD" ]; then
+            gh release create "v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }}" \
+              --draft \
+              --title "Release v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }}" \
+              --notes-file changelog.md \
+              $FILES_TO_UPLOAD
+          else
+            echo "No build files to upload, creating release without files"
+            gh release create "v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }}" \
+              --draft \
+              --title "Release v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }}" \
+              --notes-file changelog.md
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: 📝 Create GitHub Release (Build Info Only)
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.skip_to_build_info == 'true'
         uses: softprops/action-gh-release@v1
         with:
           draft: true
-          name: "Release v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }}"
+          name: "Release v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }} (Build Info Only)"
           tag_name: "v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }}"
-          files: |
-            ./app-dev.apk
-            ./app-prod.apk
-            ./app-prod.aab
           body_path: changelog.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: 📦 Upload build artifacts to GitHub
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-builds
-          path: |
-            ./app-dev.apk
-            ./app-prod.apk
-            ./app-prod.aab
-          retention-days: 7
+        if: (github.event_name == 'workflow_dispatch' && github.event.inputs.skip_to_build_info != 'true') || github.event_name == 'push'
+        run: |
+          # Create a list of files to upload based on build type
+          FILES_TO_UPLOAD=""
+          
+          # Check for dev APK
+          if [ "${{ github.event.inputs.buildType }}" == "dev" ] || [ "${{ github.event.inputs.buildType }}" == "all" ] || [ "${{ github.event_name }}" == "push" ]; then
+            if [ -f "./app-dev.apk" ]; then
+              FILES_TO_UPLOAD="$FILES_TO_UPLOAD ./app-dev.apk"
+            fi
+          fi
+          
+          # Check for prod APK
+          if [ "${{ github.event.inputs.buildType }}" == "prod-apk" ] || [ "${{ github.event.inputs.buildType }}" == "all" ] || [ "${{ github.event_name }}" == "push" ]; then
+            if [ -f "./app-prod.apk" ]; then
+              FILES_TO_UPLOAD="$FILES_TO_UPLOAD ./app-prod.apk"
+            fi
+          fi
+          
+          # Check for prod AAB
+          if [ "${{ github.event.inputs.buildType }}" == "prod-aab" ] || [ "${{ github.event.inputs.buildType }}" == "all" ] || [ "${{ github.event_name }}" == "push" ]; then
+            if [ -f "./app-prod.aab" ]; then
+              FILES_TO_UPLOAD="$FILES_TO_UPLOAD ./app-prod.aab"
+            fi
+          fi
+          
+          echo "Files to upload as artifacts: $FILES_TO_UPLOAD"
+          
+          if [ -n "$FILES_TO_UPLOAD" ]; then
+            # Use gh command to upload artifacts
+            for file in $FILES_TO_UPLOAD; do
+              echo "Uploading $file as artifact..."
+              gh run upload $file --name app-builds
+            done
+          else
+            echo "No build files to upload as artifacts"
+          fi
