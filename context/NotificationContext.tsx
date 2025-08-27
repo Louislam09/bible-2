@@ -9,6 +9,7 @@ import React, {
   useState,
 } from "react";
 import { storedData$ } from "./LocalstoreContext";
+import { useNotificationService } from "@/services/notificationServices";
 
 interface NotificationContextType {
   expoPushToken: string | null;
@@ -37,6 +38,7 @@ interface NotificationProviderProps {
 export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   children,
 }) => {
+  const notificationService = useNotificationService();
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
   const [notification, setNotification] =
     useState<Notifications.Notification | null>(null);
@@ -46,31 +48,35 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   const responseListener = useRef<Notifications.EventSubscription>(null);
 
   useEffect(() => {
+    console.log('----- NotificationProvider useEffect ---')
     registerForPushNotificationsAsync().then(
       (token) => {
-        setExpoPushToken(token);
-        if (
-          token &&
-          storedData$.notificationPreferences.pushToken.get() !== token
-        ) {
-          storedData$.notificationPreferences.pushToken.set(token);
-          console.log("🔔 Push token saved: ", token);
-        }
+        console.log('registerForPushNotificationsAsync successfully', { token })
+        notificationService.initializeNotifications()
+        // setExpoPushToken(token);
+        // if (
+        //   token &&
+        //   storedData$.notificationPreferences.pushToken.get() !== token
+        // ) {
+        //   storedData$.notificationPreferences.pushToken.set(token);
+        //   console.log("🔔 Push token saved: ", token);
+        // }
       },
       (error) => {
-        console.log("🔔 Error: ", error);
+        console.log("registerForPushNotificationsAsync error: ", error);
         setError(error);
       }
     );
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
-        // console.log("🔔 Notification Received: ", notification);
+        console.log("🔔 Notification Received: ", notification);
         setNotification(notification);
       });
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log('User interacted with notification:', response);
         // console.log(
         //   "🔔 Notification Response: ",
         //   JSON.stringify(response, null, 2),

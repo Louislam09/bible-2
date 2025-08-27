@@ -116,7 +116,7 @@ export const useNotificationService = () => {
 
             await Notifications.setNotificationChannelAsync("daily-verse", {
                 name: "Versículo del Día",
-                importance: Notifications.AndroidImportance.HIGH,
+                importance: Notifications.AndroidImportance.MAX,
                 vibrationPattern: [0, 250, 250, 250],
                 lightColor: "#0c3e3d",
                 sound: "default",
@@ -124,7 +124,7 @@ export const useNotificationService = () => {
 
             await Notifications.setNotificationChannelAsync("devotional", {
                 name: "Recordatorio Devocional",
-                importance: Notifications.AndroidImportance.HIGH,
+                importance: Notifications.AndroidImportance.MAX,
                 vibrationPattern: [0, 250, 250, 250],
                 lightColor: "#0c3e3d",
                 sound: "default",
@@ -132,14 +132,13 @@ export const useNotificationService = () => {
 
             await Notifications.setNotificationChannelAsync("memorization", {
                 name: "Recordatorio de Memorización",
-                importance: Notifications.AndroidImportance.HIGH,
+                importance: Notifications.AndroidImportance.MAX,
                 vibrationPattern: [0, 250, 250, 250],
                 lightColor: "#0c3e3d",
                 sound: "default",
             });
         }
     };
-
 
     const scheduleDailyVerseNotification = useCallback(async (time: string = '08:00'): Promise<string | null> => {
         const { primaryDB } = getBibleServices({})
@@ -565,6 +564,31 @@ export const useNotificationService = () => {
         });
     }
 
+    const scheduleAtSpecificTime = async (hour: number, minute: number, channelId: string = 'default') => {
+        const triggerDate = new Date();
+        triggerDate.setHours(hour); // Set to 9 AM
+        triggerDate.setMinutes(minute);
+        triggerDate.setSeconds(0);
+
+        // If the time has passed today, schedule for tomorrow
+        if (triggerDate.getTime() < Date.now()) {
+            triggerDate.setDate(triggerDate.getDate() + 1);
+        }
+
+        await Notifications.scheduleNotificationAsync({
+            content: {
+                title: "Morning Alert",
+                body: "Time to start your day!",
+            },
+            trigger: {
+                type: Notifications.SchedulableTriggerInputTypes.DAILY,
+                channelId: channelId,
+                hour: triggerDate.getHours(),
+                minute: triggerDate.getMinutes(),
+            },
+        });
+    }
+
     return {
         getNotificationPreferences,
         updateNotificationPreferences,
@@ -583,6 +607,7 @@ export const useNotificationService = () => {
         sendPushNotificationToUser,
         cancelAlarm,
         testNotification,
+        scheduleAtSpecificTime,
         error,
     };
 };

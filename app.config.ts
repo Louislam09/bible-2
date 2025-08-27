@@ -110,14 +110,14 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         backgroundColor: "#0c3e3d",
       },
       package: getUniqueIdentifier(),
-      googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? googleServicesFile(),
+      // googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? googleServicesFile(),
       permissions: [
         "android.permission.SCHEDULE_EXACT_ALARM",
         "android.permission.USE_EXACT_ALARM",
         "android.permission.RECEIVE_BOOT_COMPLETED",
         "android.permission.VIBRATE",
-        // "android.permission.WAKE_LOCK",
-        // "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.WAKE_LOCK",
+        "android.permission.SYSTEM_ALERT_WINDOW",
       ],
       edgeToEdgeEnabled: true
     },

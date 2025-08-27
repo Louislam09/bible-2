@@ -58,7 +58,6 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     if (!primaryDB) return
     const dbname = primaryDB.database?.databasePath.split("/").pop();
     const baseDbname = baseDB?.database?.databasePath.split("/").pop() || "No base db";
-    console.log(`-- ${currentBibleVersion} - ${dbname} - ${baseDbname} --`)
 
     try {
       let verses: IBookVerse[] = await primaryDB.executeSql<IBookVerse>(
