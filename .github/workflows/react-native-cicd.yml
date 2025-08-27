@@ -17,6 +17,10 @@ on:
           - prod-apk
           - prod-aab
           - all
+      skip_to_build_info:
+        type: boolean
+        description: "Skip to build info step"
+        default: false
 
 env:
   EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
@@ -120,7 +124,7 @@ jobs:
           echo "Expo Doctor completed"
 
       - name: 📱 Build Development APK
-        if: github.event.inputs.buildType == 'all' || github.event.inputs.buildType == 'dev' || github.event_name == 'push'
+        if: (github.event.inputs.buildType == 'all' || github.event.inputs.buildType == 'dev' || github.event_name == 'push') && github.event.inputs.skip_to_build_info != 'true'
         run: |
           # Build with increased memory limit and proper environment setup
           export NODE_OPTIONS="--openssl-legacy-provider --max_old_space_size=4096"
@@ -134,7 +138,7 @@ jobs:
           bun add -g expo-cli@latest
 
       - name: 📱 Build Production APK
-        if: github.event.inputs.buildType == 'all' || github.event.inputs.buildType == 'prod-apk' || github.event_name == 'push'
+        if: (github.event.inputs.buildType == 'all' || github.event.inputs.buildType == 'prod-apk' || github.event_name == 'push') && github.event.inputs.skip_to_build_info != 'true'
         run: |
           export NODE_OPTIONS="--openssl-legacy-provider --max_old_space_size=4096"
           export EXPO_ROUTER_APP_ROOT=./app
@@ -143,7 +147,7 @@ jobs:
           NODE_ENV: production
 
       - name: 📱 Build Production AAB
-        if: github.event.inputs.buildType == 'all' || github.event.inputs.buildType == 'prod-aab' || github.event_name == 'push'
+        if: (github.event.inputs.buildType == 'all' || github.event.inputs.buildType == 'prod-aab' || github.event_name == 'push') && github.event.inputs.skip_to_build_info != 'true'
         run: |
           export NODE_OPTIONS="--openssl-legacy-provider --max_old_space_size=4096"
           export EXPO_ROUTER_APP_ROOT=./app
