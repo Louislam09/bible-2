@@ -268,7 +268,7 @@ jobs:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       - name: 📦 Upload build artifacts to GitHub
-        if: (github.event_name == 'workflow_dispatch' && github.event.inputs.skip_to_build_info != 'true') || github.event_name == 'push'
+        if: (github.event_name == 'workflow_dispatch' ) || github.event_name == 'push'
         run: |
           # Create a list of files to upload based on build type
           FILES_TO_UPLOAD=""
