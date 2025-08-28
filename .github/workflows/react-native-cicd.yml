@@ -268,40 +268,37 @@ jobs:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       - name: 📦 Upload build artifacts to GitHub
-        if: (github.event_name == 'workflow_dispatch' ) || github.event_name == 'push'
+        if: (github.event_name == 'workflow_dispatch') || (github.event_name == 'push')
         run: |
-          # Create a list of files to upload based on build type
           FILES_TO_UPLOAD=""
-          
+
           # Check for dev APK
-          if [ "${{ github.event.inputs.buildType }}" == "dev" ] || [ "${{ github.event.inputs.buildType }}" == "all" ] || [ "${{ github.event_name }}" == "push" ]; then
-            if [ -f "./app-dev.apk" ]; then
-              FILES_TO_UPLOAD="$FILES_TO_UPLOAD ./app-dev.apk"
-            fi
+          if [ "${{ github.event.inputs.buildType }}" == "dev" ] || \
+            [ "${{ github.event.inputs.buildType }}" == "all" ] || \
+            [ "${{ github.event_name }}" == "push" ]; then
+            [ -f "./app-dev.apk" ] && FILES_TO_UPLOAD="$FILES_TO_UPLOAD ./app-dev.apk"
           fi
-          
+
           # Check for prod APK
-          if [ "${{ github.event.inputs.buildType }}" == "prod-apk" ] || [ "${{ github.event.inputs.buildType }}" == "all" ] || [ "${{ github.event_name }}" == "push" ]; then
-            if [ -f "./app-prod.apk" ]; then
-              FILES_TO_UPLOAD="$FILES_TO_UPLOAD ./app-prod.apk"
-            fi
+          if [ "${{ github.event.inputs.buildType }}" == "prod-apk" ] || \
+            [ "${{ github.event.inputs.buildType }}" == "all" ] || \
+            [ "${{ github.event_name }}" == "push" ]; then
+            [ -f "./app-prod.apk" ] && FILES_TO_UPLOAD="$FILES_TO_UPLOAD ./app-prod.apk"
           fi
-          
+
           # Check for prod AAB
-          if [ "${{ github.event.inputs.buildType }}" == "prod-aab" ] || [ "${{ github.event.inputs.buildType }}" == "all" ] || [ "${{ github.event_name }}" == "push" ]; then
-            if [ -f "./app-prod.aab" ]; then
-              FILES_TO_UPLOAD="$FILES_TO_UPLOAD ./app-prod.aab"
-            fi
+          if [ "${{ github.event.inputs.buildType }}" == "prod-aab" ] || \
+            [ "${{ github.event.inputs.buildType }}" == "all" ] || \
+            [ "${{ github.event_name }}" == "push" ]; then
+            [ -f "./app-prod.aab" ] && FILES_TO_UPLOAD="$FILES_TO_UPLOAD ./app-prod.aab"
           fi
-          
-          echo "Files to upload as artifacts: $FILES_TO_UPLOAD"
-          
-          if [ -n "$FILES_TO_UPLOAD" ]; then
-            # Use gh command to upload artifacts
-            for file in $FILES_TO_UPLOAD; do
-              echo "Uploading $file as artifact..."
-              gh run upload $file --name app-builds
-            done
-          else
-            echo "No build files to upload as artifacts"
-          fi
+
+          echo "FILES_TO_UPLOAD=$FILES_TO_UPLOAD" >> $GITHUB_ENV
+
+      - name: 📤 Actually upload artifacts
+        if: env.FILES_TO_UPLOAD != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-builds
+          path: ${{ env.FILES_TO_UPLOAD }}
+
