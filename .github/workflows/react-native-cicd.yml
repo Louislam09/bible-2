@@ -140,9 +140,13 @@ jobs:
       - name: 📱 Build Production APK
         if: (github.event.inputs.buildType == 'all' || github.event.inputs.buildType == 'prod-apk' || github.event_name == 'push') && github.event.inputs.skip_to_build_info != 'true'
         run: |
+          echo "=== STARTING PRODUCTION APK BUILD ==="
           export NODE_OPTIONS="--openssl-legacy-provider --max_old_space_size=4096"
           export EXPO_ROUTER_APP_ROOT=./app
           eas build --platform android --profile production-apk --local --non-interactive --output=./app-prod.apk
+          echo "=== BUILD COMPLETED ==="
+          echo "Checking if output file exists:"
+          ls -la ./app-prod.apk || echo "Output file not found"
         env:
           NODE_ENV: production
 
@@ -191,8 +195,16 @@ jobs:
       - name: 📝 Check build files exist
         if: (github.event_name == 'workflow_dispatch' && github.event.inputs.skip_to_build_info != 'true') || github.event_name == 'push'
         run: |
+          echo "=== DEBUGGING BUILD FILES ==="
+          echo "Current directory: $(pwd)"
+          echo "Listing all files in current directory:"
+          ls -la
+          echo ""
+          echo "Looking for APK and AAB files:"
+          find . -name "*.apk" -o -name "*.aab" 2>/dev/null || echo "No APK/AAB files found"
+          echo ""
           echo "Checking if build files exist based on build type..."
-          ls -la *.apk *.aab 2>/dev/null || echo "No build files found"
+          ls -la *.apk *.aab 2>/dev/null || echo "No build files found in current directory"
           
           # Determine which files should exist based on build type
           EXPECTED_FILES=""
@@ -216,6 +228,7 @@ jobs:
               ALL_EXIST=false
             else
               echo "Found file: $file"
+              echo "File size: $(ls -lh $file | awk '{print $5}')"
             fi
           done
           
@@ -227,6 +240,17 @@ jobs:
             echo "build_files_exist=false" >> $GITHUB_OUTPUT
           fi
         id: check-build-files
+
+      - name: 📝 Check GitHub Token Permissions
+        if: (github.event_name == 'workflow_dispatch') || (github.event_name == 'push')
+        run: |
+          echo "=== CHECKING GITHUB TOKEN PERMISSIONS ==="
+          echo "Testing GitHub API access..."
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+               -H "Accept: application/vnd.github.v3+json" \
+               https://api.github.com/repos/${{ github.repository }}/releases \
+               | head -20 || echo "Failed to access GitHub API"
+          echo "=== END TOKEN CHECK ==="
 
       - name: 📝 Create GitHub Release
         if: (github.event_name == 'workflow_dispatch') || (github.event_name == 'push')
