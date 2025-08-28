@@ -252,18 +252,27 @@ jobs:
                | head -20 || echo "Failed to access GitHub API"
           echo "=== END TOKEN CHECK ==="
 
-      # - name: 📝 Create GitHub Release
-      #   if: (github.event_name == 'workflow_dispatch') || (github.event_name == 'push')
-      #   uses: softprops/action-gh-release@v1
+      - name: 📝 Create GitHub Release
+        if: (github.event_name == 'workflow_dispatch') || (github.event_name == 'push')
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          name: "Release v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }}"
+          tag_name: "v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }}"
+          body_path: changelog.md
+          files: |
+            ./app-dev.apk
+            ./app-prod.apk
+            ./app-prod.aab
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: 📤 Upload APK to GitHub Release
+      #   uses: softprops/action-gh-release@v2
       #   with:
-      #     draft: true
-      #     name: "Release v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }}"
-      #     tag_name: "v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }}"
-      #     body_path: changelog.md
       #     files: |
-      #       ./app-dev.apk
-      #       ./app-prod.apk
-      #       ./app-prod.aab
+      #       app-prod.apk
+      #       app-prod.aab
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
