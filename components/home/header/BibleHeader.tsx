@@ -60,7 +60,7 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
   const isSmallSDevice = width < 300;
 
   const styles = getStyles(theme);
-  const headerIconSize = isSmallSDevice ? 26 : iconSize;
+  const headerIconSize = isSmallSDevice ? 26 : 24;
   const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
@@ -211,18 +211,7 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
           <VersionList {...{ currentBibleVersion, onSelect, theme }} />
         </BottomModal>
       </View>
-      {/* {!isSplitActived && (
-        <View style={[styles.progressContainer]}>
-          <ProgressBar
-            hideCircle
-            height={4}
-            color={theme.colors.notification}
-            barColor={theme.colors.text}
-            progress={progressValue}
-            circleColor={theme.colors.notification}
-          />
-        </View>
-      )} */}
+
     </LinearGradient>
   );
 };

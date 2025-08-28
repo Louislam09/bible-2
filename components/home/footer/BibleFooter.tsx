@@ -219,7 +219,8 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           onPress={() => previousChapter()}
         >
           <Icon
-            name={"ChevronsLeft"}
+            name={"ArrowLeft"}
+            // name={"ChevronsLeft"}
             size={FOOTER_ICON_SIZE}
             style={[styles.icon, { marginHorizontal: 0 }]}
           />
@@ -241,23 +242,24 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           onPress={() => nextChapter()}
         >
           <Icon
-            name={"ChevronsRight"}
+            name={"ArrowRight"}
+            // name={"ChevronsRight"}
             size={FOOTER_ICON_SIZE}
             style={[styles.icon, { marginHorizontal: 0 }]}
           />
         </TouchableOpacity>
       </View>
       {!isSplitActived && (
-        <View style={{ flexDirection: "row", backgroundColor: "transparent" }}>
+        <View style={styles.footerAudio}>
           <TouchableOpacity
             ref={tourState$.audio.get()}
             style={[styles.footerEnd]}
             onPress={playHandlePresentModalPress}
           >
             <Icon
-              name={"Headphones"}
+              name="Play"
+              color="white"
               size={FOOTER_ICON_SIZE}
-              style={[styles.icon, { marginHorizontal: 0 }]}
             />
           </TouchableOpacity>
         </View>

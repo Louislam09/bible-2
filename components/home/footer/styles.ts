@@ -16,6 +16,18 @@ export const getStyles = ({ colors }: TTheme) =>
       bottom: 0,
       paddingBottom: 25,
     },
+    footerAudio: {
+      backgroundColor: colors.notification + 90,
+      position: 'absolute',
+      top: -60,
+      right: 10,
+      width: 50,
+      height: 50,
+      borderRadius: 8,
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 9999,
+    },
     progressBarContainer: {
       position: "absolute",
       top: 0,
@@ -41,7 +53,7 @@ export const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: "transparent",
-      marginLeft: 10,
+      // marginLeft: 10,
     },
     icon: {
       fontWeight: "900",
