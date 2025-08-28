@@ -257,7 +257,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
             onPress={playHandlePresentModalPress}
           >
             <Icon
-              name="Play"
+              name={isPlaying ? "AudioLines" : "Play"}
               color="white"
               size={FOOTER_ICON_SIZE}
             />
@@ -286,7 +286,6 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           }}
         />
       </BottomModal>
-      {/* </Animated.View> */}
     </LinearGradient>
   );
 };
