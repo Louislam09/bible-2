@@ -1,4 +1,4 @@
-name: React Native CI/CD
+name: React Native Prod CI/CD
 
 on:
   push:
