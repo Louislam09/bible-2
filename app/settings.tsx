@@ -24,6 +24,7 @@ import { useBibleContext } from "@/context/BibleContext";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { authState$ } from "@/state/authState";
+import { bibleState$ } from "@/state/bibleState";
 import { settingState$ } from "@/state/settingState";
 import { EThemes, RootStackScreenProps, TTheme } from "@/types";
 import getMinMaxFontSize from "@/utils/getMinMaxFontSize";
@@ -115,6 +116,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
   );
 
   const settingBottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const isFlashlist = use$(() => bibleState$.isFlashlist.get());
 
   useEffect(() => {
     const loadLastSyncTime = async () => {
@@ -391,6 +393,17 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
           extraText: "Activar o desactivar las animaciones",
           renderSwitch: true,
           value: !isAnimationDisabled,
+        },
+        {
+          label: 'Vista de Lista Rápida',
+          iconName: isFlashlist ? "Zap" : "ZapOff",
+          action: () => bibleState$.toggleList(),
+          extraText: "Alternar entre la vista de lista rápida y la vista estándar",
+          color: isFlashlist
+            ? theme.colors.notification
+            : theme.colors.text,
+          // renderSwitch: true,
+          value: isFlashlist,
         },
         {
           label: isGridLayout ? "Vista de Lista" : "Vista de Cuadrícula",

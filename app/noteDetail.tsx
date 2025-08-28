@@ -1,5 +1,6 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
+import { KeyboardPaddingView } from "@/components/keyboard-padding";
 import LexicalRichTextEditor from "@/components/LexicalRichTextEditor";
 import MyRichEditor from "@/components/RichTextEditor";
 import { Text, View } from "@/components/Themed";
@@ -337,7 +338,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={{ flex: 1 }}>
       <Stack.Screen
         options={{
           ...singleScreenHeader({
@@ -354,44 +355,46 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
           }),
         }}
       />
-      {isView && (
-        <View style={styles.titleContainer}>
-          <Text style={{ fontSize: 22 }}>
-            {noteInfo?.title?.toUpperCase() || defaultTitle}
-          </Text>
-          <Text style={styles.dateLabel}>
-            {formatDateShortDayMonth(
-              isNewNote
-                ? new Date()
-                : ((noteInfo?.updated_at || noteInfo?.created_at) as any),
-              {
-                weekday: "short",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              }
-            )}
-          </Text>
-        </View>
-      )}
-
-      <MyRichEditor
-        Textinput={
-          <TextInput
-            editable={!isView}
-            placeholder="Titulo"
-            placeholderTextColor={theme.colors.text}
-            style={[styles.textInput]}
-            multiline
-            value={noteContent.title}
-            onChangeText={(text: string) => onContentChange("title", text)}
-          />
-        }
-        value={noteContent.content}
-        onChangeText={(text: string) => onContentChange("content", text)}
-        readOnly={isView}
-      />
-      {renderActionButtons()}
+      <View style={styles.container}>
+        {isView && (
+          <View style={styles.titleContainer}>
+            <Text style={{ fontSize: 22 }}>
+              {noteInfo?.title?.toUpperCase() || defaultTitle}
+            </Text>
+            <Text style={styles.dateLabel}>
+              {formatDateShortDayMonth(
+                isNewNote
+                  ? new Date()
+                  : ((noteInfo?.updated_at || noteInfo?.created_at) as any),
+                {
+                  weekday: "short",
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                }
+              )}
+            </Text>
+          </View>
+        )}
+        <MyRichEditor
+          Textinput={
+            <TextInput
+              editable={!isView}
+              placeholder="Titulo"
+              placeholderTextColor={theme.colors.text}
+              style={[styles.textInput]}
+              multiline
+              value={noteContent.title}
+              onChangeText={(text: string) => onContentChange("title", text)}
+            />
+          }
+          value={noteContent.content}
+          onChangeText={(text: string) => onContentChange("content", text)}
+          readOnly={isView}
+        />
+        {renderActionButtons()}
+      </View>
+      <KeyboardPaddingView />
     </View>
   );
 };

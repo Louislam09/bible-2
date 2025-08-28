@@ -1,4 +1,5 @@
 import Icon from "@/components/Icon";
+import { KeyboardPaddingView } from "@/components/keyboard-padding";
 import MyRichEditor from "@/components/RichTextEditor";
 import { Text, View } from "@/components/Themed";
 import { GET_NOTE_BY_ID } from "@/constants/Queries";
@@ -277,47 +278,49 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
   }
 
   return (
-    <View style={styles.container}>
-      {isView && (
-        <View style={styles.titleContainer}>
-          <Text style={{ fontSize: 22 }}>
-            {noteInfo?.title?.toUpperCase() || defaultTitle}
-          </Text>
-          <Text style={styles.dateLabel}>
-            {formatDateShortDayMonth(
-              isNewNote
-                ? new Date()
-                : ((noteInfo?.updated_at || noteInfo?.created_at) as any),
-              {
-                weekday: "short",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              }
-            )}
-          </Text>
-        </View>
-      )}
-
-      <MyRichEditor
-        shouldOpenKeyboard={shouldOpenKeyboard}
-        isModal
-        Textinput={
-          <TextInput
-            editable={!isView}
-            placeholder="Titulo"
-            placeholderTextColor={theme.colors.text}
-            style={[styles.textInput]}
-            multiline
-            value={noteContent.title}
-            onChangeText={(text: string) => onContentChange("title", text)}
-          />
-        }
-        value={noteContent.content}
-        onChangeText={(text: string) => onContentChange("content", text)}
-        readOnly={isView}
-      />
-      {renderActionButtons()}
+    <View style={{ flex: 1 }}>
+      <View style={styles.container}>
+        {isView && (
+          <View style={styles.titleContainer}>
+            <Text style={{ fontSize: 22 }}>
+              {noteInfo?.title?.toUpperCase() || defaultTitle}
+            </Text>
+            <Text style={styles.dateLabel}>
+              {formatDateShortDayMonth(
+                isNewNote
+                  ? new Date()
+                  : ((noteInfo?.updated_at || noteInfo?.created_at) as any),
+                {
+                  weekday: "short",
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                }
+              )}
+            </Text>
+          </View>
+        )}
+        <MyRichEditor
+          shouldOpenKeyboard={shouldOpenKeyboard}
+          isModal
+          Textinput={
+            <TextInput
+              editable={!isView}
+              placeholder="Titulo"
+              placeholderTextColor={theme.colors.text}
+              style={[styles.textInput]}
+              multiline
+              value={noteContent.title}
+              onChangeText={(text: string) => onContentChange("title", text)}
+            />
+          }
+          value={noteContent.content}
+          onChangeText={(text: string) => onContentChange("content", text)}
+          readOnly={isView}
+        />
+        {renderActionButtons()}
+      </View>
+      <KeyboardPaddingView />
     </View>
   );
 };

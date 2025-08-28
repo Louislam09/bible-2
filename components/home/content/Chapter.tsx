@@ -169,19 +169,6 @@ const Chapter = ({
 
   return (
     <View style={styles.chapterContainer}>
-      <Pressable
-        style={{
-          position: "absolute",
-          bottom: 100,
-          right: 10,
-          backgroundColor: isFlashlist ? "red" : "blue",
-          padding: 10,
-          zIndex: 122,
-        }}
-        onPress={() => bibleState$.toggleList()}
-      >
-        <Text>{isFlashlist ? "Flashlist" : "Legendlist"}</Text>
-      </Pressable>
       <View style={[styles.verseContent]}>
         {isFlashlist ? (
           <FlashList
@@ -195,7 +182,7 @@ const Chapter = ({
             ListEmptyComponent={() => (
               <LoadingComponent textColor={theme.colors.text} />
             )}
-            initialScrollIndex={Math.abs(initialScrollIndex || 0)}
+            initialScrollIndex={Math.abs(initialScrollIndex - 1 || 0)}
             viewabilityConfigCallbackPairs={
               viewabilityConfigCallbackPairs.current
             }
@@ -217,7 +204,7 @@ const Chapter = ({
               <LoadingComponent textColor={theme.colors.text} />
             )}
             ListHeaderComponentStyle={{ paddingTop: 70 }}
-            initialScrollIndex={Math.abs(initialScrollIndex || 0)}
+            initialScrollIndex={Math.abs(initialScrollIndex - 1 || 0)}
             viewabilityConfigCallbackPairs={
               viewabilityConfigCallbackPairs.current
             }

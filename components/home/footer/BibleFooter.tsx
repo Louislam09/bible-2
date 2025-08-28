@@ -202,7 +202,6 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
       ]}
       style={styles.footer}
     >
-      {/* <Animated.View style={[styles.footer]}> */}
       {isPlaying && (
         <View style={[styles.progressBarContainer]}>
           <ProgressBar

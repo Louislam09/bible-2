@@ -14,6 +14,7 @@ export const getStyles = ({ colors }: TTheme) =>
       paddingHorizontal: 20,
       position: "absolute",
       bottom: 0,
+      paddingBottom: 25,
     },
     progressBarContainer: {
       position: "absolute",

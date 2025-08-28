@@ -8,6 +8,7 @@ import { useMyTheme } from "@/context/ThemeContext";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import { bibleState$ } from "@/state/bibleState";
 import { EBibleVersions } from "@/types";
+import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { use$ } from "@legendapp/state/react";
 import React, {
   FC,
@@ -22,7 +23,6 @@ import Chapter from "./home/content/Chapter";
 import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
 import { Text, View } from "./Themed";
-import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 
 interface BibleTopProps {
   height: Animated.Value;

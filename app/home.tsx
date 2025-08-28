@@ -13,10 +13,8 @@ import { useBibleContext } from "@/context/BibleContext";
 import BibleBottom from "@/components/BibleBottom";
 import BibleTop from "@/components/BibleTop";
 import BookContentModals from "@/components/book-content-modals";
-import BottomModal from "@/components/BottomModal";
 import CurrentNoteDetail from "@/components/CurrentNoteDetail";
 import FloatingButton from "@/components/FloatingButton";
-import NoteNameList from "@/components/home/NoteNameList";
 import Walkthrough from "@/components/Walkthrough";
 import { useMyTheme } from "@/context/ThemeContext";
 // import CustomHeader from "../components/home/header";
@@ -32,13 +30,6 @@ import { Stack, useNavigation } from "expo-router";
 // Constants
 const MIN_SPLIT_SIZE = 200;
 const ANIMATION_DELAY = 100;
-
-interface SplitConfig {
-  minTopHeight: number;
-  maxTopHeight: number;
-  minWidth: number;
-  maxWidth: number;
-}
 
 interface TutorialStep {
   text: string;
