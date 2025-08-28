@@ -230,54 +230,16 @@ jobs:
 
       - name: 📝 Create GitHub Release
         if: (github.event_name == 'workflow_dispatch') || (github.event_name == 'push')
-        run: |
-          echo "Debug: Event name = ${{ github.event_name }}"
-          echo "Debug: Build type = ${{ github.event.inputs.buildType }}"
-          echo "Debug: Skip to build info = ${{ github.event.inputs.skip_to_build_info }}"
-          echo "Debug: Running main release step"
-          
-          # Create a list of files to upload based on build type
-          FILES_TO_UPLOAD=""
-          
-          # Only check for build files if we're not skipping to build info
-          if [ "${{ github.event.inputs.skip_to_build_info }}" != "true" ]; then
-            # Check for dev APK
-            if [ "${{ github.event.inputs.buildType }}" == "dev" ] || [ "${{ github.event.inputs.buildType }}" == "all" ] || [ "${{ github.event_name }}" == "push" ]; then
-              if [ -f "./app-dev.apk" ]; then
-                FILES_TO_UPLOAD="$FILES_TO_UPLOAD ./app-dev.apk"
-              fi
-            fi
-            
-            # Check for prod APK
-            if [ "${{ github.event.inputs.buildType }}" == "prod-apk" ] || [ "${{ github.event.inputs.buildType }}" == "all" ] || [ "${{ github.event_name }}" == "push" ]; then
-              if [ -f "./app-prod.apk" ]; then
-                FILES_TO_UPLOAD="$FILES_TO_UPLOAD ./app-prod.apk"
-              fi
-            fi
-            
-            # Check for prod AAB
-            if [ "${{ github.event.inputs.buildType }}" == "prod-aab" ] || [ "${{ github.event.inputs.buildType }}" == "all" ] || [ "${{ github.event_name }}" == "push" ]; then
-              if [ -f "./app-prod.aab" ]; then
-                FILES_TO_UPLOAD="$FILES_TO_UPLOAD ./app-prod.aab"
-              fi
-            fi
-          fi
-          
-          echo "Files to upload: $FILES_TO_UPLOAD"
-          
-          if [ -n "$FILES_TO_UPLOAD" ]; then
-            gh release create "v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }}" \
-              --draft \
-              --title "Release v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }}" \
-              --notes-file changelog.md \
-              $FILES_TO_UPLOAD
-          else
-            echo "No build files to upload, creating release without files"
-            gh release create "v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }}" \
-              --draft \
-              --title "Release v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }}" \
-              --notes-file changelog.md
-          fi
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          name: "Release v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }}"
+          tag_name: "v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }}"
+          body_path: changelog.md
+          files: |
+            ./app-dev.apk
+            ./app-prod.apk
+            ./app-prod.aab
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           

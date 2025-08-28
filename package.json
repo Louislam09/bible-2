@@ -120,5 +120,14 @@
     "wrap-ansi": "7.0.0",
     "string-width": "4.1.0"
   },
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "react-native-pell-rich-editor"
+        ]
+      }
+    }
+  },
   "private": true
 }
