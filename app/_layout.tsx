@@ -110,7 +110,7 @@ const App = () => {
         await Updates.reloadAsync();
         ToastAndroid.show("Actualizada ✅", ToastAndroid.SHORT);
       }
-    } catch (error) {}
+    } catch (error) { }
   }
 
   useEffect(() => {

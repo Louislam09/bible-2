@@ -8,8 +8,8 @@ import hymnSong from "@/constants/hymnSong";
 import AlegreSongs from "@/constants/songs";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
-import useParams from "@/hooks/useParams";
 import { useHaptics } from "@/hooks/useHaptics";
+import useParams from "@/hooks/useParams";
 import { TSongItem, TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -298,6 +298,13 @@ const SongDetailPage = () => {
     };
   }, [backgroundDecorations]);
 
+  const titleInfo = useMemo(() => {
+    return {
+      hymnNumber: title.split("-")[0],
+      hymnTitle: title.split("-")[1],
+    };
+  }, [title]);
+
   return (
     <>
       <Stack.Screen options={{ ...singleScreenHeader(screenOptions) }} />
@@ -313,11 +320,11 @@ const SongDetailPage = () => {
               colors={["#e74c3c", "#c0392b"]}
               style={styles.hymnNumberGradient}
             >
-              {/* <Text style={styles.hymnNumber}>{title.toUpperCase()}</Text> */}
+              <Text style={styles.hymnNumber}>{titleInfo.hymnNumber.trim()}</Text>
             </LinearGradient>
           </View>
 
-          <Text style={styles.title}>{title.split("-")[1]}</Text>
+          <Text style={styles.title}>{titleInfo.hymnTitle}</Text>
 
           {isChorus && hasChorus ? (
             <Text style={styles.chorusLabel}>— CORO —</Text>
@@ -427,8 +434,8 @@ const SongDetailPage = () => {
                   styles.navButton,
                   styles.prevButton,
                   currentVerseIndex === 0 &&
-                    !isChorus &&
-                    styles.navButtonDisabled,
+                  !isChorus &&
+                  styles.navButtonDisabled,
                 ]}
                 disabled={currentVerseIndex === 0 && !isChorus}
               >
@@ -436,8 +443,8 @@ const SongDetailPage = () => {
                   style={[
                     styles.navButtonText,
                     currentVerseIndex === 0 &&
-                      !isChorus &&
-                      styles.navButtonTextDisabled,
+                    !isChorus &&
+                    styles.navButtonTextDisabled,
                   ]}
                 >
                   Anterior
@@ -452,8 +459,8 @@ const SongDetailPage = () => {
                   styles.navButton,
                   styles.nextButton,
                   currentVerseIndex === stanzas.length - 1 &&
-                    isChorus &&
-                    styles.navButtonDisabled,
+                  isChorus &&
+                  styles.navButtonDisabled,
                 ]}
                 disabled={currentVerseIndex === stanzas.length - 1 && isChorus}
               >
@@ -461,8 +468,8 @@ const SongDetailPage = () => {
                   style={[
                     styles.navButtonText,
                     currentVerseIndex === stanzas.length - 1 &&
-                      isChorus &&
-                      styles.navButtonTextDisabled,
+                    isChorus &&
+                    styles.navButtonTextDisabled,
                   ]}
                 >
                   Siguiente

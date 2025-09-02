@@ -1,3 +1,4 @@
+import DomChapter from "@/components/dom-components/DomChapter";
 import ProgressBar from "@/components/home/footer/ProgressBar";
 import BibleHeader from "@/components/home/header/BibleHeader";
 import Icon from "@/components/Icon";
@@ -8,10 +9,13 @@ import { useMyTheme } from "@/context/ThemeContext";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import { bibleState$ } from "@/state/bibleState";
 import { EBibleVersions } from "@/types";
+import getMemorySizeInGB from "@/utils/getDeviceRamValue";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { use$ } from "@legendapp/state/react";
+import * as Device from "expo-device";
 import React, {
   FC,
+  memo,
   useCallback,
   useEffect,
   useMemo,
@@ -36,6 +40,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const isDataLoading = use$(() => bibleState$.isDataLoading.top.get());
   const verses = bibleState$.bibleData.topVerses.get() ?? [];
   const interlinearVerses = bibleState$.bibleData.interlinearVerses.get() ?? [];
+
 
   const currentBook = bibleState$.bibleQuery.get().book;
   const bookInfo = getBookDetail(currentBook);
@@ -139,6 +144,12 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     return (currentHistoryIndexState || 0) / (verses?.length || 10);
   }, [currentHistoryIndexState, verses]);
 
+  // useEffect(() => {
+  //   console.log({
+  //     memory: getMemorySizeInGB(),
+  //   });
+  // }, []);
+
   return (
     <Animated.View style={[styles.container, containerStyle]}>
       <Animated.View style={[styles.header, headerStyle]}>
@@ -223,16 +234,19 @@ const BibleTop: FC<BibleTopProps> = (props) => {
             </Text>
           </View>
         ) : (
-          <Chapter
+          <DomChapter
+            initialScrollIndex={initialScrollIndex}
             verses={verses}
             interlinearVerses={interlinearVerses}
             isSplit={false}
             estimatedReadingTime={0}
-            initialScrollIndex={
-              initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
-            }
-            onScroll={handleScroll}
+            theme={theme}
           />
+          //   initialScrollIndex={
+          //     initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
+          //   }
+          //   onScroll={handleScroll}
+          // />
         )}
       </SwipeWrapper>
       <Animated.View style={[styles.footer, footerStyle]}>
