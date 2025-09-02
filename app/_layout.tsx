@@ -22,6 +22,7 @@ import ErrorBoundary from "react-native-error-boundary";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StackAnimationTypes } from "react-native-screens";
+import '../global.css';
 
 import { NetworkProvider } from "@/context/NetworkProvider";
 import { NotificationProvider } from "@/context/NotificationContext";

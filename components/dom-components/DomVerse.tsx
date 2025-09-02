@@ -1,38 +1,13 @@
-// "use dom";
-
-// import { View } from "@/components/Themed";
-// import { TVerse } from "@/types";
-
-// type VerseProps = TVerse & {
-//     initVerse: number;
-// };
-
-// const DomVerse: React.FC<VerseProps> = ({ item }) => {
-//     return (
-//         <div>
-//             <p>{item.text}</p>
-//         </div>
-//     );
-// };
-
-// export default DomVerse;
-
-import AiTextScannerAnimation from "@/components/ai/AiTextScannerAnimation";
-import DisplayStrongWord from "@/components/DisplayStrongWord";
+"use dom";
 import Icon from "@/components/Icon";
-import { getBookDetail } from "@/constants/BookNames";
 import { isDefaultDatabase } from "@/constants/databaseNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
-import { useMemorization } from "@/context/MemorizationContext";
-import { useMyTheme } from "@/context/ThemeContext";
 import { useHaptics } from "@/hooks/useHaptics";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import { bibleState$ } from "@/state/bibleState";
-import { modalState$ } from "@/state/modalState";
-import { IBookVerse, Screens, TIcon, TTheme, TVerse } from "@/types";
+import { IBookVerse, TIcon, TTheme, TVerse } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
-import { customUnderline } from "@/utils/customStyle";
 import {
     extractTextFromParagraph,
     extractWordsWithTags,
@@ -41,14 +16,14 @@ import {
 } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { use$ } from "@legendapp/state/react";
-import { useRouter } from "expo-router";
+import "../../global.css";
+
 import React, {
     memo,
     useCallback,
     useEffect,
     useMemo,
-    useRef,
-    useState,
+    useState
 } from "react";
 
 type VerseProps = TVerse & {
@@ -199,8 +174,6 @@ const DomVerse: React.FC<VerseProps> = ({ item, isSplit, initVerse, theme }) => 
         [isFavorite, item]
     );
 
-    // const verseColor = `text-[${theme.colors.notification}]`;
-    // console.log({ notification: theme.colors.notification })
     return (
         <div
             className="px-8 py-2 cursor-pointer"
@@ -219,6 +192,7 @@ const DomVerse: React.FC<VerseProps> = ({ item, isSplit, initVerse, theme }) => 
         />
       )} */}
 
+
             <p
                 className={`leading-relaxed ${verseIsTapped || verseShowAction
                     ? ""
@@ -226,7 +200,7 @@ const DomVerse: React.FC<VerseProps> = ({ item, isSplit, initVerse, theme }) => 
                     }`}
                 style={{ fontSize }}
             >
-                <span className={`text-[${theme.colors.notification}] font-bold`}>{item.verse} </span>
+                <span className={`text-emerald-500 font-bold`}>{item.verse} </span>
                 {getVerseTextRaw(item.text)}
             </p>
             {verseShowAction && (

@@ -1,5 +1,3 @@
-
-
 "use dom";
 import DomVerse from "@/components/dom-components/DomVerse";
 import { IBookVerse, TTheme } from "@/types";
