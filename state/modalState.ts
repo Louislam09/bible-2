@@ -26,7 +26,6 @@ export const modalState$ = observable({
     modalState$.compareRef.current?.dismiss();
   },
   openStrongSearchBottomSheet: () => {
-    console.log("open-strong-search-bottom-sheet");
     modalState$.isSheetClosed.set(false);
     modalState$.explainVerseRef.current?.close();
     modalState$.strongSearchRef.current?.expand();

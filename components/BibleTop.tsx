@@ -27,6 +27,9 @@ import Chapter from "./home/content/Chapter";
 import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
 import { Text, View } from "./Themed";
+import { modalState$ } from "@/state/modalState";
+import { showToast } from "@/utils/showToast";
+import { WordTagPair } from "@/utils/extractVersesInfo";
 
 interface BibleTopProps {
   height: Animated.Value;
@@ -149,7 +152,27 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   }, [currentHistoryIndexState, verses]);
 
   const MyChapter = (slowDevice || !isFlashlist) ? DomChapter : Chapter;
+  // const MyChapter = Chapter;
 
+  const onStrongWordClicked = useCallback(({ word, tagValue }: WordTagPair) => {
+    // haptics.impact.light();
+    const NT_BOOK_NUMBER = 470;
+    const cognate = "H"
+
+    const addCognate = (tagValue: string) =>
+      tagValue
+        .split(",")
+        .map((code) => `${cognate}${code}`)
+        .join(",");
+
+    const searchCode = addCognate(tagValue || "");
+    const value = {
+      text: word.replace(/[.,;]/g, ""),
+      code: searchCode,
+    };
+    bibleState$.handleStrongWord(value);
+    modalState$.openStrongSearchBottomSheet();
+  }, [])
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
@@ -245,6 +268,12 @@ const BibleTop: FC<BibleTopProps> = (props) => {
             estimatedReadingTime={0}
             theme={theme}
             onScroll={handleScroll}
+            onStrongWordClicked={(values) => {
+              onStrongWordClicked(values as any);
+              showToast('OPEN STRONG WORD CLICKED')
+              // bibleState$.handleStrongWord(values);
+              // modalState$.openStrongSearchBottomSheet();
+            }}
           />
         )}
       </SwipeWrapper>

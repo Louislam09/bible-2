@@ -1,4 +1,3 @@
-"use dom";
 import React from "react";
 
 interface VerseItem {

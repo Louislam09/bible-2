@@ -19,15 +19,7 @@ import InterlinearVerse from "./home/content/InterlinearVerse";
 import StrongContent from "./home/content/StrongContent";
 import { Text, View } from "./Themed";
 
-const mockVerse = {
-  book_number: 10,
-  chapter: 1,
-  is_favorite: 0,
-  text: "<e>בְּרֵאשִׁ֖ית</e> <S>7225</S> <n>be-re-Shit</n> In the beginning <e>בָּרָ֣א</e> <S>1254</S> <n>ba-Ra</n> created <e>אֱלֹהִ֑ים</e> <S>430</S> <n>E-lo-Him;</n> God <e>אֵ֥ת</e> <S>853</S> <n>'et</n> <e>הַשָּׁמַ֖יִם</e> <S>8064</S> <n>hash-sha-Ma-yim</n> the heaven <e>וְאֵ֥ת</e> <S>853</S> <n>ve-'Et</n> <e>הָאָֽרֶץ׃</e> <S>776</S> <n>ha-'A-retz.</n> the earth",
-  verse: 1,
-};
-
-const BookContentModals = ({ book, chapter }: any) => {
+const BookContentModals = () => {
   const { theme } = useMyTheme();
   const { fontSize } = useBibleContext();
   const styles = getStyles(theme);
@@ -156,8 +148,8 @@ const BookContentModals = ({ book, chapter }: any) => {
         <CompareVersions
           {...{
             theme,
-            book,
-            chapter,
+            book: "Génesis",
+            chapter: 1,
             navigation,
             compareRef: modalState$.compareRef.get(),
           }}

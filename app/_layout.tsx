@@ -28,6 +28,7 @@ import { NetworkProvider } from "@/context/NetworkProvider";
 import { NotificationProvider } from "@/context/NotificationContext";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
+import BookContentModals from "@/components/book-content-modals";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -153,6 +154,7 @@ const App = () => {
                               initialRouteName="(dashboard)"
                               screenOptions={screenOptions}
                             />
+                            {/* <BookContentModals /> */}
                           </BottomSheetModalProvider>
                         </GestureHandlerRootView>
                       </QueryProvider>

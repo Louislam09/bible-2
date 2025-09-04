@@ -2,7 +2,7 @@ import Icon from "@/components/Icon";
 import { useHaptics } from "@/hooks/useHaptics";
 import useVerseActions from "@/hooks/useVerseActions";
 import { bibleState$ } from "@/state/bibleState";
-import { IBookVerse, TIcon, TTheme, TVerse } from "@/types";
+import { IBookVerse, IStrongWord, TIcon, TTheme, TVerse } from "@/types";
 import {
     extractTextFromParagraph,
     WordTagPair
@@ -21,6 +21,7 @@ type VerseProps = TVerse & {
     isSplit: boolean;
     initVerse: number;
     theme: TTheme;
+    onStrongWordClicked?: (value: IStrongWord) => void;
 };
 
 type ActionItemProps = {
@@ -30,12 +31,12 @@ type ActionItemProps = {
     item: IBookVerse;
 };
 
-const DVerse: React.FC<VerseProps> = ({ item, isSplit, initVerse, theme }) => {
+const DVerse: React.FC<VerseProps> = ({ item, isSplit, initVerse, theme, onStrongWordClicked }) => {
     const {
         onPress,
         onVerseLongPress,
         onWordClicked,
-        onStrongWordClicked,
+        // onStrongWordClicked,
         onNonHightlistedWordClick,
         onCompareClicked,
         onMemorizeVerse,
@@ -95,7 +96,7 @@ const DVerse: React.FC<VerseProps> = ({ item, isSplit, initVerse, theme }) => {
                                 fontSize={fontSize}
                                 theme={theme}
                                 verse={item.verse}
-                                onWordClick={onStrongWordClicked}
+                                onWordClick={onStrongWordClicked as any}
                                 dom={{
                                     matchContents: true,
                                     scrollEnabled: false,
