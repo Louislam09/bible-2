@@ -39,6 +39,7 @@ interface TChapter {
   estimatedReadingTime: number;
   initialScrollIndex: number;
   onScroll?: (direction: "up" | "down") => void;
+  theme?: TTheme;
 }
 
 const Chapter = ({

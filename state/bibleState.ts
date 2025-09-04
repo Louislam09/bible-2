@@ -93,6 +93,7 @@ export const bibleState$ = observable({
     bibleState$.floatingNoteButtonPosition.set({ x, y });
   },
   handleStrongWord: (strongWord: IStrongWord) => {
+    console.log({ value: strongWord });
     bibleState$.strongWord.set(strongWord);
   },
   openNoteListBottomSheet() {

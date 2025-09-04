@@ -1,4 +1,4 @@
-import React, { RefObject, useCallback, useMemo, useState } from "react";
+import React, { RefObject, useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   Animated,
@@ -26,6 +26,7 @@ import { tourState$ } from "@/state/tourState";
 import { TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
 import { Stack, useNavigation } from "expo-router";
+import { modalState$ } from "@/state/modalState";
 
 // Constants
 const MIN_SPLIT_SIZE = 200;
@@ -130,8 +131,33 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
     );
   }, [SCREEN_HEIGHT, SCREEN_WIDTH, backgroundColor]);
 
+  // const strongSearchRef = use$(() => modalState$.strongSearchRef.get().current);
+
+  // useEffect(() => {
+  //   console.log("HomeScreen", strongSearchRef, JSON.stringify(strongSearchRef, null, 2));
+  // }, [strongSearchRef]);
+
+
   return (
     <StatusBarBackground>
+      <>
+        <BookContentModals
+          book={initialState.book}
+          chapter={initialState.chapter}
+        />
+
+        <FloatingButton iconName="NotebookText">
+          <CurrentNoteDetail />
+        </FloatingButton>
+
+        {tourState$.tourPopoverVisible.get() === "FUNCTION" && (
+          <Walkthrough
+            steps={tutorialSteps}
+            setStep={setStepIndex}
+            currentStep={stepIndex}
+          />
+        )}
+      </>
       <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
         <Stack.Screen options={{ headerShown: false }} />
         {/* <BibleHeader /> */}
@@ -141,23 +167,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
           <BibleTop height={topHeight} width={topWidth} />
           {isSplitActived && renderBottomContent()}
         </View>
-        <>
-          <BookContentModals
-            book={initialState.book}
-            chapter={initialState.chapter}
-          />
-          <FloatingButton iconName="NotebookText">
-            <CurrentNoteDetail />
-          </FloatingButton>
 
-          {tourState$.tourPopoverVisible.get() === "FUNCTION" && (
-            <Walkthrough
-              steps={tutorialSteps}
-              setStep={setStepIndex}
-              currentStep={stepIndex}
-            />
-          )}
-        </>
       </SafeAreaView>
     </StatusBarBackground>
   );

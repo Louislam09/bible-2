@@ -441,7 +441,13 @@ export const useNotificationService = () => {
             await setupNotificationChannel();
 
             if (preferences.dailyVerseEnabled) {
-                await scheduleDailyVerseNotification(preferences.dailyVerseTime);
+                const isAlreadyScheduled = await getScheduledNotifications();
+                const dailyVerseNotifications = isAlreadyScheduled.filter(
+                    notification => notification.content.data?.type === "daily-verse"
+                );
+                if (dailyVerseNotifications.length === 0) {
+                    await scheduleDailyVerseNotification(preferences.dailyVerseTime);
+                }
             }
 
             if (preferences.devotionalReminder) {

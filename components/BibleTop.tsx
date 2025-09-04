@@ -50,6 +50,10 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     EBibleVersions.INTERLINEAR
   ].includes(currentBibleVersion as EBibleVersions);
 
+  const isFlashlist = use$(() => bibleState$.isFlashlist.get());
+
+  const slowDevice = +getMemorySizeInGB() < 4;
+
   const isGreekInterlineal = [EBibleVersions.GREEK].includes(
     currentBibleVersion as EBibleVersions
   );
@@ -144,11 +148,8 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     return (currentHistoryIndexState || 0) / (verses?.length || 10);
   }, [currentHistoryIndexState, verses]);
 
-  // useEffect(() => {
-  //   console.log({
-  //     memory: getMemorySizeInGB(),
-  //   });
-  // }, []);
+  const MyChapter = (slowDevice || !isFlashlist) ? DomChapter : Chapter;
+
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
@@ -234,19 +235,17 @@ const BibleTop: FC<BibleTopProps> = (props) => {
             </Text>
           </View>
         ) : (
-          <DomChapter
-            initialScrollIndex={initialScrollIndex}
+          <MyChapter
+            initialScrollIndex={
+              initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
+            }
             verses={verses}
             interlinearVerses={interlinearVerses}
             isSplit={false}
             estimatedReadingTime={0}
             theme={theme}
+            onScroll={handleScroll}
           />
-          //   initialScrollIndex={
-          //     initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
-          //   }
-          //   onScroll={handleScroll}
-          // />
         )}
       </SwipeWrapper>
       <Animated.View style={[styles.footer, footerStyle]}>

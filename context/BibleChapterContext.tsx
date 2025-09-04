@@ -84,6 +84,7 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
           link?.chapter === targetChapter
       );
 
+
       batch(() => {
         storedData$[`${storageKey}Book`].set(targetBook);
         storedData$[`${storageKey}Chapter`].set(targetChapter);

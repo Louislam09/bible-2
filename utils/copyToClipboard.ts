@@ -1,4 +1,4 @@
-import { ToastAndroid } from "react-native";
+import { Platform, ToastAndroid } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { IBookVerse, IVerseItem } from "@/types";
 import { getVerseTextRaw } from "./getVerseTextRaw";
@@ -25,16 +25,14 @@ export const formatTextToClipboard = (data: FormatTextToClipboard): string => {
     ? highlightedVerses[highlightedVerses.length - 1].verse
     : firstVerse;
 
-  const verseTitle = `${book} ${chapter}:${firstVerse}${
-    highlightedGreaterThanOne ? "-" + lastVerse : ""
-  }`;
+  const verseTitle = `${book} ${chapter}:${firstVerse}${highlightedGreaterThanOne ? "-" + lastVerse : ""
+    }`;
   const verseText = highlightedVerses
     .map((verse) => `${verse.verse} ${getVerseTextRaw(verse.text)}`)
     .join(shouldReturn ? "<br>" : "\n");
 
-  return `${shouldReturn ? `<b>${verseTitle}</b>` : verseTitle}${
-    shouldReturn ? `<br>${verseText} <br>` : `\n${verseText}`
-  }`;
+  return `${shouldReturn ? `<b>${verseTitle}</b>` : verseTitle}${shouldReturn ? `<br>${verseText} <br>` : `\n${verseText}`
+    }`;
 };
 
 const copyToClipboard = async (
@@ -59,7 +57,8 @@ const copyToClipboard = async (
     return textCopied;
   }
   await Clipboard.setStringAsync(textCopied);
-  ToastAndroid.show("Versículo copiado!", ToastAndroid.SHORT);
+  console.log("Versículo copiado!", Platform.OS, ToastAndroid);
+  ToastAndroid?.show("Versículo copiado!", ToastAndroid.SHORT);
 };
 
 export default copyToClipboard;
