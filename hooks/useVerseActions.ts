@@ -102,7 +102,6 @@ const useVerseActions = ({ item, isSplit, initVerse, onInterlinear: externalOnIn
             bibleState$.handleTapVerse(item);
         }
         bibleState$.isBottomBibleSearching.set(!!isSplit);
-        haptics.selection();
     }, [item, verseIsTapped, isSplit]);
 
     const onPress = useSingleAndDoublePress({

@@ -57,7 +57,6 @@ const copyToClipboard = async (
     return textCopied;
   }
   await Clipboard.setStringAsync(textCopied);
-  console.log("Versículo copiado!", Platform.OS, ToastAndroid);
   ToastAndroid?.show("Versículo copiado!", ToastAndroid.SHORT);
 };
 

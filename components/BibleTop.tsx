@@ -25,6 +25,7 @@ import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
 import { Text, View } from "./Themed";
 import DomChapter from "./dom-components/DomChapter";
+import { useHaptics } from "@/hooks/useHaptics";
 
 interface BibleTopProps {
   height: Animated.Value;
@@ -33,6 +34,7 @@ interface BibleTopProps {
 
 const BibleTop: FC<BibleTopProps> = (props) => {
   const { theme } = useMyTheme();
+  const haptics = useHaptics();
   const { orientation } = useBibleContext();
   const isPortrait = orientation === "PORTRAIT";
   const isDataLoading = use$(() => bibleState$.isDataLoading.top.get());
@@ -95,19 +97,20 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const footerHeight = useRef(new Animated.Value(1)).current;
 
   const handleScroll = useCallback((direction: "up" | "down") => {
-    // const toValue = direction === "up" ? 1 : 0;
-    // Animated.parallel([
-    //   Animated.timing(headerHeight, {
-    //     toValue,
-    //     duration: 200,
-    //     useNativeDriver: false,
-    //   }),
-    //   Animated.timing(footerHeight, {
-    //     toValue,
-    //     duration: 200,
-    //     useNativeDriver: false,
-    //   }),
-    // ]).start();
+    console.log("handleScroll", direction);
+    const toValue = direction === "up" ? 1 : 0;
+    Animated.parallel([
+      Animated.timing(headerHeight, {
+        toValue,
+        duration: 200,
+        useNativeDriver: false,
+      }),
+      Animated.timing(footerHeight, {
+        toValue,
+        duration: 200,
+        useNativeDriver: false,
+      }),
+    ]).start();
   }, []);
 
   const containerStyle = useMemo(
@@ -148,6 +151,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   }, [currentHistoryIndexState, verses]);
 
   const onStrongWordClicked = useCallback(({ word, tagValue }: WordTagPair) => {
+    haptics.selection();
     // haptics.impact.light();
     const NT_BOOK_NUMBER = 470;
     const cognate = "H"

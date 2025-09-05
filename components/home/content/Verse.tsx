@@ -207,7 +207,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       bibleState$.handleTapVerse(item);
     }
     bibleState$.isBottomBibleSearching.set(!!isSplit);
-    haptics.selection();
+    // haptics.selection();
   }, [item, verseIsTapped, isSplit]);
 
   const onPress = useSingleAndDoublePress({
