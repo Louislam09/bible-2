@@ -16,10 +16,9 @@ import React, {
 import {
   ActivityIndicator,
   Animated,
-  Pressable,
   StyleSheet,
   useWindowDimensions,
-  View,
+  View
 } from "react-native";
 import InterlinearVerse from "./InterlinearVerse";
 import Verse from "./Verse";

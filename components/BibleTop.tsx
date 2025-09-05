@@ -45,27 +45,30 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const verses = bibleState$.bibleData.topVerses.get() ?? [];
   const interlinearVerses = bibleState$.bibleData.interlinearVerses.get() ?? [];
 
-
   const currentBook = bibleState$.bibleQuery.get().book;
   const bookInfo = getBookDetail(currentBook);
   const NT_BOOK_NUMBER = 470;
   const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
-  const isInterlineal = [
-    EBibleVersions.INTERLINEAR
-  ].includes(currentBibleVersion as EBibleVersions);
 
   const isFlashlist = use$(() => bibleState$.isFlashlist.get());
 
   const slowDevice = +getMemorySizeInGB() < 4;
 
-  const isGreekInterlineal = [EBibleVersions.GREEK].includes(
+  const isHebrewInterlinear = [
+    EBibleVersions.INTERLINEAR
+  ].includes(currentBibleVersion as EBibleVersions);
+
+  const isGreekInterlinear = [EBibleVersions.GREEK].includes(
     currentBibleVersion as EBibleVersions
   );
+
   const isNewTestamentAndInterlinear =
-    bookInfo.bookNumber >= NT_BOOK_NUMBER && isInterlineal;
+    bookInfo.bookNumber >= NT_BOOK_NUMBER && isHebrewInterlinear;
 
   const isOldTestamentAndGreekInterlineal =
-    bookInfo.bookNumber < NT_BOOK_NUMBER && isGreekInterlineal;
+    bookInfo.bookNumber < NT_BOOK_NUMBER && isGreekInterlinear;
+
+  const isInterlinear = isHebrewInterlinear || isGreekInterlinear
 
   const isSplitActived = bibleState$.isSplitActived.get();
   const {
@@ -152,11 +155,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     return (currentHistoryIndexState || 0) / (verses?.length || 10);
   }, [currentHistoryIndexState, verses]);
 
-  const MyChapter = (slowDevice || !isFlashlist) ? DomChapter : Chapter;
-  // const MyChapter = Chapter;
-
   const onStrongWordClicked = useCallback(({ word, tagValue }: WordTagPair) => {
-    showToast('Strong word clicked from parent');
     // haptics.impact.light();
     const NT_BOOK_NUMBER = 470;
     const cognate = "H"
@@ -177,8 +176,6 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   }, [])
 
   const onInterlinear = useCallback((item: IBookVerse) => {
-    showToast('Interlinear action triggered from parent');
-
     const currentInterlinear =
       bibleState$.bibleData.interlinearVerses.get()?.[item.verse - 1];
 
@@ -194,8 +191,6 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   }, []);
 
   const onAnotar = useCallback(async (item: IBookVerse) => {
-    showToast('Anotar action triggered from parent');
-
     const shouldReturn = true;
     const isMoreThanOneHighted = bibleState$.selectedVerses.get().size > 1;
     const highlightedVerses = Array.from(
@@ -209,11 +204,13 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   }, []);
 
   const onComparar = useCallback((item: IBookVerse) => {
-    showToast('Comparar action triggered from parent');
     bibleState$.verseToCompare.set(item.verse);
     modalState$.openCompareBottomSheet();
     bibleState$.clearSelection();
   }, []);
+
+  const MyChapter = isInterlinear ? Chapter : (slowDevice || !isFlashlist) ? DomChapter : Chapter;
+  // const MyChapter = Chapter;
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
@@ -279,9 +276,9 @@ const BibleTop: FC<BibleTopProps> = (props) => {
                 textAlign: "center",
               }}
             >
-              Los versículos del {isGreekInterlineal ? "Antiguo" : "Nuevo"}{" "}
+              Los versículos del {isGreekInterlinear ? "Antiguo" : "Nuevo"}{" "}
               Pacto no están disponibles en formato interlinear{" "}
-              {isGreekInterlineal ? "griego" : "hebreo"} en este momento.
+              {isGreekInterlinear ? "griego" : "hebreo"} en este momento.
             </Text>
 
             {/* Action Text */}
@@ -294,8 +291,8 @@ const BibleTop: FC<BibleTopProps> = (props) => {
               }}
             >
               Selecciona un versículo del{" "}
-              {isGreekInterlineal ? "Nuevo" : "Antiguo"} Pacto para usar la
-              función interlinear {isGreekInterlineal ? "griego" : "hebreo"}
+              {isGreekInterlinear ? "Nuevo" : "Antiguo"} Pacto para usar la
+              función interlinear {isGreekInterlinear ? "griego" : "hebreo"}
             </Text>
           </View>
         ) : (
@@ -308,10 +305,11 @@ const BibleTop: FC<BibleTopProps> = (props) => {
             isSplit={false}
             theme={theme}
             onScroll={handleScroll}
-            onStrongWordClicked={onStrongWordClicked}
-            onInterlinear={onInterlinear}
-            onAnotar={onAnotar}
-            onComparar={onComparar}
+            {...{ onStrongWordClicked, onInterlinear, onAnotar, onComparar }}
+          // onStrongWordClicked={onStrongWordClicked}
+          // onInterlinear={onInterlinear}
+          // onAnotar={onAnotar}
+          // onComparar={onComparar}
           />
         )}
       </SwipeWrapper>

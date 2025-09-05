@@ -35,12 +35,12 @@ const CompareVersions = ({
   chapter,
   navigation,
 }: CompareVersionsProps) => {
-  const { installedBibles: dbNames, executeSql } = useDBContext();
+  const { installedBibles: dbNames } = useDBContext();
   const [filteredVersionData, setFilteredVersionData] = useState<
     DatabaseData[]
   >([]);
   const styles = getStyles(theme);
-  const { fontSize, selectBibleVersion } = useBibleContext();
+  const { fontSize } = useBibleContext();
   const flatListRef = useRef<FlashListRef<any>>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const notFoundSource = require("../assets/lottie/notFound.json");
@@ -51,7 +51,7 @@ const CompareVersions = ({
   });
   const { data, error, loading } = useCompareVerses({
     ...searchParam,
-    databases: dbNames,
+    databases: dbNames.filter(x => !x.name.toLowerCase().includes('inter')),
   });
   const currentBook = DB_BOOK_NAMES.find(
     (x) => x.longName === book
@@ -70,16 +70,6 @@ const CompareVersions = ({
       setFilteredVersionData(data);
     }
   }, [data, loading, error]);
-
-  // const onVerseClick = async (item: IVerseItem, dbID: string) => {
-  //   await selectBibleVersion(dbID);
-  //   navigation.setParams({
-  //     Book: item.bookName,
-  //     chapter: item.chapter,
-  //     verse: item.verse,
-  //   });
-  //   modalState$.closeCompareBottomSheet();
-  // };
 
   const onCopy = async (item: IVerseItem, versionName: string) => {
     await copyToClipboard({
