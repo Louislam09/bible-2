@@ -148,7 +148,7 @@ const ChapterRender = ({
     return (
         <div
             ref={containerRef}
-            className="w-full h-full overflow-y-auto relative z-1 border border-yellow-500 "
+            className="w-full h-full overflow-y-auto relative z-1"
             style={{
                 width: width,
 
