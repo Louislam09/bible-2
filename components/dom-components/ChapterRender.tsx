@@ -1,13 +1,14 @@
 "use dom";
 
 import { bibleState$ } from "@/state/bibleState";
-import { IBookVerse, IStrongWord, TTheme } from "@/types";
+import { IBookVerse, IFavoriteVerse, IStrongWord, TTheme } from "@/types";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import "../../global.css";
 import DomInterlinearVerse from "../home/content/DomInterlinearVerse";
 import Icon from "../Icon";
 import DVerse from "./DVerse";
+import { WordTagPair } from "@/utils/extractVersesInfo";
 
 type ChapterRenderProps = {
     width: number;
@@ -17,9 +18,14 @@ type ChapterRenderProps = {
     isSplit: boolean | undefined;
     initialScrollIndex: number;
     theme: TTheme;
-    onStrongWordClicked: ((value: IStrongWord) => void) | undefined
+    onStrongWordClicked: ((value: WordTagPair) => void) | undefined
     onScroll: ((direction: "up" | "down") => void) | undefined
     estimatedReadingTime: number;
+    onInterlinear?: (item: IBookVerse) => void;
+    onAnotar?: (item: IBookVerse) => void;
+    onComparar?: (item: IBookVerse) => void;
+    onMemorizeVerse?: (verse: string, version: string) => void
+    onFavoriteVerse?: ({ bookNumber, chapter, verse, isFav, }: IFavoriteVerse) => Promise<void>
 };
 
 const ChapterRender = ({
@@ -32,7 +38,12 @@ const ChapterRender = ({
     theme,
     onStrongWordClicked,
     onScroll,
-    estimatedReadingTime
+    estimatedReadingTime,
+    onInterlinear,
+    onAnotar,
+    onComparar,
+    onMemorizeVerse,
+    onFavoriteVerse
 }: ChapterRenderProps) => {
     const { colors } = theme;
     const topVerseRef = useRef<number | null>(null);
@@ -178,6 +189,11 @@ const ChapterRender = ({
                                 initVerse={initialScrollIndex}
                                 theme={theme}
                                 onStrongWordClicked={onStrongWordClicked}
+                                onInterlinear={onInterlinear}
+                                onAnotar={onAnotar}
+                                onComparar={onComparar}
+                                onMemorizeVerse={onMemorizeVerse}
+                                onFavoriteVerse={onFavoriteVerse}
                             />
                         </div>
                     );

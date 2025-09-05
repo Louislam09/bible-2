@@ -2,26 +2,26 @@ import Icon from "@/components/Icon";
 import { useHaptics } from "@/hooks/useHaptics";
 import useVerseActions from "@/hooks/useVerseActions";
 import { bibleState$ } from "@/state/bibleState";
-import { IBookVerse, IStrongWord, TIcon, TTheme, TVerse } from "@/types";
-import {
-    extractTextFromParagraph,
-    WordTagPair
-} from "@/utils/extractVersesInfo";
+import { IBookVerse, IFavoriteVerse, IStrongWord, TIcon, TTheme, TVerse } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { use$ } from "@legendapp/state/react";
 import React, {
     memo
 } from "react";
-import { StyleSheet } from "react-native";
 import DomRenderTextWithClickableWords from "../home/content/DomRenderTextWithClickableWords";
 import DomClickableVerse from "./DomClickableVerse";
-import withRenderCount from "../withRenderCount";
+import { WordTagPair } from "@/utils/extractVersesInfo";
 
 type VerseProps = TVerse & {
     isSplit: boolean;
     initVerse: number;
     theme: TTheme;
-    onStrongWordClicked?: (value: IStrongWord) => void;
+    onStrongWordClicked?: (value: WordTagPair) => void;
+    onInterlinear?: (item: IBookVerse) => void;
+    onAnotar?: (item: IBookVerse) => void;
+    onComparar?: (item: IBookVerse) => void;
+    onMemorizeVerse?: (verse: string, version: string) => void
+    onFavoriteVerse?: ({ bookNumber, chapter, verse, isFav, }: IFavoriteVerse) => Promise<void>
 };
 
 type ActionItemProps = {
@@ -31,17 +31,11 @@ type ActionItemProps = {
     item: IBookVerse;
 };
 
-const DVerse: React.FC<VerseProps> = ({ item, isSplit, initVerse, theme, onStrongWordClicked }) => {
+const DVerse: React.FC<VerseProps> = ({ item, isSplit, initVerse, theme, onStrongWordClicked, onInterlinear, onAnotar, onComparar, onMemorizeVerse, onFavoriteVerse }) => {
     const {
         onPress,
         onVerseLongPress,
         onWordClicked,
-        // onStrongWordClicked,
-        onNonHightlistedWordClick,
-        onCompareClicked,
-        onMemorizeVerse,
-        onExplainWithAI,
-        onInterlinear,
         verseActions,
         verseIsTapped,
         verseShowAction,
@@ -50,7 +44,16 @@ const DVerse: React.FC<VerseProps> = ({ item, isSplit, initVerse, theme, onStron
         isVerseDoubleTagged,
         isBottom,
         isTop,
-    } = useVerseActions({ item: item, isSplit: !!isSplit, initVerse: initVerse });
+    } = useVerseActions({
+        item: item,
+        isSplit: !!isSplit,
+        initVerse: initVerse,
+        onInterlinear,
+        onAnotar,
+        onComparar,
+        onMemorizeVerse,
+        onFavoriteVerse
+    });
 
     return (
         <div
@@ -58,7 +61,6 @@ const DVerse: React.FC<VerseProps> = ({ item, isSplit, initVerse, theme, onStron
             onClick={() => onPress()}
             onContextMenu={(e) => {
                 e.preventDefault();
-                console.log("context menu or long press");
                 onVerseLongPress();
             }}
         >
@@ -97,10 +99,7 @@ const DVerse: React.FC<VerseProps> = ({ item, isSplit, initVerse, theme, onStron
                                 theme={theme}
                                 verse={item.verse}
                                 onWordClick={onStrongWordClicked as any}
-                                dom={{
-                                    matchContents: true,
-                                    scrollEnabled: false,
-                                }}
+                                dom={{ matchContents: true, scrollEnabled: false }}
                             />
                         </span>
                     )}
@@ -189,6 +188,4 @@ const ActionItem = memo(({ index, action, theme, item }: ActionItemProps) => {
     );
 });
 
-// export default React.memo(DVerse);
 export default DVerse;
-// export default withRenderCount(DVerse);

@@ -20,15 +20,9 @@ const Favorite: React.FC<FavoriteProps> = () => {
             titleIcon: "Star",
             headerRightProps: {
               headerRightIconColor: "#fedf75",
-              headerRightText: `⭐`,
-              onPress: () => console.log(),
+              onPress: () => { },
               disabled: true,
-              style: {
-                opacity: 1,
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 4,
-              },
+              style: {},
             },
           }),
         }}

@@ -26,17 +26,8 @@ import Verse from "./Verse";
 
 interface TChapter {
   verses: IBookVerse[];
-  isSplit?: boolean;
-  estimatedReadingTime: number;
-  initialScrollIndex: number;
-  onScroll?: (direction: "up" | "down") => void;
-}
-
-interface TChapter {
-  verses: IBookVerse[];
   interlinearVerses: IBookVerse[];
   isSplit?: boolean;
-  estimatedReadingTime: number;
   initialScrollIndex: number;
   onScroll?: (direction: "up" | "down") => void;
   theme?: TTheme;
@@ -46,7 +37,6 @@ const Chapter = ({
   verses,
   interlinearVerses,
   isSplit,
-  estimatedReadingTime,
   initialScrollIndex,
   onScroll,
 }: TChapter) => {
@@ -138,7 +128,7 @@ const Chapter = ({
         </Text>
       </View>
     );
-  }, [estimatedReadingTime, isHebrewInterlinear, isGreekInterlinear]);
+  }, [isHebrewInterlinear, isGreekInterlinear]);
 
   const keyExtractor = useCallback(
     (item: IBookVerse) =>

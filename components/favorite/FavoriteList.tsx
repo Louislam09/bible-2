@@ -2,6 +2,7 @@ import Animation from "@/components/Animation";
 import Icon from "@/components/Icon";
 import ActionButton, { Backdrop } from "@/components/note/ActionButton";
 import { Text, View as ThemedView } from "@/components/Themed";
+import { getBookDetail } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { useFavoriteVerseService } from "@/services/favoriteVerseService";
@@ -15,7 +16,7 @@ import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { showToast } from "@/utils/showToast";
 import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "@react-navigation/native";
-import { FlashList, FlashListRef } from "@shopify/flash-list";
+import { FlashListRef } from "@shopify/flash-list";
 // import * as Haptics from "expo-haptics";
 import { Stack, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -24,19 +25,17 @@ import {
   Animated,
   Keyboard,
   ListRenderItem,
-  Platform,
   RefreshControl,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type TListVerse = {};
 
-const FavoriteList = ({}: TListVerse) => {
+const FavoriteList = ({ }: TListVerse) => {
   const [filterData, setFilterData] = useState<(IVerseItem & { id: number })[]>(
     []
   );
@@ -166,12 +165,11 @@ const FavoriteList = ({}: TListVerse) => {
   }, []);
 
   const onShare = useCallback((item: IVerseItem) => {
-    const verseReference = `${renameLongBookName(item.bookName)} ${
-      item.chapter
-    }:${item.verse}`;
     const verseText = getVerseTextRaw(item.text);
-
-    showToast("Función de compartir implementada");
+    const reference = `${getBookDetail(item?.book_number).longName} ${item.chapter
+      }:${item.verse}`;
+    bibleState$.handleSelectVerseForNote(verseText);
+    router.push({ pathname: "/quote", params: { text: verseText, reference } });
   }, []);
 
   const toggleSelectionMode = useCallback(() => {
@@ -480,9 +478,8 @@ const FavoriteList = ({}: TListVerse) => {
 
               <View style={styles.headerContainer}>
                 <Text style={styles.cardTitle}>
-                  {`${renameLongBookName(item.bookName)} ${item.chapter}:${
-                    item.verse
-                  }`}
+                  {`${renameLongBookName(item.bookName)} ${item.chapter}:${item.verse
+                    }`}
                 </Text>
 
                 {!selectionMode && (
@@ -492,7 +489,7 @@ const FavoriteList = ({}: TListVerse) => {
                       onPress={() => onCopy(item)}
                       accessibilityLabel="Copiar versículo"
                     >
-                      <Icon size={20} name="Copy" />
+                      <Icon size={20} name="Copy" color={theme.colors.text} />
                     </TouchableOpacity>
 
                     <TouchableOpacity
@@ -500,7 +497,7 @@ const FavoriteList = ({}: TListVerse) => {
                       onPress={() => onShare(item)}
                       accessibilityLabel="Compartir versículo"
                     >
-                      <Icon size={20} name="Share2" />
+                      <Icon size={20} name="Share2" color={theme.colors.text} />
                     </TouchableOpacity>
                   </View>
                 )}
@@ -526,120 +523,10 @@ const FavoriteList = ({}: TListVerse) => {
     ]
   );
 
-  const SearchedHeader = useCallback(() => {
-    return (
-      <View style={styles.headerCompositeContainer}>
-        <View style={styles.searchContainer}>
-          <Icon
-            name="Search"
-            size={20}
-            color={theme.colors.text}
-            style={styles.searchIcon}
-          />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Buscar en favoritos..."
-            placeholderTextColor={theme.colors.text + "80"}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            returnKeyType="search"
-            clearButtonMode="while-editing"
-          />
-          {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery("")}>
-              <Icon name="X" size={20} color={theme.colors.text} />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        {filterData.length > 0 && (
-          <View style={styles.chapterHeader}>
-            <Text style={styles.chapterHeaderTitle}>
-              {filterData.length}{" "}
-              {filterData.length === 1
-                ? "versículo favorito"
-                : "versículos favoritos"}
-            </Text>
-
-            {filterData.length > 1 && !selectionMode && (
-              <TouchableOpacity
-                style={styles.selectButton}
-                onPress={toggleSelectionMode}
-              >
-                <Text style={styles.selectButtonText}>Seleccionar</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        )}
-
-        {selectionMode && (
-          <View style={styles.selectionToolbar}>
-            <Text style={styles.selectedCount}>
-              {selectedItems.size}{" "}
-              {selectedItems.size === 1 ? "seleccionado" : "seleccionados"}
-            </Text>
-
-            <View style={styles.selectionActions}>
-              {selectedItems.size > 0 && (
-                <TouchableOpacity
-                  style={[styles.toolbarButton, styles.deleteButton]}
-                  onPress={deleteSelected}
-                >
-                  <Icon name="Trash2" size={16} color="#fff" />
-                  <Text style={styles.deleteButtonText}>Eliminar</Text>
-                </TouchableOpacity>
-              )}
-
-              {selectedItems.size < filterData.length ? (
-                <TouchableOpacity
-                  style={styles.toolbarButton}
-                  onPress={selectAll}
-                >
-                  <Text style={styles.toolbarButtonText}>Seleccionar todo</Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  style={styles.toolbarButton}
-                  onPress={deselectAll}
-                >
-                  <Text style={styles.toolbarButtonText}>Deseleccionar</Text>
-                </TouchableOpacity>
-              )}
-
-              <TouchableOpacity
-                style={styles.toolbarButton}
-                onPress={toggleSelectionMode}
-              >
-                <Text style={styles.toolbarButtonText}>Cancelar</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-      </View>
-    );
-  }, [
-    theme,
-    searchQuery,
-    filterData.length,
-    selectionMode,
-    selectedItems.size,
-    toggleSelectionMode,
-    selectAll,
-    deselectAll,
-    deleteSelected,
-    styles,
-  ]);
-
   const EmptyComponent = useCallback(() => {
     if (loading) {
       return (
         <View style={styles.loadingContainer}>
-          {/* <Animation
-            backgroundColor={theme.colors.background}
-            source={loadingSource}
-            loop={true}
-            style={styles.animation}
-          /> */}
           <Text style={styles.loadingText}>
             Cargando versículos favoritos...
           </Text>
@@ -753,7 +640,6 @@ const FavoriteList = ({}: TListVerse) => {
       />
 
       <Backdrop visible={showMoreOptions} onPress={dismiss} theme={theme} />
-      {SearchedHeader()}
       <Animated.FlatList
         decelerationRate="normal"
         data={filterData}
@@ -800,11 +686,13 @@ const getStyles = ({ colors, dark }: TTheme) =>
     searchContainer: {
       flexDirection: "row",
       alignItems: "center",
-      backgroundColor: dark ? colors.card : colors.border + "20",
-      paddingHorizontal: 12,
-      borderRadius: 8,
-      height: 44,
-      marginBottom: 12,
+      borderRadius: 10,
+      marginVertical: 12,
+      borderWidth: 1,
+      width: "100%",
+      height: 48,
+      backgroundColor: colors.notification + "20",
+      borderColor: colors.text,
     },
     searchIcon: {
       marginRight: 8,

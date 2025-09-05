@@ -1,11 +1,3 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from "react";
-import { useDBContext } from "./databaseContext";
 import {
   DELETE_VERSE_FROM_MOMORIZATION,
   GET_ALL_MOMORIZATION,
@@ -13,6 +5,14 @@ import {
   UPDATE_MOMORIZATION_PROGRESS,
 } from "@/constants/Queries";
 import { showToast } from "@/utils/showToast";
+import React, {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useState
+} from "react";
+import { useDBContext } from "./databaseContext";
 
 type Memorization = {
   id: number;
@@ -31,13 +31,21 @@ type MemorizationContextType = {
   refreshVerses: () => void;
 };
 
-const MemorizationContext = createContext<MemorizationContextType | undefined>(
-  undefined
+const initialContext: MemorizationContextType = {
+  verses: [],
+  addVerse: () => { },
+  deleteVerse: () => { },
+  updateProgress: () => { },
+  refreshVerses: () => { },
+};
+
+const MemorizationContext = createContext<MemorizationContextType>(
+  initialContext
 );
 
 export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
   const [verses, setVerses] = useState<Memorization[]>([]);
-  const { myBibleDB, executeSql } = useDBContext();
+  const { myBibleDB, executeSql, allBibleLoaded } = useDBContext();
 
   const refreshVerses = async () => {
     try {
@@ -49,16 +57,15 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const addVerse = async (verse: string, version: string) => {
+  const addVerse = useCallback(async (verse: string, version: string) => {
+    showToast("Versículo añadido con éxito!");
     try {
-      if (!myBibleDB || !executeSql) return;
       const values = [verse, version, 0];
       await executeSql(INSERT_VERSE_TO_MOMORIZATION, values);
-      showToast("Versículo añadido con éxito!");
     } catch (error) {
       console.warn("Error inserting verse:", error);
     }
-  };
+  }, [allBibleLoaded]);
 
   const deleteVerse = async (id: number) => {
     try {
@@ -112,12 +119,14 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useMemorization = () => {
-  const context = useContext(MemorizationContext);
-  if (!context) {
-    throw new Error(
-      "useMemorization must be used within a MemorizationProvider"
-    );
-  }
-  return context;
-};
+export const useMemorization = () => useContext(MemorizationContext);
+
+// export const useMemorization = () => {
+//   const context = useContext(MemorizationContext);
+//   if (!context) {
+//     throw new Error(
+//       "useMemorization must be used within a MemorizationProvider"
+//     );
+//   }
+//   return context;
+// };

@@ -8,7 +8,7 @@ import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import { bibleState$ } from "@/state/bibleState";
-import { EBibleVersions } from "@/types";
+import { EBibleVersions, IBookVerse } from "@/types";
 import getMemorySizeInGB from "@/utils/getDeviceRamValue";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { use$ } from "@legendapp/state/react";
@@ -30,6 +30,7 @@ import { Text, View } from "./Themed";
 import { modalState$ } from "@/state/modalState";
 import { showToast } from "@/utils/showToast";
 import { WordTagPair } from "@/utils/extractVersesInfo";
+import copyToClipboard from "@/utils/copyToClipboard";
 
 interface BibleTopProps {
   height: Animated.Value;
@@ -155,6 +156,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   // const MyChapter = Chapter;
 
   const onStrongWordClicked = useCallback(({ word, tagValue }: WordTagPair) => {
+    showToast('Strong word clicked from parent');
     // haptics.impact.light();
     const NT_BOOK_NUMBER = 470;
     const cognate = "H"
@@ -173,6 +175,45 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     bibleState$.handleStrongWord(value);
     modalState$.openStrongSearchBottomSheet();
   }, [])
+
+  const onInterlinear = useCallback((item: IBookVerse) => {
+    showToast('Interlinear action triggered from parent');
+
+    const currentInterlinear =
+      bibleState$.bibleData.interlinearVerses.get()?.[item.verse - 1];
+
+    bibleState$.handleVerseToInterlinear({
+      book_number: item?.book_number,
+      chapter: item.chapter,
+      verse: item.verse,
+      text: currentInterlinear?.text || "",
+    });
+    modalState$.openInterlinealBottomSheet();
+    // Use the default implementation from the original actions
+    // The modal will be opened from the global state
+  }, []);
+
+  const onAnotar = useCallback(async (item: IBookVerse) => {
+    showToast('Anotar action triggered from parent');
+
+    const shouldReturn = true;
+    const isMoreThanOneHighted = bibleState$.selectedVerses.get().size > 1;
+    const highlightedVerses = Array.from(
+      bibleState$.selectedVerses.get().values()
+    ).sort((a, b) => a.verse - b.verse);
+    const value = isMoreThanOneHighted ? highlightedVerses : item;
+    const verseToAdd = (await copyToClipboard(value, shouldReturn)) as string;
+    bibleState$.handleSelectVerseForNote(verseToAdd);
+    bibleState$.clearSelection();
+    if (!bibleState$.currentNoteId.get()) bibleState$.openNoteListBottomSheet();
+  }, []);
+
+  const onComparar = useCallback((item: IBookVerse) => {
+    showToast('Comparar action triggered from parent');
+    bibleState$.verseToCompare.set(item.verse);
+    modalState$.openCompareBottomSheet();
+    bibleState$.clearSelection();
+  }, []);
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
@@ -265,15 +306,12 @@ const BibleTop: FC<BibleTopProps> = (props) => {
             verses={verses}
             interlinearVerses={interlinearVerses}
             isSplit={false}
-            estimatedReadingTime={0}
             theme={theme}
             onScroll={handleScroll}
-            onStrongWordClicked={(values) => {
-              onStrongWordClicked(values as any);
-              showToast('OPEN STRONG WORD CLICKED')
-              // bibleState$.handleStrongWord(values);
-              // modalState$.openStrongSearchBottomSheet();
-            }}
+            onStrongWordClicked={onStrongWordClicked}
+            onInterlinear={onInterlinear}
+            onAnotar={onAnotar}
+            onComparar={onComparar}
           />
         )}
       </SwipeWrapper>

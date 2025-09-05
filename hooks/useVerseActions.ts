@@ -8,7 +8,7 @@ import { useHaptics } from "@/hooks/useHaptics";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
-import { IBookVerse, Screens, TIcon, TVerse } from "@/types";
+import { IBookVerse, IFavoriteVerse, Screens, TIcon, TVerse } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import {
     extractTextFromParagraph,
@@ -17,6 +17,7 @@ import {
     WordTagPair,
 } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { showToast } from "@/utils/showToast";
 import { use$ } from "@legendapp/state/react";
 import { useRouter } from "expo-router";
 import React, {
@@ -33,41 +34,20 @@ import {
 type VerseProps = TVerse & {
     isSplit: boolean;
     initVerse: number;
+    onInterlinear?: (item: IBookVerse) => void;
+    onAnotar?: (item: IBookVerse) => void;
+    onComparar?: (item: IBookVerse) => void;
+    onMemorizeVerse?: (verse: string, version: string) => void;
+    onFavoriteVerse?: ({ bookNumber, chapter, verse, isFav, }: IFavoriteVerse) => Promise<void>
 };
 
-type ActionItemProps = {
-    index: number;
-    action: TIcon;
-    styles: any;
-    theme: any;
-    item: IBookVerse;
-};
 
-const validStrongList = (arr: WordTagPair[]) => {
-    const newArr = [...arr];
-    return newArr.map((item, index) => {
-        const newItem = item;
-        const nextItem = newArr[index + 1];
-        if (nextItem && nextItem.word.includes("<S>")) {
-            newItem.tagValue = `${newItem.tagValue},${extractTextFromParagraph(
-                nextItem?.word
-            )}`;
-            nextItem.word = "";
-        }
-
-        return newItem;
-    });
-};
-
-const useVerseActions = ({ item, isSplit, initVerse }: VerseProps) => {
-    const { toggleFavoriteVerse } = useBibleContext();
+const useVerseActions = ({ item, isSplit, initVerse, onInterlinear: externalOnInterlinear, onAnotar: externalOnAnotar, onComparar: externalOnComparar, onMemorizeVerse: externalOnMemorizeVerse, onFavoriteVerse: externalOnFavoriteVerse }: VerseProps) => {
+    const router = useRouter();
     const haptics = useHaptics();
 
     const fontSize = use$(() => storedData$.fontSize.get());
     const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
-    // const { addVerse } = useMemorization();
-    const addVerse = ({ }: any, version: string) => { };
-    // const { theme } = useMyTheme();
     const theme = { colors: { notification: "#fedf75" } };
     const [isFavorite, setFavorite] = useState(false);
     const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
@@ -75,11 +55,6 @@ const useVerseActions = ({ item, isSplit, initVerse }: VerseProps) => {
     const googleAIKey = use$(() => storedData$.googleAIKey.get());
     const isDefaultDb = isDefaultDatabase(currentBibleVersion);
     const modalState = use$(() => modalState$.strongSearchRef.get());
-
-    useEffect(() => {
-        if (!modalState.current) return;
-        console.log("modalState-changes", modalState);
-    }, [modalState]);
 
     // LEGEND STATE
     const isBottomBibleSearching = use$(
@@ -144,7 +119,7 @@ const useVerseActions = ({ item, isSplit, initVerse }: VerseProps) => {
     }, [item]);
 
     const onFavorite = async () => {
-        await toggleFavoriteVerse({
+        await externalOnFavoriteVerse?.({
             bookNumber: item?.book_number,
             chapter: item.chapter,
             verse: item.verse,
@@ -165,6 +140,11 @@ const useVerseActions = ({ item, isSplit, initVerse }: VerseProps) => {
     };
 
     const onVerseToNote = async () => {
+        if (externalOnAnotar) {
+            externalOnAnotar(item);
+            return;
+        }
+
         const shouldReturn = true;
         const isMoreThanOneHighted = bibleState$.selectedVerses.get().size > 1;
         const highlightedVerses = Array.from(
@@ -243,15 +223,20 @@ const useVerseActions = ({ item, isSplit, initVerse }: VerseProps) => {
     };
 
     const onCompareClicked = () => {
+        if (externalOnComparar) {
+            externalOnComparar(item);
+            return;
+        }
+
         bibleState$.verseToCompare.set(item.verse);
         modalState$.openCompareBottomSheet();
         bibleState$.clearSelection();
     };
 
-    const onMemorizeVerse = (text: string) => {
-        addVerse(text, currentBibleVersion);
+    const onMemorizeVerse = useCallback((text: string) => {
+        externalOnMemorizeVerse?.(text, currentBibleVersion);
         bibleState$.clearSelection();
-    };
+    }, [externalOnMemorizeVerse, currentBibleVersion]);
 
     const onExplainWithAI = () => {
         if (!googleAIKey) {
@@ -274,9 +259,13 @@ const useVerseActions = ({ item, isSplit, initVerse }: VerseProps) => {
         bibleState$.clearSelection();
     };
 
-    const router = useRouter();
 
     const onInterlinear = () => {
+        if (externalOnInterlinear) {
+            externalOnInterlinear(item);
+            return;
+        }
+
         const currentInterlinear =
             bibleState$.bibleData.interlinearVerses.get()?.[item.verse - 1];
 
@@ -309,6 +298,7 @@ const useVerseActions = ({ item, isSplit, initVerse }: VerseProps) => {
                 action: onExplainWithAI,
                 description: "Explicar",
                 color: "#f1c40f",
+                hide: true,
             },
             {
                 name: "Quote",

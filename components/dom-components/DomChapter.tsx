@@ -7,30 +7,37 @@ import { Dimensions } from "react-native";
 import "../../global.css";
 import ChapterRender from "./ChapterRender";
 import { Text, View } from "../Themed";
+import { WordTagPair } from "@/utils/extractVersesInfo";
+import { useMemorization } from "@/context/MemorizationContext";
 const { width } = Dimensions.get('window');
 interface TChapter {
     verses: IBookVerse[];
     interlinearVerses: IBookVerse[];
     isSplit?: boolean;
-    estimatedReadingTime: number;
     initialScrollIndex: number;
     onScroll?: (direction: "up" | "down") => void;
     theme: TTheme;
-    onStrongWordClicked?: (value: IStrongWord) => void;
+    onStrongWordClicked?: (value: WordTagPair) => void;
+    onInterlinear?: (item: IBookVerse) => void;
+    onAnotar?: (item: IBookVerse) => void;
+    onComparar?: (item: IBookVerse) => void;
 }
 
 const DomChapter = ({
     verses,
     interlinearVerses,
     isSplit,
-    estimatedReadingTime,
     initialScrollIndex,
     onScroll,
     theme,
-    onStrongWordClicked
+    onStrongWordClicked,
+    onInterlinear,
+    onAnotar,
+    onComparar
 }: TChapter) => {
     const bibleSide = isSplit ? "bottom" : "top";
-    const { currentBibleVersion } = useBibleContext();
+    const { currentBibleVersion, toggleFavoriteVerse } = useBibleContext();
+    const { addVerse } = useMemorization();
 
     const isHebrewInterlinear = [
         EBibleVersions.INTERLINEAR,
@@ -54,7 +61,6 @@ const DomChapter = ({
     ]);
 
     const data = getData() || [];
-    console.log({ initialScrollIndex })
 
     return (
         <ChapterRender
@@ -68,6 +74,11 @@ const DomChapter = ({
             theme={theme}
             onStrongWordClicked={onStrongWordClicked}
             onScroll={onScroll}
+            onInterlinear={onInterlinear}
+            onAnotar={onAnotar}
+            onComparar={onComparar}
+            onMemorizeVerse={addVerse}
+            onFavoriteVerse={toggleFavoriteVerse}
         />
     );
 };
