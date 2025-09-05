@@ -1,4 +1,3 @@
-import DomChapter from "@/components/dom-components/DomChapter";
 import ProgressBar from "@/components/home/footer/ProgressBar";
 import BibleHeader from "@/components/home/header/BibleHeader";
 import Icon from "@/components/Icon";
@@ -8,29 +7,24 @@ import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import { bibleState$ } from "@/state/bibleState";
+import { modalState$ } from "@/state/modalState";
 import { EBibleVersions, IBookVerse } from "@/types";
+import copyToClipboard from "@/utils/copyToClipboard";
+import { getStrongValue, WordTagPair } from "@/utils/extractVersesInfo";
 import getMemorySizeInGB from "@/utils/getDeviceRamValue";
-import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { use$ } from "@legendapp/state/react";
-import * as Device from "expo-device";
 import React, {
   FC,
-  memo,
   useCallback,
-  useEffect,
   useMemo,
-  useRef,
-  useState,
+  useRef
 } from "react";
 import { ActivityIndicator, Animated, StyleSheet } from "react-native";
 import Chapter from "./home/content/Chapter";
 import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
 import { Text, View } from "./Themed";
-import { modalState$ } from "@/state/modalState";
-import { showToast } from "@/utils/showToast";
-import { WordTagPair } from "@/utils/extractVersesInfo";
-import copyToClipboard from "@/utils/copyToClipboard";
+import DomChapter from "./dom-components/DomChapter";
 
 interface BibleTopProps {
   height: Animated.Value;
@@ -50,9 +44,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const NT_BOOK_NUMBER = 470;
   const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
 
-  const isFlashlist = use$(() => bibleState$.isFlashlist.get());
-
-  const slowDevice = +getMemorySizeInGB() < 4;
+  const useDomList = use$(() => storedData$.useDomList.get());
 
   const isHebrewInterlinear = [
     EBibleVersions.INTERLINEAR
@@ -175,6 +167,35 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     modalState$.openStrongSearchBottomSheet();
   }, [])
 
+  const onWordClicked = useCallback((code: string, item: IBookVerse) => {
+    const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
+    const isWordName = isNaN(+code);
+    const wordIndex = isWordName
+      ? textValue.indexOf(code)
+      : strongValue.indexOf(code);
+
+    const word = textValue[wordIndex];
+    const secondCode =
+      textValue[wordIndex + 1] === "-" ? strongValue[wordIndex + 1] : "";
+
+    const isDash = word === "-" ? -1 : 0;
+    const NT_BOOK_NUMBER = 470;
+    const cognate = item?.book_number < NT_BOOK_NUMBER ? "H" : "G";
+    const searchCode = isWordName
+      ? `${cognate}${strongValue[wordIndex]}`
+      : `${cognate}${code}`;
+    const secondSearchCode = secondCode ? `,${cognate}${secondCode}` : ",";
+    const searchWord = textValue[wordIndex + isDash] ?? searchCode;
+
+    const value = {
+      text: searchWord,
+      code: searchCode.concat(secondSearchCode),
+    };
+
+    bibleState$.handleStrongWord(value);
+    modalState$.openStrongSearchBottomSheet();
+  }, [])
+
   const onInterlinear = useCallback((item: IBookVerse) => {
     const currentInterlinear =
       bibleState$.bibleData.interlinearVerses.get()?.[item.verse - 1];
@@ -209,8 +230,8 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     bibleState$.clearSelection();
   }, []);
 
-  const MyChapter = isInterlinear ? Chapter : (slowDevice || !isFlashlist) ? DomChapter : Chapter;
-  // const MyChapter = Chapter;
+  // const MyChapter = isInterlinear ? Chapter : (slowDevice ) ? DomChapter : Chapter;
+  const MyChapter = useDomList ? DomChapter : Chapter;
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
@@ -305,15 +326,14 @@ const BibleTop: FC<BibleTopProps> = (props) => {
             isSplit={false}
             theme={theme}
             onScroll={handleScroll}
-            {...{ onStrongWordClicked, onInterlinear, onAnotar, onComparar }}
-          // onStrongWordClicked={onStrongWordClicked}
-          // onInterlinear={onInterlinear}
-          // onAnotar={onAnotar}
-          // onComparar={onComparar}
+            {...{ onStrongWordClicked, onInterlinear, onAnotar, onComparar, onWordClicked }}
           />
         )}
       </SwipeWrapper>
-      <Animated.View style={[styles.footer, footerStyle]}>
+
+      {/* <BibleFooter isSplit={false} /> */}
+      {/* <Animated.View style={[styles.footer, footerStyle]}> */}
+      <Animated.View style={[styles.footer]}>
         <BibleFooter isSplit={false} />
       </Animated.View>
     </Animated.View>
@@ -336,13 +356,15 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 1,
+    height: 50,
   },
   footer: {
     position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    zIndex: 1,
+    zIndex: 9999,
+    height: 70,
   },
   progressContainer: {
     position: "absolute",

@@ -20,6 +20,7 @@ import React, {
   useState,
 } from "react";
 import { Alert } from "react-native";
+import getMemorySizeInGB from "@/utils/getDeviceRamValue";
 
 const persistOptions = configureSynced({
   persist: {
@@ -71,6 +72,7 @@ type StoreState = {
     pushToken: string | null;
   };
   dbTableCreated: string[];
+  useDomList: boolean;
 };
 
 const initialContext: StoreState = {
@@ -115,6 +117,7 @@ const initialContext: StoreState = {
     pushToken: null,
   },
   dbTableCreated: [],
+  useDomList: false,
 };
 
 export const storedData$ = observable(initialContext);
@@ -161,6 +164,9 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isSyncing, setSyncing] = useState(false);
   const netInfo = useNetwork();
   const { isConnected } = netInfo;
+  // const slowDevice = +getMemorySizeInGB() < 4;
+  // console.log({ slowDevice })
+
 
   useEffect(() => {
     const loadState = async () => {

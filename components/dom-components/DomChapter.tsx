@@ -18,6 +18,7 @@ interface TChapter {
     onScroll?: (direction: "up" | "down") => void;
     theme: TTheme;
     onStrongWordClicked?: (value: WordTagPair) => void;
+    onWordClicked: (code: string, item: IBookVerse) => void
     onInterlinear?: (item: IBookVerse) => void;
     onAnotar?: (item: IBookVerse) => void;
     onComparar?: (item: IBookVerse) => void;
@@ -32,6 +33,7 @@ const DomChapter = ({
     theme,
     onStrongWordClicked,
     onInterlinear,
+    onWordClicked,
     onAnotar,
     onComparar
 }: TChapter) => {
@@ -79,6 +81,7 @@ const DomChapter = ({
             onComparar={onComparar}
             onMemorizeVerse={addVerse}
             onFavoriteVerse={toggleFavoriteVerse}
+            onWordClicked={onWordClicked}
         />
     );
 };

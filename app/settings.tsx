@@ -314,6 +314,56 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
         },
       ],
     },
+
+    {
+      title: "Comportamiento",
+      id: "behavior",
+      options: [
+        {
+          label: isAnimationDisabled
+            ? "Activar Animaciones"
+            : "Desactivar Animaciones",
+          iconName: "Sparkles",
+          color: isAnimationDisabled
+            ? theme.colors.text
+            : theme.colors.notification,
+          action: toggleAnimation,
+          extraText: "Activar o desactivar las animaciones",
+          renderSwitch: true,
+          value: !isAnimationDisabled,
+        },
+        {
+          label: 'Mejorar Rendimiento',
+          iconName: storedData$.useDomList.get() ? "Rabbit" : "Turtle",
+          action: () => storedData$.useDomList.set(!storedData$.useDomList.get()),
+          extraText: "Alternar entre la vista de lista rápida y la vista estándar",
+          color: storedData$.useDomList.get()
+            ? theme.colors.notification
+            : theme.colors.text,
+          renderSwitch: true,
+          value: storedData$.useDomList.get(),
+        },
+        {
+          label: 'Vista de Lista Rápida',
+          iconName: isFlashlist ? "Zap" : "ZapOff",
+          action: () => bibleState$.toggleList(),
+          extraText: "Alternar entre la vista de lista rápida y la vista estándar",
+          color: isFlashlist
+            ? theme.colors.notification
+            : theme.colors.text,
+          // renderSwitch: true,
+          value: isFlashlist,
+        },
+        {
+          label: isGridLayout ? "Vista de Lista" : "Vista de Cuadrícula",
+          iconName: isGridLayout ? "List" : "LayoutGrid",
+          action: toggleHomeScreen,
+          extraText: "Cambiar el diseño de la pantalla principal",
+          renderSwitch: true,
+          value: isGridLayout,
+        },
+      ],
+    },
     {
       title: "Apariencia",
       id: "appearance",
@@ -377,44 +427,6 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
       ],
     },
 
-    {
-      title: "Comportamiento",
-      id: "behavior",
-      options: [
-        {
-          label: isAnimationDisabled
-            ? "Activar Animaciones"
-            : "Desactivar Animaciones",
-          iconName: "Sparkles",
-          color: isAnimationDisabled
-            ? theme.colors.text
-            : theme.colors.notification,
-          action: toggleAnimation,
-          extraText: "Activar o desactivar las animaciones",
-          renderSwitch: true,
-          value: !isAnimationDisabled,
-        },
-        {
-          label: 'Vista de Lista Rápida',
-          iconName: isFlashlist ? "Zap" : "ZapOff",
-          action: () => bibleState$.toggleList(),
-          extraText: "Alternar entre la vista de lista rápida y la vista estándar",
-          color: isFlashlist
-            ? theme.colors.notification
-            : theme.colors.text,
-          // renderSwitch: true,
-          value: isFlashlist,
-        },
-        {
-          label: isGridLayout ? "Vista de Lista" : "Vista de Cuadrícula",
-          iconName: isGridLayout ? "List" : "LayoutGrid",
-          action: toggleHomeScreen,
-          extraText: "Cambiar el diseño de la pantalla principal",
-          renderSwitch: true,
-          value: isGridLayout,
-        },
-      ],
-    },
     {
       title: "Aplicación",
       id: "app",

@@ -19,6 +19,7 @@ type ChapterRenderProps = {
     initialScrollIndex: number;
     theme: TTheme;
     onStrongWordClicked: ((value: WordTagPair) => void) | undefined
+    onWordClicked: (code: string, item: IBookVerse) => void
     onScroll: ((direction: "up" | "down") => void) | undefined
     estimatedReadingTime: number;
     onInterlinear?: (item: IBookVerse) => void;
@@ -37,6 +38,7 @@ const ChapterRender = ({
     initialScrollIndex,
     theme,
     onStrongWordClicked,
+    onWordClicked,
     onScroll,
     estimatedReadingTime,
     onInterlinear,
@@ -146,7 +148,7 @@ const ChapterRender = ({
     return (
         <div
             ref={containerRef}
-            className="w-full h-full overflow-y-auto "
+            className="w-full h-full overflow-y-auto relative z-1 border border-yellow-500 "
             style={{
                 width: width,
 
@@ -194,6 +196,7 @@ const ChapterRender = ({
                                 onComparar={onComparar}
                                 onMemorizeVerse={onMemorizeVerse}
                                 onFavoriteVerse={onFavoriteVerse}
+                                onWordClicked={onWordClicked}
                             />
                         </div>
                     );

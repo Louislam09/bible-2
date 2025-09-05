@@ -22,6 +22,7 @@ type VerseProps = TVerse & {
     onComparar?: (item: IBookVerse) => void;
     onMemorizeVerse?: (verse: string, version: string) => void
     onFavoriteVerse?: ({ bookNumber, chapter, verse, isFav, }: IFavoriteVerse) => Promise<void>
+    onWordClicked: (code: string, item: IBookVerse) => void
 };
 
 type ActionItemProps = {
@@ -31,11 +32,11 @@ type ActionItemProps = {
     item: IBookVerse;
 };
 
-const DVerse: React.FC<VerseProps> = ({ item, isSplit, initVerse, theme, onStrongWordClicked, onInterlinear, onAnotar, onComparar, onMemorizeVerse, onFavoriteVerse }) => {
+const DVerse: React.FC<VerseProps> = ({ item, isSplit, initVerse, theme, onStrongWordClicked, onInterlinear, onAnotar, onComparar, onMemorizeVerse, onFavoriteVerse, onWordClicked }) => {
     const {
         onPress,
         onVerseLongPress,
-        onWordClicked,
+        // onWordClicked,
         verseActions,
         verseIsTapped,
         verseShowAction,
@@ -70,7 +71,7 @@ const DVerse: React.FC<VerseProps> = ({ item, isSplit, initVerse, theme, onStron
                         <DomRenderTextWithClickableWords
                             theme={theme}
                             text={item.text}
-                            onWordClick={onWordClicked}
+                            onWordClick={(code) => onWordClicked(code, item)}
                             verseNumber={`${item.verse} `}
                         />
                     ) : (

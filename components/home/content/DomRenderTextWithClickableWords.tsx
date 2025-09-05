@@ -15,7 +15,6 @@ interface Props {
 const DomRenderTextWithClickableWords: React.FC<Props> = ({
   text,
   onWordClick,
-  theme,
   highlightedWord,
   justOneWord,
   verseNumber,
@@ -28,7 +27,6 @@ const DomRenderTextWithClickableWords: React.FC<Props> = ({
     const cleanedHighlight = highlightedWord?.replace(",", "");
     return cleanedHighlight === `${isHebrew}${word}`;
   };
-  console.log("DomRenderTextWithClickableWords", words, text);
 
   const renderVerse = (word: string, index: number) => {
     const isEven = index % 2 === 0;
