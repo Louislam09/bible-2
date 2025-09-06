@@ -132,41 +132,12 @@ const NotificationSettingsScreen = () => {
 
   const testNotificationSchedule = async () => {
     try {
-      const now = new Date();
-      const oneMinuteFromNow = new Date(now.getTime() + 3000);
+      // const now = new Date();
+      // const oneMinuteFromNow = new Date(now.getTime() + 3000);
       await Notifications.scheduleNotificationAsync({
         content: {
           title: "🔔 Notificación de Prueba Programada",
           body: "¡Esta es una notificación de prueba! Las notificaciones están funcionando correctamente.",
-          data: {
-            type: "default",
-          },
-        },
-        trigger: {
-          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-          seconds: 15,
-          channelId: 'default'
-        },
-      });
-      console.log('Scheduled test notification scheduled successfully');
-    } catch (error) {
-      console.error('Error scheduling scheduled test notification:', error);
-      Alert.alert('Error', `Failed to send scheduled test notification: ${error}`);
-    }
-  };
-  const testNotificationSchedule2 = async () => {
-    try {
-      const now = new Date();
-      const oneMinuteFromNow = new Date(now.getTime() + 3000);
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title: "🔔 Notificación de Prueba Programada 2",
-          body: "¡Esta es una notificación de prueba! Las notificaciones están funcionando correctamente.",
-          data: { raw: JSON.stringify({ type: "default", timestamp: Date.now() }) }
-
-          // data: {
-          //   type: "default",
-          // },
         },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
@@ -293,13 +264,6 @@ const NotificationSettingsScreen = () => {
             iconName: "ConciergeBell" as keyof typeof icons,
             action: testNotificationSchedule,
             color: "gold",
-          },
-          {
-            label: "Probar Notificación Programada - New",
-            extraText: "Envía  - new",
-            iconName: "ConciergeBell" as keyof typeof icons,
-            action: testNotificationSchedule2,
-            color: "blue",
           },
           {
             label: "Permisos de Notificación",

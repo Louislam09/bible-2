@@ -152,10 +152,10 @@ export const useNotificationService = () => {
                 content: {
                     title: title,
                     body: body,
-                    data: {
-                        type: "dailyVerse",
-                        timestamp: String(Date.now())
-                    },
+                    // data: {
+                    //     type: "dailyVerse",
+                    //     timestamp: String(Date.now())
+                    // },
                 },
                 trigger: {
                     type: Notifications.SchedulableTriggerInputTypes.DAILY,
@@ -260,10 +260,10 @@ export const useNotificationService = () => {
                 content: {
                     title: title,
                     body: body,
-                    data: {
-                        type: "memorization",
-                        timestamp: String(Date.now())
-                    },
+                    // data: {
+                    //     type: "memorization",
+                    //     timestamp: String(Date.now())
+                    // },
                 },
                 trigger: {
                     type: Notifications.SchedulableTriggerInputTypes.DAILY,
