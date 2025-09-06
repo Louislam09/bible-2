@@ -154,7 +154,7 @@ export const useNotificationService = () => {
                     body: body,
                     data: {
                         type: "dailyVerse",
-                        timestamp: Date.now().toString()
+                        timestamp: String(Date.now())
                     },
                 },
                 trigger: {
@@ -192,7 +192,7 @@ export const useNotificationService = () => {
                         data: {
                             type: "devotional",
                             subtype: "morning",
-                            timestamp: Date.now().toString()
+                            timestamp: String(Date.now())
                         },
                     },
                     trigger: {
@@ -218,7 +218,7 @@ export const useNotificationService = () => {
                         data: {
                             type: "devotional",
                             subtype: "afternoon",
-                            timestamp: Date.now().toString()
+                            timestamp: String(Date.now())
                         },
                     },
                     trigger: {
@@ -262,7 +262,7 @@ export const useNotificationService = () => {
                     body: body,
                     data: {
                         type: "memorization",
-                        timestamp: Date.now().toString()
+                        timestamp: String(Date.now())
                     },
                 },
                 trigger: {
@@ -394,7 +394,7 @@ export const useNotificationService = () => {
 
             return true;
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
+            const errorMessage = error instanceof Error ? error?.message : JSON.stringify(error, null, 2);
             setError(errorMessage);
             console.error("Error updating notification settings:", errorMessage);
             Alert.alert("Error", "No se pudieron actualizar las configuraciones de notificación");
