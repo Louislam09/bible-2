@@ -70,7 +70,7 @@ const DatabaseDebug = () => {
         content: {
           title: "Test Notification",
           body: "This is a test notification from debug panel",
-          data: { type: "default" },
+          // data: { type: "default" },
         },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
@@ -93,7 +93,7 @@ const DatabaseDebug = () => {
         content: {
           title: "testNotificationSchedule",
           body: "This is a test notification from testNotificationSchedule",
-          data: { type: "default" },
+          // data: { type: "default" },
         },
         // Schedule for 1 minute from now
         trigger: {
@@ -352,14 +352,6 @@ const DatabaseDebug = () => {
         )}
       </View>
 
-      {/* <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
-        GOOGLE_SERVICE_JSON: {GOOGLE_SERVICE_JSON}{" "}
-        {JSON.stringify(GOOGLE_SERVICE_JSON, null, 2)}
-        --------------------------------------------------------------
-      </Text>
-      <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
-        {JSON.stringify(Constants.expoConfig, null, 10)}
-      </Text> */}
 
       {/* Action Buttons */}
       <View style={{ marginBottom: 20 }}>

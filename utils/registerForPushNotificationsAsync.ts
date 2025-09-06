@@ -4,12 +4,46 @@ import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 
 export async function registerForPushNotificationsAsync() {
+  // if (Platform.OS === "android") {
+  //   await Notifications.setNotificationChannelAsync("default", {
+  //     name: "default",
+  //     importance: Notifications.AndroidImportance.MAX,
+  //     vibrationPattern: [0, 250, 250, 250],
+  //     lightColor: "#0c3e3d",
+  //   });
+  // }
+
   if (Platform.OS === "android") {
     await Notifications.setNotificationChannelAsync("default", {
-      name: "default",
+      name: "Notificaciones Generales",
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
       lightColor: "#0c3e3d",
+      sound: "default",
+    });
+
+    await Notifications.setNotificationChannelAsync("daily-verse", {
+      name: "Versículo del Día",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#0c3e3d",
+      sound: "default",
+    });
+
+    await Notifications.setNotificationChannelAsync("devotional", {
+      name: "Recordatorio Devocional",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#0c3e3d",
+      sound: "default",
+    });
+
+    await Notifications.setNotificationChannelAsync("memorization", {
+      name: "Recordatorio de Memorización",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#0c3e3d",
+      sound: "default",
     });
   }
 

@@ -111,35 +111,53 @@ const NotificationSettingsScreen = () => {
   };
 
   const testNotification = async () => {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "🔔 Notificación de Prueba",
-        body: "¡Esta es una notificación de prueba! Las notificaciones están funcionando correctamente.",
-        data: { type: "default" },
-      },
-      trigger: {
-        type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-        seconds: 1,
-        channelId: 'default'
-      },
-    });
+    try {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "🔔 Notificación de Prueba",
+          body: "¡Esta es una notificación de prueba! Las notificaciones están funcionando correctamente.",
+          data: {
+            type: "test",
+            timestamp: Date.now().toString()
+          },
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+          seconds: 1,
+          channelId: 'default'
+        },
+      });
+      console.log('Test notification scheduled successfully');
+    } catch (error) {
+      console.error('Error scheduling test notification:', error);
+      Alert.alert('Error', `Failed to send test notification: ${error}`);
+    }
   };
 
   const testNotificationSchedule = async () => {
-    const now = new Date();
-    const oneMinuteFromNow = new Date(now.getTime() + 3000);
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "🔔 Notificación de Prueba Programada",
-        body: "¡Esta es una notificación de prueba! Las notificaciones están funcionando correctamente.",
-        data: { type: "default" },
-      },
-      trigger: {
-        type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-        seconds: 3,
-        channelId: 'default'
-      },
-    });
+    try {
+      const now = new Date();
+      const oneMinuteFromNow = new Date(now.getTime() + 3000);
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "🔔 Notificación de Prueba Programada",
+          body: "¡Esta es una notificación de prueba! Las notificaciones están funcionando correctamente.",
+          data: {
+            type: "scheduled-test",
+            timestamp: Date.now().toString()
+          },
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+          seconds: 3,
+          channelId: 'default'
+        },
+      });
+      console.log('Scheduled test notification scheduled successfully');
+    } catch (error) {
+      console.error('Error scheduling scheduled test notification:', error);
+      Alert.alert('Error', `Failed to send scheduled test notification: ${error}`);
+    }
   };
 
   const handleNotificationEnabled = async () => {

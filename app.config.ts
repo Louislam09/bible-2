@@ -174,7 +174,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           icon: getAssetPath().icon,
           color: "#0c3e3d",
           defaultChannel: "default",
-          // enableBackgroundRemoteNotifications: true,
+          enableBackgroundRemoteNotifications: true,
         },
       ],
       [

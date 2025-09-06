@@ -9,7 +9,6 @@ import { htmlTemplate } from "@/constants/HtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useNetwork } from "@/context/NetworkProvider";
-import { useNotification } from "@/context/NotificationContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { useSyncNotes } from "@/hooks/useSyncNotes";
@@ -17,7 +16,7 @@ import { useNoteService } from "@/services/noteService";
 import { useNotificationService } from "@/services/notificationServices";
 import { bibleState$ } from "@/state/bibleState";
 import { noteSelectors$ } from "@/state/notesState";
-import { IVerseItem, Screens, TNote, TTheme } from "@/types";
+import { Screens, TNote, TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { use$ } from "@legendapp/state/react";
@@ -236,11 +235,7 @@ const NotesPage = () => {
       return false;
     }
     if (!isConnected) {
-      notificationService.sendCustomNotification({
-        title: "Sin conexión",
-        body: "No hay conexión a Internet para sincronizar las notas.",
-        delaySeconds: 1,
-      });
+      // schedule a notification
       return false;
     }
     return true;

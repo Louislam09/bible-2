@@ -1,7 +1,6 @@
 import DAILY_VERSES from "@/constants/dailyVerses";
 import { GET_DAILY_VERSE } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
-import { useNotificationService } from "@/services/notificationServices";
 import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, pbUser, Screens, TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
@@ -40,7 +39,6 @@ type DailyVerseProps = {
 };
 
 const DailyVerseTwo = ({ dailyVerseObject, theme, user }: DailyVerseProps) => {
-  // const { scheduleDailyVerseNotification } = useNotificationService();
   const navigation = useNavigation();
   const { mainBibleService, allBibleLoaded } = useDBContext();
   const [dailyVerse, setDailyVerse] = useState<IVerseItem>(
