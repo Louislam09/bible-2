@@ -149,6 +149,7 @@ export const useNotificationService = () => {
         );
 
         if (dailyVerseNotifications.length === 0) {
+            console.log('[DailyVerse]: Scheduling new notification ...');
             return await Notifications.scheduleNotificationAsync({
                 content: {
                     title: title,
@@ -175,6 +176,8 @@ export const useNotificationService = () => {
             (notification: any) => notification?.trigger?.channelId === "devotional"
         );
         if (devotionalNotifications.length === 0) {
+            console.log('[Devotional]: SCHEDULING ...');
+
             // 9:00 (mañana)
             const morningTime = new Date();
             morningTime.setHours(9, 0, 0, 0);
@@ -243,6 +246,7 @@ export const useNotificationService = () => {
             (notification: any) => notification?.trigger?.channelId === "memorization"
         );
         if (memorizationNotifications.length === 0) {
+            console.log('[Memorization]: SCHEDULING ...');
             return await Notifications.scheduleNotificationAsync({
                 content: {
                     title: title,
@@ -275,7 +279,7 @@ export const useNotificationService = () => {
     const cancelNotificationById = async (notificationId: string): Promise<void> => {
         try {
             await Notifications.cancelScheduledNotificationAsync(notificationId);
-            showToast(`✅ Notificación cancelada`, "SHORT");
+            // showToast(`✅ Notificación cancelada`, "SHORT");
             console.log(`✅ Notification ${notificationId} cancelled`);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
@@ -325,19 +329,23 @@ export const useNotificationService = () => {
             }
 
             if (hasChanged.dailyVerseEnabled || hasChanged.dailyVerseTime) {
-                // Handle daily verse notification
-                if (updatedPrefs.dailyVerseEnabled) {
-                    await scheduleDailyVerseNotification(updatedPrefs.dailyVerseTime);
-                } else {
-                    // Cancel existing daily verse notifications
+
+                // if time change change cancel the old one and schedule the new one
+                if (hasChanged.dailyVerseTime || !updatedPrefs.dailyVerseEnabled) {
+                    console.log('[DailyVerse]: Cancelling existing notifications ...');
                     const scheduledNotifications = await getScheduledNotifications();
                     const dailyVerseNotifications = scheduledNotifications.filter(
-                        notification => notification.content.data?.type === "dailyVerse"
+                        (notification: any) => notification?.trigger?.channelId === "dailyVerse"
                     );
 
                     for (const notification of dailyVerseNotifications) {
                         await cancelNotificationById(notification.identifier);
                     }
+                }
+
+                // Handle daily verse notification
+                if (updatedPrefs.dailyVerseEnabled) {
+                    await scheduleDailyVerseNotification(updatedPrefs.dailyVerseTime);
                 }
             }
 
@@ -349,7 +357,7 @@ export const useNotificationService = () => {
                     // Cancel existing devotional notifications
                     const scheduledNotifications = await getScheduledNotifications();
                     const devotionalNotifications = scheduledNotifications.filter(
-                        notification => notification.content.data?.type === "devotional"
+                        (notification: any) => notification?.trigger?.channelId === "devotional"
                     );
 
                     for (const notification of devotionalNotifications) {
@@ -365,7 +373,7 @@ export const useNotificationService = () => {
                 } else {
                     const scheduledNotifications = await getScheduledNotifications();
                     const memorizationNotifications = scheduledNotifications.filter(
-                        notification => notification.content.data?.type === "memorization"
+                        (notification: any) => notification?.trigger?.channelId === "memorization"
                     );
 
                     for (const notification of memorizationNotifications) {

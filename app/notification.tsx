@@ -184,6 +184,7 @@ const NotificationSettingsScreen = () => {
     });
   };
 
+
   const sections: TSection[] = useMemo(() => {
     return [
       {
@@ -270,6 +271,37 @@ const NotificationSettingsScreen = () => {
             extraText: "Verificar y solicitar permisos",
             iconName: "Shield" as keyof typeof icons,
             action: async () => await notificationService.requestPermissions(),
+            color: theme.colors.text,
+          },
+          {
+            label: "Ver notificaciones programadas",
+            extraText: "Verificar notificaciones programadas",
+            iconName: "Hash" as keyof typeof icons,
+            action: async () => {
+              const notifications = await notificationService.getScheduledNotifications()
+              Alert.alert("Número de notificaciones programadas", notifications.length.toString())
+            },
+            color: theme.colors.text,
+          },
+          {
+            label: "Cancelar todas las notificaciones",
+            extraText: "Cancelar todas las notificaciones programadas",
+            iconName: "Trash" as keyof typeof icons,
+            action: async () => {
+              Alert.alert("Cancelar todas las notificaciones", "¿Estás seguro de querer cancelar todas las notificaciones programadas?", [
+                {
+                  text: "Cancelar",
+                  style: "cancel",
+                },
+                {
+                  text: "Confirmar",
+                  style: "destructive",
+                  onPress: async () => {
+                    await notificationService.cancelAllNotifications()
+                  },
+                },
+              ])
+            },
             color: theme.colors.text,
           },
         ],

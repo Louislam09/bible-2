@@ -259,16 +259,13 @@ const DatabaseDebug = () => {
               borderRadius: 8,
             }}
           >
-            <Text style={{ color: schema === "dark" ? "#fff" : "#000" }}>
-              {JSON.stringify(notification)}
-            </Text>
             <Text
               style={{
                 color: schema === "dark" ? "#fff" : "#000",
                 fontWeight: "bold",
               }}
             >
-              {notification.content.title}
+              {notification.content.title} - {`${notification.trigger.hour.toString().padStart(2, '0')}:${notification.trigger.minute.toString().padStart(2, '0')}`}
             </Text>
             <Text
               style={{
