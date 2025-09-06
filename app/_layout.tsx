@@ -30,34 +30,34 @@ import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
 import BookContentModals from "@/components/book-content-modals";
 
-Notifications.setNotificationHandler({
-  handleNotification: async (notification) => {
-    try {
-      // Log notification data for debugging
-      console.log('🔔 Handling notification:', {
-        title: notification.request.content.title,
-        body: notification.request.content.body,
-        data: notification.request.content.data,
-      });
+// Notifications.setNotificationHandler({
+//   handleNotification: async (notification) => {
+//     try {
+//       // Log notification data for debugging
+//       console.log('🔔 Handling notification:', {
+//         title: notification.request.content.title,
+//         body: notification.request.content.body,
+//         data: notification.request.content.data,
+//       });
 
-      return {
-        shouldPlaySound: true,
-        shouldSetBadge: true,
-        shouldShowBanner: true,
-        shouldShowList: true,
-      };
-    } catch (error) {
-      console.error('Error handling notification:', error);
-      // Return default values on error
-      return {
-        shouldPlaySound: true,
-        shouldSetBadge: true,
-        shouldShowBanner: true,
-        shouldShowList: true,
-      };
-    }
-  },
-});
+//       return {
+//         shouldPlaySound: true,
+//         shouldSetBadge: true,
+//         shouldShowBanner: true,
+//         shouldShowList: true,
+//       };
+//     } catch (error) {
+//       console.error('Error handling notification:', error);
+//       // Return default values on error
+//       return {
+//         shouldPlaySound: true,
+//         shouldSetBadge: true,
+//         shouldShowBanner: true,
+//         shouldShowList: true,
+//       };
+//     }
+//   },
+// });
 
 const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
 

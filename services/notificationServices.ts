@@ -144,7 +144,7 @@ export const useNotificationService = () => {
 
         const isAlreadyScheduled = await getScheduledNotifications();
         const dailyVerseNotifications = isAlreadyScheduled.filter(
-            notification => notification.content.data?.type === "daily-verse"
+            notification => notification.content.data?.type === "dailyVerse"
         );
 
         if (dailyVerseNotifications.length === 0) {
@@ -153,7 +153,7 @@ export const useNotificationService = () => {
                     title: title,
                     body: body,
                     data: {
-                        type: "daily-verse",
+                        type: "dailyVerse",
                         timestamp: Date.now().toString()
                     },
                 },
@@ -161,7 +161,7 @@ export const useNotificationService = () => {
                     type: Notifications.SchedulableTriggerInputTypes.DAILY,
                     hour: targetTime.getHours(),
                     minute: targetTime.getMinutes(),
-                    channelId: 'daily-verse'
+                    channelId: 'dailyVerse'
                 },
             });
         } else {
@@ -349,7 +349,7 @@ export const useNotificationService = () => {
                     // Cancel existing daily verse notifications
                     const scheduledNotifications = await getScheduledNotifications();
                     const dailyVerseNotifications = scheduledNotifications.filter(
-                        notification => notification.content.data?.type === "daily-verse"
+                        notification => notification.content.data?.type === "dailyVerse"
                     );
 
                     for (const notification of dailyVerseNotifications) {

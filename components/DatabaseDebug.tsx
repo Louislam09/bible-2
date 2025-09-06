@@ -67,6 +67,7 @@ const DatabaseDebug = () => {
     try {
       await Notifications.scheduleNotificationAsync({
         content: {
+          // categoryIdentifier: "default",
           title: "Test Notification",
           body: "This is a test notification from debug panel",
           // data: { type: "default" },

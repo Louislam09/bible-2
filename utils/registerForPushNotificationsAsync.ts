@@ -1,30 +1,65 @@
-import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 
 export async function registerForPushNotificationsAsync() {
-  // if (Platform.OS === "android") {
-  //   await Notifications.setNotificationChannelAsync("default", {
-  //     name: "default",
-  //     importance: Notifications.AndroidImportance.MAX,
-  //     vibrationPattern: [0, 250, 250, 250],
-  //     lightColor: "#0c3e3d",
-  //   });
-  // }
+  Notifications.setNotificationHandler({
+    handleNotification: async (notification) => {
+      try {
+        // Log notification data for debugging
+        console.log('🔔 Handling notification:', {
+          title: notification.request.content.title,
+          body: notification.request.content.body,
+          data: notification.request.content.data,
+        });
+
+        return {
+          shouldPlaySound: true,
+          shouldSetBadge: true,
+          shouldShowBanner: true,
+          shouldShowList: true,
+        };
+      } catch (error) {
+        console.error('Error handling notification:', error);
+        // Return default values on error
+        return {
+          shouldPlaySound: true,
+          shouldSetBadge: true,
+          shouldShowBanner: true,
+          shouldShowList: true,
+        };
+      }
+    },
+    handleSuccess: (notificationId) => {
+      console.log('Notification handled successfully:', notificationId);
+    },
+    handleError: (notificationId, error) => {
+      console.log('[Error]: handling notification:', error);
+    },
+  });
+  // await Notifications.setNotificationCategoryAsync("default", [
+  //   {
+  //     buttonTitle: "LEER",
+  //     identifier: 'default',
+  //   },
+  //   {
+  //     buttonTitle: "CANCELAR",
+  //     identifier: 'cancel',
+  //   }
+  // ]);
 
   if (Platform.OS === "android") {
     await Notifications.setNotificationChannelAsync("default", {
       name: "Notificaciones Generales",
-      importance: Notifications.AndroidImportance.MAX,
+      importance: Notifications.AndroidImportance.HIGH,
       vibrationPattern: [0, 250, 250, 250],
       lightColor: "#0c3e3d",
       sound: "default",
     });
 
-    await Notifications.setNotificationChannelAsync("daily-verse", {
+    await Notifications.setNotificationChannelAsync("dailyVerse", {
       name: "Versículo del Día",
-      importance: Notifications.AndroidImportance.MAX,
+      importance: Notifications.AndroidImportance.HIGH,
       vibrationPattern: [0, 250, 250, 250],
       lightColor: "#0c3e3d",
       sound: "default",
@@ -32,7 +67,7 @@ export async function registerForPushNotificationsAsync() {
 
     await Notifications.setNotificationChannelAsync("devotional", {
       name: "Recordatorio Devocional",
-      importance: Notifications.AndroidImportance.MAX,
+      importance: Notifications.AndroidImportance.HIGH,
       vibrationPattern: [0, 250, 250, 250],
       lightColor: "#0c3e3d",
       sound: "default",

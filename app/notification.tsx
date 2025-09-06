@@ -114,16 +114,12 @@ const NotificationSettingsScreen = () => {
     try {
       await Notifications.scheduleNotificationAsync({
         content: {
-          title: "🔔 Notificación de Prueba",
-          body: "¡Esta es una notificación de prueba! Las notificaciones están funcionando correctamente.",
-          data: {
-            type: "test",
-            timestamp: Date.now().toString()
-          },
+          title: 'Look at that notification',
+          body: "I'm so proud of myself!",
         },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-          seconds: 1,
+          seconds: 5,
           channelId: 'default'
         },
       });
@@ -287,6 +283,13 @@ const NotificationSettingsScreen = () => {
         title: "Información de Debug",
         id: "debug",
         options: [
+          {
+            label: "Test Notificación",
+            extraText: "Envía una notificación de prueba",
+            iconName: "ConciergeBell" as keyof typeof icons,
+            action: () => testNotification(),
+            color: "gold",
+          },
           {
             label: "Estado de Notificaciones",
             extraText: notificationService.error

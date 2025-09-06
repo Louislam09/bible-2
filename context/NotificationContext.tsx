@@ -10,6 +10,7 @@ import React, {
 } from "react";
 import { storedData$ } from "./LocalstoreContext";
 import { useNotificationService } from "@/services/notificationServices";
+import { showToast } from "@/utils/showToast";
 
 interface NotificationContextType {
   expoPushToken: string | null;
@@ -48,7 +49,6 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   const responseListener = useRef<Notifications.EventSubscription>(null);
 
   useEffect(() => {
-    console.log('----- NotificationProvider useEffect ---')
     registerForPushNotificationsAsync().then(
       (token) => {
         console.log('registerForPushNotificationsAsync successfully', { token })
@@ -72,11 +72,13 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
       Notifications.addNotificationReceivedListener((notification) => {
         console.log("🔔 Notification Received: ", notification);
         setNotification(notification);
+        showToast('🔔 Notification Received');
       });
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log('User interacted with notification:', response);
+        console.log('User interacted with notification:', JSON.stringify(response, null, 2));
+        showToast('User interacted with notification');
         // console.log(
         //   "🔔 Notification Response: ",
         //   JSON.stringify(response, null, 2),
