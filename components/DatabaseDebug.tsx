@@ -67,10 +67,8 @@ const DatabaseDebug = () => {
     try {
       await Notifications.scheduleNotificationAsync({
         content: {
-          // categoryIdentifier: "default",
           title: "Test Notification",
           body: "This is a test notification from debug panel",
-          // data: { type: "default" },
         },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
@@ -88,14 +86,11 @@ const DatabaseDebug = () => {
     try {
       const testTime = new Date(Date.now());
       testTime.setSeconds(testTime.getSeconds() + 60); // Schedule for 1 minute from now
-      console.log({ testTime })
       await Notifications.scheduleNotificationAsync({
         content: {
           title: "testNotificationSchedule",
           body: "This is a test notification from testNotificationSchedule",
-          // data: { type: "default" },
         },
-        // Schedule for 1 minute from now
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
           seconds: 10,

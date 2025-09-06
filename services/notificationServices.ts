@@ -143,8 +143,9 @@ export const useNotificationService = () => {
         }
 
         const isAlreadyScheduled = await getScheduledNotifications();
+
         const dailyVerseNotifications = isAlreadyScheduled.filter(
-            notification => notification.content.data?.type === "dailyVerse"
+            (notification: any) => notification?.trigger?.channelId === "dailyVerse"
         );
 
         if (dailyVerseNotifications.length === 0) {
@@ -152,10 +153,6 @@ export const useNotificationService = () => {
                 content: {
                     title: title,
                     body: body,
-                    // data: {
-                    //     type: "dailyVerse",
-                    //     timestamp: String(Date.now())
-                    // },
                 },
                 trigger: {
                     type: Notifications.SchedulableTriggerInputTypes.DAILY,
@@ -175,7 +172,7 @@ export const useNotificationService = () => {
 
         const isAlreadyScheduled = await getScheduledNotifications();
         const devotionalNotifications = isAlreadyScheduled.filter(
-            notification => notification.content.data?.type === "devotional"
+            (notification: any) => notification?.trigger?.channelId === "devotional"
         );
         if (devotionalNotifications.length === 0) {
             // 9:00 (mañana)
@@ -189,11 +186,6 @@ export const useNotificationService = () => {
                     content: {
                         title: "🙏 Oración de la Mañana",
                         body: "Es hora de buscar al Eterno en oración y lectura.",
-                        data: {
-                            type: "devotional",
-                            subtype: "morning",
-                            timestamp: String(Date.now())
-                        },
                     },
                     trigger: {
                         type: Notifications.SchedulableTriggerInputTypes.DAILY,
@@ -215,11 +207,6 @@ export const useNotificationService = () => {
                     content: {
                         title: "🙏 Oración de la Tarde",
                         body: "Es hora de buscar al Eterno en oración y lectura.",
-                        data: {
-                            type: "devotional",
-                            subtype: "afternoon",
-                            timestamp: String(Date.now())
-                        },
                     },
                     trigger: {
                         type: Notifications.SchedulableTriggerInputTypes.DAILY,
@@ -253,17 +240,13 @@ export const useNotificationService = () => {
 
         const isAlreadyScheduled = await getScheduledNotifications();
         const memorizationNotifications = isAlreadyScheduled.filter(
-            notification => notification.content.data?.type === "memorization"
+            (notification: any) => notification?.trigger?.channelId === "memorization"
         );
         if (memorizationNotifications.length === 0) {
             return await Notifications.scheduleNotificationAsync({
                 content: {
                     title: title,
                     body: body,
-                    // data: {
-                    //     type: "memorization",
-                    //     timestamp: String(Date.now())
-                    // },
                 },
                 trigger: {
                     type: Notifications.SchedulableTriggerInputTypes.DAILY,
