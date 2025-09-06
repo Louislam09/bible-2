@@ -1,0 +1,502 @@
+import React from 'react';
+import {
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    Linking,
+    Dimensions,
+    ViewStyle,
+    TextStyle,
+    ScrollView,
+    StatusBar
+} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Heart, Book, Volume2, Coffee, Star } from 'lucide-react-native';
+import Svg, { Path } from "react-native-svg";
+import { Stack } from 'expo-router';
+import { singleScreenHeader } from '@/components/common/singleScreenHeader';
+import { useMyTheme } from '@/context/ThemeContext';
+import { Image } from 'expo-image';
+
+const { width, height } = Dimensions.get('window');
+
+// Coffee SVG Component
+const SVGComponent: React.FC<any> = (props) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={22}
+        height={22}
+        viewBox="0 0 35 50"
+        fill="none"
+        {...props}
+    >
+        <Path
+            d="m30.751 11.63-.034-.02-.079-.024a.2.2 0 0 0 .113.045m.497 3.572-.038.01zm-.482-3.578-.014-.003v.01q.008-.001.014-.007"
+            fill="#0D0C22"
+        />
+        <Path
+            d="M30.752 11.631h.005v-.003zm.466 3.565.057-.033.022-.012.02-.02a.3.3 0 0 0-.1.065m-.367-3.487-.056-.054-.038-.02a.16.16 0 0 0 .095.074M16.715 46.371a.3.3 0 0 0-.114.089l.035-.023c.024-.022.058-.048.079-.066m8.209-1.624c0-.05-.025-.041-.02.14 0-.015.007-.03.01-.044zm-.852 1.624a.3.3 0 0 0-.114.089l.035-.023c.024-.022.058-.048.079-.066m-13.138.386a.24.24 0 0 0-.12-.056l.096.048zm-1.3-1.253a.4.4 0 0 0-.048-.15q.028.072.047.148z"
+            fill="#0D0C22"
+        />
+        <Path
+            d="M18.372 23.098c-1.786.768-3.813 1.64-6.44 1.64a12 12 0 0 1-3.25-.45L10.5 43.044c.064.784.42 1.515.994 2.048a3.1 3.1 0 0 0 2.112.829s2.575.134 3.435.134c.925 0 3.698-.134 3.698-.134.782 0 1.536-.296 2.111-.829a3.14 3.14 0 0 0 .995-2.048l1.945-20.727c-.869-.298-1.747-.497-2.736-.497-1.71 0-3.089.592-4.681 1.278"
+            fill="#FD0"
+        />
+        <Path d="m3.059 15.095.03.029.02.012a.3.3 0 0 0-.05-.041" fill="#0D0C22" />
+        <Path
+            d="m34.19 13.364-.274-1.388c-.245-1.245-.803-2.421-2.073-2.871-.408-.144-.87-.206-1.182-.504s-.405-.76-.477-1.19c-.134-.788-.26-1.576-.397-2.362-.118-.676-.212-1.436-.52-2.056-.401-.833-1.234-1.32-2.062-1.642q-.637-.24-1.297-.404C23.84.4 21.664.197 19.536.082a53 53 0 0 0-7.664.128C9.975.383 7.977.593 6.175 1.253c-.659.241-1.338.531-1.839 1.043-.614.629-.815 1.602-.366 2.386.319.557.86.95 1.432 1.21.747.336 1.527.591 2.327.762 2.227.495 4.534.69 6.809.772 2.522.103 5.048.02 7.558-.248q.93-.102 1.858-.247c.729-.112 1.196-1.07.982-1.737-.257-.798-.947-1.107-1.728-.987l-.344.052-.083.012q-.398.05-.794.094-.819.09-1.642.145a54 54 0 0 1-3.694.128c-1.21 0-2.422-.034-3.63-.114a46 46 0 0 1-2.396-.223l-.237-.03-.052-.008-.245-.036a26 26 0 0 1-1.5-.269.225.225 0 0 1-.176-.221.23.23 0 0 1 .176-.221h.01q.645-.138 1.298-.24l.436-.067h.004c.272-.018.546-.067.817-.1a52 52 0 0 1 7.095-.251c1.15.033 2.3.101 3.444.218q.368.038.735.083l.282.036.19.028q.831.125 1.653.302c.812.178 1.855.235 2.216 1.13.115.284.167.6.23.897l.082.38.004.021.575 2.69a.5.5 0 0 1-.224.524.5.5 0 0 1-.188.068h-.006l-.117.016-.115.016q-.55.072-1.101.134-1.086.124-2.175.216a76 76 0 0 1-6.549.265 76 76 0 0 1-8.784-.514 91 91 0 0 1-.947-.12c.245.032-.178-.024-.264-.036q-.3-.042-.602-.088c-.673-.101-1.343-.226-2.015-.336-.813-.135-1.59-.067-2.325.336a3.4 3.4 0 0 0-1.4 1.46c-.317.659-.41 1.377-.553 2.085-.142.708-.362 1.47-.279 2.198.18 1.569 1.271 2.844 2.84 3.13a81.7 81.7 0 0 0 23.495.783 1 1 0 0 1 .816.286 1.01 1.01 0 0 1 .291.82l-.148 1.45-2.108 20.64c-.085.853-.097 1.734-.258 2.577-.255 1.327-1.147 2.142-2.45 2.44a17 17 0 0 1-3.637.427c-1.357.008-2.714-.053-4.07-.045-1.45.008-3.224-.127-4.342-1.211-.983-.953-1.119-2.444-1.252-3.733a2895 2895 0 0 1-.53-5.121l-.984-9.49-.636-6.141-.031-.304c-.077-.733-.592-1.45-1.405-1.413-.695.03-1.486.625-1.404 1.413l.471 4.552.975 9.417.832 8.026c.053.513.103 1.027.16 1.54.305 2.8 2.432 4.31 5.066 4.735 1.538.249 3.114.3 4.675.325 2.001.033 4.022.11 5.99-.255 2.918-.538 5.106-2.497 5.418-5.535l.268-2.632.888-8.707.967-9.485.444-4.347a1.01 1.01 0 0 1 .807-.887c.835-.163 1.632-.442 2.225-1.08.944-1.017 1.132-2.342.799-3.678m-31.375.938c.013-.006-.01.103-.02.154-.002-.077.002-.146.02-.154m.081.63c.007-.005.027.021.048.054-.032-.03-.052-.052-.048-.055m.08.105c.029.049.044.08 0 0m.16.13h.004c0 .005.007.01.01.014zm27.992-.195c-.3.287-.751.42-1.198.487-5.002.746-10.078 1.124-15.136.957-3.62-.124-7.201-.528-10.785-1.037-.35-.05-.731-.115-.973-.375-.455-.491-.231-1.48-.113-2.073.108-.544.316-1.268.959-1.346 1.003-.118 2.168.308 3.16.46q1.793.275 3.599.44c5.138.47 10.362.397 15.477-.291a64 64 0 0 0 2.787-.44c.825-.148 1.74-.428 2.237.431.342.586.388 1.369.335 2.03a1.14 1.14 0 0 1-.35.757"
+            fill="#0D0C22"
+        />
+    </Svg>
+);
+
+interface BuyMeACoffeeButtonProps {
+    onPress: () => void;
+}
+import { Animated } from 'react-native';
+import { useRef, useEffect } from 'react';
+
+const BuyMeACoffeeButton: React.FC<BuyMeACoffeeButtonProps> = ({ onPress }) => {
+    const scale = useRef(new Animated.Value(1)).current;
+
+    useEffect(() => {
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(scale, {
+                    toValue: 0.95,
+                    duration: 800,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(scale, {
+                    toValue: 1,
+                    duration: 800,
+                    useNativeDriver: true,
+                }),
+            ])
+        ).start();
+    }, []);
+
+    return (
+        <Animated.View style={{ transform: [{ scale }] }}>
+            <TouchableOpacity
+                onPress={onPress}
+                activeOpacity={0.9}
+                style={styles.coffeeContainer}
+            >
+                <LinearGradient
+                    colors={['#FFD700', '#FF8C00']} // Más contraste
+                    style={[styles.gradient, { paddingVertical: 20, paddingHorizontal: 36 }]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                >
+                    <View style={styles.coffeeContent}>
+                        <SVGComponent />
+                        <Text style={[styles.coffeeText, { fontSize: 20 }]}>
+                        ¡Contribuye con un toque!
+                            {/* ¡Apoya el Proyecto! */}
+                        </Text>
+                    </View>
+                </LinearGradient>
+            </TouchableOpacity>
+        </Animated.View>
+    );
+};
+
+const DonationPage: React.FC = () => {
+    const { theme } = useMyTheme()
+    const handleCoffeePress = (): void => {
+        Linking.openURL("https://buymeacoffee.com/santabibliarv60");
+    };
+
+    return (
+        <View style={styles.container}>
+            <Stack.Screen
+                options={{
+                    ...singleScreenHeader({
+                        theme,
+                        title: "Apoyar",
+                        titleTextColor: "#fff",
+                        headerLeftIconColor: "#fff",
+                        backgroundColor: '#2C5282',
+                        titleIcon: "Book",
+                        titleIconColor: '#ffffff',
+                        headerRightProps: {
+                            headerRightIconColor: "#fedf75",
+                            onPress: () => { },
+                            disabled: true,
+                            style: {},
+                        },
+                    }),
+                }}
+            />
+            <StatusBar barStyle="light-content" backgroundColor="#2C5282" />
+
+            <ScrollView
+                style={styles.scrollView}
+                showsVerticalScrollIndicator={false}
+                bounces={false}
+            >
+                {/* Hero Section */}
+                <LinearGradient
+                    colors={['#2C5282', '#3182CE', '#4299E1']}
+                    style={styles.heroSection}
+                >
+                    <View style={styles.heroContent}>
+                        {/* App Icon & Title */}
+                        <View style={styles.appIcon}>
+
+                            <Image
+                                source={require("../assets/images/auth.png")}
+                                style={{
+                                    width: width * 0.5,
+                                    height: 100,
+                                }}
+                                resizeMode="contain"
+                            />
+                            {/* <Book size={50} color="#ffffff" strokeWidth={1.5} /> */}
+                        </View>
+
+                        <Text style={styles.appTitle}>Santa Biblia RV60</Text>
+
+                        <View style={styles.featureBadge}>
+                            <Volume2 size={16} color="#FFD700" strokeWidth={2} />
+                            <Text style={styles.featureText}>Con Audio Incluido</Text>
+                        </View>
+
+                        {/* Donate Button */}
+                        <View style={styles.donateButtonContainer}>
+                            <BuyMeACoffeeButton onPress={handleCoffeePress} />
+                        </View>
+                    </View>
+                </LinearGradient>
+
+                {/* Content Section */}
+                <View style={styles.contentSection}>
+                    {/* Creator Card */}
+                    <View style={styles.creatorCard}>
+                        <View style={styles.creatorHeader}>
+                            <View style={styles.avatarContainer}>
+                                <Heart size={24} color="#E53E3E" fill="#E53E3E" />
+                            </View>
+                            <View style={styles.creatorInfo}>
+                                <Text style={styles.creatorName}>Luis Martínez</Text>
+                                <Text style={styles.creatorRole}>Desarrollador</Text>
+                            </View>
+                        </View>
+                    </View>
+
+                    {/* Mission Card */}
+                    <View style={styles.missionCard}>
+                        <View style={styles.cardHeader}>
+                            <Star size={20} color="#D4AF37" fill="#D4AF37" />
+                            <Text style={styles.cardTitle}>Nuestra Misión</Text>
+                        </View>
+
+                        <Text style={styles.missionText}>
+                            Esta aplicación ofrece la Biblia en la versión Reina Valera 1960 con audio
+                            para que todos puedan leer y escuchar la Palabra de Dios en cualquier momento.
+                        </Text>
+                    </View>
+
+                    {/* Support Card */}
+                    <View style={styles.supportCard}>
+                        <View style={styles.cardHeader}>
+                            <Coffee size={20} color="#3182CE" />
+                            <Text style={styles.cardTitle}>¿Por qué tu apoyo es importante?</Text>
+                        </View>
+
+                        <Text style={styles.supportText}>
+                            Tu apoyo nos ayuda a mantener la app, mejorar el contenido y continuar
+                            compartiendo la Palabra de Dios con más personas en todo el mundo.
+                            Cada contribución hace posible que sigamos desarrollando nuevas funciones
+                            y manteniendo la app gratuita para todos.
+                        </Text>
+                    </View>
+
+                    {/* Bible Verse Card */}
+                    <View style={styles.verseCard}>
+  <Text style={styles.verseText}>
+    "El alma generosa será prosperada; y el que saciare, él también será saciado."
+  </Text>
+  <Text style={styles.verseReference}>Proverbios 11:25</Text>
+</View>
+
+
+<View style={styles.gratitudeCard}>
+  <Text style={styles.gratitudeTitle}>¡Mil gracias por tu apoyo!</Text>
+  <Text style={styles.gratitudeText}>
+    Cada contribución hace posible que esta obra siga creciendo. Que la paz de Dios
+    te acompañe siempre.
+  </Text>
+</View>
+
+
+                    {/* Footer */}
+                    <Text style={styles.footer}>
+                        Desarrollado con ❤️ para la gloria de Dios
+                    </Text>
+                </View>
+            </ScrollView>
+        </View>
+    );
+};
+
+interface Styles {
+    container: ViewStyle;
+    scrollView: ViewStyle;
+    heroSection: ViewStyle;
+    heroContent: ViewStyle;
+    appIcon: ViewStyle;
+    appTitle: TextStyle;
+    featureBadge: ViewStyle;
+    featureText: TextStyle;
+    donateButtonContainer: ViewStyle;
+    contentSection: ViewStyle;
+    creatorCard: ViewStyle;
+    creatorHeader: ViewStyle;
+    avatarContainer: ViewStyle;
+    creatorInfo: ViewStyle;
+    creatorName: TextStyle;
+    creatorRole: TextStyle;
+    missionCard: ViewStyle;
+    supportCard: ViewStyle;
+    cardHeader: ViewStyle;
+    cardTitle: TextStyle;
+    missionText: TextStyle;
+    supportText: TextStyle;
+    verseCard: ViewStyle;
+    verseText: TextStyle;
+    verseReference: TextStyle;
+    gratitudeCard: ViewStyle;
+    gratitudeTitle: TextStyle;
+    gratitudeText: TextStyle;
+    coffeeContainer: ViewStyle;
+    gradient: ViewStyle;
+    coffeeContent: ViewStyle;
+    coffeeText: TextStyle;
+    footer: TextStyle;
+}
+
+const styles = StyleSheet.create<Styles>({
+    container: {
+        flex: 1,
+        backgroundColor: '#f7fafc',
+    },
+    scrollView: {
+        flex: 1,
+    },
+    heroSection: {
+        paddingTop: 60,
+        paddingBottom: 40,
+        paddingHorizontal: 20,
+    },
+    heroContent: {
+        alignItems: 'center',
+    },
+    appIcon: {
+        width: 80,
+        height: 80,
+        borderRadius: 20,
+        backgroundColor: 'rgba(255,255,255,0.15)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    appTitle: {
+        fontSize: 32,
+        fontWeight: '800',
+        color: '#ffffff',
+        textAlign: 'center',
+        marginBottom: 12,
+        textShadowColor: 'rgba(0, 0, 0, 0.3)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
+    },
+    featureBadge: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255,255,255,0.2)',
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 20,
+        marginBottom: 30,
+    },
+    featureText: {
+        color: '#FFD700',
+        fontSize: 14,
+        fontWeight: '600',
+        marginLeft: 6,
+    },
+    donateButtonContainer: {
+        marginTop: 10,
+    },
+    contentSection: {
+        padding: 20,
+        paddingTop: 10,
+    },
+    creatorCard: {
+        backgroundColor: '#ffffff',
+        borderRadius: 16,
+        padding: 20,
+        marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 4,
+    },
+    creatorHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    avatarContainer: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        backgroundColor: '#FED7D7',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 15,
+    },
+    creatorInfo: {
+        flex: 1,
+    },
+    creatorName: {
+        fontSize: 20,
+        fontWeight: '700',
+        color: '#2D3748',
+        marginBottom: 2,
+    },
+    creatorRole: {
+        fontSize: 14,
+        color: '#718096',
+        fontWeight: '500',
+    },
+    missionCard: {
+        backgroundColor: '#ffffff',
+        borderRadius: 16,
+        padding: 20,
+        marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 4,
+        borderLeftWidth: 4,
+        borderLeftColor: '#D4AF37',
+    },
+    supportCard: {
+        backgroundColor: '#ffffff',
+        borderRadius: 16,
+        padding: 20,
+        marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 4,
+        borderLeftWidth: 4,
+        borderLeftColor: '#3182CE',
+    },
+    cardHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 12,
+    },
+    cardTitle: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: '#2D3748',
+        marginLeft: 10,
+    },
+    missionText: {
+        fontSize: 16,
+        lineHeight: 24,
+        color: '#4A5568',
+        textAlign: 'left',
+    },
+    supportText: {
+        fontSize: 16,
+        lineHeight: 24,
+        color: '#4A5568',
+        textAlign: 'left',
+    },
+    verseCard: {
+        backgroundColor: '#EDF2F7',
+        borderRadius: 16,
+        padding: 24,
+        marginBottom: 20,
+        borderLeftWidth: 4,
+        borderLeftColor: '#D4AF37',
+    },
+    verseText: {
+        fontSize: 18,
+        fontStyle: 'italic',
+        lineHeight: 26,
+        color: '#2D3748',
+        textAlign: 'center',
+        marginBottom: 12,
+        fontWeight: '500',
+    },
+    verseReference: {
+        fontSize: 16,
+        fontWeight: '700',
+        color: '#D4AF37',
+        textAlign: 'center',
+    },
+    gratitudeCard: {
+        backgroundColor: '#F0FFF4',
+        borderRadius: 16,
+        padding: 20,
+        marginBottom: 30,
+        borderLeftWidth: 4,
+        borderLeftColor: '#38A169',
+    },
+    gratitudeTitle: {
+        fontSize: 20,
+        fontWeight: '700',
+        color: '#276749',
+        textAlign: 'center',
+        marginBottom: 8,
+    },
+    gratitudeText: {
+        fontSize: 16,
+        lineHeight: 22,
+        color: '#2F855A',
+        textAlign: 'center',
+    },
+    coffeeContainer: {
+        borderRadius: 50,
+        overflow: 'hidden',
+        elevation: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+    },
+    gradient: {
+        paddingVertical: 16,
+        paddingHorizontal: 32,
+    },
+    coffeeContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    coffeeText: {
+        fontSize: 18,
+        color: '#744210',
+        fontWeight: '700',
+        marginLeft: 10,
+    },
+    footer: {
+        fontSize: 14,
+        color: '#A0AEC0',
+        textAlign: 'center',
+        fontStyle: 'italic',
+        paddingBottom: 20,
+    },
+});
+
+export default DonationPage;

@@ -16,7 +16,7 @@ import { use$ } from "@legendapp/state/react";
 import { useMyTheme } from "@/context/ThemeContext";
 import { useNavigation } from "expo-router";
 import React, { useCallback, useRef, useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, Linking, TouchableOpacity } from "react-native";
 import { IDashboardOption } from "../../app/(dashboard)";
 import BottomModal from "../BottomModal";
 import EmptyStateMessage from "../EmptyStateMessage";
@@ -24,6 +24,7 @@ import VersionList from "../home/header/VersionList";
 import { Text, View } from "../Themed";
 import ProfileCard from "../UserProfile";
 import VoiceList from "../VoiceList";
+import BuyMeACoffeeButton from "./BuyMeACoffe";
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
@@ -302,6 +303,10 @@ const NewDashboard = () => {
     ],
   };
 
+  const handleBuyMeACoffee = () => {
+    Linking.openURL("https://buymeacoffee.com/santabibliarv60");
+  };
+
   return (
     <StatusBarBackground>
       <ScrollView style={styles.container}>
@@ -310,6 +315,23 @@ const NewDashboard = () => {
         <MainSection list={mainActionItems} theme={theme} />
         <StudyTools list={studyToolItems} theme={theme} />
         <AdditionalResources list={additionalResourceList} theme={theme} />
+        
+        {/* BUY ME A COFFE */}
+        <BuyMeACoffeeButton />
+        {/* <TouchableOpacity
+          onPress={handleBuyMeACoffee}
+          style={{
+            backgroundColor: "#FFDD00",
+            padding: 12,
+            borderRadius: 8,
+            alignItems: "center",
+            marginVertical: 16,
+          }}
+        >
+          <Text style={{ color: "#000", fontWeight: "bold" }}>
+            Buy Me a Coffee
+          </Text>
+        </TouchableOpacity> */}
 
         <BottomModal shouldScroll startAT={2} ref={voiceBottomSheetModalRef}>
           <VoiceList theme={theme} />

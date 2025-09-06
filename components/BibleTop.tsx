@@ -235,7 +235,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   }, []);
 
   // const MyChapter = isInterlinear ? Chapter : (slowDevice ) ? DomChapter : Chapter;
-  const MyChapter = useDomList ? DomChapter : Chapter;
+  const MyChapter = useDomList ? (isInterlinear? Chapter: DomChapter) : Chapter;
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
