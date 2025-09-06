@@ -115,7 +115,7 @@ export const useNotificationService = () => {
                 dailyVerseData = await getDailyVerseData(primaryDB?.executeSql!);
             } catch (error) {
                 const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
-                console.warn('Could not get daily verse data:', errorMessage);
+                console.log('Could not get daily verse data:', errorMessage);
                 setError(errorMessage);
             }
         }
@@ -139,8 +139,6 @@ export const useNotificationService = () => {
         targetTime.setHours(hour, minute, 0, 0);
 
         if (targetTime <= now) {
-            console.log('FOR TOMORROW')
-            // If time has passed today, schedule for tomorrow
             targetTime.setDate(targetTime.getDate() + 1);
         }
 
@@ -415,13 +413,7 @@ export const useNotificationService = () => {
 
 
             if (preferences.dailyVerseEnabled) {
-                const isAlreadyScheduled = await getScheduledNotifications();
-                const dailyVerseNotifications = isAlreadyScheduled.filter(
-                    notification => notification.content.data?.type === "daily-verse"
-                );
-                if (dailyVerseNotifications.length === 0) {
-                    await scheduleDailyVerseNotification(preferences.dailyVerseTime);
-                }
+                await scheduleDailyVerseNotification(preferences.dailyVerseTime);
             }
 
             if (preferences.devotionalReminder) {

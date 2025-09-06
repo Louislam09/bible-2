@@ -143,7 +143,7 @@ const NotificationSettingsScreen = () => {
           title: "🔔 Notificación de Prueba Programada",
           body: "¡Esta es una notificación de prueba! Las notificaciones están funcionando correctamente.",
           data: {
-            type: "scheduled-test",
+            type: "default",
             timestamp: Date.now().toString()
           },
         },
@@ -267,11 +267,10 @@ const NotificationSettingsScreen = () => {
         id: "settings",
         options: [
           {
-            label: "Probar Notificación",
-            extraText: "Envía una notificación de prueba",
-            iconName: "Send" as keyof typeof icons,
-            // iconName: "Send",
-            action: testNotification,
+            label: "Probar Notificación Programada",
+            extraText: "Envía una notificación de prueba programada",
+            iconName: "ConciergeBell" as keyof typeof icons,
+            action: testNotificationSchedule,
             color: "gold",
           },
           {
@@ -288,13 +287,6 @@ const NotificationSettingsScreen = () => {
         title: "Información de Debug",
         id: "debug",
         options: [
-          {
-            label: "Probar Notificación Programada",
-            extraText: "Envía una notificación de prueba programada",
-            iconName: "ConciergeBell" as keyof typeof icons,
-            action: testNotificationSchedule,
-            color: "gold",
-          },
           {
             label: "Estado de Notificaciones",
             extraText: notificationService.error
@@ -348,7 +340,7 @@ const NotificationSettingsScreen = () => {
         hide: !IS_DEV && !isAdmin,
       },
     ].filter((section) => !section.hide);
-  }, [notificationPreferences, isAdmin]);
+  }, [notificationPreferences, isAdmin, notificationService.error]);
 
   const SettingItem = useCallback(
     ({ item }: { item: TOption }) => {

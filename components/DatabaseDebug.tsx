@@ -54,7 +54,6 @@ const DatabaseDebug = () => {
       const notifications =
         await Notifications.getAllScheduledNotificationsAsync();
       setScheduledNotifications(notifications);
-      console.log("Scheduled Notifications:", JSON.stringify(notifications, null, 2));
 
       // Get notification permissions
       const permissions = await Notifications.getPermissionsAsync();
