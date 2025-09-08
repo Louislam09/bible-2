@@ -223,7 +223,13 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
           ]}
           onPress={isView ? onEditMode : onSave}
         >
-          <Animated.View style={{ transform: [{ rotate }] }}>
+          <Animated.View
+            style={{
+              transform: [
+                { rotate: isView ? "0deg" : isTyping ? rotate : "0deg" },
+              ],
+            }}
+          >
             <Icon
               style={[{}]}
               color={theme.colors.notification}
@@ -301,7 +307,6 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
   };
 
   const onContentChange = async (field: any, text: string) => {
-    console.log("onContentChange", field, text);
     if (!isNewNote) {
       typingTimeoutRef.current = true;
       setTyping(true);
@@ -370,28 +375,29 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
         }}
       />
 
-      {showNewEditor ? (
-        <View style={styles.container}>
-          {isView && (
-            <View style={styles.titleContainer}>
-              <Text style={{ fontSize: 22 }}>
-                {noteInfo?.title?.toUpperCase() || defaultTitle}
-              </Text>
-              <Text style={styles.dateLabel}>
-                {formatDateShortDayMonth(
-                  isNewNote
-                    ? new Date()
-                    : ((noteInfo?.updated_at || noteInfo?.created_at) as any),
-                  {
-                    weekday: "short",
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  }
-                )}
-              </Text>
-            </View>
-          )}
+      <View style={styles.container}>
+        {isView && (
+          <View style={styles.titleContainer}>
+            <Text style={{ fontSize: 22 }}>
+              {noteInfo?.title?.toUpperCase() || defaultTitle}
+            </Text>
+            <Text style={styles.dateLabel}>
+              {formatDateShortDayMonth(
+                isNewNote
+                  ? new Date()
+                  : ((noteInfo?.updated_at || noteInfo?.created_at) as any),
+                {
+                  weekday: "short",
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                }
+              )}
+            </Text>
+          </View>
+        )}
+
+        {showNewEditor ? (
           <MyRichEditor
             Textinput={
               <TextInput
@@ -408,17 +414,22 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
             onChangeText={(text: string) => onContentChange("content", text)}
             readOnly={isView}
           />
-          {renderActionButtons()}
-        </View>
-      ) : (
-        <DomNoteEditor
-          theme={theme}
-          noteId={noteId?.toString()}
-          isNewNote={isNewNote}
-          setPlainText={setPlainText}
-          setEditorState={setEditorState}
-        />
-      )}
+        ) : (
+          <DomNoteEditor
+            isReadOnly={isView}
+            theme={theme}
+            noteId={noteId?.toString()}
+            isNewNote={isNewNote}
+            // onChangeText={() => {
+            //   console.log("onChangeText");
+            // }}
+            onChangeText={(text: string) => onContentChange("content", text)}
+            value={noteContent.content}
+            dom={{}}
+          />
+        )}
+        {renderActionButtons()}
+      </View>
       <KeyboardPaddingView />
     </View>
   );
