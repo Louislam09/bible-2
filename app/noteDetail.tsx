@@ -41,7 +41,7 @@ import { EditorState } from "lexical";
 type NoteDetailProps = {};
 type NoteDetailParams = { noteId: number | null; isNewNote: boolean };
 
-const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
+const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
   const { theme } = useMyTheme();
   const navigation = useNavigation();
   const styles = useMemo(() => getStyles(theme), [theme]);
@@ -187,7 +187,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
         "Guardar cambios",
         "Tienes cambios sin guardar, ¿quieres salir sin guardar?",
         [
-          { text: "Cancelar", style: "cancel", onPress: () => { } },
+          { text: "Cancelar", style: "cancel", onPress: () => {} },
           {
             text: "Salir sin guardar",
             style: "destructive",
@@ -301,7 +301,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
   };
 
   const onContentChange = async (field: any, text: string) => {
-    console.log('onContentChange', field, text);
+    console.log("onContentChange", field, text);
     if (!isNewNote) {
       typingTimeoutRef.current = true;
       setTyping(true);
@@ -343,10 +343,16 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
     );
   }
 
-  const showNewEditor = false
+  const showNewEditor = false;
 
   return (
-    <View style={{ flex: 1, width: "100%" }}>
+    <View
+      style={{
+        flex: 1,
+        width: "100%",
+        backgroundColor: "white",
+      }}
+    >
       <Stack.Screen
         options={{
           ...singleScreenHeader({
@@ -364,45 +370,47 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
         }}
       />
 
-      {showNewEditor ? <View style={styles.container}>
-        {isView && (
-          <View style={styles.titleContainer}>
-            <Text style={{ fontSize: 22 }}>
-              {noteInfo?.title?.toUpperCase() || defaultTitle}
-            </Text>
-            <Text style={styles.dateLabel}>
-              {formatDateShortDayMonth(
-                isNewNote
-                  ? new Date()
-                  : ((noteInfo?.updated_at || noteInfo?.created_at) as any),
-                {
-                  weekday: "short",
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                }
-              )}
-            </Text>
-          </View>
-        )}
-        <MyRichEditor
-          Textinput={
-            <TextInput
-              editable={!isView}
-              placeholder="Titulo"
-              placeholderTextColor={theme.colors.text}
-              style={[styles.textInput]}
-              multiline
-              value={noteContent.title}
-              onChangeText={(text: string) => onContentChange("title", text)}
-            />
-          }
-          value={noteContent.content}
-          onChangeText={(text: string) => onContentChange("content", text)}
-          readOnly={isView}
-        />
-        {renderActionButtons()}
-      </View> : (
+      {showNewEditor ? (
+        <View style={styles.container}>
+          {isView && (
+            <View style={styles.titleContainer}>
+              <Text style={{ fontSize: 22 }}>
+                {noteInfo?.title?.toUpperCase() || defaultTitle}
+              </Text>
+              <Text style={styles.dateLabel}>
+                {formatDateShortDayMonth(
+                  isNewNote
+                    ? new Date()
+                    : ((noteInfo?.updated_at || noteInfo?.created_at) as any),
+                  {
+                    weekday: "short",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  }
+                )}
+              </Text>
+            </View>
+          )}
+          <MyRichEditor
+            Textinput={
+              <TextInput
+                editable={!isView}
+                placeholder="Titulo"
+                placeholderTextColor={theme.colors.text}
+                style={[styles.textInput]}
+                multiline
+                value={noteContent.title}
+                onChangeText={(text: string) => onContentChange("title", text)}
+              />
+            }
+            value={noteContent.content}
+            onChangeText={(text: string) => onContentChange("content", text)}
+            readOnly={isView}
+          />
+          {renderActionButtons()}
+        </View>
+      ) : (
         <DomNoteEditor
           theme={theme}
           noteId={noteId?.toString()}

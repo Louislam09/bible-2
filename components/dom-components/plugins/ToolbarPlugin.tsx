@@ -32,16 +32,35 @@ function Divider() {
   return <div className="divider" />;
 }
 
-export default function ToolbarPlugin({ className }: { className?: string }) {
+interface ToolbarPluginProps {
+  className?: string;
+  activeColor?: string;
+}
+
+export default function ToolbarPlugin({
+  className,
+  activeColor,
+}: ToolbarPluginProps) {
   const [editor] = useLexicalComposerContext();
   const toolbarRef = useRef(null);
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
-  const [isBold, setIsBold] = useState(false);
-  const [isItalic, setIsItalic] = useState(false);
-  const [isUnderline, setIsUnderline] = useState(false);
-  const [isStrikethrough, setIsStrikethrough] = useState(false);
-  const [isCode, setIsCode] = useState(false);
+  const [actionButtons, setActionButtons] = useState({
+    bold: false,
+    italic: false,
+    underline: false,
+    strikethrough: false,
+    code: false,
+    heading1: false,
+    heading2: false,
+    bulletList: false,
+    numberedList: false,
+    quote: false,
+    leftAlign: false,
+    centerAlign: false,
+    rightAlign: false,
+    justifyAlign: false,
+  });
 
   // Add block format functions
   const formatHeading = useCallback(
@@ -50,6 +69,11 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
           $setBlocksType(selection, () => $createHeadingNode(headingLevel));
+          setActionButtons((prev) => ({
+            ...prev,
+            heading1: headingLevel === "h1",
+            heading2: headingLevel === "h2",
+          }));
         }
       });
     },
@@ -61,6 +85,10 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
       const selection = $getSelection();
       if ($isRangeSelection(selection)) {
         $setBlocksType(selection, () => $createListNode("bullet"));
+        setActionButtons((prev) => ({
+          ...prev,
+          bulletList: !prev.bulletList,
+        }));
       }
     });
   }, [editor]);
@@ -70,6 +98,10 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
       const selection = $getSelection();
       if ($isRangeSelection(selection)) {
         $setBlocksType(selection, () => $createListNode("number"));
+        setActionButtons((prev) => ({
+          ...prev,
+          numberedList: !prev.numberedList,
+        }));
       }
     });
   }, [editor]);
@@ -79,6 +111,10 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
       const selection = $getSelection();
       if ($isRangeSelection(selection)) {
         $setBlocksType(selection, () => $createQuoteNode());
+        setActionButtons((prev) => ({
+          ...prev,
+          quote: !prev.quote,
+        }));
       }
     });
   }, [editor]);
@@ -86,12 +122,23 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection();
     if ($isRangeSelection(selection)) {
-      // Update text format
-      setIsBold(selection.hasFormat("bold"));
-      setIsItalic(selection.hasFormat("italic"));
-      setIsUnderline(selection.hasFormat("underline"));
-      setIsStrikethrough(selection.hasFormat("strikethrough"));
-      setIsCode(selection.hasFormat("code"));
+      // Get the current element format
+      const anchorNode = selection.anchor.getNode();
+      let element = anchorNode.getTopLevelElementOrThrow();
+      const elementFormat = element.getFormatType();
+
+      setActionButtons((prev) => ({
+        ...prev,
+        bold: selection.hasFormat("bold"),
+        italic: selection.hasFormat("italic"),
+        underline: selection.hasFormat("underline"),
+        strikethrough: selection.hasFormat("strikethrough"),
+        code: selection.hasFormat("code"),
+        leftAlign: elementFormat === "left" || elementFormat === "",
+        centerAlign: elementFormat === "center",
+        rightAlign: elementFormat === "right",
+        justifyAlign: elementFormat === "justify",
+      }));
     }
   }, []);
 
@@ -130,10 +177,7 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
   }, [editor, $updateToolbar]);
 
   return (
-    <div
-      className={`toolbar border border-red-500 w-full overflow-x-auto`}
-      ref={toolbarRef}
-    >
+    <div className={`toolbar w-full overflow-x-auto`} ref={toolbarRef}>
       <button
         disabled={!canUndo}
         onClick={() => {
@@ -186,6 +230,7 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
         onClick={() => formatHeading("h1")}
         className="toolbar-item spaced"
         aria-label="Heading 1"
+        style={{ color: actionButtons.heading1 ? activeColor : "black" }}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -202,6 +247,7 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
         onClick={() => formatHeading("h2")}
         className="toolbar-item spaced"
         aria-label="Heading 2"
+        style={{ color: actionButtons.heading2 ? activeColor : "black" }}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -218,6 +264,7 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
         onClick={formatBulletList}
         className="toolbar-item spaced"
         aria-label="Bullet List"
+        style={{ color: actionButtons.bulletList ? activeColor : "black" }}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -237,6 +284,7 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
         onClick={formatNumberedList}
         className="toolbar-item spaced"
         aria-label="Numbered List"
+        style={{ color: actionButtons.numberedList ? activeColor : "black" }}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -257,6 +305,7 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
         onClick={formatQuote}
         className="toolbar-item spaced"
         aria-label="Quote"
+        style={{ color: actionButtons.quote ? activeColor : "black" }}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -273,10 +322,17 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
         onClick={() => {
           editor.dispatchCommand(FORMAT_TEXT_COMMAND, "code");
         }}
-        className={"toolbar-item spaced " + (isCode ? "active" : "")}
+        style={{ color: actionButtons.code ? activeColor : "black" }}
+        className={
+          "toolbar-item spaced " + (actionButtons.code ? "active" : "")
+        }
         aria-label="Insert code block"
       >
-        <Icon name="Code" size={16} color={isCode ? "blue" : "black"} />
+        <Icon
+          name="Code"
+          size={16}
+          color={actionButtons.code ? activeColor : "black"}
+        />
       </button>
 
       <Divider />
@@ -284,7 +340,10 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
         onClick={() => {
           editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
         }}
-        className={"toolbar-item spaced " + (isBold ? "active" : "")}
+        className={
+          "toolbar-item spaced " + (actionButtons.bold ? "active" : "")
+        }
+        style={{ color: actionButtons.bold ? activeColor : "black" }}
         aria-label="Format Bold"
       >
         <svg
@@ -302,7 +361,10 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
         onClick={() => {
           editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
         }}
-        className={"toolbar-item spaced " + (isItalic ? "active" : "")}
+        className={
+          "toolbar-item spaced " + (actionButtons.italic ? "active" : "")
+        }
+        style={{ color: actionButtons.italic ? activeColor : "black" }}
         aria-label="Format Italics"
       >
         <svg
@@ -320,7 +382,10 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
         onClick={() => {
           editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
         }}
-        className={"toolbar-item spaced " + (isUnderline ? "active" : "")}
+        className={
+          "toolbar-item spaced " + (actionButtons.underline ? "active" : "")
+        }
+        style={{ color: actionButtons.underline ? activeColor : "black" }}
         aria-label="Format Underline"
       >
         <svg
@@ -338,7 +403,10 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
         onClick={() => {
           editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough");
         }}
-        className={"toolbar-item spaced " + (isStrikethrough ? "active" : "")}
+        className={
+          "toolbar-item spaced " + (actionButtons.strikethrough ? "active" : "")
+        }
+        style={{ color: actionButtons.strikethrough ? activeColor : "black" }}
         aria-label="Format Strikethrough"
       >
         <svg
@@ -357,8 +425,11 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
         onClick={() => {
           editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left");
         }}
-        className="toolbar-item spaced"
+        className={
+          "toolbar-item spaced " + (actionButtons.leftAlign ? "active" : "")
+        }
         aria-label="Left Align"
+        style={{ color: actionButtons.leftAlign ? activeColor : "black" }}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -378,8 +449,11 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
         onClick={() => {
           editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center");
         }}
-        className="toolbar-item spaced"
+        className={
+          "toolbar-item spaced " + (actionButtons.centerAlign ? "active" : "")
+        }
         aria-label="Center Align"
+        style={{ color: actionButtons.centerAlign ? activeColor : "black" }}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -399,8 +473,11 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
         onClick={() => {
           editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right");
         }}
-        className="toolbar-item spaced"
+        className={
+          "toolbar-item spaced " + (actionButtons.rightAlign ? "active" : "")
+        }
         aria-label="Right Align"
+        style={{ color: actionButtons.rightAlign ? activeColor : "black" }}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -420,7 +497,10 @@ export default function ToolbarPlugin({ className }: { className?: string }) {
         onClick={() => {
           editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "justify");
         }}
-        className="toolbar-item"
+        style={{ color: actionButtons.justifyAlign ? activeColor : "black" }}
+        className={
+          "toolbar-item " + (actionButtons.justifyAlign ? "active" : "")
+        }
         aria-label="Justify Align"
       >
         <svg

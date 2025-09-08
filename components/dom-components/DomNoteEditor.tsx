@@ -53,12 +53,12 @@ const DomNoteEditor = ({
 }: DomNoteEditorProps) => {
   const { colors } = theme;
   return (
-    <div className={`rounded w-full`} style={{ width: width }}>
+    <div className={`rounded w-full px-1`} style={{ width: width }}>
       <LexicalComposer initialConfig={editorConfig}>
         <ReadOnlyPlugin isReadOnly={isReadOnly} />
         <div className="text-sm text-left w-full h-full text-black relative font-normal rounded-lg">
           <div className="sticky top-0 left-0 right-0 z-10 ">
-            <ToolbarPlugin />
+            <ToolbarPlugin activeColor={colors.notification} />
           </div>
 
           {true && (
