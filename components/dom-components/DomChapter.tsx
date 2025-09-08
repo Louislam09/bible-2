@@ -1,14 +1,12 @@
-import Icon from "@/components/Icon";
 import { useBibleContext } from "@/context/BibleContext";
+import { useMemorization } from "@/context/MemorizationContext";
 import { bibleState$ } from "@/state/bibleState";
-import { EBibleVersions, IBookVerse, IStrongWord, TTheme } from "@/types";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { EBibleVersions, IBookVerse, TTheme } from "@/types";
+import { WordTagPair } from "@/utils/extractVersesInfo";
+import React, { useCallback } from "react";
 import { Dimensions } from "react-native";
 import "../../global.css";
 import ChapterRender from "./ChapterRender";
-import { Text, View } from "../Themed";
-import { WordTagPair } from "@/utils/extractVersesInfo";
-import { useMemorization } from "@/context/MemorizationContext";
 const { width } = Dimensions.get('window');
 interface TChapter {
     verses: IBookVerse[];

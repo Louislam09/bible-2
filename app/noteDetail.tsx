@@ -1,4 +1,5 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import DomNoteEditor from "@/components/dom-components/DomNoteEditor";
 import Icon from "@/components/Icon";
 import { KeyboardPaddingView } from "@/components/keyboard-padding";
 import LexicalRichTextEditor from "@/components/LexicalRichTextEditor";
@@ -34,6 +35,8 @@ import {
   ToastAndroid,
   TouchableOpacity,
 } from "react-native";
+import "../global.css";
+import { EditorState } from "lexical";
 
 type NoteDetailProps = {};
 type NoteDetailParams = { noteId: number | null; isNewNote: boolean };
@@ -298,6 +301,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
   };
 
   const onContentChange = async (field: any, text: string) => {
+    console.log('onContentChange', field, text);
     if (!isNewNote) {
       typingTimeoutRef.current = true;
       setTyping(true);
@@ -328,6 +332,8 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
     );
     printToFile(html, noteInfo?.title?.toUpperCase() || "--");
   };
+  const [plainText, setPlainText] = useState("");
+  const [editorState, setEditorState] = useState<string | null>(null);
 
   if (isLoading) {
     return (
@@ -337,8 +343,10 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
     );
   }
 
+  const showNewEditor = false
+
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, width: "100%" }}>
       <Stack.Screen
         options={{
           ...singleScreenHeader({
@@ -355,7 +363,8 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
           }),
         }}
       />
-      <View style={styles.container}>
+
+      {showNewEditor ? <View style={styles.container}>
         {isView && (
           <View style={styles.titleContainer}>
             <Text style={{ fontSize: 22 }}>
@@ -393,7 +402,15 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
           readOnly={isView}
         />
         {renderActionButtons()}
-      </View>
+      </View> : (
+        <DomNoteEditor
+          theme={theme}
+          noteId={noteId?.toString()}
+          isNewNote={isNewNote}
+          setPlainText={setPlainText}
+          setEditorState={setEditorState}
+        />
+      )}
       <KeyboardPaddingView />
     </View>
   );
