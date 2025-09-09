@@ -51,6 +51,7 @@ interface DomNoteEditorProps {
   value?: string;
   width?: number;
   height?: number;
+  onSave: () => Promise<void>;
   // dom: import("expo/dom").DOMProps;
 }
 
@@ -61,6 +62,7 @@ const DomNoteEditor = ({
   value,
   width,
   height,
+  onSave,
 }: DomNoteEditorProps) => {
   const { colors } = theme;
   const isLoadingInitialContent = useRef(false);
@@ -76,7 +78,10 @@ const DomNoteEditor = ({
         <div className="editor-container text-sm text-left w-full h-full relative font-normal rounded-lg flex flex-col">
           {!isReadOnly && (
             <div className="sticky top-0 left-0 right-0 bg-white border-t border-gray-200 z-10 ">
-              <TopToolbarPlugin activeColor={colors.notification} />
+              <TopToolbarPlugin
+                onSave={onSave}
+                activeColor={colors.notification}
+              />
             </div>
           )}
           <div className="editor-inner flex-1 overflow-y-auto">

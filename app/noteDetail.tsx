@@ -468,6 +468,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
               // value={noteContent.content}
               width={width}
               height={height}
+              onSave={onSave}
               // dom={{}}
             />
           )}

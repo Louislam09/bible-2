@@ -35,11 +35,13 @@ function Divider() {
 interface TopToolbarPluginProps {
   className?: string;
   activeColor?: string;
+  onSave: () => Promise<void>;
 }
 
 export default function TopToolbarPlugin({
   className,
   activeColor,
+  onSave,
 }: TopToolbarPluginProps) {
   const [editor] = useLexicalComposerContext();
   const toolbarRef = useRef(null);
@@ -184,8 +186,7 @@ export default function TopToolbarPlugin({
       <button
         disabled={!canUndo}
         onClick={() => {
-          console.log("Check");
-          // editor.dispatchCommand(UNDO_COMMAND, undefined);
+          onSave();
         }}
         className="mx-1 px-4 rounded-full !bg-theme-notification !text-white"
         aria-label="Check"
