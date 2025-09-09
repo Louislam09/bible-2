@@ -48,13 +48,6 @@ export default function AutoScrollPlugin() {
       const cursorRelativeToEditor = Math.round(cursorBottom - editorRect.top);
       const availableHeight = Math.round(editorRect.height - SCROLL_BUFFER);
 
-      console.log({
-        cursorRelativeToEditor,
-        availableHeight,
-        shouldScroll: cursorRelativeToEditor > availableHeight,
-        scrollAmount: cursorRelativeToEditor - availableHeight,
-      });
-
       // Check if cursor is too close to the bottom of the editor inner
       if (cursorRelativeToEditor > availableHeight) {
         // Calculate how much we need to scroll to bring cursor into view
@@ -63,7 +56,7 @@ export default function AutoScrollPlugin() {
           40
         );
 
-        console.log("Scrolling by:", scrollAmount);
+        // console.log("Scrolling by:", scrollAmount);
 
         // Scroll the editor inner container
         editorInner.scrollBy({
@@ -76,5 +69,5 @@ export default function AutoScrollPlugin() {
     }
   };
 
-  return null; // This plugin doesn't render anything
+  return null;
 }

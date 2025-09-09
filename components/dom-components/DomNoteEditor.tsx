@@ -16,7 +16,7 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { TTheme } from "@/types";
 import { $generateHtmlFromNodes } from "@lexical/html";
 import { $getRoot } from "lexical";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Dimensions } from "react-native";
 import ExampleTheme from "./ExampleTheme";
 import AutoScrollPlugin from "./plugins/AutoScrollPlugin";
@@ -52,6 +52,7 @@ interface DomNoteEditorProps {
   width?: number;
   height?: number;
   onSave: () => Promise<void>;
+  statusBarHeight?: number;
   // dom: import("expo/dom").DOMProps;
 }
 
@@ -63,24 +64,37 @@ const DomNoteEditor = ({
   width,
   height,
   onSave,
+  statusBarHeight,
 }: DomNoteEditorProps) => {
   const { colors } = theme;
   const isLoadingInitialContent = useRef(false);
   useThemeVariables(theme);
 
+  const [topToolbarHeight, setTopToolbarHeight] = useState(48);
+
   return (
     <div
-      className={`rounded w-full h-full pt-[26px]`}
+      // className={`rounded w-full h-full pt-[${isReadOnly ? 0 : 26}px] `}
+      className={`rounded w-full h-full  `}
       style={{ width: width || "100%", height: height || "100%" }}
     >
       <LexicalComposer initialConfig={editorConfig}>
         <ReadOnlyPlugin isReadOnly={isReadOnly} />
-        <div className="editor-container text-sm text-left w-full h-full relative font-normal rounded-lg flex flex-col">
+        <div
+          className={`editor-container bg-theme-notification text-sm text-left w-full h-full relative font-normal rounded-lg flex flex-col`}
+          style={{ paddingTop: topToolbarHeight }}
+        >
           {!isReadOnly && (
-            <div className="sticky top-0 left-0 right-0 bg-white border-t border-gray-200 z-10 ">
+            <div
+              className={`fixed  top-0 left-0 right-0 bg-white border-t border-gray-200 z-10 `}
+            >
               <TopToolbarPlugin
                 onSave={onSave}
                 activeColor={colors.notification}
+                onTopToolbarHeightChange={(height: number) => {
+                  console.log("topToolbarHeight,", height);
+                  setTopToolbarHeight(height);
+                }}
               />
             </div>
           )}

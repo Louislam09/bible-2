@@ -36,15 +36,17 @@ interface TopToolbarPluginProps {
   className?: string;
   activeColor?: string;
   onSave: () => Promise<void>;
+  onTopToolbarHeightChange?: (height: number) => void;
 }
 
 export default function TopToolbarPlugin({
   className,
   activeColor,
   onSave,
+  onTopToolbarHeightChange,
 }: TopToolbarPluginProps) {
   const [editor] = useLexicalComposerContext();
-  const toolbarRef = useRef(null);
+  const toolbarRef = useRef<HTMLDivElement>(null);
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   const [actionButtons, setActionButtons] = useState({
@@ -63,6 +65,12 @@ export default function TopToolbarPlugin({
     rightAlign: false,
     justifyAlign: false,
   });
+
+  useEffect(() => {
+    if (toolbarRef.current && onTopToolbarHeightChange) {
+      onTopToolbarHeightChange(toolbarRef.current.clientHeight);
+    }
+  }, [toolbarRef.current]);
 
   // Add block format functions
   const formatHeading = useCallback(

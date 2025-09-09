@@ -1,12 +1,9 @@
-import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import DomNoteEditor from "@/components/dom-components/DomNoteEditor";
 import Icon from "@/components/Icon";
 import { KeyboardPaddingView } from "@/components/keyboard-padding";
-import LexicalRichTextEditor from "@/components/LexicalRichTextEditor";
 import MyRichEditor from "@/components/RichTextEditor";
 import { Text, View } from "@/components/Themed";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
-import { useBibleContext } from "@/context/BibleContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
 import useParams from "@/hooks/useParams";
@@ -16,6 +13,7 @@ import { bibleState$ } from "@/state/bibleState";
 import { EViewMode, Screens, TNote, TTheme } from "@/types";
 import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
 import { use$ } from "@legendapp/state/react";
+import Constants from "expo-constants";
 import { Stack, useNavigation } from "expo-router";
 import React, {
   useCallback,
@@ -37,9 +35,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import "../global.css";
-import { EditorState } from "lexical";
-import Constants from "expo-constants";
-import { SafeAreaView } from "react-native-safe-area-context";
 import StatusBarBackground from "@/components/StatusBarBackground";
 const { width, height } = Dimensions.get("window");
 
@@ -385,8 +380,6 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
     );
   };
 
-  // console.log(Constants.statusBarHeight);
-
   return (
     <>
       <View
@@ -455,22 +448,27 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
               readOnly={isView}
             />
           ) : (
-            <DomNoteEditor
-              isReadOnly={isView}
-              theme={theme}
-              noteId={noteId?.toString()}
-              isNewNote={isNewNote}
-              // onChangeText={() => {
-              //   console.log("onChangeText");
-              // }}
-              onChangeText={(text: string) => onContentChange("content", text)}
-              value={noteInfo?.note_text || ""}
-              // value={noteContent.content}
-              width={width}
-              height={height}
-              onSave={onSave}
-              // dom={{}}
-            />
+            <StatusBarBackground>
+              <DomNoteEditor
+                isReadOnly={isView}
+                theme={theme}
+                noteId={noteId?.toString()}
+                isNewNote={isNewNote}
+                // onChangeText={() => {
+                //   console.log("onChangeText");
+                // }}
+                onChangeText={(text: string) =>
+                  onContentChange("content", text)
+                }
+                value={noteInfo?.note_text || ""}
+                // value={noteContent.content}
+                width={width}
+                height={height}
+                onSave={onSave}
+                statusBarHeight={Constants.statusBarHeight}
+                // dom={{}}
+              />
+            </StatusBarBackground>
           )}
           {renderActionButtons()}
         </View>

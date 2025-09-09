@@ -181,7 +181,7 @@ export default function BootomToolbarPlugin({
       className={`toolbar !bg-gray-300 w-full overflow-x-auto`}
       ref={toolbarRef}
     >
-      <button
+      {/* <button
         disabled={!canUndo}
         onClick={() => {
           editor.dispatchCommand(UNDO_COMMAND, undefined);
@@ -201,7 +201,7 @@ export default function BootomToolbarPlugin({
         aria-label="Redo"
       >
         <Icon name="Redo2" size={24} color="black" />
-      </button>
+      </button> */}
 
       <button
         onClick={() => {
