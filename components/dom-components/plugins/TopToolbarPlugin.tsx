@@ -5,26 +5,30 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import "../styles.css";
+import Icon from "@/components/Icon";
+import { $createListNode } from "@lexical/list";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { $createHeadingNode, $createQuoteNode } from "@lexical/rich-text";
+import {
+  $getSelectionStyleValueForProperty,
+  $patchStyleText,
+  $setBlocksType,
+} from "@lexical/selection";
 import { mergeRegister } from "@lexical/utils";
 import {
   $getSelection,
   $isRangeSelection,
   CAN_REDO_COMMAND,
   CAN_UNDO_COMMAND,
-  FORMAT_ELEMENT_COMMAND,
-  FORMAT_TEXT_COMMAND,
   REDO_COMMAND,
   SELECTION_CHANGE_COMMAND,
   UNDO_COMMAND,
 } from "lexical";
-import { $setBlocksType } from "@lexical/selection";
-import { $createHeadingNode, $createQuoteNode } from "@lexical/rich-text";
-import { $createListNode } from "@lexical/list";
 import { useCallback, useEffect, useRef, useState } from "react";
-import BlockFormatDropDown from "./BlockFormatDropDown";
-import Icon from "@/components/Icon";
+import "../styles.css";
+import DropdownColorPicker from "../ui/DropdownColorPicker";
+import { useToolbarState } from "../context/ToolbarContext";
+import FontSize, { parseFontSizeForToolbar } from "./fontSize";
 
 const LowPriority = 1;
 
@@ -66,13 +70,15 @@ export default function TopToolbarPlugin({
     justifyAlign: false,
   });
 
+  const [isEditable, setIsEditable] = useState(() => editor.isEditable());
+  const { toolbarState, updateToolbarState } = useToolbarState();
+
   useEffect(() => {
     if (toolbarRef.current && onTopToolbarHeightChange) {
       onTopToolbarHeightChange(toolbarRef.current.clientHeight);
     }
   }, [toolbarRef.current]);
 
-  // Add block format functions
   const formatHeading = useCallback(
     (headingLevel: "h1" | "h2" | "h3") => {
       editor.update(() => {
@@ -137,6 +143,26 @@ export default function TopToolbarPlugin({
       let element = anchorNode.getTopLevelElementOrThrow();
       const elementFormat = element.getFormatType();
 
+      // Handle buttons
+      updateToolbarState(
+        "fontColor",
+        $getSelectionStyleValueForProperty(selection, "color", "#000")
+      );
+
+      updateToolbarState(
+        "bgColor",
+        $getSelectionStyleValueForProperty(
+          selection,
+          "background-color",
+          "#fff"
+        )
+      );
+
+      updateToolbarState(
+        "fontSize",
+        $getSelectionStyleValueForProperty(selection, "font-size", "15px")
+      );
+
       setActionButtons((prev) => ({
         ...prev,
         bold: selection.hasFormat("bold"),
@@ -151,6 +177,36 @@ export default function TopToolbarPlugin({
       }));
     }
   }, []);
+
+  const applyStyleText = useCallback(
+    (styles: Record<string, string>, skipHistoryStack?: boolean) => {
+      editor.update(
+        () => {
+          const selection = $getSelection();
+          if (selection !== null) {
+            $patchStyleText(selection, styles);
+          }
+        }
+        // skipHistoryStack ? { tag: HISTORIC_TAG } : {}
+      );
+    },
+    [editor]
+  );
+
+  const onFontColorSelect = useCallback(
+    (value: string, skipHistoryStack: boolean) => {
+      console.log("onFontColorSelect", value);
+      applyStyleText({ color: value }, skipHistoryStack);
+    },
+    [applyStyleText]
+  );
+
+  const onBgColorSelect = useCallback(
+    (value: string, skipHistoryStack: boolean) => {
+      applyStyleText({ "background-color": value }, skipHistoryStack);
+    },
+    [applyStyleText]
+  );
 
   useEffect(() => {
     return mergeRegister(
@@ -222,6 +278,37 @@ export default function TopToolbarPlugin({
       >
         <Icon name="Redo2" size={24} color="black" />
       </button>
+
+      <FontSize
+        selectionFontSize={parseFontSizeForToolbar(toolbarState.fontSize).slice(
+          0,
+          -2
+        )}
+        editor={editor}
+        disabled={false}
+      />
+      {/* <Divider /> */}
+
+      <DropdownColorPicker
+        disabled={false}
+        buttonClassName="toolbar-item color-picker"
+        buttonAriaLabel="Formatting text color"
+        buttonIcon="Palette"
+        color={toolbarState.fontColor}
+        onChange={onFontColorSelect}
+        title="text color"
+      />
+
+      <DropdownColorPicker
+        disabled={false}
+        buttonClassName="toolbar-item color-picker"
+        buttonAriaLabel="Formatting background color"
+        buttonIcon="PaintBucket"
+        color={"#000"}
+        // color={toolbarState.bgColor}
+        onChange={onBgColorSelect}
+        title="bg color"
+      />
     </div>
   );
 }

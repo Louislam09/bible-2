@@ -478,3 +478,199 @@ ul[data-lexical-list-type="check"] li[data-checked="true"]::before {
   content: "☑";
   color: #2a8;
 }
+
+/* Dropdown styles */
+.dropdown {
+  position: absolute;
+  z-index: 1000;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  max-width: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+
+.dropdown.dropdown-above {
+  /* Additional styles for when dropdown is positioned above the button */
+  border-radius: 6px;
+}
+
+.dropdown-button-text {
+  margin: 0 4px;
+}
+
+/* Ensure dropdown appears above other elements */
+.dropdown * {
+  box-sizing: border-box;
+}
+
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
+.font-size-input {
+  font-weight: bold;
+  font-size: 14px;
+  color: #000000;
+  border-radius: 5px;
+  border-color: grey;
+  padding: 2px 4px;
+  text-align: center;
+  width: 20px;
+  align-self: center;
+}
+
+.font-size-input:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+button.font-decrement {
+  padding: 0px;
+  margin-right: 3px;
+}
+
+button.font-increment {
+  padding: 0px;
+  margin-left: 3px;
+}
+
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
+.color-picker-wrapper {
+  padding: 20px;
+}
+
+.color-picker-basic-color {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.color-picker-basic-color button {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height: 16px;
+  width: 16px;
+  cursor: pointer;
+  list-style-type: none;
+}
+
+.color-picker-basic-color button.active {
+  box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.color-picker-saturation {
+  width: 100%;
+  position: relative;
+  margin-top: 15px;
+  height: 100px;
+  background-image: linear-gradient(transparent, black),
+    linear-gradient(to right, white, transparent);
+  user-select: none;
+}
+.color-picker-saturation_cursor {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 15px #00000026;
+  box-sizing: border-box;
+  transform: translate(-10px, -10px);
+}
+.color-picker-hue {
+  width: 100%;
+  position: relative;
+  margin-top: 15px;
+  height: 12px;
+  background-image: linear-gradient(
+    to right,
+    rgb(255, 0, 0),
+    rgb(255, 255, 0),
+    rgb(0, 255, 0),
+    rgb(0, 255, 255),
+    rgb(0, 0, 255),
+    rgb(255, 0, 255),
+    rgb(255, 0, 0)
+  );
+  user-select: none;
+  border-radius: 12px;
+}
+
+.color-picker-hue_cursor {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: #0003 0 0 0 0.5px;
+  box-sizing: border-box;
+  transform: translate(-10px, -4px);
+}
+
+.color-picker-color {
+  border: 1px solid #ccc;
+  margin-top: 15px;
+  width: 100%;
+  height: 20px;
+}
+
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ *
+ */
+
+.Input__wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.Input__label {
+  display: flex;
+  flex: 1;
+  color: #666;
+}
+.Input__input {
+  display: flex;
+  flex: 2;
+  border: 1px solid #999;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  min-width: 0;
+}

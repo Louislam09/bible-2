@@ -30,6 +30,7 @@ import { ListItemNode, ListNode } from "@lexical/list";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import LoadHTMLPlugin from "./plugins/LoadHtmlPlugin";
 import TopToolbarPlugin from "./plugins/TopToolbarPlugin";
+import { ToolbarContext } from "./context/ToolbarContext";
 
 const editorConfig: InitialConfigType = {
   namespace: "React.js Demo",
@@ -52,7 +53,6 @@ interface DomNoteEditorProps {
   width?: number;
   height?: number;
   onSave: () => Promise<void>;
-  statusBarHeight?: number;
   // dom: import("expo/dom").DOMProps;
 }
 
@@ -64,93 +64,97 @@ const DomNoteEditor = ({
   width,
   height,
   onSave,
-  statusBarHeight,
 }: DomNoteEditorProps) => {
   const { colors } = theme;
   const isLoadingInitialContent = useRef(false);
   useThemeVariables(theme);
 
-  const [topToolbarHeight, setTopToolbarHeight] = useState(48);
+  const [toolbarHeight, setToolbarHeight] = useState({
+    top: 48,
+    bottom: 48,
+  });
 
   return (
-    <div
-      // className={`rounded w-full h-full pt-[${isReadOnly ? 0 : 26}px] `}
-      className={`rounded w-full h-full  `}
-      style={{ width: width || "100%", height: height || "100%" }}
-    >
-      <LexicalComposer initialConfig={editorConfig}>
-        <ReadOnlyPlugin isReadOnly={isReadOnly} />
-        <div
-          className={`editor-container bg-theme-notification text-sm text-left w-full h-full relative font-normal rounded-lg flex flex-col`}
-          style={{ paddingTop: topToolbarHeight }}
-        >
-          {!isReadOnly && (
-            <div
-              className={`fixed  top-0 left-0 right-0 bg-white border-t border-gray-200 z-10 `}
-            >
-              <TopToolbarPlugin
-                onSave={onSave}
-                activeColor={colors.notification}
-                onTopToolbarHeightChange={(height: number) => {
-                  console.log("topToolbarHeight,", height);
-                  setTopToolbarHeight(height);
-                }}
-              />
-            </div>
-          )}
-          <div className="editor-inner flex-1 overflow-y-auto">
-            <RichTextPlugin
-              contentEditable={
-                <ContentEditable
-                  className="editor-input !pb-[70px]"
-                  aria-placeholder={placeholder}
-                  placeholder={
-                    <div className="editor-placeholder">{placeholder}</div>
-                  }
+    <ToolbarContext>
+      <div
+        className={`rounded w-full h-full`}
+        style={{ width: width || "100%", height: height || "100%" }}
+      >
+        <LexicalComposer initialConfig={editorConfig}>
+          <ReadOnlyPlugin isReadOnly={isReadOnly} />
+          <div
+            className={`editor-container text-sm text-left w-full h-full relative font-normal rounded-lg flex flex-col`}
+            style={{ paddingTop: isReadOnly ? 0 : toolbarHeight.top }}
+          >
+            {!isReadOnly && (
+              <div className={`fixed top-0 left-0 right-0 bg-white z-10 `}>
+                <TopToolbarPlugin
+                  onSave={onSave}
+                  activeColor={colors.notification}
+                  onTopToolbarHeightChange={(height: number) => {
+                    setToolbarHeight((prev) => ({ ...prev, top: height }));
+                  }}
                 />
-              }
-              ErrorBoundary={LexicalErrorBoundary}
-            />
-
-            <OnChangePlugin
-              onChange={(editorState, editor, tags) => {
-                if (isLoadingInitialContent.current) return;
-                editorState.read(() => {
-                  const root = $getRoot();
-                  const htmlString = $generateHtmlFromNodes(editor, null);
-                  // const textContent = root.getTextContent();
-                  onChangeText(htmlString);
-                });
-                //   setEditorState(JSON.stringify(editorState.toJSON()));
-              }}
-              ignoreHistoryMergeTagChange
-              ignoreSelectionChange
-            />
-            <HistoryPlugin />
-            <AutoFocusPlugin />
-            <AutoScrollPlugin />
-            {/* {!isReadOnly && <AutoScrollPlugin />} */}
-            {isReadOnly && (
-              <LoadHTMLPlugin
-                htmlString={value || ""}
-                onLoadStart={() => {
-                  isLoadingInitialContent.current = true;
-                }}
-                onLoadEnd={() => {
-                  isLoadingInitialContent.current = false;
-                }}
-              />
+              </div>
             )}
-            {/* <TreeViewPlugin /> */}
-          </div>
-          {!isReadOnly && (
-            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-10 ">
-              <BootomToolbarPlugin activeColor={colors.notification} />
+            <div className="editor-inner dark:!bg-black !bg-white flex-1 overflow-y-auto">
+              <RichTextPlugin
+                contentEditable={
+                  <ContentEditable
+                    className="editor-input !bg-white !text-black !pb-[70px]"
+                    // className="editor-input dark:!bg-black !bg-white dark:!text-white !text-black !caret-white !pb-[70px]"
+                    aria-placeholder={placeholder}
+                    placeholder={
+                      <div className="editor-placeholder">{placeholder}</div>
+                    }
+                  />
+                }
+                ErrorBoundary={LexicalErrorBoundary}
+              />
+
+              <OnChangePlugin
+                onChange={(editorState, editor, tags) => {
+                  if (isLoadingInitialContent.current) return;
+                  editorState.read(() => {
+                    const root = $getRoot();
+                    const htmlString = $generateHtmlFromNodes(editor, null);
+                    // const textContent = root.getTextContent();
+                    onChangeText(htmlString);
+                  });
+                }}
+                ignoreHistoryMergeTagChange
+                ignoreSelectionChange
+              />
+              <HistoryPlugin />
+              <AutoFocusPlugin />
+              <AutoScrollPlugin />
+              {isReadOnly && (
+                <LoadHTMLPlugin
+                  htmlString={value || ""}
+                  onLoadStart={() => {
+                    isLoadingInitialContent.current = true;
+                  }}
+                  onLoadEnd={() => {
+                    isLoadingInitialContent.current = false;
+                  }}
+                />
+              )}
+              {/* <TreeViewPlugin /> */}
             </div>
-          )}
-        </div>
-      </LexicalComposer>
-    </div>
+            {!isReadOnly && (
+              <div className="fixed bottom-0 left-0 right-0 bg-white  z-10 ">
+                <BootomToolbarPlugin
+                  activeColor={colors.notification}
+                  onBottomToolbarHeightChange={(height: number) => {
+                    setToolbarHeight((prev) => ({ ...prev, bottom: height }));
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        </LexicalComposer>
+      </div>
+    </ToolbarContext>
   );
 };
 

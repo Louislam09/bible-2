@@ -2,8 +2,7 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 import { $getSelection, $isRangeSelection } from "lexical";
 import { useEffect } from "react";
 
-const TOOLBAR_HEIGHT = 170; // Buffer space from bottom of editor inner
-const SCROLL_BUFFER = 70 + TOOLBAR_HEIGHT; // Buffer space from bottom of editor inner
+const SCROLL_TRIGGER_DISTANCE = 250; // Trigger auto-scroll when cursor is 250px from bottom
 
 export default function AutoScrollPlugin() {
   const [editor] = useLexicalComposerContext();
@@ -42,21 +41,21 @@ export default function AutoScrollPlugin() {
 
       const editorRect = editorInner.getBoundingClientRect();
       const cursorBottom = rect.bottom;
-      const editorBottom = editorRect.bottom;
 
-      // Calculate cursor position relative to the editor inner container
-      const cursorRelativeToEditor = Math.round(cursorBottom - editorRect.top);
-      const availableHeight = Math.round(editorRect.height - SCROLL_BUFFER);
+      // Check if cursor is within 250px of the bottom edge
+      const distanceFromBottom = editorRect.bottom - cursorBottom;
+      const scrollAmount = SCROLL_TRIGGER_DISTANCE - distanceFromBottom + 150; // +50px extra buffer for more comfortable spacing
 
-      // Check if cursor is too close to the bottom of the editor inner
-      if (cursorRelativeToEditor > availableHeight) {
-        // Calculate how much we need to scroll to bring cursor into view
-        const scrollAmount = Math.max(
-          cursorRelativeToEditor - availableHeight,
-          40
-        );
-
-        // console.log("Scrolling by:", scrollAmount);
+      // console.log(
+      //   `Cursor ${Math.round(
+      //     distanceFromBottom
+      //   )}px from bottom, scrolling ${Math.round(scrollAmount)}px
+      //   should scroll: ${distanceFromBottom < SCROLL_TRIGGER_DISTANCE}
+      //   `
+      // );
+      // If cursor is too close to the bottom (within 250px), scroll to keep it visible
+      if (distanceFromBottom < SCROLL_TRIGGER_DISTANCE) {
+        // Calculate how much we need to scroll to bring cursor to comfortable position
 
         // Scroll the editor inner container
         editorInner.scrollBy({

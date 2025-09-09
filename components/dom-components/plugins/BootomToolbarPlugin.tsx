@@ -35,14 +35,16 @@ function Divider() {
 interface BootomToolbarPluginProps {
   className?: string;
   activeColor?: string;
+  onBottomToolbarHeightChange?: (height: number) => void;
 }
 
 export default function BootomToolbarPlugin({
   className,
   activeColor,
+  onBottomToolbarHeightChange,
 }: BootomToolbarPluginProps) {
   const [editor] = useLexicalComposerContext();
-  const toolbarRef = useRef(null);
+  const toolbarRef = useRef<HTMLDivElement>(null);
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   const [actionButtons, setActionButtons] = useState({
@@ -61,6 +63,12 @@ export default function BootomToolbarPlugin({
     rightAlign: false,
     justifyAlign: false,
   });
+
+  useEffect(() => {
+    if (toolbarRef.current && onBottomToolbarHeightChange) {
+      onBottomToolbarHeightChange(toolbarRef.current.clientHeight);
+    }
+  }, [toolbarRef.current]);
 
   // Add block format functions
   const formatHeading = useCallback(

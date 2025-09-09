@@ -14,7 +14,7 @@ import { EViewMode, Screens, TNote, TTheme } from "@/types";
 import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
 import { use$ } from "@legendapp/state/react";
 import Constants from "expo-constants";
-import { Stack, useNavigation } from "expo-router";
+import { Stack, useNavigation, useRouter } from "expo-router";
 import React, {
   useCallback,
   useEffect,
@@ -35,7 +35,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import "../global.css";
-import StatusBarBackground from "@/components/StatusBarBackground";
 const { width, height } = Dimensions.get("window");
 
 type NoteDetailProps = {};
@@ -44,6 +43,7 @@ type NoteDetailParams = { noteId: number | null; isNewNote: boolean };
 const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
   const { theme } = useMyTheme();
   const navigation = useNavigation();
+  const router = useRouter();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const { getNoteById, createNote, updateNote } = useNoteService();
   const selectedVerseForNote = use$(() =>
@@ -351,13 +351,19 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
   const ViewModeHeader = () => {
     return (
       <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={() => {}} style={{ marginRight: 10 }}>
+        <TouchableOpacity
+          onPress={() => {
+            console.log("back");
+            router.back();
+          }}
+          style={{ marginRight: 10 }}
+        >
           <Icon name="ChevronLeft" size={24} color={theme.colors.text} />
         </TouchableOpacity>
         <View style={styles.noteHeaderSubtitleContainer}>
           <Text
             numberOfLines={1}
-            ellipsizeMode="tail"
+            // ellipsizeMode="tail"
             style={styles.noteHeaderTitle}
           >
             {noteInfo?.title}
@@ -376,6 +382,9 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
             )}
           </Text>
         </View>
+        <TouchableOpacity onPress={() => onShare()} style={{ marginRight: 10 }}>
+          <Icon name="Share2" size={24} color={theme.colors.text} />
+        </TouchableOpacity>
       </View>
     );
   };
@@ -448,28 +457,29 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
               readOnly={isView}
             />
           ) : (
-            <StatusBarBackground>
+            <>
+              <View
+                style={{
+                  height: isView ? 0 : Constants.statusBarHeight,
+                }}
+              />
               <DomNoteEditor
                 isReadOnly={isView}
                 theme={theme}
                 noteId={noteId?.toString()}
                 isNewNote={isNewNote}
-                // onChangeText={() => {
-                //   console.log("onChangeText");
-                // }}
                 onChangeText={(text: string) =>
                   onContentChange("content", text)
                 }
                 value={noteInfo?.note_text || ""}
-                // value={noteContent.content}
                 width={width}
                 height={height}
                 onSave={onSave}
-                statusBarHeight={Constants.statusBarHeight}
                 // dom={{}}
               />
-            </StatusBarBackground>
+            </>
           )}
+          {/* </StatusBarBackground> */}
           {renderActionButtons()}
         </View>
         <KeyboardPaddingView />
@@ -551,7 +561,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderColor: colors.text + 40,
       // paddingVertical: 5,
       backgroundColor: colors.notification + "20",
-      width: "80%",
+      width: "100%",
     },
     noteHeaderSubtitle: {
       fontSize: 12,
@@ -617,6 +627,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       position: "relative",
       flexDirection: "row",
       alignItems: "center",
+      justifyContent: "space-between",
       paddingVertical: 10,
       paddingHorizontal: 10,
       // borderWidth: 1,
