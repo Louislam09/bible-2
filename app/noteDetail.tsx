@@ -464,7 +464,8 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
               //   console.log("onChangeText");
               // }}
               onChangeText={(text: string) => onContentChange("content", text)}
-              value={noteContent.content}
+              value={noteInfo?.note_text || ""}
+              // value={noteContent.content}
               width={width}
               height={height}
               // dom={{}}

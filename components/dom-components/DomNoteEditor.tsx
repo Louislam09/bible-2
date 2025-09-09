@@ -21,7 +21,7 @@ import { Dimensions } from "react-native";
 import ExampleTheme from "./ExampleTheme";
 import AutoScrollPlugin from "./plugins/AutoScrollPlugin";
 import ReadOnlyPlugin from "./plugins/ReadOnlyPlugin";
-import ToolbarPlugin from "./plugins/ToolbarPlugin";
+import BootomToolbarPlugin from "./plugins/BootomToolbarPlugin";
 const placeholder = "Enter some rich text...";
 
 import { useThemeVariables } from "@/hooks/useThemeVariables";
@@ -29,6 +29,7 @@ import { CodeNode } from "@lexical/code";
 import { ListItemNode, ListNode } from "@lexical/list";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import LoadHTMLPlugin from "./plugins/LoadHtmlPlugin";
+import TopToolbarPlugin from "./plugins/TopToolbarPlugin";
 
 const editorConfig: InitialConfigType = {
   namespace: "React.js Demo",
@@ -70,10 +71,14 @@ const DomNoteEditor = ({
       className={`rounded w-full h-full pt-[26px]`}
       style={{ width: width || "100%", height: height || "100%" }}
     >
-      <h1 className="text-white">height: {height}</h1>
       <LexicalComposer initialConfig={editorConfig}>
         <ReadOnlyPlugin isReadOnly={isReadOnly} />
         <div className="editor-container text-sm text-left w-full h-full relative font-normal rounded-lg flex flex-col">
+          {!isReadOnly && (
+            <div className="sticky top-0 left-0 right-0 bg-white border-t border-gray-200 z-10 ">
+              <TopToolbarPlugin activeColor={colors.notification} />
+            </div>
+          )}
           <div className="editor-inner flex-1 overflow-y-auto">
             <RichTextPlugin
               contentEditable={
@@ -121,7 +126,7 @@ const DomNoteEditor = ({
           </div>
           {!isReadOnly && (
             <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-10 ">
-              <ToolbarPlugin activeColor={colors.notification} />
+              <BootomToolbarPlugin activeColor={colors.notification} />
             </div>
           )}
         </div>

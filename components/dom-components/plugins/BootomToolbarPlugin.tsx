@@ -32,15 +32,15 @@ function Divider() {
   return <div className="divider" />;
 }
 
-interface ToolbarPluginProps {
+interface BootomToolbarPluginProps {
   className?: string;
   activeColor?: string;
 }
 
-export default function ToolbarPlugin({
+export default function BootomToolbarPlugin({
   className,
   activeColor,
-}: ToolbarPluginProps) {
+}: BootomToolbarPluginProps) {
   const [editor] = useLexicalComposerContext();
   const toolbarRef = useRef(null);
   const [canUndo, setCanUndo] = useState(false);
@@ -203,90 +203,6 @@ export default function ToolbarPlugin({
         <Icon name="Redo2" size={24} color="black" />
       </button>
 
-      {/* Replace BlockFormatDropDown with individual buttons */}
-      <button
-        onClick={() => formatHeading("h1")}
-        className="toolbar-item spaced"
-        aria-label="Heading 1"
-        style={{ color: actionButtons.heading1 ? activeColor : "black" }}
-      >
-        <Icon
-          name="Heading1"
-          size={24}
-          color={actionButtons.heading1 ? activeColor : "black"}
-        />
-      </button>
-
-      <button
-        onClick={() => formatHeading("h2")}
-        className="toolbar-item spaced"
-        aria-label="Heading 2"
-        style={{ color: actionButtons.heading2 ? activeColor : "black" }}
-      >
-        <Icon
-          name="Heading2"
-          size={24}
-          color={actionButtons.heading2 ? activeColor : "black"}
-        />
-      </button>
-
-      <button
-        onClick={formatBulletList}
-        className="toolbar-item spaced"
-        aria-label="Bullet List"
-        style={{ color: actionButtons.bulletList ? activeColor : "black" }}
-      >
-        <Icon
-          name="List"
-          size={24}
-          color={actionButtons.bulletList ? activeColor : "black"}
-        />
-      </button>
-
-      <button
-        onClick={formatNumberedList}
-        className="toolbar-item spaced"
-        aria-label="Numbered List"
-        style={{ color: actionButtons.numberedList ? activeColor : "black" }}
-      >
-        <Icon
-          name="ListOrdered"
-          size={24}
-          color={actionButtons.numberedList ? activeColor : "black"}
-        />
-      </button>
-
-      <button
-        onClick={formatQuote}
-        className="toolbar-item spaced"
-        aria-label="Quote"
-        style={{ color: actionButtons.quote ? activeColor : "black" }}
-      >
-        <Icon
-          name="Quote"
-          size={24}
-          color={actionButtons.quote ? activeColor : "black"}
-        />
-      </button>
-
-      <button
-        onClick={() => {
-          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "code");
-        }}
-        style={{ color: actionButtons.code ? activeColor : "black" }}
-        className={
-          "toolbar-item spaced " + (actionButtons.code ? "active" : "")
-        }
-        aria-label="Insert code block"
-      >
-        <Icon
-          name="Code"
-          size={24}
-          color={actionButtons.code ? activeColor : "black"}
-        />
-      </button>
-
-      <Divider />
       <button
         onClick={() => {
           editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
@@ -353,6 +269,92 @@ export default function ToolbarPlugin({
           color={actionButtons.strikethrough ? activeColor : "black"}
         />
       </button>
+      <Divider />
+
+      <button
+        onClick={formatBulletList}
+        className="toolbar-item spaced"
+        aria-label="Bullet List"
+        style={{ color: actionButtons.bulletList ? activeColor : "black" }}
+      >
+        <Icon
+          name="List"
+          size={24}
+          color={actionButtons.bulletList ? activeColor : "black"}
+        />
+      </button>
+
+      <button
+        onClick={formatNumberedList}
+        className="toolbar-item spaced"
+        aria-label="Numbered List"
+        style={{ color: actionButtons.numberedList ? activeColor : "black" }}
+      >
+        <Icon
+          name="ListOrdered"
+          size={24}
+          color={actionButtons.numberedList ? activeColor : "black"}
+        />
+      </button>
+
+      <button
+        onClick={() => formatHeading("h1")}
+        className="toolbar-item spaced"
+        aria-label="Heading 1"
+        style={{ color: actionButtons.heading1 ? activeColor : "black" }}
+      >
+        <Icon
+          name="Heading1"
+          size={24}
+          color={actionButtons.heading1 ? activeColor : "black"}
+        />
+      </button>
+
+      <button
+        onClick={() => formatHeading("h2")}
+        className="toolbar-item spaced"
+        aria-label="Heading 2"
+        style={{ color: actionButtons.heading2 ? activeColor : "black" }}
+      >
+        <Icon
+          name="Heading2"
+          size={24}
+          color={actionButtons.heading2 ? activeColor : "black"}
+        />
+      </button>
+
+      <button
+        onClick={formatQuote}
+        className="toolbar-item spaced"
+        aria-label="Quote"
+        style={{ color: actionButtons.quote ? activeColor : "black" }}
+      >
+        <Icon
+          name="Quote"
+          size={24}
+          color={actionButtons.quote ? activeColor : "black"}
+        />
+      </button>
+
+      <button
+        onClick={() => {
+          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "code");
+        }}
+        style={{ color: actionButtons.code ? activeColor : "black" }}
+        className={
+          "toolbar-item spaced " + (actionButtons.code ? "active" : "")
+        }
+        aria-label="Insert code block"
+      >
+        <Icon
+          name="Code"
+          size={24}
+          color={actionButtons.code ? activeColor : "black"}
+        />
+      </button>
+
+      <Divider />
+
       <Divider />
       <button
         onClick={() => {
