@@ -28,6 +28,7 @@ import {
   ActivityIndicator,
   Alert,
   Animated,
+  Dimensions,
   Easing,
   Keyboard,
   StyleSheet,
@@ -37,6 +38,10 @@ import {
 } from "react-native";
 import "../global.css";
 import { EditorState } from "lexical";
+import Constants from "expo-constants";
+import { SafeAreaView } from "react-native-safe-area-context";
+import StatusBarBackground from "@/components/StatusBarBackground";
+const { width, height } = Dimensions.get("window");
 
 type NoteDetailProps = {};
 type NoteDetailParams = { noteId: number | null; isNewNote: boolean };
@@ -337,8 +342,6 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
     );
     printToFile(html, noteInfo?.title?.toUpperCase() || "--");
   };
-  const [plainText, setPlainText] = useState("");
-  const [editorState, setEditorState] = useState<string | null>(null);
 
   if (isLoading) {
     return (
@@ -350,88 +353,128 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
 
   const showNewEditor = false;
 
-  return (
-    <View
-      style={{
-        flex: 1,
-        width: "100%",
-        backgroundColor: "white",
-      }}
-    >
-      <Stack.Screen
-        options={{
-          ...singleScreenHeader({
-            theme,
-            title: "",
-            titleIcon: "NotebookPen",
-            headerRightProps: {
-              headerRightIconColor: theme.colors.primary,
-              headerRightIcon: "Share2",
-              onPress: onShare,
-              disabled: false,
-              style: { opacity: 1 },
-            },
-          }),
-        }}
-      />
-
-      <View style={styles.container}>
-        {isView && (
-          <View style={styles.titleContainer}>
-            <Text style={{ fontSize: 22 }}>
-              {noteInfo?.title?.toUpperCase() || defaultTitle}
-            </Text>
-            <Text style={styles.dateLabel}>
-              {formatDateShortDayMonth(
-                isNewNote
-                  ? new Date()
-                  : ((noteInfo?.updated_at || noteInfo?.created_at) as any),
-                {
-                  weekday: "short",
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                }
-              )}
-            </Text>
-          </View>
-        )}
-
-        {showNewEditor ? (
-          <MyRichEditor
-            Textinput={
-              <TextInput
-                editable={!isView}
-                placeholder="Titulo"
-                placeholderTextColor={theme.colors.text}
-                style={[styles.textInput]}
-                multiline
-                value={noteContent.title}
-                onChangeText={(text: string) => onContentChange("title", text)}
-              />
-            }
-            value={noteContent.content}
-            onChangeText={(text: string) => onContentChange("content", text)}
-            readOnly={isView}
-          />
-        ) : (
-          <DomNoteEditor
-            isReadOnly={isView}
-            theme={theme}
-            noteId={noteId?.toString()}
-            isNewNote={isNewNote}
-            // onChangeText={() => {
-            //   console.log("onChangeText");
-            // }}
-            onChangeText={(text: string) => onContentChange("content", text)}
-            value={noteContent.content}
-            dom={{}}
-          />
-        )}
-        {renderActionButtons()}
+  const ViewModeHeader = () => {
+    return (
+      <View style={styles.headerContainer}>
+        <TouchableOpacity onPress={() => {}} style={{ marginRight: 10 }}>
+          <Icon name="ChevronLeft" size={24} color={theme.colors.text} />
+        </TouchableOpacity>
+        <View style={styles.noteHeaderSubtitleContainer}>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={styles.noteHeaderTitle}
+          >
+            {noteInfo?.title}
+          </Text>
+          <Text style={styles.noteHeaderSubtitle}>
+            {formatDateShortDayMonth(
+              isNewNote
+                ? new Date()
+                : ((noteInfo?.updated_at || noteInfo?.created_at) as any),
+              {
+                weekday: "short",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              }
+            )}
+          </Text>
+        </View>
       </View>
-      <KeyboardPaddingView />
-    </View>
+    );
+  };
+
+  // console.log(Constants.statusBarHeight);
+
+  return (
+    <>
+      <View
+        style={{
+          flex: 1,
+          width: "100%",
+          // backgroundColor: "white",
+        }}
+      >
+        <Stack.Screen
+          options={{
+            headerShown: isView,
+            header: ViewModeHeader,
+            // ...singleScreenHeader({
+            //   theme,
+            //   title: "",
+            //   titleIcon: "NotebookPen",
+            //   headerRightProps: {
+            //     headerRightIconColor: theme.colors.primary,
+            //     headerRightIcon: "Share2",
+            //     onPress: onShare,
+            //     disabled: false,
+            //     style: { opacity: 1 },
+            //   },
+            // }),
+          }}
+        />
+        <View style={styles.container}>
+          {/* {isView && (
+            <View style={styles.titleContainer}>
+              <Text style={{ fontSize: 22 }}>
+                {noteInfo?.title?.toUpperCase() || defaultTitle}
+              </Text>
+              <Text style={styles.dateLabel}>
+                {formatDateShortDayMonth(
+                  isNewNote
+                    ? new Date()
+                    : ((noteInfo?.updated_at || noteInfo?.created_at) as any),
+                  {
+                    weekday: "short",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  }
+                )}
+              </Text>
+            </View>
+          )} */}
+          {showNewEditor ? (
+            <MyRichEditor
+              Textinput={
+                <TextInput
+                  editable={!isView}
+                  placeholder="Titulo"
+                  placeholderTextColor={theme.colors.text}
+                  style={[styles.textInput]}
+                  multiline
+                  value={noteContent.title}
+                  onChangeText={(text: string) =>
+                    onContentChange("title", text)
+                  }
+                />
+              }
+              value={noteContent.content}
+              onChangeText={(text: string) => onContentChange("content", text)}
+              readOnly={isView}
+            />
+          ) : (
+            <DomNoteEditor
+              isReadOnly={isView}
+              theme={theme}
+              noteId={noteId?.toString()}
+              isNewNote={isNewNote}
+              // onChangeText={() => {
+              //   console.log("onChangeText");
+              // }}
+              onChangeText={(text: string) => onContentChange("content", text)}
+              value={noteContent.content}
+              width={width}
+              height={height}
+              // dom={{}}
+            />
+          )}
+          {renderActionButtons()}
+        </View>
+        <KeyboardPaddingView />
+      </View>
+    </>
   );
 };
 
@@ -497,11 +540,31 @@ const getStyles = ({ colors, dark }: TTheme) =>
       textAlign: "center",
       color: colors.notification,
     },
-    noteHeaderSubtitle: {
+    noteHeaderTitle: {
       fontSize: 18,
       fontWeight: "600",
       color: colors.text,
       alignSelf: "flex-start",
+      borderRadius: 8,
+      paddingHorizontal: 2,
+      borderWidth: 1,
+      borderColor: colors.text + 40,
+      // paddingVertical: 5,
+      backgroundColor: colors.notification + "20",
+      width: "80%",
+    },
+    noteHeaderSubtitle: {
+      fontSize: 12,
+      fontWeight: "600",
+      color: colors.text,
+      alignSelf: "flex-start",
+      paddingHorizontal: 2,
+    },
+    noteHeaderSubtitleContainer: {
+      gap: 4,
+      flexDirection: "column",
+      width: "auto",
+      backgroundColor: "transparent",
     },
     activiyContainer: {
       flex: 1,
@@ -553,10 +616,13 @@ const getStyles = ({ colors, dark }: TTheme) =>
     headerContainer: {
       position: "relative",
       flexDirection: "row",
-      justifyContent: "space-between",
       alignItems: "center",
-      marginBottom: 8,
-      backgroundColor: "transparent",
+      paddingVertical: 10,
+      paddingHorizontal: 10,
+      // borderWidth: 1,
+      // borderColor: colors.notification,
+      paddingTop: Constants.statusBarHeight + 10,
+      backgroundColor: colors.background,
     },
     cardTitle: {
       fontSize: 18,

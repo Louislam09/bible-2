@@ -3,7 +3,10 @@ import "../../global.css";
 import "./styles.css";
 
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
-import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import {
+  InitialConfigType,
+  LexicalComposer,
+} from "@lexical/react/LexicalComposer";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
@@ -13,19 +16,21 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { TTheme } from "@/types";
 import { $generateHtmlFromNodes } from "@lexical/html";
 import { $getRoot } from "lexical";
-import { Dimensions } from "react-native";
 import { useRef } from "react";
+import { Dimensions } from "react-native";
 import ExampleTheme from "./ExampleTheme";
+import AutoScrollPlugin from "./plugins/AutoScrollPlugin";
 import ReadOnlyPlugin from "./plugins/ReadOnlyPlugin";
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
 const placeholder = "Enter some rich text...";
 
+import { useThemeVariables } from "@/hooks/useThemeVariables";
 import { CodeNode } from "@lexical/code";
 import { ListItemNode, ListNode } from "@lexical/list";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import LoadHTMLPlugin from "./plugins/LoadHtmlPlugin";
 
-const editorConfig = {
+const editorConfig: InitialConfigType = {
   namespace: "React.js Demo",
   nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, CodeNode],
   // Handling of errors during update
@@ -36,8 +41,6 @@ const editorConfig = {
   theme: ExampleTheme,
 };
 
-const { width, height } = Dimensions.get("window");
-
 interface DomNoteEditorProps {
   noteId?: string;
   isNewNote?: boolean;
@@ -45,7 +48,9 @@ interface DomNoteEditorProps {
   theme: TTheme;
   isReadOnly?: boolean;
   value?: string;
-  dom: import("expo/dom").DOMProps;
+  width?: number;
+  height?: number;
+  // dom: import("expo/dom").DOMProps;
 }
 
 const DomNoteEditor = ({
@@ -53,25 +58,27 @@ const DomNoteEditor = ({
   theme,
   isReadOnly = false,
   value,
+  width,
+  height,
 }: DomNoteEditorProps) => {
   const { colors } = theme;
   const isLoadingInitialContent = useRef(false);
+  useThemeVariables(theme);
+
   return (
-    <div className={`rounded w-full px-1`} style={{ width, height }}>
+    <div
+      className={`rounded w-full h-full pt-[26px]`}
+      style={{ width: width || "100%", height: height || "100%" }}
+    >
+      <h1 className="text-white">height: {height}</h1>
       <LexicalComposer initialConfig={editorConfig}>
         <ReadOnlyPlugin isReadOnly={isReadOnly} />
-        <div className="text-sm text-left w-full h-full text-black relative font-normal rounded-lg">
-          {!isReadOnly && (
-            <div className="sticky top-0 left-0 right-0 z-10 ">
-              <ToolbarPlugin activeColor={colors.notification} />
-            </div>
-          )}
-
-          <div className="editor-inner">
+        <div className="editor-container text-sm text-left w-full h-full relative font-normal rounded-lg flex flex-col">
+          <div className="editor-inner flex-1 overflow-y-auto">
             <RichTextPlugin
               contentEditable={
                 <ContentEditable
-                  className="editor-input"
+                  className="editor-input !pb-[70px]"
                   aria-placeholder={placeholder}
                   placeholder={
                     <div className="editor-placeholder">{placeholder}</div>
@@ -84,7 +91,6 @@ const DomNoteEditor = ({
             <OnChangePlugin
               onChange={(editorState, editor, tags) => {
                 if (isLoadingInitialContent.current) return;
-
                 editorState.read(() => {
                   const root = $getRoot();
                   const htmlString = $generateHtmlFromNodes(editor, null);
@@ -98,6 +104,8 @@ const DomNoteEditor = ({
             />
             <HistoryPlugin />
             <AutoFocusPlugin />
+            <AutoScrollPlugin />
+            {/* {!isReadOnly && <AutoScrollPlugin />} */}
             {isReadOnly && (
               <LoadHTMLPlugin
                 htmlString={value || ""}
@@ -111,6 +119,11 @@ const DomNoteEditor = ({
             )}
             {/* <TreeViewPlugin /> */}
           </div>
+          {!isReadOnly && (
+            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-10 ">
+              <ToolbarPlugin activeColor={colors.notification} />
+            </div>
+          )}
         </div>
       </LexicalComposer>
     </div>

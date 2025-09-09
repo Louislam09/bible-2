@@ -60,31 +60,6 @@ const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     <ThemeContext.Provider
       value={{ schema, toggleTheme, theme: theme[schema] }}
     >
-      {/* <ThemeProvider
-        value={{
-          ...theme[schema],
-          fonts: {
-            regular: {
-              fontFamily: selectedFont,
-              fontWeight: "400" as const,
-            },
-            medium: {
-              fontFamily: selectedFont,
-              fontWeight: "500" as const,
-            },
-            bold: {
-              fontFamily: selectedFont,
-              fontWeight: "700" as const,
-            },
-            heavy: {
-              fontFamily: selectedFont,
-              fontWeight: "900" as const,
-            },
-          },
-        }}
-      >
-        {children}
-      </ThemeProvider> */}
       {children}
     </ThemeContext.Provider>
   );

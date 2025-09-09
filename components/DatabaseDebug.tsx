@@ -73,7 +73,7 @@ const DatabaseDebug = () => {
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
           seconds: 1,
-          channelId: 'default'
+          channelId: "default",
         },
       });
       loadNotificationInfo(); // Refresh the list
@@ -244,7 +244,7 @@ const DatabaseDebug = () => {
             fontSize: 16,
             fontWeight: "bold",
             color: schema === "dark" ? "#fff" : "#000",
-            marginBottom: 8
+            marginBottom: 8,
           }}
         >
           Scheduled Notifications ({scheduledNotifications.length})
@@ -265,7 +265,10 @@ const DatabaseDebug = () => {
                 fontWeight: "bold",
               }}
             >
-              {notification.content.title} - {`${notification.trigger.hour.toString().padStart(2, '0')}:${notification.trigger.minute.toString().padStart(2, '0')}`}
+              {notification.content.title} -{" "}
+              {`${((notification.trigger.hour || 0) + "").padStart(2, "0")}:${(
+                (notification.trigger.minute || 0) + ""
+              ).padStart(2, "0")}`}
             </Text>
             <Text
               style={{
@@ -343,7 +346,6 @@ const DatabaseDebug = () => {
           </View>
         )}
       </View>
-
 
       {/* Action Buttons */}
       <View style={{ marginBottom: 20 }}>
