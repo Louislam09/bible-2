@@ -472,9 +472,12 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
                   onContentChange("content", text)
                 }
                 value={noteInfo?.note_text || ""}
+                title={noteContent.title}
                 width={width}
                 height={height}
                 onSave={onSave}
+                onTitleChange={(text: string) => onContentChange("title", text)}
+                // onTitleChange={(text: string) => console.log("title", text)}
                 // dom={{}}
               />
             </>

@@ -247,10 +247,10 @@ export default function TopToolbarPlugin({
 
   return (
     <div
-      className={`toolbar !bg-gray-300 !py-1 w-full overflow-x-auto`}
+      className={`toolbar flex justify-between !bg-gray-300 !py-1 w-full overflow-x-auto`}
       ref={toolbarRef}
     >
-      <button
+      {/* <button
         disabled={!canUndo}
         onClick={() => {
           onSave();
@@ -259,7 +259,7 @@ export default function TopToolbarPlugin({
         aria-label="Check"
       >
         <Icon name="Check" size={24} color="white" />
-      </button>
+      </button> */}
       <button
         disabled={!canUndo}
         onClick={() => {
@@ -312,6 +312,18 @@ export default function TopToolbarPlugin({
         onChange={onBgColorSelect}
         title="bg color"
       />
+
+      <button
+        disabled={!canRedo}
+        onClick={() => {
+          console.log("More");
+          // editor.dispatchCommand(REDO_COMMAND, undefined);
+        }}
+        className="toolbar-item"
+        aria-label="More"
+      >
+        <Icon name="EllipsisVertical" size={24} color="black" />
+      </button>
     </div>
   );
 }

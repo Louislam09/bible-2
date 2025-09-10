@@ -31,10 +31,20 @@ import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import LoadHTMLPlugin from "./plugins/LoadHtmlPlugin";
 import TopToolbarPlugin from "./plugins/TopToolbarPlugin";
 import { ToolbarContext } from "./context/ToolbarContext";
+import { HashtagPlugin } from "./plugins/LexicalHashtagPlugin";
+import { HashtagNode } from "@lexical/hashtag";
+// import { HashtagNode } from "./plugins/HashtagNode";
 
 const editorConfig: InitialConfigType = {
   namespace: "React.js Demo",
-  nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, CodeNode],
+  nodes: [
+    HeadingNode,
+    QuoteNode,
+    ListNode,
+    ListItemNode,
+    CodeNode,
+    HashtagNode,
+  ],
   // Handling of errors during update
   onError(error: Error) {
     throw error;
@@ -53,6 +63,8 @@ interface DomNoteEditorProps {
   width?: number;
   height?: number;
   onSave: () => Promise<void>;
+  title?: string;
+  onTitleChange: (title: string) => void;
   // dom: import("expo/dom").DOMProps;
 }
 
@@ -64,6 +76,8 @@ const DomNoteEditor = ({
   width,
   height,
   onSave,
+  title = "",
+  onTitleChange,
 }: DomNoteEditorProps) => {
   const { colors } = theme;
   const isLoadingInitialContent = useRef(false);
@@ -82,6 +96,8 @@ const DomNoteEditor = ({
       >
         <LexicalComposer initialConfig={editorConfig}>
           <ReadOnlyPlugin isReadOnly={isReadOnly} />
+          <HashtagPlugin />
+          {/* {selectionAlwaysOnDisplay && <SelectionAlwaysOnDisplay />} */}
           <div
             className={`editor-container text-sm text-left w-full h-full relative font-normal rounded-lg flex flex-col`}
             style={{ paddingTop: isReadOnly ? 0 : toolbarHeight.top }}
@@ -97,15 +113,31 @@ const DomNoteEditor = ({
                 />
               </div>
             )}
+
             <div className="editor-inner dark:!bg-black !bg-white flex-1 overflow-y-auto">
+              {/* Title Field */}
+              {!isReadOnly && (
+                <div className="px-4 py-3 border-b border-gray-200 bg-white">
+                  <input
+                    type="text"
+                    defaultValue={title}
+                    onChange={(e) => onTitleChange(e.target.value)}
+                    placeholder="Enter note title..."
+                    className="w-full text-xl font-semibold bg-transparent border-none outline-none placeholder-gray-400 text-gray-900 "
+                  />
+                </div>
+              )}
+
               <RichTextPlugin
                 contentEditable={
                   <ContentEditable
-                    className="editor-input !bg-white !text-black !pb-[70px]"
+                    className="editor-input relative !bg-white !text-black !pb-[70px]"
                     // className="editor-input dark:!bg-black !bg-white dark:!text-white !text-black !caret-white !pb-[70px]"
                     aria-placeholder={placeholder}
                     placeholder={
-                      <div className="editor-placeholder">{placeholder}</div>
+                      <div className="text-black absolute top-16 left-2 select-none  text-base">
+                        {placeholder}
+                      </div>
                     }
                   />
                 }

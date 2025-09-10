@@ -7,6 +7,7 @@
  */
 export default {
   code: "editor-code",
+  hashtag: "editor-hashtag",
   heading: {
     h1: "editor-heading-h1",
     h2: "editor-heading-h2",
