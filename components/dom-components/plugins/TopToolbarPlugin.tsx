@@ -195,17 +195,20 @@ export default function TopToolbarPlugin({
 
   const onFontColorSelect = useCallback(
     (value: string, skipHistoryStack: boolean) => {
-      console.log("onFontColorSelect", value);
       applyStyleText({ color: value }, skipHistoryStack);
+      // Update toolbar state to remember the selected color
+      updateToolbarState("fontColor", value);
     },
-    [applyStyleText]
+    [applyStyleText, updateToolbarState]
   );
 
   const onBgColorSelect = useCallback(
     (value: string, skipHistoryStack: boolean) => {
       applyStyleText({ "background-color": value }, skipHistoryStack);
+      // Update toolbar state to remember the selected background color
+      updateToolbarState("bgColor", value);
     },
-    [applyStyleText]
+    [applyStyleText, updateToolbarState]
   );
 
   useEffect(() => {
@@ -297,6 +300,7 @@ export default function TopToolbarPlugin({
         color={toolbarState.fontColor}
         onChange={onFontColorSelect}
         title="text color"
+        stopCloseOnClickSelf={false}
       />
 
       <DropdownColorPicker
@@ -305,7 +309,6 @@ export default function TopToolbarPlugin({
         buttonAriaLabel="Formatting background color"
         buttonIcon="PaintBucket"
         color={"#000"}
-        // color={toolbarState.bgColor}
         onChange={onBgColorSelect}
         title="bg color"
       />
