@@ -524,6 +524,147 @@ ul[data-lexical-list-type="check"] li[data-checked="true"]::before {
   background-color: rgba(88, 144, 255, 0.25);
 }
 
+/* Bible Mention styling */
+.editor-bible-mention-wrapper {
+  display: inline-block;
+  margin: 4px 0;
+}
+
+.editor-bible-mention {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #15803d;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  position: relative;
+  display: inline-block;
+}
+
+.editor-bible-mention-verse {
+  background-color: rgba(34, 197, 94, 0.05);
+  color: #374151;
+  font-style: italic;
+  padding: 8px 12px;
+  margin-top: 4px;
+  border-left: 3px solid #22c55e;
+  border-radius: 0 4px 4px 0;
+  font-size: 14px;
+  line-height: 1.4;
+  display: block;
+  max-width: 400px;
+}
+
+.editor-bible-mention:hover {
+  background-color: rgba(34, 197, 94, 0.25);
+  border-color: rgba(34, 197, 94, 0.5);
+}
+
+/* Bible verse popup/tooltip */
+.editor-bible-mention::after {
+  content: attr(data-verse-text);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1f2937;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: normal;
+  white-space: nowrap;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.editor-bible-mention:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Arrow for tooltip */
+.editor-bible-mention::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(1px);
+  border: 4px solid transparent;
+  border-top-color: #1f2937;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  z-index: 1000;
+}
+
+.editor-bible-mention:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Bible Book Dropdown styling */
+.bible-book-dropdown {
+  position: absolute;
+  z-index: 1000;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  max-height: 240px;
+  overflow-y: auto;
+  min-width: 256px;
+}
+
+.bible-book-dropdown-item {
+  padding: 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.15s ease;
+}
+
+.bible-book-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.bible-book-dropdown-item:hover {
+  background-color: #f9fafb;
+}
+
+.bible-book-dropdown-item.selected {
+  background-color: #eff6ff;
+  border-left: 3px solid #3b82f6;
+}
+
+.bible-book-dropdown-item-name {
+  font-weight: 500;
+  color: #111827;
+  margin-bottom: 2px;
+}
+
+.bible-book-dropdown-item-short {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.bible-book-dropdown-footer {
+  font-size: 11px;
+  color: #9ca3af;
+  padding: 8px 12px;
+  border-top: 1px solid #f3f4f6;
+  background-color: #fafafa;
+}
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *

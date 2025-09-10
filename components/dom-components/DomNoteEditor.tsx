@@ -33,7 +33,8 @@ import TopToolbarPlugin from "./plugins/TopToolbarPlugin";
 import { ToolbarContext } from "./context/ToolbarContext";
 import { HashtagPlugin } from "./plugins/LexicalHashtagPlugin";
 import { HashtagNode } from "@lexical/hashtag";
-// import { HashtagNode } from "./plugins/HashtagNode";
+import { BibleMentionPlugin } from "./plugins/BibleMentionPlugin";
+import { BibleMentionNode } from "./plugins/BibleMentionNode";
 
 const editorConfig: InitialConfigType = {
   namespace: "React.js Demo",
@@ -44,6 +45,7 @@ const editorConfig: InitialConfigType = {
     ListItemNode,
     CodeNode,
     HashtagNode,
+    BibleMentionNode,
   ],
   // Handling of errors during update
   onError(error: Error) {
@@ -91,15 +93,15 @@ const DomNoteEditor = ({
   return (
     <ToolbarContext>
       <div
-        className={`rounded w-full h-full`}
+        className={`rounded w-full h-full `}
         style={{ width: width || "100%", height: height || "100%" }}
       >
         <LexicalComposer initialConfig={editorConfig}>
           <ReadOnlyPlugin isReadOnly={isReadOnly} />
           <HashtagPlugin />
-          {/* {selectionAlwaysOnDisplay && <SelectionAlwaysOnDisplay />} */}
+          <BibleMentionPlugin />
           <div
-            className={`editor-container text-sm text-left w-full h-full relative font-normal rounded-lg flex flex-col`}
+            className={`editor-container  text-sm text-left w-full h-full relative font-normal rounded-lg flex flex-col`}
             style={{ paddingTop: isReadOnly ? 0 : toolbarHeight.top }}
           >
             {!isReadOnly && (
@@ -114,7 +116,7 @@ const DomNoteEditor = ({
               </div>
             )}
 
-            <div className="editor-inner dark:!bg-black !bg-white flex-1 overflow-y-auto">
+            <div className="editor-inner !bg-white flex-1 overflow-y-auto">
               {/* Title Field */}
               {!isReadOnly && (
                 <div className="px-4 py-3 border-b border-gray-200 bg-white">
