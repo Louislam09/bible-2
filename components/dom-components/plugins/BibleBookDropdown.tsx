@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { DB_BOOK_NAMES } from "../../../constants/BookNames";
 import removeAccent from "../../../utils/removeAccent";
 import type { IDBBookNames } from "../../../types";
+import Icon from "@/components/Icon";
 
 interface BibleBookDropdownProps {
   query: string;
@@ -98,6 +99,30 @@ export function BibleBookDropdown({
       className="bible-book-dropdown"
       style={{ left: position.x, top: position.y + 20 }}
     >
+      {/* Header with close button */}
+      <div
+        style={{
+          padding: "8px 12px",
+          borderBottom: "1px solid #f3f4f6",
+          fontWeight: "500",
+          fontSize: "13px",
+          color: "#374151",
+          backgroundColor: "#f9fafb",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <span>Selecciona libro bíblico</span>
+        <button
+          onClick={onClose}
+          className="bible-dropdown-close-button"
+          title="Cerrar"
+        >
+          <Icon name="X" size={24} color="black" />
+        </button>
+      </div>
+
       {filteredBooks.map((book, index) => (
         <div
           key={book.bookNumber}

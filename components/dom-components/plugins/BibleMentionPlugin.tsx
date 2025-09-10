@@ -16,6 +16,48 @@ import { ChapterVerseDropdown } from "./ChapterVerseDropdown";
 import removeAccent from "../../../utils/removeAccent";
 import type { IDBBookNames } from "../../../types";
 
+// Helper function to safely set cursor position
+function safeCursorPosition(
+  selection: any,
+  textNode: any,
+  position: number,
+  text: string,
+  context: string = "cursor positioning"
+) {
+  try {
+    // Ensure position is within valid range
+    const safePosition = Math.max(0, Math.min(position, text.length));
+
+    // Validate that the text node still exists and has the expected content
+    if (!textNode || textNode.getTextContent() !== text) {
+      console.warn(
+        `Text node mismatch during ${context}, skipping cursor positioning`
+      );
+      return false;
+    }
+
+    selection.anchor.offset = safePosition;
+    selection.focus.offset = safePosition;
+    return true;
+  } catch (error) {
+    console.warn(`Failed to set cursor position during ${context}:`, error);
+
+    // Fallback: try to position at end of text
+    try {
+      const endPosition = text.length;
+      selection.anchor.offset = endPosition;
+      selection.focus.offset = endPosition;
+      return true;
+    } catch (fallbackError) {
+      console.error(
+        `Fallback cursor positioning also failed during ${context}:`,
+        fallbackError
+      );
+      return false;
+    }
+  }
+}
+
 type SelectionState = {
   step: "book" | "chapter" | "verse" | "complete";
   book?: IDBBookNames;
@@ -169,7 +211,7 @@ export function BibleMentionPlugin(): JSX.Element | null {
 
         // Detect different patterns for each step
         const completeMatch = beforeCursor.match(
-          /@([a-záéíóúüñ]+)\s+(\d+):(\d+)$/i
+          /@([a-záéíóúüñ]+)\s+(\d+):(\d+)(\s|$)/i
         );
         const verseInProgressMatch = beforeCursor.match(
           /@([a-záéíóúüñ]+)\s+(\d+):(\d*)$/i
@@ -190,14 +232,22 @@ export function BibleMentionPlugin(): JSX.Element | null {
         };
 
         if (completeMatch) {
-          // User typed complete reference - let text entity handle it, but don't interfere
-          if (selectionState.step !== "book") {
-            setShowDropdown(false);
-            setSelectionState({ step: "book" });
-          }
+          // User typed complete reference - close dropdown immediately
+          setShowDropdown(false);
+          setSelectionState({ step: "book" });
+          return; // Exit early to prevent further processing
         } else if (verseInProgressMatch) {
           // User is typing verse after chapter (e.g., "@genesis 1:" or "@genesis 1:5")
           const [, bookText, chapterText, verseText] = verseInProgressMatch;
+
+          // If verse is complete (has a number), close dropdown
+          if (verseText && verseText.trim() && !isNaN(parseInt(verseText))) {
+            setShowDropdown(false);
+            setSelectionState({ step: "book" });
+            return;
+          }
+
+          // If verse is incomplete (just ":"), show verse dropdown
           const bookKey = removeAccent(bookText.toLowerCase());
           const book =
             BIBLE_BOOKS[bookKey] || BIBLE_BOOKS[bookText.toLowerCase()];
@@ -225,6 +275,8 @@ export function BibleMentionPlugin(): JSX.Element | null {
         } else if (chapterInProgressMatch && !verseInProgressMatch) {
           // User is typing chapter after book (e.g., "@genesis " or "@genesis 1")
           const [, bookText, chapterText] = chapterInProgressMatch;
+
+          // If chapter is complete and user hasn't added ":" yet, still show chapter dropdown
           const bookKey = removeAccent(bookText.toLowerCase());
           const book =
             BIBLE_BOOKS[bookKey] || BIBLE_BOOKS[bookText.toLowerCase()];
@@ -259,8 +311,12 @@ export function BibleMentionPlugin(): JSX.Element | null {
           updateDropdownPosition();
           setShowDropdown(true);
         } else {
-          // No @ match found, hide dropdown and reset
-          if (selectionState.step !== "book") {
+          // No @ match found, or user has moved cursor away from mention
+          // Also check if cursor is after a completed mention with space
+          const afterCompleteMatch = beforeCursor.match(
+            /@([a-záéíóúüñ]+)\s+(\d+):(\d+)\s+$/i
+          );
+          if (afterCompleteMatch || selectionState.step !== "book") {
             setShowDropdown(false);
             setSelectionState({ step: "book" });
           }
@@ -300,8 +356,13 @@ export function BibleMentionPlugin(): JSX.Element | null {
 
           // Position cursor after the book name and space
           const newOffset = atPosition + `@${book.longName} `.length;
-          selection.anchor.offset = newOffset;
-          selection.focus.offset = newOffset;
+          safeCursorPosition(
+            selection,
+            anchorNode,
+            newOffset,
+            newText,
+            "book selection"
+          );
         }
       });
 
@@ -350,8 +411,13 @@ export function BibleMentionPlugin(): JSX.Element | null {
           // Position cursor after chapter:
           const newOffset =
             matchStart + `@${bookText.trim()} ${chapter}:`.length;
-          selection.anchor.offset = newOffset;
-          selection.focus.offset = newOffset;
+          safeCursorPosition(
+            selection,
+            anchorNode,
+            newOffset,
+            newText,
+            "chapter selection"
+          );
         }
       });
 
@@ -390,19 +456,25 @@ export function BibleMentionPlugin(): JSX.Element | null {
           const [fullMatch, bookText, chapterText, existingVerse] = verseMatch;
           const matchStart = beforeCursor.length - fullMatch.length;
 
-          // Complete the reference
+          // Complete the reference and add space for verse text
           const newText =
             text.slice(0, matchStart) +
-            `@${bookText.trim()} ${chapterText}:${verse} ` +
+            `@${bookText.trim()} ${chapterText}:${verse}\n\n` +
             text.slice(offset);
 
           anchorNode.setTextContent(newText);
 
-          // Position cursor after the complete reference
+          // Position cursor after the space reserved for verse text
           const newOffset =
-            matchStart + `@${bookText.trim()} ${chapterText}:${verse} `.length;
-          selection.anchor.offset = newOffset;
-          selection.focus.offset = newOffset;
+            matchStart +
+            `@${bookText.trim()} ${chapterText}:${verse}\n\n`.length;
+          safeCursorPosition(
+            selection,
+            anchorNode,
+            newOffset,
+            newText,
+            "verse selection"
+          );
         }
       });
 

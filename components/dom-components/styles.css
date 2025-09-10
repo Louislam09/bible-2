@@ -665,6 +665,33 @@ ul[data-lexical-list-type="check"] li[data-checked="true"]::before {
   background-color: #fafafa;
 }
 
+.bible-dropdown-close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #6b7280;
+  font-size: 16px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  width: 24px;
+  height: 24px;
+}
+
+.bible-dropdown-close-button:hover {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.bible-dropdown-close-button:active {
+  background-color: #d1d5db;
+  transform: scale(0.95);
+}
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *

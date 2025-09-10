@@ -5,6 +5,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { DB_BOOK_CHAPTER_VERSES } from "../../../constants/BookNames";
 import type { IDBBookNames } from "../../../types";
+import Icon from "@/components/Icon";
 
 interface ChapterVerseDropdownProps {
   book: IDBBookNames;
@@ -152,9 +153,19 @@ export function ChapterVerseDropdown({
           fontSize: "13px",
           color: "#374151",
           backgroundColor: "#f9fafb",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
-        {title}
+        <span>{title}</span>
+        <button
+          onClick={onClose}
+          className="bible-dropdown-close-button"
+          title="Cerrar"
+        >
+          <Icon name="X" size={24} color="black" />
+        </button>
       </div>
 
       <div style={{ maxHeight: "160px", overflowY: "auto" }}>
