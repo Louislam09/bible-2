@@ -692,6 +692,17 @@ ul[data-lexical-list-type="check"] li[data-checked="true"]::before {
   transform: scale(0.95);
 }
 
+/* Bible Placeholder Guide styling */
+.bible-placeholder-guide {
+  font-size: inherit;
+  line-height: inherit;
+  color: #9ca3af !important;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.7;
+  z-index: 1;
+}
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -724,6 +735,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 input[type="number"] {
+  appearance: textfield;
   -moz-appearance: textfield;
 }
 

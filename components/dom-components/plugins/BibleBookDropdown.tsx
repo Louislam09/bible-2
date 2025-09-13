@@ -97,7 +97,7 @@ export function BibleBookDropdown({
   return (
     <div
       className="bible-book-dropdown"
-      style={{ left: position.x, top: position.y + 20 }}
+      style={{ left: position.x, top: position.y + 40 }}
     >
       {/* Header with close button */}
       <div
@@ -159,11 +159,7 @@ export function BibleBookDropdown({
       ))}
 
       <div className="bible-book-dropdown-footer">
-        ↑↓ para navegar • Enter para seleccionar • Esc para cerrar
-        <br />
-        <span style={{ fontSize: "10px", opacity: 0.8 }}>
-          O escribe el nombre del libro directamente
-        </span>
+        ↑↓ para navegar • Enter para seleccionar • X para cerrar
       </div>
     </div>
   );

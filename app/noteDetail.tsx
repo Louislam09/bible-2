@@ -10,9 +10,14 @@ import useParams from "@/hooks/useParams";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { useNoteService } from "@/services/noteService";
 import { bibleState$ } from "@/state/bibleState";
-import { EViewMode, Screens, TNote, TTheme } from "@/types";
+import { EViewMode, Screens, TNote, TTheme, EBibleVersions } from "@/types";
 import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
 import { use$ } from "@legendapp/state/react";
+import { useDBContext } from "@/context/databaseContext";
+import { storedData$ } from "@/context/LocalstoreContext";
+import { QUERY_BY_DB } from "@/constants/Queries";
+import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { getBookDetail } from "@/constants/BookNames";
 import Constants from "expo-constants";
 import { Stack, useNavigation, useRouter } from "expo-router";
 import React, {
@@ -50,6 +55,10 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
     bibleState$.selectedVerseForNote.get()
   );
 
+  // Database context for Bible verse fetching
+  const { getBibleServices, allBibleLoaded } = useDBContext();
+  const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
+
   const routeParams = useParams<NoteDetailParams>();
   const { noteId, isNewNote } = routeParams;
 
@@ -73,6 +82,55 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
 
   const debouncedNoteContent = useDebounce(noteContent, 3000);
   const { printToFile } = usePrintAndShare();
+
+  // Function to fetch Bible verse from database
+  const fetchBibleVerse = useCallback(
+    async (book: string, chapter: number, verse: number): Promise<string> => {
+      try {
+        const bookDetail = getBookDetail(book);
+        if (!bookDetail) {
+          console.log(`Book "${book}" not found in database.`);
+          return `[Libro "${book}" no encontrado]`;
+        }
+
+        const NT_BOOK_NUMBER = 470;
+        const isNewCovenant = bookDetail.bookNumber >= NT_BOOK_NUMBER;
+        const { primaryDB, baseDB } = getBibleServices({ isNewCovenant });
+
+        if (!primaryDB || !primaryDB.executeSql) {
+          return `[Base de datos no disponible]`;
+        }
+
+        // Determine which query to use based on the current Bible version
+        const isInterlinear = [
+          EBibleVersions.INTERLINEAR,
+          EBibleVersions.GREEK,
+        ].includes(currentBibleVersion as EBibleVersions);
+        const queryKey = isInterlinear
+          ? EBibleVersions.BIBLE
+          : currentBibleVersion;
+        const query = QUERY_BY_DB[queryKey] || QUERY_BY_DB["OTHERS"];
+
+        // Fetch the verse from database
+        const verses = await primaryDB.executeSql(
+          query.GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE,
+          [bookDetail.bookNumber, chapter, verse],
+          "fetchBibleVerse"
+        );
+
+        if (verses && verses.length > 0) {
+          const verseData = verses[0];
+          return getVerseTextRaw(verseData.text || "");
+        } else {
+          return `[Versículo ${book} ${chapter}:${verse} no encontrado]`;
+        }
+      } catch (error) {
+        console.error("Failed to fetch verse from database:", error);
+        return `[Error cargando ${book} ${chapter}:${verse}]`;
+      }
+    },
+    [getBibleServices, currentBibleVersion, allBibleLoaded]
+  );
 
   const rotate = rotation.interpolate({
     inputRange: [0, 1],
@@ -477,6 +535,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
                 height={height}
                 onSave={onSave}
                 onTitleChange={(text: string) => onContentChange("title", text)}
+                fetchBibleVerse={allBibleLoaded ? fetchBibleVerse : undefined}
                 // onTitleChange={(text: string) => console.log("title", text)}
                 // dom={{}}
               />

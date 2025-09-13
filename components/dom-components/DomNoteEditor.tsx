@@ -67,6 +67,11 @@ interface DomNoteEditorProps {
   onSave: () => Promise<void>;
   title?: string;
   onTitleChange: (title: string) => void;
+  fetchBibleVerse?: (
+    book: string,
+    chapter: number,
+    verse: number
+  ) => Promise<string>;
   // dom: import("expo/dom").DOMProps;
 }
 
@@ -80,6 +85,7 @@ const DomNoteEditor = ({
   onSave,
   title = "",
   onTitleChange,
+  fetchBibleVerse,
 }: DomNoteEditorProps) => {
   const { colors } = theme;
   const isLoadingInitialContent = useRef(false);
@@ -99,7 +105,7 @@ const DomNoteEditor = ({
         <LexicalComposer initialConfig={editorConfig}>
           <ReadOnlyPlugin isReadOnly={isReadOnly} />
           <HashtagPlugin />
-          <BibleMentionPlugin />
+          <BibleMentionPlugin fetchBibleVerse={fetchBibleVerse} />
           <div
             className={`editor-container  text-sm text-left w-full h-full relative font-normal rounded-lg flex flex-col`}
             style={{ paddingTop: isReadOnly ? 0 : toolbarHeight.top }}

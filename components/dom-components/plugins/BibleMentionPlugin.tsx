@@ -10,9 +10,14 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 import { useLexicalTextEntity } from "@lexical/react/useLexicalTextEntity";
 import { useCallback, useEffect, useState } from "react";
 import { $getSelection, $isRangeSelection, TextNode } from "lexical";
-import { DB_BOOK_NAMES, getBookDetail } from "../../../constants/BookNames";
+import {
+  DB_BOOK_NAMES,
+  DB_BOOK_CHAPTER_VERSES,
+  getBookDetail,
+} from "../../../constants/BookNames";
 import { BibleBookDropdown } from "./BibleBookDropdown";
 import { ChapterVerseDropdown } from "./ChapterVerseDropdown";
+import { BiblePlaceholderGuide } from "./BiblePlaceholderGuide";
 import removeAccent from "../../../utils/removeAccent";
 import type { IDBBookNames } from "../../../types";
 
@@ -59,12 +64,14 @@ function safeCursorPosition(
 }
 
 type SelectionState = {
-  step: "book" | "chapter" | "verse" | "complete";
+  step: "book" | "chapter" | "verse" | "complete" | "error";
   book?: IDBBookNames;
   chapter?: number;
   verse?: number;
   atPosition?: number;
   originalText?: string;
+  error?: string;
+  allowSkip?: boolean;
 };
 
 // Generate Bible books mapping from BookNames.ts data (Spanish only)
@@ -98,7 +105,54 @@ function createBibleBooksMapping(): Record<string, string> {
 
 const BIBLE_BOOKS = createBibleBooksMapping();
 
-// Debug: Log the first few book mappings to console
+// Validation functions
+function validateChapterForBook(book: IDBBookNames, chapter: number): boolean {
+  const chapterData = DB_BOOK_CHAPTER_VERSES.filter(
+    (item) => item.bookNumber === book.bookNumber
+  );
+
+  if (chapterData.length === 0) {
+    // Fallback validation for books without data
+    const maxChapter = getMaxChapterForBookFallback(book.longName);
+    return chapter >= 1 && chapter <= maxChapter;
+  }
+
+  const chapters = [...new Set(chapterData.map((item) => item.chapterNumber))];
+  return chapters.includes(chapter);
+}
+
+function validateVerseForChapter(
+  book: IDBBookNames,
+  chapter: number,
+  verse: number
+): boolean {
+  const verseData = DB_BOOK_CHAPTER_VERSES.find(
+    (item) =>
+      item.bookNumber === book.bookNumber && item.chapterNumber === chapter
+  );
+
+  if (!verseData) {
+    // Fallback: assume max 31 verses
+    return verse >= 1 && verse <= 31;
+  }
+
+  return verse >= 1 && verse <= verseData.verseCount;
+}
+
+function getMaxChapterForBookFallback(bookName: string): number {
+  const longBooks = ["Salmos", "Isaías", "Jeremías", "Ezequiel"];
+  const mediumBooks = [
+    "Génesis",
+    "Éxodo",
+    "Levítico",
+    "Números",
+    "Deuteronomio",
+  ];
+
+  if (longBooks.some((name) => bookName.includes(name))) return 150; // Psalms has 150
+  if (mediumBooks.some((name) => bookName.includes(name))) return 50;
+  return 28; // Default for most books
+}
 
 // Create regex pattern for @ bible references
 function createBibleReferenceRegex(): RegExp {
@@ -127,54 +181,39 @@ function createBibleReferenceRegex(): RegExp {
 
 const BIBLE_REGEX = createBibleReferenceRegex();
 
-// Function to fetch Bible verse - integrate with your Bible verse API/database
-async function fetchBibleVerse(
+// Default fallback function when no fetch function is provided
+async function defaultFetchBibleVerse(
   book: string,
   chapter: number,
   verse: number
 ): Promise<string> {
-  try {
-    // TODO: Replace with actual API call to your verse database
-    // You can use the book name to look up verses from your assets/db files
-
-    const bookDetail = getBookDetail(book);
-    const displayName = bookDetail?.longName || book;
-
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 300));
-
-    // Mock verse data - replace with your actual database lookup
-    const mockVerses: Record<string, string> = {
-      "Génesis 1:1": "En el principio creó Dios los cielos y la tierra.",
-      "Juan 3:16":
-        "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna.",
-      "Salmos 23:1": "Jehová es mi pastor; nada me faltará.",
-      "Mateo 5:3":
-        "Bienaventurados los pobres en espíritu, porque de ellos es el reino de los cielos.",
-      "Romanos 8:28":
-        "Y sabemos que a los que aman a Dios, todas las cosas les ayudan a bien, esto es, a los que conforme a su propósito son llamados.",
-      "1 Corintios 13:4":
-        "El amor es sufrido, es benigno; el amor no tiene envidia, el amor no es jactancioso, no se envanece.",
-    };
-
-    const key = `${displayName} ${chapter}:${verse}`;
-    return (
-      mockVerses[key] ||
-      `[Integrar con base de datos de versículos - ${displayName} ${chapter}:${verse}]`
-    );
-  } catch (error) {
-    console.error("Failed to fetch verse:", error);
-    return `[Error cargando ${book} ${chapter}:${verse}]`;
-  }
+  return `[Base de datos no disponible - ${book} ${chapter}:${verse}]`;
 }
 
-export function BibleMentionPlugin(): JSX.Element | null {
+interface BibleMentionPluginProps {
+  fetchBibleVerse?: (
+    book: string,
+    chapter: number,
+    verse: number
+  ) => Promise<string>;
+}
+
+export function BibleMentionPlugin({
+  fetchBibleVerse = defaultFetchBibleVerse,
+}: BibleMentionPluginProps): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
   const [showDropdown, setShowDropdown] = useState(false);
   const [dropdownQuery, setDropdownQuery] = useState("");
-  const [dropdownPosition, setDropdownPosition] = useState({ x: 0, y: 0 });
   const [selectionState, setSelectionState] = useState<SelectionState>({
     step: "book",
+  });
+  const [validationError, setValidationError] = useState<string | null>(null);
+
+  // Placeholder guide state
+  const [placeholderText, setPlaceholderText] = useState("");
+  const [cursorPosition, setCursorPosition] = useState({
+    x: 0,
+    y: 0,
   });
 
   useEffect(() => {
@@ -197,6 +236,7 @@ export function BibleMentionPlugin(): JSX.Element | null {
         }
 
         const anchorNode = selection.anchor.getNode();
+
         if (!(anchorNode instanceof TextNode)) {
           setShowDropdown(false);
           setSelectionState({ step: "book" });
@@ -213,26 +253,73 @@ export function BibleMentionPlugin(): JSX.Element | null {
         const completeMatch = beforeCursor.match(
           /@([a-záéíóúüñ]+)\s+(\d+):(\d+)(\s|$)/i
         );
+
         const verseInProgressMatch = beforeCursor.match(
           /@([a-záéíóúüñ]+)\s+(\d+):(\d*)$/i
         );
         const chapterInProgressMatch = beforeCursor.match(
           /@([a-záéíóúüñ]+)\s+(\d*)$/i
         );
+        const bookOnlyMatch = beforeCursor.match(
+          /@([a-záéíóúüñ]+)\s+([^0-9]|$)/i
+        );
         const bookInProgressMatch = beforeCursor.match(/@([a-záéíóúüñ]*)$/i);
 
-        // Calculate dropdown position once
-        const updateDropdownPosition = () => {
+        // Calculate cursor position
+        const updateCursorPosition = () => {
           const domSelection = window.getSelection();
           if (domSelection && domSelection.rangeCount > 0) {
             const range = domSelection.getRangeAt(0);
             const rect = range.getBoundingClientRect();
-            setDropdownPosition({ x: rect.left, y: rect.top });
+            setCursorPosition({ x: rect.left, y: rect.top });
           }
         };
 
+        updateCursorPosition();
+
         if (completeMatch) {
-          // User typed complete reference - close dropdown immediately
+          console.log("completeMatch", { completeMatch });
+          // User typed complete reference - validate and close dropdown
+          const [, bookText, chapterText, verseText] = completeMatch;
+          const bookKey = removeAccent(bookText.toLowerCase());
+          const book =
+            BIBLE_BOOKS[bookKey] || BIBLE_BOOKS[bookText.toLowerCase()];
+          const foundBook = DB_BOOK_NAMES.find(
+            (b) =>
+              b.longName.toLowerCase() === book?.toLowerCase() ||
+              removeAccent(b.longName).toLowerCase() === bookKey ||
+              b.shortName.toLowerCase() === bookText.toLowerCase()
+          );
+
+          if (foundBook) {
+            const chapter = parseInt(chapterText);
+            const verse = parseInt(verseText);
+
+            // Validate chapter and verse
+            let errorMsg = null;
+            if (!validateChapterForBook(foundBook, chapter)) {
+              errorMsg = `Capítulo ${chapter} no existe en ${foundBook.longName}`;
+            } else if (!validateVerseForChapter(foundBook, chapter, verse)) {
+              errorMsg = `Versículo ${verse} no existe en ${foundBook.longName} ${chapter}`;
+            }
+
+            if (errorMsg) {
+              setValidationError(errorMsg);
+              setSelectionState({
+                step: "error",
+                book: foundBook,
+                chapter,
+                verse,
+                error: errorMsg,
+                atPosition: beforeCursor.indexOf("@"),
+                originalText: text,
+              });
+              setShowDropdown(true);
+              return;
+            }
+          }
+
+          setValidationError(null);
           setShowDropdown(false);
           setSelectionState({ step: "book" });
           return; // Exit early to prevent further processing
@@ -240,14 +327,6 @@ export function BibleMentionPlugin(): JSX.Element | null {
           // User is typing verse after chapter (e.g., "@genesis 1:" or "@genesis 1:5")
           const [, bookText, chapterText, verseText] = verseInProgressMatch;
 
-          // If verse is complete (has a number), close dropdown
-          if (verseText && verseText.trim() && !isNaN(parseInt(verseText))) {
-            setShowDropdown(false);
-            setSelectionState({ step: "book" });
-            return;
-          }
-
-          // If verse is incomplete (just ":"), show verse dropdown
           const bookKey = removeAccent(bookText.toLowerCase());
           const book =
             BIBLE_BOOKS[bookKey] || BIBLE_BOOKS[bookText.toLowerCase()];
@@ -260,23 +339,73 @@ export function BibleMentionPlugin(): JSX.Element | null {
 
           if (foundBook && chapterText) {
             const chapter = parseInt(chapterText);
-            if (!isNaN(chapter)) {
+
+            // Validate chapter first
+            if (
+              !isNaN(chapter) &&
+              !validateChapterForBook(foundBook, chapter)
+            ) {
+              const errorMsg = `Capítulo ${chapter} no existe en ${foundBook.longName}`;
+              setValidationError(errorMsg);
+              setSelectionState({
+                step: "error",
+                book: foundBook,
+                chapter,
+                error: errorMsg,
+                atPosition: beforeCursor.indexOf("@"),
+                originalText: text,
+              });
+              setShowDropdown(true);
+              return;
+            }
+
+            // If verse is complete (has a number), validate it
+            if (verseText && verseText.trim() && !isNaN(parseInt(verseText))) {
+              const verse = parseInt(verseText);
+              if (!validateVerseForChapter(foundBook, chapter, verse)) {
+                const errorMsg = `Versículo ${verse} no existe en ${foundBook.longName} ${chapter}`;
+                setValidationError(errorMsg);
+                setSelectionState({
+                  step: "error",
+                  book: foundBook,
+                  chapter,
+                  verse,
+                  error: errorMsg,
+                  atPosition: beforeCursor.indexOf("@"),
+                  originalText: text,
+                });
+                setShowDropdown(true);
+                return;
+              } else {
+                // Valid verse - close dropdown
+                setValidationError(null);
+                setShowDropdown(false);
+                setSelectionState({ step: "book" });
+                return;
+              }
+            }
+
+            // If verse is incomplete (just ":"), show verse dropdown if chapter is valid
+            if (!isNaN(chapter) && validateChapterForBook(foundBook, chapter)) {
+              setValidationError(null);
               setSelectionState({
                 step: "verse",
                 book: foundBook,
                 chapter,
                 atPosition: beforeCursor.indexOf("@"),
                 originalText: text,
+                allowSkip: true,
               });
-              updateDropdownPosition();
               setShowDropdown(true);
+
+              // Show placeholder for verse input
+              setPlaceholderText(verseInProgressMatch[0]);
             }
           }
         } else if (chapterInProgressMatch && !verseInProgressMatch) {
           // User is typing chapter after book (e.g., "@genesis " or "@genesis 1")
           const [, bookText, chapterText] = chapterInProgressMatch;
 
-          // If chapter is complete and user hasn't added ":" yet, still show chapter dropdown
           const bookKey = removeAccent(bookText.toLowerCase());
           const book =
             BIBLE_BOOKS[bookKey] || BIBLE_BOOKS[bookText.toLowerCase()];
@@ -288,15 +417,50 @@ export function BibleMentionPlugin(): JSX.Element | null {
           );
 
           if (foundBook) {
+            // If chapter number is provided, validate it
+            if (
+              chapterText &&
+              chapterText.trim() &&
+              !isNaN(parseInt(chapterText))
+            ) {
+              const chapter = parseInt(chapterText);
+              if (!validateChapterForBook(foundBook, chapter)) {
+                const errorMsg = `Capítulo ${chapter} no existe en ${foundBook.longName}`;
+                setValidationError(errorMsg);
+                setSelectionState({
+                  step: "error",
+                  book: foundBook,
+                  chapter,
+                  error: errorMsg,
+                  atPosition: beforeCursor.indexOf("@"),
+                  originalText: text,
+                });
+                setShowDropdown(true);
+                return;
+              }
+            }
+
+            // Show chapter dropdown (optional)
+            setValidationError(null);
             setSelectionState({
               step: "chapter",
               book: foundBook,
               atPosition: beforeCursor.indexOf("@"),
               originalText: text,
+              allowSkip: true, // Allow skipping chapter selection
             });
-            updateDropdownPosition();
             setShowDropdown(true);
+
+            // Show placeholder for chapter input
+            setPlaceholderText(chapterInProgressMatch[0]);
           }
+        } else if (bookOnlyMatch) {
+          // User has typed a book followed by space and non-numeric characters
+          // This means they want to continue typing after the book name - close dropdown
+          setValidationError(null);
+          setShowDropdown(false);
+          setSelectionState({ step: "book" });
+          return;
         } else if (bookInProgressMatch) {
           // User is typing book name (e.g., "@gen")
           const query = bookInProgressMatch[1];
@@ -308,18 +472,24 @@ export function BibleMentionPlugin(): JSX.Element | null {
             atPosition,
             originalText: text,
           });
-          updateDropdownPosition();
           setShowDropdown(true);
+
+          // Show placeholder guide
+          const fullMatch = bookInProgressMatch[0]; // e.g., "@gen"
+          setPlaceholderText(fullMatch);
         } else {
           // No @ match found, or user has moved cursor away from mention
           // Also check if cursor is after a completed mention with space
           const afterCompleteMatch = beforeCursor.match(
             /@([a-záéíóúüñ]+)\s+(\d+):(\d+)\s+$/i
           );
+
           if (afterCompleteMatch || selectionState.step !== "book") {
+            console.log("afterCompleteMatch", { afterCompleteMatch });
             setShowDropdown(false);
             setSelectionState({ step: "book" });
           }
+          setShowDropdown(false);
         }
       });
     });
@@ -366,12 +536,9 @@ export function BibleMentionPlugin(): JSX.Element | null {
         }
       });
 
-      // Move to chapter selection step - dropdown will automatically show
-      setSelectionState((prev) => ({
-        ...prev,
-        step: "chapter",
-        book,
-      }));
+      // Close dropdown after book selection - user can continue typing or manually trigger chapter selection
+      setShowDropdown(false);
+      setSelectionState({ step: "book" });
     },
     [editor]
   );
@@ -581,6 +748,9 @@ export function BibleMentionPlugin(): JSX.Element | null {
           })
           .catch((error) => {
             console.error("Failed to fetch verse:", error);
+          })
+          .finally(() => {
+            setShowDropdown(false);
           });
 
         return mentionNode;
@@ -588,13 +758,62 @@ export function BibleMentionPlugin(): JSX.Element | null {
 
       return $createBibleMentionNode(text);
     },
-    [editor]
+    [editor, fetchBibleVerse]
   );
 
   useLexicalTextEntity<BibleMentionNode>(
     getBibleMentionMatch,
     BibleMentionNode,
     $createBibleMentionNodeSync
+  );
+
+  // Error dropdown component
+  const ErrorDropdown = ({
+    error,
+    position,
+    onClose,
+  }: {
+    error: string;
+    position: { x: number; y: number };
+    onClose: () => void;
+  }) => (
+    <div
+      className="bible-book-dropdown"
+      style={{ left: position.x, top: position.y + 20 }}
+    >
+      <div
+        style={{
+          padding: "8px 12px",
+          borderBottom: "1px solid #f3f4f6",
+          fontWeight: "500",
+          fontSize: "13px",
+          color: "#dc2626",
+          backgroundColor: "#fef2f2",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <span>❌ Error de referencia</span>
+        <button
+          onClick={onClose}
+          className="bible-dropdown-close-button"
+          title="Cerrar"
+          style={{ color: "#dc2626" }}
+        >
+          <span style={{ fontSize: "16px" }}>✕</span>
+        </button>
+      </div>
+      <div style={{ padding: "12px", color: "#dc2626", fontSize: "14px" }}>
+        {error}
+      </div>
+      <div
+        className="bible-book-dropdown-footer"
+        style={{ backgroundColor: "#fef2f2", color: "#dc2626" }}
+      >
+        Corrija la referencia o presione Esc para cerrar
+      </div>
+    </div>
   );
 
   // Render appropriate dropdown based on selection state
@@ -608,7 +827,7 @@ export function BibleMentionPlugin(): JSX.Element | null {
             query={dropdownQuery}
             onSelect={handleBookSelect}
             onClose={handleCloseDropdown}
-            position={dropdownPosition}
+            position={cursorPosition}
           />
         );
 
@@ -619,7 +838,7 @@ export function BibleMentionPlugin(): JSX.Element | null {
             mode="chapter"
             onSelect={handleChapterSelect}
             onClose={handleCloseDropdown}
-            position={dropdownPosition}
+            position={cursorPosition}
           />
         ) : null;
 
@@ -631,14 +850,32 @@ export function BibleMentionPlugin(): JSX.Element | null {
             chapter={selectionState.chapter}
             onSelect={handleVerseSelect}
             onClose={handleCloseDropdown}
-            position={dropdownPosition}
+            position={cursorPosition}
           />
         ) : null;
+
+      case "error":
+        return (
+          <ErrorDropdown
+            error={selectionState.error || "Error desconocido"}
+            position={cursorPosition}
+            onClose={handleCloseDropdown}
+          />
+        );
 
       default:
         return null;
     }
   };
 
-  return <>{renderDropdown()}</>;
+  return (
+    <>
+      {renderDropdown()}
+      <BiblePlaceholderGuide
+        currentText={placeholderText}
+        position={cursorPosition}
+        isVisible={showDropdown}
+      />
+    </>
+  );
 }
