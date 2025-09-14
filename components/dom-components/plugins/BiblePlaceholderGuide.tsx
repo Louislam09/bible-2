@@ -19,7 +19,6 @@ export function BiblePlaceholderGuide({
   isVisible,
 }: BiblePlaceholderGuideProps) {
   const [placeholderText, setPlaceholderText] = useState("");
-
   useEffect(() => {
     if (!isVisible) {
       setPlaceholderText("");
@@ -27,7 +26,7 @@ export function BiblePlaceholderGuide({
     }
 
     // Base template
-    const fullTemplate = "@Libro Capitulo:Versículo";
+    const fullTemplate = "@Libro Capitulo:Versículo-Versículo";
 
     // Remove @ if current text starts with @
     const cleanCurrentText = currentText.startsWith("@")
@@ -37,40 +36,52 @@ export function BiblePlaceholderGuide({
     // Determine what part of the placeholder to show based on current input
     if (cleanCurrentText === "") {
       // User just typed @
-      setPlaceholderText("Libro Capitulo:Versículo");
+      setPlaceholderText("Libro Capítulo:Versículo-Versículo");
     } else {
       // Analyze current text to determine what to show
       const spaceIndex = cleanCurrentText.indexOf(" ");
       const colonIndex = cleanCurrentText.indexOf(":");
+      const dashIndex = cleanCurrentText.indexOf("-");
 
-      if (colonIndex !== -1) {
-        // User has typed colon, check if verse number is complete
-        const afterColon = cleanCurrentText.slice(colonIndex + 1);
-        if (afterColon === "") {
+      if (dashIndex !== -1) {
+        // User has typed dash, check if endVerse is complete
+        const afterDash = cleanCurrentText.slice(dashIndex + 1);
+        if (afterDash === "") {
           setPlaceholderText("Versículo");
-        } else if (/^\d+$/.test(afterColon)) {
-          // Complete verse number, hide placeholder
+        } else if (/^\d+$/.test(afterDash)) {
+          // Complete endVerse number, hide placeholder
           setPlaceholderText("");
         } else {
           setPlaceholderText("Versículo");
+        }
+      } else if (colonIndex !== -1) {
+        // User has typed colon, check if verse number is complete
+        const afterColon = cleanCurrentText.slice(colonIndex + 1);
+        if (afterColon === "") {
+          setPlaceholderText("Versículo-Versículo");
+        } else if (/^\d+$/.test(afterColon)) {
+          // Complete start verse number, show dash for endVerse
+          setPlaceholderText("-Versículo");
+        } else {
+          setPlaceholderText("Versículo-Versículo");
         }
       } else if (spaceIndex !== -1) {
         // User has typed space after book name
         const afterSpace = cleanCurrentText.slice(spaceIndex + 1);
         if (afterSpace === "") {
-          setPlaceholderText("Capítulo:Versículo");
+          setPlaceholderText("Capítulo:Versículo-Versículo");
         } else if (/^\d+$/.test(afterSpace)) {
           // User is typing chapter number
-          setPlaceholderText(":Versículo");
+          setPlaceholderText(":Versículo-Versículo");
         } else {
-          setPlaceholderText("Capítulo:Versículo");
+          setPlaceholderText("Capítulo:Versículo-Versículo");
         }
       } else {
         // User is typing book name
         if (cleanCurrentText.length > 0) {
-          setPlaceholderText(" Capítulo:Versículo");
+          setPlaceholderText(" Capítulo:Versículo-Versículo");
         } else {
-          setPlaceholderText("Libro Capítulo:Versículo");
+          setPlaceholderText("Libro Capítulo:Versículo-Versículo");
         }
       }
     }

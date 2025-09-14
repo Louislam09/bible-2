@@ -15,7 +15,10 @@ import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
 import { use$ } from "@legendapp/state/react";
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
-import { QUERY_BY_DB } from "@/constants/Queries";
+import {
+  GET_SINGLE_OR_MULTIPLE_VERSES,
+  QUERY_BY_DB,
+} from "@/constants/Queries";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { getBookDetail } from "@/constants/BookNames";
 import Constants from "expo-constants";
@@ -40,6 +43,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import "../global.css";
+import { formatTextToClipboard } from "@/utils/copyToClipboard";
 const { width, height } = Dimensions.get("window");
 
 type NoteDetailProps = {};
@@ -85,7 +89,12 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
 
   // Function to fetch Bible verse from database
   const fetchBibleVerse = useCallback(
-    async (book: string, chapter: number, verse: number): Promise<string> => {
+    async (
+      book: string,
+      chapter: number,
+      startVerse: number,
+      endVerse: number
+    ): Promise<string> => {
       try {
         const bookDetail = getBookDetail(book);
         if (!bookDetail) {
@@ -101,32 +110,55 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
           return `[Base de datos no disponible]`;
         }
 
+        let conditions: string = "";
+        if (endVerse) {
+          conditions = `(v.book_number = ? AND v.chapter = ? AND v.verse BETWEEN ? AND ?)`;
+        } else {
+          conditions = `(v.book_number = ? AND v.chapter = ? AND v.verse = ?)`;
+        }
+
         // Determine which query to use based on the current Bible version
         const isInterlinear = [
           EBibleVersions.INTERLINEAR,
           EBibleVersions.GREEK,
         ].includes(currentBibleVersion as EBibleVersions);
-        const queryKey = isInterlinear
-          ? EBibleVersions.BIBLE
-          : currentBibleVersion;
-        const query = QUERY_BY_DB[queryKey] || QUERY_BY_DB["OTHERS"];
+
+        const query2 = `${GET_SINGLE_OR_MULTIPLE_VERSES} ${conditions};
+        `;
+
+        const isValidRange = endVerse && endVerse > startVerse;
 
         // Fetch the verse from database
         const verses = await primaryDB.executeSql(
-          query.GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE,
-          [bookDetail.bookNumber, chapter, verse],
+          query2,
+          [
+            bookDetail.bookNumber,
+            chapter,
+            startVerse,
+            isValidRange ? endVerse : startVerse,
+          ],
           "fetchBibleVerse"
         );
+        const textCopied = await formatTextToClipboard({
+          highlightedVerses: verses,
+          highlightedGreaterThanOne: verses.length > 1,
+          book: bookDetail.longName,
+          chapter: chapter,
+          shouldReturnHmlt: false,
+          noTitle: true,
+        });
+        console.log({ textCopied });
 
         if (verses && verses.length > 0) {
           const verseData = verses[0];
-          return getVerseTextRaw(verseData.text || "");
+          // return getVerseTextRaw(verseData.text || "");
+          return textCopied;
         } else {
-          return `[Versículo ${book} ${chapter}:${verse} no encontrado]`;
+          return `[Versículo ${book} ${chapter}:${startVerse} no encontrado]`;
         }
       } catch (error) {
         console.error("Failed to fetch verse from database:", error);
-        return `[Error cargando ${book} ${chapter}:${verse}]`;
+        return `[Error cargando ${book} ${chapter}:${startVerse}]`;
       }
     },
     [getBibleServices, currentBibleVersion, allBibleLoaded]

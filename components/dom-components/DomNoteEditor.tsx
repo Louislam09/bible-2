@@ -70,7 +70,8 @@ interface DomNoteEditorProps {
   fetchBibleVerse?: (
     book: string,
     chapter: number,
-    verse: number
+    startVerse: number,
+    endVerse: number
   ) => Promise<string>;
   // dom: import("expo/dom").DOMProps;
 }

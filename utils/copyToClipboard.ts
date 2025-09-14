@@ -9,7 +9,8 @@ type FormatTextToClipboard = {
   highlightedGreaterThanOne: boolean;
   book?: string;
   chapter?: number;
-  shouldReturn?: boolean;
+  shouldReturnHmlt?: boolean;
+  noTitle?: boolean;
 };
 
 export const formatTextToClipboard = (data: FormatTextToClipboard): string => {
@@ -18,26 +19,30 @@ export const formatTextToClipboard = (data: FormatTextToClipboard): string => {
     highlightedVerses,
     book,
     chapter,
-    shouldReturn,
+    shouldReturnHmlt,
+    noTitle,
   } = data;
   const firstVerse = highlightedVerses[0].verse;
   const lastVerse = highlightedGreaterThanOne
     ? highlightedVerses[highlightedVerses.length - 1].verse
     : firstVerse;
 
-  const verseTitle = `${book} ${chapter}:${firstVerse}${highlightedGreaterThanOne ? "-" + lastVerse : ""
+  const verseTitle = noTitle ? "" : `${book} ${chapter}:${firstVerse}${highlightedGreaterThanOne ? "-" + lastVerse : ""
     }`;
   const verseText = highlightedVerses
     .map((verse) => `${verse.verse} ${getVerseTextRaw(verse.text)}`)
-    .join(shouldReturn ? "<br>" : "\n");
+    .join(shouldReturnHmlt ? "<br>" : "\n");
 
-  return `${shouldReturn ? `<b>${verseTitle}</b>` : verseTitle}${shouldReturn ? `<br>${verseText} <br>` : `\n${verseText}`
+
+  return noTitle ? verseText : `${shouldReturnHmlt ? `<b>${verseTitle}</b>` : verseTitle}${shouldReturnHmlt ? `<br>${verseText} <br>` : `\n${verseText}`
     }`;
+  // return `${shouldReturnHmlt ? `<b>${verseTitle}</b>` : verseTitle}${shouldReturnHmlt ? `<br>${verseText} <br>` : `\n${verseText}`
+  //   }`;
 };
 
 const copyToClipboard = async (
   item: IVerseItem | IVerseItem[],
-  shouldReturn?: boolean
+  shouldReturnHmlt?: boolean
 ): Promise<void | string> => {
   const isArray = Array.isArray(item);
   const currentBook = DB_BOOK_NAMES.find(
@@ -50,10 +55,10 @@ const copyToClipboard = async (
     highlightedGreaterThanOne: isArray ? item.length > 1 : false,
     book: isArray ? bookName : item.bookName || bookName,
     chapter: isArray ? item[0].chapter : item.chapter,
-    shouldReturn,
+    shouldReturnHmlt: shouldReturnHmlt,
   });
 
-  if (shouldReturn) {
+  if (shouldReturnHmlt) {
     return textCopied;
   }
   await Clipboard.setStringAsync(textCopied);

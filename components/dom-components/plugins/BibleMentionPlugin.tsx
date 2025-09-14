@@ -9,7 +9,7 @@ import { $createBibleMentionNode, BibleMentionNode } from "./BibleMentionNode";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useLexicalTextEntity } from "@lexical/react/useLexicalTextEntity";
 import { useCallback, useEffect, useState } from "react";
-import { $getSelection, $isRangeSelection, TextNode } from "lexical";
+import { $getRoot, $getSelection, $isRangeSelection, TextNode } from "lexical";
 import {
   DB_BOOK_NAMES,
   DB_BOOK_CHAPTER_VERSES,
@@ -67,7 +67,8 @@ type SelectionState = {
   step: "book" | "chapter" | "verse" | "complete" | "error";
   book?: IDBBookNames;
   chapter?: number;
-  verse?: number;
+  startVerse?: number;
+  endVerse?: number;
   atPosition?: number;
   originalText?: string;
   error?: string;
@@ -166,10 +167,10 @@ function createBibleReferenceRegex(): RegExp {
     return new RegExp("(?!.*)", "gi"); // Regex that never matches
   }
 
-  // Match patterns like "@génesis 1:1", "@genesis 1:1", "@mateo 5:3", "@sal 23:1"
+  // Match patterns like "@génesis 1:1", "@genesis 1:1", "@mateo 5:3", "@sal 23:1", "@sal 23:1-5"
   // This includes both accented and accent-free versions
-  const pattern = `@(${bookNames})\\s+(\\d+):(\\d+)\\b`;
-
+  // const pattern = `@(${bookNames})\\s+(\\d+):(\\d+)-(\\d+)\\b`;
+  const pattern = `@(${bookNames})\\s+(\\d+):(\\d+)(?:-(\\d+))?\\b`;
   // if (__DEV__) {
   //   // Test the regex with our example
   //   const testRegex = new RegExp(pattern, "gi");
@@ -185,16 +186,20 @@ const BIBLE_REGEX = createBibleReferenceRegex();
 async function defaultFetchBibleVerse(
   book: string,
   chapter: number,
-  verse: number
+  startVerse: number,
+  endVerse: number
 ): Promise<string> {
-  return `[Base de datos no disponible - ${book} ${chapter}:${verse}]`;
+  return `[Base de datos no disponible - ${book} ${chapter}:${startVerse}-${
+    endVerse || 0
+  }]`;
 }
 
 interface BibleMentionPluginProps {
   fetchBibleVerse?: (
     book: string,
     chapter: number,
-    verse: number
+    startVerse: number,
+    endVerse: number
   ) => Promise<string>;
 }
 
@@ -251,11 +256,14 @@ export function BibleMentionPlugin({
 
         // Detect different patterns for each step
         const completeMatch = beforeCursor.match(
-          /@([a-záéíóúüñ]+)\s+(\d+):(\d+)(\s|$)/i
+          /@([a-záéíóúüñ]+)\s+(\d+):(\d+)-(\d+)(?:\s|$)/i
         );
 
-        const verseInProgressMatch = beforeCursor.match(
-          /@([a-záéíóúüñ]+)\s+(\d+):(\d*)$/i
+        const startVerseInProgressMatch = beforeCursor.match(
+          /@([a-záéíóúüñ]+)\s+(\d+):(\d+)$/i
+        );
+        const endVerseInProgressMatch = beforeCursor.match(
+          /@([a-záéíóúüñ]+)\s+(\d+):(\d+)-(\d*)$/i
         );
         const chapterInProgressMatch = beforeCursor.match(
           /@([a-záéíóúüñ]+)\s+(\d*)$/i
@@ -277,10 +285,124 @@ export function BibleMentionPlugin({
 
         updateCursorPosition();
 
-        if (completeMatch) {
-          console.log("completeMatch", { completeMatch });
+        if (endVerseInProgressMatch) {
+          // User is typing end verse after dash (e.g., "@genesis 1:1-")
+          const [, bookText, chapterText, startVerseText, endVerseText] =
+            endVerseInProgressMatch;
+
+          const bookKey = removeAccent(bookText.toLowerCase());
+          const book =
+            BIBLE_BOOKS[bookKey] || BIBLE_BOOKS[bookText.toLowerCase()];
+          const foundBook = DB_BOOK_NAMES.find(
+            (b) =>
+              b.longName.toLowerCase() === book?.toLowerCase() ||
+              removeAccent(b.longName).toLowerCase() === bookKey ||
+              b.shortName.toLowerCase() === bookText.toLowerCase()
+          );
+
+          if (foundBook && chapterText && startVerseText) {
+            const chapter = parseInt(chapterText);
+            const startVerse = parseInt(startVerseText);
+
+            // Validate start verse first
+            if (!validateChapterForBook(foundBook, chapter)) {
+              const errorMsg = `Capítulo ${chapter} no existe en ${foundBook.longName}`;
+              setValidationError(errorMsg);
+              setSelectionState({
+                step: "error",
+                book: foundBook,
+                chapter,
+                startVerse,
+                error: errorMsg,
+                atPosition: beforeCursor.indexOf("@"),
+                originalText: text,
+              });
+              setShowDropdown(true);
+              return;
+            }
+
+            if (!validateVerseForChapter(foundBook, chapter, startVerse)) {
+              const errorMsg = `Versículo ${startVerse} no existe en ${foundBook.longName} ${chapter}`;
+              setValidationError(errorMsg);
+              setSelectionState({
+                step: "error",
+                book: foundBook,
+                chapter,
+                startVerse,
+                error: errorMsg,
+                atPosition: beforeCursor.indexOf("@"),
+                originalText: text,
+              });
+              setShowDropdown(true);
+              return;
+            }
+
+            // If end verse is complete (has a number), validate it
+            if (
+              endVerseText &&
+              endVerseText.trim() &&
+              !isNaN(parseInt(endVerseText))
+            ) {
+              const endVerse = parseInt(endVerseText);
+              if (!validateVerseForChapter(foundBook, chapter, endVerse)) {
+                const errorMsg = `Versículo ${endVerse} no existe en ${foundBook.longName} ${chapter}`;
+                setValidationError(errorMsg);
+                setSelectionState({
+                  step: "error",
+                  book: foundBook,
+                  chapter,
+                  startVerse,
+                  endVerse,
+                  error: errorMsg,
+                  atPosition: beforeCursor.indexOf("@"),
+                  originalText: text,
+                });
+                setShowDropdown(true);
+                return;
+              } else if (endVerse < startVerse) {
+                const errorMsg = `El versículo final (${endVerse}) debe ser mayor o igual al inicial (${startVerse})`;
+                setValidationError(errorMsg);
+                setSelectionState({
+                  step: "error",
+                  book: foundBook,
+                  chapter,
+                  startVerse,
+                  endVerse,
+                  error: errorMsg,
+                  atPosition: beforeCursor.indexOf("@"),
+                  originalText: text,
+                });
+                setShowDropdown(true);
+                return;
+              } else {
+                // Valid end verse - close dropdown
+                setValidationError(null);
+                setShowDropdown(false);
+                setSelectionState({ step: "book" });
+                return;
+              }
+            }
+
+            // If end verse is incomplete (just "-"), show placeholder
+            setValidationError(null);
+            setSelectionState({
+              step: "verse",
+              book: foundBook,
+              chapter,
+              startVerse,
+              atPosition: beforeCursor.indexOf("@"),
+              originalText: text,
+              allowSkip: true,
+            });
+            setShowDropdown(true);
+
+            // Show placeholder for end verse input
+            setPlaceholderText(endVerseInProgressMatch[0]);
+          }
+        } else if (completeMatch) {
           // User typed complete reference - validate and close dropdown
-          const [, bookText, chapterText, verseText] = completeMatch;
+          const [, bookText, chapterText, startVerseText, endVerseText] =
+            completeMatch;
           const bookKey = removeAccent(bookText.toLowerCase());
           const book =
             BIBLE_BOOKS[bookKey] || BIBLE_BOOKS[bookText.toLowerCase()];
@@ -293,14 +415,19 @@ export function BibleMentionPlugin({
 
           if (foundBook) {
             const chapter = parseInt(chapterText);
-            const verse = parseInt(verseText);
+            const startVerse = parseInt(startVerseText);
+            const endVerse = parseInt(endVerseText);
 
             // Validate chapter and verse
             let errorMsg = null;
             if (!validateChapterForBook(foundBook, chapter)) {
               errorMsg = `Capítulo ${chapter} no existe en ${foundBook.longName}`;
-            } else if (!validateVerseForChapter(foundBook, chapter, verse)) {
-              errorMsg = `Versículo ${verse} no existe en ${foundBook.longName} ${chapter}`;
+            } else if (
+              !validateVerseForChapter(foundBook, chapter, startVerse)
+            ) {
+              errorMsg = `Versículo ${startVerse} no existe en ${foundBook.longName} ${chapter}`;
+            } else if (endVerse < startVerse) {
+              errorMsg = `El versículo final (${endVerse}) debe ser mayor o igual al inicial (${startVerse})`;
             }
 
             if (errorMsg) {
@@ -309,7 +436,8 @@ export function BibleMentionPlugin({
                 step: "error",
                 book: foundBook,
                 chapter,
-                verse,
+                startVerse,
+                endVerse,
                 error: errorMsg,
                 atPosition: beforeCursor.indexOf("@"),
                 originalText: text,
@@ -323,9 +451,10 @@ export function BibleMentionPlugin({
           setShowDropdown(false);
           setSelectionState({ step: "book" });
           return; // Exit early to prevent further processing
-        } else if (verseInProgressMatch) {
+        } else if (startVerseInProgressMatch) {
           // User is typing verse after chapter (e.g., "@genesis 1:" or "@genesis 1:5")
-          const [, bookText, chapterText, verseText] = verseInProgressMatch;
+          const [, bookText, chapterText, startVerseText, endVerseText] =
+            startVerseInProgressMatch;
 
           const bookKey = removeAccent(bookText.toLowerCase());
           const book =
@@ -360,16 +489,21 @@ export function BibleMentionPlugin({
             }
 
             // If verse is complete (has a number), validate it
-            if (verseText && verseText.trim() && !isNaN(parseInt(verseText))) {
-              const verse = parseInt(verseText);
-              if (!validateVerseForChapter(foundBook, chapter, verse)) {
-                const errorMsg = `Versículo ${verse} no existe en ${foundBook.longName} ${chapter}`;
+            if (
+              startVerseText &&
+              startVerseText.trim() &&
+              !isNaN(parseInt(startVerseText))
+            ) {
+              const startVerse = parseInt(startVerseText);
+              if (!validateVerseForChapter(foundBook, chapter, startVerse)) {
+                const errorMsg = `Versículo ${startVerse} no existe en ${foundBook.longName} ${chapter}`;
                 setValidationError(errorMsg);
                 setSelectionState({
                   step: "error",
                   book: foundBook,
                   chapter,
-                  verse,
+                  startVerse,
+                  endVerse: endVerseText ? parseInt(endVerseText) : undefined,
                   error: errorMsg,
                   atPosition: beforeCursor.indexOf("@"),
                   originalText: text,
@@ -399,10 +533,14 @@ export function BibleMentionPlugin({
               setShowDropdown(true);
 
               // Show placeholder for verse input
-              setPlaceholderText(verseInProgressMatch[0]);
+              setPlaceholderText(startVerseInProgressMatch[0]);
             }
           }
-        } else if (chapterInProgressMatch && !verseInProgressMatch) {
+        } else if (
+          chapterInProgressMatch &&
+          !startVerseInProgressMatch &&
+          !endVerseInProgressMatch
+        ) {
           // User is typing chapter after book (e.g., "@genesis " or "@genesis 1")
           const [, bookText, chapterText] = chapterInProgressMatch;
 
@@ -485,7 +623,6 @@ export function BibleMentionPlugin({
           );
 
           if (afterCompleteMatch || selectionState.step !== "book") {
-            console.log("afterCompleteMatch", { afterCompleteMatch });
             setShowDropdown(false);
             setSelectionState({ step: "book" });
           }
@@ -669,10 +806,11 @@ export function BibleMentionPlugin({
 
       const startOffset = match.index;
       const endOffset = startOffset + match[0].length;
-
-      // Only transform if followed by space, punctuation, or at end
       const nextChar = text[endOffset];
-      if (nextChar && !/[\s\n\r.,!?;:\)]/.test(nextChar)) {
+      const noNextChar = !/[\s\n\r.,!?;:\)]/.test(nextChar);
+      const shouldTransform = nextChar && noNextChar;
+      // Only transform if followed by space, punctuation, or at end
+      if (shouldTransform) {
         return null;
       }
 
@@ -681,6 +819,7 @@ export function BibleMentionPlugin({
         start: startOffset,
       };
     } catch (error) {
+      console.log("Bible mention match error:", error);
       if (__DEV__) {
         console.error("Bible mention match error:", error);
       }
@@ -691,13 +830,14 @@ export function BibleMentionPlugin({
   const $createBibleMentionNodeSync = useCallback(
     (textNode: TextNode): BibleMentionNode => {
       const text = textNode.getTextContent();
+      console.log({ text });
 
       // Create a non-global version of the regex to get capture groups
       const bookNames = Object.keys(BIBLE_BOOKS)
         .filter((key) => key && key.trim())
         .map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")) // Escape special regex characters
         .join("|");
-      const pattern = `@(${bookNames})\\s+(\\d+):(\\d+)\\b`;
+      const pattern = `@(${bookNames})\\s+(\\d+):(\\d+)(?:-(\\d+))?\\b`;
       const regex = new RegExp(pattern, "i"); // Remove 'g' flag to get capture groups
 
       const match = text.match(regex);
@@ -705,10 +845,16 @@ export function BibleMentionPlugin({
       if (match) {
         // Simple pattern: @(bookName)\s+(chapter):(verse)\b
         // Array structure: [fullMatch, bookKey, chapterStr, verseStr]
-        const [fullMatch, bookKey, chapterStr, verseStr] = match;
+        const [
+          fullMatch,
+          bookKey,
+          chapterStr,
+          startVerseStr,
+          endVerseStr = "",
+        ] = match;
 
         // Validate that we have all required match groups
-        if (!bookKey || !chapterStr || !verseStr) {
+        if (!bookKey || !chapterStr || !startVerseStr) {
           console.log("Missing match groups, creating basic node");
           return $createBibleMentionNode(text);
         }
@@ -728,19 +874,24 @@ export function BibleMentionPlugin({
         }
 
         const chapter = parseInt(chapterStr, 10);
-        const verse = parseInt(verseStr, 10);
+        const startVerse = parseInt(startVerseStr, 10);
+        const endVerse = parseInt(endVerseStr, 10) || 0;
 
-        console.log("Final values", `${book} ${chapter}:${verse}`);
+        console.log(
+          "Final values",
+          `${book} ${chapter}:${startVerse}-${endVerse}`
+        );
 
         const mentionNode = $createBibleMentionNode(
           fullMatch,
           book,
           chapter,
-          verse
+          startVerse,
+          endVerse
         );
 
         // Fetch verse text asynchronously
-        fetchBibleVerse(book, chapter, verse)
+        fetchBibleVerse(book, chapter, startVerse, endVerse)
           .then((verseText) => {
             editor.update(() => {
               mentionNode.setVerseText(verseText);
