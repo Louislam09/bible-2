@@ -67,7 +67,7 @@ interface DomNoteEditorProps {
   onSave: () => Promise<void>;
   title?: string;
   onTitleChange: (title: string) => void;
-  fetchBibleVerse?: (
+  fetchBibleVerse: (
     book: string,
     chapter: number,
     startVerse: number,

@@ -5,11 +5,21 @@
 
 import type { JSX } from "react";
 
-import { $createBibleMentionNode, BibleMentionNode } from "./BibleMentionNode";
+import {
+  $createBibleMentionNode,
+  $isBibleMentionNode,
+  BibleMentionNode,
+} from "./BibleMentionNode";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useLexicalTextEntity } from "@lexical/react/useLexicalTextEntity";
 import { useCallback, useEffect, useState } from "react";
-import { $getRoot, $getSelection, $isRangeSelection, TextNode } from "lexical";
+import {
+  $getNodeByKey,
+  $getRoot,
+  $getSelection,
+  $isRangeSelection,
+  TextNode,
+} from "lexical";
 import {
   DB_BOOK_NAMES,
   DB_BOOK_CHAPTER_VERSES,
@@ -195,7 +205,7 @@ async function defaultFetchBibleVerse(
 }
 
 interface BibleMentionPluginProps {
-  fetchBibleVerse?: (
+  fetchBibleVerse: (
     book: string,
     chapter: number,
     startVerse: number,
@@ -204,7 +214,7 @@ interface BibleMentionPluginProps {
 }
 
 export function BibleMentionPlugin({
-  fetchBibleVerse = defaultFetchBibleVerse,
+  fetchBibleVerse,
 }: BibleMentionPluginProps): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
   const [showDropdown, setShowDropdown] = useState(false);
@@ -241,11 +251,22 @@ export function BibleMentionPlugin({
         }
 
         const anchorNode = selection.anchor.getNode();
+        const isBibleMentionNode = $isBibleMentionNode(anchorNode);
 
         if (!(anchorNode instanceof TextNode)) {
           setShowDropdown(false);
           setSelectionState({ step: "book" });
           return;
+        }
+
+        if (isBibleMentionNode) {
+          const nodeReference = `${anchorNode.getBook()} ${anchorNode.getChapter()}:${anchorNode.getStartVerse()}-${anchorNode.getEndVerse()}`;
+
+          handleMentionUpdate({});
+          // console.log({
+          //   createdReference: nodeReference,
+          //   currentReference: anchorNode.getTextContent(),
+          // });
         }
 
         const text = anchorNode.getTextContent();
@@ -789,6 +810,161 @@ export function BibleMentionPlugin({
     [editor]
   );
 
+  const handleMentionUpdate = useCallback(
+    ({ isFirstUpdate = false }: { isFirstUpdate?: boolean } = {}) => {
+      editor.update(() => {
+        const selection = $getSelection();
+        if (!$isRangeSelection(selection) || !selection.isCollapsed()) {
+          return;
+        }
+
+        const anchorNode = selection.anchor.getNode();
+
+        // Check if we're dealing with an existing BibleMentionNode
+        const isBibleMentionNode = $isBibleMentionNode(anchorNode);
+
+        if (isBibleMentionNode) {
+          // Handle updating existing BibleMentionNode
+          const mentionNode = anchorNode as BibleMentionNode;
+          const currentText = mentionNode.getTextContent();
+
+          // Parse the current text to extract reference information
+          const referenceMatch = currentText.match(
+            /@([a-záéíóúüñ]+)\s+(\d+):(\d+)(?:-(\d+))?/i
+          );
+
+          if (referenceMatch) {
+            const [, bookText, chapterText, startVerseText, endVerseText] =
+              referenceMatch;
+
+            const bookKey = removeAccent(bookText.toLowerCase());
+            const book =
+              BIBLE_BOOKS[bookKey] || BIBLE_BOOKS[bookText.toLowerCase()];
+            const foundBook = DB_BOOK_NAMES.find(
+              (b) =>
+                b.longName.toLowerCase() === book?.toLowerCase() ||
+                removeAccent(b.longName).toLowerCase() === bookKey ||
+                b.shortName.toLowerCase() === bookText.toLowerCase()
+            );
+
+            if (foundBook && chapterText && startVerseText) {
+              const chapter = parseInt(chapterText);
+              const startVerse = parseInt(startVerseText);
+              const endVerse = endVerseText ? parseInt(endVerseText) : 0;
+
+              // Validate the reference
+              const isValidChapter = validateChapterForBook(foundBook, chapter);
+              const isValidStartVerse = validateVerseForChapter(
+                foundBook,
+                chapter,
+                startVerse
+              );
+              const isValidEndVerse =
+                endVerse > 0
+                  ? validateVerseForChapter(foundBook, chapter, endVerse)
+                  : true;
+
+              if (!isValidChapter) {
+                console.log(
+                  `Capítulo ${chapter} no existe en ${foundBook.longName}`
+                );
+                return;
+              }
+
+              if (!isValidStartVerse) {
+                console.log(
+                  `Versículo ${startVerse} no existe en ${foundBook.longName} ${chapter}`
+                );
+                return;
+              }
+
+              if (endVerse > 0 && !isValidEndVerse) {
+                console.log(
+                  `Versículo ${endVerse} no existe en ${foundBook.longName} ${chapter}`
+                );
+                return;
+              }
+
+              if (endVerse > 0 && endVerse < startVerse) {
+                console.log(
+                  `El versículo final (${endVerse}) debe ser mayor o igual al inicial (${startVerse})`
+                );
+                return;
+              }
+
+              // Check if the reference has actually changed
+              const currentBook = mentionNode.getBook();
+              const currentChapter = mentionNode.getChapter();
+              const currentStartVerse = mentionNode.getStartVerse();
+              const currentEndVerse = mentionNode.getEndVerse() || 0;
+              const hasVerseText = !!mentionNode.getVerseText();
+
+              const hasChanged =
+                currentBook !== foundBook.longName ||
+                currentChapter !== chapter ||
+                currentStartVerse !== startVerse ||
+                currentEndVerse !== endVerse;
+
+              if (hasChanged || isFirstUpdate) {
+                console.log(
+                  `Updating reference: ${
+                    foundBook.longName
+                  } ${chapter}:${startVerse}${
+                    endVerse > 0 ? `-${endVerse}` : ""
+                  }`
+                );
+
+                // Update the mention node with new reference data
+                const writableNode = mentionNode.getWritable();
+                writableNode.__book = foundBook.longName;
+                writableNode.__chapter = chapter;
+                writableNode.__startVerse = startVerse;
+                writableNode.__endVerse = endVerse > 0 ? endVerse : undefined;
+
+                // Fetch new verse text asynchronously
+                fetchBibleVerse(
+                  foundBook.longName,
+                  chapter,
+                  startVerse,
+                  endVerse || startVerse
+                )
+                  .then((verseText) => {
+                    editor.update(() => {
+                      const currentNode = $getNodeByKey(mentionNode.getKey());
+                      if ($isBibleMentionNode(currentNode)) {
+                        currentNode.setVerseText(verseText);
+                      }
+                    });
+                  })
+                  .catch((error) => {
+                    console.error("Failed to fetch updated verse:", error);
+                    editor.update(() => {
+                      const currentNode = $getNodeByKey(mentionNode.getKey());
+                      if ($isBibleMentionNode(currentNode)) {
+                        currentNode.setVerseText(
+                          `Error cargando versículo: ${
+                            foundBook.longName
+                          } ${chapter}:${startVerse}${
+                            endVerse > 0 ? `-${endVerse}` : ""
+                          }`
+                        );
+                      }
+                    });
+                  });
+              }
+            }
+          }
+          return;
+        }
+      });
+
+      // Close dropdown and reset state
+      setShowDropdown(false);
+      setSelectionState({ step: "book" });
+    },
+    [editor, fetchBibleVerse]
+  );
+
   const handleCloseDropdown = useCallback(() => {
     setShowDropdown(false);
     setSelectionState({ step: "book" });
@@ -890,19 +1066,8 @@ export function BibleMentionPlugin({
           endVerse
         );
 
-        // Fetch verse text asynchronously
-        fetchBibleVerse(book, chapter, startVerse, endVerse)
-          .then((verseText) => {
-            editor.update(() => {
-              mentionNode.setVerseText(verseText);
-            });
-          })
-          .catch((error) => {
-            console.error("Failed to fetch verse:", error);
-          })
-          .finally(() => {
-            setShowDropdown(false);
-          });
+        console.log("====== FETCH FOR VERSE TEXT ======");
+        handleMentionUpdate({ isFirstUpdate: true });
 
         return mentionNode;
       }

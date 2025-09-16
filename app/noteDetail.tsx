@@ -147,11 +147,8 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
           shouldReturnHmlt: false,
           noTitle: true,
         });
-        console.log({ textCopied });
 
         if (verses && verses.length > 0) {
-          const verseData = verses[0];
-          // return getVerseTextRaw(verseData.text || "");
           return textCopied;
         } else {
           return `[Versículo ${book} ${chapter}:${startVerse} no encontrado]`;
@@ -567,7 +564,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
                 height={height}
                 onSave={onSave}
                 onTitleChange={(text: string) => onContentChange("title", text)}
-                fetchBibleVerse={allBibleLoaded ? fetchBibleVerse : undefined}
+                fetchBibleVerse={fetchBibleVerse}
                 // onTitleChange={(text: string) => console.log("title", text)}
                 // dom={{}}
               />
