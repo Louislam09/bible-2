@@ -828,10 +828,17 @@ export function BibleMentionPlugin({
           const mentionNode = anchorNode as BibleMentionNode;
           const currentText = mentionNode.getTextContent();
 
+          const bookNames = Object.keys(BIBLE_BOOKS)
+            .filter((key) => key && key.trim())
+            .map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")) // Escape special regex characters
+            .join("|");
+          const pattern = `@(${bookNames})\\s+(\\d+):(\\d+)(?:-(\\d+))?\\b`;
+          const regex = new RegExp(pattern, "i"); // Remove 'g' flag to get capture groups
+
+          const match = currentText.match(regex);
+
           // Parse the current text to extract reference information
-          const referenceMatch = currentText.match(
-            /@([a-záéíóúüñ]+)\s+(\d+):(\d+)(?:-(\d+))?/i
-          );
+          const referenceMatch = match;
 
           if (referenceMatch) {
             const [, bookText, chapterText, startVerseText, endVerseText] =
@@ -897,7 +904,6 @@ export function BibleMentionPlugin({
               const currentChapter = mentionNode.getChapter();
               const currentStartVerse = mentionNode.getStartVerse();
               const currentEndVerse = mentionNode.getEndVerse() || 0;
-              const hasVerseText = !!mentionNode.getVerseText();
 
               const hasChanged =
                 currentBook !== foundBook.longName ||
@@ -1006,7 +1012,6 @@ export function BibleMentionPlugin({
   const $createBibleMentionNodeSync = useCallback(
     (textNode: TextNode): BibleMentionNode => {
       const text = textNode.getTextContent();
-      console.log({ text });
 
       // Create a non-global version of the regex to get capture groups
       const bookNames = Object.keys(BIBLE_BOOKS)
@@ -1066,7 +1071,7 @@ export function BibleMentionPlugin({
           endVerse
         );
 
-        console.log("====== FETCH FOR VERSE TEXT ======");
+        // console.log("====== FETCH FOR VERSE TEXT ======");
         handleMentionUpdate({ isFirstUpdate: true });
 
         return mentionNode;
