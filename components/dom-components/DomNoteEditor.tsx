@@ -17,7 +17,6 @@ import { TTheme } from "@/types";
 import { $generateHtmlFromNodes } from "@lexical/html";
 import { $getRoot } from "lexical";
 import { useRef, useState } from "react";
-import { Dimensions } from "react-native";
 import ExampleTheme from "./ExampleTheme";
 import AutoScrollPlugin from "./plugins/AutoScrollPlugin";
 import ReadOnlyPlugin from "./plugins/ReadOnlyPlugin";
@@ -58,7 +57,7 @@ const editorConfig: InitialConfigType = {
 interface DomNoteEditorProps {
   noteId?: string;
   isNewNote?: boolean;
-  onChangeText: (text: string) => void;
+  onChangeText: (key: "title" | "content", text: string) => void;
   theme: TTheme;
   isReadOnly?: boolean;
   value?: string;
@@ -66,13 +65,13 @@ interface DomNoteEditorProps {
   height?: number;
   onSave: () => Promise<void>;
   title?: string;
-  onTitleChange: (title: string) => void;
   fetchBibleVerse: (
     book: string,
     chapter: number,
     startVerse: number,
     endVerse: number
   ) => Promise<string>;
+  onDownloadPdf?: (htmlContent: string, noteTitle: string) => Promise<void>;
   // dom: import("expo/dom").DOMProps;
 }
 
@@ -85,12 +84,13 @@ const DomNoteEditor = ({
   height,
   onSave,
   title = "",
-  onTitleChange,
   fetchBibleVerse,
+  onDownloadPdf,
 }: DomNoteEditorProps) => {
   const { colors } = theme;
   const isLoadingInitialContent = useRef(false);
   useThemeVariables(theme);
+  const [disableEditor, setDisableEditor] = useState(false);
 
   const [toolbarHeight, setToolbarHeight] = useState({
     top: 48,
@@ -104,9 +104,13 @@ const DomNoteEditor = ({
         style={{ width: width || "100%", height: height || "100%" }}
       >
         <LexicalComposer initialConfig={editorConfig}>
-          <ReadOnlyPlugin isReadOnly={isReadOnly} />
+          <ReadOnlyPlugin isReadOnly={isReadOnly || disableEditor} />
           <HashtagPlugin />
+          <HistoryPlugin />
+          <AutoFocusPlugin />
+          <AutoScrollPlugin />
           <BibleMentionPlugin fetchBibleVerse={fetchBibleVerse} />
+
           <div
             className={`editor-container  text-sm text-left w-full h-full relative font-normal rounded-lg flex flex-col`}
             style={{ paddingTop: isReadOnly ? 0 : toolbarHeight.top }}
@@ -116,6 +120,8 @@ const DomNoteEditor = ({
                 <TopToolbarPlugin
                   onSave={onSave}
                   activeColor={colors.notification}
+                  title={title}
+                  onDownloadPdf={onDownloadPdf}
                   onTopToolbarHeightChange={(height: number) => {
                     setToolbarHeight((prev) => ({ ...prev, top: height }));
                   }}
@@ -126,13 +132,22 @@ const DomNoteEditor = ({
             <div className="editor-inner !bg-white flex-1 overflow-y-auto">
               {/* Title Field */}
               {!isReadOnly && (
-                <div className="px-4 py-3 border-b border-gray-200 bg-white">
+                <div
+                  className={`px-4 py-3 border-b border-gray-200 bg-white ${
+                    disableEditor ? "border-b-2 border-b-theme-text" : ""
+                  }`}
+                >
                   <input
                     type="text"
                     defaultValue={title}
-                    onChange={(e) => onTitleChange(e.target.value)}
-                    placeholder="Enter note title..."
-                    className="w-full text-xl font-semibold bg-transparent border-none outline-none placeholder-gray-400 text-gray-900 "
+                    onFocus={(e) => setDisableEditor(true)}
+                    onBlur={(e) => setDisableEditor(false)}
+                    // onChange={(e) => console.log(e.target.value)}
+                    onChange={(e) => onChangeText("title", e.target.value)}
+                    placeholder="Titulo: "
+                    className={`w-full text-xl font-semibold bg-transparent border-none outline-none placeholder-gray-400 text-gray-900 ${
+                      !disableEditor ? "opacity-50" : ""
+                    }`}
                   />
                 </div>
               )}
@@ -144,7 +159,7 @@ const DomNoteEditor = ({
                     // className="editor-input dark:!bg-black !bg-white dark:!text-white !text-black !caret-white !pb-[70px]"
                     aria-placeholder={placeholder}
                     placeholder={
-                      <div className="text-black absolute top-16 left-2 select-none  text-base">
+                      <div className="text-gray-400 absolute top-16 left-2 select-none  text-base">
                         {placeholder}
                       </div>
                     }
@@ -160,15 +175,13 @@ const DomNoteEditor = ({
                     const root = $getRoot();
                     const htmlString = $generateHtmlFromNodes(editor, null);
                     // const textContent = root.getTextContent();
-                    onChangeText(htmlString);
+                    onChangeText("content", htmlString);
                   });
                 }}
                 ignoreHistoryMergeTagChange
                 ignoreSelectionChange
               />
-              <HistoryPlugin />
-              <AutoFocusPlugin />
-              <AutoScrollPlugin />
+
               {isReadOnly && (
                 <LoadHTMLPlugin
                   htmlString={value || ""}

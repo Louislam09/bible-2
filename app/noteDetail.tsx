@@ -425,6 +425,298 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
     printToFile(html, noteInfo?.title?.toUpperCase() || "--");
   };
 
+  const onDownloadPdf = useCallback(
+    async (htmlContent: string, noteTitle: string) => {
+      try {
+        // Process HTML to convert Bible mentions to proper structure
+        const processedHtml = htmlContent.replace(
+          /<span[^>]*data-lexical-bible-mention="true"[^>]*>(.*?)<\/span>/g,
+          (match, content) => {
+            // Extract data attributes from the span
+            const bookMatch = match.match(/data-book="([^"]*)"/);
+            const chapterMatch = match.match(/data-chapter="([^"]*)"/);
+            const verseMatch =
+              match.match(/data-start-verse="([^"]*)"/) ||
+              match.match(/data-verse="([^"]*)"/);
+            const verseTextMatch = match.match(/data-verse-text="([^"]*)"/);
+
+            const book = bookMatch ? bookMatch[1] : "";
+            const chapter = chapterMatch ? chapterMatch[1] : "";
+            const verse = verseMatch ? verseMatch[1] : "";
+            const verseText = verseTextMatch ? verseTextMatch[1] : "";
+
+            // Create the wrapper structure like in the mobile editor
+            let result = `<div class="editor-bible-mention-wrapper">`;
+            result += `<span class="editor-bible-mention" title="${verseText}">${content}</span>`;
+
+            // Add verse text if available and not a placeholder
+            if (
+              verseText &&
+              !verseText.includes("Integrar con base de datos") &&
+              !verseText.includes("Error cargando")
+            ) {
+              result += `<div class="editor-bible-mention-verse">${verseText}</div>`;
+            }
+
+            result += `</div>`;
+            return result;
+          }
+        );
+
+        const styledHtml = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>${noteTitle}</title>
+            <style>
+              * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+              }
+              
+              body {
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                line-height: 1.6;
+                color: #000;
+                background: #fff;
+                padding: 20px;
+                font-size: 15px;
+                font-weight: 400;
+                max-width: 100%;
+                word-wrap: break-word;
+              }
+              
+              .note-title {
+                font-size: 22px;
+                font-weight: 600;
+                margin-bottom: 16px;
+                color: #1a1a1a;
+                border-bottom: 1px solid #e5e5e5;
+                padding-bottom: 8px;
+                text-align: left;
+              }
+              
+              .note-content {
+                max-width: 100%;
+                word-wrap: break-word;
+                font-size: 15px;
+                line-height: 1.6;
+              }
+              
+              /* Editor paragraph styling - matches mobile editor */
+              .editor-paragraph {
+                margin: 0;
+                margin-bottom: 8px;
+                position: relative;
+              }
+              
+              .editor-paragraph:last-child {
+                margin-bottom: 0;
+              }
+              
+              /* Headings - matches mobile editor */
+              .editor-heading-h1, h1 {
+                font-size: 24px;
+                color: #050505;
+                font-weight: 400;
+                margin: 0;
+                margin-bottom: 12px;
+                padding: 0;
+              }
+              
+              .editor-heading-h2, h2 {
+                font-size: 15px;
+                color: #65676b;
+                font-weight: 700;
+                margin: 0;
+                margin-top: 10px;
+                padding: 0;
+                text-transform: uppercase;
+              }
+              
+              /* Quotes - matches mobile editor */
+              .editor-quote, blockquote {
+                margin: 0;
+                margin-left: 20px;
+                font-size: 15px;
+                color: #65676b;
+                border-left-color: #ced0d4;
+                border-left-width: 4px;
+                border-left-style: solid;
+                padding-left: 16px;
+              }
+              
+              /* Lists - matches mobile editor */
+              .editor-list-ul, ul {
+                padding: 0;
+                margin: 0.5em 0 0.5em 1.5em;
+                list-style-type: disc;
+              }
+              
+              .editor-list-ol, ol {
+                padding: 0;
+                margin: 0.5em 0 0.5em 1.5em;
+                list-style-type: decimal;
+              }
+              
+              .editor-listitem, li {
+                margin: 0.25em 0;
+                padding-left: 0.25em;
+                line-height: 1.5;
+              }
+              
+              /* Text formatting - matches mobile editor */
+              .editor-text-bold, strong, b {
+                font-weight: bold;
+              }
+              
+              .editor-text-italic, em, i {
+                font-style: italic;
+              }
+              
+              .editor-text-underline, u {
+                text-decoration: underline;
+              }
+              
+              .editor-text-strikethrough, s, del {
+                text-decoration: line-through;
+              }
+              
+              .editor-text-code, code {
+                background-color: #f0f2f5;
+                padding: 1px 0.25rem;
+                font-family: Menlo, Consolas, Monaco, monospace;
+                font-size: 94%;
+                border-radius: 3px;
+              }
+              
+              /* Code blocks */
+              .editor-code, pre {
+                background-color: #f0f2f5;
+                font-family: Menlo, Consolas, Monaco, monospace;
+                display: block;
+                padding: 8px 8px 8px 52px;
+                line-height: 1.53;
+                font-size: 13px;
+                margin: 8px 0;
+                border-radius: 4px;
+                overflow-x: auto;
+                position: relative;
+              }
+              
+              /* Bible mentions - matches mobile editor exactly */
+              .editor-bible-mention-wrapper {
+                display: inline-block;
+                margin: 4px 0;
+                max-width: 100%;
+              }
+              
+              .editor-bible-mention {
+                background-color: rgba(34, 197, 94, 0.15);
+                color: #15803d;
+                font-weight: 500;
+                padding: 2px 6px;
+                border-radius: 4px;
+                text-decoration: none;
+                border: 1px solid rgba(34, 197, 94, 0.3);
+                position: relative;
+                display: inline-block;
+              }
+              
+              .editor-bible-mention-verse {
+                background-color: rgba(34, 197, 94, 0.05);
+                color: #374151;
+                font-style: italic;
+                padding: 8px 12px;
+                margin-top: 4px;
+                border-left: 3px solid #22c55e;
+                border-radius: 0 4px 4px 0;
+                font-size: 14px;
+                line-height: 1.4;
+                display: block;
+                max-width: 100%;
+                word-wrap: break-word;
+              }
+              
+              /* Hashtags - matches mobile editor */
+              .editor-hashtag {
+                background-color: rgba(88, 144, 255, 0.15);
+                color: #1d4ed8;
+                font-weight: 500;
+                padding: 2px 4px;
+                border-radius: 4px;
+                text-decoration: none;
+              }
+              
+              /* Text alignment */
+              .text-left { text-align: left; }
+              .text-center { text-align: center; }
+              .text-right { text-align: right; }
+              .text-justify { text-align: justify; }
+              
+              /* Mobile-friendly adjustments */
+              @media screen and (max-width: 768px) {
+                body {
+                  padding: 15px;
+                  font-size: 14px;
+                }
+                
+                .note-title {
+                  font-size: 20px;
+                }
+                
+                .editor-heading-h1, h1 {
+                  font-size: 22px;
+                }
+              }
+              
+              /* Print optimizations */
+              @media print {
+                body {
+                  padding: 15px;
+                  font-size: 14px;
+                }
+                
+                .note-title {
+                  page-break-after: avoid;
+                }
+                
+                .editor-heading-h1, .editor-heading-h2, h1, h2, h3 {
+                  page-break-after: avoid;
+                }
+                
+                .editor-quote, blockquote {
+                  page-break-inside: avoid;
+                }
+                
+                .editor-bible-mention-wrapper {
+                  page-break-inside: avoid;
+                }
+              }
+            </style>
+          </head>
+          <body>
+            <div class="note-title">${noteTitle}</div>
+            <div class="note-content">
+              ${processedHtml}
+            </div>
+          </body>
+        </html>
+      `;
+
+        // Use the existing printToFile function from usePrintAndShare hook
+        await printToFile(styledHtml, noteTitle || "nota");
+      } catch (error) {
+        console.error("Error generating PDF:", error);
+        Alert.alert("Error", "No se pudo generar el PDF");
+      }
+    },
+    [printToFile, theme.colors.notification]
+  );
+
   if (isLoading) {
     return (
       <View style={styles.activiyContainer}>
@@ -450,7 +742,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
         <View style={styles.noteHeaderSubtitleContainer}>
           <Text
             numberOfLines={1}
-            // ellipsizeMode="tail"
+            ellipsizeMode="tail"
             style={styles.noteHeaderTitle}
           >
             {noteInfo?.title}
@@ -469,7 +761,12 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
             )}
           </Text>
         </View>
-        <TouchableOpacity onPress={() => onShare()} style={{ marginRight: 10 }}>
+        <TouchableOpacity
+          onPress={() =>
+            onDownloadPdf(noteInfo?.note_text || "", noteInfo?.title || "")
+          }
+          style={{ marginRight: 10 }}
+        >
           <Icon name="Share2" size={24} color={theme.colors.text} />
         </TouchableOpacity>
       </View>
@@ -482,25 +779,12 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
         style={{
           flex: 1,
           width: "100%",
-          // backgroundColor: "white",
         }}
       >
         <Stack.Screen
           options={{
             headerShown: isView,
             header: ViewModeHeader,
-            // ...singleScreenHeader({
-            //   theme,
-            //   title: "",
-            //   titleIcon: "NotebookPen",
-            //   headerRightProps: {
-            //     headerRightIconColor: theme.colors.primary,
-            //     headerRightIcon: "Share2",
-            //     onPress: onShare,
-            //     disabled: false,
-            //     style: { opacity: 1 },
-            //   },
-            // }),
           }}
         />
         <View style={styles.container}>
@@ -550,22 +834,22 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
                   height: isView ? 0 : Constants.statusBarHeight,
                 }}
               />
+
               <DomNoteEditor
                 isReadOnly={isView}
                 theme={theme}
                 noteId={noteId?.toString()}
                 isNewNote={isNewNote}
-                onChangeText={(text: string) =>
-                  onContentChange("content", text)
+                onChangeText={(key: string, text: string) =>
+                  onContentChange(key, text)
                 }
                 value={noteInfo?.note_text || ""}
-                title={noteContent.title}
+                title={noteInfo?.title || ""}
                 width={width}
                 height={height}
                 onSave={onSave}
-                onTitleChange={(text: string) => onContentChange("title", text)}
                 fetchBibleVerse={fetchBibleVerse}
-                // onTitleChange={(text: string) => console.log("title", text)}
+                onDownloadPdf={onDownloadPdf}
                 // dom={{}}
               />
             </>
@@ -664,8 +948,9 @@ const getStyles = ({ colors, dark }: TTheme) =>
     noteHeaderSubtitleContainer: {
       gap: 4,
       flexDirection: "column",
-      width: "auto",
+      width: "70%",
       backgroundColor: "transparent",
+      // flex: 1,
     },
     activiyContainer: {
       flex: 1,

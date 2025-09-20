@@ -29,6 +29,7 @@ import "../styles.css";
 import DropdownColorPicker from "../ui/DropdownColorPicker";
 import { useToolbarState } from "../context/ToolbarContext";
 import FontSize, { parseFontSizeForToolbar } from "./fontSize";
+import DownloadPdfPlugin from "./DownloadPdfPlugin";
 
 const LowPriority = 1;
 
@@ -41,6 +42,8 @@ interface TopToolbarPluginProps {
   activeColor?: string;
   onSave: () => Promise<void>;
   onTopToolbarHeightChange?: (height: number) => void;
+  title?: string;
+  onDownloadPdf?: (htmlContent: string, noteTitle: string) => Promise<void>;
 }
 
 export default function TopToolbarPlugin({
@@ -48,6 +51,8 @@ export default function TopToolbarPlugin({
   activeColor,
   onSave,
   onTopToolbarHeightChange,
+  title,
+  onDownloadPdf,
 }: TopToolbarPluginProps) {
   const [editor] = useLexicalComposerContext();
   const toolbarRef = useRef<HTMLDivElement>(null);
@@ -311,6 +316,13 @@ export default function TopToolbarPlugin({
         color={"#000"}
         onChange={onBgColorSelect}
         title="bg color"
+      />
+
+      <DownloadPdfPlugin
+        title={title}
+        activeColor={activeColor}
+        className="spaced"
+        onDownloadPdf={onDownloadPdf}
       />
 
       <button

@@ -11,23 +11,10 @@ interface LoadHTMLPluginProps {
   onLoadEnd?: () => void;
 }
 
-// Replace all editor content with HTML
-{
-  /* <LoadHTMLPlugin htmlString="<p>Hello <strong>world</strong>!</p>" />
-
-// Append HTML to existing content
-<LoadHTMLPlugin 
-  htmlString="<p>Additional content</p>" 
-  shouldClearEditor={false} 
-  shouldAppend={true} 
-/>
-
-// Insert HTML at current cursor position
-<LoadHTMLPlugin 
-  htmlString="<em>Inserted text</em>" 
-  shouldClearEditor={false} 
-  shouldAppend={false} 
-/> */
+const sanitizeHTML = (html: string) => {
+  return html
+    .replace(/<br\s*\/?>/gi, "<p />")
+    .trim();
 }
 
 function LoadHTMLPlugin({
@@ -49,7 +36,7 @@ function LoadHTMLPlugin({
     editor.update(() => {
       // Parse the HTML string
       const parser = new DOMParser();
-      const dom = parser.parseFromString(htmlString, "text/html");
+      const dom = parser.parseFromString(sanitizeHTML(htmlString), "text/html");
 
       // Generate Lexical nodes from the DOM
       const nodes = $generateNodesFromDOM(editor, dom);
