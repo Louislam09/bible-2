@@ -114,19 +114,19 @@ const NotificationSettingsScreen = () => {
     try {
       await Notifications.scheduleNotificationAsync({
         content: {
-          title: 'Look at that notification',
+          title: "Look at that notification",
           body: "I'm so proud of myself!",
         },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
           seconds: 5,
-          channelId: 'default'
+          channelId: "default",
         },
       });
-      console.log('Test notification scheduled successfully');
+      console.log("Test notification scheduled successfully");
     } catch (error) {
-      console.error('Error scheduling test notification:', error);
-      Alert.alert('Error', `Failed to send test notification: ${error}`);
+      console.error("Error scheduling test notification:", error);
+      Alert.alert("Error", `Failed to send test notification: ${error}`);
     }
   };
 
@@ -142,13 +142,16 @@ const NotificationSettingsScreen = () => {
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
           seconds: 15,
-          channelId: 'default'
+          channelId: "default",
         },
       });
-      console.log('Scheduled test notification scheduled successfully');
+      console.log("Scheduled test notification scheduled successfully");
     } catch (error) {
-      console.error('Error scheduling scheduled test notification:', error);
-      Alert.alert('Error', `Failed to send scheduled test notification: ${error}`);
+      console.error("Error scheduling scheduled test notification:", error);
+      Alert.alert(
+        "Error",
+        `Failed to send scheduled test notification: ${error}`
+      );
     }
   };
 
@@ -184,7 +187,6 @@ const NotificationSettingsScreen = () => {
     });
   };
 
-
   const sections: TSection[] = useMemo(() => {
     return [
       {
@@ -217,15 +219,15 @@ const NotificationSettingsScreen = () => {
           },
           ...(notificationPreferences.dailyVerseEnabled
             ? [
-              {
-                label: "Hora de Notificación",
-                extraText: "Configura cuándo recibir el versículo diario",
-                iconName: "Clock" as keyof typeof icons,
-                action: () => setModalVisible(true),
-                badge: notificationPreferences.dailyVerseTime,
-                color: theme.colors.notification,
-              },
-            ]
+                {
+                  label: "Hora de Notificación",
+                  extraText: "Configura cuándo recibir el versículo diario",
+                  iconName: "Clock" as keyof typeof icons,
+                  action: () => setModalVisible(true),
+                  badge: notificationPreferences.dailyVerseTime,
+                  color: theme.colors.notification,
+                },
+              ]
             : []),
         ],
         hide: !notificationPreferences.notificationEnabled,
@@ -248,7 +250,7 @@ const NotificationSettingsScreen = () => {
             extraText: "Practica y memoriza versículos bíblicos",
             iconName: "Brain" as keyof typeof icons,
             action: handleMemorizationReminder,
-            renderSwitch: true,
+            renderSwitch: false,
             value: notificationPreferences.memorizationReminder,
             color: theme.colors.notification,
           },
@@ -278,8 +280,12 @@ const NotificationSettingsScreen = () => {
             extraText: "Verificar notificaciones programadas",
             iconName: "Hash" as keyof typeof icons,
             action: async () => {
-              const notifications = await notificationService.getScheduledNotifications()
-              Alert.alert("Número de notificaciones programadas", notifications.length.toString())
+              const notifications =
+                await notificationService.getScheduledNotifications();
+              Alert.alert(
+                "Número de notificaciones programadas",
+                notifications.length.toString()
+              );
             },
             color: theme.colors.text,
           },
@@ -288,19 +294,23 @@ const NotificationSettingsScreen = () => {
             extraText: "Cancelar todas las notificaciones programadas",
             iconName: "Trash" as keyof typeof icons,
             action: async () => {
-              Alert.alert("Cancelar todas las notificaciones", "¿Estás seguro de querer cancelar todas las notificaciones programadas?", [
-                {
-                  text: "Cancelar",
-                  style: "cancel",
-                },
-                {
-                  text: "Confirmar",
-                  style: "destructive",
-                  onPress: async () => {
-                    await notificationService.cancelAllNotifications()
+              Alert.alert(
+                "Cancelar todas las notificaciones",
+                "¿Estás seguro de querer cancelar todas las notificaciones programadas?",
+                [
+                  {
+                    text: "Cancelar",
+                    style: "cancel",
                   },
-                },
-              ])
+                  {
+                    text: "Confirmar",
+                    style: "destructive",
+                    onPress: async () => {
+                      await notificationService.cancelAllNotifications();
+                    },
+                  },
+                ]
+              );
             },
             color: theme.colors.text,
           },
@@ -461,7 +471,7 @@ const NotificationSettingsScreen = () => {
             headerRightProps: {
               headerRightIcon: "Settings",
               headerRightIconColor: theme.colors.notification,
-              onPress: () => { },
+              onPress: () => {},
               disabled: true,
               style: { opacity: 0 },
             },
@@ -470,8 +480,6 @@ const NotificationSettingsScreen = () => {
       />
       <ScreenWithAnimation duration={800} icon="Bell" title="Notificaciones">
         <ScrollView style={styles.container}>
-
-
           {sections.map(SettingSection)}
           {(isAdmin || IS_DEV) && <DatabaseDebug />}
 
@@ -518,7 +526,9 @@ const NotificationSettingsScreen = () => {
                     <Picker
                       selectedValue={selectedMinute}
                       style={styles.picker}
-                      onValueChange={(itemValue) => setSelectedMinute(itemValue)}
+                      onValueChange={(itemValue) =>
+                        setSelectedMinute(itemValue)
+                      }
                       dropdownIconColor={theme.colors.text}
                       mode="dropdown"
                     >

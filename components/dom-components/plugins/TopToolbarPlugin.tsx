@@ -324,18 +324,6 @@ export default function TopToolbarPlugin({
         className="spaced"
         onDownloadPdf={onDownloadPdf}
       />
-
-      <button
-        disabled={!canRedo}
-        onClick={() => {
-          console.log("More");
-          // editor.dispatchCommand(REDO_COMMAND, undefined);
-        }}
-        className="toolbar-item"
-        aria-label="More"
-      >
-        <Icon name="EllipsisVertical" size={24} color="black" />
-      </button>
     </div>
   );
 }
