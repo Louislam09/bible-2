@@ -468,7 +468,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
         <html>
           <head>
             <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <meta name="viewport" content="width=device-width, initial-scale=1.2, maximum-scale=2.0, user-scalable=yes, shrink-to-fit=no">
             <title>${noteTitle}</title>
             <style>
               * {
@@ -478,94 +478,108 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
               }
               
               body {
-                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
                 line-height: 1.6;
-                color: #000;
+                color: #111;
                 background: #fff;
                 padding: 20px;
-                font-size: 15px;
-                font-weight: 400;
+                font-size: 2rem;
                 max-width: 100%;
+                margin: 0;
                 word-wrap: break-word;
+                text-align: left;
+                min-height: 100vh;
+                zoom: 1.1;
               }
               
               .note-title {
-                font-size: 22px;
-                font-weight: 600;
+                font-size: 3rem;
+                font-weight: 700;
                 margin-bottom: 16px;
-                color: #1a1a1a;
-                border-bottom: 1px solid #e5e5e5;
+                color: #000;
+                text-align: center;
+                line-height: 1.4;
+                border-bottom: 2px solid #ddd;
                 padding-bottom: 8px;
-                text-align: left;
               }
               
               .note-content {
                 max-width: 100%;
                 word-wrap: break-word;
-                font-size: 15px;
+                font-size: 2rem;
                 line-height: 1.6;
+                text-align: left;
+                color: #111;
               }
               
-              /* Editor paragraph styling - matches mobile editor */
-              .editor-paragraph {
-                margin: 0;
-                margin-bottom: 8px;
-                position: relative;
+              /* Paragraph styling for clean PDF */
+              .editor-paragraph, p {
+                margin: 0 0 12px 0;
+                font-size: 2rem;
+                line-height: 1.6;
+                color: #111;
+                text-align: left;
+                text-indent: 0;
               }
               
-              .editor-paragraph:last-child {
+              .editor-paragraph:last-child, p:last-child {
                 margin-bottom: 0;
               }
               
-              /* Headings - matches mobile editor */
+              /* Headings for clean PDF */
               .editor-heading-h1, h1 {
-                font-size: 24px;
-                color: #050505;
-                font-weight: 400;
-                margin: 0;
-                margin-bottom: 12px;
+                font-size: 2.5rem;
+                color: #000;
+                font-weight: 700;
+                margin: 20px 0 10px 0;
                 padding: 0;
+                line-height: 1.4;
+                text-align: left;
               }
               
               .editor-heading-h2, h2 {
-                font-size: 15px;
-                color: #65676b;
-                font-weight: 700;
-                margin: 0;
-                margin-top: 10px;
+                font-size: 2.2rem;
+                color: #000;
+                font-weight: 600;
+                margin: 16px 0 8px 0;
                 padding: 0;
-                text-transform: uppercase;
+                line-height: 1.4;
+                text-align: left;
               }
               
-              /* Quotes - matches mobile editor */
+              /* Quotes for clean PDF */
               .editor-quote, blockquote {
-                margin: 0;
-                margin-left: 20px;
-                font-size: 15px;
-                color: #65676b;
-                border-left-color: #ced0d4;
-                border-left-width: 4px;
-                border-left-style: solid;
-                padding-left: 16px;
+                margin: 12px 0;
+                padding: 8px 12px;
+                font-size: 14px;
+                color: #555;
+                border-left: 3px solid #ccc;
+                background-color: #f9f9f9;
+                font-style: italic;
+                line-height: 1.5;
               }
               
-              /* Lists - matches mobile editor */
+              /* Lists for clean PDF */
               .editor-list-ul, ul {
                 padding: 0;
-                margin: 0.5em 0 0.5em 1.5em;
+                margin: 12px 0 12px 20px;
                 list-style-type: disc;
+                font-size: 2rem;
               }
               
               .editor-list-ol, ol {
                 padding: 0;
-                margin: 0.5em 0 0.5em 1.5em;
+                margin: 12px 0 12px 20px;
                 list-style-type: decimal;
+                font-size: 2rem;
               }
               
               .editor-listitem, li {
-                margin: 0.25em 0;
-                padding-left: 0.25em;
-                line-height: 1.5;
+                margin: 6px 0;
+                padding-left: 4px;
+                line-height: 1.6;
+                font-size: 2rem;
+                color: #111;
               }
               
               /* Text formatting - matches mobile editor */
@@ -586,68 +600,61 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
               }
               
               .editor-text-code, code {
-                background-color: #f0f2f5;
-                padding: 1px 0.25rem;
-                font-family: Menlo, Consolas, Monaco, monospace;
-                font-size: 94%;
+                background-color: #f5f5f5;
+                padding: 2px 4px;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 13px;
                 border-radius: 3px;
+                border: 1px solid #ddd;
               }
               
               /* Code blocks */
               .editor-code, pre {
-                background-color: #f0f2f5;
-                font-family: Menlo, Consolas, Monaco, monospace;
+                background-color: #f5f5f5;
+                font-family: 'Courier New', Courier, monospace;
                 display: block;
-                padding: 8px 8px 8px 52px;
-                line-height: 1.53;
-                font-size: 13px;
-                margin: 8px 0;
+                padding: 12px;
+                line-height: 1.4;
+                font-size: 12px;
+                margin: 12px 0;
                 border-radius: 4px;
+                border: 1px solid #ddd;
                 overflow-x: auto;
-                position: relative;
               }
               
-              /* Bible mentions - matches mobile editor exactly */
+              /* Bible mentions for clean PDF */
               .editor-bible-mention-wrapper {
-                display: inline-block;
-                margin: 4px 0;
-                max-width: 100%;
+                display: block;
+                margin: 12px 0;
+                padding: 8px;
+                background-color: #f8f9fa;
+                border-left: 4px solid #0066cc;
+                border-radius: 6px;
               }
               
               .editor-bible-mention {
-                background-color: rgba(34, 197, 94, 0.15);
-                color: #15803d;
-                font-weight: 500;
-                padding: 2px 6px;
-                border-radius: 4px;
-                text-decoration: none;
-                border: 1px solid rgba(34, 197, 94, 0.3);
-                position: relative;
-                display: inline-block;
+                color: #0066cc;
+                font-weight: 600;
+                font-size: 2rem;
+                display: block;
+                margin-bottom: 6px;
               }
               
               .editor-bible-mention-verse {
-                background-color: rgba(34, 197, 94, 0.05);
-                color: #374151;
-                font-style: italic;
-                padding: 8px 12px;
-                margin-top: 4px;
-                border-left: 3px solid #22c55e;
-                border-radius: 0 4px 4px 0;
-                font-size: 14px;
-                line-height: 1.4;
-                display: block;
-                max-width: 100%;
-                word-wrap: break-word;
+                color: #111;
+                font-style: normal;
+                font-size: 1.8rem;
+                line-height: 1.6;
+                text-align: left;
+                margin: 0;
+                padding: 0;
               }
               
-              /* Hashtags - matches mobile editor */
+              /* Hashtags for clean PDF */
               .editor-hashtag {
-                background-color: rgba(88, 144, 255, 0.15);
-                color: #1d4ed8;
+                color: #0066cc;
                 font-weight: 500;
-                padding: 2px 4px;
-                border-radius: 4px;
+                font-size: 2rem;
                 text-decoration: none;
               }
               
@@ -657,31 +664,70 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
               .text-right { text-align: right; }
               .text-justify { text-align: justify; }
               
-              /* Mobile-friendly adjustments */
+              /* Mobile-specific optimizations */
               @media screen and (max-width: 768px) {
                 body {
-                  padding: 15px;
-                  font-size: 14px;
+                  font-size: 2.2rem;
+                  padding: 20px;
+                  zoom: 1.15;
                 }
                 
                 .note-title {
-                  font-size: 20px;
+                  font-size: 3.5rem;
+                  margin-bottom: 16px;
+                }
+                
+                .editor-paragraph, p {
+                  font-size: 2.2rem;
+                  margin-bottom: 12px;
                 }
                 
                 .editor-heading-h1, h1 {
-                  font-size: 22px;
+                  font-size: 3rem;
+                  margin: 20px 0 10px 0;
+                }
+                
+                .editor-heading-h2, h2 {
+                  font-size: 2.6rem;
+                  margin: 16px 0 8px 0;
+                }
+                
+                .editor-bible-mention-wrapper {
+                  margin: 12px 0;
+                  padding: 8px;
+                }
+                
+                .editor-bible-mention {
+                  font-size: 2.2rem;
+                  margin-bottom: 6px;
+                }
+                
+                .editor-bible-mention-verse {
+                  font-size: 2rem;
+                }
+                
+                .editor-list-ul, .editor-list-ol, ul, ol {
+                  font-size: 2.2rem;
+                  margin: 12px 0 12px 20px;
+                }
+                
+                .editor-listitem, li {
+                  font-size: 2.2rem;
+                  margin: 6px 0;
                 }
               }
               
               /* Print optimizations */
               @media print {
                 body {
-                  padding: 15px;
-                  font-size: 14px;
+                  padding: 20px;
+                  font-size: 2rem;
+                  max-width: 100%;
                 }
                 
                 .note-title {
                   page-break-after: avoid;
+                  font-size: 3rem;
                 }
                 
                 .editor-heading-h1, .editor-heading-h2, h1, h2, h3 {
@@ -694,6 +740,14 @@ const NoteDetail: React.FC<NoteDetailProps> = ({}) => {
                 
                 .editor-bible-mention-wrapper {
                   page-break-inside: avoid;
+                }
+                
+                .editor-paragraph, p {
+                  font-size: 2rem;
+                }
+                
+                .editor-bible-mention-verse {
+                  font-size: 1.8rem;
                 }
               }
             </style>
