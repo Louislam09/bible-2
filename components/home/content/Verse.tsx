@@ -262,7 +262,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     const reference = `${getBookDetail(item?.book_number).longName} ${item.chapter
       }:${item.verse}`;
     bibleState$.handleSelectVerseForNote(verseText);
-    router.push({ pathname: "/quote", params: { text: verseText, reference } });
+    router.push({ pathname: "/quoteDom", params: { text: verseText, reference } });
   };
 
   const onWordClicked = (code: string) => {

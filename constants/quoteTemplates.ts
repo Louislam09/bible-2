@@ -23,7 +23,6 @@ export const quoteTemplates = [
      font-family: 'Montserrat', sans-serif;
      color: #1a1a1a;
      margin: 0 1rem;
-       margin: 0 1rem;
    }
 
    .quote-box {
@@ -31,6 +30,7 @@ export const quoteTemplates = [
      border-radius: 25px;
      padding: 3rem 4rem;
      max-width: 650px;
+     margin: 0 auto;
      box-shadow: 0 25px 40px rgba(0,0,0,0.25);
      position: relative;
      text-align: center;

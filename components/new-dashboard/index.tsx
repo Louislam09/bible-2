@@ -161,7 +161,7 @@ const NewDashboard = () => {
     {
       icon: "Quote",
       label: "Cita",
-      action: () => navigation.navigate(Screens.Quote),
+      action: () => navigation.navigate(Screens.QuoteDom),
       color: "#CDAA7D",
       isNew: isWithinTimeframe("1w", new Date("2025-06-05")).isActive,
     },
@@ -264,7 +264,7 @@ const NewDashboard = () => {
       {
         icon: "LayoutGrid",
         label: "Lista de Libro",
-        action: () => navigation.navigate(Screens.ChooseBook, {}),
+        action: () => navigation.navigate(Screens.ChooseReferenceDom, {}),
         color: "#b76e5b",
       },
       {
@@ -315,7 +315,7 @@ const NewDashboard = () => {
         <MainSection list={mainActionItems} theme={theme} />
         <StudyTools list={studyToolItems} theme={theme} />
         <AdditionalResources list={additionalResourceList} theme={theme} />
-        
+
         {/* BUY ME A COFFE */}
         <BuyMeACoffeeButton />
         {/* <TouchableOpacity

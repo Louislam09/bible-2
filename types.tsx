@@ -30,6 +30,7 @@ export enum Screens {
   Dashboard = "(dashboard)",
   Settings = "settings",
   Quote = "quote",
+  QuoteDom = "quoteDom",
   Home = "home",
   Search = "(search)",
   Concordance = "concordance",
@@ -70,6 +71,7 @@ export const ScreensName: TScreensName = {
   [Screens.Home]: "Santa Escritura",
   [Screens.Search]: "Busqueda",
   [Screens.Quote]: "Cita",
+  [Screens.QuoteDom]: "Cita (DOM)",
   [Screens.Concordance]: "Concordancia",
   [Screens.ChooseBook]: "Libros",
   [Screens.ChooseReferenceDom]: "Libros",
@@ -109,6 +111,7 @@ export type RootTabParamList = {
   dashboard: undefined;
   settings: undefined;
   quote: undefined;
+  quoteDom: undefined;
   home: undefined;
   chooseGame: undefined;
   book: undefined;
@@ -134,6 +137,7 @@ export type RootStackParamList = {
   dashboard: NavigatorScreenParams<RootTabParamList> | undefined;
   settings: NavigatorScreenParams<RootTabParamList> | undefined;
   quote: NavigatorScreenParams<RootTabParamList> | undefined;
+  quoteDom: NavigatorScreenParams<RootTabParamList> | undefined;
   home: NavigatorScreenParams<RootTabParamList> | HomeParams;
   book: NavigatorScreenParams<RootTabParamList> | undefined;
   favorite: NavigatorScreenParams<RootTabParamList> | undefined;

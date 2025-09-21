@@ -11,7 +11,6 @@ import { useBibleContext } from "../../../context/BibleContext";
 import BottomModal from "@/components/BottomModal";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
-import { iconSize } from "@/constants/size";
 import { useDBContext } from "@/context/databaseContext";
 import { useHaptics } from "@/hooks/useHaptics";
 import useParams from "@/hooks/useParams";
@@ -22,7 +21,6 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { batch } from "@legendapp/state";
 import { use$ } from "@legendapp/state/react";
 import { useNavigation, useRouter } from "expo-router";
-import ProgressBar from "../footer/ProgressBar";
 import VersionList from "./VersionList";
 
 interface HeaderInterface { }
@@ -58,10 +56,9 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
   const router = useRouter();
   const navigation = useNavigation();
   const isSmallSDevice = width < 300;
+  const headerIconSize = isSmallSDevice ? 26 : 24;
 
   const styles = getStyles(theme);
-  const headerIconSize = isSmallSDevice ? 26 : 24;
-  const fontBottomSheetModalRef = useRef<BottomSheetModal>(null);
   const versionRef = useRef<BottomSheetModal>(null);
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
   const isInterlineal = [

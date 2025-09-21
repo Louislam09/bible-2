@@ -5,7 +5,7 @@ import useAudioPlayer from "@/hooks/useAudioPlayer";
 import { EBibleVersions, Screens } from "@/types";
 import { LinearGradient } from "expo-linear-gradient";
 import { FC, useCallback, useEffect, useRef } from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, useWindowDimensions } from "react-native";
 
 import BottomModal from "@/components/BottomModal";
 import Icon from "@/components/Icon";
@@ -43,6 +43,11 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const netInfo = useNetwork();
   const { isConnected } = netInfo;
   const FOOTER_ICON_SIZE = iconSize;
+  const { width } = useWindowDimensions();
+
+  const isSmallSDevice = width < 300;
+  const footerIconSize = isSmallSDevice ? 26 : 24;
+
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const playRef = useRef<BottomSheetModal>(null);
@@ -221,7 +226,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           <Icon
             name={"ArrowLeft"}
             // name={"ChevronsLeft"}
-            size={FOOTER_ICON_SIZE}
+            size={footerIconSize}
             style={[styles.icon, { marginHorizontal: 0 }]}
           />
         </TouchableOpacity>
@@ -244,7 +249,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           <Icon
             name={"ArrowRight"}
             // name={"ChevronsRight"}
-            size={FOOTER_ICON_SIZE}
+            size={footerIconSize}
             style={[styles.icon, { marginHorizontal: 0 }]}
           />
         </TouchableOpacity>
@@ -259,7 +264,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
             <Icon
               name={isPlaying ? "AudioLines" : "Play"}
               color="white"
-              size={FOOTER_ICON_SIZE}
+              size={footerIconSize}
             />
           </TouchableOpacity>
         </View>

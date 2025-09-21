@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import DomSwipeTutor from "../dom-components/DomSwipeTutor";
 
 interface QuoteNavigationDotsProps {
   currentIndex: number;

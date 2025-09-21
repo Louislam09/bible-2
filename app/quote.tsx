@@ -14,15 +14,12 @@ import { bibleState$ } from "@/state/bibleState";
 import { TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { use$ } from "@legendapp/state/react";
-import * as FileSystem from "expo-file-system";
 import { Stack, useLocalSearchParams, useNavigation } from "expo-router";
-import * as Sharing from "expo-sharing";
 import React, {
-  useCallback,
   useEffect,
   useMemo,
   useRef,
-  useState,
+  useState
 } from "react";
 import {
   ActivityIndicator,
@@ -153,21 +150,15 @@ type QuoteProps = {};
 
 const Quote: React.FC<QuoteProps> = () => {
   const { theme } = useMyTheme();
-  const navigation = useNavigation();
   const styles = useMemo(() => getStyles(theme), [theme]);
-  const { printToFile } = usePrintAndShare();
-  const { createNote } = useNoteService();
   const [quoteText, setQuoteText] = useState("");
-  const [title, setTitle] = useState("");
   const [selectedColor, setSelectedColor] = useState(COLORS[0]);
   const [selectedFont, setSelectedFont] = useState<FontType>(FONTS[0]);
   const [selectedTemplate, setSelectedTemplate] = useState(quoteTemplates[0]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
   const [customMode, setCustomMode] = useState(false);
   const [reference, setReference] = useState("");
   const webViewRef = useRef<WebView>(null);
-  const [screenshotUri, setScreenshotUri] = useState<string | null>(null);
   const [currentTemplateIndex, setCurrentTemplateIndex] = useState(0);
   const {
     pan,

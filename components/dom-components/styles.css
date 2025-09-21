@@ -85,7 +85,8 @@ h1 {
   position: relative;
   tab-size: 1;
   outline: 0;
-  padding: 15px 10px 40px 10px; /* Moderate bottom padding - AutoScrollPlugin handles the rest */
+  padding: 15px 10px 40px 10px;
+  /* Moderate bottom padding - AutoScrollPlugin handles the rest */
   caret-color: #444;
 }
 
@@ -176,6 +177,7 @@ h1 {
   text-align: right;
   min-width: 25px;
 }
+
 .editor-code:after {
   content: attr(data-highlight-language);
   top: 0;
@@ -791,6 +793,7 @@ button.font-increment {
     linear-gradient(to right, white, transparent);
   user-select: none;
 }
+
 .color-picker-saturation_cursor {
   position: absolute;
   width: 20px;
@@ -801,21 +804,20 @@ button.font-increment {
   box-sizing: border-box;
   transform: translate(-10px, -10px);
 }
+
 .color-picker-hue {
   width: 100%;
   position: relative;
   margin-top: 15px;
   height: 12px;
-  background-image: linear-gradient(
-    to right,
-    rgb(255, 0, 0),
-    rgb(255, 255, 0),
-    rgb(0, 255, 0),
-    rgb(0, 255, 255),
-    rgb(0, 0, 255),
-    rgb(255, 0, 255),
-    rgb(255, 0, 0)
-  );
+  background-image: linear-gradient(to right,
+      rgb(255, 0, 0),
+      rgb(255, 255, 0),
+      rgb(0, 255, 0),
+      rgb(0, 255, 255),
+      rgb(0, 0, 255),
+      rgb(255, 0, 255),
+      rgb(255, 0, 0));
   user-select: none;
   border-radius: 12px;
 }
@@ -853,11 +855,13 @@ button.font-increment {
   align-items: center;
   margin-bottom: 10px;
 }
+
 .Input__label {
   display: flex;
   flex: 1;
   color: #666;
 }
+
 .Input__input {
   display: flex;
   flex: 2;
