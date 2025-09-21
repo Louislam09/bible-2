@@ -112,7 +112,7 @@ const BookList = React.memo(
           isNewVow={index + startIndex >= BookIndexes.Malaquias}
           onPress={() => onBookPress(item)}
           viewLayoutGrid={viewLayoutGrid}
-          isShowName={isShowName}
+          isShowName={false}
           theme={theme}
         />
       ),
@@ -244,29 +244,29 @@ const ChooseBook: React.FC = () => {
               />
             </>
           )}
-          {!isHebrewInterlineal && (
-            <>
-              <View style={styles.tab}>
-                <Icon
-                  name="Hash"
-                  size={16}
-                  color={theme.colors.text}
-                  style={styles.tabIcon}
-                />
-                <Text style={[styles.tabText]}> Nuevo Pacto</Text>
-                <View style={[styles.activeIndicator]} />
-              </View>
-              <BookList
-                data={newTestamentBooks}
-                viewLayoutGrid
-                isShowName={isShowName}
-                book={book as string}
-                onBookPress={handlePress}
-                startIndex={BookIndexes.Malaquias}
-                theme={theme}
+          {/* {!isHebrewInterlineal && ( */}
+          <>
+            <View style={styles.tab}>
+              <Icon
+                name="Hash"
+                size={16}
+                color={theme.colors.text}
+                style={styles.tabIcon}
               />
-            </>
-          )}
+              <Text style={[styles.tabText]}> Nuevo Pacto</Text>
+              <View style={[styles.activeIndicator]} />
+            </View>
+            <BookList
+              data={newTestamentBooks}
+              viewLayoutGrid
+              isShowName={isShowName}
+              book={book as string}
+              onBookPress={handlePress}
+              startIndex={BookIndexes.Malaquias}
+              theme={theme}
+            />
+          </>
+          {/* )} */}
         </View>
       </ScrollView>
     </View>

@@ -34,6 +34,7 @@ export enum Screens {
   Search = "(search)",
   Concordance = "concordance",
   ChooseBook = "chooseBook",
+  ChooseReferenceDom = "chooseReferenceDom",
   ChooseChapterNumber = "chooseChapterNumber",
   ChooseVerseNumber = "chooseVerseNumber",
   Favorite = "favorite",
@@ -71,6 +72,7 @@ export const ScreensName: TScreensName = {
   [Screens.Quote]: "Cita",
   [Screens.Concordance]: "Concordancia",
   [Screens.ChooseBook]: "Libros",
+  [Screens.ChooseReferenceDom]: "Libros",
   [Screens.ChooseChapterNumber]: "Capitulos",
   [Screens.ChooseVerseNumber]: "Versiculos",
   [Screens.Favorite]: "Versiculos Favoritos",
@@ -143,6 +145,9 @@ export type RootStackParamList = {
   | { noteId: number | null; isNewNote: boolean };
   character: NavigatorScreenParams<RootTabParamList> | undefined;
   chooseBook:
+  | NavigatorScreenParams<RootTabParamList>
+  | ChooseChapterNumberParams;
+  chooseReferenceDom:
   | NavigatorScreenParams<RootTabParamList>
   | ChooseChapterNumberParams;
   "(search)": NavigatorScreenParams<RootTabParamList> | { book?: string };

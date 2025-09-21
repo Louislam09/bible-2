@@ -16,10 +16,11 @@ import { use$ } from "@legendapp/state/react";
 import React, {
   FC,
   useCallback,
+  useEffect,
   useMemo,
   useRef
 } from "react";
-import { ActivityIndicator, Animated, StyleSheet } from "react-native";
+import { ActivityIndicator, Animated, StyleSheet, TouchableOpacity } from "react-native";
 import Chapter from "./home/content/Chapter";
 import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
@@ -35,7 +36,7 @@ interface BibleTopProps {
 const BibleTop: FC<BibleTopProps> = (props) => {
   const { theme } = useMyTheme();
   const haptics = useHaptics();
-  const { orientation } = useBibleContext();
+  const { orientation, selectBibleVersion } = useBibleContext();
   const isPortrait = orientation === "PORTRAIT";
   const isDataLoading = use$(() => bibleState$.isDataLoading.top.get());
   const verses = bibleState$.bibleData.topVerses.get() ?? [];
@@ -70,6 +71,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     chapter: chapter,
     verse: verse,
   } = bibleState$.bibleQuery.get();
+  const verseNumber = use$(() => bibleState$.bibleQuery.get().verse);
 
   const { nextChapter, previousChapter } = useChangeBookOrChapter({
     book,
@@ -78,8 +80,8 @@ const BibleTop: FC<BibleTopProps> = (props) => {
 
   const initialScrollIndex = useMemo(() => {
     if (verse <= 0) return 0;
-    return Math.min(verse, Math.max(0, verses.length - 1));
-  }, [verse, verses]);
+    return Math.min(verseNumber || verse, Math.max(0, verses.length - 1));
+  }, [verse, verses, verseNumber]);
 
   const onSwipeRight = () => {
     previousChapter();
@@ -97,20 +99,20 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const footerHeight = useRef(new Animated.Value(1)).current;
 
   const handleScroll = useCallback((direction: "up" | "down") => {
-    console.log("handleScroll", direction);
-    const toValue = direction === "up" ? 1 : 0;
-    Animated.parallel([
-      Animated.timing(headerHeight, {
-        toValue,
-        duration: 200,
-        useNativeDriver: false,
-      }),
-      Animated.timing(footerHeight, {
-        toValue,
-        duration: 200,
-        useNativeDriver: false,
-      }),
-    ]).start();
+    // console.log("handleScroll", direction);
+    // const toValue = direction === "up" ? 1 : 0;
+    // Animated.parallel([
+    //   Animated.timing(headerHeight, {
+    //     toValue,
+    //     duration: 200,
+    //     useNativeDriver: false,
+    //   }),
+    //   Animated.timing(footerHeight, {
+    //     toValue,
+    //     duration: 200,
+    //     useNativeDriver: false,
+    //   }),
+    // ]).start();
   }, []);
 
   const containerStyle = useMemo(
@@ -234,8 +236,32 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     bibleState$.clearSelection();
   }, []);
 
+  const onSelectBibleVersion = (version: string) => {
+    bibleState$.clearSelection();
+    selectBibleVersion(version);
+    bibleState$.changeBibleQuery({
+      isBibleBottom: false,
+      shouldFetch: true,
+      isHistory: false,
+    });
+    haptics.impact.light();
+  };
+
+  const autoChangeBibleVersion = useMemo(() => {
+    return isNewTestamentAndInterlinear || isOldTestamentAndGreekInterlineal;
+  }, [isNewTestamentAndInterlinear, isOldTestamentAndGreekInterlineal])
+
+  useEffect(() => {
+    if (autoChangeBibleVersion) {
+      console.log("autoChange", autoChangeBibleVersion)
+      setTimeout(() => {
+        onSelectBibleVersion(isGreekInterlinear ? EBibleVersions.INTERLINEAR : EBibleVersions.GREEK);
+      }, 50);
+    }
+  }, [autoChangeBibleVersion])
+
   // const MyChapter = isInterlinear ? Chapter : (slowDevice ) ? DomChapter : Chapter;
-  const MyChapter = useDomList ? (isInterlinear? Chapter: DomChapter) : Chapter;
+  const MyChapter = useDomList ? (isInterlinear ? Chapter : DomChapter) : Chapter;
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
@@ -259,8 +285,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
           <View style={styles.loadingContainer}>
             <ActivityIndicator />
           </View>
-        ) : isNewTestamentAndInterlinear ||
-          isOldTestamentAndGreekInterlineal ? (
+        ) : autoChangeBibleVersion ? (
           <View
             style={{
               flex: 1,
@@ -319,6 +344,18 @@ const BibleTop: FC<BibleTopProps> = (props) => {
               {isGreekInterlinear ? "Nuevo" : "Antiguo"} Pacto para usar la
               función interlinear {isGreekInterlinear ? "griego" : "hebreo"}
             </Text>
+
+            <TouchableOpacity
+              style={{
+                backgroundColor: theme.colors.notification,
+                padding: 10,
+                borderRadius: 5,
+                marginTop: 10,
+              }}
+              onPress={() => onSelectBibleVersion(isGreekInterlinear ? EBibleVersions.INTERLINEAR : EBibleVersions.GREEK)}
+            >
+              <Text style={{ color: 'white' }}>Cambiar</Text>
+            </TouchableOpacity>
           </View>
         ) : (
           <MyChapter

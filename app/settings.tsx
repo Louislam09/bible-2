@@ -333,10 +333,11 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
           value: !isAnimationDisabled,
         },
         {
-          label: 'Mejorar Rendimiento',
+          label: 'Mejorar Rendimiento en dispositivos lentos',
           iconName: storedData$.useDomList.get() ? "Rabbit" : "Turtle",
           action: () => storedData$.useDomList.set(!storedData$.useDomList.get()),
-          extraText: "Alternar entre la vista de lista rápida y la vista estándar",
+          // mas rapido para dispositivos lentos
+          extraText: "Versión DOM para mejorar el rendimiento en dispositivos lentos",
           color: storedData$.useDomList.get()
             ? theme.colors.notification
             : theme.colors.text,

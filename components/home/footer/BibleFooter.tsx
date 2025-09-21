@@ -160,7 +160,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
       bibleState$.clearSelection();
       bibleState$.isBottomBibleSearching.set(!!isSplit);
     });
-    navigation?.navigate(Screens.ChooseBook, { ...params });
+    navigation?.navigate(Screens.ChooseReferenceDom, { ...params });
   };
   const onDoubleFooterTitle = () => {
     haptics.impact.medium()
