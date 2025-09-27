@@ -40,6 +40,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const isSplitActived = bibleState$.isSplitActived.get();
   const currentVoiceIdentifier = storedData$.currentVoiceIdentifier.get();
   const currentVoiceRate = storedData$.currentVoiceRate.get() || 1;
+  const useDomComponent = use$(() => storedData$.useDomComponent.get());
   const netInfo = useNetwork();
   const { isConnected } = netInfo;
   const FOOTER_ICON_SIZE = iconSize;
@@ -165,7 +166,8 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
       bibleState$.clearSelection();
       bibleState$.isBottomBibleSearching.set(!!isSplit);
     });
-    navigation?.navigate(Screens.ChooseReferenceDom, { ...params });
+    const screen = useDomComponent ? Screens.ChooseReferenceDom : Screens.ChooseBook;
+    navigation?.navigate(screen, { ...params });
   };
   const onDoubleFooterTitle = () => {
     haptics.impact.medium()

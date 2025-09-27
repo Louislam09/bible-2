@@ -72,7 +72,7 @@ type StoreState = {
     pushToken: string | null;
   };
   dbTableCreated: string[];
-  useDomList: boolean;
+  useDomComponent: boolean;
 };
 
 const initialContext: StoreState = {
@@ -117,7 +117,7 @@ const initialContext: StoreState = {
     pushToken: null,
   },
   dbTableCreated: [],
-  useDomList: false,
+  useDomComponent: false,
 };
 
 export const storedData$ = observable(initialContext);

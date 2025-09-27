@@ -47,7 +47,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const NT_BOOK_NUMBER = 470;
   const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
 
-  const useDomList = use$(() => storedData$.useDomList.get());
+  const useDomComponent = use$(() => storedData$.useDomComponent.get());
 
   const isHebrewInterlinear = [
     EBibleVersions.INTERLINEAR
@@ -261,7 +261,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   }, [autoChangeBibleVersion])
 
   // const MyChapter = isInterlinear ? Chapter : (slowDevice ) ? DomChapter : Chapter;
-  const MyChapter = useDomList ? (isInterlinear ? Chapter : DomChapter) : Chapter;
+  const MyChapter = useDomComponent ? (isInterlinear ? Chapter : DomChapter) : Chapter;
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>

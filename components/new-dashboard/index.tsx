@@ -56,6 +56,7 @@ const NewDashboard = () => {
     lastBottomSideChapter,
     lastBottomSideVerse,
     isAdmin: _isAdmin,
+    useDomComponent
   } = storedData;
   const user = use$(() => storedData$.user.get()) || null;
   const isAdmin = _isAdmin || user?.isAdmin;
@@ -161,7 +162,7 @@ const NewDashboard = () => {
     {
       icon: "Quote",
       label: "Cita",
-      action: () => navigation.navigate(Screens.QuoteDom),
+      action: () => navigation.navigate(useDomComponent ? Screens.QuoteDom : Screens.Quote),
       color: "#CDAA7D",
       isNew: isWithinTimeframe("1w", new Date("2025-06-05")).isActive,
     },
@@ -264,7 +265,7 @@ const NewDashboard = () => {
       {
         icon: "LayoutGrid",
         label: "Lista de Libro",
-        action: () => navigation.navigate(Screens.ChooseReferenceDom, {}),
+        action: () => navigation.navigate(useDomComponent ? Screens.ChooseReferenceDom : Screens.ChooseBook, {}),
         color: "#b76e5b",
       },
       {

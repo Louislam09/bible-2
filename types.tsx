@@ -48,6 +48,7 @@ export enum Screens {
   StrongSearchEntire = "searchStrongWordEntire",
   DictionarySearch = "dictionary",
   NoteDetail = "noteDetail",
+  NoteDetailDom = "noteDetailDom",
   History = "history",
   Hymn = "hymn",
   Timeline = "timeline",
@@ -88,6 +89,7 @@ export const ScreensName: TScreensName = {
   [Screens.StrongSearchEntire]: "Explorador de Números Strong",
   [Screens.DictionarySearch]: "Busqueda en el Diccionario",
   [Screens.NoteDetail]: "Nota",
+  [Screens.NoteDetailDom]: "Nota",
   [Screens.Hymn]: "Selecciona un himnario",
   [Screens.Game]: "Juego Biblico",
   [Screens.AISearch]: "Busqueda Inteligente",
@@ -122,6 +124,7 @@ export type RootTabParamList = {
   downloadManager: undefined;
   notes: undefined;
   noteDetail: undefined;
+  noteDetailDom: undefined;
   favorite: undefined;
   notFound: undefined;
   dictionary: undefined;
@@ -145,6 +148,9 @@ export type RootStackParamList = {
   downloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
   notes: NavigatorScreenParams<RootTabParamList> | { shouldRefresh: boolean };
   noteDetail:
+  | NavigatorScreenParams<RootTabParamList>
+  | { noteId: number | null; isNewNote: boolean };
+  noteDetailDom:
   | NavigatorScreenParams<RootTabParamList>
   | { noteId: number | null; isNewNote: boolean };
   character: NavigatorScreenParams<RootTabParamList> | undefined;

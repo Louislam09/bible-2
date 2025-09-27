@@ -56,6 +56,7 @@ const NotesPage = () => {
     useSyncNotes();
   const notificationService = useNotificationService();
   const user = use$(() => storedData$.user.get()) || null;
+  const useDomComponent = use$(() => storedData$.useDomComponent.get());
 
   const { printToFile } = usePrintAndShare();
   const netInfo = useNetwork();
@@ -77,6 +78,7 @@ const NotesPage = () => {
   const selectedItems = use$(() => noteSelectors$.selectedNoteIds.get());
 
   const reloadNotes = use$(() => bibleState$.reloadNotes.get());
+  const noteDetailScreen = useDomComponent ? Screens.NoteDetailDom : Screens.NoteDetail;
 
   useEffect(() => {
     const getNotes = async () => {
@@ -104,14 +106,14 @@ const NotesPage = () => {
   }, [showSearch]);
 
   const onCreateNewNote = () => {
-    navigation.navigate(Screens.NoteDetail, { noteId: null, isNewNote: true });
+    navigation.navigate(noteDetailScreen, { noteId: null, isNewNote: true });
   };
 
   const onOpenNoteDetail = useCallback(
     (id: number) => {
-      navigation.navigate(Screens.NoteDetail, { noteId: id, isNewNote: false });
+      navigation.navigate(noteDetailScreen, { noteId: id, isNewNote: false });
     },
-    [navigation]
+    [navigation, noteDetailScreen]
   );
 
   const toggleSearch = useCallback(() => {

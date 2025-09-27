@@ -334,15 +334,15 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
         },
         {
           label: 'Mejorar Rendimiento en dispositivos lentos',
-          iconName: storedData$.useDomList.get() ? "Rabbit" : "Turtle",
-          action: () => storedData$.useDomList.set(!storedData$.useDomList.get()),
+          iconName: storedData$.useDomComponent.get() ? "Rabbit" : "Turtle",
+          action: () => storedData$.useDomComponent.set(!storedData$.useDomComponent.get()),
           // mas rapido para dispositivos lentos
           extraText: "Versión DOM para mejorar el rendimiento en dispositivos lentos",
-          color: storedData$.useDomList.get()
+          color: storedData$.useDomComponent.get()
             ? theme.colors.notification
             : theme.colors.text,
           renderSwitch: true,
-          value: storedData$.useDomList.get(),
+          value: storedData$.useDomComponent.get(),
         },
         {
           label: 'Vista de Lista Rápida',

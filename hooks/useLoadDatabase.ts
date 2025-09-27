@@ -175,8 +175,9 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
         await createTables(db);
         await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
         storedData$.dbTableCreated.set([...dbTableCreated, dbName.shortName]);
-        const slowDevice = +getMemorySizeInGB() < 4;
-        storedData$.useDomList.set(slowDevice || false);
+        // Comment this code later
+        // const slowDevice = +getMemorySizeInGB() < 4;
+        // storedData$.useDomComponent.set(slowDevice || false);
       }
 
       if (isMounted.current) {
