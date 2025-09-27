@@ -51,8 +51,10 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   useEffect(() => {
     registerForPushNotificationsAsync().then(
       (token) => {
-        console.log('registerForPushNotificationsAsync successfully', { token })
-        notificationService.initializeNotifications()
+        console.log("registerForPushNotificationsAsync successfully", {
+          token,
+        });
+        notificationService.initializeNotifications();
         // setExpoPushToken(token);
         // if (
         //   token &&
@@ -70,15 +72,15 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
-        console.log("🔔 Notification Received: ", notification);
+        // console.log("🔔 Notification Received: ", notification);
         setNotification(notification);
-        showToast('🔔 Notification Received');
+        // showToast('🔔 Notification Received');
       });
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log('User interacted with notification:', JSON.stringify(response, null, 2));
-        showToast('User interacted with notification');
+        // console.log('User interacted with notification:', JSON.stringify(response, null, 2));
+        // showToast('User interacted with notification');
         // console.log(
         //   "🔔 Notification Response: ",
         //   JSON.stringify(response, null, 2),

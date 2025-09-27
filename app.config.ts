@@ -1,7 +1,7 @@
 import { ConfigContext, ExpoConfig } from "@expo/config";
 
-// const IS_DEV = true;
-const IS_DEV = process.env.APP_VARIANT === "development";
+const IS_DEV = true;
+// const IS_DEV = process.env.APP_VARIANT === "development";
 const IS_PREVIEW = process.env.APP_VARIANT === "preview";
 // const IS_PREVIEW = true
 
@@ -68,6 +68,27 @@ const getAssetPath = () => {
     adaptiveIcon: "./assets/images/adaptive-icon.png",
     monochromeImage: "./assets/images/monochrome-icon.png",
     backgroundImage: "./assets/images/adaptive-icon.png",
+  }
+}
+
+const getAndroidIcons = () => {
+  return {
+    "search": {
+      "foregroundImage": "./assets/images/quick-actions/search-quick.png",
+      "backgroundColor": "#0c3e3d"
+    },
+    "hymn": {
+      "foregroundImage": "./assets/images/quick-actions/hymn-quick.png",
+      "backgroundColor": "#f1abab"
+    },
+    "notes": {
+      "foregroundImage": "./assets/images/quick-actions/notes-quick.png",
+      "backgroundColor": "#4ecdc4"
+    },
+    "game": {
+      "foregroundImage": "./assets/images/quick-actions/game-quick.png",
+      "backgroundColor": "#45b7d1"
+    }
   }
 }
 
@@ -196,6 +217,68 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             enableFTS: true,
             useSQLCipher: false
           }
+        }
+      ],
+      [
+        "expo-quick-actions/icon/plugin",
+        [
+          { "light": "./assets/images/icon.png", "dark": "./assets/images/icon.png" },
+          { "light": "./assets/images/icon-preview.png", "dark": "./assets/images/icon-preview.png" },
+          { "light": "./assets/images/icon-dev.png", "dark": "./assets/images/icon-dev.png" },
+          { "light": "./assets/images/icon-light.png", "dark": "./assets/images/icon-dark.png" },
+          { "light": "./assets/images/gradient.png", "dark": "./assets/images/gradient.png" },
+          { "light": "./assets/images/icon-dark.png", "dark": "./assets/images/icon-dark.png" },
+        ]
+      ],
+      [
+        "expo-quick-actions",
+        {
+          androidIcons: getAndroidIcons(),
+          iosIcons: {
+            "search": "./assets/images/icon.png",
+            "hymn": "./assets/images/icon.png",
+            "notes": "./assets/images/icon.png",
+            "gamepad": "./assets/images/icon.png"
+          },
+          iosActions: [
+            {
+              "id": "search",
+              "title": "Buscar Biblia",
+              "subtitle": "Encuentra versículos y pasajes",
+              "icon": "search",
+              "params": {
+                "href": "/search"
+              }
+            },
+            {
+              "id": "hymn",
+              "title": "Himnarios",
+              "subtitle": "Ver himnarios",
+              "icon": "hymn",
+              "params": {
+                "href": "/hymn"
+              }
+            },
+            {
+              "id": "notes",
+              "title": "Mis Notas",
+              "subtitle": "Lee tus notas",
+              "icon": "notes",
+              "params": {
+                "href": "/notes"
+              }
+            },
+            {
+              "id": "quiz",
+              "title": "Quiz Bíblico",
+              "subtitle": "Practica tus conocimientos",
+              "icon": "gamepad",
+              "params": {
+                "href": "/chooseGame"
+              }
+            }
+          ],
+
         }
       ],
       "expo-asset",

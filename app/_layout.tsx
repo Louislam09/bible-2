@@ -22,42 +22,14 @@ import ErrorBoundary from "react-native-error-boundary";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StackAnimationTypes } from "react-native-screens";
-import '../global.css';
+import "../global.css";
 
 import { NetworkProvider } from "@/context/NetworkProvider";
 import { NotificationProvider } from "@/context/NotificationContext";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
 import BookContentModals from "@/components/book-content-modals";
-
-// Notifications.setNotificationHandler({
-//   handleNotification: async (notification) => {
-//     try {
-//       // Log notification data for debugging
-//       console.log('🔔 Handling notification:', {
-//         title: notification.request.content.title,
-//         body: notification.request.content.body,
-//         data: notification.request.content.data,
-//       });
-
-//       return {
-//         shouldPlaySound: true,
-//         shouldSetBadge: true,
-//         shouldShowBanner: true,
-//         shouldShowList: true,
-//       };
-//     } catch (error) {
-//       console.error('Error handling notification:', error);
-//       // Return default values on error
-//       return {
-//         shouldPlaySound: true,
-//         shouldSetBadge: true,
-//         shouldShowBanner: true,
-//         shouldShowList: true,
-//       };
-//     }
-//   },
-// });
+import { useQuickActions } from "@/hooks/useQuickActions";
 
 const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
 
@@ -117,12 +89,17 @@ const screenAnimations: TScreensName = {
   [Screens.AISearch]: "slide_from_right",
   [Screens.Notification]: "slide_from_right",
   [Screens.SongDetail]: "slide_from_bottom",
+  [Screens.QuoteDom]: "slide_from_right",
+  [Screens.NoteDetailDom]: "slide_from_right",
 };
 
 const App = () => {
   const isAnimationDisabled = use$(() =>
     settingState$.isAnimationDisabled.get()
   );
+
+  // Initialize quick actions
+  useQuickActions();
 
   async function onFetchUpdateAsync() {
     try {
@@ -133,7 +110,7 @@ const App = () => {
         await Updates.reloadAsync();
         ToastAndroid.show("Actualizada ✅", ToastAndroid.SHORT);
       }
-    } catch (error) { }
+    } catch (error) {}
   }
 
   useEffect(() => {

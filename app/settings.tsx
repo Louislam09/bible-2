@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 
+import { AppIconSelector } from "@/components/AppIconSelector";
 import BottomModal from "@/components/BottomModal";
 import ColorSelector from "@/components/ColorSelector";
 import FontSelector from "@/components/FontSelector";
@@ -112,7 +113,6 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
 
   const version = Constants.expoConfig?.version ?? "2.0.0"; // e.g. "1.2.3"
   const build = Constants.expoConfig?.android?.versionCode ?? "";
-  console.log(JSON.stringify(Constants, null, 2))
   const appVersion = ` ${version} (Build ${build})`;
   const isAnimationDisabled = use$(() =>
     settingState$.isAnimationDisabled.get()
@@ -336,11 +336,13 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
           value: !isAnimationDisabled,
         },
         {
-          label: 'Mejorar Rendimiento en dispositivos lentos',
+          label: "Mejorar Rendimiento en dispositivos lentos",
           iconName: storedData$.useDomComponent.get() ? "Rabbit" : "Turtle",
-          action: () => storedData$.useDomComponent.set(!storedData$.useDomComponent.get()),
+          action: () =>
+            storedData$.useDomComponent.set(!storedData$.useDomComponent.get()),
           // mas rapido para dispositivos lentos
-          extraText: "Versión DOM para mejorar el rendimiento en dispositivos lentos",
+          extraText:
+            "Versión DOM para mejorar el rendimiento en dispositivos lentos",
           color: storedData$.useDomComponent.get()
             ? theme.colors.notification
             : theme.colors.text,
@@ -348,13 +350,12 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
           value: storedData$.useDomComponent.get(),
         },
         {
-          label: 'Vista de Lista Rápida',
+          label: "Vista de Lista Rápida",
           iconName: isFlashlist ? "Zap" : "ZapOff",
           action: () => bibleState$.toggleList(),
-          extraText: "Alternar entre la vista de lista rápida y la vista estándar",
-          color: isFlashlist
-            ? theme.colors.notification
-            : theme.colors.text,
+          extraText:
+            "Alternar entre la vista de lista rápida y la vista estándar",
+          color: isFlashlist ? theme.colors.notification : theme.colors.text,
           // renderSwitch: true,
           value: isFlashlist,
         },
@@ -476,7 +477,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
         {
           label: `Versión ${appVersion}`,
           iconName: "Info",
-          action: () => { },
+          action: () => {},
           extraText: `Fecha de Lanzamiento: Mar 13, 2024`,
         },
       ],
@@ -701,9 +702,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
         }}
       />
       <ScreenWithAnimation duration={800} icon="Settings" title="Ajustes">
-
         <ScrollView key={orientation + theme.dark} style={styles.container}>
-
           <View style={styles.searchContainer}>
             <Icon
               name="Search"
@@ -736,7 +735,10 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
             contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}
           >
             {filteredSections.length > 0 ? (
-              filteredSections.map(SettingSection)
+              <>
+                {filteredSections.map(SettingSection)}
+                <AppIconSelector />
+              </>
             ) : (
               <View style={styles.noResultsContainer}>
                 <Icon
