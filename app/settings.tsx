@@ -110,7 +110,10 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
 
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
-  const appVersion = Constants.expoVersion ?? Constants.nativeAppVersion;
+  const version = Constants.expoConfig?.version ?? "2.0.0"; // e.g. "1.2.3"
+  const build = Constants.expoConfig?.android?.versionCode ?? "";
+  console.log(JSON.stringify(Constants, null, 2))
+  const appVersion = ` ${version} (Build ${build})`;
   const isAnimationDisabled = use$(() =>
     settingState$.isAnimationDisabled.get()
   );
