@@ -102,7 +102,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
   const isAuthenticated = use$(() => authState$.isAuthenticated.get());
   const { toggleCloudSync, syncWithCloud, loadFromCloud } = useStorage();
   const [currentSetting, setCurrentBottomSetting] = useState<
-    "font" | "theme" | "fontSize"
+    "font" | "theme" | "fontSize" | "appIcon"
   >("font");
   const [searchQuery, setSearchQuery] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
@@ -137,7 +137,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
   }, []);
 
   const settingHandlePresentModalPress = useCallback(
-    (setting: "font" | "theme" | "fontSize") => {
+    (setting: "font" | "theme" | "fontSize" | "appIcon") => {
       setCurrentBottomSetting(setting);
       settingBottomSheetModalRef.current?.present();
     },
@@ -402,6 +402,13 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
           action: () => settingHandlePresentModalPress("fontSize"),
           extraText: "Ajustar el tamaño del texto",
           badge: `${fontSize}px`,
+        },
+        {
+          label: "Ícono de la App",
+          iconName: "Smartphone",
+          action: () => settingHandlePresentModalPress("appIcon"),
+          extraText: "Cambiar el ícono de la aplicación",
+          color: theme.colors.notification,
         },
       ],
     },
@@ -677,10 +684,23 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
     );
   }, [handleFontSizeChange, fontSize, selectedFont, fontSizes]);
 
+  const AppIcon = useMemo(() => {
+    return () => (
+      <AppIconSelector
+        style={{
+          backgroundColor: theme.colors.background,
+          margin: 0,
+          padding: 16,
+        }}
+      />
+    );
+  }, [theme]);
+
   const BottomChild = {
     font: <Font />,
     theme: <ThemeColor />,
     fontSize: <FontSize />,
+    appIcon: <AppIcon />,
   };
 
   return (
@@ -735,10 +755,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
             contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}
           >
             {filteredSections.length > 0 ? (
-              <>
-                {filteredSections.map(SettingSection)}
-                <AppIconSelector />
-              </>
+              filteredSections.map(SettingSection)
             ) : (
               <View style={styles.noResultsContainer}>
                 <Icon

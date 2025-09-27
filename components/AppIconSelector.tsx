@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Alert, Image } from "react-native";
 import { useAppIcon } from "@/hooks/useAppIcon";
 import { Ionicons } from "@expo/vector-icons";
 import * as Updates from "expo-updates";
+import { useMyTheme } from "@/context/ThemeContext";
 
 interface AppIconSelectorProps {
   style?: any;
@@ -10,6 +11,7 @@ interface AppIconSelectorProps {
 
 export const AppIconSelector: React.FC<AppIconSelectorProps> = ({ style }) => {
   const { currentIcon, isSupported, setIcon, availableIcons } = useAppIcon();
+  const { theme } = useMyTheme();
 
   const getIconImage = (iconName: string) => {
     const iconMap: { [key: string]: any } = {
@@ -64,17 +66,24 @@ export const AppIconSelector: React.FC<AppIconSelectorProps> = ({ style }) => {
         style={[
           {
             padding: 16,
-            backgroundColor: "#f5f5f5",
+            backgroundColor: theme.colors.background,
             borderRadius: 8,
             margin: 16,
           },
           style,
         ]}
       >
-        <Text style={{ fontSize: 16, fontWeight: "600", marginBottom: 8 }}>
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "600",
+            marginBottom: 8,
+            color: theme.colors.text,
+          }}
+        >
           Ícono de la App
         </Text>
-        <Text style={{ color: "#666", fontSize: 14 }}>
+        <Text style={{ color: theme.colors.text + "80", fontSize: 14 }}>
           El cambio de ícono de la app no es compatible con este dispositivo o
           en Expo Go.
         </Text>
@@ -87,20 +96,33 @@ export const AppIconSelector: React.FC<AppIconSelectorProps> = ({ style }) => {
       style={[
         {
           padding: 16,
-          backgroundColor: "#f5f5f5",
+          backgroundColor: theme.colors.background,
           borderRadius: 8,
           margin: 16,
         },
         style,
       ]}
     >
-      <Text style={{ fontSize: 16, fontWeight: "600", marginBottom: 16 }}>
+      <Text
+        style={{
+          fontSize: 16,
+          fontWeight: "600",
+          marginBottom: 16,
+          color: theme.colors.text,
+        }}
+      >
         Ícono de la App
       </Text>
       <View
         style={{ flexDirection: "row", alignItems: "center", marginBottom: 16 }}
       >
-        <Text style={{ color: "#666", fontSize: 14, marginRight: 8 }}>
+        <Text
+          style={{
+            color: theme.colors.text + "80",
+            fontSize: 14,
+            marginRight: 8,
+          }}
+        >
           Ícono actual:
         </Text>
         {currentIcon && (
@@ -111,7 +133,7 @@ export const AppIconSelector: React.FC<AppIconSelectorProps> = ({ style }) => {
               borderRadius: 4,
               overflow: "hidden",
               borderWidth: 1,
-              borderColor: "#e0e0e0",
+              borderColor: theme.colors.text + "30",
             }}
           >
             <Image
@@ -124,7 +146,13 @@ export const AppIconSelector: React.FC<AppIconSelectorProps> = ({ style }) => {
             />
           </View>
         )}
-        <Text style={{ color: "#666", fontSize: 14, marginLeft: 8 }}>
+        <Text
+          style={{
+            color: theme.colors.text + "80",
+            fontSize: 14,
+            marginLeft: 8,
+          }}
+        >
           {availableIcons.find((icon) => icon.name === currentIcon)?.label ||
             "predeterminado"}
         </Text>
@@ -137,11 +165,17 @@ export const AppIconSelector: React.FC<AppIconSelectorProps> = ({ style }) => {
             flexDirection: "row",
             alignItems: "center",
             padding: 12,
-            backgroundColor: currentIcon === icon.name ? "#e3f2fd" : "white",
+            backgroundColor:
+              currentIcon === icon.name
+                ? theme.colors.notification + "20"
+                : theme.colors.text + "10",
             borderRadius: 8,
             marginBottom: 8,
             borderWidth: currentIcon === icon.name ? 2 : 1,
-            borderColor: currentIcon === icon.name ? "#2196f3" : "#e0e0e0",
+            borderColor:
+              currentIcon === icon.name
+                ? theme.colors.notification
+                : theme.colors.text + "30",
           }}
           onPress={() => handleIconChange(icon.name)}
         >
@@ -153,7 +187,10 @@ export const AppIconSelector: React.FC<AppIconSelectorProps> = ({ style }) => {
               marginRight: 12,
               overflow: "hidden",
               borderWidth: currentIcon === icon.name ? 2 : 1,
-              borderColor: currentIcon === icon.name ? "#2196f3" : "#e0e0e0",
+              borderColor:
+                currentIcon === icon.name
+                  ? theme.colors.notification
+                  : theme.colors.text + "30",
             }}
           >
             <Image
@@ -168,7 +205,10 @@ export const AppIconSelector: React.FC<AppIconSelectorProps> = ({ style }) => {
           <Text
             style={{
               fontSize: 16,
-              color: currentIcon === icon.name ? "#2196f3" : "#333",
+              color:
+                currentIcon === icon.name
+                  ? theme.colors.notification
+                  : theme.colors.text,
               fontWeight: currentIcon === icon.name ? "600" : "400",
             }}
           >
@@ -178,7 +218,7 @@ export const AppIconSelector: React.FC<AppIconSelectorProps> = ({ style }) => {
             <Ionicons
               name="checkmark-circle"
               size={20}
-              color="#2196f3"
+              color={theme.colors.notification}
               style={{ marginLeft: "auto" }}
             />
           )}
