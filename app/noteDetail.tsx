@@ -1,3 +1,4 @@
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import DomNoteEditor from "@/components/dom-components/DomNoteEditor";
 import Icon from "@/components/Icon";
 import { KeyboardPaddingView } from "@/components/keyboard-padding";
@@ -41,8 +42,8 @@ import {
   ToastAndroid,
   TouchableOpacity,
 } from "react-native";
+// @ts-ignore
 import "../global.css";
-import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 const { width, height } = Dimensions.get("window");
 
 type NoteDetailProps = {};

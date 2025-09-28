@@ -5,7 +5,7 @@ import BibleProvider from "@/context/BibleContext";
 import DatabaseProvider from "@/context/databaseContext";
 import StorageProvider from "@/context/LocalstoreContext";
 import { MemorizationProvider } from "@/context/MemorizationContext";
-import MyThemeProvider from "@/context/ThemeContext";
+import MyThemeProvider, { useMyTheme } from "@/context/ThemeContext";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { settingState$ } from "@/state/settingState";
 import { Screens, ScreensName } from "@/types";
@@ -15,21 +15,23 @@ import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import { Stack } from "expo-router";
 import * as Updates from "expo-updates";
-import React, { useEffect } from "react";
-import { ToastAndroid } from "react-native";
+import React, { ReactNode, useEffect } from "react";
+import { ToastAndroid, View } from "react-native";
 import { SystemBars } from "react-native-edge-to-edge";
 import ErrorBoundary from "react-native-error-boundary";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StackAnimationTypes } from "react-native-screens";
+// @ts-ignore
 import "../global.css";
 
+import BookContentModals from "@/components/book-content-modals";
 import { NetworkProvider } from "@/context/NetworkProvider";
 import { NotificationProvider } from "@/context/NotificationContext";
+import { useQuickActions } from "@/hooks/useQuickActions";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
-import BookContentModals from "@/components/book-content-modals";
-import { useQuickActions } from "@/hooks/useQuickActions";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
 
@@ -93,6 +95,21 @@ const screenAnimations: TScreensName = {
   [Screens.NoteDetailDom]: "slide_from_right",
 };
 
+const SafeContentView = ({ children }: { children: ReactNode }) => {
+  const insets = useSafeAreaInsets();
+  const { theme } = useMyTheme();
+
+  return <View style={{
+    paddingBottom: insets.bottom,
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    backgroundColor: theme.colors.background
+  }}>
+    {children}
+  </View>
+}
+
 const App = () => {
   const isAnimationDisabled = use$(() =>
     settingState$.isAnimationDisabled.get()
@@ -110,7 +127,7 @@ const App = () => {
         await Updates.reloadAsync();
         ToastAndroid.show("Actualizada ✅", ToastAndroid.SHORT);
       }
-    } catch (error) {}
+    } catch (error) { }
   }
 
   useEffect(() => {
@@ -147,11 +164,13 @@ const App = () => {
                       <QueryProvider>
                         <GestureHandlerRootView style={{ flex: 1 }}>
                           <BottomSheetModalProvider>
-                            <SystemBars style="auto" />
-                            <Stack
-                              initialRouteName="(dashboard)"
-                              screenOptions={screenOptions}
-                            />
+                            <SafeContentView>
+                              <SystemBars style="auto" />
+                              <Stack
+                                initialRouteName="(dashboard)"
+                                screenOptions={screenOptions}
+                              />
+                            </SafeContentView>
                             {/* <BookContentModals /> */}
                           </BottomSheetModalProvider>
                         </GestureHandlerRootView>

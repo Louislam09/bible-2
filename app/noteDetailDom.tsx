@@ -3,24 +3,23 @@ import Icon from "@/components/Icon";
 import { KeyboardPaddingView } from "@/components/keyboard-padding";
 import MyRichEditor from "@/components/RichTextEditor";
 import { Text, View } from "@/components/Themed";
+import { getBookDetail } from "@/constants/BookNames";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
+import {
+  GET_SINGLE_OR_MULTIPLE_VERSES
+} from "@/constants/Queries";
+import { useDBContext } from "@/context/databaseContext";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
 import useParams from "@/hooks/useParams";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { useNoteService } from "@/services/noteService";
 import { bibleState$ } from "@/state/bibleState";
-import { EViewMode, Screens, TNote, TTheme, EBibleVersions } from "@/types";
+import { EBibleVersions, EViewMode, Screens, TNote, TTheme } from "@/types";
+import { formatTextToClipboard } from "@/utils/copyToClipboard";
 import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
 import { use$ } from "@legendapp/state/react";
-import { useDBContext } from "@/context/databaseContext";
-import { storedData$ } from "@/context/LocalstoreContext";
-import {
-  GET_SINGLE_OR_MULTIPLE_VERSES,
-  QUERY_BY_DB,
-} from "@/constants/Queries";
-import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
-import { getBookDetail } from "@/constants/BookNames";
 import Constants from "expo-constants";
 import { Stack, useNavigation, useRouter } from "expo-router";
 import React, {
@@ -42,8 +41,8 @@ import {
   ToastAndroid,
   TouchableOpacity,
 } from "react-native";
+// @ts-ignore
 import "../global.css";
-import { formatTextToClipboard } from "@/utils/copyToClipboard";
 const { width, height } = Dimensions.get("window");
 
 type NoteDetailProps = {};

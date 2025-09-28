@@ -1,7 +1,7 @@
 import { ConfigContext, ExpoConfig } from "@expo/config";
 
-// const IS_DEV = true;
-const IS_DEV = process.env.APP_VARIANT === "development";
+const IS_DEV = true;
+// const IS_DEV = process.env.APP_VARIANT === "development";
 const IS_PREVIEW = process.env.APP_VARIANT === "preview";
 // const IS_PREVIEW = true
 
@@ -71,7 +71,7 @@ const getAssetPath = () => {
   }
 }
 
-const getAndroidIcons = () => {
+const getAndroidQuickActionsIcons = () => {
   return {
     "search": {
       "foregroundImage": "./assets/images/quick-actions/search-quick.png",
@@ -92,6 +92,17 @@ const getAndroidIcons = () => {
   }
 }
 
+const getAndroidAppIcons = () => {
+  return [
+    { "light": "./assets/images/icon.png", "dark": "./assets/images/icon.png" },
+    { "light": "./assets/images/icon-preview.png", "dark": "./assets/images/icon-preview.png" },
+    { "light": "./assets/images/icon-dev.png", "dark": "./assets/images/icon-dev.png" },
+    { "light": "./assets/images/icon-light.png", "dark": "./assets/images/icon-dark.png" },
+    { "light": "./assets/images/gradient.png", "dark": "./assets/images/gradient.png" },
+    { "light": "./assets/images/icon-dark.png", "dark": "./assets/images/icon-dark.png" },
+  ]
+}
+
 export default ({ config }: ConfigContext): ExpoConfig => {
   return {
     ...config,
@@ -104,6 +115,11 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     scheme: "sb-rv60",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
+    androidNavigationBar: {
+      visible: "leanback",
+      barStyle: "dark-content",
+      backgroundColor: "#ffffff"
+    },
     splash: {
       image: getAssetPath().splash,
       resizeMode: "contain",
@@ -221,19 +237,20 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       ],
       [
         "expo-quick-actions/icon/plugin",
-        [
-          { "light": "./assets/images/icon.png", "dark": "./assets/images/icon.png" },
-          { "light": "./assets/images/icon-preview.png", "dark": "./assets/images/icon-preview.png" },
-          { "light": "./assets/images/icon-dev.png", "dark": "./assets/images/icon-dev.png" },
-          { "light": "./assets/images/icon-light.png", "dark": "./assets/images/icon-dark.png" },
-          { "light": "./assets/images/gradient.png", "dark": "./assets/images/gradient.png" },
-          { "light": "./assets/images/icon-dark.png", "dark": "./assets/images/icon-dark.png" },
-        ]
+        getAndroidAppIcons()
+        // [
+        //   { "light": "./assets/images/icon.png", "dark": "./assets/images/icon.png" },
+        //   { "light": "./assets/images/icon-preview.png", "dark": "./assets/images/icon-preview.png" },
+        //   { "light": "./assets/images/icon-dev.png", "dark": "./assets/images/icon-dev.png" },
+        //   { "light": "./assets/images/icon-light.png", "dark": "./assets/images/icon-dark.png" },
+        //   { "light": "./assets/images/gradient.png", "dark": "./assets/images/gradient.png" },
+        //   { "light": "./assets/images/icon-dark.png", "dark": "./assets/images/icon-dark.png" },
+        // ]
       ],
       [
         "expo-quick-actions",
         {
-          androidIcons: getAndroidIcons(),
+          androidIcons: getAndroidQuickActionsIcons(),
           iosIcons: {
             "search": "./assets/images/icon.png",
             "hymn": "./assets/images/icon.png",
@@ -277,8 +294,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
                 "href": "/chooseGame"
               }
             }
-          ],
-
+          ]
         }
       ],
       "expo-asset",

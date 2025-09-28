@@ -14,7 +14,7 @@ export const getStyles = ({ colors }: TTheme) =>
       paddingHorizontal: 20,
       position: "absolute",
       bottom: 0,
-      paddingBottom: 25,
+      paddingBottom: 10,
       borderWidth: 1,
       zIndex: 9999,
     },
