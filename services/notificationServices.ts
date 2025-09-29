@@ -148,12 +148,27 @@ export const useNotificationService = () => {
             (notification: any) => notification?.trigger?.channelId === "dailyVerse"
         );
 
-        if (dailyVerseNotifications.length === 0) {
+        // check if the scheduled notification is the same as the daily verse data
+        const isSame = dailyVerseNotifications.some(
+            (notification: any) => notification?.content?.data?.ref === dailyVerseData?.ref
+        );
+
+        console.log(`[DailyVerse]: ALREADY SCHEDULED WITH ${isSame ? 'THE SAME DATA' : 'A DIFFERENT DATA'}`);
+
+        if (dailyVerseNotifications.length === 0 || !isSame) {
+            // cancel the old notification
+            for (const notification of dailyVerseNotifications) {
+                await cancelNotificationById(notification.identifier);
+            }
+
             console.log('[DailyVerse]: Scheduling new notification ...');
             return await Notifications.scheduleNotificationAsync({
                 content: {
                     title: title,
                     body: body,
+                    data: {
+                        ref: dailyVerseData?.ref
+                    }
                 },
                 trigger: {
                     type: Notifications.SchedulableTriggerInputTypes.DAILY,
