@@ -150,7 +150,7 @@ export const useNotificationService = () => {
 
         // check if the scheduled notification is the same as the daily verse data
         const isSame = dailyVerseNotifications.some(
-            (notification: any) => notification?.content?.data?.ref === dailyVerseData?.ref
+            (notification: any) => notification?.content?.body?.includes(dailyVerseData?.ref)
         );
 
         console.log(`[DailyVerse]: ALREADY SCHEDULED WITH ${isSame ? 'THE SAME DATA' : 'A DIFFERENT DATA'}`);
@@ -165,10 +165,7 @@ export const useNotificationService = () => {
             return await Notifications.scheduleNotificationAsync({
                 content: {
                     title: title,
-                    body: body,
-                    data: {
-                        ref: dailyVerseData?.ref
-                    }
+                    body: body
                 },
                 trigger: {
                     type: Notifications.SchedulableTriggerInputTypes.DAILY,
@@ -177,10 +174,8 @@ export const useNotificationService = () => {
                     channelId: 'dailyVerse'
                 },
             });
-        } else {
-            console.log('[DailyVerse]: ALREADY SCHEDULED');
-            return null;
         }
+        return null;
     }, [allBibleLoaded])
 
     const scheduleDevotionalReminders = async (): Promise<(string | null)[]> => {
