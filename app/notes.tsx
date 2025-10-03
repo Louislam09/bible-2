@@ -78,7 +78,8 @@ const NotesPage = () => {
   const selectedItems = use$(() => noteSelectors$.selectedNoteIds.get());
 
   const reloadNotes = use$(() => bibleState$.reloadNotes.get());
-  const noteDetailScreen = useDomComponent ? Screens.NoteDetailDom : Screens.NoteDetail;
+  // const noteDetailScreen = useDomComponent ? Screens.NoteDetailDom : Screens.NoteDetail;
+  const noteDetailScreen = Screens.NoteDetailDom;
 
   useEffect(() => {
     const getNotes = async () => {

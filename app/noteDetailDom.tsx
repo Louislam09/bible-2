@@ -1,7 +1,6 @@
 import DomNoteEditor from "@/components/dom-components/DomNoteEditor";
 import Icon from "@/components/Icon";
 import { KeyboardPaddingView } from "@/components/keyboard-padding";
-import MyRichEditor from "@/components/RichTextEditor";
 import { Text, View } from "@/components/Themed";
 import { getBookDetail } from "@/constants/BookNames";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
@@ -37,12 +36,12 @@ import {
   Easing,
   Keyboard,
   StyleSheet,
-  TextInput,
   ToastAndroid,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
 // @ts-ignore
 import "../global.css";
+import NewDomNoteEditor from "@/components/dom-components/NewDomNoteEditor";
 const { width, height } = Dimensions.get("window");
 
 type NoteDetailProps = {};
@@ -778,8 +777,6 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
     );
   }
 
-  const showNewEditor = false;
-
   const ViewModeHeader = () => {
     return (
       <View style={styles.headerContainer}>
@@ -827,92 +824,47 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
   };
 
   return (
-    <>
-      <View
-        style={{
-          flex: 1,
-          width: "100%",
+    <View
+      style={{
+        flex: 1,
+        width: "100%",
+      }}
+    >
+      <Stack.Screen
+        options={{
+          headerShown: isView,
+          header: ViewModeHeader,
         }}
-      >
-        <Stack.Screen
-          options={{
-            headerShown: isView,
-            header: ViewModeHeader,
-          }}
-        />
-        <View style={styles.container}>
-          {/* {isView && (
-            <View style={styles.titleContainer}>
-              <Text style={{ fontSize: 22 }}>
-                {noteInfo?.title?.toUpperCase() || defaultTitle}
-              </Text>
-              <Text style={styles.dateLabel}>
-                {formatDateShortDayMonth(
-                  isNewNote
-                    ? new Date()
-                    : ((noteInfo?.updated_at || noteInfo?.created_at) as any),
-                  {
-                    weekday: "short",
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  }
-                )}
-              </Text>
-            </View>
-          )} */}
-          {showNewEditor ? (
-            <MyRichEditor
-              Textinput={
-                <TextInput
-                  editable={!isView}
-                  placeholder="Titulo"
-                  placeholderTextColor={theme.colors.text}
-                  style={[styles.textInput]}
-                  multiline
-                  value={noteContent.title}
-                  onChangeText={(text: string) =>
-                    onContentChange("title", text)
-                  }
-                />
-              }
-              value={noteContent.content}
-              onChangeText={(text: string) => onContentChange("content", text)}
-              readOnly={isView}
-            />
-          ) : (
-            <>
-              <View
-                style={{
-                  height: isView ? 0 : Constants.statusBarHeight,
-                }}
-              />
+      />
+      <View style={styles.container}>
+        <>
+          <View
+            style={{
+              height: isView ? 0 : Constants.statusBarHeight,
+            }}
+          />
 
-              <DomNoteEditor
-                isReadOnly={isView}
-                theme={theme}
-                noteId={noteId?.toString()}
-                isNewNote={isNewNote}
-                onChangeText={(key: string, text: string) =>
-                  onContentChange(key, text)
-                }
-                value={noteInfo?.note_text || ""}
-                title={noteInfo?.title || ""}
-                width={width}
-                height={height}
-                onSave={onSave}
-                fetchBibleVerse={fetchBibleVerse}
-                onDownloadPdf={onDownloadPdf}
-              // dom={{}}
-              />
-            </>
-          )}
-          {/* </StatusBarBackground> */}
-          {renderActionButtons()}
-        </View>
-        <KeyboardPaddingView />
+          <NewDomNoteEditor
+            isReadOnly={isView}
+            theme={theme}
+            noteId={noteId?.toString()}
+            isNewNote={isNewNote}
+            onChangeText={(key: string, text: string) =>
+              onContentChange(key, text)
+            }
+            value={noteInfo?.note_text || ""}
+            title={noteInfo?.title || ""}
+            width={width}
+            height={height}
+            onSave={onSave}
+            fetchBibleVerse={fetchBibleVerse}
+            onDownloadPdf={onDownloadPdf}
+          />
+        </>
+        {renderActionButtons()}
       </View>
-    </>
+      <KeyboardPaddingView />
+    </View>
   );
 };
 
