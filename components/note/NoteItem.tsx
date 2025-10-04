@@ -33,7 +33,13 @@ const NoteItem: React.FC<NoteItemProps> = ({
         "MMM dd, yyyy - hh:mm a"
     );
     const preview = item.note_text?.trim().substring(0, 50);
-    const notePreview = preview ? convertHtmlToText(item.note_text, { maxLength: 100, preserveLineBreaks: false, preserveWhitespace: true }) : '';
+    let data;
+    try {
+        data = JSON.parse(item.note_text);
+    } catch (error) {
+        data = { htmlString: item.note_text || "" };
+    }
+    const notePreview = preview ? convertHtmlToText(data?.htmlString || item.note_text, { maxLength: 100, preserveLineBreaks: false, preserveWhitespace: true }) : '';
 
     const styles = getStyles(theme);
 

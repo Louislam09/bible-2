@@ -152,21 +152,362 @@ const NotesPage = () => {
     setRefreshing(false);
   }, []);
 
+  const onDownloadPdf = useCallback(
+    async (htmlContent: string, noteTitle: string) => {
+      let data;
+      try {
+        data = JSON.parse(htmlContent);
+      } catch (error) {
+        data = { htmlString: htmlContent };
+      }
+      try {
+        // Process HTML to convert Bible mentions to proper structure
+        const processedHtml = (data.htmlString || "").replace(
+          /<span[^>]*data-lexical-bible-mention="true"[^>]*>(.*?)<\/span>/g,
+          (match: any, content: any) => {
+            // Extract data attributes from the span
+            const bookMatch = match.match(/data-book="([^"]*)"/);
+            const chapterMatch = match.match(/data-chapter="([^"]*)"/);
+            const verseMatch =
+              match.match(/data-start-verse="([^"]*)"/) ||
+              match.match(/data-verse="([^"]*)"/);
+            const verseTextMatch = match.match(/data-verse-text="([^"]*)"/);
+
+            const book = bookMatch ? bookMatch[1] : "";
+            const chapter = chapterMatch ? chapterMatch[1] : "";
+            const verse = verseMatch ? verseMatch[1] : "";
+            const verseText = verseTextMatch ? verseTextMatch[1] : "";
+
+            // Create the wrapper structure like in the mobile editor
+            let result = `<div class="editor-bible-mention-wrapper">`;
+            result += `<span class="editor-bible-mention" title="${verseText}">${content}</span>`;
+
+            // Add verse text if available and not a placeholder
+            if (
+              verseText &&
+              !verseText.includes("Integrar con base de datos") &&
+              !verseText.includes("Error cargando")
+            ) {
+              result += `<div class="editor-bible-mention-verse">${verseText}</div>`;
+            }
+
+            result += `</div>`;
+            return result;
+          }
+        );
+
+        const styledHtml = `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.2, maximum-scale=2.0, user-scalable=yes, shrink-to-fit=no">
+              <title>${noteTitle}</title>
+              <style>
+                * {
+                  margin: 0;
+                  padding: 0;
+                  box-sizing: border-box;
+                }
+                
+                body {
+                  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                  line-height: 1.6;
+                  color: #111;
+                  background: #fff;
+                  padding: 20px;
+                  font-size: 2rem;
+                  max-width: 100%;
+                  margin: 0;
+                  word-wrap: break-word;
+                  text-align: left;
+                  min-height: 100vh;
+                  zoom: 1.1;
+                }
+                
+                .note-title {
+                  font-size: 3rem;
+                  font-weight: 700;
+                  margin-bottom: 16px;
+                  color: #000;
+                  text-align: center;
+                  line-height: 1.4;
+                  border-bottom: 2px solid #ddd;
+                  padding-bottom: 8px;
+                }
+                
+                .note-content {
+                  max-width: 100%;
+                  word-wrap: break-word;
+                  font-size: 2rem;
+                  line-height: 1.6;
+                  text-align: left;
+                  color: #111;
+                }
+                
+                /* Paragraph styling for clean PDF */
+                .editor-paragraph, p {
+                  margin: 0 0 12px 0;
+                  font-size: 2rem;
+                  line-height: 1.6;
+                  color: #111;
+                  text-align: left;
+                  text-indent: 0;
+                }
+                
+                .editor-paragraph:last-child, p:last-child {
+                  margin-bottom: 0;
+                }
+                
+                /* Headings for clean PDF */
+                .editor-heading-h1, h1 {
+                  font-size: 2.5rem;
+                  color: #000;
+                  font-weight: 700;
+                  margin: 20px 0 10px 0;
+                  padding: 0;
+                  line-height: 1.4;
+                  text-align: left;
+                }
+                
+                .editor-heading-h2, h2 {
+                  font-size: 2.2rem;
+                  color: #000;
+                  font-weight: 600;
+                  margin: 16px 0 8px 0;
+                  padding: 0;
+                  line-height: 1.4;
+                  text-align: left;
+                }
+                
+                /* Quotes for clean PDF */
+                .editor-quote, blockquote {
+                  margin: 12px 0;
+                  padding: 8px 12px;
+                  font-size: 14px;
+                  color: #555;
+                  border-left: 3px solid #ccc;
+                  background-color: #f9f9f9;
+                  font-style: italic;
+                  line-height: 1.5;
+                }
+                
+                /* Lists for clean PDF */
+                .editor-list-ul, ul {
+                  padding: 0;
+                  margin: 12px 0 12px 20px;
+                  list-style-type: disc;
+                  font-size: 2rem;
+                }
+                
+                .editor-list-ol, ol {
+                  padding: 0;
+                  margin: 12px 0 12px 20px;
+                  list-style-type: decimal;
+                  font-size: 2rem;
+                }
+                
+                .editor-listitem, li {
+                  margin: 6px 0;
+                  padding-left: 4px;
+                  line-height: 1.6;
+                  font-size: 2rem;
+                  color: #111;
+                }
+                
+                /* Text formatting - matches mobile editor */
+                .editor-text-bold, strong, b {
+                  font-weight: bold;
+                }
+                
+                .editor-text-italic, em, i {
+                  font-style: italic;
+                }
+                
+                .editor-text-underline, u {
+                  text-decoration: underline;
+                }
+                
+                .editor-text-strikethrough, s, del {
+                  text-decoration: line-through;
+                }
+                
+                .editor-text-code, code {
+                  background-color: #f5f5f5;
+                  padding: 2px 4px;
+                  font-family: 'Courier New', Courier, monospace;
+                  font-size: 13px;
+                  border-radius: 3px;
+                  border: 1px solid #ddd;
+                }
+                
+                /* Code blocks */
+                .editor-code, pre {
+                  background-color: #f5f5f5;
+                  font-family: 'Courier New', Courier, monospace;
+                  display: block;
+                  padding: 12px;
+                  line-height: 1.4;
+                  font-size: 12px;
+                  margin: 12px 0;
+                  border-radius: 4px;
+                  border: 1px solid #ddd;
+                  overflow-x: auto;
+                }
+                
+                /* Bible mentions for clean PDF */
+                .editor-bible-mention-wrapper {
+                  display: block;
+                  margin: 12px 0;
+                  padding: 8px;
+                  background-color: #f8f9fa;
+                  border-left: 4px solid ${theme.colors.notification};
+                  border-radius: 6px;
+                }
+                
+                .editor-bible-mention {
+                  color: ${theme.colors.notification};
+                  font-weight: 600;
+                  font-size: 2rem;
+                  display: block;
+                  margin-bottom: 6px;
+                }
+                
+                .editor-bible-mention-verse {
+                  color: #111;
+                  font-style: normal;
+                  font-size: 1.8rem;
+                  line-height: 1.6;
+                  text-align: left;
+                  margin: 0;
+                  padding: 0;
+                }
+                
+                /* Hashtags for clean PDF */
+                .editor-hashtag {
+                  color: ${theme.colors.notification};
+                  font-weight: 500;
+                  font-size: 2rem;
+                  text-decoration: none;
+                }
+                
+                /* Text alignment */
+                .text-left { text-align: left; }
+                .text-center { text-align: center; }
+                .text-right { text-align: right; }
+                .text-justify { text-align: justify; }
+                
+                /* Mobile-specific optimizations */
+                @media screen and (max-width: 768px) {
+                  body {
+                    font-size: 2.2rem;
+                    padding: 20px;
+                    zoom: 1.15;
+                  }
+                  
+                  .note-title {
+                    font-size: 3.5rem;
+                    margin-bottom: 16px;
+                  }
+                  
+                  .editor-paragraph, p {
+                    font-size: 2.2rem;
+                    margin-bottom: 12px;
+                  }
+                  
+                  .editor-heading-h1, h1 {
+                    font-size: 3rem;
+                    margin: 20px 0 10px 0;
+                  }
+                  
+                  .editor-heading-h2, h2 {
+                    font-size: 2.6rem;
+                    margin: 16px 0 8px 0;
+                  }
+                  
+                  .editor-bible-mention-wrapper {
+                    margin: 12px 0;
+                    padding: 8px;
+                  }
+                  
+                  .editor-bible-mention {
+                    font-size: 2.2rem;
+                    margin-bottom: 6px;
+                  }
+                  
+                  .editor-bible-mention-verse {
+                    font-size: 2rem;
+                  }
+                  
+                  .editor-list-ul, .editor-list-ol, ul, ol {
+                    font-size: 2.2rem;
+                    margin: 12px 0 12px 20px;
+                  }
+                  
+                  .editor-listitem, li {
+                    font-size: 2.2rem;
+                    margin: 6px 0;
+                  }
+                }
+                
+                /* Print optimizations */
+                @media print {
+                  body {
+                    padding: 20px;
+                    font-size: 2rem;
+                    max-width: 100%;
+                  }
+                  
+                  .note-title {
+                    page-break-after: avoid;
+                    font-size: 3rem;
+                  }
+                  
+                  .editor-heading-h1, .editor-heading-h2, h1, h2, h3 {
+                    page-break-after: avoid;
+                  }
+                  
+                  .editor-quote, blockquote {
+                    page-break-inside: avoid;
+                  }
+                  
+                  .editor-bible-mention-wrapper {
+                    page-break-inside: avoid;
+                  }
+                  
+                  .editor-paragraph, p {
+                    font-size: 2rem;
+                  }
+                  
+                  .editor-bible-mention-verse {
+                    font-size: 1.8rem;
+                  }
+                }
+              </style>
+            </head>
+            <body>
+              <div class="note-title">${noteTitle}</div>
+              <div class="note-content">
+                ${processedHtml}
+              </div>
+            </body>
+          </html>
+        `;
+
+        // Use the existing printToFile function from usePrintAndShare hook
+        await printToFile(styledHtml, noteTitle || "nota");
+      } catch (error) {
+        console.error("Error generating PDF:", error);
+        Alert.alert("Error", "No se pudo generar el PDF");
+      }
+    },
+    [printToFile, theme.colors.notification]
+  );
+
   const handleShareSelectedNotes = async () => {
     const note = noteList.find((note: TNote) => selectedItems.has(note.id));
     if (!note) return;
-    const html = htmlTemplate(
-      [
-        {
-          definition: note?.note_text,
-          topic: note?.title,
-        },
-      ],
-      theme.colors,
-      10,
-      true
-    );
-    await printToFile(html, note?.title?.toUpperCase() || "--");
+    onDownloadPdf(note.note_text, note.title);
   };
 
   const handleDeleteSelectedNotes = () => {
@@ -529,6 +870,7 @@ const NotesPage = () => {
               ListEmptyComponent={ListEmptyComponent}
               ListFooterComponent={<View style={styles.listFooter} />}
               removeClippedSubviews={true}
+              numColumns={2}
               accessible={true}
               accessibilityLabel="Lista de notas"
               accessibilityRole="list"

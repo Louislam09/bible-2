@@ -408,24 +408,14 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
     setViewMode("EDIT");
   };
 
-  const onShare = () => {
-    const html = htmlTemplate(
-      [
-        {
-          definition: noteInfo?.note_text,
-          topic: noteInfo?.title,
-        },
-      ],
-      theme.colors,
-      10,
-      true
-    );
-    printToFile(html, noteInfo?.title?.toUpperCase() || "--");
-  };
-
   const onDownloadPdf = useCallback(
     async (htmlContent: string, noteTitle: string) => {
-      const data = JSON.parse(htmlContent);
+      let data;
+      try {
+        data = JSON.parse(htmlContent);
+      } catch (error) {
+        data = { htmlString: htmlContent };
+      }
       try {
         // Process HTML to convert Bible mentions to proper structure
         const processedHtml = (data.htmlString || "").replace(

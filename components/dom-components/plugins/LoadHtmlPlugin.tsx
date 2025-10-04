@@ -1,6 +1,6 @@
 import { $generateNodesFromDOM } from "@lexical/html";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { $getRoot, $insertNodes } from "lexical";
+import { $createParagraphNode, $getRoot, $insertNodes, TextNode } from "lexical";
 import { useEffect, useRef } from "react";
 
 interface LoadHTMLPluginProps {
@@ -32,32 +32,46 @@ function LoadHTMLPlugin({
     initRef.current = true;
 
     onLoadStart?.();
-    const data = JSON.parse(htmlString)
-    const state = editor.parseEditorState(data.json);
-    editor.setEditorState(state);
+    const isJSON = htmlString.startsWith("{");
+    if (isJSON) {
+      const data = JSON.parse(htmlString)
+      const state = editor.parseEditorState(data.json);
+      editor.setEditorState(state);
+    } else {
+      editor.update(() => {
+        // Parse the HTML string
+        const parser = new DOMParser();
+        const dom = parser.parseFromString(sanitizeHTML(htmlString), "text/html");
 
-    // editor.update(() => {
-    //   // Parse the HTML string
-    //   const parser = new DOMParser();
-    //   const dom = parser.parseFromString(sanitizeHTML(htmlString), "text/html");
+        // Generate Lexical nodes from the DOM
+        const nodes = $generateNodesFromDOM(editor, dom);
+        nodes.forEach((node) => {
+          // Wrap plain text nodes or unsupported nodes
+          if (node instanceof TextNode) {
+            const p = $createParagraphNode();
+            p.append(node);
+            $getRoot().append(p);
+          } else {
+            $getRoot().append(node); // ElementNode or DecoratorNode
+          }
+        });
 
-    //   // Generate Lexical nodes from the DOM
-    //   const nodes = $generateNodesFromDOM(editor, dom);
+        // if (shouldClearEditor && !shouldAppend) {
+        //   // Clear existing content and replace with new nodes
+        //   const root = $getRoot();
+        //   root.clear();
+        //   root.append(...nodes);
+        // } else if (shouldAppend) {
+        //   // Append nodes to existing content
+        //   const root = $getRoot();
+        //   root.append(...nodes);
+        // } else {
+        //   // Insert nodes at current selection
+        //   $insertNodes(nodes);
+        // }
+      });
+    }
 
-    //   if (shouldClearEditor && !shouldAppend) {
-    //     // Clear existing content and replace with new nodes
-    //     const root = $getRoot();
-    //     root.clear();
-    //     root.append(...nodes);
-    //   } else if (shouldAppend) {
-    //     // Append nodes to existing content
-    //     const root = $getRoot();
-    //     root.append(...nodes);
-    //   } else {
-    //     // Insert nodes at current selection
-    //     $insertNodes(nodes);
-    //   }
-    // });
 
     // Use setTimeout to ensure onLoadEnd is called after the editor update is complete
     setTimeout(() => {
