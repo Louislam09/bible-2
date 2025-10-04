@@ -9,6 +9,7 @@ import "../styles.css";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { mergeRegister } from "@lexical/utils";
 import {
+  $createParagraphNode,
   $getSelection,
   $isRangeSelection,
   CAN_REDO_COMMAND,
@@ -20,8 +21,20 @@ import {
   UNDO_COMMAND,
 } from "lexical";
 import { $setBlocksType } from "@lexical/selection";
-import { $createHeadingNode, $createQuoteNode } from "@lexical/rich-text";
-import { $createListNode } from "@lexical/list";
+import {
+  $createHeadingNode,
+  $createQuoteNode,
+  $isHeadingNode,
+  $isQuoteNode,
+  HeadingTagType,
+} from "@lexical/rich-text";
+import {
+  $isListNode,
+  INSERT_ORDERED_LIST_COMMAND,
+  INSERT_UNORDERED_LIST_COMMAND,
+  INSERT_CHECK_LIST_COMMAND,
+  REMOVE_LIST_COMMAND,
+} from "@lexical/list";
 import { useCallback, useEffect, useRef, useState } from "react";
 import BlockFormatDropDown from "./BlockFormatDropDown";
 import Icon from "@/components/Icon";
@@ -66,60 +79,55 @@ export default function NewTopToolbarPlugin({
 
   // Add block format functions
   const formatHeading = useCallback(
-    (headingLevel: "h1" | "h2" | "h3") => {
+    (headingLevel: HeadingTagType) => {
       editor.update(() => {
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
-          $setBlocksType(selection, () => $createHeadingNode(headingLevel));
-          setActionButtons((prev) => ({
-            ...prev,
-            heading1: headingLevel === "h1",
-            heading2: headingLevel === "h2",
-          }));
+          const isActive =
+            (headingLevel === "h1" && actionButtons.heading1) ||
+            (headingLevel === "h2" && actionButtons.heading2);
+
+          if (isActive) {
+            // Clear heading format by converting to paragraph
+            $setBlocksType(selection, () => $createParagraphNode());
+          } else {
+            $setBlocksType(selection, () => $createHeadingNode(headingLevel));
+          }
         }
       });
     },
-    [editor]
+    [editor, actionButtons.heading1, actionButtons.heading2]
   );
 
   const formatBulletList = useCallback(() => {
-    editor.update(() => {
-      const selection = $getSelection();
-      if ($isRangeSelection(selection)) {
-        $setBlocksType(selection, () => $createListNode("bullet"));
-        setActionButtons((prev) => ({
-          ...prev,
-          bulletList: !prev.bulletList,
-        }));
-      }
-    });
-  }, [editor]);
+    if (actionButtons.bulletList) {
+      editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
+    } else {
+      editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
+    }
+  }, [editor, actionButtons.bulletList]);
 
   const formatNumberedList = useCallback(() => {
-    editor.update(() => {
-      const selection = $getSelection();
-      if ($isRangeSelection(selection)) {
-        $setBlocksType(selection, () => $createListNode("number"));
-        setActionButtons((prev) => ({
-          ...prev,
-          numberedList: !prev.numberedList,
-        }));
-      }
-    });
-  }, [editor]);
+    if (actionButtons.numberedList) {
+      editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
+    } else {
+      editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
+    }
+  }, [editor, actionButtons.numberedList]);
 
   const formatQuote = useCallback(() => {
     editor.update(() => {
       const selection = $getSelection();
       if ($isRangeSelection(selection)) {
-        $setBlocksType(selection, () => $createQuoteNode());
-        setActionButtons((prev) => ({
-          ...prev,
-          quote: !prev.quote,
-        }));
+        if (actionButtons.quote) {
+          // Clear quote format by converting to paragraph
+          $setBlocksType(selection, () => $createParagraphNode());
+        } else {
+          $setBlocksType(selection, () => $createQuoteNode());
+        }
       }
     });
-  }, [editor]);
+  }, [editor, actionButtons.quote]);
 
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection();
@@ -129,6 +137,33 @@ export default function NewTopToolbarPlugin({
       let element = anchorNode.getTopLevelElementOrThrow();
       const elementFormat = element.getFormatType();
 
+      // Check block types by traversing up the node tree
+      let parent = anchorNode.getParent();
+      let isBulletList = false;
+      let isNumberedList = false;
+      let isHeading1 = false;
+      let isHeading2 = false;
+      let isQuote = false;
+
+      while (parent) {
+        if ($isListNode(parent)) {
+          const listType = parent.getListType();
+          isBulletList = listType === "bullet";
+          isNumberedList = listType === "number";
+          break;
+        }
+        parent = parent.getParent();
+      }
+
+      // Check if current element is a heading or quote
+      if ($isHeadingNode(element)) {
+        const tag = element.getTag();
+        isHeading1 = tag === "h1";
+        isHeading2 = tag === "h2";
+      } else if ($isQuoteNode(element)) {
+        isQuote = true;
+      }
+
       setActionButtons((prev) => ({
         ...prev,
         bold: selection.hasFormat("bold"),
@@ -136,6 +171,11 @@ export default function NewTopToolbarPlugin({
         underline: selection.hasFormat("underline"),
         strikethrough: selection.hasFormat("strikethrough"),
         code: selection.hasFormat("code"),
+        heading1: isHeading1,
+        heading2: isHeading2,
+        bulletList: isBulletList,
+        numberedList: isNumberedList,
+        quote: isQuote,
         leftAlign: elementFormat === "left" || elementFormat === "",
         centerAlign: elementFormat === "center",
         rightAlign: elementFormat === "right",
@@ -302,6 +342,27 @@ export default function NewTopToolbarPlugin({
       </button>
 
       <button
+        onClick={() => {
+          console.log("Checklist button clicked");
+          // Defer to avoid potential render conflicts
+          setTimeout(() => {
+            console.log("Dispatching INSERT_CHECK_LIST_COMMAND");
+            const result = editor.dispatchCommand(
+              INSERT_CHECK_LIST_COMMAND,
+              undefined
+            );
+            console.log("Command result:", result);
+          }, 0);
+        }}
+        className="toolbar-item spaced"
+        aria-label="Check List"
+      >
+        <Icon name="ListChecks" size={24} color={activeColor} />
+      </button>
+
+      <Divider />
+
+      <button
         onClick={() => formatHeading("h1")}
         className="toolbar-item spaced"
         aria-label="Heading 1"
@@ -324,7 +385,6 @@ export default function NewTopToolbarPlugin({
           name="Heading2"
           size={24}
           color={actionButtons.heading2 ? mainColor : activeColor}
-
         />
       </button>
 
@@ -338,7 +398,6 @@ export default function NewTopToolbarPlugin({
           name="Quote"
           size={24}
           color={actionButtons.quote ? mainColor : activeColor}
-
         />
       </button>
 
@@ -356,7 +415,6 @@ export default function NewTopToolbarPlugin({
           name="Code"
           size={24}
           color={actionButtons.code ? mainColor : activeColor}
-
         />
       </button>
 
@@ -365,7 +423,12 @@ export default function NewTopToolbarPlugin({
       <Divider />
       <button
         onClick={() => {
-          editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left");
+          // Toggle left align - if already left aligned, clear to default (which is also left)
+          if (actionButtons.leftAlign) {
+            editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "");
+          } else {
+            editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left");
+          }
         }}
         className={
           "toolbar-item spaced " + (actionButtons.leftAlign ? "active" : "")
@@ -377,12 +440,16 @@ export default function NewTopToolbarPlugin({
           name="AlignLeft"
           size={24}
           color={actionButtons.leftAlign ? mainColor : activeColor}
-
         />
       </button>
       <button
         onClick={() => {
-          editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center");
+          // Toggle center align
+          if (actionButtons.centerAlign) {
+            editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "");
+          } else {
+            editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center");
+          }
         }}
         className={
           "toolbar-item spaced " + (actionButtons.centerAlign ? "active" : "")
@@ -394,12 +461,16 @@ export default function NewTopToolbarPlugin({
           name="AlignCenter"
           size={24}
           color={actionButtons.centerAlign ? mainColor : activeColor}
-
         />
       </button>
       <button
         onClick={() => {
-          editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right");
+          // Toggle right align
+          if (actionButtons.rightAlign) {
+            editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "");
+          } else {
+            editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right");
+          }
         }}
         className={
           "toolbar-item spaced " + (actionButtons.rightAlign ? "active" : "")
@@ -411,7 +482,6 @@ export default function NewTopToolbarPlugin({
           name="AlignRight"
           size={24}
           color={actionButtons.rightAlign ? mainColor : activeColor}
-
         />
       </button>
     </div>

@@ -124,15 +124,11 @@ h1 {
 }
 
 .editor-text-code {
-  background-color: rgb(240, 242, 245);
-  padding: 1px 0.25rem;
-  font-family: Menlo, Consolas, Monaco, monospace;
-  font-size: 94%;
+  @apply bg-gray-100 dark:bg-gray-700 dark:text-gray-200 px-1 py-0.5 font-mono text-sm;
 }
 
 .editor-link {
-  color: rgb(33, 111, 219);
-  text-decoration: none;
+  @apply text-blue-600 dark:text-blue-400 no-underline;
 }
 
 .tree-view-output {
@@ -149,33 +145,15 @@ h1 {
 }
 
 .editor-code {
-  background-color: rgb(240, 242, 245);
-  font-family: Menlo, Consolas, Monaco, monospace;
-  display: block;
-  padding: 8px 8px 8px 52px;
+  @apply bg-gray-100 dark:bg-gray-800 dark:text-gray-200 font-mono block py-2 pr-2 pl-[52px] text-sm m-0 my-2 overflow-x-auto relative;
   line-height: 1.53;
-  font-size: 13px;
-  margin: 0;
-  margin-top: 8px;
-  margin-bottom: 8px;
   tab-size: 2;
-  /* white-space: pre; */
-  overflow-x: auto;
-  position: relative;
 }
 
 .editor-code:before {
+  @apply absolute bg-gray-200 dark:bg-gray-900 left-0 top-0 border-r border-gray-300 dark:border-gray-700 p-2 text-gray-500 dark:text-gray-400 text-right min-w-[25px];
   content: attr(data-gutter);
-  position: absolute;
-  background-color: #eee;
-  left: 0;
-  top: 0;
-  border-right: 1px solid #ccc;
-  padding: 8px;
-  color: #777;
   white-space: pre-wrap;
-  text-align: right;
-  min-width: 25px;
 }
 
 .editor-code:after {
@@ -232,33 +210,15 @@ h1 {
 }
 
 .editor-heading-h1 {
-  font-size: 24px;
-  color: rgb(5, 5, 5);
-  font-weight: 400;
-  margin: 0;
-  margin-bottom: 12px;
-  padding: 0;
+  @apply text-2xl text-gray-900 dark:text-gray-50 font-normal m-0 mb-3 p-0;
 }
 
 .editor-heading-h2 {
-  font-size: 15px;
-  color: rgb(101, 103, 107);
-  font-weight: 700;
-  margin: 0;
-  margin-top: 10px;
-  padding: 0;
-  text-transform: uppercase;
+  @apply text-base text-gray-600 dark:text-gray-400 font-bold m-0 mt-2.5 p-0 uppercase;
 }
 
 .editor-quote {
-  margin: 0;
-  margin-left: 20px;
-  font-size: 15px;
-  color: rgb(101, 103, 107);
-  border-left-color: rgb(206, 208, 212);
-  border-left-width: 4px;
-  border-left-style: solid;
-  padding-left: 16px;
+  @apply m-0 ml-5 text-base text-gray-600 dark:text-gray-400 border-l-4 border-gray-300 dark:border-gray-600 pl-4;
 }
 
 .editor-list-ol {
@@ -460,25 +420,123 @@ li {
 /* Checklist */
 ul[data-lexical-list-type="check"] {
   list-style: none;
-  padding-left: 1.2em;
+  padding-left: 0.5em;
+  margin-left: 0;
 }
 
 ul[data-lexical-list-type="check"] li {
   position: relative;
-  padding-left: 1.6em;
-  margin: 0.4em 0;
+  padding-left: 2em;
+  margin: 0.5em 0;
+  cursor: pointer;
+  user-select: none;
 }
 
 ul[data-lexical-list-type="check"] li::before {
-  content: "☐";
+  content: "";
   position: absolute;
   left: 0;
-  color: #666;
+  top: 0.2em;
+  width: 1.2em;
+  height: 1.2em;
+  border: 2px solid #666;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+ul[data-lexical-list-type="check"] li:hover::before {
+  border-color: #2a8;
+  background-color: #f0f9ff;
 }
 
 ul[data-lexical-list-type="check"] li[data-checked="true"]::before {
-  content: "☑";
-  color: #2a8;
+  content: "✓";
+  background-color: #2a8;
+  border-color: #2a8;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+ul[data-lexical-list-type="check"] li[data-checked="true"] {
+  color: #666;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* Theme-based checklist classes */
+.editor-checklist {
+  list-style: none;
+  padding-left: 0.5em;
+  margin-left: 0;
+}
+
+.editor-listitem-checked,
+.editor-listitem-unchecked {
+  position: relative;
+  padding-left: 2em;
+  margin: 0.5em 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.editor-listitem-checked::before,
+.editor-listitem-unchecked::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  width: 1.2em;
+  height: 1.2em;
+  border: 2px solid #666;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.editor-listitem-unchecked:hover::before {
+  border-color: #2a8;
+  background-color: #f0f9ff;
+}
+
+.editor-listitem-checked::before {
+  content: "✓";
+  background-color: #2a8;
+  border-color: #2a8;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.editor-listitem-checked {
+  color: #666;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* Dark mode for checklist */
+.dark .editor-listitem-checked::before,
+.dark .editor-listitem-unchecked::before {
+  border-color: #999;
+  background-color: #1a1a1a;
+}
+
+.dark .editor-listitem-unchecked:hover::before {
+  border-color: #2a8;
+  background-color: #1a3a3a;
+}
+
+.dark .editor-listitem-checked {
+  color: #999;
 }
 
 /* Dropdown styles */
@@ -520,6 +578,7 @@ ul[data-lexical-list-type="check"] li[data-checked="true"]::before {
   text-decoration: none;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  font-weight: bold;
 }
 
 .editor-hashtag:hover {
@@ -566,7 +625,7 @@ ul[data-lexical-list-type="check"] li[data-checked="true"]::before {
 }
 
 /* Bible verse popup/tooltip */
-.editor-bible-mention::after {
+/* .editor-bible-mention::after {
   content: attr(data-verse-text);
   position: absolute;
   bottom: 100%;
@@ -587,15 +646,15 @@ ul[data-lexical-list-type="check"] li[data-checked="true"]::before {
   transition: opacity 0.2s ease, visibility 0.2s ease;
   z-index: 1000;
   pointer-events: none;
-}
+} */
 
-.editor-bible-mention:hover::after {
+/* .editor-bible-mention:hover::after {
   opacity: 1;
   visibility: visible;
-}
+} */
 
 /* Arrow for tooltip */
-.editor-bible-mention::before {
+/* .editor-bible-mention::before {
   content: "";
   position: absolute;
   bottom: 100%;
@@ -612,7 +671,7 @@ ul[data-lexical-list-type="check"] li[data-checked="true"]::before {
 .editor-bible-mention:hover::before {
   opacity: 1;
   visibility: visible;
-}
+} */
 
 /* Bible Book Dropdown styling */
 .bible-book-dropdown {
@@ -810,14 +869,16 @@ button.font-increment {
   position: relative;
   margin-top: 15px;
   height: 12px;
-  background-image: linear-gradient(to right,
-      rgb(255, 0, 0),
-      rgb(255, 255, 0),
-      rgb(0, 255, 0),
-      rgb(0, 255, 255),
-      rgb(0, 0, 255),
-      rgb(255, 0, 255),
-      rgb(255, 0, 0));
+  background-image: linear-gradient(
+    to right,
+    rgb(255, 0, 0),
+    rgb(255, 255, 0),
+    rgb(0, 255, 0),
+    rgb(0, 255, 255),
+    rgb(0, 0, 255),
+    rgb(255, 0, 255),
+    rgb(255, 0, 0)
+  );
   user-select: none;
   border-radius: 12px;
 }

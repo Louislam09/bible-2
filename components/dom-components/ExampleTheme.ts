@@ -19,7 +19,10 @@ export default {
   image: "editor-image",
   link: "editor-link",
   list: {
+    checklist: "editor-checklist",
     listitem: "editor-listitem",
+    listitemChecked: "editor-listitem-checked",
+    listitemUnchecked: "editor-listitem-unchecked",
     nested: {
       listitem: "editor-nested-listitem",
     },

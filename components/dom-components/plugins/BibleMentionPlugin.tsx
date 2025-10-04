@@ -205,6 +205,7 @@ async function defaultFetchBibleVerse(
 }
 
 interface BibleMentionPluginProps {
+  isReadOnly: boolean;
   fetchBibleVerse: (
     book: string,
     chapter: number,
@@ -214,6 +215,7 @@ interface BibleMentionPluginProps {
 }
 
 export function BibleMentionPlugin({
+  isReadOnly,
   fetchBibleVerse,
 }: BibleMentionPluginProps): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
@@ -241,6 +243,10 @@ export function BibleMentionPlugin({
 
   // Handle @ detection and multi-step selection
   useEffect(() => {
+    if (isReadOnly) {
+      return;
+    }
+
     return editor.registerUpdateListener(({ editorState }) => {
       editorState.read(() => {
         const selection = $getSelection();
@@ -1191,12 +1197,16 @@ export function BibleMentionPlugin({
 
   return (
     <>
-      {renderDropdown()}
-      <BiblePlaceholderGuide
-        currentText={placeholderText}
-        position={cursorPosition}
-        isVisible={showDropdown}
-      />
+      {!isReadOnly && (
+        <>
+          {renderDropdown()}
+          <BiblePlaceholderGuide
+            currentText={placeholderText}
+            position={cursorPosition}
+            isVisible={showDropdown}
+          />
+        </>
+      )}
     </>
   );
 }

@@ -4,9 +4,7 @@ import { KeyboardPaddingView } from "@/components/keyboard-padding";
 import { Text, View } from "@/components/Themed";
 import { getBookDetail } from "@/constants/BookNames";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
-import {
-  GET_SINGLE_OR_MULTIPLE_VERSES
-} from "@/constants/Queries";
+import { GET_SINGLE_OR_MULTIPLE_VERSES } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
@@ -37,7 +35,7 @@ import {
   Keyboard,
   StyleSheet,
   ToastAndroid,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 // @ts-ignore
 import "../global.css";
@@ -47,7 +45,7 @@ const { width, height } = Dimensions.get("window");
 type NoteDetailProps = {};
 type NoteDetailParams = { noteId: number | null; isNewNote: boolean };
 
-const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
+const NoteDetailDom: React.FC<NoteDetailProps> = ({}) => {
   const { theme } = useMyTheme();
   const navigation = useNavigation();
   const router = useRouter();
@@ -272,7 +270,7 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
         "Guardar cambios",
         "Tienes cambios sin guardar, ¿quieres salir sin guardar?",
         [
-          { text: "Cancelar", style: "cancel", onPress: () => { } },
+          { text: "Cancelar", style: "cancel", onPress: () => {} },
           {
             text: "Salir sin guardar",
             style: "destructive",
@@ -308,20 +306,29 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
           ]}
           onPress={isView ? onEditMode : onSave}
         >
-          <Animated.View
-            style={{
-              transform: [
-                { rotate: isView ? "0deg" : isTyping ? rotate : "0deg" },
-              ],
-            }}
-          >
+          {isTyping ? (
+            <Animated.View
+              style={{
+                transform: [
+                  { rotate: isView ? "0deg" : isTyping ? rotate : "0deg" },
+                ],
+              }}
+            >
+              <Icon
+                style={[{}]}
+                color={theme.colors.notification}
+                name={"Loader"}
+                size={30}
+              />
+            </Animated.View>
+          ) : (
             <Icon
               style={[{}]}
               color={theme.colors.notification}
-              name={isView ? "Pencil" : isTyping ? "Loader" : "Save"}
+              name={isView ? "Pencil" : "Save"}
               size={30}
             />
-          </Animated.View>
+          )}
         </TouchableOpacity>
       </>
     );

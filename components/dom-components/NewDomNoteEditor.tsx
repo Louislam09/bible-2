@@ -24,9 +24,14 @@ import BootomToolbarPlugin from "./plugins/BootomToolbarPlugin";
 const placeholder = "Escribe algo...";
 
 import { useThemeVariables } from "@/hooks/useThemeVariables";
-import { CodeNode } from "@lexical/code";
+import { CodeNode, CodeHighlightNode } from "@lexical/code";
 import { ListItemNode, ListNode } from "@lexical/list";
+import { ListPlugin } from "@lexical/react/LexicalListPlugin";
+import { CheckListPlugin } from "@lexical/react/LexicalCheckListPlugin";
+import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
+import { TRANSFORMERS } from "@lexical/markdown";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
+import { LinkNode, AutoLinkNode } from "@lexical/link";
 import LoadHTMLPlugin from "./plugins/LoadHtmlPlugin";
 import TopToolbarPlugin from "./plugins/TopToolbarPlugin";
 import { ToolbarContext } from "./context/ToolbarContext";
@@ -44,8 +49,11 @@ const editorConfig: InitialConfigType = {
     ListNode,
     ListItemNode,
     CodeNode,
+    CodeHighlightNode,
     HashtagNode,
     BibleMentionNode,
+    LinkNode,
+    AutoLinkNode,
   ],
   // Handling of errors during update
   onError(error: Error) {
@@ -96,8 +104,15 @@ const NewDomNoteEditor = ({
   return (
     <div className="w-full h-full flex flex-col px-4  bg-theme-background fixed top-0 left-0 right-0 ">
       <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
+      <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossOrigin="anonymous"
+      />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+        rel="stylesheet"
+      />
 
       <ToolbarContext>
         <div
@@ -110,16 +125,19 @@ const NewDomNoteEditor = ({
             <HistoryPlugin />
             <AutoFocusPlugin />
             <AutoScrollPlugin />
-            <BibleMentionPlugin fetchBibleVerse={fetchBibleVerse} />
+            <CheckListPlugin />
+            <ListPlugin />
+            <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
+            <BibleMentionPlugin
+              isReadOnly={isReadOnly || disableEditor}
+              fetchBibleVerse={fetchBibleVerse}
+            />
 
             <div
               className={`relative overflow-y-auto text-sm text-left w-full h-full  font-normal rounded-lg flex flex-col`}
             >
-
               {!isReadOnly && (
-                <div
-                  className={`px-4  py-3 pt-10 rounded`}
-                >
+                <div className={`px-4  py-3 pt-10 rounded`}>
                   <input
                     type="text"
                     defaultValue={title}
@@ -127,8 +145,9 @@ const NewDomNoteEditor = ({
                     onBlur={(e) => setDisableEditor(false)}
                     onChange={(e) => onChangeText("title", e.target.value)}
                     placeholder="Titulo"
-                    className={`w-full text-3xl font-semibold bg-transparent border-none outline-none text-black dark:text-white ${!disableEditor ? "opacity-50" : ""
-                      } placeholder:text-black-100 placeholder:font-semibold placeholder:text-3xl dark:placeholder:text-gray-400`}
+                    className={`w-full text-3xl font-semibold bg-transparent border-none outline-none text-black dark:text-white ${
+                      !disableEditor ? "opacity-50" : ""
+                    } placeholder:text-black-100 placeholder:font-semibold placeholder:text-3xl dark:placeholder:text-gray-400`}
                   />
                 </div>
               )}
@@ -150,9 +169,7 @@ const NewDomNoteEditor = ({
                       px-2.5 py-4 outline-0 resize-none text-base"
                       aria-placeholder={placeholder}
                       placeholder={
-                        <div
-                          className="text-black-100 px-2.5 py-4 font-[Montserrat] absolute top-0 left-0 select-none text-base dark:text-gray-400"
-                        >
+                        <div className="text-black-100 px-2.5 py-4 font-[Montserrat] absolute top-0 left-0 select-none text-base dark:text-gray-400">
                           {placeholder}
                         </div>
                       }
@@ -166,10 +183,13 @@ const NewDomNoteEditor = ({
                     if (isLoadingInitialContent.current) return;
                     editorState.read(() => {
                       const root = $getRoot();
-                      const json = editorState.toJSON()
+                      const json = editorState.toJSON();
                       const htmlString = $generateHtmlFromNodes(editor, null);
                       // const textContent = root.getTextContent();
-                      onChangeText("content", JSON.stringify({ htmlString, json }));
+                      onChangeText(
+                        "content",
+                        JSON.stringify({ htmlString, json })
+                      );
                     });
                   }}
                   ignoreHistoryMergeTagChange

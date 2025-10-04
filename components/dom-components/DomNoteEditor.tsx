@@ -24,9 +24,14 @@ import BootomToolbarPlugin from "./plugins/BootomToolbarPlugin";
 const placeholder = "Enter some rich text...";
 
 import { useThemeVariables } from "@/hooks/useThemeVariables";
-import { CodeNode } from "@lexical/code";
+import { CodeNode, CodeHighlightNode } from "@lexical/code";
 import { ListItemNode, ListNode } from "@lexical/list";
+import { ListPlugin } from "@lexical/react/LexicalListPlugin";
+import { CheckListPlugin } from "@lexical/react/LexicalCheckListPlugin";
+import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
+import { TRANSFORMERS } from "@lexical/markdown";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
+import { LinkNode, AutoLinkNode } from "@lexical/link";
 import LoadHTMLPlugin from "./plugins/LoadHtmlPlugin";
 import TopToolbarPlugin from "./plugins/TopToolbarPlugin";
 import { ToolbarContext } from "./context/ToolbarContext";
@@ -43,8 +48,11 @@ const editorConfig: InitialConfigType = {
     ListNode,
     ListItemNode,
     CodeNode,
+    CodeHighlightNode,
     HashtagNode,
     BibleMentionNode,
+    LinkNode,
+    AutoLinkNode,
   ],
   // Handling of errors during update
   onError(error: Error) {
@@ -109,6 +117,9 @@ const DomNoteEditor = ({
           <HistoryPlugin />
           <AutoFocusPlugin />
           <AutoScrollPlugin />
+          <ListPlugin />
+          <CheckListPlugin />
+          <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
           <BibleMentionPlugin fetchBibleVerse={fetchBibleVerse} />
 
           <div
