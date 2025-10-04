@@ -38,6 +38,8 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import BlockFormatDropDown from "./BlockFormatDropDown";
 import Icon from "@/components/Icon";
+import { $patchStyleText } from "@lexical/selection";
+import DropdownColorPicker from "../ui/DropdownColorPicker";
 
 const LowPriority = 1;
 
@@ -60,6 +62,7 @@ export default function NewTopToolbarPlugin({
   const toolbarRef = useRef<HTMLDivElement>(null);
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
+  const [fontColor, setFontColor] = useState("#ffffff");
   const [actionButtons, setActionButtons] = useState({
     bold: false,
     italic: false,
@@ -128,6 +131,19 @@ export default function NewTopToolbarPlugin({
       }
     });
   }, [editor, actionButtons.quote]);
+
+  const applyTextColor = useCallback(
+    (color: string, skipHistoryStack: boolean) => {
+      editor.update(() => {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
+          $patchStyleText(selection, { color });
+        }
+      });
+      setFontColor(color);
+    },
+    [editor]
+  );
 
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection();
@@ -255,7 +271,6 @@ export default function NewTopToolbarPlugin({
         className={
           "toolbar-item spaced " + (actionButtons.bold ? "active" : "")
         }
-        style={{ color: actionButtons.bold ? activeColor : "black" }}
         aria-label="Format Bold"
       >
         <Icon
@@ -272,7 +287,6 @@ export default function NewTopToolbarPlugin({
         className={
           "toolbar-item spaced " + (actionButtons.italic ? "active" : "")
         }
-        style={{ color: actionButtons.italic ? activeColor : "black" }}
         aria-label="Format Italics"
       >
         <Icon
@@ -289,7 +303,6 @@ export default function NewTopToolbarPlugin({
         className={
           "toolbar-item spaced " + (actionButtons.underline ? "active" : "")
         }
-        style={{ color: actionButtons.underline ? activeColor : "black" }}
         aria-label="Format Underline"
       >
         <Icon
@@ -305,7 +318,6 @@ export default function NewTopToolbarPlugin({
         className={
           "toolbar-item spaced " + (actionButtons.strikethrough ? "active" : "")
         }
-        style={{ color: actionButtons.strikethrough ? activeColor : "black" }}
         aria-label="Format Strikethrough"
       >
         <Icon
@@ -332,7 +344,6 @@ export default function NewTopToolbarPlugin({
         onClick={formatNumberedList}
         className="toolbar-item spaced"
         aria-label="Numbered List"
-        style={{ color: actionButtons.numberedList ? activeColor : "black" }}
       >
         <Icon
           name="ListOrdered"
@@ -366,7 +377,6 @@ export default function NewTopToolbarPlugin({
         onClick={() => formatHeading("h1")}
         className="toolbar-item spaced"
         aria-label="Heading 1"
-        style={{ color: actionButtons.heading1 ? activeColor : "black" }}
       >
         <Icon
           name="Heading1"
@@ -375,24 +385,21 @@ export default function NewTopToolbarPlugin({
         />
       </button>
 
-      <button
-        onClick={() => formatHeading("h2")}
-        className="toolbar-item spaced"
-        aria-label="Heading 2"
-        style={{ color: actionButtons.heading2 ? activeColor : "black" }}
-      >
-        <Icon
-          name="Heading2"
-          size={24}
-          color={actionButtons.heading2 ? mainColor : activeColor}
-        />
-      </button>
+      <DropdownColorPicker
+        disabled={false}
+        buttonClassName="toolbar-item color-picker"
+        buttonAriaLabel="Formatting text color"
+        buttonIcon="Palette"
+        color={fontColor}
+        iconColor={isDark ? "white" : "black"}
+        onChange={applyTextColor}
+        title="Text color"
+      />
 
       <button
         onClick={formatQuote}
         className="toolbar-item spaced"
         aria-label="Quote"
-        style={{ color: actionButtons.quote ? activeColor : "black" }}
       >
         <Icon
           name="Quote"
@@ -405,7 +412,6 @@ export default function NewTopToolbarPlugin({
         onClick={() => {
           editor.dispatchCommand(FORMAT_TEXT_COMMAND, "code");
         }}
-        style={{ color: actionButtons.code ? activeColor : "black" }}
         className={
           "toolbar-item spaced " + (actionButtons.code ? "active" : "")
         }
@@ -434,7 +440,6 @@ export default function NewTopToolbarPlugin({
           "toolbar-item spaced " + (actionButtons.leftAlign ? "active" : "")
         }
         aria-label="Left Align"
-        style={{ color: actionButtons.leftAlign ? activeColor : "black" }}
       >
         <Icon
           name="AlignLeft"
@@ -455,7 +460,6 @@ export default function NewTopToolbarPlugin({
           "toolbar-item spaced " + (actionButtons.centerAlign ? "active" : "")
         }
         aria-label="Center Align"
-        style={{ color: actionButtons.centerAlign ? activeColor : "black" }}
       >
         <Icon
           name="AlignCenter"
@@ -476,7 +480,6 @@ export default function NewTopToolbarPlugin({
           "toolbar-item spaced " + (actionButtons.rightAlign ? "active" : "")
         }
         aria-label="Right Align"
-        style={{ color: actionButtons.rightAlign ? activeColor : "black" }}
       >
         <Icon
           name="AlignRight"

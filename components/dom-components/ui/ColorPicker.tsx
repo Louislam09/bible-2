@@ -117,7 +117,7 @@ export default function ColorPicker({
 
   return (
     <div
-      className="color-picker-wrapper"
+      className="color-picker-wrapper px-3 py-2"
       style={{ width: WIDTH }}
       ref={innerDivRef}
     >
@@ -125,7 +125,9 @@ export default function ColorPicker({
       <div className="color-picker-basic-color">
         {basicColors.map((basicColor) => (
           <button
-            className={basicColor === selfColor.hex ? " active" : ""}
+            className={`${
+              basicColor === selfColor.hex ? " active" : ""
+            } w-4 h-4  border !border-black`}
             key={basicColor}
             style={{ backgroundColor: basicColor }}
             onClick={() => {
@@ -135,7 +137,7 @@ export default function ColorPicker({
           />
         ))}
       </div>
-      <MoveWrapper
+      {/* <MoveWrapper
         className="color-picker-saturation"
         style={{ backgroundColor: `hsl(${selfColor.hsv.h}, 100%, 50%)` }}
         onChange={onMoveSaturation}
@@ -157,11 +159,11 @@ export default function ColorPicker({
             left: huePosition.x,
           }}
         />
-      </MoveWrapper>
-      <div
+      </MoveWrapper> */}
+      {/* <div
         className="color-picker-color"
         style={{ backgroundColor: selfColor.hex }}
-      />
+      /> */}
     </div>
   );
 }

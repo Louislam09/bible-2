@@ -157,6 +157,7 @@ export default function DropDown({
   children,
   stopCloseOnClickSelf,
   color,
+  iconColor,
 }: {
   disabled?: boolean;
   buttonAriaLabel?: string;
@@ -166,6 +167,7 @@ export default function DropDown({
   children: ReactNode;
   stopCloseOnClickSelf?: boolean;
   color?: string;
+  iconColor?: string;
 }): JSX.Element {
   const dropDownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -315,11 +317,11 @@ export default function DropDown({
         onClick={() => setShowDropDown(!showDropDown)}
         ref={buttonRef}
       >
-        <Icon name={buttonIcon as any} size={24} color={color || "black"} />
-        {buttonLabel && (
-          <span className="text dropdown-button-text">{buttonLabel}</span>
-        )}
-        <Icon name="ChevronDown" size={24} color="black" />
+        <Icon name={buttonIcon as any} size={24} color={iconColor || "white"} />
+        <div
+          className="w-6 h-1 mt-1 border !border-black"
+          style={{ backgroundColor: color }}
+        />
       </button>
 
       {showDropDown &&
