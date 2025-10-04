@@ -103,13 +103,13 @@ const NoteItem: React.FC<NoteItemProps> = ({
                         </Text>
                     </View>
                 </View>
-                <View style={styles.noteIconContainer}>
+                {/* <View style={styles.noteIconContainer}>
                     <NotebookText
                         size={30}
                         color={theme.colors.text}
                         style={{ opacity: 0.8 }}
                     />
-                </View>
+                </View> */}
             </View>
         </TouchableOpacity>
     );

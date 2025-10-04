@@ -124,7 +124,7 @@ const BookList = React.memo(
       []
     );
 
-    return isFlashlist ? (
+    return (
       <FlashList
         contentContainerStyle={styles.flatContainer}
         keyExtractor={keyExtractor}
@@ -133,16 +133,27 @@ const BookList = React.memo(
         numColumns={viewLayoutGrid ? (isShowName ? 4 : 5) : 1}
         removeClippedSubviews={true}
       />
-    ) : (
-      <LegendList
-        contentContainerStyle={styles.flatContainer}
-        keyExtractor={keyExtractor}
-        data={data}
-        renderItem={renderItem}
-        numColumns={viewLayoutGrid ? (isShowName ? 4 : 5) : 1}
-        recycleItems
-      />
     );
+
+    // return isFlashlist ? (
+    //   <FlashList
+    //     contentContainerStyle={styles.flatContainer}
+    //     keyExtractor={keyExtractor}
+    //     data={data}
+    //     renderItem={renderItem}
+    //     numColumns={viewLayoutGrid ? (isShowName ? 4 : 5) : 1}
+    //     removeClippedSubviews={true}
+    //   />
+    // ) : (
+    //   <LegendList
+    //     contentContainerStyle={styles.flatContainer}
+    //     keyExtractor={keyExtractor}
+    //     data={data}
+    //     renderItem={renderItem}
+    //     numColumns={viewLayoutGrid ? (isShowName ? 4 : 5) : 1}
+    //     recycleItems
+    //   />
+    // );
   }
 );
 
@@ -156,7 +167,9 @@ const ChooseBook: React.FC = () => {
   const { viewLayoutGrid, toggleViewLayoutGrid, currentBibleVersion } =
     useBibleContext();
   const isBottomSideSearching = bibleState$.isBottomBibleSearching.get();
-  const isHebrewInterlineal = [EBibleVersions.INTERLINEAR].includes(currentBibleVersion as EBibleVersions);
+  const isHebrewInterlineal = [EBibleVersions.INTERLINEAR].includes(
+    currentBibleVersion as EBibleVersions
+  );
 
   const isGreekInterlineal = [EBibleVersions.GREEK].includes(
     currentBibleVersion as EBibleVersions
@@ -211,7 +224,7 @@ const ChooseBook: React.FC = () => {
   }, [theme, viewLayoutGrid]);
 
   return (
-    <View style={{ flex: 1 }} key={refreshKey}>
+    <View style={{ flex: 1 }} key={theme.dark + ""}>
       <Stack.Screen options={{ ...singleScreenHeader(screenOptions) }} />
 
       <ScrollView
@@ -221,52 +234,44 @@ const ChooseBook: React.FC = () => {
         ]}
       >
         <View style={styles.listWrapper}>
-          {!isGreekInterlineal && (
-            <>
-              <View style={styles.tab}>
-                <Icon
-                  name="Hash"
-                  size={16}
-                  color={theme.colors.text}
-                  style={styles.tabIcon}
-                />
-                <Text style={[styles.tabText]}>Antiguo Pacto</Text>
-                <View style={[styles.activeIndicator]} />
-              </View>
-              <BookList
-                data={oldTestamentBooks}
-                viewLayoutGrid
-                isShowName={isShowName}
-                book={book as string}
-                onBookPress={handlePress}
-                startIndex={0}
-                theme={theme}
-              />
-            </>
-          )}
-          {/* {!isHebrewInterlineal && ( */}
-          <>
-            <View style={styles.tab}>
-              <Icon
-                name="Hash"
-                size={16}
-                color={theme.colors.text}
-                style={styles.tabIcon}
-              />
-              <Text style={[styles.tabText]}> Nuevo Pacto</Text>
-              <View style={[styles.activeIndicator]} />
-            </View>
-            <BookList
-              data={newTestamentBooks}
-              viewLayoutGrid
-              isShowName={isShowName}
-              book={book as string}
-              onBookPress={handlePress}
-              startIndex={BookIndexes.Malaquias}
-              theme={theme}
+          <View style={styles.tab}>
+            <Icon
+              name="Hash"
+              size={16}
+              color={theme.colors.text}
+              style={styles.tabIcon}
             />
-          </>
-          {/* )} */}
+            <Text style={[styles.tabText]}>Antiguo Pacto</Text>
+            <View style={[styles.activeIndicator]} />
+          </View>
+          <BookList
+            data={oldTestamentBooks}
+            viewLayoutGrid
+            isShowName={isShowName}
+            book={book as string}
+            onBookPress={handlePress}
+            startIndex={0}
+            theme={theme}
+          />
+          <View style={styles.tab}>
+            <Icon
+              name="Hash"
+              size={16}
+              color={theme.colors.text}
+              style={styles.tabIcon}
+            />
+            <Text style={[styles.tabText]}> Nuevo Pacto</Text>
+            <View style={[styles.activeIndicator]} />
+          </View>
+          <BookList
+            data={newTestamentBooks}
+            viewLayoutGrid
+            isShowName={isShowName}
+            book={book as string}
+            onBookPress={handlePress}
+            startIndex={BookIndexes.Malaquias}
+            theme={theme}
+          />
         </View>
       </ScrollView>
     </View>
