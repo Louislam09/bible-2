@@ -128,7 +128,7 @@ const NewDomNoteEditor = ({
                     onChange={(e) => onChangeText("title", e.target.value)}
                     placeholder="Titulo"
                     className={`w-full text-3xl font-semibold bg-transparent border-none outline-none text-black dark:text-white ${!disableEditor ? "opacity-50" : ""
-                      } placeholder:text-gray-100 placeholder:font-semibold placeholder:text-3xl`}
+                      } placeholder:text-black-100 placeholder:font-semibold placeholder:text-3xl dark:placeholder:text-gray-400`}
                   />
                 </div>
               )}
@@ -151,7 +151,7 @@ const NewDomNoteEditor = ({
                       aria-placeholder={placeholder}
                       placeholder={
                         <div
-                          className="text-gray-100 px-2.5 py-4 font-[Montserrat] absolute top-0 left-0 select-none text-base"
+                          className="text-black-100 px-2.5 py-4 font-[Montserrat] absolute top-0 left-0 select-none text-base dark:text-gray-400"
                         >
                           {placeholder}
                         </div>
@@ -166,9 +166,10 @@ const NewDomNoteEditor = ({
                     if (isLoadingInitialContent.current) return;
                     editorState.read(() => {
                       const root = $getRoot();
+                      const json = editorState.toJSON()
                       const htmlString = $generateHtmlFromNodes(editor, null);
                       // const textContent = root.getTextContent();
-                      onChangeText("content", htmlString);
+                      onChangeText("content", JSON.stringify({ htmlString, json }));
                     });
                   }}
                   ignoreHistoryMergeTagChange

@@ -114,32 +114,32 @@ export class BibleMentionNode extends TextNode {
         wrapper.className = 'editor-bible-mention-wrapper';
 
         // Create the main mention element
-        const element = super.createDOM(config);
-        element.className = 'editor-bible-mention';
-        element.setAttribute('data-book', this.__book);
-        element.setAttribute('data-chapter', this.__chapter.toString());
-        element.setAttribute('data-start-verse', this.__startVerse.toString());
+        const referenceDiv = super.createDOM(config);
+        referenceDiv.className = 'editor-bible-mention dark:!text-green-300';
+        referenceDiv.setAttribute('data-book', this.__book);
+        referenceDiv.setAttribute('data-chapter', this.__chapter.toString());
+        referenceDiv.setAttribute('data-start-verse', this.__startVerse.toString());
         if (this.__endVerse) {
-            element.setAttribute('data-end-verse', this.__endVerse.toString());
+            referenceDiv.setAttribute('data-end-verse', this.__endVerse.toString());
         }
         // Legacy support
-        element.setAttribute('data-verse', this.__startVerse.toString());
+        referenceDiv.setAttribute('data-verse', this.__startVerse.toString());
 
         if (this.__verseText) {
-            element.setAttribute('data-verse-text', this.__verseText);
+            referenceDiv.setAttribute('data-verse-text', this.__verseText);
         }
 
         const verseReference = this.__endVerse
             ? `${this.__startVerse}-${this.__endVerse}`
             : this.__startVerse.toString();
-        element.title = this.__verseText || `${this.__book} ${this.__chapter}:${verseReference}`;
+        referenceDiv.title = this.__verseText || `${this.__book} ${this.__chapter}:${verseReference}`;
 
-        wrapper.appendChild(element);
+        wrapper.appendChild(referenceDiv);
 
         // Add verse text below if available (exclude placeholder messages)
         if (this.__verseText && !this.__verseText.includes('Integrar con base de datos') && !this.__verseText.includes('Error cargando')) {
             const verseDiv = document.createElement('div');
-            verseDiv.className = 'editor-bible-mention-verse';
+            verseDiv.className = 'editor-bible-mention-verse dark:!text-white';
             verseDiv.textContent = this.__verseText;
             wrapper.appendChild(verseDiv);
         }

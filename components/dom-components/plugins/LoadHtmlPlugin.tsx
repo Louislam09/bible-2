@@ -32,29 +32,32 @@ function LoadHTMLPlugin({
     initRef.current = true;
 
     onLoadStart?.();
+    const data = JSON.parse(htmlString)
+    const state = editor.parseEditorState(data.json);
+    editor.setEditorState(state);
 
-    editor.update(() => {
-      // Parse the HTML string
-      const parser = new DOMParser();
-      const dom = parser.parseFromString(sanitizeHTML(htmlString), "text/html");
+    // editor.update(() => {
+    //   // Parse the HTML string
+    //   const parser = new DOMParser();
+    //   const dom = parser.parseFromString(sanitizeHTML(htmlString), "text/html");
 
-      // Generate Lexical nodes from the DOM
-      const nodes = $generateNodesFromDOM(editor, dom);
+    //   // Generate Lexical nodes from the DOM
+    //   const nodes = $generateNodesFromDOM(editor, dom);
 
-      if (shouldClearEditor && !shouldAppend) {
-        // Clear existing content and replace with new nodes
-        const root = $getRoot();
-        root.clear();
-        root.append(...nodes);
-      } else if (shouldAppend) {
-        // Append nodes to existing content
-        const root = $getRoot();
-        root.append(...nodes);
-      } else {
-        // Insert nodes at current selection
-        $insertNodes(nodes);
-      }
-    });
+    //   if (shouldClearEditor && !shouldAppend) {
+    //     // Clear existing content and replace with new nodes
+    //     const root = $getRoot();
+    //     root.clear();
+    //     root.append(...nodes);
+    //   } else if (shouldAppend) {
+    //     // Append nodes to existing content
+    //     const root = $getRoot();
+    //     root.append(...nodes);
+    //   } else {
+    //     // Insert nodes at current selection
+    //     $insertNodes(nodes);
+    //   }
+    // });
 
     // Use setTimeout to ensure onLoadEnd is called after the editor update is complete
     setTimeout(() => {
