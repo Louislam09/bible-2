@@ -37,13 +37,8 @@ import { Stack, useRouter } from "expo-router";
 import * as Updates from "expo-updates";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { URLS } from "@/constants/appConfig";
 
-const URLS = {
-  BIBLE: "market://details?id=com.louislam09.bible",
-  MORE_APPS: "market://search?q=pub:Luis_Martinez",
-  ME: "louislam09@hotmail.com",
-  RATE_APP: "market://details?id=com.louislam09.bible",
-};
 
 const colorNames: Record<string, string> = {
   Orange: "Naranja",
@@ -484,7 +479,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
         {
           label: `Versión ${appVersion}`,
           iconName: "Info",
-          action: () => {},
+          action: () => { },
           extraText: `Fecha de Lanzamiento: Mar 13, 2024`,
         },
       ],

@@ -25,6 +25,8 @@ import { Text, View } from "../Themed";
 import ProfileCard from "../UserProfile";
 import VoiceList from "../VoiceList";
 import BuyMeACoffeeButton from "./BuyMeACoffe";
+import { Share } from "react-native";
+import { URLS } from "@/constants/appConfig";
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
@@ -260,6 +262,19 @@ const NewDashboard = () => {
     currentModalOpenRef.current = versionRef.current;
   }, []);
 
+  const shareApp = async () => {
+    try {
+      await Share.share({
+        message:
+          "📖 Descarga esta increíble app de la Biblia:\n\n" +
+          URLS.APP_URL,
+        title: "Compartir la Aplicación",
+      });
+    } catch (error) {
+      console.error("Error al compartir:", error);
+    }
+  };
+
   const additionalResourceList: IAdditionalResourceList = {
     advancedSearch: [
       {
@@ -273,6 +288,12 @@ const NewDashboard = () => {
         label: "Versiones",
         action: versionHandlePresentModalPress,
         color: "#beeaff",
+      },
+      {
+        icon: "Share2",
+        label: "Compartir",
+        action: shareApp,
+        color: "#5bb77b",
       },
       // {
       //   icon: "AudioLines",
