@@ -425,11 +425,12 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
 
   const onDownloadPdf = useCallback(
     async (htmlContent: string, noteTitle: string) => {
+      const data = JSON.parse(htmlContent);
       try {
         // Process HTML to convert Bible mentions to proper structure
-        const processedHtml = htmlContent.replace(
+        const processedHtml = (data.htmlString || "").replace(
           /<span[^>]*data-lexical-bible-mention="true"[^>]*>(.*?)<\/span>/g,
-          (match, content) => {
+          (match: any, content: any) => {
             // Extract data attributes from the span
             const bookMatch = match.match(/data-book="([^"]*)"/);
             const chapterMatch = match.match(/data-chapter="([^"]*)"/);
@@ -626,12 +627,12 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
                 margin: 12px 0;
                 padding: 8px;
                 background-color: #f8f9fa;
-                border-left: 4px solid #0066cc;
+                border-left: 4px solid ${theme.colors.notification};
                 border-radius: 6px;
               }
               
               .editor-bible-mention {
-                color: #0066cc;
+                color: ${theme.colors.notification};
                 font-weight: 600;
                 font-size: 2rem;
                 display: block;
@@ -650,7 +651,7 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
               
               /* Hashtags for clean PDF */
               .editor-hashtag {
-                color: #0066cc;
+                color: ${theme.colors.notification};
                 font-weight: 500;
                 font-size: 2rem;
                 text-decoration: none;

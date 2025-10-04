@@ -115,7 +115,7 @@ export class BibleMentionNode extends TextNode {
 
         // Create the main mention element
         const referenceDiv = super.createDOM(config);
-        referenceDiv.className = 'editor-bible-mention dark:!text-green-300';
+        referenceDiv.className = 'editor-bible-mention dark:!text-green-300 !font-semibold';
         referenceDiv.setAttribute('data-book', this.__book);
         referenceDiv.setAttribute('data-chapter', this.__chapter.toString());
         referenceDiv.setAttribute('data-start-verse', this.__startVerse.toString());
