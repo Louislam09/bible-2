@@ -17,6 +17,7 @@ import * as Crypto from 'expo-crypto';
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
+import { useCallback } from "react";
 import { Alert } from "react-native";
 
 export const useNoteService = () => {
@@ -104,7 +105,7 @@ export const useNoteService = () => {
     }
   };
 
-  const updateNote = async (
+  const updateNote = useCallback(async (
     id: number | string,
     data: Partial<TNote>,
     sendToCloud: boolean = false
@@ -131,7 +132,7 @@ export const useNoteService = () => {
       Alert.alert("Error", "No se pudo actualizar la nota");
       return false;
     }
-  };
+  }, [isConnected, user]);
 
   const deleteNote = async (data: Partial<TNote>): Promise<boolean> => {
     try {

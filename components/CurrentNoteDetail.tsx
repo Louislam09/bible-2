@@ -249,6 +249,7 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
         }
       }
     } catch (error) {
+      console.log({ error });
       Alert.alert("Error", "No se pudo actualizar la nota.");
     }
   };

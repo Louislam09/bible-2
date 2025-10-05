@@ -30,7 +30,10 @@ const BookContentModals = () => {
 
   useEffect(() => {
     if (aiResponse.loading) return;
-    if (verse.text) aiResponse.fetchExplanation(verse);
+    if (verse.text && !aiResponse.error) {
+      console.log("fetching explanation");
+      // aiResponse.fetchExplanation(verse);
+    }
   }, [verse, aiResponse]);
 
   return (
@@ -66,9 +69,11 @@ const BookContentModals = () => {
         }
       >
         <BottomSheetScrollView
-          contentContainerStyle={{ backgroundColor: "transparent" }}
+          contentContainerStyle={{ backgroundColor: theme.colors.background }}
         >
-          <View style={{ padding: 10, backgroundColor: "transparent" }}>
+          <View
+            style={{ padding: 10, backgroundColor: theme.colors.background }}
+          >
             <Text
               style={{
                 fontSize: 20,
@@ -96,7 +101,7 @@ const BookContentModals = () => {
         onClose={() => bibleState$.handleStrongWord({ text: "", code: "" })}
       >
         <BottomSheetScrollView
-          contentContainerStyle={{ backgroundColor: "transparent" }}
+          contentContainerStyle={{ backgroundColor: theme.colors.background }}
         >
           <StrongContent
             navigation={navigation}
@@ -119,7 +124,7 @@ const BookContentModals = () => {
         }
       >
         <BottomSheetScrollView
-          contentContainerStyle={{ backgroundColor: "transparent" }}
+          contentContainerStyle={{ backgroundColor: theme.colors.background }}
         >
           <AiVerseExplanationContent
             navigation={navigation}

@@ -45,7 +45,7 @@ const { width, height } = Dimensions.get("window");
 type NoteDetailProps = {};
 type NoteDetailParams = { noteId: number | null; isNewNote: boolean };
 
-const NoteDetailDom: React.FC<NoteDetailProps> = ({}) => {
+const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
   const { theme } = useMyTheme();
   const navigation = useNavigation();
   const router = useRouter();
@@ -270,7 +270,7 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({}) => {
         "Guardar cambios",
         "Tienes cambios sin guardar, ¿quieres salir sin guardar?",
         [
-          { text: "Cancelar", style: "cancel", onPress: () => {} },
+          { text: "Cancelar", style: "cancel", onPress: () => { } },
           {
             text: "Salir sin guardar",
             style: "destructive",
@@ -394,6 +394,7 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({}) => {
         }
       }
     } catch (error) {
+      console.log({ error });
       Alert.alert("Error", "No se pudo actualizar la nota.");
     }
   };

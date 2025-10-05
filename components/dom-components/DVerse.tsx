@@ -171,9 +171,9 @@ const ActionItem = memo(({ index, action, theme, item }: ActionItemProps) => {
 
     return (
         <button
-            onClick={() => {
+            onClick={async () => {
+                await haptics.selection();
                 action.action();
-                haptics.selection();
             }}
             className="flex items-center justify-center flex-col transition-colors"
         >

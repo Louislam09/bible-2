@@ -259,10 +259,14 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const onQuote = () => {
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item?.book_number).longName} ${item.chapter
-      }:${item.verse}`;
+    const reference = `${getBookDetail(item?.book_number).longName} ${
+      item.chapter
+    }:${item.verse}`;
     bibleState$.handleSelectVerseForNote(verseText);
-    router.push({ pathname: "/quoteDom", params: { text: verseText, reference } });
+    router.push({
+      pathname: "/quoteDom",
+      params: { text: verseText, reference },
+    });
   };
 
   const onWordClicked = (code: string) => {
@@ -345,8 +349,9 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       return;
     }
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item?.book_number).longName} ${item.chapter
-      }:${item.verse}`;
+    const reference = `${getBookDetail(item?.book_number).longName} ${
+      item.chapter
+    }:${item.verse}`;
 
     bibleState$.handleVerseWithAiAnimation(item.verse);
     bibleState$.handleVerseToExplain({ text: verseText, reference });
@@ -389,6 +394,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         action: onExplainWithAI,
         description: "Explicar",
         color: "#f1c40f",
+        hide: true,
       },
       {
         name: "Quote",
@@ -415,7 +421,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         name: "Brain",
         action: () =>
           onMemorizeVerse(
-            `${getBookDetail(item?.book_number).longName} ${item?.chapter}:${item?.verse
+            `${getBookDetail(item?.book_number).longName} ${item?.chapter}:${
+              item?.verse
             }`
           ),
         color: "#f1abab",

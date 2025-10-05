@@ -103,8 +103,8 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
           index === 3 && { borderRadius: 0 },
           {
             backgroundColor: backgroundColor
-              ? `${backgroundColor}99`
-              : `${theme.colors.background}99`,
+              ? `${backgroundColor}`
+              : `${theme.colors.background}`,
           },
           style && style,
         ]}
@@ -147,7 +147,7 @@ const getStyles = ({ colors }: TTheme) =>
       backgroundColor: colors.notification,
     },
     contentContainer: {
-      backgroundColor: "transparent",
+      backgroundColor: colors.background,
     },
   });
 
