@@ -13,14 +13,13 @@ import copyToClipboard from "@/utils/copyToClipboard";
 import { getStrongValue, WordTagPair } from "@/utils/extractVersesInfo";
 import getMemorySizeInGB from "@/utils/getDeviceRamValue";
 import { use$ } from "@legendapp/state/react";
-import React, {
-  FC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef
-} from "react";
-import { ActivityIndicator, Animated, StyleSheet, TouchableOpacity } from "react-native";
+import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
+import {
+  ActivityIndicator,
+  Animated,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import Chapter from "./home/content/Chapter";
 import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
@@ -49,9 +48,9 @@ const BibleTop: FC<BibleTopProps> = (props) => {
 
   const useDomComponent = use$(() => storedData$.useDomComponent.get());
 
-  const isHebrewInterlinear = [
-    EBibleVersions.INTERLINEAR
-  ].includes(currentBibleVersion as EBibleVersions);
+  const isHebrewInterlinear = [EBibleVersions.INTERLINEAR].includes(
+    currentBibleVersion as EBibleVersions
+  );
 
   const isGreekInterlinear = [EBibleVersions.GREEK].includes(
     currentBibleVersion as EBibleVersions
@@ -63,7 +62,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const isOldTestamentAndGreekInterlineal =
     bookInfo.bookNumber < NT_BOOK_NUMBER && isGreekInterlinear;
 
-  const isInterlinear = isHebrewInterlinear || isGreekInterlinear
+  const isInterlinear = isHebrewInterlinear || isGreekInterlinear;
 
   const isSplitActived = bibleState$.isSplitActived.get();
   const {
@@ -156,7 +155,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     haptics.selection();
     // haptics.impact.light();
     const NT_BOOK_NUMBER = 470;
-    const cognate = "H"
+    const cognate = "H";
 
     const addCognate = (tagValue: string) =>
       tagValue
@@ -171,7 +170,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     };
     bibleState$.handleStrongWord(value);
     modalState$.openStrongSearchBottomSheet();
-  }, [])
+  }, []);
 
   const onWordClicked = useCallback((code: string, item: IBookVerse) => {
     const { textValue = ["."], strongValue = [] } = getStrongValue(item.text);
@@ -200,7 +199,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
 
     bibleState$.handleStrongWord(value);
     modalState$.openStrongSearchBottomSheet();
-  }, [])
+  }, []);
 
   const onInterlinear = useCallback((item: IBookVerse) => {
     const currentInterlinear =
@@ -249,19 +248,25 @@ const BibleTop: FC<BibleTopProps> = (props) => {
 
   const autoChangeBibleVersion = useMemo(() => {
     return isNewTestamentAndInterlinear || isOldTestamentAndGreekInterlineal;
-  }, [isNewTestamentAndInterlinear, isOldTestamentAndGreekInterlineal])
+  }, [isNewTestamentAndInterlinear, isOldTestamentAndGreekInterlineal]);
 
   useEffect(() => {
     if (autoChangeBibleVersion) {
-      console.log("autoChange", autoChangeBibleVersion)
+      console.log("autoChange", autoChangeBibleVersion);
       setTimeout(() => {
-        onSelectBibleVersion(isGreekInterlinear ? EBibleVersions.INTERLINEAR : EBibleVersions.GREEK);
+        onSelectBibleVersion(
+          isGreekInterlinear ? EBibleVersions.INTERLINEAR : EBibleVersions.GREEK
+        );
       }, 50);
     }
-  }, [autoChangeBibleVersion])
+  }, [autoChangeBibleVersion]);
 
   // const MyChapter = isInterlinear ? Chapter : (slowDevice ) ? DomChapter : Chapter;
-  const MyChapter = useDomComponent ? (isInterlinear ? Chapter : DomChapter) : Chapter;
+  const MyChapter = useDomComponent
+    ? isInterlinear
+      ? Chapter
+      : DomChapter
+    : Chapter;
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
@@ -352,9 +357,15 @@ const BibleTop: FC<BibleTopProps> = (props) => {
                 borderRadius: 5,
                 marginTop: 10,
               }}
-              onPress={() => onSelectBibleVersion(isGreekInterlinear ? EBibleVersions.INTERLINEAR : EBibleVersions.GREEK)}
+              onPress={() =>
+                onSelectBibleVersion(
+                  isGreekInterlinear
+                    ? EBibleVersions.INTERLINEAR
+                    : EBibleVersions.GREEK
+                )
+              }
             >
-              <Text style={{ color: 'white' }}>Cambiar</Text>
+              <Text style={{ color: "white" }}>Cambiar</Text>
             </TouchableOpacity>
           </View>
         ) : (
@@ -367,7 +378,13 @@ const BibleTop: FC<BibleTopProps> = (props) => {
             isSplit={false}
             theme={theme}
             onScroll={handleScroll}
-            {...{ onStrongWordClicked, onInterlinear, onAnotar, onComparar, onWordClicked }}
+            {...{
+              onStrongWordClicked,
+              onInterlinear,
+              onAnotar,
+              onComparar,
+              onWordClicked,
+            }}
           />
         )}
       </SwipeWrapper>

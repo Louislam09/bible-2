@@ -16,7 +16,12 @@ import { use$ } from "@legendapp/state/react";
 import { useMyTheme } from "@/context/ThemeContext";
 import { useNavigation } from "expo-router";
 import React, { useCallback, useRef, useState } from "react";
-import { ScrollView, StyleSheet, Linking, TouchableOpacity } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Linking,
+  TouchableOpacity,
+} from "react-native";
 import { IDashboardOption } from "../../app/(dashboard)";
 import BottomModal from "../BottomModal";
 import EmptyStateMessage from "../EmptyStateMessage";
@@ -58,7 +63,7 @@ const NewDashboard = () => {
     lastBottomSideChapter,
     lastBottomSideVerse,
     isAdmin: _isAdmin,
-    useDomComponent
+    useDomComponent,
   } = storedData;
   const user = use$(() => storedData$.user.get()) || null;
   const isAdmin = _isAdmin || user?.isAdmin;
@@ -108,17 +113,17 @@ const NewDashboard = () => {
     },
     user
       ? {
-        icon: "NotebookText",
-        label: "Notas",
-        action: () =>
-          navigation.navigate(Screens.Notes, { shouldRefresh: false }),
-        color: theme.colors?.notification || "#78b0a4",
-      }
+          icon: "NotebookText",
+          label: "Notas",
+          action: () =>
+            navigation.navigate(Screens.Notes, { shouldRefresh: false }),
+          color: theme.colors?.notification || "#78b0a4",
+        }
       : {
-        icon: "Cloudy",
-        label: "Sincronizar",
-        action: () => navigation.navigate(Screens.Login),
-      },
+          icon: "Cloudy",
+          label: "Sincronizar",
+          action: () => navigation.navigate(Screens.Login),
+        },
   ];
 
   const requestAccessHandlePresentModalPress = useCallback(
@@ -164,7 +169,8 @@ const NewDashboard = () => {
     {
       icon: "Quote",
       label: "Cita",
-      action: () => navigation.navigate(useDomComponent ? Screens.QuoteDom : Screens.Quote),
+      action: () =>
+        navigation.navigate(useDomComponent ? Screens.QuoteDom : Screens.Quote),
       color: "#CDAA7D",
       isNew: isWithinTimeframe("1w", new Date("2025-06-05")).isActive,
     },
@@ -266,8 +272,7 @@ const NewDashboard = () => {
     try {
       await Share.share({
         message:
-          "📖 Descarga esta increíble app de la Biblia:\n\n" +
-          URLS.APP_URL,
+          "📖 Descarga esta increíble app de la Biblia:\n\n" + URLS.APP_URL,
         title: "Compartir la Aplicación",
       });
     } catch (error) {
@@ -280,7 +285,11 @@ const NewDashboard = () => {
       {
         icon: "LayoutGrid",
         label: "Lista de Libro",
-        action: () => navigation.navigate(useDomComponent ? Screens.ChooseReferenceDom : Screens.ChooseBook, {}),
+        action: () =>
+          navigation.navigate(
+            useDomComponent ? Screens.ChooseReferenceDom : Screens.ChooseBook,
+            {}
+          ),
         color: "#b76e5b",
       },
       {

@@ -4,7 +4,7 @@ import { useMyTheme } from "@/context/ThemeContext";
 import useAudioPlayer from "@/hooks/useAudioPlayer";
 import { EBibleVersions, Screens } from "@/types";
 import { LinearGradient } from "expo-linear-gradient";
-import { FC, useCallback, useEffect, useRef } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { TouchableOpacity, useWindowDimensions } from "react-native";
 
 import BottomModal from "@/components/BottomModal";
@@ -28,6 +28,7 @@ import { useNavigation } from "expo-router";
 import Play from "../header/Play";
 import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
+import { ExpandedSheet } from "@/components/animations/expandable-mini-player/src/components/navigation/bottom-tab-bar/expanded-sheet";
 
 interface FooterInterface {
   isSplit?: boolean;
@@ -45,6 +46,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const { isConnected } = netInfo;
   const FOOTER_ICON_SIZE = iconSize;
   const { width } = useWindowDimensions();
+  const [showPlayer, setShowPlayer] = useState(false);
 
   const isSmallSDevice = width < 300;
   const footerIconSize = isSmallSDevice ? 26 : 24;
@@ -116,7 +118,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   };
 
   function nextChapter() {
-    haptics.impact.light()
+    haptics.impact.light();
     if (DB_BOOK_CHAPTER_NUMBER[book as any] === chapter) {
       if (bookNumber === 730) return;
       const newBookName = DB_BOOK_NAMES[bookIndex + 1].longName;
@@ -139,7 +141,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   }
 
   const previousChapter = () => {
-    haptics.impact.light()
+    haptics.impact.light();
     if (bookNumber !== 10 && chapter === 1) {
       const newBookName = DB_BOOK_NAMES[bookIndex - 1].longName;
       const newChapter = DB_BOOK_CHAPTER_NUMBER[newBookName];
@@ -161,16 +163,18 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   };
 
   const onSingleFooterTitle = () => {
-    haptics.impact.light()
+    haptics.impact.light();
     batch(() => {
       bibleState$.clearSelection();
       bibleState$.isBottomBibleSearching.set(!!isSplit);
     });
-    const screen = useDomComponent ? Screens.ChooseReferenceDom : Screens.ChooseBook;
+    const screen = useDomComponent
+      ? Screens.ChooseReferenceDom
+      : Screens.ChooseBook;
     navigation?.navigate(screen, { ...params });
   };
   const onDoubleFooterTitle = () => {
-    haptics.impact.medium()
+    haptics.impact.medium();
     batch(() => {
       bibleState$.clearSelection();
       bibleState$.isBottomBibleSearching.set(!!isSplit);
@@ -189,14 +193,21 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
       bibleState$.clearSelection();
       bibleState$.isBottomBibleSearching.set(!!isSplit);
     });
-    haptics.impact.heavy()
+    haptics.impact.heavy();
     navigation?.navigate(Screens.ChooseChapterNumber, { ...params });
   };
 
   const playHandlePresentModalPress = useCallback(() => {
-    haptics.impact.light()
+    haptics.impact.light();
     playRef.current?.present();
   }, []);
+
+  const onPlay = () => {
+    haptics.impact.light();
+    bibleState$.toggleIsPlayerOpened();
+  };
+
+  const isPlayerOpened = use$(() => bibleState$.isPlayerOpened.get());
 
   const displayBookName = renameLongBookName(book);
 
@@ -241,8 +252,9 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
         >
           <Text
             style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}
-          >{`${displayBookName ?? ""} ${chapter ?? ""}:${isSplitActived ? verse : Math.abs(currentHistoryIndexState) || verse
-            }`}</Text>
+          >{`${displayBookName ?? ""} ${chapter ?? ""}:${
+            isSplitActived ? verse : Math.abs(currentHistoryIndexState) || verse
+          }`}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           ref={tourState$.nextButton.get()}
@@ -256,12 +268,13 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           />
         </TouchableOpacity>
       </View>
-      {!isSplitActived && (
+      {!isSplitActived && !isPlayerOpened && (
         <View style={styles.footerAudio}>
           <TouchableOpacity
             ref={tourState$.audio.get()}
             style={[styles.footerEnd]}
-            onPress={playHandlePresentModalPress}
+            // onPress={playHandlePresentModalPress}
+            onPress={onPlay}
           >
             <Icon
               name={isPlaying ? "AudioLines" : "Play"}
@@ -271,8 +284,9 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           </TouchableOpacity>
         </View>
       )}
+      {isPlayerOpened && <ExpandedSheet />}
 
-      <BottomModal id="footer" justOneSnap startAT={0} ref={playRef}>
+      {/* <BottomModal id="footer" justOneSnap startAT={0} ref={playRef}>
         <Play
           isRvr={isRVR}
           {...{
@@ -292,7 +306,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
             setShouldLoop,
           }}
         />
-      </BottomModal>
+      </BottomModal> */}
     </LinearGradient>
   );
 };

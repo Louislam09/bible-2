@@ -89,6 +89,7 @@
     "metro": "^0.82.0",
     "moti": "^0.29.0",
     "pocketbase": "^0.25.2",
+    "pressto": "^0.2.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.6",
