@@ -26,7 +26,7 @@ export const ExpandedSheet = () => {
   const progressThreshold = 0.8;
   const insets = useSafeAreaInsets();
   const safeTop = insets.top;
-  const safeBottom = insets.bottom + 30;
+  const safeBottom = insets.bottom + 34;
 
   const tapGesture = Gesture.Tap()
     .onBegin(() => {
@@ -120,6 +120,7 @@ export const ExpandedSheet = () => {
         [0, progressThreshold / 2, 1],
         [0, 0, 1]
       ),
+      zIndex: 1000,
     };
   });
 
@@ -142,9 +143,9 @@ export const ExpandedSheet = () => {
 
         <SheetContent
           progress={progress}
-          reference="Reproduciendo Genesis 1:1"
           timeProgress="00:00"
-          imageUrl="https://i3.ytimg.com/vi/BgO08T3E4LE/maxresdefault.jpg"
+          // imageUrl="https://i3.ytimg.com/vi/BgO08T3E4LE/maxresdefault.jpg"
+          imageUrl="https://images.pexels.com/photos/1366919/pexels-photo-1366919.jpeg"
         />
       </Animated.View>
     </GestureDetector>
@@ -158,10 +159,11 @@ const styles = StyleSheet.create({
     shadowColor: Palette.card,
     shadowOffset: { width: 0, height: 4 },
     shadowRadius: 16,
-    zIndex: 1000,
+    overflow: "hidden",
   },
   knob: {
-    backgroundColor: "#767676",
+    // backgroundColor: "#767676",
+    backgroundColor: "#ffffff90",
     borderRadius: 24,
     height: 4,
     width: 48,

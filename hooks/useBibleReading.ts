@@ -19,6 +19,7 @@ interface UseBibleReaderResult {
   reset: ({ andPlay }: { andPlay: boolean }) => void;
   isSpeaking: boolean;
   ended: boolean;
+  currentVerseText: string;
 }
 
 const useBibleReader = ({
@@ -106,6 +107,7 @@ const useBibleReader = ({
     isSpeaking,
     ended,
     reset,
+    currentVerseText: verseList[verseIndex] || "",
   };
 };
 
