@@ -159,6 +159,9 @@ export const SheetContent = ({
       easing: EasingsUtils.inOut,
     });
     setTimeout(() => {
+      if (PLAYER_STATE.IS_PLAYING) {
+        PLAYER_STATE.PLAY_ACTION();
+      }
       bibleState$.toggleIsPlayerOpened();
     }, 550);
   };
@@ -357,7 +360,7 @@ export const SheetContent = ({
 
         <Animated.View style={rLabelsContainerStyle}>
           <Animated.Text style={[rTitleStyle, styles.title]}>
-            {`${reference}:${verseIndex + 1}`}
+            {`${reference}`}
           </Animated.Text>
           <Animated.Text style={[rSubtitleStyle, styles.subtitle]}>
             {formatTime(PLAYER_STATE.POSITION)}
@@ -441,6 +444,7 @@ export const SheetContent = ({
                         1
                       : 0
                   }%`,
+                  backgroundColor: theme.colors.notification,
                 },
               ]}
             />
