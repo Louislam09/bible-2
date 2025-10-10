@@ -2,6 +2,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import Animated, {
   interpolate,
+  interpolateColor,
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
@@ -13,15 +14,16 @@ import { MiniPlayerHeight } from "./constants";
 import Icon from "@/components/Icon";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
+import useAudioPlayer from "@/hooks/useAudioPlayer";
 import useBibleReader from "@/hooks/useBibleReading";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
 import { bibleState$ } from "@/state/bibleState";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNetInfo } from "@react-native-community/netinfo";
 import { ImageBackground } from "expo-image";
-import { LinearGradient } from "expo-linear-gradient";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import type { SharedValue } from "react-native-reanimated";
-import { useNetInfo } from "@react-native-community/netinfo";
 
 type SheetContentProps = {
   progress: SharedValue<number>;
@@ -47,6 +49,12 @@ export const SheetContent = ({
 
   const currentVoiceIdentifier = storedData$.currentVoiceIdentifier.get();
   const currentVoiceRate = storedData$.currentVoiceRate.get() || 1;
+
+  const { nextChapter, previousChapter } = useChangeBookOrChapter({
+    book: bibleQuery.book,
+    chapter: bibleQuery.chapter,
+  });
+
   const {
     verseIndex,
     startReading,
@@ -62,10 +70,52 @@ export const SheetContent = ({
     voiceRate: currentVoiceRate,
   });
 
-  const { nextChapter, previousChapter } = useChangeBookOrChapter({
+  const {
+    isDownloading,
+    isPlaying: isPlayingAudio,
+    playAudio,
+    seekTo,
+    duration,
+    position,
+  } = useAudioPlayer({
     book: bibleQuery.book,
-    chapter: bibleQuery.chapter,
+    chapterNumber: +bibleQuery.chapter,
+    nextChapter: () => {
+      nextChapter();
+    },
   });
+
+  const PLAYER_STATE = useMemo(() => {
+    const state = {
+      READING: {
+        IS_PLAYING: isReading,
+        PLAY_ACTION: isSpeaking ? stopReading : startReading,
+        IS_DOWNLOADING: false,
+        DURATION: 0,
+        POSITION: 0,
+      },
+      AUDIO: {
+        IS_PLAYING: isPlayingAudio,
+        PLAY_ACTION: playAudio,
+        IS_DOWNLOADING: isDownloading,
+        DURATION: duration,
+        POSITION: position,
+      },
+    };
+
+    return isConnected ? state.AUDIO : state.READING;
+  }, [
+    isConnected,
+    isSpeaking,
+    isReading,
+    startReading,
+    stopReading,
+    isPlayingAudio,
+    playAudio,
+    isDownloading,
+    duration,
+    position,
+  ]);
 
   const handlePlay = useCallback(() => {
     if (isSpeaking) {
@@ -248,6 +298,42 @@ export const SheetContent = ({
     // This prevents the sheet tap gesture from firing
   });
 
+  const rOverlayStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        progress.value,
+        [0, 1],
+        ["rgba(0, 0, 0, 0.7)", "rgba(0, 0, 0, 0.3)"]
+      ),
+    };
+  });
+
+  const formatTime = (timeInMilliseconds: number): string => {
+    const totalSeconds = Math.floor(timeInMilliseconds / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
+  const handleSeekBackward = useCallback(() => {
+    if (PLAYER_STATE.DURATION <= 0) return;
+
+    const newPosition = Math.max(0, PLAYER_STATE.POSITION - 10000); // 10 seconds back
+    seekTo(newPosition);
+  }, [PLAYER_STATE.DURATION, PLAYER_STATE.POSITION, seekTo]);
+
+  const handleSeekForward = useCallback(() => {
+    if (PLAYER_STATE.DURATION <= 0) return;
+
+    const newPosition = Math.min(
+      PLAYER_STATE.DURATION,
+      PLAYER_STATE.POSITION + 10000
+    ); // 10 seconds forward
+    seekTo(newPosition);
+  }, [PLAYER_STATE.DURATION, PLAYER_STATE.POSITION, seekTo]);
+
   return (
     <ImageBackground
       source={{
@@ -256,7 +342,7 @@ export const SheetContent = ({
       style={styles.fill}
       contentFit="cover"
     >
-      <View style={styles.overlay} />
+      <Animated.View style={[styles.overlay, rOverlayStyle]} />
 
       {/* Mini Player Content */}
       <Animated.View style={rContentStyle}>
@@ -274,16 +360,19 @@ export const SheetContent = ({
             {`${reference}:${verseIndex + 1}`}
           </Animated.Text>
           <Animated.Text style={[rSubtitleStyle, styles.subtitle]}>
-            {timeProgress}
+            {formatTime(PLAYER_STATE.POSITION)}
           </Animated.Text>
         </Animated.View>
 
         {/* Play Button - Only visible in mini player state */}
         <Animated.View style={rPlayButtonStyle}>
           <GestureDetector gesture={playButtonGesture}>
-            <TouchableOpacity onPress={handlePlay} style={styles.playButton}>
+            <TouchableOpacity
+              onPress={PLAYER_STATE.PLAY_ACTION}
+              style={styles.playButton}
+            >
               <Icon
-                name={isReading ? "Pause" : "Play"}
+                name={PLAYER_STATE.IS_PLAYING ? "Pause" : "Play"}
                 size={24}
                 color={"white"}
               />
@@ -318,20 +407,49 @@ export const SheetContent = ({
           <Text style={styles.verseReference}>{`${reference}:${
             verseIndex + 1
           }`}</Text>
-          <View style={styles.progressLine}>
-            <LinearGradient
-              colors={["#FF6B35", "#20ACB6"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.progressGradient}
-            />
-          </View>
+
+          {/* Progress Line */}
         </Animated.View>
 
-        {/* <View style={styles.offlineContainer}>
-          <Icon name="WifiOff" size={18} color="white" />
-        </View> */}
+        <View style={styles.progressContainer}>
+          <Text style={styles.progressTimeText}>
+            {formatTime(PLAYER_STATE.POSITION)}
+          </Text>
 
+          <View style={styles.progressLineContainer}>
+            <View style={styles.progressLineBackground} />
+            <View
+              style={[
+                styles.progressLineFill,
+                {
+                  width: `${
+                    PLAYER_STATE.DURATION > 0
+                      ? (PLAYER_STATE.POSITION / PLAYER_STATE.DURATION) * 100
+                      : 0
+                  }%`,
+                },
+              ]}
+            />
+            {/* Progress Thumb */}
+            <View
+              style={[
+                styles.progressThumb,
+                {
+                  left: `${
+                    PLAYER_STATE.DURATION > 0
+                      ? (PLAYER_STATE.POSITION / PLAYER_STATE.DURATION) * 100 -
+                        1
+                      : 0
+                  }%`,
+                },
+              ]}
+            />
+          </View>
+
+          <Text style={styles.progressTimeText}>
+            {formatTime(PLAYER_STATE.DURATION)}
+          </Text>
+        </View>
         {/* Playback Controls */}
         <Animated.View
           style={[rPlaybackControlsStyle, styles.playbackControls]}
@@ -342,8 +460,40 @@ export const SheetContent = ({
           >
             <Icon name="SkipBack" size={32} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handlePlay} style={styles.playButtonLarge}>
-            <Icon name={isReading ? "Pause" : "Play"} size={48} color="white" />
+          {/* 10s Backward Button */}
+          <TouchableOpacity
+            onPress={handleSeekBackward}
+            style={styles.seekButton}
+          >
+            <MaterialCommunityIcons name="rewind-10" size={20} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={PLAYER_STATE.PLAY_ACTION}
+            style={styles.playButtonLarge}
+          >
+            <Icon
+              name={
+                PLAYER_STATE.IS_DOWNLOADING
+                  ? "Download"
+                  : PLAYER_STATE.IS_PLAYING
+                  ? "Pause"
+                  : "Play"
+              }
+              size={48}
+              color="white"
+            />
+          </TouchableOpacity>
+
+          {/* 10s Forward Button */}
+          <TouchableOpacity
+            onPress={handleSeekForward}
+            style={styles.seekButton}
+          >
+            <MaterialCommunityIcons
+              name="fast-forward-10"
+              size={20}
+              color="white"
+            />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleNext} style={styles.controlButton}>
             <Icon name="SkipForward" size={32} color="white" />
@@ -383,7 +533,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
   },
   subtitle: {
     color: Palette.text,
@@ -475,6 +624,83 @@ const styles = StyleSheet.create({
   },
   progressGradient: {
     flex: 1,
+  },
+  progressContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 20,
+    width: "100%",
+    // paddingHorizontal: 20,
+  },
+  progressTimeText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "400",
+    minWidth: 40,
+    textAlign: "center",
+  },
+  progressLineContainer: {
+    flex: 1,
+    height: 2,
+    position: "relative",
+    paddingVertical: 3,
+    justifyContent: "center",
+    marginHorizontal: 14,
+  },
+  progressLineBackground: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(255, 255, 255, 0.432)",
+    borderRadius: 2,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 1,
+  },
+  progressLineFill: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    backgroundColor: "rgba(255, 255, 255, 0.808)",
+    borderRadius: 2,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 1,
+  },
+  progressThumb: {
+    position: "absolute",
+    top: -2,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "#ffb731",
+  },
+  seekButton: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  seekButtonText: {
+    color: "white",
+    fontSize: 10,
+    fontWeight: "500",
+    marginTop: 2,
   },
   playbackControls: {
     flexDirection: "row",

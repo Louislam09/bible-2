@@ -19,6 +19,7 @@ interface AudioPlayerHookResult {
   isDownloading: boolean;
   isPlaying: boolean;
   playAudio: () => void;
+  seekTo: (position: number) => void;
   position: number;
   duration: number;
 }
@@ -158,7 +159,15 @@ const useAudioPlayer = ({
     audioPlayer?.play();
   };
 
-  return { isDownloading, isPlaying, playAudio, position, duration };
+  const seekTo = useCallback((position: number) => {
+    if (audioPlayer && currentUri) {
+      // Convert milliseconds to seconds for expo-audio
+      const positionInSeconds = position / 1000;
+      audioPlayer.seekTo(positionInSeconds);
+    }
+  }, [audioPlayer, currentUri]);
+
+  return { isDownloading, isPlaying, playAudio, seekTo, position, duration };
 };
 
 export default useAudioPlayer;
