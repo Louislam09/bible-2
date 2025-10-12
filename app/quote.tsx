@@ -4,6 +4,7 @@ import { CustomQuoteMode } from "@/components/quote/CustomQuoteMode";
 import { QuoteCard } from "@/components/quote/QuoteCard";
 import { QuoteNavigationDots } from "@/components/quote/QuoteNavigationDots";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
+import { FAMOUS_VERSES } from "@/constants/quotesData";
 import { quoteTemplates } from "@/constants/quoteTemplates";
 import { useMyTheme } from "@/context/ThemeContext";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
@@ -15,12 +16,7 @@ import { TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { use$ } from "@legendapp/state/react";
 import { Stack, useLocalSearchParams, useNavigation } from "expo-router";
-import React, {
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -62,13 +58,13 @@ const COLORS = [
 type FontType = {
   readonly label: "Aa";
   readonly fontFamily:
-  | "System"
-  | "serif"
-  | "sans-serif"
-  | "monospace"
-  | "cursive"
-  | "fantasy"
-  | "emoji";
+    | "System"
+    | "serif"
+    | "sans-serif"
+    | "monospace"
+    | "cursive"
+    | "fantasy"
+    | "emoji";
   readonly fontWeight: "400" | "700";
 };
 
@@ -82,69 +78,6 @@ const FONTS: readonly FontType[] = [
   { label: "Aa", fontFamily: "fantasy", fontWeight: "400" },
   { label: "Aa", fontFamily: "emoji", fontWeight: "400" },
 ] as const;
-
-const FAMOUS_VERSES = [
-  {
-    text: "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree no se pierda, mas tenga vida eterna.",
-    reference: "Juan 3:16",
-  },
-  {
-    text: "Porque para Dios nada hay imposible.",
-    reference: "Lucas 1:37",
-  },
-  {
-    text: "Todo lo puedo en Cristo que me fortalece.",
-    reference: "Filipenses 4:13",
-  },
-  {
-    text: "El Señor es mi pastor; nada me faltará.",
-    reference: "Salmos 23:1",
-  },
-  {
-    text: "Porque yo sé los planes que tengo para ustedes —afirma el Señor—, planes de bienestar y no de calamidad, a fin de darles un futuro y una esperanza.",
-    reference: "Jeremías 29:11",
-  },
-  {
-    text: "Encomienda al Señor tus afanes, y él te sostendrá; no permitirá que el justo caiga y quede abatido para siempre.",
-    reference: "Salmos 55:22",
-  },
-  {
-    text: "Porque donde esté tu tesoro, allí estará también tu corazón.",
-    reference: "Mateo 6:21",
-  },
-  {
-    text: "Buscad primeramente el reino de Dios y su justicia, y todas estas cosas os serán añadidas.",
-    reference: "Mateo 6:33",
-  },
-  {
-    text: "Porque no nos ha dado Dios espíritu de cobardía, sino de poder, de amor y de dominio propio.",
-    reference: "2 Timoteo 1:7",
-  },
-  {
-    text: "Y sabemos que a los que aman a Dios, todas las cosas les ayudan a bien, esto es, a los que conforme a su propósito son llamados.",
-    reference: "Romanos 8:28",
-  },
-  {
-    text: "Porque la palabra de Dios es viva y eficaz, y más cortante que toda espada de dos filos; y penetra hasta partir el alma y el espíritu, las coyunturas y los tuétanos, y discierne los pensamientos y las intenciones del corazón.",
-    reference: "Hebreos 4:12",
-  },
-  {
-    text: "Porque la paga del pecado es muerte, mas la dádiva de Dios es vida eterna en Cristo Jesús Señor nuestro.",
-    reference: "Romanos 6:23",
-  },
-  {
-    text: "Porque la gracia de Dios se ha manifestado para salvación a todos los hombres.",
-    reference: "Tito 2:11",
-  },
-  {
-    text: "Porque la fe viene por el oír, y el oír, por la palabra de Dios.",
-    reference: "Romanos 10:17",
-  },
-  {
-    text: "Porque la sabiduría de este mundo es insensatez para con Dios.",
-    reference: "1 Corintios 3:19",
-  },
-];
 
 type QuoteProps = {};
 
@@ -281,7 +214,7 @@ const Quote: React.FC<QuoteProps> = () => {
     fileName: "quote",
     quality: 1,
     format: "png",
-    viewShotRef
+    viewShotRef,
   });
 
   const handleShare = async () => {
@@ -315,7 +248,7 @@ const Quote: React.FC<QuoteProps> = () => {
       Alert.alert(
         "Error",
         "No se pudo compartir la cita: " +
-        (error?.message || "Error desconocido")
+          (error?.message || "Error desconocido")
       );
     } finally {
       setIsLoading(false);
@@ -407,7 +340,7 @@ const Quote: React.FC<QuoteProps> = () => {
                 {customMode
                   ? "Crea tu propio estilo"
                   : quoteTemplates[currentTemplateIndex]?.description ||
-                  "Select a template"}
+                    "Select a template"}
               </Animated.Text>
             </View>
             {customMode ? (

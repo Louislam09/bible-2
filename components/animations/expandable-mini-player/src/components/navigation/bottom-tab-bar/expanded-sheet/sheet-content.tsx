@@ -17,6 +17,7 @@ import { useMyTheme } from "@/context/ThemeContext";
 import useAudioPlayer from "@/hooks/useAudioPlayer";
 import useBibleReader from "@/hooks/useBibleReading";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
+import { audioState$ } from "@/hooks/useAudioPlayer";
 import { bibleState$ } from "@/state/bibleState";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNetInfo } from "@react-native-community/netinfo";
@@ -162,7 +163,7 @@ export const SheetContent = ({
       if (PLAYER_STATE.IS_PLAYING) {
         PLAYER_STATE.PLAY_ACTION();
       }
-      bibleState$.toggleIsPlayerOpened();
+      audioState$.toggleIsPlayerOpened();
     }, 550);
   };
   const rImageStyle = useAnimatedStyle(() => {
@@ -375,7 +376,14 @@ export const SheetContent = ({
               style={styles.playButton}
             >
               <Icon
-                name={PLAYER_STATE.IS_PLAYING ? "Pause" : "Play"}
+                // name={PLAYER_STATE.IS_PLAYING ? "Pause" : "Play"}
+                name={
+                  PLAYER_STATE.IS_DOWNLOADING
+                    ? "Download"
+                    : PLAYER_STATE.IS_PLAYING
+                    ? "Pause"
+                    : "Play"
+                }
                 size={24}
                 color={"white"}
               />
@@ -471,6 +479,7 @@ export const SheetContent = ({
           >
             <MaterialCommunityIcons name="rewind-10" size={20} color="white" />
           </TouchableOpacity>
+
           <TouchableOpacity
             onPress={PLAYER_STATE.PLAY_ACTION}
             style={styles.playButtonLarge}

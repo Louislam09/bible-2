@@ -14,7 +14,7 @@ import { RefObject } from "react";
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList { }
+    interface RootParamList extends RootStackParamList {}
   }
 }
 
@@ -47,6 +47,7 @@ export enum Screens {
   Song = "song",
   StrongSearchEntire = "searchStrongWordEntire",
   DictionarySearch = "dictionary",
+  QuoteMaker = "quoteMaker",
   NoteDetail = "noteDetail",
   NoteDetailDom = "noteDetailDom",
   History = "history",
@@ -88,6 +89,7 @@ export const ScreensName: TScreensName = {
   [Screens.Song]: "Himnario",
   [Screens.StrongSearchEntire]: "Explorador de Números Strong",
   [Screens.DictionarySearch]: "Busqueda en el Diccionario",
+  [Screens.QuoteMaker]: "Cita Image",
   [Screens.NoteDetail]: "Nota",
   [Screens.NoteDetailDom]: "Nota",
   [Screens.Hymn]: "Selecciona un himnario",
@@ -123,6 +125,7 @@ export type RootTabParamList = {
   strongSearchEntire: undefined;
   downloadManager: undefined;
   notes: undefined;
+  quoteMaker: undefined;
   noteDetail: undefined;
   noteDetailDom: undefined;
   favorite: undefined;
@@ -140,6 +143,7 @@ export type RootStackParamList = {
   dashboard: NavigatorScreenParams<RootTabParamList> | undefined;
   settings: NavigatorScreenParams<RootTabParamList> | undefined;
   quote: NavigatorScreenParams<RootTabParamList> | undefined;
+  quoteMaker: NavigatorScreenParams<RootTabParamList> | undefined;
   quoteDom: NavigatorScreenParams<RootTabParamList> | undefined;
   home: NavigatorScreenParams<RootTabParamList> | HomeParams;
   book: NavigatorScreenParams<RootTabParamList> | undefined;
@@ -148,30 +152,30 @@ export type RootStackParamList = {
   downloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
   notes: NavigatorScreenParams<RootTabParamList> | { shouldRefresh: boolean };
   noteDetail:
-  | NavigatorScreenParams<RootTabParamList>
-  | { noteId: number | null; isNewNote: boolean };
+    | NavigatorScreenParams<RootTabParamList>
+    | { noteId: number | null; isNewNote: boolean };
   noteDetailDom:
-  | NavigatorScreenParams<RootTabParamList>
-  | { noteId: number | null; isNewNote: boolean };
+    | NavigatorScreenParams<RootTabParamList>
+    | { noteId: number | null; isNewNote: boolean };
   character: NavigatorScreenParams<RootTabParamList> | undefined;
   chooseBook:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
   chooseReferenceDom:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
   "(search)": NavigatorScreenParams<RootTabParamList> | { book?: string };
   concordance: NavigatorScreenParams<RootTabParamList> | {};
   strongSearchEntire:
-  | NavigatorScreenParams<RootTabParamList>
-  | { paramCode: string };
+    | NavigatorScreenParams<RootTabParamList>
+    | { paramCode: string };
   dictionary: NavigatorScreenParams<RootTabParamList> | { word: string };
   chooseChapterNumber:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
   chooseVerseNumber:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
+    | NavigatorScreenParams<RootTabParamList>
+    | ChooseChapterNumberParams;
   modal: undefined;
   onboarding: undefined;
   timeline: undefined;

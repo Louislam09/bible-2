@@ -19,6 +19,7 @@ import { useHaptics } from "@/hooks/useHaptics";
 import useParams from "@/hooks/useParams";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import { bibleState$ } from "@/state/bibleState";
+import { audioState$ } from "@/hooks/useAudioPlayer";
 import { tourState$ } from "@/state/tourState";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
@@ -69,38 +70,38 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const { bookNumber } = DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
   const isRVR = currentBibleVersion === EBibleVersions.BIBLE && isConnected;
-  const { isDownloading, isPlaying, playAudio, duration, position } =
-    useAudioPlayer({
-      book: book,
-      chapterNumber: +chapter,
-      nextChapter,
-    });
+  // const { isDownloading, isPlaying, playAudio, duration, position } =
+  //   useAudioPlayer({
+  //     book: book,
+  //     chapterNumber: +chapter,
+  //     nextChapter,
+  //   });
 
-  const { verseIndex, startReading, stopReading, isSpeaking, ended, reset } =
-    useBibleReader({
-      currentChapterVerses: bibleState$.bibleData.topVerses.get() as any,
-      currentVoiceIdentifier,
-      voiceRate: currentVoiceRate,
-    });
-  const startOrStop = isSpeaking ? stopReading : startReading;
-  const _playAudio = isRVR ? playAudio : startOrStop;
-  const _isPlaying = isRVR ? isPlaying : isSpeaking;
+  // const { verseIndex, startReading, stopReading, isSpeaking, ended, reset } =
+  //   useBibleReader({
+  //     currentChapterVerses: bibleState$.bibleData.topVerses.get() as any,
+  //     currentVoiceIdentifier,
+  //     voiceRate: currentVoiceRate,
+  //   });
+  // const startOrStop = isSpeaking ? stopReading : startReading;
+  // const _playAudio = isRVR ? playAudio : startOrStop;
+  // const _isPlaying = isRVR ? isPlaying : isSpeaking;
 
-  useEffect(() => {
-    if (ended && shouldLoopReading) {
-      nextChapter();
-      setTimeout(() => {
-        reset({ andPlay: shouldLoopReading });
-      }, 1000);
-    }
-  }, [ended, shouldLoopReading]);
+  // useEffect(() => {
+  //   if (ended && shouldLoopReading) {
+  //     nextChapter();
+  //     setTimeout(() => {
+  //       reset({ andPlay: shouldLoopReading });
+  //     }, 1000);
+  //   }
+  // }, [ended, shouldLoopReading]);
 
-  useEffect(() => {
-    return () => {
-      if (isPlaying) playAudio();
-      stopReading();
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     if (isPlaying) playAudio();
+  //     stopReading();
+  //   };
+  // }, []);
 
   const nextOrPreviousBook = (name: string, chapter: number = 1) => {
     bibleState$.clearSelection();
@@ -204,10 +205,10 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
 
   const onPlay = () => {
     haptics.impact.light();
-    bibleState$.toggleIsPlayerOpened();
+    audioState$.toggleIsPlayerOpened();
   };
 
-  const isPlayerOpened = use$(() => bibleState$.isPlayerOpened.get());
+  const isPlayerOpened = use$(() => audioState$.isPlayerOpened.get());
 
   const displayBookName = renameLongBookName(book);
 
@@ -220,7 +221,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
       ]}
       style={styles.footer}
     >
-      {isPlaying && (
+      {/* {isPlaying && (
         <View style={[styles.progressBarContainer]}>
           <ProgressBar
             height={8}
@@ -230,7 +231,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
             circleColor={theme.colors.notification}
           />
         </View>
-      )}
+      )} */}
       <View style={styles.footerCenter}>
         <TouchableOpacity
           ref={tourState$.backButton.get()}
@@ -277,7 +278,8 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
             onPress={onPlay}
           >
             <Icon
-              name={isPlaying ? "AudioLines" : "Play"}
+              name={"Play"}
+              // name={isPlaying ? "AudioLines" : "Play"}
               color="white"
               size={footerIconSize}
             />

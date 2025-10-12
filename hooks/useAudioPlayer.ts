@@ -8,6 +8,8 @@ import {
 import * as FileSystem from "expo-file-system";
 import { ToastAndroid } from "react-native";
 import getCurrentAudioUrl, { getAudioName } from "@/constants/bibleAudioUrl";
+import { observable } from "@legendapp/state";
+import { use$ } from "@legendapp/state/react";
 
 interface AudioPlayerHookProps {
   book: string;
@@ -23,6 +25,26 @@ interface AudioPlayerHookResult {
   position: number;
   duration: number;
 }
+
+export const audioState$ = observable({
+  isPlaying: false,
+  isDownloading: false,
+  isPaused: false,
+  isFinished: false,
+  isError: false,
+  isLoading: false,
+  isReady: false,
+  isPlayerOpened: false,
+  shouldPlayAfterDownload: false,
+  currentUri: null as string | null,
+  currentBook: '',
+  currentChapter: 0,
+  position: 0,
+  duration: 0,
+  toggleIsPlayerOpened: () => {
+    audioState$.isPlayerOpened.set(() => !audioState$.isPlayerOpened.get());
+  },
+});
 
 // const getAudioUrl = (bookNumberForAudio: number, chapter: number) => {
 //   return `https://www.wordproaudio.net/bibles/app/audio/6/${bookNumberForAudio}/${chapter}.mp3`;
@@ -49,11 +71,8 @@ const useAudioPlayer = ({
     };
   }, [book, chapterNumber, dbFolder]);
 
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [autoPlay, setAutoPlay] = useState(false);
-  const [currentUri, setCurrentUri] = useState<string | null>(null);
-
-  // Create audio player with the current URI
+  const currentUri = use$(() => audioState$.currentUri.get());
+  // Create audio player with the current URI from observable
   const audioPlayer = useExpoAudioPlayer(currentUri);
   const audioStatus = useAudioPlayerStatus(audioPlayer);
 
@@ -61,35 +80,39 @@ const useAudioPlayer = ({
   const position = audioStatus.currentTime * 1000; // Convert to milliseconds
   const duration = audioStatus.duration * 1000; // Convert to milliseconds
 
+  // Sync audio status with observable state
+  useEffect(() => {
+    audioState$.isPlaying.set(isPlaying);
+    audioState$.isPaused.set(!isPlaying && position > 0);
+    audioState$.isFinished.set(audioStatus.didJustFinish);
+    audioState$.isReady.set(!!currentUri && duration > 0);
+    audioState$.position.set(position);
+    audioState$.duration.set(duration);
+  }, [isPlaying, position, audioStatus.didJustFinish, duration]);
+
+  // Sync current book and chapter
+  useEffect(() => {
+    audioState$.currentBook.set(book);
+    audioState$.currentChapter.set(chapterNumber);
+  }, [book, chapterNumber]);
+
   const resetAudio = useCallback(async () => {
     if (audioPlayer) {
       audioPlayer.pause();
     }
-    setCurrentUri(null);
-    setAutoPlay(false);
+    audioState$.currentUri.set(null);
   }, [audioPlayer]);
 
+  const onCheckAudioExists = useCallback(async (effect: string) => {
+    const { exists } = await FileSystem.getInfoAsync(audioData.localUri);
+    if (!exists) {
+      await downloadAudio();
+    } else {
+      audioState$.currentUri.set(audioData.localUri);
+    }
+  }, [audioData.localUri]);
+
   useEffect(() => {
-    const loadAudio = async () => {
-      try {
-        await resetAudio();
-        await FileSystem.makeDirectoryAsync(dbFolder, { intermediates: true });
-
-        const { exists } = await FileSystem.getInfoAsync(audioData.localUri);
-        if (!exists) {
-          if (autoPlay) {
-            await downloadAudio();
-          }
-          return;
-        }
-
-        setCurrentUri(audioData.localUri);
-        setAutoPlay(false);
-      } catch (error) {
-        console.log("Error al cargar el audio:", error);
-      }
-    };
-
     // Set audio mode
     setAudioModeAsync({
       playsInSilentMode: true,
@@ -99,56 +122,71 @@ const useAudioPlayer = ({
       shouldPlayInBackground: true,
       shouldRouteThroughEarpiece: false,
     } as AudioMode);
+  }, []);
+
+  useEffect(() => {
+    if (!book || !chapterNumber) return
+    const loadAudio = async () => {
+      try {
+        await resetAudio();
+        await FileSystem.makeDirectoryAsync(dbFolder, { intermediates: true });
+
+        await onCheckAudioExists('eefect');
+
+        audioState$.currentUri.set(audioData.localUri);
+      } catch (error) {
+        console.log("Error al cargar el audio:", error);
+      }
+    };
 
     loadAudio();
 
     return () => {
       resetAudio();
     };
-  }, [book, chapterNumber, resetAudio]);
+  }, [book, chapterNumber]);
 
   // Handle audio completion
   useEffect(() => {
     if (audioStatus.didJustFinish) {
-      resetAudio();
-      setAutoPlay(true);
       nextChapter && nextChapter();
+      audioState$.shouldPlayAfterDownload.set(true);
     }
-  }, [audioStatus.didJustFinish, resetAudio, nextChapter]);
+  }, [audioStatus.didJustFinish]);
 
-  // Handle autoplay
+  // Handle auto-play when audio player is ready
   useEffect(() => {
-    if (autoPlay && currentUri && audioPlayer) {
-      audioPlayer.play();
-      setAutoPlay(false);
+    const currentUri = audioState$.currentUri.get();
+    if (currentUri && audioPlayer && audioState$.shouldPlayAfterDownload.get()) {
+      audioState$.shouldPlayAfterDownload.set(false);
+      setTimeout(() => {
+        audioPlayer.play();
+      }, 200);
     }
-  }, [autoPlay, currentUri, audioPlayer]);
+  }, [audioPlayer]);
 
   const downloadAudio = async () => {
     ToastAndroid.show("Descargando...", ToastAndroid.SHORT);
-    setIsDownloading(true);
+    audioState$.isDownloading.set(true);
 
     try {
       const { uri } = await FileSystem.downloadAsync(audioData.audioUrl, audioData.localUri);
       ToastAndroid.show("Audio descargado!", ToastAndroid.SHORT);
-      setIsDownloading(false);
+      audioState$.isDownloading.set(false);
 
-      setCurrentUri(uri);
-      if (audioPlayer) {
-        audioPlayer.play();
-      }
-      setAutoPlay(false);
+      audioState$.currentUri.set(uri);
+
     } catch (error) {
       console.log("Error downloading audio:", error);
-      setIsDownloading(false);
+      audioState$.isDownloading.set(false);
       ToastAndroid.show("Error al descargar audio", ToastAndroid.SHORT);
     }
   };
 
   const playAudio = async () => {
+    const currentUri = audioState$.currentUri.get();
     if (!currentUri) {
-      await downloadAudio();
-      return;
+      await onCheckAudioExists('playAudio');
     }
 
     if (isPlaying) {
@@ -156,18 +194,27 @@ const useAudioPlayer = ({
       return;
     }
 
+    audioState$.shouldPlayAfterDownload.set(false);
     audioPlayer?.play();
   };
 
   const seekTo = useCallback((position: number) => {
+    const currentUri = audioState$.currentUri.get();
     if (audioPlayer && currentUri) {
       // Convert milliseconds to seconds for expo-audio
       const positionInSeconds = position / 1000;
       audioPlayer.seekTo(positionInSeconds);
     }
-  }, [audioPlayer, currentUri]);
+  }, [audioPlayer]);
 
-  return { isDownloading, isPlaying, playAudio, seekTo, position, duration };
+  return {
+    isDownloading: audioState$.isDownloading.get(),
+    isPlaying,
+    playAudio,
+    seekTo,
+    position: audioState$.position.get(),
+    duration: audioState$.duration.get()
+  };
 };
 
 export default useAudioPlayer;

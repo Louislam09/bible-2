@@ -153,6 +153,12 @@ const NewDashboard = () => {
 
   const studyToolItems: IDashboardOption[] = [
     {
+      icon: "Image",
+      label: "Cita Image",
+      action: () => navigation?.navigate(Screens.QuoteMaker),
+      color: "#ec899e",
+    },
+    {
       icon: "BookA",
       label: "Diccionarios",
       action: () =>
