@@ -264,7 +264,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     }:${item.verse}`;
     bibleState$.handleSelectVerseForNote(verseText);
     router.push({
-      pathname: "/quoteDom",
+      pathname: "/quoteMaker",
+      // pathname: "/quoteDom",
       params: { text: verseText, reference },
     });
   };

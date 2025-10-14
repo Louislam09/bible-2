@@ -11,11 +11,13 @@ import { quoteTemplatesMaker } from "@/constants/quoteTemplates";
 import { headerIconSize } from "@/constants/size";
 import { useMyTheme } from "@/context/ThemeContext";
 import { useViewShot } from "@/hooks/useViewShot";
+import { bibleState$ } from "@/state/bibleState";
 import { TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { use$ } from "@legendapp/state/react";
 import { ImageBackground } from "expo-image";
-import { Stack, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Share, StyleSheet, TouchableOpacity } from "react-native";
 import ViewShot from "react-native-view-shot";
@@ -38,19 +40,33 @@ const QuoteMaker: React.FC = () => {
     | undefined
   >();
   const [watermarkClass, setWatermarkClass] = useState("none");
-  // Initialize with random verse and theme
-  useEffect(() => {
-    const randomVerse =
-      FAMOUS_VERSES[Math.floor(Math.random() * FAMOUS_VERSES.length)];
-    setSelectedVerse({
-      text: "Porque la palabra de Dios es viva y eficaz, y más cortante que toda espada de dos filos; y penetra hasta partir el alma y el espíritu, las coyunturas y los tuétanos, y discierne los pensamientos y las intenciones del corazón.",
-      reference: "Hebreos 4:12",
-    });
 
+  const mySelectedVerse = use$(() => bibleState$.selectedVerseForNote.get());
+  const params = useLocalSearchParams();
+
+  const randomVerse = useMemo(() => {
+    const randomIndex = Math.floor(Math.random() * FAMOUS_VERSES.length);
+    return FAMOUS_VERSES[randomIndex];
+  }, []);
+
+  useEffect(() => {
     // Get all themes from all sections
     const allThemes = QUOTES_DATA.flatMap((section) => section.items);
     const randomTheme = allThemes[Math.floor(Math.random() * allThemes.length)];
     setSelectedTheme(randomTheme);
+  }, []);
+
+  // Initialize with random verse and theme
+  useEffect(() => {
+    console.log({ mySelectedVerse, params });
+
+    setSelectedVerse({
+      text: typeof params?.text === "string" ? params.text : randomVerse.text,
+      reference:
+        typeof params?.reference === "string"
+          ? params.reference
+          : randomVerse.reference,
+    });
   }, []);
 
   const screenOptions: any = useMemo(() => {
