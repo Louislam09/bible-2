@@ -1,23 +1,13 @@
-import React, { useCallback, useMemo, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  Dimensions,
-} from "react-native";
-import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import React, { useCallback, useMemo, useRef, useEffect } from "react";
+import { View, StyleSheet, Dimensions } from "react-native";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { WebView } from "react-native-webview";
 import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
-import {
-  QUOTES_DATA,
-  TQuoteDataItem,
-  TQuoteDataSection,
-  BACKGROUND_IMAGES,
-} from "@/constants/quotesData";
-import Icon from "@/components/Icon";
+import { QUOTES_DATA, TQuoteDataItem } from "@/constants/quotesData";
+import BottomModal from "../BottomModal";
+import { Text } from "../Themed";
+import { quoteTemplatesMaker } from "@/constants/quoteTemplates";
 
 interface ThemeSelectorBottomSheetProps {
   bottomSheetRef: React.RefObject<BottomSheetModal | null>;
@@ -26,8 +16,352 @@ interface ThemeSelectorBottomSheetProps {
   onClose: () => void;
 }
 
-const { width: screenWidth } = Dimensions.get("window");
-const CARD_SIZE = (screenWidth - 60) / 4; // 4 cards per row with padding
+const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
+
+const getHTMLContent = (quotesData: any, selectedThemeId: string | null) => {
+  // Collect all unique fonts from the quotes data
+  const uniqueFonts = new Set<string>();
+  quotesData.forEach((section: any) => {
+    section.items.forEach((item: any) => {
+      if (item.font && item.font.name) {
+        uniqueFonts.add(item.font.name);
+      }
+    });
+  });
+
+  // Generate font imports
+  const fontImports = Array.from(uniqueFonts)
+    .map((fontName) => {
+      const fontUrl = `https://fonts.googleapis.com/css2?family=${fontName.replace(
+        /\s+/g,
+        "+"
+      )}:wght@400;600;700&display=swap`;
+      return `<link href="${fontUrl}" rel="stylesheet">`;
+    })
+    .join("\n    ");
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Selector</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    ${fontImports}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #1a1a1a0;
+            color: #ffffff;
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #333;
+            position: sticky;
+            top: 0;
+            background-color: #1a1a1a0;
+            z-index: 100;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .close-button:hover {
+            background-color: #333;
+        }
+
+        .placeholder {
+            width: 40px;
+        }
+
+        .content {
+            padding: 20px 0;
+            height: 100%;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            padding: 0 20px;
+            text-transform: capitalize;
+        }
+
+        .themes-container {
+            display: flex;
+            gap: 12px;
+            padding: 0 20px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+
+        .themes-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .theme-card {
+            flex-shrink: 0;
+            width: 80px;
+            height: 100px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-card.selected {
+            border: 2px solid #007AFF;
+        }
+
+        .card-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.1) 100%);
+        }
+
+        .preview-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            color: #ffffff;
+            max-width: 70px;
+            line-height: 1.2;
+            font-family: inherit;
+            padding: 4px 6px;
+            border-radius: 4px;
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            transition: all 0.2s ease;
+        }
+
+        .selected-indicator {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 12px;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            color: #666;
+        }
+
+        @media (prefers-color-scheme: light) {
+            body {
+                background-color: #ffffff;
+                color: #000000;
+            }
+            
+            .header {
+                background-color: #ffffff;
+                border-bottom-color: #e0e0e0;
+            }
+            
+            .title {
+                color: #000000;
+            }
+            
+            .close-button {
+                color: #000000;
+            }
+            
+            .close-button:hover {
+                background-color: #f0f0f0;
+            }
+            
+            .section-title {
+                color: #000000;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="placeholder"></div>
+        <div class="title">Themes</div>
+        <button class="close-button" onclick="handleClose()">×</button>
+    </div>
+
+    <div class="content" id="content">
+        <div class="loading">Loading themes...</div>
+    </div>
+
+    <script>
+        const quotesData = ${JSON.stringify(quotesData)};
+        const selectedThemeId = ${JSON.stringify(selectedThemeId)};
+
+        function handleClose() {
+            if (window.ReactNativeWebView) {
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                    type: 'close'
+                }));
+            }
+        }
+
+        function handleThemeSelect(themeId) {
+            // Update visual selection
+            document.querySelectorAll('.theme-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(\`[data-theme-id="\${themeId}"]\`).classList.add('selected');
+
+            // Send selection to React Native
+            if (window.ReactNativeWebView) {
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                    type: 'themeSelected',
+                    themeId: themeId
+                }));
+            }
+        }
+
+        function renderThemes() {
+            const content = document.getElementById('content');
+
+            let html = '';
+            
+            quotesData.forEach(section => {
+                html += \`
+                    <div class="section">
+                        <div class="section-title">\${section.section}</div>
+                        <div class="themes-container">
+                \`;
+                
+                section.items.forEach(theme => {
+                    const isSelected = theme.id === selectedThemeId;
+                    html += \`
+                        <div class="theme-card \${isSelected ? 'selected' : ''}" 
+                             data-theme-id="\${theme.id}" 
+                             onclick="handleThemeSelect('\${theme.id}')">
+                            <img src="\${theme.backgroundImageUrl}" 
+                                 alt="\${theme.name}" 
+                                 class="card-background"
+                                 onerror="this.style.display='none'">
+                            <div class="card-overlay"></div>
+                            <div class="preview-text" style="font-family: '\${theme.font.name}', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                                \${theme.previewText}
+                            </div>
+                            \${isSelected ? '<div class="selected-indicator">✓</div>' : ''}
+                        </div>
+                    \`;
+                });
+                
+                html += \`
+                        </div>
+                    </div>
+                \`;
+            });
+            
+            content.innerHTML = html;
+        }
+
+        // Initialize themes when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for fonts to load before rendering
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(() => {
+                    renderThemes();
+                });
+            } else {
+                // Fallback for browsers that don't support document.fonts
+                setTimeout(() => {
+                    renderThemes();
+                }, 100);
+            }
+            
+            // Ensure horizontal scrolling works on touch devices
+            const themeContainers = document.querySelectorAll('.themes-container');
+            themeContainers.forEach(container => {
+                container.addEventListener('touchstart', function(e) {
+                    this.style.scrollBehavior = 'auto';
+                });
+                
+                container.addEventListener('touchend', function(e) {
+                    this.style.scrollBehavior = 'smooth';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+  `;
+};
 
 const ThemeSelectorBottomSheet: React.FC<ThemeSelectorBottomSheetProps> = ({
   bottomSheetRef,
@@ -37,6 +371,7 @@ const ThemeSelectorBottomSheet: React.FC<ThemeSelectorBottomSheetProps> = ({
 }) => {
   const { theme } = useMyTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
+  const webViewRef = useRef<WebView>(null);
 
   const handleThemeSelect = useCallback(
     (themeItem: TQuoteDataItem) => {
@@ -46,88 +381,78 @@ const ThemeSelectorBottomSheet: React.FC<ThemeSelectorBottomSheetProps> = ({
     [onThemeSelect, bottomSheetRef]
   );
 
-  const renderThemeCard = useCallback(
-    (themeItem: TQuoteDataItem, isSelected: boolean) => {
-      return (
-        <TouchableOpacity
-          key={themeItem.id}
-          style={[
-            styles.themeCard,
-            { width: CARD_SIZE, height: CARD_SIZE + 20 },
-          ]}
-          onPress={() => handleThemeSelect(themeItem)}
-          activeOpacity={0.8}
-        >
-          <Image
-            source={{ uri: themeItem.backgroundImageUrl }}
-            style={styles.cardBackground}
-            resizeMode="cover"
-          />
-          <View style={styles.cardOverlay} />
-          <Text
-            style={[
-              styles.previewText,
-              { color: "#ffffff", fontFamily: themeItem.font.name },
-            ]}
-          >
-            {themeItem.previewText}
-          </Text>
-          {isSelected && (
-            <View style={styles.selectedIndicator}>
-              <Icon name="Check" size={16} color="#FFFFFF" />
-            </View>
-          )}
-        </TouchableOpacity>
-      );
+  const handleWebViewMessage = useCallback(
+    (event: any) => {
+      try {
+        console.log({ event });
+        const data = JSON.parse(event.nativeEvent.data);
+
+        if (data.type === "themeSelected") {
+          const selectedThemeItem = QUOTES_DATA.flatMap(
+            (section) => section.items
+          ).find((item) => item.id === data.themeId);
+
+          if (selectedThemeItem) {
+            handleThemeSelect(selectedThemeItem);
+          }
+        } else if (data.type === "close") {
+          onClose();
+        }
+      } catch (error) {
+        console.error("Error parsing WebView message:", error);
+      }
     },
-    [handleThemeSelect, styles]
+    [handleThemeSelect, onClose]
   );
 
-  const renderSection = useCallback(
-    (section: TQuoteDataSection) => {
-      return (
-        <View key={section.section} style={styles.section}>
-          <Text style={styles.sectionTitle}>{section.section}</Text>
-          <View
-            style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}
-            // horizontal
-            // showsHorizontalScrollIndicator={false}
-            // contentContainerStyle={styles.themesContainer}
-          >
-            {section.items.map((themeItem) =>
-              renderThemeCard(themeItem, selectedTheme?.id === themeItem.id)
-            )}
-          </View>
-        </View>
-      );
-    },
-    [renderThemeCard, selectedTheme, styles]
-  );
+  const htmlContent = useMemo(() => {
+    return getHTMLContent(QUOTES_DATA, selectedTheme?.id || null);
+  }, [selectedTheme]);
 
   return (
-    <BottomSheetModal
+    <BottomModal
+      style={styles.bottomSheet}
+      backgroundColor={theme.dark ? theme.colors.background : "#eee"}
+      shouldScroll={false}
       ref={bottomSheetRef}
-      index={0}
-      snapPoints={["85%"]}
-      backgroundStyle={styles.bottomSheet}
-      handleIndicatorStyle={styles.indicator}
-      enablePanDownToClose
+      justOneSnap
+      showIndicator
+      justOneValue={["70%"]}
+      startAT={0}
     >
-      <View style={styles.header}>
-        <View style={styles.placeholder} />
-        <Text style={styles.title}>Themes</Text>
-        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-          <Icon name="X" size={24} color={theme.colors.text} />
-        </TouchableOpacity>
+      <View style={styles.webViewContainer}>
+        <WebView
+          ref={webViewRef}
+          source={{ html: htmlContent }}
+          style={{
+            flex: 1,
+            minWidth: "100%",
+            minHeight: screenHeight,
+            backgroundColor: "transparent",
+          }}
+          onMessage={handleWebViewMessage}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}
+          startInLoadingState={true}
+          mixedContentMode="compatibility"
+          allowsInlineMediaPlayback={true}
+          mediaPlaybackRequiresUserAction={false}
+          scrollEnabled={true}
+          bounces={false}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          nestedScrollEnabled={true}
+          onError={(syntheticEvent) => {
+            const { nativeEvent } = syntheticEvent;
+            console.error("WebView error: ", nativeEvent);
+          }}
+          onHttpError={(syntheticEvent) => {
+            const { nativeEvent } = syntheticEvent;
+            console.error("WebView HTTP error: ", nativeEvent);
+          }}
+        />
       </View>
-
-      <BottomSheetScrollView
-        contentContainerStyle={styles.contentContainer}
-        showsVerticalScrollIndicator={false}
-      >
-        {QUOTES_DATA.map(renderSection)}
-      </BottomSheetScrollView>
-    </BottomSheetModal>
+    </BottomModal>
   );
 };
 
@@ -143,95 +468,14 @@ const getStyles = ({ colors }: TTheme) =>
       width: 40,
       height: 4,
     },
-    header: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      paddingHorizontal: 20,
-      paddingVertical: 16,
-      borderBottomColor: colors.border,
+    webViewContainer: {
+      flex: 1,
+      width: "100%",
+      backgroundColor: "transparent",
     },
-    closeButton: {
-      padding: 8,
-    },
-    closeText: {
-      fontSize: 16,
-      color: colors.text,
-      fontWeight: "500",
-    },
-    title: {
-      fontSize: 18,
-      fontWeight: "600",
-      color: colors.text,
-    },
-    placeholder: {
-      width: 60, // Same width as close button to center the title
-    },
-    contentContainer: {
-      paddingBottom: 20,
-    },
-    section: {
-      marginBottom: 24,
-    },
-    sectionTitle: {
-      fontSize: 16,
-      fontWeight: "600",
-      color: colors.text,
-      marginBottom: 12,
-      paddingHorizontal: 20,
-      textTransform: "capitalize",
-    },
-    themesContainer: {
-      paddingHorizontal: 20,
-      gap: 12,
-    },
-    themeCard: {
-      borderRadius: 12,
-      overflow: "hidden",
-      position: "relative",
-      elevation: 2,
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-    },
-    cardBackground: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-    },
-    cardOverlay: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: "rgba(0, 0, 0, 0.1)",
-    },
-    previewText: {
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: [{ translateX: -20 }, { translateY: -10 }],
-      fontSize: 16,
-      fontWeight: "600",
-      textAlign: "center",
-    },
-    selectedIndicator: {
-      position: "absolute",
-      top: 8,
-      right: 8,
-      width: 24,
-      height: 24,
-      borderRadius: 12,
-      backgroundColor: "rgba(0, 0, 0, 0.6)",
-      justifyContent: "center",
-      alignItems: "center",
+    webView: {
+      flex: 1,
+      backgroundColor: "transparent",
     },
   });
 

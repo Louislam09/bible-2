@@ -163,8 +163,6 @@ const QuoteMaker: React.FC = () => {
                   flex: 1,
                   minWidth: "100%",
                   backgroundColor: "transparent",
-                  borderWidth: 1,
-                  borderColor: "red",
                 }}
                 source={{
                   html: quoteTemplatesMaker(selectedTheme)
