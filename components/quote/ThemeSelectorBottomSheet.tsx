@@ -51,7 +51,10 @@ const ThemeSelectorBottomSheet: React.FC<ThemeSelectorBottomSheetProps> = ({
       return (
         <TouchableOpacity
           key={themeItem.id}
-          style={[styles.themeCard, { width: CARD_SIZE, height: CARD_SIZE }]}
+          style={[
+            styles.themeCard,
+            { width: CARD_SIZE, height: CARD_SIZE + 20 },
+          ]}
           onPress={() => handleThemeSelect(themeItem)}
           activeOpacity={0.8}
         >
@@ -64,7 +67,7 @@ const ThemeSelectorBottomSheet: React.FC<ThemeSelectorBottomSheetProps> = ({
           <Text
             style={[
               styles.previewText,
-              { color: "#fff", fontFamily: themeItem.font.name },
+              { color: "#ffffff", fontFamily: themeItem.font.name },
             ]}
           >
             {themeItem.previewText}

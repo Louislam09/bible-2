@@ -67,15 +67,15 @@ export const useViewShot = ({
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(fileUri, {
           mimeType: `image/${format}`,
-          dialogTitle: "Share Quote",
+          dialogTitle: "Compartir Cita",
           UTI: `public.${format}`,
         });
       } else {
-        Alert.alert("Error", "Sharing is not available on this device");
+        Alert.alert("Error", "Compartir no está disponible en este dispositivo");
       }
     } catch (error: any) {
-      console.error("Error sharing screenshot:", error);
-      Alert.alert("Error", "Failed to share screenshot: " + error.message);
+      console.error("Error compartiendo cita:", error);
+      Alert.alert("Error", "Error al compartir cita: " + error.message);
       throw error;
     }
   };

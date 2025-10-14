@@ -1,21 +1,29 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import Icon from "@/components/Icon";
+import ThemeSelectorBottomSheet from "@/components/quote/ThemeSelectorBottomSheet";
 import { Text, View } from "@/components/Themed";
-import { useMyTheme } from "@/context/ThemeContext";
-import { TTheme } from "@/types";
 import {
-  TQuoteDataItem,
   FAMOUS_VERSES,
   QUOTES_DATA,
+  TQuoteDataItem,
 } from "@/constants/quotesData";
-import { Stack } from "expo-router";
-import React, { useMemo, useRef, useState, useEffect } from "react";
-import { StyleSheet, TouchableOpacity, Alert, Share } from "react-native";
-import { ImageBackground } from "expo-image";
+import { quoteTemplatesMaker } from "@/constants/quoteTemplates";
+import { headerIconSize } from "@/constants/size";
+import { useMyTheme } from "@/context/ThemeContext";
+import { useViewShot } from "@/hooks/useViewShot";
+import { TTheme } from "@/types";
+import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import ThemeSelectorBottomSheet from "@/components/quote/ThemeSelectorBottomSheet";
-import Icon from "@/components/Icon";
+import { ImageBackground } from "expo-image";
+import { Stack, useRouter } from "expo-router";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Share, StyleSheet, TouchableOpacity } from "react-native";
+import ViewShot from "react-native-view-shot";
+import WebView from "react-native-webview";
 
 const QuoteMaker: React.FC = () => {
+  const router = useRouter();
+  const viewShotRef = useRef<ViewShot>(null);
   const { theme } = useMyTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const themeSelectorRef = useRef<BottomSheetModal>(null);
@@ -29,12 +37,15 @@ const QuoteMaker: React.FC = () => {
       }
     | undefined
   >();
-
+  const [watermarkClass, setWatermarkClass] = useState("none");
   // Initialize with random verse and theme
   useEffect(() => {
     const randomVerse =
       FAMOUS_VERSES[Math.floor(Math.random() * FAMOUS_VERSES.length)];
-    setSelectedVerse(randomVerse);
+    setSelectedVerse({
+      text: "Porque la palabra de Dios es viva y eficaz, y más cortante que toda espada de dos filos; y penetra hasta partir el alma y el espíritu, las coyunturas y los tuétanos, y discierne los pensamientos y las intenciones del corazón.",
+      reference: "Hebreos 4:12",
+    });
 
     // Get all themes from all sections
     const allThemes = QUOTES_DATA.flatMap((section) => section.items);
@@ -60,7 +71,7 @@ const QuoteMaker: React.FC = () => {
         ),
       },
     };
-  }, [theme.colors, styles.galleryButton, styles.galleryText]);
+  }, [theme.colors]);
 
   const handleThemeSelect = (themeItem: TQuoteDataItem) => {
     setSelectedTheme(themeItem);
@@ -70,68 +81,114 @@ const QuoteMaker: React.FC = () => {
     themeSelectorRef.current?.dismiss();
   };
 
+  const { captureAndShare } = useViewShot({
+    fileName: "quote",
+    quality: 1,
+    format: "png",
+    viewShotRef,
+  });
+
   const handleShare = async () => {
-    if (selectedVerse && selectedTheme) {
-      try {
-        await Share.share({
-          message: `${selectedVerse.text}\n\n${selectedVerse.reference}`,
-        });
-      } catch (error) {
-        console.error("Error sharing:", error);
-      }
-    }
+    setWatermarkClass("");
+    await captureAndShare();
+    setWatermarkClass("none");
   };
+  // console.log(selectedTheme);
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={singleScreenHeader(screenOptions)} />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+          // ...singleScreenHeader(screenOptions),
+        }}
+      />
+      {/* header */}
+      <View style={styles.header}>
+        <Icon
+          onPress={() => router.back()}
+          name="ChevronLeft"
+          size={headerIconSize}
+          color="#FFFFFF"
+        />
+        <Icon
+          onPress={handleShare}
+          name="Share2"
+          size={headerIconSize}
+          color="#FFFFFF"
+        />
+      </View>
+      <ViewShot
+        ref={viewShotRef}
+        options={{
+          format: "png",
+          quality: 1,
+          result: "tmpfile",
+        }}
+        style={{
+          flex: 1,
+          width: "100%",
+          backgroundColor: "transparent",
+        }}
+      >
+        {selectedTheme && selectedVerse ? (
+          <ImageBackground
+            source={{
+              uri: selectedTheme.backgroundImageUrl,
+            }}
+            style={styles.backgroundImage}
+            contentFit="cover"
+          >
+            <View style={styles.overlay} />
 
-      {selectedTheme && selectedVerse ? (
-        <ImageBackground
-          source={{
-            // uri: "https://firebasestorage.googleapis.com/v0/b/bible-web-fae69.appspot.com/o/web_backgrounds%2Fpeople_community__image_8_1000x1000.jpg?alt=media",
-            // uri: "https://images.unsplash.com/photo-1555169062-013468b47731?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            uri: selectedTheme.backgroundImageUrl,
-          }}
-          style={styles.backgroundImage}
-          contentFit="cover"
+            <View style={styles.verseContainer}>
+              <WebView
+                ref={null}
+                key={selectedTheme.id}
+                originWhitelist={["*"]}
+                style={{
+                  flex: 1,
+                  minWidth: "100%",
+                  backgroundColor: "transparent",
+                  borderWidth: 1,
+                  borderColor: "red",
+                }}
+                source={{
+                  html: quoteTemplatesMaker(selectedTheme)
+                    .replace(/{{ref}}/g, selectedVerse.reference)
+                    .replace(/{{text}}/g, selectedVerse.text)
+                    .replace(/{{watermarkClass}}/g, watermarkClass),
+                }}
+                scrollEnabled={false}
+                javaScriptEnabled={true}
+                domStorageEnabled={true}
+                startInLoadingState={true}
+                onError={(syntheticEvent) => {
+                  const { nativeEvent = {} } = syntheticEvent;
+                  console.warn("WebView error: ", nativeEvent);
+                }}
+              />
+            </View>
+          </ImageBackground>
+        ) : (
+          <View style={styles.loadingContainer}>
+            <Text style={styles.loadingText}>Loading...</Text>
+          </View>
+        )}
+      </ViewShot>
+      <View style={styles.footer}>
+        <TouchableOpacity onPress={handleShare} style={styles.shareButton}>
+          <Icon name="Share" size={24} color="#FFFFFF" />
+          <Text style={styles.shareText}>Share</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => themeSelectorRef.current?.present()}
+          style={styles.galleryButton}
         >
-          <View style={styles.overlay} />
-
-          <View style={styles.verseContainer}>
-            <Text
-              style={[
-                styles.verseText,
-                {
-                  color: selectedTheme.textColor,
-                  fontFamily: selectedTheme.font.name,
-                },
-              ]}
-            >
-              {selectedVerse.text}
-            </Text>
-            <Text
-              style={[
-                styles.verseReference,
-                { color: selectedTheme.textColor },
-              ]}
-            >
-              {selectedVerse.reference}
-            </Text>
-          </View>
-
-          <View style={styles.footer}>
-            <TouchableOpacity onPress={handleShare} style={styles.shareButton}>
-              <Icon name="Share" size={24} color="#FFFFFF" />
-              <Text style={styles.shareText}>Share</Text>
-            </TouchableOpacity>
-          </View>
-        </ImageBackground>
-      ) : (
-        <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Loading...</Text>
-        </View>
-      )}
+          <Icon name="Palette" size={24} color="#FFFFFF" />
+          <Text style={styles.shareText}>Temas</Text>
+        </TouchableOpacity>
+      </View>
 
       <ThemeSelectorBottomSheet
         bottomSheetRef={themeSelectorRef}
@@ -164,16 +221,23 @@ const getStyles = ({ colors }: TTheme) =>
       backgroundColor: "rgba(0, 0, 0, 0.3)",
     },
     header: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      zIndex: 100,
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
       paddingTop: 50,
       paddingHorizontal: 20,
       paddingBottom: 20,
+      backgroundColor: "transparent",
     },
     headerLeft: {
       flexDirection: "row",
       alignItems: "center",
+      backgroundColor: "rgba(0, 0, 0, 0.3)",
     },
     headerTextContainer: {
       marginLeft: 12,
@@ -206,9 +270,10 @@ const getStyles = ({ colors }: TTheme) =>
     },
     verseContainer: {
       flex: 1,
+      width: "100%",
       justifyContent: "center",
       alignItems: "center",
-      paddingHorizontal: 40,
+      paddingHorizontal: 20,
       backgroundColor: "transparent",
     },
     verseText: {
@@ -225,6 +290,12 @@ const getStyles = ({ colors }: TTheme) =>
       opacity: 0.9,
     },
     footer: {
+      position: "absolute",
+      flexDirection: "row",
+      justifyContent: "space-around",
+      bottom: 0,
+      left: 0,
+      right: 0,
       alignItems: "center",
       paddingBottom: 40,
       backgroundColor: "transparent",
@@ -248,12 +319,7 @@ const getStyles = ({ colors }: TTheme) =>
       color: colors.text,
     },
     galleryButton: {
-      flexDirection: "row",
       alignItems: "center",
-      backgroundColor: colors.card,
-      paddingHorizontal: 12,
-      paddingVertical: 8,
-      borderRadius: 8,
     },
     galleryText: {
       color: colors.text,

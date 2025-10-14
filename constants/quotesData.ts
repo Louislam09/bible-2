@@ -9,6 +9,7 @@ export type TQuoteDataItem = {
     previewText: string;
     textColor: string;
     accentColor: string;
+    textTransform: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
 }
 
 export type TQuoteDataSection = {
@@ -33,121 +34,131 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "id": "recents-classic-script",
                 "name": "Classic Script",
                 "font": {
-                    "name": "Dancing Script",
-                    "url": "https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap"
+                    "name": "Playfair Display",
+                    "url": "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/home__image_1.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#FFD700"
+                "accentColor": "#FFD700",
+                "textTransform": "capitalize"
             },
             {
                 "id": "recents-modern-lines",
                 "name": "Modern Lines",
                 "font": {
-                    "name": "Poppins",
-                    "url": "https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap"
+                    "name": "Montserrat",
+                    "url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/home__image_2.jpg"),
-                "previewText": "ABCD",
+                "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#00A8E8"
+                "accentColor": "#00A8E8",
+                "textTransform": "capitalize"
             },
             {
                 "id": "recents-minimal-shelf",
                 "name": "Minimal Shelf",
                 "font": {
-                    "name": "Lora",
-                    "url": "https://fonts.googleapis.com/css2?family=Lora:wght@500&display=swap"
+                    "name": "Lato",
+                    "url": "https://fonts.googleapis.com/css2?family=Lato:wght@500&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/home__image_3.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#333333",
-                "accentColor": "#E07A5F"
+                "accentColor": "#E07A5F",
+                "textTransform": "capitalize"
             },
             {
                 "id": "recents-cozy-cafe",
                 "name": "Cozy Cafe",
                 "font": {
-                    "name": "Merriweather",
-                    "url": "https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap"
+                    "name": "Crimson Text",
+                    "url": "https://fonts.googleapis.com/css2?family=Crimson+Text:wght@600&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/home__image_4.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#C08497"
+                "accentColor": "#C08497",
+                "textTransform": "capitalize"
             },
             {
                 "id": "recents-ocean-still",
                 "name": "Ocean Still",
                 "font": {
-                    "name": "Open Sans",
-                    "url": "https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap"
+                    "name": "Roboto",
+                    "url": "https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/home__image_5.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#2C3E50"
+                "accentColor": "#2C3E50",
+                "textTransform": "capitalize"
             },
             {
                 "id": "recents-forest-path",
                 "name": "Forest Path",
                 "font": {
-                    "name": "Playfair Display",
-                    "url": "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap"
+                    "name": "Libre Baskerville",
+                    "url": "https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/home__image_6.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#56A36C"
+                "accentColor": "#56A36C",
+                "textTransform": "capitalize"
             },
             {
                 "id": "recents-sky-view",
                 "name": "Sky View",
                 "font": {
-                    "name": "Oswald",
-                    "url": "https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap"
+                    "name": "Poppins",
+                    "url": "https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/home__image_7.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#2980B9"
+                "accentColor": "#2980B9",
+                "textTransform": "capitalize"
             },
             {
                 "id": "recents-neon-glow",
                 "name": "Neon Glow",
                 "font": {
-                    "name": "Monoton",
-                    "url": "https://fonts.googleapis.com/css2?family=Monoton&display=swap"
+                    "name": "Orbitron",
+                    "url": "https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/home__image_8.jpg"),
                 "previewText": "ABCD",
                 "textColor": "#F0F0F0",
-                "accentColor": "#FF00FF"
+                "accentColor": "#FF00FF",
+                "textTransform": "uppercase"
             },
             {
                 "id": "recents-parchment",
                 "name": "Parchment",
                 "font": {
-                    "name": "Cinzel",
-                    "url": "https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap"
+                    "name": "Cormorant Garamond",
+                    "url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/home__image_9.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#4a2c2a",
-                "accentColor": "#8B4513"
+                "accentColor": "#8B4513",
+                "textTransform": "capitalize"
             },
             {
                 "id": "recents-bold-concrete",
                 "name": "Bold Concrete",
                 "font": {
-                    "name": "Anton",
-                    "url": "https://fonts.googleapis.com/css2?family=Anton&display=swap"
+                    "name": "Bebas Neue",
+                    "url": "https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/home__image_10.jpg"),
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
-                "accentColor": "#FFC107"
+                "accentColor": "#FFC107",
+                "textTransform": "uppercase"
             }
         ]
     },
@@ -158,121 +169,131 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "id": "seasonal-spring-blossom",
                 "name": "Spring Blossom",
                 "font": {
-                    "name": "Alex Brush",
-                    "url": "https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap"
+                    "name": "Great Vibes",
+                    "url": "https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/seasonal__image_1.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#333333",
-                "accentColor": "#FFC0CB"
+                "accentColor": "#FFC0CB",
+                "textTransform": "capitalize"
             },
             {
                 "id": "seasonal-summer-beach",
                 "name": "Summer Beach",
                 "font": {
-                    "name": "Pacifico",
-                    "url": "https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+                    "name": "Kaushan Script",
+                    "url": "https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/seasonal__image_2.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#00BFFF"
+                "accentColor": "#00BFFF",
+                "textTransform": "capitalize"
             },
             {
                 "id": "seasonal-autumn-leaves",
                 "name": "Autumn Leaves",
                 "font": {
-                    "name": "Playfair Display",
-                    "url": "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap"
+                    "name": "Crimson Text",
+                    "url": "https://fonts.googleapis.com/css2?family=Crimson+Text:wght@600&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/seasonal__image_3.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#D2691E"
+                "accentColor": "#D2691E",
+                "textTransform": "capitalize"
             },
             {
                 "id": "seasonal-winter-snow",
                 "name": "Winter Snow",
                 "font": {
-                    "name": "Mountains of Christmas",
-                    "url": "https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&display=swap"
+                    "name": "Quicksand",
+                    "url": "https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/seasonal__image_4.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#1E3A5F",
-                "accentColor": "#ADD8E6"
+                "accentColor": "#ADD8E6",
+                "textTransform": "capitalize"
             },
             {
                 "id": "seasonal-pumpkin-spice",
                 "name": "Pumpkin Spice",
                 "font": {
-                    "name": "Lobster",
-                    "url": "https://fonts.googleapis.com/css2?family=Lobster&display=swap"
+                    "name": "Satisfy",
+                    "url": "https://fonts.googleapis.com/css2?family=Satisfy&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/seasonal__image_5.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#E67E22"
+                "accentColor": "#E67E22",
+                "textTransform": "capitalize"
             },
             {
                 "id": "seasonal-april-showers",
                 "name": "April Showers",
                 "font": {
-                    "name": "Caveat",
-                    "url": "https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap"
+                    "name": "Indie Flower",
+                    "url": "https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/seasonal__image_6.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#F5F5F5",
-                "accentColor": "#4682B4"
+                "accentColor": "#4682B4",
+                "textTransform": "capitalize"
             },
             {
                 "id": "seasonal-golden-hour",
                 "name": "Golden Hour",
                 "font": {
-                    "name": "Great Vibes",
-                    "url": "https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap"
+                    "name": "Sacramento",
+                    "url": "https://fonts.googleapis.com/css2?family=Sacramento&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/seasonal__image_7.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#FFD700"
+                "accentColor": "#FFD700",
+                "textTransform": "capitalize"
             },
             {
                 "id": "seasonal-first-frost",
                 "name": "First Frost",
                 "font": {
-                    "name": "Quicksand",
-                    "url": "https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap"
+                    "name": "Raleway",
+                    "url": "https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/seasonal__image_8.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#111111",
-                "accentColor": "#B0C4DE"
+                "accentColor": "#B0C4DE",
+                "textTransform": "capitalize"
             },
             {
                 "id": "seasonal-holiday-cheer",
                 "name": "Holiday Cheer",
                 "font": {
-                    "name": "Satisfy",
-                    "url": "https://fonts.googleapis.com/css2?family=Satisfy&display=swap"
+                    "name": "Tangerine",
+                    "url": "https://fonts.googleapis.com/css2?family=Tangerine:wght@700&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/seasonal__image_9.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#DC143C"
+                "accentColor": "#DC143C",
+                "textTransform": "capitalize"
             },
             {
                 "id": "seasonal-new-year",
                 "name": "New Year Sparkle",
                 "font": {
-                    "name": "Orbitron",
-                    "url": "https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap"
+                    "name": "Rajdhani",
+                    "url": "https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/seasonal__image_10.jpg"),
                 "previewText": "ABCD",
                 "textColor": "#F0E68C",
-                "accentColor": "#FFFFFF"
+                "accentColor": "#FFFFFF",
+                "textTransform": "uppercase"
             }
         ]
     },
@@ -283,121 +304,131 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "id": "calm-misty-morning",
                 "name": "Misty Morning",
                 "font": {
-                    "name": "Cormorant Garamond",
-                    "url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&display=swap"
+                    "name": "Lato",
+                    "url": "https://fonts.googleapis.com/css2?family=Lato:wght@400&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/calm__image_1.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#333333",
-                "accentColor": "#BDBDBD"
+                "accentColor": "#BDBDBD",
+                "textTransform": "capitalize"
             },
             {
                 "id": "calm-quiet-lake",
                 "name": "Quiet Lake",
                 "font": {
-                    "name": "Lato",
-                    "url": "https://fonts.googleapis.com/css2?family=Lato:wght@400&display=swap"
+                    "name": "Noto Serif",
+                    "url": "https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/calm__image_2.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#A9A9A9"
+                "accentColor": "#A9A9A9",
+                "textTransform": "capitalize"
             },
             {
                 "id": "calm-zen-garden",
                 "name": "Zen Garden",
                 "font": {
-                    "name": "Noto Serif",
-                    "url": "https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap"
+                    "name": "Cormorant Garamond",
+                    "url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/calm__image_3.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#2F4F4F",
-                "accentColor": "#6B8E23"
+                "accentColor": "#6B8E23",
+                "textTransform": "capitalize"
             },
             {
                 "id": "calm-cozy-fireplace",
                 "name": "Cozy Fireplace",
                 "font": {
-                    "name": "Crimson Text",
-                    "url": "https://fonts.googleapis.com/css2?family=Crimson+Text:wght@600&display=swap"
+                    "name": "Libre Baskerville",
+                    "url": "https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/calm__image_4.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#FFA500"
+                "accentColor": "#FFA500",
+                "textTransform": "capitalize"
             },
             {
                 "id": "calm-rainy-window",
                 "name": "Rainy Window",
                 "font": {
-                    "name": "Indie Flower",
-                    "url": "https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap"
+                    "name": "Josefin Sans",
+                    "url": "https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/calm__image_5.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#F5F5F5",
-                "accentColor": "#778899"
+                "accentColor": "#778899",
+                "textTransform": "capitalize"
             },
             {
                 "id": "calm-pastel-sunset",
                 "name": "Pastel Sunset",
                 "font": {
-                    "name": "Sacramento",
-                    "url": "https://fonts.googleapis.com/css2?family=Sacramento&display=swap"
+                    "name": "Raleway",
+                    "url": "https://fonts.googleapis.com/css2?family=Raleway:wght@400&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/calm__image_6.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#4B0082",
-                "accentColor": "#FFFFFF"
+                "accentColor": "#FFFFFF",
+                "textTransform": "capitalize"
             },
             {
                 "id": "calm-soft-linen",
                 "name": "Soft Linen",
                 "font": {
-                    "name": "Raleway",
-                    "url": "https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap"
+                    "name": "Quicksand",
+                    "url": "https://fonts.googleapis.com/css2?family=Quicksand:wght@400&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/calm__image_7.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#555555",
-                "accentColor": "#8C7853"
+                "accentColor": "#8C7853",
+                "textTransform": "capitalize"
             },
             {
                 "id": "calm-gentle-waves",
                 "name": "Gentle Waves",
                 "font": {
-                    "name": "Josefin Sans",
-                    "url": "https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@500&display=swap"
+                    "name": "Open Sans",
+                    "url": "https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/calm__image_8.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#9ACD32"
+                "accentColor": "#9ACD32",
+                "textTransform": "capitalize"
             },
             {
                 "id": "calm-reading-nook",
                 "name": "Reading Nook",
                 "font": {
-                    "name": "Libre Baskerville",
-                    "url": "https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap"
+                    "name": "Merriweather",
+                    "url": "https://fonts.googleapis.com/css2?family=Merriweather:wght@400&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/calm__image_9.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#363636",
-                "accentColor": "#A0522D"
+                "accentColor": "#A0522D",
+                "textTransform": "capitalize"
             },
             {
                 "id": "calm-lavender-field",
                 "name": "Lavender Field",
                 "font": {
-                    "name": "Tangerine",
-                    "url": "https://fonts.googleapis.com/css2?family=Tangerine:wght@700&display=swap"
+                    "name": "Caveat",
+                    "url": "https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/calm__image_10.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#E6E6FA"
+                "accentColor": "#E6E6FA",
+                "textTransform": "capitalize"
             }
         ]
     },
@@ -408,121 +439,131 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "id": "people-mountain-hiker",
                 "name": "Mountain Hiker",
                 "font": {
-                    "name": "Bebas Neue",
-                    "url": "https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+                    "name": "Oswald",
+                    "url": "https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/animals__image_1.jpg"),
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
-                "accentColor": "#FF8C00"
+                "accentColor": "#FF8C00",
+                "textTransform": "uppercase"
             },
             {
                 "id": "people-city-crowd",
                 "name": "City Crowd",
                 "font": {
-                    "name": "Montserrat",
-                    "url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap"
+                    "name": "Roboto Condensed",
+                    "url": "https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/animals__image_2.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#FFFF00"
+                "accentColor": "#FFFF00",
+                "textTransform": "capitalize"
             },
             {
                 "id": "people-friends-laughing",
                 "name": "Friends Laughing",
                 "font": {
-                    "name": "Comic Neue",
-                    "url": "https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap"
+                    "name": "Poppins",
+                    "url": "https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/animals__image_3.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#111111",
-                "accentColor": "#FF69B4"
+                "accentColor": "#FF69B4",
+                "textTransform": "capitalize"
             },
             {
                 "id": "people-hands-together",
                 "name": "Hands Together",
                 "font": {
-                    "name": "Poppins",
-                    "url": "https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap"
+                    "name": "Lato",
+                    "url": "https://fonts.googleapis.com/css2?family=Lato:wght@500&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/animals__image_4.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#4CAF50"
+                "accentColor": "#4CAF50",
+                "textTransform": "capitalize"
             },
             {
                 "id": "people-festival-lights",
                 "name": "Festival Lights",
                 "font": {
-                    "name": "Kaushan Script",
-                    "url": "https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap"
+                    "name": "Allura",
+                    "url": "https://fonts.googleapis.com/css2?family=Allura&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/animals__image_5.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#F0F0F0",
-                "accentColor": "#DA70D6"
+                "accentColor": "#DA70D6",
+                "textTransform": "capitalize"
             },
             {
                 "id": "people-cafe-conversation",
                 "name": "Cafe Conversation",
                 "font": {
-                    "name": "Roboto",
-                    "url": "https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap"
+                    "name": "Open Sans",
+                    "url": "https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/animals__image_6.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#CD853F"
+                "accentColor": "#CD853F",
+                "textTransform": "capitalize"
             },
             {
                 "id": "people-silhouette-sunset",
                 "name": "Silhouette at Sunset",
                 "font": {
-                    "name": "Allura",
-                    "url": "https://fonts.googleapis.com/css2?family=Allura&display=swap"
+                    "name": "Dancing Script",
+                    "url": "https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/animals__image_7.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#FF4500"
+                "accentColor": "#FF4500",
+                "textTransform": "capitalize"
             },
             {
                 "id": "people-urban-explorer",
                 "name": "Urban Explorer",
                 "font": {
-                    "name": "Archivo Black",
-                    "url": "https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap"
+                    "name": "Anton",
+                    "url": "https://fonts.googleapis.com/css2?family=Anton&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/animals__image_8.jpg"),
                 "previewText": "ABCD",
                 "textColor": "#FDD835",
-                "accentColor": "#FFFFFF"
+                "accentColor": "#FFFFFF",
+                "textTransform": "uppercase"
             },
             {
                 "id": "people-community-garden",
                 "name": "Community Garden",
                 "font": {
-                    "name": "Amatic SC",
-                    "url": "https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap"
+                    "name": "Caveat",
+                    "url": "https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/animals__image_9.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#3A5F0B",
-                "accentColor": "#FFFFFF"
+                "accentColor": "#FFFFFF",
+                "textTransform": "capitalize"
             },
             {
                 "id": "people-street-performer",
                 "name": "Street Performer",
                 "font": {
-                    "name": "Luckiest Guy",
-                    "url": "https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap"
+                    "name": "Righteous",
+                    "url": "https://fonts.googleapis.com/css2?family=Righteous&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/animals__image_10.jpg"),
-                "previewText": "ABCD",
+                "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#FFD700"
+                "accentColor": "#FFD700",
+                "textTransform": "capitalize"
             }
         ]
     },
@@ -533,13 +574,14 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "id": "minimal-clean-white",
                 "name": "Clean White",
                 "font": {
-                    "name": "Helvetica",
+                    "name": "Roboto",
                     "url": "https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/books__image_1.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#333333",
-                "accentColor": "#CCCCCC"
+                "accentColor": "#CCCCCC",
+                "textTransform": "capitalize"
             },
             {
                 "id": "minimal-simple-geometry",
@@ -549,9 +591,10 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                     "url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/books__image_2.jpg"),
-                "previewText": "ABCD",
+                "previewText": "Abcd",
                 "textColor": "#2c3e50",
-                "accentColor": "#e74c3c"
+                "accentColor": "#e74c3c",
+                "textTransform": "capitalize"
             },
             {
                 "id": "minimal-black-and-white",
@@ -563,7 +606,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/books__image_3.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#888888"
+                "accentColor": "#888888",
+                "textTransform": "capitalize"
             },
             {
                 "id": "minimal-subtle-texture",
@@ -575,7 +619,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/books__image_4.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#5A5A5A",
-                "accentColor": "#BDBDBD"
+                "accentColor": "#BDBDBD",
+                "textTransform": "capitalize"
             },
             {
                 "id": "minimal-single-leaf",
@@ -587,7 +632,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/books__image_5.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#264653",
-                "accentColor": "#2a9d8f"
+                "accentColor": "#2a9d8f",
+                "textTransform": "capitalize"
             },
             {
                 "id": "minimal-gradient-fade",
@@ -599,7 +645,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/books__image_6.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#F0F0F0"
+                "accentColor": "#F0F0F0",
+                "textTransform": "capitalize"
             },
             {
                 "id": "minimal-concrete-wall",
@@ -611,19 +658,21 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/books__image_7.jpg"),
                 "previewText": "ABCD",
                 "textColor": "#1a1a1a",
-                "accentColor": "#666666"
+                "accentColor": "#666666",
+                "textTransform": "uppercase"
             },
             {
                 "id": "minimal-shadow-play",
                 "name": "Shadow Play",
                 "font": {
                     "name": "Playfair Display",
-                    "url": "https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap"
+                    "url": "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&display=swap"
                 },
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/books__image_8.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#222222",
-                "accentColor": "#888888"
+                "accentColor": "#888888",
+                "textTransform": "capitalize"
             },
             {
                 "id": "minimal-neutral-tones",
@@ -635,7 +684,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/books__image_9.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#706c61",
-                "accentColor": "#b2a49e"
+                "accentColor": "#b2a49e",
+                "textTransform": "capitalize"
             },
             {
                 "id": "minimal-fine-line",
@@ -647,7 +697,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/books__image_10.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#1d3557",
-                "accentColor": "#457b9d"
+                "accentColor": "#457b9d",
+                "textTransform": "capitalize"
             }
         ]
     },
@@ -664,7 +715,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/nature__image_1.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#90EE90"
+                "accentColor": "#90EE90",
+                "textTransform": "capitalize"
             },
             {
                 "id": "nature-ocean-deep",
@@ -676,7 +728,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/nature__image_2.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#F0F8FF",
-                "accentColor": "#1E90FF"
+                "accentColor": "#1E90FF",
+                "textTransform": "capitalize"
             },
             {
                 "id": "nature-mountain-peak",
@@ -688,7 +741,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/nature__image_3.jpg"),
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
-                "accentColor": "#C0C0C0"
+                "accentColor": "#C0C0C0",
+                "textTransform": "uppercase"
             },
             {
                 "id": "nature-desert-dunes",
@@ -700,7 +754,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/nature__image_4.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#46301e",
-                "accentColor": "#FFFFFF"
+                "accentColor": "#FFFFFF",
+                "textTransform": "capitalize"
             },
             {
                 "id": "nature-lush-waterfall",
@@ -712,7 +767,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/nature__image_5.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#20B2AA"
+                "accentColor": "#20B2AA",
+                "textTransform": "capitalize"
             },
             {
                 "id": "nature-wildflowers",
@@ -724,7 +780,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/nature__image_6.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#2E2D2D",
-                "accentColor": "#8A2BE2"
+                "accentColor": "#8A2BE2",
+                "textTransform": "capitalize"
             },
             {
                 "id": "nature-starry-night",
@@ -736,7 +793,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/nature__image_7.jpg"),
                 "previewText": "ABCD",
                 "textColor": "#F5F5F5",
-                "accentColor": "#FFD700"
+                "accentColor": "#FFD700",
+                "textTransform": "uppercase"
             },
             {
                 "id": "nature-canyon-vista",
@@ -748,7 +806,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/nature__image_8.jpg"),
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
-                "accentColor": "#CD5C5C"
+                "accentColor": "#CD5C5C",
+                "textTransform": "uppercase"
             },
             {
                 "id": "nature-northern-lights",
@@ -760,7 +819,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/nature__image_9.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#39FF14"
+                "accentColor": "#39FF14",
+                "textTransform": "capitalize"
             },
             {
                 "id": "nature-redwood-giants",
@@ -772,7 +832,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/nature__image_10.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FDF5E6",
-                "accentColor": "#8B4513"
+                "accentColor": "#8B4513",
+                "textTransform": "capitalize"
             }
         ]
     },
@@ -789,7 +850,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/objects__image_1.jpg"),
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
-                "accentColor": "#FF00FF"
+                "accentColor": "#FF00FF",
+                "textTransform": "uppercase"
             },
             {
                 "id": "urban-skyscraper-view",
@@ -801,7 +863,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/objects__image_2.jpg"),
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
-                "accentColor": "#00BFFF"
+                "accentColor": "#00BFFF",
+                "textTransform": "uppercase"
             },
             {
                 "id": "urban-cobblestone-street",
@@ -813,7 +876,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/objects__image_3.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#F5DEB3",
-                "accentColor": "#FFFFFF"
+                "accentColor": "#FFFFFF",
+                "textTransform": "capitalize"
             },
             {
                 "id": "urban-graffiti-wall",
@@ -825,7 +889,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/objects__image_4.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#FFFF00"
+                "accentColor": "#FFFF00",
+                "textTransform": "capitalize"
             },
             {
                 "id": "urban-subway-motion",
@@ -837,7 +902,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/objects__image_5.jpg"),
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
-                "accentColor": "#FFD700"
+                "accentColor": "#FFD700",
+                "textTransform": "uppercase"
             },
             {
                 "id": "urban-rooftop-sunset",
@@ -849,7 +915,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/objects__image_6.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#FF4500"
+                "accentColor": "#FF4500",
+                "textTransform": "capitalize"
             },
             {
                 "id": "urban-modern-architecture",
@@ -861,7 +928,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/objects__image_7.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#2C3E50",
-                "accentColor": "#3498DB"
+                "accentColor": "#3498DB",
+                "textTransform": "capitalize"
             },
             {
                 "id": "urban-busy-intersection",
@@ -873,7 +941,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/objects__image_8.jpg"),
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
-                "accentColor": "#F1C40F"
+                "accentColor": "#F1C40F",
+                "textTransform": "uppercase"
             },
             {
                 "id": "urban-industrial-loft",
@@ -885,7 +954,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/objects__image_9.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#333333",
-                "accentColor": "#B8860B"
+                "accentColor": "#B8860B",
+                "textTransform": "capitalize"
             },
             {
                 "id": "urban-night-drive",
@@ -897,7 +967,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/objects__image_10.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#E32636"
+                "accentColor": "#E32636",
+                "textTransform": "capitalize"
             }
         ]
     },
@@ -914,7 +985,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_1.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#3A3B3C",
-                "accentColor": "#5C524A"
+                "accentColor": "#5C524A",
+                "textTransform": "capitalize"
             },
             {
                 "id": "vintage-sepia-tone",
@@ -926,7 +998,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_2.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#4B382A",
-                "accentColor": "#FFFFFF"
+                "accentColor": "#FFFFFF",
+                "textTransform": "capitalize"
             },
             {
                 "id": "vintage-film-grain",
@@ -938,7 +1011,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_3.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#AAAAAA"
+                "accentColor": "#AAAAAA",
+                "textTransform": "capitalize"
             },
             {
                 "id": "vintage-retro-cassette",
@@ -950,7 +1024,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_4.jpg"),
                 "previewText": "ABCD",
                 "textColor": "#111111",
-                "accentColor": "#E91E63"
+                "accentColor": "#E91E63",
+                "textTransform": "uppercase"
             },
             {
                 "id": "vintage-bookshelf",
@@ -962,7 +1037,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_5.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#F5F5DC",
-                "accentColor": "#D2B48C"
+                "accentColor": "#D2B48C",
+                "textTransform": "capitalize"
             },
             {
                 "id": "vintage-classic-car",
@@ -974,7 +1050,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_6.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#B22222"
+                "accentColor": "#B22222",
+                "textTransform": "capitalize"
             },
             {
                 "id": "vintage-faded-polaroid",
@@ -986,7 +1063,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_7.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#333333",
-                "accentColor": "#556B2F"
+                "accentColor": "#556B2F",
+                "textTransform": "capitalize"
             },
             {
                 "id": "vintage-antique-map",
@@ -998,7 +1076,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_8.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#4d463d",
-                "accentColor": "#8B0000"
+                "accentColor": "#8B0000",
+                "textTransform": "capitalize"
             },
             {
                 "id": "vintage-gramophone",
@@ -1010,7 +1089,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_9.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#222222",
-                "accentColor": "#DAA520"
+                "accentColor": "#DAA520",
+                "textTransform": "capitalize"
             },
             {
                 "id": "vintage-ornate-frame",
@@ -1022,7 +1102,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_10.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#362512",
-                "accentColor": "#C4A484"
+                "accentColor": "#C4A484",
+                "textTransform": "capitalize"
             }
         ]
     },
@@ -1039,7 +1120,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_1.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#3A3B3C",
-                "accentColor": "#5C524A"
+                "accentColor": "#5C524A",
+                "textTransform": "capitalize"
             },
             {
                 "id": "vintage-sepia-tone",
@@ -1051,7 +1133,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_2.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#4B382A",
-                "accentColor": "#FFFFFF"
+                "accentColor": "#FFFFFF",
+                "textTransform": "capitalize"
             },
             {
                 "id": "vintage-film-grain",
@@ -1063,7 +1146,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_3.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#AAAAAA"
+                "accentColor": "#AAAAAA",
+                "textTransform": "capitalize"
             },
             {
                 "id": "vintage-retro-cassette",
@@ -1075,7 +1159,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_4.jpg"),
                 "previewText": "ABCD",
                 "textColor": "#111111",
-                "accentColor": "#E91E63"
+                "accentColor": "#E91E63",
+                "textTransform": "uppercase"
             },
             {
                 "id": "vintage-bookshelf",
@@ -1087,7 +1172,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_5.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#F5F5DC",
-                "accentColor": "#D2B48C"
+                "accentColor": "#D2B48C",
+                "textTransform": "capitalize"
             },
             {
                 "id": "vintage-classic-car",
@@ -1099,7 +1185,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_6.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
-                "accentColor": "#B22222"
+                "accentColor": "#B22222",
+                "textTransform": "capitalize"
             },
             {
                 "id": "vintage-faded-polaroid",
@@ -1111,7 +1198,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_7.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#333333",
-                "accentColor": "#556B2F"
+                "accentColor": "#556B2F",
+                "textTransform": "capitalize"
             },
             {
                 "id": "vintage-antique-map",
@@ -1123,7 +1211,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_8.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#4d463d",
-                "accentColor": "#8B0000"
+                "accentColor": "#8B0000",
+                "textTransform": "capitalize"
             },
             {
                 "id": "vintage-gramophone",
@@ -1135,7 +1224,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_9.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#222222",
-                "accentColor": "#DAA520"
+                "accentColor": "#DAA520",
+                "textTransform": "capitalize"
             },
             {
                 "id": "vintage-ornate-frame",
@@ -1147,7 +1237,8 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_10.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#362512",
-                "accentColor": "#C4A484"
+                "accentColor": "#C4A484",
+                "textTransform": "capitalize"
             }
         ]
     },
