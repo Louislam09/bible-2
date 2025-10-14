@@ -264,8 +264,19 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
     }:${item.verse}`;
     bibleState$.handleSelectVerseForNote(verseText);
     router.push({
+      pathname: "/quoteDom",
+      params: { text: verseText, reference },
+    });
+  };
+
+  const onQuoteImage = () => {
+    const verseText = getVerseTextRaw(item.text);
+    const reference = `${getBookDetail(item?.book_number).longName} ${
+      item.chapter
+    }:${item.verse}`;
+    bibleState$.handleSelectVerseForNote(verseText);
+    router.push({
       pathname: "/quoteMaker",
-      // pathname: "/quoteDom",
       params: { text: verseText, reference },
     });
   };
@@ -396,6 +407,13 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         description: "Explicar",
         color: "#f1c40f",
         hide: true,
+      },
+      {
+        name: "Image",
+        action: onQuoteImage,
+        hide: false,
+        description: "Imagen",
+        color: "#9dcd7d",
       },
       {
         name: "Quote",

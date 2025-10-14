@@ -9,7 +9,7 @@ import { bibleState$ } from "@/state/bibleState";
 import { TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { use$ } from "@legendapp/state/react";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -87,6 +87,7 @@ const FAMOUS_VERSES = [
 
 const QuoteDom: React.FC = () => {
   const { theme } = useMyTheme();
+  const router = useRouter();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const [quoteText, setQuoteText] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState(quoteTemplates[0]);
@@ -246,6 +247,22 @@ const QuoteDom: React.FC = () => {
         headerRightIconColor: theme.colors.text,
         RightComponent: () => (
           <View style={styles.headerButtons}>
+            <TouchableOpacity
+              onPress={() =>
+                router.push({
+                  pathname: "/quoteMaker",
+                  params: { text: quoteText, reference },
+                })
+              }
+              disabled={isLoading}
+              style={styles.headerButton}
+            >
+              {isLoading ? (
+                <ActivityIndicator color={theme.colors.text} />
+              ) : (
+                <Icon name="Image" size={24} color={theme.colors.text} />
+              )}
+            </TouchableOpacity>
             <TouchableOpacity
               onPress={handleShare}
               disabled={isLoading}

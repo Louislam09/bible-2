@@ -58,8 +58,6 @@ const QuoteMaker: React.FC = () => {
 
   // Initialize with random verse and theme
   useEffect(() => {
-    console.log({ mySelectedVerse, params });
-
     setSelectedVerse({
       text: typeof params?.text === "string" ? params.text : randomVerse.text,
       reference:
@@ -109,7 +107,6 @@ const QuoteMaker: React.FC = () => {
     await captureAndShare();
     setWatermarkClass("none");
   };
-  // console.log(selectedTheme);
 
   return (
     <View style={styles.container}>
@@ -122,7 +119,7 @@ const QuoteMaker: React.FC = () => {
       {/* header */}
       <View style={styles.header}>
         <Icon
-          onPress={() => router.back()}
+          onPress={() => router.push("/(dashboard)")}
           name="ChevronLeft"
           size={headerIconSize}
           color="#FFFFFF"
