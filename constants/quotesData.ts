@@ -185,7 +185,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                     "name": "Kaushan Script",
                     "url": "https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap"
                 },
-                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/seasonal__image_2.jpg"),
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/seasonal__image_14.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#00BFFF",

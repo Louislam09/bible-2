@@ -108,6 +108,8 @@ const QuoteMaker: React.FC = () => {
     setWatermarkClass("none");
   };
 
+  console.log(selectedTheme?.backgroundImageUrl);
+
   return (
     <View style={styles.container}>
       <Stack.Screen
@@ -134,7 +136,7 @@ const QuoteMaker: React.FC = () => {
       <ViewShot
         ref={viewShotRef}
         options={{
-          format: "png",
+          format: "jpg",
           quality: 1,
           result: "tmpfile",
         }}

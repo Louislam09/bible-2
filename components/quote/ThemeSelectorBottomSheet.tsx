@@ -29,6 +29,12 @@ const getHTMLContent = (quotesData: any, selectedThemeId: string | null) => {
     });
   });
 
+  // Function to optimize image URLs for theme cards (smaller resolution)
+  const optimizeImageUrl = (url: string) => {
+    // Replace _1000x1000 with _200x200 for better performance in theme cards
+    return url.replace("_1000x1000.jpg", "_200x200.jpg");
+  };
+
   // Generate font imports
   const fontImports = Array.from(uniqueFonts)
     .map((fontName) => {
@@ -170,6 +176,8 @@ const getHTMLContent = (quotesData: any, selectedThemeId: string | null) => {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
         }
 
         .card-overlay {
@@ -266,6 +274,12 @@ const getHTMLContent = (quotesData: any, selectedThemeId: string | null) => {
     <script>
         const quotesData = ${JSON.stringify(quotesData)};
         const selectedThemeId = ${JSON.stringify(selectedThemeId)};
+        
+        // Function to optimize image URLs for theme cards (smaller resolution)
+        function optimizeImageUrl(url) {
+            // Replace _1000x1000 with _200x200 for better performance in theme cards
+            return url.replace('_1000x1000.jpg', '_200x200.jpg');
+        }
 
         function handleClose() {
             if (window.ReactNativeWebView) {
@@ -309,10 +323,14 @@ const getHTMLContent = (quotesData: any, selectedThemeId: string | null) => {
                         <div class="theme-card \${isSelected ? 'selected' : ''}" 
                              data-theme-id="\${theme.id}" 
                              onclick="handleThemeSelect('\${theme.id}')">
-                            <img src="\${theme.backgroundImageUrl}" 
+                            <img src="\${optimizeImageUrl(theme.backgroundImageUrl)}" 
                                  alt="\${theme.name}" 
                                  class="card-background"
-                                 onerror="this.style.display='none'">
+                                 loading="lazy"
+                                 onload="this.style.opacity='1'"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"
+                                 style="opacity: 0; transition: opacity 0.3s ease;">
+                            <div class="card-placeholder" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f0f0f0 75%), linear-gradient(-45deg, transparent 75%, #f0f0f0 75%); background-size: 8px 8px; background-position: 0 0, 0 4px, 4px -4px, -4px 0px;"></div>
                             <div class="card-overlay"></div>
                             <div class="preview-text" style="font-family: '\${theme.font.name}', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
                                 \${theme.previewText}
