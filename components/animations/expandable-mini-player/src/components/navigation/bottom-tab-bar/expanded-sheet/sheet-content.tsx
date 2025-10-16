@@ -22,7 +22,7 @@ import { bibleState$ } from "@/state/bibleState";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { ImageBackground } from "expo-image";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import type { SharedValue } from "react-native-reanimated";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
@@ -55,9 +55,9 @@ export const SheetContent = ({
   const { isConnected } = useNetInfo();
 
   // Theme selector state
-  const [selectedTheme, setSelectedTheme] = useState<TQuoteDataItem>(
-    QUOTES_DATA[0].items[0]
-  );
+  const [selectedTheme, setSelectedTheme] = useState<
+    TQuoteDataItem | undefined
+  >();
   const themeSelectorRef = useRef<BottomSheetModal>(null);
 
   const bibleQuery = bibleState$.bibleQuery.get();
@@ -171,9 +171,10 @@ export const SheetContent = ({
     themeSelectorRef.current?.dismiss();
   }, []);
 
-  // Function to reset theme to default
-  const resetTheme = useCallback(() => {
-    setSelectedTheme(QUOTES_DATA[0].items[0]);
+  useEffect(() => {
+    const allThemes = QUOTES_DATA.flatMap((section) => section.items);
+    const randomTheme = allThemes[Math.floor(Math.random() * allThemes.length)];
+    setSelectedTheme(randomTheme);
   }, []);
 
   // Generate HTML content for verse display using selected theme
