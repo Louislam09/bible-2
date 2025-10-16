@@ -21,6 +21,7 @@ import {
   StyleSheet,
   Linking,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 import { IDashboardOption } from "../../app/(dashboard)";
 import BottomModal from "../BottomModal";
@@ -32,6 +33,7 @@ import VoiceList from "../VoiceList";
 import BuyMeACoffeeButton from "./BuyMeACoffe";
 import { Share } from "react-native";
 import { URLS } from "@/constants/appConfig";
+import { UpdateService } from "@/services/updateService";
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
@@ -45,6 +47,7 @@ const NewDashboard = () => {
   const [currentEmpty, setCurrentEmpty] = useState<"doubible" | "timeline">(
     "doubible"
   );
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const {
     currentBibleVersion,
@@ -234,16 +237,16 @@ const NewDashboard = () => {
       color: "#6de5cb",
       isNew: isWithinTimeframe("1w", new Date("2025-03-18")).isActive,
     },
-    {
-      icon: "TreeDeciduous",
-      label: "DuoBible",
-      // @ts-ignore
-      action: () => requestAccessHandlePresentModalPress("doubible"),
-      // action: () => navigation.navigate("learn", {}),
-      color: "#4caf50",
-      // color: "#75d0fe",
-      isNew: isWithinTimeframe("1w", new Date("2025-03-04")).isActive,
-    },
+    // {
+    //   icon: "TreeDeciduous",
+    //   label: "DuoBible",
+    //   // @ts-ignore
+    //   action: () => requestAccessHandlePresentModalPress("doubible"),
+    //   // action: () => navigation.navigate("learn", {}),
+    //   color: "#4caf50",
+    //   // color: "#75d0fe",
+    //   isNew: isWithinTimeframe("1w", new Date("2025-03-04")).isActive,
+    // },
     {
       icon: "ChartArea",
       label: "Admin",
@@ -345,9 +348,31 @@ const NewDashboard = () => {
     Linking.openURL("https://buymeacoffee.com/santabibliarv60");
   };
 
+  const onRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      await UpdateService.handleUpdateFlow();
+    } catch (error) {
+      console.error("Error during refresh:", error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, []);
+
   return (
     <StatusBarBackground>
-      <ScrollView style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={onRefresh}
+            tintColor={theme.colors?.primary || "#0c3e3d"}
+            title="Buscando actualizaciones..."
+            titleColor={theme.colors?.text || "#000"}
+          />
+        }
+      >
         <ProfileCard user={user} />
         <DailyVerseTwo user={user} theme={theme} />
         <MainSection list={mainActionItems} theme={theme} />
