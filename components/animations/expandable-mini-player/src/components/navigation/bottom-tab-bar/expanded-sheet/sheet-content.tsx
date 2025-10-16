@@ -22,9 +22,14 @@ import { bibleState$ } from "@/state/bibleState";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { ImageBackground } from "expo-image";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import type { SharedValue } from "react-native-reanimated";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import ThemeSelectorBottomSheet from "@/components/quote/ThemeSelectorBottomSheet";
+import { TQuoteDataItem } from "@/constants/quotesData";
+import { quoteTemplatesMaker } from "@/constants/quoteTemplates";
+import WebView from "react-native-webview";
 
 type SheetContentProps = {
   progress: SharedValue<number>;
@@ -44,6 +49,12 @@ export const SheetContent = ({
 }: SheetContentProps) => {
   const { theme } = useMyTheme();
   const { isConnected } = useNetInfo();
+
+  // Theme selector state
+  const [selectedTheme, setSelectedTheme] = useState<
+    TQuoteDataItem | undefined
+  >(undefined);
+  const themeSelectorRef = useRef<BottomSheetModal>(null);
 
   const bibleQuery = bibleState$.bibleQuery.get();
   const reference = `${bibleQuery.book} ${bibleQuery.chapter}`;
@@ -144,8 +155,37 @@ export const SheetContent = ({
   };
 
   const handleTheming = () => {
-    // Handle theming
+    themeSelectorRef.current?.present();
   };
+
+  const handleThemeSelect = useCallback((theme: TQuoteDataItem) => {
+    setSelectedTheme(theme);
+  }, []);
+
+  const handleThemeClose = useCallback(() => {
+    themeSelectorRef.current?.dismiss();
+  }, []);
+
+  // Function to reset theme to default
+  const resetTheme = useCallback(() => {
+    setSelectedTheme(undefined);
+    console.log("Theme reset to default");
+  }, []);
+
+  // Generate HTML content for verse display using selected theme
+  const verseHtmlContent = useMemo(() => {
+    if (!selectedTheme || !currentVerseText) {
+      return "";
+    }
+
+    const verseReference = `${reference}:${verseIndex + 1}`;
+
+    return quoteTemplatesMaker(selectedTheme)
+      .replace(/{{ref}}/g, verseReference)
+      .replace(/{{text}}/g, currentVerseText)
+      .replace(/{{verseLineClass}}/g, "none")
+      .replace(/{{watermarkClass}}/g, "none");
+  }, [selectedTheme, currentVerseText, reference, verseIndex]);
 
   const handleDropdown = () => {
     progress.value = withTiming(0, {
@@ -338,10 +378,34 @@ export const SheetContent = ({
     seekTo(newPosition);
   }, [PLAYER_STATE.DURATION, PLAYER_STATE.POSITION, seekTo]);
 
+  // Use selected theme background or fallback to original imageUrl
+  const backgroundImageUrl = selectedTheme?.backgroundImageUrl || imageUrl;
+
+  // Create dynamic verse text style with selected theme font
+  const verseTextStyle = useMemo(() => {
+    const baseStyle = {
+      color: "white",
+      fontSize: 24,
+      fontWeight: "400" as const,
+      textAlign: "center" as const,
+      lineHeight: 36,
+      marginBottom: 20,
+    };
+
+    if (selectedTheme?.font?.name) {
+      return {
+        ...baseStyle,
+        fontFamily: selectedTheme.font.name,
+      };
+    }
+
+    return baseStyle;
+  }, [selectedTheme?.font?.name]);
+
   return (
     <ImageBackground
       source={{
-        uri: imageUrl,
+        uri: backgroundImageUrl,
       }}
       style={styles.fill}
       contentFit="cover"
@@ -353,7 +417,7 @@ export const SheetContent = ({
         <Animated.View style={rImageStyle}>
           <Image
             source={{
-              uri: imageUrl,
+              uri: backgroundImageUrl,
             }}
             style={styles.fill}
           />
@@ -414,10 +478,31 @@ export const SheetContent = ({
 
         {/* Verse Display */}
         <Animated.View style={[rVerseContainerStyle, styles.verseContainer]}>
-          <Text style={styles.verseText}>{currentVerseText}</Text>
-          <Text style={styles.verseReference}>{`${reference}:${
-            verseIndex + 1
-          }`}</Text>
+          {selectedTheme && verseHtmlContent ? (
+            <WebView
+              key={selectedTheme.id}
+              originWhitelist={["*"]}
+              style={styles.verseWebView}
+              source={{
+                html: verseHtmlContent,
+              }}
+              scrollEnabled={false}
+              javaScriptEnabled={true}
+              domStorageEnabled={true}
+              startInLoadingState={true}
+              onError={(syntheticEvent) => {
+                const { nativeEvent = {} } = syntheticEvent;
+                console.warn("WebView error: ", nativeEvent);
+              }}
+            />
+          ) : (
+            <>
+              <Text style={verseTextStyle}>{currentVerseText}</Text>
+              <Text style={styles.verseReference}>{`${reference}:${
+                verseIndex + 1
+              }`}</Text>
+            </>
+          )}
 
           {/* Progress Line */}
         </Animated.View>
@@ -532,6 +617,14 @@ export const SheetContent = ({
           </TouchableOpacity>
         </Animated.View>
       </Animated.View>
+
+      {/* Theme Selector Bottom Sheet */}
+      <ThemeSelectorBottomSheet
+        bottomSheetRef={themeSelectorRef}
+        selectedTheme={selectedTheme}
+        onThemeSelect={handleThemeSelect}
+        onClose={handleThemeClose}
+      />
     </ImageBackground>
   );
 };
@@ -614,6 +707,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
+  },
+  verseWebView: {
+    flex: 1,
+    minWidth: "100%",
+    backgroundColor: "transparent",
   },
   verseText: {
     color: "white",

@@ -3248,6 +3248,7 @@ export const quoteTemplatesMaker = (selectedTheme: TQuoteDataItem) => {
       font-family: '${selectedTheme.font.name}', sans-serif;
       color: #ffffff;
       margin: 0 1rem;
+      background-color: transparent;
     }
   
     .quote-box {
@@ -3296,8 +3297,11 @@ export const quoteTemplatesMaker = (selectedTheme: TQuoteDataItem) => {
       font-family: sans-serif;
       width: 100%;
     }
-    .watermark.none{
+    .watermark.none, .verse-line.none {
       display: none;
+    }
+   .verse-container:has(.verse-line.none) .verse {
+      font-family: sans-serif;
     }
     .watermark-text {
       font-size: 1.3rem;
@@ -3316,7 +3320,7 @@ export const quoteTemplatesMaker = (selectedTheme: TQuoteDataItem) => {
         <p class="verse">
         {{ref}}
         </p>
-        <div class="verse-line"></div>
+        <div class="verse-line {{verseLineClass}}"></div>
       </div>
     </div>
     <div class="watermark {{watermarkClass}}">
