@@ -157,6 +157,7 @@ const NewDashboard = () => {
       label: "Cita Image",
       action: () => navigation?.navigate(Screens.QuoteMaker),
       color: "#ec899e",
+      isNew: isWithinTimeframe("3d", new Date("2025-10-15")).isActive,
     },
     {
       icon: "BookA",
