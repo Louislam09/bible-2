@@ -40,7 +40,7 @@ const QuoteMaker: React.FC = () => {
     | undefined
   >();
   const [watermarkClass, setWatermarkClass] = useState("none");
-
+  const [highlightShareButton, setHighlightShareButton] = useState(false); // for music mode
   const mySelectedVerse = use$(() => bibleState$.selectedVerseForNote.get());
   const params = useLocalSearchParams();
 
@@ -58,6 +58,18 @@ const QuoteMaker: React.FC = () => {
 
   // Initialize with random verse and theme
   useEffect(() => {
+    if (params?.themeId && typeof params.themeId === "string") {
+      const theme = QUOTES_DATA.flatMap((section) => section.items).find(
+        (item) => item.id === params.themeId
+      );
+      setSelectedTheme(theme);
+    } else {
+      const allThemes = QUOTES_DATA.flatMap((section) => section.items);
+      const randomTheme =
+        allThemes[Math.floor(Math.random() * allThemes.length)];
+      setSelectedTheme(randomTheme);
+    }
+
     setSelectedVerse({
       text: typeof params?.text === "string" ? params.text : randomVerse.text,
       reference:
@@ -65,6 +77,10 @@ const QuoteMaker: React.FC = () => {
           ? params.reference
           : randomVerse.reference,
     });
+    if (params?.isMusic === "true") {
+      // highlight the share button
+      setHighlightShareButton(true);
+    }
   }, []);
 
   const screenOptions: any = useMemo(() => {
@@ -107,8 +123,6 @@ const QuoteMaker: React.FC = () => {
     await captureAndShare();
     setWatermarkClass("none");
   };
-
-  console.log(selectedTheme?.backgroundImageUrl);
 
   return (
     <View style={styles.container}>
@@ -190,9 +204,15 @@ const QuoteMaker: React.FC = () => {
         )}
       </ViewShot>
       <View style={styles.footer}>
-        <TouchableOpacity onPress={handleShare} style={styles.shareButton}>
+        <TouchableOpacity
+          onPress={handleShare}
+          style={[
+            styles.shareButton,
+            highlightShareButton && styles.highlightedShareButton,
+          ]}
+        >
           <Icon name="Share" size={24} color="#FFFFFF" />
-          <Text style={styles.shareText}>Share</Text>
+          <Text style={styles.shareText}>Compartir</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => themeSelectorRef.current?.present()}
@@ -339,6 +359,12 @@ const getStyles = ({ colors }: TTheme) =>
       fontSize: 14,
       fontWeight: "500",
       marginLeft: 6,
+    },
+    highlightedShareButton: {
+      backgroundColor: "rgba(255, 255, 255, 0.2)",
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      borderRadius: 8,
     },
   });
 

@@ -34,6 +34,7 @@ import {
 } from "@/constants/quoteTemplates";
 import WebView from "react-native-webview";
 import { getChapterTextRawForReading } from "@/utils/getVerseTextRaw";
+import { router } from "expo-router";
 
 type SheetContentProps = {
   progress: SharedValue<number>;
@@ -156,7 +157,15 @@ export const SheetContent = ({
   };
 
   const handleShare = () => {
-    // Handle share functionality
+    router.push({
+      pathname: "/quoteMaker",
+      params: {
+        text: currentVerseText,
+        reference: `${reference}:1`,
+        themeId: selectedTheme?.id || "",
+        isMusic: "true",
+      },
+    });
   };
 
   const handleTheming = () => {
@@ -605,10 +614,10 @@ export const SheetContent = ({
 
         {/* Feature Buttons */}
         <Animated.View style={[rFeatureButtonsStyle, styles.featureButtons]}>
-          <TouchableOpacity onPress={handleSound} style={styles.featureButton}>
+          {/* <TouchableOpacity onPress={handleSound} style={styles.featureButton}>
             <Icon name="Volume2" size={24} color="white" />
             <Text style={styles.featureButtonText}>Voz</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity onPress={handleShare} style={styles.featureButton}>
             <Icon name="Share" size={24} color="white" />
             <Text style={styles.featureButtonText}>Compartir</Text>
