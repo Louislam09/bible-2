@@ -20,6 +20,7 @@ interface UseBibleReaderResult {
   isSpeaking: boolean;
   ended: boolean;
   currentVerseText: string;
+  verseList: string[];
 }
 
 const useBibleReader = ({
@@ -108,6 +109,7 @@ const useBibleReader = ({
     ended,
     reset,
     currentVerseText: verseList[verseIndex] || "",
+    verseList
   };
 };
 

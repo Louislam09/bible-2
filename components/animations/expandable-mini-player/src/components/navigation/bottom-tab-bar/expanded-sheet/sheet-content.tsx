@@ -27,9 +27,13 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import type { SharedValue } from "react-native-reanimated";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import ThemeSelectorBottomSheet from "@/components/quote/ThemeSelectorBottomSheet";
-import { TQuoteDataItem } from "@/constants/quotesData";
-import { quoteTemplatesMaker } from "@/constants/quoteTemplates";
+import { QUOTES_DATA, TQuoteDataItem } from "@/constants/quotesData";
+import {
+  quoteTemplatesMaker,
+  quoteMusicTemplatesMaker,
+} from "@/constants/quoteTemplates";
 import WebView from "react-native-webview";
+import { getChapterTextRawForReading } from "@/utils/getVerseTextRaw";
 
 type SheetContentProps = {
   progress: SharedValue<number>;
@@ -51,9 +55,9 @@ export const SheetContent = ({
   const { isConnected } = useNetInfo();
 
   // Theme selector state
-  const [selectedTheme, setSelectedTheme] = useState<
-    TQuoteDataItem | undefined
-  >(undefined);
+  const [selectedTheme, setSelectedTheme] = useState<TQuoteDataItem>(
+    QUOTES_DATA[0].items[0]
+  );
   const themeSelectorRef = useRef<BottomSheetModal>(null);
 
   const bibleQuery = bibleState$.bibleQuery.get();
@@ -76,6 +80,7 @@ export const SheetContent = ({
     ended,
     reset,
     currentVerseText,
+    verseList,
   } = useBibleReader({
     currentChapterVerses: bibleState$.bibleData.topVerses.get() as any,
     currentVoiceIdentifier,
@@ -168,8 +173,7 @@ export const SheetContent = ({
 
   // Function to reset theme to default
   const resetTheme = useCallback(() => {
-    setSelectedTheme(undefined);
-    console.log("Theme reset to default");
+    setSelectedTheme(QUOTES_DATA[0].items[0]);
   }, []);
 
   // Generate HTML content for verse display using selected theme
@@ -180,12 +184,12 @@ export const SheetContent = ({
 
     const verseReference = `${reference}:${verseIndex + 1}`;
 
-    return quoteTemplatesMaker(selectedTheme)
+    return quoteMusicTemplatesMaker(selectedTheme)
       .replace(/{{ref}}/g, verseReference)
       .replace(/{{text}}/g, currentVerseText)
       .replace(/{{verseLineClass}}/g, "none")
       .replace(/{{watermarkClass}}/g, "none");
-  }, [selectedTheme, currentVerseText, reference, verseIndex]);
+  }, [selectedTheme, currentVerseText, reference, verseIndex, verseList]);
 
   const handleDropdown = () => {
     progress.value = withTiming(0, {

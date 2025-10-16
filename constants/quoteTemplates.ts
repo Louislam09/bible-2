@@ -3330,3 +3330,106 @@ export const quoteTemplatesMaker = (selectedTheme: TQuoteDataItem) => {
   </html>
   `
 }
+
+export const quoteMusicTemplatesMaker = (selectedTheme: TQuoteDataItem) => {
+  return `<!DOCTYPE html>
+  <html lang="es">
+  <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=0.6" />
+  <title>Proverbio Inspirador</title>
+  <style>
+    @import url('${selectedTheme.font.url}');
+  
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: '${selectedTheme.font.name}', sans-serif;
+      color: #ffffff;
+      margin: 0 1rem;
+      background-color: transparent;
+    }
+  
+    .quote-box {
+      position: relative;
+      text-align: center;
+      display: grid;
+      place-items: center;
+    }
+  
+    .quote-text {
+      font-family: '${selectedTheme.font.name}', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 500;
+      line-height: 1.35;
+      margin-bottom: 1.5rem;
+      text-transform: ${selectedTheme.textTransform};
+    }
+   
+    .verse-container {
+      text-align: center;
+      position: relative;
+      width: fit-content;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .verse {
+      font-size: 1.8rem;
+      text-transform: ${selectedTheme.textTransform};
+    }
+    .verse-line {
+      background-image: linear-gradient(90deg, #f8b04b 0, #e8465b 40.1%, #00a8c3 73.96%, #60bba2);
+      height: 4px;
+      width: 60%;
+      border-radius: 16px;
+      margin-top: -1rem;
+    }
+ 
+    .watermark {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      font-size: 1rem;
+      color: #ffffff;
+      font-family: sans-serif;
+      width: 100%;
+    }
+    .watermark.none, .verse-line.none {
+      display: none;
+    }
+   .verse-container:has(.verse-line.none) .verse {
+      font-family: sans-serif;
+    }
+    .watermark-text {
+      font-size: 1.3rem;
+      color: #ffffff;
+      text-align: center;
+    }
+   
+  </style>
+  </head>
+  <body>
+    <div class="quote-box">
+      <p class="quote-text">
+        {{text}}
+      </p>
+      <div class="verse-container">
+        <p class="verse">
+        {{ref}}
+        </p>
+        <div class="verse-line {{verseLineClass}}"></div>
+      </div>
+    </div>
+    <div class="watermark {{watermarkClass}}">
+      <p class="watermark-text"><b>Descargar:</b> Santa Biblia RV60+Audio</p>
+    </div>
+  </body>
+  </html>
+  `
+}
+
