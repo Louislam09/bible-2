@@ -14,6 +14,7 @@ export type TQuoteDataItem = {
 
 export type TQuoteDataSection = {
     section: string;
+    label: string;
     items: TQuoteDataItem[];
 }
 
@@ -29,6 +30,7 @@ export const formatBackgroundImagesUrl = (name: string) => {
 export const QUOTES_DATA: TQuoteDataSection[] = [
     {
         "section": "home",
+        "label": "Hogar",
         "items": [
             {
                 "id": "recents-classic-script",
@@ -163,7 +165,144 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
         ]
     },
     {
+        "section": "music",
+        "label": "Música",
+        "items": [
+            {
+                "id": "music-vinyl-record",
+                "name": "Vinyl Record",
+                "font": {
+                    "name": "Pacifico",
+                    "url": "https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/music__image_1.jpg"),
+                "previewText": "Abcd",
+                "textColor": "#FFFFFF",
+                "accentColor": "#FFD700",
+                "textTransform": "capitalize"
+            },
+            {
+                "id": "music-jazz-night",
+                "name": "Jazz Night",
+                "font": {
+                    "name": "Lobster Two",
+                    "url": "https://fonts.googleapis.com/css2?family=Lobster+Two&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/music__image_2.jpg"),
+                "previewText": "Abcd",
+                "textColor": "#E0C097",
+                "accentColor": "#4A2C2A",
+                "textTransform": "capitalize"
+            },
+            {
+                "id": "music-rock-stage",
+                "name": "Rock Stage",
+                "font": {
+                    "name": "Bebas Neue",
+                    "url": "https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/music__image_3.jpg"),
+                "previewText": "ABCD",
+                "textColor": "#FFFFFF",
+                "accentColor": "#E53935",
+                "textTransform": "uppercase"
+            },
+            {
+                "id": "music-classic-notes",
+                "name": "Classic Notes",
+                "font": {
+                    "name": "Cormorant Garamond",
+                    "url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/music__image_4.jpg"),
+                "previewText": "Abcd",
+                "textColor": "#2C2C2C",
+                "accentColor": "#D4AF37",
+                "textTransform": "capitalize"
+            },
+            {
+                "id": "music-electric-synth",
+                "name": "Electric Synth",
+                "font": {
+                    "name": "Orbitron",
+                    "url": "https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/music__image_5.jpg"),
+                "previewText": "ABCD",
+                "textColor": "#00FFFF",
+                "accentColor": "#FF00FF",
+                "textTransform": "uppercase"
+            },
+            {
+                "id": "music-urban-rap",
+                "name": "Urban Rap",
+                "font": {
+                    "name": "Anton",
+                    "url": "https://fonts.googleapis.com/css2?family=Anton&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/music__image_6.jpg"),
+                "previewText": "ABCD",
+                "textColor": "#F5F5F5",
+                "accentColor": "#212121",
+                "textTransform": "uppercase"
+            },
+            {
+                "id": "music-piano-elegance",
+                "name": "Piano Elegance",
+                "font": {
+                    "name": "Playfair Display",
+                    "url": "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/music__image_7.jpg"),
+                "previewText": "Abcd",
+                "textColor": "#000000",
+                "accentColor": "#C0A060",
+                "textTransform": "capitalize"
+            },
+            {
+                "id": "music-disco-glow",
+                "name": "Disco Glow",
+                "font": {
+                    "name": "Monoton",
+                    "url": "https://fonts.googleapis.com/css2?family=Monoton&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/music__image_8.jpg"),
+                "previewText": "ABCD",
+                "textColor": "#FFFFFF",
+                "accentColor": "#FF69B4",
+                "textTransform": "uppercase"
+            },
+            {
+                "id": "music-acoustic-warmth",
+                "name": "Acoustic Warmth",
+                "font": {
+                    "name": "Kalam",
+                    "url": "https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/music__image_9.jpg"),
+                "previewText": "Abcd",
+                "textColor": "#4B2E05",
+                "accentColor": "#FFDAB9",
+                "textTransform": "capitalize"
+            },
+            {
+                "id": "music-festival-vibes",
+                "name": "Festival Vibes",
+                "font": {
+                    "name": "Fredoka One",
+                    "url": "https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/music__image_10.jpg"),
+                "previewText": "ABCD",
+                "textColor": "#FFF8E1",
+                "accentColor": "#FF5722",
+                "textTransform": "uppercase"
+            }
+        ]
+    },
+    {
         "section": "seasonal",
+        "label": "Estaciones",
         "items": [
             {
                 "id": "seasonal-spring-blossom",
@@ -299,6 +438,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
     },
     {
         "section": "calm",
+        "label": "Calma",
         "items": [
             {
                 "id": "calm-misty-morning",
@@ -434,6 +574,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
     },
     {
         "section": "animals",
+        "label": "Animales",
         "items": [
             {
                 "id": "people-mountain-hiker",
@@ -569,6 +710,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
     },
     {
         "section": "books",
+        "label": "Libros",
         "items": [
             {
                 "id": "minimal-clean-white",
@@ -704,6 +846,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
     },
     {
         "section": "nature",
+        "label": "Naturaleza",
         "items": [
             {
                 "id": "nature-forest-canopy",
@@ -839,6 +982,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
     },
     {
         "section": "objects",
+        "label": "Objetos",
         "items": [
             {
                 "id": "urban-city-lights",
@@ -974,6 +1118,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
     },
     {
         "section": "mountains",
+        "label": "Montañas",
         "items": [
             {
                 "id": "vintage-old-paper",
@@ -1109,6 +1254,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
     },
     {
         "section": "lights",
+        "label": "Luces",
         "items": [
             {
                 "id": "vintage-old-paper",
@@ -1242,6 +1388,144 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
             }
         ]
     },
+
+    {
+        "section": "flowers",
+        "label": "Flores",
+        "items": [
+            {
+                "id": "flowers-rose",
+                "name": "Rose",
+                "font": {
+                    "name": "Pacifico",
+                    "url": "https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/flowers__image_1.jpg"),
+                "previewText": "Abcd",
+                "textColor": "#FFFFFF",
+                "accentColor": "#FFD700",
+                "textTransform": "capitalize"
+            },
+            {
+                "id": "flowers-sunflower",
+                "name": "Sunflower",
+                "font": {
+                    "name": "Amatic SC",
+                    "url": "https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/flowers__image_2.jpg"),
+                "previewText": "Abcd",
+                "textColor": "#3E2C00",
+                "accentColor": "#FFD54F",
+                "textTransform": "capitalize"
+            },
+            {
+                "id": "flowers-lavender",
+                "name": "Lavender",
+                "font": {
+                    "name": "Dancing Script",
+                    "url": "https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/flowers__image_3.jpg"),
+                "previewText": "Abcd",
+                "textColor": "#4A235A",
+                "accentColor": "#D7BDE2",
+                "textTransform": "capitalize"
+            },
+            {
+                "id": "flowers-cherry-blossom",
+                "name": "Cherry Blossom",
+                "font": {
+                    "name": "Great Vibes",
+                    "url": "https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/flowers__image_4.jpg"),
+                "previewText": "Abcd",
+                "textColor": "#7B1FA2",
+                "accentColor": "#F8BBD0",
+                "textTransform": "capitalize"
+            },
+            {
+                "id": "flowers-tulip",
+                "name": "Tulip",
+                "font": {
+                    "name": "Poppins",
+                    "url": "https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/flowers__image_5.jpg"),
+                "previewText": "Abcd",
+                "textColor": "#2C2C2C",
+                "accentColor": "#FF4081",
+                "textTransform": "capitalize"
+            },
+            {
+                "id": "flowers-orchid",
+                "name": "Orchid",
+                "font": {
+                    "name": "Marcellus",
+                    "url": "https://fonts.googleapis.com/css2?family=Marcellus&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/flowers__image_6.jpg"),
+                "previewText": "Abcd",
+                "textColor": "#FFFFFF",
+                "accentColor": "#BA68C8",
+                "textTransform": "capitalize"
+            },
+            {
+                "id": "flowers-daisy",
+                "name": "Daisy",
+                "font": {
+                    "name": "Quicksand",
+                    "url": "https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/flowers__image_7.jpg"),
+                "previewText": "Abcd",
+                "textColor": "#222222",
+                "accentColor": "#FFEB3B",
+                "textTransform": "capitalize"
+            },
+            {
+                "id": "flowers-peony",
+                "name": "Peony",
+                "font": {
+                    "name": "Cormorant Garamond",
+                    "url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/flowers__image_8.jpg"),
+                "previewText": "Abcd",
+                "textColor": "#4A2C2A",
+                "accentColor": "#F48FB1",
+                "textTransform": "capitalize"
+            },
+            {
+                "id": "flowers-lotus",
+                "name": "Lotus",
+                "font": {
+                    "name": "Playfair Display",
+                    "url": "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/flowers__image_9.jpg"),
+                "previewText": "Abcd",
+                "textColor": "#FFFFFF",
+                "accentColor": "#81C784",
+                "textTransform": "capitalize"
+            },
+            {
+                "id": "flowers-garden-bloom",
+                "name": "Garden Bloom",
+                "font": {
+                    "name": "Sacramento",
+                    "url": "https://fonts.googleapis.com/css2?family=Sacramento&display=swap"
+                },
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/flowers__image_10.jpg"),
+                "previewText": "Abcd",
+                "textColor": "#2E2E2E",
+                "accentColor": "#F06292",
+                "textTransform": "capitalize"
+            }
+        ]
+    }
+
 ]
 
 export const BACKGROUND_IMAGES = [

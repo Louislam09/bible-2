@@ -263,12 +263,12 @@ const getHTMLContent = (quotesData: any, selectedThemeId: string | null) => {
 <body>
     <div class="header">
         <div class="placeholder"></div>
-        <div class="title">Themes</div>
+        <div class="title">Temas</div>
         <button class="close-button" onclick="handleClose()">×</button>
     </div>
 
     <div class="content" id="content">
-        <div class="loading">Loading themes...</div>
+        <div class="loading">Cargando temas...</div>
     </div>
 
     <script>
@@ -313,7 +313,7 @@ const getHTMLContent = (quotesData: any, selectedThemeId: string | null) => {
             quotesData.forEach(section => {
                 html += \`
                     <div class="section">
-                        <div class="section-title">\${section.section}</div>
+                        <div class="section-title">\${section.label}</div>
                         <div class="themes-container">
                 \`;
                 
@@ -402,7 +402,6 @@ const ThemeSelectorBottomSheet: React.FC<ThemeSelectorBottomSheetProps> = ({
   const handleWebViewMessage = useCallback(
     (event: any) => {
       try {
-        console.log({ event });
         const data = JSON.parse(event.nativeEvent.data);
 
         if (data.type === "themeSelected") {
