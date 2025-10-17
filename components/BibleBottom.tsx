@@ -70,10 +70,10 @@ const BibleBottom: FC<any> = (props) => {
           <ActivityIndicator />
         ) : (
           <Chapter
+            data={bottomVerses}
+            isInterlinear={false}
             isSplit
-            interlinearVerses={interlinearVerses}
             verses={bottomVerses}
-            estimatedReadingTime={estimatedReadingTimeBottom}
             initialScrollIndex={
               initialScrollIndex === 1 ? 0 : initialScrollIndex
             }

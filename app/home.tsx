@@ -1,4 +1,10 @@
-import React, { RefObject, useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import {
   Animated,
@@ -27,6 +33,8 @@ import { TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
 import { Stack, useNavigation } from "expo-router";
 import { modalState$ } from "@/state/modalState";
+import withDrawTimeMeasurement from "@/components/withDrawTimeMeasurement";
+import { Text } from "@/components/Themed";
 
 // Constants
 const MIN_SPLIT_SIZE = 200;
@@ -42,7 +50,7 @@ type HomeScreenProps = {};
 const HomeScreen: React.FC<HomeScreenProps> = () => {
   const navigation = useNavigation();
   const { theme } = useMyTheme();
-  const { orientation } = useBibleContext();
+  // const { orientation } = useBibleContext();
   const isSplitActived = use$(() => bibleState$.isSplitActived.get());
   const tourPopoverVisible = use$(() => tourState$.tourPopoverVisible.get());
 
@@ -50,7 +58,8 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   const initialState = bibleState$.bibleQuery.get();
 
   const [stepIndex, setStepIndex] = useState(0);
-  const isPortrait = orientation === "PORTRAIT";
+  // const isPortrait = orientation === "PORTRAIT";
+  const isPortrait = true;
   const styles = useMemo(
     () => getStyles(theme, isPortrait),
     [theme, isPortrait]
@@ -133,30 +142,28 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
 
   return (
     <StatusBarBackground>
-
-      <SafeAreaView key={orientation + theme.dark} style={[styles.container]}>
+      <SafeAreaView key={theme.dark.toString()} style={[styles.container]}>
         <Stack.Screen options={{ headerShown: false }} />
-        {/* <BibleHeader /> */}
         <View
           style={[styles.container, !isPortrait && { flexDirection: "row" }]}
         >
           <BibleTop height={topHeight} width={topWidth} />
-          {isSplitActived && renderBottomContent()}
+          {/* {isSplitActived && renderBottomContent()} */}
         </View>
         <>
-          <BookContentModals />
+          {/* <BookContentModals /> */}
 
-          <FloatingButton iconName="NotebookText">
+          {/* <FloatingButton iconName="NotebookText">
             <CurrentNoteDetail />
-          </FloatingButton>
+          </FloatingButton> */}
 
-          {tourState$.tourPopoverVisible.get() === "FUNCTION" && (
+          {/* {tourState$.tourPopoverVisible.get() === "FUNCTION" && (
             <Walkthrough
               steps={tutorialSteps}
               setStep={setStepIndex}
               currentStep={stepIndex}
             />
-          )}
+          )} */}
         </>
       </SafeAreaView>
     </StatusBarBackground>
@@ -198,4 +205,15 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
     },
   });
 
-export default HomeScreen;
+const MeasuredHomeScreen = withDrawTimeMeasurement(HomeScreen, {
+  componentName: "HomeScreen",
+  onDrawComplete: (drawTime) => {
+    console.log(
+      `🏠 Home Screen loaded in ${(drawTime / 1000).toFixed(3)} seconds`
+    );
+  },
+});
+
+export default MeasuredHomeScreen;
+
+// export default HomeScreen;

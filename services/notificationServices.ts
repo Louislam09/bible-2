@@ -153,7 +153,7 @@ export const useNotificationService = () => {
             (notification: any) => notification?.content?.body?.includes(dailyVerseData?.ref)
         );
 
-        console.log(`[DailyVerse]: ALREADY SCHEDULED WITH ${isSame ? 'THE SAME DATA' : 'A DIFFERENT DATA'}`);
+        // console.log(`[DailyVerse]: ALREADY SCHEDULED WITH ${isSame ? 'THE SAME DATA' : 'A DIFFERENT DATA'}`);
 
         if (dailyVerseNotifications.length === 0 || !isSame) {
             // cancel the old notification
@@ -161,7 +161,7 @@ export const useNotificationService = () => {
                 await cancelNotificationById(notification.identifier);
             }
 
-            console.log('[DailyVerse]: Scheduling new notification ...');
+            // console.log('[DailyVerse]: Scheduling new notification ...');
             return await Notifications.scheduleNotificationAsync({
                 content: {
                     title: title,
@@ -186,7 +186,7 @@ export const useNotificationService = () => {
             (notification: any) => notification?.trigger?.channelId === "devotional"
         );
         if (devotionalNotifications.length === 0) {
-            console.log('[Devotional]: SCHEDULING ...');
+            // console.log('[Devotional]: SCHEDULING ...');
 
             // 9:00 (mañana)
             const morningTime = new Date();
@@ -230,7 +230,7 @@ export const useNotificationService = () => {
                 })
             );
         } else {
-            console.log('[Devotional]: ALREADY SCHEDULED');
+            // console.log('[Devotional]: ALREADY SCHEDULED');
             return [];
         }
 
@@ -256,7 +256,7 @@ export const useNotificationService = () => {
             (notification: any) => notification?.trigger?.channelId === "memorization"
         );
         if (memorizationNotifications.length === 0) {
-            console.log('[Memorization]: SCHEDULING ...');
+            // console.log('[Memorization]: SCHEDULING ...');
             return await Notifications.scheduleNotificationAsync({
                 content: {
                     title: title,
@@ -270,7 +270,7 @@ export const useNotificationService = () => {
                 },
             });
         } else {
-            console.log('[Memorization]: ALREADY SCHEDULED');
+            // console.log('[Memorization]: ALREADY SCHEDULED');
             return null;
         }
     };
@@ -290,7 +290,7 @@ export const useNotificationService = () => {
         try {
             await Notifications.cancelScheduledNotificationAsync(notificationId);
             // showToast(`✅ Notificación cancelada`, "SHORT");
-            console.log(`✅ Notification ${notificationId} cancelled`);
+            // console.log(`✅ Notification ${notificationId} cancelled`);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
             setError(errorMessage);
@@ -342,7 +342,7 @@ export const useNotificationService = () => {
 
                 // if time change change cancel the old one and schedule the new one
                 if (hasChanged.dailyVerseTime || !updatedPrefs.dailyVerseEnabled) {
-                    console.log('[DailyVerse]: Cancelling existing notifications ...');
+                    // console.log('[DailyVerse]: Cancelling existing notifications ...');
                     const scheduledNotifications = await getScheduledNotifications();
                     const dailyVerseNotifications = scheduledNotifications.filter(
                         (notification: any) => notification?.trigger?.channelId === "dailyVerse"
@@ -387,7 +387,7 @@ export const useNotificationService = () => {
                     );
 
                     for (const notification of memorizationNotifications) {
-                        console.log("🔔 Cancelling notification:", notification);
+                        // console.log("🔔 Cancelling notification:", notification);
                         await cancelNotificationById(notification.identifier);
                     }
                 }
@@ -478,7 +478,7 @@ export const useNotificationService = () => {
                 return false;
             }
 
-            console.log('Push notification sent successfully to:', pushToken);
+            // console.log('Push notification sent successfully to:', pushToken);
             return true;
 
         } catch (error) {

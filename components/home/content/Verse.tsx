@@ -1,13 +1,14 @@
 import AiTextScannerAnimation from "@/components/ai/AiTextScannerAnimation";
 import DisplayStrongWord from "@/components/DisplayStrongWord";
 import Icon from "@/components/Icon";
-import { Text, View } from "@/components/Themed";
+import { Text } from "@/components/Themed";
 import { getBookDetail } from "@/constants/BookNames";
 import { isDefaultDatabase } from "@/constants/databaseNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMemorization } from "@/context/MemorizationContext";
 import { useMyTheme } from "@/context/ThemeContext";
+import { useHaptics } from "@/hooks/useHaptics";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
@@ -21,7 +22,6 @@ import {
   WordTagPair,
 } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { use$ } from "@legendapp/state/react";
 import { useRouter } from "expo-router";
 import React, {
@@ -35,15 +35,12 @@ import React, {
 import {
   Alert,
   Animated,
-  Easing,
   Pressable,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
 } from "react-native";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
 import VerseTitle from "./VerseTitle";
-import { useHaptics } from "@/hooks/useHaptics";
 
 type VerseProps = TVerse & {
   isSplit: boolean;

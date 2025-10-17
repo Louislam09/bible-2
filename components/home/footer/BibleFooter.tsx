@@ -1,35 +1,29 @@
 import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { useMyTheme } from "@/context/ThemeContext";
-import useAudioPlayer from "@/hooks/useAudioPlayer";
-import { EBibleVersions, Screens } from "@/types";
+import { Screens } from "@/types";
 import { LinearGradient } from "expo-linear-gradient";
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useRef } from "react";
 import { TouchableOpacity, useWindowDimensions } from "react-native";
 
-import BottomModal from "@/components/BottomModal";
+import { ExpandedSheet } from "@/components/animations/expandable-mini-player/src/components/navigation/bottom-tab-bar/expanded-sheet";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useNetwork } from "@/context/NetworkProvider";
-import useBibleReader from "@/hooks/useBibleReading";
-import useColorScheme from "@/hooks/useColorScheme";
+import { audioState$ } from "@/hooks/useAudioPlayer";
 import { useHaptics } from "@/hooks/useHaptics";
 import useParams from "@/hooks/useParams";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import { bibleState$ } from "@/state/bibleState";
-import { audioState$ } from "@/hooks/useAudioPlayer";
 import { tourState$ } from "@/state/tourState";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { batch } from "@legendapp/state";
 import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "expo-router";
-import Play from "../header/Play";
-import ProgressBar from "./ProgressBar";
 import { getStyles } from "./styles";
-import { ExpandedSheet } from "@/components/animations/expandable-mini-player/src/components/navigation/bottom-tab-bar/expanded-sheet";
 
 interface FooterInterface {
   isSplit?: boolean;
@@ -37,17 +31,13 @@ interface FooterInterface {
 
 const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const haptics = useHaptics();
-  const { currentBibleVersion, shouldLoopReading, setShouldLoop } =
-    useBibleContext();
+  const { currentBibleVersion } = useBibleContext();
   const isSplitActived = bibleState$.isSplitActived.get();
-  const currentVoiceIdentifier = storedData$.currentVoiceIdentifier.get();
-  const currentVoiceRate = storedData$.currentVoiceRate.get() || 1;
   const useDomComponent = use$(() => storedData$.useDomComponent.get());
   const netInfo = useNetwork();
   const { isConnected } = netInfo;
   const FOOTER_ICON_SIZE = iconSize;
   const { width } = useWindowDimensions();
-  const [showPlayer, setShowPlayer] = useState(false);
 
   const isSmallSDevice = width < 300;
   const footerIconSize = isSmallSDevice ? 26 : 24;
@@ -57,7 +47,6 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const playRef = useRef<BottomSheetModal>(null);
   const navigation = useNavigation();
   const params = useParams();
-  const scheme = useColorScheme();
   const bibleQuery = bibleState$.bibleQuery.get();
 
   const book = isSplit ? bibleQuery?.bottomSideBook : bibleQuery.book;
@@ -69,39 +58,6 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
 
   const { bookNumber } = DB_BOOK_NAMES.find((x) => x.longName === book) || {};
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
-  const isRVR = currentBibleVersion === EBibleVersions.BIBLE && isConnected;
-  // const { isDownloading, isPlaying, playAudio, duration, position } =
-  //   useAudioPlayer({
-  //     book: book,
-  //     chapterNumber: +chapter,
-  //     nextChapter,
-  //   });
-
-  // const { verseIndex, startReading, stopReading, isSpeaking, ended, reset } =
-  //   useBibleReader({
-  //     currentChapterVerses: bibleState$.bibleData.topVerses.get() as any,
-  //     currentVoiceIdentifier,
-  //     voiceRate: currentVoiceRate,
-  //   });
-  // const startOrStop = isSpeaking ? stopReading : startReading;
-  // const _playAudio = isRVR ? playAudio : startOrStop;
-  // const _isPlaying = isRVR ? isPlaying : isSpeaking;
-
-  // useEffect(() => {
-  //   if (ended && shouldLoopReading) {
-  //     nextChapter();
-  //     setTimeout(() => {
-  //       reset({ andPlay: shouldLoopReading });
-  //     }, 1000);
-  //   }
-  // }, [ended, shouldLoopReading]);
-
-  // useEffect(() => {
-  //   return () => {
-  //     if (isPlaying) playAudio();
-  //     stopReading();
-  //   };
-  // }, []);
 
   const nextOrPreviousBook = (name: string, chapter: number = 1) => {
     bibleState$.clearSelection();

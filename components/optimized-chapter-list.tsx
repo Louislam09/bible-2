@@ -56,7 +56,6 @@ const OptimizedChapterList = ({
   const { theme } = useMyTheme();
   const { colors } = theme;
   const styles = getStyles(theme);
-  const isFlashlist = use$(() => bibleState$.isFlashlist.get());
 
   const ListHeader = useCallback(
     () => (
@@ -92,7 +91,7 @@ const OptimizedChapterList = ({
 
   const keyExtractor = useCallback((item: number) => item.toString(), []);
 
-  return isFlashlist ? (
+  return (
     <FlashList
       data={chapters}
       renderItem={renderItem}
@@ -101,20 +100,6 @@ const OptimizedChapterList = ({
       ListHeaderComponent={ListHeader}
       contentContainerStyle={styles.flatContainer}
       removeClippedSubviews={true}
-      getItemType={() => "chapter"}
-      drawDistance={200} // Optimize draw distance
-      overrideItemLayout={(layout, item) => {
-        layout.span = 1; // Only span is supported
-      }}
-    />
-  ) : (
-    <LegendList
-      data={chapters}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
-      numColumns={5}
-      ListHeaderComponent={ListHeader}
-      contentContainerStyle={styles.flatContainer}
       getItemType={() => "chapter"}
     />
   );

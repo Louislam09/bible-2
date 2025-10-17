@@ -23,9 +23,9 @@ import { use$ } from "@legendapp/state/react";
 import { useNavigation, useRouter } from "expo-router";
 import VersionList from "./VersionList";
 
-interface HeaderInterface { }
+interface HeaderInterface {}
 
-const BibleHeader: FC<HeaderInterface> = ({ }) => {
+const BibleHeader: FC<HeaderInterface> = ({}) => {
   const haptics = useHaptics();
   const { width } = useWindowDimensions();
   const {
@@ -61,9 +61,9 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
   const styles = getStyles(theme);
   const versionRef = useRef<BottomSheetModal>(null);
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
-  const isInterlineal = [
-    EBibleVersions.INTERLINEAR,
-  ].includes(currentBibleVersion as EBibleVersions);
+  const isInterlineal = [EBibleVersions.INTERLINEAR].includes(
+    currentBibleVersion as EBibleVersions
+  );
   const canGoForward = !(currentHistoryIndex === history?.length - 1);
   const canGoBackward = currentHistoryIndex !== 0;
   const { installedBibles } = useDBContext();
@@ -208,7 +208,6 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
           <VersionList {...{ currentBibleVersion, onSelect, theme }} />
         </BottomModal>
       </View>
-
     </LinearGradient>
   );
 };

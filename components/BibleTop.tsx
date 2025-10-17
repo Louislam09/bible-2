@@ -13,10 +13,18 @@ import copyToClipboard from "@/utils/copyToClipboard";
 import { getStrongValue, WordTagPair } from "@/utils/extractVersesInfo";
 import getMemorySizeInGB from "@/utils/getDeviceRamValue";
 import { use$ } from "@legendapp/state/react";
-import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   ActivityIndicator,
   Animated,
+  Dimensions,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
@@ -26,6 +34,10 @@ import SwipeWrapper from "./SwipeWrapper";
 import { Text, View } from "./Themed";
 import DomChapter from "./dom-components/DomChapter";
 import { useHaptics } from "@/hooks/useHaptics";
+import WebView from "react-native-webview";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
+import { bibleChapterHtmlTemplate } from "@/constants/HtmlTemplate";
+import WebViewChapter from "./home/content/WebViewChapter";
 
 interface BibleTopProps {
   height: Animated.Value;
@@ -46,7 +58,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const NT_BOOK_NUMBER = 470;
   const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
 
-  const useDomComponent = use$(() => storedData$.useDomComponent.get());
+  const isSplitActived = bibleState$.isSplitActived.get();
 
   const isHebrewInterlinear = [EBibleVersions.INTERLINEAR].includes(
     currentBibleVersion as EBibleVersions
@@ -55,6 +67,14 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const isGreekInterlinear = [EBibleVersions.GREEK].includes(
     currentBibleVersion as EBibleVersions
   );
+  const isInterlinear = isHebrewInterlinear || isGreekInterlinear;
+
+  const chapterData = useMemo(() => {
+    if (isInterlinear && !isSplitActived) {
+      return interlinearVerses;
+    }
+    return verses;
+  }, [isInterlinear, verses, isSplitActived]);
 
   const isNewTestamentAndInterlinear =
     bookInfo.bookNumber >= NT_BOOK_NUMBER && isHebrewInterlinear;
@@ -62,9 +82,6 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const isOldTestamentAndGreekInterlineal =
     bookInfo.bookNumber < NT_BOOK_NUMBER && isGreekInterlinear;
 
-  const isInterlinear = isHebrewInterlinear || isGreekInterlinear;
-
-  const isSplitActived = bibleState$.isSplitActived.get();
   const {
     book: book,
     chapter: chapter,
@@ -262,29 +279,17 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   }, [autoChangeBibleVersion]);
 
   // const MyChapter = isInterlinear ? Chapter : (slowDevice ) ? DomChapter : Chapter;
-  const MyChapter = useDomComponent
-    ? isInterlinear
-      ? Chapter
-      : DomChapter
-    : Chapter;
+  // const MyChapter = useDomComponent
+  //   ? isInterlinear
+  //     ? Chapter
+  //     : DomChapter
+  //   : Chapter;
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
       <Animated.View style={[styles.header, headerStyle]}>
         <BibleHeader />
       </Animated.View>
-      {!isSplitActived && (
-        <Animated.View style={[styles.progressContainer, progressStyle]}>
-          <ProgressBar
-            hideCircle
-            height={4}
-            color={theme.colors.notification}
-            barColor={theme.colors.text}
-            progress={progressValue}
-            circleColor={theme.colors.notification}
-          />
-        </Animated.View>
-      )}
       <SwipeWrapper {...{ onSwipeRight, onSwipeLeft }}>
         {isDataLoading ? (
           <View style={styles.loadingContainer}>
@@ -299,7 +304,6 @@ const BibleTop: FC<BibleTopProps> = (props) => {
               paddingHorizontal: 20,
             }}
           >
-            {/* Icon */}
             <View style={{ marginBottom: 20 }}>
               <Icon
                 name="BookType"
@@ -308,7 +312,6 @@ const BibleTop: FC<BibleTopProps> = (props) => {
               />
             </View>
 
-            {/* Main Title */}
             <Text
               style={{
                 color: theme.colors.text,
@@ -321,7 +324,6 @@ const BibleTop: FC<BibleTopProps> = (props) => {
               Interlinear no disponible
             </Text>
 
-            {/* Description */}
             <Text
               style={{
                 color: theme.colors.text + "CC",
@@ -336,7 +338,6 @@ const BibleTop: FC<BibleTopProps> = (props) => {
               {isGreekInterlinear ? "griego" : "hebreo"} en este momento.
             </Text>
 
-            {/* Action Text */}
             <Text
               style={{
                 color: theme.colors.notification,
@@ -369,28 +370,33 @@ const BibleTop: FC<BibleTopProps> = (props) => {
             </TouchableOpacity>
           </View>
         ) : (
-          <MyChapter
-            initialScrollIndex={
-              initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
-            }
-            verses={verses}
-            interlinearVerses={interlinearVerses}
-            isSplit={false}
+          <WebViewChapter
+            width={Dimensions.get("window").width}
             theme={theme}
-            onScroll={handleScroll}
-            {...{
-              onStrongWordClicked,
-              onInterlinear,
-              onAnotar,
-              onComparar,
-              onWordClicked,
-            }}
+            data={chapterData}
+            initialScrollIndex={initialScrollIndex}
           />
+          // <Chapter
+          //   initialScrollIndex={
+          //     initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
+          //   }
+          //   verses={verses}
+          //   data={chapterData}
+          //   isInterlinear={isInterlinear}
+          //   isSplit={false}
+          //   theme={theme}
+          //   onScroll={handleScroll}
+          //   {...{
+          //     onStrongWordClicked,
+          //     onInterlinear,
+          //     onAnotar,
+          //     onComparar,
+          //     onWordClicked,
+          //   }}
+          // />
         )}
       </SwipeWrapper>
 
-      {/* <BibleFooter isSplit={false} /> */}
-      {/* <Animated.View style={[styles.footer, footerStyle]}> */}
       <Animated.View style={[styles.footer]}>
         <BibleFooter isSplit={false} />
       </Animated.View>

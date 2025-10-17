@@ -1,18 +1,17 @@
 import Icon from "@/components/Icon";
 import { Text } from "@/components/Themed";
-import { useBibleContext } from "@/context/BibleContext";
+import { useHighlightRender } from "@/components/withDrawTimeMeasurement";
 import { useMyTheme } from "@/context/ThemeContext";
 import { bibleState$ } from "@/state/bibleState";
-import { EBibleVersions, IBookVerse, TTheme } from "@/types";
-import { LegendList } from "@legendapp/list";
-import { observer, use$ } from "@legendapp/state/react";
+import { IBookVerse, TTheme } from "@/types";
+import { observer } from "@legendapp/state/react";
 import { FlashList, FlashListRef } from "@shopify/flash-list";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   ActivityIndicator,
   Animated,
+  ScrollView,
   StyleSheet,
-  useWindowDimensions,
   View,
 } from "react-native";
 import InterlinearVerse from "./InterlinearVerse";
@@ -20,59 +19,40 @@ import Verse from "./Verse";
 
 interface TChapter {
   verses: IBookVerse[];
-  interlinearVerses: IBookVerse[];
+  data: IBookVerse[];
   isSplit?: boolean;
   initialScrollIndex: number;
   onScroll?: (direction: "up" | "down") => void;
   theme?: TTheme;
+  isInterlinear: boolean;
 }
 
 const Chapter = ({
   verses,
-  interlinearVerses,
+  data,
   isSplit,
   initialScrollIndex,
   onScroll,
+  isInterlinear,
 }: TChapter) => {
   const bibleSide = isSplit ? "bottom" : "top";
-  const isFlashlist = use$(() => bibleState$.isFlashlist.get());
+  const hightlightStyle = useHighlightRender();
 
-  const { width, height } = useWindowDimensions();
   const { theme } = useMyTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const chapterRef = useRef<FlashListRef<any>>(null);
   const topVerseRef = useRef<number | null>(null);
   const lastOffset = useRef(0);
   const lastScrollTime = useRef(Date.now());
-  const { currentBibleVersion } = useBibleContext();
-
-  const aspectRadio = height / width;
-  const isMobile = +aspectRadio.toFixed(2) > 1.65;
-  const isHebrewInterlinear = [EBibleVersions.INTERLINEAR].includes(
-    currentBibleVersion as EBibleVersions
-  );
-
-  const isGreekInterlinear = [EBibleVersions.GREEK].includes(
-    currentBibleVersion as EBibleVersions
-  );
-
-  const getData = useCallback(() => {
-    if ((isHebrewInterlinear || isGreekInterlinear) && !isSplit) {
-      return interlinearVerses;
-    }
-    return verses;
-  }, [isHebrewInterlinear, isSplit, isGreekInterlinear, interlinearVerses]);
-
-  const data = getData() || [];
 
   const renderItem = useCallback(
     ({ item }: any) =>
-      (isHebrewInterlinear || isGreekInterlinear) && !isSplit ? (
+      isInterlinear && !isSplit ? (
         <InterlinearVerse item={item} />
       ) : (
         <Verse item={item} isSplit={!!isSplit} initVerse={initialScrollIndex} />
       ),
-    [isSplit, initialScrollIndex, isHebrewInterlinear, isGreekInterlinear]
+    [isSplit, initialScrollIndex, isInterlinear]
   );
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: any) => {
@@ -108,7 +88,7 @@ const Chapter = ({
   }, [initialScrollIndex]);
 
   const ListHeader = useCallback(() => {
-    return isHebrewInterlinear || isGreekInterlinear ? null : (
+    return isInterlinear ? null : (
       <View style={styles.estimatedContainer}>
         <Text style={[styles.estimatedText]}>
           <Icon size={14} name="Timer" color={theme.colors.notification} />
@@ -117,7 +97,7 @@ const Chapter = ({
         </Text>
       </View>
     );
-  }, [isHebrewInterlinear, isGreekInterlinear]);
+  }, [isInterlinear]);
 
   const keyExtractor = useCallback(
     (item: IBookVerse) =>
@@ -149,52 +129,30 @@ const Chapter = ({
 
   return (
     <View style={styles.chapterContainer}>
-      <View style={[styles.verseContent]}>
-        {isFlashlist ? (
-          <FlashList
-            ref={chapterRef}
-            keyExtractor={keyExtractor}
-            data={data ?? []}
-            ListHeaderComponent={ListHeader}
-            renderItem={renderItem}
-            decelerationRate="normal"
-            removeClippedSubviews
-            getItemType={() => "verse"} // Consistent item type
-            ListEmptyComponent={() => (
-              <LoadingComponent textColor={theme.colors.text} />
-            )}
-            initialScrollIndex={Math.abs(initialScrollIndex - 1 || 0)}
-            viewabilityConfigCallbackPairs={
-              viewabilityConfigCallbackPairs.current
-            }
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={<View style={{ paddingBottom: 100 }} />}
-            ListHeaderComponentStyle={{ paddingTop: 70 }}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
-          />
-        ) : (
-          <LegendList
-            data={data}
-            renderItem={renderItem}
-            keyExtractor={keyExtractor}
-            recycleItems
-            ListHeaderComponent={ListHeader}
-            decelerationRate="normal"
-            ListEmptyComponent={() => (
-              <LoadingComponent textColor={theme.colors.text} />
-            )}
-            ListHeaderComponentStyle={{ paddingTop: 70 }}
-            initialScrollIndex={Math.abs(initialScrollIndex - 1 || 0)}
-            viewabilityConfigCallbackPairs={
-              viewabilityConfigCallbackPairs.current
-            }
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={<View style={{ paddingBottom: 100 }} />}
-            onScroll={handleScroll}
-          />
-        )}
-      </View>
+      <Animated.View style={[styles.verseContent, hightlightStyle.style]}>
+        <FlashList
+          ref={chapterRef}
+          keyExtractor={keyExtractor}
+          data={data ?? []}
+          ListHeaderComponent={ListHeader}
+          renderItem={renderItem}
+          decelerationRate="normal"
+          removeClippedSubviews
+          getItemType={() => "verse"} // Consistent item type
+          ListEmptyComponent={() => (
+            <LoadingComponent textColor={theme.colors.text} />
+          )}
+          initialScrollIndex={Math.abs(initialScrollIndex - 1 || 0)}
+          viewabilityConfigCallbackPairs={
+            viewabilityConfigCallbackPairs.current
+          }
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={<View style={{ paddingBottom: 100 }} />}
+          ListHeaderComponentStyle={{ paddingTop: 70 }}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+        />
+      </Animated.View>
     </View>
   );
 };
@@ -255,43 +213,4 @@ const getStyles = ({ colors }: TTheme) =>
     },
   });
 
-export function useHighlightRender() {
-  const animation = useRef(new Animated.Value(0)).current;
-  const renderCount = useRef(0);
-  const { theme } = useMyTheme();
-
-  useEffect(() => {
-    // Increment render count
-    renderCount.current += 1;
-
-    // Trigger animation only if it's not the first render
-    if (renderCount.current > 1) {
-      Animated.sequence([
-        Animated.timing(animation, {
-          toValue: 1,
-          duration: 200,
-          useNativeDriver: false,
-        }),
-        Animated.timing(animation, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: false,
-        }),
-      ]).start();
-    }
-  });
-
-  return {
-    style: {
-      borderColor: animation.interpolate({
-        inputRange: [0, 1],
-        outputRange: ["transparent", "red"],
-        // outputRange: ["transparent", theme.colors.notification],
-      }),
-      borderWidth: 1,
-    },
-  };
-}
-
 export default observer(Chapter);
-// export default React.memo(Chapter);

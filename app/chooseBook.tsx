@@ -19,7 +19,6 @@ import {
   TTheme,
 } from "@/types";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
-import { LegendList } from "@legendapp/list";
 import { use$ } from "@legendapp/state/react";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
@@ -134,26 +133,6 @@ const BookList = React.memo(
         removeClippedSubviews={true}
       />
     );
-
-    // return isFlashlist ? (
-    //   <FlashList
-    //     contentContainerStyle={styles.flatContainer}
-    //     keyExtractor={keyExtractor}
-    //     data={data}
-    //     renderItem={renderItem}
-    //     numColumns={viewLayoutGrid ? (isShowName ? 4 : 5) : 1}
-    //     removeClippedSubviews={true}
-    //   />
-    // ) : (
-    //   <LegendList
-    //     contentContainerStyle={styles.flatContainer}
-    //     keyExtractor={keyExtractor}
-    //     data={data}
-    //     renderItem={renderItem}
-    //     numColumns={viewLayoutGrid ? (isShowName ? 4 : 5) : 1}
-    //     recycleItems
-    //   />
-    // );
   }
 );
 

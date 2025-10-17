@@ -6,12 +6,14 @@ import {
   findNodeHandle,
   UIManager,
   StyleSheet,
+  Animated,
 } from "react-native";
 import { Text } from "./Themed";
 
 interface DrawTimeMeasurementOptions {
   componentName?: string;
   onDrawComplete?: (drawTime: number) => void;
+  showStats?: boolean;
 }
 
 interface RenderStats {
@@ -33,6 +35,7 @@ const withDrawTimeMeasurement: WithDrawTimeMeasurement = (
   {
     componentName = "Component",
     onDrawComplete,
+    showStats = false,
   }: DrawTimeMeasurementOptions = {}
 ) => {
   return function MeasuredComponent(props: any) {
@@ -105,7 +108,7 @@ const withDrawTimeMeasurement: WithDrawTimeMeasurement = (
     return (
       <View ref={componentRef} onLayout={handleLayout} style={containerStyle}>
         <WrappedComponent {...props} />
-        {renderStats.drawTime > 0 && (
+        {renderStats.drawTime > 0 && showStats && (
           <View style={styles.statsContainer}>
             <Text style={styles.statsTitle}>
               {componentName} Performance Metrics:
@@ -161,5 +164,42 @@ const styles = StyleSheet.create({
     fontFamily: "monospace",
   },
 });
+
+export function useHighlightRender() {
+  const animation = useRef(new Animated.Value(0)).current;
+  const renderCount = useRef(0);
+
+  useEffect(() => {
+    // Increment render count
+    renderCount.current += 1;
+
+    // Trigger animation only if it's not the first render
+    if (renderCount.current > 1) {
+      Animated.sequence([
+        Animated.timing(animation, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: false,
+        }),
+        Animated.timing(animation, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: false,
+        }),
+      ]).start();
+    }
+  });
+
+  return {
+    style: {
+      borderColor: animation.interpolate({
+        inputRange: [0, 1],
+        outputRange: ["transparent", "red"],
+        // outputRange: ["transparent", theme.colors.notification],
+      }),
+      borderWidth: 3,
+    },
+  };
+}
 
 export default withDrawTimeMeasurement;
