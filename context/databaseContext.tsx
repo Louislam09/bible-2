@@ -6,7 +6,13 @@ import { DEFAULT_DATABASE, EBibleVersions } from "@/types";
 import { showToast } from "@/utils/showToast";
 import { use$ } from "@legendapp/state/react";
 import * as SQLite from "expo-sqlite";
-import React, { createContext, useCallback, useContext, useEffect, useMemo } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+} from "react";
 import { storedData$ } from "./LocalstoreContext";
 
 type DatabaseContextType = {
@@ -38,7 +44,7 @@ const initialContext: DatabaseContextType = {
   installedDictionary: [],
   isInstallBiblesLoaded: false,
   isMyBibleDbLoaded: false,
-  refreshDatabaseList: () => { },
+  refreshDatabaseList: () => {},
   hebrewInterlinearService: {
     database: null,
     isLoaded: false,
@@ -90,24 +96,28 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const isInterlinear = useMemo(
     () =>
-      [
-        EBibleVersions.INTERLINEAR,
-        EBibleVersions.GREEK,
-      ].includes(currentBibleVersion as EBibleVersions),
+      [EBibleVersions.INTERLINEAR, EBibleVersions.GREEK].includes(
+        currentBibleVersion as EBibleVersions
+      ),
     [currentBibleVersion]
   );
 
+  // Load main Bible database first (critical for app functionality)
   const mainBibleService = useLoadDatabase({
     currentBibleVersion: isDataLoaded && isLoaded ? currentDbName : undefined,
     isInterlinear,
   });
+
+  // Load interlinear databases in parallel once main DB is ready
+  // This reduces the cascade effect and improves startup time
+  const shouldLoadInterlinear = mainBibleService.isLoaded && isDataLoaded;
 
   const hebrewInterlinearService = useHebrewDB({
     databaseId: DEFAULT_DATABASE.INTERLINEAR,
     onProgress: (msg) => {
       showToast(msg, "SHORT");
     },
-    enabled: mainBibleService.isLoaded,
+    enabled: shouldLoadInterlinear,
   });
 
   const greekInterlinearService = useGreekDB({
@@ -115,7 +125,7 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     onProgress: (msg) => {
       showToast(msg, "SHORT");
     },
-    enabled: hebrewInterlinearService.isLoaded,
+    enabled: shouldLoadInterlinear, // Load in parallel with Hebrew, not dependent on it
   });
 
   const allBibleLoaded = useMemo(
@@ -125,38 +135,47 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
         hebrewInterlinearService.isLoaded,
         greekInterlinearService.isLoaded,
       ].every((x) => x),
-    [mainBibleService.isLoaded, hebrewInterlinearService.isLoaded, greekInterlinearService.isLoaded]
+    [
+      mainBibleService.isLoaded,
+      hebrewInterlinearService.isLoaded,
+      greekInterlinearService.isLoaded,
+    ]
   );
 
-  const getBibleServices = useCallback(({ isNewCovenant }: { isNewCovenant?: boolean }) => {
-    switch (currentBibleVersion) {
-      case EBibleVersions.BIBLE:
-        return {
-          primaryDB: mainBibleService,
-          baseDB: isNewCovenant ? greekInterlinearService : hebrewInterlinearService,
-        }
-      case EBibleVersions.NTV:
-        return {
-          primaryDB: mainBibleService,
-          baseDB: null,
-        }
-      case EBibleVersions.INTERLINEAR:
-        return {
-          primaryDB: mainBibleService,
-          baseDB: hebrewInterlinearService,
-        }
-      case EBibleVersions.GREEK:
-        return {
-          primaryDB: mainBibleService,
-          baseDB: greekInterlinearService,
-        }
-      default:
-        return {
-          primaryDB: mainBibleService,
-          baseDB: hebrewInterlinearService,
-        };
-    }
-  }, [currentBibleVersion, allBibleLoaded, mainBibleService]);
+  const getBibleServices = useCallback(
+    ({ isNewCovenant }: { isNewCovenant?: boolean }) => {
+      switch (currentBibleVersion) {
+        case EBibleVersions.BIBLE:
+          return {
+            primaryDB: mainBibleService,
+            baseDB: isNewCovenant
+              ? greekInterlinearService
+              : hebrewInterlinearService,
+          };
+        case EBibleVersions.NTV:
+          return {
+            primaryDB: mainBibleService,
+            baseDB: null,
+          };
+        case EBibleVersions.INTERLINEAR:
+          return {
+            primaryDB: mainBibleService,
+            baseDB: hebrewInterlinearService,
+          };
+        case EBibleVersions.GREEK:
+          return {
+            primaryDB: mainBibleService,
+            baseDB: greekInterlinearService,
+          };
+        default:
+          return {
+            primaryDB: mainBibleService,
+            baseDB: hebrewInterlinearService,
+          };
+      }
+    },
+    [currentBibleVersion, allBibleLoaded, mainBibleService]
+  );
 
   const dbContextValue = {
     myBibleDB: mainBibleService.database,

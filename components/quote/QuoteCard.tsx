@@ -1,6 +1,7 @@
 import { useViewShot } from "@/hooks/useViewShot";
 import { TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import React, { useEffect, useRef } from "react";
 import { Animated, Dimensions, StyleSheet } from "react-native";
 import ViewShot, { ViewShotProperties } from "react-native-view-shot";
@@ -118,13 +119,11 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
               .replace(/{{text}}/g, getVerseTextRaw(quoteText)),
           }}
           scrollEnabled={false}
-          javaScriptEnabled={true}
-          domStorageEnabled={true}
-          startInLoadingState={true}
           onError={(syntheticEvent) => {
             const { nativeEvent = {} } = syntheticEvent;
             console.warn("WebView error: ", nativeEvent);
           }}
+          {...createOptimizedWebViewProps({}, "static")}
         />
       </ViewShot>
     </Animated.View>

@@ -6,7 +6,6 @@ import DatabaseProvider from "@/context/databaseContext";
 import StorageProvider from "@/context/LocalstoreContext";
 import { MemorizationProvider } from "@/context/MemorizationContext";
 import MyThemeProvider, { useMyTheme } from "@/context/ThemeContext";
-import { QueryProvider } from "@/providers/QueryProvider";
 import { settingState$ } from "@/state/settingState";
 import { Screens, ScreensName } from "@/types";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
@@ -15,7 +14,7 @@ import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import { Stack } from "expo-router";
 import * as Updates from "expo-updates";
-import React, { ReactNode, useEffect } from "react";
+import React, { memo, ReactNode, useEffect } from "react";
 import { ToastAndroid, View } from "react-native";
 import { SystemBars } from "react-native-edge-to-edge";
 import ErrorBoundary from "react-native-error-boundary";
@@ -25,7 +24,6 @@ import { StackAnimationTypes } from "react-native-screens";
 // @ts-ignore
 import "../global.css";
 
-import BookContentModals from "@/components/book-content-modals";
 import { NetworkProvider } from "@/context/NetworkProvider";
 import { NotificationProvider } from "@/context/NotificationContext";
 import { useQuickActions } from "@/hooks/useQuickActions";
@@ -87,6 +85,7 @@ const screenAnimations: TScreensName = {
   [Screens.Login]: "slide_from_right",
   [Screens.Register]: "slide_from_right",
   [Screens.Quote]: "slide_from_right",
+  [Screens.QuoteMaker]: "slide_from_right",
   [Screens.AISetup]: "slide_from_right",
   [Screens.AISearch]: "slide_from_right",
   [Screens.Notification]: "slide_from_right",
@@ -95,20 +94,56 @@ const screenAnimations: TScreensName = {
   [Screens.NoteDetailDom]: "slide_from_right",
 };
 
-const SafeContentView = ({ children }: { children: ReactNode }) => {
+// Memoized SafeContentView to prevent unnecessary re-renders
+const SafeContentView = memo(({ children }: { children: ReactNode }) => {
   const insets = useSafeAreaInsets();
   const { theme } = useMyTheme();
 
-  return <View style={{
-    paddingBottom: insets.bottom,
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    backgroundColor: theme.colors.background
-  }}>
-    {children}
-  </View>
-}
+  return (
+    <View
+      style={{
+        paddingBottom: insets.bottom,
+        flex: 1,
+        width: "100%",
+        height: "100%",
+        backgroundColor: theme.colors.background,
+      }}
+    >
+      {children}
+    </View>
+  );
+});
+
+// Consolidated Core Providers - Critical for app startup
+const CoreProviders = memo(({ children }: { children: ReactNode }) => (
+  <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
+    <NetworkProvider>
+      <StorageProvider>
+        <MyThemeProvider>{children}</MyThemeProvider>
+      </StorageProvider>
+    </NetworkProvider>
+  </ErrorBoundary>
+));
+
+// Database and Bible Providers - Can be lazy loaded
+const DataProviders = memo(({ children }: { children: ReactNode }) => (
+  <DatabaseProvider>
+    <BibleProvider>
+      <BibleChapterProvider>{children}</BibleChapterProvider>
+    </BibleProvider>
+  </DatabaseProvider>
+));
+
+// UI and Feature Providers - Non-critical for startup
+const FeatureProviders = memo(({ children }: { children: ReactNode }) => (
+  <MemorizationProvider>
+    <NotificationProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
+      </GestureHandlerRootView>
+    </NotificationProvider>
+  </MemorizationProvider>
+));
 
 const App = () => {
   const isAnimationDisabled = use$(() =>
@@ -127,7 +162,7 @@ const App = () => {
         await Updates.reloadAsync();
         ToastAndroid.show("Actualizada ✅", ToastAndroid.SHORT);
       }
-    } catch (error) { }
+    } catch (error) {}
   }
 
   useEffect(() => {
@@ -152,38 +187,20 @@ const App = () => {
   };
 
   return (
-    <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
-      <NetworkProvider>
-        <StorageProvider>
-          <DatabaseProvider>
-            <MyThemeProvider>
-              <BibleProvider>
-                <BibleChapterProvider>
-                  <MemorizationProvider>
-                    <NotificationProvider>
-                      <QueryProvider>
-                        <GestureHandlerRootView style={{ flex: 1 }}>
-                          <BottomSheetModalProvider>
-                            <SafeContentView>
-                              <SystemBars style="auto" />
-                              <Stack
-                                initialRouteName="(dashboard)"
-                                screenOptions={screenOptions}
-                              />
-                            </SafeContentView>
-                            {/* <BookContentModals /> */}
-                          </BottomSheetModalProvider>
-                        </GestureHandlerRootView>
-                      </QueryProvider>
-                    </NotificationProvider>
-                  </MemorizationProvider>
-                </BibleChapterProvider>
-              </BibleProvider>
-            </MyThemeProvider>
-          </DatabaseProvider>
-        </StorageProvider>
-      </NetworkProvider>
-    </ErrorBoundary>
+    <CoreProviders>
+      <DataProviders>
+        <FeatureProviders>
+          <SafeContentView>
+            <SystemBars style="auto" />
+            <Stack
+              initialRouteName="(dashboard)"
+              screenOptions={screenOptions}
+            />
+          </SafeContentView>
+          {/* <BookContentModals /> */}
+        </FeatureProviders>
+      </DataProviders>
+    </CoreProviders>
   );
 };
 

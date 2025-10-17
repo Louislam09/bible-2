@@ -6,7 +6,7 @@ import { LegendList } from "@legendapp/list";
 import { use$ } from "@legendapp/state/react";
 import { FlashList } from "@shopify/flash-list";
 import React, { useCallback } from "react";
-import { Image, StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "./Icon";
 
 interface ChapterItemProps {
@@ -102,6 +102,7 @@ const OptimizedChapterList = ({
       contentContainerStyle={styles.flatContainer}
       removeClippedSubviews={true}
       getItemType={() => "chapter"}
+      drawDistance={200} // Optimize draw distance
       overrideItemLayout={(layout, item) => {
         layout.span = 1; // Only span is supported
       }}

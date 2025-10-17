@@ -1,9 +1,10 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Alert, Image } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { useAppIcon } from "@/hooks/useAppIcon";
 import { Ionicons } from "@expo/vector-icons";
 import * as Updates from "expo-updates";
 import { useMyTheme } from "@/context/ThemeContext";
+import { OptimizedImage } from "@/utils/imageCache";
 
 interface AppIconSelectorProps {
   style?: any;
@@ -136,13 +137,14 @@ export const AppIconSelector: React.FC<AppIconSelectorProps> = ({ style }) => {
               borderColor: theme.colors.text + "30",
             }}
           >
-            <Image
+            <OptimizedImage
               source={getIconImage(currentIcon)}
               style={{
                 width: "100%",
                 height: "100%",
-                resizeMode: "cover",
               }}
+              contentFit="cover"
+              category="general"
             />
           </View>
         )}
@@ -193,13 +195,14 @@ export const AppIconSelector: React.FC<AppIconSelectorProps> = ({ style }) => {
                   : theme.colors.text + "30",
             }}
           >
-            <Image
+            <OptimizedImage
               source={getIconImage(icon.name)}
               style={{
                 width: "100%",
                 height: "100%",
-                resizeMode: "cover",
               }}
+              contentFit="cover"
+              category="general"
             />
           </View>
           <Text

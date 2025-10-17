@@ -8,6 +8,7 @@ import { QUOTES_DATA, TQuoteDataItem } from "@/constants/quotesData";
 import BottomModal from "../BottomModal";
 import { Text } from "../Themed";
 import { quoteTemplatesMaker } from "@/constants/quoteTemplates";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 
 interface ThemeSelectorBottomSheetProps {
   bottomSheetRef: React.RefObject<BottomSheetModal | null>;
@@ -448,12 +449,6 @@ const ThemeSelectorBottomSheet: React.FC<ThemeSelectorBottomSheetProps> = ({
             backgroundColor: "transparent",
           }}
           onMessage={handleWebViewMessage}
-          javaScriptEnabled={true}
-          domStorageEnabled={true}
-          startInLoadingState={true}
-          mixedContentMode="compatibility"
-          allowsInlineMediaPlayback={true}
-          mediaPlaybackRequiresUserAction={false}
           scrollEnabled={true}
           bounces={false}
           showsHorizontalScrollIndicator={false}
@@ -467,6 +462,7 @@ const ThemeSelectorBottomSheet: React.FC<ThemeSelectorBottomSheetProps> = ({
             const { nativeEvent } = syntheticEvent;
             console.error("WebView HTTP error: ", nativeEvent);
           }}
+          {...createOptimizedWebViewProps({}, "themeSelector")}
         />
       </View>
     </BottomModal>

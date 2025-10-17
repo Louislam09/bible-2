@@ -9,7 +9,6 @@ import {
 import React, { useState } from "react";
 import {
   Dimensions,
-  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -17,6 +16,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { OptimizedImage } from "@/utils/imageCache";
 
 interface RelatedPerson {
   slug: string;
@@ -154,14 +154,16 @@ const BiblicalEventDetail: React.FC<BiblicalEventDetailProps> = ({
         <View style={styles.imageContainer}>
           {images.length > 0 ? (
             <View style={{ height: 250 }}>
-              <Image
+              <OptimizedImage
                 source={{
-                  //   uri: placeholderImages[imageIndex % placeholderImages.length],
-                  uri: `http://timeline.biblehistory.com/media/images/original/${images[imageIndex % images.length].file
-                    }`,
+                  uri: `http://timeline.biblehistory.com/media/images/original/${
+                    images[imageIndex % images.length].file
+                  }`,
                 }}
                 style={styles.image}
-                resizeMode="contain"
+                contentFit="contain"
+                category="timeline"
+                transition={200}
               />
 
               {/* Image Caption */}

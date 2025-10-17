@@ -7,18 +7,13 @@ import { EBibleVersions, IBookVerse, TTheme } from "@/types";
 import { LegendList } from "@legendapp/list";
 import { observer, use$ } from "@legendapp/state/react";
 import { FlashList, FlashListRef } from "@shopify/flash-list";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   ActivityIndicator,
   Animated,
   StyleSheet,
   useWindowDimensions,
-  View
+  View,
 } from "react-native";
 import InterlinearVerse from "./InterlinearVerse";
 import Verse from "./Verse";
@@ -53,9 +48,9 @@ const Chapter = ({
 
   const aspectRadio = height / width;
   const isMobile = +aspectRadio.toFixed(2) > 1.65;
-  const isHebrewInterlinear = [
-    EBibleVersions.INTERLINEAR,
-  ].includes(currentBibleVersion as EBibleVersions);
+  const isHebrewInterlinear = [EBibleVersions.INTERLINEAR].includes(
+    currentBibleVersion as EBibleVersions
+  );
 
   const isGreekInterlinear = [EBibleVersions.GREEK].includes(
     currentBibleVersion as EBibleVersions
@@ -66,12 +61,7 @@ const Chapter = ({
       return interlinearVerses;
     }
     return verses;
-  }, [
-    isHebrewInterlinear,
-    isSplit,
-    isGreekInterlinear,
-    interlinearVerses,
-  ]);
+  }, [isHebrewInterlinear, isSplit, isGreekInterlinear, interlinearVerses]);
 
   const data = getData() || [];
 
@@ -118,7 +108,7 @@ const Chapter = ({
   }, [initialScrollIndex]);
 
   const ListHeader = useCallback(() => {
-    return (isHebrewInterlinear || isGreekInterlinear) ? null : (
+    return isHebrewInterlinear || isGreekInterlinear ? null : (
       <View style={styles.estimatedContainer}>
         <Text style={[styles.estimatedText]}>
           <Icon size={14} name="Timer" color={theme.colors.notification} />
@@ -169,6 +159,7 @@ const Chapter = ({
             renderItem={renderItem}
             decelerationRate="normal"
             removeClippedSubviews
+            getItemType={() => "verse"} // Consistent item type
             ListEmptyComponent={() => (
               <LoadingComponent textColor={theme.colors.text} />
             )}

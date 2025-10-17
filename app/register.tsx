@@ -14,7 +14,6 @@ import {
   Alert,
   Animated,
   Dimensions,
-  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -25,6 +24,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { OptimizedImage } from "@/utils/imageCache";
 
 const { width } = Dimensions.get("window");
 
@@ -189,7 +189,7 @@ const RegisterScreen = () => {
               headerRightProps: {
                 headerRightIcon: "Trash2",
                 headerRightIconColor: "red",
-                onPress: () => { },
+                onPress: () => {},
                 disabled: false,
                 style: { opacity: 0 },
               },
@@ -206,10 +206,11 @@ const RegisterScreen = () => {
                 { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
               ]}
             >
-              <Image
+              <OptimizedImage
                 source={require("../assets/images/auth.png")}
                 style={styles.logo}
-                resizeMode="contain"
+                contentFit="contain"
+                category="general"
               />
             </Animated.View>
           )}
@@ -355,8 +356,8 @@ const RegisterScreen = () => {
             <GoogleAuth
               isRegistration={true}
               onSuccess={handleGoogleSuccess}
-            // buttonStyle={styles.googleButton}
-            // textStyle={styles.googleButtonText}
+              // buttonStyle={styles.googleButton}
+              // textStyle={styles.googleButtonText}
             />
 
             <TouchableOpacity

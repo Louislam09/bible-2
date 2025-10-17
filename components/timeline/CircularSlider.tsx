@@ -6,10 +6,10 @@ import React, { useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
-  Image,
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { OptimizedImage } from "@/utils/imageCache";
 import Animated, {
   clamp,
   FadeIn,
@@ -170,16 +170,22 @@ const CircularSlider = () => {
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View style={[StyleSheet.absoluteFillObject, { zIndex: 1 }]}>
-        <Animated.Image
+        <Animated.View
           entering={FadeIn.duration(500)}
           exiting={FadeOut.duration(500)}
           key={`image-${activeIndex}`}
-          source={{ uri: eventImages[activeIndex] }}
           style={{ flex: 1 }}
-          // resizeMode="contain"
-          onLoadStart={() => setLoading(true)}
-          onLoadEnd={() => setLoading(false)}
-        />
+        >
+          <OptimizedImage
+            source={{ uri: eventImages[activeIndex] }}
+            style={{ flex: 1 }}
+            contentFit="cover"
+            category="timeline"
+            transition={300}
+            onLoadStart={() => setLoading(true)}
+            onLoadEnd={() => setLoading(false)}
+          />
+        </Animated.View>
         {loading && (
           <View
             style={[StyleSheet.absoluteFillObject, styles.loadingContainer]}

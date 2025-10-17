@@ -14,6 +14,7 @@ import { useViewShot } from "@/hooks/useViewShot";
 import { bibleState$ } from "@/state/bibleState";
 import { TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
 import { ImageBackground } from "expo-image";
@@ -187,13 +188,11 @@ const QuoteMaker: React.FC = () => {
                     .replace(/{{watermarkClass}}/g, watermarkClass),
                 }}
                 scrollEnabled={false}
-                javaScriptEnabled={true}
-                domStorageEnabled={true}
-                startInLoadingState={true}
                 onError={(syntheticEvent) => {
                   const { nativeEvent = {} } = syntheticEvent;
                   console.warn("WebView error: ", nativeEvent);
                 }}
+                {...createOptimizedWebViewProps({}, "static")}
               />
             </View>
           </ImageBackground>

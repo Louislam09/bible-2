@@ -1,6 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { WebView } from 'react-native-webview';
+import React, { useEffect, useState } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { WebView } from "react-native-webview";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 
 const HTML_CONTENT = `
 <!DOCTYPE html>
@@ -319,13 +326,13 @@ const HTML_CONTENT = `
 `;
 
 const LexicalRichTextEditor = () => {
-    const [isEditorReady, setIsEditorReady] = useState(false);
-    const [editorContent, setEditorContent] = useState(null);
-    const [webViewKey, setWebViewKey] = useState(0);
-    const webViewRef = React.useRef(null);
+  const [isEditorReady, setIsEditorReady] = useState(false);
+  const [editorContent, setEditorContent] = useState(null);
+  const [webViewKey, setWebViewKey] = useState(0);
+  const webViewRef = React.useRef(null);
 
-    // Lexical and its plugins as strings to inject into the WebView
-    const lexicalScript = `
+  // Lexical and its plugins as strings to inject into the WebView
+  const lexicalScript = `
     window.Lexical = {
       lexical: true,
       createEditor: function(config) {
@@ -581,148 +588,143 @@ const LexicalRichTextEditor = () => {
     initEditor();
   `;
 
-    // Handle messages from WebView
-    const handleMessage = (event: any) => {
-        try {
-            const message = JSON.parse(event.nativeEvent.data);
+  // Handle messages from WebView
+  const handleMessage = (event: any) => {
+    try {
+      const message = JSON.parse(event.nativeEvent.data);
 
-            switch (message.type) {
-                case 'ready':
-                    // Inject Lexical scripts when WebView is ready
-                    // @ts-ignore
-                    webViewRef.current?.injectJavaScript(lexicalScript);
-                    break;
-                case 'initialized':
-                    setIsEditorReady(true);
-                    break;
-                case 'contentChange':
-                    setEditorContent(message.content);
-                    break;
-                default:
-                    console.log('Unknown message type:', message.type);
-            }
-        } catch (error) {
-            console.error('Error handling WebView message:', error);
-        }
-    };
+      switch (message.type) {
+        case "ready":
+          // Inject Lexical scripts when WebView is ready
+          // @ts-ignore
+          webViewRef.current?.injectJavaScript(lexicalScript);
+          break;
+        case "initialized":
+          setIsEditorReady(true);
+          break;
+        case "contentChange":
+          setEditorContent(message.content);
+          break;
+        default:
+          console.log("Unknown message type:", message.type);
+      }
+    } catch (error) {
+      console.error("Error handling WebView message:", error);
+    }
+  };
 
-    // Reset the WebView if needed
-    const resetEditor = () => {
-        setWebViewKey(prevKey => prevKey + 1);
-    };
+  // Reset the WebView if needed
+  const resetEditor = () => {
+    setWebViewKey((prevKey) => prevKey + 1);
+  };
 
-    return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Lexical Rich Text Editor</Text>
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Lexical Rich Text Editor</Text>
 
-            <View style={styles.editorContainer}>
-                <WebView
-                    key={webViewKey}
-                    ref={webViewRef}
-                    originWhitelist={['*']}
-                    source={{ html: HTML_CONTENT }}
-                    style={styles.webview}
-                    onMessage={handleMessage}
-                    javaScriptEnabled={true}
-                    domStorageEnabled={true}
-                    startInLoadingState={true}
-                    scalesPageToFit={false}
-                    scrollEnabled={false}
-                    showsVerticalScrollIndicator={false}
-                    automaticallyAdjustContentInsets={false}
-                />
-            </View>
+      <View style={styles.editorContainer}>
+        <WebView
+          key={webViewKey}
+          ref={webViewRef}
+          originWhitelist={["*"]}
+          source={{ html: HTML_CONTENT }}
+          style={styles.webview}
+          onMessage={handleMessage}
+          scalesPageToFit={false}
+          scrollEnabled={false}
+          showsVerticalScrollIndicator={false}
+          automaticallyAdjustContentInsets={false}
+          {...createOptimizedWebViewProps({}, "editor")}
+        />
+      </View>
 
-            <View style={styles.actionBar}>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={resetEditor}>
-                    <Text style={styles.buttonText}>Reset Editor</Text>
-                </TouchableOpacity>
-            </View>
+      <View style={styles.actionBar}>
+        <TouchableOpacity style={styles.button} onPress={resetEditor}>
+          <Text style={styles.buttonText}>Reset Editor</Text>
+        </TouchableOpacity>
+      </View>
 
-            <View style={styles.contentViewer}>
-                <Text style={styles.contentViewerTitle}>Content Preview:</Text>
-                <ScrollView style={styles.contentScrollView}>
-                    {editorContent ? (
-                        <Text style={styles.contentText}>
-                            {JSON.stringify(editorContent, null, 2)}
-                        </Text>
-                    ) : (
-                        <Text style={styles.placeholderText}>
-                            Editor content will appear here...
-                        </Text>
-                    )}
-                </ScrollView>
-            </View>
-        </View>
-    );
+      <View style={styles.contentViewer}>
+        <Text style={styles.contentViewerTitle}>Content Preview:</Text>
+        <ScrollView style={styles.contentScrollView}>
+          {editorContent ? (
+            <Text style={styles.contentText}>
+              {JSON.stringify(editorContent, null, 2)}
+            </Text>
+          ) : (
+            <Text style={styles.placeholderText}>
+              Editor content will appear here...
+            </Text>
+          )}
+        </ScrollView>
+      </View>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 16,
-        backgroundColor: '#f5f5f5',
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginBottom: 16,
-        textAlign: 'center',
-    },
-    editorContainer: {
-        height: 320,
-        backgroundColor: '#fff',
-        borderRadius: 8,
-        overflow: 'hidden',
-        borderWidth: 1,
-        borderColor: '#ddd',
-    },
-    webview: {
-        flex: 1,
-        backgroundColor: 'transparent',
-    },
-    actionBar: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginVertical: 12,
-    },
-    button: {
-        backgroundColor: '#007BFF',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        borderRadius: 4,
-    },
-    buttonText: {
-        color: '#fff',
-        fontWeight: '600',
-    },
-    contentViewer: {
-        flex: 1,
-        backgroundColor: '#fff',
-        borderRadius: 8,
-        padding: 12,
-        borderWidth: 1,
-        borderColor: '#ddd',
-    },
-    contentViewerTitle: {
-        fontSize: 16,
-        fontWeight: '600',
-        marginBottom: 8,
-    },
-    contentScrollView: {
-        flex: 1,
-    },
-    contentText: {
-        fontSize: 12,
-        fontFamily: 'monospace',
-    },
-    placeholderText: {
-        color: '#999',
-        fontStyle: 'italic',
-    },
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: "#f5f5f5",
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 16,
+    textAlign: "center",
+  },
+  editorContainer: {
+    height: 320,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+  webview: {
+    flex: 1,
+    backgroundColor: "transparent",
+  },
+  actionBar: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginVertical: 12,
+  },
+  button: {
+    backgroundColor: "#007BFF",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 4,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "600",
+  },
+  contentViewer: {
+    flex: 1,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+  contentViewerTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 8,
+  },
+  contentScrollView: {
+    flex: 1,
+  },
+  contentText: {
+    fontSize: 12,
+    fontFamily: "monospace",
+  },
+  placeholderText: {
+    color: "#999",
+    fontStyle: "italic",
+  },
 });
-
 
 export default LexicalRichTextEditor;

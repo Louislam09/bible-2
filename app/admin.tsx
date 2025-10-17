@@ -7,10 +7,6 @@ import {
   NotificationPreferences,
   useNotificationService,
 } from "@/services/notificationServices";
-import {
-  useDeleteRequest,
-  useUpdateRequestStatus,
-} from "@/services/queryService";
 import { RequestStatus } from "@/services/types";
 import { Collections, RequestData, TTheme } from "@/types";
 import { showToast } from "@/utils/showToast";
@@ -253,6 +249,8 @@ const RequestAccessScreen: React.FC = () => {
     RequestStatus["status"] | null
   >(null);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const { sendPushNotificationToUser } = useNotificationService();
 
   const { theme } = useMyTheme();
@@ -272,9 +270,45 @@ const RequestAccessScreen: React.FC = () => {
     },
   });
 
-  const { mutate: updateStatus, isPending: isUpdating } =
-    useUpdateRequestStatus();
-  const { mutate: deleteRequest, isPending: isDeleting } = useDeleteRequest();
+  const updateStatus = useCallback(
+    async ({
+      id,
+      status,
+    }: {
+      id: string;
+      status: RequestStatus["status"];
+    }): Promise<RequestStatus> => {
+      try {
+        setIsUpdating(true);
+        const updatedRequest = await pb
+          .collection(Collections.AccessRequest)
+          .update(id, {
+            status,
+          });
+        setIsUpdating(false);
+        showToast("Estado actualizado exitosamente", "SHORT");
+        return updatedRequest as unknown as unknown as RequestStatus;
+      } catch (error: any) {
+        setIsUpdating(false);
+        showToast("Error al actualizar el estado de la solicitud", "SHORT");
+        throw error;
+      }
+    },
+    []
+  );
+
+  const deleteRequest = useCallback(async (id: string) => {
+    try {
+      setIsDeleting(true);
+      await pb.collection(Collections.AccessRequest).delete(id);
+      showToast("Solicitud eliminada exitosamente", "SHORT");
+      setIsDeleting(false);
+    } catch (error) {
+      setIsDeleting(false);
+      showToast("Error al eliminar la solicitud", "SHORT");
+      throw error;
+    }
+  }, []);
 
   const filteredAndSortedRequests = useMemo(() => {
     if (!requests) return [];
@@ -318,35 +352,22 @@ const RequestAccessScreen: React.FC = () => {
           }
         }
 
-        updateStatus(
-          { id, status },
-          {
-            onSuccess: () => {
-              showToast("Estado actualizado exitosamente", "SHORT");
-              if (currentUserPushToken) {
-                sendPushNotificationToUser({
-                  pushToken: currentUserPushToken,
-                  title: "📖 Solicitud de acceso al himnario",
-                  body: `Tu solicitud ha sido ${status === "approved"
-                    ? "aprobada ✅. Ya puedes acceder al himnario."
-                    : "rechazada ❌. Si crees que se trata de un error, contáctanos."
-                    }`,
-                  options: {
-                    badge: 1,
-                  },
-                });
-              }
+        await updateStatus({ id, status });
+        showToast("Estado actualizado exitosamente", "SHORT");
+        if (currentUserPushToken) {
+          sendPushNotificationToUser({
+            pushToken: currentUserPushToken,
+            title: "📖 Solicitud de acceso al himnario",
+            body: `Tu solicitud ha sido ${
+              status === "approved"
+                ? "aprobada ✅. Ya puedes acceder al himnario."
+                : "rechazada ❌. Si crees que se trata de un error, contáctanos."
+            }`,
+            options: {
+              badge: 1,
             },
-            onError: (error) => {
-              Alert.alert(
-                "Error",
-                error instanceof Error
-                  ? error.message
-                  : "Error al actualizar el estado"
-              );
-            },
-          }
-        );
+          });
+        }
       } catch (error: any) {
         console.log({ error }, error.originalError);
       }
@@ -368,19 +389,7 @@ const RequestAccessScreen: React.FC = () => {
             text: "Eliminar",
             style: "destructive",
             onPress: () => {
-              deleteRequest(id, {
-                onSuccess: () => {
-                  Alert.alert("Éxito", "Solicitud eliminada exitosamente");
-                },
-                onError: (error) => {
-                  Alert.alert(
-                    "Error",
-                    error instanceof Error
-                      ? error.message
-                      : "Error al eliminar la solicitud"
-                  );
-                },
-              });
+              deleteRequest(id as string);
             },
           },
         ]

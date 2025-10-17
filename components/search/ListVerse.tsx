@@ -113,6 +113,9 @@ const ListVerse = ({ data, isLoading, searchQuery: query }: TListVerse) => {
         onScroll={handleScroll}
         keyExtractor={(item: any, index: any) => `list-${index}`}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
+        getItemType={() => "verse"} // Consistent item type
+        removeClippedSubviews={true} // Enable view recycling
+        drawDistance={300} // Optimize draw distance
         ListEmptyComponent={
           <View style={styles.noResultsContainer}>
             <Animation

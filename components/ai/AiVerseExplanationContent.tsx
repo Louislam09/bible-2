@@ -6,6 +6,7 @@ import { useNoteService } from "@/services/noteService";
 import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import * as Clipboard from "expo-clipboard";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
@@ -246,6 +247,7 @@ const AiVerseExplanationContent: React.FC<VerseExplanationProps> = ({
               }
             }}
             scrollEnabled
+            {...createOptimizedWebViewProps({}, "dynamic")}
           />
         )}
       </View>

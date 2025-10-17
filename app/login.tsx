@@ -13,7 +13,6 @@ import {
   ActivityIndicator,
   Animated,
   Dimensions,
-  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -22,6 +21,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { OptimizedImage } from "@/utils/imageCache";
 
 const { width } = Dimensions.get("window");
 
@@ -144,7 +144,7 @@ const LoginScreen = () => {
                 headerRightProps: {
                   headerRightIcon: "Trash2",
                   headerRightIconColor: "red",
-                  onPress: () => { },
+                  onPress: () => {},
                   disabled: true,
                   style: { opacity: 0 },
                 },
@@ -160,10 +160,11 @@ const LoginScreen = () => {
                 { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
               ]}
             >
-              <Image
+              <OptimizedImage
                 source={require("../assets/images/auth.png")}
                 style={styles.logo}
-                resizeMode="contain"
+                contentFit="contain"
+                category="general"
               />
             </Animated.View>
           )}

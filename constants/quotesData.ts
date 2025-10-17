@@ -1257,130 +1257,130 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
         "label": "Luces",
         "items": [
             {
-                "id": "vintage-old-paper",
+                "id": "lights-vintage-old-paper",
                 "name": "Old Paper",
                 "font": {
                     "name": "Special Elite",
                     "url": "https://fonts.googleapis.com/css2?family=Special+Elite&display=swap"
                 },
-                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_1.jpg"),
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/lights__image_1.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#3A3B3C",
                 "accentColor": "#5C524A",
                 "textTransform": "capitalize"
             },
             {
-                "id": "vintage-sepia-tone",
+                "id": "lights-vintage-sepia-tone",
                 "name": "Sepia Tone",
                 "font": {
                     "name": "Old Standard TT",
                     "url": "https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@700&display=swap"
                 },
-                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_2.jpg"),
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/lights__image_2.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#4B382A",
                 "accentColor": "#FFFFFF",
                 "textTransform": "capitalize"
             },
             {
-                "id": "vintage-film-grain",
+                "id": "lights-vintage-film-grain",
                 "name": "Film Grain",
                 "font": {
                     "name": "Courier Prime",
                     "url": "https://fonts.googleapis.com/css2?family=Courier+Prime:wght@700&display=swap"
                 },
-                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_3.jpg"),
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/lights__image_3.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#AAAAAA",
                 "textTransform": "capitalize"
             },
             {
-                "id": "vintage-retro-cassette",
+                "id": "lights-vintage-retro-cassette",
                 "name": "Retro Cassette",
                 "font": {
                     "name": "Press Start 2P",
                     "url": "https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
                 },
-                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_4.jpg"),
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/lights__image_4.jpg"),
                 "previewText": "ABCD",
                 "textColor": "#111111",
                 "accentColor": "#E91E63",
                 "textTransform": "uppercase"
             },
             {
-                "id": "vintage-bookshelf",
+                "id": "lights-vintage-bookshelf",
                 "name": "Vintage Bookshelf",
                 "font": {
                     "name": "Libre Baskerville",
                     "url": "https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap"
                 },
-                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_5.jpg"),
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/lights__image_5.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#F5F5DC",
                 "accentColor": "#D2B48C",
                 "textTransform": "capitalize"
             },
             {
-                "id": "vintage-classic-car",
+                "id": "lights-vintage-classic-car",
                 "name": "Classic Car",
                 "font": {
                     "name": "Lobster",
                     "url": "https://fonts.googleapis.com/css2?family=Lobster&display=swap"
                 },
-                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_6.jpg"),
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/lights__image_6.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#B22222",
                 "textTransform": "capitalize"
             },
             {
-                "id": "vintage-faded-polaroid",
+                "id": "lights-vintage-faded-polaroid",
                 "name": "Faded Polaroid",
                 "font": {
                     "name": "Architects Daughter",
                     "url": "https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap"
                 },
-                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_7.jpg"),
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/lights__image_7.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#333333",
                 "accentColor": "#556B2F",
                 "textTransform": "capitalize"
             },
             {
-                "id": "vintage-antique-map",
+                "id": "lights-vintage-antique-map",
                 "name": "Antique Map",
                 "font": {
                     "name": "Cinzel Decorative",
                     "url": "https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap"
                 },
-                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_8.jpg"),
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/lights__image_8.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#4d463d",
                 "accentColor": "#8B0000",
                 "textTransform": "capitalize"
             },
             {
-                "id": "vintage-gramophone",
+                "id": "lights-vintage-gramophone",
                 "name": "Gramophone",
                 "font": {
                     "name": "Great Vibes",
                     "url": "https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap"
                 },
-                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_9.jpg"),
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/lights__image_9.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#222222",
                 "accentColor": "#DAA520",
                 "textTransform": "capitalize"
             },
             {
-                "id": "vintage-ornate-frame",
+                "id": "lights-vintage-ornate-frame",
                 "name": "Ornate Frame",
                 "font": {
                     "name": "UnifrakturCook",
                     "url": "https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap"
                 },
-                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/mountains__image_10.jpg"),
+                "backgroundImageUrl": formatBackgroundImagesUrl("web_backgrounds/lights__image_10.jpg"),
                 "previewText": "Abcd",
                 "textColor": "#362512",
                 "accentColor": "#C4A484",
@@ -1388,7 +1388,6 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
             }
         ]
     },
-
     {
         "section": "flowers",
         "label": "Flores",

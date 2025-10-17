@@ -10,7 +10,6 @@ import React, { useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
-  Image,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
@@ -19,6 +18,7 @@ import CloudSyncPopup from "./SyncPopup";
 import { Text, View } from "./Themed";
 import Tooltip from "./Tooltip";
 import { useHaptics } from "@/hooks/useHaptics";
+import { OptimizedImage } from "@/utils/imageCache";
 
 interface ProfileCardProps {
   user: pbUser | null;
@@ -121,12 +121,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
         {user ? (
           <View style={styles.userHeader}>
             <View style={styles.avatarContainer}>
-              <Image
+              <OptimizedImage
                 source={{
                   uri: user.avatar ? avatarUrl : defaultAvatar,
                 }}
                 style={styles.avatar}
-                resizeMode="cover"
+                contentFit="cover"
+                category="avatar"
               />
             </View>
             <View style={{ display: "flex", backgroundColor: "transparent" }}>
