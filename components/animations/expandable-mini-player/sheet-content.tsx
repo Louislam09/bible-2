@@ -4,6 +4,7 @@ import Animated, {
   Easing,
   interpolate,
   interpolateColor,
+  runOnJS,
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
@@ -200,17 +201,26 @@ export const SheetContent = ({ progress }: SheetContentProps) => {
     });
   };
 
+  const closeModal = () => {
+    if (PLAYER_STATE.IS_PLAYING) {
+      PLAYER_STATE.PLAY_ACTION();
+    }
+    audioState$.toggleIsPlayerOpened();
+  };
+
   const handleClose = () => {
-    progress.value = withTiming(0, {
-      duration: 550,
-      easing: EasingsUtils.inOut,
-    });
-    setTimeout(() => {
-      if (PLAYER_STATE.IS_PLAYING) {
-        PLAYER_STATE.PLAY_ACTION();
+    progress.value = withTiming(
+      0,
+      {
+        duration: 550,
+        easing: EasingsUtils.inOut,
+      },
+      (finished) => {
+        if (finished) {
+          runOnJS(closeModal)();
+        }
       }
-      audioState$.toggleIsPlayerOpened();
-    }, 550);
+    );
   };
   const rImageStyle = useAnimatedStyle(() => {
     const imageSize = interpolate(

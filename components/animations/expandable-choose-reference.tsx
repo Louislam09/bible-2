@@ -14,6 +14,7 @@ import Animated, {
   useSharedValue,
   withTiming,
   Easing,
+  runOnJS,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -47,6 +48,10 @@ const ExpandableChooseReference = () => {
   const insets = useSafeAreaInsets();
   const safeTop = insets.top;
   const safeBottom = insets.bottom + 34;
+
+  const closeModal = () => {
+    modalState$.toggleIsChooseReferenceOpened();
+  };
 
   const tapGesture = Gesture.Tap()
     .onBegin(() => {
@@ -86,10 +91,19 @@ const ExpandableChooseReference = () => {
     .onFinalize(() => {
       if (!panEnabled.value) return;
       panEnabled.value = false;
-      progress.value = withTiming(progress.value > progressThreshold ? 1 : 0, {
-        duration: 350,
-        easing: EasingsUtils.inOut,
-      });
+      const finalProgress = progress.value > progressThreshold ? 1 : 0;
+      progress.value = withTiming(
+        finalProgress,
+        {
+          duration: 350,
+          easing: EasingsUtils.inOut,
+        },
+        (finished) => {
+          if (finished && finalProgress === 0) {
+            runOnJS(closeModal)();
+          }
+        }
+      );
     });
 
   const rSheetStyle = useAnimatedStyle(() => {
@@ -171,7 +185,6 @@ const ExpandableChooseReference = () => {
       modalState$.toggleIsChooseReferenceOpened();
     }, 550);
   };
-
   const gestures = Gesture.Simultaneous(tapGesture, panGesture);
 
   return (
@@ -202,7 +215,7 @@ const ExpandableChooseReference = () => {
         ]}
       >
         <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
-          <Icon name="X" color={"#fff"} size={20} />
+          <Icon name="X" color={theme.colors.text} size={20} />
         </TouchableOpacity>
       </Animated.View>
 
