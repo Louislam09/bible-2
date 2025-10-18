@@ -280,7 +280,9 @@ const BibleTop: FC<BibleTopProps> = (props) => {
       }, 50);
     }
   }, [autoChangeBibleVersion]);
+
   const isPlayerOpened = use$(() => audioState$.isPlayerOpened.get());
+  const useDomComponent = use$(() => storedData$.useDomComponent.get());
 
   // const MyChapter = isInterlinear ? Chapter : (slowDevice ) ? DomChapter : Chapter;
   // const MyChapter = useDomComponent
@@ -373,7 +375,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
               <Text style={{ color: "white" }}>Cambiar</Text>
             </TouchableOpacity>
           </View>
-        ) : (
+        ) : useDomComponent ? (
           <WebViewChapter
             width={Dimensions.get("window").width}
             theme={theme}
@@ -391,24 +393,25 @@ const BibleTop: FC<BibleTopProps> = (props) => {
               onWordClicked,
             }}
           />
-          // <Chapter
-          //   initialScrollIndex={
-          //     initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
-          //   }
-          //   verses={verses}
-          //   data={chapterData}
-          //   isInterlinear={isInterlinear}
-          //   isSplit={false}
-          //   theme={theme}
-          //   onScroll={handleScroll}
-          //   {...{
-          //     onStrongWordClicked,
-          //     onInterlinear,
-          //     onAnotar,
-          //     onComparar,
-          //     onWordClicked,
-          //   }}
-          // />
+        ) : (
+          <Chapter
+            initialScrollIndex={
+              initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
+            }
+            verses={verses}
+            data={chapterData}
+            isInterlinear={isInterlinear}
+            isSplit={false}
+            theme={theme}
+            onScroll={handleScroll}
+            {...{
+              onStrongWordClicked,
+              onInterlinear,
+              onAnotar,
+              onComparar,
+              onWordClicked,
+            }}
+          />
         )}
       </SwipeWrapper>
       {/* {!isSplitActived && !isPlayerOpened && ( */}
