@@ -237,23 +237,17 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           />
         </TouchableOpacity>
       </View>
-      {!isSplitActived && !isPlayerOpened && (
+      {/* {!isSplitActived && !isPlayerOpened && (
         <View style={styles.footerAudio}>
           <TouchableOpacity
             ref={tourState$.audio.get()}
             style={[styles.footerEnd]}
-            // onPress={playHandlePresentModalPress}
             onPress={onPlay}
           >
-            <Icon
-              name={"Play"}
-              // name={isPlaying ? "AudioLines" : "Play"}
-              color="white"
-              size={footerIconSize}
-            />
+            <Icon name={"Play"} color="white" size={footerIconSize} />
           </TouchableOpacity>
         </View>
-      )}
+      )} */}
       {isPlayerOpened && <ExpandedSheet />}
     </LinearGradient>
   );

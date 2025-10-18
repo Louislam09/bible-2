@@ -39,6 +39,8 @@ import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { bibleChapterHtmlTemplate } from "@/constants/HtmlTemplate";
 import WebViewChapter from "./home/content/WebViewChapter";
 import ExpandableChooseReference from "./animations/expandable-choose-reference";
+import { tourState$ } from "@/state/tourState";
+import { audioState$ } from "@/hooks/useAudioPlayer";
 
 interface BibleTopProps {
   height: Animated.Value;
@@ -278,6 +280,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
       }, 50);
     }
   }, [autoChangeBibleVersion]);
+  const isPlayerOpened = use$(() => audioState$.isPlayerOpened.get());
 
   // const MyChapter = isInterlinear ? Chapter : (slowDevice ) ? DomChapter : Chapter;
   // const MyChapter = useDomComponent
@@ -408,6 +411,24 @@ const BibleTop: FC<BibleTopProps> = (props) => {
           // />
         )}
       </SwipeWrapper>
+      {/* {!isSplitActived && !isPlayerOpened && ( */}
+      {!isPlayerOpened && (
+        <View
+          style={[
+            styles.audioButton,
+            { backgroundColor: theme.colors.notification + 90 },
+          ]}
+        >
+          <TouchableOpacity
+            ref={tourState$.audio.get()}
+            style={{}}
+            onPress={() => audioState$.toggleIsPlayerOpened()}
+          >
+            <Icon name="Play" color="white" size={24} />
+          </TouchableOpacity>
+        </View>
+      )}
+      {/* )} */}
 
       <Animated.View style={[styles.footer]}>
         <BibleFooter isSplit={false} />
@@ -451,6 +472,17 @@ const styles = StyleSheet.create({
     zIndex: 1,
     backgroundColor: "transparent",
     paddingHorizontal: 8,
+  },
+  audioButton: {
+    position: "absolute",
+    bottom: 60,
+    right: 20,
+    width: 50,
+    height: 50,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 9999,
   },
 });
 
