@@ -6,7 +6,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FC, useCallback, useRef } from "react";
 import { TouchableOpacity, useWindowDimensions } from "react-native";
 
-import { ExpandedSheet } from "@/components/animations/expandable-mini-player/src/components/navigation/bottom-tab-bar/expanded-sheet";
+import { ExpandedSheet } from "@/components/animations/expandable-mini-player";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
@@ -24,6 +24,7 @@ import { batch } from "@legendapp/state";
 import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "expo-router";
 import { getStyles } from "./styles";
+import { modalState$ } from "@/state/modalState";
 
 interface FooterInterface {
   isSplit?: boolean;
@@ -125,10 +126,13 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
       bibleState$.clearSelection();
       bibleState$.isBottomBibleSearching.set(!!isSplit);
     });
-    const screen = useDomComponent
-      ? Screens.ChooseReferenceDom
-      : Screens.ChooseBook;
-    navigation?.navigate(screen, { ...params });
+    modalState$.openChooseReferenceBottomSheet();
+    // const screen = Screens.ChooseReferenceDom;
+
+    // const screen = useDomComponent
+    //   ? Screens.ChooseReferenceDom
+    //   : Screens.ChooseBook;
+    // navigation?.navigate(screen, { ...params });
   };
   const onDoubleFooterTitle = () => {
     haptics.impact.medium();

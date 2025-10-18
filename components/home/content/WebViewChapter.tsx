@@ -1,18 +1,20 @@
 import { bibleChapterHtmlTemplate } from "@/constants/bibleChapterTemplate";
-import { IBookVerse, IFavoriteVerse, IStrongWord, TTheme } from "@/types";
-import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
+import { storedData$ } from "@/context/LocalstoreContext";
+import { IBookVerse, IFavoriteVerse, TTheme } from "@/types";
 import { WordTagPair } from "@/utils/extractVersesInfo";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
+import { use$ } from "@legendapp/state/react";
 import React, { useCallback, useRef } from "react";
 import WebView from "react-native-webview";
 
 interface WebViewChapterProps {
   data: IBookVerse[];
   width: number;
-  isHebrewInterlinear?: boolean;
-  isGreekInterlinear?: boolean;
+  isInterlinear: boolean;
   isSplit?: boolean;
   initialScrollIndex?: number;
   theme: TTheme;
+  verses: IBookVerse[];
   onStrongWordClicked?: (value: WordTagPair) => void;
   onWordClicked?: (code: string, item: IBookVerse) => void;
   onScroll?: (direction: "up" | "down") => void;
@@ -33,11 +35,11 @@ const WebViewChapter = React.memo(
   ({
     data,
     width,
-    isHebrewInterlinear = false,
-    isGreekInterlinear = false,
     isSplit = false,
     initialScrollIndex = 0,
     theme,
+    verses,
+    isInterlinear,
     onStrongWordClicked,
     onWordClicked,
     onScroll,
@@ -49,6 +51,7 @@ const WebViewChapter = React.memo(
     onFavoriteVerse,
   }: WebViewChapterProps) => {
     const webViewRef = useRef<WebView>(null);
+    const fontSize = use$(() => storedData$.fontSize.get());
 
     const handleMessage = useCallback(
       (event: any) => {
@@ -137,15 +140,14 @@ const WebViewChapter = React.memo(
           backgroundColor: "transparent",
         }}
         source={{
-          html: bibleChapterHtmlTemplate(
+          html: bibleChapterHtmlTemplate({
             data,
             theme,
             width,
-            isHebrewInterlinear,
-            isGreekInterlinear,
             isSplit,
-            estimatedReadingTime
-          ),
+            isInterlinear,
+            fontSize,
+          }),
         }}
         scrollEnabled={true}
         onMessage={handleMessage}

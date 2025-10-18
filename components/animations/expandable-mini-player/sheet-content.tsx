@@ -1,57 +1,49 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import Animated, {
+  Easing,
   interpolate,
   interpolateColor,
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
 
-import { EasingsUtils } from "../../../../animations/easings";
-import { Palette } from "../../../../constants/palette";
-import { MiniPlayerHeight } from "./constants";
-
 import Icon from "@/components/Icon";
+import ThemeSelectorBottomSheet from "@/components/quote/ThemeSelectorBottomSheet";
+import { QUOTES_DATA, TQuoteDataItem } from "@/constants/quotesData";
+import { quoteMusicTemplatesMaker } from "@/constants/quoteTemplates";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
-import useAudioPlayer from "@/hooks/useAudioPlayer";
+import useAudioPlayer, { audioState$ } from "@/hooks/useAudioPlayer";
 import useBibleReader from "@/hooks/useBibleReading";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
-import { audioState$ } from "@/hooks/useAudioPlayer";
 import { bibleState$ } from "@/state/bibleState";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { ImageBackground } from "expo-image";
+import { router } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import type { SharedValue } from "react-native-reanimated";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import ThemeSelectorBottomSheet from "@/components/quote/ThemeSelectorBottomSheet";
-import { QUOTES_DATA, TQuoteDataItem } from "@/constants/quotesData";
-import {
-  quoteTemplatesMaker,
-  quoteMusicTemplatesMaker,
-} from "@/constants/quoteTemplates";
 import WebView from "react-native-webview";
-import { getChapterTextRawForReading } from "@/utils/getVerseTextRaw";
-import { router } from "expo-router";
 
 type SheetContentProps = {
   progress: SharedValue<number>;
   timeProgress: string;
-  imageUrl: string;
+};
+
+const EasingsUtils = {
+  inOut: Easing.bezier(0.25, 0.1, 0.25, 1),
 };
 
 const ImageHeight = 44;
 const ExpandedImageHeight = ImageHeight * 3;
+const MiniPlayerHeight = 64;
 
 const BaseOffset = (MiniPlayerHeight - ImageHeight) / 2;
 
-export const SheetContent = ({
-  progress,
-  timeProgress,
-  imageUrl,
-}: SheetContentProps) => {
+export const SheetContent = ({ progress }: SheetContentProps) => {
   const { theme } = useMyTheme();
   const { isConnected } = useNetInfo();
 
@@ -393,7 +385,7 @@ export const SheetContent = ({
   }, [PLAYER_STATE.DURATION, PLAYER_STATE.POSITION, seekTo]);
 
   // Use selected theme background or fallback to original imageUrl
-  const backgroundImageUrl = selectedTheme?.backgroundImageUrl || imageUrl;
+  const backgroundImageUrl = selectedTheme?.backgroundImageUrl || "";
 
   // Create dynamic verse text style with selected theme font
   const verseTextStyle = useMemo(() => {
@@ -641,6 +633,13 @@ export const SheetContent = ({
       />
     </ImageBackground>
   );
+};
+
+const Palette = {
+  background: "#0D0D0D",
+  card: "#222222", // Slightly darker for better contrast with background
+  icons: "#FFFFFF",
+  text: "#FFFFFF",
 };
 
 const styles = StyleSheet.create({

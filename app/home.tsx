@@ -151,7 +151,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
           {/* {isSplitActived && renderBottomContent()} */}
         </View>
         <>
-          {/* <BookContentModals /> */}
+          <BookContentModals />
 
           {/* <FloatingButton iconName="NotebookText">
             <CurrentNoteDetail />

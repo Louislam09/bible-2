@@ -18,6 +18,7 @@ import { StyleSheet } from "react-native";
 import InterlinearVerse from "./home/content/InterlinearVerse";
 import StrongContent from "./home/content/StrongContent";
 import { Text, View } from "./Themed";
+import WebviewReferenceChoose from "./home/content/WebviewReferenceChoose";
 
 const BookContentModals = () => {
   const { theme } = useMyTheme();
@@ -89,6 +90,32 @@ const BookContentModals = () => {
           </View>
         </BottomSheetScrollView>
       </BottomSheet>
+
+      {/* CHOOSE REFERENCE */}
+      {/* <BottomSheet
+        backgroundStyle={styles.bottomSheet}
+        enablePanDownToClose
+        snapPoints={["30%", "100%"]}
+        enableDynamicSizing={false}
+        index={-1}
+        ref={modalState$.chooseReferenceRef.get()}
+        handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
+        onClose={() => console.log("onClose")}
+      >
+        <BottomSheetScrollView
+          contentContainerStyle={{
+            backgroundColor: theme.colors.background,
+            flex: 1,
+            height: "100%",
+            width: "100%",
+          }}
+        >
+          <WebviewReferenceChoose
+            theme={theme}
+            onConfirm={() => console.log("onConfirm")}
+          />
+        </BottomSheetScrollView>
+      </BottomSheet> */}
 
       <BottomSheet
         backgroundStyle={styles.bottomSheet}

@@ -7,15 +7,29 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
+  makeMutable,
+  Easing,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useMyTheme } from "@/context/ThemeContext";
-import { EasingsUtils } from "../../../../animations/easings";
-import { Palette } from "../../../../constants/palette";
-import { ExpandedSheetMutableProgress } from "../shared-progress";
-import { MiniPlayerHeight } from "./constants";
 import { SheetContent } from "./sheet-content";
+
+export const EasingsUtils = {
+  // https://www.easing.dev/in-out-base
+  inOut: Easing.bezier(0.25, 0.1, 0.25, 1),
+};
+
+const Palette = {
+  background: "#0D0D0D",
+  card: "#222222", // Slightly darker for better contrast with background
+  icons: "#FFFFFF",
+  text: "#FFFFFF",
+};
+
+// Kind of a Global Shared Value
+const MiniPlayerHeight = 64;
+const ExpandedSheetMutableProgress = makeMutable(0);
 
 export const ExpandedSheet = () => {
   const { height: windowHeight } = useWindowDimensions();
@@ -141,12 +155,7 @@ export const ExpandedSheet = () => {
           <View style={styles.knob} />
         </Animated.View>
 
-        <SheetContent
-          progress={progress}
-          timeProgress="00:00"
-          // imageUrl="https://i3.ytimg.com/vi/BgO08T3E4LE/maxresdefault.jpg"
-          imageUrl="https://images.pexels.com/photos/1366919/pexels-photo-1366919.jpeg"
-        />
+        <SheetContent progress={progress} timeProgress="00:00" />
       </Animated.View>
     </GestureDetector>
   );

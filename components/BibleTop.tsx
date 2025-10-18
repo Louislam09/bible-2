@@ -284,6 +284,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   //     ? Chapter
   //     : DomChapter
   //   : Chapter;
+  console.log(chapterData.slice);
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
@@ -375,6 +376,17 @@ const BibleTop: FC<BibleTopProps> = (props) => {
             theme={theme}
             data={chapterData}
             initialScrollIndex={initialScrollIndex}
+            verses={verses}
+            isInterlinear={isInterlinear}
+            isSplit={false}
+            onScroll={handleScroll}
+            {...{
+              onStrongWordClicked,
+              onInterlinear,
+              onAnotar,
+              onComparar,
+              onWordClicked,
+            }}
           />
           // <Chapter
           //   initialScrollIndex={
