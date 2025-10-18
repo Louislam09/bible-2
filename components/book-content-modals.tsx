@@ -50,7 +50,8 @@ const BookContentModals = () => {
       >
         <NoteNameList />
       </BottomModal>
-      {isChooseReferenceOpened && <ExpandableChooseReference />}
+      {/* {isChooseReferenceOpened && <ExpandableChooseReference />} */}
+      <ExpandableChooseReference />
 
       <BottomSheet
         ref={modalState$.interlinealRef.get()}

@@ -65,7 +65,7 @@ const WebviewReferenceChoose = React.memo(({}: WebviewReferenceChooseProps) => {
             }
           }
         );
-        navigation.navigate(Screens.Home, params);
+        // navigation.navigate(Screens.Home, params);
       }
     },
     [routeParam, navigation]

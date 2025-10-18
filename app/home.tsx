@@ -148,14 +148,14 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
           style={[styles.container, !isPortrait && { flexDirection: "row" }]}
         >
           <BibleTop height={topHeight} width={topWidth} />
-          {/* {isSplitActived && renderBottomContent()} */}
+          {isSplitActived && renderBottomContent()}
         </View>
         <>
           <BookContentModals />
 
-          {/* <FloatingButton iconName="NotebookText">
+          <FloatingButton iconName="NotebookText">
             <CurrentNoteDetail />
-          </FloatingButton> */}
+          </FloatingButton>
 
           {/* {tourState$.tourPopoverVisible.get() === "FUNCTION" && (
             <Walkthrough

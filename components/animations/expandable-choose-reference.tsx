@@ -24,6 +24,7 @@ import Icon from "../Icon";
 import { iconSize } from "@/constants/size";
 import { modalState$ } from "@/state/modalState";
 import { useEffect } from "react";
+import { Text } from "../Themed";
 
 export const EasingsUtils = {
   inOut: Easing.bezier(0.25, 0.1, 0.25, 1),
@@ -40,7 +41,7 @@ const MiniPlayerHeight = 64;
 export const ChooseReferenceMutableProgress = makeMutable(0);
 
 const ExpandableChooseReference = () => {
-  const { height: windowHeight } = useWindowDimensions();
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
   const progress = ChooseReferenceMutableProgress;
   const { theme } = useMyTheme();
 
@@ -109,11 +110,7 @@ const ExpandableChooseReference = () => {
 
   const rSheetStyle = useAnimatedStyle(() => {
     return {
-      height: interpolate(
-        progress.value,
-        [0, 1],
-        [MiniPlayerHeight, windowHeight - safeTop]
-      ),
+      height: interpolate(progress.value, [0, 1], [0, windowHeight - safeTop]),
       bottom: interpolate(progress.value, [0, 1], [safeBottom, 0]),
       left: interpolate(progress.value, [0, 1], [16, 0]),
       right: interpolate(progress.value, [0, 1], [16, 0]),
@@ -169,13 +166,6 @@ const ExpandableChooseReference = () => {
       zIndex: 1000,
     };
   });
-
-  useEffect(() => {
-    progress.value = withTiming(1, {
-      duration: 450,
-      easing: EasingsUtils.inOut,
-    });
-  }, []);
 
   const handleClose = () => {
     progress.value = withTiming(0, {

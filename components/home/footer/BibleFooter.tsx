@@ -25,7 +25,10 @@ import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "expo-router";
 import { getStyles } from "./styles";
 import { modalState$ } from "@/state/modalState";
-import ExpandableChooseReference from "@/components/animations/expandable-choose-reference";
+import ExpandableChooseReference, {
+  ChooseReferenceMutableProgress,
+} from "@/components/animations/expandable-choose-reference";
+import { Easing, withTiming } from "react-native-reanimated";
 
 interface FooterInterface {
   isSplit?: boolean;
@@ -127,7 +130,11 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
       bibleState$.clearSelection();
       bibleState$.isBottomBibleSearching.set(!!isSplit);
     });
-    modalState$.toggleIsChooseReferenceOpened();
+    // modalState$.isChooseReferenceOpened.set(true);
+    ChooseReferenceMutableProgress.value = withTiming(1, {
+      duration: 450,
+      easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+    });
     // const screen = Screens.ChooseReferenceDom;
 
     // const screen = useDomComponent
