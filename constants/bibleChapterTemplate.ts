@@ -2,10 +2,10 @@ import { IBookVerse } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 
 const bibleChapterStyles = (
-  colors: any,
-  containerWidth: number,
-  showReadingTime: boolean,
-  fontSize: number
+    colors: any,
+    containerWidth: number,
+    showReadingTime: boolean,
+    fontSize: number
 ) => `
          <style>
             * {
@@ -190,11 +190,11 @@ const bibleChapterStyles = (
 
 // HTML document structure functions
 const createHtmlHead = (
-  chapterNumber: number,
-  colors: any,
-  containerWidth: any,
-  showReadingTime: boolean,
-  fontSize: number
+    chapterNumber: number,
+    colors: any,
+    containerWidth: any,
+    showReadingTime: boolean,
+    fontSize: number
 ) => `
     <head>
         <meta charset="utf-8">
@@ -204,11 +204,162 @@ const createHtmlHead = (
     </head>
 `;
 
-const createHtmlBody = (content: string) => `
+const createHtmlBody = (content: string, initialScrollIndex: number = 0) => `
     <body>
         <div class="container" id="chapterContainer">
             ${content}
         </div>
+        
+        <script>
+            let lastScrollTime = 0;
+            let lastOffset = 0;
+            let topVerseRef = null;
+            let intersectionObserver = null;
+            
+            // Initial scroll functionality
+            function performInitialScroll() {
+                const verseNumber = ${initialScrollIndex};
+                if (verseNumber > 0) {
+                    const verseElement = document.querySelector(\`[data-verse-number="\${verseNumber}"]\`);
+                    if (verseElement) {
+                        verseElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            }
+            
+            // Initialize intersection observer
+            function initIntersectionObserver() {
+                intersectionObserver = new IntersectionObserver(
+                    (entries) => {
+                        const visibleEntries = entries.filter(entry => entry.isIntersecting);
+                        if (visibleEntries.length > 0) {
+                            const topEntry = visibleEntries.reduce((prev, current) => {
+                                return (current.intersectionRatio > prev.intersectionRatio) ? current : prev;
+                            });
+                            
+                            const verseElement = topEntry.target;
+                            const verseNumber = parseInt(verseElement.dataset.verseNumber || '0');
+                            
+                            if (verseNumber && topVerseRef !== verseNumber) {
+                                topVerseRef = verseNumber;
+                                // Send message to React Native
+                                window.ReactNativeWebView.postMessage(JSON.stringify({
+                                    type: 'verseInView',
+                                    verseNumber: verseNumber
+                                }));
+                            }
+                        }
+                    },
+                    {
+                        threshold: [0.5],
+                        rootMargin: '0px'
+                    }
+                );
+                
+                // Observe all verse elements
+                document.querySelectorAll('[data-verse-number]').forEach(el => {
+                    intersectionObserver.observe(el);
+                });
+            }
+            
+            // Handle scroll events
+            function handleScroll(event) {
+                const now = Date.now();
+                const minScrollTime = 50;
+                
+                if (now - lastScrollTime < minScrollTime) {
+                    return;
+                }
+                
+                const currentOffset = event.target.scrollTop;
+                const direction = currentOffset > lastOffset ? "down" : "up";
+                
+                if (Math.abs(currentOffset - lastOffset) > 10) {
+                    lastOffset = currentOffset;
+                    lastScrollTime = now;
+                    
+                    // Send scroll message to React Native
+                    window.ReactNativeWebView.postMessage(JSON.stringify({
+                        type: 'scroll',
+                        direction: direction
+                    }));
+                }
+            }
+            
+            // Handle verse click
+            function handleVerseClick(element, verseNumber) {
+                element.classList.toggle('tapped');
+                
+                // Send verse click message
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                    type: 'verseClick',
+                    verseNumber: verseNumber
+                }));
+            }
+            
+            // Handle verse long press
+            function handleVerseLongPress(element, event) {
+                event.preventDefault();
+                const actionsElement = element.querySelector('.verse-actions');
+                if (actionsElement) {
+                    actionsElement.classList.toggle('show');
+                }
+            }
+            
+            // Handle verse text click
+            function handleVerseTextClick(event, verseNumber) {
+                event.stopPropagation();
+            }
+            
+            // Handle strong word click
+            function handleStrongWordClick(event, strongNumber) {
+                event.stopPropagation();
+                
+                // Send strong word click message
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                    type: 'strongWordClick',
+                    data: { strongNumber: strongNumber }
+                }));
+            }
+            
+            // Handle verse action
+            function handleVerseAction(action, verseNumber) {
+                const verseElement = document.querySelector(\`[data-verse-number="\${verseNumber}"]\`);
+                const verseData = verseElement ? JSON.parse(verseElement.dataset.verseData || '{}') : {};
+                
+                // Send verse action message
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                    type: 'verseAction',
+                    action: action,
+                    item: verseData
+                }));
+            }
+            
+            // Initialize when DOM is loaded
+            document.addEventListener('DOMContentLoaded', function() {
+                const container = document.getElementById('chapterContainer');
+                if (container) {
+                    container.addEventListener('scroll', handleScroll, { passive: true });
+                }
+                
+                initIntersectionObserver();
+                
+                // Perform initial scroll after a short delay to ensure content is rendered
+                setTimeout(performInitialScroll, 100);
+                
+                // Send initial height
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                    type: 'height',
+                    height: document.body.scrollHeight
+                }));
+            });
+            
+            // Send height when content changes
+            window.ReactNativeWebView.postMessage(JSON.stringify({
+                type: 'height',
+                height: document.body.scrollHeight
+            }));
+        </script>
     </body>
 `;
 
@@ -246,8 +397,7 @@ const createVerseActions = (verse: number) => `
 `;
 
 const createInterlinearVerse = (item: IBookVerse, verseKey: string) => `
-    <div class="interlinear-verse" data-verse-number="${
-      item.verse
+    <div class="interlinear-verse" data-verse-number="${item.verse
     }" data-verse-key="${verseKey}">
         <div class="verse-number">
             ${item.is_favorite ? '<span class="favorite-star">★</span>' : ""}
@@ -265,9 +415,8 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
          onclick="handleVerseClick(this, ${item.verse})"
          oncontextmenu="handleVerseLongPress(this, event)">
         ${createVerseNumber(item.verse, item.is_favorite)}
-        <span class="verse-text" onclick="handleVerseTextClick(event, ${
-          item.verse
-        })">
+        <span class="verse-text" onclick="handleVerseTextClick(event, ${item.verse
+    })">
             ${getVerseTextRaw(item.text)}
         </span>
         ${createVerseActions(item.verse)}
@@ -282,66 +431,68 @@ const createLoadingState = () => `
 `;
 
 const renderVerses = (
-  data: IBookVerse[],
-  isInterlinear: boolean,
-  isSplit: boolean
+    data: IBookVerse[],
+    isInterlinear: boolean,
+    isSplit: boolean
 ) => {
-  if (data.length === 0) {
-    return createLoadingState();
-  }
+    if (data.length === 0) {
+        return createLoadingState();
+    }
 
-  return data
-    .map((item) => {
-      const verseKey = `${item.book_number}-${item.chapter}-${item.verse}`;
+    return data
+        .map((item) => {
+            const verseKey = `${item.book_number}-${item.chapter}-${item.verse}`;
 
-      if (isInterlinear && !isSplit) {
-        return createInterlinearVerse(item, verseKey);
-      }
+            if (isInterlinear && !isSplit) {
+                return createInterlinearVerse(item, verseKey);
+            }
 
-      return createRegularVerse(item, verseKey);
-    })
-    .join("");
+            return createRegularVerse(item, verseKey);
+        })
+        .join("");
 };
 
 type TBibleChapterHtmlTemplateProps = {
-  data: IBookVerse[];
-  theme?: any;
-  width?: number;
-  isSplit?: boolean;
-  isInterlinear?: boolean;
-  fontSize?: number;
+    data: IBookVerse[];
+    theme?: any;
+    width?: number;
+    isSplit?: boolean;
+    isInterlinear?: boolean;
+    fontSize?: number;
+    initialScrollIndex?: number;
 };
 
 export const bibleChapterHtmlTemplate = ({
-  data,
-  theme,
-  width,
-  isSplit,
-  isInterlinear,
-  fontSize,
-}: TBibleChapterHtmlTemplateProps) => {
-  const colors = theme?.colors;
-  const containerWidth = width || "100%";
-  const showReadingTime = !isInterlinear;
-  const chapterNumber = data[0]?.chapter || 1;
-
-  const versesContent = renderVerses(
     data,
-    isInterlinear || false,
-    isSplit || false
-  );
+    theme,
+    width,
+    isSplit,
+    isInterlinear,
+    fontSize,
+    initialScrollIndex = 0,
+}: TBibleChapterHtmlTemplateProps) => {
+    const colors = theme?.colors;
+    const containerWidth = width || "100%";
+    const showReadingTime = !isInterlinear;
+    const chapterNumber = data[0]?.chapter || 1;
 
-  return `
+    const versesContent = renderVerses(
+        data,
+        isInterlinear || false,
+        isSplit || false
+    );
+
+    return `
     <!DOCTYPE html>
     <html>
         ${createHtmlHead(
-          chapterNumber,
-          colors,
-          containerWidth,
-          showReadingTime,
-          fontSize || 16
-        )}
-        ${createHtmlBody(versesContent)}
+        chapterNumber,
+        colors,
+        containerWidth,
+        showReadingTime,
+        fontSize || 16
+    )}
+        ${createHtmlBody(versesContent, initialScrollIndex)}
     </html>
     `;
 };

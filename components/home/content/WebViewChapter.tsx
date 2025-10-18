@@ -5,6 +5,7 @@ import { WordTagPair } from "@/utils/extractVersesInfo";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WebView from "react-native-webview";
 
 interface WebViewChapterProps {
@@ -52,7 +53,6 @@ const WebViewChapter = React.memo(
   }: WebViewChapterProps) => {
     const webViewRef = useRef<WebView>(null);
     const fontSize = use$(() => storedData$.fontSize.get());
-    const [isInitialScroll, setIsInitialScroll] = useState(false);
 
     const handleMessage = useCallback(
       (event: any) => {
@@ -117,24 +117,9 @@ const WebViewChapter = React.memo(
         onFavoriteVerse,
       ]
     );
-
-    const handleScrollToVerse = useCallback(() => {
-      if (initialScrollIndex > 0 && webViewRef.current) {
-        const script = `
-        const verseElement = document.querySelector('[data-verse-number="${initialScrollIndex}"]');
-        if (verseElement) {
-          verseElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      `;
-        webViewRef.current.injectJavaScript(script);
-      }
-    }, [initialScrollIndex]);
-
-    useEffect(() => {
-      if (isInitialScroll && initialScrollIndex > 0) {
-        handleScrollToVerse();
-      }
-    }, [initialScrollIndex]);
+    console.log({ initialScrollIndex });
+    const insets = useSafeAreaInsets();
+    const safeTop = insets.top;
 
     return (
       <WebView
@@ -146,6 +131,9 @@ const WebViewChapter = React.memo(
           minWidth: "100%",
           backgroundColor: "transparent",
         }}
+        containerStyle={{
+          marginTop: safeTop + 10,
+        }}
         source={{
           html: bibleChapterHtmlTemplate({
             data,
@@ -154,11 +142,12 @@ const WebViewChapter = React.memo(
             isSplit,
             isInterlinear,
             fontSize,
+            initialScrollIndex,
           }),
         }}
         scrollEnabled={true}
         onMessage={handleMessage}
-        onLoadEnd={() => setIsInitialScroll(true)}
+        onLoadEnd={() => {}}
         onError={(syntheticEvent) => {
           const { nativeEvent = {} } = syntheticEvent;
           console.warn("WebView error: ", nativeEvent);
