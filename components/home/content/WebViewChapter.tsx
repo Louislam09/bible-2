@@ -117,7 +117,6 @@ const WebViewChapter = React.memo(
         onFavoriteVerse,
       ]
     );
-    console.log({ initialScrollIndex });
     const insets = useSafeAreaInsets();
     const safeTop = insets.top;
 

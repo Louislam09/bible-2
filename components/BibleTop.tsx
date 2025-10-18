@@ -375,7 +375,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
               <Text style={{ color: "white" }}>Cambiar</Text>
             </TouchableOpacity>
           </View>
-        ) : useDomComponent ? (
+        ) : true ? (
           <WebViewChapter
             width={Dimensions.get("window").width}
             theme={theme}

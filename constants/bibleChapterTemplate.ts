@@ -9,66 +9,23 @@ const bibleChapterStyles = (
     fontSize: number
 ) => `
          <style>
-            * {
-                box-sizing: border-box;
-            }
-            
+            /* Custom styles that can't be replaced with Tailwind */
             body {
                 font-family: 'Georgia', 'Times New Roman', serif;
                 font-size: ${fontSize}px;
-                padding: 0;
-                margin: 0;
                 line-height: 1.8;
-                color: ${colors.text};
-                background: ${colors.background};
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-                overflow-x: hidden;
+                letter-spacing: 2px;
             }
             
             .container {
                 width: ${containerWidth};
-                height: 100vh;
-                overflow-y: auto;
-                position: relative;
-                padding-top: 70px;
-                padding-bottom: 100px;
             }
             
-            .reading-time {
-                display: ${showReadingTime ? "flex" : "none"};
-                flex-direction: row;
-                align-items: center;
-                justify-content: flex-end;
-                padding-right: 16px;
-                width: 100%;
-                margin-bottom: 20px;
+            .verse-actions.show {
+                display: flex !important;
             }
             
-            .reading-time-icon {
-                width: 14px;
-                height: 14px;
-                margin-right: 4px;
-                color: ${colors.notification};
-            }
-            
-            .reading-time-text {
-                color: ${colors.text};
-                font-size: 14px;
-            }
-            
-            .verse {
-                padding: 8px 32px;
-                margin: 2px 0;
-                cursor: pointer;
-                position: relative;
-                overflow: hidden;
-                width: 100%;
-                transition: background-color 0.2s ease;
-            }
-            
+            /* Dynamic hover states with theme colors */
             .verse:hover {
                 background-color: ${colors.notification}20;
             }
@@ -77,99 +34,15 @@ const bibleChapterStyles = (
                 background-color: ${colors.notification}20;
             }
             
-            .verse-number {
-                color: ${colors.notification};
-                font-weight: bold;
-                margin-right: 8px;
-                display: inline-flex;
-                align-items: center;
-            }
-            
-            .verse-text {
-                color: ${colors.text};
-                letter-spacing: 2px;
-            }
-            
-            .verse-actions {
-                display: none;
-                overflow-x: auto;
-                gap: 12px;
-                margin-top: 8px;
-                margin-left: -32px;
-                margin-right: -32px;
-                padding: 0 32px;
-            }
-            
-            .verse-actions.show {
-                display: flex;
-            }
-            
-            .action-button {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                background: none;
-                border: none;
-                cursor: pointer;
-                transition: color 0.2s ease;
-                min-width: 60px;
-            }
-            
             .action-button:hover {
                 opacity: 0.7;
-            }
-            
-            .action-icon {
-                width: 30px;
-                height: 30px;
-                margin-bottom: 4px;
-            }
-            
-            .action-text {
-                font-size: 12px;
-                color: ${colors.text};
-            }
-            
-            .strong-word {
-                color: ${colors.notification};
-                cursor: pointer;
-                text-decoration: underline;
             }
             
             .strong-word:hover {
                 opacity: 0.7;
             }
             
-            .favorite-star {
-                color: #ffd41d;
-                margin-right: 4px;
-            }
-            
-            .interlinear-verse {
-                padding: 16px;
-                border: 1px solid ${colors.border};
-                border-radius: 8px;
-                margin: 8px 0;
-                background: ${colors.background};
-            }
-            
-            .loading {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                padding: 48px;
-                margin-top: 100px;
-            }
-            
-            .loading-text {
-                margin-top: 8px;
-                font-size: 16px;
-                color: ${colors.text};
-            }
-            
-            /* Scrollbar styling */
+            /* Scrollbar styling - not supported by Tailwind */
             .container::-webkit-scrollbar {
                 width: 6px;
             }
@@ -219,10 +92,14 @@ const createHtmlHead = (
     </head>
 `;
 
-const createHtmlBody = (content: string, initialScrollIndex: number = 0) => `
-    <body>
-    <div class="container" id="chapterContainer">
-         ${content}
+const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapterNumber: number = 1) => `
+    <body class="p-0 m-0 text-theme-text bg-theme-background select-none overflow-x-hidden">
+    <div class="container relative h-screen overflow-y-auto pt-[70px] pb-[100px]" id="chapterContainer">
+        <!-- Chapter Header -->
+        <div class="sticky top-0 z-10 backdrop-blur-sm px-4 pt-3 my-2">
+            <h1 class="text-2xl font-bold text-theme-text text-center">Capítulo ${chapterNumber}</h1>
+        </div>
+        ${content}
     </div>
         
         <script>
@@ -234,7 +111,7 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0) => `
             // Initial scroll functionality
             function performInitialScroll() {
                 const verseNumber = ${initialScrollIndex};
-                if (verseNumber > 0) {
+                if (verseNumber > 1) {
                     const verseElement = document.querySelector(\`[data-verse-number="\${verseNumber}"]\`);
                     if (verseElement) {
                         verseElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -380,57 +257,57 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0) => `
 
 // Verse rendering functions
 const createVerseNumber = (verse: number, isFavorite: boolean) => `
-    <span class="verse-number">
-        ${isFavorite ? '<span class="favorite-star">★</span>' : ""}
-        ${verse}&nbsp;
+    <span class="text-theme-notification font-bold inline-flex items-center py-1 rounded-full">
+        ${isFavorite ? '<span class="text-yellow-400 mr-1 text-xs">★</span>' : ""}
+        ${verse}
     </span>
 `;
 
 const createVerseActions = (verse: number) => `
-    <div class="verse-actions" id="actions-${verse}">
-        <button class="action-button" onclick="handleVerseAction('favorite', ${verse})">
-            <div class="action-icon">⭐</div>
-            <div class="action-text">Favorito</div>
+    <div class="verse-actions hidden overflow-x-auto gap-3 mt-2 -mx-8 px-8 py-2" id="actions-${verse}">
+        <button class="flex flex-col items-center justify-center bg-transparent border-none cursor-pointer transition-all duration-200 min-w-[60px] hover:bg-theme-card/50 rounded-lg p-2 hover:scale-105 active:scale-95" onclick="handleVerseAction('favorite', ${verse})">
+            <div class="w-8 h-8 mb-1 text-yellow-400">⭐</div>
+            <div class="text-xs text-theme-text font-medium">Favorito</div>
         </button>
-        <button class="action-button" onclick="handleVerseAction('interlinear', ${verse})">
-            <div class="action-icon">📖</div>
-            <div class="action-text">Interlinear</div>
+        <button class="flex flex-col items-center justify-center bg-transparent border-none cursor-pointer transition-all duration-200 min-w-[60px] hover:bg-theme-card/50 rounded-lg p-2 hover:scale-105 active:scale-95" onclick="handleVerseAction('interlinear', ${verse})">
+            <div class="w-8 h-8 mb-1 text-blue-500">📖</div>
+            <div class="text-xs text-theme-text font-medium">Interlinear</div>
         </button>
-        <button class="action-button" onclick="handleVerseAction('annotate', ${verse})">
-            <div class="action-icon">✏️</div>
-            <div class="action-text">Anotar</div>
+        <button class="flex flex-col items-center justify-center bg-transparent border-none cursor-pointer transition-all duration-200 min-w-[60px] hover:bg-theme-card/50 rounded-lg p-2 hover:scale-105 active:scale-95" onclick="handleVerseAction('annotate', ${verse})">
+            <div class="w-8 h-8 mb-1 text-green-500">✏️</div>
+            <div class="text-xs text-theme-text font-medium">Anotar</div>
         </button>
-        <button class="action-button" onclick="handleVerseAction('compare', ${verse})">
-            <div class="action-icon">🔄</div>
-            <div class="action-text">Comparar</div>
+        <button class="flex flex-col items-center justify-center bg-transparent border-none cursor-pointer transition-all duration-200 min-w-[60px] hover:bg-theme-card/50 rounded-lg p-2 hover:scale-105 active:scale-95" onclick="handleVerseAction('compare', ${verse})">
+            <div class="w-8 h-8 mb-1 text-purple-500">🔄</div>
+            <div class="text-xs text-theme-text font-medium">Comparar</div>
         </button>
-        <button class="action-button" onclick="handleVerseAction('memorize', ${verse})">
-            <div class="action-icon">🧠</div>
-            <div class="action-text">Memorizar</div>
+        <button class="flex flex-col items-center justify-center bg-transparent border-none cursor-pointer transition-all duration-200 min-w-[60px] hover:bg-theme-card/50 rounded-lg p-2 hover:scale-105 active:scale-95" onclick="handleVerseAction('memorize', ${verse})">
+            <div class="w-8 h-8 mb-1 text-pink-500">🧠</div>
+            <div class="text-xs text-theme-text font-medium">Memorizar</div>
         </button>
     </div>
 `;
 
 const createInterlinearVerse = (item: IBookVerse, verseKey: string) => `
-    <div class="interlinear-verse" data-verse-number="${item.verse
+    <div class="p-4 border border-theme-border rounded-lg my-2 bg-theme-background shadow-sm hover:shadow-md transition-shadow duration-200" data-verse-number="${item.verse
     }" data-verse-key="${verseKey}">
-        <div class="verse-number">
-            ${item.is_favorite ? '<span class="favorite-star">★</span>' : ""}
-            ${item.verse}&nbsp;
+        <div class="text-theme-notification font-bold mr-2 inline-flex items-center mb-2 text-sm bg-theme-notification/10 px-2 py-1 rounded-full">
+            ${item.is_favorite ? '<span class="text-yellow-400 mr-1 text-xs">★</span>' : ""}
+            ${item.verse}
         </div>
-        <div class="verse-text">${item.text}</div>
+        <div class="text-theme-text leading-relaxed">${item.text}</div>
     </div>
 `;
 
 const createRegularVerse = (item: IBookVerse, verseKey: string) => `
-    <div class="verse" 
+    <div class="py-2 px-8 my-0.5 cursor-pointer relative overflow-hidden w-full transition-colors duration-200 hover:bg-theme-notification/20 active:bg-theme-notification/30" 
          data-verse-number="${item.verse}" 
          data-verse-key="${verseKey}"
          data-verse-data='${JSON.stringify(item)}'
          onclick="handleVerseClick(this, ${item.verse})"
          oncontextmenu="handleVerseLongPress(this, event)">
         ${createVerseNumber(item.verse, item.is_favorite)}
-        <span class="verse-text" onclick="handleVerseTextClick(event, ${item.verse
+        <span class="text-theme-text cursor-pointer select-text" onclick="handleVerseTextClick(event, ${item.verse
     })">
             ${getVerseTextRaw(item.text)}
         </span>
@@ -439,9 +316,10 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
 `;
 
 const createLoadingState = () => `
-    <div class="loading">
-        <div>⏳</div>
-        <div class="loading-text">Cargando...</div>
+    <div class="flex flex-col items-center justify-center p-12 mt-24">
+        <div class="text-6xl mb-4 animate-pulse">⏳</div>
+        <div class="text-lg text-theme-text font-medium">Cargando...</div>
+        <div class="mt-2 text-sm text-theme-text/70">Preparando el contenido</div>
     </div>
 `;
 
@@ -507,7 +385,7 @@ export const bibleChapterHtmlTemplate = ({
         showReadingTime,
         fontSize || 16
     )}
-        ${createHtmlBody(versesContent, initialScrollIndex)}
+        ${createHtmlBody(versesContent, initialScrollIndex, chapterNumber)}
     </html>
     `;
 };
