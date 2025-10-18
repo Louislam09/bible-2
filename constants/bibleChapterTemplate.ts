@@ -173,14 +173,25 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                     element.style.opacity = '';
                 }, 150);
                 
+                // Get verse data to determine cognate
+                const verseElement = element.closest('[data-verse-number]');
+                const verseData = verseElement ? JSON.parse(verseElement.dataset.verseData || '{}') : {};
+                const bookNumber = verseData.book_number || 0;
+                
+                // Determine cognate based on book number (same logic as Verse.tsx)
+                const NT_BOOK_NUMBER = 470;
+                const cognate = bookNumber < NT_BOOK_NUMBER ? "H" : "G";
+                const cognateStrongNumber = cognate + strongNumber;
+                
                 // Send strong word click message
                 window.ReactNativeWebView.postMessage(JSON.stringify({
                     type: 'strongWordClick',
                     data: { 
-                        strongNumber: strongNumber,
+                        tagValue: cognateStrongNumber,
                         word: element.textContent,
-                        verseNumber: element.closest('[data-verse-number]')?.getAttribute('data-verse-number')
-                    }
+                        verseNumber: verseElement?.getAttribute('data-verse-number')
+                    },
+                    verseData: verseData
                 }));
             }
             
@@ -360,6 +371,7 @@ const createInterlinearVerse = (item: IBookVerse, verseKey: string) => `
     <div class="p-4 border border-theme-border rounded-lg my-2 bg-theme-background shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer" 
          data-verse-number="${item.verse}" 
          data-verse-key="${verseKey}"
+         data-verse-data='${JSON.stringify(item)}'
          data-verse-mode="regular"
          onclick="toggleVerseMode(this, '${verseKey}')">
         <div class="text-theme-notification font-bold mr-2 inline-flex items-center mb-2 text-sm bg-theme-notification/10 px-2 py-1 rounded-full">

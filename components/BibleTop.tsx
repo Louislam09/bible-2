@@ -173,20 +173,10 @@ const BibleTop: FC<BibleTopProps> = (props) => {
 
   const onStrongWordClicked = useCallback(({ word, tagValue }: WordTagPair) => {
     haptics.selection();
-    // haptics.impact.light();
-    const NT_BOOK_NUMBER = 470;
-    const cognate = "H";
 
-    const addCognate = (tagValue: string) =>
-      tagValue
-        .split(",")
-        .map((code) => `${cognate}${code}`)
-        .join(",");
-
-    const searchCode = addCognate(tagValue || "");
     const value = {
       text: word.replace(/[.,;]/g, ""),
-      code: searchCode,
+      code: tagValue ?? "",
     };
     bibleState$.handleStrongWord(value);
     modalState$.openStrongSearchBottomSheet();
