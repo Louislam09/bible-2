@@ -25,6 +25,7 @@ import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "expo-router";
 import { getStyles } from "./styles";
 import { modalState$ } from "@/state/modalState";
+import ExpandableChooseReference from "@/components/animations/expandable-choose-reference";
 
 interface FooterInterface {
   isSplit?: boolean;
@@ -126,7 +127,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
       bibleState$.clearSelection();
       bibleState$.isBottomBibleSearching.set(!!isSplit);
     });
-    modalState$.openChooseReferenceBottomSheet();
+    modalState$.toggleIsChooseReferenceOpened();
     // const screen = Screens.ChooseReferenceDom;
 
     // const screen = useDomComponent
@@ -247,28 +248,6 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
         </View>
       )}
       {isPlayerOpened && <ExpandedSheet />}
-
-      {/* <BottomModal id="footer" justOneSnap startAT={0} ref={playRef}>
-        <Play
-          isRvr={isRVR}
-          {...{
-            theme,
-            isDownloading,
-            isPlaying: _isPlaying,
-            playAudio: _playAudio,
-            duration: isRVR
-              ? duration
-              : (bibleState$.bibleData.topVerses.get() || []).length,
-            position: isRVR ? position : verseIndex,
-            nextChapter,
-            previousChapter,
-            book,
-            chapter,
-            shouldLoopReading,
-            setShouldLoop,
-          }}
-        />
-      </BottomModal> */}
     </LinearGradient>
   );
 };

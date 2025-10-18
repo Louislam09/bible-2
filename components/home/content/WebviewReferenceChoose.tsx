@@ -8,6 +8,8 @@ import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
 import React, { useCallback, useRef } from "react";
 import WebView from "react-native-webview";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { View } from "@/components/Themed";
 
 interface WebviewReferenceChooseProps {
   theme: TTheme;
@@ -19,7 +21,6 @@ const WebviewReferenceChoose = React.memo(
     const webViewRef = useRef<WebView>(null);
     const fontSize = use$(() => storedData$.fontSize.get());
     const bibleQuery = bibleState$.bibleQuery.get();
-    console.log({ bibleQuery });
 
     const handleMessage = useCallback((event: any) => {
       try {

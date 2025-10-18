@@ -5,7 +5,7 @@ import { createRef } from "react";
 export const modalState$ = observable({
   compareRef: createRef<BottomSheetModal>(),
   strongSearchRef: createRef<BottomSheetModal>(),
-  chooseReferenceRef: createRef<BottomSheetModal>(),
+  isChooseReferenceOpened: false,
   dictionaryRef: createRef<BottomSheetModal>(),
   explainVerseRef: createRef<BottomSheetModal>(),
   interlinealRef: createRef<BottomSheetModal>(),
@@ -68,9 +68,7 @@ export const modalState$ = observable({
   closeStrongSearchFilterBottomSheet: () => {
     modalState$.strongSearchFilterRef.current?.dismiss();
   },
-  openChooseReferenceBottomSheet: () => {
-    modalState$.isSheetClosed.set(false);
-    modalState$.explainVerseRef.current?.close();
-    modalState$.chooseReferenceRef.current?.expand();
+  toggleIsChooseReferenceOpened: () => {
+    modalState$.isChooseReferenceOpened.set(!modalState$.isChooseReferenceOpened.get());
   },
 });

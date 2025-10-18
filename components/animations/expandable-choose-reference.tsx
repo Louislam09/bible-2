@@ -1,4 +1,9 @@
-import { StyleSheet, useWindowDimensions, View } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from "react-native";
 
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -14,6 +19,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import WebviewReferenceChoose from "@/components/home/content/WebviewReferenceChoose";
 import { useMyTheme } from "@/context/ThemeContext";
+import Icon from "../Icon";
+import { iconSize } from "@/constants/size";
+import { modalState$ } from "@/state/modalState";
+import { useEffect } from "react";
 
 export const EasingsUtils = {
   inOut: Easing.bezier(0.25, 0.1, 0.25, 1),
@@ -26,12 +35,11 @@ const Palette = {
   text: "#FFFFFF",
 };
 
-const ExpandedSheetMutableProgress = makeMutable(0);
 const MiniPlayerHeight = 64;
 
 const ExpandableChooseReference = () => {
   const { height: windowHeight } = useWindowDimensions();
-  const progress = ExpandedSheetMutableProgress;
+  const progress = useSharedValue(0);
   const { theme } = useMyTheme();
 
   const isTapped = useSharedValue(false);
@@ -89,7 +97,7 @@ const ExpandableChooseReference = () => {
       height: interpolate(
         progress.value,
         [0, 1],
-        [MiniPlayerHeight, windowHeight]
+        [MiniPlayerHeight, windowHeight - safeTop]
       ),
       bottom: interpolate(progress.value, [0, 1], [safeBottom, 0]),
       left: interpolate(progress.value, [0, 1], [16, 0]),
@@ -136,15 +144,44 @@ const ExpandableChooseReference = () => {
     };
   });
 
+  const rCloseButtonStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        progress.value,
+        [0, progressThreshold / 2, 1],
+        [0, 0, 1]
+      ),
+      zIndex: 1000,
+    };
+  });
+
+  useEffect(() => {
+    progress.value = withTiming(1, {
+      duration: 450,
+      easing: EasingsUtils.inOut,
+    });
+  }, []);
+
+  const handleClose = () => {
+    progress.value = withTiming(0, {
+      duration: 550,
+      easing: EasingsUtils.inOut,
+    });
+    setTimeout(() => {
+      modalState$.toggleIsChooseReferenceOpened();
+    }, 550);
+  };
+
   const gestures = Gesture.Simultaneous(tapGesture, panGesture);
 
   return (
-    <GestureDetector gesture={gestures}>
-      <Animated.View style={[rSheetStyle, styles.container]}>
+    <Animated.View style={[rSheetStyle, styles.container]}>
+      <GestureDetector gesture={gestures}>
         <Animated.View
           style={[
             rKnobStyle,
             {
+              height: safeTop,
               top: safeTop + 20,
             },
             styles.knobContainer,
@@ -152,13 +189,30 @@ const ExpandableChooseReference = () => {
         >
           <View style={styles.knob} />
         </Animated.View>
+      </GestureDetector>
 
+      <Animated.View
+        style={[
+          rCloseButtonStyle,
+          {
+            top: safeTop + 20,
+            right: 20,
+          },
+          styles.closeButtonContainer,
+        ]}
+      >
+        <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+          <Icon name="X" color={"#fff"} size={20} />
+        </TouchableOpacity>
+      </Animated.View>
+
+      <View style={styles.webviewContainer}>
         <WebviewReferenceChoose
           theme={theme}
           onConfirm={() => console.log("onConfirm")}
         />
-      </Animated.View>
-    </GestureDetector>
+      </View>
+    </Animated.View>
   );
 };
 
@@ -170,6 +224,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowRadius: 16,
     overflow: "hidden",
+    flex: 9999,
   },
   knob: {
     // backgroundColor: "#767676",
@@ -184,15 +239,18 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: "100%",
   },
-  playButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
+  closeButtonContainer: {
+    position: "absolute",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.2)",
+  },
+  closeButton: {
+    width: 40,
+    height: 40,
+  },
+  webviewContainer: {
+    flex: 1,
+    marginTop: 60, // Add some top margin to avoid overlap with knob and close button
   },
 });
 

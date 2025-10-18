@@ -18,7 +18,8 @@ const chooseReferenceStyles = (theme: TTheme) => `
       font-weight: 500;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      background-color: ${theme.colors.background};
+      // background-color: ${theme.colors.background};
+      background-color: transparent;
       color: ${theme.colors.text};
       height: 100vh;
       overflow: hidden;
@@ -29,7 +30,8 @@ const chooseReferenceStyles = (theme: TTheme) => `
     .container {
       width: 100%;
       height: 100vh;
-      background-color: ${theme.colors.background};
+      // background-color: ${theme.colors.background};
+      background-color: transparent;
       color: ${theme.colors.text};
       padding: 12px;
       display: flex;
@@ -435,18 +437,18 @@ const createBooksSection = (books: any[], theme: TTheme, selectedBook?: string) 
 `;
 
 const createHtmlBody = (
-    theme: TTheme,
-    initialBook?: string,
-    initialChapter?: number,
-    initialVerse?: number
+  theme: TTheme,
+  initialBook?: string,
+  initialChapter?: number,
+  initialVerse?: number
 ) => {
-    const oldTestamentBooks = DB_BOOK_NAMES.slice(0, 39);
-    const newTestamentBooks = DB_BOOK_NAMES.slice(39);
+  const oldTestamentBooks = DB_BOOK_NAMES.slice(0, 39);
+  const newTestamentBooks = DB_BOOK_NAMES.slice(39);
 
-    // Always start at book selection step (step 0)
-    const currentStep = 0;
+  // Always start at book selection step (step 0)
+  const currentStep = 0;
 
-    return `
+  return `
     <body>
       <div class="container">
         <div class="max-width-container">
@@ -690,19 +692,19 @@ const createHtmlBody = (
 
 // Main template function
 type TChooseReferenceTemplateProps = {
-    theme: TTheme;
-    initialBook?: string;
-    initialChapter?: number;
-    initialVerse?: number;
+  theme: TTheme;
+  initialBook?: string;
+  initialChapter?: number;
+  initialVerse?: number;
 };
 
 export const chooseReferenceHtmlTemplate = ({
-    theme,
-    initialBook,
-    initialChapter,
-    initialVerse,
+  theme,
+  initialBook,
+  initialChapter,
+  initialVerse,
 }: TChooseReferenceTemplateProps) => {
-    return `
+  return `
     <!DOCTYPE html>
     <html lang="es">
       ${createHtmlHead(theme)}

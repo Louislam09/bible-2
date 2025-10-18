@@ -38,6 +38,7 @@ import WebView from "react-native-webview";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { bibleChapterHtmlTemplate } from "@/constants/HtmlTemplate";
 import WebViewChapter from "./home/content/WebViewChapter";
+import ExpandableChooseReference from "./animations/expandable-choose-reference";
 
 interface BibleTopProps {
   height: Animated.Value;
@@ -284,7 +285,6 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   //     ? Chapter
   //     : DomChapter
   //   : Chapter;
-  console.log(chapterData.slice);
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
