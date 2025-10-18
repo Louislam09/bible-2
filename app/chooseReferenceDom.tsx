@@ -88,10 +88,7 @@ const ChooseReferenceDom = () => {
         })}
       />
       <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-        <WebviewReferenceChoose
-          theme={theme}
-          onConfirm={() => console.log("onConfirm")}
-        />
+        <WebviewReferenceChoose />
         {/* <DomChooseReference
                     theme={theme}
                     initialBook={(routeParam as any)?.book || (routeParam as any)?.bottomSideBook}

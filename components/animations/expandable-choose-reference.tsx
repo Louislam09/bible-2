@@ -37,10 +37,11 @@ const Palette = {
 };
 
 const MiniPlayerHeight = 64;
+export const ChooseReferenceMutableProgress = makeMutable(0);
 
 const ExpandableChooseReference = () => {
   const { height: windowHeight } = useWindowDimensions();
-  const progress = useSharedValue(0);
+  const progress = ChooseReferenceMutableProgress;
   const { theme } = useMyTheme();
 
   const isTapped = useSharedValue(false);
@@ -220,10 +221,7 @@ const ExpandableChooseReference = () => {
       </Animated.View>
 
       <View style={styles.webviewContainer}>
-        <WebviewReferenceChoose
-          theme={theme}
-          onConfirm={() => console.log("onConfirm")}
-        />
+        <WebviewReferenceChoose />
       </View>
     </Animated.View>
   );
