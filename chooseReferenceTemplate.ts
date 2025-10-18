@@ -168,7 +168,7 @@ const chooseReferenceStyles = (theme: TTheme) => `
       align-items: center;
       justify-content: center;
       transform: scale(1);
-      animation: fadeInUp 0.4s ease forwards;
+      // animation: fadeInUp 0.4s ease forwards;
     }
 
     .book-button:hover {
@@ -269,7 +269,7 @@ const chooseReferenceStyles = (theme: TTheme) => `
       justify-content: center;
       opacity: 0.9;
       transform: scale(1);
-      animation: fadeInUp 0.4s ease forwards;
+      // animation: fadeInUp 0.4s ease forwards;
     }
 
     .chapter-button:hover {
@@ -562,6 +562,9 @@ const createHtmlBody = (
                 goHome: true
               }
             }));
+            setTimeout(() => {
+              goToStep(0);
+            }, 2000);
           }
         }
 

@@ -56,7 +56,7 @@ const WebviewReferenceChoose = React.memo(({}: WebviewReferenceChooseProps) => {
         ChooseReferenceMutableProgress.value = withTiming(
           0,
           {
-            duration: 450,
+            duration: 50,
             easing: Easing.bezier(0.25, 0.1, 0.25, 1),
           },
           (finished) => {

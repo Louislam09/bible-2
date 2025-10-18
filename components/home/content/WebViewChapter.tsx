@@ -4,7 +4,7 @@ import { IBookVerse, IFavoriteVerse, TTheme } from "@/types";
 import { WordTagPair } from "@/utils/extractVersesInfo";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import WebView from "react-native-webview";
 
 interface WebViewChapterProps {
@@ -52,6 +52,7 @@ const WebViewChapter = React.memo(
   }: WebViewChapterProps) => {
     const webViewRef = useRef<WebView>(null);
     const fontSize = use$(() => storedData$.fontSize.get());
+    const [isInitialScroll, setIsInitialScroll] = useState(false);
 
     const handleMessage = useCallback(
       (event: any) => {
@@ -129,6 +130,12 @@ const WebViewChapter = React.memo(
       }
     }, [initialScrollIndex]);
 
+    useEffect(() => {
+      if (isInitialScroll && initialScrollIndex > 0) {
+        handleScrollToVerse();
+      }
+    }, [initialScrollIndex]);
+
     return (
       <WebView
         ref={webViewRef}
@@ -151,7 +158,7 @@ const WebViewChapter = React.memo(
         }}
         scrollEnabled={true}
         onMessage={handleMessage}
-        onLoadEnd={handleScrollToVerse}
+        onLoadEnd={() => setIsInitialScroll(true)}
         onError={(syntheticEvent) => {
           const { nativeEvent = {} } = syntheticEvent;
           console.warn("WebView error: ", nativeEvent);
