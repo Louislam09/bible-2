@@ -176,8 +176,6 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
     audioState$.toggleIsPlayerOpened();
   };
 
-  const isPlayerOpened = use$(() => audioState$.isPlayerOpened.get());
-
   const displayBookName = renameLongBookName(book);
 
   return (
@@ -189,17 +187,6 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
       ]}
       style={styles.footer}
     >
-      {/* {isPlaying && (
-        <View style={[styles.progressBarContainer]}>
-          <ProgressBar
-            height={8}
-            color={theme.colors.notification}
-            barColor={theme.colors.text}
-            progress={position / duration}
-            circleColor={theme.colors.notification}
-          />
-        </View>
-      )} */}
       <View style={styles.footerCenter}>
         <TouchableOpacity
           ref={tourState$.backButton.get()}
@@ -237,18 +224,6 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           />
         </TouchableOpacity>
       </View>
-      {/* {!isSplitActived && !isPlayerOpened && (
-        <View style={styles.footerAudio}>
-          <TouchableOpacity
-            ref={tourState$.audio.get()}
-            style={[styles.footerEnd]}
-            onPress={onPlay}
-          >
-            <Icon name={"Play"} color="white" size={footerIconSize} />
-          </TouchableOpacity>
-        </View>
-      )} */}
-      {isPlayerOpened && <ExpandedSheet />}
     </LinearGradient>
   );
 };

@@ -19,6 +19,8 @@ import InterlinearVerse from "./home/content/InterlinearVerse";
 import StrongContent from "./home/content/StrongContent";
 import { Text, View } from "./Themed";
 import ExpandableChooseReference from "./animations/expandable-choose-reference";
+import { ExpandedSheet } from "./animations/expandable-mini-player";
+import { audioState$ } from "@/hooks/useAudioPlayer";
 
 const BookContentModals = () => {
   const { theme } = useMyTheme();
@@ -28,9 +30,8 @@ const BookContentModals = () => {
   const aiResponse = useGoogleAI();
   const verse = use$(() => bibleState$.verseToExplain.get());
   const verseToInterlinear = use$(() => bibleState$.verseToInterlinear.get());
-  const isChooseReferenceOpened = use$(() =>
-    modalState$.isChooseReferenceOpened.get()
-  );
+
+  const isPlayerOpened = use$(() => audioState$.isPlayerOpened.get());
   useEffect(() => {
     if (aiResponse.loading) return;
     if (verse.text && !aiResponse.error) {
@@ -52,6 +53,7 @@ const BookContentModals = () => {
       </BottomModal>
       {/* {isChooseReferenceOpened && <ExpandableChooseReference />} */}
       <ExpandableChooseReference />
+      {isPlayerOpened && <ExpandedSheet />}
 
       <BottomSheet
         ref={modalState$.interlinealRef.get()}
