@@ -13,14 +13,13 @@ const bibleChapterStyles = (
             body {
                 font-family: 'Georgia', 'Times New Roman', serif;
                 font-size: ${fontSize}px;
-                line-height: 1.8;
+                line-height: 1.5;
                 letter-spacing: 2px;
             }
             
             .container {
                 width: ${containerWidth};
             }
-            
             
             .strong-word {
                 transition: all 0.2s ease;
@@ -215,9 +214,8 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                     strongContent.classList.remove('hidden');
                     verseElement.setAttribute('data-verse-mode', 'strong');
                     
-                    // Add visual indicator
-                    verseElement.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
-                    verseElement.style.borderLeft = '3px solid #3b82f6';
+                    // Add visual indicator use theme colors from variables
+                    verseElement.style.borderLeft = "3px solid var(--color-notification)";
                 } else {
                     // Switch to regular mode
                     regularContent.classList.remove('hidden');
@@ -252,17 +250,17 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 setTimeout(performInitialScroll, 100);
                 
                 // Send initial height
-                window.ReactNativeWebView.postMessage(JSON.stringify({
-                    type: 'height',
-                    height: document.body.scrollHeight
-                }));
+                // window.ReactNativeWebView.postMessage(JSON.stringify({
+                //     type: 'height',
+                //     height: document.body.scrollHeight
+                // }));
             });
             
             // Send height when content changes
-            window.ReactNativeWebView.postMessage(JSON.stringify({
-                type: 'height',
-                height: document.body.scrollHeight
-            }));
+            // window.ReactNativeWebView.postMessage(JSON.stringify({
+            //     type: 'height',
+            //     height: document.body.scrollHeight
+            // }));
         </script>
     </body>
 `;
@@ -391,7 +389,7 @@ const createInterlinearVerse = (item: IBookVerse, verseKey: string) => `
 `;
 
 const createRegularVerse = (item: IBookVerse, verseKey: string) => `
-    <div class="py-2 px-8 my-0.5 relative overflow-hidden w-full cursor-pointer hover:bg-theme-background/50 transition-colors duration-200" 
+    <div class="py-2 px-8 my-0.5 relative overflow-hidden w-full cursor-pointer transition-colors duration-200" 
          data-verse-number="${item.verse}" 
          data-verse-key="${verseKey}"
          data-verse-data='${JSON.stringify(item)}'
@@ -404,9 +402,6 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
         <span class="text-theme-text select-text verse-strong-content hidden">
             ${parseVerseTextWithStrongs(item.text)}
         </span>
-        <div class="absolute top-2 right-2 text-xs text-theme-text/50 opacity-0 hover:opacity-100 transition-opacity pointer-events-none">
-            Click to toggle Strong's
-        </div>
     </div>
 `;
 
