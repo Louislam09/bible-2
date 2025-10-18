@@ -58,6 +58,7 @@ const WebViewChapter = React.memo(
       (event: any) => {
         try {
           const message = JSON.parse(event.nativeEvent.data);
+          console.log("message", message);
 
           switch (message.type) {
             case "scroll":

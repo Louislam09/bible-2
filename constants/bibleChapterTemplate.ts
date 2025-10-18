@@ -21,25 +21,42 @@ const bibleChapterStyles = (
                 width: ${containerWidth};
             }
             
-            .verse-actions.show {
-                display: flex !important;
-            }
             
-            /* Dynamic hover states with theme colors */
-            .verse:hover {
-                background-color: ${colors.notification}20;
-            }
-            
-            .verse.tapped {
-                background-color: ${colors.notification}20;
-            }
-            
-            .action-button:hover {
-                opacity: 0.7;
+            .strong-word {
+                transition: all 0.2s ease;
+                cursor: pointer;
+                user-select: none;
             }
             
             .strong-word:hover {
                 opacity: 0.7;
+                transform: scale(1.02);
+            }
+            
+            .strong-word:active {
+                transform: scale(0.98);
+            }
+            
+            /* Verse toggle styles */
+            .verse-content, .verse-strong-content {
+                transition: opacity 0.3s ease;
+            }
+            
+            .verse-strong-content.hidden {
+                display: none;
+            }
+            
+            .verse-content.hidden {
+                display: none;
+            }
+            
+            /* Hover effect for verses */
+            [data-verse-mode] {
+                transition: all 0.2s ease;
+            }
+            
+            [data-verse-mode]:hover {
+                transform: translateX(2px);
             }
             
             /* Scrollbar styling - not supported by Tailwind */
@@ -119,40 +136,6 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 }
             }
             
-            // Initialize intersection observer
-            function initIntersectionObserver() {
-                intersectionObserver = new IntersectionObserver(
-                    (entries) => {
-                        const visibleEntries = entries.filter(entry => entry.isIntersecting);
-                        if (visibleEntries.length > 0) {
-                            const topEntry = visibleEntries.reduce((prev, current) => {
-                                return (current.intersectionRatio > prev.intersectionRatio) ? current : prev;
-                            });
-                            
-                            const verseElement = topEntry.target;
-                            const verseNumber = parseInt(verseElement.dataset.verseNumber || '0');
-                            
-                            if (verseNumber && topVerseRef !== verseNumber) {
-                                topVerseRef = verseNumber;
-                                // Send message to React Native
-                                window.ReactNativeWebView.postMessage(JSON.stringify({
-                                    type: 'verseInView',
-                                    verseNumber: verseNumber
-                                }));
-                            }
-                        }
-                    },
-                    {
-                        threshold: [0.5],
-                        rootMargin: '0px'
-                    }
-                );
-                
-                // Observe all verse elements
-                document.querySelectorAll('[data-verse-number]').forEach(el => {
-                    intersectionObserver.observe(el);
-                });
-            }
             
             // Handle scroll events
             function handleScroll(event) {
@@ -178,52 +161,71 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 }
             }
             
-            // Handle verse click
-            function handleVerseClick(element, verseNumber) {
-                element.classList.toggle('tapped');
-                
-                // Send verse click message
-                window.ReactNativeWebView.postMessage(JSON.stringify({
-                    type: 'verseClick',
-                    verseNumber: verseNumber
-                }));
-            }
-            
-            // Handle verse long press
-            function handleVerseLongPress(element, event) {
-                event.preventDefault();
-                const actionsElement = element.querySelector('.verse-actions');
-                if (actionsElement) {
-                    actionsElement.classList.toggle('show');
-                }
-            }
-            
-            // Handle verse text click
-            function handleVerseTextClick(event, verseNumber) {
-                event.stopPropagation();
-            }
-            
             // Handle strong word click
             function handleStrongWordClick(event, strongNumber) {
                 event.stopPropagation();
+                event.preventDefault();
+                
+                // Add visual feedback
+                const element = event.target;
+                element.style.opacity = '0.5';
+                setTimeout(() => {
+                    element.style.opacity = '';
+                }, 150);
                 
                 // Send strong word click message
                 window.ReactNativeWebView.postMessage(JSON.stringify({
                     type: 'strongWordClick',
-                    data: { strongNumber: strongNumber }
+                    data: { 
+                        strongNumber: strongNumber,
+                        word: element.textContent,
+                        verseNumber: element.closest('[data-verse-number]')?.getAttribute('data-verse-number')
+                    }
                 }));
             }
             
-            // Handle verse action
-            function handleVerseAction(action, verseNumber) {
-                const verseElement = document.querySelector(\`[data-verse-number="\${verseNumber}"]\`);
-                const verseData = verseElement ? JSON.parse(verseElement.dataset.verseData || '{}') : {};
+            // Handle strong word keyboard interaction
+            function handleStrongWordKeydown(event, strongNumber) {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    handleStrongWordClick(event, strongNumber);
+                }
+            }
+            
+            // Toggle verse mode between regular and Strong's numbers
+            function toggleVerseMode(verseElement, verseKey) {
+                const currentMode = verseElement.getAttribute('data-verse-mode');
+                const regularContent = verseElement.querySelector('.verse-content');
+                const strongContent = verseElement.querySelector('.verse-strong-content');
                 
-                // Send verse action message
+                if (currentMode === 'regular') {
+                    // Switch to Strong's mode
+                    regularContent.classList.add('hidden');
+                    strongContent.classList.remove('hidden');
+                    verseElement.setAttribute('data-verse-mode', 'strong');
+                    
+                    // Add visual indicator
+                    verseElement.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+                    verseElement.style.borderLeft = '3px solid #3b82f6';
+                } else {
+                    // Switch to regular mode
+                    regularContent.classList.remove('hidden');
+                    strongContent.classList.add('hidden');
+                    verseElement.setAttribute('data-verse-mode', 'regular');
+                    
+                    // Remove visual indicator
+                    verseElement.style.backgroundColor = '';
+                    verseElement.style.borderLeft = '';
+                }
+                
+                // Send toggle message to React Native
                 window.ReactNativeWebView.postMessage(JSON.stringify({
-                    type: 'verseAction',
-                    action: action,
-                    item: verseData
+                    type: 'verseModeToggle',
+                    data: { 
+                        verseKey: verseKey,
+                        mode: currentMode === 'regular' ? 'strong' : 'regular',
+                        verseNumber: verseElement.getAttribute('data-verse-number')
+                    }
                 }));
             }
             
@@ -234,7 +236,6 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                     container.addEventListener('scroll', handleScroll, { passive: true });
                 }
                 
-                initIntersectionObserver();
                 
                 // Perform initial scroll after a short delay to ensure content is rendered
                 setTimeout(performInitialScroll, 100);
@@ -263,55 +264,137 @@ const createVerseNumber = (verse: number, isFavorite: boolean) => `
     </span>
 `;
 
-const createVerseActions = (verse: number) => `
-    <div class="verse-actions hidden overflow-x-auto gap-3 mt-2 -mx-8 px-8 py-2" id="actions-${verse}">
-        <button class="flex flex-col items-center justify-center bg-transparent border-none cursor-pointer transition-all duration-200 min-w-[60px] hover:bg-theme-card/50 rounded-lg p-2 hover:scale-105 active:scale-95" onclick="handleVerseAction('favorite', ${verse})">
-            <div class="w-8 h-8 mb-1 text-yellow-400">⭐</div>
-            <div class="text-xs text-theme-text font-medium">Favorito</div>
-        </button>
-        <button class="flex flex-col items-center justify-center bg-transparent border-none cursor-pointer transition-all duration-200 min-w-[60px] hover:bg-theme-card/50 rounded-lg p-2 hover:scale-105 active:scale-95" onclick="handleVerseAction('interlinear', ${verse})">
-            <div class="w-8 h-8 mb-1 text-blue-500">📖</div>
-            <div class="text-xs text-theme-text font-medium">Interlinear</div>
-        </button>
-        <button class="flex flex-col items-center justify-center bg-transparent border-none cursor-pointer transition-all duration-200 min-w-[60px] hover:bg-theme-card/50 rounded-lg p-2 hover:scale-105 active:scale-95" onclick="handleVerseAction('annotate', ${verse})">
-            <div class="w-8 h-8 mb-1 text-green-500">✏️</div>
-            <div class="text-xs text-theme-text font-medium">Anotar</div>
-        </button>
-        <button class="flex flex-col items-center justify-center bg-transparent border-none cursor-pointer transition-all duration-200 min-w-[60px] hover:bg-theme-card/50 rounded-lg p-2 hover:scale-105 active:scale-95" onclick="handleVerseAction('compare', ${verse})">
-            <div class="w-8 h-8 mb-1 text-purple-500">🔄</div>
-            <div class="text-xs text-theme-text font-medium">Comparar</div>
-        </button>
-        <button class="flex flex-col items-center justify-center bg-transparent border-none cursor-pointer transition-all duration-200 min-w-[60px] hover:bg-theme-card/50 rounded-lg p-2 hover:scale-105 active:scale-95" onclick="handleVerseAction('memorize', ${verse})">
-            <div class="w-8 h-8 mb-1 text-pink-500">🧠</div>
-            <div class="text-xs text-theme-text font-medium">Memorizar</div>
-        </button>
-    </div>
-`;
+// Parse verse text with Strong's numbers for clickable words
+// This function converts the DomClickableVerse component logic into a template string
+// that can be used directly in the HTML template for better performance
+const parseVerseTextWithStrongs = (text: string): string => {
+    if (!text || typeof text !== 'string') {
+        return '';
+    }
+
+    try {
+        // More robust regex pattern for Strong's numbers
+        const strongPattern = /<S>(\d+)<\/S>/g;
+        const segments = text.split(strongPattern);
+
+        let result = '';
+        let i = 0;
+
+        while (i < segments.length) {
+            const segment = segments[i];
+
+            // Check if next segment is a Strong's number
+            if (i + 1 < segments.length && /^\d+$/.test(segments[i + 1])) {
+                const strongNumber = segments[i + 1];
+
+                // Process the text segment to find words
+                const words = segment.trim().split(/\s+/).filter(w => w.length > 0);
+
+                if (words.length > 0) {
+                    // All words except the last are non-clickable
+                    for (let j = 0; j < words.length - 1; j++) {
+                        result += cleanWord(words[j]) + ' ';
+                    }
+
+                    // Last word gets the Strong's number and becomes clickable
+                    const lastWord = words[words.length - 1];
+                    if (lastWord) {
+                        const cleanLastWord = cleanWord(lastWord);
+                        result += `<span class="strong-word cursor-pointer bg-white/10 px-1 py-0.5 rounded-md border border-white/10 text-theme-notification hover:opacity-70 transition-opacity" 
+                                     onclick="handleStrongWordClick(event, '${strongNumber}')" 
+                                     onkeydown="handleStrongWordKeydown(event, '${strongNumber}')"
+                                     role="button" 
+                                     tabindex="0"
+                                     aria-label="Strong's number ${strongNumber} for word ${cleanLastWord}"
+                                     data-strong="${strongNumber}">${cleanLastWord}</span> `;
+                    }
+                }
+
+                i += 2; // Skip both the text and the Strong's number
+            } else {
+                // Regular text without Strong's number
+                const words = segment.trim().split(/\s+/).filter(w => w.length > 0);
+                words.forEach(word => {
+                    if (word) {
+                        result += cleanWord(word) + ' ';
+                    }
+                });
+                i++;
+            }
+        }
+
+        return result.trim();
+    } catch (error) {
+        console.error('Error parsing verse text:', error);
+        // Fallback: return plain text
+        return text.replace(/<.*?>|<\/.*?> |<.*?>.*?<\/.*?>|\[.*?\]/gi, "").replace(/\s{2,}/g, " ");
+    }
+};
+
+// Helper function to clean word from punctuation artifacts
+const cleanWord = (word: string): string => {
+    return word.replace(/[<>]/g, '').trim();
+};
+
+// Parse verse text to regular text without Strong's numbers
+const parseVerseTextRegular = (text: string): string => {
+    if (!text || typeof text !== 'string') {
+        return '';
+    }
+
+    try {
+        // Remove Strong's number tags and clean up the text
+        return text
+            .replace(/<S>\d+<\/S>/g, '') // Remove Strong's number tags
+            .replace(/\s{2,}/g, ' ') // Replace multiple spaces with single space
+            .trim();
+    } catch (error) {
+        console.error('Error parsing regular verse text:', error);
+        // Fallback: return plain text
+        return text.replace(/<.*?>|<\/.*?> |<.*?>.*?<\/.*?>|\[.*?\]/gi, "").replace(/\s{2,}/g, " ");
+    }
+};
+
 
 const createInterlinearVerse = (item: IBookVerse, verseKey: string) => `
-    <div class="p-4 border border-theme-border rounded-lg my-2 bg-theme-background shadow-sm hover:shadow-md transition-shadow duration-200" data-verse-number="${item.verse
-    }" data-verse-key="${verseKey}">
+    <div class="p-4 border border-theme-border rounded-lg my-2 bg-theme-background shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer" 
+         data-verse-number="${item.verse}" 
+         data-verse-key="${verseKey}"
+         data-verse-mode="regular"
+         onclick="toggleVerseMode(this, '${verseKey}')">
         <div class="text-theme-notification font-bold mr-2 inline-flex items-center mb-2 text-sm bg-theme-notification/10 px-2 py-1 rounded-full">
             ${item.is_favorite ? '<span class="text-yellow-400 mr-1 text-xs">★</span>' : ""}
             ${item.verse}
         </div>
-        <div class="text-theme-text leading-relaxed">${item.text}</div>
+        <div class="text-theme-text leading-relaxed verse-content">
+            ${parseVerseTextRegular(item.text)}
+        </div>
+        <div class="text-theme-text leading-relaxed verse-strong-content hidden">
+            ${parseVerseTextWithStrongs(item.text)}
+        </div>
+        <div class="text-xs text-theme-text/50 mt-2 opacity-0 hover:opacity-100 transition-opacity pointer-events-none">
+            Click to toggle Strong's numbers
+        </div>
     </div>
 `;
 
 const createRegularVerse = (item: IBookVerse, verseKey: string) => `
-    <div class="py-2 px-8 my-0.5 cursor-pointer relative overflow-hidden w-full transition-colors duration-200 hover:bg-theme-notification/20 active:bg-theme-notification/30" 
+    <div class="py-2 px-8 my-0.5 relative overflow-hidden w-full cursor-pointer hover:bg-theme-background/50 transition-colors duration-200" 
          data-verse-number="${item.verse}" 
          data-verse-key="${verseKey}"
          data-verse-data='${JSON.stringify(item)}'
-         onclick="handleVerseClick(this, ${item.verse})"
-         oncontextmenu="handleVerseLongPress(this, event)">
+         data-verse-mode="regular"
+         onclick="toggleVerseMode(this, '${verseKey}')">
         ${createVerseNumber(item.verse, item.is_favorite)}
-        <span class="text-theme-text cursor-pointer select-text" onclick="handleVerseTextClick(event, ${item.verse
-    })">
-            ${getVerseTextRaw(item.text)}
+        <span class="text-theme-text select-text verse-content">
+            ${parseVerseTextRegular(item.text)}
         </span>
-        ${createVerseActions(item.verse)}
+        <span class="text-theme-text select-text verse-strong-content hidden">
+            ${parseVerseTextWithStrongs(item.text)}
+        </span>
+        <div class="absolute top-2 right-2 text-xs text-theme-text/50 opacity-0 hover:opacity-100 transition-opacity pointer-events-none">
+            Click to toggle Strong's
+        </div>
     </div>
 `;
 
