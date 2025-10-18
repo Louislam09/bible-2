@@ -1,5 +1,6 @@
 import { IBookVerse } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { tailwindCss } from "./tailwindCss";
 
 const bibleChapterStyles = (
     colors: any,
@@ -200,15 +201,29 @@ const createHtmlHead = (
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Capítulo ${chapterNumber}</title>
-        ${bibleChapterStyles(colors, containerWidth, showReadingTime, fontSize)}
+        <!-- Tailwind CSS (Offline) -->
+         <style>
+             /* Theme CSS Variables */
+             :root {
+                 --color-primary: ${colors.primary || '#3b82f6'};
+                 --color-background: ${colors.background || '#ffffff'};
+                 --color-card: ${colors.card || '#f8fafc'};
+                 --color-text: ${colors.text || '#1f2937'};
+                 --color-border: ${colors.border || '#e5e7eb'};
+                 --color-notification: ${colors.notification || '#ef4444'};
+             }
+             
+             ${tailwindCss}
+         </style>
+         ${bibleChapterStyles(colors, containerWidth, showReadingTime, fontSize)}
     </head>
 `;
 
 const createHtmlBody = (content: string, initialScrollIndex: number = 0) => `
     <body>
-        <div class="container" id="chapterContainer">
-            ${content}
-        </div>
+    <div class="container" id="chapterContainer">
+         ${content}
+    </div>
         
         <script>
             let lastScrollTime = 0;
