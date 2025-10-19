@@ -164,6 +164,8 @@ const WebViewChapter = React.memo(
         }}
         containerStyle={{
           marginTop: safeTop + 10,
+          // paddingBottom: insets.bottom + 40,
+          backgroundColor: "red",
         }}
         source={{
           html: bibleChapterHtmlTemplate({

@@ -11,7 +11,7 @@ const bibleChapterStyles = (
          <style>
             /* Custom styles that can't be replaced with Tailwind */
             body {
-                font-family: 'Georgia', 'Times New Roman', serif;
+                font-family: 'Quicksand', 'Noto Sans Hebrew', 'Georgia', 'Times New Roman', serif;
                 font-size: ${fontSize}px;
                 line-height: 1.5;
                 letter-spacing: 2px;
@@ -162,6 +162,8 @@ const createHtmlHead = (
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Capítulo ${chapterNumber}</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@100..900&display=swap">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400&display=swap">
         <!-- Lucide Icons -->
         <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
         <!-- Tailwind CSS (Offline) -->
@@ -184,13 +186,13 @@ const createHtmlHead = (
 
 const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapterNumber: number = 1) => `
     <body class="p-0 m-0 text-theme-text bg-theme-background select-none overflow-x-hidden">
-    <div class="container relative h-screen overflow-y-auto pt-[70px] pb-[100px]" id="chapterContainer">
+    <div class="container relative h-screen overflow-y-auto pt-[70px] pb-[100px] " id="chapterContainer">
         <!-- Chapter Header -->
         <div class="sticky top-0 z-10 backdrop-blur-sm px-4 pt-3 my-2">
             <h1 class="text-2xl font-bold text-theme-text text-center">Capítulo ${chapterNumber}</h1>
         </div>
         ${content}
-    </div>
+        </div>
         
         <script>
             let lastScrollTime = 0;
@@ -552,8 +554,6 @@ const parseVerseTextRegular = (text: string): string => {
 };
 
 
-
-
 const createRegularVerse = (item: IBookVerse, verseKey: string) => `
     <div class="verse-container" data-verse-key="${verseKey}">
         <!-- Verse content -->
@@ -638,7 +638,7 @@ const renderVerses = (
             const verseKey = `${item.book_number}-${item.chapter}-${item.verse}`;
             return createRegularVerse(item, verseKey);
         })
-        .join("");
+        .join("") + "<br />".repeat(7);
 };
 
 type TBibleChapterHtmlTemplateProps = {
