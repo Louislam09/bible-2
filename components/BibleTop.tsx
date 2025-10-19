@@ -1,46 +1,36 @@
-import ProgressBar from "@/components/home/footer/ProgressBar";
 import BibleHeader from "@/components/home/header/BibleHeader";
 import Icon from "@/components/Icon";
 import { getBookDetail } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { useMemorization } from "@/context/MemorizationContext";
 import { useMyTheme } from "@/context/ThemeContext";
+import { audioState$ } from "@/hooks/useAudioPlayer";
 import useChangeBookOrChapter from "@/hooks/useChangeBookOrChapter";
+import { useHaptics } from "@/hooks/useHaptics";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
-import { EBibleVersions, IBookVerse } from "@/types";
+import { tourState$ } from "@/state/tourState";
+import { EBibleVersions, IBookVerse, IFavoriteVerse, Screens } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { getStrongValue, WordTagPair } from "@/utils/extractVersesInfo";
-import getMemorySizeInGB from "@/utils/getDeviceRamValue";
+import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { use$ } from "@legendapp/state/react";
-import React, {
-  FC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useRouter } from "expo-router";
+import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Animated,
   Dimensions,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
 import Chapter from "./home/content/Chapter";
+import WebViewChapter from "./home/content/WebViewChapter";
 import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
 import { Text, View } from "./Themed";
-import DomChapter from "./dom-components/DomChapter";
-import { useHaptics } from "@/hooks/useHaptics";
-import WebView from "react-native-webview";
-import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
-import { bibleChapterHtmlTemplate } from "@/constants/HtmlTemplate";
-import WebViewChapter from "./home/content/WebViewChapter";
-import ExpandableChooseReference from "./animations/expandable-choose-reference";
-import { tourState$ } from "@/state/tourState";
-import { audioState$ } from "@/hooks/useAudioPlayer";
 
 interface BibleTopProps {
   height: Animated.Value;
@@ -50,7 +40,10 @@ interface BibleTopProps {
 const BibleTop: FC<BibleTopProps> = (props) => {
   const { theme } = useMyTheme();
   const haptics = useHaptics();
-  const { orientation, selectBibleVersion } = useBibleContext();
+  const router = useRouter();
+  const { orientation, selectBibleVersion, toggleFavoriteVerse } =
+    useBibleContext();
+  const { addVerse } = useMemorization();
   const isPortrait = orientation === "PORTRAIT";
   const isDataLoading = use$(() => bibleState$.isDataLoading.top.get());
   const verses = bibleState$.bibleData.topVerses.get() ?? [];
@@ -245,6 +238,99 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     bibleState$.clearSelection();
   }, []);
 
+  const onCopy = useCallback(async (item: IBookVerse) => {
+    const highlightedVerses = Array.from(
+      bibleState$.selectedVerses.get().values()
+    ).sort((a, b) => a.verse - b.verse);
+    const value = highlightedVerses.length > 0 ? highlightedVerses : [item];
+    await copyToClipboard(value);
+    bibleState$.clearSelection();
+  }, []);
+
+  const onExplain = useCallback(
+    (item: IBookVerse) => {
+      const googleAIKey = storedData$.googleAIKey.get();
+      if (!googleAIKey) {
+        Alert.alert("Aviso", "No se ha configurado la API key de Google AI", [
+          { text: "Cancelar", style: "cancel" },
+          {
+            text: "Configurar",
+            onPress: () => {
+              router.push(Screens.AISetup);
+            },
+          },
+        ]);
+        return;
+      }
+      const verseText = getVerseTextRaw(item.text);
+      const reference = `${getBookDetail(item?.book_number).longName} ${
+        item.chapter
+      }:${item.verse}`;
+
+      bibleState$.handleVerseWithAiAnimation(item.verse);
+      bibleState$.handleVerseToExplain({ text: verseText, reference });
+      modalState$.closeExplainVerseBottomSheet();
+      bibleState$.clearSelection();
+    },
+    [router]
+  );
+
+  const onImage = useCallback(
+    (item: IBookVerse) => {
+      const verseText = getVerseTextRaw(item.text);
+      const reference = `${getBookDetail(item?.book_number).longName} ${
+        item.chapter
+      }:${item.verse}`;
+      bibleState$.handleSelectVerseForNote(verseText);
+      router.push({
+        pathname: "/quoteMaker",
+        params: { text: verseText, reference },
+      });
+    },
+    [router]
+  );
+
+  const onQuote = useCallback(
+    (item: IBookVerse) => {
+      const verseText = getVerseTextRaw(item.text);
+      const reference = `${getBookDetail(item?.book_number).longName} ${
+        item.chapter
+      }:${item.verse}`;
+      bibleState$.handleSelectVerseForNote(verseText);
+      router.push({
+        pathname: "/quoteDom",
+        params: { text: verseText, reference },
+      });
+    },
+    [router]
+  );
+
+  const onVerseLongPress = useCallback((item: IBookVerse) => {
+    bibleState$.handleLongPressVerse(item);
+    haptics.impact.medium();
+  }, []);
+
+  const onMemorizeVerse = useCallback(
+    (verse: string, version: string) => {
+      addVerse(verse, version);
+      bibleState$.clearSelection();
+    },
+    [addVerse]
+  );
+
+  const onFavoriteVerse = useCallback(
+    async ({ bookNumber, chapter, verse, isFav }: IFavoriteVerse) => {
+      await toggleFavoriteVerse({
+        bookNumber,
+        chapter,
+        verse,
+        isFav,
+      });
+      bibleState$.clearSelection();
+    },
+    [toggleFavoriteVerse]
+  );
+
   const onSelectBibleVersion = (version: string) => {
     bibleState$.clearSelection();
     selectBibleVersion(version);
@@ -381,6 +467,13 @@ const BibleTop: FC<BibleTopProps> = (props) => {
               onAnotar,
               onComparar,
               onWordClicked,
+              onCopy,
+              onExplain,
+              onImage,
+              onQuote,
+              onVerseLongPress,
+              onMemorizeVerse,
+              onFavoriteVerse,
             }}
           />
         ) : (

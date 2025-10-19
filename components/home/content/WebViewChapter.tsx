@@ -30,6 +30,11 @@ interface WebViewChapterProps {
     verse,
     isFav,
   }: IFavoriteVerse) => Promise<void>;
+  onCopy?: (item: IBookVerse) => void;
+  onExplain?: (item: IBookVerse) => void;
+  onImage?: (item: IBookVerse) => void;
+  onQuote?: (item: IBookVerse) => void;
+  onVerseLongPress?: (item: IBookVerse) => void;
 }
 
 const WebViewChapter = React.memo(
@@ -50,6 +55,11 @@ const WebViewChapter = React.memo(
     onComparar,
     onMemorizeVerse,
     onFavoriteVerse,
+    onCopy,
+    onExplain,
+    onImage,
+    onQuote,
+    onVerseLongPress,
   }: WebViewChapterProps) => {
     const webViewRef = useRef<WebView>(null);
     const fontSize = use$(() => storedData$.fontSize.get());
@@ -58,7 +68,7 @@ const WebViewChapter = React.memo(
       (event: any) => {
         try {
           const message = JSON.parse(event.nativeEvent.data);
-          console.log("message-" + message.type, message.data);
+          console.log("message-" + message.type);
 
           switch (message.type) {
             case "scroll":
@@ -77,20 +87,30 @@ const WebViewChapter = React.memo(
                 onWordClicked(message.code, message.item);
               }
               break;
+            case "verseLongPress":
+              // Handle verse long press - could trigger haptic feedback or other UI updates
+              onVerseLongPress?.(message.data.item);
+              break;
             case "verseAction":
-              const { action, item } = message;
+              const { action, item } = message.data;
               switch (action) {
+                case "copy":
+                  onCopy?.(item);
+                  break;
                 case "interlinear":
                   onInterlinear?.(item);
                   break;
-                case "annotate":
+                case "explain":
+                  onExplain?.(item);
+                  break;
+                case "image":
+                  onImage?.(item);
+                  break;
+                case "quote":
+                  onQuote?.(item);
+                  break;
+                case "note":
                   onAnotar?.(item);
-                  break;
-                case "compare":
-                  onComparar?.(item);
-                  break;
-                case "memorize":
-                  onMemorizeVerse?.(item.text, "version");
                   break;
                 case "favorite":
                   onFavoriteVerse?.({
@@ -99,6 +119,12 @@ const WebViewChapter = React.memo(
                     verse: item.verse,
                     isFav: !item.is_favorite,
                   });
+                  break;
+                case "memorize":
+                  onMemorizeVerse?.(item.text, "version");
+                  break;
+                case "compare":
+                  onComparar?.(item);
                   break;
               }
               break;
@@ -116,6 +142,11 @@ const WebViewChapter = React.memo(
         onComparar,
         onMemorizeVerse,
         onFavoriteVerse,
+        onCopy,
+        onExplain,
+        onImage,
+        onQuote,
+        onVerseLongPress,
       ]
     );
     const insets = useSafeAreaInsets();

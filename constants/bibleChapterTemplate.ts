@@ -75,6 +75,76 @@ const bibleChapterStyles = (
             .container::-webkit-scrollbar-thumb:hover {
                 background: ${colors.notification}60;
             }
+            
+            /* Action buttons styling */
+            .verse-actions {
+                background: rgba(0, 0, 0, 0.1) !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+                padding: 8px 12px !important;
+                margin-top: 8px !important;
+                display: none !important;
+                flex-direction: row !important;
+                justify-content: flex-start !important;
+                align-items: center !important;
+                gap: 16px !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                white-space: nowrap !important;
+                scrollbar-width: thin !important;
+                scrollbar-color: rgba(255, 255, 255, 0.3) transparent !important;
+            }
+            
+            .verse-actions::-webkit-scrollbar {
+                height: 4px !important;
+            }
+            
+            .verse-actions::-webkit-scrollbar-track {
+                background: transparent !important;
+            }
+            
+            .verse-actions::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.3) !important;
+                border-radius: 2px !important;
+            }
+            
+            .verse-actions::-webkit-scrollbar-thumb:hover {
+                background: rgba(255, 255, 255, 0.5) !important;
+            }
+            
+            .action-btn {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                background: transparent !important;
+                border: none !important;
+                cursor: pointer !important;
+                transition: all 0.2s ease !important;
+                padding: 4px 8px !important;
+                min-width: 50px !important;
+                flex-shrink: 0 !important;
+                color: rgba(255, 255, 255, 0.8) !important;
+            }
+            
+            .action-btn:hover {
+                color: rgba(255, 255, 255, 1) !important;
+                transform: scale(1.05) !important;
+            }
+            
+            .action-btn:active {
+                transform: scale(0.95) !important;
+            }
+            
+            .action-icon {
+                font-size: 20px !important;
+                margin-bottom: 4px !important;
+            }
+            
+            .action-label {
+                font-size: 10px !important;
+                text-align: center !important;
+                line-height: 1.2 !important;
+            }
         </style>
 `;
 
@@ -90,6 +160,8 @@ const createHtmlHead = (
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Capítulo ${chapterNumber}</title>
+        <!-- Lucide Icons -->
+        <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
         <!-- Tailwind CSS (Offline) -->
          <style>
              /* Theme CSS Variables */
@@ -238,6 +310,122 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 }));
             }
             
+            // Track selected verses in WebView (similar to React Native state)
+            let selectedVerses = new Map();
+            
+            // Handle verse long press to show actions
+            function handleVerseLongPress(verseElement, verseKey) {
+                const verseData = JSON.parse(verseElement.dataset.verseData || '{}');
+                const verseNumber = parseInt(verseElement.getAttribute('data-verse-number'));
+                
+                // Toggle verse in selectedVerses Map (same logic as React Native)
+                if (selectedVerses.has(verseNumber)) {
+                    selectedVerses.delete(verseNumber);
+                } else {
+                    selectedVerses.set(verseNumber, verseData);
+                }
+                
+                // Update action button visibility
+                updateActionButtonVisibility(verseNumber, selectedVerses.has(verseNumber));
+                
+                // Send long press message to React Native for other purposes
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                    type: 'verseLongPress',
+                    data: { 
+                        verseKey: verseKey,
+                        verseNumber: verseNumber,
+                        item: verseData
+                    }
+                }));
+            }
+            
+            // Function to update action button visibility based on state
+            function updateActionButtonVisibility(verseNumber, isVisible) {
+                const verseElement = document.querySelector(\`[data-verse-number="\${verseNumber}"]\`);
+                if (!verseElement) return;
+                
+                const actionButtons = verseElement.querySelector('.verse-actions');
+                if (!actionButtons) return;
+                
+                if (isVisible) {
+                    actionButtons.style.setProperty('display', 'flex', 'important');
+                    actionButtons.style.flexDirection = 'row';
+                    actionButtons.style.justifyContent = 'flex-start';
+                    actionButtons.style.alignItems = 'center';
+                    actionButtons.style.gap = '16px';
+                    actionButtons.style.flexWrap = 'nowrap';
+                    actionButtons.style.padding = '8px 12px';
+                    actionButtons.style.marginTop = '8px';
+                    actionButtons.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+                    actionButtons.style.borderTop = '1px solid rgba(255, 255, 255, 0.1)';
+                    actionButtons.style.overflowX = 'auto';
+                    actionButtons.style.overflowY = 'hidden';
+                    actionButtons.style.whiteSpace = 'nowrap';
+                    
+                    // Initialize Lucide icons
+                    if (typeof lucide !== 'undefined') {
+                        lucide.createIcons();
+                    }
+                } else {
+                    actionButtons.style.setProperty('display', 'none', 'important');
+                }
+            }
+            
+            // Handle verse action clicks
+            function handleVerseAction(action, verseElement, verseKey) {
+                const verseData = JSON.parse(verseElement.dataset.verseData || '{}');
+                const verseNumber = parseInt(verseElement.getAttribute('data-verse-number'));
+                
+                // Hide action buttons for this verse after action is clicked
+                selectedVerses.delete(verseNumber);
+                updateActionButtonVisibility(verseNumber, false);
+                
+                // Send action message to React Native
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                    type: 'verseAction',
+                    data: { 
+                        action: action,
+                        verseKey: verseKey,
+                        verseNumber: verseNumber,
+                        item: verseData
+                    }
+                }));
+            }
+            
+            // Handle verse context menu (right-click or long press)
+            function handleVerseContextMenu(verseElement, verseKey, event) {
+                event.preventDefault(); // Prevent default context menu
+                handleVerseLongPress(verseElement, verseKey);
+            }
+            
+            // Function to hide all action buttons (can be called from outside)
+            function hideAllActionButtons() {
+                selectedVerses.clear();
+                document.querySelectorAll('.verse-actions').forEach(btn => {
+                    btn.style.setProperty('display', 'none', 'important');
+                });
+            }
+            
+            // Handle state updates from React Native
+            function handleStateUpdate(message) {
+                if (message.type === 'updateActionVisibility') {
+                    const { verseNumber, isVisible } = message.data;
+                    updateActionButtonVisibility(verseNumber, isVisible);
+                } else if (message.type === 'clearAllActions') {
+                    hideAllActionButtons();
+                }
+            }
+            
+            // Function to check if verse should show actions (similar to verseShowAction in Verse.tsx)
+            function shouldShowActions(verseNumber) {
+                return selectedVerses.has(verseNumber);
+            }
+            
+            // Make functions available globally for React Native to call
+            window.updateActionButtonVisibility = updateActionButtonVisibility;
+            window.hideAllActionButtons = hideAllActionButtons;
+            window.shouldShowActions = shouldShowActions;
+            
             // Initialize when DOM is loaded
             document.addEventListener('DOMContentLoaded', function() {
                 const container = document.getElementById('chapterContainer');
@@ -245,6 +433,10 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                     container.addEventListener('scroll', handleScroll, { passive: true });
                 }
                 
+                // Initialize Lucide icons
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
                 
                 // Perform initial scroll after a short delay to ensure content is rendered
                 setTimeout(performInitialScroll, 100);
@@ -365,36 +557,17 @@ const parseVerseTextRegular = (text: string): string => {
 };
 
 
-const createInterlinearVerse = (item: IBookVerse, verseKey: string) => `
-    <div class="p-4 border border-theme-border rounded-lg my-2 bg-theme-background shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer" 
-         data-verse-number="${item.verse}" 
-         data-verse-key="${verseKey}"
-         data-verse-data='${JSON.stringify(item)}'
-         data-verse-mode="regular"
-         onclick="toggleVerseMode(this, '${verseKey}')">
-        <div class="text-theme-notification font-bold mr-2 inline-flex items-center mb-2 text-sm bg-theme-notification/10 px-2 py-1 rounded-full">
-            ${item.is_favorite ? '<span class="text-yellow-400 mr-1 text-xs">★</span>' : ""}
-            ${item.verse}
-        </div>
-        <div class="text-theme-text leading-relaxed verse-content">
-            ${parseVerseTextRegular(item.text)}
-        </div>
-        <div class="text-theme-text leading-relaxed verse-strong-content hidden">
-            ${parseVerseTextWithStrongs(item.text)}
-        </div>
-        <div class="text-xs text-theme-text/50 mt-2 opacity-0 hover:opacity-100 transition-opacity pointer-events-none">
-            Click to toggle Strong's numbers
-        </div>
-    </div>
-`;
+
 
 const createRegularVerse = (item: IBookVerse, verseKey: string) => `
-    <div class="py-2 px-8 my-0.5 relative overflow-hidden w-full cursor-pointer transition-colors duration-200" 
+    <div class="py-2 px-8 my-0.5 overflow-hidden w-full cursor-pointer transition-colors duration-200" 
          data-verse-number="${item.verse}" 
          data-verse-key="${verseKey}"
          data-verse-data='${JSON.stringify(item)}'
          data-verse-mode="regular"
-         onclick="toggleVerseMode(this, '${verseKey}')">
+         onclick="toggleVerseMode(this, '${verseKey}')"
+         oncontextmenu="handleVerseContextMenu(this, '${verseKey}', event)"
+         style="position: relative; z-index: 1;">
         ${createVerseNumber(item.verse, item.is_favorite)}
         <span class="text-theme-text select-text verse-content">
             ${parseVerseTextRegular(item.text)}
@@ -402,6 +575,46 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
         <span class="text-theme-text select-text verse-strong-content hidden">
             ${parseVerseTextWithStrongs(item.text)}
         </span>
+        
+        <!-- Action buttons (hidden by default, shown on long press) -->
+        <div class="verse-actions" style="display: none;">
+            <button class="action-btn" onclick="handleVerseAction('copy', this.closest('[data-verse-key]'), '${verseKey}')">
+                <i data-lucide="copy" class="action-icon"></i>
+                <div class="action-label">Copiar</div>
+            </button>
+            <button class="action-btn" onclick="handleVerseAction('interlinear', this.closest('[data-verse-key]'), '${verseKey}')">
+                <i data-lucide="book-open" class="action-icon"></i>
+                <div class="action-label">Interlinear</div>
+            </button>
+            <button class="action-btn" onclick="handleVerseAction('explain', this.closest('[data-verse-key]'), '${verseKey}')">
+                <i data-lucide="sparkles" class="action-icon"></i>
+                <div class="action-label">Explicar</div>
+            </button>
+            <button class="action-btn" onclick="handleVerseAction('image', this.closest('[data-verse-key]'), '${verseKey}')">
+                <i data-lucide="image" class="action-icon"></i>
+                <div class="action-label">Imagen</div>
+            </button>
+            <button class="action-btn" onclick="handleVerseAction('quote', this.closest('[data-verse-key]'), '${verseKey}')">
+                <i data-lucide="quote" class="action-icon"></i>
+                <div class="action-label">Cita</div>
+            </button>
+            <button class="action-btn" onclick="handleVerseAction('note', this.closest('[data-verse-key]'), '${verseKey}')">
+                <i data-lucide="pen-tool" class="action-icon"></i>
+                <div class="action-label">Anotar</div>
+            </button>
+            <button class="action-btn" onclick="handleVerseAction('favorite', this.closest('[data-verse-key]'), '${verseKey}')">
+                <i data-lucide="${item.is_favorite ? 'star' : 'star-off'}" class="action-icon"></i>
+                <div class="action-label">Favorito</div>
+            </button>
+            <button class="action-btn" onclick="handleVerseAction('memorize', this.closest('[data-verse-key]'), '${verseKey}')">
+                <i data-lucide="brain" class="action-icon"></i>
+                <div class="action-label">Memorizar</div>
+            </button>
+            <button class="action-btn" onclick="handleVerseAction('compare', this.closest('[data-verse-key]'), '${verseKey}')">
+                <i data-lucide="git-compare" class="action-icon"></i>
+                <div class="action-label">Comparar</div>
+            </button>
+        </div>
     </div>
 `;
 
@@ -425,11 +638,6 @@ const renderVerses = (
     return data
         .map((item) => {
             const verseKey = `${item.book_number}-${item.chapter}-${item.verse}`;
-
-            if (isInterlinear && !isSplit) {
-                return createInterlinearVerse(item, verseKey);
-            }
-
             return createRegularVerse(item, verseKey);
         })
         .join("");
