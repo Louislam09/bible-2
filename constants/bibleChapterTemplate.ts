@@ -588,16 +588,13 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
                 <i data-lucide="book-open" class="action-icon" style="color: #f79c67;"></i>
                 <div class="action-label">Interlinear</div>
             </button>
-            <button class="action-btn" onclick="handleVerseAction('explain', '${verseKey}')">
-                <i data-lucide="sparkles" class="action-icon" style="color: #f1c40f;"></i>
-                <div class="action-label">Explicar</div>
-            </button>
+         
             <button class="action-btn" onclick="handleVerseAction('quote', '${verseKey}')">
                 <i data-lucide="quote" class="action-icon" style="color: #CDAA7D;"></i>
                 <div class="action-label">Cita</div>
             </button>
             <button class="action-btn" onclick="handleVerseAction('note', '${verseKey}')">
-                <i data-lucide="pen-tool" class="action-icon" style="color: var(--color-notification);"></i>
+                <i data-lucide="notebook-pen" class="action-icon" style="color: var(--color-notification);"></i>
                 <div class="action-label">Anotar</div>
             </button>
             <button class="action-btn" onclick="handleVerseAction('favorite', '${verseKey}')">
