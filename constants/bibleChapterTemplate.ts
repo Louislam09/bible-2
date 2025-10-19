@@ -86,7 +86,7 @@ const bibleChapterStyles = (
                 flex-direction: row !important;
                 justify-content: flex-start !important;
                 align-items: center !important;
-                gap: 16px !important;
+                gap: 10px !important;
                 overflow-x: auto !important;
                 overflow-y: hidden !important;
                 white-space: nowrap !important;
@@ -136,12 +136,12 @@ const bibleChapterStyles = (
             }
             
             .action-icon {
-                font-size: 20px !important;
+                font-size: 30px !important;
                 margin-bottom: 4px !important;
             }
             
             .action-label {
-                font-size: 10px !important;
+                font-size: 16px !important;
                 text-align: center !important;
                 line-height: 1.2 !important;
             }
@@ -349,18 +349,6 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 
                 if (isVisible) {
                     actionButtons.style.setProperty('display', 'flex', 'important');
-                    actionButtons.style.flexDirection = 'row';
-                    actionButtons.style.justifyContent = 'flex-start';
-                    actionButtons.style.alignItems = 'center';
-                    actionButtons.style.gap = '16px';
-                    actionButtons.style.flexWrap = 'nowrap';
-                    actionButtons.style.padding = '8px 12px';
-                    actionButtons.style.marginTop = '8px';
-                    actionButtons.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
-                    actionButtons.style.borderTop = '1px solid rgba(255, 255, 255, 0.1)';
-                    actionButtons.style.overflowX = 'auto';
-                    actionButtons.style.overflowY = 'hidden';
-                    actionButtons.style.whiteSpace = 'nowrap';
                     
                     // Initialize Lucide icons
                     if (typeof lucide !== 'undefined') {
@@ -579,35 +567,39 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
         <!-- Action buttons (hidden by default, shown on long press) -->
         <div class="verse-actions" style="display: none;">
             <button class="action-btn" onclick="handleVerseAction('copy', this.closest('[data-verse-key]'), '${verseKey}')">
-                <i data-lucide="copy" class="action-icon"></i>
+                <i data-lucide="copy" class="action-icon" style="color: rgba(255, 255, 255, 0.8);"></i>
                 <div class="action-label">Copiar</div>
             </button>
-              <button class="action-btn" onclick="handleVerseAction('image', this.closest('[data-verse-key]'), '${verseKey}')">
-                <i data-lucide="image" class="action-icon"></i>
+            <button class="action-btn" onclick="handleVerseAction('image', this.closest('[data-verse-key]'), '${verseKey}')">
+                <i data-lucide="image" class="action-icon" style="color: #9dcd7d;"></i>
                 <div class="action-label">Imagen</div>
             </button>
             <button class="action-btn" onclick="handleVerseAction('interlinear', this.closest('[data-verse-key]'), '${verseKey}')">
-                <i data-lucide="book-open" class="action-icon"></i>
+                <i data-lucide="book-open" class="action-icon" style="color: #f79c67;"></i>
                 <div class="action-label">Interlinear</div>
             </button>
+            <button class="action-btn" onclick="handleVerseAction('explain', this.closest('[data-verse-key]'), '${verseKey}')">
+                <i data-lucide="sparkles" class="action-icon" style="color: #f1c40f;"></i>
+                <div class="action-label">Explicar</div>
+            </button>
             <button class="action-btn" onclick="handleVerseAction('quote', this.closest('[data-verse-key]'), '${verseKey}')">
-                <i data-lucide="quote" class="action-icon"></i>
+                <i data-lucide="quote" class="action-icon" style="color: #CDAA7D;"></i>
                 <div class="action-label">Cita</div>
             </button>
             <button class="action-btn" onclick="handleVerseAction('note', this.closest('[data-verse-key]'), '${verseKey}')">
-                <i data-lucide="pen-tool" class="action-icon"></i>
+                <i data-lucide="pen-tool" class="action-icon" style="color: var(--color-notification);"></i>
                 <div class="action-label">Anotar</div>
             </button>
             <button class="action-btn" onclick="handleVerseAction('favorite', this.closest('[data-verse-key]'), '${verseKey}')">
-                <i data-lucide="${item.is_favorite ? 'star' : 'star-off'}" class="action-icon"></i>
+                <i data-lucide="${item.is_favorite ? 'star' : 'star-off'}" class="action-icon" style="color: ${item.is_favorite ? 'var(--color-notification)' : '#fedf75'};"></i>
                 <div class="action-label">Favorito</div>
             </button>
             <button class="action-btn" onclick="handleVerseAction('memorize', this.closest('[data-verse-key]'), '${verseKey}')">
-                <i data-lucide="brain" class="action-icon"></i>
+                <i data-lucide="brain" class="action-icon" style="color: #f1abab;"></i>
                 <div class="action-label">Memorizar</div>
             </button>
             <button class="action-btn" onclick="handleVerseAction('compare', this.closest('[data-verse-key]'), '${verseKey}')">
-                <i data-lucide="git-compare" class="action-icon"></i>
+                <i data-lucide="git-compare" class="action-icon" style="color: rgba(255, 255, 255, 0.8);"></i>
                 <div class="action-label">Comparar</div>
             </button>
         </div>
