@@ -1,5 +1,6 @@
 import { bibleChapterHtmlTemplate } from "@/constants/bibleChapterTemplate";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { bibleState$ } from "@/state/bibleState";
 import { IBookVerse, IFavoriteVerse, TTheme } from "@/types";
 import { WordTagPair } from "@/utils/extractVersesInfo";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
@@ -126,6 +127,25 @@ const WebViewChapter = React.memo(
                 case "compare":
                   onComparar?.(item);
                   break;
+              }
+              break;
+            case "verseLinkClick":
+              // Handle verse link clicks from verse titles
+              if (message.data) {
+                const { bookName, chapter, verse } = message.data;
+
+                const isBottom = false;
+                const queryInfo = {
+                  [isBottom ? "bottomSideBook" : "book"]: bookName,
+                  [isBottom ? "bottomSideChapter" : "chapter"]: chapter,
+                  [isBottom ? "bottomSideVerse" : "verse"]: verse,
+                };
+                bibleState$.changeBibleQuery({
+                  ...queryInfo,
+                  shouldFetch: true,
+                  isBibleBottom: isBottom,
+                  isHistory: false,
+                });
               }
               break;
           }

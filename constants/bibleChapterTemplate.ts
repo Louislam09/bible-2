@@ -1,6 +1,7 @@
 import { IBookVerse } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { tailwindCss } from "./tailwindCss";
+import { DB_BOOK_NAMES } from "./BookNames";
 
 const bibleChapterStyles = (
     colors: any,
@@ -418,10 +419,26 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 return selectedVerses.has(verseNumber);
             }
             
+            // Handle verse link clicks (converted from DomVerseTitle.tsx)
+            function handleVerseLinkClick(bookNumber, bookName, chapter, verse, endVerse) {
+                // Send verse link click message to React Native
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                    type: 'verseLinkClick',
+                    data: {
+                        bookNumber: bookNumber,
+                        bookName: bookName,
+                        chapter: chapter,
+                        verse: verse,
+                        endVerse: endVerse
+                    }
+                }));
+            }
+            
             // Make functions available globally for React Native to call
             window.updateActionButtonVisibility = updateActionButtonVisibility;
             window.hideAllActionButtons = hideAllActionButtons;
             window.shouldShowActions = shouldShowActions;
+            window.handleVerseLinkClick = handleVerseLinkClick;
             
             // Initialize when DOM is loaded
             document.addEventListener('DOMContentLoaded', function() {
@@ -453,6 +470,103 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
         </script>
     </body>
 `;
+
+// Verse title rendering function (converted from DomVerseTitle.tsx)
+const createVerseTitle = (subheading: string[], links: string, theme: any) => {
+    if (!subheading || subheading.length === 0 || subheading === null || subheading === undefined) {
+        return '';
+    }
+
+    try {
+        const [subTitle, link] = JSON.parse(subheading as any);
+        const linkVerses = link
+            ? link.split("—").map((linkVerse: any) => extractVersesInfo(linkVerse))
+            : [];
+        const verseLinks = links
+            ? links.split(";").map((linkVerse: any) => extractVersesInfo(linkVerse))
+            : [];
+        const myLinks = links ? verseLinks : linkVerses;
+        // // Check if subTitle is null, undefined, or empty
+        if (!subTitle || subTitle === null || subTitle === undefined || subTitle.trim() === '') {
+            return '';
+        }
+        // const linkVerses = link
+        //     ? link.split("—").map((linkVerse: any) => extractVersesInfo(linkVerse))
+        //     : [];
+        // const verseLinks = links
+        //     ? links.split(";").map((linkVerse: any) => extractVersesInfo(linkVerse))
+        //     : [];
+        // const myLinks = links ? verseLinks : linkVerses;
+
+        const renderLinkItem = (verseInfo: any, index: number) => {
+            const { bookNumber, chapter, verse, endVerse } = verseInfo;
+            const bookName = DB_BOOK_NAMES.find(
+                (x: any) => x.bookNumber === bookNumber
+            )?.longName;
+
+            if (!bookName) return '';
+
+            return `
+                <p class="text-theme-text rounded-lg py-0.5 px-1.5 my-1 bg-theme-notification border border-theme-notification text-sm font-bold w-fit cursor-pointer hover:bg-theme-notification mx-4 transition-colors"
+                   onclick="handleVerseLinkClick(${bookNumber}, '${bookName}', ${chapter}, ${verse}, ${endVerse || 'null'})">
+                    ${bookName} ${chapter}:${verse}${endVerse ? `-${endVerse}` : ''}
+                </p>
+            `;
+        };
+
+        return `
+            <div class="verse-title-container my-4 flex flex-col items-center">
+                <h3 class="text-theme-notification px-4 text-center font-bold text-2xl mb-2">
+                    ${subTitle}
+                    </h3>
+                <div class="flex flex-row gap-3 text-centeritems-center flex-wrap">
+                    ${myLinks.map(renderLinkItem).join('')}
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Error parsing verse title:', error);
+        return '';
+    }
+};
+
+function extractVersesInfo(input: string): any {
+    // Updated regex to match both cases
+    const regex = /<x>(\d+)\s+(\d+):(\d+)(?:-(\d+))?<\/x>/;
+    const match = input.match(regex);
+
+    if (match) {
+        const [, book, chapter, startVerse, endVerse] = match;
+        return {
+            bookNumber: parseInt(book, 10),
+            chapter: parseInt(chapter, 10),
+            verse: parseInt(startVerse, 10),
+            endVerse: endVerse ? parseInt(endVerse, 10) : "", // Handle optional end verse
+        };
+    } else {
+        return {
+            bookNumber: "",
+            chapter: "",
+            verse: "",
+            endVerse: "",
+        };
+    }
+}
+
+// Helper function to extract verse info (simplified version)
+// const extractVersesInfo = (linkVerse: string) => {
+//     // Simple regex to extract book, chapter, verse info
+//     const match = linkVerse.match(/(\d+)\s+(\d+):(\d+)(?:-(\d+))?/);
+//     if (match) {
+//         return {
+//             bookNumber: parseInt(match[1]),
+//             chapter: parseInt(match[2]),
+//             verse: parseInt(match[3]),
+//             endVerse: match[4] ? parseInt(match[4]) : null
+//         };
+//     }
+//     return { bookNumber: 0, chapter: 0, verse: 0, endVerse: null };
+// };
 
 // Verse rendering functions
 const createVerseNumber = (verse: number, isFavorite: boolean) => `
@@ -556,6 +670,7 @@ const parseVerseTextRegular = (text: string): string => {
 
 const createRegularVerse = (item: IBookVerse, verseKey: string) => `
     <div class="verse-container" data-verse-key="${verseKey}">
+        ${item.subheading && item.subheading !== null && item.subheading !== undefined ? createVerseTitle(item.subheading, '', null) : ''}
         <!-- Verse content -->
         <div class="py-2 px-8 my-0.5 overflow-hidden w-full cursor-pointer transition-colors duration-200" 
              data-verse-number="${item.verse}" 
