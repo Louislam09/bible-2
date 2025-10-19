@@ -17,7 +17,7 @@ import React, {
 } from "react";
 import { useBibleContext } from "./BibleContext";
 
-interface BibleChapterContextProps { }
+interface BibleChapterContextProps {}
 
 const BibleChapterContext = createContext<BibleChapterContextProps>({});
 
@@ -49,15 +49,19 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     const targetVerse = isBibleBottom ? bibleQuery.bottomSideVerse : verse;
     const currentBook = DB_BOOK_NAMES.find((x) => x.longName === targetBook)!;
 
-    const isInterlinear = [EBibleVersions.INTERLINEAR, EBibleVersions.GREEK].includes(currentBibleVersion as EBibleVersions);
+    const isInterlinear = [
+      EBibleVersions.INTERLINEAR,
+      EBibleVersions.GREEK,
+    ].includes(currentBibleVersion as EBibleVersions);
     const queryKey = isInterlinear ? EBibleVersions.BIBLE : currentBibleVersion;
-    const query = QUERY_BY_DB[queryKey] || QUERY_BY_DB['OTHERS'];
+    const query = QUERY_BY_DB[queryKey] || QUERY_BY_DB["OTHERS"];
     const NT_BOOK_NUMBER = 470;
     const isNewCovenant = currentBook.bookNumber >= NT_BOOK_NUMBER;
-    const { primaryDB, baseDB } = getBibleServices({ isNewCovenant })
-    if (!primaryDB) return
+    const { primaryDB, baseDB } = getBibleServices({ isNewCovenant });
+    if (!primaryDB) return;
     const dbname = primaryDB.database?.databasePath.split("/").pop();
-    const baseDbname = baseDB?.database?.databasePath.split("/").pop() || "No base db";
+    const baseDbname =
+      baseDB?.database?.databasePath.split("/").pop() || "No base db";
 
     try {
       let verses: IBookVerse[] = await primaryDB.executeSql<IBookVerse>(
@@ -66,10 +70,11 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
         "verses"
       );
 
-      let interlinearVerses: IBookVerse[] = []
+      let interlinearVerses: IBookVerse[] = [];
 
       if (baseDB) {
-        const baseQuery = QUERY_BY_DB[baseDbname.replace(".db", "")] || QUERY_BY_DB['OTHERS'];
+        const baseQuery =
+          QUERY_BY_DB[baseDbname.replace(".db", "")] || QUERY_BY_DB["OTHERS"];
 
         interlinearVerses = await baseDB.executeSql<IBookVerse>(
           baseQuery.GET_VERSES_BY_BOOK_AND_CHAPTER,
@@ -83,7 +88,6 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
           link?.book_number === currentBook?.bookNumber &&
           link?.chapter === targetChapter
       );
-
 
       batch(() => {
         storedData$[`${storageKey}Book`].set(targetBook);
@@ -102,7 +106,7 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
             verse: targetVerse,
             created_at: "",
           });
-        console.log("✅✅✅✅✅✅✅✅✅");
+        console.log("✅");
       });
     } catch (error) {
       console.error("Error fetching Bible data:", error);
@@ -130,10 +134,7 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
     if (!allBibleLoaded) return;
     if (!shouldFetch) return;
     fetchChapter();
-  }, [
-    shouldFetch,
-    allBibleLoaded
-  ]);
+  }, [shouldFetch, allBibleLoaded]);
 
   const contextValue = useMemo(() => ({}), []);
   return (

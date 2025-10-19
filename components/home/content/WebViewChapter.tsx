@@ -1,11 +1,12 @@
+import { View } from "@/components/Themed";
 import { bibleChapterHtmlTemplate } from "@/constants/bibleChapterTemplate";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { bibleState$ } from "@/state/bibleState";
 import { IBookVerse, IFavoriteVerse, TTheme } from "@/types";
 import { WordTagPair } from "@/utils/extractVersesInfo";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
-import { use$ } from "@legendapp/state/react";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import { Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WebView from "react-native-webview";
 
@@ -63,7 +64,7 @@ const WebViewChapter = React.memo(
     onVerseLongPress,
   }: WebViewChapterProps) => {
     const webViewRef = useRef<WebView>(null);
-    const fontSize = use$(() => storedData$.fontSize.get());
+    const [hasLoaded, setHasLoaded] = useState(false);
 
     const handleMessage = useCallback(
       (event: any) => {
@@ -172,41 +173,64 @@ const WebViewChapter = React.memo(
     const insets = useSafeAreaInsets();
     const safeTop = insets.top;
 
+    const htmlChapterTemplate = useMemo(() => {
+      return bibleChapterHtmlTemplate({
+        data,
+        theme,
+        width: Dimensions.get("window").width,
+        isSplit: false,
+        isInterlinear,
+        fontSize: storedData$.fontSize.get(),
+        initialScrollIndex,
+      });
+    }, [data, theme, isInterlinear, initialScrollIndex]);
+
     return (
-      <WebView
-        ref={webViewRef}
-        key={data[0].book_number + data[0].chapter}
-        originWhitelist={["*"]}
-        style={{
-          flex: 1,
-          minWidth: "100%",
-          backgroundColor: "transparent",
-        }}
-        containerStyle={{
-          marginTop: safeTop + 10,
-          // paddingBottom: insets.bottom + 40,
-          backgroundColor: "red",
-        }}
-        source={{
-          html: bibleChapterHtmlTemplate({
-            data,
-            theme,
-            width,
-            isSplit,
-            isInterlinear,
-            fontSize,
-            initialScrollIndex,
-          }),
-        }}
-        scrollEnabled={true}
-        onMessage={handleMessage}
-        onLoadEnd={() => {}}
-        onError={(syntheticEvent) => {
-          const { nativeEvent = {} } = syntheticEvent;
-          console.warn("WebView error: ", nativeEvent);
-        }}
-        {...createOptimizedWebViewProps({}, "static")}
-      />
+      <>
+        {!hasLoaded && (
+          <View
+            style={{
+              backgroundColor: theme.colors.background,
+              flex: 1,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 1000,
+            }}
+          />
+        )}
+        <WebView
+          ref={webViewRef}
+          key={data[0].book_number + data[0].chapter}
+          originWhitelist={["*"]}
+          style={{
+            flex: 1,
+            minWidth: "100%",
+            backgroundColor: "transparent",
+          }}
+          containerStyle={{
+            marginTop: safeTop + 10,
+            backgroundColor: "transparent",
+          }}
+          source={{ html: htmlChapterTemplate }}
+          scrollEnabled={true}
+          onMessage={handleMessage}
+          onLoadStart={() => {
+            console.log("onLoadStart");
+          }}
+          onLoadEnd={() => {
+            console.log("onLoadEnd");
+            setHasLoaded(true);
+          }}
+          onError={(syntheticEvent) => {
+            const { nativeEvent = {} } = syntheticEvent;
+            console.warn("WebView error: ", nativeEvent);
+          }}
+          {...createOptimizedWebViewProps({}, "static")}
+        />
+      </>
     );
   }
 );

@@ -15,6 +15,7 @@ import { EBibleVersions, IBookVerse, IFavoriteVerse, Screens } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { getStrongValue, WordTagPair } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { showToast } from "@/utils/showToast";
 import { use$ } from "@legendapp/state/react";
 import { useRouter } from "expo-router";
 import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
@@ -31,7 +32,6 @@ import WebViewChapter from "./home/content/WebViewChapter";
 import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
 import { Text, View } from "./Themed";
-import { showToast } from "@/utils/showToast";
 
 interface BibleTopProps {
   height: Animated.Value;

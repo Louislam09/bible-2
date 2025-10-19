@@ -203,7 +203,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           ref={tourState$.footerTitleRef.get()}
           style={styles.titleContainer}
           onPress={onPress}
-          onLongPress={onLongFooterTitle}
+          // onLongPress={onLongFooterTitle}
           delayLongPress={200}
         >
           <Text

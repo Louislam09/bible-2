@@ -4,7 +4,7 @@ import { tailwindCss } from "./tailwindCss";
 import { DB_BOOK_NAMES } from "./BookNames";
 
 const bibleChapterStyles = (
-    colors: any,
+    theme: any,
     containerWidth: number,
     showReadingTime: boolean,
     fontSize: number
@@ -69,12 +69,12 @@ const bibleChapterStyles = (
             }
             
             .container::-webkit-scrollbar-thumb {
-                background: ${colors.notification}40;
+                background: ${theme.colors.notification}40;
                 border-radius: 3px;
             }
             
             .container::-webkit-scrollbar-thumb:hover {
-                background: ${colors.notification}60;
+                background: ${theme.colors.notification}60;
             }
             
             /* Action buttons styling */
@@ -154,7 +154,7 @@ const bibleChapterStyles = (
 // HTML document structure functions
 const createHtmlHead = (
     chapterNumber: number,
-    colors: any,
+    theme: any,
     containerWidth: any,
     showReadingTime: boolean,
     fontSize: number
@@ -171,22 +171,33 @@ const createHtmlHead = (
          <style>
              /* Theme CSS Variables */
              :root {
-                 --color-primary: ${colors.primary || '#3b82f6'};
-                 --color-background: ${colors.background || '#ffffff'};
-                 --color-card: ${colors.card || '#f8fafc'};
-                 --color-text: ${colors.text || '#1f2937'};
-                 --color-border: ${colors.border || '#e5e7eb'};
-                 --color-notification: ${colors.notification || '#ef4444'};
+                --data-theme: ${theme.dark ? "dark" : "light"};
+                --theme: ${theme.dark ? "theme-dark" : "theme-light"};
+                 --color-primary: ${theme.colors.primary || '#3b82f6'};
+                 --color-background: ${theme.colors.background || '#ffffff'};
+                 --color-card: ${theme.colors.card || '#f8fafc'};
+                 --color-text: ${theme.colors.text || '#1f2937'};
+                 --color-chip: ${theme.dark ? theme.colors.text + 40 : theme.colors.notification + 80 || '#e5e7eb'};
+                 --color-chip-border: ${theme.colors.text + 80 || '#e5e7eb'};
+                 --color-border: ${theme.colors.border || '#e5e7eb'};
+                 --color-notification: ${theme.colors.notification || '#ef4444'};
              }
              
              ${tailwindCss}
          </style>
-         ${bibleChapterStyles(colors, containerWidth, showReadingTime, fontSize)}
+         ${bibleChapterStyles(theme, containerWidth, showReadingTime, fontSize)}
     </head>
 `;
 
+// Add theme schema as a data attribute for additional styling options
+//  root.setAttribute('data-theme', schema);
+
+// Add a CSS class for the current theme schema
+//  root.classList.remove('theme-light', 'theme-dark');
+//  root.classList.add(`theme-${schema}`);
+
 const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapterNumber: number = 1) => `
-    <body class="p-0 m-0 text-theme-text bg-theme-background select-none overflow-x-hidden">
+    <body data-theme="var(--data-theme)" class="p-0 m-0 text-theme-text bg-theme-background select-none overflow-x-hidden">
     <div class="container relative h-screen overflow-y-auto pt-[70px] pb-[100px] " id="chapterContainer">
         <!-- Chapter Header -->
         <div class="sticky top-0 z-10 backdrop-blur-sm px-4 pt-3 my-2">
@@ -472,7 +483,7 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
 `;
 
 // Verse title rendering function (converted from DomVerseTitle.tsx)
-const createVerseTitle = (subheading: string[], links: string, theme: any) => {
+const createVerseTitle = (subheading: string[], links: string) => {
     if (!subheading || subheading.length === 0 || subheading === null || subheading === undefined) {
         return '';
     }
@@ -490,13 +501,6 @@ const createVerseTitle = (subheading: string[], links: string, theme: any) => {
         if (!subTitle || subTitle === null || subTitle === undefined || subTitle.trim() === '') {
             return '';
         }
-        // const linkVerses = link
-        //     ? link.split("—").map((linkVerse: any) => extractVersesInfo(linkVerse))
-        //     : [];
-        // const verseLinks = links
-        //     ? links.split(";").map((linkVerse: any) => extractVersesInfo(linkVerse))
-        //     : [];
-        // const myLinks = links ? verseLinks : linkVerses;
 
         const renderLinkItem = (verseInfo: any, index: number) => {
             const { bookNumber, chapter, verse, endVerse } = verseInfo;
@@ -505,9 +509,10 @@ const createVerseTitle = (subheading: string[], links: string, theme: any) => {
             )?.longName;
 
             if (!bookName) return '';
+            // text-theme-text rounded-lg py-0.5 px-1.5 my-1 bg-theme-notification border border-theme-notification text-sm font-bold w-fit cursor-pointer hover:bg-theme-notification mx-4 transition-colors
 
             return `
-                <p class="text-theme-text rounded-lg py-0.5 px-1.5 my-1 bg-theme-notification border border-theme-notification text-sm font-bold w-fit cursor-pointer hover:bg-theme-notification mx-4 transition-colors"
+                <p class="text-theme-text rounded-lg py-1 px-1.5 my-1 border border-theme-text text-xs font-bold w-fit cursor-pointer bg-theme-chip transition-colors"
                    onclick="handleVerseLinkClick(${bookNumber}, '${bookName}', ${chapter}, ${verse}, ${endVerse || 'null'})">
                     ${bookName} ${chapter}:${verse}${endVerse ? `-${endVerse}` : ''}
                 </p>
@@ -515,11 +520,11 @@ const createVerseTitle = (subheading: string[], links: string, theme: any) => {
         };
 
         return `
-            <div class="verse-title-container my-4 flex flex-col items-center">
+            <div class="verse-title-container my-1">
                 <h3 class="text-theme-notification px-4 text-center font-bold text-2xl mb-2">
                     ${subTitle}
                     </h3>
-                <div class="flex flex-row gap-3 text-centeritems-center flex-wrap">
+                <div class="flex flex-row gap-3 items-center flex-wrap px-4">
                     ${myLinks.map(renderLinkItem).join('')}
                 </div>
             </div>
@@ -670,7 +675,7 @@ const parseVerseTextRegular = (text: string): string => {
 
 const createRegularVerse = (item: IBookVerse, verseKey: string) => `
     <div class="verse-container" data-verse-key="${verseKey}">
-        ${item.subheading && item.subheading !== null && item.subheading !== undefined ? createVerseTitle(item.subheading, '', null) : ''}
+        ${item.subheading && item.subheading !== null && item.subheading !== undefined ? createVerseTitle(item.subheading, '') : ''}
         <!-- Verse content -->
         <div class="py-2 px-8 my-0.5 overflow-hidden w-full cursor-pointer transition-colors duration-200" 
              data-verse-number="${item.verse}" 
@@ -772,7 +777,6 @@ export const bibleChapterHtmlTemplate = ({
     fontSize,
     initialScrollIndex = 0,
 }: TBibleChapterHtmlTemplateProps) => {
-    const colors = theme?.colors;
     const containerWidth = width || "100%";
     const showReadingTime = !isInterlinear;
     const chapterNumber = data[0]?.chapter || 1;
@@ -785,10 +789,10 @@ export const bibleChapterHtmlTemplate = ({
 
     return `
     <!DOCTYPE html>
-    <html>
+    <html class="var(--theme)">
         ${createHtmlHead(
         chapterNumber,
-        colors,
+        theme,
         containerWidth,
         showReadingTime,
         fontSize || 16

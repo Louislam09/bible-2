@@ -996,6 +996,8 @@ img, video {
 .bg-theme-text { background-color: var(--color-text); }
 .bg-theme-border { background-color: var(--color-border); }
 .bg-theme-notification { background-color: var(--color-notification); }
+.bg-theme-chip { background-color: var(--color-chip); border-color: var(--color-chip-border); }
+
 
 .text-theme-primary { color: var(--color-primary); }
 .text-theme-background { color: var(--color-background); }
