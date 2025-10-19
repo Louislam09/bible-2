@@ -82,6 +82,8 @@ const bibleChapterStyles = (
                 border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
                 padding: 8px 12px !important;
                 margin-top: 8px !important;
+                margin-left: 32px !important;
+                margin-right: 32px !important;
                 display: none !important;
                 flex-direction: row !important;
                 justify-content: flex-start !important;
@@ -344,7 +346,8 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 const verseElement = document.querySelector(\`[data-verse-number="\${verseNumber}"]\`);
                 if (!verseElement) return;
                 
-                const actionButtons = verseElement.querySelector('.verse-actions');
+                const verseKey = verseElement.getAttribute('data-verse-key');
+                const actionButtons = document.querySelector(\`.verse-actions[data-verse-key="\${verseKey}"]\`);
                 if (!actionButtons) return;
                 
                 if (isVisible) {
@@ -360,7 +363,11 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
             }
             
             // Handle verse action clicks
-            function handleVerseAction(action, verseElement, verseKey) {
+            function handleVerseAction(action, verseKey) {
+                // Find the verse element by verseKey (now it's the inner div with the verse data)
+                const verseElement = document.querySelector(\`[data-verse-key="\${verseKey}"][data-verse-number]\`);
+                if (!verseElement) return;
+                
                 const verseData = JSON.parse(verseElement.dataset.verseData || '{}');
                 const verseNumber = parseInt(verseElement.getAttribute('data-verse-number'));
                 
@@ -548,57 +555,60 @@ const parseVerseTextRegular = (text: string): string => {
 
 
 const createRegularVerse = (item: IBookVerse, verseKey: string) => `
-    <div class="py-2 px-8 my-0.5 overflow-hidden w-full cursor-pointer transition-colors duration-200" 
-         data-verse-number="${item.verse}" 
-         data-verse-key="${verseKey}"
-         data-verse-data='${JSON.stringify(item)}'
-         data-verse-mode="regular"
-         onclick="toggleVerseMode(this, '${verseKey}')"
-         oncontextmenu="handleVerseContextMenu(this, '${verseKey}', event)"
-         style="position: relative; z-index: 1;">
-        ${createVerseNumber(item.verse, item.is_favorite)}
-        <span class="text-theme-text select-text verse-content">
-            ${parseVerseTextRegular(item.text)}
-        </span>
-        <span class="text-theme-text select-text verse-strong-content hidden">
-            ${parseVerseTextWithStrongs(item.text)}
-        </span>
+    <div class="verse-container" data-verse-key="${verseKey}">
+        <!-- Verse content -->
+        <div class="py-2 px-8 my-0.5 overflow-hidden w-full cursor-pointer transition-colors duration-200" 
+             data-verse-number="${item.verse}" 
+             data-verse-key="${verseKey}"
+             data-verse-data='${JSON.stringify(item)}'
+             data-verse-mode="regular"
+             onclick="toggleVerseMode(this, '${verseKey}')"
+             oncontextmenu="handleVerseContextMenu(this, '${verseKey}', event)"
+             style="position: relative; z-index: 1;">
+            ${createVerseNumber(item.verse, item.is_favorite)}
+            <span class="text-theme-text select-text verse-content">
+                ${parseVerseTextRegular(item.text)}
+            </span>
+            <span class="text-theme-text select-text verse-strong-content hidden">
+                ${parseVerseTextWithStrongs(item.text)}
+            </span>
+        </div>
         
-        <!-- Action buttons (hidden by default, shown on long press) -->
-        <div class="verse-actions" style="display: none;">
-            <button class="action-btn" onclick="handleVerseAction('copy', this.closest('[data-verse-key]'), '${verseKey}')">
+        <!-- Action buttons (hidden by default, shown on long press) - Outside verse container -->
+        <div class="verse-actions" data-verse-key="${verseKey}" style="display: none;">
+            <button class="action-btn" onclick="handleVerseAction('copy', '${verseKey}')">
                 <i data-lucide="copy" class="action-icon" style="color: rgba(255, 255, 255, 0.8);"></i>
                 <div class="action-label">Copiar</div>
             </button>
-            <button class="action-btn" onclick="handleVerseAction('image', this.closest('[data-verse-key]'), '${verseKey}')">
+            <button class="action-btn" onclick="handleVerseAction('image', '${verseKey}')">
                 <i data-lucide="image" class="action-icon" style="color: #9dcd7d;"></i>
                 <div class="action-label">Imagen</div>
             </button>
-            <button class="action-btn" onclick="handleVerseAction('interlinear', this.closest('[data-verse-key]'), '${verseKey}')">
+            <button class="action-btn" onclick="handleVerseAction('interlinear', '${verseKey}')">
                 <i data-lucide="book-open" class="action-icon" style="color: #f79c67;"></i>
                 <div class="action-label">Interlinear</div>
             </button>
-            <button class="action-btn" onclick="handleVerseAction('explain', this.closest('[data-verse-key]'), '${verseKey}')">
+            <button class="action-btn" onclick="handleVerseAction('explain', '${verseKey}')">
                 <i data-lucide="sparkles" class="action-icon" style="color: #f1c40f;"></i>
                 <div class="action-label">Explicar</div>
             </button>
-            <button class="action-btn" onclick="handleVerseAction('quote', this.closest('[data-verse-key]'), '${verseKey}')">
+            <button class="action-btn" onclick="handleVerseAction('quote', '${verseKey}')">
                 <i data-lucide="quote" class="action-icon" style="color: #CDAA7D;"></i>
                 <div class="action-label">Cita</div>
             </button>
-            <button class="action-btn" onclick="handleVerseAction('note', this.closest('[data-verse-key]'), '${verseKey}')">
+            <button class="action-btn" onclick="handleVerseAction('note', '${verseKey}')">
                 <i data-lucide="pen-tool" class="action-icon" style="color: var(--color-notification);"></i>
                 <div class="action-label">Anotar</div>
             </button>
-            <button class="action-btn" onclick="handleVerseAction('favorite', this.closest('[data-verse-key]'), '${verseKey}')">
+            <button class="action-btn" onclick="handleVerseAction('favorite', '${verseKey}')">
                 <i data-lucide="${item.is_favorite ? 'star' : 'star-off'}" class="action-icon" style="color: ${item.is_favorite ? 'var(--color-notification)' : '#fedf75'};"></i>
                 <div class="action-label">Favorito</div>
             </button>
-            <button class="action-btn" onclick="handleVerseAction('memorize', this.closest('[data-verse-key]'), '${verseKey}')">
+            <button class="action-btn" onclick="handleVerseAction('memorize', '${verseKey}')">
                 <i data-lucide="brain" class="action-icon" style="color: #f1abab;"></i>
                 <div class="action-label">Memorizar</div>
             </button>
-            <button class="action-btn" onclick="handleVerseAction('compare', this.closest('[data-verse-key]'), '${verseKey}')">
+            <button class="action-btn" onclick="handleVerseAction('compare', '${verseKey}')">
                 <i data-lucide="git-compare" class="action-icon" style="color: rgba(255, 255, 255, 0.8);"></i>
                 <div class="action-label">Comparar</div>
             </button>
