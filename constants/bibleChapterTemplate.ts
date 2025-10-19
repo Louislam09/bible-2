@@ -582,17 +582,13 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
                 <i data-lucide="copy" class="action-icon"></i>
                 <div class="action-label">Copiar</div>
             </button>
+              <button class="action-btn" onclick="handleVerseAction('image', this.closest('[data-verse-key]'), '${verseKey}')">
+                <i data-lucide="image" class="action-icon"></i>
+                <div class="action-label">Imagen</div>
+            </button>
             <button class="action-btn" onclick="handleVerseAction('interlinear', this.closest('[data-verse-key]'), '${verseKey}')">
                 <i data-lucide="book-open" class="action-icon"></i>
                 <div class="action-label">Interlinear</div>
-            </button>
-            <button class="action-btn" onclick="handleVerseAction('explain', this.closest('[data-verse-key]'), '${verseKey}')">
-                <i data-lucide="sparkles" class="action-icon"></i>
-                <div class="action-label">Explicar</div>
-            </button>
-            <button class="action-btn" onclick="handleVerseAction('image', this.closest('[data-verse-key]'), '${verseKey}')">
-                <i data-lucide="image" class="action-icon"></i>
-                <div class="action-label">Imagen</div>
             </button>
             <button class="action-btn" onclick="handleVerseAction('quote', this.closest('[data-verse-key]'), '${verseKey}')">
                 <i data-lucide="quote" class="action-icon"></i>

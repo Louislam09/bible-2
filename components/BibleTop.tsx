@@ -31,6 +31,7 @@ import WebViewChapter from "./home/content/WebViewChapter";
 import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
 import { Text, View } from "./Themed";
+import { showToast } from "@/utils/showToast";
 
 interface BibleTopProps {
   height: Animated.Value;
@@ -327,6 +328,11 @@ const BibleTop: FC<BibleTopProps> = (props) => {
         isFav,
       });
       bibleState$.clearSelection();
+      showToast(
+        isFav
+          ? "Versículo agregado a favoritos"
+          : "Versículo eliminado de favoritos"
+      );
     },
     [toggleFavoriteVerse]
   );
