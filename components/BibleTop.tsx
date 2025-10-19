@@ -373,6 +373,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   //     : DomChapter
   //   : Chapter;
 
+  const showWebView = true;
   return (
     <Animated.View style={[styles.container, containerStyle]}>
       <Animated.View style={[styles.header, headerStyle]}>
@@ -457,7 +458,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
               <Text style={{ color: "white" }}>Cambiar</Text>
             </TouchableOpacity>
           </View>
-        ) : useDomComponent ? (
+        ) : showWebView ? (
           <WebViewChapter
             width={Dimensions.get("window").width}
             theme={theme}
@@ -483,24 +484,25 @@ const BibleTop: FC<BibleTopProps> = (props) => {
             }}
           />
         ) : (
-          <Chapter
-            initialScrollIndex={
-              initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
-            }
-            verses={verses}
-            data={chapterData}
-            isInterlinear={isInterlinear}
-            isSplit={false}
-            theme={theme}
-            onScroll={handleScroll}
-            {...{
-              onStrongWordClicked,
-              onInterlinear,
-              onAnotar,
-              onComparar,
-              onWordClicked,
-            }}
-          />
+          <></>
+          // <Chapter
+          //   initialScrollIndex={
+          //     initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
+          //   }
+          //   verses={verses}
+          //   data={chapterData}
+          //   isInterlinear={isInterlinear}
+          //   isSplit={false}
+          //   theme={theme}
+          //   onScroll={handleScroll}
+          //   {...{
+          //     onStrongWordClicked,
+          //     onInterlinear,
+          //     onAnotar,
+          //     onComparar,
+          //     onWordClicked,
+          //   }}
+          // />
         )}
       </SwipeWrapper>
       {/* {!isSplitActived && !isPlayerOpened && ( */}
