@@ -1,7 +1,7 @@
 import { IBookVerse } from "@/types";
-import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { tailwindCss } from "./tailwindCss";
 import { DB_BOOK_NAMES } from "./BookNames";
+import { lucideIcons } from "@/utils/lucideIcons";
 
 const bibleChapterStyles = (
     theme: any,
@@ -139,8 +139,17 @@ const bibleChapterStyles = (
             }
             
             .action-icon {
-                font-size: 30px !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 30px !important;
+                height: 30px !important;
                 margin-bottom: 4px !important;
+            }
+            
+            .action-icon svg {
+                width: 100% !important;
+                height: 100% !important;
             }
             
             .action-label {
@@ -165,8 +174,6 @@ const createHtmlHead = (
         <title>Capítulo ${chapterNumber}</title>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@100..900&display=swap">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400&display=swap">
-        <!-- Lucide Icons -->
-        <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
         <!-- Tailwind CSS (Offline) -->
          <style>
              /* Theme CSS Variables */
@@ -188,13 +195,6 @@ const createHtmlHead = (
          ${bibleChapterStyles(theme, containerWidth, showReadingTime, fontSize)}
     </head>
 `;
-
-// Add theme schema as a data attribute for additional styling options
-//  root.setAttribute('data-theme', schema);
-
-// Add a CSS class for the current theme schema
-//  root.classList.remove('theme-light', 'theme-dark');
-//  root.classList.add(`theme-${schema}`);
 
 const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapterNumber: number = 1) => `
     <body data-theme="var(--data-theme)" class="p-0 m-0 text-theme-text bg-theme-background select-none overflow-x-hidden">
@@ -367,10 +367,6 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 if (isVisible) {
                     actionButtons.style.setProperty('display', 'flex', 'important');
                     
-                    // Initialize Lucide icons
-                    if (typeof lucide !== 'undefined') {
-                        lucide.createIcons();
-                    }
                 } else {
                     actionButtons.style.setProperty('display', 'none', 'important');
                 }
@@ -458,10 +454,6 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                     container.addEventListener('scroll', handleScroll, { passive: true });
                 }
                 
-                // Initialize Lucide icons
-                if (typeof lucide !== 'undefined') {
-                    lucide.createIcons();
-                }
                 
                 // Perform initial scroll after a short delay to ensure content is rendered
                 setTimeout(performInitialScroll, 100);
@@ -697,36 +689,36 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
         <!-- Action buttons (hidden by default, shown on long press) - Outside verse container -->
         <div class="verse-actions" data-verse-key="${verseKey}" style="display: none;">
             <button class="action-btn" onclick="handleVerseAction('copy', '${verseKey}')">
-                <i data-lucide="copy" class="action-icon" style="color: rgba(255, 255, 255, 0.8);"></i>
+                <span class="action-icon" style="color: rgba(255, 255, 255, 0.8);">${lucideIcons.copy}</span>
                 <div class="action-label">Copiar</div>
             </button>
             <button class="action-btn" onclick="handleVerseAction('image', '${verseKey}')">
-                <i data-lucide="image" class="action-icon" style="color: #9dcd7d;"></i>
+                <span class="action-icon" style="color: #9dcd7d;">${lucideIcons.image}</span>
                 <div class="action-label">Imagen</div>
             </button>
             <button class="action-btn" onclick="handleVerseAction('interlinear', '${verseKey}')">
-                <i data-lucide="book-open" class="action-icon" style="color: #f79c67;"></i>
+                <span class="action-icon" style="color: #f79c67;">${lucideIcons['book-open']}</span>
                 <div class="action-label">Interlinear</div>
             </button>
          
             <button class="action-btn" onclick="handleVerseAction('quote', '${verseKey}')">
-                <i data-lucide="quote" class="action-icon" style="color: #CDAA7D;"></i>
+                <span class="action-icon" style="color: #CDAA7D;">${lucideIcons.quote}</span>
                 <div class="action-label">Cita</div>
             </button>
             <button class="action-btn" onclick="handleVerseAction('note', '${verseKey}')">
-                <i data-lucide="notebook-pen" class="action-icon" style="color: var(--color-notification);"></i>
+                <span class="action-icon" style="color: var(--color-notification);">${lucideIcons['notebook-pen']}</span>
                 <div class="action-label">Anotar</div>
             </button>
             <button class="action-btn" onclick="handleVerseAction('favorite', '${verseKey}')">
-                <i data-lucide="${item.is_favorite ? 'star' : 'star-off'}" class="action-icon" style="color: ${item.is_favorite ? 'var(--color-notification)' : '#fedf75'};"></i>
+                <span class="action-icon" style="color: ${item.is_favorite ? 'var(--color-notification)' : '#fedf75'};">${lucideIcons[item.is_favorite ? 'star' : 'star-off']}</span>
                 <div class="action-label">Favorito</div>
             </button>
             <button class="action-btn" onclick="handleVerseAction('memorize', '${verseKey}')">
-                <i data-lucide="brain" class="action-icon" style="color: #f1abab;"></i>
+                <span class="action-icon" style="color: #f1abab;">${lucideIcons.brain}</span>
                 <div class="action-label">Memorizar</div>
             </button>
             <button class="action-btn" onclick="handleVerseAction('compare', '${verseKey}')">
-                <i data-lucide="git-compare" class="action-icon" style="color: rgba(255, 255, 255, 0.8);"></i>
+                <span class="action-icon" style="color: rgba(255, 255, 255, 0.8);">${lucideIcons['git-compare']}</span>
                 <div class="action-label">Comparar</div>
             </button>
         </div>
