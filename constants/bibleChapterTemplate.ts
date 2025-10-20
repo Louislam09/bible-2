@@ -156,6 +156,68 @@ const bibleChapterStyles = (
                 text-align: center !important;
                 line-height: 1.2 !important;
             }
+            
+            /* Strong's word inline badge system */
+            .strong-word-container {
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 4px !important;
+                background: rgba(255, 255, 255, 0.05) !important;
+                padding: 2px 6px !important;
+                border-radius: 8px !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                transition: all 0.2s ease !important;
+            }
+            
+            .strong-word-container:hover {
+                background: rgba(255, 255, 255, 0.1) !important;
+                border-color: rgba(255, 255, 255, 0.2) !important;
+                transform: translateY(-1px) !important;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+            }
+            
+            .strong-word-text {
+                color: var(--color-notification) !important;
+                font-weight: 500 !important;
+            }
+            
+            .strong-badges-container {
+                display: flex !important;
+                gap: 3px !important;
+                align-items: center !important;
+                flex-wrap: wrap !important;
+                max-width: 120px !important;
+            }
+            
+            .strong-badge {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                background: linear-gradient(135deg, #ffd700, #ffed4e) !important;
+                color: #1a1a1a !important;
+                font-size: 9px !important;
+                font-weight: bold !important;
+                padding: 1px 4px !important;
+                border-radius: 6px !important;
+                cursor: pointer !important;
+                transition: all 0.2s ease !important;
+                min-width: 16px !important;
+                height: 16px !important;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+                border: 1px solid rgba(255, 255, 255, 0.3) !important;
+                flex-shrink: 0 !important;
+            }
+            
+            .strong-badge:hover {
+                background: linear-gradient(135deg, #ffed4e, #fff176) !important;
+                transform: scale(1.1) !important;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+            }
+            
+            .strong-badge:active {
+                transform: scale(0.95) !important;
+                background: linear-gradient(135deg, #fbc02d, #ffd700) !important;
+            }
         </style>
 `;
 
@@ -269,13 +331,22 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 const cognate = bookNumber < NT_BOOK_NUMBER ? "H" : "G";
                 const cognateStrongNumber = cognate + strongNumber;
                 
+                // Get the word text (handle both direct clicks and tooltip option clicks)
+                let wordText = element.textContent;
+                if (element.classList.contains('tooltip-option')) {
+                    // If clicked from tooltip, get the parent word
+                    const parentWord = element.closest('.strong-word-multiple');
+                    wordText = parentWord ? parentWord.textContent.replace(/Strong's \d+/g, '').trim() : element.textContent;
+                }
+                
                 // Send strong word click message
                 window.ReactNativeWebView.postMessage(JSON.stringify({
                     type: 'strongWordClick',
                     data: { 
                         tagValue: cognateStrongNumber,
-                        word: element.textContent,
-                        verseNumber: verseElement?.getAttribute('data-verse-number')
+                        word: wordText,
+                        verseNumber: verseElement?.getAttribute('data-verse-number'),
+                        selectedStrongNumber: strongNumber
                     },
                     verseData: verseData
                 }));
@@ -288,6 +359,7 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                     handleStrongWordClick(event, strongNumber);
                 }
             }
+            
             
             // Toggle verse mode between regular and Strong's numbers
             function toggleVerseMode(verseElement, verseKey) {
@@ -572,18 +644,62 @@ const createVerseNumber = (verse: number, isFavorite: boolean) => `
     </span>
 `;
 
+// Pre-process text to combine consecutive Strong's numbers
+// This function detects patterns like <S>12312</S> <S>1234</S> <S>5678</S> and combines them into <S>12312, 1234, 5678</S>
+const preprocessConsecutiveStrongs = (text: string): string => {
+    if (!text || typeof text !== 'string') {
+        return '';
+    }
+
+    try {
+        // Pattern to match one or more consecutive Strong's numbers with optional whitespace between them
+        const consecutiveStrongsPattern = /(<S>\d+<\/S>(?:\s*<S>\d+<\/S>)+)/g;
+
+        let result = text;
+        let match;
+
+        // Find all sequences of consecutive Strong's numbers
+        while ((match = consecutiveStrongsPattern.exec(result)) !== null) {
+            const fullMatch = match[1];
+
+            // Extract all Strong's numbers from the sequence
+            const strongNumbers = fullMatch.match(/<S>(\d+)<\/S>/g);
+            if (strongNumbers && strongNumbers.length > 1) {
+                // Extract just the numbers and combine them
+                const numbers = strongNumbers.map(s => s.replace(/<S>|<\/S>/g, ''));
+                const combinedStrongs = numbers.join(', ');
+
+                // Replace the entire sequence with combined version
+                result = result.replace(fullMatch, `<S>${combinedStrongs}</S>`);
+            }
+
+            // Reset regex lastIndex to start from beginning for next iteration
+            consecutiveStrongsPattern.lastIndex = 0;
+        }
+
+        return result;
+    } catch (error) {
+        console.error('Error preprocessing consecutive Strongs:', error);
+        return text; // Return original text if preprocessing fails
+    }
+};
+
 // Parse verse text with Strong's numbers for clickable words
 // This function converts the DomClickableVerse component logic into a template string
 // that can be used directly in the HTML template for better performance
+// Enhanced to handle multiple consecutive Strong's numbers
 const parseVerseTextWithStrongs = (text: string): string => {
     if (!text || typeof text !== 'string') {
         return '';
     }
 
     try {
+        // Pre-process text to combine consecutive Strong's numbers
+        const preprocessedText = preprocessConsecutiveStrongs(text);
+
         // More robust regex pattern for Strong's numbers
-        const strongPattern = /<S>(\d+)<\/S>/g;
-        const segments = text.split(strongPattern);
+        const strongPattern = /<S>(\d+(?:,\s*\d+)*)<\/S>/g;
+        const segments = preprocessedText.split(strongPattern);
 
         let result = '';
         let i = 0;
@@ -591,8 +707,8 @@ const parseVerseTextWithStrongs = (text: string): string => {
         while (i < segments.length) {
             const segment = segments[i];
 
-            // Check if next segment is a Strong's number
-            if (i + 1 < segments.length && /^\d+$/.test(segments[i + 1])) {
+            // Check if next segment is a Strong's number (including combined numbers with commas)
+            if (i + 1 < segments.length && /^\d+(?:,\s*\d+)*$/.test(segments[i + 1])) {
                 const strongNumber = segments[i + 1];
 
                 // Process the text segment to find words
@@ -608,13 +724,28 @@ const parseVerseTextWithStrongs = (text: string): string => {
                     const lastWord = words[words.length - 1];
                     if (lastWord) {
                         const cleanLastWord = cleanWord(lastWord);
-                        result += `<span class="strong-word cursor-pointer bg-white/10 px-1 py-0.5 rounded-md border border-white/10 text-theme-notification hover:opacity-70 transition-opacity" 
-                                     onclick="handleStrongWordClick(event, '${strongNumber}')" 
-                                     onkeydown="handleStrongWordKeydown(event, '${strongNumber}')"
-                                     role="button" 
-                                     tabindex="0"
-                                     aria-label="Strong's number ${strongNumber} for word ${cleanLastWord}"
-                                     data-strong="${strongNumber}">${cleanLastWord}</span> `;
+                        const strongNumbers = strongNumber.includes(',') ? strongNumber.split(',').map(n => n.trim()) : [strongNumber];
+
+                        if (strongNumbers.length > 1) {
+                            // Multiple Strong's numbers - create inline badge system
+                            const strongBadges = strongNumbers.map(num =>
+                                `<span class="strong-badge" onclick="handleStrongWordClick(event, '${num}')" data-strong="${num}" title="Número de Strong ${num}">${num}</span>`
+                            ).join('');
+
+                            result += `<span class="strong-word-container">
+                                         <span class="strong-word-text">${cleanLastWord}</span>
+                                         <span class="strong-badges-container">${strongBadges}</span>
+                                       </span> `;
+                        } else {
+                            // Single Strong's number - normal behavior
+                            result += `<span class="strong-word cursor-pointer bg-white/10 px-1 py-0.5 rounded-md border border-white/10 text-theme-notification hover:opacity-70 transition-opacity" 
+                                         onclick="handleStrongWordClick(event, '${strongNumber}')" 
+                                         onkeydown="handleStrongWordKeydown(event, '${strongNumber}')"
+                                         role="button" 
+                                         tabindex="0"
+                                         aria-label="Número de Strong ${strongNumber} para la palabra ${cleanLastWord}"
+                                         data-strong="${strongNumber}">${cleanLastWord}</span> `;
+                        }
                     }
                 }
 
