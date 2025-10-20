@@ -21,6 +21,7 @@ import { Text, View } from "./Themed";
 import ExpandableChooseReference from "./animations/expandable-choose-reference";
 import { ExpandedSheet } from "./animations/expandable-mini-player";
 import { audioState$ } from "@/hooks/useAudioPlayer";
+import MultipleStrongsContent from "./home/content/MultipleStrongsContent";
 
 const BookContentModals = () => {
   const { theme } = useMyTheme();
@@ -30,6 +31,7 @@ const BookContentModals = () => {
   const aiResponse = useGoogleAI();
   const verse = use$(() => bibleState$.verseToExplain.get());
   const verseToInterlinear = use$(() => bibleState$.verseToInterlinear.get());
+  const multipleStrongsData = use$(() => bibleState$.multipleStrongsData.get());
 
   const isPlayerOpened = use$(() => audioState$.isPlayerOpened.get());
   useEffect(() => {
@@ -167,6 +169,34 @@ const BookContentModals = () => {
           }}
         />
       </BottomModal>
+
+      <BottomSheet
+        backgroundStyle={styles.bottomSheet}
+        enablePanDownToClose
+        snapPoints={["40%", "70%", "99%"]}
+        enableDynamicSizing={false}
+        index={-1}
+        ref={modalState$.multipleStrongsRef.get()}
+        handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
+        onClose={() =>
+          bibleState$.handleMultipleStrongs({
+            word: "",
+            strongNumbers: [],
+            verseData: {},
+          })
+        }
+      >
+        <BottomSheetScrollView
+          contentContainerStyle={{ backgroundColor: theme.colors.background }}
+        >
+          <MultipleStrongsContent
+            navigation={navigation}
+            theme={theme}
+            fontSize={fontSize}
+            data={multipleStrongsData as any}
+          />
+        </BottomSheetScrollView>
+      </BottomSheet>
     </>
   );
 };

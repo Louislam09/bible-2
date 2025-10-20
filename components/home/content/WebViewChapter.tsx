@@ -2,6 +2,7 @@ import { View } from "@/components/Themed";
 import { bibleChapterHtmlTemplate } from "@/constants/bibleChapterTemplate";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { bibleState$ } from "@/state/bibleState";
+import { modalState$ } from "@/state/modalState";
 import { IBookVerse, IFavoriteVerse, TTheme } from "@/types";
 import { WordTagPair } from "@/utils/extractVersesInfo";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
@@ -82,6 +83,19 @@ const WebViewChapter = React.memo(
             case "strongWordClick":
               if (onStrongWordClicked && message.data) {
                 onStrongWordClicked(message.data);
+              }
+              break;
+            case "multipleStrongsClick":
+              if (message.data) {
+                // Handle multiple Strong's numbers click
+                const { word, strongNumbers, verseData } = message.data;
+                // Set the data and open the bottom sheet
+                bibleState$.handleMultipleStrongs({
+                  word,
+                  strongNumbers,
+                  verseData,
+                });
+                modalState$.openMultipleStrongsBottomSheet();
               }
               break;
             case "wordClick":

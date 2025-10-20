@@ -52,6 +52,7 @@ export const bibleState$ = observable({
   isSyncingNotes: false,
   floatingNoteButtonPosition: { x: 0, y: 75 },
   strongWord: { text: "", code: "" } as IStrongWord,
+  multipleStrongsData: { word: "", strongNumbers: [], verseData: {} },
   noteListBottomSheetRef: createRef<BottomSheetModal>(),
   isSplitActived: false,
   currentHistoryIndex: 0,
@@ -94,6 +95,9 @@ export const bibleState$ = observable({
   },
   handleStrongWord: (strongWord: IStrongWord) => {
     bibleState$.strongWord.set(strongWord);
+  },
+  handleMultipleStrongs: (data: { word: string; strongNumbers: string[]; verseData: any }) => {
+    bibleState$.multipleStrongsData.set(data);
   },
   openNoteListBottomSheet() {
     bibleState$.noteListBottomSheetRef.current?.present();

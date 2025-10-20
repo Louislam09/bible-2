@@ -176,48 +176,33 @@ const bibleChapterStyles = (
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
             }
             
-            .strong-word-text {
-                color: var(--color-notification) !important;
-                font-weight: 500 !important;
-            }
             
-            .strong-badges-container {
-                display: flex !important;
-                gap: 3px !important;
-                align-items: center !important;
-                flex-wrap: wrap !important;
-                max-width: 120px !important;
-            }
-            
-            .strong-badge {
+            /* Multiple Strong's indicator for 2+ numbers */
+            .strong-word-multiple-indicator {
                 display: inline-flex !important;
                 align-items: center !important;
-                justify-content: center !important;
-                background: linear-gradient(135deg, #ffd700, #ffed4e) !important;
-                color: #1a1a1a !important;
-                font-size: 9px !important;
-                font-weight: bold !important;
-                padding: 1px 4px !important;
-                border-radius: 6px !important;
+                gap: 4px !important;
+                background: rgba(255, 255, 255, 0.05) !important;
+                padding: 2px 6px !important;
+                border-radius: 8px !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
                 cursor: pointer !important;
                 transition: all 0.2s ease !important;
-                min-width: 16px !important;
-                height: 16px !important;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
-                border: 1px solid rgba(255, 255, 255, 0.3) !important;
-                flex-shrink: 0 !important;
+                color: var(--color-notification) !important;
+                font-weight: 500 !important;
+                pointer-events: auto !important;
+                position: relative !important;
+                z-index: 10 !important;
+                border-bottom: 2px solid  #ffd700 !important;
             }
             
-            .strong-badge:hover {
-                background: linear-gradient(135deg, #ffed4e, #fff176) !important;
-                transform: scale(1.1) !important;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+            .strong-word-multiple-indicator:hover {
+                background: rgba(255, 255, 255, 0.1) !important;
+                border-color: rgba(255, 255, 255, 0.2) !important;
+                transform: translateY(-1px) !important;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
             }
             
-            .strong-badge:active {
-                transform: scale(0.95) !important;
-                background: linear-gradient(135deg, #fbc02d, #ffd700) !important;
-            }
         </style>
 `;
 
@@ -359,7 +344,42 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                     handleStrongWordClick(event, strongNumber);
                 }
             }
+               
+                function handleMultiple(event, strongNumbersJson, word) {
+                 event.stopPropagation();
+                 event.preventDefault();
+                alert('handleMultiple called with:');
+                }
             
+            // Handle multiple Strong's numbers click with proper event handling
+            function handleMultipleStrongsClick(event, strongNumbersStr, word) {
+                event.stopPropagation();
+                event.preventDefault();
+                
+                // Add visual feedback
+                const element = event.target;
+                element.style.opacity = '0.5';
+                setTimeout(() => {
+                    element.style.opacity = '';
+                }, 150);
+                
+                const strongNumbers = strongNumbersStr.split(',');
+                
+                // Get verse context
+                const verseElement = event.target.closest('[data-verse-number]');
+                const verseData = verseElement ? JSON.parse(verseElement.dataset.verseData || '{}') : {};
+                
+                // Send message to React Native to open bottom sheet
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                    type: 'multipleStrongsClick',
+                    data: {
+                        word: word,
+                        strongNumbers: strongNumbers,
+                        verseNumber: verseElement?.getAttribute('data-verse-number'),
+                        verseData: verseData
+                    }
+                }));
+            }
             
             // Toggle verse mode between regular and Strong's numbers
             function toggleVerseMode(verseElement, verseKey) {
@@ -517,6 +537,7 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
             window.hideAllActionButtons = hideAllActionButtons;
             window.shouldShowActions = shouldShowActions;
             window.handleVerseLinkClick = handleVerseLinkClick;
+            window.handleMultipleStrongsClick = handleMultipleStrongsClick;
             
             // Initialize when DOM is loaded
             document.addEventListener('DOMContentLoaded', function() {
@@ -727,14 +748,12 @@ const parseVerseTextWithStrongs = (text: string): string => {
                         const strongNumbers = strongNumber.includes(',') ? strongNumber.split(',').map(n => n.trim()) : [strongNumber];
 
                         if (strongNumbers.length > 1) {
-                            // Multiple Strong's numbers - create inline badge system
-                            const strongBadges = strongNumbers.map(num =>
-                                `<span class="strong-badge" onclick="handleStrongWordClick(event, '${num}')" data-strong="${num}" title="Número de Strong ${num}">${num}</span>`
-                            ).join('');
-
-                            result += `<span class="strong-word-container">
-                                         <span class="strong-word-text">${cleanLastWord}</span>
-                                         <span class="strong-badges-container">${strongBadges}</span>
+                            // Two or more Strong's numbers - show indicator and open bottom sheet
+                            const strongNumbersStr = strongNumbers.join(',');
+                            result += `<span class="strong-word-multiple-indicator" 
+                                         onclick="handleMultipleStrongsClick(event, '${strongNumbersStr}', '${cleanLastWord}')"
+                                         title="Múltiples números de Strong: ${strongNumbers.join(', ')}">
+                                         ${cleanLastWord}
                                        </span> `;
                         } else {
                             // Single Strong's number - normal behavior
