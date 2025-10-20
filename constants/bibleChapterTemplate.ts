@@ -79,8 +79,7 @@ const bibleChapterStyles = (
             
             /* Action buttons styling */
             .verse-actions {
-                background: rgba(0, 0, 0, 0.1) !important;
-                border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+                background: transparent;
                 padding: 8px 12px !important;
                 margin-top: 8px !important;
                 margin-left: 32px !important;
