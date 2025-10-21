@@ -489,12 +489,6 @@ const MultipleStrongsContentBottomModal: FC<IMultipleStrongsContent> = ({
             backgroundColor: "transparent",
           }}
           onMessage={(event) => {
-            // const isNumber = !isNaN(+event.nativeEvent.data);
-            // if (isNumber) {
-            //   setHeight(+event.nativeEvent.data || DEFAULT_HEIGHT);
-            //   return;
-            // }
-
             try {
               const message = JSON.parse(event.nativeEvent.data);
               if (message.type === "switchTab") {
@@ -526,78 +520,6 @@ const MultipleStrongsContentBottomModal: FC<IMultipleStrongsContent> = ({
           {...createOptimizedWebViewProps({}, "themeSelector")}
         />
       </View>
-      {/* <View
-        style={[
-          styles.versionContainer,
-          { height: height + EXTRA_HEIGHT_TO_ADJUST },
-        ]}
-      >
-        <View style={[styles.header]}>
-          <View style={styles.actionContainer}>
-            {backUrl.length !== 0 && (
-              <Pressable
-                android_ripple={{
-                  color: theme.colors.background,
-                  foreground: true,
-                  radius: 10,
-                }}
-                style={{ alignItems: "center" }}
-                onPress={onGoBack}
-              >
-                <Icon
-                  strokeWidth={3}
-                  name="ArrowLeft"
-                  size={26}
-                  color={theme.colors.text}
-                />
-                <Text style={{ fontSize: 12, color: theme.colors.text }}>
-                  Anterior
-                </Text>
-              </Pressable>
-            )}
-            {headerActions.map((item, index) => (
-              <RenderItem key={index} item={item} />
-            ))}
-          </View>
-          <View style={styles.subHeader}>
-            <Text style={[styles.subTitle, { fontSize }]}>
-              {data.word.replace(/[.,;]/g, "") || "-"} - Múltiples definiciones
-            </Text>
-          </View>
-        </View>
-
-        <View style={[styles.webviewWrapper]}>
-          <WebView
-            style={{ backgroundColor: "transparent" }}
-            ref={webViewRef}
-            originWhitelist={["*"]}
-            source={{ html: HTML_DATA }}
-            onMessage={(event) => {
-              const isNumber = !isNaN(+event.nativeEvent.data);
-              if (isNumber) {
-                setHeight(+event.nativeEvent.data || DEFAULT_HEIGHT);
-                return;
-              }
-
-              try {
-                const message = JSON.parse(event.nativeEvent.data);
-                if (message.type === "switchTab") {
-                  haptics.impact.light();
-                  setActiveTab(message.data.index);
-                  return;
-                }
-              } catch (error) {
-                // Not JSON, treat as text
-              }
-
-              const text = `${event.nativeEvent.data}`;
-              createAndShareTextFile(text, title || "-");
-            }}
-            scrollEnabled
-            onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-          />
-        </View>
-      </View> */}
     </BottomModal>
   );
 };

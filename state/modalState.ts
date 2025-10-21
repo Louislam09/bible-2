@@ -30,7 +30,7 @@ export const modalState$ = observable({
   openStrongSearchBottomSheet: () => {
     modalState$.isSheetClosed.set(false);
     modalState$.explainVerseRef.current?.close();
-    modalState$.strongSearchRef.current?.expand();
+    modalState$.strongSearchRef.current?.present();
   },
   openDictionaryBottomSheet: (text: string) => {
     modalState$.setSearchWordOnDic(text);
@@ -41,7 +41,7 @@ export const modalState$ = observable({
   },
   openExplainVerseBottomSheet: () => {
     modalState$.isSheetClosed.set(false);
-    modalState$.strongSearchRef.current?.close();
+    modalState$.strongSearchRef.current?.dismiss();
     modalState$.explainVerseRef.current?.expand();
   },
   closeExplainVerseBottomSheet: () => {

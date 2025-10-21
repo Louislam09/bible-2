@@ -16,7 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import InterlinearVerse from "./home/content/InterlinearVerse";
-import StrongContent from "./home/content/StrongContent";
+import StrongContentBottomModal from "./home/content/StrongContentBottomModal";
 import { Text, View } from "./Themed";
 import ExpandableChooseReference from "./animations/expandable-choose-reference";
 import { ExpandedSheet } from "./animations/expandable-mini-player";
@@ -107,26 +107,11 @@ const BookContentModals = () => {
         data={multipleStrongsData as any}
       />
 
-      <BottomSheet
-        backgroundStyle={styles.bottomSheet}
-        enablePanDownToClose
-        snapPoints={["30%", "60%"]}
-        enableDynamicSizing={false}
-        index={-1}
-        ref={modalState$.strongSearchRef.get()}
-        handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
-        onClose={() => bibleState$.handleStrongWord({ text: "", code: "" })}
-      >
-        <BottomSheetScrollView
-          contentContainerStyle={{ backgroundColor: theme.colors.background }}
-        >
-          <StrongContent
-            navigation={navigation}
-            theme={theme}
-            fontSize={fontSize}
-          />
-        </BottomSheetScrollView>
-      </BottomSheet>
+      <StrongContentBottomModal
+        theme={theme}
+        navigation={navigation}
+        fontSize={fontSize}
+      />
 
       <BottomSheet
         backgroundStyle={styles.bottomSheet}

@@ -1,9 +1,12 @@
+import BottomModal from "@/components/BottomModal";
 import Icon, { IconProps } from "@/components/Icon";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
 import { SEARCH_STRONG_WORD } from "@/constants/Queries";
 import { iconSize } from "@/constants/size";
+import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
+import { useHaptics } from "@/hooks/useHaptics";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
@@ -14,6 +17,7 @@ import {
   Screens,
   TTheme,
 } from "@/types";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
 import React, {
   FC,
@@ -23,18 +27,10 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {
-  Animated,
-  Easing,
-  Platform,
-  Pressable,
-  StyleSheet,
-} from "react-native";
+import { Animated, Easing, Pressable, StyleSheet } from "react-native";
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { Text, View } from "../../Themed";
-import { useBibleContext } from "@/context/BibleContext";
-import { useHaptics } from "@/hooks/useHaptics";
 
 type HeaderAction = {
   iconName: IconProps["name"];
@@ -42,9 +38,6 @@ type HeaderAction = {
   description: string;
   onAction: () => void;
 };
-
-const DEFAULT_HEIGHT = 14000;
-const EXTRA_HEIGHT_TO_ADJUST = 150;
 
 function extractWord(text: string, isH: boolean) {
   const regex = isH ? /<p\/><b>(.*?)<\/b>/ : /<p\/>(.*?)<\/b>/;
@@ -63,7 +56,11 @@ interface IStrongContent {
   navigation: any;
 }
 
-const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
+const StrongContentBottomModal: FC<IStrongContent> = ({
+  theme,
+  fontSize,
+  navigation,
+}) => {
   const data = use$<IStrongWord>(() => bibleState$.strongWord.get());
   const { code, text: word } = data;
   const { myBibleDB, executeSql, isMyBibleDbLoaded, mainBibleService } =
@@ -72,7 +69,6 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
     { definition: "", topic: "" },
   ]);
   const styles = getStyles(theme);
-  const [height, setHeight] = useState(DEFAULT_HEIGHT);
   const webViewRef = React.useRef<WebView>(null);
   const [strongCode, setStrongCode] = useState(code);
   const [sharing, setSharing] = useState(false);
@@ -82,9 +78,9 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
   const HTML_DATA = htmlTemplate(values, theme.colors, fontSize);
   const { currentBibleVersion } = useBibleContext();
   const haptics = useHaptics();
-  const isInterlineal = [
-    EBibleVersions.INTERLINEAR,
-  ].includes(currentBibleVersion as EBibleVersions);
+  const isInterlineal = [EBibleVersions.INTERLINEAR].includes(
+    currentBibleVersion as EBibleVersions
+  );
 
   useEffect(() => {
     const loopAnimation = Animated.loop(
@@ -128,9 +124,9 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
       try {
         const dictionaryData = isInterlineal
           ? await mainBibleService.executeSql(
-            SEARCH_STRONG_WORD,
-            strongCode.split(",")
-          )
+              SEARCH_STRONG_WORD,
+              strongCode.split(",")
+            )
           : await executeSql(SEARCH_STRONG_WORD, strongCode.split(","));
 
         if (dictionaryData?.length) {
@@ -255,13 +251,17 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
   };
 
   return (
-    <View
-      style={[
-        styles.versionContainer,
-        { height: height + EXTRA_HEIGHT_TO_ADJUST },
-      ]}
+    <BottomModal
+      style={styles.bottomSheet}
+      backgroundColor={theme.dark ? theme.colors.background : "#eee"}
+      shouldScroll={false}
+      ref={modalState$.strongSearchRef.get()}
+      justOneSnap
+      showIndicator
+      justOneValue={["60%"]}
+      startAT={0}
     >
-      <View style={[styles.header]}>
+      <View style={[styles.webviewWrapper]}>
         <View style={styles.actionContainer}>
           {backUrl.length !== 0 && (
             <Pressable
@@ -276,49 +276,53 @@ const StrongContent: FC<IStrongContent> = ({ theme, fontSize, navigation }) => {
               <Icon
                 strokeWidth={3}
                 name="ArrowLeft"
-                size={26}
-                color={theme.colors.text}
+                size={iconSize}
+                color={theme.colors.notification}
               />
-              <Text style={{ fontSize: 12, color: theme.colors.text }}>
-                Anterior
-              </Text>
+              <Text style={styles.actionItemText}>Anterior</Text>
             </Pressable>
           )}
           {headerActions.map((item, index) => (
             <RenderItem key={index} item={item} />
           ))}
         </View>
-        <View style={styles.subHeader}>
-          <Text style={[styles.subTitle, { fontSize }]}>
-            {word.replace(/[.,;]/g, "") || "-"} - {title || "-"} {currentCode}
-          </Text>
-        </View>
-      </View>
-      <View style={[styles.webviewWrapper]}>
         <WebView
           style={{ backgroundColor: "transparent" }}
           ref={webViewRef}
           originWhitelist={["*"]}
           source={{ html: HTML_DATA }}
           onMessage={(event) => {
-            const isNumber = !isNaN(+event.nativeEvent.data);
-            if (isNumber) {
-              setHeight(+event.nativeEvent.data || DEFAULT_HEIGHT);
-              return;
-            }
             const text = `${event.nativeEvent.data}`;
             createAndShareTextFile(text, title || "-");
           }}
-          scrollEnabled
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+          scrollEnabled
+          bounces={false}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          nestedScrollEnabled={true}
+          onError={(syntheticEvent) => {
+            const { nativeEvent } = syntheticEvent;
+            console.error("WebView error: ", nativeEvent);
+          }}
+          onHttpError={(syntheticEvent) => {
+            const { nativeEvent } = syntheticEvent;
+            console.error("WebView HTTP error: ", nativeEvent);
+          }}
+          {...createOptimizedWebViewProps({}, "themeSelector")}
         />
       </View>
-    </View>
+    </BottomModal>
   );
 };
 
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
+    bottomSheet: {
+      backgroundColor: colors.background,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+    },
     versionContainer: {
       position: "relative",
       display: "flex",
@@ -387,7 +391,7 @@ const getStyles = ({ colors }: TTheme) =>
       backgroundColor: "transparent",
       alignItems: "center",
       justifyContent: "space-between",
-      // ...customBorder,
+      paddingBottom: 10,
     },
     actionItem: {
       alignItems: "center",
@@ -403,4 +407,4 @@ const getStyles = ({ colors }: TTheme) =>
     },
   });
 
-export default StrongContent;
+export default StrongContentBottomModal;
