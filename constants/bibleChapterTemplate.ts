@@ -1,7 +1,6 @@
 import { IBookVerse } from "@/types";
-import { tailwindCss } from "./tailwindCss";
-import { DB_BOOK_NAMES } from "./BookNames";
 import { lucideIcons } from "@/utils/lucideIcons";
+import { DB_BOOK_NAMES } from "./BookNames";
 
 const bibleChapterStyles = (
     theme: any,
@@ -175,6 +174,8 @@ const bibleChapterStyles = (
                 transform: translateY(-1px) !important;
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
             }
+
+          
             
             
             /* Multiple Strong's indicator for 2+ numbers */
@@ -193,7 +194,8 @@ const bibleChapterStyles = (
                 pointer-events: auto !important;
                 position: relative !important;
                 z-index: 10 !important;
-                border-bottom: 2px solid  #ffd700 !important;
+                // border-bottom: 1px solid  #ffd700 !important;
+                border-bottom: 2px solid  var(--color-notification) !important;
             }
             
             .strong-word-multiple-indicator:hover {
@@ -201,6 +203,10 @@ const bibleChapterStyles = (
                 border-color: rgba(255, 255, 255, 0.2) !important;
                 transform: translateY(-1px) !important;
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+            }
+
+            .regular-word-text {
+                border-bottom: 2px solid  rgba(255, 255, 255, 0.2)  !important;
             }
             
         </style>
@@ -212,7 +218,8 @@ const createHtmlHead = (
     theme: any,
     containerWidth: any,
     showReadingTime: boolean,
-    fontSize: number
+    fontSize: number,
+    tailwindScript?: string
 ) => `
     <head>
         <meta charset="utf-8">
@@ -220,9 +227,9 @@ const createHtmlHead = (
         <title>Capítulo ${chapterNumber}</title>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@100..900&display=swap">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400&display=swap">
-        <!-- Tailwind CSS (Offline) -->
+        ${tailwindScript}
+      
          <style>
-             /* Theme CSS Variables */
              :root {
                 --data-theme: ${theme.dark ? "dark" : "light"};
                 --theme: ${theme.dark ? "theme-dark" : "theme-light"};
@@ -235,18 +242,31 @@ const createHtmlHead = (
                  --color-border: ${theme.colors.border || '#e5e7eb'};
                  --color-notification: ${theme.colors.notification || '#ef4444'};
              }
-             
-             ${tailwindCss}
          </style>
+
+           <style type="text/tailwindcss">
+            @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+            @theme {
+                /* Define Tailwind theme tokens */
+                --color-theme-text: ${theme.colors.text || '#1f2937'};
+                --color-theme-background: ${theme.colors.background || '#ffffff'};
+                --color-theme-card: ${theme.colors.card || '#f8fafc'};
+                --color-theme-border: ${theme.colors.border || '#e5e7eb'};
+                --color-theme-primary: ${theme.colors.primary || '#3b82f6'};
+                --color-theme-notification: ${theme.colors.notification || '#ef4444'};
+                --color-theme-chip: ${theme.dark ? theme.colors.text + 40 : theme.colors.notification + 80 || '#e5e7eb'};
+                --color-theme-chip-border: ${theme.colors.text + 80 || '#e5e7eb'};
+            }
+        </style>
          ${bibleChapterStyles(theme, containerWidth, showReadingTime, fontSize)}
     </head>
 `;
 
 const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapterNumber: number = 1) => `
-    <body data-theme="var(--data-theme)" class="p-0 m-0 text-theme-text bg-theme-background select-none overflow-x-hidden">
+    <body class="p-0 m-0 text-theme-text bg-theme-background select-none overflow-x-hidden ">
     <div class="container relative h-screen overflow-y-auto pt-[70px] pb-[100px] " id="chapterContainer">
         <!-- Chapter Header -->
-        <div class="sticky top-0 z-10 backdrop-blur-sm px-4 pt-3 my-2">
+        <div class="px-4 pt-3 my-2">
             <h1 class="text-2xl font-bold text-theme-text text-center">Capítulo ${chapterNumber}</h1>
         </div>
         ${content}
@@ -292,6 +312,18 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                         direction: direction
                     }));
                 }
+            }
+
+            // Handle regular word click
+            function handleRegularWordClick(event, word) {
+                event.stopPropagation();
+                event.preventDefault();
+                
+                // Send regular word click message
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                    type: 'regularWordClick',
+                    data: word
+                }));
             }
             
             // Handle strong word click
@@ -596,10 +628,12 @@ const createVerseTitle = (subheading: string[], links: string) => {
             // text-theme-text rounded-lg py-0.5 px-1.5 my-1 bg-theme-notification border border-theme-notification text-sm font-bold w-fit cursor-pointer hover:bg-theme-notification mx-4 transition-colors
 
             return `
-                <p class="text-theme-text rounded-lg py-1 px-1.5 my-1 border border-theme-text text-xs font-bold w-fit cursor-pointer bg-theme-chip transition-colors"
-                   onclick="handleVerseLinkClick(${bookNumber}, '${bookName}', ${chapter}, ${verse}, ${endVerse || 'null'})">
+          <div class="p-[1px] my-1 rounded-lg bg-linear-to-r  from-theme-notification via-theme-notification/50 to-theme-primary">
+                <p class="text-theme-text rounded-lg py-1 px-1.5  text-xs font-bold w-fit cursor-pointer transition-colors bg-theme-background"
+                onclick="handleVerseLinkClick(${bookNumber}, '${bookName}', ${chapter}, ${verse}, ${endVerse || 'null'})">
                     ${bookName} ${chapter}:${verse}${endVerse ? `-${endVerse}` : ''}
                 </p>
+                </div>
             `;
         };
 
@@ -641,21 +675,6 @@ function extractVersesInfo(input: string): any {
         };
     }
 }
-
-// Helper function to extract verse info (simplified version)
-// const extractVersesInfo = (linkVerse: string) => {
-//     // Simple regex to extract book, chapter, verse info
-//     const match = linkVerse.match(/(\d+)\s+(\d+):(\d+)(?:-(\d+))?/);
-//     if (match) {
-//         return {
-//             bookNumber: parseInt(match[1]),
-//             chapter: parseInt(match[2]),
-//             verse: parseInt(match[3]),
-//             endVerse: match[4] ? parseInt(match[4]) : null
-//         };
-//     }
-//     return { bookNumber: 0, chapter: 0, verse: 0, endVerse: null };
-// };
 
 // Verse rendering functions
 const createVerseNumber = (verse: number, isFavorite: boolean) => `
@@ -738,7 +757,8 @@ const parseVerseTextWithStrongs = (text: string): string => {
                 if (words.length > 0) {
                     // All words except the last are non-clickable
                     for (let j = 0; j < words.length - 1; j++) {
-                        result += cleanWord(words[j]) + ' ';
+                        // result += cleanWord(words[j]) + ' ';
+                        result += `<span class="regular-word-text text-theme-text cursor-pointer bg-white/10 border border-white/10 px-1 py-0.5 rounded-md hover:opacity-70 transition-opacity" onclick="handleRegularWordClick(event, '${cleanWord(words[j])}')">${cleanWord(words[j])}</span> `;
                     }
 
                     // Last word gets the Strong's number and becomes clickable
@@ -827,7 +847,7 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
              oncontextmenu="handleVerseContextMenu(this, '${verseKey}', event)"
              style="position: relative; z-index: 1;">
             ${createVerseNumber(item.verse, item.is_favorite)}
-            <span class="text-theme-text select-text verse-content">
+            <span class="select-text verse-content font-semibold dark:font-normal text-theme-text">
                 ${parseVerseTextRegular(item.text)}
             </span>
             <span class="text-theme-text select-text verse-strong-content hidden">
@@ -907,6 +927,7 @@ type TBibleChapterHtmlTemplateProps = {
     isInterlinear?: boolean;
     fontSize?: number;
     initialScrollIndex?: number;
+    tailwindScript?: string;
 };
 
 export const bibleChapterHtmlTemplate = ({
@@ -917,6 +938,7 @@ export const bibleChapterHtmlTemplate = ({
     isInterlinear,
     fontSize,
     initialScrollIndex = 0,
+    tailwindScript,
 }: TBibleChapterHtmlTemplateProps) => {
     const containerWidth = width || "100%";
     const showReadingTime = !isInterlinear;
@@ -928,15 +950,18 @@ export const bibleChapterHtmlTemplate = ({
         isSplit || false
     );
 
+    const themeSchema = theme.dark ? 'dark' : 'light';
+
     return `
     <!DOCTYPE html>
-    <html class="var(--theme)">
+    <html data-theme="${themeSchema}" >
         ${createHtmlHead(
         chapterNumber,
         theme,
         containerWidth,
         showReadingTime,
-        fontSize || 16
+        fontSize || 16,
+        tailwindScript
     )}
         ${createHtmlBody(versesContent, initialScrollIndex, chapterNumber)}
     </html>

@@ -1,5 +1,4 @@
 import { lucideIcons } from "@/utils/lucideIcons";
-import { tailwindCss } from "./tailwindCss";
 
 export const dictionaryListHtmlTemplate = (
     data: any[],
@@ -9,6 +8,7 @@ export const dictionaryListHtmlTemplate = (
     searchWord: string = "",
     selectedWord: any = null,
     showDefinition: boolean = false,
+    tailwindScript?: string
 ) => {
     const colors = theme.colors;
     const generateContent = () => {
@@ -23,20 +23,20 @@ export const dictionaryListHtmlTemplate = (
 
         return `
        <div class="p-1 w-full">
-         <div class="flex flex-row items-center justify-between mb-4">
+         <div class="action-buttons flex flex-row items-center justify-between mb-4 [&>button>span>svg]:!w-7 [&>button>span>svg]:!h-7">
            <button class="flex flex-col items-center justify-center" onclick="goBack()">
-             <span class="action-icon back-icon">${lucideIcons.arrowLeft}</span>
+             <span class="text-theme-notification">${lucideIcons.arrowLeft}</span>
              <span class="text-sm font-bold">Anterior</span>
            </button>
            <button class="flex flex-col items-center justify-center" onclick="shareContent()">
-            <span class="action-icon share-icon">${lucideIcons.share}</span>
+            <span class="text-theme-notification">${lucideIcons.share}</span>
             <span class="text-sm font-bold">Compartir</span>
            </button>
          </div>
         <h2 class="text-2xl font-bold">Definición</h2>
-         <div class="definition-content">
+        <div class="definition-content ">
            ${definition.replace(/<b>(.*?)<\/b>/g, "<h3>$1</h3>")}
-         </div>
+        </div>
        </div>
      `;
     };
@@ -46,7 +46,7 @@ export const dictionaryListHtmlTemplate = (
             return `
         <div class="no-results">
           <div class="searching-animation">🔍</div>
-          <p class="no-results-text">No encontramos resultados para: "${searchWord}"</p>
+          <p class="no-results-text text-theme-text">No encontramos resultados para: "${searchWord}"</p>
         </div>
       `;
         }
@@ -64,16 +64,16 @@ export const dictionaryListHtmlTemplate = (
             if (version.words.length === 0) return '';
 
             const wordCards = version.words.slice(0, 10).map((word: any, wordIndex: number) => `
-        <div class="word-card" data-word='${versionIndex}-${wordIndex}' style="animation-delay: ${wordIndex * 100}ms">
+        <div class="word-card bg-theme-background border border-theme-chip-border" data-word='${versionIndex}-${wordIndex}' style="animation-delay: ${wordIndex * 100}ms">
           <div class="word-content ">
-            <span class="word-topic">${word.topic || ''}</span>
+            <span class="word-topic text-theme-text">${word.topic || ''}</span>
           </div>
         </div>
       `).join('');
 
             return `
         <div class="dictionary-version w-full">
-          <h3 class="version-title">${version.dbShortName}</h3>
+          <h3 class="version-title text-theme-notification">${version.dbShortName}</h3>
           <div class="words-container overflow-hidden w-full">
             ${wordCards}
           </div>
@@ -94,23 +94,20 @@ export const dictionaryListHtmlTemplate = (
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@100..900&display=swap">
 
           <!-- Tailwind CSS (Offline) -->
-         <style>
-             /* Theme CSS Variables */
-             :root {
-                --data-theme: ${theme.dark ? "dark" : "light"};
-                --theme: ${theme.dark ? "theme-dark" : "theme-light"};
-                 --color-primary: ${theme.colors.primary || '#3b82f6'};
-                 --color-background: ${theme.colors.background || '#ffffff'};
-                 --color-card: ${theme.colors.card || '#f8fafc'};
-                 --color-text: ${theme.colors.text || '#1f2937'};
-                 --color-chip: ${theme.dark ? theme.colors.text + 40 : theme.colors.notification + 80 || '#e5e7eb'};
-                 --color-chip-border: ${theme.colors.text + 80 || '#e5e7eb'};
-                 --color-border: ${theme.colors.border || '#e5e7eb'};
-                 --color-notification: ${theme.colors.notification || '#ef4444'};
-             }
-             
-             ${tailwindCss}
-         </style>
+         ${tailwindScript}
+         <style type="text/tailwindcss">
+            @theme {
+                /* Define Tailwind theme tokens */
+                --color-theme-text: ${theme.colors.text || '#1f2937'};
+                --color-theme-background: ${theme.colors.background || '#ffffff'};
+                --color-theme-card: ${theme.colors.card || '#f8fafc'};
+                --color-theme-border: ${theme.colors.border || '#e5e7eb'};
+                --color-theme-primary: ${theme.colors.primary || '#3b82f6'};
+                --color-theme-notification: ${theme.colors.notification || '#ef4444'};
+                --color-theme-chip: ${theme.dark ? theme.colors.text + 40 : theme.colors.notification + 80 || '#e5e7eb'};
+                --color-theme-chip-border: ${theme.colors.text + 80 || '#e5e7eb'};
+            }
+        </style>
         <title>Dictionary</title>
         <style>
             * {
@@ -120,19 +117,19 @@ export const dictionaryListHtmlTemplate = (
             }
             
             body {
-                color: var(--color-text);
-                background: var(--color-background);
                 overflow-x: hidden;
                 font-family: "Noto Sans Hebrew", sans-serif;
             }
             
+            .action-buttons {
+                margin-bottom: 20px;
+            }
             .dictionary-version {
                 margin-bottom: 20px;
             }
             
             .version-title {
                 font-weight: bold;
-                color: var(--color-notification);
                 margin-bottom: 10px;
                 text-transform: uppercase;
             }
@@ -144,8 +141,6 @@ export const dictionaryListHtmlTemplate = (
             }
             
             .word-card {
-                background: var(--color-card);
-                border: 1px solid var(--color-chip-border);
                 border-radius: 8px;
                 padding: 15px;
                 margin: 5px 0;
@@ -157,7 +152,6 @@ export const dictionaryListHtmlTemplate = (
             }
             
             .word-card:hover {
-                background: var(--color-notification)20;
                 transform: translateY(-2px);
                 box-shadow: 0 4px 10px rgba(0,0,0,0.15);
             }
@@ -173,7 +167,6 @@ export const dictionaryListHtmlTemplate = (
             }
             
             .word-topic {
-                color: var(--color-text);
                 text-transform: uppercase;
                 font-weight: 600;
             }
@@ -194,7 +187,6 @@ export const dictionaryListHtmlTemplate = (
             }
             
             .no-results-text {
-                color: var(--color-text);
                 line-height: 1.5;
             }
             
@@ -218,21 +210,11 @@ export const dictionaryListHtmlTemplate = (
                 }
             }
             
-            .separator {
-                height: 1px;
-                background: var(--color-notification)30;
-                margin: 10px 0;
-            }
-            
             .footer {
                 height: 30px;
             }
             
             /* Definition View Styles */
-            .definition-container {
-                padding: 20px;
-                background: var(--color-background);
-            }
             
             .definition-header {
                 display: flex;
@@ -240,46 +222,6 @@ export const dictionaryListHtmlTemplate = (
                 align-items: center;
                 margin-bottom: 20px;
                 position: relative;
-            }
-            
-            .back-button {
-                display: flex;
-                align-items: center;
-                background: transparent;
-                border: none;
-                cursor: pointer;
-                padding: 8px 12px;
-                border-radius: 8px;
-                transition: background-color 0.2s ease;
-                color: var(--color-notification);
-            }
-            
-            .back-button:hover {
-                background: var(--color-notification)20;
-            }
-            
-            .back-icon {
-                margin-right: 8px;
-                display: flex;
-                align-items: center;
-            }
-            
-            .back-icon svg {
-                stroke: var(--color-notification);
-                width: 100% !important;
-                height: 100% !important;
-            }
-            
-            .back-text {
-                font-weight: bold;
-                color: var(--color-text);
-            }
-            
-            .definition-title {
-                color: var(--color-text);
-                font-size: ${fontSize + 2}px;
-                font-weight: bold;
-                margin: 0;
             }
             
             .share-button {
@@ -295,14 +237,8 @@ export const dictionaryListHtmlTemplate = (
                 background: ${colors.notification}20;
             }
             
-            .share-icon {
-                color: ${colors.notification};
-            }
 
-            .action-icon svg {
-                width: 30px !important;
-                height: 30px !important;
-            }
+           
             
             .definition-content {
                 color: ${colors.text};
@@ -335,7 +271,7 @@ export const dictionaryListHtmlTemplate = (
         </style>
     </head>
     <body class="w-full py-4 px-2 m-0 text-theme-text bg-theme-background select-none overflow-x-hidden">
-        <div class="flex flex-col items-center justify-center w-full  ">
+        <div class="flex flex-col items-center justify-center w-full">
             ${generateContent()}
             <div class="footer"></div>
         </div>

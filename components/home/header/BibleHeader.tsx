@@ -52,7 +52,7 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
 
   const params = useParams<HomeParams>();
   const { book } = params;
-  const { theme } = useMyTheme();
+  const { theme, toggleTheme } = useMyTheme();
   const router = useRouter();
   const navigation = useNavigation();
   const isSmallSDevice = width < 300;
@@ -98,6 +98,15 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
 
   const headerIconData = useMemo(() => {
     const options: TIcon[] = [
+      {
+        name: theme.dark ? "Sun" : "Moon",
+        action: () => {
+          toggleTheme();
+        },
+        ref: tourState$.fav,
+        isIonicon: true,
+        color: theme.colors.notification,
+      },
       {
         name: "SquareSplitVertical",
         action: () => {

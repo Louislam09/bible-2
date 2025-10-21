@@ -50,7 +50,7 @@ const DictionaryBottomModalContent: React.FC<DictionaryContentProps> = ({
   const [selectedWord, setSelectedWord] = useState<any>(null);
   const [filterData, setFilterData] = useState<DatabaseData[]>([]);
   const { schema } = useMyTheme();
-  const { fontSize: bibleFontSize } = useBibleContext();
+  const { fontSize: bibleFontSize, tailwindScript } = useBibleContext();
   const { printToFile } = usePrintAndShare();
   const styles = getStyles(theme);
   const word = "";
@@ -214,7 +214,8 @@ const DictionaryBottomModalContent: React.FC<DictionaryContentProps> = ({
               wordNotFoundInDictionary,
               word,
               selectedWord,
-              !!selectedWord
+              !!selectedWord,
+              tailwindScript
             ),
           }}
           onMessage={onWebViewMessage}

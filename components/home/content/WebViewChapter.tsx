@@ -1,5 +1,6 @@
 import { View } from "@/components/Themed";
 import { bibleChapterHtmlTemplate } from "@/constants/bibleChapterTemplate";
+import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
@@ -66,12 +67,12 @@ const WebViewChapter = React.memo(
   }: WebViewChapterProps) => {
     const webViewRef = useRef<WebView>(null);
     const [hasLoaded, setHasLoaded] = useState(false);
+    const { tailwindScript } = useBibleContext();
 
     const handleMessage = useCallback(
       (event: any) => {
         try {
           const message = JSON.parse(event.nativeEvent.data);
-          // console.log("message-" + message.type);
 
           switch (message.type) {
             case "scroll":
@@ -79,6 +80,10 @@ const WebViewChapter = React.memo(
               break;
             case "verseClick":
               // Handle verse click
+              break;
+            case "regularWordClick":
+              console.log("regularWordClick", message.data);
+              modalState$.openDictionaryBottomSheet(message.data);
               break;
             case "strongWordClick":
               if (onStrongWordClicked && message.data) {
@@ -196,8 +201,9 @@ const WebViewChapter = React.memo(
         isInterlinear,
         fontSize: storedData$.fontSize.get(),
         initialScrollIndex,
+        tailwindScript,
       });
-    }, [data, theme, isInterlinear, initialScrollIndex]);
+    }, [data, theme, isInterlinear, initialScrollIndex, tailwindScript]);
 
     return (
       <>

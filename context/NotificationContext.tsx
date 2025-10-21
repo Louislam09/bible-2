@@ -65,7 +65,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         // }
       },
       (error) => {
-        console.log("registerForPushNotificationsAsync error: ", error);
+        // console.log("registerForPushNotificationsAsync error: ", error);
         setError(error);
       }
     );

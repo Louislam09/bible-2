@@ -5,6 +5,7 @@ const defaultConfig = getDefaultConfig(__dirname);
 
 // Asset extensions
 defaultConfig.resolver.assetExts.push("db");
+defaultConfig.resolver.assetExts.push("txt");
 defaultConfig.resolver.assetExts.push("zip");
 defaultConfig.resolver.assetExts.push("mp3");
 defaultConfig.resolver.assetExts.push("SQLite3");

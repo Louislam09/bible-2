@@ -15,7 +15,6 @@ export const getStyles = ({ colors }: TTheme) =>
       position: "absolute",
       bottom: 0,
       paddingBottom: 10,
-      borderWidth: 1,
       zIndex: 9999,
     },
     footerAudio: {

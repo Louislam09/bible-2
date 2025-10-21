@@ -1,3 +1,131 @@
+// Function to generate utility classes for different properties
+const generateUtilityClasses = (property: string, colors: Record<string, any[]>) => {
+  let css = '';
+
+  // Generate standard color classes
+  Object.entries(colors).forEach(([colorName, shades]) => {
+    shades.forEach(([shade, rgb]) => {
+      if (property === 'border') {
+        css += `.${property}-${colorName}-${shade} { --tw-${property}-opacity: 1; ${property}-color: rgb(${rgb} / var(--tw-${property}-opacity, 1)); }\n`;
+      } else if (property === 'bg') {
+        css += `.${property}-${colorName}-${shade} { --tw-${property}-opacity: 1; background-color: rgb(${rgb} / var(--tw-${property}-opacity, 1)); }\n`;
+      } else if (property === 'text') {
+        css += `.${property}-${colorName}-${shade} { --tw-${property}-opacity: 1; color: rgb(${rgb} / var(--tw-${property}-opacity, 1)); }\n`;
+      }
+    });
+  });
+
+  return css;
+};
+
+// Color definitions
+const colorDefinitions = {
+  red: [
+    [100, '254 226 226'], [200, '254 202 202'], [300, '252 165 165'], [400, '248 113 113'],
+    [500, '239 68 68'], [600, '220 38 38'], [700, '185 28 28'], [800, '153 27 27'], [900, '127 29 29']
+  ],
+  blue: [
+    [100, '219 234 254'], [200, '191 219 254'], [300, '147 197 253'], [400, '96 165 250'],
+    [500, '59 130 246'], [600, '37 99 235'], [700, '29 78 216'], [800, '30 64 175'], [900, '30 58 138']
+  ],
+  green: [
+    [100, '220 252 231'], [200, '187 247 208'], [300, '134 239 172'], [400, '74 222 128'],
+    [500, '34 197 94'], [600, '22 163 74'], [700, '21 128 61'], [800, '22 101 52'], [900, '20 83 45']
+  ],
+  yellow: [
+    [100, '254 249 195'], [200, '254 240 138'], [300, '253 224 71'], [400, '250 204 21'],
+    [500, '234 179 8'], [600, '202 138 4'], [700, '161 98 7'], [800, '133 77 14'], [900, '113 63 18']
+  ],
+  purple: [
+    [100, '243 232 255'], [200, '221 214 254'], [300, '196 181 253'], [400, '196 181 253'],
+    [500, '168 85 247'], [600, '147 51 234'], [700, '126 34 206'], [800, '107 33 168'], [900, '88 28 135']
+  ],
+  pink: [
+    [100, '252 231 243'], [200, '251 207 232'], [300, '249 168 212'], [400, '244 114 182'],
+    [500, '236 72 153'], [600, '219 39 119'], [700, '190 24 93'], [800, '157 23 77'], [900, '131 24 67']
+  ],
+  indigo: [
+    [100, '224 231 255'], [200, '199 210 254'], [300, '165 180 252'], [400, '129 140 248'],
+    [500, '99 102 241'], [600, '79 70 229'], [700, '67 56 202'], [800, '55 48 163'], [900, '49 46 129']
+  ],
+  orange: [
+    [100, '255 237 213'], [200, '254 215 170'], [300, '253 186 116'], [400, '251 146 60'],
+    [500, '249 115 22'], [600, '234 88 12'], [700, '194 65 12'], [800, '154 52 18'], [900, '124 45 18']
+  ],
+  gray: [
+    [100, '243 244 246'], [200, '229 231 235'], [300, '209 213 219'], [400, '156 163 175'],
+    [500, '107 114 128'], [600, '75 85 99'], [700, '55 65 81'], [800, '31 41 55'], [900, '17 24 39']
+  ],
+  slate: [
+    [100, '241 245 249'], [200, '226 232 240'], [300, '203 213 225'], [400, '148 163 184'],
+    [500, '100 116 139'], [600, '71 85 105'], [700, '51 65 85'], [800, '30 41 59'], [900, '15 23 42']
+  ],
+  zinc: [
+    [100, '244 244 245'], [200, '228 228 231'], [300, '212 212 216'], [400, '161 161 170'],
+    [500, '113 113 122'], [600, '82 82 91'], [700, '63 63 70'], [800, '39 39 42'], [900, '24 24 27']
+  ],
+  neutral: [
+    [100, '245 245 245'], [200, '229 229 229'], [300, '212 212 212'], [400, '163 163 163'],
+    [500, '115 115 115'], [600, '82 82 82'], [700, '64 64 64'], [800, '38 38 38'], [900, '23 23 23']
+  ],
+  stone: [
+    [100, '245 245 244'], [200, '231 229 228'], [300, '214 211 209'], [400, '168 162 158'],
+    [500, '120 113 108'], [600, '87 83 78'], [700, '68 64 60'], [800, '41 37 36'], [900, '28 25 23']
+  ],
+  cyan: [
+    [100, '207 250 254'], [200, '165 243 252'], [300, '103 232 249'], [400, '34 211 238'],
+    [500, '6 182 212'], [600, '8 145 178'], [700, '14 116 144'], [800, '21 94 117'], [900, '22 78 99']
+  ],
+  teal: [
+    [100, '204 251 241'], [200, '153 246 228'], [300, '94 234 212'], [400, '45 212 191'],
+    [500, '20 184 166'], [600, '13 148 136'], [700, '15 118 110'], [800, '17 94 89'], [900, '19 78 74']
+  ],
+  lime: [
+    [100, '236 252 203'], [200, '217 249 157'], [300, '190 242 100'], [400, '163 230 53'],
+    [500, '132 204 22'], [600, '101 163 13'], [700, '77 124 15'], [800, '63 98 18'], [900, '54 83 20']
+  ],
+  amber: [
+    [100, '254 243 199'], [200, '253 230 138'], [300, '252 211 77'], [400, '251 191 36'],
+    [500, '245 158 11'], [600, '217 119 6'], [700, '180 83 9'], [800, '146 64 14'], [900, '120 53 15']
+  ],
+  violet: [
+    [100, '237 233 254'], [200, '221 214 254'], [300, '196 181 253'], [400, '167 139 250'],
+    [500, '139 92 246'], [600, '124 58 237'], [700, '109 40 217'], [800, '91 33 182'], [900, '76 29 149']
+  ],
+  fuchsia: [
+    [100, '253 244 255'], [200, '250 232 255'], [300, '240 171 252'], [400, '232 121 249'],
+    [500, '217 70 239'], [600, '192 38 211'], [700, '162 28 175'], [800, '134 25 143'], [900, '112 26 117']
+  ],
+  rose: [
+    [100, '255 228 230'], [200, '254 205 211'], [300, '253 164 175'], [400, '251 113 133'],
+    [500, '244 63 94'], [600, '225 29 72'], [700, '190 18 60'], [800, '159 18 57'], [900, '136 19 55']
+  ],
+  sky: [
+    [100, '224 242 254'], [200, '186 230 253'], [300, '125 211 252'], [400, '56 189 248'],
+    [500, '14 165 233'], [600, '2 132 199'], [700, '3 105 161'], [800, '7 89 133'], [900, '12 74 110']
+  ],
+  emerald: [
+    [100, '209 250 229'], [200, '167 243 208'], [300, '110 231 183'], [400, '52 211 153'],
+    [500, '16 185 129'], [600, '5 150 105'], [700, '4 120 87'], [800, '6 95 70'], [900, '6 78 59']
+  ]
+};
+
+
+// Function to generate border color classes
+const generateBorderColorClasses = () => {
+  return generateUtilityClasses('border', colorDefinitions);
+};
+
+// Function to generate background color classes
+const generateBackgroundColorClasses = () => {
+  return generateUtilityClasses('bg', colorDefinitions);
+};
+
+// Function to generate text color classes
+const generateTextColorClasses = () => {
+  return generateUtilityClasses('text', colorDefinitions);
+};
+
 // Compiled Tailwind CSS for offline WebView usage
 export const tailwindCss = `
 /* Complete Tailwind CSS v3.4.17 - Base Styles */
@@ -472,6 +600,16 @@ img, video {
 .border-emerald-700 { --tw-border-opacity: 1; border-color: rgb(4 120 87 / var(--tw-border-opacity, 1)); }
 .border-white\/10 { border-color: rgb(255 255 255 / 0.1); }
 
+/* Generated Border Colors */
+${generateBorderColorClasses()}
+
+/* Generated Background Colors */
+${generateBackgroundColorClasses()}
+
+/* Generated Text Colors */
+${generateTextColorClasses()}
+
+
 /* Border Radius */
 .rounded { border-radius: 0.25rem; }
 .rounded-md { border-radius: 0.375rem; }
@@ -567,179 +705,6 @@ img, video {
 .hover\\:border-theme-primary:hover { border-color: var(--color-primary); }
 
 /* Additional Color Classes */
-.bg-blue-50 { background-color: rgb(239 246 255); }
-.bg-blue-100 { background-color: rgb(219 234 254); }
-.bg-blue-200 { background-color: rgb(191 219 254); }
-.bg-blue-300 { background-color: rgb(147 197 253); }
-.bg-blue-400 { background-color: rgb(96 165 250); }
-.bg-blue-500 { background-color: rgb(59 130 246); }
-.bg-blue-600 { background-color: rgb(37 99 235); }
-.bg-blue-700 { background-color: rgb(29 78 216); }
-.bg-blue-800 { background-color: rgb(30 64 175); }
-.bg-blue-900 { background-color: rgb(30 58 138); }
-
-.text-blue-50 { color: rgb(239 246 255); }
-.text-blue-100 { color: rgb(219 234 254); }
-.text-blue-200 { color: rgb(191 219 254); }
-.text-blue-300 { color: rgb(147 197 253); }
-.text-blue-400 { color: rgb(96 165 250); }
-.text-blue-500 { color: rgb(59 130 246); }
-.text-blue-600 { color: rgb(37 99 235); }
-.text-blue-700 { color: rgb(29 78 216); }
-.text-blue-800 { color: rgb(30 64 175); }
-.text-blue-900 { color: rgb(30 58 138); }
-
-.bg-red-50 { background-color: rgb(254 242 242); }
-.bg-red-100 { background-color: rgb(254 226 226); }
-.bg-red-200 { background-color: rgb(254 202 202); }
-.bg-red-300 { background-color: rgb(252 165 165); }
-.bg-red-400 { background-color: rgb(248 113 113); }
-.bg-red-500 { background-color: rgb(239 68 68); }
-.bg-red-600 { background-color: rgb(220 38 38); }
-.bg-red-700 { background-color: rgb(185 28 28); }
-.bg-red-800 { background-color: rgb(153 27 27); }
-.bg-red-900 { background-color: rgb(127 29 29); }
-
-.text-red-50 { color: rgb(254 242 242); }
-.text-red-100 { color: rgb(254 226 226); }
-.text-red-200 { color: rgb(254 202 202); }
-.text-red-300 { color: rgb(252 165 165); }
-.text-red-400 { color: rgb(248 113 113); }
-.text-red-500 { color: rgb(239 68 68); }
-.text-red-600 { color: rgb(220 38 38); }
-.text-red-700 { color: rgb(185 28 28); }
-.text-red-800 { color: rgb(153 27 27); }
-.text-red-900 { color: rgb(127 29 29); }
-
-.bg-green-50 { background-color: rgb(240 253 244); }
-.bg-green-100 { background-color: rgb(220 252 231); }
-.bg-green-200 { background-color: rgb(187 247 208); }
-.bg-green-300 { background-color: rgb(134 239 172); }
-.bg-green-400 { background-color: rgb(74 222 128); }
-.bg-green-500 { background-color: rgb(34 197 94); }
-.bg-green-600 { background-color: rgb(22 163 74); }
-.bg-green-700 { background-color: rgb(21 128 61); }
-.bg-green-800 { background-color: rgb(22 101 52); }
-.bg-green-900 { background-color: rgb(20 83 45); }
-
-.text-green-50 { color: rgb(240 253 244); }
-.text-green-100 { color: rgb(220 252 231); }
-.text-green-200 { color: rgb(187 247 208); }
-.text-green-300 { color: rgb(134 239 172); }
-.text-green-400 { color: rgb(74 222 128); }
-.text-green-500 { color: rgb(34 197 94); }
-.text-green-600 { color: rgb(22 163 74); }
-.text-green-700 { color: rgb(21 128 61); }
-.text-green-800 { color: rgb(22 101 52); }
-.text-green-900 { color: rgb(20 83 45); }
-
-.bg-yellow-50 { background-color: rgb(254 252 232); }
-.bg-yellow-100 { background-color: rgb(254 249 195); }
-.bg-yellow-200 { background-color: rgb(254 240 138); }
-.bg-yellow-300 { background-color: rgb(253 224 71); }
-.bg-yellow-400 { background-color: rgb(250 204 21); }
-.bg-yellow-500 { background-color: rgb(234 179 8); }
-.bg-yellow-600 { background-color: rgb(202 138 4); }
-.bg-yellow-700 { background-color: rgb(161 98 7); }
-.bg-yellow-800 { background-color: rgb(133 77 14); }
-.bg-yellow-900 { background-color: rgb(113 63 18); }
-
-.text-yellow-50 { color: rgb(254 252 232); }
-.text-yellow-100 { color: rgb(254 249 195); }
-.text-yellow-200 { color: rgb(254 240 138); }
-.text-yellow-300 { color: rgb(253 224 71); }
-.text-yellow-400 { color: rgb(250 204 21); }
-.text-yellow-500 { color: rgb(234 179 8); }
-.text-yellow-600 { color: rgb(202 138 4); }
-.text-yellow-700 { color: rgb(161 98 7); }
-.text-yellow-800 { color: rgb(133 77 14); }
-.text-yellow-900 { color: rgb(113 63 18); }
-
-.bg-purple-50 { background-color: rgb(250 245 255); }
-.bg-purple-100 { background-color: rgb(243 232 255); }
-.bg-purple-200 { background-color: rgb(233 213 255); }
-.bg-purple-300 { background-color: rgb(216 180 254); }
-.bg-purple-400 { background-color: rgb(196 181 253); }
-.bg-purple-500 { background-color: rgb(168 85 247); }
-.bg-purple-600 { background-color: rgb(147 51 234); }
-.bg-purple-700 { background-color: rgb(126 34 206); }
-.bg-purple-800 { background-color: rgb(107 33 168); }
-.bg-purple-900 { background-color: rgb(88 28 135); }
-
-.text-purple-50 { color: rgb(250 245 255); }
-.text-purple-100 { color: rgb(243 232 255); }
-.text-purple-200 { color: rgb(233 213 255); }
-.text-purple-300 { color: rgb(216 180 254); }
-.text-purple-400 { color: rgb(196 181 253); }
-.text-purple-500 { color: rgb(168 85 247); }
-.text-purple-600 { color: rgb(147 51 234); }
-.text-purple-700 { color: rgb(126 34 206); }
-.text-purple-800 { color: rgb(107 33 168); }
-.text-purple-900 { color: rgb(88 28 135); }
-
-.bg-pink-50 { background-color: rgb(253 242 248); }
-.bg-pink-100 { background-color: rgb(252 231 243); }
-.bg-pink-200 { background-color: rgb(251 207 232); }
-.bg-pink-300 { background-color: rgb(249 168 212); }
-.bg-pink-400 { background-color: rgb(244 114 182); }
-.bg-pink-500 { background-color: rgb(236 72 153); }
-.bg-pink-600 { background-color: rgb(219 39 119); }
-.bg-pink-700 { background-color: rgb(190 24 93); }
-.bg-pink-800 { background-color: rgb(157 23 77); }
-.bg-pink-900 { background-color: rgb(131 24 67); }
-
-.text-pink-50 { color: rgb(253 242 248); }
-.text-pink-100 { color: rgb(252 231 243); }
-.text-pink-200 { color: rgb(251 207 232); }
-.text-pink-300 { color: rgb(249 168 212); }
-.text-pink-400 { color: rgb(244 114 182); }
-.text-pink-500 { color: rgb(236 72 153); }
-.text-pink-600 { color: rgb(219 39 119); }
-.text-pink-700 { color: rgb(190 24 93); }
-.text-pink-800 { color: rgb(157 23 77); }
-.text-pink-900 { color: rgb(131 24 67); }
-
-.bg-indigo-50 { background-color: rgb(238 242 255); }
-.bg-indigo-100 { background-color: rgb(224 231 255); }
-.bg-indigo-200 { background-color: rgb(199 210 254); }
-.bg-indigo-300 { background-color: rgb(165 180 252); }
-.bg-indigo-400 { background-color: rgb(129 140 248); }
-.bg-indigo-500 { background-color: rgb(99 102 241); }
-.bg-indigo-600 { background-color: rgb(79 70 229); }
-.bg-indigo-700 { background-color: rgb(67 56 202); }
-.bg-indigo-800 { background-color: rgb(55 48 163); }
-.bg-indigo-900 { background-color: rgb(49 46 129); }
-
-.text-indigo-50 { color: rgb(238 242 255); }
-.text-indigo-100 { color: rgb(224 231 255); }
-.text-indigo-200 { color: rgb(199 210 254); }
-.text-indigo-300 { color: rgb(165 180 252); }
-.text-indigo-400 { color: rgb(129 140 248); }
-.text-indigo-500 { color: rgb(99 102 241); }
-.text-indigo-600 { color: rgb(79 70 229); }
-.text-indigo-700 { color: rgb(67 56 202); }
-.text-indigo-800 { color: rgb(55 48 163); }
-.text-indigo-900 { color: rgb(49 46 129); }
-
-.bg-gray-50 { background-color: rgb(249 250 251); }
-.bg-gray-100 { background-color: rgb(243 244 246); }
-.bg-gray-200 { background-color: rgb(229 231 235); }
-.bg-gray-300 { background-color: rgb(209 213 219); }
-.bg-gray-400 { background-color: rgb(156 163 175); }
-.bg-gray-500 { background-color: rgb(107 114 128); }
-.bg-gray-600 { background-color: rgb(75 85 99); }
-.bg-gray-700 { background-color: rgb(55 65 81); }
-.bg-gray-800 { background-color: rgb(31 41 55); }
-.bg-gray-900 { background-color: rgb(17 24 39); }
-
-.text-gray-50 { color: rgb(249 250 251); }
-.text-gray-100 { color: rgb(243 244 246); }
-.text-gray-200 { color: rgb(229 231 235); }
-.text-gray-300 { color: rgb(209 213 219); }
-.text-gray-500 { color: rgb(107 114 128); }
-.text-gray-600 { color: rgb(75 85 99); }
-.text-gray-700 { color: rgb(55 65 81); }
-.text-gray-800 { color: rgb(31 41 55); }
 
 /* Additional Spacing */
 .m-0 { margin: 0px; }
@@ -2445,111 +2410,6 @@ video {
 
 .\\[\\&\\>button\\.toolbar-item\\]\\:p-\\[8px\\]>button.toolbar-item {
   padding: 8px;
-}
-
-/* Additional commonly used classes */
-.bg-blue-100 {
-  background-color: rgb(219 234 254);
-}
-
-.bg-blue-800 {
-  background-color: rgb(30 64 175);
-}
-
-.text-blue-600 {
-  color: rgb(37 99 235);
-}
-
-.text-blue-800 {
-  color: rgb(30 64 175);
-}
-
-.text-red-500 {
-  color: rgb(239 68 68);
-}
-
-.bg-red-500 {
-  background-color: rgb(239 68 68);
-}
-
-.bg-green-500 {
-  background-color: rgb(34 197 94);
-}
-
-.text-green-500 {
-  color: rgb(34 197 94);
-}
-
-.bg-yellow-500 {
-  background-color: rgb(234 179 8);
-}
-
-.text-yellow-500 {
-  color: rgb(234 179 8);
-}
-
-.bg-purple-500 {
-  background-color: rgb(168 85 247);
-}
-
-.text-purple-500 {
-  color: rgb(168 85 247);
-}
-
-.bg-pink-500 {
-  background-color: rgb(236 72 153);
-}
-
-.text-pink-500 {
-  color: rgb(236 72 153);
-}
-
-.bg-indigo-500 {
-  background-color: rgb(99 102 241);
-}
-
-.text-indigo-500 {
-  color: rgb(99 102 241);
-}
-
-.bg-gray-100 {
-  background-color: rgb(243 244 246);
-}
-
-.bg-gray-500 {
-  background-color: rgb(107 114 128);
-}
-
-.bg-gray-800 {
-  background-color: rgb(31 41 55);
-}
-
-.text-gray-100 {
-  color: rgb(243 244 246);
-}
-
-.text-gray-500 {
-  color: rgb(107 114 128);
-}
-
-.text-gray-800 {
-  color: rgb(31 41 55);
-}
-
-.text-white {
-  color: rgb(255 255 255);
-}
-
-.bg-white {
-  background-color: rgb(255 255 255);
-}
-
-.text-black {
-  color: rgb(0 0 0);
-}
-
-.bg-black {
-  background-color: rgb(0 0 0);
 }
 
 /* Spacing utilities */
