@@ -174,37 +174,7 @@ const bibleChapterStyles = (
                 transform: translateY(-1px) !important;
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
             }
-
-          
             
-            
-            /* Multiple Strong's indicator for 2+ numbers */
-            .strong-word-multiple-indicator {
-                display: inline-flex !important;
-                align-items: center !important;
-                gap: 4px !important;
-                background: rgba(255, 255, 255, 0.05) !important;
-                padding: 2px 6px !important;
-                border-radius: 8px !important;
-                border: 1px solid rgba(255, 255, 255, 0.1) !important;
-                cursor: pointer !important;
-                transition: all 0.2s ease !important;
-                color: var(--color-notification) !important;
-                font-weight: 500 !important;
-                pointer-events: auto !important;
-                position: relative !important;
-                z-index: 10 !important;
-                // border-bottom: 1px solid  #ffd700 !important;
-                border-bottom: 2px solid  var(--color-notification) !important;
-            }
-            
-            .strong-word-multiple-indicator:hover {
-                background: rgba(255, 255, 255, 0.1) !important;
-                border-color: rgba(255, 255, 255, 0.2) !important;
-                transform: translateY(-1px) !important;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
-            }
-
             .regular-word-text {
                 border-bottom: 2px solid  rgba(255, 255, 255, 0.2)  !important;
             }
@@ -770,14 +740,14 @@ const parseVerseTextWithStrongs = (text: string): string => {
                         if (strongNumbers.length > 1) {
                             // Two or more Strong's numbers - show indicator and open bottom sheet
                             const strongNumbersStr = strongNumbers.join(',');
-                            result += `<span class="strong-word-multiple-indicator" 
+                            result += `<span class="border cursor-pointer px-1 py-0.5 m-1 rounded-md  dark:border-white/10 border-gray-300/70 text-theme-notification hover:opacity-70  border-b-2 border-b-theme-notification dark:border-b-theme-notification transition-opacity font-semibold dark:font-normal dark:bg-white/10 bg-gray-300/70 " 
                                          onclick="handleMultipleStrongsClick(event, '${strongNumbersStr}', '${cleanLastWord}')"
                                          title="Múltiples números de Strong: ${strongNumbers.join(', ')}">
                                          ${cleanLastWord}
                                        </span> `;
                         } else {
                             // Single Strong's number - normal behavior
-                            result += `<span class="strong-word cursor-pointer bg-white/10 px-1 py-0.5 rounded-md border border-white/10 text-theme-notification hover:opacity-70 transition-opacity" 
+                            result += `<span class="strong-word cursor-pointer px-1 py-0.5 rounded-md border dark:border-white/10 border-gray-300/70 text-theme-notification hover:opacity-70 transition-opacity font-semibold dark:font-normal dark:bg-white/10 bg-gray-300/70" 
                                          onclick="handleStrongWordClick(event, '${strongNumber}')" 
                                          onkeydown="handleStrongWordKeydown(event, '${strongNumber}')"
                                          role="button" 

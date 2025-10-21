@@ -6,13 +6,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FC, useCallback, useRef } from "react";
 import { TouchableOpacity, useWindowDimensions } from "react-native";
 
-import { ExpandedSheet } from "@/components/animations/expandable-mini-player";
+import { ChooseReferenceMutableProgress } from "@/components/animations/expandable-choose-reference";
 import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useNetwork } from "@/context/NetworkProvider";
-import { audioState$ } from "@/hooks/useAudioPlayer";
 import { useHaptics } from "@/hooks/useHaptics";
 import useParams from "@/hooks/useParams";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
@@ -23,12 +22,8 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { batch } from "@legendapp/state";
 import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "expo-router";
-import { getStyles } from "./styles";
-import { modalState$ } from "@/state/modalState";
-import ExpandableChooseReference, {
-  ChooseReferenceMutableProgress,
-} from "@/components/animations/expandable-choose-reference";
 import { Easing, withTiming } from "react-native-reanimated";
+import { getStyles } from "./styles";
 
 interface FooterInterface {
   isSplit?: boolean;
@@ -170,11 +165,6 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
     haptics.impact.light();
     playRef.current?.present();
   }, []);
-
-  const onPlay = () => {
-    haptics.impact.light();
-    audioState$.toggleIsPlayerOpened();
-  };
 
   const displayBookName = renameLongBookName(book);
 
