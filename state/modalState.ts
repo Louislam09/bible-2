@@ -7,7 +7,6 @@ export const modalState$ = observable({
   strongSearchRef: createRef<BottomSheetModal>(),
   isChooseReferenceOpened: false,
   dictionaryRef: createRef<BottomSheetModal>(),
-  explainVerseRef: createRef<BottomSheetModal>(),
   interlinealRef: createRef<BottomSheetModal>(),
   searchFilterRef: createRef<BottomSheetModal>(),
   strongSearchFilterRef: createRef<BottomSheetModal>(),
@@ -16,7 +15,8 @@ export const modalState$ = observable({
   isSheetClosed: true,
 
   setSearchWordOnDic: (word: string) => {
-    modalState$.searchWordOnDic.set(word);
+    const cleanedWord = word.replace(/[.,:;?!]/g, "");
+    modalState$.searchWordOnDic.set(cleanedWord);
   },
   handleSheetChange: (index: number) => {
     modalState$.isSheetClosed.set(index <= 0);
@@ -29,7 +29,6 @@ export const modalState$ = observable({
   },
   openStrongSearchBottomSheet: () => {
     modalState$.isSheetClosed.set(false);
-    modalState$.explainVerseRef.current?.close();
     modalState$.strongSearchRef.current?.present();
   },
   openDictionaryBottomSheet: (text: string) => {
@@ -42,15 +41,12 @@ export const modalState$ = observable({
   openExplainVerseBottomSheet: () => {
     modalState$.isSheetClosed.set(false);
     modalState$.strongSearchRef.current?.dismiss();
-    modalState$.explainVerseRef.current?.expand();
   },
   closeExplainVerseBottomSheet: () => {
     modalState$.isSheetClosed.set(true);
-    modalState$.explainVerseRef.current?.close();
   },
   openInterlinealBottomSheet: () => {
     modalState$.isSheetClosed.set(false);
-    modalState$.explainVerseRef.current?.close();
     modalState$.interlinealRef.current?.expand();
   },
   closeInterlinealBottomSheet: () => {

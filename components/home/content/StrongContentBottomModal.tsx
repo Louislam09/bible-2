@@ -27,7 +27,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Animated, Easing, Pressable, StyleSheet } from "react-native";
+import {
+  Animated,
+  Easing,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { Text, View } from "../../Themed";
@@ -222,21 +228,21 @@ const StrongContentBottomModal: FC<IStrongContent> = ({
         onAction: onShare,
       },
     ],
-    [onStrongSearchEntire, onShare]
+    [onStrongSearchEntire, onShare, data]
   );
 
   const RenderItem = ({ item }: { item: HeaderAction }) => {
     return (
       <Animated.View style={[item.viewStyle, styles.actionItem]}>
-        <Pressable
-          android_ripple={{
-            color: theme.colors.background,
-            foreground: true,
-            radius: 10,
-          }}
+        <TouchableOpacity
           onPress={() => {
             haptics.impact.light();
             item.onAction();
+          }}
+          style={{
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <Icon
@@ -244,8 +250,8 @@ const StrongContentBottomModal: FC<IStrongContent> = ({
             size={iconSize}
             color={theme.colors.notification}
           />
-        </Pressable>
-        <Text style={styles.actionItemText}>{item.description}</Text>
+          <Text style={styles.actionItemText}>{item.description}</Text>
+        </TouchableOpacity>
       </Animated.View>
     );
   };

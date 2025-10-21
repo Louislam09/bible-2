@@ -1,47 +1,34 @@
-import AiVerseExplanationContent from "@/components/ai/AiVerseExplanationContent";
 import BottomModal from "@/components/BottomModal";
 import CompareVersions from "@/components/CompareVersions";
-import DictionaryContent from "@/components/DictionaryContent";
+import DictionaryContentBottomModal from "@/components/DictionaryContentBottomModal";
 import NoteNameList from "@/components/home/NoteNameList";
 import { getBookDetail } from "@/constants/BookNames";
-import { useBibleContext } from "@/context/BibleContext";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
-import { useGoogleAI } from "@/hooks/useGoogleAI";
+import { audioState$ } from "@/hooks/useAudioPlayer";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
 import { TTheme } from "@/types";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect } from "react";
+import React from "react";
 import { StyleSheet } from "react-native";
-import InterlinearVerse from "./home/content/InterlinearVerse";
-import StrongContentBottomModal from "./home/content/StrongContentBottomModal";
-import { Text, View } from "./Themed";
 import ExpandableChooseReference from "./animations/expandable-choose-reference";
 import { ExpandedSheet } from "./animations/expandable-mini-player";
-import { audioState$ } from "@/hooks/useAudioPlayer";
+import InterlinearVerse from "./home/content/InterlinearVerse";
 import MultipleStrongsContentBottomModal from "./home/content/MultipleStrongsContentBottomSheet";
-import { storedData$ } from "@/context/LocalstoreContext";
+import StrongContentBottomModal from "./home/content/StrongContentBottomModal";
+import { Text, View } from "./Themed";
 
 const BookContentModals = () => {
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const fontSize = use$(() => storedData$.fontSize.get());
   const navigation = useNavigation();
-  const aiResponse = useGoogleAI();
-  const verse = use$(() => bibleState$.verseToExplain.get());
   const verseToInterlinear = use$(() => bibleState$.verseToInterlinear.get());
   const multipleStrongsData = use$(() => bibleState$.multipleStrongsData.get());
-
   const isPlayerOpened = use$(() => audioState$.isPlayerOpened.get());
-  useEffect(() => {
-    if (aiResponse.loading) return;
-    if (verse.text && !aiResponse.error) {
-      console.log("fetching explanation");
-      // aiResponse.fetchExplanation(verse);
-    }
-  }, [verse, aiResponse]);
 
   return (
     <>
@@ -113,38 +100,17 @@ const BookContentModals = () => {
         fontSize={fontSize}
       />
 
-      <BottomSheet
-        backgroundStyle={styles.bottomSheet}
-        enablePanDownToClose
-        snapPoints={["30%", "60%"]}
-        enableDynamicSizing={false}
-        index={-1}
-        ref={modalState$.explainVerseRef.get()}
-        handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
-        onClose={() =>
-          bibleState$.handleVerseToExplain({ text: "", reference: "" })
-        }
-      >
-        <BottomSheetScrollView
-          contentContainerStyle={{ backgroundColor: theme.colors.background }}
-        >
-          <AiVerseExplanationContent
-            navigation={navigation}
-            theme={theme}
-            fontSize={fontSize}
-            aiResponse={aiResponse}
-          />
-        </BottomSheetScrollView>
-      </BottomSheet>
-
       <BottomModal
         style={styles.bottomSheet}
         backgroundColor={theme.dark ? theme.colors.background : "#eee"}
-        shouldScroll
-        startAT={2}
+        shouldScroll={false}
         ref={modalState$.dictionaryRef.get()}
+        justOneSnap
+        showIndicator
+        justOneValue={["60%"]}
+        startAT={0}
       >
-        <DictionaryContent
+        <DictionaryContentBottomModal
           navigation={navigation}
           theme={theme}
           fontSize={fontSize}

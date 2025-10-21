@@ -140,7 +140,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     bottomSheet: {
-      borderColor: colors.notification,
+      borderColor: colors.notification + 70,
       borderWidth: 2,
     },
     indicator: {
@@ -148,6 +148,7 @@ const getStyles = ({ colors }: TTheme) =>
     },
     contentContainer: {
       backgroundColor: colors.background,
+      padding: 2,
     },
   });
 

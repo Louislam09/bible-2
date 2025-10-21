@@ -1,13 +1,11 @@
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
-import { iconSize } from "@/constants/size";
-import Voices from "@/constants/Voices";
 import { wordDefinitionHtmlTemplate } from "@/constants/wordDefinitionHtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
-import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { bibleState$ } from "@/state/bibleState";
 import { DictionaryData, Screens, TTheme } from "@/types";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { useNavigation } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import React, { useRef, useState } from "react";
@@ -17,8 +15,8 @@ import {
   ShouldStartLoadRequest,
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
-import Icon from "./Icon";
 import { Text, View } from "./Themed";
+import Icon from "./Icon";
 
 type WordDefinitionProps = {
   wordData: DictionaryData;
@@ -26,7 +24,6 @@ type WordDefinitionProps = {
   navigation?: any;
   theme?: TTheme;
 };
-const randomVoice = Math.floor(Math.random() * Voices.length);
 
 const WordDefinition = ({
   wordData,
@@ -35,8 +32,6 @@ const WordDefinition = ({
   theme: _theme,
 }: WordDefinitionProps) => {
   const navigation = _navigation ? _navigation : useNavigation();
-  const voice = Voices[randomVoice];
-  const { speak, stop, isSpeaking } = useTextToSpeech({ voice });
   const { schema: themeScheme, theme } = useMyTheme();
   const styles = getStyles(theme, themeScheme === "dark");
   const webViewRef = useRef<WebView>(null);
@@ -104,14 +99,6 @@ const WordDefinition = ({
     printToFile(_html, topic?.toUpperCase() || "--");
   };
 
-  const onRead = () => {
-    if (isSpeaking) {
-      stop();
-      return;
-    }
-    // speak(definition);
-  };
-
   return (
     <View
       style={{
@@ -120,40 +107,24 @@ const WordDefinition = ({
         backgroundColor: theme.colors.background,
       }}
     >
-      <View style={styles.wordOfDayContainer}>
-        <TouchableOpacity
-          onPress={copyContentToClipboard}
-          style={styles.wordOfDayBody}
-        >
-          <Text style={styles.bodyTitle}>{topic}</Text>
-          <View style={styles.decorationLine} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ marginHorizontal: 20 }}
-          onPress={copyContentToClipboard}
-        >
-          <Icon name="Share2" color={theme.colors.notification} size={28} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ marginHorizontal: 20, display: "none" }}
-          onPress={onRead}
-        >
-          <Icon
-            name={isSpeaking ? "Pause" : "Play"}
-            color={theme.colors.notification}
-            size={iconSize}
-          />
-        </TouchableOpacity>
-      </View>
-
       <View
         style={{
           position: "relative",
           backgroundColor: theme.colors.background,
         }}
       >
-        <Text style={[styles.sectionTitle]}>{subTitle}</Text>
-        <View style={styles.sectionDecorationLine} />
+        <TouchableOpacity
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+          onPress={copyContentToClipboard}
+        >
+          <Text style={[styles.sectionTitle]}>{subTitle}</Text>
+          <Icon name="Share2" color={theme.colors.notification} size={28} />
+          <View style={styles.sectionDecorationLine} />
+        </TouchableOpacity>
       </View>
 
       <View style={[styles.definitionContainer, { height: height as any }]}>
@@ -166,7 +137,6 @@ const WordDefinition = ({
           ref={webViewRef}
           originWhitelist={["*"]}
           source={{ html }}
-          scrollEnabled={true}
           onMessage={onMessage}
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
           onLoadEnd={() => {
@@ -177,6 +147,20 @@ const WordDefinition = ({
               }, 500);
             `);
           }}
+          scrollEnabled
+          bounces={false}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          nestedScrollEnabled={true}
+          onError={(syntheticEvent) => {
+            const { nativeEvent } = syntheticEvent;
+            console.error("WebView error: ", nativeEvent);
+          }}
+          onHttpError={(syntheticEvent) => {
+            const { nativeEvent } = syntheticEvent;
+            console.error("WebView HTTP error: ", nativeEvent);
+          }}
+          {...createOptimizedWebViewProps({}, "themeSelector")}
         />
       </View>
     </View>

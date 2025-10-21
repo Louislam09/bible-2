@@ -1,13 +1,12 @@
 import Animation from "@/components/Animation";
-import { Text } from "@/components/Themed";
+import { Text, View } from "@/components/Themed";
 import WordDefinition from "@/components/WordDefinition";
+import { iconSize } from "@/constants/size";
 import { useDBContext } from "@/context/databaseContext";
 import { useMyTheme } from "@/context/ThemeContext";
-import useDebounce from "@/hooks/useDebounce";
 import useDictionaryData, { DatabaseData } from "@/hooks/useDictionaryData";
 import { modalState$ } from "@/state/modalState";
 import { DictionaryData, Screens, TTheme } from "@/types";
-import { pluralToSingular } from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { NavigationProp, NavigationState } from "@react-navigation/native";
 import { FlashList } from "@shopify/flash-list";
@@ -21,11 +20,13 @@ import React, {
 import {
   Animated,
   BackHandler,
+  Pressable,
   StyleSheet,
   TouchableOpacity,
-  View,
 } from "react-native";
-import BackButton from "./BackButton";
+import BottomModal from "./BottomModal";
+import Icon, { IconProps } from "./Icon";
+import { observer, use$ } from "@legendapp/state/react";
 
 type RenderItem = {
   item: DatabaseData;
@@ -77,6 +78,9 @@ const RenderItem = ({
               transform: [{ translateX: translateXAnim }],
               marginVertical: 5,
               paddingHorizontal: 5,
+              borderWidth: 1,
+              borderColor: theme.colors.notification + 70,
+              borderRadius: 8,
             },
           ]}
         >
@@ -114,7 +118,13 @@ interface DictionaryContentProps {
   };
 }
 
-const DictionaryContent: React.FC<DictionaryContentProps> = ({
+type HeaderAction = {
+  iconName: IconProps["name"];
+  description: string;
+  onAction: () => void;
+};
+
+const DictionaryContentBottomModal: React.FC<DictionaryContentProps> = ({
   navigation,
   theme,
   fontSize,
@@ -123,33 +133,22 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
   const [filterData, setFilterData] = useState<DatabaseData[]>([]);
   const { schema } = useMyTheme();
   const styles = getStyles(theme);
-  const word = (modalState$.searchWordOnDic.get() || "")?.replace(/[.,;]/g, "");
-  const [searchText, setSearchText] = useState<any>(word ? word : "");
+  const word = "";
+
   const { installedDictionary: dbNames } = useDBContext();
-  const searchDebounce = useDebounce(searchText, 500);
   const searchingSource = require("../assets/lottie/searching.json");
   const animationRef = useRef<any>(null);
-
-  useEffect(() => {
-    if (!animationRef.current) return;
-
-    return () => animationRef.current?.pause();
-  }, []);
 
   const { data, error, loading, onSearch } = useDictionaryData({
     databases: dbNames,
     enabled: true,
+    autoSearch: true,
   });
 
   const wordNotFoundInDictionary = useMemo(
     () => data?.every((version) => version.words.length === 0),
     [data]
   );
-
-  useEffect(() => {
-    if (searchDebounce.length < 3) return;
-    onSearch({ searchParam: searchDebounce });
-  }, [searchDebounce]);
 
   useEffect(() => {
     if (!loading && !error) {
@@ -161,25 +160,6 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
 
   const onItemClick = (word: DictionaryData) => {
     setSelectedWord(word);
-  };
-
-  const DictionaryHeader = () => {
-    const suggestWord = pluralToSingular(searchDebounce);
-    return (
-      <View style={[styles.noteHeader]}>
-        <Text style={[styles.noteListTitle]}>Diccionarios</Text>
-        {wordNotFoundInDictionary && searchDebounce !== "" && suggestWord && (
-          <TouchableOpacity onPress={() => setSearchText(suggestWord)}>
-            <Text style={{ fontSize, color: theme.colors.text }}>
-              Sugerencia:&nbsp;
-              <Text style={{ color: theme.colors.notification }}>
-                {suggestWord}{" "}
-              </Text>
-            </Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    );
   };
 
   useEffect(() => {
@@ -197,6 +177,12 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
     return () => backHandler.remove();
   }, [selectedWord]);
 
+  useEffect(() => {
+    if (!animationRef.current) return;
+
+    return () => animationRef.current?.pause();
+  }, []);
+
   const handleCustomBack = useCallback(() => {
     if (selectedWord?.topic) {
       setSelectedWord(null);
@@ -209,6 +195,8 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
     // @ts-ignore
     navigation.navigate(Screens.DownloadManager);
   }, [navigation]);
+
+  const [sharing, setSharing] = useState(false);
 
   if (dbNames.length === 0) {
     return (
@@ -231,22 +219,47 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
   }
 
   return (
+    // <BottomModal
+    //   style={styles.bottomSheet}
+    //   backgroundColor={theme.dark ? theme.colors.background : "#eee"}
+    //   shouldScroll={false}
+    //   ref={modalState$.dictionaryRef.get()}
+    //   justOneSnap
+    //   showIndicator
+    //   justOneValue={["60%"]}
+    //   startAT={0}
+    // >
     <View
       style={{
         position: "relative",
-        backgroundColor: "transparent",
+        flex: 1,
       }}
     >
       {selectedWord && (
-        <View style={{ position: "relative", height: 40 }}>
-          <BackButton theme={theme} backAction={() => handleCustomBack()} />
+        <View style={styles.actionContainer}>
+          <Pressable
+            android_ripple={{
+              color: theme.colors.background,
+              foreground: true,
+              radius: 10,
+            }}
+            style={{ alignItems: "center" }}
+            onPress={handleCustomBack}
+          >
+            <Icon
+              strokeWidth={3}
+              name="ArrowLeft"
+              size={iconSize}
+              color={theme.colors.notification}
+            />
+            <Text style={styles.actionItemText}>Anterior</Text>
+          </Pressable>
         </View>
       )}
       <View
         style={{
           flex: 1,
           paddingHorizontal: 15,
-          backgroundColor: "transparent",
         }}
       >
         {selectedWord ? (
@@ -257,66 +270,61 @@ const DictionaryContent: React.FC<DictionaryContentProps> = ({
             wordData={selectedWord}
           />
         ) : (
-          <>
-            {DictionaryHeader()}
-            <FlashList
-              key={schema}
-              contentContainerStyle={{
-                backgroundColor: "transparent",
-              }}
-              decelerationRate={"normal"}
-              data={wordNotFoundInDictionary ? [] : filterData}
-              renderItem={({ item, index }) => (
-                <RenderItem
-                  {...{ theme, styles, onItemClick }}
-                  item={item}
-                  index={index}
+          <FlashList
+            key={schema}
+            contentContainerStyle={{
+              backgroundColor: "transparent",
+            }}
+            decelerationRate={"normal"}
+            data={wordNotFoundInDictionary ? [] : filterData}
+            renderItem={({ item, index }) => (
+              <RenderItem
+                {...{ theme, styles, onItemClick }}
+                item={item}
+                index={index}
+              />
+            )}
+            keyExtractor={(item: any, index: any) => `dictionary-${index}`}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            ListFooterComponent={<View style={{ paddingVertical: 30 }} />}
+            ListEmptyComponent={
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "transparent",
+                }}
+              >
+                <Animation
+                  animationRef={animationRef}
+                  backgroundColor={"transparent"}
+                  source={searchingSource}
                 />
-              )}
-              keyExtractor={(item: any, index: any) => `dictionary-${index}`}
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
-              ListFooterComponent={<View style={{ paddingVertical: 30 }} />}
-              ListEmptyComponent={
-                <View
-                  style={{
-                    flex: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: "transparent",
-                  }}
-                >
-                  <Animation
-                    animationRef={animationRef}
-                    backgroundColor={"transparent"}
-                    source={searchingSource}
-                  />
-                  {wordNotFoundInDictionary && searchDebounce !== "" ? (
-                    <Text style={[styles.noResultsText, { fontSize }]}>
-                      No encontramos resultados para: {"\n"}
-                      <Text
-                        style={{
-                          color: theme.colors.notification,
-                          textDecorationLine: "underline",
-                        }}
-                      >
-                        {searchDebounce}
-                      </Text>
-                    </Text>
-                  ) : (
-                    <Text>Buscar un palabra</Text>
-                  )}
-                </View>
-              }
-            />
-          </>
+                {wordNotFoundInDictionary && word !== "" ? (
+                  <Text style={[styles.noResultsText, { fontSize }]}>
+                    No encontramos resultados para: "{word}"
+                  </Text>
+                ) : (
+                  <Text>Buscar un palabra</Text>
+                )}
+              </View>
+            }
+          />
         )}
       </View>
     </View>
+    // </BottomModal>
   );
 };
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
+    bottomSheet: {
+      backgroundColor: colors.background,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+    },
     verseBody: {
       color: colors.text,
       backgroundColor: "transparent",
@@ -458,8 +466,9 @@ const getStyles = ({ colors, dark }: TTheme) =>
       color: "#999",
     },
     emptyContainer: {
+      flex: 1,
       alignItems: "center",
-      backgroundColor: "transparent",
+      backgroundColor: colors.background,
       justifyContent: "center",
       padding: 20,
     },
@@ -475,6 +484,32 @@ const getStyles = ({ colors, dark }: TTheme) =>
       textDecorationLine: "underline",
       fontSize: 18,
     },
+
+    actionContainer: {
+      flexDirection: "row",
+      backgroundColor: "transparent",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingBottom: 10,
+      paddingHorizontal: 10,
+    },
+    actionItem: {
+      alignItems: "center",
+      marginHorizontal: 2,
+      paddingVertical: 2,
+      paddingHorizontal: 4,
+    },
+    actionItemText: {
+      fontSize: 16,
+      color: colors.text,
+      textAlign: "center",
+      fontWeight: "bold",
+    },
+    currentWord: {
+      color: colors.text,
+      fontWeight: "bold",
+      textAlign: "center",
+    },
   });
 
-export default DictionaryContent;
+export default DictionaryContentBottomModal;

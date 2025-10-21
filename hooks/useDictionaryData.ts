@@ -4,6 +4,7 @@ import { DATABASE_TYPE, DictionaryData } from "@/types";
 import * as SQLite from "expo-sqlite";
 import { useCallback, useEffect, useState } from "react";
 import { VersionItem } from "./useInstalledBible";
+import { modalState$ } from "@/state/modalState";
 
 interface Verse {
   book_number: number;
@@ -25,11 +26,13 @@ interface Row {
 type UseCompareVersesProps = {
   enabled: boolean;
   databases: VersionItem[];
+  autoSearch?: boolean;
 };
 
 const useDictionaryData = ({
   databases,
   enabled,
+  autoSearch = false,
 }: UseCompareVersesProps) => {
   const [data, setData] = useState<DatabaseData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -97,10 +100,10 @@ const useDictionaryData = ({
     }
   }, [enabled, databases]);
 
-  // useEffect(() => {
-  //   if (!enabled) return;
-  //   onSearch({ searchParam });
-  // }, [searchParam, enabled, databases]);
+  useEffect(() => {
+    if (!autoSearch) return;
+    onSearch({ searchParam: modalState$.searchWordOnDic.get() });
+  }, [autoSearch]);
 
   return { data, loading, error, onSearch };
 };

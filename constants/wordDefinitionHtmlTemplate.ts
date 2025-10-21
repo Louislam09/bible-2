@@ -1,10 +1,10 @@
 export const wordDefinitionHtmlTemplate = (
-  content: any,
-  colors: any,
-  fontSize: any,
-  isPrint: boolean = false
+    content: any,
+    colors: any,
+    fontSize: any,
+    isPrint: boolean = false
 ) => {
-  return `
+    return `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -21,6 +21,7 @@ export const wordDefinitionHtmlTemplate = (
                     background: ${colors.background};
                     font-size: ${isPrint ? "3rem" : fontSize - 2 + "px"};
                     user-select: none;
+                    padding-bottom: 20px;
                     font-family: "Open Sans", sans-serif;
                     font-optical-sizing: auto;
                     font-weight: <weight>;
@@ -50,7 +51,6 @@ export const wordDefinitionHtmlTemplate = (
         </head>
         <body>
            ${content?.replace(/<b>(.*?)<\/b>/g, "<h3>$1</h3>")}
-           <hr />
         </body>
         </html>
 `;

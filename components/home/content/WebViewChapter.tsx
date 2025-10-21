@@ -71,7 +71,7 @@ const WebViewChapter = React.memo(
       (event: any) => {
         try {
           const message = JSON.parse(event.nativeEvent.data);
-          console.log("message-" + message.type);
+          // console.log("message-" + message.type);
 
           switch (message.type) {
             case "scroll":
@@ -231,11 +231,8 @@ const WebViewChapter = React.memo(
           source={{ html: htmlChapterTemplate }}
           scrollEnabled={true}
           onMessage={handleMessage}
-          onLoadStart={() => {
-            console.log("onLoadStart");
-          }}
+          onLoadStart={() => {}}
           onLoadEnd={() => {
-            console.log("onLoadEnd");
             setHasLoaded(true);
           }}
           onError={(syntheticEvent) => {
