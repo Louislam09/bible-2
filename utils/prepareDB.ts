@@ -27,7 +27,6 @@ export const prepareDatabaseFromDbFile = async ({ databaseItem, onProgress }: Pr
         const DB_PATH = `${localFolder}/${DB_FILENAME}`;
 
         let DB_ASSET = require("../assets/db/bible.db");
-
         switch (DB_NAME) {
             case DEFAULT_DATABASE.BIBLE:
                 DB_ASSET = require("../assets/db/bible.db");
@@ -93,7 +92,7 @@ export const prepareDatabaseFromDbFile = async ({ databaseItem, onProgress }: Pr
 
         const fileInfo = await FileSystem.getInfoAsync(DB_PATH);
 
-        if (!fileInfo.exists) {
+        if (!fileInfo.exists || fileInfo.size === 0) {
             await FileSystem.copyAsync({
                 from: assetUri as string,
                 to: DB_PATH,
