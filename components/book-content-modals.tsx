@@ -21,12 +21,13 @@ import { Text, View } from "./Themed";
 import ExpandableChooseReference from "./animations/expandable-choose-reference";
 import { ExpandedSheet } from "./animations/expandable-mini-player";
 import { audioState$ } from "@/hooks/useAudioPlayer";
-import MultipleStrongsContent from "./home/content/MultipleStrongsContent";
+import MultipleStrongsContentBottomModal from "./home/content/MultipleStrongsContentBottomSheet";
+import { storedData$ } from "@/context/LocalstoreContext";
 
 const BookContentModals = () => {
   const { theme } = useMyTheme();
-  const { fontSize } = useBibleContext();
   const styles = getStyles(theme);
+  const fontSize = use$(() => storedData$.fontSize.get());
   const navigation = useNavigation();
   const aiResponse = useGoogleAI();
   const verse = use$(() => bibleState$.verseToExplain.get());
@@ -99,6 +100,13 @@ const BookContentModals = () => {
         </BottomSheetScrollView>
       </BottomSheet>
 
+      <MultipleStrongsContentBottomModal
+        theme={theme}
+        navigation={navigation}
+        fontSize={fontSize}
+        data={multipleStrongsData as any}
+      />
+
       <BottomSheet
         backgroundStyle={styles.bottomSheet}
         enablePanDownToClose
@@ -169,34 +177,6 @@ const BookContentModals = () => {
           }}
         />
       </BottomModal>
-
-      <BottomSheet
-        backgroundStyle={styles.bottomSheet}
-        enablePanDownToClose
-        snapPoints={["40%", "70%", "99%"]}
-        enableDynamicSizing={false}
-        index={-1}
-        ref={modalState$.multipleStrongsRef.get()}
-        handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
-        onClose={() =>
-          bibleState$.handleMultipleStrongs({
-            word: "",
-            strongNumbers: [],
-            verseData: {},
-          })
-        }
-      >
-        <BottomSheetScrollView
-          contentContainerStyle={{ backgroundColor: theme.colors.background }}
-        >
-          <MultipleStrongsContent
-            navigation={navigation}
-            theme={theme}
-            fontSize={fontSize}
-            data={multipleStrongsData as any}
-          />
-        </BottomSheetScrollView>
-      </BottomSheet>
     </>
   );
 };

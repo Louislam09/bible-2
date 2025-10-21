@@ -25,6 +25,7 @@ import React, {
 } from "react";
 import {
   Animated,
+  Dimensions,
   Easing,
   Platform,
   Pressable,
@@ -36,6 +37,8 @@ import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { Text, View } from "../../Themed";
 import { useBibleContext } from "@/context/BibleContext";
 import { useHaptics } from "@/hooks/useHaptics";
+import BottomModal from "@/components/BottomModal";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 
 type HeaderAction = {
   iconName: IconProps["name"];
@@ -51,11 +54,11 @@ const createMultipleStrongsHtmlTemplate = (
   content: DictionaryData[] | any,
   colors: any,
   fontSize: any,
-  strongNumbers: string[],
+  data: MultipleStrongsData,
   cognate: string,
   activeTab: number
 ) => {
-  const tabs = strongNumbers
+  const tabs = data.strongNumbers
     .map(
       (strongNumber, index) => `
     <button 
@@ -90,13 +93,16 @@ const createMultipleStrongsHtmlTemplate = (
 
             .tabs-container {
                 display: flex;
-                overflow: auto;
-                width: 100%;
-                // border: 1px solid red;
+                gap: 8px;
                 padding: 8px 16px;
                 background: ${colors.background};
+                overflow-x: auto;
+                overflow-y: hidden;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                white-space: nowrap;
             }
 
             .tabs-container::-webkit-scrollbar {
@@ -104,8 +110,8 @@ const createMultipleStrongsHtmlTemplate = (
             }
 
             .tab {
+                flex-shrink: 0;
                 padding: 10px 16px;
-                margin-right: 8px;
                 border: none;
                 background: transparent;
                 color: ${colors.text};
@@ -116,8 +122,6 @@ const createMultipleStrongsHtmlTemplate = (
                 font-weight: 600;
                 white-space: nowrap;
                 transition: all 0.2s ease;
-                flex-shrink: 0;
-                flex: 0 0 auto;
                 min-width: fit-content;
             }
 
@@ -174,6 +178,20 @@ const createMultipleStrongsHtmlTemplate = (
                     data: { index: index }
                 }));
             }
+
+            // Ensure horizontal scrolling works on touch devices
+            document.addEventListener('DOMContentLoaded', function() {
+                const tabsContainer = document.querySelector('.tabs-container');
+                if (tabsContainer) {
+                    tabsContainer.addEventListener('touchstart', function(e) {
+                        this.style.scrollBehavior = 'auto';
+                    });
+                    
+                    tabsContainer.addEventListener('touchend', function(e) {
+                        this.style.scrollBehavior = 'smooth';
+                    });
+                }
+            });
         </script>
     </body>
     </html>
@@ -205,7 +223,9 @@ interface IMultipleStrongsContent {
   data: MultipleStrongsData;
 }
 
-const MultipleStrongsContent: FC<IMultipleStrongsContent> = ({
+const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
+
+const MultipleStrongsContentBottomModal: FC<IMultipleStrongsContent> = ({
   theme,
   fontSize,
   navigation,
@@ -241,7 +261,7 @@ const MultipleStrongsContent: FC<IMultipleStrongsContent> = ({
     values,
     theme.colors,
     fontSize,
-    data.strongNumbers,
+    data,
     cognate,
     activeTab
   );
@@ -420,23 +440,18 @@ const MultipleStrongsContent: FC<IMultipleStrongsContent> = ({
     );
   };
 
-  if (!data.word || !data.strongNumbers || data.strongNumbers.length === 0) {
-    return (
-      <View style={styles.versionContainer}>
-        <Text style={styles.title}>No hay datos disponibles</Text>
-        <Text style={styles.subtitle}>Intenta seleccionar otra palabra</Text>
-      </View>
-    );
-  }
-
   return (
-    <View
-      style={[
-        styles.versionContainer,
-        { height: height + EXTRA_HEIGHT_TO_ADJUST },
-      ]}
+    <BottomModal
+      style={styles.bottomSheet}
+      backgroundColor={theme.dark ? theme.colors.background : "#eee"}
+      shouldScroll={false}
+      ref={modalState$.multipleStrongsRef.get()}
+      justOneSnap
+      showIndicator
+      justOneValue={["60%"]}
+      startAT={0}
     >
-      <View style={[styles.header]}>
+      <View style={[styles.webviewWrapper]}>
         <View style={styles.actionContainer}>
           {backUrl.length !== 0 && (
             <Pressable
@@ -463,25 +478,22 @@ const MultipleStrongsContent: FC<IMultipleStrongsContent> = ({
             <RenderItem key={index} item={item} />
           ))}
         </View>
-        <View style={styles.subHeader}>
-          <Text style={[styles.subTitle, { fontSize }]}>
-            {data.word.replace(/[.,;]/g, "") || "-"} - Múltiples definiciones
-          </Text>
-        </View>
-      </View>
-
-      <View style={[styles.webviewWrapper]}>
         <WebView
-          style={{ backgroundColor: "transparent" }}
           ref={webViewRef}
           originWhitelist={["*"]}
           source={{ html: HTML_DATA }}
+          style={{
+            flex: 1,
+            minWidth: "100%",
+            minHeight: screenHeight,
+            backgroundColor: "transparent",
+          }}
           onMessage={(event) => {
-            const isNumber = !isNaN(+event.nativeEvent.data);
-            if (isNumber) {
-              setHeight(+event.nativeEvent.data || DEFAULT_HEIGHT);
-              return;
-            }
+            // const isNumber = !isNaN(+event.nativeEvent.data);
+            // if (isNumber) {
+            //   setHeight(+event.nativeEvent.data || DEFAULT_HEIGHT);
+            //   return;
+            // }
 
             try {
               const message = JSON.parse(event.nativeEvent.data);
@@ -497,16 +509,106 @@ const MultipleStrongsContent: FC<IMultipleStrongsContent> = ({
             const text = `${event.nativeEvent.data}`;
             createAndShareTextFile(text, title || "-");
           }}
-          scrollEnabled
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+          scrollEnabled
+          bounces={false}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          nestedScrollEnabled={true}
+          onError={(syntheticEvent) => {
+            const { nativeEvent } = syntheticEvent;
+            console.error("WebView error: ", nativeEvent);
+          }}
+          onHttpError={(syntheticEvent) => {
+            const { nativeEvent } = syntheticEvent;
+            console.error("WebView HTTP error: ", nativeEvent);
+          }}
+          {...createOptimizedWebViewProps({}, "themeSelector")}
         />
       </View>
-    </View>
+      {/* <View
+        style={[
+          styles.versionContainer,
+          { height: height + EXTRA_HEIGHT_TO_ADJUST },
+        ]}
+      >
+        <View style={[styles.header]}>
+          <View style={styles.actionContainer}>
+            {backUrl.length !== 0 && (
+              <Pressable
+                android_ripple={{
+                  color: theme.colors.background,
+                  foreground: true,
+                  radius: 10,
+                }}
+                style={{ alignItems: "center" }}
+                onPress={onGoBack}
+              >
+                <Icon
+                  strokeWidth={3}
+                  name="ArrowLeft"
+                  size={26}
+                  color={theme.colors.text}
+                />
+                <Text style={{ fontSize: 12, color: theme.colors.text }}>
+                  Anterior
+                </Text>
+              </Pressable>
+            )}
+            {headerActions.map((item, index) => (
+              <RenderItem key={index} item={item} />
+            ))}
+          </View>
+          <View style={styles.subHeader}>
+            <Text style={[styles.subTitle, { fontSize }]}>
+              {data.word.replace(/[.,;]/g, "") || "-"} - Múltiples definiciones
+            </Text>
+          </View>
+        </View>
+
+        <View style={[styles.webviewWrapper]}>
+          <WebView
+            style={{ backgroundColor: "transparent" }}
+            ref={webViewRef}
+            originWhitelist={["*"]}
+            source={{ html: HTML_DATA }}
+            onMessage={(event) => {
+              const isNumber = !isNaN(+event.nativeEvent.data);
+              if (isNumber) {
+                setHeight(+event.nativeEvent.data || DEFAULT_HEIGHT);
+                return;
+              }
+
+              try {
+                const message = JSON.parse(event.nativeEvent.data);
+                if (message.type === "switchTab") {
+                  haptics.impact.light();
+                  setActiveTab(message.data.index);
+                  return;
+                }
+              } catch (error) {
+                // Not JSON, treat as text
+              }
+
+              const text = `${event.nativeEvent.data}`;
+              createAndShareTextFile(text, title || "-");
+            }}
+            scrollEnabled
+            onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+          />
+        </View>
+      </View> */}
+    </BottomModal>
   );
 };
 
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
+    bottomSheet: {
+      backgroundColor: colors.background,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+    },
     versionContainer: {
       position: "relative",
       display: "flex",
@@ -516,14 +618,17 @@ const getStyles = ({ colors }: TTheme) =>
       backgroundColor: "transparent",
     },
     webviewWrapper: {
-      width: "95%",
+      // width: "95%",
       padding: 5,
-      height: "100%",
+      // height: "100%",
+      // backgroundColor: "transparent",
+
+      flex: 1,
+      width: "100%",
       backgroundColor: "transparent",
     },
     header: {
       display: "flex",
-      flexDirection: "column",
       justifyContent: "center",
       width: "90%",
       backgroundColor: "transparent",
@@ -574,6 +679,7 @@ const getStyles = ({ colors }: TTheme) =>
       backgroundColor: "transparent",
       alignItems: "center",
       justifyContent: "space-between",
+      paddingBottom: 10,
     },
     actionItem: {
       alignItems: "center",
@@ -594,4 +700,4 @@ const getStyles = ({ colors }: TTheme) =>
     },
   });
 
-export default MultipleStrongsContent;
+export default MultipleStrongsContentBottomModal;

@@ -58,15 +58,10 @@ export const modalState$ = observable({
     modalState$.interlinealRef.current?.close();
   },
   openMultipleStrongsBottomSheet: () => {
-    modalState$.isSheetClosed.set(false);
-    modalState$.strongSearchRef.current?.close();
-    modalState$.explainVerseRef.current?.close();
-    modalState$.interlinealRef.current?.close();
-    modalState$.multipleStrongsRef.current?.expand();
+    modalState$.multipleStrongsRef.current?.present();
   },
   closeMultipleStrongsBottomSheet: () => {
-    modalState$.isSheetClosed.set(true);
-    modalState$.multipleStrongsRef.current?.close();
+    modalState$.multipleStrongsRef.current?.dismiss();
   },
   openSearchFilterBottomSheet: () => {
     modalState$.searchFilterRef.current?.present();
