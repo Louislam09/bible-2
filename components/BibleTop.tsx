@@ -373,7 +373,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   //     : DomChapter
   //   : Chapter;
 
-  const showWebView = true;
+  const showWebView = !isInterlinear;
   return (
     <Animated.View style={[styles.container, containerStyle]}>
       <Animated.View style={[styles.header, headerStyle]}>
@@ -484,28 +484,26 @@ const BibleTop: FC<BibleTopProps> = (props) => {
             }}
           />
         ) : (
-          <></>
-          // <Chapter
-          //   initialScrollIndex={
-          //     initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
-          //   }
-          //   verses={verses}
-          //   data={chapterData}
-          //   isInterlinear={isInterlinear}
-          //   isSplit={false}
-          //   theme={theme}
-          //   onScroll={handleScroll}
-          //   {...{
-          //     onStrongWordClicked,
-          //     onInterlinear,
-          //     onAnotar,
-          //     onComparar,
-          //     onWordClicked,
-          //   }}
-          // />
+          <Chapter
+            initialScrollIndex={
+              initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
+            }
+            verses={verses}
+            data={chapterData}
+            isInterlinear={isInterlinear}
+            isSplit={false}
+            theme={theme}
+            onScroll={handleScroll}
+            {...{
+              onStrongWordClicked,
+              onInterlinear,
+              onAnotar,
+              onComparar,
+              onWordClicked,
+            }}
+          />
         )}
       </SwipeWrapper>
-      {/* {!isSplitActived && !isPlayerOpened && ( */}
       {!isPlayerOpened && (
         <View
           style={[
@@ -522,7 +520,6 @@ const BibleTop: FC<BibleTopProps> = (props) => {
           </TouchableOpacity>
         </View>
       )}
-      {/* )} */}
 
       <Animated.View style={[styles.footer]}>
         <BibleFooter isSplit={false} />
