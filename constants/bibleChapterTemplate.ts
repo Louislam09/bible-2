@@ -120,7 +120,6 @@ const bibleChapterStyles = (
                 background: transparent !important;
                 border: none !important;
                 cursor: pointer !important;
-                transition: all 0.2s ease !important;
                 padding: 4px 8px !important;
                 min-width: 50px !important;
                 flex-shrink: 0 !important;
@@ -459,9 +458,33 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 
                 if (isVisible) {
                     actionButtons.style.setProperty('display', 'flex', 'important');
-                    
+                    // Trigger animation after a small delay to ensure display is set
+                    setTimeout(() => {
+                        actionButtons.classList.remove('opacity-0', '-translate-y-2', 'scale-95');
+                        actionButtons.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+                        
+                        // Animate individual buttons
+                        const buttons = actionButtons.querySelectorAll('.action-btn');
+                        buttons.forEach(btn => {
+                            btn.classList.remove('opacity-0', 'translate-y-5', 'scale-75');
+                            btn.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+                        });
+                    }, 10);
                 } else {
-                    actionButtons.style.setProperty('display', 'none', 'important');
+                    // Reverse animation
+                    actionButtons.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
+                    actionButtons.classList.add('opacity-0', '-translate-y-2', 'scale-95');
+                    
+                    const buttons = actionButtons.querySelectorAll('.action-btn');
+                    buttons.forEach(btn => {
+                        btn.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
+                        btn.classList.add('opacity-0', 'translate-y-5', 'scale-75');
+                    });
+                    
+                    // Hide after animation completes
+                    setTimeout(() => {
+                        actionButtons.style.setProperty('display', 'none', 'important');
+                    }, 300);
                 }
             }
             
@@ -500,7 +523,20 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
             function hideAllActionButtons() {
                 selectedVerses.clear();
                 document.querySelectorAll('.verse-actions').forEach(btn => {
-                    btn.style.setProperty('display', 'none', 'important');
+                    // Reverse animation
+                    btn.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
+                    btn.classList.add('opacity-0', '-translate-y-2', 'scale-95');
+                    
+                    const buttons = btn.querySelectorAll('.action-btn');
+                    buttons.forEach(button => {
+                        button.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
+                        button.classList.add('opacity-0', 'translate-y-5', 'scale-75');
+                    });
+                    
+                    // Hide after animation completes
+                    setTimeout(() => {
+                        btn.style.setProperty('display', 'none', 'important');
+                    }, 300);
                 });
             }
             
@@ -826,37 +862,37 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
         </div>
         
         <!-- Action buttons (hidden by default, shown on long press) - Outside verse container -->
-        <div class="verse-actions" data-verse-key="${verseKey}" style="display: none;">
-            <button class="action-btn" onclick="handleVerseAction('copy', '${verseKey}')">
+        <div class="verse-actions opacity-0 -translate-y-2 scale-95 transition-all duration-300 ease-out" data-verse-key="${verseKey}" style="display: none;">
+            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[50ms] hover:scale-105" onclick="handleVerseAction('copy', '${verseKey}')">
                 <span class="action-icon" style="color: rgba(255, 255, 255, 0.8);">${lucideIcons.copy}</span>
                 <div class="action-label">Copiar</div>
             </button>
-            <button class="action-btn" onclick="handleVerseAction('image', '${verseKey}')">
+            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[100ms] hover:scale-105" onclick="handleVerseAction('image', '${verseKey}')">
                 <span class="action-icon" style="color: #9dcd7d;">${lucideIcons.image}</span>
                 <div class="action-label">Imagen</div>
             </button>
-            <button class="action-btn" onclick="handleVerseAction('interlinear', '${verseKey}')">
+            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[150ms] hover:scale-105" onclick="handleVerseAction('interlinear', '${verseKey}')">
                 <span class="action-icon" style="color: #f79c67;">${lucideIcons['book-open']}</span>
                 <div class="action-label">Interlinear</div>
             </button>
          
-            <button class="action-btn" onclick="handleVerseAction('quote', '${verseKey}')">
+            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[200ms] hover:scale-105" onclick="handleVerseAction('quote', '${verseKey}')">
                 <span class="action-icon" style="color: #CDAA7D;">${lucideIcons.quote}</span>
                 <div class="action-label">Cita</div>
             </button>
-            <button class="action-btn" onclick="handleVerseAction('note', '${verseKey}')">
+            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[250ms] hover:scale-105" onclick="handleVerseAction('note', '${verseKey}')">
                 <span class="action-icon" style="color: var(--color-notification);">${lucideIcons['notebook-pen']}</span>
                 <div class="action-label">Anotar</div>
             </button>
-            <button class="action-btn" onclick="handleVerseAction('favorite', '${verseKey}')">
+            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[300ms] hover:scale-105" onclick="handleVerseAction('favorite', '${verseKey}')">
                 <span class="action-icon" style="color: ${item.is_favorite ? 'var(--color-notification)' : '#fedf75'};">${lucideIcons[item.is_favorite ? 'star' : 'star-off']}</span>
                 <div class="action-label">Favorito</div>
             </button>
-            <button class="action-btn" onclick="handleVerseAction('memorize', '${verseKey}')">
+            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[350ms] hover:scale-105" onclick="handleVerseAction('memorize', '${verseKey}')">
                 <span class="action-icon" style="color: #f1abab;">${lucideIcons.brain}</span>
                 <div class="action-label">Memorizar</div>
             </button>
-            <button class="action-btn" onclick="handleVerseAction('compare', '${verseKey}')">
+            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[400ms] hover:scale-105" onclick="handleVerseAction('compare', '${verseKey}')">
                 <span class="action-icon" style="color: rgba(255, 255, 255, 0.8);">${lucideIcons['git-compare']}</span>
                 <div class="action-label">Comparar</div>
             </button>
