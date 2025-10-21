@@ -1,7 +1,6 @@
-import { dictionaryListHtmlTemplate } from "@/constants/dictionaryListHtmlTemplate";
-import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { Text, View } from "@/components/Themed";
-import { iconSize } from "@/constants/size";
+import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { dictionaryListHtmlTemplate } from "@/constants/dictionaryListHtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
 import { useMyTheme } from "@/context/ThemeContext";
@@ -21,17 +20,10 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {
-  BackHandler,
-  Pressable,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { BackHandler, StyleSheet, TouchableOpacity } from "react-native";
 import WebView from "react-native-webview";
 import { WebViewMessageEvent } from "react-native-webview/lib/WebViewTypes";
-import BottomModal from "./BottomModal";
-import Icon, { IconProps } from "./Icon";
-import { observer, use$ } from "@legendapp/state/react";
+import { IconProps } from "./Icon";
 
 interface DictionaryContentProps {
   theme: TTheme;
@@ -226,6 +218,12 @@ const DictionaryBottomModalContent: React.FC<DictionaryContentProps> = ({
             ),
           }}
           onMessage={onWebViewMessage}
+          onShouldStartLoadWithRequest={(event) => {
+            if (event.url.startsWith("b:")) {
+              handleBibleLink(event.url);
+            }
+            return false;
+          }}
           originWhitelist={["*"]}
           scrollEnabled
           bounces={false}
