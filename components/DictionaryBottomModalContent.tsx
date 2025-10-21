@@ -209,7 +209,6 @@ const DictionaryBottomModalContent: React.FC<DictionaryContentProps> = ({
         }}
       >
         <WebView
-          key={`${schema}-${selectedWord ? "definition" : "list"}`}
           ref={webViewRef}
           style={{
             flex: 1,

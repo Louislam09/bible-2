@@ -20,7 +20,6 @@ export const dictionaryListHtmlTemplate = (
 
     const generateWordDefinition = () => {
         const definition = selectedWord.definition || "";
-        const topic = selectedWord.topic || "";
 
         return `
        <div class="p-1 w-full">
@@ -61,11 +60,11 @@ export const dictionaryListHtmlTemplate = (
       `;
         }
 
-        return data.map((version) => {
+        return data.map((version, versionIndex) => {
             if (version.words.length === 0) return '';
 
-            const wordCards = version.words.slice(0, 10).map((word: any, index: number) => `
-        <div class="word-card" data-word='${JSON.stringify(word)}' style="animation-delay: ${index * 100}ms">
+            const wordCards = version.words.slice(0, 10).map((word: any, wordIndex: number) => `
+        <div class="word-card" data-word='${versionIndex}-${wordIndex}' style="animation-delay: ${wordIndex * 100}ms">
           <div class="word-content ">
             <span class="word-topic">${word.topic || ''}</span>
           </div>
@@ -73,9 +72,9 @@ export const dictionaryListHtmlTemplate = (
       `).join('');
 
             return `
-        <div class="dictionary-version">
+        <div class="dictionary-version w-full">
           <h3 class="version-title">${version.dbShortName}</h3>
-          <div class="words-container">
+          <div class="words-container overflow-hidden w-full">
             ${wordCards}
           </div>
         </div>
@@ -153,7 +152,6 @@ export const dictionaryListHtmlTemplate = (
                 cursor: pointer;
                 transition: all 0.2s ease;
                 opacity: 0;
-                transform: translateX(300px);
                 animation: slideIn 0.1s ease forwards;
                 box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             }
@@ -201,6 +199,10 @@ export const dictionaryListHtmlTemplate = (
             }
             
             @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(300px);
+            }
                 to {
                     opacity: 1;
                     transform: translateX(0);
@@ -345,13 +347,16 @@ export const dictionaryListHtmlTemplate = (
                 
                 wordCards.forEach(card => {
                     card.addEventListener('click', function() {
-                        const wordData = this.getAttribute('data-word');
+                        const dataWord = this.getAttribute('data-word');
+                        const [versionIndex, wordIndex] = dataWord.split('-');
+                        const data = ${JSON.stringify(data)};
+                        const wordData = data[versionIndex].words[wordIndex];
+
                         if (wordData) {
                             try {
-                                const word = JSON.parse(wordData);
                                 window.ReactNativeWebView.postMessage(JSON.stringify({
                                     type: 'wordSelected',
-                                    data: word
+                                    data: wordData
                                 }));
                             } catch (e) {
                                 console.error('Error parsing word data:', e);
