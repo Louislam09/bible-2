@@ -1,6 +1,5 @@
 import BottomModal from "@/components/BottomModal";
 import CompareVersions from "@/components/CompareVersions";
-import DictionaryContentBottomModal from "@/components/DictionaryContentBottomModal";
 import NoteNameList from "@/components/home/NoteNameList";
 import { getBookDetail } from "@/constants/BookNames";
 import { storedData$ } from "@/context/LocalstoreContext";
@@ -20,6 +19,7 @@ import InterlinearVerse from "./home/content/InterlinearVerse";
 import MultipleStrongsContentBottomModal from "./home/content/MultipleStrongsContentBottomSheet";
 import StrongContentBottomModal from "./home/content/StrongContentBottomModal";
 import { Text, View } from "./Themed";
+import DictionaryBottomModalContent from "./DictionaryBottomModalContent";
 
 const BookContentModals = () => {
   const { theme } = useMyTheme();
@@ -110,7 +110,7 @@ const BookContentModals = () => {
         justOneValue={["60%"]}
         startAT={0}
       >
-        <DictionaryContentBottomModal
+        <DictionaryBottomModalContent
           navigation={navigation}
           theme={theme}
           fontSize={fontSize}

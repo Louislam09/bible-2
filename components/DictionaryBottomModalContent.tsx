@@ -1,15 +1,19 @@
-import Animation from "@/components/Animation";
+import { dictionaryListHtmlTemplate } from "@/constants/dictionaryListHtmlTemplate";
+import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { Text, View } from "@/components/Themed";
-import WordDefinition from "@/components/WordDefinition";
 import { iconSize } from "@/constants/size";
+import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useDictionaryData, { DatabaseData } from "@/hooks/useDictionaryData";
+import usePrintAndShare from "@/hooks/usePrintAndShare";
+import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
 import { DictionaryData, Screens, TTheme } from "@/types";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { NavigationProp, NavigationState } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
+import * as Clipboard from "expo-clipboard";
 import React, {
   useCallback,
   useEffect,
@@ -18,94 +22,16 @@ import React, {
   useState,
 } from "react";
 import {
-  Animated,
   BackHandler,
   Pressable,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import WebView from "react-native-webview";
+import { WebViewMessageEvent } from "react-native-webview/lib/WebViewTypes";
 import BottomModal from "./BottomModal";
 import Icon, { IconProps } from "./Icon";
 import { observer, use$ } from "@legendapp/state/react";
-
-type RenderItem = {
-  item: DatabaseData;
-  index: any;
-  theme: any;
-  onItemClick: any;
-  styles: any;
-};
-
-const RenderItem = ({
-  item,
-  index,
-  theme,
-  onItemClick,
-  styles,
-}: RenderItem) => {
-  const { dbShortName, words } = item;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const translateXAnim = useRef(new Animated.Value(300)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 100,
-        delay: index * 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(translateXAnim, {
-        toValue: 0,
-        duration: 100,
-        delay: index * 100,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [fadeAnim, translateXAnim, index]);
-
-  if (words.length === 0) return <></>;
-
-  return (
-    <View style={{ backgroundColor: "transparent" }}>
-      <Text style={styles.itemTitle}>{dbShortName}</Text>
-      {words.slice(0, 10).map((word) => (
-        <Animated.View
-          key={word?.topic}
-          style={[
-            {
-              opacity: fadeAnim,
-              transform: [{ translateX: translateXAnim }],
-              marginVertical: 5,
-              paddingHorizontal: 5,
-              borderWidth: 1,
-              borderColor: theme.colors.notification + 70,
-              borderRadius: 8,
-            },
-          ]}
-        >
-          <TouchableOpacity
-            style={[
-              styles.cardContainer,
-              {
-                backgroundColor: theme.dark ? "#151517" : theme.colors.card,
-                borderRadius: 10,
-                elevation: 5,
-              },
-            ]}
-            onPress={() => onItemClick(word)}
-          >
-            <Text
-              style={{ color: theme.colors.text, textTransform: "uppercase" }}
-            >
-              {word?.topic}
-            </Text>
-          </TouchableOpacity>
-        </Animated.View>
-      ))}
-    </View>
-  );
-};
 
 interface DictionaryContentProps {
   theme: TTheme;
@@ -124,7 +50,7 @@ type HeaderAction = {
   onAction: () => void;
 };
 
-const DictionaryContentBottomModal: React.FC<DictionaryContentProps> = ({
+const DictionaryBottomModalContent: React.FC<DictionaryContentProps> = ({
   navigation,
   theme,
   fontSize,
@@ -132,12 +58,13 @@ const DictionaryContentBottomModal: React.FC<DictionaryContentProps> = ({
   const [selectedWord, setSelectedWord] = useState<any>(null);
   const [filterData, setFilterData] = useState<DatabaseData[]>([]);
   const { schema } = useMyTheme();
+  const { fontSize: bibleFontSize } = useBibleContext();
+  const { printToFile } = usePrintAndShare();
   const styles = getStyles(theme);
   const word = "";
+  const webViewRef = useRef<WebView>(null);
 
   const { installedDictionary: dbNames } = useDBContext();
-  const searchingSource = require("../assets/lottie/searching.json");
-  const animationRef = useRef<any>(null);
 
   const { data, error, loading, onSearch } = useDictionaryData({
     databases: dbNames,
@@ -162,6 +89,62 @@ const DictionaryContentBottomModal: React.FC<DictionaryContentProps> = ({
     setSelectedWord(word);
   };
 
+  const onWebViewMessage = async (event: WebViewMessageEvent) => {
+    try {
+      const message = JSON.parse(event.nativeEvent.data);
+
+      if (message.type === "wordSelected") {
+        onItemClick(message.data);
+      } else if (message.type === "bibleLink") {
+        handleBibleLink(message.url);
+      } else if (message.type === "shareContent") {
+        await handleShareContent(message.content);
+      } else if (message.type === "goBack") {
+        handleCustomBack();
+      }
+    } catch (error) {
+      console.error("Error parsing WebView message:", error);
+    }
+  };
+
+  const handleBibleLink = (url: string) => {
+    const [, bookNumber, chapter, verse] =
+      url.match(/b:(\d+) (\d+):(\d+)/) || [];
+    const currentBook = DB_BOOK_NAMES.find((x) => x.bookNumber === +bookNumber);
+    const queryInfo = {
+      book: currentBook?.longName || "Mateo",
+      chapter: +chapter,
+      verse: +verse || 0,
+    };
+    bibleState$.changeBibleQuery({
+      ...queryInfo,
+      shouldFetch: true,
+      isHistory: false,
+    });
+    navigation.navigate(Screens.Home, queryInfo);
+  };
+
+  const handleShareContent = async (content: string) => {
+    try {
+      await Clipboard.setStringAsync(content);
+      // Also print to file if needed
+      if (selectedWord?.topic) {
+        const { wordDefinitionHtmlTemplate } = await import(
+          "@/constants/wordDefinitionHtmlTemplate"
+        );
+        const html = wordDefinitionHtmlTemplate(
+          selectedWord.definition || "",
+          theme.colors,
+          bibleFontSize,
+          true
+        );
+        printToFile(html, selectedWord.topic?.toUpperCase() || "--");
+      }
+    } catch (error) {
+      console.error("Error sharing content:", error);
+    }
+  };
+
   useEffect(() => {
     const backAction = () => {
       setSelectedWord(null);
@@ -176,12 +159,6 @@ const DictionaryContentBottomModal: React.FC<DictionaryContentProps> = ({
 
     return () => backHandler.remove();
   }, [selectedWord]);
-
-  useEffect(() => {
-    if (!animationRef.current) return;
-
-    return () => animationRef.current?.pause();
-  }, []);
 
   const handleCustomBack = useCallback(() => {
     if (selectedWord?.topic) {
@@ -219,102 +196,55 @@ const DictionaryContentBottomModal: React.FC<DictionaryContentProps> = ({
   }
 
   return (
-    // <BottomModal
-    //   style={styles.bottomSheet}
-    //   backgroundColor={theme.dark ? theme.colors.background : "#eee"}
-    //   shouldScroll={false}
-    //   ref={modalState$.dictionaryRef.get()}
-    //   justOneSnap
-    //   showIndicator
-    //   justOneValue={["60%"]}
-    //   startAT={0}
-    // >
     <View
       style={{
         position: "relative",
         flex: 1,
       }}
     >
-      {selectedWord && (
-        <View style={styles.actionContainer}>
-          <Pressable
-            android_ripple={{
-              color: theme.colors.background,
-              foreground: true,
-              radius: 10,
-            }}
-            style={{ alignItems: "center" }}
-            onPress={handleCustomBack}
-          >
-            <Icon
-              strokeWidth={3}
-              name="ArrowLeft"
-              size={iconSize}
-              color={theme.colors.notification}
-            />
-            <Text style={styles.actionItemText}>Anterior</Text>
-          </Pressable>
-        </View>
-      )}
       <View
         style={{
           flex: 1,
           paddingHorizontal: 15,
         }}
       >
-        {selectedWord ? (
-          <WordDefinition
-            theme={theme}
-            navigation={navigation}
-            subTitle="Definicion"
-            wordData={selectedWord}
-          />
-        ) : (
-          <FlashList
-            key={schema}
-            contentContainerStyle={{
-              backgroundColor: "transparent",
-            }}
-            decelerationRate={"normal"}
-            data={wordNotFoundInDictionary ? [] : filterData}
-            renderItem={({ item, index }) => (
-              <RenderItem
-                {...{ theme, styles, onItemClick }}
-                item={item}
-                index={index}
-              />
-            )}
-            keyExtractor={(item: any, index: any) => `dictionary-${index}`}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-            ListFooterComponent={<View style={{ paddingVertical: 30 }} />}
-            ListEmptyComponent={
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "transparent",
-                }}
-              >
-                <Animation
-                  animationRef={animationRef}
-                  backgroundColor={"transparent"}
-                  source={searchingSource}
-                />
-                {wordNotFoundInDictionary && word !== "" ? (
-                  <Text style={[styles.noResultsText, { fontSize }]}>
-                    No encontramos resultados para: "{word}"
-                  </Text>
-                ) : (
-                  <Text>Buscar un palabra</Text>
-                )}
-              </View>
-            }
-          />
-        )}
+        <WebView
+          key={`${schema}-${selectedWord ? "definition" : "list"}`}
+          ref={webViewRef}
+          style={{
+            flex: 1,
+            backgroundColor: "transparent",
+          }}
+          source={{
+            html: dictionaryListHtmlTemplate(
+              wordNotFoundInDictionary ? [] : filterData,
+              theme,
+              fontSize,
+              wordNotFoundInDictionary,
+              word,
+              selectedWord,
+              !!selectedWord
+            ),
+          }}
+          onMessage={onWebViewMessage}
+          originWhitelist={["*"]}
+          scrollEnabled
+          bounces={false}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          nestedScrollEnabled={true}
+          onError={(syntheticEvent) => {
+            const { nativeEvent } = syntheticEvent;
+            console.error("WebView error: ", nativeEvent);
+          }}
+          onHttpError={(syntheticEvent) => {
+            const { nativeEvent } = syntheticEvent;
+            console.error("WebView HTTP error: ", nativeEvent);
+          }}
+          {...createOptimizedWebViewProps({}, "dynamic")}
+        />
       </View>
     </View>
-    // </BottomModal>
   );
 };
 
@@ -406,43 +336,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
     },
-    cardContainer: {
-      padding: 15,
-    },
-    headerContainer: {
-      position: "relative",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: 8,
-      backgroundColor: "transparent",
-    },
-    cardTitle: {
-      fontSize: 18,
-      fontWeight: "600",
-      color: colors.notification,
-      flex: 1,
-    },
-    cardBody: {
-      fontSize: 16,
-      color: colors.text,
-    },
-    separator: {
-      height: 1,
-      marginVertical: 5,
-    },
-    noResultsContainer: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-      borderRadius: 10,
-      paddingBottom: 20,
-    },
-    noResultsText: {
-      fontSize: 18,
-      color: colors.text,
-      textAlign: "center",
-    },
     verseAction: {
       flexDirection: "row",
       backgroundColor: "transparent",
@@ -452,18 +345,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       marginHorizontal: 10,
       color: colors.primary,
       fontSize: 24,
-    },
-    itemTitle: {
-      fontSize: 20,
-      marginVertical: 5,
-      color: colors.notification,
-      fontWeight: "bold",
-    },
-
-    loadingText: {
-      textAlign: "center",
-      marginVertical: 20,
-      color: "#999",
     },
     emptyContainer: {
       flex: 1,
@@ -512,4 +393,4 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
   });
 
-export default DictionaryContentBottomModal;
+export default DictionaryBottomModalContent;
