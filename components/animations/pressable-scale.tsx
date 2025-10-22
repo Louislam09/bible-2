@@ -11,12 +11,14 @@ type PressableScaleProps = {
   children?: React.ReactNode;
   onPress?: () => void;
   style?: StyleProp<ViewStyle>;
+  disabled?: boolean;
 };
 
 export const PressableScale: React.FC<PressableScaleProps> = ({
   children,
   onPress,
   style,
+  disabled,
 }) => {
   const scale = useSharedValue(1);
 
@@ -26,7 +28,7 @@ export const PressableScale: React.FC<PressableScaleProps> = ({
       scale.value = withTiming(0.9);
     })
     .onTouchesUp(() => {
-      if (onPress) {
+      if (onPress && !disabled) {
         runOnJS(onPress)();
       }
     })

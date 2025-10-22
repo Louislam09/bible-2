@@ -4,7 +4,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { PressableScale } from "./components/pressable-scale";
+import { PressableScale } from "../pressable-scale";
 import { Palette } from "./constants";
 
 type SplitAction = {

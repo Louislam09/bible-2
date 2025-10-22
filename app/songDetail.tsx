@@ -151,7 +151,7 @@ const SongDetailPage = () => {
   }, [currentIndex, stanzas]);
 
   const currentStanzaText = useMemo(() => {
-    return currentStanza.replace(/^\(\d+\)\s*/, "");
+    return currentStanza?.replace(/^\(\d+\)\s*/, "");
   }, [currentStanza]);
 
   const screenOptions = useMemo(() => {
@@ -269,8 +269,8 @@ const SongDetailPage = () => {
 
   const titleInfo = useMemo(() => {
     return {
-      hymnNumber: title.split("-")[0],
-      hymnTitle: title.split("-")[1],
+      hymnNumber: title?.split("-")[0],
+      hymnTitle: title?.split("-")[1],
     };
   }, [title]);
 
@@ -278,11 +278,7 @@ const SongDetailPage = () => {
     <>
       <Stack.Screen options={{ ...singleScreenHeader(screenOptions) }} />
       <LinearGradient
-        colors={[
-          "#2c3e50",
-          theme.colors.background,
-          // theme.colors.notification,
-        ]}
+        colors={["#2c3e50", "#000000"]}
         // colors={["#2c3e50", "#34495e", theme.colors.notification]}
         style={styles.container}
       >
@@ -344,7 +340,7 @@ const SongDetailPage = () => {
               </Fragment>
             ) : (
               <Fragment>
-                {currentStanzaText.split("\n").map((line, i) => (
+                {currentStanzaText?.split("\n").map((line, i) => (
                   <Text
                     style={[
                       styles.verseText,
@@ -408,7 +404,6 @@ const SongDetailPage = () => {
             mainAction={{
               label: currentIndex === 0 ? "Iniciar" : "Siguiente",
               onPress: () => {
-                console.log("Siguiente");
                 goToNextVerse();
               },
               backgroundColor: theme.colors.text + 60,
@@ -416,7 +411,6 @@ const SongDetailPage = () => {
             leftAction={{
               label: "Anterior",
               onPress: () => {
-                console.log("Anterior");
                 goToPrevVerse();
               },
               backgroundColor: theme.colors.text + 60,
@@ -424,7 +418,6 @@ const SongDetailPage = () => {
             rightAction={{
               label: finishedSong ? "Finalizar" : "Siguiente",
               onPress: () => {
-                console.log("Finish");
                 goToNextVerse();
               },
               backgroundColor: theme.colors.notification,

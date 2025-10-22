@@ -4,6 +4,7 @@ import Icon from "@/components/Icon";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
 import RequestAccess from "@/components/admin/RequestAccess";
+import { PressableScale } from "@/components/animations/pressable-scale";
 import {
   singleScreenHeader,
   SingleScreenHeaderProps,
@@ -18,11 +19,9 @@ import { authState$ } from "@/state/authState";
 import { Collections, RequestData, Screens, TTheme } from "@/types";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
-import { FlashList } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
 import { RecordModel } from "pocketbase";
 import React, {
-  Fragment,
   useCallback,
   useEffect,
   useMemo,
@@ -31,11 +30,9 @@ import React, {
 } from "react";
 import {
   Alert,
-  Animated,
   Pressable,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
 
@@ -81,8 +78,6 @@ interface HymnOptionItem {
 
 interface HymnOptionProps {
   item: HymnOptionItem;
-  onPress: () => void;
-  isLocked: boolean;
   onRequestAccess?: () => void;
   hasRequestAccess: boolean;
   statusColor: string;
@@ -90,96 +85,53 @@ interface HymnOptionProps {
 
 const HymnOption: React.FC<HymnOptionProps> = ({
   item,
-  onPress,
-  isLocked,
   onRequestAccess,
   hasRequestAccess,
   statusColor,
 }) => {
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-
-  const handlePressIn = () => {
-    Animated.spring(scaleAnim, {
-      toValue: 0.95,
-      friction: 5,
-      tension: 40,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const handlePressOut = () => {
-    Animated.spring(scaleAnim, {
-      toValue: 1,
-      friction: 5,
-      tension: 40,
-      useNativeDriver: true,
-    }).start();
-  };
 
   const handlePress = () => {
-    if (!isLocked) {
-      onPress();
+    if (!item.isLocked) {
+      item.action();
     }
   };
 
   return (
-    <TouchableOpacity
-      activeOpacity={0.8}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-      onPress={handlePress}
-      disabled={isLocked && !onRequestAccess}
-      accessibilityLabel={`${item.label}${isLocked ? " (Bloqueado)" : ""}`}
-      accessibilityRole="button"
-      accessibilityHint={
-        isLocked ? "Pulse para solicitar acceso" : "Pulse para abrir himnario"
-      }
+    <PressableScale
+      style={[styles.card]}
+      onPress={item.isLocked ? onRequestAccess : handlePress}
+      disabled={item.isLocked && !onRequestAccess}
     >
-      <Animated.View
-        style={[styles.card, { transform: [{ scale: scaleAnim }] }]}
-      >
-        {isLocked && (
-          <Pressable
-            style={({ pressed }) => [
-              styles.lockCard,
-              pressed && styles.pressed,
-              { borderColor: statusColor },
+      {item.isLocked && (
+        <View style={[styles.lockCard, { borderColor: statusColor }]}>
+          <Icon
+            name={hasRequestAccess ? "Clock" : "Lock"}
+            color={statusColor}
+            size={35}
+          />
+          <Text
+            style={[
+              styles.lockTitle,
+              hasRequestAccess && {
+                backgroundColor: statusColor + 99,
+                textAlign: "center",
+              },
             ]}
-            onPress={onRequestAccess}
-            accessibilityLabel={
-              hasRequestAccess ? "Solicitud en proceso" : "Solicitar acceso"
-            }
-            accessibilityRole="button"
           >
-            <Icon
-              name={hasRequestAccess ? "Clock" : "Lock"}
-              color={statusColor}
-              size={35}
-            />
-            <Text
-              style={[
-                styles.lockTitle,
-                hasRequestAccess && {
-                  backgroundColor: statusColor + 99,
-                  textAlign: "center",
-                },
-              ]}
-            >
-              {hasRequestAccess ? "Solicitud en proceso" : "Solicitar acceso"}
-            </Text>
-          </Pressable>
-        )}
-        <Animation
-          backgroundColor={"transparent"}
-          source={item.animation}
-          loop
-          size={{ width: 120, height: 120 }}
-        />
-        <Text style={styles.cardLabel}>{item.label}</Text>
-      </Animated.View>
-    </TouchableOpacity>
+            {hasRequestAccess ? "Solicitud en proceso" : "Solicitar acceso"}
+          </Text>
+        </View>
+      )}
+      <Animation
+        backgroundColor={"transparent"}
+        source={item.animation}
+        loop={false}
+        size={{ width: 120, height: 120 }}
+      />
+      <Text style={styles.cardLabel}>{item.label}</Text>
+    </PressableScale>
   );
 };
 
@@ -279,19 +231,19 @@ const HymnScreen = () => {
     },
   ];
 
-  const renderItem = useCallback(
-    ({ item }: { item: HymnOptionItem }) => (
-      <HymnOption
-        item={item}
-        onPress={item.action}
-        isLocked={item.isLocked}
-        onRequestAccess={handleRequestAccessPress}
-        hasRequestAccess={hasRequestAccess}
-        statusColor={statusColor}
-      />
-    ),
-    [hasRequestAccess, statusColor, handleRequestAccessPress]
-  );
+  // const renderItem = useCallback(
+  //   ({ item }: { item: HymnOptionItem }) => (
+  //     <HymnOption
+  //       item={item}
+  //       onPress={item.action}
+  //       isLocked={item.isLocked}
+  //       onRequestAccess={handleRequestAccessPress}
+  //       hasRequestAccess={hasRequestAccess}
+  //       statusColor={statusColor}
+  //     />
+  //   ),
+  //   [hasRequestAccess, statusColor, handleRequestAccessPress]
+  // );
 
   const requestAccess = async (name: string) => {
     if (!isConnected) {
@@ -373,15 +325,18 @@ const HymnScreen = () => {
               style={{ backgroundColor: "transparent" }}
             />
           </View>
-          <View style={[styles.optionContainer, { width: SCREEN_WIDTH }]}>
-            <FlashList
-              contentContainerStyle={styles.listContainer}
-              data={options}
-              keyExtractor={(item) => item.label}
-              renderItem={renderItem}
-              numColumns={2}
-              showsVerticalScrollIndicator={false}
-            />
+          <View style={[styles.optionContainer]}>
+            {options.map((item) => {
+              return (
+                <HymnOption
+                  item={item}
+                  onRequestAccess={handleRequestAccessPress}
+                  hasRequestAccess={hasRequestAccess}
+                  statusColor={statusColor}
+                  key={item.label}
+                />
+              );
+            })}
           </View>
           {!isConnected && (
             <View style={styles.offlineNotice}>
@@ -449,15 +404,21 @@ const getStyles = ({ colors }: TTheme) =>
     },
     optionContainer: {
       flex: 1,
+      flexDirection: "row",
+      justifyContent: "space-between",
       width: "100%",
       backgroundColor: "transparent",
-      minHeight: 390,
+      gap: 10,
+      paddingHorizontal: 10,
+      // minHeight: 390,
     },
     listContainer: {
       padding: 15,
       paddingBottom: 30,
     },
     card: {
+      flex: 1,
+      width: "100%",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -465,9 +426,7 @@ const getStyles = ({ colors }: TTheme) =>
       padding: 10,
       paddingHorizontal: 18,
       borderRadius: 15,
-      flex: 1,
       minHeight: 220,
-      margin: 8,
       backgroundColor: "white",
       overflow: "hidden",
     },
