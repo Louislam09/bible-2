@@ -1,3 +1,5 @@
+import { SplitButton } from "@/components/animations/split-button";
+import { Palette } from "@/components/animations/split-button/constants";
 import {
   singleScreenHeader,
   SingleScreenHeaderProps,
@@ -34,21 +36,27 @@ const SongDetailPage = () => {
   const { title, chorus, stanzas } = song;
   const scrollViewRef = useRef<ScrollView>(null);
 
-  const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
+  const hasChorus = !!song?.chorus;
+  const multiplayerValue = hasChorus ? 0.5 : 1;
+  const [currentIndex, setCurrentIndex] = useState(0);
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const slideAnim = useRef(new Animated.Value(0)).current;
+
+  const shouldShowChorus = useMemo(() => {
+    return currentIndex % 1 === 0.5;
+  }, [currentIndex, hasChorus]);
+
+  const finishedSong = useMemo(() => {
+    const add = hasChorus ? multiplayerValue : 0;
+    return currentIndex === stanzas.length - 1 + add;
+  }, [currentIndex, stanzas.length, multiplayerValue]);
 
   // Add animated values for background decorations
   const decorationAnimations = useRef<Animated.Value[]>([]).current;
 
   // Add animated values for button interactions
-  const prevButtonAnim = useRef(new Animated.Value(1)).current;
-  const nextButtonAnim = useRef(new Animated.Value(1)).current;
   const increaseFontAnim = useRef(new Animated.Value(1)).current;
   const decreaseFontAnim = useRef(new Animated.Value(1)).current;
-
-  const hasChorus = !!song?.chorus;
-  const [isChorus, setIsChorus] = useState(false);
 
   const increaseFont = async () => {
     impact.light();
@@ -91,10 +99,10 @@ const SongDetailPage = () => {
   };
 
   useEffect(() => {
-    if (currentVerseIndex > 0) {
+    if (currentIndex > 0) {
       animateTransition();
     }
-  }, [currentVerseIndex]);
+  }, [currentIndex]);
 
   const animateTransition = () => {
     fadeAnim.setValue(0);
@@ -120,28 +128,8 @@ const SongDetailPage = () => {
       animated: true,
     });
 
-    // Animate button press
-    Animated.sequence([
-      Animated.timing(nextButtonAnim, {
-        toValue: 0.9,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-      Animated.timing(nextButtonAnim, {
-        toValue: 1,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-    ]).start();
-
-    if (!isChorus && hasChorus) {
-      setIsChorus(true);
-      return;
-    }
-
-    if (currentVerseIndex < stanzas.length - 1) {
-      setCurrentVerseIndex((prev) => prev + 1);
-      setIsChorus(false);
+    if (currentIndex < stanzas.length - multiplayerValue) {
+      setCurrentIndex((prev) => prev + multiplayerValue);
     }
   };
 
@@ -152,38 +140,19 @@ const SongDetailPage = () => {
       animated: true,
     });
 
-    // Animate button press
-    Animated.sequence([
-      Animated.timing(prevButtonAnim, {
-        toValue: 0.9,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-      Animated.timing(prevButtonAnim, {
-        toValue: 1,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-    ]).start();
-
-    if (isChorus) {
-      setIsChorus(false);
-      return;
-    }
-
-    if (currentVerseIndex > 0) {
-      setCurrentVerseIndex((prev) => prev - 1);
-      if (hasChorus) setIsChorus(true);
+    if (currentIndex > 0) {
+      setCurrentIndex((prev) => prev - multiplayerValue);
     }
   };
 
-  const verse = useMemo(() => {
-    return stanzas[currentVerseIndex];
-  }, [currentVerseIndex, stanzas]);
+  const currentStanza = useMemo(() => {
+    const parsedIndex = Math.floor(currentIndex);
+    return stanzas[parsedIndex];
+  }, [currentIndex, stanzas]);
 
-  const verseText = useMemo(() => {
-    return verse.replace(/^\(\d+\)\s*/, "");
-  }, [verse]);
+  const currentStanzaText = useMemo(() => {
+    return currentStanza.replace(/^\(\d+\)\s*/, "");
+  }, [currentStanza]);
 
   const screenOptions = useMemo(() => {
     return {
@@ -268,7 +237,7 @@ const SongDetailPage = () => {
     });
 
     return decorations;
-  }, [currentVerseIndex]);
+  }, [currentIndex]);
 
   // Add floating animation effect
   useEffect(() => {
@@ -309,8 +278,12 @@ const SongDetailPage = () => {
     <>
       <Stack.Screen options={{ ...singleScreenHeader(screenOptions) }} />
       <LinearGradient
-        colors={["#2c3e50", "#34495e", theme.colors.notification]}
-        // colors={["#2c3e50", "#34495e", "#3498db"]}
+        colors={[
+          "#2c3e50",
+          theme.colors.background,
+          // theme.colors.notification,
+        ]}
+        // colors={["#2c3e50", "#34495e", theme.colors.notification]}
         style={styles.container}
       >
         {/* Title Section */}
@@ -320,17 +293,21 @@ const SongDetailPage = () => {
               colors={["#e74c3c", "#c0392b"]}
               style={styles.hymnNumberGradient}
             >
-              <Text style={styles.hymnNumber}>{titleInfo.hymnNumber.trim()}</Text>
+              <Text style={styles.hymnNumber}>
+                {titleInfo.hymnNumber.trim()}
+              </Text>
             </LinearGradient>
           </View>
 
           <Text style={styles.title}>{titleInfo.hymnTitle}</Text>
 
-          {isChorus && hasChorus ? (
-            <Text style={styles.chorusLabel}>— CORO —</Text>
+          {shouldShowChorus ? (
+            <Text style={styles.chorusLabel}>
+              — CORO {Math.floor(currentIndex) + 1} —
+            </Text>
           ) : (
             <Text style={styles.chorusLabel}>
-              — ESTRÓFA {currentVerseIndex + 1} de {stanzas.length} —
+              — ESTRÓFA {currentIndex + 1} de {stanzas.length} —
             </Text>
           )}
         </View>
@@ -351,7 +328,7 @@ const SongDetailPage = () => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
           >
-            {isChorus && hasChorus ? (
+            {shouldShowChorus ? (
               <Fragment>
                 {chorus?.split("\n").map((line, i) => (
                   <Text
@@ -367,7 +344,7 @@ const SongDetailPage = () => {
               </Fragment>
             ) : (
               <Fragment>
-                {verseText.split("\n").map((line, i) => (
+                {currentStanzaText.split("\n").map((line, i) => (
                   <Text
                     style={[
                       styles.verseText,
@@ -426,57 +403,33 @@ const SongDetailPage = () => {
 
         {/* Navigation */}
         <View style={styles.navigationContainer}>
-          <View style={styles.navigationButtons}>
-            <Animated.View style={{ transform: [{ scale: prevButtonAnim }] }}>
-              <TouchableOpacity
-                onPress={goToPrevVerse}
-                style={[
-                  styles.navButton,
-                  styles.prevButton,
-                  currentVerseIndex === 0 &&
-                  !isChorus &&
-                  styles.navButtonDisabled,
-                ]}
-                disabled={currentVerseIndex === 0 && !isChorus}
-              >
-                <Text
-                  style={[
-                    styles.navButtonText,
-                    currentVerseIndex === 0 &&
-                    !isChorus &&
-                    styles.navButtonTextDisabled,
-                  ]}
-                >
-                  Anterior
-                </Text>
-              </TouchableOpacity>
-            </Animated.View>
-
-            <Animated.View style={{ transform: [{ scale: nextButtonAnim }] }}>
-              <TouchableOpacity
-                onPress={goToNextVerse}
-                style={[
-                  styles.navButton,
-                  styles.nextButton,
-                  currentVerseIndex === stanzas.length - 1 &&
-                  isChorus &&
-                  styles.navButtonDisabled,
-                ]}
-                disabled={currentVerseIndex === stanzas.length - 1 && isChorus}
-              >
-                <Text
-                  style={[
-                    styles.navButtonText,
-                    currentVerseIndex === stanzas.length - 1 &&
-                    isChorus &&
-                    styles.navButtonTextDisabled,
-                  ]}
-                >
-                  Siguiente
-                </Text>
-              </TouchableOpacity>
-            </Animated.View>
-          </View>
+          <SplitButton
+            splitted={currentIndex > 0}
+            mainAction={{
+              label: currentIndex === 0 ? "Iniciar" : "Siguiente",
+              onPress: () => {
+                console.log("Siguiente");
+                goToNextVerse();
+              },
+              backgroundColor: theme.colors.text + 60,
+            }}
+            leftAction={{
+              label: "Anterior",
+              onPress: () => {
+                console.log("Anterior");
+                goToPrevVerse();
+              },
+              backgroundColor: theme.colors.text + 60,
+            }}
+            rightAction={{
+              label: finishedSong ? "Finalizar" : "Siguiente",
+              onPress: () => {
+                console.log("Finish");
+                goToNextVerse();
+              },
+              backgroundColor: theme.colors.notification,
+            }}
+          />
         </View>
       </LinearGradient>
     </>
@@ -585,9 +538,10 @@ const getStyles = ({ colors, dark }: TTheme) =>
       transform: [{ rotate: "15deg" }],
     },
     navigationContainer: {
-      paddingHorizontal: 30,
-      paddingBottom: 30,
+      paddingBottom: 10,
       backgroundColor: "transparent",
+      justifyContent: "center",
+      alignItems: "center",
     },
     topDivider: {
       height: 1,
