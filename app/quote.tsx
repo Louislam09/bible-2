@@ -1,9 +1,12 @@
+import { StoryList } from "@/components/animations/story-list/components/story-list";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
 import { CustomQuoteMode } from "@/components/quote/CustomQuoteMode";
 import { QuoteCard } from "@/components/quote/QuoteCard";
+import { QuoteCardItem } from "@/components/quote/QuoteCardItem";
 import { QuoteNavigationDots } from "@/components/quote/QuoteNavigationDots";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
+import { Text } from "@/components/Themed";
 import { FAMOUS_VERSES } from "@/constants/quotesData";
 import { quoteTemplates } from "@/constants/quoteTemplates";
 import { useMyTheme } from "@/context/ThemeContext";
@@ -14,6 +17,7 @@ import { useNoteService } from "@/services/noteService";
 import { bibleState$ } from "@/state/bibleState";
 import { TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
 import { Stack, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -26,6 +30,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from "react-native";
 import ViewShot from "react-native-view-shot";
@@ -300,6 +305,15 @@ const Quote: React.FC<QuoteProps> = () => {
     };
   }, [theme.colors, handleShare, isLoading, setCustomMode]);
 
+  const { width, height } = useWindowDimensions();
+
+  const storyItemDimensions = useMemo(() => {
+    return {
+      width: width * 0.8,
+      height: width + 150,
+    };
+  }, [width]);
+
   return (
     <>
       <Stack.Screen options={singleScreenHeader(screenOptions)} />
@@ -364,45 +378,58 @@ const Quote: React.FC<QuoteProps> = () => {
                 viewShotRef={viewShotRef}
               />
             ) : (
-              <View style={styles.templateContent}>
-                {renderCardRange.map((index) => {
-                  const template = quoteTemplates[index];
-                  const isCurrent = index === currentTemplateIndex;
-                  const distance = Math.abs(index - currentTemplateIndex);
-                  return (
-                    <QuoteCard
-                      key={template.id.toString()}
-                      template={{
-                        id: template.id.toString(),
-                        template: template.template,
-                      }}
-                      index={index}
-                      isCurrent={isCurrent}
-                      distance={distance}
-                      currentTemplateIndex={currentTemplateIndex}
-                      pan={pan}
-                      rotate={rotate}
-                      currentCardScale={currentCardScale}
-                      currentCardOpacity={currentCardOpacity}
-                      screenWidth={screenWidth}
-                      panResponder={panResponder}
-                      reference={reference}
-                      quoteText={quoteText}
-                      webViewRef={webViewRef}
-                      viewShotRef={viewShotRef}
-                    />
-                  );
-                })}
+              <View
+                style={{
+                  width: width,
+                  height: width,
+                  aspectRatio: 1,
+                  paddingLeft: 25,
+                  // borderWidth: 1,
+                  // borderColor: "red",
+                }}
+              >
+                <StoryList
+                  stories={quoteTemplates}
+                  pagingEnabled={false} // set to true to enable paging
+                  storyItemDimensions={storyItemDimensions}
+                  visibleItems={3} // number of items visible at a time
+                  gap={35} // gap between items
+                  renderItem={(template) => {
+                    return (
+                      <View
+                        style={{
+                          width: storyItemDimensions.width,
+                          height: storyItemDimensions.height,
+                          backgroundColor: "transparent",
+                        }}
+                      >
+                        <WebView
+                          ref={null}
+                          // ref={isCurrent ? webViewRef : null}
+                          key={template.id}
+                          originWhitelist={["*"]}
+                          containerStyle={{
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: 20,
+                          }}
+                          source={{
+                            html: template.template
+                              .replace(/{{ref}}/g, reference)
+                              .replace(/{{text}}/g, getVerseTextRaw(quoteText)),
+                          }}
+                          scrollEnabled={false}
+                          onError={(syntheticEvent) => {
+                            const { nativeEvent = {} } = syntheticEvent;
+                            console.warn("WebView error: ", nativeEvent);
+                          }}
+                          {...createOptimizedWebViewProps({}, "static")}
+                        />
+                      </View>
+                    );
+                  }}
+                />
               </View>
-            )}
-            {!customMode && (
-              <QuoteNavigationDots
-                currentIndex={currentTemplateIndex}
-                totalTemplates={quoteTemplates.length}
-                customMode={customMode}
-                onDotPress={handleDotPress}
-                scrollViewRef={scrollViewRef}
-              />
             )}
           </View>
         </KeyboardAvoidingView>

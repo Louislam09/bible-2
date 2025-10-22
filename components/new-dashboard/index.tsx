@@ -113,6 +113,10 @@ const NewDashboard = () => {
       label: "Himnos",
       isIonicon: true,
       action: onSong,
+      longAction: () => {
+        // @ts-ignore
+        navigation.navigate("example");
+      },
     },
     user
       ? {

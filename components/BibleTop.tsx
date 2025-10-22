@@ -299,7 +299,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
       }:${item.verse}`;
       bibleState$.handleSelectVerseForNote(verseText);
       router.push({
-        pathname: "/quoteDom",
+        pathname: "/quote",
         params: { text: verseText, reference },
       });
     },
