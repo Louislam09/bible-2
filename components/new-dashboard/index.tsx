@@ -183,8 +183,7 @@ const NewDashboard = () => {
     {
       icon: "Quote",
       label: "Cita",
-      action: () =>
-        navigation.navigate(useDomComponent ? Screens.QuoteDom : Screens.Quote),
+      action: () => navigation.navigate(Screens.Quote),
       color: "#CDAA7D",
       isNew: isWithinTimeframe("1w", new Date("2025-06-05")).isActive,
     },

@@ -2,32 +2,24 @@ import { StoryList } from "@/components/animations/story-list/components/story-l
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
 import { CustomQuoteMode } from "@/components/quote/CustomQuoteMode";
-import { QuoteCard } from "@/components/quote/QuoteCard";
-import { QuoteCardItem } from "@/components/quote/QuoteCardItem";
-import { QuoteNavigationDots } from "@/components/quote/QuoteNavigationDots";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text } from "@/components/Themed";
 import { FAMOUS_VERSES } from "@/constants/quotesData";
 import { quoteTemplates } from "@/constants/quoteTemplates";
 import { useMyTheme } from "@/context/ThemeContext";
-import usePrintAndShare from "@/hooks/usePrintAndShare";
-import { useQuoteCardStack } from "@/hooks/useQuoteCardStack";
 import { useViewShot } from "@/hooks/useViewShot";
-import { useNoteService } from "@/services/noteService";
 import { bibleState$ } from "@/state/bibleState";
 import { TTheme } from "@/types";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
-import { Stack, useLocalSearchParams, useNavigation } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
-  Animated,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
@@ -89,131 +81,36 @@ type QuoteProps = {};
 const Quote: React.FC<QuoteProps> = () => {
   const { theme } = useMyTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
-  const [quoteText, setQuoteText] = useState("");
-  const [selectedColor, setSelectedColor] = useState(COLORS[0]);
-  const [selectedFont, setSelectedFont] = useState<FontType>(FONTS[0]);
-  const [selectedTemplate, setSelectedTemplate] = useState(quoteTemplates[0]);
+
+  const [quoteInfo, setQuoteInfo] = useState({
+    text: "",
+    reference: "",
+    color: COLORS[0],
+    font: FONTS[0],
+  });
+
   const [isLoading, setIsLoading] = useState(false);
   const [customMode, setCustomMode] = useState(false);
-  const [reference, setReference] = useState("");
   const webViewRef = useRef<WebView>(null);
   const [currentTemplateIndex, setCurrentTemplateIndex] = useState(0);
-  const {
-    pan,
-    rotate,
-    currentCardScale,
-    currentCardOpacity,
-    panResponder,
-    renderCardRange,
-    screenWidth,
-  } = useQuoteCardStack({
-    currentIndex: currentTemplateIndex,
-    totalTemplates: quoteTemplates.length,
-    onIndexChange: setCurrentTemplateIndex,
-  });
-  const scrollViewRef = useRef<ScrollView>(null);
-  const titleOpacity = useRef(new Animated.Value(1)).current;
-  const subTitleOpacity = useRef(new Animated.Value(1)).current;
-  const titleTranslateY = useRef(new Animated.Value(0)).current;
-  const subTitleTranslateY = useRef(new Animated.Value(0)).current;
+
   const viewShotRef = useRef<ViewShot>(null);
 
   const selectedVerse = use$(() => bibleState$.selectedVerseForNote.get());
   const params = useLocalSearchParams();
 
+  // Extract specific param values to avoid infinite loop from params object reference changes
+  const paramText =
+    params?.text && typeof params.text === "string" ? params.text : null;
+  const paramReference =
+    params?.reference && typeof params.reference === "string"
+      ? params.reference
+      : null;
+
   const randomVerse = useMemo(() => {
     const randomIndex = Math.floor(Math.random() * FAMOUS_VERSES.length);
     return FAMOUS_VERSES[randomIndex];
   }, []);
-
-  useEffect(() => {
-    if (!customMode && selectedTemplate) {
-      setSelectedColor(COLORS[0]);
-      setSelectedFont(FONTS[0]);
-      if (params?.text && typeof params.text === "string") {
-        setQuoteText(params.text);
-      } else if (selectedVerse) {
-        setQuoteText(selectedVerse);
-      } else {
-        setQuoteText(randomVerse.text);
-      }
-      if (params?.reference && typeof params.reference === "string") {
-        setReference(params.reference);
-      } else {
-        setReference(randomVerse.reference);
-      }
-    }
-  }, [selectedTemplate, customMode, params, selectedVerse]);
-
-  useEffect(() => {
-    if (!customMode) {
-      setSelectedTemplate(quoteTemplates[currentTemplateIndex]);
-    }
-    if (scrollViewRef.current) {
-      const dotWidth = 8 + 8;
-      const centerOffset = screenWidth / 2 - dotWidth / 2;
-      const scrollToX = currentTemplateIndex * dotWidth - centerOffset;
-      const maxScrollX = (quoteTemplates.length + 1) * dotWidth - screenWidth;
-      const limitedScrollToX = Math.max(0, Math.min(maxScrollX, scrollToX));
-
-      scrollViewRef.current.scrollTo({ x: limitedScrollToX, animated: true });
-    }
-  }, [currentTemplateIndex, customMode, screenWidth]);
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(titleOpacity, {
-        toValue: 0,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-      Animated.timing(subTitleOpacity, {
-        toValue: 0,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-      Animated.timing(titleTranslateY, {
-        toValue: -20,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-      Animated.timing(subTitleTranslateY, {
-        toValue: -20,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      if (!customMode) {
-        setSelectedTemplate(quoteTemplates[currentTemplateIndex]);
-      }
-      Animated.parallel([
-        Animated.timing(titleOpacity, {
-          toValue: 1,
-          duration: 150,
-          delay: 50,
-          useNativeDriver: true,
-        }),
-        Animated.timing(subTitleOpacity, {
-          toValue: 1,
-          duration: 150,
-          delay: 50,
-          useNativeDriver: true,
-        }),
-        Animated.timing(titleTranslateY, {
-          toValue: 0,
-          duration: 150,
-          delay: 50,
-          useNativeDriver: true,
-        }),
-        Animated.timing(subTitleTranslateY, {
-          toValue: 0,
-          duration: 150,
-          delay: 50,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    });
-  }, [currentTemplateIndex, customMode, screenWidth]);
 
   const { captureAndShare } = useViewShot({
     fileName: "quote",
@@ -222,17 +119,31 @@ const Quote: React.FC<QuoteProps> = () => {
     viewShotRef,
   });
 
+  useEffect(() => {
+    if (!customMode) {
+      const text = paramText || selectedVerse || randomVerse.text;
+      const reference = paramReference || randomVerse.reference;
+
+      setQuoteInfo({
+        text,
+        reference,
+        color: COLORS[0],
+        font: FONTS[0],
+      });
+    }
+  }, [customMode, paramText, paramReference, selectedVerse, randomVerse]);
+
   const handleShare = async () => {
-    if (!quoteText.trim()) {
+    if (!quoteInfo.text.trim()) {
       Alert.alert("Error", "Por favor, ingrese una cita antes de compartir");
       return;
     }
     setIsLoading(true);
     try {
       if (customMode) {
-        const verseText = getVerseTextRaw(quoteText);
-        const verseRef = reference;
-        const html = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;width:100vw;background:${selectedColor};flex-direction:column;"><span style=\"color:#fff;font-size:2.5em;font-family:${selectedFont.fontFamily};font-weight:${selectedFont.fontWeight};\">${verseText}</span><span style=\"color:#fff;font-size:1.2em;margin-top:2em;opacity:0.8;\">${verseRef}</span></div>`;
+        const verseText = getVerseTextRaw(quoteInfo.text);
+        const verseRef = quoteInfo.reference;
+        const html = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;width:100vw;background:${quoteInfo.color};flex-direction:column;"><span style=\"color:#fff;font-size:2.5em;font-family:${quoteInfo.font.fontFamily};font-weight:${quoteInfo.font.fontWeight};\">${verseText}</span><span style=\"color:#fff;font-size:1.2em;margin-top:2em;opacity:0.8;\">${verseRef}</span></div>`;
 
         // Wait a bit for the content to render
         await new Promise((resolve) => setTimeout(resolve, 100));
@@ -257,15 +168,6 @@ const Quote: React.FC<QuoteProps> = () => {
       );
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleDotPress = (index: number) => {
-    if (index < quoteTemplates.length) {
-      setCurrentTemplateIndex(index);
-      setCustomMode(false);
-    } else {
-      setCustomMode(true);
     }
   };
 
@@ -328,51 +230,26 @@ const Quote: React.FC<QuoteProps> = () => {
           behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
           <View style={styles.container}>
-            <View style={styles.headerContent}>
-              <Animated.Text
-                style={[
-                  styles.mainTitle,
-                  {
-                    opacity: titleOpacity,
-                    transform: [{ translateY: titleTranslateY }],
-                  },
-                ]}
-              >
-                {customMode
-                  ? "Personaliza tu cita"
-                  : quoteTemplates[currentTemplateIndex]?.name || "Loading..."}
-              </Animated.Text>
-              <Animated.Text
-                style={[
-                  styles.subTitle,
-                  {
-                    opacity: subTitleOpacity,
-                    transform: [{ translateY: subTitleTranslateY }],
-                  },
-                ]}
-              >
-                {customMode
-                  ? "Crea tu propio estilo"
-                  : quoteTemplates[currentTemplateIndex]?.description ||
-                    "Select a template"}
-              </Animated.Text>
-            </View>
             {customMode ? (
               <CustomQuoteMode
-                selectedColor={selectedColor}
-                selectedFont={selectedFont}
-                quoteText={quoteText}
-                reference={reference}
+                selectedColor={quoteInfo.color}
+                selectedFont={quoteInfo.font}
+                quoteText={quoteInfo.text}
+                reference={quoteInfo.reference}
                 onColorSelect={(color) => {
-                  setSelectedColor(color);
+                  setQuoteInfo({ ...quoteInfo, color });
                   setCustomMode(true);
                 }}
                 onFontSelect={(font) => {
-                  setSelectedFont(font);
+                  setQuoteInfo({ ...quoteInfo, font });
                   setCustomMode(true);
                 }}
-                onQuoteTextChange={setQuoteText}
-                onReferenceChange={setReference}
+                onQuoteTextChange={(text) =>
+                  setQuoteInfo({ ...quoteInfo, text })
+                }
+                onReferenceChange={(reference) =>
+                  setQuoteInfo({ ...quoteInfo, reference })
+                }
                 colors={COLORS}
                 fonts={FONTS}
                 viewShotRef={viewShotRef}
@@ -380,51 +257,70 @@ const Quote: React.FC<QuoteProps> = () => {
             ) : (
               <View
                 style={{
-                  width: width,
-                  height: width,
-                  aspectRatio: 1,
-                  paddingLeft: 25,
-                  // borderWidth: 1,
-                  // borderColor: "red",
+                  position: "relative",
+                  flex: 1,
+                  width: "100%",
+                  paddingLeft: width * 0.1,
+                  paddingTop: width * 0.2 - 10,
                 }}
               >
                 <StoryList
                   stories={quoteTemplates}
-                  pagingEnabled={false} // set to true to enable paging
+                  pagingEnabled={true} // set to true to enable paging
                   storyItemDimensions={storyItemDimensions}
-                  visibleItems={3} // number of items visible at a time
-                  gap={35} // gap between items
-                  renderItem={(template) => {
+                  setActiveIndex={setCurrentTemplateIndex}
+                  visibleItems={4} // number of items visible at a time
+                  gap={25} // gap between items
+                  renderItem={(template, index) => {
+                    const isCurrent = index === currentTemplateIndex;
                     return (
                       <View
                         style={{
                           width: storyItemDimensions.width,
                           height: storyItemDimensions.height,
                           backgroundColor: "transparent",
+                          // borderWidth: isCurrent ? 1 : 0,
+                          // borderColor: isCurrent ? "red" : "transparent",
                         }}
                       >
-                        <WebView
-                          ref={null}
-                          // ref={isCurrent ? webViewRef : null}
-                          key={template.id}
-                          originWhitelist={["*"]}
-                          containerStyle={{
+                        <ViewShot
+                          ref={isCurrent ? viewShotRef : null}
+                          options={{
+                            format: "png",
+                            quality: 1,
+                            result: "tmpfile",
+                          }}
+                          style={{
+                            flex: 1,
                             width: "100%",
-                            height: "100%",
-                            borderRadius: 20,
+                            backgroundColor: "transparent",
                           }}
-                          source={{
-                            html: template.template
-                              .replace(/{{ref}}/g, reference)
-                              .replace(/{{text}}/g, getVerseTextRaw(quoteText)),
-                          }}
-                          scrollEnabled={false}
-                          onError={(syntheticEvent) => {
-                            const { nativeEvent = {} } = syntheticEvent;
-                            console.warn("WebView error: ", nativeEvent);
-                          }}
-                          {...createOptimizedWebViewProps({}, "static")}
-                        />
+                        >
+                          <WebView
+                            ref={isCurrent ? webViewRef : null}
+                            key={template.id}
+                            originWhitelist={["*"]}
+                            containerStyle={{
+                              width: "100%",
+                              height: "100%",
+                              borderRadius: 20,
+                            }}
+                            source={{
+                              html: template.template
+                                .replace(/{{ref}}/g, quoteInfo.reference)
+                                .replace(
+                                  /{{text}}/g,
+                                  getVerseTextRaw(quoteInfo.text)
+                                ),
+                            }}
+                            scrollEnabled={false}
+                            onError={(syntheticEvent) => {
+                              const { nativeEvent = {} } = syntheticEvent;
+                              console.warn("WebView error: ", nativeEvent);
+                            }}
+                            {...createOptimizedWebViewProps({}, "static")}
+                          />
+                        </ViewShot>
                       </View>
                     );
                   }}
@@ -445,6 +341,7 @@ const getStyles = ({ colors }: TTheme) =>
       backgroundColor: colors.background,
       alignItems: "center",
       paddingTop: 20,
+      justifyContent: "center",
     },
     headerContent: {
       alignItems: "center",

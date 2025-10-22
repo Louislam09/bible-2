@@ -1,18 +1,19 @@
-import { useWindowDimensions } from 'react-native';
+import { useWindowDimensions } from "react-native";
 
-import { type ReactNode, useMemo } from 'react';
+import { type ReactNode, useMemo } from "react";
 
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   cancelAnimation,
+  runOnJS,
   useDerivedValue,
   useSharedValue,
   withDecay,
   withTiming,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
-import { StoryListItem } from './story-item';
-import { clamp, findClosestSnapPoint } from '../../helpers';
+import { StoryListItem } from "./story-item";
+import { clamp, findClosestSnapPoint } from "../../helpers";
 
 type StoryListProps<T> = {
   stories: T[];
@@ -22,6 +23,7 @@ type StoryListProps<T> = {
     height: number;
   };
   renderItem: (story: T, index: number) => ReactNode;
+  setActiveIndex: (index: number) => void;
   visibleItems?: number;
   gap?: number;
 };
@@ -31,6 +33,7 @@ function StoryList<T>({
   pagingEnabled,
   storyItemDimensions,
   renderItem,
+  setActiveIndex,
   visibleItems = 3,
   gap = 35,
 }: StoryListProps<T>) {
@@ -50,7 +53,7 @@ function StoryList<T>({
     return clamp(
       translateX.value,
       -storyItemDimensions.width * (stories.length - 1),
-      0,
+      0
     );
   }, [width, stories]);
 
@@ -72,12 +75,12 @@ function StoryList<T>({
       // Please not that we're using the clamped value
       contextX.value = clampedTranslateX.value;
     })
-    .onUpdate(event => {
+    .onUpdate((event) => {
       // update the translateX value by adding the
       // current translation to the stored context value
       translateX.value = contextX.value + event.translationX;
     })
-    .onFinalize(event => {
+    .onFinalize((event) => {
       if (!pagingEnabled) {
         // If paging is disabled, we need to use a decay animation
         // to simulate the momentum of the gesture
@@ -92,7 +95,7 @@ function StoryList<T>({
       // If paging is enabled, we need to snap to the closest snap point
       const closestSnapPoint = findClosestSnapPoint(
         translateX.value,
-        storiesSnapPoints,
+        storiesSnapPoints
       );
       // snap to the closest snap point using a timing animation
       // (you can use any animation you want)
@@ -109,7 +112,11 @@ function StoryList<T>({
     // calculate the active index by dividing the current
     // translation by the width of a story item
     // We're using Math.abs here because the translation value is negative
-    return Math.abs(clampedTranslateX.value / storyItemDimensions.width);
+    const currentActiveIndex = Math.abs(
+      clampedTranslateX.value / storyItemDimensions.width
+    );
+    runOnJS(setActiveIndex)(Math.floor(currentActiveIndex));
+    return currentActiveIndex;
   }, [storyItemDimensions.width]);
 
   return (

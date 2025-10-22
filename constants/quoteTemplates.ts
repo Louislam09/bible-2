@@ -44,6 +44,7 @@ export const quoteTemplates = [
     width: 100%;
     max-width: 100%;
     max-height: 100%;
+    min-height: 300px;
     box-shadow: 0 2vmin 4vmin rgba(0,0,0,0.25);
     position: relative;
     text-align: center;
@@ -86,17 +87,36 @@ export const quoteTemplates = [
     font-style: italic;
     color: #555;
   }
+    .watermark {
+      position: absolute;
+      bottom: 2vmin;
+      right: 2vmin;
+      font-size: 5vmin;
+      color: #000000;
+      font-family: sans-serif;
+      width: 100%;
+    }
+  
+    .watermark-text {
+      font-size: 4vmin;
+      font-family: sans-serif;
+      color: #000000;
+      text-align: center;
+    }
  </style>
  </head>
  <body>
    <div class="quote-box">
      <p class="quote-text">
-       "{{text}}"
+       {{text}}
      </p>
      <p class="verse">
       {{ref}}
      </p>
    </div>
+   <div class="watermark {{watermarkClass}}">
+      <p class="watermark-text"><b>Descargar:</b> Santa Biblia RV60+Audio</p>
+    </div>
  </body>
  </html>
  `,
@@ -142,6 +162,7 @@ export const quoteTemplates = [
     width: 100%;
     max-width: 100%;
     max-height: 100%;
+    min-height: 300px;
     border-radius: 5vmin;
     box-shadow: 0 2vmin 4vmin rgba(25, 32, 61, 0.8);
     position: relative;
@@ -187,7 +208,7 @@ export const quoteTemplates = [
 <body>
   <div class="quote-box">
     <p class="quote-text">
-      "{{text}}"
+      {{text}}
     </p>
     <p class="verse">
      {{ref}}
@@ -237,6 +258,7 @@ export const quoteTemplates = [
     width: 100%;
     max-width: 100%;
     max-height: 100%;
+    min-height: 300px;
     padding: 6vmin 7vmin;
     border-radius: 5vmin;
     box-shadow: 0 2vmin 4vmin rgba(15, 12, 45, 0.7);
@@ -283,7 +305,7 @@ export const quoteTemplates = [
 <body>
   <div class="quote-container">
     <p class="quote">
-       "{{text}}"
+       {{text}}
     </p>
     <p class="reference">
      {{ref}}
@@ -334,6 +356,7 @@ export const quoteTemplates = [
     width: 100%;
     max-width: 100%;
     max-height: 100%;
+    min-height: 300px;
     padding: 6vmin 7vmin;
     text-align: center;
     position: relative;
@@ -378,7 +401,7 @@ export const quoteTemplates = [
 </head>
 <body>
   <div class="quote-container" role="blockquote" aria-label="Proverbio bíblico">
-    <p class="quote-text">"{{text}}"</p>
+    <p class="quote-text">{{text}}</p>
     <p class="quote-ref">{{ref}}</p>
   </div>
 </body>
@@ -427,6 +450,7 @@ export const quoteTemplates = [
     width: 100%;
     max-width: 100%;
     max-height: 100%;
+    min-height: 300px;
     padding: 6vmin 7vmin;
     text-align: center;
     position: relative;
@@ -478,7 +502,6 @@ export const quoteTemplates = [
 </body>
 </html>`,
   },
-  // --- NEW TEMPLATES START HERE ---
   {
     id: 6,
     name: "Atardecer Dorado Profundo",
@@ -520,7 +543,8 @@ export const quoteTemplates = [
     padding: 6vmin 7vmin;
     width: 100%;
     max-width: 100%;
-    max-height: 100%;
+        max-height: 100%;
+    min-height: 300px;
     box-shadow: 0 2vmin 4vmin rgba(0,0,0,0.5);
     text-align: center;
     border-left: 1vmin solid #FFC300;
@@ -559,7 +583,7 @@ export const quoteTemplates = [
 </head>
 <body>
   <div class="quote-card">
-    <p class="quote-text-content">"{{text}}"</p>
+    <p class="quote-text-content">{{text}}</p>
     <p class="quote-reference">{{ref}}</p>
   </div>
 </body>
@@ -607,7 +631,8 @@ export const quoteTemplates = [
     padding: 6vmin 7vmin;
     width: 100%;
     max-width: 100%;
-    max-height: 100%;
+        max-height: 100%;
+    min-height: 300px;
     box-shadow: 0 2vmin 4vmin rgba(0,0,0,0.4);
     text-align: left;
     border-top: 0.6vmin solid #92a1ac;
@@ -636,7 +661,7 @@ export const quoteTemplates = [
 </head>
 <body>
   <div class="quote-wrapper">
-    <p class="quote-main-text">"{{text}}"</p>
+    <p class="quote-main-text">{{text}}</p>
     <p class="quote-source">{{ref}}</p>
   </div>
 </body>
@@ -690,7 +715,8 @@ export const quoteTemplates = [
     padding: 6vmin 7vmin;
     width: 100%;
     max-width: 100%;
-    max-height: 100%;
+        max-height: 100%;
+    min-height: 300px;
     box-shadow: 0.6vmin 0.6vmin 2vmin rgba(74, 59, 49, 0.25),
                 inset 0 0 3vmin rgba(222, 184, 135, 0.3);
     text-align: center;
@@ -731,7 +757,7 @@ export const quoteTemplates = [
 </head>
 <body>
   <div class="scroll-container">
-    <p class="quote-script">"{{text}}"</p>
+    <p class="quote-script">{{text}}</p>
     <p class="quote-attribution">{{ref}}</p>
   </div>
 </body>
@@ -739,7 +765,7 @@ export const quoteTemplates = [
 `,
   },
   {
-    id: 10,
+    id: 9,
     name: "Moderno Geométrico Impacto",
     description:
       "Líneas limpias y acentos geométricos audaces para una presentación contemporánea y memorable de la cita.",
@@ -780,6 +806,7 @@ export const quoteTemplates = [
     width: 100%;
     max-width: 100%;
     max-height: 100%;
+    min-height: 300px;
     box-shadow: 0 2vmin 4vmin rgba(0,0,0,0.08);
     text-align: left;
     position: relative;
@@ -835,7 +862,9 @@ export const quoteTemplates = [
 </head>
 <body>
   <div class="geo-quote-box">
-    <p class="quote-content-main">"{{text}}"</p>
+    <p class="quote-content-main">
+    {{text}}
+    </p>
     <p class="quote-ref-source">{{ref}}</p>
   </div>
 </body>
@@ -843,7 +872,7 @@ export const quoteTemplates = [
 `,
   },
   {
-    id: 24,
+    id: 10,
     name: "Arte Abstracto Vibrante",
     description:
       "Formas audaces, colores contrastantes y un diseño moderno para una cita con energía artística.",
@@ -882,7 +911,8 @@ export const quoteTemplates = [
       padding: 6vmin 7vmin;
       width: 100%;
       max-width: 100%;
-      max-height: 100%;
+          max-height: 100%;
+    min-height: 300px;
       box-shadow: 0 2vmin 4vmin rgba(0,0,0,0.1);
       text-align: left;
       position: relative;
@@ -941,7 +971,7 @@ export const quoteTemplates = [
   <body>
     <div class="abstract-art-quote">
       <div class="quote-content">
-        <p class="quote-text-bold">"{{text}}"</p>
+        <p class="quote-text-bold">{{text}}</p>
         <p class="quote-ref-clean">{{ref}}</p>
       </div>
     </div>
@@ -950,7 +980,7 @@ export const quoteTemplates = [
   `,
   },
   {
-    id: 26,
+    id: 11,
     name: "Minimalismo Japonés Zen",
     description:
       "Diseño limpio y aireado con inspiración japonesa, usando tonos naturales y tipografía simple.",
@@ -990,7 +1020,8 @@ export const quoteTemplates = [
       padding: 6vmin 7vmin;
       width: 100%;
       max-width: 100%;
-      max-height: 100%;
+          max-height: 100%;
+    min-height: 300px;
       box-shadow: 0 1vmin 3vmin rgba(0,0,0,0.05);
       text-align: left;
       position: relative;
@@ -1027,7 +1058,7 @@ export const quoteTemplates = [
   </head>
   <body>
     <div class="zen-quote-panel">
-      <p class="quote-text-haiku">"{{text}}"</p>
+      <p class="quote-text-haiku">{{text}}</p>
       <p class="quote-ref-shodo">{{ref}}</p>
     </div>
   </body>
@@ -1035,7 +1066,7 @@ export const quoteTemplates = [
   `,
   },
   {
-    id: 31,
+    id: 12,
     name: "Blueprint Técnico Limpio",
     description:
       "Estilo de plano técnico con fondo azul, cuadrícula blanca y tipografía precisa.",
@@ -1080,7 +1111,8 @@ export const quoteTemplates = [
       padding: 5vmin;
       width: 100%;
       max-width: 100%;
-      max-height: 100%;
+          max-height: 100%;
+    min-height: 300px;
       box-shadow: 0 0 2vmin rgba(102, 170, 255, 0.3);
       text-align: left;
       display: flex;
@@ -1125,7 +1157,7 @@ export const quoteTemplates = [
         <span class="title-block-main">PROYECTO: INSPIRACIÓN</span>
         <span class="title-block-rev">REV: 1.0</span>
       </div>
-      <p class="quote-text-specs">"{{text}}"</p>
+      <p class="quote-text-specs">{{text}}</p>
       <p class="quote-ref-drawingno">REF. #: {{ref}}</p>
     </div>
   </body>
@@ -1133,7 +1165,7 @@ export const quoteTemplates = [
   `,
   },
   {
-    id: 38,
+    id: 13,
     name: "Cristal Fracturado Neón",
     description:
       "Efecto de cristal roto con brillos de neón sobre un fondo oscuro para un look moderno y dinámico.",
@@ -1172,7 +1204,8 @@ export const quoteTemplates = [
       padding: 6vmin;
       width: 100%;
       max-width: 100%;
-      max-height: 100%;
+          max-height: 100%;
+    min-height: 300px;
       box-shadow: 0 0 4vmin rgba(255,0,255,0.3), 0 0 7vmin rgba(0,255,255,0.3);
       text-align: center;
       position: relative;
@@ -1220,7 +1253,7 @@ export const quoteTemplates = [
       <div class="shard shard2"></div>
       <div class="shard shard3"></div>
       <div class="shard shard4"></div>
-      <p class="quote-text-glitch">"{{text}}"</p>
+      <p class="quote-text-glitch">{{text}}</p>
       <p class="quote-ref-matrix">> {{ref}}</p>
     </div>
   </body>
@@ -1414,13 +1447,13 @@ export const quoteMusicTemplatesMaker = (selectedTheme: TQuoteDataItem) => {
     .watermark.none, .verse-line.none {
       display: none;
     }
-   .verse-container:has(.verse-line.none) .verse {
-      font-family: sans-serif;
-    }
     .watermark-text {
       font-size: 1.3rem;
       color: #ffffff;
       text-align: center;
+    }
+   .verse-container:has(.verse-line.none) .verse {
+      font-family: sans-serif;
     }
    
   </style>
