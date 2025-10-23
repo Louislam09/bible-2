@@ -113,10 +113,10 @@ export const quoteTemplates = [
      <p class="verse">
       {{ref}}
      </p>
-   </div>
-   <div class="watermark {{watermarkClass}}">
-      <p class="watermark-text"><b>Descargar:</b> Santa Biblia RV60+Audio</p>
+      <div class="watermark {{watermarkClass}}">
+      <p class="watermark-text"> Santa Biblia RV60+Audio</p>
     </div>
+   </div>
  </body>
  </html>
  `,
@@ -203,6 +203,21 @@ export const quoteTemplates = [
     font-style: italic;
     opacity: 0.75;
   }
+  .watermark {
+    position: absolute;
+    bottom: 2vmin;
+    right: 2vmin;
+    font-size: 5vmin;
+    color: #ffffff;
+    font-family: sans-serif;
+    width: 100%;
+  }
+  .watermark-text {
+    font-size: 4vmin;
+    font-family: sans-serif;
+    color: #e0e6f8;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
@@ -213,6 +228,9 @@ export const quoteTemplates = [
     <p class="verse">
      {{ref}}
     </p>
+    <div class="watermark {{watermarkClass}}">
+      <p class="watermark-text"> Santa Biblia RV60+Audio</p>
+    </div>
   </div>
 </body>
 </html>
@@ -300,6 +318,21 @@ export const quoteTemplates = [
     font-style: italic;
     opacity: 0.7;
   }
+  .watermark {
+    position: absolute;
+    bottom: 2vmin;
+    right: 2vmin;
+    font-size: 5vmin;
+    color: #ffffff;
+    font-family: sans-serif;
+    width: 100%;
+  }
+  .watermark-text {
+    font-size: 4vmin;
+    font-family: sans-serif;
+    color: #f0e9f4;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
@@ -310,6 +343,9 @@ export const quoteTemplates = [
     <p class="reference">
      {{ref}}
     </p>
+    <div class="watermark {{watermarkClass}}">
+      <p class="watermark-text"> Santa Biblia RV60+Audio</p>
+    </div>
   </div>
 </body>
 </html>
@@ -397,12 +433,30 @@ export const quoteTemplates = [
     font-weight: 600;
     font-family: 'Montserrat', sans-serif;
   }
+  .watermark {
+    position: absolute;
+    bottom: 2vmin;
+    right: 2vmin;
+    font-size: 5vmin;
+    color: #7b448b;
+    font-family: sans-serif;
+    width: 100%;
+  }
+  .watermark-text {
+    font-size: 4vmin;
+    font-family: sans-serif;
+    color: #7b448b;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
   <div class="quote-container" role="blockquote" aria-label="Proverbio bíblico">
     <p class="quote-text">{{text}}</p>
     <p class="quote-ref">{{ref}}</p>
+    <div class="watermark {{watermarkClass}}">
+      <p class="watermark-text"> Santa Biblia RV60+Audio</p>
+    </div>
   </div>
 </body>
 </html>
@@ -492,12 +546,30 @@ export const quoteTemplates = [
     font-size: 3vmin;
     color: #885ead;
   }
+  .watermark {
+    position: absolute;
+    bottom: 2vmin;
+    right: 2vmin;
+    font-size: 5vmin;
+    color: #9a5b99;
+    font-family: sans-serif;
+    width: 100%;
+  }
+  .watermark-text {
+    font-size: 4vmin;
+    font-family: sans-serif;
+    color: #9a5b99;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
   <div class="quote-container" role="blockquote" aria-label="Proverbio bíblico">
     <p class="quote-text">{{text}}</p> <!-- No explicit quotes here, rely on ::before/::after or style -->
     <p class="quote-ref">{{ref}}</p>
+    <div class="watermark {{watermarkClass}}">
+      <p class="watermark-text"> Santa Biblia RV60+Audio</p>
+    </div>
   </div>
 </body>
 </html>`,
@@ -579,12 +651,30 @@ export const quoteTemplates = [
     color: #FFD700;
     font-weight: 400;
   }
+  .watermark {
+    position: absolute;
+    bottom: 2vmin;
+    right: 2vmin;
+    font-size: 5vmin;
+    color: #FDEBD0;
+    font-family: sans-serif;
+    width: 100%;
+  }
+  .watermark-text {
+    font-size: 4vmin;
+    font-family: sans-serif;
+    color: #FDEBD0;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
   <div class="quote-card">
     <p class="quote-text-content">{{text}}</p>
     <p class="quote-reference">{{ref}}</p>
+    <div class="watermark {{watermarkClass}}">
+      <p class="watermark-text"> Santa Biblia RV60+Audio</p>
+    </div>
   </div>
 </body>
 </html>
@@ -631,12 +721,13 @@ export const quoteTemplates = [
     padding: 6vmin 7vmin;
     width: 100%;
     max-width: 100%;
-        max-height: 100%;
+    max-height: 100%;
     min-height: 300px;
     box-shadow: 0 2vmin 4vmin rgba(0,0,0,0.4);
     text-align: left;
     border-top: 0.6vmin solid #92a1ac;
     display: flex;
+    position: relative;
     flex-direction: column;
     justify-content: center;
   }
@@ -657,12 +748,30 @@ export const quoteTemplates = [
   .quote-source::before {
     content: "— ";
   }
+  .watermark {
+    position: absolute;
+    bottom: 2vmin;
+    right: 2vmin;
+    font-size: 5vmin;
+    color: #EAEAEA;
+    font-family: sans-serif;
+    width: 100%;
+  }
+  .watermark-text {
+    font-size: 4vmin;
+    font-family: sans-serif;
+    color: #EAEAEA;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
   <div class="quote-wrapper">
     <p class="quote-main-text">{{text}}</p>
     <p class="quote-source">{{ref}}</p>
+    <div class="watermark {{watermarkClass}}">
+      <p class="watermark-text"> Santa Biblia RV60+Audio</p>
+    </div>
   </div>
 </body>
 </html>
@@ -753,12 +862,30 @@ export const quoteTemplates = [
     font-style: italic;
     color: #795548;
   }
+  .watermark {
+    position: absolute;
+    bottom: 2vmin;
+    right: 2vmin;
+    font-size: 5vmin;
+    color: #8D6E63;
+    font-family: sans-serif;
+    width: 100%;
+  }
+  .watermark-text {
+    font-size: 4vmin;
+    font-family: sans-serif;
+    color: #8D6E63;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
   <div class="scroll-container">
     <p class="quote-script">{{text}}</p>
     <p class="quote-attribution">{{ref}}</p>
+    <div class="watermark {{watermarkClass}}">
+      <p class="watermark-text"> Santa Biblia RV60+Audio</p>
+    </div>
   </div>
 </body>
 </html>
@@ -858,6 +985,22 @@ export const quoteTemplates = [
     z-index: 1;
     padding-right: 2vmin;
   }
+  .watermark {
+    position: absolute;
+    bottom: 2vmin;
+    right: 2vmin;
+    font-size: 5vmin;
+    color: #2c3e50;
+    font-family: sans-serif;
+    width: 100%;
+    z-index: 1;
+  }
+  .watermark-text {
+    font-size: 4vmin;
+    font-family: sans-serif;
+    color: #2c3e50;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
@@ -866,6 +1009,9 @@ export const quoteTemplates = [
     {{text}}
     </p>
     <p class="quote-ref-source">{{ref}}</p>
+    <div class="watermark {{watermarkClass}}">
+      <p class="watermark-text"> Santa Biblia RV60+Audio</p>
+    </div>
   </div>
 </body>
 </html>
@@ -966,6 +1112,22 @@ export const quoteTemplates = [
     .quote-ref-clean::before {
       content: "— ";
     }
+    .watermark {
+      position: absolute;
+      bottom: 2vmin;
+      right: 2vmin;
+      font-size: 5vmin;
+      color: #2c3e50;
+      font-family: sans-serif;
+      width: 100%;
+      z-index: 2;
+    }
+    .watermark-text {
+      font-size: 4vmin;
+      font-family: sans-serif;
+      color: #2c3e50;
+      text-align: center;
+    }
   </style>
   </head>
   <body>
@@ -973,7 +1135,10 @@ export const quoteTemplates = [
       <div class="quote-content">
         <p class="quote-text-bold">{{text}}</p>
         <p class="quote-ref-clean">{{ref}}</p>
-      </div>
+        </div>
+        <div class="watermark {{watermarkClass}}">
+          <p class="watermark-text"> Santa Biblia RV60+Audioss</p>
+        </div>
     </div>
   </body>
   </html>
@@ -1054,12 +1219,30 @@ export const quoteTemplates = [
       text-align: right;
       padding-top: 2vmin;
     }
+    .watermark {
+      position: absolute;
+      bottom: 2vmin;
+      right: 2vmin;
+      font-size: 5vmin;
+      color: #8c7b70;
+      font-family: sans-serif;
+      width: 100%;
+    }
+    .watermark-text {
+      font-size: 4vmin;
+      font-family: sans-serif;
+      color: #8c7b70;
+      text-align: center;
+    }
   </style>
   </head>
   <body>
     <div class="zen-quote-panel">
       <p class="quote-text-haiku">{{text}}</p>
       <p class="quote-ref-shodo">{{ref}}</p>
+      <div class="watermark {{watermarkClass}}">
+        <p class="watermark-text"> Santa Biblia RV60+Audio</p>
+      </div>
     </div>
   </body>
   </html>
@@ -1116,6 +1299,7 @@ export const quoteTemplates = [
       box-shadow: 0 0 2vmin rgba(102, 170, 255, 0.3);
       text-align: left;
       display: flex;
+      position: relative;
       flex-direction: column;
       justify-content: center;
     }
@@ -1149,6 +1333,21 @@ export const quoteTemplates = [
       border-top: 0.2vmin dashed #99ccff;
       padding-top: 2vmin;
     }
+    .watermark {
+      position: absolute;
+      bottom: 2vmin;
+      right: 2vmin;
+      font-size: 5vmin;
+      color: #66aaff;
+      font-family: sans-serif;
+      width: 100%;
+    }
+    .watermark-text {
+      font-size: 4vmin;
+      font-family: sans-serif;
+      color: #66aaff;
+      text-align: center;
+    }
   </style>
   </head>
   <body>
@@ -1159,6 +1358,9 @@ export const quoteTemplates = [
       </div>
       <p class="quote-text-specs">{{text}}</p>
       <p class="quote-ref-drawingno">REF. #: {{ref}}</p>
+      <div class="watermark {{watermarkClass}}">
+        <p class="watermark-text"> Santa Biblia RV60+Audio</p>
+      </div>
     </div>
   </body>
   </html>
@@ -1245,6 +1447,23 @@ export const quoteTemplates = [
       position: relative;
       z-index: 1;
     }
+    .watermark {
+      position: absolute;
+      bottom: 2vmin;
+      right: 2vmin;
+      font-size: 5vmin;
+      color: #e0e0ff;
+      font-family: sans-serif;
+      width: 100%;
+      z-index: 2;
+    }
+    .watermark-text {
+      font-size: 4vmin;
+      font-family: sans-serif;
+      color: #e0e0ff;
+      text-align: center;
+      text-shadow: 0 0 0.5vmin #0ff;
+    }
   </style>
   </head>
   <body>
@@ -1255,6 +1474,9 @@ export const quoteTemplates = [
       <div class="shard shard4"></div>
       <p class="quote-text-glitch">{{text}}</p>
       <p class="quote-ref-matrix">> {{ref}}</p>
+      <div class="watermark {{watermarkClass}}">
+        <p class="watermark-text"> Santa Biblia RV60+Audio</p>
+      </div>
     </div>
   </body>
   </html>
