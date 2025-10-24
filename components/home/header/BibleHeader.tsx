@@ -105,15 +105,6 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
   const headerIconData = useMemo(() => {
     const options: TIcon[] = [
       {
-        name: theme.dark ? "Sun" : "Moon",
-        action: () => {
-          toggleTheme();
-        },
-        ref: tourState$.fav,
-        isIonicon: true,
-        color: theme.colors.notification,
-      },
-      {
         name: "SquareSplitVertical",
         action: () => {
           batch(() => {
@@ -151,11 +142,11 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
         color: canGoForward ? theme.colors.notification : "#7a7a7a",
       },
       { name: "Search", action: goSearchScreen, ref: tourState$.search },
-      {
-        name: "Settings",
-        action: settingsHandlePresentModalPress,
-        ref: tourState$.search,
-      },
+      // {
+      //   name: "Settings",
+      //   action: settingsHandlePresentModalPress,
+      //   ref: tourState$.search,
+      // },
     ];
     return options.filter((x) => !x.hide);
   }, [isSplitActived, canGoForward, canGoBackward]);
@@ -228,6 +219,17 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
         <BottomModal shouldScroll startAT={1} ref={versionRef}>
           <VersionList {...{ currentBibleVersion, onSelect, theme }} />
         </BottomModal>
+
+        <TouchableOpacity
+          style={[styles.iconContainer, { marginHorizontal: 10 }]}
+          onPress={settingsHandlePresentModalPress}
+        >
+          <Icon
+            name={"Settings"}
+            size={headerIconSize}
+            color={theme.colors.primary}
+          />
+        </TouchableOpacity>
       </View>
     </LinearGradient>
   );
