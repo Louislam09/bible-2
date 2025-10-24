@@ -7,24 +7,25 @@ import {
 
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
+  Easing,
   interpolate,
   interpolateColor,
   makeMutable,
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  Easing,
-  runOnJS,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import WebviewReferenceChoose from "@/components/home/content/WebviewReferenceChoose";
 import { useMyTheme } from "@/context/ThemeContext";
-import Icon from "../Icon";
-import { iconSize } from "@/constants/size";
 import { modalState$ } from "@/state/modalState";
-import { useEffect } from "react";
-import { Text } from "../Themed";
+import Icon from "../Icon";
+import useBackHandler from "@/hooks/useBackHandler";
+import { useMemo, useState } from "react";
+import { bibleState$ } from "@/state/bibleState";
+import { use$ } from "@legendapp/state/react";
 
 export const EasingsUtils = {
   inOut: Easing.bezier(0.25, 0.1, 0.25, 1),
@@ -52,7 +53,7 @@ const ExpandableChooseReference = () => {
   const safeBottom = insets.bottom + 34;
 
   const closeModal = () => {
-    modalState$.toggleIsChooseReferenceOpened();
+    bibleState$.isChooseReferenceOpened.set(false);
   };
 
   const tapGesture = Gesture.Tap()
@@ -168,13 +169,18 @@ const ExpandableChooseReference = () => {
   });
 
   const handleClose = () => {
-    progress.value = withTiming(0, {
-      duration: 550,
-      easing: EasingsUtils.inOut,
-    });
-    setTimeout(() => {
-      modalState$.toggleIsChooseReferenceOpened();
-    }, 550);
+    progress.value = withTiming(
+      0,
+      {
+        duration: 550,
+        easing: EasingsUtils.inOut,
+      },
+      (finished) => {
+        if (finished) {
+          runOnJS(closeModal)();
+        }
+      }
+    );
   };
   const gestures = Gesture.Simultaneous(tapGesture, panGesture);
 
@@ -211,7 +217,7 @@ const ExpandableChooseReference = () => {
       </Animated.View>
 
       <View style={styles.webviewContainer}>
-        <WebviewReferenceChoose />
+        <WebviewReferenceChoose onClose={handleClose} />
       </View>
     </Animated.View>
   );

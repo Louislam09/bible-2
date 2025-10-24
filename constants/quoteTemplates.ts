@@ -1489,31 +1489,21 @@ export const quoteTemplatesMaker = (selectedTheme: TQuoteDataItem) => {
   <html lang="es">
   <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=0.6, maximum-scale=1.0, user-scalable=no" />
   <title>Proverbio Inspirador</title>
   <style>
     @import url('${selectedTheme.font.url}');
-    
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
   
     body {
+      margin: 0;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       font-family: '${selectedTheme.font.name}', sans-serif;
       color: #ffffff;
+      margin: 0 1rem;
       background-color: transparent;
-      padding: 3vmin;
     }
   
     .quote-box {
@@ -1521,16 +1511,14 @@ export const quoteTemplatesMaker = (selectedTheme: TQuoteDataItem) => {
       text-align: center;
       display: grid;
       place-items: center;
-      width: 100%;
-      height: 100%;
     }
   
     .quote-text {
       font-family: '${selectedTheme.font.name}', sans-serif;
-      font-size: 5.5vmin;
+      font-size: 2.5rem;
       font-weight: 500;
       line-height: 1.35;
-      margin-bottom: 3vmin;
+      margin-bottom: 1.5rem;
       text-transform: ${selectedTheme.textTransform};
     }
    
@@ -1544,22 +1532,22 @@ export const quoteTemplatesMaker = (selectedTheme: TQuoteDataItem) => {
       justify-content: center;
     }
     .verse {
-      font-size: 3.5vmin;
+      font-size: 1.8rem;
       text-transform: ${selectedTheme.textTransform};
     }
     .verse-line {
       background-image: linear-gradient(90deg, #f8b04b 0, #e8465b 40.1%, #00a8c3 73.96%, #60bba2);
-      height: 0.8vmin;
+      height: 4px;
       width: 60%;
       border-radius: 16px;
-      margin-top: -2vmin;
+      margin-top: -1rem;
     }
  
     .watermark {
       position: absolute;
-      bottom: 2vmin;
-      right: 2vmin;
-      font-size: 2vmin;
+      bottom: 1rem;
+      right: 1rem;
+      font-size: 1rem;
       color: #ffffff;
       font-family: sans-serif;
       width: 100%;
@@ -1571,7 +1559,7 @@ export const quoteTemplatesMaker = (selectedTheme: TQuoteDataItem) => {
       font-family: sans-serif;
     }
     .watermark-text {
-      font-size: 2.5vmin;
+      font-size: 1.3rem;
       color: #ffffff;
       text-align: center;
     }

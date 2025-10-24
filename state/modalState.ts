@@ -2,16 +2,26 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { observable } from "@legendapp/state";
 import { createRef } from "react";
 
+export enum ChooseReferenceStep {
+  InBookSelection = "inBookSelection",
+  InChapterSelection = "inChapterSelection",
+  InVerseSelection = "inVerseSelection",
+  Finished = "finished",
+}
+
 export const modalState$ = observable({
   compareRef: createRef<BottomSheetModal>(),
   strongSearchRef: createRef<BottomSheetModal>(),
-  isChooseReferenceOpened: false,
   dictionaryRef: createRef<BottomSheetModal>(),
   interlinealRef: createRef<BottomSheetModal>(),
   searchFilterRef: createRef<BottomSheetModal>(),
   strongSearchFilterRef: createRef<BottomSheetModal>(),
   multipleStrongsRef: createRef<BottomSheetModal>(),
   searchWordOnDic: "",
+  chooseReferenceStep: ChooseReferenceStep.InBookSelection,
+  setChooseReferenceStep: (step: ChooseReferenceStep) => {
+    modalState$.chooseReferenceStep.set(step);
+  },
   isSheetClosed: true,
 
   setSearchWordOnDic: (word: string) => {
@@ -70,8 +80,5 @@ export const modalState$ = observable({
   },
   closeStrongSearchFilterBottomSheet: () => {
     modalState$.strongSearchFilterRef.current?.dismiss();
-  },
-  toggleIsChooseReferenceOpened: () => {
-    modalState$.isChooseReferenceOpened.set(!modalState$.isChooseReferenceOpened.get());
   },
 });

@@ -1,4 +1,5 @@
 import { useMyTheme } from "@/context/ThemeContext";
+import useBackHandler from "@/hooks/useBackHandler";
 import { TTheme } from "@/types";
 import {
   BottomSheetBackdrop,
@@ -63,7 +64,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
           : snaps || ["30%", "50%", "75%", "95%"],
       [snaps]
     );
-    const [index, setIndex] = useState(0);
+    const [index, setIndex] = useState(-1);
     const handleSheetChanges = useCallback((index: number) => {
       setIndex(index);
       getIndex?.(index);
@@ -80,34 +81,33 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       []
     );
 
-    useEffect(() => {
-      const backHandler = BackHandler.addEventListener(
-        "hardwareBackPress",
-        () => {
-          if (index > 0) {
-            // @ts-ignore
-            ref?.current?.dismiss();
-            return true; // Prevent default back button behavior
-          }
-          return false; // Allow default back button behavior if modal is not open
-        }
-      );
+    const shouldBeHandledHere = useMemo(() => index >= 0, [index]);
 
-      return () => backHandler.remove(); // Cleanup the listener
-    }, [index]);
+    useBackHandler(shouldBeHandledHere, () => {
+      console.log("BOTTOM MODAL BACK HANDLER");
+      // @ts-ignore
+      ref?.current?.close();
+    });
+
+    // useEffect(() => {
+    //   const backHandler = BackHandler.addEventListener(
+    //     "hardwareBackPress",
+    //     () => {
+    //       if (index > 0) {
+    //         // @ts-ignore
+    //         ref?.current?.dismiss();
+    //         return true; // Prevent default back button behavior
+    //       }
+    //       return false; // Allow default back button behavior if modal is not open
+    //     }
+    //   );
+
+    //   return () => backHandler.remove(); // Cleanup the listener
+    // }, [index]);
 
     return (
       <BottomSheetModal
-        backgroundStyle={[
-          styles.bottomSheet,
-          index === 3 && { borderRadius: 0 },
-          {
-            backgroundColor: backgroundColor
-              ? `${backgroundColor}`
-              : `${theme.colors.background}`,
-          },
-          style && style,
-        ]}
+        backgroundStyle={[styles.bottomSheet, style ? style : {}]}
         ref={ref}
         index={startAT ?? 1}
         snapPoints={snapPoints}
@@ -140,7 +140,8 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     bottomSheet: {
-      borderColor: colors.notification + 70,
+      borderColor: "transparent",
+      backgroundColor: colors.background,
       borderWidth: 2,
     },
     indicator: {

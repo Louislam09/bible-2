@@ -22,7 +22,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { batch } from "@legendapp/state";
 import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "expo-router";
-import { Easing, withTiming } from "react-native-reanimated";
+import { Easing, runOnJS, withTiming } from "react-native-reanimated";
 import { getStyles } from "./styles";
 
 interface FooterInterface {
@@ -97,6 +97,10 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
     });
   }
 
+  const openModal = () => {
+    bibleState$.isChooseReferenceOpened.set(true);
+  };
+
   const previousChapter = () => {
     haptics.impact.light();
     if (bookNumber !== 10 && chapter === 1) {
@@ -125,17 +129,18 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
       bibleState$.clearSelection();
       bibleState$.isBottomBibleSearching.set(!!isSplit);
     });
-    // modalState$.isChooseReferenceOpened.set(true);
-    ChooseReferenceMutableProgress.value = withTiming(1, {
-      duration: 450,
-      easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-    });
-    // const screen = Screens.ChooseReferenceDom;
-
-    // const screen = useDomComponent
-    //   ? Screens.ChooseReferenceDom
-    //   : Screens.ChooseBook;
-    // navigation?.navigate(screen, { ...params });
+    ChooseReferenceMutableProgress.value = withTiming(
+      1,
+      {
+        duration: 450,
+        easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+      },
+      (finished) => {
+        if (finished) {
+          runOnJS(openModal)();
+        }
+      }
+    );
   };
   const onDoubleFooterTitle = () => {
     haptics.impact.medium();

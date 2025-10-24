@@ -1,4 +1,3 @@
-import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
 import ThemeSelectorBottomSheet from "@/components/quote/ThemeSelectorBottomSheet";
 import { Text, View } from "@/components/Themed";
@@ -13,16 +12,20 @@ import { useMyTheme } from "@/context/ThemeContext";
 import { useViewShot } from "@/hooks/useViewShot";
 import { bibleState$ } from "@/state/bibleState";
 import { TTheme } from "@/types";
-import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
 import { ImageBackground } from "expo-image";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Share, StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import ViewShot from "react-native-view-shot";
 import WebView from "react-native-webview";
+
+type TSelectedVerse = {
+  text: string;
+  reference: string;
+};
 
 const QuoteMaker: React.FC = () => {
   const router = useRouter();
@@ -34,11 +37,7 @@ const QuoteMaker: React.FC = () => {
     TQuoteDataItem | undefined
   >();
   const [selectedVerse, setSelectedVerse] = useState<
-    | {
-        text: string;
-        reference: string;
-      }
-    | undefined
+    TSelectedVerse | undefined
   >();
   const [watermarkClass, setWatermarkClass] = useState("none");
   const [highlightShareButton, setHighlightShareButton] = useState(false); // for music mode
@@ -164,7 +163,8 @@ const QuoteMaker: React.FC = () => {
         {selectedTheme && selectedVerse ? (
           <ImageBackground
             source={{
-              uri: selectedTheme.backgroundImageUrl,
+              // uri: selectedTheme.backgroundImageUrl,
+              uri: "https://videos.openai.com/az/vg-assets/assets%2Ftask_01k889mzgjfcb8qshe68na6c3d%2F1761215250_img_1.webp?se=2025-10-29T21%3A46%3A13Z&sp=r&sv=2024-08-04&sr=b&skoid=5e5fc900-07cf-43e7-ab5b-314c0d877bb0&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-23T21%3A24%3A08Z&ske=2025-10-30T21%3A29%3A08Z&sks=b&skv=2024-08-04&sig=TD4vih22eWkcywZhMfvTbXXikPsVf0XEUwbtGd9rYTQ%3D&ac=oaivgprodscus",
             }}
             style={styles.backgroundImage}
             contentFit="cover"

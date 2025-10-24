@@ -445,6 +445,7 @@ const createHtmlBody = (
   const oldTestamentBooks = DB_BOOK_NAMES.slice(0, 39);
   const newTestamentBooks = DB_BOOK_NAMES.slice(39);
 
+
   // Always start at book selection step (step 0)
   const currentStep = 0;
 
@@ -511,6 +512,20 @@ const createHtmlBody = (
           // Setup chapters first, then move to chapter selection
           setupChapters();
           goToStep(1);
+          
+          // Notify parent (if in webview)
+          if (window.ReactNativeWebView) {
+            window.ReactNativeWebView.postMessage(JSON.stringify({
+              type: 'bookSelected',
+              data: {
+                book: selectedBook,
+                chapter: 1,
+                verse: 1,
+                goHome: false,
+                step: getStepType(1)
+              }
+            }));
+          }
         }
 
         function selectChapter(chapter) {
@@ -535,7 +550,8 @@ const createHtmlBody = (
                 book: selectedBook,
                 chapter: chapter,
                 verse: 1,
-                goHome: false
+                goHome: false,
+                step: getStepType(2)
               }
             }));
           }
@@ -559,7 +575,8 @@ const createHtmlBody = (
                 book: selectedBook,
                 chapter: selectedChapter,
                 verse: verse,
-                goHome: true
+                goHome: true,
+                step: getStepType(3)
               }
             }));
             setTimeout(() => {
@@ -578,7 +595,7 @@ const createHtmlBody = (
           
           // Show/hide back button
           document.getElementById('backButton').classList.toggle('hidden', step === 0);
-          
+
           if (step === 1) {
             setupChapters();
           } else if (step === 2) {
@@ -648,15 +665,39 @@ const createHtmlBody = (
           \`;
         }
 
+        function getStepType(step) {
+          switch (step) {
+            case 0:
+              return 'inBookSelection';
+            case 1:
+              return 'inChapterSelection';
+            case 2:
+              return 'inVerseSelection';
+            case 3:
+              return 'finished';
+          }
+        }
+
         function goBack() {
           if (currentStep > 0) {
-            goToStep(currentStep - 1);
+            const value = currentStep - 1;
+            goToStep(value);
+
+            // Notify parent (if in webview)
+            if (window.ReactNativeWebView) {
+              window.ReactNativeWebView.postMessage(JSON.stringify({
+                type: 'stepChanged',
+                data: {
+                  step: getStepType(value)
+                }
+              }));
+            }
           }
         }
 
         // Listen for messages from React Native (if in webview)
         if (window.ReactNativeWebView) {
-          window.addEventListener('message', (event) => {
+          window.document.addEventListener('message', (event) => {
             try {
               const data = JSON.parse(event.data);
               handleMessage(data);
@@ -668,6 +709,9 @@ const createHtmlBody = (
 
         function handleMessage(data) {
           switch (data.type) {
+            case 'step':
+              goToStep(data.step);
+              break;
             case 'setTheme':
               // Handle theme changes if needed
               break;

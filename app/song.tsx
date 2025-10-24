@@ -32,6 +32,7 @@ import {
   View,
 } from "react-native";
 import Fuse from "fuse.js";
+import { PressableScale } from "@/components/animations/pressable-scale";
 
 type RenderItemProps = {
   item: TSongItem;
@@ -64,7 +65,7 @@ const RenderItem = ({ item, onItemClick, index, theme }: RenderItemProps) => {
   }, [fadeAnim, translateYAnim, index]);
 
   return (
-    <Pressable
+    <PressableScale
       key={`${item.id}-${index}`}
       style={[styles.itemContainer, styles.defaultItem]}
       onPress={() => onItemClick(item.id)}
@@ -92,17 +93,19 @@ const RenderItem = ({ item, onItemClick, index, theme }: RenderItemProps) => {
           style={styles.backgroundIcon}
         />
       </View>
-    </Pressable>
+    </PressableScale>
   );
 };
 
 type SearchProps = {
+  setSearchActive: (active: boolean) => void;
   setSearchQuery: (query: string) => void;
   onSearch: (query: string) => void;
   isLoading: boolean;
 };
 
 const AnimatedSearchBar = ({
+  setSearchActive,
   setSearchQuery,
   onSearch,
   isLoading,
@@ -173,8 +176,14 @@ const AnimatedSearchBar = ({
         style={[styles.noteHeaderSearchInput]}
         onChangeText={handleSearchTextChange}
         defaultValue={searchText ?? ""}
-        onFocus={() => setIsSearchFocused(true)}
-        onBlur={() => setIsSearchFocused(false)}
+        onFocus={() => {
+          setIsSearchFocused(true);
+          setSearchActive(true);
+        }}
+        onBlur={() => {
+          setIsSearchFocused(false);
+          setSearchActive(false);
+        }}
         returnKeyType="search"
         onSubmitEditing={() => {
           if (searchText.length >= 1) {
@@ -265,9 +274,16 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
     } as SingleScreenHeaderProps;
   }, [isAlegres, isPortrait, theme]);
 
+  const [searchActive, setSearchActive] = useState(false);
+
   return (
     <>
-      <Stack.Screen options={{ ...singleScreenHeader(screenOptions) }} />
+      <Stack.Screen
+        options={{
+          ...singleScreenHeader(screenOptions),
+          // headerShown: !searchActive,
+        }}
+      />
       <View
         key={orientation + theme.dark}
         style={{
@@ -278,6 +294,7 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
         }}
       >
         <AnimatedSearchBar
+          setSearchActive={setSearchActive}
           setSearchQuery={setSearchText}
           onSearch={filterSongs}
           isLoading={false}

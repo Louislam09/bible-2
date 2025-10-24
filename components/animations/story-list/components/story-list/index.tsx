@@ -23,7 +23,7 @@ type StoryListProps<T> = {
     height: number;
   };
   renderItem: (story: T, index: number) => ReactNode;
-  setActiveIndex: (index: number) => void;
+  setActiveIndex?: (index: number) => void;
   visibleItems?: number;
   gap?: number;
 };
@@ -33,7 +33,7 @@ function StoryList<T>({
   pagingEnabled,
   storyItemDimensions,
   renderItem,
-  setActiveIndex,
+  setActiveIndex = () => {},
   visibleItems = 3,
   gap = 35,
 }: StoryListProps<T>) {

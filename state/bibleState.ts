@@ -32,6 +32,7 @@ export function getReadingTime(verses: IBookVerse[], wordsPerMinute = 200) {
 
 export const bibleState$ = observable({
   isBottomBibleSearching: false,
+  isChooseReferenceOpened: false,
   currentVerse: 0,
   verseWithAiAnimation: 0,
   verseToCompare: 0,
@@ -76,7 +77,6 @@ export const bibleState$ = observable({
     bibleState$.isFlashlist.set(!value)
   },
   changeBibleQuery: (query: Partial<IBibleQuery>) => {
-    // console.log("🟡 ChangeBibleQuery 🟡");
     const loadingKey = query.isBibleBottom ? "bottom" : "top";
     const newQuery = { ...bibleState$.bibleQuery.get(), ...query };
     batch(() => {

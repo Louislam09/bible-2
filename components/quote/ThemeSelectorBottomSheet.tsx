@@ -1,14 +1,12 @@
-import React, { useCallback, useMemo, useRef, useEffect } from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { WebView } from "react-native-webview";
+import { QUOTES_DATA, TQuoteDataItem } from "@/constants/quotesData";
 import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
-import { QUOTES_DATA, TQuoteDataItem } from "@/constants/quotesData";
-import BottomModal from "../BottomModal";
-import { Text } from "../Themed";
-import { quoteTemplatesMaker } from "@/constants/quoteTemplates";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import React, { useCallback, useMemo, useRef } from "react";
+import { Dimensions, StyleSheet, View } from "react-native";
+import { WebView } from "react-native-webview";
+import BottomModal from "../BottomModal";
 
 interface ThemeSelectorBottomSheetProps {
   bottomSheetRef: React.RefObject<BottomSheetModal | null>;

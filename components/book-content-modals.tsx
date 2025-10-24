@@ -141,8 +141,7 @@ const getStyles = ({ colors }: TTheme) =>
       width: "100%",
     },
     bottomSheet: {
-      backgroundColor: colors.background + 99,
-      borderColor: colors.notification + 99,
+      // backgroundColor: colors.background + 99,
       borderWidth: 2,
     },
   });
