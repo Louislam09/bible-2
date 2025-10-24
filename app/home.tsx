@@ -142,7 +142,8 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
 
   return (
     <StatusBarBackground>
-      <SafeAreaView key={theme.dark.toString()} style={[styles.container]}>
+      {/* <SafeAreaView key={theme.dark.toString()} style={[styles.container]}> */}
+      <SafeAreaView style={[styles.container]}>
         <Stack.Screen options={{ headerShown: false }} />
         <View
           style={[styles.container, !isPortrait && { flexDirection: "row" }]}
