@@ -7,6 +7,7 @@ import { modalState$ } from "@/state/modalState";
 import { EThemes, TFont, TTheme } from "@/types";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import getMinMaxFontSize from "@/utils/getMinMaxFontSize";
+import getThemes from "@/constants/themeColors";
 import { use$ } from "@legendapp/state/react";
 import React, { useCallback, useMemo, useRef } from "react";
 import { StyleSheet } from "react-native";
@@ -32,13 +33,25 @@ const colorNames: Record<string, string> = {
   BlueGreen: "Azul Verde",
 };
 
-// Get theme colors from EThemes enum with actual hex colors
-const getThemeColors = () => {
-  return Object.entries(EThemes).map(([name, hexColor]) => ({
-    value: name,
-    label: colorNames[name] || name,
-    hexColor: hexColor,
-  }));
+// Get theme colors from themeColors.ts with actual theme colors
+const getThemeColors = (themeSchema: string) => {
+  const themes = getThemes();
+
+  return Object.entries(EThemes).map(([name, hexColor]) => {
+    const themeName = name as keyof typeof themes;
+    const { DarkTheme, LightTheme } = themes[themeName];
+    const theme = { dark: DarkTheme, light: LightTheme };
+    const currentTheme = theme[themeSchema as keyof typeof theme];
+
+    return {
+      value: name,
+      label: colorNames[name] || name,
+      hexColor: hexColor,
+      background: currentTheme?.colors.background || "#FFFFFF",
+      text: currentTheme?.colors.text || "#000000",
+      accent: currentTheme?.colors.notification || hexColor,
+    };
+  });
 };
 
 // Get all available fonts from TFont enum
@@ -63,7 +76,7 @@ const createSettingsHTML = (
 ) => {
   const themeSchema = isDark ? "dark" : "light";
   const fontSizes = getMinMaxFontSize();
-  const themeColors = getThemeColors();
+  const themeColors = getThemeColors(themeSchema);
   const fonts = getFonts();
 
   // Define missing icons inline
@@ -185,16 +198,19 @@ const createSettingsHTML = (
                 padding: 12px;
                 cursor: pointer;
                 transition: all 0.2s;
-                border: 2px solid transparent;
+                border: 3px solid transparent;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
             
             .theme-card.selected {
                 border-color: var(--color-notification);
-                box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+                box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2), 0 4px 8px rgba(0, 0, 0, 0.15);
+                transform: scale(1.05);
             }
             
             .theme-card:hover {
                 transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
             }
             
             /* Select Dropdown Styles */
@@ -292,16 +308,22 @@ const createSettingsHTML = (
                                 : ""
                             } min-w-[120px]" 
                                   style="background-color: ${
-                                    themeColor.hexColor
+                                    themeColor.background
                                   };"
                                   onclick="handleThemeColorChange('${
                                     themeColor.value
                                   }')">
-                                <p class="text-white text-xs font-bold mb-1">Genesis 1</p>
-                                <p class="text-white/70 text-[10px] leading-tight">En el principio creó Dios los cielos y la tierra...</p>
-                                 <p class="text-white/50 text-[10px] mt-1">${
-                                   themeColor.label
-                                 }</p>
+                                <p style="color: ${
+                                  themeColor.text
+                                };" class="text-xs font-bold mb-1">Genesis 1</p>
+                                <p style="color: ${
+                                  themeColor.text
+                                }; opacity: 0.7;" class="text-[10px] leading-tight"><span class="!text-theme-notification">1</span> En el principio creó Dios los cielos y la tierra...</p>
+                                <p style="color: ${
+                                  themeColor.accent
+                                };" class="text-[10px] mt-1 font-semibold">${
+                                  themeColor.label
+                                }</p>
                             </div>
                              `
                               )
@@ -386,7 +408,7 @@ const createSettingsHTML = (
                 </div>
                 
                 <!-- Reading Plan Section -->
-                <div class="mb-6">
+                <div class="mb-6 hidden">
                     <h2 class="text-lg font-semibold mb-4">Plan de Lectura</h2>
                     
                     <!-- Current Plan Selector -->
