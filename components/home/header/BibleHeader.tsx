@@ -15,6 +15,7 @@ import { useDBContext } from "@/context/databaseContext";
 import { useHaptics } from "@/hooks/useHaptics";
 import useParams from "@/hooks/useParams";
 import { bibleState$ } from "@/state/bibleState";
+import { modalState$ } from "@/state/modalState";
 import { tourState$ } from "@/state/tourState";
 import { EBibleVersions, HomeParams, Screens, TIcon, TTheme } from "@/types";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
@@ -60,6 +61,7 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
 
   const styles = getStyles(theme);
   const versionRef = useRef<BottomSheetModal>(null);
+  const settingsRef = useRef<BottomSheetModal>(null);
   const isNTV = currentBibleVersion === EBibleVersions.NTV;
   const isInterlineal = [EBibleVersions.INTERLINEAR].includes(
     currentBibleVersion as EBibleVersions
@@ -75,6 +77,10 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
 
   const versionHandlePresentModalPress = useCallback(() => {
     versionRef.current?.present();
+  }, []);
+
+  const settingsHandlePresentModalPress = useCallback(() => {
+    modalState$.openBibleSettingBottomSheet();
   }, []);
 
   const goSearchScreen = () => {
@@ -145,6 +151,11 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
         color: canGoForward ? theme.colors.notification : "#7a7a7a",
       },
       { name: "Search", action: goSearchScreen, ref: tourState$.search },
+      {
+        name: "Settings",
+        action: settingsHandlePresentModalPress,
+        ref: tourState$.search,
+      },
     ];
     return options.filter((x) => !x.hide);
   }, [isSplitActived, canGoForward, canGoBackward]);
@@ -213,6 +224,7 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
             </Text>
           )}
         </TouchableOpacity>
+
         <BottomModal shouldScroll startAT={1} ref={versionRef}>
           <VersionList {...{ currentBibleVersion, onSelect, theme }} />
         </BottomModal>

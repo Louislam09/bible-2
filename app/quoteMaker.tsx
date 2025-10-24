@@ -163,8 +163,8 @@ const QuoteMaker: React.FC = () => {
         {selectedTheme && selectedVerse ? (
           <ImageBackground
             source={{
-              // uri: selectedTheme.backgroundImageUrl,
-              uri: "https://videos.openai.com/az/vg-assets/assets%2Ftask_01k889mzgjfcb8qshe68na6c3d%2F1761215250_img_1.webp?se=2025-10-29T21%3A46%3A13Z&sp=r&sv=2024-08-04&sr=b&skoid=5e5fc900-07cf-43e7-ab5b-314c0d877bb0&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-23T21%3A24%3A08Z&ske=2025-10-30T21%3A29%3A08Z&sks=b&skv=2024-08-04&sig=TD4vih22eWkcywZhMfvTbXXikPsVf0XEUwbtGd9rYTQ%3D&ac=oaivgprodscus",
+              uri: selectedTheme.backgroundImageUrl,
+              // uri: "https://videos.openai.com/az/vg-assets/assets%2Ftask_01k889mzgjfcb8qshe68na6c3d%2F1761215250_img_1.webp?se=2025-10-29T21%3A46%3A13Z&sp=r&sv=2024-08-04&sr=b&skoid=5e5fc900-07cf-43e7-ab5b-314c0d877bb0&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-23T21%3A24%3A08Z&ske=2025-10-30T21%3A29%3A08Z&sks=b&skv=2024-08-04&sig=TD4vih22eWkcywZhMfvTbXXikPsVf0XEUwbtGd9rYTQ%3D&ac=oaivgprodscus",
             }}
             style={styles.backgroundImage}
             contentFit="cover"

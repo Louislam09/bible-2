@@ -17,6 +17,7 @@ export const modalState$ = observable({
   searchFilterRef: createRef<BottomSheetModal>(),
   strongSearchFilterRef: createRef<BottomSheetModal>(),
   multipleStrongsRef: createRef<BottomSheetModal>(),
+  bibleSettingRef: createRef<BottomSheetModal>(),
   searchWordOnDic: "",
   chooseReferenceStep: ChooseReferenceStep.InBookSelection,
   setChooseReferenceStep: (step: ChooseReferenceStep) => {
@@ -80,5 +81,11 @@ export const modalState$ = observable({
   },
   closeStrongSearchFilterBottomSheet: () => {
     modalState$.strongSearchFilterRef.current?.dismiss();
+  },
+  openBibleSettingBottomSheet: () => {
+    modalState$.bibleSettingRef.current?.present();
+  },
+  closeBibleSettingBottomSheet: () => {
+    modalState$.bibleSettingRef.current?.dismiss();
   },
 });

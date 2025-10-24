@@ -20,6 +20,7 @@ import MultipleStrongsContentBottomModal from "./home/content/MultipleStrongsCon
 import StrongContentBottomModal from "./home/content/StrongContentBottomModal";
 import { Text, View } from "./Themed";
 import DictionaryBottomModalContent from "./DictionaryBottomModalContent";
+import WebviewBibleSettingBottomModal from "./home/WebviewBibleSettingBottomModal";
 
 const BookContentModals = () => {
   const { theme } = useMyTheme();
@@ -93,6 +94,8 @@ const BookContentModals = () => {
         fontSize={fontSize}
         data={multipleStrongsData as any}
       />
+
+      <WebviewBibleSettingBottomModal />
 
       <StrongContentBottomModal
         theme={theme}

@@ -28,6 +28,7 @@ const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const colorScheme = Appearance.getColorScheme();
   const themes = getThemes();
   const { DarkTheme, LightTheme } = themes[currentTheme];
+  // const { DarkTheme, LightTheme } = themes["BlueGray"];
   const theme = { dark: DarkTheme, light: LightTheme };
   const [schema, setSchema] = useState<"light" | "dark">(
     colorScheme === "dark" ? "dark" : "light"
