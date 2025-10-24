@@ -8,6 +8,7 @@ import Animated, {
   runOnJS,
 } from "react-native-reanimated";
 import { View } from "@/components/Themed";
+import { StoryList } from "@/components/animations/story-list";
 
 const { width } = Dimensions.get("window");
 const height = 220;
@@ -98,9 +99,7 @@ export function ImageSlider() {
   });
 
   return (
-    <View
-      style={{ width: "100%", height: 220, borderWidth: 1, borderColor: "red" }}
-    >
+    <View style={{ width: "100%", height: 220 }}>
       <Animated.FlatList
         ref={scrollRef}
         data={images}
@@ -145,6 +144,7 @@ export default function Example() {
   return (
     <View style={styles.container}>
       <ImageSlider />
+      {/* <StoryList /> */}
     </View>
   );
 }
