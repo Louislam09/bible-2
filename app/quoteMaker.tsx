@@ -1,4 +1,5 @@
 import Icon from "@/components/Icon";
+import FontSelectorBottomSheet from "@/components/quote/FontSelectorBottomSheet";
 import ThemeSelectorBottomSheet from "@/components/quote/ThemeSelectorBottomSheet";
 import { Text, View } from "@/components/Themed";
 import {
@@ -33,6 +34,7 @@ const QuoteMaker: React.FC = () => {
   const { theme } = useMyTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const themeSelectorRef = useRef<BottomSheetModal>(null);
+  const fontSelectorRef = useRef<BottomSheetModal>(null);
   const [selectedTheme, setSelectedTheme] = useState<
     TQuoteDataItem | undefined
   >();
@@ -44,6 +46,10 @@ const QuoteMaker: React.FC = () => {
   const mySelectedVerse = use$(() => bibleState$.selectedVerseForNote.get());
   const params = useLocalSearchParams();
 
+  const allThemes = useMemo(() => {
+    return QUOTES_DATA.flatMap((section) => section.items);
+  }, []);
+
   const randomVerse = useMemo(() => {
     const randomIndex = Math.floor(Math.random() * FAMOUS_VERSES.length);
     return FAMOUS_VERSES[randomIndex];
@@ -51,7 +57,6 @@ const QuoteMaker: React.FC = () => {
 
   useEffect(() => {
     // Get all themes from all sections
-    const allThemes = QUOTES_DATA.flatMap((section) => section.items);
     const randomTheme = allThemes[Math.floor(Math.random() * allThemes.length)];
     setSelectedTheme(randomTheme);
   }, []);
@@ -124,6 +129,16 @@ const QuoteMaker: React.FC = () => {
     setWatermarkClass("none");
   };
 
+  const handleFontSelect = (chosenTheme: TQuoteDataItem) => {
+    setSelectedTheme((prev: TQuoteDataItem | undefined) => {
+      if (!prev) return chosenTheme;
+      return {
+        ...chosenTheme,
+        backgroundImageUrl: prev.backgroundImageUrl,
+      };
+    });
+  };
+
   return (
     <View style={styles.container}>
       <Stack.Screen
@@ -164,7 +179,7 @@ const QuoteMaker: React.FC = () => {
           <ImageBackground
             source={{
               uri: selectedTheme.backgroundImageUrl,
-              // uri: "https://videos.openai.com/az/vg-assets/assets%2Ftask_01k889mzgjfcb8qshe68na6c3d%2F1761215250_img_1.webp?se=2025-10-29T21%3A46%3A13Z&sp=r&sv=2024-08-04&sr=b&skoid=5e5fc900-07cf-43e7-ab5b-314c0d877bb0&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-23T21%3A24%3A08Z&ske=2025-10-30T21%3A29%3A08Z&sks=b&skv=2024-08-04&sig=TD4vih22eWkcywZhMfvTbXXikPsVf0XEUwbtGd9rYTQ%3D&ac=oaivgprodscus",
+              // uri: "https://img.freepik.com/foto-gratis/textura-hoja-verde-fondo-textura-hoja_501050-120.jpg?t=st=1761402779~exp=1761406379~hmac=59924c57ad723855c25a1a0f062b489f6c54d02116c2c3925ef1e1601a77ffa8&w=1480",
             }}
             style={styles.backgroundImage}
             contentFit="cover"
@@ -174,7 +189,7 @@ const QuoteMaker: React.FC = () => {
             <View style={styles.verseContainer}>
               <WebView
                 ref={null}
-                key={selectedTheme.id}
+                // key={selectedTheme.id}
                 originWhitelist={["*"]}
                 style={{
                   flex: 1,
@@ -202,6 +217,7 @@ const QuoteMaker: React.FC = () => {
           </View>
         )}
       </ViewShot>
+
       <View style={styles.footer}>
         <TouchableOpacity
           onPress={handleShare}
@@ -214,6 +230,16 @@ const QuoteMaker: React.FC = () => {
           <Text style={styles.shareText}>Compartir</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={() => fontSelectorRef.current?.present()}
+          style={[
+            styles.customFontButton,
+            highlightShareButton && styles.highlightedShareButton,
+          ]}
+        >
+          <Icon name="Type" size={24} color="#FFFFFF" />
+          <Text style={styles.shareText}>Fuentes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={() => themeSelectorRef.current?.present()}
           style={styles.galleryButton}
         >
@@ -221,6 +247,13 @@ const QuoteMaker: React.FC = () => {
           <Text style={styles.shareText}>Temas</Text>
         </TouchableOpacity>
       </View>
+
+      <FontSelectorBottomSheet
+        bottomSheetRef={fontSelectorRef}
+        selectedTheme={selectedTheme}
+        onThemeSelect={handleFontSelect}
+        onClose={() => fontSelectorRef.current?.dismiss()}
+      />
 
       <ThemeSelectorBottomSheet
         bottomSheetRef={themeSelectorRef}
@@ -234,6 +267,33 @@ const QuoteMaker: React.FC = () => {
 
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
+    fontCarousel: {
+      position: "absolute",
+      bottom: 100,
+      left: 0,
+      right: 0,
+      zIndex: 1000,
+      flexDirection: "row",
+      paddingHorizontal: 20,
+      backgroundColor: "transparent",
+    },
+    fontCarouselItemContainer: {
+      backgroundColor: "rgba(255, 255, 255, 0.342)",
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      borderRadius: 50,
+      width: 60,
+      height: 60,
+      justifyContent: "center",
+      alignItems: "center",
+      marginRight: 10,
+    },
+    fontCarouselItem: {
+      color: "#ffffff",
+      fontSize: 12,
+      fontWeight: "500",
+      textTransform: "uppercase",
+    },
     container: {
       flex: 1,
       backgroundColor: colors.background,
@@ -333,6 +393,9 @@ const getStyles = ({ colors }: TTheme) =>
       backgroundColor: "transparent",
     },
     shareButton: {
+      alignItems: "center",
+    },
+    customFontButton: {
       alignItems: "center",
     },
     shareText: {

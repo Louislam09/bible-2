@@ -14,6 +14,7 @@ const { width } = Dimensions.get("window");
 const height = 220;
 
 const images = [
+  "https://img.freepik.com/foto-gratis/textura-hoja-verde-fondo-textura-hoja_501050-120.jpg?t=st=1761402779~exp=1761406379~hmac=59924c57ad723855c25a1a0f062b489f6c54d02116c2c3925ef1e1601a77ffa8&w=1480",
   "https://picsum.photos/800/400?random=1",
   "https://picsum.photos/800/400?random=2",
   "https://picsum.photos/800/400?random=3",

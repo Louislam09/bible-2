@@ -9,7 +9,7 @@ import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import getMinMaxFontSize from "@/utils/getMinMaxFontSize";
 import getThemes from "@/constants/themeColors";
 import { use$ } from "@legendapp/state/react";
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 import WebView from "react-native-webview";
 
@@ -298,7 +298,7 @@ const createSettingsHTML = (
                                 ${colorNames[currentTheme] || currentTheme}
                             </span>
                         </div>
-                        <div class="flex gap-3 overflow-x-auto pb-2" style="scrollbar-width: thin;">
+                        <div class="flex gap-3 overflow-x-auto py-2" style="scrollbar-width: thin;">
                             ${themeColors
                               .map(
                                 (themeColor) => `
@@ -485,16 +485,46 @@ const createSettingsHTML = (
             
             function handleThemeColorChange(color) {
                 settings.themeColor = color;
-                // Update visual selection
-                document.querySelectorAll('.theme-card').forEach(card => {
+                
+                // Find the clicked card
+                const allCards = document.querySelectorAll('.theme-card');
+                let clickedCard = null;
+                
+                // Remove 'selected' class from all and find the clicked one
+                allCards.forEach(card => {
                     card.classList.remove('selected');
+                    // Find the card by checking the onclick attribute
+                    if (card.getAttribute('onclick')?.includes(color)) {
+                        clickedCard = card;
+                    }
                 });
-                event.currentTarget.classList.add('selected');
+                
+                // Add 'selected' class to clicked card and scroll
+                if (clickedCard) {
+                    clickedCard.classList.add('selected');
+                    clickedCard.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'nearest', 
+                        inline: 'center' 
+                    });
+                }
                 
                 window.ReactNativeWebView.postMessage(JSON.stringify({
                     type: 'themeColorChange',
                     value: color
                 }));
+            }
+            
+            // Scroll to selected theme on page load
+            function scrollToSelectedTheme() {
+                const selectedCard = document.querySelector('.theme-card.selected');
+                if (selectedCard) {
+                    selectedCard.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'nearest', 
+                        inline: 'center' 
+                    });
+                }
             }
             
             // Debounced function to send font size to React Native (300ms delay)
@@ -567,6 +597,11 @@ const createSettingsHTML = (
                     settings: settings
                 }));
             }
+            
+            // Initialize: scroll to selected theme after page loads
+            window.addEventListener('load', function() {
+                setTimeout(scrollToSelectedTheme, 100);
+            });
         </script>
     </body>
     </html>
@@ -584,6 +619,7 @@ const WebviewBibleSettingBottomModal = ({
   const currentTheme = use$(() => storedData$.currentTheme.get());
   const selectedFont = use$(() => storedData$.selectedFont.get());
   const styles = getStyles(theme);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   const settingsHTML = useMemo(
     () =>
@@ -649,11 +685,29 @@ const WebviewBibleSettingBottomModal = ({
       showIndicator
       justOneValue={["90%"]}
       startAT={0}
+      onDismiss={() => {
+        setHasLoaded(false);
+      }}
     >
       <View style={[styles.webviewWrapper]}>
+        {!hasLoaded && (
+          <View
+            style={{
+              backgroundColor: theme.colors.background,
+              flex: 1,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 1000,
+            }}
+          />
+        )}
         <WebView
           ref={webViewRef}
           originWhitelist={["*"]}
+          key={"bible-setting"}
           style={{
             flex: 1,
             minWidth: "100%",
@@ -665,6 +719,9 @@ const WebviewBibleSettingBottomModal = ({
           showsVerticalScrollIndicator={true}
           nestedScrollEnabled={true}
           onMessage={handleMessage}
+          onLoadEnd={() => {
+            setHasLoaded(true);
+          }}
           onError={(syntheticEvent) => {
             const { nativeEvent = {} } = syntheticEvent;
             console.warn("WebView error: ", nativeEvent);

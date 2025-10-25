@@ -31,6 +31,7 @@ type TBottomModal = {
   backgroundColor?: any;
   style?: StyleProp<ViewStyle>;
   id?: string;
+  onDismiss?: () => void;
 };
 
 type Ref = BottomSheetModal;
@@ -52,6 +53,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       _theme,
       style,
       id,
+      onDismiss = () => {},
     },
     ref
   ) => {
@@ -118,6 +120,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
         backdropComponent={renderBackdrop}
         onChange={handleSheetChanges}
         enableDynamicSizing={false}
+        onDismiss={onDismiss}
       >
         {headerComponent && (
           <BottomSheetView style={{}}>{headerComponent}</BottomSheetView>

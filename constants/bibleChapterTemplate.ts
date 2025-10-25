@@ -200,6 +200,7 @@ const createHtmlHead = (
       
          <style>
              :root {
+                --font-size: ${fontSize}px;
                 --data-theme: ${theme.dark ? "dark" : "light"};
                 --theme: ${theme.dark ? "theme-dark" : "theme-light"};
                  --color-primary: ${theme.colors.primary || '#3b82f6'};
@@ -226,6 +227,17 @@ const createHtmlHead = (
                 --color-theme-chip: ${theme.dark ? theme.colors.text + 40 : theme.colors.notification + 80 || '#e5e7eb'};
                 --color-theme-chip-border: ${theme.colors.text + 80 || '#e5e7eb'};
             }
+                /* Font size tokens */
+                .text-font-xs {  font-size: ${fontSize * 0.6}px;  }
+                .text-font-sm {  font-size: ${fontSize * 0.9}px;  }
+                .text-font-base { font-size: ${fontSize * 1}px;  }
+                .text-font-lg {  font-size: ${fontSize * 1.1}px;  }
+                .text-font-xl {  font-size: ${fontSize * 1.2}px;  }
+                .text-font-2xl {  font-size: ${fontSize * 1.3}px;  }
+                .text-font-3xl {  font-size: ${fontSize * 1.4}px;  }
+                .text-font-4xl {  font-size: ${fontSize * 1.5}px;  }
+                .text-font-5xl {  font-size: ${fontSize * 1.6}px;  }
+             
         </style>
          ${bibleChapterStyles(theme, containerWidth, showReadingTime, fontSize)}
     </head>
@@ -236,7 +248,7 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
     <div class="container relative h-screen overflow-y-auto pt-[70px] pb-[100px] " id="chapterContainer">
         <!-- Chapter Header -->
         <div class="px-4 pt-3 my-2">
-            <h1 class="text-2xl font-bold text-theme-text text-center">Capítulo ${chapterNumber}</h1>
+            <h1 class=" font-bold text-theme-text text-center text-font-xl">Capítulo ${chapterNumber}</h1>
         </div>
         ${content}
         </div>
@@ -635,7 +647,7 @@ const createVerseTitle = (subheading: string[], links: string) => {
 
             return `
           <div class="p-[1px] my-1 rounded-lg bg-linear-to-r  from-theme-notification via-theme-notification/50 to-theme-primary">
-                <p class="text-theme-text rounded-lg py-1 px-1.5  text-xs font-bold w-fit cursor-pointer transition-colors bg-theme-background"
+                <p class="text-theme-text rounded-lg py-1 px-1.5 text-font-xs font-bold w-fit cursor-pointer transition-colors bg-theme-background"
                 onclick="handleVerseLinkClick(${bookNumber}, '${bookName}', ${chapter}, ${verse}, ${endVerse || 'null'})">
                     ${bookName} ${chapter}:${verse}${endVerse ? `-${endVerse}` : ''}
                 </p>
@@ -645,7 +657,7 @@ const createVerseTitle = (subheading: string[], links: string) => {
 
         return `
             <div class="verse-title-container my-1">
-                <h3 class="text-theme-notification px-4 text-center font-bold text-2xl mb-2">
+                <h3 class="text-theme-notification px-4 text-center font-bold mb-2 text-font-lg">
                     ${subTitle}
                     </h3>
                 <div class="flex flex-row gap-3 items-center flex-wrap px-4">

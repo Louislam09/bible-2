@@ -7,6 +7,7 @@ import { modalState$ } from "@/state/modalState";
 import { IBookVerse, IFavoriteVerse, TTheme } from "@/types";
 import { WordTagPair } from "@/utils/extractVersesInfo";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
+import { use$ } from "@legendapp/state/react";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -192,6 +193,8 @@ const WebViewChapter = React.memo(
     const insets = useSafeAreaInsets();
     const safeTop = insets.top;
 
+    const fontSize = use$(() => storedData$.fontSize.get());
+
     const htmlChapterTemplate = useMemo(() => {
       return bibleChapterHtmlTemplate({
         data,
@@ -199,11 +202,18 @@ const WebViewChapter = React.memo(
         width: Dimensions.get("window").width,
         isSplit: false,
         isInterlinear,
-        fontSize: storedData$.fontSize.get(),
+        fontSize,
         initialScrollIndex,
         tailwindScript,
       });
-    }, [data, theme, isInterlinear, initialScrollIndex, tailwindScript]);
+    }, [
+      data,
+      theme,
+      isInterlinear,
+      initialScrollIndex,
+      tailwindScript,
+      fontSize,
+    ]);
 
     return (
       <>
