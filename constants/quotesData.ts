@@ -27,6 +27,79 @@ export const formatBackgroundImagesUrl = (name: string) => {
     return `https://firebasestorage.googleapis.com/v0/b/bible-web-fae69.appspot.com/o/${newName}?alt=media`;
 }
 
+export const NEW_IMAGE_URLS = [
+    {
+        "topic": "nature",
+        "imagesUrl": [
+            "https://images.pexels.com/photos/775201/pexels-photo-775201.jpeg?_gl=1*1gxgsek*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODEkajU5JGwwJGgw",
+            "https://img.freepik.com/foto-gratis/textura-hoja-verde-fondo-textura-hoja_501050-120.jpg?t=st=1761402779~exp=1761406379~hmac=59924c57ad723855c25a1a0f062b489f6c54d02116c2c3925ef1e1601a77ffa8&w=1480",
+            "https://videos.openai.com/az/vg-assets/task_01k8dw2gp4eva9j7scnsw5j5cn%2F1761402336_img_1.webp?se=2025-10-31T16%3A57%3A19Z&sp=r&sv=2024-08-04&sr=b&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-24T23%3A52%3A53Z&ske=2025-10-31T23%3A57%3A53Z&sks=b&skv=2024-08-04&sig=0%2BsMC/kqUNE1W3hTAAUAoYJ/yZ5GDabH3TtLxfs2Rw4%3D&ac=oaivgprodscus2",
+            "https://videos.openai.com/az/vg-assets/assets%2Ftask_01jvfhfjmyf63sj02hh8kp591d%2F1747499673_img_1.webp?se=2025-10-31T22%3A46%3A38Z&sp=r&sv=2024-08-04&sr=b&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-25T21%3A56%3A19Z&ske=2025-11-01T22%3A01%3A19Z&sks=b&skv=2024-08-04&sig=7o6SFTCWgDon7Gvc3U4pbCIlCMbTjM08MFqaXK9h42Y%3D&ac=oaivgprodscus",
+            "https://videos.openai.com/az/vg-assets/assets%2Ftask_01jx26tzr0fva8425qct4kyjtr%2F1749199796_img_1.webp?se=2025-10-31T22%3A46%3A38Z&sp=r&sv=2024-08-04&sr=b&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-25T21%3A56%3A19Z&ske=2025-11-01T22%3A01%3A19Z&sks=b&skv=2024-08-04&sig=izaTPmFyNOaOub7ulFjWUrQs59deEmB1ua/n%2BNVDVqI%3D&ac=oaivgprodscus",
+            "https://videos.openai.com/az/vg-assets/assets%2Ftask_01k26hjzj2enxt5vv84csmn00k%2F1754713955_img_1.webp?se=2025-10-31T22%3A46%3A38Z&sp=r&sv=2024-08-04&sr=b&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-25T21%3A56%3A19Z&ske=2025-11-01T22%3A01%3A19Z&sks=b&skv=2024-08-04&sig=BHMOwcPnu5zXd/hVdN7Ml%2BUrhxrSzA4Q8zN7cjBDvmE%3D&ac=oaivgprodscus",
+            "https://videos.openai.com/az/vg-assets/assets%2Ftask_01jxw7xwh0ec5bq7wmwzjw8wa7%2F1750073315_img_0.webp?se=2025-10-31T23%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-25T21%3A54%3A56Z&ske=2025-11-01T21%3A59%3A56Z&sks=b&skv=2024-08-04&sig=NCdsR6lDxtp4OFs0yob5TGCRMStqnaLyomfkPkEUeHs%3D&ac=oaivgprodscus",
+            "https://videos.openai.com/az/vg-assets/assets%2Ftask_01jxcx4h9df4xvd1abpgmzbha8%2F1749558771_img_3.webp?se=2025-10-31T23%3A05%3A11Z&sp=r&sv=2024-08-04&sr=b&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-25T21%3A56%3A12Z&ske=2025-11-01T22%3A01%3A12Z&sks=b&skv=2024-08-04&sig=HMw6P7JOh025ATt/OMhSWfx9oMRF1RqHpK8JqEwZwBc%3D&ac=oaivgprodscus",
+            "https://images.pexels.com/photos/2754200/pexels-photo-2754200.jpeg",
+            "https://images.pexels.com/photos/443446/pexels-photo-443446.jpeg?_gl=1*curke8*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQwNTEkajI5JGwwJGgw",
+            "https://images.pexels.com/photos/163872/italy-cala-gonone-air-sky-163872.jpeg?_gl=1*12diws4*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODckajUzJGwwJGgw",
+        ]
+    },
+    {
+        "topic": "mountains",
+        "imagesUrl": [
+            "https://images.pexels.com/photos/1428277/pexels-photo-1428277.jpeg?_gl=1*1rw811a*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQwNjAkajIwJGwwJGgw",
+            "https://images.pexels.com/photos/1586298/pexels-photo-1586298.jpeg?_gl=1*175bkc1*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQwMDkkajEkbDAkaDA.",
+            "https://images.pexels.com/photos/3181458/pexels-photo-3181458.jpeg?_gl=1*1non3z7*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzM5OTMkajE3JGwwJGgw",
+            "https://images.pexels.com/photos/2335126/pexels-photo-2335126.jpeg?_gl=1*pe2dfj*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzM5NTAkajYwJGwwJGgw",
+            "https://images.pexels.com/photos/1624496/pexels-photo-1624496.jpeg?_gl=1*18dnsnn*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0MTIkajM0JGwwJGgw",
+            "https://images.pexels.com/photos/640781/pexels-photo-640781.jpeg",
+            "https://images.pexels.com/photos/1624438/pexels-photo-1624438.jpeg?_gl=1*12apkv6*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODckajUzJGwwJGgw",
+            "https://images.pexels.com/photos/730981/pexels-photo-730981.jpeg?_gl=1*12apkv6*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODckajUzJGwwJGgw",
+            "https://images.pexels.com/photos/326235/pexels-photo-326235.jpeg?_gl=1*ppr3qf*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzU1NzUkajUyJGwwJGgw",
+            "https://images.pexels.com/photos/675764/pexels-photo-675764.jpeg?_gl=1*ppr3qf*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzU1NzUkajUyJGwwJGgw"
+        ]
+    },
+    {
+        "topic": "animals",
+        "imagesUrl": [
+            "https://images.pexels.com/photos/247431/pexels-photo-247431.jpeg?_gl=1*znozwo*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0MDgkajM4JGwwJGgw",
+            "https://images.pexels.com/photos/3608263/pexels-photo-3608263.jpeg",
+            "https://images.pexels.com/photos/2295744/pexels-photo-2295744.jpeg",
+            "https://images.pexels.com/photos/1893158/pexels-photo-1893158.jpeg",
+            "https://images.pexels.com/photos/3565545/pexels-photo-3565545.jpeg",
+            "https://images.pexels.com/photos/3611393/pexels-photo-3611393.jpeg",
+            "https://images.pexels.com/photos/1327405/pexels-photo-1327405.jpeg",
+            "https://images.pexels.com/photos/15092513/pexels-photo-15092513.jpeg",
+            "https://images.pexels.com/photos/688618/pexels-photo-688618.jpeg",
+            "https://images.pexels.com/photos/5490734/pexels-photo-5490734.jpeg"
+
+        ]
+    },
+    {
+        "topic": "home",
+        "imagesUrl": [
+            "https://images.pexels.com/photos/235986/pexels-photo-235986.jpeg?_gl=1*12diws4*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODckajUzJGwwJGgw",
+            "https://images.pexels.com/photos/1156684/pexels-photo-1156684.jpeg?_gl=1*gwm7xr*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODckajUzJGwwJGgw",
+
+        ]
+    },
+    {
+        "topic": "bridges",
+        "imagesUrl": [
+            "https://images.pexels.com/photos/775201/pexels-photo-775201.jpeg?_gl=1*1gxgsek*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODEkajU5JGwwJGgw",
+            ""
+        ]
+    },
+    {
+        "topic": "flowers",
+        "imagesUrl": [
+            "https://images.pexels.com/photos/1366630/pexels-photo-1366630.jpeg?_gl=1*12apkv6*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODckajUzJGwwJGgw",
+            "https://images.pexels.com/photos/1319750/pexels-photo-1319750.jpeg?_gl=1*10gt74t*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODckajUzJGwwJGgw",
+
+        ]
+    }
+]
+
 export const QUOTES_DATA: TQuoteDataSection[] = [
     {
         "section": "home",
@@ -1871,6 +1944,5 @@ export const FAMOUS_VERSES = [
         reference: "1 Corintios 3:19",
     },
 ];
-
 
 

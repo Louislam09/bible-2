@@ -179,7 +179,6 @@ const QuoteMaker: React.FC = () => {
           <ImageBackground
             source={{
               uri: selectedTheme.backgroundImageUrl,
-              // uri: "https://img.freepik.com/foto-gratis/textura-hoja-verde-fondo-textura-hoja_501050-120.jpg?t=st=1761402779~exp=1761406379~hmac=59924c57ad723855c25a1a0f062b489f6c54d02116c2c3925ef1e1601a77ffa8&w=1480",
             }}
             style={styles.backgroundImage}
             contentFit="cover"
@@ -309,8 +308,9 @@ const getStyles = ({ colors }: TTheme) =>
       left: 0,
       right: 0,
       bottom: 0,
-      //   backgroundColor: "red",
-      backgroundColor: "rgba(0, 0, 0, 0.3)",
+      zIndex: 10,
+      // backgroundColor: "transparent",
+      backgroundColor: "rgba(0, 0, 0, 0.2)",
     },
     header: {
       position: "absolute",
@@ -361,6 +361,7 @@ const getStyles = ({ colors }: TTheme) =>
       marginLeft: 6,
     },
     verseContainer: {
+      zIndex: 101,
       flex: 1,
       width: "100%",
       justifyContent: "center",
