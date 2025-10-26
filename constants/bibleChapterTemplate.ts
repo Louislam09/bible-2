@@ -1,6 +1,25 @@
 import { IBookVerse } from "@/types";
 import { lucideIcons } from "@/utils/lucideIcons";
 import { DB_BOOK_NAMES } from "./BookNames";
+import { Platform } from "react-native";
+
+export const generateAssetFontCss = ({
+    fontFileName,
+    extension = 'ttf',
+}: {
+    fontFileName: string;
+    extension?: string;
+}) => {
+    const fileUri = Platform.select({
+        ios: `${fontFileName}.${extension}`,
+        android: `file:///android_asset/fonts/${fontFileName}.${extension}`,
+    });
+
+    return `@font-face {
+        font-family: '${fontFileName}';
+        src: local('${fontFileName}'), url('${fileUri}') ;
+    }`;
+};
 
 const bibleChapterStyles = (
     theme: any,

@@ -377,7 +377,7 @@ const createSettingsHTML = (
                 </div>
                 
                 <!-- Reading Experience Section -->
-                <div>
+                <div class="hidden">
                     <h2 class="text-lg font-semibold mb-4">Experiencia de Lectura</h2>
                     
                     <!-- Show Verse Numbers Toggle -->
