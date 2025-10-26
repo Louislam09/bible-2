@@ -1,4 +1,5 @@
 import Icon from "@/components/Icon";
+import BackgroundImageSelectorBottomSheet from "@/components/quote/BackgroundImageSelectorBottomSheet";
 import FontSelectorBottomSheet from "@/components/quote/FontSelectorBottomSheet";
 import ThemeSelectorBottomSheet from "@/components/quote/ThemeSelectorBottomSheet";
 import { Text, View } from "@/components/Themed";
@@ -35,6 +36,7 @@ const QuoteMaker: React.FC = () => {
   const styles = useMemo(() => getStyles(theme), [theme]);
   const themeSelectorRef = useRef<BottomSheetModal>(null);
   const fontSelectorRef = useRef<BottomSheetModal>(null);
+  const backgroundImageSelectorRef = useRef<BottomSheetModal>(null);
   const [selectedTheme, setSelectedTheme] = useState<
     TQuoteDataItem | undefined
   >();
@@ -139,6 +141,38 @@ const QuoteMaker: React.FC = () => {
     });
   };
 
+  const handleBackgroundImageSelect = (backgroundImageUrl: string) => {
+    setSelectedTheme((prev: TQuoteDataItem | undefined) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        backgroundImageUrl: backgroundImageUrl,
+      };
+    });
+  };
+
+  const handleTextAlignSelect = () => {
+    const alignOptions = ["center", "left", "right", "justify"];
+    const currentAlign = selectedTheme?.textAlign || "center";
+    const nextAlign =
+      alignOptions[
+        (alignOptions.indexOf(currentAlign) + 1) % alignOptions.length
+      ];
+    setSelectedTheme((prev: any) => {
+      return {
+        ...prev,
+        textAlign: nextAlign,
+      };
+    });
+  };
+
+  const handleMessage = (event: any) => {
+    const data = JSON.parse(event.nativeEvent.data);
+    if (data.type === "textAlignSelect") {
+      handleTextAlignSelect();
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Stack.Screen
@@ -202,6 +236,7 @@ const QuoteMaker: React.FC = () => {
                     .replace(/{{watermarkClass}}/g, watermarkClass),
                 }}
                 scrollEnabled={false}
+                onMessage={handleMessage}
                 onError={(syntheticEvent) => {
                   const { nativeEvent = {} } = syntheticEvent;
                   console.warn("WebView error: ", nativeEvent);
@@ -227,6 +262,16 @@ const QuoteMaker: React.FC = () => {
         >
           <Icon name="Share" size={24} color="#FFFFFF" />
           <Text style={styles.shareText}>Compartir</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => backgroundImageSelectorRef.current?.present()}
+          style={[
+            styles.customFontButton,
+            highlightShareButton && styles.highlightedShareButton,
+          ]}
+        >
+          <Icon name="Image" size={24} color="#FFFFFF" />
+          <Text style={styles.shareText}>Fondo</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => fontSelectorRef.current?.present()}
@@ -259,6 +304,13 @@ const QuoteMaker: React.FC = () => {
         selectedTheme={selectedTheme}
         onThemeSelect={handleThemeSelect}
         onClose={handleCloseThemeSelector}
+      />
+
+      <BackgroundImageSelectorBottomSheet
+        bottomSheetRef={backgroundImageSelectorRef}
+        selectedTheme={selectedTheme}
+        onBackgroundImageSelect={handleBackgroundImageSelect}
+        onClose={() => backgroundImageSelectorRef.current?.dismiss()}
       />
     </View>
   );
@@ -310,7 +362,7 @@ const getStyles = ({ colors }: TTheme) =>
       bottom: 0,
       zIndex: 10,
       // backgroundColor: "transparent",
-      backgroundColor: "rgba(0, 0, 0, 0.2)",
+      backgroundColor: "rgba(0, 0, 0, 0.3)",
     },
     header: {
       position: "absolute",

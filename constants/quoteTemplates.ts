@@ -1520,6 +1520,7 @@ export const quoteTemplatesMaker = (selectedTheme: TQuoteDataItem) => {
       line-height: 1.35;
       margin-bottom: 1.5rem;
       text-transform: ${selectedTheme.textTransform};
+      text-align: ${selectedTheme.textAlign};
     }
    
     .verse-container {
@@ -1534,6 +1535,7 @@ export const quoteTemplatesMaker = (selectedTheme: TQuoteDataItem) => {
     .verse {
       font-size: 1.8rem;
       text-transform: ${selectedTheme.textTransform};
+      text-align: ${selectedTheme.textAlign};
     }
     .verse-line {
       background-image: linear-gradient(90deg, #f8b04b 0, #e8465b 40.1%, #00a8c3 73.96%, #60bba2);
@@ -1581,6 +1583,16 @@ export const quoteTemplatesMaker = (selectedTheme: TQuoteDataItem) => {
     <div class="watermark {{watermarkClass}}">
       <p class="watermark-text"><b>Descargar:</b> Santa Biblia RV60+Audio</p>
     </div>
+      <script>
+      document.querySelector('.quote-box').addEventListener('click', () => {
+         // Send selection to React Native
+              if (window.ReactNativeWebView) {
+                  window.ReactNativeWebView.postMessage(JSON.stringify({
+                      type: 'textAlignSelect'
+                  }));
+              }
+      });
+    </script>
   </body>
   </html>
   `

@@ -24,7 +24,11 @@ interface FontItem {
   previewText: string;
 }
 
-const getHTMLContent = (quotesData: any, selectedThemeId: string | null) => {
+const getHTMLContent = (
+  quotesData: any,
+  selectedThemeId: string | null,
+  theme: TTheme
+) => {
   // Collect all unique fonts from the quotes data with their details
   const fontsMap = new Map<string, FontItem>();
   quotesData.forEach((section: any) => {
@@ -92,7 +96,7 @@ const getHTMLContent = (quotesData: any, selectedThemeId: string | null) => {
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: transparent;
-            color: #ffffff;
+            color: ${theme.colors.text};
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -108,14 +112,14 @@ const getHTMLContent = (quotesData: any, selectedThemeId: string | null) => {
         .title {
             font-size: 18px;
             font-weight: 700;
-            color: #ffffff;
+            color: ${theme.colors.text};
             letter-spacing: -0.5px;
         }
 
         .close-button {
             background: rgba(255, 255, 255, 0.1);
             border: none;
-            color: #ffffff;
+            color: ${theme.colors.text};
             font-size: 24px;
             cursor: pointer;
             padding: 2px 10px;
@@ -221,7 +225,7 @@ const getHTMLContent = (quotesData: any, selectedThemeId: string | null) => {
         .font-preview {
             font-size: 32px;
             font-weight: 600;
-            color: #ffffff;
+            color: ${theme.colors.text};
             line-height: 1;
             transition: font-size 0.3s ease, text-shadow 0.3s ease;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -230,7 +234,7 @@ const getHTMLContent = (quotesData: any, selectedThemeId: string | null) => {
         .font-name {
             font-size: 9px;
             font-weight: 500;
-            color: rgba(255, 255, 255, 0.7);
+            color: ${theme.colors.text + "70"};
             text-align: center;
             max-width: 90%;
             overflow: hidden;
@@ -241,9 +245,11 @@ const getHTMLContent = (quotesData: any, selectedThemeId: string | null) => {
 
 
         .font-item.center .font-circle {
-            background: linear-gradient(135deg, rgba(0, 122, 255, 0.3) 0%, rgba(0, 122, 255, 0.15) 100%);
-            border: 3px solid rgba(0, 122, 255, 0.6);
-            box-shadow: 0 12px 48px rgba(0, 122, 255, 0.4);
+            background: linear-gradient(135deg, ${
+              theme.colors.primary + "30"
+            } 0%, ${theme.colors.primary + "15"} 100%);
+            border: 3px solid ${theme.colors.primary + "60"};
+            box-shadow: 0 12px 48px ${theme.colors.text + "40"};
         }
 
         .font-item.center .font-preview {
@@ -252,12 +258,12 @@ const getHTMLContent = (quotesData: any, selectedThemeId: string | null) => {
         }
 
         .font-item.center .font-name {
-            color: rgba(255, 255, 255, 1);
+            color: ${theme.colors.text};
             font-weight: 600;
         }
 
         .font-item.selected .font-circle {
-            border-color: rgba(0, 255, 150, 0.6);
+            border-color: ${theme.colors.notification};
         }
 
         .selected-indicator {
@@ -267,14 +273,16 @@ const getHTMLContent = (quotesData: any, selectedThemeId: string | null) => {
             width: 22px;
             height: 22px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #00ff96 0%, #00cc77 100%);
+            background: linear-gradient(135deg, ${
+              theme.colors.notification
+            } 0%, ${theme.colors.notification + "70"} 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             color: #ffffff;
             font-size: 12px;
             font-weight: bold;
-            box-shadow: 0 2px 8px rgba(0, 255, 150, 0.4);
+            box-shadow: 0 2px 8px ${theme.colors.notification + "40"};
             animation: checkmarkPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
@@ -558,8 +566,8 @@ const FontSelectorBottomSheet: React.FC<FontSelectorBottomSheetProps> = ({
   );
 
   const htmlContent = useMemo(() => {
-    return getHTMLContent(QUOTES_DATA, selectedTheme?.id || null);
-  }, []);
+    return getHTMLContent(QUOTES_DATA, selectedTheme?.id || null, theme);
+  }, [theme]);
 
   return (
     <BottomModal

@@ -10,6 +10,7 @@ export type TQuoteDataItem = {
     textColor: string;
     accentColor: string;
     textTransform: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
+    textAlign: 'left' | 'right' | 'center' | 'justify';
 }
 
 export type TQuoteDataSection = {
@@ -30,39 +31,41 @@ export const formatBackgroundImagesUrl = (name: string) => {
 export const NEW_IMAGE_URLS = [
     {
         "topic": "nature",
+        "label": "Naturaleza",
         "imagesUrl": [
-            "https://images.pexels.com/photos/775201/pexels-photo-775201.jpeg?_gl=1*1gxgsek*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODEkajU5JGwwJGgw",
-            "https://img.freepik.com/foto-gratis/textura-hoja-verde-fondo-textura-hoja_501050-120.jpg?t=st=1761402779~exp=1761406379~hmac=59924c57ad723855c25a1a0f062b489f6c54d02116c2c3925ef1e1601a77ffa8&w=1480",
-            "https://videos.openai.com/az/vg-assets/task_01k8dw2gp4eva9j7scnsw5j5cn%2F1761402336_img_1.webp?se=2025-10-31T16%3A57%3A19Z&sp=r&sv=2024-08-04&sr=b&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-24T23%3A52%3A53Z&ske=2025-10-31T23%3A57%3A53Z&sks=b&skv=2024-08-04&sig=0%2BsMC/kqUNE1W3hTAAUAoYJ/yZ5GDabH3TtLxfs2Rw4%3D&ac=oaivgprodscus2",
-            "https://videos.openai.com/az/vg-assets/assets%2Ftask_01jvfhfjmyf63sj02hh8kp591d%2F1747499673_img_1.webp?se=2025-10-31T22%3A46%3A38Z&sp=r&sv=2024-08-04&sr=b&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-25T21%3A56%3A19Z&ske=2025-11-01T22%3A01%3A19Z&sks=b&skv=2024-08-04&sig=7o6SFTCWgDon7Gvc3U4pbCIlCMbTjM08MFqaXK9h42Y%3D&ac=oaivgprodscus",
-            "https://videos.openai.com/az/vg-assets/assets%2Ftask_01jx26tzr0fva8425qct4kyjtr%2F1749199796_img_1.webp?se=2025-10-31T22%3A46%3A38Z&sp=r&sv=2024-08-04&sr=b&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-25T21%3A56%3A19Z&ske=2025-11-01T22%3A01%3A19Z&sks=b&skv=2024-08-04&sig=izaTPmFyNOaOub7ulFjWUrQs59deEmB1ua/n%2BNVDVqI%3D&ac=oaivgprodscus",
-            "https://videos.openai.com/az/vg-assets/assets%2Ftask_01k26hjzj2enxt5vv84csmn00k%2F1754713955_img_1.webp?se=2025-10-31T22%3A46%3A38Z&sp=r&sv=2024-08-04&sr=b&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-25T21%3A56%3A19Z&ske=2025-11-01T22%3A01%3A19Z&sks=b&skv=2024-08-04&sig=BHMOwcPnu5zXd/hVdN7Ml%2BUrhxrSzA4Q8zN7cjBDvmE%3D&ac=oaivgprodscus",
-            "https://videos.openai.com/az/vg-assets/assets%2Ftask_01jxw7xwh0ec5bq7wmwzjw8wa7%2F1750073315_img_0.webp?se=2025-10-31T23%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-25T21%3A54%3A56Z&ske=2025-11-01T21%3A59%3A56Z&sks=b&skv=2024-08-04&sig=NCdsR6lDxtp4OFs0yob5TGCRMStqnaLyomfkPkEUeHs%3D&ac=oaivgprodscus",
-            "https://videos.openai.com/az/vg-assets/assets%2Ftask_01jxcx4h9df4xvd1abpgmzbha8%2F1749558771_img_3.webp?se=2025-10-31T23%3A05%3A11Z&sp=r&sv=2024-08-04&sr=b&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-25T21%3A56%3A12Z&ske=2025-11-01T22%3A01%3A12Z&sks=b&skv=2024-08-04&sig=HMw6P7JOh025ATt/OMhSWfx9oMRF1RqHpK8JqEwZwBc%3D&ac=oaivgprodscus",
+            "https://images.pexels.com/photos/775201/pexels-photo-775201.jpeg",
+            "https://images.pexels.com/photos/32786078/pexels-photo-32786078.jpeg",
+            "https://images.pexels.com/photos/28239594/pexels-photo-28239594.jpeg",
             "https://images.pexels.com/photos/2754200/pexels-photo-2754200.jpeg",
-            "https://images.pexels.com/photos/443446/pexels-photo-443446.jpeg?_gl=1*curke8*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQwNTEkajI5JGwwJGgw",
-            "https://images.pexels.com/photos/163872/italy-cala-gonone-air-sky-163872.jpeg?_gl=1*12diws4*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODckajUzJGwwJGgw",
+            "https://images.pexels.com/photos/443446/pexels-photo-443446.jpeg",
+            "https://images.pexels.com/photos/163872/italy-cala-gonone-air-sky-163872.jpeg",
+            "https://images.pexels.com/photos/28239594/pexels-photo-28239594.jpeg",
+            "https://images.pexels.com/photos/1368382/pexels-photo-1368382.jpeg",
+            "https://images.pexels.com/photos/1226302/pexels-photo-1226302.jpeg",
+            "https://images.pexels.com/photos/1723637/pexels-photo-1723637.jpeg"
         ]
     },
     {
         "topic": "mountains",
+        "label": "Montañas",
         "imagesUrl": [
-            "https://images.pexels.com/photos/1428277/pexels-photo-1428277.jpeg?_gl=1*1rw811a*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQwNjAkajIwJGwwJGgw",
-            "https://images.pexels.com/photos/1586298/pexels-photo-1586298.jpeg?_gl=1*175bkc1*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQwMDkkajEkbDAkaDA.",
-            "https://images.pexels.com/photos/3181458/pexels-photo-3181458.jpeg?_gl=1*1non3z7*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzM5OTMkajE3JGwwJGgw",
-            "https://images.pexels.com/photos/2335126/pexels-photo-2335126.jpeg?_gl=1*pe2dfj*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzM5NTAkajYwJGwwJGgw",
-            "https://images.pexels.com/photos/1624496/pexels-photo-1624496.jpeg?_gl=1*18dnsnn*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0MTIkajM0JGwwJGgw",
+            "https://images.pexels.com/photos/1428277/pexels-photo-1428277.jpeg",
+            "https://images.pexels.com/photos/1586298/pexels-photo-1586298.jpeg",
+            "https://images.pexels.com/photos/3181458/pexels-photo-3181458.jpeg",
+            "https://images.pexels.com/photos/2335126/pexels-photo-2335126.jpeg",
+            "https://images.pexels.com/photos/1624496/pexels-photo-1624496.jpeg",
             "https://images.pexels.com/photos/640781/pexels-photo-640781.jpeg",
-            "https://images.pexels.com/photos/1624438/pexels-photo-1624438.jpeg?_gl=1*12apkv6*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODckajUzJGwwJGgw",
-            "https://images.pexels.com/photos/730981/pexels-photo-730981.jpeg?_gl=1*12apkv6*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODckajUzJGwwJGgw",
-            "https://images.pexels.com/photos/326235/pexels-photo-326235.jpeg?_gl=1*ppr3qf*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzU1NzUkajUyJGwwJGgw",
-            "https://images.pexels.com/photos/675764/pexels-photo-675764.jpeg?_gl=1*ppr3qf*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzU1NzUkajUyJGwwJGgw"
+            "https://images.pexels.com/photos/1624438/pexels-photo-1624438.jpeg",
+            "https://images.pexels.com/photos/730981/pexels-photo-730981.jpeg",
+            "https://images.pexels.com/photos/326235/pexels-photo-326235.jpeg",
+            "https://images.pexels.com/photos/675764/pexels-photo-675764.jpeg"
         ]
     },
     {
         "topic": "animals",
+        "label": "Animales",
         "imagesUrl": [
-            "https://images.pexels.com/photos/247431/pexels-photo-247431.jpeg?_gl=1*znozwo*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0MDgkajM4JGwwJGgw",
+            "https://images.pexels.com/photos/247431/pexels-photo-247431.jpeg",
             "https://images.pexels.com/photos/3608263/pexels-photo-3608263.jpeg",
             "https://images.pexels.com/photos/2295744/pexels-photo-2295744.jpeg",
             "https://images.pexels.com/photos/1893158/pexels-photo-1893158.jpeg",
@@ -77,25 +80,51 @@ export const NEW_IMAGE_URLS = [
     },
     {
         "topic": "home",
+        "label": "Hogar",
         "imagesUrl": [
-            "https://images.pexels.com/photos/235986/pexels-photo-235986.jpeg?_gl=1*12diws4*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODckajUzJGwwJGgw",
-            "https://images.pexels.com/photos/1156684/pexels-photo-1156684.jpeg?_gl=1*gwm7xr*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODckajUzJGwwJGgw",
-
+            "https://images.pexels.com/photos/276514/pexels-photo-276514.jpeg",
+            "https://images.pexels.com/photos/235986/pexels-photo-235986.jpeg",
+            "https://images.pexels.com/photos/1156684/pexels-photo-1156684.jpeg",
+            "https://images.pexels.com/photos/667838/pexels-photo-667838.jpeg",
+            "https://images.pexels.com/photos/2121121/pexels-photo-2121121.jpeg",
+            "https://images.pexels.com/photos/1129413/pexels-photo-1129413.jpeg",
+            "https://images.pexels.com/photos/1125136/pexels-photo-1125136.jpeg",
+            "https://images.pexels.com/photos/920025/pexels-photo-920025.jpeg",
+            "https://images.pexels.com/photos/2098405/pexels-photo-2098405.jpeg",
+            "https://images.pexels.com/photos/2883203/pexels-photo-2883203.jpeg",
+            "https://images.pexels.com/photos/2100245/pexels-photo-2100245.jpeg"
         ]
     },
     {
         "topic": "bridges",
+        "label": "Puentes",
         "imagesUrl": [
-            "https://images.pexels.com/photos/775201/pexels-photo-775201.jpeg?_gl=1*1gxgsek*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODEkajU5JGwwJGgw",
-            ""
+            "https://images.pexels.com/photos/775201/pexels-photo-775201.jpeg",
+            "https://images.pexels.com/photos/34407951/pexels-photo-34407951.jpeg",
+            "https://images.pexels.com/photos/19128486/pexels-photo-19128486.jpeg",
+            "https://images.pexels.com/photos/14737658/pexels-photo-14737658.jpeg",
+            "https://images.pexels.com/photos/21533286/pexels-photo-21533286.jpeg",
+            "https://images.pexels.com/photos/2739288/pexels-photo-2739288.jpeg",
+            "https://images.pexels.com/photos/4353812/pexels-photo-4353812.jpeg",
+            "https://images.pexels.com/photos/10537852/pexels-photo-10537852.jpeg",
+            "https://images.pexels.com/photos/4001405/pexels-photo-4001405.jpeg",
+            "https://images.pexels.com/photos/19977412/pexels-photo-19977412.jpeg"
         ]
     },
     {
         "topic": "flowers",
+        "label": "Flores",
         "imagesUrl": [
-            "https://images.pexels.com/photos/1366630/pexels-photo-1366630.jpeg?_gl=1*12apkv6*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODckajUzJGwwJGgw",
-            "https://images.pexels.com/photos/1319750/pexels-photo-1319750.jpeg?_gl=1*10gt74t*_ga*MTM3MjMwNTk2MC4xNzYwMDI5MjQx*_ga_8JE65Q40S6*czE3NjE0MzM4NTkkbzUkZzEkdDE3NjE0MzQ0ODckajUzJGwwJGgw",
-
+            "https://images.pexels.com/photos/1366630/pexels-photo-1366630.jpeg",
+            "https://images.pexels.com/photos/1319750/pexels-photo-1319750.jpeg",
+            "https://images.pexels.com/photos/736230/pexels-photo-736230.jpeg",
+            "https://images.pexels.com/photos/250591/pexels-photo-250591.jpeg",
+            "https://images.pexels.com/photos/1883385/pexels-photo-1883385.jpeg",
+            "https://images.pexels.com/photos/1697912/pexels-photo-1697912.jpeg",
+            "https://images.pexels.com/photos/1624076/pexels-photo-1624076.jpeg",
+            "https://images.pexels.com/photos/532168/pexels-photo-532168.jpeg",
+            "https://images.pexels.com/photos/3014941/pexels-photo-3014941.jpeg",
+            "https://images.pexels.com/photos/2251822/pexels-photo-2251822.jpeg"
         ]
     }
 ]
@@ -116,6 +145,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#FFD700",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -129,6 +159,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#00A8E8",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -142,6 +173,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#333333",
                 "accentColor": "#E07A5F",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -155,6 +187,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#C08497",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -168,6 +201,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#2C3E50",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -181,6 +215,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#56A36C",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -194,6 +229,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#2980B9",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -207,6 +243,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#F0F0F0",
                 "accentColor": "#FF00FF",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             },
             {
@@ -220,6 +257,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#4a2c2a",
                 "accentColor": "#8B4513",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -233,6 +271,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
                 "accentColor": "#FFC107",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             }
         ]
@@ -252,6 +291,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#FFD700",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -265,6 +305,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#E0C097",
                 "accentColor": "#4A2C2A",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -278,6 +319,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
                 "accentColor": "#E53935",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             },
             {
@@ -291,6 +333,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#2C2C2C",
                 "accentColor": "#D4AF37",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -304,6 +347,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#00FFFF",
                 "accentColor": "#FF00FF",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             },
             {
@@ -317,6 +361,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#F5F5F5",
                 "accentColor": "#212121",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             },
             {
@@ -330,6 +375,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#000000",
                 "accentColor": "#C0A060",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -343,6 +389,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
                 "accentColor": "#FF69B4",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             },
             {
@@ -356,6 +403,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#4B2E05",
                 "accentColor": "#FFDAB9",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -369,6 +417,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#FFF8E1",
                 "accentColor": "#FF5722",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             }
         ]
@@ -388,6 +437,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#333333",
                 "accentColor": "#FFC0CB",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -401,6 +451,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#00BFFF",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -414,6 +465,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#D2691E",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -427,6 +479,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#1E3A5F",
                 "accentColor": "#ADD8E6",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -440,6 +493,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#E67E22",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -453,6 +507,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#F5F5F5",
                 "accentColor": "#4682B4",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -466,6 +521,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#FFD700",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -479,6 +535,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#111111",
                 "accentColor": "#B0C4DE",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -492,6 +549,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#DC143C",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -505,6 +563,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#F0E68C",
                 "accentColor": "#FFFFFF",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             }
         ]
@@ -524,6 +583,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#333333",
                 "accentColor": "#BDBDBD",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -537,6 +597,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#A9A9A9",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -550,6 +611,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#2F4F4F",
                 "accentColor": "#6B8E23",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -563,6 +625,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#FFA500",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -576,6 +639,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#F5F5F5",
                 "accentColor": "#778899",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -589,6 +653,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#4B0082",
                 "accentColor": "#FFFFFF",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -602,6 +667,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#555555",
                 "accentColor": "#8C7853",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -615,6 +681,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#9ACD32",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -628,6 +695,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#363636",
                 "accentColor": "#A0522D",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -641,6 +709,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#E6E6FA",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             }
         ]
@@ -660,6 +729,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
                 "accentColor": "#FF8C00",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             },
             {
@@ -673,6 +743,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#FFFF00",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -686,6 +757,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#111111",
                 "accentColor": "#FF69B4",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -699,6 +771,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#4CAF50",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -712,6 +785,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#F0F0F0",
                 "accentColor": "#DA70D6",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -725,6 +799,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#CD853F",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -738,6 +813,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#FF4500",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -751,6 +827,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#FDD835",
                 "accentColor": "#FFFFFF",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             },
             {
@@ -764,6 +841,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#3A5F0B",
                 "accentColor": "#FFFFFF",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -777,6 +855,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#FFD700",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             }
         ]
@@ -796,6 +875,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#333333",
                 "accentColor": "#CCCCCC",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -809,6 +889,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#2c3e50",
                 "accentColor": "#e74c3c",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -822,6 +903,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#888888",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -835,6 +917,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#5A5A5A",
                 "accentColor": "#BDBDBD",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -848,6 +931,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#264653",
                 "accentColor": "#2a9d8f",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -861,6 +945,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#F0F0F0",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -874,6 +959,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#1a1a1a",
                 "accentColor": "#666666",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             },
             {
@@ -887,6 +973,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#222222",
                 "accentColor": "#888888",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -900,6 +987,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#706c61",
                 "accentColor": "#b2a49e",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -913,6 +1001,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#1d3557",
                 "accentColor": "#457b9d",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             }
         ]
@@ -932,6 +1021,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#90EE90",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -945,6 +1035,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#F0F8FF",
                 "accentColor": "#1E90FF",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -958,6 +1049,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
                 "accentColor": "#C0C0C0",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             },
             {
@@ -971,6 +1063,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#46301e",
                 "accentColor": "#FFFFFF",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -984,6 +1077,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#20B2AA",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -997,6 +1091,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#2E2D2D",
                 "accentColor": "#8A2BE2",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1010,6 +1105,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#F5F5F5",
                 "accentColor": "#FFD700",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             },
             {
@@ -1023,6 +1119,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
                 "accentColor": "#CD5C5C",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             },
             {
@@ -1036,6 +1133,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#39FF14",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1049,6 +1147,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FDF5E6",
                 "accentColor": "#8B4513",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             }
         ]
@@ -1068,6 +1167,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
                 "accentColor": "#FF00FF",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             },
             {
@@ -1081,6 +1181,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
                 "accentColor": "#00BFFF",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             },
             {
@@ -1094,6 +1195,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#F5DEB3",
                 "accentColor": "#FFFFFF",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1107,6 +1209,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#FFFF00",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1120,6 +1223,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
                 "accentColor": "#FFD700",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             },
             {
@@ -1133,6 +1237,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#FF4500",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1146,6 +1251,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#2C3E50",
                 "accentColor": "#3498DB",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1159,6 +1265,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#FFFFFF",
                 "accentColor": "#F1C40F",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             },
             {
@@ -1172,6 +1279,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#333333",
                 "accentColor": "#B8860B",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1185,6 +1293,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#E32636",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             }
         ]
@@ -1204,6 +1313,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#3A3B3C",
                 "accentColor": "#5C524A",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1217,6 +1327,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#4B382A",
                 "accentColor": "#FFFFFF",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1230,6 +1341,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#AAAAAA",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1243,6 +1355,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#111111",
                 "accentColor": "#E91E63",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             },
             {
@@ -1256,6 +1369,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#F5F5DC",
                 "accentColor": "#D2B48C",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1269,6 +1383,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#B22222",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1282,6 +1397,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#333333",
                 "accentColor": "#556B2F",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1295,6 +1411,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#4d463d",
                 "accentColor": "#8B0000",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1308,6 +1425,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#222222",
                 "accentColor": "#DAA520",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1321,6 +1439,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#362512",
                 "accentColor": "#C4A484",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             }
         ]
@@ -1340,6 +1459,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#3A3B3C",
                 "accentColor": "#5C524A",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1353,6 +1473,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#4B382A",
                 "accentColor": "#FFFFFF",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1366,6 +1487,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#AAAAAA",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1379,6 +1501,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "ABCD",
                 "textColor": "#111111",
                 "accentColor": "#E91E63",
+                "textAlign": "center",
                 "textTransform": "uppercase"
             },
             {
@@ -1392,6 +1515,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#F5F5DC",
                 "accentColor": "#D2B48C",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1405,6 +1529,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#B22222",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1418,6 +1543,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#333333",
                 "accentColor": "#556B2F",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1431,6 +1557,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#4d463d",
                 "accentColor": "#8B0000",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1444,6 +1571,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#222222",
                 "accentColor": "#DAA520",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1457,6 +1585,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#362512",
                 "accentColor": "#C4A484",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             }
         ]
@@ -1476,6 +1605,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#FFD700",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1489,6 +1619,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#3E2C00",
                 "accentColor": "#FFD54F",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1502,6 +1633,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#4A235A",
                 "accentColor": "#D7BDE2",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1515,6 +1647,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#7B1FA2",
                 "accentColor": "#F8BBD0",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1528,6 +1661,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#2C2C2C",
                 "accentColor": "#FF4081",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1541,6 +1675,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#BA68C8",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1554,6 +1689,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#222222",
                 "accentColor": "#FFEB3B",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1567,6 +1703,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#4A2C2A",
                 "accentColor": "#F48FB1",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1580,6 +1717,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#FFFFFF",
                 "accentColor": "#81C784",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             },
             {
@@ -1593,6 +1731,7 @@ export const QUOTES_DATA: TQuoteDataSection[] = [
                 "previewText": "Abcd",
                 "textColor": "#2E2E2E",
                 "accentColor": "#F06292",
+                "textAlign": "center",
                 "textTransform": "capitalize"
             }
         ]

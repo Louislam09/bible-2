@@ -1,4 +1,4 @@
-import { QUOTES_DATA, TQuoteDataItem } from "@/constants/quotesData";
+import { NEW_IMAGE_URLS, TQuoteDataItem } from "@/constants/quotesData";
 import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
@@ -8,47 +8,26 @@ import { Dimensions, StyleSheet, View } from "react-native";
 import { WebView } from "react-native-webview";
 import BottomModal from "../BottomModal";
 
-interface ThemeSelectorBottomSheetProps {
+interface BackgroundImageSelectorBottomSheetProps {
   bottomSheetRef: React.RefObject<BottomSheetModal | null>;
   selectedTheme?: TQuoteDataItem;
-  onThemeSelect: (theme: TQuoteDataItem) => void;
+  onBackgroundImageSelect: (backgroundImageUrl: string) => void;
   onClose: () => void;
 }
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 
+type TNewImageUrls = {
+  topic: string;
+  label: string;
+  imagesUrl: string[];
+};
+
 const getHTMLContent = (
-  quotesData: any,
-  selectedThemeId: string | null,
+  newImageUrls: TNewImageUrls[],
+  selectedImageUrl: string | null,
   theme: TTheme
 ) => {
-  // Collect all unique fonts from the quotes data
-  const uniqueFonts = new Set<string>();
-  quotesData.forEach((section: any) => {
-    section.items.forEach((item: any) => {
-      if (item.font && item.font.name) {
-        uniqueFonts.add(item.font.name);
-      }
-    });
-  });
-
-  // Function to optimize image URLs for theme cards (smaller resolution)
-  const optimizeImageUrl = (url: string) => {
-    // Replace _1000x1000 with _200x200 for better performance in theme cards
-    return url.replace("_1000x1000.jpg", "_200x200.jpg");
-  };
-
-  // Generate font imports
-  const fontImports = Array.from(uniqueFonts)
-    .map((fontName) => {
-      const fontUrl = `https://fonts.googleapis.com/css2?family=${fontName.replace(
-        /\s+/g,
-        "+"
-      )}:wght@400;600;700&display=swap`;
-      return `<link href="${fontUrl}" rel="stylesheet">`;
-    })
-    .join("\n    ");
-
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -58,7 +37,6 @@ const getHTMLContent = (
     <title>Theme Selector</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    ${fontImports}
     <style>
         * {
             margin: 0;
@@ -74,7 +52,7 @@ const getHTMLContent = (
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #1a1a1a0;
+            background-color: ${theme.colors.background};
             color: ${theme.colors.text};
             overflow-x: hidden;
             overflow-y: auto;
@@ -91,7 +69,7 @@ const getHTMLContent = (
             border-bottom: 1px solid ${theme.colors.text + "80"};
             position: sticky;
             top: 0;
-            background-color: #1a1a1a0;
+            background-color: ${theme.colors.background};
             z-index: 100;
         }
 
@@ -140,7 +118,7 @@ const getHTMLContent = (
             text-transform: capitalize;
         }
 
-        .themes-container {
+        .images-container {
             display: flex;
             gap: 12px;
             padding: 0 20px;
@@ -152,11 +130,11 @@ const getHTMLContent = (
             scroll-behavior: smooth;
         }
 
-        .themes-container::-webkit-scrollbar {
+        .images-container::-webkit-scrollbar {
             display: none;
         }
 
-        .theme-card {
+        .image-card {
             flex-shrink: 0;
             width: 80px;
             height: 100px;
@@ -166,9 +144,10 @@ const getHTMLContent = (
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid ${theme.colors.text + "1a"};
         }
 
-        .theme-card.selected {
+        .image-card.selected {
             border: 2px solid ${theme.colors.primary};
         }
 
@@ -192,24 +171,6 @@ const getHTMLContent = (
             background: linear-gradient(0deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.1) 100%);
         }
 
-        .preview-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 16px;
-            font-weight: 600;
-            text-align: center;
-            color: #ffffff;
-            max-width: 70px;
-            line-height: 1.2;
-            font-family: inherit;
-            padding: 4px 6px;
-            border-radius: 4px;
-            backdrop-filter: blur(2px);
-            -webkit-backdrop-filter: blur(2px);
-            transition: all 0.2s ease;
-        }
 
         .selected-indicator {
             position: absolute;
@@ -222,7 +183,7 @@ const getHTMLContent = (
             display: flex;
             align-items: center;
             justify-content: center;
-            color: ${theme.colors.text};
+            color: #ffffff;
             font-size: 12px;
         }
 
@@ -231,7 +192,7 @@ const getHTMLContent = (
             justify-content: center;
             align-items: center;
             height: 200px;
-            color: ${theme.colors.text};
+            color: #666;
         }
 
         @media (prefers-color-scheme: light) {
@@ -266,24 +227,18 @@ const getHTMLContent = (
 <body>
     <div class="header">
         <div class="placeholder"></div>
-        <div class="title">Temas</div>
+        <div class="title">Imágenes</div>
         <button class="close-button" onclick="handleClose()">×</button>
     </div>
 
     <div class="content" id="content">
-        <div class="loading">Cargando temas...</div>
+        <div class="loading">Cargando imágenes...</div>
     </div>
 
     <script>
-        const quotesData = ${JSON.stringify(quotesData)};
-        const selectedThemeId = ${JSON.stringify(selectedThemeId)};
+        const newImageUrls = ${JSON.stringify(newImageUrls)};
+        const selectedImageUrl = ${JSON.stringify(selectedImageUrl || null)};
         
-        // Function to optimize image URLs for theme cards (smaller resolution)
-        function optimizeImageUrl(url) {
-            // Replace _1000x1000 with _200x200 for better performance in theme cards
-            return url.replace('_1000x1000.jpg', '_200x200.jpg');
-        }
-
         function handleClose() {
             if (window.ReactNativeWebView) {
                 window.ReactNativeWebView.postMessage(JSON.stringify({
@@ -292,52 +247,55 @@ const getHTMLContent = (
             }
         }
 
-        function handleThemeSelect(themeId) {
+        function handleImageSelect(imageUrl) {
             // Update visual selection
-            document.querySelectorAll('.theme-card').forEach(card => {
+            document.querySelectorAll('.image-card').forEach(card => {
                 card.classList.remove('selected');
             });
-            document.querySelector(\`[data-theme-id="\${themeId}"]\`).classList.add('selected');
+            document.querySelector(\`[data-image-url="\${imageUrl}"]\`).classList.add('selected');
 
             // Send selection to React Native
             if (window.ReactNativeWebView) {
                 window.ReactNativeWebView.postMessage(JSON.stringify({
-                    type: 'themeSelected',
-                    themeId: themeId
+                    type: 'imageSelected',
+                    imageUrl: imageUrl
                 }));
             }
         }
 
-        function renderThemes() {
+        function renderImages() {
             const content = document.getElementById('content');
 
             let html = '';
             
-            quotesData.forEach(section => {
+            newImageUrls.forEach(section => {
                 html += \`
                     <div class="section">
                         <div class="section-title">\${section.label}</div>
-                        <div class="themes-container">
+                        <div class="images-container">
                 \`;
                 
-                section.items.forEach(theme => {
-                    const isSelected = theme.id === selectedThemeId;
+                section.imagesUrl.forEach(imageUrl => {
+                    const isSelected = imageUrl === selectedImageUrl;
+                    let optimizedImageUrl = imageUrl;
+                    //add ?auto=compress&cs=tinysrgb&w=200 for pexels images
+                    if (imageUrl.includes('pexels.com')) {
+                        optimizedImageUrl += '?auto=compress&cs=tinysrgb&w=200';
+                    }
+
+
                     html += \`
-                        <div class="theme-card \${isSelected ? 'selected' : ''}" 
-                             data-theme-id="\${theme.id}" 
-                             onclick="handleThemeSelect('\${theme.id}')">
-                            <img src="\${optimizeImageUrl(theme.backgroundImageUrl)}" 
-                                 alt="\${theme.name}" 
+                        <div class="image-card \${isSelected ? 'selected' : ''}" 
+                             data-image-url="\${imageUrl}" 
+                             onclick="handleImageSelect('\${imageUrl}')">
+                            <img src="\${optimizedImageUrl}" 
+                                 alt="\${imageUrl}" 
                                  class="card-background"
                                  loading="lazy"
                                  onload="this.style.opacity='1'"
                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"
                                  style="opacity: 0; transition: opacity 0.3s ease;">
                             <div class="card-placeholder" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f0f0f0 75%), linear-gradient(-45deg, transparent 75%, #f0f0f0 75%); background-size: 8px 8px; background-position: 0 0, 0 4px, 4px -4px, -4px 0px;"></div>
-                            <div class="card-overlay"></div>
-                            <div class="preview-text" style="font-family: '\${theme.font.name}', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-                                \${theme.previewText}
-                            </div>
                             \${isSelected ? '<div class="selected-indicator">✓</div>' : ''}
                         </div>
                     \`;
@@ -352,22 +310,12 @@ const getHTMLContent = (
             content.innerHTML = html;
         }
 
-        // Initialize themes when page loads
+        // Initialize images when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            // Wait for fonts to load before rendering
-            if (document.fonts && document.fonts.ready) {
-                document.fonts.ready.then(() => {
-                    renderThemes();
-                });
-            } else {
-                // Fallback for browsers that don't support document.fonts
-                setTimeout(() => {
-                    renderThemes();
-                }, 100);
-            }
+            renderImages();
             
             // Ensure horizontal scrolling works on touch devices
-            const themeContainers = document.querySelectorAll('.themes-container');
+            const themeContainers = document.querySelectorAll('.images-container');
             themeContainers.forEach(container => {
                 container.addEventListener('touchstart', function(e) {
                     this.style.scrollBehavior = 'auto';
@@ -384,23 +332,20 @@ const getHTMLContent = (
   `;
 };
 
-const ThemeSelectorBottomSheet: React.FC<ThemeSelectorBottomSheetProps> = ({
-  bottomSheetRef,
-  selectedTheme,
-  onThemeSelect,
-  onClose,
-}) => {
+const BackgroundImageSelectorBottomSheet: React.FC<
+  BackgroundImageSelectorBottomSheetProps
+> = ({ bottomSheetRef, selectedTheme, onBackgroundImageSelect, onClose }) => {
   const { theme } = useMyTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const webViewRef = useRef<WebView>(null);
   const [hasLoaded, setHasLoaded] = useState(false);
 
   const handleThemeSelect = useCallback(
-    (themeItem: TQuoteDataItem) => {
-      onThemeSelect(themeItem);
+    (imageUrl: string) => {
+      onBackgroundImageSelect(imageUrl);
       bottomSheetRef.current?.dismiss();
     },
-    [onThemeSelect, bottomSheetRef]
+    [onBackgroundImageSelect, bottomSheetRef]
   );
 
   const handleWebViewMessage = useCallback(
@@ -408,14 +353,8 @@ const ThemeSelectorBottomSheet: React.FC<ThemeSelectorBottomSheetProps> = ({
       try {
         const data = JSON.parse(event.nativeEvent.data);
 
-        if (data.type === "themeSelected") {
-          const selectedThemeItem = QUOTES_DATA.flatMap(
-            (section) => section.items
-          ).find((item) => item.id === data.themeId);
-
-          if (selectedThemeItem) {
-            handleThemeSelect(selectedThemeItem);
-          }
+        if (data.type === "imageSelected") {
+          handleThemeSelect(data.imageUrl);
         } else if (data.type === "close") {
           onClose();
         }
@@ -427,7 +366,11 @@ const ThemeSelectorBottomSheet: React.FC<ThemeSelectorBottomSheetProps> = ({
   );
 
   const htmlContent = useMemo(() => {
-    return getHTMLContent(QUOTES_DATA, selectedTheme?.id || null, theme);
+    return getHTMLContent(
+      NEW_IMAGE_URLS,
+      selectedTheme?.backgroundImageUrl || null,
+      theme
+    );
   }, [selectedTheme, theme]);
 
   return (
@@ -489,6 +432,8 @@ const ThemeSelectorBottomSheet: React.FC<ThemeSelectorBottomSheetProps> = ({
             const { nativeEvent } = syntheticEvent;
             console.error("WebView HTTP error: ", nativeEvent);
           }}
+          cacheEnabled
+          cacheMode="LOAD_CACHE_ELSE_NETWORK"
           {...createOptimizedWebViewProps({}, "themeSelector")}
         />
       </View>
@@ -519,4 +464,4 @@ const getStyles = ({ colors }: TTheme) =>
     },
   });
 
-export default ThemeSelectorBottomSheet;
+export default BackgroundImageSelectorBottomSheet;
