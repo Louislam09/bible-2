@@ -1,3 +1,4 @@
+import { PressableScale } from "@/components/animations/pressable-scale";
 import Icon from "@/components/Icon";
 import BackgroundImageSelectorBottomSheet from "@/components/quote/BackgroundImageSelectorBottomSheet";
 import FontSelectorBottomSheet from "@/components/quote/FontSelectorBottomSheet";
@@ -183,18 +184,12 @@ const QuoteMaker: React.FC = () => {
       />
       {/* header */}
       <View style={styles.header}>
-        <Icon
-          onPress={() => router.push("/(dashboard)")}
-          name="ChevronLeft"
-          size={headerIconSize}
-          color="#FFFFFF"
-        />
-        <Icon
-          onPress={handleShare}
-          name="Share2"
-          size={headerIconSize}
-          color="#FFFFFF"
-        />
+        <PressableScale onPress={() => router.push("/(dashboard)")}>
+          <Icon name="ChevronLeft" size={headerIconSize} color="#FFFFFF" />
+        </PressableScale>
+        <PressableScale onPress={handleShare}>
+          <Icon name="Share2" size={headerIconSize} color="#FFFFFF" />
+        </PressableScale>
       </View>
       <ViewShot
         ref={viewShotRef}
@@ -253,7 +248,7 @@ const QuoteMaker: React.FC = () => {
       </ViewShot>
 
       <View style={styles.footer}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={handleShare}
           style={[
             styles.shareButton,
@@ -262,8 +257,8 @@ const QuoteMaker: React.FC = () => {
         >
           <Icon name="Share" size={24} color="#FFFFFF" />
           <Text style={styles.shareText}>Compartir</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        </TouchableOpacity> */}
+        <PressableScale
           onPress={() => backgroundImageSelectorRef.current?.present()}
           style={[
             styles.customFontButton,
@@ -272,8 +267,8 @@ const QuoteMaker: React.FC = () => {
         >
           <Icon name="Image" size={24} color="#FFFFFF" />
           <Text style={styles.shareText}>Fondo</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        </PressableScale>
+        <PressableScale
           onPress={() => fontSelectorRef.current?.present()}
           style={[
             styles.customFontButton,
@@ -282,14 +277,14 @@ const QuoteMaker: React.FC = () => {
         >
           <Icon name="Type" size={24} color="#FFFFFF" />
           <Text style={styles.shareText}>Fuentes</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        </PressableScale>
+        <PressableScale
           onPress={() => themeSelectorRef.current?.present()}
           style={styles.galleryButton}
         >
           <Icon name="Palette" size={24} color="#FFFFFF" />
           <Text style={styles.shareText}>Temas</Text>
-        </TouchableOpacity>
+        </PressableScale>
       </View>
 
       <FontSelectorBottomSheet
