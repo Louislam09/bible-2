@@ -126,6 +126,55 @@ export const NEW_IMAGE_URLS = [
             "https://images.pexels.com/photos/3014941/pexels-photo-3014941.jpeg",
             "https://images.pexels.com/photos/2251822/pexels-photo-2251822.jpeg"
         ]
+    },
+    {
+        "topic": "instruments",
+        "label": "Instrumentos",
+        "imagesUrl": [
+            "https://images.pexels.com/photos/34221/violin-musical-instrument-music-sound.jpg",
+            "https://images.pexels.com/photos/164936/pexels-photo-164936.jpeg",
+            "https://images.pexels.com/photos/1010519/pexels-photo-1010519.jpeg",
+            "https://images.pexels.com/photos/30641685/pexels-photo-30641685.jpeg",
+            "https://images.pexels.com/photos/8536926/pexels-photo-8536926.jpeg",
+            "https://images.pexels.com/photos/29613886/pexels-photo-29613886.png",
+            "https://images.pexels.com/photos/15662091/pexels-photo-15662091.png",
+            "https://images.pexels.com/photos/7095811/pexels-photo-7095811.jpeg",
+            "https://images.pexels.com/photos/31177554/pexels-photo-31177554.jpeg",
+            "https://images.pexels.com/photos/2909367/pexels-photo-2909367.jpeg"
+        ]
+    },
+    {
+        "topic": "books",
+        "label": "Libros",
+        "imagesUrl": [
+            "https://images.pexels.com/photos/34382377/pexels-photo-34382377.jpeg",
+            "https://images.pexels.com/photos/4440123/pexels-photo-4440123.jpeg",
+            "https://images.pexels.com/photos/12004406/pexels-photo-12004406.jpeg",
+            "https://images.pexels.com/photos/694740/pexels-photo-694740.jpeg",
+            "https://images.pexels.com/photos/272337/pexels-photo-272337.jpeg",
+            "https://images.pexels.com/photos/1112048/pexels-photo-1112048.jpeg",
+            "https://images.pexels.com/photos/5864222/pexels-photo-5864222.jpeg",
+            "https://images.pexels.com/photos/32034598/pexels-photo-32034598.jpeg",
+            "https://images.pexels.com/photos/6981538/pexels-photo-6981538.jpeg",
+            "https://images.pexels.com/photos/33514898/pexels-photo-33514898.jpeg"
+        ]
+
+    },
+    {
+        "topic": "objects",
+        "label": "Objetos",
+        "imagesUrl": [
+            "https://images.pexels.com/photos/1236421/pexels-photo-1236421.jpeg",
+            "https://images.pexels.com/photos/746496/pexels-photo-746496.jpeg",
+            "https://images.pexels.com/photos/4973821/pexels-photo-4973821.jpeg",
+            "https://images.pexels.com/photos/4614246/pexels-photo-4614246.jpeg",
+            "https://images.pexels.com/photos/163116/typewriter-vintage-old-vintage-typewriter-163116.jpeg",
+            "https://images.pexels.com/photos/6830376/pexels-photo-6830376.jpeg",
+            "https://images.pexels.com/photos/9241893/pexels-photo-9241893.jpeg",
+            "https://images.pexels.com/photos/9818647/pexels-photo-9818647.jpeg",
+            "https://images.pexels.com/photos/6127326/pexels-photo-6127326.jpeg",
+            "https://images.pexels.com/photos/7828656/pexels-photo-7828656.jpeg"
+        ]
     }
 ]
 
@@ -2083,5 +2132,6 @@ export const FAMOUS_VERSES = [
         reference: "1 Corintios 3:19",
     },
 ];
+
 
 
