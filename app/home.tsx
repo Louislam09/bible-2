@@ -1,10 +1,4 @@
-import React, {
-  RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { RefObject, useCallback, useMemo } from "react";
 
 import {
   Animated,
@@ -14,27 +8,22 @@ import {
   View,
 } from "react-native";
 
-import { useBibleContext } from "@/context/BibleContext";
-
 import BibleBottom from "@/components/BibleBottom";
 import BibleTop from "@/components/BibleTop";
 import BookContentModals from "@/components/book-content-modals";
 import CurrentNoteDetail from "@/components/CurrentNoteDetail";
 import FloatingButton from "@/components/FloatingButton";
-import Walkthrough from "@/components/Walkthrough";
 import { useMyTheme } from "@/context/ThemeContext";
-// import CustomHeader from "../components/home/header";
 
 import StatusBarBackground from "@/components/StatusBarBackground";
+import withDrawTimeMeasurement from "@/components/withDrawTimeMeasurement";
+import { useDeviceOrientation } from "@/hooks/useDeviceOrientation";
 import { useSplitScreen } from "@/hooks/useSplitScreen";
 import { bibleState$ } from "@/state/bibleState";
 import { tourState$ } from "@/state/tourState";
-import { TTheme } from "@/types";
+import { OrientationType, TTheme } from "@/types";
 import { use$ } from "@legendapp/state/react";
 import { Stack, useNavigation } from "expo-router";
-import { modalState$ } from "@/state/modalState";
-import withDrawTimeMeasurement from "@/components/withDrawTimeMeasurement";
-import { Text } from "@/components/Themed";
 
 // Constants
 const MIN_SPLIT_SIZE = 200;
@@ -50,16 +39,14 @@ type HomeScreenProps = {};
 const HomeScreen: React.FC<HomeScreenProps> = () => {
   const navigation = useNavigation();
   const { theme } = useMyTheme();
-  // const { orientation } = useBibleContext();
+  const orientation = useDeviceOrientation();
   const isSplitActived = use$(() => bibleState$.isSplitActived.get());
   const tourPopoverVisible = use$(() => tourState$.tourPopoverVisible.get());
 
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
   const initialState = bibleState$.bibleQuery.get();
 
-  const [stepIndex, setStepIndex] = useState(0);
-  // const isPortrait = orientation === "PORTRAIT";
-  const isPortrait = true;
+  const isPortrait = orientation === OrientationType.PORTRAIT;
   const styles = useMemo(
     () => getStyles(theme, isPortrait),
     [theme, isPortrait]
