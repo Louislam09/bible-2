@@ -1,15 +1,27 @@
+import { modalState$ } from "@/state/modalState";
 import { lucideIcons } from "@/utils/lucideIcons";
 
-export const dictionaryListHtmlTemplate = (
+type DictionaryListHtmlTemplateProps = {
     data: any[],
     theme: any,
     fontSize: any,
-    wordNotFound: boolean = false,
-    searchWord: string = "",
-    selectedWord: any = null,
-    showDefinition: boolean = false,
-    tailwindScript?: string
-) => {
+    wordNotFound: boolean,
+    loading: boolean,
+    selectedWord: any,
+    showDefinition: boolean,
+    tailwindScript: string,
+}
+
+export const dictionaryListHtmlTemplate = ({
+    data,
+    theme,
+    fontSize,
+    wordNotFound,
+    loading,
+    selectedWord,
+    showDefinition,
+    tailwindScript
+}: DictionaryListHtmlTemplateProps) => {
     const colors = theme.colors;
     const generateContent = () => {
         if (showDefinition && selectedWord) {
@@ -42,16 +54,16 @@ export const dictionaryListHtmlTemplate = (
     };
 
     const generateWordCards = () => {
-        if (wordNotFound && searchWord) {
+        if (wordNotFound) {
             return `
         <div class="no-results">
           <div class="searching-animation">🔍</div>
-          <p class="no-results-text text-theme-text">No encontramos resultados para: "${searchWord}"</p>
+          <p class="no-results-text text-theme-text">No encontramos resultados para: "${modalState$.searchWordOnDic.get()}"</p>
         </div>
       `;
         }
 
-        if (!data || data.length === 0) {
+        if (!data || data.length === 0 || loading) {
             return `
         <div class="no-results">
           <div class="searching-animation">🔍</div>

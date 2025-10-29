@@ -207,16 +207,16 @@ const DictionaryBottomModalContent: React.FC<DictionaryContentProps> = ({
             backgroundColor: "transparent",
           }}
           source={{
-            html: dictionaryListHtmlTemplate(
-              wordNotFoundInDictionary ? [] : filterData,
+            html: dictionaryListHtmlTemplate({
+              data: wordNotFoundInDictionary ? [] : filterData,
               theme,
               fontSize,
-              wordNotFoundInDictionary,
-              word,
+              wordNotFound: wordNotFoundInDictionary,
+              loading,
               selectedWord,
-              !!selectedWord,
-              tailwindScript
-            ),
+              showDefinition: !!selectedWord,
+              tailwindScript,
+            }),
           }}
           onMessage={onWebViewMessage}
           onShouldStartLoadWithRequest={(event) => {
