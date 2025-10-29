@@ -20,7 +20,6 @@ import React, {
   useState,
 } from "react";
 import { Alert } from "react-native";
-import getMemorySizeInGB from "@/utils/getDeviceRamValue";
 
 const persistOptions = configureSynced({
   persist: {
@@ -74,6 +73,8 @@ type StoreState = {
   dbTableCreated: string[];
   useDomComponent: boolean;
   showReadingTime: boolean;
+  appFolderUri: string;
+  appFolderTreeUri: string;
 };
 
 const initialContext: StoreState = {
@@ -120,6 +121,8 @@ const initialContext: StoreState = {
   dbTableCreated: [],
   useDomComponent: false,
   showReadingTime: false,
+  appFolderUri: "",
+  appFolderTreeUri: "",
 };
 
 export const storedData$ = observable(initialContext);

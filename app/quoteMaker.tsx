@@ -21,7 +21,7 @@ import { use$ } from "@legendapp/state/react";
 import { ImageBackground } from "expo-image";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { ActivityIndicator, StyleSheet, TouchableOpacity } from "react-native";
 import ViewShot from "react-native-view-shot";
 import WebView from "react-native-webview";
 
@@ -48,6 +48,10 @@ const QuoteMaker: React.FC = () => {
   const [highlightShareButton, setHighlightShareButton] = useState(false); // for music mode
   const mySelectedVerse = use$(() => bibleState$.selectedVerseForNote.get());
   const params = useLocalSearchParams();
+  const [actionLoading, setActionLoading] = useState({
+    save: false,
+    share: false,
+  });
 
   const allThemes = useMemo(() => {
     return QUOTES_DATA.flatMap((section) => section.items);
@@ -119,7 +123,7 @@ const QuoteMaker: React.FC = () => {
     themeSelectorRef.current?.dismiss();
   };
 
-  const { captureAndShare } = useViewShot({
+  const { captureAndShare, captureAndSaveToGallery } = useViewShot({
     fileName: "quote",
     quality: 1,
     format: "png",
@@ -127,9 +131,21 @@ const QuoteMaker: React.FC = () => {
   });
 
   const handleShare = async () => {
+    if (actionLoading.share) return;
+    setActionLoading({ ...actionLoading, share: true });
     setWatermarkClass("");
     await captureAndShare();
     setWatermarkClass("none");
+    setActionLoading({ ...actionLoading, share: false });
+  };
+
+  const handleSave = async () => {
+    if (actionLoading.save) return;
+    setActionLoading({ ...actionLoading, save: true });
+    setWatermarkClass("");
+    await captureAndSaveToGallery(selectedVerse?.reference || "");
+    setWatermarkClass("none");
+    setActionLoading({ ...actionLoading, save: false });
   };
 
   const handleFontSelect = (chosenTheme: TQuoteDataItem) => {
@@ -187,8 +203,13 @@ const QuoteMaker: React.FC = () => {
         <PressableScale onPress={() => router.push("/(dashboard)")}>
           <Icon name="ChevronLeft" size={headerIconSize} color="#FFFFFF" />
         </PressableScale>
-        <PressableScale onPress={handleShare}>
-          <Icon name="Share2" size={headerIconSize} color="#FFFFFF" />
+
+        <PressableScale disabled={actionLoading.share} onPress={handleShare}>
+          {actionLoading.share ? (
+            <ActivityIndicator size="small" color="#FFFFFF" />
+          ) : (
+            <Icon name="Share2" size={headerIconSize} color="#FFFFFF" />
+          )}
         </PressableScale>
       </View>
       <ViewShot
@@ -197,6 +218,7 @@ const QuoteMaker: React.FC = () => {
           format: "jpg",
           quality: 1,
           result: "tmpfile",
+          fileName: selectedVerse?.reference || "",
         }}
         style={{
           flex: 1,
@@ -248,16 +270,18 @@ const QuoteMaker: React.FC = () => {
       </ViewShot>
 
       <View style={styles.footer}>
-        {/* <TouchableOpacity
-          onPress={handleShare}
-          style={[
-            styles.shareButton,
-            highlightShareButton && styles.highlightedShareButton,
-          ]}
+        <PressableScale
+          disabled={actionLoading.save}
+          onPress={handleSave}
+          style={styles.shareButton}
         >
-          <Icon name="Share" size={24} color="#FFFFFF" />
-          <Text style={styles.shareText}>Compartir</Text>
-        </TouchableOpacity> */}
+          {actionLoading.save ? (
+            <ActivityIndicator size="small" color="#FFFFFF" />
+          ) : (
+            <Icon name="Save" size={24} color="#FFFFFF" />
+          )}
+          <Text style={styles.shareText}>Guardar</Text>
+        </PressableScale>
         <PressableScale
           onPress={() => backgroundImageSelectorRef.current?.present()}
           style={[

@@ -5,4 +5,3 @@ export const URLS = {
   RATE_APP: "market://details?id=com.louislam09.bible",
   APP_URL: "https://play.google.com/store/apps/details?id=com.louislam09.bible",
 };
-
