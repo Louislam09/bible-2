@@ -2,6 +2,8 @@ import { IBookVerse } from "@/types";
 import { lucideIcons } from "@/utils/lucideIcons";
 import { DB_BOOK_NAMES } from "./BookNames";
 import { Platform } from "react-native";
+import { bibleState$ } from "@/state/bibleState";
+import { storedData$ } from "@/context/LocalstoreContext";
 
 export const generateAssetFontCss = ({
     fontFileName,
@@ -247,6 +249,7 @@ const createHtmlHead = (
                 --color-theme-chip-border: ${theme.colors.text + 80 || '#e5e7eb'};
             }
                 /* Font size tokens */
+                .text-font-xxs {  font-size: ${fontSize * 0.5}px;  }
                 .text-font-xs {  font-size: ${fontSize * 0.6}px;  }
                 .text-font-sm {  font-size: ${fontSize * 0.9}px;  }
                 .text-font-base { font-size: ${fontSize * 1}px;  }
@@ -262,12 +265,13 @@ const createHtmlHead = (
     </head>
 `;
 
-const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapterNumber: number = 1) => `
+const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapterNumber: number = 1, showReadingTime: boolean) => `
     <body class="p-0 m-0 text-theme-text bg-theme-background select-none overflow-x-hidden ">
     <div class="container relative h-screen overflow-y-auto pt-[70px] pb-[100px] " id="chapterContainer">
         <!-- Chapter Header -->
         <div class="px-4 pt-3 my-2">
-            <h1 class=" font-bold text-theme-text text-center text-font-xl">Capítulo ${chapterNumber}</h1>
+        <h1 class=" font-bold text-theme-text text-center text-font-xl">Capítulo ${chapterNumber}</h1>
+        <p class="text-theme-text text-center text-font-xs mt-1 ${showReadingTime ? 'block' : 'hidden'}">Tiempo de lectura: ~ ${bibleState$.readingTimeData.top.get()} min(s)</p>
         </div>
         ${content}
         </div>
@@ -965,6 +969,7 @@ type TBibleChapterHtmlTemplateProps = {
     fontSize?: number;
     initialScrollIndex?: number;
     tailwindScript?: string;
+    showReadingTime: boolean
 };
 
 export const bibleChapterHtmlTemplate = ({
@@ -976,9 +981,9 @@ export const bibleChapterHtmlTemplate = ({
     fontSize,
     initialScrollIndex = 0,
     tailwindScript,
+    showReadingTime
 }: TBibleChapterHtmlTemplateProps) => {
     const containerWidth = width || "100%";
-    const showReadingTime = !isInterlinear;
     const chapterNumber = data[0]?.chapter || 1;
 
     const versesContent = renderVerses(
@@ -1000,7 +1005,7 @@ export const bibleChapterHtmlTemplate = ({
         fontSize || 16,
         tailwindScript
     )}
-        ${createHtmlBody(versesContent, initialScrollIndex, chapterNumber)}
+        ${createHtmlBody(versesContent, initialScrollIndex, chapterNumber, showReadingTime)}
     </html>
     `;
 };

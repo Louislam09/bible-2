@@ -72,7 +72,8 @@ const createSettingsHTML = (
   currentTheme: string,
   selectedFont: string,
   tailwindScript: string,
-  isDark: boolean
+  isDark: boolean,
+  showReadingTime: boolean
 ) => {
   const themeSchema = isDark ? "dark" : "light";
   const fontSizes = getMinMaxFontSize();
@@ -87,6 +88,7 @@ const createSettingsHTML = (
     listOrdered: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" x2="21" y1="6" y2="6"/><line x1="10" x2="21" y1="12" y2="12"/><line x1="10" x2="21" y1="18" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>`,
     penLine: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`,
     calendar: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>`,
+    timer: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16.5 12"/></svg>`,
   };
 
   return `
@@ -119,6 +121,8 @@ const createSettingsHTML = (
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
                 overflow-x: hidden;
+                width: 100%;
+                height: 100%;
             }
             
             /* Enable smooth scrolling */
@@ -241,8 +245,8 @@ const createSettingsHTML = (
         </style>
     </head>
     
-    <body class="bg-theme-background text-theme-text m-0 p-0">
-        <div class="max-w-md mx-auto">
+    <body class="bg-theme-background text-theme-text m-0 p-0 ">
+        <div class="">
             <!-- Header -->
             <div class="flex items-center justify-between px-6 py-4 border-b border-theme-border sticky top-0 bg-theme-background z-10">
                 <h1 class="text-xl font-bold">Configuración</h1>
@@ -377,11 +381,25 @@ const createSettingsHTML = (
                 </div>
                 
                 <!-- Reading Experience Section -->
-                <div class="hidden">
+                <div class="">
                     <h2 class="text-lg font-semibold mb-4">Experiencia de Lectura</h2>
                     
-                    <!-- Show Verse Numbers Toggle -->
+                    <!-- Show Reading Time Toggle -->
                     <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-theme-text opacity-70">${
+                              icons.timer
+                            }</span>
+                            <span>Mostrar Tiempo de Lectura</span>
+                        </div>
+                        <div id="readingTimeToggle" class="toggle-switch ${
+                          showReadingTime ? "active" : ""
+                        }" onclick="handleToggle('readingTime')">
+                            <div class="toggle-knob"></div>
+                        </div>
+                    </div>
+                     <!-- flex hidden -->
+                    <div class=" items-center justify-between mb-4 hidden">
                         <div class="flex items-center gap-3">
                             <span class="text-theme-text opacity-70">${
                               icons.listOrdered
@@ -393,8 +411,8 @@ const createSettingsHTML = (
                         </div>
                     </div>
                     
-                    <!-- Red Letter Text Toggle -->
-                    <div class="flex items-center justify-between mb-4">
+                    <!-- Red Letter Text Toggle - flex -->
+                    <div class=" items-center justify-between mb-4 hidden">
                         <div class="flex items-center gap-3">
                             <span class="text-theme-text opacity-70">${
                               icons.penLine
@@ -445,6 +463,7 @@ const createSettingsHTML = (
                 fontSize: ${Math.round(fontSize)},
                 fontFamily: '${selectedFont}',
                 showVerseNumbers: true,
+                showReadingTime: ${showReadingTime},
                 redLetterText: false,
                 readingPlan: 'chronological'
             };
@@ -574,6 +593,8 @@ const createSettingsHTML = (
                     settings.showVerseNumbers = !isActive;
                 } else if (toggleId === 'redLetter') {
                     settings.redLetterText = !isActive;
+                } else if (toggleId === 'readingTime') {
+                    settings.showReadingTime = !isActive;
                 }
                 
                 window.ReactNativeWebView.postMessage(JSON.stringify({
@@ -620,6 +641,7 @@ const WebviewBibleSettingBottomModal = ({
   const selectedFont = use$(() => storedData$.selectedFont.get());
   const styles = getStyles(theme);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const showReadingTime = use$(() => storedData$.showReadingTime.get());
 
   const settingsHTML = useMemo(
     () =>
@@ -629,9 +651,17 @@ const WebviewBibleSettingBottomModal = ({
         currentTheme,
         selectedFont,
         tailwindScript,
-        theme.dark
+        theme.dark,
+        showReadingTime
       ),
-    [theme, fontSize, currentTheme, selectedFont, tailwindScript]
+    [
+      theme,
+      fontSize,
+      currentTheme,
+      selectedFont,
+      tailwindScript,
+      showReadingTime,
+    ]
   );
 
   const handleMessage = useCallback(
@@ -656,6 +686,9 @@ const WebviewBibleSettingBottomModal = ({
             selectFont(data.value);
             break;
           case "toggle":
+            if (data.toggleId === "readingTime") {
+              storedData$.showReadingTime.set(data.value);
+            }
             // Handle toggle settings
             console.log("Toggle:", data.toggleId, data.value);
             break;
@@ -664,7 +697,7 @@ const WebviewBibleSettingBottomModal = ({
             console.log("Reading plan:", data.value);
             break;
           case "save":
-            console.log("Settings saved:", data.settings);
+            // console.log("Settings saved:", data.settings);
             modalState$.bibleSettingRef.current?.dismiss();
             break;
         }
@@ -710,7 +743,7 @@ const WebviewBibleSettingBottomModal = ({
           key={"bible-setting"}
           style={{
             flex: 1,
-            minWidth: "100%",
+            width: "100%",
             backgroundColor: "transparent",
           }}
           source={{ html: settingsHTML }}

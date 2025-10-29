@@ -194,6 +194,7 @@ const WebViewChapter = React.memo(
     const safeTop = insets.top;
 
     const fontSize = use$(() => storedData$.fontSize.get());
+    const showReadingTime = use$(() => storedData$.showReadingTime.get());
 
     const htmlChapterTemplate = useMemo(() => {
       return bibleChapterHtmlTemplate({
@@ -205,6 +206,7 @@ const WebViewChapter = React.memo(
         fontSize,
         initialScrollIndex,
         tailwindScript,
+        showReadingTime,
       });
     }, [
       data,
@@ -213,6 +215,7 @@ const WebViewChapter = React.memo(
       initialScrollIndex,
       tailwindScript,
       fontSize,
+      showReadingTime,
     ]);
 
     return (

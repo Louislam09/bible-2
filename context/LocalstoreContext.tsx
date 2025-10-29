@@ -73,6 +73,7 @@ type StoreState = {
   };
   dbTableCreated: string[];
   useDomComponent: boolean;
+  showReadingTime: boolean;
 };
 
 const initialContext: StoreState = {
@@ -118,6 +119,7 @@ const initialContext: StoreState = {
   },
   dbTableCreated: [],
   useDomComponent: false,
+  showReadingTime: false,
 };
 
 export const storedData$ = observable(initialContext);
@@ -166,7 +168,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { isConnected } = netInfo;
   // const slowDevice = +getMemorySizeInGB() < 4;
   // console.log({ slowDevice })
-
 
   useEffect(() => {
     const loadState = async () => {
@@ -314,7 +315,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           };
         }
 
-        storedData$.set(prev => ({
+        storedData$.set((prev) => ({
           ...prev,
           ...settingsData,
           isDataLoaded: true,
