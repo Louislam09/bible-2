@@ -1,11 +1,108 @@
-export default [
-  // {
-  //   name: "Biblia de estudio hebrea interlineal con vocales, acentos, transliteración y número Strong",
-  //   url: "_dl.php?back=bbl&a=HSB_plus_&b=mybible&c",
-  //   key: "HSB+",
-  //   size: 5459189,
-  //   storedName: "HSB+",
-  // },
+export const commentariesDatabases = [
+  {
+    name: "Comentario Bíblico Beacon",
+    url: "_dl.php?back=bbl&a=CBB-es.commentaries&b=mybible&c",
+    key: "CBB",
+    size: 32406914,
+    storedName: "CBB-es.commentaries",
+  },
+  {
+    name: "Comentario Bíblico Adventista",
+    url: "_dl.php?back=bbl&a=CBA-c.commentaries&b=mybible&c",
+    key: "CBA",
+    size: 8049516,
+    storedName: "CBA-c.commentaries",
+  },
+  {
+    name: "Comentario Biblico William Macdonald",
+    url: "_dl.php?back=bbl&a=CBWM-c.commentaries&b=mybible&c",
+    key: "CBWM",
+    size: 3356434,
+    storedName: "CBWM-c.commentaries",
+  },
+  {
+    name: "Comentario Mattew Henry",
+    url: "_dl.php?back=bbl&a=CMH-c.commentaries&b=mybible&c",
+    key: "CMH",
+    size: 2626245,
+    storedName: "CMH-c.commentaries",
+  },
+  {
+    name: "Comentario Bíblico Mundo Hispano",
+    url: "_dl.php?back=bbl&a=CBMH-c.commentaries&b=mybible&c",
+    key: "CBMH",
+    size: 4645248,
+    storedName: "CBMH-c.commentaries",
+  },
+]
+
+export const dictionariesDatabases = [
+  {
+    name: "Diccionario de la Real Academia Española",
+    url: "_dl.php?back=bbl&a=DRAE.dictionary&b=mybible&c",
+    key: "DRAE",
+    size: 8562950,
+    storedName: "DRAE.dictionary",
+  },
+  {
+    name: "Diccionario Clave - Diccionario de uso del espanol actual (con sinonimos y antonimos)",
+    url: "_dl.php?back=bbl&a=Clave.dictionary&b=mybible&c",
+    key: "Clave",
+    size: 8265896,
+    storedName: "Clave.dictionary",
+  },
+  {
+    name: "Diccionario de Nombres Bíblicos Hitchcock",
+    url: "_dl.php?back=bbl&a=DNBH.dictionary&b=mybible&c",
+    key: "DNBH",
+    size: 57341,
+    storedName: "DNBH.dictionary",
+  },
+  {
+    name: "Diccionario Nombres Segun RV",
+    url: "_dl.php?back=bbl&a=DicRV.dictionary&b=mybible&c",
+    key: "DicRV",
+    size: 220005,
+    storedName: "DicRV.dictionary",
+  },
+  {
+    name: "Glosario de Nombres Bíblicos de Jack Enlow",
+    url: "_dl.php?back=bbl&a=Enlow.dictionary&b=mybible&c",
+    key: "Enlow",
+    size: 118509,
+    storedName: "Enlow.dictionary",
+  },
+  {
+    name: "Nuevo Diccionario Bíblico Vila-Escuaín",
+    url: "_dl.php?back=bbl&a=NDBI.dictionary&b=mybible&c",
+    key: "NDBI",
+    size: 2047346,
+    storedName: "NDBI.dictionary",
+  },
+  {
+    name: "Diccionario bíblico: Mundo Hispano",
+    url: "_dl.php?back=bbl&a=DBMH.dictionary&b=mybible&c",
+    key: "DBMH",
+    size: 1383125,
+    storedName: "DBMH.dictionary",
+  },
+  {
+    name: "Mapas bíblicos",
+    url: "_dl.php?back=bbl&a=LDS-es.dictionary&b=mybible&c",
+    key: "LDS",
+    size: 14312799,
+    storedName: "LDS-es.dictionary",
+  },
+  {
+    name: "Concordancia Biblica",
+    url: "_dl.php?back=bbl&a=Conc.dictionary&b=mybible&c",
+    key: "Conc",
+    size: 1080614,
+    storedName: "Conc.dictionary",
+  },
+]
+
+export const biblesDatabases = [
   {
     name: "Nueva Biblia al Día",
     url: "_dl.php?back=bbl&a=NBD'08&b=mybible&c",
@@ -14,25 +111,11 @@ export default [
     storedName: "NBD'08",
   },
   {
-    name: "Sagradas Escrituras. La Biblia del Oso",
-    url: "_dl.php?back=bbl&a=BDO'1573&b=mybible&c",
-    key: "BDO",
-    size: 3221980,
-    storedName: "BDO'1573",
-  },
-  {
-    name: "Dios Habla Hoy Con Deuterocanónicos Versión Española",
-    url: "_dl.php?back=bbl&a=DHHED&b=mybible&c",
-    key: "DHHED",
-    size: 4146483,
-    storedName: "DHHED",
-  },
-  {
-    name: "La Biblia Dios Habla Hoy (Castellano Peninsular)",
-    url: "_dl.php?back=bbl&a=DHHE&b=mybible&c",
-    key: "DHHE",
-    size: 1718131,
-    storedName: "DHHE",
+    name: "Nueva Versión Internacional (Castellano)",
+    url: "_dl.php?back=bbl&a=NVIC'17&b=mybible&c",
+    key: "NVIC",
+    size: 2274828,
+    storedName: "NVIC'17",
   },
   {
     name: "Biblia Dios Habla Hoy",
@@ -42,11 +125,71 @@ export default [
     storedName: "DHHD",
   },
   {
-    name: "Dios habla Hoy Estándar",
-    url: "_dl.php?back=bbl&a=DHHS'94&b=mybible&c",
-    key: "DHHS",
-    size: 2583954,
-    storedName: "DHHS'94",
+    name: "La Biblia de las Américas",
+    url: "_dl.php?back=bbl&a=LBLA_plus_&b=mybible&c",
+    key: "LBLA_plus_",
+    size: 5869767,
+    storedName: "LBLA_plus_",
+  },
+  {
+    name: "La Biblia Hispanoamericana (Traducción Interconfesional, versión hispanoamericana)",
+    url: "_dl.php?back=bbl&a=BHTI&b=mybible&c",
+    key: "BHTI",
+    size: 2445032,
+    storedName: "BHTI",
+  },
+  {
+    name: "La Biblia, Traducción Interconfesional",
+    url: "_dl.php?back=bbl&a=BTI-es&b=mybible&c",
+    key: "BTI",
+    size: 2626421,
+    storedName: "BTI-es",
+  },
+  {
+    name: "Nacar-Colunga",
+    url: "_dl.php?back=bbl&a=N-C&b=mybible&c",
+    key: "N",
+    size: 1919194,
+    storedName: "N-C",
+  },
+  {
+    name: "Reina Valera Gómez",
+    url: "_dl.php?back=bbl&a=RVG'04&b=mybible&c",
+    key: "RVG",
+    size: 1854050,
+    storedName: "RVG'04",
+  },
+  {
+    name: "Nueva Versión Internacional Simplificada",
+    url: "_dl.php?back=bbl&a=NVI-S'19&b=mybible&c",
+    key: "NVI",
+    size: 649494,
+    storedName: "NVI-S'19",
+  },
+  {
+    name: "Biblia de Jerusalén",
+    url: "_dl.php?back=bbl&a=BJ'1975&b=mybible&c",
+    key: "BJ",
+    size: 2152118,
+    storedName: "BJ'1975",
+  },
+]
+
+const AllDatabases = [
+  {
+    name: "Nueva Biblia al Día",
+    url: "_dl.php?back=bbl&a=NBD'08&b=mybible&c",
+    key: "NBD",
+    size: 2066515,
+    storedName: "NBD'08",
+  },
+
+  {
+    name: "Biblia Dios Habla Hoy",
+    url: "_dl.php?back=bbl&a=DHHD&b=mybible&c",
+    key: "DHHD",
+    size: 2413808,
+    storedName: "DHHD",
   },
   {
     name: "La Biblia Hispanoamericana (Traducción Interconfesional, versión hispanoamericana)",
@@ -152,13 +295,6 @@ export default [
     key: "NTV",
     size: 2393963,
     storedName: "NTV",
-  },
-  {
-    name: "La Santa Biblia (Nueva Versión Internacional)",
-    url: "_dl.php?back=bbl&a=NVI&b=mybible&c",
-    key: "NVI",
-    size: 2383835,
-    storedName: "NVI",
   },
   {
     name: "Nueva Versión Internacional (Castellano)",
@@ -399,20 +535,6 @@ export default [
     storedName: "NBV'08",
   },
   {
-    name: "Nueva Version Internacional",
-    url: "_dl.php?back=bbl&a=NVI'1984&b=mybible&c",
-    key: "NVI",
-    size: 1980941,
-    storedName: "NVI'1984",
-  },
-  {
-    name: "Nueva Versión Internacional",
-    url: "_dl.php?back=bbl&a=NVI'15&b=mybible&c",
-    key: "NVI",
-    size: 2330516,
-    storedName: "NVI'15",
-  },
-  {
     name: "Nueva Versión Internacional Simplificada",
     url: "_dl.php?back=bbl&a=NVI-S'19&b=mybible&c",
     key: "NVI",
@@ -427,39 +549,11 @@ export default [
     storedName: "RV'17_plus_",
   },
   {
-    name: "Biblia Reina Valera",
-    url: "_dl.php?back=bbl&a=RV1909&b=mybible&c",
-    key: "RV1909",
-    size: 2864587,
-    storedName: "RV1909",
-  },
-  {
-    name: "Reina Valera",
-    url: "_dl.php?back=bbl&a=RV'77&b=mybible&c",
-    key: "RV",
-    size: 1946563,
-    storedName: "RV'77",
-  },
-  {
-    name: "Reina Valera Actualizada",
-    url: "_dl.php?back=bbl&a=RVA'15&b=mybible&c",
-    key: "RVA",
-    size: 2132858,
-    storedName: "RVA'15",
-  },
-  {
     name: "Nueva Reina Valera",
     url: "_dl.php?back=bbl&a=NRV&b=mybible&c",
     key: "NRV",
     size: 1803229,
     storedName: "NRV",
-  },
-  {
-    name: "Reina-Valera",
-    url: "_dl.php?back=bbl&a=RV'09_plus_&b=mybible&c",
-    key: "RV",
-    size: 2732947,
-    storedName: "RV'09_plus_",
   },
   {
     name: "La Santa Biblia Reina-Valera",
@@ -469,67 +563,19 @@ export default [
     storedName: "RV'60_plus_",
   },
   {
-    name: "Reina-Valera",
-    url: "_dl.php?back=bbl&a=RV'65&b=mybible&c",
-    key: "RV",
-    size: 1836432,
-    storedName: "RV'65",
-  },
-  {
-    name: "La Santa Biblia Reina-Valera",
-    url: "_dl.php?back=bbl&a=RV1865&b=mybible&c",
-    key: "RV1865",
-    size: 1682379,
-    storedName: "RV1865",
-  },
-  {
-    name: "Reina Valera (Nuevo Testamento)",
-    url: "_dl.php?back=bbl&a=RV'1858&b=mybible&c",
-    key: "RV",
-    size: 473569,
-    storedName: "RV'1858",
-  },
-  {
-    name: "Reina Valera",
-    url: "_dl.php?back=bbl&a=RV'1862&b=mybible&c",
-    key: "RV",
-    size: 1886473,
-    storedName: "RV'1862",
-  },
-  {
     name: "La Santa Biblia Reina Valera Revisión",
     url: "_dl.php?back=bbl&a=RV'95&b=mybible&c",
     key: "RV",
     size: 2059374,
     storedName: "RV'95",
   },
-  {
-    name: "Reina Valera",
-    url: "_dl.php?back=bbl&a=RV'2000&b=mybible&c",
-    key: "RV",
-    size: 1915375,
-    storedName: "RV'2000",
-  },
-  {
-    name: "Reina Valera",
-    url: "_dl.php?back=bbl&a=RV'2004&b=mybible&c",
-    key: "RV",
-    size: 1892804,
-    storedName: "RV'2004",
-  },
+
   {
     name: "Reina Valera Actualizada",
     url: "_dl.php?back=bbl&a=RVA&b=mybible&c",
     key: "RVA",
     size: 1929235,
     storedName: "RVA",
-  },
-  {
-    name: "Reina Valera Antigua",
-    url: "_dl.php?back=bbl&a=RVA'1602&b=mybible&c",
-    key: "RVA",
-    size: 1906975,
-    storedName: "RVA'1602",
   },
   {
     name: "Reina Valera Contemporánea",
@@ -629,48 +675,14 @@ export default [
     size: 2393884,
     storedName: "NTV'10",
   },
-  {
-    name: "Biblia de Israel (Solo Genesis)",
-    url: "_dl.php?back=bbl&a=BDI&b=mybible&c",
-    key: "BDI",
-    size: 98256,
-    storedName: "BDI",
-  },
-  {
-    name: "DuTillet — Solo Mateo — Hebreo",
-    url: "_dl.php?back=bbl&a=DuTillet&b=mybible&c",
-    key: "DuTillet",
-    size: 71969,
-    storedName: "DuTillet",
-  },
-  {
-    name: "Scio de San Miguel",
-    url: "_dl.php?back=bbl&a=SCIO&b=mybible&c",
-    key: "SCIO",
-    size: 239031,
-    storedName: "SCIO",
-  },
-  {
-    name: "La Torah",
-    url: "_dl.php?back=bbl&a=TORAH&b=mybible&c",
-    key: "TORAH",
-    size: 345022,
-    storedName: "TORAH",
-  },
-  {
-    name: "Bizantino interlineal griego-español",
-    url: "_dl.php?back=bbl&a=iBY_plus_&b=mybible&c",
-    key: "iBY_plus_",
-    size: 1312204,
-    storedName: "iBY_plus_",
-  },
-  {
-    name: "NA27 interlineal griego-español",
-    url: "_dl.php?back=bbl&a=iNA27_plus_&b=mybible&c",
-    key: "iNA27_plus_",
-    size: 1335954,
-    storedName: "iNA27_plus_",
-  },
+  // {
+  //   name: "Bizantino interlineal griego-español",
+  //   url: "_dl.php?back=bbl&a=iBY_plus_&b=mybible&c",
+  //   key: "iBY_plus_",
+  //   size: 1312204,
+  //   storedName: "iBY_plus_",
+  // },
+
   {
     name: "Westcott y Hort interlineal griego-español",
     url: "_dl.php?back=bbl&a=inWH_plus_&b=mybible&c",
@@ -1042,13 +1054,13 @@ export default [
     size: 83092,
     storedName: "CDG-c.commentaries",
   },
-  {
-    name: "Apocalipse Versículo Por Versículo",
-    url: "_dl.php?back=bbl&a=AVPV-c.commentaries&b=mybible&c",
-    key: "AVPV",
-    size: 281220,
-    storedName: "AVPV-c.commentaries",
-  },
+  // {
+  //   name: "Apocalipse Versículo Por Versículo",
+  //   url: "_dl.php?back=bbl&a=AVPV-c.commentaries&b=mybible&c",
+  //   key: "AVPV",
+  //   size: 281220,
+  //   storedName: "AVPV-c.commentaries",
+  // },
   {
     name: "Introducción a la Reina-Valera",
     url: "_dl.php?back=bbl&a=RV60-c.commentaries&b=mybible&c",
@@ -1308,10 +1320,7 @@ export default [
     size: 2553649,
     storedName: "CATG-c.commentaries",
   },
-].map((version) => {
-  return {
-    ...version,
-    disabled:
-      version.name.includes("Comentario") || version.name.includes("Comentada"),
-  };
-});
+]
+
+export default AllDatabases
+

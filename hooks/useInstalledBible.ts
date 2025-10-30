@@ -1,4 +1,4 @@
-import bibleDatabases from "@/constants/bibleDatabases";
+import AllDatabases from "@/constants/AllDatabases";
 import {
   databaseNames,
   getDatabaseExt,
@@ -25,11 +25,14 @@ const useInstalledBibles = () => {
     useState<VersionItem[]>(defaultDBs);
   const [installedDictionary, setInstalledDictionary] =
     useState<VersionItem[]>(defaultDBs);
+  const [installedCommentary, setInstalledCommentary] =
+    useState<VersionItem[]>([]);
   const [refreshList, setRefreshList] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const bibleDirectory = `${SQLiteDirPath}/`;
   const bibleExt = getDatabaseExt(DATABASE_TYPE.BIBLE).replace("-", "");
   const dicExt = getDatabaseExt(DATABASE_TYPE.DICTIONARY);
+  const commentaryExt = getDatabaseExt(DATABASE_TYPE.COMMENTARY);
 
   const refreshDatabaseList = () => {
     setRefreshList((prev) => !prev);
@@ -38,7 +41,7 @@ const useInstalledBibles = () => {
   const formatArray = (arr: string[]) => {
     return arr
       .map((file) => {
-        const findBible = bibleDatabases.find((version) =>
+        const findBible = AllDatabases.find((version) =>
           file.includes(version.storedName)
         );
 
@@ -71,8 +74,10 @@ const useInstalledBibles = () => {
         const files = await FileSystem.readDirectoryAsync(bibleDirectory);
         const bibleFiles = files.filter((file) => file.endsWith(bibleExt));
         const dicFiles = files.filter((file) => file.endsWith(dicExt));
+        const commentaryFiles = files.filter((file) => file.endsWith(commentaryExt));
         setInstalledBibles(() => [...defaultDBs, ...formatArray(bibleFiles)]);
         setInstalledDictionary(() => [...formatArray(dicFiles)]);
+        setInstalledCommentary(() => [...formatArray(commentaryFiles)]);
       } catch (error) {
         console.error("Error checking installed Bible:", error);
       } finally {
@@ -83,7 +88,7 @@ const useInstalledBibles = () => {
     checkInstalledBible();
   }, [refreshList]);
 
-  return { installedBibles, installedDictionary, isLoaded: !loading, refreshDatabaseList };
+  return { installedBibles, installedDictionary, installedCommentary, isLoaded: !loading, refreshDatabaseList };
 };
 
 export default useInstalledBibles;

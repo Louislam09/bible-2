@@ -494,6 +494,7 @@ const DatabaseDownloadItem = ({
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
+            backgroundColor: "transparent",
           }}
         >
           {unzipProgress ? (

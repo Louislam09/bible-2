@@ -32,7 +32,11 @@ import Icon from "@/components/Icon";
 import NoInternetSplash from "@/components/NoInternetSplash";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
-import bibleDatabases from "@/constants/bibleDatabases";
+import AllDatabases, {
+  commentariesDatabases,
+  dictionariesDatabases,
+  biblesDatabases,
+} from "@/constants/AllDatabases";
 import { useNetwork } from "@/context/NetworkProvider";
 import useDebounce from "@/hooks/useDebounce";
 import useParams from "@/hooks/useParams";
@@ -40,6 +44,12 @@ import { useDownloadManager } from "@/hooks/useDownloadManager";
 import { DownloadBibleItem, ModulesFilters, TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+
+const recommendedModules = [
+  ...biblesDatabases,
+  ...dictionariesDatabases,
+  ...commentariesDatabases,
+];
 
 type DownloadManagerProps = {};
 
@@ -70,17 +80,17 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
   const databasesToDownload: DownloadBibleItem[] = useMemo(() => {
     switch (selectedFilter) {
       case ModulesFilters.ALL:
-        return bibleDatabases;
+        return recommendedModules;
       case ModulesFilters.BIBLES:
-        return bibleDatabases.filter(
-          (option) => !option.storedName.split(".")[1]
-        );
+        return biblesDatabases;
       case ModulesFilters.DICTIONARIES:
-        return bibleDatabases.filter((option) =>
-          option.storedName.includes(".dictionary")
-        );
+        return dictionariesDatabases;
+      case ModulesFilters.COMMENTARIES:
+        return commentariesDatabases;
+      case ModulesFilters.GENERAL:
+        return AllDatabases;
       default:
-        return bibleDatabases;
+        return recommendedModules;
     }
   }, [selectedFilter]);
 
@@ -336,7 +346,7 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
           <BottomModal
             justOneSnap
             showIndicator
-            justOneValue={["40%"]}
+            justOneValue={["50%"]}
             startAT={0}
             style={{
               borderColor: "transparent",

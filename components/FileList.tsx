@@ -32,6 +32,7 @@ const FileList = () => {
     refreshDatabaseList,
     installedBibles,
     installedDictionary,
+    installedCommentary,
     mainBibleService,
     hebrewInterlinearService: interlinearService,
     greekInterlinearService: interlinearGreekService,
@@ -223,8 +224,10 @@ const FileList = () => {
         <View>
           {index === 0 &&
             renderSection(
-              "Biblias & Diccionarios",
-              installedBibles.length + (installedDictionary.length || 0)
+              "Módulos descargados",
+              installedBibles.length +
+                (installedDictionary.length || 0) +
+                (installedCommentary.length || 0)
             )}
 
           <View style={[styles.itemContainer, styles.defaultItem]}>
@@ -238,7 +241,12 @@ const FileList = () => {
 
             <View style={styles.itemContent}>
               <View
-                style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 8,
+                  backgroundColor: "transparent",
+                }}
               >
                 <Text
                   style={[
@@ -309,7 +317,13 @@ const FileList = () => {
         </View>
       );
     },
-    [theme, getDownloadStatus, installedBibles, installedDictionary]
+    [
+      theme,
+      getDownloadStatus,
+      installedBibles,
+      installedDictionary,
+      installedCommentary,
+    ]
   );
 
   if (loading) {
@@ -326,16 +340,29 @@ const FileList = () => {
   }
 
   const listData = useMemo(
-    () => [...installedBibles, ...installedDictionary],
-    [installedBibles, installedDictionary]
+    () => [...installedBibles, ...installedDictionary, ...installedCommentary],
+    [installedBibles, installedDictionary, installedCommentary]
   );
+
+  const keyExtractor = useCallback(
+    (item: VersionItem) => `downloaded-${item.shortName}`,
+    []
+  );
+
+  // ✅ Get item type for recycling optimization
+  const getItemType = useCallback((item: VersionItem) => {
+    if (item.shortName.includes(".dictionary")) return "dictionary";
+    if (item.shortName.includes(".commentaries")) return "commentary";
+    return "bible";
+  }, []);
 
   return (
     <FlashList
       key={`file-list-${listData.length}-${listRevision}`}
       data={listData}
       renderItem={renderItem}
-      keyExtractor={(item) => item.id}
+      keyExtractor={keyExtractor}
+      getItemType={getItemType} // Enable item recycling for better performance
       contentContainerStyle={styles.listContent}
       ListEmptyComponent={<EmptyComponent />}
       refreshControl={

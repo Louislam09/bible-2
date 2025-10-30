@@ -12,7 +12,7 @@ export const defaultDatabases = ['bible', 'ntv-bible', 'interlinear-bible', 'gre
 const databaseExtensions = {
   [DATABASE_TYPE.BIBLE]: '-bible.db',
   [DATABASE_TYPE.DICTIONARY]: '-dict.db',
-  [DATABASE_TYPE.COMMENTARIES]: '-com.db',
+  [DATABASE_TYPE.COMMENTARY]: '-com.db',
 };
 
 export const isPrimaryBibleDatabase = (dbID: string) => {
@@ -29,7 +29,7 @@ export const getDatabaseExt = (dbType: DATABASE_TYPE) => {
 
 export const getDatabaseType = (fileName: string) => {
   if (fileName.includes('.dictionary')) return DATABASE_TYPE.DICTIONARY;
-  if (fileName.includes('.commentaries')) return DATABASE_TYPE.COMMENTARIES;
+  if (fileName.includes('.commentaries')) return DATABASE_TYPE.COMMENTARY;
   return DATABASE_TYPE.BIBLE;
 };
 

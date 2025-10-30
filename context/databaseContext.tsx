@@ -24,6 +24,7 @@ type DatabaseContextType = {
   ) => Promise<T[]>;
   installedBibles: VersionItem[];
   installedDictionary: VersionItem[];
+  installedCommentary: VersionItem[];
   isInstallBiblesLoaded: boolean;
   isMyBibleDbLoaded: boolean;
   refreshDatabaseList: () => void;
@@ -42,6 +43,7 @@ const initialContext: DatabaseContextType = {
   executeSql: async (sql: string, params?: any[], queryName?: string) => [],
   installedBibles: [],
   installedDictionary: [],
+  installedCommentary: [],
   isInstallBiblesLoaded: false,
   isMyBibleDbLoaded: false,
   refreshDatabaseList: () => {},
@@ -87,6 +89,7 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     isLoaded,
     refreshDatabaseList,
     installedDictionary,
+    installedCommentary,
   } = useInstalledBibles();
 
   const currentDbName = useMemo(
@@ -185,6 +188,7 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
     executeSql: mainBibleService.executeSql,
     installedBibles,
     installedDictionary,
+    installedCommentary,
     isInstallBiblesLoaded: isLoaded,
     refreshDatabaseList,
     isMyBibleDbLoaded: mainBibleService.isLoaded,

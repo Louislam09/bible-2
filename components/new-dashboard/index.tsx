@@ -175,6 +175,12 @@ const NewDashboard = () => {
       color: "#ec899e",
     },
     {
+      icon: "MessageSquare",
+      label: "Comentarios",
+      action: () => navigation?.navigate(Screens.Commentary),
+      color: "#78b0a4",
+    },
+    {
       icon: "Sparkles",
       label: "Busqueda inteligente",
       isIonicon: true,

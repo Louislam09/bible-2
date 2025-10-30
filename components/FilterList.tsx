@@ -1,7 +1,13 @@
 import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 type SortProps = {
   onSelect: (sort: any) => void;

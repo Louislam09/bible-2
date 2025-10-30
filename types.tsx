@@ -65,6 +65,7 @@ export enum Screens {
   AISetup = "ai-setup",
   Notification = "notification",
   SongDetail = "songDetail",
+  Commentary = "commentary",
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -108,6 +109,7 @@ export const ScreensName: TScreensName = {
   [Screens.AISetup]: "Configuración de IA",
   [Screens.Notification]: "Notificacion",
   [Screens.SongDetail]: "Himno",
+  [Screens.Commentary]: "Comentarios",
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -170,6 +172,7 @@ export type RootStackParamList = {
     | NavigatorScreenParams<RootTabParamList>
     | { paramCode: string };
   dictionary: NavigatorScreenParams<RootTabParamList> | { word: string };
+  commentary: NavigatorScreenParams<RootTabParamList> | undefined;
   chooseChapterNumber:
     | NavigatorScreenParams<RootTabParamList>
     | ChooseChapterNumberParams;
@@ -548,7 +551,7 @@ export type EHistoryItem = {
 export enum DATABASE_TYPE {
   BIBLE,
   DICTIONARY,
-  COMMENTARIES,
+  COMMENTARY,
 }
 
 export interface ComponentRefs {
@@ -680,6 +683,8 @@ export enum ModulesFilters {
   ALL = "Todo",
   BIBLES = "Escrituras",
   DICTIONARIES = "Diccionarios",
+  COMMENTARIES = "Comentarios",
+  GENERAL = "Más Recursos",
 }
 
 export enum MemorizationButtonType {

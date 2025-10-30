@@ -61,8 +61,9 @@ const unzipFile = async ({ zipFileUri, onProgress }: UnzipProps) => {
       }
 
       const databaseType = getDatabaseType(fileName);
-      const allowTypes = [DATABASE_TYPE.BIBLE, DATABASE_TYPE.DICTIONARY, DATABASE_TYPE.COMMENTARIES];
+      const allowTypes = [DATABASE_TYPE.BIBLE, DATABASE_TYPE.DICTIONARY, DATABASE_TYPE.COMMENTARY];
       const isDefaultBible = isDefaultDatabase(fileName.replace(/\.(db|SQLite3?)$/i, ""));
+      console.log({ databaseType, allowTypes, isDefaultBible })
 
       if (allowTypes.includes(databaseType) && !isDefaultBible) {
         const newFileName = changeFileNameExt({
