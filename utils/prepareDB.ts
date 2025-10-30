@@ -46,17 +46,17 @@ export const prepareDatabaseFromDbFile = async ({ databaseItem, onProgress }: Pr
         if (dbExists.exists && dbExists.size! > 0) {
             // console.log(`📖 DB ${DB_FILENAME} already ready (${(dbExists.size! / (1024 * 1024)).toFixed(2)} MB)`);
             const db = await SQLite.openDatabaseAsync(DB_FILENAME);
-            await db.execAsync(`
-                PRAGMA journal_mode = WAL;
-                PRAGMA synchronous = OFF;
-                PRAGMA temp_store = MEMORY;
-                PRAGMA cache_size = 16384;
-            `);
+            if (isDefaultDatabaseItem) {
+                await db.execAsync("PRAGMA journal_mode = WAL");
+                await db.execAsync("PRAGMA synchronous = OFF");
+                await db.execAsync("PRAGMA temp_store = MEMORY");
+                await db.execAsync("PRAGMA cache_size = 16384");
+            }
             return db;
         }
 
         dbDownloadState$.isDownloadingDB.set(true);
-        // console.log('IT REACHED HERE', { alreadyExtracted, dbExists })
+        // console.log('IT REACHED HERE', { dbExists })
         onProgress?.({
             stage: 'preparing',
             message: `Preparando ${DB_NAME}...`,

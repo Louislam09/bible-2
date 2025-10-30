@@ -126,11 +126,16 @@ const StrongContentBottomModal: FC<IStrongContent> = ({
     const fetchDictionaryData = async () => {
       const isPrimaryBible =
         isPrimaryBibleDatabase(currentBibleVersion) || isInterlineal;
+      const matchDatabase =
+        mainBibleService.database?.databasePath.split("/").pop() ===
+          currentBibleVersion + ".db" || isInterlineal;
+
       if (
         !isMyBibleDbLoaded ||
         !strongCode ||
         !mainBibleService.isLoaded ||
-        !isPrimaryBible
+        !isPrimaryBible ||
+        !matchDatabase
       ) {
         return;
       }

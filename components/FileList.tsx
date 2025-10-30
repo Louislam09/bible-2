@@ -9,7 +9,7 @@ import { TTheme } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 import * as FileSystem from "expo-file-system";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -43,7 +43,6 @@ const FileList = () => {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      console.log("Refreshing files...");
       await refreshDatabaseList();
       setListRevision((prev) => prev + 1);
     } finally {
@@ -326,7 +325,10 @@ const FileList = () => {
     return <ErrorComponent />;
   }
 
-  const listData = [...installedBibles, ...installedDictionary];
+  const listData = useMemo(
+    () => [...installedBibles, ...installedDictionary],
+    [installedBibles, installedDictionary]
+  );
 
   return (
     <FlashList

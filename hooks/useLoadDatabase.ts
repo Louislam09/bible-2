@@ -52,11 +52,10 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
     queryName?: any
   ): Promise<any[]> => {
     try {
-      // console.log("executeSql", database, dbInitialized.current);
       if (!database || !dbInitialized.current) {
         return [];
       }
-
+      // console.log(" executing SQL", sql)
       const statement = await database.prepareAsync(sql);
       try {
         const result = await statement.executeAsync(params);
@@ -67,8 +66,7 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
         await statement.finalizeAsync();
       }
     } catch (error) {
-      console.log("-- Error executing SQL --")
-      // console.log(`"[useLoadDatabase - ${dbName?.id}] Error executing SQL ${sql}:"`, error);
+      console.log("[useLoadDatabase] -- Error executing SQL --", error)
       return [];
     }
   }, [database, dbInitialized.current])
@@ -83,7 +81,10 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
     ];
 
     try {
-      await db.execAsync(tables.join("\n"));
+      // await db.execAsync(tables.join("\n"));
+      for (const table of tables) {
+        await db.execAsync(table);
+      }
     } catch (error) {
       console.error("Error creating tables:", error);
       throw error; // Rethrow to handle in the calling function
@@ -158,7 +159,6 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
       });
 
       const isInterlinear = dbName.id === DEFAULT_DATABASE.INTERLINEAR;
-      const isGreekInterlinear = dbName.id === DEFAULT_DATABASE.GREEK;
       if (!db) return;
       const dbTableCreated = storedData$.dbTableCreated.get();
       if (!dbTableCreated?.includes(dbName.shortName)) {

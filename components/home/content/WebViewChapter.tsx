@@ -45,16 +45,12 @@ interface WebViewChapterProps {
 const WebViewChapter = React.memo(
   ({
     data,
-    width,
-    isSplit = false,
     initialScrollIndex = 0,
     theme,
-    verses,
     isInterlinear,
     onStrongWordClicked,
     onWordClicked,
     onScroll,
-    estimatedReadingTime = 0,
     onInterlinear,
     onAnotar,
     onComparar,
@@ -236,7 +232,10 @@ const WebViewChapter = React.memo(
         )}
         <WebView
           ref={webViewRef}
-          key={data[0].book_number + data[0].chapter}
+          key={
+            bibleState$.bibleQuery.get().book +
+            bibleState$.bibleQuery.get().chapter
+          }
           originWhitelist={["*"]}
           style={{
             flex: 1,

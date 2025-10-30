@@ -25,6 +25,7 @@ import { downloadState$ } from "@/state/downloadState";
 import ProgressBar from "./home/footer/ProgressBar";
 import Icon from "./Icon";
 import { Text, View } from "./Themed";
+import { storedData$ } from "@/context/LocalstoreContext";
 
 // Type definitions
 type TTheme = {
@@ -298,6 +299,11 @@ const DatabaseDownloadItem = ({
               // Clear download manager state first
               removeCompleted(storedName);
 
+              const dbTableCreated = storedData$.dbTableCreated.get();
+              storedData$.dbTableCreated.set(
+                dbTableCreated.filter((db: string) => db !== storedName)
+              );
+
               // Update UI state
               setIsDownloaded(false);
               setDownloadedDate(null);
@@ -339,24 +345,6 @@ const DatabaseDownloadItem = ({
       month: "short",
       day: "numeric",
     });
-  };
-
-  // Render file size text with warning icon
-  const FileSizeText = () => {
-    const formattedSize = formatFileSize(size);
-    return (
-      <View style={styles.sizeContainer}>
-        <Icon name="TriangleAlert" color="orange" size={16} />
-        <Text
-          style={[
-            styles.sizeText,
-            item?.disabled && { color: theme.colors.text + "70" },
-          ]}
-        >
-          {formattedSize}
-        </Text>
-      </View>
-    );
   };
 
   const toggleExpandDetails = () => {
