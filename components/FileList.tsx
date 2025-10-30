@@ -1,9 +1,10 @@
 import { defaultDatabases } from "@/constants/databaseNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
-import { VersionItem } from "@/hooks/useInstalledBible";
 import { useDownloadManager } from "@/hooks/useDownloadManager";
+import { VersionItem } from "@/hooks/useInstalledBible";
 import { TTheme } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
@@ -16,16 +17,14 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import Icon from "./Icon";
 import ProgressBar from "./home/footer/ProgressBar";
+import Icon from "./Icon";
 import { Text, View } from "./Themed";
-import { storedData$ } from "@/context/LocalstoreContext";
 
 const FileList = () => {
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
-  const [files, setFiles] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [listRevision, setListRevision] = useState<number>(0);
@@ -41,24 +40,6 @@ const FileList = () => {
   const { getDownloadStatus, isDownloading, removeCompleted } =
     useDownloadManager();
 
-  const extractionPath = `${FileSystem.documentDirectory}SQLite/`;
-
-  const fetchFiles = async () => {
-    const fileList = await FileSystem.readDirectoryAsync(extractionPath);
-    // console.log({ fileList });
-
-    try {
-      setFiles(
-        fileList.filter((file) => file.endsWith(".db") || file.endsWith(".zip"))
-      );
-    } catch (err) {
-      setError("Error fetching files");
-      console.error("Error fetching files:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
@@ -66,6 +47,7 @@ const FileList = () => {
       await refreshDatabaseList();
       setListRevision((prev) => prev + 1);
     } finally {
+      setLoading(false);
       setRefreshing(false);
     }
   }, [refreshDatabaseList]);
@@ -137,18 +119,6 @@ const FileList = () => {
     );
   };
 
-  useEffect(() => {
-    fetchFiles();
-  }, []);
-
-  // Re-render when installed databases change
-  useEffect(() => {
-    console.log("Installed databases changed:", {
-      bibles: installedBibles.length,
-      dictionaries: installedDictionary.length,
-    });
-  }, [installedBibles, installedDictionary]);
-
   const EmptyComponent = () => (
     <View style={styles.emptyContainer}>
       <Ionicons
@@ -167,7 +137,7 @@ const FileList = () => {
     <View style={styles.errorContainer}>
       <Ionicons name="alert-circle-outline" size={60} color="#e74856" />
       <Text style={styles.errorText}>{error}</Text>
-      <TouchableOpacity style={styles.retryButton} onPress={fetchFiles}>
+      <TouchableOpacity style={styles.retryButton} onPress={onRefresh}>
         <Text style={styles.retryButtonText}>Reintentar</Text>
       </TouchableOpacity>
     </View>

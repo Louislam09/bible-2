@@ -1,5 +1,5 @@
 import { DBName } from '@/enums';
-import { DATABASE_TYPE } from '@/types';
+import { DATABASE_TYPE, DEFAULT_DATABASE } from '@/types';
 import * as FileSystem from 'expo-file-system';
 export const SQLiteDirPath = `${FileSystem.documentDirectory}SQLite`;
 export const baseDownloadUrl = 'https://www.ph4.org';
@@ -13,6 +13,10 @@ const databaseExtensions = {
   [DATABASE_TYPE.BIBLE]: '-bible.db',
   [DATABASE_TYPE.DICTIONARY]: '-dict.db',
   [DATABASE_TYPE.COMMENTARIES]: '-com.db',
+};
+
+export const isPrimaryBibleDatabase = (dbID: string) => {
+  return dbID === DEFAULT_DATABASE.BIBLE;
 };
 
 export const isDefaultDatabase = (dbID: string) => {

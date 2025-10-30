@@ -106,7 +106,8 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Load main Bible database first (critical for app functionality)
   const mainBibleService = useLoadDatabase({
-    currentBibleVersion: isDataLoaded && isLoaded ? currentDbName : undefined,
+    currentBibleVersion:
+      isDataLoaded && isLoaded ? currentDbName : installedBibles[0],
     isInterlinear,
   });
 

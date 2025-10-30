@@ -1,6 +1,7 @@
 import BottomModal from "@/components/BottomModal";
 import Icon, { IconProps } from "@/components/Icon";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { isPrimaryBibleDatabase } from "@/constants/databaseNames";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
 import { SEARCH_STRONG_WORD } from "@/constants/Queries";
 import { iconSize } from "@/constants/size";
@@ -69,8 +70,7 @@ const StrongContentBottomModal: FC<IStrongContent> = ({
 }) => {
   const data = use$<IStrongWord>(() => bibleState$.strongWord.get());
   const { code, text: word } = data;
-  const { myBibleDB, executeSql, isMyBibleDbLoaded, mainBibleService } =
-    useDBContext();
+  const { executeSql, isMyBibleDbLoaded, mainBibleService } = useDBContext();
   const [values, setValues] = useState<DictionaryData[]>([
     { definition: "", topic: "" },
   ]);
@@ -124,8 +124,16 @@ const StrongContentBottomModal: FC<IStrongContent> = ({
 
   useEffect(() => {
     const fetchDictionaryData = async () => {
-      if (!isMyBibleDbLoaded || !strongCode || !mainBibleService.isLoaded)
+      const isPrimaryBible =
+        isPrimaryBibleDatabase(currentBibleVersion) || isInterlineal;
+      if (
+        !isMyBibleDbLoaded ||
+        !strongCode ||
+        !mainBibleService.isLoaded ||
+        !isPrimaryBible
+      ) {
         return;
+      }
 
       try {
         const dictionaryData = isInterlineal

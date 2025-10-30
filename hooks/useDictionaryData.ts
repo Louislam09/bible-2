@@ -64,13 +64,14 @@ const useDictionaryData = ({
       } finally {
         await statement.finalizeAsync();
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Dictionary query error:', error);
       return [];
     }
   }, [])
 
   const onSearch = useCallback(async ({ searchParam }: { searchParam: string }) => {
-    if (!enabled || searchParam.length < 3) return;
+    if (!enabled || searchParam.length < 3 || databases.length === 0) return;
     setLoading(true);
     setError(null);
 

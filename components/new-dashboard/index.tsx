@@ -72,6 +72,7 @@ const NewDashboard = () => {
   const isAdmin = _isAdmin || user?.isAdmin;
 
   const onSelect = (version: string) => {
+    bibleState$.handleStrongWord({ text: "", code: "" });
     bibleState$.clearSelection();
     selectBibleVersion(version);
     versionRef.current?.dismiss();

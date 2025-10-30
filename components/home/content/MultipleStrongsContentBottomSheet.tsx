@@ -1,20 +1,17 @@
+import BottomModal from "@/components/BottomModal";
 import Icon, { IconProps } from "@/components/Icon";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
 import { SEARCH_STRONG_WORD } from "@/constants/Queries";
 import { iconSize } from "@/constants/size";
+import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
+import { useHaptics } from "@/hooks/useHaptics";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
-import {
-  DictionaryData,
-  EBibleVersions,
-  IStrongWord,
-  Screens,
-  TTheme,
-} from "@/types";
-import { use$ } from "@legendapp/state/react";
+import { DictionaryData, EBibleVersions, Screens, TTheme } from "@/types";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import React, {
   FC,
   useCallback,
@@ -27,18 +24,13 @@ import {
   Animated,
   Dimensions,
   Easing,
-  Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
 } from "react-native";
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { Text, View } from "../../Themed";
-import { useBibleContext } from "@/context/BibleContext";
-import { useHaptics } from "@/hooks/useHaptics";
-import BottomModal from "@/components/BottomModal";
-import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
+import { isPrimaryBibleDatabase } from "@/constants/databaseNames";
 
 type HeaderAction = {
   iconName: IconProps["name"];
@@ -46,9 +38,6 @@ type HeaderAction = {
   description: string;
   onAction: () => void;
 };
-
-const DEFAULT_HEIGHT = 14000;
-const EXTRA_HEIGHT_TO_ADJUST = 150;
 
 const createMultipleStrongsHtmlTemplate = (
   content: DictionaryData[] | any,
@@ -244,13 +233,11 @@ const MultipleStrongsContentBottomModal: FC<IMultipleStrongsContent> = ({
   const currentStrongNumber = data.strongNumbers[activeTab] || "";
   const cognateStrongNumber = cognate + currentStrongNumber;
 
-  const { myBibleDB, executeSql, isMyBibleDbLoaded, mainBibleService } =
-    useDBContext();
+  const { executeSql, isMyBibleDbLoaded, mainBibleService } = useDBContext();
   const [values, setValues] = useState<DictionaryData[]>([
     { definition: "", topic: "" },
   ]);
   const styles = getStyles(theme);
-  const [height, setHeight] = useState(DEFAULT_HEIGHT);
   const webViewRef = React.useRef<WebView>(null);
   const [strongCode, setStrongCode] = useState(cognateStrongNumber);
   const [sharing, setSharing] = useState(false);
@@ -308,8 +295,16 @@ const MultipleStrongsContentBottomModal: FC<IMultipleStrongsContent> = ({
 
   useEffect(() => {
     const fetchDictionaryData = async () => {
-      if (!isMyBibleDbLoaded || !strongCode || !mainBibleService.isLoaded)
+      const isPrimaryBible =
+        isPrimaryBibleDatabase(currentBibleVersion) || isInterlineal;
+      if (
+        !isMyBibleDbLoaded ||
+        !strongCode ||
+        !mainBibleService.isLoaded ||
+        !isPrimaryBible
+      ) {
         return;
+      }
 
       try {
         const dictionaryData = isInterlineal

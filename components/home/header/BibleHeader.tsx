@@ -152,6 +152,7 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
   }, [isSplitActived, canGoForward, canGoBackward]);
 
   const onSelect = (version: string) => {
+    bibleState$.handleStrongWord({ text: "", code: "" });
     bibleState$.clearSelection();
     selectBibleVersion(version);
     versionRef.current?.dismiss();
