@@ -1,30 +1,30 @@
-import { DownloadedDatabase } from '@/classes/Database';
+import { DownloadedDatabase } from "@/classes/Database";
 import {
-  baseDownloadUrl,
   dbFileExt,
   defaultDatabases,
   getIfDatabaseNeedsDownload,
   SQLiteDirPath,
-} from '@/constants/databaseNames';
-import { useBibleContext } from '@/context/BibleContext';
-import { useDBContext } from '@/context/databaseContext';
-import { showToast } from '@/utils/showToast';
-import unzipFile from '@/utils/unzipFile';
-import { Ionicons } from '@expo/vector-icons';
-import * as FileSystem from 'expo-file-system';
-import React, { useEffect, useRef, useState } from 'react';
+} from "@/constants/databaseNames";
+import { useBibleContext } from "@/context/BibleContext";
+import { useDBContext } from "@/context/databaseContext";
+import { useDownloadManager } from "@/hooks/useDownloadManager";
+import { showToast } from "@/utils/showToast";
+import { Ionicons } from "@expo/vector-icons";
+import * as FileSystem from "expo-file-system";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import {
-  ActivityIndicator,
   Alert,
   Animated,
   Easing,
   Pressable,
   StyleSheet,
-  TouchableOpacity
-} from 'react-native';
-import ProgressBar from './home/footer/ProgressBar';
-import Icon from './Icon';
-import { Text, View } from './Themed';
+  TouchableOpacity,
+} from "react-native";
+import { use$ } from "@legendapp/state/react";
+import { downloadState$ } from "@/state/downloadState";
+import ProgressBar from "./home/footer/ProgressBar";
+import Icon from "./Icon";
+import { Text, View } from "./Themed";
 
 // Type definitions
 type TTheme = {
@@ -52,7 +52,6 @@ type DatabaseDownloadItemProps = {
   item: DownloadBibleItem;
   theme: TTheme;
   isConnected: boolean | null;
-  onDownloadStart?: () => void;
   onDownloadComplete?: (storedName: string) => void;
   onError?: (error: string) => void;
 };
@@ -61,24 +60,13 @@ const DatabaseDownloadItem = ({
   item,
   theme,
   isConnected,
-  onDownloadStart,
   onDownloadComplete,
   onError,
 }: DatabaseDownloadItemProps) => {
   // State management
-  const [isDownloaded, setIsDownloaded] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [unzipProgress, setUnzipProgress] = useState('');
   const [expandDetails, setExpandDetails] = useState(false);
-  const [downloadError, setDownloadError] = useState<string | null>(null);
   const [downloadedDate, setDownloadedDate] = useState<Date | null>(null);
-
-  // Animation setup
   const [animation] = useState(new Animated.Value(0));
-  const downloadResumable = useRef<FileSystem.DownloadResumable | null>(null);
-  const retryCount = useRef(0);
-  const MAX_RETRIES = 3;
 
   // Extract properties from item
   const { size, url, storedName, name } = item;
@@ -86,190 +74,195 @@ const DatabaseDownloadItem = ({
   // Context hooks
   const { refreshDatabaseList } = useDBContext();
   const { selectBibleVersion, currentBibleVersion } = useBibleContext();
+  const { addDownload, cancelDownload, retryDownload, removeCompleted } =
+    useDownloadManager();
+
+  // ✅ Use selective Legend State subscription - only re-render when THIS download changes
+  const downloadStatus = use$(downloadState$.downloads[storedName]);
+
+  // ✅ Memoize computed values to prevent unnecessary recalculations
+  const isLoading = useMemo(
+    () =>
+      downloadStatus?.status === "downloading" ||
+      downloadStatus?.status === "unzipping",
+    [downloadStatus?.status]
+  );
+
+  const progress = useMemo(
+    () => downloadStatus?.progress || 0,
+    [downloadStatus?.progress]
+  );
+
+  const unzipProgress = useMemo(
+    () => downloadStatus?.unzipProgress || "",
+    [downloadStatus?.unzipProgress]
+  );
+
+  const downloadError = useMemo(
+    () => downloadStatus?.error || null,
+    [downloadStatus?.error]
+  );
+
+  // ✅ Initialize as false - will be checked properly in useEffect
+  const [isDownloaded, setIsDownloaded] = useState(false);
 
   // Paths and URLs
   const styles = getStyles(theme);
-  const downloadFrom = `${baseDownloadUrl}/${url}`;
-  const fileUri = `${SQLiteDirPath}/${storedName}`;
-  const downloadDest = `${fileUri}.zip`;
 
   // Check if this is the currently selected Bible
   const isCurrentBible = currentBibleVersion === storedName + dbFileExt;
 
-  // Check download status on mount and when refreshing database list
+  // Check download status on mount and when download status changes
   useEffect(() => {
-    checkDownloadStatus();
-  }, []);
+    let isMounted = true;
+
+    const checkStatus = async () => {
+      if (isMounted) {
+        await checkDownloadStatus();
+      }
+    };
+
+    checkStatus();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [downloadStatus?.status]);
 
   // Handle animation for expand/collapse
   useEffect(() => {
-    Animated.timing(animation, {
+    const animationHandle = Animated.timing(animation, {
       toValue: expandDetails ? 1 : 0,
       duration: 300,
       easing: Easing.bezier(0.4, 0, 0.2, 1),
       useNativeDriver: false,
-    }).start();
+    });
+
+    animationHandle.start();
+
+    return () => {
+      animationHandle.stop();
+    };
   }, [expandDetails]);
 
-  // Create interpolated values for animation
-  const containerHeight = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 1],
-  });
+  // Monitor download completion
+  useEffect(() => {
+    let isMounted = true;
 
-  const rotateIcon = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '180deg'],
-  });
+    const handleStatusChange = async () => {
+      if (downloadStatus?.status === "completed" && isMounted) {
+        setIsDownloaded(true);
+        setDownloadedDate(new Date(downloadStatus.completedAt || Date.now()));
+
+        if (isMounted) {
+          await refreshDatabaseList();
+          onDownloadComplete?.(storedName);
+          await checkFirstDownload();
+        }
+      } else if (downloadStatus?.status === "failed" && isMounted) {
+        onError?.(downloadStatus.error || "Error desconocido");
+      }
+    };
+
+    handleStatusChange();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [downloadStatus?.status]);
+
+  const checkFirstDownload = async () => {
+    const allDatabases = (await refreshDatabaseList()) as any;
+    if (allDatabases?.length === 1) {
+      selectBibleVersion(storedName + dbFileExt);
+    }
+  };
 
   // Check if database exists and when it was downloaded
   const checkDownloadStatus = async () => {
     try {
-      const needDownload = await getIfDatabaseNeedsDownload(storedName + dbFileExt);
-      setIsDownloaded(!needDownload);
+      const needDownload = await getIfDatabaseNeedsDownload(
+        storedName + dbFileExt
+      );
+      const fileDownloaded = !needDownload;
 
-      if (!needDownload) {
+      // ✅ ONLY consider it downloaded if the file actually exists
+      // Ignore download manager state if file doesn't exist (was deleted)
+      setIsDownloaded(fileDownloaded);
+
+      if (fileDownloaded) {
         // Get file info to check when it was downloaded
-        const fileInfo = await FileSystem.getInfoAsync(`${SQLiteDirPath}/${storedName}${dbFileExt}`);
+        const fileInfo = await FileSystem.getInfoAsync(
+          `${SQLiteDirPath}/${storedName}${dbFileExt}`
+        );
         if (fileInfo.exists && fileInfo.modificationTime) {
           setDownloadedDate(new Date(fileInfo.modificationTime * 1000));
         }
+      } else {
+        // File doesn't exist, ensure it's marked as not downloaded
+        setDownloadedDate(null);
       }
     } catch (error) {
       console.error("Error checking download status:", error);
+      setIsDownloaded(false);
     }
   };
 
-  // Progress calculation for download
-  const calculateProgress = ({
-    totalBytesExpectedToWrite,
-    totalBytesWritten,
-  }: FileSystem.DownloadProgressData) => {
-    const fileProgress = Math.floor((totalBytesWritten / totalBytesExpectedToWrite) * 100) / 100;
+  // ✅ Optimistic UI updates for better UX
+  const [localProgress, setLocalProgress] = useState(0);
+  const [optimisticDownloading, setOptimisticDownloading] = useState(false);
 
-    if (fileProgress === 1) {
-      setProgress(0.99); // Keep at 99% until unzipping is complete
-    } else {
-      setProgress(fileProgress);
-    }
-  };
-
-  // Start download process
-  const startDownload = async () => {
-    try {
-      setDownloadError(null);
-      const uri = downloadFrom;
-
-      // Notify download start
-      onDownloadStart?.();
-
-      // Create download resumable
-      downloadResumable.current = FileSystem.createDownloadResumable(
-        uri,
-        downloadDest,
-        {},
-        calculateProgress
-      );
-
-      // Start download
-      const result = await downloadResumable.current.downloadAsync();
-
-      if (!result) {
-        throw new Error("Download failed");
-      }
-
-      // Setup progress callback for unzipping
-      const progressCallback = (progress: string) => {
-        setUnzipProgress(progress);
-      };
-
-      // Unzip file and delete zip
-      await unzipFile({
-        zipFileUri: downloadDest,
-        onProgress: progressCallback,
-      });
-
-      // Update state and refresh database list
-      setIsLoading(false);
-      setProgress(1);
-      setIsDownloaded(true);
-      setDownloadedDate(new Date());
-      refreshDatabaseList();
-
-      // Notify completion
-      onDownloadComplete?.(storedName);
-
-      // Show success toast
-      showToast(`${name} se ha descargado correctamente.`);
-
-      // Set as current Bible if it's the first one downloaded
-      const allDatabases = await refreshDatabaseList() as any
-      if (allDatabases?.length === 1) {
-        selectBibleVersion(storedName + dbFileExt);
-      }
-
-    } catch (error) {
-      console.error("Download error:", error);
-
-      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-      setDownloadError(errorMessage);
-
-      if (retryCount.current < MAX_RETRIES) {
-        retryCount.current++;
-        showToast(`Error al descargar. Reintentando (${retryCount.current}/${MAX_RETRIES})...`);
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        startDownload();
-      } else {
-        setIsLoading(false);
-        setProgress(0);
-        onError?.(errorMessage);
-        showToast('No se pudo completar la descarga. Por favor, inténtalo más tarde.');
-      }
-    }
-  };
-
-  // Initiate Bible download
-  const downloadBible = async () => {
+  // ✅ Memoize callback functions to prevent unnecessary re-renders
+  const downloadBible = useCallback(async () => {
     if (!isConnected) {
-      showToast('Por favor, revisa tu conexión e inténtalo de nuevo.');
+      showToast("Por favor, revisa tu conexión e inténtalo de nuevo.");
       return;
     }
 
-    const needDownload = await getIfDatabaseNeedsDownload(storedName + dbFileExt);
+    const needDownload = await getIfDatabaseNeedsDownload(
+      storedName + dbFileExt
+    );
     if (needDownload) {
-      // Reset retry counter
-      retryCount.current = 0;
-      setIsLoading(true);
-      startDownload();
+      // ✅ Show downloading state immediately (optimistic update)
+      setOptimisticDownloading(true);
+      setLocalProgress(0.01);
+
+      try {
+        await addDownload({
+          storedName,
+          name,
+          url,
+          size,
+        });
+      } catch (error) {
+        // Rollback optimistic update on error
+        setOptimisticDownloading(false);
+        setLocalProgress(0);
+        showToast("Error al iniciar descarga");
+      }
     } else {
-      showToast('Esta versión ya está descargada.');
+      showToast("Esta versión ya está descargada.");
     }
-  };
+  }, [isConnected, storedName, name, url, size, addDownload]);
+
+  // Reset optimistic state when actual download starts
+  useEffect(() => {
+    if (isLoading && optimisticDownloading) {
+      setOptimisticDownloading(false);
+      setLocalProgress(0);
+    }
+  }, [isLoading]);
 
   // Cancel download if in progress
-  const cancelDownload = async () => {
-    if (downloadResumable.current) {
-      try {
-        await downloadResumable.current.cancelAsync();
+  const handleCancelDownload = useCallback(async () => {
+    await cancelDownload(storedName);
+    showToast("Descarga cancelada.");
+  }, [storedName, cancelDownload]);
 
-        // Clean up any partial files
-        try {
-          const fileInfo = await FileSystem.getInfoAsync(downloadDest);
-          if (fileInfo.exists) {
-            await FileSystem.deleteAsync(downloadDest);
-          }
-        } catch (cleanupError) {
-          console.warn("Failed to delete partial download:", cleanupError);
-        }
-
-        setIsLoading(false);
-        setProgress(0);
-        showToast('Descarga cancelada.');
-      } catch (error) {
-        console.error("Error canceling download:", error);
-      }
-    }
-  };
+  // Retry failed download
+  const handleRetryDownload = useCallback(async () => {
+    await retryDownload(storedName);
+  }, [storedName, retryDownload]);
 
   // Delete Bible file
   const deleteBibleFile = async () => {
@@ -292,25 +285,38 @@ const DatabaseDownloadItem = ({
           style: "destructive",
           onPress: async () => {
             try {
-              const bibleObject = new DownloadedDatabase(storedName + dbFileExt);
+              const bibleObject = new DownloadedDatabase(
+                storedName + dbFileExt
+              );
               const deleted = await bibleObject.delete();
 
               if (!deleted) {
-                showToast('No se pudo eliminar el archivo.');
+                showToast("No se pudo eliminar el archivo.");
                 return;
               }
 
+              // Clear download manager state first
+              removeCompleted(storedName);
+
+              // Update UI state
               setIsDownloaded(false);
-              setProgress(0);
               setDownloadedDate(null);
+
+              // Refresh database list
               refreshDatabaseList();
+
+              // Force recheck after a small delay to ensure state has updated
+              setTimeout(() => {
+                checkDownloadStatus();
+              }, 100);
+
               showToast(`${name} ha sido eliminado.`);
             } catch (error) {
               console.error("Error deleting file:", error);
-              showToast('Error al eliminar el archivo.');
+              showToast("Error al eliminar el archivo.");
             }
-          }
-        }
+          },
+        },
       ]
     );
   };
@@ -329,9 +335,9 @@ const DatabaseDownloadItem = ({
   // Format date display
   const formatDate = (date: Date) => {
     return date.toLocaleDateString(undefined, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -340,11 +346,11 @@ const DatabaseDownloadItem = ({
     const formattedSize = formatFileSize(size);
     return (
       <View style={styles.sizeContainer}>
-        <Icon name='TriangleAlert' color="orange" size={16} />
+        <Icon name="TriangleAlert" color="orange" size={16} />
         <Text
           style={[
             styles.sizeText,
-            item?.disabled && { color: theme.colors.text + '70' },
+            item?.disabled && { color: theme.colors.text + "70" },
           ]}
         >
           {formattedSize}
@@ -357,16 +363,25 @@ const DatabaseDownloadItem = ({
     setExpandDetails(!expandDetails);
   };
 
-  const isBible = !item.storedName.split('.')[1]
+  const isBible = !item.storedName.split(".")[1];
 
   return (
-    <Animated.View style={[
-      styles.itemContainer,
-      isCurrentBible && styles.currentBibleContainer
-    ]}
+    <Animated.View
+      style={[
+        styles.itemContainer,
+        isCurrentBible && styles.currentBibleContainer,
+        item.disabled && styles.disabledContainer,
+      ]}
     >
-
-      <Pressable onPress={() => toggleExpandDetails()} style={{ flexDirection: 'row', alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
+      <Pressable
+        onPress={() => toggleExpandDetails()}
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 2,
+          justifyContent: "space-between",
+        }}
+      >
         <View style={styles.itemIconContainer}>
           <Ionicons
             name={isBible ? "book-outline" : "library-outline"}
@@ -376,19 +391,19 @@ const DatabaseDownloadItem = ({
         </View>
 
         <View style={styles.itemContent}>
-          <View isTransparent style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
+          <View
+            isTransparent
+            style={{ flexDirection: "row", gap: 4, alignItems: "center" }}
+          >
             <Text
-              style={[
-                styles.itemTitle,
-                { color: theme.colors.notification },
-              ]}
+              style={[styles.itemTitle, { color: theme.colors.notification }]}
             >
               {item?.key || "-"}
             </Text>
             {isDownloaded && (
               <Icon
                 size={18}
-                name='BadgeCheck'
+                name="BadgeCheck"
                 color={theme.colors.notification}
               />
             )}
@@ -397,29 +412,46 @@ const DatabaseDownloadItem = ({
                 <Text style={styles.currentBadgeText}>EN USO</Text>
               </View>
             )}
+            {item.disabled && (
+              <View style={styles.comingSoonBadge}>
+                <Text style={styles.comingSoonText}>PRÓXIMAMENTE</Text>
+              </View>
+            )}
           </View>
           <Text
-            style={[
-              styles.itemSubTitle,
-              { color: theme.colors.primary },
-            ]}
+            style={[styles.itemSubTitle, { color: theme.colors.primary }]}
             numberOfLines={expandDetails ? undefined : 1}
           >
             {item?.name || "-"}
           </Text>
           <View style={styles.defaultBadge}>
-            <Icon name='ChartPie' color={theme.colors.notification} size={16} />
+            <Icon name="ChartPie" color={theme.colors.notification} size={16} />
             <Text style={styles.defaultBadgeText}>{formatFileSize(size)}</Text>
           </View>
         </View>
 
         <View style={styles.buttonContainer}>
-          {isLoading ? (
+          {item.disabled ? (
+            <View style={styles.disabledButton}>
+              <Icon name="Lock" size={18} color={theme.colors.text + "50"} />
+            </View>
+          ) : isLoading || optimisticDownloading ? (
             <TouchableOpacity
               style={styles.cancelButton}
-              onPress={cancelDownload}
+              onPress={handleCancelDownload}
             >
               <Icon name="X" size={18} color="#FF0000" />
+            </TouchableOpacity>
+          ) : downloadStatus?.status === "failed" ? (
+            <TouchableOpacity
+              style={[styles.actionButton, styles.retryButton]}
+              onPress={handleRetryDownload}
+            >
+              <Icon
+                name="RotateCcw"
+                size={18}
+                color={theme.colors.notification}
+              />
             </TouchableOpacity>
           ) : isDownloaded ? (
             <TouchableOpacity
@@ -429,10 +461,13 @@ const DatabaseDownloadItem = ({
             >
               <Icon name="Trash2" size={18} color="#FF0000" />
             </TouchableOpacity>
+          ) : downloadStatus?.status === "queued" ? (
+            <View style={styles.queuedIndicator}>
+              <Text style={styles.queuedText}>En cola...</Text>
+            </View>
           ) : (
             <TouchableOpacity
               style={[styles.actionButton, styles.downloadButton]}
-              // style={[styles.redownloadButton]}
               onPress={downloadBible}
               disabled={!isConnected || isLoading}
             >
@@ -443,24 +478,46 @@ const DatabaseDownloadItem = ({
       </Pressable>
 
       {/* Progress bar for download */}
-      {!!progress && !isDownloaded && (
+      {(!!progress || optimisticDownloading) && !isDownloaded && (
         <View style={styles.progressContainer}>
-          <ProgressBar
-            height={8}
-            color={theme.colors.primary}
-            barColor={theme.colors.border}
-            progress={progress}
-            circleColor={theme.colors.notification}
-          />
-          {/* <Text style={styles.progressText}>{Math.round(progress * 100)}%</Text> */}
+          <View style={{ flex: 1, marginRight: 12 }}>
+            <ProgressBar
+              height={8}
+              color={theme.colors.primary}
+              barColor={theme.colors.border}
+              progress={optimisticDownloading ? localProgress : progress}
+              circleColor={theme.colors.notification}
+            />
+          </View>
+          <Text style={styles.progressText}>
+            {Math.round(
+              (optimisticDownloading ? localProgress : progress) * 100
+            )}
+            %
+          </Text>
         </View>
       )}
 
-      {/* Unzip progress text */}
-      {isLoading && unzipProgress && (
-        <Text style={styles.unzipText}>
-          {unzipProgress}
-        </Text>
+      {/* Download status text */}
+      {isLoading && (
+        <View
+          style={{
+            marginTop: 8,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          {unzipProgress ? (
+            <Text style={styles.unzipText}>{unzipProgress}</Text>
+          ) : (
+            <Text style={styles.unzipText}>
+              {downloadStatus?.status === "downloading"
+                ? "Descargando..."
+                : "Preparando..."}
+            </Text>
+          )}
+        </View>
       )}
 
       {/* Error message */}
@@ -477,13 +534,15 @@ const DatabaseDownloadItem = ({
           {/* File location */}
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Nombre:</Text>
-            <Text style={styles.detailValue} >{item.name}</Text>
+            <Text style={styles.detailValue}>{item.name}</Text>
           </View>
           {/* Downloaded date */}
           {isDownloaded && downloadedDate && (
             <View style={styles.detailRow}>
               <Text style={styles.detailLabel}>Descargado:</Text>
-              <Text style={styles.detailValue}>{formatDate(downloadedDate)}</Text>
+              <Text style={styles.detailValue}>
+                {formatDate(downloadedDate)}
+              </Text>
             </View>
           )}
 
@@ -492,8 +551,6 @@ const DatabaseDownloadItem = ({
             <Text style={styles.detailLabel}>Tamaño:</Text>
             <Text style={styles.detailValue}>{formatFileSize(size)}</Text>
           </View>
-
-
         </Animated.View>
       )}
     </Animated.View>
@@ -512,17 +569,20 @@ const getStyles = ({ colors, dark = false }: TTheme) =>
       borderWidth: 1,
       borderColor: colors.notification + "50",
       gap: 2,
-
     },
     currentBibleContainer: {
       borderColor: colors.primary,
       borderWidth: 2,
-      backgroundColor: colors.card + '10',
+      backgroundColor: colors.card + "10",
+    },
+    disabledContainer: {
+      opacity: 0.6,
+      backgroundColor: colors.card + "40",
     },
     header: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       marginBottom: 8,
       backgroundColor: "transparent",
     },
@@ -541,28 +601,28 @@ const getStyles = ({ colors, dark = false }: TTheme) =>
     //   backgroundColor: "transparent",
     // },
     titleRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       flex: 1,
       backgroundColor: "transparent",
-      gap: 5
+      gap: 5,
     },
     storedName: {
       color: colors.notification,
-      fontWeight: '600',
+      fontWeight: "600",
       fontSize: 15,
     },
     currentBibleText: {
       color: colors.primary,
-      fontWeight: '700',
+      fontWeight: "700",
     },
     expandButton: {
       padding: 4,
-      alignSelf: 'flex-end',
+      alignSelf: "flex-end",
     },
     itemContent: {
-      display: 'flex',
-      justifyContent: 'space-between',
+      display: "flex",
+      justifyContent: "space-between",
       flex: 1,
       marginBottom: 8,
       backgroundColor: "transparent",
@@ -570,7 +630,7 @@ const getStyles = ({ colors, dark = false }: TTheme) =>
     itemTitle: {
       fontSize: 16,
       fontWeight: "600",
-      textTransform: 'uppercase'
+      textTransform: "uppercase",
     },
     itemSubTitle: {
       fontSize: 14,
@@ -583,13 +643,13 @@ const getStyles = ({ colors, dark = false }: TTheme) =>
       borderRadius: 8,
       backgroundColor: colors.notification + "20",
       marginLeft: "auto",
-      marginHorizontal: 8
+      marginHorizontal: 8,
     },
     bibleName: {
       paddingRight: 10,
       flex: 1,
       fontSize: 16,
-      fontWeight: '500',
+      fontWeight: "500",
     },
     defaultBadge: {
       backgroundColor: colors.notification + "20",
@@ -598,9 +658,9 @@ const getStyles = ({ colors, dark = false }: TTheme) =>
       borderRadius: 12,
       alignSelf: "flex-start",
       marginTop: 4,
-      flexDirection: 'row',
+      flexDirection: "row",
       gap: 4,
-      alignItems: 'center'
+      alignItems: "center",
     },
     defaultBadgeText: {
       fontSize: 10,
@@ -608,7 +668,7 @@ const getStyles = ({ colors, dark = false }: TTheme) =>
       color: colors.notification,
     },
     versionBadge: {
-      backgroundColor: colors.notification + '20',
+      backgroundColor: colors.notification + "20",
       paddingHorizontal: 8,
       paddingVertical: 2,
       borderRadius: 12,
@@ -617,15 +677,15 @@ const getStyles = ({ colors, dark = false }: TTheme) =>
     versionText: {
       fontSize: 12,
       color: colors.notification,
-      fontWeight: '600',
+      fontWeight: "600",
     },
     badgeIcon: {
-      fontWeight: '700',
-      color: '#4ec9b0', // Success color from original code
+      fontWeight: "700",
+      color: "#4ec9b0", // Success color from original code
       fontSize: 18,
     },
     currentBadge: {
-      backgroundColor: colors.primary + '30',
+      backgroundColor: colors.primary + "30",
       paddingHorizontal: 8,
       paddingVertical: 2,
       borderRadius: 12,
@@ -634,87 +694,127 @@ const getStyles = ({ colors, dark = false }: TTheme) =>
     currentBadgeText: {
       color: colors.primary,
       fontSize: 10,
-      fontWeight: '700',
+      fontWeight: "700",
+    },
+    comingSoonBadge: {
+      backgroundColor: "#FFA500" + "30",
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+      borderRadius: 12,
+      marginLeft: 8,
+    },
+    comingSoonText: {
+      color: "#FFA500",
+      fontSize: 9,
+      fontWeight: "700",
+    },
+    disabledButton: {
+      width: 36,
+      height: 36,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: colors.background,
+      borderWidth: 1,
+      borderColor: colors.border,
+      padding: 8,
+      borderRadius: 8,
+      marginLeft: "auto",
+      marginHorizontal: 8,
     },
     buttonContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-end",
       backgroundColor: "transparent",
-      marginLeft: 4
+      marginLeft: 4,
     },
     actionButton: {
       width: 36,
       height: 36,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       backgroundColor: colors.background,
       borderWidth: 1,
       padding: 8,
       borderRadius: 8,
       marginLeft: "auto",
-      marginHorizontal: 8
+      marginHorizontal: 8,
     },
     downloadButton: {
-      borderColor: colors.primary + '50',
+      borderColor: colors.primary + "50",
       backgroundColor: colors.notification + "20",
     },
     deleteButton: {
-      borderColor: '#FF000050', // Error with opacity
+      borderColor: "#FF000050", // Error with opacity
     },
     cancelButton: {
       width: 36,
       height: 36,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#FF000010', // Error with opacity
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "#FF000010", // Error with opacity
       borderWidth: 1,
-      borderColor: '#FF000030', // Error with opacity
+      borderColor: "#FF000030", // Error with opacity
 
       padding: 8,
       borderRadius: 8,
       marginLeft: "auto",
-      marginHorizontal: 8
+      marginHorizontal: 8,
+    },
+    retryButton: {
+      borderColor: colors.notification + "50",
+      backgroundColor: colors.notification + "20",
+    },
+    queuedIndicator: {
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      backgroundColor: colors.notification + "20",
+      borderRadius: 8,
+    },
+    queuedText: {
+      fontSize: 12,
+      color: colors.notification,
+      fontWeight: "600",
     },
     sizeContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginTop: 4,
       marginBottom: 8,
       backgroundColor: "transparent",
     },
     sizeText: {
-      color: colors.text + '80',
+      color: colors.text + "80",
       fontSize: 14,
       marginLeft: 6,
     },
     progressContainer: {
       marginVertical: 12,
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       backgroundColor: "transparent",
     },
     progressText: {
       marginLeft: 8,
       fontSize: 14,
       color: colors.primary,
-      fontWeight: '600',
+      fontWeight: "600",
     },
     unzipText: {
       marginTop: 8,
-      color: colors.text + '80',
+      color: colors.text + "80",
       fontSize: 14,
     },
     errorContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: '#FF000015', // Error background with opacity
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: "#FF000015", // Error background with opacity
       padding: 10,
       borderRadius: 8,
       marginTop: 8,
     },
     errorText: {
-      color: '#FF0000', // Error color
+      color: "#FF0000", // Error color
       marginLeft: 8,
       flex: 1,
       fontSize: 14,
@@ -722,7 +822,7 @@ const getStyles = ({ colors, dark = false }: TTheme) =>
     detailsContainer: {
       marginTop: 12,
       padding: 12,
-      backgroundColor: colors.background + '50',
+      backgroundColor: colors.background + "50",
       borderRadius: 8,
       borderWidth: 1,
       borderColor: colors.border,
@@ -731,21 +831,21 @@ const getStyles = ({ colors, dark = false }: TTheme) =>
       marginBottom: 12,
     },
     descriptionText: {
-      color: colors.text + '90',
+      color: colors.text + "90",
       fontSize: 14,
       lineHeight: 20,
     },
     detailRow: {
-      flexDirection: 'row',
+      flexDirection: "row",
       marginVertical: 4,
-      alignItems: 'center',
+      alignItems: "center",
       backgroundColor: "transparent",
     },
     detailLabel: {
-      color: colors.text + '70',
+      color: colors.text + "70",
       width: 90,
       fontSize: 14,
-      fontWeight: '500',
+      fontWeight: "500",
     },
     detailValue: {
       color: colors.text,

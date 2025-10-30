@@ -2,7 +2,13 @@ import { useMyTheme } from "@/context/ThemeContext";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 import { Stack } from "expo-router";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   BackHandler,
   Platform,
@@ -14,7 +20,10 @@ import {
 } from "react-native";
 
 import BottomModal from "@/components/BottomModal";
-import { singleScreenHeader, SingleScreenHeaderProps } from "@/components/common/singleScreenHeader";
+import {
+  singleScreenHeader,
+  SingleScreenHeaderProps,
+} from "@/components/common/singleScreenHeader";
 import DatabaseDownloadItem from "@/components/DatabaseDownloadItem";
 import TabNavigation from "@/components/DownloadManagerTab";
 import FileList from "@/components/FileList";
@@ -27,6 +36,7 @@ import bibleDatabases from "@/constants/bibleDatabases";
 import { useNetwork } from "@/context/NetworkProvider";
 import useDebounce from "@/hooks/useDebounce";
 import useParams from "@/hooks/useParams";
+import { useDownloadManager } from "@/hooks/useDownloadManager";
 import { DownloadBibleItem, ModulesFilters, TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
@@ -34,7 +44,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 type DownloadManagerProps = {};
 
 const DownloadManager: React.FC<DownloadManagerProps> = () => {
-  const { filter } = useParams<{ filter: ModulesFilters }>()
+  const { filter } = useParams<{ filter: ModulesFilters }>();
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const [isMyDownloadTab, setIsMyDownloadTab] = useState(false);
@@ -43,20 +53,34 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const debouncedSearchText = useDebounce(searchText, 500);
   const netInfo = useNetwork();
-  const { isConnected } = netInfo
-  const [selectedFilter, setSelectedFilter] = useState(filter || ModulesFilters.ALL)
+  const { isConnected } = netInfo;
+  const [selectedFilter, setSelectedFilter] = useState(
+    filter || ModulesFilters.ALL
+  );
   const sortRef = useRef<BottomSheetModal>(null);
+
+  // Download manager hook
+  const {
+    activeDownloads,
+    queuedDownloads,
+    completedDownloads,
+    clearCompleted,
+  } = useDownloadManager();
 
   const databasesToDownload: DownloadBibleItem[] = useMemo(() => {
     switch (selectedFilter) {
       case ModulesFilters.ALL:
-        return bibleDatabases
+        return bibleDatabases;
       case ModulesFilters.BIBLES:
-        return bibleDatabases.filter(option => !option.storedName.split('.')[1])
+        return bibleDatabases.filter(
+          (option) => !option.storedName.split(".")[1]
+        );
       case ModulesFilters.DICTIONARIES:
-        return bibleDatabases.filter(option => option.storedName.includes('.dictionary'))
+        return bibleDatabases.filter((option) =>
+          option.storedName.includes(".dictionary")
+        );
       default:
-        return bibleDatabases
+        return bibleDatabases;
     }
   }, [selectedFilter]);
 
@@ -134,16 +158,16 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
   const filteredDatabases = useMemo(() => {
     return debouncedSearchText
       ? databasesToDownload.filter(
-        (version) =>
-          removeAccent(version.name)
-            .toLowerCase()
-            .includes(removeAccent(debouncedSearchText).toLowerCase()) ||
-          removeAccent(version.storedName)
-            .toLowerCase()
-            .includes(removeAccent(debouncedSearchText).toLowerCase())
-      )
+          (version) =>
+            removeAccent(version.name)
+              .toLowerCase()
+              .includes(removeAccent(debouncedSearchText).toLowerCase()) ||
+            removeAccent(version.storedName)
+              .toLowerCase()
+              .includes(removeAccent(debouncedSearchText).toLowerCase())
+        )
       : databasesToDownload;
-  }, [debouncedSearchText, databasesToDownload])
+  }, [debouncedSearchText, databasesToDownload]);
 
   const NoModulesFound = () => (
     <View style={styles.emptyStateContainer}>
@@ -167,14 +191,25 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
       title: "Gestor de Módulos",
       titleIcon: "Download",
       headerRightProps: {
-        headerRightIcon: "ListFilter",
+        headerRightIcon:
+          completedDownloads.length > 0 && isMyDownloadTab
+            ? "Trash2"
+            : "ListFilter",
         headerRightIconColor: theme.colors.text,
-        onPress: () => sortHandlePresentModalPress(),
-        disabled: isMyDownloadTab,
-        style: { opacity: isMyDownloadTab ? 0 : 1 },
+        onPress: () => {
+          if (completedDownloads.length > 0 && isMyDownloadTab) {
+            clearCompleted();
+          } else {
+            sortHandlePresentModalPress();
+          }
+        },
+        disabled: isMyDownloadTab && completedDownloads.length === 0,
+        style: {
+          opacity: isMyDownloadTab && completedDownloads.length === 0 ? 0 : 1,
+        },
       },
-    } as SingleScreenHeaderProps
-  }, [theme.colors, isMyDownloadTab]);
+    } as SingleScreenHeaderProps;
+  }, [theme.colors, isMyDownloadTab, completedDownloads.length]);
 
   const handleFilter = (filterOption: ModulesFilters) => {
     setSelectedFilter(filterOption);
@@ -184,6 +219,27 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
   if (!isConnected && !isMyDownloadTab) {
     return <NoInternetSplash />;
   }
+
+  // ✅ Memoize render functions for better performance
+  const renderItem = useCallback(
+    (props: any) => (
+      <DatabaseDownloadItem {...{ theme, isConnected, ...props }} />
+    ),
+    [theme, isConnected]
+  );
+
+  const keyExtractor = useCallback(
+    (item: DownloadBibleItem) => `download-${item.storedName}`,
+    []
+  );
+
+  // ✅ Get item type for recycling optimization
+  const getItemType = useCallback((item: DownloadBibleItem) => {
+    if (item.disabled) return "disabled";
+    if (item.storedName.includes(".dictionary")) return "dictionary";
+    if (item.storedName.includes(".commentaries")) return "commentary";
+    return "bible";
+  }, []);
 
   const renderTab = useCallback(() => {
     return isMyDownloadTab ? (
@@ -203,26 +259,35 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
                 {filteredDatabases.length <= 1 ? "Disponible" : "Disponibles"}{" "}
               </Text>
             </View>
-            {!isConnected && (
-              <View style={styles.offlineIndicator}>
-                <Icon
-                  name="WifiOff"
-                  size={16}
-                  color="#e74856"
-                />
-              </View>
-            )}
+            <View style={{ flexDirection: "row", gap: 8 }}>
+              {(activeDownloads.length > 0 || queuedDownloads.length > 0) && (
+                <View style={styles.downloadQueueIndicator}>
+                  <Icon
+                    name="Download"
+                    size={14}
+                    color={theme.colors.primary}
+                  />
+                  <Text style={styles.downloadQueueText}>
+                    {activeDownloads.length}
+                    {queuedDownloads.length > 0 &&
+                      ` (+${queuedDownloads.length})`}
+                  </Text>
+                </View>
+              )}
+              {!isConnected && (
+                <View style={styles.offlineIndicator}>
+                  <Icon name="WifiOff" size={16} color="#e74856" />
+                </View>
+              )}
+            </View>
           </RNView>
         }
         contentContainerStyle={styles.listContent}
-        // ItemSeparatorComponent={() => <View style={styles.separator} />}
-        renderItem={(props) => (
-          <DatabaseDownloadItem {...{ theme, isConnected, ...props }} />
-        )}
+        renderItem={renderItem}
         data={filteredDatabases}
-        keyExtractor={(item: DownloadBibleItem) =>
-          `download-${item.storedName}`
-        }
+        keyExtractor={keyExtractor}
+        // ✅ FlashList performance optimizations
+        getItemType={getItemType} // Enable item recycling for better performance
         ListEmptyComponent={debouncedSearchText ? <NoModulesFound /> : null}
         refreshControl={
           <RefreshControl
@@ -233,8 +298,20 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
           />
         }
       />
-    )
-  }, [isMyDownloadTab, filteredDatabases])
+    );
+  }, [
+    isMyDownloadTab,
+    filteredDatabases,
+    activeDownloads.length,
+    queuedDownloads.length,
+    renderItem,
+    keyExtractor,
+    getItemType,
+    refreshing,
+    debouncedSearchText,
+    theme.colors,
+    isConnected,
+  ]);
 
   return (
     <>
@@ -249,7 +326,9 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
             <View style={styles.titleContainer}>
               {!isMyDownloadTab && AnimatedSearchBar()}
             </View>
-            <TabNavigation {...{ isMyDownloadTab, setIsMyDownloadTab, theme }} />
+            <TabNavigation
+              {...{ isMyDownloadTab, setIsMyDownloadTab, theme }}
+            />
           </View>
 
           {renderTab()}
@@ -261,7 +340,9 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
             startAT={0}
             style={{
               borderColor: "transparent",
-              backgroundColor: theme.dark ? theme.colors.background : theme.colors.background,
+              backgroundColor: theme.dark
+                ? theme.colors.background
+                : theme.colors.background,
               width: "100%",
             }}
             ref={sortRef}
@@ -272,7 +353,7 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
               onSelect={(value) => handleFilter(value)}
               options={Object.values(ModulesFilters)}
               value={selectedFilter}
-              buttonText='Filtrar'
+              buttonText="Filtrar"
             />
           </BottomModal>
         </View>
@@ -287,7 +368,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
       flex: 1,
       paddingHorizontal: 16,
       // backgroundColor: 'red'
-
     },
     headerContainer: {
       paddingBottom: 8,
@@ -404,7 +484,21 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontSize: 12,
       fontWeight: "600",
       marginLeft: 4,
-    }
+    },
+    downloadQueueIndicator: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: colors.primary + "20",
+      paddingHorizontal: 12,
+      paddingVertical: 4,
+      borderRadius: 16,
+    },
+    downloadQueueText: {
+      color: colors.primary,
+      fontSize: 12,
+      fontWeight: "600",
+      marginLeft: 4,
+    },
   });
 
 export default DownloadManager;

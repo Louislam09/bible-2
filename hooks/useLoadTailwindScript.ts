@@ -8,7 +8,6 @@ const useLoadTailwindScript = () => {
     useEffect(() => {
         const loadTailwindScript = async () => {
             try {
-                console.log('Loading tailwind script...');
                 const asset = Asset.fromModule(require('../assets/tailwind.txt'));
                 await asset.downloadAsync();
                 const tailwindScript = await FileSystem.readAsStringAsync(
@@ -16,6 +15,7 @@ const useLoadTailwindScript = () => {
                 );
 
                 setTailwindScript(`<script defer>${tailwindScript}</script>`);
+                console.log('Tailwind script loaded successfully');
             } catch (error) {
                 console.error('Error loading tailwind script:', error);
             }

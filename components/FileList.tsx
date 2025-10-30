@@ -3,6 +3,7 @@ import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { VersionItem } from "@/hooks/useInstalledBible";
+import { useDownloadManager } from "@/hooks/useDownloadManager";
 import { TTheme } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
@@ -16,6 +17,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Icon from "./Icon";
+import ProgressBar from "./home/footer/ProgressBar";
 import { Text, View } from "./Themed";
 import { storedData$ } from "@/context/LocalstoreContext";
 
@@ -26,6 +28,7 @@ const FileList = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [listRevision, setListRevision] = useState<number>(0);
   const {
     refreshDatabaseList,
     installedBibles,
@@ -35,6 +38,8 @@ const FileList = () => {
     greekInterlinearService: interlinearGreekService,
   } = useDBContext();
   const { selectBibleVersion } = useBibleContext();
+  const { getDownloadStatus, isDownloading, removeCompleted } =
+    useDownloadManager();
 
   const extractionPath = `${FileSystem.documentDirectory}SQLite/`;
 
@@ -58,14 +63,26 @@ const FileList = () => {
     setRefreshing(true);
     try {
       console.log("Refreshing files...");
-      refreshDatabaseList();
-      await fetchFiles();
+      await refreshDatabaseList();
+      setListRevision((prev) => prev + 1);
     } finally {
       setRefreshing(false);
     }
-  }, []);
+  }, [refreshDatabaseList]);
 
   const deleteFile = async (item: VersionItem) => {
+    // Check if file is currently being downloaded
+    const downloadingFile = isDownloading(item.shortName.replace(/.db$/, ""));
+
+    if (downloadingFile) {
+      Alert.alert(
+        "Descarga en progreso",
+        "No se puede eliminar un archivo que se está descargando. Por favor, cancela la descarga primero.",
+        [{ text: "Entendido", style: "cancel" }]
+      );
+      return;
+    }
+
     Alert.alert(
       "Eliminar módulo",
       `¿Estás seguro que deseas eliminar "${item.name}"?`,
@@ -80,6 +97,8 @@ const FileList = () => {
           onPress: async () => {
             try {
               const fileUri = item.path;
+
+              // Delete all database files
               await FileSystem.deleteAsync(fileUri, { idempotent: true });
               await FileSystem.deleteAsync(`${fileUri}-wal`, {
                 idempotent: true,
@@ -87,13 +106,27 @@ const FileList = () => {
               await FileSystem.deleteAsync(`${fileUri}-shm`, {
                 idempotent: true,
               });
+
+              // Update stored data
               const dbTableCreated = storedData$.dbTableCreated.get();
               storedData$.dbTableCreated.set(
                 dbTableCreated.filter((db: string) => db !== item.shortName)
               );
-              refreshDatabaseList();
-              await onRefresh();
+
+              // Clear download manager state for this file
+              const storedNameWithoutExt = item.shortName.replace(/.db$/, "");
+              removeCompleted(storedNameWithoutExt);
+
+              // Refresh the database list and wait for it to complete
+              await refreshDatabaseList();
+
+              // Increment list revision to force re-render
+              setListRevision((prev) => prev + 1);
+
+              // Select default bible if needed
               selectBibleVersion(defaultDatabases[0]);
+
+              console.log("File deleted and list refreshed:", item.shortName);
             } catch (err) {
               setError("Error deleting file");
               console.error("Error deleting file:", err);
@@ -107,6 +140,14 @@ const FileList = () => {
   useEffect(() => {
     fetchFiles();
   }, []);
+
+  // Re-render when installed databases change
+  useEffect(() => {
+    console.log("Installed databases changed:", {
+      bibles: installedBibles.length,
+      dictionaries: installedDictionary.length,
+    });
+  }, [installedBibles, installedDictionary]);
 
   const EmptyComponent = () => (
     <View style={styles.emptyContainer}>
@@ -199,8 +240,15 @@ const FileList = () => {
     ({ item, index }: { item: VersionItem; index: number }) => {
       const versionItem = item;
       const allowDelete = !defaultDatabases.includes(versionItem?.id as string);
-      // const allowDelete = !defaultDatabases.includes(versionItem?.id as string);
       const isBible = index < installedBibles.length;
+
+      // Check download status
+      const storedNameWithoutExt =
+        versionItem?.shortName?.replace(/.db$/, "") || "";
+      const downloadStatus = getDownloadStatus(storedNameWithoutExt);
+      const isCurrentlyDownloading =
+        downloadStatus?.status === "downloading" ||
+        downloadStatus?.status === "unzipping";
 
       return (
         <View>
@@ -220,14 +268,27 @@ const FileList = () => {
             </View>
 
             <View style={styles.itemContent}>
-              <Text
-                style={[
-                  styles.itemTitle,
-                  !allowDelete && { color: theme.colors.notification },
-                ]}
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
               >
-                {versionItem?.shortName || "-"}
-              </Text>
+                <Text
+                  style={[
+                    styles.itemTitle,
+                    !allowDelete && { color: theme.colors.notification },
+                  ]}
+                >
+                  {versionItem?.shortName || "-"}
+                </Text>
+                {isCurrentlyDownloading && (
+                  <View style={styles.downloadingBadge}>
+                    <Text style={styles.downloadingBadgeText}>
+                      {downloadStatus?.status === "unzipping"
+                        ? "Procesando..."
+                        : "Descargando..."}
+                    </Text>
+                  </View>
+                )}
+              </View>
               <Text
                 style={[
                   styles.itemSubTitle,
@@ -236,14 +297,25 @@ const FileList = () => {
               >
                 {versionItem?.name || "-"}
               </Text>
-              {!allowDelete && (
+              {!allowDelete && !isCurrentlyDownloading && (
                 <View style={styles.defaultBadge}>
                   <Text style={styles.defaultBadgeText}>Predeterminado</Text>
                 </View>
               )}
+              {isCurrentlyDownloading && downloadStatus && (
+                <View style={styles.progressContainer}>
+                  <ProgressBar
+                    height={4}
+                    color={theme.colors.primary}
+                    barColor={theme.colors.border}
+                    progress={downloadStatus.progress}
+                    circleColor={theme.colors.notification}
+                  />
+                </View>
+              )}
             </View>
 
-            {!allowDelete && (
+            {!allowDelete && !isCurrentlyDownloading && (
               <TouchableOpacity
                 style={styles.redownloadButton}
                 onPress={() => refreshDatabase(versionItem!)}
@@ -256,19 +328,19 @@ const FileList = () => {
               </TouchableOpacity>
             )}
 
-            {/* {allowDelete && ( */}
-            <TouchableOpacity
-              style={styles.deleteButton}
-              onPress={() => deleteFile(item)}
-            >
-              <Icon name="Trash2" size={20} color="#e74856" />
-            </TouchableOpacity>
-            {/* )} */}
+            {!isCurrentlyDownloading && (
+              <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={() => deleteFile(item)}
+              >
+                <Icon name="Trash2" size={20} color="#e74856" />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       );
     },
-    [theme]
+    [theme, getDownloadStatus, installedBibles, installedDictionary]
   );
 
   if (loading) {
@@ -284,9 +356,12 @@ const FileList = () => {
     return <ErrorComponent />;
   }
 
+  const listData = [...installedBibles, ...installedDictionary];
+
   return (
     <FlashList
-      data={[...installedBibles, ...installedDictionary]}
+      key={`file-list-${listData.length}-${listRevision}`}
+      data={listData}
       renderItem={renderItem}
       keyExtractor={(item) => item.id}
       contentContainerStyle={styles.listContent}
@@ -444,6 +519,21 @@ const getStyles = ({ colors, dark }: TTheme) =>
       backgroundColor: colors.notification + "20",
       marginLeft: "auto",
       marginHorizontal: 8,
+    },
+    downloadingBadge: {
+      backgroundColor: colors.primary + "20",
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+      borderRadius: 12,
+    },
+    downloadingBadgeText: {
+      fontSize: 10,
+      fontWeight: "600",
+      color: colors.primary,
+    },
+    progressContainer: {
+      marginTop: 8,
+      width: "100%",
     },
   });
 

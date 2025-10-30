@@ -90,7 +90,9 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   } = useInstalledBibles();
 
   const currentDbName = useMemo(
-    () => installedBibles?.find((x) => x.id === currentBibleVersion),
+    () =>
+      installedBibles?.find((x) => x.id === currentBibleVersion) ||
+      installedBibles[0],
     [installedBibles, currentBibleVersion]
   );
 
