@@ -7,6 +7,8 @@ import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { WebView } from "react-native-webview";
 import BottomModal from "../BottomModal";
+import useLoadTailwindScript, { getTailwindStyleTag } from "@/hooks/useLoadTailwindScript";
+import { storedData$ } from "@/context/LocalstoreContext";
 
 interface FontSelectorBottomSheetProps {
   bottomSheetRef: React.RefObject<BottomSheetModal | null>;
@@ -27,7 +29,8 @@ interface FontItem {
 const getHTMLContent = (
   quotesData: any,
   selectedThemeId: string | null,
-  theme: TTheme
+  theme: TTheme,
+  tailwindScript?: string
 ) => {
   // Collect all unique fonts from the quotes data with their details
   const fontsMap = new Map<string, FontItem>();
@@ -72,6 +75,9 @@ const getHTMLContent = (
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     ${fontImports}
+    ${tailwindScript}
+    ${getTailwindStyleTag({ theme, fontSize: storedData$.fontSize.get() })}
+
     <style>
         * {
             margin: 0;
@@ -176,20 +182,21 @@ const getHTMLContent = (
 
         .font-item {
             flex-shrink: 0;
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 110px;
             scroll-snap-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             cursor: pointer;
             transform-origin: center;
+            gap: 6px;
         }
 
         .font-circle {
-            width: 100%;
-            height: 100%;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
             backdrop-filter: blur(20px);
@@ -200,7 +207,7 @@ const getHTMLContent = (
             align-items: center;
             justify-content: center;
             gap: 6px;
-            transition: background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
+            transition: background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             position: relative;
             overflow: hidden;
@@ -232,23 +239,24 @@ const getHTMLContent = (
         }
 
         .font-name {
-            font-size: 9px;
+            font-size: 11px;
             font-weight: 500;
-            color: ${theme.colors.text + "70"};
+            color: ${theme.colors.text + "80"};
             text-align: center;
-            max-width: 90%;
+            max-width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            transition: color 0.3s ease, font-weight 0.3s ease;
+            transition: color 0.3s ease, font-weight 0.3s ease, font-size 0.3s ease;
+            margin-top: 2px;
         }
 
 
         .font-item.center .font-circle {
-            background: linear-gradient(135deg, ${theme.colors.primary + "30"
-    } 0%, ${theme.colors.primary + "15"} 100%);
+            background: linear-gradient(135deg, ${theme.colors.primary + "30"} 0%, ${theme.colors.primary + "15"} 100%);
             border: 3px solid ${theme.colors.primary + "60"};
             box-shadow: 0 12px 48px ${theme.colors.text + "40"};
+            transform: scale(1.05);
         }
 
         .font-item.center .font-preview {
@@ -259,6 +267,7 @@ const getHTMLContent = (
         .font-item.center .font-name {
             color: ${theme.colors.text};
             font-weight: 600;
+            font-size: 12px;
         }
 
         .font-item.selected .font-circle {
@@ -272,8 +281,7 @@ const getHTMLContent = (
             width: 22px;
             height: 22px;
             border-radius: 50%;
-            background: linear-gradient(135deg, ${theme.colors.notification
-    } 0%, ${theme.colors.notification + "70"} 100%);
+            background: linear-gradient(135deg, ${theme.colors.notification} 0%, ${theme.colors.notification + "70"} 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -343,6 +351,8 @@ const getHTMLContent = (
 
             .font-item.center .font-name {
                 color: rgba(0, 0, 0, 0.9);
+                font-weight: 600;
+                font-size: 12px;
             }
 
             .loading {
@@ -451,8 +461,8 @@ const getHTMLContent = (
             const content = document.getElementById('content');
 
             let html = \`
-                <div class="carousel-container">
-                    <div class="carousel-wrapper" id="carousel-wrapper">
+                <div class="carousel-container ">
+                    <div class="carousel-wrapper !py-2 " id="carousel-wrapper">
             \`;
             
             fonts.forEach(font => {
@@ -466,6 +476,7 @@ const getHTMLContent = (
                                 \${font.previewText}
                             </div>
                         </div>
+                        <div class="font-name">\${font.name}</div>
                     </div>
                 \`;
             });
@@ -531,6 +542,7 @@ const FontSelectorBottomSheet: React.FC<FontSelectorBottomSheetProps> = ({
   const { theme } = useMyTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const webViewRef = useRef<WebView>(null);
+  const tailwindScript = useLoadTailwindScript()
   const handleThemeSelect = useCallback(
     (themeItem: TQuoteDataItem) => {
       onThemeSelect(themeItem);
@@ -563,8 +575,8 @@ const FontSelectorBottomSheet: React.FC<FontSelectorBottomSheetProps> = ({
   );
 
   const htmlContent = useMemo(() => {
-    return getHTMLContent(QUOTES_DATA, selectedTheme?.id || null, theme);
-  }, [theme]);
+    return getHTMLContent(QUOTES_DATA, selectedTheme?.id || null, theme, tailwindScript);
+  }, [theme, tailwindScript]);
 
   return (
     <BottomModal
