@@ -55,13 +55,13 @@ const COLORS = [
 type FontType = {
   readonly label: "Aa";
   readonly fontFamily:
-    | "System"
-    | "serif"
-    | "sans-serif"
-    | "monospace"
-    | "cursive"
-    | "fantasy"
-    | "emoji";
+  | "System"
+  | "serif"
+  | "sans-serif"
+  | "monospace"
+  | "cursive"
+  | "fantasy"
+  | "emoji";
   readonly fontWeight: "400" | "700";
 };
 
@@ -164,7 +164,7 @@ const Quote: React.FC<QuoteProps> = () => {
       Alert.alert(
         "Error",
         "No se pudo compartir la cita: " +
-          (error?.message || "Error desconocido")
+        (error?.message || "Error desconocido")
       );
     } finally {
       setIsLoading(false);
@@ -279,8 +279,6 @@ const Quote: React.FC<QuoteProps> = () => {
                           width: storyItemDimensions.width,
                           height: storyItemDimensions.height,
                           backgroundColor: "transparent",
-                          // borderWidth: isCurrent ? 1 : 0,
-                          // borderColor: isCurrent ? "red" : "transparent",
                         }}
                       >
                         <ViewShot
@@ -314,10 +312,20 @@ const Quote: React.FC<QuoteProps> = () => {
                                 ),
                             }}
                             scrollEnabled={false}
-                            onError={(syntheticEvent) => {
-                              const { nativeEvent = {} } = syntheticEvent;
-                              console.warn("WebView error: ", nativeEvent);
-                            }}
+                            renderLoading={() => <View
+                              style={{
+                                backgroundColor: theme.colors.background,
+                                flex: 1,
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                zIndex: 1000,
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            />}
                             {...createOptimizedWebViewProps({}, "static")}
                           />
                         </ViewShot>

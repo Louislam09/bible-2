@@ -13,7 +13,7 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useMyTheme } from "@/context/ThemeContext";
-import { SheetContent } from "./sheet-content";
+import { AudioPlayerSheetContent } from "./sheet-content";
 
 export const EasingsUtils = {
   // https://www.easing.dev/in-out-base
@@ -31,7 +31,7 @@ const Palette = {
 const MiniPlayerHeight = 64;
 const ExpandedSheetMutableProgress = makeMutable(0);
 
-export const ExpandedSheet = () => {
+export const AudioPlayerExpandedSheet = () => {
   const { height: windowHeight } = useWindowDimensions();
   const progress = ExpandedSheetMutableProgress;
   const { theme } = useMyTheme();
@@ -155,7 +155,7 @@ export const ExpandedSheet = () => {
           <View style={styles.knob} />
         </Animated.View>
 
-        <SheetContent progress={progress} timeProgress="00:00" />
+        <AudioPlayerSheetContent progress={progress} timeProgress="00:00" />
       </Animated.View>
     </GestureDetector>
   );

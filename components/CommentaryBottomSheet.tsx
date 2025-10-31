@@ -1,21 +1,23 @@
 import { View } from "@/components/Themed";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { commentaryCss } from "@/constants/commentaryCss";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useCommentaryData from "@/hooks/useCommentaryData";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
+import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
 import { ModulesFilters, Screens, TTheme } from "@/types";
 import { lucideIcons } from "@/utils/lucideIcons";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import * as Clipboard from "expo-clipboard";
 import { useRouter } from "expo-router";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { StyleSheet } from "react-native";
 import WebView from "react-native-webview";
+import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import BottomModal from "./BottomModal";
-import { commentaryCss } from "@/constants/commentaryCss";
 
 interface CommentaryBottomSheetProps {
   bookNumber: number;
@@ -157,12 +159,66 @@ const createCommentaryHTML = (
           color: ${colors.text};
           -webkit-font-smoothing: antialiased;
         }
+        a {
+          color: ${colors.notification};
+          text-decoration: none;
+          font-weight: 600;
+          transition: opacity 0.2s ease;
+          border-bottom: 1px solid ${colors.notification}40;
+        }
+        a:hover {
+          opacity: 0.8;
+          border-bottom-color: ${colors.notification};
+        }
+        a:active {
+          opacity: 0.6;
+        }
         .tab { transition: all 0.2s; cursor: pointer; }
         .tab.active { background: ${colors.notification
     } !important; color: white !important; }
         .commentary-card { animation: fadeIn 0.3s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .tabs-container::-webkit-scrollbar { display: none; }
+        .collapse-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          cursor: pointer;
+          user-select: none;
+          transition: all 0.2s ease;
+        }
+        .collapse-header:hover {
+          opacity: 0.8;
+        }
+        .collapse-header:active {
+          transform: scale(0.98);
+        }
+        .collapse-icon {
+          transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          display: inline-flex;
+          margin-left: 8px;
+          transform-origin: center;
+        }
+        .collapse-icon.collapsed {
+          transform: rotate(-180deg);
+        }
+        .collapsible-content {
+          max-height: 10000px;
+          overflow: hidden;
+          transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                      opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                      margin-top 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                      transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          opacity: 1;
+          margin-top: 12px;
+          transform: translateY(0);
+        }
+        .collapsible-content.collapsed {
+          max-height: 0;
+          opacity: 0;
+          margin-top: 0;
+          transform: translateY(-10px);
+        }
       </style>
       
     </head>
@@ -210,13 +266,13 @@ const createCommentaryHTML = (
           <div class="tab-content ${sourceIdx === 0 ? "" : "hidden"
           }" data-content="${sourceIdx}">
             ${source.commentaries
-            .map((commentary: any) => {
+            .map((commentary: any, commentaryIdx: number) => {
               const commentaryRef = `${bookName} ${commentary.chapter_number_from
                 }:${commentary.verse_number_from}${commentary.verse_number_to !== commentary.verse_number_from
                   ? `-${commentary.verse_number_to}`
                   : ""
                 }`;
-              // const cleanText = commentary.text.replace(/<[^>]*>/g, "");
+              const cardId = `card-${sourceIdx}-${commentaryIdx}`;
 
               return `
               ${source.dbShortName === "Comentario Bíblico Beacon" ? `
@@ -229,12 +285,21 @@ const createCommentaryHTML = (
                 </style>
               ` : ""}
                 <div class="commentary-card bg-theme-card rounded-2xl p-5 mb-4 border border-theme-border">
-                   <div class="inline-flex items-center gap-2 py-1 rounded-lg mb-3">
-                      <span class="text-theme-notification text-xs">${lucideIcons.bookMarked}</span>
-                      <span class="text-base font-semibold text-theme-notification">${commentaryRef}</span>
+                  <div class="collapse-header" onclick="toggleCollapse('${cardId}')">
+                    <div class="flex-1">
+                      <div class="inline-flex items-center gap-2 py-1 rounded-lg mb-2">
+                        <span class="text-theme-notification text-xs">${lucideIcons.bookMarked}</span>
+                        <span class="text-base font-semibold text-theme-notification">${commentaryRef}</span>
+                      </div>
+                      <h3 class="text-lg font-bold">Comentario de ${source.dbShortName}</h3>
                     </div>
-                  <h3 class="text-lg font-bold mb-3">Comentario de ${source.dbShortName}</h3>
-                  <p class="leading-relaxed opacity-90">${commentary.text.replace("noshade", "class='my-4")}</p>
+                    <span class="collapse-icon collapsed text-theme-notification" id="icon-${cardId}">
+                      ${lucideIcons["chevron-down"]}
+                    </span>
+                  </div>
+                  <div class="collapsible-content collapsed" id="${cardId}">
+                    <p class="leading-relaxed opacity-90">${commentary.text.replace("noshade", "class='my-4")}</p>
+                  </div>
                 </div>
               `;
             })
@@ -277,6 +342,16 @@ const createCommentaryHTML = (
           });
         }
 
+        function toggleCollapse(cardId) {
+          const content = document.getElementById(cardId);
+          const icon = document.getElementById('icon-' + cardId);
+          
+          if (content && icon) {
+            content.classList.toggle('collapsed');
+            icon.classList.toggle('collapsed');
+          }
+        }
+
         function handleShare() {
           const source = commentaryData[currentTab];
           if (source && source.commentaries.length > 0) {
@@ -315,7 +390,6 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
   const { printToFile } = usePrintAndShare();
   const router = useRouter();
   const webViewRef = useRef<WebView>(null);
-  const [hasLoaded, setHasLoaded] = useState(false);
 
   const { data, error, loading } = useCommentaryData({
     databases: dbNames,
@@ -404,6 +478,45 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
     [reference, bookName, chapter, verse, printToFile, router]
   );
 
+  const onShouldStartLoadWithRequest = useCallback((event: ShouldStartLoadRequest) => {
+    const { url } = event;
+
+    // Handle Bible reference links (e.g., b:20 4:1-17)
+    if (url.startsWith("b:")) {
+      try {
+        const match = url.match(/b:(\d+)\s+(\d+):(\d+)(?:-(\d+))?/);
+        if (match) {
+          const [, bookNumber, chapterNum, verseStart] = match;
+          const currentBook = DB_BOOK_NAMES.find(
+            (x) => x.bookNumber === +bookNumber
+          );
+
+          if (currentBook) {
+            const queryInfo = {
+              book: currentBook.longName,
+              chapter: +chapterNum,
+              verse: +verseStart || 0,
+            };
+
+            bibleState$.changeBibleQuery({
+              ...queryInfo,
+              shouldFetch: true,
+              isHistory: false,
+            });
+
+            modalState$.commentaryRef.current?.dismiss();
+          }
+        }
+      } catch (error) {
+        console.error("Error handling Bible reference:", error);
+      }
+      return false;
+    }
+
+    // Allow normal navigation for other URLs
+    return true;
+  }, [router]);
+
   return (
     <BottomModal
       style={styles.bottomSheet}
@@ -412,27 +525,12 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
       ref={modalState$.commentaryRef.get()}
       justOneSnap
       showIndicator
-      justOneValue={["90%"]}
+      justOneValue={["40%", "90%"]}
       startAT={0}
-      onDismiss={() => {
-        setHasLoaded(false);
-      }}
+      onDismiss={() => { }}
     >
       <View style={styles.webviewWrapper}>
-        {!hasLoaded && (
-          <View
-            style={{
-              backgroundColor: theme.colors.background,
-              flex: 1,
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: 1000,
-            }}
-          />
-        )}
+
         <WebView
           ref={webViewRef}
           originWhitelist={["*"]}
@@ -448,13 +546,21 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
           showsVerticalScrollIndicator={true}
           nestedScrollEnabled={true}
           onMessage={handleMessage}
-          onLoadEnd={() => {
-            setHasLoaded(true);
-          }}
-          onError={(syntheticEvent) => {
-            const { nativeEvent = {} } = syntheticEvent;
-            console.warn("WebView error: ", nativeEvent);
-          }}
+          onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+          renderLoading={() => <View
+            style={{
+              backgroundColor: theme.colors.background,
+              flex: 1,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 1000,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          />}
           {...createOptimizedWebViewProps({}, "static")}
         />
       </View>

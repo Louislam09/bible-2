@@ -3,6 +3,7 @@ import Icon from "@/components/Icon";
 import BackgroundImageSelectorBottomSheet from "@/components/quote/BackgroundImageSelectorBottomSheet";
 import FontSelectorBottomSheet from "@/components/quote/FontSelectorBottomSheet";
 import ThemeSelectorBottomSheet from "@/components/quote/ThemeSelectorBottomSheet";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
 import {
   FAMOUS_VERSES,
@@ -173,7 +174,7 @@ const QuoteMaker: React.FC = () => {
     const currentAlign = selectedTheme?.textAlign || "center";
     const nextAlign =
       alignOptions[
-        (alignOptions.indexOf(currentAlign) + 1) % alignOptions.length
+      (alignOptions.indexOf(currentAlign) + 1) % alignOptions.length
       ];
     setSelectedTheme((prev: any) => {
       return {
@@ -191,147 +192,158 @@ const QuoteMaker: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Stack.Screen
-        options={{
-          headerShown: false,
-          // ...singleScreenHeader(screenOptions),
-        }}
-      />
-      {/* header */}
-      <View style={styles.header}>
-        <PressableScale onPress={() => router.push("/(dashboard)")}>
-          <Icon name="ChevronLeft" size={headerIconSize} color="#FFFFFF" />
-        </PressableScale>
+    <ScreenWithAnimation
+      iconColor="#CDAA7D"
+      duration={800}
+      icon="Image"
+      title="Cita Imagen"
+    >
+      <View style={styles.container}>
+        {/* header */}
+        <View style={styles.header}>
+          <PressableScale onPress={() => router.push("/(dashboard)")}>
+            <Icon name="ChevronLeft" size={headerIconSize} color="#FFFFFF" />
+          </PressableScale>
 
-        <PressableScale disabled={actionLoading.share} onPress={handleShare}>
-          {actionLoading.share ? (
-            <ActivityIndicator size="small" color="#FFFFFF" />
+          <PressableScale disabled={actionLoading.share} onPress={handleShare}>
+            {actionLoading.share ? (
+              <ActivityIndicator size="small" color="#FFFFFF" />
+            ) : (
+              <Icon name="Share2" size={headerIconSize} color="#FFFFFF" />
+            )}
+          </PressableScale>
+        </View>
+        <ViewShot
+          ref={viewShotRef}
+          options={{
+            format: "jpg",
+            quality: 1,
+            result: "tmpfile",
+            fileName: selectedVerse?.reference || "",
+          }}
+          style={{
+            flex: 1,
+            width: "100%",
+            backgroundColor: "transparent",
+          }}
+        >
+          {selectedTheme && selectedVerse ? (
+            <ImageBackground
+              source={{
+                uri: selectedTheme.backgroundImageUrl,
+              }}
+              style={styles.backgroundImage}
+              contentFit="cover"
+            >
+              <View style={styles.overlay} />
+
+              <View style={styles.verseContainer}>
+                <WebView
+                  ref={null}
+                  // key={selectedTheme.id}
+                  originWhitelist={["*"]}
+                  style={{
+                    flex: 1,
+                    minWidth: "100%",
+                    backgroundColor: "transparent",
+                  }}
+                  source={{
+                    html: quoteTemplatesMaker(selectedTheme)
+                      .replace(/{{ref}}/g, selectedVerse.reference)
+                      .replace(/{{text}}/g, selectedVerse.text)
+                      .replace(/{{watermarkClass}}/g, watermarkClass),
+                  }}
+                  scrollEnabled={false}
+                  onMessage={handleMessage}
+                  renderLoading={() => <View
+                    style={{
+                      backgroundColor: "transparent",
+                      flex: 1,
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      zIndex: 1000,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  />}
+                  {...createOptimizedWebViewProps({}, "static")}
+                />
+              </View>
+            </ImageBackground>
           ) : (
-            <Icon name="Share2" size={headerIconSize} color="#FFFFFF" />
-          )}
-        </PressableScale>
-      </View>
-      <ViewShot
-        ref={viewShotRef}
-        options={{
-          format: "jpg",
-          quality: 1,
-          result: "tmpfile",
-          fileName: selectedVerse?.reference || "",
-        }}
-        style={{
-          flex: 1,
-          width: "100%",
-          backgroundColor: "transparent",
-        }}
-      >
-        {selectedTheme && selectedVerse ? (
-          <ImageBackground
-            source={{
-              uri: selectedTheme.backgroundImageUrl,
-            }}
-            style={styles.backgroundImage}
-            contentFit="cover"
-          >
-            <View style={styles.overlay} />
-
-            <View style={styles.verseContainer}>
-              <WebView
-                ref={null}
-                // key={selectedTheme.id}
-                originWhitelist={["*"]}
-                style={{
-                  flex: 1,
-                  minWidth: "100%",
-                  backgroundColor: "transparent",
-                }}
-                source={{
-                  html: quoteTemplatesMaker(selectedTheme)
-                    .replace(/{{ref}}/g, selectedVerse.reference)
-                    .replace(/{{text}}/g, selectedVerse.text)
-                    .replace(/{{watermarkClass}}/g, watermarkClass),
-                }}
-                scrollEnabled={false}
-                onMessage={handleMessage}
-                onError={(syntheticEvent) => {
-                  const { nativeEvent = {} } = syntheticEvent;
-                  console.warn("WebView error: ", nativeEvent);
-                }}
-                {...createOptimizedWebViewProps({}, "static")}
-              />
+            <View style={styles.loadingContainer}>
+              <Text style={styles.loadingText}>Loading...</Text>
             </View>
-          </ImageBackground>
-        ) : (
-          <View style={styles.loadingContainer}>
-            <Text style={styles.loadingText}>Loading...</Text>
-          </View>
-        )}
-      </ViewShot>
-
-      <View style={styles.footer}>
-        <PressableScale
-          disabled={actionLoading.save}
-          onPress={handleSave}
-          style={styles.shareButton}
-        >
-          {actionLoading.save ? (
-            <ActivityIndicator size="small" color="#FFFFFF" />
-          ) : (
-            <Icon name="Save" size={24} color="#FFFFFF" />
           )}
-          <Text style={styles.shareText}>Guardar</Text>
-        </PressableScale>
-        <PressableScale
-          onPress={() => backgroundImageSelectorRef.current?.present()}
-          style={[
-            styles.customFontButton,
-            highlightShareButton && styles.highlightedShareButton,
-          ]}
-        >
-          <Icon name="Image" size={24} color="#FFFFFF" />
-          <Text style={styles.shareText}>Fondo</Text>
-        </PressableScale>
-        <PressableScale
-          onPress={() => fontSelectorRef.current?.present()}
-          style={[
-            styles.customFontButton,
-            highlightShareButton && styles.highlightedShareButton,
-          ]}
-        >
-          <Icon name="Type" size={24} color="#FFFFFF" />
-          <Text style={styles.shareText}>Fuentes</Text>
-        </PressableScale>
-        <PressableScale
-          onPress={() => themeSelectorRef.current?.present()}
-          style={styles.galleryButton}
-        >
-          <Icon name="Palette" size={24} color="#FFFFFF" />
-          <Text style={styles.shareText}>Temas</Text>
-        </PressableScale>
+        </ViewShot>
+
+        <View style={styles.footer}>
+          <PressableScale
+            disabled={actionLoading.save}
+            onPress={handleSave}
+            style={styles.shareButton}
+          >
+            {actionLoading.save ? (
+              <ActivityIndicator size="small" color="#FFFFFF" />
+            ) : (
+              <Icon name="Save" size={24} color="#FFFFFF" />
+            )}
+            <Text style={styles.shareText}>Guardar</Text>
+          </PressableScale>
+          <PressableScale
+            onPress={() => backgroundImageSelectorRef.current?.present()}
+            style={[
+              styles.customFontButton,
+              highlightShareButton && styles.highlightedShareButton,
+            ]}
+          >
+            <Icon name="Image" size={24} color="#FFFFFF" />
+            <Text style={styles.shareText}>Fondo</Text>
+          </PressableScale>
+          <PressableScale
+            onPress={() => fontSelectorRef.current?.present()}
+            style={[
+              styles.customFontButton,
+              highlightShareButton && styles.highlightedShareButton,
+            ]}
+          >
+            <Icon name="Type" size={24} color="#FFFFFF" />
+            <Text style={styles.shareText}>Fuentes</Text>
+          </PressableScale>
+          <PressableScale
+            onPress={() => themeSelectorRef.current?.present()}
+            style={styles.galleryButton}
+          >
+            <Icon name="Palette" size={24} color="#FFFFFF" />
+            <Text style={styles.shareText}>Temas</Text>
+          </PressableScale>
+        </View>
+
+        <FontSelectorBottomSheet
+          bottomSheetRef={fontSelectorRef}
+          selectedTheme={selectedTheme}
+          onThemeSelect={handleFontSelect}
+          onClose={() => fontSelectorRef.current?.dismiss()}
+        />
+
+        <ThemeSelectorBottomSheet
+          bottomSheetRef={themeSelectorRef}
+          selectedTheme={selectedTheme}
+          onThemeSelect={handleThemeSelect}
+          onClose={handleCloseThemeSelector}
+        />
+
+        <BackgroundImageSelectorBottomSheet
+          bottomSheetRef={backgroundImageSelectorRef}
+          selectedTheme={selectedTheme}
+          onBackgroundImageSelect={handleBackgroundImageSelect}
+          onClose={() => backgroundImageSelectorRef.current?.dismiss()}
+        />
       </View>
-
-      <FontSelectorBottomSheet
-        bottomSheetRef={fontSelectorRef}
-        selectedTheme={selectedTheme}
-        onThemeSelect={handleFontSelect}
-        onClose={() => fontSelectorRef.current?.dismiss()}
-      />
-
-      <ThemeSelectorBottomSheet
-        bottomSheetRef={themeSelectorRef}
-        selectedTheme={selectedTheme}
-        onThemeSelect={handleThemeSelect}
-        onClose={handleCloseThemeSelector}
-      />
-
-      <BackgroundImageSelectorBottomSheet
-        bottomSheetRef={backgroundImageSelectorRef}
-        selectedTheme={selectedTheme}
-        onBackgroundImageSelect={handleBackgroundImageSelect}
-        onClose={() => backgroundImageSelectorRef.current?.dismiss()}
-      />
-    </View>
+    </ScreenWithAnimation>
   );
 };
 

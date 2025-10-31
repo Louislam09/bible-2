@@ -245,9 +245,8 @@ const getHTMLContent = (
 
 
         .font-item.center .font-circle {
-            background: linear-gradient(135deg, ${
-              theme.colors.primary + "30"
-            } 0%, ${theme.colors.primary + "15"} 100%);
+            background: linear-gradient(135deg, ${theme.colors.primary + "30"
+    } 0%, ${theme.colors.primary + "15"} 100%);
             border: 3px solid ${theme.colors.primary + "60"};
             box-shadow: 0 12px 48px ${theme.colors.text + "40"};
         }
@@ -273,9 +272,8 @@ const getHTMLContent = (
             width: 22px;
             height: 22px;
             border-radius: 50%;
-            background: linear-gradient(135deg, ${
-              theme.colors.notification
-            } 0%, ${theme.colors.notification + "70"} 100%);
+            background: linear-gradient(135deg, ${theme.colors.notification
+    } 0%, ${theme.colors.notification + "70"} 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -533,7 +531,6 @@ const FontSelectorBottomSheet: React.FC<FontSelectorBottomSheetProps> = ({
   const { theme } = useMyTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const webViewRef = useRef<WebView>(null);
-  const [hasLoaded, setHasLoaded] = useState(false);
   const handleThemeSelect = useCallback(
     (themeItem: TQuoteDataItem) => {
       onThemeSelect(themeItem);
@@ -579,25 +576,9 @@ const FontSelectorBottomSheet: React.FC<FontSelectorBottomSheetProps> = ({
       showIndicator
       justOneValue={["30%"]}
       startAT={0}
-      onDismiss={() => {
-        setHasLoaded(false);
-      }}
+      onDismiss={() => { }}
     >
       <View style={styles.webViewContainer}>
-        {!hasLoaded && (
-          <View
-            style={{
-              backgroundColor: theme.colors.background,
-              flex: 1,
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: 1000,
-            }}
-          />
-        )}
         <WebView
           ref={webViewRef}
           source={{ html: htmlContent }}
@@ -613,17 +594,20 @@ const FontSelectorBottomSheet: React.FC<FontSelectorBottomSheetProps> = ({
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled={true}
-          onLoadEnd={() => {
-            setHasLoaded(true);
-          }}
-          onError={(syntheticEvent) => {
-            const { nativeEvent } = syntheticEvent;
-            console.error("WebView error: ", nativeEvent);
-          }}
-          onHttpError={(syntheticEvent) => {
-            const { nativeEvent } = syntheticEvent;
-            console.error("WebView HTTP error: ", nativeEvent);
-          }}
+          renderLoading={() => <View
+            style={{
+              backgroundColor: theme.colors.background,
+              flex: 1,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 1000,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          />}
           {...createOptimizedWebViewProps({}, "themeSelector")}
         />
       </View>

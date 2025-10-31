@@ -81,14 +81,14 @@ const ChooseReferenceDom = () => {
           titleIcon: "List",
           headerRightProps: {
             headerRightIconColor: "red",
-            onPress: () => {},
+            onPress: () => { },
             disabled: true,
             style: { opacity: 1 },
           },
         })}
       />
       <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-        <WebviewReferenceChoose />
+        <WebviewReferenceChoose onClose={() => { }} />
         {/* <DomChooseReference
                     theme={theme}
                     initialBook={(routeParam as any)?.book || (routeParam as any)?.bottomSideBook}

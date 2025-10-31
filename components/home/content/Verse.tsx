@@ -256,21 +256,19 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const onQuote = () => {
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item?.book_number).longName} ${
-      item.chapter
-    }:${item.verse}`;
+    const reference = `${getBookDetail(item?.book_number).longName} ${item.chapter
+      }:${item.verse}`;
     bibleState$.handleSelectVerseForNote(verseText);
     router.push({
-      pathname: "/quoteDom",
+      pathname: "/quote",
       params: { text: verseText, reference },
     });
   };
 
   const onQuoteImage = () => {
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item?.book_number).longName} ${
-      item.chapter
-    }:${item.verse}`;
+    const reference = `${getBookDetail(item?.book_number).longName} ${item.chapter
+      }:${item.verse}`;
     bibleState$.handleSelectVerseForNote(verseText);
     router.push({
       pathname: "/quoteMaker",
@@ -358,9 +356,8 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       return;
     }
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item?.book_number).longName} ${
-      item.chapter
-    }:${item.verse}`;
+    const reference = `${getBookDetail(item?.book_number).longName} ${item.chapter
+      }:${item.verse}`;
 
     bibleState$.handleVerseWithAiAnimation(item.verse);
     bibleState$.handleVerseToExplain({ text: verseText, reference });
@@ -437,8 +434,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
         name: "Brain",
         action: () =>
           onMemorizeVerse(
-            `${getBookDetail(item?.book_number).longName} ${item?.chapter}:${
-              item?.verse
+            `${getBookDetail(item?.book_number).longName} ${item?.chapter}:${item?.verse
             }`
           ),
         color: "#f1abab",

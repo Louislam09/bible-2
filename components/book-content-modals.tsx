@@ -14,7 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet } from "react-native";
 import ExpandableChooseReference from "./animations/expandable-choose-reference";
-import { ExpandedSheet } from "./animations/expandable-mini-player";
+import { AudioPlayerExpandedSheet } from "./animations/expandable-mini-player";
 import InterlinearVerse from "./home/content/InterlinearVerse";
 import MultipleStrongsContentBottomModal from "./home/content/MultipleStrongsContentBottomSheet";
 import StrongContentBottomModal from "./home/content/StrongContentBottomModal";
@@ -46,7 +46,7 @@ const BookContentModals = () => {
       </BottomModal>
       {/* {isChooseReferenceOpened && <ExpandableChooseReference />} */}
       <ExpandableChooseReference />
-      {isPlayerOpened && <ExpandedSheet />}
+      {isPlayerOpened && <AudioPlayerExpandedSheet />}
 
       <BottomSheet
         ref={modalState$.interlinealRef.get()}

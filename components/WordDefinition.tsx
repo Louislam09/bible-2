@@ -127,40 +127,37 @@ const WordDefinition = ({
         </TouchableOpacity>
       </View>
 
-      <View style={[styles.definitionContainer, { height: height as any }]}>
+      <View style={[styles.definitionContainer]}>
         <WebView
           startInLoadingState
           style={{
             backgroundColor: "transparent",
-            height: height as any,
           }}
           ref={webViewRef}
           originWhitelist={["*"]}
           source={{ html }}
           onMessage={onMessage}
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-          onLoadEnd={() => {
-            webViewRef.current?.injectJavaScript(`
-              setTimeout(() => {
-                const contentHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-                window.ReactNativeWebView.postMessage(contentHeight.toString());
-              }, 500);
-            `);
-          }}
+          renderLoading={() => <View
+            style={{
+              backgroundColor: theme.colors.background,
+              flex: 1,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 1000,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          />}
           scrollEnabled
           bounces={false}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled={true}
-          onError={(syntheticEvent) => {
-            const { nativeEvent } = syntheticEvent;
-            console.error("WebView error: ", nativeEvent);
-          }}
-          onHttpError={(syntheticEvent) => {
-            const { nativeEvent } = syntheticEvent;
-            console.error("WebView HTTP error: ", nativeEvent);
-          }}
-          {...createOptimizedWebViewProps({}, "themeSelector")}
+          {...createOptimizedWebViewProps({}, "static")}
         />
       </View>
     </View>

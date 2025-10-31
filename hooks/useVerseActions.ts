@@ -161,7 +161,7 @@ const useVerseActions = ({ item, isSplit, initVerse, onInterlinear: externalOnIn
         const reference = `${getBookDetail(item?.book_number).longName} ${item.chapter
             }:${item.verse}`;
         bibleState$.handleSelectVerseForNote(verseText);
-        router.push({ pathname: "/quoteDom", params: { text: verseText, reference } });
+        router.push({ pathname: "/quote", params: { text: verseText, reference } });
     };
 
     const onWordClicked = (code: string) => {

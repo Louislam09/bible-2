@@ -1,4 +1,4 @@
-import { View } from "@/components/Themed";
+import { Text, View } from "@/components/Themed";
 import { bibleChapterHtmlTemplate } from "@/constants/bibleChapterTemplate";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
@@ -9,9 +9,10 @@ import { WordTagPair } from "@/utils/extractVersesInfo";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import { Dimensions } from "react-native";
+import { ActivityIndicator, Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WebView from "react-native-webview";
+import { WebViewOpenWindowEvent, WebViewRenderProcessGoneEvent } from "react-native-webview/lib/WebViewTypes";
 
 interface WebViewChapterProps {
   data: IBookVerse[];
@@ -63,7 +64,6 @@ const WebViewChapter = React.memo(
     onVerseLongPress,
   }: WebViewChapterProps) => {
     const webViewRef = useRef<WebView>(null);
-    const [hasLoaded, setHasLoaded] = useState(false);
     const { tailwindScript } = useBibleContext();
 
     const handleMessage = useCallback(
@@ -221,22 +221,12 @@ const WebViewChapter = React.memo(
       showReadingTime,
     ]);
 
+    const handleRenderProcessGone = useCallback((event: WebViewRenderProcessGoneEvent) => {
+      console.log("Render process gone: ", event);
+    }, []);
+
     return (
       <>
-        {!hasLoaded && (
-          <View
-            style={{
-              backgroundColor: theme.colors.background,
-              flex: 1,
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: 1000,
-            }}
-          />
-        )}
         <WebView
           ref={webViewRef}
           key={
@@ -256,14 +246,21 @@ const WebViewChapter = React.memo(
           source={{ html: htmlChapterTemplate }}
           scrollEnabled={true}
           onMessage={handleMessage}
-          onLoadStart={() => {}}
-          onLoadEnd={() => {
-            setHasLoaded(true);
-          }}
-          onError={(syntheticEvent) => {
-            const { nativeEvent = {} } = syntheticEvent;
-            console.warn("WebView error: ", nativeEvent);
-          }}
+          onRenderProcessonOpenWindowGone={handleRenderProcessGone}
+          renderLoading={() => <View
+            style={{
+              backgroundColor: theme.colors.background,
+              flex: 1,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 1000,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          />}
           {...createOptimizedWebViewProps({}, "static")}
         />
       </>

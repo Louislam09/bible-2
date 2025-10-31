@@ -128,7 +128,7 @@ const StrongContentBottomModal: FC<IStrongContent> = ({
         isPrimaryBibleDatabase(currentBibleVersion) || isInterlineal;
       const matchDatabase =
         mainBibleService.database?.databasePath.split("/").pop() ===
-          currentBibleVersion + ".db" || isInterlineal;
+        currentBibleVersion + ".db" || isInterlineal;
 
       if (
         !isMyBibleDbLoaded ||
@@ -143,9 +143,9 @@ const StrongContentBottomModal: FC<IStrongContent> = ({
       try {
         const dictionaryData = isInterlineal
           ? await mainBibleService.executeSql(
-              SEARCH_STRONG_WORD,
-              strongCode.split(",")
-            )
+            SEARCH_STRONG_WORD,
+            strongCode.split(",")
+          )
           : await executeSql(SEARCH_STRONG_WORD, strongCode.split(","));
 
         if (dictionaryData?.length) {
@@ -320,14 +320,20 @@ const StrongContentBottomModal: FC<IStrongContent> = ({
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled={true}
-          onError={(syntheticEvent) => {
-            const { nativeEvent } = syntheticEvent;
-            console.error("WebView error: ", nativeEvent);
-          }}
-          onHttpError={(syntheticEvent) => {
-            const { nativeEvent } = syntheticEvent;
-            console.error("WebView HTTP error: ", nativeEvent);
-          }}
+          renderLoading={() => <View
+            style={{
+              backgroundColor: theme.colors.background,
+              flex: 1,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 1000,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          />}
           {...createOptimizedWebViewProps({}, "themeSelector")}
         />
       </View>

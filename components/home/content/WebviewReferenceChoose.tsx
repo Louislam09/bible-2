@@ -1,5 +1,6 @@
 import { chooseReferenceHtmlTemplate } from "@/chooseReferenceTemplate";
 import { ChooseReferenceMutableProgress } from "@/components/animations/expandable-choose-reference";
+import { View } from "@/components/Themed";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useBackHandler from "@/hooks/useBackHandler";
@@ -150,10 +151,20 @@ const WebviewReferenceChoose = React.memo(
           }),
         }}
         onMessage={handleMessage}
-        onError={(syntheticEvent) => {
-          const { nativeEvent = {} } = syntheticEvent;
-          console.warn("WebView error: ", nativeEvent);
-        }}
+        renderLoading={() => <View
+          style={{
+            backgroundColor: theme.colors.background,
+            flex: 1,
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 1000,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        />}
         {...createOptimizedWebViewProps({}, "static")}
       />
     );

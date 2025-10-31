@@ -393,7 +393,6 @@ const ThemeSelectorBottomSheet: React.FC<ThemeSelectorBottomSheetProps> = ({
   const { theme } = useMyTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const webViewRef = useRef<WebView>(null);
-  const [hasLoaded, setHasLoaded] = useState(false);
 
   const handleThemeSelect = useCallback(
     (themeItem: TQuoteDataItem) => {
@@ -440,25 +439,9 @@ const ThemeSelectorBottomSheet: React.FC<ThemeSelectorBottomSheetProps> = ({
       showIndicator
       justOneValue={["70%"]}
       startAT={0}
-      onDismiss={() => {
-        setHasLoaded(false);
-      }}
+      onDismiss={() => { }}
     >
       <View style={styles.webViewContainer}>
-        {!hasLoaded && (
-          <View
-            style={{
-              backgroundColor: theme.colors.background,
-              flex: 1,
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: 1000,
-            }}
-          />
-        )}
         <WebView
           ref={webViewRef}
           source={{ html: htmlContent }}
@@ -478,17 +461,20 @@ const ThemeSelectorBottomSheet: React.FC<ThemeSelectorBottomSheetProps> = ({
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled={true}
-          onLoadEnd={() => {
-            setHasLoaded(true);
-          }}
-          onError={(syntheticEvent) => {
-            const { nativeEvent } = syntheticEvent;
-            console.error("WebView error: ", nativeEvent);
-          }}
-          onHttpError={(syntheticEvent) => {
-            const { nativeEvent } = syntheticEvent;
-            console.error("WebView HTTP error: ", nativeEvent);
-          }}
+          renderLoading={() => <View
+            style={{
+              backgroundColor: theme.colors.background,
+              flex: 1,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 1000,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          />}
           {...createOptimizedWebViewProps({}, "themeSelector")}
         />
       </View>

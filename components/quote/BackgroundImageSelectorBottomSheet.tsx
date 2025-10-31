@@ -338,7 +338,6 @@ const BackgroundImageSelectorBottomSheet: React.FC<
   const { theme } = useMyTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const webViewRef = useRef<WebView>(null);
-  const [hasLoaded, setHasLoaded] = useState(false);
 
   const handleThemeSelect = useCallback(
     (imageUrl: string) => {
@@ -383,25 +382,9 @@ const BackgroundImageSelectorBottomSheet: React.FC<
       showIndicator
       justOneValue={["70%"]}
       startAT={0}
-      onDismiss={() => {
-        setHasLoaded(false);
-      }}
+      onDismiss={() => { }}
     >
       <View style={styles.webViewContainer}>
-        {!hasLoaded && (
-          <View
-            style={{
-              backgroundColor: theme.colors.background,
-              flex: 1,
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: 1000,
-            }}
-          />
-        )}
         <WebView
           ref={webViewRef}
           source={{ html: htmlContent }}
@@ -421,17 +404,20 @@ const BackgroundImageSelectorBottomSheet: React.FC<
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled={true}
-          onLoadEnd={() => {
-            setHasLoaded(true);
-          }}
-          onError={(syntheticEvent) => {
-            const { nativeEvent } = syntheticEvent;
-            console.error("WebView error: ", nativeEvent);
-          }}
-          onHttpError={(syntheticEvent) => {
-            const { nativeEvent } = syntheticEvent;
-            console.error("WebView HTTP error: ", nativeEvent);
-          }}
+          renderLoading={() => <View
+            style={{
+              backgroundColor: theme.colors.background,
+              flex: 1,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 1000,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          />}
           cacheEnabled
           cacheMode="LOAD_CACHE_ELSE_NETWORK"
           {...createOptimizedWebViewProps({}, "themeSelector")}

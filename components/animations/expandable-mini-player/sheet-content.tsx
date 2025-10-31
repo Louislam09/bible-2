@@ -44,7 +44,7 @@ const MiniPlayerHeight = 64;
 
 const BaseOffset = (MiniPlayerHeight - ImageHeight) / 2;
 
-export const SheetContent = ({ progress }: SheetContentProps) => {
+export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
   const { theme } = useMyTheme();
   const { isConnected } = useNetInfo();
 
@@ -461,8 +461,8 @@ export const SheetContent = ({ progress }: SheetContentProps) => {
                   PLAYER_STATE.IS_DOWNLOADING
                     ? "Download"
                     : PLAYER_STATE.IS_PLAYING
-                    ? "Pause"
-                    : "Play"
+                      ? "Pause"
+                      : "Play"
                 }
                 size={24}
                 color={"white"}
@@ -506,17 +506,26 @@ export const SheetContent = ({ progress }: SheetContentProps) => {
               javaScriptEnabled={true}
               domStorageEnabled={true}
               startInLoadingState={true}
-              onError={(syntheticEvent) => {
-                const { nativeEvent = {} } = syntheticEvent;
-                console.warn("WebView error: ", nativeEvent);
-              }}
+              renderLoading={() => <View
+                style={{
+                  backgroundColor: "transparent",
+                  flex: 1,
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  zIndex: 1000,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              />}
             />
           ) : (
             <>
               <Text style={verseTextStyle}>{currentVerseText}</Text>
-              <Text style={styles.verseReference}>{`${reference}:${
-                verseIndex + 1
-              }`}</Text>
+              <Text style={styles.verseReference}>{`${reference}:${verseIndex + 1
+                }`}</Text>
             </>
           )}
 
@@ -534,11 +543,10 @@ export const SheetContent = ({ progress }: SheetContentProps) => {
               style={[
                 styles.progressLineFill,
                 {
-                  width: `${
-                    PLAYER_STATE.DURATION > 0
-                      ? (PLAYER_STATE.POSITION / PLAYER_STATE.DURATION) * 100
-                      : 0
-                  }%`,
+                  width: `${PLAYER_STATE.DURATION > 0
+                    ? (PLAYER_STATE.POSITION / PLAYER_STATE.DURATION) * 100
+                    : 0
+                    }%`,
                 },
               ]}
             />
@@ -547,12 +555,11 @@ export const SheetContent = ({ progress }: SheetContentProps) => {
               style={[
                 styles.progressThumb,
                 {
-                  left: `${
-                    PLAYER_STATE.DURATION > 0
-                      ? (PLAYER_STATE.POSITION / PLAYER_STATE.DURATION) * 100 -
-                        1
-                      : 0
-                  }%`,
+                  left: `${PLAYER_STATE.DURATION > 0
+                    ? (PLAYER_STATE.POSITION / PLAYER_STATE.DURATION) * 100 -
+                    1
+                    : 0
+                    }%`,
                   backgroundColor: theme.colors.notification,
                 },
               ]}
@@ -590,8 +597,8 @@ export const SheetContent = ({ progress }: SheetContentProps) => {
                 PLAYER_STATE.IS_DOWNLOADING
                   ? "Download"
                   : PLAYER_STATE.IS_PLAYING
-                  ? "Pause"
-                  : "Play"
+                    ? "Pause"
+                    : "Play"
               }
               size={48}
               color="white"

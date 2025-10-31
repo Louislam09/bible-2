@@ -1,15 +1,15 @@
 import BottomModal from "@/components/BottomModal";
 import { View } from "@/components/Themed";
+import getThemes from "@/constants/themeColors";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { modalState$ } from "@/state/modalState";
 import { EThemes, TFont, TTheme } from "@/types";
-import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import getMinMaxFontSize from "@/utils/getMinMaxFontSize";
-import getThemes from "@/constants/themeColors";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { StyleSheet } from "react-native";
 import WebView from "react-native-webview";
 
@@ -166,13 +166,11 @@ const createSettingsHTML = (
                 width: 100%;
                 height: 6px;
                 border-radius: 3px;
-                background: linear-gradient(to right, var(--color-notification) 0%, var(--color-notification) ${
-                  ((fontSize - fontSizes.minPx) /
-                    (fontSizes.maxPx - fontSizes.minPx)) *
-                  100
-                }%, #333 ${
-    ((fontSize - fontSizes.minPx) / (fontSizes.maxPx - fontSizes.minPx)) * 100
-  }%, #333 100%);
+                background: linear-gradient(to right, var(--color-notification) 0%, var(--color-notification) ${((fontSize - fontSizes.minPx) /
+      (fontSizes.maxPx - fontSizes.minPx)) *
+    100
+    }%, #333 ${((fontSize - fontSizes.minPx) / (fontSizes.maxPx - fontSizes.minPx)) * 100
+    }%, #333 100%);
                 outline: none;
             }
             
@@ -232,15 +230,13 @@ const createSettingsHTML = (
             @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
             @theme {
                 --color-theme-text: ${theme.colors.text || "#1f2937"};
-                --color-theme-background: ${
-                  theme.colors.background || "#ffffff"
-                };
+                --color-theme-background: ${theme.colors.background || "#ffffff"
+    };
                 --color-theme-card: ${theme.colors.card || "#f8fafc"};
                 --color-theme-border: ${theme.colors.border || "#e5e7eb"};
                 --color-theme-primary: ${theme.colors.primary || "#3b82f6"};
-                --color-theme-notification: ${
-                  theme.colors.notification || "#ef4444"
-                };
+                --color-theme-notification: ${theme.colors.notification || "#ef4444"
+    };
             }
         </style>
     </head>
@@ -264,26 +260,23 @@ const createSettingsHTML = (
                     <!-- Theme Toggle -->
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center gap-3">
-                            <span class="text-theme-text opacity-70">${
-                              icons.moon
-                            }</span>
+                            <span class="text-theme-text opacity-70">${icons.moon
+    }</span>
                             <span>Tema</span>
                         </div>
                         <div class="flex items-center gap-2 bg-theme-notification rounded-full p-1">
                             <button id="lightBtn" onclick="handleThemeToggle('light')" 
-                                    class="px-4 py-1 rounded-full transition-colors ${
-                                      !isDark
-                                        ? "bg-white text-black"
-                                        : "text-white"
-                                    }">
+                                    class="px-4 py-1 rounded-full transition-colors ${!isDark
+      ? "bg-white text-black"
+      : "text-white"
+    }">
                                 Claro
                             </button>
                             <button id="darkBtn" onclick="handleThemeToggle('dark')" 
-                                    class="px-4 py-1 rounded-full transition-colors ${
-                                      isDark
-                                        ? "bg-gray-800 text-white"
-                                        : "text-white"
-                                    }">
+                                    class="px-4 py-1 rounded-full transition-colors ${isDark
+      ? "bg-gray-800 text-white"
+      : "text-white"
+    }">
                                 Oscuro
                             </button>
                         </div>
@@ -293,9 +286,8 @@ const createSettingsHTML = (
                     <div class="mb-4">
                         <div class="flex items-center justify-between mb-3">
                             <div class="flex items-center gap-3">
-                                <span class="text-theme-text opacity-70">${
-                                  icons.palette
-                                }</span>
+                                <span class="text-theme-text opacity-70">${icons.palette
+    }</span>
                                 <span>Color del Tema</span>
                             </div>
                             <span class="px-2 py-1 bg-theme-notification text-white text-xs font-bold rounded-full">
@@ -304,34 +296,27 @@ const createSettingsHTML = (
                         </div>
                         <div class="flex gap-3 overflow-x-auto py-2" style="scrollbar-width: thin;">
                             ${themeColors
-                              .map(
-                                (themeColor) => `
-                            <div class="theme-card ${
-                              currentTheme === themeColor.value
-                                ? "selected"
-                                : ""
-                            } min-w-[120px]" 
-                                  style="background-color: ${
-                                    themeColor.background
-                                  };"
-                                  onclick="handleThemeColorChange('${
-                                    themeColor.value
-                                  }')">
-                                <p style="color: ${
-                                  themeColor.text
-                                };" class="text-xs font-bold mb-1">Genesis 1</p>
-                                <p style="color: ${
-                                  themeColor.text
-                                }; opacity: 0.7;" class="text-[10px] leading-tight"><span class="!text-theme-notification">1</span> En el principio creó Dios los cielos y la tierra...</p>
-                                <p style="color: ${
-                                  themeColor.accent
-                                };" class="text-[10px] mt-1 font-semibold">${
-                                  themeColor.label
-                                }</p>
+      .map(
+        (themeColor) => `
+                            <div class="theme-card ${currentTheme === themeColor.value
+            ? "selected"
+            : ""
+          } min-w-[120px]" 
+                                  style="background-color: ${themeColor.background
+          };"
+                                  onclick="handleThemeColorChange('${themeColor.value
+          }')">
+                                <p style="color: ${themeColor.text
+          };" class="text-xs font-bold mb-1">Genesis 1</p>
+                                <p style="color: ${themeColor.text
+          }; opacity: 0.7;" class="text-[10px] leading-tight"><span class="!text-theme-notification">1</span> En el principio creó Dios los cielos y la tierra...</p>
+                                <p style="color: ${themeColor.accent
+          };" class="text-[10px] mt-1 font-semibold">${themeColor.label
+          }</p>
                             </div>
                              `
-                              )
-                              .join("")}
+      )
+      .join("")}
                         </div>
                     </div>
                     
@@ -340,14 +325,14 @@ const createSettingsHTML = (
                         <div class="flex items-center justify-between mb-2">
                             <span>Tamaño de Fuente</span>
                             <span id="fontSizeValue" class="text-theme-notification font-semibold">${Math.round(
-                              fontSize
-                            )}px</span>
+        fontSize
+      )}px</span>
                         </div>
                         <input type="range" id="fontSizeSlider" min="${Math.round(
-                          fontSizes.minPx
-                        )}" max="${Math.round(
-    fontSizes.maxPx
-  )}" value="${Math.round(fontSize)}" 
+        fontSizes.minPx
+      )}" max="${Math.round(
+        fontSizes.maxPx
+      )}" value="${Math.round(fontSize)}" 
                                oninput="handleFontSizeChange(this.value)" 
                                class="w-full">
                     </div>
@@ -366,16 +351,15 @@ const createSettingsHTML = (
                         <select id="fontFamily" onchange="handleFontFamilyChange(this.value)" 
                                 class="w-full bg-theme-card border border-theme-border rounded-lg px-4 py-2 text-theme-text">
                             ${fonts
-                              .filter((font) => !font.value.includes("Bold"))
-                              .map(
-                                (font) =>
-                                  `<option value="${font.value}" ${
-                                    selectedFont.includes(font.value)
-                                      ? "selected"
-                                      : ""
-                                  }>${font.label}</option>`
-                              )
-                              .join("")}
+      .filter((font) => !font.value.includes("Bold"))
+      .map(
+        (font) =>
+          `<option value="${font.value}" ${selectedFont.includes(font.value)
+            ? "selected"
+            : ""
+          }>${font.label}</option>`
+      )
+      .join("")}
                         </select>
                     </div>
                 </div>
@@ -387,23 +371,20 @@ const createSettingsHTML = (
                     <!-- Show Reading Time Toggle -->
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center gap-3">
-                            <span class="text-theme-text opacity-70">${
-                              icons.timer
-                            }</span>
+                            <span class="text-theme-text opacity-70">${icons.timer
+    }</span>
                             <span>Mostrar Tiempo de Lectura</span>
                         </div>
-                        <div id="readingTimeToggle" class="toggle-switch ${
-                          showReadingTime ? "active" : ""
-                        }" onclick="handleToggle('readingTime')">
+                        <div id="readingTimeToggle" class="toggle-switch ${showReadingTime ? "active" : ""
+    }" onclick="handleToggle('readingTime')">
                             <div class="toggle-knob"></div>
                         </div>
                     </div>
                      <!-- flex hidden -->
                     <div class=" items-center justify-between mb-4 hidden">
                         <div class="flex items-center gap-3">
-                            <span class="text-theme-text opacity-70">${
-                              icons.listOrdered
-                            }</span>
+                            <span class="text-theme-text opacity-70">${icons.listOrdered
+    }</span>
                             <span>Mostrar Números de Versículos</span>
                         </div>
                         <div id="verseNumbersToggle" class="toggle-switch active" onclick="handleToggle('verseNumbers')">
@@ -414,9 +395,8 @@ const createSettingsHTML = (
                     <!-- Red Letter Text Toggle - flex -->
                     <div class=" items-center justify-between mb-4 hidden">
                         <div class="flex items-center gap-3">
-                            <span class="text-theme-text opacity-70">${
-                              icons.penLine
-                            }</span>
+                            <span class="text-theme-text opacity-70">${icons.penLine
+    }</span>
                             <span>Texto en Rojo</span>
                         </div>
                         <div id="redLetterToggle" class="toggle-switch" onclick="handleToggle('redLetter')">
@@ -432,9 +412,8 @@ const createSettingsHTML = (
                     <!-- Current Plan Selector -->
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
-                            <span class="text-theme-text opacity-70">${
-                              icons.calendar
-                            }</span>
+                            <span class="text-theme-text opacity-70">${icons.calendar
+    }</span>
                             <span>Plan Actual</span>
                         </div>
                         <select id="readingPlan" onchange="handleReadingPlanChange(this.value)" 
@@ -633,14 +612,13 @@ const WebviewBibleSettingBottomModal = ({
   onClose,
 }: WebviewBibleSettingProps = {}) => {
   const webViewRef = useRef<WebView>(null);
-  const { theme, toggleTheme, schema } = useMyTheme();
+  const { theme, toggleTheme } = useMyTheme();
   const { tailwindScript, selectTheme, handleFontSize, selectFont } =
     useBibleContext();
   const fontSize = use$(() => storedData$.fontSize.get());
   const currentTheme = use$(() => storedData$.currentTheme.get());
   const selectedFont = use$(() => storedData$.selectedFont.get());
   const styles = getStyles(theme);
-  const [hasLoaded, setHasLoaded] = useState(false);
   const showReadingTime = use$(() => storedData$.showReadingTime.get());
 
   const settingsHTML = useMemo(
@@ -718,25 +696,9 @@ const WebviewBibleSettingBottomModal = ({
       showIndicator
       justOneValue={["90%"]}
       startAT={0}
-      onDismiss={() => {
-        setHasLoaded(false);
-      }}
+      onDismiss={() => { }}
     >
       <View style={[styles.webviewWrapper]}>
-        {!hasLoaded && (
-          <View
-            style={{
-              backgroundColor: theme.colors.background,
-              flex: 1,
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: 1000,
-            }}
-          />
-        )}
         <WebView
           ref={webViewRef}
           originWhitelist={["*"]}
@@ -752,13 +714,20 @@ const WebviewBibleSettingBottomModal = ({
           showsVerticalScrollIndicator={true}
           nestedScrollEnabled={true}
           onMessage={handleMessage}
-          onLoadEnd={() => {
-            setHasLoaded(true);
-          }}
-          onError={(syntheticEvent) => {
-            const { nativeEvent = {} } = syntheticEvent;
-            console.warn("WebView error: ", nativeEvent);
-          }}
+          renderLoading={() => <View
+            style={{
+              backgroundColor: theme.colors.background,
+              flex: 1,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 1000,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          />}
           {...createOptimizedWebViewProps({}, "static")}
         />
       </View>

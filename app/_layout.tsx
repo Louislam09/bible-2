@@ -90,8 +90,8 @@ const screenAnimations: TScreensName = {
   [Screens.AISearch]: "slide_from_right",
   [Screens.Notification]: "slide_from_right",
   [Screens.SongDetail]: "slide_from_bottom",
-  [Screens.QuoteDom]: "slide_from_right",
   [Screens.NoteDetailDom]: "slide_from_right",
+  [Screens.Commentary]: "slide_from_right",
 };
 
 // Memoized SafeContentView to prevent unnecessary re-renders
@@ -162,7 +162,7 @@ const App = () => {
         await Updates.reloadAsync();
         ToastAndroid.show("Actualizada ✅", ToastAndroid.SHORT);
       }
-    } catch (error) {}
+    } catch (error) { }
   }
 
   useEffect(() => {
