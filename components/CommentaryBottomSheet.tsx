@@ -113,9 +113,8 @@ const createCommentaryHTML = (
           }
         </style>
         <style>
-          body { margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; background: ${
-            colors.background
-          }; color: ${colors.text}; }
+          body { margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; background: ${colors.background
+      }; color: ${colors.text}; }
         </style>
       </head>
       <body>
@@ -159,18 +158,13 @@ const createCommentaryHTML = (
           -webkit-font-smoothing: antialiased;
         }
         .tab { transition: all 0.2s; cursor: pointer; }
-        .tab.active { background: ${
-          colors.notification
-        } !important; color: white !important; }
+        .tab.active { background: ${colors.notification
+    } !important; color: white !important; }
         .commentary-card { animation: fadeIn 0.3s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .tabs-container::-webkit-scrollbar { display: none; }
       </style>
-      <style>
-          ${commentaryCss
-            .replaceAll("%COLOR_GREY%", colors.text)
-            .replaceAll("%COLOR_BLUE%", colors.notification)}
-        </style>
+      
     </head>
     <body class="bg-theme-background text-theme-text">
       <!-- Header -->
@@ -184,90 +178,81 @@ const createCommentaryHTML = (
             <span class="text-theme-notification">${lucideIcons.share}</span>
           </button>
           <button onclick="handleExplore()" class="p-2 rounded-lg hover:opacity-70">
-            <span class="text-theme-notification">${
-              lucideIcons.externalLink
-            }</span>
+            <span class="text-theme-notification">${lucideIcons.externalLink
+    }</span>
           </button>
         </div>
       </div>
 
       <!-- Tabs -->
-      ${
-        commentaryData.length > 1
-          ? `
-      <div class="tabs-container flex gap-2 px-4 py-3  overflow-x-auto">
+      ${commentaryData.length > 1
+      ? `
+      <div class="tabs-container flex gap-2 px-4 py-3 overflow-x-auto">
         ${commentaryData
-          .map(
-            (c, i) => `
-          <button onclick="switchTab(${i})" class="tab px-4 py-2 rounded-full border border-theme-border whitespace-nowrap ${
-              i === 0 ? "active" : ""
+        .map(
+          (c, i) => `
+          <button onclick="switchTab(${i})" class="tab px-4 py-2 rounded-full border border-theme-border whitespace-nowrap ${i === 0 ? "active" : ""
             }" data-tab="${i}">
             ${c.dbShortName}
           </button>
         `
-          )
-          .join("")}
-      </div>
-      `
-          : ""
-      }
+        )
+        .join("")}
+      </div>  `
+      : ""
+    }
 
       <!-- Content -->
       <div id="content" class="p-5 pb-10">
         ${commentaryData
-          .map(
-            (source, sourceIdx) => `
-          <div class="tab-content ${
-            sourceIdx === 0 ? "" : "hidden"
+      .map(
+        (source, sourceIdx) => `
+          <div class="tab-content ${sourceIdx === 0 ? "" : "hidden"
           }" data-content="${sourceIdx}">
             ${source.commentaries
-              .map((commentary: any) => {
-                const commentaryRef = `${bookName} ${
-                  commentary.chapter_number_from
-                }:${commentary.verse_number_from}${
-                  commentary.verse_number_to !== commentary.verse_number_from
-                    ? `-${commentary.verse_number_to}`
-                    : ""
+            .map((commentary: any) => {
+              const commentaryRef = `${bookName} ${commentary.chapter_number_from
+                }:${commentary.verse_number_from}${commentary.verse_number_to !== commentary.verse_number_from
+                  ? `-${commentary.verse_number_to}`
+                  : ""
                 }`;
-                const cleanText = commentary.text.replace(/<[^>]*>/g, "");
+              // const cleanText = commentary.text.replace(/<[^>]*>/g, "");
 
-                return `
+              return `
+              ${source.dbShortName === "Comentario Bíblico Beacon" ? `
+                <style>
+                  ${commentaryCss
+                    .replaceAll("%COLOR_GREY%", colors.notification)
+                    .replaceAll("%COLOR_BLUE%", colors.notification)
+                    .replaceAll("%COLOR_TEXT%", colors.text)
+                    .replaceAll("%COLOR_GREEN%", colors.notification)}
+                </style>
+              ` : ""}
                 <div class="commentary-card bg-theme-card rounded-2xl p-5 mb-4 border border-theme-border">
-                  ${
-                    commentaryRef !== reference
-                      ? `
-                    <div class="inline-flex items-center gap-2  px-3 py-1 rounded-lg mb-3">
+                   <div class="inline-flex items-center gap-2 py-1 rounded-lg mb-3">
                       <span class="text-theme-notification text-xs">${lucideIcons.bookMarked}</span>
-                      <span class="text-xs font-semibold text-theme-notification">${commentaryRef}</span>
+                      <span class="text-base font-semibold text-theme-notification">${commentaryRef}</span>
                     </div>
-                  `
-                      : ""
-                  }
-                  <h3 class="text-lg font-bold mb-3">Comentario de ${
-                    source.dbShortName
-                  }</h3>
-                  <p class="leading-relaxed opacity-90">${cleanText}</p>
+                  <h3 class="text-lg font-bold mb-3">Comentario de ${source.dbShortName}</h3>
+                  <p class="leading-relaxed opacity-90">${commentary.text.replace("noshade", "class='my-4")}</p>
                 </div>
               `;
-              })
-              .join("")}
-            
-            <!-- Info Card -->
-            <div class=" rounded-xl p-4 border-l-4 border-theme-notification">
+            })
+            .join("")}
+          </div>
+        `
+      )
+      .join("")}
+           <!-- Info Card -->
+            <div class=" rounded-xl p-4 border-b-4 border-theme-notification">
               <div class="flex items-center gap-2 mb-2">
                 <span class="text-theme-notification">${lucideIcons.info}</span>
                 <span class="font-semibold">Acerca de este comentario</span>
               </div>
               <p class="text-sm opacity-80 leading-relaxed">
-                ${
-                  source.dbShortName
-                } proporciona perspectivas teológicas e históricas sobre el texto bíblico.
+                Estos comentarios proporcionan perspectivas teológicas e históricas sobre el texto bíblico.
               </p>
             </div>
-          </div>
-        `
-          )
-          .join("")}
       </div>
 
       <script>

@@ -1,6 +1,6 @@
 export const commentaryCss = `
 p { margin-bottom: 0; margin-top: 6px; }  
-.SECCION { text-align: right; margin-right: 13px; margin-top: 36px; }
+.SECCION { text-align: start; margin-right: 13px; margin-top: 36px; }
 .FN { text-align: left; margin-left: 13px; color: %COLOR_GREY%; }
 .H1 { text-align: left; margin-left: 13px; color: %COLOR_BLUE%; }
 .H2 { text-align: left; margin-left: 13px; color: %COLOR_BLUE%; }
