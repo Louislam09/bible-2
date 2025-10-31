@@ -127,6 +127,13 @@ const WebViewChapter = React.memo(
                 case "quote":
                   onQuote?.(item);
                   break;
+                case "commentary":
+                  modalState$.openCommentaryBottomSheet(
+                    item.book_number,
+                    item.chapter,
+                    item.verse
+                  );
+                  break;
                 case "note":
                   onAnotar?.(item);
                   break;

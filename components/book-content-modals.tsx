@@ -20,6 +20,7 @@ import MultipleStrongsContentBottomModal from "./home/content/MultipleStrongsCon
 import StrongContentBottomModal from "./home/content/StrongContentBottomModal";
 import { Text, View } from "./Themed";
 import DictionaryBottomModalContent from "./DictionaryBottomModalContent";
+import CommentaryBottomSheet from "./CommentaryBottomSheet";
 import WebviewBibleSettingBottomModal from "./home/WebviewBibleSettingBottomModal";
 
 const BookContentModals = () => {
@@ -30,6 +31,7 @@ const BookContentModals = () => {
   const verseToInterlinear = use$(() => bibleState$.verseToInterlinear.get());
   const multipleStrongsData = use$(() => bibleState$.multipleStrongsData.get());
   const isPlayerOpened = use$(() => audioState$.isPlayerOpened.get());
+  const commentaryReference = use$(() => modalState$.commentaryReference.get());
 
   return (
     <>
@@ -131,6 +133,12 @@ const BookContentModals = () => {
           }}
         />
       </BottomModal>
+
+      <CommentaryBottomSheet
+        bookNumber={commentaryReference.bookNumber}
+        chapter={commentaryReference.chapter}
+        verse={commentaryReference.verse}
+      />
     </>
   );
 };

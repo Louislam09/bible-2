@@ -178,7 +178,7 @@ const NewDashboard = () => {
       icon: "MessageSquare",
       label: "Comentarios",
       action: () => navigation?.navigate(Screens.Commentary),
-      color: "#78b0a4",
+      color: "#87c4ff",
     },
     {
       icon: "Sparkles",

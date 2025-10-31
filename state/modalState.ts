@@ -13,12 +13,14 @@ export const modalState$ = observable({
   compareRef: createRef<BottomSheetModal>(),
   strongSearchRef: createRef<BottomSheetModal>(),
   dictionaryRef: createRef<BottomSheetModal>(),
+  commentaryRef: createRef<BottomSheetModal>(),
   interlinealRef: createRef<BottomSheetModal>(),
   searchFilterRef: createRef<BottomSheetModal>(),
   strongSearchFilterRef: createRef<BottomSheetModal>(),
   multipleStrongsRef: createRef<BottomSheetModal>(),
   bibleSettingRef: createRef<BottomSheetModal>(),
   searchWordOnDic: "",
+  commentaryReference: { bookNumber: 40, chapter: 1, verse: 1 },
   chooseReferenceStep: ChooseReferenceStep.InBookSelection,
   setChooseReferenceStep: (step: ChooseReferenceStep) => {
     modalState$.chooseReferenceStep.set(step);
@@ -87,5 +89,12 @@ export const modalState$ = observable({
   },
   closeBibleSettingBottomSheet: () => {
     modalState$.bibleSettingRef.current?.dismiss();
+  },
+  openCommentaryBottomSheet: (bookNumber: number, chapter: number, verse: number) => {
+    modalState$.commentaryReference.set({ bookNumber, chapter, verse });
+    modalState$.commentaryRef.current?.present();
+  },
+  closeCommentaryBottomSheet: () => {
+    modalState$.commentaryRef.current?.dismiss();
   },
 });

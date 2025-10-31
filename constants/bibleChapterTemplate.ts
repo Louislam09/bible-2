@@ -915,6 +915,10 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
                 <span class="action-icon" style="color: #CDAA7D;">${lucideIcons.quote}</span>
                 <div class="action-label">Cita</div>
             </button>
+            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[225ms] hover:scale-105" onclick="handleVerseAction('commentary', '${verseKey}')">
+                <span class="action-icon" style="color: #87c4ff;">${lucideIcons.messageSquare}</span>
+                <div class="action-label">Comentarios</div>
+            </button>
             <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[250ms] hover:scale-105" onclick="handleVerseAction('note', '${verseKey}')">
                 <span class="action-icon" style="color: var(--color-notification);">${lucideIcons['notebook-pen']}</span>
                 <div class="action-label">Anotar</div>
