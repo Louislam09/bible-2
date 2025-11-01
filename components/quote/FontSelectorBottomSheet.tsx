@@ -1,14 +1,15 @@
 import { QUOTES_DATA, TQuoteDataItem } from "@/constants/quotesData";
+import { useBibleContext } from "@/context/BibleContext";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
+import { getTailwindStyleTag } from "@/hooks/useLoadTailwindScript";
 import { TTheme } from "@/types";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { WebView } from "react-native-webview";
 import BottomModal from "../BottomModal";
-import useLoadTailwindScript, { getTailwindStyleTag } from "@/hooks/useLoadTailwindScript";
-import { storedData$ } from "@/context/LocalstoreContext";
 
 interface FontSelectorBottomSheetProps {
   bottomSheetRef: React.RefObject<BottomSheetModal | null>;
@@ -542,7 +543,8 @@ const FontSelectorBottomSheet: React.FC<FontSelectorBottomSheetProps> = ({
   const { theme } = useMyTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const webViewRef = useRef<WebView>(null);
-  const tailwindScript = useLoadTailwindScript()
+  const { tailwindScript } = useBibleContext();
+
   const handleThemeSelect = useCallback(
     (themeItem: TQuoteDataItem) => {
       onThemeSelect(themeItem);

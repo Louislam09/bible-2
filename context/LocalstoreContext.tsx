@@ -75,6 +75,7 @@ type StoreState = {
   showReadingTime: boolean;
   appFolderUri: string;
   appFolderTreeUri: string;
+  tailwindScript: string;
 };
 
 const initialContext: StoreState = {
@@ -123,6 +124,7 @@ const initialContext: StoreState = {
   showReadingTime: false,
   appFolderUri: "",
   appFolderTreeUri: "",
+  tailwindScript: "",
 };
 
 export const storedData$ = observable(initialContext);

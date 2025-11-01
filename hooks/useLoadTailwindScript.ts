@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
 import { TTheme } from "@/types";
+import { storedData$ } from "@/context/LocalstoreContext";
 
 interface ITailwindStyleTagProps {
     theme: TTheme;
@@ -60,14 +61,29 @@ const useLoadTailwindScript = () => {
     useEffect(() => {
         const loadTailwindScript = async () => {
             try {
+                // Try to load from storage context first
+                const cachedScript = storedData$.tailwindScript.get();
+
+                if (cachedScript) {
+                    setTailwindScript(cachedScript);
+                    console.log('Tailwind script loaded from cache');
+                    return;
+                }
+
+                // If not in cache, load from asset file
                 const asset = Asset.fromModule(require('../assets/tailwind.txt'));
                 await asset.downloadAsync();
                 const tailwindScript = await FileSystem.readAsStringAsync(
                     asset.localUri!
                 );
 
-                setTailwindScript(`<script defer>${tailwindScript}</script>`);
-                console.log('Tailwind script loaded successfully');
+                const scriptTag = `<script defer>${tailwindScript}</script>`;
+
+                // Save to storage context for future use
+                storedData$.tailwindScript.set(scriptTag);
+
+                setTailwindScript(scriptTag);
+                console.log('Tailwind script loaded from asset and cached');
             } catch (error) {
                 console.error('Error loading tailwind script:', error);
             }
