@@ -11,7 +11,7 @@ import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { Stack, useNavigation } from "expo-router";
 import { Fragment, useMemo } from "react";
 
-const chooseVerseNumber = () => {
+const ChooseVerseNumber = () => {
   const routeParam = useParams<ChooseChapterNumberParams>();
   const isBottomSideSearching = bibleState$.isBottomBibleSearching.get();
   const { book, bottomSideBook, bottomSideChapter, chapter } = routeParam;
@@ -87,4 +87,4 @@ const chooseVerseNumber = () => {
   );
 };
 
-export default chooseVerseNumber;
+export default ChooseVerseNumber;

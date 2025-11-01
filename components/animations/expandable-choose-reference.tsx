@@ -10,22 +10,18 @@ import Animated, {
   Easing,
   interpolate,
   interpolateColor,
-  makeMutable,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
+  withTiming
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import WebviewReferenceChoose from "@/components/home/content/WebviewReferenceChoose";
 import { useMyTheme } from "@/context/ThemeContext";
-import { modalState$ } from "@/state/modalState";
-import Icon from "../Icon";
-import useBackHandler from "@/hooks/useBackHandler";
-import { useMemo, useState } from "react";
 import { bibleState$ } from "@/state/bibleState";
-import { use$ } from "@legendapp/state/react";
+import Icon from "../Icon";
+import { ChooseReferenceMutableProgress } from "./constants";
 
 export const EasingsUtils = {
   inOut: Easing.bezier(0.25, 0.1, 0.25, 1),
@@ -38,11 +34,9 @@ const Palette = {
   text: "#FFFFFF",
 };
 
-const MiniPlayerHeight = 64;
-export const ChooseReferenceMutableProgress = makeMutable(0);
 
 const ExpandableChooseReference = () => {
-  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
+  const { height: windowHeight } = useWindowDimensions();
   const progress = ChooseReferenceMutableProgress;
   const { theme } = useMyTheme();
 

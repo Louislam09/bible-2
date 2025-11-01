@@ -31,7 +31,8 @@ const WordDefinition = ({
   navigation: _navigation,
   theme: _theme,
 }: WordDefinitionProps) => {
-  const navigation = _navigation ? _navigation : useNavigation();
+  const defaultNavigation = useNavigation();
+  const navigation = _navigation || defaultNavigation;
   const { schema: themeScheme, theme } = useMyTheme();
   const styles = getStyles(theme, themeScheme === "dark");
   const webViewRef = useRef<WebView>(null);

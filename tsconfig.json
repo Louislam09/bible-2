@@ -15,5 +15,7 @@
     "**/*.js",
     "**/*.jsx",
     "**/*.css",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
   ]
 }

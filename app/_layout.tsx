@@ -113,6 +113,7 @@ const SafeContentView = memo(({ children }: { children: ReactNode }) => {
     </View>
   );
 });
+SafeContentView.displayName = 'SafeContentView';
 
 // Consolidated Core Providers - Critical for app startup
 const CoreProviders = memo(({ children }: { children: ReactNode }) => (
@@ -124,6 +125,7 @@ const CoreProviders = memo(({ children }: { children: ReactNode }) => (
     </NetworkProvider>
   </ErrorBoundary>
 ));
+CoreProviders.displayName = 'CoreProviders';
 
 // Database and Bible Providers - Can be lazy loaded
 const DataProviders = memo(({ children }: { children: ReactNode }) => (
@@ -133,6 +135,7 @@ const DataProviders = memo(({ children }: { children: ReactNode }) => (
     </BibleProvider>
   </DatabaseProvider>
 ));
+DataProviders.displayName = 'DataProviders';
 
 // UI and Feature Providers - Non-critical for startup
 const FeatureProviders = memo(({ children }: { children: ReactNode }) => (
@@ -144,6 +147,7 @@ const FeatureProviders = memo(({ children }: { children: ReactNode }) => (
     </NotificationProvider>
   </MemorizationProvider>
 ));
+FeatureProviders.displayName = 'FeatureProviders';
 
 const App = () => {
   const isAnimationDisabled = use$(() =>

@@ -43,7 +43,7 @@ export function DropDownItem({
 }) {
   const ref = useRef<HTMLButtonElement>(null);
 
-  const dropDownContext = React.useContext(DropDownContext);
+  const dropDownContext = React.use(DropDownContext);
 
   if (dropDownContext === null) {
     throw new Error("DropDownItem must be used within a DropDown");

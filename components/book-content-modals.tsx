@@ -33,6 +33,12 @@ const BookContentModals = () => {
   const isPlayerOpened = use$(() => audioState$.isPlayerOpened.get());
   const commentaryReference = use$(() => modalState$.commentaryReference.get());
 
+  // Get all refs directly without reactive subscriptions (refs don't need reactivity)
+  const noteListBottomSheetRef = bibleState$.noteListBottomSheetRef.get();
+  const interlinealRef = modalState$.interlinealRef.get();
+  const dictionaryRef = modalState$.dictionaryRef.get();
+  const compareRef = modalState$.compareRef.get();
+
   return (
     <>
       <BottomModal
@@ -40,7 +46,7 @@ const BookContentModals = () => {
         showIndicator
         justOneValue={["50%"]}
         startAT={0}
-        ref={bibleState$.noteListBottomSheetRef.get()}
+        ref={noteListBottomSheetRef}
       >
         <NoteNameList />
       </BottomModal>
@@ -49,7 +55,7 @@ const BookContentModals = () => {
       {isPlayerOpened && <AudioPlayerExpandedSheet />}
 
       <BottomSheet
-        ref={modalState$.interlinealRef.get()}
+        ref={interlinealRef}
         index={-1}
         snapPoints={["30%", "60%", "99%"]}
         backgroundStyle={{
@@ -109,7 +115,7 @@ const BookContentModals = () => {
         style={styles.bottomSheet}
         backgroundColor={theme.dark ? theme.colors.background : "#eee"}
         shouldScroll={false}
-        ref={modalState$.dictionaryRef.get()}
+        ref={dictionaryRef}
         justOneSnap
         showIndicator
         justOneValue={["60%"]}
@@ -122,14 +128,14 @@ const BookContentModals = () => {
         />
       </BottomModal>
 
-      <BottomModal shouldScroll startAT={3} ref={modalState$.compareRef.get()}>
+      <BottomModal shouldScroll startAT={3} ref={compareRef}>
         <CompareVersions
           {...{
             theme,
             book: "Génesis",
             chapter: 1,
             navigation,
-            compareRef: modalState$.compareRef.get(),
+            compareRef: compareRef,
           }}
         />
       </BottomModal>

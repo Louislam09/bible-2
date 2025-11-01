@@ -9,7 +9,7 @@ import { Stack } from "expo-router";
 import React, { useCallback, useRef } from "react";
 import { StyleSheet } from "react-native";
 
-const timeline = () => {
+const Timeline = () => {
   const { theme } = useMyTheme();
   const timelineFaqBottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -58,7 +58,7 @@ const timeline = () => {
   );
 };
 
-export default timeline;
+export default Timeline;
 
 const styles = StyleSheet.create({
   container: {

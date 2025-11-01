@@ -4,7 +4,7 @@ import { use$ } from "@legendapp/state/react";
 import React, {
   createContext,
   ReactNode,
-  useContext,
+  use,
   useEffect,
   useState,
 } from "react";
@@ -67,7 +67,7 @@ const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 };
 
 export const useMyTheme = (): ThemeContextProps => {
-  const context = useContext(ThemeContext);
+  const context = use(ThemeContext);
   if (!context) {
     throw new Error("useMyTheme must be used within a ThemeProvider");
   }

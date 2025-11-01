@@ -1,5 +1,5 @@
 import { addEventListener, NetInfoState, NetInfoStateType } from '@react-native-community/netinfo';
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, use, useEffect, useState } from 'react';
 
 // Default NetInfo state (safe fallback for when real state isn't ready yet)
 const defaultNetInfo: NetInfoState = {
@@ -34,5 +34,5 @@ export const NetworkProvider: React.FC<NetworkProviderProps> = ({ children }) =>
 };
 
 export function useNetwork(): NetInfoState {
-    return useContext(NetworkContext);
+    return use(NetworkContext);
 }

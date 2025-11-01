@@ -58,7 +58,6 @@ class DownloadManagerService implements IDownloadManager {
     // ✅ Improved download resumption with proper state recovery
     private async resumeIncompleteDownloads() {
         const downloads = downloadStateHelpers.getAllDownloads();
-        console.log({ downloads })
         const incompleteDownloads = downloads.filter(
             (d) => d.status === "downloading" || d.status === "paused"
         );

@@ -40,6 +40,11 @@ export const formatTextToClipboard = (data: FormatTextToClipboard): string => {
   //   }`;
 };
 
+export const copyTextToClipboard = async (text: string): Promise<void> => {
+  await Clipboard.setStringAsync(text);
+  ToastAndroid?.show("Texto copiado!", ToastAndroid.SHORT);
+};
+
 const copyToClipboard = async (
   item: IVerseItem | IVerseItem[],
   shouldReturnHmlt?: boolean

@@ -206,6 +206,23 @@ const FileList = () => {
     );
   };
 
+  const listData = useMemo(
+    () => [...installedBibles, ...installedDictionary, ...installedCommentary],
+    [installedBibles, installedDictionary, installedCommentary]
+  );
+
+  const keyExtractor = useCallback(
+    (item: VersionItem) => `downloaded-${item.shortName}`,
+    []
+  );
+
+  // ✅ Get item type for recycling optimization
+  const getItemType = useCallback((item: VersionItem) => {
+    if (item.shortName.includes(".dictionary")) return "dictionary";
+    if (item.shortName.includes(".commentaries")) return "commentary";
+    return "bible";
+  }, []);
+
   const renderItem = useCallback(
     ({ item, index }: { item: VersionItem; index: number }) => {
       const versionItem = item;
@@ -226,8 +243,8 @@ const FileList = () => {
             renderSection(
               "Módulos descargados",
               installedBibles.length +
-                (installedDictionary.length || 0) +
-                (installedCommentary.length || 0)
+              (installedDictionary.length || 0) +
+              (installedCommentary.length || 0)
             )}
 
           <View style={[styles.itemContainer, styles.defaultItem]}>
@@ -326,6 +343,7 @@ const FileList = () => {
     ]
   );
 
+  // Conditional rendering without early returns to avoid breaking Rules of Hooks
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -338,23 +356,6 @@ const FileList = () => {
   if (error) {
     return <ErrorComponent />;
   }
-
-  const listData = useMemo(
-    () => [...installedBibles, ...installedDictionary, ...installedCommentary],
-    [installedBibles, installedDictionary, installedCommentary]
-  );
-
-  const keyExtractor = useCallback(
-    (item: VersionItem) => `downloaded-${item.shortName}`,
-    []
-  );
-
-  // ✅ Get item type for recycling optimization
-  const getItemType = useCallback((item: VersionItem) => {
-    if (item.shortName.includes(".dictionary")) return "dictionary";
-    if (item.shortName.includes(".commentaries")) return "commentary";
-    return "bible";
-  }, []);
 
   return (
     <FlashList

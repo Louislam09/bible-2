@@ -11,13 +11,13 @@ import React, {
   createContext,
   ReactNode,
   useCallback,
-  useContext,
+  use,
   useEffect,
   useMemo,
 } from "react";
 import { useBibleContext } from "./BibleContext";
 
-interface BibleChapterContextProps {}
+interface BibleChapterContextProps { }
 
 const BibleChapterContext = createContext<BibleChapterContextProps>({});
 
@@ -145,7 +145,7 @@ const BibleChapterProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useBibleChapter = () => {
-  const context = useContext(BibleChapterContext);
+  const context = use(BibleChapterContext);
   if (!context) {
     throw new Error(
       "useBibleChapter must be used within a BibleChapterProvider"

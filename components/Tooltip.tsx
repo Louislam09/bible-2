@@ -1,8 +1,8 @@
 import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
-import React, { useEffect } from "react";
+import React from "react";
 import { StyleSheet, View } from "react-native";
-import Popover, { PopoverMode } from "react-native-popover-view";
+import Popover from "react-native-popover-view";
 
 interface ITooltip {
   target: any;
@@ -21,11 +21,6 @@ const Tooltip = ({
 }: ITooltip) => {
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
-
-  useEffect(() => {
-    if (isVisible) {
-    }
-  }, [isVisible]);
 
   return (
     <Popover

@@ -36,12 +36,15 @@ type TButtonItem = {
 const MemorizationScreen = () => {
   const { verseId } = useParams();
   const { verses, deleteVerse } = useMemorization();
-  const item = verses.find((x) => x.id === verseId) as Memorization;
-  if (!item) return <ActivityIndicator />;
   const { theme } = useMyTheme();
-  const styles = getStyles(theme);
   const router = useRouter();
-  const memorizeProgress = useDebounce(item.progress, 1000);
+
+  const item = verses.find((x) => x.id === verseId) as Memorization;
+  const memorizeProgress = useDebounce(item?.progress || 0, 1000);
+
+  const styles = getStyles(theme);
+
+  if (!item) return <ActivityIndicator />;
 
   const isTestLocked = item.progress < 80;
 
@@ -55,6 +58,7 @@ const MemorizationScreen = () => {
       showToast("Necesitas 80% de progreso para desbloquear.", "LONG");
       return;
     }
+    // @ts-ignore
     router.push(`memorization/${verseId}/challenge/${type}`);
   };
 
@@ -99,7 +103,7 @@ const MemorizationScreen = () => {
       [
         {
           text: "Cancelar",
-          onPress: () => {},
+          onPress: () => { },
           style: "cancel",
         },
         { text: "Eliminar", onPress: () => onDelete(id) },
@@ -175,8 +179,8 @@ const MemorizationScreen = () => {
                       styles.actionLabel,
                       isLockButton && styles[lockTextKey],
                       isLockButton &&
-                        isCompleted &&
-                        styles.isCompletedLabelText,
+                      isCompleted &&
+                      styles.isCompletedLabelText,
                     ]}
                   >
                     {label}

@@ -649,25 +649,29 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
   );
 
   const Font = useMemo(() => {
-    return () => (
+    const FontComponent = () => (
       <FontSelector
         onSelectFont={handleFontChange}
         initialFont={selectedFont}
       />
     );
+    FontComponent.displayName = 'FontComponent';
+    return FontComponent;
   }, [handleFontChange, selectedFont]);
 
   const ThemeColor = useMemo(() => {
-    return () => (
+    const ThemeColorComponent = () => (
       <ColorSelector
         onSelectColor={handleColorChange}
         initialColor={currentTheme}
       />
     );
+    ThemeColorComponent.displayName = 'ThemeColorComponent';
+    return ThemeColorComponent;
   }, [handleColorChange, currentTheme]);
 
   const FontSize = useMemo(() => {
-    return () => (
+    const FontSizeComponent = () => (
       <FontSizeAdjuster
         onSizeChange={handleFontSizeChange}
         initialSize={fontSize}
@@ -677,10 +681,12 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
         step={1}
       />
     );
+    FontSizeComponent.displayName = 'FontSizeComponent';
+    return FontSizeComponent;
   }, [handleFontSizeChange, fontSize, selectedFont, fontSizes]);
 
   const AppIcon = useMemo(() => {
-    return () => (
+    const AppIconComponent = () => (
       <AppIconSelector
         style={{
           backgroundColor: theme.colors.background,
@@ -689,6 +695,8 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
         }}
       />
     );
+    AppIconComponent.displayName = 'AppIconComponent';
+    return AppIconComponent;
   }, [theme]);
 
   const BottomChild = {

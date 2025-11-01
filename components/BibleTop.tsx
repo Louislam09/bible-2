@@ -47,15 +47,15 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const { addVerse } = useMemorization();
   const isPortrait = orientation === "PORTRAIT";
   const isDataLoading = use$(() => bibleState$.isDataLoading.top.get());
-  const verses = bibleState$.bibleData.topVerses.get() ?? [];
-  const interlinearVerses = bibleState$.bibleData.interlinearVerses.get() ?? [];
+  const verses = use$(() => bibleState$.bibleData.topVerses.get()) ?? [];
+  const interlinearVerses = use$(() => bibleState$.bibleData.interlinearVerses.get()) ?? [];
 
-  const currentBook = bibleState$.bibleQuery.get().book;
+  const currentBook = use$(() => bibleState$.bibleQuery.get().book);
   const bookInfo = getBookDetail(currentBook);
   const NT_BOOK_NUMBER = 470;
   const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
 
-  const isSplitActived = bibleState$.isSplitActived.get();
+  const isSplitActived = use$(() => bibleState$.isSplitActived.get());
 
   const isHebrewInterlinear = [EBibleVersions.INTERLINEAR].includes(
     currentBibleVersion as EBibleVersions
@@ -79,11 +79,12 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const isOldTestamentAndGreekInterlineal =
     bookInfo.bookNumber < NT_BOOK_NUMBER && isGreekInterlinear;
 
+  const bibleQuery = use$(() => bibleState$.bibleQuery.get());
   const {
     book: book,
     chapter: chapter,
     verse: verse,
-  } = bibleState$.bibleQuery.get();
+  } = bibleQuery;
   const verseNumber = use$(() => bibleState$.bibleQuery.get().verse);
 
   const { nextChapter, previousChapter } = useChangeBookOrChapter({
@@ -264,9 +265,8 @@ const BibleTop: FC<BibleTopProps> = (props) => {
         return;
       }
       const verseText = getVerseTextRaw(item.text);
-      const reference = `${getBookDetail(item?.book_number).longName} ${
-        item.chapter
-      }:${item.verse}`;
+      const reference = `${getBookDetail(item?.book_number).longName} ${item.chapter
+        }:${item.verse}`;
 
       bibleState$.handleVerseWithAiAnimation(item.verse);
       bibleState$.handleVerseToExplain({ text: verseText, reference });
@@ -279,9 +279,8 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const onImage = useCallback(
     (item: IBookVerse) => {
       const verseText = getVerseTextRaw(item.text);
-      const reference = `${getBookDetail(item?.book_number).longName} ${
-        item.chapter
-      }:${item.verse}`;
+      const reference = `${getBookDetail(item?.book_number).longName} ${item.chapter
+        }:${item.verse}`;
       bibleState$.handleSelectVerseForNote(verseText);
       router.push({
         pathname: "/quoteMaker",
@@ -294,9 +293,8 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   const onQuote = useCallback(
     (item: IBookVerse) => {
       const verseText = getVerseTextRaw(item.text);
-      const reference = `${getBookDetail(item?.book_number).longName} ${
-        item.chapter
-      }:${item.verse}`;
+      const reference = `${getBookDetail(item?.book_number).longName} ${item.chapter
+        }:${item.verse}`;
       bibleState$.handleSelectVerseForNote(verseText);
       router.push({
         pathname: "/quote",

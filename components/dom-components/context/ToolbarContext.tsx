@@ -6,14 +6,14 @@
  *
  */
 
-import type {JSX} from 'react';
+import type { JSX } from 'react';
 
-import {ElementFormatType} from 'lexical';
+import { ElementFormatType } from 'lexical';
 import React, {
   createContext,
   ReactNode,
+  use,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
@@ -127,7 +127,7 @@ export const ToolbarContext = ({
 };
 
 export const useToolbarState = () => {
-  const context = useContext(Context);
+  const context = use(Context);
 
   if (context === undefined) {
     throw new Error('useToolbarState must be used within a ToolbarProvider');

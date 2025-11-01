@@ -1,4 +1,5 @@
 import { TTheme } from "@/types";
+import { copyTextToClipboard } from "@/utils/copyToClipboard";
 import React, { useState } from "react";
 import {
   Pressable,
@@ -63,7 +64,10 @@ const ErrorBoundaryFallback = ({
         </Pressable>
         <TouchableOpacity
           style={styles.toggleErrorButton}
-          onPress={() => setShowErrorDetails(!showErrorDetails)}
+          onPress={() => {
+            setShowErrorDetails(!showErrorDetails)
+            copyTextToClipboard(JSON.stringify(error, null, 2))
+          }}
         >
           <Icon
             name={showErrorDetails ? "ChevronDown" : "ChevronRight"}

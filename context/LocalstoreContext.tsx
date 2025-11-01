@@ -15,7 +15,7 @@ import React, {
   createContext,
   ReactNode,
   useCallback,
-  useContext,
+  use,
   useEffect,
   useState,
 } from "react";
@@ -157,7 +157,7 @@ const StorageContext = createContext<StorageContextProps | undefined>(
 );
 
 export const useStorage = () => {
-  const context = useContext(StorageContext);
+  const context = use(StorageContext);
   if (!context) {
     throw new Error("useStorage must be used within a StorageProvider");
   }

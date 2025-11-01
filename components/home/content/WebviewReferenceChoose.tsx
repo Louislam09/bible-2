@@ -1,5 +1,5 @@
 import { chooseReferenceHtmlTemplate } from "@/chooseReferenceTemplate";
-import { ChooseReferenceMutableProgress } from "@/components/animations/expandable-choose-reference";
+import { ChooseReferenceMutableProgress } from "@/components/animations/constants";
 import { View } from "@/components/Themed";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
@@ -7,11 +7,11 @@ import useBackHandler from "@/hooks/useBackHandler";
 import useParams from "@/hooks/useParams";
 import { bibleState$ } from "@/state/bibleState";
 import { ChooseReferenceStep, modalState$ } from "@/state/modalState";
-import { ChooseChapterNumberParams, Screens } from "@/types";
+import { ChooseChapterNumberParams } from "@/types";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "expo-router";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useRef } from "react";
 import { Easing, runOnJS, withTiming } from "react-native-reanimated";
 import WebView from "react-native-webview";
 

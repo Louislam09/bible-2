@@ -30,7 +30,8 @@ const Animation = ({
   colorFilters,
   onFinished
 }: TAnimation) => {
-  const ref = animationRef || useRef<AnimatedLottieView>(null);
+  const internalRef = useRef<AnimatedLottieView>(null);
+  const ref = animationRef || internalRef;
   const { width, height } = size;
   useEffect(() => {
     if (!ref.current) return;

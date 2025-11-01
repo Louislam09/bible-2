@@ -18,7 +18,7 @@ import getCurrentDbName from "@/utils/getCurrentDB";
 import { use$ } from "@legendapp/state/react";
 import React, {
   createContext,
-  useContext,
+  use,
   useEffect,
   useReducer,
   useState,
@@ -452,6 +452,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-export const useBibleContext = (): BibleState => useContext(BibleContext);
+export const useBibleContext = (): BibleState => use(BibleContext);
 
 export default BibleProvider;
