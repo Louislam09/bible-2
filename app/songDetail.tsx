@@ -356,7 +356,7 @@ const SongDetailPage = () => {
           </ScrollView>
         </Animated.View>
 
-        {backgroundDecorations.map((item, index) => (
+        {/* {backgroundDecorations.map((item, index) => (
           <Animated.View
             key={index}
             style={[
@@ -395,14 +395,15 @@ const SongDetailPage = () => {
               style={styles.backgroundIcon}
             />
           </Animated.View>
-        ))}
+        ))} */}
 
         {/* Navigation */}
         <View style={styles.navigationContainer}>
           <SplitButton
             splitted={currentIndex > 0}
             mainAction={{
-              label: currentIndex === 0 ? "Iniciar" : "Siguiente",
+              label: "Siguiente",
+              // label: currentIndex === 0 ? "Iniciar" : "Siguiente",
               onPress: () => {
                 goToNextVerse();
               },
@@ -416,7 +417,7 @@ const SongDetailPage = () => {
               backgroundColor: theme.colors.text + 60,
             }}
             rightAction={{
-              label: finishedSong ? "Finalizar" : "Siguiente",
+              label: finishedSong ? "Final" : "Siguiente",
               onPress: () => {
                 goToNextVerse();
               },
