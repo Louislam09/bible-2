@@ -1,5 +1,4 @@
 import { QUOTES_DATA, TQuoteDataItem } from "@/constants/quotesData";
-import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { getTailwindStyleTag } from "@/hooks/useLoadTailwindScript";
@@ -7,7 +6,7 @@ import { TTheme } from "@/types";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import React, { useCallback, useMemo, useRef } from "react";
-import { Dimensions, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { WebView } from "react-native-webview";
 import BottomModal from "../BottomModal";
 
@@ -17,8 +16,6 @@ interface FontSelectorBottomSheetProps {
   onThemeSelect: (theme: TQuoteDataItem) => void;
   onClose: () => void;
 }
-
-const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 
 // Font data structure
 interface FontItem {
@@ -31,7 +28,6 @@ const getHTMLContent = (
   quotesData: any,
   selectedThemeId: string | null,
   theme: TTheme,
-  tailwindScript?: string
 ) => {
   // Collect all unique fonts from the quotes data with their details
   const fontsMap = new Map<string, FontItem>();
@@ -76,7 +72,7 @@ const getHTMLContent = (
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     ${fontImports}
-    ${tailwindScript}
+    ${storedData$.tailwindScript.get()}
     ${getTailwindStyleTag({ theme, fontSize: storedData$.fontSize.get() })}
 
     <style>
@@ -543,7 +539,6 @@ const FontSelectorBottomSheet: React.FC<FontSelectorBottomSheetProps> = ({
   const { theme } = useMyTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
   const webViewRef = useRef<WebView>(null);
-  const { tailwindScript } = useBibleContext();
 
   const handleThemeSelect = useCallback(
     (themeItem: TQuoteDataItem) => {
@@ -577,8 +572,8 @@ const FontSelectorBottomSheet: React.FC<FontSelectorBottomSheetProps> = ({
   );
 
   const htmlContent = useMemo(() => {
-    return getHTMLContent(QUOTES_DATA, selectedTheme?.id || null, theme, tailwindScript);
-  }, [theme, tailwindScript]);
+    return getHTMLContent(QUOTES_DATA, selectedTheme?.id || null, theme);
+  }, [theme]);
 
   return (
     <BottomModal

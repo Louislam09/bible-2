@@ -56,8 +56,6 @@ export const getTailwindStyleTag = ({ theme, fontSize }: ITailwindStyleTagProps)
 }
 
 const useLoadTailwindScript = () => {
-    const [tailwindScript, setTailwindScript] = useState("");
-
     useEffect(() => {
         const loadTailwindScript = async () => {
             try {
@@ -65,7 +63,6 @@ const useLoadTailwindScript = () => {
                 const cachedScript = storedData$.tailwindScript.get();
 
                 if (cachedScript) {
-                    setTailwindScript(cachedScript);
                     console.log('Tailwind script loaded from cache');
                     return;
                 }
@@ -82,7 +79,6 @@ const useLoadTailwindScript = () => {
                 // Save to storage context for future use
                 storedData$.tailwindScript.set(scriptTag);
 
-                setTailwindScript(scriptTag);
                 console.log('Tailwind script loaded from asset and cached');
             } catch (error) {
                 console.error('Error loading tailwind script:', error);
@@ -91,8 +87,6 @@ const useLoadTailwindScript = () => {
 
         loadTailwindScript();
     }, []);
-
-    return tailwindScript;
 };
 
 export default useLoadTailwindScript;

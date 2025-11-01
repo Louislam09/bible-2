@@ -31,12 +31,13 @@ import {
 
 import { FontAwesome } from "@expo/vector-icons";
 import { TFont } from '../types';
+import useLoadTailwindScript from "./useLoadTailwindScript";
 
 type FontMapping = Record<TFont, number | any>;
 
 const useBibleFonts = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
-
+  useLoadTailwindScript();
   const [googleFontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_700Bold,

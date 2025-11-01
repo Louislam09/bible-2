@@ -1,3 +1,4 @@
+import { storedData$ } from "@/context/LocalstoreContext";
 import { modalState$ } from "@/state/modalState";
 import { lucideIcons } from "@/utils/lucideIcons";
 
@@ -9,7 +10,6 @@ type DictionaryListHtmlTemplateProps = {
     loading: boolean,
     selectedWord: any,
     showDefinition: boolean,
-    tailwindScript: string,
 }
 
 export const dictionaryListHtmlTemplate = ({
@@ -20,7 +20,6 @@ export const dictionaryListHtmlTemplate = ({
     loading,
     selectedWord,
     showDefinition,
-    tailwindScript
 }: DictionaryListHtmlTemplateProps) => {
     const colors = theme.colors;
     const generateContent = () => {
@@ -106,7 +105,7 @@ export const dictionaryListHtmlTemplate = ({
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@100..900&display=swap">
 
           <!-- Tailwind CSS (Offline) -->
-         ${tailwindScript}
+         ${storedData$.tailwindScript.get()}
          <style type="text/tailwindcss">
             @theme {
                 /* Define Tailwind theme tokens */

@@ -4,6 +4,7 @@ import { DB_BOOK_NAMES } from "./BookNames";
 import { Platform } from "react-native";
 import { bibleState$ } from "@/state/bibleState";
 import { getTailwindStyleTag } from "@/hooks/useLoadTailwindScript";
+import { storedData$ } from "@/context/LocalstoreContext";
 
 export const generateAssetFontCss = ({
     fontFileName,
@@ -209,7 +210,6 @@ const createHtmlHead = (
     containerWidth: any,
     showReadingTime: boolean,
     fontSize: number,
-    tailwindScript?: string
 ) => `
     <head>
         <meta charset="utf-8">
@@ -217,7 +217,7 @@ const createHtmlHead = (
         <title>Capítulo ${chapterNumber}</title>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@100..900&display=swap">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400&display=swap">
-        ${tailwindScript}
+        ${storedData$.tailwindScript.get()}
       
          ${getTailwindStyleTag({ theme, fontSize })}
          ${bibleChapterStyles(theme, containerWidth, showReadingTime, fontSize)}
@@ -932,7 +932,6 @@ type TBibleChapterHtmlTemplateProps = {
     isInterlinear?: boolean;
     fontSize?: number;
     initialScrollIndex?: number;
-    tailwindScript?: string;
     showReadingTime: boolean
 };
 
@@ -944,7 +943,6 @@ export const bibleChapterHtmlTemplate = ({
     isInterlinear,
     fontSize,
     initialScrollIndex = 0,
-    tailwindScript,
     showReadingTime
 }: TBibleChapterHtmlTemplateProps) => {
     const containerWidth = width || "100%";
@@ -967,7 +965,6 @@ export const bibleChapterHtmlTemplate = ({
         containerWidth,
         showReadingTime,
         fontSize || 16,
-        tailwindScript
     )}
         ${createHtmlBody(versesContent, initialScrollIndex, chapterNumber, showReadingTime)}
     </html>

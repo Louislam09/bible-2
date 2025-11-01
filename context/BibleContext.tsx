@@ -23,7 +23,7 @@ import React, {
   useReducer,
   useState,
 } from "react";
-import { Dimensions, Text, ToastAndroid, View } from "react-native";
+import { Dimensions, ToastAndroid } from "react-native";
 import {
   EBibleVersions,
   EHistoryItem,
@@ -33,10 +33,8 @@ import {
 } from "../types";
 import { useDBContext } from "./databaseContext";
 import { storedData$ } from "./LocalstoreContext";
-import useLoadTailwindScript from "@/hooks/useLoadTailwindScript";
 
 type BibleState = {
-  tailwindScript: string;
   setSearchQuery: Function;
   selectFont: Function;
   onDeleteNote: (id: number) => void;
@@ -109,27 +107,27 @@ const initialContext: BibleState = {
   selectBibleVersion: (version: string) => {
     return new Promise((resolve) => resolve());
   },
-  onSaveNote: () => {},
-  onUpdateNote: () => {},
-  onDeleteNote: () => {},
-  onDeleteAllNotes: () => {},
-  selectFont: () => {},
-  selectTheme: () => {},
-  handleFontSize: () => {},
+  onSaveNote: () => { },
+  onUpdateNote: () => { },
+  onDeleteNote: () => { },
+  onDeleteAllNotes: () => { },
+  selectFont: () => { },
+  selectTheme: () => { },
+  handleFontSize: () => { },
   toggleFavoriteVerse: async ({
     bookNumber,
     chapter,
     verse,
     isFav,
-  }: IFavoriteVerse) => {},
-  setShouldLoop: (shouldLoop: boolean) => {},
+  }: IFavoriteVerse) => { },
+  setShouldLoop: (shouldLoop: boolean) => { },
   // setverseInStrongDisplay: (verse: number) => {},
-  increaseFontSize: () => {},
-  toggleViewLayoutGrid: () => {},
-  setLocalData: () => {},
-  performSearch: () => {},
-  setSearchQuery: () => {},
-  syncLocalSettings: () => {},
+  increaseFontSize: () => { },
+  toggleViewLayoutGrid: () => { },
+  setLocalData: () => { },
+  performSearch: () => { },
+  setSearchQuery: () => { },
+  syncLocalSettings: () => { },
   selectedFont: TFont.Roboto,
   currentBibleVersion: EBibleVersions.BIBLE,
   fontSize: 24,
@@ -143,7 +141,6 @@ const initialContext: BibleState = {
   orientation: "PORTRAIT",
   currentBibleLongName: "Reina Valera 1960",
   historyManager: {} as HistoryManager,
-  tailwindScript: "",
 };
 
 export const BibleContext = createContext<BibleState | any>(initialContext);
@@ -237,7 +234,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     allBibleLoaded,
   });
   const [state, dispatch] = useReducer(bibleReducer, initialContext);
-  const tailwindScript = useLoadTailwindScript();
   const fontsLoaded = useBibleFonts();
 
   const { state: searchState, performSearch } = useSearch({ db: myBibleDB });
@@ -431,7 +427,6 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     searchState,
     currentBibleLongName,
     historyManager,
-    tailwindScript,
     selectFont,
     onSaveNote,
     onDeleteNote,

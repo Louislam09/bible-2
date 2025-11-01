@@ -1,6 +1,5 @@
-import { Text, View } from "@/components/Themed";
+import { View } from "@/components/Themed";
 import { bibleChapterHtmlTemplate } from "@/constants/bibleChapterTemplate";
-import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
@@ -8,11 +7,11 @@ import { IBookVerse, IFavoriteVerse, TTheme } from "@/types";
 import { WordTagPair } from "@/utils/extractVersesInfo";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
-import React, { useCallback, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, Dimensions } from "react-native";
+import React, { useCallback, useMemo, useRef } from "react";
+import { Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WebView from "react-native-webview";
-import { WebViewOpenWindowEvent, WebViewRenderProcessGoneEvent } from "react-native-webview/lib/WebViewTypes";
+import { WebViewRenderProcessGoneEvent } from "react-native-webview/lib/WebViewTypes";
 
 interface WebViewChapterProps {
   data: IBookVerse[];
@@ -64,7 +63,6 @@ const WebViewChapter = React.memo(
     onVerseLongPress,
   }: WebViewChapterProps) => {
     const webViewRef = useRef<WebView>(null);
-    const { tailwindScript } = useBibleContext();
 
     const handleMessage = useCallback(
       (event: any) => {
@@ -208,7 +206,6 @@ const WebViewChapter = React.memo(
         isInterlinear,
         fontSize,
         initialScrollIndex,
-        tailwindScript,
         showReadingTime,
       });
     }, [
@@ -216,7 +213,6 @@ const WebViewChapter = React.memo(
       theme,
       isInterlinear,
       initialScrollIndex,
-      tailwindScript,
       fontSize,
       showReadingTime,
     ]);

@@ -71,7 +71,6 @@ const createSettingsHTML = (
   fontSize: number,
   currentTheme: string,
   selectedFont: string,
-  tailwindScript: string,
   isDark: boolean,
   showReadingTime: boolean
 ) => {
@@ -99,7 +98,7 @@ const createSettingsHTML = (
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <title>Configuración</title>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap">
-        ${tailwindScript}
+        ${storedData$.tailwindScript.get()}
         
         <style>
             :root {
@@ -613,8 +612,7 @@ const WebviewBibleSettingBottomModal = ({
 }: WebviewBibleSettingProps = {}) => {
   const webViewRef = useRef<WebView>(null);
   const { theme, toggleTheme } = useMyTheme();
-  const { tailwindScript, selectTheme, handleFontSize, selectFont } =
-    useBibleContext();
+  const { selectTheme, handleFontSize, selectFont } = useBibleContext();
   const fontSize = use$(() => storedData$.fontSize.get());
   const currentTheme = use$(() => storedData$.currentTheme.get());
   const selectedFont = use$(() => storedData$.selectedFont.get());
@@ -628,7 +626,6 @@ const WebviewBibleSettingBottomModal = ({
         fontSize,
         currentTheme,
         selectedFont,
-        tailwindScript,
         theme.dark,
         showReadingTime
       ),
@@ -637,7 +634,6 @@ const WebviewBibleSettingBottomModal = ({
       fontSize,
       currentTheme,
       selectedFont,
-      tailwindScript,
       showReadingTime,
     ]
   );

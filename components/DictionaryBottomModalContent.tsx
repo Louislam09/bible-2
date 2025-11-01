@@ -3,7 +3,6 @@ import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { dictionaryListHtmlTemplate } from "@/constants/dictionaryListHtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
-import { useMyTheme } from "@/context/ThemeContext";
 import useDictionaryData, { DatabaseData } from "@/hooks/useDictionaryData";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { bibleState$ } from "@/state/bibleState";
@@ -49,8 +48,7 @@ const DictionaryBottomModalContent: React.FC<DictionaryContentProps> = ({
 }) => {
   const [selectedWord, setSelectedWord] = useState<any>(null);
   const [filterData, setFilterData] = useState<DatabaseData[]>([]);
-  const { schema } = useMyTheme();
-  const { fontSize: bibleFontSize, tailwindScript } = useBibleContext();
+  const { fontSize: bibleFontSize } = useBibleContext();
   const { printToFile } = usePrintAndShare();
   const styles = getStyles(theme);
   const word = "";
@@ -165,7 +163,6 @@ const DictionaryBottomModalContent: React.FC<DictionaryContentProps> = ({
     navigation.navigate(Screens.DownloadManager);
   }, [navigation]);
 
-  const [sharing, setSharing] = useState(false);
 
   if (dbNames.length === 0) {
     return (
@@ -215,7 +212,6 @@ const DictionaryBottomModalContent: React.FC<DictionaryContentProps> = ({
               loading,
               selectedWord,
               showDefinition: !!selectedWord,
-              tailwindScript,
             }),
           }}
           onMessage={onWebViewMessage}

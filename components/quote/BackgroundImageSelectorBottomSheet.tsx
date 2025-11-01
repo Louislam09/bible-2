@@ -418,8 +418,6 @@ const BackgroundImageSelectorBottomSheet: React.FC<
               alignItems: "center",
             }}
           />}
-          cacheEnabled
-          cacheMode="LOAD_CACHE_ELSE_NETWORK"
           {...createOptimizedWebViewProps({}, "themeSelector")}
         />
       </View>

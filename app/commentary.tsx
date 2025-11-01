@@ -5,6 +5,7 @@ import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { commentaryCss } from "@/constants/commentaryCss";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useCommentaryData from "@/hooks/useCommentaryData";
 import useParams from "@/hooks/useParams";
@@ -28,10 +29,10 @@ const createCommentaryHTML = (
   commentaryData: any[],
   loading: boolean,
   hasCommentaries: boolean,
-  tailwindScript: string,
   showReferencePicker: boolean = true
 ) => {
   const colors = theme.colors;
+  const tailwindScript = storedData$.tailwindScript.get();
 
   // Generate empty state
   const generateEmptyState = () => {
@@ -394,7 +395,6 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
     verse: paramVerse,
   } = useParams<{ book?: string; chapter?: string; verse?: string }>();
 
-  const { tailwindScript } = useBibleContext();
   const { theme } = useMyTheme();
   const router = useRouter();
   const styles = getStyles(theme);
@@ -448,7 +448,6 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
         availableCommentaries,
         loading,
         dbNames.length > 0,
-        tailwindScript,
         true // showReferencePicker
       ),
     [
@@ -458,7 +457,6 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
       availableCommentaries,
       loading,
       dbNames.length,
-      tailwindScript,
     ]
   );
 

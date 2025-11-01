@@ -1,14 +1,17 @@
 // WebView performance optimization utilities
+import { Platform } from 'react-native';
 
 export const getOptimizedWebViewProps = (options: {
     enableCache?: boolean;
     enableMedia?: boolean;
     mixedContentMode?: 'never' | 'always' | 'compatibility';
+    allowFileAccess?: boolean;
 } = {}) => {
     const {
         enableCache = true,
         enableMedia = false,
-        mixedContentMode = 'never'
+        mixedContentMode = 'never',
+        allowFileAccess = false,
     } = options;
 
     return {
@@ -18,6 +21,13 @@ export const getOptimizedWebViewProps = (options: {
         allowsInlineMediaPlayback: enableMedia,
         mediaPlaybackRequiresUserAction: !enableMedia,
         mixedContentMode,
+
+        // File access settings (needed for local image caching)
+        ...(allowFileAccess && {
+            allowFileAccess: true,
+            allowFileAccessFromFileURLs: true,
+            allowUniversalAccessFromFileURLs: true,
+        }),
 
         // Additional performance settings
         javaScriptEnabled: true,
@@ -38,28 +48,40 @@ export const webViewConfigs = {
     static: getOptimizedWebViewProps({
         enableCache: true,
         enableMedia: false,
-        mixedContentMode: 'never'
+        mixedContentMode: 'never',
+        allowFileAccess: false,
     }),
 
-    // For theme selectors with images
+    // For theme selectors with images (with file access for cached images)
     themeSelector: getOptimizedWebViewProps({
         enableCache: true,
         enableMedia: true,
-        mixedContentMode: 'compatibility'
+        mixedContentMode: 'compatibility',
+        allowFileAccess: true,
     }),
 
     // For AI responses and dynamic content
     dynamic: getOptimizedWebViewProps({
         enableCache: true,
         enableMedia: false,
-        mixedContentMode: 'never'
+        mixedContentMode: 'never',
+        allowFileAccess: false,
     }),
 
     // For rich text editors
     editor: getOptimizedWebViewProps({
         enableCache: true,
         enableMedia: false,
-        mixedContentMode: 'never'
+        mixedContentMode: 'never',
+        allowFileAccess: false,
+    }),
+
+    // For content with cached images
+    withCachedImages: getOptimizedWebViewProps({
+        enableCache: true,
+        enableMedia: true,
+        mixedContentMode: 'compatibility',
+        allowFileAccess: true,
     })
 };
 

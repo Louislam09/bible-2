@@ -18,6 +18,7 @@ import { StyleSheet } from "react-native";
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import BottomModal from "./BottomModal";
+import { storedData$ } from "@/context/LocalstoreContext";
 
 interface CommentaryBottomSheetProps {
   bookNumber: number;
@@ -33,10 +34,9 @@ const createCommentaryHTML = (
   commentaryData: any[],
   loading: boolean,
   hasCommentaries: boolean,
-  tailwindScript: string
 ) => {
   const colors = theme.colors;
-  const isDark = theme.dark;
+  const tailwindScript = storedData$.tailwindScript.get();
 
   // Generate empty state
   const generateEmptyState = () => {
@@ -384,7 +384,6 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
   verse,
 }) => {
   const { theme } = useMyTheme();
-  const { tailwindScript } = useBibleContext();
   const styles = getStyles(theme);
   const { installedCommentary: dbNames } = useDBContext();
   const { printToFile } = usePrintAndShare();
@@ -421,7 +420,6 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
         availableCommentaries,
         loading,
         dbNames.length > 0,
-        tailwindScript
       ),
     [
       theme,
@@ -430,7 +428,6 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
       availableCommentaries,
       loading,
       dbNames.length,
-      tailwindScript,
     ]
   );
 
