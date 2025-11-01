@@ -44,6 +44,8 @@ import { useDownloadManager } from "@/hooks/useDownloadManager";
 import { DownloadBibleItem, ModulesFilters, TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { downloadState$ } from "@/state/downloadState";
+import { use$ } from "@legendapp/state/react";
 
 const recommendedModules = [
   ...biblesDatabases,
@@ -68,14 +70,6 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
     filter || ModulesFilters.ALL
   );
   const sortRef = useRef<BottomSheetModal>(null);
-
-  // Download manager hook
-  const {
-    activeDownloads,
-    queuedDownloads,
-    completedDownloads,
-    clearCompleted,
-  } = useDownloadManager();
 
   const databasesToDownload: DownloadBibleItem[] = useMemo(() => {
     switch (selectedFilter) {
@@ -168,14 +162,14 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
   const filteredDatabases = useMemo(() => {
     return debouncedSearchText
       ? databasesToDownload.filter(
-          (version) =>
-            removeAccent(version.name)
-              .toLowerCase()
-              .includes(removeAccent(debouncedSearchText).toLowerCase()) ||
-            removeAccent(version.storedName)
-              .toLowerCase()
-              .includes(removeAccent(debouncedSearchText).toLowerCase())
-        )
+        (version) =>
+          removeAccent(version.name)
+            .toLowerCase()
+            .includes(removeAccent(debouncedSearchText).toLowerCase()) ||
+          removeAccent(version.storedName)
+            .toLowerCase()
+            .includes(removeAccent(debouncedSearchText).toLowerCase())
+      )
       : databasesToDownload;
   }, [debouncedSearchText, databasesToDownload]);
 
@@ -202,24 +196,24 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
       titleIcon: "Download",
       headerRightProps: {
         headerRightIcon:
-          completedDownloads.length > 0 && isMyDownloadTab
+          isMyDownloadTab
             ? "Trash2"
             : "ListFilter",
         headerRightIconColor: theme.colors.text,
         onPress: () => {
-          if (completedDownloads.length > 0 && isMyDownloadTab) {
-            clearCompleted();
+          if (isMyDownloadTab) {
+            console.log('clearCompleted');
+            // clearCompleted();
           } else {
             sortHandlePresentModalPress();
           }
         },
-        disabled: isMyDownloadTab && completedDownloads.length === 0,
         style: {
-          opacity: isMyDownloadTab && completedDownloads.length === 0 ? 0 : 1,
+          opacity: 1,
         },
       },
     } as SingleScreenHeaderProps;
-  }, [theme.colors, isMyDownloadTab, completedDownloads.length]);
+  }, [theme.colors, isMyDownloadTab]);
 
   const handleFilter = (filterOption: ModulesFilters) => {
     setSelectedFilter(filterOption);
@@ -270,7 +264,7 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", gap: 8 }}>
-              {(activeDownloads.length > 0 || queuedDownloads.length > 0) && (
+              {/* {(activeDownloads.length > 0 || queuedDownloads.length > 0) && (
                 <View style={styles.downloadQueueIndicator}>
                   <Icon
                     name="Download"
@@ -283,7 +277,7 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
                       ` (+${queuedDownloads.length})`}
                   </Text>
                 </View>
-              )}
+              )} */}
               {!isConnected && (
                 <View style={styles.offlineIndicator}>
                   <Icon name="WifiOff" size={16} color="#e74856" />
@@ -312,8 +306,8 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
   }, [
     isMyDownloadTab,
     filteredDatabases,
-    activeDownloads.length,
-    queuedDownloads.length,
+    // activeDownloads.length,
+    // queuedDownloads.length,
     renderItem,
     keyExtractor,
     getItemType,
