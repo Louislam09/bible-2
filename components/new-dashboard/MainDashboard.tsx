@@ -3,44 +3,53 @@ import DailyVerseTwo from "@/components/new-dashboard/DailyVerseTwo";
 import MainSection from "@/components/new-dashboard/MainSection";
 import StudyTools from "@/components/new-dashboard/StudyTools";
 import StatusBarBackground from "@/components/StatusBarBackground";
+import { URLS } from "@/constants/appConfig";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
-import { useNotification } from "@/context/NotificationContext";
+import { useMyTheme } from "@/context/ThemeContext";
+import { UpdateService } from "@/services/updateService";
 import { bibleState$ } from "@/state/bibleState";
-import { Screens, TTheme } from "@/types";
+import { IDashboardOption, pbUser, Screens, TTheme } from "@/types";
 import isWithinTimeframe from "@/utils/isWithinTimeframe";
 import { showToast } from "@/utils/showToast";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
-// import * as Notifications from "expo-notifications";
-import { useMyTheme } from "@/context/ThemeContext";
 import { useNavigation } from "expo-router";
 import React, { useCallback, useRef, useState } from "react";
 import {
-  ScrollView,
-  StyleSheet,
   Linking,
-  TouchableOpacity,
   RefreshControl,
+  ScrollView,
+  Share,
+  StyleSheet
 } from "react-native";
-import { IDashboardOption } from "../../app/(dashboard)";
 import BottomModal from "../BottomModal";
 import EmptyStateMessage from "../EmptyStateMessage";
 import VersionList from "../home/header/VersionList";
-import { Text, View } from "../Themed";
-import ProfileCard from "../UserProfile";
+import UserProfile from "../UserProfile";
 import VoiceList from "../VoiceList";
 import BuyMeACoffeeButton from "./BuyMeACoffe";
-import { Share } from "react-native";
-import { URLS } from "@/constants/appConfig";
-import { UpdateService } from "@/services/updateService";
 
 export interface IAdditionalResourceList {
   advancedSearch: IDashboardOption[];
   manager: IDashboardOption[];
 }
 
-const NewDashboard = () => {
+const defaultUser: pbUser = {
+  id: "",
+  updated: "",
+  verified: false,
+  name: "hermano/a",
+  avatar: "",
+  collectionId: "",
+  collectionName: "",
+  created: "",
+  email: "",
+  emailVisibility: false,
+};
+
+
+const MainDashboard = () => {
   const navigation = useNavigation();
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
@@ -56,7 +65,6 @@ const NewDashboard = () => {
   } = useBibleContext();
   const storedData = storedData$.get();
   const requestAccessBottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const { notification, expoPushToken, error } = useNotification();
 
   const {
     lastBook,
@@ -68,7 +76,7 @@ const NewDashboard = () => {
     isAdmin: _isAdmin,
     useDomComponent,
   } = storedData;
-  const user = use$(() => storedData$.user.get()) || null;
+  const user = use$(() => storedData$.user.get()) || defaultUser;
   const isAdmin = _isAdmin || user?.isAdmin;
 
   const onSelect = (version: string) => {
@@ -121,17 +129,17 @@ const NewDashboard = () => {
     },
     user
       ? {
-          icon: "NotebookText",
-          label: "Notas",
-          action: () =>
-            navigation.navigate(Screens.Notes, { shouldRefresh: false }),
-          color: theme.colors?.notification || "#78b0a4",
-        }
+        icon: "NotebookText",
+        label: "Notas",
+        action: () =>
+          navigation.navigate(Screens.Notes, { shouldRefresh: false }),
+        color: theme.colors?.notification || "#78b0a4",
+      }
       : {
-          icon: "Cloudy",
-          label: "Sincronizar",
-          action: () => navigation.navigate(Screens.Login),
-        },
+        icon: "Cloudy",
+        label: "Sincronizar",
+        action: () => navigation.navigate(Screens.Login),
+      },
   ];
 
   const requestAccessHandlePresentModalPress = useCallback(
@@ -383,28 +391,13 @@ const NewDashboard = () => {
           />
         }
       >
-        <ProfileCard user={user} />
+        <UserProfile user={user} />
         <DailyVerseTwo user={user} theme={theme} />
         <MainSection list={mainActionItems} theme={theme} />
         <StudyTools list={studyToolItems} theme={theme} />
         <AdditionalResources list={additionalResourceList} theme={theme} />
 
-        {/* BUY ME A COFFE */}
         <BuyMeACoffeeButton />
-        {/* <TouchableOpacity
-          onPress={handleBuyMeACoffee}
-          style={{
-            backgroundColor: "#FFDD00",
-            padding: 12,
-            borderRadius: 8,
-            alignItems: "center",
-            marginVertical: 16,
-          }}
-        >
-          <Text style={{ color: "#000", fontWeight: "bold" }}>
-            Buy Me a Coffee
-          </Text>
-        </TouchableOpacity> */}
 
         <BottomModal shouldScroll startAT={2} ref={voiceBottomSheetModalRef}>
           <VoiceList theme={theme} />
@@ -440,4 +433,4 @@ const getStyles = ({ colors }: TTheme) =>
     },
   });
 
-export default NewDashboard;
+export default MainDashboard;

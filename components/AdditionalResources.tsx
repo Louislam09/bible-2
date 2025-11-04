@@ -1,4 +1,4 @@
-import { IAdditionalResourceList } from "@/components/new-dashboard";
+import { IAdditionalResourceList } from "@/components/new-dashboard/MainDashboard";
 import { TTheme } from "@/types";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";

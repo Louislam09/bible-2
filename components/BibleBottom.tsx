@@ -11,11 +11,11 @@ import BibleFooter from "./home/footer/BibleFooter";
 
 const BibleBottom: FC<any> = (props) => {
   const { orientation } = useBibleContext();
-  const isSplitActived = bibleState$.isSplitActived.get();
+  const isSplitActived = use$(() => bibleState$.isSplitActived.get());
   const isPortrait = orientation === "PORTRAIT";
   const { theme } = useMyTheme();
 
-  const estimatedReadingTimeBottom = bibleState$.readingTimeData.bottom.get();
+  const estimatedReadingTimeBottom = use$(() => bibleState$.readingTimeData.bottom.get());
   const isDataLoading = use$(() => bibleState$.isDataLoading.bottom.get());
   const bottomVerses = use$(() => bibleState$.bibleData.bottomVerses.get());
   const interlinearVerses = use$(
@@ -25,11 +25,12 @@ const BibleBottom: FC<any> = (props) => {
   console.log(
     `🔝 BibleBottom Component Rendered 🔄:${isDataLoading} 🧮:${bottomVerses.length} ⌚:${estimatedReadingTimeBottom}`
   );
+  const bibleQuery = use$(() => bibleState$.bibleQuery.get());
   const {
     bottomSideVerse: verse,
     bottomSideBook: book,
     bottomSideChapter: chapter,
-  } = bibleState$.bibleQuery.get();
+  } = bibleQuery;
 
   const { nextChapter, previousChapter } = useChangeBookOrChapter({
     book,

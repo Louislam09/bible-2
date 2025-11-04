@@ -6,8 +6,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FC, useCallback, useRef } from "react";
 import { TouchableOpacity, useWindowDimensions } from "react-native";
 
-import { ChooseReferenceMutableProgress } from "@/components/animations/expandable-choose-reference";
 import Icon from "@/components/Icon";
+import { ChooseReferenceMutableProgress } from "@/components/animations/constants";
 import { Text, View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
 import { storedData$ } from "@/context/LocalstoreContext";
@@ -32,7 +32,7 @@ interface FooterInterface {
 const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const haptics = useHaptics();
   const { currentBibleVersion } = useBibleContext();
-  const isSplitActived = bibleState$.isSplitActived.get();
+  const isSplitActived = use$(() => bibleState$.isSplitActived.get());
   const useDomComponent = use$(() => storedData$.useDomComponent.get());
   const netInfo = useNetwork();
   const { isConnected } = netInfo;
@@ -47,7 +47,12 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const playRef = useRef<BottomSheetModal>(null);
   const navigation = useNavigation();
   const params = useParams();
-  const bibleQuery = bibleState$.bibleQuery.get();
+  const bibleQuery = use$(() => bibleState$.bibleQuery.get());
+
+  // Get refs at the top to maintain consistent hook order
+  const backButtonRef = tourState$.backButton.get();
+  const footerTitleRef = tourState$.footerTitleRef.get();
+  const nextButtonRef = tourState$.nextButton.get();
 
   const book = isSplit ? bibleQuery?.bottomSideBook : bibleQuery.book;
   const chapter = isSplit ? bibleQuery?.bottomSideChapter : bibleQuery.chapter;
@@ -184,7 +189,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
     >
       <View style={styles.footerCenter}>
         <TouchableOpacity
-          ref={tourState$.backButton.get()}
+          ref={backButtonRef}
           onPress={() => previousChapter()}
         >
           <Icon
@@ -195,7 +200,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           />
         </TouchableOpacity>
         <TouchableOpacity
-          ref={tourState$.footerTitleRef.get()}
+          ref={footerTitleRef}
           style={styles.titleContainer}
           onPress={onPress}
           // onLongPress={onLongFooterTitle}
@@ -203,12 +208,11 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
         >
           <Text
             style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}
-          >{`${displayBookName ?? ""} ${chapter ?? ""}:${
-            isSplitActived ? verse : Math.abs(currentHistoryIndexState) || verse
-          }`}</Text>
+          >{`${displayBookName ?? ""} ${chapter ?? ""}:${isSplitActived ? verse : Math.abs(currentHistoryIndexState) || verse
+            }`}</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          ref={tourState$.nextButton.get()}
+          ref={nextButtonRef}
           onPress={() => nextChapter()}
         >
           <Icon

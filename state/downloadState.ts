@@ -86,6 +86,29 @@ export const downloadStateHelpers = {
         }
     },
 
+    // ✅ Create or update a download entry (useful for extracted files)
+    upsertDownload: (storedName: string, download: Partial<DownloadItem> & Pick<DownloadItem, 'name' | 'status'>) => {
+        const current = downloadState$.downloads[storedName].peek();
+
+        if (current) {
+            // Update existing
+            downloadState$.downloads[storedName].assign(download);
+        } else {
+            // Create new entry
+            const id = `${storedName}-${Date.now()}`;
+            const newDownload: DownloadItem = {
+                id,
+                storedName,
+                url: '', // Not needed for extracted files
+                size: 0, // Not needed for extracted files
+                progress: 0,
+                retryCount: 0,
+                ...download,
+            };
+            downloadState$.downloads[storedName].set(newDownload);
+        }
+    },
+
     removeFromQueue: (storedName: string) => {
         downloadState$.queue.set((currentQueue) =>
             currentQueue.filter(name => name !== storedName)

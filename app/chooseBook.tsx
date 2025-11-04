@@ -81,6 +81,7 @@ const BookItem = React.memo(
     );
   }
 );
+BookItem.displayName = 'BookItem';
 
 const BookList = React.memo(
   ({
@@ -135,6 +136,7 @@ const BookList = React.memo(
     );
   }
 );
+BookList.displayName = 'BookList';
 
 const ChooseBook: React.FC = () => {
   const navigation = useNavigation();

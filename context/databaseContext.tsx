@@ -9,7 +9,7 @@ import * as SQLite from "expo-sqlite";
 import React, {
   createContext,
   useCallback,
-  useContext,
+  use,
   useEffect,
   useMemo,
 } from "react";
@@ -46,7 +46,7 @@ const initialContext: DatabaseContextType = {
   installedCommentary: [],
   isInstallBiblesLoaded: false,
   isMyBibleDbLoaded: false,
-  refreshDatabaseList: () => {},
+  refreshDatabaseList: () => { },
   hebrewInterlinearService: {
     database: null,
     isLoaded: false,
@@ -206,7 +206,7 @@ const DatabaseProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-const useDBContext = (): DatabaseContextType => useContext(DatabaseContext);
+const useDBContext = (): DatabaseContextType => use(DatabaseContext);
 
 export { DatabaseContext, useDBContext };
 export default DatabaseProvider;

@@ -4,7 +4,7 @@ import Icon, { IconProps } from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { useMyTheme } from "@/context/ThemeContext";
 import { tourState$ } from "@/state/tourState";
-import { Screens, TTheme } from "@/types";
+import { IDashboardOption, Screens, TTheme } from "@/types";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
 import React, { useMemo } from "react";
@@ -14,14 +14,6 @@ import {
   useWindowDimensions,
 } from "react-native";
 
-type IDashboardOption = {
-  icon: IconProps["name"];
-  label: string;
-  action: () => void;
-  disabled?: boolean;
-  isIonicon?: boolean;
-  tag?: string;
-};
 
 const OnboardingScreen = () => {
   const { theme } = useMyTheme();

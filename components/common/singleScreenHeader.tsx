@@ -12,6 +12,7 @@ import {
 import Icon from "../Icon";
 import { Text } from "../Themed";
 import * as Haptics from 'expo-haptics';
+import { useCallback } from "react";
 
 export type SingleScreenHeaderProps = {
   theme: TTheme;
@@ -58,7 +59,7 @@ export const singleScreenHeader = ({
     },
   } as any;
 
-  const RightHeaderComponent = () => (
+  const RightHeaderComponent = useCallback(() => (
     <TouchableOpacity {...headerRightProps}>
       {headerRightProps.headerRightIcon && (
         <Icon
@@ -72,7 +73,7 @@ export const singleScreenHeader = ({
         <Text style={{ fontSize: 18 }}>{headerRightProps.headerRightText}</Text>
       )}
     </TouchableOpacity>
-  );
+  ), [headerRightProps]);
 
   return {
     headerShown: true,

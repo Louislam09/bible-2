@@ -9,7 +9,7 @@ import React, {
   createContext,
   ReactNode,
   useCallback,
-  useContext,
+  use,
   useState
 } from "react";
 import { useDBContext } from "./databaseContext";
@@ -119,10 +119,10 @@ export const MemorizationProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useMemorization = () => useContext(MemorizationContext);
+export const useMemorization = () => use(MemorizationContext);
 
 // export const useMemorization = () => {
-//   const context = useContext(MemorizationContext);
+//   const context = use(MemorizationContext);
 //   if (!context) {
 //     throw new Error(
 //       "useMemorization must be used within a MemorizationProvider"

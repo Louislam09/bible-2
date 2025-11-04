@@ -3,13 +3,13 @@ import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
-import { useDownloadManager } from "@/hooks/useDownloadManager";
+import type { useDownloadManager } from "@/hooks/useDownloadManager";
 import { VersionItem } from "@/hooks/useInstalledBible";
 import { TTheme } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 import * as FileSystem from "expo-file-system";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -21,13 +21,19 @@ import ProgressBar from "./home/footer/ProgressBar";
 import Icon from "./Icon";
 import { Text, View } from "./Themed";
 
-const FileList = () => {
+type FileListProps = {
+  downloadManager: ReturnType<typeof useDownloadManager>;
+  isActive?: boolean;
+};
+
+const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true }) => {
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const [loading, setLoading] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [listRevision, setListRevision] = useState<number>(0);
+
   const {
     refreshDatabaseList,
     installedBibles,
@@ -38,8 +44,25 @@ const FileList = () => {
     greekInterlinearService: interlinearGreekService,
   } = useDBContext();
   const { selectBibleVersion } = useBibleContext();
-  const { getDownloadStatus, isDownloading, removeCompleted } =
-    useDownloadManager();
+
+  // ✅ Get download manager functions from props instead of calling the hook
+  const { getDownloadStatus, isDownloading, removeCompleted } = downloadManager;
+
+  // ✅ Refresh when tab becomes active
+  const prevActiveRef = useRef<boolean>(false);
+
+  useEffect(() => {
+    // Only refresh when transitioning from inactive to active
+    if (isActive && !prevActiveRef.current) {
+      const refreshOnActivate = async () => {
+        await refreshDatabaseList();
+        setListRevision((prev) => prev + 1);
+      };
+      refreshOnActivate();
+    }
+    prevActiveRef.current = isActive;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isActive]); // Only trigger when isActive changes
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -79,6 +102,28 @@ const FileList = () => {
           onPress: async () => {
             try {
               const fileUri = item.path;
+              const storedNameWithoutExt = item.shortName.replace(/.db$/, "");
+
+              // Extract base name to check for related files BEFORE deleting
+              let baseName = storedNameWithoutExt;
+              if (storedNameWithoutExt.endsWith('-bible')) {
+                baseName = storedNameWithoutExt.replace('-bible', '');
+              } else if (storedNameWithoutExt.includes('.commentaries-com')) {
+                baseName = storedNameWithoutExt.replace('.commentaries-com', '');
+              } else if (storedNameWithoutExt.includes('.dictionary')) {
+                baseName = storedNameWithoutExt.replace('.dictionary', '');
+              }
+
+              // Check if there are any other files from the same base download BEFORE deleting
+              const relatedFiles = listData.filter(f => {
+                const fNameWithoutExt = f.shortName.replace(/.db$/, "");
+                return fNameWithoutExt !== storedNameWithoutExt && // Not the file we're deleting
+                  (fNameWithoutExt === baseName ||
+                    fNameWithoutExt.startsWith(`${baseName}-`) ||
+                    fNameWithoutExt.startsWith(`${baseName}.`));
+              });
+
+              console.log(`Deleting ${storedNameWithoutExt}, found ${relatedFiles.length} related files`);
 
               // Delete all database files
               await FileSystem.deleteAsync(fileUri, { idempotent: true });
@@ -96,8 +141,14 @@ const FileList = () => {
               );
 
               // Clear download manager state for this file
-              const storedNameWithoutExt = item.shortName.replace(/.db$/, "");
+              // Try to remove the exact match first (for extracted files like commentaries)
               removeCompleted(storedNameWithoutExt);
+
+              // Only remove the base download entry if no related files remain
+              if (relatedFiles.length === 0 && baseName !== storedNameWithoutExt) {
+                console.log(`Removing base download entry: ${baseName} (no related files remaining)`);
+                removeCompleted(baseName);
+              }
 
               // Refresh the database list and wait for it to complete
               await refreshDatabaseList();
@@ -140,15 +191,6 @@ const FileList = () => {
       <TouchableOpacity style={styles.retryButton} onPress={onRefresh}>
         <Text style={styles.retryButtonText}>Reintentar</Text>
       </TouchableOpacity>
-    </View>
-  );
-
-  const renderSection = (title: string, count: number) => (
-    <View style={styles.sectionHeader}>
-      <Text style={styles.sectionTitle}>{title}</Text>
-      <View style={styles.countBadge}>
-        <Text style={styles.countText}>{count}</Text>
-      </View>
     </View>
   );
 
@@ -206,6 +248,23 @@ const FileList = () => {
     );
   };
 
+  const listData = useMemo(
+    () => [...installedBibles, ...installedDictionary, ...installedCommentary],
+    [installedBibles, installedDictionary, installedCommentary]
+  );
+
+  const keyExtractor = useCallback(
+    (item: VersionItem) => `downloaded-${item.shortName}`,
+    []
+  );
+
+  // ✅ Get item type for recycling optimization
+  const getItemType = useCallback((item: VersionItem) => {
+    if (item.shortName.includes(".dictionary")) return "dictionary";
+    if (item.shortName.includes(".commentaries")) return "commentary";
+    return "bible";
+  }, []);
+
   const renderItem = useCallback(
     ({ item, index }: { item: VersionItem; index: number }) => {
       const versionItem = item;
@@ -221,15 +280,7 @@ const FileList = () => {
         downloadStatus?.status === "unzipping";
 
       return (
-        <View>
-          {index === 0 &&
-            renderSection(
-              "Módulos descargados",
-              installedBibles.length +
-                (installedDictionary.length || 0) +
-                (installedCommentary.length || 0)
-            )}
-
+        <View >
           <View style={[styles.itemContainer, styles.defaultItem]}>
             <View style={styles.itemIconContainer}>
               <Ionicons
@@ -326,6 +377,7 @@ const FileList = () => {
     ]
   );
 
+  // Conditional rendering without early returns to avoid breaking Rules of Hooks
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -339,22 +391,7 @@ const FileList = () => {
     return <ErrorComponent />;
   }
 
-  const listData = useMemo(
-    () => [...installedBibles, ...installedDictionary, ...installedCommentary],
-    [installedBibles, installedDictionary, installedCommentary]
-  );
-
-  const keyExtractor = useCallback(
-    (item: VersionItem) => `downloaded-${item.shortName}`,
-    []
-  );
-
-  // ✅ Get item type for recycling optimization
-  const getItemType = useCallback((item: VersionItem) => {
-    if (item.shortName.includes(".dictionary")) return "dictionary";
-    if (item.shortName.includes(".commentaries")) return "commentary";
-    return "bible";
-  }, []);
+  // console.log("listData", listData);
 
   return (
     <FlashList
@@ -365,6 +402,14 @@ const FileList = () => {
       getItemType={getItemType} // Enable item recycling for better performance
       contentContainerStyle={styles.listContent}
       ListEmptyComponent={<EmptyComponent />}
+      ListHeaderComponent={
+        <View style={[styles.sectionHeader]}>
+          <Text style={styles.sectionTitle}>Módulos descargados</Text>
+          <View style={styles.countBadge}>
+            <Text style={styles.countText}>{listData.length}</Text>
+          </View>
+        </View>
+      }
       refreshControl={
         <RefreshControl
           refreshing={refreshing}

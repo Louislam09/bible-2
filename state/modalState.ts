@@ -26,6 +26,14 @@ export const modalState$ = observable({
     modalState$.chooseReferenceStep.set(step);
   },
   isSheetClosed: true,
+  showUserTooltip: false,
+
+  openUserTooltip: () => {
+    modalState$.showUserTooltip.set(true);
+  },
+  closeUserTooltip: () => {
+    modalState$.showUserTooltip.set(false);
+  },
 
   setSearchWordOnDic: (word: string) => {
     const cleanedWord = word.replace(/[.,:;?!]/g, "");

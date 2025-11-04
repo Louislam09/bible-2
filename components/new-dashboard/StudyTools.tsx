@@ -1,5 +1,4 @@
-import { IDashboardOption } from "@/app/(dashboard)";
-import { TTheme } from "@/types";
+import { TTheme, IDashboardOption } from "@/types";
 import React from "react";
 import {
   StyleSheet,

@@ -22,7 +22,7 @@ import { useSplitScreen } from "@/hooks/useSplitScreen";
 import { bibleState$ } from "@/state/bibleState";
 import { tourState$ } from "@/state/tourState";
 import { OrientationType, TTheme } from "@/types";
-import { use$ } from "@legendapp/state/react";
+import { observer, use$ } from "@legendapp/state/react";
 import { Stack, useNavigation } from "expo-router";
 
 // Constants
@@ -36,7 +36,7 @@ interface TutorialStep {
 
 type HomeScreenProps = {};
 
-const HomeScreen: React.FC<HomeScreenProps> = () => {
+const HomeScreen: React.FC<HomeScreenProps> = observer(() => {
   const navigation = useNavigation();
   const { theme } = useMyTheme();
   const orientation = useDeviceOrientation();
@@ -156,7 +156,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
       </SafeAreaView>
     </StatusBarBackground>
   );
-};
+});
 
 const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
   StyleSheet.create({

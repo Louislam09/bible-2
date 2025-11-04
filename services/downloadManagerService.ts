@@ -58,7 +58,6 @@ class DownloadManagerService implements IDownloadManager {
     // ✅ Improved download resumption with proper state recovery
     private async resumeIncompleteDownloads() {
         const downloads = downloadStateHelpers.getAllDownloads();
-        console.log({ downloads })
         const incompleteDownloads = downloads.filter(
             (d) => d.status === "downloading" || d.status === "paused"
         );
@@ -295,7 +294,7 @@ class DownloadManagerService implements IDownloadManager {
             );
 
             // Unzip with progress callback
-            await unzipFile({
+            const unzipResult = await unzipFile({
                 zipFileUri: zipPath,
                 onProgress: (progressText) => {
                     downloadStateHelpers.updateDownload(storedName, {
@@ -304,12 +303,44 @@ class DownloadManagerService implements IDownloadManager {
                 },
             });
 
-            // Mark as completed
+            const completedAt = Date.now();
+
+            // Mark main download as completed
             downloadStateHelpers.updateDownload(storedName, {
                 status: "completed",
                 progress: 1,
-                completedAt: Date.now(),
+                completedAt,
             });
+
+            // ✅ Mark ALL extracted files as completed
+            // This handles cases where a zip contains multiple files (e.g., bible + commentaries)
+            if (unzipResult.extractedFiles.length > 0) {
+                console.log(`📦 Processing ${unzipResult.extractedFiles.length} extracted files`);
+
+                for (const extractedFile of unzipResult.extractedFiles) {
+                    console.log(`Processing extracted file: ${extractedFile.storedName} (main: ${storedName})`);
+
+                    // Skip if it's the same as the main storedName (already marked above)
+                    // Also check if the extractedFile.storedName starts with storedName (for bible files)
+                    const isMainFile = extractedFile.storedName === storedName ||
+                        extractedFile.storedName === `${storedName}-bible`;
+
+                    if (isMainFile) {
+                        console.log(`Skipping ${extractedFile.storedName} (already marked as main download)`);
+                        continue;
+                    }
+
+                    // Create a completed download entry for each extracted file
+                    console.log(`✅ Marking ${extractedFile.storedName} as completed`);
+                    downloadStateHelpers.upsertDownload(extractedFile.storedName, {
+                        status: "completed",
+                        progress: 1,
+                        completedAt,
+                        startedAt: completedAt,
+                        name: extractedFile.finalName,
+                    });
+                }
+            }
 
             // Notify completion
             await downloadNotificationService.notifyDownloadCompleted(

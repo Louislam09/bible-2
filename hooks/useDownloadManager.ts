@@ -5,8 +5,10 @@ import { use$ } from "@legendapp/state/react";
 import { useCallback, useEffect, useMemo } from "react";
 
 export const useDownloadManager = () => {
-    const downloads = use$(downloadState$.downloads);
-    const queue = use$(downloadState$.queue);
+    // const downloads = use$(() => downloadState$.downloads.get());
+    // const queue = use$(() => downloadState$.queue.get());
+    const downloads = downloadState$.downloads.get()
+    const queue = downloadState$.queue.get()
 
     // Initialize download manager on mount
     useEffect(() => {

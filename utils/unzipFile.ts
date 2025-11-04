@@ -14,7 +14,18 @@ interface UnzipProps {
   onProgress: (progress: string) => void;
 }
 
-const unzipFile = async ({ zipFileUri, onProgress }: UnzipProps) => {
+interface ExtractedFile {
+  originalName: string;
+  finalName: string;
+  storedName: string; // storedName without extension
+  type: 'bible' | 'dictionary' | 'commentary';
+}
+
+export interface UnzipResult {
+  extractedFiles: ExtractedFile[];
+}
+
+const unzipFile = async ({ zipFileUri, onProgress }: UnzipProps): Promise<UnzipResult> => {
   try {
     const extractionPath = `${SQLiteDirPath}/`;
     onProgress("Preparando archivos...");
@@ -42,7 +53,9 @@ const unzipFile = async ({ zipFileUri, onProgress }: UnzipProps) => {
 
     // Only process NEW files that were just extracted
     const newFiles = allFiles.filter(file => !existingFiles.includes(file));
-    console.log("Newly extracted files:", newFiles);
+    console.log("Newly extracted files:", existingFiles, " - ", newFiles);
+
+    const extractedFiles: ExtractedFile[] = [];
 
     // Rename files if needed (for non-default databases)
     for (const fileName of newFiles) {
@@ -63,7 +76,7 @@ const unzipFile = async ({ zipFileUri, onProgress }: UnzipProps) => {
       const databaseType = getDatabaseType(fileName);
       const allowTypes = [DATABASE_TYPE.BIBLE, DATABASE_TYPE.DICTIONARY, DATABASE_TYPE.COMMENTARY];
       const isDefaultBible = isDefaultDatabase(fileName.replace(/\.(db|SQLite3?)$/i, ""));
-      console.log({ databaseType, allowTypes, isDefaultBible })
+      console.log({ fileName })
 
       if (allowTypes.includes(databaseType) && !isDefaultBible) {
         const newFileName = changeFileNameExt({
@@ -74,6 +87,7 @@ const unzipFile = async ({ zipFileUri, onProgress }: UnzipProps) => {
         if (newFileName !== fileName) {
           const oldPath = `${extractionPath}${fileName}`;
           const newPath = `${extractionPath}${newFileName}`;
+          console.log({ oldPath, newPath })
 
           console.log("Renaming file:", { from: fileName, to: newFileName });
 
@@ -82,6 +96,21 @@ const unzipFile = async ({ zipFileUri, onProgress }: UnzipProps) => {
             to: newPath,
           });
         }
+
+        // Track extracted file
+        const storedName = newFileName.replace(/\.(db|SQLite3?)$/i, "");
+        const fileType = databaseType === DATABASE_TYPE.BIBLE ? 'bible'
+          : databaseType === DATABASE_TYPE.DICTIONARY ? 'dictionary'
+            : 'commentary';
+
+        extractedFiles.push({
+          originalName: fileName,
+          finalName: newFileName,
+          storedName: storedName,
+          type: fileType
+        });
+
+        console.log("Tracked extracted file:", { storedName, type: fileType });
       }
     }
 
@@ -92,6 +121,9 @@ const unzipFile = async ({ zipFileUri, onProgress }: UnzipProps) => {
 
     onProgress("¡Archivos listos!");
     console.log("Unzip process completed successfully");
+    console.log("Total extracted database files:", extractedFiles.length);
+
+    return { extractedFiles };
   } catch (error) {
     onProgress("Error durante extracción");
     console.error("Error during unzipping process:", error);
@@ -111,10 +143,12 @@ interface ChangeFileNameExt {
 }
 
 const changeFileNameExt = ({ fileName, newExt }: ChangeFileNameExt) => {
+  console.log({ fileName, newExt })
   const fileExt = getFileExtension(fileName);
   const newFileName = fileName.endsWith(`.${fileExt}`)
     ? fileName.replace(`.${fileExt}`, newExt)
     : fileName;
+  console.log({ newFileName })
   return newFileName;
 };
 

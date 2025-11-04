@@ -7,9 +7,9 @@ import {
 } from "@/constants/databaseNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
-import { useDownloadManager } from "@/hooks/useDownloadManager";
 import { showToast } from "@/utils/showToast";
 import { Ionicons } from "@expo/vector-icons";
+import type { useDownloadManager } from "@/hooks/useDownloadManager";
 import * as FileSystem from "expo-file-system";
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import {
@@ -55,6 +55,7 @@ type DatabaseDownloadItemProps = {
   isConnected: boolean | null;
   onDownloadComplete?: (storedName: string) => void;
   onError?: (error: string) => void;
+  downloadManager: ReturnType<typeof useDownloadManager>;
 };
 
 const DatabaseDownloadItem = ({
@@ -63,6 +64,7 @@ const DatabaseDownloadItem = ({
   isConnected,
   onDownloadComplete,
   onError,
+  downloadManager,
 }: DatabaseDownloadItemProps) => {
   // State management
   const [expandDetails, setExpandDetails] = useState(false);
@@ -75,8 +77,9 @@ const DatabaseDownloadItem = ({
   // Context hooks
   const { refreshDatabaseList } = useDBContext();
   const { selectBibleVersion, currentBibleVersion } = useBibleContext();
-  const { addDownload, cancelDownload, retryDownload, removeCompleted } =
-    useDownloadManager();
+
+  // ✅ Get download manager functions from props instead of calling the hook
+  const { addDownload, cancelDownload, retryDownload, removeCompleted } = downloadManager;
 
   // ✅ Use selective Legend State subscription - only re-render when THIS download changes
   const downloadStatus = use$(downloadState$.downloads[storedName]);
@@ -130,21 +133,6 @@ const DatabaseDownloadItem = ({
     };
   }, [downloadStatus?.status]);
 
-  // Handle animation for expand/collapse
-  useEffect(() => {
-    const animationHandle = Animated.timing(animation, {
-      toValue: expandDetails ? 1 : 0,
-      duration: 300,
-      easing: Easing.bezier(0.4, 0, 0.2, 1),
-      useNativeDriver: false,
-    });
-
-    animationHandle.start();
-
-    return () => {
-      animationHandle.stop();
-    };
-  }, [expandDetails]);
 
   // Monitor download completion
   useEffect(() => {
@@ -357,8 +345,7 @@ const DatabaseDownloadItem = ({
     <Animated.View
       style={[
         styles.itemContainer,
-        isCurrentBible && styles.currentBibleContainer,
-        item.disabled && styles.disabledContainer,
+        isDownloaded && styles.downloadedItem
       ]}
     >
       <Pressable
@@ -379,39 +366,12 @@ const DatabaseDownloadItem = ({
         </View>
 
         <View style={styles.itemContent}>
-          <View
-            isTransparent
-            style={{ flexDirection: "row", gap: 4, alignItems: "center" }}
-          >
-            <Text
-              style={[styles.itemTitle, { color: theme.colors.notification }]}
-            >
-              {item?.key || "-"}
-            </Text>
-            {isDownloaded && (
-              <Icon
-                size={18}
-                name="BadgeCheck"
-                color={theme.colors.notification}
-              />
-            )}
-            {isCurrentBible && (
-              <View style={styles.currentBadge}>
-                <Text style={styles.currentBadgeText}>EN USO</Text>
-              </View>
-            )}
-            {item.disabled && (
-              <View style={styles.comingSoonBadge}>
-                <Text style={styles.comingSoonText}>PRÓXIMAMENTE</Text>
-              </View>
-            )}
-          </View>
           <Text
-            style={[styles.itemSubTitle, { color: theme.colors.primary }]}
-            numberOfLines={expandDetails ? undefined : 1}
+            style={[styles.itemSubTitle]}
           >
             {item?.name || "-"}
           </Text>
+
           <View style={styles.defaultBadge}>
             <Icon name="ChartPie" color={theme.colors.notification} size={16} />
             <Text style={styles.defaultBadgeText}>{formatFileSize(size)}</Text>
@@ -516,32 +476,6 @@ const DatabaseDownloadItem = ({
           <Text style={styles.errorText}>{downloadError}</Text>
         </View>
       )}
-
-      {/* Expandable details section */}
-      {expandDetails && (
-        <Animated.View style={styles.detailsContainer}>
-          {/* File location */}
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Nombre:</Text>
-            <Text style={styles.detailValue}>{item.name}</Text>
-          </View>
-          {/* Downloaded date */}
-          {isDownloaded && downloadedDate && (
-            <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Descargado:</Text>
-              <Text style={styles.detailValue}>
-                {formatDate(downloadedDate)}
-              </Text>
-            </View>
-          )}
-
-          {/* File size details */}
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Tamaño:</Text>
-            <Text style={styles.detailValue}>{formatFileSize(size)}</Text>
-          </View>
-        </Animated.View>
-      )}
     </Animated.View>
   );
 };
@@ -559,10 +493,9 @@ const getStyles = ({ colors, dark = false }: TTheme) =>
       borderColor: colors.notification + "50",
       gap: 2,
     },
-    currentBibleContainer: {
-      borderColor: colors.primary,
-      borderWidth: 2,
-      backgroundColor: colors.card + "10",
+    downloadedItem: {
+      borderColor: colors.notification,
+      borderWidth: 1,
     },
     disabledContainer: {
       opacity: 0.6,

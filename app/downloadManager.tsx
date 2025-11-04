@@ -1,5 +1,5 @@
 import { useMyTheme } from "@/context/ThemeContext";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 import { Stack } from "expo-router";
 import React, {
@@ -33,17 +33,18 @@ import NoInternetSplash from "@/components/NoInternetSplash";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
 import AllDatabases, {
+  biblesDatabases,
   commentariesDatabases,
   dictionariesDatabases,
-  biblesDatabases,
 } from "@/constants/AllDatabases";
 import { useNetwork } from "@/context/NetworkProvider";
 import useDebounce from "@/hooks/useDebounce";
-import useParams from "@/hooks/useParams";
 import { useDownloadManager } from "@/hooks/useDownloadManager";
+import useParams from "@/hooks/useParams";
 import { DownloadBibleItem, ModulesFilters, TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
 
 const recommendedModules = [
   ...biblesDatabases,
@@ -69,13 +70,8 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
   );
   const sortRef = useRef<BottomSheetModal>(null);
 
-  // Download manager hook
-  const {
-    activeDownloads,
-    queuedDownloads,
-    completedDownloads,
-    clearCompleted,
-  } = useDownloadManager();
+  // ✅ Call useDownloadManager once at the top level
+  const downloadManager = useDownloadManager();
 
   const databasesToDownload: DownloadBibleItem[] = useMemo(() => {
     switch (selectedFilter) {
@@ -131,51 +127,28 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
     setSearchText("");
   };
 
-  const AnimatedSearchBar = () => {
-    return (
-      <View style={styles.searchContainer}>
-        <Ionicons
-          style={styles.searchIcon}
-          name="search"
-          size={20}
-          color={
-            isSearchFocused ? theme.colors.text : theme.colors.notification
-          }
-        />
-        <TextInput
-          placeholder="Buscar un módulo..."
-          placeholderTextColor={theme.colors.text}
-          style={[styles.noteHeaderSearchInput]}
-          onChangeText={(text) => setSearchText(text)}
-          value={searchText}
-          onFocus={() => setIsSearchFocused(true)}
-          onBlur={() => setIsSearchFocused(false)}
-          returnKeyType="search"
-        />
-        {searchText.length > 0 && (
-          <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
-            <Ionicons
-              name="close-circle"
-              size={20}
-              color={theme.colors.text + "80"}
-            />
-          </TouchableOpacity>
-        )}
-      </View>
-    );
-  };
-
+  const searchContainerAnimatedStyle = useAnimatedStyle(() => ({
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 10,
+    marginVertical: 12,
+    borderWidth: 1,
+    width: "100%",
+    height: 48,
+    backgroundColor: theme.colors.notification + "20",
+    borderColor: withTiming(isSearchFocused ? theme.colors.text : theme.colors.text + "80", { duration: 300 }),
+  }));
   const filteredDatabases = useMemo(() => {
     return debouncedSearchText
       ? databasesToDownload.filter(
-          (version) =>
-            removeAccent(version.name)
-              .toLowerCase()
-              .includes(removeAccent(debouncedSearchText).toLowerCase()) ||
-            removeAccent(version.storedName)
-              .toLowerCase()
-              .includes(removeAccent(debouncedSearchText).toLowerCase())
-        )
+        (version) =>
+          removeAccent(version.name)
+            .toLowerCase()
+            .includes(removeAccent(debouncedSearchText).toLowerCase()) ||
+          removeAccent(version.storedName)
+            .toLowerCase()
+            .includes(removeAccent(debouncedSearchText).toLowerCase())
+      )
       : databasesToDownload;
   }, [debouncedSearchText, databasesToDownload]);
 
@@ -195,31 +168,33 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
     </View>
   );
 
-  const screenOptions: any = useMemo(() => {
-    return {
-      theme,
-      title: "Gestor de Módulos",
-      titleIcon: "Download",
-      headerRightProps: {
-        headerRightIcon:
-          completedDownloads.length > 0 && isMyDownloadTab
-            ? "Trash2"
-            : "ListFilter",
-        headerRightIconColor: theme.colors.text,
-        onPress: () => {
-          if (completedDownloads.length > 0 && isMyDownloadTab) {
-            clearCompleted();
-          } else {
-            sortHandlePresentModalPress();
-          }
-        },
-        disabled: isMyDownloadTab && completedDownloads.length === 0,
-        style: {
-          opacity: isMyDownloadTab && completedDownloads.length === 0 ? 0 : 1,
-        },
+  const screenOptions: any = {
+    theme,
+    title: "Gestor de Módulos",
+    titleIcon: "Download",
+    headerRightProps: {
+      // RightComponent: () => (
+      //   <TouchableOpacity onPress={() => sortHandlePresentModalPress()} style={{ padding: 8 }}>
+      //     <Icon name={isMyDownloadTab ? "Trash2" : "ListFilter"} size={20} color={theme.colors.text} />
+      //   </TouchableOpacity>
+      // ),
+      headerRightIcon:
+        isMyDownloadTab
+          ? "Trash2"
+          : "ListFilter",
+      headerRightIconColor: theme.colors.text,
+      onPress: () => {
+        if (isMyDownloadTab) {
+          downloadManager.clearCompleted();
+        } else {
+          sortHandlePresentModalPress();
+        }
       },
-    } as SingleScreenHeaderProps;
-  }, [theme.colors, isMyDownloadTab, completedDownloads.length]);
+      style: {
+        opacity: 1,
+      },
+    },
+  } as SingleScreenHeaderProps;
 
   const handleFilter = (filterOption: ModulesFilters) => {
     setSelectedFilter(filterOption);
@@ -233,9 +208,9 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
   // ✅ Memoize render functions for better performance
   const renderItem = useCallback(
     (props: any) => (
-      <DatabaseDownloadItem {...{ theme, isConnected, ...props }} />
+      <DatabaseDownloadItem {...{ theme, isConnected, downloadManager, ...props }} />
     ),
-    [theme, isConnected]
+    [theme, isConnected, downloadManager]
   );
 
   const keyExtractor = useCallback(
@@ -253,7 +228,7 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
 
   const renderTab = useCallback(() => {
     return isMyDownloadTab ? (
-      <FileList />
+      <FileList key="my-downloads-tab" downloadManager={downloadManager} isActive={isMyDownloadTab} />
     ) : (
       <FlashList
         ListHeaderComponent={
@@ -270,7 +245,7 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
               </Text>
             </View>
             <View style={{ flexDirection: "row", gap: 8 }}>
-              {(activeDownloads.length > 0 || queuedDownloads.length > 0) && (
+              {/* {(activeDownloads.length > 0 || queuedDownloads.length > 0) && (
                 <View style={styles.downloadQueueIndicator}>
                   <Icon
                     name="Download"
@@ -283,7 +258,7 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
                       ` (+${queuedDownloads.length})`}
                   </Text>
                 </View>
-              )}
+              )} */}
               {!isConnected && (
                 <View style={styles.offlineIndicator}>
                   <Icon name="WifiOff" size={16} color="#e74856" />
@@ -312,8 +287,6 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
   }, [
     isMyDownloadTab,
     filteredDatabases,
-    activeDownloads.length,
-    queuedDownloads.length,
     renderItem,
     keyExtractor,
     getItemType,
@@ -321,6 +294,7 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
     debouncedSearchText,
     theme.colors,
     isConnected,
+    downloadManager,
   ]);
 
   return (
@@ -334,7 +308,38 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
         <View style={[styles.container, {}]}>
           <View style={styles.headerContainer}>
             <View style={styles.titleContainer}>
-              {!isMyDownloadTab && AnimatedSearchBar()}
+              <Animated.View style={searchContainerAnimatedStyle}>
+                <Ionicons
+                  style={styles.searchIcon}
+                  name="search"
+                  size={20}
+                  color={
+                    isSearchFocused ? theme.colors.text : theme.colors.notification
+                  }
+                />
+                <TextInput
+                  placeholder="Buscar un módulo..."
+                  placeholderTextColor={theme.colors.text}
+                  style={[styles.noteHeaderSearchInput]}
+                  onChangeText={(text) => setSearchText(text)}
+                  value={searchText}
+                  onFocus={() => {
+                    setIsSearchFocused(true)
+                    setIsMyDownloadTab(false)
+                  }}
+                  onBlur={() => setIsSearchFocused(false)}
+                  returnKeyType="search"
+                />
+                {searchText.length > 0 && (
+                  <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
+                    <Ionicons
+                      name="close-circle"
+                      size={20}
+                      color={theme.colors.text + "80"}
+                    />
+                  </TouchableOpacity>
+                )}
+              </Animated.View>
             </View>
             <TabNavigation
               {...{ isMyDownloadTab, setIsMyDownloadTab, theme }}
@@ -422,7 +427,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       width: "100%",
       height: 48,
       backgroundColor: colors.notification + "20",
-      borderColor: colors.text,
+      borderColor: colors.text + "80",
     },
     searchIcon: {
       paddingHorizontal: 12,

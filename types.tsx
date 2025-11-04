@@ -11,6 +11,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Router } from "expo-router";
 import { icons } from "lucide-react-native";
 import { RefObject } from "react";
+import { IconProps } from "./components/Icon";
 
 declare global {
   namespace ReactNavigation {
@@ -61,7 +62,7 @@ export enum Screens {
   TimelineId = "timeline/[timelineId]",
   Login = "login",
   Register = "register",
-  AISetup = "ai-setup",
+  AISetup = "/ai-setup",
   Notification = "notification",
   SongDetail = "songDetail",
   Commentary = "commentary",
@@ -189,6 +190,18 @@ export type RootStackParamList = {
   [Screens.Register]: undefined;
   [Screens.AISetup]: undefined;
   [Screens.AISearch]: undefined;
+};
+
+export type IDashboardOption = {
+  icon: IconProps["name"];
+  label: string;
+  action: () => void;
+  longAction?: () => void;
+  disabled?: boolean;
+  isIonicon?: boolean;
+  tag?: string;
+  color?: string;
+  isNew?: boolean;
 };
 
 export type HomeParams = {

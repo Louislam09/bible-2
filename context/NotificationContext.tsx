@@ -3,7 +3,7 @@ import * as Notifications from "expo-notifications";
 import React, {
   createContext,
   ReactNode,
-  useContext,
+  use,
   useEffect,
   useRef,
   useState,
@@ -23,7 +23,7 @@ const NotificationContext = createContext<NotificationContextType | undefined>(
 );
 
 export const useNotification = () => {
-  const context = useContext(NotificationContext);
+  const context = use(NotificationContext);
   if (context === undefined) {
     throw new Error(
       "useNotification must be used within a NotificationProvider"

@@ -21,7 +21,6 @@ const VersionList: FC<IVersionList> = ({
 }) => {
   const styles = getStyles(theme);
   const { installedBibles } = useDBContext();
-  const fontSize = storedData$.fontSize.get();
 
   const dbNameList = installedBibles || [];
 

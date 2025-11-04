@@ -1,12 +1,15 @@
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { POCKETBASE_URL } from "@/globalConfig";
+import { useHaptics } from "@/hooks/useHaptics";
 import { authState$ } from "@/state/authState";
+import { modalState$ } from "@/state/modalState";
 import { pbUser, Screens, TTheme } from "@/types";
-import { use$ } from "@legendapp/state/react";
+import { observer } from "@legendapp/state/react";
+import { Image } from "expo-image";
 import { useNavigation } from "expo-router";
 import { User } from "lucide-react-native";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -17,37 +20,40 @@ import Icon from "./Icon";
 import CloudSyncPopup from "./SyncPopup";
 import { Text, View } from "./Themed";
 import Tooltip from "./Tooltip";
-import { useHaptics } from "@/hooks/useHaptics";
-import { OptimizedImage } from "@/utils/imageCache";
 
-interface ProfileCardProps {
+interface UserProfileProps {
   user: pbUser | null;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
-  const nameInfo = user?.name.split(" ") || [];
-  const firstName = nameInfo[0];
+const UserProfile: React.FC<UserProfileProps> = observer(({ user }) => {
+  const navigation = useNavigation();
+  const haptics = useHaptics();
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
-  const navigation = useNavigation();
+  const nameInfo = user?.name.split(" ") || [];
+  const firstName = nameInfo?.[0] || "";
   const userRef = useRef(null);
-  const [openUser, setOpenUser] = useState(false);
+
+  // With observer(), we can directly access observables without use$()
   const isAuth = authState$.isAuthenticated.get();
-  const isLoading = use$(() => authState$.isLoading.get());
+  const isLoading = authState$.isLoading.get();
+  const openUserTooltip = modalState$.showUserTooltip.get();
+
   const avatarUrl = user
     ? `${POCKETBASE_URL}/api/files/${user.collectionId}/${user.id}/${user.avatar}`
     : "";
   const defaultAvatar = user
     ? `https://robohash.org/set_set10/bgset_bg1/${user.id}?size=200x200`
     : "";
-  const haptics = useHaptics();
-  const searchIcon = {
-    icon: "Search",
-    label: "Buscador",
-    action: () => {
-      navigation.navigate(Screens.Search, {});
-      haptics.impact.light();
-    },
+
+  const onOpenUser = useCallback(async () => {
+    await haptics.impact.light();
+    modalState$.openUserTooltip();
+  }, [haptics]);
+
+  const onSearch = () => {
+    navigation.navigate(Screens.Search, {});
+    haptics.impact.light();
   };
 
   const onLogout = () => {
@@ -71,7 +77,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
         "Por favor, inicia sesión para acceder a todas las funciones.",
       buttonText: "Iniciar Sesión",
       action: () => {
-        setOpenUser(false);
+        modalState$.closeUserTooltip();
         setTimeout(() => {
           navigation.navigate(Screens.Login);
         }, 500);
@@ -82,7 +88,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
       description: "¿Estás seguro de que deseas cerrar tu sesión?",
       buttonText: "Cerrar Sesión",
       action: async () => {
-        setOpenUser(false);
+        modalState$.closeUserTooltip();
         setTimeout(() => {
           onLogout();
         }, 500);
@@ -91,43 +97,40 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
   };
 
   const [syncModalVisible, setSyncModalVisible] = useState<boolean>(false);
-  const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
 
   const tooltipData = tooltipInfo[isAuth ? "logout" : "login"];
 
   const onSync = () => {
     if (!storedData$.user.get()) {
       haptics.impact.light();
-      setOpenUser(false);
+      modalState$.closeUserTooltip();
       setTimeout(() => {
         navigation.navigate(Screens.Login);
       }, 500);
       return;
     }
 
-    setOpenUser(false);
+    modalState$.closeUserTooltip();
     setSyncModalVisible(true);
   };
+
+
 
   return (
     <View style={styles.userInfoContainer}>
       <TouchableOpacity
         ref={userRef}
-        onPress={() => {
-          setOpenUser(true);
-          haptics.impact.light();
-        }}
+        onPress={onOpenUser}
       >
         {user ? (
           <View style={styles.userHeader}>
             <View style={styles.avatarContainer}>
-              <OptimizedImage
+              <Image
                 source={{
                   uri: user.avatar ? avatarUrl : defaultAvatar,
                 }}
                 style={styles.avatar}
                 contentFit="cover"
-                category="avatar"
               />
             </View>
             <View style={{ display: "flex", backgroundColor: "transparent" }}>
@@ -153,25 +156,24 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
           </View>
         )}
       </TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.8} onPress={() => searchIcon.action()}>
+      <TouchableOpacity activeOpacity={0.8} onPress={onSearch}>
         <Icon
-          name={searchIcon.icon as any}
+          name="Search"
           color={theme.colors.text}
           size={30}
-          style={[]}
         />
       </TouchableOpacity>
 
       <CloudSyncPopup
         visible={syncModalVisible}
         onClose={() => setSyncModalVisible(false)}
-        lastSyncTime={lastSyncTime}
+        lastSyncTime={""}
       />
       <Tooltip
         offset={-20}
         target={userRef}
-        isVisible={openUser}
-        onClose={() => setOpenUser(false)}
+        isVisible={openUserTooltip}
+        onClose={() => modalState$.closeUserTooltip()}
       >
         <View
           style={{
@@ -247,7 +249,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
       </Tooltip>
     </View>
   );
-};
+});
 
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
@@ -293,4 +295,4 @@ const getStyles = ({ colors }: TTheme) =>
     },
   });
 
-export default ProfileCard;
+export default UserProfile;

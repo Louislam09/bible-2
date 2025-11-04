@@ -17,8 +17,9 @@ const UnitCard: React.FC<UnitCardProps> = ({ unit, currentUnit }) => {
     const [currentLesson, setCurrentLesson] = React.useState<Lesson | null>(null);
     const currentPopRef = useRef(null)
 
-    const onPress = (lesson: Lesson, ref: any, lessonIndex: number) => {
-        currentPopRef.current = ref.current
+    const onPress = (lesson: Lesson, lessonIndex: number, event: any) => {
+        // Store the event target for tooltip positioning
+        currentPopRef.current = event.currentTarget
         setCurrentLessonIndex(lessonIndex)
         setCurrentLesson(lesson)
     }
@@ -40,10 +41,8 @@ const UnitCard: React.FC<UnitCardProps> = ({ unit, currentUnit }) => {
             </View>
             <View style={styles.lessonsContainer}>
                 {lessons.map((lesson: any, lessonIndex: number) => {
-                    const lessonRef = useRef(null)
                     return (
                         <View
-                            ref={lessonRef}
                             key={lessonIndex}
                             style={[
                                 styles.lesson,
@@ -59,7 +58,7 @@ const UnitCard: React.FC<UnitCardProps> = ({ unit, currentUnit }) => {
                                 backgroundColor={unitIndex === currentUnit && lessonIndex === currentLessonIndex ? "#c9c6cdb0" : "#fff"}
                             >
                                 <LessonButton
-                                    action={() => onPress(lesson, lessonRef, lessonIndex)}
+                                    action={(event) => onPress(lesson, lessonIndex, event)}
                                     type={unit.lessons.length - 1 === lessonIndex ? 'crown' : 'star'}
                                     completed={false}
                                     label={'Empezar'}

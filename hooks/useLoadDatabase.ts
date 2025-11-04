@@ -15,7 +15,6 @@ import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { VersionItem } from "./useInstalledBible";
-import getMemorySizeInGB from "@/utils/getDeviceRamValue";
 
 interface Row {
   [key: string]: any;

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo } from "react";
+import React, { createContext, use, useMemo } from "react";
 import { useSearch } from "@/hooks/useSearch";
 import { useDBContext } from "./databaseContext";
 
@@ -38,7 +38,7 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 export const useSearchContext = (): SearchContextType => {
-  const context = useContext(SearchContext);
+  const context = use(SearchContext);
   if (!context) {
     throw new Error("useSearchContext must be used within a SearchProvider");
   }
