@@ -1,4 +1,4 @@
-import { defaultDatabases } from "@/constants/databaseNames";
+import { defaultDatabases, SQLiteDirPath } from "@/constants/databaseNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
@@ -20,6 +20,7 @@ import {
 import ProgressBar from "./home/footer/ProgressBar";
 import Icon from "./Icon";
 import { Text, View } from "./Themed";
+import AllDatabases from "@/constants/AllDatabases";
 
 type FileListProps = {
   downloadManager: ReturnType<typeof useDownloadManager>;
@@ -50,6 +51,41 @@ const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true })
 
   // ✅ Refresh when tab becomes active
   const prevActiveRef = useRef<boolean>(false);
+
+  const formatArray = useCallback((arr: string[]): VersionItem[] => {
+    return arr
+      .map((file) => {
+        const db = AllDatabases.find((d) => file.includes(d.storedName));
+        console.log(file, "=>", file.split('-').shift(), " - ", db)
+        if (!db) return null;
+        return {
+          id: file.split('-').shift() || '',
+          name: db.name,
+          description: db.key,
+          size: db.size,
+          path: `${SQLiteDirPath}${file}`,
+          shortName: db.storedName,
+        };
+      })
+      .filter(Boolean) as VersionItem[];
+  }, []);
+
+
+  useEffect(() => {
+    const getExistingFiles = async () => {
+      // Get list of files BEFORE extraction to identify new files
+      const existingFiles = await FileSystem.readDirectoryAsync(SQLiteDirPath);
+      // console.log('existingFiles', existingFiles)
+      // console.log('formatArray', formatArray(existingFiles))
+      formatArray(existingFiles)
+    }
+    // console.log({
+    //   installedBibles,
+    //   installedDictionary,
+    //   installedCommentary,
+    // })
+    // getExistingFiles();
+  }, [])
 
   useEffect(() => {
     // Only refresh when transitioning from inactive to active
@@ -254,7 +290,7 @@ const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true })
   );
 
   const keyExtractor = useCallback(
-    (item: VersionItem) => `downloaded-${item.shortName}`,
+    (item: VersionItem) => `downloaded-${item.path}`,
     []
   );
 
@@ -279,6 +315,8 @@ const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true })
         downloadStatus?.status === "downloading" ||
         downloadStatus?.status === "unzipping";
 
+      const suffix = versionItem.id.includes('commentaries') ? ' - Comentarios' : versionItem.id.includes('dictionary') ? ' - Diccionario' : '';
+
       return (
         <View >
           <View style={[styles.itemContainer, styles.defaultItem]}>
@@ -291,7 +329,7 @@ const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true })
             </View>
 
             <View style={styles.itemContent}>
-              <View
+              {/* <View
                 style={{
                   flexDirection: "row",
                   alignItems: "center",
@@ -305,7 +343,7 @@ const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true })
                     !allowDelete && { color: theme.colors.notification },
                   ]}
                 >
-                  {versionItem?.shortName || "-"}
+                  {versionItem?. || "-"} 
                 </Text>
                 {isCurrentlyDownloading && (
                   <View style={styles.downloadingBadge}>
@@ -316,20 +354,16 @@ const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true })
                     </Text>
                   </View>
                 )}
-              </View>
+              </View> */}
               <Text
                 style={[
                   styles.itemSubTitle,
                   !allowDelete && { color: theme.colors.primary },
                 ]}
               >
-                {versionItem?.name || "-"}
+                {versionItem?.name || "-"}{suffix}
               </Text>
-              {!allowDelete && !isCurrentlyDownloading && (
-                <View style={styles.defaultBadge}>
-                  <Text style={styles.defaultBadgeText}>Predeterminado</Text>
-                </View>
-              )}
+
               {isCurrentlyDownloading && downloadStatus && (
                 <View style={styles.progressContainer}>
                   <ProgressBar

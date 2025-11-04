@@ -47,7 +47,8 @@ const useInstalledBibles = () => {
 
         return findBible
           ? {
-            id: findBible.storedName,
+            id: file.split('-').shift() || '',
+            // id: findBible.storedName,
             name: findBible.name,
             description: findBible.key,
             size: findBible.size,
