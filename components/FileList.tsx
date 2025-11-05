@@ -52,40 +52,6 @@ const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true })
   // ✅ Refresh when tab becomes active
   const prevActiveRef = useRef<boolean>(false);
 
-  const formatArray = useCallback((arr: string[]): VersionItem[] => {
-    return arr
-      .map((file) => {
-        const db = AllDatabases.find((d) => file.includes(d.storedName));
-        console.log(file, "=>", file.split('-').shift(), " - ", db)
-        if (!db) return null;
-        return {
-          id: file.split('-').shift() || '',
-          name: db.name,
-          description: db.key,
-          size: db.size,
-          path: `${SQLiteDirPath}${file}`,
-          shortName: db.storedName,
-        };
-      })
-      .filter(Boolean) as VersionItem[];
-  }, []);
-
-
-  useEffect(() => {
-    const getExistingFiles = async () => {
-      // Get list of files BEFORE extraction to identify new files
-      const existingFiles = await FileSystem.readDirectoryAsync(SQLiteDirPath);
-      // console.log('existingFiles', existingFiles)
-      // console.log('formatArray', formatArray(existingFiles))
-      formatArray(existingFiles)
-    }
-    // console.log({
-    //   installedBibles,
-    //   installedDictionary,
-    //   installedCommentary,
-    // })
-    // getExistingFiles();
-  }, [])
 
   useEffect(() => {
     // Only refresh when transitioning from inactive to active
@@ -329,32 +295,6 @@ const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true })
             </View>
 
             <View style={styles.itemContent}>
-              {/* <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 8,
-                  backgroundColor: "transparent",
-                }}
-              >
-                <Text
-                  style={[
-                    styles.itemTitle,
-                    !allowDelete && { color: theme.colors.notification },
-                  ]}
-                >
-                  {versionItem?. || "-"} 
-                </Text>
-                {isCurrentlyDownloading && (
-                  <View style={styles.downloadingBadge}>
-                    <Text style={styles.downloadingBadgeText}>
-                      {downloadStatus?.status === "unzipping"
-                        ? "Procesando..."
-                        : "Descargando..."}
-                    </Text>
-                  </View>
-                )}
-              </View> */}
               <Text
                 style={[
                   styles.itemSubTitle,

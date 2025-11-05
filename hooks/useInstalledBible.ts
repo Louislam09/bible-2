@@ -19,12 +19,11 @@ export type VersionItem = {
 };
 
 const useInstalledBibles = () => {
-  const [bible, ntvBible, intBible, greekBible] = databaseNames;
-  const defaultDBs = [bible, ntvBible, intBible, greekBible];
+
   const [installedBibles, setInstalledBibles] =
-    useState<VersionItem[]>(defaultDBs);
+    useState<VersionItem[]>(databaseNames);
   const [installedDictionary, setInstalledDictionary] =
-    useState<VersionItem[]>(defaultDBs);
+    useState<VersionItem[]>([]);
   const [installedCommentary, setInstalledCommentary] =
     useState<VersionItem[]>([]);
   const [refreshList, setRefreshList] = useState<boolean>(false);
@@ -56,14 +55,6 @@ const useInstalledBibles = () => {
             shortName: findBible.storedName,
           }
           : null;
-        // : ['bible.db', 'ntv-bible.db'].includes(file) ? null : {
-        //   id: file,
-        //   name: file,
-        //   description: file,
-        //   size: 0,
-        //   path: `${bibleDirectory}${file}`,
-        //   shortName: file,
-        // };
       })
       .filter((x) => x) as any;
   };
@@ -73,10 +64,12 @@ const useInstalledBibles = () => {
       try {
         await initSQLiteDir();
         const files = await FileSystem.readDirectoryAsync(bibleDirectory);
+
         const bibleFiles = files.filter((file) => file.endsWith(bibleExt));
         const dicFiles = files.filter((file) => file.endsWith(dicExt));
         const commentaryFiles = files.filter((file) => file.endsWith(commentaryExt));
-        setInstalledBibles(() => [...defaultDBs, ...formatArray(bibleFiles)]);
+
+        setInstalledBibles((prev) => [...databaseNames, ...formatArray(bibleFiles)]);
         setInstalledDictionary(() => [...formatArray(dicFiles)]);
         setInstalledCommentary(() => [...formatArray(commentaryFiles)]);
       } catch (error) {

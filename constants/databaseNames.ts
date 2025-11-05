@@ -104,29 +104,4 @@ export const databaseNames = [
     path: `${SQLiteDirPath}/${DBName.GREEK}`,
     shortName: 'iTisch+',
   },
-  {
-    id: 'DIC',
-    name: 'Diccionario Clave - Diccionario de uso del espanol actual ',
-    description:
-      'Diccionario Clave - Diccionario de uso del espanol actual (con sinonimos y antonimos)',
-    size: 15571968,
-    path: `${SQLiteDirPath}/${DBName.DIC}`,
-    shortName: 'DIC',
-  },
-  {
-    id: 'Hitchcock',
-    name: 'Diccionario de Nombres Bíblicos Hitchcock',
-    description: 'Diccionario de Nombres Bíblicos Hitchcock',
-    size: 15571968,
-    path: `${SQLiteDirPath}/${DBName.Hitchcock}`,
-    shortName: 'Hitchcock',
-  },
-  {
-    id: 'Nelson',
-    name: 'Diccionario Nelson',
-    description: 'Diccionario Nelson',
-    size: 15571968,
-    path: `${SQLiteDirPath}/${DBName.Nelson}`,
-    shortName: 'Nelson',
-  },
 ];
