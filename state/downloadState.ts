@@ -129,7 +129,7 @@ export const downloadStateHelpers = {
     clearCompleted: () => {
         const downloads = downloadState$.downloads.peek();
         const completedKeys = Object.entries(downloads)
-            .filter(([_, download]) => download.status === 'completed')
+            .filter(([_, download]) => download.status === 'completed' || download.status === 'queued')
             .map(([key]) => key);
 
         completedKeys.forEach(key => {

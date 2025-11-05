@@ -385,14 +385,11 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
 }) => {
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
-  const { installedCommentary: dbNames } = useDBContext();
   const { printToFile } = usePrintAndShare();
   const router = useRouter();
   const webViewRef = useRef<WebView>(null);
 
-  const { data, error, loading } = useCommentaryData({
-    databases: dbNames,
-    enabled: true,
+  const { data, error, loading, hasCommentaries } = useCommentaryData({
     autoSearch: true,
     bookNumber,
     chapter,
@@ -419,7 +416,7 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
         reference,
         availableCommentaries,
         loading,
-        dbNames.length > 0,
+        hasCommentaries,
       ),
     [
       theme,
@@ -427,7 +424,7 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
       reference,
       availableCommentaries,
       loading,
-      dbNames.length,
+      hasCommentaries,
     ]
   );
 
@@ -451,7 +448,7 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
           case "explore":
             modalState$.commentaryRef.current?.dismiss();
             router.push({
-              pathname: Screens.Commentary,
+              pathname: `/${Screens.Commentary}`,
               params: {
                 book: bookName,
                 chapter: chapter.toString(),
@@ -463,7 +460,7 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
           case "download":
             modalState$.commentaryRef.current?.dismiss();
             router.push({
-              pathname: Screens.DownloadManager,
+              pathname: `/${Screens.DownloadManager}`,
               params: { filter: ModulesFilters.COMMENTARIES },
             });
             break;
@@ -523,7 +520,7 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
       justOneSnap
       showIndicator
       justOneValue={["40%", "90%"]}
-      startAT={0}
+      startAT={1}
       onDismiss={() => { }}
     >
       <View style={styles.webviewWrapper}>

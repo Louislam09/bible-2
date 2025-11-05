@@ -38,6 +38,12 @@ class DownloadManagerService implements IDownloadManager {
                     error: undefined,
                     startedAt: Date.now(),
                 });
+
+                // Add back to queue if not already there
+                const currentQueue = downloadState$.queue.get();
+                if (!currentQueue.includes(item.storedName)) {
+                    downloadState$.queue.set([...currentQueue, item.storedName]);
+                }
             } else if (existing.status === "completed") {
                 console.log("Download already completed:", item.storedName);
                 return existing;
@@ -51,26 +57,45 @@ class DownloadManagerService implements IDownloadManager {
         }
 
         // Process queue
+        console.log(`Queue status: ${downloadState$.queue.get().length} items in queue`);
         this.processQueue();
 
         return downloadStateHelpers.getDownload(item.storedName);
     }
 
     private async processQueue() {
+        const activeDownloads = downloadStateHelpers.getActiveDownloads();
+        const maxConcurrent = downloadState$.maxConcurrent.get();
+
+        console.log(`📋 Processing queue: ${activeDownloads.length}/${maxConcurrent} active downloads`);
+
         // Check if we can start new downloads
         if (!downloadStateHelpers.canStartNewDownload()) {
+            console.log(`⏸️ Cannot start new download: ${activeDownloads.length} >= ${maxConcurrent}`);
             return;
         }
 
         const queuedDownloads = downloadStateHelpers.getQueuedDownloads();
-        const slotsAvailable =
-            downloadState$.maxConcurrent.get() -
-            downloadStateHelpers.getActiveDownloads().length;
+        const slotsAvailable = maxConcurrent - activeDownloads.length;
 
-        // Start downloads for available slots
+        // Debug: Log queue state
+        const queueArray = downloadState$.queue.get();
+        const allDownloads = downloadState$.downloads.get();
+        console.log(`📦 Queue array has ${queueArray.length} items`);
+        console.log(`📦 ${queuedDownloads.length} downloads with 'queued' status, ${slotsAvailable} slots available`);
+
+        // Debug: Show status of all items in queue
+        queueArray.forEach(name => {
+            const download = allDownloads[name];
+            console.log(`  - ${name}: status=${download?.status || 'NOT FOUND'}`);
+        });
+
+        // Start downloads for available slots (fire and forget - don't await)
         for (let i = 0; i < Math.min(slotsAvailable, queuedDownloads.length); i++) {
             const download = queuedDownloads[i];
             if (download) {
+                console.log(`🚀 Starting queued download: ${download.storedName}`);
+                // Don't await - let downloads run in parallel
                 this.startDownload(download.storedName);
             }
         }
@@ -92,11 +117,14 @@ class DownloadManagerService implements IDownloadManager {
         // Remove from queue
         downloadStateHelpers.removeFromQueue(storedName);
 
+        console.log({ baseDownloadUrl, downloadUrl: download.url });
         const downloadFrom = `${baseDownloadUrl}/${download.url}`;
         const fileUri = `${SQLiteDirPath}/${storedName}`;
         const downloadDest = `${fileUri}.zip`;
 
         try {
+            console.log(`📥 Starting download: ${storedName} (${download.size} bytes)`);
+
             // Create download resumable
             const downloadResumable = FileSystem.createDownloadResumable(
                 downloadFrom,
@@ -109,16 +137,24 @@ class DownloadManagerService implements IDownloadManager {
             this.activeDownloads.set(storedName, downloadResumable);
 
             // Start download
+            console.log(`Downloading from: ${downloadFrom}`);
             const result = await downloadResumable.downloadAsync();
 
             if (!result) {
                 throw new Error("Download failed - no result returned");
             }
 
+            console.log(`✅ Download completed: ${storedName}`);
+
             // Download completed, now unzip
             await this.unzipDownload(storedName, downloadDest, download.name);
         } catch (error: any) {
-            console.error("Download error:", error);
+            console.error(`❌ Download error for ${storedName}:`, error);
+            console.error("Error details:", {
+                message: error.message,
+                code: error.code,
+                stack: error.stack?.substring(0, 200)
+            });
             await this.handleDownloadError(storedName, error);
         } finally {
             // Clean up
@@ -170,6 +206,16 @@ class DownloadManagerService implements IDownloadManager {
                 completedAt,
             });
 
+            // Auto-cleanup: Remove completed download from state after 3 seconds
+            // This prevents UI from showing progress/status for completed downloads
+            setTimeout(() => {
+                const download = downloadStateHelpers.getDownload(storedName);
+                if (download?.status === "completed") {
+                    console.log(`🧹 Auto-cleaning completed download: ${storedName}`);
+                    downloadStateHelpers.removeDownload(storedName);
+                }
+            }, 3000);
+
             // Create separate download entries for each extracted file
             if (unzipResult.extractedFiles.length > 0) {
                 // Check if this is a multi-file download (Bible + Commentary/Dictionary)
@@ -207,6 +253,16 @@ class DownloadManagerService implements IDownloadManager {
                         startedAt: completedAt,
                     });
 
+                    // Auto-cleanup extracted file entries after 3 seconds
+                    const cleanupStoredName = extractedFile.storedName;
+                    setTimeout(() => {
+                        const dl = downloadStateHelpers.getDownload(cleanupStoredName);
+                        if (dl?.status === "completed") {
+                            console.log(`🧹 Auto-cleaning extracted file: ${cleanupStoredName}`);
+                            downloadStateHelpers.removeDownload(cleanupStoredName);
+                        }
+                    }, 3000);
+
                     console.log(`✅ Created completed entry for ${extractedFile.storedName}`);
                 }
             }
@@ -223,15 +279,18 @@ class DownloadManagerService implements IDownloadManager {
         storedName: string,
         error: any
     ) {
+        const errorMessage = error?.message || String(error);
         console.error("Download error:", {
             storedName,
-            error: error.message || error,
+            error: errorMessage,
+            errorType: typeof error,
         });
 
-        // Mark as failed
+        // Mark as failed with detailed error
         downloadStateHelpers.updateDownload(storedName, {
             status: "failed",
-            error: error.message || "Error al descargar",
+            error: errorMessage || "Error al descargar",
+            progress: 0,
         });
 
         // Process next in queue
@@ -282,6 +341,8 @@ class DownloadManagerService implements IDownloadManager {
             return;
         }
 
+        console.log(`🔄 Retrying download: ${storedName}`);
+
         // Reset download
         downloadStateHelpers.updateDownload(storedName, {
             status: "queued",
@@ -293,6 +354,9 @@ class DownloadManagerService implements IDownloadManager {
         const currentQueue = downloadState$.queue.get();
         if (!currentQueue.includes(storedName)) {
             downloadState$.queue.set([...currentQueue, storedName]);
+            console.log(`Added ${storedName} to queue. Queue length: ${currentQueue.length + 1}`);
+        } else {
+            console.log(`${storedName} already in queue`);
         }
 
         // Process queue
@@ -305,6 +369,53 @@ class DownloadManagerService implements IDownloadManager {
 
     clearCompleted() {
         downloadStateHelpers.clearCompleted();
+    }
+
+    // Manual queue processing - useful for debugging stuck queues
+    forceProcessQueue() {
+        console.log(`🔧 Manually forcing queue processing...`);
+        this.processQueue();
+    }
+
+    // Get queue status for debugging
+    getQueueStatus() {
+        const queueArray = downloadState$.queue.get();
+        const allDownloads = downloadState$.downloads.get();
+        const activeDownloads = downloadStateHelpers.getActiveDownloads();
+
+        const queueStatus = queueArray.map(name => ({
+            name,
+            status: allDownloads[name]?.status || 'NOT FOUND',
+            progress: allDownloads[name]?.progress || 0,
+        }));
+
+        return {
+            queueLength: queueArray.length,
+            activeDownloads: activeDownloads.length,
+            maxConcurrent: downloadState$.maxConcurrent.get(),
+            queueItems: queueStatus,
+        };
+    }
+
+    // Fix stuck items in queue - reset them to queued status
+    fixStuckQueue() {
+        console.log(`🔧 Fixing stuck queue items...`);
+        const queueArray = downloadState$.queue.get();
+        const allDownloads = downloadState$.downloads.get();
+
+        queueArray.forEach(name => {
+            const download = allDownloads[name];
+            if (download && download.status !== 'queued' && download.status !== 'downloading' && download.status !== 'unzipping') {
+                console.log(`  - Resetting ${name} from ${download.status} to queued`);
+                downloadStateHelpers.updateDownload(name, {
+                    status: 'queued',
+                    progress: 0,
+                    error: undefined,
+                });
+            }
+        });
+
+        this.processQueue();
     }
 }
 

@@ -45,6 +45,7 @@ import { DownloadBibleItem, ModulesFilters, TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
+import { downloadState$ } from "@/state/downloadState";
 
 const recommendedModules = [
   ...biblesDatabases,
@@ -247,21 +248,42 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
                 {filteredDatabases.length <= 1 ? "Disponible" : "Disponibles"}{" "}
               </Text>
             </View>
-            <View style={{ flexDirection: "row", gap: 8 }}>
-              {/* {(activeDownloads.length > 0 || queuedDownloads.length > 0) && (
-                <View style={styles.downloadQueueIndicator}>
-                  <Icon
-                    name="Download"
-                    size={14}
-                    color={theme.colors.primary}
-                  />
-                  <Text style={styles.downloadQueueText}>
-                    {activeDownloads.length}
-                    {queuedDownloads.length > 0 &&
-                      ` (+${queuedDownloads.length})`}
-                  </Text>
-                </View>
-              )} */}
+            <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+              {(downloadManager.activeDownloads.length > 0 || downloadManager.queuedDownloads.length > 0) && (
+                <>
+                  <TouchableOpacity
+                    onPress={() => {
+                      const status = downloadManager.getQueueStatus();
+                      console.log("📊 Queue Status:", JSON.stringify(status, null, 2));
+                    }}
+                    style={styles.downloadQueueIndicator}
+                  >
+                    <Icon
+                      name="Download"
+                      size={14}
+                      color={theme.colors.primary}
+                    />
+                    <Text style={styles.downloadQueueText}>
+                      {downloadManager.activeDownloads.length}
+                      {downloadManager.queuedDownloads.length > 0 &&
+                        ` (+${downloadManager.queuedDownloads.length})`}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      console.log("🔧 Fixing stuck queue...");
+                      downloadManager.fixStuckQueue();
+                    }}
+                    style={[styles.downloadQueueIndicator, { backgroundColor: "#FFA500" + "30" }]}
+                  >
+                    <Icon
+                      name="RefreshCw"
+                      size={14}
+                      color="#FFA500"
+                    />
+                  </TouchableOpacity>
+                </>
+              )}
               {!isConnected && (
                 <View style={styles.offlineIndicator}>
                   <Icon name="WifiOff" size={16} color="#e74856" />

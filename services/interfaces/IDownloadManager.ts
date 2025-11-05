@@ -42,6 +42,21 @@ export interface IDownloadManager {
     clearCompleted(): void;
 
     /**
+     * Manually force queue processing (useful for debugging)
+     */
+    forceProcessQueue(): void;
+
+    /**
+     * Get current queue status for debugging
+     */
+    getQueueStatus(): any;
+
+    /**
+     * Fix stuck queue items
+     */
+    fixStuckQueue(): void;
+
+    /**
      * Cleanup resources when service is destroyed
      */
     destroy(): void;

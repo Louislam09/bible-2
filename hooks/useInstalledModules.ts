@@ -76,12 +76,12 @@ const useInstalledModules = () => {
     );
 
     const dictionaries = useMemo(
-        () => allModules.filter((m) => m.shortName.includes(".dictionary")),
+        () => allModules.filter((m) => m.shortName.includes(".dictionary") || m.id.includes(".dictionary")),
         [allModules]
     );
 
     const commentaries = useMemo(
-        () => allModules.filter((m) => m.shortName.includes(".commentaries")),
+        () => allModules.filter((m) => m.shortName.includes(".commentaries") || m.id.includes(".commentaries")),
         [allModules]
     );
 

@@ -3,6 +3,7 @@ import { DATABASE_TYPE } from "@/types";
 import * as SQLite from "expo-sqlite";
 import { useCallback, useEffect, useState } from "react";
 import { VersionItem } from "./useInstalledBible";
+import useInstalledModules from "./useInstalledModules";
 
 interface CommentaryData {
     book_number: number;
@@ -22,9 +23,136 @@ interface Row {
     [key: string]: any;
 }
 
+// Helper function outside component to avoid React Compiler issues with try-finally
+async function executeSqlQuery(
+    database: SQLite.SQLiteDatabase | null,
+    sql: string,
+    params: any[] = [],
+    queryName?: string
+): Promise<Row[]> {
+    // Early validation - avoid throw inside try
+    if (!database) {
+        console.error("Database not initialized");
+        return [];
+    }
+
+    const startTime = Date.now();
+    let statement: SQLite.SQLiteStatement | null = null;
+
+    try {
+        statement = await database.prepareAsync(sql);
+        const result = await statement.executeAsync(params);
+        const response = await result.getAllAsync();
+
+        const endTime = Date.now();
+        const executionTime = endTime - startTime;
+
+        if (queryName) {
+            console.log(`Query ${queryName} executed in ${executionTime} ms.`);
+        }
+
+        // Manual cleanup in success path
+        if (statement) {
+            await statement.finalizeAsync();
+            statement = null;
+        }
+
+        return response as Row[];
+    } catch (error: any) {
+        console.error("Commentary query error:", error);
+
+        // Manual cleanup in error path
+        if (statement) {
+            try {
+                await statement.finalizeAsync();
+            } catch (cleanupError) {
+                console.error('Error finalizing statement:', cleanupError);
+            }
+        }
+
+        return [];
+    }
+}
+
+// Helper function to query a single commentary database
+async function queryCommentaryDatabase(
+    databaseItem: { id: string; name: string; path: string },
+    commentaryExt: string,
+    searchBook: number,
+    searchChapter: number,
+    searchVerse?: number
+): Promise<DatabaseCommentaryData> {
+    const dbID = databaseItem.id;
+    const dbNameWithExt = `${dbID}${commentaryExt}`;
+    let db: SQLite.SQLiteDatabase | null = null;
+    const dbName = databaseItem.path.split('/').pop() || dbNameWithExt;
+
+    try {
+        db = await SQLite.openDatabaseAsync(dbName);
+
+        // Log database tables (for debugging)
+        // if (__DEV__) {
+        //     const tablesResult = await executeSqlQuery(
+        //         db,
+        //         "SELECT * FROM sqlite_master",
+        //         []
+        //     );
+        //     console.log(`📚 Tables in ${databaseItem.name}:`, tablesResult.map(t => t.name));
+        // }
+
+        // Build query for commentaries that cover the specified reference
+        let query = `
+            SELECT *
+        FROM commentaries
+        WHERE book_number = ?
+          AND (
+               chapter_number_from = ?
+               OR (? BETWEEN chapter_number_from AND chapter_number_to)
+          )
+        ORDER BY chapter_number_from, verse_number_from;
+          `;
+        let params: any[] = [searchBook, searchChapter, searchChapter];
+
+        // If verse is specified, filter by verse range too
+        if (searchVerse) {
+            query += ` AND verse_number_from <= ? AND verse_number_to >= ?`;
+            params.push(searchVerse, searchVerse);
+        }
+
+        query += ` ORDER BY chapter_number_from, verse_number_from`;
+
+        const queryResult = await executeSqlQuery(db, query, params);
+
+        // Manual cleanup in success path
+        if (db) {
+            await db.closeAsync();
+            db = null;
+        }
+
+        return {
+            dbShortName: databaseItem.name,
+            commentaries: queryResult as CommentaryData[],
+        };
+    } catch (error) {
+        console.error(`Commentary query error for ${databaseItem.name}:`, error);
+
+        // Manual cleanup in error path
+        if (db) {
+            try {
+                await db.closeAsync();
+            } catch (cleanupError) {
+                console.error('Error closing database:', cleanupError);
+            }
+        }
+
+        return {
+            dbShortName: databaseItem.name,
+            commentaries: [],
+        };
+    }
+}
+
 type UseCommentaryDataProps = {
-    enabled: boolean;
-    databases: VersionItem[];
     autoSearch?: boolean;
     bookNumber?: number;
     chapter?: number;
@@ -32,8 +160,6 @@ type UseCommentaryDataProps = {
 };
 
 const useCommentaryData = ({
-    databases,
-    enabled,
     autoSearch = false,
     bookNumber,
     chapter,
@@ -43,40 +169,7 @@ const useCommentaryData = ({
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const commentaryExt = getDatabaseExt(DATABASE_TYPE.COMMENTARY);
-
-    const executeSql = useCallback(
-        async (
-            database: SQLite.SQLiteDatabase,
-            sql: string,
-            params: any[] = [],
-            queryName?: any
-        ): Promise<any[]> => {
-            try {
-                const startTime = Date.now();
-                if (!database) {
-                    throw new Error("Database not initialized");
-                }
-                const statement = await database.prepareAsync(sql);
-                try {
-                    const result = await statement.executeAsync(params);
-                    const endTime = Date.now();
-                    const executionTime = endTime - startTime;
-
-                    const response = await result.getAllAsync();
-                    if (queryName) {
-                        console.log(`Query ${queryName} executed in ${executionTime} ms.`);
-                    }
-                    return response as Row[];
-                } finally {
-                    await statement.finalizeAsync();
-                }
-            } catch (error: any) {
-                console.error("Commentary query error:", error);
-                return [];
-            }
-        },
-        []
-    );
+    const { commentaries: databases } = useInstalledModules();
 
     const onSearch = useCallback(
         async ({
@@ -88,63 +181,43 @@ const useCommentaryData = ({
             chapter: number;
             verse?: number;
         }) => {
-            if (!enabled || !searchBook || !searchChapter || databases.length === 0)
+            if (!searchBook || !searchChapter || databases.length === 0)
                 return;
 
             setLoading(true);
             setError(null);
 
             try {
-                const results: DatabaseCommentaryData[] = [];
-
-                for (const databaseItem of databases) {
-                    const dbID = databaseItem.id;
-                    const dbNameWithExt = `${dbID}${commentaryExt}`;
-                    const db = await SQLite.openDatabaseAsync(dbNameWithExt);
-
-                    // Query for commentaries that cover the specified reference
-                    let query = `
-            SELECT * FROM commentaries 
-            WHERE book_number = ? 
-            AND chapter_number_from <= ? 
-            AND chapter_number_to >= ?
-          `;
-                    let params: any[] = [searchBook, searchChapter, searchChapter];
-
-                    // If verse is specified, filter by verse range too
-                    if (searchVerse) {
-                        query += ` AND verse_number_from <= ? AND verse_number_to >= ?`;
-                        params.push(searchVerse, searchVerse);
-                    }
-
-                    query += ` ORDER BY chapter_number_from, verse_number_from`;
-
-                    const queryResult = await executeSql(db, query, params);
-
-                    await db.closeAsync();
-                    results.push({
-                        dbShortName: databaseItem.name,
-                        commentaries: queryResult as CommentaryData[],
-                    });
-                }
+                // Query all commentary databases in parallel
+                const results = await Promise.all(
+                    databases.map((databaseItem) =>
+                        queryCommentaryDatabase(
+                            databaseItem,
+                            commentaryExt,
+                            searchBook,
+                            searchChapter,
+                            searchVerse
+                        )
+                    )
+                );
 
                 setData(results);
+                setLoading(false);
             } catch (error) {
                 setError("Error fetching commentary data");
                 console.error(error);
-            } finally {
                 setLoading(false);
             }
         },
-        [enabled, databases, executeSql, commentaryExt]
+        [databases, commentaryExt]
     );
 
     useEffect(() => {
         if (!autoSearch || !bookNumber || !chapter) return;
         onSearch({ bookNumber, chapter, verse });
-    }, [autoSearch, bookNumber, chapter, verse]);
+    }, [autoSearch, bookNumber, chapter, verse, onSearch]);
 
-    return { data, loading, error, onSearch };
+    return { data, loading, error, onSearch, hasCommentaries: databases.length > 0 };
 };
 
 export default useCommentaryData;

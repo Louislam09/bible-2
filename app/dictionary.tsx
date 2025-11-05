@@ -5,13 +5,12 @@ import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text } from "@/components/Themed";
 import WordDefinition from "@/components/WordDefinition";
 import { useBibleContext } from "@/context/BibleContext";
-import { useDBContext } from "@/context/databaseContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
 import useDictionaryData, { DatabaseData } from "@/hooks/useDictionaryData";
 import useParams from "@/hooks/useParams";
 import { DictionaryData, ModulesFilters, Screens, TTheme } from "@/types";
-import removeAccent, { pluralToSingular } from "@/utils/removeAccent";
+import removeAccent from "@/utils/removeAccent";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { FlashList } from "@shopify/flash-list";
 import { Stack, useRouter } from "expo-router";
@@ -73,7 +72,7 @@ const RenderItem = ({
   return (
     <View style={{}}>
       <Text style={styles.itemTitle}>{dbShortName}</Text>
-      {words.map((word) => (
+      {words?.map((word: any) => (
         <Animated.View
           key={word?.topic}
           style={[
@@ -209,7 +208,7 @@ const AnimatedSearchBar = ({
 
 type DictionarySearchProps = {};
 
-const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
+const DictionarySearch: React.FC<DictionarySearchProps> = ({ }) => {
   const { word } = useParams<{ word: string }>();
   const { fontSize } = useBibleContext();
   const [selectedWord, setSelectedWord] = useState<any>(null);
@@ -218,30 +217,15 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
   const router = useRouter();
   const styles = getStyles(theme);
   const [searchText, setSearchText] = useState<any>(word ? word : "");
-  const { installedDictionary: dbNames } = useDBContext();
-  // const searchDebounce = useDebounce(searchText, 500);
   const searchingSource = require("../assets/lottie/searching.json");
-  const animationRef = useRef<any>(null);
-  useEffect(() => {
-    if (!animationRef.current) return;
 
-    return () => animationRef.current?.pause();
-  }, []);
-
-  const { data, error, loading, onSearch } = useDictionaryData({
-    // searchParam:
-    //   searchDebounce?.length < 3 ? "" : searchDebounce.replace(/[.,;]/g, ""),
-    databases: dbNames,
-    enabled: true,
-    // enabled: searchDebounce !== "",
-  });
+  const { data, error, loading, onSearch, hasDictionary } = useDictionaryData({});
 
   const wordNotFoundInDictionary = useMemo(
     () => data?.every((version) => version.words.length === 0),
     [data]
   );
 
-  const hasDictionary = useMemo(() => dbNames.length >= 1, [dbNames]);
 
   useEffect(() => {
     if (!loading && !error) {
@@ -272,7 +256,7 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
 
   const onNavToManagerDownload = useCallback(() => {
     router.push({
-      pathname: Screens.DownloadManager,
+      pathname: `/${Screens.DownloadManager}`,
       params: { filter: ModulesFilters.DICTIONARIES },
     });
   }, [router]);
@@ -288,7 +272,6 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
         }}
       >
         <Animation
-          animationRef={animationRef}
           backgroundColor={theme.colors.background}
           source={searchingSource}
         />
@@ -327,7 +310,7 @@ const DictionarySearch: React.FC<DictionarySearchProps> = ({}) => {
       headerRightProps: {
         headerRightIcon: "Trash2",
         headerRightIconColor: "red",
-        onPress: () => {},
+        onPress: () => { },
         disabled: true,
         style: { opacity: 0 },
       },

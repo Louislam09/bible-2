@@ -3,8 +3,6 @@ import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { View } from "@/components/Themed";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { commentaryCss } from "@/constants/commentaryCss";
-import { useBibleContext } from "@/context/BibleContext";
-import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useCommentaryData from "@/hooks/useCommentaryData";
@@ -16,7 +14,7 @@ import { lucideIcons } from "@/utils/lucideIcons";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import * as Clipboard from "expo-clipboard";
 import { Stack, useRouter } from "expo-router";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { StyleSheet } from "react-native";
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
@@ -398,7 +396,6 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
   const { theme } = useMyTheme();
   const router = useRouter();
   const styles = getStyles(theme);
-  const { installedCommentary: dbNames } = useDBContext();
   const { printToFile } = usePrintAndShare();
   const webViewRef = useRef<WebView>(null);
   const searchingSource = require("../assets/lottie/searching.json");
@@ -418,9 +415,7 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
     : bibleState$.bibleQuery.chapter.get() || 1;
   const verse = paramVerse ? parseInt(paramVerse) : undefined;
 
-  const { data, error, loading, onSearch } = useCommentaryData({
-    databases: dbNames,
-    enabled: true,
+  const { data, error, loading, onSearch, hasCommentaries } = useCommentaryData({
     autoSearch: true,
     bookNumber,
     chapter,
@@ -447,7 +442,7 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
         reference,
         availableCommentaries,
         loading,
-        dbNames.length > 0,
+        hasCommentaries,
         true // showReferencePicker
       ),
     [
@@ -456,7 +451,7 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
       reference,
       availableCommentaries,
       loading,
-      dbNames.length,
+      hasCommentaries,
     ]
   );
 
@@ -483,7 +478,7 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
             const currentVerse = bibleState$.bibleQuery.verse.get();
 
             router.push({
-              pathname: Screens.ChooseReferenceDom,
+              pathname: `/${Screens.ChooseReferenceDom}`,
               params: {
                 book: currentBook,
                 chapter: currentChapter.toString(),
@@ -495,7 +490,7 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
 
           case "download":
             router.push({
-              pathname: Screens.DownloadManager,
+              pathname: `/${Screens.DownloadManager}`,
               params: { filter: ModulesFilters.COMMENTARIES },
             });
             break;
@@ -538,7 +533,7 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
             });
 
             router.push({
-              pathname: Screens.Home,
+              pathname: `/${Screens.Home}`,
               params: queryInfo,
             });
           }

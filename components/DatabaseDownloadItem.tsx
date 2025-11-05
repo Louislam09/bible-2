@@ -4,7 +4,9 @@ import {
   defaultDatabases,
   getIfDatabaseNeedsDownload,
   SQLiteDirPath,
+  getDatabaseExt,
 } from "@/constants/databaseNames";
+import { DATABASE_TYPE } from "@/types";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
 import { showToast } from "@/utils/showToast";
@@ -107,8 +109,17 @@ const DatabaseDownloadItem = ({
   // Paths and URLs
   const styles = getStyles(theme);
 
+  // Detect module type and get correct extension
+  const moduleType = useMemo(() => {
+    if (storedName.includes('.dictionary')) return DATABASE_TYPE.DICTIONARY;
+    if (storedName.includes('.commentaries')) return DATABASE_TYPE.COMMENTARY;
+    return DATABASE_TYPE.BIBLE;
+  }, [storedName]);
+
+  const fileExtension = useMemo(() => getDatabaseExt(moduleType), [moduleType]);
+
   // Check if this is the currently selected Bible
-  const isCurrentBible = currentBibleVersion === storedName + dbFileExt;
+  const isCurrentBible = currentBibleVersion === storedName + fileExtension;
 
   // Check download status on mount and when download status changes
   useEffect(() => {
@@ -165,7 +176,7 @@ const DatabaseDownloadItem = ({
   const checkDownloadStatus = async () => {
     try {
       const needDownload = await getIfDatabaseNeedsDownload(
-        storedName + dbFileExt
+        storedName + fileExtension
       );
       const fileDownloaded = !needDownload;
 
@@ -176,7 +187,7 @@ const DatabaseDownloadItem = ({
       if (fileDownloaded) {
         // Get file info to check when it was downloaded
         const fileInfo = await FileSystem.getInfoAsync(
-          `${SQLiteDirPath}/${storedName}${dbFileExt}`
+          `${SQLiteDirPath}/${storedName}${fileExtension}`
         );
         if (fileInfo.exists && fileInfo.modificationTime) {
           setDownloadedDate(new Date(fileInfo.modificationTime * 1000));
@@ -198,7 +209,7 @@ const DatabaseDownloadItem = ({
     }
 
     const needDownload = await getIfDatabaseNeedsDownload(
-      storedName + dbFileExt
+      storedName + fileExtension
     );
     if (needDownload) {
       try {
@@ -214,7 +225,7 @@ const DatabaseDownloadItem = ({
     } else {
       showToast("Esta versión ya está descargada.");
     }
-  }, [isConnected, storedName, name, url, size, addDownload]);
+  }, [isConnected, storedName, name, url, size, addDownload, fileExtension]);
 
   // Cancel download if in progress
   const handleCancelDownload = useCallback(async () => {
@@ -249,7 +260,7 @@ const DatabaseDownloadItem = ({
           onPress: async () => {
             try {
               const bibleObject = new DownloadedDatabase(
-                storedName + dbFileExt
+                storedName + fileExtension
               );
               const deleted = await bibleObject.delete();
 
@@ -396,7 +407,7 @@ const DatabaseDownloadItem = ({
       </View>
 
       {/* Progress bar for download */}
-      {!!progress && !isDownloaded && (
+      {isLoading && !!progress && (
         <View style={styles.progressContainer}>
           <View style={{ flex: 1, marginRight: 12 }}>
             <ProgressBar

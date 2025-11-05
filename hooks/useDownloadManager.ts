@@ -76,6 +76,19 @@ export const useDownloadManager = () => {
         [downloads]
     );
 
+    // Debug helpers
+    const forceProcessQueue = useCallback(() => {
+        downloadManager.forceProcessQueue();
+    }, []);
+
+    const getQueueStatus = useCallback(() => {
+        return downloadManager.getQueueStatus();
+    }, []);
+
+    const fixStuckQueue = useCallback(() => {
+        downloadManager.fixStuckQueue();
+    }, []);
+
     return {
         activeDownloads,
         queuedDownloads,
@@ -88,6 +101,9 @@ export const useDownloadManager = () => {
         removeCompleted,
         isDownloaded,
         getDownloadStatus,
+        forceProcessQueue,
+        getQueueStatus,
+        fixStuckQueue,
         allDownloads: Object.values(downloads),
     };
 };
