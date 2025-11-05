@@ -1,10 +1,9 @@
 import { defaultDatabases, SQLiteDirPath } from "@/constants/databaseNames";
 import { useBibleContext } from "@/context/BibleContext";
-import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import type { useDownloadManager } from "@/hooks/useDownloadManager";
-import { VersionItem } from "@/hooks/useInstalledBible";
+import useInstalledModules, { ModuleWithStatus } from "@/hooks/useInstalledModules";
 import { TTheme } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
@@ -30,24 +29,21 @@ type FileListProps = {
 const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true }) => {
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
-  const [loading, setLoading] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [listRevision, setListRevision] = useState<number>(0);
 
+  // ✅ Use combined hook for modules with download status
   const {
+    downloadedModules,
+    isLoaded,
     refreshDatabaseList,
-    installedBibles,
-    installedDictionary,
-    installedCommentary,
-    mainBibleService,
-    hebrewInterlinearService: interlinearService,
-    greekInterlinearService: interlinearGreekService,
-  } = useDBContext();
+  } = useInstalledModules();
+
   const { selectBibleVersion } = useBibleContext();
 
-  // ✅ Get download manager functions from props instead of calling the hook
-  const { getDownloadStatus, isDownloading, removeCompleted } = downloadManager;
+  // ✅ Get download manager functions from props
+  const { removeCompleted } = downloadManager;
 
   // ✅ Refresh when tab becomes active
   const prevActiveRef = useRef<boolean>(false);
@@ -72,16 +68,15 @@ const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true })
       await refreshDatabaseList();
       setListRevision((prev) => prev + 1);
     } finally {
-      setLoading(false);
       setRefreshing(false);
     }
   }, [refreshDatabaseList]);
 
-  const deleteFile = async (item: VersionItem) => {
+  const deleteFile = async (item: ModuleWithStatus) => {
     // Check if file is currently being downloaded
-    const downloadingFile = isDownloading(item.shortName.replace(/.db$/, ""));
+    const isCurrentlyDownloading = item.downloadStatus === "downloading" || item.downloadStatus === "unzipping";
 
-    if (downloadingFile) {
+    if (isCurrentlyDownloading) {
       Alert.alert(
         "Descarga en progreso",
         "No se puede eliminar un archivo que se está descargando. Por favor, cancela la descarga primero.",
@@ -105,27 +100,15 @@ const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true })
             try {
               const fileUri = item.path;
               const storedNameWithoutExt = item.shortName.replace(/.db$/, "");
-
-              // Extract base name to check for related files BEFORE deleting
-              let baseName = storedNameWithoutExt;
-              if (storedNameWithoutExt.endsWith('-bible')) {
-                baseName = storedNameWithoutExt.replace('-bible', '');
-              } else if (storedNameWithoutExt.includes('.commentaries-com')) {
-                baseName = storedNameWithoutExt.replace('.commentaries-com', '');
-              } else if (storedNameWithoutExt.includes('.dictionary')) {
-                baseName = storedNameWithoutExt.replace('.dictionary', '');
-              }
+              const baseName = item.baseDownloadName || storedNameWithoutExt;
 
               // Check if there are any other files from the same base download BEFORE deleting
-              const relatedFiles = listData.filter(f => {
-                const fNameWithoutExt = f.shortName.replace(/.db$/, "");
-                return fNameWithoutExt !== storedNameWithoutExt && // Not the file we're deleting
-                  (fNameWithoutExt === baseName ||
-                    fNameWithoutExt.startsWith(`${baseName}-`) ||
-                    fNameWithoutExt.startsWith(`${baseName}.`));
-              });
+              const relatedFiles = downloadedModules.filter(f =>
+                f.baseDownloadName === baseName &&
+                f.shortName !== item.shortName // Not the file we're deleting
+              );
 
-              console.log(`Deleting ${storedNameWithoutExt}, found ${relatedFiles.length} related files`);
+              console.log(`Deleting ${storedNameWithoutExt}, found ${relatedFiles.length} related files from base: ${baseName}`);
 
               // Delete all database files
               await FileSystem.deleteAsync(fileUri, { idempotent: true });
@@ -196,90 +179,40 @@ const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true })
     </View>
   );
 
-  const refreshDatabase = async (dbName: VersionItem) => {
-    const isInterlinear = dbName.id.includes("interlinear");
-    if (isInterlinear) {
-      Alert.alert(
-        "Actualizar módulo",
-        `¿Quieres descargar de nuevo "${dbName.name}"? Esto reemplazará los datos actuales de la biblia, notas, favoritos, etc.`
-      );
-      interlinearService.reOpen(dbName);
-      return;
-    }
-
-    const isGreekInterlinear = dbName.id.includes("greek");
-    if (isGreekInterlinear) {
-      Alert.alert(
-        "Actualizar módulo",
-        `¿Quieres descargar de nuevo "${dbName.name}"? Esto reemplazará los datos actuales de la biblia, notas, favoritos, etc.`
-      );
-      interlinearGreekService.reOpen(dbName);
-      return;
-    }
-
+  const refreshDatabase = async (dbName: ModuleWithStatus) => {
     Alert.alert(
       "Actualizar módulo",
-      `¿Quieres descargar de nuevo "${dbName.name}"? Esto reemplazará los datos actuales de la biblia, notas, favoritos, etc.`,
-      [
-        {
-          text: "No, cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Sí, actualizar",
-          onPress: async () => {
-            console.log("Iniciando actualización de base de datos:", dbName);
-            try {
-              const db = await mainBibleService.reOpen(dbName);
-              if (db) {
-                selectBibleVersion(dbName.id);
-                Alert.alert(
-                  "Actualización exitosa",
-                  `"${dbName.name}" se ha actualizado correctamente.`
-                );
-              } else {
-                setError("Hubo un problema al descargar la base de datos.");
-              }
-            } catch (err) {
-              setError("Hubo un problema al descargar la base de datos.");
-              console.error("Error al descargar la base de datos:", err);
-            }
-          },
-        },
-      ]
+      `La función de actualizar módulo requiere acceso a servicios de base de datos. Esta característica estará disponible próximamente.`,
+      [{ text: "OK", style: "cancel" }]
     );
   };
 
-  const listData = useMemo(
-    () => [...installedBibles, ...installedDictionary, ...installedCommentary],
-    [installedBibles, installedDictionary, installedCommentary]
-  );
+  const listData = useMemo(() => {
+    return downloadedModules;
+  }, [downloadedModules]);
 
   const keyExtractor = useCallback(
-    (item: VersionItem) => `downloaded-${item.path}`,
+    (item: ModuleWithStatus) => `downloaded-${item.path}`,
     []
   );
 
   // ✅ Get item type for recycling optimization
-  const getItemType = useCallback((item: VersionItem) => {
+  const getItemType = useCallback((item: ModuleWithStatus) => {
     if (item.shortName.includes(".dictionary")) return "dictionary";
     if (item.shortName.includes(".commentaries")) return "commentary";
     return "bible";
   }, []);
 
   const renderItem = useCallback(
-    ({ item, index }: { item: VersionItem; index: number }) => {
+    ({ item, index }: { item: ModuleWithStatus; index: number }) => {
       const versionItem = item;
-      const allowDelete = !defaultDatabases.includes(versionItem?.id as string);
-      const isBible = index < installedBibles.length;
+      const allowDelete = !item.isDefault;
+      const isBible = !item.shortName.includes(".dictionary") && !item.shortName.includes(".commentaries");
 
-      // Check download status
-      const storedNameWithoutExt =
-        versionItem?.shortName?.replace(/.db$/, "") || "";
-      const downloadStatus = getDownloadStatus(storedNameWithoutExt);
+      // Download status is already in the item
       const isCurrentlyDownloading =
-        downloadStatus?.status === "downloading" ||
-        downloadStatus?.status === "unzipping";
+        item.downloadStatus === "downloading" ||
+        item.downloadStatus === "unzipping";
 
       const suffix = versionItem.id.includes('commentaries') ? ' - Comentarios' : versionItem.id.includes('dictionary') ? ' - Diccionario' : '';
 
@@ -304,13 +237,13 @@ const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true })
                 {versionItem?.name || "-"}{suffix}
               </Text>
 
-              {isCurrentlyDownloading && downloadStatus && (
+              {isCurrentlyDownloading && item.downloadProgress !== undefined && (
                 <View style={styles.progressContainer}>
                   <ProgressBar
                     height={4}
                     color={theme.colors.primary}
                     barColor={theme.colors.border}
-                    progress={downloadStatus.progress}
+                    progress={item.downloadProgress}
                     circleColor={theme.colors.notification}
                   />
                 </View>
@@ -342,17 +275,11 @@ const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true })
         </View>
       );
     },
-    [
-      theme,
-      getDownloadStatus,
-      installedBibles,
-      installedDictionary,
-      installedCommentary,
-    ]
+    [theme, refreshDatabase]
   );
 
   // Conditional rendering without early returns to avoid breaking Rules of Hooks
-  if (loading) {
+  if (!isLoaded) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={theme.colors.primary} />

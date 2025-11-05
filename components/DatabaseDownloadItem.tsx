@@ -67,9 +67,7 @@ const DatabaseDownloadItem = ({
   downloadManager,
 }: DatabaseDownloadItemProps) => {
   // State management
-  const [expandDetails, setExpandDetails] = useState(false);
   const [downloadedDate, setDownloadedDate] = useState<Date | null>(null);
-  const [animation] = useState(new Animated.Value(0));
 
   // Extract properties from item
   const { size, url, storedName, name } = item;
@@ -97,10 +95,6 @@ const DatabaseDownloadItem = ({
     [downloadStatus?.progress]
   );
 
-  const unzipProgress = useMemo(
-    () => downloadStatus?.unzipProgress || "",
-    [downloadStatus?.unzipProgress]
-  );
 
   const downloadError = useMemo(
     () => downloadStatus?.error || null,
@@ -197,11 +191,6 @@ const DatabaseDownloadItem = ({
     }
   };
 
-  // ✅ Optimistic UI updates for better UX
-  const [localProgress, setLocalProgress] = useState(0);
-  const [optimisticDownloading, setOptimisticDownloading] = useState(false);
-
-  // ✅ Memoize callback functions to prevent unnecessary re-renders
   const downloadBible = useCallback(async () => {
     if (!isConnected) {
       showToast("Por favor, revisa tu conexión e inténtalo de nuevo.");
@@ -212,10 +201,6 @@ const DatabaseDownloadItem = ({
       storedName + dbFileExt
     );
     if (needDownload) {
-      // ✅ Show downloading state immediately (optimistic update)
-      setOptimisticDownloading(true);
-      setLocalProgress(0.01);
-
       try {
         await addDownload({
           storedName,
@@ -224,23 +209,12 @@ const DatabaseDownloadItem = ({
           size,
         });
       } catch (error) {
-        // Rollback optimistic update on error
-        setOptimisticDownloading(false);
-        setLocalProgress(0);
         showToast("Error al iniciar descarga");
       }
     } else {
       showToast("Esta versión ya está descargada.");
     }
   }, [isConnected, storedName, name, url, size, addDownload]);
-
-  // Reset optimistic state when actual download starts
-  useEffect(() => {
-    if (isLoading && optimisticDownloading) {
-      setOptimisticDownloading(false);
-      setLocalProgress(0);
-    }
-  }, [isLoading]);
 
   // Cancel download if in progress
   const handleCancelDownload = useCallback(async () => {
@@ -335,21 +309,17 @@ const DatabaseDownloadItem = ({
     });
   };
 
-  const toggleExpandDetails = () => {
-    setExpandDetails(!expandDetails);
-  };
 
   const isBible = !item.storedName.split(".")[1];
 
   return (
-    <Animated.View
+    <View
       style={[
         styles.itemContainer,
         isDownloaded && styles.downloadedItem
       ]}
     >
-      <Pressable
-        onPress={() => toggleExpandDetails()}
+      <View
         style={{
           flexDirection: "row",
           alignItems: "center",
@@ -383,7 +353,7 @@ const DatabaseDownloadItem = ({
             <View style={styles.disabledButton}>
               <Icon name="Lock" size={18} color={theme.colors.text + "50"} />
             </View>
-          ) : isLoading || optimisticDownloading ? (
+          ) : isLoading ? (
             <TouchableOpacity
               style={styles.cancelButton}
               onPress={handleCancelDownload}
@@ -423,25 +393,22 @@ const DatabaseDownloadItem = ({
             </TouchableOpacity>
           )}
         </View>
-      </Pressable>
+      </View>
 
       {/* Progress bar for download */}
-      {(!!progress || optimisticDownloading) && !isDownloaded && (
+      {!!progress && !isDownloaded && (
         <View style={styles.progressContainer}>
           <View style={{ flex: 1, marginRight: 12 }}>
             <ProgressBar
               height={8}
               color={theme.colors.primary}
               barColor={theme.colors.border}
-              progress={optimisticDownloading ? localProgress : progress}
+              progress={progress}
               circleColor={theme.colors.notification}
             />
           </View>
           <Text style={styles.progressText}>
-            {Math.round(
-              (optimisticDownloading ? localProgress : progress) * 100
-            )}
-            %
+            {Math.round(progress * 100)}%
           </Text>
         </View>
       )}
@@ -457,15 +424,11 @@ const DatabaseDownloadItem = ({
             backgroundColor: "transparent",
           }}
         >
-          {unzipProgress ? (
-            <Text style={styles.unzipText}>{unzipProgress}</Text>
-          ) : (
-            <Text style={styles.unzipText}>
-              {downloadStatus?.status === "downloading"
-                ? "Descargando..."
-                : "Preparando..."}
-            </Text>
-          )}
+          <Text style={styles.unzipText}>
+            {downloadStatus?.status === "downloading"
+              ? "Descargando..."
+              : "Descomprimiendo..."}
+          </Text>
         </View>
       )}
 
@@ -476,7 +439,7 @@ const DatabaseDownloadItem = ({
           <Text style={styles.errorText}>{downloadError}</Text>
         </View>
       )}
-    </Animated.View>
+    </View>
   );
 };
 

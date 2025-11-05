@@ -139,7 +139,7 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
     borderColor: withTiming(isSearchFocused ? theme.colors.text : theme.colors.text + "80", { duration: 300 }),
   }));
   const filteredDatabases = useMemo(() => {
-    return debouncedSearchText
+    const filtered = debouncedSearchText
       ? databasesToDownload.filter(
         (version) =>
           removeAccent(version.name)
@@ -150,6 +150,9 @@ const DownloadManager: React.FC<DownloadManagerProps> = () => {
             .includes(removeAccent(debouncedSearchText).toLowerCase())
       )
       : databasesToDownload;
+
+    // Filter out default databases from display
+    return filtered.filter(db => !['bible', 'ntv-bible', 'interlinear-bible', 'greek-bible'].includes(db.storedName));
   }, [debouncedSearchText, databasesToDownload]);
 
   const NoModulesFound = () => (

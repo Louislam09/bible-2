@@ -1,14 +1,11 @@
 import { getIfDatabaseNeedsDownload } from "@/constants/databaseNames";
 import { downloadManager } from "@/services/downloadManagerService";
 import { downloadState$, downloadStateHelpers } from "@/state/downloadState";
-import { use$ } from "@legendapp/state/react";
 import { useCallback, useEffect, useMemo } from "react";
 
 export const useDownloadManager = () => {
-    // const downloads = use$(() => downloadState$.downloads.get());
-    // const queue = use$(() => downloadState$.queue.get());
-    const downloads = downloadState$.downloads.get()
-    const queue = downloadState$.queue.get()
+    const downloads = downloadState$.downloads.get();
+    const queue = downloadState$.queue.get();
 
     // Initialize download manager on mount
     useEffect(() => {
@@ -42,14 +39,6 @@ export const useDownloadManager = () => {
         },
         []
     );
-
-    const pauseDownload = useCallback(async (storedName: string) => {
-        await downloadManager.pauseDownload(storedName);
-    }, []);
-
-    const resumeDownload = useCallback(async (storedName: string) => {
-        await downloadManager.retryDownload(storedName);
-    }, []);
 
     const cancelDownload = useCallback(async (storedName: string) => {
         await downloadManager.cancelDownload(storedName);
@@ -87,29 +76,18 @@ export const useDownloadManager = () => {
         [downloads]
     );
 
-    const isDownloading = useCallback(
-        (storedName: string) => {
-            return downloadStateHelpers.isDownloading(storedName);
-        },
-        [downloads]
-    );
-
     return {
         activeDownloads,
         queuedDownloads,
         completedDownloads,
         failedDownloads,
         addDownload,
-        pauseDownload,
-        resumeDownload,
         cancelDownload,
         retryDownload,
         clearCompleted,
         removeCompleted,
         isDownloaded,
         getDownloadStatus,
-        isDownloading,
         allDownloads: Object.values(downloads),
     };
 };
-

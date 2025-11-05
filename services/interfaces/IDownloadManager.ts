@@ -22,11 +22,6 @@ export interface IDownloadManager {
     addToQueue(item: DownloadQueueItem): Promise<any>;
 
     /**
-     * Pause an active download
-     */
-    pauseDownload(storedName: string): Promise<void>;
-
-    /**
      * Cancel a download
      */
     cancelDownload(storedName: string): Promise<void>;

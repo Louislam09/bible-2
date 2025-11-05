@@ -4,7 +4,7 @@ import { observablePersistAsyncStorage } from "@legendapp/state/persist-plugins/
 import { configureSynced, syncObservable } from "@legendapp/state/sync";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export type DownloadStatus = 'queued' | 'downloading' | 'unzipping' | 'completed' | 'failed' | 'paused' | 'cancelled';
+export type DownloadStatus = 'queued' | 'downloading' | 'unzipping' | 'completed' | 'failed' | 'cancelled';
 
 export interface DownloadItem {
     id: string;
@@ -15,11 +15,8 @@ export interface DownloadItem {
     status: DownloadStatus;
     progress: number; // 0-1
     error?: string;
-    downloadResumableData?: string; // Serialized FileSystem.DownloadResumable data
     startedAt?: number;
     completedAt?: number;
-    unzipProgress?: string;
-    retryCount?: number;
 }
 
 export interface DownloadState {
@@ -64,7 +61,6 @@ export const downloadStateHelpers = {
             status: 'queued',
             progress: 0,
             startedAt: Date.now(),
-            retryCount: 0,
         };
 
         downloadState$.downloads[item.storedName].set(download);
@@ -78,34 +74,10 @@ export const downloadStateHelpers = {
         return download;
     },
 
-    // ✅ Atomic state updates to prevent race conditions
     updateDownload: (storedName: string, updates: Partial<DownloadItem>) => {
-        const current = downloadState$.downloads[storedName].peek(); // Use peek() for non-reactive read
-        if (current) {
-            downloadState$.downloads[storedName].assign(updates); // Use assign() for partial updates
-        }
-    },
-
-    // ✅ Create or update a download entry (useful for extracted files)
-    upsertDownload: (storedName: string, download: Partial<DownloadItem> & Pick<DownloadItem, 'name' | 'status'>) => {
         const current = downloadState$.downloads[storedName].peek();
-
         if (current) {
-            // Update existing
-            downloadState$.downloads[storedName].assign(download);
-        } else {
-            // Create new entry
-            const id = `${storedName}-${Date.now()}`;
-            const newDownload: DownloadItem = {
-                id,
-                storedName,
-                url: '', // Not needed for extracted files
-                size: 0, // Not needed for extracted files
-                progress: 0,
-                retryCount: 0,
-                ...download,
-            };
-            downloadState$.downloads[storedName].set(newDownload);
+            downloadState$.downloads[storedName].assign(updates);
         }
     },
 
@@ -149,19 +121,17 @@ export const downloadStateHelpers = {
         );
     },
 
-    // ✅ Atomic removal to prevent race conditions
     removeDownload: (storedName: string) => {
-        downloadState$.downloads[storedName].delete(); // Use Legend State's delete() method
+        downloadState$.downloads[storedName].delete();
         downloadStateHelpers.removeFromQueue(storedName);
     },
 
     clearCompleted: () => {
-        const downloads = downloadState$.downloads.peek(); // Non-reactive read
+        const downloads = downloadState$.downloads.peek();
         const completedKeys = Object.entries(downloads)
-            .filter(([_, download]) => download.status === 'completed' || (download.retryCount || 0) >= 1)
+            .filter(([_, download]) => download.status === 'completed')
             .map(([key]) => key);
 
-        // Delete completed downloads atomically
         completedKeys.forEach(key => {
             downloadState$.downloads[key].delete();
         });
