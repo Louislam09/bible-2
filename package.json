@@ -48,7 +48,6 @@
     "@shopify/flash-list": "^2.0.2",
     "autoprefixer": "^10.4.21",
     "axios": "^1.8.2",
-    "babel-plugin-react-compiler": "^1.0.0",
     "base-64": "^1.0.0",
     "date-fns": "^4.1.0",
     "expo": "^53.0.20",
