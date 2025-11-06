@@ -24,9 +24,9 @@ import { use$ } from "@legendapp/state/react";
 import { useNavigation, useRouter } from "expo-router";
 import VersionList from "./VersionList";
 
-interface HeaderInterface {}
+interface HeaderInterface { }
 
-const BibleHeader: FC<HeaderInterface> = ({}) => {
+const BibleHeader: FC<HeaderInterface> = ({ }) => {
   const haptics = useHaptics();
   const { width } = useWindowDimensions();
   const {
@@ -122,6 +122,7 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
         ref: tourState$.fav,
         isIonicon: false,
         color: isSplitActived ? theme.colors.notification : theme.colors.text,
+        hide: true,
       },
       {
         name: "ArrowBigLeftDash",
@@ -174,7 +175,7 @@ const BibleHeader: FC<HeaderInterface> = ({}) => {
       <View style={{ flexDirection: "row", backgroundColor: "transparent" }}>
         <TouchableOpacity
           style={styles.iconContainer}
-          onPress={() => router.navigate("(dashboard)")}
+          onPress={() => router.navigate("/(dashboard)")}
         >
           <Icon
             name="House"
@@ -249,6 +250,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       width: "100%",
       // borderWidth: 0.5,
       zIndex: 10,
+      paddingBottom: 10
     },
     progressContainer: {
       width: "100%",

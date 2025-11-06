@@ -110,7 +110,6 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     [isPortrait]
   );
   const headerHeight = useRef(new Animated.Value(1)).current;
-  const footerHeight = useRef(new Animated.Value(1)).current;
 
   const handleScroll = useCallback((direction: "up" | "down") => {
     // console.log("handleScroll", direction);
@@ -142,29 +141,6 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     transform: [{ scaleY: headerHeight }],
     opacity: headerHeight,
   };
-
-  const footerStyle = {
-    transform: [{ scaleY: footerHeight }],
-    opacity: footerHeight,
-  };
-
-  const progressTranslateY = headerHeight.interpolate({
-    inputRange: [0, 0.5, 1],
-    outputRange: [1, 28, 47],
-  });
-
-  const progressStyle = {
-    transform: [{ translateY: progressTranslateY }],
-    opacity: 1,
-  };
-
-  const currentHistoryIndexState = use$(() =>
-    bibleState$.currentHistoryIndex.get()
-  );
-
-  const progressValue = useMemo(() => {
-    return (currentHistoryIndexState || 0) / (verses?.length || 10);
-  }, [currentHistoryIndexState, verses]);
 
   const onStrongWordClicked = useCallback(({ word, tagValue }: WordTagPair) => {
     haptics.selection();

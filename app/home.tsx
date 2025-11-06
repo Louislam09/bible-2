@@ -136,7 +136,7 @@ const HomeScreen: React.FC<HomeScreenProps> = observer(() => {
           style={[styles.container, !isPortrait && { flexDirection: "row" }]}
         >
           <BibleTop height={topHeight} width={topWidth} />
-          {isSplitActived && renderBottomContent()}
+          {/* {isSplitActived && renderBottomContent()} */}
         </View>
         <>
           <BookContentModals />

@@ -8,29 +8,27 @@ import { ActivityIndicator, Animated, StyleSheet } from "react-native";
 import SwipeWrapper from "./SwipeWrapper";
 import Chapter from "./home/content/Chapter";
 import BibleFooter from "./home/footer/BibleFooter";
+import { View } from "./Themed";
+import { useDeviceOrientation } from "@/hooks/useDeviceOrientation";
+import { OrientationType } from "@/types";
 
 const BibleBottom: FC<any> = (props) => {
-  const { orientation } = useBibleContext();
-  const isSplitActived = use$(() => bibleState$.isSplitActived.get());
-  const isPortrait = orientation === "PORTRAIT";
   const { theme } = useMyTheme();
+  const orientation = useDeviceOrientation();
+  const isPortrait = orientation === OrientationType.PORTRAIT;
 
-  const estimatedReadingTimeBottom = use$(() => bibleState$.readingTimeData.bottom.get());
+
+  const isSplitActived = use$(() => bibleState$.isSplitActived.get());
   const isDataLoading = use$(() => bibleState$.isDataLoading.bottom.get());
   const bottomVerses = use$(() => bibleState$.bibleData.bottomVerses.get());
   const interlinearVerses = use$(
     () => bibleState$.bibleData.interlinearVerses.get() ?? []
   );
-
-  console.log(
-    `🔝 BibleBottom Component Rendered 🔄:${isDataLoading} 🧮:${bottomVerses.length} ⌚:${estimatedReadingTimeBottom}`
-  );
   const bibleQuery = use$(() => bibleState$.bibleQuery.get());
-  const {
-    bottomSideVerse: verse,
-    bottomSideBook: book,
-    bottomSideChapter: chapter,
-  } = bibleQuery;
+
+  const verse = bibleQuery?.bottomSideVerse || 1;
+  const book = bibleQuery?.bottomSideBook || "Génesis";
+  const chapter = bibleQuery?.bottomSideChapter || 1;
 
   const { nextChapter, previousChapter } = useChangeBookOrChapter({
     book,
@@ -38,17 +36,18 @@ const BibleBottom: FC<any> = (props) => {
     isSplit: true,
   });
 
+
   const initialScrollIndex = useMemo(
     () => Math.min(verse - 1, bottomVerses.length - 1),
     [verse, bottomVerses]
   );
 
-  const onSwipeRight = () => {
-    previousChapter();
-  };
-  const onSwipeLeft = () => {
-    nextChapter();
-  };
+  // const onSwipeRight = () => {
+  //   previousChapter();
+  // };
+  // const onSwipeLeft = () => {
+  //   nextChapter();
+  // };
 
   const widthOrHeight = useMemo(
     () => (isPortrait ? "height" : "width"),
@@ -64,9 +63,12 @@ const BibleBottom: FC<any> = (props) => {
     [widthOrHeight, props, isSplitActived, theme.colors.background]
   );
 
+  // return <View style={{ width: 100, height: 100, backgroundColor: "red" }} />;
+
   return (
     <Animated.View style={[styles.container, containerStyle]}>
-      <SwipeWrapper {...{ onSwipeRight, onSwipeLeft }}>
+      <SwipeWrapper onSwipeLeft={nextChapter} onSwipeRight={previousChapter}>
+
         {isDataLoading ? (
           <ActivityIndicator />
         ) : (

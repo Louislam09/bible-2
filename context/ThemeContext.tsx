@@ -52,11 +52,6 @@ const MyThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     setSchema((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
-  // regular: { fontFamily: selectedFont, fontWeight: "400" },
-  // medium: { fontFamily: selectedFont, fontWeight: "500" },
-  // bold: { fontFamily: selectedFont, fontWeight: "700" },
-  // heavy: { fontFamily: selectedFont, fontWeight: "900" },
-
   return (
     <ThemeContext.Provider
       value={{ schema, toggleTheme, theme: theme[schema] }}

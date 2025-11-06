@@ -171,7 +171,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     experiments: {
       buildCacheProvider: "eas",
       typedRoutes: true,
-      reactCompiler: true
+      reactCompiler: false
     },
     plugins: [
       [
