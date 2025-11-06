@@ -1,7 +1,6 @@
 import { chooseReferenceHtmlTemplate } from "@/chooseReferenceTemplate";
 import { ChooseReferenceMutableProgress } from "@/components/animations/constants";
 import { View } from "@/components/Themed";
-import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useBackHandler from "@/hooks/useBackHandler";
 import useParams from "@/hooks/useParams";
@@ -17,12 +16,12 @@ import WebView from "react-native-webview";
 
 interface WebviewReferenceChooseProps {
   onClose: () => void;
+  isCommentary?: boolean;
 }
 
 const WebviewReferenceChoose = React.memo(
-  ({ onClose }: WebviewReferenceChooseProps) => {
+  ({ onClose, isCommentary }: WebviewReferenceChooseProps) => {
     const webViewRef = useRef<WebView>(null);
-    const fontSize = use$(() => storedData$.fontSize.get());
     const bibleQuery = bibleState$.bibleQuery.get();
 
     const navigation = useNavigation();
@@ -73,6 +72,7 @@ const WebviewReferenceChoose = React.memo(
         type: string;
       }) => {
         if (ref.type === "bookSelected") return;
+        const shouldCloseOnChapter = ref.type === "chapterSelected" && isCommentary;
 
         const isBottomSideSearching = bibleState$.isBottomBibleSearching.get();
         const params = {
@@ -84,14 +84,25 @@ const WebviewReferenceChoose = React.memo(
           isHistory: false,
         } as any;
 
-        bibleState$.changeBibleQuery({
-          ...params,
-          isBibleBottom: isBottomSideSearching,
-          shouldFetch: ref.goHome ? false : true,
-          isHistory: false,
-        });
+        if (isCommentary) {
+          bibleState$.changeCommentaryQuery({
+            book: ref.book,
+            chapter: ref.chapter,
+            verse: ref.verse,
+          });
+        } else {
+          bibleState$.changeBibleQuery({
+            ...params,
+            isBibleBottom: isBottomSideSearching,
+            shouldFetch: ref.goHome ? false : true,
+            isHistory: false,
+          });
+        }
+        if (shouldCloseOnChapter) {
+          sendMessage(0);
+        }
 
-        if (ref.goHome) {
+        if (ref.goHome || shouldCloseOnChapter) {
           ChooseReferenceMutableProgress.value = withTiming(
             0,
             {
@@ -104,7 +115,6 @@ const WebviewReferenceChoose = React.memo(
               }
             }
           );
-          // navigation.navigate(Screens.Home, params);
         }
       },
       [routeParam, navigation]
@@ -130,7 +140,7 @@ const WebviewReferenceChoose = React.memo(
       } catch (error) {
         console.warn("Error parsing WebView message:", error);
       }
-    }, []);
+    }, [isCommentary]);
 
     return (
       <WebView

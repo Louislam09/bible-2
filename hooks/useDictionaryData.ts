@@ -37,9 +37,9 @@ async function queryDictionaryDatabase(
     const result = await statement.executeAsync([`${trimmedSearch}%`]);
     const response = await result.getAllAsync();
 
-    if (__DEV__) {
-      console.log(`Dictionary query for ${databaseItem.name} completed`);
-    }
+    // if (__DEV__) {
+    //   console.log(`Dictionary query for ${databaseItem.name} completed`);
+    // }
 
     // Manual cleanup in success path
     if (statement) {

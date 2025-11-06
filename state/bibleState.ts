@@ -68,6 +68,11 @@ export const bibleState$ = observable({
     isHistory: false,
     shouldFetch: true,
   },
+  commentaryQuery: {
+    book: "Génesis",
+    chapter: 1,
+    verse: 1,
+  },
   isDataLoading: { top: true, bottom: false },
   bibleData: { topVerses: [], bottomVerses: [], topLinks: [], bottomLinks: [], interlinearVerses: [] } as BibleData,
   readingTimeData: { top: 0, bottom: 0 },
@@ -82,6 +87,12 @@ export const bibleState$ = observable({
     batch(() => {
       bibleState$.bibleQuery.set(newQuery);
       bibleState$.isDataLoading[loadingKey].set(query.shouldFetch || false);
+    });
+  },
+  changeCommentaryQuery: (query: Partial<IBibleQuery>) => {
+    const newQuery = { ...bibleState$.commentaryQuery.get(), ...query };
+    batch(() => {
+      bibleState$.commentaryQuery.set(newQuery);
     });
   },
   handleSplitActived: () => {

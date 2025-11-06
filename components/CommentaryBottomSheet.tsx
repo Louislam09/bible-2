@@ -389,7 +389,7 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
   const router = useRouter();
   const webViewRef = useRef<WebView>(null);
 
-  const { data, error, loading, hasCommentaries } = useCommentaryData({
+  const { data, loading, hasCommentaries } = useCommentaryData({
     autoSearch: true,
     bookNumber,
     chapter,
@@ -445,8 +445,11 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
             printToFile(commentary.text, `${reference} - ${source}`);
             break;
 
-          case "explore":
-            modalState$.commentaryRef.current?.dismiss();
+          case "explore": {
+            const commentaryRef = modalState$.commentaryRef.current;
+            if (commentaryRef) {
+              commentaryRef.dismiss();
+            }
             router.push({
               pathname: `/${Screens.Commentary}`,
               params: {
@@ -456,14 +459,19 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
               },
             });
             break;
+          }
 
-          case "download":
-            modalState$.commentaryRef.current?.dismiss();
+          case "download": {
+            const commentaryRef = modalState$.commentaryRef.current;
+            if (commentaryRef) {
+              commentaryRef.dismiss();
+            }
             router.push({
               pathname: `/${Screens.DownloadManager}`,
               params: { filter: ModulesFilters.COMMENTARIES },
             });
             break;
+          }
         }
       } catch (error) {
         console.error("Error handling message:", error);
@@ -486,10 +494,18 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
           );
 
           if (currentBook) {
+            const verseNumber = +verseStart;
+            let verseValue;
+            if (verseNumber) {
+              verseValue = verseNumber;
+            } else {
+              verseValue = 0;
+            }
+
             const queryInfo = {
               book: currentBook.longName,
               chapter: +chapterNum,
-              verse: +verseStart || 0,
+              verse: verseValue,
             };
 
             bibleState$.changeBibleQuery({
@@ -498,7 +514,10 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
               isHistory: false,
             });
 
-            modalState$.commentaryRef.current?.dismiss();
+            const commentaryRef = modalState$.commentaryRef.current;
+            if (commentaryRef) {
+              commentaryRef.dismiss();
+            }
           }
         }
       } catch (error) {

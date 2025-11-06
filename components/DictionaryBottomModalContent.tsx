@@ -2,7 +2,6 @@ import { Text, View } from "@/components/Themed";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { dictionaryListHtmlTemplate } from "@/constants/dictionaryListHtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
-import { useDBContext } from "@/context/databaseContext";
 import useDictionaryData, { DatabaseData } from "@/hooks/useDictionaryData";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { bibleState$ } from "@/state/bibleState";
@@ -23,6 +22,7 @@ import { BackHandler, StyleSheet, TouchableOpacity } from "react-native";
 import WebView from "react-native-webview";
 import { WebViewMessageEvent } from "react-native-webview/lib/WebViewTypes";
 import { IconProps } from "./Icon";
+import { wordDefinitionHtmlTemplate } from "@/constants/wordDefinitionHtmlTemplate";
 
 interface DictionaryContentProps {
   theme: TTheme;
@@ -54,11 +54,7 @@ const DictionaryBottomModalContent: React.FC<DictionaryContentProps> = ({
   const word = "";
   const webViewRef = useRef<WebView>(null);
 
-  const { installedDictionary: dbNames } = useDBContext();
-
-  const { data, error, loading, onSearch } = useDictionaryData({
-    databases: dbNames,
-    enabled: true,
+  const { data, error, loading, hasDictionary } = useDictionaryData({
     autoSearch: true,
   });
 
@@ -115,23 +111,16 @@ const DictionaryBottomModalContent: React.FC<DictionaryContentProps> = ({
   };
 
   const handleShareContent = async (content: string) => {
-    try {
-      await Clipboard.setStringAsync(content);
-      // Also print to file if needed
-      if (selectedWord?.topic) {
-        const { wordDefinitionHtmlTemplate } = await import(
-          "@/constants/wordDefinitionHtmlTemplate"
-        );
-        const html = wordDefinitionHtmlTemplate(
-          selectedWord.definition || "",
-          theme.colors,
-          bibleFontSize,
-          true
-        );
-        printToFile(html, selectedWord.topic?.toUpperCase() || "--");
-      }
-    } catch (error) {
-      console.error("Error sharing content:", error);
+    await Clipboard.setStringAsync(content);
+    // Also print to file if needed
+    if (selectedWord.topic) {
+      const html = wordDefinitionHtmlTemplate(
+        selectedWord.definition || "",
+        theme.colors,
+        bibleFontSize,
+        true
+      );
+      printToFile(html, selectedWord.topic?.toUpperCase() || "--");
     }
   };
 
@@ -164,7 +153,7 @@ const DictionaryBottomModalContent: React.FC<DictionaryContentProps> = ({
   }, [navigation]);
 
 
-  if (dbNames.length === 0) {
+  if (!hasDictionary) {
     return (
       <View style={styles.emptyContainer}>
         <Ionicons

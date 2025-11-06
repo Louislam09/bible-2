@@ -1,17 +1,14 @@
 import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "@/constants/BookNames";
-import { useBibleContext } from "@/context/BibleContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { Screens } from "@/types";
 import { LinearGradient } from "expo-linear-gradient";
 import { FC, useCallback, useRef } from "react";
 import { TouchableOpacity, useWindowDimensions } from "react-native";
 
-import Icon from "@/components/Icon";
 import { ChooseReferenceMutableProgress } from "@/components/animations/constants";
+import Icon from "@/components/Icon";
 import { Text, View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
-import { storedData$ } from "@/context/LocalstoreContext";
-import { useNetwork } from "@/context/NetworkProvider";
 import { useHaptics } from "@/hooks/useHaptics";
 import useParams from "@/hooks/useParams";
 import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
@@ -31,11 +28,7 @@ interface FooterInterface {
 
 const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const haptics = useHaptics();
-  const { currentBibleVersion } = useBibleContext();
   const isSplitActived = use$(() => bibleState$.isSplitActived.get());
-  const useDomComponent = use$(() => storedData$.useDomComponent.get());
-  const netInfo = useNetwork();
-  const { isConnected } = netInfo;
   const FOOTER_ICON_SIZE = iconSize;
   const { width } = useWindowDimensions();
 
@@ -217,7 +210,6 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
         >
           <Icon
             name={"ArrowRight"}
-            // name={"ChevronsRight"}
             size={footerIconSize}
             style={[styles.icon, { marginHorizontal: 0 }]}
           />
@@ -227,5 +219,4 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   );
 };
 
-// export default withRenderCount(BibleFooter);
 export default BibleFooter;

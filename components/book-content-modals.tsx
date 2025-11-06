@@ -26,8 +26,9 @@ import WebviewBibleSettingBottomModal from "./home/WebviewBibleSettingBottomModa
 const BookContentModals = () => {
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
-  const fontSize = use$(() => storedData$.fontSize.get());
   const navigation = useNavigation();
+
+  const fontSize = use$(() => storedData$.fontSize.get());
   const verseToInterlinear = use$(() => bibleState$.verseToInterlinear.get());
   const multipleStrongsData = use$(() => bibleState$.multipleStrongsData.get());
   const isPlayerOpened = use$(() => audioState$.isPlayerOpened.get());
@@ -50,7 +51,6 @@ const BookContentModals = () => {
       >
         <NoteNameList />
       </BottomModal>
-      {/* {isChooseReferenceOpened && <ExpandableChooseReference />} */}
       <ExpandableChooseReference />
       {isPlayerOpened && <AudioPlayerExpandedSheet />}
 

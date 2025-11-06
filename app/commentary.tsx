@@ -1,3 +1,5 @@
+import { ChooseReferenceMutableProgress } from "@/components/animations/constants";
+import ExpandableChooseReference from "@/components/animations/expandable-choose-reference";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { View } from "@/components/Themed";
@@ -6,16 +8,17 @@ import { commentaryCss } from "@/constants/commentaryCss";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useCommentaryData from "@/hooks/useCommentaryData";
-import useParams from "@/hooks/useParams";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { bibleState$ } from "@/state/bibleState";
 import { ModulesFilters, Screens, TTheme } from "@/types";
 import { lucideIcons } from "@/utils/lucideIcons";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
+import { use$ } from "@legendapp/state/react";
 import * as Clipboard from "expo-clipboard";
 import { Stack, useRouter } from "expo-router";
 import React, { useCallback, useMemo, useRef } from "react";
 import { StyleSheet } from "react-native";
+import { Easing, runOnJS, withTiming } from "react-native-reanimated";
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 
@@ -231,29 +234,18 @@ const createCommentaryHTML = (
       </style>
     </head>
     <body class="bg-theme-background text-theme-text">
-      ${showReferencePicker ? `
-        <!-- Reference Picker -->
-        <div class="reference-picker" onclick="handleChangeReference()">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <span class="text-theme-notification">${lucideIcons["book-open"]}</span>
-            <span style="font-size: 18px; font-weight: 600;">${reference}</span>
-          </div>
-          <span class="text-theme-text">${lucideIcons["chevron-right"]}</span>
-        </div>
-      ` : ''}
-
       <!-- Header -->
       <div class="flex items-center justify-between px-5 py-4">
-        <div class="flex-1">
-          <h1 class="text-xl font-bold">${reference}</h1>
-          <p class="text-sm opacity-70">Comentarios</p>
+        <div class="flex-1 cursor-pointer active:opacity-70 transition-opacity" onclick="handleChangeReference()">
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl font-bold">${reference}</h1>
+            <span class="text-theme-text opacity-70">${lucideIcons["chevron-right"]}</span>
+          </div>
+          <p class="text-sm opacity-70">Toca para cambiar la referencia</p>
         </div>
         <div class="flex gap-2">
           <button onclick="handleShare()" class="p-2 rounded-lg hover:opacity-70">
             <span class="text-theme-notification">${lucideIcons.share}</span>
-          </button>
-          <button onclick="handleRefresh()" class="p-2 rounded-lg hover:opacity-70">
-            <span class="text-theme-notification">${lucideIcons.refreshCw}</span>
           </button>
         </div>
       </div>
@@ -367,10 +359,6 @@ const createCommentaryHTML = (
           }
         }
 
-        function handleRefresh() {
-          window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'refresh' }));
-        }
-
         function handleChangeReference() {
           window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'changeReference' }));
         }
@@ -387,48 +375,32 @@ const createCommentaryHTML = (
 type CommentaryScreenProps = {};
 
 const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
-  const {
-    book: paramBook,
-    chapter: paramChapter,
-    verse: paramVerse,
-  } = useParams<{ book?: string; chapter?: string; verse?: string }>();
-
+  // All hooks must be called in the same order every render
   const { theme } = useMyTheme();
   const router = useRouter();
-  const styles = getStyles(theme);
   const { printToFile } = usePrintAndShare();
   const webViewRef = useRef<WebView>(null);
+
+  const commentaryQuery = use$(() => bibleState$.commentaryQuery.get());
+  const { book, chapter, verse } = commentaryQuery;
+
   const searchingSource = require("../assets/lottie/searching.json");
 
   // Get reference from params or current bible state
   const currentBook = useMemo(() => {
-    if (paramBook) {
-      return DB_BOOK_NAMES.find((b) => b.longName === paramBook);
-    }
-    const stateBook = bibleState$.bibleQuery.book.get();
-    return DB_BOOK_NAMES.find((b) => b.longName === stateBook);
-  }, [paramBook]);
+    return DB_BOOK_NAMES.find((b) => b.longName === book);
+  }, [book]);
 
-  const bookNumber = currentBook?.bookNumber || 40; // Default to Matthew
-  const chapter = paramChapter
-    ? parseInt(paramChapter)
-    : bibleState$.bibleQuery.chapter.get() || 1;
-  const verse = paramVerse ? parseInt(paramVerse) : undefined;
+  const bookNumber = currentBook?.bookNumber || 10;
 
-  const { data, error, loading, onSearch, hasCommentaries } = useCommentaryData({
+  const { data, loading, onSearch, hasCommentaries } = useCommentaryData({
     autoSearch: true,
     bookNumber,
     chapter,
     verse,
   });
 
-  const bookName = useMemo(
-    () =>
-      DB_BOOK_NAMES.find((b) => b.bookNumber === bookNumber)?.longName || "",
-    [bookNumber]
-  );
-
-  const reference = `${bookName} ${chapter}${verse ? `:${verse}` : ""}`;
+  const reference = `${currentBook?.longName} ${chapter}${verse ? `:${verse}` : ""}`;
 
   const availableCommentaries = useMemo(() => {
     return data?.filter((d) => d.commentaries.length > 0) || [];
@@ -438,7 +410,7 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
     () =>
       createCommentaryHTML(
         theme,
-        bookName,
+        currentBook?.longName || "",
         reference,
         availableCommentaries,
         loading,
@@ -447,13 +419,17 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
       ),
     [
       theme,
-      bookName,
+      currentBook,
       reference,
       availableCommentaries,
       loading,
       hasCommentaries,
     ]
   );
+
+  const openModal = () => {
+    bibleState$.isChooseReferenceOpened.set(true);
+  };
 
   const handleMessage = useCallback(
     (event: any) => {
@@ -473,19 +449,18 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
             break;
 
           case "changeReference":
-            const currentBook = bibleState$.bibleQuery.book.get();
-            const currentChapter = bibleState$.bibleQuery.chapter.get();
-            const currentVerse = bibleState$.bibleQuery.verse.get();
-
-            router.push({
-              pathname: `/${Screens.ChooseReferenceDom}`,
-              params: {
-                book: currentBook,
-                chapter: currentChapter.toString(),
-                verse: currentVerse?.toString() || "0",
-                returnScreen: Screens.Commentary,
+            ChooseReferenceMutableProgress.value = withTiming(
+              1,
+              {
+                duration: 450,
+                easing: Easing.bezier(0.25, 0.1, 0.25, 1),
               },
-            });
+              (finished) => {
+                if (finished) {
+                  runOnJS(openModal)();
+                }
+              }
+            );
             break;
 
           case "download":
@@ -503,7 +478,7 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
         console.error("Error handling message:", error);
       }
     },
-    [reference, bookName, chapter, verse, printToFile, router, bookNumber, onSearch]
+    [reference, bookNumber, chapter, verse, printToFile, router, onSearch]
   );
 
   const onShouldStartLoadWithRequest = useCallback((event: ShouldStartLoadRequest) => {
@@ -520,10 +495,18 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
           );
 
           if (currentBook) {
+            const verseNumber = +verseStart;
+            let verseValue;
+            if (verseNumber) {
+              verseValue = verseNumber;
+            } else {
+              verseValue = 0;
+            }
+
             const queryInfo = {
               book: currentBook.longName,
               chapter: +chapterNum,
-              verse: +verseStart || 0,
+              verse: verseValue,
             };
 
             bibleState$.changeBibleQuery({
@@ -549,6 +532,7 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
   }, [router]);
 
   const screenOptions = useMemo(() => {
+    const opacity = loading ? 0.5 : 1;
     return {
       theme,
       title: "Comentarios",
@@ -560,7 +544,7 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
           onSearch({ bookNumber, chapter, verse });
         },
         disabled: loading,
-        style: { opacity: loading ? 0.5 : 1 },
+        style: { opacity },
       },
     } as any;
   }, [loading, bookNumber, chapter, verse, onSearch]);
@@ -621,7 +605,9 @@ const CommentaryScreen: React.FC<CommentaryScreenProps> = ({ }) => {
             {...createOptimizedWebViewProps({}, "static")}
           />
         </View>
+
       </ScreenWithAnimation>
+      <ExpandableChooseReference isCommentary />
     </>
   );
 };

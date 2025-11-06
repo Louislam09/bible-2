@@ -34,8 +34,11 @@ const Palette = {
   text: "#FFFFFF",
 };
 
+type ExpandableChooseReferenceProps = {
+  isCommentary?: boolean;
+};
 
-const ExpandableChooseReference = () => {
+const ExpandableChooseReference = ({ isCommentary }: ExpandableChooseReferenceProps) => {
   const { height: windowHeight } = useWindowDimensions();
   const progress = ChooseReferenceMutableProgress;
   const { theme } = useMyTheme();
@@ -105,7 +108,7 @@ const ExpandableChooseReference = () => {
 
   const rSheetStyle = useAnimatedStyle(() => {
     return {
-      height: interpolate(progress.value, [0, 1], [0, windowHeight - safeTop]),
+      height: interpolate(progress.value, [0, 1], [0, windowHeight - safeTop - (isCommentary ? 60 : 0)]),
       bottom: interpolate(progress.value, [0, 1], [safeBottom, 0]),
       left: interpolate(progress.value, [0, 1], [16, 0]),
       right: interpolate(progress.value, [0, 1], [16, 0]),
@@ -211,7 +214,7 @@ const ExpandableChooseReference = () => {
       </Animated.View>
 
       <View style={styles.webviewContainer}>
-        <WebviewReferenceChoose onClose={handleClose} />
+        <WebviewReferenceChoose isCommentary={isCommentary} onClose={handleClose} />
       </View>
     </Animated.View>
   );
