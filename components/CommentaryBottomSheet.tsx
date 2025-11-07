@@ -285,17 +285,19 @@ const createCommentaryHTML = (
                 </style>
               ` : ""}
                 <div class="commentary-card bg-theme-card rounded-2xl p-5 mb-4 border border-theme-border">
-                  <div class="collapse-header" onclick="toggleCollapse('${cardId}')">
+                   <div class="collapse-header" onclick="toggleCollapse('${cardId}')">
                     <div class="flex-1">
-                      <div class="inline-flex items-center gap-2 py-1 rounded-lg mb-2">
-                        <span class="text-theme-notification text-xs">${lucideIcons.bookMarked}</span>
-                        <span class="text-base font-semibold text-theme-notification">${commentaryRef}</span>
+                      <div class="flex items-center justify-between w-full">
+                        <div class="inline-flex items-center gap-2 py-1 rounded-lg ">
+                          <span class="text-theme-notification text-xs">${lucideIcons.bookMarked}</span>
+                          <span class="text-base font-semibold text-theme-notification">${commentaryRef}</span>
+                        </div>
+                        <span class="collapse-icon collapsed text-theme-notification" id="icon-${cardId}">
+                          ${lucideIcons["chevron-down"]}
+                        </span>
                       </div>
-                      <h3 class="text-lg font-bold">Comentario de ${source.dbShortName}</h3>
+                      <h3 class="text-sm font-bold">${source.dbShortName}</h3>
                     </div>
-                    <span class="collapse-icon collapsed text-theme-notification" id="icon-${cardId}">
-                      ${lucideIcons["chevron-down"]}
-                    </span>
                   </div>
                   <div class="collapsible-content collapsed" id="${cardId}">
                     <p class="leading-relaxed opacity-90">${commentary.text.replace("noshade", "class='my-4")}</p>

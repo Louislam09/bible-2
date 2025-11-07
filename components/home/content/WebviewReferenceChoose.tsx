@@ -23,6 +23,7 @@ const WebviewReferenceChoose = React.memo(
   ({ onClose, isCommentary }: WebviewReferenceChooseProps) => {
     const webViewRef = useRef<WebView>(null);
     const bibleQuery = bibleState$.bibleQuery.get();
+    const initialQuery = useRef(bibleQuery);
 
     const navigation = useNavigation();
     const routeParam = useParams<ChooseChapterNumberParams>();
@@ -145,7 +146,8 @@ const WebviewReferenceChoose = React.memo(
     return (
       <WebView
         ref={webViewRef}
-        key={bibleQuery.book + bibleQuery.chapter + bibleQuery.verse}
+        // key={bibleQuery.book + bibleQuery.chapter + bibleQuery.verse}
+        key="reference-choose-webview"
         originWhitelist={["*"]}
         style={{
           flex: 1,
@@ -155,9 +157,9 @@ const WebviewReferenceChoose = React.memo(
         source={{
           html: chooseReferenceHtmlTemplate({
             theme,
-            initialBook: bibleQuery.book,
-            initialChapter: bibleQuery.chapter,
-            initialVerse: bibleQuery.verse,
+            initialBook: initialQuery.current.book,
+            initialChapter: initialQuery.current.chapter,
+            initialVerse: initialQuery.current.verse,
           }),
         }}
         onMessage={handleMessage}

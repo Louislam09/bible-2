@@ -4,6 +4,7 @@ import * as SQLite from "expo-sqlite";
 import { useCallback, useEffect, useState } from "react";
 import { VersionItem } from "./useInstalledBible";
 import useInstalledModules from "./useInstalledModules";
+import { GET_COMMENTARIES_BY_BOOK_AND_CHAPTER } from "@/constants/Queries";
 
 interface CommentaryData {
     book_number: number;
@@ -101,16 +102,7 @@ async function queryCommentaryDatabase(
         // }
 
         // Build query for commentaries that cover the specified reference
-        let query = `
-            SELECT *
-        FROM commentaries
-        WHERE book_number = ?
-          AND (
-               chapter_number_from = ?
-               OR (? BETWEEN chapter_number_from AND chapter_number_to)
-          )
-        ORDER BY chapter_number_from, verse_number_from;
-          `;
+        let query = GET_COMMENTARIES_BY_BOOK_AND_CHAPTER;
         let params: any[] = [searchBook, searchChapter, searchChapter];
 
         // If verse is specified, filter by verse range too
@@ -118,8 +110,6 @@ async function queryCommentaryDatabase(
             query += ` AND verse_number_from <= ? AND verse_number_to >= ?`;
             params.push(searchVerse, searchVerse);
         }
-
-        query += ` ORDER BY chapter_number_from, verse_number_from`;
 
         const queryResult = await executeSqlQuery(db, query, params);
 
