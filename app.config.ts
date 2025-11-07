@@ -109,7 +109,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     name: getAppName(),
     owner: "louislam09",
     slug: "bible",
-    version: "2.0.0",
+    version: "2.0.1",
     orientation: "default",
     icon: getAssetPath().icon,
     scheme: "sb-rv60",
@@ -240,14 +240,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       [
         "expo-quick-actions/icon/plugin",
         getAndroidAppIcons()
-        // [
-        //   { "light": "./assets/images/icon.png", "dark": "./assets/images/icon.png" },
-        //   { "light": "./assets/images/icon-preview.png", "dark": "./assets/images/icon-preview.png" },
-        //   { "light": "./assets/images/icon-dev.png", "dark": "./assets/images/icon-dev.png" },
-        //   { "light": "./assets/images/icon-light.png", "dark": "./assets/images/icon-dark.png" },
-        //   { "light": "./assets/images/gradient.png", "dark": "./assets/images/gradient.png" },
-        //   { "light": "./assets/images/icon-dark.png", "dark": "./assets/images/icon-dark.png" },
-        // ]
       ],
       [
         "expo-quick-actions",
