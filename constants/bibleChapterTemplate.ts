@@ -32,6 +32,10 @@ const bibleChapterStyles = (
 ) => `
          <style>
             /* Custom styles that can't be replaced with Tailwind */
+            :root {
+                --color-notification-opacity-20: ${theme.colors.notification}10;
+            }
+            
             body {
                 font-family: 'Quicksand', 'Noto Sans Hebrew', 'Georgia', 'Times New Roman', serif;
                 font-size: ${fontSize}px;
@@ -416,6 +420,32 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
             // Track selected verses in WebView (similar to React Native state)
             let selectedVerses = new Map();
             
+            // Handle verse click with action mode logic (similar to Verse.tsx onVerseClicked)
+            function handleVerseClick(verseElement, verseKey) {
+                const verseData = JSON.parse(verseElement.dataset.verseData || '{}');
+                const verseNumber = parseInt(verseElement.getAttribute('data-verse-number'));
+                const isActionMode = selectedVerses.size > 0;
+                
+                if (isActionMode) {
+                    // In action mode, single click adds to selection (like handleLongPressVerse)
+                    handleVerseLongPress(verseElement, verseKey);
+                } else {
+                    // Normal mode, toggle between regular and Strong's view
+                    toggleVerseMode(verseElement, verseKey);
+                    // Send message to React Native
+                    window.ReactNativeWebView.postMessage(JSON.stringify({
+                        type: 'verseClick',
+                        data: { 
+                            verseKey: verseKey,
+                            verseNumber: verseNumber,
+                            item: verseData,
+                            isActionMode: isActionMode
+                        }
+                    }));
+                }
+                
+            }
+            
             // Handle verse long press to show actions
             function handleVerseLongPress(verseElement, verseKey) {
                 const verseData = JSON.parse(verseElement.dataset.verseData || '{}');
@@ -452,6 +482,9 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 if (!actionButtons) return;
                 
                 if (isVisible) {
+                    // Add visual highlight to verse (similar to Verse.tsx highlightCopy style)
+                    verseElement.style.backgroundColor = 'var(--color-notification-opacity-20)';
+                    
                     actionButtons.style.setProperty('display', 'flex', 'important');
                     // Trigger animation after a small delay to ensure display is set
                     setTimeout(() => {
@@ -466,6 +499,9 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                         });
                     }, 10);
                 } else {
+                    // Remove visual highlight from verse
+                    verseElement.style.backgroundColor = '';
+                    
                     // Reverse animation
                     actionButtons.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
                     actionButtons.classList.add('opacity-0', '-translate-y-2', 'scale-95');
@@ -492,9 +528,21 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 const verseData = JSON.parse(verseElement.dataset.verseData || '{}');
                 const verseNumber = parseInt(verseElement.getAttribute('data-verse-number'));
                 
-                // Hide action buttons for this verse after action is clicked
-                selectedVerses.delete(verseNumber);
-                updateActionButtonVisibility(verseNumber, false);
+                // Actions that use all selected verses vs single verse
+                const multiVerseActions = ['copy', 'note', 'image'];
+                const shouldUseAllVerses = multiVerseActions.includes(action) && selectedVerses.size > 0;
+                
+                // Get all selected verses sorted by verse number (like Verse.tsx onCopy)
+                const allSelectedVerses = shouldUseAllVerses 
+                    ? Array.from(selectedVerses.values()).sort((a, b) => a.verse - b.verse)
+                    : null;
+                
+                // Clear all selections and hide all action buttons after action is clicked
+                const allVerseNumbers = Array.from(selectedVerses.keys());
+                selectedVerses.clear();
+                allVerseNumbers.forEach(vNumber => {
+                    updateActionButtonVisibility(vNumber, false);
+                });
                 
                 // Send action message to React Native
                 window.ReactNativeWebView.postMessage(JSON.stringify({
@@ -503,7 +551,9 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                         action: action,
                         verseKey: verseKey,
                         verseNumber: verseNumber,
-                        item: verseData
+                        item: verseData,
+                        allSelectedVerses: allSelectedVerses,
+                        isMultiVerse: shouldUseAllVerses
                     }
                 }));
             }
@@ -571,6 +621,7 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
             window.shouldShowActions = shouldShowActions;
             window.handleVerseLinkClick = handleVerseLinkClick;
             window.handleMultipleStrongsClick = handleMultipleStrongsClick;
+            window.handleVerseClick = handleVerseClick;
             
             // Initialize when DOM is loaded
             document.addEventListener('DOMContentLoaded', function() {
@@ -844,7 +895,7 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
              data-verse-key="${verseKey}"
              data-verse-data='${JSON.stringify(item)}'
              data-verse-mode="regular"
-             onclick="toggleVerseMode(this, '${verseKey}')"
+             onclick="handleVerseClick(this, '${verseKey}')"
              oncontextmenu="handleVerseContextMenu(this, '${verseKey}', event)"
              style="position: relative; z-index: 1;">
             ${createVerseNumber(item.verse, item.is_favorite)}

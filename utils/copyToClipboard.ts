@@ -70,4 +70,61 @@ const copyToClipboard = async (
   ToastAndroid?.show("Versículo copiado!", ToastAndroid.SHORT);
 };
 
+type FormatForImageQuote = {
+  text: string;
+  reference: string;
+};
+
+type FormatForImageQuoteArgs = {
+  items: IVerseItem | IVerseItem[];
+  shouldReturnHmlt?: boolean;
+  includeVerseNumbers?: boolean;
+};
+
+const formatForImageQuote = (args: FormatForImageQuoteArgs): FormatForImageQuote => {
+  const { items, shouldReturnHmlt, includeVerseNumbers } = args;
+  const isArray = Array.isArray(items);
+  const verses = isArray ? items : [items];
+
+  // Get book name
+  const currentBook = DB_BOOK_NAMES.find(
+    (x) => x.bookNumber === +verses[0].book_number
+  );
+  const bookName = verses[0].bookName || currentBook?.longName || "";
+  const chapter = verses[0].chapter;
+
+  // Format reference intelligently
+  let reference = "";
+  if (verses.length === 1) {
+    // Single verse: "Salmos 119:1"
+    reference = `${bookName} ${chapter}:${verses[0].verse}`;
+  } else {
+    // Check if verses are consecutive
+    const verseNumbers = verses.map(v => v.verse).sort((a, b) => a - b);
+    const isConsecutive = verseNumbers.every((num, i) =>
+      i === 0 || num === verseNumbers[i - 1] + 1
+    );
+
+    if (isConsecutive) {
+      // Consecutive: "Salmos 119:1-5"
+      reference = `${bookName} ${chapter}:${verseNumbers[0]}-${verseNumbers[verseNumbers.length - 1]}`;
+    } else {
+      // Non-consecutive: "Salmos 119:1, 3, 5"
+      reference = `${bookName} ${chapter}:${verseNumbers.join(", ")}`;
+    }
+  }
+
+  // Format text
+  const text = verses
+    .map((verse) => `${includeVerseNumbers ? `${verse.verse} ` : ""}${getVerseTextRaw(verse.text)}`)
+    .join(shouldReturnHmlt ? "<br>" : "\n");
+
+  // Return formatted result
+  return {
+    text,
+    reference
+  };;
+};
+
+export { formatForImageQuote };
 export default copyToClipboard;

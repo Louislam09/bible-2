@@ -71,6 +71,7 @@ const QuoteMaker: React.FC = () => {
 
   // Initialize with random verse and theme
   useEffect(() => {
+    console.log('params', params);
     if (params?.themeId && typeof params.themeId === "string") {
       const theme = QUOTES_DATA.flatMap((section) => section.items).find(
         (item) => item.id === params.themeId

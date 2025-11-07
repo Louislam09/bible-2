@@ -26,7 +26,7 @@ interface WebViewChapterProps {
   onScroll?: (direction: "up" | "down") => void;
   estimatedReadingTime?: number;
   onInterlinear?: (item: IBookVerse) => void;
-  onAnotar?: (item: IBookVerse) => void;
+  onAnotar?: (item: IBookVerse | IBookVerse[]) => void;
   onComparar?: (item: IBookVerse) => void;
   onMemorizeVerse?: (verse: string, version: string) => void;
   onFavoriteVerse?: ({
@@ -35,9 +35,9 @@ interface WebViewChapterProps {
     verse,
     isFav,
   }: IFavoriteVerse) => Promise<void>;
-  onCopy?: (item: IBookVerse) => void;
+  onCopy?: (item: IBookVerse | IBookVerse[]) => void;
   onExplain?: (item: IBookVerse) => void;
-  onImage?: (item: IBookVerse) => void;
+  onImage?: (item: IBookVerse | IBookVerse[]) => void;
   onQuote?: (item: IBookVerse) => void;
   onVerseLongPress?: (item: IBookVerse) => void;
 }
@@ -74,7 +74,25 @@ const WebViewChapter = React.memo(
               onScroll?.(message.direction);
               break;
             case "verseClick":
-              // Handle verse click
+              console.log("verseClick", message.data.item.verse);
+              // Handle verse click with action mode logic
+              if (message.data?.item) {
+                const item = message.data.item;
+                const isActionMode = bibleState$.selectedVerses.get().size > 0;
+                if (isActionMode) {
+                  console.log({ isActionMode });
+                  // In action mode, single click adds to selection
+                  // bibleState$.handleLongPressVerse(item);
+                } else {
+                  // Normal mode, just select for viewing
+                  bibleState$.handleTapVerse(item);
+                }
+              }
+              break;
+            case "verseLongPress":
+              console.log("verseLongPress", message.data.item.verse);
+              // Handle verse long press - could trigger haptic feedback or other UI updates
+              onVerseLongPress?.(message.data.item);
               break;
             case "regularWordClick":
               console.log("regularWordClick", message.data);
@@ -103,15 +121,15 @@ const WebViewChapter = React.memo(
                 onWordClicked(message.code, message.item);
               }
               break;
-            case "verseLongPress":
-              // Handle verse long press - could trigger haptic feedback or other UI updates
-              onVerseLongPress?.(message.data.item);
-              break;
             case "verseAction":
-              const { action, item } = message.data;
+              const { action, item, allSelectedVerses, isMultiVerse } = message.data;
+
+              // For copy and note actions, use all selected verses if available
+              const dataToUse = isMultiVerse && allSelectedVerses ? allSelectedVerses : item;
+
               switch (action) {
                 case "copy":
-                  onCopy?.(item);
+                  onCopy?.(dataToUse);
                   break;
                 case "interlinear":
                   onInterlinear?.(item);
@@ -120,7 +138,7 @@ const WebViewChapter = React.memo(
                   onExplain?.(item);
                   break;
                 case "image":
-                  onImage?.(item);
+                  onImage?.(dataToUse);
                   break;
                 case "quote":
                   onQuote?.(item);
@@ -133,7 +151,7 @@ const WebViewChapter = React.memo(
                   );
                   break;
                 case "note":
-                  onAnotar?.(item);
+                  onAnotar?.(dataToUse);
                   break;
                 case "favorite":
                   onFavoriteVerse?.({

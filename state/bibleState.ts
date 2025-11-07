@@ -147,6 +147,7 @@ export const bibleState$ = observable({
     }
   },
   handleLongPressVerse: (verseItem: IBookVerse) => {
+    // console.log("handleLongPressVerse", verseItem.verse);
     const selectedVerses = new Map(bibleState$.selectedVerses.get());
 
     if (selectedVerses.has(verseItem.verse)) {

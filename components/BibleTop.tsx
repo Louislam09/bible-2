@@ -12,7 +12,7 @@ import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
 import { tourState$ } from "@/state/tourState";
 import { EBibleVersions, IBookVerse, IFavoriteVerse, Screens } from "@/types";
-import copyToClipboard from "@/utils/copyToClipboard";
+import copyToClipboard, { formatForImageQuote } from "@/utils/copyToClipboard";
 import { getStrongValue, WordTagPair } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { showToast } from "@/utils/showToast";
@@ -197,8 +197,19 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     // The modal will be opened from the global state
   }, []);
 
-  const onAnotar = useCallback(async (item: IBookVerse) => {
+  const onAnotar = useCallback(async (item: IBookVerse | IBookVerse[]) => {
     const shouldReturn = true;
+
+    // If item is already an array (from WebView), use it directly
+    if (Array.isArray(item)) {
+      const verseToAdd = (await copyToClipboard(item, shouldReturn)) as string;
+      bibleState$.handleSelectVerseForNote(verseToAdd);
+      bibleState$.clearSelection();
+      if (!bibleState$.currentNoteId.get()) bibleState$.openNoteListBottomSheet();
+      return;
+    }
+
+    // Otherwise, fallback to original logic (for native Verse component)
     const isMoreThanOneHighted = bibleState$.selectedVerses.get().size > 1;
     const highlightedVerses = Array.from(
       bibleState$.selectedVerses.get().values()
@@ -216,7 +227,15 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     bibleState$.clearSelection();
   }, []);
 
-  const onCopy = useCallback(async (item: IBookVerse) => {
+  const onCopy = useCallback(async (item: IBookVerse | IBookVerse[]) => {
+    // If item is already an array (from WebView), use it directly
+    if (Array.isArray(item)) {
+      await copyToClipboard(item);
+      bibleState$.clearSelection();
+      return;
+    }
+
+    // Otherwise, fallback to original logic (for native Verse component)
     const highlightedVerses = Array.from(
       bibleState$.selectedVerses.get().values()
     ).sort((a, b) => a.verse - b.verse);
@@ -253,7 +272,18 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   );
 
   const onImage = useCallback(
-    (item: IBookVerse) => {
+    async (item: IBookVerse | IBookVerse[]) => {
+      if (Array.isArray(item)) {
+        const formattedValue = formatForImageQuote({ items: item });
+        console.log('value', formattedValue);
+        bibleState$.handleSelectVerseForNote(formattedValue.text);
+        router.push({
+          pathname: "/quoteMaker",
+          params: { text: formattedValue.text, reference: formattedValue.reference },
+        });
+        return;
+      }
+
       const verseText = getVerseTextRaw(item.text);
       const reference = `${getBookDetail(item?.book_number).longName} ${item.chapter
         }:${item.verse}`;
