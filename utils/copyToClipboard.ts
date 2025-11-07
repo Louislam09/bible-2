@@ -93,18 +93,18 @@ const formatForImageQuote = (args: FormatForImageQuoteArgs): FormatForImageQuote
   const bookName = verses[0].bookName || currentBook?.longName || "";
   const chapter = verses[0].chapter;
 
+  // Check if verses are consecutive
+  const verseNumbers = verses.map(v => v.verse).sort((a, b) => a - b);
+  const isConsecutive = verseNumbers.every((num, i) =>
+    i === 0 || num === verseNumbers[i - 1] + 1
+  );
+
   // Format reference intelligently
   let reference = "";
   if (verses.length === 1) {
     // Single verse: "Salmos 119:1"
     reference = `${bookName} ${chapter}:${verses[0].verse}`;
   } else {
-    // Check if verses are consecutive
-    const verseNumbers = verses.map(v => v.verse).sort((a, b) => a - b);
-    const isConsecutive = verseNumbers.every((num, i) =>
-      i === 0 || num === verseNumbers[i - 1] + 1
-    );
-
     if (isConsecutive) {
       // Consecutive: "Salmos 119:1-5"
       reference = `${bookName} ${chapter}:${verseNumbers[0]}-${verseNumbers[verseNumbers.length - 1]}`;
@@ -116,7 +116,7 @@ const formatForImageQuote = (args: FormatForImageQuoteArgs): FormatForImageQuote
 
   // Format text
   const text = verses
-    .map((verse) => `${includeVerseNumbers ? `${verse.verse} ` : ""}${getVerseTextRaw(verse.text)}`)
+    .map((verse) => `${(includeVerseNumbers || !isConsecutive) ? `${verse.verse} ` : ""}${getVerseTextRaw(verse.text)}`)
     .join(shouldReturnHmlt ? "<br>" : "\n");
 
   // Return formatted result

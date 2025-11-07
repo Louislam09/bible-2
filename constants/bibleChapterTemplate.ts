@@ -53,6 +53,14 @@ const bibleChapterStyles = (
                 user-select: none;
             }
             
+            /* Prevent text selection on verse text */
+            .verse-content, .verse-strong-content {
+                user-select: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+            }
+            
             .strong-word:hover {
                 opacity: 0.7;
                 transform: scale(1.02);
@@ -105,20 +113,17 @@ const bibleChapterStyles = (
             /* Action buttons styling */
             .verse-actions {
                 background: transparent;
-                padding: 8px 12px !important;
-                margin-top: 8px !important;
-                margin-left: 32px !important;
-                margin-right: 32px !important;
-                display: none !important;
-                flex-direction: row !important;
-                justify-content: flex-start !important;
-                align-items: center !important;
-                gap: 10px !important;
-                overflow-x: auto !important;
-                overflow-y: hidden !important;
-                white-space: nowrap !important;
-                scrollbar-width: thin !important;
-                scrollbar-color: rgba(255, 255, 255, 0.3) transparent !important;
+                padding: 2px 12px;
+                display: none;
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: center;
+                gap: 4px;
+                overflow-x: auto;
+                overflow-y: hidden;
+                white-space: nowrap;
+                scrollbar-width: thin;
+                scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
             }
             
             .verse-actions::-webkit-scrollbar {
@@ -140,16 +145,16 @@ const bibleChapterStyles = (
             
             .action-btn {
                 display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                justify-content: center !important;
-                background: transparent !important;
-                border: none !important;
-                cursor: pointer !important;
-                padding: 4px 8px !important;
-                min-width: 50px !important;
-                flex-shrink: 0 !important;
-                color: rgba(255, 255, 255, 0.8) !important;
+                flex-direction: column ;
+                align-items: center ;
+                justify-content: center ;
+                background: transparent ;
+                border: none ;
+                cursor: pointer ;
+                padding: 4px 8px ;
+                min-width: 50px ;
+                flex-shrink: 0 ;
+                color: rgba(255, 255, 255, 0.8) ;
             }
             
             .action-btn:hover {
@@ -176,7 +181,7 @@ const bibleChapterStyles = (
             }
             
             .action-label {
-                font-size: 16px !important;
+                font-size: 12px !important;
                 text-align: center !important;
                 line-height: 1.2 !important;
             }
@@ -529,7 +534,7 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 const verseNumber = parseInt(verseElement.getAttribute('data-verse-number'));
                 
                 // Actions that use all selected verses vs single verse
-                const multiVerseActions = ['copy', 'note', 'image'];
+                const multiVerseActions = ['copy', 'note', 'image', 'quote'];
                 const shouldUseAllVerses = multiVerseActions.includes(action) && selectedVerses.size > 0;
                 
                 // Get all selected verses sorted by verse number (like Verse.tsx onCopy)
@@ -899,10 +904,10 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
              oncontextmenu="handleVerseContextMenu(this, '${verseKey}', event)"
              style="position: relative; z-index: 1;">
             ${createVerseNumber(item.verse, item.is_favorite)}
-            <span class="select-text verse-content font-semibold dark:font-normal text-theme-text">
+            <span class="verse-content font-semibold dark:font-normal text-theme-text">
                 ${parseVerseTextRegular(item.text)}
             </span>
-            <span class="text-theme-text select-text verse-strong-content hidden">
+            <span class="text-theme-text verse-strong-content hidden">
                 ${parseVerseTextWithStrongs(item.text)}
             </span>
         </div>
@@ -913,36 +918,35 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
                 <span class="action-icon" style="color: rgba(255, 255, 255, 0.8);">${lucideIcons.copy}</span>
                 <div class="action-label">Copiar</div>
             </button>
-            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[100ms] hover:scale-105" onclick="handleVerseAction('image', '${verseKey}')">
-                <span class="action-icon" style="color: #9dcd7d;">${lucideIcons.image}</span>
-                <div class="action-label">Imagen</div>
-            </button>
-            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[150ms] hover:scale-105" onclick="handleVerseAction('interlinear', '${verseKey}')">
-                <span class="action-icon" style="color: #f79c67;">${lucideIcons['book-open']}</span>
-                <div class="action-label">Interlinear</div>
-            </button>
-         
-            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[200ms] hover:scale-105" onclick="handleVerseAction('quote', '${verseKey}')">
-                <span class="action-icon" style="color: #CDAA7D;">${lucideIcons.quote}</span>
-                <div class="action-label">Cita</div>
-            </button>
-            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[225ms] hover:scale-105" onclick="handleVerseAction('commentary', '${verseKey}')">
-                <span class="action-icon" style="color: #87c4ff;">${lucideIcons.messageSquare}</span>
-                <div class="action-label">Comentarios</div>
-            </button>
-            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[250ms] hover:scale-105" onclick="handleVerseAction('note', '${verseKey}')">
-                <span class="action-icon" style="color: var(--color-notification);">${lucideIcons['notebook-pen']}</span>
-                <div class="action-label">Anotar</div>
-            </button>
-            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[300ms] hover:scale-105" onclick="handleVerseAction('favorite', '${verseKey}')">
+            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[100ms] hover:scale-105" onclick="handleVerseAction('favorite', '${verseKey}')">
                 <span class="action-icon" style="color: ${item.is_favorite ? 'var(--color-notification)' : '#fedf75'};">${lucideIcons[item.is_favorite ? 'star' : 'star-off']}</span>
                 <div class="action-label">Favorito</div>
             </button>
-            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[350ms] hover:scale-105" onclick="handleVerseAction('memorize', '${verseKey}')">
+            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[200ms] hover:scale-105" onclick="handleVerseAction('image', '${verseKey}')">
+                <span class="action-icon" style="color: #9dcd7d;">${lucideIcons.image}</span>
+                <div class="action-label">Imagen</div>
+            </button>
+            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[150ms] hover:scale-105" onclick="handleVerseAction('note', '${verseKey}')">
+                <span class="action-icon" style="color: var(--color-notification);">${lucideIcons['notebook-pen']}</span>
+                <div class="action-label">Anotar</div>
+            </button>
+            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[300ms] hover:scale-105" onclick="handleVerseAction('quote', '${verseKey}')">
+                <span class="action-icon" style="color: #CDAA7D;">${lucideIcons.quote}</span>
+                <div class="action-label">Cita</div>
+            </button>
+            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[400ms] hover:scale-105" onclick="handleVerseAction('commentary', '${verseKey}')">
+                <span class="action-icon" style="color: #87c4ff;">${lucideIcons.messageSquare}</span>
+                <div class="action-label">Comentarios</div>
+            </button>
+             <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[500ms] hover:scale-105" onclick="handleVerseAction('interlinear', '${verseKey}')">
+                <span class="action-icon" style="color: #f79c67;">${lucideIcons['book-open']}</span>
+                <div class="action-label">Interlinear</div>
+            </button>
+            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[600ms] hover:scale-105" onclick="handleVerseAction('memorize', '${verseKey}')">
                 <span class="action-icon" style="color: #f1abab;">${lucideIcons.brain}</span>
                 <div class="action-label">Memorizar</div>
             </button>
-            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[400ms] hover:scale-105" onclick="handleVerseAction('compare', '${verseKey}')">
+            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[700ms] hover:scale-105" onclick="handleVerseAction('compare', '${verseKey}')">
                 <span class="action-icon" style="color: rgba(255, 255, 255, 0.8);">${lucideIcons['git-compare']}</span>
                 <div class="action-label">Comparar</div>
             </button>

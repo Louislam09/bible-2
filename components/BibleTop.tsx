@@ -275,7 +275,6 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     async (item: IBookVerse | IBookVerse[]) => {
       if (Array.isArray(item)) {
         const formattedValue = formatForImageQuote({ items: item });
-        console.log('value', formattedValue);
         bibleState$.handleSelectVerseForNote(formattedValue.text);
         router.push({
           pathname: "/quoteMaker",
@@ -297,7 +296,17 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   );
 
   const onQuote = useCallback(
-    (item: IBookVerse) => {
+    (item: IBookVerse | IBookVerse[]) => {
+      if (Array.isArray(item)) {
+        const formattedValue = formatForImageQuote({ items: item });
+        bibleState$.handleSelectVerseForNote(formattedValue.text);
+        router.push({
+          pathname: "/quote",
+          params: { text: formattedValue.text, reference: formattedValue.reference },
+        });
+        return;
+      }
+
       const verseText = getVerseTextRaw(item.text);
       const reference = `${getBookDetail(item?.book_number).longName} ${item.chapter
         }:${item.verse}`;
@@ -358,7 +367,6 @@ const BibleTop: FC<BibleTopProps> = (props) => {
 
   useEffect(() => {
     if (autoChangeBibleVersion) {
-      console.log("autoChange", autoChangeBibleVersion);
       setTimeout(() => {
         onSelectBibleVersion(
           isGreekInterlinear ? EBibleVersions.INTERLINEAR : EBibleVersions.GREEK

@@ -38,7 +38,7 @@ interface WebViewChapterProps {
   onCopy?: (item: IBookVerse | IBookVerse[]) => void;
   onExplain?: (item: IBookVerse) => void;
   onImage?: (item: IBookVerse | IBookVerse[]) => void;
-  onQuote?: (item: IBookVerse) => void;
+  onQuote?: (item: IBookVerse | IBookVerse[]) => void;
   onVerseLongPress?: (item: IBookVerse) => void;
 }
 
@@ -74,28 +74,18 @@ const WebViewChapter = React.memo(
               onScroll?.(message.direction);
               break;
             case "verseClick":
-              console.log("verseClick", message.data.item.verse);
-              // Handle verse click with action mode logic
               if (message.data?.item) {
                 const item = message.data.item;
                 const isActionMode = bibleState$.selectedVerses.get().size > 0;
-                if (isActionMode) {
-                  console.log({ isActionMode });
-                  // In action mode, single click adds to selection
-                  // bibleState$.handleLongPressVerse(item);
-                } else {
-                  // Normal mode, just select for viewing
+                if (!isActionMode) {
                   bibleState$.handleTapVerse(item);
                 }
               }
               break;
             case "verseLongPress":
-              console.log("verseLongPress", message.data.item.verse);
-              // Handle verse long press - could trigger haptic feedback or other UI updates
               onVerseLongPress?.(message.data.item);
               break;
             case "regularWordClick":
-              console.log("regularWordClick", message.data);
               modalState$.openDictionaryBottomSheet(message.data);
               break;
             case "strongWordClick":
@@ -141,7 +131,7 @@ const WebViewChapter = React.memo(
                   onImage?.(dataToUse);
                   break;
                 case "quote":
-                  onQuote?.(item);
+                  onQuote?.(dataToUse);
                   break;
                 case "commentary":
                   modalState$.openCommentaryBottomSheet(
