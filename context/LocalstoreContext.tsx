@@ -76,6 +76,7 @@ type StoreState = {
   appFolderUri: string;
   appFolderTreeUri: string;
   tailwindScript: string;
+  lexicalBundle: string;
 };
 
 const initialContext: StoreState = {
@@ -125,6 +126,7 @@ const initialContext: StoreState = {
   appFolderUri: "",
   appFolderTreeUri: "",
   tailwindScript: "",
+  lexicalBundle: "",
 };
 
 export const storedData$ = observable(initialContext);

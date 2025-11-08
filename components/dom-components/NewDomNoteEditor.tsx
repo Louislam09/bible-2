@@ -20,25 +20,23 @@ import { useRef, useState } from "react";
 import ExampleTheme from "./ExampleTheme";
 import AutoScrollPlugin from "./plugins/AutoScrollPlugin";
 import ReadOnlyPlugin from "./plugins/ReadOnlyPlugin";
-import BootomToolbarPlugin from "./plugins/BootomToolbarPlugin";
 const placeholder = "Escribe algo...";
 
 import { useThemeVariables } from "@/hooks/useThemeVariables";
-import { CodeNode, CodeHighlightNode } from "@lexical/code";
-import { ListItemNode, ListNode } from "@lexical/list";
-import { ListPlugin } from "@lexical/react/LexicalListPlugin";
-import { CheckListPlugin } from "@lexical/react/LexicalCheckListPlugin";
-import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
-import { TRANSFORMERS } from "@lexical/markdown";
-import { HeadingNode, QuoteNode } from "@lexical/rich-text";
-import { LinkNode, AutoLinkNode } from "@lexical/link";
-import LoadHTMLPlugin from "./plugins/LoadHtmlPlugin";
-import TopToolbarPlugin from "./plugins/TopToolbarPlugin";
-import { ToolbarContext } from "./context/ToolbarContext";
-import { HashtagPlugin } from "./plugins/LexicalHashtagPlugin";
+import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { HashtagNode } from "@lexical/hashtag";
-import { BibleMentionPlugin } from "./plugins/BibleMentionPlugin";
+import { AutoLinkNode, LinkNode } from "@lexical/link";
+import { ListItemNode, ListNode } from "@lexical/list";
+import { TRANSFORMERS } from "@lexical/markdown";
+import { CheckListPlugin } from "@lexical/react/LexicalCheckListPlugin";
+import { ListPlugin } from "@lexical/react/LexicalListPlugin";
+import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
+import { HeadingNode, QuoteNode } from "@lexical/rich-text";
+import { ToolbarContext } from "./context/ToolbarContext";
 import { BibleMentionNode } from "./plugins/BibleMentionNode";
+import { BibleMentionPlugin } from "./plugins/BibleMentionPlugin";
+import { HashtagPlugin } from "./plugins/LexicalHashtagPlugin";
+import LoadHTMLPlugin from "./plugins/LoadHtmlPlugin";
 import NewTopToolbarPlugin from "./plugins/NewTopToolbarPlugin";
 
 const editorConfig: InitialConfigType = {
@@ -145,9 +143,8 @@ const NewDomNoteEditor = ({
                     onBlur={(e) => setDisableEditor(false)}
                     onChange={(e) => onChangeText("title", e.target.value)}
                     placeholder="Titulo"
-                    className={`w-full text-3xl font-semibold bg-transparent border-none outline-none text-black dark:text-white ${
-                      !disableEditor ? "opacity-50" : ""
-                    } placeholder:text-black-100 placeholder:font-semibold placeholder:text-3xl dark:placeholder:text-gray-400`}
+                    className={`w-full text-3xl font-semibold bg-transparent border-none outline-none text-black dark:text-white ${!disableEditor ? "opacity-50" : ""
+                      } placeholder:text-black-100 placeholder:font-semibold placeholder:text-3xl dark:placeholder:text-gray-400`}
                   />
                 </div>
               )}
