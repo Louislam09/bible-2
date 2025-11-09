@@ -3,6 +3,10 @@ import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
 import { storedData$ } from "@/context/LocalstoreContext";
 
+// Update this version when you rebuild the bundle to force cache refresh
+// Increment this after running: npm run build:lexical
+const LEXICAL_BUNDLE_VERSION = "v2.2.0-lists"; // Now includes registerList for full list functionality!
+
 /**
  * Hook to load and cache the Lexical bundle
  * Similar to useLoadTailwindScript, this loads the bundle once and caches it
@@ -12,26 +16,33 @@ const useLoadLexicalBundle = () => {
     useEffect(() => {
         const loadLexicalBundle = async () => {
             try {
-                // Try to load from storage context first
+                // Check if cached bundle has the correct version marker
                 const cachedBundle = storedData$.lexicalBundle.get();
 
-                if (cachedBundle) {
-                    console.log('Lexical bundle loaded from cache');
+                // Use cache only if it contains the version marker
+                if (cachedBundle && cachedBundle.includes(LEXICAL_BUNDLE_VERSION)) {
+                    console.log(`Lexical bundle ${LEXICAL_BUNDLE_VERSION} loaded from cache`);
                     return;
                 }
 
-                // If not in cache, load from asset file
+                if (cachedBundle) {
+                    console.log(`Lexical bundle outdated. Reloading with ${LEXICAL_BUNDLE_VERSION}...`);
+                }
+
+                // Load from asset file
                 const asset = Asset.fromModule(require('../assets/lexical-bundle.txt'));
                 await asset.downloadAsync();
                 const lexicalBundle = await FileSystem.readAsStringAsync(
                     asset.localUri!
                 );
 
-                const scriptTag = `<script defer>${lexicalBundle}</script>`;
-                // Save to storage context for future use
+                // Add version marker as a comment at the start
+                const scriptTag = `<script defer>/* Lexical Bundle ${LEXICAL_BUNDLE_VERSION} */${lexicalBundle}</script>`;
+
+                // Save to storage context
                 storedData$.lexicalBundle.set(scriptTag);
 
-                console.log('Lexical bundle loaded from asset and cached', { lexicalBundle });
+                console.log(`Lexical bundle ${LEXICAL_BUNDLE_VERSION} loaded from asset and cached`);
             } catch (error) {
                 console.error('Error loading Lexical bundle:', error);
             }

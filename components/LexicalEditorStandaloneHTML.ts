@@ -1,11 +1,11 @@
 // Standalone Lexical Editor HTML Template for WebView
 // Uses bundled lexical-bundle.min.js - no external CDN required
 
-import { storedData$ } from "@/context/LocalstoreContext";
 import { TTheme } from "@/types";
 
 export const generateStandaloneLexicalHTML = (options: {
     theme: TTheme;
+    lexicalBundle: string;
     initialTitle?: string;
     initialContent?: string;
     isReadOnly?: boolean;
@@ -13,6 +13,7 @@ export const generateStandaloneLexicalHTML = (options: {
 }) => {
     const {
         theme,
+        lexicalBundle,
         initialTitle = '',
         initialContent = '',
         isReadOnly = false,
@@ -253,8 +254,8 @@ export const generateStandaloneLexicalHTML = (options: {
             font-size: 16px;
         }
     </style>
-     <!-- Bundled Lexical JS -->
-    ${storedData$.lexicalBundle.get()}
+    <!-- Bundled Lexical JS -->
+    ${lexicalBundle}
 </head>
 <body>
     <div id="root">

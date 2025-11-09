@@ -32,11 +32,11 @@ const NoteEditorScreen = () => {
         <View style={styles.container}>
             <Stack.Screen options={singleScreenHeader(screenOptions)} />
             <StandaloneLexicalWebView
-                initialTitle="My Note"
+                initialTitle=""
                 initialContent=""
-                onContentChange={(content) => console.log('Content:', content)}
+                onContentChange={(content) => { }}
                 onTitleChange={(title) => console.log('Title:', title)}
-                placeholder="Start writing..."
+                placeholder="Escribe tu nota..."
             />
         </View>
     );
@@ -45,7 +45,6 @@ const NoteEditorScreen = () => {
 const getStyles = ({ colors }: TTheme) =>
     StyleSheet.create({
         container: {
-            paddingTop: 50,
             flex: 1,
         },
         imageContainer: {

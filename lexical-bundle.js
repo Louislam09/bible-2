@@ -43,6 +43,7 @@ import {
   $isDecoratorNode,
   $isLineBreakNode,
   $nodesOfType,
+  $applyNodeReplacement,
   TextNode,
   ElementNode,
   DecoratorNode,
@@ -62,7 +63,11 @@ import {
   $createQuoteNode,
   $isHeadingNode,
   $isQuoteNode,
+  registerRichText,
 } from "@lexical/rich-text";
+
+// History (for undo/redo)
+import { registerHistory, createEmptyHistoryState } from "@lexical/history";
 
 // List nodes and utilities
 import {
@@ -76,6 +81,11 @@ import {
   INSERT_UNORDERED_LIST_COMMAND,
   REMOVE_LIST_COMMAND,
   INSERT_CHECK_LIST_COMMAND,
+  registerList,
+  insertList,
+  removeList,
+  $getListDepth,
+  $handleListInsertParagraph,
 } from "@lexical/list";
 
 // Code nodes
@@ -116,6 +126,7 @@ import {
   $setBlocksType,
   $wrapNodes,
   $isAtNodeEnd,
+  $patchStyleText,
 } from "@lexical/selection";
 
 // Utils
@@ -180,6 +191,7 @@ const LexicalBundle = {
   $isDecoratorNode,
   $isLineBreakNode,
   $nodesOfType,
+  $applyNodeReplacement,
   TextNode,
   ElementNode,
   DecoratorNode,
@@ -198,6 +210,11 @@ const LexicalBundle = {
   $createQuoteNode,
   $isHeadingNode,
   $isQuoteNode,
+  registerRichText,
+
+  // History
+  registerHistory,
+  createEmptyHistoryState,
 
   // Lists
   ListNode,
@@ -210,6 +227,11 @@ const LexicalBundle = {
   INSERT_UNORDERED_LIST_COMMAND,
   REMOVE_LIST_COMMAND,
   INSERT_CHECK_LIST_COMMAND,
+  registerList,
+  insertList,
+  removeList,
+  $getListDepth,
+  $handleListInsertParagraph,
 
   // Code
   CodeNode,
@@ -240,6 +262,7 @@ const LexicalBundle = {
   $setBlocksType,
   $wrapNodes,
   $isAtNodeEnd,
+  $patchStyleText,
 
   // Utils
   $findMatchingParent,
