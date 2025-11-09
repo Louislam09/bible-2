@@ -3,6 +3,7 @@ import Animated, {
     useAnimatedStyle,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { View } from "./Themed";
 
 export const KeyboardPaddingView = () => {
     const { height } = useAnimatedKeyboard();
@@ -14,4 +15,20 @@ export const KeyboardPaddingView = () => {
         };
     });
     return <Animated.View style={keyboardHeightStyle} />;
+}
+
+export const MoveWithKeyboardWrapper = ({ children }: { children: React.ReactNode }) => {
+    const { height } = useAnimatedKeyboard();
+    const { bottom } = useSafeAreaInsets();
+
+    const keyboardHeightStyle = useAnimatedStyle(() => {
+        return {
+            transform: [
+                { translateY: Math.max(height.get(), bottom) },
+            ],
+        };
+    });
+    return <Animated.View style={keyboardHeightStyle}>
+        {children}
+    </Animated.View>;
 }

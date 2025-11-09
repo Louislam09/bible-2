@@ -4,11 +4,13 @@ import { createOptimizedWebViewProps } from '@/utils/webViewOptimizations';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { KeyboardPaddingView } from './keyboard-padding';
+import { KeyboardPaddingView, MoveWithKeyboardWrapper } from './keyboard-padding';
 
-interface StandaloneLexicalWebViewProps {
+interface LexicalWebViewProps {
+  moveWithKeyboard?: boolean;
   noteId?: string;
   isReadOnly?: boolean;
+  isNewNote?: boolean;
   initialTitle?: string;
   initialContent?: string;
   onContentChange?: (content: string) => void;
@@ -19,40 +21,42 @@ interface StandaloneLexicalWebViewProps {
   fetchBibleVerse?: (book: string, chapter: number, startVerse: number, endVerse: number) => Promise<string>;
 }
 
-export interface StandaloneLexicalWebViewRef {
+export interface LexicalWebViewRef {
   loadContent: (content: string, title?: string) => void;
   setReadOnly: (readonly: boolean) => void;
   getContent: () => void;
   reload: () => void;
 }
 
-const StandaloneLexicalWebView = React.forwardRef<StandaloneLexicalWebViewRef, StandaloneLexicalWebViewProps>(({
+const LexicalWebView = React.forwardRef<LexicalWebViewRef, LexicalWebViewProps>(({
+  moveWithKeyboard = false,
   noteId,
   isReadOnly = false,
+  isNewNote = false,
   initialTitle = '',
   initialContent = '',
+  placeholder = 'Escribe algo...',
   onContentChange,
   onTitleChange,
   onReady,
   onError,
-  placeholder = 'Escribe algo...',
   fetchBibleVerse,
 }, ref) => {
   const { theme } = useMyTheme();
   const webViewRef = useRef<WebView>(null);
   const [isEditorReady, setIsEditorReady] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [webViewKey, setWebViewKey] = useState(0);
 
 
   // Generate HTML with current theme and bundle
   const htmlContent = React.useMemo(() => {
-
+    const isJSON = initialContent.startsWith("{");
+    const htmlString = isJSON ? JSON.parse(initialContent).htmlString : initialContent;
     return lexicalHtmlContent({
       theme,
       initialTitle,
-      initialContent,
+      initialContent: htmlString,
       isReadOnly,
       placeholder,
     });
@@ -67,7 +71,6 @@ const StandaloneLexicalWebView = React.forwardRef<StandaloneLexicalWebViewRef, S
         switch (message.type) {
           case 'ready':
             setIsEditorReady(true);
-            setIsLoading(false);
             onReady?.();
             break;
 
@@ -78,7 +81,7 @@ const StandaloneLexicalWebView = React.forwardRef<StandaloneLexicalWebViewRef, S
 
           case 'contentChange':
             const content = JSON.parse(message.data.content);
-            console.log('Content:', content.text);
+            // console.log('contentChange:', content.text);
             setHasUnsavedChanges(true);
             onContentChange?.(content);
             break;
@@ -179,7 +182,6 @@ const StandaloneLexicalWebView = React.forwardRef<StandaloneLexicalWebViewRef, S
       // Reload WebView with new theme
       setWebViewKey(prev => prev + 1);
       setIsEditorReady(false);
-      setIsLoading(true);
     }
   }, [theme.dark]);
 
@@ -213,7 +215,7 @@ const StandaloneLexicalWebView = React.forwardRef<StandaloneLexicalWebViewRef, S
         )}
         {...createOptimizedWebViewProps({}, "editor")}
       />
-      <KeyboardPaddingView />
+      {moveWithKeyboard ? <KeyboardPaddingView /> : null}
     </View>
   );
 });
@@ -242,6 +244,6 @@ const styles = StyleSheet.create({
 });
 
 // Set display name for debugging
-StandaloneLexicalWebView.displayName = 'StandaloneLexicalWebView';
+LexicalWebView.displayName = 'StandaloneLexicalWebView';
 
-export default StandaloneLexicalWebView;
+export default LexicalWebView;

@@ -1,5 +1,4 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
-import DomNoteEditor from "@/components/dom-components/DomNoteEditor";
 import Icon from "@/components/Icon";
 import { KeyboardPaddingView } from "@/components/keyboard-padding";
 import MyRichEditor from "@/components/RichTextEditor";
@@ -34,17 +33,15 @@ import {
   ActivityIndicator,
   Alert,
   Animated,
-  Dimensions,
   Easing,
   Keyboard,
   StyleSheet,
   TextInput,
   ToastAndroid,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
 // @ts-ignore
 import "../global.css";
-const { width, height } = Dimensions.get("window");
 
 type NoteDetailProps = {};
 type NoteDetailParams = { noteId: number | null; isNewNote: boolean };

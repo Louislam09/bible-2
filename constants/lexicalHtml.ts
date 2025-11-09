@@ -1,17 +1,3 @@
-// Standalone Lexical Editor HTML Template for WebView
-// Uses bundled lexical-bundle.min.js - no external CDN required
-//
-// Features (matching NewDomNoteEditor.tsx and NewTopToolbarPlugin.tsx):
-// - Full-featured toolbar with SVG icons
-// - Text formatting: Bold, Italic, Underline, Strikethrough, Code
-// - Block formatting: Headings (H1), Quotes
-// - Lists: Bullet lists, Numbered lists
-// - Alignment: Left, Center, Right
-// - Undo/Redo functionality
-// - Active state tracking for all toolbar buttons
-// - Read-only mode support
-// - Theme-aware styling
-
 import { storedData$ } from "@/context/LocalstoreContext";
 import { getTailwindStyleTag } from "@/hooks/useLoadTailwindScript";
 import { TTheme } from "@/types";
@@ -500,7 +486,6 @@ const headContent = (theme: TTheme, isReadOnly: boolean) => `
         
         /* Hide toolbar in read-only mode */
         ${isReadOnly ? '.toolbar { display: none !important; }' : ''}
-        ${isReadOnly ? '.title-container { display: none !important; }' : ''}
         
         /* Loading State */
         .loading {
@@ -661,18 +646,18 @@ export const lexicalHtmlContent = (options: {
         placeholder = 'Escribe algo...',
     } = options;
 
-
     return `
 <!DOCTYPE html>
 <html lang="es">
 ${headContent(theme, isReadOnly)}
-<body class=" overflow-y-hidden h-full">
+<body class="overflow-y-hidden h-full">
     <div id="root" class="overflow-y-hidden h-full">
         <div class="loading">Inicializando editor...</div>
     </div>
     
     <!-- Editor Logic -->
     <script>
+
         // Access Lexical from the global scope
         const {
             createEditor,
@@ -760,8 +745,9 @@ ${headContent(theme, isReadOnly)}
             root.innerHTML = \`
                 <div class="main-container">
                     <div class="content-wrapper">
-                        <div class="title-container ${isReadOnly ? 'hidden' : ''}">
+                        <div class="title-container">
                             <input 
+                                disabled=\${isReadOnly}
                                 id="title-input" 
                                 type="text" 
                                 class="title-input" 
@@ -774,7 +760,7 @@ ${headContent(theme, isReadOnly)}
                         <div class="editor-wrapper">
                             <div class="editor-container">
                                 <div class="editor-placeholder" id="placeholder">${placeholder}</div>
-                                <div class="editor-input" contenteditable="true" tabindex="0" role="textbox" aria-multiline="true" id="editor"></div>
+                                <div class="editor-input" contenteditable=\${!isReadOnly} tabindex="0" role="textbox" aria-multiline="true" id="editor"></div>
                             </div>
                         </div>
                     </div>
@@ -835,10 +821,10 @@ ${headContent(theme, isReadOnly)}
                 registerList(editor);
                 console.log('List plugin registered');
             }
-            
+                
             // Initialize with empty paragraph if no initial content
-            const hasInitialContent = '${initialContent}'.trim();
-            if (!hasInitialContent) {
+             const content = \`${initialContent}\`;
+            if (!content) {
                 editor.update(() => {
                     const root = $getRoot();
                     if (root.getChildrenSize() === 0) {
@@ -851,18 +837,12 @@ ${headContent(theme, isReadOnly)}
             } else {
                 // Load initial content if provided
                 try {
-                    const content = JSON.parse(\`${initialContent.replace(/`/g, '\\`')}\`);
-                    if (content.htmlString) {
                         editor.update(() => {
                             const parser = new DOMParser();
-                            const dom = parser.parseFromString(content.htmlString, 'text/html');
+                            const dom = parser.parseFromString(content, 'text/html');
                             const nodes = $generateNodesFromDOM(editor, dom);
                             $getRoot().clear().append(...nodes);
                         });
-                    } else if (content.json) {
-                        const editorState = editor.parseEditorState(content.json);
-                        editor.setEditorState(editorState);
-                    }
                 } catch (error) {
                     console.error('Failed to load initial content:', error);
                     // Fallback to empty paragraph on error

@@ -1,9 +1,7 @@
-import DomNoteEditor from "@/components/dom-components/DomNoteEditor";
 import Icon from "@/components/Icon";
-import { KeyboardPaddingView } from "@/components/keyboard-padding";
+import { KeyboardPaddingView, MoveWithKeyboardWrapper } from "@/components/keyboard-padding";
 import { Text, View } from "@/components/Themed";
 import { getBookDetail } from "@/constants/BookNames";
-import { htmlTemplate } from "@/constants/HtmlTemplate";
 import { GET_SINGLE_OR_MULTIPLE_VERSES } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
@@ -38,8 +36,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 // @ts-ignore
-import "../global.css";
 import NewDomNoteEditor from "@/components/dom-components/NewDomNoteEditor";
+import "../global.css";
+import LexicalWebView from "@/components/LexicalWebView";
 const { width, height } = Dimensions.get("window");
 
 type NoteDetailProps = {};
@@ -292,45 +291,37 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
 
   const renderActionButtons = useCallback(() => {
     return (
-      <>
-        <TouchableOpacity
-          style={[
-            styles.scrollToTopButton,
-            {
-              borderWidth: 1,
-              borderColor: theme.colors.notification,
-              padding: 10,
-              borderRadius: 10,
-            },
-            (keyboardOpen || !isView) && { bottom: 70 },
-          ]}
-          onPress={isView ? onEditMode : onSave}
-        >
-          {isTyping ? (
-            <Animated.View
-              style={{
-                transform: [
-                  { rotate: isView ? "0deg" : isTyping ? rotate : "0deg" },
-                ],
-              }}
-            >
-              <Icon
-                style={[{}]}
-                color={theme.colors.notification}
-                name={"Loader"}
-                size={30}
-              />
-            </Animated.View>
-          ) : (
+      <TouchableOpacity
+        style={[
+          styles.scrollToTopButton,
+
+        ]}
+        onPress={isView ? onEditMode : onSave}
+      >
+        {isTyping ? (
+          <Animated.View
+            style={{
+              transform: [
+                { rotate: isView ? "0deg" : isTyping ? rotate : "0deg" },
+              ],
+            }}
+          >
             <Icon
               style={[{}]}
               color={theme.colors.notification}
-              name={isView ? "Pencil" : "Save"}
+              name={"Loader"}
               size={30}
             />
-          )}
-        </TouchableOpacity>
-      </>
+          </Animated.View>
+        ) : (
+          <Icon
+            style={[{}]}
+            color={theme.colors.notification}
+            name={isView ? "Pencil" : "Save"}
+            size={30}
+          />
+        )}
+      </TouchableOpacity>
     );
   }, [isTyping, isView, noteContent]);
 
@@ -822,13 +813,9 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
     );
   };
 
+
   return (
-    <View
-      style={{
-        flex: 1,
-        width: "100%",
-      }}
-    >
+    <View style={styles.pageContainer} >
       <Stack.Screen
         options={{
           headerShown: isView,
@@ -836,39 +823,61 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
         }}
       />
       <View style={styles.container}>
-        <>
-          <View
-            style={{
-              height: isView ? 0 : Constants.statusBarHeight,
-            }}
-          />
-
-          <NewDomNoteEditor
-            isReadOnly={isView}
-            theme={theme}
-            noteId={noteId?.toString()}
-            isNewNote={isNewNote}
-            onChangeText={(key: string, text: string) =>
-              onContentChange(key, text)
-            }
-            value={noteInfo?.note_text || ""}
-            title={noteInfo?.title || ""}
-            width={width}
-            height={height}
-            onSave={onSave}
-            fetchBibleVerse={fetchBibleVerse}
-            onDownloadPdf={onDownloadPdf}
-          />
-        </>
+        <View
+          style={{
+            height: isView ? 0 : Constants.statusBarHeight,
+          }}
+        />
+        <LexicalWebView
+          initialTitle={noteInfo?.title || ""}
+          initialContent={noteInfo?.note_text || ""}
+          onContentChange={(content) => console.log('Typing a note')}
+          onTitleChange={(title) => console.log('Title:', title)}
+          placeholder="Escribe tu nota..."
+          isReadOnly={isView}
+          noteId={noteId?.toString()}
+          isNewNote={isNewNote}
+        />
         {renderActionButtons()}
       </View>
       <KeyboardPaddingView />
+      {/* <View style={styles.container}>
+          <>
+            <View
+              style={{
+                height: isView ? 0 : Constants.statusBarHeight,
+              }}
+            />
+            <NewDomNoteEditor
+              isReadOnly={isView}
+              theme={theme}
+              noteId={noteId?.toString()}
+              isNewNote={isNewNote}
+              onChangeText={(key: string, text: string) =>
+                onContentChange(key, text)
+              }
+              value={noteInfo?.note_text || ""}
+              title={noteInfo?.title || ""}
+              width={width}
+              height={height}
+              onSave={onSave}
+              fetchBibleVerse={fetchBibleVerse}
+              onDownloadPdf={onDownloadPdf}
+            />
+          </>
+          {renderActionButtons()}
+        </View>
+        <KeyboardPaddingView /> */}
     </View>
   );
 };
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
+    pageContainer: {
+      flex: 1,
+      width: "100%",
+    },
     container: {
       flex: 1,
       padding: 5,
@@ -898,20 +907,17 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontWeight: "bold",
       color: colors.text,
       marginVertical: 5,
-      // textDecorationStyle: "solid",
-      // textDecorationColor: "red",
-      // textDecorationLine: "underline",
     },
     scrollToTopButton: {
       position: "absolute",
-      bottom: 25,
+      bottom: 10,
       right: 20,
       backgroundColor: colors.background,
       padding: 10,
       borderRadius: 10,
-      borderColor: "#ddd",
-      borderWidth: 0.3,
       elevation: 3,
+      borderWidth: 1,
+      borderColor: colors.notification,
     },
     noteHeader: {
       display: "flex",

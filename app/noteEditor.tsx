@@ -1,5 +1,5 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
-import StandaloneLexicalWebView from "@/components/StandaloneLexicalWebView";
+import LexicalWebView from "@/components/LexicalWebView";
 import { View } from "@/components/Themed";
 import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
@@ -32,7 +32,7 @@ const NoteEditorScreen = () => {
     return (
         <View style={styles.container}>
             <Stack.Screen options={singleScreenHeader(screenOptions)} />
-            <StandaloneLexicalWebView
+            <LexicalWebView
                 initialTitle=""
                 initialContent={JSON.stringify(initialContent)}
                 onContentChange={(content) => { }}

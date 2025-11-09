@@ -5,7 +5,6 @@ import ActionButton, { Backdrop } from "@/components/note/ActionButton";
 import NoteItem from "@/components/note/NoteItem";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
-import { htmlTemplate } from "@/constants/HtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useNetwork } from "@/context/NetworkProvider";
@@ -78,7 +77,6 @@ const NotesPage = () => {
   const selectedItems = use$(() => noteSelectors$.selectedNoteIds.get());
 
   const reloadNotes = use$(() => bibleState$.reloadNotes.get());
-  // const noteDetailScreen = useDomComponent ? Screens.NoteDetailDom : Screens.NoteDetail;
   const noteDetailScreen = Screens.NoteDetailDom;
 
   useEffect(() => {
