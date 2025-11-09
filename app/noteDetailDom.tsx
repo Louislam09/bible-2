@@ -831,8 +831,8 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
         <LexicalWebView
           initialTitle={noteInfo?.title || ""}
           initialContent={noteInfo?.note_text || ""}
-          onContentChange={(content) => console.log('Typing a note')}
-          onTitleChange={(title) => console.log('Title:', title)}
+          onContentChange={(content) => onContentChange('content', content)}
+          onTitleChange={(title) => onContentChange('title', title)}
           placeholder="Escribe tu nota..."
           isReadOnly={isView}
           noteId={noteId?.toString()}
@@ -880,7 +880,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     container: {
       flex: 1,
-      padding: 5,
       backgroundColor: dark ? colors.background : "#eee",
     },
     titleContainer: {
