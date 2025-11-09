@@ -79,8 +79,10 @@ const StandaloneLexicalWebView = React.forwardRef<StandaloneLexicalWebViewRef, S
             break;
 
           case 'contentChange':
+            const content = JSON.parse(message.data.content);
+            console.log('Content:', content.text);
             setHasUnsavedChanges(true);
-            onContentChange?.(message.data.content);
+            onContentChange?.(content);
             break;
 
           case 'contentResponse':
@@ -154,7 +156,7 @@ const StandaloneLexicalWebView = React.forwardRef<StandaloneLexicalWebViewRef, S
   //   () => ({
   //     loadContent: (content: string, title?: string) => {
   //       console.log('loadContent', content, title);
-  //       // sendMessage('loadContent', { content, title });
+  //       sendMessage('loadContent', { content, title });
   //     },
   //     setReadOnly: (readonly: boolean) => {
   //       console.log('setReadOnly', readonly);

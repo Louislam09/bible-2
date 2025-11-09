@@ -858,10 +858,6 @@ ${headContent(theme, isReadOnly)}
                     const json = editor.getEditorState().toJSON();
                     const text = $getRoot().getTextContent();
                     
-                    console.log('Text content:', text);
-                    console.log('HTML:', htmlString);
-                    console.log('ContentEditable value:', editorElement.textContent);
-                    
                     sendMessage('contentChange', {
                         content: JSON.stringify({ htmlString, json, text })
                     });
@@ -869,7 +865,7 @@ ${headContent(theme, isReadOnly)}
                     // Update placeholder visibility
                     const placeholder = document.getElementById('placeholder');
                     if (placeholder) {
-                        placeholder.style.display = text.trim() ? 'none' : 'block';
+                        placeholder.style.display = text ? 'none' : 'block';
                     }
                 });
             }, 500);
