@@ -1,12 +1,10 @@
-import { storedData$ } from '@/context/LocalstoreContext';
+import { lexicalHtmlContent } from '@/constants/lexicalHtml';
 import { useMyTheme } from '@/context/ThemeContext';
 import { createOptimizedWebViewProps } from '@/utils/webViewOptimizations';
-import { use$ } from '@legendapp/state/react';
-import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { generateStandaloneLexicalHTML } from './LexicalEditorStandaloneHTML';
-import { lexicalHtmlContent } from '@/constants/lexicalHtml';
+import { KeyboardPaddingView } from './keyboard-padding';
 
 interface StandaloneLexicalWebViewProps {
   noteId?: string;
@@ -215,6 +213,7 @@ const StandaloneLexicalWebView = React.forwardRef<StandaloneLexicalWebViewRef, S
         )}
         {...createOptimizedWebViewProps({}, "editor")}
       />
+      <KeyboardPaddingView />
     </View>
   );
 });

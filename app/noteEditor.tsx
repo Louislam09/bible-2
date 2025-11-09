@@ -1,10 +1,9 @@
-import { singleScreenHeader, SingleScreenHeaderProps } from "@/components/common/singleScreenHeader";
-import LexicalRichTextEditor from "@/components/LexicalRichTextEditor";
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import StandaloneLexicalWebView from "@/components/StandaloneLexicalWebView";
-import { Text, View } from "@/components/Themed";
+import { View } from "@/components/Themed";
 import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
-import { Stack, useNavigation } from "expo-router";
+import { Stack } from "expo-router";
 import React, { useMemo } from "react";
 import {
     StyleSheet
@@ -14,7 +13,6 @@ import {
 const NoteEditorScreen = () => {
     const { theme } = useMyTheme();
     const styles = getStyles(theme);
-    const navigation = useNavigation();
 
     const screenOptions: any = useMemo(() => {
         return {
@@ -23,17 +21,20 @@ const NoteEditorScreen = () => {
             titleIcon: "NotebookTabs",
             headerRightProps: {
                 headerRightIconColor: theme.colors.text,
-
             },
         };
     }, [theme.colors]);
+
+    const initialContent = {
+        // htmlString: "<h1>Hola soy Luis</h1>",
+    };
 
     return (
         <View style={styles.container}>
             <Stack.Screen options={singleScreenHeader(screenOptions)} />
             <StandaloneLexicalWebView
                 initialTitle=""
-                initialContent=""
+                initialContent={JSON.stringify(initialContent)}
                 onContentChange={(content) => { }}
                 onTitleChange={(title) => console.log('Title:', title)}
                 placeholder="Escribe tu nota..."
