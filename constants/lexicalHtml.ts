@@ -671,6 +671,7 @@ ${headContent(theme, isReadOnly)}
             $generateNodesFromDOM,
             $isRangeSelection,
             $isHeadingNode,
+            $isElementNode,
             $isQuoteNode,
             $isListNode,
             HeadingNode,
@@ -1261,32 +1262,40 @@ ${headContent(theme, isReadOnly)}
                         });
                         break;
                     case 'addTextToNote':
-                        if (editor) {
-                            editor.update(() => {
-                                const root = $getRoot();
+                        editor.update(() => {
+                    const parser = new DOMParser();
+                    const dom = parser.parseFromString(message.data.text, "text/html");
 
-                                console.log('Processing HTML text:', message.data.text);
+                    const nodes = $generateNodesFromDOM(editor, dom);
+                    const root = $getRoot();
+                    // Don't clear existing content - just append new content
 
-                                // Parse the HTML manually for better control
-                                const htmlText = message.data.text;
+                    // ✅ Wrap non-element nodes inside a paragraph
+                    const paragraph = $createParagraphNode();
+                    for (const node of nodes) {
+                        if ($isElementNode(node)) {
+                        root.append(node);
+                        } else {
+                        paragraph.append(node);
+                        }
+                    }
 
-                                // Split by <br> tags to create paragraphs
-                                const parts = htmlText.split('<br>');
+                    // If paragraph has any children, append it
+                    if (paragraph.getChildrenSize() > 0) {
+                        root.append(paragraph);
+                    }
 
-                                parts.forEach((part, index) => {
-                                    if (part.trim()) {
-                                        const paragraph = $createParagraphNode();
-
-                                        // For now, just add the text as plain text to test basic functionality
-                                        // TODO: Implement proper HTML parsing with formatting
-                                        paragraph.append($createTextNode(part.replace(/<[^>]*>/g, ''))); // Remove HTML tags for now
-
-                                        root.append(paragraph);
-                                    }
-                                });
-
+                    // Scroll to bottom to show the newly added content
+                    setTimeout(() => {
+                        const contentWrapper = document.querySelector('.content-wrapper');
+                        if (contentWrapper) {
+                            contentWrapper.scrollTo({
+                                top: contentWrapper.scrollHeight,
+                                behavior: 'smooth'
                             });
                         }
+                    }, 100);
+                    });
                         break;
                 }
             } catch (error) {

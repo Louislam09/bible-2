@@ -55,20 +55,6 @@ function LoadHTMLPlugin({
             $getRoot().append(node); // ElementNode or DecoratorNode
           }
         });
-
-        // if (shouldClearEditor && !shouldAppend) {
-        //   // Clear existing content and replace with new nodes
-        //   const root = $getRoot();
-        //   root.clear();
-        //   root.append(...nodes);
-        // } else if (shouldAppend) {
-        //   // Append nodes to existing content
-        //   const root = $getRoot();
-        //   root.append(...nodes);
-        // } else {
-        //   // Insert nodes at current selection
-        //   $insertNodes(nodes);
-        // }
       });
     }
 
