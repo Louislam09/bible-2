@@ -21,14 +21,12 @@ import React, {
 import {
   ActivityIndicator,
   Alert,
-  Animated,
-  Easing,
-  Keyboard,
   StyleSheet,
   TextInput,
   ToastAndroid,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
+import LexicalWebView from "./LexicalWebView";
 
 const CurrentNoteDetail: React.FC<any> = ({ }) => {
   const { theme } = useMyTheme();
@@ -43,10 +41,8 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
   const currentNoteId = bibleState$.currentNoteId.get();
   const [noteId, setNoteId] = useState(currentNoteId);
   const [isNewNote, setNewNote] = useState(noteId === -1);
-  const rotation = useRef(new Animated.Value(0)).current;
   const typingTimeoutRef = useRef<any>(null);
   const [isLoading, setLoading] = useState(true);
-  const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [isTyping, setTyping] = useState(false);
   const [shouldOpenKeyboard, setShouldOpenKeyboard] = useState(false);
   const [noteInfo, setNoteInfo] = useState<TNote | null>(null);
@@ -62,11 +58,6 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
   const defaultTitle = "Sin titulo ✏️";
 
   const debouncedNoteContent = useDebounce(noteContent, 1000);
-
-  const rotate = rotation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "360deg"],
-  });
 
   useEffect(() => {
     setNoteId(currentNoteId);
@@ -110,29 +101,6 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
     }
   }, [noteInfo, isNewNote, isLoading]);
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => setKeyboardOpen(true)
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => setKeyboardOpen(false)
-    );
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (isTyping) {
-      startRotation();
-    } else {
-      stopRotation();
-    }
-  }, [isTyping]);
-
   const onSave = useCallback(async () => {
     try {
       if (noteId && !isNewNote) {
@@ -165,58 +133,37 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
     return (
       <>
         <TouchableOpacity
-          style={[
-            styles.scrollToTopButton,
-            {
-              borderWidth: 1,
-              borderColor: theme.colors.notification,
-              padding: 10,
-              borderRadius: 10,
-            },
-            (keyboardOpen || !isView) && { bottom: 70 },
-          ]}
+          style={[styles.scrollToTopButton]}
           onPress={isView ? onEditMode : onSave}
         >
-          <Animated.View style={{ transform: [{ rotate }] }}>
+          {isView ? (
             <Icon
-              style={[{}]}
               color={theme.colors.notification}
-              name={isView ? "Pencil" : isTyping ? "Loader" : "Save"}
+              name="Pencil"
               size={30}
             />
-          </Animated.View>
+          ) : isTyping ? (
+            <ActivityIndicator size={30} color={theme.colors.notification} />
+          ) : (
+            <Icon
+              color={theme.colors.notification}
+              name="Save"
+              size={30}
+            />
+          )}
+
         </TouchableOpacity>
       </>
     );
   }, [isTyping, isView, noteContent]);
 
-  const startRotation = () => {
-    Animated.loop(
-      Animated.timing(rotation, {
-        toValue: 1,
-        duration: 2000,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      })
-    ).start();
-  };
-
-  const stopRotation = () => {
-    rotation.stopAnimation();
-    rotation.setValue(0);
-  };
-
   const addTextToNote = useCallback(() => {
     const isEditMode = !!selectedVerseForNote;
-    const contentToAdd = selectedVerseForNote
-      ? `<br> <div>${selectedVerseForNote}</div><br>`
-      : "";
-    const myContent = `${noteInfo?.note_text || ""} ${contentToAdd}`;
+    const myContent = noteInfo?.note_text || "";
     setNoteContent({
       title: noteInfo?.title || "",
       content: !noteInfo && !selectedVerseForNote ? "" : myContent,
     });
-    bibleState$.clearSelectedVerseForNote();
     if (isEditMode) {
       setViewMode("EDIT");
       setShouldOpenKeyboard(true);
@@ -269,6 +216,14 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
   const onEditMode = () => {
     setViewMode("EDIT");
   };
+  const onReady = (sendMessageCallback: (type: string, data: any) => void) => {
+    if (selectedVerseForNote) {
+      sendMessageCallback('addTextToNote', {
+        text: selectedVerseForNote,
+      });
+      bibleState$.clearSelectedVerseForNote();
+    }
+  };
 
   if (isLoading) {
     return (
@@ -277,6 +232,27 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
       </View>
     );
   }
+
+  return (
+    <View style={styles.pageContainer}>
+      <View style={styles.container}>
+        <LexicalWebView
+          initialTitle={isView ? noteContent.title : noteInfo?.title || ""}
+          initialContent={isView ? noteContent.content : noteInfo?.note_text || ""}
+          onContentChange={(content) => onContentChange('content', content)}
+          onTitleChange={(title) => onContentChange('title', title)}
+          placeholder="Escribe tu nota..."
+          isReadOnly={isView}
+          noteId={noteId?.toString()}
+          isNewNote={isNewNote}
+          isModal
+          onReady={onReady}
+        />
+        {renderActionButtons()}
+      </View>
+      <KeyboardPaddingView />
+    </View>
+  )
 
   return (
     <View style={{ flex: 1 }}>
@@ -328,9 +304,12 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
 
 const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
+    pageContainer: {
+      flex: 1,
+      width: "100%",
+    },
     container: {
       flex: 1,
-      padding: 5,
       backgroundColor: dark ? colors.background : "#eee",
       zIndex: 100,
     },
@@ -355,14 +334,14 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
     scrollToTopButton: {
       position: "absolute",
-      bottom: 15,
+      bottom: 10,
       right: 20,
       backgroundColor: colors.background,
       padding: 10,
       borderRadius: 10,
-      borderColor: "#ddd",
-      borderWidth: 0.3,
       elevation: 3,
+      borderWidth: 1,
+      borderColor: colors.notification,
     },
     noteHeader: {
       display: "flex",

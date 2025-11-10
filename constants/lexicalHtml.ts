@@ -637,6 +637,7 @@ export const lexicalHtmlContent = (options: {
     initialContent?: string;
     isReadOnly?: boolean;
     placeholder?: string;
+    isModal?: boolean;
 }) => {
     const {
         theme,
@@ -644,13 +645,14 @@ export const lexicalHtmlContent = (options: {
         initialContent = '',
         isReadOnly = false,
         placeholder = 'Escribe algo...',
+        isModal = false,
     } = options;
 
     return `
 <!DOCTYPE html>
 <html lang="es">
 ${headContent(theme, isReadOnly)}
-<body class="overflow-y-hidden h-full">
+<body class="overflow-y-hidden h-full ">
     <div id="root" class="overflow-y-hidden h-full">
         <div class="loading">Inicializando editor...</div>
     </div>
@@ -716,8 +718,6 @@ ${headContent(theme, isReadOnly)}
                 const message = JSON.stringify({ type, data });
                 if (window.ReactNativeWebView) {
                     window.ReactNativeWebView.postMessage(message);
-                } else {
-                    console.log('Message:', type, data);
                 }
             } catch (error) {
                 console.error('Failed to send message:', error);
@@ -745,9 +745,8 @@ ${headContent(theme, isReadOnly)}
             root.innerHTML = \`
                 <div class="main-container">
                     <div class="content-wrapper">
-                        <div class="title-container">
+                        <div class="title-container ${isReadOnly ? 'hidden' : ''}">
                             <input 
-                                disabled=\${isReadOnly}
                                 id="title-input" 
                                 type="text" 
                                 class="title-input" 
@@ -755,11 +754,24 @@ ${headContent(theme, isReadOnly)}
                                 value="${initialTitle.replace(/"/g, '&quot;')}"
                             />
                         </div>
+                        ${(isModal && isReadOnly) ? `
+                            <div class="title-container">
+                                <input 
+                                    id="title-input" 
+                                    type="text" 
+                                    class="title-input" 
+                                    placeholder="Título" 
+                                    value="${initialTitle.replace(/"/g, '&quot;')}"
+                                    disabled
+                                />
+                            </div>
+                        ` : ''}
+                       
                         ${toolbarContent({ isReadOnly })}
 
                         <div class="editor-wrapper">
                             <div class="editor-container">
-                                <div class="editor-placeholder" id="placeholder">${placeholder}</div>
+                                <div class="editor-placeholder ${(isReadOnly || initialContent) ? 'hidden' : ''}" id="placeholder">${placeholder}</div>
                                 <div class="editor-input" contenteditable=\${!isReadOnly} tabindex="0" role="textbox" aria-multiline="true" id="editor"></div>
                             </div>
                         </div>
@@ -802,24 +814,20 @@ ${headContent(theme, isReadOnly)}
             const editorElement = document.getElementById('editor');
             editor.setRootElement(editorElement);
             
-            console.log('Lexical editor initialized');
             
             // Register essential plugins FIRST (before any content manipulation)
             if (registerRichText) {
                 registerRichText(editor);
-                console.log('Rich text plugin registered');
             }
             
             if (registerHistory && createEmptyHistoryState) {
                 const historyState = createEmptyHistoryState();
                 registerHistory(editor, historyState, 1000);
-                console.log('History plugin registered');
             }
             
             // Register list plugin (required for list commands to work)
             if (registerList) {
                 registerList(editor);
-                console.log('List plugin registered');
             }
                 
             // Initialize with empty paragraph if no initial content
@@ -889,17 +897,6 @@ ${headContent(theme, isReadOnly)}
                         }
                     });
                 }
-                
-                // Auto-focus the editor after a short delay
-                setTimeout(() => {
-                    try {
-                        editor.focus();
-                        console.log('Editor focused successfully');
-                    } catch (e) {
-                        console.warn('Auto-focus error:', e);
-                        editorElement.focus();
-                    }
-                }, 200);
             }
             
             // Setup toolbar (if not read-only)
@@ -924,7 +921,7 @@ ${headContent(theme, isReadOnly)}
                         placeholder.style.display = text ? 'none' : 'block';
                     }
                 });
-            }, 500);
+            }, 10);
             
             editor.registerUpdateListener(({ editorState }) => {
                 if (!isReadOnly) {
@@ -932,22 +929,8 @@ ${headContent(theme, isReadOnly)}
                 }
             });
             
-            // Log editor state for debugging
-            console.log('Editor editable:', editor.isEditable());
-            console.log('Editor element contenteditable:', editorElement.contentEditable);
-            console.log('Editor element:', editorElement);
-            console.log('IsReadOnly:', isReadOnly);
-            
-            // Test if we can type programmatically
-            setTimeout(() => {
-                editor.update(() => {
-                    const root = $getRoot();
-                    console.log('Root children count:', root.getChildrenSize());
-                    const firstChild = root.getFirstChild();
-                    console.log('First child:', firstChild);
-                    console.log('First child type:', firstChild ? firstChild.getType() : 'none');
-                });
-            }, 500);
+ 
+          
             
             // Title input handler
             const titleInput = document.getElementById('title-input');
@@ -960,7 +943,6 @@ ${headContent(theme, isReadOnly)}
             
             // Notify React Native that editor is ready
             sendMessage('ready', { success: true });
-            console.log('Editor ready');
         }
         
         // Toolbar state
@@ -1125,19 +1107,7 @@ ${headContent(theme, isReadOnly)}
             document.querySelectorAll('[data-format]').forEach(button => {
                 button.addEventListener('click', () => {
                     const format = button.getAttribute('data-format');
-                    console.log('Formatting with:', format);
                     editor.dispatchCommand(FORMAT_TEXT_COMMAND, format);
-                    
-                    // Debug: Check what's applied after formatting
-                    setTimeout(() => {
-                        editor.getEditorState().read(() => {
-                            const selection = $getSelection();
-                            if ($isRangeSelection(selection)) {
-                                console.log('Has underline:', selection.hasFormat('underline'));
-                                console.log('Has strikethrough:', selection.hasFormat('strikethrough'));
-                            }
-                        });
-                    }, 100);
                 });
             });
             
@@ -1244,7 +1214,6 @@ ${headContent(theme, isReadOnly)}
         function handleNativeMessage(event) {
             try {
                 const message = JSON.parse(event.data);
-                console.log('Received message:', message.type);
                 
                 switch (message.type) {
                     case 'loadContent':
@@ -1290,6 +1259,34 @@ ${headContent(theme, isReadOnly)}
                                 content: JSON.stringify({ htmlString, json })
                             });
                         });
+                        break;
+                    case 'addTextToNote':
+                        if (editor) {
+                            editor.update(() => {
+                                const root = $getRoot();
+
+                                console.log('Processing HTML text:', message.data.text);
+
+                                // Parse the HTML manually for better control
+                                const htmlText = message.data.text;
+
+                                // Split by <br> tags to create paragraphs
+                                const parts = htmlText.split('<br>');
+
+                                parts.forEach((part, index) => {
+                                    if (part.trim()) {
+                                        const paragraph = $createParagraphNode();
+
+                                        // For now, just add the text as plain text to test basic functionality
+                                        // TODO: Implement proper HTML parsing with formatting
+                                        paragraph.append($createTextNode(part.replace(/<[^>]*>/g, ''))); // Remove HTML tags for now
+
+                                        root.append(paragraph);
+                                    }
+                                });
+
+                            });
+                        }
                         break;
                 }
             } catch (error) {

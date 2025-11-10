@@ -1,5 +1,5 @@
 import Icon from "@/components/Icon";
-import { KeyboardPaddingView, MoveWithKeyboardWrapper } from "@/components/keyboard-padding";
+import { KeyboardPaddingView } from "@/components/keyboard-padding";
 import { Text, View } from "@/components/Themed";
 import { getBookDetail } from "@/constants/BookNames";
 import { GET_SINGLE_OR_MULTIPLE_VERSES } from "@/constants/Queries";
@@ -30,15 +30,13 @@ import {
   Animated,
   Dimensions,
   Easing,
-  Keyboard,
   StyleSheet,
   ToastAndroid,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
 // @ts-ignore
-import NewDomNoteEditor from "@/components/dom-components/NewDomNoteEditor";
-import "../global.css";
 import LexicalWebView from "@/components/LexicalWebView";
+import "../global.css";
 const { width, height } = Dimensions.get("window");
 
 type NoteDetailProps = {};
@@ -65,7 +63,6 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
   const typingTimeoutRef = useRef<any>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isLoading, setLoading] = useState(true);
-  const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [isTyping, setTyping] = useState(false);
   const [noteInfo, setNoteInfo] = useState<TNote | null>(null);
   const [viewMode, setViewMode] = useState<keyof typeof EViewMode>(
@@ -77,7 +74,7 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
   });
 
   const isView = viewMode === "VIEW";
-  const defaultTitle = "Sin titulo ✏️";
+  const defaultTitle = "Sin título";
 
   const debouncedNoteContent = useDebounce(noteContent, 3000);
   const { printToFile } = usePrintAndShare();
@@ -207,22 +204,6 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
     }
   }, [isView, noteInfo, isNewNote]);
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => setKeyboardOpen(true)
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => setKeyboardOpen(false)
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
 
   useEffect(() => {
     if (isTyping) {

@@ -42,6 +42,47 @@ const BookContentModals = () => {
 
   return (
     <>
+      <ExpandableChooseReference />
+      {isPlayerOpened && <AudioPlayerExpandedSheet />}
+
+      <MultipleStrongsContentBottomModal
+        theme={theme}
+        navigation={navigation}
+        fontSize={fontSize}
+        data={multipleStrongsData as any}
+      />
+
+      <WebviewBibleSettingBottomModal />
+
+      <StrongContentBottomModal
+        theme={theme}
+        navigation={navigation}
+        fontSize={fontSize}
+      />
+
+      <CommentaryBottomSheet
+        bookNumber={commentaryReference.bookNumber}
+        chapter={commentaryReference.chapter}
+        verse={commentaryReference.verse}
+      />
+
+      <BottomModal
+        style={styles.bottomSheet}
+        backgroundColor={theme.dark ? theme.colors.background : "#eee"}
+        shouldScroll={false}
+        ref={dictionaryRef}
+        justOneSnap
+        showIndicator
+        justOneValue={["60%"]}
+        startAT={0}
+      >
+        <DictionaryBottomModalContent
+          navigation={navigation}
+          theme={theme}
+          fontSize={fontSize}
+        />
+      </BottomModal>
+
       <BottomModal
         justOneSnap
         showIndicator
@@ -51,8 +92,6 @@ const BookContentModals = () => {
       >
         <NoteNameList />
       </BottomModal>
-      <ExpandableChooseReference />
-      {isPlayerOpened && <AudioPlayerExpandedSheet />}
 
       <BottomSheet
         ref={interlinealRef}
@@ -96,38 +135,6 @@ const BookContentModals = () => {
         </BottomSheetScrollView>
       </BottomSheet>
 
-      <MultipleStrongsContentBottomModal
-        theme={theme}
-        navigation={navigation}
-        fontSize={fontSize}
-        data={multipleStrongsData as any}
-      />
-
-      <WebviewBibleSettingBottomModal />
-
-      <StrongContentBottomModal
-        theme={theme}
-        navigation={navigation}
-        fontSize={fontSize}
-      />
-
-      <BottomModal
-        style={styles.bottomSheet}
-        backgroundColor={theme.dark ? theme.colors.background : "#eee"}
-        shouldScroll={false}
-        ref={dictionaryRef}
-        justOneSnap
-        showIndicator
-        justOneValue={["60%"]}
-        startAT={0}
-      >
-        <DictionaryBottomModalContent
-          navigation={navigation}
-          theme={theme}
-          fontSize={fontSize}
-        />
-      </BottomModal>
-
       <BottomModal shouldScroll startAT={3} ref={compareRef}>
         <CompareVersions
           {...{
@@ -140,11 +147,6 @@ const BookContentModals = () => {
         />
       </BottomModal>
 
-      <CommentaryBottomSheet
-        bookNumber={commentaryReference.bookNumber}
-        chapter={commentaryReference.chapter}
-        verse={commentaryReference.verse}
-      />
     </>
   );
 };

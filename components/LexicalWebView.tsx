@@ -4,7 +4,9 @@ import { createOptimizedWebViewProps } from '@/utils/webViewOptimizations';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { KeyboardPaddingView, MoveWithKeyboardWrapper } from './keyboard-padding';
+import { KeyboardPaddingView } from './keyboard-padding';
+import { use$ } from '@legendapp/state/react';
+import { bibleState$ } from '@/state/bibleState';
 
 interface LexicalWebViewProps {
   moveWithKeyboard?: boolean;
@@ -13,9 +15,10 @@ interface LexicalWebViewProps {
   isNewNote?: boolean;
   initialTitle?: string;
   initialContent?: string;
+  isModal?: boolean;
   onContentChange?: (content: string) => void;
   onTitleChange?: (title: string) => void;
-  onReady?: () => void;
+  onReady?: (sendMessageCallback: (type: string, data: any) => void) => void;
   onError?: (error: any) => void;
   placeholder?: string;
   fetchBibleVerse?: (book: string, chapter: number, startVerse: number, endVerse: number) => Promise<string>;
@@ -36,6 +39,7 @@ const LexicalWebView = React.forwardRef<LexicalWebViewRef, LexicalWebViewProps>(
   initialTitle = '',
   initialContent = '',
   placeholder = 'Escribe algo...',
+  isModal = false,
   onContentChange,
   onTitleChange,
   onReady,
@@ -47,7 +51,7 @@ const LexicalWebView = React.forwardRef<LexicalWebViewRef, LexicalWebViewProps>(
   const [isEditorReady, setIsEditorReady] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [webViewKey, setWebViewKey] = useState(0);
-
+  const [messageQueue, setMessageQueue] = useState<Array<{ type: string; data: any }>>([]);
 
   // Generate HTML with current theme and bundle
   const htmlContent = React.useMemo(() => {
@@ -59,8 +63,9 @@ const LexicalWebView = React.forwardRef<LexicalWebViewRef, LexicalWebViewProps>(
       initialContent: htmlString,
       isReadOnly,
       placeholder,
+      isModal
     });
-  }, [theme, initialTitle, initialContent, isReadOnly, placeholder]);
+  }, [theme, initialTitle, initialContent, isReadOnly, placeholder, isModal]);
 
   // Handle messages from WebView
   const handleMessage = useCallback(
@@ -71,7 +76,7 @@ const LexicalWebView = React.forwardRef<LexicalWebViewRef, LexicalWebViewProps>(
         switch (message.type) {
           case 'ready':
             setIsEditorReady(true);
-            onReady?.();
+            onReady?.(sendMessage);
             break;
 
           case 'titleChange':
@@ -81,9 +86,9 @@ const LexicalWebView = React.forwardRef<LexicalWebViewRef, LexicalWebViewProps>(
 
           case 'contentChange':
             const content = JSON.parse(message.data.content);
-            // console.log('contentChange:', content.text);
+
             setHasUnsavedChanges(true);
-            onContentChange?.(content);
+            onContentChange?.(JSON.stringify(content));
             break;
 
           case 'contentResponse':
@@ -137,7 +142,7 @@ const LexicalWebView = React.forwardRef<LexicalWebViewRef, LexicalWebViewProps>(
   // Send messages to WebView
   const sendMessage = useCallback(
     (type: string, data: any) => {
-      if (webViewRef.current && isEditorReady) {
+      if (webViewRef.current) {
         try {
           webViewRef.current.postMessage(JSON.stringify({ type, data }));
         } catch (error) {
@@ -146,35 +151,11 @@ const LexicalWebView = React.forwardRef<LexicalWebViewRef, LexicalWebViewProps>(
         }
       } else {
         console.warn('WebView not ready, message queued:', type);
+        setMessageQueue(prev => [...prev, { type, data }]);
       }
     },
-    [isEditorReady, onError]
+    []
   );
-
-  // Public methods via ref
-  // useImperativeHandle(
-  //   ref,
-  //   () => ({
-  //     loadContent: (content: string, title?: string) => {
-  //       console.log('loadContent', content, title);
-  //       sendMessage('loadContent', { content, title });
-  //     },
-  //     setReadOnly: (readonly: boolean) => {
-  //       console.log('setReadOnly', readonly);
-  //       sendMessage('setReadOnly', { isReadOnly: readonly });
-  //     },
-  //     getContent: () => {
-  //       console.log('getContent');
-  //       sendMessage('getContent', {});
-  //     },
-  //     reload: () => {
-  //       setWebViewKey(prev => prev + 1);
-  //       setIsEditorReady(false);
-  //       setIsLoading(true);
-  //     },
-  //   }),
-  //   [sendMessage]
-  // );
 
   // Update theme when it changes - reload WebView
   useEffect(() => {
@@ -184,7 +165,6 @@ const LexicalWebView = React.forwardRef<LexicalWebViewRef, LexicalWebViewProps>(
       setIsEditorReady(false);
     }
   }, [theme.dark]);
-
 
   return (
     <View style={styles.container}>

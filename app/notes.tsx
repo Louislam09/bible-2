@@ -21,6 +21,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { use$ } from "@legendapp/state/react";
 import { FlashList, FlashListRef, ListRenderItem } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
+import { goBack } from "expo-router/build/global-state/routing";
 import React, {
   Fragment,
   useCallback,
@@ -55,7 +56,6 @@ const NotesPage = () => {
     useSyncNotes();
   const notificationService = useNotificationService();
   const user = use$(() => storedData$.user.get()) || null;
-  const useDomComponent = use$(() => storedData$.useDomComponent.get());
 
   const { printToFile } = usePrintAndShare();
   const netInfo = useNetwork();
@@ -817,6 +817,7 @@ const NotesPage = () => {
       theme,
       title: "Mis Notas",
       titleIcon: "NotebookPen",
+      goBack: () => { navigation.navigate(Screens.Dashboard as any) },
       headerRightProps: {
         headerRightIcon: "Search",
         headerRightIconColor: showSearch
