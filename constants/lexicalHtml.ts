@@ -108,10 +108,9 @@ const headContent = (theme: TTheme, isReadOnly: boolean) => `
         /* Toolbar */
         .toolbar {
             background: ${theme.colors.background};
-            padding: 8px;
             display: flex;
             flex-wrap: wrap;
-            gap: 4px;
+            gap: 2px;
             align-items: center;
             justify-content: center;
         }
@@ -148,6 +147,19 @@ const headContent = (theme: TTheme, isReadOnly: boolean) => `
             justify-content: center;
             min-width: 40px;
             min-height: 40px;
+            position: relative;
+        }
+
+        .toolbar-button.color-active::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 1px;
         }
         
         .toolbar-button:disabled {
@@ -469,6 +481,11 @@ const headContent = (theme: TTheme, isReadOnly: boolean) => `
             padding: 2px 4px;
             border-radius: 3px;
         }
+
+        /* Text color formatting - allow inline color styles to work */
+        .editor-input span[style*="color"] {
+            /* Inline color styles should take precedence */
+        }
         
         /* Text alignment */
         .editor-input [style*="text-align: left"],
@@ -493,7 +510,96 @@ const headContent = (theme: TTheme, isReadOnly: boolean) => `
         
         /* Hide toolbar in read-only mode */
         ${isReadOnly ? '.toolbar { display: none !important; }' : ''}
-        
+
+        /* Color Picker Backdrop */
+        .color-picker-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        .color-picker-backdrop.show {
+            display: block;
+        }
+
+        /* Color Picker Dropdown */
+        .color-picker-dropdown {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            background: ${theme.colors.background};
+            border: 1px solid ${theme.colors.border}40;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+            min-width: 200px;
+            max-width: 90vw;
+        }
+
+        .color-picker-dropdown.show {
+            display: block;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .color-option {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .color-option:hover {
+            border-color: ${theme.colors.border}60;
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: ${theme.colors.notification};
+            box-shadow: 0 0 0 2px ${theme.colors.notification}40;
+        }
+
+        .color-custom {
+            margin-top: 8px;
+        }
+
+        .color-input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .color-input {
+            flex: 1;
+            height: 32px;
+            padding: 4px 8px;
+            border: 1px solid ${theme.colors.border}40;
+            border-radius: 4px;
+            background: ${theme.colors.background};
+            color: ${theme.colors.text};
+            font-size: 14px;
+        }
+
+        .color-input:focus {
+            outline: none;
+            border-color: ${theme.colors.notification};
+        }
+
         /* Loading State */
         .loading {
             display: flex;
@@ -514,8 +620,8 @@ interface ToolbarContentProps {
 }
 
 const toolbarContent = ({ isReadOnly }: ToolbarContentProps) => `
-<div class="toolbar-container${isReadOnly ? 'hidden' : ''}">
-    <div class="toolbar">
+<div class="toolbar-container  ${isReadOnly ? 'hidden' : ''}">
+    <div class="toolbar py-2">
         <button class="toolbar-button" id="btn-undo" aria-label="Undo">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -610,6 +716,14 @@ const toolbarContent = ({ isReadOnly }: ToolbarContentProps) => `
             </svg>
         </button>
         <div class="toolbar-divider"></div>
+            <button class="toolbar-button" id="btn-text-color" data-color="text" aria-label="Text Color">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-baseline-icon lucide-baseline">
+                    <path d="M4 20h16"/>
+                    <path d="m6 16 6-12 6 12"/>
+                    <path d="M8 12h8"/>
+                </svg>
+            </button>
+        <div class="toolbar-divider"></div>
         <button class="toolbar-button" id="btn-align-left" data-align="left" aria-label="Align Left">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -636,7 +750,23 @@ const toolbarContent = ({ isReadOnly }: ToolbarContentProps) => `
         </button>
     </div>
     <div class="toolbar-separator"></div>
-</div> `
+</div>
+
+<!-- Color Picker Backdrop -->
+<div class="color-picker-backdrop" id="color-picker-backdrop"></div>
+
+<!-- Color Picker Dropdown (positioned at body level for centering) -->
+<div class="color-picker-dropdown" id="color-picker-dropdown">
+    <div class="color-grid" id="color-grid">
+        <!-- Color options will be populated by JavaScript -->
+    </div>
+    <div class="color-custom">
+        <div class="color-input-group">
+            <input type="color" class="color-input" id="color-input" value="#000000">
+            <input type="text" class="color-input" id="color-hex" placeholder="#000000" maxlength="7">
+        </div>
+    </div>
+</div>`
 
 export const lexicalHtmlContent = (options: {
     theme: TTheme;
@@ -700,6 +830,7 @@ ${headContent(theme, isReadOnly)}
             $setBlocksType,
             $createHeadingNode,
             $createQuoteNode,
+            $patchStyleText,
             INSERT_ORDERED_LIST_COMMAND,
             INSERT_UNORDERED_LIST_COMMAND,
             REMOVE_LIST_COMMAND,
@@ -971,8 +1102,103 @@ ${headContent(theme, isReadOnly)}
             centerAlign: false,
             rightAlign: false,
             justifyAlign: false,
+            textColor: '#000000',
         };
-        
+
+        // Color picker functionality - include theme color first
+        const defaultColors = [
+            '${theme.colors.text}', // Theme color first
+            '#000000', '#374151', '#6B7280', '#9CA3AF', '#D1D5DB', '#F3F4F6', '#FFFFFF',
+            '#DC2626', '#EA580C', '#D97706', '#CA8A04', '#65A30D', '#16A34A', '#0891B2',
+            '#2563EB', '#7C3AED', '#C026D3', '#DB2777', '#E11D48', '#F97316', '#F59E0B',
+            '#84CC16', '#22C55E', '#06B6D4', '#3B82F6', '#8B5CF6', '#D946EF', '#EC4899',
+            '#EF4444', '#F97316', '#F59E0B', '#EAB308', '#84CC16', '#10B981', '#06B6D4',
+            '#0EA5E9', '#3B82F6', '#6366F1', '#8B5CF6', '#A855F7', '#D946EF', '#EC4899',
+            '#F43F5E', '#FB7185', '#FDA4AF', '#FECDD3', '#FED7D7', '#FEF3C7', '#FEF9C3',
+            '#ECFCCB', '#D1FAD7', '#A7F3D0', '#6EE7B7', '#34D399', '#10B981', '#059669'
+        ];
+
+        function initColorPicker() {
+            const colorGrid = document.getElementById('color-grid');
+            if (!colorGrid) return;
+
+            // Clear existing colors
+            colorGrid.innerHTML = '';
+
+            // Add color options
+            defaultColors.forEach(color => {
+                const colorOption = document.createElement('div');
+                colorOption.className = 'color-option';
+                colorOption.style.backgroundColor = color;
+                colorOption.setAttribute('data-color', color);
+                colorOption.addEventListener('click', () => {
+                    applyTextColor(color);
+                    hideColorPicker();
+                });
+                colorGrid.appendChild(colorOption);
+            });
+        }
+
+        function showColorPicker() {
+            const dropdown = document.getElementById('color-picker-dropdown');
+            const backdrop = document.getElementById('color-picker-backdrop');
+            if (dropdown && backdrop) {
+                dropdown.classList.add('show');
+                backdrop.classList.add('show');
+                updateSelectedColor();
+            }
+        }
+
+        function hideColorPicker() {
+            const dropdown = document.getElementById('color-picker-dropdown');
+            const backdrop = document.getElementById('color-picker-backdrop');
+            if (dropdown && backdrop) {
+                dropdown.classList.remove('show');
+                backdrop.classList.remove('show');
+            }
+        }
+
+        function updateSelectedColor() {
+            const selectedColor = toolbarState.textColor;
+            document.querySelectorAll('.color-option').forEach(option => {
+                const color = option.getAttribute('data-color');
+                if (color === selectedColor) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+
+            // Update custom color inputs
+            const colorInput = document.getElementById('color-input');
+            const colorHex = document.getElementById('color-hex');
+            if (colorInput) colorInput.value = selectedColor;
+            if (colorHex) colorHex.value = selectedColor;
+        }
+
+        function applyTextColor(color) {
+            if (!editor) return;
+
+            toolbarState.textColor = color;
+            updateSelectedColor();
+
+            editor.update(() => {
+                const selection = $getSelection();
+                if ($isRangeSelection(selection)) {
+                    // Use $patchStyleText for proper color application (like the React version)
+                    $patchStyleText(selection, { color });
+                }
+            });
+
+            // Ensure the editor gets focus back for typing
+            setTimeout(() => {
+                const editorElement = document.getElementById('editor');
+                if (editorElement) {
+                    editorElement.focus();
+                }
+            }, 10);
+        }
+
         // Update toolbar UI
         function updateToolbarUI() {
             // Update undo/redo buttons
@@ -980,6 +1206,18 @@ ${headContent(theme, isReadOnly)}
             const redoBtn = document.getElementById('btn-redo');
             if (undoBtn) undoBtn.disabled = !toolbarState.canUndo;
             if (redoBtn) redoBtn.disabled = !toolbarState.canRedo;
+
+            // Update text color button indicator
+            const colorBtn = document.getElementById('btn-text-color');
+            if (colorBtn) {
+                if (toolbarState.textColor && toolbarState.textColor !== '#000000') {
+                    colorBtn.classList.add('color-active');
+                    colorBtn.style.color = toolbarState.textColor;
+                } else {
+                    colorBtn.classList.remove('color-active');
+                    colorBtn.style.color = '';
+                }
+            }
             
             // Update format buttons
             const formatButtons = {
@@ -1033,6 +1271,7 @@ ${headContent(theme, isReadOnly)}
                     toolbarState.heading1 = false;
                     toolbarState.heading2 = false;
                     toolbarState.quote = false;
+                    toolbarState.textColor = '#000000';
                     
                     if (!$isRangeSelection(selection)) {
                         updateToolbarUI();
@@ -1045,6 +1284,46 @@ ${headContent(theme, isReadOnly)}
                     toolbarState.underline = selection.hasFormat('underline');
                     toolbarState.strikethrough = selection.hasFormat('strikethrough');
                     toolbarState.code = selection.hasFormat('code');
+
+                    // Get text color - check if selection has color formatting
+                    let detectedColor = '#000000';
+                    let hasUniformColor = false;
+
+                    try {
+                        const nodes = selection.getNodes();
+                        let firstColor = null;
+                        let allSameColor = true;
+
+                        for (const node of nodes) {
+                            if (node.getStyle) {
+                                const nodeStyle = node.getStyle();
+                                const colorMatch = nodeStyle.match(/color:\s*([^;]+)/);
+
+                                if (colorMatch) {
+                                    const nodeColor = colorMatch[1];
+                                    if (firstColor === null) {
+                                        firstColor = nodeColor;
+                                    } else if (firstColor !== nodeColor) {
+                                        allSameColor = false;
+                                        break;
+                                    }
+                                } else if (firstColor !== null) {
+                                    // Some nodes have color, some don't
+                                    allSameColor = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (allSameColor && firstColor) {
+                            detectedColor = firstColor;
+                            hasUniformColor = true;
+                        }
+                    } catch (e) {
+                        console.warn('Error detecting text color:', e);
+                    }
+
+                    toolbarState.textColor = detectedColor;
                     
                     // Get block types - safely handle all node types
                     try {
@@ -1214,6 +1493,73 @@ ${headContent(theme, isReadOnly)}
                 });
             });
             
+            // Color picker button
+            const colorBtn = document.getElementById('btn-text-color');
+            if (colorBtn) {
+                colorBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const dropdown = document.getElementById('color-picker-dropdown');
+                    if (dropdown && dropdown.classList.contains('show')) {
+                        hideColorPicker();
+                    } else {
+                        showColorPicker();
+                    }
+                });
+            }
+
+            // Custom color input handlers
+            const colorInput = document.getElementById('color-input');
+            const colorHex = document.getElementById('color-hex');
+
+            if (colorInput) {
+                colorInput.addEventListener('input', (e) => {
+                    const color = e.target.value;
+                    if (colorHex) colorHex.value = color;
+                    applyTextColor(color);
+                });
+            }
+
+            if (colorHex) {
+                colorHex.addEventListener('input', (e) => {
+                    const color = e.target.value;
+                    if (colorInput) colorInput.value = color;
+                    if (/^#[0-9A-F]{6}$/i.test(color)) {
+                        applyTextColor(color);
+                    }
+                });
+
+                colorHex.addEventListener('blur', () => {
+                    const color = colorHex.value;
+                    if (!/^#[0-9A-F]{6}$/i.test(color)) {
+                        // Reset to current color if invalid
+                        colorHex.value = toolbarState.textColor;
+                        if (colorInput) colorInput.value = toolbarState.textColor;
+                    }
+                });
+            }
+
+            // Close color picker when clicking outside or on backdrop
+            document.addEventListener('click', (e) => {
+                const dropdown = document.getElementById('color-picker-dropdown');
+                const backdrop = document.getElementById('color-picker-backdrop');
+                const colorBtn = document.getElementById('btn-text-color');
+                if (dropdown && backdrop && colorBtn) {
+                    if (e.target === backdrop || (!dropdown.contains(e.target) && !colorBtn.contains(e.target))) {
+                        hideColorPicker();
+                    }
+                }
+            });
+
+            // Close color picker on ESC key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    hideColorPicker();
+                }
+            });
+
+            // Initialize color picker
+            initColorPicker();
+
             // Initial toolbar state
             updateToolbarState();
         }
