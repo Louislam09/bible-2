@@ -1,6 +1,6 @@
 import Icon from "@/components/Icon";
 import { KeyboardPaddingView } from "@/components/keyboard-padding";
-import { Text, View } from "@/components/Themed";
+import { View } from "@/components/Themed";
 import { getBookDetail } from "@/constants/BookNames";
 import { GET_SINGLE_OR_MULTIPLE_VERSES } from "@/constants/Queries";
 import { useDBContext } from "@/context/databaseContext";
@@ -13,7 +13,6 @@ import { useNoteService } from "@/services/noteService";
 import { bibleState$ } from "@/state/bibleState";
 import { EBibleVersions, EViewMode, Screens, TNote, TTheme } from "@/types";
 import { formatTextToClipboard } from "@/utils/copyToClipboard";
-import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
 import { use$ } from "@legendapp/state/react";
 import Constants from "expo-constants";
 import { Stack, useNavigation, useRouter } from "expo-router";
@@ -25,7 +24,6 @@ import React, {
   useState,
 } from "react";
 import {
-  ActivityIndicator,
   Alert,
   Animated,
   Dimensions,
@@ -35,9 +33,9 @@ import {
   TouchableOpacity
 } from "react-native";
 // @ts-ignore
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import LexicalWebView from "@/components/LexicalWebView";
 import "../global.css";
-const { width, height } = Dimensions.get("window");
 
 type NoteDetailProps = {};
 type NoteDetailParams = { noteId: number | null; isNewNote: boolean };
@@ -179,10 +177,7 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
           setNoteInfo(note as TNote);
         }
       } catch (error) {
-        Alert.alert(
-          "Error",
-          "No se pudo cargar la nota. Por favor, inténtelo de nuevo."
-        );
+        console.error("Failed to fetch note:", error);
       } finally {
         setLoading(false);
       }
@@ -236,7 +231,7 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
         ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
       }
     } catch (error) {
-      Alert.alert("Error", "No se pudo guardar la nota.");
+      console.error("Failed to save note:", error);
     }
   }, [noteContent, noteId]);
 
@@ -366,8 +361,7 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
         }
       }
     } catch (error) {
-      console.log({ error });
-      Alert.alert("Error", "No se pudo actualizar la nota.");
+      console.error(error);
     }
   };
 
@@ -740,75 +734,26 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
     [printToFile, theme.colors.notification]
   );
 
-  if (isLoading) {
-    return (
-      <View style={styles.activiyContainer}>
-        <ActivityIndicator style={{ flex: 1 }} />
-      </View>
-    );
-  }
-
-  const ViewModeHeader = () => {
-    return (
-      <View style={styles.headerContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            console.log("back");
-            router.back();
-          }}
-          style={{ marginRight: 10 }}
-        >
-          <Icon name="ChevronLeft" size={24} color={theme.colors.text} />
-        </TouchableOpacity>
-        <View style={styles.noteHeaderSubtitleContainer}>
-          <Text
-            numberOfLines={1}
-            ellipsizeMode="tail"
-            style={styles.noteHeaderTitle}
-          >
-            {noteInfo?.title}
-          </Text>
-          <Text style={styles.noteHeaderSubtitle}>
-            {formatDateShortDayMonth(
-              isNewNote
-                ? new Date()
-                : ((noteInfo?.updated_at || noteInfo?.created_at) as any),
-              {
-                weekday: "short",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              }
-            )}
-          </Text>
-        </View>
-        <TouchableOpacity
-          onPress={() =>
-            onDownloadPdf(noteInfo?.note_text || "", noteInfo?.title || "")
-          }
-          style={{ marginRight: 10 }}
-        >
-          <Icon name="Share2" size={24} color={theme.colors.text} />
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
+  const screenOptions: any = useMemo(() => {
+    return {
+      theme,
+      title: isView ? "Vista previa" : "Editor",
+      titleIcon: isView ? "NotebookPen" : "SquarePen",
+      goBack: () => { navigation.navigate(Screens.Dashboard as any) },
+      headerRightProps: {
+        headerRightIcon: "Share2",
+        headerRightIconColor: theme.colors.text,
+        onPress: () => onDownloadPdf(noteInfo?.note_text || "", noteInfo?.title || ""),
+        disabled: false,
+        style: { opacity: 1 },
+      },
+    };
+  }, [theme.colors, isView]);
 
   return (
     <View style={styles.pageContainer} >
-      <Stack.Screen
-        options={{
-          headerShown: isView,
-          header: ViewModeHeader,
-        }}
-      />
+      <Stack.Screen options={singleScreenHeader(screenOptions)} />
       <View style={styles.container}>
-        <View
-          style={{
-            height: isView ? 0 : Constants.statusBarHeight,
-          }}
-        />
         <LexicalWebView
           initialTitle={noteInfo?.title || ""}
           initialContent={noteInfo?.note_text || ""}
@@ -818,37 +763,11 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
           isReadOnly={isView}
           noteId={noteId?.toString()}
           isNewNote={isNewNote}
+          isModal
         />
         {renderActionButtons()}
       </View>
       <KeyboardPaddingView />
-      {/* <View style={styles.container}>
-          <>
-            <View
-              style={{
-                height: isView ? 0 : Constants.statusBarHeight,
-              }}
-            />
-            <NewDomNoteEditor
-              isReadOnly={isView}
-              theme={theme}
-              noteId={noteId?.toString()}
-              isNewNote={isNewNote}
-              onChangeText={(key: string, text: string) =>
-                onContentChange(key, text)
-              }
-              value={noteInfo?.note_text || ""}
-              title={noteInfo?.title || ""}
-              width={width}
-              height={height}
-              onSave={onSave}
-              fetchBibleVerse={fetchBibleVerse}
-              onDownloadPdf={onDownloadPdf}
-            />
-          </>
-          {renderActionButtons()}
-        </View>
-        <KeyboardPaddingView /> */}
     </View>
   );
 };
@@ -862,6 +781,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
     container: {
       flex: 1,
       backgroundColor: dark ? colors.background : "#eee",
+
     },
     titleContainer: {
       gap: 4,
@@ -922,17 +842,17 @@ const getStyles = ({ colors, dark }: TTheme) =>
       alignSelf: "flex-start",
       borderRadius: 8,
       paddingHorizontal: 2,
-      borderWidth: 1,
-      borderColor: colors.text + 40,
+      // borderWidth: 1,
+      // borderColor: colors.text + 40,
       // paddingVertical: 5,
-      backgroundColor: colors.notification + "20",
+      // backgroundColor: colors.notification + "20",
       width: "100%",
     },
     noteHeaderSubtitle: {
       fontSize: 12,
       fontWeight: "600",
       color: colors.text,
-      alignSelf: "flex-start",
+      alignSelf: "center",
       paddingHorizontal: 2,
     },
     noteHeaderSubtitleContainer: {

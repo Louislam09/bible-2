@@ -67,7 +67,6 @@ const headContent = (theme: TTheme, isReadOnly: boolean) => `
         /* Title Input */
         .title-container {
             padding: 16px;
-            padding-top: 40px;
             background: ${theme.colors.background};
         }
         
@@ -86,6 +85,14 @@ const headContent = (theme: TTheme, isReadOnly: boolean) => `
         .title-input::placeholder {
             color: ${theme.colors.text}80;
             opacity: 0.5;
+        }
+
+         .divider-line {
+            background-image: linear-gradient(90deg, #f8b04b 0, #e8465b 40.1%, #00a8c3 73.96%, #60bba2);
+            height: .5px;
+            width: 100%;
+            border-radius: 50px;
+            margin-top: 0px;
         }
         
         /* Toolbar Container */
@@ -652,7 +659,7 @@ export const lexicalHtmlContent = (options: {
 <!DOCTYPE html>
 <html lang="es">
 ${headContent(theme, isReadOnly)}
-<body class="overflow-y-hidden h-full ">
+<body class="overflow-y-hidden h-full">
     <div id="root" class="overflow-y-hidden h-full">
         <div class="loading">Inicializando editor...</div>
     </div>
@@ -750,7 +757,7 @@ ${headContent(theme, isReadOnly)}
                             <input 
                                 id="title-input" 
                                 type="text" 
-                                class="title-input" 
+                                class="title-input !border-b !border-gray-200/10" 
                                 placeholder="Título" 
                                 value="${initialTitle.replace(/"/g, '&quot;')}"
                             />

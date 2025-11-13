@@ -33,7 +33,6 @@ export const useNoteService = () => {
       return notes;
     } catch (error) {
       console.error("Error al obtener notas:", error);
-      Alert.alert("Error", "No se pudieron cargar las notas");
       return [];
     }
   };
@@ -48,7 +47,6 @@ export const useNoteService = () => {
       return notes.length > 0 ? notes[0] : null;
     } catch (error) {
       console.error(`Error al obtener nota con ID ${id}:`, error);
-      Alert.alert("Error", "No se pudo cargar la nota");
       return null;
     }
   };
@@ -68,7 +66,6 @@ export const useNoteService = () => {
       return notes.length > 0 ? notes : null;
     } catch (error) {
       console.error(`Error al obtener notas con IDs ${ids}:`, error);
-      Alert.alert("Error", "No se pudieron cargar las notas");
       return null;
     }
   };
@@ -100,7 +97,6 @@ export const useNoteService = () => {
       return true;
     } catch (error) {
       console.log("Error al crear nota:", error);
-      Alert.alert("Error", "No se pudo crear la nota");
       return false;
     }
   };
@@ -129,7 +125,6 @@ export const useNoteService = () => {
       return true;
     } catch (error: any) {
       console.error(`Error al actualizar nota con ID ${data.uuid}:`, error.message, error.originalError);
-      Alert.alert("Error", "No se pudo actualizar la nota");
       return false;
     }
   }, [isConnected, user]);
@@ -156,7 +151,6 @@ export const useNoteService = () => {
       return true;
     } catch (error) {
       console.error("Error al eliminar todas las notas:", error);
-      Alert.alert("Error", "No se pudieron eliminar todas las notas");
       return false;
     }
   };
