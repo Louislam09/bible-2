@@ -4,7 +4,8 @@ import { KeyboardPaddingView } from "@/components/keyboard-padding";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
-import useBibleAI from "@/hooks/useBibleAI";
+import useBibleAIChat, { ChatMessage } from "@/hooks/useBibleAIChat";
+import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { bibleState$ } from "@/state/bibleState";
 import { Screens, TTheme } from "@/types";
 import { copyTextToClipboard } from "@/utils/copyToClipboard";
@@ -38,13 +39,6 @@ import Animated, {
     withTiming
 } from "react-native-reanimated";
 
-interface ChatMessage {
-    id: string;
-    type: "user" | "ai";
-    content: string;
-    timestamp: Date;
-    scriptureReferences?: string[];
-}
 
 // Animated Example Button Component
 const AnimatedExampleButton = ({
@@ -213,7 +207,12 @@ const AnimatedScriptureChips = ({
 }) => {
     const styles = getStyles(theme);
     return (
-        <View style={styles.scriptureChipsContainer}>
+        <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.scriptureChipsContainer}
+            contentContainerStyle={styles.scriptureChipsContent}
+        >
             {references.map((ref, idx) => (
                 <AnimatedScriptureChip
                     key={idx}
@@ -223,7 +222,7 @@ const AnimatedScriptureChips = ({
                     theme={theme}
                 />
             ))}
-        </View>
+        </ScrollView>
     );
 };
 
@@ -523,10 +522,14 @@ const AnimatedMessage = ({
                 </View>
             ) : (
                 <View style={styles.aiMessageContainer}>
-                    <AnimatedIconContainer theme={theme} loading={false} />
                     <View style={styles.aiContentContainer}>
                         <View style={styles.aiBubble}>
                             <Text style={styles.aiMessageText}>{message.content}</Text>
+                            <View style={styles.aiMessageIconContainerWrapper}>
+                                <View style={styles.aiMessageIconContainer}>
+                                    <Icon name="Sparkles" size={16} color={theme.colors.notification} />
+                                </View>
+                            </View>
                         </View>
                         {message.scriptureReferences &&
                             message.scriptureReferences.length > 0 && (
@@ -541,12 +544,16 @@ const AnimatedMessage = ({
                             onShare={() => handleShare(message.content)}
                             theme={theme}
                         />
+
                     </View>
                 </View>
             )}
         </Animated.View>
     );
 };
+
+const inputMinHeight = 48;
+const inputPaddingHeight = 0;
 
 // Input Bar Animated Component
 const InputBarAnimated = ({
@@ -570,24 +577,36 @@ const InputBarAnimated = ({
     theme: TTheme;
     styles: ReturnType<typeof getStyles>;
 }) => {
+    // const loading = true
     const gradientRotation = useSharedValue(0);
     const borderOpacity = useSharedValue(0);
+    const inputHeight = useSharedValue(inputMinHeight); // Start with minHeight
+
+    // Reset height when input is cleared
+    useEffect(() => {
+        if (!inputText.trim()) {
+            inputHeight.value = withSpring(inputMinHeight, {
+                damping: 15,
+                stiffness: 150,
+            });
+        }
+    }, [inputText]);
 
     useEffect(() => {
         if (loading) {
-            // Animate gradient rotation
+            // Animate gradient rotation - complete circle loop, smooth and continuous
             gradientRotation.value = withRepeat(
                 withTiming(360, {
-                    duration: 2000,
+                    duration: 1500,
                     easing: Easing.linear,
                 }),
-                -1,
-                false
+                -1, // infinite repeat
+                false // don't reverse - complete circle
             );
             borderOpacity.value = withTiming(1, { duration: 300 });
         } else {
             borderOpacity.value = withTiming(0, { duration: 300 });
-            gradientRotation.value = 0;
+            gradientRotation.value = withTiming(0, { duration: 200 });
         }
     }, [loading]);
 
@@ -599,6 +618,24 @@ const InputBarAnimated = ({
     const sendButtonAnimatedStyle = useAnimatedStyle(() => ({
         transform: [{ scale: sendButtonScale.value }],
     }));
+
+    const inputHeightAnimatedStyle = useAnimatedStyle(() => ({
+        height: inputHeight.value,
+    }));
+
+    const handleContentSizeChange = (event: { nativeEvent: { contentSize: { height: number } } }) => {
+        const { height } = event.nativeEvent.contentSize;
+        const minHeight = inputMinHeight;
+        const maxHeight = 120;
+        const newHeight = Math.max(minHeight, Math.min(maxHeight, height + inputPaddingHeight)); // +24 for padding
+
+        if (Math.abs(newHeight - inputHeight.value) > 1) {
+            inputHeight.value = withSpring(newHeight, {
+                damping: 15,
+                stiffness: 150,
+            });
+        }
+    };
 
     const borderAnimatedStyle = useAnimatedStyle(() => {
         return {
@@ -613,12 +650,15 @@ const InputBarAnimated = ({
         };
     });
 
+    // Create a smooth circular gradient with a bright highlight that spins around
     const gradientColors = [
-        theme.colors.notification,
-        theme.colors.notification + "CC",
-        theme.colors.notification + "99",
-        theme.colors.notification + "CC",
-        theme.colors.notification,
+        theme.colors.notification + "40", // Dim
+        theme.colors.notification + "60", // Slightly brighter
+        theme.colors.notification + "80", // Brighter
+        theme.colors.notification, // Full brightness - this creates the spinning highlight
+        theme.colors.notification + "80", // Brighter
+        theme.colors.notification + "60", // Slightly brighter
+        theme.colors.notification + "40", // Dim
     ];
 
     return (
@@ -635,27 +675,34 @@ const InputBarAnimated = ({
                         <Animated.View style={[gradientAnimatedStyle, StyleSheet.absoluteFill]}>
                             <LinearGradient
                                 colors={gradientColors as any}
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 1 }}
+                                start={{ x: 0.5, y: 0 }}
+                                end={{ x: 0.5, y: 1 }}
                                 style={StyleSheet.absoluteFill}
                             />
                         </Animated.View>
                         <View style={styles.inputBorderMask} />
+                        <View style={styles.searchingTextContainer}>
+                            <Text style={styles.searchingText}>Buscando respuesta...</Text>
+                        </View>
                     </Animated.View>
                 )}
-                <TextInput
-                    style={[
-                        styles.input,
-                        loading && styles.inputLoading,
-                    ]}
-                    value={inputText}
-                    onChangeText={setInputText}
-                    placeholder="Pregunta sobre la Biblia..."
-                    placeholderTextColor={theme.colors.text + "80"}
-                    multiline
-                    editable={!loading}
-                    onSubmitEditing={handleSend}
-                />
+                <Animated.View style={[inputHeightAnimatedStyle, { width: '100%' }]}>
+                    <TextInput
+                        style={[
+                            styles.input,
+                            loading && styles.inputLoading,
+                        ]}
+                        value={loading ? "Buscando respuesta..." : inputText}
+                        onChangeText={setInputText}
+                        placeholder={"Pregunta sobre la Biblia..."}
+                        placeholderTextColor={loading ? theme.colors.notification + "CC" : theme.colors.text + "80"}
+                        multiline
+                        editable={!loading}
+                        onSubmitEditing={handleSend}
+                        onContentSizeChange={handleContentSizeChange}
+                        textAlignVertical="top"
+                    />
+                </Animated.View>
             </View>
             <View style={styles.inputButtons}>
                 <Animated.View style={sendButtonAnimatedStyle}>
@@ -684,9 +731,31 @@ const InputBarAnimated = ({
     );
 };
 
+const exampleQuestions = [
+    "¿Quién fue el rey David?",
+    "Explica la Parábola del Sembrador",
+    "¿Qué significa que el ser humano fue creado a imagen de Dios?",
+    "¿Por qué Caín mató a Abel?",
+    "¿Qué ocurrió en la Torre de Babel?",
+    "¿Cuál fue la misión del profeta Jeremías?",
+    "¿Qué representa el sueño de Nabucodonosor en Daniel 2?",
+    "¿Por qué Dios pidió a Abraham sacrificar a Isaac?",
+    "¿Qué enseña Jesús en el Sermón del Monte?",
+    "¿Qué sucedió en el Día de Pentecostés?",
+    "¿Quién fue Moisés y cuál fue su llamado?",
+    "¿Qué simboliza el tabernáculo en el desierto?",
+    "¿Qué significa la visión de los huesos secos en Ezequiel 37?",
+    "Explica la parábola del Hijo Pródigo",
+    "¿Por qué Jonás huyó de la misión que Dios le dio?",
+    "¿Qué enseña Pablo sobre el fruto del Espíritu en Gálatas 5?",
+    "¿Qué son las Bienaventuranzas y qué enseñan?",
+    "¿Cuál es el propósito del libro de Apocalipsis?",
+    "¿Qué significa la armadura de Dios en Efesios 6?",
+    "¿Qué ocurrió durante la tentación de Jesús en el desierto?",
+];
+
 const AIBibleGuideScreen = () => {
     const [inputText, setInputText] = useState("");
-    const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [selectedTranslation, setSelectedTranslation] = useState("RV1960");
     const googleAIKey = use$(() => storedData$.googleAIKey.get());
     const { theme } = useMyTheme();
@@ -709,18 +778,18 @@ const AIBibleGuideScreen = () => {
     const inputBarOpacity = useSharedValue(0);
     const sendButtonScale = useSharedValue(1);
 
-
+    // Use the chat hook
     const {
+        messages,
         loading,
         error,
-        predictedAnswer,
-        verses,
-        articles,
-        searchBible,
-        clearResults,
-        hasResults,
+        sendMessage,
         isEmpty,
-    } = useBibleAI(googleAIKey);
+    } = useBibleAIChat(googleAIKey);
+
+    // PDF generation hook
+    const { printToFile } = usePrintAndShare();
+    const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
     // Animate empty state on mount
     useEffect(() => {
@@ -766,26 +835,15 @@ const AIBibleGuideScreen = () => {
         }
     }, [messages, loading]);
 
-    // Add AI response to messages when it's ready
+    // Clear input when search completes (when loading changes from true to false)
     useEffect(() => {
-        if (predictedAnswer && !loading && hasResults) {
+        if (!loading && messages.length > 0) {
             const lastMessage = messages[messages.length - 1];
-            if (lastMessage && lastMessage.type === "user") {
-                // Extract scripture references from verses
-                const references = verses.map((v) => v.reference);
-
-                const aiMessage: ChatMessage = {
-                    id: Date.now().toString(),
-                    type: "ai",
-                    content: predictedAnswer.description,
-                    timestamp: new Date(),
-                    scriptureReferences: references,
-                };
-                setMessages((prev) => [...prev, aiMessage]);
+            if (lastMessage && lastMessage.type === "ai") {
+                setInputText("");
             }
         }
-    }, [predictedAnswer, loading, hasResults]);
-
+    }, [loading, messages]);
 
     const handleSend = async () => {
         if (!inputText.trim() || !googleAIKey) return;
@@ -798,33 +856,16 @@ const AIBibleGuideScreen = () => {
             });
         });
 
-        const userMessage: ChatMessage = {
-            id: Date.now().toString(),
-            type: "user",
-            content: inputText.trim(),
-            timestamp: new Date(),
-        };
-
-        setMessages((prev) => [...prev, userMessage]);
+        const messageContent = inputText.trim();
         setInputText("");
-        clearResults();
-
-        await searchBible(inputText.trim(), selectedTranslation);
+        await sendMessage(messageContent, selectedTranslation);
     };
 
     const handleExamplePress = (question: string) => {
         setInputText(question);
         // Auto-send example questions
         setTimeout(() => {
-            const userMessage: ChatMessage = {
-                id: Date.now().toString(),
-                type: "user",
-                content: question,
-                timestamp: new Date(),
-            };
-            setMessages((prev) => [...prev, userMessage]);
-            clearResults();
-            searchBible(question, selectedTranslation);
+            sendMessage(question, selectedTranslation);
         }, 100);
     };
 
@@ -874,11 +915,144 @@ const AIBibleGuideScreen = () => {
         }
     };
 
+    const generateConversationPDF = async () => {
+        if (messages.length === 0 || isGeneratingPDF) return;
 
-    const exampleQuestions = [
-        "¿Quién fue el rey David?",
-        "Explica la Parábola del Sembrador",
-    ];
+        setIsGeneratingPDF(true);
+        try {
+            const date = new Date().toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+            });
+
+            // Generate HTML content from messages
+            const messagesHTML = messages
+                .map((msg) => {
+                    const isUser = msg.type === "user";
+                    const referencesHTML =
+                        msg.scriptureReferences && msg.scriptureReferences.length > 0
+                            ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid ${isUser ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.1)"}; font-size: 11px; color: ${isUser ? "rgba(255,255,255,0.9)" : "#666"}; line-height: 1.5;">
+                                <strong style="font-weight: 600;">Referencias:</strong> ${msg.scriptureReferences.join(", ")}
+                               </div>`
+                            : "";
+
+                    return `
+                        <div style="margin-bottom: 20px; clear: both; ${isUser ? "text-align: right;" : "text-align: left;"}">
+                            <div style="
+                                display: inline-block;
+                                max-width: 80%;
+                                min-width: 50px;
+                                padding: 12px 16px;
+                                border-radius: 12px;
+                                ${isUser ? "border-bottom-right-radius: 4px;" : "border-bottom-left-radius: 4px;"}
+                                background-color: ${isUser ? "#1736cf" : "#f5f5f5"};
+                                color: ${isUser ? "#ffffff" : "#333333"};
+                                word-wrap: break-word;
+                                overflow-wrap: break-word;
+                                box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+                                vertical-align: top;
+                            ">
+                                <div style="font-size: 14px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; color: ${isUser ? "#ffffff" : "#333333"};">
+                                    ${msg.content.replace(/\n/g, "<br/>")}
+                                </div>
+                                ${referencesHTML}
+                            </div>
+                            <div style="font-size: 11px; color: #999999; margin-top: 6px; padding: 0 4px; ${isUser ? "text-align: right;" : "text-align: left;"}">
+                                ${isUser ? "Tú" : "Guía Bíblica IA"} • ${msg.timestamp.toLocaleTimeString("es-ES", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                    })}
+                            </div>
+                        </div>
+                    `;
+                })
+                .join("");
+
+            const htmlContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Guía Bíblica IA - Conversación</title>
+                    <style>
+                        * {
+                            box-sizing: border-box;
+                            margin: 0;
+                            padding: 0;
+                        }
+                        body {
+                            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                            padding: 20px 16px;
+                            background-color: #ffffff;
+                            color: #333333;
+                            font-size: 14px;
+                            line-height: 1.5;
+                            -webkit-font-smoothing: antialiased;
+                            -moz-osx-font-smoothing: grayscale;
+                        }
+                        h1 {
+                            color: #1736cf;
+                            font-size: 22px;
+                            margin-bottom: 6px;
+                            font-weight: 600;
+                            letter-spacing: -0.3px;
+                        }
+                        .date {
+                            color: #666666;
+                            font-size: 13px;
+                            margin-bottom: 24px;
+                            font-weight: 400;
+                        }
+                        .message-content {
+                            word-wrap: break-word;
+                            overflow-wrap: break-word;
+                            width: 100%;
+                        }
+                        @media print {
+                            body {
+                                padding: 16px 12px;
+                            }
+                            h1 {
+                                font-size: 20px;
+                            }
+                            .date {
+                                font-size: 12px;
+                            }
+                        }
+                        @page {
+                            margin: 0.5cm;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>Guía Bíblica IA</h1>
+                    <div class="date">${date}</div>
+                    <div class="message-content">
+                        ${messagesHTML}
+                    </div>
+                </body>
+                </html>
+            `;
+
+            const fileName = `Guia_Biblica_IA_${Date.now()}`;
+            await printToFile(htmlContent, fileName);
+
+            if (Platform.OS === "android") {
+                ToastAndroid.show("PDF generado exitosamente", ToastAndroid.SHORT);
+            }
+        } catch (error) {
+            console.error("Error generating PDF:", error);
+            if (Platform.OS === "android") {
+                ToastAndroid.show("Error al generar el PDF", ToastAndroid.SHORT);
+            }
+        } finally {
+            setIsGeneratingPDF(false);
+        }
+    };
+
+    const randomExampleQuestions = exampleQuestions.sort(() => Math.random() - 0.5).slice(0, 4);
 
     const isEmptyState = messages.length === 0 && !loading && isEmpty;
 
@@ -892,10 +1066,10 @@ const AIBibleGuideScreen = () => {
                         titleIcon: "Sparkles",
                         titleIconColor: theme.colors.notification,
                         headerRightProps: {
-                            headerRightIconColor: "",
-                            onPress: () => console.log(),
-                            disabled: true,
-                            style: { opacity: 0 },
+                            headerRightIcon: isGeneratingPDF ? "Loader" : "FileText",
+                            headerRightIconColor: theme.colors.notification,
+                            onPress: generateConversationPDF,
+                            disabled: messages.length === 0 || isGeneratingPDF,
                         },
                     }),
                 }}
@@ -918,7 +1092,7 @@ const AIBibleGuideScreen = () => {
                         emptySubtitleTranslateY={emptySubtitleTranslateY}
                         exampleButtonsOpacity={exampleButtonsOpacity}
                         exampleButtonsTranslateY={exampleButtonsTranslateY}
-                        exampleQuestions={exampleQuestions}
+                        exampleQuestions={randomExampleQuestions}
                         handleExamplePress={handleExamplePress}
                         theme={theme}
                         styles={styles}
@@ -1077,7 +1251,7 @@ const getStyles = ({ colors }: TTheme) =>
             flexDirection: "row",
             alignItems: "flex-start",
             marginBottom: 16,
-            paddingRight: 40,
+            paddingRight: 20,
         },
         aiIconContainer: {
             width: 40,
@@ -1104,11 +1278,24 @@ const getStyles = ({ colors }: TTheme) =>
             color: colors.text,
             lineHeight: 22,
         },
+        aiMessageIconContainerWrapper: {
+            width: '100%',
+            alignItems: 'flex-end',
+        },
+        aiMessageIconContainer: {
+            width: 24,
+            height: 24,
+            borderRadius: 12,
+            backgroundColor: colors.notification + "1A",
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
         scriptureChipsContainer: {
-            flexDirection: "row",
-            flexWrap: "wrap",
-            gap: 8,
             marginTop: 12,
+        },
+        scriptureChipsContent: {
+            flexDirection: "row",
+            paddingRight: 8,
         },
         scriptureChip: {
             flexDirection: "row",
@@ -1118,6 +1305,7 @@ const getStyles = ({ colors }: TTheme) =>
             paddingHorizontal: 12,
             borderRadius: 8,
             backgroundColor: colors.text + "30",
+            marginRight: 8,
         },
         scriptureChipText: {
             fontSize: 14,
@@ -1181,10 +1369,24 @@ const getStyles = ({ colors }: TTheme) =>
             borderRadius: 12,
             backgroundColor: colors.background,
         },
+        searchingTextContainer: {
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 3,
+            pointerEvents: "none",
+        },
+        searchingText: {
+            fontSize: 16,
+            color: colors.notification,
+            fontWeight: "500",
+        },
         input: {
             flex: 1,
-            minHeight: 48,
-            maxHeight: 120,
             paddingVertical: 12,
             paddingHorizontal: 16,
             borderRadius: 12,
@@ -1192,6 +1394,7 @@ const getStyles = ({ colors }: TTheme) =>
             color: colors.text,
             fontSize: 16,
             zIndex: 2,
+            overflow: "hidden",
         },
         inputLoading: {
             backgroundColor: colors.background,
