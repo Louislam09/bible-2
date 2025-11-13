@@ -11,7 +11,6 @@ import { Screens, TTheme } from "@/types";
 import { parseBibleReferences } from "@/utils/extractVersesInfo";
 import { use$ } from "@legendapp/state/react";
 import { Stack, useRouter } from "expo-router";
-import { ChevronDown } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -113,7 +112,7 @@ const BibleAIScreen = ({ }) => {
       shouldFetch: true,
       isHistory: true,
     });
-    router.push({ pathname: Screens.Home, params: queryInfo });
+    router.push({ pathname: `/${Screens.Home}`, params: queryInfo });
   };
 
   return (

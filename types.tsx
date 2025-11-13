@@ -29,7 +29,6 @@ export enum Collections {
 
 export enum Screens {
   Dashboard = "(dashboard)",
-  NoteEditor = "noteEditor",
   Settings = "settings",
   Quote = "quote",
   Home = "home",
@@ -67,13 +66,13 @@ export enum Screens {
   Notification = "notification",
   SongDetail = "songDetail",
   Commentary = "commentary",
+  AIBibleGuide = "ai-bible-guide",
 }
 
 type TScreensName = { [key in Screens]: string };
 
 export const ScreensName: TScreensName = {
   [Screens.Home]: "Santa Escritura",
-  [Screens.NoteEditor]: "Editor de Notas",
   [Screens.Search]: "Busqueda",
   [Screens.Quote]: "Cita",
   [Screens.Concordance]: "Concordancia",
@@ -111,6 +110,7 @@ export const ScreensName: TScreensName = {
   [Screens.Notification]: "Notificacion",
   [Screens.SongDetail]: "Himno",
   [Screens.Commentary]: "Comentarios",
+  [Screens.AIBibleGuide]: "Guía Bíblica IA",
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -143,7 +143,6 @@ export type RootTabParamList = {
 
 export type RootStackParamList = {
   dashboard: NavigatorScreenParams<RootTabParamList> | undefined;
-  noteEditor: NavigatorScreenParams<RootTabParamList> | undefined;
   settings: NavigatorScreenParams<RootTabParamList> | undefined;
   quote: NavigatorScreenParams<RootTabParamList> | undefined;
   quoteMaker: NavigatorScreenParams<RootTabParamList> | undefined;
@@ -193,6 +192,7 @@ export type RootStackParamList = {
   [Screens.Register]: undefined;
   [Screens.AISetup]: undefined;
   [Screens.AISearch]: undefined;
+  [Screens.AIBibleGuide]: undefined;
 };
 
 export type IDashboardOption = {

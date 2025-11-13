@@ -92,6 +92,7 @@ const screenAnimations: TScreensName = {
   [Screens.SongDetail]: "slide_from_bottom",
   [Screens.NoteDetailDom]: "slide_from_right",
   [Screens.Commentary]: "slide_from_right",
+  [Screens.AIBibleGuide]: "slide_from_right",
 };
 
 // Memoized SafeContentView to prevent unnecessary re-renders

@@ -11,7 +11,7 @@ export const KeyboardPaddingView = () => {
 
     const keyboardHeightStyle = useAnimatedStyle(() => {
         return {
-            height: Math.max(height.get(), bottom),
+            height: Math.max(height.get(), 0),
         };
     });
     return <Animated.View style={keyboardHeightStyle} />;

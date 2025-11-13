@@ -202,6 +202,13 @@ const MainDashboard = () => {
       color: "#fedf75",
     },
     {
+      icon: "Bot",
+      label: "Guía Bíblica IA",
+      action: () => navigation.navigate(Screens.AIBibleGuide),
+      color: "#cccf17",
+      isNew: true,
+    },
+    {
       icon: "Quote",
       label: "Cita",
       action: () => navigation.navigate(Screens.Quote),
