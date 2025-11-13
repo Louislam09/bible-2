@@ -138,7 +138,7 @@ export const useNoteService = () => {
     try {
       await executeSql(DELETE_NOTE, [data.id], "deleteNote");
 
-      if (isConnected) {
+      if (isConnected && user) {
         const existing = await pb.collection("notes").getFirstListItem(`uuid = "${data.uuid}"`);
         await notesState$.deleteNote(existing.id)
       }

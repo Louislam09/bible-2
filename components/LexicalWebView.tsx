@@ -1,12 +1,11 @@
 import { lexicalHtmlContent } from '@/constants/lexicalHtml';
 import { useMyTheme } from '@/context/ThemeContext';
+import { sanitizeHTML } from '@/utils/convertHtmlToText';
 import { createOptimizedWebViewProps } from '@/utils/webViewOptimizations';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { KeyboardPaddingView } from './keyboard-padding';
-import { use$ } from '@legendapp/state/react';
-import { bibleState$ } from '@/state/bibleState';
 
 interface LexicalWebViewProps {
   moveWithKeyboard?: boolean;
@@ -56,7 +55,8 @@ const LexicalWebView = React.forwardRef<LexicalWebViewRef, LexicalWebViewProps>(
   // Generate HTML with current theme and bundle
   const htmlContent = React.useMemo(() => {
     const isJSON = initialContent.startsWith("{");
-    const htmlString = isJSON ? JSON.parse(initialContent).htmlString : initialContent;
+    const htmlString = isJSON ? JSON.parse(initialContent).htmlString : sanitizeHTML(initialContent);
+
     return lexicalHtmlContent({
       theme,
       initialTitle,
