@@ -30,6 +30,8 @@ export interface LexicalWebViewRef {
   reload: () => void;
 }
 
+// const mock = ``
+
 const LexicalWebView = React.forwardRef<LexicalWebViewRef, LexicalWebViewProps>(({
   moveWithKeyboard = false,
   noteId,
@@ -48,19 +50,20 @@ const LexicalWebView = React.forwardRef<LexicalWebViewRef, LexicalWebViewProps>(
   const { theme } = useMyTheme();
   const webViewRef = useRef<WebView>(null);
   const [isEditorReady, setIsEditorReady] = useState(false);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [webViewKey, setWebViewKey] = useState(0);
-  const [messageQueue, setMessageQueue] = useState<Array<{ type: string; data: any }>>([]);
 
   // Generate HTML with current theme and bundle
   const htmlContent = React.useMemo(() => {
     const isJSON = initialContent.startsWith("{");
-    const htmlString = isJSON ? JSON.parse(initialContent).htmlString : sanitizeHTML(initialContent);
+    const content = isJSON ? JSON.parse(initialContent) : { htmlString: sanitizeHTML(initialContent) };
+    // const content = isJSON ? JSON.parse(initialContent) : { htmlString: sanitizeHTML(mock) };
+
+    // console.log({ initialContent, isJSON, content })
 
     return lexicalHtmlContent({
       theme,
       initialTitle,
-      initialContent: htmlString,
+      initialContent: content,
       isReadOnly,
       placeholder,
       isModal
@@ -80,25 +83,25 @@ const LexicalWebView = React.forwardRef<LexicalWebViewRef, LexicalWebViewProps>(
             break;
 
           case 'titleChange':
-            setHasUnsavedChanges(true);
             onTitleChange?.(message.data.title);
             break;
 
           case 'contentChange':
             const content = JSON.parse(message.data.content);
-
-            setHasUnsavedChanges(true);
             onContentChange?.(JSON.stringify(content));
             break;
 
           case 'contentResponse':
-            // Handle content response if needed
             console.log('Content received:', message.data.content);
             break;
 
           case 'error':
             console.error('WebView error:', message.data);
             onError?.(message.data);
+            break;
+
+          case 'log':
+            console.log('🌐:', message.data);
             break;
 
           case 'bibleMentionRequest':
@@ -129,7 +132,7 @@ const LexicalWebView = React.forwardRef<LexicalWebViewRef, LexicalWebViewProps>(
             break;
 
           default:
-            console.log('Unknown message type:', message.type);
+            console.log('Unknown message type:', message);
         }
       } catch (error) {
         console.error('Failed to handle WebView message:', error);
@@ -149,9 +152,6 @@ const LexicalWebView = React.forwardRef<LexicalWebViewRef, LexicalWebViewProps>(
           console.error('Failed to send message to WebView:', error);
           onError?.(error);
         }
-      } else {
-        console.warn('WebView not ready, message queued:', type);
-        setMessageQueue(prev => [...prev, { type, data }]);
       }
     },
     []

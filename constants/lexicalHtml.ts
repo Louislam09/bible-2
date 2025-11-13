@@ -208,7 +208,7 @@ const headContent = (theme: TTheme, isReadOnly: boolean) => `
             width: 100%;
             height: 100%;
             outline: none;
-            color: ${theme.colors.text} !important;
+            color: ${theme.colors.text};
             font-size: 16px;
             line-height: 1.6;
             position: relative;
@@ -771,7 +771,7 @@ const toolbarContent = ({ isReadOnly }: ToolbarContentProps) => `
 export const lexicalHtmlContent = (options: {
     theme: TTheme;
     initialTitle?: string;
-    initialContent?: string;
+    initialContent?: { json: string; htmlString: string };
     isReadOnly?: boolean;
     placeholder?: string;
     isModal?: boolean;
@@ -779,11 +779,15 @@ export const lexicalHtmlContent = (options: {
     const {
         theme,
         initialTitle = '',
-        initialContent = '',
+        initialContent = { json: '', htmlString: '' },
         isReadOnly = false,
         placeholder = 'Escribe algo...',
         isModal = false,
     } = options;
+
+    const content = initialContent
+    const initialJson = content.json ? JSON.stringify(content.json) : '';
+    const initialHtmlString = content.htmlString;
 
     return `
 <!DOCTYPE html>
@@ -971,6 +975,9 @@ ${headContent(theme, isReadOnly)}
                 
             // Initialize with empty paragraph if no initial content
              const content = \`${initialContent}\`;
+             const initialJson = \`${initialJson}\`;
+             const initialHtmlString = \`${initialHtmlString}\`;
+
             if (!content) {
                 editor.update(() => {
                     const root = $getRoot();
@@ -984,23 +991,42 @@ ${headContent(theme, isReadOnly)}
             } else {
                 // Load initial content if provided
                 try {
+                    if(initialJson) {
+                        const editorState = editor.parseEditorState(initialJson);
+                        editor.setEditorState(editorState);
+                        sendMessage('log', {  log: 'loading from json'  });
+
+                    }  else if(initialHtmlString) {
                         editor.update(() => {
-                            const parser = new DOMParser();
-                            const dom = parser.parseFromString(content, 'text/html');
-                            const nodes = $generateNodesFromDOM(editor, dom);
-                            $getRoot().clear().append(...nodes);
-                        });
+                                const parser = new DOMParser();
+                                const dom = parser.parseFromString(initialHtmlString, 'text/html');
+                                const nodes = $generateNodesFromDOM(editor, dom);
+                                $getRoot().clear().append(...nodes);
+                            });
+                    }
                 } catch (error) {
-                    console.error('Failed to load initial content:', error);
                     // Fallback to empty paragraph on error
-                    editor.update(() => {
-                        const root = $getRoot();
-                        if (root.getChildrenSize() === 0) {
-                            const paragraph = $createParagraphNode();
-                            root.append(paragraph);
-                            paragraph.select();
-                        }
-                    });
+                    try {
+                      if(initialHtmlString) {
+                        editor.update(() => {
+                                const parser = new DOMParser();
+                                const dom = parser.parseFromString(initialHtmlString, 'text/html');
+                                const nodes = $generateNodesFromDOM(editor, dom);
+                                $getRoot().clear().append(...nodes);
+                            });
+                    } else {
+                        editor.update(() => {
+                            const root = $getRoot();
+                            if (root.getChildrenSize() === 0) {
+                                const paragraph = $createParagraphNode();
+                                root.append(paragraph);
+                                paragraph.select();
+                            }
+                        });
+                     }
+                    } catch (error) {
+                        sendMessage('log', {  log: 'Failed to load initial content:' + error.message   });
+                    }
                 }
             }
             

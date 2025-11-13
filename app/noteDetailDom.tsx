@@ -748,7 +748,7 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
         style: { opacity: 1 },
       },
     };
-  }, [theme.colors, isView]);
+  }, [theme.colors, isView, noteInfo]);
 
   return (
     <View style={styles.pageContainer} >
