@@ -1,5 +1,6 @@
 import { View } from "@/components/Themed";
 import { bibleChapterHtmlTemplate } from "@/constants/bibleChapterTemplate";
+import { getBookDetail } from "@/constants/BookNames";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
@@ -152,7 +153,8 @@ const WebViewChapter = React.memo(
                   });
                   break;
                 case "memorize":
-                  onMemorizeVerse?.(item.text, "version");
+                  const text = `${getBookDetail(item?.book_number).longName} ${item?.chapter}:${item?.verse}`
+                  onMemorizeVerse?.(text, storedData$.currentBibleVersion.get());
                   break;
                 case "compare":
                   onComparar?.(item);

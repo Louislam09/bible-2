@@ -11,23 +11,20 @@ import Tooltip from "@/components/Tooltip";
 import { getBookDetail } from "@/constants/BookNames";
 import { headerIconSize } from "@/constants/size";
 import { useBibleContext } from "@/context/BibleContext";
-import { storedData$, useStorage } from "@/context/LocalstoreContext";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { useMemorization } from "@/context/MemorizationContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { useStreak } from "@/hooks/useStreak";
 import { Memorization, SortOption, TTheme } from "@/types";
-import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
+import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { format } from "date-fns";
 import { Stack, useRouter } from "expo-router";
 import {
-  Brain,
-  ChevronLeft,
   ListFilter,
-  Trash2,
-  Zap,
+  Trash2
 } from "lucide-react-native";
 import React, {
   useCallback,
