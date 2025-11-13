@@ -782,7 +782,7 @@ export default [
     stanzas: [
       "(1) Todas las promesas del Señor Jesús\nson apoyo poderoso de mi fe:\nmientras luche aquí buscando yo Su luz,\nsiempre en Sus promesas confiare.",
       "(2) Todas Sus promesas para el hombre fiel,\nel Señor en Sus bondades cumplirá;\nY confiado sé que para siempre en Él\npaz eterna mi alma gozará.",
-      "(3) Todas las promesas del Señor serán\ngozo y fuerza en nuestra vida terrenal;\nellas en dura lid nos sostendrán,\ny triunfar podremos sobre el mal.",
+      "(3) Todas las promesas del Señor serán\ngozo y fuerza en nuestra vida terrenal;\nellas en la dura lid nos sostendrán,\ny triunfar podremos sobre el mal.",
     ],
   },
   {
