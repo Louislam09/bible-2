@@ -11,10 +11,12 @@ import { Screens, TTheme } from "@/types";
 import { copyTextToClipboard } from "@/utils/copyToClipboard";
 import { parseBibleReferences } from "@/utils/extractVersesInfo";
 import { use$ } from "@legendapp/state/react";
-import { Stack, useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import { Stack, useNavigation, useRouter } from "expo-router";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import Markdown from "react-native-markdown-display";
 import {
+    Alert,
     Platform,
     SafeAreaView,
     ScrollView,
@@ -29,7 +31,6 @@ import {
 import Animated, {
     Easing,
     interpolate,
-    runOnJS,
     useAnimatedStyle,
     useSharedValue,
     withDelay,
@@ -524,7 +525,14 @@ const AnimatedMessage = ({
                 <View style={styles.aiMessageContainer}>
                     <View style={styles.aiContentContainer}>
                         <View style={styles.aiBubble}>
-                            <Text style={styles.aiMessageText}>{message.content}</Text>
+                            <View style={styles.markdownContainer}>
+                                <Markdown
+                                    style={getMarkdownStyles(theme)}
+                                    mergeStyle={true}
+                                >
+                                    {message.content}
+                                </Markdown>
+                            </View>
                             <View style={styles.aiMessageIconContainerWrapper}>
                                 <View style={styles.aiMessageIconContainer}>
                                     <Icon name="Sparkles" size={16} color={theme.colors.notification} />
@@ -756,11 +764,13 @@ const exampleQuestions = [
 
 const AIBibleGuideScreen = () => {
     const [inputText, setInputText] = useState("");
-    const [selectedTranslation, setSelectedTranslation] = useState("RV1960");
+    const selectedTranslation = "RV1960";
+    const [hasAttemptedSend, setHasAttemptedSend] = useState(false);
     const googleAIKey = use$(() => storedData$.googleAIKey.get());
     const { theme } = useMyTheme();
     const styles = getStyles(theme);
     const router = useRouter();
+    const navigation = useNavigation();
     const scrollViewRef = useRef<ScrollView>(null);
 
     // Animation values for empty state
@@ -784,6 +794,7 @@ const AIBibleGuideScreen = () => {
         loading,
         error,
         sendMessage,
+        clearConversation,
         isEmpty,
     } = useBibleAIChat(googleAIKey);
 
@@ -817,14 +828,44 @@ const AIBibleGuideScreen = () => {
 
     // Animate input bar on mount
     useEffect(() => {
-        if (googleAIKey) {
-            inputBarTranslateY.value = withSpring(0, {
-                damping: 8,
-                stiffness: 50,
-            });
-            inputBarOpacity.value = withDelay(200, withTiming(1, { duration: 400 }));
-        }
-    }, [googleAIKey]);
+        inputBarTranslateY.value = withSpring(0, {
+            damping: 8,
+            stiffness: 50,
+        });
+        inputBarOpacity.value = withDelay(200, withTiming(1, { duration: 400 }));
+    }, []);
+
+    // Warn user before leaving if they have messages
+    useEffect(() => {
+        const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+            // Only warn if there are messages in the chat
+            if (messages.length === 0) return;
+
+            e.preventDefault();
+
+            Alert.alert(
+                "¿Salir de la conversación?",
+                "Si sales de esta página, la conversación se reiniciará y perderás todos los mensajes.",
+                [
+                    {
+                        text: "Cancelar",
+                        style: "cancel",
+                        onPress: () => { },
+                    },
+                    {
+                        text: "Salir",
+                        style: "destructive",
+                        onPress: () => {
+                            // clearConversation();
+                            navigation.dispatch(e.data.action);
+                        },
+                    },
+                ]
+            );
+        });
+
+        return unsubscribe;
+    }, [navigation, messages.length, clearConversation]);
 
     // Scroll to bottom when new messages arrive
     useEffect(() => {
@@ -846,7 +887,13 @@ const AIBibleGuideScreen = () => {
     }, [loading, messages]);
 
     const handleSend = async () => {
-        if (!inputText.trim() || !googleAIKey) return;
+        if (!inputText.trim()) return;
+
+        setHasAttemptedSend(true);
+
+        if (!googleAIKey) {
+            return;
+        }
 
         // Animate send button press
         sendButtonScale.value = withTiming(0.9, { duration: 100 }, () => {
@@ -863,6 +910,7 @@ const AIBibleGuideScreen = () => {
 
     const handleExamplePress = (question: string) => {
         setInputText(question);
+        setHasAttemptedSend(true);
         // Auto-send example questions
         setTimeout(() => {
             sendMessage(question, selectedTranslation);
@@ -1052,8 +1100,7 @@ const AIBibleGuideScreen = () => {
         }
     };
 
-    const randomExampleQuestions = exampleQuestions.sort(() => Math.random() - 0.5).slice(0, 4);
-
+    const randomExampleQuestions = useMemo(() => exampleQuestions.sort(() => Math.random() - 0.5).slice(0, 4), []);
     const isEmptyState = messages.length === 0 && !loading && isEmpty;
 
     return (
@@ -1083,7 +1130,7 @@ const AIBibleGuideScreen = () => {
                     showsVerticalScrollIndicator={false}
                 >
                     {/* Empty State */}
-                    {isEmptyState && <EmptyStateAnimated
+                    {isEmptyState && !hasAttemptedSend && <EmptyStateAnimated
                         emptyIconOpacity={emptyIconOpacity}
                         emptyIconScale={emptyIconScale}
                         emptyTitleOpacity={emptyTitleOpacity}
@@ -1115,10 +1162,91 @@ const AIBibleGuideScreen = () => {
                     {loading && (
                         <AnimatedLoadingIndicator theme={theme} />
                     )}
+
+                    {/* Error Message */}
+                    {error && !loading && hasAttemptedSend && (
+                        <View style={styles.errorBanner}>
+                            <Icon
+                                name="MessageCircleWarning"
+                                size={20}
+                                color={theme.colors.notification}
+                            />
+                            <View style={styles.errorBannerContent}>
+                                <Text style={styles.errorBannerTitle}>
+                                    Error
+                                </Text>
+                                <Text style={styles.errorBannerText}>
+                                    {error}
+                                </Text>
+                                {(error.includes("clave de API") || !googleAIKey) && (
+                                    <TouchableOpacity
+                                        style={styles.errorBannerButton}
+                                        onPress={() => router.push(Screens.AISetup)}
+                                    >
+                                        <Text style={styles.errorBannerButtonText}>
+                                            Ir a Configuración
+                                        </Text>
+                                    </TouchableOpacity>
+                                )}
+                            </View>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    // Clear error by clearing conversation
+                                    clearConversation();
+                                }}
+                                style={styles.errorBannerClose}
+                            >
+                                <Icon
+                                    name="X"
+                                    size={18}
+                                    color={theme.colors.text}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    )}
+
+                    {/* Show error banner if no API key and user attempted to send */}
+                    {!googleAIKey && hasAttemptedSend && !error && (
+                        <View style={styles.errorBanner}>
+                            <Icon
+                                name="MessageCircleWarning"
+                                size={20}
+                                color={theme.colors.notification}
+                            />
+                            <View style={styles.errorBannerContent}>
+                                <Text style={styles.errorBannerTitle}>
+                                    Error
+                                </Text>
+                                <Text style={styles.errorBannerText}>
+                                    No se ha configurado la clave de Google AI. Por favor configúrala en ajustes.
+                                </Text>
+                                <TouchableOpacity
+                                    style={styles.errorBannerButton}
+                                    onPress={() => router.push(Screens.AISetup)}
+                                >
+                                    <Text style={styles.errorBannerButtonText}>
+                                        Ir a Configuración
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setHasAttemptedSend(false);
+                                }}
+                                style={styles.errorBannerClose}
+                            >
+                                <Icon
+                                    name="X"
+                                    size={18}
+                                    color={theme.colors.text}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    )}
                 </ScrollView>
 
                 {/* Input Bar */}
-                {googleAIKey && <InputBarAnimated
+                <InputBarAnimated
                     inputBarOpacity={inputBarOpacity}
                     inputBarTranslateY={inputBarTranslateY}
                     sendButtonScale={sendButtonScale}
@@ -1128,31 +1256,92 @@ const AIBibleGuideScreen = () => {
                     loading={loading}
                     theme={theme}
                     styles={styles}
-                />}
-
-                {!googleAIKey && (
-                    <View style={styles.errorContainer}>
-                        <Icon
-                            name="MessageCircleWarning"
-                            size={48}
-                            color={theme.colors.notification}
-                        />
-                        <Text style={styles.errorText}>
-                            No se ha configurado la clave de Google AI. Por favor configúrala en ajustes.
-                        </Text>
-                        <TouchableOpacity
-                            style={styles.configButton}
-                            onPress={() => router.push(Screens.AISetup)}
-                        >
-                            <Text style={styles.configButtonText}>Configurar</Text>
-                        </TouchableOpacity>
-                    </View>
-                )}
+                />
             </SafeAreaView>
             <KeyboardPaddingView />
         </View>
     );
 };
+
+// Markdown styles for AI messages
+const getMarkdownStyles = (theme: TTheme) => ({
+    body: {
+        fontSize: 16,
+        color: theme.colors.text,
+        lineHeight: 22,
+    },
+    paragraph: {
+        marginVertical: 4,
+    },
+    heading1: {
+        fontSize: 20,
+        fontWeight: "700" as const,
+        color: theme.colors.text,
+        marginTop: 12,
+        marginBottom: 8,
+    },
+    heading2: {
+        fontSize: 18,
+        fontWeight: "700" as const,
+        color: theme.colors.text,
+        marginTop: 10,
+        marginBottom: 6,
+    },
+    heading3: {
+        fontSize: 16,
+        fontWeight: "600" as const,
+        color: theme.colors.text,
+        marginTop: 8,
+        marginBottom: 4,
+    },
+    strong: {
+        fontWeight: "700" as const,
+        color: theme.colors.text,
+    },
+    em: {
+        fontStyle: "italic" as const,
+        color: theme.colors.text,
+    },
+    code_inline: {
+        backgroundColor: theme.colors.text + "20",
+        paddingHorizontal: 4,
+        paddingVertical: 2,
+        borderRadius: 4,
+        fontSize: 14,
+        fontFamily: "monospace",
+        color: theme.colors.text,
+    },
+    code_block: {
+        backgroundColor: theme.colors.text + "20",
+        padding: 12,
+        borderRadius: 8,
+        marginVertical: 8,
+        fontSize: 14,
+        fontFamily: "monospace",
+        color: theme.colors.text,
+    },
+    blockquote: {
+        borderLeftWidth: 3,
+        borderLeftColor: theme.colors.notification,
+        paddingLeft: 12,
+        marginVertical: 8,
+        color: theme.colors.text + "CC",
+        fontStyle: "italic" as const,
+    },
+    list_item: {
+        marginVertical: 2,
+    },
+    bullet_list: {
+        marginVertical: 4,
+    },
+    ordered_list: {
+        marginVertical: 4,
+    },
+    link: {
+        color: theme.colors.notification,
+        textDecorationLine: "underline" as const,
+    },
+});
 
 const getStyles = ({ colors }: TTheme) =>
     StyleSheet.create({
@@ -1277,6 +1466,9 @@ const getStyles = ({ colors }: TTheme) =>
             fontSize: 16,
             color: colors.text,
             lineHeight: 22,
+        },
+        markdownContainer: {
+            flex: 1,
         },
         aiMessageIconContainerWrapper: {
             width: '100%',
@@ -1438,6 +1630,49 @@ const getStyles = ({ colors }: TTheme) =>
             color: "white",
             fontSize: 16,
             fontWeight: "600",
+        },
+        errorBanner: {
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: colors.notification + "15",
+            borderLeftWidth: 4,
+            borderLeftColor: colors.notification,
+            padding: 12,
+            marginHorizontal: 16,
+            marginBottom: 16,
+            borderRadius: 8,
+            gap: 12,
+        },
+        errorBannerContent: {
+            flex: 1,
+        },
+        errorBannerTitle: {
+            fontSize: 14,
+            fontWeight: "700",
+            color: colors.notification,
+            marginBottom: 4,
+        },
+        errorBannerText: {
+            fontSize: 13,
+            color: colors.text,
+            lineHeight: 18,
+            marginBottom: 8,
+        },
+        errorBannerButton: {
+            marginTop: 8,
+            paddingVertical: 6,
+            paddingHorizontal: 12,
+            backgroundColor: colors.notification,
+            borderRadius: 6,
+            alignSelf: "flex-start",
+        },
+        errorBannerButtonText: {
+            fontSize: 12,
+            fontWeight: "600",
+            color: "white",
+        },
+        errorBannerClose: {
+            padding: 4,
         },
     });
 

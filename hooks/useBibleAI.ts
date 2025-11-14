@@ -59,6 +59,7 @@ const useBibleAI = (googleAIKey: string): UseBibleAIReturn => {
     },
   });
 
+
   const searchBible = useCallback(
     async (query: string, translation: string = "RV1960"): Promise<void> => {
       if (!query.trim()) return;
