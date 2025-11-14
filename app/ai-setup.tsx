@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function AISetupScreen() {
   const { theme } = useMyTheme();
@@ -59,7 +60,7 @@ export default function AISetupScreen() {
   return (
     <View style={styles.container}>
       <Stack.Screen options={singleScreenHeader(screenOptions)} />
-      <View style={styles.content}>
+      <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>Configura tu API Key de Google AI</Text>
 
         <Text style={styles.description}>
@@ -72,6 +73,29 @@ export default function AISetupScreen() {
           <Text style={styles.step}>2. Crea una cuenta o inicia sesión</Text>
           <Text style={styles.step}>3. Genera una nueva API key</Text>
           <Text style={styles.step}>4. Copia y pega tu API key aquí</Text>
+        </View>
+
+        <View style={[styles.infoBox, { backgroundColor: theme.colors.notification + "15", borderLeftColor: theme.colors.notification }]}>
+          <Icon
+            name="Info"
+            size={20}
+            color={theme.colors.notification}
+          />
+          <View style={styles.infoContent}>
+            <Text style={[styles.infoTitle, { color: theme.colors.notification }]}>
+              Gratis con límites generosos
+            </Text>
+            <Text style={styles.infoText}>
+              Google ofrece un tier gratuito que incluye:
+              {"\n"}• ~15 solicitudes por minuto
+              {"\n"}• ~1 millón de tokens por día
+              {"\n"}• Sin necesidad de tarjeta de crédito
+              {"\n"}• Suficiente para uso personal moderado
+            </Text>
+            <Text style={styles.infoNote}>
+              Si alcanzas los límites, verás un mensaje de error. Puedes esperar unos minutos o considerar el plan de pago de Google.
+            </Text>
+          </View>
         </View>
 
         <TouchableOpacity style={styles.docsButton} onPress={openGoogleAIDocs}>
@@ -142,7 +166,7 @@ export default function AISetupScreen() {
             {isSaving ? "Guardando..." : "Guardar API Key"}
           </Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -218,5 +242,33 @@ const getStyles = ({ colors }: TTheme) =>
       color: "white",
       fontSize: 16,
       fontWeight: "600",
+    },
+    infoBox: {
+      flexDirection: "row",
+      padding: 16,
+      borderRadius: 8,
+      marginBottom: 20,
+      borderLeftWidth: 4,
+      gap: 12,
+    },
+    infoContent: {
+      flex: 1,
+    },
+    infoTitle: {
+      fontSize: 16,
+      fontWeight: "700",
+      marginBottom: 8,
+    },
+    infoText: {
+      fontSize: 14,
+      lineHeight: 20,
+      color: colors.text,
+      marginBottom: 8,
+    },
+    infoNote: {
+      fontSize: 12,
+      lineHeight: 16,
+      color: colors.text + "CC",
+      fontStyle: "italic",
     },
   });

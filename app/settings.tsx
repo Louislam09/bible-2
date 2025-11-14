@@ -21,11 +21,11 @@ import Icon, { IconProps } from "@/components/Icon";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text, View } from "@/components/Themed";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import { URLS } from "@/constants/appConfig";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { authState$ } from "@/state/authState";
-import { bibleState$ } from "@/state/bibleState";
 import { settingState$ } from "@/state/settingState";
 import { EThemes, RootStackScreenProps, TTheme } from "@/types";
 import getMinMaxFontSize from "@/utils/getMinMaxFontSize";
@@ -37,7 +37,6 @@ import { Stack, useRouter } from "expo-router";
 import * as Updates from "expo-updates";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { URLS } from "@/constants/appConfig";
 
 
 const colorNames: Record<string, string> = {
@@ -114,7 +113,6 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
   );
 
   const settingBottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const isFlashlist = use$(() => bibleState$.isFlashlist.get());
 
   useEffect(() => {
     const loadLastSyncTime = async () => {
@@ -275,10 +273,6 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
     await Linking.openURL(URLS.RATE_APP);
   };
 
-  const toggleHomeScreen = () => {
-    storedData$.isGridLayout.set(!isGridLayout);
-  };
-
   const toggleAnimation = () => {
     settingState$.isAnimationDisabled.set(!isAnimationDisabled);
   };
@@ -312,7 +306,19 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
         },
       ],
     },
-
+    {
+      title: "Inteligencia Artificial",
+      id: "ai",
+      options: [
+        {
+          label: "Configurar API Key de Google AI",
+          iconName: "Brain",
+          action: () => router.push("/ai-setup"),
+          extraText: "Configura tu API key para usar la IA de Google",
+          color: theme.colors.notification,
+        },
+      ],
+    },
     {
       title: "Comportamiento",
       id: "behavior",
@@ -329,38 +335,6 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
           extraText: "Activar o desactivar las animaciones",
           renderSwitch: true,
           value: !isAnimationDisabled,
-        },
-        {
-          label: "Mejorar Rendimiento en dispositivos lentos",
-          iconName: storedData$.useDomComponent.get() ? "Rabbit" : "Turtle",
-          action: () =>
-            storedData$.useDomComponent.set(!storedData$.useDomComponent.get()),
-          // mas rapido para dispositivos lentos
-          extraText:
-            "Versión DOM para mejorar el rendimiento en dispositivos lentos",
-          color: storedData$.useDomComponent.get()
-            ? theme.colors.notification
-            : theme.colors.text,
-          renderSwitch: true,
-          value: storedData$.useDomComponent.get(),
-        },
-        {
-          label: "Vista de Lista Rápida",
-          iconName: isFlashlist ? "Zap" : "ZapOff",
-          action: () => bibleState$.toggleList(),
-          extraText:
-            "Alternar entre la vista de lista rápida y la vista estándar",
-          color: isFlashlist ? theme.colors.notification : theme.colors.text,
-          // renderSwitch: true,
-          value: isFlashlist,
-        },
-        {
-          label: isGridLayout ? "Vista de Lista" : "Vista de Cuadrícula",
-          iconName: isGridLayout ? "List" : "LayoutGrid",
-          action: toggleHomeScreen,
-          extraText: "Cambiar el diseño de la pantalla principal",
-          renderSwitch: true,
-          value: isGridLayout,
         },
       ],
     },
@@ -407,33 +381,6 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
         },
       ],
     },
-    {
-      title: "Notificaciones",
-      id: "notifications",
-      options: [
-        {
-          label: "Notificaciones",
-          iconName: "Bell",
-          action: () => router.push("/notification"),
-          extraText: "Configura las notificaciones de la aplicación",
-          color: theme.colors.notification,
-        },
-      ],
-    },
-    {
-      title: "Inteligencia Artificial",
-      id: "ai",
-      options: [
-        {
-          label: "Configurar API Key de Google AI",
-          iconName: "Brain",
-          action: () => router.push("/ai-setup"),
-          extraText: "Configura tu API key para usar la IA de Google",
-          color: theme.colors.notification,
-        },
-      ],
-    },
-
     {
       title: "Aplicación",
       id: "app",

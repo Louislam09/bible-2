@@ -76,11 +76,6 @@ export const bibleState$ = observable({
   isDataLoading: { top: true, bottom: false },
   bibleData: { topVerses: [], bottomVerses: [], topLinks: [], bottomLinks: [], interlinearVerses: [] } as BibleData,
   readingTimeData: { top: 0, bottom: 0 },
-  isFlashlist: false,
-  toggleList: () => {
-    const value = bibleState$.isFlashlist.get()
-    bibleState$.isFlashlist.set(!value)
-  },
   changeBibleQuery: (query: Partial<IBibleQuery>) => {
     const loadingKey = query.isBibleBottom ? "bottom" : "top";
     const newQuery = { ...bibleState$.bibleQuery.get(), ...query };

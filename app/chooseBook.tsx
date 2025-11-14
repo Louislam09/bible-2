@@ -101,7 +101,6 @@ const BookList = React.memo(
     startIndex: number;
     theme: any;
   }) => {
-    const isFlashlist = use$(() => bibleState$.isFlashlist.get());
     const styles = useMemo(() => getBookstyles(theme), [theme]);
 
     const renderItem = useCallback(
