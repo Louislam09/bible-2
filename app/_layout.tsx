@@ -12,7 +12,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
 import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
-import { Stack } from "expo-router";
+// import { Stack } from "expo-router";
 import * as Updates from "expo-updates";
 import React, { memo, ReactNode, useEffect } from "react";
 import { ToastAndroid, View } from "react-native";
@@ -30,6 +30,7 @@ import { useQuickActions } from "@/hooks/useQuickActions";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Stack } from "@/layouts/stack";
 
 const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
 
@@ -177,9 +178,9 @@ const App = () => {
       headerShown: false,
       headerTitleAlign: "center",
       headerTitleStyle: { fontWeight: "bold" },
-      animation: isAnimationDisabled
-        ? "none"
-        : screenAnimations[props.route.name as Screens],
+      // animation: isAnimationDisabled
+      //   ? "none"
+      //   : screenAnimations[props.route.name as Screens],
       headerLeft: () => (
         <CustomHeaderLeft title={ScreensName[props.route.name as Screens]} />
       ),

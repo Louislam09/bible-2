@@ -6,9 +6,13 @@ import Animated, {
   useAnimatedStyle,
   interpolate,
   runOnJS,
+  interpolateColor,
+  Easing,
 } from "react-native-reanimated";
 import { View } from "@/components/Themed";
 import { StoryList } from "@/components/animations/story-list";
+import { Stack } from "@/layouts/stack";
+import Transition from "react-native-screen-transitions";
 
 const { width } = Dimensions.get("window");
 const height = 220;
@@ -144,6 +148,332 @@ export function ImageSlider() {
 export default function Example() {
   return (
     <View style={styles.container}>
+      <Stack.Screen
+        // options={{
+        //   headerShown: false,
+        //   enableTransitions: true,
+        //   ...Transition.presets.SlideFromTop(),
+        // }}
+        // options={{
+        //   enableTransitions: true,
+
+        //   screenStyleInterpolator: ({ current, next }) => {
+        //     "worklet";
+
+        //     const overlay = interpolateColor(
+        //       current.progress,
+        //       [0, 1],
+        //       ["rgba(0,0,0,0)", "rgba(0,0,0,0.85)"],
+        //     );
+
+        //     return {
+        //       overlayStyle: {
+        //         backgroundColor: !next ? overlay : "rgba(0,0,0,0)",
+        //       },
+        //     };
+        //   },
+        //   transitionSpec: {
+        //     open: Transition.specs.DefaultSpec,
+        //     close: Transition.specs.DefaultSpec,
+        //   },
+        // }}
+        // options={{
+        //   enableTransitions: true,
+        //   gestureEnabled: true,
+        //   gestureDirection: "vertical",
+        //   screenStyleInterpolator: ({
+        //     focused,
+        //     progress,
+        //     layouts: { screen },
+        //     insets,
+        //   }) => {
+        //     "worklet";
+
+        //     if (focused) {
+        //       const y = interpolate(progress, [0, 1], [screen.height, 0]);
+        //       const overlay = interpolateColor(
+        //         progress,
+        //         [0, 1],
+        //         ["rgba(0,0,0,0)", "rgba(0,0,0,0.5)"],
+        //       );
+        //       return {
+        //         overlayStyle: {
+        //           backgroundColor: overlay,
+        //         },
+        //         contentStyle: {
+        //           transform: [{ translateY: y }],
+
+        //           backgroundColor: "#fff",
+        //           margin: 16,
+        //           marginBottom: insets.bottom,
+        //           marginTop: "auto",
+        //           flex: 0.9,
+        //           borderRadius: 36,
+        //           overflow: "hidden",
+        //         },
+        //       };
+        //     }
+
+        //     return {};
+        //   },
+        //   transitionSpec: {
+        //     open: Transition.specs.DefaultSpec,
+        //     close: Transition.specs.DefaultSpec,
+        //   },
+        // }}
+
+        // options={{
+        //   enableTransitions: true,
+        //   gestureEnabled: true,
+        //   gestureDirection: "horizontal",
+        //   screenStyleInterpolator: ({
+        //     progress,
+        //     layouts: {
+        //       screen: { width },
+        //     },
+        //   }) => {
+        //     "worklet";
+
+        //     const x = interpolate(progress, [0, 1, 2], [width, 0, -width]);
+
+        //     return {
+        //       contentStyle: {
+        //         transform: [{ translateX: x }],
+        //       },
+        //     };
+        //   },
+        //   transitionSpec: {
+        //     open: Transition.specs.DefaultSpec,
+        //     close: Transition.specs.DefaultSpec,
+        //   },
+        // }}
+        // options={{
+        //   enableTransitions: true,
+        //   gestureEnabled: true,
+        //   gestureDirection: [
+        //     "horizontal",
+        //     "vertical",
+        //     "horizontal-inverted",
+        //     "vertical-inverted",
+        //   ],
+        //   screenStyleInterpolator: ({
+        //     progress,
+        //     current,
+        //     layouts: {
+        //       screen: { width, height },
+        //     },
+        //     focused,
+        //   }) => {
+        //     "worklet";
+
+        //     const scale = interpolate(progress, [0, 1, 2], [0, 1, 0.75]);
+        //     const gestureX = interpolate(
+        //       current.gesture.normalizedX,
+        //       [-1, 0, 1],
+        //       [-width, 0, width],
+        //     );
+
+        //     const y = interpolate(
+        //       current.gesture.normalizedY,
+        //       [-1, 0, 1],
+        //       [-height, 0, height],
+        //     );
+
+        //     return {
+        //       contentStyle: {
+        //         transform: [
+        //           { scale },
+        //           { translateX: gestureX },
+        //           { translateY: y },
+        //         ],
+        //         ...(focused && {
+        //           backgroundColor: "lightblue",
+        //         }),
+        //       },
+        //     };
+        //   },
+        //   transitionSpec: {
+        //     open: Transition.specs.DefaultSpec,
+        //     close: Transition.specs.DefaultSpec,
+        //   },
+        // }}
+
+        // options={{
+        //   enableTransitions: true,
+        //   gestureEnabled: true,
+        //   gestureDirection: ["vertical"],
+        //   screenStyleInterpolator: ({
+        //     progress,
+        //     current,
+        //     layouts: {
+        //       screen: { height, width },
+        //     },
+        //   }) => {
+        //     "worklet";
+
+        //     const y = interpolate(progress, [0, 1, 2], [height, 0, -height]);
+
+        //     const gestureX = interpolate(
+        //       current.gesture.normalizedX,
+        //       [-1, 0, 1],
+        //       [-width, 0, width],
+        //     );
+
+        //     const gestureY = interpolate(
+        //       current.gesture.normalizedY,
+        //       [-1, 0, 1],
+        //       [-height, 0, height],
+        //     );
+
+        //     return {
+        //       contentStyle: {
+        //         transform: [
+        //           { translateY: y },
+        //           { translateX: gestureX },
+        //           { translateY: gestureY },
+        //         ],
+        //       },
+        //     };
+        //   },
+        //   transitionSpec: {
+        //     open: Transition.specs.DefaultSpec,
+        //     close: Transition.specs.DefaultSpec,
+        //   },
+        // }}
+
+        // options={{
+        //   enableTransitions: true,
+        //   gestureEnabled: true,
+        //   gestureDirection: ["horizontal", "horizontal-inverted"],
+        //   screenStyleInterpolator: ({
+        //     progress,
+        //     layouts: {
+        //       screen: { width },
+        //     },
+        //   }) => {
+        //     "worklet";
+
+        //     const x = interpolate(progress, [0, 1, 2], [width, 0, -width]);
+
+        //     return {
+        //       contentStyle: {
+        //         transform: [{ translateX: x }],
+        //       },
+        //     };
+        //   },
+        //   transitionSpec: {
+        //     open: Transition.specs.DefaultSpec,
+        //     close: Transition.specs.DefaultSpec,
+        //   },
+        // }}
+
+        // options={{
+        //   enableTransitions: true,
+        //   gestureEnabled: true,
+        //   gestureDirection: "vertical",
+        //   screenStyleInterpolator: ({
+        //     progress,
+        //     layouts: {
+        //       screen: { height },
+        //     },
+        //   }) => {
+        //     "worklet";
+
+        //     const y = interpolate(progress, [0, 1, 2], [height, 0, -height]);
+
+        //     return {
+        //       contentStyle: {
+        //         transform: [{ translateY: y }],
+        //       },
+        //     };
+        //   },
+        //   transitionSpec: {
+        //     open: Transition.specs.DefaultSpec,
+        //     close: Transition.specs.DefaultSpec,
+        //   },
+        // }}
+
+        // options={{
+        //   enableTransitions: true,
+        //   gestureEnabled: true,
+        //   gestureDirection: "bidirectional",
+        //   gestureActivationArea: "edge",
+        //   screenStyleInterpolator: ({
+        //     progress,
+        //     layouts: {
+        //       screen: { height },
+        //     },
+        //   }) => {
+        //     "worklet";
+
+        //     const y = interpolate(progress, [0, 1, 2], [height, 0, -height]);
+
+        //     return {
+        //       contentStyle: {
+        //         transform: [{ translateY: y }],
+        //       },
+        //     };
+        //   },
+        //   transitionSpec: {
+        //     open: Transition.specs.DefaultSpec,
+        //     close: Transition.specs.DefaultSpec,
+        //   },
+        // }}
+
+        // options={{
+        //   enableTransitions: true,
+        //   gestureEnabled: true,
+        //   gestureDirection: ["horizontal", "vertical"],
+        //   gestureActivationArea: {
+        //     left: "edge",
+        //     top: "screen",
+        //   },
+        //   screenStyleInterpolator: ({
+        //     progress,
+        //     layouts: {
+        //       screen: { height },
+        //     },
+        //   }) => {
+        //     "worklet";
+
+        //     const y = interpolate(progress, [0, 1, 2], [height, 0, -height]);
+
+        //     return {
+        //       contentStyle: {
+        //         transform: [{ translateY: y }],
+        //       },
+        //     };
+        //   },
+        //   transitionSpec: {
+        //     open: Transition.specs.DefaultSpec,
+        //     close: Transition.specs.DefaultSpec,
+        //   },
+        // }}
+        options={{
+          enableTransitions: true,
+          gestureDirection: "horizontal",
+          gestureEnabled: true,
+          screenStyleInterpolator: ({
+            layouts: {
+              screen: { width },
+            },
+            progress,
+          }) => {
+            "worklet";
+            const x = interpolate(progress, [0, 1, 2], [width, 0, -width]);
+            return {
+              contentStyle: {
+                transform: [{ translateX: x }],
+              },
+            };
+          },
+          transitionSpec: {
+            open: Transition.specs.DefaultSpec,
+            close: Transition.specs.DefaultSpec,
+          },
+        }}
+
+      />
       <ImageSlider />
       {/* <StoryList /> */}
     </View>
