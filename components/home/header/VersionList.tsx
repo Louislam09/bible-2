@@ -1,7 +1,6 @@
 import Icon from "@/components/Icon";
 import { iconSize } from "@/constants/size";
 import { useDBContext } from "@/context/databaseContext";
-import { storedData$ } from "@/context/LocalstoreContext";
 import { TTheme } from "@/types";
 import React, { FC } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";

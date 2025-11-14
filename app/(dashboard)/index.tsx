@@ -199,7 +199,7 @@ const MainDashboard = () => {
       label: "Guía Bíblica IA",
       action: () => navigation.navigate(Screens.AIBibleGuide),
       color: "#cccf17",
-      isNew: true,
+      isNew: isWithinTimeframe("1w", new Date("2025-11-13")).isActive,
     },
     {
       icon: "Quote",
@@ -292,11 +292,6 @@ const MainDashboard = () => {
   const currentModalOpenRef = useRef<any>(null);
   const voiceBottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const voiceHandlePresentModalPress = useCallback(() => {
-    voiceBottomSheetModalRef.current?.present();
-    currentModalOpenRef.current = voiceBottomSheetModalRef.current;
-  }, []);
-
   const versionHandlePresentModalPress = useCallback(() => {
     versionRef.current?.present();
     currentModalOpenRef.current = versionRef.current;
@@ -317,14 +312,12 @@ const MainDashboard = () => {
   const additionalResourceList: IAdditionalResourceList = {
     advancedSearch: [
       {
-        icon: "LayoutGrid",
-        label: "Lista de Libro",
-        action: () =>
-          navigation.navigate(
-            useDomComponent ? Screens.ChooseReferenceDom : Screens.ChooseBook,
-            {}
-          ),
-        color: "#b76e5b",
+        icon: "Sparkles",
+        label: "Ai Chat",
+        action: () => {
+          navigation.navigate(Screens.AIBibleGuide);
+        },
+        color: "#fedf75",
       },
       {
         icon: "FileStack",
@@ -347,16 +340,17 @@ const MainDashboard = () => {
     ],
     manager: [
       {
-        icon: "MonitorDown",
+        // icon: "MonitorDown",
+        icon: "HardDriveDownload",
         label: "Modulos",
         action: () => navigation.navigate(Screens.DownloadManager),
         color: "#2cc47d",
       },
       {
-        icon: "Info",
-        label: "Incorporación",
-        action: () => navigation.navigate(Screens.Onboarding),
-        color: "#beeaff",
+        icon: "Bell",
+        label: "Notificaciones",
+        action: () => navigation.navigate(Screens.Notification),
+        color: "#78b0a4",
       },
       {
         icon: "Settings",

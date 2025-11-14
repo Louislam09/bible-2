@@ -219,15 +219,15 @@ const NotificationSettingsScreen = () => {
           },
           ...(notificationPreferences.dailyVerseEnabled
             ? [
-                {
-                  label: "Hora de Notificación",
-                  extraText: "Configura cuándo recibir el versículo diario",
-                  iconName: "Clock" as keyof typeof icons,
-                  action: () => setModalVisible(true),
-                  badge: notificationPreferences.dailyVerseTime,
-                  color: theme.colors.notification,
-                },
-              ]
+              {
+                label: "Hora de Notificación",
+                extraText: "Configura cuándo recibir el versículo diario",
+                iconName: "Clock" as keyof typeof icons,
+                action: () => setModalVisible(true),
+                badge: notificationPreferences.dailyVerseTime,
+                color: theme.colors.notification,
+              },
+            ]
             : []),
         ],
         hide: !notificationPreferences.notificationEnabled,
@@ -471,7 +471,7 @@ const NotificationSettingsScreen = () => {
             headerRightProps: {
               headerRightIcon: "Settings",
               headerRightIconColor: theme.colors.notification,
-              onPress: () => {},
+              onPress: () => { },
               disabled: true,
               style: { opacity: 0 },
             },
@@ -481,7 +481,7 @@ const NotificationSettingsScreen = () => {
       <ScreenWithAnimation duration={800} icon="Bell" title="Notificaciones">
         <ScrollView style={styles.container}>
           {sections.map(SettingSection)}
-          {(isAdmin || IS_DEV) && <DatabaseDebug />}
+          {/* {(isAdmin || IS_DEV) && <DatabaseDebug />} */}
 
           {/* Time Picker Modal */}
           <Modal

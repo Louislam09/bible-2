@@ -56,11 +56,7 @@ type TScreensName = { [key in Screens]: StackAnimationTypes };
 const screenAnimations: TScreensName = {
   [Screens.Dashboard]: "none",
   [Screens.Home]: "slide_from_right",
-  [Screens.ChooseBook]: "slide_from_bottom",
-  [Screens.ChooseReferenceDom]: "slide_from_bottom",
   [Screens.Search]: "slide_from_right",
-  [Screens.ChooseChapterNumber]: "slide_from_right",
-  [Screens.ChooseVerseNumber]: "none", // You can adjust this if needed
   [Screens.Onboarding]: "slide_from_bottom",
   [Screens.DownloadManager]: "slide_from_right",
   [Screens.Settings]: "slide_from_right",

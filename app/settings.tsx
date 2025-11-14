@@ -91,7 +91,6 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
   const { toggleTheme, theme } = useMyTheme();
   const styles = getStyles(theme);
   const fontSizes = getMinMaxFontSize();
-  const isGridLayout = use$(() => storedData$.isGridLayout.get());
   const isSyncedWithCloud = use$(() => storedData$.isSyncedWithCloud.get());
   const isAuthenticated = use$(() => authState$.isAuthenticated.get());
   const { toggleCloudSync, syncWithCloud, loadFromCloud } = useStorage();

@@ -34,10 +34,6 @@ export enum Screens {
   Home = "home",
   Search = "(search)",
   Concordance = "concordance",
-  ChooseBook = "chooseBook",
-  ChooseReferenceDom = "chooseReferenceDom",
-  ChooseChapterNumber = "chooseChapterNumber",
-  ChooseVerseNumber = "chooseVerseNumber",
   Favorite = "favorite",
   DownloadManager = "downloadManager",
   Notes = "notes",
@@ -75,10 +71,6 @@ export const ScreensName: TScreensName = {
   [Screens.Search]: "Busqueda",
   [Screens.Quote]: "Cita",
   [Screens.Concordance]: "Concordancia",
-  [Screens.ChooseBook]: "Libros",
-  [Screens.ChooseReferenceDom]: "Libros",
-  [Screens.ChooseChapterNumber]: "Capitulos",
-  [Screens.ChooseVerseNumber]: "Versiculos",
   [Screens.Favorite]: "Versiculos Favoritos",
   [Screens.Notes]: "Notas",
   [Screens.Dashboard]: "Dashboard",
@@ -118,8 +110,6 @@ export type RootTabParamList = {
   quote: undefined;
   home: undefined;
   chooseGame: undefined;
-  book: undefined;
-  chooseBook: { book: string };
   search: undefined;
   concordance: undefined;
   strongSearchEntire: undefined;
@@ -157,12 +147,7 @@ export type RootStackParamList = {
   | NavigatorScreenParams<RootTabParamList>
   | { noteId: number | null; isNewNote: boolean };
   character: NavigatorScreenParams<RootTabParamList> | undefined;
-  chooseBook:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
-  chooseReferenceDom:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
+
   "(search)": NavigatorScreenParams<RootTabParamList> | { book?: string };
   concordance: NavigatorScreenParams<RootTabParamList> | {};
   strongSearchEntire:
@@ -170,12 +155,6 @@ export type RootStackParamList = {
   | { paramCode: string };
   dictionary: NavigatorScreenParams<RootTabParamList> | { word: string };
   commentary: NavigatorScreenParams<RootTabParamList> | undefined;
-  chooseChapterNumber:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
-  chooseVerseNumber:
-  | NavigatorScreenParams<RootTabParamList>
-  | ChooseChapterNumberParams;
   modal: undefined;
   onboarding: undefined;
   timeline: undefined;

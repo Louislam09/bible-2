@@ -2,7 +2,7 @@ import Icon from "@/components/Icon";
 import { GET_ALL_NOTE } from "@/constants/Queries";
 import { iconSize } from "@/constants/size";
 import { useDBContext } from "@/context/databaseContext";
-import { storedData$, useStorage } from "@/context/LocalstoreContext";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { bibleState$ } from "@/state/bibleState";
 import { TNote, TTheme } from "@/types";
@@ -12,9 +12,8 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Animated,
-  Dimensions,
   StyleSheet,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
 import { Text, View } from "../Themed";
 
@@ -22,7 +21,6 @@ type NoteNameListProps = {
   handleSnapPress?: (index: number) => void;
 };
 
-const { width } = Dimensions.get("window");
 const ITEM_HEIGHT = 70;
 
 const NoteNameList: FC<NoteNameListProps> = ({ handleSnapPress }) => {

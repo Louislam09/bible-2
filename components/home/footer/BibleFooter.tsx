@@ -146,7 +146,18 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
       bibleState$.clearSelection();
       bibleState$.isBottomBibleSearching.set(!!isSplit);
     });
-    navigation?.navigate(Screens.ChooseChapterNumber, { ...params });
+    ChooseReferenceMutableProgress.value = withTiming(
+      1,
+      {
+        duration: 450,
+        easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+      },
+      (finished) => {
+        if (finished) {
+          runOnJS(openModal)();
+        }
+      }
+    );
   };
 
   const onPress = useSingleAndDoublePress({
@@ -155,19 +166,6 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
     delay: 200,
   });
 
-  const onLongFooterTitle = () => {
-    batch(() => {
-      bibleState$.clearSelection();
-      bibleState$.isBottomBibleSearching.set(!!isSplit);
-    });
-    haptics.impact.heavy();
-    navigation?.navigate(Screens.ChooseChapterNumber, { ...params });
-  };
-
-  const playHandlePresentModalPress = useCallback(() => {
-    haptics.impact.light();
-    playRef.current?.present();
-  }, []);
 
   const displayBookName = renameLongBookName(book);
 
