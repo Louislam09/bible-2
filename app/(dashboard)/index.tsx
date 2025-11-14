@@ -195,13 +195,6 @@ const MainDashboard = () => {
       color: "#87c4ff",
     },
     {
-      icon: "Sparkles",
-      label: "Busqueda inteligente",
-      isIonicon: true,
-      action: () => navigation.navigate(Screens.AISearch),
-      color: "#fedf75",
-    },
-    {
       icon: "Bot",
       label: "Guía Bíblica IA",
       action: () => navigation.navigate(Screens.AIBibleGuide),

@@ -43,7 +43,6 @@ export enum Screens {
   Notes = "notes",
   Onboarding = "onboarding",
   Character = "character",
-  AISearch = "ai-search",
   Song = "song",
   StrongSearchEntire = "searchStrongWordEntire",
   DictionarySearch = "dictionary",
@@ -95,7 +94,6 @@ export const ScreensName: TScreensName = {
   [Screens.NoteDetailDom]: "Nota",
   [Screens.Hymn]: "Selecciona un himnario",
   [Screens.Game]: "Juego Biblico",
-  [Screens.AISearch]: "Busqueda Inteligente",
   [Screens.ChooseGame]: "Seleccionar Juego",
   [Screens.MemorizeVerse]: "Memorizar Verso",
   [Screens.VerseId]: "Versiculo",
@@ -191,7 +189,6 @@ export type RootStackParamList = {
   [Screens.Login]: undefined;
   [Screens.Register]: undefined;
   [Screens.AISetup]: undefined;
-  [Screens.AISearch]: undefined;
   [Screens.AIBibleGuide]: undefined;
 };
 

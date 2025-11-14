@@ -87,7 +87,6 @@ const screenAnimations: TScreensName = {
   [Screens.Quote]: "slide_from_right",
   [Screens.QuoteMaker]: "slide_from_right",
   [Screens.AISetup]: "slide_from_right",
-  [Screens.AISearch]: "slide_from_right",
   [Screens.Notification]: "slide_from_right",
   [Screens.SongDetail]: "slide_from_bottom",
   [Screens.NoteDetailDom]: "slide_from_right",
