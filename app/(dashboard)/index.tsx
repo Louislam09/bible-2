@@ -73,7 +73,6 @@ const MainDashboard = () => {
     lastBottomSideChapter,
     lastBottomSideVerse,
     isAdmin: _isAdmin,
-    useDomComponent,
   } = storedData;
   const user = use$(() => storedData$.user.get());
   const isAdmin = _isAdmin || user?.isAdmin;
@@ -86,7 +85,8 @@ const MainDashboard = () => {
   };
 
   const onSong = useCallback(() => {
-    navigation.navigate(Screens.Hymn);
+    navigation.navigate(Screens.Hymns);
+    // navigation.navigate(Screens.Hymn);
   }, [navigation]);
 
   const {

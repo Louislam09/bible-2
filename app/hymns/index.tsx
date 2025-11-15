@@ -14,12 +14,13 @@ import { storedData$ } from "@/context/LocalstoreContext";
 import { useNetwork } from "@/context/NetworkProvider";
 import { useMyTheme } from "@/context/ThemeContext";
 import { pb } from "@/globalConfig";
+import useParams from "@/hooks/useParams";
 import useRealtimeCollection from "@/hooks/useRealtimeCollection";
 import { authState$ } from "@/state/authState";
 import { Collections, RequestData, Screens, TTheme } from "@/types";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
-import { Stack, useNavigation } from "expo-router";
+import { Stack, useGlobalSearchParams, useNavigation, useRouter } from "expo-router";
 import { RecordModel } from "pocketbase";
 import React, {
   useCallback,
@@ -150,7 +151,9 @@ const BibleQuote = ({ verse, reference }: BibleVerse) => {
 const HymnScreen = () => {
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
-  const navigation = useNavigation();
+  const { animationIndex } = useGlobalSearchParams<{ animationIndex: any }>();
+  // const navigation = useNavigation();
+  const router = useRouter()
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const netInfo = useNetwork();
   const { isConnected } = netInfo;
@@ -165,7 +168,7 @@ const HymnScreen = () => {
   );
 
   const assets = [...Object.values(lottieAssets)];
-  const pickARandomAsset = assets[getRandomNumberFromLength(assets.length)];
+  const pickARandomAsset = assets[animationIndex || getRandomNumberFromLength(assets.length)];
   const statusColor = hasRequestAccess ? "#efbf43" : "#FFFFFF";
 
   const {
@@ -209,9 +212,10 @@ const HymnScreen = () => {
 
   const navigateToSongs = useCallback(
     (isAlegres: boolean) => {
-      navigation.navigate(Screens.Song, { isAlegres });
+      router.push({ pathname: "/hymns/[isAlegres]", params: { isAlegres } as any });
+      // navigation.navigate(Screens.Song, { isAlegres });
     },
-    [navigation]
+    []
   );
 
   const options = [

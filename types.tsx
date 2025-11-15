@@ -12,6 +12,7 @@ import { Router } from "expo-router";
 import { icons } from "lucide-react-native";
 import { RefObject } from "react";
 import { IconProps } from "./components/Icon";
+import { StackAnimationTypes } from "react-native-screens";
 
 declare global {
   namespace ReactNavigation {
@@ -39,6 +40,7 @@ export enum Screens {
   Notes = "notes",
   Onboarding = "onboarding",
   Character = "character",
+  Hymns = "hymns",
   Song = "song",
   StrongSearchEntire = "searchStrongWordEntire",
   DictionarySearch = "dictionary",
@@ -67,6 +69,7 @@ export enum Screens {
 type TScreensName = { [key in Screens]: string };
 
 export const ScreensName: TScreensName = {
+  [Screens.Hymns]: "Himnarios",
   [Screens.Home]: "Santa Escritura",
   [Screens.Search]: "Busqueda",
   [Screens.Quote]: "Cita",
@@ -103,8 +106,49 @@ export const ScreensName: TScreensName = {
   [Screens.AIBibleGuide]: "Guía Bíblica IA",
 };
 
+export type TScreenAnimations = { [key in Screens]: StackAnimationTypes };
+
+export const screenAnimations: TScreenAnimations = {
+  [Screens.Dashboard]: "none",
+  [Screens.Home]: "slide_from_right",
+  [Screens.Search]: "slide_from_right",
+  [Screens.Onboarding]: "slide_from_bottom",
+  [Screens.DownloadManager]: "slide_from_right",
+  [Screens.Settings]: "slide_from_right",
+  [Screens.Favorite]: "slide_from_right",
+  [Screens.DictionarySearch]: "slide_from_bottom",
+  [Screens.StrongSearchEntire]: "slide_from_bottom",
+  [Screens.Notes]: "slide_from_right",
+  [Screens.NoteDetail]: "slide_from_right",
+  [Screens.Character]: "slide_from_right",
+  [Screens.Song]: "slide_from_right",
+  [Screens.Concordance]: "slide_from_right",
+  [Screens.Hymn]: "slide_from_right",
+  [Screens.Game]: "slide_from_right",
+  [Screens.ChooseGame]: "slide_from_right",
+  [Screens.MemorizeVerse]: "slide_from_bottom",
+  [Screens.VerseId]: "slide_from_bottom",
+  [Screens.ChallengeTypeId]: "slide_from_left",
+  [Screens.History]: "slide_from_bottom",
+  [Screens.Timeline]: "slide_from_bottom",
+  [Screens.Admin]: "slide_from_bottom",
+  [Screens.TimelineId]: "slide_from_bottom",
+  [Screens.Login]: "slide_from_right",
+  [Screens.Register]: "slide_from_right",
+  [Screens.Quote]: "slide_from_right",
+  [Screens.QuoteMaker]: "slide_from_right",
+  [Screens.AISetup]: "slide_from_right",
+  [Screens.Notification]: "slide_from_right",
+  [Screens.SongDetail]: "slide_from_bottom",
+  [Screens.NoteDetailDom]: "slide_from_right",
+  [Screens.Commentary]: "slide_from_right",
+  [Screens.AIBibleGuide]: "slide_from_right",
+  [Screens.Hymns]: "slide_from_right",
+};
+
 // export type RootTabParamList = { [key in Screens]: any };
 export type RootTabParamList = {
+  hymns: undefined;
   dashboard: undefined;
   settings: undefined;
   quote: undefined;
@@ -130,6 +174,7 @@ export type RootTabParamList = {
 };
 
 export type RootStackParamList = {
+  hymns: NavigatorScreenParams<RootTabParamList> | undefined;
   dashboard: NavigatorScreenParams<RootTabParamList> | undefined;
   settings: NavigatorScreenParams<RootTabParamList> | undefined;
   quote: NavigatorScreenParams<RootTabParamList> | undefined;
