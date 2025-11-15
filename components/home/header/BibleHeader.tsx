@@ -175,7 +175,7 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
     >
       <View style={styles.headerContainer}>
         <TouchableOpacity
-          style={styles.iconContainer}
+          style={[styles.iconContainer]}
           onPress={() => router.navigate("/(dashboard)")}
         >
           <Icon
@@ -188,8 +188,8 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.headerCenter}
-          style={styles.headerCenterScroll}
+          contentContainerStyle={[styles.headerCenter]}
+          style={[styles.headerCenterScroll]}
         >
           {headerIconData.map((icon, index) => (
             <TouchableOpacity
@@ -305,6 +305,13 @@ const getStyles = ({ colors, dark }: TTheme) =>
       gap: 4,
       paddingLeft: 10,
       borderRadius: 50,
+    },
+    styledIconContainer: {
+      borderWidth: 1,
+      borderColor: colors.text + 20,
+      borderRadius: 10,
+      paddingHorizontal: 8,
+      paddingVertical: 4,
     },
     iconContainer: {
       display: "flex",
