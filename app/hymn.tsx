@@ -30,10 +30,8 @@ import React, {
 } from "react";
 import {
   Alert,
-  Pressable,
   ScrollView,
-  StyleSheet,
-  useWindowDimensions,
+  StyleSheet
 } from "react-native";
 
 interface BibleVerse {
@@ -135,23 +133,10 @@ const HymnOption: React.FC<HymnOptionProps> = ({
   );
 };
 
-const BibleQuote = ({ verse, reference }: BibleVerse) => {
-  const { theme } = useMyTheme();
-  const styles = getStyles(theme);
-
-  return (
-    <View style={styles.quoteContainer}>
-      <Text style={styles.verse}>{verse}</Text>
-      <Text style={styles.reference}>{reference}</Text>
-    </View>
-  );
-};
-
 const HymnScreen = () => {
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
-  const { width: SCREEN_WIDTH } = useWindowDimensions();
   const netInfo = useNetwork();
   const { isConnected } = netInfo;
   const requestAccessBottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -231,20 +216,6 @@ const HymnScreen = () => {
     },
   ];
 
-  // const renderItem = useCallback(
-  //   ({ item }: { item: HymnOptionItem }) => (
-  //     <HymnOption
-  //       item={item}
-  //       onPress={item.action}
-  //       isLocked={item.isLocked}
-  //       onRequestAccess={handleRequestAccessPress}
-  //       hasRequestAccess={hasRequestAccess}
-  //       statusColor={statusColor}
-  //     />
-  //   ),
-  //   [hasRequestAccess, statusColor, handleRequestAccessPress]
-  // );
-
   const requestAccess = async (name: string) => {
     if (!isConnected) {
       Alert.alert(
@@ -305,7 +276,7 @@ const HymnScreen = () => {
       <ScreenWithAnimation
         title="Himnarios"
         animationSource={pickARandomAsset}
-        speed={2}
+        speed={2.5}
       >
         <ScrollView
           style={styles.container}
@@ -313,10 +284,10 @@ const HymnScreen = () => {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.imageContainer}>
-            <BibleQuote
-              verse={selectedVerse.verse}
-              reference={selectedVerse.reference}
-            />
+            <View style={styles.quoteContainer}>
+              <Text style={styles.verse}>{selectedVerse.verse}</Text>
+              <Text style={styles.reference}>{selectedVerse.reference}</Text>
+            </View>
             <Animation
               backgroundColor={"transparent"}
               source={pickARandomAsset}

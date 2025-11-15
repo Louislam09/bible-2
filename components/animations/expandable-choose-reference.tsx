@@ -108,8 +108,9 @@ const ExpandableChooseReference = ({ isCommentary }: ExpandableChooseReferencePr
 
   const rSheetStyle = useAnimatedStyle(() => {
     return {
-      height: interpolate(progress.value, [0, 1], [0, windowHeight - safeTop - (isCommentary ? 60 : 0)]),
-      bottom: interpolate(progress.value, [0, 1], [safeBottom, 0]),
+      height: interpolate(progress.value, [0, 1], [0, windowHeight - safeTop - (isCommentary ? 60 : safeTop)]),
+      // bottom: interpolate(progress.value, [0, 1], [safeBottom, 0]),
+      bottom: interpolate(progress.value, [0, 1], [0, 0]),
       left: interpolate(progress.value, [0, 1], [16, 0]),
       right: interpolate(progress.value, [0, 1], [16, 0]),
       backgroundColor: interpolateColor(
@@ -121,16 +122,16 @@ const ExpandableChooseReference = ({ isCommentary }: ExpandableChooseReferencePr
         progress.value,
         [0, 0.9, 1],
         [
+          "rgba(255, 255, 255, 0.1)",
+          "rgba(255, 255, 255, 0.1)",
           theme.colors.notification + 50,
-          "rgba(255, 255, 255, 0.1)",
-          "rgba(255, 255, 255, 0.1)",
         ]
       ),
-      borderRadius: interpolate(progress.value, [0, 0.9, 1], [16, 48, 0]),
+      borderRadius: interpolate(progress.value, [0, 0.9, 1], [16, 48, 10]),
       borderWidth: interpolate(
         progress.value,
         [0, 0.9, 1],
-        [StyleSheet.hairlineWidth, StyleSheet.hairlineWidth, 0]
+        [StyleSheet.hairlineWidth, StyleSheet.hairlineWidth, 1]
       ),
       shadowOpacity: interpolate(progress.value, [0, 1], [0.2, 0.5]),
       transform: [
@@ -189,12 +190,12 @@ const ExpandableChooseReference = ({ isCommentary }: ExpandableChooseReferencePr
             rKnobStyle,
             {
               height: safeTop,
-              top: safeTop + 20,
+              top: safeTop,
             },
             styles.knobContainer,
           ]}
         >
-          <View style={styles.knob} />
+          <View style={[styles.knob, { backgroundColor: theme.colors.notification }]} />
         </Animated.View>
       </GestureDetector>
 
@@ -202,7 +203,7 @@ const ExpandableChooseReference = ({ isCommentary }: ExpandableChooseReferencePr
         style={[
           rCloseButtonStyle,
           {
-            top: safeTop + 20,
+            top: safeTop,
             right: 20,
           },
           styles.closeButtonContainer,

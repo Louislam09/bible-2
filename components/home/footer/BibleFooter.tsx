@@ -172,8 +172,8 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   return (
     <LinearGradient
       colors={[
-        "transparent",
-        theme.colors.background + "99",
+        // "transparent",
+        theme.colors.background + "ee",
         theme.colors.background + "ee",
       ]}
       style={styles.footer}

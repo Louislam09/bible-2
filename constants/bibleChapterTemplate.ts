@@ -915,40 +915,40 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
         <!-- Action buttons (hidden by default, shown on long press) - Outside verse container -->
         <div class="verse-actions opacity-0 -translate-y-2 scale-95 transition-all duration-300 ease-out" data-verse-key="${verseKey}" style="display: none;">
             <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[50ms] hover:scale-105" onclick="handleVerseAction('copy', '${verseKey}')">
-                <span class="action-icon" style="color: rgba(255, 255, 255, 0.8);">${lucideIcons.copy}</span>
-                <div class="action-label">Copiar</div>
+                <span class="action-icon text-theme-text">${lucideIcons.copy}</span>
+                <div class="action-label text-theme-text">Copiar</div>
             </button>
             <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[100ms] hover:scale-105" onclick="handleVerseAction('favorite', '${verseKey}')">
                 <span class="action-icon" style="color: ${item.is_favorite ? 'var(--color-notification)' : '#fedf75'};">${lucideIcons[item.is_favorite ? 'star' : 'star-off']}</span>
-                <div class="action-label">Favorito</div>
+                <div class="action-label text-theme-text">Favorito</div>
             </button>
             <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[200ms] hover:scale-105" onclick="handleVerseAction('image', '${verseKey}')">
                 <span class="action-icon" style="color: #9dcd7d;">${lucideIcons.image}</span>
-                <div class="action-label">Imagen</div>
+                <div class="action-label text-theme-text">Imagen</div>
             </button>
             <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[150ms] hover:scale-105" onclick="handleVerseAction('note', '${verseKey}')">
                 <span class="action-icon" style="color: var(--color-notification);">${lucideIcons['notebook-pen']}</span>
-                <div class="action-label">Anotar</div>
+                <div class="action-label text-theme-text">Anotar</div>
             </button>
             <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[300ms] hover:scale-105" onclick="handleVerseAction('quote', '${verseKey}')">
                 <span class="action-icon" style="color: #CDAA7D;">${lucideIcons.quote}</span>
-                <div class="action-label">Cita</div>
+                <div class="action-label text-theme-text">Cita</div>
             </button>
             <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[400ms] hover:scale-105" onclick="handleVerseAction('commentary', '${verseKey}')">
                 <span class="action-icon" style="color: #87c4ff;">${lucideIcons.messageSquare}</span>
-                <div class="action-label">Comentarios</div>
+                <div class="action-label text-theme-text">Comentarios</div>
             </button>
              <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[500ms] hover:scale-105" onclick="handleVerseAction('interlinear', '${verseKey}')">
                 <span class="action-icon" style="color: #f79c67;">${lucideIcons['book-open']}</span>
-                <div class="action-label">Interlinear</div>
+                <div class="action-label text-theme-text">Interlinear</div>
             </button>
             <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[600ms] hover:scale-105" onclick="handleVerseAction('memorize', '${verseKey}')">
                 <span class="action-icon" style="color: #f1abab;">${lucideIcons.brain}</span>
-                <div class="action-label">Memorizar</div>
+                <div class="action-label text-theme-text">Memorizar</div>
             </button>
             <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[700ms] hover:scale-105" onclick="handleVerseAction('compare', '${verseKey}')">
-                <span class="action-icon" style="color: rgba(255, 255, 255, 0.8);">${lucideIcons['git-compare']}</span>
-                <div class="action-label">Comparar</div>
+                <span class="action-icon text-theme-text">${lucideIcons['git-compare']}</span>
+                <div class="action-label text-theme-text">Comparar</div>
             </button>
         </div>
     </div>

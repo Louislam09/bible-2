@@ -994,8 +994,6 @@ ${headContent(theme, isReadOnly)}
                     if(initialJson) {
                         const editorState = editor.parseEditorState(initialJson);
                         editor.setEditorState(editorState);
-                        sendMessage('log', {  log: 'loading from json'  });
-
                     }  else if(initialHtmlString) {
                         editor.update(() => {
                                 const parser = new DOMParser();

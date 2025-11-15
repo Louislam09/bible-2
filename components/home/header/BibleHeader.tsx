@@ -2,6 +2,7 @@ import { useMyTheme } from "@/context/ThemeContext";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { FC, useCallback, useMemo, useRef } from "react";
 import {
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
@@ -90,6 +91,11 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
     haptics.impact.light();
   };
 
+  const goHymnsScreen = () => {
+    navigation.navigate(Screens.Hymn);
+    haptics.impact.light();
+  };
+
   const moveBackInHistory = () => {
     const index = goBack();
     goBackOnHistory?.(index);
@@ -142,12 +148,10 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
         disabled: !canGoForward,
         color: canGoForward ? theme.colors.notification : "#7a7a7a",
       },
+      // { name: "Notebook", action: () => router.navigate({ pathname: `/${Screens.Notes}` }), ref: tourState$.search },
+      { name: "Music4", action: goHymnsScreen, ref: tourState$.search },
+      // { name: "Bot", action: () => router.navigate({ pathname: `/${Screens.AIBibleGuide}` }), ref: tourState$.search },
       { name: "Search", action: goSearchScreen, ref: tourState$.search },
-      // {
-      //   name: "Settings",
-      //   action: settingsHandlePresentModalPress,
-      //   ref: tourState$.search,
-      // },
     ];
     return options.filter((x) => !x.hide);
   }, [isSplitActived, canGoForward, canGoBackward]);
@@ -159,20 +163,17 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
     versionRef.current?.dismiss();
     haptics.impact.light();
   };
-  // const progressValue = useMemo(() => {
-  //   return (currentHistoryIndexState || 0) / (verses?.length || 10);
-  // }, [currentHistoryIndexState, verses]);
 
   return (
     <LinearGradient
       colors={[
         theme.colors.background + "ee",
-        theme.colors.background + "99",
-        "transparent",
+        theme.colors.background + "ee",
+        // "transparent",
       ]}
       style={styles.header}
     >
-      <View style={{ flexDirection: "row", backgroundColor: "transparent" }}>
+      <View style={styles.headerContainer}>
         <TouchableOpacity
           style={styles.iconContainer}
           onPress={() => router.navigate("/(dashboard)")}
@@ -183,7 +184,13 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
             color={theme.colors.primary}
           />
         </TouchableOpacity>
-        <View style={styles.headerCenter}>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.headerCenter}
+          style={styles.headerCenterScroll}
+        >
           {headerIconData.map((icon, index) => (
             <TouchableOpacity
               ref={icon.ref.get()}
@@ -200,7 +207,8 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
               />
             </TouchableOpacity>
           ))}
-        </View>
+        </ScrollView>
+
         <TouchableOpacity
           ref={tourState$.bibleVersion.get()}
           style={styles.headerEnd}
@@ -218,10 +226,6 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
           )}
         </TouchableOpacity>
 
-        <BottomModal shouldScroll startAT={1} ref={versionRef}>
-          <VersionList {...{ currentBibleVersion, onSelect, theme }} />
-        </BottomModal>
-
         <TouchableOpacity
           style={[styles.iconContainer, { marginHorizontal: 10 }]}
           onPress={settingsHandlePresentModalPress}
@@ -232,6 +236,10 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
             color={theme.colors.primary}
           />
         </TouchableOpacity>
+
+        <BottomModal shouldScroll startAT={1} ref={versionRef}>
+          <VersionList {...{ currentBibleVersion, onSelect, theme }} />
+        </BottomModal>
       </View>
     </LinearGradient>
   );
@@ -241,16 +249,22 @@ const getStyles = ({ colors, dark }: TTheme) =>
   StyleSheet.create({
     header: {
       position: "absolute",
-      top: 0,
+      top: 10,
       display: "flex",
       alignItems: "center",
-      justifyContent: "flex-end",
+      justifyContent: "center",
       paddingHorizontal: 10,
       paddingTop: 10,
       width: "100%",
-      // borderWidth: 0.5,
       zIndex: 10,
-      paddingBottom: 10
+      paddingBottom: 10,
+      borderRadius: 10,
+      alignSelf: "center",
+    },
+    headerContainer: {
+      flexDirection: "row",
+      backgroundColor: "transparent",
+      width: "100%",
     },
     progressContainer: {
       width: "100%",
@@ -269,6 +283,10 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontSize: 24,
       textAlign: "center",
     },
+    headerCenterScroll: {
+      flex: 1,
+      marginLeft: 10,
+    },
     headerCenter: {
       display: "flex",
       flexDirection: "row",
@@ -276,7 +294,7 @@ const getStyles = ({ colors, dark }: TTheme) =>
       justifyContent: "flex-end",
       backgroundColor: "transparent",
       gap: 15,
-      flex: 1,
+      flexGrow: 1,
     },
     headerEnd: {
       position: "relative",
