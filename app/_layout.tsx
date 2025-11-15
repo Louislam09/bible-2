@@ -27,10 +27,10 @@ import "../global.css";
 import { NetworkProvider } from "@/context/NetworkProvider";
 import { NotificationProvider } from "@/context/NotificationContext";
 import { useQuickActions } from "@/hooks/useQuickActions";
+import { Stack } from "@/layouts/stack";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Stack } from "@/layouts/stack";
 
 const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
 
@@ -146,6 +146,7 @@ const FeatureProviders = memo(({ children }: { children: ReactNode }) => (
 ));
 FeatureProviders.displayName = 'FeatureProviders';
 
+
 const App = () => {
   const isAnimationDisabled = use$(() =>
     settingState$.isAnimationDisabled.get()
@@ -178,9 +179,9 @@ const App = () => {
       headerShown: false,
       headerTitleAlign: "center",
       headerTitleStyle: { fontWeight: "bold" },
-      // animation: isAnimationDisabled
-      //   ? "none"
-      //   : screenAnimations[props.route.name as Screens],
+      animation: isAnimationDisabled
+        ? "none"
+        : screenAnimations[props.route.name as Screens],
       headerLeft: () => (
         <CustomHeaderLeft title={ScreensName[props.route.name as Screens]} />
       ),
@@ -198,7 +199,6 @@ const App = () => {
               screenOptions={screenOptions}
             />
           </SafeContentView>
-          {/* <BookContentModals /> */}
         </FeatureProviders>
       </DataProviders>
     </CoreProviders>
