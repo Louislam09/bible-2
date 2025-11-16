@@ -7,6 +7,7 @@ import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { commentaryCss } from "@/constants/commentaryCss";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
+import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
 import useCommentaryData from "@/hooks/useCommentaryData";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { bibleState$ } from "@/state/bibleState";
@@ -33,7 +34,7 @@ const createCommentaryHTML = (
   showReferencePicker: boolean = true
 ) => {
   const colors = theme.colors;
-  const tailwindScript = storedData$.tailwindScript.get();
+  const tailwindScript = scriptDownloadHelpers.getTailwindScript();
 
   // Generate empty state
   const generateEmptyState = () => {

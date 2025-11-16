@@ -3,6 +3,7 @@ import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { getTailwindStyleTag } from "@/hooks/useLoadTailwindScript";
 import { TTheme } from "@/types";
+import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import React, { useCallback, useMemo, useRef } from "react";
@@ -72,7 +73,7 @@ const getHTMLContent = (
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     ${fontImports}
-    ${storedData$.tailwindScript.get()}
+    ${scriptDownloadHelpers.getTailwindScript()}
     ${getTailwindStyleTag({ theme, fontSize: storedData$.fontSize.get() })}
 
     <style>

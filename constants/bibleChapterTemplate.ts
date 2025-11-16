@@ -5,6 +5,7 @@ import { bibleState$ } from "@/state/bibleState";
 import { getTailwindStyleTag } from "@/hooks/useLoadTailwindScript";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { getFontCss } from "@/hooks/useLoadFonts";
+import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
 
 
 const bibleChapterStyles = (
@@ -212,7 +213,7 @@ const createHtmlHead = (
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Capítulo ${chapterNumber}</title>
-        ${storedData$.tailwindScript.get()}
+        ${scriptDownloadHelpers.getTailwindScript()}
       
          ${getTailwindStyleTag({ theme, fontSize })}
          ${bibleChapterStyles(theme, containerWidth, fontSize, selectedFont)}

@@ -1,6 +1,7 @@
 import { storedData$ } from "@/context/LocalstoreContext";
 import { getTailwindStyleTag } from "@/hooks/useLoadTailwindScript";
 import { TTheme } from "@/types";
+import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
 
 const headContent = (theme: TTheme, isReadOnly: boolean) => `
   <head>
@@ -10,7 +11,7 @@ const headContent = (theme: TTheme, isReadOnly: boolean) => `
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-      ${storedData$.tailwindScript.get()}
+      ${scriptDownloadHelpers.getTailwindScript()}
       
          ${getTailwindStyleTag({ theme, fontSize: storedData$.fontSize.get() })}
     <style>
@@ -611,7 +612,7 @@ const headContent = (theme: TTheme, isReadOnly: boolean) => `
         }
     </style>
     <!-- Bundled Lexical JS -->
-    ${storedData$.lexicalBundle.get()}
+    ${scriptDownloadHelpers.getLexicalBundle()}
 </head>
 `;
 

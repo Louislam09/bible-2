@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
+import { TTheme } from "@/types";
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
-import { TTheme } from "@/types";
-import { storedData$ } from "@/context/LocalstoreContext";
+import { useEffect } from "react";
 
 interface ITailwindStyleTagProps {
     theme: TTheme;
@@ -59,9 +59,8 @@ const useLoadTailwindScript = () => {
     useEffect(() => {
         const loadTailwindScript = async () => {
             try {
-                // Try to load from storage context first
-                const cachedScript = storedData$.tailwindScript.get();
-
+                // Try to load from script download state first
+                const cachedScript = scriptDownloadHelpers.getTailwindScript();
                 if (cachedScript) {
                     console.log('Tailwind script loaded from cache');
                     return;
@@ -76,8 +75,8 @@ const useLoadTailwindScript = () => {
 
                 const scriptTag = `<script defer>${tailwindScript}</script>`;
 
-                // Save to storage context for future use
-                storedData$.tailwindScript.set(scriptTag);
+                // Save to script download state for future use
+                scriptDownloadHelpers.setTailwindScript(scriptTag);
 
                 console.log('Tailwind script loaded from asset and cached');
             } catch (error) {

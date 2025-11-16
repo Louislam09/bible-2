@@ -1,4 +1,4 @@
-import { storedData$ } from "@/context/LocalstoreContext";
+import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
 import { TFont } from "@/types";
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
@@ -11,9 +11,8 @@ export const getFontCss = ({
 }: {
     fontName: string;
 }) => {
-    console.log({ fontName });
-    // Get cached font styles from storage context (loaded as base64 data URIs)
-    const fontStyles = storedData$.fontStyles.get();
+    // Get cached font styles from script download state (loaded as base64 data URIs)
+    const fontStyles = scriptDownloadHelpers.getAllFontStyles();
     const fontFace = fontStyles[fontName] || '';
 
     if (!fontFace) {
@@ -35,8 +34,8 @@ const useLoadFonts = (fontMapping: FontMapping = {} as FontMapping) => {
         const loadFonts = async () => {
             try {
                 // Check if fonts are already cached
-                // storedData$.fontStyles.set({});
-                const cachedFonts = storedData$.fontStyles.get();
+                const cachedFonts = scriptDownloadHelpers.getAllFontStyles();
+                console.log('cachedFonts', Object.keys(cachedFonts).length);
                 if (cachedFonts && Object.keys(cachedFonts).length > 0) {
                     console.log('Fonts loaded from cache');
                     return;
@@ -77,8 +76,8 @@ const useLoadFonts = (fontMapping: FontMapping = {} as FontMapping) => {
                     }
                 }
 
-                // Save to storage context
-                storedData$.fontStyles.set(fontStyles);
+                // Save to script download state
+                scriptDownloadHelpers.setFontStyles(fontStyles);
                 console.log('All fonts loaded and cached');
             } catch (error) {
                 console.error('Error loading fonts:', error);

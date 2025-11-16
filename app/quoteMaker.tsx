@@ -14,13 +14,11 @@ import { quoteTemplatesMaker } from "@/constants/quoteTemplates";
 import { headerIconSize } from "@/constants/size";
 import { useMyTheme } from "@/context/ThemeContext";
 import { useViewShot } from "@/hooks/useViewShot";
-import { bibleState$ } from "@/state/bibleState";
 import { TTheme } from "@/types";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { use$ } from "@legendapp/state/react";
 import { ImageBackground } from "expo-image";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, StyleSheet, TouchableOpacity } from "react-native";
 import ViewShot from "react-native-view-shot";
@@ -47,7 +45,6 @@ const QuoteMaker: React.FC = () => {
   >();
   const [watermarkClass, setWatermarkClass] = useState("none");
   const [highlightShareButton, setHighlightShareButton] = useState(false); // for music mode
-  const mySelectedVerse = use$(() => bibleState$.selectedVerseForNote.get());
   const params = useLocalSearchParams();
   const [actionLoading, setActionLoading] = useState({
     save: false,
@@ -71,7 +68,6 @@ const QuoteMaker: React.FC = () => {
 
   // Initialize with random verse and theme
   useEffect(() => {
-    console.log('params', params);
     if (params?.themeId && typeof params.themeId === "string") {
       const theme = QUOTES_DATA.flatMap((section) => section.items).find(
         (item) => item.id === params.themeId

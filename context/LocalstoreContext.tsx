@@ -1,6 +1,7 @@
 import { StorageKeys } from "@/constants/StorageKeys";
 import { pb } from "@/globalConfig";
 import { bibleState$ } from "@/state/bibleState";
+import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
 import { settingState$ } from "@/state/settingState";
 import { EBibleVersions, EThemes, pbUser, SortOption, TFont } from "@/types";
 import { observable, syncState, when } from "@legendapp/state";
@@ -14,8 +15,8 @@ import { showToast } from "@/utils/showToast";
 import React, {
   createContext,
   ReactNode,
-  useCallback,
   use,
+  useCallback,
   useEffect,
   useState,
 } from "react";
@@ -75,9 +76,6 @@ type StoreState = {
   showReadingTime: boolean;
   appFolderUri: string;
   appFolderTreeUri: string;
-  tailwindScript: string;
-  lexicalBundle: string;
-  fontStyles: Record<string, string>;
 };
 
 const initialContext: StoreState = {
@@ -89,7 +87,7 @@ const initialContext: StoreState = {
   lastBottomSideVerse: 0,
   currentTheme: "Green",
   fontSize: 24,
-  selectedFont: TFont.NotoSansHebrew,
+  selectedFont: TFont.Quicksand,
   isDarkMode: true,
   isGridLayout: false,
   isShowName: false,
@@ -126,9 +124,6 @@ const initialContext: StoreState = {
   showReadingTime: false,
   appFolderUri: "",
   appFolderTreeUri: "",
-  tailwindScript: "",
-  lexicalBundle: "",
-  fontStyles: {},
 };
 
 export const storedData$ = observable(initialContext);
@@ -175,12 +170,12 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isSyncing, setSyncing] = useState(false);
   const netInfo = useNetwork();
   const { isConnected } = netInfo;
-  // const slowDevice = +getMemorySizeInGB() < 4;
-  // console.log({ slowDevice })
 
   useEffect(() => {
     const loadState = async () => {
       await when(() => syncState$.isPersistLoaded.get());
+      // Migrate script download data from old storage to new state
+      await scriptDownloadHelpers.migrateFromOldStorage();
 
       bibleState$.changeBibleQuery({
         book: storedData$.lastBook.get(),
@@ -192,6 +187,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         isHistory: true,
       });
       storedData$.isDataLoaded.set(true);
+
     };
 
     loadState();
@@ -205,7 +201,9 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribeFromChanges = storedData$.onChange((value) => {
+      // console.log('storedData changed', value);
       if (storedData$.user.get() && pb.authStore.isValid) {
+        console.log('syncing with cloud');
         setHasPendingCloudSync(true);
       }
     });
@@ -215,6 +213,9 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const clearData = async () => {
     console.log("🗑 Clearing data...");
     storedData$.set(initialContext);
+    scriptDownloadHelpers.clearTailwindScript();
+    scriptDownloadHelpers.clearLexicalBundle();
+    scriptDownloadHelpers.clearFontStyles();
   };
 
   const toggleCloudSync = useCallback(
@@ -279,8 +280,8 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         showToast("✅ Configuración sincronizada con la nube");
       }
       return true;
-    } catch (error) {
-      console.error("Error al sincronizar con la nube:", error);
+    } catch (error: any) {
+      console.error("Error al sincronizar con la nube:", error.originalError);
       return false;
     }
   };
@@ -315,6 +316,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
       if (existingSettings.items.length > 0) {
         const settingsData = existingSettings.items[0].settings as StoreState;
+        console.log('existingSettings', settingsData);
 
         if (user.name || user.email) {
           settingsData.userData = {
@@ -352,7 +354,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       return false;
     } catch (error: any) {
       console.log("Error al cargar desde la nube:", error.originalError);
-      console.error("Error al cargar desde la nube:", error);
+      // console.error("Error al cargar desde la nube:", error);
       return false;
     } finally {
       console.log("📌Configuración cargada desde la nube");

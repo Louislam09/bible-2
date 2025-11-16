@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
-import { storedData$ } from "@/context/LocalstoreContext";
+import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
 
 // Update this version when you rebuild the bundle to force cache refresh
 // Increment this after running: npm run build:lexical
@@ -17,7 +17,7 @@ const useLoadLexicalBundle = () => {
         const loadLexicalBundle = async () => {
             try {
                 // Check if cached bundle has the correct version marker
-                const cachedBundle = storedData$.lexicalBundle.get();
+                const cachedBundle = scriptDownloadHelpers.getLexicalBundle();
 
                 // Use cache only if it contains the version marker
                 if (cachedBundle && cachedBundle.includes(LEXICAL_BUNDLE_VERSION)) {
@@ -39,8 +39,8 @@ const useLoadLexicalBundle = () => {
                 // Add version marker as a comment at the start
                 const scriptTag = `<script defer>/* Lexical Bundle ${LEXICAL_BUNDLE_VERSION} */${lexicalBundle}</script>`;
 
-                // Save to storage context
-                storedData$.lexicalBundle.set(scriptTag);
+                // Save to script download state
+                scriptDownloadHelpers.setLexicalBundle(scriptTag);
 
                 console.log(`Lexical bundle ${LEXICAL_BUNDLE_VERSION} loaded from asset and cached`);
             } catch (error) {

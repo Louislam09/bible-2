@@ -1,6 +1,7 @@
 import { storedData$ } from "@/context/LocalstoreContext";
 import { modalState$ } from "@/state/modalState";
 import { lucideIcons } from "@/utils/lucideIcons";
+import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
 
 type DictionaryListHtmlTemplateProps = {
     data: any[],
@@ -105,7 +106,7 @@ export const dictionaryListHtmlTemplate = ({
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@100..900&display=swap">
 
           <!-- Tailwind CSS (Offline) -->
-         ${storedData$.tailwindScript.get()}
+         ${scriptDownloadHelpers.getTailwindScript()}
          <style type="text/tailwindcss">
             @theme {
                 /* Define Tailwind theme tokens */

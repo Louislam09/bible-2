@@ -19,6 +19,7 @@ import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import BottomModal from "./BottomModal";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
 
 interface CommentaryBottomSheetProps {
   bookNumber: number;
@@ -36,7 +37,7 @@ const createCommentaryHTML = (
   hasCommentaries: boolean,
 ) => {
   const colors = theme.colors;
-  const tailwindScript = storedData$.tailwindScript.get();
+  const tailwindScript = scriptDownloadHelpers.getTailwindScript();
 
   // Generate empty state
   const generateEmptyState = () => {
