@@ -5,13 +5,10 @@
       "name": "bible",
       "dependencies": {
         "@babel/preset-typescript": "^7.18.6",
-        "@expo-google-fonts/dm-sans": "^0.2.3",
-        "@expo-google-fonts/eb-garamond": "^0.2.3",
         "@expo-google-fonts/inter": "^0.2.3",
-        "@expo-google-fonts/manrope": "^0.2.3",
         "@expo-google-fonts/noto-sans-hebrew": "^0.4.0",
-        "@expo-google-fonts/noto-serif": "^0.4.0",
         "@expo-google-fonts/poppins": "^0.2.3",
+        "@expo-google-fonts/quicksand": "^0.4.1",
         "@expo/cli": "^0.21.8",
         "@expo/config-plugins": "~10.1.1",
         "@expo/metro-config": "~0.20.0",
@@ -393,19 +390,13 @@
 
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.4.1", "", { "dependencies": { "@eslint/core": "^0.17.0", "levn": "^0.4.1" } }, "sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA=="],
 
-    "@expo-google-fonts/dm-sans": ["@expo-google-fonts/dm-sans@0.2.3", "", {}, "sha512-sMrW6bc3ZWg5tyasDe6GB56N1/q/wY5zjMFp1vnA61MUX19mVd62ZiiubDaroSsQIhKEJvRW662NjDGUkqmEmg=="],
-
-    "@expo-google-fonts/eb-garamond": ["@expo-google-fonts/eb-garamond@0.2.3", "", {}, "sha512-45H94GBpQLrOtooPcsNkITzZPxS+NGHqEFQoO1ngv/l7q1CJwWT8E/gI0jBP8yPhiTS3AlJDfKXz4asyPL2Vng=="],
-
     "@expo-google-fonts/inter": ["@expo-google-fonts/inter@0.2.3", "", {}, "sha512-iHK9FI+dnE45X5c2Z5hSFwNH4zUWethizpbv3XUn0FIGw5jwvzriENz0a6wCdkI4/d+1QkurnHo5XHti7TbNJA=="],
-
-    "@expo-google-fonts/manrope": ["@expo-google-fonts/manrope@0.2.3", "", {}, "sha512-2M9hzi5ku97ZbheGMyzqIdiIEmve0/ihBk9nVWRy2lVIchWqR2k2yIQPS7jKC/Az/e43tW3POLNeU6gQJQL9hw=="],
 
     "@expo-google-fonts/noto-sans-hebrew": ["@expo-google-fonts/noto-sans-hebrew@0.4.1", "", {}, "sha512-NR3vP6GT/hSINLrk4JHJBQnuzh/C1mlMrphNlI2dQaO53a3oTjSRoG4JyYb1B6bHadjsGh0wPZbT4kMJBKjT/w=="],
 
-    "@expo-google-fonts/noto-serif": ["@expo-google-fonts/noto-serif@0.4.2", "", {}, "sha512-1xvAYegrtpCuPPunSyhvhV9FHWEzCWjikEoUJkvHt+WWvt+h7lKr+vkXNpqwFQM4W3KjXOccfLd5s04xLMjjDQ=="],
-
     "@expo-google-fonts/poppins": ["@expo-google-fonts/poppins@0.2.3", "", {}, "sha512-PXkur1ZY/puy1PwVFYPJx8qiI3dtBzC2ig1bo53swCt7/sI7krCGYRO6hLBNp15M0kcNh2J4cCR9ZQyFxsving=="],
+
+    "@expo-google-fonts/quicksand": ["@expo-google-fonts/quicksand@0.4.1", "", {}, "sha512-LpGdmY+CDm/GTv29qDPy8Nz1a3idWO1R6Bb+ty7flS6vfHXsdOQTRKNz93SFHdXQj0FSvVhvMLe3wTtMgf312A=="],
 
     "@expo/bunyan": ["@expo/bunyan@4.0.1", "", { "dependencies": { "uuid": "^8.0.0" } }, "sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg=="],
 

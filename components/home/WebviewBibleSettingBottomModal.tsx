@@ -4,6 +4,7 @@ import getThemes from "@/constants/themeColors";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
+import { getFontCss } from "@/hooks/useLoadFonts";
 import { modalState$ } from "@/state/modalState";
 import { EThemes, TFont, TTheme } from "@/types";
 import getMinMaxFontSize from "@/utils/getMinMaxFontSize";
@@ -99,6 +100,7 @@ const createSettingsHTML = (
         <title>Configuración</title>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap">
         ${storedData$.tailwindScript.get()}
+        ${getFontCss({ fontName: selectedFont || '' })}
         
         <style>
             :root {
@@ -116,7 +118,6 @@ const createSettingsHTML = (
             }
             
             body {
-                font-family: 'Quicksand', sans-serif;
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
                 overflow-x: hidden;

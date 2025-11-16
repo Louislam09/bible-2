@@ -68,6 +68,14 @@ export const webViewConfigs = {
         allowFileAccess: false,
     }),
 
+    // For bible chapters (with file access for cached fonts)
+    bibleChapter: getOptimizedWebViewProps({
+        enableCache: true,
+        enableMedia: false,
+        mixedContentMode: 'never',
+        allowFileAccess: true,
+    }),
+
     // For rich text editors
     editor: getOptimizedWebViewProps({
         enableCache: true,

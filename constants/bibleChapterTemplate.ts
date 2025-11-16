@@ -1,43 +1,29 @@
 import { IBookVerse } from "@/types";
 import { lucideIcons } from "@/utils/lucideIcons";
 import { DB_BOOK_NAMES } from "./BookNames";
-import { Platform } from "react-native";
 import { bibleState$ } from "@/state/bibleState";
 import { getTailwindStyleTag } from "@/hooks/useLoadTailwindScript";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { getFontCss } from "@/hooks/useLoadFonts";
 
-export const generateAssetFontCss = ({
-    fontFileName,
-    extension = 'ttf',
-}: {
-    fontFileName: string;
-    extension?: string;
-}) => {
-    const fileUri = Platform.select({
-        ios: `${fontFileName}.${extension}`,
-        android: `file:///android_asset/fonts/${fontFileName}.${extension}`,
-    });
-
-    return `@font-face {
-        font-family: '${fontFileName}';
-        src: local('${fontFileName}'), url('${fileUri}') ;
-    }`;
-};
 
 const bibleChapterStyles = (
     theme: any,
     containerWidth: number,
-    showReadingTime: boolean,
-    fontSize: number
-) => `
+    fontSize: number,
+    selectedFont?: string
+) => {
+
+    return `
+        ${getFontCss({ fontName: selectedFont || '' })}
          <style>
             /* Custom styles that can't be replaced with Tailwind */
             :root {
                 --color-notification-opacity-20: ${theme.colors.notification}10;
             }
-            
+                
             body {
-                font-family: 'Quicksand', 'Noto Sans Hebrew', 'Georgia', 'Times New Roman', serif;
+
                 font-size: ${fontSize}px;
                 line-height: 1.5;
                 letter-spacing: 2px;
@@ -211,6 +197,7 @@ const bibleChapterStyles = (
             
         </style>
 `;
+};
 
 // HTML document structure functions
 const createHtmlHead = (
@@ -219,17 +206,16 @@ const createHtmlHead = (
     containerWidth: any,
     showReadingTime: boolean,
     fontSize: number,
+    selectedFont?: string
 ) => `
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Capítulo ${chapterNumber}</title>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@100..900&display=swap">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400&display=swap">
         ${storedData$.tailwindScript.get()}
       
          ${getTailwindStyleTag({ theme, fontSize })}
-         ${bibleChapterStyles(theme, containerWidth, showReadingTime, fontSize)}
+         ${bibleChapterStyles(theme, containerWidth, fontSize, selectedFont)}
     </head>
 `;
 
@@ -988,6 +974,7 @@ type TBibleChapterHtmlTemplateProps = {
     fontSize?: number;
     initialScrollIndex?: number;
     showReadingTime: boolean
+    selectedFont?: string;
 };
 
 export const bibleChapterHtmlTemplate = ({
@@ -998,7 +985,8 @@ export const bibleChapterHtmlTemplate = ({
     isInterlinear,
     fontSize,
     initialScrollIndex = 0,
-    showReadingTime
+    showReadingTime,
+    selectedFont
 }: TBibleChapterHtmlTemplateProps) => {
     const containerWidth = width || "100%";
     const chapterNumber = data[0]?.chapter || 1;
@@ -1020,6 +1008,7 @@ export const bibleChapterHtmlTemplate = ({
         containerWidth,
         showReadingTime,
         fontSize || 16,
+        selectedFont
     )}
         ${createHtmlBody(versesContent, initialScrollIndex, chapterNumber, showReadingTime)}
     </html>

@@ -205,6 +205,7 @@ const WebViewChapter = React.memo(
     const safeTop = insets.top;
 
     const fontSize = use$(() => storedData$.fontSize.get());
+    const selectedFont = use$(() => storedData$.selectedFont.get());
     const showReadingTime = use$(() => storedData$.showReadingTime.get());
 
     const htmlChapterTemplate = useMemo(() => {
@@ -217,6 +218,7 @@ const WebViewChapter = React.memo(
         fontSize,
         initialScrollIndex,
         showReadingTime,
+        selectedFont,
       });
     }, [
       data,
@@ -225,6 +227,7 @@ const WebViewChapter = React.memo(
       initialScrollIndex,
       fontSize,
       showReadingTime,
+      selectedFont,
     ]);
 
     const handleRenderProcessGone = useCallback((event: WebViewRenderProcessGoneEvent) => {
@@ -249,7 +252,9 @@ const WebViewChapter = React.memo(
             marginTop: safeTop + 10,
             backgroundColor: "transparent",
           }}
-          source={{ html: htmlChapterTemplate }}
+          source={{
+            html: htmlChapterTemplate,
+          }}
           scrollEnabled={true}
           onMessage={handleMessage}
           onRenderProcessonOpenWindowGone={handleRenderProcessGone}
@@ -267,7 +272,7 @@ const WebViewChapter = React.memo(
               alignItems: "center",
             }}
           />}
-          {...createOptimizedWebViewProps({}, "static")}
+          {...createOptimizedWebViewProps({}, "bibleChapter")}
         />
       </>
     );
