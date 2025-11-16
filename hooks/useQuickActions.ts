@@ -57,7 +57,7 @@ export const useQuickActions = () => {
 
             // Handle navigation based on the action
             if (action.params?.href) {
-                router.push(action.params.href as string);
+                router.push(action.params.href as any);
             }
         });
 
@@ -70,7 +70,7 @@ export const useQuickActions = () => {
         if (initialAction?.params?.href) {
             // Small delay to ensure app is fully loaded
             setTimeout(() => {
-                router.push(initialAction.params?.href as string);
+                router.push(initialAction.params?.href as any);
             }, 1000);
         }
     }, []);

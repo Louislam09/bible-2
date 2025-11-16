@@ -36,6 +36,7 @@ import {
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import LexicalWebView from "@/components/LexicalWebView";
 import "../global.css";
+import { getFontCss } from "@/hooks/useLoadFonts";
 
 type NoteDetailProps = {};
 type NoteDetailParams = { noteId: number | null; isNewNote: boolean };
@@ -431,30 +432,22 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
         <html>
           <head>
             <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.2, maximum-scale=2.0, user-scalable=yes, shrink-to-fit=no">
             <title>${noteTitle}</title>
+            ${getFontCss({ fontName: storedData$.selectedFont.get() || '' })}
             <style>
-              * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-              }
+             @page { size: A4; margin: 0mm; }
               
               body {
-                font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
                 line-height: 1.6;
                 color: #111;
                 background: #fff;
-                padding: 20px;
                 font-size: 2rem;
                 max-width: 100%;
                 margin: 0;
                 word-wrap: break-word;
                 text-align: left;
                 min-height: 100vh;
-                zoom: 1.1;
               }
-              
               .note-title {
                 font-size: 3rem;
                 font-weight: 700;

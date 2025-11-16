@@ -1,3 +1,6 @@
+import { storedData$ } from "@/context/LocalstoreContext";
+import { getFontCss } from "@/hooks/useLoadFonts";
+
 export const wordDefinitionHtmlTemplate = (
     content: any,
     colors: any,
@@ -15,14 +18,16 @@ export const wordDefinitionHtmlTemplate = (
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
             <title>Santa Escritura</title>
+            ${getFontCss({ fontName: storedData$.selectedFont.get() || '' })}
+            
             <style>
+             @page { size: A4; margin: 0mm; }
                 body{
                     color: ${colors.text};
                     background: ${colors.background};
                     font-size: ${isPrint ? "3rem" : fontSize - 2 + "px"};
                     user-select: none;
                     padding-bottom: 20px;
-                    font-family: "Open Sans", sans-serif;
                     font-optical-sizing: auto;
                     font-weight: <weight>;
                     font-style: normal;
