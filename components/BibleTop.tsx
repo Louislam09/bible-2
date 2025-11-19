@@ -18,15 +18,15 @@ import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { showToast } from "@/utils/showToast";
 import { use$ } from "@legendapp/state/react";
 import { useRouter } from "expo-router";
-import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
+import React, { FC, useCallback, useEffect, useMemo } from "react";
 import {
   ActivityIndicator,
   Alert,
-  Animated,
   Dimensions,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import Chapter from "./home/content/Chapter";
 import WebViewChapter from "./home/content/WebViewChapter";
 import BibleFooter from "./home/footer/BibleFooter";
@@ -34,16 +34,14 @@ import SwipeWrapper from "./SwipeWrapper";
 import { Text, View } from "./Themed";
 
 interface BibleTopProps {
-  height: Animated.Value;
-  width: Animated.Value;
 }
 
-const BibleTop: FC<BibleTopProps> = (props) => {
+// rename this component to something more descriptive with header and footer
+const BibleTop: FC<BibleTopProps> = ({ }) => {
   const { theme } = useMyTheme();
   const haptics = useHaptics();
   const router = useRouter();
-  const { orientation, selectBibleVersion, toggleFavoriteVerse } =
-    useBibleContext();
+  const { orientation, selectBibleVersion, toggleFavoriteVerse } = useBibleContext();
   const { addVerse } = useMemorization();
   const isPortrait = orientation === "PORTRAIT";
   const isDataLoading = use$(() => bibleState$.isDataLoading.top.get());
@@ -105,11 +103,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     nextChapter();
   };
 
-  const widthOrHeight = useMemo(
-    () => (isPortrait ? "height" : "width"),
-    [isPortrait]
-  );
-  const headerHeight = useRef(new Animated.Value(1)).current;
+  const headerHeight = useSharedValue(1);
 
   const handleScroll = useCallback((direction: "up" | "down") => {
     // console.log("handleScroll", direction);
@@ -128,19 +122,10 @@ const BibleTop: FC<BibleTopProps> = (props) => {
     // ]).start();
   }, []);
 
-  const containerStyle = useMemo(
-    () => ({
-      [widthOrHeight]: props[widthOrHeight],
-      flex: isSplitActived ? undefined : 1,
-      backgroundColor: theme.colors.background,
-    }),
-    [widthOrHeight, props, isSplitActived, theme.colors.background]
-  );
-
-  const headerStyle = {
-    transform: [{ scaleY: headerHeight }],
-    opacity: headerHeight,
-  };
+  const headerStyle = useAnimatedStyle(() => ({
+    transform: [{ scaleY: headerHeight.value }],
+    opacity: headerHeight.value,
+  }));
 
   const onStrongWordClicked = useCallback(({ word, tagValue }: WordTagPair) => {
     haptics.selection();
@@ -385,9 +370,17 @@ const BibleTop: FC<BibleTopProps> = (props) => {
   //     : DomChapter
   //   : Chapter;
 
+  const containerAnimatedStyle = useAnimatedStyle(() => ({
+    flex: 1,
+    backgroundColor: theme.colors.background,
+    position: "relative",
+    width: "100%",
+  }));
+
+
   const showWebView = !isInterlinear;
   return (
-    <Animated.View style={[styles.container, containerStyle]}>
+    <Animated.View style={[containerAnimatedStyle]}>
       <Animated.View style={[styles.header, headerStyle]}>
         <BibleHeader />
       </Animated.View>
@@ -476,7 +469,6 @@ const BibleTop: FC<BibleTopProps> = (props) => {
             theme={theme}
             data={chapterData}
             initialScrollIndex={initialScrollIndex}
-            verses={verses}
             isInterlinear={isInterlinear}
             isSplit={false}
             onScroll={handleScroll}
@@ -542,6 +534,7 @@ const BibleTop: FC<BibleTopProps> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     position: "relative",
     width: "100%",
   },

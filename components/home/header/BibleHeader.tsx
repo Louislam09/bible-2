@@ -128,7 +128,7 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
         ref: tourState$.fav,
         isIonicon: false,
         color: isSplitActived ? theme.colors.notification : theme.colors.text,
-        hide: true,
+        hide: false
       },
       {
         name: "ArrowBigLeftDash",

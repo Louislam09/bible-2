@@ -9,7 +9,6 @@ import {
 } from "react-native";
 
 import BibleBottom from "@/components/BibleBottom";
-import BibleTop from "@/components/BibleTop";
 import BookContentModals from "@/components/book-content-modals";
 import CurrentNoteDetail from "@/components/CurrentNoteDetail";
 import FloatingButton from "@/components/FloatingButton";
@@ -24,6 +23,9 @@ import { tourState$ } from "@/state/tourState";
 import { OrientationType, TTheme } from "@/types";
 import { observer, use$ } from "@legendapp/state/react";
 import { Stack, useNavigation } from "expo-router";
+import ResizableSplitView from "@/components/animations/resizable-split-view";
+import BibleTop from "@/components/BibleTop";
+import BibleBottomContent from "@/components/BibleBottomContent";
 
 // Constants
 const MIN_SPLIT_SIZE = 200;
@@ -37,95 +39,16 @@ interface TutorialStep {
 type HomeScreenProps = {};
 
 const HomeScreen: React.FC<HomeScreenProps> = observer(() => {
-  const navigation = useNavigation();
   const { theme } = useMyTheme();
   const orientation = useDeviceOrientation();
   const isSplitActived = use$(() => bibleState$.isSplitActived.get());
   const tourPopoverVisible = use$(() => tourState$.tourPopoverVisible.get());
-
-  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
-  const initialState = bibleState$.bibleQuery.get();
 
   const isPortrait = orientation === OrientationType.PORTRAIT;
   const styles = useMemo(
     () => getStyles(theme, isPortrait),
     [theme, isPortrait]
   );
-
-  const { topHeight, topWidth, panResponder, backgroundColor } = useSplitScreen(
-    {
-      screenWidth: SCREEN_WIDTH,
-      screenHeight: SCREEN_HEIGHT,
-      theme,
-      minSplitSize: MIN_SPLIT_SIZE,
-    }
-  );
-
-  const tutorialSteps = useMemo<TutorialStep[]>(
-    () => [
-      {
-        text: "🏠 Toque aquí para ir a la pantalla principal.",
-        target: null,
-      },
-      {
-        text: "✂️ Toque aquí para partir la pantalla en dos secciones de escrituras.",
-        target: tourState$.fav.get(),
-      },
-      {
-        text: "⏪⏩ Toque las flechas para moverse atras/delante en su historial de busqueda.",
-        target: tourState$.setting.get(),
-      },
-      {
-        text: "🔍 Toque aquí para buscar en la escritura.",
-        target: tourState$.search.get(),
-      },
-      {
-        text: "📑 Toque aquí para cambiar la versión de la escritura.",
-        target: tourState$.bibleVersion.get(),
-      },
-      {
-        text: "📚 Toque aquí para elegir un libro.",
-        target: tourState$.footerTitleRef.get(),
-      },
-      {
-        text: "⬅️ Toque aquí para retroceder al capítulo anterior.",
-        target: tourState$.backButton.get(),
-      },
-      {
-        text: "➡️ Toque aquí para pasar al siguiente capítulo.",
-        target: tourState$.nextButton.get(),
-      },
-      {
-        text: "🔊 Toque aquí para escuchar el capítulo.",
-        target: tourState$.audio.get(),
-      },
-    ],
-    [tourPopoverVisible]
-  );
-
-  const renderBottomContent = useCallback(() => {
-    return (
-      <>
-        <Animated.View
-          {...panResponder.panHandlers}
-          style={[styles.slider, { backgroundColor }]}
-        >
-          <View style={styles.sliderHandle} />
-        </Animated.View>
-        <BibleBottom
-          book={initialState.bottomSideBook}
-          chapter={initialState.bottomSideChapter}
-          verse={initialState.bottomSideVerse}
-          height={Animated.subtract(
-            new Animated.Value(SCREEN_HEIGHT),
-            topHeight
-          )}
-          width={Animated.subtract(new Animated.Value(SCREEN_WIDTH), topWidth)}
-          navigation={navigation}
-        />
-      </>
-    );
-  }, [SCREEN_HEIGHT, SCREEN_WIDTH, backgroundColor]);
 
   return (
     <StatusBarBackground>
@@ -135,7 +58,15 @@ const HomeScreen: React.FC<HomeScreenProps> = observer(() => {
         <View
           style={[styles.container, !isPortrait && { flexDirection: "row" }]}
         >
-          <BibleTop height={topHeight} width={topWidth} />
+          {isSplitActived ? (
+            <ResizableSplitView
+              topContent={<BibleTop />}
+              bottomContent={<BibleBottomContent />}
+            />
+          ) : (
+            <BibleTop />
+          )}
+          {/* <BibleTop height={topHeight} width={topWidth} /> */}
           {/* {isSplitActived && renderBottomContent()} */}
         </View>
 

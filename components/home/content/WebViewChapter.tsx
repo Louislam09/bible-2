@@ -21,7 +21,6 @@ interface WebViewChapterProps {
   isSplit?: boolean;
   initialScrollIndex?: number;
   theme: TTheme;
-  verses: IBookVerse[];
   onStrongWordClicked?: (value: WordTagPair) => void;
   onWordClicked?: (code: string, item: IBookVerse) => void;
   onScroll?: (direction: "up" | "down") => void;
