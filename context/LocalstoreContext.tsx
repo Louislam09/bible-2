@@ -121,7 +121,7 @@ const initialContext: StoreState = {
   },
   dbTableCreated: [],
   useDomComponent: false,
-  showReadingTime: false,
+  showReadingTime: true,
   appFolderUri: "",
   appFolderTreeUri: "",
 };

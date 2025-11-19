@@ -225,12 +225,12 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
     <div class="container relative h-screen overflow-y-auto pt-[70px] pb-[100px] " id="chapterContainer">
         <!-- Chapter Header -->
         <div class="px-4 pt-3 my-2">
-        <!-- (<a href='B:10 1:1'>click there</a>) -->
-        <h1 class=" font-bold text-theme-text text-center text-font-xl">Capítulo ${chapterNumber}</h1>
-        <p class="text-theme-text text-center text-font-xs mt-1 ${showReadingTime ? 'block' : 'hidden'}">Tiempo de lectura: ~ ${bibleState$.readingTimeData.top.get()} min(s)</p>
+            <!-- (<a href='B:10 1:1'>click there</a>) -->
+            <h1 class=" font-bold text-theme-text text-center text-font-xl">Capítulo ${chapterNumber}</h1>
+            <p class="text-theme-text text-center text-font-xs mt-1 ${showReadingTime ? 'block' : 'hidden'}">Tiempo de lectura: ~ ${bibleState$.readingTimeData.top.get()} min(s)</p>
         </div>
         ${content}
-        </div>
+    </div>  
         
         <script>
             let lastScrollTime = 0;

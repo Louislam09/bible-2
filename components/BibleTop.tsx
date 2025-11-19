@@ -32,6 +32,7 @@ import WebViewChapter from "./home/content/WebViewChapter";
 import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
 import { Text, View } from "./Themed";
+import WebviewInterlinearChapter from "./home/content/WebviewInterlinearChapter";
 
 interface BibleTopProps {
 }
@@ -488,24 +489,25 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
             }}
           />
         ) : (
-          <Chapter
-            initialScrollIndex={
-              initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
-            }
-            verses={verses}
-            data={chapterData}
-            isInterlinear={isInterlinear}
-            isSplit={false}
-            theme={theme}
-            onScroll={handleScroll}
-            {...{
-              onStrongWordClicked,
-              onInterlinear,
-              onAnotar,
-              onComparar,
-              onWordClicked,
-            }}
-          />
+          <WebviewInterlinearChapter theme={theme} data={chapterData} />
+          // <Chapter
+          //   initialScrollIndex={
+          //     initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
+          //   }
+          //   verses={verses}
+          //   data={chapterData}
+          //   isInterlinear={isInterlinear}
+          //   isSplit={false}
+          //   theme={theme}
+          //   onScroll={handleScroll}
+          //   {...{
+          //     onStrongWordClicked,
+          //     onInterlinear,
+          //     onAnotar,
+          //     onComparar,
+          //     onWordClicked,
+          //   }}
+          // />
         )}
       </SwipeWrapper>
       {!isPlayerOpened && (

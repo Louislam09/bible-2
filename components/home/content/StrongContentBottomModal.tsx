@@ -84,7 +84,7 @@ const StrongContentBottomModal: FC<IStrongContent> = ({
   const HTML_DATA = htmlTemplate(values, theme.colors, fontSize);
   const { currentBibleVersion } = useBibleContext();
   const haptics = useHaptics();
-  const isInterlineal = [EBibleVersions.INTERLINEAR].includes(
+  const isInterlineal = [EBibleVersions.INTERLINEAR, EBibleVersions.GREEK].includes(
     currentBibleVersion as EBibleVersions
   );
 
