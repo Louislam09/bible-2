@@ -35,7 +35,6 @@ const useLoadFonts = (fontMapping: FontMapping = {} as FontMapping) => {
             try {
                 // Check if fonts are already cached
                 const cachedFonts = scriptDownloadHelpers.getAllFontStyles();
-                console.log('cachedFonts', Object.keys(cachedFonts).length);
                 if (cachedFonts && Object.keys(cachedFonts).length > 0) {
                     console.log('Fonts loaded from cache');
                     return;

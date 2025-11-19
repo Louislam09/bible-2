@@ -109,7 +109,6 @@ export const scriptDownloadHelpers = {
             const hasOldData = oldData.tailwindScript || oldData.lexicalBundle ||
                 (oldData.fontStyles && Object.keys(oldData.fontStyles).length > 0);
 
-            console.log('hasOldData', { hasOldData, oldData });
             if (!hasOldData) {
                 return;
             }

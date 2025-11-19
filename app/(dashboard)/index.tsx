@@ -167,13 +167,13 @@ const MainDashboard = () => {
   };
 
   const studyToolItems: IDashboardOption[] = [
-    // {
-    //   icon: "NotebookTabs",
-    //   label: "Editor de Notas",
-    //   action: () => navigation?.navigate(Screens.NoteEditor),
-    //   color: "#9389ec",
-    //   isNew: isWithinTimeframe("3d", new Date("2025-10-15")).isActive,
-    // },
+    {
+      icon: "TestTubeDiagonal",
+      label: "Ejemplos",
+      action: () => navigation?.navigate("example" as any),
+      color: "#9389ec",
+      disabled: !__DEV__,
+    },
     {
       icon: "Image",
       label: "Cita Image",

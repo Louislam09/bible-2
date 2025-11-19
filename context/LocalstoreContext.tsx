@@ -201,7 +201,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribeFromChanges = storedData$.onChange((value) => {
-      // console.log('storedData changed', value);
       if (storedData$.user.get() && pb.authStore.isValid) {
         console.log('syncing with cloud');
         setHasPendingCloudSync(true);
@@ -316,7 +315,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
       if (existingSettings.items.length > 0) {
         const settingsData = existingSettings.items[0].settings as StoreState;
-        console.log('existingSettings', settingsData);
 
         if (user.name || user.email) {
           settingsData.userData = {

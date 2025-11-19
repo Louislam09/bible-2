@@ -138,6 +138,7 @@ const HomeScreen: React.FC<HomeScreenProps> = observer(() => {
           <BibleTop height={topHeight} width={topWidth} />
           {/* {isSplitActived && renderBottomContent()} */}
         </View>
+
         <>
           <BookContentModals />
 
