@@ -1,5 +1,6 @@
-import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
+import { scriptDownloadHelpers, scriptDownloadState$ } from "@/state/scriptDownloadState";
 import { TFont } from "@/types";
+import { syncState, when } from "@legendapp/state";
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
 import { useEffect } from "react";
@@ -32,6 +33,9 @@ export const getFontCss = ({
 const useLoadFonts = (fontMapping: FontMapping = {} as FontMapping) => {
     useEffect(() => {
         const loadFonts = async () => {
+            const sState = syncState(scriptDownloadState$);
+            await when(() => sState.isPersistLoaded.get());
+
             try {
                 // Check if fonts are already cached
                 const cachedFonts = scriptDownloadHelpers.getAllFontStyles();
