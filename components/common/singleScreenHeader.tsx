@@ -88,7 +88,7 @@ export const singleScreenHeader = ({
         }}
       />
     ),
-    headerRight: headerRightProps.RightComponent || RightHeaderComponent,
+    headerRight: headerRightProps?.RightComponent || (headerRightProps ? RightHeaderComponent : undefined),
     headerTitle: () => (
       <View style={styles.headerTitle}>
         <Icon

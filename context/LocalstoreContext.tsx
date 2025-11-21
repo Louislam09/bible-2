@@ -76,6 +76,7 @@ type StoreState = {
   showReadingTime: boolean;
   appFolderUri: string;
   appFolderTreeUri: string;
+  isOnboardingCompleted: boolean;
 };
 
 const initialContext: StoreState = {
@@ -124,6 +125,7 @@ const initialContext: StoreState = {
   showReadingTime: true,
   appFolderUri: "",
   appFolderTreeUri: "",
+  isOnboardingCompleted: false,
 };
 
 export const storedData$ = observable(initialContext);
@@ -170,6 +172,8 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isSyncing, setSyncing] = useState(false);
   const netInfo = useNetwork();
   const { isConnected } = netInfo;
+  const syncTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  const SYNC_DEBOUNCE_MS = 10000; // 10 seconds
 
   useEffect(() => {
     const loadState = async () => {
@@ -202,11 +206,27 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   useEffect(() => {
     const unsubscribeFromChanges = storedData$.onChange((value) => {
       if (storedData$.user.get() && pb.authStore.isValid) {
-        console.log('syncing with cloud');
+        console.log('Change detected, scheduling sync...');
         setHasPendingCloudSync(true);
+
+        // Clear existing timeout
+        if (syncTimeoutRef.current) {
+          clearTimeout(syncTimeoutRef.current);
+        }
+
+        // Set new timeout
+        syncTimeoutRef.current = setTimeout(() => {
+          console.log('Debounce timer fired, syncing now...');
+          syncWithCloud({ alert: false });
+        }, SYNC_DEBOUNCE_MS);
       }
     });
-    return () => unsubscribeFromChanges();
+    return () => {
+      if (syncTimeoutRef.current) {
+        clearTimeout(syncTimeoutRef.current);
+      }
+      unsubscribeFromChanges();
+    };
   }, []);
 
   const clearData = async () => {
@@ -234,16 +254,18 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     [isConnected]
   );
 
-  const syncWithCloud = async ({
+  const syncWithCloud = useCallback(async ({
     alert = true,
   }: {
     alert?: boolean;
   }): Promise<boolean> => {
+    console.log({ isConnected })
     if (!isConnected) {
-      Alert.alert(
-        "Sin conexión a Internet",
-        "No se pueden sincronizar los datos con la nube sin conexión a Internet. Por favor, inténtalo de nuevo cuando estés conectado."
-      );
+      console.log("❌ [Sin conexión a Internet]");
+      // Alert.alert(
+      //   "Sin conexión a Internet",
+      //   "No se pueden sincronizar los datos con la nube sin conexión a Internet. Por favor, inténtalo de nuevo cuando estés conectado."
+      // );
       return false;
     }
 
@@ -283,7 +305,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       console.error("Error al sincronizar con la nube:", error.originalError);
       return false;
     }
-  };
+  }, [isConnected]);
 
   const loadFromCloud = useCallback(async (): Promise<boolean> => {
     if (isSyncing) {

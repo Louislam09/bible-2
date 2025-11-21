@@ -59,6 +59,7 @@ export enum Screens {
   Register = "register",
   AISetup = "/ai-setup",
   Notification = "notification",
+  Help = "help/index",
   SongDetail = "songDetail",
   Commentary = "commentary",
   AIBibleGuide = "ai-bible-guide",
@@ -98,6 +99,7 @@ export const ScreensName: TScreensName = {
   [Screens.Register]: "Crear una cuenta",
   [Screens.AISetup]: "Configuración de IA",
   [Screens.Notification]: "Notificacion",
+  [Screens.Help]: "Ayuda y Guía",
   [Screens.SongDetail]: "Himno",
   [Screens.Commentary]: "Comentarios",
   [Screens.AIBibleGuide]: "Guía Bíblica IA",
@@ -127,6 +129,7 @@ export type RootTabParamList = {
   history: undefined;
   notification: undefined;
   "memorization/memoryList": undefined;
+  help: undefined;
 };
 
 export type RootStackParamList = {
@@ -169,6 +172,7 @@ export type RootStackParamList = {
   [Screens.Register]: undefined;
   [Screens.AISetup]: undefined;
   [Screens.AIBibleGuide]: undefined;
+  [Screens.Help]: undefined;
 };
 
 export type IDashboardOption = {

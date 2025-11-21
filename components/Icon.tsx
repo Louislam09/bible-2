@@ -27,7 +27,7 @@ const Icon: React.FC<IconProps> = ({
   fillColor,
 }) => {
   const LucideIcon: React.FC<LucideProps & { color?: ColorValue }> =
-    icons[name];
+    icons[name] || icons['AArrowDown'];
 
   return (
     <LucideIcon
@@ -41,4 +41,4 @@ const Icon: React.FC<IconProps> = ({
   );
 };
 
-export default Icon
+export default Icon;
