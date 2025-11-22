@@ -88,6 +88,20 @@ const Walkthrough = ({ currentStep, steps, setStep, onComplete }: TWalkthrough) 
     });
   };
 
+  const highlightElement = () => {
+    const view = target?.current;
+    if (view) {
+      view.setNativeProps({
+        style: {
+          borderWidth: 2,
+          borderColor: theme.colors.notification,
+          borderRadius: 8,
+          padding: 4,
+        },
+      });
+    }
+  };
+
   // Animate content on step change
   useEffect(() => {
     if (currentStep >= 0 && currentStep < steps.length) {
@@ -122,30 +136,29 @@ const Walkthrough = ({ currentStep, steps, setStep, onComplete }: TWalkthrough) 
         toValue: (currentStep + 1) / totalStep,
         duration: 500,
         useNativeDriver: false,
-      }).start();
+      }).start(() => {
+        // console.log("progress animated");
+        highlightElement();
+      });
     }
   }, [currentStep]);
 
   useEffect(() => {
-    const highlightElement = () => {
-      const view = target?.current;
-      if (view) {
-        view.setNativeProps({
-          style: {
-            borderWidth: 2,
-            borderColor: theme.colors.notification,
-            borderRadius: 8,
-            shadowColor: theme.colors.notification,
-            shadowOffset: { width: 0, height: 0 },
-            shadowOpacity: 0.5,
-            shadowRadius: 10,
-            elevation: 5,
-          },
-        });
-      }
-    };
+    // const highlightElement = () => {
+    //   const view = target?.current;
+    //   if (view) {
+    //     view.setNativeProps({
+    //       style: {
+    //         borderWidth: 2,
+    //         borderColor: theme.colors.notification,
+    //         borderRadius: 8,
+    //         padding: 4,
+    //       },
+    //     });
+    //   }
+    // };
 
-    highlightElement();
+    // highlightElement();
 
     return () => {
       const view = target?.current;
@@ -154,8 +167,7 @@ const Walkthrough = ({ currentStep, steps, setStep, onComplete }: TWalkthrough) 
           style: {
             borderWidth: 0,
             borderRadius: 0,
-            shadowOpacity: 0,
-            elevation: 0,
+            padding: 0,
           },
         });
       }
@@ -169,42 +181,44 @@ const Walkthrough = ({ currentStep, steps, setStep, onComplete }: TWalkthrough) 
 
   return (
     <Popover
-      offset={12}
+      offset={16}
       from={target}
       isVisible={currentStep === -1 ? false : currentStep < steps.length}
-      arrowSize={{ width: 16, height: 20 }}
-      backgroundStyle={{ opacity: 0.3, backgroundColor: 'transparent' }}
+      arrowSize={{ width: 30, height: 16 }}
+      backgroundStyle={{ backgroundColor: 'transparent' }}
       popoverStyle={{
         borderWidth: 2,
-        borderColor: theme.colors.notification + '80',
-        backgroundColor: theme.colors.notification + '80',
+        borderColor: theme.colors.notification,
+        backgroundColor: theme.colors.notification + "ee",
         borderRadius: 12,
-        shadowColor: theme.colors.notification,
-        shadowOffset: {
-          width: 0,
-          height: 8,
-        },
-        shadowOpacity: 0.6,
-        shadowRadius: 16,
-        elevation: 12,
       }}
 
       animationConfig={{
         duration: 300,
-        // easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-        easing: Easing.linear,
+        easing: Easing.bezier(0.25, 0.1, 0.25, 1),
         useNativeDriver: true,
       }}
     >
       <RNAnimated.View
         style={[
           styles.container,
-          {
-            // opacity: fadeAnim,
-            // transform: [{ scale: scaleAnim }],
-          },
         ]}
       >
+        <TouchableOpacity onPress={close} activeOpacity={0.7}>
+          <View style={styles.closeIconWrapper}>
+            <Icon style={styles.closeIcon} name="X" size={22} />
+          </View>
+        </TouchableOpacity>
+
+        <RNAnimated.View
+          style={{
+            opacity: fadeAnim,
+            transform: [{ translateY: slideAnim }],
+          }}
+        >
+          <Text style={styles.content}>{content}</Text>
+        </RNAnimated.View>
+
         {/* Progress Bar */}
         <View style={styles.progressBarContainer}>
           <RNAnimated.View
@@ -218,27 +232,7 @@ const Walkthrough = ({ currentStep, steps, setStep, onComplete }: TWalkthrough) 
           />
         </View>
 
-        <TouchableOpacity onPress={close} activeOpacity={0.7}>
-          <View style={styles.closeIconWrapper}>
-            <Icon style={styles.closeIcon} name="X" />
-          </View>
-        </TouchableOpacity>
-
-        <RNAnimated.View
-          style={{
-            opacity: fadeAnim,
-            transform: [{ translateY: slideAnim }],
-          }}
-        >
-          <Text style={styles.content}>{content}</Text>
-        </RNAnimated.View>
-
-        <View style={styles.separetor} />
-
         <View style={styles.actions}>
-          <View style={styles.stepCount}>
-            <Text style={styles.countLabel}>{`${currentStep + 1} de ${totalStep}`}</Text>
-          </View>
           <View style={styles.actionButtons}>
             {!firstStep && (
               <Pressable onPress={previuos} style={styles.iconButton}>
@@ -247,12 +241,16 @@ const Walkthrough = ({ currentStep, steps, setStep, onComplete }: TWalkthrough) 
                     style={{
                       opacity: pressed ? 0.6 : 1,
                       transform: [{ scale: pressed ? 0.95 : 1 }],
+                      width: 20,
+                      height: 20,
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
                   >
                     <Icon
                       name="ArrowLeft"
                       color={theme.colors.notification}
-                      size={16}
+                      size={22}
                     />
                   </RNAnimated.View>
                 )}
@@ -264,6 +262,7 @@ const Walkthrough = ({ currentStep, steps, setStep, onComplete }: TWalkthrough) 
                   style={{
                     opacity: pressed ? 0.6 : 1,
                     transform: [{ scale: pressed ? 0.95 : 1 }],
+                    display: !lastStep ? "none" : "flex",
                   }}
                 >
                   <Text style={styles.actionIcon}>
@@ -279,12 +278,14 @@ const Walkthrough = ({ currentStep, steps, setStep, onComplete }: TWalkthrough) 
                     style={{
                       opacity: pressed ? 0.6 : 1,
                       transform: [{ scale: pressed ? 0.95 : 1 }],
+                      width: 20,
+                      height: 20,
                     }}
                   >
                     <Icon
                       name="ArrowRight"
                       color={theme.colors.notification}
-                      size={16}
+                      size={22}
                     />
                   </RNAnimated.View>
                 )}
@@ -312,15 +313,15 @@ const getStyles = ({ colors }: TTheme) =>
       width: 320,
     },
     progressBarContainer: {
-      height: 4,
-      backgroundColor: colors.notification + "30",
-      borderRadius: 2,
+      height: 8,
+      backgroundColor: colors.notification + "60",
+      borderRadius: 8,
       marginBottom: 10,
       overflow: "hidden",
     },
     progressBar: {
       height: "100%",
-      borderRadius: 2,
+      borderRadius: 8,
     },
     closeIcon: {
       fontSize: 18,
@@ -350,6 +351,7 @@ const getStyles = ({ colors }: TTheme) =>
       alignItems: "center",
       width: "100%",
       flex: 1,
+      backgroundColor: 'transparent',
     },
     stepCount: {},
     countLabel: {
@@ -375,6 +377,10 @@ const getStyles = ({ colors }: TTheme) =>
     actionButtons: {
       display: "flex",
       flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      flex: 1,
+      backgroundColor: 'transparent',
     },
   });
 

@@ -22,6 +22,8 @@ export type TutorialFeature = {
   steps: TutorialStep[];
 };
 
+
+
 export const TUTORIAL_FEATURES: TutorialFeature[] = [
   // LECTURA
   {
@@ -41,13 +43,13 @@ export const TUTORIAL_FEATURES: TutorialFeature[] = [
       },
       {
         id: "2",
-        text: "En la parte superior verás el nombre del libro, capítulo y versión actual de la Biblia. Toca cualquiera para cambiar.",
+        text: "📚 Toque aquí para elegir un libro, capítulo y versículo.",
         target: null,
         targetRef: "footerTitleRef", // Will use ref from tourState$
       },
       {
         id: "3",
-        text: "Puedes navegar entre capítulos deslizando hacia la izquierda o derecha, o usando las flechas de navegación.",
+        text: "➡️ Toque aquí para pasar al siguiente capítulo.",
         target: null,
         targetRef: "nextButton",
       },
