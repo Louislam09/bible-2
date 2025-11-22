@@ -12,6 +12,7 @@ import BibleBottom from "@/components/BibleBottom";
 import BookContentModals from "@/components/book-content-modals";
 import CurrentNoteDetail from "@/components/CurrentNoteDetail";
 import FloatingButton from "@/components/FloatingButton";
+import TutorialWalkthrough from "@/components/TutorialWalkthrough";
 import { useMyTheme } from "@/context/ThemeContext";
 
 import StatusBarBackground from "@/components/StatusBarBackground";
@@ -77,13 +78,7 @@ const HomeScreen: React.FC<HomeScreenProps> = observer(() => {
             <CurrentNoteDetail />
           </FloatingButton>
 
-          {/* {tourState$.tourPopoverVisible.get() === "FUNCTION" && (
-            <Walkthrough
-              steps={tutorialSteps}
-              setStep={setStepIndex}
-              currentStep={stepIndex}
-            />
-          )} */}
+          <TutorialWalkthrough />
         </>
       </SafeAreaView>
     </StatusBarBackground>

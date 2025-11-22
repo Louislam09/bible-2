@@ -4,6 +4,7 @@ import Icon from "@/components/Icon";
 import ActionButton, { Backdrop } from "@/components/note/ActionButton";
 import NoteItem from "@/components/note/NoteItem";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
+import TutorialWalkthrough from "@/components/TutorialWalkthrough";
 import { Text, View } from "@/components/Themed";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
@@ -928,6 +929,7 @@ const NotesPage = () => {
           </RNView>
         </TouchableWithoutFeedback>
       </ScreenWithAnimation>
+      <TutorialWalkthrough />
     </Fragment>
   );
 };

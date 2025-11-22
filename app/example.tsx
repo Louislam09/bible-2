@@ -1,5 +1,6 @@
 import AnimatedFab from "@/components/animations/animated-fab";
 import ResizableSplitView from "@/components/animations/resizable-split-view";
+import ExamplePopover from "@/components/example/ExamplePopover";
 import { Text, View } from "@/components/Themed";
 import { useState } from "react";
 import { StyleSheet } from "react-native";
@@ -43,17 +44,18 @@ export default function Example() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Example</Text>
-      <AnimatedFab
+      {/* <AnimatedFab
         fabIcon="NotebookText"
         isFabOpen={isFabOpen}
         handleFabPress={handleFabPress}
         items={items}
-      />
+      /> */}
       {/* <ResizableSplitView
         topContent={<View style={styles.topContent} />}
         bottomContent={<View style={styles.bottomContent} />}
         onHeightChange={(height) => console.log({ height })}
       /> */}
+      <ExamplePopover />
     </View>
   );
 }

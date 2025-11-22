@@ -1,6 +1,7 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import FavoriteList from "@/components/favorite/FavoriteList";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
+import TutorialWalkthrough from "@/components/TutorialWalkthrough";
 import { useMyTheme } from "@/context/ThemeContext";
 import { Stack } from "expo-router";
 import React, { Fragment } from "react";
@@ -35,6 +36,7 @@ const Favorite: React.FC<FavoriteProps> = () => {
 
         <FavoriteList />
       </ScreenWithAnimation>
+      <TutorialWalkthrough />
     </Fragment>
   );
 };

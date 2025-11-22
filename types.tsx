@@ -63,6 +63,7 @@ export enum Screens {
   SongDetail = "songDetail",
   Commentary = "commentary",
   AIBibleGuide = "ai-bible-guide",
+  Tutorials = "tutorials",
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -103,6 +104,7 @@ export const ScreensName: TScreensName = {
   [Screens.SongDetail]: "Himno",
   [Screens.Commentary]: "Comentarios",
   [Screens.AIBibleGuide]: "Guía Bíblica IA",
+  [Screens.Tutorials]: "Tutoriales",
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -173,6 +175,7 @@ export type RootStackParamList = {
   [Screens.AISetup]: undefined;
   [Screens.AIBibleGuide]: undefined;
   [Screens.Help]: undefined;
+  [Screens.Tutorials]: undefined;
 };
 
 export type IDashboardOption = {

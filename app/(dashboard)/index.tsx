@@ -6,6 +6,7 @@ import BuyMeACoffeeButton from "@/components/new-dashboard/BuyMeACoffe";
 import DailyVerseTwo from "@/components/new-dashboard/DailyVerseTwo";
 import MainSection from "@/components/new-dashboard/MainSection";
 import StudyTools from "@/components/new-dashboard/StudyTools";
+import TutorialsCard from "@/components/new-dashboard/TutorialsCard";
 import StatusBarBackground from "@/components/StatusBarBackground";
 import UserProfile from "@/components/UserProfile";
 import VoiceList from "@/components/VoiceList";
@@ -110,7 +111,10 @@ const MainDashboard = () => {
     {
       icon: "Crown",
       label: "Santa Escritura",
-      action: () => navigation.navigate(Screens.Home, homePageInitParams),
+      action: () => {
+        // Check if user wants the tutorial on first navigation
+        navigation.navigate(Screens.Home, homePageInitParams);
+      },
       longAction: () => {
         showToast("Santa Escritura");
       },
@@ -173,6 +177,12 @@ const MainDashboard = () => {
       action: () => navigation?.navigate("example" as any),
       color: "#9389ec",
       disabled: !__DEV__,
+    },
+    {
+      icon: "GraduationCap",
+      label: "Tutoriales",
+      action: () => navigation.navigate(Screens.Tutorials),
+      color: "#4CAF50",
     },
     {
       icon: "Image",

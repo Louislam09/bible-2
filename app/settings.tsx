@@ -19,6 +19,7 @@ import FontSelector from "@/components/FontSelector";
 import FontSizeAdjuster from "@/components/FontSizeAdjuster";
 import Icon, { IconProps } from "@/components/Icon";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
+import TutorialWalkthrough from "@/components/TutorialWalkthrough";
 import { Text, View } from "@/components/Themed";
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import { URLS } from "@/constants/appConfig";
@@ -758,6 +759,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
           </BottomModal>
         </ScrollView>
       </ScreenWithAnimation>
+      <TutorialWalkthrough />
     </>
   );
 };
