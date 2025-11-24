@@ -50,6 +50,7 @@ const TutorialWalkthrough: React.FC = () => {
         text: step.text,
         target: targetRef,
         action: step.action,
+        startActionOnMount: step.startActionOnMount,
       };
     });
   }, [activeTutorial]);

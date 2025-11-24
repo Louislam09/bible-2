@@ -1,6 +1,9 @@
 import { RefObject } from "react";
 import { icons } from "lucide-react-native";
 import { tourState$ } from "@/state/tourState";
+import { ChooseReferenceMutableProgress } from "@/components/animations/constants";
+import { Easing, runOnJS, withTiming } from "react-native-reanimated";
+import { bibleState$ } from "@/state/bibleState";
 
 export type TutorialStep = {
   id: string;
@@ -8,6 +11,7 @@ export type TutorialStep = {
   target: RefObject<any> | null;
   targetRef?: string; // Name of ref in tourState$ (e.g., "bookSelector")
   action?: () => void | Promise<void>;
+  startActionOnMount?: boolean;
 };
 
 export type TutorialFeature = {
@@ -22,6 +26,9 @@ export type TutorialFeature = {
   steps: TutorialStep[];
 };
 
+const openModal = () => {
+  bibleState$.isChooseReferenceOpened.set(true);
+}
 
 
 export const TUTORIAL_FEATURES: TutorialFeature[] = [
@@ -43,39 +50,75 @@ export const TUTORIAL_FEATURES: TutorialFeature[] = [
       },
       {
         id: "2",
-        text: "📚 Toque aquí para elegir un libro, capítulo y versículo.",
+        text: "📚 Toca aquí para seleccionar el libro, capítulo y versículo que deseas estudiar.",
         target: null,
-        targetRef: "footerTitleRef", // Will use ref from tourState$
+        targetRef: "bookSelector", // Will use ref from tourState$
       },
       {
         id: "3",
-        text: "➡️ Toque aquí para pasar al siguiente capítulo.",
+        text: "➡️ Avanza al siguiente capítulo tocando aquí.",
         target: null,
         targetRef: "nextButton",
       },
       {
         id: "4",
-        text: "Para seleccionar un versículo, simplemente tócalo. Verás opciones para copiar, compartir, agregar a favoritos o crear notas.",
+        text: "⬅️ Regresa al capítulo anterior desde este punto.",
         target: null,
-        targetRef: "verseContent",
+        targetRef: "previousButton",
       },
       {
         id: "5",
-        text: "En la barra superior encontrarás herramientas como búsqueda, audio, pantalla dividida y más opciones.",
+        text: "🎨 Abre las opciones de configuración tocando aquí.",
         target: null,
-        targetRef: "toolbar",
+        targetRef: "setting",
       },
       {
         id: "6",
-        text: "El botón flotante de notas te permite acceder rápidamente a tus notas personales sobre el pasaje actual.",
+        text: "💡 Aquí puedes elegir la versión bíblica que prefieras.",
         target: null,
-        targetRef: "floatingNotesButton",
+        targetRef: "bibleVersion",
       },
       {
         id: "7",
-        text: "¡Perfecto! Ya conoces los elementos básicos. Explora y disfruta de tu tiempo en la Palabra.",
+        text: "🔍 Usa esta opción para buscar pasajes, palabras y temas.",
         target: null,
+        targetRef: "search",
       },
+      {
+        id: "8",
+        text: "🎵 Toca aquí para acceder al himnario digital.",
+        target: null,
+        targetRef: "hymnalButton",
+      },
+      {
+        id: "9",
+        text: "➡️ Avanza en tu historial de lectura desde aquí.",
+        target: null,
+        targetRef: "moveForwardButton",
+      },
+      {
+        id: "10",
+        text: "⬅️ Retrocede en tu historial tocando aquí.",
+        target: null,
+        targetRef: "moveBackwardButton",
+      },
+      {
+        id: "11",
+        text: "🔄 Activa la vista de pantalla dividida desde este botón.",
+        target: null,
+        targetRef: "splitScreenButton",
+      },
+      {
+        id: "12",
+        text: "🏠 Regresa a la pantalla principal tocando aquí.",
+        target: null,
+        targetRef: "dashboard",
+      },
+      {
+        id: "13",
+        text: "✨ Fin del recorrido. Que esta herramienta bendiga tu estudio diario.",
+        target: null,
+      }
     ],
   },
   {
@@ -90,22 +133,37 @@ export const TUTORIAL_FEATURES: TutorialFeature[] = [
     steps: [
       {
         id: "1",
-        text: "Bienvenido a la Biblia. Aquí puedes leer cualquier libro y capítulo. Toca el selector de libros para comenzar.",
+        text: "👋 Bienvenido! Aquí puedes leer cualquier libro y capítulo. Toca el selector de libros para comenzar.",
         target: null,
+        startActionOnMount: true,
+        action: () => {
+          ChooseReferenceMutableProgress.value = withTiming(
+            1,
+            {
+              duration: 450,
+              easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+            },
+            (finished) => {
+              if (finished) {
+                runOnJS(openModal)();
+              }
+            }
+          );
+        },
       },
       {
         id: "2",
-        text: "Selecciona un libro de la lista. Puedes buscar por nombre o desplazarte.",
+        text: "🔍 Selecciona un libro de la lista. Puedes buscar por nombre o desplazarte.",
         target: null,
       },
       {
         id: "3",
-        text: "Ahora selecciona el capítulo que deseas leer.",
+        text: "📖 Ahora selecciona el capítulo que deseas leer.",
         target: null,
       },
       {
         id: "4",
-        text: "Desliza hacia arriba o abajo para leer el contenido del capítulo.",
+        text: "🔄 Desliza hacia arriba o abajo para leer el contenido del capítulo.",
         target: null,
       },
     ],

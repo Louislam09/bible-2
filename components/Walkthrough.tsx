@@ -104,6 +104,10 @@ const Walkthrough = ({ currentStep, steps, setStep, onComplete }: TWalkthrough) 
 
   // Animate content on step change
   useEffect(() => {
+    if (steps[currentStep]?.startActionOnMount) {
+      console.log("startActionOnMount");
+      action && action()
+    }
     if (currentStep >= 0 && currentStep < steps.length) {
       // Reset and animate in
       fadeAnim.setValue(0);
@@ -342,7 +346,7 @@ const getStyles = ({ colors }: TTheme) =>
       paddingVertical: 10,
       fontSize: 16,
       marginBottom: 10,
-      color: colors.notification,
+      color: colors.text,
     },
     actions: {
       display: "flex",

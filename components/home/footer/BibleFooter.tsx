@@ -42,10 +42,6 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
   const params = useParams();
   const bibleQuery = use$(() => bibleState$.bibleQuery.get());
 
-  // Get refs at the top to maintain consistent hook order
-  const backButtonRef = tourState$.backButton.get();
-  const footerTitleRef = tourState$.footerTitleRef.get();
-  const nextButtonRef = tourState$.nextButton.get();
 
   const book = isSplit ? bibleQuery?.bottomSideBook : bibleQuery.book;
   const chapter = isSplit ? bibleQuery?.bottomSideChapter : bibleQuery.chapter;
@@ -180,7 +176,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
     >
       <View style={styles.footerCenter}>
         <TouchableOpacity
-          ref={backButtonRef}
+          ref={tourState$.previousButton.get()}
           onPress={() => previousChapter()}
         >
           <Icon
@@ -191,7 +187,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
           />
         </TouchableOpacity>
         <TouchableOpacity
-          ref={footerTitleRef}
+          ref={tourState$.bookSelector.get()}
           style={styles.titleContainer}
           onPress={onPress}
           // onLongPress={onLongFooterTitle}
@@ -203,7 +199,7 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
             }`}</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          ref={nextButtonRef}
+          ref={tourState$.nextButton.get()}
           onPress={() => nextChapter()}
         >
           <Icon

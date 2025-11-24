@@ -490,24 +490,6 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
           />
         ) : (
           <WebviewInterlinearChapter theme={theme} data={chapterData} />
-          // <Chapter
-          //   initialScrollIndex={
-          //     initialScrollIndex === 1 ? 0 : initialScrollIndex || 0
-          //   }
-          //   verses={verses}
-          //   data={chapterData}
-          //   isInterlinear={isInterlinear}
-          //   isSplit={false}
-          //   theme={theme}
-          //   onScroll={handleScroll}
-          //   {...{
-          //     onStrongWordClicked,
-          //     onInterlinear,
-          //     onAnotar,
-          //     onComparar,
-          //     onWordClicked,
-          //   }}
-          // />
         )}
       </SwipeWrapper>
       {!isPlayerOpened && (

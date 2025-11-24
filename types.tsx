@@ -215,6 +215,7 @@ export type TStep = {
   text: string;
   target: any;
   action?: any;
+  startActionOnMount?: boolean;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

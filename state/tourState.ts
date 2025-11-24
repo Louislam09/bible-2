@@ -3,9 +3,9 @@ import { createRef } from "react";
 
 export const tourState$ = observable({
   // Home screen refs
-  footerTitleRef: createRef<any>(),
+  bookSelector: createRef<any>(),
   nextButton: createRef<any>(),
-  backButton: createRef<any>(),
+  previousButton: createRef<any>(),
   audio: createRef<any>(),
   dashboard: createRef<any>(),
   bibleVersion: createRef<any>(),
@@ -13,8 +13,11 @@ export const tourState$ = observable({
   setting: createRef<any>(),
   fav: createRef<any>(),
 
+  // move
+  moveForwardButton: createRef<any>(),
+  moveBackwardButton: createRef<any>(),
+
   // Additional refs for tutorials
-  bookSelector: createRef<any>(),
   chapterSelector: createRef<any>(),
   versionSelector: createRef<any>(),
   toolbar: createRef<any>(),

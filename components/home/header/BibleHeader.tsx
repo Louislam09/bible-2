@@ -125,7 +125,7 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
             bibleState$.handleSplitActived();
           });
         },
-        ref: tourState$.fav,
+        ref: tourState$.splitScreenButton.get(),
         isIonicon: false,
         color: isSplitActived ? theme.colors.notification : theme.colors.text,
         hide: false
@@ -133,7 +133,7 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
       {
         name: "ArrowBigLeftDash",
         action: moveBackInHistory,
-        ref: tourState$.setting,
+        ref: tourState$.moveBackwardButton.get(),
         isIonicon: true,
         disabled: !canGoBackward,
         hide: isSplitActived,
@@ -142,16 +142,14 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
       {
         name: "ArrowBigRightDash",
         action: moveForwardInHistory,
-        ref: tourState$.search,
+        ref: tourState$.moveForwardButton.get(),
         isIonicon: true,
         hide: isSplitActived,
         disabled: !canGoForward,
         color: canGoForward ? theme.colors.notification : "#7a7a7a",
       },
-      // { name: "Notebook", action: () => router.navigate({ pathname: `/${Screens.Notes}` }), ref: tourState$.search },
-      { name: "Music4", action: goHymnsScreen, ref: tourState$.search },
-      // { name: "Bot", action: () => router.navigate({ pathname: `/${Screens.AIBibleGuide}` }), ref: tourState$.search },
-      { name: "Search", action: goSearchScreen, ref: tourState$.search },
+      { name: "Music4", action: goHymnsScreen, ref: tourState$.hymnalButton.get() },
+      { name: "Search", action: goSearchScreen, ref: tourState$.search.get() },
     ];
     return options.filter((x) => !x.hide);
   }, [isSplitActived, canGoForward, canGoBackward]);
@@ -175,6 +173,7 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
     >
       <View style={styles.headerContainer}>
         <TouchableOpacity
+          ref={tourState$.dashboard.get()}
           style={[styles.iconContainer]}
           onPress={() => router.navigate("/(dashboard)")}
         >
@@ -193,7 +192,7 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
         >
           {headerIconData.map((icon, index) => (
             <TouchableOpacity
-              ref={icon.ref.get()}
+              ref={icon.ref}
               style={[styles.iconContainer]}
               key={index}
               onPress={icon?.action}
@@ -227,6 +226,7 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
         </TouchableOpacity>
 
         <TouchableOpacity
+          ref={tourState$.setting.get()}
           style={[styles.iconContainer, { marginHorizontal: 10 }]}
           onPress={settingsHandlePresentModalPress}
         >
