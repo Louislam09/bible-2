@@ -20,7 +20,7 @@ import isWithinTimeframe from "@/utils/isWithinTimeframe";
 import { showToast } from "@/utils/showToast";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
-import { useNavigation } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import React, { useCallback, useRef, useState } from "react";
 import {
   Linking,
@@ -50,6 +50,7 @@ export interface IAdditionalResourceList {
 
 const MainDashboard = () => {
   const navigation = useNavigation();
+  const router = useRouter();
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const [currentEmpty, setCurrentEmpty] = useState<"doubible" | "timeline">(
@@ -180,7 +181,9 @@ const MainDashboard = () => {
     {
       icon: "GraduationCap",
       label: "Tutoriales",
-      action: () => navigation.navigate(Screens.Tutorials),
+      action: () => {
+        navigation.navigate(Screens.Tutorials)
+      },
       color: "#4CAF50",
     },
     {

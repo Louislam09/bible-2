@@ -327,6 +327,65 @@ const tutorialsStyles = (theme: TTheme, fontSize: number = 16, selectedFont?: st
     .hidden {
       display: none !important;
     }
+
+    /* Lazy load animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .animate-spin {
+      animation: spin 1s linear infinite;
+    }
+
+    .tutorial-card {
+      opacity: 0;
+      animation: fadeInUp 0.4s ease-out forwards;
+    }
+
+    .featured-badge {
+      opacity: 0;
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+
+    .progress-card {
+      opacity: 0;
+      animation: fadeIn 0.3s ease-out 0.1s forwards;
+    }
+
+    .categories-container {
+      opacity: 0;
+      animation: fadeIn 0.3s ease-out 0.2s forwards;
+    }
+
+    .tutorials-section {
+      opacity: 0;
+      animation: fadeIn 0.3s ease-out 0.3s forwards;
+    }
   </style>
 `;
 };
@@ -406,57 +465,17 @@ const createHtmlBody = (theme: TTheme, completedTutorials: string[]) => {
 
       <!-- Tutorials List -->
       <div id="tutorialsList">
-        ${TUTORIAL_FEATURES.map((tutorial, index) => {
-    const isFeatured = tutorial.id === "home-screen-tour";
-    const isCompleted = completedTutorials.includes(tutorial.id);
-    const categoryData = TUTORIAL_CATEGORIES[tutorial.category];
-
-    return `
-            ${isFeatured ? `
-              <div class="featured-badge ">
-                <svg class="featured-icon !text-theme-notification" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                </svg>
-                <span class="featured-text !text-theme-notification">Recomendado</span>
-              </div>
-            ` : ''}
-            
-            <div class="tutorial-card border-2 border-[${tutorial.color}30] !my-3 bg-linear-to-r from-[${tutorial.color}10] via-[${tutorial.color}20] to-[${tutorial.color}30]" data-tutorial-id="${tutorial.id}" data-category="${tutorial.category}" onclick="selectTutorial('${tutorial.id}')">
-              <div class="tutorial-card-header">
-                <div class="tutorial-icon-container" style="background-color: ${tutorial.color}20;">
-                  <svg class="tutorial-icon" viewBox="0 0 24 24" fill="none" stroke="${tutorial.color}" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                  </svg>
-                </div>
-                <div class="tutorial-info">
-                  <div class="tutorial-title">${tutorial.title}</div>
-                  <div class="tutorial-meta">
-                    <span class="tutorial-badge difficulty-badge" style="--difficulty-color: ${getDifficultyColor(tutorial.difficulty)}">
-                      ${getDifficultyLabel(tutorial.difficulty)}
-                    </span>
-                    <span class="tutorial-badge duration-badge">
-                      ⏱️ ${tutorial.duration}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div class="tutorial-description !text-theme-text">${tutorial.description}</div>
-              <div class="tutorial-footer">
-                <div class="tutorial-steps !text-theme-text">
-                  <span>📖 ${tutorial.steps.length} pasos</span>
-                </div>
-                ${isCompleted ? `
-                  <div class="completed-badge">
-                    <svg class="completed-icon" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2">
-                      <polyline points="20 6 9 17 4 12"/>
-                    </svg>
-                    <span>Completado</span>
-                  </div>
-                ` : ''}
-              </div>
-            </div>
-          `;
-  }).join('')}
+        <!-- Tutorials will be loaded dynamically -->
+      </div>
+      
+      <!-- Loading indicator -->
+      <div id="loadingIndicator" style="display: none;">
+        <div class="flex items-center justify-center py-6 px-4">
+          <div class="flex items-center gap-2">
+            <div class="animate-spin rounded-full h-5 w-5 border-2 border-theme-notification border-t-transparent"></div>
+            <span class="text-theme-text/70 text-font-sm">Cargando más tutoriales...</span>
+          </div>
+        </div>
       </div>
 
       <!-- Empty State (hidden by default) -->
@@ -473,6 +492,118 @@ const createHtmlBody = (theme: TTheme, completedTutorials: string[]) => {
         let completedTutorials = ${JSON.stringify(completedTutorials)};
         const tutorials = ${JSON.stringify(TUTORIAL_FEATURES)};
         const categories = ${JSON.stringify(TUTORIAL_CATEGORIES)};
+        const difficultyColors = ${JSON.stringify(TUTORIAL_FEATURES.reduce((acc, t) => ({ ...acc, [t.difficulty]: getDifficultyColor(t.difficulty) }), {}))};
+        const difficultyLabels = ${JSON.stringify(TUTORIAL_FEATURES.reduce((acc, t) => ({ ...acc, [t.difficulty]: getDifficultyLabel(t.difficulty) }), {}))};
+        
+        let loadedCount = 0;
+        const INITIAL_LOAD = 3; // Reduced from 5 for faster initial render
+        const BATCH_SIZE = 4; // Increased from 3 for faster subsequent loads
+        let animationDelay = 0;
+        
+        // Function to create tutorial card HTML
+        function createTutorialCard(tutorial, index) {
+          const isFeatured = tutorial.id === "home-screen-tour";
+          const isCompleted = completedTutorials.includes(tutorial.id);
+          
+          const featuredBadge = isFeatured ? \`
+            <div class="featured-badge" style="animation-delay: \${animationDelay}s;">
+              <svg class="featured-icon !text-theme-notification" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <span class="featured-text !text-theme-notification">Recomendado</span>
+            </div>
+          \` : '';
+          
+          const completedBadge = isCompleted ? \`
+            <div class="completed-badge">
+              <svg class="completed-icon" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>Completado</span>
+            </div>
+          \` : '';
+          
+          // Stagger animation for each card
+          const cardDelay = animationDelay;
+          animationDelay += 0.08; // Increment delay for next card
+          
+          return \`
+            \${featuredBadge}
+            <div class="tutorial-card border-2 border-[\${tutorial.color}30] !my-3 bg-linear-to-r from-[\${tutorial.color}10] via-[\${tutorial.color}20] to-[\${tutorial.color}30]" 
+                 data-tutorial-id="\${tutorial.id}" 
+                 data-category="\${tutorial.category}" 
+                 style="animation-delay: \${cardDelay}s;"
+                 onclick="selectTutorial('\${tutorial.id}')">
+              <div class="tutorial-card-header">
+                <div class="tutorial-icon-container" style="background-color: \${tutorial.color}20;">
+                  <svg class="tutorial-icon" viewBox="0 0 24 24" fill="none" stroke="\${tutorial.color}" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                  </svg>
+                </div>
+                <div class="tutorial-info">
+                  <div class="tutorial-title">\${tutorial.title}</div>
+                  <div class="tutorial-meta">
+                    <span class="tutorial-badge difficulty-badge" style="--difficulty-color: \${difficultyColors[tutorial.difficulty]}">
+                      \${difficultyLabels[tutorial.difficulty]}
+                    </span>
+                    <span class="tutorial-badge duration-badge">
+                      ⏱️ \${tutorial.duration}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="tutorial-description !text-theme-text">\${tutorial.description}</div>
+              <div class="tutorial-footer">
+                <div class="tutorial-steps !text-theme-text">
+                  <span>📖 \${tutorial.steps.length} pasos</span>
+                </div>
+                \${completedBadge}
+              </div>
+            </div>
+          \`;
+        }
+        
+        // Load tutorials progressively with requestAnimationFrame for better performance
+        function loadTutorials(count) {
+          const tutorialsList = document.getElementById('tutorialsList');
+          const loadingIndicator = document.getElementById('loadingIndicator');
+          const endIndex = Math.min(loadedCount + count, tutorials.length);
+          
+          // Use document fragment for better performance
+          const fragment = document.createDocumentFragment();
+          const tempDiv = document.createElement('div');
+          
+          for (let i = loadedCount; i < endIndex; i++) {
+            const cardHTML = createTutorialCard(tutorials[i], i);
+            tempDiv.innerHTML = cardHTML;
+            while (tempDiv.firstChild) {
+              fragment.appendChild(tempDiv.firstChild);
+            }
+          }
+          
+          tutorialsList.appendChild(fragment);
+          loadedCount = endIndex;
+          
+          // Load more if not all loaded, using requestAnimationFrame for smooth rendering
+          if (loadedCount < tutorials.length) {
+            loadingIndicator.style.display = 'block';
+            requestAnimationFrame(() => {
+              setTimeout(() => loadTutorials(BATCH_SIZE), 50);
+            });
+          } else {
+            loadingIndicator.style.display = 'none';
+          }
+        }
+        
+        // Initialize: Load first batch immediately when DOM is ready
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function() {
+            requestAnimationFrame(() => loadTutorials(INITIAL_LOAD));
+          });
+        } else {
+          // DOM already loaded, start immediately with requestAnimationFrame
+          requestAnimationFrame(() => loadTutorials(INITIAL_LOAD));
+        }
 
         function selectCategory(category, color) {
           currentCategory = category;

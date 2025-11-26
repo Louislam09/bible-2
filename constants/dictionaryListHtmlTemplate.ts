@@ -76,7 +76,7 @@ export const dictionaryListHtmlTemplate = ({
             if (version.words.length === 0) return '';
 
             const wordCards = version.words.slice(0, 10).map((word: any, wordIndex: number) => `
-        <div class="word-card bg-theme-background border border-theme-chip-border" data-word='${versionIndex}-${wordIndex}' style="animation-delay: ${wordIndex * 100}ms">
+        <div class="word-card bg-theme-background border border-theme-chip-border" data-word='${versionIndex}-${wordIndex}' style="animation-delay: ${wordIndex * 60}ms">
           <div class="word-content ">
             <span class="word-topic text-theme-text">${word.topic || ''}</span>
           </div>
@@ -159,7 +159,7 @@ export const dictionaryListHtmlTemplate = ({
                 cursor: pointer;
                 transition: all 0.2s ease;
                 opacity: 0;
-                animation: slideIn 0.1s ease forwards;
+                animation: slideIn 0.15s ease forwards;
                 box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             }
             
@@ -205,7 +205,7 @@ export const dictionaryListHtmlTemplate = ({
             @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateX(300px);
+                transform: translateX(100px);
             }
                 to {
                     opacity: 1;

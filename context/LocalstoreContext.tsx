@@ -172,7 +172,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isSyncing, setSyncing] = useState(false);
   const netInfo = useNetwork();
   const { isConnected } = netInfo;
-  const syncTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const SYNC_DEBOUNCE_MS = 10000; // 10 seconds
 
   useEffect(() => {
@@ -208,23 +207,10 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       if (storedData$.user.get() && pb.authStore.isValid) {
         console.log('Change detected, scheduling sync...');
         setHasPendingCloudSync(true);
-
-        // Clear existing timeout
-        if (syncTimeoutRef.current) {
-          clearTimeout(syncTimeoutRef.current);
-        }
-
-        // Set new timeout
-        syncTimeoutRef.current = setTimeout(() => {
-          console.log('Debounce timer fired, syncing now...');
-          syncWithCloud({ alert: false });
-        }, SYNC_DEBOUNCE_MS);
       }
     });
     return () => {
-      if (syncTimeoutRef.current) {
-        clearTimeout(syncTimeoutRef.current);
-      }
+
       unsubscribeFromChanges();
     };
   }, []);
