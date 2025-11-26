@@ -13,6 +13,7 @@ import Icon from "../Icon";
 import { Text } from "../Themed";
 import * as Haptics from 'expo-haptics';
 import { useCallback } from "react";
+import { PressableScale } from "../animations/pressable-scale";
 
 export type SingleScreenHeaderProps = {
   theme: TTheme;
@@ -60,7 +61,7 @@ export const singleScreenHeader = ({
   } as any;
 
   const RightHeaderComponent = useCallback(() => (
-    <TouchableOpacity {...headerRightProps}>
+    <PressableScale style={headerRightProps.style} onPress={headerRightProps.onPress} disabled={headerRightProps.disabled}>
       {headerRightProps.headerRightIcon && (
         <Icon
           name={headerRightProps.headerRightIcon}
@@ -72,7 +73,7 @@ export const singleScreenHeader = ({
       {headerRightProps.headerRightText && (
         <Text style={{ fontSize: 18 }}>{headerRightProps.headerRightText}</Text>
       )}
-    </TouchableOpacity>
+    </PressableScale>
   ), [headerRightProps]);
 
   return {

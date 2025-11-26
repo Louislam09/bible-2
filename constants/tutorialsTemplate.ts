@@ -47,29 +47,6 @@ const tutorialsStyles = (theme: TTheme, fontSize: number = 16, selectedFont?: st
       color: ${theme.colors.text}80;
     }
 
-    .reset-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 1px solid ${theme.colors.notification};
-      background: transparent;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .reset-button:active {
-      transform: scale(0.95);
-      opacity: 0.7;
-    }
-
-    .reset-icon {
-      width: 16px;
-      height: 16px;
-      color: ${theme.colors.notification};
-    }
-
     .progress-card {
       background-color: ${theme.colors.card};
       padding: 16px;
@@ -380,14 +357,6 @@ const createHtmlBody = (theme: TTheme, completedTutorials: string[]) => {
             <div class="header-title">Aprende a usar la app</div>
             <div class="header-subtitle !text-theme-text">Domina todas las funciones paso a paso</div>
           </div>
-          <button class="reset-button" onclick="resetProgress()">
-            <svg class="reset-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
-              <path d="M21 3v5h-5"/>
-              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
-              <path d="M3 21v-5h5"/>
-            </svg>
-          </button>
         </div>
 
         <!-- Progress Card -->
@@ -571,14 +540,6 @@ const createHtmlBody = (theme: TTheme, completedTutorials: string[]) => {
             window.ReactNativeWebView.postMessage(JSON.stringify({
               type: 'tutorialSelected',
               data: { tutorialId }
-            }));
-          }
-        }
-
-        function resetProgress() {
-          if (window.ReactNativeWebView) {
-            window.ReactNativeWebView.postMessage(JSON.stringify({
-              type: 'resetProgress'
             }));
           }
         }

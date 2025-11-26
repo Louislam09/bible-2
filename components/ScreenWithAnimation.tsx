@@ -2,8 +2,18 @@ import { useMyTheme } from "@/context/ThemeContext";
 import { TTheme } from "@/types";
 import LottieView, { AnimationObject } from "lottie-react-native";
 import { icons } from "lucide-react-native";
-import React, { FC, useEffect, useRef, useState } from "react";
-import { Animated, SafeAreaView, StyleSheet, View } from "react-native";
+import React, { FC, useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withSpring,
+  withRepeat,
+  withSequence,
+  Easing,
+  runOnJS,
+} from "react-native-reanimated";
 import Icon from "./Icon";
 
 type ScreenWithAnimationProps = {
@@ -40,61 +50,90 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
   customContent,
 }) => {
   const [isAnimating, setIsAnimating] = useState(shouldPlay);
-  const opacity = useRef(new Animated.Value(0)).current;
-  const bounceValue = useRef(new Animated.Value(0)).current;
+  const opacity = useSharedValue(0);
+  const bounceValue = useSharedValue(0);
+  const scale = useSharedValue(0.5);
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
 
-  const onAnimationFinish = (isCancelled: boolean) => {
-    if (!isCancelled) return;
-    setTimeout(() => setIsAnimating(false), 0);
-  };
-
-  const animateOpacityLoop = () => {
-    return Animated.loop(
-      Animated.sequence([
-        Animated.timing(opacity, {
-          toValue: 1,
-          duration,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacity, {
-          toValue: 0,
-          duration,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
+  const finishAnimation = () => {
+    setIsAnimating(false);
   };
 
   useEffect(() => {
     if (isVisible) {
-      animateOpacityLoop();
+      // Loop opacity animation when visible
+      opacity.value = withRepeat(
+        withSequence(
+          withTiming(1, { duration }),
+          withTiming(0, { duration })
+        ),
+        -1, // infinite loop
+        false
+      );
     } else {
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: duration,
-        useNativeDriver: true,
-      }).start(({ finished }) => onAnimationFinish(finished));
+      // Entrance animation
+      opacity.value = withTiming(1, {
+        duration,
+        easing: Easing.out(Easing.cubic),
+      }, (finished) => {
+        if (finished) {
+          runOnJS(finishAnimation)();
+        }
+      });
+
+      scale.value = withSpring(1, {
+        damping: 15,
+        stiffness: 100,
+      });
+
+
     }
 
-    if (icon && !animationSource) {
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(bounceValue, {
-            toValue: -10,
-            duration: 500,
-            useNativeDriver: true,
-          }),
-          Animated.timing(bounceValue, {
-            toValue: 0,
-            duration: 500,
-            useNativeDriver: true,
-          }),
-        ])
-      ).start();
+    if ((icon || imageSource) && !animationSource) {
+      // Bounce animation
+      bounceValue.value = withRepeat(
+        withSequence(
+          withTiming(-10, { duration: 500 }),
+          withTiming(0, { duration: 500 })
+        ),
+        -1, // infinite loop
+        false
+      );
     }
-  }, [opacity, bounceValue, icon, animationSource, duration, isVisible]);
+  }, [icon, imageSource, animationSource, duration, isVisible]);
+
+  const imageAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      transform: [
+        { translateY: bounceValue.value },
+        { scale: scale.value },
+      ],
+    };
+  });
+
+  const iconAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      transform: [
+        { translateY: bounceValue.value },
+        { scale: scale.value },
+      ],
+    };
+  });
+
+  const titleAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      transform: [{ scale: scale.value }],
+    };
+  });
+
+  const onAnimationFinish = (isCancelled: boolean) => {
+    if (!isCancelled) return;
+    finishAnimation();
+  };
 
   return (
     <View
@@ -122,20 +161,19 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
           ) : imageSource ? (
             <Animated.Image
               source={imageSource}
-              style={{
-                width: 300,
-                height: 300,
-                opacity,
-                transform: [{ translateY: bounceValue }],
-              }}
+              style={[
+                {
+                  width: 300,
+                  height: 300,
+                },
+                imageAnimatedStyle,
+              ]}
               resizeMode="contain"
             />
           ) : (
-            <Animated.View
-              style={{ transform: [{ translateY: bounceValue }], opacity }}
-            >
+            <Animated.View style={iconAnimatedStyle}>
               <Icon
-                name={icon! || "BookPlus"}
+                name={icon || "BookPlus"}
                 size={100}
                 color={iconColor || theme.colors.text}
               />
@@ -143,11 +181,15 @@ const ScreenWithAnimation: FC<ScreenWithAnimationProps> = ({
           )}
           {title && (
             <Animated.Text
-              style={{
-                color: titleColor || theme.colors.text,
-                fontSize: 28,
-                opacity,
-              }}
+              style={[
+                {
+                  color: titleColor || theme.colors.text,
+                  fontSize: 28,
+                  fontWeight: "bold",
+                  marginTop: 20,
+                },
+                titleAnimatedStyle,
+              ]}
             >
               {title}
             </Animated.Text>

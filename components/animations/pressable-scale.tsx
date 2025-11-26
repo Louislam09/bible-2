@@ -9,7 +9,7 @@ import Animated, {
 
 type PressableScaleProps = {
   children?: React.ReactNode;
-  onPress?: () => void;
+  onPress?: (event?: any) => void;
   style?: StyleProp<ViewStyle>;
   disabled?: boolean;
 };

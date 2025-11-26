@@ -16,6 +16,9 @@ import { tutorialsHtmlTemplate } from "@/constants/tutorialsTemplate";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import { showToast } from "@/utils/showToast";
+import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 
 export default function TutorialsScreen() {
   const { theme } = useMyTheme();
@@ -114,9 +117,6 @@ export default function TutorialsScreen() {
         case "tutorialSelected":
           handleTutorialPress(data.tutorialId);
           break;
-        case "resetProgress":
-          resetTutorialProgress();
-          break;
         default:
           break;
       }
@@ -126,54 +126,66 @@ export default function TutorialsScreen() {
   }, []);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background, paddingTop: topInset }]}>
+    <>
       <Stack.Screen
         options={{
-          title: "Tutoriales",
-          headerStyle: {
-            backgroundColor: theme.colors.background,
-          },
-          headerTintColor: theme.colors.text,
-          headerShadowVisible: false,
-        }}
-      />
-
-      <WebView
-        ref={webViewRef}
-        key="tutorials-webview"
-        originWhitelist={["*"]}
-        style={{
-          flex: 1,
-          backgroundColor: theme.colors.background,
-        }}
-        source={{
-          html: tutorialsHtmlTemplate({
+          ...singleScreenHeader({
             theme,
-            completedTutorials,
-            fontSize,
-            selectedFont,
+            title: "Tutoriales",
+            titleIcon: "GraduationCap",
+            headerRightProps: {
+              headerRightIcon: "RefreshCcw",
+              headerRightIconColor: theme.colors.notification,
+              onPress: () => {
+                resetTutorialProgress();
+                showToast("Tutoriales reiniciados", "SHORT", "TOP");
+              },
+              disabled: false,
+              style: {},
+            },
           }),
         }}
-        onMessage={handleMessage}
-        renderLoading={() => (
-          <View
-            style={{
-              backgroundColor: theme.colors.background,
-              flex: 1,
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: 1000,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          />
-        )}
-        {...createOptimizedWebViewProps({}, "static")}
       />
-    </SafeAreaView>
+      <ScreenWithAnimation iconColor="#4CAF50" title="Tutoriales" icon="GraduationCap">
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
+          <WebView
+            ref={webViewRef}
+            key="tutorials-webview"
+            originWhitelist={["*"]}
+            style={{
+              flex: 1,
+              backgroundColor: theme.colors.background,
+            }}
+            source={{
+              html: tutorialsHtmlTemplate({
+                theme,
+                completedTutorials,
+                fontSize,
+                selectedFont,
+              }),
+            }}
+            onMessage={handleMessage}
+            renderLoading={() => (
+              <View
+                style={{
+                  backgroundColor: theme.colors.background,
+                  flex: 1,
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  zIndex: 1000,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              />
+            )}
+            {...createOptimizedWebViewProps({}, "static")}
+          />
+        </SafeAreaView>
+      </ScreenWithAnimation>
+    </>
   );
 }
 

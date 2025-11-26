@@ -58,7 +58,7 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
   const router = useRouter();
   const navigation = useNavigation();
   const isSmallSDevice = width < 300;
-  const headerIconSize = isSmallSDevice ? 26 : 24;
+  const headerIconSize = 20;
 
   const styles = getStyles(theme);
   const versionRef = useRef<BottomSheetModal>(null);
@@ -71,7 +71,6 @@ const BibleHeader: FC<HeaderInterface> = ({ }) => {
   const canGoBackward = currentHistoryIndex !== 0;
   const { installedBibles } = useDBContext();
   const currentItem = getCurrentItem?.();
-  const currentVerse = currentItem?.verse;
   const currentVersionName =
     installedBibles.find((version) => version.id === currentBibleVersion)
       ?.shortName || installedBibles[0].shortName;

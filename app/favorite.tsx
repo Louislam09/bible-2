@@ -33,7 +33,6 @@ const Favorite: React.FC<FavoriteProps> = () => {
         animationSource={startSource}
         speed={2}
       >
-
         <FavoriteList />
       </ScreenWithAnimation>
       <TutorialWalkthrough />
