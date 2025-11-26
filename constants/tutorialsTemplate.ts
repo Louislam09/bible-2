@@ -13,6 +13,9 @@ const tutorialsStyles = (theme: TTheme, fontSize: number = 16, selectedFont?: st
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+    }
+    
+    body, .header, .progress-card, .categories-container {
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -197,13 +200,28 @@ const tutorialsStyles = (theme: TTheme, fontSize: number = 16, selectedFont?: st
       padding: 16px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                  opacity 0.3s ease-out, 
+                  box-shadow 0.3s ease-out,
+                  filter 0.3s ease-out;
       position: relative;
       overflow: hidden;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      will-change: transform, opacity;
+      transform-style: preserve-3d;
+      perspective: 1000px;
     }
 
     .tutorial-card:active {
-      transform: scale(0.98);
+      transform: scale(0.96) !important;
+      opacity: 0.75 !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+      transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), 
+                  opacity 0.15s ease-in, 
+                  box-shadow 0.15s ease-in;
     }
 
     .tutorial-card-header {
@@ -532,8 +550,7 @@ const createHtmlBody = (theme: TTheme, completedTutorials: string[]) => {
             <div class="tutorial-card border-2 border-[\${tutorial.color}30] !my-3 bg-linear-to-r from-[\${tutorial.color}10] via-[\${tutorial.color}20] to-[\${tutorial.color}30]" 
                  data-tutorial-id="\${tutorial.id}" 
                  data-category="\${tutorial.category}" 
-                 style="animation-delay: \${cardDelay}s;"
-                 onclick="selectTutorial('\${tutorial.id}')">
+                 style="animation-delay: \${cardDelay}s;">
               <div class="tutorial-card-header">
                 <div class="tutorial-icon-container" style="background-color: \${tutorial.color}20;">
                   <svg class="tutorial-icon" viewBox="0 0 24 24" fill="none" stroke="\${tutorial.color}" stroke-width="2">
@@ -584,6 +601,9 @@ const createHtmlBody = (theme: TTheme, completedTutorials: string[]) => {
           tutorialsList.appendChild(fragment);
           loadedCount = endIndex;
           
+          // Add touch event listeners to newly loaded cards
+          addTouchListeners();
+          
           // Load more if not all loaded, using requestAnimationFrame for smooth rendering
           if (loadedCount < tutorials.length) {
             loadingIndicator.style.display = 'block';
@@ -593,6 +613,70 @@ const createHtmlBody = (theme: TTheme, completedTutorials: string[]) => {
           } else {
             loadingIndicator.style.display = 'none';
           }
+        }
+        
+        // Add touch and click listeners to cards with enhanced animations
+        function addTouchListeners() {
+          const cards = document.querySelectorAll('.tutorial-card');
+          cards.forEach(card => {
+            // Click handler
+            card.onclick = function() {
+              const tutorialId = this.getAttribute('data-tutorial-id');
+              selectTutorial(tutorialId);
+            };
+            
+            // Touch start - apply pressed state with enhanced effects
+            card.addEventListener('touchstart', function(e) {
+              const touch = e.touches[0];
+              const rect = this.getBoundingClientRect();
+              const x = touch.clientX - rect.left - rect.width / 2;
+              const y = touch.clientY - rect.top - rect.height / 2;
+              const tiltX = (y / rect.height) * 3; // Subtle tilt
+              const tiltY = -(x / rect.width) * 3;
+              
+              this.style.transform = \`scale(0.96) rotateX(\${tiltX}deg) rotateY(\${tiltY}deg)\`;
+              this.style.opacity = '0.8';
+              this.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.12)';
+              this.style.filter = 'brightness(0.95)';
+              this.style.transition = 'all 0.15s cubic-bezier(0.22, 1, 0.36, 1)';
+            }, { passive: true });
+            
+            // Touch move - update tilt based on finger position
+            card.addEventListener('touchmove', function(e) {
+              const touch = e.touches[0];
+              const rect = this.getBoundingClientRect();
+              const x = touch.clientX - rect.left - rect.width / 2;
+              const y = touch.clientY - rect.top - rect.height / 2;
+              const tiltX = (y / rect.height) * 3;
+              const tiltY = -(x / rect.width) * 3;
+              
+              this.style.transform = \`scale(0.96) rotateX(\${tiltX}deg) rotateY(\${tiltY}deg)\`;
+            }, { passive: true });
+            
+            // Touch end - remove pressed state with spring animation
+            card.addEventListener('touchend', function(e) {
+              this.style.transform = 'scale(1.02)'; // Slight overshoot
+              this.style.opacity = '1';
+              this.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+              this.style.filter = 'brightness(1)';
+              this.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+              
+              // Return to normal after overshoot
+              setTimeout(() => {
+                this.style.transform = '';
+                this.style.transition = 'all 0.3s ease-out';
+              }, 100);
+            }, { passive: true });
+            
+            // Touch cancel - remove pressed state
+            card.addEventListener('touchcancel', function(e) {
+              this.style.transform = '';
+              this.style.opacity = '';
+              this.style.boxShadow = '';
+              this.style.filter = '';
+              this.style.transition = 'all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            }, { passive: true });
+          });
         }
         
         // Initialize: Load first batch immediately when DOM is ready
