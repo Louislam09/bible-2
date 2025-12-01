@@ -26,6 +26,27 @@ const chooseReferenceStyles = (theme: TTheme) => `
       margin: 0;
       padding: 0;
     }
+    .start-tour-button {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid ${theme.colors.text}40;
+      color: ${theme.colors.text};
+      font-size: 15px;
+      background: transparent;
+      cursor: pointer;
+    }
+    .start-tour-button:hover {
+      opacity: 1;
+      background-color: ${theme.colors.primary}20;
+      border-color: ${theme.colors.primary}60;
+      transform: translateX(-2px) scale(1.02);
+    }
+    .start-tour-button:active {
+      opacity: 1;
+      background-color: ${theme.colors.primary}40;
+      border-color: ${theme.colors.primary}80;
+      transform: translateX(-2px) scale(1.02);
+    }
 
     .container {
       width: 100%;
@@ -412,6 +433,9 @@ const createHtmlHead = (theme: TTheme) => `
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seleccionar Referencia</title>
     ${chooseReferenceStyles(theme)}
+
+    <script src="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.js.iife.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.css"/>
   </head>
 `;
 
@@ -421,14 +445,15 @@ const createBookButton = (book: any, theme: TTheme, isSelected: boolean = false,
     title="${book.longName}"
     onclick="selectBook('${book.longName}', '${book.bookColor}')"
     style="animation-delay: ${index * 0.02}s;"
+    id="bookButton-${index}"
   >
     ${abbr(book.longName)}
   </button>
 `;
 
-const createBooksSection = (books: any[], theme: TTheme, selectedBook?: string) => `
+const createBooksSection = (books: any[], theme: TTheme, selectedBook?: string, section?: 'oldTestament' | 'newTestament') => `
   <div class="section-header">
-    <h3 class="section-title">${books[0]?.bookNumber < 400 ? 'Antiguo Pacto' : 'Nuevo Pacto'}</h3>
+    <h3 class="section-title" id="sectionTitle-${section}">${section === 'oldTestament' ? 'Antiguo Pacto' : 'Nuevo Pacto'}</h3>
   </div>
   <div class="section-divider"></div>
   <div class="books-grid">
@@ -459,10 +484,13 @@ const createHtmlBody = (
             </button>
           </div>
 
+          <button id="startTourButton" class="start-tour-button" onclick="startReferenceTour()">
+            <span class="text">Iniciar Tour</span>
+          </button>
           <!-- Book Selection Step -->
           <div id="bookStep" class="section ${currentStep !== 0 ? 'hidden' : ''}">
-            ${createBooksSection(oldTestamentBooks, theme, initialBook)}
-            ${createBooksSection(newTestamentBooks, theme, initialBook)}
+            ${createBooksSection(oldTestamentBooks, theme, initialBook, 'oldTestament')}
+            ${createBooksSection(newTestamentBooks, theme, initialBook, 'newTestament')}
           </div>
 
           <!-- Chapter Selection Step -->
@@ -490,6 +518,93 @@ const createHtmlBody = (
           chapter: ${initialChapter || 'null'},
           verse: ${initialVerse || 'null'}
         };
+
+        const driver = window.driver.js.driver;
+
+        const driverObj = driver({
+          showProgress: true,
+          // allowClose: false,
+          showButtons: ['next', 'previous', 'close'],
+          nextBtnText: 'Siguiente',
+          prevBtnText: 'Anterior',
+          doneBtnText: 'Cerrar',
+          steps: [
+            { 
+              popover: { 
+                title: '¡Bienvenido al Selector de Referencias! 📖', 
+                description: 'Aquí puedes navegar fácilmente a cualquier libro, capítulo y versículo de la Biblia. Vamos a ver cómo funciona.', 
+                side: "over",
+                align: 'center'
+              }
+            },
+            { 
+              element: '#bookButton-0', 
+              popover: { 
+                title: 'Libros Abreviados', 
+                description: 'Cada botón muestra las primeras tres letras del libro.', 
+                side: "right", 
+                align: 'start' ,
+              }
+            },
+            { 
+              element: '.books-grid', 
+              popover: { 
+                title: 'Paso 1: Selecciona un Libro', 
+                description: 'Elige cualquier libro del Antiguo o Nuevo Pacto. Los libros están organizados en dos secciones para facilitar tu búsqueda.', 
+                side: "bottom", 
+                align: 'start' 
+              },
+              disableActiveInteraction: true
+            },
+            { 
+              popover: { 
+                title: 'Paso 2: Selecciona un Capítulo', 
+                description: 'Después de elegir un libro, se mostrará una lista de capítulos disponibles. Simplemente toca el capítulo que deseas leer.', 
+                side: "over", 
+                align: 'center' 
+              }
+            },
+            { 
+              popover: { 
+                title: 'Paso 3: Selecciona un Versículo', 
+                description: 'Finalmente, elige el versículo específico que quieres estudiar. Una vez seleccionado, serás llevado directamente a ese pasaje.', 
+                side: "over", 
+                align: 'center' 
+              }
+            },
+            { 
+              element: '#backButton', 
+              popover: { 
+                title: 'Botón Atrás', 
+                description: 'Si necesitas volver al paso anterior, usa este botón para regresar a la selección de libro o capítulo.', 
+                side: "bottom", 
+                align: 'end' 
+              }
+            },
+            { 
+              popover: { 
+                title: '¡Listo para Explorar! ✨', 
+                description: 'Ahora ya sabes cómo navegar por las Escrituras. ¡Que tu estudio de la Palabra sea bendecido!', 
+                side: "over", 
+                align: 'center' 
+              }
+            }
+          ],
+          onDestroyed: () => {
+            // Store that user has seen the tour
+            if (window.ReactNativeWebView) {
+              window.ReactNativeWebView.postMessage(JSON.stringify({
+                type: 'tourCompleted',
+                data: { tourId: 'reference-chooser' }
+              }));
+            }
+          }
+        });
+        
+        // Check if tour should be shown (can be triggered from React Native)
+        function startReferenceTour() {
+          driverObj.drive();
+        }
 
         // Book data
         const DB_BOOK_NAMES = ${JSON.stringify(DB_BOOK_NAMES)};

@@ -37,7 +37,6 @@ export enum Screens {
   Favorite = "favorite",
   DownloadManager = "downloadManager",
   Notes = "notes",
-  Onboarding = "onboarding",
   Character = "character",
   Song = "song",
   StrongSearchEntire = "searchStrongWordEntire",
@@ -59,7 +58,6 @@ export enum Screens {
   Register = "register",
   AISetup = "/ai-setup",
   Notification = "notification",
-  Help = "help/index",
   SongDetail = "songDetail",
   Commentary = "commentary",
   AIBibleGuide = "ai-bible-guide",
@@ -78,7 +76,6 @@ export const ScreensName: TScreensName = {
   [Screens.Dashboard]: "Dashboard",
   [Screens.Settings]: "Ajustes",
   [Screens.DownloadManager]: "Gestor de descargas",
-  [Screens.Onboarding]: "Guia",
   [Screens.Character]: "Personaje",
   [Screens.Song]: "Himnario",
   [Screens.StrongSearchEntire]: "Explorador de Números Strong",
@@ -100,7 +97,6 @@ export const ScreensName: TScreensName = {
   [Screens.Register]: "Crear una cuenta",
   [Screens.AISetup]: "Configuración de IA",
   [Screens.Notification]: "Notificacion",
-  [Screens.Help]: "Ayuda y Guía",
   [Screens.SongDetail]: "Himno",
   [Screens.Commentary]: "Comentarios",
   [Screens.AIBibleGuide]: "Guía Bíblica IA",
@@ -131,7 +127,6 @@ export type RootTabParamList = {
   history: undefined;
   notification: undefined;
   "memorization/memoryList": undefined;
-  help: undefined;
 };
 
 export type RootStackParamList = {
@@ -161,7 +156,6 @@ export type RootStackParamList = {
   dictionary: NavigatorScreenParams<RootTabParamList> | { word: string };
   commentary: NavigatorScreenParams<RootTabParamList> | undefined;
   modal: undefined;
-  onboarding: undefined;
   timeline: undefined;
   "memorization/memoryList": undefined;
   song: { isAlegres: boolean };
@@ -174,7 +168,6 @@ export type RootStackParamList = {
   [Screens.Register]: undefined;
   [Screens.AISetup]: undefined;
   [Screens.AIBibleGuide]: undefined;
-  [Screens.Help]: undefined;
   [Screens.Tutorials]: undefined;
 };
 

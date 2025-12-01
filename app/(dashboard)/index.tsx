@@ -365,12 +365,6 @@ const MainDashboard = () => {
         color: "#78b0a4",
       },
       {
-        icon: "HandHelping",
-        label: "Ayuda y Guía",
-        action: () => navigation.navigate(Screens.Help),
-        color: "#78b0a4",
-      },
-      {
         icon: "Settings",
         label: "Ajustes",
         isIonicon: true,

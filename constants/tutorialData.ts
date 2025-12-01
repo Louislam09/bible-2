@@ -8,10 +8,11 @@ import { bibleState$ } from "@/state/bibleState";
 export type TutorialStep = {
   id: string;
   text: string;
-  target: RefObject<any> | null;
+  target: RefObject<any> | null | { x: number; y: number; width: number; height: number };
   targetRef?: string; // Name of ref in tourState$ (e.g., "bookSelector")
   action?: () => void | Promise<void>;
   startActionOnMount?: boolean;
+  isPositionTarget?: boolean;
 };
 
 export type TutorialFeature = {
@@ -133,7 +134,7 @@ export const TUTORIAL_FEATURES: TutorialFeature[] = [
     steps: [
       {
         id: "1",
-        text: "👋 Bienvenido! Aquí puedes leer cualquier libro y capítulo. Toca el selector de libros para comenzar.",
+        text: "👋 Bienvenido!\n\nAquí puedes seleccionar cualquier libro y capítulo.\n\nVeamos cómo funciona.",
         target: null,
         startActionOnMount: true,
         action: () => {
@@ -159,12 +160,16 @@ export const TUTORIAL_FEATURES: TutorialFeature[] = [
       {
         id: "3",
         text: "📖 Ahora selecciona el capítulo que deseas leer.",
-        target: null,
+        target: { x: 100, y: 100, width: 50, height: 50 },
+        targetRef: "chapterSelector",
+        isPositionTarget: true,
       },
       {
         id: "4",
-        text: "🔄 Desliza hacia arriba o abajo para leer el contenido del capítulo.",
-        target: null,
+        text: "🔄 Desliza hacia arriba o abajo para leer el contenido del versículo.",
+        target: { x: 100, y: 100, width: 50, height: 50 },
+        targetRef: "verseSelector",
+        isPositionTarget: true,
       },
     ],
   },

@@ -12,8 +12,6 @@ export const tourState$ = observable({
   search: createRef<any>(),
   setting: createRef<any>(),
   fav: createRef<any>(),
-
-  // move
   moveForwardButton: createRef<any>(),
   moveBackwardButton: createRef<any>(),
 

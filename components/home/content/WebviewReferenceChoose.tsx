@@ -6,11 +6,12 @@ import useBackHandler from "@/hooks/useBackHandler";
 import useParams from "@/hooks/useParams";
 import { bibleState$ } from "@/state/bibleState";
 import { ChooseReferenceStep, modalState$ } from "@/state/modalState";
+import { tourState$ } from "@/state/tourState";
 import { ChooseChapterNumberParams } from "@/types";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "expo-router";
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { Easing, runOnJS, withTiming } from "react-native-reanimated";
 import WebView from "react-native-webview";
 
@@ -35,6 +36,12 @@ const WebviewReferenceChoose = React.memo(
 
     const sendMessage = (step: number) => {
       const message = { type: "step", step };
+      webViewRef.current?.postMessage(JSON.stringify(message));
+    };
+
+    const startTour = () => {
+      console.log("startTour");
+      const message = { type: "startTour" };
       webViewRef.current?.postMessage(JSON.stringify(message));
     };
 

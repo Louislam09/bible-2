@@ -432,29 +432,6 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
       ],
     },
     {
-      title: "Ayuda",
-      id: "help",
-      options: [
-        {
-          label: "Ayuda y Guía",
-          iconName: "HandHelping",
-          action: () => router.push("/help" as any),
-          extraText: "Aprende a usar la aplicación",
-          color: theme.colors.notification,
-        },
-        {
-          label: "Ver Introducción",
-          iconName: "CirclePlay",
-          action: () => {
-            storedData$.isOnboardingCompleted.set(false);
-            router.push("/onboarding" as any)
-          },
-          extraText: "Revive la experiencia de bienvenida",
-          color: theme.colors.notification,
-        },
-      ],
-    },
-    {
       title: "Acerca de",
       id: "about",
       options: [

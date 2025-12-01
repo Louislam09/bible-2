@@ -76,7 +76,6 @@ type StoreState = {
   showReadingTime: boolean;
   appFolderUri: string;
   appFolderTreeUri: string;
-  isOnboardingCompleted: boolean;
 };
 
 const initialContext: StoreState = {
@@ -125,7 +124,6 @@ const initialContext: StoreState = {
   showReadingTime: true,
   appFolderUri: "",
   appFolderTreeUri: "",
-  isOnboardingCompleted: false,
 };
 
 export const storedData$ = observable(initialContext);

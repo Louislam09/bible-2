@@ -2,8 +2,8 @@ import { useMyTheme } from "@/context/ThemeContext";
 import { tourState$ } from "@/state/tourState";
 import { TStep, TTheme } from "@/types";
 import React, { useEffect, useRef } from "react";
-import { Pressable, StyleSheet, TouchableOpacity, Animated as RNAnimated, Easing } from "react-native";
-import Popover, { PopoverPlacement } from "react-native-popover-view";
+import { Easing, Pressable, Animated as RNAnimated, StyleSheet, TouchableOpacity } from "react-native";
+import Popover from "react-native-popover-view";
 import Icon from "./Icon";
 import { Text, View } from "./Themed";
 

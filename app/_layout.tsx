@@ -3,7 +3,7 @@ import ErrorBoundaryFallback from "@/components/ErrorBoundaryFallback";
 import BibleChapterProvider from "@/context/BibleChapterContext";
 import BibleProvider from "@/context/BibleContext";
 import DatabaseProvider from "@/context/databaseContext";
-import StorageProvider, { storedData$ } from "@/context/LocalstoreContext";
+import StorageProvider from "@/context/LocalstoreContext";
 import { MemorizationProvider } from "@/context/MemorizationContext";
 import MyThemeProvider, { useMyTheme } from "@/context/ThemeContext";
 import { settingState$ } from "@/state/settingState";
@@ -12,7 +12,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
 import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
-import { Stack, useRouter, useSegments } from "expo-router";
+import { Stack } from "expo-router";
 import * as Updates from "expo-updates";
 import React, { memo, ReactNode, useEffect } from "react";
 import { ToastAndroid, View } from "react-native";
@@ -58,7 +58,6 @@ const screenAnimations: TScreensName = {
   [Screens.Dashboard]: "none",
   [Screens.Home]: "slide_from_right",
   [Screens.Search]: "slide_from_right",
-  [Screens.Onboarding]: "slide_from_bottom",
   [Screens.DownloadManager]: "slide_from_right",
   [Screens.Settings]: "slide_from_right",
   [Screens.Favorite]: "slide_from_right",
@@ -149,30 +148,6 @@ const FeatureProviders = memo(({ children }: { children: ReactNode }) => (
 ));
 FeatureProviders.displayName = 'FeatureProviders';
 
-// Onboarding Guard Component
-const OnboardingGuard = memo(({ children }: { children: ReactNode }) => {
-  const router = useRouter();
-  const segments = useSegments();
-  const isOnboardingCompleted = use$(() => storedData$.isOnboardingCompleted.get());
-  const isDataLoaded = use$(() => storedData$.isDataLoaded.get());
-
-  useEffect(() => {
-    if (!isDataLoaded) return; // Wait for data to load
-
-    const inOnboarding = segments[0] === 'onboarding';
-
-    if (!isOnboardingCompleted && !inOnboarding) {
-      // User hasn't completed onboarding, redirect to onboarding
-      router.replace('/onboarding');
-    } else if (isOnboardingCompleted && inOnboarding) {
-      // User completed onboarding but is on onboarding screen, redirect to dashboard
-      router.replace('/(dashboard)');
-    }
-  }, [isOnboardingCompleted, isDataLoaded, segments]);
-
-  return <>{children}</>;
-});
-OnboardingGuard.displayName = 'OnboardingGuard';
 
 const App = () => {
   const isAnimationDisabled = use$(() =>
@@ -219,15 +194,13 @@ const App = () => {
     <CoreProviders>
       <DataProviders>
         <FeatureProviders>
-          <OnboardingGuard>
-            <SafeContentView>
-              <SystemBars style="auto" />
-              <Stack
-                initialRouteName="(dashboard)"
-                screenOptions={screenOptions}
-              />
-            </SafeContentView>
-          </OnboardingGuard>
+          <SafeContentView>
+            <SystemBars style="auto" />
+            <Stack
+              initialRouteName="(dashboard)"
+              screenOptions={screenOptions}
+            />
+          </SafeContentView>
           {/* <BookContentModals /> */}
         </FeatureProviders>
       </DataProviders>
