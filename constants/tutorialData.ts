@@ -244,389 +244,389 @@ export const TUTORIAL_FEATURES: TutorialFeature[] = [
   },
 
   // ESTUDIO
-  {
-    id: "search-feature",
-    title: "Búsqueda Inteligente",
-    description: "Encuentra versículos, palabras y temas rápidamente",
-    icon: "Search",
-    color: "#FF9800",
-    category: "estudio",
-    difficulty: "intermedio",
-    duration: "3 min",
-    steps: [
-      {
-        id: "1",
-        text: "Toca el ícono de búsqueda en la parte superior para buscar en toda la Biblia.",
-        target: null,
-      },
-      {
-        id: "2",
-        text: "Escribe una palabra o frase. La búsqueda es instantánea y muestra resultados mientras escribes.",
-        target: null,
-      },
-      {
-        id: "3",
-        text: "Puedes filtrar los resultados por libro usando los filtros disponibles.",
-        target: null,
-      },
-      {
-        id: "4",
-        text: "Tu historial de búsqueda se guarda automáticamente para acceso rápido.",
-        target: null,
-      },
-    ],
-  },
-  {
-    id: "notes-feature",
-    title: "Notas Personales",
-    description: "Crea y organiza notas sobre versículos",
-    icon: "FileText",
-    color: "#E91E63",
-    category: "estudio",
-    difficulty: "intermedio",
-    duration: "4 min",
-    steps: [
-      {
-        id: "1",
-        text: "Selecciona un versículo y toca el ícono de notas para crear una nota personal.",
-        target: null,
-      },
-      {
-        id: "2",
-        text: "Escribe tus reflexiones, estudios o recordatorios sobre el versículo.",
-        target: null,
-      },
-      {
-        id: "3",
-        text: "Puedes agregar etiquetas para organizar tus notas por tema.",
-        target: null,
-      },
-      {
-        id: "4",
-        text: "Accede a todas tus notas desde el menú principal en cualquier momento.",
-        target: null,
-      },
-    ],
-  },
-  {
-    id: "favorites",
-    title: "Versículos Favoritos",
-    description: "Guarda y organiza tus versículos favoritos",
-    icon: "Heart",
-    color: "#F44336",
-    category: "estudio",
-    difficulty: "facil",
-    duration: "2 min",
-    steps: [
-      {
-        id: "1",
-        text: "Selecciona un versículo y toca el ícono de corazón para agregarlo a favoritos.",
-        target: null,
-      },
-      {
-        id: "2",
-        text: "Puedes crear colecciones temáticas para organizar tus versículos favoritos.",
-        target: null,
-      },
-      {
-        id: "3",
-        text: "Accede a tus favoritos desde el menú principal para revisarlos en cualquier momento.",
-        target: null,
-      },
-    ],
-  },
-  {
-    id: "strong-numbers",
-    title: "Números Strong",
-    description: "Estudia el significado original de las palabras en hebreo y griego",
-    icon: "Languages",
-    color: "#00BCD4",
-    category: "estudio",
-    difficulty: "avanzado",
-    duration: "5 min",
-    steps: [
-      {
-        id: "1",
-        text: "Los números Strong te ayudan a entender el significado original de las palabras bíblicas.",
-        target: null,
-      },
-      {
-        id: "2",
-        text: "Activa la vista interlineal desde el menú de configuración.",
-        target: null,
-      },
-      {
-        id: "3",
-        text: "Toca una palabra para ver su definición en hebreo o griego.",
-        target: null,
-      },
-      {
-        id: "4",
-        text: "Explora la etimología, traducción literal y usos en otros versículos.",
-        target: null,
-      },
-    ],
-  },
+  // {
+  //   id: "search-feature",
+  //   title: "Búsqueda Inteligente",
+  //   description: "Encuentra versículos, palabras y temas rápidamente",
+  //   icon: "Search",
+  //   color: "#FF9800",
+  //   category: "estudio",
+  //   difficulty: "intermedio",
+  //   duration: "3 min",
+  //   steps: [
+  //     {
+  //       id: "1",
+  //       text: "Toca el ícono de búsqueda en la parte superior para buscar en toda la Biblia.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "2",
+  //       text: "Escribe una palabra o frase. La búsqueda es instantánea y muestra resultados mientras escribes.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "3",
+  //       text: "Puedes filtrar los resultados por libro usando los filtros disponibles.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "4",
+  //       text: "Tu historial de búsqueda se guarda automáticamente para acceso rápido.",
+  //       target: null,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "notes-feature",
+  //   title: "Notas Personales",
+  //   description: "Crea y organiza notas sobre versículos",
+  //   icon: "FileText",
+  //   color: "#E91E63",
+  //   category: "estudio",
+  //   difficulty: "intermedio",
+  //   duration: "4 min",
+  //   steps: [
+  //     {
+  //       id: "1",
+  //       text: "Selecciona un versículo y toca el ícono de notas para crear una nota personal.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "2",
+  //       text: "Escribe tus reflexiones, estudios o recordatorios sobre el versículo.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "3",
+  //       text: "Puedes agregar etiquetas para organizar tus notas por tema.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "4",
+  //       text: "Accede a todas tus notas desde el menú principal en cualquier momento.",
+  //       target: null,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "favorites",
+  //   title: "Versículos Favoritos",
+  //   description: "Guarda y organiza tus versículos favoritos",
+  //   icon: "Heart",
+  //   color: "#F44336",
+  //   category: "estudio",
+  //   difficulty: "facil",
+  //   duration: "2 min",
+  //   steps: [
+  //     {
+  //       id: "1",
+  //       text: "Selecciona un versículo y toca el ícono de corazón para agregarlo a favoritos.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "2",
+  //       text: "Puedes crear colecciones temáticas para organizar tus versículos favoritos.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "3",
+  //       text: "Accede a tus favoritos desde el menú principal para revisarlos en cualquier momento.",
+  //       target: null,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "strong-numbers",
+  //   title: "Números Strong",
+  //   description: "Estudia el significado original de las palabras en hebreo y griego",
+  //   icon: "Languages",
+  //   color: "#00BCD4",
+  //   category: "estudio",
+  //   difficulty: "avanzado",
+  //   duration: "5 min",
+  //   steps: [
+  //     {
+  //       id: "1",
+  //       text: "Los números Strong te ayudan a entender el significado original de las palabras bíblicas.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "2",
+  //       text: "Activa la vista interlineal desde el menú de configuración.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "3",
+  //       text: "Toca una palabra para ver su definición en hebreo o griego.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "4",
+  //       text: "Explora la etimología, traducción literal y usos en otros versículos.",
+  //       target: null,
+  //     },
+  //   ],
+  // },
 
-  // HERRAMIENTAS
-  {
-    id: "audio-reading",
-    title: "Audio y Lectura",
-    description: "Escucha la Biblia con voz natural",
-    icon: "Volume2",
-    color: "#8BC34A",
-    category: "herramientas",
-    difficulty: "facil",
-    duration: "2 min",
-    steps: [
-      {
-        id: "1",
-        text: "Toca el ícono de audio para activar la lectura en voz alta.",
-        target: null,
-      },
-      {
-        id: "2",
-        text: "Puedes ajustar la velocidad de lectura según tu preferencia.",
-        target: null,
-      },
-      {
-        id: "3",
-        text: "La lectura continúa automáticamente al pasar de capítulo.",
-        target: null,
-      },
-      {
-        id: "4",
-        text: "Puedes pausar, avanzar o retroceder en cualquier momento.",
-        target: null,
-      },
-    ],
-  },
-  {
-    id: "hymnal",
-    title: "Himnario Digital",
-    description: "Accede a himnos y canciones de adoración",
-    icon: "Music",
-    color: "#673AB7",
-    category: "herramientas",
-    difficulty: "facil",
-    duration: "3 min",
-    steps: [
-      {
-        id: "1",
-        text: "Accede al himnario desde el menú principal.",
-        target: null,
-      },
-      {
-        id: "2",
-        text: "Busca himnos por nombre, número o categoría.",
-        target: null,
-      },
-      {
-        id: "3",
-        text: "Toca un himno para ver la letra completa.",
-        target: null,
-      },
-      {
-        id: "4",
-        text: "Algunos himnos incluyen audio para escuchar la melodía.",
-        target: null,
-      },
-    ],
-  },
-  {
-    id: "games-quiz",
-    title: "Juegos y Quiz",
-    description: "Aprende jugando con quizzes bíblicos",
-    icon: "Gamepad2",
-    color: "#FF5722",
-    category: "herramientas",
-    difficulty: "facil",
-    duration: "3 min",
-    steps: [
-      {
-        id: "1",
-        text: "Accede a la sección de juegos desde el menú principal.",
-        target: null,
-      },
-      {
-        id: "2",
-        text: "Elige entre diferentes categorías: personajes, eventos, libros, etc.",
-        target: null,
-      },
-      {
-        id: "3",
-        text: "Responde las preguntas y gana puntos por respuestas correctas.",
-        target: null,
-      },
-      {
-        id: "4",
-        text: "Revisa tus estadísticas y compite con tus récords anteriores.",
-        target: null,
-      },
-    ],
-  },
-  {
-    id: "memory-verses",
-    title: "Memorización de Versículos",
-    description: "Herramientas para memorizar pasajes bíblicos",
-    icon: "Brain",
-    color: "#009688",
-    category: "herramientas",
-    difficulty: "intermedio",
-    duration: "4 min",
-    steps: [
-      {
-        id: "1",
-        text: "Selecciona versículos que quieres memorizar.",
-        target: null,
-      },
-      {
-        id: "2",
-        text: "Usa el modo de práctica que oculta palabras progresivamente.",
-        target: null,
-      },
-      {
-        id: "3",
-        text: "Repite el versículo diariamente para reforzar la memoria.",
-        target: null,
-      },
-      {
-        id: "4",
-        text: "Recibe recordatorios para revisar tus versículos memorizados.",
-        target: null,
-      },
-    ],
-  },
+  // // HERRAMIENTAS
+  // {
+  //   id: "audio-reading",
+  //   title: "Audio y Lectura",
+  //   description: "Escucha la Biblia con voz natural",
+  //   icon: "Volume2",
+  //   color: "#8BC34A",
+  //   category: "herramientas",
+  //   difficulty: "facil",
+  //   duration: "2 min",
+  //   steps: [
+  //     {
+  //       id: "1",
+  //       text: "Toca el ícono de audio para activar la lectura en voz alta.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "2",
+  //       text: "Puedes ajustar la velocidad de lectura según tu preferencia.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "3",
+  //       text: "La lectura continúa automáticamente al pasar de capítulo.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "4",
+  //       text: "Puedes pausar, avanzar o retroceder en cualquier momento.",
+  //       target: null,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "hymnal",
+  //   title: "Himnario Digital",
+  //   description: "Accede a himnos y canciones de adoración",
+  //   icon: "Music",
+  //   color: "#673AB7",
+  //   category: "herramientas",
+  //   difficulty: "facil",
+  //   duration: "3 min",
+  //   steps: [
+  //     {
+  //       id: "1",
+  //       text: "Accede al himnario desde el menú principal.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "2",
+  //       text: "Busca himnos por nombre, número o categoría.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "3",
+  //       text: "Toca un himno para ver la letra completa.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "4",
+  //       text: "Algunos himnos incluyen audio para escuchar la melodía.",
+  //       target: null,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "games-quiz",
+  //   title: "Juegos y Quiz",
+  //   description: "Aprende jugando con quizzes bíblicos",
+  //   icon: "Gamepad2",
+  //   color: "#FF5722",
+  //   category: "herramientas",
+  //   difficulty: "facil",
+  //   duration: "3 min",
+  //   steps: [
+  //     {
+  //       id: "1",
+  //       text: "Accede a la sección de juegos desde el menú principal.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "2",
+  //       text: "Elige entre diferentes categorías: personajes, eventos, libros, etc.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "3",
+  //       text: "Responde las preguntas y gana puntos por respuestas correctas.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "4",
+  //       text: "Revisa tus estadísticas y compite con tus récords anteriores.",
+  //       target: null,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "memory-verses",
+  //   title: "Memorización de Versículos",
+  //   description: "Herramientas para memorizar pasajes bíblicos",
+  //   icon: "Brain",
+  //   color: "#009688",
+  //   category: "herramientas",
+  //   difficulty: "intermedio",
+  //   duration: "4 min",
+  //   steps: [
+  //     {
+  //       id: "1",
+  //       text: "Selecciona versículos que quieres memorizar.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "2",
+  //       text: "Usa el modo de práctica que oculta palabras progresivamente.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "3",
+  //       text: "Repite el versículo diariamente para reforzar la memoria.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "4",
+  //       text: "Recibe recordatorios para revisar tus versículos memorizados.",
+  //       target: null,
+  //     },
+  //   ],
+  // },
 
-  // PERSONALIZACIÓN
-  {
-    id: "themes-fonts",
-    title: "Temas y Fuentes",
-    description: "Personaliza la apariencia de tu aplicación",
-    icon: "Palette",
-    color: "#795548",
-    category: "personalizacion",
-    difficulty: "facil",
-    duration: "3 min",
-    steps: [
-      {
-        id: "1",
-        text: "Accede a configuración desde el menú principal.",
-        target: null,
-      },
-      {
-        id: "2",
-        text: "Elige entre modo claro u oscuro según tu preferencia.",
-        target: null,
-      },
-      {
-        id: "3",
-        text: "Selecciona diferentes temas de color para personalizar la interfaz.",
-        target: null,
-      },
-      {
-        id: "4",
-        text: "Ajusta el tamaño de fuente para una lectura más cómoda.",
-        target: null,
-      },
-    ],
-  },
-  {
-    id: "bible-versions",
-    title: "Versiones de la Biblia",
-    description: "Descarga y cambia entre diferentes versiones",
-    icon: "Download",
-    color: "#607D8B",
-    category: "personalizacion",
-    difficulty: "intermedio",
-    duration: "4 min",
-    steps: [
-      {
-        id: "1",
-        text: "Ve a configuración y selecciona 'Versiones de la Biblia'.",
-        target: null,
-      },
-      {
-        id: "2",
-        text: "Descarga versiones adicionales: NVI, TLA, RVR1960, etc.",
-        target: null,
-      },
-      {
-        id: "3",
-        text: "Cambia entre versiones fácilmente desde el selector de versiones.",
-        target: null,
-      },
-      {
-        id: "4",
-        text: "Puedes comparar versiones usando la pantalla dividida.",
-        target: null,
-      },
-    ],
-  },
-  {
-    id: "cloud-sync",
-    title: "Sincronización en la Nube",
-    description: "Mantén tus datos sincronizados entre dispositivos",
-    icon: "Cloud",
-    color: "#03A9F4",
-    category: "personalizacion",
-    difficulty: "intermedio",
-    duration: "3 min",
-    steps: [
-      {
-        id: "1",
-        text: "Crea una cuenta o inicia sesión para activar la sincronización.",
-        target: null,
-      },
-      {
-        id: "2",
-        text: "Tus notas, favoritos e historial se guardarán automáticamente.",
-        target: null,
-      },
-      {
-        id: "3",
-        text: "Accede a tus datos desde cualquier dispositivo donde inicies sesión.",
-        target: null,
-      },
-      {
-        id: "4",
-        text: "Puedes exportar tus datos en cualquier momento desde configuración.",
-        target: null,
-      },
-    ],
-  },
-  {
-    id: "notifications",
-    title: "Notificaciones y Recordatorios",
-    description: "Configura recordatorios para lectura diaria",
-    icon: "Bell",
-    color: "#FFC107",
-    category: "personalizacion",
-    difficulty: "facil",
-    duration: "2 min",
-    steps: [
-      {
-        id: "1",
-        text: "Ve a configuración y selecciona 'Notificaciones'.",
-        target: null,
-      },
-      {
-        id: "2",
-        text: "Activa el versículo del día para recibir inspiración diaria.",
-        target: null,
-      },
-      {
-        id: "3",
-        text: "Configura recordatorios de lectura para crear un hábito.",
-        target: null,
-      },
-      {
-        id: "4",
-        text: "Elige la hora que mejor se adapte a tu rutina diaria.",
-        target: null,
-      },
-    ],
-  },
+  // // PERSONALIZACIÓN
+  // {
+  //   id: "themes-fonts",
+  //   title: "Temas y Fuentes",
+  //   description: "Personaliza la apariencia de tu aplicación",
+  //   icon: "Palette",
+  //   color: "#795548",
+  //   category: "personalizacion",
+  //   difficulty: "facil",
+  //   duration: "3 min",
+  //   steps: [
+  //     {
+  //       id: "1",
+  //       text: "Accede a configuración desde el menú principal.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "2",
+  //       text: "Elige entre modo claro u oscuro según tu preferencia.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "3",
+  //       text: "Selecciona diferentes temas de color para personalizar la interfaz.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "4",
+  //       text: "Ajusta el tamaño de fuente para una lectura más cómoda.",
+  //       target: null,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "bible-versions",
+  //   title: "Versiones de la Biblia",
+  //   description: "Descarga y cambia entre diferentes versiones",
+  //   icon: "Download",
+  //   color: "#607D8B",
+  //   category: "personalizacion",
+  //   difficulty: "intermedio",
+  //   duration: "4 min",
+  //   steps: [
+  //     {
+  //       id: "1",
+  //       text: "Ve a configuración y selecciona 'Versiones de la Biblia'.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "2",
+  //       text: "Descarga versiones adicionales: NVI, TLA, RVR1960, etc.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "3",
+  //       text: "Cambia entre versiones fácilmente desde el selector de versiones.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "4",
+  //       text: "Puedes comparar versiones usando la pantalla dividida.",
+  //       target: null,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "cloud-sync",
+  //   title: "Sincronización en la Nube",
+  //   description: "Mantén tus datos sincronizados entre dispositivos",
+  //   icon: "Cloud",
+  //   color: "#03A9F4",
+  //   category: "personalizacion",
+  //   difficulty: "intermedio",
+  //   duration: "3 min",
+  //   steps: [
+  //     {
+  //       id: "1",
+  //       text: "Crea una cuenta o inicia sesión para activar la sincronización.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "2",
+  //       text: "Tus notas, favoritos e historial se guardarán automáticamente.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "3",
+  //       text: "Accede a tus datos desde cualquier dispositivo donde inicies sesión.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "4",
+  //       text: "Puedes exportar tus datos en cualquier momento desde configuración.",
+  //       target: null,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "notifications",
+  //   title: "Notificaciones y Recordatorios",
+  //   description: "Configura recordatorios para lectura diaria",
+  //   icon: "Bell",
+  //   color: "#FFC107",
+  //   category: "personalizacion",
+  //   difficulty: "facil",
+  //   duration: "2 min",
+  //   steps: [
+  //     {
+  //       id: "1",
+  //       text: "Ve a configuración y selecciona 'Notificaciones'.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "2",
+  //       text: "Activa el versículo del día para recibir inspiración diaria.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "3",
+  //       text: "Configura recordatorios de lectura para crear un hábito.",
+  //       target: null,
+  //     },
+  //     {
+  //       id: "4",
+  //       text: "Elige la hora que mejor se adapte a tu rutina diaria.",
+  //       target: null,
+  //     },
+  //   ],
+  // },
 ];
 
 export const TUTORIAL_CATEGORIES = {
