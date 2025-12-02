@@ -58,9 +58,6 @@ const ResizableSplitView: React.FC<ResizableSplitViewProps> = ({
   const startY = useSharedValue(0);
 
   // Snap positions (stored as constants for worklet access)
-  const snapPos1 = minSectionHeight;
-  const snapPos2 = DEFAULT_TOP_SECTION_HEIGHT;
-  const snapPos3 = MAX_TOP_SECTION_HEIGHT;
 
   // Notify height change callback
   const notifyHeightChange = (height: number) => {
@@ -83,97 +80,14 @@ const ResizableSplitView: React.FC<ResizableSplitViewProps> = ({
       );
       topSectionHeight.value = constrainedHeight;
     })
-    .onEnd((event) => {
+    .onEnd(() => {
       "worklet";
       isDragging.value = false;
 
+      // No snapping - stay at current position
+      // Min/max constraints are already enforced in onUpdate
       const currentHeight = topSectionHeight.value;
-      let targetHeight: number;
-
-      // High velocity swipe: snap to next/previous position
-      if (Math.abs(event.velocityY) > VELOCITY_THRESHOLD) {
-        const pos1 = snapPos1;
-        const pos2 = snapPos2;
-        const pos3 = snapPos3;
-
-        // Sort positions to find min, mid, max
-        let minPos: number;
-        let midPos: number;
-        let maxPos: number;
-
-        if (pos1 <= pos2 && pos2 <= pos3) {
-          minPos = pos1;
-          midPos = pos2;
-          maxPos = pos3;
-        } else if (pos1 <= pos3 && pos3 <= pos2) {
-          minPos = pos1;
-          midPos = pos3;
-          maxPos = pos2;
-        } else if (pos2 <= pos1 && pos1 <= pos3) {
-          minPos = pos2;
-          midPos = pos1;
-          maxPos = pos3;
-        } else if (pos2 <= pos3 && pos3 <= pos1) {
-          minPos = pos2;
-          midPos = pos3;
-          maxPos = pos1;
-        } else if (pos3 <= pos1 && pos1 <= pos2) {
-          minPos = pos3;
-          midPos = pos1;
-          maxPos = pos2;
-        } else {
-          minPos = pos3;
-          midPos = pos2;
-          maxPos = pos1;
-        }
-
-        // Find which position we're closest to
-        const distMin = Math.abs(currentHeight - minPos);
-        const distMid = Math.abs(currentHeight - midPos);
-        const distMax = Math.abs(currentHeight - maxPos);
-
-        const direction = event.velocityY > 0 ? "down" : "up";
-
-        // Determine current position
-        if (distMin < distMid && distMin < distMax) {
-          // At min position
-          targetHeight = direction === "down" ? minPos : midPos;
-        } else if (distMid < distMax) {
-          // At mid position
-          targetHeight = direction === "down" ? minPos : maxPos;
-        } else {
-          // At max position
-          targetHeight = direction === "down" ? midPos : maxPos;
-        }
-      } else {
-        // Low velocity: snap to closest position
-        const pos1 = snapPos1;
-        const pos2 = snapPos2;
-        const pos3 = snapPos3;
-
-        const dist1 = Math.abs(currentHeight - pos1);
-        const dist2 = Math.abs(currentHeight - pos2);
-        const dist3 = Math.abs(currentHeight - pos3);
-
-        if (dist1 <= dist2 && dist1 <= dist3) {
-          targetHeight = pos1;
-        } else if (dist2 <= dist3) {
-          targetHeight = pos2;
-        } else {
-          targetHeight = pos3;
-        }
-      }
-
-      // Animate to target height
-      topSectionHeight.value = withSpring(
-        targetHeight,
-        ANIMATION_CONFIG,
-        (finished) => {
-          if (finished) {
-            runOnJS(notifyHeightChange)(targetHeight);
-          }
-        }
-      );
+      runOnJS(notifyHeightChange)(currentHeight);
     });
 
   // Animated styles
