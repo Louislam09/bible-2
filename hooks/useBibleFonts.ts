@@ -23,6 +23,7 @@ import { TFont } from '../types';
 import useLoadTailwindScript from "./useLoadTailwindScript";
 import useLoadLexicalBundle from "./useLoadLexicalBundle";
 import useLoadFonts from "./useLoadFonts";
+import useLoadDrivejs from "./useLoadDrivejs";
 
 type FontMapping = Record<TFont, number | any>;
 
@@ -45,6 +46,7 @@ const useBibleFonts = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   useLoadTailwindScript();
   useLoadLexicalBundle();
+  useLoadDrivejs();
   useLoadFonts(fontMapping);
 
   const [googleFontsLoaded] = useFonts({

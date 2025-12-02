@@ -8,12 +8,14 @@ export interface ScriptDownloadState {
     tailwindScript: string;
     lexicalBundle: string;
     fontStyles: Record<string, string>;
+    drivejsScript: string;
 }
 
 const initialState: ScriptDownloadState = {
     tailwindScript: "",
     lexicalBundle: "",
     fontStyles: {},
+    drivejsScript: "",
 };
 
 const persistOptions = configureSynced({
@@ -44,6 +46,14 @@ export const scriptDownloadHelpers = {
 
     getTailwindScript: (): string => {
         return scriptDownloadState$.tailwindScript.get();
+    },
+
+    setDrivejsScript: (script: string) => {
+        scriptDownloadState$.drivejsScript.set(script);
+    },
+
+    getDrivejsScript: (): string => {
+        return scriptDownloadState$.drivejsScript.get();
     },
 
     setLexicalBundle: (bundle: string) => {

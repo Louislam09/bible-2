@@ -3,6 +3,7 @@ import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES, DB_BOOK_CHAPTER_VERSES } from ".
 import { getTailwindStyleTag } from "./hooks/useLoadTailwindScript";
 import { scriptDownloadHelpers } from "./state/scriptDownloadState";
 import { storedData$ } from "./context/LocalstoreContext";
+import { getDrivejsStyleTag } from "./hooks/useLoadDrivejs";
 
 // Helper functions
 const abbr = (name: string) => name.replace(/\s+/g, "").slice(0, 3);
@@ -441,8 +442,8 @@ const createHtmlHead = (theme: TTheme) => `
     ${scriptDownloadHelpers.getTailwindScript()}
     ${chooseReferenceStyles(theme)}
 
-    <script src="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.js.iife.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.css"/>
+    ${scriptDownloadHelpers.getDrivejsScript()}
+    ${getDrivejsStyleTag()}
   </head>
 `;
 
@@ -607,7 +608,7 @@ const createHtmlBody = (
               disableActiveInteraction: false,
             },
             { 
-              element: '.header', 
+              element: '#backButton', 
               popover: { 
                 title: 'Botón Atrás ⬅️', 
                 description: 'Si necesitas cambiar tu selección, usa este botón para regresar al paso anterior.', 
