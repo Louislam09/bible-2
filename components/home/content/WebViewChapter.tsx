@@ -4,11 +4,12 @@ import { getBookDetail } from "@/constants/BookNames";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
+import { tourState$ } from "@/state/tourState";
 import { IBookVerse, IFavoriteVerse, TTheme } from "@/types";
 import { WordTagPair } from "@/utils/extractVersesInfo";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WebView from "react-native-webview";
@@ -63,6 +64,7 @@ const WebViewChapter = React.memo(
     onVerseLongPress,
   }: WebViewChapterProps) => {
     const webViewRef = useRef<WebView>(null);
+    const startVerseSectionTour = use$(() => tourState$.startVerseSectionTour.get());
 
     const handleMessage = useCallback(
       (event: any) => {
@@ -70,6 +72,12 @@ const WebViewChapter = React.memo(
           const message = JSON.parse(event.nativeEvent.data);
 
           switch (message.type) {
+            case "onload":
+              console.log({ message });
+              if (startVerseSectionTour) {
+                startTour();
+              }
+              break;
             case "scroll":
               onScroll?.(message.direction);
               break;
@@ -198,8 +206,10 @@ const WebViewChapter = React.memo(
         onImage,
         onQuote,
         onVerseLongPress,
+        startVerseSectionTour
       ]
     );
+
     const insets = useSafeAreaInsets();
     const safeTop = insets.top;
 
@@ -229,9 +239,16 @@ const WebViewChapter = React.memo(
       selectedFont,
     ]);
 
-    const handleRenderProcessGone = useCallback((event: WebViewRenderProcessGoneEvent) => {
-      console.log("Render process gone: ", event);
+    const startTour = useCallback(() => {
+      webViewRef.current?.postMessage(JSON.stringify({ type: "startTour" }));
+      tourState$.startVerseSectionTour.set(false);
     }, []);
+
+    // useEffect(() => {
+    //   if (startVerseSectionTour) {
+    //     startTour();
+    //   }
+    // }, [startVerseSectionTour]);
 
     return (
       <>
@@ -256,7 +273,6 @@ const WebViewChapter = React.memo(
           }}
           scrollEnabled={true}
           onMessage={handleMessage}
-          onRenderProcessonOpenWindowGone={handleRenderProcessGone}
           renderLoading={() => <View
             style={{
               backgroundColor: theme.colors.background,

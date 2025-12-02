@@ -40,6 +40,7 @@ export const tourState$ = observable({
   },
 
   startReferenceTour: false,
+  startVerseSectionTour: false,
 });
 
 // Helper function to get ref by name (outside the observable)

@@ -215,6 +215,10 @@ export const TUTORIAL_FEATURES: TutorialFeature[] = [
     category: "lectura",
     difficulty: "facil",
     duration: "2 min",
+    noSteps: true,
+    action: () => {
+      tourState$.startVerseSectionTour.set(true);
+    },
     steps: [
       {
         id: "1",

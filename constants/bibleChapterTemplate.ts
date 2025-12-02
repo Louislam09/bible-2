@@ -1,11 +1,12 @@
+import { getDrivejsStyleTag } from "@/hooks/useLoadDrivejs";
+import { getFontCss } from "@/hooks/useLoadFonts";
+import { getTailwindStyleTag } from "@/hooks/useLoadTailwindScript";
+import { bibleState$ } from "@/state/bibleState";
+import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
 import { IBookVerse } from "@/types";
 import { lucideIcons } from "@/utils/lucideIcons";
 import { DB_BOOK_NAMES } from "./BookNames";
-import { bibleState$ } from "@/state/bibleState";
-import { getTailwindStyleTag } from "@/hooks/useLoadTailwindScript";
-import { storedData$ } from "@/context/LocalstoreContext";
-import { getFontCss } from "@/hooks/useLoadFonts";
-import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
+import { theme } from "@/tailwind.config";
 
 
 const bibleChapterStyles = (
@@ -24,7 +25,6 @@ const bibleChapterStyles = (
             }
                 
             body {
-
                 font-size: ${fontSize}px;
                 line-height: 1.5;
                 letter-spacing: 2px;
@@ -200,6 +200,188 @@ const bibleChapterStyles = (
 `;
 };
 
+const verseSelectionTourScript = (theme: any) => {
+
+    return `
+        <script>
+            function startVerseTour() {
+            // Find the first verse element for demonstration
+                const firstVerse = document.querySelector('[data-verse-number]');
+
+                // Get verse details
+                const verseNumber = parseInt(firstVerse.getAttribute('data-verse-number'));
+                const verseKey = firstVerse.getAttribute('data-verse-key');
+                const verseData = JSON.parse(firstVerse.dataset.verseData || '{}');
+
+                // Set tour active flag
+                let tourCompleted = false;
+                isTourActive = true;
+
+
+                 const driver = window.driver.js.driver;
+                driverObj = driver({
+                    overlayColor: '${theme.colors.notification}70',
+                    showProgress: true,
+                    showButtons: ['next', 'previous', 'close'],
+                    nextBtnText: 'Siguiente',
+                    prevBtnText: 'Anterior',
+                    doneBtnText: 'Finalizar',
+                    progressText: '{{current}} / {{total}}',
+                    steps: [
+                        {
+                            popover: {
+                                title: '¡Bienvenido! 📖',
+                                description: 'Aprende cómo seleccionar y usar versículos.',
+                                side: "over",
+                                align: 'center'
+                            }
+                        },
+                        {
+                            element: firstVerse,
+                            popover: {
+                                title: '👆 Mantén Presionado',
+                                description: 'Mantén presionado un versículo para activarlo.',
+                                side: "bottom",
+                                align: 'start'
+                            },
+                            onHighlightStarted: () => {
+                                if (!selectedVerses.has(verseNumber)) {
+                                selectedVerses.set(verseNumber, verseData);
+                                updateActionButtonVisibility(verseNumber, true);
+                                }
+                            }
+                        },
+                         {
+                            element:  \`[data-verse-key="\${verseKey}"].verse-actions\`,
+                            popover: {
+                                title: '⚡ Acciones Rápidas',
+                                description: 'Aparecen al seleccionar un versículo.',
+                                side: 'top',
+                                align: 'center'
+                            }
+                        },
+                        {
+                            element: \`[data-verse-key="\${verseKey}"].verse-actions button:nth-child(1)\`,
+                            popover: {
+                                title: '📋 Copiar',
+                                description: 'Copia el versículo.',
+                                side: 'bottom',
+                                align: 'center'
+                            }
+                        },
+                        {
+                            element: \`[data-verse-key="\${verseKey}"].verse-actions button:nth-child(2)\`,
+                            popover: {
+                                title: '⭐ Favorito',
+                                description: 'Guarda el versículo.',
+                                side: 'top',
+                                align: 'center'
+                            }
+                        },
+                        {
+                            element:\`[data-verse-key="\${verseKey}"].verse-actions button:nth-child(3)\`,
+                            popover: {
+                                title: '🖼️ Imagen',
+                                description: 'Crea una imagen del versículo.',
+                                side: 'bottom',
+                                align: 'center'
+                            }
+                        },
+                        {
+                            element: \`[data-verse-key="\${verseKey}"].verse-actions button:nth-child(4)\`,
+                            popover: {
+                                title: '📝 Nota',
+                                description: 'Añade tus notas.',
+                                side: 'top',
+                                align: 'center'
+                            }
+                        },
+                        {
+                            element: \`[data-verse-key="\${verseKey}"].verse-actions button:nth-child(5)\`,
+                            popover: {
+                                title: '💬 Cita',
+                                description: 'Comparte el versículo como cita.',
+                                side: 'top',
+                                align: 'center'
+                            }
+                        },
+                        {
+                            element: \`[data-verse-key="\${verseKey}"].verse-actions button:nth-child(6)\`,
+                            popover: {
+                                title: '📖 Comentarios',
+                                description: 'Ver comentarios bíblicos.',
+                                side: 'top',
+                                align: 'center'
+                            }
+                        },
+                        {
+                            element: \`[data-verse-key="\${verseKey}"].verse-actions button:nth-child(7)\`,
+                            popover: {
+                                title: '🔤 Interlineal',
+                                description: 'Ver texto original y Strong.',
+                               side: 'bottom',
+                                align: 'center'
+                            }
+                        },
+                        {
+                            element: \`[data-verse-key="\${verseKey}"].verse-actions button:nth-child(8)\`,
+                            popover: {
+                                title: '🧠 Memorizar',
+                                description: 'Añade a memorización.',
+                                side: 'top',
+                                align: 'start'
+                            }
+                        },
+                        {
+                            element: \`[data-verse-key="\${verseKey}"].verse-actions button:nth-child(9)\`,
+                            popover: {
+                                title: '🔄 Comparar',
+                                description: 'Compara con otras versiones.',
+                            side: 'bottom',
+                                align: 'center'
+                            }
+                        },
+                        {
+                            element: firstVerse,
+                            popover: {
+                                title: '📚 Selección Múltiple',
+                                description: 'Selecciona varios versículos.',
+                                side: 'bottom',
+                                align: 'center'
+                            },
+                            onHighlightStarted: () => {
+                               hideAllActionButtons()
+                            }
+                        },
+                        {
+                            element: firstVerse,
+                            popover: {
+                                title: '👆 Vista Interlineal',
+                                description: 'Toca para activar interlineal.',
+                                side: 'bottom',
+                                align: 'center'
+                            },
+                            onHighlightStarted: () => {
+                            toggleVerseMode(firstVerse, verseKey);
+                            }
+                        },
+                        {
+                            popover: {
+                                title: '✨ ¡Listo!',
+                                description: 'Dominaste las acciones del versículo.',
+                                side: 'over',
+                                align: 'center'
+                            }
+                        }
+                    ],
+ 
+                });
+                driverObj.drive();
+            }
+        </script>
+    `;
+};
+
 // HTML document structure functions
 const createHtmlHead = (
     chapterNumber: number,
@@ -217,12 +399,22 @@ const createHtmlHead = (
       
          ${getTailwindStyleTag({ theme, fontSize })}
          ${bibleChapterStyles(theme, containerWidth, fontSize, selectedFont)}
+
+         ${scriptDownloadHelpers.getDrivejsScript()}
+         ${getDrivejsStyleTag()}
+
+         <Style>
+         body .driver-popover * {
+            font-family:  Arial, sans-serif !important;
+            }
+         </Style>
     </head>
 `;
 
-const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapterNumber: number = 1, showReadingTime: boolean) => `
+const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapterNumber: number = 1, showReadingTime: boolean, theme: any) => `
     <body class="p-0 m-0 text-theme-text bg-theme-background select-none overflow-x-hidden ">
     <div class="container relative h-screen overflow-y-auto pt-[70px] pb-[100px] " id="chapterContainer">
+
         <!-- Chapter Header -->
         <div class="px-4 pt-3 my-2">
             <!-- (<a href='B:10 1:1'>click there</a>) -->
@@ -615,30 +807,45 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
             window.handleMultipleStrongsClick = handleMultipleStrongsClick;
             window.handleVerseClick = handleVerseClick;
             
+
+             function handleMessage(data) {
+                switch (data.type) {
+                    case 'startTour':
+                        startVerseTour();
+                        break;
+                }
+            }
+
+              // Listen for messages from React Native (if in webview)
+            if (window.ReactNativeWebView) {
+                window.document.addEventListener('message', (event) => {
+                    try {
+                    const data = JSON.parse(event.data);
+                    handleMessage(data);
+                    } catch (e) {
+                    console.error('Error parsing message:', e);
+                    }
+                });
+            }
+            
             // Initialize when DOM is loaded
             document.addEventListener('DOMContentLoaded', function() {
+             if (window.ReactNativeWebView) {
+                            window.ReactNativeWebView.postMessage(JSON.stringify({
+                                type: 'onload'
+                            }));
+                        }
                 const container = document.getElementById('chapterContainer');
                 if (container) {
                     container.addEventListener('scroll', handleScroll, { passive: true });
                 }
                 
-                
                 // Perform initial scroll after a short delay to ensure content is rendered
                 setTimeout(performInitialScroll, 100);
-                
-                // Send initial height
-                // window.ReactNativeWebView.postMessage(JSON.stringify({
-                //     type: 'height',
-                //     height: document.body.scrollHeight
-                // }));
+              
             });
-            
-            // Send height when content changes
-            // window.ReactNativeWebView.postMessage(JSON.stringify({
-            //     type: 'height',
-            //     height: document.body.scrollHeight
-            // }));
         </script>
+        ${(verseSelectionTourScript(theme))}
     </body>
 `;
 
@@ -1011,7 +1218,7 @@ export const bibleChapterHtmlTemplate = ({
         fontSize || 16,
         selectedFont
     )}
-        ${createHtmlBody(versesContent, initialScrollIndex, chapterNumber, showReadingTime)}
+        ${createHtmlBody(versesContent, initialScrollIndex, chapterNumber, showReadingTime, theme)}
     </html>
     `;
 };
