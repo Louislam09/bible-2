@@ -20,6 +20,7 @@ export const tourState$ = observable({
   versionSelector: createRef<any>(),
   toolbar: createRef<any>(),
   splitScreenButton: createRef<any>(),
+  splitScreenLine: createRef<any>(),
   verseContent: createRef<any>(),
   floatingNotesButton: createRef<any>(),
   searchInput: createRef<any>(),

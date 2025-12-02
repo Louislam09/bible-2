@@ -180,18 +180,24 @@ export const TUTORIAL_FEATURES: TutorialFeature[] = [
     steps: [
       {
         id: "1",
-        text: "La pantalla dividida te permite ver dos pasajes al mismo tiempo. Toca el ícono de pantalla dividida.",
+        text: "La pantalla dividida te permite ver dos pasajes al mismo tiempo. ",
         target: null,
       },
       {
         id: "2",
-        text: "Ahora tienes dos paneles. El superior y el inferior funcionan de forma independiente.",
+        text: "🔄 Activa la vista de pantalla dividida desde este botón.",
         target: null,
+        targetRef: "splitScreenButton",
+        action: () => {
+          bibleState$.isSplitActived.set(true);
+        },
+        // startActionOnMount: true,
       },
       {
         id: "3",
         text: "Puedes ajustar el tamaño de cada panel arrastrando la línea divisoria.",
         target: null,
+        targetRef: "splitScreenLine",
       },
       {
         id: "4",

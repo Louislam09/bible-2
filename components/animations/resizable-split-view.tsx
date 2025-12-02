@@ -1,3 +1,4 @@
+import { tourState$ } from "@/state/tourState";
 import { StyleSheet, useWindowDimensions } from "react-native";
 import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, {
@@ -118,6 +119,7 @@ const ResizableSplitView: React.FC<ResizableSplitViewProps> = ({
         {/* Drag Handle */}
         <GestureDetector gesture={panGesture}>
           <Animated.View
+            ref={tourState$.splitScreenLine.get()}
             style={[styles.dragHandleContainer, dragHandleAnimatedStyle]}
           >
             <Animated.View style={styles.dragHandle} />
