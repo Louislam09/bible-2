@@ -7,7 +7,7 @@ import useParams from "@/hooks/useParams";
 import { bibleState$ } from "@/state/bibleState";
 import { ChooseReferenceStep, modalState$ } from "@/state/modalState";
 import { tourState$ } from "@/state/tourState";
-import { ChooseChapterNumberParams } from "@/types";
+import { ChooseChapterNumberParams, Screens } from "@/types";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "expo-router";
@@ -33,17 +33,28 @@ const WebviewReferenceChoose = React.memo(
     const isChooseReferenceOpened = use$(() =>
       bibleState$.isChooseReferenceOpened.get()
     );
+    const startReferenceTour = use$(() =>
+      tourState$.startReferenceTour.get()
+    );
 
     const sendMessage = (step: number) => {
       const message = { type: "step", step };
       webViewRef.current?.postMessage(JSON.stringify(message));
     };
 
-    const startTour = () => {
-      console.log("startTour");
+    const startTour = useCallback(() => {
       const message = { type: "startTour" };
+      sendMessage(0);
       webViewRef.current?.postMessage(JSON.stringify(message));
-    };
+      tourState$.startReferenceTour.set(false);
+    }, []);
+
+    // Expose startTour function via tour state for external access
+    useEffect(() => {
+      if (startReferenceTour) {
+        startTour();
+      }
+    }, [startReferenceTour]);
 
     useBackHandler(isChooseReferenceOpened, () => {
       switch (modalState$.chooseReferenceStep.get()) {
@@ -139,6 +150,28 @@ const WebviewReferenceChoose = React.memo(
               data.step as ChooseReferenceStep
             );
             return;
+          case "tourCompleted":
+            console.log("Tour completed, closing modal and going home");
+            // Close the reference chooser modal
+            ChooseReferenceMutableProgress.value = withTiming(
+              0,
+              {
+                duration: 450,
+                easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+              },
+              (finished) => {
+                if (finished) {
+                  runOnJS(onClose)();
+                }
+              }
+            );
+            return;
+          case "log":
+            console.log(JSON.stringify(data));
+            return;
+          case "close":
+            onClose();
+            return;
           default:
             break;
         }
@@ -153,7 +186,6 @@ const WebviewReferenceChoose = React.memo(
     return (
       <WebView
         ref={webViewRef}
-        // key={bibleQuery.book + bibleQuery.chapter + bibleQuery.verse}
         key="reference-choose-webview"
         originWhitelist={["*"]}
         style={{

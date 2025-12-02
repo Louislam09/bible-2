@@ -22,6 +22,7 @@ import { useMyTheme } from "@/context/ThemeContext";
 import { bibleState$ } from "@/state/bibleState";
 import Icon from "../Icon";
 import { ChooseReferenceMutableProgress } from "./constants";
+import { tourState$ } from "@/state/tourState";
 
 export const EasingsUtils = {
   inOut: Easing.bezier(0.25, 0.1, 0.25, 1),
@@ -180,6 +181,11 @@ const ExpandableChooseReference = ({ isCommentary }: ExpandableChooseReferencePr
       }
     );
   };
+
+  const handleInfo = () => {
+    tourState$.startReferenceTour.set(true);
+  };
+
   const gestures = Gesture.Simultaneous(tapGesture, panGesture);
 
   return (
@@ -199,6 +205,20 @@ const ExpandableChooseReference = ({ isCommentary }: ExpandableChooseReferencePr
         </Animated.View>
       </GestureDetector>
 
+      <Animated.View
+        style={[
+          rCloseButtonStyle,
+          {
+            top: safeTop,
+            left: 20,
+          },
+          styles.closeButtonContainer,
+        ]}
+      >
+        <TouchableOpacity style={styles.closeButton} onPress={handleInfo}>
+          <Icon name="Info" color={theme.colors.text} size={20} />
+        </TouchableOpacity>
+      </Animated.View>
       <Animated.View
         style={[
           rCloseButtonStyle,

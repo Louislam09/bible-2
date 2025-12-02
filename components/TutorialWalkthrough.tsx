@@ -47,6 +47,7 @@ const TutorialWalkthrough: React.FC = () => {
       }
 
       return {
+        ...step,
         text: step.text,
         target: targetRef,
         action: step.action,

@@ -23,6 +23,8 @@ const Walkthrough = ({ currentStep, steps, setStep, onComplete }: TWalkthrough) 
   const content = steps[currentStep]?.text ?? "";
   const target = steps[currentStep]?.target ?? null;
   const action = steps[currentStep]?.action ?? null;
+  const hideActionButton = steps[currentStep]?.hideActionButton ?? false;
+  const endAfterAction = steps[currentStep]?.endAfterAction ?? false;
 
   // Animation values
   const fadeAnim = useRef(new RNAnimated.Value(0)).current;
@@ -105,8 +107,10 @@ const Walkthrough = ({ currentStep, steps, setStep, onComplete }: TWalkthrough) 
   // Animate content on step change
   useEffect(() => {
     if (steps[currentStep]?.startActionOnMount) {
-      console.log("startActionOnMount");
       action && action()
+    }
+    if (endAfterAction) {
+      close();
     }
     if (currentStep >= 0 && currentStep < steps.length) {
       // Reset and animate in
@@ -220,6 +224,7 @@ const Walkthrough = ({ currentStep, steps, setStep, onComplete }: TWalkthrough) 
             transform: [{ translateY: slideAnim }],
           }}
         >
+
           <Text style={styles.content}>{content}</Text>
         </RNAnimated.View>
 
@@ -236,7 +241,7 @@ const Walkthrough = ({ currentStep, steps, setStep, onComplete }: TWalkthrough) 
           />
         </View>
 
-        <View style={styles.actions}>
+        {!hideActionButton && <View style={styles.actions}>
           <View style={styles.actionButtons}>
             {!firstStep && (
               <Pressable onPress={previuos} style={styles.iconButton}>
@@ -260,13 +265,13 @@ const Walkthrough = ({ currentStep, steps, setStep, onComplete }: TWalkthrough) 
                 )}
               </Pressable>
             )}
-            <Pressable onPress={close} style={styles.iconButton}>
+            {lastStep ? <Pressable onPress={close} style={styles.iconButton}>
               {({ pressed }) => (
                 <RNAnimated.View
                   style={{
                     opacity: pressed ? 0.6 : 1,
                     transform: [{ scale: pressed ? 0.95 : 1 }],
-                    display: !lastStep ? "none" : "flex",
+                    display: "flex",
                   }}
                 >
                   <Text style={styles.actionIcon}>
@@ -274,7 +279,7 @@ const Walkthrough = ({ currentStep, steps, setStep, onComplete }: TWalkthrough) 
                   </Text>
                 </RNAnimated.View>
               )}
-            </Pressable>
+            </Pressable> : <View style={{}} />}
             {!lastStep && (
               <Pressable onPress={next} style={styles.iconButton}>
                 {({ pressed }) => (
@@ -284,6 +289,7 @@ const Walkthrough = ({ currentStep, steps, setStep, onComplete }: TWalkthrough) 
                       transform: [{ scale: pressed ? 0.95 : 1 }],
                       width: 20,
                       height: 20,
+                      alignSelf: 'flex-end',
                     }}
                   >
                     <Icon
@@ -296,7 +302,7 @@ const Walkthrough = ({ currentStep, steps, setStep, onComplete }: TWalkthrough) 
               </Pressable>
             )}
           </View>
-        </View>
+        </View>}
       </RNAnimated.View>
     </Popover>
   );

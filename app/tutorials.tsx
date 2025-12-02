@@ -51,8 +51,13 @@ export default function TutorialsScreen() {
     const tutorial = TUTORIAL_FEATURES.find(t => t.id === tutorialId);
     if (!tutorial) return;
 
-    startTutorial(tutorial);
-
+    if (!tutorial.noSteps) {
+      startTutorial(tutorial);
+    } else {
+      setTimeout(() => {
+        tutorial.action?.();
+      }, 100);
+    }
     // Navigate to the appropriate screen for each tutorial
     switch (tutorial.id) {
       case "home-screen-tour":

@@ -1,5 +1,8 @@
 import { TTheme } from "@/types";
 import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES, DB_BOOK_CHAPTER_VERSES } from "./constants/BookNames";
+import { getTailwindStyleTag } from "./hooks/useLoadTailwindScript";
+import { scriptDownloadHelpers } from "./state/scriptDownloadState";
+import { storedData$ } from "./context/LocalstoreContext";
 
 // Helper functions
 const abbr = (name: string) => name.replace(/\s+/g, "").slice(0, 3);
@@ -26,6 +29,7 @@ const chooseReferenceStyles = (theme: TTheme) => `
       margin: 0;
       padding: 0;
     }
+
     .start-tour-button {
       padding: 8px 12px;
       border-radius: 6px;
@@ -432,6 +436,9 @@ const createHtmlHead = (theme: TTheme) => `
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seleccionar Referencia</title>
+
+    ${getTailwindStyleTag({ theme, fontSize: storedData$.fontSize.get() || 16 })}
+    ${scriptDownloadHelpers.getTailwindScript()}
     ${chooseReferenceStyles(theme)}
 
     <script src="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.js.iife.js"></script>
@@ -484,9 +491,6 @@ const createHtmlBody = (
             </button>
           </div>
 
-          <button id="startTourButton" class="start-tour-button" onclick="startReferenceTour()">
-            <span class="text">Iniciar Tour</span>
-          </button>
           <!-- Book Selection Step -->
           <div id="bookStep" class="section ${currentStep !== 0 ? 'hidden' : ''}">
             ${createBooksSection(oldTestamentBooks, theme, initialBook, 'oldTestament')}
@@ -521,88 +525,127 @@ const createHtmlBody = (
 
         const driver = window.driver.js.driver;
 
+        // Tour state management
+        let isTourActive = false;
+        let tourWaitingForBook = false;
+        let tourWaitingForChapter = false;
+        let tourWaitingForVerse = false;
+        let tourCompleted = false;
+
         const driverObj = driver({
+          overlayColor: "${theme.colors.background}",
           showProgress: true,
-          // allowClose: false,
           showButtons: ['next', 'previous', 'close'],
           nextBtnText: 'Siguiente',
           prevBtnText: 'Anterior',
           doneBtnText: 'Cerrar',
+          progressText: 'Paso {{current}} de {{total}}',
+          disableActiveInteraction: true,
+          allowClose: false,
           steps: [
             { 
               popover: { 
                 title: '¡Bienvenido al Selector de Referencias! 📖', 
                 description: 'Aquí puedes navegar fácilmente a cualquier libro, capítulo y versículo de la Biblia. Vamos a ver cómo funciona.', 
                 side: "over",
-                align: 'center'
-              }
+                align: 'center',
+                showButtons: ['next','close'],
+              },
             },
             { 
-              element: '#bookButton-0', 
+              element: '#bookButton-1', 
               popover: { 
                 title: 'Libros Abreviados', 
-                description: 'Cada botón muestra las primeras tres letras del libro.', 
-                side: "right", 
-                align: 'start' ,
+                description: 'Cada botón muestra las primeras tres letras del libro. Por ejemplo, "Gen" es Génesis.', 
               }
             },
             { 
-              element: '.books-grid', 
+              element: '#bookStep',
               popover: { 
-                title: 'Paso 1: Selecciona un Libro', 
-                description: 'Elige cualquier libro del Antiguo o Nuevo Pacto. Los libros están organizados en dos secciones para facilitar tu búsqueda.', 
+                title: 'Paso 1: Selecciona un Libro 📚', 
+                description: '¡Ahora es tu turno! Elige cualquier libro tocando uno de los botones.', 
                 side: "bottom", 
-                align: 'start' 
+                align: 'start',
+                showButtons: ['previous'],
+                onNextClick: () => {
+                  // Prevent default next - wait for user to select a book
+                  return false;
+                }
               },
-              disableActiveInteraction: true
+              onHighlightStarted: () => {
+                tourWaitingForBook = true;
+              },
+              disableActiveInteraction: false,
+            },
+            
+            { 
+              element: '#chapterStep',
+              popover: { 
+                title: 'Paso 2: Selecciona un Capítulo 📖', 
+                description: '¡Excelente! Ahora selecciona el capítulo que deseas leer. Toca cualquier número de capítulo.', 
+                side: "top", 
+                align: 'center',
+                showButtons: [],
+              },
+              onHighlightStarted: () => {
+                tourWaitingForChapter = true;
+              },
+              disableActiveInteraction: false,
             },
             { 
+              element: '#verseStep',
               popover: { 
-                title: 'Paso 2: Selecciona un Capítulo', 
-                description: 'Después de elegir un libro, se mostrará una lista de capítulos disponibles. Simplemente toca el capítulo que deseas leer.', 
-                side: "over", 
-                align: 'center' 
-              }
+                title: 'Paso 3: Selecciona un Versículo ✨', 
+                description: '¡Casi listo! Ahora elige el versículo específico que quieres estudiar. Toca un número de versículo.', 
+                side: "top", 
+                align: 'center',
+                showButtons: [],
+              },
+              onHighlightStarted: () => {
+                tourWaitingForVerse = true;
+              },
+              disableActiveInteraction: false,
             },
             { 
+              element: '.header', 
               popover: { 
-                title: 'Paso 3: Selecciona un Versículo', 
-                description: 'Finalmente, elige el versículo específico que quieres estudiar. Una vez seleccionado, serás llevado directamente a ese pasaje.', 
-                side: "over", 
-                align: 'center' 
-              }
-            },
-            { 
-              element: '#backButton', 
-              popover: { 
-                title: 'Botón Atrás', 
-                description: 'Si necesitas volver al paso anterior, usa este botón para regresar a la selección de libro o capítulo.', 
+                title: 'Botón Atrás ⬅️', 
+                description: 'Si necesitas cambiar tu selección, usa este botón para regresar al paso anterior.', 
                 side: "bottom", 
-                align: 'end' 
-              }
+                align: 'center',
+                showButtons: ['next'],
+              },
             },
             { 
               popover: { 
                 title: '¡Listo para Explorar! ✨', 
                 description: 'Ahora ya sabes cómo navegar por las Escrituras. ¡Que tu estudio de la Palabra sea bendecido!', 
                 side: "over", 
-                align: 'center' 
-              }
+                align: 'center',
+                showButtons: ["previous",'next','close'],
+              },
             }
           ],
-          onDestroyed: () => {
-            // Store that user has seen the tour
-            if (window.ReactNativeWebView) {
-              window.ReactNativeWebView.postMessage(JSON.stringify({
-                type: 'tourCompleted',
-                data: { tourId: 'reference-chooser' }
-              }));
+           onDestroyed: () => {
+            if(tourCompleted){
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                  type: 'tourCompleted',
+                }));
+
+                setTimeout(() => {
+                  goToStep(0);
+                }, 100);
             }
-          }
+          },
         });
         
         // Check if tour should be shown (can be triggered from React Native)
         function startReferenceTour() {
+          isTourActive = true;
+          tourWaitingForBook = false;
+          tourWaitingForChapter = false;
+          tourWaitingForVerse = false;
+          tourCompleted = false;
           driverObj.drive();
         }
 
@@ -627,6 +670,14 @@ const createHtmlBody = (
           // Setup chapters first, then move to chapter selection
           setupChapters();
           goToStep(1);
+          
+          // If tour is waiting for book selection, advance to next step
+          if (isTourActive && tourWaitingForBook) {
+            tourWaitingForBook = false;
+            setTimeout(() => {
+              driverObj.moveNext();
+            }, 100); // Small delay to let the UI update
+          }
           
           // Notify parent (if in webview)
           if (window.ReactNativeWebView) {
@@ -657,6 +708,14 @@ const createHtmlBody = (
           // Auto-confirm chapter selection and move to verse selection
           goToStep(2);
           
+          // If tour is waiting for chapter selection, advance to next step
+          if (isTourActive && tourWaitingForChapter) {
+            tourWaitingForChapter = false;
+            setTimeout(() => {
+              driverObj.moveNext();
+            }, 100);
+          }
+          
           // Notify parent (if in webview)
           if (window.ReactNativeWebView) {
             window.ReactNativeWebView.postMessage(JSON.stringify({
@@ -682,6 +741,17 @@ const createHtmlBody = (
           
           event.target.classList.add('selected');
           
+          // If tour is waiting for verse selection, advance to next step
+          if (isTourActive && tourWaitingForVerse) {
+            tourWaitingForVerse = false;
+            tourCompleted = true;
+            setTimeout(() => {
+              driverObj.moveNext();
+            }, 100);
+          }
+
+          if(isTourActive) return
+          
           // Notify parent (if in webview)
           if (window.ReactNativeWebView) {
             window.ReactNativeWebView.postMessage(JSON.stringify({
@@ -694,9 +764,13 @@ const createHtmlBody = (
                 step: getStepType(3)
               }
             }));
-            setTimeout(() => {
-              goToStep(0);
-            }, 2000);
+            
+            // Only reset to step 0 if tour is not active
+            if (!isTourActive) {
+              setTimeout(() => {
+                goToStep(0);
+              }, 2000);
+            }
           }
         }
 
@@ -826,6 +900,9 @@ const createHtmlBody = (
           switch (data.type) {
             case 'step':
               goToStep(data.step);
+              break;
+            case 'startTour':
+              startReferenceTour();
               break;
             case 'setTheme':
               // Handle theme changes if needed

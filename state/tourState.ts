@@ -37,6 +37,8 @@ export const tourState$ = observable({
   setTourPopoverVisible: (tour: "EMPTY" | "VERSE" | "FUNCTION") => {
     tourState$.tourPopoverVisible.set(tour);
   },
+
+  startReferenceTour: false,
 });
 
 // Helper function to get ref by name (outside the observable)

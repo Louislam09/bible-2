@@ -13,6 +13,8 @@ export type TutorialStep = {
   action?: () => void | Promise<void>;
   startActionOnMount?: boolean;
   isPositionTarget?: boolean;
+  hideActionButton?: boolean;
+  endAfterAction?: boolean;
 };
 
 export type TutorialFeature = {
@@ -25,10 +27,13 @@ export type TutorialFeature = {
   difficulty: "facil" | "intermedio" | "avanzado";
   duration: string; // e.g., "2 min"
   steps: TutorialStep[];
+  noSteps?: boolean;
+  action?: () => void;
 };
 
 const openModal = () => {
   bibleState$.isChooseReferenceOpened.set(true);
+  tourState$.startReferenceTour.set(true);
 }
 
 
@@ -134,9 +139,17 @@ export const TUTORIAL_FEATURES: TutorialFeature[] = [
     steps: [
       {
         id: "1",
-        text: "👋 Bienvenido!\n\nAquí puedes seleccionar cualquier libro y capítulo.\n\nVeamos cómo funciona.",
+        text: "📚 Toca aquí para seleccionar el libro, capítulo y versículo que deseas estudiar.",
         target: null,
-        startActionOnMount: true,
+        targetRef: "bookSelector",
+      },
+      {
+        id: "2",
+        text: "➡️ Avanza al siguiente capítulo tocando aquí.",
+        target: null,
+        targetRef: "",
+        hideActionButton: true,
+        endAfterAction: true,
         action: () => {
           ChooseReferenceMutableProgress.value = withTiming(
             1,
@@ -150,27 +163,9 @@ export const TUTORIAL_FEATURES: TutorialFeature[] = [
               }
             }
           );
+          tourState$.startReferenceTour.set(true);
         },
-      },
-      {
-        id: "2",
-        text: "🔍 Selecciona un libro de la lista. Puedes buscar por nombre o desplazarte.",
-        target: null,
-      },
-      {
-        id: "3",
-        text: "📖 Ahora selecciona el capítulo que deseas leer.",
-        target: { x: 100, y: 100, width: 50, height: 50 },
-        targetRef: "chapterSelector",
-        isPositionTarget: true,
-      },
-      {
-        id: "4",
-        text: "🔄 Desliza hacia arriba o abajo para leer el contenido del versículo.",
-        target: { x: 100, y: 100, width: 50, height: 50 },
-        targetRef: "verseSelector",
-        isPositionTarget: true,
-      },
+      }
     ],
   },
   {
