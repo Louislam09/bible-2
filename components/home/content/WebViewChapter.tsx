@@ -78,6 +78,9 @@ const WebViewChapter = React.memo(
                 startTour();
               }
               break;
+            case "tourCompleted":
+              tourState$.startVerseSectionTour.set(false);
+              break;
             case "scroll":
               onScroll?.(message.direction);
               break;
@@ -228,6 +231,7 @@ const WebViewChapter = React.memo(
         initialScrollIndex,
         showReadingTime,
         selectedFont,
+        shouldLoadTour: startVerseSectionTour, // Only load tour scripts when actually needed
       });
     }, [
       data,
@@ -237,18 +241,14 @@ const WebViewChapter = React.memo(
       fontSize,
       showReadingTime,
       selectedFont,
+      startVerseSectionTour
     ]);
 
     const startTour = useCallback(() => {
       webViewRef.current?.postMessage(JSON.stringify({ type: "startTour" }));
-      tourState$.startVerseSectionTour.set(false);
+      // tourState$.startVerseSectionTour.set(false);
     }, []);
 
-    // useEffect(() => {
-    //   if (startVerseSectionTour) {
-    //     startTour();
-    //   }
-    // }, [startVerseSectionTour]);
 
     return (
       <>
@@ -273,6 +273,8 @@ const WebViewChapter = React.memo(
           }}
           scrollEnabled={true}
           onMessage={handleMessage}
+          startInLoadingState={false}
+          androidLayerType="hardware"
           renderLoading={() => <View
             style={{
               backgroundColor: theme.colors.background,

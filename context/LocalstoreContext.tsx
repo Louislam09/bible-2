@@ -188,7 +188,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         isHistory: true,
       });
       storedData$.isDataLoaded.set(true);
-
     };
 
     loadState();
@@ -214,7 +213,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }, []);
 
   const clearData = async () => {
-    console.log("🗑 Clearing data...");
     storedData$.set(initialContext);
     scriptDownloadHelpers.clearTailwindScript();
     scriptDownloadHelpers.clearLexicalBundle();
@@ -340,9 +338,9 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         }));
 
         bibleState$.changeBibleQuery({
-          book: settingsData.lastBook,
-          chapter: settingsData.lastChapter,
-          verse: settingsData.lastVerse,
+          // book: settingsData.lastBook,
+          // chapter: settingsData.lastChapter,
+          // verse: settingsData.lastVerse,
           bottomSideBook: settingsData.lastBottomSideBook,
           bottomSideChapter: settingsData.lastBottomSideChapter,
           bottomSideVerse: settingsData.lastBottomSideVerse,

@@ -217,6 +217,11 @@ const verseSelectionTourScript = (theme: any) => {
                 let tourCompleted = false;
                 isTourActive = true;
 
+                // Check if driver.js is loaded, if not we can't start the tour
+                if (!window.driver || !window.driver.js || !window.driver.js.driver) {
+                    console.warn('Driver.js not loaded, skipping tour');
+                    return;
+                }
 
                  const driver = window.driver.js.driver;
                 driverObj = driver({
@@ -374,7 +379,12 @@ const verseSelectionTourScript = (theme: any) => {
                             }
                         }
                     ],
- 
+                    onDestroyStarted: () => {
+                        window.ReactNativeWebView.postMessage(JSON.stringify({
+                            type: 'tourCompleted',
+                        }));
+                        driverObj.destroy();
+                    }
                 });
                 driverObj.drive();
             }
@@ -389,7 +399,8 @@ const createHtmlHead = (
     containerWidth: any,
     showReadingTime: boolean,
     fontSize: number,
-    selectedFont?: string
+    selectedFont?: string,
+    shouldLoadTour?: boolean
 ) => `
     <head>
         <meta charset="utf-8">
@@ -400,18 +411,18 @@ const createHtmlHead = (
          ${getTailwindStyleTag({ theme, fontSize })}
          ${bibleChapterStyles(theme, containerWidth, fontSize, selectedFont)}
 
-         ${scriptDownloadHelpers.getDrivejsScript()}
-         ${getDrivejsStyleTag()}
+         ${shouldLoadTour ? scriptDownloadHelpers.getDrivejsScript() : ''}
+         ${shouldLoadTour ? getDrivejsStyleTag() : ''}
 
-         <Style>
+         ${shouldLoadTour ? `<Style>
          body .driver-popover * {
             font-family:  Arial, sans-serif !important;
             }
-         </Style>
+         </Style>` : ''}
     </head>
 `;
 
-const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapterNumber: number = 1, showReadingTime: boolean, theme: any) => `
+const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapterNumber: number = 1, showReadingTime: boolean, theme: any, shouldLoadTour?: boolean) => `
     <body class="p-0 m-0 text-theme-text bg-theme-background select-none overflow-x-hidden ">
     <div class="container relative h-screen overflow-y-auto pt-[70px] pb-[100px] " id="chapterContainer">
 
@@ -436,7 +447,7 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 if (verseNumber > 1) {
                     const verseElement = document.querySelector(\`[data-verse-number="\${verseNumber}"]\`);
                     if (verseElement) {
-                        verseElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        verseElement.scrollIntoView({ behavior: 'instant', block: 'start' });
                     }
                 }
             }
@@ -840,12 +851,12 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                     container.addEventListener('scroll', handleScroll, { passive: true });
                 }
                 
-                // Perform initial scroll after a short delay to ensure content is rendered
-                setTimeout(performInitialScroll, 100);
+                // Perform initial scroll immediately for faster perceived load
+                requestAnimationFrame(performInitialScroll);
               
             });
         </script>
-        ${(verseSelectionTourScript(theme))}
+        ${shouldLoadTour ? verseSelectionTourScript(theme) : ''}
     </body>
 `;
 
@@ -1183,6 +1194,7 @@ type TBibleChapterHtmlTemplateProps = {
     initialScrollIndex?: number;
     showReadingTime: boolean
     selectedFont?: string;
+    shouldLoadTour?: boolean;
 };
 
 export const bibleChapterHtmlTemplate = ({
@@ -1194,7 +1206,8 @@ export const bibleChapterHtmlTemplate = ({
     fontSize,
     initialScrollIndex = 0,
     showReadingTime,
-    selectedFont
+    selectedFont,
+    shouldLoadTour = false
 }: TBibleChapterHtmlTemplateProps) => {
     const containerWidth = width || "100%";
     const chapterNumber = data[0]?.chapter || 1;
@@ -1216,9 +1229,10 @@ export const bibleChapterHtmlTemplate = ({
         containerWidth,
         showReadingTime,
         fontSize || 16,
-        selectedFont
+        selectedFont,
+        shouldLoadTour
     )}
-        ${createHtmlBody(versesContent, initialScrollIndex, chapterNumber, showReadingTime, theme)}
+        ${createHtmlBody(versesContent, initialScrollIndex, chapterNumber, showReadingTime, theme, shouldLoadTour)}
     </html>
     `;
 };

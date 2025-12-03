@@ -362,14 +362,6 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
   }, [autoChangeBibleVersion]);
 
   const isPlayerOpened = use$(() => audioState$.isPlayerOpened.get());
-  const useDomComponent = use$(() => storedData$.useDomComponent.get());
-
-  // const MyChapter = isInterlinear ? Chapter : (slowDevice ) ? DomChapter : Chapter;
-  // const MyChapter = useDomComponent
-  //   ? isInterlinear
-  //     ? Chapter
-  //     : DomChapter
-  //   : Chapter;
 
   const containerAnimatedStyle = useAnimatedStyle(() => ({
     flex: 1,
@@ -378,8 +370,8 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
     width: "100%",
   }));
 
+  const showRegularChapter = !isInterlinear;
 
-  const showWebView = !isInterlinear;
   return (
     <Animated.View style={[containerAnimatedStyle]}>
       <Animated.View style={[styles.header, headerStyle]}>
@@ -464,7 +456,7 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
               <Text style={{ color: "white" }}>Cambiar</Text>
             </TouchableOpacity>
           </View>
-        ) : showWebView ? (
+        ) : showRegularChapter ? (
           <WebViewChapter
             width={Dimensions.get("window").width}
             theme={theme}
