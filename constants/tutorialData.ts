@@ -218,6 +218,13 @@ export const TUTORIAL_FEATURES: TutorialFeature[] = [
     noSteps: true,
     action: () => {
       tourState$.startVerseSectionTour.set(true);
+      bibleState$.changeBibleQuery({
+        book: "Génesis",
+        chapter: 1,
+        verse: 1,
+        shouldFetch: true,
+        isHistory: false,
+      });
     },
     steps: [
       {
