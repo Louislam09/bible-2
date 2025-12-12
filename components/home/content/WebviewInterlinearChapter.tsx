@@ -6,7 +6,7 @@ import { modalState$ } from "@/state/modalState";
 import { IBookVerse, TTheme } from "@/types";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WebView from "react-native-webview";
 
@@ -56,6 +56,10 @@ const WebviewInterlinearChapter: React.FC<Props> = ({ theme, data, isModal }) =>
         },
         []
     );
+
+    useEffect(() => {
+        console.log('THIS COMPONENT IS MOUNTED')
+    }, []);
 
     return (
         <WebView
