@@ -102,7 +102,6 @@ const useBibleReader = ({
   );
 
   useEffect(() => {
-    console.log("currentChapterVerses", {shouldPlayNextChapter});
     if (shouldPlayNextChapter) {
       setVerseIndex(0);
       setReading(true);
