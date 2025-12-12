@@ -73,7 +73,6 @@ const WebViewChapter = React.memo(
 
           switch (message.type) {
             case "onload":
-              console.log({ message });
               if (startVerseSectionTour) {
                 startTour();
               }

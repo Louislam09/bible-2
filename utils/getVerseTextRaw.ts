@@ -13,7 +13,8 @@ export const getVerseTextRaw = (
 export const getChapterTextRawForReading = (verses: IBookVerse[] = []) => {
   const text = [];
   for (const verse of verses) {
-    const rawText = getVerseTextRaw(verse.text);
+    // Remove  all * from text
+    const rawText = getVerseTextRaw(verse.text).replace(/\*/g, "");
     text.push(rawText);
   }
   return text;

@@ -2,13 +2,13 @@ import { StyleSheet, useWindowDimensions, View } from "react-native";
 
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
+  Easing,
   interpolate,
   interpolateColor,
+  makeMutable,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  makeMutable,
-  Easing,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -16,7 +16,6 @@ import { useMyTheme } from "@/context/ThemeContext";
 import { AudioPlayerSheetContent } from "./sheet-content";
 
 export const EasingsUtils = {
-  // https://www.easing.dev/in-out-base
   inOut: Easing.bezier(0.25, 0.1, 0.25, 1),
 };
 
@@ -29,11 +28,11 @@ const Palette = {
 
 // Kind of a Global Shared Value
 const MiniPlayerHeight = 64;
-const ExpandedSheetMutableProgress = makeMutable(0);
+export const ExpandedAudioPlayerProgress = makeMutable(0);
 
 export const AudioPlayerExpandedSheet = () => {
   const { height: windowHeight } = useWindowDimensions();
-  const progress = ExpandedSheetMutableProgress;
+  const progress = ExpandedAudioPlayerProgress;
   const { theme } = useMyTheme();
 
   const isTapped = useSharedValue(false);

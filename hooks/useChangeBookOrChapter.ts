@@ -13,8 +13,7 @@ const useChangeBookOrChapter = ({
   chapter,
 }: useChangeBookOrChapterProps) => {
   const bookIndex = DB_BOOK_NAMES.findIndex((x) => x.longName === book);
-  const { bookNumber, shortName } =
-    DB_BOOK_NAMES.find((x) => x.longName === book) || {};
+  const { bookNumber } = DB_BOOK_NAMES.find((x) => x.longName === book) || {};
 
   const nextOrPreviousBook = (name: string, chapter: number = 1) => {
     const queryInfo = {
@@ -73,7 +72,7 @@ const useChangeBookOrChapter = ({
       isBibleBottom: isSplit,
       isHistory: false,
     });
-  };
+  }
 
   return {
     nextChapter,

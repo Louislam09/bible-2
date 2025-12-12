@@ -1,8 +1,7 @@
 import { DB_BOOK_CHAPTER_NUMBER, DB_BOOK_NAMES } from "@/constants/BookNames";
 import { useMyTheme } from "@/context/ThemeContext";
-import { Screens } from "@/types";
 import { LinearGradient } from "expo-linear-gradient";
-import { FC, useCallback, useRef } from "react";
+import { FC, useRef } from "react";
 import { TouchableOpacity, useWindowDimensions } from "react-native";
 
 import { ChooseReferenceMutableProgress } from "@/components/animations/constants";
@@ -11,7 +10,7 @@ import { Text, View } from "@/components/Themed";
 import { iconSize } from "@/constants/size";
 import { useHaptics } from "@/hooks/useHaptics";
 import useParams from "@/hooks/useParams";
-import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
+// import useSingleAndDoublePress from "@/hooks/useSingleOrDoublePress";
 import { bibleState$ } from "@/state/bibleState";
 import { tourState$ } from "@/state/tourState";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
@@ -136,31 +135,12 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
       }
     );
   };
-  const onDoubleFooterTitle = () => {
-    haptics.impact.medium();
-    batch(() => {
-      bibleState$.clearSelection();
-      bibleState$.isBottomBibleSearching.set(!!isSplit);
-    });
-    ChooseReferenceMutableProgress.value = withTiming(
-      1,
-      {
-        duration: 450,
-        easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-      },
-      (finished) => {
-        if (finished) {
-          runOnJS(openModal)();
-        }
-      }
-    );
-  };
 
-  const onPress = useSingleAndDoublePress({
-    onSinglePress: onSingleFooterTitle,
-    onDoublePress: onDoubleFooterTitle,
-    delay: 200,
-  });
+  // const onPress = useSingleAndDoublePress({
+  //   onSinglePress: onSingleFooterTitle,
+  //   onDoublePress: onDoubleFooterTitle,
+  //   delay: 200,
+  // });
 
 
   const displayBookName = renameLongBookName(book);
@@ -189,9 +169,9 @@ const BibleFooter: FC<FooterInterface> = ({ isSplit }) => {
         <TouchableOpacity
           ref={tourState$.bookSelector.get()}
           style={styles.titleContainer}
-          onPress={onPress}
+          onPress={onSingleFooterTitle}
           // onLongPress={onLongFooterTitle}
-          delayLongPress={200}
+          // delayLongPress={200}
         >
           <Text
             style={[styles.bookLabel, { fontSize: FOOTER_ICON_SIZE - 5 }]}

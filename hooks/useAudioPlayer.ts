@@ -1,15 +1,15 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
-import {
-  useAudioPlayer as useExpoAudioPlayer,
-  useAudioPlayerStatus,
-  setAudioModeAsync,
-  AudioMode
-} from "expo-audio";
-import * as FileSystem from "expo-file-system";
-import { ToastAndroid } from "react-native";
-import getCurrentAudioUrl, { getAudioName } from "@/constants/bibleAudioUrl";
+import { ExpandedAudioPlayerProgress } from "@/components/animations/expandable-mini-player";
+import getCurrentAudioUrl from "@/constants/bibleAudioUrl";
 import { observable } from "@legendapp/state";
-import { use$ } from "@legendapp/state/react";
+import {
+  AudioMode,
+  AudioPlayer,
+  setAudioModeAsync,
+  useAudioPlayerStatus,
+  useAudioPlayer as useExpoAudioPlayer,
+} from "expo-audio";
+import { useCallback, useEffect, useMemo } from "react";
+import { Easing, withTiming } from "react-native-reanimated";
 
 interface AudioPlayerHookProps {
   book: string;
@@ -18,7 +18,6 @@ interface AudioPlayerHookProps {
 }
 
 interface AudioPlayerHookResult {
-  isDownloading: boolean;
   isPlaying: boolean;
   playAudio: () => void;
   seekTo: (position: number) => void;
@@ -27,97 +26,41 @@ interface AudioPlayerHookResult {
 }
 
 export const audioState$ = observable({
-  isPlaying: false,
-  isDownloading: false,
-  isPaused: false,
-  isFinished: false,
-  isError: false,
-  isLoading: false,
-  isReady: false,
   isPlayerOpened: false,
-  shouldPlayAfterDownload: false,
-  currentUri: null as string | null,
-  currentBook: '',
-  currentChapter: 0,
-  position: 0,
-  duration: 0,
+  shouldAutoplay: false,
   toggleIsPlayerOpened: () => {
     audioState$.isPlayerOpened.set(() => !audioState$.isPlayerOpened.get());
+    ExpandedAudioPlayerProgress.value = withTiming(
+      +audioState$.isPlayerOpened.get(),
+      {
+        duration: 450,
+        easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+      }
+    );
   },
 });
-
-// const getAudioUrl = (bookNumberForAudio: number, chapter: number) => {
-//   return `https://www.wordproaudio.net/bibles/app/audio/6/${bookNumberForAudio}/${chapter}.mp3`;
-// };
 
 const useAudioPlayer = ({
   book,
   chapterNumber,
   nextChapter,
 }: AudioPlayerHookProps): AudioPlayerHookResult => {
-  const dbFolder = `${FileSystem.documentDirectory}audio`;
+  const audioUrl = useMemo(() => {
+    return getCurrentAudioUrl(book, chapterNumber);
+  }, [book, chapterNumber]);
 
-  const audioData = useMemo(() => {
-    const audioKey = `${book}-${chapterNumber}`;
-    const audioUrl = getCurrentAudioUrl(book.toString(), chapterNumber);
-    const audioName = getAudioName(book.toString(), chapterNumber);
-    const localUri = `${dbFolder}/${audioName}`;
-
-    return {
-      audioKey,
-      audioUrl,
-      audioName,
-      localUri,
-    };
-  }, [book, chapterNumber, dbFolder]);
-
-  const currentUri = use$(() => audioState$.currentUri.get());
-  // Create audio player with the current URI from observable
-  const audioPlayer = useExpoAudioPlayer(currentUri);
+  const audioPlayer = useExpoAudioPlayer(audioUrl);
   const audioStatus = useAudioPlayerStatus(audioPlayer);
 
   const isPlaying = audioStatus.playing;
-  const position = audioStatus.currentTime * 1000; // Convert to milliseconds
-  const duration = audioStatus.duration * 1000; // Convert to milliseconds
-
-  // Sync audio status with observable state
-  useEffect(() => {
-    audioState$.isPlaying.set(isPlaying);
-    audioState$.isPaused.set(!isPlaying && position > 0);
-    audioState$.isFinished.set(audioStatus.didJustFinish);
-    audioState$.isReady.set(!!currentUri && duration > 0);
-    audioState$.position.set(position);
-    audioState$.duration.set(duration);
-  }, [isPlaying, position, audioStatus.didJustFinish, duration]);
-
-  // Sync current book and chapter
-  useEffect(() => {
-    audioState$.currentBook.set(book);
-    audioState$.currentChapter.set(chapterNumber);
-  }, [book, chapterNumber]);
-
-  const resetAudio = useCallback(async () => {
-    if (audioPlayer) {
-      audioPlayer.pause();
-    }
-    audioState$.currentUri.set(null);
-  }, [audioPlayer]);
-
-  const onCheckAudioExists = useCallback(async (effect: string) => {
-    const { exists } = await FileSystem.getInfoAsync(audioData.localUri);
-    if (!exists) {
-      await downloadAudio();
-    } else {
-      audioState$.currentUri.set(audioData.localUri);
-    }
-  }, [audioData.localUri]);
+  const position = audioStatus.currentTime * 1000;
+  const duration = audioStatus.duration * 1000;
 
   useEffect(() => {
-    // Set audio mode
     setAudioModeAsync({
       playsInSilentMode: true,
-      interruptionMode: 'duckOthers',
-      interruptionModeAndroid: 'duckOthers',
+      interruptionMode: "duckOthers",
+      interruptionModeAndroid: "duckOthers",
       allowsRecording: false,
       shouldPlayInBackground: true,
       shouldRouteThroughEarpiece: false,
@@ -125,95 +68,45 @@ const useAudioPlayer = ({
   }, []);
 
   useEffect(() => {
-    if (!book || !chapterNumber) return
-    const loadAudio = async () => {
-      try {
-        await resetAudio();
-        await FileSystem.makeDirectoryAsync(dbFolder, { intermediates: true });
-
-        await onCheckAudioExists('eefect');
-
-        audioState$.currentUri.set(audioData.localUri);
-      } catch (error) {
-        console.log("Error al cargar el audio:", error);
-      }
-    };
-
-    loadAudio();
-
-    return () => {
-      resetAudio();
-    };
-  }, [book, chapterNumber]);
-
-  // Handle audio completion
-  useEffect(() => {
     if (audioStatus.didJustFinish) {
       nextChapter && nextChapter();
-      audioState$.shouldPlayAfterDownload.set(true);
+      audioState$.shouldAutoplay.set(true);
     }
   }, [audioStatus.didJustFinish]);
 
-  // Handle auto-play when audio player is ready
   useEffect(() => {
-    const currentUri = audioState$.currentUri.get();
-    if (currentUri && audioPlayer && audioState$.shouldPlayAfterDownload.get()) {
-      audioState$.shouldPlayAfterDownload.set(false);
-      setTimeout(() => {
-        audioPlayer.play();
-      }, 200);
+    if(!audioPlayer.isLoaded) return;
+    const shouldAutoplay = audioState$.shouldAutoplay.get();
+    if (shouldAutoplay && !isPlaying) {
+      audioPlayer.play();
+      audioState$.shouldAutoplay.set(false);
     }
-  }, [audioPlayer]);
-
-  const downloadAudio = async () => {
-    ToastAndroid.show("Descargando...", ToastAndroid.SHORT);
-    audioState$.isDownloading.set(true);
-
-    try {
-      const { uri } = await FileSystem.downloadAsync(audioData.audioUrl, audioData.localUri);
-      ToastAndroid.show("Audio descargado!", ToastAndroid.SHORT);
-      audioState$.isDownloading.set(false);
-
-      audioState$.currentUri.set(uri);
-
-    } catch (error) {
-      console.log("Error downloading audio:", error);
-      audioState$.isDownloading.set(false);
-      ToastAndroid.show("Error al descargar audio", ToastAndroid.SHORT);
-    }
-  };
+  }, [duration, isPlaying, audioPlayer, audioUrl]);
 
   const playAudio = async () => {
-    const currentUri = audioState$.currentUri.get();
-    if (!currentUri) {
-      await onCheckAudioExists('playAudio');
-    }
+    if (!audioUrl) return;
 
     if (isPlaying) {
-      audioPlayer?.pause();
+      audioPlayer.pause();
       return;
     }
-
-    audioState$.shouldPlayAfterDownload.set(false);
-    audioPlayer?.play();
+    audioPlayer.play();
   };
 
-  const seekTo = useCallback((position: number) => {
-    const currentUri = audioState$.currentUri.get();
-    if (audioPlayer && currentUri) {
-      // Convert milliseconds to seconds for expo-audio
-      const positionInSeconds = position / 1000;
-      audioPlayer.seekTo(positionInSeconds);
-    }
-  }, [audioPlayer]);
+  const seekTo = useCallback(
+    (position: number) => {
+      const positionSec = position / 1000;
+      if (audioPlayer) audioPlayer.seekTo(positionSec);
+    },
+    [audioPlayer]
+  );
 
   return {
-    isDownloading: audioState$.isDownloading.get(),
     isPlaying,
     playAudio,
     seekTo,
-    position: audioState$.position.get(),
-    duration: audioState$.duration.get()
+    position,
+    duration,
   };
 };
 

@@ -27,12 +27,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
-import Chapter from "./home/content/Chapter";
 import WebViewChapter from "./home/content/WebViewChapter";
+import WebviewInterlinearChapter from "./home/content/WebviewInterlinearChapter";
 import BibleFooter from "./home/footer/BibleFooter";
 import SwipeWrapper from "./SwipeWrapper";
 import { Text, View } from "./Themed";
-import WebviewInterlinearChapter from "./home/content/WebviewInterlinearChapter";
 
 interface BibleTopProps {
 }

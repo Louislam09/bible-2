@@ -28,6 +28,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import type { SharedValue } from "react-native-reanimated";
 import WebView from "react-native-webview";
+import { use$ } from "@legendapp/state/react";
 
 type SheetContentProps = {
   progress: SharedValue<number>;
@@ -47,14 +48,13 @@ const BaseOffset = (MiniPlayerHeight - ImageHeight) / 2;
 export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
   const { theme } = useMyTheme();
   const { isConnected } = useNetInfo();
-
   // Theme selector state
   const [selectedTheme, setSelectedTheme] = useState<
     TQuoteDataItem | undefined
   >();
   const themeSelectorRef = useRef<BottomSheetModal>(null);
 
-  const bibleQuery = bibleState$.bibleQuery.get();
+  const bibleQuery = use$(() => bibleState$.bibleQuery.get());
   const reference = `${bibleQuery.book} ${bibleQuery.chapter}`;
 
   const currentVoiceIdentifier = storedData$.currentVoiceIdentifier.get();
@@ -75,14 +75,19 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
     reset,
     currentVerseText,
     verseList,
+    seekToNextVerse,
+    seekToPreviousVerse,
   } = useBibleReader({
     currentChapterVerses: bibleState$.bibleData.topVerses.get() as any,
     currentVoiceIdentifier,
     voiceRate: currentVoiceRate,
+    nextChapter: () => {
+      nextChapter();
+    },
   });
 
   const {
-    isDownloading,
+    // audioPlayer,
     isPlaying: isPlayingAudio,
     playAudio,
     seekTo,
@@ -101,14 +106,12 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
       READING: {
         IS_PLAYING: isReading,
         PLAY_ACTION: isSpeaking ? stopReading : startReading,
-        IS_DOWNLOADING: false,
         DURATION: 0,
         POSITION: 0,
       },
       AUDIO: {
         IS_PLAYING: isPlayingAudio,
         PLAY_ACTION: playAudio,
-        IS_DOWNLOADING: isDownloading,
         DURATION: duration,
         POSITION: position,
       },
@@ -116,6 +119,7 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
 
     return isConnected ? state.AUDIO : state.READING;
   }, [
+    // audioPlayer,
     isConnected,
     isSpeaking,
     isReading,
@@ -123,31 +127,9 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
     stopReading,
     isPlayingAudio,
     playAudio,
-    isDownloading,
     duration,
     position,
   ]);
-
-  const handlePlay = useCallback(() => {
-    if (isSpeaking) {
-      stopReading();
-      return;
-    }
-
-    startReading();
-  }, [isSpeaking, stopReading, startReading]);
-
-  const handlePrevious = useCallback(() => {
-    previousChapter();
-  }, [previousChapter]);
-
-  const handleNext = useCallback(() => {
-    nextChapter();
-  }, [nextChapter]);
-
-  const handleSound = () => {
-    // Handle sound settings
-  };
 
   const handleShare = () => {
     router.push({
@@ -222,6 +204,7 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
       }
     );
   };
+  
   const rImageStyle = useAnimatedStyle(() => {
     const imageSize = interpolate(
       progress.value,
@@ -378,13 +361,21 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
   };
 
   const handleSeekBackward = useCallback(() => {
+    if(!isConnected) {
+      seekToPreviousVerse();
+      return;
+    }
     if (PLAYER_STATE.DURATION <= 0) return;
 
     const newPosition = Math.max(0, PLAYER_STATE.POSITION - 10000); // 10 seconds back
     seekTo(newPosition);
-  }, [PLAYER_STATE.DURATION, PLAYER_STATE.POSITION, seekTo]);
+  }, [PLAYER_STATE.DURATION,verseIndex, PLAYER_STATE.POSITION, seekTo, isConnected]);
 
   const handleSeekForward = useCallback(() => {
+    if(!isConnected) {
+      seekToNextVerse();
+      return;
+    }
     if (PLAYER_STATE.DURATION <= 0) return;
 
     const newPosition = Math.min(
@@ -392,7 +383,7 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
       PLAYER_STATE.POSITION + 10000
     ); // 10 seconds forward
     seekTo(newPosition);
-  }, [PLAYER_STATE.DURATION, PLAYER_STATE.POSITION, seekTo]);
+  }, [PLAYER_STATE.DURATION,verseIndex, PLAYER_STATE.POSITION, seekTo, isConnected]);
 
   // Use selected theme background or fallback to original imageUrl
   const backgroundImageUrl = selectedTheme?.backgroundImageUrl || "";
@@ -456,14 +447,8 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
               style={styles.playButton}
             >
               <Icon
+                name={isPlayingAudio ? "Pause" : "Play"}
                 // name={PLAYER_STATE.IS_PLAYING ? "Pause" : "Play"}
-                name={
-                  PLAYER_STATE.IS_DOWNLOADING
-                    ? "Download"
-                    : PLAYER_STATE.IS_PLAYING
-                      ? "Pause"
-                      : "Play"
-                }
                 size={24}
                 color={"white"}
               />
@@ -532,7 +517,7 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
           {/* Progress Line */}
         </Animated.View>
 
-        <View style={styles.progressContainer}>
+        <View style={[styles.progressContainer, { display: isConnected ? "flex" : "none" }]}>
           <Text style={styles.progressTimeText}>
             {formatTime(PLAYER_STATE.POSITION)}
           </Text>
@@ -570,12 +555,13 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
             {formatTime(PLAYER_STATE.DURATION)}
           </Text>
         </View>
+
         {/* Playback Controls */}
         <Animated.View
           style={[rPlaybackControlsStyle, styles.playbackControls]}
         >
           <TouchableOpacity
-            onPress={handlePrevious}
+            onPress={() => previousChapter()}
             style={styles.controlButton}
           >
             <Icon name="SkipBack" size={32} color="white" />
@@ -583,7 +569,7 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
           {/* 10s Backward Button */}
           <TouchableOpacity
             onPress={handleSeekBackward}
-            style={styles.seekButton}
+            style={[styles.seekButton,]}
           >
             <MaterialCommunityIcons name="rewind-10" size={20} color="white" />
           </TouchableOpacity>
@@ -593,13 +579,7 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
             style={styles.playButtonLarge}
           >
             <Icon
-              name={
-                PLAYER_STATE.IS_DOWNLOADING
-                  ? "Download"
-                  : PLAYER_STATE.IS_PLAYING
-                    ? "Pause"
-                    : "Play"
-              }
+              name={PLAYER_STATE.IS_PLAYING ? "Pause" : "Play"}
               size={48}
               color="white"
             />
@@ -608,7 +588,7 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
           {/* 10s Forward Button */}
           <TouchableOpacity
             onPress={handleSeekForward}
-            style={styles.seekButton}
+            style={[styles.seekButton]}
           >
             <MaterialCommunityIcons
               name="fast-forward-10"
@@ -616,17 +596,14 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
               color="white"
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleNext} style={styles.controlButton}>
+
+          <TouchableOpacity onPress={() => nextChapter()} style={styles.controlButton}>
             <Icon name="SkipForward" size={32} color="white" />
           </TouchableOpacity>
         </Animated.View>
 
         {/* Feature Buttons */}
         <Animated.View style={[rFeatureButtonsStyle, styles.featureButtons]}>
-          {/* <TouchableOpacity onPress={handleSound} style={styles.featureButton}>
-            <Icon name="Volume2" size={24} color="white" />
-            <Text style={styles.featureButtonText}>Voz</Text>
-          </TouchableOpacity> */}
           <TouchableOpacity onPress={handleShare} style={styles.featureButton}>
             <Icon name="Share" size={24} color="white" />
             <Text style={styles.featureButtonText}>Compartir</Text>
@@ -875,7 +852,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 60,
     height: 60,
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    backgroundColor: "transparent",
     borderRadius: 30,
     marginHorizontal: 10,
   },

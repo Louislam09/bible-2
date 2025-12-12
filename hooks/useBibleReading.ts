@@ -8,6 +8,7 @@ interface UseBibleReaderProps {
   currentChapterVerses: IBookVerse[];
   currentVoiceIdentifier: string;
   voiceRate: number; // Add the voice rate to the props
+  nextChapter?: () => void;
 }
 
 interface UseBibleReaderResult {
@@ -21,13 +22,16 @@ interface UseBibleReaderResult {
   ended: boolean;
   currentVerseText: string;
   verseList: string[];
+  seekToNextVerse: () => void;
+  seekToPreviousVerse: () => void;
 }
 
 const useBibleReader = ({
   currentChapterVerses,
   currentVoiceIdentifier,
   voiceRate,
-}: UseBibleReaderProps): UseBibleReaderResult => {
+  nextChapter,
+  }: UseBibleReaderProps): UseBibleReaderResult => {
   const [verseIndex, setVerseIndex] = useState(0);
   const [reading, setReading] = useState(false);
   const [ended, setEnded] = useState(false);
@@ -49,6 +53,22 @@ const useBibleReader = ({
     setVerseIndex(0);
     setEnded(false);
     setReading(false);
+  };
+
+  const seekToNextVerse = () => {
+    stop();
+    const maxIndex = verseList.length - 1;
+    if (verseIndex < maxIndex) {
+      setVerseIndex((prev) => prev + 1);
+    }
+  };
+
+  const seekToPreviousVerse = () => {
+    stop();
+    const minIndex = 0;
+    if (verseIndex > minIndex) {
+      setVerseIndex((prev) => prev - 1);
+    }
   };
 
   const stopReading = useCallback(() => {
@@ -73,6 +93,8 @@ const useBibleReader = ({
         } else {
           setEnded(true);
           stopReading();
+          nextChapter && nextChapter();
+          setShouldPlayNextChapter(true);
         }
       });
     },
@@ -80,11 +102,12 @@ const useBibleReader = ({
   );
 
   useEffect(() => {
+    console.log("currentChapterVerses", {shouldPlayNextChapter});
     if (shouldPlayNextChapter) {
       setVerseIndex(0);
       setReading(true);
     }
-  }, [shouldPlayNextChapter]);
+  }, [currentChapterVerses]);
 
   useEffect(() => {
     if (reading && verseIndex < verseList.length) {
@@ -109,7 +132,9 @@ const useBibleReader = ({
     ended,
     reset,
     currentVerseText: verseList[verseIndex] || "",
-    verseList
+    verseList,
+    seekToNextVerse,
+    seekToPreviousVerse,
   };
 };
 

@@ -1,32 +1,28 @@
-import React, { RefObject, useCallback, useMemo } from "react";
+import React, { RefObject, useMemo } from "react";
 
 import {
-  Animated,
   SafeAreaView,
   StyleSheet,
-  useWindowDimensions,
-  View,
+  View
 } from "react-native";
 
-import BibleBottom from "@/components/BibleBottom";
 import BookContentModals from "@/components/book-content-modals";
 import CurrentNoteDetail from "@/components/CurrentNoteDetail";
 import FloatingButton from "@/components/FloatingButton";
 import TutorialWalkthrough from "@/components/TutorialWalkthrough";
 import { useMyTheme } from "@/context/ThemeContext";
 
+import ResizableSplitView from "@/components/animations/resizable-split-view";
+import BibleBottomContent from "@/components/BibleBottomContent";
+import BibleTop from "@/components/BibleTop";
 import StatusBarBackground from "@/components/StatusBarBackground";
 import withDrawTimeMeasurement from "@/components/withDrawTimeMeasurement";
 import { useDeviceOrientation } from "@/hooks/useDeviceOrientation";
-import { useSplitScreen } from "@/hooks/useSplitScreen";
 import { bibleState$ } from "@/state/bibleState";
 import { tourState$ } from "@/state/tourState";
 import { OrientationType, TTheme } from "@/types";
 import { observer, use$ } from "@legendapp/state/react";
-import { Stack, useNavigation } from "expo-router";
-import ResizableSplitView from "@/components/animations/resizable-split-view";
-import BibleTop from "@/components/BibleTop";
-import BibleBottomContent from "@/components/BibleBottomContent";
+import { Stack } from "expo-router";
 
 // Constants
 const MIN_SPLIT_SIZE = 200;
