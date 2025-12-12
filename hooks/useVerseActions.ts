@@ -36,13 +36,12 @@ type VerseProps = TVerse & {
     initVerse: number;
     onInterlinear?: (item: IBookVerse) => void;
     onAnotar?: (item: IBookVerse) => void;
-    onComparar?: (item: IBookVerse) => void;
     onMemorizeVerse?: (verse: string, version: string) => void;
     onFavoriteVerse?: ({ bookNumber, chapter, verse, isFav, }: IFavoriteVerse) => Promise<void>
 };
 
 
-const useVerseActions = ({ item, isSplit, initVerse, onInterlinear: externalOnInterlinear, onAnotar: externalOnAnotar, onComparar: externalOnComparar, onMemorizeVerse: externalOnMemorizeVerse, onFavoriteVerse: externalOnFavoriteVerse }: VerseProps) => {
+const useVerseActions = ({ item, isSplit, initVerse, onInterlinear: externalOnInterlinear, onAnotar: externalOnAnotar,onMemorizeVerse: externalOnMemorizeVerse, onFavoriteVerse: externalOnFavoriteVerse }: VerseProps) => {
     const router = useRouter();
     const haptics = useHaptics();
 
@@ -221,17 +220,6 @@ const useVerseActions = ({ item, isSplit, initVerse, onInterlinear: externalOnIn
         modalState$.openDictionaryBottomSheet(word);
     };
 
-    const onCompareClicked = () => {
-        if (externalOnComparar) {
-            externalOnComparar(item);
-            return;
-        }
-
-        bibleState$.verseToCompare.set(item.verse);
-        modalState$.openCompareBottomSheet();
-        bibleState$.clearSelection();
-    };
-
     const onMemorizeVerse = useCallback((text: string) => {
         externalOnMemorizeVerse?.(text, currentBibleVersion);
         bibleState$.clearSelection();
@@ -331,12 +319,6 @@ const useVerseActions = ({ item, isSplit, initVerse, onInterlinear: externalOnIn
                 hide: false,
                 description: "Memorizar",
             },
-            {
-                name: "FileDiff",
-                action: onCompareClicked,
-                hide: bibleState$.isSplitActived.get(),
-                description: "Comparar",
-            },
         ] as TIcon[];
     }, [verseIsTapped, isFavorite, item]);
 
@@ -351,7 +333,6 @@ const useVerseActions = ({ item, isSplit, initVerse, onInterlinear: externalOnIn
         onWordClicked,
         onStrongWordClicked,
         onNonHightlistedWordClick,
-        onCompareClicked,
         onMemorizeVerse,
         onExplainWithAI,
         onInterlinear,

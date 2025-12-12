@@ -142,11 +142,11 @@ const BibleBottomContent: FC<BibleBottomContentProps> = ({ }) => {
     if (!bibleState$.currentNoteId.get()) bibleState$.openNoteListBottomSheet();
   }, []);
 
-  const onComparar = useCallback((item: IBookVerse) => {
-    bibleState$.verseToCompare.set(item.verse);
-    modalState$.openCompareBottomSheet();
-    bibleState$.clearSelection();
-  }, []);
+  // const onComparar = useCallback((item: IBookVerse) => {
+  //   bibleState$.verseToCompare.set(item.verse);
+  //   modalState$.openCompareBottomSheet();
+  //   bibleState$.clearSelection();
+  // }, []);
 
   const onCopy = useCallback(async (item: IBookVerse | IBookVerse[]) => {
     // If item is already an array (from WebView), use it directly
@@ -301,7 +301,6 @@ const BibleBottomContent: FC<BibleBottomContentProps> = ({ }) => {
               onStrongWordClicked,
               onInterlinear,
               onAnotar,
-              onComparar,
               onWordClicked,
               onCopy,
               onExplain,

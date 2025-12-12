@@ -67,12 +67,14 @@ export const modalState$ = observable({
     modalState$.isSheetClosed.set(true);
   },
   openInterlinealBottomSheet: () => {
-    modalState$.isSheetClosed.set(false);
-    modalState$.interlinealRef.current?.expand();
+    // modalState$.isSheetClosed.set(false);
+    // modalState$.interlinealRef.current?.expand();
+      modalState$.interlinealRef.current?.present();
   },
   closeInterlinealBottomSheet: () => {
-    modalState$.isSheetClosed.set(true);
-    modalState$.interlinealRef.current?.close();
+    modalState$.interlinealRef.current?.dismiss();
+    // modalState$.isSheetClosed.set(true);
+    // modalState$.interlinealRef.current?.close();
   },
   openMultipleStrongsBottomSheet: () => {
     modalState$.multipleStrongsRef.current?.present();

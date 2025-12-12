@@ -1,6 +1,4 @@
-import BottomModal from "@/components/BottomModal";
-import CompareVersions from "@/components/CompareVersions";
-import NoteNameList from "@/components/home/NoteNameList";
+import NoteNameListBottomModal from "@/components/home/NoteNameListBottomModal";
 import { getBookDetail } from "@/constants/BookNames";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
@@ -15,13 +13,14 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import ExpandableChooseReference from "./animations/expandable-choose-reference";
 import { AudioPlayerExpandedSheet } from "./animations/expandable-mini-player";
+import CommentaryBottomSheet from "./CommentaryBottomSheet";
+import DictionaryContentBottomModal from "./DictionaryContentBottomModal";
 import InterlinearVerse from "./home/content/InterlinearVerse";
 import MultipleStrongsContentBottomModal from "./home/content/MultipleStrongsContentBottomSheet";
 import StrongContentBottomModal from "./home/content/StrongContentBottomModal";
-import { Text, View } from "./Themed";
-import DictionaryBottomModalContent from "./DictionaryBottomModalContent";
-import CommentaryBottomSheet from "./CommentaryBottomSheet";
 import WebviewBibleSettingBottomModal from "./home/WebviewBibleSettingBottomModal";
+import { Text, View } from "./Themed";
+import InterlinearBottomSheet from "./InterlinearBottomSheet";
 
 const BookContentModals = () => {
   const { theme } = useMyTheme();
@@ -34,16 +33,18 @@ const BookContentModals = () => {
   const isPlayerOpened = use$(() => audioState$.isPlayerOpened.get());
   const commentaryReference = use$(() => modalState$.commentaryReference.get());
 
-  // Get all refs directly without reactive subscriptions (refs don't need reactivity)
-  const noteListBottomSheetRef = bibleState$.noteListBottomSheetRef.get();
   const interlinealRef = modalState$.interlinealRef.get();
-  const dictionaryRef = modalState$.dictionaryRef.get();
-  const compareRef = modalState$.compareRef.get();
 
   return (
     <>
       <ExpandableChooseReference />
       {isPlayerOpened && <AudioPlayerExpandedSheet />}
+
+      <StrongContentBottomModal
+        theme={theme}
+        navigation={navigation}
+        fontSize={fontSize}
+      />
 
       <MultipleStrongsContentBottomModal
         theme={theme}
@@ -52,13 +53,13 @@ const BookContentModals = () => {
         data={multipleStrongsData as any}
       />
 
-      <WebviewBibleSettingBottomModal />
-
-      <StrongContentBottomModal
-        theme={theme}
+      <DictionaryContentBottomModal
         navigation={navigation}
+        theme={theme}
         fontSize={fontSize}
       />
+
+      <WebviewBibleSettingBottomModal />
 
       <CommentaryBottomSheet
         bookNumber={commentaryReference.bookNumber}
@@ -66,34 +67,11 @@ const BookContentModals = () => {
         verse={commentaryReference.verse}
       />
 
-      <BottomModal
-        style={styles.bottomSheet}
-        backgroundColor={theme.dark ? theme.colors.background : "#eee"}
-        shouldScroll={false}
-        ref={dictionaryRef}
-        justOneSnap
-        showIndicator
-        justOneValue={["60%"]}
-        startAT={0}
-      >
-        <DictionaryBottomModalContent
-          navigation={navigation}
-          theme={theme}
-          fontSize={fontSize}
-        />
-      </BottomModal>
+      <InterlinearBottomSheet />
 
-      <BottomModal
-        justOneSnap
-        showIndicator
-        justOneValue={["50%"]}
-        startAT={0}
-        ref={noteListBottomSheetRef}
-      >
-        <NoteNameList />
-      </BottomModal>
+      <NoteNameListBottomModal />
 
-      <BottomSheet
+      {/* <BottomSheet
         ref={interlinealRef}
         index={-1}
         snapPoints={["30%", "60%", "99%"]}
@@ -133,20 +111,7 @@ const BookContentModals = () => {
             <InterlinearVerse withBackground item={verseToInterlinear as any} />
           </View>
         </BottomSheetScrollView>
-      </BottomSheet>
-
-      <BottomModal shouldScroll startAT={3} ref={compareRef}>
-        <CompareVersions
-          {...{
-            theme,
-            book: "Génesis",
-            chapter: 1,
-            navigation,
-            compareRef: compareRef,
-          }}
-        />
-      </BottomModal>
-
+      </BottomSheet> */}
     </>
   );
 };

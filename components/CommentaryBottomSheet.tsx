@@ -1,13 +1,12 @@
 import { View } from "@/components/Themed";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { commentaryCss } from "@/constants/commentaryCss";
-import { useBibleContext } from "@/context/BibleContext";
-import { useDBContext } from "@/context/databaseContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useCommentaryData from "@/hooks/useCommentaryData";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
+import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
 import { ModulesFilters, Screens, TTheme } from "@/types";
 import { lucideIcons } from "@/utils/lucideIcons";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
@@ -18,8 +17,6 @@ import { StyleSheet } from "react-native";
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import BottomModal from "./BottomModal";
-import { storedData$ } from "@/context/LocalstoreContext";
-import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
 
 interface CommentaryBottomSheetProps {
   bookNumber: number;

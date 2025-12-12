@@ -338,15 +338,6 @@ const verseSelectionTourScript = (theme: any) => {
                             }
                         },
                         {
-                            element: \`[data-verse-key="\${verseKey}"].verse-actions button:nth-child(9)\`,
-                            popover: {
-                                title: '🔄 Comparar',
-                                description: 'Compara con otras versiones.',
-                            side: 'bottom',
-                                align: 'center'
-                            }
-                        },
-                        {
                             element: firstVerse,
                             popover: {
                                 title: '📚 Selección Múltiple',
@@ -1150,10 +1141,6 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
             <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[600ms] hover:scale-105" onclick="handleVerseAction('memorize', '${verseKey}')">
                 <span class="action-icon" style="color: #f1abab;">${lucideIcons.brain}</span>
                 <div class="action-label text-theme-text">Memorizar</div>
-            </button>
-            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[700ms] hover:scale-105" onclick="handleVerseAction('compare', '${verseKey}')">
-                <span class="action-icon text-theme-text">${lucideIcons['git-compare']}</span>
-                <div class="action-label text-theme-text">Comparar</div>
             </button>
         </div>
     </div>

@@ -12,6 +12,7 @@ import Animated, {
   interpolateColor,
   runOnJS,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withTiming
 } from "react-native-reanimated";
@@ -167,6 +168,18 @@ const ExpandableChooseReference = ({ isCommentary }: ExpandableChooseReferencePr
     };
   });
 
+  const display = useDerivedValue(() => {
+    return progress.value === 1 ? "flex" : "none";
+  });
+
+const rWebviewStyle = useAnimatedStyle(() => {
+  return {
+    opacity: progress.value,
+    // @ts-ignore
+    display: display.value,
+  };
+});
+
   const handleClose = () => {
     progress.value = withTiming(
       0,
@@ -234,9 +247,9 @@ const ExpandableChooseReference = ({ isCommentary }: ExpandableChooseReferencePr
         </TouchableOpacity>
       </Animated.View>
 
-      <View style={styles.webviewContainer}>
+      <Animated.View style={[rWebviewStyle,styles.webviewContainer]}>
         <WebviewReferenceChoose isCommentary={isCommentary} onClose={handleClose} />
-      </View>
+      </Animated.View>
     </Animated.View>
   );
 };
@@ -250,6 +263,7 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     overflow: "hidden",
     flex: 9999,
+    zIndex: 9999, 
   },
   knob: {
     // backgroundColor: "#767676",

@@ -13,12 +13,13 @@ import WebView from "react-native-webview";
 interface Props {
     theme: TTheme;
     data: IBookVerse[];
+    isModal?: boolean;
 }
 
-const WebviewInterlinearChapter: React.FC<Props> = ({ theme, data }) => {
+const WebviewInterlinearChapter: React.FC<Props> = ({ theme, data, isModal }) => {
     const webViewRef = useRef<WebView>(null);
     const insets = useSafeAreaInsets();
-    const safeTop = insets.top;
+    const safeTop = isModal ? 0 : insets.top;
 
     const fontSize = use$(() => storedData$.fontSize.get());
     const topVerses = use$(() => bibleState$.bibleData.topVerses.get());
@@ -57,42 +58,42 @@ const WebviewInterlinearChapter: React.FC<Props> = ({ theme, data }) => {
     );
 
     return (
-        <>
-            <WebView
-                ref={webViewRef}
-                key={'interlinear-chapter'}
-                originWhitelist={["*"]}
+        <WebView
+            ref={webViewRef}
+            key={'interlinear-chapter'}
+            originWhitelist={["*"]}
+            style={{
+                flex: 1,
+                minWidth: "100%",
+                backgroundColor: "transparent",
+
+            }}
+            containerStyle={{
+                marginTop: isModal ? 0 : safeTop + 10,
+                backgroundColor: "transparent",
+            }}
+            source={{
+                html: htmlChapterTemplate,
+            }}
+            scrollEnabled={true}
+            nestedScrollEnabled={true}
+            onMessage={handleMessage}
+            renderLoading={() => <View
                 style={{
+                    backgroundColor: theme.colors.background,
                     flex: 1,
-                    minWidth: "100%",
-                    backgroundColor: "transparent",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    zIndex: 1000,
+                    justifyContent: "center",
+                    alignItems: "center",
                 }}
-                containerStyle={{
-                    marginTop: safeTop + 10,
-                    backgroundColor: "transparent",
-                }}
-                source={{
-                    html: htmlChapterTemplate,
-                }}
-                scrollEnabled={true}
-                onMessage={handleMessage}
-                renderLoading={() => <View
-                    style={{
-                        backgroundColor: theme.colors.background,
-                        flex: 1,
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        zIndex: 1000,
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                />}
-                {...createOptimizedWebViewProps({}, "bibleChapter")}
-            />
-        </>
+            />}
+            {...createOptimizedWebViewProps({}, "bibleChapter")}
+        />
     );
 };
 

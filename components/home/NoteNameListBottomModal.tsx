@@ -11,11 +11,11 @@ import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
-  Animated,
   StyleSheet,
   TouchableOpacity
 } from "react-native";
 import { Text, View } from "../Themed";
+import BottomModal from "../BottomModal";
 
 type NoteNameListProps = {
   handleSnapPress?: (index: number) => void;
@@ -23,7 +23,7 @@ type NoteNameListProps = {
 
 const ITEM_HEIGHT = 70;
 
-const NoteNameList: FC<NoteNameListProps> = ({ handleSnapPress }) => {
+const NoteNameListBottomModal: FC<NoteNameListProps> = ({ handleSnapPress }) => {
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const { myBibleDB, executeSql } = useDBContext();
@@ -73,7 +73,7 @@ const NoteNameList: FC<NoteNameListProps> = ({ handleSnapPress }) => {
       const isEven = index % 2 === 0;
 
       return (
-        <Animated.View
+        <View
           style={{
             flexDirection: "row",
             marginVertical: 5,
@@ -112,7 +112,7 @@ const NoteNameList: FC<NoteNameListProps> = ({ handleSnapPress }) => {
               />
             </View>
           </TouchableOpacity>
-        </Animated.View>
+        </View>
       );
     },
     [theme, styles, fontSize, onSelectNote]
@@ -173,31 +173,39 @@ const NoteNameList: FC<NoteNameListProps> = ({ handleSnapPress }) => {
   );
 
   return (
-    <View style={styles.container}>
-      {loading && !data ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={theme.colors.notification} />
-          <Text style={styles.loadingText}>Cargando notas...</Text>
-        </View>
-      ) : (
-        <BottomSheetFlatList
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={styles.listContainer}
-          ListHeaderComponent={ListHeaderComponent}
-          ListEmptyComponent={ListEmptyComponent as any}
-          showsVerticalScrollIndicator={false}
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-          getItemLayout={(data, index) => ({
-            length: ITEM_HEIGHT,
-            offset: ITEM_HEIGHT * index,
-            index,
-          })}
-        />
-      )}
-    </View>
+    <BottomModal
+      justOneSnap
+      showIndicator
+      justOneValue={["50%"]}
+      startAT={0}
+      ref={bibleState$.noteListBottomSheetRef.get()}
+    >
+      <View style={styles.container}>
+        {loading && !data ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={theme.colors.notification} />
+            <Text style={styles.loadingText}>Cargando notas...</Text>
+          </View>
+        ) : (
+          <BottomSheetFlatList
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={styles.listContainer}
+            ListHeaderComponent={ListHeaderComponent}
+            ListEmptyComponent={ListEmptyComponent as any}
+            showsVerticalScrollIndicator={false}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            getItemLayout={(data, index) => ({
+              length: ITEM_HEIGHT,
+              offset: ITEM_HEIGHT * index,
+              index,
+            })}
+          />
+        )}
+      </View>
+    </BottomModal>
   );
 };
 
@@ -330,4 +338,4 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
   });
 
-export default NoteNameList;
+export default NoteNameListBottomModal;

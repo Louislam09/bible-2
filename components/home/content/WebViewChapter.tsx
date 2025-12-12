@@ -54,7 +54,6 @@ const WebViewChapter = React.memo(
     onScroll,
     onInterlinear,
     onAnotar,
-    onComparar,
     onMemorizeVerse,
     onFavoriteVerse,
     onCopy,
@@ -165,9 +164,9 @@ const WebViewChapter = React.memo(
                   const text = `${getBookDetail(item?.book_number).longName} ${item?.chapter}:${item?.verse}`
                   onMemorizeVerse?.(text, storedData$.currentBibleVersion.get());
                   break;
-                case "compare":
-                  onComparar?.(item);
-                  break;
+                // case "compare":
+                //   onComparar?.(item);
+                //   break;
               }
               break;
             case "verseLinkClick":
@@ -200,7 +199,6 @@ const WebViewChapter = React.memo(
         onWordClicked,
         onInterlinear,
         onAnotar,
-        onComparar,
         onMemorizeVerse,
         onFavoriteVerse,
         onCopy,

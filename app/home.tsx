@@ -67,15 +67,13 @@ const HomeScreen: React.FC<HomeScreenProps> = observer(() => {
           {/* {isSplitActived && renderBottomContent()} */}
         </View>
 
-        <>
-          <BookContentModals />
+        <BookContentModals />
 
-          <FloatingButton iconName="NotebookText">
-            <CurrentNoteDetail />
-          </FloatingButton>
+        <FloatingButton iconName="NotebookText">
+          <CurrentNoteDetail />
+        </FloatingButton>
 
-          <TutorialWalkthrough />
-        </>
+        <TutorialWalkthrough />
       </SafeAreaView>
     </StatusBarBackground>
   );
@@ -116,15 +114,15 @@ const getStyles = ({ colors }: TTheme, isPortrait: boolean) =>
     },
   });
 
-const MeasuredHomeScreen = withDrawTimeMeasurement(HomeScreen, {
-  componentName: "HomeScreen",
-  onDrawComplete: (drawTime) => {
-    console.log(
-      `🏠 Home Screen loaded in ${(drawTime / 1000).toFixed(3)} seconds`
-    );
-  },
-});
+// const MeasuredHomeScreen = withDrawTimeMeasurement(HomeScreen, {
+//   componentName: "HomeScreen",
+//   onDrawComplete: (drawTime) => {
+//     console.log(
+//       `🏠 Home Screen loaded in ${(drawTime / 1000).toFixed(3)} seconds`
+//     );
+//   },
+// });
 
-export default MeasuredHomeScreen;
+// export default MeasuredHomeScreen;
 
-// export default HomeScreen;
+export default HomeScreen;

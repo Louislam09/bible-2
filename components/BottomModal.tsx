@@ -1,5 +1,4 @@
 import { useMyTheme } from "@/context/ThemeContext";
-import useBackHandler from "@/hooks/useBackHandler";
 import { TTheme } from "@/types";
 import {
   BottomSheetBackdrop,
@@ -10,11 +9,10 @@ import {
 import React, {
   forwardRef,
   useCallback,
-  useEffect,
   useMemo,
-  useState,
+  useState
 } from "react";
-import { BackHandler, StyleProp, StyleSheet, ViewStyle } from "react-native";
+import { StyleProp, StyleSheet, ViewStyle } from "react-native";
 
 type TBottomModal = {
   startAT?: 0 | 1 | 2 | 3;
@@ -53,7 +51,7 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       _theme,
       style,
       id,
-      onDismiss = () => {},
+      onDismiss = () => { },
     },
     ref
   ) => {
@@ -83,13 +81,13 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       []
     );
 
-    const shouldBeHandledHere = useMemo(() => index >= 0, [index]);
+    // const shouldBeHandledHere = useMemo(() => index >= 0, [index]);
 
-    useBackHandler(shouldBeHandledHere, () => {
-      console.log("BOTTOM MODAL BACK HANDLER");
-      // @ts-ignore
-      ref?.current?.close();
-    });
+    // useBackHandler(shouldBeHandledHere, () => {
+    //   console.log("BOTTOM MODAL BACK HANDLER");
+    //   // @ts-ignore
+    //   ref?.current?.close();
+    // });
 
     // useEffect(() => {
     //   const backHandler = BackHandler.addEventListener(

@@ -23,6 +23,7 @@ import WebView from "react-native-webview";
 import { WebViewMessageEvent } from "react-native-webview/lib/WebViewTypes";
 import { IconProps } from "./Icon";
 import { wordDefinitionHtmlTemplate } from "@/constants/wordDefinitionHtmlTemplate";
+import BottomModal from "./BottomModal";
 
 interface DictionaryContentProps {
   theme: TTheme;
@@ -41,7 +42,7 @@ type HeaderAction = {
   onAction: () => void;
 };
 
-const DictionaryBottomModalContent: React.FC<DictionaryContentProps> = ({
+const DictionaryContentBottomModal: React.FC<DictionaryContentProps> = ({
   navigation,
   theme,
   fontSize,
@@ -153,87 +154,97 @@ const DictionaryBottomModalContent: React.FC<DictionaryContentProps> = ({
   }, [navigation]);
 
 
-  if (!hasDictionary) {
-    return (
-      <View style={styles.emptyContainer}>
-        <Ionicons
-          name="cloud-download-outline"
-          size={50}
-          color={theme.dark ? theme.colors.text : "#fff"}
-        />
-        <Text style={styles.emptyText}>
-          No tienes ningún diccionario descargado. {"\n"}
-          <TouchableOpacity onPress={onNavToManagerDownload}>
-            <Text style={styles.linkText}>
-              Haz clic aquí para descargar uno.
-            </Text>
-          </TouchableOpacity>
-        </Text>
-      </View>
-    );
-  }
-
   return (
-    <View
-      style={{
-        position: "relative",
-        flex: 1,
-      }}
+    <BottomModal
+      style={styles.bottomSheet}
+      backgroundColor={theme.dark ? theme.colors.background : "#eee"}
+      shouldScroll={false}
+      ref={modalState$.dictionaryRef.get()}
+      justOneSnap
+      showIndicator
+      justOneValue={["60%"]}
+      startAT={0}
     >
-      <View
-        style={{
-          flex: 1,
-          paddingHorizontal: 15,
-        }}
-      >
-        <WebView
-          ref={webViewRef}
+      {!hasDictionary ? (
+        <View style={styles.emptyContainer}>
+          <Ionicons
+            name="cloud-download-outline"
+            size={50}
+            color={theme.dark ? theme.colors.text : "#fff"}
+          />
+          <Text style={styles.emptyText}>
+            No tienes ningún diccionario descargado. {"\n"}
+            <TouchableOpacity onPress={onNavToManagerDownload}>
+              <Text style={styles.linkText}>
+                Haz clic aquí para descargar uno.
+              </Text>
+            </TouchableOpacity>
+          </Text>
+        </View>
+      ) : (
+
+        <View
           style={{
+            position: "relative",
             flex: 1,
-            backgroundColor: "transparent",
           }}
-          source={{
-            html: dictionaryListHtmlTemplate({
-              data: wordNotFoundInDictionary ? [] : filterData,
-              theme,
-              fontSize,
-              wordNotFound: wordNotFoundInDictionary,
-              loading,
-              selectedWord,
-              showDefinition: !!selectedWord,
-            }),
-          }}
-          onMessage={onWebViewMessage}
-          onShouldStartLoadWithRequest={(event) => {
-            if (event.url.startsWith("b:")) {
-              handleBibleLink(event.url);
-            }
-            return false;
-          }}
-          originWhitelist={["*"]}
-          scrollEnabled
-          bounces={false}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          nestedScrollEnabled={true}
-          renderLoading={() => <View
+        >
+          <View
             style={{
-              backgroundColor: theme.colors.background,
               flex: 1,
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: 1000,
-              justifyContent: "center",
-              alignItems: "center",
+              paddingHorizontal: 15,
             }}
-          />}
-          {...createOptimizedWebViewProps({}, "dynamic")}
-        />
-      </View>
-    </View>
+          >
+            <WebView
+              ref={webViewRef}
+              style={{
+                flex: 1,
+                backgroundColor: "transparent",
+              }}
+              source={{
+                html: dictionaryListHtmlTemplate({
+                  data: wordNotFoundInDictionary ? [] : filterData,
+                  theme,
+                  fontSize,
+                  wordNotFound: wordNotFoundInDictionary,
+                  loading,
+                  selectedWord,
+                  showDefinition: !!selectedWord,
+                }),
+              }}
+              onMessage={onWebViewMessage}
+              onShouldStartLoadWithRequest={(event) => {
+                if (event.url.startsWith("b:")) {
+                  handleBibleLink(event.url);
+                }
+                return false;
+              }}
+              originWhitelist={["*"]}
+              scrollEnabled
+              bounces={false}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
+              nestedScrollEnabled={true}
+              renderLoading={() => <View
+                style={{
+                  backgroundColor: theme.colors.background,
+                  flex: 1,
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  zIndex: 1000,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              />}
+              {...createOptimizedWebViewProps({}, "dynamic")}
+            />
+          </View>
+        </View>
+      )}
+    </BottomModal>
   );
 };
 
@@ -382,4 +393,4 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
   });
 
-export default DictionaryBottomModalContent;
+export default DictionaryContentBottomModal;
