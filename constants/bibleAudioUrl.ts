@@ -1,9 +1,10 @@
 const baseUrl = "https://dn721906.ca.archive.org/0/items/RV60_202010";
+const baseUrlOfficial = 'https://archive.org/download/RV60_202010';
 
 const getCurrentAudioUrl = (book: string, chapter: number): string => {
   const bookCodeFormatted = bookCodes[book];
   const chapterFormatted = chapter.toString().padStart(3, "0");
-  return `${baseUrl}/RV60_B${bookCodeFormatted}C${chapterFormatted}.mp3`;
+  return `${baseUrlOfficial}/RV60_B${bookCodeFormatted}C${chapterFormatted}.mp3`;
 };
 
 export const getAudioName = (book: string, chapter: number): string => {

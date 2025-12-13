@@ -75,7 +75,7 @@ const useAudioPlayer = ({
   }, [audioStatus.didJustFinish]);
 
   useEffect(() => {
-    if(!audioPlayer.isLoaded) return;
+    if (!audioPlayer.isLoaded) return;
     const shouldAutoplay = audioState$.shouldAutoplay.get();
     if (shouldAutoplay && !isPlaying) {
       audioPlayer.play();
