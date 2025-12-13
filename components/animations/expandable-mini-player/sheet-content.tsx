@@ -101,6 +101,8 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
     },
   });
 
+  const forceOfflineMode = use$(() => audioState$.forceOfflineMode.get());
+
   const PLAYER_STATE = useMemo(() => {
     const state = {
       READING: {
@@ -117,10 +119,11 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
       },
     };
 
-    return isConnected ? state.AUDIO : state.READING;
+    return isConnected && !forceOfflineMode ? state.AUDIO : state.READING;
   }, [
     // audioPlayer,
     isConnected,
+    forceOfflineMode,
     isSpeaking,
     isReading,
     startReading,
@@ -204,7 +207,7 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
       }
     );
   };
-  
+
   const rImageStyle = useAnimatedStyle(() => {
     const imageSize = interpolate(
       progress.value,
@@ -361,7 +364,7 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
   };
 
   const handleSeekBackward = useCallback(() => {
-    if(!isConnected) {
+    if (!isConnected || forceOfflineMode) {
       seekToPreviousVerse();
       return;
     }
@@ -369,10 +372,10 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
 
     const newPosition = Math.max(0, PLAYER_STATE.POSITION - 10000); // 10 seconds back
     seekTo(newPosition);
-  }, [PLAYER_STATE.DURATION,verseIndex, PLAYER_STATE.POSITION, seekTo, isConnected]);
+  }, [PLAYER_STATE.DURATION, verseIndex, PLAYER_STATE.POSITION, seekTo, isConnected, forceOfflineMode]);
 
   const handleSeekForward = useCallback(() => {
-    if(!isConnected) {
+    if (!isConnected || forceOfflineMode) {
       seekToNextVerse();
       return;
     }
@@ -383,7 +386,7 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
       PLAYER_STATE.POSITION + 10000
     ); // 10 seconds forward
     seekTo(newPosition);
-  }, [PLAYER_STATE.DURATION,verseIndex, PLAYER_STATE.POSITION, seekTo, isConnected]);
+  }, [PLAYER_STATE.DURATION, verseIndex, PLAYER_STATE.POSITION, seekTo, isConnected, forceOfflineMode]);
 
   // Use selected theme background or fallback to original imageUrl
   const backgroundImageUrl = selectedTheme?.backgroundImageUrl || "";
@@ -466,15 +469,27 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
           </TouchableOpacity>
 
           <Text style={styles.headerTitleText}>
-            Audio | {bibleQuery.book} {bibleQuery.chapter}
+            {forceOfflineMode ? "Lectura" : "Audio"} | {bibleQuery.book} {bibleQuery.chapter}
           </Text>
 
-          <TouchableOpacity
-            onPress={handleDropdown}
-            style={styles.headerButton}
-          >
-            <Icon name="ChevronDown" size={20} color="white" />
-          </TouchableOpacity>
+          <View style={styles.headerRightButtons}>
+            <TouchableOpacity
+              onPress={() => audioState$.toggleForceOfflineMode()}
+              style={styles.headerButton}
+            >
+              <MaterialCommunityIcons
+                name={forceOfflineMode ? "wifi-off" : "wifi"}
+                size={20}
+                color="white"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleDropdown}
+              style={styles.headerButton}
+            >
+              <Icon name="ChevronDown" size={20} color="white" />
+            </TouchableOpacity>
+          </View>
         </Animated.View>
 
         {/* Verse Display */}
@@ -517,7 +532,7 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
           {/* Progress Line */}
         </Animated.View>
 
-        <View style={[styles.progressContainer, { display: isConnected ? "flex" : "none" }]}>
+        <View style={[styles.progressContainer, { display: isConnected && !forceOfflineMode ? "flex" : "none" }]}>
           <Text style={styles.progressTimeText}>
             {formatTime(PLAYER_STATE.POSITION)}
           </Text>
@@ -701,6 +716,11 @@ const styles = StyleSheet.create({
     height: 32,
     alignItems: "center",
     justifyContent: "center",
+  },
+  headerRightButtons: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
   headerTitleText: {
     color: "white",

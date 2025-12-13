@@ -28,6 +28,7 @@ interface AudioPlayerHookResult {
 export const audioState$ = observable({
   isPlayerOpened: false,
   shouldAutoplay: false,
+  forceOfflineMode: false,
   toggleIsPlayerOpened: () => {
     audioState$.isPlayerOpened.set(() => !audioState$.isPlayerOpened.get());
     ExpandedAudioPlayerProgress.value = withTiming(
@@ -37,6 +38,9 @@ export const audioState$ = observable({
         easing: Easing.bezier(0.25, 0.1, 0.25, 1),
       }
     );
+  },
+  toggleForceOfflineMode: () => {
+    audioState$.forceOfflineMode.set(() => !audioState$.forceOfflineMode.get());
   },
 });
 
