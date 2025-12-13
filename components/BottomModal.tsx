@@ -3,16 +3,19 @@ import { TTheme } from "@/types";
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
+  BottomSheetModalProps,
   BottomSheetScrollView,
-  BottomSheetView,
+  BottomSheetView
 } from "@gorhom/bottom-sheet";
 import React, {
   forwardRef,
   useCallback,
+  useEffect,
   useMemo,
+  useRef,
   useState
 } from "react";
-import { StyleProp, StyleSheet, ViewStyle } from "react-native";
+import { BackHandler, NativeEventSubscription, StyleProp, StyleSheet, ViewStyle } from "react-native";
 
 type TBottomModal = {
   startAT?: 0 | 1 | 2 | 3;
@@ -33,6 +36,50 @@ type TBottomModal = {
 };
 
 type Ref = BottomSheetModal;
+
+import { useFocusEffect } from '@react-navigation/native';
+
+export const useBottomSheetBack = (
+  bottomSheetModalRef: React.RefObject<BottomSheetModal | null>,
+  onClose?: () => void,
+) => {
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        if (bottomSheetModalRef?.current) {
+          bottomSheetModalRef?.current.close();
+          onClose?.();
+          return true;
+        }
+        return false;
+      };
+      const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      return () => subscription.remove();
+    }, [bottomSheetModalRef, onClose]),
+  );
+};
+
+/**
+ * hook that dismisses the bottom sheet on the hardware back button press if it is visible
+ * @param bottomSheetRef ref to the bottom sheet which is going to be closed/dismissed on the back press
+ */
+export const useBottomSheetBackHandler = (bottomSheetRef: React.RefObject<BottomSheetModal | null>) => {
+  const backHandlerSubscriptionRef = useRef<NativeEventSubscription | null>(null)
+  const handleSheetPositionChange = useCallback<NonNullable<BottomSheetModalProps['onChange']>>((index) => {
+    const isBottomSheetVisible = index >= 0
+    if (isBottomSheetVisible && !backHandlerSubscriptionRef.current) {
+      // setup the back handler if the bottom sheet is right in front of the user
+      backHandlerSubscriptionRef.current = BackHandler.addEventListener('hardwareBackPress', () => {
+        bottomSheetRef.current?.dismiss()
+        return true
+      })
+    } else if (!isBottomSheetVisible) {
+      backHandlerSubscriptionRef.current?.remove()
+      backHandlerSubscriptionRef.current = null
+    }
+  }, [bottomSheetRef, backHandlerSubscriptionRef])
+  return { handleSheetPositionChange }
+}
 
 const BottomModal = forwardRef<Ref, TBottomModal>(
   (
@@ -81,9 +128,16 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
       []
     );
 
+    // useBottomSheetBack(ref as any, () => {
+    //   console.log("BOTTOM MODAL BACK HANDLER");
+    // }
+    // );
+
+    const { handleSheetPositionChange } = useBottomSheetBackHandler(ref as any)
     // const shouldBeHandledHere = useMemo(() => index >= 0, [index]);
 
-    // useBackHandler(shouldBeHandledHere, () => {
+
+    // useBackHandler("bottomModal", shouldBeHandledHere, () => {
     //   console.log("BOTTOM MODAL BACK HANDLER");
     //   // @ts-ignore
     //   ref?.current?.close();
@@ -116,7 +170,10 @@ const BottomModal = forwardRef<Ref, TBottomModal>(
           justOneSnap && !showIndicator && { opacity: 0 },
         ]}
         backdropComponent={renderBackdrop}
-        onChange={handleSheetChanges}
+        onChange={(index: number, position: number, type: any) => {
+          handleSheetChanges(index)
+          handleSheetPositionChange(index, position, type)
+        }}
         enableDynamicSizing={false}
         onDismiss={onDismiss}
       >

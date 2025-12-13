@@ -1,6 +1,7 @@
 import BottomModal from "@/components/BottomModal";
 import Icon, { IconProps } from "@/components/Icon";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
+import { isPrimaryBibleDatabase } from "@/constants/databaseNames";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
 import { SEARCH_STRONG_WORD } from "@/constants/Queries";
 import { iconSize } from "@/constants/size";
@@ -30,7 +31,6 @@ import {
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
 import { Text, View } from "../../Themed";
-import { isPrimaryBibleDatabase } from "@/constants/databaseNames";
 
 type HeaderAction = {
   iconName: IconProps["name"];
@@ -152,9 +152,8 @@ const createMultipleStrongsHtmlTemplate = (
         </div>
         <div class="content">
             <h4>
-                ${content?.[0]?.topic || ""} > <a href='S:${
-    content?.[1]?.topic || ""
-  }'>${content?.[1]?.topic || ""}</a>
+                ${content?.[0]?.topic || ""} > <a href='S:${content?.[1]?.topic || ""
+    }'>${content?.[1]?.topic || ""}</a>
             </h4>
             ${content?.[0]?.definition || ""}
         </div>
@@ -293,13 +292,21 @@ const MultipleStrongsContentBottomModal: FC<IMultipleStrongsContent> = ({
     setStrongCode(cognateStrongNumber);
   }, [currentStrongNumber, cognate]);
 
+  // Present modal when component mounts
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      modalState$.multipleStrongsRef.current?.present();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     const fetchDictionaryData = async () => {
       const isPrimaryBible =
         isPrimaryBibleDatabase(currentBibleVersion) || isInterlineal;
       const matchDatabase =
         mainBibleService.database?.databasePath.split("/").pop() ===
-          currentBibleVersion + ".db" || isInterlineal;
+        currentBibleVersion + ".db" || isInterlineal;
       if (
         !isMyBibleDbLoaded ||
         !strongCode ||
@@ -313,9 +320,9 @@ const MultipleStrongsContentBottomModal: FC<IMultipleStrongsContent> = ({
       try {
         const dictionaryData = isInterlineal
           ? await mainBibleService.executeSql(
-              SEARCH_STRONG_WORD,
-              strongCode.split(",")
-            )
+            SEARCH_STRONG_WORD,
+            strongCode.split(",")
+          )
           : await executeSql(SEARCH_STRONG_WORD, strongCode.split(","));
 
         if (dictionaryData?.length) {
@@ -449,6 +456,7 @@ const MultipleStrongsContentBottomModal: FC<IMultipleStrongsContent> = ({
       showIndicator
       justOneValue={["60%"]}
       startAT={0}
+      onDismiss={() => modalState$.isMultipleStrongsOpen.set(false)}
     >
       <View style={[styles.webviewWrapper]}>
         <View style={styles.actionContainer}>

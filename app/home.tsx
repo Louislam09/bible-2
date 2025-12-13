@@ -1,4 +1,4 @@
-import React, { RefObject, useMemo } from "react";
+import React, { useMemo } from "react";
 
 import {
   SafeAreaView,
@@ -16,22 +16,11 @@ import ResizableSplitView from "@/components/animations/resizable-split-view";
 import BibleBottomContent from "@/components/BibleBottomContent";
 import BibleTop from "@/components/BibleTop";
 import StatusBarBackground from "@/components/StatusBarBackground";
-import withDrawTimeMeasurement from "@/components/withDrawTimeMeasurement";
 import { useDeviceOrientation } from "@/hooks/useDeviceOrientation";
 import { bibleState$ } from "@/state/bibleState";
-import { tourState$ } from "@/state/tourState";
 import { OrientationType, TTheme } from "@/types";
 import { observer, use$ } from "@legendapp/state/react";
 import { Stack } from "expo-router";
-
-// Constants
-const MIN_SPLIT_SIZE = 200;
-const ANIMATION_DELAY = 100;
-
-interface TutorialStep {
-  text: string;
-  target: RefObject<any> | null;
-}
 
 type HomeScreenProps = {};
 
@@ -39,7 +28,6 @@ const HomeScreen: React.FC<HomeScreenProps> = observer(() => {
   const { theme } = useMyTheme();
   const orientation = useDeviceOrientation();
   const isSplitActived = use$(() => bibleState$.isSplitActived.get());
-  const tourPopoverVisible = use$(() => tourState$.tourPopoverVisible.get());
 
   const isPortrait = orientation === OrientationType.PORTRAIT;
   const styles = useMemo(
@@ -47,9 +35,9 @@ const HomeScreen: React.FC<HomeScreenProps> = observer(() => {
     [theme, isPortrait]
   );
 
+
   return (
     <StatusBarBackground>
-      {/* <SafeAreaView key={theme.dark.toString()} style={[styles.container]}> */}
       <SafeAreaView style={[styles.container]}>
         <Stack.Screen options={{ headerShown: false }} />
         <View
@@ -63,8 +51,6 @@ const HomeScreen: React.FC<HomeScreenProps> = observer(() => {
           ) : (
             <BibleTop />
           )}
-          {/* <BibleTop height={topHeight} width={topWidth} /> */}
-          {/* {isSplitActived && renderBottomContent()} */}
         </View>
 
         <BookContentModals />

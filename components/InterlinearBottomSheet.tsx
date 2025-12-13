@@ -5,10 +5,11 @@ import { modalState$ } from "@/state/modalState";
 import { EBibleVersions, TTheme } from "@/types";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { use$ } from "@legendapp/state/react";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { StyleSheet } from "react-native";
 import WebviewInterlinearChapter from "./home/content/WebviewInterlinearChapter";
 import { View } from "./Themed";
+import useBackHandler from "@/hooks/useBackHandler";
 
 interface InterlinearBottomSheetProps { }
 
@@ -33,6 +34,10 @@ const InterlinearBottomSheet: React.FC<InterlinearBottomSheetProps> = ({
     return interlinearVerses;
   }, [isInterlinear]);
 
+  useBackHandler("BottomSheet", modalState$.isInterlinearOpen.get(), () => {
+    modalState$.isInterlinearOpen.set(false);
+  });
+
   return (
     <BottomSheet
       ref={modalState$.interlinealRef.get()}
@@ -45,16 +50,20 @@ const InterlinearBottomSheet: React.FC<InterlinearBottomSheetProps> = ({
       enablePanDownToClose
       handleIndicatorStyle={{ backgroundColor: theme.colors.notification }}
       enableDynamicSizing={false}
-      onClose={() =>
+      onClose={() => {
+        console.log('INTERLINEAL BOTTOM SHEET CLOSED');
+        modalState$.isInterlinearOpen.set(false);
         bibleState$.handleVerseToInterlinear({
           book_number: 0,
           chapter: 0,
           verse: 0,
           text: "",
-        })
-      }
+        });
+      }}
     >
-      <View style={styles.webviewWrapper}>
+      <View style={styles.webviewWrapper} onLayout={() => {
+        modalState$.interlinealRef.current?.expand();
+      }}>
         <WebviewInterlinearChapter isModal theme={theme} data={chapterData} />
       </View>
     </BottomSheet>

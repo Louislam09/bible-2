@@ -12,7 +12,7 @@ import { lucideIcons } from "@/utils/lucideIcons";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import * as Clipboard from "expo-clipboard";
 import { useRouter } from "expo-router";
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { StyleSheet } from "react-native";
 import WebView from "react-native-webview";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
@@ -428,6 +428,14 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
     ]
   );
 
+  // Present modal when component mounts
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      modalState$.commentaryRef.current?.present();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleMessage = useCallback(
     (event: any) => {
       try {
@@ -446,10 +454,7 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
             break;
 
           case "explore": {
-            const commentaryRef = modalState$.commentaryRef.current;
-            if (commentaryRef) {
-              commentaryRef.dismiss();
-            }
+            modalState$.closeCommentaryBottomSheet();
             router.push({
               pathname: `/${Screens.Commentary}`,
               params: {
@@ -462,10 +467,7 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
           }
 
           case "download": {
-            const commentaryRef = modalState$.commentaryRef.current;
-            if (commentaryRef) {
-              commentaryRef.dismiss();
-            }
+            modalState$.closeCommentaryBottomSheet();
             router.push({
               pathname: `/${Screens.DownloadManager}`,
               params: { filter: ModulesFilters.COMMENTARIES },
@@ -514,10 +516,7 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
               isHistory: false,
             });
 
-            const commentaryRef = modalState$.commentaryRef.current;
-            if (commentaryRef) {
-              commentaryRef.dismiss();
-            }
+            modalState$.closeCommentaryBottomSheet();
           }
         }
       } catch (error) {
@@ -540,7 +539,7 @@ const CommentaryBottomSheet: React.FC<CommentaryBottomSheetProps> = ({
       showIndicator
       justOneValue={["40%", "90%"]}
       startAT={1}
-      onDismiss={() => { }}
+      onDismiss={() => modalState$.isCommentaryOpen.set(false)}
     >
       <View style={styles.webviewWrapper}>
 

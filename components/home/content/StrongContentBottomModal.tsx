@@ -122,6 +122,14 @@ const StrongContentBottomModal: FC<IStrongContent> = ({
     setStrongCode(data.code);
   }, [data]);
 
+  // Present modal when component mounts
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      modalState$.strongSearchRef.current?.present();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     const fetchDictionaryData = async () => {
       const isPrimaryBible =
@@ -279,6 +287,7 @@ const StrongContentBottomModal: FC<IStrongContent> = ({
       showIndicator
       justOneValue={["60%"]}
       startAT={0}
+      onDismiss={() => modalState$.isStrongSearchOpen.set(false)}
     >
       <View style={[styles.webviewWrapper]}>
         <View style={styles.actionContainer}>

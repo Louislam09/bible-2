@@ -27,42 +27,53 @@ const BookContentModals = () => {
   const isPlayerOpened = use$(() => audioState$.isPlayerOpened.get());
   const commentaryReference = use$(() => modalState$.commentaryReference.get());
 
+  // Modal open state flags for conditional rendering (only for WebView-based modals - most expensive)
+  const isBibleSettingOpen = use$(() => modalState$.isBibleSettingOpen.get());
+  const isInterlinearOpen = use$(() => modalState$.isInterlinearOpen.get());
+  const isStrongSearchOpen = use$(() => modalState$.isStrongSearchOpen.get());
+  const isMultipleStrongsOpen = use$(() => modalState$.isMultipleStrongsOpen.get());
+  const isDictionaryOpen = use$(() => modalState$.isDictionaryOpen.get());
+  const isCommentaryOpen = use$(() => modalState$.isCommentaryOpen.get());
+
   return (
     <>
-      <WebviewBibleSettingBottomModal />
+      {/* WebView-based modals - conditionally rendered for performance */}
+      {isBibleSettingOpen && <WebviewBibleSettingBottomModal />}
+      {isInterlinearOpen && <InterlinearBottomSheet />}
+      {isStrongSearchOpen && (
+        <StrongContentBottomModal
+          theme={theme}
+          navigation={navigation}
+          fontSize={fontSize}
+        />
+      )}
+      {isMultipleStrongsOpen && (
+        <MultipleStrongsContentBottomModal
+          theme={theme}
+          navigation={navigation}
+          fontSize={fontSize}
+          data={multipleStrongsData as any}
+        />
+      )}
+      {isDictionaryOpen && (
+        <DictionaryContentBottomModal
+          navigation={navigation}
+          theme={theme}
+          fontSize={fontSize}
+        />
+      )}
+      {isCommentaryOpen && (
+        <CommentaryBottomSheet
+          bookNumber={commentaryReference.bookNumber}
+          chapter={commentaryReference.chapter}
+          verse={commentaryReference.verse}
+        />
+      )}
 
-      <InterlinearBottomSheet />
-
+      {/* Simpler modals - always mounted (less expensive) */}
       <NoteNameListBottomModal />
-
       <ExpandableChooseReference />
-
       {isPlayerOpened && <AudioPlayerExpandedSheet />}
-
-      <StrongContentBottomModal
-        theme={theme}
-        navigation={navigation}
-        fontSize={fontSize}
-      />
-
-      <MultipleStrongsContentBottomModal
-        theme={theme}
-        navigation={navigation}
-        fontSize={fontSize}
-        data={multipleStrongsData as any}
-      />
-
-      <DictionaryContentBottomModal
-        navigation={navigation}
-        theme={theme}
-        fontSize={fontSize}
-      />
-
-      <CommentaryBottomSheet
-        bookNumber={commentaryReference.bookNumber}
-        chapter={commentaryReference.chapter}
-        verse={commentaryReference.verse}
-      />
     </>
   );
 };

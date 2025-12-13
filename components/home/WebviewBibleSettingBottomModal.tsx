@@ -11,7 +11,7 @@ import { EThemes, TFont, TTheme } from "@/types";
 import getMinMaxFontSize from "@/utils/getMinMaxFontSize";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { StyleSheet } from "react-native";
 import WebView from "react-native-webview";
 
@@ -640,6 +640,14 @@ const WebviewBibleSettingBottomModal = ({
     ]
   );
 
+  // Present modal when component mounts
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      modalState$.bibleSettingRef.current?.present();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleMessage = useCallback(
     (event: any) => {
       try {
@@ -647,7 +655,7 @@ const WebviewBibleSettingBottomModal = ({
 
         switch (data.type) {
           case "close":
-            modalState$.bibleSettingRef.current?.dismiss();
+            modalState$.closeBibleSettingBottomSheet();
             break;
           case "themeToggle":
             toggleTheme();
@@ -674,7 +682,7 @@ const WebviewBibleSettingBottomModal = ({
             break;
           case "save":
             // console.log("Settings saved:", data.settings);
-            modalState$.bibleSettingRef.current?.dismiss();
+            modalState$.closeBibleSettingBottomSheet();
             break;
         }
       } catch (error) {
@@ -694,7 +702,7 @@ const WebviewBibleSettingBottomModal = ({
       showIndicator
       justOneValue={["90%"]}
       startAT={0}
-      onDismiss={() => { }}
+      onDismiss={() => modalState$.isBibleSettingOpen.set(false)}
     >
       <View style={[styles.webviewWrapper]}>
         <WebView

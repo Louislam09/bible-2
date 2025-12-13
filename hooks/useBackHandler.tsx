@@ -1,10 +1,9 @@
 import { useEffect } from "react";
 import { BackHandler } from "react-native";
 
-const useBackHandler = (active: boolean, onBack: () => void): void => {
+const useBackHandler = (name: string, active: boolean, onBack: () => void): void => {
   useEffect(() => {
     const handleBackPress = () => {
-      console.log({ active });
       if (active) {
         onBack();
         return true; // prevent default system behavior
@@ -20,7 +19,7 @@ const useBackHandler = (active: boolean, onBack: () => void): void => {
     return () => {
       subscription.remove();
     };
-  }, [active, onBack]);
+  }, [active]);
 };
 
 export default useBackHandler;

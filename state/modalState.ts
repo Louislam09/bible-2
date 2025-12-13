@@ -27,6 +27,13 @@ export const modalState$ = observable({
   },
   isSheetClosed: true,
   showUserTooltip: false,
+  // Modal open state flags for conditional rendering (only for WebView-based modals)
+  isStrongSearchOpen: false,
+  isDictionaryOpen: false,
+  isCommentaryOpen: false,
+  isInterlinearOpen: false,
+  isMultipleStrongsOpen: false,
+  isBibleSettingOpen: false,
 
   openUserTooltip: () => {
     modalState$.showUserTooltip.set(true);
@@ -50,17 +57,25 @@ export const modalState$ = observable({
   },
   openStrongSearchBottomSheet: () => {
     modalState$.isSheetClosed.set(false);
-    modalState$.strongSearchRef.current?.present();
+    modalState$.isStrongSearchOpen.set(true);
+    // present() will be called by useEffect in the component after mount
+  },
+  closeStrongSearchBottomSheet: () => {
+    modalState$.isStrongSearchOpen.set(false);
+    modalState$.strongSearchRef.current?.dismiss();
   },
   openDictionaryBottomSheet: (text: string) => {
     modalState$.setSearchWordOnDic(text);
-    modalState$.dictionaryRef.current?.present();
+    modalState$.isDictionaryOpen.set(true);
+    // present() will be called by useEffect in the component after mount
   },
   closeDictionaryBottomSheet: () => {
+    modalState$.isDictionaryOpen.set(false);
     modalState$.dictionaryRef.current?.dismiss();
   },
   openExplainVerseBottomSheet: () => {
     modalState$.isSheetClosed.set(false);
+    modalState$.isStrongSearchOpen.set(false);
     modalState$.strongSearchRef.current?.dismiss();
   },
   closeExplainVerseBottomSheet: () => {
@@ -68,18 +83,21 @@ export const modalState$ = observable({
   },
   openInterlinealBottomSheet: () => {
     modalState$.isSheetClosed.set(false);
-    modalState$.interlinealRef.current?.expand();
-      // modalState$.interlinealRef.current?.present();
+    modalState$.isInterlinearOpen.set(true);
+    // expand() will be called by useEffect in the component after mount
   },
   closeInterlinealBottomSheet: () => {
     modalState$.isSheetClosed.set(true);
+    modalState$.isInterlinearOpen.set(false);
     modalState$.interlinealRef.current?.close();
     // modalState$.interlinealRef.current?.dismiss();
   },
   openMultipleStrongsBottomSheet: () => {
-    modalState$.multipleStrongsRef.current?.present();
+    modalState$.isMultipleStrongsOpen.set(true);
+    // present() will be called by useEffect in the component after mount
   },
   closeMultipleStrongsBottomSheet: () => {
+    modalState$.isMultipleStrongsOpen.set(false);
     modalState$.multipleStrongsRef.current?.dismiss();
   },
   openSearchFilterBottomSheet: () => {
@@ -95,16 +113,20 @@ export const modalState$ = observable({
     modalState$.strongSearchFilterRef.current?.dismiss();
   },
   openBibleSettingBottomSheet: () => {
-    modalState$.bibleSettingRef.current?.present();
+    modalState$.isBibleSettingOpen.set(true);
+    // present() will be called by useEffect in the component after mount
   },
   closeBibleSettingBottomSheet: () => {
+    modalState$.isBibleSettingOpen.set(false);
     modalState$.bibleSettingRef.current?.dismiss();
   },
   openCommentaryBottomSheet: (bookNumber: number, chapter: number, verse: number) => {
     modalState$.commentaryReference.set({ bookNumber, chapter, verse });
-    modalState$.commentaryRef.current?.present();
+    modalState$.isCommentaryOpen.set(true);
+    // present() will be called by useEffect in the component after mount
   },
   closeCommentaryBottomSheet: () => {
+    modalState$.isCommentaryOpen.set(false);
     modalState$.commentaryRef.current?.dismiss();
   },
 });

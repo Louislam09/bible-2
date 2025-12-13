@@ -57,10 +57,6 @@ const WebviewInterlinearChapter: React.FC<Props> = ({ theme, data, isModal }) =>
         []
     );
 
-    useEffect(() => {
-        console.log('THIS COMPONENT IS MOUNTED')
-    }, []);
-
     return (
         <WebView
             ref={webViewRef}

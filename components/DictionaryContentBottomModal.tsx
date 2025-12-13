@@ -1,6 +1,7 @@
 import { Text, View } from "@/components/Themed";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { dictionaryListHtmlTemplate } from "@/constants/dictionaryListHtmlTemplate";
+import { wordDefinitionHtmlTemplate } from "@/constants/wordDefinitionHtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
 import useDictionaryData, { DatabaseData } from "@/hooks/useDictionaryData";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
@@ -21,8 +22,6 @@ import React, {
 import { BackHandler, StyleSheet, TouchableOpacity } from "react-native";
 import WebView from "react-native-webview";
 import { WebViewMessageEvent } from "react-native-webview/lib/WebViewTypes";
-import { IconProps } from "./Icon";
-import { wordDefinitionHtmlTemplate } from "@/constants/wordDefinitionHtmlTemplate";
 import BottomModal from "./BottomModal";
 
 interface DictionaryContentProps {
@@ -36,12 +35,6 @@ interface DictionaryContentProps {
   };
 }
 
-type HeaderAction = {
-  iconName: IconProps["name"];
-  description: string;
-  onAction: () => void;
-};
-
 const DictionaryContentBottomModal: React.FC<DictionaryContentProps> = ({
   navigation,
   theme,
@@ -52,7 +45,6 @@ const DictionaryContentBottomModal: React.FC<DictionaryContentProps> = ({
   const { fontSize: bibleFontSize } = useBibleContext();
   const { printToFile } = usePrintAndShare();
   const styles = getStyles(theme);
-  const word = "";
   const webViewRef = useRef<WebView>(null);
 
   const { data, error, loading, hasDictionary } = useDictionaryData({
@@ -71,6 +63,14 @@ const DictionaryContentBottomModal: React.FC<DictionaryContentProps> = ({
       console.log("Error fetching dictionary data:", error);
     }
   }, [data, loading, error]);
+
+  // Present modal when component mounts
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      modalState$.dictionaryRef.current?.present();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   const onItemClick = (word: DictionaryData) => {
     setSelectedWord(word);
@@ -164,6 +164,7 @@ const DictionaryContentBottomModal: React.FC<DictionaryContentProps> = ({
       showIndicator
       justOneValue={["60%"]}
       startAT={0}
+      onDismiss={() => modalState$.isDictionaryOpen.set(false)}
     >
       {!hasDictionary ? (
         <View style={styles.emptyContainer}>

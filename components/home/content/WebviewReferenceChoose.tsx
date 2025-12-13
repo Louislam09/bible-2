@@ -56,7 +56,7 @@ const WebviewReferenceChoose = React.memo(
       }
     }, [startReferenceTour]);
 
-    useBackHandler(isChooseReferenceOpened, () => {
+    useBackHandler("chooseReference", isChooseReferenceOpened, () => {
       switch (modalState$.chooseReferenceStep.get()) {
         case ChooseReferenceStep.InBookSelection ||
           ChooseReferenceStep.Finished:
