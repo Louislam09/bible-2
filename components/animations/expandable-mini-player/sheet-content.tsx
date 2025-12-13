@@ -29,6 +29,7 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import type { SharedValue } from "react-native-reanimated";
 import WebView from "react-native-webview";
 import { use$ } from "@legendapp/state/react";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 
 type SheetContentProps = {
   progress: SharedValue<number>;
@@ -472,24 +473,12 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
             {forceOfflineMode ? "Lectura" : "Audio"} | {bibleQuery.book} {bibleQuery.chapter}
           </Text>
 
-          <View style={styles.headerRightButtons}>
-            <TouchableOpacity
-              onPress={() => audioState$.toggleForceOfflineMode()}
-              style={styles.headerButton}
-            >
-              <MaterialCommunityIcons
-                name={forceOfflineMode ? "wifi-off" : "wifi"}
-                size={20}
-                color="white"
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleDropdown}
-              style={styles.headerButton}
-            >
-              <Icon name="ChevronDown" size={20} color="white" />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={handleDropdown}
+            style={styles.headerButton}
+          >
+            <Icon name="ChevronDown" size={20} color="white" />
+          </TouchableOpacity>
         </Animated.View>
 
         {/* Verse Display */}
@@ -520,6 +509,7 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
                   alignItems: "center",
                 }}
               />}
+              {...createOptimizedWebViewProps({}, "static")}
             />
           ) : (
             <>
@@ -630,6 +620,19 @@ export const AudioPlayerSheetContent = ({ progress }: SheetContentProps) => {
             <Icon name="Palette" size={24} color="white" />
             <Text style={styles.featureButtonText}>Tema</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => audioState$.toggleForceOfflineMode()}
+            style={styles.featureButton}
+          >
+            <MaterialCommunityIcons
+              name={forceOfflineMode ? "wifi-off" : "wifi"}
+              size={24}
+              color="white"
+            />
+            <Text style={styles.featureButtonText}>
+              {forceOfflineMode ? "Sin red" : "Con red"}
+            </Text>
+          </TouchableOpacity>
         </Animated.View>
       </Animated.View>
 
@@ -716,11 +719,6 @@ const styles = StyleSheet.create({
     height: 32,
     alignItems: "center",
     justifyContent: "center",
-  },
-  headerRightButtons: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
   },
   headerTitleText: {
     color: "white",

@@ -1618,6 +1618,7 @@ export const quoteMusicTemplatesMaker = (selectedTheme: TQuoteDataItem) => {
       color: #ffffff;
       margin: 0 1rem;
       background-color: transparent;
+      user-select: none;
     }
   
     .quote-box {
