@@ -33,6 +33,12 @@ import {
 } from "react-native";
 import Fuse from "fuse.js";
 import { PressableScale } from "@/components/animations/pressable-scale";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
+import WebView from "react-native-webview";
+import { storedData$ } from "@/context/LocalstoreContext";
+import { use$ } from "@legendapp/state/react";
+import { songsListHtmlTemplate } from "@/constants/songsListHtmlTemplate";
+import useLoadFuse from "@/hooks/useLoadFuse";
 
 type RenderItemProps = {
   item: TSongItem;
@@ -190,7 +196,7 @@ const AnimatedSearchBar = ({
             onSearch(searchText);
           }
         }}
-        // editable={!isLoading}
+      // editable={!isLoading}
       />
       {(searchText.length > 0 || isLoading) && (
         <TouchableOpacity
@@ -217,6 +223,9 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
   const [filterData, setFilterData] = useState<TSongItem[]>(Songs);
   const [searchText, setSearchText] = useState<string>("");
   const { orientation } = useBibleContext();
+
+  // Load Fuse.js script for offline use
+  useLoadFuse();
   const title = useMemo(
     () => (isAlegres ? "Mensajero de\nAlegres Nuevas" : "Himnario de Victoria"),
     [isAlegres]
@@ -276,6 +285,42 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
 
   const [searchActive, setSearchActive] = useState(false);
 
+  const webViewRef = useRef<WebView>(null);
+  const handleMessage = useCallback(
+    (event: any) => {
+      try {
+        const message = JSON.parse(event.nativeEvent.data);
+
+        switch (message.type) {
+          case "search":
+            filterSongs(message.query || "");
+            break;
+          case "songClick":
+            if (message.songId) {
+              handleSongPress(message.songId);
+            }
+            break;
+        }
+      } catch (error) {
+        console.warn("Error parsing WebView message:", error);
+      }
+    },
+    [filterSongs, handleSongPress]
+  );
+
+  const fontSize = use$(() => storedData$.fontSize.get());
+  const selectedFont = use$(() => storedData$.selectedFont.get());
+  const htmlTemplate = useMemo(() => {
+    return songsListHtmlTemplate({
+      songs: Songs, // Pass all songs since filtering is now handled in HTML
+      theme,
+      fontSize,
+      selectedFont,
+      searchQuery: '',
+    });
+  }, [Songs, theme, fontSize, selectedFont]);
+
+
   return (
     <>
       <Stack.Screen
@@ -293,13 +338,51 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
           backgroundColor: theme.colors.background,
         }}
       >
-        <AnimatedSearchBar
+        {/* <AnimatedSearchBar
           setSearchActive={setSearchActive}
           setSearchQuery={setSearchText}
           onSearch={filterSongs}
           isLoading={false}
+        /> */}
+
+        <WebView
+          ref={webViewRef}
+          originWhitelist={["*"]}
+          style={{
+            flex: 1,
+            minWidth: "100%",
+            backgroundColor: theme.colors.background,
+          }}
+          containerStyle={{
+            // marginTop: safeTop + 10,
+            backgroundColor: theme.colors.background,
+          }}
+          source={{
+            html: htmlTemplate,
+          }}
+          scrollEnabled={true}
+          onMessage={handleMessage}
+          startInLoadingState={false}
+          androidLayerType="hardware"
+          renderLoading={() => (
+            <View
+              style={{
+                backgroundColor: theme.colors.background,
+                flex: 1,
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                zIndex: 1000,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            />
+          )}
+          {...createOptimizedWebViewProps({}, "static")}
         />
-        <FlashList
+        {/* <FlashList
           key={schema}
           contentContainerStyle={{
             backgroundColor: theme.colors.background,
@@ -316,7 +399,7 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
           )}
           keyExtractor={(item: any, index: any) => `note-${index}`}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
-        />
+        /> */}
       </View>
     </>
   );

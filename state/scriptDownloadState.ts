@@ -9,6 +9,7 @@ export interface ScriptDownloadState {
     lexicalBundle: string;
     fontStyles: Record<string, string>;
     drivejsScript: string;
+    fuseScript: string;
 }
 
 const initialState: ScriptDownloadState = {
@@ -16,6 +17,7 @@ const initialState: ScriptDownloadState = {
     lexicalBundle: "",
     fontStyles: {},
     drivejsScript: "",
+    fuseScript: "",
 };
 
 const persistOptions = configureSynced({
@@ -54,6 +56,14 @@ export const scriptDownloadHelpers = {
 
     getDrivejsScript: (): string => {
         return scriptDownloadState$.drivejsScript.get();
+    },
+
+    setFuseScript: (script: string) => {
+        scriptDownloadState$.fuseScript.set(script);
+    },
+
+    getFuseScript: (): string => {
+        return scriptDownloadState$.fuseScript.get();
     },
 
     setLexicalBundle: (bundle: string) => {
