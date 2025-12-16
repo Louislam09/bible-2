@@ -157,7 +157,7 @@ const createEmptyStateHtml = (theme: TTheme, isSearchResult: boolean = false) =>
     return `
     <div class="flex flex-col items-center justify-center py-[80px] px-6 text-center animate-slide-in-up">
       <div 
-        class=" w-24 h-24 bg-[${theme.colors.notification}20] mb-6 rounded-full hidden items-center justify-center transition-all duration-300"
+        class=" w-24 h-24 bg-[${theme.colors.notification}20] mb-6 rounded-full flex items-center justify-center transition-all duration-300"
       >
         <div class="w-16 h-16 [&>svg]:w-full [&>svg]:h-full">
           ${lucideIcons.music4}
@@ -309,13 +309,12 @@ const createHtmlBody = (songs: TSongItem[], theme: TTheme, fontSize: number, sel
           return \`
             <div class="flex flex-col items-center justify-center py-[80px] px-6 text-center animate-slide-in-up">
               <div 
-                class="w-24 h-24 mb-6 rounded-full flex items-center justify-center transition-all duration-300"
-                style="background-color: \${theme.colors.notification}15; color: \${iconColor};"
-              >
-                <div class="w-16 h-16">
-                  ${lucideIcons.music4}
+                class=" w-24 h-24 bg-[${theme.colors.notification}20] mb-6 rounded-full flex items-center justify-center transition-all duration-300"
+            >
+                <div class="w-16 h-16 [&>svg]:w-full [&>svg]:h-full">
+                ${lucideIcons.music4}
                 </div>
-              </div>
+            </div>
               <h3 
                 class="text-font-5xl font-bold mb-3"
                 style="color: \${textColor};"
