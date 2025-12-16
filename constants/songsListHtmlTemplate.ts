@@ -89,24 +89,25 @@ const createSongCard = (song: TSongItem, index: number, theme: TTheme) => {
   const gradientDir = index % 2 === 0 ? 'r' : 'l';
 
   return `
-  <div class="relative  bg-gradient-to-${gradientDir} from-[${theme.colors.notification}70] to-[${theme.colors.text}80] rounded-[20px] p-[1px]">
+  <div 
+    class="relative bg-gradient-to-${gradientDir} from-[${theme.colors.notification}70] to-[${theme.colors.text}80] rounded-[20px] p-[1px] animate-slide-in-up"
+    style="animation-delay: ${animationDelay}s;"
+  >
     <div 
        class="
-    song-card
-  bg-theme-card
-    rounded-[20px]
-    p-3
-    flex items-center gap-4
-    cursor-pointer
-    transition-all duration-300
-    ease-[cubic-bezier(0.4,0,0.2,1)]
-    relative overflow-hidden
-    animate-slide-in-up
-    hover:-translate-y-0.5
-    hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)]
-    active:scale-[0.98]
-  "
-      style="animation-delay: ${animationDelay}s;"
+        song-card
+        bg-theme-card
+        rounded-[20px]
+        p-3
+        flex items-center gap-4
+        cursor-pointer
+        transition-all duration-300
+        ease-[cubic-bezier(0.4,0,0.2,1)]
+        relative overflow-hidden
+        hover:-translate-y-0.5
+        hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)]
+        active:scale-[0.98]
+      "
       data-song-id="${escapeHtml(String(song.id))}" 
       data-index="${index}"
     >
@@ -266,6 +267,7 @@ const createHtmlBody = (songs: TSongItem[], theme: TTheme, fontSize: number, sel
           const stanzasCount = song.stanzas?.length || 0;
           const stanzasText = stanzasCount === 1 ? 'Estrofa' : 'Estrofas';
           const animationDelay = Math.min(index * 0.05, 0.25);
+          const gradientDir = index % 2 === 0 ? 'r' : 'l';
           
           // Escape HTML to prevent XSS
           function escapeHtml(text) {
@@ -279,23 +281,39 @@ const createHtmlBody = (songs: TSongItem[], theme: TTheme, fontSize: number, sel
           
           return \`
             <div 
-              class="song-card bg-theme-card border border-theme-border rounded-[20px] p-3 my-1 flex items-center gap-4 cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] relative overflow-hidden animate-slide-in-up hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] active:scale-[0.98]" 
+              class="relative bg-gradient-to-\${gradientDir} from-[\${theme.colors.notification}70] to-[\${theme.colors.text}80] rounded-[20px] p-[1px] animate-slide-in-up"
               style="animation-delay: \${animationDelay}s;"
-              data-song-id="\${escapeHtml(String(song.id))}" 
-              data-index="\${index}"
             >
               <div 
-                class="song-icon-container w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-300 ease-in-out text-theme-notification"
-                style="background-color: \${theme.colors.notification}40;"
+                class="
+                  song-card
+                  bg-theme-card
+                  rounded-[20px]
+                  p-3
+                  flex items-center gap-4
+                  cursor-pointer
+                  transition-all duration-300
+                  ease-[cubic-bezier(0.4,0,0.2,1)]
+                  relative overflow-hidden
+                  hover:-translate-y-0.5
+                  hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)]
+                  active:scale-[0.98]
+                "
+                data-song-id="\${escapeHtml(String(song.id))}" 
+                data-index="\${index}"
               >
-                <div class="text-font-5xl font-bold text-theme-notification">\${escapeHtml(String(songNumber))}</div>
-              </div>
-              <div class="flex-1 min-w-0">
-                <div class="text-font-base font-semibold text-theme-text leading-[1.4] overflow-hidden text-ellipsis line-clamp-2">\${escapeHtml(songTitle)}</div>
-                <div class="text-font-base font-bold text-theme-notification">\${escapeHtml(stanzasText)}: \${stanzasCount}</div>
-              </div>
-              <div class="song-bg-decoration rotate-12 absolute bottom-1 right-1 z-0 w-14 h-14 pointer-events-none transition-transform duration-300 ease-in-out" style="color: \${theme.dark ? '#ffffff60' : theme.colors.text + '50'};">
-                ${lucideIcons.music4}
+                <div 
+                  class="song-icon-container w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-300 ease-in-out text-theme-notification"
+                >
+                  <div class="text-font-5xl font-bold bg-gradient-to-\${gradientDir} from-theme-text to-theme-notification bg-clip-text text-transparent">\${escapeHtml(String(songNumber))}</div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-font-base font-semibold text-theme-text leading-[1.4] overflow-hidden text-ellipsis line-clamp-2">\${escapeHtml(songTitle)}</div>
+                  <div class="text-font-base font-bold text-theme-notification">\${escapeHtml(stanzasText)}: \${stanzasCount}</div>
+                </div>
+                <div class="song-bg-decoration !bg-gradient-to-\${gradientDir} from-[\${theme.colors.text}40] to-[\${theme.colors.notification}10] dark:[&>svg]:stroke-[\${theme.colors.text}90] rotate-12 absolute -top-3 right-1 z-0 w-16 h-28 pointer-events-none transition-transform duration-300 ease-in-out">
+                  ${lucideIcons.music4}
+                </div>
               </div>
             </div>
           \`;
