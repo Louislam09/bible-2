@@ -71,72 +71,59 @@ const createHtmlHead = (theme: TTheme, fontSize: number, selectedFont?: string) 
 
 // Escape HTML to prevent XSS
 const escapeHtml = (text: string): string => {
-    return String(text)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 };
-
-// <div
-//     class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-700 to-gray-900 dark:from-card-dark dark:to-gray-950 shadow-xl p-5 flex flex-col justify-end min-h-[160px]">
-//     <div
-//         class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1581468455824-06f90d07ccae?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center opacity-20">
-//     </div>
-//     <div class="relative z-10">
-//         <span class="text-gray-200 text-base font-bold tracking-wide block mb-1 drop-shadow-sm">#
-//             105</span>
-//         <h3 class="text-white text-2xl font-extrabold leading-tight drop-shadow-md">Gran Gozo en mi
-//             Alma</h3>
-//         <p class="text-gray-300 text-sm mt-1 drop-shadow-sm">Himno de alegría y gratitud</p>
-//     </div>
-// </div>
 
 // Create song card HTML
 const createSongCard = (song: TSongItem, index: number, theme: TTheme) => {
-    const songNumber = song.id || '-';
-    const songTitle = song.title?.split('-')[1]?.trim() || song.title || '-';
-    const stanzasCount = song.stanzas?.length || 0;
-    const stanzasText = stanzasCount === 1 ? 'Estrofa' : 'Estrofas';
-    const animationDelay = Math.min(index * 0.05, 0.25);
+  const songNumber = song.id || '-';
+  const songTitle = song.title?.split('-')[1]?.trim() || song.title || '-';
+  const stanzasCount = song.stanzas?.length || 0;
+  const stanzasText = stanzasCount === 1 ? 'Estrofa' : 'Estrofas';
+  const animationDelay = Math.min(index * 0.05, 0.25)
+  const gradientDir = index % 2 === 0 ? 'r' : 'l';
 
-    // return `
-    //  <div  class="song-card relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-theme-notification dark:from-primary/80 dark:to-blue-900 shadow-xl py-2 px-5 flex flex-col justify-end min-h-[60px]"
-    //  style="animation-delay: ${animationDelay}s;"
-    //  data-song-id="${escapeHtml(String(song.id))}"
-    //  data-index="${index}"
-    //  >
-    //         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1662531004028-dffc2d97e1c1?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center opacity-30">
-    //         </div>
-    //         <div class="relative">
-    //             <span class="text-white text-base font-bold tracking-wide block mb-1 drop-shadow-sm"># ${escapeHtml(String(songNumber))}</span>
-    //             <h3 class="text-white text-2xl font-extrabold leading-tight drop-shadow-md">${escapeHtml(songTitle)}</h3>
-    //             <p class="text-blue-100 text-sm mt-1 drop-shadow-sm">${escapeHtml(stanzasText)}: ${stanzasCount}</p>
-    //         </div>
-    //     </div>
-    // `
-
-    return `
+  return `
+  <div class="relative  bg-gradient-to-${gradientDir} from-[${theme.colors.notification}70] to-[${theme.colors.text}80] rounded-[20px] p-[1px]">
     <div 
-      class="song-card bg-theme-card border border-theme-border rounded-[20px] p-3 my-1 flex items-center gap-4 cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] relative overflow-hidden animate-slide-in-up hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] active:scale-[0.98]" 
+       class="
+    song-card
+  bg-theme-card
+    rounded-[20px]
+    p-3
+    flex items-center gap-4
+    cursor-pointer
+    transition-all duration-300
+    ease-[cubic-bezier(0.4,0,0.2,1)]
+    relative overflow-hidden
+    animate-slide-in-up
+    hover:-translate-y-0.5
+    hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)]
+    active:scale-[0.98]
+  "
       style="animation-delay: ${animationDelay}s;"
       data-song-id="${escapeHtml(String(song.id))}" 
       data-index="${index}"
     >
       <div 
-        class="song-icon-container w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-300 ease-in-out text-theme-notification bg-[${theme.colors.notification}40]" 
+        class="song-icon-container w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-300 ease-in-out text-theme-notification " 
       >
-         <div class="text-font-5xl font-bold text-theme-notification">${escapeHtml(String(songNumber))}</div>
+         <div class="text-font-5xl font-bold bg-gradient-to-${gradientDir} from-theme-text to-theme-notification bg-clip-text text-transparent">${escapeHtml(String(songNumber))}</div>
       </div>
       <div class="flex-1 min-w-0">
         <div class="text-font-base font-semibold text-theme-text leading-[1.4] overflow-hidden text-ellipsis line-clamp-2">${escapeHtml(songTitle)}</div>
         <div class="text-font-base font-bold text-theme-notification" >${escapeHtml(stanzasText)}: ${stanzasCount}</div>
       </div>
-      <div class="song-bg-decoration rotate-12 absolute bottom-1 right-1 z-0 w-14 h-14  pointer-events-none transition-transform duration-300 ease-in-out dark:text-[#ffffff60] text-[${theme.colors.text + 50}]">
+      <div class="song-bg-decoration !bg-gradient-to-${gradientDir} from-[${theme.colors.text}40] to-[${theme.colors.notification}10]  dark:[&>svg]:stroke-[${theme.colors.text}90] rotate-12 absolute -top-3 right-1 z-0 w-16 h-28  pointer-events-none transition-transform duration-300 ease-in-out">
         ${lucideIcons.music4}
       </div>
     </div>
+  </div>
   `;
 };
 
@@ -152,9 +139,9 @@ function removeAccent(text) {
 
 // Helper function to create empty state HTML
 const createEmptyStateHtml = (theme: TTheme, isSearchResult: boolean = false) => {
-    const secondaryTextColor = + '80';
+  const secondaryTextColor = + '80';
 
-    return `
+  return `
     <div class="flex flex-col items-center justify-center py-[80px] px-6 text-center animate-slide-in-up">
       <div 
         class=" w-24 h-24 bg-[${theme.colors.notification}20] mb-6 rounded-full flex items-center justify-center transition-all duration-300"
@@ -172,8 +159,8 @@ const createEmptyStateHtml = (theme: TTheme, isSearchResult: boolean = false) =>
         class="text-font-base max-w-md mx-auto leading-relaxed text-[${theme.colors.text}80]"
       >
         ${isSearchResult
-            ? 'Intenta buscar con diferentes palabras clave o verifica la ortografía de tu búsqueda.'
-            : 'No hay himnos disponibles en este momento.'}
+      ? 'Intenta buscar con diferentes palabras clave o verifica la ortografía de tu búsqueda.'
+      : 'No hay himnos disponibles en este momento.'}
       </p>
       ${isSearchResult ? `
         <div 
@@ -195,18 +182,31 @@ const createEmptyStateHtml = (theme: TTheme, isSearchResult: boolean = false) =>
 
 // Create HTML body
 const createHtmlBody = (songs: TSongItem[], theme: TTheme, fontSize: number, selectedFont?: string, searchQuery: string = '') => {
-    // Store all songs data as JSON for client-side filtering
-    const songsDataJson = JSON.stringify(songs);
+  // Store all songs data as JSON for client-side filtering
+  const songsDataJson = JSON.stringify(songs);
 
-    // Initial songs HTML (all songs)
-    const initialSongsHtml = songs.length > 0
-        ? songs.map((song, index) => createSongCard(song, index, theme)).join('')
-        : createEmptyStateHtml(theme, false);
+  // Initial songs HTML (all songs)
+  const initialSongsHtml = songs.length > 0
+    ? songs.map((song, index) => createSongCard(song, index, theme)).join('')
+    : createEmptyStateHtml(theme, false);
 
-    return `
-    <body class="bg-theme-background text-theme-text overflow-x-hidden px-1 pb-8" style="font-family: ${selectedFont || 'system-ui, -apple-system, sans-serif'};">
+  return `
+    <body class="bg-theme-background text-theme-text overflow-x-hidden px-1 pb-8" >
       <div class="sticky top-0 z-10 bg-theme-background pb-3 mb-2">
-        <div class="search-box flex items-center bg-theme-card border border-theme-border rounded-2xl px-4 py-3 gap-3 transition-all duration-200">
+     <div
+      class="
+        rounded-2xl p-[1px]
+        bg-gradient-to-r
+        from-[${theme.colors.notification}80]
+        via-[${theme.colors.text}80]
+        to-[${theme.colors.notification}70]
+        bg-[length:200%_200%]
+        bg-left
+        transition-[background-position] duration-500 ease-out
+        focus-within:bg-right
+      "
+    >
+        <div class="bg-theme-card flex items-center rounded-2xl px-4 py-4 gap-3 transition-all duration-200">
           <svg class="w-5 h-5 flex-shrink-0 opacity-90" style="color: ${theme.colors.text}90;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <path d="m21 21-4.35-4.35"></path>
@@ -227,6 +227,7 @@ const createHtmlBody = (songs: TSongItem[], theme: TTheme, fontSize: number, sel
             </svg>
           </button>
         </div>
+      </div>
       </div>
       
       <div class="flex flex-col gap-2" id="songsList">
@@ -449,23 +450,23 @@ const createHtmlBody = (songs: TSongItem[], theme: TTheme, fontSize: number, sel
 };
 
 type TSongsListHtmlTemplateProps = {
-    songs: TSongItem[];
-    theme: TTheme;
-    fontSize: number;
-    selectedFont?: string;
-    searchQuery?: string;
+  songs: TSongItem[];
+  theme: TTheme;
+  fontSize: number;
+  selectedFont?: string;
+  searchQuery?: string;
 };
 
 export const songsListHtmlTemplate = ({
-    songs,
-    theme,
-    fontSize,
-    selectedFont,
-    searchQuery = '',
+  songs,
+  theme,
+  fontSize,
+  selectedFont,
+  searchQuery = '',
 }: TSongsListHtmlTemplateProps) => {
-    const themeSchema = theme.dark ? 'dark' : 'light';
+  const themeSchema = theme.dark ? 'dark' : 'light';
 
-    return `
+  return `
     <!DOCTYPE html>
     <html data-theme="${themeSchema}">
       ${createHtmlHead(theme, 16, selectedFont)}
