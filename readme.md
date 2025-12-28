@@ -37,7 +37,7 @@ Santa Escritura is your go-to digital spiritual companion, providing easy and qu
 We value your feedback! If you encounter any issues or have suggestions for improvement, please:
 
 1. Use the in-app feedback feature
-2. Contact us at [Email](louislam09@hotmail.com)
+2. Contact us at [Email](biblia.support@luismartinez.site)
 3. Visit our [Website](https://luismartinez.tech)
 
 ## License
