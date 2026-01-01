@@ -1,5 +1,5 @@
 import { DB_BOOK_CHAPTER_VERSES, DB_BOOK_NAMES } from '@/constants/BookNames';
-import { GET_SINGLE_OR_MULTIPLE_VERSES } from '@/constants/Queries';
+import { GET_SINGLE_OR_MULTIPLE_VERSES } from '@/constants/queries';
 import { useDBContext } from '@/context/databaseContext';
 import { parseBibleReferences } from '@/utils/extractVersesInfo';
 import { getVerseTextRaw } from '@/utils/getVerseTextRaw';

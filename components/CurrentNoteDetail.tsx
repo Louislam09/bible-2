@@ -2,7 +2,7 @@ import Icon from "@/components/Icon";
 import { KeyboardPaddingView } from "@/components/keyboard-padding";
 import MyRichEditor from "@/components/RichTextEditor";
 import { Text, View } from "@/components/Themed";
-import { GET_NOTE_BY_ID } from "@/constants/Queries";
+import { GET_NOTE_BY_ID } from "@/constants/queries";
 import { useDBContext } from "@/context/databaseContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";

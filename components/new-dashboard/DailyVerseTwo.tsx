@@ -1,5 +1,5 @@
 import DAILY_VERSES from "@/constants/dailyVerses";
-import { GET_DAILY_VERSE } from "@/constants/Queries";
+import { GET_DAILY_VERSE } from "@/constants/queries";
 import { useDBContext } from "@/context/databaseContext";
 import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, pbUser, Screens, TTheme } from "@/types";

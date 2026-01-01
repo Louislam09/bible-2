@@ -1,5 +1,5 @@
 import { databaseNames, dbFileExt, SQLiteDirPath } from "@/constants/databaseNames";
-import { CREATE_FAVORITE_VERSES_TABLE, historyQuery } from "@/constants/Queries";
+import { CREATE_FAVORITE_VERSES_TABLE, historyQuery } from "@/constants/queries";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { dbDownloadState$ } from "@/state/dbDownloadState";
 import { DEFAULT_DATABASE } from "@/types";

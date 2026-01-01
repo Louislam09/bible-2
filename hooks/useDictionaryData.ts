@@ -1,5 +1,5 @@
 import { getDatabaseExt } from "@/constants/databaseNames";
-import { SEARCH_DICTIONARY_WORD } from "@/constants/Queries";
+import { SEARCH_DICTIONARY_WORD } from "@/constants/queries";
 import { DATABASE_TYPE, DictionaryData } from "@/types";
 import * as SQLite from "expo-sqlite";
 import { useCallback, useEffect, useState, useRef, useMemo } from "react";

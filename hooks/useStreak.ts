@@ -5,7 +5,7 @@ import {
   DELETE_ALL_STEAKS,
   GET_STREAK,
   DELETE_LAST_STREAK,
-} from "@/constants/Queries";
+} from "@/constants/queries";
 import { showToast } from "@/utils/showToast";
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$, useStorage } from "@/context/LocalstoreContext";

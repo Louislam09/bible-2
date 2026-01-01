@@ -2,7 +2,7 @@ import {
   defaultDatabases,
   getDatabaseQueryKey,
 } from "@/constants/databaseNames";
-import { QUERY_BY_DB } from "@/constants/Queries";
+import { QUERY_BY_DB } from "@/constants/queries";
 import * as SQLite from "expo-sqlite";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { IVerseItem } from "@/types";

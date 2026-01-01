@@ -5,7 +5,7 @@ import Icon from "@/components/Icon";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
 import { Text } from "@/components/Themed";
 import { getDatabaseQueryKey } from "@/constants/databaseNames";
-import { QUERY_BY_DB } from "@/constants/Queries";
+import { QUERY_BY_DB } from "@/constants/queries";
 import WORDS, { TWord } from "@/constants/words";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
@@ -147,7 +147,7 @@ const Concordance: React.FC<ConcordanceProps> = () => {
       }
     })();
 
-    return () => {};
+    return () => { };
   }, [myBibleDB, selected]);
 
   const onWordItemClick = (item: TWord) => {
@@ -295,16 +295,16 @@ const Concordance: React.FC<ConcordanceProps> = () => {
                 data={
                   debouncedSearchText
                     ? filterData.filter(
-                        (x: any) =>
-                          x.name_lower.indexOf(
-                            debouncedSearchText.toLowerCase()
-                          ) !== -1
-                      )
+                      (x: any) =>
+                        x.name_lower.indexOf(
+                          debouncedSearchText.toLowerCase()
+                        ) !== -1
+                    )
                     : filterData
-                        .filter(
-                          (x) => x.first_letter === randomLetter.toLowerCase()
-                        )
-                        .sort()
+                      .filter(
+                        (x) => x.first_letter === randomLetter.toLowerCase()
+                      )
+                      .sort()
                 }
                 renderItem={({ item, index }) => (
                   <RenderWordItem

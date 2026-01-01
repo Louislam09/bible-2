@@ -1,5 +1,5 @@
 import Icon from "@/components/Icon";
-import { GET_ALL_NOTE } from "@/constants/Queries";
+import { GET_ALL_NOTE } from "@/constants/queries";
 import { iconSize } from "@/constants/size";
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";

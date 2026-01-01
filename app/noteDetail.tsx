@@ -7,7 +7,7 @@ import { getBookDetail } from "@/constants/BookNames";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
 import {
   GET_SINGLE_OR_MULTIPLE_VERSES
-} from "@/constants/Queries";
+} from "@/constants/queries";
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";

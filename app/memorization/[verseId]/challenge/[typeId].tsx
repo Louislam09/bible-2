@@ -9,7 +9,7 @@ import PointsCard from "@/components/memorization/PointCard";
 import ReadChallenge from "@/components/memorization/ReadChallenge";
 import TypeChallenge from "@/components/memorization/TypeChallenge";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
-import { GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE } from "@/constants/Queries";
+import { GET_VERSES_BY_BOOK_AND_CHAPTER_VERSE } from "@/constants/queries";
 import { headerIconSize } from "@/constants/size";
 import { useMemorization } from "@/context/MemorizationContext";
 import { useMyTheme } from "@/context/ThemeContext";

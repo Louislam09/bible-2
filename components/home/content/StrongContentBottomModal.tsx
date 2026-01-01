@@ -3,7 +3,7 @@ import Icon, { IconProps } from "@/components/Icon";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import { isPrimaryBibleDatabase } from "@/constants/databaseNames";
 import { htmlTemplate } from "@/constants/HtmlTemplate";
-import { SEARCH_STRONG_WORD } from "@/constants/Queries";
+import { SEARCH_STRONG_WORD } from "@/constants/queries";
 import { iconSize } from "@/constants/size";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";

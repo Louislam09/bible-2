@@ -4,7 +4,7 @@ import {
   GET_FAVORITE_VERSES_WITHOUT_UUID,
   INSERT_FAVORITE_VERSE,
   UPDATE_FAVORITE_VERSE_UUID_BY_ID,
-} from "@/constants/Queries";
+} from "@/constants/queries";
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import * as Crypto from 'expo-crypto';
@@ -25,13 +25,13 @@ export const useFavoriteVerseService = () => {
     }
   };
 
-  const addFavoriteVerse = async (book_number: number, chapter: number, verse: number, uuid?:string) => {
+  const addFavoriteVerse = async (book_number: number, chapter: number, verse: number, uuid?: string) => {
     try {
-            const newUUID = uuid || Crypto.randomUUID();
-      
+      const newUUID = uuid || Crypto.randomUUID();
+
       await executeSql(
         INSERT_FAVORITE_VERSE,
-        [book_number, chapter, verse, newUUID , book_number, chapter, verse],
+        [book_number, chapter, verse, newUUID, book_number, chapter, verse],
         "addFavoriteVerse"
       );
       return true;
@@ -60,15 +60,15 @@ export const useFavoriteVerseService = () => {
   const generateAndAssignUUID = async () => {
     try {
 
-       if (storedData$.isFavUUIDGenerated.get()) {
-          return true;
-        }
+      if (storedData$.isFavUUIDGenerated.get()) {
+        return true;
+      }
 
       const verses = await executeSql(GET_FAVORITE_VERSES_WITHOUT_UUID, [], "generateFavoriteVerseUUID");
       if (verses.length === 0) {
         console.log("UUIDs already generated for all favorite_verses");
-      storedData$.isFavUUIDGenerated.set(true);
-      return true;
+        storedData$.isFavUUIDGenerated.set(true);
+        return true;
       }
       for (const row of verses) {
         const newUUID = Crypto.randomUUID();

@@ -3,7 +3,7 @@ import {
   SingleScreenHeaderProps,
 } from "@/components/common/singleScreenHeader";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
-import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from "@/constants/Queries";
+import { SEARCH_STRONG_WORD_ENTIRE_SCRIPTURE } from "@/constants/queries";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
 import { useMyTheme } from "@/context/ThemeContext";
@@ -87,7 +87,7 @@ const SearchStrongWordEntire: React.FC<SearchStrongWordEntireProps> = () => {
       setData((searchData as IVerseItem[]) || []);
     })();
 
-    return () => {};
+    return () => { };
   }, [myBibleDB, code, selectedFilterOption]);
 
   const screenOptions = useMemo(() => {

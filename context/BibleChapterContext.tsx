@@ -1,6 +1,6 @@
 import bibleLinks from "@/constants/bibleLinks";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
-import { QUERY_BY_DB } from "@/constants/Queries";
+import { QUERY_BY_DB } from "@/constants/queries";
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { bibleState$, getReadingTime } from "@/state/bibleState";

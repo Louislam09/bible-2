@@ -2,7 +2,7 @@ import Icon from "@/components/Icon";
 import { KeyboardPaddingView } from "@/components/keyboard-padding";
 import { View } from "@/components/Themed";
 import { getBookDetail } from "@/constants/BookNames";
-import { GET_SINGLE_OR_MULTIPLE_VERSES } from "@/constants/Queries";
+import { GET_SINGLE_OR_MULTIPLE_VERSES } from "@/constants/queries";
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";

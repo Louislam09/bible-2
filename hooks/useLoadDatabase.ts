@@ -1,15 +1,17 @@
 import { databaseNames } from "@/constants/databaseNames";
 import {
   CREATE_FAVORITE_VERSES_TABLE,
+  CREATE_HIGHLIGHTED_VERSES_TABLE,
   CREATE_MEMORIZATION_TABLE,
   CREATE_NOTE_TABLE,
   CREATE_STREAK_TABLE,
   historyQuery,
-} from "@/constants/Queries";
+} from "@/constants/queries";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { bibleState$ } from "@/state/bibleState";
 import { dbDownloadState$ } from "@/state/dbDownloadState";
 import { DEFAULT_DATABASE } from "@/types";
+import { isPrimaryBibleDatabase } from "@/constants/databaseNames";
 import { prepareDatabaseFromDbFile } from "@/utils/prepareDB";
 import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
@@ -36,6 +38,14 @@ export type TUseLoadDB = {
   isInterlinear: boolean;
 };
 
+const MY_TABLES = [
+  { name: "favorite_verses", query: CREATE_FAVORITE_VERSES_TABLE },
+  { name: "notes", query: CREATE_NOTE_TABLE },
+  { name: "memorization", query: CREATE_MEMORIZATION_TABLE },
+  { name: "streaks", query: CREATE_STREAK_TABLE },
+  { name: "history", query: historyQuery.CREATE_TABLE },
+  { name: "highlighted_verses", query: CREATE_HIGHLIGHTED_VERSES_TABLE }
+];
 
 const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): UseLoadDB => {
   const [database, setDatabase] = useState<SQLite.SQLiteDatabase | null>(null);
@@ -70,24 +80,28 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
     }
   }, [database, dbInitialized.current])
 
-  async function createTables(db: SQLite.SQLiteDatabase) {
-    const tables = [
-      CREATE_FAVORITE_VERSES_TABLE,
-      CREATE_NOTE_TABLE,
-      CREATE_MEMORIZATION_TABLE,
-      CREATE_STREAK_TABLE,
-      historyQuery.CREATE_TABLE,
-    ];
-
+  async function createTables(db: SQLite.SQLiteDatabase, isMainBible: boolean) {
     try {
-      // await db.execAsync(tables.join("\n"));
-      for (const table of tables) {
-        await db.execAsync(table);
+      for (const table of MY_TABLES) {
+        const tableExists = await checkTableExists(db, table.name);
+        console.log(`🖨️ ${table.name} table exists: ${tableExists}`)
+        if (!tableExists) {
+          await db.execAsync(table.query);
+        }
       }
     } catch (error) {
       console.error("Error creating tables:", error);
       throw error; // Rethrow to handle in the calling function
     }
+  }
+
+  const checkIfAllTablesExists = async (db: SQLite.SQLiteDatabase) => {
+    const allTablesExist = await Promise.all(MY_TABLES.map(async (table) => {
+      const tableExists = await checkTableExists(db, table.name);
+      console.log(`${tableExists ? "✅" : "❌"} ${table.name} table exists: ${tableExists}`)
+      return tableExists;
+    }));
+    return allTablesExist.every(exists => exists);
   }
 
   async function checkAndCreateColumn(
@@ -113,6 +127,25 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
     } catch (error) {
       console.error(
         `Error creating column ${createColumnQuery} In ${db.databasePath} :`,
+        error
+      );
+    }
+  }
+
+  async function checkTableExists(
+    db: SQLite.SQLiteDatabase,
+    tableName: string,
+  ) {
+    const checkTableQuery = `SELECT name FROM sqlite_master WHERE type='table' AND name=?;`;
+    try {
+      const statement = await db.prepareAsync(checkTableQuery);
+      const result = await statement.executeAsync([tableName]);
+      const rows = await result.getAllAsync();
+      await statement.finalizeAsync();
+      return rows.length > 0;
+    } catch (error) {
+      console.error(
+        `Error checking table existence for ${tableName} In ${db.databasePath} :`,
         error
       );
     }
@@ -158,11 +191,14 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
       });
 
       const isInterlinear = dbName.id === DEFAULT_DATABASE.INTERLINEAR;
+      const isMainBible = isPrimaryBibleDatabase(dbName.id);
       if (!db) return;
       const dbTableCreated = storedData$.dbTableCreated.get();
-      if (!dbTableCreated?.includes(dbName.shortName)) {
-        const valid = await isDatabaseValid(db!, isInterlinear ? "interlinear" : "verses");
+      const allTablesExist = await checkIfAllTablesExists(db);
+      console.log({ allTablesExist }, dbName.shortName)
 
+      if (!dbTableCreated?.includes(dbName.shortName) || !allTablesExist) {
+        const valid = await isDatabaseValid(db!, isInterlinear ? "interlinear" : "verses");
         if (!valid) {
           await db?.closeAsync();
           await FileSystem.deleteAsync(dbName.path, { idempotent: true });
@@ -171,21 +207,16 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
           return undefined
         }
 
-        await createTables(db);
+        await createTables(db, isMainBible);
         await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
+        // await checkAndCreateColumn(db, "highlighted_verses", "uuid", "TEXT");
         storedData$.dbTableCreated.set([...dbTableCreated, dbName.shortName]);
-        // Comment this code later
-        // const slowDevice = +getMemorySizeInGB() < 4;
-        // storedData$.useDomComponent.set(slowDevice || false);
       }
 
       if (isMounted.current) {
         setDatabase(db);
         dbInitialized.current = true;
         bibleState$.bibleQuery.shouldFetch.set(true);
-        // setTimeout(() => {
-        //   bibleState$.bibleQuery.shouldFetch.set(true);
-        // }, 2000);
         setLoaded(true);
       }
     } catch (error) {

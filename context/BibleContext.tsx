@@ -5,7 +5,7 @@ import {
   DELETE_NOTE_ALL,
   INSERT_INTO_NOTE,
   UPDATE_NOTE_BY_ID,
-} from "@/constants/Queries";
+} from "@/constants/queries";
 import useBibleFonts from "@/hooks/useBibleFonts";
 import useHistoryManager, { HistoryManager } from "@/hooks/useHistoryManager";
 import useSearch, { UseSearchHookState } from "@/hooks/useSearch";

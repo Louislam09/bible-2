@@ -4,7 +4,7 @@ import * as SQLite from "expo-sqlite";
 import { useCallback, useEffect, useState } from "react";
 import { VersionItem } from "./useInstalledBible";
 import useInstalledModules from "./useInstalledModules";
-import { GET_COMMENTARIES_BY_BOOK_AND_CHAPTER } from "@/constants/Queries";
+import { GET_COMMENTARIES_BY_BOOK_AND_CHAPTER } from "@/constants/queries";
 
 interface CommentaryData {
     book_number: number;

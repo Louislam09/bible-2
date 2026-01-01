@@ -1,4 +1,4 @@
-import { historyQuery } from "@/constants/Queries";
+import { historyQuery } from "@/constants/queries";
 import { useDBContext } from "@/context/databaseContext";
 import { bibleState$ } from "@/state/bibleState";
 import { format } from "date-fns";

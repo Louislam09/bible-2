@@ -3,7 +3,7 @@ import {
   GET_ALL_MOMORIZATION,
   INSERT_VERSE_TO_MOMORIZATION,
   UPDATE_MOMORIZATION_PROGRESS,
-} from "@/constants/Queries";
+} from "@/constants/queries";
 import { showToast } from "@/utils/showToast";
 import React, {
   createContext,

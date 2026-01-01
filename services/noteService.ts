@@ -6,7 +6,7 @@ import {
   GET_NOTES_BY_IDS,
   INSERT_INTO_NOTE,
   UPDATE_NOTE_BY_ID,
-} from "@/constants/Queries";
+} from "@/constants/queries";
 import { useDBContext } from "@/context/databaseContext";
 import { useNetwork } from "@/context/NetworkProvider";
 import { pb } from "@/globalConfig";

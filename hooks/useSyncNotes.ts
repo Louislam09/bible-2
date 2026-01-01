@@ -1,4 +1,4 @@
-import { GET_ALL_NOTE } from "@/constants/Queries";
+import { GET_ALL_NOTE } from "@/constants/queries";
 import { useDBContext } from "@/context/databaseContext";
 import { pb } from "@/globalConfig";
 import { authState$ } from "@/state/authState";

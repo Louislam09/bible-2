@@ -7,7 +7,7 @@ import {
 } from "@/constants/databaseNames";
 import { VersionItem } from "./useInstalledBible";
 import { DB_BOOK_NAMES } from "@/constants/BookNames";
-import { GET_COMPARE_BOOK_CHAPTER_VERSE } from "@/constants/Queries";
+import { GET_COMPARE_BOOK_CHAPTER_VERSE } from "@/constants/queries";
 
 interface Verse {
   book_number: number;
