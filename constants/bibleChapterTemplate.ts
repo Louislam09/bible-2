@@ -821,7 +821,22 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                     const verseElement = document.querySelector(\`[data-verse-number="\${verse}"]\`);
                     
                     if (verseElement && highlight && highlight.color) {
-                        verseElement.style.backgroundColor = \`\${highlight.color}40\`;
+                        const verseContent = verseElement.querySelector('.verse-content');
+                        const verseStrongContent = verseElement.querySelector('.verse-strong-content');
+                        
+                        // Apply highlight style using inline style for gradient, Tailwind classes for other properties
+                        const highlightStyle = \`background: linear-gradient(to top, \${highlight.color}35, \${highlight.color}45);\`;
+                        
+                        if (verseContent) {
+                            verseContent.style.cssText = highlightStyle;
+                            verseContent.classList.add('px-1', 'rounded-sm');
+                        }
+                        
+                        if (verseStrongContent) {
+                            verseStrongContent.style.cssText = highlightStyle;
+                            verseStrongContent.classList.add('px-1', 'rounded-sm');
+                        }
+                        
                         verseElement.setAttribute('data-highlight-color', highlight.color);
                     }
                 });
@@ -833,7 +848,19 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                     const key = \`\${verseData.book_number}-\${verseData.chapter}-\${verseNumber}\`;
                     
                     if (!highlightsData[key]) {
-                        verseElement.style.backgroundColor = '';
+                        const verseContent = verseElement.querySelector('.verse-content');
+                        const verseStrongContent = verseElement.querySelector('.verse-strong-content');
+                        
+                        if (verseContent) {
+                            verseContent.style.background = '';
+                            verseContent.classList.remove('px-1', 'rounded-sm');
+                        }
+                        
+                        if (verseStrongContent) {
+                            verseStrongContent.style.background = '';
+                            verseStrongContent.classList.remove('px-1', 'rounded-sm');
+                        }
+                        
                         verseElement.removeAttribute('data-highlight-color');
                     }
                 });
@@ -1140,7 +1167,12 @@ type THighlight = {
 const createRegularVerse = (item: IBookVerse, verseKey: string, highlights?: Map<string, THighlight>) => {
     const highlightKey = `${item.book_number}-${item.chapter}-${item.verse}`;
     const highlight = highlights?.get(highlightKey);
-    const highlightStyle = highlight ? `bg-gradient-to-t from-[${highlight.color}35] to-[${highlight.color}45] px-1 rounded-sm` : '';
+
+    // Use inline style for dynamic gradient colors, Tailwind for other properties
+    const highlightStyle = highlight
+        ? `background: linear-gradient(to top, ${highlight.color}35, ${highlight.color}45);`
+        : '';
+    const highlightClasses = highlight ? 'px-1 rounded-sm' : '';
 
     return `
     <div class="verse-container" data-verse-key="${verseKey}">
@@ -1156,10 +1188,10 @@ const createRegularVerse = (item: IBookVerse, verseKey: string, highlights?: Map
              style="position: relative; z-index: 1;"
              data-highlight-color="${highlight?.color || ''}">
             ${createVerseNumber(item.verse, item.is_favorite)}
-            <span class="verse-content font-semibold dark:font-normal text-theme-text ${highlightStyle}">
+            <span class="verse-content font-semibold dark:font-normal text-theme-text ${highlightClasses}" style="${highlightStyle}">
                 ${parseVerseTextRegular(item.text)}
             </span>
-            <span class="text-theme-text verse-strong-content hidden">
+            <span class="text-theme-text verse-strong-content hidden" >
                 ${parseVerseTextWithStrongs(item.text)}
             </span>
         </div>
