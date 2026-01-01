@@ -58,6 +58,17 @@ export const highlighterHtmlTemplate = ({
         ${lucideIcons.check}</span>
     `;
 
+    // Map colors to ring colors for selected state
+    const getColorRing = (color: string) => {
+        const colorMap: Record<string, string> = {
+            '#FFEB3B': 'rgba(253, 224, 71, 0.5)', // yellow-300/50
+            '#4CAF50': 'rgba(52, 211, 153, 0.5)', // emerald-300/50
+            '#2196F3': 'rgba(125, 211, 252, 0.5)', // sky-300/50
+            '#E91E63': 'rgba(244, 114, 182, 0.5)' // pink-300/50
+        };
+        return colorMap[color] || 'rgba(253, 224, 71, 0.5)';
+    };
+
     return `
 <!DOCTYPE html>
 <html data-theme="${themeSchema}">
@@ -69,52 +80,93 @@ export const highlighterHtmlTemplate = ({
     ${getTailwindStyleTag({ theme, fontSize })}
     ${highlighterStyles(theme)}
 </head>
-<body class="p-5 m-0 text-theme-text bg-theme-background select-none overflow-x-hidden flex flex-col items-center min-h-screen">
-    <div class="text-center mb-6 w-full">
-        <div class="text-xl font-semibold text-theme-text mb-2">Destacar versículo</div>
-    </div>
+<body class="m-0 p-6 text-theme-text bg-theme-background select-none overflow-hidden">
+    <h3 class="text-center text-lg font-semibold mb-6">
+        Destacar versículo
+    </h3>
 
-    <!-- Style Selection: Highlight vs Underline -->
-    <div class="flex flex-row items-center justify-center gap-3 mb-6 w-full">
-        <button 
+    <div class="grid grid-cols-2 gap-4 mb-6">
+        <button
             id="style-highlight"
-            class="px-4 py-2 rounded-lg border-2 transition-all ${currentStyle === 'highlight' ? 'border-theme-notification bg-theme-notification/20 text-theme-notification font-semibold' : 'border-theme-border bg-theme-card text-theme-text'}"
+            class="flex items-center justify-center gap-2 rounded-xl border py-3 text-sm font-medium transition-all ${currentStyle === 'highlight' ? 'bg-theme-notification/20 border-theme-notification text-theme-notification ring-2 ring-theme-notification/50' : 'border-theme-border hover:bg-theme-background'}"
             onclick="selectStyle('highlight')"
         >
             Resaltar
         </button>
-        <button 
+
+        <button
             id="style-underline"
-            class="px-4 py-2 rounded-lg border-2 transition-all ${currentStyle === 'underline' ? 'border-theme-notification bg-theme-notification/20 text-theme-notification font-semibold' : 'border-theme-border bg-theme-card text-theme-text'}"
+            class="flex items-center justify-center gap-2 rounded-xl border py-3 text-sm font-medium transition-all ${currentStyle === 'underline' ? 'bg-theme-notification/20 border-theme-notification text-theme-notification ring-2 ring-theme-notification/50' : 'border-theme-border hover:bg-theme-background'}"
             onclick="selectStyle('underline')"
         >
             Subrayar
         </button>
     </div>
 
-    <!-- Color Selection -->
-    <div class="flex flex-row items-center gap-4 overflow-x-auto py-1 px-10 w-full">
-        ${colors.map((item, index) => `  <div 
-                class="w-14 h-14 rounded-full flex items-center justify-center cursor-pointer flex-shrink-0 relative shadow-md ${selectedColors.includes(item.color) ? "border-2 border-theme-notification" : ""}"
-                style="background-color: ${item.color};"
+    <div class="flex justify-center gap-5 mb-6">
+        ${colors.map((item, index) => {
+        const isSelected = selectedColors.includes(item.color);
+        const colorRing = getColorRing(item.color);
+        const checkmarkColor = item.color === '#FFEB3B' ? '#000' : '#fff';
+        return `
+            <button
+                data-color-button
+                data-color="${item.color}"
+                class="h-12 w-12 rounded-full flex items-center justify-center transition-all"
+                style="background-color: ${item.color}; ${isSelected ? `box-shadow: 0 0 0 4px ${colorRing};` : ''}"
                 onclick="handleColorSelect('${item.color}')"
             >
-                ${selectCheckElement(selectedColors.includes(item.color))}
-                </div>
-        `).join("")}
-        
-        <div class="w-px h-10 bg-theme-border mx-2"></div>
-        
-        <div 
-            class="w-14 h-14 rounded-full border-2 border-theme-border flex items-center justify-center cursor-pointer flex-shrink-0 shadow-md bg-theme-card clear-button"
-            onclick="handleClearHighlight()"
-        ></div>
+                ${isSelected ? `
+                    <svg class="h-6 w-6" style="color: ${checkmarkColor};" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                    </svg>
+                ` : ''}
+            </button>
+            `;
+    }).join("")}
     </div>
 
-    ${loading ? '<div class="mt-4 text-center w-full"><div class="text-sm text-theme-text opacity-70">Aplicando...</div></div>' : ""}
+    <button
+        id="action-button"
+        class="w-full rounded-xl py-3 text-sm font-medium transition-all mb-4"
+        style="${selectedColors.length > 0 ? 'background-color: #ef4444; color: white;' : `background-color: ${theme.colors.notification || theme.colors.primary}; color: ${theme.dark ? '#000' : '#fff'};`}"
+    >
+        <span id="action-text">${selectedColors.length > 0 ? 'Limpiar' : 'Aplicar'}</span>
+    </button>
 
     <script>
         let currentStyle = '${currentStyle}';
+        let selectedColor = null;
+        const hasExistingHighlight = ${selectedColors.length > 0};
+        
+        function updateActionButton() {
+            const actionBtn = document.getElementById('action-button');
+            const actionText = document.getElementById('action-text');
+            
+            const themeColor = '${theme.colors.text || theme.colors.primary}';
+            const textColor = '${theme.dark ? '#000' : '#fff'}';
+            
+            if (hasExistingHighlight && !selectedColor) {
+                // Show "Limpiar" when there's an existing highlight and no new selection
+                actionText.textContent = 'Limpiar';
+                actionBtn.onclick = handleClearHighlight;
+                actionBtn.style.backgroundColor = '#ef4444';
+                actionBtn.style.color = 'white';
+            } else if (selectedColor) {
+                // Show "Aplicar" when a color is selected
+                actionText.textContent = 'Aplicar';
+                actionBtn.onclick = applyHighlight;
+                actionBtn.style.backgroundColor = themeColor;
+                actionBtn.style.color = textColor;
+                actionBtn.style.fontWeight = 'bold';
+            } else {
+                // Default: show "Limpiar" if no selection
+                actionText.textContent = 'Limpiar';
+                actionBtn.onclick = handleClearHighlight;
+                actionBtn.style.backgroundColor = '#ef4444';
+                actionBtn.style.color = 'white';
+            }
+        }
 
         function selectStyle(style) {
             currentStyle = style;
@@ -122,23 +174,66 @@ export const highlighterHtmlTemplate = ({
             const underlineBtn = document.getElementById('style-underline');
             
             if (style === 'highlight') {
-                highlightBtn.classList.add('border-theme-notification', 'bg-theme-notification/20', 'text-theme-notification', 'font-semibold');
-                highlightBtn.classList.remove('border-theme-border', 'bg-theme-card', 'text-theme-text');
-                underlineBtn.classList.remove('border-theme-notification', 'bg-theme-notification/20', 'text-theme-notification', 'font-semibold');
-                underlineBtn.classList.add('border-theme-border', 'bg-theme-card', 'text-theme-text');
+                highlightBtn.classList.add('bg-theme-notification/20', 'border-theme-notification', 'text-theme-notification', 'ring-2', 'ring-theme-notification/50');
+                highlightBtn.classList.remove('border-theme-border', 'hover:bg-theme-background');
+                underlineBtn.classList.remove('bg-theme-notification/20', 'border-theme-notification', 'text-theme-notification', 'ring-2', 'ring-theme-notification/50');
+                underlineBtn.classList.add('border-theme-border', 'hover:bg-theme-background');
             } else {
-                underlineBtn.classList.add('border-theme-notification', 'bg-theme-notification/20', 'text-theme-notification', 'font-semibold');
-                underlineBtn.classList.remove('border-theme-border', 'bg-theme-card', 'text-theme-text');
-                highlightBtn.classList.remove('border-theme-notification', 'bg-theme-notification/20', 'text-theme-notification', 'font-semibold');
-                highlightBtn.classList.add('border-theme-border', 'bg-theme-card', 'text-theme-text');
+                underlineBtn.classList.add('bg-theme-notification/20', 'border-theme-notification', 'text-theme-notification', 'ring-2', 'ring-theme-notification/50');
+                underlineBtn.classList.remove('border-theme-border', 'hover:bg-theme-background');
+                highlightBtn.classList.remove('bg-theme-notification/20', 'border-theme-notification', 'text-theme-notification', 'ring-2', 'ring-theme-notification/50');
+                highlightBtn.classList.add('border-theme-border', 'hover:bg-theme-background');
+            }
+            
+            // Update button if color is already selected
+            if (selectedColor) {
+                updateActionButton();
             }
         }
 
         function handleColorSelect(color) {
-            window.ReactNativeWebView.postMessage(JSON.stringify({
-                type: 'colorSelect',
-                data: { color, style: currentStyle }
-            }));
+            // Just select the color visually, don't apply yet
+            selectedColor = color;
+            updateActionButton();
+            
+            // Update visual selection on color buttons
+            document.querySelectorAll('[data-color-button]').forEach(btn => {
+                const btnColor = btn.getAttribute('data-color');
+                if (btnColor === color) {
+                    const colorRing = getColorRing(color);
+                    btn.style.boxShadow = \`0 0 0 4px \${colorRing}\`;
+                    const svg = btn.querySelector('svg');
+                    if (!svg) {
+                        const checkmarkColor = color === '#FFEB3B' ? '#000' : '#fff';
+                        const svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                        svgEl.setAttribute('class', 'h-6 w-6');
+                        svgEl.setAttribute('style', \`color: \${checkmarkColor};\`);
+                        svgEl.setAttribute('fill', 'none');
+                        svgEl.setAttribute('stroke', 'currentColor');
+                        svgEl.setAttribute('stroke-width', '3');
+                        svgEl.setAttribute('viewBox', '0 0 24 24');
+                        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        path.setAttribute('stroke-linecap', 'round');
+                        path.setAttribute('stroke-linejoin', 'round');
+                        path.setAttribute('d', 'M5 13l4 4L19 7');
+                        svgEl.appendChild(path);
+                        btn.appendChild(svgEl);
+                    }
+                } else {
+                    btn.style.boxShadow = '';
+                    const svg = btn.querySelector('svg');
+                    if (svg) svg.remove();
+                }
+            });
+        }
+        
+        function applyHighlight() {
+            if (selectedColor) {
+                window.ReactNativeWebView.postMessage(JSON.stringify({
+                    type: 'colorSelect',
+                    data: { color: selectedColor, style: currentStyle }
+                }));
+            }
         }
 
         function handleClearHighlight() {
@@ -147,6 +242,19 @@ export const highlighterHtmlTemplate = ({
                 data: {}
             }));
         }
+        
+        function getColorRing(color) {
+            const colorMap = {
+                '#FFEB3B': 'rgba(253, 224, 71, 0.5)',
+                '#4CAF50': 'rgba(52, 211, 153, 0.5)',
+                '#2196F3': 'rgba(125, 211, 252, 0.5)',
+                '#E91E63': 'rgba(244, 114, 182, 0.5)'
+            };
+            return colorMap[color] || 'rgba(253, 224, 71, 0.5)';
+        }
+        
+        // Initialize button state
+        updateActionButton();
     </script>
 </body>
 </html>

@@ -22,7 +22,7 @@ const HighlighterBottomSheet = () => {
         <BottomSheet
             ref={modalState$.highlighterRef.get()}
             index={-1}
-            snapPoints={["30%"]}
+            snapPoints={["40%"]}
             backgroundStyle={{
                 ...styles.bottomSheet,
                 backgroundColor: theme.colors.background,
@@ -52,11 +52,14 @@ const getStyles = ({ colors }: TTheme) =>
             backgroundColor: colors.background,
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
+            borderWidth: 1,
+            borderColor: colors.notification,
         },
         webviewWrapper: {
             flex: 1,
             minWidth: "100%",
             backgroundColor: "transparent",
+            paddingHorizontal: 1
         },
     });
 
