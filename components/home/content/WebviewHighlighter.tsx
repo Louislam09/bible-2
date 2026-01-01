@@ -220,7 +220,7 @@ const WebviewHighlighter: React.FC<Props> = ({ theme }) => {
     ? `Versículo ${verses[0].verse}`
     : `${verses.length} versículos seleccionados`;
 
-  // Get selected colors for the verses
+  // Get selected colors and styles for the verses
   const selectedColors = useMemo(() => {
     const selected: string[] = [];
     verses.forEach((verse: any) => {
@@ -233,16 +233,32 @@ const WebviewHighlighter: React.FC<Props> = ({ theme }) => {
     return selected;
   }, [verses, existingHighlights]);
 
+  // Get selected style for the verses (if all verses have the same style, use it; otherwise default to 'highlight')
+  const selectedStyle = useMemo(() => {
+    if (verses.length === 0) return 'highlight';
+
+    const styles = verses.map((verse: any) => {
+      const key = `${verse.book_number}-${verse.chapter}-${verse.verse}`;
+      const existing = existingHighlights.get(key);
+      return existing?.style || 'highlight';
+    });
+
+    // If all verses have the same style, return it; otherwise default to 'highlight'
+    const firstStyle = styles[0];
+    return styles.every(style => style === firstStyle) ? firstStyle : 'highlight';
+  }, [verses, existingHighlights]);
+
   const htmlTemplate = useMemo(() => {
     return highlighterHtmlTemplate({
       theme,
       colors: HIGHLIGHT_COLORS,
       selectedColors,
+      selectedStyle,
       verseText,
       loading,
       fontSize: fontSize || 16,
     });
-  }, [theme, selectedColors, verseText, loading, fontSize]);
+  }, [theme, selectedColors, selectedStyle, verseText, loading, fontSize]);
 
   const handleMessage = useCallback(
     (event: any) => {
@@ -251,8 +267,8 @@ const WebviewHighlighter: React.FC<Props> = ({ theme }) => {
 
         switch (message.type) {
           case "colorSelect":
-            if (message.data?.color) {
-              handleColorSelect(message.data.color, 'highlight');
+            if (message.data?.color && message.data?.style) {
+              handleColorSelect(message.data.color, message.data.style);
             }
             break;
           case "clearHighlight":

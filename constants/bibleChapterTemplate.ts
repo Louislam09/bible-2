@@ -824,20 +824,39 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                         const verseContent = verseElement.querySelector('.verse-content');
                         const verseStrongContent = verseElement.querySelector('.verse-strong-content');
                         
-                        // Apply highlight style using inline style for gradient, Tailwind classes for other properties
-                        const highlightStyle = \`background: linear-gradient(to top, \${highlight.color}35, \${highlight.color}45);\`;
+                        // Apply style based on highlight type
+                        let highlightStyle = '';
+                        let highlightClasses = '';
+                        
+                        if (highlight.style === 'underline') {
+                            // Underline style
+                            highlightStyle = \`text-decoration: underline; text-decoration-color: \${highlight.color}; text-decoration-thickness: 3px; text-underline-offset: 3px;\`;
+                        } else {
+                            // Highlight style (default)
+                            highlightStyle = \`background: linear-gradient(to top, \${highlight.color}35, \${highlight.color}45);\`;
+                            highlightClasses = 'px-1 rounded-sm';
+                        }
                         
                         if (verseContent) {
                             verseContent.style.cssText = highlightStyle;
-                            verseContent.classList.add('px-1', 'rounded-sm');
+                            if (highlightClasses) {
+                                verseContent.classList.add(...highlightClasses.split(' '));
+                            } else {
+                                verseContent.classList.remove('px-1', 'rounded-sm');
+                            }
                         }
                         
                         if (verseStrongContent) {
                             verseStrongContent.style.cssText = highlightStyle;
-                            verseStrongContent.classList.add('px-1', 'rounded-sm');
+                            if (highlightClasses) {
+                                verseStrongContent.classList.add(...highlightClasses.split(' '));
+                            } else {
+                                verseStrongContent.classList.remove('px-1', 'rounded-sm');
+                            }
                         }
                         
                         verseElement.setAttribute('data-highlight-color', highlight.color);
+                        verseElement.setAttribute('data-highlight-style', highlight.style || 'highlight');
                     }
                 });
                 
@@ -853,15 +872,24 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                         
                         if (verseContent) {
                             verseContent.style.background = '';
+                            verseContent.style.textDecoration = '';
+                            verseContent.style.textDecorationColor = '';
+                            verseContent.style.textDecorationThickness = '';
+                            verseContent.style.textUnderlineOffset = '';
                             verseContent.classList.remove('px-1', 'rounded-sm');
                         }
                         
                         if (verseStrongContent) {
                             verseStrongContent.style.background = '';
+                            verseStrongContent.style.textDecoration = '';
+                            verseStrongContent.style.textDecorationColor = '';
+                            verseStrongContent.style.textDecorationThickness = '';
+                            verseStrongContent.style.textUnderlineOffset = '';
                             verseStrongContent.classList.remove('px-1', 'rounded-sm');
                         }
                         
                         verseElement.removeAttribute('data-highlight-color');
+                        verseElement.removeAttribute('data-highlight-style');
                     }
                 });
             }
@@ -1168,11 +1196,20 @@ const createRegularVerse = (item: IBookVerse, verseKey: string, highlights?: Map
     const highlightKey = `${item.book_number}-${item.chapter}-${item.verse}`;
     const highlight = highlights?.get(highlightKey);
 
-    // Use inline style for dynamic gradient colors, Tailwind for other properties
-    const highlightStyle = highlight
-        ? `background: linear-gradient(to top, ${highlight.color}35, ${highlight.color}45);`
-        : '';
-    const highlightClasses = highlight ? 'px-1 rounded-sm' : '';
+    // Use inline style for dynamic colors, Tailwind for other properties
+    let highlightStyle = '';
+    let highlightClasses = '';
+
+    if (highlight) {
+        if (highlight.style === 'underline') {
+            // Underline style
+            highlightStyle = `text-decoration: underline; text-decoration-color: ${highlight.color}; text-decoration-thickness: 3px; text-underline-offset: 3px;`;
+        } else {
+            // Highlight style (default)
+            highlightStyle = `background: linear-gradient(to top, ${highlight.color}35, ${highlight.color}45);`;
+            highlightClasses = 'px-1 rounded-sm';
+        }
+    }
 
     return `
     <div class="verse-container" data-verse-key="${verseKey}">
@@ -1186,12 +1223,13 @@ const createRegularVerse = (item: IBookVerse, verseKey: string, highlights?: Map
              onclick="handleVerseClick(this, '${verseKey}')"
              oncontextmenu="handleVerseContextMenu(this, '${verseKey}', event)"
              style="position: relative; z-index: 1;"
-             data-highlight-color="${highlight?.color || ''}">
+             data-highlight-color="${highlight?.color || ''}"
+             data-highlight-style="${highlight?.style || ''}">
             ${createVerseNumber(item.verse, item.is_favorite)}
             <span class="verse-content font-semibold dark:font-normal text-theme-text ${highlightClasses}" style="${highlightStyle}">
                 ${parseVerseTextRegular(item.text)}
             </span>
-            <span class="text-theme-text verse-strong-content hidden" >
+            <span class="text-theme-text verse-strong-content hidden">
                 ${parseVerseTextWithStrongs(item.text)}
             </span>
         </div>
