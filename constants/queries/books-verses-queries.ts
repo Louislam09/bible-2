@@ -16,27 +16,73 @@ export const GET_SUBTITLE_BY_BOOK_AND_CHAPTER = `Select * from subheadings where
 export const CHECK_DB =
     "SELECT name FROM sqlite_master WHERE type='table' AND name='verses';";
 
-export const GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV = `SELECT 
-    v.*,
-    CASE 
-        WHEN fv.id IS NOT NULL THEN 1 
-        ELSE 0 
-    END AS is_favorite,
-    COALESCE(
-        json_group_array(sh.subheading),
-        json('[]')
-    ) AS subheading
+// export const GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV = `SELECT 
+//     v.*,
+//     CASE 
+//         WHEN fv.id IS NOT NULL THEN 1 
+//         ELSE 0 
+//     END AS is_favorite,
+//     COALESCE(
+//         json_group_array(sh.subheading),
+//         json('[]')
+//     ) AS subheading
+// FROM verses v
+// LEFT JOIN favorite_verses fv 
+//     ON v.book_number = fv.book_number 
+//     AND v.chapter = fv.chapter 
+//     AND v.verse = fv.verse
+// LEFT JOIN subheadings sh 
+//     ON v.book_number = sh.book_number 
+//     AND v.chapter = sh.chapter 
+//     AND v.verse = sh.verse
+// WHERE v.book_number = ? 
+// AND v.chapter = ?
+// GROUP BY v.book_number, v.chapter, v.verse;
+// `;
+export const GET_VERSES_BY_BOOK_AND_CHAPTER_WITH_FAV = `
+SELECT 
+  v.*,
+
+  CASE 
+    WHEN fv.id IS NOT NULL THEN 1 
+    ELSE 0 
+  END AS is_favorite,
+
+  CASE 
+    WHEN hv.id IS NOT NULL THEN json_object(
+      'id', hv.id,
+      'style', hv.style,
+      'color', hv.color,
+      'uuid', hv.uuid
+    )
+    ELSE NULL
+  END AS highlight,
+
+  COALESCE(
+    json_group_array(sh.subheading),
+    json('[]')
+  ) AS subheading
+
 FROM verses v
+
 LEFT JOIN favorite_verses fv 
-    ON v.book_number = fv.book_number 
-    AND v.chapter = fv.chapter 
-    AND v.verse = fv.verse
+  ON v.book_number = fv.book_number
+  AND v.chapter = fv.chapter
+  AND v.verse = fv.verse
+
+LEFT JOIN highlighted_verses hv
+  ON v.book_number = hv.book_number
+  AND v.chapter = hv.chapter
+  AND v.verse = hv.verse
+
 LEFT JOIN subheadings sh 
-    ON v.book_number = sh.book_number 
-    AND v.chapter = sh.chapter 
-    AND v.verse = sh.verse
-WHERE v.book_number = ? 
+  ON v.book_number = sh.book_number
+  AND v.chapter = sh.chapter
+  AND v.verse = sh.verse
+
+WHERE v.book_number = ?
 AND v.chapter = ?
+
 GROUP BY v.book_number, v.chapter, v.verse;
 `;
 

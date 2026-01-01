@@ -1,4 +1,4 @@
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { observable } from "@legendapp/state";
 import { createRef } from "react";
 
@@ -19,8 +19,10 @@ export const modalState$ = observable({
   strongSearchFilterRef: createRef<BottomSheetModal>(),
   multipleStrongsRef: createRef<BottomSheetModal>(),
   bibleSettingRef: createRef<BottomSheetModal>(),
+  highlighterRef: createRef<BottomSheet>(),
   searchWordOnDic: "",
   commentaryReference: { bookNumber: 40, chapter: 1, verse: 1 },
+  highlighterReference: { bookNumber: 40, chapter: 1, verse: 1 },
   chooseReferenceStep: ChooseReferenceStep.InBookSelection,
   setChooseReferenceStep: (step: ChooseReferenceStep) => {
     modalState$.chooseReferenceStep.set(step);
@@ -34,6 +36,7 @@ export const modalState$ = observable({
   isInterlinearOpen: false,
   isMultipleStrongsOpen: false,
   isBibleSettingOpen: false,
+  isHighlighterOpen: false,
 
   openUserTooltip: () => {
     modalState$.showUserTooltip.set(true);
@@ -128,5 +131,16 @@ export const modalState$ = observable({
   closeCommentaryBottomSheet: () => {
     modalState$.isCommentaryOpen.set(false);
     modalState$.commentaryRef.current?.dismiss();
+  },
+  openHighlighterBottomSheet: (bookNumber?: number, chapter?: number, verse?: number) => {
+    if (bookNumber !== undefined && chapter !== undefined && verse !== undefined) {
+      modalState$.highlighterReference.set({ bookNumber, chapter, verse });
+    }
+    modalState$.isHighlighterOpen.set(true);
+    // present() will be called by useEffect in the component after mount
+  },
+  closeHighlighterBottomSheet: () => {
+    modalState$.isHighlighterOpen.set(false);
+    modalState$.highlighterRef.current?.close();
   },
 });

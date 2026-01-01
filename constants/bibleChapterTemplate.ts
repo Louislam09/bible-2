@@ -715,7 +715,7 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 const verseNumber = parseInt(verseElement.getAttribute('data-verse-number'));
                 
                 // Actions that use all selected verses vs single verse
-                const multiVerseActions = ['copy', 'note', 'image', 'quote'];
+                const multiVerseActions = ['copy', 'note', 'image', 'quote', 'highlighter'];
                 const shouldUseAllVerses = multiVerseActions.includes(action) && selectedVerses.size > 0;
                 
                 // Get all selected verses sorted by verse number (like Verse.tsx onCopy)
@@ -810,10 +810,45 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
             window.handleVerseClick = handleVerseClick;
             
 
+            // Function to update highlights dynamically
+            function updateHighlights(highlightsData) {
+                if (!highlightsData) return;
+                
+                // Update all verses with their highlight colors
+                Object.keys(highlightsData).forEach(key => {
+                    const highlight = highlightsData[key];
+                    const [bookNumber, chapter, verse] = key.split('-');
+                    const verseElement = document.querySelector(\`[data-verse-number="\${verse}"]\`);
+                    
+                    if (verseElement && highlight && highlight.color) {
+                        verseElement.style.backgroundColor = \`\${highlight.color}40\`;
+                        verseElement.setAttribute('data-highlight-color', highlight.color);
+                    }
+                });
+                
+                // Remove highlights from verses that are no longer highlighted
+                document.querySelectorAll('[data-verse-number]').forEach(verseElement => {
+                    const verseNumber = verseElement.getAttribute('data-verse-number');
+                    const verseData = JSON.parse(verseElement.dataset.verseData || '{}');
+                    const key = \`\${verseData.book_number}-\${verseData.chapter}-\${verseNumber}\`;
+                    
+                    if (!highlightsData[key]) {
+                        verseElement.style.backgroundColor = '';
+                        verseElement.removeAttribute('data-highlight-color');
+                    }
+                });
+            }
+            
+            // Make updateHighlights available globally
+            window.updateHighlights = updateHighlights;
+            
              function handleMessage(data) {
                 switch (data.type) {
                     case 'startTour':
                         startVerseTour();
+                        break;
+                    case 'updateHighlights':
+                        updateHighlights(data.data);
                         break;
                 }
             }
@@ -826,6 +861,16 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                     handleMessage(data);
                     } catch (e) {
                     console.error('Error parsing message:', e);
+                    }
+                });
+                
+                // Also listen via postMessage (React Native WebView standard)
+                window.addEventListener('message', (event) => {
+                    try {
+                        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+                        handleMessage(data);
+                    } catch (e) {
+                        console.error('Error parsing message:', e);
                     }
                 });
             }
@@ -1086,8 +1131,18 @@ const parseVerseTextRegular = (text: string): string => {
     }
 };
 
+type THighlight = {
+    color: string;
+    style: string;
+}
 
-const createRegularVerse = (item: IBookVerse, verseKey: string) => `
+
+const createRegularVerse = (item: IBookVerse, verseKey: string, highlights?: Map<string, THighlight>) => {
+    const highlightKey = `${item.book_number}-${item.chapter}-${item.verse}`;
+    const highlight = highlights?.get(highlightKey);
+    const highlightStyle = highlight ? `bg-gradient-to-t from-[${highlight.color}35] to-[${highlight.color}45] px-1 rounded-sm` : '';
+
+    return `
     <div class="verse-container" data-verse-key="${verseKey}">
         ${item.subheading && item.subheading !== null && item.subheading !== undefined ? createVerseTitle(item.subheading, '') : ''}
         <!-- Verse content -->
@@ -1098,9 +1153,10 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
              data-verse-mode="regular"
              onclick="handleVerseClick(this, '${verseKey}')"
              oncontextmenu="handleVerseContextMenu(this, '${verseKey}', event)"
-             style="position: relative; z-index: 1;">
+             style="position: relative; z-index: 1;"
+             data-highlight-color="${highlight?.color || ''}">
             ${createVerseNumber(item.verse, item.is_favorite)}
-            <span class="verse-content font-semibold dark:font-normal text-theme-text">
+            <span class="verse-content font-semibold dark:font-normal text-theme-text ${highlightStyle}">
                 ${parseVerseTextRegular(item.text)}
             </span>
             <span class="text-theme-text verse-strong-content hidden">
@@ -1113,6 +1169,10 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
             <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[50ms] hover:scale-105" onclick="handleVerseAction('copy', '${verseKey}')">
                 <span class="action-icon text-theme-text">${lucideIcons.copy}</span>
                 <div class="action-label text-theme-text">Copiar</div>
+            </button>
+             <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[100ms] hover:scale-105" onclick="handleVerseAction('highlighter', '${verseKey}')">
+                <span class="action-icon" style="color:  #4dcd8d;">${lucideIcons.highlighter}</span>
+                <div class="action-label text-theme-text">Resaltar</div>
             </button>
             <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[100ms] hover:scale-105" onclick="handleVerseAction('favorite', '${verseKey}')">
                 <span class="action-icon" style="color: ${item.is_favorite ? 'var(--color-notification)' : '#fedf75'};">${lucideIcons[item.is_favorite ? 'star' : 'star-off']}</span>
@@ -1145,6 +1205,7 @@ const createRegularVerse = (item: IBookVerse, verseKey: string) => `
         </div>
     </div>
 `;
+};
 
 const createLoadingState = () => `
     <div class="flex flex-col items-center justify-center p-12 mt-24">
@@ -1157,7 +1218,8 @@ const createLoadingState = () => `
 const renderVerses = (
     data: IBookVerse[],
     isInterlinear: boolean,
-    isSplit: boolean
+    isSplit: boolean,
+    highlights?: Map<string, { color: string; style: string }>
 ) => {
     if (data.length === 0) {
         return createLoadingState();
@@ -1166,7 +1228,7 @@ const renderVerses = (
     return data
         .map((item) => {
             const verseKey = `${item.book_number}-${item.chapter}-${item.verse}`;
-            return createRegularVerse(item, verseKey);
+            return createRegularVerse(item, verseKey, highlights);
         })
         .join("") + "<br />".repeat(7);
 };
@@ -1182,6 +1244,7 @@ type TBibleChapterHtmlTemplateProps = {
     showReadingTime: boolean
     selectedFont?: string;
     shouldLoadTour?: boolean;
+    highlights?: Map<string, { color: string; style: string }>;
 };
 
 export const bibleChapterHtmlTemplate = ({
@@ -1194,7 +1257,8 @@ export const bibleChapterHtmlTemplate = ({
     initialScrollIndex = 0,
     showReadingTime,
     selectedFont,
-    shouldLoadTour = false
+    shouldLoadTour = false,
+    highlights
 }: TBibleChapterHtmlTemplateProps) => {
     const containerWidth = width || "100%";
     const chapterNumber = data[0]?.chapter || 1;
@@ -1202,7 +1266,8 @@ export const bibleChapterHtmlTemplate = ({
     const versesContent = renderVerses(
         data,
         isInterlinear || false,
-        isSplit || false
+        isSplit || false,
+        highlights
     );
 
     const themeSchema = theme.dark ? 'dark' : 'light';

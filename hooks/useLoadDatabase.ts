@@ -209,7 +209,6 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
 
         await createTables(db, isMainBible);
         await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
-        // await checkAndCreateColumn(db, "highlighted_verses", "uuid", "TEXT");
         storedData$.dbTableCreated.set([...dbTableCreated, dbName.shortName]);
       }
 

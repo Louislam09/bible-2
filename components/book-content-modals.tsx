@@ -17,6 +17,7 @@ import MultipleStrongsContentBottomModal from "./home/content/MultipleStrongsCon
 import StrongContentBottomModal from "./home/content/StrongContentBottomModal";
 import WebviewBibleSettingBottomModal from "./home/WebviewBibleSettingBottomModal";
 import InterlinearBottomSheet from "./InterlinearBottomSheet";
+import HighlighterBottomSheet from "./HighlighterBottomSheet";
 
 const BookContentModals = () => {
   const { theme } = useMyTheme();
@@ -26,6 +27,7 @@ const BookContentModals = () => {
   const multipleStrongsData = use$(() => bibleState$.multipleStrongsData.get());
   const isPlayerOpened = use$(() => audioState$.isPlayerOpened.get());
   const commentaryReference = use$(() => modalState$.commentaryReference.get());
+  const isHighlighterOpen = use$(() => modalState$.isHighlighterOpen.get());
 
   // Modal open state flags for conditional rendering (only for WebView-based modals - most expensive)
   const isBibleSettingOpen = use$(() => modalState$.isBibleSettingOpen.get());
@@ -68,6 +70,9 @@ const BookContentModals = () => {
           chapter={commentaryReference.chapter}
           verse={commentaryReference.verse}
         />
+      )}
+      {isHighlighterOpen && (
+        <HighlighterBottomSheet />
       )}
 
       {/* Simpler modals - always mounted (less expensive) */}

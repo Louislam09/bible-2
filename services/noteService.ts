@@ -18,7 +18,6 @@ import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { useCallback } from "react";
-import { Alert } from "react-native";
 
 export const useNoteService = () => {
   const { mainBibleService } = useDBContext();
