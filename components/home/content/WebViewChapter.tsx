@@ -1,8 +1,8 @@
 import { View } from "@/components/Themed";
 import { bibleChapterHtmlTemplate } from "@/constants/bibleChapterTemplate";
 import { getBookDetail } from "@/constants/BookNames";
-import { storedData$ } from "@/context/LocalstoreContext";
 import { useDBContext } from "@/context/databaseContext";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { useHighlightService } from "@/services/highlightService";
 import { bibleState$ } from "@/state/bibleState";
 import { modalState$ } from "@/state/modalState";
@@ -11,11 +11,10 @@ import { IBookVerse, IFavoriteVerse, TTheme } from "@/types";
 import { WordTagPair } from "@/utils/extractVersesInfo";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WebView from "react-native-webview";
-import { WebViewRenderProcessGoneEvent } from "react-native-webview/lib/WebViewTypes";
 
 interface WebViewChapterProps {
   data: IBookVerse[];
@@ -45,7 +44,7 @@ interface WebViewChapterProps {
   onVerseLongPress?: (item: IBookVerse) => void;
 }
 
-const WebViewChapter = React.memo(
+const WebViewChapter = memo(
   ({
     data,
     initialScrollIndex = 0,
@@ -69,8 +68,9 @@ const WebViewChapter = React.memo(
     const { isMyBibleDbLoaded } = useDBContext();
     const { getAllHighlightedVerses } = useHighlightService();
     const isHighlighterOpen = use$(() => modalState$.isHighlighterOpen.get());
+    const previewHighlightData = use$(() => modalState$.previewHighlight.get());
     const [highlights, setHighlights] = useState<Map<string, { color: string; style: string }>>(new Map());
-
+    const lastPreviewRef = useRef<{ color: string; style: string }>({ color: "", style: "" });
     const handleMessage = useCallback(
       (event: any) => {
         try {
@@ -207,6 +207,12 @@ const WebViewChapter = React.memo(
               // WebView requesting highlights update
               loadHighlights();
               break;
+            case "previewHighlight":
+              // Preview highlight before applying
+              if (message.data?.color && message.data?.style) {
+                previewHighlight(message.data.color, message.data.style);
+              }
+              break;
           }
         } catch (error) {
           console.warn("Error parsing WebView message:", error);
@@ -236,19 +242,45 @@ const WebViewChapter = React.memo(
     const selectedFont = use$(() => storedData$.selectedFont.get());
     const showReadingTime = use$(() => storedData$.showReadingTime.get());
 
-    // Load highlights
-    useEffect(() => {
-      if (isMyBibleDbLoaded) {
-        loadHighlights();
-      }
-    }, [isMyBibleDbLoaded, data]);
+    const previewHighlight = useCallback((color: string, style: string) => {
+      // Get current reference or selected verses
+      const reference = modalState$.highlighterReference.get();
+      const selectedVerses = bibleState$.selectedVerses.get();
 
-    // Reload highlights when highlighter closes
-    useEffect(() => {
-      if (!isHighlighterOpen && isMyBibleDbLoaded) {
-        loadHighlights();
+      let versesToPreview: Array<{ book_number: number; chapter: number; verse: number }> = [];
+
+      if (selectedVerses.size > 0) {
+        versesToPreview = Array.from(selectedVerses.values()).map(v => ({
+          book_number: v.book_number,
+          chapter: v.chapter,
+          verse: v.verse
+        }));
+      } else if (reference.bookNumber && reference.chapter && reference.verse) {
+        versesToPreview = [{
+          book_number: reference.bookNumber,
+          chapter: reference.chapter,
+          verse: reference.verse
+        }];
       }
-    }, [isHighlighterOpen, isMyBibleDbLoaded]);
+
+      // Send preview to WebView
+      if (webViewRef.current && versesToPreview.length > 0) {
+        const previewData: Record<string, { color: string; style: string }> = {};
+        versesToPreview.forEach(verse => {
+          const key = `${verse.book_number}-${verse.chapter}-${verse.verse}`;
+          previewData[key] = { color, style };
+        });
+
+        webViewRef.current.injectJavaScript(`
+          (function() {
+            if (window.previewHighlight) {
+              window.previewHighlight(${JSON.stringify(previewData)});
+            }
+          })();
+          true;
+        `);
+      }
+    }, []);
 
     const loadHighlights = useCallback(async () => {
       try {
@@ -280,7 +312,47 @@ const WebViewChapter = React.memo(
       } catch (error) {
         console.error("Error loading highlights:", error);
       }
-    }, [getAllHighlightedVerses]);
+    }, []);
+
+    // Load highlights
+    useEffect(() => {
+      if (isMyBibleDbLoaded) {
+        loadHighlights();
+      }
+    }, [isMyBibleDbLoaded, data]);
+
+
+    // Handle preview highlight updates
+    useEffect(() => {
+      const hasColor = previewHighlightData.color && previewHighlightData.color !== "";
+      const hasStyle = previewHighlightData.style && previewHighlightData.style !== "";
+      const isDifferent =
+        lastPreviewRef.current.color !== previewHighlightData.color ||
+        lastPreviewRef.current.style !== previewHighlightData.style;
+
+      if (hasColor && hasStyle && isHighlighterOpen && isDifferent) {
+        lastPreviewRef.current = {
+          color: previewHighlightData.color,
+          style: previewHighlightData.style
+        };
+        previewHighlight(previewHighlightData.color, previewHighlightData.style);
+      } else if (!hasColor && !hasStyle && isHighlighterOpen) {
+        // Clear preview if both are empty
+        if (lastPreviewRef.current.color || lastPreviewRef.current.style) {
+          lastPreviewRef.current = { color: "", style: "" };
+          if (webViewRef.current) {
+            webViewRef.current.injectJavaScript(`
+              (function() {
+                if (window.clearPreview) {
+                  window.clearPreview();
+                }
+              })();
+              true;
+            `);
+          }
+        }
+      }
+    }, [previewHighlightData.color, previewHighlightData.style, isHighlighterOpen]);
 
     const htmlChapterTemplate = useMemo(() => {
       return bibleChapterHtmlTemplate({
@@ -312,6 +384,8 @@ const WebViewChapter = React.memo(
       webViewRef.current?.postMessage(JSON.stringify({ type: "startTour" }));
       // tourState$.startVerseSectionTour.set(false);
     }, []);
+
+
 
 
     return (
@@ -360,4 +434,4 @@ const WebViewChapter = React.memo(
   }
 );
 
-export default React.memo(WebViewChapter);
+export default WebViewChapter;

@@ -894,8 +894,73 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 });
             }
             
-            // Make updateHighlights available globally
+            // Function to preview highlights (temporary, before applying)
+            function previewHighlight(previewData) {
+                if (!previewData) return;
+                
+                // Apply preview highlights
+                Object.keys(previewData).forEach(key => {
+                    const highlight = previewData[key];
+                    const [bookNumber, chapter, verse] = key.split('-');
+                    const verseElement = document.querySelector(\`[data-verse-number="\${verse}"]\`);
+                    
+                    if (verseElement && highlight && highlight.color) {
+                        const verseContent = verseElement.querySelector('.verse-content');
+                        const verseStrongContent = verseElement.querySelector('.verse-strong-content');
+                        
+                        // Apply style based on highlight type
+                        let highlightStyle = '';
+                        let highlightClasses = '';
+                        
+                        if (highlight.style === 'underline') {
+                            // Underline style
+                            highlightStyle = \`text-decoration: underline; text-decoration-color: \${highlight.color}; text-decoration-thickness: 3px; text-underline-offset: 3px;\`;
+                        } else {
+                            // Highlight style (default)
+                            highlightStyle = \`background: linear-gradient(to top, \${highlight.color}35, \${highlight.color}45);\`;
+                            highlightClasses = 'px-1 rounded-sm';
+                        }
+                        
+                        if (verseContent) {
+                            verseContent.style.cssText = highlightStyle;
+                            if (highlightClasses) {
+                                verseContent.classList.add(...highlightClasses.split(' '));
+                            } else {
+                                verseContent.classList.remove('px-1', 'rounded-sm');
+                            }
+                            verseContent.setAttribute('data-preview', 'true');
+                        }
+                        
+                        if (verseStrongContent) {
+                            verseStrongContent.style.cssText = highlightStyle;
+                            if (highlightClasses) {
+                                verseStrongContent.classList.add(...highlightClasses.split(' '));
+                            } else {
+                                verseStrongContent.classList.remove('px-1', 'rounded-sm');
+                            }
+                            verseStrongContent.setAttribute('data-preview', 'true');
+                        }
+                    }
+                });
+            }
+            
+            // Function to clear preview highlights
+            function clearPreview() {
+                document.querySelectorAll('[data-preview="true"]').forEach(element => {
+                    element.style.background = '';
+                    element.style.textDecoration = '';
+                    element.style.textDecorationColor = '';
+                    element.style.textDecorationThickness = '';
+                    element.style.textUnderlineOffset = '';
+                    element.classList.remove('px-1', 'rounded-sm');
+                    element.removeAttribute('data-preview');
+                });
+            }
+            
+            // Make functions available globally
             window.updateHighlights = updateHighlights;
+            window.previewHighlight = previewHighlight;
+            window.clearPreview = clearPreview;
             
              function handleMessage(data) {
                 switch (data.type) {

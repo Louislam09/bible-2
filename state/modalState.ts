@@ -37,6 +37,7 @@ export const modalState$ = observable({
   isMultipleStrongsOpen: false,
   isBibleSettingOpen: false,
   isHighlighterOpen: false,
+  previewHighlight: { color: "", style: "" },
 
   openUserTooltip: () => {
     modalState$.showUserTooltip.set(true);

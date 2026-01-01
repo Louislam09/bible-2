@@ -130,6 +130,9 @@ const WebviewHighlighter: React.FC<Props> = ({ theme }) => {
       // Reload highlights
       await loadExistingHighlights();
 
+      // Clear preview
+      modalState$.previewHighlight.set({ color: "", style: "" });
+
       // Clear selection and close
       bibleState$.clearSelection();
       modalState$.closeHighlighterBottomSheet();
@@ -184,6 +187,9 @@ const WebviewHighlighter: React.FC<Props> = ({ theme }) => {
 
       // Reload highlights
       await loadExistingHighlights();
+
+      // Clear preview
+      modalState$.previewHighlight.set({ color: "", style: "" });
 
       // Clear selection and close
       bibleState$.clearSelection();
@@ -272,6 +278,15 @@ const WebviewHighlighter: React.FC<Props> = ({ theme }) => {
             break;
           case "clearHighlight":
             handleClearHighlight();
+            break;
+          case "previewHighlight":
+            // Forward preview message to WebViewChapter via modalState
+            if (message.data?.color && message.data?.style) {
+              modalState$.previewHighlight.set({
+                color: message.data.color,
+                style: message.data.style
+              });
+            }
             break;
         }
       } catch (error) {

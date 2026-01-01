@@ -188,6 +188,8 @@ export const highlighterHtmlTemplate = ({
             // Update button if color is already selected
             if (selectedColor) {
                 updateActionButton();
+                // Update preview when style changes
+                previewHighlight(selectedColor, currentStyle);
             }
         }
 
@@ -195,6 +197,9 @@ export const highlighterHtmlTemplate = ({
             // Just select the color visually, don't apply yet
             selectedColor = color;
             updateActionButton();
+            
+            // Send preview to WebViewChapter
+            previewHighlight(color, currentStyle);
             
             // Update visual selection on color buttons
             document.querySelectorAll('[data-color-button]').forEach(btn => {
@@ -234,6 +239,14 @@ export const highlighterHtmlTemplate = ({
                     data: { color: selectedColor, style: currentStyle }
                 }));
             }
+        }
+        
+        function previewHighlight(color, style) {
+            // Send preview message to WebViewChapter
+            window.ReactNativeWebView.postMessage(JSON.stringify({
+                type: 'previewHighlight',
+                data: { color, style }
+            }));
         }
 
         function handleClearHighlight() {
