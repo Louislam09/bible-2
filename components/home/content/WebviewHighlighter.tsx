@@ -27,7 +27,6 @@ const WebviewHighlighter: React.FC<Props> = ({ theme }) => {
   const webViewRef = useRef<WebView>(null);
   const fontSize = use$(() => storedData$.fontSize.get());
   const haptics = useHaptics();
-  const { isMyBibleDbLoaded } = useDBContext();
   const {
     createHighlight,
     updateHighlight,

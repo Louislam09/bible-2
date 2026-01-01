@@ -1,6 +1,7 @@
 import { getTailwindStyleTag } from "@/hooks/useLoadTailwindScript";
 import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
 import { TTheme } from "@/types";
+import { lucideIcons } from "@/utils/lucideIcons";
 
 interface HighlighterTemplateProps {
     theme: TTheme;
@@ -29,24 +30,6 @@ const highlighterStyles = (theme: TTheme) => {
             -webkit-tap-highlight-color: transparent;
         }
         
-        /* Color button checkmark */
-        .color-button.selected::after {
-            content: '✓';
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            font-size: 16px;
-            font-weight: bold;
-            color: #000;
-            background: rgba(255, 255, 255, 0.9);
-            width: 20px;
-            height: 20px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
         /* Clear button X icon */
         .clear-button::after {
             content: '✕';
@@ -54,11 +37,6 @@ const highlighterStyles = (theme: TTheme) => {
             color: var(--color-theme-text);
         }
         
-        
-        /* Selected state border */
-        .color-button.selected {
-            border-width: 3px !important;
-        }
     </style>
   `;
 };
@@ -74,6 +52,11 @@ export const highlighterHtmlTemplate = ({
 }: HighlighterTemplateProps): string => {
     const themeSchema = theme.dark ? "dark" : "light";
     let currentStyle = selectedStyle || 'highlight';
+
+    const selectCheckElement = (selected: boolean) => `
+        <span class="${selected ? "w-full h-full rounded-full bg-black/30 flex items-center justify-center text-xl text-white " : "hidden"}">
+        ${lucideIcons.check}</span>
+    `;
 
     return `
 <!DOCTYPE html>
@@ -112,17 +95,18 @@ export const highlighterHtmlTemplate = ({
     <!-- Color Selection -->
     <div class="flex flex-row items-center gap-4 overflow-x-auto py-1 px-10 w-full">
         ${colors.map((item, index) => `  <div 
-                class="w-14 h-14 rounded-full border-2 flex items-center justify-center cursor-pointer flex-shrink-0 relative shadow-md color-button 
-                ${selectedColors.includes(item.color) ? "selected border-theme-notification scale-110" : "border-theme-border"}"
+                class="w-14 h-14 rounded-full flex items-center justify-center cursor-pointer flex-shrink-0 relative shadow-md ${selectedColors.includes(item.color) ? "border-2 border-theme-notification" : ""}"
                 style="background-color: ${item.color};"
                 onclick="handleColorSelect('${item.color}')"
-            ></div>
+            >
+                ${selectCheckElement(selectedColors.includes(item.color))}
+                </div>
         `).join("")}
         
         <div class="w-px h-10 bg-theme-border mx-2"></div>
         
         <div 
-            class="w-14 h-14 rounded-full border-2 border-theme-border flex items-center justify-center cursor-pointer flex-shrink-0 shadow-md bg-theme-card clear-button color-button"
+            class="w-14 h-14 rounded-full border-2 border-theme-border flex items-center justify-center cursor-pointer flex-shrink-0 shadow-md bg-theme-card clear-button"
             onclick="handleClearHighlight()"
         ></div>
     </div>
