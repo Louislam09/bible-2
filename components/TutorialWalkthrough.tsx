@@ -1,26 +1,8 @@
-import React, { useEffect, useRef } from "react";
 import { useTutorial } from "@/context/TutorialContext";
 import { getTourRef } from "@/state/tourState";
+import React from "react";
 import Walkthrough from "./Walkthrough";
 
-/**
- * TutorialWalkthrough Component
- * 
- * A wrapper component that automatically connects the enhanced Walkthrough
- * component with the TutorialContext and tourState$ refs. This component 
- * should be placed at the root level of screens where tutorials will be displayed.
- * 
- * @example
- * // In your screen component:
- * function HomeScreen() {
- *   return (
- *     <>
- *       <YourScreenContent />
- *       <TutorialWalkthrough />
- *     </>
- *   );
- * }
- */
 const TutorialWalkthrough: React.FC = () => {
   const {
     activeTutorial,

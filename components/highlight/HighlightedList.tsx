@@ -1,35 +1,28 @@
 import Animation from "@/components/Animation";
-import Icon from "@/components/Icon";
-import ActionButton, { Backdrop } from "@/components/note/ActionButton";
 import { Text, View as ThemedView } from "@/components/Themed";
 import { getBookDetail } from "@/constants/BookNames";
+import { highlightedListHtmlTemplate } from "@/constants/highlightedListTemplate";
 import { useBibleContext } from "@/context/BibleContext";
+import { useDBContext } from "@/context/databaseContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { useHighlightService, THighlightedVerse } from "@/services/highlightService";
-import { authState$ } from "@/state/authState";
 import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, Screens, TTheme } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
-import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { showToast } from "@/utils/showToast";
-import { use$ } from "@legendapp/state/react";
-import { useNavigation } from "@react-navigation/native";
-import { FlashListRef } from "@shopify/flash-list";
 import { Stack, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
-  Animated,
-  Keyboard,
-  ListRenderItem,
-  RefreshControl,
   StyleSheet,
-  TouchableOpacity,
   View
 } from "react-native";
-import { Swipeable } from "react-native-gesture-handler";
+import WebView from "react-native-webview";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 
 type HighlightedListProps = {};
 
@@ -37,15 +30,9 @@ const HighlightedList = ({ }: HighlightedListProps) => {
   const [filterData, setFilterData] = useState<THighlightedVerse[]>([]);
   const [originalData, setOriginalData] = useState<THighlightedVerse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showMoreOptions, setShowMoreOptions] = useState(false);
-  const [selectionMode, setSelectionMode] = useState(false);
-  const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
 
-  const flatListRef = useRef<FlashListRef<any>>(null);
-  const scrollY = useRef(new Animated.Value(0)).current;
-  const swipeableRefs = useRef<{ [key: number]: Swipeable | null }>({});
+  const webViewRef = useRef<WebView>(null);
 
   // Hooks
   const { theme } = useMyTheme();
@@ -53,12 +40,50 @@ const HighlightedList = ({ }: HighlightedListProps) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const styles = getStyles(theme);
-  const notFoundSource = require("../../assets/lottie/notFound.json");
 
-  const { currentBibleLongName, orientation } = useBibleContext();
-  const { getAllHighlightedVerses, deleteHighlight, exportHighlights, importHighlights } =
-    useHighlightService();
-  const isLoggedIn = use$(() => !!authState$.user.get());
+  const { currentBibleLongName, orientation, currentBibleVersion } = useBibleContext();
+  const { installedBibles } = useDBContext();
+  const { getAllHighlightedVerses, deleteHighlight } = useHighlightService();
+
+  // Get current Bible version short name
+  const currentVersionShortName = useMemo(() => {
+    const currentBible = installedBibles.find((version) => version.id === currentBibleVersion);
+    return currentBible?.shortName || currentBibleLongName || "NIV";
+  }, [installedBibles, currentBibleVersion, currentBibleLongName]);
+
+  // Format relative time (e.g., "2 days ago")
+  const formatTimeAgo = useCallback((timestamp: number | string): string => {
+    const now = new Date();
+    const date = typeof timestamp === 'string' ? new Date(timestamp) : new Date(timestamp);
+    const diff = now.getTime() - date.getTime();
+
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(days / 365);
+
+    if (years > 0) {
+      return years === 1 ? "1 year ago" : `${years} years ago`;
+    }
+    if (months > 0) {
+      return months === 1 ? "1 month ago" : `${months} months ago`;
+    }
+    if (weeks > 0) {
+      return weeks === 1 ? "1 week ago" : `${weeks} weeks ago`;
+    }
+    if (days > 0) {
+      return days === 1 ? "1 day ago" : `${days} days ago`;
+    }
+    if (hours > 0) {
+      return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
+    }
+    if (minutes > 0) {
+      return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
+    }
+    return "Just now";
+  }, []);
 
   // Calculate if scroll position is beyond threshold for showing top button
 
@@ -73,7 +98,6 @@ const HighlightedList = ({ }: HighlightedListProps) => {
       showToast("Error al cargar versículos destacados");
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   }, [getAllHighlightedVerses]);
 
@@ -81,10 +105,6 @@ const HighlightedList = ({ }: HighlightedListProps) => {
     fetchData();
   }, []);
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    fetchData();
-  }, []);
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -107,11 +127,6 @@ const HighlightedList = ({ }: HighlightedListProps) => {
 
   const onVerseClick = useCallback(
     (item: THighlightedVerse) => {
-      if (selectionMode) {
-        toggleSelection(item.id as number);
-        return;
-      }
-
       const queryInfo = {
         book: item.bookName || getBookDetail(item.book_number).longName,
         chapter: item.chapter,
@@ -126,30 +141,9 @@ const HighlightedList = ({ }: HighlightedListProps) => {
 
       navigation.navigate(Screens.Home, queryInfo);
     },
-    [navigation, selectionMode]
+    [navigation]
   );
 
-  const onRemoveHighlight = useCallback(
-    async (item: THighlightedVerse) => {
-      try {
-        await deleteHighlight(
-          item.book_number,
-          item.chapter,
-          item.verse,
-          item.uuid
-        );
-
-        setFilterData((prev) => prev.filter((v) => v.id !== item.id));
-        setOriginalData((prev) => prev.filter((v) => v.id !== item.id));
-
-        showToast("Versículo destacado eliminado");
-      } catch (error) {
-        console.error("Error removing highlight:", error);
-        showToast("Error al eliminar versículo destacado");
-      }
-    },
-    [deleteHighlight]
-  );
 
   const onCopy = useCallback(async (item: THighlightedVerse) => {
     try {
@@ -174,377 +168,148 @@ const HighlightedList = ({ }: HighlightedListProps) => {
     router.push({ pathname: "/quoteMaker", params: { text: verseText, reference } });
   }, [router]);
 
-  const toggleSelectionMode = useCallback(() => {
-    setSelectionMode((prev) => !prev);
-    if (selectionMode) {
-      setSelectedItems(new Set());
-    }
-  }, [selectionMode]);
-
-  const toggleSelection = useCallback((id: number) => {
-    setSelectedItems((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-      } else {
-        newSet.add(id);
-      }
-      return newSet;
-    });
-  }, []);
-
-  const selectAll = useCallback(() => {
-    const allIds = filterData.map((item) => item.id).filter((id): id is number => id !== undefined);
-    setSelectedItems(new Set(allIds));
-  }, [filterData]);
-
-  const deselectAll = useCallback(() => {
-    setSelectedItems(new Set());
-  }, []);
-
-  const deleteSelected = useCallback(async () => {
-    if (selectedItems.size === 0) return;
-
-    Alert.alert(
-      "Eliminar destacados",
-      `¿Estás seguro de eliminar ${selectedItems.size} versículos destacados?`,
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Eliminar",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              const deletePromises = Array.from(selectedItems).map((id) => {
-                const verse = originalData.find((v) => v.id === id);
-                if (!verse) return Promise.resolve();
-
-                return deleteHighlight(
-                  verse.book_number,
-                  verse.chapter,
-                  verse.verse,
-                  verse.uuid
-                );
-              });
-
-              await Promise.all(deletePromises);
-
-              setFilterData((prev) =>
-                prev.filter((item) => !selectedItems.has(item.id as number))
-              );
-              setOriginalData((prev) =>
-                prev.filter((item) => !selectedItems.has(item.id as number))
-              );
-
-              setSelectionMode(false);
-              setSelectedItems(new Set());
-
-              showToast(`${selectedItems.size} versículos eliminados`);
-            } catch (error) {
-              console.error("Error deleting highlights:", error);
-              showToast("Error al eliminar destacados");
-            }
+  const onDelete = useCallback(
+    (item: THighlightedVerse) => {
+      Alert.alert(
+        "Eliminar destacado",
+        "¿Estás seguro de eliminar este versículo destacado?",
+        [
+          {
+            text: "Cancelar",
+            style: "cancel",
           },
-        },
-      ]
-    );
-  }, [selectedItems, originalData, deleteHighlight]);
+          {
+            text: "Eliminar",
+            style: "destructive",
+            onPress: async () => {
+              try {
+                await deleteHighlight(
+                  item.book_number,
+                  item.chapter,
+                  item.verse,
+                  item.uuid
+                );
 
-  const handleExportHighlights = useCallback(async () => {
-    try {
-      if (selectedItems.size > 0) {
-        const selectedIds = Array.from(selectedItems) as number[];
-        await exportHighlights(selectedIds);
-      } else {
-        await exportHighlights();
-      }
-      showToast("Destacados exportados exitosamente");
-    } catch (error) {
-      console.error("Error exporting highlights:", error);
-      showToast("Error al exportar destacados");
-    } finally {
-      setShowMoreOptions(false);
-    }
-  }, [selectedItems, exportHighlights]);
+                setFilterData((prev) => prev.filter((v) => v.id !== item.id));
+                setOriginalData((prev) => prev.filter((v) => v.id !== item.id));
 
-  const handleImportHighlights = useCallback(async () => {
-    try {
-      await importHighlights();
-      showToast("Destacados importados exitosamente");
-      fetchData();
-    } catch (error) {
-      console.error("Error importing highlights:", error);
-      showToast("Error al importar destacados");
-    } finally {
-      setShowMoreOptions(false);
-    }
-  }, [importHighlights, fetchData]);
-
-  const showMoreOptionHandle = useCallback(() => {
-    setShowMoreOptions((prev) => !prev);
-  }, []);
-
-  const dismiss = useCallback(() => {
-    Keyboard.dismiss();
-    setShowMoreOptions(false);
-  }, []);
-
-  const renderItem: ListRenderItem<THighlightedVerse> = useCallback(
-    ({ item, index }) => {
-      const itemId = item.id as number;
-      const isSelected = itemId !== undefined && selectedItems.has(itemId);
-
-      const renderRightActions = (progress: any, dragX: any) => {
-        const trans = dragX.interpolate({
-          inputRange: [-80, 0],
-          outputRange: [0, 80],
-          extrapolate: "clamp",
-        });
-
-        return (
-          <View style={styles.rightSwipeActions}>
-            <Animated.View
-              style={[
-                styles.deleteAction,
-                {
-                  transform: [{ translateX: trans }],
-                },
-              ]}
-            >
-              <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={() => {
-                  if (itemId !== undefined) {
-                    swipeableRefs.current[itemId]?.close();
-                  }
-                  Alert.alert(
-                    "Eliminar destacado",
-                    "¿Estás seguro de eliminar este versículo destacado?",
-                    [
-                      { text: "Cancelar", style: "cancel" },
-                      {
-                        text: "Eliminar",
-                        style: "destructive",
-                        onPress: () => onRemoveHighlight(item),
-                      },
-                    ]
-                  );
-                }}
-              >
-                <Icon name="Trash2" size={24} color="#fff" />
-              </TouchableOpacity>
-            </Animated.View>
-          </View>
-        );
-      };
-
-      return (
-        <Swipeable
-          ref={(ref) => {
-            if (itemId !== undefined) {
-              swipeableRefs.current[itemId] = ref;
-            }
-          }}
-          renderRightActions={renderRightActions}
-          friction={2}
-          overshootRight={false}
-          enabled={!selectionMode}
-        >
-          <TouchableOpacity
-            style={[styles.itemContainer, isSelected && styles.selectedItem]}
-            activeOpacity={0.8}
-            onPress={() => onVerseClick(item)}
-            onLongPress={() => {
-              if (!selectionMode && itemId !== undefined) {
-                setSelectionMode(true);
-                toggleSelection(itemId);
-                // // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                showToast("Versículo destacado eliminado");
+              } catch (error) {
+                console.error("Error removing highlight:", error);
+                showToast("Error al eliminar versículo destacado");
               }
-            }}
-          >
-            <View style={styles.cardContainer}>
-              {selectionMode && (
-                <View style={styles.checkboxContainer}>
-                  <View
-                    style={[
-                      styles.checkbox,
-                      isSelected && styles.checkboxSelected,
-                    ]}
-                  >
-                    {isSelected && <Icon name="Check" size={16} color="#fff" />}
-                  </View>
-                </View>
-              )}
-
-              <View style={styles.headerContainer}>
-                <View style={styles.titleContainer}>
-                  <Text style={styles.cardTitle}>
-                    {`${renameLongBookName(item.bookName || getBookDetail(item.book_number).longName)} ${item.chapter}:${item.verse}`}
-                  </Text>
-                  {/* Highlight color indicator */}
-                  <View
-                    style={[
-                      styles.highlightIndicator,
-                      {
-                        backgroundColor: item.color,
-                        borderColor: item.color,
-                      },
-                    ]}
-                  >
-                    {item.style === 'underline' && (
-                      <View
-                        style={[
-                          styles.underlineIndicator,
-                          { borderBottomColor: item.color },
-                        ]}
-                      />
-                    )}
-                  </View>
-                </View>
-
-                {!selectionMode && (
-                  <View style={styles.verseAction}>
-                    <TouchableOpacity
-                      style={styles.actionIconButton}
-                      onPress={() => onCopy(item)}
-                      accessibilityLabel="Copiar versículo"
-                    >
-                      <Icon size={20} name="Copy" color={theme.colors.text} />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={styles.actionIconButton}
-                      onPress={() => onShare(item)}
-                      accessibilityLabel="Compartir versículo"
-                    >
-                      <Icon size={20} name="Share2" color={theme.colors.text} />
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </View>
-
-              <Text style={styles.verseBody} numberOfLines={3}>
-                {item.text ? getVerseTextRaw(item.text) : ""}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </Swipeable>
+            },
+          },
+        ]
       );
     },
-    [
-      styles,
-      selectionMode,
-      selectedItems,
-      onVerseClick,
-      onRemoveHighlight,
-      onCopy,
-      onShare,
-      toggleSelection,
-      theme,
-    ]
+    [deleteHighlight]
   );
 
-  const EmptyComponent = useCallback(() => {
-    if (loading) {
-      return (
-        <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>
-            Cargando versículos destacados...
-          </Text>
-        </View>
-      );
-    }
+  // Handle WebView messages
+  const handleWebViewMessage = useCallback(
+    (event: any) => {
+      try {
+        const message = JSON.parse(event.nativeEvent.data);
+        const { type, data } = message;
 
-    return (
-      <View style={styles.noResultsContainer}>
-        <Animation
-          backgroundColor={theme.colors.background}
-          source={notFoundSource}
-          loop={false}
-          style={styles.animation}
-        />
+        console.log("WebView message received:", type, data);
 
-        {searchQuery ? (
-          <Text style={styles.noResultsText}>
-            No se encontraron resultados para "{searchQuery}"
-          </Text>
-        ) : (
-          <View style={styles.emptyStateContent}>
-            <Text style={styles.noResultsText}>
-              <Text style={{ color: theme.colors.notification }}>
-                ({currentBibleLongName})
-              </Text>
-              {"\n"}
-              No tienes versículos destacados en esta versión de la escritura.
-            </Text>
+        // Find item by id
+        const item = filterData.find((v) => {
+          const itemId = v.id?.toString();
+          const dataId = data.id?.toString();
+          return itemId === dataId;
+        });
 
-            <TouchableOpacity
-              style={styles.addFavoriteButton}
-              onPress={() => navigation.navigate(Screens.Home, {})}
-            >
-              <Text style={styles.addFavoriteButtonText}>
-                Ir a la Biblia para añadir destacados
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
+        if (!item) {
+          console.warn("Item not found for id:", data.id);
+          return;
+        }
+
+        switch (type) {
+          case "copy":
+            console.log("Copy action triggered");
+            onCopy(item);
+            break;
+          case "share":
+            console.log("Share action triggered");
+            onShare(item);
+            break;
+          case "delete":
+            console.log("Delete action triggered");
+            onDelete(item);
+            break;
+          case "goToContext":
+          case "context":
+            console.log("Go to context action triggered");
+            onVerseClick(item);
+            break;
+          default:
+            console.log("Unknown message type:", type);
+        }
+      } catch (error) {
+        console.error("Error parsing WebView message:", error, event.nativeEvent.data);
+      }
+    },
+    [filterData, onCopy, onShare, onDelete, onVerseClick]
+  );
+
+  // Generate HTML content
+  const htmlContent = useMemo(() => {
+    return highlightedListHtmlTemplate(
+      filterData,
+      theme,
+      currentVersionShortName,
+      formatTimeAgo,
+      16,
+      undefined // selectedFont - can be added later if needed
     );
-  }, [loading, searchQuery, currentBibleLongName, navigation, theme, styles]);
+  }, [filterData, theme, currentVersionShortName, formatTimeAgo]);
 
-
-  if (loading && !filterData.length) {
-    return (
-      <View style={[styles.container, { paddingTop: insets.top }]}>
-        <Stack.Screen
-          options={{
-            headerShown: true,
-            title: "Mis versículos destacados",
-            headerTitleStyle: { color: theme.colors.text },
-            headerStyle: { backgroundColor: theme.colors.background },
-          }}
-        />
-        <EmptyComponent />
-      </View>
-    );
-  }
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <Stack.Screen
         options={{
           headerShown: true,
-          title: "Mis versículos favoritos",
+          title: "Mis versículos destacados",
           headerTitleStyle: { color: theme.colors.text },
           headerStyle: { backgroundColor: theme.colors.background },
         }}
       />
-
-      <Backdrop visible={showMoreOptions} onPress={dismiss} theme={theme} />
-      <Animated.FlatList
-        decelerationRate="normal"
-        data={filterData}
-        renderItem={renderItem as any}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-          { useNativeDriver: false }
-        )}
-        keyExtractor={(item: THighlightedVerse) => `highlight-${item.id || item.uuid}`}
-        contentContainerStyle={styles.listContentContainer}
-        ListEmptyComponent={EmptyComponent}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            colors={[theme.colors.notification]}
-            tintColor={theme.colors.notification}
+      <WebView
+        ref={webViewRef}
+        originWhitelist={["*"]}
+        source={{ html: htmlContent }}
+        style={styles.webView}
+        onMessage={handleWebViewMessage}
+        scrollEnabled={true}
+        bounces={false}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        renderLoading={() => (
+          <View
+            style={{
+              backgroundColor: theme.colors.background,
+              flex: 1,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 1000,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           />
-        }
+        )}
+        onError={(syntheticEvent) => {
+          const { nativeEvent } = syntheticEvent;
+          console.error("WebView error:", nativeEvent);
+        }}
+        {...createOptimizedWebViewProps({}, "static")}
       />
-
     </ThemedView>
   );
 };
@@ -555,8 +320,9 @@ const getStyles = ({ colors, dark }: TTheme) =>
       flex: 1,
       backgroundColor: colors.background,
     },
-    listContentContainer: {
-      paddingBottom: 120,
+    webView: {
+      flex: 1,
+      backgroundColor: "transparent",
     },
     headerCompositeContainer: {
       paddingHorizontal: 16,
@@ -607,71 +373,113 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontWeight: "500",
     },
     itemContainer: {
-      flexDirection: "row",
-      backgroundColor: dark ? colors.background : "white",
-      marginVertical: 5,
-      paddingLeft: 5,
-      borderRadius: 10,
+      marginVertical: 8,
+      marginHorizontal: 16,
+      borderRadius: 16,
       overflow: "hidden",
     },
     selectedItem: {
       backgroundColor: colors.notification + "20",
     },
-    cardContainer: {
-      display: "flex",
-      borderRadius: 10,
-      padding: 12,
-      flex: 1,
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
-      borderColor: colors.notification + "40",
-      backgroundColor: dark ? colors.background : "white",
-      borderWidth: dark ? 1 : 0,
+    pressedCard: {
+      transform: [{ scale: 0.99 }],
+      opacity: 0.95,
     },
-    headerContainer: {
-      position: "relative",
+    cardContainer: {
+      borderRadius: 16,
+      padding: 20,
+      backgroundColor: dark ? colors.text + 20 : 'white',
+      borderWidth: 1,
+      borderColor: dark ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.1)",
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 4,
+    },
+    headerRow: {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-      marginBottom: 8,
+      marginBottom: 12,
     },
-    titleContainer: {
+    headerLeft: {
       flexDirection: "row",
       alignItems: "center",
       flex: 1,
     },
-    cardTitle: {
-      fontSize: 16,
-      fontWeight: "bold",
-      color: colors.notification,
-      flex: 1,
+    colorDot: {
+      width: 10,
+      height: 10,
+      borderRadius: 5,
+      marginRight: 8,
+      shadowOffset: {
+        width: 0,
+        height: 0,
+      },
+      shadowOpacity: 0.5,
+      shadowRadius: 8,
+      elevation: 4,
     },
-    highlightIndicator: {
-      width: 20,
-      height: 20,
-      borderRadius: 10,
-      marginLeft: 8,
-      borderWidth: 2,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    underlineIndicator: {
-      width: 12,
-      height: 2,
-      borderBottomWidth: 3,
-    },
-    verseBody: {
+    verseReference: {
+      fontSize: 14,
+      fontWeight: "600",
       color: colors.text,
-      fontSize: 15,
-      lineHeight: 22,
     },
-    verseAction: {
+    timestamp: {
+      fontSize: 10,
+      fontWeight: "500",
+      textTransform: "uppercase",
+      letterSpacing: 0.5,
+      color: colors.text + "99",
+    },
+    verseTextContainer: {
+      position: "relative",
+      paddingLeft: 12,
+      marginBottom: 12,
+      marginTop: 0,
+    },
+    leftBorderAccent: {
+      position: "absolute",
+      left: 0,
+      top: 4,
+      bottom: 4,
+      width: 2,
+      borderRadius: 1,
+    },
+    verseText: {
+      fontSize: 15,
+      lineHeight: 24,
+      color: colors.text + "CC",
+    },
+    footer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingTop: 12,
+      borderTopWidth: 1,
+      borderTopColor: dark ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.1)",
+    },
+    versionText: {
+      fontSize: 12,
+      fontWeight: "500",
+      color: colors.text + "99",
+    },
+    goToContextButton: {
       flexDirection: "row",
       alignItems: "center",
+      paddingVertical: 4,
+      paddingLeft: 8,
+      paddingRight: 4,
+      borderRadius: 8,
     },
-    actionIconButton: {
-      padding: 6,
-      marginLeft: 8,
+    goToContextText: {
+      fontSize: 12,
+      fontWeight: "500",
+      color: colors.notification || colors.primary,
     },
     icon: {
       color: colors.primary,
