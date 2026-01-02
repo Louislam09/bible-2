@@ -1,5 +1,4 @@
 import {
-  Alert,
   Animated,
   Easing,
   KeyboardAvoidingView,
@@ -11,6 +10,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 
 import { AppIconSelector } from "@/components/AppIconSelector";
 import BottomModal from "@/components/BottomModal";
@@ -78,6 +78,7 @@ type TSection = {
 };
 
 const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
+  const { confirm, alertError, alertSuccess, alertInfo } = useAlert();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const {
@@ -138,16 +139,10 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
   );
 
   const onLogout = () => {
-    Alert.alert(
+    confirm(
       "Cerrar Sesión",
       "¿Estás seguro de que deseas cerrar tu sesión?",
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Cerrar Sesión",
-          onPress: () => handleLogout(),
-        },
-      ]
+      () => handleLogout()
     );
   };
 
@@ -167,10 +162,10 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
         useNativeDriver: true,
       }).start();
 
-      Alert.alert("Sesión Cerrada", "Has cerrado sesión correctamente.");
+      alertSuccess("Sesión Cerrada", "Has cerrado sesión correctamente.");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
-      Alert.alert("Error", "No se pudo cerrar la sesión.");
+      alertError("Error", "No se pudo cerrar la sesión.");
 
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -203,13 +198,13 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
         await storedData$.lastSyncTime.set(now);
         setLastSyncTime(new Date(now).toLocaleString());
 
-        Alert.alert("Éxito", "Configuración sincronizada con la nube.");
+        alertSuccess("Éxito", "Configuración sincronizada con la nube.");
       } else {
-        Alert.alert("Error", "No se pudo sincronizar con la nube.");
+        alertError("Error", "No se pudo sincronizar con la nube.");
       }
     } catch (error) {
       console.error("Error al sincronizar:", error);
-      Alert.alert("Error", "No se pudo sincronizar con la nube.");
+      alertError("Error", "No se pudo sincronizar con la nube.");
     } finally {
       setIsSyncing(false);
     }
@@ -221,20 +216,17 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
 
       const update = await Updates.checkForUpdateAsync();
       if (update.isAvailable) {
-        Alert.alert(
+        confirm(
           "Actualización Disponible",
           "Hay una nueva actualización. ¿Te gustaría descargarla e instalarla?",
-          [
-            { text: "Cancelar", style: "cancel" },
-            { text: "Actualizar", onPress: applyUpdate },
-          ]
+          () => applyUpdate()
         );
       } else {
-        Alert.alert("No Hay Actualizaciones", "Ya tienes la última versión.");
+        alertInfo("No Hay Actualizaciones", "Ya tienes la última versión.");
       }
     } catch (error) {
       console.error("Error al verificar actualizaciones:", error);
-      Alert.alert("Error", "Ocurrió un error al verificar actualizaciones.");
+      alertError("Error", "Ocurrió un error al verificar actualizaciones.");
     } finally {
       setIsUpdating(false);
     }
@@ -248,7 +240,7 @@ const SettingsScreen: React.FC<RootStackScreenProps<"settings">> = () => {
       await Updates.reloadAsync();
     } catch (error) {
       console.error("Error al actualizar:", error);
-      Alert.alert("Error", "Ocurrió un error al actualizar la aplicación.");
+      alertError("Error", "Ocurrió un error al actualizar la aplicación.");
       setIsUpdating(false);
     }
   };

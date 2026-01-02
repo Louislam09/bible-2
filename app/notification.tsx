@@ -19,7 +19,6 @@ import { Stack } from "expo-router";
 import { icons } from "lucide-react-native";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  Alert,
   Animated,
   Modal,
   Pressable,
@@ -28,6 +27,7 @@ import {
   Switch,
   TouchableOpacity,
 } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 
 type TOption = {
   label: string;
@@ -49,6 +49,7 @@ type TSection = {
 };
 
 const NotificationSettingsScreen = () => {
+  const { alertError, alertInfo, confirm } = useAlert();
   const { theme } = useMyTheme();
   const { expoPushToken, error } = useNotification();
   const notificationService = useNotificationService();
@@ -100,7 +101,7 @@ const NotificationSettingsScreen = () => {
       await notificationService.updateNotificationSettings(newPrefs);
     } catch (error) {
       console.error("Error saving preferences:", error);
-      Alert.alert("Error", "No se pudieron guardar las preferencias.");
+      alertError("Error", "No se pudieron guardar las preferencias.");
     }
   };
 
@@ -126,7 +127,7 @@ const NotificationSettingsScreen = () => {
       console.log("Test notification scheduled successfully");
     } catch (error) {
       console.error("Error scheduling test notification:", error);
-      Alert.alert("Error", `Failed to send test notification: ${error}`);
+      alertError("Error", `Failed to send test notification: ${error}`);
     }
   };
 
@@ -148,10 +149,7 @@ const NotificationSettingsScreen = () => {
       console.log("Scheduled test notification scheduled successfully");
     } catch (error) {
       console.error("Error scheduling scheduled test notification:", error);
-      Alert.alert(
-        "Error",
-        `Failed to send scheduled test notification: ${error}`
-      );
+      alertError("Error", `Failed to send scheduled test notification: ${error}`);
     }
   };
 
@@ -282,10 +280,7 @@ const NotificationSettingsScreen = () => {
             action: async () => {
               const notifications =
                 await notificationService.getScheduledNotifications();
-              Alert.alert(
-                "Número de notificaciones programadas",
-                notifications.length.toString()
-              );
+              alertInfo("Número de notificaciones programadas", notifications.length.toString());
             },
             color: theme.colors.text,
           },
@@ -294,22 +289,12 @@ const NotificationSettingsScreen = () => {
             extraText: "Cancelar todas las notificaciones programadas",
             iconName: "Trash" as keyof typeof icons,
             action: async () => {
-              Alert.alert(
+              confirm(
                 "Cancelar todas las notificaciones",
                 "¿Estás seguro de querer cancelar todas las notificaciones programadas?",
-                [
-                  {
-                    text: "Cancelar",
-                    style: "cancel",
-                  },
-                  {
-                    text: "Confirmar",
-                    style: "destructive",
-                    onPress: async () => {
-                      await notificationService.cancelAllNotifications();
-                    },
-                  },
-                ]
+                async () => {
+                  await notificationService.cancelAllNotifications();
+                }
               );
             },
             color: theme.colors.text,
@@ -338,10 +323,7 @@ const NotificationSettingsScreen = () => {
             action: () => {
               if (notificationService.error) {
                 try {
-                  Alert.alert(
-                    "Error",
-                    JSON.stringify(notificationService.error, null, 2)
-                  );
+                  alertError("Error", JSON.stringify(notificationService.error, null, 2));
                 } catch (error) {
                   console.log(error);
                 }
@@ -358,7 +340,7 @@ const NotificationSettingsScreen = () => {
             iconName: "Key" as keyof typeof icons,
             action: () => {
               if (expoPushToken) {
-                Alert.alert("Token Push", JSON.stringify(expoPushToken));
+                alertInfo("Token Push", JSON.stringify(expoPushToken));
               }
             },
             color: expoPushToken
@@ -372,7 +354,7 @@ const NotificationSettingsScreen = () => {
             iconName: "BadgeAlert" as keyof typeof icons,
             action: () => {
               if (error) {
-                Alert.alert("Error", JSON.stringify(error));
+                alertError("Error", JSON.stringify(error));
               }
             },
             color: error ? "red" : theme.colors.notification,

@@ -15,6 +15,7 @@ import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { useSyncNotes } from "@/hooks/useSyncNotes";
 import { useNoteService } from "@/services/noteService";
 import { useNotificationService } from "@/services/notificationServices";
+import { useAlert } from "@/context/AlertContext";
 import { bibleState$ } from "@/state/bibleState";
 import { noteSelectors$ } from "@/state/notesState";
 import { Screens, TNote, TTheme } from "@/types";
@@ -35,7 +36,6 @@ import React, {
 import {
   AccessibilityInfo,
   ActivityIndicator,
-  Alert,
   Animated,
   Keyboard,
   RefreshControl,
@@ -48,6 +48,7 @@ import {
 } from "react-native";
 
 const NotesPage = () => {
+  const { alertError, confirm, alertWarning } = useAlert();
   const { theme } = useMyTheme();
   const navigation = useNavigation();
   const { currentBibleLongName } = useBibleContext();
@@ -490,10 +491,10 @@ const NotesPage = () => {
         await printToFile(styledHtml, noteTitle || "nota");
       } catch (error) {
         console.error("Error generating PDF:", error);
-        Alert.alert("Error", "No se pudo generar el PDF");
+        alertError("Error", "No se pudo generar el PDF");
       }
     },
-    [printToFile, theme.colors.notification]
+    [printToFile, theme.colors.notification, alertError]
   );
 
   const handleShareSelectedNotes = async () => {
@@ -502,40 +503,31 @@ const NotesPage = () => {
     onDownloadPdf(note.note_text, note.title);
   };
 
-  const handleDeleteSelectedNotes = () => {
+  const handleDeleteSelectedNotes = useCallback(() => {
     const selectedIds = Array.from(selectedItems);
 
-    Alert.alert(
+    confirm(
       "Eliminar Notas",
       `¿Estás seguro que quieres eliminar ${selectedIds.length} notas seleccionadas?`,
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Eliminar",
-          onPress: async () => {
-            for (const id of selectedIds) {
-              const currentNote = noteList.find(
-                (note: TNote) => note.id === id
-              );
-              if (!currentNote) continue;
-              await deleteNote(currentNote);
-            }
-            noteSelectors$.clearSelections();
-            bibleState$.toggleReloadNotes();
-            ToastAndroid.show("Notas eliminadas", ToastAndroid.SHORT);
-          },
-        },
-      ]
+      async () => {
+        for (const id of selectedIds) {
+          const currentNote = noteList.find(
+            (note: TNote) => note.id === id
+          );
+          if (!currentNote) continue;
+          await deleteNote(currentNote);
+        }
+        noteSelectors$.clearSelections();
+        bibleState$.toggleReloadNotes();
+        ToastAndroid.show("Notas eliminadas", ToastAndroid.SHORT);
+      }
     );
-  };
+  }, [confirm, selectedItems, noteList, deleteNote]);
 
   const handleSyncSelectedNotes = async () => {
     console.log("Conexión a Internet:", isConnected);
     if (!isConnected) {
-      Alert.alert(
-        "Sin conexión",
-        "No hay conexión a Internet para sincronizar las notas."
-      );
+      alertWarning("Sin conexión", "No hay conexión a Internet para sincronizar las notas.");
       return;
     }
     const selectedIds = Array.from(selectedItems);
@@ -557,17 +549,7 @@ const NotesPage = () => {
 
   const checkUserAndConnection = useCallback(() => {
     if (!user) {
-      Alert.alert(
-        "Sincronizar notas",
-        "Debes iniciar sesión para sincronizar tus notas.",
-        [
-          { text: "Cancelar", style: "cancel" },
-          {
-            text: "Iniciar sesión",
-            onPress: () => navigation.navigate(Screens.Login),
-          },
-        ]
-      );
+      alertWarning("Sincronizar notas", "Debes iniciar sesión para sincronizar tus notas.");
       return false;
     }
     if (!isConnected) {
@@ -575,7 +557,7 @@ const NotesPage = () => {
       return false;
     }
     return true;
-  }, [user, isConnected, navigation, notificationService]);
+  }, [user, isConnected, navigation, notificationService, alertWarning]);
 
   const noteActionButtons = useMemo(
     () =>

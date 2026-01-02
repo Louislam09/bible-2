@@ -11,6 +11,7 @@ import useParams from "@/hooks/useParams";
 import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { useNoteService } from "@/services/noteService";
 import { bibleState$ } from "@/state/bibleState";
+import { useAlert } from "@/context/AlertContext";
 import { EBibleVersions, EViewMode, Screens, TNote, TTheme } from "@/types";
 import { formatTextToClipboard } from "@/utils/copyToClipboard";
 import { use$ } from "@legendapp/state/react";
@@ -24,7 +25,6 @@ import React, {
   useState,
 } from "react";
 import {
-  Alert,
   Animated,
   Dimensions,
   Easing,
@@ -42,6 +42,7 @@ type NoteDetailProps = {};
 type NoteDetailParams = { noteId: number | null; isNewNote: boolean };
 
 const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
+  const { confirm, alertError, alert } = useAlert();
   const { theme } = useMyTheme();
   const navigation = useNavigation();
   const router = useRouter();
@@ -242,11 +243,12 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
 
       e.preventDefault();
 
-      Alert.alert(
-        "Guardar cambios",
-        "Tienes cambios sin guardar, ¿quieres salir sin guardar?",
-        [
-          { text: "Cancelar", style: "cancel", onPress: () => { } },
+      alert({
+        title: "Guardar cambios",
+        message: "Tienes cambios sin guardar, ¿quieres salir sin guardar?",
+        type: "warning",
+        buttons: [
+          { text: "Cancelar", style: "cancel" },
           {
             text: "Salir sin guardar",
             style: "destructive",
@@ -259,12 +261,12 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
               navigation.dispatch(e.data.action);
             },
           },
-        ]
-      );
+        ],
+      });
     });
 
     return unsubscribe;
-  }, [navigation, hasUnsavedChanges, onSave]);
+  }, [navigation, hasUnsavedChanges, onSave, alert]);
 
   const renderActionButtons = useCallback(() => {
     return (
@@ -721,10 +723,10 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
         await printToFile(styledHtml, noteTitle || "nota");
       } catch (error) {
         console.error("Error generating PDF:", error);
-        Alert.alert("Error", "No se pudo generar el PDF");
+        alertError("Error", "No se pudo generar el PDF");
       }
     },
-    [printToFile, theme.colors.notification]
+    [printToFile, theme.colors.notification, alertError]
   );
 
   const screenOptions: any = useMemo(() => {

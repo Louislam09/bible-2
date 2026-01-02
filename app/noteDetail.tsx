@@ -31,7 +31,6 @@ import React, {
 } from "react";
 import {
   ActivityIndicator,
-  Alert,
   Animated,
   Easing,
   Keyboard,
@@ -40,6 +39,7 @@ import {
   ToastAndroid,
   TouchableOpacity
 } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 // @ts-ignore
 import "../global.css";
 
@@ -184,10 +184,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
           setNoteInfo(note as TNote);
         }
       } catch (error) {
-        Alert.alert(
-          "Error",
-          "No se pudo cargar la nota. Por favor, inténtelo de nuevo."
-        );
+        alertError("Error", "No se pudo cargar la nota. Por favor, inténtelo de nuevo.");
       } finally {
         setLoading(false);
       }
@@ -257,7 +254,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
         ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
       }
     } catch (error) {
-      Alert.alert("Error", "No se pudo guardar la nota.");
+      alertError("Error", "No se pudo guardar la nota.");
     }
   }, [noteContent, noteId]);
 
@@ -267,11 +264,12 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
 
       e.preventDefault();
 
-      Alert.alert(
-        "Guardar cambios",
-        "Tienes cambios sin guardar, ¿quieres salir sin guardar?",
-        [
-          { text: "Cancelar", style: "cancel", onPress: () => { } },
+      alert({
+        title: "Guardar cambios",
+        message: "Tienes cambios sin guardar, ¿quieres salir sin guardar?",
+        type: "warning",
+        buttons: [
+          { text: "Cancelar", style: "cancel" },
           {
             text: "Salir sin guardar",
             style: "destructive",
@@ -284,12 +282,12 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
               navigation.dispatch(e.data.action);
             },
           },
-        ]
-      );
+        ],
+      });
     });
 
     return unsubscribe;
-  }, [navigation, hasUnsavedChanges, onSave]);
+  }, [navigation, hasUnsavedChanges, onSave, alert]);
 
   const renderActionButtons = useCallback(() => {
     return (
@@ -386,7 +384,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
         }
       }
     } catch (error) {
-      Alert.alert("Error", "No se pudo actualizar la nota.");
+      alertError("Error", "No se pudo actualizar la nota.");
     }
   };
 

@@ -20,15 +20,16 @@ import React, {
 } from "react";
 import {
   ActivityIndicator,
-  Alert,
   StyleSheet,
   TextInput,
   ToastAndroid,
   TouchableOpacity
 } from "react-native";
 import LexicalWebView from "./LexicalWebView";
+import { useAlert } from "@/context/AlertContext";
 
 const CurrentNoteDetail: React.FC<any> = ({ }) => {
+  const { alertError } = useAlert();
   const { theme } = useMyTheme();
   const { myBibleDB, executeSql } = useDBContext();
   const styles = useMemo(() => getStyles(theme), [theme]);
@@ -84,10 +85,7 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
         const note = await executeSql(GET_NOTE_BY_ID, [noteId]);
         setNoteInfo(note[0] as TNote);
       } catch (error) {
-        Alert.alert(
-          "Error",
-          "No se pudo cargar la nota. Por favor, inténtelo de nuevo."
-        );
+        alertError("Error", "No se pudo cargar la nota. Por favor, inténtelo de nuevo.");
       } finally {
         setLoading(false);
       }
@@ -125,7 +123,7 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
         ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
       }
     } catch (error) {
-      Alert.alert("Error", "No se pudo guardar la nota.");
+      alertError("Error", "No se pudo guardar la nota.");
     }
   }, [noteContent, noteId]);
 
@@ -197,7 +195,7 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
       }
     } catch (error) {
       console.log({ error });
-      Alert.alert("Error", "No se pudo actualizar la nota.");
+      alertError("Error", "No se pudo actualizar la nota.");
     }
   };
 
