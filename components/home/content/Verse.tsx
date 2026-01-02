@@ -33,12 +33,12 @@ import React, {
   useState,
 } from "react";
 import {
-  Alert,
   Animated,
   Pressable,
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 import RenderTextWithClickableWords from "./RenderTextWithClickableWords";
 import VerseTitle from "./VerseTitle";
 
@@ -144,6 +144,7 @@ const ActionItem = memo(
 
 const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
   const { toggleFavoriteVerse } = useBibleContext();
+  const { alertWarning } = useAlert();
   const haptics = useHaptics();
 
   const fontSize = use$(() => storedData$.fontSize.get());
@@ -346,13 +347,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
 
   const onExplainWithAI = () => {
     if (!googleAIKey) {
-      Alert.alert("Aviso", "No se ha configurado la API key de Google AI", [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Configurar",
-          onPress: () => router.push(Screens.AISetup),
-        },
-      ]);
+      alertWarning("Aviso", "No se ha configurado la API key de Google AI");
       return;
     }
     const verseText = getVerseTextRaw(item.text);

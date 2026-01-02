@@ -13,13 +13,14 @@ import { Stack, useRouter } from "expo-router";
 import React, { Fragment, useCallback, useEffect, useMemo } from "react";
 import {
   ActivityIndicator,
-  Alert,
   StyleSheet,
   TouchableOpacity,
   useColorScheme,
 } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 
 const HistoryScreen = () => {
+  const { confirm } = useAlert();
   const { theme } = useMyTheme();
   const colorScheme = useColorScheme();
   const styles = useMemo(() => getStyles(theme), [theme, colorScheme]);
@@ -33,25 +34,18 @@ const HistoryScreen = () => {
   }, []);
 
   const clearHistory = useCallback(async () => {
-    Alert.alert(
+    confirm(
       "Borrar Historial",
       "¿Estás seguro de que quieres borrar todo el historial?",
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Borrar",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              clear();
-            } catch (error) {
-              console.error("Error clearing history:", error);
-            }
-          },
-        },
-      ]
+      async () => {
+        try {
+          clear();
+        } catch (error) {
+          console.error("Error clearing history:", error);
+        }
+      }
     );
-  }, [clear]);
+  }, [confirm, clear]);
 
   const navigateToHistoryItem = useCallback(
     async (item: HistoryItem) => {

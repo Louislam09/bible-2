@@ -3,7 +3,7 @@ import { storedData$, useStorage } from "@/context/LocalstoreContext";
 import { showToast } from "@/utils/showToast";
 import * as Notifications from "expo-notifications";
 import { useCallback, useState } from "react";
-import { Alert, Platform } from "react-native";
+import { Platform } from "react-native";
 import { getDailyVerseData } from "./dailyVerseService";
 
 export interface NotificationPreferences {
@@ -88,10 +88,7 @@ export const useNotificationService = () => {
             }
 
             if (finalStatus !== "granted") {
-                Alert.alert(
-                    "Permisos Requeridos",
-                    "Se necesitan permisos para enviar notificaciones. Por favor, habilítalos en la configuración de tu dispositivo."
-                );
+                console.warn("Permisos Requeridos: Se necesitan permisos para enviar notificaciones");
                 return false;
             }
 
@@ -99,7 +96,7 @@ export const useNotificationService = () => {
         } catch (error) {
             setError(JSON.stringify(error, null, 2));
             console.error("Error requesting notification permissions:", error);
-            Alert.alert("Error", "No se pudieron solicitar los permisos de notificación");
+            console.error("Error: No se pudieron solicitar los permisos de notificación");
             return false;
         }
     };
@@ -398,7 +395,7 @@ export const useNotificationService = () => {
             const errorMessage = error instanceof Error ? error?.message : JSON.stringify(error, null, 2);
             setError(errorMessage);
             console.error("Error updating notification settings:", errorMessage);
-            Alert.alert("Error", "No se pudieron actualizar las configuraciones de notificación");
+            console.error("Error: No se pudieron actualizar las configuraciones de notificación");
             return false;
         } finally {
         }

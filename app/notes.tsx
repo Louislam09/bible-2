@@ -4,8 +4,9 @@ import Icon from "@/components/Icon";
 import ActionButton, { Backdrop } from "@/components/note/ActionButton";
 import NoteItem from "@/components/note/NoteItem";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
-import TutorialWalkthrough from "@/components/TutorialWalkthrough";
 import { Text, View } from "@/components/Themed";
+import TutorialWalkthrough from "@/components/TutorialWalkthrough";
+import { useAlert } from "@/context/AlertContext";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useNetwork } from "@/context/NetworkProvider";
@@ -15,7 +16,6 @@ import usePrintAndShare from "@/hooks/usePrintAndShare";
 import { useSyncNotes } from "@/hooks/useSyncNotes";
 import { useNoteService } from "@/services/noteService";
 import { useNotificationService } from "@/services/notificationServices";
-import { useAlert } from "@/context/AlertContext";
 import { bibleState$ } from "@/state/bibleState";
 import { noteSelectors$ } from "@/state/notesState";
 import { Screens, TNote, TTheme } from "@/types";
@@ -24,7 +24,6 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { use$ } from "@legendapp/state/react";
 import { FlashList, FlashListRef, ListRenderItem } from "@shopify/flash-list";
 import { Stack, useNavigation } from "expo-router";
-import { goBack } from "expo-router/build/global-state/routing";
 import React, {
   Fragment,
   useCallback,

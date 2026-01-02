@@ -34,12 +34,12 @@ import React, {
   useState,
 } from "react";
 import {
-  Alert,
   Animated,
   StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 
 type MemorizationProps = {};
@@ -86,6 +86,7 @@ const sortVerses = (
 };
 
 const MemoryList: React.FC<MemorizationProps> = () => {
+  const { confirm } = useAlert();
   const { theme } = useMyTheme();
   const router = useRouter();
   const sortRef = useRef<BottomSheetModal>(null);
@@ -131,17 +132,14 @@ const MemoryList: React.FC<MemorizationProps> = () => {
   };
 
   const warnBeforeDelete = (item: Memorization) => {
-    Alert.alert(
+    confirm(
       `Eliminar ${item.verse}`,
       "¿Estás seguro que quieres eliminar este versículo?",
-      [
-        {
-          text: "Cancelar",
-          onPress: () => swipeableRefs.current.get(item.id)?.close(),
-          style: "cancel",
-        },
-        { text: "Eliminar", onPress: () => handleDelete(item.id) },
-      ]
+      () => {
+        swipeableRefs.current.get(item.id)?.close();
+        handleDelete(item.id);
+      },
+      () => swipeableRefs.current.get(item.id)?.close()
     );
   };
 

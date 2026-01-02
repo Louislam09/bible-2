@@ -30,7 +30,6 @@ import React, {
 import {
   AccessibilityInfo,
   ActivityIndicator,
-  Alert,
   Animated,
   Keyboard,
   RefreshControl,
@@ -41,6 +40,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 import { singleScreenHeader } from "../common/singleScreenHeader";
 
 type TListVerse = {
@@ -48,6 +48,7 @@ type TListVerse = {
 };
 
 const Note = ({ data }: TListVerse) => {
+  const { confirm, alertWarning } = useAlert();
   const { theme } = useMyTheme();
   const navigation = useNavigation();
   const { currentBibleLongName } = useBibleContext();
@@ -177,36 +178,27 @@ const Note = ({ data }: TListVerse) => {
   const handleDeleteSelectedNotes = () => {
     const selectedIds = Array.from(selectedItems);
 
-    Alert.alert(
+    confirm(
       "Eliminar Notas",
       `¿Estás seguro que quieres eliminar ${selectedIds.length} notas seleccionadas?`,
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Eliminar",
-          onPress: async () => {
-            for (const id of selectedIds) {
-              const currentNote = noteList.find(
-                (note: TNote) => note.id === id
-              );
-              if (!currentNote) continue;
-              await deleteNote(currentNote);
-            }
-            noteSelectors$.clearSelections();
-            bibleState$.toggleReloadNotes();
-            ToastAndroid.show("Notas eliminadas", ToastAndroid.SHORT);
-          },
-        },
-      ]
+      async () => {
+        for (const id of selectedIds) {
+          const currentNote = noteList.find(
+            (note: TNote) => note.id === id
+          );
+          if (!currentNote) continue;
+          await deleteNote(currentNote);
+        }
+        noteSelectors$.clearSelections();
+        bibleState$.toggleReloadNotes();
+        ToastAndroid.show("Notas eliminadas", ToastAndroid.SHORT);
+      }
     );
   };
   const handleSyncSelectedNotes = async () => {
     console.log("Conexión a Internet:", isConnected);
     if (!isConnected) {
-      Alert.alert(
-        "Sin conexión",
-        "No hay conexión a Internet para sincronizar las notas."
-      );
+      alertWarning("Sin conexión", "No hay conexión a Internet para sincronizar las notas.");
       return;
     }
     const selectedIds = Array.from(selectedItems);

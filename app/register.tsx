@@ -11,7 +11,6 @@ import { Stack, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   Animated,
   Dimensions,
   Keyboard,
@@ -24,11 +23,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 import { OptimizedImage } from "@/utils/imageCache";
 
 const { width } = Dimensions.get("window");
 
 const RegisterScreen = () => {
+  const { alertError } = useAlert();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,7 +50,7 @@ const RegisterScreen = () => {
 
   useEffect(() => {
     const userData = storedData$.user.get();
-    if (userData) router.replace("(dashboard)");
+    if (userData) router.replace("/(dashboard)");
 
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -85,7 +86,7 @@ const RegisterScreen = () => {
   };
 
   const showErrorAlert = (title: string, message: string) => {
-    Alert.alert(title, message);
+    alertError(title, message);
     setError(message);
   };
 
@@ -189,7 +190,7 @@ const RegisterScreen = () => {
               headerRightProps: {
                 headerRightIcon: "Trash2",
                 headerRightIconColor: "red",
-                onPress: () => {},
+                onPress: () => { },
                 disabled: false,
                 style: { opacity: 0 },
               },
@@ -356,8 +357,8 @@ const RegisterScreen = () => {
             <GoogleAuth
               isRegistration={true}
               onSuccess={handleGoogleSuccess}
-              // buttonStyle={styles.googleButton}
-              // textStyle={styles.googleButtonText}
+            // buttonStyle={styles.googleButton}
+            // textStyle={styles.googleButtonText}
             />
 
             <TouchableOpacity

@@ -16,7 +16,6 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import Markdown from "react-native-markdown-display";
 import {
-    Alert,
     Platform,
     SafeAreaView,
     ScrollView,
@@ -28,6 +27,7 @@ import {
     TouchableOpacity,
     View
 } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 import Animated, {
     Easing,
     interpolate,
@@ -763,6 +763,7 @@ const exampleQuestions = [
 ];
 
 const AIBibleGuideScreen = () => {
+    const { confirm } = useAlert();
     const [inputText, setInputText] = useState("");
     const selectedTranslation = "RV1960";
     const [hasAttemptedSend, setHasAttemptedSend] = useState(false);
@@ -843,29 +844,18 @@ const AIBibleGuideScreen = () => {
 
             e.preventDefault();
 
-            Alert.alert(
+            confirm(
                 "¿Salir de la conversación?",
                 "Si sales de esta página, la conversación se reiniciará y perderás todos los mensajes.",
-                [
-                    {
-                        text: "Cancelar",
-                        style: "cancel",
-                        onPress: () => { },
-                    },
-                    {
-                        text: "Salir",
-                        style: "destructive",
-                        onPress: () => {
-                            // clearConversation();
-                            navigation.dispatch(e.data.action);
-                        },
-                    },
-                ]
+                () => {
+                    // clearConversation();
+                    navigation.dispatch(e.data.action);
+                }
             );
         });
 
         return unsubscribe;
-    }, [navigation, messages.length, clearConversation]);
+    }, [navigation, messages.length, clearConversation, confirm]);
 
     // Scroll to bottom when new messages arrive
     useEffect(() => {

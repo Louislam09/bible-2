@@ -1,5 +1,6 @@
 import { singleScreenHeader } from "@/components/common/singleScreenHeader";
 import Icon from "@/components/Icon";
+import { useAlert } from "@/context/AlertContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { pb } from "@/globalConfig";
 import useRealtimeCollection from "@/hooks/useRealtimeCollection";
@@ -252,6 +253,7 @@ const RequestAccessScreen: React.FC = () => {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const { sendPushNotificationToUser } = useNotificationService();
+  const { confirm } = useAlert();
 
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
@@ -358,11 +360,10 @@ const RequestAccessScreen: React.FC = () => {
           sendPushNotificationToUser({
             pushToken: currentUserPushToken,
             title: "📖 Solicitud de acceso al himnario",
-            body: `Tu solicitud ha sido ${
-              status === "approved"
-                ? "aprobada ✅. Ya puedes acceder al himnario."
-                : "rechazada ❌. Si crees que se trata de un error, contáctanos."
-            }`,
+            body: `Tu solicitud ha sido ${status === "approved"
+              ? "aprobada ✅. Ya puedes acceder al himnario."
+              : "rechazada ❌. Si crees que se trata de un error, contáctanos."
+              }`,
             options: {
               badge: 1,
             },
@@ -377,25 +378,15 @@ const RequestAccessScreen: React.FC = () => {
 
   const handleDeleteRequest = useCallback(
     (id: string) => {
-      Alert.alert(
+      confirm(
         "Confirmar Eliminación",
         "¿Estás seguro que deseas eliminar esta solicitud?",
-        [
-          {
-            text: "Cancelar",
-            style: "cancel",
-          },
-          {
-            text: "Eliminar",
-            style: "destructive",
-            onPress: () => {
-              deleteRequest(id as string);
-            },
-          },
-        ]
+        () => {
+          deleteRequest(id as string);
+        }
       );
     },
-    [deleteRequest]
+    []
   );
 
   const handleRefresh = useCallback(async () => {

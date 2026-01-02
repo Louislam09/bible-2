@@ -28,6 +28,7 @@ import ProgressBar from "./home/footer/ProgressBar";
 import Icon from "./Icon";
 import { Text, View } from "./Themed";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { useAlert } from "@/context/AlertContext";
 
 // Type definitions
 type TTheme = {
@@ -68,6 +69,7 @@ const DatabaseDownloadItem = ({
   onError,
   downloadManager,
 }: DatabaseDownloadItemProps) => {
+  const { confirm } = useAlert();
   // State management
   const [downloadedDate, setDownloadedDate] = useState<Date | null>(null);
 
@@ -249,54 +251,47 @@ const DatabaseDownloadItem = ({
       return;
     }
 
-    Alert.alert(
+    confirm(
       "Eliminar versión",
       `¿Estás seguro que deseas eliminar ${name}?`,
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Eliminar",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              const bibleObject = new DownloadedDatabase(
-                storedName + fileExtension
-              );
-              const deleted = await bibleObject.delete();
+      async () => {
+        try {
+          const bibleObject = new DownloadedDatabase(
+            storedName + fileExtension
+          );
+          const deleted = await bibleObject.delete();
 
-              if (!deleted) {
-                showToast("No se pudo eliminar el archivo.");
-                return;
-              }
+          if (!deleted) {
+            showToast("No se pudo eliminar el archivo.");
+            return;
+          }
 
-              // Clear download manager state first
-              removeCompleted(storedName);
+          // Clear download manager state first
+          removeCompleted(storedName);
 
-              const dbTableCreated = storedData$.dbTableCreated.get();
-              storedData$.dbTableCreated.set(
-                dbTableCreated.filter((db: string) => db !== storedName)
-              );
+          const dbTableCreated = storedData$.dbTableCreated.get();
+          storedData$.dbTableCreated.set(
+            dbTableCreated.filter((db: string) => db !== storedName)
+          );
 
-              // Update UI state
-              setIsDownloaded(false);
-              setDownloadedDate(null);
+          // Update UI state
+          setIsDownloaded(false);
+          setDownloadedDate(null);
 
-              // Refresh database list
-              refreshDatabaseList();
+          // Refresh database list
+          refreshDatabaseList();
 
-              // Force recheck after a small delay to ensure state has updated
-              setTimeout(() => {
-                checkDownloadStatus();
-              }, 100);
+          // Force recheck after a small delay to ensure state has updated
+          setTimeout(() => {
+            checkDownloadStatus();
+          }, 100);
 
-              showToast(`${name} ha sido eliminado.`);
-            } catch (error) {
-              console.error("Error deleting file:", error);
-              showToast("Error al eliminar el archivo.");
-            }
-          },
-        },
-      ]
+          showToast(`${name} ha sido eliminado.`);
+        } catch (error) {
+          console.error("Error deleting file:", error);
+          showToast("Error al eliminar el archivo.");
+        }
+      }
     );
   };
 

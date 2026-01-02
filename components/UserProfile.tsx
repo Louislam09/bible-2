@@ -12,10 +12,10 @@ import { User } from "lucide-react-native";
 import React, { useCallback, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 import Icon from "./Icon";
 import CloudSyncPopup from "./SyncPopup";
 import { Text, View } from "./Themed";
@@ -26,6 +26,7 @@ interface UserProfileProps {
 }
 
 const UserProfile: React.FC<UserProfileProps> = observer(({ user }) => {
+  const { confirm } = useAlert();
   const navigation = useNavigation();
   const haptics = useHaptics();
   const { theme } = useMyTheme();
@@ -57,16 +58,10 @@ const UserProfile: React.FC<UserProfileProps> = observer(({ user }) => {
   };
 
   const onLogout = () => {
-    Alert.alert(
+    confirm(
       "Cerrar Sesión",
       "¿Estás seguro de que deseas cerrar tu sesión?",
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Cerrar Sesión",
-          onPress: () => authState$.logout().then(console.log),
-        },
-      ]
+      () => authState$.logout().then(console.log)
     );
   };
 

@@ -27,9 +27,7 @@ import React, {
     useRef,
     useState
 } from "react";
-import {
-    Alert
-} from "react-native";
+import { useAlert } from "@/context/AlertContext";
 
 type VerseProps = TVerse & {
     isSplit: boolean;
@@ -41,9 +39,10 @@ type VerseProps = TVerse & {
 };
 
 
-const useVerseActions = ({ item, isSplit, initVerse, onInterlinear: externalOnInterlinear, onAnotar: externalOnAnotar,onMemorizeVerse: externalOnMemorizeVerse, onFavoriteVerse: externalOnFavoriteVerse }: VerseProps) => {
+const useVerseActions = ({ item, isSplit, initVerse, onInterlinear: externalOnInterlinear, onAnotar: externalOnAnotar, onMemorizeVerse: externalOnMemorizeVerse, onFavoriteVerse: externalOnFavoriteVerse }: VerseProps) => {
     const router = useRouter();
     const haptics = useHaptics();
+    const { alertWarning } = useAlert();
 
     const fontSize = use$(() => storedData$.fontSize.get());
     const currentBibleVersion = use$(() => storedData$.currentBibleVersion.get());
@@ -227,13 +226,7 @@ const useVerseActions = ({ item, isSplit, initVerse, onInterlinear: externalOnIn
 
     const onExplainWithAI = () => {
         if (!googleAIKey) {
-            Alert.alert("Aviso", "No se ha configurado la API key de Google AI", [
-                { text: "Cancelar", style: "cancel" },
-                {
-                    text: "Configurar",
-                    onPress: () => router.push(Screens.AISetup),
-                },
-            ]);
+            alertWarning("Aviso", "No se ha configurado la API key de Google AI");
             return;
         }
         const verseText = getVerseTextRaw(item.text);

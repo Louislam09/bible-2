@@ -17,7 +17,6 @@ import { Stack, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -25,6 +24,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 import ViewShot from "react-native-view-shot";
 import { WebView } from "react-native-webview";
 
@@ -79,6 +79,7 @@ const FONTS: readonly FontType[] = [
 type QuoteProps = {};
 
 const Quote: React.FC<QuoteProps> = () => {
+  const { alertError } = useAlert();
   const { theme } = useMyTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
 
@@ -135,7 +136,7 @@ const Quote: React.FC<QuoteProps> = () => {
 
   const handleShare = async () => {
     if (!quoteInfo.text.trim()) {
-      Alert.alert("Error", "Por favor, ingrese una cita antes de compartir");
+      alertError("Error", "Por favor, ingrese una cita antes de compartir");
       return;
     }
     setIsLoading(true);
@@ -161,7 +162,7 @@ const Quote: React.FC<QuoteProps> = () => {
       await captureAndShare();
     } catch (error: any) {
       console.error("Error in handleShare:", error);
-      Alert.alert(
+      alertError(
         "Error",
         "No se pudo compartir la cita: " +
         (error?.message || "Error desconocido")

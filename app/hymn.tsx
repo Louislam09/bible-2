@@ -29,10 +29,10 @@ import React, {
   useState,
 } from "react";
 import {
-  Alert,
   ScrollView,
   StyleSheet
 } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 
 interface BibleVerse {
   verse: string;
@@ -134,6 +134,7 @@ const HymnOption: React.FC<HymnOptionProps> = ({
 };
 
 const HymnScreen = () => {
+  const { alertWarning, alertInfo } = useAlert();
   const { theme } = useMyTheme();
   const styles = getStyles(theme);
   const navigation = useNavigation();
@@ -181,16 +182,12 @@ const HymnScreen = () => {
 
   const handleRequestAccessPress = useCallback(() => {
     if (!isConnected) {
-      Alert.alert(
-        "Shalom",
-        "Por favor, conecta a internet para solicitar acceso",
-        [{ text: "Entendido", style: "default" }]
-      );
+      alertInfo("Shalom", "Por favor, conecta a internet para solicitar acceso");
       return;
     }
 
     requestAccessBottomSheetModalRef.current?.present();
-  }, [isConnected, hasRequestAccess]);
+  }, [isConnected, hasRequestAccess, alertInfo]);
 
   const navigateToSongs = useCallback(
     (isAlegres: boolean) => {
@@ -218,10 +215,7 @@ const HymnScreen = () => {
 
   const requestAccess = async (name: string) => {
     if (!isConnected) {
-      Alert.alert(
-        "Sin conexión",
-        "No hay conexión a Internet para solicitar accesso."
-      );
+      alertWarning("Sin conexión", "No hay conexión a Internet para solicitar accesso.");
       return;
     }
     const user = authState$.user.get();

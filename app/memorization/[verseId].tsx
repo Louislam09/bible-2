@@ -20,11 +20,11 @@ import { Brain, ChevronLeft, icons } from "lucide-react-native";
 import React, { useMemo } from "react";
 import {
   ActivityIndicator,
-  Alert,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 
 type TButtonItem = {
   icon: keyof typeof icons;
@@ -34,6 +34,7 @@ type TButtonItem = {
 };
 
 const MemorizationScreen = () => {
+  const { confirm } = useAlert();
   const { verseId } = useParams();
   const { verses, deleteVerse } = useMemorization();
   const { theme } = useMyTheme();
@@ -97,17 +98,11 @@ const MemorizationScreen = () => {
   };
 
   const warnBeforeDelete = (id: number) => {
-    Alert.alert(
+    confirm(
       `Eliminar ${item.verse}`,
       "¿Estás seguro que quieres eliminar este versículo?",
-      [
-        {
-          text: "Cancelar",
-          onPress: () => { },
-          style: "cancel",
-        },
-        { text: "Eliminar", onPress: () => onDelete(id) },
-      ]
+      () => onDelete(id),
+      () => { }
     );
   };
 

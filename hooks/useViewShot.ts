@@ -3,7 +3,8 @@ import { showToast } from "@/utils/showToast";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import React from "react";
-import { Alert, Platform } from "react-native";
+import { Platform } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 import ViewShot from "react-native-view-shot";
 
 interface UseViewShotOptions {
@@ -23,6 +24,7 @@ export const useViewShot = ({
 }: UseViewShotOptions) => {
   const internalRef = React.useRef<ViewShot>(null);
   const viewShotRef = externalRef || internalRef;
+  const { alertError } = useAlert();
 
   const capture = async () => {
     try {
@@ -54,7 +56,7 @@ export const useViewShot = ({
       return uri;
     } catch (error: any) {
       console.error("Error saving screenshot:", error);
-      Alert.alert("Error", "Failed to save screenshot: " + error.message);
+      alertError("Error", "Failed to save screenshot: " + error.message);
       throw error;
     }
   };
@@ -95,11 +97,11 @@ export const useViewShot = ({
           UTI: `public.${format}`,
         });
       } else {
-        Alert.alert("Error", "Compartir no está disponible en este dispositivo");
+        alertError("Error", "Compartir no está disponible en este dispositivo");
       }
     } catch (error: any) {
       console.error("Error compartiendo cita:", error);
-      Alert.alert("Error", "Error al compartir cita: " + error.message);
+      alertError("Error", "Error al compartir cita: " + error.message);
       throw error;
     }
   };

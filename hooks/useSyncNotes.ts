@@ -5,7 +5,7 @@ import { authState$ } from "@/state/authState";
 import { bibleState$ } from "@/state/bibleState";
 import { notesState$ } from "@/state/notesState";
 import { TNote } from "@/types";
-import { Alert } from "react-native";
+// Alert removed - components should handle errors
 
 export const useSyncNotes = () => {
     const { executeSql } = useDBContext();
@@ -144,7 +144,7 @@ export const useSyncNotes = () => {
             console.log("Sincronización completa entre local y nube.");
         } catch (error) {
             console.error("Error durante la sincronización:", error);
-            Alert.alert("Error", "No se pudieron sincronizar las notas");
+            console.error("Error syncing notes");
         } finally {
             bibleState$.toggleReloadNotes();
             bibleState$.isSyncingNotes.set(false);
@@ -194,7 +194,7 @@ export const useSyncNotes = () => {
             }
         } catch (error) {
             console.error("Error en syncSingleNote:", error);
-            Alert.alert("Error", "No se pudo sincronizar la nota individual.");
+            console.error("Error syncing individual note");
         } finally {
             bibleState$.isSyncingNotes.set(false);
         }
@@ -237,7 +237,7 @@ export const useSyncNotes = () => {
             console.log("Notas de la nube descargadas y almacenadas localmente");
         } catch (error) {
             console.error("Error al descargar y almacenar notas de la nube:", error);
-            Alert.alert("Error", "No se pudieron descargar las notas de la nube");
+            console.error("Error downloading notes from cloud");
         } finally {
             bibleState$.toggleReloadNotes();
             bibleState$.isSyncingNotes.set(false);

@@ -5,7 +5,8 @@ import { bibleState$ } from "@/state/bibleState";
 import { IBookVerse, IFavoriteVerse, OrientationType, Screens } from "@/types";
 import { use$ } from "@legendapp/state/react";
 import React, { FC, useCallback, useMemo } from "react";
-import { ActivityIndicator, Alert, Dimensions, StyleSheet } from "react-native";
+import { ActivityIndicator, Dimensions, StyleSheet } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import Chapter from "./home/content/Chapter";
 import BibleFooter from "./home/footer/BibleFooter";
@@ -27,6 +28,7 @@ type BibleBottomContentProps = {
 };
 
 const BibleBottomContent: FC<BibleBottomContentProps> = ({ }) => {
+  const { alertWarning } = useAlert();
   const { theme } = useMyTheme();
   const orientation = useDeviceOrientation();
   const isPortrait = orientation === OrientationType.PORTRAIT;
@@ -169,15 +171,7 @@ const BibleBottomContent: FC<BibleBottomContentProps> = ({ }) => {
     (item: IBookVerse) => {
       const googleAIKey = storedData$.googleAIKey.get();
       if (!googleAIKey) {
-        Alert.alert("Aviso", "No se ha configurado la API key de Google AI", [
-          { text: "Cancelar", style: "cancel" },
-          {
-            text: "Configurar",
-            onPress: () => {
-              router.push(Screens.AISetup);
-            },
-          },
-        ]);
+        alertWarning("Aviso", "No se ha configurado la API key de Google AI");
         return;
       }
       const verseText = getVerseTextRaw(item.text);
@@ -189,7 +183,7 @@ const BibleBottomContent: FC<BibleBottomContentProps> = ({ }) => {
       modalState$.closeExplainVerseBottomSheet();
       bibleState$.clearSelection();
     },
-    [router]
+    [router, alertWarning]
   );
 
   const onImage = useCallback(
