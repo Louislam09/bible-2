@@ -12,18 +12,16 @@ import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
 import React, { useEffect, useMemo, useState } from "react";
 import {
-  Alert,
   Animated,
   Pressable,
   StyleSheet,
-  TouchableOpacity,
   Vibration,
   View,
 } from "react-native";
 import { WebView } from "react-native-webview";
 import Icon, { IconProps } from "../Icon";
 import { Text } from "../Themed";
-import { aiMockResponse } from "@/constants/aiPrompts";
+import { useAlert } from "@/context/AlertContext";
 
 type VerseExplanationProps = {
   theme: TTheme;
@@ -74,7 +72,7 @@ const AiVerseExplanationContent: React.FC<VerseExplanationProps> = ({
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const webViewRef = React.useRef<WebView>(null);
   const { createNote } = useNoteService();
-
+  const { alertError } = useAlert();
   const htmlResponse = useMemo(() => {
     return aiHtmlTemplate(explanation, theme.colors, fontSize, false);
   }, [explanation, fontSize]);
@@ -116,7 +114,7 @@ const AiVerseExplanationContent: React.FC<VerseExplanationProps> = ({
       setTimeout(() => setCopySuccess(false), 3000);
     } catch (error) {
       console.error("Error copying text:", error);
-      Alert.alert("Error", "No se pudo copiar el texto");
+      alertError("Error", "No se pudo copiar el texto");
     }
   };
 
@@ -134,7 +132,7 @@ const AiVerseExplanationContent: React.FC<VerseExplanationProps> = ({
       });
     } catch (error) {
       console.error("Error generating/sharing PDF:", error);
-      Alert.alert("Error", "No se pudo generar el PDF");
+      alertError("Error", "No se pudo generar el PDF");
     } finally {
       setIsGeneratingPDF(false);
     }
@@ -149,8 +147,8 @@ const AiVerseExplanationContent: React.FC<VerseExplanationProps> = ({
         description: loading
           ? "Generando..."
           : isNoteSaved
-          ? "¡Nota guardada!"
-          : "Guardar nota",
+            ? "¡Nota guardada!"
+            : "Guardar nota",
         onAction: () => handleSaveNote(),
         disabled: loading || isNoteSaved,
       },

@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Updates from "expo-updates";
 import { useMyTheme } from "@/context/ThemeContext";
 import { OptimizedImage } from "@/utils/imageCache";
+import { useAlert } from "@/context/AlertContext";
 
 interface AppIconSelectorProps {
   style?: any;
@@ -13,6 +14,7 @@ interface AppIconSelectorProps {
 export const AppIconSelector: React.FC<AppIconSelectorProps> = ({ style }) => {
   const { currentIcon, isSupported, setIcon, availableIcons } = useAppIcon();
   const { theme } = useMyTheme();
+  const { alertInfo, alertError } = useAlert();
 
   const getIconImage = (iconName: string) => {
     const iconMap: { [key: string]: any } = {
@@ -28,8 +30,8 @@ export const AppIconSelector: React.FC<AppIconSelectorProps> = ({ style }) => {
 
   const handleIconChange = async (iconName: string) => {
     if (!isSupported) {
-      Alert.alert(
-        "No Compatible",
+      alertInfo(
+        "No compatible",
         "El cambio de ícono de la app no es compatible con este dispositivo o en Expo Go."
       );
       return;
@@ -38,26 +40,22 @@ export const AppIconSelector: React.FC<AppIconSelectorProps> = ({ style }) => {
     try {
       const success = await setIcon(iconName);
       if (success) {
-        Alert.alert(
+        alertInfo(
           "Éxito",
           "¡El ícono de la app se cambió exitosamente! La app se reiniciará para aplicar el nuevo ícono.",
-          [
-            {
-              text: "OK",
-              onPress: async () => {
-                await Updates.reloadAsync();
-              },
-            },
-          ]
         );
+        Updates.reloadAsync();
       } else {
-        Alert.alert(
+        alertError(
           "Error",
           "No se pudo cambiar el ícono de la app. Inténtalo de nuevo."
         );
       }
     } catch (error) {
-      Alert.alert("Error", "Ocurrió un error al cambiar el ícono de la app.");
+      alertError(
+        "Error",
+        "Ocurrió un error al cambiar el ícono de la app."
+      );
     }
   };
 

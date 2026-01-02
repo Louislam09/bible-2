@@ -1,3 +1,4 @@
+import { useAlert } from "@/context/AlertContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { authState$ } from "@/state/authState";
 import { pbUser, TTheme } from "@/types";
@@ -8,10 +9,9 @@ import * as WebBrowser from "expo-web-browser";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
 import { pb } from "../globalConfig";
 
@@ -42,6 +42,7 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({
   const { theme } = useMyTheme();
   const styles = getStyles(theme as TTheme);
   const REDIRECT_URI = AuthSession.makeRedirectUri();
+  const { alertError } = useAlert();
 
   const InitiateGoogleAuth = async () => {
     try {
@@ -72,7 +73,7 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({
       "Error al autenticar con Google. Por favor, inténtalo de nuevo."
     );
 
-    Alert.alert("Error de Autenticación", authError.message);
+    alertError("Error de Autenticación", authError.message);
   };
 
   return (

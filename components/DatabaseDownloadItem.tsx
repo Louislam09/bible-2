@@ -69,7 +69,7 @@ const DatabaseDownloadItem = ({
   onError,
   downloadManager,
 }: DatabaseDownloadItemProps) => {
-  const { confirm } = useAlert();
+  const { confirm, alertWarning } = useAlert();
   // State management
   const [downloadedDate, setDownloadedDate] = useState<Date | null>(null);
 
@@ -243,11 +243,7 @@ const DatabaseDownloadItem = ({
   // Delete Bible file
   const deleteBibleFile = async () => {
     if (isCurrentBible) {
-      Alert.alert(
-        "Versión en uso",
-        "No se puede eliminar la versión que está en uso actualmente. Por favor, selecciona otra versión primero.",
-        [{ text: "Entendido", style: "cancel" }]
-      );
+      alertWarning("Versión en uso", "No se puede eliminar la versión que está en uso actualmente. Por favor, selecciona otra versión primero.");
       return;
     }
 

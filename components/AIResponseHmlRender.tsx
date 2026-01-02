@@ -1,16 +1,15 @@
+import { useAlert } from "@/context/AlertContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import * as Clipboard from "expo-clipboard";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
 import React, { useEffect, useMemo, useState } from "react";
 import {
-  Alert,
   Animated,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   Vibration,
-  View,
+  View
 } from "react-native";
 import { WebView } from "react-native-webview";
 import Icon from "./Icon";
@@ -31,6 +30,7 @@ export default function AIResponseHmlRender({ response }: AIResponseProps) {
   const [slideAnim] = useState(new Animated.Value(-50));
   const [height, setHeight] = useState(DEFAULT_HEIGHT);
   const webViewRef = React.useRef<WebView>(null);
+  const { alertError } = useAlert();
 
   const htmlResponse = useMemo(() => {
     return `<!DOCTYPE html>
@@ -163,7 +163,7 @@ export default function AIResponseHmlRender({ response }: AIResponseProps) {
       setTimeout(() => setCopySuccess(false), 3000);
     } catch (error) {
       console.error("Error copying text:", error);
-      Alert.alert("Error", "No se pudo copiar el texto");
+      alertError("Error", "No se pudo copiar el texto");
     }
   };
 
@@ -182,7 +182,7 @@ export default function AIResponseHmlRender({ response }: AIResponseProps) {
       });
     } catch (error) {
       console.error("Error generating/sharing PDF:", error);
-      Alert.alert("Error", "No se pudo generar el PDF");
+      alertError("Error", "No se pudo generar el PDF");
     } finally {
       setIsGeneratingPDF(false);
     }

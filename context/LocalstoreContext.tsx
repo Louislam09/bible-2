@@ -244,10 +244,6 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     console.log({ isConnected })
     if (!isConnected) {
       console.log("❌ [Sin conexión a Internet]");
-      // Alert.alert(
-      //   "Sin conexión a Internet",
-      //   "No se pueden sincronizar los datos con la nube sin conexión a Internet. Por favor, inténtalo de nuevo cuando estés conectado."
-      // );
       return false;
     }
 

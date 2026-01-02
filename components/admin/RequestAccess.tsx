@@ -8,7 +8,6 @@ import { use$ } from "@legendapp/state/react";
 import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import {
-  Alert,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -16,6 +15,7 @@ import {
 } from "react-native";
 import EmptyStateMessage from "../EmptyStateMessage";
 import { Text } from "../Themed";
+import { useAlert } from "@/context/AlertContext";
 
 type IRequestAccess = {
   onRequest: (name: string) => Promise<void>;
@@ -27,7 +27,7 @@ const RequestAccess = ({ onClose, onRequest, isPending }: IRequestAccess) => {
   const { theme } = useMyTheme();
   const router = useRouter();
   const styles = getStyles(theme);
-
+  const { alertError, alertSuccess } = useAlert();
   const hasRequestAccess = use$(() => storedData$.hasRequestAccess.get());
   const userData = use$(() => storedData$.userData.get());
   const isAuthenticated = use$(() => authState$.isAuthenticated.get());
@@ -65,7 +65,7 @@ const RequestAccess = ({ onClose, onRequest, isPending }: IRequestAccess) => {
 
     if (!submitName) {
       if (!isAutoSubmit) {
-        Alert.alert("Error", ERROR_MESSAGES.EMPTY_FIELDS);
+        alertError("Error", ERROR_MESSAGES.EMPTY_FIELDS);
       }
       return;
     }
@@ -76,7 +76,7 @@ const RequestAccess = ({ onClose, onRequest, isPending }: IRequestAccess) => {
       storedData$.hasRequestAccess.set(true);
 
       if (!isAutoSubmit) {
-        Alert.alert("Éxito", ERROR_MESSAGES.REQUEST_CREATED);
+        alertSuccess("Éxito", ERROR_MESSAGES.REQUEST_CREATED);
         onClose();
       } else {
         onClose();
@@ -88,7 +88,7 @@ const RequestAccess = ({ onClose, onRequest, isPending }: IRequestAccess) => {
             ? ERROR_MESSAGES.EMAIL_EXISTS
             : ERROR_MESSAGES.CREATE_REQUEST_ERROR
           : ERROR_MESSAGES.NETWORK_ERROR;
-        Alert.alert("Error", errorMessage);
+        alertError("Error", errorMessage);
       }
     }
   };

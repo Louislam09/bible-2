@@ -1,4 +1,5 @@
-import { defaultDatabases, SQLiteDirPath } from "@/constants/databaseNames";
+import { defaultDatabases } from "@/constants/databaseNames";
+import { useAlert } from "@/context/AlertContext";
 import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
@@ -8,18 +9,16 @@ import { TTheme } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 import * as FileSystem from "expo-file-system";
-import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   RefreshControl,
   StyleSheet,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
 import ProgressBar from "./home/footer/ProgressBar";
 import Icon from "./Icon";
 import { Text, View } from "./Themed";
-import AllDatabases from "@/constants/AllDatabases";
 
 type FileListProps = {
   downloadManager: ReturnType<typeof useDownloadManager>;
@@ -28,6 +27,7 @@ type FileListProps = {
 
 const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true }) => {
   const { theme } = useMyTheme();
+  const { alertWarning, confirm } = useAlert();
   const styles = getStyles(theme);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -77,81 +77,67 @@ const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true })
     const isCurrentlyDownloading = item.downloadStatus === "downloading" || item.downloadStatus === "unzipping";
 
     if (isCurrentlyDownloading) {
-      Alert.alert(
-        "Descarga en progreso",
-        "No se puede eliminar un archivo que se está descargando. Por favor, cancela la descarga primero.",
-        [{ text: "Entendido", style: "cancel" }]
-      );
+      alertWarning("Descarga en progreso", "No se puede eliminar un archivo que se está descargando. Por favor, cancela la descarga primero.");
       return;
     }
 
-    Alert.alert(
+    confirm(
       "Eliminar módulo",
       `¿Estás seguro que deseas eliminar "${item.name}"?`,
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Eliminar",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              const fileUri = item.path;
-              const storedNameWithoutExt = item.shortName.replace(/.db$/, "");
-              const baseName = item.baseDownloadName || storedNameWithoutExt;
+      async () => {
+        try {
+          const fileUri = item.path;
+          const storedNameWithoutExt = item.shortName.replace(/.db$/, "");
+          const baseName = item.baseDownloadName || storedNameWithoutExt;
 
-              // Check if there are any other files from the same base download BEFORE deleting
-              const relatedFiles = downloadedModules.filter(f =>
-                f.baseDownloadName === baseName &&
-                f.shortName !== item.shortName // Not the file we're deleting
-              );
+          // Check if there are any other files from the same base download BEFORE deleting
+          const relatedFiles = downloadedModules.filter(f =>
+            f.baseDownloadName === baseName &&
+            f.shortName !== item.shortName // Not the file we're deleting
+          );
 
-              console.log(`Deleting ${storedNameWithoutExt}, found ${relatedFiles.length} related files from base: ${baseName}`);
+          console.log(`Deleting ${storedNameWithoutExt}, found ${relatedFiles.length} related files from base: ${baseName}`);
 
-              // Delete all database files
-              await FileSystem.deleteAsync(fileUri, { idempotent: true });
-              await FileSystem.deleteAsync(`${fileUri}-wal`, {
-                idempotent: true,
-              });
-              await FileSystem.deleteAsync(`${fileUri}-shm`, {
-                idempotent: true,
-              });
+          // Delete all database files
+          await FileSystem.deleteAsync(fileUri, { idempotent: true });
+          await FileSystem.deleteAsync(`${fileUri}-wal`, {
+            idempotent: true,
+          });
+          await FileSystem.deleteAsync(`${fileUri}-shm`, {
+            idempotent: true,
+          });
 
-              // Update stored data
-              const dbTableCreated = storedData$.dbTableCreated.get();
-              storedData$.dbTableCreated.set(
-                dbTableCreated.filter((db: string) => db !== item.shortName)
-              );
+          // Update stored data
+          const dbTableCreated = storedData$.dbTableCreated.get();
+          storedData$.dbTableCreated.set(
+            dbTableCreated.filter((db: string) => db !== item.shortName)
+          );
 
-              // Clear download manager state for this file
-              // Try to remove the exact match first (for extracted files like commentaries)
-              removeCompleted(storedNameWithoutExt);
+          // Clear download manager state for this file
+          // Try to remove the exact match first (for extracted files like commentaries)
+          removeCompleted(storedNameWithoutExt);
 
-              // Only remove the base download entry if no related files remain
-              if (relatedFiles.length === 0 && baseName !== storedNameWithoutExt) {
-                console.log(`Removing base download entry: ${baseName} (no related files remaining)`);
-                removeCompleted(baseName);
-              }
+          // Only remove the base download entry if no related files remain
+          if (relatedFiles.length === 0 && baseName !== storedNameWithoutExt) {
+            console.log(`Removing base download entry: ${baseName} (no related files remaining)`);
+            removeCompleted(baseName);
+          }
 
-              // Refresh the database list and wait for it to complete
-              await refreshDatabaseList();
+          // Refresh the database list and wait for it to complete
+          await refreshDatabaseList();
 
-              // Increment list revision to force re-render
-              setListRevision((prev) => prev + 1);
+          // Increment list revision to force re-render
+          setListRevision((prev) => prev + 1);
 
-              // Select default bible if needed
-              selectBibleVersion(defaultDatabases[0]);
+          // Select default bible if needed
+          selectBibleVersion(defaultDatabases[0]);
 
-              console.log("File deleted and list refreshed:", item.shortName);
-            } catch (err) {
-              setError("Error deleting file");
-              console.error("Error deleting file:", err);
-            }
-          },
-        },
-      ]
+          console.log("File deleted and list refreshed:", item.shortName);
+        } catch (err) {
+          setError("Error deleting file");
+          console.error("Error deleting file:", err);
+        }
+      }
     );
   };
 
@@ -180,10 +166,9 @@ const FileList: React.FC<FileListProps> = ({ downloadManager, isActive = true })
   );
 
   const refreshDatabase = async (dbName: ModuleWithStatus) => {
-    Alert.alert(
+    alertWarning(
       "Actualizar módulo",
-      `La función de actualizar módulo requiere acceso a servicios de base de datos. Esta característica estará disponible próximamente.`,
-      [{ text: "OK", style: "cancel" }]
+      "La función de actualizar módulo requiere acceso a servicios de base de datos. Esta característica estará disponible próximamente."
     );
   };
 
