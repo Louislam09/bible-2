@@ -62,6 +62,7 @@ export enum Screens {
   Commentary = "commentary",
   AIBibleGuide = "ai-bible-guide",
   Tutorials = "tutorials",
+  Highlighted = "highlighted",
 }
 
 type TScreensName = { [key in Screens]: string };
@@ -101,6 +102,7 @@ export const ScreensName: TScreensName = {
   [Screens.Commentary]: "Comentarios",
   [Screens.AIBibleGuide]: "Guía Bíblica IA",
   [Screens.Tutorials]: "Tutoriales",
+  [Screens.Highlighted]: "Destacados",
 };
 
 // export type RootTabParamList = { [key in Screens]: any };
@@ -127,6 +129,7 @@ export type RootTabParamList = {
   history: undefined;
   notification: undefined;
   "memorization/memoryList": undefined;
+  highlighted: undefined;
 };
 
 export type RootStackParamList = {
@@ -137,6 +140,7 @@ export type RootStackParamList = {
   home: NavigatorScreenParams<RootTabParamList> | HomeParams;
   book: NavigatorScreenParams<RootTabParamList> | undefined;
   favorite: NavigatorScreenParams<RootTabParamList> | undefined;
+  highlighted: NavigatorScreenParams<RootTabParamList> | undefined;
   chooseGame: NavigatorScreenParams<RootTabParamList> | undefined;
   downloadManager: NavigatorScreenParams<RootTabParamList> | undefined;
   notes: NavigatorScreenParams<RootTabParamList> | { shouldRefresh: boolean };

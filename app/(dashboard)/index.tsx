@@ -172,6 +172,12 @@ const MainDashboard = () => {
 
   const studyToolItems: IDashboardOption[] = [
     {
+      icon: "Highlighter",
+      label: "Destacados",
+      action: () => navigation?.navigate(Screens.Highlighted),
+      color: "#4dcd8d",
+    },
+    {
       icon: "TestTubeDiagonal",
       label: "Ejemplos",
       action: () => navigation?.navigate("example" as any),

@@ -5,10 +5,9 @@ import { Text, View as ThemedView } from "@/components/Themed";
 import { getBookDetail } from "@/constants/BookNames";
 import { useBibleContext } from "@/context/BibleContext";
 import { useMyTheme } from "@/context/ThemeContext";
-import { useFavoriteVerseService } from "@/services/favoriteVerseService";
+import { useHighlightService, THighlightedVerse } from "@/services/highlightService";
 import { authState$ } from "@/state/authState";
 import { bibleState$ } from "@/state/bibleState";
-import { favoriteState$ } from "@/state/favoriteState";
 import { IVerseItem, Screens, TTheme } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
@@ -17,7 +16,6 @@ import { showToast } from "@/utils/showToast";
 import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "@react-navigation/native";
 import { FlashListRef } from "@shopify/flash-list";
-// import * as Haptics from "expo-haptics";
 import { Stack, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -33,15 +31,11 @@ import {
 import { Swipeable } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-type TListVerse = {};
+type HighlightedListProps = {};
 
-const FavoriteList = ({ }: TListVerse) => {
-  const [filterData, setFilterData] = useState<(IVerseItem & { id: number })[]>(
-    []
-  );
-  const [originalData, setOriginalData] = useState<
-    (IVerseItem & { id: number })[]
-  >([]);
+const HighlightedList = ({ }: HighlightedListProps) => {
+  const [filterData, setFilterData] = useState<THighlightedVerse[]>([]);
+  const [originalData, setOriginalData] = useState<THighlightedVerse[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -61,11 +55,9 @@ const FavoriteList = ({ }: TListVerse) => {
   const styles = getStyles(theme);
   const notFoundSource = require("../../assets/lottie/notFound.json");
 
-  const { toggleFavoriteVerse, currentBibleLongName, orientation } =
-    useBibleContext();
-  const { addFavoriteVerse, getAllFavoriteVerses, removeFavoriteVerse } =
-    useFavoriteVerseService();
-  const reloadFavorites = use$(() => bibleState$.reloadFavorites.get());
+  const { currentBibleLongName, orientation } = useBibleContext();
+  const { getAllHighlightedVerses, deleteHighlight, exportHighlights, importHighlights } =
+    useHighlightService();
   const isLoggedIn = use$(() => !!authState$.user.get());
 
   // Calculate if scroll position is beyond threshold for showing top button
@@ -73,26 +65,26 @@ const FavoriteList = ({ }: TListVerse) => {
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      const verses = await getAllFavoriteVerses();
-      setOriginalData(verses ?? []);
-      setFilterData(verses ?? []);
+      const highlights = await getAllHighlightedVerses();
+      setOriginalData(highlights ?? []);
+      setFilterData(highlights ?? []);
     } catch (error) {
-      console.error("Error fetching favorite verses:", error);
-      showToast("Error al cargar versículos favoritos");
+      console.error("Error fetching highlighted verses:", error);
+      showToast("Error al cargar versículos destacados");
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [getAllHighlightedVerses]);
 
   useEffect(() => {
     fetchData();
-  }, [reloadFavorites]);
+  }, []);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchData();
-  }, [fetchData]);
+  }, []);
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -102,9 +94,10 @@ const FavoriteList = ({ }: TListVerse) => {
 
     const lowerQuery = searchQuery.toLowerCase();
     const filtered = originalData.filter((item) => {
+      const bookName = item.bookName || getBookDetail(item.book_number).longName;
       return (
-        item.bookName?.toLowerCase().includes(lowerQuery) ||
-        getVerseTextRaw(item.text).toLowerCase().includes(lowerQuery) ||
+        bookName.toLowerCase().includes(lowerQuery) ||
+        (item.text && getVerseTextRaw(item.text).toLowerCase().includes(lowerQuery)) ||
         `${item.chapter}:${item.verse}`.includes(lowerQuery)
       );
     });
@@ -113,14 +106,14 @@ const FavoriteList = ({ }: TListVerse) => {
   }, [searchQuery, originalData]);
 
   const onVerseClick = useCallback(
-    (item: IVerseItem & { id: number }) => {
+    (item: THighlightedVerse) => {
       if (selectionMode) {
-        toggleSelection(item.id as any);
+        toggleSelection(item.id as number);
         return;
       }
 
       const queryInfo = {
-        book: item.bookName,
+        book: item.bookName || getBookDetail(item.book_number).longName,
         chapter: item.chapter,
         verse: item.verse,
       };
@@ -136,41 +129,50 @@ const FavoriteList = ({ }: TListVerse) => {
     [navigation, selectionMode]
   );
 
-  const onRemoveFavorite = useCallback(
-    async (item: IVerseItem & { id: number }) => {
+  const onRemoveHighlight = useCallback(
+    async (item: THighlightedVerse) => {
       try {
-        toggleFavoriteVerse({
-          bookNumber: item.book_number,
-          chapter: item.chapter,
-          verse: item.verse,
-          isFav: true,
-        });
+        await deleteHighlight(
+          item.book_number,
+          item.chapter,
+          item.verse,
+          item.uuid
+        );
 
-        showToast("Versículo removido de favoritos");
+        setFilterData((prev) => prev.filter((v) => v.id !== item.id));
+        setOriginalData((prev) => prev.filter((v) => v.id !== item.id));
+
+        showToast("Versículo destacado eliminado");
       } catch (error) {
-        console.error("Error removing favorite:", error);
-        showToast("Error al eliminar versículo favorito");
+        console.error("Error removing highlight:", error);
+        showToast("Error al eliminar versículo destacado");
       }
     },
-    [removeFavoriteVerse, toggleFavoriteVerse]
+    [deleteHighlight]
   );
 
-  const onCopy = useCallback(async (item: IVerseItem) => {
+  const onCopy = useCallback(async (item: THighlightedVerse) => {
     try {
-      await copyToClipboard(item);
+      const verseItem: IVerseItem = {
+        book_number: item.book_number,
+        chapter: item.chapter,
+        verse: item.verse,
+        text: item.text || "",
+        bookName: item.bookName || getBookDetail(item.book_number).longName,
+      };
+      await copyToClipboard(verseItem);
     } catch (error) {
       console.error("Error copying verse:", error);
       showToast("Error al copiar versículo");
     }
   }, []);
 
-  const onShare = useCallback((item: IVerseItem) => {
-    const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item?.book_number).longName} ${item.chapter
-      }:${item.verse}`;
+  const onShare = useCallback((item: THighlightedVerse) => {
+    const verseText = item.text ? getVerseTextRaw(item.text) : "";
+    const reference = `${getBookDetail(item?.book_number).longName} ${item.chapter}:${item.verse}`;
     bibleState$.handleSelectVerseForNote(verseText);
-    router.push({ pathname: "/quote", params: { text: verseText, reference } });
-  }, []);
+    router.push({ pathname: "/quoteMaker", params: { text: verseText, reference } });
+  }, [router]);
 
   const toggleSelectionMode = useCallback(() => {
     setSelectionMode((prev) => !prev);
@@ -192,7 +194,7 @@ const FavoriteList = ({ }: TListVerse) => {
   }, []);
 
   const selectAll = useCallback(() => {
-    const allIds = filterData.map((item) => item.id);
+    const allIds = filterData.map((item) => item.id).filter((id): id is number => id !== undefined);
     setSelectedItems(new Set(allIds));
   }, [filterData]);
 
@@ -204,8 +206,8 @@ const FavoriteList = ({ }: TListVerse) => {
     if (selectedItems.size === 0) return;
 
     Alert.alert(
-      "Eliminar favoritos",
-      `¿Estás seguro de eliminar ${selectedItems.size} versículos favoritos?`,
+      "Eliminar destacados",
+      `¿Estás seguro de eliminar ${selectedItems.size} versículos destacados?`,
       [
         {
           text: "Cancelar",
@@ -220,21 +222,21 @@ const FavoriteList = ({ }: TListVerse) => {
                 const verse = originalData.find((v) => v.id === id);
                 if (!verse) return Promise.resolve();
 
-                return toggleFavoriteVerse({
-                  bookNumber: verse.book_number,
-                  chapter: verse.chapter,
-                  verse: verse.verse,
-                  isFav: true,
-                });
+                return deleteHighlight(
+                  verse.book_number,
+                  verse.chapter,
+                  verse.verse,
+                  verse.uuid
+                );
               });
 
               await Promise.all(deletePromises);
 
               setFilterData((prev) =>
-                prev.filter((item) => !selectedItems.has(item.id))
+                prev.filter((item) => !selectedItems.has(item.id as number))
               );
               setOriginalData((prev) =>
-                prev.filter((item) => !selectedItems.has(item.id))
+                prev.filter((item) => !selectedItems.has(item.id as number))
               );
 
               setSelectionMode(false);
@@ -242,154 +244,44 @@ const FavoriteList = ({ }: TListVerse) => {
 
               showToast(`${selectedItems.size} versículos eliminados`);
             } catch (error) {
-              console.error("Error deleting favorites:", error);
-              showToast("Error al eliminar favoritos");
+              console.error("Error deleting highlights:", error);
+              showToast("Error al eliminar destacados");
             }
           },
         },
       ]
     );
-  }, [selectedItems, originalData, removeFavoriteVerse, toggleFavoriteVerse]);
+  }, [selectedItems, originalData, deleteHighlight]);
 
-  const handleSyncToCloud = useCallback(async () => {
-    if (!isLoggedIn) {
-      Alert.alert(
-        "Sincronización requerida",
-        "Debes iniciar sesión para sincronizar tus versículos favoritos con la nube",
-        [
-          { text: "Cancelar", style: "cancel" },
-          {
-            text: "Iniciar sesión",
-            onPress: () => router.push({
-              pathname: '/login'
-            }),
-          },
-        ]
-      );
-      return;
-    }
-
+  const handleExportHighlights = useCallback(async () => {
     try {
-      const favoriteVerses = await getAllFavoriteVerses();
-
-      if (favoriteVerses.length === 0) {
-        showToast("No hay versículos favoritos para sincronizar");
-        return;
+      if (selectedItems.size > 0) {
+        const selectedIds = Array.from(selectedItems) as number[];
+        await exportHighlights(selectedIds);
+      } else {
+        await exportHighlights();
       }
-
-      let syncCount = 0;
-      for (const favoriteVerse of favoriteVerses) {
-        if (!favoriteVerse.uuid) {
-          console.warn(
-            "Favorito sin UUID, no se puede sincronizar:",
-            favoriteVerse.id
-          );
-          continue;
-        }
-
-        try {
-          await favoriteState$.addFavorite(favoriteVerse);
-          syncCount++;
-        } catch (error) {
-          console.error(
-            "Error al sincronizar versículo:",
-            favoriteVerse.id,
-            error
-          );
-        }
-      }
-
-      showToast(`${syncCount} versículos favoritos sincronizados con la nube`);
-      // // Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      showToast("Destacados exportados exitosamente");
     } catch (error) {
-      console.error(
-        "Error al sincronizar versículos favoritos con la nube:",
-        error
-      );
-      showToast("Error al sincronizar versículos favoritos");
+      console.error("Error exporting highlights:", error);
+      showToast("Error al exportar destacados");
     } finally {
       setShowMoreOptions(false);
     }
-  }, [isLoggedIn, getAllFavoriteVerses, router]);
+  }, [selectedItems, exportHighlights]);
 
-  const handleDownloadFromCloud = useCallback(async () => {
-    if (!isLoggedIn) {
-      Alert.alert(
-        "Sincronización requerida",
-        "Debes iniciar sesión para descargar tus versículos favoritos desde la nube",
-        [
-          { text: "Cancelar", style: "cancel" },
-          {
-            text: "Iniciar sesión",
-            onPress: () => router.push({
-              pathname: '/login'
-            }),
-          },
-        ]
-      );
-      return;
-    }
-
+  const handleImportHighlights = useCallback(async () => {
     try {
-      const favoriteCloudEntries = await favoriteState$.fetchFavorites();
-
-      if (!favoriteCloudEntries || favoriteCloudEntries.length === 0) {
-        showToast("No hay versículos favoritos en la nube");
-        return;
-      }
-
-      const localFavorites = await getAllFavoriteVerses();
-      let downloadCount = 0;
-
-      for (const cloudFavoriteVerse of favoriteCloudEntries) {
-        if (!cloudFavoriteVerse.uuid) {
-          console.warn(
-            "Favorito en la nube sin UUID, se omite:",
-            cloudFavoriteVerse.id
-          );
-          continue;
-        }
-
-        try {
-          const existingFavoriteEntry = localFavorites.find(
-            (n) => n.uuid === cloudFavoriteVerse.uuid
-          );
-
-          if (existingFavoriteEntry) {
-            console.log(
-              "Favorito ya existe localmente, se omite:",
-              existingFavoriteEntry.id
-            );
-          } else {
-            await addFavoriteVerse(
-              cloudFavoriteVerse.book_number,
-              cloudFavoriteVerse.chapter,
-              cloudFavoriteVerse.verse,
-              cloudFavoriteVerse.uuid
-            );
-            downloadCount++;
-          }
-        } catch (error) {
-          console.error(
-            "Error al guardar versículo local:",
-            cloudFavoriteVerse.id,
-            error
-          );
-        }
-      }
-
-      showToast(
-        `${downloadCount} versículos favoritos descargados desde la nube`
-      );
-      // // Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      await importHighlights();
+      showToast("Destacados importados exitosamente");
+      fetchData();
     } catch (error) {
-      console.error("Error al descargar versículos desde la nube:", error);
-      showToast("Error al descargar versículos");
+      console.error("Error importing highlights:", error);
+      showToast("Error al importar destacados");
     } finally {
       setShowMoreOptions(false);
-      bibleState$.toggleReloadFavorites();
     }
-  }, [isLoggedIn, getAllFavoriteVerses, addFavoriteVerse, router]);
+  }, [importHighlights, fetchData]);
 
   const showMoreOptionHandle = useCallback(() => {
     setShowMoreOptions((prev) => !prev);
@@ -400,9 +292,10 @@ const FavoriteList = ({ }: TListVerse) => {
     setShowMoreOptions(false);
   }, []);
 
-  const renderItem: ListRenderItem<IVerseItem & { id: number }> = useCallback(
+  const renderItem: ListRenderItem<THighlightedVerse> = useCallback(
     ({ item, index }) => {
-      const isSelected = selectedItems.has(item.id);
+      const itemId = item.id as number;
+      const isSelected = itemId !== undefined && selectedItems.has(itemId);
 
       const renderRightActions = (progress: any, dragX: any) => {
         const trans = dragX.interpolate({
@@ -424,16 +317,18 @@ const FavoriteList = ({ }: TListVerse) => {
               <TouchableOpacity
                 style={styles.deleteButton}
                 onPress={() => {
-                  swipeableRefs.current[item.id]?.close();
+                  if (itemId !== undefined) {
+                    swipeableRefs.current[itemId]?.close();
+                  }
                   Alert.alert(
-                    "Eliminar favorito",
-                    "¿Estás seguro de eliminar este versículo de tus favoritos?",
+                    "Eliminar destacado",
+                    "¿Estás seguro de eliminar este versículo destacado?",
                     [
                       { text: "Cancelar", style: "cancel" },
                       {
                         text: "Eliminar",
                         style: "destructive",
-                        onPress: () => onRemoveFavorite(item),
+                        onPress: () => onRemoveHighlight(item),
                       },
                     ]
                   );
@@ -448,7 +343,11 @@ const FavoriteList = ({ }: TListVerse) => {
 
       return (
         <Swipeable
-          ref={(ref) => (swipeableRefs.current[item.id] = ref) as any}
+          ref={(ref) => {
+            if (itemId !== undefined) {
+              swipeableRefs.current[itemId] = ref;
+            }
+          }}
           renderRightActions={renderRightActions}
           friction={2}
           overshootRight={false}
@@ -459,9 +358,9 @@ const FavoriteList = ({ }: TListVerse) => {
             activeOpacity={0.8}
             onPress={() => onVerseClick(item)}
             onLongPress={() => {
-              if (!selectionMode) {
+              if (!selectionMode && itemId !== undefined) {
                 setSelectionMode(true);
-                toggleSelection(item.id);
+                toggleSelection(itemId);
                 // // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
               }
             }}
@@ -481,10 +380,30 @@ const FavoriteList = ({ }: TListVerse) => {
               )}
 
               <View style={styles.headerContainer}>
-                <Text style={styles.cardTitle}>
-                  {`${renameLongBookName(item.bookName)} ${item.chapter}:${item.verse
-                    }`}
-                </Text>
+                <View style={styles.titleContainer}>
+                  <Text style={styles.cardTitle}>
+                    {`${renameLongBookName(item.bookName || getBookDetail(item.book_number).longName)} ${item.chapter}:${item.verse}`}
+                  </Text>
+                  {/* Highlight color indicator */}
+                  <View
+                    style={[
+                      styles.highlightIndicator,
+                      {
+                        backgroundColor: item.color,
+                        borderColor: item.color,
+                      },
+                    ]}
+                  >
+                    {item.style === 'underline' && (
+                      <View
+                        style={[
+                          styles.underlineIndicator,
+                          { borderBottomColor: item.color },
+                        ]}
+                      />
+                    )}
+                  </View>
+                </View>
 
                 {!selectionMode && (
                   <View style={styles.verseAction}>
@@ -508,7 +427,7 @@ const FavoriteList = ({ }: TListVerse) => {
               </View>
 
               <Text style={styles.verseBody} numberOfLines={3}>
-                {getVerseTextRaw(item.text)}
+                {item.text ? getVerseTextRaw(item.text) : ""}
               </Text>
             </View>
           </TouchableOpacity>
@@ -520,10 +439,11 @@ const FavoriteList = ({ }: TListVerse) => {
       selectionMode,
       selectedItems,
       onVerseClick,
-      onRemoveFavorite,
+      onRemoveHighlight,
       onCopy,
       onShare,
       toggleSelection,
+      theme,
     ]
   );
 
@@ -532,7 +452,7 @@ const FavoriteList = ({ }: TListVerse) => {
       return (
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>
-            Cargando versículos favoritos...
+            Cargando versículos destacados...
           </Text>
         </View>
       );
@@ -558,7 +478,7 @@ const FavoriteList = ({ }: TListVerse) => {
                 ({currentBibleLongName})
               </Text>
               {"\n"}
-              No tienes versículos favoritos en esta versión de la escritura.
+              No tienes versículos destacados en esta versión de la escritura.
             </Text>
 
             <TouchableOpacity
@@ -566,7 +486,7 @@ const FavoriteList = ({ }: TListVerse) => {
               onPress={() => navigation.navigate(Screens.Home, {})}
             >
               <Text style={styles.addFavoriteButtonText}>
-                Ir a la Biblia para añadir favoritos
+                Ir a la Biblia para añadir destacados
               </Text>
             </TouchableOpacity>
           </View>
@@ -575,46 +495,6 @@ const FavoriteList = ({ }: TListVerse) => {
     );
   }, [loading, searchQuery, currentBibleLongName, navigation, theme, styles]);
 
-  const actionButtons = useMemo(() => {
-    const buttons = [
-      {
-        bottom: 25,
-        name: "EllipsisVertical",
-        color: "#008CBA",
-        action: showMoreOptionHandle,
-        hide: showMoreOptions || selectionMode,
-        label: "",
-      },
-      {
-        bottom: 25,
-        name: "Import",
-        color: "#008CBA",
-        action: handleDownloadFromCloud,
-        hide: !showMoreOptions || selectionMode,
-        label: "Cargar desde la cuenta",
-        isSync: true,
-      },
-      {
-        bottom: 90,
-        name: "Share",
-        color: "#45a049",
-        action: handleSyncToCloud,
-        hide: !showMoreOptions || selectionMode,
-        label: "Guardar en la cuenta",
-        isSync: true,
-      },
-      {
-        bottom: 155,
-        name: "ChevronDown",
-        color: theme.colors.notification,
-        action: showMoreOptionHandle,
-        hide: !showMoreOptions || selectionMode,
-        label: "Cerrar menú",
-      },
-    ];
-
-    return buttons.filter((item) => !item.hide);
-  }, [showMoreOptions]);
 
   if (loading && !filterData.length) {
     return (
@@ -622,7 +502,7 @@ const FavoriteList = ({ }: TListVerse) => {
         <Stack.Screen
           options={{
             headerShown: true,
-            title: "Mis versículos favoritos",
+            title: "Mis versículos destacados",
             headerTitleStyle: { color: theme.colors.text },
             headerStyle: { backgroundColor: theme.colors.background },
           }}
@@ -652,7 +532,7 @@ const FavoriteList = ({ }: TListVerse) => {
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: false }
         )}
-        keyExtractor={(item: any) => `fav-${item.id}`}
+        keyExtractor={(item: THighlightedVerse) => `highlight-${item.id || item.uuid}`}
         contentContainerStyle={styles.listContentContainer}
         ListEmptyComponent={EmptyComponent}
         refreshControl={
@@ -665,9 +545,6 @@ const FavoriteList = ({ }: TListVerse) => {
         }
       />
 
-      {actionButtons.map((item, index) => (
-        <ActionButton key={index} theme={theme} item={item} index={index} />
-      ))}
     </ThemedView>
   );
 };
@@ -758,11 +635,30 @@ const getStyles = ({ colors, dark }: TTheme) =>
       alignItems: "center",
       marginBottom: 8,
     },
+    titleContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      flex: 1,
+    },
     cardTitle: {
       fontSize: 16,
       fontWeight: "bold",
       color: colors.notification,
       flex: 1,
+    },
+    highlightIndicator: {
+      width: 20,
+      height: 20,
+      borderRadius: 10,
+      marginLeft: 8,
+      borderWidth: 2,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    underlineIndicator: {
+      width: 12,
+      height: 2,
+      borderBottomWidth: 3,
     },
     verseBody: {
       color: colors.text,
@@ -919,4 +815,4 @@ const getStyles = ({ colors, dark }: TTheme) =>
     },
   });
 
-export default FavoriteList;
+export default HighlightedList;
