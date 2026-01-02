@@ -1,6 +1,7 @@
 import {
   DELETE_HIGHLIGHTED_VERSE,
   GET_ALL_HIGHLIGHTED_VERSES,
+  GET_ALL_HIGHLIGHTED_VERSES_BY_BOOK_AND_CHAPTER,
   INSERT_HIGHLIGHTED_VERSE,
   UPDATE_HIGHLIGHTED_VERSE,
 } from "@/constants/queries";
@@ -43,6 +44,21 @@ export const useHighlightService = () => {
       );
       return highlights;
     } catch (error) {
+      console.error("Error al obtener versículos destacados:", error);
+      return [];
+    }
+  };
+
+  const getAllHighlightedVersesByBookAndChapter = async (bookNumber: number, chapter: number): Promise<THighlightedVerse[]> => {
+    try {
+      const highlights = await executeSql<THighlightedVerse>(
+        GET_ALL_HIGHLIGHTED_VERSES_BY_BOOK_AND_CHAPTER,
+        [bookNumber, chapter],
+        "getAllHighlightedVersesByBookAndChapter"
+      );
+      return highlights;
+    }
+    catch (error) {
       console.error("Error al obtener versículos destacados:", error);
       return [];
     }
@@ -238,6 +254,7 @@ export const useHighlightService = () => {
 
   return {
     getAllHighlightedVerses,
+    getAllHighlightedVersesByBookAndChapter,
     createHighlight,
     updateHighlight,
     deleteHighlight,

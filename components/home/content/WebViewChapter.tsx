@@ -71,6 +71,7 @@ const WebViewChapter = memo(
     const previewHighlightData = use$(() => modalState$.previewHighlight.get());
     const [highlights, setHighlights] = useState<Map<string, { color: string; style: string }>>(new Map());
     const lastPreviewRef = useRef<{ color: string; style: string }>({ color: "", style: "" });
+
     const handleMessage = useCallback(
       (event: any) => {
         try {
@@ -159,7 +160,6 @@ const WebViewChapter = memo(
                   onAnotar?.(dataToUse);
                   break;
                 case "highlighter":
-                  console.log("highlighter");
                   const verseToHighlight = isMultiVerse && allSelectedVerses ? allSelectedVerses[0] : item;
                   modalState$.openHighlighterBottomSheet(
                     verseToHighlight.book_number,
@@ -172,7 +172,7 @@ const WebViewChapter = memo(
                     bookNumber: item.book_number,
                     chapter: item.chapter,
                     verse: item.verse,
-                    isFav: !item.is_favorite,
+                    isFav: item.is_favorite,
                   });
                   break;
                 case "memorize":
@@ -208,6 +208,7 @@ const WebViewChapter = memo(
               loadHighlights();
               break;
             case "previewHighlight":
+              console.log("previewHighlight-webchapter", message.data);
               // Preview highlight before applying
               if (message.data?.color && message.data?.style) {
                 previewHighlight(message.data.color, message.data.style);
@@ -319,8 +320,7 @@ const WebViewChapter = memo(
       if (isMyBibleDbLoaded) {
         loadHighlights();
       }
-    }, [isMyBibleDbLoaded, data]);
-
+    }, [isMyBibleDbLoaded, data, isHighlighterOpen]);
 
     // Handle preview highlight updates
     useEffect(() => {
@@ -329,6 +329,7 @@ const WebViewChapter = memo(
       const isDifferent =
         lastPreviewRef.current.color !== previewHighlightData.color ||
         lastPreviewRef.current.style !== previewHighlightData.style;
+      console.log("previewHighlightData", previewHighlightData);
 
       if (hasColor && hasStyle && isHighlighterOpen && isDifferent) {
         lastPreviewRef.current = {
@@ -352,7 +353,7 @@ const WebViewChapter = memo(
           }
         }
       }
-    }, [previewHighlightData.color, previewHighlightData.style, isHighlighterOpen]);
+    }, [previewHighlightData.color, previewHighlightData.style]);
 
     const htmlChapterTemplate = useMemo(() => {
       return bibleChapterHtmlTemplate({
@@ -384,9 +385,6 @@ const WebViewChapter = memo(
       webViewRef.current?.postMessage(JSON.stringify({ type: "startTour" }));
       // tourState$.startVerseSectionTour.set(false);
     }, []);
-
-
-
 
     return (
       <>

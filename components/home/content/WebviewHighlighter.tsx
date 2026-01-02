@@ -32,6 +32,7 @@ const WebviewHighlighter: React.FC<Props> = ({ theme }) => {
     updateHighlight,
     deleteHighlight,
     getAllHighlightedVerses,
+    getAllHighlightedVersesByBookAndChapter
   } = useHighlightService();
 
   const isOpen = use$(() => modalState$.isHighlighterOpen.get());
@@ -46,7 +47,7 @@ const WebviewHighlighter: React.FC<Props> = ({ theme }) => {
 
   const loadExistingHighlights = useCallback(async () => {
     try {
-      const allHighlights = await getAllHighlightedVerses();
+      const allHighlights = await getAllHighlightedVersesByBookAndChapter(reference.bookNumber, reference.chapter);
       const highlightsMap = new Map();
 
       allHighlights.forEach((highlight) => {
@@ -58,19 +59,20 @@ const WebviewHighlighter: React.FC<Props> = ({ theme }) => {
           uuid: highlight.uuid,
         });
       });
-
       setExistingHighlights(highlightsMap);
     } catch (error) {
       console.error("Error loading existing highlights:", error);
     }
-  }, [getAllHighlightedVerses]);
+  }, []);
 
-  // Load existing highlights for the verses
+  // Load existing highlights for the verses and clear preview when opening
   useEffect(() => {
     if (isOpen) {
       loadExistingHighlights();
+      // Clear any stale preview data when highlighter opens
+      modalState$.previewHighlight.set({ color: "", style: "" });
     }
-  }, [isOpen, loadExistingHighlights]);
+  }, [isOpen]);
 
   const handleColorSelect = useCallback(async (color: string, style: HighlightStyle = 'highlight') => {
     haptics.selection();
@@ -90,7 +92,8 @@ const WebviewHighlighter: React.FC<Props> = ({ theme }) => {
         }];
 
       // Get current highlights
-      const allHighlights = await getAllHighlightedVerses();
+      const allHighlights = await getAllHighlightedVersesByBookAndChapter(reference.bookNumber, reference.chapter);
+
       const highlightsMap = new Map();
       allHighlights.forEach((highlight) => {
         const key = `${highlight.book_number}-${highlight.chapter}-${highlight.verse}`;
@@ -141,7 +144,7 @@ const WebviewHighlighter: React.FC<Props> = ({ theme }) => {
     } finally {
       setLoading(false);
     }
-  }, [selectedVerses, reference, bibleQuery, createHighlight, updateHighlight, getAllHighlightedVerses, loadExistingHighlights, haptics]);
+  }, [selectedVerses, reference, bibleQuery]);
 
   const handleClearHighlight = useCallback(async () => {
     haptics.selection();
@@ -199,7 +202,7 @@ const WebviewHighlighter: React.FC<Props> = ({ theme }) => {
     } finally {
       setLoading(false);
     }
-  }, [selectedVerses, reference, bibleQuery, deleteHighlight, getAllHighlightedVerses, loadExistingHighlights, haptics]);
+  }, [selectedVerses, reference, bibleQuery]);
 
   // Get verses to highlight (from selectedVerses or current reference)
   const verses = useMemo(() => {
@@ -221,9 +224,6 @@ const WebviewHighlighter: React.FC<Props> = ({ theme }) => {
     }];
   }, [selectedVerses, reference, bibleQuery]);
 
-  const verseText = verses.length === 1
-    ? `Versículo ${verses[0].verse}`
-    : `${verses.length} versículos seleccionados`;
 
   // Get selected colors and styles for the verses
   const selectedColors = useMemo(() => {
@@ -259,11 +259,9 @@ const WebviewHighlighter: React.FC<Props> = ({ theme }) => {
       colors: HIGHLIGHT_COLORS,
       selectedColors,
       selectedStyle,
-      verseText,
-      loading,
       fontSize: fontSize || 16,
     });
-  }, [theme, selectedColors, selectedStyle, verseText, loading, fontSize]);
+  }, [theme, selectedColors, selectedStyle, fontSize]);
 
   const handleMessage = useCallback(
     (event: any) => {

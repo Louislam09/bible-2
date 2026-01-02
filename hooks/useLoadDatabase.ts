@@ -84,7 +84,7 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
     try {
       for (const table of MY_TABLES) {
         const tableExists = await checkTableExists(db, table.name);
-        console.log(`🖨️ ${table.name} table exists: ${tableExists}`)
+        // console.log(`🖨️ ${table.name} table exists: ${tableExists}`)
         if (!tableExists) {
           await db.execAsync(table.query);
         }
@@ -98,7 +98,7 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
   const checkIfAllTablesExists = async (db: SQLite.SQLiteDatabase) => {
     const allTablesExist = await Promise.all(MY_TABLES.map(async (table) => {
       const tableExists = await checkTableExists(db, table.name);
-      console.log(`${tableExists ? "✅" : "❌"} ${table.name} table exists: ${tableExists}`)
+      // console.log(`${tableExists ? "✅" : "❌"} ${table.name} table exists: ${tableExists}`)
       return tableExists;
     }));
     return allTablesExist.every(exists => exists);
@@ -195,7 +195,6 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
       if (!db) return;
       const dbTableCreated = storedData$.dbTableCreated.get();
       const allTablesExist = await checkIfAllTablesExists(db);
-      console.log({ allTablesExist }, dbName.shortName)
 
       if (!dbTableCreated?.includes(dbName.shortName) || !allTablesExist) {
         const valid = await isDatabaseValid(db!, isInterlinear ? "interlinear" : "verses");

@@ -4,6 +4,8 @@ export const CREATE_FAVORITE_VERSES_TABLE = `CREATE TABLE IF NOT EXISTS favorite
   chapter INTEGER,
   verse INTEGER,
   uuid TEXT
+
+  UNIQUE (book_number, chapter, verse)
 );`;
 
 export const CREATE_COLUMN_UUID_IN_FAVORITE_VERSES_TABLE = `ALTER TABLE favorite_verses ADD COLUMN uuid TEXT;`;

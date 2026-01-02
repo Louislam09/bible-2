@@ -8,8 +8,6 @@ interface HighlighterTemplateProps {
     colors: Array<{ color: string; label: string }>;
     selectedColors: string[];
     selectedStyle: 'highlight' | 'underline';
-    verseText: string;
-    loading: boolean;
     fontSize?: number;
 }
 
@@ -46,17 +44,10 @@ export const highlighterHtmlTemplate = ({
     colors,
     selectedColors,
     selectedStyle,
-    verseText,
-    loading,
     fontSize = 16,
 }: HighlighterTemplateProps): string => {
     const themeSchema = theme.dark ? "dark" : "light";
     let currentStyle = selectedStyle || 'highlight';
-
-    const selectCheckElement = (selected: boolean) => `
-        <span class="${selected ? "w-full h-full rounded-full bg-black/30 flex items-center justify-center text-xl text-white " : "hidden"}">
-        ${lucideIcons.check}</span>
-    `;
 
     // Map colors to ring colors for selected state
     const getColorRing = (color: string) => {
