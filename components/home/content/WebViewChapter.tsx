@@ -66,7 +66,7 @@ const WebViewChapter = memo(
     const webViewRef = useRef<WebView>(null);
     const startVerseSectionTour = use$(() => tourState$.startVerseSectionTour.get());
     const { isMyBibleDbLoaded } = useDBContext();
-    const { getAllHighlightedVerses } = useHighlightService();
+    const { getAllHighlightedVerses, getAllHighlightedVersesByBookAndChapter } = useHighlightService();
     const isHighlighterOpen = use$(() => modalState$.isHighlighterOpen.get());
     const previewHighlightData = use$(() => modalState$.previewHighlight.get());
     const [highlights, setHighlights] = useState<Map<string, { color: string; style: string }>>(new Map());
@@ -208,8 +208,6 @@ const WebViewChapter = memo(
               loadHighlights();
               break;
             case "previewHighlight":
-              console.log("previewHighlight-webchapter", message.data);
-              // Preview highlight before applying
               if (message.data?.color && message.data?.style) {
                 previewHighlight(message.data.color, message.data.style);
               }
@@ -285,7 +283,8 @@ const WebViewChapter = memo(
 
     const loadHighlights = useCallback(async () => {
       try {
-        const allHighlights = await getAllHighlightedVerses();
+        const reference = data[0] || { book_number: 10, chapter: 1 }
+        const allHighlights = await getAllHighlightedVersesByBookAndChapter(reference.book_number, reference.chapter);
         const highlightsMap = new Map<string, { color: string; style: string }>();
 
         allHighlights.forEach((highlight) => {
@@ -329,7 +328,6 @@ const WebViewChapter = memo(
       const isDifferent =
         lastPreviewRef.current.color !== previewHighlightData.color ||
         lastPreviewRef.current.style !== previewHighlightData.style;
-      console.log("previewHighlightData", previewHighlightData);
 
       if (hasColor && hasStyle && isHighlighterOpen && isDifferent) {
         lastPreviewRef.current = {
