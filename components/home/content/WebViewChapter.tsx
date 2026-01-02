@@ -66,7 +66,7 @@ const WebViewChapter = memo(
     const webViewRef = useRef<WebView>(null);
     const startVerseSectionTour = use$(() => tourState$.startVerseSectionTour.get());
     const { isMyBibleDbLoaded } = useDBContext();
-    const { getAllHighlightedVerses, getAllHighlightedVersesByBookAndChapter } = useHighlightService();
+    const { getAllHighlightedVersesByBookAndChapter } = useHighlightService();
     const isHighlighterOpen = use$(() => modalState$.isHighlighterOpen.get());
     const previewHighlightData = use$(() => modalState$.previewHighlight.get());
     const [highlights, setHighlights] = useState<Map<string, { color: string; style: string }>>(new Map());
