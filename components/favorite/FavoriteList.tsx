@@ -21,7 +21,6 @@ import { FlashListRef } from "@shopify/flash-list";
 import { Stack, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  Alert,
   Animated,
   Keyboard,
   ListRenderItem,
@@ -30,12 +29,14 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 import { Swipeable } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type TListVerse = {};
 
 const FavoriteList = ({ }: TListVerse) => {
+  const { confirm, alertWarning } = useAlert();
   const [filterData, setFilterData] = useState<(IVerseItem & { id: number })[]>(
     []
   );
@@ -203,68 +204,49 @@ const FavoriteList = ({ }: TListVerse) => {
   const deleteSelected = useCallback(async () => {
     if (selectedItems.size === 0) return;
 
-    Alert.alert(
+    confirm(
       "Eliminar favoritos",
       `¿Estás seguro de eliminar ${selectedItems.size} versículos favoritos?`,
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Eliminar",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              const deletePromises = Array.from(selectedItems).map((id) => {
-                const verse = originalData.find((v) => v.id === id);
-                if (!verse) return Promise.resolve();
+      async () => {
+        try {
+          const deletePromises = Array.from(selectedItems).map((id) => {
+            const verse = originalData.find((v) => v.id === id);
+            if (!verse) return Promise.resolve();
 
-                return toggleFavoriteVerse({
-                  bookNumber: verse.book_number,
-                  chapter: verse.chapter,
-                  verse: verse.verse,
-                  isFav: true,
-                });
-              });
+            return toggleFavoriteVerse({
+              bookNumber: verse.book_number,
+              chapter: verse.chapter,
+              verse: verse.verse,
+              isFav: true,
+            });
+          });
 
-              await Promise.all(deletePromises);
+          await Promise.all(deletePromises);
 
-              setFilterData((prev) =>
-                prev.filter((item) => !selectedItems.has(item.id))
-              );
-              setOriginalData((prev) =>
-                prev.filter((item) => !selectedItems.has(item.id))
-              );
+          setFilterData((prev) =>
+            prev.filter((item) => !selectedItems.has(item.id))
+          );
+          setOriginalData((prev) =>
+            prev.filter((item) => !selectedItems.has(item.id))
+          );
 
-              setSelectionMode(false);
-              setSelectedItems(new Set());
+          setSelectionMode(false);
+          setSelectedItems(new Set());
 
-              showToast(`${selectedItems.size} versículos eliminados`);
-            } catch (error) {
-              console.error("Error deleting favorites:", error);
-              showToast("Error al eliminar favoritos");
-            }
-          },
-        },
-      ]
+          showToast(`${selectedItems.size} versículos eliminados`);
+        } catch (error) {
+          console.error("Error deleting favorites:", error);
+          showToast("Error al eliminar favoritos");
+        }
+      }
     );
-  }, [selectedItems, originalData, removeFavoriteVerse, toggleFavoriteVerse]);
+  }, [confirm, selectedItems, originalData, removeFavoriteVerse, toggleFavoriteVerse]);
 
   const handleSyncToCloud = useCallback(async () => {
     if (!isLoggedIn) {
-      Alert.alert(
+      alertWarning(
         "Sincronización requerida",
         "Debes iniciar sesión para sincronizar tus versículos favoritos con la nube",
-        [
-          { text: "Cancelar", style: "cancel" },
-          {
-            text: "Iniciar sesión",
-            onPress: () => router.push({
-              pathname: '/login'
-            }),
-          },
-        ]
       );
       return;
     }
@@ -314,18 +296,9 @@ const FavoriteList = ({ }: TListVerse) => {
 
   const handleDownloadFromCloud = useCallback(async () => {
     if (!isLoggedIn) {
-      Alert.alert(
+      alertWarning(
         "Sincronización requerida",
         "Debes iniciar sesión para descargar tus versículos favoritos desde la nube",
-        [
-          { text: "Cancelar", style: "cancel" },
-          {
-            text: "Iniciar sesión",
-            onPress: () => router.push({
-              pathname: '/login'
-            }),
-          },
-        ]
       );
       return;
     }
@@ -425,17 +398,10 @@ const FavoriteList = ({ }: TListVerse) => {
                 style={styles.deleteButton}
                 onPress={() => {
                   swipeableRefs.current[item.id]?.close();
-                  Alert.alert(
+                  confirm(
                     "Eliminar favorito",
                     "¿Estás seguro de eliminar este versículo de tus favoritos?",
-                    [
-                      { text: "Cancelar", style: "cancel" },
-                      {
-                        text: "Eliminar",
-                        style: "destructive",
-                        onPress: () => onRemoveFavorite(item),
-                      },
-                    ]
+                    () => onRemoveFavorite(item)
                   );
                 }}
               >

@@ -21,11 +21,11 @@ import { useRouter } from "expo-router";
 import React, { FC, useCallback, useEffect, useMemo } from "react";
 import {
   ActivityIndicator,
-  Alert,
   Dimensions,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import WebViewChapter from "./home/content/WebViewChapter";
 import WebviewInterlinearChapter from "./home/content/WebviewInterlinearChapter";
@@ -41,6 +41,7 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
   const { theme } = useMyTheme();
   const haptics = useHaptics();
   const router = useRouter();
+  const { alertWarning } = useAlert();
   const { orientation, selectBibleVersion, toggleFavoriteVerse } = useBibleContext();
   const { addVerse } = useMemorization();
   const isPortrait = orientation === "PORTRAIT";
@@ -233,15 +234,7 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
     (item: IBookVerse) => {
       const googleAIKey = storedData$.googleAIKey.get();
       if (!googleAIKey) {
-        Alert.alert("Aviso", "No se ha configurado la API key de Google AI", [
-          { text: "Cancelar", style: "cancel" },
-          {
-            text: "Configurar",
-            onPress: () => {
-              router.push(Screens.AISetup);
-            },
-          },
-        ]);
+        alertWarning("Aviso", "No se ha configurado la API key de Google AI");
         return;
       }
       const verseText = getVerseTextRaw(item.text);
@@ -253,7 +246,7 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
       modalState$.closeExplainVerseBottomSheet();
       bibleState$.clearSelection();
     },
-    [router]
+    [alertWarning, router]
   );
 
   const onImage = useCallback(

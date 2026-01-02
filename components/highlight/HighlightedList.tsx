@@ -16,10 +16,10 @@ import { Stack, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   StyleSheet,
   View
 } from "react-native";
+import { useAlert } from "@/context/AlertContext";
 import WebView from "react-native-webview";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -27,6 +27,7 @@ import { useNavigation } from "@react-navigation/native";
 type HighlightedListProps = {};
 
 const HighlightedList = ({ }: HighlightedListProps) => {
+  const { confirm } = useAlert();
   const [filterData, setFilterData] = useState<THighlightedVerse[]>([]);
   const [originalData, setOriginalData] = useState<THighlightedVerse[]>([]);
   const [loading, setLoading] = useState(true);
@@ -170,40 +171,30 @@ const HighlightedList = ({ }: HighlightedListProps) => {
 
   const onDelete = useCallback(
     (item: THighlightedVerse) => {
-      Alert.alert(
+      confirm(
         "Eliminar destacado",
         "¿Estás seguro de eliminar este versículo destacado?",
-        [
-          {
-            text: "Cancelar",
-            style: "cancel",
-          },
-          {
-            text: "Eliminar",
-            style: "destructive",
-            onPress: async () => {
-              try {
-                await deleteHighlight(
-                  item.book_number,
-                  item.chapter,
-                  item.verse,
-                  item.uuid
-                );
+        async () => {
+          try {
+            await deleteHighlight(
+              item.book_number,
+              item.chapter,
+              item.verse,
+              item.uuid
+            );
 
-                setFilterData((prev) => prev.filter((v) => v.id !== item.id));
-                setOriginalData((prev) => prev.filter((v) => v.id !== item.id));
+            setFilterData((prev) => prev.filter((v) => v.id !== item.id));
+            setOriginalData((prev) => prev.filter((v) => v.id !== item.id));
 
-                showToast("Versículo destacado eliminado");
-              } catch (error) {
-                console.error("Error removing highlight:", error);
-                showToast("Error al eliminar versículo destacado");
-              }
-            },
-          },
-        ]
+            showToast("Versículo destacado eliminado");
+          } catch (error) {
+            console.error("Error removing highlight:", error);
+            showToast("Error al eliminar versículo destacado");
+          }
+        }
       );
     },
-    [deleteHighlight]
+    [confirm, deleteHighlight]
   );
 
   // Handle WebView messages

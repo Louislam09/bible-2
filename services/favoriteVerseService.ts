@@ -8,7 +8,6 @@ import {
 import { useDBContext } from "@/context/databaseContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import * as Crypto from 'expo-crypto';
-import { Alert } from "react-native";
 
 export const useFavoriteVerseService = () => {
   const { executeSql } = useDBContext();
@@ -20,7 +19,6 @@ export const useFavoriteVerseService = () => {
       return verses;
     } catch (error) {
       console.error("Error loading favorite verses:", error);
-      Alert.alert("Error", "No se pudieron cargar los versículos favoritos");
       return [];
     }
   };
@@ -37,7 +35,6 @@ export const useFavoriteVerseService = () => {
       return true;
     } catch (error) {
       console.error("Error adding favorite verse:", error);
-      Alert.alert("Error", "No se pudo agregar el versículo favorito");
       return false;
     }
   };
@@ -52,7 +49,6 @@ export const useFavoriteVerseService = () => {
       return true;
     } catch (error) {
       console.error("Error removing favorite verse:", error);
-      Alert.alert("Error", "No se pudo eliminar el versículo favorito");
       return false;
     }
   };
@@ -81,7 +77,6 @@ export const useFavoriteVerseService = () => {
       return true;
     } catch (error) {
       console.error("Error generating UUIDs for favorite_verses:", error);
-      Alert.alert("Error", "No se pudieron generar UUIDs para los versículos favoritos");
       return false;
     }
   };

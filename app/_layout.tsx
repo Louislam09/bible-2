@@ -27,6 +27,7 @@ import "../global.css";
 import { NetworkProvider } from "@/context/NetworkProvider";
 import { NotificationProvider } from "@/context/NotificationContext";
 import { TutorialProvider } from "@/context/TutorialContext";
+import { AlertProvider } from "@/context/AlertContext";
 import { useQuickActions } from "@/hooks/useQuickActions";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
@@ -136,15 +137,17 @@ DataProviders.displayName = 'DataProviders';
 
 // UI and Feature Providers - Non-critical for startup
 const FeatureProviders = memo(({ children }: { children: ReactNode }) => (
-  <MemorizationProvider>
-    <NotificationProvider>
-      <TutorialProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
-        </GestureHandlerRootView>
-      </TutorialProvider>
-    </NotificationProvider>
-  </MemorizationProvider>
+  <AlertProvider>
+    <MemorizationProvider>
+      <NotificationProvider>
+        <TutorialProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
+          </GestureHandlerRootView>
+        </TutorialProvider>
+      </NotificationProvider>
+    </MemorizationProvider>
+  </AlertProvider>
 ));
 FeatureProviders.displayName = 'FeatureProviders';
 
