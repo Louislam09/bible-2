@@ -1258,8 +1258,31 @@ type THighlight = {
 
 
 const createRegularVerse = (item: IBookVerse, verseKey: string, highlights?: Map<string, THighlight>) => {
-    const highlightKey = `${item.book_number}-${item.chapter}-${item.verse}`;
-    const highlight = highlights?.get(highlightKey);
+    // Parse highlight from verse object if available, otherwise use highlights map
+    let highlight: THighlight | undefined;
+
+    if ((item as any).highlight) {
+        try {
+            const highlightData = typeof (item as any).highlight === 'string'
+                ? JSON.parse((item as any).highlight)
+                : (item as any).highlight;
+
+            if (highlightData && highlightData.color && highlightData.style) {
+                highlight = {
+                    color: highlightData.color,
+                    style: highlightData.style
+                };
+            }
+        } catch (parseError) {
+            // Fallback to highlights map if parsing fails
+            const highlightKey = `${item.book_number}-${item.chapter}-${item.verse}`;
+            highlight = highlights?.get(highlightKey);
+        }
+    } else {
+        // Use highlights map if no highlight field in verse
+        const highlightKey = `${item.book_number}-${item.chapter}-${item.verse}`;
+        highlight = highlights?.get(highlightKey);
+    }
 
     // Use inline style for dynamic colors, Tailwind for other properties
     let highlightStyle = '';
