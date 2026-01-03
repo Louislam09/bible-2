@@ -39,8 +39,8 @@ const BuyMeACoffeeButton = () => {
     const { theme } = useMyTheme();
     const router = useRouter();
     const handlePress = () => {
-        router.push("/donate");
-        // Linking.openURL("https://buymeacoffee.com/santabibliarv60");
+        // router.push("/donate");
+        Linking.openURL("https://buymeacoffee.com/santabibliarv60");
     };
     const scale = useRef(new Animated.Value(1)).current;
 

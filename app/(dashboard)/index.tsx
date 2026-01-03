@@ -125,10 +125,6 @@ const MainDashboard = () => {
       label: "Himnos",
       isIonicon: true,
       action: onSong,
-      longAction: () => {
-        // @ts-ignore
-        navigation.navigate("example");
-      },
     },
     user
       ? {
@@ -136,7 +132,7 @@ const MainDashboard = () => {
         label: "Notas",
         action: () =>
           navigation.navigate(Screens.Notes, { shouldRefresh: false }),
-        color: theme.colors?.notification || "#78b0a4",
+        color: theme.colors?.notification,
       }
       : {
         icon: "Cloudy",

@@ -42,7 +42,7 @@ const HighlightedList = ({ }: HighlightedListProps) => {
   const insets = useSafeAreaInsets();
   const styles = getStyles(theme);
 
-  const { currentBibleLongName, orientation, currentBibleVersion } = useBibleContext();
+  const { currentBibleLongName, currentBibleVersion } = useBibleContext();
   const { installedBibles } = useDBContext();
   const { getAllHighlightedVerses, deleteHighlight } = useHighlightService();
 
