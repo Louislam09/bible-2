@@ -1,28 +1,28 @@
-import Animation from "@/components/Animation";
-import { Text, View as ThemedView } from "@/components/Themed";
+import { View as ThemedView } from "@/components/Themed";
 import { getBookDetail } from "@/constants/BookNames";
 import { highlightedListHtmlTemplate } from "@/constants/highlightedListTemplate";
+import { useAlert } from "@/context/AlertContext";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
 import { useMyTheme } from "@/context/ThemeContext";
-import { useHighlightService, THighlightedVerse } from "@/services/highlightService";
+import { THighlightedVerse, useHighlightService } from "@/services/highlightService";
 import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, Screens, TTheme } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
-import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { showToast } from "@/utils/showToast";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
+import { useNavigation } from "@react-navigation/native";
+import { formatDistanceToNow } from "date-fns";
+import { es } from "date-fns/locale";
 import { Stack, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  ActivityIndicator,
   StyleSheet,
   View
 } from "react-native";
-import { useAlert } from "@/context/AlertContext";
-import WebView from "react-native-webview";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import WebView from "react-native-webview";
 
 type HighlightedListProps = {};
 
@@ -52,38 +52,10 @@ const HighlightedList = ({ }: HighlightedListProps) => {
     return currentBible?.shortName || currentBibleLongName || "NIV";
   }, [installedBibles, currentBibleVersion, currentBibleLongName]);
 
-  // Format relative time (e.g., "2 days ago")
+  // Format relative time (e.g., "hace 2 días")
   const formatTimeAgo = useCallback((timestamp: number | string): string => {
-    const now = new Date();
     const date = typeof timestamp === 'string' ? new Date(timestamp) : new Date(timestamp);
-    const diff = now.getTime() - date.getTime();
-
-    const minutes = Math.floor(diff / 60000);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-    const weeks = Math.floor(days / 7);
-    const months = Math.floor(days / 30);
-    const years = Math.floor(days / 365);
-
-    if (years > 0) {
-      return years === 1 ? "1 year ago" : `${years} years ago`;
-    }
-    if (months > 0) {
-      return months === 1 ? "1 month ago" : `${months} months ago`;
-    }
-    if (weeks > 0) {
-      return weeks === 1 ? "1 week ago" : `${weeks} weeks ago`;
-    }
-    if (days > 0) {
-      return days === 1 ? "1 day ago" : `${days} days ago`;
-    }
-    if (hours > 0) {
-      return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
-    }
-    if (minutes > 0) {
-      return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
-    }
-    return "Just now";
+    return formatDistanceToNow(date, { addSuffix: true, locale: es });
   }, []);
 
   // Calculate if scroll position is beyond threshold for showing top button
