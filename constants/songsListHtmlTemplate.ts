@@ -3,6 +3,7 @@ import { getTailwindStyleTag } from "@/hooks/useLoadTailwindScript";
 import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
 import { getFontCss } from "@/hooks/useLoadFonts";
 import { createInlineIcon, lucideIcons } from "@/utils/lucideIcons";
+import { storedData$ } from "@/context/LocalstoreContext";
 
 // Create HTML head
 const createHtmlHead = (theme: TTheme, fontSize: number, selectedFont?: string) => `
@@ -10,7 +11,7 @@ const createHtmlHead = (theme: TTheme, fontSize: number, selectedFont?: string) 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Himnario</title>
-    ${getFontCss({ fontName: selectedFont || '' })}
+    ${getFontCss({ fontName: storedData$.selectedFont.get() || '' })}
     ${getTailwindStyleTag({ theme, fontSize })}
     ${scriptDownloadHelpers.getTailwindScript()}
     ${scriptDownloadHelpers.getFuseScript()}

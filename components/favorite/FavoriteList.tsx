@@ -1,9 +1,10 @@
-import Animation from "@/components/Animation";
-import Icon from "@/components/Icon";
 import ActionButton, { Backdrop } from "@/components/note/ActionButton";
-import { Text, View as ThemedView } from "@/components/Themed";
+import { View as ThemedView } from "@/components/Themed";
 import { getBookDetail } from "@/constants/BookNames";
+import { favoriteListHtmlTemplate } from "@/constants/favoriteListTemplate";
+import { useAlert } from "@/context/AlertContext";
 import { useBibleContext } from "@/context/BibleContext";
+import { useDBContext } from "@/context/databaseContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { useFavoriteVerseService } from "@/services/favoriteVerseService";
 import { authState$ } from "@/state/authState";
@@ -11,27 +12,20 @@ import { bibleState$ } from "@/state/bibleState";
 import { favoriteState$ } from "@/state/favoriteState";
 import { IVerseItem, Screens, TTheme } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
-import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { showToast } from "@/utils/showToast";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "@react-navigation/native";
-import { FlashListRef } from "@shopify/flash-list";
-// import * as Haptics from "expo-haptics";
 import { Stack, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  Animated,
   Keyboard,
-  ListRenderItem,
-  RefreshControl,
   StyleSheet,
-  TouchableOpacity,
   View
 } from "react-native";
-import { useAlert } from "@/context/AlertContext";
-import { Swipeable } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import WebView from "react-native-webview";
 
 type TListVerse = {};
 
@@ -44,15 +38,10 @@ const FavoriteList = ({ }: TListVerse) => {
     (IVerseItem & { id: number })[]
   >([]);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showMoreOptions, setShowMoreOptions] = useState(false);
-  const [selectionMode, setSelectionMode] = useState(false);
-  const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
 
-  const flatListRef = useRef<FlashListRef<any>>(null);
-  const scrollY = useRef(new Animated.Value(0)).current;
-  const swipeableRefs = useRef<{ [key: number]: Swipeable | null }>({});
+  const webViewRef = useRef<WebView>(null);
 
   // Hooks
   const { theme } = useMyTheme();
@@ -60,14 +49,25 @@ const FavoriteList = ({ }: TListVerse) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const styles = getStyles(theme);
-  const notFoundSource = require("../../assets/lottie/notFound.json");
 
-  const { toggleFavoriteVerse, currentBibleLongName, orientation } =
+  const { toggleFavoriteVerse, currentBibleLongName, orientation, currentBibleVersion } =
     useBibleContext();
+  const { installedBibles } = useDBContext();
   const { addFavoriteVerse, getAllFavoriteVerses, removeFavoriteVerse } =
     useFavoriteVerseService();
   const reloadFavorites = use$(() => bibleState$.reloadFavorites.get());
   const isLoggedIn = use$(() => !!authState$.user.get());
+
+  // Get current Bible version short name
+  const currentVersionShortName = useMemo(() => {
+    const currentBible = installedBibles.find((version) => version.id === currentBibleVersion);
+    return currentBible?.shortName || currentBibleLongName || "NIV";
+  }, [installedBibles, currentBibleVersion, currentBibleLongName]);
+
+  // Format relative time (e.g., "2 days ago") - not used for favorites but kept for template compatibility
+  const formatTimeAgo = useCallback((timestamp: number | string): string => {
+    return "";
+  }, []);
 
   // Calculate if scroll position is beyond threshold for showing top button
 
@@ -82,18 +82,12 @@ const FavoriteList = ({ }: TListVerse) => {
       showToast("Error al cargar versículos favoritos");
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
-  }, []);
+  }, [getAllFavoriteVerses]);
 
   useEffect(() => {
     fetchData();
   }, [reloadFavorites]);
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    fetchData();
-  }, [fetchData]);
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -115,11 +109,6 @@ const FavoriteList = ({ }: TListVerse) => {
 
   const onVerseClick = useCallback(
     (item: IVerseItem & { id: number }) => {
-      if (selectionMode) {
-        toggleSelection(item.id as any);
-        return;
-      }
-
       const queryInfo = {
         book: item.bookName,
         chapter: item.chapter,
@@ -134,7 +123,7 @@ const FavoriteList = ({ }: TListVerse) => {
 
       navigation.navigate(Screens.Home, queryInfo);
     },
-    [navigation, selectionMode]
+    [navigation]
   );
 
   const onRemoveFavorite = useCallback(
@@ -147,13 +136,16 @@ const FavoriteList = ({ }: TListVerse) => {
           isFav: true,
         });
 
+        setFilterData((prev) => prev.filter((v) => v.id !== item.id));
+        setOriginalData((prev) => prev.filter((v) => v.id !== item.id));
+
         showToast("Versículo removido de favoritos");
       } catch (error) {
         console.error("Error removing favorite:", error);
         showToast("Error al eliminar versículo favorito");
       }
     },
-    [removeFavoriteVerse, toggleFavoriteVerse]
+    [toggleFavoriteVerse]
   );
 
   const onCopy = useCallback(async (item: IVerseItem) => {
@@ -167,80 +159,11 @@ const FavoriteList = ({ }: TListVerse) => {
 
   const onShare = useCallback((item: IVerseItem) => {
     const verseText = getVerseTextRaw(item.text);
-    const reference = `${getBookDetail(item?.book_number).longName} ${item.chapter
-      }:${item.verse}`;
+    const reference = `${getBookDetail(item?.book_number).longName} ${item.chapter}:${item.verse}`;
     bibleState$.handleSelectVerseForNote(verseText);
     router.push({ pathname: "/quote", params: { text: verseText, reference } });
-  }, []);
+  }, [router]);
 
-  const toggleSelectionMode = useCallback(() => {
-    setSelectionMode((prev) => !prev);
-    if (selectionMode) {
-      setSelectedItems(new Set());
-    }
-  }, [selectionMode]);
-
-  const toggleSelection = useCallback((id: number) => {
-    setSelectedItems((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-      } else {
-        newSet.add(id);
-      }
-      return newSet;
-    });
-  }, []);
-
-  const selectAll = useCallback(() => {
-    const allIds = filterData.map((item) => item.id);
-    setSelectedItems(new Set(allIds));
-  }, [filterData]);
-
-  const deselectAll = useCallback(() => {
-    setSelectedItems(new Set());
-  }, []);
-
-  const deleteSelected = useCallback(async () => {
-    if (selectedItems.size === 0) return;
-
-    confirm(
-      "Eliminar favoritos",
-      `¿Estás seguro de eliminar ${selectedItems.size} versículos favoritos?`,
-      async () => {
-        try {
-          const deletePromises = Array.from(selectedItems).map((id) => {
-            const verse = originalData.find((v) => v.id === id);
-            if (!verse) return Promise.resolve();
-
-            return toggleFavoriteVerse({
-              bookNumber: verse.book_number,
-              chapter: verse.chapter,
-              verse: verse.verse,
-              isFav: true,
-            });
-          });
-
-          await Promise.all(deletePromises);
-
-          setFilterData((prev) =>
-            prev.filter((item) => !selectedItems.has(item.id))
-          );
-          setOriginalData((prev) =>
-            prev.filter((item) => !selectedItems.has(item.id))
-          );
-
-          setSelectionMode(false);
-          setSelectedItems(new Set());
-
-          showToast(`${selectedItems.size} versículos eliminados`);
-        } catch (error) {
-          console.error("Error deleting favorites:", error);
-          showToast("Error al eliminar favoritos");
-        }
-      }
-    );
-  }, [confirm, selectedItems, originalData, removeFavoriteVerse, toggleFavoriteVerse]);
 
   const handleSyncToCloud = useCallback(async () => {
     if (!isLoggedIn) {
@@ -282,7 +205,6 @@ const FavoriteList = ({ }: TListVerse) => {
       }
 
       showToast(`${syncCount} versículos favoritos sincronizados con la nube`);
-      // // Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } catch (error) {
       console.error(
         "Error al sincronizar versículos favoritos con la nube:",
@@ -292,7 +214,7 @@ const FavoriteList = ({ }: TListVerse) => {
     } finally {
       setShowMoreOptions(false);
     }
-  }, [isLoggedIn, getAllFavoriteVerses, router]);
+  }, [isLoggedIn, getAllFavoriteVerses, alertWarning]);
 
   const handleDownloadFromCloud = useCallback(async () => {
     if (!isLoggedIn) {
@@ -354,7 +276,6 @@ const FavoriteList = ({ }: TListVerse) => {
       showToast(
         `${downloadCount} versículos favoritos descargados desde la nube`
       );
-      // // Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } catch (error) {
       console.error("Error al descargar versículos desde la nube:", error);
       showToast("Error al descargar versículos");
@@ -362,7 +283,7 @@ const FavoriteList = ({ }: TListVerse) => {
       setShowMoreOptions(false);
       bibleState$.toggleReloadFavorites();
     }
-  }, [isLoggedIn, getAllFavoriteVerses, addFavoriteVerse, router]);
+  }, [isLoggedIn,]);
 
   const showMoreOptionHandle = useCallback(() => {
     setShowMoreOptions((prev) => !prev);
@@ -373,173 +294,70 @@ const FavoriteList = ({ }: TListVerse) => {
     setShowMoreOptions(false);
   }, []);
 
-  const renderItem: ListRenderItem<IVerseItem & { id: number }> = useCallback(
-    ({ item, index }) => {
-      const isSelected = selectedItems.has(item.id);
+  // Handle WebView messages
+  const handleWebViewMessage = useCallback(
+    (event: any) => {
+      try {
+        const message = JSON.parse(event.nativeEvent.data);
+        const { type, data } = message;
 
-      const renderRightActions = (progress: any, dragX: any) => {
-        const trans = dragX.interpolate({
-          inputRange: [-80, 0],
-          outputRange: [0, 80],
-          extrapolate: "clamp",
+        console.log("WebView message received:", type, data);
+
+        // Find item by id
+        const item = filterData.find((v) => {
+          const itemId = v.id?.toString();
+          const dataId = data.id?.toString();
+          return itemId === dataId;
         });
 
-        return (
-          <View style={styles.rightSwipeActions}>
-            <Animated.View
-              style={[
-                styles.deleteAction,
-                {
-                  transform: [{ translateX: trans }],
-                },
-              ]}
-            >
-              <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={() => {
-                  swipeableRefs.current[item.id]?.close();
-                  confirm(
-                    "Eliminar favorito",
-                    "¿Estás seguro de eliminar este versículo de tus favoritos?",
-                    () => onRemoveFavorite(item)
-                  );
-                }}
-              >
-                <Icon name="Trash2" size={24} color="#fff" />
-              </TouchableOpacity>
-            </Animated.View>
-          </View>
-        );
-      };
+        if (!item) {
+          console.warn("Item not found for id:", data.id);
+          return;
+        }
 
-      return (
-        <Swipeable
-          ref={(ref) => (swipeableRefs.current[item.id] = ref) as any}
-          renderRightActions={renderRightActions}
-          friction={2}
-          overshootRight={false}
-          enabled={!selectionMode}
-        >
-          <TouchableOpacity
-            style={[styles.itemContainer, isSelected && styles.selectedItem]}
-            activeOpacity={0.8}
-            onPress={() => onVerseClick(item)}
-            onLongPress={() => {
-              if (!selectionMode) {
-                setSelectionMode(true);
-                toggleSelection(item.id);
-                // // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-              }
-            }}
-          >
-            <View style={styles.cardContainer}>
-              {selectionMode && (
-                <View style={styles.checkboxContainer}>
-                  <View
-                    style={[
-                      styles.checkbox,
-                      isSelected && styles.checkboxSelected,
-                    ]}
-                  >
-                    {isSelected && <Icon name="Check" size={16} color="#fff" />}
-                  </View>
-                </View>
-              )}
-
-              <View style={styles.headerContainer}>
-                <Text style={styles.cardTitle}>
-                  {`${renameLongBookName(item.bookName)} ${item.chapter}:${item.verse
-                    }`}
-                </Text>
-
-                {!selectionMode && (
-                  <View style={styles.verseAction}>
-                    <TouchableOpacity
-                      style={styles.actionIconButton}
-                      onPress={() => onCopy(item)}
-                      accessibilityLabel="Copiar versículo"
-                    >
-                      <Icon size={20} name="Copy" color={theme.colors.text} />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={styles.actionIconButton}
-                      onPress={() => onShare(item)}
-                      accessibilityLabel="Compartir versículo"
-                    >
-                      <Icon size={20} name="Share2" color={theme.colors.text} />
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </View>
-
-              <Text style={styles.verseBody} numberOfLines={3}>
-                {getVerseTextRaw(item.text)}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </Swipeable>
-      );
+        switch (type) {
+          case "copy":
+            console.log("Copy action triggered");
+            onCopy(item);
+            break;
+          case "share":
+            console.log("Share action triggered");
+            onShare(item);
+            break;
+          case "delete":
+            console.log("Delete action triggered");
+            confirm(
+              "Eliminar favorito",
+              "¿Estás seguro de eliminar este versículo de tus favoritos?",
+              () => onRemoveFavorite(item)
+            );
+            break;
+          case "goToContext":
+          case "context":
+            console.log("Go to context action triggered");
+            onVerseClick(item);
+            break;
+          default:
+            console.log("Unknown message type:", type);
+        }
+      } catch (error) {
+        console.error("Error parsing WebView message:", error, event.nativeEvent.data);
+      }
     },
-    [
-      styles,
-      selectionMode,
-      selectedItems,
-      onVerseClick,
-      onRemoveFavorite,
-      onCopy,
-      onShare,
-      toggleSelection,
-    ]
+    [filterData, onCopy, onShare, onRemoveFavorite, onVerseClick, confirm]
   );
 
-  const EmptyComponent = useCallback(() => {
-    if (loading) {
-      return (
-        <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>
-            Cargando versículos favoritos...
-          </Text>
-        </View>
-      );
-    }
-
-    return (
-      <View style={styles.noResultsContainer}>
-        <Animation
-          backgroundColor={theme.colors.background}
-          source={notFoundSource}
-          loop={false}
-          style={styles.animation}
-        />
-
-        {searchQuery ? (
-          <Text style={styles.noResultsText}>
-            No se encontraron resultados para "{searchQuery}"
-          </Text>
-        ) : (
-          <View style={styles.emptyStateContent}>
-            <Text style={styles.noResultsText}>
-              <Text style={{ color: theme.colors.notification }}>
-                ({currentBibleLongName})
-              </Text>
-              {"\n"}
-              No tienes versículos favoritos en esta versión de la escritura.
-            </Text>
-
-            <TouchableOpacity
-              style={styles.addFavoriteButton}
-              onPress={() => navigation.navigate(Screens.Home, {})}
-            >
-              <Text style={styles.addFavoriteButtonText}>
-                Ir a la Biblia para añadir favoritos
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
+  // Generate HTML content
+  const htmlContent = useMemo(() => {
+    return favoriteListHtmlTemplate(
+      filterData,
+      theme,
+      currentVersionShortName,
+      formatTimeAgo,
+      16,
+      undefined // selectedFont - can be added later if needed
     );
-  }, [loading, searchQuery, currentBibleLongName, navigation, theme, styles]);
+  }, [filterData, theme, currentVersionShortName,]);
 
   const actionButtons = useMemo(() => {
     const buttons = [
@@ -548,7 +366,7 @@ const FavoriteList = ({ }: TListVerse) => {
         name: "EllipsisVertical",
         color: "#008CBA",
         action: showMoreOptionHandle,
-        hide: showMoreOptions || selectionMode,
+        hide: showMoreOptions,
         label: "",
       },
       {
@@ -556,7 +374,7 @@ const FavoriteList = ({ }: TListVerse) => {
         name: "Import",
         color: "#008CBA",
         action: handleDownloadFromCloud,
-        hide: !showMoreOptions || selectionMode,
+        hide: !showMoreOptions,
         label: "Cargar desde la cuenta",
         isSync: true,
       },
@@ -565,7 +383,7 @@ const FavoriteList = ({ }: TListVerse) => {
         name: "Share",
         color: "#45a049",
         action: handleSyncToCloud,
-        hide: !showMoreOptions || selectionMode,
+        hide: !showMoreOptions,
         label: "Guardar en la cuenta",
         isSync: true,
       },
@@ -574,29 +392,13 @@ const FavoriteList = ({ }: TListVerse) => {
         name: "ChevronDown",
         color: theme.colors.notification,
         action: showMoreOptionHandle,
-        hide: !showMoreOptions || selectionMode,
+        hide: !showMoreOptions,
         label: "Cerrar menú",
       },
     ];
 
     return buttons.filter((item) => !item.hide);
-  }, [showMoreOptions]);
-
-  if (loading && !filterData.length) {
-    return (
-      <View style={[styles.container, { paddingTop: insets.top }]}>
-        <Stack.Screen
-          options={{
-            headerShown: true,
-            title: "Mis versículos favoritos",
-            headerTitleStyle: { color: theme.colors.text },
-            headerStyle: { backgroundColor: theme.colors.background },
-          }}
-        />
-        <EmptyComponent />
-      </View>
-    );
-  }
+  }, [showMoreOptions, theme]);
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
@@ -610,25 +412,37 @@ const FavoriteList = ({ }: TListVerse) => {
       />
 
       <Backdrop visible={showMoreOptions} onPress={dismiss} theme={theme} />
-      <Animated.FlatList
-        decelerationRate="normal"
-        data={filterData}
-        renderItem={renderItem as any}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-          { useNativeDriver: false }
-        )}
-        keyExtractor={(item: any) => `fav-${item.id}`}
-        contentContainerStyle={styles.listContentContainer}
-        ListEmptyComponent={EmptyComponent}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            colors={[theme.colors.notification]}
-            tintColor={theme.colors.notification}
+      <WebView
+        ref={webViewRef}
+        originWhitelist={["*"]}
+        source={{ html: htmlContent }}
+        style={styles.webView}
+        onMessage={handleWebViewMessage}
+        scrollEnabled={true}
+        bounces={false}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        renderLoading={() => (
+          <View
+            style={{
+              backgroundColor: theme.colors.background,
+              flex: 1,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 1000,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           />
-        }
+        )}
+        onError={(syntheticEvent) => {
+          const { nativeEvent } = syntheticEvent;
+          console.error("WebView error:", nativeEvent);
+        }}
+        {...createOptimizedWebViewProps({}, "static")}
       />
 
       {actionButtons.map((item, index) => (
@@ -644,8 +458,9 @@ const getStyles = ({ colors, dark }: TTheme) =>
       flex: 1,
       backgroundColor: colors.background,
     },
-    listContentContainer: {
-      paddingBottom: 120,
+    webView: {
+      flex: 1,
+      backgroundColor: "transparent",
     },
     headerCompositeContainer: {
       paddingHorizontal: 16,
@@ -694,194 +509,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
     selectButtonText: {
       color: colors.notification,
       fontWeight: "500",
-    },
-    itemContainer: {
-      flexDirection: "row",
-      backgroundColor: dark ? colors.background : "white",
-      marginVertical: 5,
-      paddingLeft: 5,
-      borderRadius: 10,
-      overflow: "hidden",
-    },
-    selectedItem: {
-      backgroundColor: colors.notification + "20",
-    },
-    cardContainer: {
-      display: "flex",
-      borderRadius: 10,
-      padding: 12,
-      flex: 1,
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
-      borderColor: colors.notification + "40",
-      backgroundColor: dark ? colors.background : "white",
-      borderWidth: dark ? 1 : 0,
-    },
-    headerContainer: {
-      position: "relative",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: 8,
-    },
-    cardTitle: {
-      fontSize: 16,
-      fontWeight: "bold",
-      color: colors.notification,
-      flex: 1,
-    },
-    verseBody: {
-      color: colors.text,
-      fontSize: 15,
-      lineHeight: 22,
-    },
-    verseAction: {
-      flexDirection: "row",
-      alignItems: "center",
-    },
-    actionIconButton: {
-      padding: 6,
-      marginLeft: 8,
-    },
-    icon: {
-      color: colors.primary,
-    },
-    rightSwipeActions: {
-      width: 80,
-      alignItems: "center",
-      justifyContent: "center",
-      marginVertical: 5,
-    },
-    deleteAction: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      width: 80,
-      backgroundColor: "#ff3b30",
-      borderTopRightRadius: 10,
-      borderBottomRightRadius: 10,
-    },
-    deleteButton: {
-      backgroundColor: "#ff3b30",
-      alignItems: "center",
-      justifyContent: "center",
-      height: "100%",
-      width: "100%",
-      borderRadius: 6,
-    },
-    deleteButtonText: {
-      color: "#fff",
-      fontWeight: "600",
-      fontSize: 14,
-      marginLeft: 6,
-    },
-    scrollToTopButton: {
-      position: "absolute",
-      bottom: 80,
-      right: 20,
-      backgroundColor: "transparent",
-    },
-    scrollToTopButtonInner: {
-      backgroundColor: colors.notification,
-      padding: 12,
-      borderRadius: 30,
-    },
-    noResultsContainer: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "transparent",
-      padding: 20,
-    },
-    loadingContainer: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "transparent",
-    },
-    animation: {
-      width: 200,
-      height: 200,
-    },
-    loadingText: {
-      fontSize: 16,
-      color: colors.text,
-      marginTop: 20,
-    },
-    noResultsText: {
-      fontSize: 18,
-      color: colors.text,
-      textAlign: "center",
-      paddingHorizontal: 10,
-      marginTop: 16,
-    },
-    emptyStateContent: {
-      alignItems: "center",
-    },
-    addFavoriteButton: {
-      marginTop: 20,
-      backgroundColor: colors.notification,
-      paddingHorizontal: 20,
-      paddingVertical: 12,
-      borderRadius: 8,
-    },
-    addFavoriteButtonText: {
-      color: "#fff",
-      fontWeight: "600",
-    },
-    selectionToolbar: {
-      marginTop: 8,
-      paddingVertical: 12,
-      borderTopWidth: 1,
-      borderTopColor: colors.border,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
-    selectedCount: {
-      fontSize: 14,
-      fontWeight: "500",
-      color: colors.text,
-      marginBottom: 8,
-    },
-    selectionActions: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-    },
-    toolbarButton: {
-      paddingVertical: 8,
-      paddingHorizontal: 12,
-      borderRadius: 6,
-      backgroundColor: colors.card,
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    toolbarButtonText: {
-      color: colors.text,
-      fontWeight: "500",
-      fontSize: 14,
-    },
-    checkboxContainer: {
-      marginRight: 12,
-      justifyContent: "center",
-      marginBottom: 10,
-    },
-    checkbox: {
-      width: 22,
-      height: 22,
-      borderRadius: 11,
-      borderWidth: 2,
-      borderColor: colors.notification,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "transparent",
-    },
-    checkboxSelected: {
-      backgroundColor: colors.notification,
-      borderColor: colors.notification,
-    },
-    buttonLoader: {
-      position: "absolute",
     },
   });
 

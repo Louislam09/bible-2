@@ -33,6 +33,7 @@ import {
 } from "../types";
 import { useDBContext } from "./databaseContext";
 import { storedData$ } from "./LocalstoreContext";
+import { showToast } from "@/utils/showToast";
 
 type BibleState = {
   setSearchQuery: Function;
@@ -356,8 +357,10 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       if (isFav) {
         await removeFavoriteVerse(bookNumber, chapter, verse);
+        showToast("Versículo eliminado de favoritos");
       } else {
         await addFavoriteVerse(bookNumber, chapter, verse);
+        showToast("Versículo agregado a favoritos");
       }
     } catch (error) {
       console.error("Error toggling favorite verse:", error);

@@ -1333,8 +1333,8 @@ const createRegularVerse = (item: IBookVerse, verseKey: string, highlights?: Map
                 <div class="action-label text-theme-text">Resaltar</div>
             </button>
             <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[100ms] hover:scale-105" onclick="handleVerseAction('favorite', '${verseKey}')">
-                <span class="action-icon" style="color: ${item.is_favorite ? 'var(--color-notification)' : '#fedf75'};">${lucideIcons[item.is_favorite ? 'star' : 'star-off']}</span>
-                <div class="action-label text-theme-text">Favorito</div>
+                <span class="action-icon" style="color: #fedf75;">${lucideIcons[!item.is_favorite ? 'star' : 'star-off']}</span>
+                <div class="action-label text-theme-text">${item.is_favorite ? 'Quitar' : 'Favorito'}</div>
             </button>
             <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[200ms] hover:scale-105" onclick="handleVerseAction('image', '${verseKey}')">
                 <span class="action-icon" style="color: #9dcd7d;">${lucideIcons.image}</span>

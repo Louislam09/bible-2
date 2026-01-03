@@ -3,11 +3,12 @@ import { TUTORIAL_FEATURES, TUTORIAL_CATEGORIES, getDifficultyLabel, getDifficul
 import { getTailwindStyleTag } from "@/hooks/useLoadTailwindScript";
 import { getFontCss } from "@/hooks/useLoadFonts";
 import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
+import { storedData$ } from "@/context/LocalstoreContext";
 
 // Styles for the tutorials page
 const tutorialsStyles = (theme: TTheme, fontSize: number = 16, selectedFont?: string) => {
   return `
-    ${getFontCss({ fontName: selectedFont || '' })}
+    ${getFontCss({ fontName: storedData$.selectedFont.get() || '' })}
     <style>
     * {
       margin: 0;

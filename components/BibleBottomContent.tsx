@@ -256,11 +256,6 @@ const BibleBottomContent: FC<BibleBottomContentProps> = ({ }) => {
         isFav,
       });
       bibleState$.clearSelection();
-      showToast(
-        isFav
-          ? "Versículo agregado a favoritos"
-          : "Versículo eliminado de favoritos"
-      );
     },
     [toggleFavoriteVerse]
   );

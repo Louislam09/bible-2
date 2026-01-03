@@ -1,15 +1,15 @@
 import { getTailwindStyleTag } from "@/hooks/useLoadTailwindScript";
 import { getFontCss } from "@/hooks/useLoadFonts";
 import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
-import { THighlightedVerse } from "@/services/highlightService";
+import { IVerseItem } from "@/types";
 import { TTheme } from "@/types";
 import { getBookDetail } from "./BookNames";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { storedData$ } from "@/context/LocalstoreContext";
 
-export const highlightedListHtmlTemplate = (
-  highlights: THighlightedVerse[],
+export const favoriteListHtmlTemplate = (
+  favorites: (IVerseItem & { id: number })[],
   theme: TTheme,
   versionShortName: string,
   formatTimeAgo: (timestamp: number | string) => string,
@@ -19,12 +19,11 @@ export const highlightedListHtmlTemplate = (
   const themeSchema = theme.dark ? 'dark' : 'light';
   const accentColor = theme.colors.notification || theme.colors.primary;
 
-  const cardsHtml = highlights.map((item) => {
+  const cardsHtml = favorites.map((item) => {
     const verseReference = `${renameLongBookName(item.bookName || getBookDetail(item.book_number).longName)} ${item.chapter}:${item.verse}`;
     const verseText = item.text ? getVerseTextRaw(item.text) : "";
-    const timeAgo = formatTimeAgo(item.created_at);
-    const colorDot = item.color;
-    const borderAccent = item.color + "66";
+    // Favorites don't have created_at, so we'll use a placeholder or omit the timestamp
+    const timeAgo = ""; // Favorites don't have timestamps
 
     return `
       <div class="card bg-white dark:bg-white/8 border border-white/5 dark:border-white/5 rounded-2xl p-5 mb-4 shadow-lg cursor-pointer transition-all hover:bg-white/80 dark:hover:bg-white/10 active:scale-[0.99] active:opacity-95" 
@@ -35,13 +34,12 @@ export const highlightedListHtmlTemplate = (
         <div class="flex items-center justify-between mb-3">
           <div class="flex items-center gap-2 flex-1">
             <div class="h-2.5 w-2.5 rounded-full flex-shrink-0" 
-                 style="background-color: ${colorDot}; box-shadow: 0 0 8px ${colorDot}80;"></div>
+                 style="background-color: ${accentColor}; box-shadow: 0 0 8px ${accentColor}80;"></div>
             <span class="text-sm font-semibold text-theme-text">${verseReference}</span>
           </div>
-          <span class="text-[10px] font-medium uppercase tracking-wider text-theme-text/60">${timeAgo.toUpperCase()}</span>
         </div>
         <div class="relative pl-3 mb-3">
-          <div class="absolute left-0 top-1 bottom-1 w-0.5 rounded-full" style="background-color: ${borderAccent};"></div>
+          <div class="absolute left-0 top-1 bottom-1 w-0.5 rounded-full" style="background-color: ${accentColor}66;"></div>
           <p class="text-[15px] leading-relaxed text-theme-text/80 group-hover:text-theme-text transition-colors m-0">
             ${verseText}
           </p>
@@ -102,7 +100,7 @@ export const highlightedListHtmlTemplate = (
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <title>Highlighted Verses</title>
+      <title>Favorite Verses</title>
       ${scriptDownloadHelpers.getTailwindScript()}
       ${getTailwindStyleTag({ theme, fontSize })}
       ${getFontCss({ fontName: storedData$.selectedFont.get() || '' })}
@@ -116,7 +114,7 @@ export const highlightedListHtmlTemplate = (
     </head>
     <body class="p-4 m-0 text-theme-text bg-theme-background select-none">
       <div id="cards-container" class="pb-8">
-        ${cardsHtml || '<div class="text-center py-10 text-theme-text/60">No hay versículos destacados</div>'}
+        ${cardsHtml || '<div class="text-center py-10 text-theme-text/60">No hay versículos favoritos</div>'}
       </div>
       
       <script>
