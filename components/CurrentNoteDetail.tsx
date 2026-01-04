@@ -175,17 +175,16 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
 
   const onUpdate = async (id: number, goToViewMode = false) => {
     try {
-      const success = await updateNote(
+      const updatedNote = await updateNote(
         id,
         {
           title: noteContent.title,
           note_text: noteContent.content,
           uuid: noteInfo?.uuid,
-        },
-        true
+        }
       );
 
-      if (success) {
+      if (updatedNote) {
         afterSaving();
         if (goToViewMode) {
           setViewMode("VIEW");

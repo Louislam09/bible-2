@@ -108,7 +108,8 @@
     "react-native-view-shot": "^4.0.3",
     "react-native-web": "^0.20.0",
     "react-native-webview": "13.13.5",
-    "react-native-zip-archive": "^7.0.2"
+    "react-native-zip-archive": "^7.0.2",
+    "tinybase": "^7.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

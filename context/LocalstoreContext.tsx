@@ -12,6 +12,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useNetwork } from "@/context/NetworkProvider";
 import { showToast } from "@/utils/showToast";
+import {
+  isStoreInitialized,
+  getStore,
+  setSetting,
+  getAllSettings,
+} from "@/lib/sync";
 import React, {
   createContext,
   ReactNode,
@@ -19,6 +25,7 @@ import React, {
   useCallback,
   useEffect,
   useState,
+  useRef,
 } from "react";
 import { Alert } from "react-native";
 
@@ -163,6 +170,61 @@ export const useStorage = () => {
   return context;
 };
 
+// Keys that should NOT be synced to TinyBase (runtime/local-only state)
+const NON_SYNCABLE_KEYS = [
+  'isDataLoaded',
+  'isSyncedWithCloud',
+  'token',
+  'user',
+  'dbTableCreated',
+  'isUUIDGenerated',
+  'isFavUUIDGenerated',
+];
+
+// Sync storedData$ to TinyBase
+const syncSettingsToTinyBase = (settings: Partial<StoreState>) => {
+  if (!isStoreInitialized()) return;
+
+  try {
+    const store = getStore();
+    for (const [key, value] of Object.entries(settings)) {
+      if (!NON_SYNCABLE_KEYS.includes(key)) {
+        setSetting(store, key, value);
+      }
+    }
+  } catch (error) {
+    console.error('[LocalstoreContext] Error syncing to TinyBase:', error);
+  }
+};
+
+// Load settings from TinyBase into storedData$
+const loadSettingsFromTinyBase = () => {
+  if (!isStoreInitialized()) return;
+
+  try {
+    const store = getStore();
+    const tinySettings = getAllSettings(store);
+
+    if (Object.keys(tinySettings).length > 0) {
+      console.log('[LocalstoreContext] Loading settings from TinyBase...');
+      storedData$.set((prev) => ({
+        ...prev,
+        ...tinySettings,
+        // Preserve runtime state
+        isDataLoaded: prev.isDataLoaded,
+        isSyncedWithCloud: prev.isSyncedWithCloud,
+        token: prev.token,
+        user: prev.user,
+        dbTableCreated: prev.dbTableCreated,
+        isUUIDGenerated: prev.isUUIDGenerated,
+        isFavUUIDGenerated: prev.isFavUUIDGenerated,
+      }));
+    }
+  } catch (error) {
+    console.error('[LocalstoreContext] Error loading from TinyBase:', error);
+  }
+};
+
 const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const storedData = use$(() => storedData$.get());
   const syncState$ = syncState(storedData$);
@@ -170,6 +232,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isSyncing, setSyncing] = useState(false);
   const netInfo = useNetwork();
   const { isConnected } = netInfo;
+  const tinyBaseInitialized = useRef(false);
   const SYNC_DEBOUNCE_MS = 10000; // 10 seconds
 
   useEffect(() => {
@@ -188,6 +251,15 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         isHistory: true,
       });
       storedData$.isDataLoaded.set(true);
+
+      // Try to load settings from TinyBase after a short delay
+      // (SyncProvider initializes TinyBase store)
+      setTimeout(() => {
+        if (isStoreInitialized() && !tinyBaseInitialized.current) {
+          loadSettingsFromTinyBase();
+          tinyBaseInitialized.current = true;
+        }
+      }, 1000);
     };
 
     loadState();
@@ -200,14 +272,28 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }, [pb.authStore.isValid, isConnected]);
 
   useEffect(() => {
-    const unsubscribeFromChanges = storedData$.onChange((value) => {
+    let syncTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    const unsubscribeFromChanges = storedData$.onChange(() => {
       if (storedData$.user.get() && pb.authStore.isValid) {
         console.log('Change detected, scheduling sync...');
         setHasPendingCloudSync(true);
       }
-    });
-    return () => {
 
+      // Debounce sync to TinyBase
+      if (syncTimeout) {
+        clearTimeout(syncTimeout);
+      }
+      syncTimeout = setTimeout(() => {
+        const currentSettings = storedData$.get();
+        syncSettingsToTinyBase(currentSettings);
+      }, 500);
+    });
+
+    return () => {
+      if (syncTimeout) {
+        clearTimeout(syncTimeout);
+      }
       unsubscribeFromChanges();
     };
   }, []);

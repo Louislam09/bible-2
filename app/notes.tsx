@@ -79,7 +79,6 @@ const NotesPage = () => {
   const selectedItems = use$(() => noteSelectors$.selectedNoteIds.get());
 
   const reloadNotes = use$(() => bibleState$.reloadNotes.get());
-  const noteDetailScreen = Screens.NoteDetailDom;
 
   useEffect(() => {
     const getNotes = async () => {
@@ -107,14 +106,14 @@ const NotesPage = () => {
   }, [showSearch]);
 
   const onCreateNewNote = () => {
-    navigation.navigate(noteDetailScreen, { noteId: null, isNewNote: true });
+    navigation.navigate(Screens.NoteDetailDom, { noteId: null, isNewNote: true });
   };
 
   const onOpenNoteDetail = useCallback(
     (id: number) => {
-      navigation.navigate(noteDetailScreen, { noteId: id, isNewNote: false });
+      navigation.navigate(Screens.NoteDetailDom, { noteId: id, isNewNote: false });
     },
-    [navigation, noteDetailScreen]
+    [navigation]
   );
 
   const toggleSearch = useCallback(() => {

@@ -78,6 +78,7 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
 
   const debouncedNoteContent = useDebounce(noteContent, 3000);
   const { printToFile } = usePrintAndShare();
+  console.log('noteDetailDom', noteId, isNewNote);
 
   // Function to fetch Bible verse from database
   const fetchBibleVerse = useCallback(
@@ -222,12 +223,12 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
         noteContent.title = `${defaultTitle} ${date} - ${uniqueSuffix}`;
       }
       setHasUnsavedChanges(false);
-      const success = await createNote({
+      const createdNote = await createNote({
         title: noteContent.title,
         note_text: noteContent.content,
       });
 
-      if (success) {
+      if (createdNote) {
         bibleState$.toggleReloadNotes();
         navigation.navigate(Screens.Notes, { shouldRefresh: true });
         ToastAndroid.show("Nota guardada!", ToastAndroid.SHORT);
@@ -344,17 +345,16 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
 
   const onUpdate = async (id: number, goToViewMode = false) => {
     try {
-      const success = await updateNote(
+      const updatedNote = await updateNote(
         id,
         {
           title: noteContent.title,
           note_text: noteContent.content,
           uuid: noteInfo?.uuid,
-        },
-        true
+        }
       );
 
-      if (success) {
+      if (updatedNote) {
         afterSaving();
         setHasUnsavedChanges(false);
         if (goToViewMode) {

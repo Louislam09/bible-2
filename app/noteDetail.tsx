@@ -55,6 +55,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
   const selectedVerseForNote = use$(() =>
     bibleState$.selectedVerseForNote.get()
   );
+  const { alertError } = useAlert();
 
   // Database context for Bible verse fetching
   const { getBibleServices, allBibleLoaded } = useDBContext();
@@ -364,17 +365,16 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
 
   const onUpdate = async (id: number, goToViewMode = false) => {
     try {
-      const success = await updateNote(
+      const updatedNote = await updateNote(
         id,
         {
           title: noteContent.title,
           note_text: noteContent.content,
           uuid: noteInfo?.uuid,
-        },
-        true
+        }
       );
 
-      if (success) {
+      if (updatedNote) {
         afterSaving();
         setHasUnsavedChanges(false);
         if (goToViewMode) {

@@ -4,6 +4,7 @@ import BibleChapterProvider from "@/context/BibleChapterContext";
 import BibleProvider from "@/context/BibleContext";
 import DatabaseProvider from "@/context/databaseContext";
 import StorageProvider from "@/context/LocalstoreContext";
+import { SyncProvider } from "@/context/SyncContext";
 import { MemorizationProvider } from "@/context/MemorizationContext";
 import MyThemeProvider, { useMyTheme } from "@/context/ThemeContext";
 import { settingState$ } from "@/state/settingState";
@@ -128,9 +129,11 @@ CoreProviders.displayName = 'CoreProviders';
 // Database and Bible Providers - Can be lazy loaded
 const DataProviders = memo(({ children }: { children: ReactNode }) => (
   <DatabaseProvider>
-    <BibleProvider>
-      <BibleChapterProvider>{children}</BibleChapterProvider>
-    </BibleProvider>
+    <SyncProvider>
+      <BibleProvider>
+        <BibleChapterProvider>{children}</BibleChapterProvider>
+      </BibleProvider>
+    </SyncProvider>
   </DatabaseProvider>
 ));
 DataProviders.displayName = 'DataProviders';

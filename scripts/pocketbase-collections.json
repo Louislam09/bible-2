@@ -1,0 +1,104 @@
+[
+  {
+    "name": "highlighted_verses",
+    "type": "base",
+    "listRule": "user = @request.auth.id",
+    "viewRule": "user = @request.auth.id",
+    "createRule": "user = @request.auth.id",
+    "updateRule": "user = @request.auth.id",
+    "deleteRule": "user = @request.auth.id",
+    "fields": [
+      {
+        "name": "uuid",
+        "type": "text",
+        "required": true,
+        "presentable": false,
+        "system": false
+      },
+      {
+        "name": "user",
+        "type": "relation",
+        "required": false,
+        "collectionId": "_pb_users_auth_",
+        "cascadeDelete": false,
+        "maxSelect": 1,
+        "minSelect": 0
+      },
+      {
+        "name": "book_number",
+        "type": "number",
+        "required": false,
+        "onlyInt": true
+      },
+      {
+        "name": "chapter",
+        "type": "number",
+        "required": false,
+        "onlyInt": true
+      },
+      {
+        "name": "verse",
+        "type": "number",
+        "required": false,
+        "onlyInt": true
+      },
+      {
+        "name": "style",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "color",
+        "type": "text",
+        "required": false
+      }
+    ],
+    "indexes": []
+  },
+  {
+    "name": "history",
+    "type": "base",
+    "listRule": "user = @request.auth.id",
+    "viewRule": "user = @request.auth.id",
+    "createRule": "user = @request.auth.id",
+    "updateRule": "user = @request.auth.id",
+    "deleteRule": "user = @request.auth.id",
+    "fields": [
+      {
+        "name": "uuid",
+        "type": "text",
+        "required": true,
+        "presentable": false,
+        "system": false
+      },
+      {
+        "name": "user",
+        "type": "relation",
+        "required": false,
+        "collectionId": "_pb_users_auth_",
+        "cascadeDelete": false,
+        "maxSelect": 1,
+        "minSelect": 0
+      },
+      {
+        "name": "book",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "chapter",
+        "type": "number",
+        "required": false,
+        "onlyInt": true
+      },
+      {
+        "name": "verse",
+        "type": "number",
+        "required": false,
+        "onlyInt": true
+      }
+    ],
+    "indexes": []
+  }
+]
+
