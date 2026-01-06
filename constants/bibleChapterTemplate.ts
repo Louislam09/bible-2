@@ -6,8 +6,6 @@ import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
 import { IBookVerse } from "@/types";
 import { lucideIcons } from "@/utils/lucideIcons";
 import { DB_BOOK_NAMES } from "./BookNames";
-import { theme } from "@/tailwind.config";
-
 
 const bibleChapterStyles = (
     theme: any,
@@ -705,6 +703,56 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 }
             }
             
+            // SVG icons for favorite toggle
+            const starIcon = \`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>\`;
+            const starOffIcon = \`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.34 8.34 2 9.27l5 4.87-1.18 6.88L12 17.77l6.18 3.25L17 14.14 22 9.27l-6.34-.93L12 2l-3.66 6.34z"/><path d="m2 2 20 20"/></svg>\`;
+            
+            // Toggle favorite UI immediately
+            function toggleFavoriteUI(verseKey, verseNumber) {
+                const verseElement = document.querySelector(\`[data-verse-key="\${verseKey}"][data-verse-number]\`);
+                if (!verseElement) return;
+                
+                // Get current favorite state from verse data
+                const verseData = JSON.parse(verseElement.dataset.verseData || '{}');
+                const currentIsFavorite = verseData.is_favorite;
+                const newIsFavorite = !currentIsFavorite;
+                
+                // Update verse data
+                verseData.is_favorite = newIsFavorite;
+                verseElement.dataset.verseData = JSON.stringify(verseData);
+                
+                // Toggle the star next to verse number
+                const favoriteStar = verseElement.querySelector('.favorite-star');
+                if (favoriteStar) {
+                    if (newIsFavorite) {
+                        favoriteStar.classList.remove('hidden');
+                    } else {
+                        favoriteStar.classList.add('hidden');
+                    }
+                }
+                
+                // Update the favorite action button
+                const verseContainer = verseElement.closest('.verse-container');
+                if (verseContainer) {
+                    const favoriteBtn = verseContainer.querySelector('.favorite-action-btn');
+                    if (favoriteBtn) {
+                        favoriteBtn.setAttribute('data-is-favorite', newIsFavorite.toString());
+                        
+                        const favoriteIcon = favoriteBtn.querySelector('.favorite-icon');
+                        const favoriteLabel = favoriteBtn.querySelector('.favorite-label');
+                        
+                        if (favoriteIcon) {
+                            favoriteIcon.innerHTML = newIsFavorite ? starOffIcon : starIcon;
+                        }
+                        if (favoriteLabel) {
+                            favoriteLabel.textContent = newIsFavorite ? 'Quitar' : 'Favorito';
+                        }
+                    }
+                }
+                
+                return newIsFavorite;
+            }
+            
             // Handle verse action clicks
             function handleVerseAction(action, verseKey) {
                 // Find the verse element by verseKey (now it's the inner div with the verse data)
@@ -713,6 +761,11 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                 
                 const verseData = JSON.parse(verseElement.dataset.verseData || '{}');
                 const verseNumber = parseInt(verseElement.getAttribute('data-verse-number'));
+                
+                // Toggle favorite UI immediately before sending to React Native
+                if (action === 'favorite') {
+                    toggleFavoriteUI(verseKey, verseNumber);
+                }
                 
                 // Actions that use all selected verses vs single verse
                 const multiVerseActions = ['copy', 'note', 'image', 'quote', 'highlighter'];
@@ -808,6 +861,48 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
             window.handleVerseLinkClick = handleVerseLinkClick;
             window.handleMultipleStrongsClick = handleMultipleStrongsClick;
             window.handleVerseClick = handleVerseClick;
+            window.toggleFavoriteUI = toggleFavoriteUI;
+            
+            // Function to update favorite state from React Native
+            function updateFavoriteState(verseKey, isFavorite) {
+                const verseElement = document.querySelector(\`[data-verse-key="\${verseKey}"][data-verse-number]\`);
+                if (!verseElement) return;
+                
+                // Update verse data
+                const verseData = JSON.parse(verseElement.dataset.verseData || '{}');
+                verseData.is_favorite = isFavorite;
+                verseElement.dataset.verseData = JSON.stringify(verseData);
+                
+                // Update the star next to verse number
+                const favoriteStar = verseElement.querySelector('.favorite-star');
+                if (favoriteStar) {
+                    if (isFavorite) {
+                        favoriteStar.classList.remove('hidden');
+                    } else {
+                        favoriteStar.classList.add('hidden');
+                    }
+                }
+                
+                // Update the favorite action button
+                const verseContainer = verseElement.closest('.verse-container');
+                if (verseContainer) {
+                    const favoriteBtn = verseContainer.querySelector('.favorite-action-btn');
+                    if (favoriteBtn) {
+                        favoriteBtn.setAttribute('data-is-favorite', isFavorite.toString());
+                        
+                        const favoriteIcon = favoriteBtn.querySelector('.favorite-icon');
+                        const favoriteLabel = favoriteBtn.querySelector('.favorite-label');
+                        
+                        if (favoriteIcon) {
+                            favoriteIcon.innerHTML = isFavorite ? starOffIcon : starIcon;
+                        }
+                        if (favoriteLabel) {
+                            favoriteLabel.textContent = isFavorite ? 'Quitar' : 'Favorito';
+                        }
+                    }
+                }
+            }
+            window.updateFavoriteState = updateFavoriteState;
             
 
             // Function to update highlights dynamically
@@ -970,6 +1065,9 @@ const createHtmlBody = (content: string, initialScrollIndex: number = 0, chapter
                     case 'updateHighlights':
                         updateHighlights(data.data);
                         break;
+                    case 'updateFavorite':
+                        updateFavoriteState(data.verseKey, data.isFavorite);
+                        break;
                 }
             }
 
@@ -1097,7 +1195,7 @@ function extractVersesInfo(input: string): any {
 // Verse rendering functions
 const createVerseNumber = (verse: number, isFavorite: boolean) => `
     <span class="text-theme-notification font-bold inline-flex items-center py-1 rounded-full">
-        ${isFavorite ? '<span class="text-yellow-400 mr-1 text-xs">★</span>' : ""}
+        <span class="favorite-star text-yellow-400 mr-1 text-xs ${isFavorite ? '' : 'hidden'}">★</span>
         ${verse}
     </span>
 `;
@@ -1332,9 +1430,9 @@ const createRegularVerse = (item: IBookVerse, verseKey: string, highlights?: Map
                 <span class="action-icon" style="color:  #4dcd8d;">${lucideIcons.highlighter}</span>
                 <div class="action-label text-theme-text">Resaltar</div>
             </button>
-            <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[100ms] hover:scale-105" onclick="handleVerseAction('favorite', '${verseKey}')">
-                <span class="action-icon" style="color: #fedf75;">${lucideIcons[!item.is_favorite ? 'star' : 'star-off']}</span>
-                <div class="action-label text-theme-text">${item.is_favorite ? 'Quitar' : 'Favorito'}</div>
+            <button class="action-btn favorite-action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[100ms] hover:scale-105" onclick="handleVerseAction('favorite', '${verseKey}')" data-is-favorite="${item.is_favorite}">
+                <span class="action-icon favorite-icon" style="color: #fedf75;">${lucideIcons[!item.is_favorite ? 'star' : 'star-off']}</span>
+                <div class="action-label favorite-label text-theme-text">${item.is_favorite ? 'Quitar' : 'Favorito'}</div>
             </button>
             <button class="action-btn opacity-0 translate-y-5 scale-75 transition-all duration-300 ease-out delay-[200ms] hover:scale-105" onclick="handleVerseAction('image', '${verseKey}')">
                 <span class="action-icon" style="color: #9dcd7d;">${lucideIcons.image}</span>

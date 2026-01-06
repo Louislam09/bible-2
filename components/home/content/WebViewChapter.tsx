@@ -168,6 +168,7 @@ const WebViewChapter = memo(
                   );
                   break;
                 case "favorite":
+                  console.log('favorite', item);
                   onFavoriteVerse?.({
                     bookNumber: item.book_number,
                     chapter: item.chapter,
