@@ -172,6 +172,7 @@ const MainDashboard = () => {
       label: "Destacados",
       action: () => navigation?.navigate(Screens.Highlighted),
       color: "#4dcd8d",
+      isNew: isWithinTimeframe("1w", new Date("2026-01-06")).isActive,
     },
     {
       icon: "TestTubeDiagonal",
@@ -193,7 +194,6 @@ const MainDashboard = () => {
       label: "Cita Image",
       action: () => navigation?.navigate(Screens.QuoteMaker),
       color: "#ec899e",
-      isNew: isWithinTimeframe("3d", new Date("2025-10-15")).isActive,
     },
     {
       icon: "BookA",
@@ -213,14 +213,12 @@ const MainDashboard = () => {
       label: "Guía Bíblica IA",
       action: () => navigation.navigate(Screens.AIBibleGuide),
       color: "#cccf17",
-      isNew: isWithinTimeframe("1w", new Date("2025-11-13")).isActive,
     },
     {
       icon: "Quote",
       label: "Cita",
       action: () => navigation.navigate(Screens.Quote),
       color: "#CDAA7D",
-      isNew: isWithinTimeframe("1w", new Date("2025-06-05")).isActive,
     },
     {
       icon: "SwatchBook",
@@ -252,28 +250,24 @@ const MainDashboard = () => {
       label: "Historial",
       action: () => navigation.navigate(Screens.History),
       color: "#a9a9a9",
-      isNew: isWithinTimeframe("3d", new Date("2025-02-16")).isActive,
     },
     {
       icon: "Gamepad",
       label: "Quiz Bíblico",
       action: () => navigation.navigate(Screens.ChooseGame),
       color: "#75d0fe",
-      isNew: isWithinTimeframe("3d", new Date("2025-02-04")).isActive,
     },
     {
       icon: "Brain",
       label: "Memorizar",
       action: () => navigation.navigate(Screens.MemorizeVerse),
       color: "#f1abab",
-      isNew: isWithinTimeframe("1w", new Date("2025-02-04")).isActive,
     },
     {
       icon: "CalendarRange",
       label: "Linea de tiempo",
       action: () => navigation.navigate(Screens.Timeline),
       color: "#6de5cb",
-      isNew: isWithinTimeframe("1w", new Date("2025-03-18")).isActive,
     },
     // {
     //   icon: "TreeDeciduous",

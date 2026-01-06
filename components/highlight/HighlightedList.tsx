@@ -176,8 +176,6 @@ const HighlightedList = ({ }: HighlightedListProps) => {
         const message = JSON.parse(event.nativeEvent.data);
         const { type, data } = message;
 
-        console.log("WebView message received:", type, data);
-
         // Find item by id
         const item = filterData.find((v) => {
           const itemId = v.id?.toString();
@@ -192,20 +190,16 @@ const HighlightedList = ({ }: HighlightedListProps) => {
 
         switch (type) {
           case "copy":
-            console.log("Copy action triggered");
             onCopy(item);
             break;
           case "share":
-            console.log("Share action triggered");
             onShare(item);
             break;
           case "delete":
-            console.log("Delete action triggered");
             onDelete(item);
             break;
           case "goToContext":
           case "context":
-            console.log("Go to context action triggered");
             onVerseClick(item);
             break;
           default:

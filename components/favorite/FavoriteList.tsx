@@ -301,8 +301,6 @@ const FavoriteList = ({ }: TListVerse) => {
         const message = JSON.parse(event.nativeEvent.data);
         const { type, data } = message;
 
-        console.log("WebView message received:", type, data);
-
         // Find item by id
         const item = filterData.find((v) => {
           const itemId = v.id?.toString();
@@ -317,15 +315,12 @@ const FavoriteList = ({ }: TListVerse) => {
 
         switch (type) {
           case "copy":
-            console.log("Copy action triggered");
             onCopy(item);
             break;
           case "share":
-            console.log("Share action triggered");
             onShare(item);
             break;
           case "delete":
-            console.log("Delete action triggered");
             confirm(
               "Eliminar favorito",
               "¿Estás seguro de eliminar este versículo de tus favoritos?",
@@ -334,7 +329,6 @@ const FavoriteList = ({ }: TListVerse) => {
             break;
           case "goToContext":
           case "context":
-            console.log("Go to context action triggered");
             onVerseClick(item);
             break;
           default:
