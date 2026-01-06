@@ -1,13 +1,13 @@
 import { storedData$, useStorage } from "@/context/LocalstoreContext";
+import { useSync, syncState$ } from "@/context/SyncContext";
 import { useMyTheme } from "@/context/ThemeContext";
-import { settingState$ } from "@/state/settingState";
 import { TTheme } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
+import { use$ } from "@legendapp/state/react";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
   Modal,
-  ModalProps,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -31,16 +31,41 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
   const [syncComplete, setSyncComplete] = useState<boolean>(false);
   const [syncError, setSyncError] = useState<string | null>(null);
   const { loadFromCloud } = useStorage();
+  const { triggerSync, isInitialized } = useSync();
+  
+  // Get sync status from TinyBase
+  const tinybaseSyncStatus = use$(() => syncState$.syncStatus.get());
 
   const handleSync = async (): Promise<void> => {
     try {
       setSyncing(true);
       setSyncError(null);
 
-      // Load settings from cloud
-      const success = await loadFromCloud();
+      let success = true;
+      const errors: string[] = [];
 
-      if (success) {
+      // 1. Sync TinyBase data (favorites, highlights, notes, history)
+      if (isInitialized) {
+        console.log('[SyncPopup] Starting TinyBase sync...');
+        const tinybaseSuccess = await triggerSync();
+        if (!tinybaseSuccess) {
+          errors.push('Error al sincronizar datos locales');
+        }
+      }
+
+      // 2. Load settings from cloud (LocalstoreContext)
+      console.log('[SyncPopup] Loading settings from cloud...');
+      const settingsSuccess = await loadFromCloud();
+      if (!settingsSuccess) {
+        errors.push('Error al cargar configuración');
+      }
+
+      if (errors.length > 0) {
+        setSyncError(errors.join('. '));
+        success = false;
+      }
+
+      if (success || errors.length === 0) {
         setSyncComplete(true);
 
         // Give a short delay before closing to show the success state
@@ -48,8 +73,6 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
           setSyncComplete(false);
           onClose();
         }, 2000);
-      } else {
-        setSyncError("No se pudieron cargar los datos desde la nube");
       }
     } catch (error) {
       console.error("Sync error:", error);
@@ -61,9 +84,17 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
     }
   };
 
-  const formattedLastSync = lastSyncTime
-    ? new Date(lastSyncTime).toLocaleString()
-    : "- -- ----";
+  // Use TinyBase last sync time if available, fallback to prop
+  const effectiveLastSync = tinybaseSyncStatus.lastSyncAt 
+    ? new Date(tinybaseSyncStatus.lastSyncAt).toLocaleString()
+    : lastSyncTime
+      ? new Date(lastSyncTime).toLocaleString()
+      : "- -- ----";
+
+  // Show pending changes count if any
+  const pendingInfo = tinybaseSyncStatus.pendingChanges > 0
+    ? ` (${tinybaseSyncStatus.pendingChanges} cambios pendientes)`
+    : '';
 
   return (
     <Modal
@@ -75,9 +106,9 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
           <View style={styles.header}>
-            <Text style={styles.title}>Sincronización de nubes</Text>
+            <Text style={styles.title}>Sincronización</Text>
             <TouchableOpacity onPress={onClose} disabled={syncing}>
-              <Ionicons name="close" size={24} color="#555" />
+              <Ionicons name="close" size={24} color={theme.colors.text} />
             </TouchableOpacity>
           </View>
 
@@ -86,6 +117,8 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
               <Ionicons name="checkmark-circle" size={60} color="#4CAF50" />
             ) : syncError ? (
               <Ionicons name="alert-circle" size={60} color="#F44336" />
+            ) : tinybaseSyncStatus.isSyncing || syncing ? (
+              <ActivityIndicator size={60} color="#4A80F0" />
             ) : (
               <Ionicons name="cloud-upload-outline" size={60} color="#4A80F0" />
             )}
@@ -93,11 +126,33 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
 
           <Text style={styles.description}>
             {syncComplete
-              ? "¡Tus datos se han sincronizado exitosamente con la nube!"
+              ? "¡Tus datos se han sincronizado exitosamente!"
               : syncError
-                ? `Error de sincronización: ${syncError}`
-                : "Sincroniza tus datos con la nube para acceder a ellos desde todos tus dispositivos."}
+                ? `${syncError}`
+                : "Sincroniza favoritos, destacados, notas e historial con la nube."}
           </Text>
+
+          {/* Sync info badges */}
+          {!syncComplete && !syncError && (
+            <View style={styles.syncInfoContainer}>
+              <View style={styles.syncBadge}>
+                <Ionicons name="heart" size={16} color={theme.colors.notification} />
+                <Text style={styles.syncBadgeText}>Favoritos</Text>
+              </View>
+              <View style={styles.syncBadge}>
+                <Ionicons name="color-palette" size={16} color={theme.colors.notification} />
+                <Text style={styles.syncBadgeText}>Destacados</Text>
+              </View>
+              <View style={styles.syncBadge}>
+                <Ionicons name="document-text" size={16} color={theme.colors.notification} />
+                <Text style={styles.syncBadgeText}>Notas</Text>
+              </View>
+              <View style={styles.syncBadge}>
+                <Ionicons name="settings" size={16} color={theme.colors.notification} />
+                <Text style={styles.syncBadgeText}>Ajustes</Text>
+              </View>
+            </View>
+          )}
 
           {!syncComplete && (
             <View style={styles.buttonContainer}>
@@ -121,14 +176,14 @@ const CloudSyncPopup: React.FC<CloudSyncPopupProps> = ({
                 {syncing ? (
                   <ActivityIndicator color="#fff" size="small" />
                 ) : (
-                  <Text style={styles.syncButtonText}>Sincronizar ahora</Text>
+                  <Text style={styles.syncButtonText}>Sincronizar</Text>
                 )}
               </TouchableOpacity>
             </View>
           )}
 
           <Text style={styles.lastSyncText}>
-            Última sincronización: {formattedLastSync}
+            Última sincronización: {effectiveLastSync}{pendingInfo}
           </Text>
         </View>
       </View>
@@ -170,8 +225,28 @@ const getStyles = ({ colors, dark }: TTheme) =>
       fontSize: 16,
       color: colors.text,
       textAlign: "center",
-      marginBottom: 24,
+      marginBottom: 16,
       lineHeight: 22,
+    },
+    syncInfoContainer: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      gap: 8,
+      marginBottom: 20,
+    },
+    syncBadge: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: colors.text + "15",
+      paddingHorizontal: 10,
+      paddingVertical: 6,
+      borderRadius: 16,
+      gap: 4,
+    },
+    syncBadgeText: {
+      fontSize: 12,
+      color: colors.text,
     },
     buttonContainer: {
       flexDirection: "row",

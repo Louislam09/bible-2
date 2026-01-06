@@ -65,6 +65,22 @@ async function getBibleDatabase(dbName: string): Promise<SQLite.SQLiteDatabase |
 }
 
 /**
+ * Check if a table exists in the database
+ */
+async function tableExists(db: SQLite.SQLiteDatabase, tableName: string): Promise<boolean> {
+  try {
+    const result = await db.getAllAsync<{ name: string }>(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+      [tableName]
+    );
+    return result.length > 0;
+  } catch (error) {
+    console.error(`[Migration] Error checking table ${tableName}:`, error);
+    return false;
+  }
+}
+
+/**
  * Migrate favorites from old SQLite table
  */
 async function migrateFavoritesFromSQLite(
@@ -74,6 +90,12 @@ async function migrateFavoritesFromSQLite(
   let count = 0;
 
   try {
+    // Check if table exists first
+    if (!(await tableExists(bibleDb, 'favorite_verses'))) {
+      console.log('[Migration] No favorite_verses table found, skipping');
+      return 0;
+    }
+
     const rows = await bibleDb.getAllAsync<{
       id: number;
       book_number: number;
@@ -110,6 +132,12 @@ async function migrateHighlightsFromSQLite(
   let count = 0;
 
   try {
+    // Check if table exists first
+    if (!(await tableExists(bibleDb, 'highlighted_verses'))) {
+      console.log('[Migration] No highlighted_verses table found, skipping');
+      return 0;
+    }
+
     const rows = await bibleDb.getAllAsync<{
       id: number;
       book_number: number;
@@ -151,6 +179,12 @@ async function migrateNotesFromSQLite(
   let count = 0;
 
   try {
+    // Check if table exists first
+    if (!(await tableExists(bibleDb, 'notes'))) {
+      console.log('[Migration] No notes table found, skipping');
+      return 0;
+    }
+
     const rows = await bibleDb.getAllAsync<{
       id: number;
       title: string;
@@ -195,12 +229,8 @@ async function migrateHistoryFromSQLite(
 
   try {
     // Check if history table exists
-    const tableExists = await bibleDb.getAllAsync(
-      "SELECT name FROM sqlite_master WHERE type='table' AND name='history'"
-    );
-
-    if (tableExists.length === 0) {
-      console.log('[Migration] No history table found in SQLite');
+    if (!(await tableExists(bibleDb, 'history'))) {
+      console.log('[Migration] No history table found, skipping');
       return 0;
     }
 
