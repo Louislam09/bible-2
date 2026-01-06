@@ -78,7 +78,6 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
 
   const debouncedNoteContent = useDebounce(noteContent, 3000);
   const { printToFile } = usePrintAndShare();
-  console.log('noteDetailDom', noteId, isNewNote);
 
   // Function to fetch Bible verse from database
   const fetchBibleVerse = useCallback(

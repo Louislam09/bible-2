@@ -71,7 +71,10 @@ export function addFavorite(
     data: Omit<FavoriteRecord, 'updated_at' | 'synced_at' | 'is_deleted'>
 ): void {
     store.setRow('favorites', uuid, {
-        ...data,
+        book_number: data.book_number,
+        chapter: data.chapter,
+        verse: data.verse,
+        text: data.text || '',
         updated_at: Date.now(),
         synced_at: null,
         is_deleted: false,
@@ -132,7 +135,12 @@ export function addHighlight(
     data: Omit<HighlightRecord, 'updated_at' | 'synced_at' | 'is_deleted'>
 ): void {
     store.setRow('highlights', uuid, {
-        ...data,
+        book_number: data.book_number,
+        chapter: data.chapter,
+        verse: data.verse,
+        style: data.style,
+        color: data.color,
+        text: data.text || '',
         updated_at: Date.now(),
         synced_at: null,
         is_deleted: false,

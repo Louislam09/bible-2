@@ -1,5 +1,5 @@
 import { databaseNames, dbFileExt, SQLiteDirPath } from "@/constants/databaseNames";
-import { CREATE_FAVORITE_VERSES_TABLE, historyQuery } from "@/constants/queries";
+import { CREATE_FAVORITE_VERSES_TABLE, CREATE_HIGHLIGHTED_VERSES_TABLE, CREATE_MEMORIZATION_TABLE, CREATE_NOTE_TABLE, CREATE_STREAK_TABLE, historyQuery } from "@/constants/queries";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { dbDownloadState$ } from "@/state/dbDownloadState";
 import { DEFAULT_DATABASE } from "@/types";
@@ -29,6 +29,15 @@ interface UseGreekDB {
     enabled?: boolean;
     databaseId: DEFAULT_DATABASE;
 }
+
+const MY_TABLES = [
+    { name: "favorite_verses", query: CREATE_FAVORITE_VERSES_TABLE },
+    { name: "notes", query: CREATE_NOTE_TABLE },
+    { name: "memorization", query: CREATE_MEMORIZATION_TABLE },
+    { name: "streaks", query: CREATE_STREAK_TABLE },
+    { name: "history", query: historyQuery.CREATE_TABLE },
+    { name: "highlighted_verses", query: CREATE_HIGHLIGHTED_VERSES_TABLE }
+];
 
 export function useGreekDB({ onProgress, enabled, databaseId }: UseGreekDB): UseGreekDatabase {
     const [database, setDatabase] = useState<SQLite.SQLiteDatabase | null>(null);
@@ -90,14 +99,9 @@ export function useGreekDB({ onProgress, enabled, databaseId }: UseGreekDB): Use
     }
 
     async function createTables(db: SQLite.SQLiteDatabase) {
-        const tables = [
-            CREATE_FAVORITE_VERSES_TABLE,
-            historyQuery.CREATE_TABLE,
-        ];
-
         try {
-            for (const sql of tables) {
-                await db.execAsync(sql);
+            for (const table of MY_TABLES) {
+                await db.execAsync(table.query);
             }
         } catch (error) {
             console.error("Error creating tables:", error);

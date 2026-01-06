@@ -36,6 +36,7 @@ interface WebViewChapterProps {
     chapter,
     verse,
     isFav,
+    text,
   }: IFavoriteVerse) => Promise<void>;
   onCopy?: (item: IBookVerse | IBookVerse[]) => void;
   onExplain?: (item: IBookVerse) => void;
@@ -173,6 +174,7 @@ const WebViewChapter = memo(
                     chapter: item.chapter,
                     verse: item.verse,
                     isFav: item.is_favorite,
+                    text: item.text || '',
                   });
                   break;
                 case "memorize":

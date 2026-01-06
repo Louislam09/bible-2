@@ -227,6 +227,7 @@ const Verse: React.FC<VerseProps> = ({ item, isSplit, initVerse }) => {
       chapter: item.chapter,
       verse: item.verse,
       isFav: isFavorite,
+      text: item.text || '',
     });
 
     setFavorite((prev) => !prev);

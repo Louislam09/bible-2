@@ -311,12 +311,13 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
   );
 
   const onFavoriteVerse = useCallback(
-    async ({ bookNumber, chapter, verse, isFav }: IFavoriteVerse) => {
+    async ({ bookNumber, chapter, verse, isFav, text }: IFavoriteVerse) => {
       await toggleFavoriteVerse({
         bookNumber,
         chapter,
         verse,
         isFav,
+        text,
       });
       bibleState$.clearSelection();
       showToast(

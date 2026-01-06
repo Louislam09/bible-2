@@ -353,13 +353,14 @@ const BibleProvider: React.FC<{ children: React.ReactNode }> = ({
     chapter,
     verse,
     isFav,
+    text,
   }: IFavoriteVerse) => {
     try {
       if (isFav) {
         await removeFavoriteVerse(bookNumber, chapter, verse);
         showToast("Versículo eliminado de favoritos");
       } else {
-        await addFavoriteVerse(bookNumber, chapter, verse);
+        await addFavoriteVerse(bookNumber, chapter, verse, text || '');
         showToast("Versículo agregado a favoritos");
       }
     } catch (error) {

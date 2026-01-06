@@ -14,6 +14,7 @@ export interface FavoriteRecord extends SyncMetadata {
     book_number: number;
     chapter: number;
     verse: number;
+    text: string;  // Verse text for offline display
 }
 
 // Highlight record
@@ -25,6 +26,7 @@ export interface HighlightRecord extends SyncMetadata {
     verse: number;
     style: HighlightStyle;
     color: string;
+    text: string;  // Verse text for offline display
 }
 
 // Note record

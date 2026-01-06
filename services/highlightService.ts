@@ -64,6 +64,7 @@ export const useHighlightService = () => {
       color: h.color,
       uuid: h.uuid,
       created_at: h.updated_at,
+      text: h.text,
     }));
   };
 
@@ -84,6 +85,7 @@ export const useHighlightService = () => {
       color: h.color,
       uuid,
       created_at: h.updated_at,
+      text: h.text,
     }));
   };
 
@@ -103,7 +105,8 @@ export const useHighlightService = () => {
       data.chapter,
       data.verse,
       data.style,
-      data.color
+      data.color,
+      data.text || ''
     );
   };
 
@@ -161,6 +164,7 @@ export const useHighlightService = () => {
         color: found.record.color,
         uuid: found.uuid,
         created_at: found.record.updated_at,
+        text: found.record.text,
       };
     }
     return null;

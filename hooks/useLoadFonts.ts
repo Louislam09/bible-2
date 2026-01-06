@@ -72,7 +72,7 @@ const useLoadFonts = (fontMapping: FontMapping = {} as FontMapping) => {
 }`;
 
                             fontStyles[fontName] = fontFace;
-                            console.log(`Downloaded and Loaded font: ${fontName}`);
+                            // console.log(`Downloaded and Loaded font: ${fontName}`);
                         }
                     } catch (error) {
                         console.error(`Error loading font ${fontName}:`, error);

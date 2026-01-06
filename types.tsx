@@ -436,6 +436,7 @@ export type IFavoriteVerse = {
   chapter: number;
   verse: number;
   isFav: boolean;
+  text?: string;
 };
 
 export enum EBookIndexesAudio {

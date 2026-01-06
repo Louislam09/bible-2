@@ -126,6 +126,7 @@ const WebviewHighlighter: React.FC<Props> = ({ theme }) => {
             verse: verseNumber,
             style,
             color,
+            text: verse.text || '',
           });
         }
       }

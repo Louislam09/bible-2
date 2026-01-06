@@ -35,7 +35,7 @@ type VerseProps = TVerse & {
     onInterlinear?: (item: IBookVerse) => void;
     onAnotar?: (item: IBookVerse) => void;
     onMemorizeVerse?: (verse: string, version: string) => void;
-    onFavoriteVerse?: ({ bookNumber, chapter, verse, isFav, }: IFavoriteVerse) => Promise<void>
+    onFavoriteVerse?: ({ bookNumber, chapter, verse, isFav, text }: IFavoriteVerse) => Promise<void>
 };
 
 

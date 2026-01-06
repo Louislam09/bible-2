@@ -43,7 +43,7 @@ import { scheduleSync } from '@/lib/sync/syncManager';
 export interface UseFavoritesReturn {
   favorites: Record<string, FavoriteRecord>;
   favoritesList: Array<FavoriteRecord & { uuid: string }>;
-  addFavorite: (bookNumber: number, chapter: number, verse: number) => string | null;
+  addFavorite: (bookNumber: number, chapter: number, verse: number, text: string) => string | null;
   removeFavorite: (uuid: string) => void;
   removeFavoriteByVerse: (bookNumber: number, chapter: number, verse: number) => void;
   isFavorite: (bookNumber: number, chapter: number, verse: number) => string | null;
@@ -63,7 +63,7 @@ export function useFavorites(): UseFavoritesReturn {
   }, [favorites]);
 
   const addFavorite = useCallback(
-    (bookNumber: number, chapter: number, verse: number): string | null => {
+    (bookNumber: number, chapter: number, verse: number, text: string): string | null => {
       if (!store) return null;
 
       // Check if already favorite
@@ -75,6 +75,7 @@ export function useFavorites(): UseFavoritesReturn {
         book_number: bookNumber,
         chapter,
         verse,
+        text,
       });
 
       return uuid;
@@ -132,7 +133,8 @@ export interface UseHighlightsReturn {
     chapter: number,
     verse: number,
     style: HighlightStyle,
-    color: string
+    color: string,
+    text: string
   ) => string | null;
   updateHighlight: (uuid: string, style: HighlightStyle, color: string) => void;
   removeHighlight: (uuid: string) => void;
@@ -153,7 +155,6 @@ export function useHighlights(): UseHighlightsReturn {
   const store = useSyncStore();
   const highlights = use$(() => syncState$.highlights.get());
   const isLoading = use$(() => syncState$.isLoading.get());
-
   const highlightsList = useMemo(() => {
     return Object.entries(highlights).map(([uuid, record]) => ({
       uuid,
@@ -167,7 +168,8 @@ export function useHighlights(): UseHighlightsReturn {
       chapter: number,
       verse: number,
       style: HighlightStyle,
-      color: string
+      color: string,
+      text: string
     ): string | null => {
       if (!store) return null;
 
@@ -185,6 +187,7 @@ export function useHighlights(): UseHighlightsReturn {
         verse,
         style,
         color,
+        text,
       });
 
       return uuid;

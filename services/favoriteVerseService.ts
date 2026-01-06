@@ -43,6 +43,7 @@ export const useFavoriteVerseService = () => {
       chapter: fav.chapter,
       verse: fav.verse,
       uuid: fav.uuid,
+      text: fav.text,
     }));
   };
 
@@ -53,9 +54,9 @@ export const useFavoriteVerseService = () => {
     book_number: number,
     chapter: number,
     verse: number,
-    uuid?: string
+    text: string = ''
   ): string | null => {
-    return tinyAddFavorite(book_number, chapter, verse);
+    return tinyAddFavorite(book_number, chapter, verse, text);
   };
 
   /**
