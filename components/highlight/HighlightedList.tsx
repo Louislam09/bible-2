@@ -28,10 +28,7 @@ type HighlightedListProps = {};
 
 const HighlightedList = ({ }: HighlightedListProps) => {
   const { confirm } = useAlert();
-  const [filterData, setFilterData] = useState<THighlightedVerse[]>([]);
-  const [originalData, setOriginalData] = useState<THighlightedVerse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [data, setData] = useState<THighlightedVerse[]>([]);
 
   const webViewRef = useRef<WebView>(null);
 
@@ -62,15 +59,11 @@ const HighlightedList = ({ }: HighlightedListProps) => {
 
   const fetchData = useCallback(async () => {
     try {
-      setLoading(true);
       const highlights = await getAllHighlightedVerses();
-      setOriginalData(highlights ?? []);
-      setFilterData(highlights ?? []);
+      setData(highlights ?? []);
     } catch (error) {
       console.error("Error fetching highlighted verses:", error);
       showToast("Error al cargar versículos destacados");
-    } finally {
-      setLoading(false);
     }
   }, [getAllHighlightedVerses]);
 
@@ -78,25 +71,6 @@ const HighlightedList = ({ }: HighlightedListProps) => {
     fetchData();
   }, []);
 
-
-  useEffect(() => {
-    if (searchQuery.trim() === "") {
-      setFilterData(originalData);
-      return;
-    }
-
-    const lowerQuery = searchQuery.toLowerCase();
-    const filtered = originalData.filter((item) => {
-      const bookName = item.bookName || getBookDetail(item.book_number).longName;
-      return (
-        bookName.toLowerCase().includes(lowerQuery) ||
-        (item.text && getVerseTextRaw(item.text).toLowerCase().includes(lowerQuery)) ||
-        `${item.chapter}:${item.verse}`.includes(lowerQuery)
-      );
-    });
-
-    setFilterData(filtered);
-  }, [searchQuery, originalData]);
 
   const onVerseClick = useCallback(
     (item: THighlightedVerse) => {
@@ -155,8 +129,7 @@ const HighlightedList = ({ }: HighlightedListProps) => {
               item.uuid
             );
 
-            setFilterData((prev) => prev.filter((v) => v.id !== item.id));
-            setOriginalData((prev) => prev.filter((v) => v.id !== item.id));
+            setData((prev) => prev.filter((v) => v.id !== item.id));
 
             showToast("Versículo destacado eliminado");
           } catch (error) {
@@ -177,7 +150,7 @@ const HighlightedList = ({ }: HighlightedListProps) => {
         const { type, data } = message;
 
         // Find item by id
-        const item = filterData.find((v) => {
+        const item = data.find((v: THighlightedVerse) => {
           const itemId = v.id?.toString();
           const dataId = data.id?.toString();
           return itemId === dataId;
@@ -209,20 +182,20 @@ const HighlightedList = ({ }: HighlightedListProps) => {
         console.error("Error parsing WebView message:", error, event.nativeEvent.data);
       }
     },
-    [filterData, onCopy, onShare, onDelete, onVerseClick]
+    [data, onCopy, onShare, onDelete, onVerseClick]
   );
 
   // Generate HTML content
   const htmlContent = useMemo(() => {
     return highlightedListHtmlTemplate(
-      filterData,
+      data,
       theme,
       currentVersionShortName,
       formatTimeAgo,
       16,
       undefined // selectedFont - can be added later if needed
     );
-  }, [filterData, theme, currentVersionShortName, formatTimeAgo]);
+  }, [data, theme, currentVersionShortName, formatTimeAgo]);
 
 
   return (
