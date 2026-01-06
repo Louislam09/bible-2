@@ -20,14 +20,9 @@ const useLoadLexicalBundle = () => {
                 const cachedBundle = scriptDownloadHelpers.getLexicalBundle();
 
                 // Use cache only if it contains the version marker
-                if (cachedBundle && cachedBundle.includes(LEXICAL_BUNDLE_VERSION)) {
-                    console.log(`Lexical bundle ${LEXICAL_BUNDLE_VERSION} loaded from cache`);
-                    return;
-                }
+                if (cachedBundle && cachedBundle.includes(LEXICAL_BUNDLE_VERSION)) return
 
-                if (cachedBundle) {
-                    console.log(`Lexical bundle outdated. Reloading with ${LEXICAL_BUNDLE_VERSION}...`);
-                }
+                if (cachedBundle) console.log(`Lexical bundle outdated. Reloading with ${LEXICAL_BUNDLE_VERSION}...`)
 
                 // Load from asset file
                 const asset = Asset.fromModule(require('../assets/lexical-bundle.txt'));

@@ -9,10 +9,7 @@ const useLoadFuse = () => {
             try {
                 // Try to load from script download state first
                 const cachedScript = scriptDownloadHelpers.getFuseScript();
-                if (cachedScript) {
-                    console.log('Fuse.js loaded from cache');
-                    return;
-                }
+                if (cachedScript) return
 
                 // If not in cache, load from asset file
                 const asset = Asset.fromModule(require('../assets/fuse.txt'));

@@ -61,10 +61,7 @@ const useLoadTailwindScript = () => {
             try {
                 // Try to load from script download state first
                 const cachedScript = scriptDownloadHelpers.getTailwindScript();
-                if (cachedScript) {
-                    console.log('Tailwind script loaded from cache');
-                    return;
-                }
+                if (cachedScript) return
 
                 // If not in cache, load from asset file
                 const asset = Asset.fromModule(require('../assets/tailwind.txt'));

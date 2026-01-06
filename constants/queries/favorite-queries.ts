@@ -3,8 +3,7 @@ export const CREATE_FAVORITE_VERSES_TABLE = `CREATE TABLE IF NOT EXISTS favorite
   book_number INTEGER,
   chapter INTEGER,
   verse INTEGER,
-  uuid TEXT
-
+  uuid TEXT,
   UNIQUE (book_number, chapter, verse)
 );`;
 

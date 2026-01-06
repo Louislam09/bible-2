@@ -13,10 +13,7 @@ const useLoadDrivejs = () => {
             try {
                 // Try to load from script download state first
                 const cachedScript = scriptDownloadHelpers.getDrivejsScript();
-                if (cachedScript) {
-                    console.log('Drivejs loaded from cache');
-                    return;
-                }
+                if (cachedScript) return
 
                 // If not in cache, load from asset file
                 const asset = Asset.fromModule(require('../assets/drivejs.txt'));

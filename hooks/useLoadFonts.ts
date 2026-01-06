@@ -39,10 +39,7 @@ const useLoadFonts = (fontMapping: FontMapping = {} as FontMapping) => {
             try {
                 // Check if fonts are already cached
                 const cachedFonts = scriptDownloadHelpers.getAllFontStyles();
-                if (cachedFonts && Object.keys(cachedFonts).length > 0) {
-                    console.log('Fonts loaded from cache');
-                    return;
-                }
+                if (cachedFonts && Object.keys(cachedFonts).length > 0) return
 
                 console.log('Loading fonts as base64 data URIs...');
                 const fontStyles: Record<string, string> = {};
@@ -72,7 +69,7 @@ const useLoadFonts = (fontMapping: FontMapping = {} as FontMapping) => {
 }`;
 
                             fontStyles[fontName] = fontFace;
-                            console.log(`Downloaded and Loaded font: ${fontName}`);
+                            // console.log(`Downloaded and Loaded font: ${fontName}`);
                         }
                     } catch (error) {
                         console.error(`Error loading font ${fontName}:`, error);
