@@ -1,3 +1,4 @@
+import { PressableScale } from "@/components/animations/pressable-scale";
 import {
   singleScreenHeader,
   SingleScreenHeaderProps,
@@ -5,16 +6,20 @@ import {
 import Icon from "@/components/Icon";
 import { Text } from "@/components/Themed";
 import hymnSong from "@/constants/hymnSong";
-import { iconSize } from "@/constants/size";
 import AlegreSongs from "@/constants/songs";
+import { songsListHtmlTemplate } from "@/constants/songsListHtmlTemplate";
 import { useBibleContext } from "@/context/BibleContext";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import useDebounce from "@/hooks/useDebounce";
+import useLoadFuse from "@/hooks/useLoadFuse";
 import useParams from "@/hooks/useParams";
 import { RootStackScreenProps, TSongItem, TTheme } from "@/types";
 import removeAccent from "@/utils/removeAccent";
-import { FlashList } from "@shopify/flash-list";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
+import { use$ } from "@legendapp/state/react";
 import { Stack, useRouter } from "expo-router";
+import Fuse from "fuse.js";
 import React, {
   useCallback,
   useEffect,
@@ -25,20 +30,12 @@ import React, {
 import {
   ActivityIndicator,
   Animated,
-  Pressable,
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
-import Fuse from "fuse.js";
-import { PressableScale } from "@/components/animations/pressable-scale";
-import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import WebView from "react-native-webview";
-import { storedData$ } from "@/context/LocalstoreContext";
-import { use$ } from "@legendapp/state/react";
-import { songsListHtmlTemplate } from "@/constants/songsListHtmlTemplate";
-import useLoadFuse from "@/hooks/useLoadFuse";
 
 type RenderItemProps = {
   item: TSongItem;
@@ -338,13 +335,6 @@ const Song: React.FC<RootStackScreenProps<"song"> | any> = (props) => {
           backgroundColor: theme.colors.background,
         }}
       >
-        {/* <AnimatedSearchBar
-          setSearchActive={setSearchActive}
-          setSearchQuery={setSearchText}
-          onSearch={filterSongs}
-          isLoading={false}
-        /> */}
-
         <WebView
           ref={webViewRef}
           originWhitelist={["*"]}

@@ -94,24 +94,25 @@ const createSongCard = (song: TSongItem, index: number, theme: TTheme) => {
     class="relative bg-gradient-to-${gradientDir} from-[${theme.colors.notification}70] to-[${theme.colors.text}80] rounded-[20px] p-[1px] animate-slide-in-up"
     style="animation-delay: ${animationDelay}s;"
   >
-    <div 
-       class="
-        song-card
-        bg-theme-card
-        rounded-[20px]
-        p-3
-        flex items-center gap-4
-        cursor-pointer
-        transition-all duration-300
-        ease-[cubic-bezier(0.4,0,0.2,1)]
-        relative overflow-hidden
-        hover:-translate-y-0.5
-        hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)]
-        active:scale-[0.98]
-      "
-      data-song-id="${escapeHtml(String(song.id))}" 
-      data-index="${index}"
-    >
+      <div 
+         class="
+          song-card
+          bg-theme-card
+          rounded-[20px]
+          p-3
+          flex items-center gap-4
+          cursor-pointer
+          transition-all duration-300
+          ease-[cubic-bezier(0.4,0,0.2,1)]
+          relative overflow-hidden
+          hover:-translate-y-0.5
+          hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)]
+          active:scale-[0.98]
+        "
+        data-song-id="${escapeHtml(String(song.id))}" 
+        data-index="${index}"
+        onclick="handleSongClick('${escapeHtml(String(song.id))}')"
+      >
       <div 
         class="song-icon-container w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-300 ease-in-out text-theme-notification " 
       >
@@ -244,6 +245,19 @@ const createHtmlBody = (songs: TSongItem[], theme: TTheme, fontSize: number, sel
         const theme = ${JSON.stringify(theme)};
         const fontSize = ${fontSize};
         
+        // Handle song card click
+        function handleSongClick(songId) {
+          if (window.ReactNativeWebView) {
+            window.ReactNativeWebView.postMessage(JSON.stringify({
+              type: 'songClick',
+              songId: songId
+            }));
+          }
+        }
+        
+        // Make function available globally
+        window.handleSongClick = handleSongClick;
+        
         // Initialize Fuse.js
         const fuse = new Fuse(allSongs, {
           keys: [
@@ -302,6 +316,7 @@ const createHtmlBody = (songs: TSongItem[], theme: TTheme, fontSize: number, sel
                 "
                 data-song-id="\${escapeHtml(String(song.id))}" 
                 data-index="\${index}"
+                onclick="handleSongClick('\${escapeHtml(String(song.id))}')"
               >
                 <div 
                   class="song-icon-container w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-300 ease-in-out text-theme-notification"
@@ -376,30 +391,12 @@ const createHtmlBody = (songs: TSongItem[], theme: TTheme, fontSize: number, sel
           
           songsList.innerHTML = filteredSongs.map((song, index) => createSongCardHTML(song, index)).join('');
           
-          // Re-attach click handlers to new cards
-          attachClickHandlers();
-          
           // Animate cards
           const cards = songsList.querySelectorAll('.song-card');
           cards.forEach((card, index) => {
             setTimeout(() => {
               card.style.opacity = '1';
             }, index * 50);
-          });
-        }
-        
-        // Function to attach click handlers to song cards
-        function attachClickHandlers() {
-          document.querySelectorAll('.song-card').forEach(card => {
-            card.addEventListener('click', (e) => {
-              const songId = card.dataset.songId;
-              if (window.ReactNativeWebView) {
-                window.ReactNativeWebView.postMessage(JSON.stringify({
-                  type: 'songClick',
-                  songId: songId
-                }));
-              }
-            });
           });
         }
         
@@ -449,9 +446,6 @@ const createHtmlBody = (songs: TSongItem[], theme: TTheme, fontSize: number, sel
           clearButton.style.display = 'flex';
           clearButton.classList.remove('hidden');
         }
-        
-        // Initial click handlers
-        attachClickHandlers();
         
         // Add smooth scroll behavior
         document.addEventListener('DOMContentLoaded', () => {
