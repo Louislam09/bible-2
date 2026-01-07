@@ -20,6 +20,7 @@ export const modalState$ = observable({
   multipleStrongsRef: createRef<BottomSheetModal>(),
   bibleSettingRef: createRef<BottomSheetModal>(),
   highlighterRef: createRef<BottomSheet>(),
+  noteListRef: createRef<BottomSheet>(),
   searchWordOnDic: "",
   commentaryReference: { bookNumber: 40, chapter: 1, verse: 1 },
   highlighterReference: { bookNumber: 40, chapter: 1, verse: 1 },
@@ -147,8 +148,10 @@ export const modalState$ = observable({
   },
   openNoteListBottomSheet: () => {
     modalState$.isNoteListOpen.set(true);
+    // snapToIndex will be called by onLayout in the component
   },
   closeNoteListBottomSheet: () => {
     modalState$.isNoteListOpen.set(false);
+    modalState$.noteListRef.current?.close();
   },
 });

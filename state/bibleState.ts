@@ -1,8 +1,9 @@
 import { IBibleLink, IBookVerse, IBookVerseInterlinear, IStrongWord } from "@/types";
 import { getChapterTextRaw } from "@/utils/getVerseTextRaw";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { batch, observable } from "@legendapp/state";
 import { createRef } from "react";
+import { modalState$ } from "./modalState";
 
 type IBibleQuery = {
   book: string;
@@ -54,7 +55,7 @@ export const bibleState$ = observable({
   floatingNoteButtonPosition: { x: 0, y: 75 },
   strongWord: { text: "", code: "" } as IStrongWord,
   multipleStrongsData: { word: "", strongNumbers: [], verseData: {} },
-  noteListBottomSheetRef: createRef<BottomSheetModal>(),
+  noteListBottomSheetRef: createRef<BottomSheet>(),
   isSplitActived: false,
   currentHistoryIndex: 0,
   bibleQuery: {
@@ -106,10 +107,10 @@ export const bibleState$ = observable({
     bibleState$.multipleStrongsData.set(data);
   },
   openNoteListBottomSheet() {
-    bibleState$.noteListBottomSheetRef.current?.present();
+    modalState$.openNoteListBottomSheet();
   },
   closeNoteListBottomSheet() {
-    bibleState$.noteListBottomSheetRef.current?.dismiss();
+    modalState$.closeNoteListBottomSheet();
   },
   clearSelection: () => {
     bibleState$.currentVerse.set(0);
