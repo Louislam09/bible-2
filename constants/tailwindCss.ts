@@ -970,6 +970,7 @@ ${generateTextColorClasses()}
 .text-theme-text { color: var(--color-text); }
 .text-theme-border { color: var(--color-border); }
 .text-theme-notification { color: var(--color-notification); }
+.text-theme-chip { color: var(--color-chip); }
 
 .border-theme-primary { border-color: var(--color-primary); }
 .border-theme-background { border-color: var(--color-background); }
