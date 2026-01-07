@@ -76,6 +76,7 @@ type StoreState = {
   showReadingTime: boolean;
   appFolderUri: string;
   appFolderTreeUri: string;
+  notesViewMode: 'grid' | 'list';
 };
 
 const initialContext: StoreState = {
@@ -124,6 +125,7 @@ const initialContext: StoreState = {
   showReadingTime: true,
   appFolderUri: "",
   appFolderTreeUri: "",
+  notesViewMode: "grid",
 };
 
 export const storedData$ = observable(initialContext);

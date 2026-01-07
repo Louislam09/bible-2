@@ -50,6 +50,7 @@ const WebviewNotesList: React.FC<Props> = ({ theme }) => {
             theme,
             notes,
             fontSize: 16,
+            variant: 'compact',
         });
     }, [theme, notes, fontSize]);
 

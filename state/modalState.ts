@@ -21,6 +21,7 @@ export const modalState$ = observable({
   bibleSettingRef: createRef<BottomSheetModal>(),
   highlighterRef: createRef<BottomSheet>(),
   noteListRef: createRef<BottomSheet>(),
+  noteActionsRef: createRef<BottomSheet>(),
   searchWordOnDic: "",
   commentaryReference: { bookNumber: 40, chapter: 1, verse: 1 },
   highlighterReference: { bookNumber: 40, chapter: 1, verse: 1 },
@@ -39,6 +40,7 @@ export const modalState$ = observable({
   isBibleSettingOpen: false,
   isHighlighterOpen: false,
   isNoteListOpen: false,
+  isNoteActionsOpen: false,
   previewHighlight: { color: "", style: "" },
 
   openUserTooltip: () => {
@@ -153,5 +155,12 @@ export const modalState$ = observable({
   closeNoteListBottomSheet: () => {
     modalState$.isNoteListOpen.set(false);
     modalState$.noteListRef.current?.close();
+  },
+  openNoteActionsBottomSheet: () => {
+    modalState$.isNoteActionsOpen.set(true);
+  },
+  closeNoteActionsBottomSheet: () => {
+    modalState$.isNoteActionsOpen.set(false);
+    modalState$.noteActionsRef.current?.close();
   },
 });
