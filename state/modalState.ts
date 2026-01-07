@@ -161,6 +161,5 @@ export const modalState$ = observable({
   },
   closeNoteActionsBottomSheet: () => {
     modalState$.isNoteActionsOpen.set(false);
-    modalState$.noteActionsRef.current?.close();
   },
 });

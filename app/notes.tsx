@@ -478,6 +478,7 @@ const NotesPage = () => {
           await deleteNote(currentNote);
         }
         noteSelectors$.clearSelections();
+        modalState$.closeNoteActionsBottomSheet();
         bibleState$.toggleReloadNotes();
         ToastAndroid.show("Notas eliminadas", ToastAndroid.SHORT);
 
@@ -505,6 +506,7 @@ const NotesPage = () => {
       await syncSingleNote(currentNote);
     }
     noteSelectors$.clearSelections();
+    modalState$.closeNoteActionsBottomSheet();
     bibleState$.toggleReloadNotes();
     ToastAndroid.show("Notas sincronizadas", ToastAndroid.SHORT);
 
@@ -553,6 +555,7 @@ const NotesPage = () => {
               noteSelectors$.isSelectionMode.set(true);
             } else {
               noteSelectors$.clearSelections();
+              modalState$.closeNoteActionsBottomSheet();
             }
             break;
           case "toggleSelection":
@@ -575,7 +578,7 @@ const NotesPage = () => {
           case "clearSelections":
             console.log('clearSelections')
             noteSelectors$.clearSelections();
-            // close the bottom sheet
+            modalState$.closeNoteActionsBottomSheet();
             break;
           case "searchChange":
             // Search is handled in WebView, but we can track it if needed
@@ -701,6 +704,7 @@ const NotesPage = () => {
   const handleSelectAll = useCallback(() => {
     if (isAllSelected) {
       noteSelectors$.clearSelections();
+      modalState$.closeNoteActionsBottomSheet();
       webViewRef.current?.injectJavaScript(`
         if (typeof exitSelectionMode === 'function') {
           exitSelectionMode();
@@ -720,6 +724,7 @@ const NotesPage = () => {
 
   const handleCloseSelectionMode = useCallback(() => {
     noteSelectors$.clearSelections();
+    modalState$.closeNoteActionsBottomSheet();
     webViewRef.current?.injectJavaScript(`
       if (typeof exitSelectionMode === 'function') {
         exitSelectionMode();
