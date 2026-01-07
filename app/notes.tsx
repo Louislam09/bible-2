@@ -1,4 +1,5 @@
-import { singleScreenHeader } from "@/components/common/singleScreenHeader";
+import { singleScreenHeader, SingleScreenHeaderProps } from "@/components/common/singleScreenHeader";
+import Icon from "@/components/Icon";
 import ActionButton, { Backdrop } from "@/components/note/ActionButton";
 import NoteActionsBottomSheet from "@/components/note/NoteActionsBottomSheet";
 import ScreenWithAnimation from "@/components/ScreenWithAnimation";
@@ -6,7 +7,6 @@ import { Text, View } from "@/components/Themed";
 import TutorialWalkthrough from "@/components/TutorialWalkthrough";
 import { notesListHtmlTemplate, ViewMode } from "@/constants/notesListHtmlTemplate";
 import { useAlert } from "@/context/AlertContext";
-import { useBibleContext } from "@/context/BibleContext";
 import { storedData$ } from "@/context/LocalstoreContext";
 import { useNetwork } from "@/context/NetworkProvider";
 import { useMyTheme } from "@/context/ThemeContext";
@@ -32,18 +32,20 @@ import React, {
 import {
   AccessibilityInfo,
   ActivityIndicator,
+  Dimensions,
   Keyboard,
   View as RNView,
   StyleSheet,
-  ToastAndroid,
+  ToastAndroid
 } from "react-native";
 import WebView from "react-native-webview";
+
+const height = Dimensions.get('window').height;
 
 const NotesPage = () => {
   const { alertError, confirm, alertWarning } = useAlert();
   const { theme } = useMyTheme();
   const navigation = useNavigation();
-  const { currentBibleLongName } = useBibleContext();
   const { deleteNote, exportNotes, importNotes, getAllNotes } =
     useNoteService();
   const isSyncing = use$(() => bibleState$.isSyncingNotes.get());
@@ -622,18 +624,19 @@ const NotesPage = () => {
         {
           bottom: 25,
           name: "Plus",
-          color: theme.colors.notification,
-          action: onCreateNewNote,
-          hide: !showMoreOptions,
-          label: "Nueva nota",
-        },
-        {
-          bottom: 25,
-          name: "EllipsisVertical",
           color: "#008CBA",
-          action: showMoreOptionHandle,
-          hide: showMoreOptions,
+          // color: theme.colors.notification,
+          action: onCreateNewNote,
+          hide: false,
+          label: showMoreOptions ? "Nueva nota" : "",
         },
+        // {
+        //   bottom: 25,
+        //   name: "EllipsisVertical",
+        //   color: "#008CBA",
+        //   action: showMoreOptionHandle,
+        //   hide: showMoreOptions,
+        // },
         {
           bottom: 90,
           name: "Import",
@@ -733,12 +736,22 @@ const NotesPage = () => {
     `);
   }, []);
 
-  const screenOptions: any = useMemo(() => {
+  const screenOptions: SingleScreenHeaderProps = useMemo(() => {
     return {
       theme,
       title: "Mis Notas",
       titleIcon: "NotebookPen",
       goBack: () => { navigation.navigate(Screens.Dashboard as any) },
+      headerRightProps: {
+        headerRightIconColor: theme.colors.notification,
+        headerRightIcon: "EllipsisVertical",
+        onPress: () => {
+          showMoreOptionHandle();
+        },
+        style: {
+          opacity: 1,
+        },
+      }
     };
   }, [theme, navigation]);
 
@@ -775,6 +788,7 @@ const NotesPage = () => {
             {...createOptimizedWebViewProps({}, "static")}
           />
 
+          <View style={{ backgroundColor: 'transparent', width: 60, height: 60, zIndex: 1, position: 'absolute', bottom: 25, right: 20 }} />
           {!isSelectionActive &&
             noteActionButtons.map((item, index) => (
               <ActionButton
@@ -823,6 +837,7 @@ const getStyles = ({ colors }: TTheme) =>
     webView: {
       flex: 1,
       backgroundColor: "transparent",
+      zIndex: 1
     },
     loadingContainer: {
       flex: 1,
@@ -853,6 +868,7 @@ const getStyles = ({ colors }: TTheme) =>
       marginTop: 10,
       fontWeight: "bold",
     },
+
   });
 
 export default NotesPage;
