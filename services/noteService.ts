@@ -8,10 +8,6 @@ import {
   UPDATE_NOTE_BY_ID,
 } from "@/constants/queries";
 import { useDBContext } from "@/context/databaseContext";
-import { useNetwork } from "@/context/NetworkProvider";
-import { pb } from "@/globalConfig";
-import { authState$ } from "@/state/authState";
-import { notesState$ } from "@/state/notesState";
 import { TNote } from "@/types";
 import * as Crypto from 'expo-crypto';
 import * as DocumentPicker from "expo-document-picker";
@@ -22,9 +18,6 @@ import { useCallback } from "react";
 export const useNoteService = () => {
   const { mainBibleService } = useDBContext();
   const { executeSql } = mainBibleService;
-  const netInfo = useNetwork();
-  const { isConnected } = netInfo
-  const user = authState$.user.get();
 
   const getAllNotes = async (): Promise<TNote[]> => {
     try {
@@ -49,6 +42,7 @@ export const useNoteService = () => {
       return null;
     }
   };
+
   const getNotesByIds = async (ids: number[]): Promise<TNote[] | null> => {
     if (ids.length === 0) return null;
 
@@ -69,7 +63,7 @@ export const useNoteService = () => {
     }
   };
 
-  const createNote = async (data: Partial<TNote>, sendToCloud: boolean = true): Promise<boolean> => {
+  const createNote = async (data: Partial<TNote>): Promise<boolean> => {
     try {
       const newUUID = data.uuid || Crypto.randomUUID();
       const createdAt = data.created_at || new Date().toISOString();
@@ -79,19 +73,6 @@ export const useNoteService = () => {
         [newUUID, data.title, data.note_text, createdAt, updatedAt],
         "createNote"
       );
-      const createdNotes = {
-        id: 0,
-        title: data.title || '',
-        note_text: data.note_text || '',
-        uuid: newUUID,
-        created_at: createdAt,
-        updated_at: updatedAt,
-      }
-
-
-      if (isConnected && sendToCloud && user) {
-        await notesState$.addNote(createdNotes)
-      }
 
       return true;
     } catch (error) {
@@ -102,8 +83,7 @@ export const useNoteService = () => {
 
   const updateNote = useCallback(async (
     id: number | string,
-    data: Partial<TNote>,
-    sendToCloud: boolean = false
+    data: Partial<TNote>
   ): Promise<boolean> => {
     try {
       const updatedAt = data.updated_at || new Date().toISOString();
@@ -113,29 +93,16 @@ export const useNoteService = () => {
         "updateNote"
       );
 
-      if (isConnected && sendToCloud && user) {
-        const existing = await pb.collection("notes").getFirstListItem(`uuid = "${data.uuid}"`);
-        await notesState$.updateNote(existing.id, {
-          title: data.title || '',
-          note_text: data.note_text || '',
-        })
-      }
-
       return true;
     } catch (error: any) {
-      console.error(`Error al actualizar nota con ID ${data.uuid}:`, error.message, error.originalError);
+      console.error(`Error al actualizar nota con ID ${id}:`, error.message, error.originalError);
       return false;
     }
-  }, [isConnected, user]);
+  }, []);
 
   const deleteNote = async (data: Partial<TNote>): Promise<boolean> => {
     try {
       await executeSql(DELETE_NOTE, [data.id], "deleteNote");
-
-      if (isConnected && user) {
-        const existing = await pb.collection("notes").getFirstListItem(`uuid = "${data.uuid}"`);
-        await notesState$.deleteNote(existing.id)
-      }
 
       return true;
     } catch (error) {
@@ -182,13 +149,11 @@ export const useNoteService = () => {
         "Error al guardar nota en el dispositivo: " +
         (err instanceof Error ? err.message : String(err))
       );
-    } finally {
     }
   };
 
   const importNotes = async () => {
     try {
-
       const result = await DocumentPicker.getDocumentAsync({
         type: "application/json",
       });
@@ -207,14 +172,13 @@ export const useNoteService = () => {
       }
 
       importData.notes.forEach(async (note: TNote) => {
-        await createNote(note, false);
+        await createNote(note);
       });
     } catch (err) {
       console.log(
         "Error al importar notas: " +
         (err instanceof Error ? err.message : String(err))
       );
-    } finally {
     }
   };
 

@@ -191,7 +191,7 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
       const verseToAdd = (await copyToClipboard(item, shouldReturn)) as string;
       bibleState$.handleSelectVerseForNote(verseToAdd);
       bibleState$.clearSelection();
-      if (!bibleState$.currentNoteId.get()) bibleState$.openNoteListBottomSheet();
+      if (!bibleState$.currentNoteId.get()) modalState$.openNoteListBottomSheet();
       return;
     }
 
@@ -204,7 +204,7 @@ const BibleTop: FC<BibleTopProps> = ({ }) => {
     const verseToAdd = (await copyToClipboard(value, shouldReturn)) as string;
     bibleState$.handleSelectVerseForNote(verseToAdd);
     bibleState$.clearSelection();
-    if (!bibleState$.currentNoteId.get()) bibleState$.openNoteListBottomSheet();
+    if (!bibleState$.currentNoteId.get()) modalState$.openNoteListBottomSheet();
   }, []);
 
   // const onComparar = useCallback((item: IBookVerse) => {

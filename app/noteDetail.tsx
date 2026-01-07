@@ -47,6 +47,7 @@ type NoteDetailProps = {};
 type NoteDetailParams = { noteId: number | null; isNewNote: boolean };
 
 const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
+  const { alertError } = useAlert();
   const { theme } = useMyTheme();
   const navigation = useNavigation();
   const router = useRouter();
@@ -370,8 +371,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
           title: noteContent.title,
           note_text: noteContent.content,
           uuid: noteInfo?.uuid,
-        },
-        true
+        }
       );
 
       if (success) {

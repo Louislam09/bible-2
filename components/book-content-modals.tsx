@@ -28,6 +28,7 @@ const BookContentModals = () => {
   const isPlayerOpened = use$(() => audioState$.isPlayerOpened.get());
   const commentaryReference = use$(() => modalState$.commentaryReference.get());
   const isHighlighterOpen = use$(() => modalState$.isHighlighterOpen.get());
+  const isNoteListOpen = use$(() => modalState$.isNoteListOpen.get());
 
   // Modal open state flags for conditional rendering (only for WebView-based modals - most expensive)
   const isBibleSettingOpen = use$(() => modalState$.isBibleSettingOpen.get());
@@ -75,8 +76,7 @@ const BookContentModals = () => {
         <HighlighterBottomSheet />
       )}
 
-      {/* Simpler modals - always mounted (less expensive) */}
-      <NoteNameListBottomModal />
+      {isNoteListOpen && <NoteNameListBottomModal />}
       <ExpandableChooseReference />
       {isPlayerOpened && <AudioPlayerExpandedSheet />}
     </>

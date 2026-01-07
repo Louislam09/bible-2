@@ -350,8 +350,7 @@ const NoteDetailDom: React.FC<NoteDetailProps> = ({ }) => {
           title: noteContent.title,
           note_text: noteContent.content,
           uuid: noteInfo?.uuid,
-        },
-        true
+        }
       );
 
       if (success) {

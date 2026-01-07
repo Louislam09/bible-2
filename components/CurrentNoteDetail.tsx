@@ -181,8 +181,7 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
           title: noteContent.title,
           note_text: noteContent.content,
           uuid: noteInfo?.uuid,
-        },
-        true
+        }
       );
 
       if (success) {

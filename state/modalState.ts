@@ -37,6 +37,7 @@ export const modalState$ = observable({
   isMultipleStrongsOpen: false,
   isBibleSettingOpen: false,
   isHighlighterOpen: false,
+  isNoteListOpen: false,
   previewHighlight: { color: "", style: "" },
 
   openUserTooltip: () => {
@@ -143,5 +144,11 @@ export const modalState$ = observable({
   closeHighlighterBottomSheet: () => {
     modalState$.isHighlighterOpen.set(false);
     modalState$.highlighterRef.current?.close();
+  },
+  openNoteListBottomSheet: () => {
+    modalState$.isNoteListOpen.set(true);
+  },
+  closeNoteListBottomSheet: () => {
+    modalState$.isNoteListOpen.set(false);
   },
 });

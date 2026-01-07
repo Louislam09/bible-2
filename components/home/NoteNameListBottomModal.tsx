@@ -16,6 +16,7 @@ import {
 } from "react-native";
 import { Text, View } from "../Themed";
 import BottomModal from "../BottomModal";
+import { modalState$ } from "@/state/modalState";
 
 type NoteNameListProps = {
   handleSnapPress?: (index: number) => void;
@@ -31,6 +32,13 @@ const NoteNameListBottomModal: FC<NoteNameListProps> = ({ handleSnapPress }) => 
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const fontSize = storedData$.fontSize.get();
+  // Present modal when component mounts
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      bibleState$.openNoteListBottomSheet();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   const fetchNotes = useCallback(async () => {
     if (!myBibleDB || !executeSql) return;
@@ -49,18 +57,18 @@ const NoteNameListBottomModal: FC<NoteNameListProps> = ({ handleSnapPress }) => 
 
   useEffect(() => {
     fetchNotes();
-    return () => { };
-  }, [fetchNotes]);
+  }, []);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchNotes();
-  }, [fetchNotes]);
+  }, []);
 
   const onSelectNote = useCallback(
     (id: number) => {
       bibleState$.currentNoteId.set(id);
       bibleState$.closeNoteListBottomSheet();
+      modalState$.closeNoteListBottomSheet();
       if (handleSnapPress) {
         handleSnapPress(0); // Close the bottom sheet
       }
@@ -180,7 +188,7 @@ const NoteNameListBottomModal: FC<NoteNameListProps> = ({ handleSnapPress }) => 
       startAT={0}
       ref={bibleState$.noteListBottomSheetRef.get()}
     >
-      <View style={styles.container}>
+      <View style={styles.container} >
         {loading && !data ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={theme.colors.notification} />
