@@ -573,7 +573,9 @@ const NotesPage = () => {
             noteSelectors$.selectAll(data.selectedIds);
             break;
           case "clearSelections":
+            console.log('clearSelections')
             noteSelectors$.clearSelections();
+            // close the bottom sheet
             break;
           case "searchChange":
             // Search is handled in WebView, but we can track it if needed
