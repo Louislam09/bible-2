@@ -7,6 +7,7 @@ import { getBookDetail } from "./BookNames";
 import { renameLongBookName } from "@/utils/extractVersesInfo";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { storedData$ } from "@/context/LocalstoreContext";
+import { lucideIcons } from "@/utils/lucideIcons";
 
 export const highlightedListHtmlTemplate = (
   highlights: THighlightedVerse[],
@@ -115,8 +116,31 @@ export const highlightedListHtmlTemplate = (
       </style>
     </head>
     <body class="p-4 m-0 text-theme-text bg-theme-background select-none">
+      <!-- Header -->
+      <div class="sticky top-0 bg-theme-background z-10 pb-4 mb-2">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="w-6 h-6" style="color:  #4dcd8d;">${lucideIcons.highlighter}</span>
+          <h1 class="text-xl font-bold text-theme-text">Mis Destacados</h1>
+          <span class="text-xs font-medium px-2 py-0.5 rounded-full" 
+                style="background: rgba(77, 205, 141, 0.2); color: #4dcd8d;">
+            ${highlights.length}
+          </span>
+        </div>
+        <p class="text-sm text-theme-text/50">Versículos resaltados durante tu estudio</p>
+      </div>
+      
       <div id="cards-container" class="pb-8">
-        ${cardsHtml || '<div class="text-center py-10 text-theme-text/60">No hay versículos destacados</div>'}
+        ${cardsHtml || `
+          <div class="flex flex-col items-center justify-center py-16 px-8 text-center">
+            <div class="w-20 h-20 rounded-2xl flex items-center justify-center mb-5" style="background: rgba(77, 205, 141, 0.15);">
+              <svg class="w-10 h-10" style="color: #4dcd8d;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+              </svg>
+            </div>
+            <p class="text-theme-text font-semibold text-lg mb-2">Sin destacados aún</p>
+            <p class="text-sm text-theme-text/50 max-w-xs">Selecciona texto y usa el resaltador para marcar versículos importantes</p>
+          </div>
+        `}
       </div>
       
       <script>

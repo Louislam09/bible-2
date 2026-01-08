@@ -113,8 +113,33 @@ export const favoriteListHtmlTemplate = (
       </style>
     </head>
     <body class="p-4 m-0 text-theme-text bg-theme-background select-none">
+      <!-- Header -->
+      <div class="sticky top-0 bg-theme-background z-10 pb-4 mb-2">
+        <div class="flex items-center gap-2 mb-1">
+          <svg class="w-6 h-6" style="color: #fedf75;" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          </svg>
+          <h1 class="text-xl font-bold text-theme-text">Mis Favoritos</h1>
+          <span class="text-xs font-medium px-2 py-0.5 rounded-full" 
+                style="background: rgba(254, 223, 117, 0.2); color: #fedf75;">
+            ${favorites.length}
+          </span>
+        </div>
+        <p class="text-sm text-theme-text/50">Versículos guardados para lectura rápida</p>
+      </div>
+      
       <div id="cards-container" class="pb-8">
-        ${cardsHtml || '<div class="text-center py-10 text-theme-text/60">No hay versículos favoritos</div>'}
+        ${cardsHtml || `
+          <div class="flex flex-col items-center justify-center py-16 px-8 text-center">
+            <div class="w-20 h-20 rounded-2xl flex items-center justify-center mb-5" style="background: rgba(254, 223, 117, 0.15);">
+              <svg class="w-10 h-10" style="color: #fedf75;" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+              </svg>
+            </div>
+            <p class="text-theme-text font-semibold text-lg mb-2">Sin favoritos aún</p>
+            <p class="text-sm text-theme-text/50 max-w-xs">Marca versículos como favoritos tocando el icono de estrella mientras lees</p>
+          </div>
+        `}
       </div>
       
       <script>

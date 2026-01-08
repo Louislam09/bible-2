@@ -1,17 +1,11 @@
-import ActionButton, { Backdrop } from "@/components/note/ActionButton";
 import { View as ThemedView } from "@/components/Themed";
-import Icon from "@/components/Icon";
 import { getBookDetail } from "@/constants/BookNames";
 import { favoriteListHtmlTemplate } from "@/constants/favoriteListTemplate";
 import { useAlert } from "@/context/AlertContext";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
-import { storedData$ } from "@/context/LocalstoreContext";
-import { useNetwork } from "@/context/NetworkProvider";
 import { useMyTheme } from "@/context/ThemeContext";
-import { useSyncFavorites } from "@/hooks/useSyncFavorites";
-import { TFavoriteVerse, useFavoriteVerseService } from "@/services/favoriteVerseService";
-import { authState$ } from "@/state/authState";
+import { useFavoriteVerseService } from "@/services/favoriteVerseService";
 import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, Screens, TTheme } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
@@ -20,30 +14,21 @@ import { showToast } from "@/utils/showToast";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
 import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "@react-navigation/native";
-import { Stack, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  Keyboard,
   StyleSheet,
-  TouchableOpacity,
   View
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WebView from "react-native-webview";
 
 type TListVerse = {};
 
 const FavoriteList = ({ }: TListVerse) => {
-  const { confirm, alertWarning } = useAlert();
-  const [filterData, setFilterData] = useState<(IVerseItem & { id: number; uuid?: string })[]>(
-    []
-  );
-  const [originalData, setOriginalData] = useState<
-    (IVerseItem & { id: number; uuid?: string })[]
-  >([]);
-  const [loading, setLoading] = useState(true);
+  const { confirm } = useAlert();
+  const [filterData, setFilterData] = useState<(IVerseItem & { id: number; uuid?: string })[]>([]);
+  const [originalData, setOriginalData] = useState<(IVerseItem & { id: number; uuid?: string })[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showMoreOptions, setShowMoreOptions] = useState(false);
 
   const webViewRef = useRef<WebView>(null);
 
@@ -51,21 +36,13 @@ const FavoriteList = ({ }: TListVerse) => {
   const { theme } = useMyTheme();
   const navigation = useNavigation();
   const router = useRouter();
-  const insets = useSafeAreaInsets();
   const styles = getStyles(theme);
-  const netInfo = useNetwork();
-  const { isConnected } = netInfo;
 
-  const { toggleFavoriteVerse, currentBibleLongName, orientation, currentBibleVersion } =
-    useBibleContext();
+  const { toggleFavoriteVerse, currentBibleLongName, currentBibleVersion } = useBibleContext();
   const { installedBibles } = useDBContext();
-  const { addFavoriteVerse, getAllFavoriteVerses, removeFavoriteVerse } =
-    useFavoriteVerseService();
-  const { syncFavorites } = useSyncFavorites();
+  const { getAllFavoriteVerses } = useFavoriteVerseService();
   
   const reloadFavorites = use$(() => bibleState$.reloadFavorites.get());
-  const isSyncing = use$(() => bibleState$.isSyncingFavorites.get());
-  const user = use$(() => storedData$.user.get()) || null;
 
   // Get current Bible version short name
   const currentVersionShortName = useMemo(() => {
@@ -73,43 +50,25 @@ const FavoriteList = ({ }: TListVerse) => {
     return currentBible?.shortName || currentBibleLongName || "NIV";
   }, [installedBibles, currentBibleVersion, currentBibleLongName]);
 
-  // Format relative time (e.g., "2 days ago") - not used for favorites but kept for template compatibility
-  const formatTimeAgo = useCallback((timestamp: number | string): string => {
+  // Format relative time - not used for favorites but kept for template compatibility
+  const formatTimeAgo = useCallback((_timestamp: number | string): string => {
     return "";
   }, []);
 
-  // Calculate if scroll position is beyond threshold for showing top button
-
   const fetchData = useCallback(async () => {
     try {
-      setLoading(true);
       const verses = await getAllFavoriteVerses();
       setOriginalData(verses ?? []);
       setFilterData(verses ?? []);
     } catch (error) {
       console.error("Error fetching favorite verses:", error);
       showToast("Error al cargar versículos favoritos");
-    } finally {
-      setLoading(false);
     }
   }, [getAllFavoriteVerses]);
 
   useEffect(() => {
     fetchData();
   }, [reloadFavorites]);
-
-  // Auto-sync favorites on screen load (background operation)
-  useEffect(() => {
-    if (user && isConnected && !isSyncing) {
-      syncFavorites();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Run once on mount
-
-  // Track unsynced favorites (favorites without uuid are not yet synced to cloud)
-  const unsyncedCount = useMemo(() => {
-    return filterData.filter(fav => !fav.uuid).length;
-  }, [filterData]);
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -186,48 +145,6 @@ const FavoriteList = ({ }: TListVerse) => {
     router.push({ pathname: "/quote", params: { text: verseText, reference } });
   }, [router]);
 
-
-  const handleSyncPress = useCallback(async () => {
-    if (!user) {
-      alertWarning(
-        "Sincronización requerida",
-        "Debes iniciar sesión para sincronizar tus versículos favoritos con la nube",
-      );
-      return;
-    }
-
-    if (!isConnected) {
-      alertWarning(
-        "Sin conexión",
-        "Necesitas conexión a internet para sincronizar",
-      );
-      return;
-    }
-
-    try {
-      const result = await syncFavorites();
-      if (result.success) {
-        showToast(`Sincronizado: ${result.synced} favoritos`);
-      } else {
-        showToast("Error al sincronizar algunos favoritos");
-      }
-    } catch (error) {
-      console.error("Error syncing favorites:", error);
-      showToast("Error al sincronizar favoritos");
-    } finally {
-      setShowMoreOptions(false);
-    }
-  }, [user, isConnected, syncFavorites, alertWarning]);
-
-  const showMoreOptionHandle = useCallback(() => {
-    setShowMoreOptions((prev) => !prev);
-  }, []);
-
-  const dismiss = useCallback(() => {
-    Keyboard.dismiss();
-    setShowMoreOptions(false);
-  }, []);
-
   // Handle WebView messages
   const handleWebViewMessage = useCallback(
     (event: any) => {
@@ -283,55 +200,12 @@ const FavoriteList = ({ }: TListVerse) => {
       currentVersionShortName,
       formatTimeAgo,
       16,
-      undefined // selectedFont - can be added later if needed
+      undefined
     );
-  }, [filterData, theme, currentVersionShortName,]);
-
-  const actionButtons = useMemo(() => {
-    const buttons = [
-      {
-        bottom: 25,
-        name: "EllipsisVertical",
-        color: "#008CBA",
-        action: showMoreOptionHandle,
-        hide: showMoreOptions,
-        label: "",
-      },
-      {
-        bottom: 25,
-        name: isSyncing ? "Loader" : "CloudUpload",
-        color: unsyncedCount > 0 ? theme.colors.notification : "#45a049",
-        action: handleSyncPress,
-        hide: !showMoreOptions,
-        label: isSyncing ? "Sincronizando..." : `Sincronizar${unsyncedCount > 0 ? ` (${unsyncedCount})` : ''}`,
-        isSync: true,
-        disabled: isSyncing,
-      },
-      {
-        bottom: 90,
-        name: "ChevronDown",
-        color: theme.colors.notification,
-        action: showMoreOptionHandle,
-        hide: !showMoreOptions,
-        label: "Cerrar menú",
-      },
-    ];
-
-    return buttons.filter((item) => !item.hide);
-  }, [showMoreOptions, theme, isSyncing, unsyncedCount, handleSyncPress]);
+  }, [filterData, theme, currentVersionShortName]);
 
   return (
-    <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-      <Stack.Screen
-        options={{
-          headerShown: true,
-          title: "Mis versículos favoritos",
-          headerTitleStyle: { color: theme.colors.text },
-          headerStyle: { backgroundColor: theme.colors.background },
-        }}
-      />
-
-      <Backdrop visible={showMoreOptions} onPress={dismiss} theme={theme} />
+    <ThemedView style={styles.container}>
       <WebView
         ref={webViewRef}
         originWhitelist={["*"]}
@@ -364,15 +238,11 @@ const FavoriteList = ({ }: TListVerse) => {
         }}
         {...createOptimizedWebViewProps({}, "static")}
       />
-
-      {actionButtons.map((item, index) => (
-        <ActionButton key={index} theme={theme} item={item} index={index} />
-      ))}
     </ThemedView>
   );
 };
 
-const getStyles = ({ colors, dark }: TTheme) =>
+const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -381,54 +251,6 @@ const getStyles = ({ colors, dark }: TTheme) =>
     webView: {
       flex: 1,
       backgroundColor: "transparent",
-    },
-    headerCompositeContainer: {
-      paddingHorizontal: 16,
-      paddingTop: 12,
-      paddingBottom: 8,
-      backgroundColor: colors.background,
-    },
-    searchContainer: {
-      flexDirection: "row",
-      alignItems: "center",
-      borderRadius: 10,
-      marginVertical: 12,
-      borderWidth: 1,
-      width: "100%",
-      height: 48,
-      backgroundColor: colors.notification + "20",
-      borderColor: colors.text,
-    },
-    searchIcon: {
-      marginRight: 8,
-    },
-    searchInput: {
-      flex: 1,
-      color: colors.text,
-      fontSize: 16,
-      padding: 8,
-      fontWeight: "400",
-    },
-    chapterHeader: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: 8,
-    },
-    chapterHeaderTitle: {
-      fontSize: 18,
-      fontWeight: "bold",
-      color: colors.text,
-    },
-    selectButton: {
-      paddingHorizontal: 12,
-      paddingVertical: 6,
-      borderRadius: 16,
-      backgroundColor: colors.notification + "30",
-    },
-    selectButtonText: {
-      color: colors.notification,
-      fontWeight: "500",
     },
   });
 
