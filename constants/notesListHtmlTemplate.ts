@@ -519,7 +519,7 @@ export const notesListHtmlTemplate = ({
     </div>
 
     <!-- Notes Container (Grid or List) -->
-    <div class="notes-container ${viewMode}-view pb-24 pt-2" id="notes-container">
+    <div class="notes-container ${viewMode}-view pt-2" id="notes-container" style="padding-bottom: 45vh;">
         ${notes.length > 0 ? notesHtml : ''}
     </div>
     

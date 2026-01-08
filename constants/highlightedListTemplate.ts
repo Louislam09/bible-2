@@ -129,7 +129,7 @@ export const highlightedListHtmlTemplate = (
         <p class="text-sm text-theme-text/50">Versículos resaltados durante tu estudio</p>
       </div>
       
-      <div id="cards-container" class="pb-8">
+      <div id="cards-container" style="padding-bottom: 45vh;">
         ${cardsHtml || `
           <div class="flex flex-col items-center justify-center py-16 px-8 text-center">
             <div class="w-20 h-20 rounded-2xl flex items-center justify-center mb-5" style="background: rgba(77, 205, 141, 0.15);">

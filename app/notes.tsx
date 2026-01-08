@@ -944,7 +944,6 @@ const getStyles = ({ colors }: TTheme) =>
       marginTop: 10,
       fontWeight: "bold",
     },
-
   });
 
 export default NotesPage;
