@@ -9,7 +9,7 @@ import useDebounce from "@/hooks/useDebounce";
 import { useNoteService } from "@/services/noteService";
 import { bibleState$ } from "@/state/bibleState";
 import { EViewMode, TNote, TTheme } from "@/types";
-import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
+import { formatDateShortDayMonth, formatNoteTitleDate } from "@/utils/formatDateShortDayMonth";
 import { use$ } from "@legendapp/state/react";
 import React, {
   useCallback,
@@ -105,10 +105,8 @@ const CurrentNoteDetail: React.FC<any> = ({ }) => {
         await onUpdate(noteId, true);
         return;
       }
-      const date = new Date().toLocaleDateString();
-      const uniqueSuffix = Date.now().toString(36).slice(-4);
       if (!noteContent.title) {
-        noteContent.title = `${defaultTitle} ${date} - ${uniqueSuffix}`;
+        noteContent.title = formatNoteTitleDate();
       }
       const success = await createNote({
         title: noteContent.title,

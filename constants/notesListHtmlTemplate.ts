@@ -17,6 +17,7 @@ interface NotesListTemplateProps {
     selectedNoteIds?: number[];
     viewMode?: ViewMode;
     variant?: NotesListVariant;
+    unsyncedNoteIds?: number[];
 }
 
 const notesListStyles = (theme: TTheme) => {
@@ -185,6 +186,23 @@ const notesListStyles = (theme: TTheme) => {
                 grid-template-columns: 1fr;
             }
         }
+        
+        /* Unsynced badge styles */
+        .unsynced-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            background: ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'};
+            color: ${isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.4)'};
+        }
+        
+        .unsynced-badge svg {
+            width: 12px;
+            height: 12px;
+        }
     </style>
   `;
 };
@@ -240,6 +258,7 @@ export const notesListHtmlTemplate = ({
     selectedNoteIds = [],
     viewMode = 'grid',
     variant = 'full',
+    unsyncedNoteIds = [],
 }: NotesListTemplateProps): string => {
     const themeSchema = theme.dark ? "dark" : "light";
     const isDark = theme.dark;
@@ -260,9 +279,16 @@ export const notesListHtmlTemplate = ({
 
     const notesHtml = notes.map((note) => {
         const isSelected = selectedNoteIds.includes(note.id);
+        const isUnsynced = unsyncedNoteIds.includes(note.id);
         const title = escapeHtml(note.title || 'Sin título');
         const preview = escapeHtml(getPreviewText(note.note_text));
         const date = formatDate(note.updated_at || note.created_at);
+
+        // Cloud-off SVG icon for unsynced notes
+        const cloudOffIcon = `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.707 2.707a1 1 0 011.414 0l16.97 16.97a1 1 0 01-1.414 1.414l-16.97-16.97a1 1 0 010-1.414z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5.144 5.144A7.5 7.5 0 003 10.5a5.25 5.25 0 001.5 10.25h11.25m3.75-3.75A5.25 5.25 0 0018 6.75a7.5 7.5 0 00-12.856-1.606"/>
+        </svg>`;
 
         return `
             <div class="note-card rounded-xl p-4 cursor-pointer ${isSelected ? 'selected' : ''}"
@@ -305,12 +331,20 @@ export const notesListHtmlTemplate = ({
                     </p>
                 </div>
                 
-                <!-- Date -->
-                <div class="note-date flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5" style="color: ${accentColor};" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
-                    </svg>
-                    <span class="text-xs" style="color: ${mutedText};">${date}</span>
+                <!-- Date and Sync Status -->
+                <div class="note-date flex items-center gap-2 flex-wrap">
+                    <div class="flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5" style="color: ${accentColor};" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
+                        </svg>
+                        <span class="text-xs" style="color: ${mutedText};">${date}</span>
+                    </div>
+                    ${isUnsynced ? `
+                    <div class="unsynced-badge" title="No sincronizada con la nube">
+                        ${cloudOffIcon}
+                        <span>Local</span>
+                    </div>
+                    ` : ''}
                 </div>
             </div>
         `;

@@ -98,7 +98,6 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
   const checkIfAllTablesExists = async (db: SQLite.SQLiteDatabase) => {
     const allTablesExist = await Promise.all(MY_TABLES.map(async (table) => {
       const tableExists = await checkTableExists(db, table.name);
-      // console.log(`${tableExists ? "✅" : "❌"} ${table.name} table exists: ${tableExists}`)
       return tableExists;
     }));
     return allTablesExist.every(exists => exists);
@@ -110,8 +109,14 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
     columnName: string,
     columnType: string
   ) {
-    const createColumnQuery = `ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${columnType}`;
     try {
+      // First check if the table exists
+      const tableExists = await checkTableExists(db, tableName);
+      if (!tableExists) {
+        // Table doesn't exist, skip column migration
+        return;
+      }
+
       const statement = await db.prepareAsync(`PRAGMA table_info(${tableName});`);
       const result = await statement.executeAsync([]);
       const columns = await result.getAllAsync();
@@ -121,12 +126,13 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
       await statement.finalizeAsync();
 
       if (!hasColumn) {
+        const createColumnQuery = `ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${columnType}`;
         await db.execAsync(createColumnQuery);
       }
 
     } catch (error) {
       console.error(
-        `Error creating column ${createColumnQuery} In ${db.databasePath} :`,
+        `Error in checkAndCreateColumn for ${tableName}.${columnName}:`,
         error
       );
     }
@@ -207,9 +213,15 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
         }
 
         await createTables(db, isMainBible);
-        await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
         storedData$.dbTableCreated.set([...dbTableCreated, dbName.shortName]);
       }
+
+      // Column migrations - always run (checkAndCreateColumn checks if column exists first)
+      // These ensure schema updates are applied to existing installs
+      await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
+      await checkAndCreateColumn(db, "notes", "uuid", "TEXT");
+      await checkAndCreateColumn(db, "notes", "updated_at", "TIMESTAMP");
+      await checkAndCreateColumn(db, "notes", "deleted_at", "TIMESTAMP");
 
       if (isMounted.current) {
         setDatabase(db);

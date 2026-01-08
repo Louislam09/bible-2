@@ -32,7 +32,9 @@ import { useQuickActions } from "@/hooks/useQuickActions";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import * as SplashScreen from 'expo-splash-screen';
 
+SplashScreen.preventAutoHideAsync()
 const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
 
 TaskManager.defineTask(
@@ -90,6 +92,7 @@ const screenAnimations: TScreensName = {
   [Screens.Commentary]: "slide_from_right",
   [Screens.AIBibleGuide]: "slide_from_right",
   [Screens.Tutorials]: "slide_from_right",
+  [Screens.Highlighted]: "slide_from_right",
 };
 
 // Memoized SafeContentView to prevent unnecessary re-renders

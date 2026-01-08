@@ -297,6 +297,7 @@ export type TNote = {
   uuid: string;
   created_at: string;
   updated_at?: string;
+  deleted_at?: string;
 };
 
 export enum EViewMode {

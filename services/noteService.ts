@@ -1,13 +1,15 @@
 import {
-  DELETE_NOTE,
   DELETE_NOTE_ALL,
   GET_ALL_NOTE,
   GET_NOTE_BY_ID,
   GET_NOTES_BY_IDS,
   INSERT_INTO_NOTE,
+  SOFT_DELETE_NOTE,
   UPDATE_NOTE_BY_ID,
 } from "@/constants/queries";
 import { useDBContext } from "@/context/databaseContext";
+import { pb } from "@/globalConfig";
+import { authState$ } from "@/state/authState";
 import { TNote } from "@/types";
 import * as Crypto from 'expo-crypto';
 import * as DocumentPicker from "expo-document-picker";
@@ -102,7 +104,38 @@ export const useNoteService = () => {
 
   const deleteNote = async (data: Partial<TNote>): Promise<boolean> => {
     try {
-      await executeSql(DELETE_NOTE, [data.id], "deleteNote");
+      const deletedAt = new Date().toISOString();
+      
+      // Soft delete locally - set deleted_at timestamp instead of removing
+      await executeSql(
+        SOFT_DELETE_NOTE,
+        [deletedAt, deletedAt, data.id],
+        "softDeleteNote"
+      );
+
+      // If note has UUID and user is authenticated, also soft delete in cloud
+      if (data.uuid) {
+        const user = authState$.user.get();
+        if (user) {
+          try {
+            // Find the cloud note by UUID
+            const cloudNote = await pb.collection("notes").getFirstListItem(
+              `uuid = "${data.uuid}" && user = "${user.id}"`
+            ).catch(() => null);
+
+            if (cloudNote) {
+              // Soft delete in cloud by setting deleted_at
+              await pb.collection("notes").update(cloudNote.id, {
+                deleted_at: deletedAt,
+              });
+              console.log(`[Delete] Soft deleted cloud note with UUID: ${data.uuid}`);
+            }
+          } catch (cloudError) {
+            // Log but don't fail - local delete already succeeded
+            console.error(`[Delete] Error soft deleting from cloud:`, cloudError);
+          }
+        }
+      }
 
       return true;
     } catch (error) {

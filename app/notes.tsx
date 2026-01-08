@@ -32,15 +32,13 @@ import React, {
 import {
   AccessibilityInfo,
   ActivityIndicator,
-  Dimensions,
   Keyboard,
   View as RNView,
   StyleSheet,
-  ToastAndroid
+  ToastAndroid,
+  TouchableOpacity
 } from "react-native";
 import WebView from "react-native-webview";
-
-const height = Dimensions.get('window').height;
 
 const NotesPage = () => {
   const { alertError, confirm, alertWarning } = useAlert();
@@ -82,6 +80,14 @@ const NotesPage = () => {
     getNotes();
   }, [reloadNotes]);
 
+  // Auto-sync notes on screen load (background operation, does not block local-first behavior)
+  useEffect(() => {
+    if (user && isConnected && !isSyncing) {
+      syncNotes();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run once on mount
+
   // Open bottom sheet when selection mode becomes active
   useEffect(() => {
     if (isSelectionActive) {
@@ -92,6 +98,11 @@ const NotesPage = () => {
   const noteList: TNote[] = useMemo(() => {
     return filterData;
   }, [filterData]);
+
+  // Track unsynced notes (notes without uuid are not yet synced to cloud)
+  const unsyncedNoteIds = useMemo(() => {
+    return noteList.filter(note => !note.uuid).map(n => n.id);
+  }, [noteList]);
 
   const onCreateNewNote = useCallback(() => {
     navigation.navigate(noteDetailScreen, { noteId: null, isNewNote: true });
@@ -615,8 +626,9 @@ const NotesPage = () => {
       isSelectionMode: false, // Always start with selection mode off, WebView manages it
       selectedNoteIds: [],
       viewMode,
+      unsyncedNoteIds, // Pass unsynced note IDs to show cloud-off badge
     });
-  }, [noteList, theme, viewMode]);
+  }, [noteList, theme, viewMode, unsyncedNoteIds]);
 
   const noteActionButtons = useMemo(
     () =>
@@ -736,6 +748,76 @@ const NotesPage = () => {
     `);
   }, []);
 
+  // Handle sync button press
+  const handleSyncPress = useCallback(() => {
+    if (!user) {
+      alertWarning("Sincronizar notas", "Debes iniciar sesión para sincronizar tus notas.");
+      return;
+    }
+    if (!isConnected) {
+      alertWarning("Sin conexión", "No hay conexión a Internet para sincronizar las notas.");
+      return;
+    }
+    syncNotes();
+  }, [user, isConnected, syncNotes, alertWarning]);
+
+  // Custom header right component with sync button and menu button
+  const HeaderRightComponent = useCallback(() => (
+    <RNView style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+      {/* Sync Button with Badge */}
+      <TouchableOpacity
+        onPress={handleSyncPress}
+        disabled={isSyncing}
+        style={{
+          padding: 8,
+          opacity: isSyncing ? 0.5 : 1,
+        }}
+        accessibilityLabel={`Sincronizar notas${unsyncedNoteIds.length > 0 ? `, ${unsyncedNoteIds.length} sin sincronizar` : ''}`}
+      >
+        <RNView>
+          <Icon
+            name={unsyncedNoteIds.length > 0 ? "CloudUpload" : "Cloud"}
+            size={24}
+            color={unsyncedNoteIds.length > 0 ? theme.colors.notification : theme.colors.text}
+          />
+          {unsyncedNoteIds.length > 0 && (
+            <RNView
+              style={{
+                position: 'absolute',
+                top: -4,
+                right: -4,
+                backgroundColor: theme.colors.notification,
+                borderRadius: 10,
+                minWidth: 18,
+                height: 18,
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingHorizontal: 4,
+              }}
+            >
+              <Text style={{ color: '#fff', fontSize: 11, fontWeight: 'bold' }}>
+                {unsyncedNoteIds.length > 99 ? '99+' : unsyncedNoteIds.length}
+              </Text>
+            </RNView>
+          )}
+        </RNView>
+      </TouchableOpacity>
+
+      {/* Menu Button */}
+      <TouchableOpacity
+        onPress={showMoreOptionHandle}
+        style={{ padding: 8 }}
+        accessibilityLabel="Más opciones"
+      >
+        <Icon
+          name="EllipsisVertical"
+          size={24}
+          color={theme.colors.notification}
+        />
+      </TouchableOpacity>
+    </RNView>
+  ), [handleSyncPress, isSyncing, unsyncedNoteIds.length, theme, showMoreOptionHandle]);
+
   const screenOptions: SingleScreenHeaderProps = useMemo(() => {
     return {
       theme,
@@ -744,16 +826,10 @@ const NotesPage = () => {
       goBack: () => { navigation.navigate(Screens.Dashboard as any) },
       headerRightProps: {
         headerRightIconColor: theme.colors.notification,
-        headerRightIcon: "EllipsisVertical",
-        onPress: () => {
-          showMoreOptionHandle();
-        },
-        style: {
-          opacity: 1,
-        },
+        RightComponent: HeaderRightComponent,
       }
     };
-  }, [theme, navigation]);
+  }, [theme, navigation, HeaderRightComponent]);
 
   return (
     <Fragment>

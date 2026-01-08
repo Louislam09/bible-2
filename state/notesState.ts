@@ -34,12 +34,13 @@ export const notesState$ = observable<NotesState>({
         throw new Error("No hay usuario autenticado para obtener notas");
       }
 
-      const result = await pb.collection("notes").getList(1, 100, {
+      // Use getFullList to fetch ALL notes without pagination limits
+      const result = await pb.collection("notes").getFullList({
         filter: `user = "${user.id}"`,
-        sort: "-created",
+        sort: "-updated",
       });
 
-      const notes = result.items.map((item) => ({
+      const notes = result.map((item) => ({
         id: item.id as any,
         title: item.title,
         note_text: item.note_text,

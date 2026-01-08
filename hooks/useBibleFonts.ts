@@ -24,6 +24,7 @@ import useLoadTailwindScript from "./useLoadTailwindScript";
 import useLoadLexicalBundle from "./useLoadLexicalBundle";
 import useLoadFonts from "./useLoadFonts";
 import useLoadDrivejs from "./useLoadDrivejs";
+import * as SplashScreen from 'expo-splash-screen';
 
 type FontMapping = Record<TFont, number | any>;
 
@@ -62,11 +63,10 @@ const useBibleFonts = () => {
 
   useEffect(() => {
     const loadCustomFonts = async () => {
-
-
       await Font.loadAsync(fontMapping);
       // console.log('Fonts loaded:', Font.getLoadedFonts());
       setFontsLoaded(true);
+      SplashScreen.hide();
     };
 
     if (googleFontsLoaded) {

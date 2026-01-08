@@ -18,7 +18,7 @@ import { useNoteService } from "@/services/noteService";
 import { bibleState$ } from "@/state/bibleState";
 import { EBibleVersions, EViewMode, Screens, TNote, TTheme } from "@/types";
 import { formatTextToClipboard } from "@/utils/copyToClipboard";
-import { formatDateShortDayMonth } from "@/utils/formatDateShortDayMonth";
+import { formatDateShortDayMonth, formatNoteTitleDate } from "@/utils/formatDateShortDayMonth";
 import { use$ } from "@legendapp/state/react";
 import Constants from "expo-constants";
 import { Stack, useNavigation, useRouter } from "expo-router";
@@ -238,10 +238,8 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ }) => {
         await onUpdate(noteId, true);
         return;
       }
-      const date = new Date().toLocaleDateString();
-      const uniqueSuffix = Date.now().toString(36).slice(-4);
       if (!noteContent.title) {
-        noteContent.title = `${defaultTitle} ${date} - ${uniqueSuffix}`;
+        noteContent.title = formatNoteTitleDate();
       }
       setHasUnsavedChanges(false);
       const success = await createNote({

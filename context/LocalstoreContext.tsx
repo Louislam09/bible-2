@@ -1,7 +1,7 @@
 import { StorageKeys } from "@/constants/StorageKeys";
 import { pb } from "@/globalConfig";
 import { bibleState$ } from "@/state/bibleState";
-import { scriptDownloadHelpers } from "@/state/scriptDownloadState";
+import { scriptDownloadHelpers, scriptDownloadState$ } from "@/state/scriptDownloadState";
 import { settingState$ } from "@/state/settingState";
 import { EBibleVersions, EThemes, pbUser, SortOption, TFont } from "@/types";
 import { observable, syncState, when } from "@legendapp/state";
@@ -12,6 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useNetwork } from "@/context/NetworkProvider";
 import { showToast } from "@/utils/showToast";
+import * as SplashScreen from 'expo-splash-screen';
 import React, {
   createContext,
   ReactNode,
@@ -20,7 +21,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { Alert } from "react-native";
+import { View } from "react-native";
 
 const persistOptions = configureSynced({
   persist: {
@@ -168,15 +169,17 @@ export const useStorage = () => {
 const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const storedData = use$(() => storedData$.get());
   const syncState$ = syncState(storedData$);
+  const syncScriptDownloadState$ = syncState(scriptDownloadState$);
   const [hasPendingCloudSync, setHasPendingCloudSync] = useState(false);
   const [isSyncing, setSyncing] = useState(false);
   const netInfo = useNetwork();
   const { isConnected } = netInfo;
-  const SYNC_DEBOUNCE_MS = 10000; // 10 seconds
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const loadState = async () => {
       await when(() => syncState$.isPersistLoaded.get());
+      await when(() => syncScriptDownloadState$.isPersistLoaded.get());
       // Migrate script download data from old storage to new state
       await scriptDownloadHelpers.migrateFromOldStorage();
 
@@ -192,7 +195,10 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       storedData$.isDataLoaded.set(true);
     };
 
-    loadState();
+    loadState().finally(() => {
+      setLoading(true);
+      SplashScreen.hide();
+    });
   }, []);
 
   useEffect(() => {
@@ -372,6 +378,10 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const getNotificationPreferences = () => {
     return storedData$.notificationPreferences.get();
   };
+
+  if (!loading) {
+    return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#0c3e3d' }} />
+  }
 
   return (
     <StorageContext.Provider
