@@ -1,10 +1,14 @@
+import ActionButton, { Backdrop } from "@/components/note/ActionButton";
 import { View as ThemedView } from "@/components/Themed";
 import { getBookDetail } from "@/constants/BookNames";
 import { highlightedListHtmlTemplate } from "@/constants/highlightedListTemplate";
 import { useAlert } from "@/context/AlertContext";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
+import { storedData$ } from "@/context/LocalstoreContext";
+import { useNetwork } from "@/context/NetworkProvider";
 import { useMyTheme } from "@/context/ThemeContext";
+import { useSyncHighlights } from "@/hooks/useSyncHighlights";
 import { THighlightedVerse, useHighlightService } from "@/services/highlightService";
 import { bibleState$ } from "@/state/bibleState";
 import { IVerseItem, Screens, TTheme } from "@/types";
@@ -12,12 +16,14 @@ import copyToClipboard from "@/utils/copyToClipboard";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
 import { showToast } from "@/utils/showToast";
 import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
+import { use$ } from "@legendapp/state/react";
 import { useNavigation } from "@react-navigation/native";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 import { Stack, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  Keyboard,
   StyleSheet,
   View
 } from "react-native";
@@ -27,8 +33,9 @@ import WebView from "react-native-webview";
 type HighlightedListProps = {};
 
 const HighlightedList = ({ }: HighlightedListProps) => {
-  const { confirm } = useAlert();
+  const { confirm, alertWarning } = useAlert();
   const [data, setData] = useState<THighlightedVerse[]>([]);
+  const [showMoreOptions, setShowMoreOptions] = useState(false);
 
   const webViewRef = useRef<WebView>(null);
 
@@ -38,10 +45,17 @@ const HighlightedList = ({ }: HighlightedListProps) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const styles = getStyles(theme);
+  const netInfo = useNetwork();
+  const { isConnected } = netInfo;
 
   const { currentBibleLongName, currentBibleVersion } = useBibleContext();
   const { installedBibles } = useDBContext();
   const { getAllHighlightedVerses, deleteHighlight } = useHighlightService();
+  const { syncHighlights } = useSyncHighlights();
+  
+  const reloadHighlights = use$(() => bibleState$.reloadHighlights.get());
+  const isSyncing = use$(() => bibleState$.isSyncingHighlights.get());
+  const user = use$(() => storedData$.user.get()) || null;
 
   // Get current Bible version short name
   const currentVersionShortName = useMemo(() => {
@@ -69,6 +83,60 @@ const HighlightedList = ({ }: HighlightedListProps) => {
 
   useEffect(() => {
     fetchData();
+  }, [reloadHighlights]);
+
+  // Auto-sync highlights on screen load (background operation)
+  useEffect(() => {
+    if (user && isConnected && !isSyncing) {
+      syncHighlights();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run once on mount
+
+  // Track unsynced highlights
+  const unsyncedCount = useMemo(() => {
+    return data.filter(h => !h.uuid).length;
+  }, [data]);
+
+  const handleSyncPress = useCallback(async () => {
+    if (!user) {
+      alertWarning(
+        "Sincronización requerida",
+        "Debes iniciar sesión para sincronizar tus destacados con la nube",
+      );
+      return;
+    }
+
+    if (!isConnected) {
+      alertWarning(
+        "Sin conexión",
+        "Necesitas conexión a internet para sincronizar",
+      );
+      return;
+    }
+
+    try {
+      const result = await syncHighlights();
+      if (result.success) {
+        showToast(`Sincronizado: ${result.synced} destacados`);
+      } else {
+        showToast("Error al sincronizar algunos destacados");
+      }
+    } catch (error) {
+      console.error("Error syncing highlights:", error);
+      showToast("Error al sincronizar destacados");
+    } finally {
+      setShowMoreOptions(false);
+    }
+  }, [user, isConnected, syncHighlights, alertWarning]);
+
+  const showMoreOptionHandle = useCallback(() => {
+    setShowMoreOptions((prev) => !prev);
+  }, []);
+
+  const dismiss = useCallback(() => {
+    Keyboard.dismiss();
+    setShowMoreOptions(false);
   }, []);
 
 
@@ -197,6 +265,38 @@ const HighlightedList = ({ }: HighlightedListProps) => {
     );
   }, [data, theme, currentVersionShortName, formatTimeAgo]);
 
+  const actionButtons = useMemo(() => {
+    const buttons = [
+      {
+        bottom: 25,
+        name: "EllipsisVertical",
+        color: "#008CBA",
+        action: showMoreOptionHandle,
+        hide: showMoreOptions,
+        label: "",
+      },
+      {
+        bottom: 25,
+        name: isSyncing ? "Loader" : "CloudUpload",
+        color: unsyncedCount > 0 ? theme.colors.notification : "#45a049",
+        action: handleSyncPress,
+        hide: !showMoreOptions,
+        label: isSyncing ? "Sincronizando..." : `Sincronizar${unsyncedCount > 0 ? ` (${unsyncedCount})` : ''}`,
+        isSync: true,
+        disabled: isSyncing,
+      },
+      {
+        bottom: 90,
+        name: "ChevronDown",
+        color: theme.colors.notification,
+        action: showMoreOptionHandle,
+        hide: !showMoreOptions,
+        label: "Cerrar menú",
+      },
+    ];
+
+    return buttons.filter((item) => !item.hide);
+  }, [showMoreOptions, theme, isSyncing, unsyncedCount, handleSyncPress]);
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
@@ -208,6 +308,8 @@ const HighlightedList = ({ }: HighlightedListProps) => {
           headerStyle: { backgroundColor: theme.colors.background },
         }}
       />
+      
+      <Backdrop visible={showMoreOptions} onPress={dismiss} theme={theme} />
       <WebView
         ref={webViewRef}
         originWhitelist={["*"]}
@@ -240,6 +342,10 @@ const HighlightedList = ({ }: HighlightedListProps) => {
         }}
         {...createOptimizedWebViewProps({}, "static")}
       />
+
+      {actionButtons.map((item, index) => (
+        <ActionButton key={index} theme={theme} item={item} index={index} />
+      ))}
     </ThemedView>
   );
 };

@@ -218,10 +218,21 @@ const useLoadDatabase = ({ currentBibleVersion, isInterlinear }: TUseLoadDB): Us
 
       // Column migrations - always run (checkAndCreateColumn checks if column exists first)
       // These ensure schema updates are applied to existing installs
-      await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
+      
+      // Notes migrations
       await checkAndCreateColumn(db, "notes", "uuid", "TEXT");
       await checkAndCreateColumn(db, "notes", "updated_at", "TIMESTAMP");
       await checkAndCreateColumn(db, "notes", "deleted_at", "TIMESTAMP");
+      
+      // Favorite verses migrations
+      await checkAndCreateColumn(db, "favorite_verses", "uuid", "TEXT");
+      await checkAndCreateColumn(db, "favorite_verses", "created_at", "TIMESTAMP");
+      await checkAndCreateColumn(db, "favorite_verses", "updated_at", "TIMESTAMP");
+      await checkAndCreateColumn(db, "favorite_verses", "deleted_at", "TIMESTAMP");
+      
+      // Highlighted verses migrations
+      await checkAndCreateColumn(db, "highlighted_verses", "updated_at", "TIMESTAMP");
+      await checkAndCreateColumn(db, "highlighted_verses", "deleted_at", "TIMESTAMP");
 
       if (isMounted.current) {
         setDatabase(db);

@@ -1,15 +1,18 @@
 import ActionButton, { Backdrop } from "@/components/note/ActionButton";
 import { View as ThemedView } from "@/components/Themed";
+import Icon from "@/components/Icon";
 import { getBookDetail } from "@/constants/BookNames";
 import { favoriteListHtmlTemplate } from "@/constants/favoriteListTemplate";
 import { useAlert } from "@/context/AlertContext";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
+import { storedData$ } from "@/context/LocalstoreContext";
+import { useNetwork } from "@/context/NetworkProvider";
 import { useMyTheme } from "@/context/ThemeContext";
-import { useFavoriteVerseService } from "@/services/favoriteVerseService";
+import { useSyncFavorites } from "@/hooks/useSyncFavorites";
+import { TFavoriteVerse, useFavoriteVerseService } from "@/services/favoriteVerseService";
 import { authState$ } from "@/state/authState";
 import { bibleState$ } from "@/state/bibleState";
-import { favoriteState$ } from "@/state/favoriteState";
 import { IVerseItem, Screens, TTheme } from "@/types";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { getVerseTextRaw } from "@/utils/getVerseTextRaw";
@@ -22,6 +25,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Keyboard,
   StyleSheet,
+  TouchableOpacity,
   View
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -31,11 +35,11 @@ type TListVerse = {};
 
 const FavoriteList = ({ }: TListVerse) => {
   const { confirm, alertWarning } = useAlert();
-  const [filterData, setFilterData] = useState<(IVerseItem & { id: number })[]>(
+  const [filterData, setFilterData] = useState<(IVerseItem & { id: number; uuid?: string })[]>(
     []
   );
   const [originalData, setOriginalData] = useState<
-    (IVerseItem & { id: number })[]
+    (IVerseItem & { id: number; uuid?: string })[]
   >([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -49,14 +53,19 @@ const FavoriteList = ({ }: TListVerse) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const styles = getStyles(theme);
+  const netInfo = useNetwork();
+  const { isConnected } = netInfo;
 
   const { toggleFavoriteVerse, currentBibleLongName, orientation, currentBibleVersion } =
     useBibleContext();
   const { installedBibles } = useDBContext();
   const { addFavoriteVerse, getAllFavoriteVerses, removeFavoriteVerse } =
     useFavoriteVerseService();
+  const { syncFavorites } = useSyncFavorites();
+  
   const reloadFavorites = use$(() => bibleState$.reloadFavorites.get());
-  const isLoggedIn = use$(() => !!authState$.user.get());
+  const isSyncing = use$(() => bibleState$.isSyncingFavorites.get());
+  const user = use$(() => storedData$.user.get()) || null;
 
   // Get current Bible version short name
   const currentVersionShortName = useMemo(() => {
@@ -88,6 +97,19 @@ const FavoriteList = ({ }: TListVerse) => {
   useEffect(() => {
     fetchData();
   }, [reloadFavorites]);
+
+  // Auto-sync favorites on screen load (background operation)
+  useEffect(() => {
+    if (user && isConnected && !isSyncing) {
+      syncFavorites();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run once on mount
+
+  // Track unsynced favorites (favorites without uuid are not yet synced to cloud)
+  const unsyncedCount = useMemo(() => {
+    return filterData.filter(fav => !fav.uuid).length;
+  }, [filterData]);
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -165,8 +187,8 @@ const FavoriteList = ({ }: TListVerse) => {
   }, [router]);
 
 
-  const handleSyncToCloud = useCallback(async () => {
-    if (!isLoggedIn) {
+  const handleSyncPress = useCallback(async () => {
+    if (!user) {
       alertWarning(
         "Sincronización requerida",
         "Debes iniciar sesión para sincronizar tus versículos favoritos con la nube",
@@ -174,116 +196,28 @@ const FavoriteList = ({ }: TListVerse) => {
       return;
     }
 
-    try {
-      const favoriteVerses = await getAllFavoriteVerses();
-
-      if (favoriteVerses.length === 0) {
-        showToast("No hay versículos favoritos para sincronizar");
-        return;
-      }
-
-      let syncCount = 0;
-      for (const favoriteVerse of favoriteVerses) {
-        if (!favoriteVerse.uuid) {
-          console.warn(
-            "Favorito sin UUID, no se puede sincronizar:",
-            favoriteVerse.id
-          );
-          continue;
-        }
-
-        try {
-          await favoriteState$.addFavorite(favoriteVerse);
-          syncCount++;
-        } catch (error) {
-          console.error(
-            "Error al sincronizar versículo:",
-            favoriteVerse.id,
-            error
-          );
-        }
-      }
-
-      showToast(`${syncCount} versículos favoritos sincronizados con la nube`);
-    } catch (error) {
-      console.error(
-        "Error al sincronizar versículos favoritos con la nube:",
-        error
-      );
-      showToast("Error al sincronizar versículos favoritos");
-    } finally {
-      setShowMoreOptions(false);
-    }
-  }, [isLoggedIn, getAllFavoriteVerses, alertWarning]);
-
-  const handleDownloadFromCloud = useCallback(async () => {
-    if (!isLoggedIn) {
+    if (!isConnected) {
       alertWarning(
-        "Sincronización requerida",
-        "Debes iniciar sesión para descargar tus versículos favoritos desde la nube",
+        "Sin conexión",
+        "Necesitas conexión a internet para sincronizar",
       );
       return;
     }
 
     try {
-      const favoriteCloudEntries = await favoriteState$.fetchFavorites();
-
-      if (!favoriteCloudEntries || favoriteCloudEntries.length === 0) {
-        showToast("No hay versículos favoritos en la nube");
-        return;
+      const result = await syncFavorites();
+      if (result.success) {
+        showToast(`Sincronizado: ${result.synced} favoritos`);
+      } else {
+        showToast("Error al sincronizar algunos favoritos");
       }
-
-      const localFavorites = await getAllFavoriteVerses();
-      let downloadCount = 0;
-
-      for (const cloudFavoriteVerse of favoriteCloudEntries) {
-        if (!cloudFavoriteVerse.uuid) {
-          console.warn(
-            "Favorito en la nube sin UUID, se omite:",
-            cloudFavoriteVerse.id
-          );
-          continue;
-        }
-
-        try {
-          const existingFavoriteEntry = localFavorites.find(
-            (n) => n.uuid === cloudFavoriteVerse.uuid
-          );
-
-          if (existingFavoriteEntry) {
-            console.log(
-              "Favorito ya existe localmente, se omite:",
-              existingFavoriteEntry.id
-            );
-          } else {
-            await addFavoriteVerse(
-              cloudFavoriteVerse.book_number,
-              cloudFavoriteVerse.chapter,
-              cloudFavoriteVerse.verse,
-              cloudFavoriteVerse.uuid
-            );
-            downloadCount++;
-          }
-        } catch (error) {
-          console.error(
-            "Error al guardar versículo local:",
-            cloudFavoriteVerse.id,
-            error
-          );
-        }
-      }
-
-      showToast(
-        `${downloadCount} versículos favoritos descargados desde la nube`
-      );
     } catch (error) {
-      console.error("Error al descargar versículos desde la nube:", error);
-      showToast("Error al descargar versículos");
+      console.error("Error syncing favorites:", error);
+      showToast("Error al sincronizar favoritos");
     } finally {
       setShowMoreOptions(false);
-      bibleState$.toggleReloadFavorites();
     }
-  }, [isLoggedIn,]);
+  }, [user, isConnected, syncFavorites, alertWarning]);
 
   const showMoreOptionHandle = useCallback(() => {
     setShowMoreOptions((prev) => !prev);
@@ -365,24 +299,16 @@ const FavoriteList = ({ }: TListVerse) => {
       },
       {
         bottom: 25,
-        name: "Import",
-        color: "#008CBA",
-        action: handleDownloadFromCloud,
+        name: isSyncing ? "Loader" : "CloudUpload",
+        color: unsyncedCount > 0 ? theme.colors.notification : "#45a049",
+        action: handleSyncPress,
         hide: !showMoreOptions,
-        label: "Cargar desde la cuenta",
+        label: isSyncing ? "Sincronizando..." : `Sincronizar${unsyncedCount > 0 ? ` (${unsyncedCount})` : ''}`,
         isSync: true,
+        disabled: isSyncing,
       },
       {
         bottom: 90,
-        name: "Share",
-        color: "#45a049",
-        action: handleSyncToCloud,
-        hide: !showMoreOptions,
-        label: "Guardar en la cuenta",
-        isSync: true,
-      },
-      {
-        bottom: 155,
         name: "ChevronDown",
         color: theme.colors.notification,
         action: showMoreOptionHandle,
@@ -392,7 +318,7 @@ const FavoriteList = ({ }: TListVerse) => {
     ];
 
     return buttons.filter((item) => !item.hide);
-  }, [showMoreOptions, theme]);
+  }, [showMoreOptions, theme, isSyncing, unsyncedCount, handleSyncPress]);
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>

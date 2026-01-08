@@ -1,13 +1,15 @@
 import {
-  DELETE_HIGHLIGHTED_VERSE,
   GET_ALL_HIGHLIGHTED_VERSES,
   GET_ALL_HIGHLIGHTED_VERSES_BY_BOOK_AND_CHAPTER,
   INSERT_HIGHLIGHTED_VERSE,
   UPDATE_HIGHLIGHTED_VERSE,
+  SOFT_DELETE_HIGHLIGHTED_VERSE,
+  GET_HIGHLIGHTED_VERSE_BY_UUID,
 } from "@/constants/queries";
 import { useDBContext } from "@/context/databaseContext";
 import { useNetwork } from "@/context/NetworkProvider";
 import { authState$ } from "@/state/authState";
+import { pb } from "@/globalConfig";
 import * as Crypto from 'expo-crypto';
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
@@ -25,6 +27,8 @@ export interface THighlightedVerse {
   color: string;
   uuid: string;
   created_at: number | string;
+  updated_at?: string | null;
+  deleted_at?: string | null;
   text?: string;
   bookName?: string;
 }
@@ -42,25 +46,41 @@ export const useHighlightService = () => {
         [],
         "getAllHighlightedVerses"
       );
-      return highlights;
+      return highlights || [];
     } catch (error) {
       console.error("Error al obtener versículos destacados:", error);
       return [];
     }
   };
 
-  const getAllHighlightedVersesByBookAndChapter = async (bookNumber: number, chapter: number): Promise<THighlightedVerse[]> => {
+  const getAllHighlightedVersesByBookAndChapter = async (
+    bookNumber: number, 
+    chapter: number
+  ): Promise<THighlightedVerse[]> => {
     try {
       const highlights = await executeSql<THighlightedVerse>(
         GET_ALL_HIGHLIGHTED_VERSES_BY_BOOK_AND_CHAPTER,
         [bookNumber, chapter],
         "getAllHighlightedVersesByBookAndChapter"
       );
-      return highlights;
-    }
-    catch (error) {
+      return highlights || [];
+    } catch (error) {
       console.error("Error al obtener versículos destacados:", error);
       return [];
+    }
+  };
+
+  const getHighlightByUUID = async (uuid: string): Promise<THighlightedVerse | null> => {
+    try {
+      const results = await executeSql<THighlightedVerse>(
+        GET_HIGHLIGHTED_VERSE_BY_UUID, 
+        [uuid], 
+        "getHighlightByUUID"
+      );
+      return results?.[0] || null;
+    } catch (error) {
+      console.error("Error getting highlight by UUID:", error);
+      return null;
     }
   };
 
@@ -75,6 +95,7 @@ export const useHighlightService = () => {
 
       const newUUID = data.uuid || Crypto.randomUUID();
       const createdAt = data.created_at || Date.now();
+      const updatedAt = new Date().toISOString();
 
       await executeSql(
         INSERT_HIGHLIGHTED_VERSE,
@@ -86,25 +107,10 @@ export const useHighlightService = () => {
           data.color,
           newUUID,
           createdAt,
+          updatedAt,
         ],
         "createHighlight"
       );
-
-      const createdHighlight = {
-        id: 0,
-        book_number: data.book_number,
-        chapter: data.chapter,
-        verse: data.verse,
-        style: data.style,
-        color: data.color,
-        uuid: newUUID,
-        created_at: createdAt,
-      };
-
-      if (isConnected && sendToCloud && user) {
-        // TODO: Add highlight state management if needed
-        // await highlightState$.addHighlight(createdHighlight);
-      }
 
       return true;
     } catch (error) {
@@ -126,19 +132,13 @@ export const useHighlightService = () => {
           throw new Error("Se requieren estilo y color para actualizar el destacado");
         }
 
+        const updatedAt = new Date().toISOString();
+
         await executeSql(
           UPDATE_HIGHLIGHTED_VERSE,
-          [data.style, data.color, bookNumber, chapter, verse],
+          [data.style, data.color, updatedAt, bookNumber, chapter, verse],
           "updateHighlight"
         );
-
-        if (isConnected && sendToCloud && user) {
-          // TODO: Add highlight state management if needed
-          // const existing = await pb.collection("highlighted_verses").getFirstListItem(
-          //   `book_number = ${bookNumber} AND chapter = ${chapter} AND verse = ${verse}`
-          // );
-          // await highlightState$.updateHighlight(existing.id, data);
-        }
 
         return true;
       } catch (error: any) {
@@ -150,7 +150,7 @@ export const useHighlightService = () => {
         return false;
       }
     },
-    [isConnected, user]
+    []
   );
 
   const deleteHighlight = async (
@@ -160,22 +160,32 @@ export const useHighlightService = () => {
     uuid?: string
   ): Promise<boolean> => {
     try {
+      const deletedAt = new Date().toISOString();
+
+      // Soft delete locally
       await executeSql(
-        DELETE_HIGHLIGHTED_VERSE,
-        [bookNumber, chapter, verse],
-        "deleteHighlight"
+        SOFT_DELETE_HIGHLIGHTED_VERSE,
+        [deletedAt, deletedAt, bookNumber, chapter, verse],
+        "softDeleteHighlight"
       );
 
-      if (isConnected && user && uuid) {
-        // TODO: Add highlight state management if needed
-        // try {
-        //   const existing = await pb.collection("highlighted_verses").getFirstListItem(
-        //     `uuid = "${uuid}"`
-        //   );
-        //   await highlightState$.deleteHighlight(existing.id);
-        // } catch (error) {
-        //   console.error("Error al eliminar destacado de la nube:", error);
-        // }
+      // If we have UUID and user is authenticated, also soft delete in cloud
+      if (uuid && user) {
+        try {
+          const cloudHighlight = await pb.collection("highlighted_verses").getFirstListItem(
+            `uuid = "${uuid}" && user = "${user.id}"`
+          ).catch(() => null);
+
+          if (cloudHighlight) {
+            await pb.collection("highlighted_verses").update(cloudHighlight.id, {
+              deleted_at: deletedAt,
+            });
+            console.log(`[HighlightService] Soft deleted cloud highlight with UUID: ${uuid}`);
+          }
+        } catch (cloudError) {
+          console.error(`[HighlightService] Error soft deleting from cloud:`, cloudError);
+          // Continue - local delete succeeded
+        }
       }
 
       return true;
@@ -241,9 +251,9 @@ export const useHighlightService = () => {
         throw new Error("Formato de archivo de importación no válido");
       }
 
-      importData.highlights.forEach(async (highlight: THighlightedVerse) => {
+      for (const highlight of importData.highlights) {
         await createHighlight(highlight, false);
-      });
+      }
     } catch (err) {
       console.log(
         "Error al importar destacados: " +
@@ -255,6 +265,7 @@ export const useHighlightService = () => {
   return {
     getAllHighlightedVerses,
     getAllHighlightedVersesByBookAndChapter,
+    getHighlightByUUID,
     createHighlight,
     updateHighlight,
     deleteHighlight,
@@ -262,4 +273,3 @@ export const useHighlightService = () => {
     exportHighlights,
   };
 };
-

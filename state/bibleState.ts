@@ -51,7 +51,10 @@ export const bibleState$ = observable({
   currentNoteId: null as number | null,
   reloadNotes: false,
   reloadFavorites: false,
+  reloadHighlights: false,
   isSyncingNotes: false,
+  isSyncingFavorites: false,
+  isSyncingHighlights: false,
   floatingNoteButtonPosition: { x: 0, y: 75 },
   strongWord: { text: "", code: "" } as IStrongWord,
   multipleStrongsData: { word: "", strongNumbers: [], verseData: {} },
@@ -172,6 +175,9 @@ export const bibleState$ = observable({
   },
   toggleReloadFavorites: () => {
     bibleState$.reloadFavorites.set(() => !bibleState$.reloadFavorites.get());
+  },
+  toggleReloadHighlights: () => {
+    bibleState$.reloadHighlights.set(() => !bibleState$.reloadHighlights.get());
   },
   handleVerseToExplain: (verse: { text: string; reference: string }) => {
     bibleState$.verseToExplain.set(verse);
