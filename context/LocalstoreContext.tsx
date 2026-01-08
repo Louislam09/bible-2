@@ -78,6 +78,8 @@ type StoreState = {
   appFolderUri: string;
   appFolderTreeUri: string;
   notesViewMode: 'grid' | 'list';
+  highlightsViewMode: 'grid' | 'list';
+  favoritesViewMode: 'grid' | 'list';
 };
 
 const initialContext: StoreState = {
@@ -127,6 +129,8 @@ const initialContext: StoreState = {
   appFolderUri: "",
   appFolderTreeUri: "",
   notesViewMode: "grid",
+  highlightsViewMode: "list",
+  favoritesViewMode: "list",
 };
 
 export const storedData$ = observable(initialContext);
@@ -207,17 +211,17 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
   }, [pb.authStore.isValid, isConnected]);
 
-  useEffect(() => {
-    const unsubscribeFromChanges = storedData$.onChange((value) => {
-      if (storedData$.user.get() && pb.authStore.isValid) {
-        console.log('Change detected, scheduling sync...');
-        setHasPendingCloudSync(true);
-      }
-    });
-    return () => {
-      unsubscribeFromChanges();
-    };
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribeFromChanges = storedData$.onChange((value) => {
+  //     if (storedData$.user.get() && pb.authStore.isValid) {
+  //       console.log('Change detected, scheduling sync...');
+  //       setHasPendingCloudSync(true);
+  //     }
+  //   });
+  //   return () => {
+  //     unsubscribeFromChanges();
+  //   };
+  // }, []);
 
   const clearData = async () => {
     storedData$.set(initialContext);

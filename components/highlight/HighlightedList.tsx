@@ -1,9 +1,10 @@
 import { View as ThemedView } from "@/components/Themed";
 import { getBookDetail } from "@/constants/BookNames";
-import { highlightedListHtmlTemplate } from "@/constants/highlightedListTemplate";
+import { highlightedListHtmlTemplate, HighlightViewMode } from "@/constants/highlightedListTemplate";
 import { useAlert } from "@/context/AlertContext";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { THighlightedVerse, useHighlightService } from "@/services/highlightService";
 import { bibleState$ } from "@/state/bibleState";
@@ -29,6 +30,9 @@ type HighlightedListProps = {};
 const HighlightedList = ({ }: HighlightedListProps) => {
   const { confirm } = useAlert();
   const [data, setData] = useState<THighlightedVerse[]>([]);
+  const [viewMode, setViewMode] = useState<HighlightViewMode>(() => {
+    return (storedData$.highlightsViewMode?.get() as HighlightViewMode) || 'list';
+  });
 
   const webViewRef = useRef<WebView>(null);
 
@@ -146,6 +150,14 @@ const HighlightedList = ({ }: HighlightedListProps) => {
         const message = JSON.parse(event.nativeEvent.data);
         const { type, data: msgData } = message;
 
+        // Handle view mode change
+        if (type === 'viewModeChange') {
+          const newMode = msgData.viewMode as HighlightViewMode;
+          setViewMode(newMode);
+          storedData$.highlightsViewMode.set(newMode);
+          return;
+        }
+
         // Find item by id
         const item = data.find((v) => {
           const itemId = v.id?.toString();
@@ -184,15 +196,15 @@ const HighlightedList = ({ }: HighlightedListProps) => {
 
   // Generate HTML content
   const htmlContent = useMemo(() => {
-    return highlightedListHtmlTemplate(
-      data,
+    return highlightedListHtmlTemplate({
+      highlights: data,
       theme,
-      currentVersionShortName,
+      versionShortName: currentVersionShortName,
       formatTimeAgo,
-      16,
-      undefined
-    );
-  }, [data, theme, currentVersionShortName, formatTimeAgo]);
+      fontSize: 16,
+      viewMode,
+    });
+  }, [data, theme, currentVersionShortName, formatTimeAgo, viewMode]);
 
   return (
     <ThemedView style={styles.container}>

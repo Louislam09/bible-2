@@ -1,9 +1,10 @@
 import { View as ThemedView } from "@/components/Themed";
 import { getBookDetail } from "@/constants/BookNames";
-import { favoriteListHtmlTemplate } from "@/constants/favoriteListTemplate";
+import { favoriteListHtmlTemplate, FavoriteViewMode } from "@/constants/favoriteListTemplate";
 import { useAlert } from "@/context/AlertContext";
 import { useBibleContext } from "@/context/BibleContext";
 import { useDBContext } from "@/context/databaseContext";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
 import { useFavoriteVerseService } from "@/services/favoriteVerseService";
 import { bibleState$ } from "@/state/bibleState";
@@ -29,6 +30,9 @@ const FavoriteList = ({ }: TListVerse) => {
   const [filterData, setFilterData] = useState<(IVerseItem & { id: number; uuid?: string })[]>([]);
   const [originalData, setOriginalData] = useState<(IVerseItem & { id: number; uuid?: string })[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState<FavoriteViewMode>(() => {
+    return (storedData$.favoritesViewMode?.get() as FavoriteViewMode) || 'list';
+  });
 
   const webViewRef = useRef<WebView>(null);
 
@@ -50,10 +54,6 @@ const FavoriteList = ({ }: TListVerse) => {
     return currentBible?.shortName || currentBibleLongName || "NIV";
   }, [installedBibles, currentBibleVersion, currentBibleLongName]);
 
-  // Format relative time - not used for favorites but kept for template compatibility
-  const formatTimeAgo = useCallback((_timestamp: number | string): string => {
-    return "";
-  }, []);
 
   const fetchData = useCallback(async () => {
     try {
@@ -150,17 +150,25 @@ const FavoriteList = ({ }: TListVerse) => {
     (event: any) => {
       try {
         const message = JSON.parse(event.nativeEvent.data);
-        const { type, data } = message;
+        const { type, data: msgData } = message;
+
+        // Handle view mode change
+        if (type === 'viewModeChange') {
+          const newMode = msgData.viewMode as FavoriteViewMode;
+          setViewMode(newMode);
+          storedData$.favoritesViewMode.set(newMode);
+          return;
+        }
 
         // Find item by id
         const item = filterData.find((v) => {
           const itemId = v.id?.toString();
-          const dataId = data.id?.toString();
+          const dataId = msgData.id?.toString();
           return itemId === dataId;
         });
 
         if (!item) {
-          console.warn("Item not found for id:", data.id);
+          console.warn("Item not found for id:", msgData.id);
           return;
         }
 
@@ -194,15 +202,14 @@ const FavoriteList = ({ }: TListVerse) => {
 
   // Generate HTML content
   const htmlContent = useMemo(() => {
-    return favoriteListHtmlTemplate(
-      filterData,
+    return favoriteListHtmlTemplate({
+      favorites: filterData,
       theme,
-      currentVersionShortName,
-      formatTimeAgo,
-      16,
-      undefined
-    );
-  }, [filterData, theme, currentVersionShortName]);
+      versionShortName: currentVersionShortName,
+      fontSize: 16,
+      viewMode,
+    });
+  }, [filterData, theme, currentVersionShortName, viewMode]);
 
   return (
     <ThemedView style={styles.container}>
