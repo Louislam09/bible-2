@@ -1,268 +1,179 @@
-import { Text } from "@/components/Themed";
+import { View as ThemedView } from "@/components/Themed";
+import { DB_BOOK_NAMES } from "@/constants/BookNames";
 import Characters from "@/constants/Characters";
+import { characterListHtmlTemplate, CharacterViewMode } from "@/constants/characterListTemplate";
+import { storedData$ } from "@/context/LocalstoreContext";
 import { useMyTheme } from "@/context/ThemeContext";
-import { TTheme } from "@/types";
-import removeAccent from "@/utils/removeAccent";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { FlashList } from "@shopify/flash-list";
-import { useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-
-const RenderItem = ({ item, index, theme, onItemClick, styles }: any) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const translateXAnim = useRef(new Animated.Value(300)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 200,
-        delay: index * 200,
-        useNativeDriver: true,
-      }),
-      Animated.timing(translateXAnim, {
-        toValue: 0,
-        duration: 200,
-        delay: index * 200,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [fadeAnim, translateXAnim, index]);
-
-  return (
-    <Animated.View
-      style={[
-        {
-          opacity: fadeAnim,
-          transform: [{ translateX: translateXAnim }],
-        },
-      ]}
-    >
-      <TouchableOpacity
-        style={[styles.cardContainer]}
-        onPress={() => onItemClick(item.topic)}
-      >
-        <Text style={styles.cardTitle}>{item.topic}</Text>
-      </TouchableOpacity>
-    </Animated.View>
-  );
-};
+import useBackHandler from "@/hooks/useBackHandler";
+import { bibleState$ } from "@/state/bibleState";
+import { Screens, TTheme } from "@/types";
+import { createOptimizedWebViewProps } from "@/utils/webViewOptimizations";
+import { useNavigation } from "@react-navigation/native";
+import * as Clipboard from "expo-clipboard";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import { Share, StyleSheet, View } from "react-native";
+import WebView from "react-native-webview";
 
 type CharacterProps = {};
 
 const Character: React.FC<CharacterProps> = () => {
-  const [filterData] = useState(Characters);
-  const { theme, schema } = useMyTheme();
-  const router = useRouter();
+  const { theme } = useMyTheme();
+  const navigation = useNavigation();
   const styles = getStyles(theme);
-  const [searchText, setSearchText] = useState<any>(null);
+  const webViewRef = useRef<WebView>(null);
+  const [viewMode, setViewMode] = useState<CharacterViewMode>(() => {
+    return (storedData$.charactersViewMode?.get() as CharacterViewMode) || 'list';
+  });
+  const [isDetailView, setIsDetailView] = useState(false);
 
-  const handleCharacterPress = (character: string) => {
-    router.push({ pathname: `character/${character}` });
-  };
+  // Handle back button - if in detail view, go back to list
+  useBackHandler("character", isDetailView, () => {
+    if (webViewRef.current) {
+      webViewRef.current.postMessage(JSON.stringify({ type: "goBackToList" }));
+    }
+  });
 
-  const CharacterHeader = () => {
-    return (
-      <View style={[styles.noteHeader]}>
-        {/* <Text style={[styles.noteListTitle]}>Personajes Biblicos</Text> */}
-        <View style={styles.searchContainer}>
-          <Ionicons
-            style={styles.searchIcon}
-            name="search"
-            size={24}
-            color={theme.colors.notification}
-          />
-          <TextInput
-            placeholder="Buscar un personaje..."
-            style={[styles.noteHeaderSearchInput]}
-            onChangeText={(text) => setSearchText(text)}
-            value={searchText}
-          />
-        </View>
-      </View>
-    );
-  };
+  // Handle copy
+  const handleCopy = useCallback(async (text: string, topic: string) => {
+    try {
+      const fullText = `${topic}\n\n${text}`;
+      await Clipboard.setStringAsync(fullText);
+    } catch (error) {
+      console.error("Error copying to clipboard:", error);
+    }
+  }, []);
+
+  // Handle share
+  const handleShare = useCallback(async (text: string, topic: string) => {
+    try {
+      await Share.share({
+        message: `${topic}\n\n${text}`,
+        title: topic,
+      });
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  }, []);
+
+  // Handle Bible verse links
+  const handleLinkPress = useCallback((href: string) => {
+    // Parse links like "B:20 7:12" -> book 20, chapter 7, verse 12
+    const match = href.match(/B:(\d+)\s+(\d+):(\d+)/i);
+    if (match) {
+      const [, bookNumber, chapter, verse] = match;
+      const currentBook = DB_BOOK_NAMES.find(
+        (x) => x.bookNumber === +bookNumber
+      );
+      const queryInfo = {
+        book: currentBook?.longName || "Mateo",
+        chapter: +chapter,
+        verse: +verse || 0,
+      };
+      bibleState$.changeBibleQuery({
+        ...queryInfo,
+        shouldFetch: true,
+        isHistory: false,
+      });
+      (navigation as any).navigate(Screens.Home, queryInfo);
+    }
+  }, [navigation]);
+
+  // Handle WebView messages
+  const handleWebViewMessage = useCallback(
+    (event: any) => {
+      try {
+        const message = JSON.parse(event.nativeEvent.data);
+        const { type, data } = message;
+
+        switch (type) {
+          case 'viewModeChange':
+            const newMode = data.viewMode as CharacterViewMode;
+            setViewMode(newMode);
+            storedData$.charactersViewMode.set(newMode);
+            break;
+          case 'copy':
+            handleCopy(data.text, data.topic);
+            break;
+          case 'share':
+            handleShare(data.text, data.topic);
+            break;
+          case 'linkPress':
+            handleLinkPress(data.href);
+            break;
+          case 'detailViewOpened':
+            setIsDetailView(true);
+            break;
+          case 'detailViewClosed':
+            setIsDetailView(false);
+            break;
+          default:
+            console.log("Unknown message type:", type);
+        }
+      } catch (error) {
+        console.error("Error parsing WebView message:", error, event.nativeEvent.data);
+      }
+    },
+    [handleCopy, handleShare, handleLinkPress]
+  );
+
+  // Generate HTML content
+  const htmlContent = useMemo(() => {
+    return characterListHtmlTemplate({
+      characters: Characters,
+      theme,
+      fontSize: 16,
+      viewMode,
+    });
+  }, [theme, viewMode]);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        padding: 5,
-        backgroundColor: theme.dark ? theme.colors.background : "#eee",
-      }}
-      key={theme.dark + ""}
-    >
-      {CharacterHeader()}
-      <FlashList
-        key={schema}
-        contentContainerStyle={{
-          backgroundColor: theme.dark ? theme.colors.background : "#eee",
-          paddingVertical: 20,
-        }}
-        decelerationRate={"normal"}
-        data={
-          searchText
-            ? filterData.filter(
-              (x: any) =>
-                removeAccent(x.topic).indexOf(searchText.toLowerCase()) !== -1
-            )
-            : filterData
-        }
-        renderItem={({ item, index }) => (
-          <RenderItem
-            {...{ theme, styles, onItemClick: handleCharacterPress }}
-            item={item}
-            index={index}
+    <ThemedView style={styles.container}>
+      <WebView
+        ref={webViewRef}
+        originWhitelist={["*"]}
+        source={{ html: htmlContent }}
+        style={styles.webView}
+        onMessage={handleWebViewMessage}
+        scrollEnabled={true}
+        bounces={false}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        keyboardDisplayRequiresUserAction={false}
+        renderLoading={() => (
+          <View
+            style={{
+              backgroundColor: theme.colors.background,
+              flex: 1,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 1000,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           />
         )}
-        keyExtractor={(item: any, index: any) => `note-${index}`}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        onError={(syntheticEvent) => {
+          const { nativeEvent } = syntheticEvent;
+          console.error("WebView error:", nativeEvent);
+        }}
+        {...createOptimizedWebViewProps({}, "static")}
       />
-    </View>
+    </ThemedView>
   );
 };
 
-const getStyles = ({ colors, dark }: TTheme) =>
+const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
-    verseBody: {
-      color: colors.text,
-      backgroundColor: "transparent",
-    },
-    date: {
-      color: colors.notification,
-      textAlign: "right",
-      marginTop: 10,
-    },
-    textInput: {
-      padding: 10,
-      fontSize: 22,
-      color: colors.text,
-      marginVertical: 5,
-      textDecorationStyle: "solid",
-      textDecorationColor: "red",
-      textDecorationLine: "underline",
-    },
-    scrollToTopButton: {
-      position: "absolute",
-      bottom: 25,
-      right: 20,
-      backgroundColor: colors.notification,
-      padding: 10,
-      borderRadius: 10,
-      borderColor: "#ddd",
-      borderWidth: 0.3,
-      elevation: 3,
-    },
-    noteHeader: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      paddingHorizontal: 4,
-      paddingVertical: 10,
-      backgroundColor: "transparent",
-    },
-    noteListTitle: {
-      fontSize: 30,
-      marginVertical: 10,
-      fontWeight: "bold",
-      textAlign: "center",
-      color: colors.notification,
-    },
-    noteHeaderSubtitle: {
-      fontSize: 18,
-      fontWeight: "600",
-      color: colors.text,
-      alignSelf: "flex-start",
-    },
-    searchContainer: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-around",
-      borderRadius: 10,
-      // marginVertical: 20,
-      borderWidth: 1,
-      borderColor: colors.notification,
-      borderStyle: "solid",
-      width: "100%",
-      fontWeight: "100",
-      backgroundColor: colors.notification + "99",
-    },
-    searchIcon: {
-      color: colors.text,
-      paddingHorizontal: 15,
-      borderRadius: 10,
-      fontWeight: "bold",
-    },
-    noteHeaderSearchInput: {
-      borderRadius: 10,
-      padding: 10,
-      paddingLeft: 15,
-      fontSize: 18,
+    container: {
       flex: 1,
-      fontWeight: "100",
-      backgroundColor: "#ddd",
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
+      backgroundColor: colors.background,
     },
-    cardContainer: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: 15,
-      marginBottom: 8,
-      borderRadius: 8,
-      backgroundColor: dark ? colors.background : colors.text + 20,
-      borderColor: colors.notification + 50,
-      borderWidth: dark ? 1 : 0,
-    },
-    cardTitle: {
-      fontSize: 16,
-      color: colors.text,
-    },
-    headerContainer: {
-      position: "relative",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: 8,
-      backgroundColor: "transparent",
-    },
-    cardBody: {
-      fontSize: 16,
-      color: colors.text,
-    },
-    separator: {
-      height: 1,
-      marginVertical: 5,
-    },
-    noResultsContainer: {
+    webView: {
       flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-      borderRadius: 10,
-      paddingBottom: 20,
-    },
-    noResultsText: {
-      fontSize: 18,
-      color: colors.text,
-    },
-    verseAction: {
-      flexDirection: "row",
       backgroundColor: "transparent",
-    },
-    icon: {
-      fontWeight: "700",
-      marginHorizontal: 10,
-      color: colors.primary,
-      fontSize: 24,
     },
   });
 

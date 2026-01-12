@@ -30,7 +30,7 @@ const CharacterDetails = () => {
           animation: 'fade_from_bottom',
         }}
       />
-      <WordDefinition subTitle='Historia' wordData={wordData} />
+      <WordDefinition subTitle='Historia' wordData={wordData} mainColor="#cec8ff" />
     </Fragment>
   );
 };

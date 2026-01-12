@@ -13,8 +13,9 @@ const SearchLayout = () => {
         options={{
           ...singleScreenHeader({
             theme,
-            title: "Personajes Biblicos",
-            titleIcon: "User",
+            title: "",
+            titleIcon: "Users",
+            titleIconColor: theme.dark ? "#cec8ff" : theme.colors.notification,
             headerRightProps: {
               headerRightIcon: "Trash2",
               headerRightIconColor: "red",
