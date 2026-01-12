@@ -81,6 +81,7 @@ type StoreState = {
   highlightsViewMode: 'grid' | 'list';
   favoritesViewMode: 'grid' | 'list';
   charactersViewMode: 'grid' | 'list';
+  concordanceViewMode: 'grid' | 'list';
 };
 
 const initialContext: StoreState = {
@@ -133,6 +134,7 @@ const initialContext: StoreState = {
   highlightsViewMode: "list",
   favoritesViewMode: "list",
   charactersViewMode: "list",
+  concordanceViewMode: "list",
 };
 
 export const storedData$ = observable(initialContext);
