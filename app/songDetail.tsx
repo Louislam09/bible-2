@@ -1,5 +1,4 @@
 import { SplitButton } from "@/components/animations/split-button";
-import { Palette } from "@/components/animations/split-button/constants";
 import {
   singleScreenHeader,
   SingleScreenHeaderProps,
@@ -39,8 +38,6 @@ const SongDetailPage = () => {
   const hasChorus = !!song?.chorus;
   const multiplayerValue = hasChorus ? 0.5 : 1;
   const [currentIndex, setCurrentIndex] = useState(0);
-  const fadeAnim = useRef(new Animated.Value(1)).current;
-  const slideAnim = useRef(new Animated.Value(0)).current;
 
   const shouldShowChorus = useMemo(() => {
     return currentIndex % 1 === 0.5;
@@ -93,29 +90,6 @@ const SongDetailPage = () => {
       Animated.timing(decreaseFontAnim, {
         toValue: 1,
         duration: 100,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  };
-
-  useEffect(() => {
-    if (currentIndex > 0) {
-      animateTransition();
-    }
-  }, [currentIndex]);
-
-  const animateTransition = () => {
-    fadeAnim.setValue(0);
-    slideAnim.setValue(30);
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 400,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 400,
         useNativeDriver: true,
       }),
     ]).start();
@@ -310,13 +284,7 @@ const SongDetailPage = () => {
 
         {/* Main Content */}
         <Animated.View
-          style={[
-            styles.contentContainer,
-            {
-              opacity: fadeAnim,
-              transform: [{ translateY: slideAnim }],
-            },
-          ]}
+          style={[styles.contentContainer]}
         >
           <ScrollView
             ref={scrollViewRef}
@@ -355,47 +323,6 @@ const SongDetailPage = () => {
             )}
           </ScrollView>
         </Animated.View>
-
-        {/* {backgroundDecorations.map((item, index) => (
-          <Animated.View
-            key={index}
-            style={[
-              styles.backgroundDecoration,
-              {
-                bottom: item.pos.bottom as any,
-                right: item.pos.right as any,
-                transform: [
-                  {
-                    translateY:
-                      decorationAnimations[index]?.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [0, -15], // Gentle floating up and down
-                      }) || 0,
-                  },
-                  {
-                    scale:
-                      decorationAnimations[index]?.interpolate({
-                        inputRange: [0, 0.5, 1],
-                        outputRange: [1, 1.05, 1], // Subtle scale effect
-                      }) || 1,
-                  },
-                ],
-                opacity:
-                  decorationAnimations[index]?.interpolate({
-                    inputRange: [0, 0.5, 1],
-                    outputRange: [0.6, 0.8, 0.6], // Gentle opacity change
-                  }) || 0.6,
-              },
-            ]}
-          >
-            <Icon
-              name={item.name as any}
-              size={item.size}
-              color={item.color}
-              style={styles.backgroundIcon}
-            />
-          </Animated.View>
-        ))} */}
 
         {/* Navigation */}
         <View style={styles.navigationContainer}>
