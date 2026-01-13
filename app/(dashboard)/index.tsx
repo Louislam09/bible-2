@@ -74,7 +74,6 @@ const MainDashboard = () => {
     lastBottomSideChapter,
     lastBottomSideVerse,
     isAdmin: _isAdmin,
-    useDomComponent,
   } = storedData;
   const user = use$(() => storedData$.user.get());
   const isAdmin = _isAdmin || user?.isAdmin;
