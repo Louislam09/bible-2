@@ -61,7 +61,7 @@ const Concordance: React.FC<ConcordanceProps> = () => {
       console.error("Error fetching verses:", error);
       return [];
     }
-  }, [myBibleDB, executeSql, currentBibleVersion]);
+  }, [myBibleDB, currentBibleVersion]);
 
   // Handle copy
   const handleCopy = useCallback(async (verse: any) => {
@@ -131,7 +131,7 @@ const Concordance: React.FC<ConcordanceProps> = () => {
         console.error("Error parsing WebView message:", error, event.nativeEvent.data);
       }
     },
-    [fetchVerses, handleCopy, handleGoToVerse]
+    []
   );
 
   // Generate HTML content

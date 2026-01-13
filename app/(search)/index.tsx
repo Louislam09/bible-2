@@ -141,7 +141,7 @@ const SearchPage: React.FC<SearchPageProps> = () => {
         console.error("Error parsing WebView message:", error, event.nativeEvent.data);
       }
     },
-    [handleSearch, handleCopy, handleGoToVerse]
+    []
   );
 
   // Generate HTML content
