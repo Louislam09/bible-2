@@ -327,6 +327,7 @@ const DatabaseDownloadItem = ({
           alignItems: "center",
           gap: 2,
           justifyContent: "space-between",
+          backgroundColor: "transparent",
         }}
       >
         <View style={styles.itemIconContainer}>
