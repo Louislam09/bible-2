@@ -30,7 +30,6 @@ export const modalState$ = observable({
     modalState$.chooseReferenceStep.set(step);
   },
   isSheetClosed: true,
-  showUserTooltip: false,
   // Modal open state flags for conditional rendering (only for WebView-based modals)
   isStrongSearchOpen: false,
   isDictionaryOpen: false,
@@ -42,13 +41,6 @@ export const modalState$ = observable({
   isNoteListOpen: false,
   isNoteActionsOpen: false,
   previewHighlight: { color: "", style: "" },
-
-  openUserTooltip: () => {
-    modalState$.showUserTooltip.set(true);
-  },
-  closeUserTooltip: () => {
-    modalState$.showUserTooltip.set(false);
-  },
 
   setSearchWordOnDic: (word: string) => {
     const cleanedWord = word.replace(/[.,:;?!]/g, "");

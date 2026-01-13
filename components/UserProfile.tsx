@@ -5,7 +5,7 @@ import { useHaptics } from "@/hooks/useHaptics";
 import { authState$ } from "@/state/authState";
 import { modalState$ } from "@/state/modalState";
 import { pbUser, Screens, TTheme } from "@/types";
-import { observer } from "@legendapp/state/react";
+import { observer, use$ } from "@legendapp/state/react";
 import { Image } from "expo-image";
 import { useNavigation } from "expo-router";
 import { User } from "lucide-react-native";
@@ -25,7 +25,7 @@ interface UserProfileProps {
   user: pbUser | null;
 }
 
-const UserProfile: React.FC<UserProfileProps> = observer(({ user }) => {
+const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
   const { confirm } = useAlert();
   const navigation = useNavigation();
   const haptics = useHaptics();
@@ -36,9 +36,8 @@ const UserProfile: React.FC<UserProfileProps> = observer(({ user }) => {
   const userRef = useRef(null);
 
   // With observer(), we can directly access observables without use$()
-  const isAuth = authState$.isAuthenticated.get();
-  const isLoading = authState$.isLoading.get();
-  const openUserTooltip = modalState$.showUserTooltip.get();
+  const isAuth = use$(() => authState$.isAuthenticated.get());
+  const isLoading = use$(() => authState$.isLoading.get());
 
   const avatarUrl = user
     ? `${POCKETBASE_URL}/api/files/${user.collectionId}/${user.id}/${user.avatar}`
@@ -49,8 +48,9 @@ const UserProfile: React.FC<UserProfileProps> = observer(({ user }) => {
 
   const onOpenUser = useCallback(async () => {
     await haptics.impact.light();
-    modalState$.openUserTooltip();
-  }, [haptics]);
+    setIsUserTooltipVisible(!isUserTooltipVisible);
+    // modalState$.openUserTooltip();
+  }, []);
 
   const onSearch = () => {
     navigation.navigate(Screens.Search, {});
@@ -72,7 +72,7 @@ const UserProfile: React.FC<UserProfileProps> = observer(({ user }) => {
         "Por favor, inicia sesión para acceder a todas las funciones.",
       buttonText: "Iniciar Sesión",
       action: () => {
-        modalState$.closeUserTooltip();
+        setIsUserTooltipVisible(false);
         setTimeout(() => {
           navigation.navigate(Screens.Login);
         }, 500);
@@ -83,7 +83,7 @@ const UserProfile: React.FC<UserProfileProps> = observer(({ user }) => {
       description: "¿Estás seguro de que deseas cerrar tu sesión?",
       buttonText: "Cerrar Sesión",
       action: async () => {
-        modalState$.closeUserTooltip();
+        setIsUserTooltipVisible(false);
         setTimeout(() => {
           onLogout();
         }, 500);
@@ -98,77 +98,64 @@ const UserProfile: React.FC<UserProfileProps> = observer(({ user }) => {
   const onSync = () => {
     if (!storedData$.user.get()) {
       haptics.impact.light();
-      modalState$.closeUserTooltip();
+      setIsUserTooltipVisible(false);
       setTimeout(() => {
         navigation.navigate(Screens.Login);
       }, 500);
       return;
     }
 
-    modalState$.closeUserTooltip();
+    setIsUserTooltipVisible(false);
     setSyncModalVisible(true);
   };
-
-
+  const [isUserTooltipVisible, setIsUserTooltipVisible] = useState(false);
 
   return (
     <View style={styles.userInfoContainer}>
-      <TouchableOpacity
-        ref={userRef}
-        onPress={onOpenUser}
-      >
-        {user ? (
-          <View style={styles.userHeader}>
-            <View style={styles.avatarContainer}>
-              <Image
-                source={{
-                  uri: user.avatar ? avatarUrl : defaultAvatar,
-                }}
-                style={styles.avatar}
-                contentFit="cover"
-              />
-            </View>
-            <View style={{ display: "flex", backgroundColor: "transparent" }}>
-              {isLoading ? (
-                <ActivityIndicator color={theme.colors.text} />
-              ) : (
-                <Text style={styles.userName}>{`Shalom ${firstName}!`}</Text>
-              )}
-            </View>
-          </View>
-        ) : (
-          <View style={styles.userHeader}>
-            <View style={styles.avatarContainer}>
-              <User color={theme.colors.text} size={30} />
-            </View>
-            <View style={{ display: "flex", backgroundColor: "transparent" }}>
-              {isLoading ? (
-                <ActivityIndicator color={theme.colors.text} />
-              ) : (
-                <Text style={styles.userName}>{`Bienvenido!`}</Text>
-              )}
-            </View>
-          </View>
-        )}
-      </TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.8} onPress={onSearch}>
-        <Icon
-          name="Search"
-          color={theme.colors.text}
-          size={30}
-        />
-      </TouchableOpacity>
-
-      <CloudSyncPopup
-        visible={syncModalVisible}
-        onClose={() => setSyncModalVisible(false)}
-        lastSyncTime={""}
-      />
       <Tooltip
-        offset={-20}
-        target={userRef}
-        isVisible={openUserTooltip}
-        onClose={() => modalState$.closeUserTooltip()}
+        offset={10}
+        target={
+          <TouchableOpacity
+            ref={userRef}
+            onPress={() => onOpenUser()}
+          >
+            {user ? (
+              <View style={styles.userHeader}>
+                <View style={styles.avatarContainer}>
+                  <Image
+                    source={{
+                      uri: user.avatar ? avatarUrl : defaultAvatar,
+                    }}
+                    style={styles.avatar}
+                    contentFit="cover"
+                  />
+                </View>
+                <View style={{ display: "flex", backgroundColor: "transparent" }}>
+                  {isLoading ? (
+                    <ActivityIndicator color={theme.colors.text} />
+                  ) : (
+                    <Text style={styles.userName}>{`Shalom ${firstName}!`}</Text>
+                  )}
+                </View>
+              </View>
+            ) : (
+              <View style={styles.userHeader}>
+                <View style={styles.avatarContainer}>
+                  <User color={theme.colors.text} size={30} />
+                </View>
+                <View style={{ display: "flex", backgroundColor: "transparent" }}>
+                  {isLoading ? (
+                    <ActivityIndicator color={theme.colors.text} />
+                  ) : (
+                    <Text style={styles.userName}>{`Bienvenido!`}</Text>
+                  )}
+                </View>
+              </View>
+            )}
+          </TouchableOpacity>
+        }
+        isVisible={isUserTooltipVisible}
+        onClose={() => setIsUserTooltipVisible(false)}
       >
         <View
           style={{
@@ -242,9 +229,23 @@ const UserProfile: React.FC<UserProfileProps> = observer(({ user }) => {
           </TouchableOpacity>
         </View>
       </Tooltip>
+
+      <TouchableOpacity activeOpacity={0.8} onPress={onSearch}>
+        <Icon
+          name="Search"
+          color={theme.colors.text}
+          size={30}
+        />
+      </TouchableOpacity>
+
+      <CloudSyncPopup
+        visible={syncModalVisible}
+        onClose={() => setSyncModalVisible(false)}
+        lastSyncTime={""}
+      />
     </View>
   );
-});
+}
 
 const getStyles = ({ colors }: TTheme) =>
   StyleSheet.create({
