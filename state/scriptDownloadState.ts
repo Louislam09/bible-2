@@ -1,8 +1,7 @@
 import { StorageKeys } from "@/constants/StorageKeys";
 import { observable } from "@legendapp/state";
-import { observablePersistAsyncStorage } from "@legendapp/state/persist-plugins/async-storage";
 import { configureSynced, syncObservable } from "@legendapp/state/sync";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { observablePersistSQLite } from "@/plugins/observablePersistSQLite";
 
 export interface ScriptDownloadState {
     tailwindScript: string;
@@ -22,9 +21,7 @@ const initialState: ScriptDownloadState = {
 
 const persistOptions = configureSynced({
     persist: {
-        plugin: observablePersistAsyncStorage({
-            AsyncStorage,
-        }),
+        plugin: observablePersistSQLite(),
     },
 });
 

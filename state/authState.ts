@@ -122,7 +122,7 @@ export const authState$ = observable<AuthState>({
   },
 
   checkSession: async () => {
-    console.log("🔎 checking session 🔍");
+    // console.log("🔎 checking session 🔍");
 
     try {
       authState$.isLoading.set(true);

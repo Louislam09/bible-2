@@ -190,6 +190,7 @@ const StorageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const loadState = async () => {
       await when(() => syncState$.isPersistLoaded.get());
       await when(() => syncScriptDownloadState$.isPersistLoaded.get());
+      console.log("🔎 loading state 🔍", scriptDownloadState$);
 
       bibleState$.changeBibleQuery({
         book: storedData$.lastBook.get(),
